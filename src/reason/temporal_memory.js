@@ -8,11 +8,15 @@ class TemporalMemory {
     this.math = math || MathEngine;
     this.vspace = vspace || new VectorSpace(config);
     const dims = this.vspace.dimensions;
-    this.permuter = permuter || new RelationPermuter(dims, config.get('rotationSeed'));
-    this._tickPerm = this.permuter._buildPermutation
-      ? this.permuter._buildPermutation('time_tick')
-      : this._identityPermutation(dims);
-    this._tickInv = this._buildInverse(this._tickPerm);
+    this.permuter = permuter || new RelationPermuter(config);
+    try {
+      this.permuter.register('time_tick');
+      this._tickPerm = this.permuter.get('time_tick');
+      this._tickInv = this.permuter.inverse('time_tick');
+    } catch {
+      this._tickPerm = this._identityPermutation(dims);
+      this._tickInv = this._buildInverse(this._tickPerm);
+    }
   }
 
   initState() {

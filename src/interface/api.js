@@ -3,24 +3,78 @@ const path = require('path');
 const Config = require('../support/config');
 const AuditLog = require('../support/audit_log');
 const StorageAdapter = require('../support/storage');
+const VectorSpace = require('../core/vector_space');
+const MathEngine = require('../core/math_engine');
+const RelationPermuter = require('../core/relation_permuter');
 const ConceptStore = require('../knowledge/concept_store');
 const TheoryStack = require('../knowledge/theory_stack');
+const TheoryLayer = require('../knowledge/theory_layer');
 const NLParser = require('../ingest/parser');
 const TranslatorBridge = require('./translator_bridge');
 const Reasoner = require('../reason/reasoner');
 const TheoryDSLEngine = require('../theory/dsl_engine');
+const ClusterManager = require('../ingest/clustering');
+const Encoder = require('../ingest/encoder');
+const BiasController = require('../reason/bias_control');
+const Retriever = require('../reason/retrieval');
+const TemporalMemory = require('../reason/temporal_memory');
+const ValidationEngine = require('../reason/validation');
 
 class EngineAPI {
   constructor(rawConfig) {
     this.config = new Config().load(rawConfig || {});
     this.audit = new AuditLog(this.config.get('storageRoot'));
     this.storage = new StorageAdapter({ config: this.config, audit: this.audit });
+    this.vspace = new VectorSpace(this.config);
     this.conceptStore = new ConceptStore(this.config.get('dimensions'));
     this.theoryStack = new TheoryStack(this.config.get('dimensions'));
+    this.permuter = new RelationPermuter(this.config);
+    this.permuter.bootstrapDefaults();
     this.parser = new NLParser(this.config.get('recursionHorizon'));
     this.translator = new TranslatorBridge();
-    this.reasoner = new Reasoner(this.conceptStore);
-    this.reasoner.config = this.config;
+    this.cluster = new ClusterManager({
+      config: this.config,
+      math: MathEngine,
+      vspace: this.vspace
+    });
+    this.encoder = new Encoder({
+      config: this.config,
+      vspace: this.vspace,
+      math: MathEngine,
+      permuter: this.permuter,
+      store: this.conceptStore,
+      cluster: this.cluster
+    });
+    this.bias = new BiasController({ config: this.config, audit: this.audit });
+    this.retriever = new Retriever({
+      config: this.config,
+      math: MathEngine,
+      store: this.conceptStore
+    });
+    this.temporal = new TemporalMemory({
+      config: this.config,
+      math: MathEngine,
+      permuter: this.permuter,
+      vspace: this.vspace
+    });
+    this.validation = new ValidationEngine({
+      stack: this.theoryStack,
+      store: this.conceptStore,
+      math: MathEngine,
+      bias: this.bias,
+      config: this.config,
+      audit: this.audit
+    });
+    this.reasoner = new Reasoner({
+      store: this.conceptStore,
+      stack: this.theoryStack,
+      math: MathEngine,
+      bias: this.bias,
+      retriever: this.retriever,
+      temporal: this.temporal,
+      permuter: this.permuter,
+      config: this.config
+    });
     this.dsl = new TheoryDSLEngine({
       api: this,
       conceptStore: this.conceptStore,
@@ -42,6 +96,16 @@ class EngineAPI {
       relation: ast.relation,
       object: ast.object
     });
+    try {
+      this.encoder.ingestFact(ast, ast.subject);
+    } catch (e) {
+      if (this.audit) {
+        this.audit.write({
+          kind: 'ingestEncodingError',
+          message: e.message
+        });
+      }
+    }
     this.audit.write({ kind: 'ingest', sentence: canonical });
   }
 
@@ -57,14 +121,33 @@ class EngineAPI {
     } else {
       result = this.reasoner.factExists(ast.subject, ast.relation, ast.object);
     }
+    let geom = null;
+    try {
+      if (this.encoder && typeof this.encoder.encodeNode === 'function') {
+        const queryVector = this.encoder.encodeNode(ast, 0);
+        const conceptId = ast.relation === 'IS_A' ? ast.object : ast.subject;
+        geom = this.reasoner.answer(queryVector, conceptId);
+      }
+    } catch (e) {
+      if (this.audit) {
+        this.audit.write({
+          kind: 'askGeometryError',
+          message: e.message
+        });
+      }
+    }
+    const merged = geom
+      ? { ...result, band: geom.band, provenance: geom.provenance }
+      : result;
     this.audit.write({
       kind: 'ask',
       subject: ast.subject,
       relation: ast.relation,
       object: ast.object,
-      truth: result.truth
+      truth: merged.truth,
+      band: merged.band
     });
-    return result;
+    return merged;
   }
 
   getAgenticSession() {
@@ -80,6 +163,75 @@ class EngineAPI {
         return api.abduct(observation, relation);
       }
     };
+  }
+
+  setContext(layers) {
+    this.theoryStack.clear();
+    if (Array.isArray(layers)) {
+      for (const layerConfig of layers) {
+        this.pushTheory(layerConfig);
+      }
+    }
+  }
+
+  pushTheory(layerConfig) {
+    const dims = this.config.get('dimensions');
+    const layer = new TheoryLayer(layerConfig.id || layerConfig.name || 'layer', dims);
+    this.theoryStack.push(layer);
+    this.audit.write({
+      kind: 'pushTheory',
+      id: layer.id
+    });
+  }
+
+  popTheory() {
+    const active = this.theoryStack.getActiveLayers();
+    if (active.length === 0) {
+      return null;
+    }
+    const removed = active[active.length - 1];
+    this.theoryStack.layers.pop();
+    this.audit.write({
+      kind: 'popTheory',
+      id: removed.id
+    });
+    return removed;
+  }
+
+  listConcepts() {
+    const labels = [];
+    for (const [label] of this.conceptStore._concepts.entries()) {
+      labels.push(label);
+    }
+    return labels;
+  }
+
+  inspectConcept(id) {
+    const concept = this.conceptStore.getConcept(id);
+    if (!concept) {
+      return null;
+    }
+    return {
+      label: concept.label,
+      diamonds: concept.diamonds.map((d) => ({
+        id: d.id,
+        label: d.label,
+        radius: d.l1Radius
+      }))
+    };
+  }
+
+  validate(spec) {
+    if (!spec || !spec.type) {
+      throw new Error('validate requires a spec with a type');
+    }
+    if (spec.type === 'consistency') {
+      return this.validation.checkConsistency(spec.conceptId);
+    }
+    if (spec.type === 'inclusion') {
+      return this.validation.proveInclusion(spec.point, spec.conceptId);
+    }
+    return this.validation.abstractQuery(spec);
   }
 
   abduct(observation, relation) {

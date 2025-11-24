@@ -3,11 +3,26 @@ const fs = require('fs');
 const path = require('path');
 
 class RelationPermuter {
-  constructor(dimensions, seed) {
-    this.dimensions = dimensions;
-    this.seed = seed;
+  constructor(configOrDimensions, maybeSeed) {
+    if (configOrDimensions && typeof configOrDimensions.get === 'function') {
+      const config = configOrDimensions;
+      this.dimensions = config.get('dimensions');
+      this.seed = config.get('relationSeed');
+    } else {
+      this.dimensions = configOrDimensions;
+      this.seed = maybeSeed;
+    }
     this._tables = new Map();
     this._inverseTables = new Map();
+  }
+
+  register(name) {
+    if (this._tables.has(name)) {
+      return;
+    }
+    const table = this._buildPermutation(name);
+    this._tables.set(name, table);
+    this._inverseTables.set(name, this._buildInverse(table));
   }
 
   bootstrapDefaults(relationsPath) {
@@ -19,9 +34,11 @@ class RelationPermuter {
       const name = rel.name;
       const inverse = rel.inverse;
       if (rel.symmetric) {
-        const table = this._buildPermutation(name);
-        this._tables.set(name, table);
-        this._inverseTables.set(name, this._buildInverse(table));
+        if (!this._tables.has(name)) {
+          const table = this._buildPermutation(name);
+          this._tables.set(name, table);
+          this._inverseTables.set(name, this._buildInverse(table));
+        }
         if (inverse && inverse === name) {
           continue;
         }
@@ -41,7 +58,7 @@ class RelationPermuter {
     }
   }
 
-  getPermutation(name) {
+  get(name) {
     const table = this._tables.get(name);
     if (!table) {
       throw new Error(`No permutation registered for relation '${name}'`);
@@ -49,12 +66,24 @@ class RelationPermuter {
     return table;
   }
 
-  getInversePermutation(name) {
+  inverse(name) {
     const table = this._inverseTables.get(name);
     if (!table) {
       throw new Error(`No inverse permutation registered for relation '${name}'`);
     }
     return table;
+  }
+
+  list() {
+    return Array.from(this._tables.keys());
+  }
+
+  getPermutation(name) {
+    return this.get(name);
+  }
+
+  getInversePermutation(name) {
+    return this.inverse(name);
   }
 
   _buildPermutation(name) {
@@ -92,4 +121,3 @@ class RelationPermuter {
 }
 
 module.exports = RelationPermuter;
-

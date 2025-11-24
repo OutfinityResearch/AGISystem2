@@ -5,7 +5,7 @@ async function run() {
   const config = new Config().load({ profile: 'auto_test' });
   const vspace = new VectorSpace(config);
 
-  const v = vspace.createVector();
+  const v = vspace.allocVector();
   const okLength = v.length === config.get('dimensions');
   let allZero = true;
   for (let i = 0; i < v.length; i += 1) {
@@ -15,15 +15,20 @@ async function run() {
     }
   }
 
-  const source = vspace.createVector();
+  const source = vspace.allocVector();
   source[0] = 10;
-  const clone = vspace.cloneVector(source);
+  const clone = vspace.allocVector();
+  vspace.copy(clone, source);
   const okClone = clone.length === source.length && clone[0] === 10;
   source[0] = 0;
   const okIndependence = clone[0] === 10;
 
-  const a = new Int8Array([120, -120]);
-  const b = new Int8Array([20, -20]);
+  const a = vspace.allocVector();
+  const b = vspace.allocVector();
+  a[0] = 120;
+  a[1] = -120;
+  b[0] = 20;
+  b[1] = -20;
   const sum = vspace.addSaturated(a, b);
   const okClamp = sum[0] === 127 && sum[1] === -127;
 
@@ -31,4 +36,3 @@ async function run() {
 }
 
 module.exports = { run };
-

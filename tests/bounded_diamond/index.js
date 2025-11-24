@@ -26,8 +26,15 @@ async function run() {
 
   const okFingerprint = diamond.lshFingerprint === BigInt(0);
 
-  return { ok: okMin && okMax && okCenter && okRadius && okMask && okFingerprint };
+  const inside = diamond.contains(vec);
+  const outsideVec = new Int8Array(dims);
+  outsideVec[0] = 127;
+  const outside = diamond.contains(outsideVec);
+  const okContains = inside === true && outside === false;
+
+  return {
+    ok: okMin && okMax && okCenter && okRadius && okMask && okFingerprint && okContains
+  };
 }
 
 module.exports = { run };
-

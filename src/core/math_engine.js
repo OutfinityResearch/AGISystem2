@@ -1,9 +1,9 @@
 class MathEngine {
-  static distanceMaskedL1(pointVector, concept) {
+  static distanceMaskedL1(pointVector, concept, maskOverride) {
     const minValues = concept.minValues;
     const maxValues = concept.maxValues;
     const center = concept.center;
-    const relevanceMask = concept.relevanceMask;
+    const relevanceMask = maskOverride || concept.relevanceMask;
     const dims = center.length;
 
     let distance = 0;
@@ -61,4 +61,3 @@ class MathEngine {
 }
 
 module.exports = MathEngine;
-
