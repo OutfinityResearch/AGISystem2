@@ -1,38 +1,13 @@
 (function injectGlobalNav() {
-  function computeRelPrefix() {
-    try {
-      var path = window.location.pathname || '';
-      var marker = '/docs/';
-      var idx = path.lastIndexOf(marker);
-      if (idx === -1) {
-        return '';
-      }
-      var rest = path.slice(idx + marker.length);
-      // rest like "index.html" or "guides/conceptual_spaces.html"
-      var segments = rest.split('/');
-      if (segments.length <= 1) {
-        return '';
-      }
-      var depth = segments.length - 1; // number of directories below docs/
-      var prefix = '';
-      for (var i = 0; i < depth; i += 1) {
-        prefix += '../';
-      }
-      return prefix;
-    } catch (e) {
-      return '';
-    }
-  }
-
-  function buildNavHtml(prefix) {
+  function buildNavHtml() {
     var links = [
-      { href: prefix + 'index.html', label: 'Home' },
-      { href: prefix + 'guides/conceptual_spaces.html', label: 'Theory' },
-      { href: prefix + 'guides/architecture.html', label: 'Architecture' },
-      { href: prefix + 'reference/api.html', label: 'APIs' },
-      { href: prefix + 'reference/syntax.html', label: 'Syntax' },
-      { href: prefix + 'usage/cli.html', label: 'CLI' },
-      { href: prefix + 'concepts/quick_wiki.html', label: 'Quick Wiki' }
+      { href: '/index.html', label: 'Home' },
+      { href: '/guides/conceptual_spaces.html', label: 'Theory' },
+      { href: '/guides/architecture.html', label: 'Architecture' },
+      { href: '/reference/api.html', label: 'APIs' },
+      { href: '/reference/syntax.html', label: 'Syntax' },
+      { href: '/usage/cli.html', label: 'CLI' },
+      { href: '/concepts/quick_wiki.html', label: 'Quick Wiki' }
     ];
     var parts = [];
     for (var i = 0; i < links.length; i += 1) {
@@ -41,8 +16,7 @@
     return parts.join(' · ');
   }
 
-  var rel = computeRelPrefix();
-  var navHtml = buildNavHtml(rel);
+  var navHtml = buildNavHtml();
 
   var header = document.querySelector('.nav-header');
   if (header) {

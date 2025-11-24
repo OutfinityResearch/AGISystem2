@@ -314,7 +314,14 @@ async function main() {
           break;
         case 'ask': {
           const res = api.ask(args);
-          console.log(`${color.label}Result${color.reset}: ${color.example}${res.truth}${color.reset}`);
+          if (res && Object.prototype.hasOwnProperty.call(res, 'band')) {
+            console.log(
+              `${color.label}Result${color.reset}: ${color.example}${res.truth}${color.reset}` +
+              `  ${color.label}Band${color.reset}: ${color.example}${res.band}${color.reset}`
+            );
+          } else {
+            console.log(`${color.label}Result${color.reset}: ${color.example}${res.truth}${color.reset}`);
+          }
           break;
         }
         case 'abduct': {
