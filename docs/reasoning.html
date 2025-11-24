@@ -45,17 +45,35 @@
   <p>Throughout all these reasoning modes, relevance masks act as explicit attention mechanisms. They determine which dimensions participate in each distance computation and thus which aspects of the world influence the answer. The ValidationEngine can run "dry" reasoning passes that explore the logical consequences of certain masks and layers without changing stored concepts, searching for conflicts, unreachable regions, or surprising dependencies. For example, it can check whether masking a set of dimensions leaves a decision unchanged; if the outcome flips, that mask might be hiding an implicit dependency worth auditing.</p>
   <p>The combination of masks, adversarial bands, and theory stacks is what makes AGISystem2’s reasoning both flexible and explainable. You can change context by pushing or popping layers, you can adjust strictness by tuning radii, and you can inspect which dimensions and masks mattered for each step. Other documentation chapters—especially Algorithms & Acronyms, Bias & Values, and Explainability—provide complementary perspectives on the same machinery. This chapter focuses on the story: points move, regions shift, and layers overlay, but all under deterministic control with a clear paper trail.</p>
 
-  <pre>
-High-level flow (simplified):
+  <div class="diagram">
+    <svg viewBox="0 0 340 150" role="img" aria-label="High-level reasoning flow from text to provenance">
+      <defs>
+        <marker id="arrow-reason" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
+      <rect x="20" y="30" width="80" height="24" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <text x="26" y="46" font-size="8" fill="#0f4c81">Text &amp; grammar</text>
+      <rect x="120" y="30" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="136" y="46" font-size="8" fill="#4a5670">Encoded vector</text>
+      <rect x="220" y="30" width="90" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="224" y="46" font-size="8" fill="#4a5670">TheoryStack + layers</text>
+      <line x1="100" y1="42" x2="120" y2="42" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-reason)" />
+      <line x1="200" y1="42" x2="220" y2="42" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-reason)" />
+      <rect x="40" y="90" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="52" y="106" font-size="8" fill="#4a5670">Retriever + LSH</text>
+      <rect x="140" y="90" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="147" y="106" font-size="8" fill="#4a5670">MathEngine (L1)</text>
+      <rect x="240" y="90" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="244" y="106" font-size="8" fill="#4a5670">Bands &amp; provenance</text>
+      <line x1="60" y1="54" x2="80" y2="90" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-reason)" />
+      <line x1="260" y1="54" x2="280" y2="90" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-reason)" />
+      <line x1="120" y1="102" x2="140" y2="102" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-reason)" />
+      <line x1="220" y1="102" x2="240" y2="102" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-reason)" />
+    </svg>
+    <p class="diagram-caption">This diagram groups the main reasoning steps: normalising and encoding text, composing concepts under the active theory stack, proposing candidates with Retriever and LSH, measuring masked L1 distances with MathEngine, interpreting results through adversarial bands and value layers, and finally recording provenance. It replaces the enumerated ASCII flow with a visual overview that mirrors the narrative in this chapter.</p>
+  </div>
 
-  1. Normalise text and parse into grammar
-  2. Encode into a high-dimensional vector
-  3. Compose concepts with TheoryStack and layers
-  4. Use Retriever and LSH to propose candidate diamonds
-  5. Apply masked L1 distances via MathEngine
-  6. Interpret results through adversarial bands and value layers
-  7. Record provenance: layers, masks, thresholds, modules used
-  </pre>
 
   <p>Because every stage of this flow is deterministic and uses explicit data structures, reasoning steps can be replayed, inspected, and compared across configurations or versions. That determinism underpins the explainability guarantees described in the dedicated Explainability chapter and validated by the test suites in <code>.specs/tests/reason_smoke</code> and <code>.specs/tests/validation_engine</code>.</p>
 

@@ -54,21 +54,27 @@
   <p>Choosing high-dimensional int8 vectors is an engineering decision informed by research on hyperdimensional computing. With hundreds or thousands of dimensions, most randomly chosen vectors are nearly orthogonal. This property allows the engine to use superposition: adding vectors corresponding to several observations reinforces consistent features while letting noise cancel out statistically. Using int8 instead of floating point keeps memory usage and cache behaviour predictable, which matters in long-running or embedded deployments. The MathEngine implements saturated addition so that even long histories of updates cannot overflow the numeric range.</p>
   <p>Structure such as roles, time steps, and causal directions is encoded through permutations rather than by adding extra dimensions. The RelationPermuter module maintains a deterministic permutation table for each relation, as well as inverse permutations when needed. When the encoder binds a child phrase to its parent via a relation, it permutes the child’s vector according to that relation and then adds it to the parent. This keeps the total dimensionality fixed while still encoding "who did what to whom and when". Retrieval uses locality-sensitive hashing to quickly find candidate diamonds near a query point, and then the MathEngine computes exact masked L1 distances. Because all of these components use seeded randomness and respect the global dimension configuration, two runs with the same inputs and seeds will always produce the same vectors and thus the same reasoning outcomes.</p>
 
-  <pre>
-Dimensional layout (simplified):
-  [ Ontology (0–255) | Axiology (256–383) | Empirical 384+ ... ]
+  <div class="diagram">
+    <svg viewBox="0 0 320 150" role="img" aria-label="Dimensional layout and concept, fact, context elements in the conceptual space">
+      <rect x="20" y="30" width="90" height="26" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <text x="30" y="46" font-size="8" fill="#0f4c81">Ontology 0–255</text>
+      <rect x="120" y="30" width="90" height="26" rx="4" fill="#fbe9e9" stroke="#b03a48" stroke-width="1" />
+      <text x="130" y="46" font-size="8" fill="#b03a48">Axiology 256–383</text>
+      <rect x="220" y="30" width="80" height="26" rx="4" fill="#f3f3f3" stroke="#b0b6c4" stroke-width="1" />
+      <text x="228" y="46" font-size="8" fill="#4a5670">Empirical 384+</text>
+      <rect x="40" y="80" width="70" height="26" rx="4" fill="#ffffff" stroke="#0f4c81" stroke-width="1" />
+      <text x="51" y="96" font-size="8" fill="#0f4c81">Concept</text>
+      <rect x="130" y="80" width="60" height="26" rx="4" fill="#ffffff" stroke="#0f4c81" stroke-width="1" />
+      <text x="146" y="96" font-size="8" fill="#0f4c81">Fact</text>
+      <rect x="210" y="80" width="80" height="26" rx="4" fill="#ffffff" stroke="#0f4c81" stroke-width="1" />
+      <text x="223" y="96" font-size="8" fill="#0f4c81">Context stack</text>
+      <line x1="70" y1="56" x2="70" y2="80" stroke="#0f4c81" stroke-width="1" />
+      <line x1="160" y1="56" x2="160" y2="80" stroke="#0f4c81" stroke-width="1" />
+      <line x1="250" y1="56" x2="250" y2="80" stroke="#0f4c81" stroke-width="1" />
+    </svg>
+    <p class="diagram-caption">The dimensional layout divides the global vector space into ontology, axiology and empirical ranges. Concepts are unions of diamonds that live across these dimensions, individual facts are single points encoded from normalised sentences, and context is represented as a stack of theory layers that adjust how those concepts are seen at runtime. This diagram replaces the ASCII sketch with a compact visual summary of those relationships.</p>
+  </div>
 
-Concept representation:
-  Concept = union of Diamonds
-  Diamond = Box(min, max) ∩ L1 ball(center, radius) ∩ Mask
-
-Fact representation:
-  Fact = point (vector) derived from a normalised sentence
-  Membership = point ∈ Concept under active theory layers
-
-Context representation:
-  Context = stack of TheoryLayers overlayed at runtime
-  </pre>
 
   <h2>Links to the Literature and to the Codebase</h2>
   <p>The conceptual spaces idea originates in work by Peter Gärdenfors and others who argued for a geometric middle layer between symbols and subsymbolic vectors. Hyperdimensional computing, as developed by Pentti Kanerva and subsequent researchers, shows how to represent complex structures using high-dimensional vectors, permutations, and binding operations. From the perspective of dimensionality reduction, results like the Johnson–Lindenstrauss lemma give intuition for why distances can remain meaningful in high dimensions. AGISystem2 borrows from all of these lines of work but grounds them in deterministic, auditable Node.js components described in the <code>.specs</code> directory. The <code>VectorSpace</code> and <code>MathEngine</code> modules implement the raw operations; <code>BoundedDiamond</code>, <code>ConceptStore</code>, and <code>TheoryStack</code> implement conceptual regions and context overlays; <code>Retriever</code> and the various test suites ensure that these pieces behave as intended.</p>

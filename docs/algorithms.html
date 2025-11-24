@@ -37,23 +37,31 @@
   <p>Modern machine learning systems often talk about "attention" as a soft weighting over features or tokens. In AGISystem2, attention is made explicit through binary relevance masks attached to concepts and used in distance computations. A relevance mask is a compact representation that tells the MathEngine which dimensions to consider and which to ignore for a particular concept or query. During a masked L1 computation every dimension whose mask bit is zero is skipped entirely. This not only improves performance but also clarifies which axes were actually involved in a decision.</p>
   <p>Because masks are first-class objects, they show up in provenance records and in bias control. When a BiasController mode hides certain sensitive attributes, it does so by altering the relevance mask used for a reasoning step. When the Explainability chapter talks about axis-level attribution—being able to say "this answer depended on temperature and physicality but not on jurisdiction or reputation"—it is referring directly to the state of these masks. The specifications for <code>BiasController</code> and <code>ValidationEngine</code> in the <code>.specs/reason</code> directory, together with their corresponding test suites, document how different modes and validation runs produce and consume masks.</p>
 
-  <pre>
-Algorithm flow (simplified):
+  <div class="diagram">
+    <svg viewBox="0 0 320 140" role="img" aria-label="Algorithmic flow from encoding to LSH, distance, bands and bias audit">
+      <defs>
+        <marker id="arrow-alg" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
+      <rect x="20" y="30" width="90" height="24" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <text x="26" y="46" font-size="8" fill="#0f4c81">Encode sentence</text>
+      <rect x="130" y="30" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="138" y="46" font-size="8" fill="#4a5670">LSH candidates</text>
+      <rect x="230" y="30" width="70" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="238" y="46" font-size="8" fill="#4a5670">Masked L1</text>
+      <line x1="110" y1="42" x2="130" y2="42" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-alg)" />
+      <line x1="210" y1="42" x2="230" y2="42" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-alg)" />
+      <rect x="80" y="80" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="86" y="96" font-size="8" fill="#4a5670">Adversarial bands</text>
+      <rect x="190" y="80" width="90" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="196" y="96" font-size="8" fill="#4a5670">Bias/validation modes</text>
+      <line x1="160" y1="54" x2="120" y2="80" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-alg)" />
+      <line x1="260" y1="54" x2="235" y2="80" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-alg)" />
+    </svg>
+    <p class="diagram-caption">The algorithmic path begins by encoding a normalised sentence into a high-dimensional vector, using LSH to propose candidate concepts, applying masked L1 distances to those candidates, grading the result with adversarial bands, and finally adjusting or auditing masks through bias and validation modes. The diagram replaces the ASCII flow while keeping the same sequence of ideas.</p>
+  </div>
 
-  Encode sentence -> high-D vector
-       |
-       v
-  LSH index proposes candidate concepts
-       |
-       v
-  Masked L1 via MathEngine
-       |
-       v
-  Adversarial bands grade result (True/Plausible/False)
-       |
-       v
-  BiasController and ValidationEngine adjust or audit masks
-  </pre>
 
   <h2>Putting the Pieces Together</h2>
   <p>Each of the techniques described here is modest in isolation: hashing, permutations, thresholding, vector addition, and simple clustering are all well-understood. The distinctive character of AGISystem2 comes from how they are combined under strict determinism and with explicit dimensional structure. LSH narrows the search space; permutations encode roles and time without inflating dimensionality; bounded diamonds and adversarial bands make membership and uncertainty geometrically concrete; superposition and clustering provide incremental learning; temporal rotation affords sequence modelling; relevance masks turn attention and bias control into inspectable objects. When other chapters discuss reasoning styles, bias audits, or proof generation, they are ultimately describing orchestrated uses of these simple algorithms.</p>
