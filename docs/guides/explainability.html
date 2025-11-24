@@ -9,7 +9,7 @@
   <div class="page">
   <div class="nav-header">
     <h1>Explainability</h1>
-    <small><a href="../index.html">Back to index</a> · <a href="../concepts/quick_wiki.html">Quick wiki</a></small>
+    <small><a href="../index.html">Back to index</a> · <a href="../concepts/quick_wiki.html">Quick Wiki</a></small>
   </div>
   <p>Explainability in AGISystem2 is not an afterthought or a separate tool; it is a direct consequence of using explicit geometry and deterministic algorithms. Every fact is a point in a conceptual space. Every concept is a region defined by bounded diamonds and relevance masks. Every reasoning step is a distance check, a permutation, or a layer overlay that can be replayed exactly. This chapter explains how those design choices translate into concrete explanations that auditors and engineers can follow without needing a background in machine learning theory.</p>
 
@@ -46,7 +46,7 @@
 
   <h2>Dry Proofs with ValidationEngine</h2>
   <p>ValidationEngine provides a "dry run" mode that explores consequences and checks consistency without mutating stored data. Given a set of concepts, layers, and masks, it can compute whether two concept regions intersect, whether a point must belong to both, or whether there exists a counterexample. These operations are implemented using the same geometric primitives as everyday reasoning—distance checks, box intersections, and mask combinations—but they are applied in a way that never writes back to ConceptStore or changes diamonds.</p>
-  <p>From an explainability perspective, ValidationEngine acts as a proof generator. It can report that two concepts are disjoint because their boxes do not overlap on certain key dimensions, or that a particular scenario leads to a conflict between layers because one layer expands a region that another layer marks as forbidden. The test suites in <code>.specs/tests/validation_engine</code>, <code>.specs/tests/relations_bootstrap</code>, and <code>.specs/tests/config_profiles</code> illustrate how validation is used both to sanity-check new theories and to guard against misconfiguration. When an auditor asks "How do you know these two rules cannot fire together?", the system can respond with a geometric proof derived from ValidationEngine’s analysis.</p>
+  <p>From an explainability perspective, ValidationEngine acts as a proof generator. It can report that two concepts are disjoint because their boxes do not overlap on certain key dimensions, or that a particular scenario leads to a conflict between layers because one layer expands a region that another layer marks as forbidden. Internal validation scenarios illustrate how these checks are used both to sanity-check new theories and to guard against misconfiguration. When an auditor asks "How do you know these two rules cannot fire together?", the system can respond with a geometric proof derived from ValidationEngine’s analysis.</p>
 
   <h2>Concrete Provenance Example</h2>
   <p>To make this less abstract, consider a simple counterfactual query: "Is water boiling at 50 degrees if we imagine a low-pressure environment?" The engine first normalises the question into its grammar, encodes it into a vector, and then applies a temporary theory layer representing the low-pressure condition. Under the base theory, water boiling at 50 degrees may fall outside the relevant diamond and be graded as False. Under the counterfactual layer, the same point may move inside the diamond and be graded as True. The provenance attached to each result records this contrast in detail.</p>
@@ -69,11 +69,11 @@ Example provenance (simplified):
 
   <h2>Explainability in the Larger Architecture</h2>
   <p>Explainability threads through the entire architecture. TranslatorBridge and Parser ensure that normalisation from natural language to constrained grammar is deterministic and logged. Encoder, MathEngine, and Retriever perform operations that are simple enough to describe but powerful enough to support rich reasoning. ConceptStore and TheoryStack expose the structure of knowledge and context. BiasController and ValidationEngine provide ways to explore alternative masks and policies. AuditLog persists provenance records so that, months later, an investigator can reconstruct why a particular decision was made.</p>
-  <p>Other documentation chapters give their own angle on this story. Conceptual Spaces explains the geometric substrate. Algorithms & Acronyms details the specific techniques, such as LSH and permutations, that shape explainability. Bias & Values shows how value judgments are kept separate from facts. Pragmatics and RAG discuss how AGISystem2 can be paired with generative models so that free-form text generation is always anchored by deterministic checks. Taken together, these texts form a small wiki on how to build explainable systems by design rather than by retrofitting explanations onto black boxes.</p>
+  <p>Other documentation chapters give their own angle on this story. Conceptual Spaces explains the geometric substrate. The algorithm and acronym entries linked from the Quick Wiki detail specific techniques, such as locality‑sensitive hashing and permutations, that shape explainability. Bias &amp; Values shows how value judgments are kept separate from facts. Pragmatics and RAG discuss how AGISystem2 can be paired with generative models so that free-form text generation is always anchored by deterministic checks. Taken together, these texts form a small wiki on how to build explainable systems by design rather than by retrofitting explanations onto black boxes.</p>
 
   <div class="footer-nav">
     <a href="../index.html">Back to index</a>
-    <a href="../concepts/quick_wiki.html">Quick wiki</a>
+    <a href="../concepts/quick_wiki.html">Quick Wiki</a>
   </div>
   </div>
 </body>

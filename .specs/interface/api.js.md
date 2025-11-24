@@ -3,7 +3,7 @@
 Class `EngineAPI`
 - **Role**: Stable external interface for ingest/query/admin operations and embedding into agents; orchestrates parser, encoder, reasoner, and theory stack; surfaces provenance and audit hooks.
 - **Pattern**: Facade. SOLID: single responsibility for API exposure; delegates work.
-- **Key Collaborators**: `NLParser`, `Encoder`, `Reasoner`, `Retriever`, `TheoryStack`, `TranslatorBridge`, `AuditLog`, `Config`.
+- **Key Collaborators**: `NLParser`, `Encoder`, `Reasoner`, `Retriever`, `TheoryStack`, `TranslatorBridge`, `AuditLog`, `Config`, `TheoryDSLEngine`.
 
 ## Public API (core methods)
 - `constructor(deps)`: wire dependencies; load config snapshot.
@@ -14,6 +14,7 @@ Class `EngineAPI`
 - `listConcepts()`, `inspectConcept(id)`: admin queries.
 - `validate(spec)`: run validation engine (abstract checks).
 - `getAgenticSession(options)`: returns a session-scoped object with restricted command grammar for embedding (add fact, query, context ops) without exposing internals.
+- Optional higher-level helpers (e.g., `checkProcedureCompliance`, `checkExport`, `checkMagicInCity`) may be exposed for convenience, but their behaviour must be implemented entirely in terms of theory DSL macros and generic primitives. No domain-specific logic (health, law, narrative) may be hard-coded in EngineAPI; instead, EngineAPI loads and invokes macros defined in theory files.
 
 ## Pseudocode (comments)
 ```js

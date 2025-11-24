@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Syntax – Theory Files</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Syntax for Theory Files</h1>
+  </div>
+  <p>Theory files let you collect facts into named bundles that can be applied as temporary overlays. They are plain text files with one fact per line, using exactly the same syntax as described in the Facts and Questions chapter. This page shows how to structure those files, how the CLI and API use them, and how to express different domains such as health, regulations, or narrative constraints.</p>
+
+  <h2>Basic Structure</h2>
+  <p>A theory file is a simple text file where each non-empty, non-comment line is a fact. Lines starting with <code>#</code> are comments and are ignored. Blank lines are also ignored. The engine does not interpret filenames; only the contents matter, but naming files after their purpose makes them easier to manage.</p>
+
+  <p>Example: a minimal health compliance theory file <code>health_compliance.txt</code>:</p>
+  <pre><code># Basic procedural requirements for ProcedureX
+ProcedureX REQUIRES Consent
+ProcedureX REQUIRES AuditTrail
+
+# Export rules for a simple demo
+ExportData PROHIBITED_BY GDPR
+ExportData PERMITTED_BY HIPAA</code></pre>
+
+  <p>Example: a small narrative theory file <code>scifi_magic.txt</code>:</p>
+  <pre><code># Baseline facts about Alice and CityX
+Alice IS_A Human
+Alice LOCATED_IN CityX
+Alice CASTS Magic
+
+# Sci-fi layer that permits magic in CityX
+SciFi_TechMagic PERMITS Magic_IN CityX</code></pre>
+
+  <p>There is no special syntax for “rules” beyond these triples. What makes a file a theory is how the engine uses it: it reads all facts and treats them as additional context while answering a question, without permanently modifying long-term memory unless you also ingest the same facts separately.</p>
+
+  <h2>Using Theory Files in the CLI</h2>
+  <p>When you run the CLI, it creates a <code>.AGISystem2</code> folder in the current directory with a <code>theories</code> subfolder. You can create or edit files in this folder directly, or use CLI commands like <code>new-theory</code> and <code>init-samples</code> to scaffold them. The CLI loads facts from a theory file when you call <code>apply-theory</code>.</p>
+
+  <p>Example session:</p>
+  <pre><code>AGIS2&gt; init-samples
+AGIS2&gt; list-theories
+Theories in .AGISystem2/theories:
+  - health_compliance
+  - law_minimal
+  - scifi_magic
+
+AGIS2&gt; show-theory health_compliance
+# Basic procedural requirements for ProcedureX
+ProcedureX REQUIRES Consent
+ProcedureX REQUIRES AuditTrail
+
+# Export rules for a simple demo
+ExportData PROHIBITED_BY GDPR
+ExportData PERMITTED_BY HIPAA
+
+AGIS2&gt; apply-theory health_compliance check-procedure ProcedureX
+Procedure compliance: FALSE</code></pre>
+
+  <p>In this example, the CLI reads all non-comment lines from <code>health_compliance.txt</code> and passes them as extra facts while it evaluates the <code>check-procedure</code> command. The base knowledge in memory remains unchanged unless you have also used <code>add</code> to ingest some of these facts permanently.</p>
+
+  <h2>Using Theory Files via the API</h2>
+  <p>At API level, theory files are just collections of fact strings. You can load them yourself (for example, from <code>.AGISystem2/theories</code> or from a separate configuration repository) and pass them as the <code>extraFacts</code> argument to methods such as <code>counterfactualAsk</code>, <code>checkProcedureCompliance</code>, <code>checkExport</code>, or <code>checkMagicInCity</code>. The engine will normalise and parse these lines the same way it parses facts sent via CLI.</p>
+
+  <p>Simplified example in JavaScript:</p>
+  <pre><code>const facts = [
+  "ProcedureX REQUIRES Consent",
+  "ProcedureX REQUIRES AuditTrail",
+  "ExportData PROHIBITED_BY GDPR",
+  "ExportData PERMITTED_BY HIPAA"
+];
+
+const compliance = api.checkProcedureCompliance("ProcedureX", []);
+const complianceWithEvidence = api.checkProcedureCompliance("ProcedureX", [
+  "Consent GIVEN yes",
+  "AuditTrail PRESENT yes"
+]);
+
+const gdprDecision = api.checkExport("ExportData", ["GDPR"], facts);
+const bothDecision = api.checkExport("ExportData", ["GDPR", "HIPAA"], facts);</code></pre>
+
+  <p>Here the <code>facts</code> array plays the same role as a small theory file. In a real system you would often keep such facts in versioned text files and load them at startup or per tenant, then pass them into API calls as needed.</p>
+
+  <h2>Organising Theories</h2>
+  <p>You can keep theories small and focused, or use them as larger scenario descriptions:</p>
+  <pre><code># Minimal theory per domain
+health_core.txt
+health_emergency_overrides.txt
+export_eu_us.txt
+narrative_magic_sci_fi.txt
+
+# Scenario-based theories
+scenario_hospital_A.txt
+scenario_hospital_B.txt
+scenario_cityX_festival.txt</code></pre>
+
+  <p>AGISystem2 does not impose a particular naming or directory convention beyond what the CLI expects (<code>.AGISystem2/theories</code> for interactive use). It is up to you to decide whether a theory file represents a domain slice (for example, “EU export rules”) or a concrete situation (“the setup of hospital A on a given date”). In both cases, the syntax inside the file is the same: one fact per line.</p>
+
+  <div class="footer-nav">
+    <a href="syntax.html">Back to Syntax overview</a>
+    <a href="../index.html">Back to index</a>
+  </div>
+  </div>
+  <script src="nav.js"></script>
+</body>
+</html>
+

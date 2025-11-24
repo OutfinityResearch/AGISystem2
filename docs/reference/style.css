@@ -91,8 +91,10 @@ code {
 
 .nav-header small {
   display: block;
-  margin-top: 0.25rem;
-  color: #5f6b88;
+  margin-top: 0.4rem;
+  color: #4a5670;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
 }
 
 .section-intro {
@@ -109,10 +111,32 @@ code {
   border-top: 1px solid var(--border-soft);
   font-size: 0.92rem;
   color: #5f6b88;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .footer-nav a {
   margin-right: 0.8rem;
+}
+
+.nav-header a {
+  color: var(--accent);
+  text-decoration: none;
+  margin-right: 0.4rem;
+}
+
+.nav-header a:hover {
+  text-decoration: underline;
+}
+
+.footer-nav a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.footer-nav a:hover {
+  text-decoration: underline;
 }
 
 .table-concept-index {

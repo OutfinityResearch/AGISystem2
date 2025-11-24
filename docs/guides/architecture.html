@@ -9,7 +9,15 @@
   <div class="page">
   <div class="nav-header">
     <h1>Architecture as a Narrative</h1>
-    <small><a href="../index.html">Back to index</a> · <a href="../concepts/quick_wiki.html">Quick wiki</a></small>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="conceptual_spaces.html">Theory</a> ·
+      <a href="architecture.html">Architecture</a> ·
+      <a href="../reference/api.html">APIs</a> ·
+      <a href="../reference/syntax.html">Syntax</a> ·
+      <a href="../usage/cli.html">CLI</a> ·
+      <a href="../concepts/quick_wiki.html">Quick Wiki</a>
+    </small>
   </div>
   <p>Think of AGISystem2 as a cast of characters collaborating on a geometric stage. Each character has a clear job and a minimal public face. The plot is predictable: text comes in, shapes shift or are measured, and answers come out with a trail explaining every step. This narrative matters because it lets you predict how the system will behave under change, and it ties together the theory chapters on grammar, reasoning, and conceptual spaces.</p>
 
@@ -21,8 +29,6 @@
   <p><strong>TranslatorBridge</strong> and <strong>NLParser</strong> tame language. The bridge normalizes rich English into the constrained grammar; the parser turns it into a subject–relation–object tree with a bounded depth. <strong>EngineAPI</strong> is the front door; it wires everything together, exposes ingest/query/admin calls, and offers <code>getAgenticSession</code> for embedded agents that should only speak the constrained grammar. You will see these characters referenced throughout the API, Grammar, and Reasoning chapters; this cast list anchors the rest.</p>
 
   <h2>Flow of Data</h2>
-  <p>The path from text to geometry to answer is deliberate. First, text is normalized. Then the parser builds a shallow tree. The encoder binds children with the right permutations and adds vectors with clamping. ClusterManager and ConceptStore shape and store the resulting diamonds. Retriever indexes them for later. On queries, the same front end repeats: normalize, parse, encode. TheoryStack produces a runtime concept; Retriever proposes candidates; MathEngine measures exact distances; Reasoner decides True, Plausible, or False and explains why. Counterfactual runs simply clone the stack, add a temporary layer, and then discard it, leaving the base intact.</p>
-
   <div class="diagram">
     <svg viewBox="0 0 360 150" role="img" aria-label="High-level flow from text through engine modules to answer and provenance">
       <defs>
@@ -63,25 +69,7 @@
     <p class="diagram-caption">This diagram lays out the main modules along straight paths so that arrows connect edges without crossing other boxes. It follows text as it moves through translation, parsing and encoding, then through clustering, storage and retrieval, and finally through context composition, distance checks and reasoning.</p>
   </div>
 
-  <pre>
- Text --> TranslatorBridge --> Parser (S-R-O) --> Encoder (permute+add)
-                                                   |
-                                           ClusterManager
-                                                   |
-                                           ConceptStore
-                                                   |
-                                              Retriever (LSH)
-                                                   |
-                                                  Disk
- 
- Query --> TranslatorBridge --> Parser --> Encoder --> TheoryStack
-                                                   |
-                                              Retriever -> candidates
-                                                   |
-                                             MathEngine (masked L1)
-                                                   |
-                                          Reasoner (bands + proof)
-  </pre>
+  <p>The path from text to geometry to answer is deliberate. First, text is normalised and reduced to the constrained grammar. Then the parser builds a shallow subject–relation–object tree. The encoder binds children with the right permutations and adds vectors with clamping. ClusterManager and ConceptStore shape and store the resulting diamonds. Retriever indexes them for later. On queries, the same front end repeats: normalise, parse, encode. TheoryStack produces a runtime concept; Retriever proposes candidates; MathEngine measures exact distances; Reasoner decides True, Plausible, or False and explains why. Counterfactual runs simply clone the stack, add a temporary layer, and then discard it, leaving the base intact.</p>
 
 
   <h2>Determinism by Design</h2>
@@ -91,8 +79,9 @@
 
   <div class="footer-nav">
     <a href="../index.html">Back to index</a>
-    <a href="../concepts/quick_wiki.html">Quick wiki</a>
+    <a href="../concepts/quick_wiki.html">Quick Wiki</a>
   </div>
   </div>
+  <script src="../reference/nav.js"></script>
 </body>
 </html>

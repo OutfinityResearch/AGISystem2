@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const Config = require('../support/config');
 const AuditLog = require('../support/audit_log');
 const StorageAdapter = require('../support/storage');
@@ -6,6 +8,7 @@ const TheoryStack = require('../knowledge/theory_stack');
 const NLParser = require('../ingest/parser');
 const TranslatorBridge = require('./translator_bridge');
 const Reasoner = require('../reason/reasoner');
+const TheoryDSLEngine = require('../theory/dsl_engine');
 
 class EngineAPI {
   constructor(rawConfig) {
@@ -18,6 +21,12 @@ class EngineAPI {
     this.translator = new TranslatorBridge();
     this.reasoner = new Reasoner(this.conceptStore);
     this.reasoner.config = this.config;
+    this.dsl = new TheoryDSLEngine({
+      api: this,
+      conceptStore: this.conceptStore,
+      config: this.config
+    });
+    this._macroCache = {};
   }
 
   ingest(text) {
@@ -68,18 +77,12 @@ class EngineAPI {
         return api.ask(question);
       },
       abduct(observation, relation) {
-        if (relation !== 'CAUSES') {
-          throw new Error('Only CAUSES abduction is supported in this MVP');
-        }
         return api.abduct(observation, relation);
       }
     };
   }
 
   abduct(observation, relation) {
-    if (relation !== 'CAUSES') {
-      throw new Error('Only CAUSES abduction is supported in this MVP');
-    }
     const result = this.reasoner.abductCause(observation);
     this.audit.write({
       kind: 'abduct',
@@ -127,80 +130,140 @@ class EngineAPI {
   }
 
   checkProcedureCompliance(procedureId, extraFactLines = []) {
-    const facts = [];
+    const contextFacts = [];
     for (const line of extraFactLines) {
       const canonical = this.translator.normalise(line);
       const ast = this.parser.parseSentence(canonical);
       if (ast.kind !== 'assertion') {
         throw new Error(`Compliance fact must be an assertion: '${line}'`);
       }
-      facts.push({
+      contextFacts.push({
         subject: ast.subject,
         relation: ast.relation,
         object: ast.object
       });
     }
-    const contextStack = facts.length > 0 ? [{ facts }] : null;
-    const result = this.reasoner.checkProcedureCompliance(procedureId, contextStack);
+    const script = this._loadMacroLines('health_procedure');
+    const env = this.dsl.runScript(script, {
+      initialEnv: { procId: procedureId },
+      contextFacts
+    });
+    const resultObj = env.result || env.compliance || env.decision || { truth: 'FALSE' };
+    const result = { truth: resultObj.truth || 'FALSE' };
     this.audit.write({
       kind: 'checkProcedureCompliance',
       procedureId,
-      extraFactsCount: facts.length,
+      extraFactsCount: contextFacts.length,
       truth: result.truth
     });
     return result;
   }
 
   checkExport(actionId, regulations, extraFactLines = []) {
-    const facts = [];
+    const contextFacts = [];
     for (const line of extraFactLines) {
       const canonical = this.translator.normalise(line);
       const ast = this.parser.parseSentence(canonical);
       if (ast.kind !== 'assertion') {
         throw new Error(`Export fact must be an assertion: '${line}'`);
       }
-      facts.push({
+      contextFacts.push({
         subject: ast.subject,
         relation: ast.relation,
         object: ast.object
       });
     }
-    const contextStack = facts.length > 0 ? [{ facts }] : null;
-    const result = this.reasoner.checkExportAction(actionId, regulations, contextStack);
+    const script = this._loadMacroLines('export_action');
+    const env = this.dsl.runScript(script, {
+      initialEnv: { actionId, regs: regulations },
+      contextFacts
+    });
+    const resultObj = env.result || env.decision || { truth: 'FALSE' };
+    const result = { truth: resultObj.truth || 'FALSE' };
     this.audit.write({
       kind: 'checkExport',
       actionId,
       regulations,
-      extraFactsCount: facts.length,
+      extraFactsCount: contextFacts.length,
       truth: result.truth
     });
     return result;
   }
 
   checkMagicInCity(actorId, cityId, extraFactLines = []) {
-    const facts = [];
+    const contextFacts = [];
     for (const line of extraFactLines) {
       const canonical = this.translator.normalise(line);
       const ast = this.parser.parseSentence(canonical);
       if (ast.kind !== 'assertion') {
         throw new Error(`Magic fact must be an assertion: '${line}'`);
       }
-      facts.push({
+      contextFacts.push({
         subject: ast.subject,
         relation: ast.relation,
         object: ast.object
       });
     }
-    const contextStack = facts.length > 0 ? [{ facts }] : null;
-    const result = this.reasoner.magicAllowed(actorId, cityId, contextStack);
+    const script = this._loadMacroLines('narrative_magic');
+    const env = this.dsl.runScript(script, {
+      initialEnv: { actorId, cityId },
+      contextFacts
+    });
+    const resultObj = env.result || env.decision || { truth: 'FALSE' };
+    const result = { truth: resultObj.truth || 'FALSE' };
     this.audit.write({
       kind: 'checkMagicInCity',
       actorId,
       cityId,
-      extraFactsCount: facts.length,
+      extraFactsCount: contextFacts.length,
       truth: result.truth
     });
     return result;
+  }
+
+  _loadMacroLines(name) {
+    if (this._macroCache && this._macroCache[name]) {
+      return this._macroCache[name];
+    }
+
+    const candidates = [];
+
+    // User-level override: <storageRoot>/../macros/<name>.dsl
+    try {
+      const storageRoot = this.config.get('storageRoot');
+      if (storageRoot && typeof storageRoot === 'string') {
+        const userBase = path.resolve(storageRoot, '..', 'macros');
+        candidates.push(path.join(userBase, `${name}.dsl`));
+      }
+    } catch {
+      // If config is not loaded for some reason, skip user-level macro path.
+    }
+
+    // Built-in macros shipped with the engine.
+    const builtinBase = path.join(__dirname, '..', '..', 'data', 'init', 'macros');
+    candidates.push(path.join(builtinBase, `${name}.dsl`));
+
+    let filePath = null;
+    for (const candidate of candidates) {
+      if (fs.existsSync(candidate)) {
+        filePath = candidate;
+        break;
+      }
+    }
+
+    if (!filePath) {
+      throw new Error(
+        `Macro file not found for '${name}'. Tried: ${candidates.join(', ')}`
+      );
+    }
+
+    const lines = fs
+      .readFileSync(filePath, 'utf8')
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter((l) => l.length > 0 && !l.startsWith('#'));
+    this._macroCache[name] = lines;
+    return lines;
   }
 }
 

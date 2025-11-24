@@ -5,6 +5,17 @@ const path = require('path');
 const readline = require('readline');
 const EngineAPI = require('../src/interface/api');
 
+const color = {
+  heading: '\x1b[1;36m',
+  section: '\x1b[1;34m',
+  command: '\x1b[1;32m',
+  label: '\x1b[1;33m',
+  example: '\x1b[0;36m',
+  error: '\x1b[1;31m',
+  dim: '\x1b[2m',
+  reset: '\x1b[0m'
+};
+
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -30,168 +41,186 @@ function initEngine() {
 function printMainHelp() {
   // High-level overview; specific commands get their own help sections.
   /* eslint-disable no-console */
-  console.log('AGISystem2 Raw CLI');
-  console.log('This tool starts a manual-test profile engine in .AGISystem2 for the current directory.');
+  console.log(`${color.heading}AGISystem2 Raw CLI${color.reset}`);
+  console.log(`${color.dim}Manual-test engine in .AGISystem2 for the current directory.${color.reset}`);
   console.log('You interact by typing commands followed by canonical statements or questions.\n');
-  console.log('Core commands:');
-  console.log('  help                 - show this summary');
-  console.log('  help commands        - list all commands with short descriptions');
-  console.log('  help syntax          - describe the constrained grammar (facts and questions)');
-  console.log('  help examples        - show example sessions');
-  console.log('  add <fact>           - ingest a fact, e.g. add Dog IS_A Animal');
-  console.log('  ask <question>       - ask a question, e.g. ask Is Dog an Animal?');
-  console.log('  abduct <obs> <REL>   - abductive query, e.g. abduct Smoke CAUSES');
-  console.log('  cf <q> | <facts>     - counterfactual ask with extra facts for this question only');
-  console.log('  check-procedure ...  - compliance check for procedures and requirements');
-  console.log('  check-export ...     - compliance check for export actions under regulations');
-  console.log('  check-magic ...      - narrative check for magic allowed in a city');
-  console.log('  new-theory <name>    - create an empty named theory file under .AGISystem2/theories');
-  console.log('  list-theories        - list known theory files');
-  console.log('  show-theory <name>   - print a theory file');
-  console.log('  apply-theory <name> <question> - ask a question under the facts in the theory');
-  console.log('  init-samples         - install sample theories (law, health, sci-fi) into .AGISystem2/theories');
-  console.log('  config               - print current config snapshot (profile, dims, limits)');
-  console.log('  exit / quit          - end the session\n');
-  console.log('Type "help syntax" for more detail on permitted sentences and relations.');
+  console.log(`${color.section}Core commands${color.reset}:`);
+  console.log(`  ${color.command}help${color.reset}                 - show this summary`);
+  console.log(`  ${color.command}help commands${color.reset}        - list all commands with short descriptions`);
+  console.log(`  ${color.command}help syntax${color.reset}          - describe the constrained grammar (facts and questions)`);
+  console.log(`  ${color.command}help examples${color.reset}        - show example sessions\n`);
+  console.log(`${color.section}Fact and query commands${color.reset}:`);
+  console.log(`  ${color.command}add <fact>${color.reset}           - ingest a fact, e.g. ${color.example}add Dog IS_A Animal${color.reset}`);
+  console.log(`  ${color.command}ask <question>${color.reset}       - ask a question, e.g. ${color.example}ask Is Dog an Animal?${color.reset}`);
+  console.log(`  ${color.command}abduct <obs> [REL]${color.reset}   - abductive query, e.g. ${color.example}abduct Smoke CAUSES${color.reset}`);
+  console.log(`  ${color.command}cf <q> | <facts>${color.reset}     - counterfactual ask with extra facts for this question only\n`);
+  console.log(`${color.section}Domain helpers${color.reset}:`);
+  console.log(`  ${color.command}check-procedure ...${color.reset}  - compliance check for procedures and requirements`);
+  console.log(`  ${color.command}check-export ...${color.reset}     - compliance check for export actions under regulations`);
+  console.log(`  ${color.command}check-magic ...${color.reset}      - narrative check for magic allowed in a city\n`);
+  console.log(`${color.section}Theory files${color.reset}:`);
+  console.log(`  ${color.command}new-theory <name>${color.reset}    - create empty theory file under .AGISystem2/theories`);
+  console.log(`  ${color.command}list-theories${color.reset}        - list known theory files`);
+  console.log(`  ${color.command}show-theory <name>${color.reset}   - print a theory file`);
+  console.log(`  ${color.command}apply-theory <name> <question>${color.reset} - ask question under facts from a theory`);
+  console.log(`  ${color.command}init-samples${color.reset}         - install sample theories (law, health, sci-fi)\n`);
+  console.log(`${color.section}Introspection${color.reset}:`);
+  console.log(`  ${color.command}config${color.reset}               - print current config snapshot (profile, dims, limits)`);
+  console.log(`  ${color.command}exit${color.reset} / ${color.command}quit${color.reset}          - end the session\n`);
+  console.log(`Type ${color.command}help syntax${color.reset} for more detail on permitted sentences and relations.`);
   /* eslint-enable no-console */
 }
 
 function printCommandsHelp() {
   /* eslint-disable no-console */
-  console.log('Commands Reference:');
-  console.log('  add <fact>');
+  console.log(`${color.heading}Commands Reference${color.reset}`);
+  console.log(`${color.section}Facts and queries${color.reset}`);
+  console.log(`  ${color.command}add <fact>${color.reset}`);
   console.log('    Ingests a single fact into long-term memory.');
-  console.log('    Example: add Dog IS_A Animal');
-  console.log('             add Water HAS_PROPERTY boiling_point=100\n');
-  console.log('  ask <question>');
+  console.log(`    ${color.label}Example${color.reset}: ${color.example}add Dog IS_A Animal${color.reset}`);
+  console.log(`             ${color.example}add Water HAS_PROPERTY boiling_point=100${color.reset}\n`);
+  console.log(`  ${color.command}ask <question>${color.reset}`);
   console.log('    Asks a question in constrained English or canonical triple form.');
-  console.log('    Examples: ask Is Dog an Animal?');
-  console.log('              ask Water HAS_PROPERTY boiling_point=100?\n');
-  console.log('  abduct <observation> <REL>');
-  console.log('    Performs abductive reasoning for simple causal relations.');
-  console.log('    Example: abduct Smoke CAUSES   (expects Fire as a likely cause)\n');
-  console.log('  cf <question> | <fact1> ; <fact2> ; ...');
+  console.log(`    ${color.label}Examples${color.reset}: ${color.example}ask Is Dog an Animal?${color.reset}`);
+  console.log(`              ${color.example}ask Water HAS_PROPERTY boiling_point=100?${color.reset}\n`);
+  console.log(`  ${color.command}abduct <observation> [REL]${color.reset}`);
+  console.log('    Performs abductive reasoning for observed effects using causal facts.');
+  console.log('    The REL argument is optional and currently treated as a hint; the engine');
+  console.log('    searches CAUSES/CAUSED_BY relations regardless.');
+  console.log(`    ${color.label}Examples${color.reset}: ${color.example}abduct Smoke CAUSES${color.reset}`);
+  console.log(`               ${color.example}abduct Smoke CAUSED_BY${color.reset}\n`);
+  console.log(`  ${color.command}cf <question> | <fact1> ; <fact2> ; ...${color.reset}`);
   console.log('    Runs a counterfactual question using extra, temporary facts.');
-  console.log('    Example: cf Water HAS_PROPERTY boiling_point=50? | Water HAS_PROPERTY boiling_point=50\n');
-  console.log('  check-procedure <ProcedureId> [| extra facts]');
-  console.log('    Uses domain-specific health compliance logic:');
-  console.log('    - facts of the form ProcedureX REQUIRES Consent');
-  console.log('    - plus Consent GIVEN yes, AuditTrail PRESENT yes, etc.');
-  console.log('    Example: check-procedure ProcedureX');
-  console.log('             check-procedure ProcedureX | Consent GIVEN yes ; AuditTrail PRESENT yes\n');
-  console.log('  check-export <ActionId> <Reg1> [Reg2 ...] [| extra facts]');
-  console.log('    Checks an export action under one or more regulation names.');
-  console.log('    Example: check-export ExportData GDPR');
-  console.log('             check-export ExportData GDPR HIPAA\n');
-  console.log('  check-magic <ActorId> <CityId> [| extra facts]');
-  console.log('    Checks whether an actor is allowed to cast magic in a city, given facts');
-  console.log('    like Alice CASTS Magic, Alice LOCATED_IN CityX and SciFi_TechMagic PERMITS Magic_IN CityX.\n');
-  console.log('  new-theory <name>');
+  console.log(`    ${color.label}Example${color.reset}: ${color.example}cf Water HAS_PROPERTY boiling_point=50? | Water HAS_PROPERTY boiling_point=50${color.reset}\n`);
+  console.log(`${color.section}Compliance and narrative helpers${color.reset}`);
+  console.log(`  ${color.command}check-procedure <ProcedureId> [| extra facts]${color.reset}`);
+  console.log('    Uses a theory-level macro defined in the engine to evaluate health-style');
+  console.log('    procedure compliance. The macro is written in the same DSL that theories');
+  console.log('    use, combining generic primitives like FACTS_MATCHING and');
+  console.log('    ALL_REQUIREMENTS_SATISFIED; no health rules are hard-coded in JS.');
+  console.log('    Typical facts: ProcedureX REQUIRES Consent, Consent GIVEN yes,');
+  console.log('    AuditTrail PRESENT yes, etc.');
+  console.log(`    ${color.label}Example${color.reset}: ${color.example}check-procedure ProcedureX${color.reset}`);
+  console.log(`             ${color.example}check-procedure ProcedureX | Consent GIVEN yes ; AuditTrail PRESENT yes${color.reset}\n`);
+  console.log(`  ${color.command}check-export <ActionId> <Reg1> [Reg2 ...] [| extra facts]${color.reset}`);
+  console.log('    Checks an export action under one or more regulation names using a');
+  console.log('    macro that inspects PROHIBITED_BY/PERMITTED_BY facts and applies a');
+  console.log('    generic conflict triage rule (permit vs. prohibit vs. conflict).');
+  console.log(`    ${color.label}Example${color.reset}: ${color.example}check-export ExportData GDPR${color.reset}`);
+  console.log(`             ${color.example}check-export ExportData GDPR HIPAA${color.reset}\n`);
+  console.log(`  ${color.command}check-magic <ActorId> <CityId> [| extra facts]${color.reset}`);
+  console.log('    Checks whether an actor is allowed to cast magic in a city via a macro');
+  console.log('    that requires three conditions: the actor casts Magic, is located in the');
+  console.log('    city, and some theory states that magic is permitted there (for example,');
+  console.log('    SciFi_TechMagic PERMITS Magic_IN CityX). All of this is expressed in DSL');
+  console.log('    rather than hard-coded logic.\n');
+  console.log(`${color.section}Theory and introspection${color.reset}`);
+  console.log(`  ${color.command}new-theory <name>${color.reset}`);
   console.log('    Creates an empty .AGISystem2/theories/<name>.txt file you can edit with facts.');
   console.log('    Each line should be a canonical fact (Subject REL Object).');
-  console.log('  list-theories');
+  console.log(`  ${color.command}list-theories${color.reset}`);
   console.log('    Lists theory files in .AGISystem2/theories.');
-  console.log('  show-theory <name>');
+  console.log(`  ${color.command}show-theory <name>${color.reset}`);
   console.log('    Prints the contents of a theory file.');
-  console.log('  apply-theory <name> <question>');
+  console.log(`  ${color.command}apply-theory <name> <question>${color.reset}`);
   console.log('    Reads facts from the named theory and applies them as a temporary layer');
   console.log('    when answering the question (similar to cf).');
-  console.log('  init-samples');
+  console.log(`  ${color.command}init-samples${color.reset}`);
   console.log('    Writes a few sample theory files for law/health/sci-fi into .AGISystem2/theories.\n');
-  console.log('  config');
+  console.log(`  ${color.command}config${color.reset}`);
   console.log('    Prints the current configuration snapshot (profile, dimensions, limits).');
-  console.log('  exit / quit');
+  console.log(`  ${color.command}exit${color.reset} / ${color.command}quit${color.reset}`);
   console.log('    Ends the CLI session.\n');
   /* eslint-enable no-console */
 }
 
 function printSyntaxHelp() {
   /* eslint-disable no-console */
-  console.log('Constrained Grammar and Syntax:');
+  console.log(`${color.heading}Constrained Grammar and Syntax${color.reset}`);
   console.log('AGISystem2 works with a small, explicit dialect of English.');
   console.log('Every fact is a subject–relation–object triple. The subject and object');
-  console.log('are tokens or short phrases; the relation is usually an ALL_CAPS verb.');
-  console.log('');
-  console.log('Facts:');
-  console.log('  Dog IS_A Animal');
-  console.log('  Water HAS_PROPERTY boiling_point=100');
-  console.log('  ProcedureX REQUIRES Consent');
-  console.log('  Consent GIVEN yes');
-  console.log('  AuditTrail PRESENT yes');
-  console.log('  ExportData PROHIBITED_BY GDPR');
-  console.log('  ExportData PERMITTED_BY HIPAA');
-  console.log('  Alice CASTS Magic');
-  console.log('  Alice LOCATED_IN CityX');
-  console.log('  SciFi_TechMagic PERMITS Magic_IN CityX');
-  console.log('');
-  console.log('Questions:');
+  console.log('are tokens or short phrases; the relation is usually an ALL_CAPS verb.\n');
+
+  console.log(`${color.section}Facts${color.reset}:`);
+  console.log(`  ${color.example}Dog IS_A Animal${color.reset}`);
+  console.log(`  ${color.example}Water HAS_PROPERTY boiling_point=100${color.reset}`);
+  console.log(`  ${color.example}ProcedureX REQUIRES Consent${color.reset}`);
+  console.log(`  ${color.example}Consent GIVEN yes${color.reset}`);
+  console.log(`  ${color.example}AuditTrail PRESENT yes${color.reset}`);
+  console.log(`  ${color.example}ExportData PROHIBITED_BY GDPR${color.reset}`);
+  console.log(`  ${color.example}ExportData PERMITTED_BY HIPAA${color.reset}`);
+  console.log(`  ${color.example}Alice CASTS Magic${color.reset}`);
+  console.log(`  ${color.example}Alice LOCATED_IN CityX${color.reset}`);
+  console.log(`  ${color.example}SciFi_TechMagic PERMITS Magic_IN CityX${color.reset}\n`);
+
+  console.log(`${color.section}Questions${color.reset}:`);
   console.log('  There are two main forms:');
-  console.log('    1) Natural interrogatives: Is X an Y? / Is X Y?');
-  console.log('       Example: Is Dog an Animal?');
-  console.log('    2) Canonical triple with question mark: Subject REL Object?');
-  console.log('       Example: Water HAS_PROPERTY boiling_point=100?');
-  console.log('');
-  console.log('Relations:');
+  console.log(`    1) Natural interrogatives: ${color.example}Is X an Y?${color.reset} / ${color.example}Is X Y?${color.reset}`);
+  console.log(`       Example: ${color.example}Is Dog an Animal?${color.reset}`);
+  console.log(`    2) Canonical triple with question mark: ${color.example}Subject REL Object?${color.reset}`);
+  console.log(`       Example: ${color.example}Water HAS_PROPERTY boiling_point=100?${color.reset}\n`);
+
+  console.log(`${color.section}Relations${color.reset}:`);
   console.log('  Structural: IS_A, HAS_PROPERTY, LOCATED_IN, DISJOINT_WITH etc.');
   console.log('  Causal: CAUSES, CAUSED_BY');
   console.log('  Deontic: PROHIBITED_BY, PERMITTED_BY');
   console.log('  Domain-specific (health): REQUIRES, GIVEN, PRESENT');
-  console.log('  Domain-specific (narrative): CASTS, PERMITS Magic_IN CityX');
-  console.log('');
-  console.log('The CLI does not accept free-form paragraphs. If you pass a sentence');
-  console.log('that TranslatorBridge cannot normalise to this grammar, it will throw');
-  console.log('an error instead of guessing. This is intentional: every vector and');
-  console.log('every decision must be traceable back to a clear canonical sentence.\n');
+  console.log('  Domain-specific (narrative): CASTS, PERMITS Magic_IN CityX\n');
+
+  console.log(`${color.dim}The CLI does not accept free-form paragraphs. If you pass a sentence${color.reset}`);
+  console.log(`${color.dim}that TranslatorBridge cannot normalise to this grammar, it will throw${color.reset}`);
+  console.log(`${color.dim}an error instead of guessing. This is intentional: every vector and${color.reset}`);
+  console.log(`${color.dim}every decision must be traceable back to a clear canonical sentence.${color.reset}\n`);
   /* eslint-enable no-console */
 }
 
 function printExamplesHelp() {
   /* eslint-disable no-console */
-  console.log('Example Session: Basics');
-  console.log('  add Dog IS_A Animal');
-  console.log('  add Water HAS_PROPERTY boiling_point=100');
-  console.log('  ask Is Dog an Animal?');
-  console.log('  ask Water HAS_PROPERTY boiling_point=100?');
-  console.log('');
-  console.log('Example Session: Abduction');
-  console.log('  add Fire CAUSES Smoke');
-  console.log('  add Smoke CAUSED_BY Fire');
-  console.log('  abduct Smoke CAUSES    # expects Fire as hypothesis');
-  console.log('');
-  console.log('Example Session: Counterfactual');
-  console.log('  add Water HAS_PROPERTY boiling_point=100');
-  console.log('  ask Water HAS_PROPERTY boiling_point=50?    # FALSE in base context');
-  console.log('  cf Water HAS_PROPERTY boiling_point=50? | Water HAS_PROPERTY boiling_point=50');
-  console.log('    # TRUE_CERTAIN under temporary assumption');
-  console.log('');
-  console.log('Example Session: Health Compliance');
-  console.log('  add ProcedureX REQUIRES Consent');
-  console.log('  add ProcedureX REQUIRES AuditTrail');
-  console.log('  check-procedure ProcedureX');
-  console.log('  check-procedure ProcedureX | Consent GIVEN yes ; AuditTrail PRESENT yes');
-  console.log('');
-  console.log('Example Session: Export and Narrative');
-  console.log('  add ExportData PROHIBITED_BY GDPR');
-  console.log('  add ExportData PERMITTED_BY HIPAA');
-  console.log('  check-export ExportData GDPR');
-  console.log('  check-export ExportData HIPAA');
-  console.log('');
-  console.log('  add Alice IS_A Human');
-  console.log('  add Alice LOCATED_IN CityX');
-  console.log('  add Alice CASTS Magic');
-  console.log('  check-magic Alice CityX           # FALSE without SciFi_TechMagic');
-  console.log('  check-magic Alice CityX | SciFi_TechMagic PERMITS Magic_IN CityX');
-  console.log('');
-  console.log('Example Session: Theories');
-  console.log('  init-samples');
-  console.log('  list-theories');
-  console.log('  show-theory health_compliance');
-  console.log('  apply-theory health_compliance check-procedure ProcedureX');
-  console.log('  apply-theory scifi_magic check-magic Alice CityX');
-  console.log('');
-  console.log('These examples are intentionally simple. You can create your own theory');
-  console.log('files under .AGISystem2/theories by writing one fact per line, using the');
-  console.log('same constrained grammar, and then apply them with apply-theory.\n');
+  console.log(`${color.heading}Example Session: Basics${color.reset}`);
+  console.log(`${color.example}  add Dog IS_A Animal${color.reset}`);
+  console.log(`${color.example}  add Water HAS_PROPERTY boiling_point=100${color.reset}`);
+  console.log(`${color.example}  ask Is Dog an Animal?${color.reset}`);
+  console.log(`${color.example}  ask Water HAS_PROPERTY boiling_point=100?${color.reset}\n`);
+
+  console.log(`${color.heading}Example Session: Abduction${color.reset}`);
+  console.log(`${color.example}  add Fire CAUSES Smoke${color.reset}`);
+  console.log(`${color.example}  add Smoke CAUSED_BY Fire${color.reset}`);
+  console.log(`${color.example}  abduct Smoke CAUSES    # expects Fire as hypothesis${color.reset}\n`);
+
+  console.log(`${color.heading}Example Session: Counterfactual${color.reset}`);
+  console.log(`${color.example}  add Water HAS_PROPERTY boiling_point=100${color.reset}`);
+  console.log(`${color.example}  ask Water HAS_PROPERTY boiling_point=50?    # FALSE in base context${color.reset}`);
+  console.log(`${color.example}  cf Water HAS_PROPERTY boiling_point=50? | Water HAS_PROPERTY boiling_point=50${color.reset}`);
+  console.log(`${color.dim}    # TRUE_CERTAIN under temporary assumption${color.reset}\n`);
+
+  console.log(`${color.heading}Example Session: Health Compliance${color.reset}`);
+  console.log(`${color.example}  add ProcedureX REQUIRES Consent${color.reset}`);
+  console.log(`${color.example}  add ProcedureX REQUIRES AuditTrail${color.reset}`);
+  console.log(`${color.example}  check-procedure ProcedureX${color.reset}`);
+  console.log(`${color.example}  check-procedure ProcedureX | Consent GIVEN yes ; AuditTrail PRESENT yes${color.reset}\n`);
+
+  console.log(`${color.heading}Example Session: Export and Narrative${color.reset}`);
+  console.log(`${color.example}  add ExportData PROHIBITED_BY GDPR${color.reset}`);
+  console.log(`${color.example}  add ExportData PERMITTED_BY HIPAA${color.reset}`);
+  console.log(`${color.example}  check-export ExportData GDPR${color.reset}`);
+  console.log(`${color.example}  check-export ExportData HIPAA${color.reset}\n`);
+
+  console.log(`${color.example}  add Alice IS_A Human${color.reset}`);
+  console.log(`${color.example}  add Alice LOCATED_IN CityX${color.reset}`);
+  console.log(`${color.example}  add Alice CASTS Magic${color.reset}`);
+  console.log(`${color.example}  check-magic Alice CityX           # FALSE without SciFi_TechMagic${color.reset}`);
+  console.log(`${color.example}  check-magic Alice CityX | SciFi_TechMagic PERMITS Magic_IN CityX${color.reset}\n`);
+
+  console.log(`${color.heading}Example Session: Theories${color.reset}`);
+  console.log(`${color.example}  init-samples${color.reset}`);
+  console.log(`${color.example}  list-theories${color.reset}`);
+  console.log(`${color.example}  show-theory health_compliance${color.reset}`);
+  console.log(`${color.example}  apply-theory health_compliance check-procedure ProcedureX${color.reset}`);
+  console.log(`${color.example}  apply-theory scifi_magic check-magic Alice CityX${color.reset}\n`);
+
+  console.log(`${color.dim}These examples are intentionally simple. You can create your own theory${color.reset}`);
+  console.log(`${color.dim}files under .AGISystem2/theories by writing one fact per line, using the${color.reset}`);
+  console.log(`${color.dim}same constrained grammar, and then apply them with apply-theory.${color.reset}\n`);
   /* eslint-enable no-console */
 }
 
@@ -281,23 +310,23 @@ async function main() {
           break;
         case 'add':
           api.ingest(args);
-          console.log('OK (fact ingested)');
+          console.log(`${color.label}OK${color.reset} ${color.dim}(fact ingested)${color.reset}`);
           break;
         case 'ask': {
           const res = api.ask(args);
-          console.log('Result:', res.truth);
+          console.log(`${color.label}Result${color.reset}: ${color.example}${res.truth}${color.reset}`);
           break;
         }
         case 'abduct': {
           const parts = args.split(/\s+/);
-          if (parts.length < 2) {
-            console.log('Usage: abduct <observation> <REL>');
+          if (parts.length < 1 || !parts[0]) {
+            console.log('Usage: abduct <observation> [REL]');
             break;
           }
           const observation = parts[0];
-          const relation = parts[1];
+          const relation = parts.length >= 2 ? parts[1] : null;
           const res = api.abduct(observation, relation);
-          console.log('Hypothesis:', res.hypothesis, 'Band:', res.band);
+          console.log(`${color.label}Hypothesis${color.reset}: ${color.example}${res.hypothesis}${color.reset}  ${color.label}Band${color.reset}: ${color.example}${res.band}${color.reset}`);
           break;
         }
         case 'cf': {
@@ -313,7 +342,7 @@ async function main() {
             .map((s) => s.trim())
             .filter((s) => s.length > 0);
           const res = api.counterfactualAsk(question, facts);
-          console.log('Result (counterfactual):', res.truth);
+          console.log(`${color.label}Result (counterfactual)${color.reset}: ${color.example}${res.truth}${color.reset}`);
           break;
         }
         case 'check-procedure': {
@@ -327,7 +356,7 @@ async function main() {
             ? split[1].split(';').map((s) => s.trim()).filter((s) => s.length > 0)
             : [];
           const res = api.checkProcedureCompliance(head, extraFacts);
-          console.log('Procedure compliance:', res.truth);
+          console.log(`${color.label}Procedure compliance${color.reset}: ${color.example}${res.truth}${color.reset}`);
           break;
         }
         case 'check-export': {
@@ -343,7 +372,7 @@ async function main() {
             ? split[1].split(';').map((s) => s.trim()).filter((s) => s.length > 0)
             : [];
           const res = api.checkExport(actionId, regs, extraFacts);
-          console.log('Export decision under', regs.join(','), ':', res.truth);
+          console.log(`${color.label}Export decision under${color.reset} ${color.example}${regs.join(',')}${color.reset}: ${color.example}${res.truth}${color.reset}`);
           break;
         }
         case 'check-magic': {
@@ -359,7 +388,7 @@ async function main() {
             ? split[1].split(';').map((s) => s.trim()).filter((s) => s.length > 0)
             : [];
           const res = api.checkMagicInCity(actorId, cityId, extraFacts);
-          console.log('Magic allowed:', res.truth);
+          console.log(`${color.label}Magic allowed${color.reset}: ${color.example}${res.truth}${color.reset}`);
           break;
         }
         case 'new-theory': {
@@ -375,9 +404,9 @@ async function main() {
               '# One fact per line, using Subject REL Object\n',
               'utf8'
             );
-            console.log('Created theory file:', filePath);
+            console.log(`${color.label}Created theory file${color.reset}: ${filePath}`);
           } else {
-            console.log('Theory file already exists:', filePath);
+            console.log(`${color.dim}Theory file already exists:${color.reset} ${filePath}`);
           }
           break;
         }
@@ -386,11 +415,11 @@ async function main() {
             .filter((f) => f.endsWith('.txt'))
             .sort();
           if (entries.length === 0) {
-            console.log('No theories found in', theoriesRoot);
+            console.log(`${color.dim}No theories found in${color.reset} ${theoriesRoot}`);
           } else {
-            console.log('Theories in', theoriesRoot, ':');
+            console.log(`${color.section}Theories in${color.reset} ${theoriesRoot}:`);
             for (const e of entries) {
-              console.log('  -', e.replace(/\.txt$/, ''));
+              console.log(`  - ${color.example}${e.replace(/\\.txt$/, '')}${color.reset}`);
             }
           }
           break;
@@ -403,10 +432,10 @@ async function main() {
           }
           const filePath = path.join(theoriesRoot, `${name}.txt`);
           if (!fs.existsSync(filePath)) {
-            console.log('No such theory file:', filePath);
+            console.log(`${color.error}No such theory file${color.reset}: ${filePath}`);
           } else {
             const content = fs.readFileSync(filePath, 'utf8');
-            console.log(`--- ${filePath} ---\n${content}`);
+            console.log(`${color.section}--- ${filePath} ---${color.reset}\n${content}`);
           }
           break;
         }
@@ -420,12 +449,12 @@ async function main() {
           const question = split.slice(1).join(' ');
           const facts = readTheoryFacts(theoriesRoot, name);
           const res = api.counterfactualAsk(question, facts);
-          console.log('Result with theory', name + ':', res.truth);
+          console.log(`${color.label}Result with theory${color.reset} ${color.example}${name}${color.reset}: ${color.example}${res.truth}${color.reset}`);
           break;
         }
         case 'init-samples':
           initSampleTheories(theoriesRoot);
-          console.log('Sample theories installed under', theoriesRoot);
+          console.log(`${color.label}Sample theories installed under${color.reset} ${theoriesRoot}`);
           break;
         case 'config': {
           const snap = api.config.snapshot();
@@ -437,11 +466,11 @@ async function main() {
           rl.close();
           return;
         default:
-          console.log('Unknown command. Type "help" for a list of commands.');
+          console.log(`${color.error}Unknown command${color.reset}. Type ${color.command}help${color.reset} for a list of commands.`);
           break;
       }
     } catch (err) {
-      console.error('Error:', err.message);
+      console.error(`${color.error}Error${color.reset}: ${err.message}`);
     }
 
     rl.prompt();
@@ -464,4 +493,3 @@ if (require.main === module) {
     process.exit(1);
   });
 }
-

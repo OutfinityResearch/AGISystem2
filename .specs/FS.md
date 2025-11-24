@@ -18,6 +18,7 @@ Defines functional behavior of the neuro-symbolic engine that ingests natural la
 - **FS-12 Safety & Bias Controls:** Separate ontological and axiological dimensions; allow activation of masks (e.g., bias audits, veil-of-ignorance mode) that zero selected dimensions during reasoning.
 - **FS-13 Administrative Operations:** Provide commands to list theories, inspect concept bounds, view conflicts, and trigger re-clustering events without modifying raw data.
 - **FS-14 Validation & Abstract Interpretation:** Support symbolic/abstract runs over the conceptual space to validate theory consistency, rule/program correctness, and mask effects without mutating state; surface counterexamples or contradictions geometrically.
+ - **FS-15 Theory DSL and Macros:** Expose a small, deterministic theory-level DSL that lets users and domain authors define reusable “thinking macros” in text theory files. The DSL composes core primitives (ask, abduct, counterfactual queries, fact search, requirement coverage checks) into higher-level checks (e.g., health procedure compliance, export controls, narrative consistency) without embedding domain-specific logic inside the engine code.
 
 ## Reasoning Typologies (Geometric Operations)
 - Deductive: point/volume inclusion within diamonds (strict/fuzzy).

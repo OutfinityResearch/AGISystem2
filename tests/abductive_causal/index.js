@@ -15,8 +15,13 @@ async function run({ profile }) {
   const okHypothesis = res.hypothesis === 'Fire';
   const okBand = res.band === 'PLAUSIBLE' || res.band === 'TRUE_CERTAIN';
 
-  return { ok: okHypothesis && okBand };
+  const resInverse = api.abduct('Smoke', 'CAUSED_BY');
+  const okInverse = resInverse.hypothesis === 'Fire';
+
+  const resNoRel = api.abduct('Smoke', null);
+  const okNoRel = resNoRel.hypothesis === 'Fire';
+
+  return { ok: okHypothesis && okBand && okInverse && okNoRel };
 }
 
 module.exports = { run };
-

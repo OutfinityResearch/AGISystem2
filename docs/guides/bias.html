@@ -9,7 +9,7 @@
   <div class="page">
   <div class="nav-header">
     <h1>Bias & Values</h1>
-    <small><a href="../index.html">Back to index</a> · <a href="../concepts/quick_wiki.html">Quick wiki</a></small>
+    <small><a href="../index.html">Back to index</a> · <a href="../concepts/quick_wiki.html">Quick Wiki</a></small>
   </div>
   <p>Bias appears whenever judgments about what ought to happen are mixed together with descriptions of what actually is the case. Many machine learning systems entangle these two kinds of information, so it becomes difficult to know whether an outcome was driven by facts about the world or by hidden preferences in the data and model. AGISystem2 is designed to keep facts and values apart at the level of the conceptual space itself. Ontology axes, which occupy dimensions 0 to 255, are reserved for factual and structural properties. Axiology axes, from 256 to 383, are reserved for norms, preferences, and value judgments. Everything above that is used for empirical details. This partition is reflected in the dimension catalogue specification and is enforced by the configuration and bias-control modules.</p>
 
@@ -34,12 +34,12 @@
   </div>
 
   <h2>BiasController and Mask-Based Modes</h2>
-  <p>The BiasController class, specified in <code>.specs/reason/bias_control.js.md</code>, is the main tool for applying bias-aware modes. It does not change stored concepts; instead it operates on copies or views. When a mode is activated it computes new relevance masks that zero out selected partitions before a reasoning step. A veil-of-ignorance mode, for example, may hide certain protected ontology dimensions such as age or sensitive health markers as well as all or part of the axiology block. The result is that subsequent distance computations and band decisions rely only on a reduced set of factual axes that are deemed fair to use.</p>
-  <p>Each mode is deterministic and logged in the AuditLog through the support modules defined in <code>.specs/support/audit_log.js.md</code>. Provenance records show which bias mode was active, which partitions were masked, and at what point in the reasoning pipeline the mask was applied. When other documentation pages mention that a decision was taken "under veil-of-ignorance" or in "bias-audit mode", they are referring to specific configurations of BiasController that alter relevance masks while leaving the underlying diamonds and stored vectors intact.</p>
+  <p>The BiasController class is the main tool for applying bias-aware modes. It does not change stored concepts; instead it operates on copies or views. When a mode is activated it computes new relevance masks that zero out selected partitions before a reasoning step. A veil-of-ignorance mode, for example, may hide certain protected ontology dimensions such as age or sensitive health markers as well as all or part of the axiology block. The result is that subsequent distance computations and band decisions rely only on a reduced set of factual axes that are deemed fair to use.</p>
+  <p>Each mode is deterministic and logged in the AuditLog through the support modules in the infrastructure layer. Provenance records show which bias mode was active, which partitions were masked, and at what point in the reasoning pipeline the mask was applied. When other documentation pages mention that a decision was taken "under veil-of-ignorance" or in "bias-audit mode", they are referring to specific configurations of BiasController that alter relevance masks while leaving the underlying diamonds and stored vectors intact.</p>
 
   <h2>Auditing Bias with ValidationEngine</h2>
   <p>The ValidationEngine described in the Reasoning and Explainability chapters provides a way to probe how much values influence outcomes. Because facts and values live on known groups of dimensions, it can systematically compare runs with different masking strategies. For instance, it can take a query, run it once with all axiology dimensions active, and once with those dimensions zeroed out. If the result changes, the difference points directly to the role of values in that decision. Similarly, it can compare runs where certain protected attributes are masked to those where they are visible, looking for cases where outcomes unexpectedly depend on those attributes.</p>
-  <p>In domains such as hiring, lending, or health triage, this capability becomes a practical tool. A well-designed decision rule should remain stable under the removal of attributes that should not matter, such as protected characteristics. If validation runs reveal that masking those attributes changes the answer, the system has discovered a potential source of structural bias. Test suites like <code>.specs/tests/bias_audit</code>, <code>.specs/tests/health_compliance</code>, and <code>.specs/tests/deontic_reasoning</code> simulate such scenarios to ensure that the engine’s separation between facts and values behaves as expected.</p>
+  <p>In domains such as hiring, lending, or health triage, this capability becomes a practical tool. A well-designed decision rule should remain stable under the removal of attributes that should not matter, such as protected characteristics. If validation runs reveal that masking those attributes changes the answer, the system has discovered a potential source of structural bias. Internal scenario suites simulate such cases to ensure that the engine’s separation between facts and values behaves as expected.</p>
 
   <h2>Deontic Layers and Policy Comparisons</h2>
   <p>Deontic reasoning—reasoning about what is permitted, obligatory, or forbidden—is expressed through theory layers that primarily act on axiology dimensions. A civil-law layer might encode a relatively strict set of prohibitions and obligations, while a wartime or emergency layer encodes different tolerances. Because layers do not alter stored base concepts, switching from one layer to another is equivalent to switching value systems while keeping the same description of the world. The Reasoner then answers questions under whichever stack of layers is active.</p>
@@ -51,7 +51,7 @@
 
   <div class="footer-nav">
     <a href="../index.html">Back to index</a>
-    <a href="../concepts/quick_wiki.html">Quick wiki</a>
+    <a href="../concepts/quick_wiki.html">Quick Wiki</a>
   </div>
   </div>
 </body>

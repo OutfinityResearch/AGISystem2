@@ -2,106 +2,40 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>API</title>
+  <title>APIs</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>API Narrative</h1>
-    <small><a href="../index.html">Back to index</a> · <a href="../concepts/quick_wiki.html">Quick wiki</a></small>
+    <h1>High-Level APIs</h1>
   </div>
-  <p>The EngineAPI is the main doorway through which humans and software agents interact with AGISystem2. It offers a small set of high-level operations that all follow the same pattern: accept text expressed in or normalisable to the constrained grammar, run it through the geometric reasoning pipeline, and return both results and detailed provenance. Rather than exposing dozens of low-level knobs, the API is designed to be predictable and easy to test in automated suites, which is why many of the examples in the <code>.specs/tests/agentic_session_api</code> and <code>.specs/tests/reason_smoke</code> directories are written directly in terms of EngineAPI calls.</p>
+  <p>The EngineAPI class is the main entry point for embedding AGISystem2 into an application. It provides a small set of methods that accept sentences written in the constrained syntax described in the Syntax chapter, route them through the geometric reasoning engine, and return simple JavaScript objects. This page describes what you can call, what you should pass in, and what you can expect back, without going into implementation details about vectors or clustering.</p>
 
-  <h2>Speaking the Constrained Grammar</h2>
-  <p>All EngineAPI methods expect either already normalised sentences or input that will pass through the TranslatorBridge before parsing. The underlying grammar is described in detail in the Grammar chapter: every assertion is a subject–relation–object triple and every question is the same triple in interrogative form. When you call the API with a free-form string, EngineAPI coordinates with TranslatorBridge and Parser to turn that string into a tree of tokens the encoder understands. If the bridge cannot produce a valid shape, the API is expected to fail loudly rather than guess. This design ensures that any vector entering the conceptual space has a clear, inspectable origin in text.</p>
-  <p>Programmers integrating the engine are encouraged to think in terms of these canonical forms from the start. Even if you build your own natural language layer on top, it should ultimately emit sentences like <code>Dog IS_A Animal</code>, <code>ExportData PROHIBITED_BY GDPR</code>, or <code>Assume Water HAS_PROPERTY boiling_point=50</code>. Doing so keeps the system debuggable: when something surprising happens you can always reconstruct which statements were ingested and which questions were asked.</p>
+  <h2>Creating an Engine Instance</h2>
+  <p>In Node.js, you import the EngineAPI class and construct it with an optional configuration object. The configuration selects a profile such as <code>auto_test</code>, <code>manual_test</code>, or <code>prod</code> and can specify a storage root for persistence. The profile determines dimension count, index strategy, and default limits, but from the point of view of the API you treat it as a single argument that controls performance and capacity. After construction, the EngineAPI instance is long-lived and can handle many calls; the underlying engine is deterministic, so repeating the same sequence of calls under the same configuration produces the same results.</p>
 
-  <h2>Teaching the System: ingest</h2>
-  <p>Learning in AGISystem2 begins with the <code>ingest(text, {conceptId, context})</code> family of calls. When you invoke <code>ingest</code>, EngineAPI first normalises the text, then parses it into a shallow subject–relation–object tree. The encoder turns this tree into a high-dimensional vector using permutations for roles and saturated addition for composition. That vector is then handed to the clustering and concept modules, which decide whether to widen an existing bounded diamond, adjust its centre, or create a new diamond entirely. The ConceptStore persists the updated diamonds, and Retriever updates its index so that future queries can find the new information efficiently.</p>
+  <h2>Core Methods: ingest, ask, abduct</h2>
+  <p>The <code>ingest(text)</code> method records new knowledge. The <code>text</code> argument must be an assertion in fact form, such as <code>Dog IS_A Animal</code>, <code>Water HAS_PROPERTY boiling_point=100</code>, or <code>ProcedureX REQUIRES Consent</code>. EngineAPI normalises and parses the sentence, turns it into an internal representation, and updates the conceptual space; if the sentence cannot be parsed into a subject–relation–object triple, it throws an error instead of guessing. The method does not return a value; you treat it as a command with the side effect of extending the knowledge base.</p>
+  <p>The <code>ask(question)</code> method queries the engine. The <code>question</code> argument is either a simple interrogative, for example <code>Is Dog an Animal?</code>, or a canonical triple with a question mark, such as <code>Water HAS_PROPERTY boiling_point=100?</code>. EngineAPI normalises and parses the question, encodes it, and asks the Reasoner whether it holds under the current theories. The method returns an object with a <code>truth</code> field, whose value is typically <code>TRUE_CERTAIN</code> or <code>FALSE</code>, and may also be other bands such as <code>PLAUSIBLE</code> or <code>UNKNOWN_TIMEOUT</code> in more advanced scenarios. You can compare this field to decide how to handle the answer in your application.</p>
+  <p>The <code>abduct(observation, relationHint)</code> method performs abductive reasoning. The <code>observation</code> is a symbol that appears in causal facts such as <code>Fire CAUSES Smoke</code> or <code>Smoke CAUSED_BY Fire</code>. The optional <code>relationHint</code> is usually <code>CAUSES</code> or <code>CAUSED_BY</code>, but the engine inspects both directions when it searches for explanations. The method returns an object with a <code>hypothesis</code> field naming a plausible cause and a <code>band</code> field indicating qualitative support such as <code>PLAUSIBLE</code> or <code>FALSE</code> when no explanation is found.</p>
 
-  <div class="diagram">
-    <svg viewBox="0 0 340 150" role="img" aria-label="API ingest flow from text to stored concept">
-      <defs>
-        <marker id="arrow-api-ingest" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
-          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
-        </marker>
-      </defs>
-      <rect x="10" y="30" width="80" height="24" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
-      <text x="22" y="46" font-size="8" fill="#0f4c81">API ingest call</text>
-      <rect x="100" y="30" width="80" height="24" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
-      <text x="116" y="46" font-size="8" fill="#0f4c81">Normalise + parse</text>
-      <rect x="190" y="30" width="70" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
-      <text x="206" y="46" font-size="8" fill="#4a5670">Encode</text>
-      <rect x="270" y="30" width="60" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
-      <text x="274" y="46" font-size="8" fill="#4a5670">Cluster</text>
-      <line x1="90" y1="42" x2="100" y2="42" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ingest)" />
-      <line x1="180" y1="42" x2="190" y2="42" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ingest)" />
-      <line x1="260" y1="42" x2="270" y2="42" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ingest)" />
-      <rect x="80" y="90" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
-      <text x="92" y="106" font-size="8" fill="#4a5670">ConceptStore</text>
-      <rect x="190" y="90" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
-      <text x="196" y="106" font-size="8" fill="#4a5670">Retriever index</text>
-      <line x1="300" y1="54" x2="230" y2="90" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ingest)" />
-      <line x1="230" y1="54" x2="120" y2="90" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ingest)" />
-    </svg>
-    <p class="diagram-caption">From an API perspective, ingest takes text, normalises and parses it into constrained-grammar sentences, encodes each sentence into a vector, lets clustering decide how concepts should change, and then commits those changes to ConceptStore and the Retriever index. The diagram shows these steps as distinct blocks you can test and reason about independently.</p>
-  </div>
+  <h2>Counterfactuals and Domain Helpers</h2>
+  <p>The <code>counterfactualAsk(question, extraFacts)</code> method answers questions under temporary assumptions. The <code>question</code> uses the same shapes as for <code>ask</code>, and <code>extraFacts</code> is an array of assertion strings written in fact syntax. EngineAPI treats these extra facts as a local theory layer for the duration of the call: they influence the answer to that question but do not change long-term memory. The return value has the same <code>truth</code> field as <code>ask</code>, interpreted under the counterfactual scenario.</p>
+  <p>On top of these generic methods, EngineAPI offers three convenience helpers for common patterns, implemented via macros rather than hard-coded rules. The <code>checkProcedureCompliance(procedureId, extraFacts)</code> method evaluates whether all requirements associated with a procedure are satisfied, using both stored facts and optional extra evidence such as <code>Consent GIVEN yes</code> or <code>AuditTrail PRESENT yes</code>. The <code>checkExport(actionId, regulations, extraFacts)</code> method determines whether an export-like action is permitted, prohibited, or in conflict under a list of active regulations; its return object has a <code>truth</code> field whose value is often <code>TRUE_CERTAIN</code>, <code>FALSE</code>, or <code>CONFLICT</code>. The <code>checkMagicInCity(actorId, cityId, extraFacts)</code> method checks narrative consistency by verifying that a character casts magic, is located in a given city, and that some theory file or macro declares magic permitted there. All three helpers accept plain identifiers and fact lines and return the same kind of small truth objects as <code>ask</code>.</p>
 
-  <p>The response from <code>ingest</code> is deliberately verbose. It reports which concept or concepts were affected, whether new diamonds were created or old ones merged, and includes hashes or identifiers that can be stored in your own logs. In test suites such as <code>.specs/tests/relations_bootstrap</code> you will see <code>ingest</code> used to build up small theories about relations and then immediately queried to verify that the geometric representation matches the intended semantics. In production settings, the same mechanisms support auditable data-loading pipelines where each batch of ingested facts can be traced to specific changes in the conceptual space.</p>
+  <h2>Agentic Sessions</h2>
+  <p>To integrate AGISystem2 into agents that should not see internal configuration details, EngineAPI exposes <code>getAgenticSession()</code>. This method returns a session object with methods like <code>ingest(sentence)</code>, <code>ask(question)</code>, and <code>abduct(observation, relationHint)</code>. These methods behave like their EngineAPI counterparts but present a narrow, stable surface intended for long-running interactions. The session object assumes that all text is already in the constrained syntax; it does not expose configuration or theory-management functions.</p>
+  <p>A typical embedding pattern is to construct one EngineAPI instance and then hand out its agentic session to an agent framework or to a larger orchestration system. The agent treats the session as a deterministic service: it adds facts, asks questions, and interprets the returned truth values and hypotheses. Tests in <code>tests/agentic_session_api</code> illustrate this pattern and confirm that invalid syntax is rejected deterministically rather than coerced.</p>
 
-  <h2>Asking Questions: ask and validate</h2>
-  <p>To query the engine you use <code>ask(question, options)</code>. This call mirrors the ingestion path up to a point: the question is normalised, parsed, and encoded into a vector. EngineAPI then asks TheoryStack to compose the relevant concept under the currently active layers, producing a runtime bounded diamond that takes into account both base knowledge and active value systems. Retriever uses locality-sensitive hashing to propose candidate concepts whose regions are near the query vector, and MathEngine computes exact masked L1 distances. The Reasoner interprets these distances using adversarial bands and returns a graded result such as True, Plausible, or False, along with a structured provenance object.</p>
-
-  <div class="diagram">
-    <svg viewBox="0 0 340 160" role="img" aria-label="API query flow from ask to graded answer and provenance">
-      <defs>
-        <marker id="arrow-api-ask" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
-          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
-        </marker>
-      </defs>
-      <rect x="20" y="30" width="80" height="24" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
-      <text x="30" y="46" font-size="8" fill="#0f4c81">ask(question)</text>
-      <rect x="120" y="30" width="90" height="24" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
-      <text x="126" y="46" font-size="8" fill="#0f4c81">Normalise + encode</text>
-      <rect x="230" y="30" width="90" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
-      <text x="236" y="46" font-size="8" fill="#4a5670">TheoryStack context</text>
-      <line x1="100" y1="42" x2="120" y2="42" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ask)" />
-      <line x1="210" y1="42" x2="230" y2="42" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ask)" />
-      <rect x="60" y="90" width="90" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
-      <text x="66" y="106" font-size="8" fill="#4a5670">Retriever + LSH</text>
-      <rect x="170" y="90" width="70" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
-      <text x="176" y="106" font-size="8" fill="#4a5670">MathEngine</text>
-      <rect x="250" y="90" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
-      <text x="258" y="106" font-size="8" fill="#4a5670">Bands + provenance</text>
-      <line x1="140" y1="54" x2="105" y2="90" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ask)" />
-      <line x1="260" y1="54" x2="205" y2="90" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ask)" />
-      <line x1="150" y1="102" x2="170" y2="102" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ask)" />
-      <line x1="240" y1="102" x2="250" y2="102" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ask)" />
-    </svg>
-    <p class="diagram-caption">A query walks the same front end as ingest—normalisation, parsing and encoding—but then runs through TheoryStack, Retriever, MathEngine and the banding logic to produce a graded answer and a provenance object. The diagram separates these responsibilities visually so you can map API calls to the underlying reasoning modules.</p>
-  </div>
-  <p>Sometimes you want to explore consequences without changing anything in the knowledge base. For that, EngineAPI exposes <code>validate</code> operations that delegate to ValidationEngine. These calls use the same encodings and theory stacks but run in a "dry" mode that never writes back to ConceptStore. They can answer questions like "Can these two concepts overlap under any layer?" or "Is there a counterexample to this rule?". Tests in <code>.specs/tests/validation_engine</code> demonstrate how <code>validate</code> is used to confirm that new relations or layers are consistent before they are deployed in more critical contexts.</p>
-
-  <h2>Managing Context: theory and sessions</h2>
-  <p>Context in AGISystem2 is represented by theory layers stacked on top of base concepts. EngineAPI exposes methods such as <code>pushTheory(layer)</code>, <code>popTheory()</code>, <code>setContext(stack)</code>, and <code>inspectContext()</code> so that callers can control which layers are active when they ingest facts or ask questions. A typical workflow might involve pushing a legal regime layer, running a series of compliance checks, and then popping that layer to return to a neutral state. Because layers primarily adjust axiology dimensions and relevance masks, switching contexts does not corrupt the underlying factual diamonds.</p>
-  <p>For agents that interact with the engine over multiple turns, the API exposes <code>getAgenticSession</code>. A session maintains its own view of context and offers a trimmed interface that only accepts already normalised grammar sentences. In other words, an agentic session is a sandbox in which both sides agree to speak the constrained dialect. This ensures that internal agents cannot accidentally bypass TranslatorBridge or inject ambiguous text. The <code>.specs/tests/agentic_session_api</code> suite exercises session behaviour, checking that context is kept per session and that invalid sentences are rejected deterministically.</p>
-
-  <h2>Inspecting the Knowledge Base</h2>
-  <p>Beyond ingesting and querying, EngineAPI offers introspection operations such as <code>listConcepts</code>, <code>inspectConcept(id)</code>, and <code>dumpTheoryLayers()</code>. These calls are essential when you treat the engine as a knowledge base rather than as a black-box oracle. For example, <code>inspectConcept</code> can return summaries of the diamonds associated with a concept, including approximate centres, radii, and active masks. While these summaries abstract away from raw vectors, they remain grounded in the geometry described in the Conceptual Spaces and Algorithms chapters.</p>
-  <p>In practice, many developers build their own higher-level tools on top of these introspection APIs: dashboards that visualise concept overlaps, scripts that scan for unexpectedly wide regions, or diff tools that compare theories between environments. Because everything is deterministic, results from such tools can be compared across time with confidence that differences are due to real changes in data or configuration, not to stochastic noise.</p>
-
-  <h2>Provenance and Testing</h2>
-  <p>Every EngineAPI response carries breadcrumbs sufficient to replay and audit the interaction. These include identifiers for active theory layers, descriptions or hashes of relevance masks, distances and thresholds used in band decisions, translator versions and prompts used for normalisation, and index configuration such as LSH seeds and band counts. When you log API calls in your own systems, capturing this provenance alongside inputs and outputs allows you to reconstruct reasoning paths long after the fact.</p>
-  <p>The engine also distinguishes between logical failure and operational limits. If a query exceeds the configured iteration budget for reasoning, the Reasoner returns a timeout-style outcome rather than hanging indefinitely. In API terms this may appear as a special truth value such as <code>UNKNOWN_TIMEOUT</code>, accompanied by provenance stating that the <code>maxReasonerIterations</code> cap was reached. Temporal operations behave similarly: if a rewind call asks for more steps than <code>maxTemporalRewindSteps</code> allows, the engine will only apply the permitted number of inverse rotations and record that truncation in provenance. This approach makes operational limits explicit parts of the explanation rather than hidden implementation details.</p>
-  <p>The test suites in <code>.specs/tests/runTests.js.md</code> and related folders rely heavily on this determinism. They assert not only that certain questions produce certain answers, but that those answers come with expected bands, layers, distances, and, when appropriate, explicit timeout semantics. As you extend or embed the API, using similar regression tests will help ensure that changes to configuration, ingestion strategies, or translator models do not silently change reasoning behaviour or the way operational limits are reported.</p>
-
-  <p>For more detail on the underlying grammar, see the <a href="grammar.html">Grammar</a> chapter. For relation semantics, see <a href="relations.html">Relations</a>. For configuration of dimensions, seeds, profiles, and partitions, see <a href="config.html">Configuration</a> and the dimension-related chapters. Reading these together with the API narrative gives a complete picture of how to speak to the engine and how to interpret what it says back.</p>
+  <h2>Relationship to Syntax and CLI</h2>
+  <p>No matter which method you call, the strings you pass into EngineAPI or into an agentic session must follow the syntax documented in the <a href="syntax.html">Syntax</a> chapter. Facts, questions, extra facts for counterfactuals, and the evidence passed to domain helpers are all written in the same flat subject–relation–object style. The CLI is a human-friendly wrapper around the same methods: commands like <code>add</code> and <code>ask</code> call <code>ingest</code> and <code>ask</code> internally, while commands like <code>cf</code>, <code>check-procedure</code>, <code>check-export</code>, and <code>check-magic</code> package their arguments and forward them to <code>counterfactualAsk</code> or to macro-backed helpers. Reading this API page together with the Syntax and CLI pages gives you a complete, practical picture of how to drive the engine from code or from the command line.</p>
 
   <div class="footer-nav">
     <a href="../index.html">Back to index</a>
-    <a href="../concepts/quick_wiki.html">Quick wiki</a>
+    <a href="../concepts/quick_wiki.html">Quick Wiki</a>
   </div>
   </div>
+  <script src="nav.js"></script>
 </body>
 </html>

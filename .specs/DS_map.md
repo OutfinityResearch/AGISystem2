@@ -32,6 +32,9 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 - `src/reason/validation.js` → `.specs/reason/validation.js.md` — Class `ValidationEngine`: symbolic/abstract interpretation over theory stacks and conceptual space to prove inclusion/exclusion, reachability, and consistency without mutating state.
 - `src/reason/temporal_memory.js` → `.specs/reason/temporal_memory.js.md` — Class `TemporalMemory`: rotational working memory and causal permutations for time reasoning.
 
+## Theory DSL and Macros
+- `src/theory/dsl_engine.js` → `.specs/theory/dsl_engine.js.md` — Class `TheoryDSLEngine`: interpret theory-level macro scripts, bind variables, and invoke core reasoning primitives (ask, abduct, counterfactual, fact search) without embedding domain-specific logic in engine code.
+
 ## Interaction and Orchestration
 - `src/interface/translator_bridge.js` → `.specs/interface/translator_bridge.js.md` — Class `TranslatorBridge`: contract with external LLM/translation layer; deterministic structured calls.
 - `src/interface/api.js` → `.specs/interface/api.js.md` — Class `EngineAPI`: stable interface for external callers; structured commands for ingest/query/admin operations.
