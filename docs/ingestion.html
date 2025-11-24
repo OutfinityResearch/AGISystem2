@@ -19,6 +19,29 @@
 
   <h2>Parsing and Encoding</h2>
   <p>Once normalised sentences are available, the Parser builds a shallow tree for each: a root node for the subject, a relation node, and one or more child nodes for objects or properties. The recursion horizon limits how deep this tree may become; tokens beyond that depth are either ignored or treated neutrally to prevent runaway complexity. The encoder then walks this tree. For every edge from parent to child, it applies a relation-specific permutation to the child’s vector and adds it to the parent using saturated int8 arithmetic implemented by MathEngine.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 320 160" role="img" aria-label="Ingestion tree from subject through relation to encoded vector">
+      <defs>
+        <marker id="arrow-ingest-tree" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
+      <circle cx="80" cy="40" r="10" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <text x="71" y="44" font-size="8" fill="#0f4c81">Subj</text>
+      <circle cx="160" cy="40" r="10" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <text x="151" y="44" font-size="8" fill="#0f4c81">Rel</text>
+      <circle cx="240" cy="40" r="10" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <text x="232" y="44" font-size="8" fill="#0f4c81">Obj</text>
+      <line x1="90" y1="40" x2="150" y2="40" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-ingest-tree)" />
+      <line x1="170" y1="40" x2="230" y2="40" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-ingest-tree)" />
+      <rect x="110" y="90" width="100" height="26" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="118" y="106" font-size="8" fill="#4a5670">Encoded sentence vector</text>
+      <line x1="160" y1="50" x2="160" y2="90" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-ingest-tree)" />
+    </svg>
+    <p class="diagram-caption">A normalised sentence becomes a small subject–relation–object tree that the encoder walks using relation-specific permutations and saturated addition. The diagram abstracts this into three nodes feeding a single encoded vector, which is the unit that later shapes diamonds and participates in retrieval.</p>
+  </div>
+
   <p>This process yields a single high-dimensional vector per sentence that encodes both the identities of the tokens and the roles they played. Because the same relations always use the same permutations and all arithmetic is deterministic, two identical sentences ingested under the same configuration will always produce identical vectors. The specifications in <code>.specs/ingest/parser.js.md</code> and <code>.specs/ingest/encoder.js.md</code> provide more technical detail, and the <code>.specs/tests/core_math</code> and <code>.specs/tests/relation_permuter</code> suites verify that permutations and additions behave as expected.</p>
 
   <h2>Clustering into Concepts</h2>

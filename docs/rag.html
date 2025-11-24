@@ -15,6 +15,29 @@
 
   <p>A pragmatic loop goes like this. Retrieve documents. Extract candidate statements. Normalize them into the constrained grammar. Ingest them into AGISystem2. Before handing anything to the LLM, ask AGISystem2 to validate the statements against your theories. Contradictions are rejected; conflicts are flagged; provenance is attached. After the LLM answers, feed its claims back as questions. Any claim that fails inclusion or collides with the active theory stack is either blocked or returned with a warning and a proof.</p>
 
+  <div class="diagram">
+    <svg viewBox="0 0 360 170" role="img" aria-label="RAG loop between documents, AGISystem2 and LLM">
+      <defs>
+        <marker id="arrow-rag" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
+      <rect x="20" y="30" width="90" height="26" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <text x="34" y="46" font-size="8" fill="#0f4c81">Documents</text>
+      <rect x="140" y="30" width="90" height="26" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="150" y="46" font-size="8" fill="#4a5670">AGISystem2</text>
+      <rect x="260" y="30" width="80" height="26" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="280" y="46" font-size="8" fill="#4a5670">LLM</text>
+      <line x1="110" y1="43" x2="140" y2="43" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-rag)" />
+      <line x1="230" y1="43" x2="260" y2="43" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-rag)" />
+      <line x1="260" y1="60" x2="230" y2="90" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-rag)" />
+      <rect x="140" y="90" width="90" height="26" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="154" y="106" font-size="8" fill="#4a5670">Validate LLM claims</text>
+      <line x1="185" y1="56" x2="185" y2="90" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-rag)" />
+    </svg>
+    <p class="diagram-caption">In a RAG setup, documents are first processed and ingested into AGISystem2, which validates candidate statements before they reach the LLM. After the LLM generates an answer, its claims return to AGISystem2 for checking against the active theories. The diagram captures this loop as a simple path that keeps the generative component anchored to deterministic geometry.</p>
+  </div>
+
   <p>Counterfactual or jurisdictional “what ifs” are easy: load or activate a different theory layer (for example, a different regulatory regime) and run the same questions. Give the LLM both baseline and counterfactual answers so it can narrate differences with confidence. Keep the TranslatorBridge pinned to deterministic prompts and models so normalization does not drift, and run the LLM at low temperature when normalizing.</p>
 
   <p>The result is a division of labor. AGISystem2 enforces the logical spine with geometry and provenance; the LLM provides surface fluency. Together they offer readable outputs that remain grounded in explicit, auditable rules.</p>

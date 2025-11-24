@@ -19,10 +19,68 @@
 
   <h2>Teaching the System: ingest</h2>
   <p>Learning in AGISystem2 begins with the <code>ingest(text, {conceptId, context})</code> family of calls. When you invoke <code>ingest</code>, EngineAPI first normalises the text, then parses it into a shallow subject–relation–object tree. The encoder turns this tree into a high-dimensional vector using permutations for roles and saturated addition for composition. That vector is then handed to the clustering and concept modules, which decide whether to widen an existing bounded diamond, adjust its centre, or create a new diamond entirely. The ConceptStore persists the updated diamonds, and Retriever updates its index so that future queries can find the new information efficiently.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 340 150" role="img" aria-label="API ingest flow from text to stored concept">
+      <defs>
+        <marker id="arrow-api-ingest" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
+      <rect x="10" y="30" width="80" height="24" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <text x="22" y="46" font-size="8" fill="#0f4c81">API ingest call</text>
+      <rect x="100" y="30" width="80" height="24" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <text x="116" y="46" font-size="8" fill="#0f4c81">Normalise + parse</text>
+      <rect x="190" y="30" width="70" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="206" y="46" font-size="8" fill="#4a5670">Encode</text>
+      <rect x="270" y="30" width="60" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="274" y="46" font-size="8" fill="#4a5670">Cluster</text>
+      <line x1="90" y1="42" x2="100" y2="42" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ingest)" />
+      <line x1="180" y1="42" x2="190" y2="42" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ingest)" />
+      <line x1="260" y1="42" x2="270" y2="42" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ingest)" />
+      <rect x="80" y="90" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="92" y="106" font-size="8" fill="#4a5670">ConceptStore</text>
+      <rect x="190" y="90" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="196" y="106" font-size="8" fill="#4a5670">Retriever index</text>
+      <line x1="300" y1="54" x2="230" y2="90" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ingest)" />
+      <line x1="230" y1="54" x2="120" y2="90" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ingest)" />
+    </svg>
+    <p class="diagram-caption">From an API perspective, ingest takes text, normalises and parses it into constrained-grammar sentences, encodes each sentence into a vector, lets clustering decide how concepts should change, and then commits those changes to ConceptStore and the Retriever index. The diagram shows these steps as distinct blocks you can test and reason about independently.</p>
+  </div>
+
   <p>The response from <code>ingest</code> is deliberately verbose. It reports which concept or concepts were affected, whether new diamonds were created or old ones merged, and includes hashes or identifiers that can be stored in your own logs. In test suites such as <code>.specs/tests/relations_bootstrap</code> you will see <code>ingest</code> used to build up small theories about relations and then immediately queried to verify that the geometric representation matches the intended semantics. In production settings, the same mechanisms support auditable data-loading pipelines where each batch of ingested facts can be traced to specific changes in the conceptual space.</p>
 
   <h2>Asking Questions: ask and validate</h2>
   <p>To query the engine you use <code>ask(question, options)</code>. This call mirrors the ingestion path up to a point: the question is normalised, parsed, and encoded into a vector. EngineAPI then asks TheoryStack to compose the relevant concept under the currently active layers, producing a runtime bounded diamond that takes into account both base knowledge and active value systems. Retriever uses locality-sensitive hashing to propose candidate concepts whose regions are near the query vector, and MathEngine computes exact masked L1 distances. The Reasoner interprets these distances using adversarial bands and returns a graded result such as True, Plausible, or False, along with a structured provenance object.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 340 160" role="img" aria-label="API query flow from ask to graded answer and provenance">
+      <defs>
+        <marker id="arrow-api-ask" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
+      <rect x="20" y="30" width="80" height="24" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <text x="30" y="46" font-size="8" fill="#0f4c81">ask(question)</text>
+      <rect x="120" y="30" width="90" height="24" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <text x="126" y="46" font-size="8" fill="#0f4c81">Normalise + encode</text>
+      <rect x="230" y="30" width="90" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="236" y="46" font-size="8" fill="#4a5670">TheoryStack context</text>
+      <line x1="100" y1="42" x2="120" y2="42" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ask)" />
+      <line x1="210" y1="42" x2="230" y2="42" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ask)" />
+      <rect x="60" y="90" width="90" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="66" y="106" font-size="8" fill="#4a5670">Retriever + LSH</text>
+      <rect x="170" y="90" width="70" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="176" y="106" font-size="8" fill="#4a5670">MathEngine</text>
+      <rect x="250" y="90" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="258" y="106" font-size="8" fill="#4a5670">Bands + provenance</text>
+      <line x1="140" y1="54" x2="105" y2="90" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ask)" />
+      <line x1="260" y1="54" x2="205" y2="90" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ask)" />
+      <line x1="150" y1="102" x2="170" y2="102" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ask)" />
+      <line x1="240" y1="102" x2="250" y2="102" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-api-ask)" />
+    </svg>
+    <p class="diagram-caption">A query walks the same front end as ingest—normalisation, parsing and encoding—but then runs through TheoryStack, Retriever, MathEngine and the banding logic to produce a graded answer and a provenance object. The diagram separates these responsibilities visually so you can map API calls to the underlying reasoning modules.</p>
+  </div>
   <p>Sometimes you want to explore consequences without changing anything in the knowledge base. For that, EngineAPI exposes <code>validate</code> operations that delegate to ValidationEngine. These calls use the same encodings and theory stacks but run in a "dry" mode that never writes back to ConceptStore. They can answer questions like "Can these two concepts overlap under any layer?" or "Is there a counterexample to this rule?". Tests in <code>.specs/tests/validation_engine</code> demonstrate how <code>validate</code> is used to confirm that new relations or layers are consistent before they are deployed in more critical contexts.</p>
 
   <h2>Managing Context: theory and sessions</h2>

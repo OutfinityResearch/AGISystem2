@@ -32,7 +32,7 @@ class NLParser {
 
   _parseQuestion(text) {
     const withoutQuestionMark = text.replace(/\?+$/, '').trim();
-    const matches = withoutQuestionMark.match(/^Is\s+(.+)\s+an?\s+(.+)$/i) ||
+    let matches = withoutQuestionMark.match(/^Is\s+(.+)\s+an?\s+(.+)$/i) ||
       withoutQuestionMark.match(/^Is\s+(.+)\s+(.+)$/i);
     if (matches) {
       const subject = matches[1];
@@ -44,9 +44,21 @@ class NLParser {
         object
       };
     }
+    // Canonical triple form: Subject REL Object?
+    matches = withoutQuestionMark.match(/^([A-Za-z0-9_]+)\s+([A-Z_]+)\s+(.+)$/);
+    if (matches) {
+      const subject = matches[1];
+      const relation = matches[2];
+      const object = matches[3];
+      return {
+        kind: 'question',
+        subject,
+        relation,
+        object
+      };
+    }
     throw new Error(`Cannot parse question '${text}'`);
   }
 }
 
 module.exports = NLParser;
-

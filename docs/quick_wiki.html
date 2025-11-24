@@ -9,47 +9,132 @@
   <div class="page">
   <div class="nav-header">
     <h1>Quick Wiki of Concepts</h1>
-    <small><a href="index.html">Back to index</a> · Quick glossary</small>
+    <small><a href="index.html">Back to index</a></small>
   </div>
-  <p>A short reference for the main mathematical and conceptual tools used in AGISystem2. Each entry gives an intuitive description and a link to an external resource for deeper reading.</p>
+  <p>This page is a compact index of the main philosophical and technical notions that appear throughout the documentation. It is designed for programmers who may not have formal training in philosophy or machine learning theory but want to understand the vocabulary of the engine. The first table focuses on philosophical and meta-cognitive ideas; the second collects more technical algorithms and architectural concepts.</p>
 
-  <h2>Conceptual Spaces</h2>
-  <p>Conceptual spaces treat meaning as regions in a geometric space whose axes are interpretable qualities (such as color, size, or location). Similarity is distance, and a concept is a region rather than a symbol or a list of rules. AGISystem2 implements this idea with bounded diamonds in a high-dimensional vector space. A good starting point is Peter Gärdenfors’ work; an overview is available at <a href="https://en.wikipedia.org/wiki/Conceptual_spaces" target="_blank">Wikipedia: Conceptual spaces</a>.</p>
+  <h2>Philosophical and Meta-Cognitive Concepts</h2>
+  <table class="table-concept-index">
+    <tr>
+      <th>Concept</th>
+      <th>Short description in this project</th>
+      <th>Wikipedia reference</th>
+    </tr>
+    <tr>
+      <td><a href="concepts/axiology.html">Axiology</a></td>
+      <td>Axiology is the study of values and value judgements; in this project it names the part of the vector space reserved for norms, preferences, permissions and obligations, separated from factual content.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Axiology" target="_blank" rel="noopener noreferrer">Axiology</a></td>
+    </tr>
+    <tr>
+      <td><a href="concepts/bias.html">Bias</a></td>
+      <td>Bias denotes systematic distortion in decisions or representations; here it covers both unfair dependence on protected attributes and more general value-laden shortcuts that the engine makes explicit through masks and partitions.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Bias" target="_blank" rel="noopener noreferrer">Bias</a></td>
+    </tr>
+    <tr>
+      <td><a href="concepts/conceptual_spaces.html">Conceptual spaces</a></td>
+      <td>Conceptual spaces treat meaning as geometry: entities are points and concepts are regions in a space of interpretable dimensions; AGISystem2 realises this with bounded diamonds and relevance masks.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Conceptual_space" target="_blank" rel="noopener noreferrer">Conceptual space</a></td>
+    </tr>
+    <tr>
+      <td><a href="concepts/counterfactual.html">Counterfactual</a></td>
+      <td>A counterfactual is a statement about what would happen in a world that differs from the actual one; the engine models such worlds as temporary theory layers that alter parts of the conceptual space without rewriting stored facts.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Counterfactual_conditional" target="_blank" rel="noopener noreferrer">Counterfactual conditional</a></td>
+    </tr>
+    <tr>
+      <td><a href="concepts/deontic_logic.html">Deontic logic</a></td>
+      <td>Deontic logic studies permissions, obligations and prohibitions; in AGISystem2 these ideas live on dedicated value dimensions and are manipulated through deontic relations that mark actions as allowed, required or forbidden in a given context.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Deontic_logic" target="_blank" rel="noopener noreferrer">Deontic logic</a></td>
+    </tr>
+    <tr>
+      <td><a href="concepts/expert_system.html">Expert system</a></td>
+      <td>An expert system is a program that encodes specialist knowledge in a structured way to answer questions; AGISystem2’s expert mode is a modern variant that uses geometric regions and theory layers instead of only symbolic rules.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Expert_system" target="_blank" rel="noopener noreferrer">Expert system</a></td>
+    </tr>
+    <tr>
+      <td><a href="concepts/ontology.html">Ontology</a></td>
+      <td>Ontology in philosophy is the study of what exists; here it designates the part of the vector space that encodes factual structure about entities, properties and relations, kept distinct from evaluative or normative information.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Ontology" target="_blank" rel="noopener noreferrer">Ontology</a></td>
+    </tr>
+    <tr>
+      <td><a href="concepts/pragmatics.html">Pragmatics</a></td>
+      <td>Pragmatics studies how context and purpose influence meaning beyond literal content; the project uses this notion when discussing deployment scenarios, safety constraints and how answers are framed for users.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Pragmatics" target="_blank" rel="noopener noreferrer">Pragmatics</a></td>
+    </tr>
+    <tr>
+      <td><a href="concepts/abduction.html">Abduction</a></td>
+      <td>Abduction, or inference to the best explanation, is the reasoning style that starts from an observation and searches for the most plausible cause; the engine realises it by inverting relational permutations and retrieving concepts that best account for the observed vector.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Abductive_reasoning" target="_blank" rel="noopener noreferrer">Abductive reasoning</a></td>
+    </tr>
+    <tr>
+      <td><a href="concepts/analogy.html">Analogy</a></td>
+      <td>Analogy compares structured situations of the form “A is to B as C is to D”; AGISystem2 models this by translating vectors in conceptual space so that the relation between C and a candidate D mirrors the relation between A and B.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Analogy" target="_blank" rel="noopener noreferrer">Analogy</a></td>
+    </tr>
+    <tr>
+      <td><a href="concepts/narrative_consistency.html">Narrative consistency</a></td>
+      <td>Narrative consistency refers to the way events, actions and explanations hang together as a coherent story; the engine and its tests use this notion when checking whether sequences of states and decisions remain logically and temporally aligned.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Narrative" target="_blank" rel="noopener noreferrer">Narrative</a></td>
+    </tr>
+    <tr>
+      <td><a href="concepts/non_monotonic_logic.html">Non-monotonic logic</a></td>
+      <td>Non-monotonic logic allows conclusions to be withdrawn when new information arrives; AGISystem2 supports this behaviour through layers and overrides that can retract default inferences without rewriting the entire knowledge base.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Non-monotonic_logic" target="_blank" rel="noopener noreferrer">Non-monotonic logic</a></td>
+    </tr>
+    <tr>
+      <td><a href="concepts/symbol_grounding.html">Symbol grounding</a></td>
+      <td>The symbol-grounding problem asks how abstract symbols obtain meaning in relation to the world; AGISystem2 approaches grounding by tying symbolic statements to geometric regions whose dimensions correspond to interpretable empirical and normative quantities.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Symbol_grounding" target="_blank" rel="noopener noreferrer">Symbol grounding</a></td>
+    </tr>
+    <tr>
+      <td><a href="concepts/trustworthy_ai.html">Trustworthy AI</a></td>
+      <td>Trustworthy AI is an umbrella term for systems that are reliable, transparent and aligned with human values; this project contributes by making reasoning deterministic, geometrically interpretable and auditable through explicit bias and validation mechanisms.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Trustworthy_artificial_intelligence" target="_blank" rel="noopener noreferrer">Trustworthy artificial intelligence</a></td>
+    </tr>
+    <tr>
+      <td><a href="concepts/veil_of_ignorance.html">Veil of ignorance</a></td>
+      <td>The veil of ignorance is a thought experiment from political philosophy where decisions are made without knowing one’s own position; BiasController implements analogous modes by masking protected attributes during reasoning.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Veil_of_ignorance" target="_blank" rel="noopener noreferrer">Veil of ignorance</a></td>
+    </tr>
+  </table>
 
-  <h2>Hyperdimensional Computing</h2>
-  <p>Hyperdimensional computing (also called vector symbolic architectures) uses very high-dimensional vectors with simple operations such as addition and permutation to represent and manipulate symbols. Near-orthogonality in high dimensions allows many items to be superposed without excessive interference. AGISystem2 uses this paradigm for superposition and role binding. See <a href="https://en.wikipedia.org/wiki/Hyperdimensional_computing" target="_blank">Wikipedia: Hyperdimensional computing</a>.</p>
-
-  <h2>Johnson–Lindenstrauss Lemma</h2>
-  <p>The Johnson–Lindenstrauss lemma states that a small set of points in a high-dimensional space can be embedded into a lower-dimensional space such that pairwise distances are approximately preserved. It explains why random projections can maintain geometry. Although AGISystem2 does not explicitly project down, the lemma motivates the idea that distances in high dimensions can still be meaningful. See <a href="https://en.wikipedia.org/wiki/Johnson%E2%80%93Lindenstrauss_lemma" target="_blank">Wikipedia: Johnson–Lindenstrauss lemma</a>.</p>
-
-  <h2>Locality-Sensitive Hashing (LSH)</h2>
-  <p>LSH is a technique for approximate nearest-neighbor search. It uses hash functions designed so that similar vectors are likely to collide in the same buckets. AGISystem2 uses p-stable LSH (for L1 distance) and SimHash (for fast tests) to find candidate concepts before refining with exact masked distances. An introduction is available at <a href="https://en.wikipedia.org/wiki/Locality-sensitive_hashing" target="_blank">Wikipedia: Locality-sensitive hashing</a>.</p>
-
-  <h2>Permutation-Based Binding</h2>
-  <p>Binding with permutations is a way to encode structure, such as subject and object roles, by shuffling vector indices. Applying a fixed permutation before addition distinguishes roles without adding dimensions; applying the inverse permutation recovers the bound component. This is a standard technique in vector symbolic architectures; see the discussion of binding in hyperdimensional computing and related work on holographic reduced representations.</p>
-
-  <h2>L1 vs L2 Distance</h2>
-  <p>Distance metrics measure how far apart two points are. L2 (Euclidean) is the familiar straight-line distance, while L1 (Manhattan) sums absolute differences per dimension. In high dimensions, L2 distances can concentrate, making nearest and farthest neighbors look similar. L1 often preserves contrast better, which is why AGISystem2 uses masked L1. See <a href="https://en.wikipedia.org/wiki/Norm_(mathematics)" target="_blank">Wikipedia: Norm (mathematics)</a> for context.</p>
-
-  <h2>Superposition</h2>
-  <p>Superposition is the practice of representing many items by adding their vectors. In high dimensions, random vectors are nearly orthogonal, so consistent features reinforce and noise tends to cancel. AGISystem2 uses superposition to accumulate empirical evidence in concept prototypes. This idea is central in hyperdimensional computing.</p>
-
-  <h2>Adversarial Bands</h2>
-  <p>Adversarial bands in this context refer to using two distance thresholds to grade truth. A strict inner radius corresponds to a sceptic, a relaxed outer radius to an optimist. Points inside the inner radius are treated as true, points outside the outer radius as false, and those in between as plausible. This is an engineering pattern rather than a named external algorithm, but it is analogous to robust classification margins in machine learning.</p>
-
-  <h2>Deontic Logic</h2>
-  <p>Deontic logic formalizes modalities like obligation, permission, and prohibition. AGISystem2 encodes deontic notions on axiology axes and uses relations such as PERMITS and PROHIBITS to manipulate them. For a logical introduction see <a href="https://en.wikipedia.org/wiki/Deontic_logic" target="_blank">Wikipedia: Deontic logic</a>.</p>
-
-  <h2>Non-Monotonic Reasoning</h2>
-  <p>Non-monotonic reasoning allows new information to invalidate previous conclusions, unlike classical logic where truths only accumulate. Theory layers in AGISystem2 implement non-monotonic behavior: a higher-priority layer can override a lower one without deleting it. For background, see <a href="https://en.wikipedia.org/wiki/Non-monotonic_logic" target="_blank">Wikipedia: Non-monotonic logic</a>.</p>
-
-  <h2>Explainable AI (XAI)</h2>
-  <p>Explainable AI refers to techniques that make model decisions understandable to humans. AGISystem2 achieves explainability by construction through explicit geometry and provenance. For a general overview, see <a href="https://en.wikipedia.org/wiki/Explainable_artificial_intelligence" target="_blank">Wikipedia: Explainable artificial intelligence</a>.</p>
-
-  <h2>Bias and Fairness</h2>
-  <p>Bias in AI occurs when systems systematically favor or disadvantage certain groups or outcomes. Fairness research develops ways to detect and mitigate such biases. AGISystem2 separates facts and values, and uses masks and layers to make value judgments explicit and auditable. For general context, see <a href="https://en.wikipedia.org/wiki/Fairness_(machine_learning)" target="_blank">Wikipedia: Fairness in machine learning</a>.</p>
-
-  <p>Other chapters reference these concepts in context. When you see a term you do not recognize, this page and its links are a good place to start.</p>
+  <h2>Technical and Algorithmic Concepts</h2>
+  <table class="table-concept-index">
+    <tr>
+      <th>Concept</th>
+      <th>Short description in this project</th>
+      <th>Wikipedia or reference</th>
+    </tr>
+    <tr>
+      <td><a href="concepts/hyperdimensional_computing.html">Hyperdimensional computing</a></td>
+      <td>Hyperdimensional computing uses very high-dimensional vectors and simple operations like addition and permutation to represent complex structures; AGISystem2 adopts this style for encoding, superposition and temporal rotation.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Hyperdimensional_computing" target="_blank" rel="noopener noreferrer">Hyperdimensional computing</a></td>
+    </tr>
+    <tr>
+      <td>Locality-sensitive hashing (LSH)</td>
+      <td>LSH is used as a fast, approximate neighbour search: hash families and banding group nearby vectors so Retriever can propose candidate concepts before exact masked L1 distances are computed by MathEngine.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Locality-sensitive_hashing" target="_blank" rel="noopener noreferrer">Locality-sensitive hashing</a></td>
+    </tr>
+    <tr>
+      <td>Permutation-based binding</td>
+      <td>Permutation-based binding encodes structure by shuffling indices according to a relation-specific table before adding vectors, so that roles like subject, object or cause are distinguishable without increasing dimensionality.</td>
+      <td>See binding in vector symbolic architectures and hyperdimensional computing surveys.</td>
+    </tr>
+    <tr>
+      <td>L1 vs L2 distance</td>
+      <td>The engine relies on masked L1 distance rather than L2 because in high dimensions L1 tends to preserve contrast between near and far points better, making the boundaries of bounded diamonds more meaningful.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Norm_(mathematics)" target="_blank" rel="noopener noreferrer">Norm (mathematics)</a></td>
+    </tr>
+    <tr>
+      <td>Superposition</td>
+      <td>Superposition adds multiple high-dimensional vectors together so that consistent features reinforce and noise cancels; AGISystem2 uses it to build and update concept prototypes over time.</td>
+      <td>Discussed in hyperdimensional computing and holographic reduced representations.</td>
+    </tr>
+    <tr>
+      <td>Adversarial bands</td>
+      <td>Adversarial bands grade truth by two radii: an inner sceptic radius for robust True, an outer optimist radius for Plausible, with points beyond treated as False; they make thresholds explicit and auditable.</td>
+      <td>Engineering pattern inspired by robust decision margins in machine learning.</td>
+    </tr>
+  </table>
 
   <div class="footer-nav">
     <a href="index.html">Back to index</a>
