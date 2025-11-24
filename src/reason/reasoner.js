@@ -75,9 +75,9 @@ class Reasoner {
         band: 'FALSE'
       };
     }
-    let inverseTable;
+    let table;
     try {
-      inverseTable = this.permuter.inverse(relationName);
+      table = this.permuter.get(relationName);
     } catch {
       return {
         concept: null,
@@ -86,8 +86,8 @@ class Reasoner {
       };
     }
     const hypVector = this.math.inversePermute
-      ? this.math.inversePermute(observationVector, inverseTable)
-      : MathEngine.inversePermute(observationVector, inverseTable);
+      ? this.math.inversePermute(observationVector, table)
+      : MathEngine.inversePermute(observationVector, table);
     const candidates = this.retriever.nearest(hypVector, { k: 1 });
     if (!candidates || candidates.length === 0) {
       return {
