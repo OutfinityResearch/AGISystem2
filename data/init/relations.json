@@ -1,0 +1,265 @@
+{
+  "relations": [
+    {
+      "name": "IS_A",
+      "inverse": null,
+      "symmetric": false,
+      "transitive": true,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 1.0
+    },
+    {
+      "name": "EQUIVALENT_TO",
+      "inverse": "EQUIVALENT_TO",
+      "symmetric": true,
+      "transitive": true,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 1.0
+    },
+    {
+      "name": "DISJOINT_WITH",
+      "inverse": "DISJOINT_WITH",
+      "symmetric": true,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.8
+    },
+    {
+      "name": "PART_OF",
+      "inverse": "HAS_PART",
+      "symmetric": false,
+      "transitive": true,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.9
+    },
+    {
+      "name": "HAS_PART",
+      "inverse": "PART_OF",
+      "symmetric": false,
+      "transitive": true,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.9
+    },
+    {
+      "name": "HAS_PROPERTY",
+      "inverse": "PROPERTY_OF",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.7
+    },
+    {
+      "name": "PROPERTY_OF",
+      "inverse": "HAS_PROPERTY",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.7
+    },
+    {
+      "name": "LOCATED_IN",
+      "inverse": "CONTAINS",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.7
+    },
+    {
+      "name": "CONTAINS",
+      "inverse": "LOCATED_IN",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.7
+    },
+    {
+      "name": "CAUSES",
+      "inverse": "CAUSED_BY",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.9
+    },
+    {
+      "name": "CAUSED_BY",
+      "inverse": "CAUSES",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.9
+    },
+    {
+      "name": "PERMITS",
+      "inverse": "PERMITTED_BY",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "axiology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.8
+    },
+    {
+      "name": "PERMITTED_BY",
+      "inverse": "PERMITS",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "axiology",
+      "weight": 0.8
+    },
+    {
+      "name": "PROHIBITS",
+      "inverse": "PROHIBITED_BY",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "axiology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.8
+    },
+    {
+      "name": "PROHIBITED_BY",
+      "inverse": "PROHIBITS",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "axiology",
+      "weight": 0.8
+    },
+    {
+      "name": "REQUIRES",
+      "inverse": "REQUIRED_FOR",
+      "symmetric": false,
+      "transitive": true,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.85
+    },
+    {
+      "name": "REQUIRED_FOR",
+      "inverse": "REQUIRES",
+      "symmetric": false,
+      "transitive": true,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.85
+    },
+    {
+      "name": "PROTECTED_HEALTH_INFO_OF",
+      "inverse": "HAS_PROTECTED_HEALTH_INFO",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.8
+    },
+    {
+      "name": "HAS_PROTECTED_HEALTH_INFO",
+      "inverse": "PROTECTED_HEALTH_INFO_OF",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.8
+    },
+    {
+      "name": "COMPLIES_WITH",
+      "inverse": "IS_COMPLIANCE_FOR",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.9
+    },
+    {
+      "name": "IS_COMPLIANCE_FOR",
+      "inverse": "COMPLIES_WITH",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.9
+    },
+    {
+      "name": "VIOLATES",
+      "inverse": "IS_VIOLATED_BY",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.9
+    },
+    {
+      "name": "IS_VIOLATED_BY",
+      "inverse": "VIOLATES",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.9
+    },
+    {
+      "name": "CASTS",
+      "inverse": "CAST_BY",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.6
+    },
+    {
+      "name": "CAST_BY",
+      "inverse": "CASTS",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.6
+    },
+    {
+      "name": "CHARACTER_OF",
+      "inverse": "HAS_CHARACTER",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.7
+    },
+    {
+      "name": "HAS_CHARACTER",
+      "inverse": "CHARACTER_OF",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.7
+    },
+    {
+      "name": "OCCURS_IN_CHAPTER",
+      "inverse": "HAS_EVENT",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.7
+    },
+    {
+      "name": "HAS_EVENT",
+      "inverse": "OCCURS_IN_CHAPTER",
+      "symmetric": false,
+      "transitive": false,
+      "domainPartitionHint": "ontology",
+      "rangePartitionHint": "ontology",
+      "weight": 0.7
+    }
+  ]
+}

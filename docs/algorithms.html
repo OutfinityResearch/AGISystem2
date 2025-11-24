@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Algorithms & Acronyms</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Algorithms & Acronyms Explained</h1>
+    <small><a href="index.html">Back to index</a> · <a href="quick_wiki.html">Quick wiki</a></small>
+  </div>
+  <p>This chapter acts as a small wiki for the main algorithms and acronyms that appear throughout the AGISystem2 documentation and specifications. Its goal is not to provide formal proofs or implementation details, but to give programmers who are not machine learning experts an intuitive picture of what each technique does and why it was chosen. Whenever other chapters mention terms like "LSH", "permutation tables", "adversarial bands", or "superposition", you can return here for a narrative explanation that connects the research idea to its concrete role in the engine.</p>
+
+  <h2>Locality-Sensitive Hashing (LSH)</h2>
+  <p>Locality-sensitive hashing is the engine’s primary tool for finding nearby points quickly in a very high-dimensional space. A naive search that compares a query vector to every stored concept would be far too slow once the knowledge base grows. Instead, the VectorSpace and Retriever modules project vectors using families of hash functions that have the special property that nearby points are likely to land in the same bucket. For L1 distance this can be implemented with p-stable hashes; for some test configurations a simpler variant such as SimHash may appear. The resulting hash values are grouped into bands, and each band defines a small key under which candidates are stored.</p>
+  <p>At query time, the Retriever computes the same hashes for the query vector and looks up all concepts that share a bucket with it in any band. Those concepts become candidates for exact distance computation. The MathEngine then evaluates masked L1 distances from the query to each candidate’s diamonds. This two-stage process is important: LSH is only a fast filter that proposes likely neighbours, while the final decision about membership and truth is made by precise geometric checks. Because hash projections and banding parameters are seeded from the configuration, the indexing behaviour is deterministic and can be replayed when auditing or debugging. The test suite in <code>.specs/tests/core_math</code> and <code>.specs/tests/validation_engine</code> exercises these behaviours to ensure that small changes in configuration have predictable effects on recall and performance.</p>
+
+  <h2>Permutations as a Way to Encode Structure</h2>
+  <p>Many statements of interest are not just bags of words; they have structure. There are subjects and objects, causes and effects, conditions and consequences. AGISystem2 encodes this structure without increasing dimensionality by using deterministic permutations of indices. For every relation, such as IS_A, PART_OF, CAUSES, or BEFORE, the RelationPermuter module maintains a permutation table and, when needed, its inverse. Binding a child phrase to its parent through a relation means permuting the child’s vector according to that relation and then adding it to the parent using saturated arithmetic.</p>
+  <p>Because the permutation tables are fixed given a configuration seed, the same relation will always produce the same reshuffling of coordinates, and inverse relations reuse or invert the same tables. This allows operations like abduction and temporal recall to be implemented as inverse permutations followed by retrieval. For example, in the abductive reasoning tests you will see scenarios where observing "Smoke" and knowing the CAUSES relation prompts the engine to apply the inverse CAUSES permutation and retrieve "Fire" as a likely explanation. By keeping permutations explicit and reproducible, the engine can later explain which roles were involved in a reasoning step rather than hiding that structure inside weights.</p>
+
+  <h2>Bounded Diamonds and Adversarial Bands</h2>
+  <p>Bounded diamonds, introduced in detail in the Conceptual Spaces chapter, provide the basic shape used to represent a concept. Each diamond stores minimum and maximum bounds along each dimension, a centre point, a radius measured in L1 distance, and a relevance mask. To decide whether a query belongs to a concept, the MathEngine first performs a quick box check using the bounds, then computes the masked L1 distance to the centre if the point passes that check. This raw distance is then interpreted through what the documentation calls adversarial bands.</p>
+  <p>Adversarial bands split the space around a concept into three regions: clearly inside, clearly outside, and a grey zone in between. Instead of returning a single boolean, the Reasoner compares the distance to two radii. The inner radius is tuned for a sceptical mode that prefers precision and declares True only when the point lies safely inside the concept. The outer radius is tuned for an optimistic mode that prefers recall and still considers borderline points as Plausible. Anything beyond the outer radius is treated as False. This framing is called adversarial because it makes it easier to reason about worst-case behaviour: you can ask what happens under a very strict or a very forgiving interpretation and see exactly where the thresholds lie. In the tests for deontic reasoning and validation you will see these bands used to model different standards of proof or safety margins.</p>
+
+  <h2>Superposition and Clustering</h2>
+  <p>Superposition refers to the practice of adding many high-dimensional vectors together to obtain a composite representation. Thanks to the near-orthogonality of random high-dimensional directions, features that are consistently present across observations reinforce each other when added, while noise tends to cancel. AGISystem2 uses superposition in the encoder and in concept learning. When multiple sentences refer to the same concept, their encodings are added with saturation so that the centre of the resulting diamond drifts towards the dense region of their point cloud. This allows the system to adapt as new data arrives without having to store or revisit every previous example.</p>
+  <p>However, not all observations of a word or entity belong to the same underlying meaning. When points begin to form separate clusters that are too far apart to fit comfortably within one bounded diamond, the clustering layer will split the concept into multiple diamonds. Each diamond then captures a different sense or context. The specifications under <code>.specs/ingest/clustering.js.md</code> describe the heuristic criteria for when to split or merge, and the related test suites ensure that pathological cases, such as slowly drifting concepts or rare outliers, are handled without collapsing everything into a single noisy region. These mechanisms give the engine a controlled form of empirical learning while keeping the geometry of concepts explicit.</p>
+
+  <h2>Temporal Rotation and Memory</h2>
+  <p>Time is represented not by adding a special "time" dimension but by applying rotations to working memory. The TemporalMemory module maintains a rotation table that permutes coordinates on each tick. When a new event occurs, the current state is rotated according to this table and then combined with the event’s encoding. Over successive ticks, different parts of the vector carry traces of past events at different lags. To recall a previous state, TemporalMemory applies the inverse rotation repeatedly. This approach is inspired by hyperdimensional computing and keeps the total dimensionality fixed while still allowing the Reasoner to distinguish earlier from later events.</p>
+  <p>In practice this design means that temporal queries, such as "Did X happen before Y?" or narrative consistency checks in the test suite <code>.specs/tests/narrative_consistency</code>, can be answered by comparing rotated versions of memory vectors and evaluating them against appropriate temporal relations. Because rotations are implemented as permutations through MathEngine and RelationPermuter, they share the same determinism and explainability guarantees as other geometric operations. The Explainability chapter later shows how a temporal reasoning step can be described as "applying N inverse rotations and then checking membership in a concept" rather than as an opaque recurrent hidden state.</p>
+
+  <h2>Relevance Masks as Explicit Attention</h2>
+  <p>Modern machine learning systems often talk about "attention" as a soft weighting over features or tokens. In AGISystem2, attention is made explicit through binary relevance masks attached to concepts and used in distance computations. A relevance mask is a compact representation that tells the MathEngine which dimensions to consider and which to ignore for a particular concept or query. During a masked L1 computation every dimension whose mask bit is zero is skipped entirely. This not only improves performance but also clarifies which axes were actually involved in a decision.</p>
+  <p>Because masks are first-class objects, they show up in provenance records and in bias control. When a BiasController mode hides certain sensitive attributes, it does so by altering the relevance mask used for a reasoning step. When the Explainability chapter talks about axis-level attribution—being able to say "this answer depended on temperature and physicality but not on jurisdiction or reputation"—it is referring directly to the state of these masks. The specifications for <code>BiasController</code> and <code>ValidationEngine</code> in the <code>.specs/reason</code> directory, together with their corresponding test suites, document how different modes and validation runs produce and consume masks.</p>
+
+  <pre>
+Algorithm flow (simplified):
+
+  Encode sentence -> high-D vector
+       |
+       v
+  LSH index proposes candidate concepts
+       |
+       v
+  Masked L1 via MathEngine
+       |
+       v
+  Adversarial bands grade result (True/Plausible/False)
+       |
+       v
+  BiasController and ValidationEngine adjust or audit masks
+  </pre>
+
+  <h2>Putting the Pieces Together</h2>
+  <p>Each of the techniques described here is modest in isolation: hashing, permutations, thresholding, vector addition, and simple clustering are all well-understood. The distinctive character of AGISystem2 comes from how they are combined under strict determinism and with explicit dimensional structure. LSH narrows the search space; permutations encode roles and time without inflating dimensionality; bounded diamonds and adversarial bands make membership and uncertainty geometrically concrete; superposition and clustering provide incremental learning; temporal rotation affords sequence modelling; relevance masks turn attention and bias control into inspectable objects. When other chapters discuss reasoning styles, bias audits, or proof generation, they are ultimately describing orchestrated uses of these simple algorithms.</p>
+  <p>If you ever lose track of a term while reading the rest of the documentation, return to this page as a glossary with context. The Reasoning chapter shows how these algorithms are used to implement deduction, abduction, and analogy. The Bias & Values chapter explains how masks and partitions become tools for fairness and policy modelling. The Explainability chapter elaborates on how provenance records expose the internal steps taken by LSH, MathEngine, and BiasController. Together these texts form a coherent map from research acronyms to concrete behaviours in the running system.</p>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to index</a>
+    <a href="quick_wiki.html">Quick wiki</a>
+  </div>
+  </div>
+</body>
+</html>

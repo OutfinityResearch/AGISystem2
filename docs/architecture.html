@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Architecture</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Architecture as a Narrative</h1>
+    <small><a href="index.html">Back to index</a> · <a href="quick_wiki.html">Quick wiki</a></small>
+  </div>
+  <p>Think of AGISystem2 as a cast of characters collaborating on a geometric stage. Each character has a clear job and a minimal public face. The plot is predictable: text comes in, shapes shift or are measured, and answers come out with a trail explaining every step. This narrative matters because it lets you predict how the system will behave under change, and it ties together the theory chapters on grammar, reasoning, and conceptual spaces.</p>
+
+  <h2>The Cast</h2>
+  <p><strong>VectorSpace</strong> is the stagehand. It allocates int8 arrays of a fixed size (512 to 4096, profile dependent), copies data, and clamps sums so nothing overflows. It never interprets meaning. <strong>MathEngine</strong> is the choreographer. It measures masked L1 distances, adds vectors with saturation, permutes indices to encode roles, and rotates vectors to encode time. Everything is pure; no state leaks. <strong>BoundedDiamond</strong> is the shape of a concept. It stores min/max bounds, a center, an L1 radius, and a relevance mask. A concept can be a union of several diamonds when polysemy demands it. <strong>RelationPermuter</strong> is the keeper of roles; for each relation (IS_A, PART_OF, CAUSES, BEFORE, PERMITS...), it hands out a deterministic permutation and its inverse, reusing a permutation for symmetric relations and pairing tables for inverses.</p>
+  <p><strong>ConceptStore</strong> and <strong>ClusterManager</strong> keep the shapes tidy. When a new observation arrives, ClusterManager decides to widen a diamond or create a new one; ConceptStore persists the updated union and exposes it to the rest of the system. <strong>TheoryLayer</strong> and <strong>TheoryStack</strong> bring context. Layers override dimensions (min/max/radius/masks) without touching the base shapes. The stack composes layers to produce a runtime view of a concept, which is how the engine holds contradictions and chooses which truth applies.</p>
+  <p><strong>Reasoner</strong> orchestrates the moves: inclusion checks, abductive inverse probes, analogical translations, counterfactual runs, deontic value shifts, and temporal rewinds. It grades outcomes with sceptic/optimist bands. <strong>Retriever</strong> is the scout; it uses LSH to find candidate diamonds quickly, then asks MathEngine for exact masked distances, with parameters tuned per profile and seeded for reproducibility.</p>
+  <p><strong>BiasController</strong> applies masks to separate facts from values and enables fairness modes like a veil-of-ignorance. <strong>ValidationEngine</strong> runs dry, symbolic checks to spot conflicts or produce counterexamples. <strong>TemporalMemory</strong> encodes time by rotating vectors each tick and lets you rewind by applying the inverse rotation. <strong>StorageAdapter</strong> stores concepts and theories, writing binary blobs in a hierarchy on disk by default, with memory and custom backends as options.</p>
+  <p><strong>TranslatorBridge</strong> and <strong>NLParser</strong> tame language. The bridge normalizes rich English into the constrained grammar; the parser turns it into a subject–relation–object tree with a bounded depth. <strong>EngineAPI</strong> is the front door; it wires everything together, exposes ingest/query/admin calls, and offers <code>getAgenticSession</code> for embedded agents that should only speak the constrained grammar. You will see these characters referenced throughout the API, Grammar, and Reasoning chapters; this cast list anchors the rest.</p>
+
+  <h2>Flow of Data</h2>
+  <p>The path from text to geometry to answer is deliberate. First, text is normalized. Then the parser builds a shallow tree. The encoder binds children with the right permutations and adds vectors with clamping. ClusterManager and ConceptStore shape and store the resulting diamonds. Retriever indexes them for later. On queries, the same front end repeats: normalize, parse, encode. TheoryStack produces a runtime concept; Retriever proposes candidates; MathEngine measures exact distances; Reasoner decides True, Plausible, or False and explains why. Counterfactual runs simply clone the stack, add a temporary layer, and then discard it, leaving the base intact.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 320 190" role="img" aria-label="High-level flow from text through engine modules to answer and provenance">
+      <defs>
+        <marker id="arrow-arch" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
+      <rect x="20" y="20" width="80" height="24" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <text x="34" y="36" font-size="8" fill="#0f4c81">Translator</text>
+      <rect x="120" y="20" width="70" height="24" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <text x="135" y="36" font-size="8" fill="#0f4c81">Parser</text>
+      <rect x="210" y="20" width="80" height="24" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <text x="224" y="36" font-size="8" fill="#0f4c81">Encoder</text>
+      <line x1="100" y1="32" x2="120" y2="32" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-arch)" />
+      <line x1="190" y1="32" x2="210" y2="32" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-arch)" />
+      <rect x="60" y="70" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="72" y="86" font-size="8" fill="#4a5670">ConceptStore</text>
+      <rect x="170" y="70" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="188" y="86" font-size="8" fill="#4a5670">Retriever (LSH)</text>
+      <line x1="250" y1="32" x2="210" y2="70" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-arch)" />
+      <line x1="210" y1="32" x2="100" y2="70" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-arch)" />
+      <rect x="60" y="120" width="80" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="83" y="136" font-size="8" fill="#4a5670">TheoryStack</text>
+      <rect x="170" y="120" width="60" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="176" y="136" font-size="8" fill="#4a5670">MathEngine</text>
+      <rect x="250" y="120" width="60" height="24" rx="4" fill="#ffffff" stroke="#b0b6c4" stroke-width="1" />
+      <text x="262" y="136" font-size="8" fill="#4a5670">Reasoner</text>
+      <line x1="100" y1="94" x2="100" y2="120" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-arch)" />
+      <line x1="210" y1="94" x2="210" y2="120" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-arch)" />
+      <line x1="140" y1="132" x2="170" y2="132" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-arch)" />
+      <line x1="230" y1="132" x2="250" y2="132" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-arch)" />
+    </svg>
+    <p class="diagram-caption">This high-level diagram places the main modules on a single canvas to emphasise the flow from text, through parsing and encoding, into storage and indexing, and finally through context composition, distance checks and banded decisions. It distils the more textual description of the architecture into a visual map that you can keep in mind while reading the rest of the documentation.</p>
+  </div>
+
+  <pre>
+ Text --> TranslatorBridge --> Parser (S-R-O) --> Encoder (permute+add)
+                                                   |
+                                           ClusterManager
+                                                   |
+                                           ConceptStore
+                                                   |
+                                              Retriever (LSH)
+                                                   |
+                                                  Disk
+ 
+ Query --> TranslatorBridge --> Parser --> Encoder --> TheoryStack
+                                                   |
+                                              Retriever -> candidates
+                                                   |
+                                             MathEngine (masked L1)
+                                                   |
+                                          Reasoner (bands + proof)
+  </pre>
+
+
+  <h2>Determinism by Design</h2>
+  <p>Seeds for permutations and hashes come from config and are logged. Ontology and axiology partitions never move (0–255 and 256–383). Arithmetic is int8 with saturation; no stochastic sampling. TranslatorBridge is pinned to deterministic prompts or models. LSH uses fixed hashes, bands, and bucket widths per profile. The result: the same input and stack always produce the same answer, which is the bedrock for explainability and auditability discussed in later chapters.</p>
+
+  <p>This architecture is intentionally simple and modular. Each character has a single role, minimal interfaces, and can be reasoned about in isolation. The chapters that follow go deeper into grammar, reasoning moves, conceptual space theory, and practical use.</p>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to index</a>
+    <a href="quick_wiki.html">Quick wiki</a>
+  </div>
+  </div>
+</body>
+</html>

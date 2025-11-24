@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Reasoning</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Reasoning: Geometry in Motion</h1>
+    <small><a href="index.html">Back to index</a> · <a href="quick_wiki.html">Quick wiki</a></small>
+  </div>
+  <p>All reasoning in AGISystem2 is implemented as geometric movement inside the conceptual space described in the dedicated chapter on conceptual spaces. Instead of symbolic rules firing on predicates or neural networks sampling the next token, the system manipulates points and regions in a high-dimensional int8 space. The Reasoner module orchestrates these operations, working with TheoryStack, ConceptStore, MathEngine, TemporalMemory, and BiasController. This chapter walks through the main reasoning styles—deduction, induction, abduction, analogy, counterfactuals, temporal and deontic reasoning—and explains how each becomes a particular pattern of distance checks, permutations, and layer overlays.</p>
+
+  <h2>Deduction: Checking Whether a Point Lies Inside</h2>
+  <p>Deductive reasoning in this engine answers questions of the form "Does this fact belong to this concept under the current context?" The query is first encoded into a high-dimensional vector, just like any other statement. The TheoryStack composes the base concept’s diamonds with any active theory layers, producing a runtime diamond that reflects both factual knowledge and the currently selected value system. The MathEngine then computes a masked L1 distance from the query point to the centre of that runtime diamond, but only after verifying that the point falls within the diamond’s per-dimension min and max bounds. If the query falls outside the box the result is immediately treated as False.</p>
+  <p>Rather than returning a single yes or no, the Reasoner interprets the distance through adversarial bands, as described in the Algorithms & Acronyms chapter. A sceptic radius marks where membership is considered robustly True, while an optimist radius marks a wider region of Plausible membership. Outside both radii the answer is False. These thresholds are configured per profile and logged in provenance so that later audits can see precisely why a query was classified in a particular band. This turns deduction into a deterministic, measurable operation: "Under layers L, with mask M, at distance D relative to radii (Rs, Ro), the query belongs or does not belong."</p>
+
+  <h2>Induction: Sculpting Concepts from Examples</h2>
+  <p>Inductive reasoning is about learning general concepts from specific examples. In AGISystem2, when new observations that refer to the same conceptual label arrive, the system updates the corresponding diamonds rather than merely appending new points. The ClusterManager computes per-dimension minima and maxima across all relevant points, derives a centre, and adjusts the L1 radius to cover the farthest consistent example. If the new examples remain close to the existing region, this process simply tightens or slightly expands the diamond.</p>
+  <p>When examples begin to form distinct groups that are too far apart, the clustering logic may split a single conceptual label into multiple diamonds, each capturing a different meaning or sub-type. For instance, references to "bank" in financial contexts and in river geography will eventually occupy very different parts of the space, prompting a split. The tests under <code>.specs/tests/dimensions_catalog</code> and related suites verify that such splits preserve determinism and that retrieval continues to favour the most geometrically appropriate sense. From the perspective of the conceptual spaces chapter, induction is the ongoing process of fitting regions around clouds of points as new data arrives.</p>
+
+  <h2>Abduction: Inverting Relations to Explain Observations</h2>
+  <p>Abductive reasoning seeks explanations. Given an observation and knowledge of causal or relational structure, the engine searches for the best hypothesis that would make the observation expected. Geometrically, if we observe a point corresponding to "Smoke" and we know there is a CAUSES relation, the Reasoner applies the inverse permutation associated with CAUSES to the observation vector. This inverse binding operation, implemented via MathEngine and RelationPermuter, produces a vector that lives in the space where causes of such observations reside.</p>
+  <p>The Retriever then searches for concept diamonds near this hypothesised point using locality-sensitive hashing followed by exact masked L1 checks. If "Fire" is the closest relevant concept under the current theory stack, the Reasoner can present it as the best explanation, along with a provenance trail that shows which relation was inverted and what distance thresholds were used. The <code>.specs/tests/abductive_causal</code> suite contains concrete scenarios that exercise this pattern: starting from effects, inverting relation permutations, and retrieving plausible causes.</p>
+
+  <h2>Analogy: Translating Vectors</h2>
+  <p>Analogical reasoning asks questions of the form "A is to B as C is to what?" In the engine this is implemented as a vector translation. First the Reasoner computes the difference between the encodings of A and B. This difference vector captures, in aggregate, how B differs from A in the conceptual space. Then that delta is added to the vector for C to produce a predicted location for D, all done with saturated arithmetic in MathEngine. This operation is reminiscent of the classic word-embedding analogy "king - man + woman ≈ queen", but here it operates on structured encodings that already include relation permutations and masks.</p>
+  <p>Once the predicted point is obtained, Retriever is asked to find the nearest concept diamonds. The candidate with the smallest masked L1 distance within appropriate bands is proposed as the answer to the analogy. Tests in <code>.specs/tests/analogical_reasoning</code> illustrate this behaviour on carefully hand-crafted mini spaces. Because all components are deterministic and bounded, running the same analogy under the same configuration always yields the same candidate set and distances, making analogical reasoning auditable rather than mysterious.</p>
+
+  <h2>Counterfactuals and Non-Monotonic Logic</h2>
+  <p>Counterfactual reasoning explores "what if" worlds that differ from the base theory in controlled ways. Instead of mutating stored concepts, AGISystem2 uses TheoryLayer and TheoryStack to model such variations. To answer a query like "If gravity were weaker, would this orbit be stable?", the engine clones the current theory stack, pushes a temporary layer that modifies only a subset of dimensions—for example, reducing values on certain physicality or force axes—and then runs the usual deduction steps in that altered context. After computing the result, the temporary stack is discarded and the base theory remains unchanged.</p>
+  <p>This approach supports non-monotonic logic, where adding new information can retract previous conclusions. Exceptions such as "Birds typically fly, but penguins do not" can be modelled as layers that override specific regions of the space. The ValidationEngine can compare results across stacks to discover conflicts, while provenance records which layers were active for each answer. Test suites like <code>.specs/tests/counterfactual_layering</code> and <code>.specs/tests/narrative_consistency</code> exercise these mechanisms by constructing scenarios where local overrides should win over default rules without collapsing the entire conceptual structure.</p>
+
+  <h2>Temporal and Causal Sequences</h2>
+  <p>Time and causality are encoded using permutations and rotations rather than bespoke temporal logics. TemporalMemory maintains rotation tables that advance working memory one tick at a time. On each tick the current memory vector is rotated and then combined with the encoding of the new event. This pattern ensures that information about more recent events occupies different parts of the vector than older events, roughly capturing order and recency. To ask about the past, the engine applies inverse rotations, effectively rewinding the state before applying a query.</p>
+  <p>Causal relations such as CAUSES and CAUSED_BY are handled through dedicated permutations in RelationPermuter, but they obey the same geometric principles as other relations. When the Reasoning or Bias chapters refer to temporal or deontic bands, they are describing configuration choices for how strict these temporal and causal checks should be. The tests under <code>.specs/tests/deontic_reasoning</code> and <code>.specs/tests/health_compliance</code> combine temporal memory with value layers to verify that changing a time window or switching a regulatory regime only affects the intended parts of the space.</p>
+
+  <h2>Deontic Reasoning and Values</h2>
+  <p>Deontic reasoning deals with permissions, obligations, and prohibitions. In AGISystem2, these notions live on the axiology dimensions of the conceptual space. Relations such as PERMITS, OBLIGATES, and PROHIBITS are encoded as permutations and value shifts on those dimensions. When a deontic rule applies, it creates or adjusts a region in axiology space that says, for example, "under law L, action A is forbidden in context C". When a query is evaluated, the Reasoner checks both ontological membership (is this situation factually inside the relevant concept diamonds?) and axiological membership (under which layers is this action permitted or forbidden?).</p>
+  <p>Because values are separated from facts at the level of dimensions, the BiasController can provide modes that either emphasise or suppress certain value systems. For instance, a veil-of-ignorance mode might hide protected attributes and some axiology dimensions to simulate decisions made without knowledge of sensitive characteristics. The Bias & Values chapter explains this separation in detail, and the corresponding tests in <code>.specs/tests/bias_audit</code> verify that masking or swapping value layers produces predictable differences in deontic outcomes without corrupting factual reasoning.</p>
+
+  <h2>Sparsity, Masks, and Validation</h2>
+  <p>Throughout all these reasoning modes, relevance masks act as explicit attention mechanisms. They determine which dimensions participate in each distance computation and thus which aspects of the world influence the answer. The ValidationEngine can run "dry" reasoning passes that explore the logical consequences of certain masks and layers without changing stored concepts, searching for conflicts, unreachable regions, or surprising dependencies. For example, it can check whether masking a set of dimensions leaves a decision unchanged; if the outcome flips, that mask might be hiding an implicit dependency worth auditing.</p>
+  <p>The combination of masks, adversarial bands, and theory stacks is what makes AGISystem2’s reasoning both flexible and explainable. You can change context by pushing or popping layers, you can adjust strictness by tuning radii, and you can inspect which dimensions and masks mattered for each step. Other documentation chapters—especially Algorithms & Acronyms, Bias & Values, and Explainability—provide complementary perspectives on the same machinery. This chapter focuses on the story: points move, regions shift, and layers overlay, but all under deterministic control with a clear paper trail.</p>
+
+  <pre>
+High-level flow (simplified):
+
+  1. Normalise text and parse into grammar
+  2. Encode into a high-dimensional vector
+  3. Compose concepts with TheoryStack and layers
+  4. Use Retriever and LSH to propose candidate diamonds
+  5. Apply masked L1 distances via MathEngine
+  6. Interpret results through adversarial bands and value layers
+  7. Record provenance: layers, masks, thresholds, modules used
+  </pre>
+
+  <p>Because every stage of this flow is deterministic and uses explicit data structures, reasoning steps can be replayed, inspected, and compared across configurations or versions. That determinism underpins the explainability guarantees described in the dedicated Explainability chapter and validated by the test suites in <code>.specs/tests/reason_smoke</code> and <code>.specs/tests/validation_engine</code>.</p>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to index</a>
+    <a href="quick_wiki.html">Quick wiki</a>
+  </div>
+  </div>
+</body>
+</html>

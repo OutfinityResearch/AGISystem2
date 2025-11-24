@@ -1,0 +1,39 @@
+{"ts":"2025-11-24T12:22:29.584Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T12:22:29.584Z","kind":"ingest","sentence":"Water HAS_PROPERTY boiling_point=100"}
+{"ts":"2025-11-24T12:22:50.042Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T12:22:50.043Z","kind":"ingest","sentence":"Water HAS_PROPERTY boiling_point=100"}
+{"ts":"2025-11-24T12:22:50.043Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-24T12:58:20.280Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T12:58:48.084Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T12:58:48.085Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-24T12:58:48.085Z","kind":"ingest","sentence":"Tell me a story about dogs."}
+{"ts":"2025-11-24T12:58:48.087Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T12:58:48.087Z","kind":"ingest","sentence":"Water HAS_PROPERTY boiling_point=100"}
+{"ts":"2025-11-24T12:58:48.087Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-24T12:58:54.639Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T12:58:54.639Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-24T12:58:54.639Z","kind":"ingest","sentence":"Tell me a story about dogs."}
+{"ts":"2025-11-24T12:59:03.286Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T12:59:03.286Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-24T12:59:03.286Z","kind":"ingest","sentence":"Tell me a story about dogs."}
+{"ts":"2025-11-24T12:59:18.302Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T12:59:18.305Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-24T12:59:34.330Z","kind":"ingest","sentence":"Tell me a story about dogs."}
+{"ts":"2025-11-24T13:00:16.349Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T13:00:47.484Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T13:00:47.484Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-24T13:02:52.699Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T13:02:52.700Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-24T13:02:52.702Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T13:02:52.702Z","kind":"ingest","sentence":"Water HAS_PROPERTY boiling_point=100"}
+{"ts":"2025-11-24T13:02:52.702Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-24T13:09:51.796Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T13:09:51.796Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-24T13:09:51.800Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T13:09:51.800Z","kind":"ingest","sentence":"Water HAS_PROPERTY boiling_point=100"}
+{"ts":"2025-11-24T13:09:51.801Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-24T13:10:36.175Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T13:10:36.175Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-24T13:10:36.180Z","kind":"ingest","sentence":"Dog IS_A Animal"}
+{"ts":"2025-11-24T13:10:36.180Z","kind":"ingest","sentence":"Water HAS_PROPERTY boiling_point=100"}
+{"ts":"2025-11-24T13:10:36.180Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN"}

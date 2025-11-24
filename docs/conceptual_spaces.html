@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Conceptual Spaces</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Conceptual Spaces: From Theory to Engineering</h1>
+    <small><a href="index.html">Back to index</a> · <a href="quick_wiki.html">Quick wiki</a></small>
+  </div>
+  <p>Conceptual spaces start from a simple but powerful idea: meaning can be treated as geometry. Instead of thinking about knowledge only as symbols and rules, or only as weights in a neural network, we imagine a space with many dimensions. Each dimension corresponds to some quality that the system can measure or care about, and every concrete statement becomes a point in that space. Concepts are then regions that group together many related points. AGISystem2 adopts this view and turns it into an explicit, inspectable data structure built from high-dimensional int8 vectors, bounded diamonds, and relevance masks. Throughout the rest of the documentation, when you see terms like “concept”, “region”, or “bounded diamond”, they refer back to the picture developed in this chapter.</p>
+
+  <h2>Facts as Points, Concepts as Regions</h2>
+  <p>When text comes into the system it is first normalised and reduced to a constrained grammar. A simple statement such as "Dog IS_A Animal" or "Water HAS_PROPERTY boiling_point = 100" is turned into a small tree of subject, relation, and object. The encoder then assigns each part a vector, permutes those vectors according to the roles they play, and adds them together using saturated arithmetic. The result is a single high-dimensional int8 vector that represents that fact. In geometric terms this vector is a point in the global conceptual space. That point can later be looked up through the retrieval engine, combined with other points during learning, or used as a query to ask whether a concept applies.</p>
+  <p>A concept does not live at a single point. Over time, many facts accumulate that refer to the same idea, and those facts trace out a cloud of points in the space. Rather than storing every point separately, AGISystem2 summarises that cloud as one or more bounded diamonds. A bounded diamond is the intersection of an axis-aligned box, an L1 ball centred near the mean of the examples, and a relevance mask that states which dimensions matter for this concept. If the same word is used in several very different senses, the system can maintain several diamonds for it, capturing polysemy explicitly. This view of concepts as regions built from observed points is what enables the reasoning procedures described in the Reasoning chapter to be implemented as geometric checks.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 260 160" role="img" aria-label="Schematic conceptual space with ontology and axiology axes and a bounded diamond region">
+      <defs>
+        <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
+      <line x1="40" y1="130" x2="220" y2="130" stroke="#0f4c81" stroke-width="1.2" marker-end="url(#arrow)" />
+      <line x1="40" y1="130" x2="40" y2="20" stroke="#0f4c81" stroke-width="1.2" marker-end="url(#arrow)" />
+      <text x="222" y="135" font-size="9" fill="#0f4c81">Ontology axes</text>
+      <text x="18" y="22" font-size="9" fill="#0f4c81" transform="rotate(-90 18 22)">Axiology axes</text>
+      <rect x="95" y="55" width="90" height="55" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1" />
+      <polygon points="140,50 200,82 140,140 80,108" fill="none" stroke="#0f4c81" stroke-dasharray="4 3" stroke-width="1" />
+      <circle cx="140" cy="96" r="4" fill="#0f4c81" />
+      <text x="144" y="90" font-size="8" fill="#0f4c81">centre</text>
+      <text x="100" y="68" font-size="8" fill="#0f4c81">box bounds</text>
+      <text x="148" y="132" font-size="8" fill="#0f4c81">L1 radius</text>
+    </svg>
+    <p class="diagram-caption">This schematic diagram shows a tiny slice of the conceptual space with one horizontal direction standing in for many ontology dimensions and the vertical direction standing in for axiology dimensions. The blue rectangle illustrates the per-dimension bounds that constrain a concept, while the dashed diamond shows how an L1 radius trims away the far corners of that box. The point at the centre is a typical encoded fact, and membership tests ask whether such points fall inside the intersection of box and diamond under the currently active relevance mask.</p>
+  </div>
+
+  <h2>Why Geometry Instead of Pure Symbols?</h2>
+  <p>Traditional symbolic systems represent knowledge as discrete predicates and rules. They are precise but brittle: a single missing rule can cause an inference to fail, and adding new rules can unintentionally create contradictions. Purely neural approaches, in contrast, hide their state in floating point weights and activations that are difficult to interpret and audit. Conceptual spaces offer a middle road. By mapping statements into a geometric space with named or at least well-partitioned dimensions, AGISystem2 can compute with vectors while still offering human-scale interpretations. A point belongs to a concept when it lies inside its region. Two concepts contradict each other when their regions do not intersect under the current theory stack. Exceptions and counterexamples appear as points that fall near the boundary or inside one region but not another.</p>
+  <p>Geometry also plays well with incremental learning. When new facts arrive they shift the centre of a region, widen its bounds, or cause the system to split a diamond into several clusters. These operations correspond to simple vector updates and min/max adjustments rather than global retraining. Because dimensions are fixed and arithmetic is done in int8, the cost of these updates is predictable and easy to reason about. The module specifications for <code>BoundedDiamond</code>, <code>MathEngine</code>, and <code>ConceptStore</code> in the <code>.specs/core</code> and <code>.specs/knowledge</code> directories describe how these operations are implemented in detail, but the geometric picture stays the same: learning means sculpting regions so that they better fit the observed points.</p>
+
+  <h2>Why Bounded Diamonds and Not Simple Boxes?</h2>
+  <p>In a low-dimensional space a box is easy to visualise, but in hundreds or thousands of dimensions a pure axis-aligned box becomes extremely generous: most of its volume lies in far-off corners that no real observation will ever reach. An L1 ball, on the other hand, has a smoother boundary but does not respect known hard limits per dimension. By intersecting a box with an L1 ball we obtain a diamond-shaped region that is strict where it must be and forgiving where it should be. The box imposes explicit min and max bounds per dimension, such as "temperature must be between 0 and 100" or "velocity cannot be negative". The L1 ball trims away unrealistic corners in high dimensions so that distance-based reasoning remains meaningful and robust.</p>
+  <p>The relevance mask is the third ingredient. Many dimensions exist in the global space that are irrelevant for a particular concept. For example, the legal liability dimensions in the ontology catalogue are not useful for reasoning about the colour of an apple. The relevance mask records, for each dimension, whether it participates in the definition of this concept. During distance computations the MathEngine will ignore dimensions whose mask bits are cleared. This keeps both computation and explanations focused on the axes that actually matter. When later chapters talk about "sparsity as attention" or "relevance-driven proofs", they are referring directly to this use of masks.</p>
+
+  <h2>Partitions of Meaning: Ontology, Axiology, Empirical Tail</h2>
+  <p>The conceptual space used by AGISystem2 is not a formless cloud of numbers. Its coordinate system is deliberately partitioned to reflect different kinds of meaning. Ontology dimensions, numbered from 0 to 255, carry factual and structural information about the world: physical properties, temporal attributes, agency, process characteristics, risk markers, and more, as described in the dimension catalogue specification. Axiology dimensions, from 256 to 383, encode values, norms, and preferences: which actions are permitted, which are obligatory, which outcomes are considered harmful or beneficial. Everything above 383 is reserved for empirical or latent dimensions discovered during ingestion and learning.</p>
+  <p>This partitioning supports the strict separation between facts and values that is central to the Bias & Values chapter. When a theory layer encodes that a certain action is forbidden in one jurisdiction but permitted in another, it does so by adjusting only axiology dimensions while leaving ontology untouched. The BiasController can then apply modes such as a veil-of-ignorance by masking some axiology axes or sensitive ontological axes before a reasoning step. As a result, the same factual region can be evaluated under different value systems without corrupting the underlying concept. The tests in <code>.specs/tests/deontic_reasoning</code> and <code>.specs/tests/bias_audit</code> exercise this behaviour by checking that changing value layers changes only the deontic outcome bands, not the underlying factual membership.</p>
+
+  <h2>High-Dimensional Design Choices</h2>
+  <p>Choosing high-dimensional int8 vectors is an engineering decision informed by research on hyperdimensional computing. With hundreds or thousands of dimensions, most randomly chosen vectors are nearly orthogonal. This property allows the engine to use superposition: adding vectors corresponding to several observations reinforces consistent features while letting noise cancel out statistically. Using int8 instead of floating point keeps memory usage and cache behaviour predictable, which matters in long-running or embedded deployments. The MathEngine implements saturated addition so that even long histories of updates cannot overflow the numeric range.</p>
+  <p>Structure such as roles, time steps, and causal directions is encoded through permutations rather than by adding extra dimensions. The RelationPermuter module maintains a deterministic permutation table for each relation, as well as inverse permutations when needed. When the encoder binds a child phrase to its parent via a relation, it permutes the child’s vector according to that relation and then adds it to the parent. This keeps the total dimensionality fixed while still encoding "who did what to whom and when". Retrieval uses locality-sensitive hashing to quickly find candidate diamonds near a query point, and then the MathEngine computes exact masked L1 distances. Because all of these components use seeded randomness and respect the global dimension configuration, two runs with the same inputs and seeds will always produce the same vectors and thus the same reasoning outcomes.</p>
+
+  <pre>
+Dimensional layout (simplified):
+  [ Ontology (0–255) | Axiology (256–383) | Empirical 384+ ... ]
+
+Concept representation:
+  Concept = union of Diamonds
+  Diamond = Box(min, max) ∩ L1 ball(center, radius) ∩ Mask
+
+Fact representation:
+  Fact = point (vector) derived from a normalised sentence
+  Membership = point ∈ Concept under active theory layers
+
+Context representation:
+  Context = stack of TheoryLayers overlayed at runtime
+  </pre>
+
+  <h2>Links to the Literature and to the Codebase</h2>
+  <p>The conceptual spaces idea originates in work by Peter Gärdenfors and others who argued for a geometric middle layer between symbols and subsymbolic vectors. Hyperdimensional computing, as developed by Pentti Kanerva and subsequent researchers, shows how to represent complex structures using high-dimensional vectors, permutations, and binding operations. From the perspective of dimensionality reduction, results like the Johnson–Lindenstrauss lemma give intuition for why distances can remain meaningful in high dimensions. AGISystem2 borrows from all of these lines of work but grounds them in deterministic, auditable Node.js components described in the <code>.specs</code> directory. The <code>VectorSpace</code> and <code>MathEngine</code> modules implement the raw operations; <code>BoundedDiamond</code>, <code>ConceptStore</code>, and <code>TheoryStack</code> implement conceptual regions and context overlays; <code>Retriever</code> and the various test suites ensure that these pieces behave as intended.</p>
+  <p>When reading other documentation pages you can treat this chapter as the background reference for any mention of regions, masks, diamonds, or partitions. The Reasoning chapter shows how membership in a diamond becomes a deduction step. The Bias & Values chapter relies on the ontological and axiological partitions described here. The Explainability chapter assumes that regions and masks are explicit objects that can be cited in proofs. Together, these documents form a wiki-style explanation of conceptual spaces for programmers who may not have a machine learning background but need to understand how AGISystem2 thinks.</p>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to index</a>
+    <a href="quick_wiki.html">Quick wiki</a>
+  </div>
+  </div>
+</body>
+</html>

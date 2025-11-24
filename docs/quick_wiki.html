@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Quick Wiki</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Quick Wiki of Concepts</h1>
+    <small><a href="index.html">Back to index</a> · Quick glossary</small>
+  </div>
+  <p>A short reference for the main mathematical and conceptual tools used in AGISystem2. Each entry gives an intuitive description and a link to an external resource for deeper reading.</p>
+
+  <h2>Conceptual Spaces</h2>
+  <p>Conceptual spaces treat meaning as regions in a geometric space whose axes are interpretable qualities (such as color, size, or location). Similarity is distance, and a concept is a region rather than a symbol or a list of rules. AGISystem2 implements this idea with bounded diamonds in a high-dimensional vector space. A good starting point is Peter Gärdenfors’ work; an overview is available at <a href="https://en.wikipedia.org/wiki/Conceptual_spaces" target="_blank">Wikipedia: Conceptual spaces</a>.</p>
+
+  <h2>Hyperdimensional Computing</h2>
+  <p>Hyperdimensional computing (also called vector symbolic architectures) uses very high-dimensional vectors with simple operations such as addition and permutation to represent and manipulate symbols. Near-orthogonality in high dimensions allows many items to be superposed without excessive interference. AGISystem2 uses this paradigm for superposition and role binding. See <a href="https://en.wikipedia.org/wiki/Hyperdimensional_computing" target="_blank">Wikipedia: Hyperdimensional computing</a>.</p>
+
+  <h2>Johnson–Lindenstrauss Lemma</h2>
+  <p>The Johnson–Lindenstrauss lemma states that a small set of points in a high-dimensional space can be embedded into a lower-dimensional space such that pairwise distances are approximately preserved. It explains why random projections can maintain geometry. Although AGISystem2 does not explicitly project down, the lemma motivates the idea that distances in high dimensions can still be meaningful. See <a href="https://en.wikipedia.org/wiki/Johnson%E2%80%93Lindenstrauss_lemma" target="_blank">Wikipedia: Johnson–Lindenstrauss lemma</a>.</p>
+
+  <h2>Locality-Sensitive Hashing (LSH)</h2>
+  <p>LSH is a technique for approximate nearest-neighbor search. It uses hash functions designed so that similar vectors are likely to collide in the same buckets. AGISystem2 uses p-stable LSH (for L1 distance) and SimHash (for fast tests) to find candidate concepts before refining with exact masked distances. An introduction is available at <a href="https://en.wikipedia.org/wiki/Locality-sensitive_hashing" target="_blank">Wikipedia: Locality-sensitive hashing</a>.</p>
+
+  <h2>Permutation-Based Binding</h2>
+  <p>Binding with permutations is a way to encode structure, such as subject and object roles, by shuffling vector indices. Applying a fixed permutation before addition distinguishes roles without adding dimensions; applying the inverse permutation recovers the bound component. This is a standard technique in vector symbolic architectures; see the discussion of binding in hyperdimensional computing and related work on holographic reduced representations.</p>
+
+  <h2>L1 vs L2 Distance</h2>
+  <p>Distance metrics measure how far apart two points are. L2 (Euclidean) is the familiar straight-line distance, while L1 (Manhattan) sums absolute differences per dimension. In high dimensions, L2 distances can concentrate, making nearest and farthest neighbors look similar. L1 often preserves contrast better, which is why AGISystem2 uses masked L1. See <a href="https://en.wikipedia.org/wiki/Norm_(mathematics)" target="_blank">Wikipedia: Norm (mathematics)</a> for context.</p>
+
+  <h2>Superposition</h2>
+  <p>Superposition is the practice of representing many items by adding their vectors. In high dimensions, random vectors are nearly orthogonal, so consistent features reinforce and noise tends to cancel. AGISystem2 uses superposition to accumulate empirical evidence in concept prototypes. This idea is central in hyperdimensional computing.</p>
+
+  <h2>Adversarial Bands</h2>
+  <p>Adversarial bands in this context refer to using two distance thresholds to grade truth. A strict inner radius corresponds to a sceptic, a relaxed outer radius to an optimist. Points inside the inner radius are treated as true, points outside the outer radius as false, and those in between as plausible. This is an engineering pattern rather than a named external algorithm, but it is analogous to robust classification margins in machine learning.</p>
+
+  <h2>Deontic Logic</h2>
+  <p>Deontic logic formalizes modalities like obligation, permission, and prohibition. AGISystem2 encodes deontic notions on axiology axes and uses relations such as PERMITS and PROHIBITS to manipulate them. For a logical introduction see <a href="https://en.wikipedia.org/wiki/Deontic_logic" target="_blank">Wikipedia: Deontic logic</a>.</p>
+
+  <h2>Non-Monotonic Reasoning</h2>
+  <p>Non-monotonic reasoning allows new information to invalidate previous conclusions, unlike classical logic where truths only accumulate. Theory layers in AGISystem2 implement non-monotonic behavior: a higher-priority layer can override a lower one without deleting it. For background, see <a href="https://en.wikipedia.org/wiki/Non-monotonic_logic" target="_blank">Wikipedia: Non-monotonic logic</a>.</p>
+
+  <h2>Explainable AI (XAI)</h2>
+  <p>Explainable AI refers to techniques that make model decisions understandable to humans. AGISystem2 achieves explainability by construction through explicit geometry and provenance. For a general overview, see <a href="https://en.wikipedia.org/wiki/Explainable_artificial_intelligence" target="_blank">Wikipedia: Explainable artificial intelligence</a>.</p>
+
+  <h2>Bias and Fairness</h2>
+  <p>Bias in AI occurs when systems systematically favor or disadvantage certain groups or outcomes. Fairness research develops ways to detect and mitigate such biases. AGISystem2 separates facts and values, and uses masks and layers to make value judgments explicit and auditable. For general context, see <a href="https://en.wikipedia.org/wiki/Fairness_(machine_learning)" target="_blank">Wikipedia: Fairness in machine learning</a>.</p>
+
+  <p>Other chapters reference these concepts in context. When you see a term you do not recognize, this page and its links are a good place to start.</p>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to index</a>
+  </div>
+  </div>
+</body>
+</html>

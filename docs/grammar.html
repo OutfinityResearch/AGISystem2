@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Grammar & Sentence Shapes</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Grammar & Sentence Shapes</h1>
+    <small><a href="index.html">Back to index</a> · <a href="quick_wiki.html">Quick wiki</a></small>
+  </div>
+  <p>AGISystem2 deliberately understands only a small, precise dialect of English. The aim is not to mimic human style but to provide a language that is easy to turn into high-dimensional vectors without ambiguity. Everything that enters the engine as text eventually becomes a point in conceptual space, and that mapping must be stable and deterministic. This chapter describes the canonical sentence shapes, what kinds of natural language are rejected or must be normalised, and how TranslatorBridge and Parser cooperate to enforce this contract.</p>
+
+  <h2>The Canonical Assertion and Question Forms</h2>
+  <p>Every core sentence has three parts: subject, relation, and object. A simple assertion like <code>Dog IS_A Animal</code> says that the concept labelled "Dog" belongs to the broader concept "Animal". Another assertion such as <code>Water HAS_PROPERTY boiling_point=100</code> attaches a property concept <code>boiling_point=100</code> to "Water". Property-like tokens use a <code>key=value</code> form so that the encoder can represent the key and the value as separate but related concepts, bound together through role permutations.</p>
+  <p>Questions follow the same pattern but are phrased as queries. <code>Is Dog an Animal?</code> or <code>Is water boiling at 100?</code> are treated as requests to encode the underlying assertion and check whether the resulting point lies inside the appropriate concept region. In other words, the question grammar is just a thin layer of English sugar over the same S-R-O backbone. From the engine’s point of view, both assertions and questions ultimately become vectors and bounded-diamond membership tests, as explained in the Conceptual Spaces and Reasoning chapters.</p>
+
+  <h2>Counterfactual and Deontic Forms</h2>
+  <p>Some sentences describe temporary, hypothetical contexts rather than facts that should be stored permanently. These are expressed as counterfactuals. A typical pattern is to prefix an assertion with "Assume" or to use dedicated API calls that apply a theory layer. For example, <code>Assume Water HAS_PROPERTY boiling_point=50</code> says that for the duration of this reasoning step, we pretend that water boils at 50 degrees. The corresponding vector and layer adjustments are confined to a cloned TheoryStack and discarded after the query completes, leaving the base theory unchanged.</p>
+  <p>Normative sentences rely on deontic relations such as <code>PERMITS</code>, <code>PROHIBITS</code>, and <code>OBLIGATES</code>. A sentence like <code>ExportData PROHIBITED_BY GDPR</code> assigns a deontic status to the action "ExportData" under the regime labelled "GDPR". Causal and temporal relations, on the other hand, use pairs such as <code>CAUSES</code>/<code>CAUSED_BY</code> and <code>BEFORE</code>/<code>AFTER</code>. Structural relations include <code>IS_A</code>, <code>PART_OF</code>/<code>HAS_PART</code>, <code>HAS_PROPERTY</code>/<code>PROPERTY_OF</code>, and <code>LOCATED_IN</code>/<code>CONTAINS</code>. The Relations chapter and <code>.specs/knowledge/default_relations.md</code> describe how each relation is mapped to permutations in the RelationPermuter so that the grammar has clear geometric consequences.</p>
+
+  <h2>What the Engine Rejects</h2>
+  <p>The constrained grammar is intentionally strict about what it accepts. Nested clauses, ambiguous pronouns, and vague references are all problematic because they would introduce uncertainty into the encoding step. A sentence like "Could you tell me whether dogs fall under animals?" must be normalised to "Dog IS_A Animal" before it can enter the engine. Similarly, "John met Mary there" must be rewritten so that "there" becomes a concrete location concept. Free-form requests such as "Tell me a story" or "Give me advice" are not accepted by <code>getAgenticSession</code> at all; they belong in layers that talk to generative models, with AGISystem2 used to check or structure the results.</p>
+  <p>The TranslatorBridge is responsible for this normalisation. Its behaviour is specified in <code>.specs/interface/translator_bridge.js.md</code> and validated in the <code>.specs/tests/translator_bridge_normalization</code> suite. The bridge uses a pinned prompt and model configuration so that, given the same input, it always produces the same set of constrained grammar sentences. If the bridge cannot find a safe rewrite, it should fail rather than produce a guess. The API chapter describes how EngineAPI surfaces such failures to callers.</p>
+
+  <h2>How Normalisation and Parsing Cooperate</h2>
+  <p>Once TranslatorBridge has emitted one or more clean S-R-O sentences, the Parser module takes over. Its job is deliberately modest: build a shallow tree where each node is either a subject, relation, object, or property. The recursion horizon is kept low to prevent deeply nested structures from polluting the vector with too much noise. For each node, the encoder will later apply a relation-specific permutation and add its vector into the overall encoding. Because the grammar is small, parsing can be both fast and deterministic, with a clear mapping from tokens to roles.</p>
+  <p>In practice, this means that when you read about encoding or reasoning in other chapters, you can imagine each sentence as following a simple pipeline: normalise to S-R-O, parse into a small tree, encode via permutations and saturated addition, and finally carve or query regions in conceptual space. The Grammar chapter is the specification of the first two steps in that pipeline. The tests in <code>.specs/tests/grammar</code> (if present) and in related suites ensure that small variations in phrasing are either normalised correctly or rejected in a controlled way.</p>
+
+  <h2>Concrete Examples</h2>
+  <pre>
+Assertion:
+  "Dog IS_A Animal"
+Question:
+  "Is water boiling at 100?"
+Counterfactual:
+  "Assume Water HAS_PROPERTY boiling_point=50"
+Deontic:
+  "ExportData PROHIBITED_BY GDPR"
+Causal:
+  "Fire CAUSES Smoke"
+Temporal:
+  "EventA BEFORE EventB"
+Structural:
+  "Engine PART_OF Car"
+  </pre>
+  <p>These examples are deliberately simple, but they capture the full variety of sentence shapes the core engine understands. More complex scenarios are expressed as sets of such sentences combined with different theory layers, as discussed in the Reasoning and Pragmatics chapters.</p>
+
+  <h2>Why Such a Strict Grammar?</h2>
+  <p>The decision to keep the grammar small is a trade-off between flexibility and clarity. Every extra degree of freedom in language must be reflected in the encoding and reasoning layers, multiplying the ways in which ambiguity can slip in. By constraining inputs to a handful of relations and simple token patterns, AGISystem2 gains several advantages: parsing is deterministic, the mapping from text to vectors is transparent, and explanations can directly reference the original sentences without hidden transformations. TranslatorBridge assumes the burden of dealing with messy human language, allowing the core engine to remain lean and exact.</p>
+  <p>For developers coming from traditional machine learning backgrounds, this may feel strict compared to end-to-end text models. The benefit is that when something goes wrong you can often point to a specific sentence shape or relation choice as the cause, rather than to a mysterious shift in a large neural network. The Grammar, Conceptual Spaces, and Algorithms chapters together form a small wiki that explains how this constrained language maps into geometry and why that constraint is a feature, not a limitation, for safety-critical and auditable systems.</p>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to index</a>
+    <a href="quick_wiki.html">Quick wiki</a>
+  </div>
+  </div>
+</body>
+</html>

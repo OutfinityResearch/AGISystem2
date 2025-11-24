@@ -1,0 +1,305 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AGISystem2 – Vision & Guide</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>AGISystem2 – Vision & Guide</h1>
+    <small>Deterministic neuro-symbolic geometry for explainable reasoning</small>
+  </div>
+  <div class="section-intro">
+    <p>This is a long-form, human-readable guide to a deterministic neuro-symbolic engine. AGISystem2 thinks in geometry: concepts are regions, relations are rotations, and context is a stack of overlays. The goal of these pages is to explain why we chose this path, how it works, and how to use it safely. Expect essays, diagrams, and examples rather than terse checklists.</p>
+  </div>
+
+  <h2>Research & Technologies</h2>
+  <p>This engine sits at the intersection of several research traditions: conceptual spaces, hyperdimensional computing, adversarial statistics, and practical software architecture for safety‑critical systems. If you are a programmer who has not specialised in machine learning, you can still read this documentation as a gentle introduction to those ideas. The core intuition is that we never manipulate raw text or opaque neural weights directly; instead we encode everything into a geometric space where every operation can be explained as a distance, a rotation, or a layered override. The chapters referenced below form a living wiki of concepts. When you see an unfamiliar term such as “bounded diamond”, “LSH index”, or “deontic band” in other pages, you can always come back here and follow the links to their extended explanations.</p>
+  <p>The starting point for understanding the research foundations is the chapter on <a href="conceptual_spaces.html">Conceptual Spaces</a>, which explains how ideas from Peter Gärdenfors and related work are turned into concrete data structures such as int8 vectors, relevance masks, and unions of bounded diamonds. Closely related is the chapter on <a href="algorithms.html">Algorithms & Acronyms</a>, where techniques like locality‑sensitive hashing, vector permutations, temporal rotations, and superposition are described in plain language with engineering‑oriented intuition. For an overview of how reasoning itself becomes a sequence of geometric manipulations, you can read the <a href="reasoning.html">Reasoning</a> chapter, which connects classical notions like deduction, induction, abduction, and analogy to movement inside the conceptual space.</p>
+  <p>Because the system is meant to be auditable and value‑aware, there are dedicated wiki‑style explanations for how facts, norms, and preferences are kept apart. The <a href="bias.html">Bias & Values</a> chapter introduces the separation between ontology dimensions, which carry factual content, and axiology dimensions, which express value judgements; it also shows how theory layers and masks can simulate different legal or cultural viewpoints without corrupting the underlying data. The <a href="explainability.html">Explainability</a> chapter focuses on how proofs, bands, provenance logs, and validation checks are generated and how they can be read by engineers or auditors who may not care about the underlying geometry as long as they can follow a deterministic trail of evidence. When documentation pages on API or configuration mention things like “adversarial bands”, “validation engine”, or “bias controller”, they are pointing back to these research‑oriented chapters.</p>
+  <p>Finally, the engine leans on a specific set of implementation technologies which are also documented in an explanatory rather than purely reference‑style manner. The chapters on <a href="dimensions.html">Empirical Space</a>, <a href="ontology_dims.html">Ontology Dimensions</a>, and <a href="axiology_dims.html">Axiology Dimensions</a> describe how the global vector space is partitioned into interpretable regions, how new empirical dimensions can be discovered safely, and how those regions stay stable across runs. The <a href="architecture.html">Architecture</a> chapter tells the story of how modules like VectorSpace, MathEngine, BoundedDiamond, ConceptStore, Retriever, and Reasoner collaborate, while <a href="ingestion.html">Ingestion</a> and <a href="learning.html">Learning</a> explain the data pipeline from text to vectors and from raw observations to evolving concepts. Taken together, these texts act as the “Research & Technologies” wiki that more task‑specific pages link back to whenever they use specialised terminology.</p>
+
+  <h2>Vision and Design Principles</h2>
+  <p>The engine is built to be the opposite of a black box. Determinism replaces sampling; geometry replaces opaque weights; facts and values live on separate axes; conflicting theories can coexist and be compared; explanations come “for free” because every decision is a distance check with named dimensions. This section collects the high‑level philosophy behind those choices and points to the deeper wiki chapters when needed. If you are new to the project, reading these essays in order will give you a mental model for why the system looks the way it does.</p>
+  <p>The narrative begins with <a href="conceptual_spaces.html">Conceptual Spaces</a>, which introduces the idea that concepts are regions, facts are points, and reasoning is movement within a geometric space. From there, the <a href="reasoning.html">Reasoning</a> chapter shows how deduction, induction, abduction, counterfactual reasoning, and temporal or deontic logic can all be phrased as questions about whether a point lies inside or outside various bounded diamonds. The <a href="bias.html">Bias & Values</a> chapter explains how facts and value judgements occupy different partitions of the space, while <a href="explainability.html">Explainability</a> shows how every decision can be retold as a human‑readable proof that cites distances, masks, and active theory layers instead of probability scores or opaque activations. Throughout these chapters there are references back to <a href="algorithms.html">Algorithms & Acronyms</a> whenever a concrete technique such as LSH or vector permutation first appears.</p>
+
+  <h2>Why Use It (Pragmatics)</h2>
+  <p>AGISystem2 shines where rules matter, conflicts must be explicit, and reproducibility is non‑negotiable. Typical application domains include regulatory compliance where multiple regimes such as GDPR and HIPAA must be compared, safety checks in pipelines that mix symbolic rules and generative models, expert systems in which exceptions and counterexamples are common, narrative consistency for complex agents, and any scenario where you want a deterministic anchor next to a probabilistic model. The <a href="pragmatics.html">Pragmatics</a> chapter describes these use cases in narrative form, connecting each scenario back to the geometric and architectural concepts explained in the research‑oriented wiki. The chapters on <a href="expert_mode.html">Expert System Mode</a> and <a href="rag.html">RAG</a> then specialise this discussion: Expert System Mode focuses on building layered rule systems with explicit overrides, while the RAG chapter shows how to pair AGISystem2 with large language models so that generation is constrained and checked by the conceptual space.</p>
+
+  <h2>API & Practical Considerations</h2>
+  <p>To drive the engine in practice, you work with a constrained grammar, configuration profiles, and a small but expressive API surface. The <a href="api.html">API</a> chapter explains how to obtain an EngineAPI instance, how to open an agentic session, and what guarantees you get in terms of provenance and reproducibility. Whenever that chapter mentions elements such as the Reasoner, Retriever, or ValidationEngine, you can cross‑reference the <a href="architecture.html">Architecture</a> and <a href="reasoning.html">Reasoning</a> pages for deeper background on how those components behave internally. The <a href="grammar.html">Grammar</a> chapter then walks through the sentence patterns the system accepts, how natural language is normalised into those patterns, and how expressions such as counterfactuals or deontic statements are encoded; it regularly points back to <a href="conceptual_spaces.html">Conceptual Spaces</a> and <a href="algorithms.html">Algorithms & Acronyms</a> so that the underlying geometry is never mysterious.</p>
+  <p>Engine behaviour is heavily influenced by configuration, which is why <a href="config.html">Configuration</a> and the dimension‑related chapters are written as narrative guides rather than terse parameter lists. When you choose a profile, set the total dimensionality, or adjust the number of LSH bands, you are effectively choosing a trade‑off between precision, recall, and resource usage. The documentation explains these trade‑offs with concrete, implementation‑level examples: for instance, what happens to adversarial bands when you shrink radii, or how value‑sensitive dimensions affect retrieval in deontic reasoning. The pages on <a href="relations.html">Relations</a>, <a href="ontology_dims.html">Ontology Dimensions</a>, <a href="axiology_dims.html">Axiology Dimensions</a>, <a href="dimensions.html">Empirical Space</a>, <a href="ingestion.html">Ingestion</a>, and <a href="config.html">Configuration</a> form a connected reference that you can read linearly or dip into when a particular technical term comes up elsewhere.</p>
+
+  <h2>Supporting Chapters</h2>
+  <p>The remaining chapters provide depth and context for readers who want to understand the system as an evolving research project rather than a frozen product. The <a href="architecture.html">Architecture</a> chapter tells the story of the main modules and their responsibilities, from VectorSpace and MathEngine up to Reasoner, BiasController, and Storage. The <a href="learning.html">Learning</a> chapter explains how concepts change over time through clustering, splitting, and merging of bounded diamonds, and how temporal memory interacts with long‑term storage. The <a href="limits.html">Limits</a> chapter is explicit about what the engine does not try to do, how geometric representations can fail, and which mitigation strategies are built in, while the <a href="roadmap.html">Roadmap</a> chapter sketches future research directions such as richer temporal logics, better integration with external knowledge bases, and tooling for interactive proof exploration.</p>
+  <p>Each chapter in this documentation set is intentionally longer than a short note or checklist so that non‑experts in machine learning can still build an accurate mental model of the system. You can read the pages in the suggested order, or you can treat the “Research & Technologies” section above as an index into the wiki‑style explanations of individual concepts. If you are new, begin with Vision and Reasoning. If you are integrating the engine into an application, focus on API, Grammar, Relations, Configuration, and the ingestion pipeline. If you are auditing, spend more time with Explainability, Bias & Values, Limits, and the architecture overview, using the cross‑references to navigate between theory and implementation.</p>
+
+  <h2>Concept Wiki Index</h2>
+  <p>This section collects philosophical and meta‑cognitive terms that appear throughout the documentation and gives each of them a short explanation together with a direct link to an external reference. The goal is to make the text readable for experienced programmers who may not have formal training in philosophy of language, epistemology, or machine learning theory. You can scan the table alphabetically, follow Wikipedia links for deeper background, and click on a concept name to open a focused popup with a more detailed explanation of how that notion is used inside AGISystem2.</p>
+
+  <table class="table-concept-index">
+    <tr>
+      <th>Concept</th>
+      <th>Short description in this project</th>
+      <th>Wikipedia reference</th>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="abduction">Abduction</span></td>
+      <td>Abduction, or inference to the best explanation, is the reasoning style that starts from an observation and searches for the most plausible cause; the engine realises it by inverting relational permutations and retrieving concepts that best account for the observed vector.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Abductive_reasoning" target="_blank" rel="noopener noreferrer">Abductive reasoning</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="analogy">Analogy</span></td>
+      <td>Analogy compares structured situations of the form “A is to B as C is to D”; AGISystem2 models this by translating vectors in conceptual space so that the relation between C and a candidate D mirrors the relation between A and B.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Analogy" target="_blank" rel="noopener noreferrer">Analogy</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="axiology">Axiology</span></td>
+      <td>Axiology is the study of values and value judgements; in this project it names the part of the vector space reserved for norms, preferences, permissions and obligations, separated from factual content.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Axiology" target="_blank" rel="noopener noreferrer">Axiology</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="bias">Bias</span></td>
+      <td>Bias denotes systematic distortion in decisions or representations; here it covers both unfair dependence on protected attributes and more general value‑laden shortcuts that the engine makes explicit through masks and partitions.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Bias" target="_blank" rel="noopener noreferrer">Bias</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="conceptual-spaces">Conceptual spaces</span></td>
+      <td>Conceptual spaces are geometric models of meaning where entities are points and concepts are regions; AGISystem2 realises this idea with high‑dimensional int8 vectors, bounded diamonds and relevance masks.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Conceptual_space" target="_blank" rel="noopener noreferrer">Conceptual space</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="counterfactual">Counterfactual</span></td>
+      <td>A counterfactual is a statement about what would happen in a world that differs from the actual one; the engine models such worlds as temporary theory layers that alter parts of the conceptual space without rewriting stored facts.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Counterfactual_conditional" target="_blank" rel="noopener noreferrer">Counterfactual conditional</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="deontic-logic">Deontic logic</span></td>
+      <td>Deontic logic studies permissions, obligations and prohibitions; in AGISystem2 these ideas live on dedicated value dimensions and are manipulated through deontic relations that mark actions as allowed, required or forbidden in a given context.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Deontic_logic" target="_blank" rel="noopener noreferrer">Deontic logic</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="expert-system">Expert system</span></td>
+      <td>An expert system is a program that encodes specialist knowledge in a structured way to answer questions; AGISystem2’s expert mode is a modern variant that uses geometric regions and theory layers instead of only symbolic rules.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Expert_system" target="_blank" rel="noopener noreferrer">Expert system</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="hyperdimensional-computing">Hyperdimensional computing</span></td>
+      <td>Hyperdimensional computing is an approach that represents information with very high‑dimensional vectors and simple operations like addition and permutation; the engine uses this style to keep reasoning transparent and hardware‑friendly.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Hyperdimensional_computing" target="_blank" rel="noopener noreferrer">Hyperdimensional computing</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="narrative-consistency">Narrative consistency</span></td>
+      <td>Narrative consistency refers to the way events, actions and explanations hang together as a coherent story; tests and tooling in this project use the term when checking whether sequences of states and decisions remain logically and temporally aligned.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Narrative" target="_blank" rel="noopener noreferrer">Narrative</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="non-monotonic-logic">Non‑monotonic logic</span></td>
+      <td>Non‑monotonic logic allows conclusions to be withdrawn when new information arrives; AGISystem2 supports this behaviour through layers and overrides that can retract default inferences without rewriting the entire knowledge base.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Non-monotonic_logic" target="_blank" rel="noopener noreferrer">Non‑monotonic logic</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="ontology">Ontology</span></td>
+      <td>Ontology in philosophy is the study of what exists; here it designates the part of the vector space that encodes factual structure about entities, properties and relations, kept distinct from evaluative or normative information.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Ontology" target="_blank" rel="noopener noreferrer">Ontology</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="pragmatics">Pragmatics</span></td>
+      <td>Pragmatics is the study of how context and purpose influence meaning beyond literal content; the project uses this notion when discussing real‑world deployment scenarios, safety constraints and how answers are framed for users.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Pragmatics" target="_blank" rel="noopener noreferrer">Pragmatics</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="symbol-grounding">Symbol grounding</span></td>
+      <td>The symbol‑grounding problem asks how abstract symbols obtain meaning in relation to the world; AGISystem2 approaches grounding by tying symbolic statements to geometric regions whose dimensions correspond to interpretable empirical and normative quantities.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Symbol_grounding" target="_blank" rel="noopener noreferrer">Symbol grounding</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="trustworthy-ai">Trustworthy AI</span></td>
+      <td>Trustworthy AI is an umbrella term for systems that are reliable, transparent and aligned with human values; this project contributes by making reasoning deterministic, geometrically interpretable and auditable through explicit bias and validation mechanisms.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Trustworthy_artificial_intelligence" target="_blank" rel="noopener noreferrer">Trustworthy artificial intelligence</a></td>
+    </tr>
+    <tr>
+      <td><span class="concept-link-button" data-concept="veil-of-ignorance">Veil of ignorance</span></td>
+      <td>The veil of ignorance is a thought experiment from political philosophy where decisions are made without knowing one’s own position; BiasController implements analogous modes by masking protected attributes during reasoning.</td>
+      <td><a href="https://en.wikipedia.org/wiki/Veil_of_ignorance" target="_blank" rel="noopener noreferrer">Veil of ignorance</a></td>
+    </tr>
+  </table>
+
+  <div id="concept-modal-backdrop" class="concept-modal-backdrop"></div>
+
+  <div id="concept-modal-axiology" class="concept-modal" aria-hidden="true">
+    <h3>Axiology in AGISystem2</h3>
+    <p>Axiology is the branch of philosophy that studies values, including ethics and aesthetics. In AGISystem2 this idea becomes concrete through a dedicated partition of the global vector space where value judgements, permissions and obligations are encoded as coordinates rather than as opaque tags. Ontological dimensions describe how the world is, while axiological dimensions describe how the world ought to be viewed or regulated under a given perspective.</p>
+    <p>When the documentation talks about axiology dimensions or value layers, it refers to regions of this space that mark, for example, that a medical treatment is recommended under one guideline but discouraged under another, or that a financial transaction is permitted in one jurisdiction yet forbidden in another. Because values live on separate axes, the engine can switch or compare regulatory regimes by manipulating these regions without rewriting factual knowledge, and bias‑audit tools can inspect exactly which value coordinates influenced a decision.</p>
+    <button class="concept-modal-close" data-concept-close="axiology">Close</button>
+  </div>
+
+  <div id="concept-modal-bias" class="concept-modal" aria-hidden="true">
+    <h3>Bias and Fairness Signals</h3>
+    <p>Bias in everyday language covers many different phenomena, from simple statistical skew to unfair discrimination. AGISystem2 treats bias as any systematic pattern in decisions that depends on attributes we intend to ignore or that encodes controversial value choices without making them explicit. Rather than hoping such effects do not appear, the engine is designed to represent them geometrically and to expose them through dedicated tools.</p>
+    <p>The documentation and specifications describe a BiasController that can hide or emphasise partitions of the vector space corresponding to protected attributes or sensitive value dimensions. By running the same reasoning steps under different masks, auditors and developers can see when an answer changes in ways that indicate undesirable dependence on those attributes. In this sense bias is not a single numerical score but a family of comparisons between masked and unmasked runs that reveal how robust or fragile a conclusion is.</p>
+    <button class="concept-modal-close" data-concept-close="bias">Close</button>
+  </div>
+
+  <div id="concept-modal-conceptual-spaces" class="concept-modal" aria-hidden="true">
+    <h3>Conceptual Spaces as a Mental Model</h3>
+    <p>Conceptual spaces are geometric models of meaning in which individual situations or objects are represented as points and categories as regions. Dimensions in such a space correspond to interpretable qualities like temperature, mass, risk or jurisdiction, and similarity is measured as distance. AGISystem2 adopts this view by encoding statements into high‑dimensional int8 vectors, then grouping consistent observations into bounded diamonds that occupy contiguous regions of the space.</p>
+    <p>This perspective bridges symbolic reasoning and numerical computation. Instead of memorising text patterns or relying on opaque neural activations, the engine reasons by asking whether a query point falls inside a concept’s region under the current context, or how far away it lies from a given boundary. Chapters like Conceptual Spaces, Reasoning and Algorithms explain how masks, adversarial bands and permutations refine this picture, but the underlying intuition remains that meaning is geometry and that changing assumptions corresponds to reshaping regions rather than editing ad‑hoc rules.</p>
+    <button class="concept-modal-close" data-concept-close="conceptual-spaces">Close</button>
+  </div>
+
+  <div id="concept-modal-counterfactual" class="concept-modal" aria-hidden="true">
+    <h3>Counterfactual Worlds</h3>
+    <p>Counterfactual statements explore what would be true if some aspect of the world were different, for example when asking whether a safety incident would still have occurred under stricter controls. In AGISystem2 counterfactuals are not handled by rewriting stored facts but by building temporary theory layers on top of the base knowledge. Each such layer adjusts certain regions of the conceptual space, perhaps weakening a physical law or introducing an exceptional rule, and then normal reasoning runs against this altered backdrop.</p>
+    <p>Because the underlying geometry and configuration remain deterministic, results from counterfactual runs can be compared systematically with results from the base theory. This makes it possible to highlight which distances, masks or axiological coordinates changed when moving from the actual world to the hypothetical one. The Counterfactual and Reasoning chapters describe practical patterns for using these layered worlds to test policies, explore edge cases and communicate alternative scenarios to human decision‑makers.</p>
+    <button class="concept-modal-close" data-concept-close="counterfactual">Close</button>
+  </div>
+
+  <div id="concept-modal-deontic-logic" class="concept-modal" aria-hidden="true">
+    <h3>Deontic Logic and Normative Layers</h3>
+    <p>Deontic logic is the branch of logic concerned with duties, permissions and prohibitions. In AGISystem2 the same factual situation can be evaluated under several normative regimes, each expressed as regions in the axiological part of the vector space. Relations such as PERMITS, OBLIGATES or PROHIBITS link factual descriptions of actions to these value regions, so that a query about whether something is allowed becomes a geometric membership test in a deontic layer.</p>
+    <p>This setup allows the engine to hold multiple value systems side by side. For example, a medical action could be permitted under one regulatory framework yet disallowed under another, with both representations coexisting. When the documentation talks about deontic reasoning it refers to evaluating queries against these overlapping value layers, often in combination with temporal information and bias‑audit modes to see how obligations evolve over time or depend on particular attributes.</p>
+    <button class="concept-modal-close" data-concept-close="deontic-logic">Close</button>
+  </div>
+
+  <div id="concept-modal-expert-system" class="concept-modal" aria-hidden="true">
+    <h3>Expert Systems and Engine Mode</h3>
+    <p>Classic expert systems capture specialist knowledge in the form of rules and facts maintained by domain experts, often in fields like medicine, law or engineering. AGISystem2’s expert mode follows the same spirit but replaces large rule trees with geometric concepts and theory stacks. Experts define stable regions and overrides rather than individual if‑then statements, while the engine provides deterministic checks and detailed provenance for each conclusion.</p>
+    <p>This design keeps the advantages that made expert systems attractive—traceability, explicit domain modelling, and controlled updates—while avoiding some of their brittleness. Because concepts are represented as regions in a continuous space, nearby situations can be handled gracefully rather than requiring complete new rules, and exceptions can be isolated in additional layers without rewriting the base knowledge.</p>
+    <button class="concept-modal-close" data-concept-close="expert-system">Close</button>
+  </div>
+
+  <div id="concept-modal-hyperdimensional-computing" class="concept-modal" aria-hidden="true">
+    <h3>Hyperdimensional Computing as an Implementation Style</h3>
+    <p>Hyperdimensional computing is a family of techniques that use very high‑dimensional vectors with simple operations like addition, permutation and binding to represent complex structures. AGISystem2 adopts this style to encode sentences, relations and temporal patterns while keeping the underlying numeric kernels straightforward enough to reason about and to implement efficiently on commodity hardware.</p>
+    <p>From the point of view of a programmer, this means that seemingly abstract notions such as roles in a relation or positions in a sequence become concrete index permutations and vector additions. The documentation on Algorithms explains how locality‑sensitive hashing, bounded diamonds and temporal rotations are all built on top of this high‑dimensional representation, while the Reasoning and Explainability chapters show how the resulting computations remain auditable because every step is a deterministic transformation of explicit vectors.</p>
+    <button class="concept-modal-close" data-concept-close="hyperdimensional-computing">Close</button>
+  </div>
+
+  <div id="concept-modal-ontology" class="concept-modal" aria-hidden="true">
+    <h3>Ontology as Structured Facts</h3>
+    <p>Ontology in philosophy asks what kinds of things exist and how they relate. In AGISystem2 the term is used more concretely to mean the factual backbone of the conceptual space: entities, properties, events and relations that describe how the world is, independent of how any particular agent evaluates those states. Ontology dimensions carry this structural information and are kept separate from evaluative or preference‑laden axes.</p>
+    <p>This separation lets the engine compare or combine different value systems while keeping the underlying factual representation stable. When the documentation mentions ontological partitions or ontology dimensions it is referring to ranges of coordinates that encode such factual structure, which can then be queried, layered and validated without being contaminated by axiological choices.</p>
+    <button class="concept-modal-close" data-concept-close="ontology">Close</button>
+  </div>
+
+  <div id="concept-modal-pragmatics" class="concept-modal" aria-hidden="true">
+    <h3>Pragmatics and Real‑World Use</h3>
+    <p>Pragmatics, in linguistics and philosophy of language, studies how meaning depends on context, intention and shared background rather than only on literal word content. The Pragmatics chapter of this documentation borrows that lens to discuss how AGISystem2 should be used in real applications: which kinds of questions it is suitable for, how its deterministic guarantees interact with probabilistic components, and what kinds of user interfaces help people interpret its answers responsibly.</p>
+    <p>When the text refers to pragmatic considerations it usually points to issues such as deployment constraints, regulatory expectations, user trust and failure modes. These do not live in the vector space as coordinates but they shape which theories, dimensions and bias modes are appropriate for a given project. Understanding pragmatics means understanding how to wrap the engine in processes and safeguards that respect the environments in which it operates.</p>
+    <button class="concept-modal-close" data-concept-close="pragmatics">Close</button>
+  </div>
+
+  <div id="concept-modal-veil-of-ignorance" class="concept-modal" aria-hidden="true">
+    <h3>Veil of Ignorance Modes</h3>
+    <p>The veil of ignorance is a thought experiment associated with John Rawls in which decision‑makers design rules without knowing their own position in society, thereby encouraging policies that are fair across many possible identities. AGISystem2 does not attempt to solve political philosophy, but it adopts a technical analogue: bias modes that deliberately hide certain attributes when evaluating options.</p>
+    <p>In practice this is implemented by using BiasController to zero out or mask ranges of dimensions corresponding to protected characteristics or sensitive context before running reasoning steps. By comparing results with and without such masking, developers and auditors can see how strongly an outcome depends on information that might be considered irrelevant or unfair to use. The veil‑of‑ignorance metaphor is used in the documentation to emphasise that these modes change what the engine is allowed to consider, not the underlying factual space.</p>
+    <button class="concept-modal-close" data-concept-close="veil-of-ignorance">Close</button>
+  </div>
+
+  <div id="concept-modal-abduction" class="concept-modal" aria-hidden="true">
+    <h3>Abduction as Explanation Seeking</h3>
+    <p>Abductive reasoning looks for the best explanation of an observation rather than for consequences of known rules. In AGISystem2 this means starting from a point that encodes what has been observed, applying inverse permutations for relevant relations such as CAUSES, and searching the conceptual space for nearby concepts that could reasonably give rise to that observation. The resulting candidates are graded using the same geometric bands as ordinary deduction, but the direction of inference has been flipped.</p>
+    <p>This concept shows up in examples where the engine sees an effect—smoke, a failed safety check, or a legal violation—and attempts to locate plausible causes in its conceptual space. Because abduction is expressed with the same deterministic geometry and partitions as other reasoning styles, it can be explained and audited in terms of which relations were inverted, which candidates were examined, and how far each sat from the hypothesised cause point.</p>
+    <button class="concept-modal-close" data-concept-close="abduction">Close</button>
+  </div>
+
+  <div id="concept-modal-analogy" class="concept-modal" aria-hidden="true">
+    <h3>Analogy as Geometric Translation</h3>
+    <p>Analogical reasoning asks whether one relationship between concepts can be reused in another context: if A relates to B in a certain way, what should stand in relation to C in the same pattern? AGISystem2 encodes this idea as a translation in conceptual space. It computes how B differs from A as a vector, then adds that difference to the vector for C to predict a location for D. Candidates near that location are treated as potential analogues.</p>
+    <p>This method generalises simple word-embedding analogies to structured, relation-aware encodings. Because the underlying operations are still vector arithmetic and distance checks, analogical answers come with clear provenance: they can be traced back to specific differences in dimensions and to the retrieval steps that selected the nearest concepts in the translated direction.</p>
+    <button class="concept-modal-close" data-concept-close="analogy">Close</button>
+  </div>
+
+  <div id="concept-modal-narrative-consistency" class="concept-modal" aria-hidden="true">
+    <h3>Narrative Consistency Over Time</h3>
+    <p>Narrative consistency is the idea that a sequence of events, explanations or decisions should form a coherent story rather than a set of isolated facts. In this project it refers to checks that ensure temporal order, causality and value judgements do not contradict each other when seen as a whole. TemporalMemory, TheoryStack and the deontic layers work together to maintain this coherence.</p>
+    <p>When tests or tools talk about narrative consistency they are usually asking whether the same agent could reasonably have made all the recorded decisions given the concepts and policies that were active at each moment. Geometrically this involves tracking how memory vectors evolve, how layers change over time, and whether the resulting path through conceptual space avoids sharp contradictions or unexplained reversals.</p>
+    <button class="concept-modal-close" data-concept-close="narrative-consistency">Close</button>
+  </div>
+
+  <div id="concept-modal-non-monotonic-logic" class="concept-modal" aria-hidden="true">
+    <h3>Non‑Monotonic Logic and Overrides</h3>
+    <p>In a monotonic logic, once something has been proved it remains true even if new facts are added. Real-world reasoning often breaks this rule: defaults may be overridden by exceptions, and new evidence can retract earlier conclusions. AGISystem2 supports such non‑monotonic behaviour through theory layers that can narrow or widen regions in conceptual space without destroying the base concepts they refine.</p>
+    <p>When a new layer encodes an exception—such as “penguins do not fly” in the presence of a broader “birds typically fly”—the engine effectively reshapes only the relevant region while leaving the rest of the bird concept intact. This allows conclusions to change in light of new layers, yet every change can be traced to specific geometric adjustments that are logged and can be inspected later.</p>
+    <button class="concept-modal-close" data-concept-close="non-monotonic-logic">Close</button>
+  </div>
+
+  <div id="concept-modal-symbol-grounding" class="concept-modal" aria-hidden="true">
+    <h3>Symbol Grounding in a Geometric Space</h3>
+    <p>The symbol‑grounding problem asks how abstract symbols like words or logical predicates obtain meaning in relation to the world. AGISystem2 addresses grounding by insisting that every statement be encoded as a point in a space whose dimensions correspond, as far as possible, to interpretable aspects of reality: temperature, risk, jurisdiction, intention and so on. Concepts then become regions in this space that can be inspected and related back to those dimensions.</p>
+    <p>From this perspective, a symbol is grounded when there is a stable region with clear links to observable or well‑defined quantities. Changes in data or policy reshape that region in controlled ways, and explanations for decisions can always point back to positions along named axes. This is different from treating symbols as mere tokens in a string or as indices into an opaque embedding table.</p>
+    <button class="concept-modal-close" data-concept-close="symbol-grounding">Close</button>
+  </div>
+
+  <div id="concept-modal-trustworthy-ai" class="concept-modal" aria-hidden="true">
+    <h3>Trustworthy AI as a Design Goal</h3>
+    <p>Trustworthy AI is not a single algorithm but a collection of properties—reliability, transparency, robustness, and alignment with human values—that systems should exhibit if people are to rely on them in sensitive domains. AGISystem2 contributes to this broader goal by being deterministic, by keeping facts and values on separate axes, and by exposing masks, layers and provenance structures that can be examined by humans and tools.</p>
+    <p>The documentation treats trustworthy AI as a guiding theme rather than as a checklist. Choices such as using integer arithmetic, fixed dimensional partitions, explicit bias modes and validation tooling are all motivated by the desire to make behaviour predictable and auditable. In that sense, the geometric machinery described throughout these pages is both a reasoning engine and a scaffold for building systems that can earn and deserve trust.</p>
+    <button class="concept-modal-close" data-concept-close="trustworthy-ai">Close</button>
+  </div>
+
+  <script>
+    (function () {
+      var backdrop = document.getElementById('concept-modal-backdrop');
+      if (!backdrop) return;
+
+      function openModal(id) {
+        var modal = document.getElementById('concept-modal-' + id);
+        if (!modal) return;
+        modal.classList.add('is-visible');
+        backdrop.classList.add('is-visible');
+      }
+
+      function closeModal(id) {
+        var modal = document.getElementById('concept-modal-' + id);
+        if (!modal) return;
+        modal.classList.remove('is-visible');
+        if (!document.querySelector('.concept-modal.is-visible')) {
+          backdrop.classList.remove('is-visible');
+        }
+      }
+
+      document.addEventListener('click', function (evt) {
+        var openTarget = evt.target.closest('.concept-link-button');
+        if (openTarget && openTarget.dataset.concept) {
+          evt.preventDefault();
+          openModal(openTarget.dataset.concept);
+          return;
+        }
+        var closeTarget = evt.target.closest('.concept-modal-close');
+        if (closeTarget && closeTarget.dataset.conceptClose) {
+          evt.preventDefault();
+          closeModal(closeTarget.dataset.conceptClose);
+          return;
+        }
+        if (evt.target === backdrop) {
+          var open = document.querySelector('.concept-modal.is-visible');
+          if (open && open.id.indexOf('concept-modal-') === 0) {
+            var id = open.id.replace('concept-modal-', '');
+            closeModal(id);
+          }
+        }
+      });
+
+      document.addEventListener('keydown', function (evt) {
+        if (evt.key === 'Escape') {
+          var open = document.querySelector('.concept-modal.is-visible');
+          if (open && open.id.indexOf('concept-modal-') === 0) {
+            var id = open.id.replace('concept-modal-', '');
+            closeModal(id);
+          }
+        }
+      });
+    })();
+  </script>
+
+  <div class="footer-nav">
+    <p>This documentation is part of the research work carried out by <a href="https://www.axiologic.net" target="_blank" rel="noopener noreferrer">Axiologic Research</a> within the <a href="https://www.achilles-project.eu/" target="_blank" rel="noopener noreferrer">ACHILLES</a> project on trustworthy AI. It is written as an experiment in close collaboration between human researchers and AI tools, using specification‑driven development to design and explain technologies for trustworthy AI and future AGI in a reproducible way.</p>
+  </div>
+  </div>
+ </body>
+ </html>
+

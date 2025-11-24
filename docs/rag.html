@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>RAG Integration</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>RAG Integration</h1>
+    <small><a href="index.html">Back to index</a> · <a href="quick_wiki.html">Quick wiki</a></small>
+  </div>
+  <p>Retrieval-augmented generation (RAG) pairs a retriever with a generative model. AGISystem2 can play the role of the reliable checker in that duo. It does not write the prose; it keeps the facts and logic straight. Used well, it prevents a fluent model from drifting into contradictions or hallucinations.</p>
+
+  <p>A pragmatic loop goes like this. Retrieve documents. Extract candidate statements. Normalize them into the constrained grammar. Ingest them into AGISystem2. Before handing anything to the LLM, ask AGISystem2 to validate the statements against your theories. Contradictions are rejected; conflicts are flagged; provenance is attached. After the LLM answers, feed its claims back as questions. Any claim that fails inclusion or collides with the active theory stack is either blocked or returned with a warning and a proof.</p>
+
+  <p>Counterfactual or jurisdictional “what ifs” are easy: load or activate a different theory layer (for example, a different regulatory regime) and run the same questions. Give the LLM both baseline and counterfactual answers so it can narrate differences with confidence. Keep the TranslatorBridge pinned to deterministic prompts and models so normalization does not drift, and run the LLM at low temperature when normalizing.</p>
+
+  <p>The result is a division of labor. AGISystem2 enforces the logical spine with geometry and provenance; the LLM provides surface fluency. Together they offer readable outputs that remain grounded in explicit, auditable rules.</p>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to index</a>
+    <a href="quick_wiki.html">Quick wiki</a>
+  </div>
+  </div>
+</body>
+</html>

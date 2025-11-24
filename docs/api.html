@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>API</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>API Narrative</h1>
+    <small><a href="index.html">Back to index</a> · <a href="quick_wiki.html">Quick wiki</a></small>
+  </div>
+  <p>The EngineAPI is the main doorway through which humans and software agents interact with AGISystem2. It offers a small set of high-level operations that all follow the same pattern: accept text expressed in or normalisable to the constrained grammar, run it through the geometric reasoning pipeline, and return both results and detailed provenance. Rather than exposing dozens of low-level knobs, the API is designed to be predictable and easy to test in automated suites, which is why many of the examples in the <code>.specs/tests/agentic_session_api</code> and <code>.specs/tests/reason_smoke</code> directories are written directly in terms of EngineAPI calls.</p>
+
+  <h2>Speaking the Constrained Grammar</h2>
+  <p>All EngineAPI methods expect either already normalised sentences or input that will pass through the TranslatorBridge before parsing. The underlying grammar is described in detail in the Grammar chapter: every assertion is a subject–relation–object triple and every question is the same triple in interrogative form. When you call the API with a free-form string, EngineAPI coordinates with TranslatorBridge and Parser to turn that string into a tree of tokens the encoder understands. If the bridge cannot produce a valid shape, the API is expected to fail loudly rather than guess. This design ensures that any vector entering the conceptual space has a clear, inspectable origin in text.</p>
+  <p>Programmers integrating the engine are encouraged to think in terms of these canonical forms from the start. Even if you build your own natural language layer on top, it should ultimately emit sentences like <code>Dog IS_A Animal</code>, <code>ExportData PROHIBITED_BY GDPR</code>, or <code>Assume Water HAS_PROPERTY boiling_point=50</code>. Doing so keeps the system debuggable: when something surprising happens you can always reconstruct which statements were ingested and which questions were asked.</p>
+
+  <h2>Teaching the System: ingest</h2>
+  <p>Learning in AGISystem2 begins with the <code>ingest(text, {conceptId, context})</code> family of calls. When you invoke <code>ingest</code>, EngineAPI first normalises the text, then parses it into a shallow subject–relation–object tree. The encoder turns this tree into a high-dimensional vector using permutations for roles and saturated addition for composition. That vector is then handed to the clustering and concept modules, which decide whether to widen an existing bounded diamond, adjust its centre, or create a new diamond entirely. The ConceptStore persists the updated diamonds, and Retriever updates its index so that future queries can find the new information efficiently.</p>
+  <p>The response from <code>ingest</code> is deliberately verbose. It reports which concept or concepts were affected, whether new diamonds were created or old ones merged, and includes hashes or identifiers that can be stored in your own logs. In test suites such as <code>.specs/tests/relations_bootstrap</code> you will see <code>ingest</code> used to build up small theories about relations and then immediately queried to verify that the geometric representation matches the intended semantics. In production settings, the same mechanisms support auditable data-loading pipelines where each batch of ingested facts can be traced to specific changes in the conceptual space.</p>
+
+  <h2>Asking Questions: ask and validate</h2>
+  <p>To query the engine you use <code>ask(question, options)</code>. This call mirrors the ingestion path up to a point: the question is normalised, parsed, and encoded into a vector. EngineAPI then asks TheoryStack to compose the relevant concept under the currently active layers, producing a runtime bounded diamond that takes into account both base knowledge and active value systems. Retriever uses locality-sensitive hashing to propose candidate concepts whose regions are near the query vector, and MathEngine computes exact masked L1 distances. The Reasoner interprets these distances using adversarial bands and returns a graded result such as True, Plausible, or False, along with a structured provenance object.</p>
+  <p>Sometimes you want to explore consequences without changing anything in the knowledge base. For that, EngineAPI exposes <code>validate</code> operations that delegate to ValidationEngine. These calls use the same encodings and theory stacks but run in a "dry" mode that never writes back to ConceptStore. They can answer questions like "Can these two concepts overlap under any layer?" or "Is there a counterexample to this rule?". Tests in <code>.specs/tests/validation_engine</code> demonstrate how <code>validate</code> is used to confirm that new relations or layers are consistent before they are deployed in more critical contexts.</p>
+
+  <h2>Managing Context: theory and sessions</h2>
+  <p>Context in AGISystem2 is represented by theory layers stacked on top of base concepts. EngineAPI exposes methods such as <code>pushTheory(layer)</code>, <code>popTheory()</code>, <code>setContext(stack)</code>, and <code>inspectContext()</code> so that callers can control which layers are active when they ingest facts or ask questions. A typical workflow might involve pushing a legal regime layer, running a series of compliance checks, and then popping that layer to return to a neutral state. Because layers primarily adjust axiology dimensions and relevance masks, switching contexts does not corrupt the underlying factual diamonds.</p>
+  <p>For agents that interact with the engine over multiple turns, the API exposes <code>getAgenticSession</code>. A session maintains its own view of context and offers a trimmed interface that only accepts already normalised grammar sentences. In other words, an agentic session is a sandbox in which both sides agree to speak the constrained dialect. This ensures that internal agents cannot accidentally bypass TranslatorBridge or inject ambiguous text. The <code>.specs/tests/agentic_session_api</code> suite exercises session behaviour, checking that context is kept per session and that invalid sentences are rejected deterministically.</p>
+
+  <h2>Inspecting the Knowledge Base</h2>
+  <p>Beyond ingesting and querying, EngineAPI offers introspection operations such as <code>listConcepts</code>, <code>inspectConcept(id)</code>, and <code>dumpTheoryLayers()</code>. These calls are essential when you treat the engine as a knowledge base rather than as a black-box oracle. For example, <code>inspectConcept</code> can return summaries of the diamonds associated with a concept, including approximate centres, radii, and active masks. While these summaries abstract away from raw vectors, they remain grounded in the geometry described in the Conceptual Spaces and Algorithms chapters.</p>
+  <p>In practice, many developers build their own higher-level tools on top of these introspection APIs: dashboards that visualise concept overlaps, scripts that scan for unexpectedly wide regions, or diff tools that compare theories between environments. Because everything is deterministic, results from such tools can be compared across time with confidence that differences are due to real changes in data or configuration, not to stochastic noise.</p>
+
+  <h2>Provenance and Testing</h2>
+  <p>Every EngineAPI response carries breadcrumbs sufficient to replay and audit the interaction. These include identifiers for active theory layers, descriptions or hashes of relevance masks, distances and thresholds used in band decisions, translator versions and prompts used for normalisation, and index configuration such as LSH seeds and band counts. When you log API calls in your own systems, capturing this provenance alongside inputs and outputs allows you to reconstruct reasoning paths long after the fact.</p>
+  <p>The test suites in <code>.specs/tests/runTests.js.md</code> and related folders rely heavily on this determinism. They assert not only that certain questions produce certain answers, but that those answers come with expected bands, layers, and distances. As you extend or embed the API, using similar regression tests will help ensure that changes to configuration, ingestion strategies, or translator models do not silently change reasoning behaviour.</p>
+
+  <p>For more detail on the underlying grammar, see the <a href="grammar.html">Grammar</a> chapter. For relation semantics, see <a href="relations.html">Relations</a>. For configuration of dimensions, seeds, profiles, and partitions, see <a href="config.html">Configuration</a> and the dimension-related chapters. Reading these together with the API narrative gives a complete picture of how to speak to the engine and how to interpret what it says back.</p>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to index</a>
+    <a href="quick_wiki.html">Quick wiki</a>
+  </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+class NLParser {
+  constructor(recursionHorizon) {
+    this.recursionHorizon = recursionHorizon || 3;
+  }
+
+  parseSentence(sentence) {
+    const trimmed = sentence.trim();
+    if (!trimmed) {
+      throw new Error('Empty sentence');
+    }
+    if (trimmed.endsWith('?')) {
+      return this._parseQuestion(trimmed);
+    }
+    return this._parseAssertion(trimmed);
+  }
+
+  _parseAssertion(text) {
+    const parts = text.split(/\s+/);
+    if (parts.length < 3) {
+      throw new Error(`Cannot parse assertion '${text}'`);
+    }
+    const subject = parts[0];
+    const relation = parts[1];
+    const object = parts.slice(2).join(' ');
+    return {
+      kind: 'assertion',
+      subject,
+      relation,
+      object
+    };
+  }
+
+  _parseQuestion(text) {
+    const withoutQuestionMark = text.replace(/\?+$/, '').trim();
+    const matches = withoutQuestionMark.match(/^Is\s+(.+)\s+an?\s+(.+)$/i) ||
+      withoutQuestionMark.match(/^Is\s+(.+)\s+(.+)$/i);
+    if (matches) {
+      const subject = matches[1];
+      const object = matches[2];
+      return {
+        kind: 'question',
+        subject,
+        relation: 'IS_A',
+        object
+      };
+    }
+    throw new Error(`Cannot parse question '${text}'`);
+  }
+}
+
+module.exports = NLParser;
+

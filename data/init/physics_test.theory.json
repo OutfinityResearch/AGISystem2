@@ -1,0 +1,12 @@
+{
+  "kind": "layer",
+  "id": "Physics_Test",
+  "dimensions": 1024,
+  "overrides": [
+    {
+      "dim": 4,
+      "min": 0,
+      "max": 127
+    }
+  ]
+}

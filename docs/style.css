@@ -1,0 +1,221 @@
+/* Global documentation styles for AGISystem2 */
+
+:root {
+  --bg: #f7f9fc;
+  --fg: #14213d;
+  --accent: #0f4c81;
+  --accent-soft: #e1ecf7;
+  --border-soft: #ccd6e8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.page {
+  max-width: 960px;
+  margin: 2.5rem auto 3rem auto;
+  padding: 2rem 2.5rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(15, 31, 60, 0.09);
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 2.1rem;
+  letter-spacing: 0.02em;
+  color: var(--fg);
+}
+
+h2 {
+  margin-top: 2.2rem;
+  font-size: 1.5rem;
+  color: var(--fg);
+}
+
+h3 {
+  margin-top: 1.6rem;
+  font-size: 1.2rem;
+  color: var(--fg);
+}
+
+p {
+  margin: 0 0 1rem 0;
+  line-height: 1.7;
+  text-align: justify;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: #0b365d;
+  background: var(--accent-soft);
+}
+
+pre {
+  background: #f6f8fb;
+  padding: 0.9rem 1.1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-soft);
+  overflow-x: auto;
+  font-size: 0.9rem;
+}
+
+code {
+  background: #f6f8fb;
+  padding: 0.12rem 0.35rem;
+  border-radius: 4px;
+  border: 1px solid #e0e6f2;
+  font-size: 0.9em;
+}
+
+.nav-header {
+  margin-bottom: 1.8rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.nav-header small {
+  display: block;
+  margin-top: 0.25rem;
+  color: #5f6b88;
+}
+
+.section-intro {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  padding: 0.9rem 1.1rem;
+  border-radius: 4px;
+  margin-bottom: 1.4rem;
+}
+
+.footer-nav {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-soft);
+  font-size: 0.92rem;
+  color: #5f6b88;
+}
+
+.footer-nav a {
+  margin-right: 0.8rem;
+}
+
+.table-concept-index {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.2rem;
+  margin-bottom: 1.2rem;
+  font-size: 0.95rem;
+}
+
+.table-concept-index th,
+.table-concept-index td {
+  border: 1px solid var(--border-soft);
+  padding: 0.6rem 0.7rem;
+  text-align: left;
+}
+
+.table-concept-index th {
+  background: #eef3fb;
+  font-weight: 600;
+}
+
+.table-concept-index tr:nth-child(even) td {
+  background: #fafbff;
+}
+
+.concept-link-button {
+  cursor: pointer;
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.concept-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 20, 40, 0.45);
+  display: none;
+  z-index: 900;
+}
+
+.concept-modal-backdrop.is-visible {
+  display: block;
+}
+
+.concept-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 720px;
+  width: 90%;
+  max-height: 80vh;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 18px 45px rgba(10, 20, 40, 0.35);
+  padding: 1.6rem 1.8rem;
+  overflow-y: auto;
+  display: none;
+  z-index: 1000;
+}
+
+.concept-modal.is-visible {
+  display: block;
+}
+
+.concept-modal h3 {
+  margin-top: 0;
+}
+
+.concept-modal-close {
+  margin-top: 1.2rem;
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-soft);
+  background: #f6f8fb;
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.concept-modal-close:hover {
+  background: var(--accent-soft);
+}
+
+.diagram {
+  margin: 1.6rem 0 1.4rem 0;
+  padding: 1rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+  background: #f6f8fb;
+}
+
+.diagram svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto 0.75rem auto;
+}
+
+.diagram-caption {
+  font-size: 0.96rem;
+  color: #4a5670;
+}
+
+  margin-right: 0.8rem;
+}
