@@ -7,6 +7,8 @@ class Config {
       profile: 'manual_test',
       dimensions: 1024,
       recursionHorizon: 3,
+      maxReasonerIterations: 100000,
+      maxTemporalRewindSteps: 10000,
       dtype: 'int8',
       blockSize: 8,
       ontologyPartition: { start: 0, end: 255 },
@@ -34,7 +36,7 @@ class Config {
       ...rawConfig
     };
 
-    this._applyProfileDefaults(merged);
+    this._applyProfileDefaults(merged, rawConfig || {});
     this._validate(merged, rawConfig || {});
 
     this._config = Object.freeze({ ...merged });
@@ -112,16 +114,28 @@ class Config {
     }
   }
 
-  _applyProfileDefaults(config) {
+  _applyProfileDefaults(config, rawInput = {}) {
     const profile = config.profile || 'manual_test';
     if (profile === 'auto_test') {
       config.dimensions = 512;
       config.recursionHorizon = 2;
+      if (!Object.prototype.hasOwnProperty.call(rawInput, 'maxReasonerIterations')) {
+        config.maxReasonerIterations = 10000;
+      }
+      if (!Object.prototype.hasOwnProperty.call(rawInput, 'maxTemporalRewindSteps')) {
+        config.maxTemporalRewindSteps = 1000;
+      }
       config.indexStrategy = 'simhash';
       config.persistenceStrategy = 'memory';
     } else if (profile === 'manual_test') {
       config.dimensions = 1024;
       config.recursionHorizon = 3;
+      if (!Object.prototype.hasOwnProperty.call(rawInput, 'maxReasonerIterations')) {
+        config.maxReasonerIterations = 50000;
+      }
+      if (!Object.prototype.hasOwnProperty.call(rawInput, 'maxTemporalRewindSteps')) {
+        config.maxTemporalRewindSteps = 5000;
+      }
       config.indexStrategy = 'lsh_pstable';
       config.lshHashes = 32;
       config.lshBands = 8;
@@ -131,6 +145,12 @@ class Config {
     } else if (profile === 'prod') {
       config.dimensions = 2048;
       config.recursionHorizon = 3;
+      if (!Object.prototype.hasOwnProperty.call(rawInput, 'maxReasonerIterations')) {
+        config.maxReasonerIterations = 200000;
+      }
+      if (!Object.prototype.hasOwnProperty.call(rawInput, 'maxTemporalRewindSteps')) {
+        config.maxTemporalRewindSteps = 20000;
+      }
       config.indexStrategy = 'lsh_pstable';
       config.lshHashes = 64;
       config.lshBands = 16;

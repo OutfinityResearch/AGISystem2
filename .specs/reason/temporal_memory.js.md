@@ -9,7 +9,7 @@ Class `TemporalMemory`
 - `constructor({config, math, permuter})`
 - `initState()`: allocate zeroed working memory vector.
 - `advance(state, eventVector)`: rotate state by tick permutation then add event (clamped); returns new state.
-- `rewind(state, steps)`: apply inverse rotation steps to recover past orientation.
+- `rewind(state, steps)`: apply inverse rotation steps to recover past orientation; bounded by `config.maxTemporalRewindSteps`.
 - `diff(stateA, stateB)`: compare states for change detection.
 
 ## Pseudocode (comments)
@@ -41,4 +41,5 @@ class TemporalMemory {
 ## Notes/Constraints
 - Keep rotations deterministic; use config seed.
 - No logging inside core methods; caller handles provenance.
-- Avoid unbounded history; caller snapshots if needed.***
+- Avoid unbounded history; caller snapshots if needed.
+- Rewind operations must respect `maxTemporalRewindSteps` to prevent unbounded work for large `steps` values; callers that need deeper history should rely on checkpointing strategies rather than extremely large rewinds.***

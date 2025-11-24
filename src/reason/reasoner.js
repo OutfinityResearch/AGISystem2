@@ -1,6 +1,7 @@
 class Reasoner {
   constructor(conceptStore) {
     this.conceptStore = conceptStore;
+    this.config = null;
   }
 
   _getFacts(contextStack) {
@@ -21,7 +22,15 @@ class Reasoner {
     const facts = this._getFacts(contextStack);
     const visited = new Set();
     const stack = [subject];
+    const maxSteps = this.config && this.config.get('maxReasonerIterations')
+      ? this.config.get('maxReasonerIterations')
+      : Number.MAX_SAFE_INTEGER;
+    let steps = 0;
     while (stack.length > 0) {
+      steps += 1;
+      if (steps > maxSteps) {
+        return { truth: 'UNKNOWN_TIMEOUT' };
+      }
       const current = stack.pop();
       if (current === object) {
         return { truth: 'TRUE_CERTAIN' };

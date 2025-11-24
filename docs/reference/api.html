@@ -9,7 +9,7 @@
   <div class="page">
   <div class="nav-header">
     <h1>API Narrative</h1>
-    <small><a href="index.html">Back to index</a> · <a href="quick_wiki.html">Quick wiki</a></small>
+    <small><a href="../index.html">Back to index</a> · <a href="../concepts/quick_wiki.html">Quick wiki</a></small>
   </div>
   <p>The EngineAPI is the main doorway through which humans and software agents interact with AGISystem2. It offers a small set of high-level operations that all follow the same pattern: accept text expressed in or normalisable to the constrained grammar, run it through the geometric reasoning pipeline, and return both results and detailed provenance. Rather than exposing dozens of low-level knobs, the API is designed to be predictable and easy to test in automated suites, which is why many of the examples in the <code>.specs/tests/agentic_session_api</code> and <code>.specs/tests/reason_smoke</code> directories are written directly in terms of EngineAPI calls.</p>
 
@@ -93,13 +93,14 @@
 
   <h2>Provenance and Testing</h2>
   <p>Every EngineAPI response carries breadcrumbs sufficient to replay and audit the interaction. These include identifiers for active theory layers, descriptions or hashes of relevance masks, distances and thresholds used in band decisions, translator versions and prompts used for normalisation, and index configuration such as LSH seeds and band counts. When you log API calls in your own systems, capturing this provenance alongside inputs and outputs allows you to reconstruct reasoning paths long after the fact.</p>
-  <p>The test suites in <code>.specs/tests/runTests.js.md</code> and related folders rely heavily on this determinism. They assert not only that certain questions produce certain answers, but that those answers come with expected bands, layers, and distances. As you extend or embed the API, using similar regression tests will help ensure that changes to configuration, ingestion strategies, or translator models do not silently change reasoning behaviour.</p>
+  <p>The engine also distinguishes between logical failure and operational limits. If a query exceeds the configured iteration budget for reasoning, the Reasoner returns a timeout-style outcome rather than hanging indefinitely. In API terms this may appear as a special truth value such as <code>UNKNOWN_TIMEOUT</code>, accompanied by provenance stating that the <code>maxReasonerIterations</code> cap was reached. Temporal operations behave similarly: if a rewind call asks for more steps than <code>maxTemporalRewindSteps</code> allows, the engine will only apply the permitted number of inverse rotations and record that truncation in provenance. This approach makes operational limits explicit parts of the explanation rather than hidden implementation details.</p>
+  <p>The test suites in <code>.specs/tests/runTests.js.md</code> and related folders rely heavily on this determinism. They assert not only that certain questions produce certain answers, but that those answers come with expected bands, layers, distances, and, when appropriate, explicit timeout semantics. As you extend or embed the API, using similar regression tests will help ensure that changes to configuration, ingestion strategies, or translator models do not silently change reasoning behaviour or the way operational limits are reported.</p>
 
   <p>For more detail on the underlying grammar, see the <a href="grammar.html">Grammar</a> chapter. For relation semantics, see <a href="relations.html">Relations</a>. For configuration of dimensions, seeds, profiles, and partitions, see <a href="config.html">Configuration</a> and the dimension-related chapters. Reading these together with the API narrative gives a complete picture of how to speak to the engine and how to interpret what it says back.</p>
 
   <div class="footer-nav">
-    <a href="index.html">Back to index</a>
-    <a href="quick_wiki.html">Quick wiki</a>
+    <a href="../index.html">Back to index</a>
+    <a href="../concepts/quick_wiki.html">Quick wiki</a>
   </div>
   </div>
 </body>

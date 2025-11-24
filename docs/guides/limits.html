@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <title>Limits & Risks</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../reference/style.css">
 </head>
 <body>
   <div class="page">
   <div class="nav-header">
     <h1>Limits & Risks</h1>
-    <small><a href="index.html">Back to index</a> · <a href="quick_wiki.html">Quick wiki</a></small>
+    <small><a href="../index.html">Back to index</a> · <a href="../concepts/quick_wiki.html">Quick wiki</a></small>
   </div>
   <p>No system is perfect. AGISystem2 trades generative freedom for determinism and clarity, and that choice brings boundaries you should understand before you rely on it. Capacity is finite: int8 vectors and fixed partitions cannot hold every nuance. For most domains, 2048 dimensions suffice, but extremely rich domains may require 4096 and disciplined masking to keep distances meaningful. If you dump unpruned features into the empirical tail, the geometry will blur and retrieval will lose contrast.</p>
   <p>Language normalization is another bottleneck. The engine only accepts a constrained grammar; if the TranslatorBridge mangles a sentence, the system will encode the wrong point with total confidence. Pin deterministic prompts and models, log their versions, and be willing to reject inputs you cannot normalize cleanly rather than guessing. This is a human-in-the-loop responsibility.</p>
@@ -17,11 +17,12 @@
   <p>Clustering is heuristic. Thresholds that are too tight fragment concepts; thresholds that are too loose smear distinct senses together. Start simple, log every split and merge, and review drift over time. Use ValidationEngine to surface counterexamples when clusters collide; adjust thresholds with evidence, not guesswork.</p>
   <p>Performance is intentionally CPU-only. Large corpora or heavy queries demand batching, thoughtful indexing, and perhaps profile changes. There is no GPU or WASM acceleration in the current contract, so plan capacity accordingly. If you need more speed, start with profile tuning and LSH parameter sweeps before considering architectural changes.</p>
   <p>Theory management is a social problem as much as a technical one. Layers that are misordered or left ambiguous will trigger conflict stops. This is a feature—better to halt than to hallucinate—but it means you must curate layers and precedence explicitly, especially in overlapping domains like law or compliance. Provenance will tell you which layers collided; governance must decide how to resolve them.</p>
+  <p>To avoid unbounded work, the engine also enforces hard limits on certain operations. Reasoner has an upper bound on the number of steps it may take when expanding transitive relationships or exploring search spaces; if that bound is exceeded, the answer is reported as unknown or timed out rather than letting the process hang. TemporalMemory, likewise, refuses to rewind more than a configured number of steps in a single call. These limits can be adjusted through configuration, but they should always be finite. They act as guardrails: they cannot make a bad theory good, but they can prevent a bad theory from freezing the system.</p>
   <p>Finally, remember that AGISystem2 is not a language stylist. It will not invent smooth prose; it will tell you whether a geometric condition holds. It shines when you value being right, reproducible, and explainable over being eloquent. Knowing these limits up front lets you deploy it where it fits and avoid surprise when it refuses to speculate.</p>
 
   <div class="footer-nav">
-    <a href="index.html">Back to index</a>
-    <a href="quick_wiki.html">Quick wiki</a>
+    <a href="../index.html">Back to index</a>
+    <a href="../concepts/quick_wiki.html">Quick wiki</a>
   </div>
   </div>
 </body>

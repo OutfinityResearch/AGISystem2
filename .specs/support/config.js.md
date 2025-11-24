@@ -8,6 +8,8 @@ Class `Config`
 ## Configuration Surface (examples)
 - `dimensions`: int in {512, 1024, 2048, 4096}; default 1024; used by all buffers/masks.
 - `recursionHorizon`: int >=1, default 3; parser/encoder guard.
+- `maxReasonerIterations`: int >0; hard cap on the number of reasoning steps (graph expansions, traversals) that a single Reasoner call may perform before returning an `UNKNOWN_TIMEOUT` outcome. Profiles set conservative defaults (for example auto_test uses a smaller cap than prod).
+- `maxTemporalRewindSteps`: int >0; hard cap on how many inverse rotations `TemporalMemory.rewind` will apply in one call; protects against unbounded temporal backtracking.
 - `dtype`: string `"int8"`; reserved for future types.
 - `blockSize`: small int for loop unrolling (e.g., 8/16).
 - `ontologyPartition`, `axiologyPartition`: fixed ranges across profiles; ontology is always first 256 dims (0–255), axiology next 128 dims (256–383); remaining dims are empirical.
@@ -21,9 +23,9 @@ Class `Config`
 - `profile`: enum (`"auto_test"`, `"manual_test"`, `"prod"`); sets bundled defaults below.
 
 ### Profile Defaults (suggested)
-- `auto_test` (fast CI): dimensions=512; recursionHorizon=2; blockSize=8; ontologyPartition=0–255; axiologyPartition=256–383; indexStrategy=`simhash` (hashBits=64); persistence=`memory`; storageRoot ignored.
-- `manual_test` (dev): dimensions=1024; recursionHorizon=3; blockSize=8 or 16; ontologyPartition=0–255; axiologyPartition=256–383; indexStrategy=`lsh_pstable` (lshHashes=32, lshBands=8, lshBucketWidth=8, lshSeed from config); persistence=`file_binary`; storageRoot=`./.data_dev`.
-- `prod` (CPU-efficient): dimensions=2048 (can raise to 4096 if capacity required); recursionHorizon=3; blockSize=16; ontologyPartition=0–255; axiologyPartition=256–383; indexStrategy=`lsh_pstable` (lshHashes=64, lshBands=16, lshBucketWidth=6, lshSeed from config); persistence=`file_binary`; storageRoot configurable (e.g., `./data`).
+- `auto_test` (fast CI): dimensions=512; recursionHorizon=2; `maxReasonerIterations` small (e.g., 10k); `maxTemporalRewindSteps` small (e.g., 1k); blockSize=8; ontologyPartition=0–255; axiologyPartition=256–383; indexStrategy=`simhash` (hashBits=64); persistence=`memory`; storageRoot ignored.
+- `manual_test` (dev): dimensions=1024; recursionHorizon=3; `maxReasonerIterations` moderate (e.g., 50k); `maxTemporalRewindSteps` moderate (e.g., 5k); blockSize=8 or 16; ontologyPartition=0–255; axiologyPartition=256–383; indexStrategy=`lsh_pstable` (lshHashes=32, lshBands=8, lshBucketWidth=8, lshSeed from config); persistence=`file_binary`; storageRoot=`./.data_dev`.
+- `prod` (CPU-efficient): dimensions=2048 (can raise to 4096 if capacity required); recursionHorizon=3; `maxReasonerIterations` high (e.g., 200k); `maxTemporalRewindSteps` high (e.g., 20k); blockSize=16; ontologyPartition=0–255; axiologyPartition=256–383; indexStrategy=`lsh_pstable` (lshHashes=64, lshBands=16, lshBucketWidth=6, lshSeed from config); persistence=`file_binary`; storageRoot configurable (e.g., `./data`).
 
 ## Public API (essential only)
 - `load(rawConfig)`: parse and merge env/defaults; validate schema; freeze result.

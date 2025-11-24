@@ -25,6 +25,7 @@ async function main() {
 
   const which = args[0];
   const profile = args[1] || 'auto_test';
+  const timeoutMs = Number.parseInt(process.env.TEST_TIMEOUT_MS || '', 10) || 5000;
 
   let toRun;
   if (which === 'all') {
@@ -53,8 +54,16 @@ async function main() {
     process.stdout.write(`Running suite '${suite}' with profile '${profile}'... `);
     // eslint-enable
     // eslint-disable-next-line no-await-in-loop
-    const result = await mod.run({ profile });
-    if (result && result.ok === false) {
+    const result = await Promise.race([
+      mod.run({ profile, timeoutMs }),
+      new Promise((resolve) => {
+        setTimeout(() => resolve({ ok: false, _timeout: true }), timeoutMs);
+      })
+    ]);
+    if (result && result._timeout) {
+      overallOk = false;
+      console.log('TIMEOUT');
+    } else if (result && result.ok === false) {
       overallOk = false;
       console.log('FAIL');
     } else {
@@ -69,4 +78,3 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
-

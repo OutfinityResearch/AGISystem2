@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>CLI Usage</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>AGISystem2 – CLI Usage</h1>
+    <small><a href="../index.html">Back to index</a> · <a href="../concepts/quick_wiki.html">Quick wiki</a></small>
+  </div>
+
+  <p>The command-line interface (CLI) is a raw but transparent front-end for exploring AGISystem2 without writing any code. It wraps the same EngineAPI described in the reference chapters and gives you a small set of commands to add facts, ask questions, run counterfactual scenarios, and apply simple “theory” files. This page explains how to start the CLI, what it does in the background, and how to use each command to exercise the reasoning engine.</p>
+
+  <h2>Starting the CLI and Session Layout</h2>
+  <p>The CLI entry point is a shell script called <code>AGISystem2Raw.sh</code> in the <code>bin</code> folder of the project. From a checkout of the repository, you can start a session in any directory by running:</p>
+  <pre>./bin/AGISystem2Raw.sh</pre>
+  <p>When you run this script, it initialises an engine in the <code>manual_test</code> profile. The engine’s persistent state lives in a hidden folder named <code>.AGISystem2</code> in whatever directory you launched the script from. Inside that folder you will find subdirectories such as <code>data</code> (for concept storage and audit logs) and <code>theories</code> (for simple text-based theory files). If you close the CLI and run it again from the same directory, the engine will reuse the data in <code>.AGISystem2</code>, so your facts, theories, and logs are preserved between sessions.</p>
+  <p>After the script starts, you are greeted with a short summary and a prompt of the form <code>AGIS2&gt;</code>. Every line you type is treated as a command. Some commands take canonical statements or questions as arguments; others operate on theory files or configuration. The CLI never accepts free-form paragraphs: all text that reaches the engine must use the constrained grammar described in the Grammar chapter.</p>
+
+  <h2>Core Command Set</h2>
+  <p>At any time you can type <code>help</code> to see a short summary, or <code>help commands</code> to see a more exhaustive list. The most important commands are:</p>
+  <p><strong>add &lt;fact&gt;</strong> adds a single fact to long-term memory. Facts are subject–relation–object triples such as <code>Dog IS_A Animal</code> or <code>Water HAS_PROPERTY boiling_point=100</code>. The CLI normalises and parses these statements, then passes them through the ingestion pipeline so that ConceptStore and clustering can update bounded diamonds.</p>
+  <p><strong>ask &lt;question&gt;</strong> poses a question to the engine. Questions can be natural interrogatives like <code>Is Dog an Animal?</code> or canonical triples with a question mark such as <code>Water HAS_PROPERTY boiling_point=100?</code>. Internally the engine uses the same parser and encoder as for facts, then delegates to Reasoner to decide whether the question point lies inside the relevant concept region or whether an explicit fact exists.</p>
+  <p><strong>abduct &lt;observation&gt; &lt;REL&gt;</strong> performs simple abductive reasoning over causal relations. If you have ingested facts like <code>Fire CAUSES Smoke</code> and <code>Smoke CAUSED_BY Fire</code>, running <code>abduct Smoke CAUSES</code> will ask the Reasoner to find a plausible cause for Smoke based on the CAUSES/CAUSED_BY links. The current implementation chooses the first matching candidate and reports it along with a qualitative band such as PLAUSIBLE.</p>
+  <p><strong>cf &lt;question&gt; | &lt;fact1&gt; ; &lt;fact2&gt; ; ...</strong> runs a counterfactual query. It keeps the base knowledge intact but temporarily assumes a small set of extra facts while answering the question. For example, if you have only stated that <code>Water HAS_PROPERTY boiling_point=100</code>, you can run <code>cf Water HAS_PROPERTY boiling_point=50? | Water HAS_PROPERTY boiling_point=50</code> to see how the engine would behave under an alternative boiling point. After this call returns, the extra facts are discarded and the base state remains unchanged.</p>
+
+  <h2>Domain-Specific Commands</h2>
+  <p>In addition to the generic <code>add</code>, <code>ask</code>, <code>abduct</code>, and <code>cf</code> commands, the CLI exposes a few domain-oriented helpers that build on top of the same geometric and symbolic machinery but express common patterns directly. These commands are optional, but they offer convenient entry points for testing health-compliance and narrative scenarios without manually wiring context stacks.</p>
+  <p><strong>check-procedure &lt;ProcedureId&gt; [| extra facts]</strong> invokes health compliance logic. It expects facts of the form <code>ProcedureX REQUIRES Consent</code> and <code>ProcedureX REQUIRES AuditTrail</code>, plus optional facts such as <code>Consent GIVEN yes</code> or <code>AuditTrail PRESENT yes</code>. When you run <code>check-procedure ProcedureX</code> without extra facts, the Reasoner inspects the stored REQUIRES relations and reports FALSE if any requirement is missing. If you add extra facts using the <code>|</code> syntax—<code>check-procedure ProcedureX | Consent GIVEN yes ; AuditTrail PRESENT yes</code>—the engine uses a temporary context with these satisfaction facts and reports TRUE_CERTAIN if every requirement is met.</p>
+  <p><strong>check-export &lt;ActionId&gt; &lt;Reg1&gt; [Reg2 ...] [| extra facts]</strong> checks whether an export-like action is allowed under one or more regulation names. It reuses facts such as <code>ExportData PROHIBITED_BY GDPR</code> and <code>ExportData PERMITTED_BY HIPAA</code>. A call like <code>check-export ExportData GDPR</code> examines only the GDPR entries and will typically return FALSE if there is a PROHIBITED_BY fact and no conflicting permit. A call like <code>check-export ExportData GDPR HIPAA</code> considers both regimes; if one prohibits and another permits, the current Reasoner reports CONFLICT so that you can resolve precedence explicitly.</p>
+  <p><strong>check-magic &lt;ActorId&gt; &lt;CityId&gt; [| extra facts]</strong> illustrates narrative consistency checks. With base facts like <code>Alice IS_A Human</code>, <code>Alice LOCATED_IN CityX</code>, and <code>Alice CASTS Magic</code>, a call to <code>check-magic Alice CityX</code> asks whether magic is allowed in that city. Without additional facts, the answer will be FALSE. If you add something like <code>SciFi_TechMagic PERMITS Magic_IN CityX</code> either via <code>add</code> or via the <code>|</code> syntax, then <code>check-magic Alice CityX | SciFi_TechMagic PERMITS Magic_IN CityX</code> will report TRUE_CERTAIN, reflecting that the SciFi layer permits technology-based magic in that location.</p>
+
+  <h2>Working with Theory Files</h2>
+  <p>The CLI treats simple text files under <code>.AGISystem2/theories</code> as “theories”: collections of canonical facts that you can apply as temporary overlays. This feature is intended as a lightweight way to experiment with different rule sets or world assumptions without writing code or manipulating binary layers.</p>
+  <p><strong>new-theory &lt;name&gt;</strong> creates a new file <code>.AGISystem2/theories/&lt;name&gt;.txt</code> if it does not already exist. The file starts with a comment reminding you that each line should contain a single fact in the constrained grammar. You can edit this file in your editor of choice, adding statements like <code>ProcedureX REQUIRES Consent</code>, <code>ExportData PROHIBITED_BY GDPR</code>, or <code>SciFi_TechMagic PERMITS Magic_IN CityX</code>.</p>
+  <p><strong>list-theories</strong> enumerates the existing <code>.txt</code> theory files in the <code>theories</code> subfolder, without making any changes. <strong>show-theory &lt;name&gt;</strong> prints the contents of one such file so you can review the rules it contains. This is useful when you experiment with several alternative formulations and want to understand which facts were active for a particular test.</p>
+  <p><strong>apply-theory &lt;name&gt; &lt;question...&gt;</strong> reads all facts from the named file and applies them as a temporary context while answering the given question. It behaves like a structured version of the <code>cf</code> command where the extra facts come from a file rather than being typed inline. For example, after running <code>init-samples</code> you can type <code>apply-theory health_compliance check-procedure ProcedureX</code> to run the health compliance check under the sample rules, or <code>apply-theory scifi_magic check-magic Alice CityX</code> to see how magic behaves under the SciFi theory.</p>
+  <p><strong>init-samples</strong> seeds the <code>theories</code> folder with a few pre-defined files suitable for experimentation: one for minimal health compliance, one for a tiny law example, and one for a science-fiction magic setting. You can inspect these files with <code>show-theory</code> and modify them or copy their structure when building your own domain theories.</p>
+
+  <h2>Recommended First Steps</h2>
+  <p>If this is your first encounter with the CLI, a simple way to get started is to open a new folder, run the CLI, and follow a short sequence of commands. The following transcript outlines a typical exploration:</p>
+  <pre>mkdir demo-agis2
+cd demo-agis2
+../bin/AGISystem2Raw.sh
+
+AGIS2&gt; add Dog IS_A Animal
+AGIS2&gt; add Water HAS_PROPERTY boiling_point=100
+AGIS2&gt; ask Is Dog an Animal?
+Result: TRUE_CERTAIN
+
+AGIS2&gt; ask Water HAS_PROPERTY boiling_point=50?
+Result: FALSE
+
+AGIS2&gt; cf Water HAS_PROPERTY boiling_point=50? | Water HAS_PROPERTY boiling_point=50
+Result (counterfactual): TRUE_CERTAIN
+
+AGIS2&gt; init-samples
+AGIS2&gt; list-theories
+Theories in .AGISystem2/theories :
+  - health_compliance
+  - law_minimal
+  - scifi_magic
+
+AGIS2&gt; apply-theory health_compliance check-procedure ProcedureX
+Procedure compliance: FALSE
+
+AGIS2&gt; apply-theory scifi_magic check-magic Alice CityX
+Magic allowed: TRUE_CERTAIN
+
+AGIS2&gt; config
+{ ... JSON snapshot of profile, dimensions, limits ... }</pre>
+  <p>These steps demonstrate the main paths: adding base facts, asking questions, running counterfactuals inline, applying pre-defined theories, and inspecting configuration. From here you can extend the examples by editing theory files, adding new relations from the Relations chapter, or integrating the CLI into scripts for reproducible experiments.</p>
+
+  <div class="footer-nav">
+    <a href="../index.html">Back to index</a>
+    <a href="../concepts/quick_wiki.html">Quick wiki</a>
+  </div>
+  </div>
+</body>
+</html>
+

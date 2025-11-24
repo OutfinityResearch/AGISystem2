@@ -17,6 +17,7 @@ class EngineAPI {
     this.parser = new NLParser(this.config.get('recursionHorizon'));
     this.translator = new TranslatorBridge();
     this.reasoner = new Reasoner(this.conceptStore);
+    this.reasoner.config = this.config;
   }
 
   ingest(text) {

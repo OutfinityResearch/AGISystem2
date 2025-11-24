@@ -26,8 +26,12 @@ class TemporalMemory {
   }
 
   rewind(state, steps) {
+    const maxSteps = this.config && this.config.get('maxTemporalRewindSteps')
+      ? this.config.get('maxTemporalRewindSteps')
+      : steps;
+    const iterations = Math.min(steps, maxSteps);
     let current = state;
-    for (let s = 0; s < steps; s += 1) {
+    for (let s = 0; s < iterations; s += 1) {
       current = this.math.permute(current, this._tickInv);
     }
     return current;
@@ -63,4 +67,3 @@ class TemporalMemory {
 }
 
 module.exports = TemporalMemory;
-

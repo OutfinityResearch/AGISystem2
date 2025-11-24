@@ -1,8 +1,8 @@
 const Config = require('../../src/support/config');
 const TemporalMemory = require('../../src/reason/temporal_memory');
 
-async function run() {
-  const config = new Config().load({ profile: 'auto_test' });
+async function run({ profile, timeoutMs }) {
+  const config = new Config().load({ profile });
   const tm = new TemporalMemory({ config });
 
   const state0 = tm.initState();
@@ -26,7 +26,13 @@ async function run() {
   }
   const okRotation = equal;
 
-  return { ok: okZero && okChanged && okRotation };
+  // Large rewind request should still complete quickly thanks to maxTemporalRewindSteps.
+  const start = Date.now();
+  const rewoundLarge = tm.rewind(state1, 1000000);
+  const elapsed = Date.now() - start;
+  const okLarge = rewoundLarge.length === state1.length && elapsed < (timeoutMs || 5000);
+
+  return { ok: okZero && okChanged && okRotation && okLarge };
 }
 
 module.exports = { run };

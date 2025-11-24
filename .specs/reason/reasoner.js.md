@@ -6,7 +6,7 @@ Class `Reasoner`
 - **Key Collaborators**: `TheoryStack`, `ConceptStore`, `MathEngine`, `BoundedDiamond`, `BiasController`, `ValidationEngine`, `TemporalMemory`, `Retriever`, `Config`.
 
 ## Public API
-- `constructor(deps)`
+- `constructor(deps)` (includes `config` to access limits such as `maxReasonerIterations`).
 - `answer(queryVector, conceptId, {contextStack, mode})`: return {result, band, provenance}.
 - `composeConcept(conceptId, stack)`: helper to build runtime diamond (non-mutating).
 - `adversarialCheck(vec, diamond)`: sceptic/optimist thresholds.
@@ -63,4 +63,5 @@ class Reasoner {
 ## Notes/Constraints
 - Deterministic outputs; record active stack and thresholds.
 - Keep core flows geometric; text I/O handled elsewhere.
-- Avoid storing state in Reasoner; rely on injected dependencies.***
+- Avoid storing state in Reasoner; rely on injected dependencies.
+- Long-running traversals must respect `maxReasonerIterations` from `Config`. When the limit is exceeded, Reasoner should stop and return a timeout-like outcome (for example `UNKNOWN_TIMEOUT`) rather than blocking indefinitely; this applies to graph expansions (e.g., transitive `IS_A` chains) and any future search-based methods.***
