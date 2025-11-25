@@ -91,10 +91,33 @@ code {
 
 .nav-header small {
   display: block;
-  margin-top: 0.4rem;
-  color: #4a5670;
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+.sub-nav {
+  display: block;
+  margin-top: 0.75rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--border-soft);
+  font-size: 0.8rem;
+  color: var(--fg);
+}
+
+.sub-nav strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.sub-nav a {
+  color: var(--accent);
+  text-decoration: none;
+  margin-right: 0.5rem;
+}
+
+.sub-nav a:hover {
+  text-decoration: underline;
 }
 
 .section-intro {

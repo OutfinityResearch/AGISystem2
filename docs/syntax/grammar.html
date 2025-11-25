@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Grammar & Sentence Shapes</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Grammar & Sentence Shapes</h1>
+     <small><a href="index.html">Back to index</a> · <a href="../wiki/index.html">Quick Wiki</a></small>
+  </div>
+  <p>AGISystem2 deliberately understands only a small, precise interaction language. At the engine boundary, everything is expressed as Sys2DSL statements built from simple subject–relation–object shapes. The goal is not to mimic human style but to provide a form that can be mapped into high-dimensional conceptual space without ambiguity. This page describes those canonical shapes, how they appear in Sys2DSL, and how they relate to any upstream natural-language normalisation.</p>
+
+  <h2>The Canonical Assertion and Question Forms</h2>
+  <p>Every core fact has three parts: subject, relation, and object. In canonical form this is a triple such as <code>Dog IS_A Animal</code>, which says that the concept labelled "Dog" belongs to the broader concept "Animal". Another frequent pattern is <code>Water HAS_PROPERTY boiling_point=100</code>, where <code>Water</code> is the subject, <code>HAS_PROPERTY</code> is the relation, and <code>boiling_point=100</code> is the object token.</p>
+  <p>In Sys2DSL, such assertions are always written as explicit statements, for example:</p>
+  <pre><code>@f1 ASSERT Dog IS_A Animal
+@f2 ASSERT water HAS_PROPERTY boiling_point=100</code></pre>
+  <p>From the grammar’s point of view, <code>boiling_point=100</code> is a single object token: the character <code>=</code> is allowed inside tokens but does not change their category (it still counts as a lowercase “concept-like” token). At the geometric level, encoder and dimension catalog decide how to treat such property-like tokens, typically by mapping them into appropriate ontological axes (for example, temperature) and tightening the relevant bounds. Where no special handling exists yet, they degrade gracefully to an ordinary concept name.</p>
+  <p>Questions follow the same subject–relation–object backbone but are phrased as queries. In Sys2DSL they appear as <code>@q ASK "Dog IS_A Animal?"</code> or <code>@q ASK "Water HAS_PROPERTY boiling_point=100?"</code>. Internally, the parser and encoder reconstruct the triple and ask whether the corresponding point lies inside the appropriate concept region. In other words, both assertions and questions ultimately become vectors, masks, and bounded‑diamond membership tests, as explained in the Conceptual Spaces and Reasoning chapters.</p>
+
+  <h2>Counterfactual and Deontic Forms</h2>
+  <p>Some statements describe temporary, hypothetical contexts rather than facts that should be stored permanently. In Sys2DSL these are expressed with the <code>CF</code> action, which combines a question with an inline theory layer. For example:</p>
+  <pre><code>@cf CF "Water HAS_PROPERTY boiling_point=50?"
+     | Water HAS_PROPERTY boiling_point=50</code></pre>
+  <p>For the duration of this reasoning step, the engine adds the given fact as a temporary overlay and answers the question under that overlay. The corresponding geometric adjustments are confined to a cloned theory stack and discarded after the query completes, leaving the base theory unchanged.</p>
+  <p>Normative sentences rely on deontic relations such as <code>PERMITS</code>, <code>PROHIBITS</code>, and <code>OBLIGATES</code>. A statement like <code>@f ASSERT ExportData PROHIBITED_BY GDPR</code> assigns a deontic status to the action "ExportData" under the regime labelled "GDPR". Causal and temporal relations use pairs such as <code>CAUSES</code>/<code>CAUSED_BY</code> and <code>BEFORE</code>/<code>AFTER</code>. Structural relations include <code>IS_A</code>, <code>PART_OF</code>/<code>HAS_PART</code>, <code>HAS_PROPERTY</code>/<code>PROPERTY_OF</code>, and <code>LOCATED_IN</code>/<code>CONTAINS</code>. Relation definitions and their geometric mappings are specified in the relation design specs and the RelationPermuter.</p>
+
+  <h2>What the Engine Rejects</h2>
+  <p>The constrained grammar is intentionally strict about what it accepts. At the Sys2DSL level, every fact or question must be expressible as a small number of tokens in a subject–relation–object pattern. Free‑form requests such as “Tell me a story” or “Give me advice” do not map directly to this grammar; they belong outside AGISystem2 or must first be normalised to canonical triples.</p>
+  <p>Upstream components such as a TranslatorBridge may be used to turn rich natural language into these canonical forms, but the engine itself only sees the Sys2DSL statements. If normalisation cannot produce safe statements, it should fail rather than guess.</p>
+
+  <h2>How Normalisation and Parsing Cooperate</h2>
+  <p>Once a sentence has been normalised to a canonical triple (for example by an external translator), the parser takes over. Its job is deliberately modest: identify subject, relation and object tokens and build a shallow structure that the encoder can turn into vectors. The recursion horizon is kept low so that deeply nested structures cannot pollute the vector with accidental detail.</p>
+  <p>In practice, you can think of each fact or question as following a simple pipeline: produce a canonical triple, parse subject/relation/object, encode via vector operations and relation permutations, then carve or query regions in conceptual space. The grammar described on this page specifies the textual forms that are allowed at the engine boundary; the encoding and reasoning specs explain how those forms are mapped into geometry.</p>
+
+  <h2>Concrete Examples</h2>
+  <pre>
+Assertion:
+  @f1 ASSERT Dog IS_A Animal
+Question:
+  @q1 ASK "Water HAS_PROPERTY boiling_point=100?"
+Counterfactual:
+  @cf CF "Water HAS_PROPERTY boiling_point=50?"
+      | Water HAS_PROPERTY boiling_point=50
+Deontic:
+  @f2 ASSERT ExportData PROHIBITED_BY GDPR
+Causal:
+  @f3 ASSERT Fire CAUSES Smoke
+Temporal:
+  @f4 ASSERT EventA BEFORE EventB
+Structural:
+  @f5 ASSERT Engine PART_OF Car
+  </pre>
+  <p>These examples are deliberately simple, but they capture the core shapes that the engine understands. More complex scenarios are expressed as Sys2DSL programmes that build on these triples, bind concepts and points, apply masks, and combine intermediate results via variables and topological evaluation.</p>
+
+  <h2>Why Such a Strict Grammar?</h2>
+  <p>The decision to keep the grammar small is a trade-off between flexibility and clarity. Every extra degree of freedom in language must be reflected in the encoding and reasoning layers, multiplying the ways in which ambiguity can slip in. By constraining inputs to a handful of relations and simple token patterns, AGISystem2 gains several advantages: parsing is deterministic, the mapping from text to vectors is transparent, and explanations can directly reference the original sentences without hidden transformations. TranslatorBridge assumes the burden of dealing with messy human language, allowing the core engine to remain lean and exact.</p>
+  <p>For developers coming from traditional machine learning backgrounds, this may feel strict compared to end-to-end text models. The benefit is that when something goes wrong you can often point to a specific sentence shape or relation choice as the cause, rather than to a mysterious shift in a large neural network. The Grammar, Conceptual Spaces, and Algorithms chapters together form a small wiki that explains how this constrained language maps into geometry and why that constraint is a feature, not a limitation, for safety-critical and auditable systems.</p>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to index</a>
+    <a href="../wiki/index.html">Quick Wiki</a>
+  </div>
+  </div>
+</body>
+</html>

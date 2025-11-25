@@ -12,12 +12,23 @@
     <small>
       <a href="../index.html">Home</a> ·
       <a href="conceptual_spaces.html">Theory</a> ·
-      <a href="architecture.html">Architecture</a> ·
-      <a href="../reference/api.html">APIs</a> ·
-      <a href="../reference/syntax.html">Syntax</a> ·
-      <a href="../usage/cli.html">CLI</a> ·
-      <a href="../concepts/quick_wiki.html">Quick Wiki</a>
+      <a href="../guides/architecture.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="../wiki/index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
     </small>
+    <div class="sub-nav">
+      <strong>Theory Topics:</strong>
+      <a href="conceptual_spaces.html">Conceptual Spaces</a> ·
+      <a href="reasoning.html">Reasoning</a> ·
+      <a href="bias.html">Bias & Values</a> ·
+      <a href="explainability.html">Explainability</a> ·
+      <a href="learning.html">Learning</a> ·
+      <a href="limits.html">Limits</a> ·
+      <a href="roadmap.html">Roadmap</a>
+    </div>
   </div>
   <p>Conceptual spaces start from a simple but powerful idea: meaning can be treated as geometry. Instead of thinking about knowledge only as symbols and rules, or only as weights in a neural network, we imagine a space with many dimensions. Each dimension corresponds to some quality that the system can measure or care about, and every concrete statement becomes a point in that space. Concepts are then regions that group together many related points. AGISystem2 adopts this view and turns it into an explicit, inspectable data structure built from high-dimensional int8 vectors, bounded diamonds, and relevance masks. Throughout the rest of the documentation, when you see terms like “concept”, “region”, or “bounded diamond”, they refer back to the picture developed in this chapter.</p>
 
@@ -92,12 +103,12 @@
 
   <h2>Links to the Literature and to the Codebase</h2>
   <p>The conceptual spaces idea originates in work by Peter Gärdenfors and others who argued for a geometric middle layer between symbols and subsymbolic vectors. Hyperdimensional computing, as developed by Pentti Kanerva and subsequent researchers, shows how to represent complex structures using high-dimensional vectors, permutations, and binding operations. From the perspective of dimensionality reduction, results like the Johnson–Lindenstrauss lemma give intuition for why distances can remain meaningful in high dimensions. AGISystem2 borrows from all of these lines of work but grounds them in deterministic, auditable Node.js components; the shape of the space is captured conceptually in the descriptions of ontology and axiology dimensions and is instantiated at runtime from configuration and initial data files.</p>
-  <p>If you want to see how the geometric ideas map to concrete modules, you can read this chapter together with the implementation-oriented guides and references. The modules that handle the raw geometry are introduced in the <a href="../guides/architecture.html">Architecture</a> chapter and described in more detail in the reference pages: <a href="../reference/dimensions.html">Empirical Space</a> shows how the global vector is partitioned, while <a href="../reference/ontology_dims.html">Ontology Dimensions</a> and <a href="../reference/axiology_dims.html">Axiology Dimensions</a> spell out the fixed semantic axes. On top of that, the <code>VectorSpace</code> and <code>MathEngine</code> components implement buffer allocation, clamped arithmetic, masked L1 distance, permutations, and temporal rotations; the <code>BoundedDiamond</code> class implements the box-plus-diamond region for a concept; the <code>ConceptStore</code> manages unions of diamonds and raw fact triples; and the <code>TheoryStack</code> captures context overlays that turn a static space into a layered, meta-rational one. The Retriever, whose role is explained in the <a href="../guides/algorithms.html">Algorithms &amp; Acronyms</a> and <a href="../reference/relations.html">Relations</a> pages, uses locality-sensitive hashing to find candidate regions efficiently before handing distance checks back to the MathEngine.</p>
+  <p>If you want to see how the geometric ideas map to concrete modules, you can read this chapter together with the implementation-oriented guides and references. The modules that handle the raw geometry are introduced in the <a href="../guides/architecture.html">Architecture</a> chapter and described in more detail in the reference pages: <a href="../theory/dimensions.html">Empirical Space</a> shows how the global vector is partitioned, while <a href="../theory/ontology_dims.html">Ontology Dimensions</a> and <a href="../theory/axiology_dims.html">Axiology Dimensions</a> spell out the fixed semantic axes. On top of that, the <code>VectorSpace</code> and <code>MathEngine</code> components implement buffer allocation, clamped arithmetic, masked L1 distance, permutations, and temporal rotations; the <code>BoundedDiamond</code> class implements the box-plus-diamond region for a concept; the <code>ConceptStore</code> manages unions of diamonds and raw fact triples; and the <code>TheoryStack</code> captures context overlays that turn a static space into a layered, meta-rational one. The Retriever, whose role is explained in the <a href="../theory/relations.html">Relations</a> <a href="../theory/relations.html">Relations</a> pages, uses locality-sensitive hashing to find candidate regions efficiently before handing distance checks back to the MathEngine.</p>
   <p>When reading other documentation pages you can treat this chapter as the background reference for any mention of regions, masks, diamonds, or partitions. The <a href="../guides/reasoning.html">Reasoning</a> chapter shows how membership in a diamond becomes a deduction step, how inverse permutations and translations implement abduction and analogy, and how theory layers enable counterfactuals. The <a href="../guides/bias.html">Bias &amp; Values</a> chapter relies on the ontological and axiological partitions described here to explain how facts and value judgements are kept separate and how different value systems can be loaded as theory layers. The <a href="../guides/explainability.html">Explainability</a> chapter assumes that regions and masks are explicit objects that can be cited in proofs and audit trails. For a system-level picture of how all modules interact—from ingestion, through conceptual space, to answers—you can follow the diagram and narrative in the <a href="../guides/architecture.html">Architecture</a> chapter; that page shows how conceptual spaces fit into the larger design, while this one focuses on the semantic geometry itself.</p>
 
   <div class="footer-nav">
     <a href="../index.html">Back to index</a>
-    <a href="../concepts/quick_wiki.html">Quick Wiki</a>
+    <a href="../wiki/index.html">Quick Wiki</a>
   </div>
   </div>
   <script src="../reference/nav2.js"></script>

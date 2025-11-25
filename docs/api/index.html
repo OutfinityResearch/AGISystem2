@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>APIs</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>High-Level APIs</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="../guides/architecture.html">Architecture</a> ·
+      <a href="index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="../wiki/index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
+    <div class="sub-nav">
+      <strong>API Topics:</strong>
+      <a href="index.html">Engine API</a>
+    </div>
+  </div>
+  <p>The EngineAPI class is the main entry point for embedding AGISystem2 into an application. It provides a small set of methods that accept sentences written in the constrained syntax described in the Syntax chapter, route them through the geometric reasoning engine, and return simple JavaScript objects. This page describes what you can call, what you should pass in, and what you can expect back, without going into implementation details about vectors or clustering.</p>
+
+  <h2>Creating an Engine Instance</h2>
+  <p>In Node.js, you import the EngineAPI class and construct it with an optional configuration object. The configuration selects a profile such as <code>auto_test</code>, <code>manual_test</code>, or <code>prod</code> and can specify a storage root for persistence. The profile determines dimension count, index strategy, and default limits, but from the point of view of the API you treat it as a single argument that controls performance and capacity. After construction, the EngineAPI instance is long-lived and can handle many calls; the underlying engine is deterministic, so repeating the same sequence of calls under the same configuration produces the same results.</p>
+
+  <h2>Core Methods: ingest, ask, abduct</h2>
+  <p>The <code>ingest(text)</code> method records new knowledge. The <code>text</code> argument must be an assertion in fact form, such as <code>Dog IS_A Animal</code>, <code>Water HAS_PROPERTY boiling_point=100</code>, or <code>ProcedureX REQUIRES Consent</code>. EngineAPI normalises and parses the sentence, turns it into an internal representation, and updates the conceptual space; if the sentence cannot be parsed into a subject–relation–object triple, it throws an error instead of guessing. The method does not return a value; you treat it as a command with the side effect of extending the knowledge base.</p>
+  <p>The <code>ask(question)</code> method queries the engine. The <code>question</code> argument is either a simple interrogative, for example <code>Is Dog an Animal?</code>, or a canonical triple with a question mark, such as <code>Water HAS_PROPERTY boiling_point=100?</code>. EngineAPI normalises and parses the question, encodes it, and asks the Reasoner whether it holds under the current theories. The method always returns an object with a <code>truth</code> field, whose value is typically <code>TRUE_CERTAIN</code> or <code>FALSE</code>, and in some cases <code>PLAUSIBLE</code> or <code>UNKNOWN_TIMEOUT</code>. When the geometric engine is active it also returns a <code>band</code> field and a <code>provenance</code> object. The <code>band</code> summarises the geometric reasoning (<code>TRUE_CERTAIN</code> for points deep inside a diamond, <code>PLAUSIBLE</code> for points near its boundary, <code>FALSE</code> outside), while <code>truth</code> reflects the symbolic verdict based on explicit facts and theory stacks. In simple integrations you can check only <code>truth</code>; in more advanced ones you can inspect <code>band</code> and <code>provenance</code> to understand how strict or ambiguous the answer was.</p>
+  <p>The <code>abduct(observation, relationHint)</code> method performs abductive reasoning. The <code>observation</code> is a symbol that appears in causal facts such as <code>Fire CAUSES Smoke</code> or <code>Smoke CAUSED_BY Fire</code>. The optional <code>relationHint</code> is usually <code>CAUSES</code> or <code>CAUSED_BY</code>, but the engine inspects both directions when it searches for explanations. The method returns an object with a <code>hypothesis</code> field naming a plausible cause and a <code>band</code> field indicating qualitative support such as <code>PLAUSIBLE</code> or <code>FALSE</code> when no explanation is found.</p>
+
+  <h2>Counterfactuals and Domain Helpers</h2>
+  <p>The <code>counterfactualAsk(question, extraFacts)</code> method answers questions under temporary assumptions. The <code>question</code> uses the same shapes as for <code>ask</code>, and <code>extraFacts</code> is an array of assertion strings written in fact syntax. EngineAPI treats these extra facts as a local theory layer for the duration of the call: they influence the answer to that question but do not change long-term memory. The return value has the same <code>truth</code> field as <code>ask</code>, interpreted under the counterfactual scenario.</p>
+  <p>On top of these generic methods, EngineAPI offers three convenience helpers for common patterns, implemented via macros rather than hard-coded rules. The <code>checkProcedureCompliance(procedureId, extraFacts)</code> method evaluates whether all requirements associated with a procedure are satisfied, using both stored facts and optional extra evidence such as <code>Consent GIVEN yes</code> or <code>AuditTrail PRESENT yes</code>. The <code>checkExport(actionId, regulations, extraFacts)</code> method determines whether an export-like action is permitted, prohibited, or in conflict under a list of active regulations; its return object has a <code>truth</code> field whose value is often <code>TRUE_CERTAIN</code>, <code>FALSE</code>, or <code>CONFLICT</code>. The <code>checkMagicInCity(actorId, cityId, extraFacts)</code> method checks narrative consistency by verifying that a character casts magic, is located in a given city, and that some theory file or macro declares magic permitted there. All three helpers accept plain identifiers and fact lines and return the same kind of small truth objects as <code>ask</code>.</p>
+
+  <h2>Agentic Sessions</h2>
+  <p>To integrate AGISystem2 into agents that should not see internal configuration details, EngineAPI exposes <code>getAgenticSession()</code>. This method returns a session object with methods like <code>ingest(sentence)</code>, <code>ask(question)</code>, and <code>abduct(observation, relationHint)</code>. These methods behave like their EngineAPI counterparts but present a narrow, stable surface intended for long-running interactions. The session object assumes that all text is already in the constrained syntax; it does not expose configuration or theory-management functions.</p>
+  <p>A typical embedding pattern is to construct one EngineAPI instance and then hand out its agentic session to an agent framework or to a larger orchestration system. The agent treats the session as a deterministic service: it adds facts, asks questions, and interprets the returned truth values and hypotheses. Tests in <code>tests/agentic_session_api</code> illustrate this pattern and confirm that invalid syntax is rejected deterministically rather than coerced.</p>
+
+  <h2>Relationship to Syntax and CLI</h2>
+  <p>No matter which method you call, the strings you pass into EngineAPI or into an agentic session must follow the syntax documented in the <a href="syntax.html">Syntax</a> chapter. Facts, questions, extra facts for counterfactuals, and the evidence passed to domain helpers are all written in the same flat subject–relation–object style. The CLI is a human-friendly wrapper around the same methods: commands like <code>add</code> and <code>ask</code> call <code>ingest</code> and <code>ask</code> internally, while commands like <code>cf</code>, <code>check-procedure</code>, <code>check-export</code>, and <code>check-magic</code> package their arguments and forward them to <code>counterfactualAsk</code> or to macro-backed helpers. Reading this API page together with the Syntax and CLI pages gives you a complete, practical picture of how to drive the engine from code or from the command line.</p>
+
+  <div class="footer-nav">
+    <a href="../index.html">Back to index</a>
+    <a href="../wiki/index.html">Quick Wiki</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

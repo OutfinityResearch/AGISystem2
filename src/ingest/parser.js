@@ -14,6 +14,30 @@ class NLParser {
     return this._parseAssertion(trimmed);
   }
 
+  /**
+   * Explicitly parse text as a question, regardless of trailing '?'.
+   * Used by EngineAPI.ask and Sys2DSL ASK so that the semantics come
+   * from the call site, not just from punctuation.
+   */
+  parseQuestion(text) {
+    const trimmed = text.trim();
+    if (!trimmed) {
+      throw new Error('Empty question');
+    }
+    return this._parseQuestion(trimmed);
+  }
+
+  /**
+   * Explicitly parse text as an assertion.
+   */
+  parseAssertion(text) {
+    const trimmed = text.trim();
+    if (!trimmed) {
+      throw new Error('Empty assertion');
+    }
+    return this._parseAssertion(trimmed);
+  }
+
   _parseAssertion(text) {
     const parts = text.split(/\s+/);
     if (parts.length < 3) {

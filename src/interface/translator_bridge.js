@@ -17,7 +17,7 @@ class TranslatorBridge {
     }
     const lower = trimmed.toLowerCase().replace(/\?+$/, '');
     if (lower === 'could you tell me whether dogs fall under animals') {
-      return 'Dog IS_A Animal';
+      return 'dog IS_A Animal';
     }
     throw new Error('TranslatorBridge cannot normalise input into constrained grammar');
   }

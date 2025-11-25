@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Wiki of Concepts</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Wiki of Concepts</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="../guides/architecture.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
+    <div class="sub-nav">
+      <strong>Wiki Topics:</strong>
+      <a href="index.html">Concepts Overview</a> ·
+      <a href="abduction.html">Abduction</a> ·
+      <a href="abstract_interpretation.html">Abstract Interpretation</a> ·
+      <a href="analogy.html">Analogy</a> ·
+      <a href="axiology.html">Axiology</a> ·
+      <a href="auditability.html">Auditability</a> ·
+      <a href="bias.html">Bias</a> ·
+      <a href="bounded_diamonds.html">Bounded Diamonds</a> ·
+      <a href="conceptual_spaces.html">Conceptual Spaces</a> ·
+      <a href="counterfactual.html">Counterfactuals</a> ·
+      <a href="deduction.html">Deduction</a> ·
+      <a href="deontic_logic.html">Deontic Logic</a> ·
+      <a href="expert_system.html">Expert Systems</a> ·
+      <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> ·
+      <a href="induction.html">Induction</a> ·
+      <a href="lsh.html">Locality-Sensitive Hashing (LSH)</a> ·
+      <a href="masked_l1_distance.html">Masked L1 Distance</a> ·
+      <a href="narrative_consistency.html">Narrative Consistency</a> ·
+      <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> ·
+      <a href="ontology.html">Ontology</a> ·
+      <a href="permutation_binding.html">Permutation-Based Binding</a> ·
+      <a href="pragmatics.html">Pragmatics</a> ·
+      <a href="symbol_grounding.html">Symbol Grounding</a> ·
+      <a href="symbolic_execution.html">Symbolic Execution</a> ·
+      <a href="sys2dsl.html">Sys2DSL</a> ·
+      <a href="theory_layers.html">Theory Layers</a> ·
+      <a href="trustworthy_ai.html">Trustworthy AI</a> ·
+      <a href="validation.html">Validation</a> ·
+      <a href="veil_of_ignorance.html">Veil of Ignorance</a>
+    </div>
+  </div>
+
+  <div class="philosophical-introduction">
+    <p>This small wiki collects the theoretical and algorithmic concepts that underpin AGISystem2. Each page connects philosophical and mathematical ideas to the concrete way the system implements geometric reasoning, layered theories, and value-aware control.</p>
+    <p>The index below groups concepts into a few families: reasoning styles, knowledge and values, geometric foundations, and a short technical note on how these ideas show up in the implementation.</p>
+  </div>
+
+  <h2>Reasoning and Logic</h2>
+  <table class="table-concept-index">
+    <tr>
+      <th>Concept</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td><a href="abduction.html">Abduction</a></td>
+      <td>Reasoning to the best explanation: starting from observations and inferring the most plausible causes.</td>
+    </tr>
+    <tr>
+      <td><a href="induction.html">Induction</a></td>
+      <td>Generalising from examples into rules and new concepts by enveloping points in the conceptual space.</td>
+    </tr>
+    <tr>
+      <td><a href="deduction.html">Deduction</a></td>
+      <td>Deriving necessary conclusions from premises, seen as checking inclusion between conceptual volumes.</td>
+    </tr>
+    <tr>
+      <td><a href="analogy.html">Analogy</a></td>
+      <td>Transferring relations between domains by applying learned vector “deltas” between concepts.</td>
+    </tr>
+    <tr>
+      <td><a href="non_monotonic_logic.html">Non-Monotonic Logic</a></td>
+      <td>Reasoning that allows withdrawing conclusions when new information or context changes appear.</td>
+    </tr>
+    <tr>
+      <td><a href="counterfactual.html">Counterfactuals</a></td>
+      <td>“What-if” questions evaluated through temporary theories and alternative layers.</td>
+    </tr>
+    <tr>
+      <td><a href="deontic_logic.html">Deontic Logic</a></td>
+      <td>Modelling obligations and permissions in the axiological space with forbidden and obligatory volumes.</td>
+    </tr>
+    <tr>
+      <td><a href="narrative_consistency.html">Narrative Consistency</a></td>
+      <td>Keeping stories and scenarios coherent over time and aligned with normative theories.</td>
+    </tr>
+    <tr>
+      <td><a href="symbolic_execution.html">Symbolic Execution</a></td>
+      <td>Exploring all feasible branches of a symbolic program or theory to find contradictions and counterexamples.</td>
+    </tr>
+    <tr>
+      <td><a href="abstract_interpretation.html">Abstract Interpretation</a></td>
+      <td>Static analysis via controlled abstractions, used to guarantee properties without exhaustive exploration.</td>
+    </tr>
+    <tr>
+      <td><a href="expert_system.html">Expert Systems</a></td>
+      <td>Rule-based predecessors of our engine, with explicit knowledge and traceable explanations.</td>
+    </tr>
+  </table>
+
+  <h2>Knowledge, Values and Governance</h2>
+  <table class="table-concept-index">
+    <tr>
+      <th>Concept</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td><a href="conceptual_spaces.html">Conceptual Spaces</a></td>
+      <td>Representing knowledge as points and volumes in a continuous multidimensional space.</td>
+    </tr>
+    <tr>
+      <td><a href="ontology.html">Ontology</a></td>
+      <td>The factual layer of dimensions and relations that structures the objective world inside the system.</td>
+    </tr>
+    <tr>
+      <td><a href="axiology.html">Axiology</a></td>
+      <td>The layer of values and moral judgements, geometrically separated from ontology for audit and bias control.</td>
+    </tr>
+    <tr>
+      <td><a href="symbol_grounding.html">Symbol Grounding</a></td>
+      <td>Anchoring symbols in experience and geometry instead of manipulating bare strings.</td>
+    </tr>
+    <tr>
+      <td><a href="pragmatics.html">Pragmatics</a></td>
+      <td>How context and speaker intent influence the interpretation of facts and questions.</td>
+    </tr>
+    <tr>
+      <td><a href="bias.html">Bias</a></td>
+      <td>Systematic preferences or discrimination that can appear in data or theories and must be controlled explicitly.</td>
+    </tr>
+    <tr>
+      <td><a href="veil_of_ignorance.html">Veil of Ignorance</a></td>
+      <td>Rawlsian principle for “fair” scenarios where decision makers do not know their social position.</td>
+    </tr>
+    <tr>
+      <td><a href="auditability.html">Auditability</a></td>
+      <td>The ability to reconstruct and verify every ingestion and reasoning step through logs and versions.</td>
+    </tr>
+    <tr>
+      <td><a href="trustworthy_ai.html">Trustworthy AI</a></td>
+      <td>The set of criteria (determinism, transparency, validation) that make the system acceptable in critical domains.</td>
+    </tr>
+  </table>
+
+  <h2>Geometric and Algorithmic Foundations</h2>
+  <table class="table-concept-index">
+    <tr>
+      <th>Concept</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td><a href="hyperdimensional_computing.html">Hyperdimensional Computing</a></td>
+      <td>Representing information via superposition, masking and permutations in a high-dimensional vector space.</td>
+    </tr>
+    <tr>
+      <td><a href="lsh.html">Locality-Sensitive Hashing (LSH)</a></td>
+      <td>Probabilistic techniques for fast nearest-neighbour search in high-dimensional spaces.</td>
+    </tr>
+    <tr>
+      <td><a href="permutation_binding.html">Permutation-Based Binding</a></td>
+      <td>Using deterministic permutations of dimensions to bind subjects, relations and objects into composite vectors.</td>
+    </tr>
+    <tr>
+      <td><a href="masked_l1_distance.html">Masked L1 Distance</a></td>
+      <td>A distance measure with masks that ignore or reweight subspaces (ontology vs. axiology).</td>
+    </tr>
+    <tr>
+      <td><a href="bounded_diamonds.html">Bounded Diamonds</a></td>
+      <td>The canonical shape of concepts: intersections of axis-aligned boxes and L1 balls with relevance masks.</td>
+    </tr>
+    <tr>
+      <td><a href="theory_layers.html">Theory Layers</a></td>
+      <td>Knowledge layers that can be activated, compared and stacked to handle context and contradictions.</td>
+    </tr>
+    <tr>
+      <td><a href="validation.html">Validation</a></td>
+      <td>Formal and empirical checking of answers and theories, including systematic search for counterexamples.</td>
+    </tr>
+  </table>
+
+  <h2>AGISystem2 Concepts</h2>
+  <table class="table-concept-index">
+    <tr>
+      <th>Concept</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td><a href="sys2dsl.html">Sys2DSL</a></td>
+      <td>The deterministic DSL used to express facts, questions, theory programmes and session scripts inside AGISystem2.</td>
+    </tr>
+  </table>
+
+  <h2>Technical Reference</h2>
+  <p>This section explains how to connect wiki concepts to the technical documentation. For implementation details and validation evidence:</p>
+  <ul>
+    <li>Use the <a href="../specs/matrix.html">Specification Matrix</a> to see which FS/NFS requirements and DS documents correspond to each capability.</li>
+    <li>Open the individual wiki pages (for example <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a>, <a href="lsh.html">LSH</a>, <a href="sys2dsl.html">Sys2DSL</a>) to find links and references to the relevant design specs and test suites.</li>
+    <li>Treat this wiki as the conceptual map, and the specs matrix as the authoritative traceability view for URS, FS, NFS and tests.</li>
+  </ul>
+
+  <div class="footer-nav">
+    <a href="../index.html">Back to index</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

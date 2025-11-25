@@ -20,9 +20,15 @@ async function run() {
   const fileConfig = new Config().load({ profile: 'manual_test', storageRoot: fileRoot });
   const fileAudit = new AuditLog('./.logs_test');
   const fileStore = new StorageAdapter({ config: fileConfig, audit: fileAudit });
-  fileStore.saveTheory('t1', Buffer.from([9, 8, 7]));
-  const theory = fileStore.loadTheory('t1');
-  ok = ok && theory && theory[0] === 9 && theory[2] === 7;
+  const theoryId = 't1';
+  const theoryText = '@f ASSERT dog IS_A Animal\n';
+  fileStore.saveTheoryText(theoryId, theoryText);
+  const loadedText = fileStore.loadTheoryText(theoryId);
+  ok = ok && typeof loadedText === 'string' && loadedText.includes('dog IS_A Animal');
+  const cachePayload = Buffer.from([9, 8, 7]);
+  fileStore.saveTheoryCache(theoryId, cachePayload);
+  const cache = fileStore.loadTheoryCache(theoryId);
+  ok = ok && cache && cache[0] === 9 && cache[2] === 7;
   ok = ok && fileStore.listTheories().includes('t1');
 
   if (fs.existsSync(fileRoot)) {
@@ -33,4 +39,3 @@ async function run() {
 }
 
 module.exports = { run };
-

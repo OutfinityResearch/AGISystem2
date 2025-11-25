@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Syntax – Sys2DSL</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Sys2DSL: Session &amp; Theory Scripts</h1>
+  </div>
+
+  <p>Sys2DSL is the textual language used to describe all reasoning logic in an AGISystem2 session or theory file. There is no separate concept of “macro”: a theory is simply a multi‑line Sys2DSL programme.</p>
+
+  <h2>Basic Line Form</h2>
+  <p>Every Sys2DSL instruction is a line (or a fragment of a line) of the form:</p>
+  <pre><code>@varName ACTION arg1 arg2 ...</code></pre>
+
+  <ul>
+    <li><code>@varName</code> defines a variable name in the script environment (for example <code>@f1</code>, <code>@q1</code>, <code>@mask</code>).</li>
+    <li><code>ACTION</code> is an uppercase keyword (for example <code>ASSERT</code>, <code>ASK</code>, <code>CF</code>, <code>FACTS_MATCHING</code>, <code>ALL_REQUIREMENTS_SATISFIED</code>, <code>MASK_DIMS</code>).</li>
+    <li><code>arg1 arg2 ...</code> are the action parameters: simple words or quoted strings, optionally with variable references.</li>
+  </ul>
+
+  <p>Comments are lines starting with <code>#</code> and are ignored. Extra spaces between tokens are allowed.</p>
+
+  <h2>Tokens and Variables</h2>
+  <p>Conventions for tokens in arguments:</p>
+  <ul>
+    <li>words starting with a lowercase letter (<code>dog</code>, <code>water</code>, <code>export_data</code>) – concept names;</li>
+    <li>words starting with an uppercase letter (<code>Alice</code>, <code>CityX</code>) – individuals or concrete instances;</li>
+    <li>words starting with <code>$</code> (<code>$reqs</code>, <code>$list</code>) – references to variables defined earlier (via <code>@reqs</code>, <code>@list</code>);</li>
+    <li>double‑quoted strings – complete texts (for example questions or search patterns) that may contain spaces, <code>?</code>, <code>=</code> etc.</li>
+  </ul>
+
+  <p>Variables are bound at the time the instruction that defines them is executed. Any instruction that uses <code>$name</code> depends on the instruction that defined <code>@name</code>.</p>
+
+  <h2>Statements and Topological Evaluation</h2>
+  <p>A Sys2DSL script is a list of instructions. Statements are delimited as follows:</p>
+  <ul>
+    <li>each occurrence of <code>@</code> that starts a word marks the beginning of a new statement;</li>
+    <li>you may write a single instruction per line or several instructions on the same line, as long as each starts with its own <code>@</code>:</li>
+  </ul>
+
+  <pre><code>@f1 ASSERT dog IS_A Animal
+@f2 ASSERT water HAS_PROPERTY boiling_point=100
+@q1 ASK "Is dog an Animal?"
+@q2 ASK "water HAS_PROPERTY boiling_point=100?"</code></pre>
+
+  <pre><code>@f1 ASSERT dog IS_A Animal @q1 ASK "Is dog an Animal?"</code></pre>
+
+  <p>Instead of executing lines strictly in textual order, the interpreter first builds a dependency graph between variables (based on <code>$name</code> occurrences) and evaluates instructions in a topological order. This allows you to write:</p>
+
+  <pre><code>@b BOOL_AND $a $a
+@a NONEMPTY $list
+@list FACTS_MATCHING "dog IS_A Animal"</code></pre>
+
+  <p>even though <code>@b</code> appears first textually; the engine will evaluate <code>@list</code> first, then <code>@a</code>, then <code>@b</code>. Cyclic dependencies (for example <code>@a</code> depending on <code>$b</code> and <code>@b</code> on <code>$a</code>) are detected and reported as errors.</p>
+
+  <h2>Core Actions (Examples)</h2>
+  <p>Some of the core actions frequently used in Sys2DSL:</p>
+
+  <h3>ASSERT – defining facts</h3>
+  <pre><code>@f1 ASSERT dog IS_A Animal
+@f2 ASSERT water HAS_PROPERTY boiling_point=100
+@f3 ASSERT surgery_x REQUIRES consent</code></pre>
+
+  <p>These instructions inscribe facts into the active session theory.</p>
+
+  <h3>ASK – yes/no questions</h3>
+  <pre><code>@q1 ASK "Is dog an Animal?"
+@q2 ASK "water HAS_PROPERTY boiling_point=100?"</code></pre>
+
+  <p>The result of each question is a truth object (for example <code>{ truth: "TRUE_CERTAIN" }</code>) stored in the corresponding variable.</p>
+
+  <h3>CF – counterfactuals</h3>
+  <pre><code>@cf CF "Water HAS_PROPERTY boiling_point=50?"
+       | Water HAS_PROPERTY boiling_point=50</code></pre>
+
+  <p>Here <code>CF</code> evaluates the question in the presence of a set of hypothetical facts (written after <code>|</code>), without modifying the base theory.</p>
+
+  <h3>FACTS_MATCHING and list combination</h3>
+  <p>Typical actions for compliance or narrative programmes:</p>
+  <pre><code>@reqs FACTS_MATCHING "$procId REQUIRES ?"
+@satGiven FACTS_MATCHING "? GIVEN yes"
+@satPresent FACTS_MATCHING "? PRESENT yes"
+@allSat MERGE_LISTS $satGiven $satPresent
+@result ALL_REQUIREMENTS_SATISFIED $reqs $allSat</code></pre>
+
+  <p>Here the script fetches the requirements of a procedure and checks that each requirement appears in the list of facts marked as satisfied.</p>
+
+  <h3>Masking and focused reasoning</h3>
+  <p>Sys2DSL also exposes actions for controlling dimension and partition masks:</p>
+  <pre><code>@m MASK_PARTITIONS ontology
+@q ASK_MASKED $m "dog IS_A Animal?"</code></pre>
+
+  <p>In this example, the question is evaluated using only the ontological dimensions.</p>
+
+  <h2>Sys2DSL in Theory Files vs. Sessions</h2>
+  <p>The same language is used in two contexts:</p>
+  <ul>
+    <li><strong>Theory files</strong> – text files (for example <code>*.sys2dsl</code>) versioned in Git, containing reusable Sys2DSL programmes for a domain (health rules, export rules, narratives, etc.).</li>
+    <li><strong>Session scripts</strong> – strings or arrays of lines sent to a <code>System2Session</code> to add facts, run checks or explore counterfactuals.</li>
+  </ul>
+
+  <p>There is no syntax difference between the two; only the loading method differs (persistent files vs. commands sent via API/CLI).</p>
+
+  <h2>Summary</h2>
+  <p>Sys2DSL is the only textual‑level language used to talk to AGISystem2. Facts, questions and verification programmes are all expressed as sequences of <code>@var ACTION …</code> instructions, evaluated in a deterministic and easily auditable way.</p>
+
+  <h2>References</h2>
+  <p>For implementation details, see the relevant design specifications (referenced by ID):</p>
+  <ul>
+    <li>DS[/theory/dsl_engine.js] – Sys2DSL interpreter and action set.</li>
+    <li>DS[/theory/Sys2DSL_arch]</li>
+    <li>DS[/theory/topological_eval]</li>
+    <li>DS[/interface/system2_session.js]</li>
+  </ul>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to Syntax overview</a>
+    <a href="../index.html">Back to index</a>
+  </div>
+  </div>
+  <script src="nav.js"></script>
+</body>
+</html>

@@ -17,10 +17,10 @@ class Encoder {
       return this.vspace.createVector();
     }
 
-    // În MVP, tratăm nodul ca pe o afirmație plată subject–relation–object.
     const vec = this.vspace.createVector();
-    // Heuristic simplu: marcăm câteva dimensiuni ontologice pentru subiect și obiect
-    // astfel încât vectorii să nu fie complet zero și să existe o vagă separare.
+
+    // Simple baseline: mark a couple of dimensions based on subject and object
+    // so that vectors are not completely zero and concepts separate slightly.
     const dims = this.vspace.dimensions;
     const markSubject = 0;
     const markObject = 1 < dims ? 1 : 0;
@@ -29,6 +29,15 @@ class Encoder {
     const objectHash = this._hashToken(node.object);
     vec[markSubject] = subjectHash;
     vec[markObject] = objectHash;
+
+    // Property-like objects under HAS_PROPERTY (e.g., boiling_point=100) can
+    // project into specific ontology axes (such as Temperature) when the key
+    // and value are recognised. This keeps the overall scheme simple while
+    // allowing more interpretable dimensions for well-known physical properties.
+    if (node && typeof node.relation === 'string' && node.relation === 'HAS_PROPERTY') {
+      this._encodePropertyObject(node.object, vec);
+    }
+
     return vec;
   }
 
@@ -57,7 +66,36 @@ class Encoder {
     }
     return acc;
   }
+
+  _encodePropertyObject(objectToken, vec) {
+    if (!objectToken || typeof objectToken !== 'string') {
+      return;
+    }
+    const parts = objectToken.split('=');
+    if (parts.length !== 2) {
+      return;
+    }
+    const key = parts[0].trim();
+    const rawValue = parts[1].trim();
+
+    // Numeric temperature mapping: boiling_point=NNN → Temperature axis (dimension 4).
+    if (key === 'boiling_point') {
+      const num = Number(rawValue);
+      if (!Number.isFinite(num)) {
+        return;
+      }
+      const axis = 4; // Temperature axis, see DS[/knowledge/dimensions].
+      if (axis >= 0 && axis < vec.length) {
+        let v = Math.round(num);
+        if (v > 127) {
+          v = 127;
+        } else if (v < -127) {
+          v = -127;
+        }
+        vec[axis] = v;
+      }
+    }
+  }
 }
 
 module.exports = Encoder;
-

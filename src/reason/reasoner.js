@@ -127,7 +127,7 @@ class Reasoner {
     return concept.diamonds[0];
   }
 
-  adversarialCheck(vector, diamond) {
+  adversarialCheck(vector, diamond, maskOverride) {
     if (!diamond) {
       return {
         truth: 'FALSE',
@@ -137,7 +137,7 @@ class Reasoner {
         optimistRadius: 0
       };
     }
-    const distance = this.math.distanceMaskedL1(vector, diamond);
+    const distance = this.math.distanceMaskedL1(vector, diamond, maskOverride);
     if (!Number.isFinite(distance)) {
       return {
         truth: 'FALSE',
@@ -189,6 +189,7 @@ class Reasoner {
 
   answer(queryVector, conceptId, options = {}) {
     const contextStack = options.contextStack || (this.stack && this.stack.getActiveLayers && this.stack.getActiveLayers()) || null;
+    const maskOverride = options.mask || null;
     const diamond = this.composeConcept(conceptId, contextStack);
     if (!diamond) {
       return {
@@ -200,7 +201,7 @@ class Reasoner {
         }
       };
     }
-    const check = this.adversarialCheck(queryVector, diamond);
+    const check = this.adversarialCheck(queryVector, diamond, maskOverride);
     return {
       result: check.truth,
       band: check.band,
@@ -215,8 +216,10 @@ class Reasoner {
 
   deduceIsA(subject, object, contextStack = null) {
     const facts = this._getFacts(contextStack);
+    const norm = (v) => (typeof v === 'string' ? v.trim().toLowerCase() : v);
+    const target = norm(object);
     const visited = new Set();
-    const stack = [subject];
+    const stack = [norm(subject)];
     const maxSteps = this.config && this.config.get('maxReasonerIterations')
       ? this.config.get('maxReasonerIterations')
       : Number.MAX_SAFE_INTEGER;
@@ -227,7 +230,7 @@ class Reasoner {
         return { truth: 'UNKNOWN_TIMEOUT' };
       }
       const current = stack.pop();
-      if (current === object) {
+      if (current === target) {
         return { truth: 'TRUE_CERTAIN' };
       }
       if (visited.has(current)) {
@@ -235,8 +238,8 @@ class Reasoner {
       }
       visited.add(current);
       for (const fact of facts) {
-        if (fact.relation === 'IS_A' && fact.subject === current) {
-          stack.push(fact.object);
+        if (fact.relation === 'IS_A' && norm(fact.subject) === current) {
+          stack.push(norm(fact.object));
         }
       }
     }
@@ -261,9 +264,15 @@ class Reasoner {
 
   factExists(subject, relation, object, contextStack = null) {
     const facts = this._getFacts(contextStack);
-    const exists = facts.some(
-      (f) => f.subject === subject && f.relation === relation && f.object === object
-    );
+    const norm = (v) => (typeof v === 'string' ? v.trim().toLowerCase() : v);
+    const sNorm = norm(subject);
+    const oNorm = norm(object);
+    const exists = facts.some((f) => {
+      const fSub = norm(f.subject);
+      const fRel = f.relation;
+      const fObj = norm(f.object);
+      return fSub === sNorm && fRel === relation && fObj === oNorm;
+    });
     return { truth: exists ? 'TRUE_CERTAIN' : 'FALSE' };
   }
 }

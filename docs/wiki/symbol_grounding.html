@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Symbol Grounding</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Symbol Grounding</h1>
+    <small></small>
+    <div class="sub-nav">
+      <strong>Wiki Topics:</strong>
+      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
+    </div>
+  </div>
+  <article>
+    <div class="philosophical-header">
+      <h2>The Symbol Grounding Problem</h2>
+      <p>The symbol grounding problem asks a simple question with deep implications: how can a purely symbolic system—one that manipulates tokens like “Dog”, “Table”, or “Justice”—ever connect those symbols to the world they are supposed to describe? If symbols only refer to other symbols, meaning seems to float free of experience.</p>
+      <p>Philosophers and cognitive scientists have argued that grounding requires at least some symbols to be tied directly to perception, action, or measurable quantities. Once a core vocabulary is grounded, more abstract concepts can be built compositionally on top of it, but the base layer must ultimately touch reality.</p>
+    </div>
+
+    <div class="academic-analysis">
+      <h2>Grounding in Conceptual Spaces</h2>
+      <p>Conceptual spaces offer a natural bridge between symbols and experience: dimensions correspond to perceptual or measurable features, and concepts become regions in this space. A label like “red” can be grounded as a region in a colour space; “hot” as a region in a temperature dimension; “near” as a relation between points.</p>
+      <p>In this view, grounding is not just a one-time mapping but an ongoing alignment between symbolic categories and empirical distributions. As new observations arrive, concept regions may expand, split, or shift—but their coordinates remain tied to dimensions with operational meaning.</p>
+    </div>
+
+    <div class="academic-analysis">
+      <h2>Symbol Grounding in AGISystem2</h2>
+      <p>AGISystem2 grounds symbols by encoding them into a high-dimensional conceptual space with explicitly catalogued dimensions. The ingestion pipeline translates natural language into structured triples; the encoder binds subject, relation, and object into vectors whose components live on named axes like ontology and axiology.</p>
+      <p>The <code>ConceptStore</code> maintains prototypes and bounded diamonds that aggregate observations over time. Each concept’s region is therefore anchored not only to a textual label but also to an empirical footprint in the space. Relations are grounded through deterministic permutations and constraints on how points move between regions.</p>
+      <p>The TranslatorBridge is deliberately conservative: it normalises language into a constrained grammar rather than hallucinating free-form meanings. This keeps the mapping from text to geometric representations stable and auditable, which is essential for reliable grounding.</p>
+    </div>
+
+    <div class="philosophical-implications">
+      <h2>Philosophical and Practical Implications</h2>
+      <p>A grounded system can do more than pattern-match strings: it can reason about similarity, thresholds, and counterexamples in terms of distances and regions. This supports explanations like “this case is treated as Fraud because it lies within the same region as past fraudulent cases along these dimensions”.</p>
+      <p>Grounding also constrains creativity. When AGISystem2 performs abductive or analogical reasoning, it must propose hypotheses that live in the same conceptual space as real observations; it cannot invent arbitrary symbols with no geometric support. This helps prevent the worst forms of “hallucination” and keeps explanations tied to the system’s actual knowledge.</p>
+    </div>
+
+    <div class="academic-references">
+      <h2>Academic References</h2>
+      <p>The symbol grounding problem was articulated by Stevan Harnad and has been widely discussed in philosophy of mind and cognitive science. Conceptual spaces (for example, the work of Peter Gärdenfors) provide one influential proposal for how to bridge symbolic and sub-symbolic representations.</p>
+      <p>For an accessible overview, see <a href="https://en.wikipedia.org/wiki/Symbol_grounding" target="_blank" rel="noopener noreferrer">the literature on symbol grounding</a>.</p>
+    </div>
+
+    <div class="technical-specifications">
+      <h2>Technical Implementation References</h2>
+      <p>For detailed technical specifications of symbol grounding in AGISystem2, consult the following design specifications (referenced by ID):</p>
+      <ul>
+        <li>DS[/knowledge/concept_store.js] — describes how concept prototypes and diamonds remain tied to accumulated observations.</li>
+        <li>DS[/ingest/encoder.js] — explains how tokens and relations are encoded into vectors along named dimensions.</li>
+        <li>DS[/core/bounded_diamond.js] — defines the grounded geometric shapes used for concept regions.</li>
+        <li>DS[/interface/translator_bridge.js] — documents the deterministic text normalisation used before grounding into the conceptual space.</li>
+      </ul>
+    </div>
+  </article>
+  <div class="footer-nav">
+    <a href="../index.html">Back to index</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

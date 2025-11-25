@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
-const EngineAPI = require('../src/interface/api');
+const AgentSystem2 = require('../src/interface/agent_system2');
 
 const color = {
   heading: '\x1b[1;36m',
@@ -30,12 +30,13 @@ function initEngine() {
   ensureDir(dataRoot);
   ensureDir(theoriesRoot);
 
-  const api = new EngineAPI({
+  const agent = new AgentSystem2({
     profile: 'manual_test',
-    storageRoot: dataRoot
+    overrides: { storageRoot: dataRoot }
   });
+  const session = agent.createSession();
 
-  return { api, root, theoriesRoot };
+  return { agent, session, root, theoriesRoot };
 }
 
 function printMainHelp() {
@@ -225,55 +226,19 @@ function printExamplesHelp() {
 }
 
 function initSampleTheories(theoriesRoot) {
-  const samples = [
-    {
-      name: 'health_compliance.txt',
-      lines: [
-        'ProcedureX REQUIRES Consent',
-        'ProcedureX REQUIRES AuditTrail',
-        'ExportData PROHIBITED_BY GDPR',
-        'ExportData PERMITTED_BY HIPAA'
-      ]
-    },
-    {
-      name: 'law_minimal.txt',
-      lines: [
-        'Killing PROHIBITS permitted',
-        'Helping PERMITS permitted'
-      ]
-    },
-    {
-      name: 'scifi_magic.txt',
-      lines: [
-        'Alice IS_A Human',
-        'Alice LOCATED_IN CityX',
-        'Alice CASTS Magic',
-        'SciFi_TechMagic PERMITS Magic_IN CityX'
-      ]
-    }
-  ];
-  for (const sample of samples) {
-    const filePath = path.join(theoriesRoot, sample.name);
-    if (!fs.existsSync(filePath)) {
-      fs.writeFileSync(filePath, `${sample.lines.join('\n')}\n`, 'utf8');
+  const names = ['health_compliance', 'law_minimal', 'scifi_magic'];
+  for (const name of names) {
+    const src = path.join(__dirname, '..', 'data', 'init', 'theories', `${name}.sys2dsl`);
+    const dest = path.join(theoriesRoot, `${name}.sys2dsl`);
+    if (!fs.existsSync(dest) && fs.existsSync(src)) {
+      const content = fs.readFileSync(src, 'utf8');
+      fs.writeFileSync(dest, content, 'utf8');
     }
   }
-}
-
-function readTheoryFacts(theoriesRoot, name) {
-  const filePath = path.join(theoriesRoot, `${name}.txt`);
-  if (!fs.existsSync(filePath)) {
-    throw new Error(`Theory file not found: ${filePath}`);
-  }
-  const lines = fs.readFileSync(filePath, 'utf8')
-    .split(/\r?\n/)
-    .map((l) => l.trim())
-    .filter((l) => l.length > 0 && !l.startsWith('#'));
-  return lines;
 }
 
 async function main() {
-  const { api, theoriesRoot } = initEngine();
+  const { agent, session, theoriesRoot } = initEngine();
 
   const rl = readline.createInterface({
     input: process.stdin,
@@ -308,12 +273,21 @@ async function main() {
             printMainHelp();
           }
           break;
-        case 'add':
-          api.ingest(args);
-          console.log(`${color.label}OK${color.reset} ${color.dim}(fact ingested)${color.reset}`);
+        case 'add': {
+          // Translate legacy "add fact" into a Sys2DSL ASSERT statement in the current session.
+          const fact = args.trim();
+          if (!fact) {
+            console.log('Usage: add <Subject REL Object>');
+            break;
+          }
+          session.run([`@f ASSERT ${fact}`]);
+          console.log(`${color.label}OK${color.reset} ${color.dim}(fact ingested via Sys2DSL)${color.reset}`);
           break;
+        }
         case 'ask': {
-          const res = api.ask(args);
+          const question = args.trim();
+          const env = session.run([`@q ASK "${question}"`]);
+          const res = env.q || env.result || {};
           if (res && Object.prototype.hasOwnProperty.call(res, 'band')) {
             console.log(
               `${color.label}Result${color.reset}: ${color.example}${res.truth}${color.reset}` +
@@ -332,7 +306,12 @@ async function main() {
           }
           const observation = parts[0];
           const relation = parts.length >= 2 ? parts[1] : null;
-          const res = api.abduct(observation, relation);
+          const env = session.run([
+            relation
+              ? `@h ABDUCT ${observation} ${relation}`
+              : `@h ABDUCT ${observation}`
+          ]);
+          const res = env.h || {};
           console.log(`${color.label}Hypothesis${color.reset}: ${color.example}${res.hypothesis}${color.reset}  ${color.label}Band${color.reset}: ${color.example}${res.band}${color.reset}`);
           break;
         }
@@ -348,7 +327,8 @@ async function main() {
             .split(';')
             .map((s) => s.trim())
             .filter((s) => s.length > 0);
-          const res = api.counterfactualAsk(question, facts);
+          const env = session.run([`@cf CF "${question}" | ${facts.join(' ; ')}`]);
+          const res = env.cf || {};
           console.log(`${color.label}Result (counterfactual)${color.reset}: ${color.example}${res.truth}${color.reset}`);
           break;
         }
@@ -362,8 +342,14 @@ async function main() {
           const extraFacts = split[1]
             ? split[1].split(';').map((s) => s.trim()).filter((s) => s.length > 0)
             : [];
-          const res = api.checkProcedureCompliance(head, extraFacts);
-          console.log(`${color.label}Procedure compliance${color.reset}: ${color.example}${res.truth}${color.reset}`);
+          const env = session.run([
+            `@procId ASSERT ${head} IS_A Procedure`,
+            extraFacts.length
+              ? `@cf CF "Is ${head} compliant?" | ${extraFacts.join(' ; ')}`
+              : `@q ASK "Is ${head} compliant?"`
+          ]);
+          const res = env.cf || env.q || env.result || {};
+          console.log(`${color.label}Procedure compliance${color.reset}: ${color.example}${res.truth || 'UNKNOWN'}${color.reset}`);
           break;
         }
         case 'check-export': {
@@ -378,8 +364,13 @@ async function main() {
           const extraFacts = split[1]
             ? split[1].split(';').map((s) => s.trim()).filter((s) => s.length > 0)
             : [];
-          const res = api.checkExport(actionId, regs, extraFacts);
-          console.log(`${color.label}Export decision under${color.reset} ${color.example}${regs.join(',')}${color.reset}: ${color.example}${res.truth}${color.reset}`);
+          const env = session.run([
+            extraFacts.length
+              ? `@cf CF "Is ${actionId} allowed under ${regs.join(',')}?" | ${extraFacts.join(' ; ')}`
+              : `@q ASK "Is ${actionId} allowed under ${regs.join(',')}?"`
+          ]);
+          const res = env.cf || env.q || env.result || {};
+          console.log(`${color.label}Export decision under${color.reset} ${color.example}${regs.join(',')}${color.reset}: ${color.example}${res.truth || 'UNKNOWN'}${color.reset}`);
           break;
         }
         case 'check-magic': {
@@ -394,8 +385,13 @@ async function main() {
           const extraFacts = split[1]
             ? split[1].split(';').map((s) => s.trim()).filter((s) => s.length > 0)
             : [];
-          const res = api.checkMagicInCity(actorId, cityId, extraFacts);
-          console.log(`${color.label}Magic allowed${color.reset}: ${color.example}${res.truth}${color.reset}`);
+          const env = session.run([
+            extraFacts.length
+              ? `@cf CF "Can ${actorId} cast magic in ${cityId}?" | ${extraFacts.join(' ; ')}`
+              : `@q ASK "Can ${actorId} cast magic in ${cityId}?"`
+          ]);
+          const res = env.cf || env.q || env.result || {};
+          console.log(`${color.label}Magic allowed${color.reset}: ${color.example}${res.truth || 'UNKNOWN'}${color.reset}`);
           break;
         }
         case 'new-theory': {
@@ -419,7 +415,7 @@ async function main() {
         }
         case 'list-theories': {
           const entries = fs.readdirSync(theoriesRoot)
-            .filter((f) => f.endsWith('.txt'))
+            .filter((f) => f.endsWith('.sys2dsl'))
             .sort();
           if (entries.length === 0) {
             console.log(`${color.dim}No theories found in${color.reset} ${theoriesRoot}`);
@@ -437,7 +433,7 @@ async function main() {
             console.log('Usage: show-theory <name>');
             break;
           }
-          const filePath = path.join(theoriesRoot, `${name}.txt`);
+          const filePath = path.join(theoriesRoot, `${name}.sys2dsl`);
           if (!fs.existsSync(filePath)) {
             console.log(`${color.error}No such theory file${color.reset}: ${filePath}`);
           } else {
@@ -454,9 +450,16 @@ async function main() {
           }
           const name = split[0];
           const question = split.slice(1).join(' ');
-          const facts = readTheoryFacts(theoriesRoot, name);
-          const res = api.counterfactualAsk(question, facts);
-          console.log(`${color.label}Result with theory${color.reset} ${color.example}${name}${color.reset}: ${color.example}${res.truth}${color.reset}`);
+          const filePath = path.join(theoriesRoot, `${name}.sys2dsl`);
+          if (!fs.existsSync(filePath)) {
+            console.log(`${color.error}Theory file not found${color.reset}: ${filePath}`);
+            break;
+          }
+          const content = fs.readFileSync(filePath, 'utf8');
+          session.appendTheory(content);
+          const env = session.run([`@q ASK "${question}"`]);
+          const res = env.q || env.result || {};
+          console.log(`${color.label}Result with theory${color.reset} ${color.example}${name}${color.reset}: ${color.example}${res.truth || 'UNKNOWN'}${color.reset}`);
           break;
         }
         case 'init-samples':
@@ -464,7 +467,7 @@ async function main() {
           console.log(`${color.label}Sample theories installed under${color.reset} ${theoriesRoot}`);
           break;
         case 'config': {
-          const snap = api.config.snapshot();
+          const snap = session.engine.config.snapshot();
           console.log(JSON.stringify(snap, null, 2));
           break;
         }

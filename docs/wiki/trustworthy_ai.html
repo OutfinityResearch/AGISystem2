@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Trustworthy AI</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Trustworthy AI</h1>
+    <small></small>
+    <div class="sub-nav">
+      <strong>Wiki Topics:</strong>
+      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
+    </div>
+  </div>
+  <article>
+    <div class="philosophical-header">
+      <h2>What Makes AI Trustworthy?</h2>
+      <p>“Trustworthy AI” refers to artificial systems that behave reliably, transparently, and in alignment with human values. Trust is not a single property but a bundle of expectations: that the system will not behave arbitrarily, that its decisions can be explained and audited, and that it respects legal and ethical constraints.</p>
+      <p>Philosophically, trustworthiness is about more than technical robustness. It concerns responsibility (who is accountable for outcomes), legitimacy (whether the system operates under acceptable norms), and the ability of those affected to contest or understand its decisions. An AI system that is opaque, unaccountable, or uncontrollable cannot reasonably be called trustworthy, regardless of its accuracy.</p>
+    </div>
+
+    <div class="academic-analysis">
+      <h2>Dimensions of Trust in AI Systems</h2>
+      <p>Frameworks for trustworthy AI often list multiple pillars: reliability and safety, privacy and security, transparency and explainability, fairness and non-discrimination, human oversight, and accountability. These are not independent checkboxes but interacting constraints on design and deployment.</p>
+      <p>From an engineering perspective, trustworthiness requires deterministic behaviour where possible, clear specification of non-determinism where unavoidable, comprehensive logging, and validation regimes that reflect realistic usage. For systems that manipulate complex knowledge and values, it also requires explicit modelling of those values and the ability to inspect and revise them.</p>
+    </div>
+
+    <div class="academic-analysis">
+      <h2>Trustworthy AI in AGISystem2</h2>
+      <p>AGISystem2 is designed around determinism, traceability, and layered reasoning. The core math engine operates on int-based vectors with clamped arithmetic; given the same theories and inputs, the Reasoner always returns the same outputs. This determinism is a foundation for reproducible decisions and meaningful testing.</p>
+      <p>Every significant operation—ingestion, clustering, theory change, translation, reasoning—is logged in append-only audit trails. The storage layer maintains versioned snapshots of theories and parameters, making it possible to replay or inspect past states. Validation engines and test suites exercise critical reasoning paths (including counterfactual, deontic, and bias-aware modes) under controlled profiles.</p>
+      <p>Finally, the separation between ontological and axiological dimensions, together with explicit theory layers and masks, makes value-laden decisions inspectable. Users can see which layers and dimensions influenced an answer, and can adjust theories or masks rather than tweaking opaque parameters.</p>
+    </div>
+
+    <div class="philosophical-implications">
+      <h2>Philosophical and Practical Implications</h2>
+      <p>A trustworthy system does not guarantee morally perfect decisions, but it does provide the tools needed for oversight: clear specifications, audit logs, principled revision mechanisms, and testable behaviour. In compliance-sensitive domains—such as healthcare, law, and safety-critical engineering—this can be the difference between a system that can be certified and one that cannot.</p>
+      <p>For AGISystem2, trustworthiness is woven into the architecture: from the choice of deterministic vector operations and explicit theories, to the presence of validation and audit subsystems, to the insistence on interpretable dimensional masks. These design choices aim to make every conclusion not only computable, but also explainable and contestable.</p>
+    </div>
+
+    <div class="academic-references">
+      <h2>Academic References</h2>
+      <p>Trustworthy AI is an active area of research and policy-making, spanning technical, legal, and ethical dimensions. Work on explainable AI, algorithmic accountability, and regulatory frameworks (such as the EU AI Act) all contribute to the evolving notion of what “trustworthy” should mean in practice.</p>
+      <p>For an overview, see <a href="https://en.wikipedia.org/wiki/Trustworthy_artificial_intelligence" target="_blank" rel="noopener noreferrer">the literature on trustworthy AI</a>.</p>
+    </div>
+
+    <div class="technical-specifications">
+      <h2>Technical Implementation References</h2>
+      <p>For detailed technical specifications of trust-related mechanisms in AGISystem2, consult the following design and test specifications (referenced by ID):</p>
+      <ul>
+        <li>DS[/support/audit_log.js] — captures append-only audit trails for theory changes and reasoning steps.</li>
+        <li>DS[/support/storage.js] — manages versioned storage of concepts, theories, and configuration.</li>
+        <li>DS[/reason/validation.js] — implements validation and abstract interpretation of theories and answers.</li>
+        <li>DS[/reason/bias_control.js] — provides explicit bias and fairness modes, including veil-of-ignorance style masks.</li>
+        <li>DS[/tests/validation_engine/runSuite] and DS[/tests/bias_audit/runSuite] — exercise validation and audit mechanisms under test profiles.</li>
+      </ul>
+    </div>
+  </article>
+  <div class="footer-nav">
+    <a href="../index.html">Back to index</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

@@ -4,10 +4,11 @@
       { href: '/index.html', label: 'Home' },
       { href: '/guides/conceptual_spaces.html', label: 'Theory' },
       { href: '/guides/architecture.html', label: 'Architecture' },
-      { href: '/reference/api.html', label: 'APIs' },
-      { href: '/reference/syntax.html', label: 'Syntax' },
-      { href: '/usage/cli.html', label: 'CLI' },
-      { href: '/concepts/quick_wiki.html', label: 'Quick Wiki' }
+      { href: '/api/index.html', label: 'APIs' },
+      { href: '/syntax/index.html', label: 'Syntax' },
+      { href: '/usage-cli/index.html', label: 'CLI' },
+      { href: '/wiki/index.html', label: 'Wiki' },
+      { href: '/specs/matrix.html', label: 'Specs' }
     ];
     var parts = [];
     for (var i = 0; i < links.length; i += 1) {

@@ -12,22 +12,122 @@ class TheoryDSLEngine {
       : [];
     const facts = this._getFacts(contextFacts);
 
-    for (const rawLine of lines) {
-      const line = rawLine.trim();
-      if (!line || line.startsWith('#')) {
-        // Comment or blank line.
-        continue;
-      }
-      if (line.startsWith('@')) {
-        this._executeAssignment(line, env, facts);
-      } else {
-        // Plain fact lines are ignored at DSL execution time.
-        // They should have been ingested separately if needed.
-        continue;
-      }
+    const statements = this._splitIntoStatements(lines || []);
+    const order = this._topologicalOrder(statements);
+    for (const stmt of order) {
+      const value = this._executeCommand(stmt.command, stmt.args, env, facts);
+      env[stmt.varName] = value;
     }
 
     return env;
+  }
+
+  _splitIntoStatements(lines) {
+    const statements = [];
+    for (const rawLine of lines) {
+      const trimmed = rawLine.trim();
+      if (!trimmed || trimmed.startsWith('#')) {
+        continue;
+      }
+      const flushSegment = (segment) => {
+        const seg = segment.trim();
+        if (!seg) {
+          return;
+        }
+        const parts = seg.split(/\s+/);
+        if (parts.length < 3 || !parts[0].startsWith('@')) {
+          throw new Error(`Invalid Sys2DSL statement: '${seg}'`);
+        }
+        const varName = parts[0].slice(1);
+        const command = parts[1].toUpperCase();
+        const args = parts.slice(2);
+        statements.push({ varName, command, args, raw: seg });
+      };
+
+      // Within each line, if additional '@' appear, treat them as new statements.
+      let current = '';
+      for (let pos = 0; pos < trimmed.length; pos += 1) {
+        const ch = trimmed[pos];
+        if (ch === '@' && current.trim().length > 0) {
+          flushSegment(current);
+          current = '@';
+        } else {
+          current += ch;
+        }
+      }
+      if (current.trim().length > 0) {
+        flushSegment(current);
+      }
+    }
+    return statements;
+  }
+
+  _topologicalOrder(statements) {
+    // Build dependency graph: each statement may depend on variables referenced via $name.
+    const nameToStmt = new Map();
+    for (const stmt of statements) {
+      if (nameToStmt.has(stmt.varName)) {
+        throw new Error(`Duplicate Sys2DSL variable '${stmt.varName}'`);
+      }
+      nameToStmt.set(stmt.varName, stmt);
+      stmt.deps = new Set();
+      stmt.dependents = [];
+      stmt.inDegree = 0;
+    }
+
+    const varRefRegex = /\$([A-Za-z0-9_]+)/g;
+    for (const stmt of statements) {
+      const argsJoined = stmt.args.join(' ');
+      let match;
+      // eslint-disable-next-line no-cond-assign
+      while ((match = varRefRegex.exec(argsJoined)) !== null) {
+        const depName = match[1];
+        if (depName === stmt.varName) {
+          // Self-dependency is a cycle.
+          throw new Error(`Cyclic Sys2DSL dependency on variable '${depName}'`);
+        }
+        if (nameToStmt.has(depName)) {
+          stmt.deps.add(depName);
+        }
+      }
+    }
+
+    for (const stmt of statements) {
+      for (const depName of stmt.deps) {
+        const depStmt = nameToStmt.get(depName);
+        depStmt.dependents.push(stmt);
+        stmt.inDegree += 1;
+      }
+    }
+
+    // Kahn's algorithm
+    const queue = [];
+    for (const stmt of statements) {
+      if (stmt.inDegree === 0) {
+        queue.push(stmt);
+      }
+    }
+
+    const ordered = [];
+    while (queue.length > 0) {
+      const stmt = queue.shift();
+      ordered.push(stmt);
+      for (const dep of stmt.dependents) {
+        dep.inDegree -= 1;
+        if (dep.inDegree === 0) {
+          queue.push(dep);
+        }
+      }
+    }
+
+    if (ordered.length !== statements.length) {
+      const unresolved = statements
+        .filter((s) => s.inDegree > 0)
+        .map((s) => s.varName);
+      throw new Error(`Cyclic Sys2DSL dependencies detected for variables: ${unresolved.join(', ')}`);
+    }
+
+    return ordered;
   }
 
   _getFacts(contextFacts) {
@@ -40,24 +140,12 @@ class TheoryDSLEngine {
     return base.concat(contextFacts);
   }
 
-  _executeAssignment(line, env, facts) {
-    const tokens = line.split(/\s+/);
-    if (tokens.length < 3) {
-      throw new Error(`Invalid DSL assignment line: '${line}'`);
-    }
-    const varToken = tokens[0];
-    const commandToken = tokens[1];
-    const argTokens = tokens.slice(2);
-    const varName = varToken.slice(1); // Drop leading '@'
-    const command = commandToken.toUpperCase();
-    const value = this._executeCommand(command, argTokens, env, facts);
-    env[varName] = value;
-  }
-
   _executeCommand(command, argTokens, env, facts) {
     switch (command) {
       case 'ASK':
         return this._cmdAsk(argTokens, env);
+      case 'ASSERT':
+        return this._cmdAssert(argTokens, env);
       case 'CF':
         return this._cmdCounterfactual(argTokens, env);
       case 'ABDUCT':
@@ -76,6 +164,16 @@ class TheoryDSLEngine {
         return this._cmdPolarityDecide(argTokens, env);
       case 'PICK_FIRST':
         return this._cmdPickFirst(argTokens, env);
+      case 'BIND_CONCEPT':
+        return this._cmdBindConcept(argTokens, env);
+      case 'BIND_POINT':
+        return this._cmdBindPoint(argTokens, env);
+      case 'MASK_PARTITIONS':
+        return this._cmdMaskPartitions(argTokens, env);
+      case 'MASK_DIMS':
+        return this._cmdMaskDims(argTokens, env);
+      case 'ASK_MASKED':
+        return this._cmdAskMasked(argTokens, env);
       default:
         throw new Error(`Unknown DSL command '${command}'`);
     }
@@ -94,13 +192,25 @@ class TheoryDSLEngine {
     if (split.length < 2) {
       throw new Error('CF command expects "<question> | <fact1> ; <fact2> ; ..."');
     }
-    const question = split[0].trim();
+    const question = this._stripQuotes(split[0].trim());
     const factsPart = split.slice(1).join('|');
     const facts = factsPart
       .split(';')
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
     return this.api.counterfactualAsk(question, facts);
+  }
+
+  _cmdAssert(argTokens, env) {
+    if (argTokens.length < 3) {
+      throw new Error('ASSERT expects at least three tokens: Subject REL Object');
+    }
+    const subject = this._expandString(argTokens[0], env);
+    const relation = this._expandString(argTokens[1], env);
+    const object = this._expandString(argTokens.slice(2).join(' '), env);
+    const sentence = `${subject} ${relation} ${object}`;
+    this.api.ingest(sentence);
+    return { ok: true, subject, relation, object };
   }
 
   _cmdAbduct(argTokens, env) {
@@ -238,6 +348,111 @@ class TheoryDSLEngine {
     }
     const list = this._resolveVarAsArray(argTokens[0], env);
     return list.length > 0 ? list[0] : null;
+  }
+
+  _cmdBindConcept(argTokens, env) {
+    if (argTokens.length < 1) {
+      throw new Error('BIND_CONCEPT expects a concept token');
+    }
+    const token = this._expandString(argTokens[0], env);
+    const label = token;
+    const concept = this.conceptStore.ensureConcept(label);
+    return {
+      kind: 'conceptRef',
+      label,
+      id: concept.label
+    };
+  }
+
+  _cmdBindPoint(argTokens, env) {
+    if (argTokens.length < 1) {
+      throw new Error('BIND_POINT expects a concept token or conceptRef');
+    }
+    const raw = this._resolveVar(argTokens[0], env) || this._expandString(argTokens[0], env);
+    let label;
+    if (raw && raw.kind === 'conceptRef') {
+      label = raw.label;
+    } else {
+      label = String(raw);
+    }
+    const concept = this.conceptStore.getConcept(label) || this.conceptStore.ensureConcept(label);
+    const centers = concept.diamonds.map((d) => new Int8Array(d.center));
+    return {
+      kind: 'pointRef',
+      conceptId: label,
+      centers,
+      meta: { diamondCount: concept.diamonds.length }
+    };
+  }
+
+  _cmdMaskPartitions(argTokens) {
+    if (argTokens.length < 1) {
+      throw new Error('MASK_PARTITIONS expects at least one partition name');
+    }
+    const dims = this.config.get('dimensions');
+    const bytes = Math.ceil(dims / 8);
+    const mask = new Uint8Array(bytes);
+    const specParts = [];
+    for (const rawName of argTokens) {
+      const name = rawName.toLowerCase();
+      const part = this.config.getPartition(name);
+      specParts.push(name);
+      for (let i = part.start; i <= part.end && i < dims; i += 1) {
+        const byteIndex = (i / 8) | 0;
+        const bitIndex = i % 8;
+        mask[byteIndex] |= 1 << bitIndex;
+      }
+    }
+    return {
+      kind: 'maskRef',
+      dims: mask,
+      spec: specParts.join(',')
+    };
+  }
+
+  _cmdMaskDims(argTokens) {
+    if (argTokens.length < 1) {
+      throw new Error('MASK_DIMS expects at least one dimension name');
+    }
+    const dims = this.config.get('dimensions');
+    const bytes = Math.ceil(dims / 8);
+    const mask = new Uint8Array(bytes);
+    const specParts = [];
+    for (const rawName of argTokens) {
+      const name = rawName.trim();
+      if (!name) {
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+      const index = this._resolveDimensionIndexByName(name);
+      if (index == null) {
+        throw new Error(`Unknown dimension name '${name}' for MASK_DIMS`);
+      }
+      const byteIndex = (index / 8) | 0;
+      const bitIndex = index % 8;
+      mask[byteIndex] |= 1 << bitIndex;
+      specParts.push(name);
+    }
+    return {
+      kind: 'maskRef',
+      dims: mask,
+      spec: specParts.join(',')
+    };
+  }
+
+  _cmdAskMasked(argTokens, env) {
+    if (argTokens.length < 2) {
+      throw new Error('ASK_MASKED expects <maskVar> <question-string>');
+    }
+    const maskVarToken = argTokens[0];
+    const maskVal = this._resolveVar(maskVarToken, env);
+    if (!maskVal || maskVal.kind !== 'maskRef') {
+      throw new Error(`ASK_MASKED expects a maskRef variable, got '${maskVarToken}'`);
+    }
+    const questionRaw = argTokens.slice(1).join(' ');
+    const question = this._expandString(questionRaw, env);
+    const base = this.api.ask(question, { mask: maskVal.dims });
+    return { ...base, maskSpec: maskVal.spec };
   }
 
   _tokenMatches(patternToken, value) {

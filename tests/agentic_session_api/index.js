@@ -1,16 +1,17 @@
-const EngineAPI = require('../../src/interface/api');
+const AgentSystem2 = require('../../src/interface/agent_system2');
 
 async function run({ profile }) {
-  const api = new EngineAPI({ profile });
-  const session = api.getAgenticSession();
+  const agent = new AgentSystem2({ profile });
+  const session = agent.createSession();
 
-  session.ingest('Dog IS_A Animal');
-  const res = session.ask('Is Dog an Animal?');
+  session.run(['@f ASSERT dog IS_A Animal']);
+  const env = session.run(['@q ASK "Is Dog an Animal?"']);
+  const res = env.q || env.result || {};
   const ok1 = res.truth === 'TRUE_CERTAIN';
 
   let threw = false;
   try {
-    session.ingest('Tell me a story about dogs.');
+    session.run(['Tell me a story about dogs.']);
   } catch (e) {
     threw = true;
   }
@@ -19,4 +20,3 @@ async function run({ profile }) {
 }
 
 module.exports = { run };
-

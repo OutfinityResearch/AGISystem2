@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Syntax</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Syntax Overview</h1>
+    <div class="sub-nav">
+      <strong>Syntax Topics:</strong>
+      <a href="syntax_macros.html">Sys2DSL</a> ·
+      <a href="syntax_facts_questions.html">Facts & Questions</a> ·
+      <a href="syntax_theories.html">Theory Files</a> ·
+      <a href="grammar.html">Grammar and Forms</a>
+    </div>
+  </div>
+  <section>
+    <h2>What This Section Covers</h2>
+    <p>This section describes the interaction language of AGISystem2 – how we express facts, questions and Sys2DSL programmes in a simple, deterministic textual form, including the scripts that later serve as input for validation and abstract interpretation runs.</p>
+    <p>The goal of this page is to act as a map of the syntax sub‑pages and when to use them, not to repeat technical details.</p>
+
+    <h3>Syntax sub‑pages</h3>
+    <ul>
+      <li><strong><a href="syntax_macros.html">Sys2DSL</a></strong> – the base language of <code>@var ACTION …</code> lines, variables, actions and topological evaluation; all other syntax pages are specialisations or applications of this language.</li>
+      <li><strong><a href="syntax_facts_questions.html">Facts &amp; Questions</a></strong> – how to write basic facts and simple questions as Sys2DSL instructions (<code>ASSERT</code>, <code>ASK</code>, <code>CF</code>) and how truth objects are handled.</li>
+      <li><strong><a href="syntax_theories.html">Theory Files</a></strong> – how Sys2DSL looks inside theory files, how lines with <code>@var ACTION …</code> are structured and how to separate reusable theories from temporary sessions.</li>
+      <li><strong><a href="grammar.html">Grammar and Forms</a></strong> – a summary of grammar rules: what is allowed on a line, how variables are delimited (<code>@name</code>, <code>$name</code>), which token forms are accepted (concepts, individuals, variables) and how they combine into a script.</li>
+    </ul>
+
+    <h3>When to start here</h3>
+    <p>Use this page as a “map”:</p>
+    <ul>
+      <li>if you want to understand the general shape of scripts – start with <em>Sys2DSL</em>;</li>
+      <li>if you just want to say “Dog IS_A Animal?” – start with <em>Facts &amp; Questions</em>;</li>
+      <li>if you want to save reusable rules into files – see <em>Theory Files</em>;</li>
+      <li>if you are implementing a parser or editor – see <em>Grammar and Forms</em> for exact rules.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>References</h2>
+    <p>For strict technical details (interfaces, pseudocode, constraints), consult the design specifications in the specs area, for example:</p>
+    <ul>
+      <li>Parser – DS[/ingest/parser.js]</li>
+      <li>TranslatorBridge – DS[/interface/translator_bridge.js]</li>
+      <li>Sys2DSL Engine – DS[/theory/dsl_engine.js]</li>
+    </ul>
+  </section>
+  <footer class="footer-nav">
+    <a href="../index.html">Back to index</a>
+    <a href="../wiki/index.html">Wiki</a>
+  </footer>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

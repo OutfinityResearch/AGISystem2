@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Ontology</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Ontology</h1>
+    <small></small>
+    <div class="sub-nav">
+      <strong>Wiki Topics:</strong>
+      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
+    </div>
+  </div>
+  <article>
+    <div class="philosophical-header">
+      <h2>What Ontology Brings to AI</h2>
+      <p>Ontology is the philosophical study of what exists and how entities are classified and related. In logic and knowledge representation, an ontology provides the vocabulary of types, properties, and relations that a system can use to talk about the world. Without a stable ontology, even precise reasoning quickly degenerates into ambiguity.</p>
+      <p>In human practice, ontologies appear as taxonomies (such as biological species), legal categories, and common-sense distinctions like “physical object”, “event”, or “institution”. For an AI system, the ontology is not just an abstract list; it shapes how concepts are encoded, which dimensions are reserved for “facts” versus “values”, and how rules can be applied consistently across cases.</p>
+    </div>
+
+    <div class="academic-analysis">
+      <h2>Ontology in Knowledge Representation</h2>
+      <p>Formal ontologies in AI—such as those inspired by OWL, description logics, or domain-specific vocabularies—provide machine-readable definitions of concepts and their relations. They enable tasks like subsumption checking (“Dog IS_A Animal”), disjointness (“MagicZone DISJOINT_WITH CityX”), and property constraints.</p>
+      <p>However, classical ontology languages often assume crisp, symbolic categories. In AGISystem2, ontological distinctions must survive translation into high-dimensional conceptual space, where each concept becomes a region and relations become geometric operations. The ontology therefore guides both the symbolic layer and the geometric one.</p>
+    </div>
+
+    <div class="academic-analysis">
+      <h2>Ontology in AGISystem2</h2>
+      <p>AGISystem2 explicitly separates ontological dimensions (those that describe “what the world is like”) from axiological ones (those that capture values, permissions, or duties). The ontology partition defines which coordinates are reserved for structural, factual information: shapes, physical quantities, roles, causal relations, and so on.</p>
+      <p>The dimension catalogue enumerates these axes and associates them with names, ranges, and intended interpretations. Default relations (such as <code>IS_A</code>, <code>PART_OF</code>, <code>CAUSES</code>) are defined on top of this ontology and mapped to deterministic permutations so that the geometric engine can manipulate them consistently.</p>
+      <p>Initial “base theories” provide root facts and constraints that express the core ontology for a deployment: which concepts exist, which are disjoint, and which regions of the conceptual space are reserved or unavailable. This gives the system a stable backbone against which new facts, rules, and theories can be evaluated.</p>
+    </div>
+
+    <div class="philosophical-implications">
+      <h2>Philosophical and Practical Implications</h2>
+      <p>By treating ontology as an explicit, versioned artefact, AGISystem2 makes it possible to audit and refine “how the system sees the world”. Misclassifications, missing categories, or overly coarse distinctions can be corrected by updating the ontology rather than by scattering ad-hoc fixes throughout the code.</p>
+      <p>This separation also clarifies the boundary between facts and values. Ontology anchors the factual side of reasoning; axiological layers operate on top, without rewriting what the system takes to exist. For users, this makes explanations clearer: they can see which parts of a decision stem from factual structure and which from policy or ethics.</p>
+    </div>
+
+    <div class="academic-references">
+      <h2>Academic References</h2>
+      <p>Ontologies have a long history in both philosophy and computer science. In AI, work on description logics, semantic web ontologies, and domain-specific knowledge bases (for example in biomedicine or law) provides a rich toolkit for thinking about formally structured vocabularies.</p>
+      <p>For an overview, see <a href="https://en.wikipedia.org/wiki/Ontology_(information_science)" target="_blank" rel="noopener noreferrer">the literature on ontologies in information science</a>.</p>
+    </div>
+
+    <div class="technical-specifications">
+      <h2>Technical Implementation References</h2>
+      <p>For detailed technical specifications of ontology handling in AGISystem2, consult the following design specifications (referenced by ID):</p>
+      <ul>
+        <li>DS[/knowledge/dimensions] — describes the ontology/axiology dimension catalogue.</li>
+        <li>DS[/init/dimensions.json] — defines how concrete dimension profiles map names to indices and ranges.</li>
+        <li>DS[/knowledge/default_relations] — lists canonical relations and their characteristics.</li>
+        <li>DS[/knowledge/base_theories] — documents built-in base theories that encode the initial ontology.</li>
+      </ul>
+    </div>
+  </article>
+  <div class="footer-nav">
+    <a href="../index.html">Back to index</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

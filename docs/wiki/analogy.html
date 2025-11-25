@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Analogy</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Analogy</h1>
+    <small></small>
+    <div class="sub-nav">
+      <strong>Wiki Topics:</strong>
+      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
+    </div>
+  </div>
+  <article>
+    <div class="philosophical-header">
+      <h2>The Philosophical Nature of Analogy</h2>
+      <p>Analogy is the art of seeing “the same pattern” in different places. Instead of merely classifying objects, analogical thought compares relations: if A stands to B as C stands to D, what does that tell us about D? Classical examples such as “hand : glove :: foot : sock” illustrate that what matters is not the objects themselves, but the structure of the relationship between them.</p>
+      <p>Philosophers and cognitive scientists have long treated analogy as a central mechanism of human understanding. It underpins metaphor, scientific model-building (“the atom is like a solar system”), and everyday reasoning by example. Unlike pure deduction, analogy does not guarantee truth; instead it offers plausible bridges from what is known to what is not yet fully understood. It is therefore both a creative and a risky form of inference.</p>
+      <p>Seen this way, analogy is a discipline for transferring insight. By noticing a relational pattern in one domain and reusing it in another, we compress complex experience into reusable templates. Any artificial reasoning system that wants to support human-like explanation and creativity must be able to operate at this relational level, rather than only at the level of isolated facts.</p>
+    </div>
+
+    <div class="academic-analysis">
+      <h2>Analogy in Artificial Reasoning</h2>
+      <p>In artificial systems, analogy is often framed as “structure mapping”: given a source structure and a target structure, identify correspondences that preserve relations and constraints. Early work by Dedre Gentner and others formalised this idea in terms of predicates and arguments; modern approaches frequently recast the same intuition in geometric or neural terms, where relations become vectors and analogy becomes vector translation.</p>
+      <p>The challenge is to support analogy without collapsing into uncontrolled pattern matching. A robust implementation must distinguish trivial surface similarities from meaningful relational ones, respect constraints from the underlying domain, and remain deterministic enough to be audited and tested. In a neuro-symbolic setting like AGISystem2, this means combining geometric operations in conceptual space with explicit control over theories and masks.</p>
+    </div>
+
+    <div class="academic-analysis">
+      <h2>Analogy in AGISystem2</h2>
+      <p>AGISystem2 treats analogy as a controlled geometric operation. Concepts live as regions in a high-dimensional space, and relations are implemented by permutations and vector deltas. To reason analogically about a relation such as “Theft → Jail”, the engine computes a relation-specific transformation that captures how moving from the concept of <code>Theft</code> to the concept of <code>Jail</code> looks in this space.</p>
+      <p>When given a new source concept, for example <code>Fraud</code>, the system applies the same transformation to obtain a candidate target point. The <code>RelationPermuter</code> module manages the permutations and inverse permutations associated with each relation label, while the <code>Reasoner</code> evaluates whether the transformed point falls inside an appropriate concept volume (for instance, another penalty such as <code>Fine</code> or <code>Jail</code>), and with what truth band.</p>
+      <p>This process is tightly integrated with the rest of the reasoning engine. Analogical suggestions are not accepted blindly: they are checked against the active theory stack, masked distances along relevant dimensions, and any deontic or axiological constraints in effect. The result is an analogical mechanism that is creative enough to propose new candidates, yet constrained enough to remain deterministic, explainable, and auditable.</p>
+    </div>
+
+    <div class="philosophical-implications">
+      <h2>Philosophical and Practical Implications</h2>
+      <p>Analogical reasoning blurs the line between “learning from data” and “reusing knowledge”. A system that can perform analogy is not merely clustering similar items; it can project known structures into new situations and ask, “if this was a good explanation in one domain, could it also be a good explanation here?”. This is especially valuable in domains where direct training data is sparse but relational patterns are stable, such as law, medicine, or engineering safety cases.</p>
+      <p>At the same time, analogy forces us to confront the limits of similarity-based reasoning. A misleading analogy can be more dangerous than no analogy at all, because it carries an implicit claim of understanding. The AGISystem2 design therefore emphasises not only generating analogical candidates, but also exposing why they were generated: which dimensions were active, which relations were invoked, and which theory layers supported the mapping.</p>
+    </div>
+
+    <div class="academic-references">
+      <h2>Academic References</h2>
+      <p>Work on analogy spans philosophy, cognitive science, and AI. Structure-mapping theory (Dedre Gentner) formalises analogical reasoning as the preservation of relational structure. In AI, analogical inference appears in case-based reasoning, analogical problem solving, and vector-space models where relations are represented as translation operators.</p>
+      <p>For an accessible overview, see <a href="https://en.wikipedia.org/wiki/Analogy" target="_blank" rel="noopener noreferrer">the literature on analogy and structure mapping</a>.</p>
+    </div>
+
+    <div class="technical-specifications">
+      <h2>Technical Implementation References</h2>
+      <p>For detailed technical specifications of analogical reasoning in AGISystem2, consult the following design and test specifications (referenced by ID):</p>
+      <ul>
+        <li>DS[/core/relation_permuter.js] — defines deterministic permutations for relation roles and their inverses.</li>
+        <li>DS[/reason/reasoner.js] — integrates analogical reasoning alongside deductive, abductive, counterfactual, and deontic modes.</li>
+        <li>DS[/core/vector_space.js] — provides the high-dimensional vector canvas and basic operations used for relation deltas.</li>
+        <li>DS[/tests/analogical_reasoning/runSuite] — exercises analogical deltas in a legal penalty scenario and checks that results remain deterministic.</li>
+      </ul>
+    </div>
+  </article>
+  <div class="footer-nav">
+    <a href="../index.html">Back to index</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

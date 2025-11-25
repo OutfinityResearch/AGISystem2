@@ -1,0 +1,4 @@
+# Minimal law theory (Sys2DSL)
+@f1 ASSERT Killing PROHIBITS permitted
+@f2 ASSERT Helping PERMITS permitted
+

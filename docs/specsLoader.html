@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Specification Loader - AGISystem2</title>
+    <link rel="stylesheet" href="reference/style.css">
+    <style>
+        .spec-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .spec-nav {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .spec-content {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .error {
+            color: #d32f2f;
+            background: #ffebee;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .back-link {
+            margin-bottom: 20px;
+        }
+        .spec-id {
+            background: #e3f2fd;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="nav-header">
+            <h1>Specification Loader</h1>
+            <small>
+                <a href="index.html">Home</a> ·
+                <a href="specs/matrix.html">Specification Matrix</a> ·
+                <span id="current-spec">Loading...</span>
+            </small>
+        </div>
+
+        <div class="spec-container">
+            <div class="back-link">
+                <a href="specs/matrix.html">← Back to Specification Matrix</a>
+            </div>
+
+            <div id="content">
+                <div class="loading">Loading specification...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class SpecsLoader {
+            constructor() {
+                this.content = document.getElementById('content');
+                this.currentSpecSpan = document.getElementById('current-spec');
+                this.specPath = this.getSpecPath();
+                this.load();
+            }
+
+            getSpecPath() {
+                const params = new URLSearchParams(window.location.search);
+                return params.get('spec');
+            }
+
+            async load() {
+                if (!this.specPath) {
+                    window.location.href = 'specs/matrix.html';
+                    return;
+                }
+
+                try {
+                    this.currentSpecSpan.textContent = `Loading: ${this.specPath}`;
+                    
+                    const response = await fetch(`specs/${this.specPath}`);
+                    if (!response.ok) {
+                        throw new Error(`Specification not found: ${this.specPath}`);
+                    }
+
+                    const markdown = await response.text();
+                    const html = this.markdownToHtml(markdown);
+                    this.content.innerHTML = html;
+                    this.currentSpecSpan.textContent = this.specPath;
+                    
+                    // Extract title from the content
+                    const titleMatch = markdown.match(/^#\s+(.+)$/m);
+                    if (titleMatch) {
+                        document.title = `${titleMatch[1]} - AGISystem2`;
+                    }
+
+                } catch (error) {
+                    this.showError(error.message);
+                }
+            }
+
+            showError(message) {
+                this.content.innerHTML = `
+                    <div class="error">
+                        <h3>Error Loading Specification</h3>
+                        <p>${message}</p>
+                        <p><a href="specs/matrix.html">Return to Specification Matrix</a></p>
+                    </div>
+                `;
+                this.currentSpecSpan.textContent = 'Error';
+            }
+
+            markdownToHtml(markdown) {
+                // Basic markdown to HTML conversion
+                let html = markdown
+                    // Headers
+                    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+                    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+                    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+                    // Bold
+                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                    // Italic
+                    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                    // Code blocks
+                    .replace(/```([^`]+)```/g, '<pre><code>$1</code></pre>')
+                    // Inline code
+                    .replace(/`([^`]+)`/g, '<code>$1</code>')
+                    // Links
+                    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+                    // Lists
+                    .replace(/^- (.+)$/gm, '<li>$1</li>')
+                    .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+                    // Line breaks
+                    .replace(/\n\n/g, '</p><p>')
+                    .replace(/\n/g, '<br>');
+
+                // Wrap in paragraphs
+                if (!html.startsWith('<h1>') && !html.startsWith('<h2>') && !html.startsWith('<h3>')) {
+                    html = '<p>' + html + '</p>';
+                }
+
+                // Highlight specification IDs
+                html = html.replace(/\*\*ID:\*\* ([A-Z0-9\-\/_]+)/g, 
+                    '<strong>ID:</strong> <span class="spec-id">$1</span>');
+
+                return html;
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new SpecsLoader();
+        });
+    </script>
+</body>
+</html>

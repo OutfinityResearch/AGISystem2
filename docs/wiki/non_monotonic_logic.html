@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Non-Monotonic Logic</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Non-Monotonic Logic</h1>
+    <small></small>
+    <div class="sub-nav">
+      <strong>Wiki Topics:</strong>
+      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
+    </div>
+  </div>
+  <article>
+    <div class="philosophical-header">
+      <h2>The Logic of Revisable Beliefs</h2>
+      <p>Non-monotonic logic challenges a core assumption of classical logic: that once a conclusion is derived from a set of premises, adding more premises can never invalidate it. Human reasoning clearly violates this principle. We routinely withdraw conclusions when we learn new information (“birds fly” until we learn that this particular bird is a penguin).</p>
+      <p>Non-monotonic formalisms were developed to capture this behaviour. Instead of treating knowledge as a growing, never-corrected set of theorems, they model default assumptions, exceptions, and revision policies. This makes them especially suitable for domains where rules are true “in general” but not “always”, such as law, medicine, or everyday common-sense reasoning.</p>
+    </div>
+
+    <div class="academic-analysis">
+      <h2>Non-Monotonic Reasoning in AI</h2>
+      <p>In artificial intelligence, non-monotonic logic provides the tools to represent defaults (“normally, X holds”), defeaters (“except when Y is true”), and priority between conflicting rules. Frameworks such as default logic, circumscription, and answer-set programming all embody variants of this idea.</p>
+      <p>From a systems perspective, the key requirement is the ability to revise conclusions deterministically when theories change, while keeping a clear audit trail of what changed and why. Non-monotonic reasoning should not feel like ad-hoc patching; it should be principled and inspectable.</p>
+    </div>
+
+    <div class="academic-analysis">
+      <h2>Non-Monotonic Behaviour in AGISystem2</h2>
+      <p>AGISystem2 implements non-monotonic behaviour through theory layering and validation. Instead of mutating base concepts, the engine maintains a stack of theory layers: base facts, domain overrides, contextual policies, and temporary counterfactual layers. A conclusion is always evaluated with respect to the currently active stack.</p>
+      <p>When new information arrives—such as an exception, a stricter policy, or a temporary scenario—the system does not “forget” old rules. It adds a layer on top that can narrow or reshape the relevant concept volumes. The <code>TheoryStack</code> component controls the order of layers, their activation, and how conflicts are detected.</p>
+      <p>To keep this behaviour safe, the <code>ValidationEngine</code> performs abstract checks: it can detect when an added layer makes previously valid combinations impossible, when two layers clash irreconcilably, or when a seemingly benign override would break guarantees. The <code>BiasController</code> can also apply masks to prevent certain dimensions (for example protected attributes) from influencing revised conclusions.</p>
+    </div>
+
+    <div class="philosophical-implications">
+      <h2>Philosophical and Practical Implications</h2>
+      <p>Non-monotonic reasoning in AGISystem2 reflects a more realistic picture of knowledge: not as a frozen catalogue of facts, but as a layered structure subject to revision and contextual re-interpretation. This is essential in domains where regulations change, exceptions proliferate, or competing value systems must be reconciled.</p>
+      <p>Practically, it also protects users from overconfident but brittle answers. By design, the system can say “previously I would have answered YES, but under this new policy layer the answer becomes NO, and here is why”. That shift—from opaque rule firing to transparent, layered revision—is central to building trust.</p>
+    </div>
+
+    <div class="academic-references">
+      <h2>Academic References</h2>
+      <p>Non-monotonic logic has a rich literature in knowledge representation and reasoning. Work by McCarthy, Reiter and many others formalised default reasoning, circumscription, and belief revision. These frameworks provide the theoretical backdrop for layered, revisable knowledge in systems like AGISystem2.</p>
+      <p>For an accessible entry point, see <a href="https://en.wikipedia.org/wiki/Non-monotonic_logic" target="_blank" rel="noopener noreferrer">the literature on non-monotonic logic</a>.</p>
+    </div>
+
+    <div class="technical-specifications">
+      <h2>Technical Implementation References</h2>
+      <p>For detailed technical specifications of non-monotonic behaviour in AGISystem2, consult the following design and test specifications (referenced by ID):</p>
+      <ul>
+        <li>DS[/knowledge/theory_stack.js] — manages layer ordering, overrides, and conflict detection.</li>
+        <li>DS[/knowledge/theory_layer.js] — represents individual overlays on top of base concepts.</li>
+        <li>DS[/reason/validation.js] — performs consistency checks and abstract interpretation over changing stacks.</li>
+        <li>DS[/reason/bias_control.js] — applies masks to protect sensitive dimensions when revising conclusions.</li>
+        <li>DS[/tests/counterfactual_layering/runSuite] — exercises layered reasoning and non-monotonic updates.</li>
+      </ul>
+    </div>
+  </article>
+  <div class="footer-nav">
+    <a href="../index.html">Back to index</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

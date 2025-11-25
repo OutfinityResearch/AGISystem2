@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Relations</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Relations: The Grammar of Structure</h1>
+     <small><a href="index.html">Back to index</a> · <a href="../wiki/index.html">Quick Wiki</a></small>
+  </div>
+  <p>Relations are the verbs of the conceptual space. Each relation is a deterministic permutation that encodes a role without adding dimensions. We start with an OWL-inspired set to cover most structural, causal, temporal, and deontic needs, and we allow adding new relations when domains demand it.</p>
+
+  <h2>Default Set (OWL-inspired)</h2>
+  <p>Structural: <strong>IS_A</strong> (subClassOf, transitive), <strong>EQUIVALENT_TO</strong> (symmetric), <strong>DISJOINT_WITH</strong> (symmetric), <strong>PART_OF</strong>/<strong>HAS_PART</strong> (transitive), <strong>HAS_PROPERTY</strong>/<strong>PROPERTY_OF</strong> (functional/inverse-functional), <strong>LOCATED_IN</strong>/<strong>CONTAINS</strong>.</p>
+  <p>Causal/Temporal: <strong>CAUSES</strong>/<strong>CAUSED_BY</strong>, <strong>BEFORE</strong>/<strong>AFTER</strong> (transitive), <strong>AGENT_OF</strong>/<strong>HAS_AGENT</strong>, <strong>PATIENT_OF</strong>/<strong>HAS_PATIENT</strong>.</p>
+  <p>Deontic: <strong>PERMITS</strong>/<strong>PERMITTED_BY</strong>, <strong>OBLIGATES</strong>/<strong>OBLIGATED_BY</strong>, <strong>PROHIBITS</strong>/<strong>PROHIBITED_BY</strong>.</p>
+  <p>Fallback: <strong>RELATED_TO</strong> (symmetric, low weight) when nothing else fits.</p>
+
+  <h2>How Relations Become Geometry</h2>
+  <p>Each relation gets a permutation table; symmetric relations reuse the same table; inverse pairs get paired tables. Binding is a permutation followed by addition; unbinding (for abduction) uses the inverse permutation. Because permutations are seeded, the same relation always yields the same shuffle across runs.</p>
+
+  <h2>Adding New Relations Safely</h2>
+  <p>1) Define the intent: is it structural, causal, temporal, deontic, or a domain-specific role? 2) Decide symmetry and transitivity. 3) Register the relation with the permuter using a seed from config; if it has an inverse, register both together. 4) Update the grammar and fixtures so ingestion accepts it. 5) If the relation implies constraints (e.g., functional), document them in the domain theory.</p>
+
+  <h2>Domain Hints</h2>
+  <p>Relations can bias ontology or axiology axes. For example, PERMITS/PROHIBITS primarily touch axiology, while IS_A/PART_OF stress ontology. Temporal relations can be paired with TemporalMemory rotations for sequence modeling.</p>
+
+  <pre>
+Example binding:
+  "Fire CAUSES Smoke"
+  fireVec + permute(smokeVec, CAUSES)
+
+Example abduction:
+  observation = smokeVec
+  hypothesis = inversePermute(observation, CAUSES_inverse)
+  nearest(hypothesis) -> Fire
+  </pre>
+
+  <p>Keep the relation set small unless you have a clear semantic need; every new relation is a new permutation to maintain and test.</p>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to index</a>
+    <a href="../wiki/index.html">Quick Wiki</a>
+  </div>
+  </div>
+</body>
+</html>

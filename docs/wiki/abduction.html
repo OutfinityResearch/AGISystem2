@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Abduction</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Abduction</h1>
+    <small></small>
+    <div class="sub-nav">
+      <strong>Wiki Topics:</strong>
+      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
+    </div>
+  </div>
+  <article>
+    <div class="philosophical-header">
+      <h2>The Philosophical Nature of Abduction</h2>
+      <p>Abduction, also known as inference to the best explanation, represents one of the most subtle forms of human inference. Unlike deduction, which extracts necessary conclusions from premises, and induction, which generalizes from particular cases, abduction begins with observations and seeks the causes that would make them most plausible. This inference process was first formalized by the American philosopher Charles Sanders Peirce, who considered abduction to be the only form of reasoning that can generate truly new ideas.</p>
+      
+      <p>In its essence, abduction is a creative act of logical imagination. When we observe an unexpected phenomenon, the human mind does not merely record the observation but actively seeks an explanation that transforms surprise into understanding. This search is not arbitrary but is guided by principles of plausibility, simplicity, and coherence with existing knowledge. Abduction thus represents the bridge between the empirical and the theoretical, between the particular observation and the general law that explains it.</p>
+    </div>
+
+    <div class="academic-analysis">
+      <h2>Abduction in the Context of Artificial Reasoning</h2>
+      <p>The implementation of abduction in artificial intelligence systems represents a fundamental challenge, as it requires reproducing the human capacity to generate explanatory hypotheses in a creative yet constrained manner. In AGISystem2, abduction is realized through a complex architecture that combines spatial search, metric evaluation, and logical validation. The system is not limited to selecting from a predefined set of explanations but can generate new combinations of concepts and relations to construct original hypotheses.</p>
+      
+      <p>The abductive process in our system begins with the identification of unexpected observations or discrepancies from current expectations. Through the reasoning engine, the system explores the inverse of causal relations, seeking possible antecedents that could explain the observed effect. The Retriever uses locality-sensitive hashing to propose relevant candidates from the vast conceptual space, while masked distances evaluate the degree of fit between hypotheses and observations.</p>
+      
+      <p>What distinguishes our approach is the integration of abduction within a deterministic and auditable framework. Each generated hypothesis can be traced back to its conceptual components, and the evaluation process is transparent and reproducible. This transparency is essential for preventing hallucinations and ensuring that generated explanations are not only creative but also grounded in the system's conceptual structure.</p>
+    </div>
+
+    <div class="philosophical-implications">
+      <h2>Philosophical and Practical Implications</h2>
+      <p>Artificial abduction raises profound questions about the nature of explanation and understanding. A system that can generate plausible explanations does not merely process information but demonstrates a form of understanding of causal relations and world structure. This capability has significant implications for fields such as medical diagnosis, scientific investigation, and complex problem-solving, where hypothesis generation is often the crucial step toward discovery.</p>
+      
+      <p>From an epistemological perspective, abduction represents the recognition that human knowledge is not merely the accumulation of facts but also the active construction of explanations that give meaning to these facts. By implementing abduction in artificial systems, we approach a form of intelligence that not only recognizes patterns but also understands and explains why these patterns exist.</p>
+    </div>
+
+    <div class="academic-references">
+      <h2>Academic References</h2>
+      <p>The concept of abduction has been extensively developed in the specialized literature. Charles Sanders Peirce introduced the term in his works on logic and semiotics, considering abduction as the third form of reasoning alongside deduction and induction. Contemporary philosopher Gilbert Harman has argued that abduction is fundamental to scientific reasoning and inference to the best explanation. In the field of artificial intelligence, abduction has been explored in the context of expert systems, medical diagnosis, and automated reasoning.</p>
+      
+      <p>For a deeper understanding of the concept, <a href="https://en.wikipedia.org/wiki/Abductive_reasoning" target="_blank" rel="noopener noreferrer">the academic literature on abductive reasoning</a> offers multiple perspectives on the nature and applications of this unique form of inference.</p>
+    </div>
+
+    <div class="technical-specifications">
+      <h2>Technical Implementation References</h2>
+      <p>For detailed technical specifications of abduction implementation in AGISystem2, consult the following documentation (referenced by ID):</p>
+      <ul>
+        <li>DS[/reason/reasoner.js] — orchestrates abductive searches and the use of theory overlays.</li>
+        <li>DS[/reason/retrieval.js] — finds candidate causes using locality-sensitive hashing and similarity search.</li>
+        <li>DS[/core/relation_permuter.js] — provides inverse permutations for causal roles and relation directions.</li>
+        <li>DS[/tests/abductive_causal/runSuite] — tests abductive behaviour on causal scenarios such as fire/smoke.</li>
+      </ul>
+    </div>
+  </article>
+  <div class="footer-nav">
+    <a href="../index.html">Back to index</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>
