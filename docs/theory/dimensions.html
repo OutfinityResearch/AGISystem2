@@ -11,13 +11,44 @@
     <h1>Dimensions Overview</h1>
     <small><a href="index.html">Back to index</a> · <a href="../wiki/index.html">Quick Wiki</a></small>
   </div>
-  <p>The dimensional layout is the backbone of the system. We reserve 0–255 for ontology (facts and structure), 256–383 for axiology (values and norms), and 384+ for empirical/latent features learned from data. This fixed map holds across profiles so that masks, layers, and explanations remain stable.</p>
+  <p>The dimensional layout is the backbone of the system. We reserve 0–255 for ontology (facts and structure), 256–383 for axiology (values and norms), and 384+ for empirical/latent features learned from data. This fixed map holds across profiles so that masks, layers, and explanations remain stable and comparable over time.</p>
 
-  <p>Ontology axes capture what something is: physical properties, biological status, legal identity, evidence strength, process structure, risk exposure, and more. Axiology axes capture how we judge it: moral valence, legality, permission, obligation, risk appetite, alignment with policies, and even emotional tone. Keeping these ranges disjoint lets us change value systems without altering facts and lets audits isolate where value judgments entered a decision.</p>
+  <h2>Ontology (0–255)</h2>
+  <p>Ontology axes capture what something is. In the default dimension catalogue, the 0–255 range is preconfigured into several thematic blocks, including:</p>
+  <ul>
+    <li><strong>Physical reality</strong> – physicality, solidity, mass/weight, size/scale, temperature (e.g., boiling point), pressure, density, phase, spatial extent.</li>
+    <li><strong>Space and time</strong> – location specificity, temporality, duration, frequency, sequence position, recency, projections into the future.</li>
+    <li><strong>Biology and agency</strong> – living flag, taxonomy anchor, health and metabolism, cognition and agency, communication, memory, learning, planning, sociality and roles.</li>
+    <li><strong>Artifacts and systems</strong> – device flags, power source, interface type, computation and storage capability, autonomy, safety mechanisms, modularity, reliability.</li>
+    <li><strong>Legal and entity structure</strong> – legal entity flag, jurisdiction, contractual capacity, liability, registration, licenses, regulation class.</li>
+    <li><strong>Evidence and knowledge</strong> – evidence strength, source credibility, recency, consistency with theory, falsifiability, uncertainty bands, provenance completeness.</li>
+    <li><strong>Processes and control</strong> – process dynamics, inputs/outputs, control points, feedback, stability, resource constraints, failure modes, observability/controllability.</li>
+    <li><strong>Risk and safety</strong> – hazard presence, exposure, severity, likelihood, detectability, mitigation, residual risk, safety margins, tolerance bands.</li>
+    <li><strong>Environmental and governance</strong> – environmental impact, sustainability, resource consumption, emissions, waste, lifecycle footprint, supply chain and governance axes.</li>
+  </ul>
+  <p>These groups give every concept a rich factual backbone. Ontological dimensions are used when constructing diamonds, computing distances, and explaining which factual aspects supported or ruled out an answer.</p>
 
-  <p>Beyond 383, dimensions are free-form. They arise from empirical learning and domain extensions. Relevance masks keep this tail sparse: for any given concept, only a small subset of axes is active. This keeps distances meaningful and explanations focused.</p>
+  <h2>Axiology (256–383)</h2>
+  <p>Axiology axes capture how we judge things: moral valence, harm vs. beneficence, fairness, respect for autonomy, legality, permissibility, obligations, sanctions, risk appetite, preferences for safety, security, privacy, efficiency, transparency, alignment with policy/mission, and emotional tone (trust, fear, anger, joy, etc.). By keeping these dimensions in a dedicated partition, we can:</p>
+  <ul>
+    <li>swap or layer different value systems without rewriting ontology,</li>
+    <li>mask all value axes for veil-of-ignorance or bias audits,</li>
+    <li>show clearly which axes carried value judgements in provenance.</li>
+  </ul>
+  <p>The detailed list of axiological axes is in the Axiology Dimensions page and in the dimension catalogue design spec.</p>
 
+  <h2>Empirical Space (384+)</h2>
+  <p>Beyond 383, dimensions form the empirical space. These axes are not pre-assigned in the core catalogue; they are reserved for:</p>
+  <ul>
+    <li>latent features learned from data (for example, from embeddings or domain-specific statistics),</li>
+    <li>deployment-specific extensions that do not fit cleanly into the ontology/axiology partitions,</li>
+    <li>temporary or experimental axes used by research profiles.</li>
+  </ul>
+  <p>Empirical axes start at index 384 and extend up to the configured dimension count (512, 1024, 2048, or 4096). Relevance masks keep this tail sparse: for any given concept, only a small subset of axes is active. This keeps distances meaningful and explanations focused, while allowing the space to grow as new domains are added.</p>
+
+  <h2>Where to Go Next</h2>
   <p>For detailed catalogues of the fact and value axes, see <a href="ontology_dims.html">Ontology Dimensions</a> and <a href="axiology_dims.html">Axiology Dimensions</a>. For the empirical tail, the key practice is discipline: add only what you need, mask aggressively, and document any new axes you reserve so that future reasoning remains interpretable.</p>
+  <p>For how these dimensions are populated during ingestion and learning, see the <a href="../usage-guide/ingestion.html">Data Ingestion</a> guide, and for the broader geometric context see the <a href="../wiki/conceptual_spaces.html">Conceptual Spaces</a>, <a href="../wiki/ontology.html">Ontology</a>, and <a href="../wiki/axiology.html">Axiology</a> wiki pages.</p>
 
   <div class="footer-nav">
     <a href="index.html">Back to index</a>

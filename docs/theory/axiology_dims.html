@@ -13,13 +13,22 @@
   </div>
   <p>Axiology axes encode judgments, norms, preferences, and emotional tones. They answer whether something is good or bad, permitted or forbidden, risky or safe, aligned or misaligned with policies or cultures. This range is reserved for values so that factual axes stay untouched when norms shift.</p>
 
-  <p>The moral and legal subset covers moral valence, harm versus beneficence, fairness, respect for autonomy, legality, permissibility, obligations, prohibitions, and the severity of sanctions. Risk and safety preferences record appetite for risk, priority given to safety, and preferences for security, privacy, robustness, and reliability. Utility and economic preferences encode efficiency, profit or ROI orientation, sensitivity to cost, and the value placed on resources, time, scalability, and resilience. Trust and reputation axes capture how much transparency and explainability matter, as well as expected trustworthiness and reputation impact. Alignment axes indicate how strongly an action or concept aligns with a policy, mission, ideology, culture, or brand, and how stakeholders are weighted. Finally, emotional axes represent states such as fear, anger, sadness, joy, disgust, surprise, empathy, hostility, trust, suspicion, curiosity, and motivation.</p>
+  <h2>Preconfigured Axiology Blocks</h2>
+  <ul>
+    <li><strong>Moral and legal valence</strong> – moral valence (good/bad), harmfulness vs. beneficence, fairness/justice, respect for autonomy and dignity, honesty, loyalty, care, responsibility, legality, permissibility, obligation weight, prohibition strength, sanction severity, enforcement likelihood, due process and precedent alignment.</li>
+    <li><strong>Utility and efficiency</strong> – utility and efficiency value, profit/ROI orientation, cost sensitivity, resource and time efficiency, scalability and resilience values.</li>
+    <li><strong>Safety and risk preferences</strong> – risk appetite, safety preference, security and privacy preferences, robustness and reliability preferences.</li>
+    <li><strong>Transparency, trust and reputation</strong> – transparency and explainability preferences, trustworthiness expectations, reputation impact, accountability and liability assignment preferences.</li>
+    <li><strong>Alignment and governance</strong> – alignment with policy/mission, ideological, cultural, and brand alignment, stakeholder priority weights, sensitivity to bias and fairness (including protected classes and corrective fairness pressure), duties to disclose, permission to act, consent strength and revocability, remediation expectations, penalty tolerance.</li>
+    <li><strong>Emotional and motivational tone</strong> – fear, anger, sadness, joy, disgust, surprise, empathy/compassion, hostility, trust/confidence, suspicion/doubt, attachment/aversion, curiosity/engagement, motivation/drive, risk aversion/ seeking, stress/anxiety.</li>
+  </ul>
 
+  <h2>Extensions</h2>
   <p>Dimensions 336–383 are left open for domain-specific value axes. When adding one, define its meaning, polarity, and the contexts in which it applies. Document typical ranges and masks, and resist the temptation to overload existing moral axes with unrelated values; clear separation preserves auditability.</p>
 
-  <p>Deontic relations (PERMITS, PROHIBITS, OBLIGATES) and theory layers act primarily on axiology. A war layer can neutralize prohibitions that a civil layer enforces, while BiasController can zero axiology for a veil-of-ignorance audit. When a layer changes axiology, the underlying ontology remains unchanged, so provenance can show exactly which value axes were touched. A statement like “Killing PROHIBITS permitted” depresses moral valence and raises prohibition strength; a war layer can temporarily set permissibility to neutral; a bias audit can mask all value axes and force the decision to rest on ontology alone.</p>
-
-  <p>Keeping value dimensions explicit and separate allows you to swap or mask value systems deliberately. Provenance will always show which axiology axes influenced an outcome, making value-driven decisions transparent rather than hidden.</p>
+  <h2>Role in Reasoning, Bias Control and Explainability</h2>
+  <p>Deontic relations (<code>PERMITS</code>, <code>PROHIBITS</code>, <code>OBLIGATES</code>) and theory layers act primarily on axiology. A war layer can neutralise prohibitions that a civil layer enforces, while BiasController can zero axiology for a veil-of-ignorance audit. When a layer changes axiology, the underlying ontology remains unchanged, so provenance can show exactly which value axes were touched.</p>
+  <p>Keeping value dimensions explicit and separate allows you to swap or mask value systems deliberately. Provenance will always show which axiology axes influenced an outcome, making value-driven decisions transparent rather than hidden. For background on the philosophical and practical role of axiology, see the <a href="../wiki/axiology.html">Axiology</a>, <a href="../wiki/bias.html">Bias</a>, and <a href="../wiki/veil_of_ignorance.html">Veil of Ignorance</a> wiki pages, and for the partitioning into ontology vs. axiology see <a href="dimensions.html">Dimensions Overview</a>.</p>
 
   <div class="footer-nav">
     <a href="index.html">Back to index</a>
