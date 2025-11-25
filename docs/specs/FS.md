@@ -21,27 +21,16 @@ Defines functional behavior of the neuro-symbolic engine that ingests natural la
  - **FS-15 Sys2DSL Theory Programs:** Expose a small, deterministic line-oriented DSL (Sys2DSL) that lets users and domain authors define reusable reasoning programmes in text theory files. Sys2DSL composes core primitives (ask, abduct, counterfactual queries, fact search, requirement coverage checks, mask control) into higher-level checks (e.g., health procedure compliance, export controls, narrative consistency) without embedding domain-specific logic inside the engine code. Macros as a separate concept are removed; theory files themselves are Sys2DSL programmes.
  - **FS-16 Session-Based Interaction (AgentSystem2/System2Session):** Provide a top-level entry class `AgentSystem2` that creates session-scoped `System2Session` objects. All ingestion of facts, queries, and theory updates from external callers must flow through `System2Session` APIs; direct access to internal modules (`ConceptStore`, `Reasoner`, `TheoryStack`, etc.) is not permitted for user code. Each session manages its own active theory (expressed as a Sys2DSL programme), with explicit commands to persist the session theory or merge it into an existing external theory file.
 
-## Reasoning Typologies (Geometric Operations)
-- Deductive: point/volume inclusion within diamonds (strict/fuzzy).
-- Inductive: envelope construction (min/max, centroid, L1 radius) to form new diamonds from examples.
-- Abductive: inverse permutation probing plus nearest-neighbor lookup for best-explanation hypotheses.
-- Analogical: vector translation (delta application) to map relations across domains.
-- Counterfactual/Non-monotonic: theory-layer overrides and temporary layers to simulate alternative realities.
-- Temporal/Causal: rotational encoding for time steps; inverse rotations for recall; causal permutations.
-- Deontic/Normative: forbidden/obligation volumes with strict radii and context-dependent layers.
-- Sparsity/Attention: relevance mask activation to focus comparisons on specific subspaces.
-- Validation/Abstract: symbolic execution over theory stacks and dimensions to check consistency and expected outcomes without relying on empirical data.
+## Global Architecture Reference
 
-## Data and Structural Rules
-- Vectors are int-based with clamped arithmetic; relevance masks and relation hints use bitwise ops.
-- Relation permutations are deterministic shuffles; new relations are generated orthogonally when missing.
-- Theory overrides must not mutate stored base concepts; runtime synthesis combines overlays on demand.
+The functional requirements above rely on a shared geometric reasoning model, data rules, and key flows that are specified in the global design spec:
 
-## Key Flows
-- **Ingest:** Parse text → tree → vector encoding → superposition update → clustering check → persist → confirm.
-- **Answer:** Receive query + optional context → select theory stack (or multiple stacks for comparison) → synthesize runtime concept → validate (optimist/sceptic) → retrieve nearest matches → produce boolean/graded answer + explanation.
-- **Conflict Handling:** Detect empty intersections or high collinearity between ontological and axiological axes; prompt user for precedence or masking; surface meta-rational options (compare stacks, request priority).
-- **Validate (Symbolic/Abstract):** Run abstract interpretation/symbolic execution over theory stacks, masks, and relations to prove/deny reachability or inclusion properties without consuming new data; report counterexamples.
+- **DS[/global_arch]** – Global geometric architecture and reasoning model:
+  - reasoning typologies (deductive, inductive, abductive, analogical, counterfactual, temporal/causal, deontic, sparsity, validation/abstract);
+  - data and structural rules (vector ranges, partitions, relation permutations, theory overlays, property tokens);
+  - key flows (Ingest, Answer, Conflict Handling, Validation).
+
+All module-level DS documents (`core`, `knowledge`, `ingest`, `reason`, `theory`, `interface`, `support`) must be interpreted in the context of DS[/global_arch]. FS-01…FS-16 are considered satisfied only when both the per-module behaviour and the global architecture constraints are met.
 
 ## Open Issues / Design Risks
 - Configurable dimension counts (512 minimum, higher for production) require masks, permutations, and test suites to validate behavior across settings; supported values are restricted to {512, 1024, 2048, 4096} to simplify layout and testing.

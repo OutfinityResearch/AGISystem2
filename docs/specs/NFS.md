@@ -44,9 +44,3 @@
 - <a id="NFS-026"></a>**NFS-026:** Value ranges: int values in [-127, 127]; zero indicates irrelevance; clamping is mandatory on all arithmetic.
 - <a id="NFS-027"></a>**NFS-027:** Recursion horizon for parsing must prevent saturation; the limit is configurable (default target 3).
 - <a id="NFS-028"></a>**NFS-028:** Reasoning and temporal operations must be bounded in work: a `maxReasonerIterations` limit caps the number of reasoning steps per query, and `maxTemporalRewindSteps` caps how many inverse rotations can be applied in one rewind call. These limits are configurable but require safe defaults for test and prod profiles.
-
-## Risks and Open Issues
-- Multiple supported dimension configurations may vary in performance and expressivity; benchmarking and guidance are needed to pick defaults per environment.
-- LSH/nearest-neighbor strategy may need tuning to balance accuracy vs. CPU budget.
-- Translation dependency can introduce nondeterminism; need a pinning/caching strategy for repeatability.
-- Storage format/versioning for theories and masks must be defined to avoid drift between instances.

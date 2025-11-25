@@ -40,9 +40,3 @@
 - <a id="URS-026"></a>**URS-026:** Users can add or adjust rules in natural language and see the system update behavior immediately.
 - <a id="URS-027"></a>**URS-027:** The system refuses to answer when contradictions make a conclusion impossible without user clarification.
 - <a id="URS-028"></a>**URS-028:** Performance remains acceptable for interactive use on modern CPUs with millions of stored concepts.
-
-## Risks and Open Issues (User Impact)
-- Dimension count is configurable but restricted to a small set of supported values (512, 1024, 2048, 4096); different profiles may emphasize speed (lower counts) or fidelity (higher counts), and this trade-off must be communicated clearly to users of each deployment.
-- Reliance on English may limit adoption; translation quality affects correctness and trust.
-- User understanding of "theories" and "dimensions" may need onboarding aids to avoid mis-teaching.
-- Conflict resolution policies (e.g., priority rules) must be exposed clearly to avoid user surprise.
