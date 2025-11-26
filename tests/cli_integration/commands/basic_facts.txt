@@ -1,0 +1,26 @@
+# Test: Basic fact operations
+# Tests: add, ask, prove, retract
+
+# Add taxonomy facts
+add Dog IS_A Animal
+add Cat IS_A Animal
+add Animal IS_A LivingThing
+add Bird IS_A Animal
+add Sparrow IS_A Bird
+
+# Query facts
+ask Is Dog an Animal?
+ask Dog IS_A Animal?
+ask Cat IS_A Animal?
+ask Sparrow IS_A Bird?
+
+# Prove transitivity
+prove Dog IS_A LivingThing
+prove Sparrow IS_A Animal
+
+# Retract and verify
+retract Cat IS_A Animal
+ask Cat IS_A Animal?
+
+# Validate knowledge base
+validate

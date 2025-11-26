@@ -186,7 +186,7 @@ This file materializes the default relation set as JSON. It must be compatible w
       "domainPartitionHint": "ontology",
       "rangePartitionHint": "ontology",
       "weight": 0.7
-    }
+    },
     {
       "name": "PROHIBITS",
       "inverse": "PROHIBITED_BY",

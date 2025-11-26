@@ -17,9 +17,11 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 - `theories (data spec)` → `.specs/knowledge/base_theories.md` — Base and test theory defaults (partitions, root constraints, sample layers for testing).
 - `relations (data spec)` → `.specs/knowledge/default_relations.md` — Default relation set (OWL-inspired) with permutation characteristics and test guidance.
 - `dimensions (data spec)` → `.specs/knowledge/dimensions.md` — Ontology/axiology axis catalog (fixed partitions).
- - `data/init/dimensions.json` → `.specs/init/dimensions.json.md` — JSON layout for dimension catalog instances.
- - `data/init/relations.json` → `.specs/init/relations.json.md` — JSON layout for default relation instances.
- - `data/init/config_profile.json` → `.specs/init/config_profile.json.md` — JSON layout for profile selection and seeds.
+- `(memory spec)` → `.specs/knowledge/usage_tracking.md` — **Usage tracking and prioritization**: counters, frequency-based ranking, priority calculation.
+- `(memory spec)` → `.specs/knowledge/forgetting.md` — **Forgetting mechanisms**: threshold-based removal, decay models, protection, recovery.
+- `data/init/dimensions.json` → `.specs/init/dimensions.json.md` — JSON layout for dimension catalog instances.
+- `data/init/relations.json` → `.specs/init/relations.json.md` — JSON layout for default relation instances.
+- `data/init/config_profile.json` → `.specs/init/config_profile.json.md` — JSON layout for profile selection and seeds.
 
 ## Ingestion and Learning
 - `src/ingest/parser.js` → `.specs/ingest/parser.js.md` — Class `NLParser`: parse text into subject–relation–object trees; configurable recursion horizon.
@@ -35,6 +37,10 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 
 ## Sys2DSL Engine
 - `src/theory/dsl_engine.js` → `.specs/theory/dsl_engine.js.md` — Class `TheoryDSLEngine` (Sys2DSL interpreter): interpret Sys2DSL command lines from theory files and sessions, bind variables, and invoke core reasoning primitives (ask, abduct, counterfactual, fact search, mask control) without embedding domain-specific logic in engine code.
+- `(language spec)` → `.specs/theory/Sys2DSL_syntax.md` — **Complete Sys2DSL language specification**: syntax, token types, case conventions, grammar (EBNF), evaluation model, session lifecycle.
+- `(command reference)` → `.specs/theory/Sys2DSL_commands.md` — **Full command reference**: all commands organized by category (query, assertion, concept, relation, theory, reasoning, mask, utility, memory, output).
+- `(data mapping)` → `.specs/theory/Sys2DSL_arch.md` — Sys2DSL data mapping: how scripts map to internal structures, value types, mask application.
+- `(eval spec)` → `.specs/theory/topological_eval.md` — Topological evaluation and dependency resolution.
 
 ## Interaction and Orchestration
 - `src/interface/translator_bridge.js` → `.specs/interface/translator_bridge.js.md` — Class `TranslatorBridge`: contract with external LLM/translation layer; deterministic structured calls.
@@ -43,6 +49,12 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 - `src/interface/system2_session.js` → `.specs/interface/system2_session.js.md` — Class `System2Session`: session-scoped API that accepts Sys2DSL command lines, manages a per-session theory, and mediates all fact ingestion and reasoning operations.
 - `src/support/audit_log.js` → `.specs/support/audit_log.js.md` — Class `AuditLog`: append-only logs for theory changes, ingestions, clustering events, translator calls.
 - `src/support/storage.js` → `.specs/support/storage.js.md` — Class `StorageAdapter`: pluggable persistence backends (default binary-on-disk hierarchy) for concepts and theories.
+
+## Use Case Specifications
+- `(use case)` → `.specs/interface/usecase_define_theory.md` — **Defining Theories**: how to create, load, save, and merge theories.
+- `(use case)` → `.specs/interface/usecase_validate.md` — **Validating Consistency**: how to check for contradictions and conflicts.
+- `(use case)` → `.specs/interface/usecase_hypothesize.md` — **Generating Hypotheses**: abductive reasoning from observations to causes.
+- `(use case)` → `.specs/interface/usecase_prove.md` — **Proving Theorems**: deductive reasoning and proof construction.
 
 ## Testing Harness
 - `tests/runTests.js` → `.specs/tests/runTests.js.md` — CLI harness for suite discovery and execution across test profiles (auto/manual/prod-like).

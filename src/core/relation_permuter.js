@@ -26,7 +26,9 @@ class RelationPermuter {
   }
 
   bootstrapDefaults(relationsPath) {
-    const fullPath = relationsPath || path.join(process.cwd(), 'data', 'init', 'relations.json');
+    // Use package directory, not current working directory
+    const packageRoot = path.resolve(__dirname, '..', '..');
+    const fullPath = relationsPath || path.join(packageRoot, 'data', 'init', 'relations.json');
     const raw = fs.readFileSync(fullPath, 'utf8');
     const spec = JSON.parse(raw);
     const relations = spec.relations || [];

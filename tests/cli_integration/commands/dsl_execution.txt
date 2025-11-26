@@ -1,0 +1,20 @@
+# Test: Direct DSL execution
+# Tests: run command with various DSL statements
+
+# Direct ASSERT
+run @f ASSERT Robot IS_A Machine
+
+# Direct ASK
+run @q ASK "Robot IS_A Machine?"
+
+# Direct PROVE
+run @r PROVE Robot IS_A Machine
+
+# Config snapshot
+config
+
+# Facts listing
+facts
+
+# Inspect concept
+inspect Robot

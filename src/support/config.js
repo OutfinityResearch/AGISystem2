@@ -98,7 +98,9 @@ class Config {
   }
 
   _loadProfileFile() {
-    const filePath = path.join(process.cwd(), 'data', 'init', 'config_profile.json');
+    // Use package directory, not current working directory
+    const packageRoot = path.resolve(__dirname, '..', '..');
+    const filePath = path.join(packageRoot, 'data', 'init', 'config_profile.json');
     if (!fs.existsSync(filePath)) {
       return {};
     }

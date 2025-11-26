@@ -1,0 +1,30 @@
+# Test: Memory management commands
+# Tests: usage, protect, unprotect, boost, forget, concepts
+
+# Create concepts via facts
+add ImportantConcept HAS_PROPERTY critical
+add TemporaryConcept HAS_PROPERTY disposable
+add TestConcept HAS_PROPERTY testable
+
+# Check initial usage
+usage ImportantConcept
+usage TemporaryConcept
+
+# Protect important concept
+protect ImportantConcept
+
+# Boost a concept
+boost TestConcept 50
+usage TestConcept
+
+# List all concepts
+concepts
+
+# Try to forget (with dry run if supported)
+forget concept=TemporaryConcept
+
+# Protected concept should remain
+usage ImportantConcept
+
+# Unprotect and verify
+unprotect ImportantConcept

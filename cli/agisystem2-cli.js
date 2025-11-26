@@ -1,11 +1,54 @@
 #!/usr/bin/env node
+/**
+ * AGISystem2 CLI
+ * DS(/interface/cli)
+ *
+ * Interactive and batch command-line interface for theory exploration and testing.
+ *
+ * Usage:
+ *   Interactive:  node cli/agisystem2-cli.js
+ *   Batch:        node cli/agisystem2-cli.js --batch <commands.txt> [--output <results.json>]
+ *   Single:       node cli/agisystem2-cli.js --exec "add Dog IS_A Animal"
+ *   Help:         node cli/agisystem2-cli.js --help
+ */
 
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 const AgentSystem2 = require('../src/interface/agent_system2');
 
-const color = {
+// Parse command line arguments
+const argv = process.argv.slice(2);
+const options = {
+  batch: null,      // --batch <file>
+  output: null,     // --output <file>
+  exec: null,       // --exec "command"
+  noColor: false,   // --no-color
+  json: false,      // --json (output as JSON)
+  help: false       // --help
+};
+
+for (let i = 0; i < argv.length; i++) {
+  if (argv[i] === '--batch' && argv[i + 1]) {
+    options.batch = argv[++i];
+  } else if (argv[i] === '--output' && argv[i + 1]) {
+    options.output = argv[++i];
+  } else if (argv[i] === '--exec' && argv[i + 1]) {
+    options.exec = argv[++i];
+  } else if (argv[i] === '--no-color') {
+    options.noColor = true;
+  } else if (argv[i] === '--json') {
+    options.json = true;
+  } else if (argv[i] === '--help' || argv[i] === '-h') {
+    options.help = true;
+  }
+}
+
+// Color codes (disabled in batch/json mode)
+const color = options.noColor || options.json ? {
+  heading: '', section: '', command: '', label: '',
+  example: '', error: '', dim: '', reset: ''
+} : {
   heading: '\x1b[1;36m',
   section: '\x1b[1;34m',
   command: '\x1b[1;32m',
@@ -27,8 +70,20 @@ function initEngine() {
   const root = path.join(cwd, '.AGISystem2');
   const dataRoot = path.join(root, 'data');
   const theoriesRoot = path.join(root, 'theories');
+
+  // Check if this is first run (environment doesn't exist yet)
+  const isFirstRun = !fs.existsSync(root);
+
   ensureDir(dataRoot);
   ensureDir(theoriesRoot);
+
+  // Auto-install sample theories on first run
+  if (isFirstRun) {
+    initSampleTheories(theoriesRoot);
+    if (!options.json && !options.batch) {
+      console.log(`${color.dim}First run: created .AGISystem2/ environment with sample theories${color.reset}\n`);
+    }
+  }
 
   const agent = new AgentSystem2({
     profile: 'manual_test',
@@ -36,7 +91,7 @@ function initEngine() {
   });
   const session = agent.createSession();
 
-  return { agent, session, root, theoriesRoot };
+  return { agent, session, root, theoriesRoot, isFirstRun };
 }
 
 function printMainHelp() {
@@ -53,8 +108,27 @@ function printMainHelp() {
   console.log(`${color.section}Fact and query commands${color.reset}:`);
   console.log(`  ${color.command}add <fact>${color.reset}           - ingest a fact, e.g. ${color.example}add Dog IS_A Animal${color.reset}`);
   console.log(`  ${color.command}ask <question>${color.reset}       - ask a question, e.g. ${color.example}ask Is Dog an Animal?${color.reset}`);
+  console.log(`  ${color.command}retract <fact>${color.reset}       - remove a fact, e.g. ${color.example}retract Dog IS_A Animal${color.reset}`);
   console.log(`  ${color.command}abduct <obs> [REL]${color.reset}   - abductive query, e.g. ${color.example}abduct Smoke CAUSES${color.reset}`);
   console.log(`  ${color.command}cf <q> | <facts>${color.reset}     - counterfactual ask with extra facts for this question only\n`);
+  console.log(`${color.section}Reasoning commands${color.reset}:`);
+  console.log(`  ${color.command}prove <statement>${color.reset}    - attempt to prove, e.g. ${color.example}prove Dog IS_A Animal${color.reset}`);
+  console.log(`  ${color.command}validate${color.reset}             - check theory consistency`);
+  console.log(`  ${color.command}hypothesize <subj>${color.reset}   - generate hypotheses for subject\n`);
+  console.log(`${color.section}Theory layers (what-if)${color.reset}:`);
+  console.log(`  ${color.command}push [name]${color.reset}          - push new theory layer for exploration`);
+  console.log(`  ${color.command}pop${color.reset}                  - pop and discard top layer`);
+  console.log(`  ${color.command}layers${color.reset}               - show current layer stack\n`);
+  console.log(`${color.section}Knowledge inspection${color.reset}:`);
+  console.log(`  ${color.command}facts [pattern]${color.reset}      - list facts (optionally filter by subject)`);
+  console.log(`  ${color.command}concepts${color.reset}             - list all concepts`);
+  console.log(`  ${color.command}usage <concept>${color.reset}      - show usage statistics`);
+  console.log(`  ${color.command}inspect <concept>${color.reset}    - detailed concept info\n`);
+  console.log(`${color.section}Memory management${color.reset}:`);
+  console.log(`  ${color.command}protect <concept>${color.reset}    - protect from forgetting`);
+  console.log(`  ${color.command}unprotect <concept>${color.reset}  - remove protection`);
+  console.log(`  ${color.command}forget <criteria>${color.reset}    - forget by threshold/pattern/concept`);
+  console.log(`  ${color.command}boost <concept> [n]${color.reset}  - boost usage priority\n`);
   console.log(`${color.section}Domain helpers${color.reset}:`);
   console.log(`  ${color.command}check-procedure ...${color.reset}  - compliance check for procedures and requirements`);
   console.log(`  ${color.command}check-export ...${color.reset}     - compliance check for export actions under regulations`);
@@ -63,10 +137,11 @@ function printMainHelp() {
   console.log(`  ${color.command}new-theory <name>${color.reset}    - create empty theory file under .AGISystem2/theories`);
   console.log(`  ${color.command}list-theories${color.reset}        - list known theory files`);
   console.log(`  ${color.command}show-theory <name>${color.reset}   - print a theory file`);
-  console.log(`  ${color.command}apply-theory <name> <question>${color.reset} - ask question under facts from a theory`);
+  console.log(`  ${color.command}load-theory <name>${color.reset}   - load theory into current session`);
   console.log(`  ${color.command}init-samples${color.reset}         - install sample theories (law, health, sci-fi)\n`);
   console.log(`${color.section}Introspection${color.reset}:`);
   console.log(`  ${color.command}config${color.reset}               - print current config snapshot (profile, dims, limits)`);
+  console.log(`  ${color.command}run <dsl>${color.reset}            - execute raw DSL statement`);
   console.log(`  ${color.command}exit${color.reset} / ${color.command}quit${color.reset}          - end the session\n`);
   console.log(`Type ${color.command}help syntax${color.reset} for more detail on permitted sentences and relations.`);
   /* eslint-enable no-console */
@@ -237,7 +312,442 @@ function initSampleTheories(theoriesRoot) {
   }
 }
 
+// =========================================================================
+// Batch/Non-interactive mode support
+// =========================================================================
+
+/**
+ * Execute a single CLI command and return structured result
+ * @param {string} line - The command line to execute
+ * @param {object} session - The DSL session
+ * @param {string} theoriesRoot - Path to theories directory
+ * @returns {object} - { command, args, result, error?, timestamp }
+ */
+function executeCommand(line, session, theoriesRoot) {
+  const trimmed = line.trim();
+  const timestamp = new Date().toISOString();
+
+  // Skip empty lines and comments
+  if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) {
+    return { command: null, skipped: true, line: trimmed, timestamp };
+  }
+
+  const [cmd, ...rest] = trimmed.split(/\s+/);
+  const args = rest.join(' ');
+  const result = { command: cmd, args, timestamp };
+
+  try {
+    switch (cmd.toLowerCase()) {
+      case 'add': {
+        const fact = args.trim();
+        if (!fact) {
+          result.error = 'Missing fact';
+          break;
+        }
+        session.run([`@f ASSERT ${fact}`]);
+        result.result = { ok: true, action: 'asserted', fact };
+        break;
+      }
+      case 'ask': {
+        const question = args.trim();
+        const env = session.run([`@q ASK "${question}"`]);
+        const res = env.q || env.result || {};
+        result.result = { truth: res.truth, band: res.band };
+        break;
+      }
+      case 'retract': {
+        const fact = args.trim();
+        if (!fact) {
+          result.error = 'Missing fact';
+          break;
+        }
+        const env = session.run([`@r RETRACT ${fact}`]);
+        result.result = env.r || { ok: false };
+        break;
+      }
+      case 'prove': {
+        const statement = args.trim();
+        if (!statement) {
+          result.error = 'Missing statement';
+          break;
+        }
+        const env = session.run([`@r PROVE ${statement}`]);
+        result.result = env.r || {};
+        break;
+      }
+      case 'validate': {
+        const env = session.run(['@r VALIDATE']);
+        result.result = env.r || {};
+        break;
+      }
+      case 'hypothesize': {
+        const subject = args.trim();
+        if (!subject) {
+          result.error = 'Missing subject';
+          break;
+        }
+        const env = session.run([`@r HYPOTHESIZE ${subject}`]);
+        result.result = env.r || {};
+        break;
+      }
+      case 'abduct': {
+        const parts = args.split(/\s+/);
+        if (parts.length < 1 || !parts[0]) {
+          result.error = 'Missing observation';
+          break;
+        }
+        const observation = parts[0];
+        const relation = parts.length >= 2 ? parts[1] : null;
+        const env = session.run([
+          relation
+            ? `@h ABDUCT ${observation} ${relation}`
+            : `@h ABDUCT ${observation}`
+        ]);
+        result.result = env.h || {};
+        break;
+      }
+      case 'cf': {
+        const split = args.split('|');
+        if (split.length < 2) {
+          result.error = 'Missing counterfactual facts (use | separator)';
+          break;
+        }
+        const question = split[0].trim();
+        const factsPart = split.slice(1).join('|');
+        const facts = factsPart
+          .split(';')
+          .map((s) => s.trim())
+          .filter((s) => s.length > 0);
+        const env = session.run([`@cf CF "${question}" | ${facts.join(' ; ')}`]);
+        result.result = env.cf || {};
+        break;
+      }
+      case 'push': {
+        const name = args.trim() || `layer_${Date.now()}`;
+        const env = session.run([`@r THEORY_PUSH name="${name}"`]);
+        result.result = { ok: true, name, depth: (env.r || {}).depth };
+        break;
+      }
+      case 'pop': {
+        const env = session.run(['@r THEORY_POP']);
+        result.result = env.r || {};
+        break;
+      }
+      case 'layers': {
+        const env = session.run(['@r LIST_THEORIES']);
+        result.result = env.r || {};
+        break;
+      }
+      case 'facts': {
+        const pattern = args.trim();
+        const dsl = pattern
+          ? `@r FACTS_MATCHING ${pattern} ? ?`
+          : '@r FACTS_MATCHING ? ? ?';
+        const env = session.run([dsl]);
+        result.result = { facts: env.r || [], count: (env.r || []).length };
+        break;
+      }
+      case 'concepts': {
+        const conceptStore = session.engine.conceptStore;
+        const concepts = conceptStore.listConcepts();
+        result.result = { concepts, count: concepts.length };
+        break;
+      }
+      case 'usage': {
+        const concept = args.trim();
+        if (!concept) {
+          result.error = 'Missing concept';
+          break;
+        }
+        const env = session.run([`@r GET_USAGE ${concept}`]);
+        result.result = env.r || {};
+        break;
+      }
+      case 'inspect': {
+        const concept = args.trim();
+        if (!concept) {
+          result.error = 'Missing concept';
+          break;
+        }
+        const env = session.run([`@r INSPECT ${concept}`]);
+        result.result = env.r || null;
+        break;
+      }
+      case 'protect': {
+        const concept = args.trim();
+        if (!concept) {
+          result.error = 'Missing concept';
+          break;
+        }
+        session.run([`@r PROTECT ${concept}`]);
+        result.result = { ok: true, protected: concept };
+        break;
+      }
+      case 'unprotect': {
+        const concept = args.trim();
+        if (!concept) {
+          result.error = 'Missing concept';
+          break;
+        }
+        const conceptStore = session.engine.conceptStore;
+        conceptStore.unprotect(concept);
+        result.result = { ok: true, unprotected: concept };
+        break;
+      }
+      case 'forget': {
+        const criteria = args.trim();
+        if (!criteria) {
+          result.error = 'Missing criteria';
+          break;
+        }
+        const env = session.run([`@r FORGET ${criteria}`]);
+        result.result = env.r || {};
+        break;
+      }
+      case 'boost': {
+        const parts = args.trim().split(/\s+/);
+        if (!parts[0]) {
+          result.error = 'Missing concept';
+          break;
+        }
+        const concept = parts[0];
+        const amount = parts[1] ? parseInt(parts[1], 10) : 10;
+        session.run([`@r BOOST ${concept} ${amount}`]);
+        result.result = { ok: true, boosted: concept, amount };
+        break;
+      }
+      case 'run': {
+        const dsl = args.trim();
+        if (!dsl) {
+          result.error = 'Missing DSL statement';
+          break;
+        }
+        const env = session.run([dsl]);
+        result.result = env;
+        break;
+      }
+      case 'load-theory': {
+        const name = args.trim();
+        if (!name) {
+          result.error = 'Missing theory name';
+          break;
+        }
+        const filePath = path.join(theoriesRoot, `${name}.sys2dsl`);
+        if (!fs.existsSync(filePath)) {
+          result.error = `Theory file not found: ${filePath}`;
+          break;
+        }
+        const content = fs.readFileSync(filePath, 'utf8');
+        session.appendTheory(content);
+        result.result = { ok: true, loaded: name };
+        break;
+      }
+      case 'config': {
+        const snap = session.engine.config.snapshot();
+        result.result = snap;
+        break;
+      }
+      case 'check-procedure':
+      case 'check-export':
+      case 'check-magic': {
+        // Domain helpers - simplified for batch mode
+        result.result = { note: 'Domain helper - use interactive mode for full output' };
+        break;
+      }
+      case 'init-samples': {
+        initSampleTheories(theoriesRoot);
+        result.result = { ok: true, installed: ['health_compliance', 'law_minimal', 'scifi_magic'] };
+        break;
+      }
+      case 'list-theories': {
+        const entries = fs.readdirSync(theoriesRoot)
+          .filter((f) => f.endsWith('.sys2dsl') || f.endsWith('.txt'))
+          .sort();
+        result.result = { theories: entries, count: entries.length };
+        break;
+      }
+      case 'new-theory': {
+        const name = args.trim();
+        if (!name) {
+          result.error = 'Missing theory name';
+          break;
+        }
+        const filePath = path.join(theoriesRoot, `${name}.txt`);
+        if (!fs.existsSync(filePath)) {
+          fs.writeFileSync(filePath, '# One fact per line, using Subject REL Object\n', 'utf8');
+        }
+        result.result = { ok: true, created: filePath };
+        break;
+      }
+      case 'show-theory': {
+        const name = args.trim();
+        if (!name) {
+          result.error = 'Missing theory name';
+          break;
+        }
+        const filePath = path.join(theoriesRoot, `${name}.sys2dsl`);
+        if (!fs.existsSync(filePath)) {
+          result.error = `Theory file not found: ${filePath}`;
+          break;
+        }
+        const content = fs.readFileSync(filePath, 'utf8');
+        result.result = { name, content };
+        break;
+      }
+      default:
+        result.error = `Unknown command: ${cmd}`;
+    }
+  } catch (err) {
+    result.error = err.message;
+  }
+
+  return result;
+}
+
+/**
+ * Run commands from a file in batch mode
+ * @param {string} batchFile - Path to file with commands
+ * @param {string} outputFile - Optional path to output file
+ * @param {boolean} jsonOutput - Whether to output JSON
+ */
+async function runBatch(batchFile, outputFile, jsonOutput) {
+  const { session, theoriesRoot } = initEngine();
+
+  if (!fs.existsSync(batchFile)) {
+    console.error(`Error: Batch file not found: ${batchFile}`);
+    process.exit(1);
+  }
+
+  const content = fs.readFileSync(batchFile, 'utf8');
+  const lines = content.split('\n');
+
+  const results = {
+    batchFile,
+    timestamp: new Date().toISOString(),
+    commands: [],
+    summary: { total: 0, executed: 0, skipped: 0, errors: 0 }
+  };
+
+  for (const line of lines) {
+    results.summary.total++;
+    const cmdResult = executeCommand(line, session, theoriesRoot);
+
+    if (cmdResult.skipped) {
+      results.summary.skipped++;
+    } else if (cmdResult.error) {
+      results.summary.errors++;
+      results.commands.push(cmdResult);
+    } else {
+      results.summary.executed++;
+      results.commands.push(cmdResult);
+    }
+  }
+
+  // Output results
+  if (jsonOutput || outputFile) {
+    const output = JSON.stringify(results, null, 2);
+    if (outputFile) {
+      fs.writeFileSync(outputFile, output, 'utf8');
+      console.log(`Results written to: ${outputFile}`);
+    } else {
+      console.log(output);
+    }
+  } else {
+    // Human-readable output
+    console.log(`\n${color.heading}Batch Execution Results${color.reset}`);
+    console.log(`File: ${batchFile}`);
+    console.log(`Total: ${results.summary.total}, Executed: ${results.summary.executed}, Skipped: ${results.summary.skipped}, Errors: ${results.summary.errors}\n`);
+
+    for (const cmd of results.commands) {
+      if (cmd.error) {
+        console.log(`${color.error}ERROR${color.reset} ${cmd.command} ${cmd.args}`);
+        console.log(`  ${color.dim}${cmd.error}${color.reset}`);
+      } else {
+        console.log(`${color.label}OK${color.reset} ${cmd.command} ${cmd.args}`);
+        if (cmd.result && typeof cmd.result === 'object') {
+          const preview = JSON.stringify(cmd.result).substring(0, 80);
+          console.log(`  ${color.dim}${preview}${preview.length >= 80 ? '...' : ''}${color.reset}`);
+        }
+      }
+    }
+  }
+
+  // Exit with error code if any errors
+  process.exit(results.summary.errors > 0 ? 1 : 0);
+}
+
+/**
+ * Execute a single command from --exec argument
+ * @param {string} command - The command to execute
+ * @param {boolean} jsonOutput - Whether to output JSON
+ */
+async function runSingleCommand(command, jsonOutput) {
+  const { session, theoriesRoot } = initEngine();
+
+  const result = executeCommand(command, session, theoriesRoot);
+
+  if (jsonOutput) {
+    console.log(JSON.stringify(result, null, 2));
+  } else {
+    if (result.error) {
+      console.log(`${color.error}ERROR${color.reset}: ${result.error}`);
+      process.exit(1);
+    } else {
+      console.log(`${color.label}Result${color.reset}:`);
+      console.log(JSON.stringify(result.result, null, 2));
+    }
+  }
+
+  process.exit(result.error ? 1 : 0);
+}
+
+/**
+ * Print batch mode help
+ */
+function printBatchHelp() {
+  console.log(`${color.heading}AGISystem2 CLI - Batch Mode${color.reset}\n`);
+  console.log(`${color.section}Usage:${color.reset}`);
+  console.log(`  Interactive:  node cli/agisystem2-cli.js`);
+  console.log(`  Batch:        node cli/agisystem2-cli.js --batch <commands.txt> [--output <results.json>]`);
+  console.log(`  Single:       node cli/agisystem2-cli.js --exec "add Dog IS_A Animal"`);
+  console.log(`\n${color.section}Options:${color.reset}`);
+  console.log(`  --batch <file>   Execute commands from file (one per line)`);
+  console.log(`  --output <file>  Write results to file (implies JSON)`);
+  console.log(`  --exec "cmd"     Execute a single command`);
+  console.log(`  --json           Output results in JSON format`);
+  console.log(`  --no-color       Disable colored output`);
+  console.log(`  --help, -h       Show this help`);
+  console.log(`\n${color.section}Batch File Format:${color.reset}`);
+  console.log(`  # Comments start with # or //`);
+  console.log(`  add Dog IS_A Animal`);
+  console.log(`  add Cat IS_A Animal`);
+  console.log(`  ask Is Dog an Animal?`);
+  console.log(`  prove Cat IS_A Animal`);
+  console.log(`\n${color.section}Examples:${color.reset}`);
+  console.log(`  ${color.example}node cli/agisystem2-cli.js --batch tests/cli/basic_facts.txt${color.reset}`);
+  console.log(`  ${color.example}node cli/agisystem2-cli.js --batch tests/cli/theory_test.txt --output results.json${color.reset}`);
+  console.log(`  ${color.example}node cli/agisystem2-cli.js --exec "add Water HAS_PROPERTY liquid" --json${color.reset}`);
+  console.log('');
+}
+
 async function main() {
+  // Handle batch mode / single command / help before interactive mode
+  if (options.help) {
+    printBatchHelp();
+    process.exit(0);
+  }
+
+  if (options.batch) {
+    await runBatch(options.batch, options.output, options.json);
+    return; // runBatch calls process.exit
+  }
+
+  if (options.exec) {
+    await runSingleCommand(options.exec, options.json);
+    return; // runSingleCommand calls process.exit
+  }
+
+  // Interactive mode
   const { agent, session, theoriesRoot } = initEngine();
 
   const rl = readline.createInterface({
@@ -471,6 +981,267 @@ async function main() {
           console.log(JSON.stringify(snap, null, 2));
           break;
         }
+
+        // =========================================================================
+        // New commands: Reasoning
+        // =========================================================================
+        case 'retract': {
+          const fact = args.trim();
+          if (!fact) {
+            console.log('Usage: retract <Subject REL Object>');
+            break;
+          }
+          const env = session.run([`@r RETRACT ${fact}`]);
+          const res = env.r || {};
+          if (res.ok) {
+            console.log(`${color.label}OK${color.reset} ${color.dim}(fact retracted)${color.reset}`);
+          } else {
+            console.log(`${color.dim}No matching fact found${color.reset}`);
+          }
+          break;
+        }
+        case 'prove': {
+          const statement = args.trim();
+          if (!statement) {
+            console.log('Usage: prove <Subject REL Object>');
+            break;
+          }
+          const env = session.run([`@r PROVE ${statement}`]);
+          const res = env.r || {};
+          if (res.proven) {
+            console.log(`${color.label}PROVEN${color.reset} ${color.dim}(method: ${res.method}, confidence: ${res.confidence})${color.reset}`);
+            if (res.chain) {
+              console.log(`${color.dim}Chain: ${res.chain.join(' → ')}${color.reset}`);
+            }
+          } else {
+            console.log(`${color.error}NOT PROVEN${color.reset} ${color.dim}(method: ${res.method})${color.reset}`);
+          }
+          break;
+        }
+        case 'validate': {
+          const env = session.run(['@r VALIDATE']);
+          const res = env.r || {};
+          if (res.consistent) {
+            console.log(`${color.label}CONSISTENT${color.reset} ${color.dim}(${res.factCount} facts checked)${color.reset}`);
+          } else {
+            console.log(`${color.error}INCONSISTENT${color.reset} ${color.dim}(${res.issues.length} issues found)${color.reset}`);
+            for (const issue of res.issues || []) {
+              console.log(`  - ${color.example}${issue.type}${color.reset}: ${issue.subject} at ${issue.location}`);
+            }
+          }
+          break;
+        }
+        case 'hypothesize': {
+          const subject = args.trim();
+          if (!subject) {
+            console.log('Usage: hypothesize <subject>');
+            break;
+          }
+          const env = session.run([`@r HYPOTHESIZE ${subject}`]);
+          const res = env.r || {};
+          console.log(`${color.label}Hypotheses for${color.reset} ${color.example}${res.subject}${color.reset}:`);
+          for (const h of res.hypotheses || []) {
+            console.log(`  - ${h.subject} ${color.example}${h.relation}${color.reset} ${h.object} ${color.dim}(basis: ${h.basis})${color.reset}`);
+          }
+          if (!res.hypotheses || res.hypotheses.length === 0) {
+            console.log(`  ${color.dim}(none generated)${color.reset}`);
+          }
+          break;
+        }
+
+        // =========================================================================
+        // New commands: Theory layers
+        // =========================================================================
+        case 'push': {
+          const name = args.trim() || `layer_${Date.now()}`;
+          const env = session.run([`@r THEORY_PUSH name="${name}"`]);
+          const res = env.r || {};
+          console.log(`${color.label}Pushed layer${color.reset} ${color.example}${name}${color.reset} ${color.dim}(depth: ${res.depth})${color.reset}`);
+          break;
+        }
+        case 'pop': {
+          const env = session.run(['@r THEORY_POP']);
+          const res = env.r || {};
+          if (res.ok) {
+            console.log(`${color.label}Popped layer${color.reset} ${color.example}${res.popped}${color.reset} ${color.dim}(depth: ${res.depth})${color.reset}`);
+          } else {
+            console.log(`${color.error}No layer to pop${color.reset}`);
+          }
+          break;
+        }
+        case 'layers': {
+          const env = session.run(['@r LIST_THEORIES']);
+          const res = env.r || {};
+          console.log(`${color.label}Theory layers${color.reset} ${color.dim}(${res.count} active)${color.reset}:`);
+          for (const layer of res.active || []) {
+            console.log(`  - ${color.example}${layer}${color.reset}`);
+          }
+          if (res.count === 0) {
+            console.log(`  ${color.dim}(base layer only)${color.reset}`);
+          }
+          break;
+        }
+
+        // =========================================================================
+        // New commands: Knowledge inspection
+        // =========================================================================
+        case 'facts': {
+          const pattern = args.trim();
+          const dsl = pattern
+            ? `@r FACTS_MATCHING ${pattern} ? ?`
+            : '@r FACTS_MATCHING ? ? ?';
+          const env = session.run([dsl]);
+          const facts = env.r || [];
+          console.log(`${color.label}Facts${color.reset} ${color.dim}(${facts.length} found)${color.reset}:`);
+          for (const f of facts.slice(0, 20)) {
+            console.log(`  ${f.subject} ${color.example}${f.relation}${color.reset} ${f.object}`);
+          }
+          if (facts.length > 20) {
+            console.log(`  ${color.dim}... and ${facts.length - 20} more${color.reset}`);
+          }
+          break;
+        }
+        case 'concepts': {
+          const conceptStore = session.engine.conceptStore;
+          const concepts = conceptStore.listConcepts();
+          console.log(`${color.label}Concepts${color.reset} ${color.dim}(${concepts.length} total)${color.reset}:`);
+          for (const c of concepts.slice(0, 30)) {
+            console.log(`  - ${color.example}${c}${color.reset}`);
+          }
+          if (concepts.length > 30) {
+            console.log(`  ${color.dim}... and ${concepts.length - 30} more${color.reset}`);
+          }
+          break;
+        }
+        case 'usage': {
+          const concept = args.trim();
+          if (!concept) {
+            console.log('Usage: usage <concept>');
+            break;
+          }
+          const env = session.run([`@r GET_USAGE ${concept}`]);
+          const res = env.r || {};
+          if (res.error) {
+            console.log(`${color.error}${res.error}${color.reset}`);
+          } else {
+            console.log(`${color.label}Usage stats for${color.reset} ${color.example}${concept}${color.reset}:`);
+            console.log(`  Total: ${res.usageCount}  Assert: ${res.assertCount}  Query: ${res.queryCount}  Inference: ${res.inferenceCount}`);
+            console.log(`  Recency: ${res.recency}  Frequency: ${res.frequency}  Priority: ${res.priority}`);
+            console.log(`  Created: ${res.createdAt}  Last used: ${res.lastUsedAt}`);
+          }
+          break;
+        }
+        case 'inspect': {
+          const concept = args.trim();
+          if (!concept) {
+            console.log('Usage: inspect <concept>');
+            break;
+          }
+          const env = session.run([`@r INSPECT ${concept}`]);
+          const res = env.r;
+          if (!res) {
+            console.log(`${color.error}Concept not found${color.reset}`);
+          } else {
+            console.log(`${color.label}Concept${color.reset} ${color.example}${res.label}${color.reset}:`);
+            console.log(`  Diamonds: ${res.diamonds.length}`);
+            if (res.usage) {
+              console.log(`  Priority: ${res.usage.priority}  Usage: ${res.usage.usageCount}`);
+            }
+            console.log(`  Snapshot: ${res.timestamp}`);
+          }
+          break;
+        }
+
+        // =========================================================================
+        // New commands: Memory management
+        // =========================================================================
+        case 'protect': {
+          const concept = args.trim();
+          if (!concept) {
+            console.log('Usage: protect <concept>');
+            break;
+          }
+          const env = session.run([`@r PROTECT ${concept}`]);
+          const res = env.r || {};
+          console.log(`${color.label}Protected${color.reset} ${color.example}${concept}${color.reset}`);
+          break;
+        }
+        case 'unprotect': {
+          const concept = args.trim();
+          if (!concept) {
+            console.log('Usage: unprotect <concept>');
+            break;
+          }
+          const conceptStore = session.engine.conceptStore;
+          conceptStore.unprotect(concept);
+          console.log(`${color.label}Unprotected${color.reset} ${color.example}${concept}${color.reset}`);
+          break;
+        }
+        case 'forget': {
+          const criteria = args.trim();
+          if (!criteria) {
+            console.log('Usage: forget threshold=N | olderThan=Xd | concept=name | pattern=pat [dryRun]');
+            break;
+          }
+          const env = session.run([`@r FORGET ${criteria}`]);
+          const res = env.r || {};
+          if (res.wouldRemove) {
+            console.log(`${color.label}Would forget${color.reset} ${color.dim}(dry run)${color.reset}:`);
+            for (const c of res.wouldRemove.slice(0, 10)) {
+              console.log(`  - ${color.example}${c}${color.reset}`);
+            }
+          } else {
+            console.log(`${color.label}Forgotten${color.reset} ${res.count} concepts`);
+            if (res.protected.length > 0) {
+              console.log(`${color.dim}Skipped ${res.protected.length} protected concepts${color.reset}`);
+            }
+          }
+          break;
+        }
+        case 'boost': {
+          const parts = args.trim().split(/\s+/);
+          if (!parts[0]) {
+            console.log('Usage: boost <concept> [amount]');
+            break;
+          }
+          const concept = parts[0];
+          const amount = parts[1] ? parseInt(parts[1], 10) : 10;
+          const env = session.run([`@r BOOST ${concept} ${amount}`]);
+          console.log(`${color.label}Boosted${color.reset} ${color.example}${concept}${color.reset} by ${amount}`);
+          break;
+        }
+
+        // =========================================================================
+        // New commands: DSL execution
+        // =========================================================================
+        case 'run': {
+          const dsl = args.trim();
+          if (!dsl) {
+            console.log('Usage: run <@var COMMAND args...>');
+            break;
+          }
+          const env = session.run([dsl]);
+          console.log(`${color.label}Result${color.reset}:`);
+          console.log(JSON.stringify(env, null, 2));
+          break;
+        }
+        case 'load-theory': {
+          const name = args.trim();
+          if (!name) {
+            console.log('Usage: load-theory <name>');
+            break;
+          }
+          const filePath = path.join(theoriesRoot, `${name}.sys2dsl`);
+          if (!fs.existsSync(filePath)) {
+            console.log(`${color.error}Theory file not found${color.reset}: ${filePath}`);
+            break;
+          }
+          const content = fs.readFileSync(filePath, 'utf8');
+          session.appendTheory(content);
+          console.log(`${color.label}Loaded theory${color.reset} ${color.example}${name}${color.reset}`);
+          break;
+        }
+
         case 'exit':
         case 'quit':
           rl.close();

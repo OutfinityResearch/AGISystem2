@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../reference/style.css">
     <style>
         .matrix-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -49,6 +49,44 @@
         .spec-link:hover {
             text-decoration: underline;
         }
+
+        /* Test status styles */
+        .test-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85em;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+        .status-passed {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status-partial {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        .status-unknown {
+            background: #e2e3e5;
+            color: #383d41;
+            border: 1px solid #d6d8db;
+        }
+        .status-skipped {
+            background: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+
+        /* Coverage styles */
         .coverage-partial {
             background: #fff3cd;
             color: #856404;
@@ -61,6 +99,7 @@
             background: #f8d7da;
             color: #721c24;
         }
+
         .gamp-category {
             font-weight: bold;
             background: #e8eaf6;
@@ -84,6 +123,77 @@
             height: 15px;
             margin-right: 5px;
             border: 1px solid #ccc;
+            vertical-align: middle;
+        }
+
+        /* Test results summary */
+        .test-summary {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f0f4f8;
+            border-radius: 8px;
+            border-left: 4px solid #1976d2;
+        }
+        .test-summary h4 {
+            margin: 0 0 10px 0;
+            color: #1976d2;
+        }
+        .summary-stats {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .stat-label {
+            color: #666;
+        }
+
+        /* Loading indicator */
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Timestamp */
+        .results-timestamp {
+            color: #666;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+
+        /* New document highlight */
+        .new-doc {
+            background: #e8f5e9;
+        }
+        .new-badge {
+            background: #4caf50;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.7em;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        /* Consolidation note */
+        .consolidation-note {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .consolidation-note h4 {
+            margin: 0 0 10px 0;
+            color: #856404;
         }
     </style>
 </head>
@@ -113,22 +223,54 @@
 
         <div class="matrix-container">
             <div class="back-link">
-                <a href="../index.html">← Back to Home</a>
+                <a href="../index.html">&larr; Back to Home</a>
+            </div>
+
+            <!-- Consolidation Note -->
+            <div class="consolidation-note">
+                <h4>Requirements Consolidated</h4>
+                <p>URS, FS, and NFS have been consolidated to remove duplicates. See cross-reference tables in each spec file for mapping from old to new IDs.</p>
+                <ul>
+                    <li><strong>URS:</strong> 28 &rarr; 21 requirements</li>
+                    <li><strong>FS:</strong> 16 &rarr; 14 requirements</li>
+                    <li><strong>NFS:</strong> 28 &rarr; 23 requirements</li>
+                </ul>
+            </div>
+
+            <!-- Test Results Summary -->
+            <div class="test-summary" id="test-summary">
+                <h4>Test Results Summary</h4>
+                <div class="summary-stats" id="summary-stats">
+                    <span class="loading">Loading test results...</span>
+                </div>
+                <div class="results-timestamp" id="results-timestamp"></div>
             </div>
 
             <div class="legend">
-                <h4>Coverage Legend:</h4>
+                <h4>Legend:</h4>
                 <div class="legend-item">
-                    <span class="legend-box coverage-full"></span>
-                    Full Coverage
+                    <span class="legend-box" style="background: #d4edda;"></span>
+                    PASSED - All tests passed
                 </div>
                 <div class="legend-item">
-                    <span class="legend-box coverage-partial"></span>
-                    Partial Coverage
+                    <span class="legend-box" style="background: #f8d7da;"></span>
+                    FAILED - Tests failed
                 </div>
                 <div class="legend-item">
-                    <span class="legend-box coverage-none"></span>
-                    No Coverage / Not Applicable
+                    <span class="legend-box" style="background: #fff3cd;"></span>
+                    PARTIAL - Some tests passed
+                </div>
+                <div class="legend-item">
+                    <span class="legend-box" style="background: #e2e3e5;"></span>
+                    UNKNOWN - No test data
+                </div>
+                <div class="legend-item">
+                    <span class="legend-box" style="background: #cce5ff;"></span>
+                    SKIPPED - Tests skipped
+                </div>
+                <div class="legend-item">
+                    <span class="new-badge">NEW</span>
+                    Recently added specification
                 </div>
             </div>
 
@@ -136,7 +278,7 @@
             <div class="matrix-section">
                 <h2>Requirement Specifications (URS / FS / NFS)</h2>
 
-                <h3>User Requirements (URS)</h3>
+                <h3>User Requirements (URS) - Consolidated</h3>
                 <table class="matrix-table">
                     <thead>
                         <tr>
@@ -144,207 +286,12 @@
                             <th>Title</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-001</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-001" class="spec-link">Overview – URS-001</a>
-                            </td>
-                            <td>Deterministic, explainable neuro-symbolic assistant</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-002</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-002" class="spec-link">Overview – URS-002</a>
-                            </td>
-                            <td>Conceptual space with bounded diamonds</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-003</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-003" class="spec-link">Overview – URS-003</a>
-                            </td>
-                            <td>System 2, layered-theory reasoning partner</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-004</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-004" class="spec-link">Overview – URS-004</a>
-                            </td>
-                            <td>Natural-language-only interaction</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-005</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-005" class="spec-link">Goals and Outcomes – URS-005</a>
-                            </td>
-                            <td>Reproducible answers with reasoning trace</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-006</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-006" class="spec-link">Goals and Outcomes – URS-006</a>
-                            </td>
-                            <td>Teaching-by-mentoring without manual coding</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-007</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-007" class="spec-link">Goals and Outcomes – URS-007</a>
-                            </td>
-                            <td>Meta-rational handling of multiple theory stacks</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-008</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-008" class="spec-link">Goals and Outcomes – URS-008</a>
-                            </td>
-                            <td>What-if exploration via temporary theories</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-009</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-009" class="spec-link">Goals and Outcomes – URS-009</a>
-                            </td>
-                            <td>Scalable to millions of concepts on CPUs</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-010</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-010" class="spec-link">Primary User Types – URS-010</a>
-                            </td>
-                            <td>Support domain experts as primary authors</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-011</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-011" class="spec-link">Primary User Types – URS-011</a>
-                            </td>
-                            <td>Support operators/analysts as consumers</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-012</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-012" class="spec-link">Primary User Types – URS-012</a>
-                            </td>
-                            <td>Support integrators embedding deterministic APIs</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-013</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-013" class="spec-link">Core Capabilities – URS-013</a>
-                            </td>
-                            <td>Natural-language ingestion of facts, rules, exceptions</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-014</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-014" class="spec-link">Core Capabilities – URS-014</a>
-                            </td>
-                            <td>Query answering with explicit context and justification</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-015</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-015" class="spec-link">Core Capabilities – URS-015</a>
-                            </td>
-                            <td>Narrative consultation with confidence bands</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-016</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-016" class="spec-link">Core Capabilities – URS-016</a>
-                            </td>
-                            <td>Layered, possibly contradictory theories with meta-rational mode</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-017</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-017" class="spec-link">Core Capabilities – URS-017</a>
-                            </td>
-                            <td>Exposed geometric reasoning modes</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-018</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-018" class="spec-link">Core Capabilities – URS-018</a>
-                            </td>
-                            <td>Temporary/parallel theory contexts for simulation</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-019</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-019" class="spec-link">Core Capabilities – URS-019</a>
-                            </td>
-                            <td>English as primary interaction language</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-020</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-020" class="spec-link">Constraints and Assumptions – URS-020</a>
-                            </td>
-                            <td>Determinism over stochasticity</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-021</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-021" class="spec-link">Constraints and Assumptions – URS-021</a>
-                            </td>
-                            <td>Explanations must cite layers and dimensions</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-022</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-022" class="spec-link">Constraints and Assumptions – URS-022</a>
-                            </td>
-                            <td>CPU-only Node.js deployment (no GPU/native/wasm)</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-023</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-023" class="spec-link">Constraints and Assumptions – URS-023</a>
-                            </td>
-                            <td>Geometric knowledge representation (vectors, bounded shapes)</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-024</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-024" class="spec-link">Constraints and Assumptions – URS-024</a>
-                            </td>
-                            <td>Persist theory data separately from runtime memory</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-025</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-025" class="spec-link">Success Criteria – URS-025</a>
-                            </td>
-                            <td>Every answer includes a provenance trail</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-026</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-026" class="spec-link">Success Criteria – URS-026</a>
-                            </td>
-                            <td>Rules editable in natural language with immediate effect</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-027</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-027" class="spec-link">Success Criteria – URS-027</a>
-                            </td>
-                            <td>Refuse answers when contradictions block conclusions</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">URS-028</span><br>
-                                <a href="../specsLoader.html?spec=URS.md#URS-028" class="spec-link">Success Criteria – URS-028</a>
-                            </td>
-                            <td>Interactive performance at scale</td>
-                        </tr>
+                    <tbody id="urs-table-body">
+                        <!-- Populated by JavaScript -->
                     </tbody>
                 </table>
 
-                <h3>Functional Specification (FS)</h3>
+                <h3>Functional Specification (FS) - Consolidated</h3>
                 <table class="matrix-table">
                     <thead>
                         <tr>
@@ -352,123 +299,12 @@
                             <th>Summary</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-01</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS.md</a>
-                            </td>
-                            <td>Concept representation in high-dimensional vector space (bounded diamonds, masks, dimensional partitions).</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-02</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-02 in FS.md</a>
-                            </td>
-                            <td>Theory layering and meta-rational stack management.</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-03</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-03 in FS.md</a>
-                            </td>
-                            <td>Ingestion pipeline from natural language to encoded concepts.</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-04</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-04 in FS.md</a>
-                            </td>
-                            <td>Learning and concept updates via clustering and superposition.</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-05</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-05 in FS.md</a>
-                            </td>
-                            <td>Reasoning engine (truth bands, adversarial validation, conflicts).</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-06</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-06 in FS.md</a>
-                            </td>
-                            <td>Retrieval and decoding of concepts and theories.</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-07</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-07 in FS.md</a>
-                            </td>
-                            <td>Provenance and explainability for all answers.</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-08</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-08 in FS.md</a>
-                            </td>
-                            <td>Parallel and what-if reasoning with temporary theories.</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-09</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-09 in FS.md</a>
-                            </td>
-                            <td>Session-based interaction via AgentSystem2/System2Session Sys2DSL APIs.</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-10</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-10 in FS.md</a>
-                            </td>
-                            <td>Language handling and translator bridge responsibilities.</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-11</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-11 in FS.md</a>
-                            </td>
-                            <td>Persistence, versioning and audit logging of theories and facts.</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-12</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-12 in FS.md</a>
-                            </td>
-                            <td>Safety and bias controls via masks and partitions.</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-13</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-13 in FS.md</a>
-                            </td>
-                            <td>Administrative operations and inspection commands.</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-14</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-14 in FS.md</a>
-                            </td>
-                            <td>Validation and abstract interpretation runs.</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-15</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-15 in FS.md</a>
-                            </td>
-                            <td>Sys2DSL theory programmes as first-class text artefacts.</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">FS-16</span><br>
-                                <a href="../specsLoader.html?spec=FS.md" class="spec-link">FS-16 in FS.md</a>
-                            </td>
-                            <td>Session-based interaction via AgentSystem2/System2Session.</td>
-                        </tr>
+                    <tbody id="fs-table-body">
+                        <!-- Populated by JavaScript -->
                     </tbody>
                 </table>
 
-                <h3>Non-Functional Specification (NFS)</h3>
+                <h3>Non-Functional Specification (NFS) - Consolidated</h3>
                 <table class="matrix-table">
                     <thead>
                         <tr>
@@ -476,690 +312,57 @@
                             <th>Title</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-001</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-001" class="spec-link">Performance and Capacity – NFS-001</a>
-                            </td>
-                            <td>CPU-only Node.js operation (no GPU/native/wasm)</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-002</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-002" class="spec-link">Performance and Capacity – NFS-002</a>
-                            </td>
-                            <td><500 ms interactive latency at scale</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-003</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-003" class="spec-link">Performance and Capacity – NFS-003</a>
-                            </td>
-                            <td>Byte-level arithmetic with JIT/SIMD-friendly loops</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-004</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-004" class="spec-link">Performance and Capacity – NFS-004</a>
-                            </td>
-                            <td>Handle millions of concepts/facts with acceptable retrieval</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-005</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-005" class="spec-link">Performance and Capacity – NFS-005</a>
-                            </td>
-                            <td>Efficient geometric reasoning across configured dimensions</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-006</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-006" class="spec-link">Reliability and Determinism – NFS-006</a>
-                            </td>
-                            <td>Deterministic execution for identical inputs/state</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-007</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-007" class="spec-link">Reliability and Determinism – NFS-007</a>
-                            </td>
-                            <td>Deterministic handling of conflicting theories</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-008</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-008" class="spec-link">Reliability and Determinism – NFS-008</a>
-                            </td>
-                            <td>Fail-closed behaviour on contradictions</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-009</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-009" class="spec-link">Reliability and Determinism – NFS-009</a>
-                            </td>
-                            <td>Versioned snapshots and recovery</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-010</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-010" class="spec-link">Reliability and Determinism – NFS-010</a>
-                            </td>
-                            <td>Reproducible symbolic/abstract validation runs</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-011</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-011" class="spec-link">Explainability and Auditability – NFS-011</a>
-                            </td>
-                            <td>Provenance on every output</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-012</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-012" class="spec-link">Explainability and Auditability – NFS-012</a>
-                            </td>
-                            <td>Append-only audit logs for all critical events</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-013</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-013" class="spec-link">Explainability and Auditability – NFS-013</a>
-                            </td>
-                            <td>Traceable bias/audit modes</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-014</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-014" class="spec-link">Security and Data Governance – NFS-014</a>
-                            </td>
-                            <td>Separated theory storage with integrity checks</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-015</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-015" class="spec-link">Security and Data Governance – NFS-015</a>
-                            </td>
-                            <td>Tamper-resistant audit logs and theory definitions</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-016</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-016" class="spec-link">Maintainability and Extensibility – NFS-016</a>
-                            </td>
-                            <td>Modular Node.js architecture for extensibility</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-017</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-017" class="spec-link">Maintainability and Extensibility – NFS-017</a>
-                            </td>
-                            <td>Deterministic generation of relations and permutations</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-018</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-018" class="spec-link">Maintainability and Extensibility – NFS-018</a>
-                            </td>
-                            <td>Externalized and documented configuration</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-019</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-019" class="spec-link">Minimum Lovable Product – NFS-019</a>
-                            </td>
-                            <td>All core capabilities present at MLP</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-020</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-020" class="spec-link">Minimum Lovable Product – NFS-020</a>
-                            </td>
-                            <td>MLP prioritizes correctness and explainability over micro-optimizations</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-021</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-021" class="spec-link">Minimum Lovable Product – NFS-021</a>
-                            </td>
-                            <td>No partial/stubbed implementations at MLP</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-022</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-022" class="spec-link">Minimum Lovable Product – NFS-022</a>
-                            </td>
-                            <td>End-to-end test coverage for major capabilities</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-023</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-023" class="spec-link">Compatibility and Localization – NFS-023</a>
-                            </td>
-                            <td>English core semantics with explicit translation boundary</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-024</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-024" class="spec-link">Compatibility and Localization – NFS-024</a>
-                            </td>
-                            <td>Stable, schema-validated APIs</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-025</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-025" class="spec-link">Constraints and Limits – NFS-025</a>
-                            </td>
-                            <td>Restricted dimension sets with adaptive layouts</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-026</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-026" class="spec-link">Constraints and Limits – NFS-026</a>
-                            </td>
-                            <td>Value ranges in [-127, 127] with clamping</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-027</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-027" class="spec-link">Constraints and Limits – NFS-027</a>
-                            </td>
-                            <td>Bounded recursion horizon for parsing</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="spec-id">NFS-028</span><br>
-                                <a href="../specsLoader.html?spec=NFS.md#NFS-028" class="spec-link">Constraints and Limits – NFS-028</a>
-                            </td>
-                            <td>Bounded reasoning and temporal operations</td>
-                        </tr>
+                    <tbody id="nfs-table-body">
+                        <!-- Populated by JavaScript -->
                     </tbody>
                 </table>
             </div>
 
             <!-- Design Specifications Coverage -->
             <div class="matrix-section">
-                <h2>Design Specifications → Requirements (DS → URS / FS / NFS)</h2>
+                <h2>Design Specifications &rarr; Requirements (DS &rarr; URS / FS / NFS)</h2>
                 <table class="matrix-table">
                     <thead>
                         <tr>
                             <th>Component (linked spec, DS ID)</th>
                             <th>Requirements Covered (URS / FS / NFS)</th>
                             <th>Coverage</th>
+                            <th>Test Status</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- Core geometry and math -->
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=core/vector_space.js.md" class="spec-link">VectorSpace: high-dimensional buffers and arithmetic.</a><br>
-                                <span class="spec-id">DS[/core/vector_space.js]</span>
-                            </td>
-                            <td>FS-01, FS-06; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=core/bounded_diamond.js.md" class="spec-link">BoundedDiamond: hyper-rectangles + L1 ball + masks.</a><br>
-                                <span class="spec-id">DS[/core/bounded_diamond.js]</span>
-                            </td>
-                            <td>FS-01, FS-04, FS-05; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=core/math_engine.js.md" class="spec-link">MathEngine: stateless vector ops and distances.</a><br>
-                                <span class="spec-id">DS[/core/math_engine.js]</span>
-                            </td>
-                            <td>FS-01, FS-05, FS-06; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=core/relation_permuter.js.md" class="spec-link">RelationPermuter: deterministic permutations and inverses.</a><br>
-                                <span class="spec-id">DS[/core/relation_permuter.js]</span>
-                            </td>
-                            <td>FS-01, FS-03, FS-05, FS-06; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-
-                        <!-- Knowledge and theories -->
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=knowledge/concept_store.js.md" class="spec-link">ConceptStore: persistence of concepts and clusters.</a><br>
-                                <span class="spec-id">DS[/knowledge/concept_store.js]</span>
-                            </td>
-                            <td>FS-01, FS-03, FS-04, FS-06, FS-11; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=knowledge/theory_layer.js.md" class="spec-link">TheoryLayer: overlays for bounds/radii/masks.</a><br>
-                                <span class="spec-id">DS[/knowledge/theory_layer.js]</span>
-                            </td>
-                            <td>FS-02, FS-05, FS-08, FS-12, FS-14; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=knowledge/theory_stack.js.md" class="spec-link">TheoryStack: layered theories and meta-rational selection.</a><br>
-                                <span class="spec-id">DS[/knowledge/theory_stack.js]</span>
-                            </td>
-                            <td>FS-02, FS-05, FS-08, FS-14; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=knowledge/base_theories.md" class="spec-link">Base theory catalogue and defaults.</a><br>
-                                <span class="spec-id">DS[/knowledge/base_theories]</span>
-                            </td>
-                            <td>FS-02, FS-08, FS-11, FS-15; NFS-001</td>
-                            <td class="coverage-partial">Partial</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=knowledge/default_relations.md" class="spec-link">Default relation set and characteristics.</a><br>
-                                <span class="spec-id">DS[/knowledge/default_relations]</span>
-                            </td>
-                            <td>FS-01, FS-03, FS-05, FS-06; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=knowledge/dimensions.md" class="spec-link">Ontology/axiology dimension catalogue.</a><br>
-                                <span class="spec-id">DS[/knowledge/dimensions]</span>
-                            </td>
-                            <td>FS-01, FS-12; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-
-                        <!-- Ingestion and learning -->
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=ingest/parser.js.md" class="spec-link">NLParser: parse text into S-R-O trees.</a><br>
-                                <span class="spec-id">DS[/ingest/parser.js]</span>
-                            </td>
-                            <td>FS-03, FS-10; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=ingest/encoder.js.md" class="spec-link">Encoder: assemble vectors and update concepts.</a><br>
-                                <span class="spec-id">DS[/ingest/encoder.js]</span>
-                            </td>
-                            <td>FS-01, FS-03, FS-04; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=ingest/clustering.js.md" class="spec-link">ClusterManager: split/merge diamonds for polysemy.</a><br>
-                                <span class="spec-id">DS[/ingest/clustering.js]</span>
-                            </td>
-                            <td>FS-04, FS-05; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-
-                        <!-- Reasoning and retrieval -->
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=reason/reasoner.js.md" class="spec-link">Reasoner: assemble runtime concepts and answer queries.</a><br>
-                                <span class="spec-id">DS[/reason/reasoner.js]</span>
-                            </td>
-                            <td>FS-02, FS-05, FS-08, FS-12, FS-14; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=reason/retrieval.js.md" class="spec-link">Retriever: blind decoding and nearest-neighbour search.</a><br>
-                                <span class="spec-id">DS[/reason/retrieval.js]</span>
-                            </td>
-                            <td>FS-05, FS-06; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=reason/bias_control.js.md" class="spec-link">BiasController: masks and bias/audit modes.</a><br>
-                                <span class="spec-id">DS[/reason/bias_control.js]</span>
-                            </td>
-                            <td>FS-05, FS-12; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=reason/validation.js.md" class="spec-link">ValidationEngine: symbolic/abstract interpretation.</a><br>
-                                <span class="spec-id">DS[/reason/validation.js]</span>
-                            </td>
-                            <td>FS-05, FS-12, FS-14; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=reason/temporal_memory.js.md" class="spec-link">TemporalMemory: temporal/causal reasoning.</a><br>
-                                <span class="spec-id">DS[/reason/temporal_memory.js]</span>
-                            </td>
-                            <td>FS-05; NFS-001</td>
-                            <td class="coverage-partial">Partial</td>
-                        </tr>
-
-                        <!-- Sys2DSL and theory engine -->
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=theory/dsl_engine.js.md" class="spec-link">TheoryDSLEngine: Sys2DSL interpreter and topological eval.</a><br>
-                                <span class="spec-id">DS[/theory/dsl_engine.js]</span>
-                            </td>
-                            <td>FS-08, FS-12, FS-14, FS-15, FS-16; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=theory/Sys2DSL_arch.md" class="spec-link">Sys2DSL architecture and semantics.</a><br>
-                                <span class="spec-id">DS[/theory/Sys2DSL_arch]</span>
-                            </td>
-                            <td>FS-09, FS-15, FS-16; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=theory/topological_eval.md" class="spec-link">Topological evaluation of Sys2DSL scripts.</a><br>
-                                <span class="spec-id">DS[/theory/topological_eval]</span>
-                            </td>
-                            <td>FS-14, FS-15; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-
-                        <!-- Interface and orchestration -->
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=interface/translator_bridge.js.md" class="spec-link">TranslatorBridge: external LLM/translation boundary.</a><br>
-                                <span class="spec-id">DS[/interface/translator_bridge.js]</span>
-                            </td>
-                            <td>FS-03, FS-09, FS-10; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=interface/api.js.md" class="spec-link">EngineAPI: internal façade for engine modules.</a><br>
-                                <span class="spec-id">DS[/interface/api.js]</span>
-                            </td>
-                            <td>FS-03, FS-05, FS-08, FS-09, FS-14; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=interface/agent_system2.js.md" class="spec-link">AgentSystem2: top-level entry and configuration owner.</a><br>
-                                <span class="spec-id">DS[/interface/agent_system2.js]</span>
-                            </td>
-                            <td>FS-09, FS-16; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=interface/system2_session.js.md" class="spec-link">System2Session: session façade and Sys2DSL host.</a><br>
-                                <span class="spec-id">DS[/interface/system2_session.js]</span>
-                            </td>
-                            <td>FS-08, FS-09, FS-15, FS-16; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-
-                        <!-- Support and storage -->
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=support/config.js.md" class="spec-link">Config: profiles, dimension and recursion limits.</a><br>
-                                <span class="spec-id">DS[/support/config.js]</span>
-                            </td>
-                            <td>FS-01, FS-11, FS-12; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=support/storage.js.md" class="spec-link">StorageAdapter: binary/text persistence for concepts and theories.</a><br>
-                                <span class="spec-id">DS[/support/storage.js]</span>
-                            </td>
-                            <td>FS-01, FS-06, FS-11; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=support/audit_log.js.md" class="spec-link">AuditLog: append-only audit trail.</a><br>
-                                <span class="spec-id">DS[/support/audit_log.js]</span>
-                            </td>
-                            <td>FS-07, FS-11, FS-12; NFS-001</td>
-                            <td class="coverage-full">Full</td>
-                        </tr>
-
-                        <!-- Init / data specs -->
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=init/bootstrap.md" class="spec-link">Bootstrap: data and configuration boot sequence.</a><br>
-                                <span class="spec-id">DS[/init/bootstrap]</span>
-                            </td>
-                            <td>FS-01, FS-03, FS-11; NFS-001</td>
-                            <td class="coverage-partial">Partial</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=init/config_profile.json.md" class="spec-link">Config profile JSON schema.</a><br>
-                                <span class="spec-id">DS[/init/config_profile.json]</span>
-                            </td>
-                            <td>FS-01, FS-11; NFS-001</td>
-                            <td class="coverage-partial">Partial</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=init/dimensions.json.md" class="spec-link">Dimension catalogue JSON schema.</a><br>
-                                <span class="spec-id">DS[/init/dimensions.json]</span>
-                            </td>
-                            <td>FS-01, FS-12; NFS-001</td>
-                            <td class="coverage-partial">Partial</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=init/relations.json.md" class="spec-link">Relations catalogue JSON schema.</a><br>
-                                <span class="spec-id">DS[/init/relations.json]</span>
-                            </td>
-                            <td>FS-01, FS-03, FS-05, FS-06; NFS-001</td>
-                            <td class="coverage-partial">Partial</td>
-                        </tr>
-
-                        <!-- Spec playbook and DS map -->
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=agent.md" class="spec-link">Specification playbook and conventions.</a><br>
-                                <span class="spec-id">DS[/agent]</span>
-                            </td>
-                            <td>FS-11; NFS-001</td>
-                            <td class="coverage-partial">Partial</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=DS_map.md" class="spec-link">Design Specification Map (DS_map).</a><br>
-                                <span class="spec-id">DS-MAP-001</span>
-                            </td>
-                            <td>FS-11; NFS-001</td>
-                            <td class="coverage-partial">Partial</td>
-                        </tr>
+                    <tbody id="ds-table-body">
+                        <!-- Populated by JavaScript -->
                     </tbody>
                 </table>
             </div>
 
             <!-- Test Suite Coverage -->
             <div class="matrix-section">
-                <h2>Test Suites → Requirements (Tests → URS / FS / NFS)</h2>
+                <h2>Test Suites &rarr; Requirements (Tests &rarr; URS / FS / NFS)</h2>
                 <table class="matrix-table">
                     <thead>
                         <tr>
                             <th>Scope (linked suite spec, DS ID)</th>
                             <th>Requirements Covered (URS / FS / NFS)</th>
                             <th>Profile</th>
+                            <th>Test Status</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/core_math/runSuite.md" class="spec-link">MathEngine and VectorSpace core arithmetic.</a><br>
-                                <span class="spec-id">DS[/tests/core_math/runSuite]</span>
-                            </td>
-                            <td>FS-01, FS-05; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/relation_permuter/runSuite.md" class="spec-link">RelationPermuter and default relations.</a><br>
-                                <span class="spec-id">DS[/tests/relation_permuter/runSuite]</span>
-                            </td>
-                            <td>FS-01, FS-03, FS-05, FS-06; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/relations_bootstrap/runSuite.md" class="spec-link">Relations bootstrap and audit logging.</a><br>
-                                <span class="spec-id">DS[/tests/relations_bootstrap/runSuite]</span>
-                            </td>
-                            <td>FS-01, FS-03, FS-11; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/config_profiles/runSuite.md" class="spec-link">Configuration profiles for auto/manual/prod.</a><br>
-                                <span class="spec-id">DS[/tests/config_profiles/runSuite]</span>
-                            </td>
-                            <td>FS-01, FS-11, FS-12; NFS-001</td>
-                            <td>auto_test + manual_test + prod</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/dimensions_catalog/runSuite.md" class="spec-link">Dimension catalogue and partitions.</a><br>
-                                <span class="spec-id">DS[/tests/dimensions_catalog/runSuite]</span>
-                            </td>
-                            <td>FS-01, FS-12; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/agentic_session_api/runSuite.md" class="spec-link">AgentSystem2/System2Session Sys2DSL interaction.</a><br>
-                                <span class="spec-id">DS[/tests/agentic_session_api/runSuite]</span>
-                            </td>
-                            <td>FS-08, FS-09, FS-15, FS-16; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/sys2dsl_core/runSuite.md" class="spec-link">Core Sys2DSL engine and topological evaluation.</a><br>
-                                <span class="spec-id">DS[/tests/sys2dsl_core/runSuite]</span>
-                            </td>
-                            <td>FS-08, FS-12, FS-14, FS-15; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/reason_smoke/runSuite.md" class="spec-link">End-to-end ingest and basic reasoning.</a><br>
-                                <span class="spec-id">DS[/tests/reason_smoke/runSuite]</span>
-                            </td>
-                            <td>FS-03, FS-05, FS-07, FS-09; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/abductive_causal/runSuite.md" class="spec-link">Abductive reasoning for CAUSES/CAUSED_BY.</a><br>
-                                <span class="spec-id">DS[/tests/abductive_causal/runSuite]</span>
-                            </td>
-                            <td>FS-05, FS-06; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/analogical_reasoning/runSuite.md" class="spec-link">Analogical vector delta reasoning.</a><br>
-                                <span class="spec-id">DS[/tests/analogical_reasoning/runSuite]</span>
-                            </td>
-                            <td>FS-05, FS-06; NFS-001</td>
-                            <td>manual_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/counterfactual_layering/runSuite.md" class="spec-link">Counterfactuals, theory layering and validation.</a><br>
-                                <span class="spec-id">DS[/tests/counterfactual_layering/runSuite]</span>
-                            </td>
-                            <td>FS-02, FS-05, FS-08, FS-14; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/deontic_reasoning/runSuite.md" class="spec-link">Deontic/normative reasoning volumes.</a><br>
-                                <span class="spec-id">DS[/tests/deontic_reasoning/runSuite]</span>
-                            </td>
-                            <td>FS-05, FS-12; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/bias_audit/runSuite.md" class="spec-link">Bias masks and veil-of-ignorance checks.</a><br>
-                                <span class="spec-id">DS[/tests/bias_audit/runSuite]</span>
-                            </td>
-                            <td>FS-05, FS-12; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/health_compliance/runSuite.md" class="spec-link">Health procedure compliance via Sys2DSL programmes.</a><br>
-                                <span class="spec-id">DS[/tests/health_compliance/runSuite]</span>
-                            </td>
-                            <td>FS-05, FS-08, FS-15; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/narrative_consistency/runSuite.md" class="spec-link">Narrative consistency and temporal reasoning.</a><br>
-                                <span class="spec-id">DS[/tests/narrative_consistency/runSuite]</span>
-                            </td>
-                            <td>FS-05, FS-08; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/persistence_file_binary/runSuite.md" class="spec-link">File-binary persistence of concepts and theories.</a><br>
-                                <span class="spec-id">DS[/tests/persistence_file_binary/runSuite]</span>
-                            </td>
-                            <td>FS-01, FS-06, FS-11; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/translator_bridge_normalization/runSuite.md" class="spec-link">TranslatorBridge + Parser normalization.</a><br>
-                                <span class="spec-id">DS[/tests/translator_bridge_normalization/runSuite]</span>
-                            </td>
-                            <td>FS-03, FS-09, FS-10; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/validation_engine/runSuite.md" class="spec-link">ValidationEngine consistency checks and counterexamples.</a><br>
-                                <span class="spec-id">DS[/tests/validation_engine/runSuite]</span>
-                            </td>
-                            <td>FS-05, FS-14; NFS-001</td>
-                            <td>auto_test</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="../specsLoader.html?spec=tests/runTests.js.md" class="spec-link">Test harness orchestration.</a><br>
-                                <span class="spec-id">DS[/tests/runTests.js]</span>
-                            </td>
-                            <td>FS-11, FS-14; NFS-001</td>
-                            <td>all profiles</td>
-                        </tr>
+                    <tbody id="tests-table-body">
+                        <!-- Populated by JavaScript -->
                     </tbody>
                 </table>
             </div>
 
-
             <div class="matrix-section">
                 <h2>Traceability Summary</h2>
-                <p><strong>Requirement Specifications:</strong> URS-001, FS-01…FS-16, NFS-001.</p>
+                <p><strong>Requirement Specifications:</strong> URS-001 to URS-021, FS-01 to FS-14, NFS-001 to NFS-023 (consolidated).</p>
                 <p><strong>Design Specifications:</strong> All engine, data, theory and test DS documents in <code>docs/specs/**</code> are enumerated above with their URS/FS/NFS coverage.</p>
                 <p><strong>Test Coverage:</strong> Every major capability (geometry, ingestion, retrieval, theory layering, Sys2DSL, validation, bias/temporal reasoning, persistence) has at least one dedicated suite.</p>
                 <p><strong>MLP Status:</strong> Core MLP behaviour is implemented and exercised end-to-end; gaps are called out as partial coverage in the tables.</p>
             </div>
 
-            <!-- GAMP Categories Mapping (kept last) -->
+            <!-- GAMP Categories Mapping -->
             <div class="matrix-section">
                 <h2>GAMP Category Mapping</h2>
                 <table class="matrix-table">
@@ -1175,25 +378,25 @@
                         <tr class="gamp-category">
                             <td>Infrastructure Software</td>
                             <td>Core math and storage primitives</td>
-                            <td>FS-01 (concept representation), FS-11 (persistence & versioning); NFS-001–NFS-005 (performance/capacity), NFS-025–NFS-028 (constraints/limits).</td>
+                            <td>FS-01 (concept representation), FS-10 (persistence); NFS-001-002 (performance), NFS-020-023 (constraints).</td>
                             <td>Unit tests, performance checks, determinism validation (core_math, config_profiles, persistence_file_binary).</td>
                         </tr>
                         <tr class="gamp-category">
                             <td>Configurable Software</td>
                             <td>Knowledge, theories and reasoning behaviour</td>
-                            <td>URS-013–URS-018 (user-facing reasoning capabilities); FS-02, FS-04, FS-05, FS-08, FS-12, FS-14–FS-16; NFS-006–NFS-013 (determinism, explainability, auditability).</td>
-                            <td>Integration tests and domain suites (reason_smoke, counterfactual_layering, health_compliance, narrative_consistency, validation_engine).</td>
+                            <td>URS-011-015 (user-facing reasoning); FS-02, FS-04, FS-05, FS-12-14; NFS-003-008 (determinism, explainability).</td>
+                            <td>Integration tests and domain suites (reason_smoke, counterfactual_layering, health_compliance, validation_engine).</td>
                         </tr>
                         <tr class="gamp-category">
                             <td>Custom Application</td>
                             <td>Interfaces, ingestion and session APIs</td>
-                            <td>URS-010–URS-012, URS-019 (user types & NL interaction); FS-03, FS-09–FS-11, FS-16; NFS-023–NFS-024 (compatibility & API stability).</td>
-                            <td>API-level and end-to-end tests (agentic_session_api, translator_bridge_normalization, reason_smoke, sys2dsl_core).</td>
+                            <td>URS-008-010 (user types); FS-03, FS-08-09; NFS-018-019 (compatibility).</td>
+                            <td>API-level and end-to-end tests (agentic_session_api, translator_bridge_normalization, sys2dsl_core).</td>
                         </tr>
                         <tr class="gamp-category">
                             <td>Support Components</td>
                             <td>Audit, bias control and governance</td>
-                            <td>FS-07, FS-12–FS-13; NFS-011–NFS-018 (explainability, auditability, security, maintainability); URS-020–URS-027 (determinism & success criteria).</td>
+                            <td>FS-07, FS-12; NFS-007-010 (explainability, security); URS-017-021 (constraints).</td>
                             <td>Bias and audit suites (bias_audit, relations_bootstrap, dimensions_catalog, validation_engine).</td>
                         </tr>
                     </tbody>
@@ -1201,5 +404,423 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // =============================================================================
+        // Test Results Loader
+        // =============================================================================
+
+        const TEST_RESULTS_PATH = '../../tests/results/test_results.json';
+
+        // Global test results cache
+        let testResults = null;
+
+        // =============================================================================
+        // Data Definitions - CONSOLIDATED IDs
+        // =============================================================================
+
+        const URS_DATA = [
+            { id: 'URS-001', section: 'Overview', title: 'Deterministic, explainable neuro-symbolic assistant' },
+            { id: 'URS-002', section: 'Overview', title: 'Conceptual space with bounded diamonds (>=512 dims)' },
+            { id: 'URS-003', section: 'Overview', title: 'System 2 reasoning with meta-rationality and layered theories' },
+            { id: 'URS-004', section: 'Goals', title: 'Reproducible answers with provenance trail' },
+            { id: 'URS-005', section: 'Goals', title: 'Teaching-by-mentoring via Sys2DSL with immediate effect' },
+            { id: 'URS-006', section: 'Goals', title: 'What-if exploration with temporary theories' },
+            { id: 'URS-007', section: 'Goals', title: 'CPU-only operation with millions of concepts at interactive latency' },
+            { id: 'URS-008', section: 'Users', title: 'Domain experts externalize knowledge without coding' },
+            { id: 'URS-009', section: 'Users', title: 'Operators/analysts query for determinations and audits' },
+            { id: 'URS-010', section: 'Users', title: 'Integrators embed with deterministic API behavior' },
+            { id: 'URS-011', section: 'Capabilities', title: 'Sys2DSL-based ingestion (NL translated externally)' },
+            { id: 'URS-012', section: 'Capabilities', title: 'Query answering with context selection and justification' },
+            { id: 'URS-013', section: 'Capabilities', title: 'Narrative consultation with confidence bands' },
+            { id: 'URS-014', section: 'Capabilities', title: 'Layered theories with conflict signaling' },
+            { id: 'URS-015', section: 'Capabilities', title: 'Geometric reasoning modes (deductive, abductive, etc.)' },
+            { id: 'URS-016', section: 'Capabilities', title: 'English primary; other languages via external bridge' },
+            { id: 'URS-017', section: 'Constraints', title: 'Determinism: identical inputs yield identical outputs' },
+            { id: 'URS-018', section: 'Constraints', title: 'Explanations cite theory layers and dimensions' },
+            { id: 'URS-019', section: 'Constraints', title: 'Knowledge stored as geometric constructs' },
+            { id: 'URS-020', section: 'Constraints', title: 'Theory data persisted separately from runtime' },
+            { id: 'URS-021', section: 'Success', title: 'Refuse answers when contradictions block conclusions' }
+        ];
+
+        const FS_DATA = [
+            { id: 'FS-01', summary: 'Concept representation: bounded diamonds, masks, dimension partitions.' },
+            { id: 'FS-02', summary: 'Theory layering, what-if reasoning, and meta-rational stack management.' },
+            { id: 'FS-03', summary: 'Ingestion pipeline: Sys2DSL to encoded concepts.' },
+            { id: 'FS-04', summary: 'Learning via clustering and superposition.' },
+            { id: 'FS-05', summary: 'Reasoning engine: truth bands, adversarial validation.' },
+            { id: 'FS-06', summary: 'Retrieval and decoding with LSH.' },
+            { id: 'FS-07', summary: 'Provenance and explainability for all answers.' },
+            { id: 'FS-08', summary: 'Session-based interaction via AgentSystem2/System2Session.' },
+            { id: 'FS-09', summary: 'Language handling: NL translated to Sys2DSL externally.' },
+            { id: 'FS-10', summary: 'Persistence, versioning, and audit logging.' },
+            { id: 'FS-11', summary: 'Administrative operations and inspection.' },
+            { id: 'FS-12', summary: 'Safety and bias controls via masks.' },
+            { id: 'FS-13', summary: 'Validation and abstract interpretation.' },
+            { id: 'FS-14', summary: 'Sys2DSL theory programs as first-class artefacts.' }
+        ];
+
+        const NFS_DATA = [
+            { id: 'NFS-001', section: 'Performance', title: 'CPU-only, <500ms latency, JIT/SIMD-friendly, performant geometry' },
+            { id: 'NFS-002', section: 'Performance', title: 'Millions of concepts with O(1) retrieval' },
+            { id: 'NFS-003', section: 'Reliability', title: 'Deterministic execution with logged meta-rational selection' },
+            { id: 'NFS-004', section: 'Reliability', title: 'Fail closed on contradictions' },
+            { id: 'NFS-005', section: 'Reliability', title: 'Versioned snapshots and recovery' },
+            { id: 'NFS-006', section: 'Reliability', title: 'Side-effect free validation runs' },
+            { id: 'NFS-007', section: 'Auditability', title: 'Provenance on every output with append-only audit logs' },
+            { id: 'NFS-008', section: 'Auditability', title: 'Toggleable bias/audit modes' },
+            { id: 'NFS-009', section: 'Security', title: 'Isolated theory storage with integrity checks' },
+            { id: 'NFS-010', section: 'Security', title: 'Tamper-resistant logs and access controls' },
+            { id: 'NFS-011', section: 'Maintainability', title: 'Modular Node.js classes' },
+            { id: 'NFS-012', section: 'Maintainability', title: 'Deterministic relation/permutation generation' },
+            { id: 'NFS-013', section: 'Maintainability', title: 'Externalized configuration' },
+            { id: 'NFS-014', section: 'MLP', title: 'All core capabilities present and usable' },
+            { id: 'NFS-015', section: 'MLP', title: 'Correctness over micro-optimizations' },
+            { id: 'NFS-016', section: 'MLP', title: 'No partial/stubbed implementations' },
+            { id: 'NFS-017', section: 'MLP', title: 'End-to-end test coverage' },
+            { id: 'NFS-018', section: 'Compatibility', title: 'English core; translation bridge boundary' },
+            { id: 'NFS-019', section: 'Compatibility', title: 'Stable, schema-validated APIs' },
+            { id: 'NFS-020', section: 'Limits', title: 'Dimensions: {512, 1024, 2048, 4096}' },
+            { id: 'NFS-021', section: 'Limits', title: 'Values: [-127, 127] with clamping' },
+            { id: 'NFS-022', section: 'Limits', title: 'Configurable recursion horizon' },
+            { id: 'NFS-023', section: 'Limits', title: 'Bounded reasoning iterations' }
+        ];
+
+        const DS_DATA = [
+            // Core geometry and math
+            { spec: 'core/vector_space.js.md', name: 'VectorSpace: high-dimensional buffers and arithmetic.', dsId: 'DS[/core/vector_space.js]', reqs: 'FS-01, FS-06; NFS-001', coverage: 'full', testSuite: 'core_math' },
+            { spec: 'core/bounded_diamond.js.md', name: 'BoundedDiamond: hyper-rectangles + L1 ball + masks.', dsId: 'DS[/core/bounded_diamond.js]', reqs: 'FS-01, FS-04, FS-05; NFS-001', coverage: 'full', testSuite: 'core_math' },
+            { spec: 'core/math_engine.js.md', name: 'MathEngine: stateless vector ops and distances.', dsId: 'DS[/core/math_engine.js]', reqs: 'FS-01, FS-05, FS-06; NFS-001', coverage: 'full', testSuite: 'core_math' },
+            { spec: 'core/relation_permuter.js.md', name: 'RelationPermuter: deterministic permutations and inverses.', dsId: 'DS[/core/relation_permuter.js]', reqs: 'FS-01, FS-03, FS-05, FS-06; NFS-012', coverage: 'full', testSuite: 'relation_permuter' },
+
+            // Knowledge and theories
+            { spec: 'knowledge/concept_store.js.md', name: 'ConceptStore: persistence of concepts and clusters.', dsId: 'DS[/knowledge/concept_store.js]', reqs: 'FS-01, FS-03, FS-04, FS-06, FS-10; NFS-002', coverage: 'full', testSuite: 'concept_store' },
+            { spec: 'knowledge/theory_layer.js.md', name: 'TheoryLayer: overlays for bounds/radii/masks.', dsId: 'DS[/knowledge/theory_layer.js]', reqs: 'FS-02, FS-05, FS-12, FS-13; NFS-003', coverage: 'full', testSuite: 'counterfactual_layering' },
+            { spec: 'knowledge/theory_stack.js.md', name: 'TheoryStack: layered theories and meta-rational selection.', dsId: 'DS[/knowledge/theory_stack.js]', reqs: 'FS-02, FS-05, FS-13; NFS-003', coverage: 'full', testSuite: 'counterfactual_layering' },
+            { spec: 'knowledge/base_theories.md', name: 'Base theory catalogue and defaults.', dsId: 'DS[/knowledge/base_theories]', reqs: 'FS-02, FS-10, FS-14; NFS-005', coverage: 'partial', testSuite: null },
+            { spec: 'knowledge/default_relations.md', name: 'Default relation set and characteristics.', dsId: 'DS[/knowledge/default_relations]', reqs: 'FS-01, FS-03, FS-05, FS-06; NFS-012', coverage: 'full', testSuite: 'relation_permuter' },
+            { spec: 'knowledge/dimensions.md', name: 'Ontology/axiology dimension catalogue.', dsId: 'DS[/knowledge/dimensions]', reqs: 'FS-01, FS-12; NFS-020', coverage: 'full', testSuite: 'dimensions_catalog' },
+            { spec: 'knowledge/usage_tracking.md', name: 'Usage tracking and prioritization counters.', dsId: 'DS[/knowledge/usage_tracking]', reqs: 'FS-04, FS-10; NFS-002', coverage: 'full', testSuite: 'usage_tracking', isNew: true },
+            { spec: 'knowledge/forgetting.md', name: 'Forgetting mechanisms and threshold-based removal.', dsId: 'DS[/knowledge/forgetting]', reqs: 'FS-04, FS-10; NFS-002', coverage: 'full', testSuite: 'forgetting', isNew: true },
+
+            // Ingestion and learning
+            { spec: 'ingest/parser.js.md', name: 'NLParser: parse Sys2DSL into S-R-O trees.', dsId: 'DS[/ingest/parser.js]', reqs: 'FS-03, FS-09; NFS-022', coverage: 'full', testSuite: 'translator_bridge_normalization' },
+            { spec: 'ingest/encoder.js.md', name: 'Encoder: assemble vectors and update concepts.', dsId: 'DS[/ingest/encoder.js]', reqs: 'FS-01, FS-03, FS-04; NFS-001', coverage: 'full', testSuite: 'reason_smoke' },
+            { spec: 'ingest/clustering.js.md', name: 'ClusterManager: split/merge diamonds for polysemy.', dsId: 'DS[/ingest/clustering.js]', reqs: 'FS-04, FS-05; NFS-002', coverage: 'full', testSuite: 'reason_smoke' },
+
+            // Reasoning and retrieval
+            { spec: 'reason/reasoner.js.md', name: 'Reasoner: assemble runtime concepts and answer queries.', dsId: 'DS[/reason/reasoner.js]', reqs: 'FS-02, FS-05, FS-12, FS-13; NFS-003', coverage: 'full', testSuite: 'reason_smoke' },
+            { spec: 'reason/retrieval.js.md', name: 'Retriever: blind decoding and nearest-neighbour search.', dsId: 'DS[/reason/retrieval.js]', reqs: 'FS-05, FS-06; NFS-002', coverage: 'full', testSuite: 'reason_smoke' },
+            { spec: 'reason/bias_control.js.md', name: 'BiasController: masks and bias/audit modes.', dsId: 'DS[/reason/bias_control.js]', reqs: 'FS-05, FS-12; NFS-008', coverage: 'full', testSuite: 'bias_control' },
+            { spec: 'reason/validation.js.md', name: 'ValidationEngine: symbolic/abstract interpretation.', dsId: 'DS[/reason/validation.js]', reqs: 'FS-05, FS-12, FS-13; NFS-006', coverage: 'full', testSuite: 'counterfactual_layering' },
+            { spec: 'reason/temporal_memory.js.md', name: 'TemporalMemory: temporal/causal reasoning.', dsId: 'DS[/reason/temporal_memory.js]', reqs: 'FS-05; NFS-023', coverage: 'partial', testSuite: 'narrative_consistency' },
+
+            // Sys2DSL and theory engine
+            { spec: 'theory/dsl_engine.js.md', name: 'TheoryDSLEngine: Sys2DSL interpreter and topological eval.', dsId: 'DS[/theory/dsl_engine.js]', reqs: 'FS-08, FS-12, FS-13, FS-14; NFS-003', coverage: 'full', testSuite: 'sys2dsl_core' },
+            { spec: 'theory/Sys2DSL_syntax.md', name: 'Sys2DSL complete language specification.', dsId: 'DS[/theory/Sys2DSL_syntax]', reqs: 'FS-08, FS-14; NFS-003', coverage: 'full', testSuite: 'sys2dsl_syntax', isNew: true },
+            { spec: 'theory/Sys2DSL_commands.md', name: 'Sys2DSL full command reference (40+ commands).', dsId: 'DS[/theory/Sys2DSL_commands]', reqs: 'FS-08, FS-14; NFS-003', coverage: 'full', testSuite: 'sys2dsl_commands', isNew: true },
+            { spec: 'theory/Sys2DSL_arch.md', name: 'Sys2DSL architecture and semantics.', dsId: 'DS[/theory/Sys2DSL_arch]', reqs: 'FS-08, FS-14; NFS-003', coverage: 'full', testSuite: 'sys2dsl_core' },
+            { spec: 'theory/topological_eval.md', name: 'Topological evaluation of Sys2DSL scripts.', dsId: 'DS[/theory/topological_eval]', reqs: 'FS-13, FS-14; NFS-003', coverage: 'full', testSuite: 'sys2dsl_core' },
+
+            // Interface and orchestration
+            { spec: 'interface/translator_bridge.js.md', name: 'TranslatorBridge: external LLM/translation boundary.', dsId: 'DS[/interface/translator_bridge.js]', reqs: 'FS-03, FS-08, FS-09; NFS-018', coverage: 'full', testSuite: 'translator_bridge_normalization' },
+            { spec: 'interface/api.js.md', name: 'EngineAPI: internal facade for engine modules.', dsId: 'DS[/interface/api.js]', reqs: 'FS-03, FS-05, FS-08, FS-13; NFS-019', coverage: 'full', testSuite: 'agentic_session_api' },
+            { spec: 'interface/agent_system2.js.md', name: 'AgentSystem2: top-level entry and configuration owner.', dsId: 'DS[/interface/agent_system2.js]', reqs: 'FS-08; NFS-011', coverage: 'full', testSuite: 'agentic_session_api' },
+            { spec: 'interface/system2_session.js.md', name: 'System2Session: session facade and Sys2DSL host.', dsId: 'DS[/interface/system2_session.js]', reqs: 'FS-08, FS-14; NFS-011', coverage: 'full', testSuite: 'agentic_session_api' },
+            { spec: 'interface/usecase_define_theory.md', name: 'Use Case: Defining Theories.', dsId: 'DS[/interface/usecase_define_theory]', reqs: 'FS-02, FS-10, FS-14; NFS-005', coverage: 'full', testSuite: 'usecase_integration', isNew: true },
+            { spec: 'interface/usecase_validate.md', name: 'Use Case: Validating Consistency.', dsId: 'DS[/interface/usecase_validate]', reqs: 'FS-05, FS-13; NFS-006', coverage: 'full', testSuite: 'usecase_integration', isNew: true },
+            { spec: 'interface/usecase_hypothesize.md', name: 'Use Case: Generating Hypotheses (abduction).', dsId: 'DS[/interface/usecase_hypothesize]', reqs: 'FS-05, FS-06; NFS-003', coverage: 'full', testSuite: 'usecase_integration', isNew: true },
+            { spec: 'interface/usecase_prove.md', name: 'Use Case: Proving Theorems (deduction).', dsId: 'DS[/interface/usecase_prove]', reqs: 'FS-05, FS-13; NFS-006', coverage: 'full', testSuite: 'usecase_integration', isNew: true },
+
+            // Support and storage
+            { spec: 'support/config.js.md', name: 'Config: profiles, dimension and recursion limits.', dsId: 'DS[/support/config.js]', reqs: 'FS-01, FS-10, FS-12; NFS-013', coverage: 'full', testSuite: 'config_profiles' },
+            { spec: 'support/storage.js.md', name: 'StorageAdapter: binary/text persistence.', dsId: 'DS[/support/storage.js]', reqs: 'FS-01, FS-06, FS-10; NFS-009', coverage: 'full', testSuite: 'storage_adapter' },
+            { spec: 'support/audit_log.js.md', name: 'AuditLog: append-only audit trail.', dsId: 'DS[/support/audit_log.js]', reqs: 'FS-07, FS-10, FS-12; NFS-007', coverage: 'full', testSuite: 'storage_adapter' },
+
+            // Init / data specs
+            { spec: 'init/bootstrap.md', name: 'Bootstrap: data and configuration boot sequence.', dsId: 'DS[/init/bootstrap]', reqs: 'FS-01, FS-03, FS-10; NFS-013', coverage: 'partial', testSuite: 'config_profiles' },
+            { spec: 'init/config_profile.json.md', name: 'Config profile JSON schema.', dsId: 'DS[/init/config_profile.json]', reqs: 'FS-01, FS-10; NFS-013', coverage: 'partial', testSuite: 'config_profiles' },
+            { spec: 'init/dimensions.json.md', name: 'Dimension catalogue JSON schema.', dsId: 'DS[/init/dimensions.json]', reqs: 'FS-01, FS-12; NFS-020', coverage: 'partial', testSuite: 'dimensions_catalog' },
+            { spec: 'init/relations.json.md', name: 'Relations catalogue JSON schema.', dsId: 'DS[/init/relations.json]', reqs: 'FS-01, FS-03, FS-05, FS-06; NFS-012', coverage: 'partial', testSuite: 'relation_permuter' },
+
+            // Spec playbook and DS map
+            { spec: 'agent.md', name: 'Specification playbook and conventions.', dsId: 'DS[/agent]', reqs: 'FS-10; NFS-013', coverage: 'partial', testSuite: null },
+            { spec: 'DS_map.md', name: 'Design Specification Map (DS_map).', dsId: 'DS-MAP-001', reqs: 'FS-10; NFS-013', coverage: 'partial', testSuite: null }
+        ];
+
+        const TEST_SUITES = [
+            { spec: 'tests/core_math/runSuite.md', name: 'MathEngine and VectorSpace core arithmetic.', dsId: 'DS[/tests/core_math/runSuite]', reqs: 'FS-01, FS-05; NFS-001', profile: 'auto_test', suiteId: 'core_math' },
+            { spec: 'tests/relation_permuter/runSuite.md', name: 'RelationPermuter and default relations.', dsId: 'DS[/tests/relation_permuter/runSuite]', reqs: 'FS-01, FS-03, FS-05, FS-06; NFS-012', profile: 'auto_test', suiteId: 'relation_permuter' },
+            { spec: 'tests/config_profiles/runSuite.md', name: 'Configuration profiles for auto/manual/prod.', dsId: 'DS[/tests/config_profiles/runSuite]', reqs: 'FS-01, FS-10, FS-12; NFS-013', profile: 'auto_test + manual_test + prod', suiteId: 'config_profiles' },
+            { spec: 'tests/dimensions_catalog/runSuite.md', name: 'Dimension catalogue and partitions.', dsId: 'DS[/tests/dimensions_catalog/runSuite]', reqs: 'FS-01, FS-12; NFS-020', profile: 'auto_test', suiteId: 'dimensions_catalog' },
+            { spec: 'tests/agentic_session_api/runSuite.md', name: 'AgentSystem2/System2Session Sys2DSL interaction.', dsId: 'DS[/tests/agentic_session_api/runSuite]', reqs: 'FS-08, FS-14; NFS-011', profile: 'auto_test', suiteId: 'agentic_session_api' },
+            { spec: 'tests/sys2dsl_core/runSuite.md', name: 'Core Sys2DSL engine and topological evaluation.', dsId: 'DS[/tests/sys2dsl_core/runSuite]', reqs: 'FS-08, FS-12, FS-13, FS-14; NFS-003', profile: 'auto_test', suiteId: 'sys2dsl_core' },
+            { spec: 'tests/reason_smoke/runSuite.md', name: 'End-to-end ingest and basic reasoning.', dsId: 'DS[/tests/reason_smoke/runSuite]', reqs: 'FS-03, FS-05, FS-07, FS-08; NFS-003', profile: 'auto_test', suiteId: 'reason_smoke' },
+            { spec: 'tests/abductive_causal/runSuite.md', name: 'Abductive reasoning for CAUSES/CAUSED_BY.', dsId: 'DS[/tests/abductive_causal/runSuite]', reqs: 'FS-05, FS-06; NFS-003', profile: 'auto_test', suiteId: 'abductive_causal' },
+            { spec: 'tests/abductive_geometric/runSuite.md', name: 'Abductive geometric reasoning tests.', dsId: 'DS[/tests/abductive_geometric/runSuite]', reqs: 'FS-05, FS-06; NFS-003', profile: 'auto_test', suiteId: 'abductive_geometric' },
+            { spec: 'tests/analogical_reasoning/runSuite.md', name: 'Analogical vector delta reasoning.', dsId: 'DS[/tests/analogical_reasoning/runSuite]', reqs: 'FS-05, FS-06; NFS-003', profile: 'manual_test', suiteId: 'analogical_reasoning' },
+            { spec: 'tests/counterfactual_layering/runSuite.md', name: 'Counterfactuals, theory layering and validation.', dsId: 'DS[/tests/counterfactual_layering/runSuite]', reqs: 'FS-02, FS-05, FS-13; NFS-003', profile: 'auto_test', suiteId: 'counterfactual_layering' },
+            { spec: 'tests/bias_control/runSuite.md', name: 'Bias masks and veil-of-ignorance checks.', dsId: 'DS[/tests/bias_control/runSuite]', reqs: 'FS-05, FS-12; NFS-008', profile: 'auto_test', suiteId: 'bias_control' },
+            { spec: 'tests/bounded_diamond/runSuite.md', name: 'BoundedDiamond geometry tests.', dsId: 'DS[/tests/bounded_diamond/runSuite]', reqs: 'FS-01, FS-04; NFS-001', profile: 'auto_test', suiteId: 'bounded_diamond' },
+            { spec: 'tests/concept_store/runSuite.md', name: 'ConceptStore persistence tests.', dsId: 'DS[/tests/concept_store/runSuite]', reqs: 'FS-01, FS-06, FS-10; NFS-002', profile: 'auto_test', suiteId: 'concept_store' },
+            { spec: 'tests/health_compliance/runSuite.md', name: 'Health procedure compliance via Sys2DSL programmes.', dsId: 'DS[/tests/health_compliance/runSuite]', reqs: 'FS-05, FS-14; NFS-003', profile: 'auto_test', suiteId: 'health_compliance' },
+            { spec: 'tests/narrative_consistency/runSuite.md', name: 'Narrative consistency and temporal reasoning.', dsId: 'DS[/tests/narrative_consistency/runSuite]', reqs: 'FS-05; NFS-023', profile: 'auto_test', suiteId: 'narrative_consistency' },
+            { spec: 'tests/property_mapping/runSuite.md', name: 'Property mapping tests.', dsId: 'DS[/tests/property_mapping/runSuite]', reqs: 'FS-01, FS-03; NFS-012', profile: 'auto_test', suiteId: 'property_mapping' },
+            { spec: 'tests/reasoner_timeout/runSuite.md', name: 'Reasoner timeout and bounds tests.', dsId: 'DS[/tests/reasoner_timeout/runSuite]', reqs: 'FS-05; NFS-023', profile: 'auto_test', suiteId: 'reasoner_timeout' },
+            { spec: 'tests/storage_adapter/runSuite.md', name: 'StorageAdapter persistence tests.', dsId: 'DS[/tests/storage_adapter/runSuite]', reqs: 'FS-10; NFS-009', profile: 'auto_test', suiteId: 'storage_adapter' },
+            { spec: 'tests/temporal_memory/runSuite.md', name: 'TemporalMemory and causal reasoning tests.', dsId: 'DS[/tests/temporal_memory/runSuite]', reqs: 'FS-05; NFS-023', profile: 'auto_test', suiteId: 'temporal_memory' },
+            { spec: 'tests/translator_bridge_normalization/runSuite.md', name: 'TranslatorBridge + Parser normalization.', dsId: 'DS[/tests/translator_bridge_normalization/runSuite]', reqs: 'FS-03, FS-08, FS-09; NFS-018', profile: 'auto_test', suiteId: 'translator_bridge_normalization' },
+            { spec: 'tests/vector_space/runSuite.md', name: 'VectorSpace operations tests.', dsId: 'DS[/tests/vector_space/runSuite]', reqs: 'FS-01; NFS-001', profile: 'auto_test', suiteId: 'vector_space' },
+            { spec: 'tests/runTests.js.md', name: 'Test harness orchestration.', dsId: 'DS[/tests/runTests.js]', reqs: 'FS-10, FS-13; NFS-017', profile: 'all profiles', suiteId: 'runTests' },
+            // NEW: Sys2DSL and Memory Management tests
+            { spec: 'tests/sys2dsl_syntax/runSuite.md', name: 'Sys2DSL lexical structure and parsing.', dsId: 'DS[/tests/sys2dsl_syntax/runSuite]', reqs: 'FS-08, FS-14; NFS-003', profile: 'auto_test', suiteId: 'sys2dsl_syntax', isNew: true },
+            { spec: 'tests/sys2dsl_commands/runSuite.md', name: 'Sys2DSL command categories (40+ commands).', dsId: 'DS[/tests/sys2dsl_commands/runSuite]', reqs: 'FS-08, FS-14; NFS-003', profile: 'auto_test', suiteId: 'sys2dsl_commands', isNew: true },
+            { spec: 'tests/usage_tracking/runSuite.md', name: 'Usage counters, timestamps, and priority scoring.', dsId: 'DS[/tests/usage_tracking/runSuite]', reqs: 'FS-04, FS-10; NFS-002', profile: 'auto_test', suiteId: 'usage_tracking', isNew: true },
+            { spec: 'tests/forgetting/runSuite.md', name: 'Threshold-based forgetting and protection.', dsId: 'DS[/tests/forgetting/runSuite]', reqs: 'FS-04, FS-10; NFS-002', profile: 'auto_test', suiteId: 'forgetting', isNew: true },
+            { spec: 'tests/usecase_integration/runSuite.md', name: 'High-level use cases: theory definition, validation, abduction, proof.', dsId: 'DS[/tests/usecase_integration/runSuite]', reqs: 'FS-02, FS-05, FS-13, FS-14; NFS-003, NFS-014', profile: 'auto_test + manual_test', suiteId: 'usecase_integration', isNew: true }
+        ];
+
+        // =============================================================================
+        // Helper Functions
+        // =============================================================================
+
+        function getTestStatus(suiteId) {
+            if (!testResults || !testResults.suites) {
+                return { status: 'unknown', label: 'UNKNOWN', details: '' };
+            }
+
+            const suite = testResults.suites[suiteId];
+            if (!suite) {
+                return { status: 'unknown', label: 'UNKNOWN', details: '' };
+            }
+
+            // Handle new format with status field
+            if (suite.status === 'skipped') {
+                return { status: 'skipped', label: 'SKIPPED', details: suite.reason || '' };
+            }
+
+            if (suite.status === 'passed') {
+                return { status: 'passed', label: 'PASSED', details: suite.total ? `${suite.passed}/${suite.total}` : '' };
+            }
+
+            if (suite.status === 'failed') {
+                if (suite.passed > 0) {
+                    return { status: 'partial', label: 'PARTIAL', details: `${suite.passed}/${suite.total} passed` };
+                }
+                return { status: 'failed', label: 'FAILED', details: suite.total ? `${suite.failed}/${suite.total} failed` : '' };
+            }
+
+            if (suite.status === 'timeout') {
+                return { status: 'failed', label: 'TIMEOUT', details: 'Test timed out' };
+            }
+
+            // Fallback for old format (skipped as boolean)
+            if (suite.skipped === true) {
+                return { status: 'skipped', label: 'SKIPPED', details: suite.reason || '' };
+            }
+
+            if (suite.passed === suite.total && suite.total > 0) {
+                return { status: 'passed', label: 'PASSED', details: `${suite.passed}/${suite.total}` };
+            }
+
+            if (suite.failed > 0) {
+                if (suite.passed > 0) {
+                    return { status: 'partial', label: 'PARTIAL', details: `${suite.passed}/${suite.total} passed` };
+                }
+                return { status: 'failed', label: 'FAILED', details: `${suite.failed}/${suite.total} failed` };
+            }
+
+            return { status: 'unknown', label: 'UNKNOWN', details: '' };
+        }
+
+        function createStatusBadge(statusObj) {
+            const badge = document.createElement('span');
+            badge.className = `test-status status-${statusObj.status}`;
+            badge.textContent = statusObj.label;
+            badge.title = statusObj.details;
+            return badge;
+        }
+
+        // =============================================================================
+        // Table Rendering
+        // =============================================================================
+
+        function renderURSTable() {
+            const tbody = document.getElementById('urs-table-body');
+            tbody.innerHTML = '';
+
+            for (const urs of URS_DATA) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <span class="spec-id">${urs.id}</span><br>
+                        <a href="../specsLoader.html?spec=URS.md#${urs.id}" class="spec-link">${urs.section} - ${urs.id}</a>
+                    </td>
+                    <td>${urs.title}</td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        function renderFSTable() {
+            const tbody = document.getElementById('fs-table-body');
+            tbody.innerHTML = '';
+
+            for (const fs of FS_DATA) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <span class="spec-id">${fs.id}</span><br>
+                        <a href="../specsLoader.html?spec=FS.md#${fs.id}" class="spec-link">${fs.id} in FS.md</a>
+                    </td>
+                    <td>${fs.summary}</td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        function renderNFSTable() {
+            const tbody = document.getElementById('nfs-table-body');
+            tbody.innerHTML = '';
+
+            for (const nfs of NFS_DATA) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <span class="spec-id">${nfs.id}</span><br>
+                        <a href="../specsLoader.html?spec=NFS.md#${nfs.id}" class="spec-link">${nfs.section} - ${nfs.id}</a>
+                    </td>
+                    <td>${nfs.title}</td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        function renderDSTable() {
+            const tbody = document.getElementById('ds-table-body');
+            tbody.innerHTML = '';
+
+            for (const ds of DS_DATA) {
+                const tr = document.createElement('tr');
+                if (ds.isNew) {
+                    tr.className = 'new-doc';
+                }
+
+                const status = ds.testSuite ? getTestStatus(ds.testSuite) : { status: 'unknown', label: 'UNKNOWN', details: 'No test suite' };
+                const newBadge = ds.isNew ? '<span class="new-badge">NEW</span>' : '';
+
+                tr.innerHTML = `
+                    <td>
+                        <a href="../specsLoader.html?spec=${ds.spec}" class="spec-link">${ds.name}</a>${newBadge}<br>
+                        <span class="spec-id">${ds.dsId}</span>
+                    </td>
+                    <td>${ds.reqs}</td>
+                    <td class="coverage-${ds.coverage}">${ds.coverage === 'full' ? 'Full' : 'Partial'}</td>
+                    <td></td>
+                `;
+                tr.lastElementChild.appendChild(createStatusBadge(status));
+                tbody.appendChild(tr);
+            }
+        }
+
+        function renderTestsTable() {
+            const tbody = document.getElementById('tests-table-body');
+            tbody.innerHTML = '';
+
+            for (const suite of TEST_SUITES) {
+                const tr = document.createElement('tr');
+                if (suite.isNew) {
+                    tr.className = 'new-doc';
+                }
+                const status = getTestStatus(suite.suiteId);
+                const newBadge = suite.isNew ? '<span class="new-badge">NEW</span>' : '';
+
+                tr.innerHTML = `
+                    <td>
+                        <a href="../specsLoader.html?spec=${suite.spec}" class="spec-link">${suite.name}</a>${newBadge}<br>
+                        <span class="spec-id">${suite.dsId}</span>
+                    </td>
+                    <td>${suite.reqs}</td>
+                    <td>${suite.profile}</td>
+                    <td></td>
+                `;
+                tr.lastElementChild.appendChild(createStatusBadge(status));
+                tbody.appendChild(tr);
+            }
+        }
+
+        function renderSummary() {
+            const container = document.getElementById('summary-stats');
+            const timestampEl = document.getElementById('results-timestamp');
+
+            if (!testResults) {
+                container.innerHTML = '<span class="loading">No test results available. Run the test suite to generate results.</span>';
+                timestampEl.textContent = '';
+                return;
+            }
+
+            const summary = testResults.summary || {};
+            const passed = summary.passed || 0;
+            const failed = summary.failed || 0;
+            const skipped = summary.skipped || 0;
+            const total = summary.total || 0;
+
+            container.innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-value" style="color: #155724;">${passed}</span>
+                    <span class="stat-label">Passed</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" style="color: #721c24;">${failed}</span>
+                    <span class="stat-label">Failed</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" style="color: #004085;">${skipped}</span>
+                    <span class="stat-label">Skipped</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">${total}</span>
+                    <span class="stat-label">Total Tests</span>
+                </div>
+            `;
+
+            if (testResults.timestamp) {
+                const date = new Date(testResults.timestamp);
+                timestampEl.textContent = `Results from: ${date.toLocaleString()}`;
+            }
+        }
+
+        // =============================================================================
+        // Initialization
+        // =============================================================================
+
+        async function loadTestResults() {
+            try {
+                const response = await fetch(TEST_RESULTS_PATH);
+                if (response.ok) {
+                    testResults = await response.json();
+                } else {
+                    console.log('Test results file not found, using UNKNOWN status');
+                    testResults = null;
+                }
+            } catch (error) {
+                console.log('Error loading test results:', error);
+                testResults = null;
+            }
+        }
+
+        async function init() {
+            await loadTestResults();
+            renderSummary();
+            renderURSTable();
+            renderFSTable();
+            renderNFSTable();
+            renderDSTable();
+            renderTestsTable();
+        }
+
+        // Run on page load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 </html>

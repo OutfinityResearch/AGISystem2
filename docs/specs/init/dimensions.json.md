@@ -196,13 +196,6 @@ Ontology axes should eventually cover indices 0–255 with `partition: "ontology
       "reserved": false
     },
     {
-      "index": 96,
-      "name": "LegalEntity",
-      "partition": "ontology",
-      "description": "Indicates that an entity is recognized as a legal person or organization.",
-      "reserved": false
-    },
-    {
       "index": 128,
       "name": "KnowledgeClaim",
       "partition": "ontology",

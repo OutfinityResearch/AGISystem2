@@ -151,4 +151,29 @@ The exact set of primitives may evolve, but every addition must:
 - All parsing is whitespace-based and must be robust to extra spaces but not to arbitrary natural language; inputs are canonical sentences and command tokens, not arbitrary free text.
 - Timeouts and limits (e.g., `maxReasonerIterations`) still apply because Sys2DSL primitives call back into the same reasoning paths; the interpreter itself should remain O(number of lines).
 - Meta-rationality: complex domain behaviour (e.g., combining multiple regulations or narrative layers) is expressed by chaining primitives and reading environment variables rather than by bespoke JS code per domain.
-- Future extensions (conditionals, loops, higher-order constructs) must be specified explicitly in this DS before implementation; the MLP intentionally restricts expressive power to keep execution predictable and easily auditable.***
+- Future extensions (conditionals, loops, higher-order constructs) must be specified explicitly in this DS before implementation; the MLP intentionally restricts expressive power to keep execution predictable and easily auditable.
+
+## Related Documents
+
+For complete language specification and additional commands, see:
+
+- **DS(/theory/Sys2DSL_syntax)** - Complete language syntax specification
+- **DS(/theory/Sys2DSL_commands)** - Full command reference including:
+  - Theory management: `LIST_THEORIES`, `LOAD_THEORY`, `SAVE_THEORY`, `MERGE_THEORY`
+  - Relation commands: `DEFINE_RELATION`, `MODIFY_RELATION`, `BIND_RELATION`
+  - Reasoning: `VALIDATE`, `PROVE`, `HYPOTHESIZE`
+  - Memory: `GET_USAGE`, `FORGET`, `BOOST`
+  - Output: `TO_NATURAL`, `EXPLAIN`
+- **DS(/theory/Sys2DSL_arch)** - Data mapping and architecture
+- **DS(/knowledge/usage_tracking)** - Usage counters for prioritization
+- **DS(/knowledge/forgetting)** - Forgetting mechanisms
+
+## Architectural Note
+
+Sys2DSL is the **sole interface** for communicating with the AGISystem2 engine. All interactions - queries, assertions, theory management - must be expressed as Sys2DSL scripts. The engine receives scripts and returns scripts (or structured results that can be converted to natural language via `TO_NATURAL`).
+
+This design ensures:
+1. **Determinism**: Same script + same state = same results
+2. **Auditability**: All operations are logged as Sys2DSL
+3. **Composability**: Complex behaviors built from simple primitives
+4. **Portability**: Scripts are plain text, version-controllable

@@ -1,0 +1,28 @@
+# Test: Theory layer operations (what-if exploration)
+# Tests: push, pop, layers
+
+# Setup base facts
+add Water HAS_PROPERTY liquid
+add Ice HAS_PROPERTY solid
+
+# Check base state
+ask Water HAS_PROPERTY liquid?
+layers
+
+# Push exploration layer
+push exploration_layer
+
+# Add hypothetical facts
+add Water HAS_PROPERTY solid
+ask Water HAS_PROPERTY solid?
+
+# Check layer stack
+layers
+
+# Pop layer - should restore base state
+pop
+ask Water HAS_PROPERTY solid?
+
+# Verify base state preserved
+ask Water HAS_PROPERTY liquid?
+layers
