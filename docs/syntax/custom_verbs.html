@@ -1,0 +1,262 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Custom Verbs – Sys2DSL</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Defining Custom Relations (Verbs)</h1>
+    <div class="sub-nav">
+      <strong>Syntax Topics:</strong>
+      <a href="syntax_macros.html">Sys2DSL</a> ·
+      <a href="dimensions.html">Dimensions</a> ·
+      <a href="relations.html">Relations</a> ·
+      <a href="custom_verbs.html">Custom Verbs</a> ·
+      <a href="metacognition.html">Metacognition</a>
+    </div>
+  </div>
+
+  <article>
+    <div class="philosophical-introduction">
+      <p>While AGISystem2 provides a rich set of <a href="relations.html">built-in relations</a>, you can define <strong>custom verbs</strong> tailored to your domain. Custom relations become first-class citizens of the conceptual space – they receive their own permutation encoding and can be used identically to built-in relations.</p>
+    </div>
+
+    <h2>Basic Syntax: DEFINE_RELATION</h2>
+    <p>Use the <code>DEFINE_RELATION</code> command to create a new verb:</p>
+
+    <pre><code>@relDef DEFINE_RELATION name [properties...]</code></pre>
+
+    <h3>Parameters</h3>
+    <table class="table-concept-index">
+      <tr>
+        <th>Parameter</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td><code>name</code></td>
+        <td>Required</td>
+        <td>The relation name (ALL_CAPS convention)</td>
+      </tr>
+      <tr>
+        <td><code>symmetric</code></td>
+        <td>Optional flag</td>
+        <td>If present, A REL B implies B REL A</td>
+      </tr>
+      <tr>
+        <td><code>transitive</code></td>
+        <td>Optional flag</td>
+        <td>If present, A REL B and B REL C implies A REL C</td>
+      </tr>
+      <tr>
+        <td><code>inverse=NAME</code></td>
+        <td>Optional</td>
+        <td>Names the inverse relation</td>
+      </tr>
+    </table>
+
+    <h2>Examples</h2>
+
+    <h3>Simple Relation</h3>
+    <pre><code># Define a temperature relation
+@r1 DEFINE_RELATION BOILS_AT
+
+# Use it
+@f1 ASSERT Water BOILS_AT Celsius100
+@f2 ASSERT Alcohol BOILS_AT Celsius78</code></pre>
+
+    <h3>Relation with Inverse</h3>
+    <pre><code># Define a bidirectional relation pair
+@r1 DEFINE_RELATION TEACHES inverse=TAUGHT_BY
+@r2 DEFINE_RELATION TAUGHT_BY inverse=TEACHES
+
+# Now both work
+@f1 ASSERT Alice TEACHES Math
+@f2 ASSERT Math TAUGHT_BY Alice  # Equivalent</code></pre>
+
+    <h3>Symmetric Relation</h3>
+    <pre><code># Define a symmetric relation (both directions are identical)
+@r1 DEFINE_RELATION COLLABORATES_WITH symmetric
+
+# One assertion implies both
+@f1 ASSERT Alice COLLABORATES_WITH Bob
+# Automatically: Bob COLLABORATES_WITH Alice</code></pre>
+
+    <h3>Transitive Relation</h3>
+    <pre><code># Define a transitive relation
+@r1 DEFINE_RELATION ANCESTOR_OF transitive
+
+# Chain inference
+@f1 ASSERT Adam ANCESTOR_OF Seth
+@f2 ASSERT Seth ANCESTOR_OF Enos
+
+# Query works via transitivity
+@q1 ASK Adam ANCESTOR_OF Enos  # TRUE</code></pre>
+
+    <h3>Combined Properties</h3>
+    <pre><code># Symmetric AND transitive (equivalence relation)
+@r1 DEFINE_RELATION SAME_GROUP_AS symmetric transitive
+
+# If A=B and B=C, then A=C, and all combinations
+@f1 ASSERT Alice SAME_GROUP_AS Bob
+@f2 ASSERT Bob SAME_GROUP_AS Carol
+
+@q1 ASK Carol SAME_GROUP_AS Alice  # TRUE</code></pre>
+
+    <h2>The Geometric Model: Values as Separate Concepts</h2>
+
+    <div class="philosophical-implications">
+      <p><strong>Critical principle:</strong> In AGISystem2, every entity is a point (or region) in conceptual space. This means <strong>values must be separate concepts</strong>, not embedded in relation arguments.</p>
+
+      <h3>❌ WRONG: Compressed Syntax</h3>
+      <pre><code># This is FORBIDDEN - property=value compresses multiple points
+@f ASSERT Water HAS_PROPERTY boiling_point=100</code></pre>
+
+      <p>This syntax hides three separate points:</p>
+      <ol>
+        <li><code>Water</code> – a concept point</li>
+        <li><code>boiling_point</code> – another concept point</li>
+        <li><code>100</code> (or <code>Celsius100</code>) – yet another concept point</li>
+      </ol>
+
+      <h3>✓ CORRECT: Decomposed Relations</h3>
+
+      <h4>Pattern A: Direct Relation with Value Concept</h4>
+      <pre><code># Define a specific relation for the property
+@r1 DEFINE_RELATION BOILS_AT inverse=BOILING_POINT_OF
+
+# The value is a first-class concept
+@f1 ASSERT Celsius100 IS_A temperature
+@f2 ASSERT Celsius100 IS_A high_temperature
+
+# Now use the direct relation
+@f3 ASSERT Water BOILS_AT Celsius100</code></pre>
+
+      <h4>Pattern B: Property Chain</h4>
+      <pre><code># Explicit chain of relations
+@f1 ASSERT Water HAS_PROPERTY boiling_point
+@f2 ASSERT WaterBoilingPoint HAS_VALUE Celsius100
+@f3 ASSERT WaterBoilingPoint PROPERTY_OF Water</code></pre>
+
+      <h4>Pattern C: Reified Fact</h4>
+      <pre><code># Create a fact node for complex properties
+@fact DEFINE_CONCEPT WaterBoilingFact
+@f1 ASSERT WaterBoilingFact SUBJECT Water
+@f2 ASSERT WaterBoilingFact PROPERTY boiling_point
+@f3 ASSERT WaterBoilingFact VALUE Celsius100
+@f4 ASSERT WaterBoilingFact CONDITION SeaLevelPressure</code></pre>
+    </div>
+
+    <h2>Domain-Specific Relation Sets</h2>
+
+    <h3>Temperature Domain</h3>
+    <pre><code># Define temperature relations
+@r1 DEFINE_RELATION BOILS_AT inverse=BOILING_POINT_OF
+@r2 DEFINE_RELATION FREEZES_AT inverse=FREEZING_POINT_OF
+@r3 DEFINE_RELATION MELTS_AT inverse=MELTING_POINT_OF
+
+# Define value concepts
+@v1 ASSERT Celsius0 IS_A temperature
+@v2 ASSERT Celsius100 IS_A temperature
+@v3 ASSERT Celsius0 IS_A freezing_temperature
+@v4 ASSERT Celsius100 IS_A boiling_temperature
+
+# Use relations
+@f1 ASSERT Water BOILS_AT Celsius100
+@f2 ASSERT Water FREEZES_AT Celsius0
+@f3 ASSERT Iron MELTS_AT Celsius1538</code></pre>
+
+    <h3>Employment Domain</h3>
+    <pre><code># Define employment relations
+@r1 DEFINE_RELATION WORKS_AT inverse=EMPLOYS
+@r2 DEFINE_RELATION MANAGES inverse=MANAGED_BY
+@r3 DEFINE_RELATION REPORTS_TO inverse=HAS_REPORT transitive
+
+# Use them
+@f1 ASSERT Alice WORKS_AT TechCorp
+@f2 ASSERT Bob MANAGES Engineering
+@f3 ASSERT Charlie REPORTS_TO Bob
+@f4 ASSERT Bob REPORTS_TO Alice
+
+# Transitive query
+@q1 ASK Charlie REPORTS_TO Alice  # TRUE</code></pre>
+
+    <h3>Medical Domain</h3>
+    <pre><code># Define medical relations
+@r1 DEFINE_RELATION TREATS inverse=TREATED_BY
+@r2 DEFINE_RELATION SYMPTOM_OF inverse=HAS_SYMPTOM
+@r3 DEFINE_RELATION CONTRAINDICATED_WITH symmetric
+
+# Use them
+@f1 ASSERT Aspirin TREATS Headache
+@f2 ASSERT Fever SYMPTOM_OF Infection
+@f3 ASSERT DrugA CONTRAINDICATED_WITH DrugB</code></pre>
+
+    <h2>Querying Custom Relations</h2>
+    <p>Custom relations work with all query commands:</p>
+
+    <pre><code># Direct query
+@q1 ASK Water BOILS_AT Celsius100
+
+# Pattern matching
+@temps FACTS_MATCHING ? BOILS_AT ?
+@waterFacts FACTS_MATCHING Water ? ?
+
+# With masks
+@mask MASK_DIMS temperature
+@q2 ASK_MASKED $mask Water FREEZES_AT Celsius0</code></pre>
+
+    <h2>Relation Introspection</h2>
+    <p>Query information about relations:</p>
+
+    <pre><code># Get relation properties
+@info GET_RELATION_INFO BOILS_AT
+# Returns: { name: "BOILS_AT", inverse: "BOILING_POINT_OF", symmetric: false, transitive: false }
+
+# List all registered relations
+@rels LIST_RELATIONS
+# Returns: ["IS_A", "PART_OF", "BOILS_AT", ...]</code></pre>
+
+    <h2>Best Practices</h2>
+
+    <h3>Naming Conventions</h3>
+    <ul>
+      <li>Use ALL_CAPS for relation names: <code>BOILS_AT</code>, <code>TEACHES</code></li>
+      <li>Use verb phrases: <code>WORKS_AT</code> not <code>WORKPLACE</code></li>
+      <li>Name inverses consistently: <code>TEACHES</code> / <code>TAUGHT_BY</code></li>
+    </ul>
+
+    <h3>Value Concepts</h3>
+    <ul>
+      <li>Create explicit concepts for values: <code>Celsius100</code>, <code>Kilogram50</code></li>
+      <li>Place values in hierarchies: <code>Celsius100 IS_A high_temperature</code></li>
+      <li>Never embed values in tokens: <code>temp=100</code> is <strong>forbidden</strong></li>
+    </ul>
+
+    <h3>Relation Design</h3>
+    <ul>
+      <li>Define inverses for bidirectional navigation</li>
+      <li>Use <code>transitive</code> sparingly – it increases inference complexity</li>
+      <li>Group domain relations in theory files for reuse</li>
+    </ul>
+
+    <h2>Technical References</h2>
+    <ul>
+      <li><a href="../specsLoader.html?spec=theory/dsl_engine.js.md">DS(/theory/dsl_engine.js)</a> – DEFINE_RELATION implementation</li>
+      <li><a href="../specsLoader.html?spec=core/relation_permuter.js.md">DS(/core/relation_permuter.js)</a> – Permutation generation</li>
+      <li><a href="../specsLoader.html?spec=theory/Sys2DSL_geometric_model.md">DS(/theory/Sys2DSL_geometric_model)</a> – Why property=value is forbidden</li>
+      <li><a href="relations.html">Built-in Relations</a> – Reference for standard relations</li>
+    </ul>
+  </article>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to Syntax overview</a>
+    <a href="../index.html">Back to index</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

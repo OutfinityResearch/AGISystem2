@@ -67,14 +67,58 @@
       <p>For deeper understanding of DSL design and implementation, <a href="https://en.wikipedia.org/wiki/Domain-specific_language" target="_blank" rel="noopener noreferrer">the computer science literature on domain-specific languages</a> provides comprehensive coverage of theoretical foundations and practical applications.</p>
     </div>
 
+    <div class="technical-syntax">
+      <h2>Sys2DSL Syntax Quick Reference</h2>
+      <p>Every Sys2DSL instruction follows this pattern:</p>
+      <pre><code>@varName ACTION arg1 arg2 ...</code></pre>
+      <p>Where <code>@varName</code> defines a variable, <code>ACTION</code> is an uppercase command, and arguments follow.</p>
+
+      <h3>Core Commands</h3>
+      <table class="table-concept-index">
+        <tr><th>Command</th><th>Purpose</th><th>Example</th></tr>
+        <tr><td>ASSERT</td><td>Add a fact</td><td><code>@f ASSERT Dog IS_A Animal</code></td></tr>
+        <tr><td>ASK</td><td>Query truth value</td><td><code>@q ASK "Is Dog an Animal?"</code></td></tr>
+        <tr><td>RETRACT</td><td>Remove a fact</td><td><code>@r RETRACT Dog IS_A Fish</code></td></tr>
+        <tr><td>PROVE</td><td>Prove statement</td><td><code>@p PROVE Dog IS_A LivingThing</code></td></tr>
+        <tr><td>VALIDATE</td><td>Check consistency</td><td><code>@v VALIDATE</code></td></tr>
+        <tr><td>CF</td><td>Counterfactual query</td><td><code>@cf CF "Water IS_A gas?" | Water HAS_PROPERTY temp=150</code></td></tr>
+        <tr><td>ABDUCT</td><td>Abductive reasoning</td><td><code>@a ABDUCT Smoke CAUSED_BY</code></td></tr>
+        <tr><td>HYPOTHESIZE</td><td>Generate hypotheses</td><td><code>@h HYPOTHESIZE Dog</code></td></tr>
+      </table>
+
+      <h3>Theory Management</h3>
+      <table class="table-concept-index">
+        <tr><th>Command</th><th>Purpose</th><th>Example</th></tr>
+        <tr><td>THEORY_PUSH</td><td>Push new layer</td><td><code>@_ THEORY_PUSH name="exploration"</code></td></tr>
+        <tr><td>THEORY_POP</td><td>Pop top layer</td><td><code>@_ THEORY_POP</code></td></tr>
+        <tr><td>LIST_THEORIES</td><td>List layer stack</td><td><code>@t LIST_THEORIES</code></td></tr>
+        <tr><td>LOAD_THEORY</td><td>Load theory file</td><td><code>@l LOAD_THEORY physics_basics</code></td></tr>
+      </table>
+
+      <h3>Memory Management</h3>
+      <table class="table-concept-index">
+        <tr><th>Command</th><th>Purpose</th><th>Example</th></tr>
+        <tr><td>GET_USAGE</td><td>Get usage stats</td><td><code>@u GET_USAGE Water</code></td></tr>
+        <tr><td>PROTECT</td><td>Protect from forgetting</td><td><code>@_ PROTECT ImportantConcept</code></td></tr>
+        <tr><td>FORGET</td><td>Remove low-usage concepts</td><td><code>@f FORGET threshold=5</code></td></tr>
+        <tr><td>BOOST</td><td>Increase priority</td><td><code>@_ BOOST Water 50</code></td></tr>
+      </table>
+
+      <h3>Topological Evaluation</h3>
+      <p>Sys2DSL scripts are evaluated in <em>topological order</em> based on variable dependencies, not line order. This allows forward references:</p>
+      <pre><code>@result BOOL_AND $check1 $check2   # Uses $check1 and $check2
+@check1 ASK Dog IS_A Animal         # Evaluated first
+@check2 ASK Cat IS_A Animal         # Evaluated second</code></pre>
+    </div>
+
     <div class="technical-specifications">
       <h2>Technical Implementation References</h2>
       <p>Specificațiile tehnice relevante pentru implementarea Sys2DSL în AGISystem2 includ:</p>
       <ul>
-        <li>DSL Engine Specification (DS(/theory/dsl_engine.js)): implementează parsing, compilare și execuție pentru programe Sys2DSL.</li>
-        <li>DSL Grammar Specification (DS(/theory/dsl_grammar)): definește sintaxa și structura semantică a limbajului Sys2DSL.</li>
-        <li>Parser Specification (DS(/ingest/parser.js)): se ocupă de analiza sintactică și generarea de arbori S-R-O.</li>
-        <li>Reasoner Specification (DS(/reason/reasoner.js)): execută construcțiile de raționare Sys2DSL în spațiul conceptual geometric.</li>
+        <li><a href="../specsLoader.html?spec=theory/dsl_engine.js.md">DS(/theory/dsl_engine.js)</a>: implementează parsing, compilare și execuție pentru programe Sys2DSL.</li>
+        <li><a href="../specsLoader.html?spec=theory/Sys2DSL_commands.md">DS(/theory/Sys2DSL_commands)</a>: referință completă a comenzilor (40+).</li>
+        <li><a href="../specsLoader.html?spec=theory/Sys2DSL_syntax.md">DS(/theory/Sys2DSL_syntax)</a>: definește sintaxa și structura semantică.</li>
+        <li><a href="../specsLoader.html?spec=ingest/parser.js.md">DS(/ingest/parser.js)</a>: analiza sintactică și generarea de arbori S-R-O.</li>
       </ul>
     </div>
   </article>

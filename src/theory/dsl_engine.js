@@ -259,6 +259,14 @@ class TheoryDSLEngine {
   _cmdAsk(argTokens, env) {
     const questionRaw = argTokens.join(' ');
     const question = this._expandString(questionRaw, env);
+
+    // Validate no property=value in question triplet parts
+    const parts = question.replace(/[?"]/g, '').trim().split(/\s+/);
+    if (parts.length >= 3) {
+      this._validateNoPropertyValue(parts[0], 'subject');
+      this._validateNoPropertyValue(parts.slice(2).join(' '), 'object');
+    }
+
     return this.api.ask(question);
   }
 
@@ -285,9 +293,30 @@ class TheoryDSLEngine {
     const subject = this._expandString(argTokens[0], env);
     const relation = this._expandString(argTokens[1], env);
     const object = this._expandString(argTokens.slice(2).join(' '), env);
+
+    // Validate: no property=value syntax allowed in triplets
+    // Each concept/fact must be a separate point in space
+    this._validateNoPropertyValue(subject, 'subject');
+    this._validateNoPropertyValue(object, 'object');
+
     const sentence = `${subject} ${relation} ${object}`;
     this.api.ingest(sentence);
     return { ok: true, subject, relation, object };
+  }
+
+  /**
+   * Validates that a triplet argument does not contain property=value syntax.
+   * Values must be separate concepts, not embedded in tokens.
+   * See DS(/theory/Sys2DSL_geometric_model) for rationale.
+   */
+  _validateNoPropertyValue(token, position) {
+    if (token && token.includes('=') && !token.startsWith('"')) {
+      throw new Error(
+        `Invalid ${position} '${token}': property=value syntax not allowed in triplets. ` +
+        `Each value must be a separate concept. Example: Instead of 'HAS_PROPERTY temp=100', ` +
+        `use 'HAS_TEMPERATURE Celsius100' or define a specific relation.`
+      );
+    }
   }
 
   _cmdAbduct(argTokens, env) {

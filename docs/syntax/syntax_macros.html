@@ -58,44 +58,72 @@
 
   <p>even though <code>@b</code> appears first textually; the engine will evaluate <code>@list</code> first, then <code>@a</code>, then <code>@b</code>. Cyclic dependencies (for example <code>@a</code> depending on <code>$b</code> and <code>@b</code> on <code>$a</code>) are detected and reported as errors.</p>
 
-  <h2>Core Actions (Examples)</h2>
-  <p>Some of the core actions frequently used in Sys2DSL:</p>
+  <h2>Command Categories</h2>
+  <p>Sys2DSL commands are organized into functional categories. See DS(/theory/Sys2DSL_commands) for the complete reference with 40+ commands.</p>
 
-  <h3>ASSERT – defining facts</h3>
+  <h3>Query Commands</h3>
+  <pre><code>@q1 ASK dog IS_A Animal                    # Query truth value
+@q2 ASK "Is dog an Animal?"                # Natural question form
+@masked ASK_MASKED $ontologyMask dog IS_A Animal  # Masked query
+@facts FACTS_MATCHING Dog ? ?              # Pattern search</code></pre>
+
+  <h3>Assertion Commands</h3>
   <pre><code>@f1 ASSERT dog IS_A Animal
 @f2 ASSERT water HAS_PROPERTY boiling_point=100
-@f3 ASSERT surgery_x REQUIRES consent</code></pre>
+@r1 RETRACT dog IS_A Fish                  # Remove fact</code></pre>
 
-  <p>These instructions inscribe facts into the active session theory.</p>
+  <h3>Reasoning Commands</h3>
+  <pre><code>@proof PROVE Dog IS_A LivingThing          # Prove with chain
+@valid VALIDATE                            # Check consistency
+@hyp HYPOTHESIZE Smoke                     # Generate hypotheses
+@cf CF "Water IS_A gas?" | Water HAS_PROPERTY temp=150
+@abd ABDUCT Smoke CAUSED_BY                # Abductive reasoning</code></pre>
 
-  <h3>ASK – yes/no questions</h3>
-  <pre><code>@q1 ASK "Is dog an Animal?"
-@q2 ASK "water HAS_PROPERTY boiling_point=100?"</code></pre>
+  <h3>Theory Layer Commands</h3>
+  <pre><code>@_ THEORY_PUSH name="exploration"          # Push new layer
+@_ THEORY_POP                              # Pop and discard
+@stack LIST_THEORIES                       # Show layer stack
+@load LOAD_THEORY physics_basics           # Load from file
+@save SAVE_THEORY my_domain                # Save to file</code></pre>
 
-  <p>The result of each question is a truth object (for example <code>{ truth: "TRUE_CERTAIN" }</code>) stored in the corresponding variable.</p>
+  <h3>Memory Management Commands</h3>
+  <pre><code>@stats GET_USAGE Water                     # Usage statistics
+@_ PROTECT ImportantConcept                # Protect from forgetting
+@_ UNPROTECT TempConcept                   # Remove protection
+@clean FORGET threshold=5                  # Remove low-usage
+@_ BOOST Water 50                          # Increase priority</code></pre>
 
-  <h3>CF – counterfactuals</h3>
-  <pre><code>@cf CF "Water HAS_PROPERTY boiling_point=50?"
-       | Water HAS_PROPERTY boiling_point=50</code></pre>
+  <h3>Mask Commands</h3>
+  <pre><code>@m1 MASK_PARTITIONS ontology               # By partition
+@m2 MASK_DIMS temperature pressure         # By dimensions
+@m3 MASK_CONCEPT $waterRef                 # By concept relevance</code></pre>
 
-  <p>Here <code>CF</code> evaluates the question in the presence of a set of hypothetical facts (written after <code>|</code>), without modifying the base theory.</p>
+  <h3>Utility Commands</h3>
+  <pre><code>@and BOOL_AND $q1 $q2                      # Boolean AND
+@or BOOL_OR $q1 $q2                        # Boolean OR
+@not BOOL_NOT $q1                          # Boolean NOT
+@merged MERGE_LISTS $list1 $list2          # Combine lists
+@first PICK_FIRST $list                    # First element
+@n COUNT $list                             # List size
+@nonEmpty NONEMPTY $list                   # Check if non-empty</code></pre>
 
-  <h3>FACTS_MATCHING and list combination</h3>
-  <p>Typical actions for compliance or narrative programmes:</p>
-  <pre><code>@reqs FACTS_MATCHING "$procId REQUIRES ?"
+  <h3>Output Commands</h3>
+  <pre><code>@text TO_NATURAL $result                   # Human-readable
+@json TO_JSON $result                      # JSON export
+@exp EXPLAIN $result                       # Detailed explanation</code></pre>
+
+  <h2>Complete Example</h2>
+  <p>A compliance check programme demonstrating multiple command types:</p>
+  <pre><code># Fetch procedure requirements
+@reqs FACTS_MATCHING "$procId REQUIRES ?"
 @satGiven FACTS_MATCHING "? GIVEN yes"
 @satPresent FACTS_MATCHING "? PRESENT yes"
 @allSat MERGE_LISTS $satGiven $satPresent
-@result ALL_REQUIREMENTS_SATISFIED $reqs $allSat</code></pre>
+@result ALL_REQUIREMENTS_SATISFIED $reqs $allSat
 
-  <p>Here the script fetches the requirements of a procedure and checks that each requirement appears in the list of facts marked as satisfied.</p>
-
-  <h3>Masking and focused reasoning</h3>
-  <p>Sys2DSL also exposes actions for controlling dimension and partition masks:</p>
-  <pre><code>@m MASK_PARTITIONS ontology
-@q ASK_MASKED $m "dog IS_A Animal?"</code></pre>
-
-  <p>In this example, the question is evaluated using only the ontological dimensions.</p>
+# Check and report
+@check ASK ProcedureX COMPLIANT yes
+@explanation EXPLAIN $check</code></pre>
 
   <h2>Sys2DSL in Theory Files vs. Sessions</h2>
   <p>The same language is used in two contexts:</p>

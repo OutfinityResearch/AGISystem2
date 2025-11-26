@@ -543,6 +543,9 @@
             { spec: 'init/dimensions.json.md', name: 'Dimension catalogue JSON schema.', dsId: 'DS[/init/dimensions.json]', reqs: 'FS-01, FS-12; NFS-020', coverage: 'partial', testSuite: 'dimensions_catalog' },
             { spec: 'init/relations.json.md', name: 'Relations catalogue JSON schema.', dsId: 'DS[/init/relations.json]', reqs: 'FS-01, FS-03, FS-05, FS-06; NFS-012', coverage: 'partial', testSuite: 'relation_permuter' },
 
+            // Interface - CLI
+            { spec: 'interface/cli.md', name: 'CLI: interactive REPL and batch mode.', dsId: 'DS[/interface/cli]', reqs: 'FS-08, FS-11, FS-14; NFS-011, NFS-019', coverage: 'full', testSuite: 'cli_integration', isNew: true },
+
             // Spec playbook and DS map
             { spec: 'agent.md', name: 'Specification playbook and conventions.', dsId: 'DS[/agent]', reqs: 'FS-10; NFS-013', coverage: 'partial', testSuite: null },
             { spec: 'DS_map.md', name: 'Design Specification Map (DS_map).', dsId: 'DS-MAP-001', reqs: 'FS-10; NFS-013', coverage: 'partial', testSuite: null }
@@ -577,7 +580,9 @@
             { spec: 'tests/sys2dsl_commands/runSuite.md', name: 'Sys2DSL command categories (40+ commands).', dsId: 'DS[/tests/sys2dsl_commands/runSuite]', reqs: 'FS-08, FS-14; NFS-003', profile: 'auto_test', suiteId: 'sys2dsl_commands', isNew: true },
             { spec: 'tests/usage_tracking/runSuite.md', name: 'Usage counters, timestamps, and priority scoring.', dsId: 'DS[/tests/usage_tracking/runSuite]', reqs: 'FS-04, FS-10; NFS-002', profile: 'auto_test', suiteId: 'usage_tracking', isNew: true },
             { spec: 'tests/forgetting/runSuite.md', name: 'Threshold-based forgetting and protection.', dsId: 'DS[/tests/forgetting/runSuite]', reqs: 'FS-04, FS-10; NFS-002', profile: 'auto_test', suiteId: 'forgetting', isNew: true },
-            { spec: 'tests/usecase_integration/runSuite.md', name: 'High-level use cases: theory definition, validation, abduction, proof.', dsId: 'DS[/tests/usecase_integration/runSuite]', reqs: 'FS-02, FS-05, FS-13, FS-14; NFS-003, NFS-014', profile: 'auto_test + manual_test', suiteId: 'usecase_integration', isNew: true }
+            { spec: 'tests/usecase_integration/runSuite.md', name: 'High-level use cases: theory definition, validation, abduction, proof.', dsId: 'DS[/tests/usecase_integration/runSuite]', reqs: 'FS-02, FS-05, FS-13, FS-14; NFS-003, NFS-014', profile: 'auto_test + manual_test', suiteId: 'usecase_integration', isNew: true },
+            // CLI Integration
+            { spec: 'tests/cli_integration/runSuite.md', name: 'CLI batch mode, commands, JSON output.', dsId: 'DS[/tests/cli_integration/runSuite]', reqs: 'FS-08, FS-11, FS-14; NFS-011, NFS-019', profile: 'auto_test', suiteId: 'cli_integration', isNew: true }
         ];
 
         // =============================================================================

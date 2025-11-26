@@ -35,10 +35,39 @@
 
   <h2>Core Command Set</h2>
   <p>At any time you can type <code>help</code> to see a short summary, or <code>help commands</code> to see a more exhaustive list. The most important commands are:</p>
+
+  <h3>Fact and Query Commands</h3>
   <p><strong>add &lt;fact&gt;</strong> adds a single fact to long-term memory. Facts are subject–relation–object triples such as <code>Dog IS_A Animal</code> or <code>Water HAS_PROPERTY boiling_point=100</code>. The CLI normalises and parses these statements, then passes them through the ingestion pipeline so that ConceptStore and clustering can update bounded diamonds.</p>
-  <p><strong>ask &lt;question&gt;</strong> poses a question to the engine. Questions can be natural interrogatives like <code>Is Dog an Animal?</code> or canonical triples with a question mark such as <code>Water HAS_PROPERTY boiling_point=100?</code>. Internally the engine uses the same parser and encoder as for facts, then delegates to Reasoner to decide whether the question point lies inside the relevant concept region or whether an explicit fact exists. The CLI reports the <code>truth</code> verdict such as <code>TRUE_CERTAIN</code> or <code>FALSE</code>, and in future versions may also surface the geometric band used by the engine to grade how deep or borderline the match was. For programmatic use you can already read both <code>truth</code> and <code>band</code> from the EngineAPI, as described in the API reference.</p>
-  <p><strong>abduct &lt;observation&gt; &lt;REL&gt;</strong> performs simple abductive reasoning over causal relations. If you have ingested facts like <code>Fire CAUSES Smoke</code> and <code>Smoke CAUSED_BY Fire</code>, running <code>abduct Smoke CAUSES</code> will ask the Reasoner to find a plausible cause for Smoke based on the CAUSES/CAUSED_BY links. The current implementation chooses the first matching candidate and reports it along with a qualitative band such as PLAUSIBLE.</p>
-  <p><strong>cf &lt;question&gt; | &lt;fact1&gt; ; &lt;fact2&gt; ; ...</strong> runs a counterfactual query. It keeps the base knowledge intact but temporarily assumes a small set of extra facts while answering the question. For example, if you have only stated that <code>Water HAS_PROPERTY boiling_point=100</code>, you can run <code>cf Water HAS_PROPERTY boiling_point=50? | Water HAS_PROPERTY boiling_point=50</code> to see how the engine would behave under an alternative boiling point. After this call returns, the extra facts are discarded and the base state remains unchanged.</p>
+  <p><strong>ask &lt;question&gt;</strong> poses a question to the engine. Questions can be natural interrogatives like <code>Is Dog an Animal?</code> or canonical triples with a question mark such as <code>Water HAS_PROPERTY boiling_point=100?</code>. The CLI reports the <code>truth</code> verdict such as <code>TRUE_CERTAIN</code> or <code>FALSE</code>, along with the geometric <code>band</code> used by the engine.</p>
+  <p><strong>retract &lt;fact&gt;</strong> removes a previously asserted fact. For example, <code>retract Cat IS_A Fish</code> would remove that incorrect assertion from the working theory.</p>
+
+  <h3>Reasoning Commands</h3>
+  <p><strong>prove &lt;statement&gt;</strong> attempts to prove a statement is true within current theory. Returns a proof chain showing the reasoning steps, or a counterexample if proven false. For example, <code>prove Dog IS_A LivingThing</code> will trace through IS_A transitivity.</p>
+  <p><strong>validate</strong> checks the consistency of the current working theory. Reports conflicts between facts and suggests resolutions.</p>
+  <p><strong>hypothesize &lt;subject&gt; [relation]</strong> generates plausible hypotheses about a concept. For example, <code>hypothesize Smoke</code> might suggest <code>Fire CAUSES Smoke</code> based on causal relations.</p>
+  <p><strong>abduct &lt;observation&gt; &lt;REL&gt;</strong> performs abductive reasoning over causal relations. Running <code>abduct Smoke CAUSES</code> finds plausible causes for Smoke based on CAUSES/CAUSED_BY links.</p>
+  <p><strong>cf &lt;question&gt; | &lt;fact1&gt; ; &lt;fact2&gt; ; ...</strong> runs a counterfactual query. It keeps the base knowledge intact but temporarily assumes extra facts while answering the question.</p>
+
+  <h3>Theory Layer Commands (What-If Exploration)</h3>
+  <p><strong>push [name]</strong> pushes a new theory layer onto the stack for exploration. Facts added after this are isolated to the new layer.</p>
+  <p><strong>pop</strong> pops and discards the top theory layer, restoring the previous state.</p>
+  <p><strong>layers</strong> shows the current theory layer stack with names and depths.</p>
+
+  <h3>Knowledge Inspection Commands</h3>
+  <p><strong>facts [pattern]</strong> lists facts in the current theory, optionally filtered by pattern.</p>
+  <p><strong>concepts [pattern]</strong> lists all concepts, optionally filtered by pattern.</p>
+  <p><strong>usage &lt;concept&gt;</strong> shows usage statistics for a concept (access counts, timestamps, priority).</p>
+  <p><strong>inspect &lt;concept&gt;</strong> shows detailed information about a concept including its bounded diamond geometry.</p>
+
+  <h3>Memory Management Commands</h3>
+  <p><strong>protect &lt;concept&gt;</strong> marks a concept as protected from forgetting.</p>
+  <p><strong>unprotect &lt;concept&gt;</strong> removes protection from a concept.</p>
+  <p><strong>forget &lt;criteria&gt;</strong> removes concepts meeting the criteria. Criteria can be <code>threshold=N</code> (usage count &lt; N), <code>pattern=glob</code>, or <code>concept=name</code>.</p>
+  <p><strong>boost &lt;concept&gt; [amount]</strong> manually increases a concept's usage priority (default: +10).</p>
+
+  <h3>DSL Execution Commands</h3>
+  <p><strong>run &lt;dsl-statement&gt;</strong> executes a raw Sys2DSL statement directly. For example, <code>run @r PROVE Dog IS_A Animal</code>.</p>
+  <p><strong>load-theory &lt;name&gt;</strong> loads a theory file from <code>.AGISystem2/theories/</code> into the current session.</p>
 
   <h2>Domain-Specific Commands</h2>
   <p>In addition to the generic <code>add</code>, <code>ask</code>, <code>abduct</code>, and <code>cf</code> commands, the CLI exposes a few domain-oriented helpers that build on top of the same geometric and symbolic machinery but express common patterns via a theory-level DSL. These helpers are implemented as small macros written in the engine’s theory language; no health, legal, or narrative rules are baked directly into the JavaScript code. The built-in versions of these macros live under <code>data/init/macros</code>, but you can override them in a project by creating files with the same macro names under <code>.AGISystem2/macros</code> in the working directory.</p>
@@ -52,6 +81,54 @@
   <p><strong>list-theories</strong> enumerates the existing <code>.txt</code> theory files in the <code>theories</code> subfolder, without making any changes. <strong>show-theory &lt;name&gt;</strong> prints the contents of one such file so you can review the rules it contains. This is useful when you experiment with several alternative formulations and want to understand which facts were active for a particular test.</p>
   <p><strong>apply-theory &lt;name&gt; &lt;question...&gt;</strong> reads all facts from the named file and applies them as a temporary context while answering the given question. It behaves like a structured version of the <code>cf</code> command where the extra facts come from a file rather than being typed inline. For example, after running <code>init-samples</code> you can type <code>apply-theory health_compliance check-procedure ProcedureX</code> to run the health compliance check under the sample rules, or <code>apply-theory scifi_magic check-magic Alice CityX</code> to see how magic behaves under the SciFi theory.</p>
   <p><strong>init-samples</strong> seeds the <code>theories</code> folder with a few pre-defined files suitable for experimentation: one for minimal health compliance, one for a tiny law example, and one for a science-fiction magic setting. You can inspect these files with <code>show-theory</code> and modify them or copy their structure when building your own domain theories.</p>
+
+  <h2>Batch Mode (Non-Interactive)</h2>
+  <p>The CLI supports non-interactive batch execution for automated testing and scripting. You can execute commands from a file or pass a single command from the command line.</p>
+
+  <h3>Command Line Options</h3>
+  <pre>
+./bin/AGISystem2Raw.sh --batch &lt;commands.txt&gt;     # Execute commands from file
+./bin/AGISystem2Raw.sh --exec "add Dog IS_A Animal"  # Execute single command
+./bin/AGISystem2Raw.sh --output results.json         # Write results to file
+./bin/AGISystem2Raw.sh --json                        # Output in JSON format
+./bin/AGISystem2Raw.sh --no-color                    # Disable ANSI colors
+./bin/AGISystem2Raw.sh --help                        # Show batch mode help</pre>
+
+  <h3>Batch File Format</h3>
+  <p>Command files contain one command per line. Comments start with <code>#</code> or <code>//</code>:</p>
+  <pre>
+# Setup taxonomy
+add Dog IS_A Animal
+add Cat IS_A Animal
+add Animal IS_A LivingThing
+
+# Query facts
+ask Is Dog an Animal?
+prove Dog IS_A LivingThing
+
+# Validate knowledge base
+validate</pre>
+
+  <h3>JSON Output</h3>
+  <p>When using <code>--json</code> or <code>--output</code>, results are formatted as JSON for programmatic consumption:</p>
+  <pre>
+{
+  "batchFile": "commands.txt",
+  "timestamp": "2025-01-15T10:30:00Z",
+  "commands": [
+    { "command": "add", "args": "Dog IS_A Animal", "result": { "ok": true } },
+    { "command": "ask", "args": "Is Dog an Animal?", "result": { "truth": "TRUE_CERTAIN" } }
+  ],
+  "summary": { "total": 10, "executed": 8, "skipped": 2, "errors": 0 }
+}</pre>
+
+  <h3>First Run Auto-Initialization</h3>
+  <p>When running from a new directory, the CLI automatically:</p>
+  <ul>
+    <li>Creates the <code>.AGISystem2/</code> environment structure</li>
+    <li>Installs sample theories (health_compliance, law_minimal, scifi_magic)</li>
+    <li>Sets up data and theories directories</li>
+  </ul>
 
   <h2>Recommended First Steps</h2>
   <p>If this is your first encounter with the CLI, a simple way to get started is to open a new folder, run the CLI, and follow a short sequence of commands. The following transcript outlines a typical exploration:</p>

@@ -1,0 +1,328 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Relations – Sys2DSL</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Built-in Relations</h1>
+    <div class="sub-nav">
+      <strong>Syntax Topics:</strong>
+      <a href="syntax_macros.html">Sys2DSL</a> ·
+      <a href="dimensions.html">Dimensions</a> ·
+      <a href="relations.html">Relations</a> ·
+      <a href="custom_verbs.html">Custom Verbs</a> ·
+      <a href="metacognition.html">Metacognition</a>
+    </div>
+  </div>
+
+  <article>
+    <div class="philosophical-introduction">
+      <p>Relations (verbs) in AGISystem2 are <strong>directed connections between points</strong> in conceptual space. Each relation is implemented via a deterministic <strong>permutation</strong> of vector dimensions, ensuring that <code>A REL B</code> produces a unique, consistent encoding.</p>
+      <p><strong>Important:</strong> Relations are themselves concepts – they occupy their own positions in the space and can be queried, modified, and reasoned about.</p>
+    </div>
+
+    <h2>Relation Properties</h2>
+    <p>Each relation may have the following mathematical properties:</p>
+
+    <table class="table-concept-index">
+      <tr>
+        <th>Property</th>
+        <th>Meaning</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><strong>Symmetric</strong></td>
+        <td>If A REL B, then B REL A</td>
+        <td>EQUIVALENT_TO, DISJOINT_WITH</td>
+      </tr>
+      <tr>
+        <td><strong>Transitive</strong></td>
+        <td>If A REL B and B REL C, then A REL C</td>
+        <td>IS_A, PART_OF</td>
+      </tr>
+      <tr>
+        <td><strong>Inverse</strong></td>
+        <td>Named reverse relation</td>
+        <td>CAUSES ↔ CAUSED_BY</td>
+      </tr>
+      <tr>
+        <td><strong>Weight</strong></td>
+        <td>Strength factor for reasoning (0.0–1.0)</td>
+        <td>IS_A: 1.0, CASTS: 0.6</td>
+      </tr>
+    </table>
+
+    <h2>Taxonomic Relations</h2>
+    <p>Relations for organizing concepts into hierarchies:</p>
+
+    <table class="table-concept-index">
+      <tr>
+        <th>Relation</th>
+        <th>Inverse</th>
+        <th>Properties</th>
+        <th>Usage</th>
+      </tr>
+      <tr>
+        <td><code>IS_A</code></td>
+        <td>—</td>
+        <td>transitive</td>
+        <td>Subsumption: <code>dog IS_A mammal</code></td>
+      </tr>
+      <tr>
+        <td><code>EQUIVALENT_TO</code></td>
+        <td>EQUIVALENT_TO</td>
+        <td>symmetric, transitive</td>
+        <td>Synonyms: <code>car EQUIVALENT_TO automobile</code></td>
+      </tr>
+      <tr>
+        <td><code>DISJOINT_WITH</code></td>
+        <td>DISJOINT_WITH</td>
+        <td>symmetric</td>
+        <td>Exclusion: <code>cat DISJOINT_WITH dog</code></td>
+      </tr>
+    </table>
+
+    <h3>Examples</h3>
+    <pre><code># Taxonomy assertions
+@f1 ASSERT Dog IS_A mammal
+@f2 ASSERT mammal IS_A animal
+@f3 ASSERT Cat IS_A mammal
+@f4 ASSERT Dog DISJOINT_WITH Cat
+
+# Query with transitive closure
+@q1 ASK Dog IS_A animal        # TRUE (via transitivity)
+@q2 ASK Dog DISJOINT_WITH Cat  # TRUE</code></pre>
+
+    <h2>Mereological Relations (Part-Whole)</h2>
+    <p>Relations for compositional structure:</p>
+
+    <table class="table-concept-index">
+      <tr>
+        <th>Relation</th>
+        <th>Inverse</th>
+        <th>Properties</th>
+        <th>Usage</th>
+      </tr>
+      <tr>
+        <td><code>PART_OF</code></td>
+        <td>HAS_PART</td>
+        <td>transitive</td>
+        <td>Component: <code>wheel PART_OF car</code></td>
+      </tr>
+      <tr>
+        <td><code>HAS_PART</code></td>
+        <td>PART_OF</td>
+        <td>transitive</td>
+        <td>Composition: <code>car HAS_PART wheel</code></td>
+      </tr>
+      <tr>
+        <td><code>HAS_PROPERTY</code></td>
+        <td>PROPERTY_OF</td>
+        <td>—</td>
+        <td>Attribute: <code>water HAS_PROPERTY transparency</code></td>
+      </tr>
+    </table>
+
+    <h3>Examples</h3>
+    <pre><code># Mereological structure
+@f1 ASSERT Engine PART_OF Car
+@f2 ASSERT Piston PART_OF Engine
+
+# Query transitivity
+@q1 ASK Piston PART_OF Car     # TRUE (via Engine)</code></pre>
+
+    <h2>Spatial Relations</h2>
+    <p>Relations for location and containment:</p>
+
+    <table class="table-concept-index">
+      <tr>
+        <th>Relation</th>
+        <th>Inverse</th>
+        <th>Properties</th>
+        <th>Usage</th>
+      </tr>
+      <tr>
+        <td><code>LOCATED_IN</code></td>
+        <td>CONTAINS</td>
+        <td>—</td>
+        <td>Position: <code>Paris LOCATED_IN France</code></td>
+      </tr>
+      <tr>
+        <td><code>CONTAINS</code></td>
+        <td>LOCATED_IN</td>
+        <td>—</td>
+        <td>Container: <code>France CONTAINS Paris</code></td>
+      </tr>
+    </table>
+
+    <h3>Examples</h3>
+    <pre><code># Spatial assertions
+@f1 ASSERT Paris LOCATED_IN France
+@f2 ASSERT France LOCATED_IN Europe
+
+# Spatial query
+@q1 ASK Paris LOCATED_IN Europe  # May require explicit rule</code></pre>
+
+    <h2>Causal Relations</h2>
+    <p>Relations for cause-effect reasoning:</p>
+
+    <table class="table-concept-index">
+      <tr>
+        <th>Relation</th>
+        <th>Inverse</th>
+        <th>Properties</th>
+        <th>Usage</th>
+      </tr>
+      <tr>
+        <td><code>CAUSES</code></td>
+        <td>CAUSED_BY</td>
+        <td>—</td>
+        <td>Causation: <code>Fire CAUSES Smoke</code></td>
+      </tr>
+      <tr>
+        <td><code>CAUSED_BY</code></td>
+        <td>CAUSES</td>
+        <td>—</td>
+        <td>Effect: <code>Smoke CAUSED_BY Fire</code></td>
+      </tr>
+      <tr>
+        <td><code>REQUIRES</code></td>
+        <td>REQUIRED_FOR</td>
+        <td>transitive</td>
+        <td>Precondition: <code>Combustion REQUIRES Oxygen</code></td>
+      </tr>
+    </table>
+
+    <h3>Examples</h3>
+    <pre><code># Causal assertions
+@f1 ASSERT Fire CAUSES Smoke
+@f2 ASSERT Rain CAUSES WetGround
+
+# Abductive reasoning (find causes)
+@causes ABDUCT Smoke CAUSED_BY
+# Returns: [Fire, ...]</code></pre>
+
+    <h2>Deontic Relations (Norms)</h2>
+    <p>Relations for permissions, prohibitions, and compliance:</p>
+
+    <table class="table-concept-index">
+      <tr>
+        <th>Relation</th>
+        <th>Inverse</th>
+        <th>Partition Hint</th>
+        <th>Usage</th>
+      </tr>
+      <tr>
+        <td><code>PERMITS</code></td>
+        <td>PERMITTED_BY</td>
+        <td>axiology→ontology</td>
+        <td><code>GDPR PERMITS DataProcessing</code></td>
+      </tr>
+      <tr>
+        <td><code>PROHIBITS</code></td>
+        <td>PROHIBITED_BY</td>
+        <td>axiology→ontology</td>
+        <td><code>HIPAA PROHIBITS DataSharing</code></td>
+      </tr>
+      <tr>
+        <td><code>COMPLIES_WITH</code></td>
+        <td>IS_COMPLIANCE_FOR</td>
+        <td>ontology→ontology</td>
+        <td><code>SystemX COMPLIES_WITH GDPR</code></td>
+      </tr>
+      <tr>
+        <td><code>VIOLATES</code></td>
+        <td>IS_VIOLATED_BY</td>
+        <td>ontology→ontology</td>
+        <td><code>ActionY VIOLATES HIPAA</code></td>
+      </tr>
+    </table>
+
+    <h3>Examples</h3>
+    <pre><code># Normative assertions
+@f1 ASSERT GDPR PERMITS ConsentBasedProcessing
+@f2 ASSERT GDPR PROHIBITS UnconsentedDataSale
+@f3 ASSERT OurSystem COMPLIES_WITH GDPR
+
+# Compliance check
+@q1 ASK OurSystem VIOLATES GDPR  # Should be FALSE</code></pre>
+
+    <h2>Domain-Specific Relations</h2>
+    <p>Pre-defined relations for specific use cases:</p>
+
+    <h3>Healthcare</h3>
+    <table class="table-concept-index">
+      <tr>
+        <th>Relation</th>
+        <th>Inverse</th>
+        <th>Usage</th>
+      </tr>
+      <tr>
+        <td><code>HAS_PROTECTED_HEALTH_INFO</code></td>
+        <td>PROTECTED_HEALTH_INFO_OF</td>
+        <td><code>PatientRecord HAS_PROTECTED_HEALTH_INFO Diagnosis</code></td>
+      </tr>
+    </table>
+
+    <h3>Narrative</h3>
+    <table class="table-concept-index">
+      <tr>
+        <th>Relation</th>
+        <th>Inverse</th>
+        <th>Usage</th>
+      </tr>
+      <tr>
+        <td><code>CASTS</code></td>
+        <td>CAST_BY</td>
+        <td><code>MovieX CASTS ActorY</code></td>
+      </tr>
+      <tr>
+        <td><code>HAS_CHARACTER</code></td>
+        <td>CHARACTER_OF</td>
+        <td><code>NovelX HAS_CHARACTER ProtagonistY</code></td>
+      </tr>
+      <tr>
+        <td><code>HAS_EVENT</code></td>
+        <td>OCCURS_IN_CHAPTER</td>
+        <td><code>Chapter3 HAS_EVENT BattleScene</code></td>
+      </tr>
+    </table>
+
+    <h2>Relation Encoding</h2>
+    <p>Each relation is implemented as a <strong>deterministic permutation</strong> of vector dimensions:</p>
+
+    <pre><code>encode(A REL B) = permute(encode(A), π_REL) ⊕ encode(B)</code></pre>
+
+    <p>Where:</p>
+    <ul>
+      <li><code>π_REL</code> is a unique permutation derived from the relation name and seed</li>
+      <li><code>⊕</code> is saturating addition (clamped to [-127, 127])</li>
+    </ul>
+
+    <p>This encoding ensures:</p>
+    <ul>
+      <li><strong>Uniqueness</strong>: Different relations produce different encodings</li>
+      <li><strong>Determinism</strong>: Same input always produces same output</li>
+      <li><strong>Reversibility</strong>: Can query for unknown subjects/objects</li>
+    </ul>
+
+    <h2>Technical References</h2>
+    <ul>
+      <li><a href="../specsLoader.html?spec=core/relation_permuter.js.md">DS(/core/relation_permuter.js)</a> – Permutation implementation</li>
+      <li><a href="custom_verbs.html">Custom Verbs</a> – Defining new relations</li>
+      <li><a href="../wiki/permutation_binding.html">Wiki: Permutation-Based Binding</a></li>
+    </ul>
+  </article>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to Syntax overview</a>
+    <a href="../index.html">Back to index</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Metacognition – Sys2DSL</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>System Metacognition</h1>
+    <div class="sub-nav">
+      <strong>Syntax Topics:</strong>
+      <a href="syntax_macros.html">Sys2DSL</a> ·
+      <a href="dimensions.html">Dimensions</a> ·
+      <a href="relations.html">Relations</a> ·
+      <a href="custom_verbs.html">Custom Verbs</a> ·
+      <a href="metacognition.html">Metacognition</a>
+    </div>
+  </div>
+
+  <article>
+    <div class="philosophical-introduction">
+      <p><strong>Metacognition</strong> is the system's ability to reason about <em>its own knowledge and reasoning processes</em>. AGISystem2 exposes this internal structure through Sys2DSL commands, allowing explicit introspection, self-monitoring, and adaptive behavior.</p>
+    </div>
+
+    <h2>Overview: How It All Connects</h2>
+
+    <div class="diagram">
+      <pre>
+┌─────────────────────────────────────────────────────────────────┐
+│                      Sys2DSL Script                             │
+│  @var COMMAND subject VERB complement                           │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    DSL Engine (dsl_engine.js)                   │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
+│  │   Parser     │─▶│  Topological │─▶│   Command    │          │
+│  │              │  │    Sorter    │  │   Executor   │          │
+│  └──────────────┘  └──────────────┘  └──────────────┘          │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │
+        ┌───────────────────┼───────────────────┐
+        ▼                   ▼                   ▼
+┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+│ Concept Store │   │ Theory Stack  │   │   Reasoner    │
+│ (knowledge)   │   │ (layers)      │   │ (inference)   │
+└───────┬───────┘   └───────┬───────┘   └───────┬───────┘
+        │                   │                   │
+        ▼                   ▼                   ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Vector Space (1024 dims)                     │
+│  ┌─────────────────────┐  ┌─────────────────────────────────┐  │
+│  │  Ontology (0-255)   │  │  Axiology (256-383) + Extended  │  │
+│  │  Facts, categories  │  │  Values, norms, context         │  │
+│  └─────────────────────┘  └─────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+      </pre>
+    </div>
+
+    <h2>1. Knowledge Layer: Concept Store</h2>
+    <p>The Concept Store maintains all known concepts, facts, and their relationships.</p>
+
+    <h3>Introspection Commands</h3>
+    <table class="table-concept-index">
+      <tr>
+        <th>Command</th>
+        <th>Purpose</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><code>FACTS_MATCHING</code></td>
+        <td>Query facts by pattern</td>
+        <td><code>@facts FACTS_MATCHING Dog ? ?</code></td>
+      </tr>
+      <tr>
+        <td><code>GET_USAGE</code></td>
+        <td>Usage statistics for a concept</td>
+        <td><code>@stats GET_USAGE Water</code></td>
+      </tr>
+      <tr>
+        <td><code>LIST_CONCEPTS</code></td>
+        <td>All known concepts</td>
+        <td><code>@all LIST_CONCEPTS</code></td>
+      </tr>
+      <tr>
+        <td><code>COUNT</code></td>
+        <td>Count items in a list</td>
+        <td><code>@n COUNT $facts</code></td>
+      </tr>
+    </table>
+
+    <h3>Example: Self-Assessment of Knowledge</h3>
+    <pre><code># How much do we know about animals?
+@animalFacts FACTS_MATCHING ? IS_A animal
+@animalCount COUNT $animalFacts
+
+# What concepts are most used?
+@dogUsage GET_USAGE Dog
+@catUsage GET_USAGE Cat
+
+# Check knowledge coverage
+@hasTemperature NONEMPTY FACTS_MATCHING ? BOILS_AT ?
+@text TO_NATURAL $hasTemperature</code></pre>
+
+    <h2>2. Theory Layer: Context Management</h2>
+    <p>The Theory Stack enables hypothetical reasoning and context switching.</p>
+
+    <h3>Theory Commands</h3>
+    <table class="table-concept-index">
+      <tr>
+        <th>Command</th>
+        <th>Purpose</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><code>THEORY_PUSH</code></td>
+        <td>Create new hypothetical layer</td>
+        <td><code>@_ THEORY_PUSH name="exploration"</code></td>
+      </tr>
+      <tr>
+        <td><code>THEORY_POP</code></td>
+        <td>Discard hypothetical layer</td>
+        <td><code>@_ THEORY_POP</code></td>
+      </tr>
+      <tr>
+        <td><code>LIST_THEORIES</code></td>
+        <td>Show theory stack</td>
+        <td><code>@stack LIST_THEORIES</code></td>
+      </tr>
+      <tr>
+        <td><code>LOAD_THEORY</code></td>
+        <td>Load saved theory</td>
+        <td><code>@_ LOAD_THEORY physics</code></td>
+      </tr>
+      <tr>
+        <td><code>SAVE_THEORY</code></td>
+        <td>Save current layer</td>
+        <td><code>@_ SAVE_THEORY myDomain</code></td>
+      </tr>
+    </table>
+
+    <h3>Example: What-If Exploration</h3>
+    <pre><code># Base knowledge
+@f1 ASSERT Ice IS_A solid
+@f2 ASSERT Water IS_A liquid
+
+# Explore hypothetical: what if ice was a liquid?
+@_ THEORY_PUSH name="hypothetical_ice"
+@h1 ASSERT Ice IS_A liquid
+
+# Query in this context
+@q1 ASK Ice IS_A solid  # FALSE in this layer
+
+# Check theory stack
+@stack LIST_THEORIES
+# Returns: ["base", "hypothetical_ice"]
+
+# Discard hypothetical
+@_ THEORY_POP
+
+# Back to base
+@q2 ASK Ice IS_A solid  # TRUE again</code></pre>
+
+    <h2>3. Reasoning Layer: Inference Introspection</h2>
+    <p>Understand <em>how</em> conclusions are reached, not just <em>what</em> they are.</p>
+
+    <h3>Reasoning Commands</h3>
+    <table class="table-concept-index">
+      <tr>
+        <th>Command</th>
+        <th>Purpose</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><code>PROVE</code></td>
+        <td>Find proof chain</td>
+        <td><code>@proof PROVE Dog IS_A animal</code></td>
+      </tr>
+      <tr>
+        <td><code>EXPLAIN</code></td>
+        <td>Human-readable explanation</td>
+        <td><code>@exp EXPLAIN $proof</code></td>
+      </tr>
+      <tr>
+        <td><code>ABDUCT</code></td>
+        <td>Find possible causes</td>
+        <td><code>@causes ABDUCT Smoke CAUSED_BY</code></td>
+      </tr>
+      <tr>
+        <td><code>HYPOTHESIZE</code></td>
+        <td>Generate hypotheses</td>
+        <td><code>@hyp HYPOTHESIZE Symptom</code></td>
+      </tr>
+      <tr>
+        <td><code>VALIDATE</code></td>
+        <td>Check consistency</td>
+        <td><code>@valid VALIDATE</code></td>
+      </tr>
+    </table>
+
+    <h3>Example: Explanation Chain</h3>
+    <pre><code># Establish knowledge
+@f1 ASSERT Dog IS_A mammal
+@f2 ASSERT mammal IS_A animal
+
+# Prove a transitive conclusion
+@proof PROVE Dog IS_A animal
+
+# Get human-readable explanation
+@explanation EXPLAIN $proof
+# Returns: "Dog IS_A animal because:
+#   1. Dog IS_A mammal (direct fact)
+#   2. mammal IS_A animal (direct fact)
+#   3. IS_A is transitive, so Dog IS_A animal"</code></pre>
+
+    <h2>4. Memory Management: Self-Optimization</h2>
+    <p>The system tracks usage and can selectively forget low-value knowledge.</p>
+
+    <h3>Memory Commands</h3>
+    <table class="table-concept-index">
+      <tr>
+        <th>Command</th>
+        <th>Purpose</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><code>GET_USAGE</code></td>
+        <td>Usage statistics</td>
+        <td><code>@stats GET_USAGE concept</code></td>
+      </tr>
+      <tr>
+        <td><code>PROTECT</code></td>
+        <td>Mark as unforgettable</td>
+        <td><code>@_ PROTECT CoreConcept</code></td>
+      </tr>
+      <tr>
+        <td><code>UNPROTECT</code></td>
+        <td>Allow forgetting</td>
+        <td><code>@_ UNPROTECT TempConcept</code></td>
+      </tr>
+      <tr>
+        <td><code>FORGET</code></td>
+        <td>Remove low-usage concepts</td>
+        <td><code>@_ FORGET threshold=5</code></td>
+      </tr>
+      <tr>
+        <td><code>BOOST</code></td>
+        <td>Increase priority</td>
+        <td><code>@_ BOOST ImportantConcept 50</code></td>
+      </tr>
+    </table>
+
+    <h3>Example: Memory Maintenance</h3>
+    <pre><code># Check what's rarely used
+@lowUsage FACTS_MATCHING ? usage_count LessThan 3
+
+# Protect critical concepts
+@_ PROTECT Water
+@_ PROTECT fundamental_axiom
+
+# Boost important domain concepts
+@_ BOOST CustomerData 100
+
+# Clean up (dry run first)
+@preview FORGET threshold=5 dryRun=true
+
+# Actually forget
+@result FORGET threshold=5</code></pre>
+
+    <h2>5. Dimension Masks: Attention Focus</h2>
+    <p>Masks control which dimensions participate in reasoning – a form of selective attention.</p>
+
+    <h3>Mask Commands</h3>
+    <table class="table-concept-index">
+      <tr>
+        <th>Command</th>
+        <th>Purpose</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><code>MASK_PARTITIONS</code></td>
+        <td>Mask by partition</td>
+        <td><code>@m MASK_PARTITIONS ontology</code></td>
+      </tr>
+      <tr>
+        <td><code>MASK_DIMS</code></td>
+        <td>Mask specific dims</td>
+        <td><code>@m MASK_DIMS temperature color</code></td>
+      </tr>
+      <tr>
+        <td><code>MASK_CONCEPT</code></td>
+        <td>Mask by concept relevance</td>
+        <td><code>@m MASK_CONCEPT $waterRef</code></td>
+      </tr>
+      <tr>
+        <td><code>ASK_MASKED</code></td>
+        <td>Query with mask</td>
+        <td><code>@q ASK_MASKED $m Water IS_A liquid</code></td>
+      </tr>
+    </table>
+
+    <h3>Example: Bias Control</h3>
+    <pre><code># Create mask that ignores value judgments
+@fairMask MASK_PARTITIONS ontology
+
+# Query without axiological bias
+@result ASK_MASKED $fairMask Candidate QUALIFIES_FOR Position
+
+# Compare with full query
+@fullResult ASK Candidate QUALIFIES_FOR Position
+
+# Explain the difference
+@diff EXPLAIN_DIFFERENCE $result $fullResult</code></pre>
+
+    <h2>6. Relation Introspection</h2>
+    <p>Query and understand the relation system itself.</p>
+
+    <h3>Relation Introspection Commands</h3>
+    <pre><code># List all known relations
+@rels LIST_RELATIONS
+
+# Get properties of a relation
+@info GET_RELATION_INFO IS_A
+# Returns: { symmetric: false, transitive: true, inverse: null }
+
+# Find relations between concepts
+@links GET_RELATIONS_BETWEEN Dog mammal
+# Returns: ["IS_A"]</code></pre>
+
+    <h2>7. Script Evaluation: Understanding Execution</h2>
+    <p>The DSL engine itself can be introspected.</p>
+
+    <h3>Evaluation Model</h3>
+    <p>Scripts are evaluated in <strong>topological order</strong> based on variable dependencies:</p>
+
+    <pre><code># These can appear in any order in the file
+@b BOOL_AND $a $a    # Depends on @a
+@a NONEMPTY $list    # Depends on @list
+@list FACTS_MATCHING dog IS_A ?  # No dependencies
+
+# Execution order:
+# 1. @list (no deps)
+# 2. @a (depends on @list)
+# 3. @b (depends on @a)</code></pre>
+
+    <h3>Variable Composition</h3>
+    <p>Variables enable metacognitive composition:</p>
+
+    <pre><code># Store a concept reference
+@subject BIND_CONCEPT Water
+@relation BIND_RELATION BOILS_AT
+@value BIND_CONCEPT Celsius100
+
+# Compose dynamically
+@fact ASSERT $subject $relation $value
+
+# The system "knows" it asserted Water BOILS_AT Celsius100
+@reflection GET_LAST_ASSERTION
+# Returns: { subject: "Water", relation: "BOILS_AT", object: "Celsius100" }</code></pre>
+
+    <h2>8. The Four Use Cases of Sys2DSL</h2>
+    <p>Understanding the system's metacognitive purpose:</p>
+
+    <table class="table-concept-index">
+      <tr>
+        <th>Use Case</th>
+        <th>Primary Commands</th>
+        <th>Metacognitive Purpose</th>
+      </tr>
+      <tr>
+        <td><strong>Define Theory</strong></td>
+        <td>ASSERT, DEFINE_RELATION</td>
+        <td>Building the knowledge base</td>
+      </tr>
+      <tr>
+        <td><strong>Validate</strong></td>
+        <td>VALIDATE, ALL_REQUIREMENTS_SATISFIED</td>
+        <td>Self-checking consistency</td>
+      </tr>
+      <tr>
+        <td><strong>Hypothesize</strong></td>
+        <td>CF, THEORY_PUSH/POP, HYPOTHESIZE</td>
+        <td>Exploring possibilities</td>
+      </tr>
+      <tr>
+        <td><strong>Prove</strong></td>
+        <td>PROVE, ASK, EXPLAIN</td>
+        <td>Deriving and explaining conclusions</td>
+      </tr>
+    </table>
+
+    <h2>9. Full Metacognitive Example</h2>
+    <pre><code># === Domain Setup ===
+@r1 DEFINE_RELATION SYMPTOM_OF inverse=HAS_SYMPTOM
+@r2 DEFINE_RELATION TREATS inverse=TREATED_BY
+
+@f1 ASSERT Fever SYMPTOM_OF Infection
+@f2 ASSERT Headache SYMPTOM_OF Stress
+@f3 ASSERT Aspirin TREATS Headache
+
+# === Self-Assessment ===
+@symptoms FACTS_MATCHING ? SYMPTOM_OF ?
+@treatments FACTS_MATCHING ? TREATS ?
+@symptomCount COUNT $symptoms
+@treatmentCount COUNT $treatments
+
+# === Hypothetical Reasoning ===
+@_ THEORY_PUSH name="new_symptom_hypothesis"
+@h1 ASSERT Fatigue SYMPTOM_OF Infection
+@newSymptoms FACTS_MATCHING ? SYMPTOM_OF Infection
+@_ THEORY_POP
+
+# === Consistency Check ===
+@valid VALIDATE
+
+# === Explanation ===
+@report TO_NATURAL "We know $symptomCount symptoms and $treatmentCount treatments"</code></pre>
+
+    <h2>Technical References</h2>
+    <ul>
+      <li><a href="../specsLoader.html?spec=theory/dsl_engine.js.md">DS(/theory/dsl_engine.js)</a> – DSL interpreter</li>
+      <li><a href="../specsLoader.html?spec=knowledge/concept_store.js.md">DS(/knowledge/concept_store.js)</a> – Knowledge persistence</li>
+      <li><a href="../specsLoader.html?spec=knowledge/theory_stack.js.md">DS(/knowledge/theory_stack.js)</a> – Theory layering</li>
+      <li><a href="../specsLoader.html?spec=reason/reasoner.js.md">DS(/reason/reasoner.js)</a> – Inference engine</li>
+      <li><a href="../wiki/memory_management.html">Wiki: Memory Management</a></li>
+      <li><a href="../wiki/theory_layers.html">Wiki: Theory Layers</a></li>
+    </ul>
+  </article>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to Syntax overview</a>
+    <a href="../index.html">Back to index</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>
