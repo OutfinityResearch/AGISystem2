@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Configuration</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>AGISystem2 – Configuration</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="../wiki/index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
+    <div class="sub-nav">
+      <strong>Architecture:</strong>
+      <a href="index.html">Overview</a> ·
+      <a href="geometry.html">Geometry</a> ·
+      <a href="knowledge.html">Knowledge</a> ·
+      <a href="reasoning.html">Reasoning</a> ·
+      <a href="language.html">Language</a> ·
+      <a href="storage.html">Storage</a> ·
+      <a href="configuration.html">Configuration</a>
+    </div>
+  </div>
+
+  <p>AGISystem2 uses configuration profiles to tune system behavior for different use cases. Profiles control vector dimensionality, LSH parameters, clustering thresholds, and other settings that affect precision, recall, and resource usage.</p>
+
+  <div class="section-intro">
+    <p><strong>Specification:</strong> DS(/config/profiles) · DS(/config/settings)</p>
+  </div>
+
+  <h2>Profiles</h2>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Profile</th><th>Use Case</th><th>Trade-offs</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>auto_test</strong></td>
+        <td>Automated tests, CI/CD</td>
+        <td>Fast, low memory, reduced precision</td>
+      </tr>
+      <tr>
+        <td><strong>manual_test</strong></td>
+        <td>Development, debugging</td>
+        <td>Balanced speed and precision</td>
+      </tr>
+      <tr>
+        <td><strong>prod</strong></td>
+        <td>Production deployments</td>
+        <td>High precision, higher resource usage</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Key Parameters</h2>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Parameter</th><th>auto_test</th><th>manual_test</th><th>prod</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Vector dimensions</td><td>512</td><td>1024</td><td>4096</td></tr>
+      <tr><td>LSH tables</td><td>4</td><td>8</td><td>16</td></tr>
+      <tr><td>Max diamond radius</td><td>100</td><td>150</td><td>200</td></tr>
+      <tr><td>Permutation seed</td><td>42</td><td>42</td><td>configurable</td></tr>
+      <tr><td>Audit logging</td><td>disabled</td><td>enabled</td><td>enabled</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Setting the Profile</h2>
+
+  <h3>Library API</h3>
+  <pre>
+const agent = new AgentSystem2({ profile: 'prod' });</pre>
+
+  <h3>Environment Variable</h3>
+  <pre>
+export AGIS2_PROFILE=manual_test
+./bin/AGISystem2Raw.sh</pre>
+
+  <h3>Overrides</h3>
+  <p>Override specific settings while using a base profile:</p>
+  <pre>
+const agent = new AgentSystem2({
+  profile: 'manual_test',
+  overrides: {
+    storageRoot: '/custom/path',
+    lshTables: 12
+  }
+});</pre>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="../usage-guide/config.html">Configuration Guide</a> – Detailed usage</li>
+    <li><a href="geometry.html">Geometry Layer</a> – Dimension settings</li>
+    <li><a href="reasoning.html#retriever">Retriever</a> – LSH parameters</li>
+  </ul>
+
+  <div class="footer-nav">
+    <a href="storage.html">← Storage</a> ·
+    <a href="index.html">Architecture Overview</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

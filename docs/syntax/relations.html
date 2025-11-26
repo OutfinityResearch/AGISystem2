@@ -11,7 +11,7 @@
     <h1>Built-in Relations</h1>
     <div class="sub-nav">
       <strong>Syntax Topics:</strong>
-      <a href="syntax_macros.html">Sys2DSL</a> ·
+      <a href="syntax_scripts.html">Sys2DSL</a> ·
       <a href="dimensions.html">Dimensions</a> ·
       <a href="relations.html">Relations</a> ·
       <a href="custom_verbs.html">Custom Verbs</a> ·
@@ -291,6 +291,42 @@
         <td><code>Chapter3 HAS_EVENT BattleScene</code></td>
       </tr>
     </table>
+
+    <h2>Relation Constraints</h2>
+    <p>Relations can have constraints that enforce logical consistency:</p>
+
+    <h3>Functional Relations</h3>
+    <p>A relation is <strong>functional</strong> if each subject can have at most one object:</p>
+
+    <pre><code># Declare BORN_IN as functional (one value only)
+@_ REGISTER_FUNCTIONAL BORN_IN
+
+# This is valid:
+@f1 ASSERT Alice BORN_IN Paris
+
+# This would cause a FUNCTIONAL_VIOLATION:
+@f2 ASSERT Alice BORN_IN London  # Contradiction!</code></pre>
+
+    <h3>Cardinality Constraints</h3>
+    <p>Limit how many relations of a type an entity can have:</p>
+
+    <pre><code># Person can have 0-2 biological parents
+@_ REGISTER_CARDINALITY Person HAS_BIOLOGICAL_PARENT 0 2
+
+# This is valid:
+@f1 ASSERT Alice HAS_BIOLOGICAL_PARENT Bob
+@f2 ASSERT Alice HAS_BIOLOGICAL_PARENT Carol
+
+# This would cause a CARDINALITY_MAX_VIOLATION:
+@f3 ASSERT Alice HAS_BIOLOGICAL_PARENT Dave  # Third parent!</code></pre>
+
+    <h3>Checking for Violations</h3>
+    <pre><code># Check all facts for constraint violations
+@report CHECK_CONTRADICTION
+
+# Test before adding a fact
+@test CHECK_WOULD_CONTRADICT Alice BORN_IN London
+# Returns: { wouldContradict: true, reason: "FUNCTIONAL_VIOLATION" }</code></pre>
 
     <h2>Relation Encoding</h2>
     <p>Each relation is implemented as a <strong>deterministic permutation</strong> of vector dimensions:</p>

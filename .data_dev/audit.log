@@ -68,3 +68,335 @@
 {"ts":"2025-11-26T14:00:30.612Z","kind":"ingest","sentence":"CatRetract IS_A Animal"}
 {"ts":"2025-11-26T14:00:30.613Z","kind":"ingest","sentence":"dog IS_A Animal"}
 {"ts":"2025-11-26T14:00:30.613Z","kind":"ask","subject":"dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"FALSE"}
+{"ts":"2025-11-26T16:07:20.290Z","kind":"ingest","sentence":"Fire CAUSES Smoke"}
+{"ts":"2025-11-26T16:07:20.291Z","kind":"ingest","sentence":"Smoke CAUSED_BY Fire"}
+{"ts":"2025-11-26T16:07:20.291Z","kind":"abduct","observation":"Smoke","relation":"CAUSES","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:07:20.291Z","kind":"abduct","observation":"Smoke","relation":"CAUSED_BY","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:07:20.291Z","kind":"abduct","observation":"Smoke","relation":null,"hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:07:20.294Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:07:20.295Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:07:21.097Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:09:37.300Z","kind":"ingest","sentence":"Fire CAUSES Smoke"}
+{"ts":"2025-11-26T16:09:37.300Z","kind":"ingest","sentence":"Smoke CAUSED_BY Fire"}
+{"ts":"2025-11-26T16:09:37.300Z","kind":"abduct","observation":"Smoke","relation":"CAUSES","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:09:37.300Z","kind":"abduct","observation":"Smoke","relation":"CAUSED_BY","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:09:37.301Z","kind":"abduct","observation":"Smoke","relation":null,"hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:09:37.305Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:09:37.305Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:09:38.090Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:09:38.090Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:09:38.090Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:09:38.091Z","kind":"counterfactualAsk","question":"Water BOILS_AT Celsius50?","extraFactsCount":1,"truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:09:38.091Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:09:38.094Z","kind":"ingest","sentence":"ProcedureX REQUIRES Consent"}
+{"ts":"2025-11-26T16:09:38.094Z","kind":"ingest","sentence":"ProcedureX REQUIRES AuditTrail"}
+{"ts":"2025-11-26T16:09:38.094Z","kind":"ingest","sentence":"ExportData PROHIBITED_BY GDPR"}
+{"ts":"2025-11-26T16:09:38.094Z","kind":"ingest","sentence":"ExportData PERMITTED_BY HIPAA"}
+{"ts":"2025-11-26T16:09:38.094Z","kind":"ingest","sentence":"Consent GIVEN yes"}
+{"ts":"2025-11-26T16:09:38.095Z","kind":"ingest","sentence":"AuditTrail PRESENT yes"}
+{"ts":"2025-11-26T16:09:38.095Z","kind":"ingest","sentence":"ExportData HAS_PROPERTY regs"}
+{"ts":"2025-11-26T16:09:38.098Z","kind":"ingest","sentence":"Alice IS_A Human"}
+{"ts":"2025-11-26T16:09:38.098Z","kind":"ingest","sentence":"Alice LOCATED_IN CityX"}
+{"ts":"2025-11-26T16:09:38.098Z","kind":"ingest","sentence":"CityX DISJOINT_WITH MagicZone"}
+{"ts":"2025-11-26T16:09:38.098Z","kind":"ingest","sentence":"Alice CASTS Magic"}
+{"ts":"2025-11-26T16:09:38.098Z","kind":"ingest","sentence":"SciFi_TechMagic PERMITS Magic_IN CityX"}
+{"ts":"2025-11-26T16:09:38.098Z","kind":"ask","subject":"Alice","relation":"IS_A","object":"Human","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:09:38.099Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:09:38.100Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:09:38.100Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:09:38.100Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:09:38.104Z","kind":"ingest","sentence":"TrueTest IS_A Thing"}
+{"ts":"2025-11-26T16:09:38.104Z","kind":"ask","subject":"TrueTest","relation":"IS_A","object":"Thing","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:09:38.105Z","kind":"ingest","sentence":"BirdProve IS_A Animal"}
+{"ts":"2025-11-26T16:09:38.106Z","kind":"ingest","sentence":"CatRetract IS_A Animal"}
+{"ts":"2025-11-26T16:09:38.107Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:09:38.107Z","kind":"ask","subject":"dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"FALSE"}
+{"ts":"2025-11-26T16:09:43.341Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:09:49.572Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:09:55.578Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:10:05.959Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:10:18.241Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:10:24.642Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:10:40.852Z","kind":"ingest","sentence":"Fire CAUSES Smoke"}
+{"ts":"2025-11-26T16:10:40.853Z","kind":"ingest","sentence":"Smoke CAUSED_BY Fire"}
+{"ts":"2025-11-26T16:10:40.853Z","kind":"abduct","observation":"Smoke","relation":"CAUSES","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:10:40.853Z","kind":"abduct","observation":"Smoke","relation":"CAUSED_BY","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:10:40.853Z","kind":"abduct","observation":"Smoke","relation":null,"hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:10:40.858Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:10:40.858Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:10:41.637Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:10:41.637Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:10:41.638Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:10:41.638Z","kind":"counterfactualAsk","question":"Water BOILS_AT Celsius50?","extraFactsCount":1,"truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:10:41.638Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:10:41.641Z","kind":"ingest","sentence":"ProcedureX REQUIRES Consent"}
+{"ts":"2025-11-26T16:10:41.641Z","kind":"ingest","sentence":"ProcedureX REQUIRES AuditTrail"}
+{"ts":"2025-11-26T16:10:41.641Z","kind":"ingest","sentence":"ExportData PROHIBITED_BY GDPR"}
+{"ts":"2025-11-26T16:10:41.641Z","kind":"ingest","sentence":"ExportData PERMITTED_BY HIPAA"}
+{"ts":"2025-11-26T16:10:41.642Z","kind":"ingest","sentence":"Consent GIVEN yes"}
+{"ts":"2025-11-26T16:10:41.642Z","kind":"ingest","sentence":"AuditTrail PRESENT yes"}
+{"ts":"2025-11-26T16:10:41.642Z","kind":"ingest","sentence":"ExportData HAS_PROPERTY regs"}
+{"ts":"2025-11-26T16:10:41.645Z","kind":"ingest","sentence":"Alice IS_A Human"}
+{"ts":"2025-11-26T16:10:41.645Z","kind":"ingest","sentence":"Alice LOCATED_IN CityX"}
+{"ts":"2025-11-26T16:10:41.645Z","kind":"ingest","sentence":"CityX DISJOINT_WITH MagicZone"}
+{"ts":"2025-11-26T16:10:41.646Z","kind":"ingest","sentence":"Alice CASTS Magic"}
+{"ts":"2025-11-26T16:10:41.646Z","kind":"ingest","sentence":"SciFi_TechMagic PERMITS Magic_IN CityX"}
+{"ts":"2025-11-26T16:10:41.646Z","kind":"ask","subject":"Alice","relation":"IS_A","object":"Human","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:10:41.647Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:10:41.647Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:10:41.647Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:10:41.647Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:10:41.651Z","kind":"ingest","sentence":"TrueTest IS_A Thing"}
+{"ts":"2025-11-26T16:10:41.651Z","kind":"ask","subject":"TrueTest","relation":"IS_A","object":"Thing","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:10:41.652Z","kind":"ingest","sentence":"BirdProve IS_A Animal"}
+{"ts":"2025-11-26T16:10:41.653Z","kind":"ingest","sentence":"CatRetract IS_A Animal"}
+{"ts":"2025-11-26T16:10:41.654Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:10:41.654Z","kind":"ask","subject":"dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"FALSE"}
+{"ts":"2025-11-26T16:17:35.202Z","kind":"ingest","sentence":"Fire CAUSES Smoke"}
+{"ts":"2025-11-26T16:17:35.202Z","kind":"ingest","sentence":"Smoke CAUSED_BY Fire"}
+{"ts":"2025-11-26T16:17:35.202Z","kind":"abduct","observation":"Smoke","relation":"CAUSES","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:17:35.202Z","kind":"abduct","observation":"Smoke","relation":"CAUSED_BY","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:17:35.202Z","kind":"abduct","observation":"Smoke","relation":null,"hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:17:35.210Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:17:35.211Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:17:36.022Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:17:36.022Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:17:36.022Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:17:36.023Z","kind":"counterfactualAsk","question":"Water BOILS_AT Celsius50?","extraFactsCount":1,"truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:17:36.023Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:17:36.026Z","kind":"ingest","sentence":"ProcedureX REQUIRES Consent"}
+{"ts":"2025-11-26T16:17:36.026Z","kind":"ingest","sentence":"ProcedureX REQUIRES AuditTrail"}
+{"ts":"2025-11-26T16:17:36.026Z","kind":"ingest","sentence":"ExportData PROHIBITED_BY GDPR"}
+{"ts":"2025-11-26T16:17:36.026Z","kind":"ingest","sentence":"ExportData PERMITTED_BY HIPAA"}
+{"ts":"2025-11-26T16:17:36.027Z","kind":"ingest","sentence":"Consent GIVEN yes"}
+{"ts":"2025-11-26T16:17:36.027Z","kind":"ingest","sentence":"AuditTrail PRESENT yes"}
+{"ts":"2025-11-26T16:17:36.027Z","kind":"ingest","sentence":"ExportData HAS_PROPERTY regs"}
+{"ts":"2025-11-26T16:17:36.030Z","kind":"ingest","sentence":"Alice IS_A Human"}
+{"ts":"2025-11-26T16:17:36.030Z","kind":"ingest","sentence":"Alice LOCATED_IN CityX"}
+{"ts":"2025-11-26T16:17:36.030Z","kind":"ingest","sentence":"CityX DISJOINT_WITH MagicZone"}
+{"ts":"2025-11-26T16:17:36.030Z","kind":"ingest","sentence":"Alice CASTS Magic"}
+{"ts":"2025-11-26T16:17:36.030Z","kind":"ingest","sentence":"SciFi_TechMagic PERMITS Magic_IN CityX"}
+{"ts":"2025-11-26T16:17:36.031Z","kind":"ask","subject":"Alice","relation":"IS_A","object":"Human","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:17:36.031Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:17:36.032Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:17:36.032Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:17:36.032Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:17:36.036Z","kind":"ingest","sentence":"TrueTest IS_A Thing"}
+{"ts":"2025-11-26T16:17:36.036Z","kind":"ask","subject":"TrueTest","relation":"IS_A","object":"Thing","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:17:36.037Z","kind":"ingest","sentence":"BirdProve IS_A Animal"}
+{"ts":"2025-11-26T16:17:36.038Z","kind":"ingest","sentence":"CatRetract IS_A Animal"}
+{"ts":"2025-11-26T16:17:36.038Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:17:36.039Z","kind":"ask","subject":"dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"FALSE"}
+{"ts":"2025-11-26T16:21:25.986Z","kind":"ingest","sentence":"Fire CAUSES Smoke"}
+{"ts":"2025-11-26T16:21:25.987Z","kind":"ingest","sentence":"Smoke CAUSED_BY Fire"}
+{"ts":"2025-11-26T16:21:25.987Z","kind":"abduct","observation":"Smoke","relation":"CAUSES","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:21:25.987Z","kind":"abduct","observation":"Smoke","relation":"CAUSED_BY","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:21:25.987Z","kind":"abduct","observation":"Smoke","relation":null,"hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:21:25.990Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:21:25.991Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:21:26.730Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:21:26.730Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:21:26.730Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:21:26.730Z","kind":"counterfactualAsk","question":"Water BOILS_AT Celsius50?","extraFactsCount":1,"truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:21:26.731Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:21:26.733Z","kind":"ingest","sentence":"ProcedureX REQUIRES Consent"}
+{"ts":"2025-11-26T16:21:26.733Z","kind":"ingest","sentence":"ProcedureX REQUIRES AuditTrail"}
+{"ts":"2025-11-26T16:21:26.734Z","kind":"ingest","sentence":"ExportData PROHIBITED_BY GDPR"}
+{"ts":"2025-11-26T16:21:26.734Z","kind":"ingest","sentence":"ExportData PERMITTED_BY HIPAA"}
+{"ts":"2025-11-26T16:21:26.735Z","kind":"ingest","sentence":"Consent GIVEN yes"}
+{"ts":"2025-11-26T16:21:26.735Z","kind":"ingest","sentence":"AuditTrail PRESENT yes"}
+{"ts":"2025-11-26T16:21:26.735Z","kind":"ingest","sentence":"ExportData HAS_PROPERTY regs"}
+{"ts":"2025-11-26T16:21:26.738Z","kind":"ingest","sentence":"Alice IS_A Human"}
+{"ts":"2025-11-26T16:21:26.738Z","kind":"ingest","sentence":"Alice LOCATED_IN CityX"}
+{"ts":"2025-11-26T16:21:26.738Z","kind":"ingest","sentence":"CityX DISJOINT_WITH MagicZone"}
+{"ts":"2025-11-26T16:21:26.738Z","kind":"ingest","sentence":"Alice CASTS Magic"}
+{"ts":"2025-11-26T16:21:26.738Z","kind":"ingest","sentence":"SciFi_TechMagic PERMITS Magic_IN CityX"}
+{"ts":"2025-11-26T16:21:26.738Z","kind":"ask","subject":"Alice","relation":"IS_A","object":"Human","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:21:26.739Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:21:26.740Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:21:26.740Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:21:26.740Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:21:26.744Z","kind":"ingest","sentence":"TrueTest IS_A Thing"}
+{"ts":"2025-11-26T16:21:26.744Z","kind":"ask","subject":"TrueTest","relation":"IS_A","object":"Thing","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:21:26.745Z","kind":"ingest","sentence":"BirdProve IS_A Animal"}
+{"ts":"2025-11-26T16:21:26.746Z","kind":"ingest","sentence":"CatRetract IS_A Animal"}
+{"ts":"2025-11-26T16:21:26.747Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:21:26.747Z","kind":"ask","subject":"dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"FALSE"}
+{"ts":"2025-11-26T16:24:42.188Z","kind":"ingest","sentence":"Fire CAUSES Smoke"}
+{"ts":"2025-11-26T16:24:42.188Z","kind":"ingest","sentence":"Smoke CAUSED_BY Fire"}
+{"ts":"2025-11-26T16:24:42.188Z","kind":"abduct","observation":"Smoke","relation":"CAUSES","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:24:42.189Z","kind":"abduct","observation":"Smoke","relation":"CAUSED_BY","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:24:42.189Z","kind":"abduct","observation":"Smoke","relation":null,"hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:24:42.192Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:24:42.193Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:24:42.925Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:24:42.925Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:24:42.926Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:24:42.926Z","kind":"counterfactualAsk","question":"Water BOILS_AT Celsius50?","extraFactsCount":1,"truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:24:42.926Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:24:42.929Z","kind":"ingest","sentence":"ProcedureX REQUIRES Consent"}
+{"ts":"2025-11-26T16:24:42.929Z","kind":"ingest","sentence":"ProcedureX REQUIRES AuditTrail"}
+{"ts":"2025-11-26T16:24:42.929Z","kind":"ingest","sentence":"ExportData PROHIBITED_BY GDPR"}
+{"ts":"2025-11-26T16:24:42.929Z","kind":"ingest","sentence":"ExportData PERMITTED_BY HIPAA"}
+{"ts":"2025-11-26T16:24:42.930Z","kind":"ingest","sentence":"Consent GIVEN yes"}
+{"ts":"2025-11-26T16:24:42.930Z","kind":"ingest","sentence":"AuditTrail PRESENT yes"}
+{"ts":"2025-11-26T16:24:42.930Z","kind":"ingest","sentence":"ExportData HAS_PROPERTY regs"}
+{"ts":"2025-11-26T16:24:42.933Z","kind":"ingest","sentence":"Alice IS_A Human"}
+{"ts":"2025-11-26T16:24:42.933Z","kind":"ingest","sentence":"Alice LOCATED_IN CityX"}
+{"ts":"2025-11-26T16:24:42.933Z","kind":"ingest","sentence":"CityX DISJOINT_WITH MagicZone"}
+{"ts":"2025-11-26T16:24:42.933Z","kind":"ingest","sentence":"Alice CASTS Magic"}
+{"ts":"2025-11-26T16:24:42.933Z","kind":"ingest","sentence":"SciFi_TechMagic PERMITS Magic_IN CityX"}
+{"ts":"2025-11-26T16:24:42.934Z","kind":"ask","subject":"Alice","relation":"IS_A","object":"Human","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:24:42.934Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:24:42.935Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:24:42.935Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:24:42.935Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:24:42.939Z","kind":"ingest","sentence":"TrueTest IS_A Thing"}
+{"ts":"2025-11-26T16:24:42.939Z","kind":"ask","subject":"TrueTest","relation":"IS_A","object":"Thing","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:24:42.940Z","kind":"ingest","sentence":"BirdProve IS_A Animal"}
+{"ts":"2025-11-26T16:24:42.941Z","kind":"ingest","sentence":"CatRetract IS_A Animal"}
+{"ts":"2025-11-26T16:24:42.941Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:24:42.942Z","kind":"ask","subject":"dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"FALSE"}
+{"ts":"2025-11-26T16:33:44.765Z","kind":"ingest","sentence":"Fire CAUSES Smoke"}
+{"ts":"2025-11-26T16:33:44.766Z","kind":"ingest","sentence":"Smoke CAUSED_BY Fire"}
+{"ts":"2025-11-26T16:33:44.766Z","kind":"abduct","observation":"Smoke","relation":"CAUSES","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:33:44.766Z","kind":"abduct","observation":"Smoke","relation":"CAUSED_BY","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:33:44.766Z","kind":"abduct","observation":"Smoke","relation":null,"hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T16:33:44.771Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:33:44.772Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:33:45.591Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:33:45.591Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:33:45.592Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:33:45.592Z","kind":"counterfactualAsk","question":"Water BOILS_AT Celsius50?","extraFactsCount":1,"truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:33:45.592Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:33:45.595Z","kind":"ingest","sentence":"ProcedureX REQUIRES Consent"}
+{"ts":"2025-11-26T16:33:45.595Z","kind":"ingest","sentence":"ProcedureX REQUIRES AuditTrail"}
+{"ts":"2025-11-26T16:33:45.596Z","kind":"ingest","sentence":"ExportData PROHIBITED_BY GDPR"}
+{"ts":"2025-11-26T16:33:45.596Z","kind":"ingest","sentence":"ExportData PERMITTED_BY HIPAA"}
+{"ts":"2025-11-26T16:33:45.596Z","kind":"ingest","sentence":"Consent GIVEN yes"}
+{"ts":"2025-11-26T16:33:45.596Z","kind":"ingest","sentence":"AuditTrail PRESENT yes"}
+{"ts":"2025-11-26T16:33:45.597Z","kind":"ingest","sentence":"ExportData HAS_PROPERTY regs"}
+{"ts":"2025-11-26T16:33:45.600Z","kind":"ingest","sentence":"Alice IS_A Human"}
+{"ts":"2025-11-26T16:33:45.600Z","kind":"ingest","sentence":"Alice LOCATED_IN CityX"}
+{"ts":"2025-11-26T16:33:45.600Z","kind":"ingest","sentence":"CityX DISJOINT_WITH MagicZone"}
+{"ts":"2025-11-26T16:33:45.600Z","kind":"ingest","sentence":"Alice CASTS Magic"}
+{"ts":"2025-11-26T16:33:45.601Z","kind":"ingest","sentence":"SciFi_TechMagic PERMITS Magic_IN CityX"}
+{"ts":"2025-11-26T16:33:45.601Z","kind":"ask","subject":"Alice","relation":"IS_A","object":"Human","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:33:45.601Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:33:45.602Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:33:45.602Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T16:33:45.602Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:33:45.606Z","kind":"ingest","sentence":"TrueTest IS_A Thing"}
+{"ts":"2025-11-26T16:33:45.606Z","kind":"ask","subject":"TrueTest","relation":"IS_A","object":"Thing","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T16:33:45.607Z","kind":"ingest","sentence":"BirdProve IS_A Animal"}
+{"ts":"2025-11-26T16:33:45.608Z","kind":"ingest","sentence":"CatRetract IS_A Animal"}
+{"ts":"2025-11-26T16:33:45.609Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T16:33:45.609Z","kind":"ask","subject":"dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"FALSE"}
+{"ts":"2025-11-26T17:28:59.421Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T17:28:59.421Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T17:28:59.422Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:35:24.170Z","kind":"ingest","sentence":"Fire CAUSES Smoke"}
+{"ts":"2025-11-26T17:35:24.170Z","kind":"ingest","sentence":"Smoke CAUSED_BY Fire"}
+{"ts":"2025-11-26T17:35:24.171Z","kind":"abduct","observation":"Smoke","relation":"CAUSES","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T17:35:24.171Z","kind":"abduct","observation":"Smoke","relation":"CAUSED_BY","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T17:35:24.171Z","kind":"abduct","observation":"Smoke","relation":null,"hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T17:35:24.179Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T17:35:24.180Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:35:25.013Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T17:35:25.013Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T17:35:25.014Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:35:25.014Z","kind":"counterfactualAsk","question":"Water BOILS_AT Celsius50?","extraFactsCount":1,"truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:35:25.014Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:35:25.017Z","kind":"ingest","sentence":"ProcedureX REQUIRES Consent"}
+{"ts":"2025-11-26T17:35:25.017Z","kind":"ingest","sentence":"ProcedureX REQUIRES AuditTrail"}
+{"ts":"2025-11-26T17:35:25.017Z","kind":"ingest","sentence":"ExportData PROHIBITED_BY GDPR"}
+{"ts":"2025-11-26T17:35:25.017Z","kind":"ingest","sentence":"ExportData PERMITTED_BY HIPAA"}
+{"ts":"2025-11-26T17:35:25.018Z","kind":"ingest","sentence":"Consent GIVEN yes"}
+{"ts":"2025-11-26T17:35:25.018Z","kind":"ingest","sentence":"AuditTrail PRESENT yes"}
+{"ts":"2025-11-26T17:35:25.019Z","kind":"ingest","sentence":"ExportData HAS_PROPERTY regs"}
+{"ts":"2025-11-26T17:35:25.022Z","kind":"ingest","sentence":"Alice IS_A Human"}
+{"ts":"2025-11-26T17:35:25.022Z","kind":"ingest","sentence":"Alice LOCATED_IN CityX"}
+{"ts":"2025-11-26T17:35:25.022Z","kind":"ingest","sentence":"CityX DISJOINT_WITH MagicZone"}
+{"ts":"2025-11-26T17:35:25.022Z","kind":"ingest","sentence":"Alice CASTS Magic"}
+{"ts":"2025-11-26T17:35:25.022Z","kind":"ingest","sentence":"SciFi_TechMagic PERMITS Magic_IN CityX"}
+{"ts":"2025-11-26T17:35:25.022Z","kind":"ask","subject":"Alice","relation":"IS_A","object":"Human","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:35:25.023Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T17:35:25.024Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T17:35:25.024Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T17:35:25.024Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:35:25.028Z","kind":"ingest","sentence":"TrueTest IS_A Thing"}
+{"ts":"2025-11-26T17:35:25.028Z","kind":"ask","subject":"TrueTest","relation":"IS_A","object":"Thing","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:35:25.029Z","kind":"ingest","sentence":"BirdProve IS_A Animal"}
+{"ts":"2025-11-26T17:35:25.030Z","kind":"ingest","sentence":"CatRetract IS_A Animal"}
+{"ts":"2025-11-26T17:35:25.030Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T17:35:25.031Z","kind":"ask","subject":"dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"FALSE"}
+{"ts":"2025-11-26T17:36:51.453Z","kind":"ingest","sentence":"Fire CAUSES Smoke"}
+{"ts":"2025-11-26T17:36:51.453Z","kind":"ingest","sentence":"Smoke CAUSED_BY Fire"}
+{"ts":"2025-11-26T17:36:51.454Z","kind":"abduct","observation":"Smoke","relation":"CAUSES","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T17:36:51.454Z","kind":"abduct","observation":"Smoke","relation":"CAUSED_BY","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T17:36:51.454Z","kind":"abduct","observation":"Smoke","relation":null,"hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T17:36:51.458Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T17:36:51.458Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:36:52.221Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T17:36:52.221Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T17:36:52.221Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:36:52.221Z","kind":"counterfactualAsk","question":"Water BOILS_AT Celsius50?","extraFactsCount":1,"truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:36:52.221Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:36:52.224Z","kind":"ingest","sentence":"ProcedureX REQUIRES Consent"}
+{"ts":"2025-11-26T17:36:52.224Z","kind":"ingest","sentence":"ProcedureX REQUIRES AuditTrail"}
+{"ts":"2025-11-26T17:36:52.224Z","kind":"ingest","sentence":"ExportData PROHIBITED_BY GDPR"}
+{"ts":"2025-11-26T17:36:52.225Z","kind":"ingest","sentence":"ExportData PERMITTED_BY HIPAA"}
+{"ts":"2025-11-26T17:36:52.225Z","kind":"ingest","sentence":"Consent GIVEN yes"}
+{"ts":"2025-11-26T17:36:52.225Z","kind":"ingest","sentence":"AuditTrail PRESENT yes"}
+{"ts":"2025-11-26T17:36:52.226Z","kind":"ingest","sentence":"ExportData HAS_PROPERTY regs"}
+{"ts":"2025-11-26T17:36:52.228Z","kind":"ingest","sentence":"Alice IS_A Human"}
+{"ts":"2025-11-26T17:36:52.229Z","kind":"ingest","sentence":"Alice LOCATED_IN CityX"}
+{"ts":"2025-11-26T17:36:52.229Z","kind":"ingest","sentence":"CityX DISJOINT_WITH MagicZone"}
+{"ts":"2025-11-26T17:36:52.229Z","kind":"ingest","sentence":"Alice CASTS Magic"}
+{"ts":"2025-11-26T17:36:52.229Z","kind":"ingest","sentence":"SciFi_TechMagic PERMITS Magic_IN CityX"}
+{"ts":"2025-11-26T17:36:52.229Z","kind":"ask","subject":"Alice","relation":"IS_A","object":"Human","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:36:52.230Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T17:36:52.230Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T17:36:52.230Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T17:36:52.231Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:36:52.234Z","kind":"ingest","sentence":"TrueTest IS_A Thing"}
+{"ts":"2025-11-26T17:36:52.234Z","kind":"ask","subject":"TrueTest","relation":"IS_A","object":"Thing","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:36:52.235Z","kind":"ingest","sentence":"BirdProve IS_A Animal"}
+{"ts":"2025-11-26T17:36:52.236Z","kind":"ingest","sentence":"CatRetract IS_A Animal"}
+{"ts":"2025-11-26T17:36:52.237Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T17:36:52.237Z","kind":"ask","subject":"dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"FALSE"}
+{"ts":"2025-11-26T17:44:41.636Z","kind":"ingest","sentence":"Fire CAUSES Smoke"}
+{"ts":"2025-11-26T17:44:41.636Z","kind":"ingest","sentence":"Smoke CAUSED_BY Fire"}
+{"ts":"2025-11-26T17:44:41.637Z","kind":"abduct","observation":"Smoke","relation":"CAUSES","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T17:44:41.637Z","kind":"abduct","observation":"Smoke","relation":"CAUSED_BY","hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T17:44:41.637Z","kind":"abduct","observation":"Smoke","relation":null,"hypothesis":"Fire","band":"PLAUSIBLE"}
+{"ts":"2025-11-26T17:44:41.642Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T17:44:41.642Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:44:42.467Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T17:44:42.467Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T17:44:42.468Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:44:42.468Z","kind":"counterfactualAsk","question":"Water BOILS_AT Celsius50?","extraFactsCount":1,"truth":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:44:42.468Z","kind":"ask","subject":"Water","relation":"BOILS_AT","object":"Celsius50","truth":"FALSE","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:44:42.471Z","kind":"ingest","sentence":"ProcedureX REQUIRES Consent"}
+{"ts":"2025-11-26T17:44:42.471Z","kind":"ingest","sentence":"ProcedureX REQUIRES AuditTrail"}
+{"ts":"2025-11-26T17:44:42.471Z","kind":"ingest","sentence":"ExportData PROHIBITED_BY GDPR"}
+{"ts":"2025-11-26T17:44:42.471Z","kind":"ingest","sentence":"ExportData PERMITTED_BY HIPAA"}
+{"ts":"2025-11-26T17:44:42.471Z","kind":"ingest","sentence":"Consent GIVEN yes"}
+{"ts":"2025-11-26T17:44:42.472Z","kind":"ingest","sentence":"AuditTrail PRESENT yes"}
+{"ts":"2025-11-26T17:44:42.472Z","kind":"ingest","sentence":"ExportData HAS_PROPERTY regs"}
+{"ts":"2025-11-26T17:44:42.475Z","kind":"ingest","sentence":"Alice IS_A Human"}
+{"ts":"2025-11-26T17:44:42.475Z","kind":"ingest","sentence":"Alice LOCATED_IN CityX"}
+{"ts":"2025-11-26T17:44:42.475Z","kind":"ingest","sentence":"CityX DISJOINT_WITH MagicZone"}
+{"ts":"2025-11-26T17:44:42.476Z","kind":"ingest","sentence":"Alice CASTS Magic"}
+{"ts":"2025-11-26T17:44:42.476Z","kind":"ingest","sentence":"SciFi_TechMagic PERMITS Magic_IN CityX"}
+{"ts":"2025-11-26T17:44:42.476Z","kind":"ask","subject":"Alice","relation":"IS_A","object":"Human","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:44:42.477Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T17:44:42.477Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T17:44:42.478Z","kind":"ingest","sentence":"Water BOILS_AT Celsius100"}
+{"ts":"2025-11-26T17:44:42.478Z","kind":"ask","subject":"Dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:44:42.482Z","kind":"ingest","sentence":"TrueTest IS_A Thing"}
+{"ts":"2025-11-26T17:44:42.482Z","kind":"ask","subject":"TrueTest","relation":"IS_A","object":"Thing","truth":"TRUE_CERTAIN","band":"TRUE_CERTAIN"}
+{"ts":"2025-11-26T17:44:42.483Z","kind":"ingest","sentence":"BirdProve IS_A Animal"}
+{"ts":"2025-11-26T17:44:42.484Z","kind":"ingest","sentence":"CatRetract IS_A Animal"}
+{"ts":"2025-11-26T17:44:42.485Z","kind":"ingest","sentence":"dog IS_A Animal"}
+{"ts":"2025-11-26T17:44:42.485Z","kind":"ask","subject":"dog","relation":"IS_A","object":"Animal","truth":"TRUE_CERTAIN","band":"FALSE"}

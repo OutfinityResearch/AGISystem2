@@ -8,74 +8,182 @@
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>Axiology</h1>
-    <small></small>
-    <div class="sub-nav">
-      <strong>Wiki Topics:</strong>
-      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
-    </div>
+    <h1>AGISystem2 – Axiology</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
   </div>
-  <article>
-    <div class="philosophical-header">
-      <h2>The Philosophical Foundations of Axiology</h2>
-      <p>Axiology, the branch of philosophy that studies the nature of values and value judgments, represents a fundamental attempt to understand what makes things, actions, or states desired, good, beautiful, or important. Unlike ontology, which deals with what exists, and epistemology, which deals with what we can know, axiology explores what we ought to value and why. This philosophical discipline has its roots in the works of Plato and Aristotle but was formalized as a distinct field only in the 19th century.</p>
-      
-      <p>In its fundamental structure, axiology divides into two main branches: ethics, which deals with moral values and the principles governing human conduct, and aesthetics, which explores values related to beauty, art, and sensory experience. However, axiology extends this analysis to other domains of value, such as economic, social, political, and existential values. Each of these domains represents a distinct dimension of human experience, with its own evaluation criteria and its own value hierarchies.</p>
-      
-      <p>What makes axiology particularly relevant to artificial intelligence is the fact that automated decision systems cannot be value-neutral. Any system that makes decisions, whether it involves resource allocation, task prioritization, or result evaluation, operates implicitly or explicitly according to a value system. The recognition and formalization of these values thus becomes a technical and ethical necessity.</p>
-    </div>
 
-    <div class="academic-analysis">
-      <h2>Axiological Formalization and Geometric Representation</h2>
-      <p>In AGISystem2, axiology is implemented through a sophisticated geometric framework that integrates value dimensions directly into the conceptual representation of meaning. The system dedicates a distinct partition of the high-dimensional vector space to axiological axes, ensuring that values are represented explicitly and not mixed with factual content. This ontological-axiological separation is essential for transparency, auditability, and explainability of AI reasoning.</p>
-      
-      <p>The axiological dimensions in our system represent continuous axes that encode specific value domains such as safety, fairness, efficiency, privacy, and autonomy. Each dimension operates on a normalized scale, typically ranging from -1.0 (maximum negative value) to +1.0 (maximum positive value), with 0.0 representing neutrality. This geometric representation allows for precise mathematical operations on values, including comparison, combination, and transformation.</p>
-      
-      <p>Within each concept vector, axiological dimensions occupy dedicated positions that are preserved through all geometric operations. When concepts are combined through intersection or union, their axiological components are mathematically merged according to principled rules. For example, when intersecting two concepts, the resulting axiological values might represent the minimum safety level or the maximum efficiency requirement, depending on the context of reasoning.</p>
-      
-      <p>The geometric nature of axiological representation enables sophisticated value reasoning through spatial operations. The system can compute value distances between concepts, identify value conflicts, and find optimal trade-offs between competing values. These operations are performed using the same mathematical engine that handles factual reasoning, ensuring that value reasoning is integrated seamlessly with other forms of inference.</p>
-    </div>
+  <p>Axiology in AGISystem2 refers to dimensions 256-383: the 128 dimensions that encode values, preferences, and normative judgments. These are kept separate from <a href="ontology.html">ontological</a> facts so the system can reason about values explicitly and transparently.</p>
 
-    <div class="technical-implementation">
-      <h2>Integration with Bias Control and Explainability</h2>
-      <p>The axiological system is tightly integrated with the bias control framework, providing comprehensive tools for managing value-based reasoning and ensuring ethical behavior. This integration allows the system to detect, correct, and explain how values influence decisions, creating a transparent and accountable AI system.</p>
-      
-      <p>The BiasController monitors axiological dimensions for systematic distortions or unwanted influences that might compromise fair reasoning. It can detect when certain values are consistently overweighted or underweighted compared to intended policy, and can apply corrective masks to rebalance the value space. These corrections are logged and can be audited to ensure ongoing compliance with ethical requirements.</p>
-      
-      <p>For explainability, the system provides detailed accounts of how axiological dimensions affect specific reasoning outcomes. Each decision can be decomposed to show the contribution of different value axes, including any that were masked or transformed due to bias concerns. This granular explainability is essential for building trust and enabling effective human oversight of AI decision-making processes.</p>
-      
-      <p>The system also supports multiple axiological frameworks that can be selected based on context or deployment requirements. For example, a healthcare deployment might prioritize patient welfare and justice dimensions, while a research deployment might emphasize academic freedom and innovation values. This flexibility ensures that the system can operate appropriately across different cultural and institutional contexts while maintaining methodological rigor.</p>
-    </div>
+  <div class="diagram">
+    <svg viewBox="0 0 560 300" role="img" aria-label="Axiology dimension detail">
+      <defs>
+        <marker id="arrow-axio" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#e65100" />
+        </marker>
+      </defs>
 
-    <div class="philosophical-implications">
-      <h2>Ethical and Epistemological Implications</h2>
-      <p>The explicit integration of axiology in artificial intelligence systems raises profound questions about the nature of objectivity and neutrality. Recognizing that any decision system operates according to a value system forces us to confront the responsibility of choosing and justifying these values. This responsibility is all the greater as AI systems have increasingly significant impact on human life.</p>
-      
-      <p>From an epistemological perspective, the system's axiological structure enables a form of explicit and verifiable value reasoning. Instead of values being opaquely embedded in algorithms, they become part of the explicit representation of knowledge, able to be examined, debated, and modified transparently. This transparency is essential for public trust and algorithmic accountability.</p>
-      
-      <p>Moreover, axiological formalization opens the way to systems that can understand and navigate value conflicts, a fundamental aspect of human moral reasoning. When two values conflict—for example, safety versus efficiency or freedom versus equality—the system can explicitly evaluate trade-offs and justify decisions based on a clear and transparent value hierarchy.</p>
-    </div>
+      <!-- Background -->
+      <rect x="0" y="0" width="560" height="300" fill="#fafbfc"/>
 
-    <div class="academic-references">
-      <h2>Academic and Philosophical Context</h2>
-      <p>Axiology as a philosophical discipline was developed by thinkers such as Wilhelm Windelband, Heinrich Rickert, and Nicolai Hartmann. They argued that values are neither objective properties of the world nor mere psychological subjectivities, but distinct forms of reality that require their own methods of investigation. In the 20th century, developments in applied ethics, decision theory, and behavioral economics brought new perspectives on how values can be formalized and applied in practical contexts.</p>
-      
-      <p>For deeper exploration of these concepts, <a href="https://en.wikipedia.org/wiki/Axiology" target="_blank" rel="noopener noreferrer">the specialized literature on axiology</a> offers a comprehensive perspective on the history and contemporary problems of the philosophy of values.</p>
-    </div>
+      <!-- Full vector bar -->
+      <rect x="20" y="20" width="520" height="50" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
 
-    <div class="technical-specifications">
-      <h2>Technical Implementation References</h2>
-      <p>For detailed technical specifications of axiology implementation in AGISystem2, consult the following documentation:</p>
-      <ul>
-        <li><span class="spec-id">DS[/knowledge/dimensions]</span> – dimension catalogue that defines the ontology/axiology split and the axiological axis configuration.</li>
-        <li><span class="spec-id">DS[/reason/bias_control.js]</span> – <code>BiasController</code>: applies value masks and fairness toggles for axiological reasoning.</li>
-        <li><span class="spec-id">DS[/support/config.js]</span> – <code>Config</code>: exposes configuration for partitions and profile-specific limits.</li>
-        <li>Theory pages: <a href="../theory/dimensions.html">Dimensions Overview</a> and <a href="../theory/axiology_dims.html">Axiology Dimensions</a> describe how value axes are laid out, while <a href="../usage-guide/ingestion.html">Data Ingestion</a> shows how they are populated in practice.</li>
-      </ul>
-    </div>
-  </article>
+      <!-- Ontology partition (grayed) -->
+      <rect x="40" y="35" width="300" height="20" rx="2" fill="#f5f5f5" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="190" y="49" font-size="9" fill="#b0b6c4" text-anchor="middle">Ontology: 0-255</text>
+
+      <!-- Axiology partition (highlighted) -->
+      <rect x="340" y="35" width="180" height="20" rx="2" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+      <text x="430" y="49" font-size="9" fill="#e65100" text-anchor="middle">Axiology: 256-383</text>
+
+      <!-- Axiological categories -->
+      <rect x="20" y="85" width="520" height="195" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+      <text x="280" y="105" font-size="11" font-weight="bold" fill="#e65100" text-anchor="middle">Axiological Dimension Categories</text>
+
+      <!-- Ethical -->
+      <rect x="40" y="120" width="150" height="65" rx="4" fill="#fff" stroke="#e65100" stroke-width="1"/>
+      <text x="115" y="138" font-size="10" font-weight="bold" fill="#e65100" text-anchor="middle">Ethical</text>
+      <text x="50" y="155" font-size="8" fill="#4a5670">• Good / bad</text>
+      <text x="50" y="168" font-size="8" fill="#4a5670">• Right / wrong</text>
+      <text x="50" y="181" font-size="8" fill="#4a5670">• Moral weight</text>
+
+      <!-- Deontic -->
+      <rect x="205" y="120" width="150" height="65" rx="4" fill="#fff" stroke="#e65100" stroke-width="1"/>
+      <text x="280" y="138" font-size="10" font-weight="bold" fill="#e65100" text-anchor="middle">Deontic</text>
+      <text x="215" y="155" font-size="8" fill="#4a5670">• Permitted / forbidden</text>
+      <text x="215" y="168" font-size="8" fill="#4a5670">• Obligatory / optional</text>
+      <text x="215" y="181" font-size="8" fill="#4a5670">• Legal status</text>
+
+      <!-- Aesthetic -->
+      <rect x="370" y="120" width="150" height="65" rx="4" fill="#fff" stroke="#e65100" stroke-width="1"/>
+      <text x="445" y="138" font-size="10" font-weight="bold" fill="#e65100" text-anchor="middle">Aesthetic</text>
+      <text x="380" y="155" font-size="8" fill="#4a5670">• Beautiful / ugly</text>
+      <text x="380" y="168" font-size="8" fill="#4a5670">• Elegant / crude</text>
+      <text x="380" y="181" font-size="8" fill="#4a5670">• Pleasing / jarring</text>
+
+      <!-- Pragmatic -->
+      <rect x="40" y="195" width="150" height="65" rx="4" fill="#fff" stroke="#e65100" stroke-width="1"/>
+      <text x="115" y="213" font-size="10" font-weight="bold" fill="#e65100" text-anchor="middle">Pragmatic</text>
+      <text x="50" y="230" font-size="8" fill="#4a5670">• Useful / useless</text>
+      <text x="50" y="243" font-size="8" fill="#4a5670">• Efficient / wasteful</text>
+      <text x="50" y="256" font-size="8" fill="#4a5670">• Cost / benefit</text>
+
+      <!-- Social -->
+      <rect x="205" y="195" width="150" height="65" rx="4" fill="#fff" stroke="#e65100" stroke-width="1"/>
+      <text x="280" y="213" font-size="10" font-weight="bold" fill="#e65100" text-anchor="middle">Social</text>
+      <text x="215" y="230" font-size="8" fill="#4a5670">• Fair / unfair</text>
+      <text x="215" y="243" font-size="8" fill="#4a5670">• Popular / unpopular</text>
+      <text x="215" y="256" font-size="8" fill="#4a5670">• Trustworthy / suspect</text>
+
+      <!-- Importance -->
+      <rect x="370" y="195" width="150" height="65" rx="4" fill="#fff" stroke="#e65100" stroke-width="1"/>
+      <text x="445" y="213" font-size="10" font-weight="bold" fill="#e65100" text-anchor="middle">Priority</text>
+      <text x="380" y="230" font-size="8" fill="#4a5670">• Important / trivial</text>
+      <text x="380" y="243" font-size="8" fill="#4a5670">• Urgent / can wait</text>
+      <text x="380" y="256" font-size="8" fill="#4a5670">• Critical / optional</text>
+    </svg>
+    <p class="diagram-caption">The 128 axiological dimensions are organized into categories: ethical (good/bad), deontic (permitted/forbidden), aesthetic (beautiful/ugly), pragmatic (useful/useless), social (fair/unfair), and priority (important/trivial). These capture value judgments explicitly.</p>
+  </div>
+
+  <h2>Why Separate Values?</h2>
+
+  <p>Mixing facts and values creates problems:</p>
+  <ul>
+    <li><strong>Hidden bias</strong> – Value judgments influence factual classifications</li>
+    <li><strong>Unexplainable decisions</strong> – Can't tell if a decision is based on facts or preferences</li>
+    <li><strong>Context brittleness</strong> – Values that make sense in one context don't in another</li>
+  </ul>
+
+  <p>By putting values in their own dimensions, AGISystem2 can:</p>
+  <ul>
+    <li>Reason about facts with values masked out (<a href="veil_of_ignorance.html">veil of ignorance</a>)</li>
+    <li>Explain which values influenced a decision</li>
+    <li>Swap value systems without relearning facts</li>
+  </ul>
+
+  <h2>Value Encoding</h2>
+
+  <p>Axiological dimensions use the same Int8 range (-128 to +127) as ontological ones:</p>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Value</th><th>Interpretation</th><th>Example</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>+127</td>
+        <td>Strongly positive</td>
+        <td>Very good, highly permitted</td>
+      </tr>
+      <tr>
+        <td>+64</td>
+        <td>Moderately positive</td>
+        <td>Generally good</td>
+      </tr>
+      <tr>
+        <td>0</td>
+        <td>Neutral / unknown</td>
+        <td>No value judgment</td>
+      </tr>
+      <tr>
+        <td>-64</td>
+        <td>Moderately negative</td>
+        <td>Generally bad</td>
+      </tr>
+      <tr>
+        <td>-128</td>
+        <td>Strongly negative</td>
+        <td>Very bad, forbidden</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Deontic Logic Integration</h2>
+
+  <p>The deontic axiological dimensions integrate with <a href="deontic_logic.html">deontic reasoning</a>:</p>
+
+  <pre>
+# Assert something is forbidden
+ASSERT Speeding PROHIBITED_BY TrafficLaw
+# Sets deontic dimensions to negative values
+
+# Query deontic status
+ASK "Speeding PERMITTED?"
+# → FALSE_CERTAIN (deontic dims strongly negative)</pre>
+
+  <h2>Implementation</h2>
+
+  <pre>
+// Axiology-only mask: only dims 256-383 active
+const axiologyMask = new Uint8Array(384);
+axiologyMask.fill(0, 0, 256);   // dims 0-255 = 0
+axiologyMask.fill(1, 256, 384); // dims 256-383 = 1
+
+// Pure value comparison (ignores facts)
+const valueDist = mathEngine.maskedL1(conceptA, conceptB, axiologyMask);</pre>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="ontology.html">Ontology</a> – The factual dimension partition</li>
+    <li><a href="bias.html">Bias</a> – Fact/value separation for fairness</li>
+    <li><a href="deontic_logic.html">Deontic Logic</a> – Permitted/forbidden reasoning</li>
+    <li><a href="veil_of_ignorance.html">Veil of Ignorance</a> – Reasoning without value influence</li>
+    <li><a href="../architecture/reasoning.html#bias-controller">BiasController</a> – Managing value masks</li>
+  </ul>
+
   <div class="footer-nav">
-    <a href="../index.html">Back to index</a>
+    <a href="ontology.html">← Ontology</a> ·
+    <a href="bias.html">Bias →</a>
   </div>
   </div>
   <script src="../reference/nav2.js"></script>

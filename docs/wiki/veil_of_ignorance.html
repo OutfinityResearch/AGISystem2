@@ -8,57 +8,164 @@
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>Veil of Ignorance</h1>
-    <small></small>
-    <div class="sub-nav">
-      <strong>Wiki Topics:</strong>
-      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
-    </div>
+    <h1>AGISystem2 – Veil of Ignorance</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
   </div>
-  <article>
-    <div class="philosophical-header">
-      <h2>Rawls’ Veil of Ignorance</h2>
-      <p>The “veil of ignorance” is a thought experiment introduced by philosopher John Rawls. It imagines a group of rational agents tasked with designing the basic rules of a society, but forced to do so without knowing their own position in that society: they do not know their class, gender, health, or talents. Behind the veil, they must choose principles that they would accept no matter where they end up.</p>
-      <p>This device is meant to operationalise impartiality. If you do not know whether you will be rich or poor, healthy or sick, majority or minority, you are incentivised to design fair rules—ones that protect the worst-off as well as the best-off. The veil of ignorance thus connects moral reasoning with an information constraint.</p>
-    </div>
 
-    <div class="academic-analysis">
-      <h2>From Philosophy to Decision Procedures</h2>
-      <p>In decision theory and AI ethics, the veil of ignorance inspires procedures that remove or mask information about particular individuals before evaluating outcomes. Rather than attempting to encode all ethical theories directly, a system can simulate “ignorance” about protected attributes and ask whether a decision would still be acceptable under that constraint.</p>
-      <p>This perspective is especially relevant for automated decision systems in hiring, lending, healthcare, or criminal justice, where knowledge of certain attributes (such as race or gender) should not influence outcomes.</p>
-    </div>
+  <p>The "veil of ignorance" in AGISystem2 is a fairness mode where the system reasons without knowing protected attributes. Inspired by Rawls' philosophical concept, the <a href="../architecture/reasoning.html#bias-controller">BiasController</a> masks both <a href="axiology.html">axiological</a> and protected <a href="ontology.html">ontological</a> dimensions, forcing decisions to be based only on relevant facts.</p>
 
-    <div class="academic-analysis">
-      <h2>Veil of Ignorance in AGISystem2</h2>
-      <p>AGISystem2 implements veil-of-ignorance style reasoning through masking in the conceptual space. The <code>BiasController</code> can activate modes in which selected dimensions—those corresponding to protected attributes or sensitive value-laden axes—are zeroed out or ignored during distance computations and decision-making.</p>
-      <p>When such a mode is active, the Reasoner evaluates queries “as if” it did not know where individuals sit along those dimensions. This does not erase the information from storage, but it removes its influence from the specific reasoning step, and records the use of the mask in provenance metadata.</p>
-      <p>Bias audit suites then compare outcomes with and without the veil: if decisions change dramatically when protected dimensions are masked, this is a signal that the underlying theory or data may contain problematic dependencies.</p>
-    </div>
+  <div class="diagram">
+    <svg viewBox="0 0 560 300" role="img" aria-label="Veil of ignorance masking">
+      <defs>
+        <marker id="arrow-veil" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
 
-    <div class="philosophical-implications">
-      <h2>Philosophical and Practical Implications</h2>
-      <p>Using veil-of-ignorance style masks does not solve all fairness questions, but it provides a concrete, inspectable mechanism for exploring them. It shifts the conversation from vague assurances of neutrality to explicit statements: “this decision was computed under a fairness mode that masked dimensions X, Y, Z”.</p>
-      <p>Practically, this allows regulators, auditors, and domain experts to test whether certain outcomes depend on information that should not matter, and to refine theories or policies accordingly.</p>
-    </div>
+      <!-- Background -->
+      <rect x="0" y="0" width="560" height="300" fill="#fafbfc"/>
 
-    <div class="academic-references">
-      <h2>Academic References</h2>
-      <p>The veil of ignorance is central to Rawls’ theory of justice and has been widely discussed in political philosophy and ethics. In AI and algorithmic fairness, related ideas appear in discussions of counterfactual fairness, demographic parity, and fairness through unawareness.</p>
-      <p>For background, see <a href="https://en.wikipedia.org/wiki/Veil_of_ignorance" target="_blank" rel="noopener noreferrer">the literature on the veil of ignorance</a>.</p>
-    </div>
+      <!-- Before: Normal reasoning -->
+      <rect x="20" y="20" width="250" height="130" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="145" y="40" font-size="10" font-weight="bold" fill="#4a5670" text-anchor="middle">Normal Reasoning</text>
 
-    <div class="technical-specifications">
-      <h2>Technical Implementation References</h2>
-      <p>For detailed technical specifications of veil-of-ignorance style masking in AGISystem2, consult the following design and test specifications (referenced by ID):</p>
-      <ul>
-        <li>DS[/reason/bias_control.js] — implements bias modes, including veil-like masking over selected dimensions.</li>
-        <li>DS[/knowledge/dimensions] — keeps protected axes explicit so that they can be masked and audited.</li>
-        <li>DS[/tests/bias_audit/runSuite] — provides automated scenarios for checking decisions under different masking modes.</li>
-      </ul>
-    </div>
-  </article>
+      <!-- Full vector -->
+      <rect x="35" y="55" width="220" height="25" rx="2" fill="#fff" stroke="#b0b6c4" stroke-width="1"/>
+      <rect x="35" y="55" width="100" height="25" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="85" y="71" font-size="8" fill="#0f4c81" text-anchor="middle">Ontology</text>
+      <rect x="135" y="55" width="40" height="25" fill="#ffebee" stroke="#c62828" stroke-width="1"/>
+      <text x="155" y="71" font-size="7" fill="#c62828" text-anchor="middle">Prot</text>
+      <rect x="175" y="55" width="80" height="25" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
+      <text x="215" y="71" font-size="8" fill="#e65100" text-anchor="middle">Axiology</text>
+
+      <text x="35" y="100" font-size="9" fill="#4a5670">All dimensions active:</text>
+      <text x="35" y="115" font-size="8" fill="#c62828">• Protected attrs influence result</text>
+      <text x="35" y="130" font-size="8" fill="#e65100">• Values may bias decisions</text>
+      <text x="35" y="145" font-size="8" fill="#4a5670">• May be unfair</text>
+
+      <!-- Arrow -->
+      <line x1="275" y1="85" x2="305" y2="85" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-veil)"/>
+      <text x="290" y="105" font-size="8" fill="#0f4c81" text-anchor="middle">Veil</text>
+
+      <!-- After: Veil active -->
+      <rect x="310" y="20" width="230" height="130" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+      <text x="425" y="40" font-size="10" font-weight="bold" fill="#2e7d32" text-anchor="middle">Veil of Ignorance Active</text>
+
+      <!-- Masked vector -->
+      <rect x="325" y="55" width="200" height="25" rx="2" fill="#fff" stroke="#b0b6c4" stroke-width="1"/>
+      <rect x="325" y="55" width="90" height="25" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+      <text x="370" y="71" font-size="8" fill="#2e7d32" text-anchor="middle">Active ✓</text>
+      <rect x="415" y="55" width="40" height="25" fill="#f5f5f5" stroke="#b0b6c4" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="435" y="71" font-size="7" fill="#b0b6c4" text-anchor="middle">×</text>
+      <rect x="455" y="55" width="70" height="25" fill="#f5f5f5" stroke="#b0b6c4" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="490" y="71" font-size="8" fill="#b0b6c4" text-anchor="middle">×</text>
+
+      <text x="325" y="100" font-size="9" fill="#4a5670">Masked dimensions ignored:</text>
+      <text x="325" y="115" font-size="8" fill="#2e7d32">• Decisions on qualifications only</text>
+      <text x="325" y="130" font-size="8" fill="#2e7d32">• Protected attrs hidden</text>
+      <text x="325" y="145" font-size="8" fill="#2e7d32">• Fair by design</text>
+
+      <!-- Comparison -->
+      <rect x="20" y="165" width="520" height="120" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="280" y="185" font-size="10" font-weight="bold" fill="#4a5670" text-anchor="middle">Comparison: Hire Decision</text>
+
+      <rect x="35" y="200" width="235" height="75" rx="4" fill="#ffebee" stroke="#c62828" stroke-width="1"/>
+      <text x="152" y="218" font-size="9" font-weight="bold" fill="#c62828" text-anchor="middle">Without Veil</text>
+      <text x="45" y="238" font-size="8" fill="#4a5670">Query: "Should hire candidate?"</text>
+      <text x="45" y="253" font-size="8" fill="#c62828">Result: NO (age=55 influenced decision)</text>
+      <text x="45" y="268" font-size="8" fill="#c62828">⚠ Potential age discrimination</text>
+
+      <rect x="285" y="200" width="240" height="75" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
+      <text x="405" y="218" font-size="9" font-weight="bold" fill="#2e7d32" text-anchor="middle">With Veil</text>
+      <text x="295" y="238" font-size="8" fill="#4a5670">Query: "Should hire candidate?"</text>
+      <text x="295" y="253" font-size="8" fill="#2e7d32">Result: YES (based on skills only)</text>
+      <text x="295" y="268" font-size="8" fill="#2e7d32">✓ Fair decision, age masked</text>
+    </svg>
+    <p class="diagram-caption">The veil of ignorance masks protected attributes (like age, gender) and all axiological dimensions. This forces decisions to be based solely on relevant qualifications, implementing Rawlsian fairness geometrically.</p>
+  </div>
+
+  <h2>How It Works</h2>
+
+  <p>The veil combines two types of masking:</p>
+
+  <ol>
+    <li><strong>Protected ontological dimensions</strong> – Age, gender, ethnicity, disability, etc.</li>
+    <li><strong>All axiological dimensions</strong> – Value judgments (good/bad, important/trivial)</li>
+  </ol>
+
+  <p>When the veil is active, the <a href="masked_l1_distance.html">masked L1 distance</a> ignores these dimensions entirely.</p>
+
+  <h2>DSL Syntax</h2>
+
+  <pre>
+# Enable veil of ignorance mode
+VEIL_OF_IGNORANCE ON
+
+# Or configure specific protected dimensions
+BIAS_MASK protected=[120,121,122,123] includeAxiology=true
+
+# All queries now use fair reasoning
+ASK "Should hire Candidate123?"
+# → Result based only on unmasked qualifications
+
+# Disable veil
+VEIL_OF_IGNORANCE OFF</pre>
+
+  <h2>Implementation</h2>
+
+  <pre>
+// Enable full veil of ignorance
+biasController.enableVeilOfIgnorance({
+  protectedDimensions: config.protectedAttributes,
+  includeAllAxiology: true
+});
+
+// Query with veil active
+const result = reasoner.ask(query); // Uses masked distance automatically
+
+// Audit log records the mask
+// { event: "VEIL_ACTIVE", masked: [120-123, 256-383], query: "..." }</pre>
+
+  <h2>Bias Auditing</h2>
+
+  <p>Compare results with and without the veil to detect bias:</p>
+
+  <pre>
+// Run same query both ways
+const withVeil = reasoner.ask(query, { veil: true });
+const withoutVeil = reasoner.ask(query, { veil: false });
+
+// If results differ, protected attributes influenced the decision
+if (withVeil !== withoutVeil) {
+  auditLog.alert("BIAS_DETECTED", {
+    query,
+    veilResult: withVeil,
+    normalResult: withoutVeil
+  });
+}</pre>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="bias.html">Bias Control</a> – General bias masking</li>
+    <li><a href="axiology.html">Axiology</a> – Value dimensions that are masked</li>
+    <li><a href="ontology.html">Ontology</a> – Factual dimensions (some protected)</li>
+    <li><a href="auditability.html">Auditability</a> – Logging veil usage</li>
+    <li><a href="../architecture/reasoning.html#bias-controller">BiasController</a> – Implementation</li>
+  </ul>
+
   <div class="footer-nav">
-    <a href="../index.html">Back to index</a>
+    <a href="bias.html">← Bias Control</a> ·
+    <a href="trustworthy_ai.html">Trustworthy AI →</a>
   </div>
   </div>
   <script src="../reference/nav2.js"></script>

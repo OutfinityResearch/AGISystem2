@@ -1,2 +1,2 @@
 dog IS_A Animal
-Water HAS_PROPERTY boiling_point=100
+Water BOILS_AT Celsius100

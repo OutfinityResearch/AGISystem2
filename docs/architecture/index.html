@@ -1,0 +1,281 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>System Architecture</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>AGISystem2 – System Architecture</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="../wiki/index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
+    <div class="sub-nav">
+      <strong>Architecture:</strong>
+      <a href="index.html">Overview</a> ·
+      <a href="geometry.html">Geometry</a> ·
+      <a href="knowledge.html">Knowledge</a> ·
+      <a href="reasoning.html">Reasoning</a> ·
+      <a href="language.html">Language</a> ·
+      <a href="storage.html">Storage</a> ·
+      <a href="configuration.html">Configuration</a>
+    </div>
+  </div>
+
+  <p>AGISystem2 implements a layered architecture where each layer has well-defined responsibilities and interfaces. The system transforms natural language into geometric representations, performs reasoning operations on those representations, and produces explainable results. This document provides an overview of the system's structure and the interaction between its components.</p>
+
+  <h2>Architectural Layers</h2>
+
+  <div class="diagram">
+    <svg viewBox="0 0 560 380" role="img" aria-label="AGISystem2 layered architecture diagram">
+      <defs>
+        <marker id="arrow-arch" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L8,4 L0,8 z" fill="#0f4c81" />
+        </marker>
+      </defs>
+
+      <!-- Background -->
+      <rect x="0" y="0" width="560" height="380" fill="#fafbfc"/>
+
+      <!-- Layer 5: Interface (top) -->
+      <rect x="30" y="20" width="500" height="60" rx="6" fill="#e8f4fd" stroke="#1565c0" stroke-width="2"/>
+      <text x="50" y="45" font-size="14" font-weight="bold" fill="#1565c0">Interface Layer</text>
+      <text x="50" y="62" font-size="10" fill="#37474f">EngineAPI · AgentSystem2 · Session · TranslatorBridge</text>
+      <text x="440" y="55" font-size="9" fill="#546e7a">Entry Points</text>
+
+      <!-- Layer 4: Language -->
+      <rect x="30" y="95" width="500" height="60" rx="6" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+      <text x="50" y="120" font-size="14" font-weight="bold" fill="#1976d2">Language Layer</text>
+      <text x="50" y="137" font-size="10" fill="#37474f">Sys2DSL Parser · Grammar · Fact Encoder · Query Compiler</text>
+      <text x="440" y="130" font-size="9" fill="#546e7a">DSL Processing</text>
+
+      <!-- Layer 3: Reasoning -->
+      <rect x="30" y="170" width="500" height="60" rx="6" fill="#e1f5fe" stroke="#0288d1" stroke-width="2"/>
+      <text x="50" y="195" font-size="14" font-weight="bold" fill="#0288d1">Reasoning Layer</text>
+      <text x="50" y="212" font-size="10" fill="#37474f">Reasoner · Retriever · BiasController · ValidationEngine</text>
+      <text x="440" y="205" font-size="9" fill="#546e7a">Inference</text>
+
+      <!-- Layer 2: Knowledge -->
+      <rect x="30" y="245" width="500" height="60" rx="6" fill="#e0f7fa" stroke="#0097a7" stroke-width="2"/>
+      <text x="50" y="270" font-size="14" font-weight="bold" fill="#0097a7">Knowledge Layer</text>
+      <text x="50" y="287" font-size="10" fill="#37474f">ConceptStore · ClusterManager · TheoryStack · TheoryLayer</text>
+      <text x="440" y="280" font-size="9" fill="#546e7a">Storage</text>
+
+      <!-- Layer 1: Geometry (bottom) -->
+      <rect x="30" y="320" width="500" height="60" rx="6" fill="#e0f2f1" stroke="#00796b" stroke-width="2"/>
+      <text x="50" y="345" font-size="14" font-weight="bold" fill="#00796b">Geometry Layer</text>
+      <text x="50" y="362" font-size="10" fill="#37474f">VectorSpace · MathEngine · BoundedDiamond · RelationPermuter</text>
+      <text x="440" y="355" font-size="9" fill="#546e7a">Math Core</text>
+
+      <!-- Arrows between layers -->
+      <line x1="280" y1="80" x2="280" y2="93" stroke="#0f4c81" stroke-width="2" marker-end="url(#arrow-arch)"/>
+      <line x1="280" y1="155" x2="280" y2="168" stroke="#0f4c81" stroke-width="2" marker-end="url(#arrow-arch)"/>
+      <line x1="280" y1="230" x2="280" y2="243" stroke="#0f4c81" stroke-width="2" marker-end="url(#arrow-arch)"/>
+      <line x1="280" y1="305" x2="280" y2="318" stroke="#0f4c81" stroke-width="2" marker-end="url(#arrow-arch)"/>
+    </svg>
+    <p class="diagram-caption">AGISystem2's five architectural layers. Each layer depends only on the layers below it.</p>
+  </div>
+
+  <p>The <strong>Geometry Layer</strong> forms the foundation of the system, providing the mathematical primitives that underpin all knowledge representation: vector allocation, distance computation, and geometric shapes. All operations are deterministic, using int8 arithmetic with saturation to prevent overflow. The layer is pure—no state escapes, and the same inputs always produce the same outputs. Key components include <a href="geometry.html">VectorSpace</a>, <a href="geometry.html#math-engine">MathEngine</a>, <a href="geometry.html#bounded-diamond">BoundedDiamond</a>, and <a href="geometry.html#relation-permuter">RelationPermuter</a>.</p>
+
+  <p>Above it, the <strong>Knowledge Layer</strong> manages the storage and organization of concepts, represented as bounded diamond shapes in the vector space. The <a href="knowledge.html#cluster-manager">ClusterManager</a> decides when to expand existing diamonds or create new ones, while <a href="knowledge.html#theory-stack">TheoryStack</a> enables layered contexts that can hold contradictory information without corrupting base knowledge. See the <a href="knowledge.html">Knowledge Layer Reference</a> for details on <a href="knowledge.html">ConceptStore</a> and <a href="knowledge.html#theory-layer">TheoryLayer</a>.</p>
+
+  <p>The <strong>Reasoning Layer</strong> performs inference operations over the knowledge base. The <a href="reasoning.html">Reasoner</a> orchestrates different reasoning modes: deduction (inclusion checks), abduction (inverse probes), analogy (geometric translation), counterfactuals (temporary layers), and temporal reasoning (vector rotation). Results include confidence bands and full provenance traces. Other components include <a href="reasoning.html#retriever">Retriever</a> for LSH-based candidate selection, <a href="reasoning.html#bias-controller">BiasController</a> for fact/value separation, and <a href="reasoning.html#validation-engine">ValidationEngine</a> for consistency checking.</p>
+
+  <p>The <strong>Language Layer</strong> transforms structured <a href="../wiki/sys2dsl.html">Sys2DSL</a> commands into operations on the knowledge base. The <a href="language.html">DSL Parser</a> validates syntax and builds abstract representations, while the <a href="language.html#encoder">Fact Encoder</a> transforms parsed structures into geometric points by applying relation-specific permutations and combining vectors with clamped addition. See the <a href="language.html">Language Layer Reference</a> for <a href="language.html#grammar">Grammar Rules</a> and <a href="language.html#query-compiler">Query Compiler</a> details.</p>
+
+  <p>Finally, the <strong>Interface Layer</strong> provides the public API surface. <a href="../api/index.html">EngineAPI</a> exposes high-level methods for ingestion, querying, and administration. AgentSystem2 and Session provide stateful wrappers for multi-step interactions. TranslatorBridge can normalize natural language to constrained grammar when used with an external LLM. See the <a href="../api/index.html">API Reference</a> for usage details.</p>
+
+  <h2>Data Flow</h2>
+
+  <div class="diagram">
+    <svg viewBox="0 0 600 200" role="img" aria-label="Data flow from input to output">
+      <defs>
+        <marker id="arrow-flow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
+
+      <!-- Input -->
+      <rect x="20" y="70" width="80" height="60" rx="6" fill="#f5f7fb" stroke="#0f4c81" stroke-width="2"/>
+      <text x="60" y="92" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Input</text>
+      <text x="60" y="106" font-size="7" fill="#4a5670" text-anchor="middle">Sys2DSL</text>
+      <text x="60" y="118" font-size="7" fill="#4a5670" text-anchor="middle">Command</text>
+
+      <!-- Parse -->
+      <rect x="120" y="70" width="80" height="60" rx="6" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="160" y="92" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Parse</text>
+      <text x="160" y="106" font-size="7" fill="#4a5670" text-anchor="middle">Validate</text>
+      <text x="160" y="118" font-size="7" fill="#4a5670" text-anchor="middle">Build AST</text>
+
+      <!-- Encode -->
+      <rect x="220" y="70" width="80" height="60" rx="6" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="260" y="92" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Encode</text>
+      <text x="260" y="106" font-size="7" fill="#4a5670" text-anchor="middle">Permute</text>
+      <text x="260" y="118" font-size="7" fill="#4a5670" text-anchor="middle">Combine</text>
+
+      <!-- Store/Query -->
+      <rect x="320" y="70" width="80" height="60" rx="6" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="360" y="92" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Process</text>
+      <text x="360" y="106" font-size="7" fill="#4a5670" text-anchor="middle">Store or</text>
+      <text x="360" y="118" font-size="7" fill="#4a5670" text-anchor="middle">Query</text>
+
+      <!-- Reason -->
+      <rect x="420" y="70" width="80" height="60" rx="6" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="460" y="92" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Reason</text>
+      <text x="460" y="106" font-size="7" fill="#4a5670" text-anchor="middle">Distance</text>
+      <text x="460" y="118" font-size="7" fill="#4a5670" text-anchor="middle">Inclusion</text>
+
+      <!-- Output -->
+      <rect x="520" y="70" width="60" height="60" rx="6" fill="#f5f7fb" stroke="#0f4c81" stroke-width="2"/>
+      <text x="550" y="92" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Output</text>
+      <text x="550" y="106" font-size="7" fill="#4a5670" text-anchor="middle">Result</text>
+      <text x="550" y="118" font-size="7" fill="#4a5670" text-anchor="middle">Trace</text>
+
+      <!-- Arrows -->
+      <line x1="100" y1="100" x2="118" y2="100" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-flow)"/>
+      <line x1="200" y1="100" x2="218" y2="100" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-flow)"/>
+      <line x1="300" y1="100" x2="318" y2="100" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-flow)"/>
+      <line x1="400" y1="100" x2="418" y2="100" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-flow)"/>
+      <line x1="500" y1="100" x2="518" y2="100" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-flow)"/>
+
+      <!-- Storage connection -->
+      <rect x="320" y="150" width="80" height="40" rx="4" fill="#fff" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="360" y="170" font-size="8" fill="#4a5670" text-anchor="middle">ConceptStore</text>
+      <text x="360" y="182" font-size="7" fill="#4a5670" text-anchor="middle">Persistence</text>
+      <line x1="360" y1="130" x2="360" y2="148" stroke="#b0b6c4" stroke-width="1" marker-end="url(#arrow-flow)"/>
+
+      <!-- Labels -->
+      <text x="60" y="50" font-size="8" fill="#4a5670" text-anchor="middle">Interface</text>
+      <text x="160" y="50" font-size="8" fill="#4a5670" text-anchor="middle">Language</text>
+      <text x="260" y="50" font-size="8" fill="#4a5670" text-anchor="middle">Language</text>
+      <text x="360" y="50" font-size="8" fill="#4a5670" text-anchor="middle">Knowledge</text>
+      <text x="460" y="50" font-size="8" fill="#4a5670" text-anchor="middle">Reasoning</text>
+      <text x="550" y="50" font-size="8" fill="#4a5670" text-anchor="middle">Interface</text>
+    </svg>
+    <p class="diagram-caption">Request processing flow. Commands enter through the Interface Layer, are parsed and encoded in the Language Layer, stored or queried in the Knowledge Layer, reasoned about in the Reasoning Layer, and results returned through the Interface Layer with full provenance.</p>
+  </div>
+
+  <h2>Design Principles</h2>
+
+  <h3>Determinism</h3>
+  <p>Every operation in AGISystem2 is deterministic. Seeds for permutations and hashes are drawn from configuration and logged. All arithmetic uses int8 with saturation—no floating-point operations, no stochastic sampling. Given the same input and theory stack, the system always produces the same output. This property is essential for auditability, testing, and reproducibility.</p>
+
+  <h3>Separation of Concerns</h3>
+  <p>Each layer has a single, well-defined responsibility. The Geometry Layer knows nothing about concepts; it only manipulates vectors. The Knowledge Layer knows nothing about reasoning; it only stores and retrieves shapes. This separation makes the system easier to understand, test, and modify.</p>
+
+  <h3>Explainability</h3>
+  <p>Every answer includes a provenance trace that explains how it was derived. The trace records which concepts were retrieved, which distances were computed, which theory layers were consulted, and which reasoning steps were applied. This trace can be inspected by humans or auditing tools.</p>
+
+  <h3>Composability</h3>
+  <p>Theory layers compose cleanly. A layer can override specific dimensions of a concept without affecting others. Multiple layers can be stacked to represent different contexts, hypotheticals, or perspectives. Layers can be pushed, popped, saved, and loaded independently.</p>
+
+  <h2>Module Index</h2>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Module</th><th>Layer</th><th>Responsibility</th><th>Documentation</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>VectorSpace</code></td>
+        <td>Geometry</td>
+        <td>Int8 array allocation and basic operations</td>
+        <td><a href="geometry.html">Geometry</a></td>
+      </tr>
+      <tr>
+        <td><code>MathEngine</code></td>
+        <td>Geometry</td>
+        <td>Masked L1 distance, permutation, rotation</td>
+        <td><a href="geometry.html#math-engine">Geometry</a></td>
+      </tr>
+      <tr>
+        <td><code>BoundedDiamond</code></td>
+        <td>Geometry</td>
+        <td>Concept shape with min/max/center/radius</td>
+        <td><a href="geometry.html#bounded-diamond">Geometry</a></td>
+      </tr>
+      <tr>
+        <td><code>RelationPermuter</code></td>
+        <td>Geometry</td>
+        <td>Relation-specific permutation tables</td>
+        <td><a href="geometry.html#relation-permuter">Geometry</a></td>
+      </tr>
+      <tr>
+        <td><code>ConceptStore</code></td>
+        <td>Knowledge</td>
+        <td>Persistent concept storage and retrieval</td>
+        <td><a href="knowledge.html">Knowledge</a></td>
+      </tr>
+      <tr>
+        <td><code>ClusterManager</code></td>
+        <td>Knowledge</td>
+        <td>Diamond expansion and splitting</td>
+        <td><a href="knowledge.html#cluster-manager">Knowledge</a></td>
+      </tr>
+      <tr>
+        <td><code>TheoryStack</code></td>
+        <td>Knowledge</td>
+        <td>Layered context composition</td>
+        <td><a href="knowledge.html#theory-stack">Knowledge</a></td>
+      </tr>
+      <tr>
+        <td><code>Reasoner</code></td>
+        <td>Reasoning</td>
+        <td>Inference orchestration</td>
+        <td><a href="reasoning.html">Reasoning</a></td>
+      </tr>
+      <tr>
+        <td><code>Retriever</code></td>
+        <td>Reasoning</td>
+        <td>LSH-based candidate retrieval</td>
+        <td><a href="reasoning.html#retriever">Reasoning</a></td>
+      </tr>
+      <tr>
+        <td><code>BiasController</code></td>
+        <td>Reasoning</td>
+        <td>Fact/value separation, fairness modes</td>
+        <td><a href="reasoning.html#bias-controller">Reasoning</a></td>
+      </tr>
+      <tr>
+        <td><code>DSL Parser</code></td>
+        <td>Language</td>
+        <td>Sys2DSL command parsing</td>
+        <td><a href="language.html">Language</a></td>
+      </tr>
+      <tr>
+        <td><code>EngineAPI</code></td>
+        <td>Interface</td>
+        <td>Public API surface</td>
+        <td><a href="../api/index.html">API</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="../guides/conceptual_spaces.html">Conceptual Spaces Theory</a> – The theoretical foundation for geometric knowledge representation</li>
+    <li><a href="../guides/reasoning.html">Reasoning Guide</a> – How different reasoning modes map to geometric operations</li>
+    <li><a href="../syntax/index.html">Sys2DSL Syntax</a> – The structured command language</li>
+    <li><a href="../api/index.html">API Reference</a> – Programmatic interface documentation</li>
+    <li><a href="../specs/matrix.html">Specification Matrix</a> – Complete DS specification coverage</li>
+  </ul>
+
+  <div class="footer-nav">
+    <a href="../index.html">Home</a> ·
+    <a href="geometry.html">Geometry Layer →</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

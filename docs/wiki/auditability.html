@@ -8,76 +8,211 @@
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>Auditability</h1>
-    <small></small>
-    <div class="sub-nav">
-      <strong>Wiki Topics:</strong>
-      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="abstract_interpretation.html">Abstract Interpretation</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deduction.html">Deduction</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="induction.html">Induction</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="symbolic_execution.html">Symbolic Execution</a> · <a href="sys2dsl.html">Sys2DSL</a> · <a href="theory_layers.html">Theory Layers</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="validation.html">Validation</a> · <a href="auditability.html">Auditability</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
-    </div>
+    <h1>AGISystem2 – Auditability</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
   </div>
-  <article>
-    <div class="philosophical-header">
-      <h2>Philosophical Foundations of Auditability</h2>
-      <p>Auditability represents a fundamental principle in system design and governance, emphasizing the importance of creating systems whose operations can be examined, verified, and understood. The philosophical significance lies in its recognition that transparency and accountability are essential for trust, reliability, and ethical responsibility in both human organizations and artificial intelligence systems. Auditability transforms the traditional notion of a system as a black box into a transparent mechanism whose internal processes can be scrutinized and validated.</p>
-      
-      <p>The concept of auditability has deep roots in political philosophy, organizational theory, and ethics. It reflects the democratic principle that those who exercise power or make decisions should be accountable to those affected by their actions. In the context of artificial intelligence, auditability becomes particularly crucial as AI systems increasingly influence critical aspects of human life, from healthcare and finance to criminal justice and autonomous systems.</p>
-      
-      <p>From an epistemological perspective, auditability addresses the problem of justification and evidence. By providing systematic records of decisions, reasoning processes, and outcomes, auditable systems create the foundation for rational discourse and improvement. The ability to examine not just what decisions were made but how and why they were made represents a fundamental advancement in how knowledge and authority can be challenged, verified, and legitimately questioned.</p>
-    </div>
 
-    <div class="academic-analysis">
-      <h2>Auditability Implementation in AGISystem2</h2>
-      <p>In AGISystem2, auditability is implemented as a comprehensive framework that ensures complete traceability of all system operations, decisions, and knowledge modifications. The system treats auditability not as an optional feature but as a fundamental architectural principle that permeates every component and process. This implementation provides unprecedented transparency and accountability for all aspects of system behavior.</p>
-      
-      <p>The Audit Log component serves as the central mechanism for recording all system activities with cryptographic integrity. Every operation, from concept creation to reasoning execution, is logged with precise timestamps, context information, and cryptographic signatures. This append-only log ensures that audit trail cannot be modified or deleted, providing an immutable record of all system activities.</p>
-      
-      <p>Deterministic operations guarantee that given the same inputs and context, the system will always produce the same outputs and follow the same reasoning paths. This determinism is essential for auditability, as it ensures that audit logs can be used to verify and reproduce any system behavior. The system's mathematical foundation, based on bounded diamonds and geometric operations, provides the necessary predictability for effective auditing.</p>
-      
-      <p>Comprehensive logging captures not just system operations but also the reasoning chains, intermediate states, and decision factors that lead to final outcomes. This detailed logging enables auditors to understand not just what decisions were made but the complete reasoning process that produced them. The logging system captures both factual and axiological dimensions, ensuring that value-based decisions are fully traceable.</p>
-    </div>
+  <p>Auditability in AGISystem2 means every reasoning step can be traced back to its inputs and rules. The <a href="../architecture/support.html">AuditLog</a> component records all operations with timestamps and provenance, creating an immutable trail for debugging, compliance, and trust.</p>
 
-    <div class="technical-implementation">
-      <h2>Advanced Auditing Capabilities</h2>
-      <p>The auditability framework in AGISystem2 includes several advanced features that enable comprehensive monitoring, analysis, and verification of system behavior. These capabilities extend beyond simple logging to provide sophisticated tools for ensuring system integrity and accountability.</p>
-      
-      <p>Query-specific auditing allows for detailed examination of particular reasoning processes or decisions. Auditors can reconstruct the exact sequence of operations, context, and reasoning that led to specific outcomes. This capability is essential for investigating complex decisions, identifying potential issues, and verifying compliance with policies or regulations.</p>
-      
-      <p>Temporal analysis enables auditors to examine system behavior over time and identify patterns or trends. The audit system can analyze how reasoning processes evolve, how knowledge structures change, and how decisions vary across different contexts. This temporal analysis is crucial for understanding system dynamics and identifying potential systematic issues or improvements.</p>
-      
-      <p>Compliance verification automatically checks system behavior against established rules, policies, or constraints. The system can verify that all operations comply with ethical guidelines, legal requirements, or organizational standards. This automated compliance checking helps prevent violations and ensures that system operates within acceptable boundaries.</p>
-    </div>
+  <div class="diagram">
+    <svg viewBox="0 0 560 360" role="img" aria-label="Audit trail provenance">
+      <defs>
+        <marker id="arrow-audit" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
 
-    <div class="philosophical-implications">
-      <h2>Implications for Trust and Governance</h2>
-      <p>The comprehensive auditability implementation in AGISystem2 has profound implications for building trustworthy artificial intelligence systems and for effective governance of AI technologies. By providing complete traceability and verifiability, the system enables the level of transparency and accountability necessary for public trust and regulatory compliance.</p>
-      
-      <p>From a governance perspective, auditability transforms the relationship between humans and AI systems from one of blind trust to one of informed oversight. The ability to examine, question, and verify system operations creates the foundation for democratic control and ethical oversight of AI technologies. This transparency is essential for maintaining human agency in an increasingly automated world.</p>
-      
-      <p>The immutable audit logs also serve as a foundation for algorithmic accountability and legal compliance. When AI systems make decisions that affect human rights, opportunities, or well-being, the ability to provide verifiable evidence of how and why those decisions were made becomes essential for due process and legal protection. This auditability creates the conditions for responsible AI deployment and operation.</p>
-    </div>
+      <!-- Background -->
+      <rect x="0" y="0" width="560" height="360" fill="#fafbfc"/>
 
-    <div class="academic-references">
-      <h2>Academic Context and Related Work</h2>
-      <p>Auditability and transparency have been extensively studied in computer science, information security, and governance. Key contributors include Butler Lampson, who developed fundamental principles for system auditing; David Chaum, who contributed to cryptographic protocols for secure logging; and numerous researchers in software engineering who have developed systematic approaches to accountability and verifiability.</p>
-      
-      <p>In artificial intelligence, auditability is crucial for explainable AI, trustworthy AI, and AI alignment. The ability to trace and verify AI decisions is particularly important for safety-critical applications and for building public trust in AI systems. Research in AI ethics increasingly emphasizes the importance of transparency and accountability for responsible AI development.</p>
-      
-      <p>For deeper understanding of auditability principles and their applications, <a href="https://en.wikipedia.org/wiki/Audit_trail" target="_blank" rel="noopener noreferrer">the computer science literature on audit trails and system accountability</a> provides comprehensive coverage of theoretical foundations and practical implementations.</p>
-    </div>
+      <!-- Query input -->
+      <rect x="20" y="20" width="120" height="50" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="80" y="40" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Query</text>
+      <text x="80" y="55" font-size="8" fill="#4a5670" text-anchor="middle">ASK "Dog IS_A ?"</text>
 
-    <div class="technical-specifications">
-      <h2>Technical Implementation References</h2>
-      <p>For detailed technical specifications of auditability implementation in AGISystem2, consult the following design and test specifications (referenced by ID only):</p>
-      <ul>
-        <li>DS[/support/audit_log.js] — immutable logging with integrity guarantees.</li>
-        <li>DS[/support/storage.js] — storage adapter and versioned data structures for auditability.</li>
-        <li>DS[/reason/validation.js] — validation engine with audit-focused checks.</li>
-        <li>DS[/tests/bias_audit/runSuite] and DS[/tests/validation_engine/runSuite] — suites exercising audit and validation flows.</li>
-      </ul>
-    </div>
-  </article>
+      <!-- Arrow -->
+      <line x1="145" y1="45" x2="175" y2="45" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-audit)"/>
+
+      <!-- Reasoning steps -->
+      <rect x="180" y="15" width="200" height="60" rx="4" fill="#fff" stroke="#0f4c81" stroke-width="1"/>
+      <text x="280" y="33" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Reasoning Steps</text>
+      <text x="190" y="48" font-size="8" fill="#4a5670">1. Lookup Dog → vector v₁</text>
+      <text x="190" y="60" font-size="8" fill="#4a5670">2. Find containment → Animal</text>
+      <text x="190" y="72" font-size="8" fill="#4a5670">3. Return result</text>
+
+      <!-- Arrow -->
+      <line x1="385" y1="45" x2="415" y2="45" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-audit)"/>
+
+      <!-- Result -->
+      <rect x="420" y="20" width="120" height="50" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+      <text x="480" y="40" font-size="9" font-weight="bold" fill="#2e7d32" text-anchor="middle">Result</text>
+      <text x="480" y="55" font-size="8" fill="#4a5670" text-anchor="middle">Animal (0.95)</text>
+
+      <!-- Audit log entries -->
+      <rect x="20" y="95" width="520" height="180" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="280" y="115" font-size="10" font-weight="bold" fill="#4a5670" text-anchor="middle">Audit Log Entries</text>
+
+      <!-- Entry 1 -->
+      <rect x="35" y="125" width="490" height="40" rx="4" fill="#fff" stroke="#0f4c81" stroke-width="1"/>
+      <text x="45" y="140" font-size="8" font-family="monospace" fill="#0f4c81">#001 | 2024-01-15T10:30:00Z | QUERY_START</text>
+      <text x="45" y="155" font-size="8" fill="#4a5670">input: "ASK Dog IS_A ?" | context: layer=base | mask=full</text>
+
+      <!-- Entry 2 -->
+      <rect x="35" y="170" width="490" height="40" rx="4" fill="#fff" stroke="#0f4c81" stroke-width="1"/>
+      <text x="45" y="185" font-size="8" font-family="monospace" fill="#0f4c81">#002 | 2024-01-15T10:30:00Z | CONTAINMENT_CHECK</text>
+      <text x="45" y="200" font-size="8" fill="#4a5670">Dog.center ∈ Animal.diamond → TRUE | distance=42 | threshold=100</text>
+
+      <!-- Entry 3 -->
+      <rect x="35" y="215" width="490" height="40" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
+      <text x="45" y="230" font-size="8" font-family="monospace" fill="#2e7d32">#003 | 2024-01-15T10:30:01Z | QUERY_RESULT</text>
+      <text x="45" y="245" font-size="8" fill="#4a5670">result: Animal | confidence: 0.95 | steps: 2 | duration: 1ms</text>
+
+      <!-- Audit features -->
+      <rect x="20" y="290" width="520" height="55" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
+      <text x="280" y="310" font-size="10" font-weight="bold" fill="#e65100" text-anchor="middle">Audit Features</text>
+
+      <rect x="35" y="320" width="115" height="20" rx="4" fill="#fff" stroke="#e65100" stroke-width="1"/>
+      <text x="92" y="334" font-size="8" fill="#e65100" text-anchor="middle">Immutable log</text>
+
+      <rect x="160" y="320" width="115" height="20" rx="4" fill="#fff" stroke="#e65100" stroke-width="1"/>
+      <text x="217" y="334" font-size="8" fill="#e65100" text-anchor="middle">Hash chains</text>
+
+      <rect x="285" y="320" width="115" height="20" rx="4" fill="#fff" stroke="#e65100" stroke-width="1"/>
+      <text x="342" y="334" font-size="8" fill="#e65100" text-anchor="middle">Replay capability</text>
+
+      <rect x="410" y="320" width="115" height="20" rx="4" fill="#fff" stroke="#e65100" stroke-width="1"/>
+      <text x="467" y="334" font-size="8" fill="#e65100" text-anchor="middle">Export (JSON/CSV)</text>
+    </svg>
+    <p class="diagram-caption">Every query creates audit log entries that record the input, each reasoning step, and the final result. The log is immutable with hash chains for integrity. Any decision can be replayed to verify correctness or investigate issues.</p>
+  </div>
+
+  <h2>What Gets Logged</h2>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Event Type</th><th>Data Recorded</th><th>Purpose</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>QUERY_START</td>
+        <td>Input, context, active layers, mask</td>
+        <td>Reproduce initial conditions</td>
+      </tr>
+      <tr>
+        <td>CONCEPT_LOOKUP</td>
+        <td>Name, vector hash, retrieval time</td>
+        <td>Track data access</td>
+      </tr>
+      <tr>
+        <td>CONTAINMENT_CHECK</td>
+        <td>Concepts, distance, threshold, result</td>
+        <td>Explain IS_A decisions</td>
+      </tr>
+      <tr>
+        <td>BIAS_MASK_APPLIED</td>
+        <td>Mask dimensions, context</td>
+        <td>Fairness compliance</td>
+      </tr>
+      <tr>
+        <td>THEORY_PUSH/POP</td>
+        <td>Layer name, facts added</td>
+        <td>Counterfactual tracking</td>
+      </tr>
+      <tr>
+        <td>QUERY_RESULT</td>
+        <td>Output, confidence, duration</td>
+        <td>Performance and correctness</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Log Entry Structure</h2>
+
+  <pre>
+{
+  "id": "a1b2c3d4",
+  "timestamp": "2024-01-15T10:30:00.123Z",
+  "event": "CONTAINMENT_CHECK",
+  "data": {
+    "subject": "Dog",
+    "predicate": "IS_A",
+    "object": "Animal",
+    "distance": 42,
+    "threshold": 100,
+    "result": true
+  },
+  "context": {
+    "queryId": "q789",
+    "layer": "base",
+    "mask": "full"
+  },
+  "prevHash": "abc123...",
+  "hash": "def456..."
+}</pre>
+
+  <h2>Query Replay</h2>
+
+  <p>Any logged query can be replayed to verify it produces the same result:</p>
+
+  <pre>
+// Get original query from audit log
+const entry = auditLog.getEntry("q789");
+
+// Replay with same context
+const replayResult = reasoner.replay(entry);
+
+// Verify deterministic behavior
+assert(replayResult.equals(entry.result));
+// If not equal, something changed (data, code, or corruption)</pre>
+
+  <h2>Compliance Export</h2>
+
+  <p>Audit logs can be exported for regulatory compliance:</p>
+
+  <pre>
+// Export all entries for a time range
+auditLog.export({
+  format: "json",        // or "csv"
+  from: "2024-01-01",
+  to: "2024-01-31",
+  events: ["BIAS_MASK_APPLIED", "QUERY_RESULT"],
+  output: "/reports/january-audit.json"
+});</pre>
+
+  <h2>Integrity Verification</h2>
+
+  <p>Hash chains ensure the log hasn't been tampered with:</p>
+
+  <pre>
+// Verify entire log integrity
+const valid = auditLog.verifyChain();
+// Returns: { valid: true } or { valid: false, brokenAt: "entry#123" }
+
+// Each entry's hash includes previous hash
+hash(entry) = SHA256(entry.data + entry.prevHash)</pre>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="../architecture/support.html">Support Layer</a> – AuditLog implementation</li>
+    <li><a href="bias.html">Bias Control</a> – Logged for fairness compliance</li>
+    <li><a href="validation.html">Validation</a> – Validation failures are logged</li>
+    <li><a href="theory_layers.html">Theory Layers</a> – Layer changes are tracked</li>
+    <li><a href="trustworthy_ai.html">Trustworthy AI</a> – Auditability as trust foundation</li>
+  </ul>
+
   <div class="footer-nav">
-    <a href="../index.html">Back to index</a>
+    <a href="validation.html">← Validation</a> ·
+    <a href="trustworthy_ai.html">Trustworthy AI →</a>
   </div>
   </div>
   <script src="../reference/nav2.js"></script>

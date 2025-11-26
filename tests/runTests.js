@@ -11,7 +11,12 @@ async function main() {
   }
 
   const entries = fs.readdirSync(testsRoot, { withFileTypes: true });
-  const suites = entries.filter((e) => e.isDirectory()).map((e) => e.name).sort();
+  // Exclude non-test directories
+  const excludeDirs = ['fixtures', 'results'];
+  const suites = entries
+    .filter((e) => e.isDirectory() && !excludeDirs.includes(e.name))
+    .map((e) => e.name)
+    .sort();
 
   const args = process.argv.slice(2);
   if (args.length === 0) {
@@ -76,30 +81,59 @@ async function main() {
     resultsData.summary.total++;
     if (result && result._timeout) {
       overallOk = false;
-      console.log('TIMEOUT');
+      console.log('\x1b[33mTIMEOUT\x1b[0m');
       resultsData.suites[suite] = { status: 'timeout', passed: 0, failed: 1 };
       resultsData.summary.timeout++;
     } else if (result && result.ok === false) {
       overallOk = false;
-      console.log('FAIL');
+      const passed = result.passed || 0;
+      const failed = result.failed || 1;
+      const total = result.total || (passed + failed);
+      console.log(`\x1b[31mFAIL\x1b[0m (${passed}/${total} passed)`);
+      if (result.errors && result.errors.length > 0) {
+        for (const err of result.errors.slice(0, 5)) {
+          console.log(`  \x1b[31m✗\x1b[0m ${err}`);
+        }
+        if (result.errors.length > 5) {
+          console.log(`  ... and ${result.errors.length - 5} more errors`);
+        }
+      }
       resultsData.suites[suite] = {
         status: 'failed',
-        passed: result.passed || 0,
-        failed: result.failed || 1,
-        total: result.total || 1
+        passed,
+        failed,
+        total,
+        errors: result.errors || []
       };
       resultsData.summary.failed++;
     } else {
-      console.log('OK');
+      const passed = result && result.passed ? result.passed : 1;
+      const total = result && result.total ? result.total : passed;
+      console.log(`\x1b[32mOK\x1b[0m (${passed}/${total} passed)`);
       resultsData.suites[suite] = {
         status: 'passed',
-        passed: result && result.passed ? result.passed : 1,
+        passed,
         failed: 0,
-        total: result && result.total ? result.total : 1
+        total
       };
       resultsData.summary.passed++;
     }
   }
+
+  // Print summary
+  console.log('\n' + '─'.repeat(50));
+  console.log('Test Summary:');
+  const { passed, failed, skipped, timeout, total } = resultsData.summary;
+  const passedColor = passed > 0 ? '\x1b[32m' : '';
+  const failedColor = failed > 0 ? '\x1b[31m' : '';
+  const timeoutColor = timeout > 0 ? '\x1b[33m' : '';
+  const reset = '\x1b[0m';
+  console.log(`  ${passedColor}Passed:  ${passed}${reset}`);
+  console.log(`  ${failedColor}Failed:  ${failed}${reset}`);
+  if (timeout > 0) console.log(`  ${timeoutColor}Timeout: ${timeout}${reset}`);
+  if (skipped > 0) console.log(`  Skipped: ${skipped}`);
+  console.log(`  Total:   ${total}`);
+  console.log('─'.repeat(50));
 
   // Write results JSON for matrix.html consumption
   const resultsDir = path.join(testsRoot, 'results');
@@ -108,7 +142,7 @@ async function main() {
   }
   const resultsPath = path.join(resultsDir, 'test_results.json');
   fs.writeFileSync(resultsPath, JSON.stringify(resultsData, null, 2));
-  console.log(`\nResults written to ${resultsPath}`);
+  console.log(`Results written to ${resultsPath}`);
 
   process.exit(overallOk ? 0 : 1);
 }

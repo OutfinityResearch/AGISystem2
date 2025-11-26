@@ -2,82 +2,197 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Locality-Sensitive Hashing (LSH)</title>
+  <title>Locality-Sensitive Hashing</title>
   <link rel="stylesheet" href="../reference/style.css">
 </head>
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>Locality-Sensitive Hashing (LSH)</h1>
-    <small></small>
-    <div class="sub-nav">
-      <strong>Wiki Topics:</strong>
-      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="abstract_interpretation.html">Abstract Interpretation</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="auditability.html">Auditability</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deduction.html">Deduction</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="induction.html">Induction</a> · <a href="lsh.html">Locality-Sensitive Hashing (LSH)</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="permutation_binding.html">Permutation-Based Binding</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="symbolic_execution.html">Symbolic Execution</a> · <a href="sys2dsl.html">Sys2DSL</a> · <a href="theory_layers.html">Theory Layers</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="validation.html">Validation</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
-    </div>
+    <h1>AGISystem2 – Locality-Sensitive Hashing</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
   </div>
-  <article>
-    <div class="philosophical-header">
-      <h2>Theoretical Foundations of Locality-Sensitive Hashing</h2>
-      <p>Locality-Sensitive Hashing (LSH) represents a revolutionary approach to similarity search and nearest neighbor finding in high-dimensional spaces. The fundamental insight is that instead of searching exhaustively through all possible items, we can group similar items together into buckets that can be searched efficiently. This probabilistic approach trades exact precision for dramatic improvements in computational efficiency, enabling similarity search in spaces with millions or billions of items where exact methods would be computationally infeasible.</p>
-      
-      <p>The philosophical significance of LSH lies in its recognition that sometimes "good enough" is preferable to "perfect but slow." In many real-world scenarios, approximate similarity answers that can be computed quickly are more valuable than exact answers that require excessive computation. This insight challenges traditional notions of precision and suggests that intelligence often operates with bounded rationality and resource constraints.</p>
-      
-      <p>LSH also raises profound questions about the nature of similarity and categorization. By using probabilistic grouping rather than exact matching, LSH suggests that categories and similarities may be fuzzy rather than crisp, and that the boundaries between similar and dissimilar items may be probabilistic rather than absolute. This perspective has important implications for understanding how humans and machines can efficiently navigate complex information spaces.</p>
-    </div>
 
-    <div class="academic-analysis">
-      <h2>LSH Implementation in AGISystem2</h2>
-      <p>In AGISystem2, Locality-Sensitive Hashing is implemented as a core component of the retrieval system, enabling efficient similarity search and concept access within the high-dimensional conceptual space. The implementation leverages the mathematical properties of hyperdimensional vectors to create hash buckets that preserve locality while enabling fast approximate nearest neighbor queries.</p>
-      
-      <p>The LSH system creates hash buckets by projecting high-dimensional vectors onto lower-dimensional spaces using random projections. Vectors that are close in the original high-dimensional space are likely to remain close in the projected lower-dimensional space, enabling them to fall into the same hash buckets. This probabilistic grouping allows the system to dramatically reduce the search space while maintaining high probability of finding true nearest neighbors.</p>
-      
-      <p>For conceptual reasoning, the LSH system enables efficient retrieval of related concepts and analogical matches. When the system needs to find concepts similar to a query vector, it can first search within the appropriate hash bucket to identify candidate matches, then perform exact similarity computation only on this reduced candidate set. This two-stage approach combines the efficiency of LSH with the precision of exact computation.</p>
-      
-      <p>The integration with the conceptual space framework allows LSH to operate on semantic similarity rather than just syntactic or lexical similarity. Because the hash buckets are created from the actual vector representations of concepts, the grouping preserves semantic relationships and conceptual structure. This semantic awareness is essential for meaningful analogical reasoning and knowledge discovery.</p>
-    </div>
+  <p>Locality-Sensitive Hashing (LSH) is the retrieval mechanism that makes AGISystem2 fast. Instead of comparing a query against every stored concept, LSH groups similar vectors into buckets. Only concepts in the same bucket need exact comparison, reducing search from O(n) to approximately O(1).</p>
 
-    <div class="technical-implementation">
-      <h2>Advanced LSH Capabilities</h2>
-      <p>The LSH implementation in AGISystem2 includes several advanced features that enable sophisticated similarity search and knowledge retrieval. These capabilities extend beyond basic nearest neighbor search to support complex reasoning patterns and large-scale knowledge management.</p>
-      
-      <p>Multi-projection LSH creates multiple hash tables using different random projections, increasing the probability that similar items will collide in at least one projection. This multi-projection approach significantly reduces false negatives while maintaining the efficiency gains of LSH. The system can intelligently combine results from multiple projections to achieve high recall with controlled false positive rates.</p>
-      
-      <p>Adaptive bucket sizing allows the system to dynamically adjust the number and size of hash buckets based on data distribution and query requirements. This adaptivity ensures optimal performance across different domains and conceptual densities, preventing both under-filled and over-filled buckets that would degrade search efficiency.</p>
-      
-      <p>Temporal LSH enables efficient similarity search for time-varying or sequential concepts. The system can create hash buckets that account for temporal patterns in concept evolution, enabling efficient retrieval of temporally related concepts. This temporal awareness is essential for reasoning about change, causation, and narrative consistency.</p>
-    </div>
+  <div class="diagram">
+    <svg viewBox="0 0 560 320" role="img" aria-label="LSH bucket retrieval">
+      <defs>
+        <marker id="arrow-lsh" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
 
-    <div class="philosophical-implications">
-      <h2>Implications for Scalability and Efficiency</h2>
-      <p>The implementation of LSH in AGISystem2 has profound implications for building scalable artificial intelligence systems that can efficiently search and reason within massive knowledge bases. By enabling approximate similarity search that is orders of magnitude faster than exact methods, the system can handle conceptual spaces with millions of concepts while maintaining interactive response times.</p>
-      
-      <p>From a cognitive science perspective, this approach mirrors how human memory might organize information for efficient retrieval. The use of hash buckets and probabilistic grouping reflects the brain's strategy of organizing related concepts together for rapid access, even if this means some precision is lost. This biological plausibility suggests that LSH captures fundamental principles of efficient information storage and retrieval.</p>
-      
-      <p>The LSH system also enhances the ability to handle uncertainty and ambiguity in conceptual reasoning. By providing approximate but fast similarity search, the system can operate effectively even when dealing with incomplete or noisy information. This robustness is essential for real-world applications where perfect information is rarely available and decisions must be made under time constraints.</p>
-    </div>
+      <!-- Background -->
+      <rect x="0" y="0" width="560" height="320" fill="#fafbfc"/>
 
-    <div class="academic-references">
-      <h2>Academic Context and Related Work</h2>
-      <p>Locality-Sensitive Hashing has been extensively studied in computer science, information retrieval, and machine learning. Key contributors include Piotr Indyk, who pioneered the technique; Rajee Motwani, who developed theoretical foundations; and numerous researchers who have applied LSH to problems ranging from nearest neighbor search to clustering and dimensionality reduction.</p>
-      
-      <p>In machine learning and information retrieval, LSH has become fundamental to large-scale similarity search, recommendation systems, and dimensionality reduction. The ability to efficiently find approximate nearest neighbors has enabled modern web-scale services and machine learning applications that would be infeasible with exact methods.</p>
-      
-      <p>For deeper understanding of LSH and its applications, <a href="https://en.wikipedia.org/wiki/Locality-sensitive_hashing" target="_blank" rel="noopener noreferrer">the computer science literature on locality-sensitive hashing</a> provides comprehensive coverage of theoretical foundations and practical implementations.</p>
-    </div>
+      <!-- Query vector -->
+      <rect x="20" y="130" width="80" height="60" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="60" y="155" font-size="10" font-weight="bold" fill="#0f4c81" text-anchor="middle">Query</text>
+      <text x="60" y="175" font-size="9" fill="#4a5670" text-anchor="middle">vector</text>
 
-    <div class="technical-specifications">
-      <h2>Technical Implementation References</h2>
-      <p>For detailed technical specifications of LSH implementation in AGISystem2, consult the following design and test specifications (referenced by ID, without direct links from this theory page):</p>
-      <ul>
-        <li>DS[/reason/retrieval.js] — Retrieval specification implementing LSH-based nearest-neighbour search.</li>
-        <li>DS[/core/math_engine.js] — Math Engine specification for vector operations and hash functions.</li>
-        <li>DS[/core/vector_space.js] — Vector Space specification for high-dimensional buffers and buckets.</li>
-        <li>DS[/tests/relation_permuter/runSuite] and DS[/tests/relations_bootstrap/runSuite] — test suites covering relation permutations and bootstrap behaviour related to LSH.</li>
-      </ul>
-    </div>
-  </article>
+      <!-- Hash function -->
+      <rect x="130" y="130" width="80" height="60" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+      <text x="170" y="150" font-size="10" font-weight="bold" fill="#e65100" text-anchor="middle">Hash</text>
+      <text x="170" y="165" font-size="9" fill="#4a5670" text-anchor="middle">h(v) → bucket</text>
+      <text x="170" y="180" font-size="9" fill="#e65100" text-anchor="middle">= 42</text>
+
+      <!-- Arrow to hash -->
+      <line x1="100" y1="160" x2="128" y2="160" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-lsh)"/>
+
+      <!-- Buckets -->
+      <rect x="240" y="20" width="300" height="280" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="390" y="40" font-size="11" font-weight="bold" fill="#4a5670" text-anchor="middle">Hash Buckets</text>
+
+      <!-- Bucket 41 -->
+      <rect x="260" y="55" width="260" height="45" rx="4" fill="#fff" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="275" y="75" font-size="9" fill="#b0b6c4">Bucket 41:</text>
+      <circle cx="350" cy="77" r="8" fill="#e0e0e0"/>
+      <circle cx="375" cy="77" r="8" fill="#e0e0e0"/>
+      <circle cx="400" cy="77" r="8" fill="#e0e0e0"/>
+
+      <!-- Bucket 42 (highlighted) -->
+      <rect x="260" y="110" width="260" height="70" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+      <text x="275" y="130" font-size="10" font-weight="bold" fill="#2e7d32">Bucket 42:</text>
+      <circle cx="350" cy="145" r="10" fill="#2e7d32"/>
+      <text x="350" y="149" font-size="8" fill="#fff" text-anchor="middle">A</text>
+      <circle cx="380" cy="145" r="10" fill="#2e7d32"/>
+      <text x="380" y="149" font-size="8" fill="#fff" text-anchor="middle">B</text>
+      <circle cx="410" cy="145" r="10" fill="#2e7d32"/>
+      <text x="410" y="149" font-size="8" fill="#fff" text-anchor="middle">C</text>
+      <circle cx="440" cy="145" r="10" fill="#2e7d32"/>
+      <text x="440" y="149" font-size="8" fill="#fff" text-anchor="middle">D</text>
+      <text x="275" y="168" font-size="8" fill="#2e7d32">← Only these 4 need exact comparison</text>
+
+      <!-- Bucket 43 -->
+      <rect x="260" y="190" width="260" height="45" rx="4" fill="#fff" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="275" y="210" font-size="9" fill="#b0b6c4">Bucket 43:</text>
+      <circle cx="350" cy="212" r="8" fill="#e0e0e0"/>
+      <circle cx="375" cy="212" r="8" fill="#e0e0e0"/>
+
+      <!-- Bucket 44 -->
+      <rect x="260" y="245" width="260" height="45" rx="4" fill="#fff" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="275" y="265" font-size="9" fill="#b0b6c4">Bucket 44:</text>
+      <circle cx="350" cy="267" r="8" fill="#e0e0e0"/>
+      <circle cx="375" cy="267" r="8" fill="#e0e0e0"/>
+      <circle cx="400" cy="267" r="8" fill="#e0e0e0"/>
+      <circle cx="425" cy="267" r="8" fill="#e0e0e0"/>
+      <circle cx="450" cy="267" r="8" fill="#e0e0e0"/>
+
+      <!-- Arrow to bucket -->
+      <line x1="210" y1="160" x2="258" y2="145" stroke="#e65100" stroke-width="1.5" marker-end="url(#arrow-lsh)"/>
+
+      <!-- Stats -->
+      <text x="20" y="240" font-size="9" fill="#4a5670">Total concepts: 10,000</text>
+      <text x="20" y="255" font-size="9" fill="#4a5670">Bucket 42 size: 4</text>
+      <text x="20" y="270" font-size="9" fill="#2e7d32" font-weight="bold">Speedup: 2,500×</text>
+    </svg>
+    <p class="diagram-caption">LSH maps similar vectors to the same bucket. Instead of comparing the query against all 10,000 concepts, we only compare against the 4 concepts in bucket 42. Similar vectors hash to nearby buckets with high probability.</p>
+  </div>
+
+  <h2>How It Works</h2>
+
+  <p>LSH uses random hyperplane projections to create hash codes. Each bit of the hash is determined by which side of a random hyperplane the vector falls on. Similar vectors tend to fall on the same side of most hyperplanes, producing similar hash codes and landing in the same or adjacent buckets.</p>
+
+  <p>The <a href="../architecture/reasoning.html#retriever">Retriever</a> maintains multiple hash tables with different random projections. This reduces false negatives: if two similar vectors end up in different buckets in one table, they're likely to share a bucket in another table.</p>
+
+  <h2>Two-Stage Retrieval</h2>
+
+  <p>Retrieval happens in two stages:</p>
+
+  <ol>
+    <li><strong>Candidate selection</strong> – Hash the query, fetch all vectors in matching buckets across all tables</li>
+    <li><strong>Exact ranking</strong> – Compute <a href="masked_l1_distance.html">masked L1 distance</a> for candidates, return top-k</li>
+  </ol>
+
+  <p>This combines LSH's speed (sublinear candidate selection) with exact distance accuracy (precise ranking of candidates).</p>
+
+  <h2>Implementation</h2>
+
+  <p>The <a href="../architecture/reasoning.html#retriever">Retriever</a> component manages LSH tables:</p>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Operation</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>index(vector, id)</code></td>
+        <td>Add vector to all hash tables</td>
+      </tr>
+      <tr>
+        <td><code>query(vector, k)</code></td>
+        <td>Find k nearest neighbors</td>
+      </tr>
+      <tr>
+        <td><code>remove(id)</code></td>
+        <td>Remove from all tables</td>
+      </tr>
+      <tr>
+        <td><code>rehash()</code></td>
+        <td>Rebuild tables (after many changes)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Configuration</h2>
+
+  <p>LSH parameters are set via <a href="../architecture/configuration.html">configuration profiles</a>:</p>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Parameter</th><th>auto_test</th><th>prod</th><th>Effect</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>numTables</td>
+        <td>4</td>
+        <td>16</td>
+        <td>More tables = fewer false negatives</td>
+      </tr>
+      <tr>
+        <td>hashBits</td>
+        <td>8</td>
+        <td>12</td>
+        <td>More bits = smaller buckets</td>
+      </tr>
+      <tr>
+        <td>probeRadius</td>
+        <td>1</td>
+        <td>2</td>
+        <td>Check adjacent buckets too</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Trade-offs</h2>
+
+  <ul>
+    <li><strong>Speed vs accuracy</strong> – More tables improve recall but cost memory and time</li>
+    <li><strong>Memory vs precision</strong> – More hash bits create smaller buckets but more overhead</li>
+    <li><strong>Build vs query</strong> – Indexing is slower than exact search; queries are much faster</li>
+  </ul>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="../architecture/reasoning.html#retriever">Retriever Implementation</a> – LSH tables and query processing</li>
+    <li><a href="masked_l1_distance.html">Masked L1 Distance</a> – The exact distance used for ranking</li>
+    <li><a href="../architecture/configuration.html">Configuration</a> – Profile settings for LSH</li>
+    <li><a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> – Why high dimensions work well with LSH</li>
+  </ul>
+
   <div class="footer-nav">
-    <a href="../index.html">Back to index</a>
+    <a href="masked_l1_distance.html">← Masked L1 Distance</a> ·
+    <a href="theory_layers.html">Theory Layers →</a>
   </div>
   </div>
   <script src="../reference/nav2.js"></script>

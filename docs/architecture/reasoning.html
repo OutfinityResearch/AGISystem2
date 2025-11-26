@@ -1,0 +1,397 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Reasoning Layer</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>AGISystem2 – Reasoning Layer</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="../wiki/index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
+    <div class="sub-nav">
+      <strong>Architecture:</strong>
+      <a href="index.html">Overview</a> ·
+      <a href="geometry.html">Geometry</a> ·
+      <a href="knowledge.html">Knowledge</a> ·
+      <a href="reasoning.html">Reasoning</a> ·
+      <a href="language.html">Language</a> ·
+      <a href="storage.html">Storage</a> ·
+      <a href="configuration.html">Configuration</a>
+    </div>
+  </div>
+
+  <p>The Reasoning Layer performs inference operations over the knowledge stored in the <a href="knowledge.html">Knowledge Layer</a>. It transforms queries into geometric operations, retrieves relevant concepts, computes distances and inclusions, and produces results with confidence scores and full provenance traces. All reasoning modes—deduction, abduction, analogy, counterfactual, and temporal—are implemented as operations on bounded diamonds.</p>
+
+  <div class="section-intro">
+    <p><strong>Specification:</strong> DS(/engine/reasoner) · DS(/engine/retriever) · DS(/engine/bias_controller)</p>
+  </div>
+
+  <h2>Reasoner</h2>
+
+  <p>The Reasoner is the central orchestrator for inference. It receives parsed queries, selects the appropriate reasoning mode, coordinates retrieval and distance computation, and assembles results with explanations.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 560 240" role="img" aria-label="Reasoner query processing flow">
+      <defs>
+        <marker id="arrow-reas" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
+
+      <!-- Query input -->
+      <rect x="20" y="90" width="80" height="50" rx="6" fill="#f5f7fb" stroke="#0f4c81" stroke-width="2"/>
+      <text x="60" y="112" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Query</text>
+      <text x="60" y="126" font-size="7" fill="#4a5670" text-anchor="middle">ASK "Is X a Y?"</text>
+
+      <!-- Mode selector -->
+      <rect x="120" y="80" width="90" height="70" rx="6" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="165" y="100" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Mode Select</text>
+      <text x="165" y="115" font-size="7" fill="#4a5670" text-anchor="middle">Deduction</text>
+      <text x="165" y="127" font-size="7" fill="#4a5670" text-anchor="middle">Abduction</text>
+      <text x="165" y="139" font-size="7" fill="#4a5670" text-anchor="middle">Analogy...</text>
+
+      <!-- Retriever -->
+      <rect x="230" y="30" width="90" height="50" rx="6" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="275" y="50" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Retriever</text>
+      <text x="275" y="65" font-size="7" fill="#4a5670" text-anchor="middle">LSH candidates</text>
+
+      <!-- MathEngine -->
+      <rect x="230" y="100" width="90" height="50" rx="6" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="275" y="120" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">MathEngine</text>
+      <text x="275" y="135" font-size="7" fill="#4a5670" text-anchor="middle">Exact distances</text>
+
+      <!-- TheoryStack -->
+      <rect x="230" y="170" width="90" height="50" rx="6" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+      <text x="275" y="190" font-size="9" font-weight="bold" fill="#e65100" text-anchor="middle">TheoryStack</text>
+      <text x="275" y="205" font-size="7" fill="#4a5670" text-anchor="middle">Context layers</text>
+
+      <!-- Grading -->
+      <rect x="340" y="90" width="90" height="60" rx="6" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="385" y="110" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Grading</text>
+      <text x="385" y="125" font-size="7" fill="#4a5670" text-anchor="middle">Confidence</text>
+      <text x="385" y="137" font-size="7" fill="#4a5670" text-anchor="middle">Sceptic/Optimist</text>
+
+      <!-- Result -->
+      <rect x="450" y="90" width="90" height="60" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+      <text x="495" y="110" font-size="9" font-weight="bold" fill="#2e7d32" text-anchor="middle">Result</text>
+      <text x="495" y="125" font-size="7" fill="#4a5670" text-anchor="middle">Truth + Trace</text>
+      <text x="495" y="137" font-size="7" fill="#4a5670" text-anchor="middle">Provenance</text>
+
+      <!-- Arrows -->
+      <line x1="100" y1="115" x2="118" y2="115" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-reas)"/>
+      <line x1="210" y1="100" x2="228" y2="70" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-reas)"/>
+      <line x1="210" y1="115" x2="228" y2="115" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-reas)"/>
+      <line x1="210" y1="130" x2="228" y2="180" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-reas)"/>
+      <line x1="320" y1="55" x2="385" y2="88" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-reas)"/>
+      <line x1="320" y1="125" x2="338" y2="120" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-reas)"/>
+      <line x1="320" y1="195" x2="385" y2="152" stroke="#0f4c81" stroke-width="1" marker-end="url(#arrow-reas)"/>
+      <line x1="430" y1="120" x2="448" y2="120" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#arrow-reas)"/>
+    </svg>
+    <p class="diagram-caption">Reasoner query processing. The Mode Selector determines the reasoning strategy. Retriever finds candidate concepts via LSH. MathEngine computes exact distances. TheoryStack provides context. Grading produces confidence scores. The final Result includes truth value and full provenance trace.</p>
+  </div>
+
+  <h3>Reasoning Modes</h3>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Mode</th><th>Question Type</th><th>Geometric Operation</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Deduction</strong></td>
+        <td>"Is X a Y?"</td>
+        <td>Check if point X is inside diamond Y</td>
+      </tr>
+      <tr>
+        <td><strong>Abduction</strong></td>
+        <td>"What could cause Y?"</td>
+        <td>Find concepts whose CAUSES relation includes Y</td>
+      </tr>
+      <tr>
+        <td><strong>Analogy</strong></td>
+        <td>"X is to Y as ? is to Z"</td>
+        <td>Vector arithmetic: compute offset and apply</td>
+      </tr>
+      <tr>
+        <td><strong>Counterfactual</strong></td>
+        <td>"What if X were true?"</td>
+        <td>Push temporary layer, assert X, query, pop</td>
+      </tr>
+      <tr>
+        <td><strong>Temporal</strong></td>
+        <td>"Was X true before?"</td>
+        <td>Apply inverse rotation, check inclusion</td>
+      </tr>
+      <tr>
+        <td><strong>Deontic</strong></td>
+        <td>"Is X permitted?"</td>
+        <td>Check PERMITS/PROHIBITS relations in stack</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Deduction: Inclusion Check</h3>
+
+  <p>The most common reasoning operation. A query "Is Dog an Animal?" becomes: retrieve the Animal concept, encode Dog as a point, check if the point lies inside the Animal diamond(s).</p>
+
+  <pre>
+function deductionCheck(subject, relation, object) {
+  // Get composed concept through theory stack
+  const objectConcept = theoryStack.compose(object);
+  if (!objectConcept) return { truth: 'UNKNOWN', reason: 'Object not found' };
+
+  // Encode subject with relation permutation
+  const subjectPoint = encodeWithRelation(subject, relation);
+
+  // Check inclusion in all diamonds
+  for (const diamond of objectConcept.diamonds) {
+    if (isInside(subjectPoint, diamond)) {
+      return {
+        truth: 'TRUE_CERTAIN',
+        confidence: computeConfidence(subjectPoint, diamond),
+        trace: [{ step: 'inclusion', diamond, result: 'inside' }]
+      };
+    }
+  }
+
+  // Check proximity for plausible answers
+  const nearestDist = nearestDistance(subjectPoint, objectConcept);
+  if (nearestDist < plausibilityThreshold) {
+    return {
+      truth: 'TRUE_PLAUSIBLE',
+      confidence: 1 - (nearestDist / plausibilityThreshold),
+      trace: [{ step: 'proximity', distance: nearestDist }]
+    };
+  }
+
+  return { truth: 'FALSE', confidence: 0.9, trace: [...] };
+}</pre>
+
+  <h3>Confidence Bands</h3>
+
+  <p>Results include confidence computed from two perspectives:</p>
+
+  <ul>
+    <li><strong>Sceptic band</strong> – Assumes worst case: uses maximum distances, strictest thresholds</li>
+    <li><strong>Optimist band</strong> – Assumes best case: uses minimum distances, relaxed thresholds</li>
+  </ul>
+
+  <p>The final confidence is the overlap between bands, providing a robust estimate even with uncertain data.</p>
+
+  <h2 id="retriever">Retriever</h2>
+
+  <p>The Retriever provides fast approximate lookup of relevant concepts. It uses Locality-Sensitive Hashing (LSH) to find candidates in sub-linear time, then passes candidates to MathEngine for exact distance computation.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 480 180" role="img" aria-label="LSH retrieval process">
+      <defs>
+        <marker id="arrow-lsh" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
+
+      <!-- Query vector -->
+      <rect x="20" y="60" width="80" height="60" rx="6" fill="#f5f7fb" stroke="#0f4c81" stroke-width="2"/>
+      <text x="60" y="85" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Query</text>
+      <text x="60" y="100" font-size="7" fill="#4a5670" text-anchor="middle">Vector q</text>
+
+      <!-- Hash functions -->
+      <rect x="120" y="40" width="100" height="100" rx="6" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="170" y="60" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Hash Functions</text>
+      <text x="170" y="80" font-size="8" fill="#4a5670" text-anchor="middle">h₁(q) → bucket</text>
+      <text x="170" y="95" font-size="8" fill="#4a5670" text-anchor="middle">h₂(q) → bucket</text>
+      <text x="170" y="110" font-size="8" fill="#4a5670" text-anchor="middle">...</text>
+      <text x="170" y="125" font-size="8" fill="#4a5670" text-anchor="middle">hₖ(q) → bucket</text>
+
+      <!-- Buckets -->
+      <rect x="240" y="40" width="100" height="100" rx="6" fill="#fff" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="290" y="60" font-size="9" font-weight="bold" fill="#4a5670" text-anchor="middle">Buckets</text>
+      <rect x="250" y="70" width="80" height="20" rx="2" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="290" y="84" font-size="7" fill="#4a5670" text-anchor="middle">{Dog, Wolf, Fox}</text>
+      <rect x="250" y="95" width="80" height="20" rx="2" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="290" y="109" font-size="7" fill="#4a5670" text-anchor="middle">{Cat, Tiger}</text>
+      <text x="290" y="130" font-size="7" fill="#4a5670" text-anchor="middle">...</text>
+
+      <!-- Candidates -->
+      <rect x="360" y="60" width="100" height="60" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+      <text x="410" y="85" font-size="9" font-weight="bold" fill="#2e7d32" text-anchor="middle">Candidates</text>
+      <text x="410" y="100" font-size="7" fill="#4a5670" text-anchor="middle">Top-k similar</text>
+
+      <!-- Arrows -->
+      <line x1="100" y1="90" x2="118" y2="90" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-lsh)"/>
+      <line x1="220" y1="90" x2="238" y2="90" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-lsh)"/>
+      <line x1="340" y1="90" x2="358" y2="90" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#arrow-lsh)"/>
+
+      <!-- Complexity note -->
+      <text x="240" y="165" font-size="8" fill="#4a5670" text-anchor="middle">O(1) lookup per hash, O(k) total vs O(N) brute force</text>
+    </svg>
+    <p class="diagram-caption">LSH retrieval. The query vector is hashed through multiple hash functions. Each hash points to a bucket containing similar concepts. The union of buckets forms the candidate set for exact distance computation.</p>
+  </div>
+
+  <h3>LSH Configuration</h3>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Parameter</th><th>auto_test</th><th>manual_test</th><th>prod</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Number of hash tables</td><td>4</td><td>8</td><td>16</td></tr>
+      <tr><td>Hashes per table</td><td>8</td><td>12</td><td>16</td></tr>
+      <tr><td>Bucket width</td><td>20</td><td>15</td><td>10</td></tr>
+      <tr><td>Max candidates</td><td>50</td><td>100</td><td>200</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="bias-controller">BiasController</h2>
+
+  <p>The BiasController manages the separation between factual and value-laden reasoning. It applies masks to isolate ontology dimensions (facts) from axiology dimensions (values), enabling fairness modes and value-aware reasoning.</p>
+
+  <h3>Fairness Modes</h3>
+
+  <ul>
+    <li><strong>facts_only</strong> – Mask out all axiology dimensions; reason only on factual properties</li>
+    <li><strong>values_only</strong> – Mask out ontology dimensions; compare only value profiles</li>
+    <li><strong>veil_of_ignorance</strong> – Additionally mask protected attributes (age, gender, etc.)</li>
+    <li><strong>full</strong> – Use all dimensions (default)</li>
+  </ul>
+
+  <pre>
+function applyFairnessMode(query, mode) {
+  const mask = query.mask.slice();  // Copy base mask
+
+  switch (mode) {
+    case 'facts_only':
+      // Zero out axiology range
+      for (let i = 256; i < 384; i++) mask[i] = 0;
+      break;
+    case 'values_only':
+      // Zero out ontology range
+      for (let i = 0; i < 256; i++) mask[i] = 0;
+      break;
+    case 'veil_of_ignorance':
+      // Zero out axiology + protected attributes
+      for (let i = 256; i < 384; i++) mask[i] = 0;
+      for (const dim of protectedDimensions) mask[dim] = 0;
+      break;
+  }
+
+  return { ...query, mask };
+}</pre>
+
+  <h2 id="validation-engine">ValidationEngine</h2>
+
+  <p>The ValidationEngine performs consistency checks on the knowledge base. It can detect:</p>
+
+  <ul>
+    <li><strong>Direct contradictions</strong> – A IS_A B and A IS_NOT_A B in same context</li>
+    <li><strong>Cyclic hierarchies</strong> – A IS_A B IS_A C IS_A A</li>
+    <li><strong>Orphan concepts</strong> – Concepts with no relations</li>
+    <li><strong>Overlapping diamonds</strong> – Concepts whose regions intersect unexpectedly</li>
+  </ul>
+
+  <pre>
+function validateConsistency() {
+  const issues = [];
+
+  // Check for contradictions in each theory layer
+  for (const layer of theoryStack.layers) {
+    for (const [name, concept] of layer.concepts) {
+      const contradictions = findContradictions(concept);
+      issues.push(...contradictions);
+    }
+  }
+
+  // Check for cycles
+  const cycles = detectCycles(conceptGraph);
+  issues.push(...cycles);
+
+  return {
+    valid: issues.length === 0,
+    issues
+  };
+}</pre>
+
+  <h2 id="temporal-memory">TemporalMemory</h2>
+
+  <p>TemporalMemory encodes time by rotating vectors. Each time step applies a fixed rotation, shifting dimensions cyclically. This allows the system to reason about past and future states without separate storage structures.</p>
+
+  <h3>Operations</h3>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Operation</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>tick()</code></td>
+        <td>Advance time by one step (rotate current state)</td>
+      </tr>
+      <tr>
+        <td><code>rewind(n)</code></td>
+        <td>Apply n inverse rotations to query past</td>
+      </tr>
+      <tr>
+        <td><code>forward(n)</code></td>
+        <td>Apply n forward rotations to query future</td>
+      </tr>
+      <tr>
+        <td><code>snapshot()</code></td>
+        <td>Save current time state for later comparison</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Provenance Traces</h2>
+
+  <p>Every reasoning result includes a provenance trace that records the steps taken to reach the conclusion. This trace enables:</p>
+
+  <ul>
+    <li><strong>Debugging</strong> – Understand why a particular answer was given</li>
+    <li><strong>Auditing</strong> – Verify reasoning follows expected patterns</li>
+    <li><strong>Explanation</strong> – Generate human-readable justifications</li>
+  </ul>
+
+  <pre>
+{
+  truth: "TRUE_CERTAIN",
+  confidence: 0.92,
+  trace: [
+    { step: "parse", input: "Is Dog an Animal?", output: { s: "Dog", r: "IS_A", o: "Animal" } },
+    { step: "encode", subject: "Dog", relation: "IS_A", vectorHash: "a7b3..." },
+    { step: "retrieve", candidates: ["Animal", "Mammal", "Creature"], method: "LSH" },
+    { step: "compose", concept: "Animal", layers: ["base"], diamondCount: 1 },
+    { step: "inclusion", point: "Dog", diamond: "Animal#0", distance: 12, radius: 50, result: "inside" },
+    { step: "grade", sceptic: 0.89, optimist: 0.95, final: 0.92 }
+  ]
+}</pre>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="../guides/reasoning.html">Reasoning Guide</a> – Conceptual overview of reasoning modes</li>
+    <li><a href="knowledge.html">Knowledge Layer</a> – Concept storage and theory management</li>
+    <li><a href="../wiki/deduction.html">Deduction Wiki</a> – Background on deductive reasoning</li>
+    <li><a href="../wiki/abduction.html">Abduction Wiki</a> – Background on abductive reasoning</li>
+    <li><a href="../wiki/analogy.html">Analogy Wiki</a> – Background on analogical reasoning</li>
+    <li><a href="../wiki/lsh.html">LSH Wiki</a> – Locality-Sensitive Hashing details</li>
+  </ul>
+
+  <div class="footer-nav">
+    <a href="knowledge.html">← Knowledge</a> ·
+    <a href="language.html">Language Layer →</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

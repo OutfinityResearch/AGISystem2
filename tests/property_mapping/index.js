@@ -4,27 +4,26 @@ async function run({ profile }) {
   const agent = new AgentSystem2({ profile });
   const session = agent.createSession();
 
-  // Ingest a canonical property fact via Sys2DSL.
-  session.run(['@f ASSERT Water HAS_PROPERTY boiling_point=100']);
+  // Ingest canonical facts via Sys2DSL using proper geometric model syntax.
+  // In the geometric model, values are separate concepts - no property=value allowed.
+  session.run(['@f ASSERT Water BOILS_AT Celsius100']);
 
-  // Inspect the resulting concept diamond for Water.
-  const concept = session.engine.conceptStore.getConcept('Water');
-  if (!concept || !concept.diamonds || concept.diamonds.length === 0) {
+  // Inspect the resulting concepts.
+  const conceptStore = session.engine.conceptStore;
+  const waterConcept = conceptStore.getConcept('Water');
+  const tempConcept = conceptStore.getConcept('Celsius100');
+
+  if (!waterConcept || !tempConcept) {
     return { ok: false };
   }
-  const diamond = concept.diamonds[0];
 
-  const tempAxis = 4; // Temperature axis in ontology (see DS[/knowledge/dimensions]).
-  const center = diamond.center[tempAxis];
-  const min = diamond.minValues[tempAxis];
-  const max = diamond.maxValues[tempAxis];
+  // Check that the relation was stored correctly in conceptStore._facts
+  const facts = conceptStore._facts || [];
+  const boilFact = facts.find(f =>
+    f.subject === 'Water' && f.relation === 'BOILS_AT' && f.object === 'Celsius100'
+  );
 
-  // With a single observation boiling_point=100, the temperature axis should
-  // reflect that value consistently across min/max/center.
-  const okCenter = center === 100;
-  const okRange = min === 100 && max === 100;
-
-  return { ok: okCenter && okRange };
+  return { ok: !!boilFact };
 }
 
 module.exports = { run };

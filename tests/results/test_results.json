@@ -1,11 +1,11 @@
 {
-  "timestamp": "2025-11-26T14:00:29.813Z",
+  "timestamp": "2025-11-26T17:44:41.612Z",
   "profile": "auto_test",
   "summary": {
-    "total": 28,
-    "passed": 26,
+    "total": 29,
+    "passed": 29,
     "failed": 0,
-    "skipped": 2,
+    "skipped": 0,
     "timeout": 0
   },
   "suites": {
@@ -63,6 +63,12 @@
       "failed": 0,
       "total": 1
     },
+    "contradiction_detector": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
     "core_math": {
       "status": "passed",
       "passed": 1,
@@ -81,10 +87,6 @@
       "failed": 0,
       "total": 1
     },
-    "fixtures": {
-      "status": "skipped",
-      "reason": "no index.js"
-    },
     "forgetting": {
       "status": "passed",
       "passed": 11,
@@ -92,6 +94,12 @@
       "total": 11
     },
     "health_compliance": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "inference_engine": {
       "status": "passed",
       "passed": 1,
       "failed": 0,
@@ -127,10 +135,6 @@
       "failed": 0,
       "total": 1
     },
-    "results": {
-      "status": "skipped",
-      "reason": "no index.js"
-    },
     "storage_adapter": {
       "status": "passed",
       "passed": 1,
@@ -154,6 +158,12 @@
       "passed": 1,
       "failed": 0,
       "total": 1
+    },
+    "theory_layering": {
+      "status": "passed",
+      "passed": 12,
+      "failed": 0,
+      "total": 12
     },
     "translator_bridge_normalization": {
       "status": "passed",

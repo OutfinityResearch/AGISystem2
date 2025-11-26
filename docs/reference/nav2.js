@@ -20,7 +20,7 @@
     var links = [
       { href: 'index.html', label: 'Home' },
       { href: 'guides/conceptual_spaces.html', label: 'Theory' },
-      { href: 'guides/architecture.html', label: 'Architecture' },
+      { href: 'architecture/index.html', label: 'Architecture' },
       { href: 'api/index.html', label: 'APIs' },
       { href: 'syntax/index.html', label: 'Syntax' },
       { href: 'usage-cli/index.html', label: 'CLI' },

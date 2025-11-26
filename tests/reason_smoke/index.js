@@ -5,7 +5,7 @@ async function run({ profile }) {
   const session = agent.createSession();
   session.run([
     '@f1 ASSERT dog IS_A Animal',
-    '@f2 ASSERT Water HAS_PROPERTY boiling_point=100'
+    '@f2 ASSERT Water BOILS_AT Celsius100'
   ]);
 
   const env = session.run(['@q ASK "Is Dog an Animal?"']);

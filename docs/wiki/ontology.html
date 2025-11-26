@@ -8,59 +8,152 @@
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>Ontology</h1>
-    <small></small>
-    <div class="sub-nav">
-      <strong>Wiki Topics:</strong>
-      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
-    </div>
+    <h1>AGISystem2 – Ontology</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
   </div>
-  <article>
-    <div class="philosophical-header">
-      <h2>What Ontology Brings to AI</h2>
-      <p>Ontology is the philosophical study of what exists and how entities are classified and related. In logic and knowledge representation, an ontology provides the vocabulary of types, properties, and relations that a system can use to talk about the world. Without a stable ontology, even precise reasoning quickly degenerates into ambiguity.</p>
-      <p>In human practice, ontologies appear as taxonomies (such as biological species), legal categories, and common-sense distinctions like “physical object”, “event”, or “institution”. For an AI system, the ontology is not just an abstract list; it shapes how concepts are encoded, which dimensions are reserved for “facts” versus “values”, and how rules can be applied consistently across cases.</p>
-    </div>
 
-    <div class="academic-analysis">
-      <h2>Ontology in Knowledge Representation</h2>
-      <p>Formal ontologies in AI—such as those inspired by OWL, description logics, or domain-specific vocabularies—provide machine-readable definitions of concepts and their relations. They enable tasks like subsumption checking (“Dog IS_A Animal”), disjointness (“MagicZone DISJOINT_WITH CityX”), and property constraints.</p>
-      <p>However, classical ontology languages often assume crisp, symbolic categories. In AGISystem2, ontological distinctions must survive translation into high-dimensional conceptual space, where each concept becomes a region and relations become geometric operations. The ontology therefore guides both the symbolic layer and the geometric one.</p>
-    </div>
+  <p>In AGISystem2, ontology refers to the factual dimensions of the vector space—dimensions 0-255 that encode what things <em>are</em>, not what they're <em>worth</em>. This separation from <a href="axiology.html">axiological</a> dimensions enables unbiased reasoning when needed.</p>
 
-    <div class="academic-analysis">
-      <h2>Ontology in AGISystem2</h2>
-      <p>AGISystem2 explicitly separates ontological dimensions (those that describe “what the world is like”) from axiological ones (those that capture values, permissions, or duties). The ontology partition defines which coordinates are reserved for structural, factual information: shapes, physical quantities, roles, causal relations, and so on.</p>
-      <p>The dimension catalogue enumerates these axes and associates them with names, ranges, and intended interpretations. Default relations (such as <code>IS_A</code>, <code>PART_OF</code>, <code>CAUSES</code>) are defined on top of this ontology and mapped to deterministic permutations so that the geometric engine can manipulate them consistently.</p>
-      <p>Initial “base theories” provide root facts and constraints that express the core ontology for a deployment: which concepts exist, which are disjoint, and which regions of the conceptual space are reserved or unavailable. This gives the system a stable backbone against which new facts, rules, and theories can be evaluated.</p>
-    </div>
+  <div class="diagram">
+    <svg viewBox="0 0 560 280" role="img" aria-label="Ontology dimension partition">
+      <defs>
+        <marker id="arrow-ont" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
 
-    <div class="philosophical-implications">
-      <h2>Philosophical and Practical Implications</h2>
-      <p>By treating ontology as an explicit, versioned artefact, AGISystem2 makes it possible to audit and refine “how the system sees the world”. Misclassifications, missing categories, or overly coarse distinctions can be corrected by updating the ontology rather than by scattering ad-hoc fixes throughout the code.</p>
-      <p>This separation also clarifies the boundary between facts and values. Ontology anchors the factual side of reasoning; axiological layers operate on top, without rewriting what the system takes to exist. For users, this makes explanations clearer: they can see which parts of a decision stem from factual structure and which from policy or ethics.</p>
-    </div>
+      <!-- Background -->
+      <rect x="0" y="0" width="560" height="280" fill="#fafbfc"/>
 
-    <div class="academic-references">
-      <h2>Academic References</h2>
-      <p>Ontologies have a long history in both philosophy and computer science. In AI, work on description logics, semantic web ontologies, and domain-specific knowledge bases (for example in biomedicine or law) provides a rich toolkit for thinking about formally structured vocabularies.</p>
-      <p>For an overview, see <a href="https://en.wikipedia.org/wiki/Ontology_(information_science)" target="_blank" rel="noopener noreferrer">the literature on ontologies in information science</a>.</p>
-    </div>
+      <!-- Full vector bar -->
+      <rect x="20" y="20" width="520" height="60" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="280" y="40" font-size="10" font-weight="bold" fill="#4a5670" text-anchor="middle">384-Dimensional Concept Vector</text>
 
-    <div class="technical-specifications">
-      <h2>Technical Implementation References</h2>
-      <p>For detailed technical specifications of ontology handling in AGISystem2, consult the following design specifications (referenced by ID):</p>
-      <ul>
-        <li><span class="spec-id">DS[/knowledge/dimensions]</span> — ontology/axiology dimension catalogue.</li>
-        <li><span class="spec-id">DS[/init/dimensions.json]</span> — concrete dimension profiles mapping names to indices and ranges.</li>
-        <li><span class="spec-id">DS[/knowledge/default_relations]</span> — canonical relations and their characteristics.</li>
-        <li><span class="spec-id">DS[/knowledge/base_theories]</span> — built-in base theories that encode the initial ontology.</li>
-        <li>Theory pages: <a href="../theory/dimensions.html">Dimensions Overview</a> and <a href="../theory/ontology_dims.html">Ontology Dimensions</a> summarise the preconfigured factual axes, and <a href="../usage-guide/ingestion.html">Data Ingestion</a> shows how facts populate ontological dimensions.</li>
-      </ul>
-    </div>
-  </article>
+      <!-- Ontology partition -->
+      <rect x="40" y="50" width="340" height="20" rx="2" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="210" y="64" font-size="9" fill="#0f4c81" text-anchor="middle">Ontology: dims 0-255 (256 dims)</text>
+
+      <!-- Axiology partition -->
+      <rect x="380" y="50" width="140" height="20" rx="2" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
+      <text x="450" y="64" font-size="9" fill="#e65100" text-anchor="middle">Axiology: 256-383</text>
+
+      <!-- Ontology detail -->
+      <rect x="20" y="100" width="340" height="160" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="190" y="120" font-size="11" font-weight="bold" fill="#0f4c81" text-anchor="middle">Ontological Dimensions</text>
+
+      <text x="40" y="145" font-size="10" fill="#4a5670">These dimensions encode factual properties:</text>
+
+      <rect x="40" y="155" width="140" height="30" rx="4" fill="#fff" stroke="#0f4c81" stroke-width="1"/>
+      <text x="50" y="175" font-size="9" fill="#0f4c81">Physical: size, color, weight</text>
+
+      <rect x="190" y="155" width="150" height="30" rx="4" fill="#fff" stroke="#0f4c81" stroke-width="1"/>
+      <text x="200" y="175" font-size="9" fill="#0f4c81">Categorical: IS_A, HAS_PART</text>
+
+      <rect x="40" y="195" width="140" height="30" rx="4" fill="#fff" stroke="#0f4c81" stroke-width="1"/>
+      <text x="50" y="215" font-size="9" fill="#0f4c81">Spatial: location, proximity</text>
+
+      <rect x="190" y="195" width="150" height="30" rx="4" fill="#fff" stroke="#0f4c81" stroke-width="1"/>
+      <text x="200" y="215" font-size="9" fill="#0f4c81">Temporal: before, during, after</text>
+
+      <text x="40" y="250" font-size="9" fill="#4a5670">Used for: classification, similarity, causality</text>
+
+      <!-- Axiology summary -->
+      <rect x="380" y="100" width="160" height="160" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
+      <text x="460" y="120" font-size="10" font-weight="bold" fill="#e65100" text-anchor="middle">Axiological (128)</text>
+
+      <text x="395" y="145" font-size="9" fill="#4a5670">Value judgments:</text>
+      <text x="395" y="165" font-size="9" fill="#e65100">• Good/bad</text>
+      <text x="395" y="185" font-size="9" fill="#e65100">• Fair/unfair</text>
+      <text x="395" y="205" font-size="9" fill="#e65100">• Important/trivial</text>
+      <text x="395" y="225" font-size="9" fill="#e65100">• Permitted/forbidden</text>
+
+      <text x="395" y="250" font-size="8" fill="#4a5670">See: <a href="axiology.html">Axiology</a></text>
+    </svg>
+    <p class="diagram-caption">The 384-dimensional vector is partitioned: 256 dimensions for ontology (facts about the world) and 128 for axiology (values and judgments). This separation allows reasoning about facts independently of values.</p>
+  </div>
+
+  <h2>What Ontology Encodes</h2>
+
+  <p>Ontological dimensions capture <em>what is</em>—properties that can be observed or measured:</p>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Category</th><th>Examples</th><th>Typical Relations</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Taxonomic</td>
+        <td>Species, categories, types</td>
+        <td>IS_A, HAS_INSTANCE</td>
+      </tr>
+      <tr>
+        <td>Mereological</td>
+        <td>Parts, components, members</td>
+        <td>HAS_PART, PART_OF</td>
+      </tr>
+      <tr>
+        <td>Spatial</td>
+        <td>Location, containment, proximity</td>
+        <td>LOCATED_IN, NEAR</td>
+      </tr>
+      <tr>
+        <td>Temporal</td>
+        <td>Sequence, duration, simultaneity</td>
+        <td>BEFORE, DURING, AFTER</td>
+      </tr>
+      <tr>
+        <td>Causal</td>
+        <td>Causes, effects, dependencies</td>
+        <td>CAUSES, REQUIRES</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Why Separate Ontology from Axiology?</h2>
+
+  <p>The separation enables <strong>veil of ignorance</strong> reasoning: by masking axiological dimensions, the system can compare concepts purely on facts, ignoring value judgments. This is essential for:</p>
+
+  <ul>
+    <li><strong>Fair classification</strong> – Deciding if X IS_A Y based on properties, not preferences</li>
+    <li><strong>Bias auditing</strong> – Detecting when value dimensions influence factual queries</li>
+    <li><strong>Domain transfer</strong> – Applying factual knowledge across contexts with different values</li>
+  </ul>
+
+  <p>The <a href="../architecture/reasoning.html#bias-controller">BiasController</a> manages this separation, automatically applying ontology-only masks when fairness is required.</p>
+
+  <h2>Implementation</h2>
+
+  <pre>
+// Ontology mask: only dims 0-255 active
+const ontologyMask = new Uint8Array(384);
+ontologyMask.fill(1, 0, 256);   // dims 0-255 = 1
+ontologyMask.fill(0, 256, 384); // dims 256-383 = 0
+
+// Pure factual comparison
+const factualDist = mathEngine.maskedL1(conceptA, conceptB, ontologyMask);</pre>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="axiology.html">Axiology</a> – The value dimension partition</li>
+    <li><a href="bias.html">Bias</a> – How fact/value separation aids fairness</li>
+    <li><a href="masked_l1_distance.html">Masked L1 Distance</a> – Selective dimension comparison</li>
+    <li><a href="../architecture/reasoning.html#bias-controller">BiasController</a> – Managing ontology/axiology masks</li>
+    <li><a href="veil_of_ignorance.html">Veil of Ignorance</a> – Fair reasoning mode</li>
+  </ul>
+
   <div class="footer-nav">
-    <a href="../index.html">Back to index</a>
+    <a href="hyperdimensional_computing.html">← Hyperdimensional Computing</a> ·
+    <a href="axiology.html">Axiology →</a>
   </div>
   </div>
   <script src="../reference/nav2.js"></script>

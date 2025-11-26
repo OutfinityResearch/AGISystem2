@@ -2,71 +2,185 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Reasoning by Deduction</title>
+  <title>Deduction</title>
   <link rel="stylesheet" href="../reference/style.css">
 </head>
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>Reasoning by Deduction</h1>
-    <small></small>
-    <div class="sub-nav">
-      <strong>Wiki Topics:</strong>
-      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="deduction.html">Deduction</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="induction.html">Induction</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
-    </div>
+    <h1>AGISystem2 – Deduction</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
   </div>
-  <article>
-    <div class="philosophical-header">
-      <h2>The Philosophical Foundations of Deductive Reasoning</h2>
-      <p>Deductive reasoning represents the most rigorous form of logical inference, characterized by the guarantee that if premises are true, conclusions must necessarily follow. This form of reasoning has been central to Western philosophy since Aristotle's development of syllogistic logic, and it continues to serve as the foundation for mathematical proof, formal logic, and rational argumentation. The certainty of deductive conclusions makes it uniquely valuable in contexts where reliability and correctness are paramount.</p>
-      
-      <p>The classical formulation of deductive reasoning emphasizes the relationship between general principles and specific instances. In a valid deductive argument, the conclusion contains no information that was not already present, at least implicitly, in the premises. This property of non-amplification distinguishes deduction from inductive and abductive reasoning, which can generate genuinely new knowledge beyond what is contained in the initial premises.</p>
-      
-      <p>In modern logic, deduction has been formalized through various systems including propositional logic, predicate logic, and higher-order logics. These formalizations allow for precise analysis of deductive validity and the development of automated reasoning systems. The study of deduction has also led to important discoveries about the limits of formal reasoning, including Gödel's incompleteness theorems and the undecidability results of Turing and Church.</p>
-    </div>
 
-    <div class="academic-analysis">
-      <h2>Geometric Deduction in Conceptual Spaces</h2>
-      <p>In AGISystem2, deductive reasoning is implemented through geometric operations within the conceptual space, transforming logical deduction into spatial computation. The system represents premises as bounded diamonds or regions within the high-dimensional vector space, and deductive conclusions are derived through geometric containment and intersection operations. This geometric approach allows for deductive reasoning that is both formally rigorous and computationally efficient.</p>
-      
-      <p>The geometric deduction process begins with the representation of premises as well-defined regions in conceptual space. Each premise corresponds to a bounded diamond that captures the semantic content of the premise in terms of dimensional constraints. The MathEngine then performs geometric operations to determine the logical consequences of these premises. For categorical syllogisms, this involves computing intersections between premise regions to identify the area that satisfies all constraints simultaneously.</p>
-      
-      <p>For conditional reasoning (if-then statements), the system implements geometric implication through subset relationships. The antecedent region must be contained within the consequent region for the implication to hold true. This containment relationship is verified through geometric algorithms that check whether all points in the antecedent region are also included in the consequent region, respecting the relevance masks that define which dimensions are applicable to the reasoning context.</p>
-      
-      <p>The system also supports more complex deductive patterns through composition of geometric operations. Chained syllogisms are implemented as sequential intersection operations, while disjunctive reasoning uses union operations to represent alternative possibilities. The bounded diamond representation ensures that all deductive operations remain computationally tractable while preserving semantic precision.</p>
-    </div>
+  <p>Deduction in AGISystem2 is geometric containment. If concept A's region is entirely inside concept B's region, then "A IS_A B" is deductively true. This transforms classical syllogistic logic into spatial computation.</p>
 
-    <div class="philosophical-implications">
-      <h2>Implications for Formal Reasoning and Verification</h2>
-      <p>The geometric approach to deduction in AGISystem2 offers several advantages over traditional symbolic methods. By operating within a continuous conceptual space, the system can handle reasoning about concepts that have graded boundaries and fuzzy membership, while still maintaining the logical rigor required for valid deduction. This allows for more natural reasoning about real-world concepts that rarely have sharp boundaries.</p>
-      
-      <p>From a philosophical perspective, this implementation suggests that deductive reasoning may have a geometric foundation that complements its logical structure. The ability to derive conclusions through spatial containment mirrors human intuitive reasoning that often relies on mental models and spatial representations rather than purely symbolic manipulation.</p>
-      
-      <p>The integration of deductive reasoning with other forms of inference in the system creates a comprehensive reasoning framework. Deduction provides the certainty needed for verification and proof, while induction and abduction handle the creative and exploratory aspects of reasoning. This integration allows the system to engage in full scientific reasoning cycles, from hypothesis formation through inductive generalization to deductive verification and abductive explanation.</p>
-    </div>
+  <div class="diagram">
+    <svg viewBox="0 0 560 280" role="img" aria-label="Deduction as containment">
+      <defs>
+        <marker id="arrow-ded" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
 
-    <div class="academic-references">
-      <h2>Academic Context and Related Work</h2>
-      <p>The study of deductive reasoning has a rich history spanning philosophy, mathematics, computer science, and cognitive psychology. Key contributors include Aristotle, who developed the first systematic treatment of syllogistic logic; Gottlob Frege, who invented modern predicate logic; and Alonzo Church and Alan Turing, who developed the theoretical foundations of computation and decidability.</p>
-      
-      <p>In cognitive science, research by Philip Johnson-Laird on mental models and by Lance Rips on rule-based reasoning provides insights into how humans perform deductive reasoning. In artificial intelligence, automated theorem proving systems and logic programming languages demonstrate the effectiveness of formal deduction methods.</p>
-      
-      <p>For deeper understanding of deductive reasoning, <a href="https://en.wikipedia.org/wiki/Deductive_reasoning" target="_blank" rel="noopener noreferrer">the philosophical literature on deduction</a> offers comprehensive coverage of the logical, mathematical, and psychological aspects of this fundamental reasoning process.</p>
-    </div>
+      <!-- Background -->
+      <rect x="0" y="0" width="560" height="280" fill="#fafbfc"/>
 
-    <div class="technical-specifications">
-      <h2>Technical Implementation References</h2>
-      <p>For detailed technical specifications of deductive reasoning implementation in AGISystem2, consult the following documentation:</p>
-      <ul>
-        <li>Bounded Diamond Specification (DS(/core/bounded_diamond.js)): definește operațiile geometrice pentru incluziune și intersecție logică.</li>
-        <li>Math Engine Specification (DS(/core/math_engine.js)): oferă calcule geometrice pentru operații deductive.</li>
-        <li>Reasoner Specification (DS(/reason/reasoner.js)): orchestrează lanțurile de raționamente deductive și validarea lor.</li>
-        <li>Validation Specification (DS(/reason/validation.js)): se asigură că concluziile deductive rămân logic consistente.</li>
-      </ul>
-    </div>
-  </article>
+      <!-- Left: Simple containment -->
+      <rect x="20" y="20" width="240" height="240" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="140" y="40" font-size="10" font-weight="bold" fill="#4a5670" text-anchor="middle">Simple Deduction</text>
+
+      <!-- Animal region (large) -->
+      <ellipse cx="140" cy="145" rx="90" ry="75" fill="#e3f2fd" fill-opacity="0.5" stroke="#1976d2" stroke-width="2"/>
+      <text x="140" y="80" font-size="11" fill="#1976d2" text-anchor="middle">Animal</text>
+
+      <!-- Mammal region (medium) -->
+      <ellipse cx="140" cy="155" rx="60" ry="50" fill="#e8f5e9" fill-opacity="0.6" stroke="#2e7d32" stroke-width="2"/>
+      <text x="140" y="120" font-size="10" fill="#2e7d32" text-anchor="middle">Mammal</text>
+
+      <!-- Dog region (small) -->
+      <ellipse cx="140" cy="165" rx="30" ry="25" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+      <text x="140" y="170" font-size="10" fill="#e65100" text-anchor="middle">Dog</text>
+
+      <!-- Conclusion -->
+      <text x="140" y="235" font-size="9" fill="#4a5670" text-anchor="middle">Dog ⊂ Mammal ⊂ Animal</text>
+      <text x="140" y="250" font-size="9" fill="#2e7d32" text-anchor="middle" font-weight="bold">∴ Dog IS_A Animal ✓</text>
+
+      <!-- Right: Query process -->
+      <rect x="280" y="20" width="260" height="240" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="410" y="40" font-size="10" font-weight="bold" fill="#4a5670" text-anchor="middle">Deduction Process</text>
+
+      <!-- Step 1 -->
+      <rect x="300" y="55" width="220" height="40" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="310" y="72" font-size="9" font-weight="bold" fill="#0f4c81">1. Query: "Dog IS_A Animal?"</text>
+      <text x="310" y="87" font-size="8" fill="#4a5670">Encode query point from "Dog" + IS_A + "Animal"</text>
+
+      <!-- Step 2 -->
+      <rect x="300" y="105" width="220" height="40" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
+      <text x="310" y="122" font-size="9" font-weight="bold" fill="#2e7d32">2. Direct check</text>
+      <text x="310" y="137" font-size="8" fill="#4a5670">Is Dog's diamond inside Animal's diamond?</text>
+
+      <!-- Step 3 -->
+      <rect x="300" y="155" width="220" height="40" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
+      <text x="310" y="172" font-size="9" font-weight="bold" fill="#e65100">3. Transitive check</text>
+      <text x="310" y="187" font-size="8" fill="#4a5670">Dog→Mammal→Animal chain exists?</text>
+
+      <!-- Result -->
+      <rect x="300" y="205" width="220" height="45" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+      <text x="310" y="222" font-size="9" font-weight="bold" fill="#2e7d32">Result: TRUE_CERTAIN</text>
+      <text x="310" y="237" font-size="8" fill="#4a5670">Confidence: 0.95 (geometric containment)</text>
+    </svg>
+    <p class="diagram-caption">Deduction checks if one region contains another. "Dog IS_A Animal" is true because Dog's bounded diamond is geometrically inside Animal's. The Reasoner first checks direct containment, then follows IS_A chains for transitive deduction.</p>
+  </div>
+
+  <h2>How It Works</h2>
+
+  <p>The <a href="../architecture/reasoning.html">Reasoner</a> handles deductive queries in two steps:</p>
+
+  <ol>
+    <li><strong>Direct containment</strong> – Check if the subject's <a href="bounded_diamonds.html">bounded diamond</a> is inside the object's diamond using geometric inclusion tests</li>
+    <li><strong>Transitive chaining</strong> – For IS_A relations, follow the taxonomy chain (Dog→Mammal→Animal) and check containment at each step</li>
+  </ol>
+
+  <p>The geometric test uses <a href="masked_l1_distance.html">masked L1 distance</a>: the subject is inside the object if the distance from subject's center to object's boundary is less than object's radius, on all relevant dimensions.</p>
+
+  <h2>Confidence Levels</h2>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Result</th><th>Meaning</th><th>Geometric Interpretation</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>TRUE_CERTAIN</td>
+        <td>Definitely true</td>
+        <td>Subject completely inside object</td>
+      </tr>
+      <tr>
+        <td>TRUE_PROBABLE</td>
+        <td>Likely true</td>
+        <td>Subject mostly inside, minor overlap outside</td>
+      </tr>
+      <tr>
+        <td>UNKNOWN</td>
+        <td>Insufficient information</td>
+        <td>No containment path found</td>
+      </tr>
+      <tr>
+        <td>FALSE_PROBABLE</td>
+        <td>Likely false</td>
+        <td>Subject mostly outside object</td>
+      </tr>
+      <tr>
+        <td>FALSE_CERTAIN</td>
+        <td>Definitely false</td>
+        <td>Subject completely disjoint from object</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Example Queries</h2>
+
+  <pre>
+# Direct deduction
+ASK "Dog IS_A Animal?"
+# → TRUE_CERTAIN (Dog ⊂ Mammal ⊂ Animal)
+
+# Failed deduction
+ASK "Cat IS_A Dog?"
+# → FALSE_CERTAIN (disjoint regions)
+
+# Unknown (missing link)
+ASK "Widget IS_A Animal?"
+# → UNKNOWN (Widget not in knowledge base)</pre>
+
+  <h2>Comparison with Classical Logic</h2>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Classical Logic</th><th>AGISystem2 Geometry</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>All A are B</td>
+        <td>Region(A) ⊂ Region(B)</td>
+      </tr>
+      <tr>
+        <td>A → B (implication)</td>
+        <td>Diamond(A) inside Diamond(B)</td>
+      </tr>
+      <tr>
+        <td>Modus ponens</td>
+        <td>Point in A → Point in B</td>
+      </tr>
+      <tr>
+        <td>Transitive inference</td>
+        <td>Chain of containments</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="../architecture/reasoning.html">Reasoner</a> – Query processing and containment checks</li>
+    <li><a href="bounded_diamonds.html">Bounded Diamonds</a> – The shapes being compared</li>
+    <li><a href="induction.html">Induction</a> – The inverse: generalizing from examples</li>
+    <li><a href="abduction.html">Abduction</a> – Reasoning backwards from conclusions</li>
+    <li><a href="../guides/reasoning.html">Reasoning Theory</a> – All reasoning modes</li>
+  </ul>
+
   <div class="footer-nav">
-    <a href="../index.html">Back to index</a>
+    <a href="index.html">← Wiki Index</a> ·
+    <a href="induction.html">Induction →</a>
   </div>
   </div>
   <script src="../reference/nav2.js"></script>

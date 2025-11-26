@@ -8,78 +8,183 @@
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>Masked L1 Distance</h1>
-    <small></small>
-    <div class="sub-nav">
-      <strong>Wiki Topics:</strong>
-      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="abstract_interpretation.html">Abstract Interpretation</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="auditability.html">Auditability</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deduction.html">Deduction</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="induction.html">Induction</a> · <a href="lsh.html">Locality-Sensitive Hashing (LSH)</a> · <a href="masked_l1_distance.html">Masked L1 Distance</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="permutation_binding.html">Permutation-Based Binding</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="symbolic_execution.html">Symbolic Execution</a> · <a href="sys2dsl.html">Sys2DSL</a> · <a href="theory_layers.html">Theory Layers</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="validation.html">Validation</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
-    </div>
+    <h1>AGISystem2 – Masked L1 Distance</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
   </div>
-  <article>
-    <div class="philosophical-header">
-      <h2>Theoretical Foundations of Masked Distance Metrics</h2>
-      <p>Masked L1 distance represents a sophisticated approach to measuring similarity and dissimilarity in high-dimensional spaces, where different dimensions may have different levels of relevance or importance. The fundamental insight is that not all dimensions contribute equally to our understanding of similarity—some dimensions may be irrelevant, noisy, or contextually inappropriate. By applying masks that selectively weight dimensions, we can compute distance metrics that focus on semantically meaningful aspects while ignoring irrelevant or distracting features.</p>
-      
-      <p>The philosophical significance lies in its recognition that similarity and difference are inherently context-dependent concepts. What counts as "similar" varies dramatically based on purpose, perspective, or domain. A masked distance approach acknowledges this subjectivity by making the weighting of dimensions explicit and controllable, rather than embedding hidden assumptions about relative importance into fixed mathematical formulas.</p>
-      
-      <p>From a cognitive perspective, this mirrors how human attention selectively focuses on relevant features while ignoring distractions. When we compare two concepts, we naturally emphasize aspects that matter for our current task while disregarding irrelevant details. This selective attention is not a flaw but a feature of intelligent adaptation to context and goals.</p>
-    </div>
 
-    <div class="academic-analysis">
-      <h2>Masked L1 Distance in AGISystem2</h2>
-      <p>In AGISystem2, masked L1 distance is implemented as a core geometric operation that enables context-sensitive similarity computation within the high-dimensional conceptual space framework. The system provides sophisticated masking capabilities that allow for dynamic adjustment of dimension relevance based on reasoning context, domain requirements, or user preferences.</p>
-      
-      <p>The MathEngine implements optimized masked distance computation that efficiently handles thousands of dimensions while maintaining numerical stability. The masking operation selectively zeroes out or reduces the contribution of specified dimensions before computing the L1 norm, ensuring that distance calculations focus only on the relevant aspects of the concepts being compared.</p>
-      
-      <p>Dynamic masking allows for context-aware similarity assessment where different dimensions may be relevant in different situations. For example, when reasoning about moral concepts, the system might mask purely perceptual dimensions and focus on axiological dimensions. When reasoning about physical properties, the system might mask value-based dimensions and focus on factual ones. This contextual adaptivity is essential for nuanced and appropriate reasoning.</p>
-      
-      <p>Relevance masks support sophisticated attention mechanisms that can be learned, inherited, or dynamically adjusted. The system can maintain multiple mask profiles for different contexts or users, automatically selecting appropriate mask based on the nature of the reasoning task. This capability enables the system to adapt to different domains, expertise levels, or cultural perspectives while maintaining computational efficiency.</p>
-    </div>
+  <p>Masked L1 distance is the primary similarity metric in AGISystem2. It measures the Manhattan distance between two vectors, but only considers dimensions marked as relevant by a mask. This enables context-sensitive comparisons where different dimensions matter in different situations.</p>
 
-    <div class="technical-implementation">
-      <h2>Advanced Masking Capabilities</h2>
-      <p>The masked L1 distance implementation in AGISystem2 includes several advanced features that enable sophisticated context-sensitive reasoning and similarity computation. These capabilities extend beyond simple distance calculation to support complex cognitive and computational tasks.</p>
-      
-      <p>Partial masking allows for fine-grained control over dimension contributions at the individual dimension level. Instead of all-or-nothing masking, the system can apply partial weights to dimensions, allowing for nuanced emphasis or de-emphasis based on subtle contextual factors. This granular control enables more sophisticated and contextually appropriate similarity assessment.</p>
-      
-      <p>Adaptive masking automatically adjusts dimension weights based on the statistical properties of the concepts being compared or the reasoning context. The system can learn which dimensions are most discriminative or relevant for particular types of comparisons, automatically optimizing masks for maximum effectiveness. This adaptivity enables the system to improve its similarity assessment over time without manual parameter tuning.</p>
-      
-      <p>Hierarchical masking supports multi-level attention control where masks can be organized into hierarchies or compositions. The system can create complex masking policies that combine multiple levels of selection criteria, enabling sophisticated context modeling and attention control. This hierarchical approach allows for both high-level strategic attention and low-level feature selection within a unified framework.</p>
-      
-      <p>Temporal masking allows for time-varying attention patterns where dimension relevance changes over the course of reasoning or interaction. The system can apply different masks at different stages of a reasoning process or in different temporal contexts, enabling dynamic adaptation to evolving requirements. This temporal capability is essential for complex, multi-step reasoning tasks.</p>
-    </div>
+  <div class="diagram">
+    <svg viewBox="0 0 560 300" role="img" aria-label="Masked L1 distance computation">
+      <defs>
+        <marker id="arrow-ml1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
 
-    <div class="philosophical-implications">
-      <h2>Implications for Contextual Reasoning and Adaptability</h2>
-      <p>The implementation of masked L1 distance in AGISystem2 has profound implications for building context-aware and adaptive artificial intelligence systems. By making dimension relevance explicit and controllable, the system can achieve more human-like flexibility in similarity assessment and reasoning across different domains and contexts.</p>
-      
-      <p>From a cognitive science perspective, this approach provides a computational model of selective attention that mirrors human capabilities for context-dependent processing. The ability to dynamically adjust which features are considered based on task requirements reflects the sophisticated adaptivity of human cognition and its ability to focus on relevant information while ignoring distractions.</p>
-      
-      <p>The masking system also enhances the explainability and interpretability of AI reasoning. Since the contribution of each dimension to similarity calculations is explicit and controlled, the system can provide detailed accounts of why certain concepts are considered more or less similar in particular contexts. This transparency is essential for building trust and enabling effective human-AI collaboration.</p>
-    </div>
+      <!-- Background -->
+      <rect x="0" y="0" width="560" height="300" fill="#fafbfc"/>
 
-    <div class="academic-references">
-      <h2>Academic Context and Related Work</h2>
-      <p>Masked distance metrics and attention mechanisms have been extensively studied in machine learning, cognitive science, and information retrieval. Key contributors include researchers in feature selection, attention mechanisms, and similarity learning who have developed sophisticated methods for context-dependent processing and dimension weighting.</p>
-      
-      <p>In machine learning, attention mechanisms and masked distance computations have become fundamental to modern neural networks and transformer architectures. The ability to selectively focus on relevant features while ignoring noise or irrelevant dimensions is crucial for performance in high-dimensional spaces and complex tasks.</p>
-      
-      <p>For deeper understanding of masked distance metrics and attention mechanisms, <a href="https://en.wikipedia.org/wiki/Mahalanobis_distance" target="_blank" rel="noopener noreferrer">the machine learning literature on distance metrics and attention</a> provides comprehensive coverage of theoretical foundations and practical applications.</p>
-    </div>
+      <!-- Formula box -->
+      <rect x="20" y="20" width="520" height="50" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="280" y="50" font-size="14" fill="#0f4c81" text-anchor="middle">d(a, b, mask) = Σ mask[i] × |a[i] - b[i]|</text>
 
-    <div class="technical-specifications">
-      <h2>Technical Implementation References</h2>
-      <p>For detailed technical specifications of masked L1 distance implementation in AGISystem2, consult the following design specifications (by ID):</p>
-      <ul>
-        <li>DS[/core/math_engine.js] — masked L1 distance computation and masking capabilities.</li>
-        <li>DS[/core/vector_space.js] — mask-aware storage and vector operations.</li>
-        <li>DS[/reason/reasoner.js] — use of masked distances in reasoning.</li>
-        <li>DS[/reason/bias_control.js] — advanced masking and attention control mechanisms.</li>
-      </ul>
-    </div>
-  </article>
+      <!-- Vector A -->
+      <text x="40" y="100" font-size="10" font-weight="bold" fill="#0f4c81">Vector A:</text>
+      <rect x="100" y="85" width="30" height="25" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="115" y="102" font-size="10" fill="#0f4c81" text-anchor="middle">10</text>
+      <rect x="130" y="85" width="30" height="25" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="145" y="102" font-size="10" fill="#0f4c81" text-anchor="middle">25</text>
+      <rect x="160" y="85" width="30" height="25" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="175" y="102" font-size="10" fill="#0f4c81" text-anchor="middle">-5</text>
+      <rect x="190" y="85" width="30" height="25" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="205" y="102" font-size="10" fill="#0f4c81" text-anchor="middle">40</text>
+      <rect x="220" y="85" width="30" height="25" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="235" y="102" font-size="10" fill="#0f4c81" text-anchor="middle">15</text>
+      <text x="260" y="102" font-size="10" fill="#4a5670">...</text>
+
+      <!-- Vector B -->
+      <text x="40" y="140" font-size="10" font-weight="bold" fill="#2e7d32">Vector B:</text>
+      <rect x="100" y="125" width="30" height="25" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
+      <text x="115" y="142" font-size="10" fill="#2e7d32" text-anchor="middle">12</text>
+      <rect x="130" y="125" width="30" height="25" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
+      <text x="145" y="142" font-size="10" fill="#2e7d32" text-anchor="middle">20</text>
+      <rect x="160" y="125" width="30" height="25" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
+      <text x="175" y="142" font-size="10" fill="#2e7d32" text-anchor="middle">0</text>
+      <rect x="190" y="125" width="30" height="25" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
+      <text x="205" y="142" font-size="10" fill="#2e7d32" text-anchor="middle">38</text>
+      <rect x="220" y="125" width="30" height="25" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
+      <text x="235" y="142" font-size="10" fill="#2e7d32" text-anchor="middle">10</text>
+      <text x="260" y="142" font-size="10" fill="#4a5670">...</text>
+
+      <!-- Mask -->
+      <text x="40" y="180" font-size="10" font-weight="bold" fill="#e65100">Mask:</text>
+      <rect x="100" y="165" width="30" height="25" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
+      <text x="115" y="182" font-size="10" fill="#e65100" text-anchor="middle">1</text>
+      <rect x="130" y="165" width="30" height="25" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
+      <text x="145" y="182" font-size="10" fill="#e65100" text-anchor="middle">1</text>
+      <rect x="160" y="165" width="30" height="25" fill="#f5f5f5" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="175" y="182" font-size="10" fill="#b0b6c4" text-anchor="middle">0</text>
+      <rect x="190" y="165" width="30" height="25" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
+      <text x="205" y="182" font-size="10" fill="#e65100" text-anchor="middle">1</text>
+      <rect x="220" y="165" width="30" height="25" fill="#f5f5f5" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="235" y="182" font-size="10" fill="#b0b6c4" text-anchor="middle">0</text>
+      <text x="260" y="182" font-size="10" fill="#4a5670">...</text>
+
+      <!-- Differences -->
+      <text x="40" y="220" font-size="10" font-weight="bold" fill="#4a5670">|Diff|:</text>
+      <rect x="100" y="205" width="30" height="25" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="115" y="222" font-size="10" fill="#0f4c81" text-anchor="middle">2</text>
+      <rect x="130" y="205" width="30" height="25" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="145" y="222" font-size="10" fill="#0f4c81" text-anchor="middle">5</text>
+      <rect x="160" y="205" width="30" height="25" fill="#f5f5f5" stroke="#b0b6c4" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="175" y="222" font-size="10" fill="#b0b6c4" text-anchor="middle">5</text>
+      <rect x="190" y="205" width="30" height="25" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="205" y="222" font-size="10" fill="#0f4c81" text-anchor="middle">2</text>
+      <rect x="220" y="205" width="30" height="25" fill="#f5f5f5" stroke="#b0b6c4" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="235" y="222" font-size="10" fill="#b0b6c4" text-anchor="middle">5</text>
+
+      <!-- Result -->
+      <rect x="320" y="165" width="220" height="65" rx="4" fill="#f5f7fb" stroke="#0f4c81" stroke-width="2"/>
+      <text x="330" y="185" font-size="10" fill="#4a5670">Masked sum: 2 + 5 + 0 + 2 + 0 = </text>
+      <text x="470" y="185" font-size="12" font-weight="bold" fill="#0f4c81">9</text>
+      <text x="330" y="205" font-size="9" fill="#4a5670">Unmasked would be: 2 + 5 + 5 + 2 + 5 = 19</text>
+      <text x="330" y="220" font-size="9" fill="#4a5670">Masked dims (gray) are ignored</text>
+
+      <!-- Labels -->
+      <text x="100" y="250" font-size="9" fill="#4a5670">dim 0</text>
+      <text x="130" y="250" font-size="9" fill="#4a5670">dim 1</text>
+      <text x="160" y="250" font-size="9" fill="#b0b6c4">dim 2</text>
+      <text x="190" y="250" font-size="9" fill="#4a5670">dim 3</text>
+      <text x="220" y="250" font-size="9" fill="#b0b6c4">dim 4</text>
+
+      <!-- Explanation -->
+      <text x="20" y="285" font-size="9" fill="#4a5670">Grayed dimensions (mask=0) don't contribute to the distance. This focuses comparison on relevant features.</text>
+    </svg>
+    <p class="diagram-caption">The mask determines which dimensions count. Dimensions with mask=1 contribute their absolute difference to the total. Dimensions with mask=0 are ignored. This allows context-sensitive similarity comparisons.</p>
+  </div>
+
+  <h2>Why Masking?</h2>
+
+  <p>Not all dimensions are relevant in every context. When comparing animals by behavior, physical appearance dimensions might be irrelevant. When comparing products by price, brand dimensions might not matter. The mask provides this flexibility without requiring different vector representations for different contexts.</p>
+
+  <p>AGISystem2 uses separate dimension ranges for ontological (factual) and axiological (value) information. The <a href="../architecture/reasoning.html#bias-controller">BiasController</a> can automatically mask value dimensions when pure factual comparisons are needed, enabling the "veil of ignorance" mode for fair reasoning.</p>
+
+  <h2>Implementation</h2>
+
+  <p>The <a href="../architecture/geometry.html#math-engine">MathEngine</a> provides optimized distance computation:</p>
+
+  <pre>
+// Basic masked L1 distance
+const dist = mathEngine.maskedL1(vectorA, vectorB, mask);
+
+// With ontology-only mask (dims 0-255)
+const ontoDist = mathEngine.maskedL1(vectorA, vectorB, ontologyMask);
+
+// With full mask (all 384 dims)
+const fullDist = mathEngine.maskedL1(vectorA, vectorB, fullMask);</pre>
+
+  <h2>Mask Types</h2>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Mask Type</th><th>Dimensions</th><th>Use Case</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Full mask</td>
+        <td>All 384</td>
+        <td>Complete similarity including values</td>
+      </tr>
+      <tr>
+        <td>Ontology mask</td>
+        <td>0-255</td>
+        <td>Factual similarity only (veil of ignorance)</td>
+      </tr>
+      <tr>
+        <td>Axiology mask</td>
+        <td>256-383</td>
+        <td>Value similarity only</td>
+      </tr>
+      <tr>
+        <td>Custom mask</td>
+        <td>User-defined</td>
+        <td>Domain-specific comparisons</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Why L1 (Manhattan)?</h2>
+
+  <p>L1 distance sums absolute differences rather than squared differences (L2/Euclidean). This has practical advantages:</p>
+  <ul>
+    <li><strong>Int8 friendly</strong> – No multiplication needed, avoiding overflow with saturating addition</li>
+    <li><strong>Sparse-aware</strong> – A single large difference dominates, matching intuition about key features</li>
+    <li><strong>Closed under diamonds</strong> – L1 balls (diamonds) have clean geometric properties</li>
+  </ul>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="../architecture/geometry.html#math-engine">MathEngine</a> – Implementation details</li>
+    <li><a href="bounded_diamonds.html">Bounded Diamonds</a> – How masks integrate with concept shapes</li>
+    <li><a href="../architecture/reasoning.html#bias-controller">BiasController</a> – Automatic masking for fair reasoning</li>
+    <li><a href="ontology.html">Ontology</a> – Factual dimension space</li>
+    <li><a href="axiology.html">Axiology</a> – Value dimension space</li>
+  </ul>
+
   <div class="footer-nav">
-    <a href="../index.html">Back to index</a>
+    <a href="bounded_diamonds.html">← Bounded Diamonds</a> ·
+    <a href="lsh.html">LSH →</a>
   </div>
   </div>
   <script src="../reference/nav2.js"></script>

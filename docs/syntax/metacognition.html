@@ -11,7 +11,7 @@
     <h1>System Metacognition</h1>
     <div class="sub-nav">
       <strong>Syntax Topics:</strong>
-      <a href="syntax_macros.html">Sys2DSL</a> ·
+      <a href="syntax_scripts.html">Sys2DSL</a> ·
       <a href="dimensions.html">Dimensions</a> ·
       <a href="relations.html">Relations</a> ·
       <a href="custom_verbs.html">Custom Verbs</a> ·
@@ -199,6 +199,21 @@
         <td>Check consistency</td>
         <td><code>@valid VALIDATE</code></td>
       </tr>
+      <tr>
+        <td><code>INFER</code></td>
+        <td>Query with full inference</td>
+        <td><code>@result INFER Dog IS_A animal</code></td>
+      </tr>
+      <tr>
+        <td><code>FORWARD_CHAIN</code></td>
+        <td>Derive all conclusions</td>
+        <td><code>@derived FORWARD_CHAIN</code></td>
+      </tr>
+      <tr>
+        <td><code>WHY</code></td>
+        <td>Explain how a fact was derived</td>
+        <td><code>@exp WHY Dog IS_A animal</code></td>
+      </tr>
     </table>
 
     <h3>Example: Explanation Chain</h3>
@@ -215,6 +230,117 @@
 #   1. Dog IS_A mammal (direct fact)
 #   2. mammal IS_A animal (direct fact)
 #   3. IS_A is transitive, so Dog IS_A animal"</code></pre>
+
+    <h3>Example: Full Inference with Forward Chaining</h3>
+    <pre><code># Establish knowledge with inference rules
+@f1 ASSERT Dog IS_A mammal
+@f2 ASSERT mammal IS_A animal
+@f3 ASSERT animal HAS_PROPERTY needs_food
+
+# Define a custom inference rule
+@r1 DEFINE_RULE "inheritance" | ?X IS_A ?Y ; ?Y HAS_PROPERTY ?P => ?X HAS_PROPERTY ?P
+
+# Forward chain to derive all conclusions
+@derived FORWARD_CHAIN
+
+# Query derived facts
+@result INFER Dog HAS_PROPERTY needs_food
+# Returns: { truth: "TRUE_INFERRED", method: "inheritance", chain: [...] }
+
+# Understand why
+@why WHY Dog HAS_PROPERTY needs_food</code></pre>
+
+    <h2>3.1 Contradiction Detection: Knowledge Consistency</h2>
+    <p>The system actively monitors for logical contradictions and can prevent inconsistent facts from being added.</p>
+
+    <h3>Contradiction Types</h3>
+    <table class="table-concept-index">
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><code>DISJOINT_VIOLATION</code></td>
+        <td>Entity belongs to mutually exclusive types</td>
+        <td>Fluffy IS_A Cat AND Fluffy IS_A Dog (when Cat DISJOINT_WITH Dog)</td>
+      </tr>
+      <tr>
+        <td><code>FUNCTIONAL_VIOLATION</code></td>
+        <td>Multiple values for a functional relation</td>
+        <td>Alice BORN_IN Paris AND Alice BORN_IN London</td>
+      </tr>
+      <tr>
+        <td><code>TAXONOMIC_CYCLE</code></td>
+        <td>Circular inheritance</td>
+        <td>A IS_A B, B IS_A C, C IS_A A</td>
+      </tr>
+      <tr>
+        <td><code>CARDINALITY_VIOLATION</code></td>
+        <td>Too many/few relations</td>
+        <td>Person with 3 biological parents (max is 2)</td>
+      </tr>
+    </table>
+
+    <h3>Contradiction Commands</h3>
+    <table class="table-concept-index">
+      <tr>
+        <th>Command</th>
+        <th>Purpose</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><code>CHECK_CONTRADICTION</code></td>
+        <td>Check all facts for contradictions</td>
+        <td><code>@report CHECK_CONTRADICTION</code></td>
+      </tr>
+      <tr>
+        <td><code>CHECK_WOULD_CONTRADICT</code></td>
+        <td>Test if adding a fact would create contradiction</td>
+        <td><code>@test CHECK_WOULD_CONTRADICT Fluffy IS_A Dog</code></td>
+      </tr>
+      <tr>
+        <td><code>REGISTER_FUNCTIONAL</code></td>
+        <td>Declare a relation as functional (one value only)</td>
+        <td><code>@_ REGISTER_FUNCTIONAL BORN_IN</code></td>
+      </tr>
+      <tr>
+        <td><code>REGISTER_CARDINALITY</code></td>
+        <td>Set min/max constraints on a relation</td>
+        <td><code>@_ REGISTER_CARDINALITY Person HAS_PARENT 0 2</code></td>
+      </tr>
+    </table>
+
+    <h3>Example: Consistency Checking</h3>
+    <pre><code># Establish type disjointness
+@d1 ASSERT Cat DISJOINT_WITH Dog
+@d2 ASSERT mammal DISJOINT_WITH reptile
+
+# Add some facts
+@f1 ASSERT Fluffy IS_A Cat
+@f2 ASSERT Rex IS_A Dog
+
+# Check consistency
+@report CHECK_CONTRADICTION
+# Returns: { consistent: true, contradictions: [] }
+
+# Test hypothetical addition
+@test CHECK_WOULD_CONTRADICT Fluffy IS_A Dog
+# Returns: { wouldContradict: true, reason: "DISJOINT_VIOLATION",
+#            details: "Fluffy cannot be both Cat and Dog" }
+
+# Set up functional constraints
+@_ REGISTER_FUNCTIONAL BORN_IN
+
+# This would be flagged:
+@f3 ASSERT Alice BORN_IN Paris
+@f4 ASSERT Alice BORN_IN London  # WARNING: functional violation
+
+# Check again
+@report2 CHECK_CONTRADICTION
+# Returns: { consistent: false, contradictions: [
+#   { type: "FUNCTIONAL_VIOLATION", subject: "Alice", relation: "BORN_IN", values: ["Paris", "London"] }
+# ]}</code></pre>
 
     <h2>4. Memory Management: Self-Optimization</h2>
     <p>The system tracks usage and can selectively forget low-value knowledge.</p>
@@ -424,7 +550,9 @@
       <li><a href="../specsLoader.html?spec=theory/dsl_engine.js.md">DS(/theory/dsl_engine.js)</a> – DSL interpreter</li>
       <li><a href="../specsLoader.html?spec=knowledge/concept_store.js.md">DS(/knowledge/concept_store.js)</a> – Knowledge persistence</li>
       <li><a href="../specsLoader.html?spec=knowledge/theory_stack.js.md">DS(/knowledge/theory_stack.js)</a> – Theory layering</li>
-      <li><a href="../specsLoader.html?spec=reason/reasoner.js.md">DS(/reason/reasoner.js)</a> – Inference engine</li>
+      <li><a href="../specsLoader.html?spec=reason/reasoner.js.md">DS(/reason/reasoner.js)</a> – Basic reasoner</li>
+      <li><a href="../specsLoader.html?spec=reason/contradiction_detection.md">DS(/reason/contradiction_detection)</a> – Contradiction detection specification</li>
+      <li><a href="../specsLoader.html?spec=reason/inference_engine.md">DS(/reason/inference_engine)</a> – Complete inference engine specification</li>
       <li><a href="../wiki/memory_management.html">Wiki: Memory Management</a></li>
       <li><a href="../wiki/theory_layers.html">Wiki: Theory Layers</a></li>
     </ul>

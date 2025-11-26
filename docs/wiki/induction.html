@@ -2,71 +2,188 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Reasoning by Induction</title>
+  <title>Induction</title>
   <link rel="stylesheet" href="../reference/style.css">
 </head>
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>Reasoning by Induction</h1>
-    <small></small>
-    <div class="sub-nav">
-      <strong>Wiki Topics:</strong>
-      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="induction.html">Induction</a> · <a href="deduction.html">Deduction</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
-    </div>
+    <h1>AGISystem2 – Induction</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
   </div>
-  <article>
-    <div class="philosophical-header">
-      <h2>The Philosophical Foundations of Inductive Reasoning</h2>
-      <p>Inductive reasoning represents one of the fundamental modes of human thought, characterized by the movement from specific observations to general principles or rules. Unlike deduction, which guarantees the truth of conclusions given true premises, induction offers probabilistic conclusions that extend beyond the immediate evidence. This form of reasoning has been central to scientific discovery, learning, and the formation of knowledge throughout human history, from Aristotle's early observations about natural phenomena to modern machine learning algorithms.</p>
-      
-      <p>The philosophical problem of induction, famously articulated by David Hume, questions the rational justification for inductive inferences. Hume argued that no amount of past observations can logically guarantee future occurrences, yet humans and scientists routinely rely on inductive reasoning with remarkable success. This apparent paradox has led to extensive philosophical debate about the nature of induction, its relationship to causality, and its role in scientific methodology. The resolution of this problem continues to be a central concern in epistemology and the philosophy of science.</p>
-      
-      <p>In contemporary cognitive science and artificial intelligence, induction is understood as a process of pattern recognition, generalization, and hypothesis formation. It involves identifying regularities in data, abstracting common features, and forming general rules that can explain and predict new instances. This process is inherently probabilistic and context-dependent, requiring careful consideration of sample size, representativeness, and potential confounding factors.</p>
-    </div>
 
-    <div class="academic-analysis">
-      <h2>Geometric Induction in Conceptual Spaces</h2>
-      <p>In AGISystem2, inductive reasoning is implemented through geometric operations within the conceptual space, transforming the traditional logical approach into a spatial computation problem. The system represents observations as points or regions within the high-dimensional vector space, and induction occurs through the identification of geometric patterns and the formation of encompassing regions that capture the regularities across multiple instances.</p>
-      
-      <p>The geometric induction process begins with the clustering of similar observations within the conceptual space. Using bounded diamond representations, the system identifies groups of concepts that share similar dimensional characteristics. The MathEngine computes the geometric properties of these clusters, determining their centroids, extents, and overlap patterns. This clustering is not merely statistical but is guided by the semantic structure of the space, ensuring that inductive generalizations respect the underlying conceptual relationships.</p>
-      
-      <p>Once clusters are identified, the system performs geometric generalization by constructing new bounded diamonds that encompass the observed instances while maintaining semantic coherence. This generalization process involves computing the minimal bounding region that captures the essential features of the cluster while excluding irrelevant variations. The resulting generalized concept represents an inductive hypothesis that can be applied to new instances through geometric inclusion tests.</p>
-      
-      <p>The strength of an inductive generalization in our system is quantified through geometric metrics such as density, compactness, and separation from other conceptual regions. These metrics provide a formal basis for evaluating the reliability of inductive conclusions, allowing the system to express confidence levels and identify cases where additional evidence may be required.</p>
-    </div>
+  <p>Induction in AGISystem2 is geometric envelope expansion. Given multiple examples of a concept, the system computes a <a href="bounded_diamonds.html">bounded diamond</a> that contains them all. This transforms learning from examples into finding the minimal enclosing shape.</p>
 
-    <div class="philosophical-implications">
-      <h2>Implications for Learning and Knowledge Formation</h2>
-      <p>The geometric approach to induction in AGISystem2 offers several advantages over traditional symbolic methods. By operating within a continuous conceptual space, the system can capture graded similarities and handle exceptions more naturally than rigid rule-based systems. This allows for more nuanced generalizations that reflect the complexity of real-world concepts and categories.</p>
-      
-      <p>From a philosophical perspective, this implementation suggests that induction may be fundamentally geometric rather than purely logical in nature. The ability to form generalizations through spatial containment and pattern recognition mirrors human cognitive processes that often rely on similarity judgments and prototype formation rather than explicit rule application.</p>
-      
-      <p>The integration of inductive reasoning with other forms of reasoning in the system—such as abduction and deduction—creates a comprehensive reasoning framework that can handle the full spectrum of inferential processes. This integration allows the system to use induction to form hypotheses, abduction to find explanations, and deduction to derive consequences, creating a reasoning cycle that mirrors human scientific inquiry.</p>
-    </div>
+  <div class="diagram">
+    <svg viewBox="0 0 560 280" role="img" aria-label="Induction as envelope finding">
+      <defs>
+        <marker id="arrow-ind" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
 
-    <div class="academic-references">
-      <h2>Academic Context and Related Work</h2>
-      <p>The study of inductive reasoning has a rich history in philosophy, cognitive science, and artificial intelligence. Key contributors include John Stuart Mill, who formulated methods of inductive inquiry; Carl Hempel, who developed the deductive-nomological model of scientific explanation; and more recently, machine learning researchers who have developed sophisticated algorithms for pattern recognition and generalization.</p>
-      
-      <p>In cognitive science, the work of Eleanor Rosch on prototype theory and prototype-based categorization provides empirical support for geometric approaches to concept formation. In artificial intelligence, instance-based learning and case-based reasoning systems demonstrate the effectiveness of similarity-based generalization methods.</p>
-      
-      <p>For deeper understanding of inductive reasoning, <a href="https://en.wikipedia.org/wiki/Inductive_reasoning" target="_blank" rel="noopener noreferrer">the philosophical literature on induction</a> offers comprehensive coverage of the logical, epistemological, and psychological aspects of this fundamental reasoning process.</p>
-    </div>
+      <!-- Background -->
+      <rect x="0" y="0" width="560" height="280" fill="#fafbfc"/>
 
-    <div class="technical-specifications">
-      <h2>Technical Implementation References</h2>
-      <p>For detailed technical specifications of inductive reasoning implementation in AGISystem2, consult the following documentation:</p>
-      <ul>
-        <li>Clustering Specification (DS(/ingest/clustering.js)): implementează algoritmi de clustering geometric pentru identificarea tiparelor inductive.</li>
-        <li>Bounded Diamond Specification (DS(/core/bounded_diamond.js)): definește operațiile geometrice pentru generalizare și incluziune.</li>
-        <li>Math Engine Specification (DS(/core/math_engine.js)): oferă calcule geometrice pentru metrici de generalizare inductivă.</li>
-        <li>Reasoner Specification (DS(/reason/reasoner.js)): orchestrează ciclurile de raționament inductiv alături de alte moduri.</li>
-      </ul>
-    </div>
-  </article>
+      <!-- Left: Before (examples only) -->
+      <rect x="20" y="20" width="160" height="240" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="100" y="40" font-size="10" font-weight="bold" fill="#4a5670" text-anchor="middle">Examples</text>
+
+      <!-- Example points -->
+      <circle cx="70" cy="100" r="6" fill="#0f4c81"/>
+      <text x="85" y="105" font-size="8" fill="#4a5670">Rover</text>
+      <circle cx="120" cy="130" r="6" fill="#0f4c81"/>
+      <text x="135" y="135" font-size="8" fill="#4a5670">Buddy</text>
+      <circle cx="80" cy="160" r="6" fill="#0f4c81"/>
+      <text x="95" y="165" font-size="8" fill="#4a5670">Max</text>
+      <circle cx="130" cy="180" r="6" fill="#0f4c81"/>
+      <text x="145" y="185" font-size="8" fill="#4a5670">Luna</text>
+      <circle cx="90" cy="200" r="6" fill="#0f4c81"/>
+      <text x="105" y="205" font-size="8" fill="#4a5670">Rex</text>
+
+      <text x="100" y="240" font-size="9" fill="#4a5670" text-anchor="middle">5 dogs (points)</text>
+
+      <!-- Arrow -->
+      <line x1="185" y1="140" x2="215" y2="140" stroke="#2e7d32" stroke-width="2" marker-end="url(#arrow-ind)"/>
+      <text x="200" y="130" font-size="8" fill="#2e7d32" text-anchor="middle">induce</text>
+
+      <!-- Right: After (concept formed) -->
+      <rect x="220" y="20" width="160" height="240" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="300" y="40" font-size="10" font-weight="bold" fill="#4a5670" text-anchor="middle">Induced Concept</text>
+
+      <!-- Bounded diamond -->
+      <polygon points="300,70 360,140 300,210 240,140" fill="#e8f5e9" fill-opacity="0.6" stroke="#2e7d32" stroke-width="2"/>
+
+      <!-- Same points inside -->
+      <circle cx="270" cy="100" r="4" fill="#0f4c81"/>
+      <circle cx="320" cy="130" r="4" fill="#0f4c81"/>
+      <circle cx="280" cy="160" r="4" fill="#0f4c81"/>
+      <circle cx="330" cy="180" r="4" fill="#0f4c81"/>
+      <circle cx="290" cy="200" r="4" fill="#0f4c81"/>
+
+      <!-- Center -->
+      <circle cx="300" cy="140" r="5" fill="#2e7d32"/>
+      <text x="300" y="125" font-size="9" fill="#2e7d32" text-anchor="middle">center</text>
+
+      <text x="300" y="230" font-size="9" fill="#2e7d32" text-anchor="middle" font-weight="bold">"Dog" concept</text>
+      <text x="300" y="245" font-size="8" fill="#4a5670" text-anchor="middle">(bounded diamond)</text>
+
+      <!-- Process panel -->
+      <rect x="400" y="20" width="140" height="240" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="470" y="40" font-size="10" font-weight="bold" fill="#4a5670" text-anchor="middle">Process</text>
+
+      <rect x="410" y="55" width="120" height="35" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="420" y="70" font-size="8" font-weight="bold" fill="#0f4c81">1. Compute center</text>
+      <text x="420" y="82" font-size="7" fill="#4a5670">Mean of all points</text>
+
+      <rect x="410" y="100" width="120" height="35" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="420" y="115" font-size="8" font-weight="bold" fill="#0f4c81">2. Find min/max</text>
+      <text x="420" y="127" font-size="7" fill="#4a5670">Per-dimension bounds</text>
+
+      <rect x="410" y="145" width="120" height="35" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="420" y="160" font-size="8" font-weight="bold" fill="#0f4c81">3. Compute radius</text>
+      <text x="420" y="172" font-size="7" fill="#4a5670">Max L1 to any point</text>
+
+      <rect x="410" y="190" width="120" height="35" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
+      <text x="420" y="205" font-size="8" font-weight="bold" fill="#2e7d32">4. Create diamond</text>
+      <text x="420" y="217" font-size="7" fill="#4a5670">Store in ConceptStore</text>
+    </svg>
+    <p class="diagram-caption">Induction creates a bounded diamond that encloses all examples. Given 5 dogs (Rover, Buddy, Max, Luna, Rex), the system computes a "Dog" concept as the minimal diamond containing all 5 points. New dogs will fall inside this region.</p>
+  </div>
+
+  <h2>How It Works</h2>
+
+  <p>The <a href="../architecture/knowledge.html#cluster-manager">ClusterManager</a> handles induction when new facts arrive:</p>
+
+  <ol>
+    <li><strong>Encode the example</strong> – Convert "Rover IS_A Dog" into a vector point</li>
+    <li><strong>Find existing concept</strong> – Look for a "Dog" diamond in the knowledge base</li>
+    <li><strong>Expand or create</strong> – If found, expand the diamond to include the new point. If not, create a new diamond centered on this point.</li>
+  </ol>
+
+  <p>Expansion adjusts the diamond's center, min/max bounds, and radius to include the new point while keeping the shape minimal.</p>
+
+  <h2>Incremental Learning</h2>
+
+  <p>Unlike batch learning algorithms, AGISystem2's induction is incremental. Each new example updates the concept immediately:</p>
+
+  <pre>
+# First dog
+ASSERT Rover IS_A Dog
+# Creates initial "Dog" diamond centered on Rover
+
+# More examples expand it
+ASSERT Buddy IS_A Dog
+ASSERT Max IS_A Dog
+ASSERT Luna IS_A Dog
+# Diamond grows to encompass all
+
+# Query generalization
+ASK "Fido IS_A Dog?"
+# TRUE if Fido's vector falls inside the Dog diamond</pre>
+
+  <h2>Splitting Concepts</h2>
+
+  <p>If examples are too spread out, the ClusterManager may split a concept into multiple subconcepts rather than creating one huge diamond. This happens when:</p>
+
+  <ul>
+    <li>The radius would exceed a threshold</li>
+    <li>Points cluster into distinct groups</li>
+    <li>Including new points would overlap with conflicting concepts</li>
+  </ul>
+
+  <h2>Comparison with Deduction</h2>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Aspect</th><th>Deduction</th><th>Induction</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Direction</td>
+        <td>General → Specific</td>
+        <td>Specific → General</td>
+      </tr>
+      <tr>
+        <td>Geometry</td>
+        <td>Containment check</td>
+        <td>Envelope construction</td>
+      </tr>
+      <tr>
+        <td>Certainty</td>
+        <td>Guaranteed if premises true</td>
+        <td>Probable (may have exceptions)</td>
+      </tr>
+      <tr>
+        <td>Operation</td>
+        <td>Query (read)</td>
+        <td>Assert (write)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="../architecture/knowledge.html#cluster-manager">ClusterManager</a> – Expansion and splitting logic</li>
+    <li><a href="bounded_diamonds.html">Bounded Diamonds</a> – The shapes being constructed</li>
+    <li><a href="deduction.html">Deduction</a> – Using induced concepts for queries</li>
+    <li><a href="../guides/learning.html">Learning Theory</a> – How concepts evolve over time</li>
+    <li><a href="analogy.html">Analogy</a> – Transferring structure between induced concepts</li>
+  </ul>
+
   <div class="footer-nav">
-    <a href="../index.html">Back to index</a>
+    <a href="deduction.html">← Deduction</a> ·
+    <a href="abduction.html">Abduction →</a>
   </div>
   </div>
   <script src="../reference/nav2.js"></script>

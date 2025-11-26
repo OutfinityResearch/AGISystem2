@@ -8,59 +8,203 @@
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>Trustworthy AI</h1>
-    <small></small>
-    <div class="sub-nav">
-      <strong>Wiki Topics:</strong>
-      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
-    </div>
+    <h1>AGISystem2 – Trustworthy AI</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
   </div>
-  <article>
-    <div class="philosophical-header">
-      <h2>What Makes AI Trustworthy?</h2>
-      <p>“Trustworthy AI” refers to artificial systems that behave reliably, transparently, and in alignment with human values. Trust is not a single property but a bundle of expectations: that the system will not behave arbitrarily, that its decisions can be explained and audited, and that it respects legal and ethical constraints.</p>
-      <p>Philosophically, trustworthiness is about more than technical robustness. It concerns responsibility (who is accountable for outcomes), legitimacy (whether the system operates under acceptable norms), and the ability of those affected to contest or understand its decisions. An AI system that is opaque, unaccountable, or uncontrollable cannot reasonably be called trustworthy, regardless of its accuracy.</p>
-    </div>
 
-    <div class="academic-analysis">
-      <h2>Dimensions of Trust in AI Systems</h2>
-      <p>Frameworks for trustworthy AI often list multiple pillars: reliability and safety, privacy and security, transparency and explainability, fairness and non-discrimination, human oversight, and accountability. These are not independent checkboxes but interacting constraints on design and deployment.</p>
-      <p>From an engineering perspective, trustworthiness requires deterministic behaviour where possible, clear specification of non-determinism where unavoidable, comprehensive logging, and validation regimes that reflect realistic usage. For systems that manipulate complex knowledge and values, it also requires explicit modelling of those values and the ability to inspect and revise them.</p>
-    </div>
+  <p>Trustworthy AI in AGISystem2 is built on four pillars: determinism, auditability, fairness, and validation. Every reasoning step is reproducible, logged, bias-controlled, and consistency-checked—making the system suitable for compliance-sensitive domains.</p>
 
-    <div class="academic-analysis">
-      <h2>Trustworthy AI in AGISystem2</h2>
-      <p>AGISystem2 is designed around determinism, traceability, and layered reasoning. The core math engine operates on int-based vectors with clamped arithmetic; given the same theories and inputs, the Reasoner always returns the same outputs. This determinism is a foundation for reproducible decisions and meaningful testing.</p>
-      <p>Every significant operation—ingestion, clustering, theory change, translation, reasoning—is logged in append-only audit trails. The storage layer maintains versioned snapshots of theories and parameters, making it possible to replay or inspect past states. Validation engines and test suites exercise critical reasoning paths (including counterfactual, deontic, and bias-aware modes) under controlled profiles.</p>
-      <p>Finally, the separation between ontological and axiological dimensions, together with explicit theory layers and masks, makes value-laden decisions inspectable. Users can see which layers and dimensions influenced an answer, and can adjust theories or masks rather than tweaking opaque parameters.</p>
-    </div>
+  <div class="diagram">
+    <svg viewBox="0 0 560 320" role="img" aria-label="Trustworthy AI pillars">
+      <!-- Background -->
+      <rect x="0" y="0" width="560" height="320" fill="#fafbfc"/>
 
-    <div class="philosophical-implications">
-      <h2>Philosophical and Practical Implications</h2>
-      <p>A trustworthy system does not guarantee morally perfect decisions, but it does provide the tools needed for oversight: clear specifications, audit logs, principled revision mechanisms, and testable behaviour. In compliance-sensitive domains—such as healthcare, law, and safety-critical engineering—this can be the difference between a system that can be certified and one that cannot.</p>
-      <p>For AGISystem2, trustworthiness is woven into the architecture: from the choice of deterministic vector operations and explicit theories, to the presence of validation and audit subsystems, to the insistence on interpretable dimensional masks. These design choices aim to make every conclusion not only computable, but also explainable and contestable.</p>
-    </div>
+      <!-- Title -->
+      <text x="280" y="25" font-size="12" font-weight="bold" fill="#4a5670" text-anchor="middle">AGISystem2 Trustworthiness Pillars</text>
 
-    <div class="academic-references">
-      <h2>Academic References</h2>
-      <p>Trustworthy AI is an active area of research and policy-making, spanning technical, legal, and ethical dimensions. Work on explainable AI, algorithmic accountability, and regulatory frameworks (such as the EU AI Act) all contribute to the evolving notion of what “trustworthy” should mean in practice.</p>
-      <p>For an overview, see <a href="https://en.wikipedia.org/wiki/Trustworthy_artificial_intelligence" target="_blank" rel="noopener noreferrer">the literature on trustworthy AI</a>.</p>
-    </div>
+      <!-- Pillar 1: Determinism -->
+      <rect x="20" y="45" width="125" height="140" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="82" y="65" font-size="10" font-weight="bold" fill="#0f4c81" text-anchor="middle">Determinism</text>
+      <text x="30" y="85" font-size="8" fill="#4a5670">Same input →</text>
+      <text x="30" y="98" font-size="8" fill="#4a5670">same output</text>
+      <line x1="30" y1="108" x2="135" y2="108" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="30" y="125" font-size="8" fill="#4a5670">• Int8 arithmetic</text>
+      <text x="30" y="140" font-size="8" fill="#4a5670">• No floating point</text>
+      <text x="30" y="155" font-size="8" fill="#4a5670">• Reproducible</text>
+      <text x="30" y="170" font-size="8" fill="#4a5670">• Testable</text>
 
-    <div class="technical-specifications">
-      <h2>Technical Implementation References</h2>
-      <p>For detailed technical specifications of trust-related mechanisms in AGISystem2, consult the following design and test specifications (referenced by ID):</p>
-      <ul>
-        <li>DS[/support/audit_log.js] — captures append-only audit trails for theory changes and reasoning steps.</li>
-        <li>DS[/support/storage.js] — manages versioned storage of concepts, theories, and configuration.</li>
-        <li>DS[/reason/validation.js] — implements validation and abstract interpretation of theories and answers.</li>
-        <li>DS[/reason/bias_control.js] — provides explicit bias and fairness modes, including veil-of-ignorance style masks.</li>
-        <li>DS[/tests/validation_engine/runSuite] and DS[/tests/bias_audit/runSuite] — exercise validation and audit mechanisms under test profiles.</li>
-      </ul>
-    </div>
-  </article>
+      <!-- Pillar 2: Auditability -->
+      <rect x="155" y="45" width="125" height="140" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+      <text x="217" y="65" font-size="10" font-weight="bold" fill="#2e7d32" text-anchor="middle">Auditability</text>
+      <text x="165" y="85" font-size="8" fill="#4a5670">Every step logged</text>
+      <text x="165" y="98" font-size="8" fill="#4a5670">with provenance</text>
+      <line x1="165" y1="108" x2="270" y2="108" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="165" y="125" font-size="8" fill="#4a5670">• Immutable logs</text>
+      <text x="165" y="140" font-size="8" fill="#4a5670">• Hash chains</text>
+      <text x="165" y="155" font-size="8" fill="#4a5670">• Query replay</text>
+      <text x="165" y="170" font-size="8" fill="#4a5670">• Compliance export</text>
+
+      <!-- Pillar 3: Fairness -->
+      <rect x="290" y="45" width="125" height="140" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+      <text x="352" y="65" font-size="10" font-weight="bold" fill="#e65100" text-anchor="middle">Fairness</text>
+      <text x="300" y="85" font-size="8" fill="#4a5670">Bias detection</text>
+      <text x="300" y="98" font-size="8" fill="#4a5670">and control</text>
+      <line x1="300" y1="108" x2="405" y2="108" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="300" y="125" font-size="8" fill="#4a5670">• Dimension masks</text>
+      <text x="300" y="140" font-size="8" fill="#4a5670">• Veil of ignorance</text>
+      <text x="300" y="155" font-size="8" fill="#4a5670">• Bias audits</text>
+      <text x="300" y="170" font-size="8" fill="#4a5670">• Protected attrs</text>
+
+      <!-- Pillar 4: Validation -->
+      <rect x="425" y="45" width="115" height="140" rx="4" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2"/>
+      <text x="482" y="65" font-size="10" font-weight="bold" fill="#7b1fa2" text-anchor="middle">Validation</text>
+      <text x="435" y="85" font-size="8" fill="#4a5670">Consistency</text>
+      <text x="435" y="98" font-size="8" fill="#4a5670">guarantees</text>
+      <line x1="435" y1="108" x2="530" y2="108" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="435" y="125" font-size="8" fill="#4a5670">• Type checks</text>
+      <text x="435" y="140" font-size="8" fill="#4a5670">• Conflict detect</text>
+      <text x="435" y="155" font-size="8" fill="#4a5670">• Cycle detect</text>
+      <text x="435" y="170" font-size="8" fill="#4a5670">• Deontic checks</text>
+
+      <!-- How they connect -->
+      <rect x="20" y="200" width="520" height="105" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="280" y="220" font-size="10" font-weight="bold" fill="#4a5670" text-anchor="middle">How They Work Together</text>
+
+      <!-- Flow -->
+      <rect x="35" y="235" width="80" height="30" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="75" y="254" font-size="8" fill="#0f4c81" text-anchor="middle">Input</text>
+
+      <line x1="120" y1="250" x2="145" y2="250" stroke="#0f4c81" stroke-width="1.5"/>
+      <text x="132" y="245" font-size="7" fill="#4a5670">→</text>
+
+      <rect x="150" y="235" width="85" height="30" rx="4" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1"/>
+      <text x="192" y="254" font-size="8" fill="#7b1fa2" text-anchor="middle">Validation</text>
+
+      <line x1="240" y1="250" x2="265" y2="250" stroke="#7b1fa2" stroke-width="1.5"/>
+      <text x="252" y="245" font-size="7" fill="#4a5670">→</text>
+
+      <rect x="270" y="235" width="80" height="30" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
+      <text x="310" y="254" font-size="8" fill="#e65100" text-anchor="middle">Bias Mask</text>
+
+      <line x1="355" y1="250" x2="380" y2="250" stroke="#e65100" stroke-width="1.5"/>
+      <text x="367" y="245" font-size="7" fill="#4a5670">→</text>
+
+      <rect x="385" y="235" width="80" height="30" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="425" y="254" font-size="8" fill="#0f4c81" text-anchor="middle">Reasoning</text>
+
+      <line x1="470" y1="250" x2="495" y2="250" stroke="#0f4c81" stroke-width="1.5"/>
+      <text x="482" y="245" font-size="7" fill="#4a5670">→</text>
+
+      <rect x="500" y="235" width="35" height="30" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
+      <text x="517" y="254" font-size="8" fill="#2e7d32" text-anchor="middle">Log</text>
+
+      <text x="280" y="290" font-size="8" fill="#4a5670" text-anchor="middle">Every step is validated, bias-controlled, deterministic, and logged</text>
+    </svg>
+    <p class="diagram-caption">The four pillars of trustworthiness in AGISystem2: determinism ensures reproducibility, auditability provides traceability, fairness controls bias, and validation guarantees consistency. These work together on every query.</p>
+  </div>
+
+  <h2>Trustworthiness Features</h2>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Feature</th><th>What It Provides</th><th>Architecture Component</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Determinism</td>
+        <td>Same input always produces same output</td>
+        <td><a href="../architecture/geometry.html">MathEngine</a> (Int8)</td>
+      </tr>
+      <tr>
+        <td>Audit Trail</td>
+        <td>Complete provenance for every decision</td>
+        <td><a href="auditability.html">AuditLog</a></td>
+      </tr>
+      <tr>
+        <td>Bias Control</td>
+        <td>Protected attributes can be masked</td>
+        <td><a href="bias.html">BiasController</a></td>
+      </tr>
+      <tr>
+        <td>Validation</td>
+        <td>Consistency checks before commit</td>
+        <td><a href="validation.html">ValidationEngine</a></td>
+      </tr>
+      <tr>
+        <td>Explainability</td>
+        <td>Reasoning steps are interpretable</td>
+        <td><a href="../architecture/reasoning.html">Reasoner</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Why Determinism Matters</h2>
+
+  <p>AGISystem2 uses Int8 arithmetic with saturating operations—no floating-point rounding errors:</p>
+
+  <pre>
+// Same query, same context → same result, always
+const result1 = reasoner.ask("Dog IS_A ?", context);
+const result2 = reasoner.ask("Dog IS_A ?", context);
+assert(result1.equals(result2)); // Always true
+
+// Unlike neural networks where:
+// - Different runs may give different results
+// - Floating-point accumulation varies
+// - Hardware affects output</pre>
+
+  <h2>Compliance Use Cases</h2>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Domain</th><th>Requirement</th><th>AGISystem2 Solution</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Healthcare</td>
+        <td>Explainable diagnoses</td>
+        <td>Audit trail + reasoning chain</td>
+      </tr>
+      <tr>
+        <td>Finance</td>
+        <td>Fair lending decisions</td>
+        <td>Veil of ignorance + bias audits</td>
+      </tr>
+      <tr>
+        <td>Legal</td>
+        <td>Reproducible case analysis</td>
+        <td>Determinism + query replay</td>
+      </tr>
+      <tr>
+        <td>HR</td>
+        <td>Non-discriminatory hiring</td>
+        <td>Protected dimension masks</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="auditability.html">Auditability</a> – Logging and compliance export</li>
+    <li><a href="validation.html">Validation</a> – Consistency guarantees</li>
+    <li><a href="bias.html">Bias Control</a> – Fairness mechanisms</li>
+    <li><a href="veil_of_ignorance.html">Veil of Ignorance</a> – Maximum fairness mode</li>
+    <li><a href="../architecture/geometry.html">Geometry Layer</a> – Deterministic math</li>
+  </ul>
+
   <div class="footer-nav">
-    <a href="../index.html">Back to index</a>
+    <a href="auditability.html">← Auditability</a> ·
+    <a href="validation.html">Validation →</a>
   </div>
   </div>
   <script src="../reference/nav2.js"></script>

@@ -11,7 +11,7 @@ async function run({ profile }) {
   const basicScript = basicLines.map((l, idx) => `@b${idx} ASSERT ${l}`);
   session.run(basicScript);
 
-  const baseEnv = session.run(['@q1 ASK "Water HAS_PROPERTY boiling_point=50?"']);
+  const baseEnv = session.run(['@q1 ASK "Water BOILS_AT Celsius50?"']);
   const base = baseEnv.q1 || {};
   const okBaseFalse = base.truth === 'FALSE';
 
@@ -20,12 +20,12 @@ async function run({ profile }) {
   const cfFacts = cfLines.join(' ; ');
 
   const cfEnv = session.run([
-    `@cf CF "Water HAS_PROPERTY boiling_point=50?" | ${cfFacts}`
+    `@cf CF "Water BOILS_AT Celsius50?" | ${cfFacts}`
   ]);
   const cf = cfEnv.cf || {};
   const okCfTrue = cf.truth === 'TRUE_CERTAIN';
 
-  const baseAfterEnv = session.run(['@q2 ASK "Water HAS_PROPERTY boiling_point=50?"']);
+  const baseAfterEnv = session.run(['@q2 ASK "Water BOILS_AT Celsius50?"']);
   const baseAfter = baseAfterEnv.q2 || {};
   const okBaseStillFalse = baseAfter.truth === 'FALSE';
 

@@ -13,10 +13,10 @@ abduct Smoke CAUSES
 abduct WetGround CAUSED_BY
 
 # Setup for counterfactual
-add Earth HAS_PROPERTY gravity=9.8
+add Earth HAS_GRAVITY StandardGravity
 
 # Counterfactual query
-cf Earth HAS_PROPERTY gravity=0? | Earth HAS_PROPERTY gravity=0
+cf Earth HAS_GRAVITY ZeroGravity? | Earth HAS_GRAVITY ZeroGravity
 
 # Generate hypotheses
 hypothesize Dog

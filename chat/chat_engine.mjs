@@ -1,0 +1,261 @@
+/**
+ * DS(/chat/chat_engine.mjs) - Chat Engine Core
+ *
+ * Core engine that bridges LLM natural language processing with
+ * AGISystem2's DSL-based reasoning. Handles:
+ * - Intent detection from user input
+ * - Routing to appropriate handlers
+ * - Session and conversation management
+ *
+ * See also: DS(/chat/chat_handlers), DS(/chat/prompts)
+ *
+ * @module chat/chat_engine
+ */
+
+import fs from 'node:fs';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import { loadLLMAgent, checkAPIKeys, getMissingLibraryHelp } from './llm_loader.mjs';
+import { buildIntentPrompt } from './prompts.mjs';
+import {
+  handleTeach,
+  handleAsk,
+  handleImport,
+  handleTheoryManagement,
+  handleList,
+  handleHelp
+} from './chat_handlers.mjs';
+
+// Use createRequire to import CommonJS modules
+const require = createRequire(import.meta.url);
+
+export class ChatEngine {
+  constructor(options = {}) {
+    this.options = options;
+    this.llmAgent = null;
+    this.session = null;
+    this.theoriesRoot = null;
+    this.currentTheory = 'default';
+    this.conversationHistory = [];
+    this.initialized = false;
+  }
+
+  /**
+   * Initialize the chat engine
+   * @returns {Promise<{success: boolean, message: string}>}
+   */
+  async initialize() {
+    // Load LLM library
+    const llmResult = await loadLLMAgent();
+    if (!llmResult.available) {
+      return {
+        success: false,
+        message: getMissingLibraryHelp()
+      };
+    }
+
+    // Check API keys
+    const apiCheck = checkAPIKeys();
+    if (!apiCheck.configured) {
+      return {
+        success: false,
+        message: `No LLM API keys configured. Set at least one of:\n` +
+          `  OPENAI_API_KEY, ANTHROPIC_API_KEY, GEMINI_API_KEY, or OPENROUTER_API_KEY\n` +
+          `You can put these in a .env file.`
+      };
+    }
+
+    // Create LLM agent
+    this.llmAgent = new llmResult.LLMAgent({ name: 'AGISystem2Chat' });
+
+    // Initialize AGISystem2 session
+    try {
+      await this._initializeAGISession();
+    } catch (err) {
+      return {
+        success: false,
+        message: `Failed to initialize AGISystem2: ${err.message}`
+      };
+    }
+
+    this.initialized = true;
+    return {
+      success: true,
+      message: `AGISystem2 Chat initialized. LLM providers: ${apiCheck.providers.join(', ')}`
+    };
+  }
+
+  /**
+   * Initialize AGISystem2 session using the existing CLI infrastructure
+   */
+  async _initializeAGISession() {
+    // Find the AGISystem2 root
+    const chatDir = path.dirname(new URL(import.meta.url).pathname);
+    const agisystemRoot = path.resolve(chatDir, '..');
+
+    // Load AgentSystem2 class
+    const AgentSystem2 = require(path.join(agisystemRoot, 'src', 'interface', 'agent_system2.js'));
+
+    // Setup directories
+    const cwd = process.cwd();
+    const dataRoot = path.join(cwd, '.AGISystem2');
+    const theoriesDir = path.join(dataRoot, 'theories');
+    const storageDir = path.join(dataRoot, 'data');
+
+    // Ensure directories exist
+    for (const dir of [dataRoot, theoriesDir, storageDir]) {
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+    }
+
+    // Create agent and session
+    const agent = new AgentSystem2({
+      profile: 'manual_test',
+      overrides: { storageRoot: storageDir }
+    });
+    this.session = agent.createSession();
+    this.theoriesRoot = theoriesDir;
+  }
+
+  /**
+   * Get handler context object
+   */
+  _getHandlerContext() {
+    return {
+      llmAgent: this.llmAgent,
+      session: this.session,
+      theoriesRoot: this.theoriesRoot,
+      currentTheory: this.currentTheory,
+      setCurrentTheory: (name) => { this.currentTheory = name; }
+    };
+  }
+
+  /**
+   * Process a user message and return a response
+   * @param {string} userMessage - Natural language input
+   * @returns {Promise<{response: string, actions: object[]}>}
+   */
+  async processMessage(userMessage) {
+    if (!this.initialized) {
+      return {
+        response: 'Chat engine not initialized. Call initialize() first.',
+        actions: []
+      };
+    }
+
+    const trimmed = userMessage.trim();
+    if (!trimmed) {
+      return { response: 'Please enter a message.', actions: [] };
+    }
+
+    // Add to conversation history
+    this.conversationHistory.push({ role: 'user', content: trimmed });
+
+    try {
+      // Detect intent using LLM
+      const intent = await this._detectIntent(trimmed);
+      const ctx = this._getHandlerContext();
+
+      // Process based on intent
+      let result;
+      switch (intent.intent) {
+        case 'teach':
+          result = await handleTeach(ctx, trimmed, intent.details);
+          break;
+        case 'ask':
+          result = await handleAsk(ctx, trimmed, intent.details);
+          break;
+        case 'import':
+          result = await handleImport(ctx, trimmed, intent.details);
+          break;
+        case 'manage_theory':
+          result = await handleTheoryManagement(ctx, trimmed, intent.details);
+          break;
+        case 'list':
+          result = await handleList(ctx, intent.details);
+          break;
+        case 'help':
+          result = handleHelp();
+          break;
+        default:
+          result = await handleTeach(ctx, trimmed, {});
+      }
+
+      // Add response to history
+      this.conversationHistory.push({ role: 'assistant', content: result.response });
+
+      return result;
+    } catch (err) {
+      const errorResponse = `I encountered an error: ${err.message}`;
+      this.conversationHistory.push({ role: 'assistant', content: errorResponse });
+      return { response: errorResponse, actions: [{ type: 'error', error: err.message }] };
+    }
+  }
+
+  /**
+   * Detect user intent using LLM
+   */
+  async _detectIntent(message) {
+    const prompt = buildIntentPrompt(message);
+
+    try {
+      const response = await this.llmAgent.complete({
+        prompt,
+        mode: 'fast',
+        context: { intent: 'detect-intent' }
+      });
+
+      // Parse JSON response
+      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        return JSON.parse(jsonMatch[0]);
+      }
+    } catch (err) {
+      // Fallback to simple heuristics
+    }
+
+    // Simple heuristic fallback
+    return this._heuristicIntentDetection(message);
+  }
+
+  /**
+   * Fallback heuristic intent detection
+   */
+  _heuristicIntentDetection(message) {
+    const lower = message.toLowerCase();
+
+    if (lower.includes('?') || lower.startsWith('is ') || lower.startsWith('what ') ||
+        lower.startsWith('why ') || lower.startsWith('how ') || lower.startsWith('does ')) {
+      return { intent: 'ask', confidence: 0.6, details: {} };
+    }
+    if (lower.includes('import') || lower.includes('load file')) {
+      return { intent: 'import', confidence: 0.7, details: {} };
+    }
+    if (lower.includes('theory') || lower.includes('context') || lower.includes('branch')) {
+      return { intent: 'manage_theory', confidence: 0.6, details: {} };
+    }
+    if (lower.startsWith('list ') || lower.includes('show me')) {
+      return { intent: 'list', confidence: 0.6, details: {} };
+    }
+    if (lower.includes('help')) {
+      return { intent: 'help', confidence: 0.9, details: {} };
+    }
+
+    return { intent: 'teach', confidence: 0.5, details: {} };
+  }
+
+  /**
+   * Get conversation history
+   */
+  getHistory() {
+    return [...this.conversationHistory];
+  }
+
+  /**
+   * Clear conversation history
+   */
+  clearHistory() {
+    this.conversationHistory = [];
+  }
+}

@@ -44,14 +44,15 @@
 
   <p>Example: a theory file that defines a concept and immediately uses it in derived checks, independent of textual order:</p>
   <pre><code># Derived checks first
-@bpFact ASSERT water HAS_PROPERTY boiling_point=100
-@waterPoint BIND_POINT water
+@bpFact ASSERT Water BOILS_AT Celsius100
+@tempFact ASSERT Celsius100 IS_A temperature
+@waterPoint BIND_POINT Water
 @tempMask MASK_DIMS Temperature
-@checkBP ASK_MASKED $tempMask "water HAS_PROPERTY boiling_point=100?"
+@checkBP ASK_MASKED $tempMask "Water BOILS_AT Celsius100?"
 
 # Definition of reusable bundles below
-@waterConcept BIND_CONCEPT water
-@facts FACTS_MATCHING "water HAS_PROPERTY ?"</code></pre>
+@waterConcept BIND_CONCEPT Water
+@facts FACTS_MATCHING "Water BOILS_AT ?"</code></pre>
 
   <p>Even though <code>@waterConcept</code> appears later in the file, any statement that uses <code>$waterConcept</code> will be executed after its definition. Circular references (for example <code>@a</code> depending on <code>$b</code> and <code>@b</code> on <code>$a</code>) are rejected with deterministic errors.</p>
 

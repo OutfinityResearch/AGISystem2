@@ -19,10 +19,12 @@
   <pre><code>@f1 ASSERT subject REL object</code></pre>
 
   <p>Examples of basic facts:</p>
-  <pre><code>@f1 ASSERT dog IS_A Animal
-@f2 ASSERT water HAS_PROPERTY boiling_point=100
-@f3 ASSERT surgery_x REQUIRES consent
-@f4 ASSERT export_data PROHIBITED_BY GDPR</code></pre>
+  <pre><code>@f1 ASSERT Dog IS_A Animal
+@f2 ASSERT Water BOILS_AT Celsius100
+@f3 ASSERT Celsius100 IS_A temperature
+@f4 ASSERT surgery_x REQUIRES consent
+@f5 ASSERT export_data PROHIBITED_BY GDPR</code></pre>
+  <p><strong>Note:</strong> Properties like boiling point are expressed using specific relations (e.g., <code>BOILS_AT</code>) that connect subjects to value concepts (e.g., <code>Celsius100</code>). This keeps values as first-class concepts that can be reasoned about independently.</p>
 
   <p>Conventions for tokens in the parameter list:</p>
   <ul>
@@ -40,12 +42,12 @@
   <p><code>question-text</code> is a string that follows the constrained grammar. For natural language it usually ends in <code>?</code>, but for canonical triples the trailing <code>?</code> is optional because the <code>ASK</code> action already marks the statement as a question.</p>
   <ul>
     <li>simple natural‑language questions, normalised by the translator, such as:
-      <pre><code>@q1 ASK "Is dog an Animal?"
-@q2 ASK "Is water a Substance?"</code></pre>
+      <pre><code>@q1 ASK "Is Dog an Animal?"
+@q2 ASK "Is Water a Substance?"</code></pre>
     </li>
     <li>canonical triples written as strings, for example:
-      <pre><code>@q3 ASK "dog IS_A Animal"
-@q4 ASK "water HAS_PROPERTY boiling_point=100"
+      <pre><code>@q3 ASK "Dog IS_A Animal"
+@q4 ASK "Water BOILS_AT Celsius100"
 @q5 ASK "export_data PROHIBITED_BY GDPR"</code></pre>
     </li>
   </ul>
@@ -56,21 +58,22 @@
   <p>Counterfactuals use a dedicated action but remain a single Sys2DSL instruction. General form:</p>
   <pre><code>@cfVar CF "question-text" | Fact1 ; Fact2 ; ...</code></pre>
 
-  <p>Simple example (asking “what if water boiled at 50?”):</p>
-  <pre><code>@cf CF "Water HAS_PROPERTY boiling_point=50"
-     | Water HAS_PROPERTY boiling_point=50</code></pre>
+  <p>Simple example (asking "what if water boiled at 50°C?"):</p>
+  <pre><code>@cf CF "Water BOILS_AT Celsius50"
+     | Water BOILS_AT Celsius50</code></pre>
 
   <p>The list of assumptions after <code>|</code> uses the same “Subject REL Object” grammar as <code>ASSERT</code>, separated by <code>;</code> when there are multiple facts. Internally, the engine treats these facts as a temporary theory layer for the given question, without modifying the session’s base theory.</p>
 
   <h2>Combining Facts and Questions in One Script</h2>
   <p>A typical Sys2DSL script that mixes facts and questions looks like this:</p>
-  <pre><code>@f1 ASSERT dog IS_A Animal
-@f2 ASSERT water HAS_PROPERTY boiling_point=100
-@q1 ASK "Is dog an Animal?"
-@q2 ASK "Water HAS_PROPERTY boiling_point=100"</code></pre>
+  <pre><code>@f1 ASSERT Dog IS_A Animal
+@f2 ASSERT Water BOILS_AT Celsius100
+@f3 ASSERT Celsius100 IS_A temperature
+@q1 ASK "Is Dog an Animal?"
+@q2 ASK "Water BOILS_AT Celsius100"</code></pre>
 
   <p>You can write the same instructions on a single line, for example:</p>
-  <pre><code>@f1 ASSERT dog IS_A Animal @q1 ASK "Is dog an Animal?"</code></pre>
+  <pre><code>@f1 ASSERT Dog IS_A Animal @q1 ASK "Is Dog an Animal?"</code></pre>
 
   <p>The interpreter splits the script at each <code>@</code>, builds the dependency graph between variables and executes the instructions in a topological order so that <code>$</code> references are resolved correctly even if they appear “earlier” in the text.</p>
 

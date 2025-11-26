@@ -8,76 +8,186 @@
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>Counterfactuals</h1>
-    <small></small>
-    <div class="sub-nav">
-      <strong>Wiki Topics:</strong>
-      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
-    </div>
+    <h1>AGISystem2 – Counterfactuals</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
   </div>
-  <article>
-    <div class="philosophical-header">
-      <h2>Philosophical Foundations of Counterfactual Reasoning</h2>
-      <p>Counterfactual reasoning represents one of the most sophisticated forms of human thought, involving the contemplation of what would have happened under different circumstances. This capacity to mentally simulate alternative worlds and evaluate their consequences is fundamental to learning from experience, moral reasoning, and strategic planning. Philosophically, counterfactuals raise profound questions about causation, possibility, and the nature of reality itself.</p>
-      
-      <p>The philosophical analysis of counterfactuals was pioneered by David Lewis's possible worlds semantics, which suggests that counterfactual statements are true in those possible worlds most similar to our actual world, except for the specified difference. This framework provides formal tools for evaluating counterfactual claims and understanding their logical structure. However, the psychological reality of counterfactual reasoning may be more complex, involving mental simulation, analogy, and narrative construction rather than explicit comparison of possible worlds.</p>
-      
-      <p>Counterfactual thinking is essential for many aspects of human intelligence. It enables us to learn from mistakes by imagining what would have happened if we had acted differently. It supports moral reasoning by considering how outcomes would change under different ethical choices. It facilitates planning by exploring consequences of alternative actions. This versatility makes counterfactual reasoning a cornerstone of adaptive intelligence and rational decision-making.</p>
-    </div>
 
-    <div class="academic-analysis">
-      <h2>Counterfactual Implementation in AGISystem2</h2>
-      <p>In AGISystem2, counterfactual reasoning is implemented through a sophisticated theory layering system that allows temporary modification of conceptual knowledge while preserving the integrity of the base theory. This implementation enables safe exploration of alternative scenarios without risking corruption of established knowledge, providing a powerful tool for what-if analysis and hypothetical reasoning.</p>
-      
-      <p>The TheoryStack component manages multiple layers of conceptual knowledge, where each layer can override or modify statements from layers below it. For counterfactual reasoning, the system creates temporary layers that contain hypothetical modifications to the base theory. These layers can represent alternative facts, different causal relations, or modified axiological principles, enabling comprehensive exploration of counterfactual scenarios.</p>
-      
-      <p>When a counterfactual query is processed, the Reasoner operates within the context of the temporary layers, treating their modifications as if they were part of the actual theory. This allows the system to reason through consequences of hypothetical changes, tracing how they would affect related concepts and conclusions. The reasoning process is fully functional within the counterfactual context, supporting all inference types including deduction, induction, and abduction.</p>
-      
-      <p>The Validation component ensures that counterfactual modifications maintain logical consistency before any conclusions are accepted. It checks for contradictions within the modified theory and verifies that the hypothetical scenario is coherent. This validation prevents the generation of impossible or absurd counterfactuals while still allowing exploration of reasonable alternatives.</p>
-    </div>
+  <p>Counterfactual reasoning in AGISystem2 uses <a href="theory_layers.html">theory layers</a> to explore "what if" scenarios. A temporary layer holds hypothetical facts that override base knowledge. After reasoning in this altered world, the layer is discarded and reality is restored.</p>
 
-    <div class="technical-implementation">
-      <h2>Advanced Counterfactual Capabilities</h2>
-      <p>The counterfactual system in AGISystem2 includes several advanced features that enable sophisticated hypothetical reasoning and analysis. These capabilities extend beyond simple what-if scenarios to support complex exploration of alternative possibilities and their implications.</p>
-      
-      <p>Multiple simultaneous counterfactuals can be active at once, allowing the system to compare different hypothetical scenarios side by side. This comparative analysis is valuable for decision support, policy evaluation, and strategic planning. The system can maintain consistency across multiple counterfactual worlds while still allowing them to interact and influence each other in controlled ways.</p>
-      
-      <p>Counterfactual dependency tracking allows the system to understand how changes in one area of knowledge would cascade through the conceptual network. When a hypothetical modification is made, the system can automatically identify related concepts that would be affected and propagate appropriate changes. This dependency tracking ensures that counterfactual reasoning is comprehensive and considers all relevant implications of hypothetical changes.</p>
-      
-      <p>Temporal counterfactuals enable reasoning about how the past or future might have been different. The system can create counterfactual layers that represent alternative histories or projected futures, supporting historical analysis, planning, and prediction. These temporal capabilities are essential for understanding causation, learning from experience, and preparing for multiple possible futures.</p>
-    </div>
+  <div class="diagram">
+    <svg viewBox="0 0 560 300" role="img" aria-label="Counterfactual reasoning with layers">
+      <defs>
+        <marker id="arrow-cf" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
 
-    <div class="philosophical-implications">
-      <h2>Implications for Causation and Decision Support</h2>
-      <p>The implementation of counterfactual reasoning in AGISystem2 has profound implications for how artificial intelligence systems can understand causation, support decision-making, and learn from experience. By enabling systematic exploration of alternative scenarios, the system can provide insights that go beyond simple pattern recognition and prediction.</p>
-      
-      <p>From a causal reasoning perspective, counterfactuals provide a framework for understanding the structure of causal relationships. By systematically varying antecedent conditions and observing changes in consequences, the system can identify which factors are causally significant and which are merely correlated. This capability is essential for scientific reasoning, policy analysis, and understanding complex systems.</p>
-      
-      <p>The counterfactual capabilities also enhance the system's ability to support human decision-making under uncertainty. By exploring multiple what-if scenarios, the system can provide comprehensive analysis of different options, their potential consequences, and their associated risks and benefits. This support is particularly valuable in complex domains where decisions have far-reaching implications and multiple stakeholders must be considered.</p>
-    </div>
+      <!-- Background -->
+      <rect x="0" y="0" width="560" height="300" fill="#fafbfc"/>
 
-    <div class="academic-references">
-      <h2>Academic Context and Related Work</h2>
-      <p>Counterfactual reasoning has been extensively studied in philosophy, psychology, economics, and computer science. David Lewis's possible worlds theory provides the philosophical foundation, while Daniel Kahneman and Amos Tversky's work on cognitive biases explores how humans actually reason counterfactually. In economics, counterfactual analysis is essential for understanding decision-making and market behavior.</p>
-      
-      <p>In artificial intelligence, counterfactual reasoning has applications to planning systems, causal inference, and explainable AI. The ability to systematically explore alternative scenarios is crucial for robust decision support systems and for understanding the causal structure of complex environments.</p>
-      
-      <p>For deeper understanding of counterfactual reasoning, <a href="https://en.wikipedia.org/wiki/Counterfactual_conditional" target="_blank" rel="noopener noreferrer">the philosophical literature on counterfactuals</a> provides comprehensive coverage of theoretical foundations and practical applications.</p>
-    </div>
+      <!-- Step 1: Base state -->
+      <rect x="20" y="20" width="120" height="120" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="80" y="40" font-size="9" font-weight="bold" fill="#4a5670" text-anchor="middle">1. Base State</text>
 
-    <div class="technical-specifications">
-      <h2>Technical Implementation References</h2>
-      <p>For detailed technical specifications of counterfactual reasoning implementation in AGISystem2, consult the following documentation:</p>
-      <ul>
-        <li>Theory Stack Specification (DS(/knowledge/theory_stack.js)): gestionează reprezentarea stratificată a cunoașterii și modificările temporare.</li>
-        <li>Reasoner Specification (DS(/reason/reasoner.js)): execută raționamente în contexte contrafactuale.</li>
-        <li>Validation Specification (DS(/reason/validation.js)): asigură consistența scenariilor contrafactuale.</li>
-        <li>Theory Layer Specification (DS(/knowledge/theory_layer.js)): definește structura și operațiile straturilor de teorie.</li>
-      </ul>
-    </div>
-  </article>
+      <rect x="35" y="55" width="90" height="35" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="80" y="70" font-size="8" font-weight="bold" fill="#0f4c81" text-anchor="middle">Base Knowledge</text>
+      <text x="80" y="82" font-size="7" fill="#4a5670" text-anchor="middle">Water IS_A Liquid</text>
+
+      <text x="80" y="115" font-size="8" fill="#4a5670" text-anchor="middle">ASK "Water IS_A ?"</text>
+      <text x="80" y="130" font-size="8" fill="#2e7d32" text-anchor="middle">→ Liquid</text>
+
+      <!-- Arrow 1→2 -->
+      <line x1="145" y1="80" x2="175" y2="80" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-cf)"/>
+
+      <!-- Step 2: Push layer -->
+      <rect x="180" y="20" width="120" height="120" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
+      <text x="240" y="40" font-size="9" font-weight="bold" fill="#e65100" text-anchor="middle">2. Push Layer</text>
+
+      <rect x="195" y="55" width="90" height="25" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+      <text x="240" y="72" font-size="7" fill="#e65100" text-anchor="middle">Water IS_A Gas</text>
+
+      <rect x="195" y="85" width="90" height="25" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
+      <text x="240" y="102" font-size="7" fill="#4a5670" text-anchor="middle">Water IS_A Liquid</text>
+
+      <text x="240" y="125" font-size="7" fill="#e65100" text-anchor="middle">Hypothetical overrides</text>
+
+      <!-- Arrow 2→3 -->
+      <line x1="305" y1="80" x2="335" y2="80" stroke="#e65100" stroke-width="1.5" marker-end="url(#arrow-cf)"/>
+
+      <!-- Step 3: Reason -->
+      <rect x="340" y="20" width="120" height="120" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
+      <text x="400" y="40" font-size="9" font-weight="bold" fill="#2e7d32" text-anchor="middle">3. Reason</text>
+
+      <rect x="355" y="55" width="90" height="25" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+      <text x="400" y="72" font-size="7" fill="#e65100" text-anchor="middle">Water IS_A Gas ✓</text>
+
+      <rect x="355" y="85" width="90" height="25" rx="4" fill="#f5f5f5" stroke="#b0b6c4" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="400" y="102" font-size="7" fill="#b0b6c4" text-anchor="middle">(hidden)</text>
+
+      <text x="400" y="125" font-size="8" fill="#2e7d32" text-anchor="middle">→ Gas</text>
+
+      <!-- Step 4: Pop layer -->
+      <rect x="340" y="160" width="120" height="120" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="400" y="180" font-size="9" font-weight="bold" fill="#4a5670" text-anchor="middle">4. Pop Layer</text>
+
+      <rect x="355" y="195" width="90" height="35" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="400" y="210" font-size="8" font-weight="bold" fill="#0f4c81" text-anchor="middle">Base Knowledge</text>
+      <text x="400" y="222" font-size="7" fill="#4a5670" text-anchor="middle">Water IS_A Liquid</text>
+
+      <text x="400" y="255" font-size="8" fill="#4a5670" text-anchor="middle">ASK "Water IS_A ?"</text>
+      <text x="400" y="270" font-size="8" fill="#2e7d32" text-anchor="middle">→ Liquid (restored)</text>
+
+      <!-- Arrow 3→4 -->
+      <line x1="400" y1="145" x2="400" y2="155" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#arrow-cf)"/>
+
+      <!-- Command panel -->
+      <rect x="20" y="160" width="280" height="120" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="160" y="180" font-size="10" font-weight="bold" fill="#4a5670" text-anchor="middle">Sys2DSL Commands</text>
+
+      <text x="35" y="200" font-size="9" fill="#4a5670" font-family="monospace">THEORY_PUSH name="what-if"</text>
+      <text x="35" y="218" font-size="9" fill="#e65100" font-family="monospace">ASSERT Water IS_A Gas</text>
+      <text x="35" y="236" font-size="9" fill="#2e7d32" font-family="monospace">ASK "Water IS_A ?" → Gas</text>
+      <text x="35" y="254" font-size="9" fill="#4a5670" font-family="monospace">THEORY_POP</text>
+      <text x="35" y="272" font-size="9" fill="#0f4c81" font-family="monospace">ASK "Water IS_A ?" → Liquid</text>
+    </svg>
+    <p class="diagram-caption">Counterfactual workflow: Push a hypothetical layer, add overriding facts, reason in the altered world, then pop to restore reality. The base knowledge is never modified—only temporarily shadowed by the hypothetical layer.</p>
+  </div>
+
+  <h2>How It Works</h2>
+
+  <p>Counterfactuals use the <a href="../architecture/knowledge.html#theory-stack">TheoryStack</a> mechanism:</p>
+
+  <ol>
+    <li><strong>THEORY_PUSH</strong> – Create a new layer for hypothetical facts</li>
+    <li><strong>ASSERT</strong> – Add counterfactual facts to the layer (these override base facts)</li>
+    <li><strong>ASK / reason</strong> – Query the system; it sees the hypothetical world</li>
+    <li><strong>THEORY_POP</strong> – Discard the layer; base knowledge is restored</li>
+  </ol>
+
+  <p>The key insight is that the base knowledge is never modified. The hypothetical layer simply intercepts queries and returns overriding answers.</p>
+
+  <h2>Use Cases</h2>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Use Case</th><th>Example</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>What-if analysis</td>
+        <td>"If water were a gas at room temperature, could fish survive?"</td>
+      </tr>
+      <tr>
+        <td>Policy simulation</td>
+        <td>"If the tax rate were 20%, what would be the budget impact?"</td>
+      </tr>
+      <tr>
+        <td>Debugging scenarios</td>
+        <td>"If this config value were true, would the bug still occur?"</td>
+      </tr>
+      <tr>
+        <td>Alternative history</td>
+        <td>"If Rome had not fallen, what technologies might exist?"</td>
+      </tr>
+      <tr>
+        <td>Safe experimentation</td>
+        <td>Test knowledge changes before committing them</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>CF Syntax Shorthand</h2>
+
+  <p>For simple counterfactuals, use the CF command:</p>
+
+  <pre>
+# Shorthand (push, assert, query, pop in one command)
+CF "Water IS_A Gas?" | Water TEMPERATURE_AT Celsius200
+# Temporarily assumes Water IS_A Gas and queries implications
+
+# Expanded equivalent
+THEORY_PUSH name="cf_temp"
+ASSERT Water IS_A Gas
+ASSERT Water TEMPERATURE_AT Celsius200
+ASK "Can fish survive in Water?"
+THEORY_POP</pre>
+
+  <h2>Nested Counterfactuals</h2>
+
+  <p>Multiple layers can be stacked for nested hypotheticals:</p>
+
+  <pre>
+THEORY_PUSH name="layer1"
+ASSERT A IS_A B
+  THEORY_PUSH name="layer2"
+  ASSERT A IS_A C  # Overrides layer1's A IS_A B
+  ASK "A IS_A ?"   # → C
+  THEORY_POP
+ASK "A IS_A ?"     # → B (layer1 still active)
+THEORY_POP
+ASK "A IS_A ?"     # → (original value)</pre>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="theory_layers.html">Theory Layers</a> – The underlying mechanism</li>
+    <li><a href="../architecture/knowledge.html#theory-stack">TheoryStack</a> – Implementation details</li>
+    <li><a href="non_monotonic_logic.html">Non-Monotonic Logic</a> – Belief revision</li>
+    <li><a href="../syntax/index.html">Syntax Reference</a> – THEORY_PUSH, CF commands</li>
+  </ul>
+
   <div class="footer-nav">
-    <a href="../index.html">Back to index</a>
+    <a href="analogy.html">← Analogy</a> ·
+    <a href="theory_layers.html">Theory Layers →</a>
   </div>
   </div>
   <script src="../reference/nav2.js"></script>

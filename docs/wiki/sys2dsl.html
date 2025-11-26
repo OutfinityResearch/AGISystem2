@@ -8,122 +8,222 @@
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>Sys2DSL</h1>
-    <small></small>
-    <div class="sub-nav">
-      <strong>Wiki Topics:</strong>
-      <a href="index.html">Concepts Overview</a> · <a href="abduction.html">Abduction</a> · <a href="abstract_interpretation.html">Abstract Interpretation</a> · <a href="analogy.html">Analogy</a> · <a href="axiology.html">Axiology</a> · <a href="bias.html">Bias</a> · <a href="conceptual_spaces.html">Conceptual Spaces</a> · <a href="counterfactual.html">Counterfactuals</a> · <a href="deduction.html">Deduction</a> · <a href="deontic_logic.html">Deontic Logic</a> · <a href="expert_system.html">Expert Systems</a> · <a href="hyperdimensional_computing.html">Hyperdimensional Computing</a> · <a href="induction.html">Induction</a> · <a href="narrative_consistency.html">Narrative Consistency</a> · <a href="non_monotonic_logic.html">Non-Monotonic Logic</a> · <a href="ontology.html">Ontology</a> · <a href="pragmatics.html">Pragmatics</a> · <a href="symbol_grounding.html">Symbol Grounding</a> · <a href="symbolic_execution.html">Symbolic Execution</a> · <a href="sys2dsl.html">Sys2DSL</a> · <a href="trustworthy_ai.html">Trustworthy AI</a> · <a href="veil_of_ignorance.html">Veil of Ignorance</a>
-    </div>
+    <h1>AGISystem2 – Sys2DSL</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
   </div>
-  <article>
-    <div class="philosophical-header">
-      <h2>Philosophical Foundations of Domain-Specific Languages</h2>
-      <p>Domain-Specific Languages (DSLs) represent a fundamental approach to managing complexity in computational systems by creating specialized languages tailored to particular problem domains. The philosophical significance of DSLs lies in their recognition that different domains require different conceptual tools and that universal languages, while powerful, often lack the precision and expressiveness needed for specific applications. DSLs bridge the gap between human expertise and computational implementation, providing languages that think like domain experts rather than computer scientists.</p>
-      
-      <p>The development of DSLs reflects a deep philosophical insight about the nature of knowledge and expertise. Expert knowledge is not merely a collection of facts but is organized around conceptual structures, reasoning patterns, and problem-solving methods that are specific to a domain. By creating languages that capture these domain-specific patterns, DSLs enable more natural expression of expertise and more effective computational solutions.</p>
-      
-      <p>Sys2DSL extends this concept by creating a DSL specifically designed for expressing conceptual knowledge and reasoning patterns within AGISystem2's geometric framework. Unlike traditional DSLs that focus on procedural or algorithmic concepts, Sys2DSL is designed to express semantic structures, conceptual relationships, and inference patterns in a way that maps directly to the underlying geometric operations.</p>
-    </div>
 
-    <div class="academic-analysis">
-      <h2>Sys2DSL Design and Architecture</h2>
-      <p>Sys2DSL represents a sophisticated domain-specific language that combines declarative knowledge representation with procedural reasoning capabilities. The language is specifically designed to express concepts, relations, and inference rules within the geometric conceptual space framework of AGISystem2. This design ensures that knowledge expressed in Sys2DSL can be directly executed by the system's reasoning engine without complex translation or interpretation layers.</p>
-      
-      <p>The language provides constructs for defining concepts as bounded regions within multidimensional space. These definitions can specify dimensional constraints, prototype locations, and relevance masks, allowing for precise expression of conceptual boundaries. The syntax supports both simple definitions and complex compositions, enabling the expression of hierarchical concepts and family resemblances.</p>
-      
-      <p>Sys2DSL includes powerful relation definition capabilities that support the expression of semantic, causal, and normative relationships. Relations can be defined with specific permutations, inverse mappings, and composition rules, enabling the expression of complex conceptual networks. The language also supports conditional relations and context-dependent definitions, allowing for nuanced modeling of real-world knowledge.</p>
-      
-      <p>The reasoning constructs in Sys2DSL enable the expression of inference patterns, abductive hypotheses, and counterfactual scenarios. These constructs can specify how concepts should be combined, what conclusions follow from premises, and how hypothetical modifications should be processed. The reasoning rules are directly executable by the system's inference engine, ensuring that knowledge representation and reasoning are seamlessly integrated.</p>
-    </div>
+  <p>Sys2DSL (System 2 Domain-Specific Language) is the structured command language used by AGISystem2. It provides a deterministic, testable, and auditable way to express knowledge and queries. This page explains the role of Sys2DSL and shows how natural language maps to structured commands.</p>
 
-    <div class="technical-implementation">
-      <h2>Language Features and Capabilities</h2>
-      <p>Sys2DSL includes several advanced features that make it particularly well-suited for expressing complex conceptual knowledge and reasoning patterns. These features extend beyond basic DSL capabilities to support the sophisticated requirements of geometric conceptual reasoning.</p>
-      
-      <p>Dimensional abstraction allows the language to express concepts at different levels of detail and from different perspectives. Users can define concepts that focus on specific subsets of dimensions while ignoring others, enabling contextual reasoning and perspective-taking. This capability is essential for modeling how different experts or stakeholders might conceptualize the same domain differently.</p>
-      
-      <p>Macros and meta-programming support the creation of reusable knowledge patterns and language extensions. Users can define high-level constructs that capture common reasoning patterns, then instantiate these constructs with specific parameters. This meta-programming capability enables the creation of domain-specific libraries and the evolution of the language itself to meet new requirements.</p>
-      
-      <p>Integration with geometric operations ensures that Sys2DSL expressions can be directly mapped to mathematical operations in the conceptual space. The language includes constructs for distance computation, intersection detection, containment testing, and region transformation. This direct mapping eliminates the semantic gap between knowledge representation and computational implementation.</p>
-      
-      <p>Symbolic execution support allows Sys2DSL programs to be analyzed and verified before execution. The language includes constructs for specifying preconditions, postconditions, and invariants that can be checked automatically. This verification capability is essential for building trustworthy knowledge bases and ensuring the reliability of reasoning processes.</p>
-    </div>
+  <h2>Why a DSL?</h2>
 
-    <div class="philosophical-implications">
-      <h2>Implications for Knowledge Engineering and AI</h2>
-      <p>The development of Sys2DSL has profound implications for how knowledge is engineered and how AI systems can be made more transparent and maintainable. By providing a language that directly expresses the conceptual structures used by the reasoning engine, Sys2DSL eliminates the traditional gap between high-level knowledge representation and low-level implementation details.</p>
-      
-      <p>From a knowledge engineering perspective, Sys2DSL enables domain experts to directly participate in knowledge base development without needing to understand the underlying computational architecture. The language's constructs are designed to match natural patterns of expert thinking, making knowledge acquisition more efficient and less error-prone. This approach democratizes AI development by allowing experts to be knowledge programmers rather than requiring programming expertise.</p>
-      
-      <p>The explicit nature of Sys2DSL also enhances the explainability and auditability of AI systems. Since reasoning processes are expressed in a high-level, domain-specific language, the system can provide explanations that are meaningful to domain experts and that directly correspond to the knowledge that drives decisions. This transparency is essential for building trust in AI systems and for effective human-AI collaboration.</p>
-    </div>
+  <p>AGISystem2 uses a constrained DSL rather than free-form natural language for several important reasons:</p>
 
-    <div class="academic-references">
-      <h2>Academic Context and Related Work</h2>
-      <p>Domain-Specific Languages have been extensively studied in programming language theory, software engineering, and knowledge representation. Key contributors include Krzysztof Czarnecki and David Watt, who developed frameworks for DSL design and implementation; Margaret Burnett, who studied visual programming languages and end-user development; and numerous researchers in knowledge representation who have developed semantic web languages and ontology languages.</p>
-      
-      <p>In artificial intelligence, DSLs have been applied to expert systems, natural language processing, and knowledge engineering. The ability to create languages that capture domain-specific reasoning patterns is particularly valuable for building systems that need to model human expertise and complex decision-making processes.</p>
-      
-      <p>For deeper understanding of DSL design and implementation, <a href="https://en.wikipedia.org/wiki/Domain-specific_language" target="_blank" rel="noopener noreferrer">the computer science literature on domain-specific languages</a> provides comprehensive coverage of theoretical foundations and practical applications.</p>
-    </div>
+  <ul>
+    <li><strong>Determinism</strong> – The same command always produces the same result. No interpretation variability.</li>
+    <li><strong>Testability</strong> – Commands can be scripted, versioned in git, and executed in CI pipelines.</li>
+    <li><strong>Auditability</strong> – Every operation is logged with its exact command, enabling complete audit trails.</li>
+    <li><strong>Precision</strong> – Unambiguous Subject-Relation-Object structure maps directly to geometric operations.</li>
+  </ul>
 
-    <div class="technical-syntax">
-      <h2>Sys2DSL Syntax Quick Reference</h2>
-      <p>Every Sys2DSL instruction follows this pattern:</p>
-      <pre><code>@varName ACTION arg1 arg2 ...</code></pre>
-      <p>Where <code>@varName</code> defines a variable, <code>ACTION</code> is an uppercase command, and arguments follow.</p>
+  <h2>Natural Language to Sys2DSL</h2>
 
-      <h3>Core Commands</h3>
-      <table class="table-concept-index">
-        <tr><th>Command</th><th>Purpose</th><th>Example</th></tr>
-        <tr><td>ASSERT</td><td>Add a fact</td><td><code>@f ASSERT Dog IS_A Animal</code></td></tr>
-        <tr><td>ASK</td><td>Query truth value</td><td><code>@q ASK "Is Dog an Animal?"</code></td></tr>
-        <tr><td>RETRACT</td><td>Remove a fact</td><td><code>@r RETRACT Dog IS_A Fish</code></td></tr>
-        <tr><td>PROVE</td><td>Prove statement</td><td><code>@p PROVE Dog IS_A LivingThing</code></td></tr>
-        <tr><td>VALIDATE</td><td>Check consistency</td><td><code>@v VALIDATE</code></td></tr>
-        <tr><td>CF</td><td>Counterfactual query</td><td><code>@cf CF "Water IS_A gas?" | Water HAS_PROPERTY temp=150</code></td></tr>
-        <tr><td>ABDUCT</td><td>Abductive reasoning</td><td><code>@a ABDUCT Smoke CAUSED_BY</code></td></tr>
-        <tr><td>HYPOTHESIZE</td><td>Generate hypotheses</td><td><code>@h HYPOTHESIZE Dog</code></td></tr>
-      </table>
+  <p>The <a href="../usage-cli/chat-cli.html">Chat Interface</a> uses an LLM to translate natural language into Sys2DSL commands. Here are examples of how common statements translate:</p>
 
-      <h3>Theory Management</h3>
-      <table class="table-concept-index">
-        <tr><th>Command</th><th>Purpose</th><th>Example</th></tr>
-        <tr><td>THEORY_PUSH</td><td>Push new layer</td><td><code>@_ THEORY_PUSH name="exploration"</code></td></tr>
-        <tr><td>THEORY_POP</td><td>Pop top layer</td><td><code>@_ THEORY_POP</code></td></tr>
-        <tr><td>LIST_THEORIES</td><td>List layer stack</td><td><code>@t LIST_THEORIES</code></td></tr>
-        <tr><td>LOAD_THEORY</td><td>Load theory file</td><td><code>@l LOAD_THEORY physics_basics</code></td></tr>
-      </table>
+  <h3>Teaching Facts</h3>
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Natural Language</th><th>Sys2DSL Command</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>"Dogs are animals"</td>
+        <td><code>ASSERT Dog IS_A Animal</code></td>
+      </tr>
+      <tr>
+        <td>"Fire causes smoke"</td>
+        <td><code>ASSERT Fire CAUSES Smoke</code></td>
+      </tr>
+      <tr>
+        <td>"Paris is located in France"</td>
+        <td><code>ASSERT Paris LOCATED_IN France</code></td>
+      </tr>
+      <tr>
+        <td>"A car has wheels"</td>
+        <td><code>ASSERT Car HAS_PART Wheel</code></td>
+      </tr>
+      <tr>
+        <td>"Driving requires a license"</td>
+        <td><code>ASSERT Driving REQUIRES License</code></td>
+      </tr>
+      <tr>
+        <td>"Speeding is prohibited by law"</td>
+        <td><code>ASSERT Speeding PROHIBITED_BY Law</code></td>
+      </tr>
+    </tbody>
+  </table>
 
-      <h3>Memory Management</h3>
-      <table class="table-concept-index">
-        <tr><th>Command</th><th>Purpose</th><th>Example</th></tr>
-        <tr><td>GET_USAGE</td><td>Get usage stats</td><td><code>@u GET_USAGE Water</code></td></tr>
-        <tr><td>PROTECT</td><td>Protect from forgetting</td><td><code>@_ PROTECT ImportantConcept</code></td></tr>
-        <tr><td>FORGET</td><td>Remove low-usage concepts</td><td><code>@f FORGET threshold=5</code></td></tr>
-        <tr><td>BOOST</td><td>Increase priority</td><td><code>@_ BOOST Water 50</code></td></tr>
-      </table>
+  <h3>Asking Questions</h3>
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Natural Language</th><th>Sys2DSL Command</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>"Is a dog an animal?"</td>
+        <td><code>ASK "Dog IS_A Animal?"</code></td>
+      </tr>
+      <tr>
+        <td>"What causes smoke?"</td>
+        <td><code>ASK "? CAUSES Smoke"</code></td>
+      </tr>
+      <tr>
+        <td>"Where is Paris located?"</td>
+        <td><code>ASK "Paris LOCATED_IN ?"</code></td>
+      </tr>
+      <tr>
+        <td>"What if water were a gas?"</td>
+        <td><code>CF "Water IS_A Gas?" | Water TEMPERATURE_AT Celsius200</code></td>
+      </tr>
+    </tbody>
+  </table>
 
-      <h3>Topological Evaluation</h3>
-      <p>Sys2DSL scripts are evaluated in <em>topological order</em> based on variable dependencies, not line order. This allows forward references:</p>
-      <pre><code>@result BOOL_AND $check1 $check2   # Uses $check1 and $check2
-@check1 ASK Dog IS_A Animal         # Evaluated first
-@check2 ASK Cat IS_A Animal         # Evaluated second</code></pre>
-    </div>
+  <h2>Command Structure</h2>
 
-    <div class="technical-specifications">
-      <h2>Technical Implementation References</h2>
-      <p>Specificațiile tehnice relevante pentru implementarea Sys2DSL în AGISystem2 includ:</p>
-      <ul>
-        <li><a href="../specsLoader.html?spec=theory/dsl_engine.js.md">DS(/theory/dsl_engine.js)</a>: implementează parsing, compilare și execuție pentru programe Sys2DSL.</li>
-        <li><a href="../specsLoader.html?spec=theory/Sys2DSL_commands.md">DS(/theory/Sys2DSL_commands)</a>: referință completă a comenzilor (40+).</li>
-        <li><a href="../specsLoader.html?spec=theory/Sys2DSL_syntax.md">DS(/theory/Sys2DSL_syntax)</a>: definește sintaxa și structura semantică.</li>
-        <li><a href="../specsLoader.html?spec=ingest/parser.js.md">DS(/ingest/parser.js)</a>: analiza sintactică și generarea de arbori S-R-O.</li>
-      </ul>
-    </div>
-  </article>
+  <p>Every Sys2DSL command follows a consistent pattern:</p>
+
+  <pre>@variable COMMAND arguments</pre>
+
+  <p>The <code>@variable</code> captures the result. The <code>COMMAND</code> specifies the operation. Arguments provide the data.</p>
+
+  <h3>Core Commands</h3>
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Command</th><th>Purpose</th><th>Example</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>ASSERT</code></td>
+        <td>Add a fact</td>
+        <td><code>@f ASSERT Dog IS_A Animal</code></td>
+      </tr>
+      <tr>
+        <td><code>ASK</code></td>
+        <td>Query truth value</td>
+        <td><code>@q ASK "Dog IS_A Animal?"</code></td>
+      </tr>
+      <tr>
+        <td><code>RETRACT</code></td>
+        <td>Remove a fact</td>
+        <td><code>@r RETRACT Dog IS_A Fish</code></td>
+      </tr>
+      <tr>
+        <td><code>FACTS_MATCHING</code></td>
+        <td>Find matching facts</td>
+        <td><code>@m FACTS_MATCHING ? IS_A Animal</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Theory Management</h3>
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Command</th><th>Purpose</th><th>Example</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>THEORY_PUSH</code></td>
+        <td>Create new context layer</td>
+        <td><code>@_ THEORY_PUSH name="experiment"</code></td>
+      </tr>
+      <tr>
+        <td><code>THEORY_POP</code></td>
+        <td>Discard top layer</td>
+        <td><code>@_ THEORY_POP</code></td>
+      </tr>
+      <tr>
+        <td><code>LOAD_THEORY</code></td>
+        <td>Load theory file</td>
+        <td><code>@_ LOAD_THEORY medical</code></td>
+      </tr>
+      <tr>
+        <td><code>SAVE_THEORY</code></td>
+        <td>Save current state</td>
+        <td><code>@_ SAVE_THEORY session_1</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Benefits for Testing and Validation</h2>
+
+  <h3>Automated Testing</h3>
+  <p>Sys2DSL commands can be stored in test files and executed automatically:</p>
+
+  <pre>
+# test_taxonomy.sys2dsl
+@f1 ASSERT Dog IS_A Mammal
+@f2 ASSERT Mammal IS_A Animal
+@q ASK "Dog IS_A Animal?"
+# Expected: TRUE_CERTAIN (transitive)</pre>
+
+  <h3>CI/CD Integration</h3>
+  <pre>
+# In GitHub Actions or similar
+./bin/AGISystem2Raw.sh --batch tests/knowledge_base.sys2dsl
+./bin/AGISystem2Raw.sh --exec "ask Is system consistent?" --json</pre>
+
+  <h3>Audit Logs</h3>
+  <p>Every command execution is logged with timestamp and result:</p>
+  <pre>
+2024-01-15 10:23:45 ASSERT Dog IS_A Animal → OK
+2024-01-15 10:23:46 ASK "Dog IS_A Animal?" → TRUE_CERTAIN (0.95)
+2024-01-15 10:23:47 THEORY_PUSH name="experiment" → depth=1</pre>
+
+  <h2>The Two Interfaces</h2>
+
+  <p>AGISystem2 provides two ways to work with Sys2DSL:</p>
+
+  <table class="table-concept-index">
+    <thead>
+      <tr><th>Interface</th><th>Input</th><th>Best For</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="../usage-cli/raw-cli.html">Raw CLI</a></td>
+        <td>Direct Sys2DSL commands</td>
+        <td>Testing, automation, scripting</td>
+      </tr>
+      <tr>
+        <td><a href="../usage-cli/chat-cli.html">Chat Interface</a></td>
+        <td>Natural language (translated by LLM)</td>
+        <td>Exploration, demos, learning</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Both interfaces execute the same underlying Sys2DSL commands. The Chat Interface adds an LLM translation layer for convenience, while the Raw CLI provides direct control for precision work.</p>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="../syntax/index.html">Syntax Reference</a> – Complete command documentation</li>
+    <li><a href="../syntax/relations.html">Relations</a> – All relation types with semantics</li>
+    <li><a href="../architecture/language.html">Language Layer</a> – How commands are parsed and executed</li>
+    <li><a href="../usage-cli/index.html">CLI Overview</a> – Command-line interfaces</li>
+    <li><a href="../api/index.html">API Reference</a> – Programmatic usage</li>
+  </ul>
+
   <div class="footer-nav">
-    <a href="../index.html">Back to index</a>
+    <a href="index.html">Wiki</a> ·
+    <a href="../syntax/index.html">Syntax Reference</a>
   </div>
   </div>
   <script src="../reference/nav2.js"></script>

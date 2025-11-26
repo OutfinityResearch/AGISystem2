@@ -43,18 +43,19 @@
     <li>you may write a single instruction per line or several instructions on the same line, as long as each starts with its own <code>@</code>:</li>
   </ul>
 
-  <pre><code>@f1 ASSERT dog IS_A Animal
-@f2 ASSERT water HAS_PROPERTY boiling_point=100
-@q1 ASK "Is dog an Animal?"
-@q2 ASK "water HAS_PROPERTY boiling_point=100?"</code></pre>
+  <pre><code>@f1 ASSERT Dog IS_A Animal
+@f2 ASSERT Water BOILS_AT Celsius100
+@f3 ASSERT Celsius100 IS_A temperature
+@q1 ASK "Is Dog an Animal?"
+@q2 ASK "Water BOILS_AT Celsius100?"</code></pre>
 
-  <pre><code>@f1 ASSERT dog IS_A Animal @q1 ASK "Is dog an Animal?"</code></pre>
+  <pre><code>@f1 ASSERT Dog IS_A Animal @q1 ASK "Is Dog an Animal?"</code></pre>
 
   <p>Instead of executing lines strictly in textual order, the interpreter first builds a dependency graph between variables (based on <code>$name</code> occurrences) and evaluates instructions in a topological order. This allows you to write:</p>
 
   <pre><code>@b BOOL_AND $a $a
 @a NONEMPTY $list
-@list FACTS_MATCHING "dog IS_A Animal"</code></pre>
+@list FACTS_MATCHING "Dog IS_A Animal"</code></pre>
 
   <p>even though <code>@b</code> appears first textually; the engine will evaluate <code>@list</code> first, then <code>@a</code>, then <code>@b</code>. Cyclic dependencies (for example <code>@a</code> depending on <code>$b</code> and <code>@b</code> on <code>$a</code>) are detected and reported as errors.</p>
 
@@ -62,21 +63,21 @@
   <p>Sys2DSL commands are organized into functional categories. See DS(/theory/Sys2DSL_commands) for the complete reference with 40+ commands.</p>
 
   <h3>Query Commands</h3>
-  <pre><code>@q1 ASK dog IS_A Animal                    # Query truth value
-@q2 ASK "Is dog an Animal?"                # Natural question form
-@masked ASK_MASKED $ontologyMask dog IS_A Animal  # Masked query
+  <pre><code>@q1 ASK Dog IS_A Animal                    # Query truth value
+@q2 ASK "Is Dog an Animal?"                # Natural question form
+@masked ASK_MASKED $ontologyMask Dog IS_A Animal  # Masked query
 @facts FACTS_MATCHING Dog ? ?              # Pattern search</code></pre>
 
   <h3>Assertion Commands</h3>
-  <pre><code>@f1 ASSERT dog IS_A Animal
-@f2 ASSERT water HAS_PROPERTY boiling_point=100
-@r1 RETRACT dog IS_A Fish                  # Remove fact</code></pre>
+  <pre><code>@f1 ASSERT Dog IS_A Animal
+@f2 ASSERT Water BOILS_AT Celsius100
+@r1 RETRACT Dog IS_A Fish                  # Remove fact</code></pre>
 
   <h3>Reasoning Commands</h3>
   <pre><code>@proof PROVE Dog IS_A LivingThing          # Prove with chain
 @valid VALIDATE                            # Check consistency
 @hyp HYPOTHESIZE Smoke                     # Generate hypotheses
-@cf CF "Water IS_A gas?" | Water HAS_PROPERTY temp=150
+@cf CF "Water IS_A gas?" | Water TEMPERATURE_AT Celsius150
 @abd ABDUCT Smoke CAUSED_BY                # Abductive reasoning</code></pre>
 
   <h3>Theory Layer Commands</h3>

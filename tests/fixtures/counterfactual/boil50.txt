@@ -1,2 +1,1 @@
-Water HAS_PROPERTY boiling_point=50
-
+Water BOILS_AT Celsius50

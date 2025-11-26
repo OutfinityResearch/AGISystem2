@@ -119,12 +119,59 @@ class Reasoner {
     return base.concat(extras);
   }
 
+  /**
+   * Compose a concept's diamond with theory layer overrides
+   * @param {string} conceptId - Concept to compose
+   * @param {TheoryStack|Array} stack - Theory stack or array of layers
+   * @returns {BoundedDiamond|null} Composed diamond with overrides applied
+   */
   composeConcept(conceptId, stack) {
     const concept = this.conceptStore.getConcept(conceptId);
     if (!concept || !concept.diamonds || concept.diamonds.length === 0) {
       return null;
     }
-    return concept.diamonds[0];
+
+    const baseDiamond = concept.diamonds[0];
+
+    // If no stack provided, return base diamond
+    if (!stack) {
+      return baseDiamond;
+    }
+
+    // If stack is a TheoryStack instance with compose method, use it
+    if (stack.compose && typeof stack.compose === 'function') {
+      return stack.compose(baseDiamond);
+    }
+
+    // If stack is an array of layers (legacy/contextStack format), apply them manually
+    if (Array.isArray(stack) && stack.length > 0) {
+      let result = baseDiamond;
+      for (const layer of stack) {
+        if (layer && layer.applyTo && typeof layer.applyTo === 'function') {
+          result = layer.applyTo(result);
+        }
+      }
+      return result;
+    }
+
+    // If stack has getActiveLayers method (TheoryStack), use compose
+    if (stack.getActiveLayers && typeof stack.getActiveLayers === 'function') {
+      const layers = stack.getActiveLayers();
+      if (layers.length === 0) {
+        return baseDiamond;
+      }
+      // Sort by priority and apply
+      const sorted = [...layers].sort((a, b) => (a.priority || 0) - (b.priority || 0));
+      let result = baseDiamond;
+      for (const layer of sorted) {
+        if (layer.applyTo) {
+          result = layer.applyTo(result);
+        }
+      }
+      return result;
+    }
+
+    return baseDiamond;
   }
 
   adversarialCheck(vector, diamond, maskOverride) {

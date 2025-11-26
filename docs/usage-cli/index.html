@@ -2,17 +2,17 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>CLI Usage</title>
+  <title>Command Line Interfaces</title>
   <link rel="stylesheet" href="../reference/style.css">
 </head>
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>AGISystem2 – CLI Usage</h1>
+    <h1>AGISystem2 – Command Line Interfaces</h1>
     <small>
       <a href="../index.html">Home</a> ·
       <a href="../guides/conceptual_spaces.html">Theory</a> ·
-      <a href="../guides/architecture.html">Architecture</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
       <a href="../api/index.html">APIs</a> ·
       <a href="../syntax/index.html">Syntax</a> ·
       <a href="index.html">CLI</a> ·
@@ -21,152 +21,226 @@
     </small>
     <div class="sub-nav">
       <strong>CLI Topics:</strong>
-      <a href="index.html">Command Line Interface</a>
+      <a href="index.html">Overview</a> ·
+      <a href="raw-cli.html">Raw CLI</a> ·
+      <a href="chat-cli.html">Chat Interface</a>
     </div>
   </div>
 
-  <p>The command-line interface (CLI) is a raw but transparent front-end for exploring AGISystem2 without writing any code. It wraps the same EngineAPI described in the reference chapters and gives you a small set of commands to add facts, ask questions, run counterfactual scenarios, and apply simple “theory” files. This page explains how to start the CLI, what it does in the background, and how to use each command to exercise the reasoning engine.</p>
+  <p>AGISystem2 provides two distinct command-line interfaces, each designed for different use cases. Both interfaces share the same underlying engine and knowledge store, but differ in how users interact with them and what level of control they offer.</p>
 
-  <h2>Starting the CLI and Session Layout</h2>
-  <p>The CLI entry point is a shell script called <code>AGISystem2Raw.sh</code> in the <code>bin</code> folder of the project. From a checkout of the repository, you can start a session in any directory by running:</p>
-  <pre>./bin/AGISystem2Raw.sh</pre>
-  <p>When you run this script, it initialises an engine in the <code>manual_test</code> profile. The engine’s persistent state lives in a hidden folder named <code>.AGISystem2</code> in whatever directory you launched the script from. Inside that folder you will find subdirectories such as <code>data</code> (for concept storage and audit logs) and <code>theories</code> (for simple text-based theory files). If you close the CLI and run it again from the same directory, the engine will reuse the data in <code>.AGISystem2</code>, so your facts, theories, and logs are preserved between sessions.</p>
-  <p>After the script starts, you are greeted with a short summary and a prompt of the form <code>AGIS2&gt;</code>. Every line you type is treated as a command. Some commands take canonical statements or questions as arguments; others operate on theory files or configuration. The CLI never accepts free-form paragraphs: all text that reaches the engine must use the constrained syntax described in the Syntax chapter, which explains the shapes of facts, questions, theory files, and macros.</p>
+  <div class="diagram">
+    <svg viewBox="0 0 500 220" role="img" aria-label="Two CLI modes: Raw CLI for automation and Chat for natural language">
+      <defs>
+        <marker id="arrow-cli" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
 
-  <h2>Core Command Set</h2>
-  <p>At any time you can type <code>help</code> to see a short summary, or <code>help commands</code> to see a more exhaustive list. The most important commands are:</p>
+      <!-- User icon -->
+      <circle cx="50" cy="110" r="20" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="50" y="115" font-size="10" fill="#0f4c81" text-anchor="middle">User</text>
 
-  <h3>Fact and Query Commands</h3>
-  <p><strong>add &lt;fact&gt;</strong> adds a single fact to long-term memory. Facts are subject–relation–object triples such as <code>Dog IS_A Animal</code> or <code>Water HAS_PROPERTY boiling_point=100</code>. The CLI normalises and parses these statements, then passes them through the ingestion pipeline so that ConceptStore and clustering can update bounded diamonds.</p>
-  <p><strong>ask &lt;question&gt;</strong> poses a question to the engine. Questions can be natural interrogatives like <code>Is Dog an Animal?</code> or canonical triples with a question mark such as <code>Water HAS_PROPERTY boiling_point=100?</code>. The CLI reports the <code>truth</code> verdict such as <code>TRUE_CERTAIN</code> or <code>FALSE</code>, along with the geometric <code>band</code> used by the engine.</p>
-  <p><strong>retract &lt;fact&gt;</strong> removes a previously asserted fact. For example, <code>retract Cat IS_A Fish</code> would remove that incorrect assertion from the working theory.</p>
+      <!-- Raw CLI path -->
+      <rect x="110" y="30" width="140" height="60" rx="6" fill="#f5f7fb" stroke="#0f4c81" stroke-width="2"/>
+      <text x="180" y="50" font-size="11" font-weight="bold" fill="#0f4c81" text-anchor="middle">Raw CLI</text>
+      <text x="180" y="65" font-size="8" fill="#4a5670" text-anchor="middle">AGISystem2Raw.sh</text>
+      <text x="180" y="78" font-size="7" fill="#4a5670" text-anchor="middle">Structured commands</text>
 
-  <h3>Reasoning Commands</h3>
-  <p><strong>prove &lt;statement&gt;</strong> attempts to prove a statement is true within current theory. Returns a proof chain showing the reasoning steps, or a counterexample if proven false. For example, <code>prove Dog IS_A LivingThing</code> will trace through IS_A transitivity.</p>
-  <p><strong>validate</strong> checks the consistency of the current working theory. Reports conflicts between facts and suggests resolutions.</p>
-  <p><strong>hypothesize &lt;subject&gt; [relation]</strong> generates plausible hypotheses about a concept. For example, <code>hypothesize Smoke</code> might suggest <code>Fire CAUSES Smoke</code> based on causal relations.</p>
-  <p><strong>abduct &lt;observation&gt; &lt;REL&gt;</strong> performs abductive reasoning over causal relations. Running <code>abduct Smoke CAUSES</code> finds plausible causes for Smoke based on CAUSES/CAUSED_BY links.</p>
-  <p><strong>cf &lt;question&gt; | &lt;fact1&gt; ; &lt;fact2&gt; ; ...</strong> runs a counterfactual query. It keeps the base knowledge intact but temporarily assumes extra facts while answering the question.</p>
+      <!-- Chat CLI path -->
+      <rect x="110" y="130" width="140" height="60" rx="6" fill="#f5f7fb" stroke="#2e7d32" stroke-width="2"/>
+      <text x="180" y="150" font-size="11" font-weight="bold" fill="#2e7d32" text-anchor="middle">Chat Interface</text>
+      <text x="180" y="165" font-size="8" fill="#4a5670" text-anchor="middle">AGISystem2.sh</text>
+      <text x="180" y="178" font-size="7" fill="#4a5670" text-anchor="middle">Natural language + LLM</text>
 
-  <h3>Theory Layer Commands (What-If Exploration)</h3>
-  <p><strong>push [name]</strong> pushes a new theory layer onto the stack for exploration. Facts added after this are isolated to the new layer.</p>
-  <p><strong>pop</strong> pops and discards the top theory layer, restoring the previous state.</p>
-  <p><strong>layers</strong> shows the current theory layer stack with names and depths.</p>
+      <!-- Engine core -->
+      <rect x="290" y="60" width="100" height="100" rx="8" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="340" y="95" font-size="10" font-weight="bold" fill="#0f4c81" text-anchor="middle">AGISystem2</text>
+      <text x="340" y="110" font-size="8" fill="#4a5670" text-anchor="middle">Engine Core</text>
+      <text x="340" y="125" font-size="7" fill="#4a5670" text-anchor="middle">Sys2DSL Execution</text>
+      <text x="340" y="138" font-size="7" fill="#4a5670" text-anchor="middle">Knowledge Store</text>
 
-  <h3>Knowledge Inspection Commands</h3>
-  <p><strong>facts [pattern]</strong> lists facts in the current theory, optionally filtered by pattern.</p>
-  <p><strong>concepts [pattern]</strong> lists all concepts, optionally filtered by pattern.</p>
-  <p><strong>usage &lt;concept&gt;</strong> shows usage statistics for a concept (access counts, timestamps, priority).</p>
-  <p><strong>inspect &lt;concept&gt;</strong> shows detailed information about a concept including its bounded diamond geometry.</p>
+      <!-- Storage -->
+      <rect x="420" y="85" width="70" height="50" rx="4" fill="#fff" stroke="#b0b6c4" stroke-width="1"/>
+      <text x="455" y="105" font-size="8" fill="#4a5670" text-anchor="middle">.AGISystem2/</text>
+      <text x="455" y="118" font-size="7" fill="#4a5670" text-anchor="middle">data &amp; theories</text>
 
-  <h3>Memory Management Commands</h3>
-  <p><strong>protect &lt;concept&gt;</strong> marks a concept as protected from forgetting.</p>
-  <p><strong>unprotect &lt;concept&gt;</strong> removes protection from a concept.</p>
-  <p><strong>forget &lt;criteria&gt;</strong> removes concepts meeting the criteria. Criteria can be <code>threshold=N</code> (usage count &lt; N), <code>pattern=glob</code>, or <code>concept=name</code>.</p>
-  <p><strong>boost &lt;concept&gt; [amount]</strong> manually increases a concept's usage priority (default: +10).</p>
+      <!-- Arrows -->
+      <line x1="70" y1="100" x2="108" y2="60" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-cli)"/>
+      <line x1="70" y1="120" x2="108" y2="160" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#arrow-cli)"/>
+      <line x1="250" y1="60" x2="288" y2="90" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-cli)"/>
+      <line x1="250" y1="160" x2="288" y2="130" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#arrow-cli)"/>
+      <line x1="390" y1="110" x2="418" y2="110" stroke="#b0b6c4" stroke-width="1" marker-end="url(#arrow-cli)"/>
 
-  <h3>DSL Execution Commands</h3>
-  <p><strong>run &lt;dsl-statement&gt;</strong> executes a raw Sys2DSL statement directly. For example, <code>run @r PROVE Dog IS_A Animal</code>.</p>
-  <p><strong>load-theory &lt;name&gt;</strong> loads a theory file from <code>.AGISystem2/theories/</code> into the current session.</p>
+      <!-- Labels -->
+      <text x="85" y="70" font-size="7" fill="#0f4c81">Structured</text>
+      <text x="85" y="155" font-size="7" fill="#2e7d32">Natural</text>
+    </svg>
+    <p class="diagram-caption">Both CLI interfaces connect to the same AGISystem2 engine core. The Raw CLI accepts structured Sys2DSL commands directly, while the Chat interface uses an LLM to translate natural language into the same underlying commands.</p>
+  </div>
 
-  <h2>Domain-Specific Commands</h2>
-  <p>In addition to the generic <code>add</code>, <code>ask</code>, <code>abduct</code>, and <code>cf</code> commands, the CLI exposes a few domain-oriented helpers that build on top of the same geometric and symbolic machinery but express common patterns via a theory-level DSL. These helpers are implemented as small macros written in the engine’s theory language; no health, legal, or narrative rules are baked directly into the JavaScript code. The built-in versions of these macros live under <code>data/init/macros</code>, but you can override them in a project by creating files with the same macro names under <code>.AGISystem2/macros</code> in the working directory.</p>
-  <p><strong>check-procedure &lt;ProcedureId&gt; [| extra facts]</strong> invokes a health-style compliance macro. It expects facts of the form <code>ProcedureX REQUIRES Consent</code> and <code>ProcedureX REQUIRES AuditTrail</code>, plus optional facts such as <code>Consent GIVEN yes</code> or <code>AuditTrail PRESENT yes</code>. Internally the macro asks “what does this procedure require?” and “which of those requirements have a GIVEN/PRESENT=yes fact?”, then returns TRUE_CERTAIN only when every requirement is covered. Dacă dorești un alt model de conformitate (de exemplu reguli mai stricte sau proceduri cu excepții), poți crea un fișier <code>.AGISystem2/macros/health_procedure.dsl</code> în proiectul tău și să rescrii macro-ul acolo.</p>
-  <p><strong>check-export &lt;ActionId&gt; &lt;Reg1&gt; [Reg2 ...] [| extra facts]</strong> verifică dacă o acțiune de export este permisă sub unul sau mai multe nume de reglementări folosind un macro generic de “polaritate”. Macro-ul caută fapte de forma <code>Action PROHIBITED_BY Reg</code> și <code>Action PERMITTED_BY Reg</code> și aplică apoi o regulă simplă: dacă o reglementare activă atât permite cât și interzice acțiunea, rezultatul este CONFLICT; dacă există doar interdicții, rezultatul este FALSE; dacă există doar permisiuni, rezultatul este TRUE_CERTAIN; dacă nu există nicio informație, rezultatul este FALSE. Pentru a adapta această logică la un alt regim (de exemplu, priorități diferite între regulamente), poți defini un macro <code>export_action.dsl</code> în <code>.AGISystem2/macros</code>.</p>
-  <p><strong>check-magic &lt;ActorId&gt; &lt;CityId&gt; [| extra facts]</strong> ilustrează verificarea consistenței narative printr-un alt macro. Cu fapte de bază precum <code>Alice IS_A Human</code>, <code>Alice LOCATED_IN CityX</code> și <code>Alice CASTS Magic</code>, macro-ul verifică mai întâi că actorul practică magia și se află în orașul dat, apoi caută fapte de permisiune precum <code>SciFi_TechMagic PERMITS Magic_IN CityX</code> sau <code>SciFi_TechMagic PERMITS Magic_IN_CityX</code>. Doar când toate cele trei condiții sunt îndeplinite raportează TRUE_CERTAIN; altfel raportează FALSE. Dacă vrei să modelezi un alt tip de lume (de exemplu magii interzise în anumite zone sau permise doar pe timp de noapte), poți crea propriul macro <code>narrative_magic.dsl</code> în <code>.AGISystem2/macros</code> și sistemul îl va folosi în locul celui implicit.</p>
+  <h2>Two Modes, Different Purposes</h2>
 
-  <h2>Working with Theory Files</h2>
-  <p>The CLI treats simple text files under <code>.AGISystem2/theories</code> as “theories”: collections of canonical facts that you can apply as temporary overlays. This feature is intended as a lightweight way to experiment with different rule sets or world assumptions without writing code or manipulating binary layers.</p>
-  <p><strong>new-theory &lt;name&gt;</strong> creates a new file <code>.AGISystem2/theories/&lt;name&gt;.txt</code> if it does not already exist. The file starts with a comment reminding you that each line should normally contain a single fact in the constrained grammar. You can edit this file in your editor of choice, adding statements like <code>ProcedureX REQUIRES Consent</code>, <code>ExportData PROHIBITED_BY GDPR</code>, or <code>SciFi_TechMagic PERMITS Magic_IN CityX</code>. Advanced users may also add DSL assignment lines starting with <code>@</code> to define their own macros alongside facts.</p>
-  <p><strong>list-theories</strong> enumerates the existing <code>.txt</code> theory files in the <code>theories</code> subfolder, without making any changes. <strong>show-theory &lt;name&gt;</strong> prints the contents of one such file so you can review the rules it contains. This is useful when you experiment with several alternative formulations and want to understand which facts were active for a particular test.</p>
-  <p><strong>apply-theory &lt;name&gt; &lt;question...&gt;</strong> reads all facts from the named file and applies them as a temporary context while answering the given question. It behaves like a structured version of the <code>cf</code> command where the extra facts come from a file rather than being typed inline. For example, after running <code>init-samples</code> you can type <code>apply-theory health_compliance check-procedure ProcedureX</code> to run the health compliance check under the sample rules, or <code>apply-theory scifi_magic check-magic Alice CityX</code> to see how magic behaves under the SciFi theory.</p>
-  <p><strong>init-samples</strong> seeds the <code>theories</code> folder with a few pre-defined files suitable for experimentation: one for minimal health compliance, one for a tiny law example, and one for a science-fiction magic setting. You can inspect these files with <code>show-theory</code> and modify them or copy their structure when building your own domain theories.</p>
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>Aspect</th>
+        <th>Raw CLI (AGISystem2Raw.sh)</th>
+        <th>Chat Interface (AGISystem2.sh)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Input Style</strong></td>
+        <td>Structured commands and canonical syntax</td>
+        <td>Natural language (any language)</td>
+      </tr>
+      <tr>
+        <td><strong>Primary Use</strong></td>
+        <td>Testing, automation, scripting, CI/CD</td>
+        <td>Exploration, demonstration, learning</td>
+      </tr>
+      <tr>
+        <td><strong>Dependencies</strong></td>
+        <td>Node.js only</td>
+        <td>Node.js + LLM API (OpenAI, Anthropic, etc.)</td>
+      </tr>
+      <tr>
+        <td><strong>Determinism</strong></td>
+        <td>Fully deterministic, reproducible</td>
+        <td>LLM introduces variability in parsing</td>
+      </tr>
+      <tr>
+        <td><strong>Batch Mode</strong></td>
+        <td>Full support (--batch, --exec, --json)</td>
+        <td>Interactive only</td>
+      </tr>
+      <tr>
+        <td><strong>Learning Curve</strong></td>
+        <td>Requires understanding Sys2DSL syntax</td>
+        <td>Minimal – just type naturally</td>
+      </tr>
+      <tr>
+        <td><strong>Control Level</strong></td>
+        <td>Fine-grained, exact commands</td>
+        <td>High-level, intent-based</td>
+      </tr>
+    </tbody>
+  </table>
 
-  <h2>Batch Mode (Non-Interactive)</h2>
-  <p>The CLI supports non-interactive batch execution for automated testing and scripting. You can execute commands from a file or pass a single command from the command line.</p>
+  <h2>When to Use Each Interface</h2>
 
-  <h3>Command Line Options</h3>
-  <pre>
-./bin/AGISystem2Raw.sh --batch &lt;commands.txt&gt;     # Execute commands from file
-./bin/AGISystem2Raw.sh --exec "add Dog IS_A Animal"  # Execute single command
-./bin/AGISystem2Raw.sh --output results.json         # Write results to file
-./bin/AGISystem2Raw.sh --json                        # Output in JSON format
-./bin/AGISystem2Raw.sh --no-color                    # Disable ANSI colors
-./bin/AGISystem2Raw.sh --help                        # Show batch mode help</pre>
-
-  <h3>Batch File Format</h3>
-  <p>Command files contain one command per line. Comments start with <code>#</code> or <code>//</code>:</p>
-  <pre>
-# Setup taxonomy
-add Dog IS_A Animal
-add Cat IS_A Animal
-add Animal IS_A LivingThing
-
-# Query facts
-ask Is Dog an Animal?
-prove Dog IS_A LivingThing
-
-# Validate knowledge base
-validate</pre>
-
-  <h3>JSON Output</h3>
-  <p>When using <code>--json</code> or <code>--output</code>, results are formatted as JSON for programmatic consumption:</p>
-  <pre>
-{
-  "batchFile": "commands.txt",
-  "timestamp": "2025-01-15T10:30:00Z",
-  "commands": [
-    { "command": "add", "args": "Dog IS_A Animal", "result": { "ok": true } },
-    { "command": "ask", "args": "Is Dog an Animal?", "result": { "truth": "TRUE_CERTAIN" } }
-  ],
-  "summary": { "total": 10, "executed": 8, "skipped": 2, "errors": 0 }
-}</pre>
-
-  <h3>First Run Auto-Initialization</h3>
-  <p>When running from a new directory, the CLI automatically:</p>
+  <h3>Use the Raw CLI When:</h3>
   <ul>
-    <li>Creates the <code>.AGISystem2/</code> environment structure</li>
-    <li>Installs sample theories (health_compliance, law_minimal, scifi_magic)</li>
-    <li>Sets up data and theories directories</li>
+    <li><strong>Automating tests</strong> – Write reproducible test scripts that verify reasoning behavior</li>
+    <li><strong>Building integrations</strong> – Script interactions for CI/CD pipelines or other tools</li>
+    <li><strong>Precise control</strong> – Need exact Sys2DSL commands with predictable results</li>
+    <li><strong>No external dependencies</strong> – Work offline without LLM API costs</li>
+    <li><strong>Auditing and compliance</strong> – Every command and result is deterministic and logged</li>
   </ul>
 
-  <h2>Recommended First Steps</h2>
-  <p>If this is your first encounter with the CLI, a simple way to get started is to open a new folder, run the CLI, and follow a short sequence of commands. The following transcript outlines a typical exploration:</p>
-  <pre>mkdir demo-agis2
-cd demo-agis2
-../bin/AGISystem2Raw.sh
+  <h3>Use the Chat Interface When:</h3>
+  <ul>
+    <li><strong>Exploring the system</strong> – Learn what AGISystem2 can do through conversation</li>
+    <li><strong>Quick demonstrations</strong> – Show capabilities without teaching syntax</li>
+    <li><strong>Building knowledge interactively</strong> – Teach facts in natural language</li>
+    <li><strong>Prototyping theories</strong> – Quickly test ideas before formalizing them</li>
+    <li><strong>Non-technical users</strong> – Allow domain experts to interact without coding</li>
+  </ul>
 
+  <h2>The Library Approach</h2>
+
+  <p>Both command-line interfaces are convenience wrappers around the AGISystem2 JavaScript library. For production applications, most integrations will use the library directly through the <a href="../api/index.html">APIs</a>:</p>
+
+  <pre>
+const AgentSystem2 = require('agisystem2');
+
+// Create engine instance
+const agent = new AgentSystem2({ profile: 'prod' });
+const session = agent.createSession();
+
+// Execute commands programmatically
+session.run(['@f ASSERT Dog IS_A Animal']);
+const result = session.run(['@q ASK "Is Dog an Animal?"']);
+console.log(result.q.truth); // TRUE_CERTAIN</pre>
+
+  <p>The library approach provides:</p>
+  <ul>
+    <li>Full programmatic control over all engine features</li>
+    <li>Direct integration with application logic</li>
+    <li>Custom session management and theory layering</li>
+    <li>Event hooks for reasoning steps</li>
+    <li>Memory-efficient batch operations</li>
+  </ul>
+
+  <p>See the <a href="../api/index.html">API Reference</a> for complete documentation of the library interface.</p>
+
+  <h2>Quick Start</h2>
+
+  <div class="two-column">
+    <div class="column">
+      <h3>Raw CLI Quick Start</h3>
+      <pre>
+# Start interactive session
+./bin/AGISystem2Raw.sh
+
+# Add facts
 AGIS2&gt; add Dog IS_A Animal
-AGIS2&gt; add Water HAS_PROPERTY boiling_point=100
+AGIS2&gt; add Cat IS_A Animal
+
+# Ask questions
 AGIS2&gt; ask Is Dog an Animal?
 Result: TRUE_CERTAIN
 
-AGIS2&gt; ask Water HAS_PROPERTY boiling_point=50?
-Result: FALSE
+# Batch mode
+./bin/AGISystem2Raw.sh --exec "add Fire CAUSES Smoke" --json</pre>
+      <p><a href="raw-cli.html">Full Raw CLI Documentation →</a></p>
+    </div>
+    <div class="column">
+      <h3>Chat Interface Quick Start</h3>
+      <pre>
+# Start chat (requires LLM API key)
+export OPENAI_API_KEY="sk-..."
+./bin/AGISystem2.sh
 
-AGIS2&gt; cf Water HAS_PROPERTY boiling_point=50? | Water HAS_PROPERTY boiling_point=50
-Result (counterfactual): TRUE_CERTAIN
+# Natural conversation
+You: Dogs are mammals that bark
+AI: Got it! I've learned 2 fact(s):
+    - Dog IS_A Mammal
+    - Dog HAS_PROPERTY barks
 
-AGIS2&gt; init-samples
-AGIS2&gt; list-theories
-Theories in .AGISystem2/theories :
-  - health_compliance
-  - law_minimal
-  - scifi_magic
+You: Is a dog an animal?
+AI: Yes, based on what I know...</pre>
+      <p><a href="chat-cli.html">Full Chat Documentation →</a></p>
+    </div>
+  </div>
 
-AGIS2&gt; apply-theory health_compliance check-procedure ProcedureX
-Procedure compliance: FALSE
+  <h2>Shared State</h2>
 
-AGIS2&gt; apply-theory scifi_magic check-magic Alice CityX
-Magic allowed: TRUE_CERTAIN
+  <p>Both interfaces work with the same <code>.AGISystem2/</code> directory structure in the current working directory:</p>
 
-AGIS2&gt; config
-{ ... JSON snapshot of profile, dimensions, limits ... }</pre>
-  <p>These steps demonstrate the main paths: adding base facts, asking questions, running counterfactuals inline, applying pre-defined theories, and inspecting configuration. From here you can extend the examples by editing theory files, adding new relations from the Relations chapter, or integrating the CLI into scripts for reproducible experiments.</p>
+  <pre>
+.AGISystem2/
+├── data/           # Concept storage, binary blobs
+│   ├── concepts/   # Bounded diamond data
+│   └── audit/      # Operation logs
+└── theories/       # Theory files (.sys2dsl, .txt)
+    ├── health_compliance.sys2dsl
+    ├── law_minimal.sys2dsl
+    └── scifi_magic.sys2dsl</pre>
+
+  <p>Facts and theories created in one interface are immediately available in the other. This allows workflows like:</p>
+  <ol>
+    <li>Use Chat interface to interactively build initial knowledge base</li>
+    <li>Export theory with <code>/theories</code> or <code>save theory</code></li>
+    <li>Use Raw CLI for automated testing of that theory</li>
+    <li>Return to Chat for exploratory questions</li>
+  </ol>
 
   <div class="footer-nav">
-    <a href="../index.html">Back to index</a>
-    <a href="../wiki/index.html">Quick Wiki</a>
+    <a href="../index.html">Back to index</a> ·
+    <a href="raw-cli.html">Raw CLI Details</a> ·
+    <a href="chat-cli.html">Chat Interface Details</a>
   </div>
   </div>
   <script src="../reference/nav2.js"></script>

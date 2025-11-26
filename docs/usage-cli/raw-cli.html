@@ -1,0 +1,368 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Raw CLI</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>AGISystem2 – Raw CLI</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="index.html">CLI</a> ·
+      <a href="../wiki/index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
+    <div class="sub-nav">
+      <strong>CLI Topics:</strong>
+      <a href="index.html">Overview</a> ·
+      <a href="raw-cli.html">Raw CLI</a> ·
+      <a href="chat-cli.html">Chat Interface</a>
+    </div>
+  </div>
+
+  <p>The Raw CLI (<code>AGISystem2Raw.sh</code>) provides direct access to the AGISystem2 engine through structured Sys2DSL commands. It is designed for automation, testing, and scripting scenarios where determinism and precise control are essential. Unlike the <a href="chat-cli.html">Chat Interface</a>, it requires no external LLM dependencies and executes commands exactly as specified.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 480 160" role="img" aria-label="Raw CLI command flow from shell to engine">
+      <defs>
+        <marker id="arrow-raw" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#0f4c81" />
+        </marker>
+      </defs>
+
+      <!-- Shell input -->
+      <rect x="10" y="50" width="100" height="60" rx="6" fill="#f5f7fb" stroke="#0f4c81" stroke-width="2"/>
+      <text x="60" y="72" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Shell / Script</text>
+      <text x="60" y="87" font-size="7" fill="#4a5670" text-anchor="middle">AGISystem2Raw.sh</text>
+      <text x="60" y="100" font-size="7" fill="#4a5670" text-anchor="middle">--exec, --batch</text>
+
+      <!-- Parser -->
+      <rect x="140" y="50" width="90" height="60" rx="6" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="185" y="72" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Sys2DSL</text>
+      <text x="185" y="87" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Parser</text>
+      <text x="185" y="100" font-size="7" fill="#4a5670" text-anchor="middle">Structured syntax</text>
+
+      <!-- Engine -->
+      <rect x="260" y="40" width="100" height="80" rx="8" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
+      <text x="310" y="65" font-size="10" font-weight="bold" fill="#0f4c81" text-anchor="middle">AGISystem2</text>
+      <text x="310" y="80" font-size="8" fill="#4a5670" text-anchor="middle">Engine</text>
+      <text x="310" y="95" font-size="7" fill="#4a5670" text-anchor="middle">Reasoning</text>
+      <text x="310" y="107" font-size="7" fill="#4a5670" text-anchor="middle">Storage</text>
+
+      <!-- Output -->
+      <rect x="390" y="50" width="80" height="60" rx="6" fill="#f5f7fb" stroke="#0f4c81" stroke-width="2"/>
+      <text x="430" y="72" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Output</text>
+      <text x="430" y="87" font-size="7" fill="#4a5670" text-anchor="middle">JSON / Text</text>
+      <text x="430" y="100" font-size="7" fill="#4a5670" text-anchor="middle">Deterministic</text>
+
+      <!-- Arrows -->
+      <line x1="110" y1="80" x2="138" y2="80" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-raw)"/>
+      <line x1="230" y1="80" x2="258" y2="80" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-raw)"/>
+      <line x1="360" y1="80" x2="388" y2="80" stroke="#0f4c81" stroke-width="1.5" marker-end="url(#arrow-raw)"/>
+    </svg>
+    <p class="diagram-caption">The Raw CLI passes structured Sys2DSL commands directly to the parser, which feeds the AGISystem2 engine. Output is deterministic and can be formatted as JSON for programmatic consumption.</p>
+  </div>
+
+  <h2>Requirements</h2>
+
+  <p>The Raw CLI requires only:</p>
+  <ul>
+    <li><strong>Node.js 18+</strong> – For running the JavaScript engine</li>
+    <li><strong>Bash</strong> – For the launcher script (Linux, macOS, WSL)</li>
+  </ul>
+
+  <p>No external API keys or network access required. The engine runs entirely locally.</p>
+
+  <h2>Starting the Raw CLI</h2>
+
+  <h3>Interactive Mode</h3>
+  <pre>
+# Start interactive REPL
+./bin/AGISystem2Raw.sh
+
+# The prompt appears:
+AGIS2&gt; </pre>
+
+  <h3>Batch Mode</h3>
+  <pre>
+# Execute single command
+./bin/AGISystem2Raw.sh --exec "add Dog IS_A Animal"
+
+# Execute with JSON output
+./bin/AGISystem2Raw.sh --exec "ask Is Dog an Animal?" --json
+
+# Execute multiple commands from file
+./bin/AGISystem2Raw.sh --batch commands.sys2dsl
+
+# Pipe commands via stdin
+echo "add Cat IS_A Animal" | ./bin/AGISystem2Raw.sh --batch -</pre>
+
+  <h2>Command Syntax</h2>
+
+  <p>Commands follow the Sys2DSL syntax. The full reference is in the <a href="../syntax/index.html">Syntax Guide</a>.</p>
+
+  <h3>Adding Facts</h3>
+  <pre>
+# Basic fact assertion
+AGIS2&gt; add Dog IS_A Animal
+OK: ASSERT Dog IS_A Animal
+
+# With explicit ASSERT keyword
+AGIS2&gt; ASSERT Cat IS_A Mammal
+OK: ASSERT Cat IS_A Mammal
+
+# Multiple relations
+AGIS2&gt; add Fire CAUSES Smoke
+AGIS2&gt; add Fire CAUSES Heat
+AGIS2&gt; add Water EXTINGUISHES Fire</pre>
+
+  <h3>Asking Questions</h3>
+  <pre>
+# Yes/no question
+AGIS2&gt; ask Is Dog an Animal?
+Result: TRUE_CERTAIN
+Confidence: 0.95
+
+# What-type question
+AGIS2&gt; ask What is Dog?
+Result: Animal, Mammal
+
+# Structured query
+AGIS2&gt; ASK "Dog IS_A ?"
+Result: Animal</pre>
+
+  <h3>Listing Knowledge</h3>
+  <pre>
+# List all facts
+AGIS2&gt; list facts
+
+# List concepts
+AGIS2&gt; list concepts
+
+# Match pattern
+AGIS2&gt; match ? IS_A Animal
+Dog IS_A Animal
+Cat IS_A Animal</pre>
+
+  <h2>Theory Management</h2>
+
+  <p>The Raw CLI supports the full theory stack operations:</p>
+
+  <pre>
+# Push new theory layer
+AGIS2&gt; THEORY_PUSH name="medical_context"
+OK: Pushed theory layer "medical_context"
+
+# Check current stack
+AGIS2&gt; LIST_THEORIES
+{ "depth": 1, "name": "medical_context" }
+
+# Add facts to current layer
+AGIS2&gt; add Aspirin REDUCES Inflammation
+
+# Pop layer (discards facts added in that layer)
+AGIS2&gt; THEORY_POP
+OK: Popped theory layer "medical_context"
+
+# Save theory to file
+AGIS2&gt; SAVE_THEORY medical_knowledge
+Saved to .AGISystem2/theories/medical_knowledge.sys2dsl
+
+# Load theory from file
+AGIS2&gt; LOAD_THEORY medical_knowledge
+Loaded 15 facts from medical_knowledge.sys2dsl</pre>
+
+  <h2>Output Formats</h2>
+
+  <h3>Text Output (Default)</h3>
+  <pre>
+$ ./bin/AGISystem2Raw.sh --exec "ask Is Dog an Animal?"
+Result: TRUE_CERTAIN
+Confidence: 0.95
+Reasoning: Direct inclusion in concept "Animal"</pre>
+
+  <h3>JSON Output</h3>
+  <pre>
+$ ./bin/AGISystem2Raw.sh --exec "ask Is Dog an Animal?" --json
+{
+  "success": true,
+  "result": {
+    "truth": "TRUE_CERTAIN",
+    "confidence": 0.95,
+    "reasoning": [
+      { "step": "inclusion_check", "concept": "Animal", "result": "inside" }
+    ]
+  }
+}</pre>
+
+  <h2>Variable Bindings</h2>
+
+  <p>Commands can use variable bindings for complex operations:</p>
+
+  <pre>
+# Store result in variable
+AGIS2&gt; @result ASK "Dog IS_A ?"
+
+# Use variable in subsequent command
+AGIS2&gt; @facts FACTS_MATCHING Dog ? ?
+
+# Chain operations
+AGIS2&gt; @f ASSERT Bird IS_A Animal
+AGIS2&gt; @q ASK "Bird IS_A Animal?"
+AGIS2&gt; echo @q.truth
+TRUE_CERTAIN</pre>
+
+  <h2>Batch File Format</h2>
+
+  <p>Batch files (<code>.sys2dsl</code>) contain one command per line:</p>
+
+  <pre>
+# comments.sys2dsl - Example batch file
+# Lines starting with # are comments
+
+# Define taxonomy
+ASSERT Dog IS_A Mammal
+ASSERT Cat IS_A Mammal
+ASSERT Mammal IS_A Animal
+ASSERT Bird IS_A Animal
+
+# Define properties
+ASSERT Dog HAS_PROPERTY barks
+ASSERT Cat HAS_PROPERTY meows
+ASSERT Bird HAS_PROPERTY flies
+
+# Define relations
+ASSERT Fire CAUSES Smoke
+ASSERT Water EXTINGUISHES Fire</pre>
+
+  <p>Execute with:</p>
+  <pre>./bin/AGISystem2Raw.sh --batch comments.sys2dsl</pre>
+
+  <h2>Exit Codes</h2>
+
+  <table class="command-table">
+    <thead>
+      <tr><th>Code</th><th>Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>0</code></td><td>Success</td></tr>
+      <tr><td><code>1</code></td><td>General error</td></tr>
+      <tr><td><code>2</code></td><td>Parse error (invalid syntax)</td></tr>
+      <tr><td><code>3</code></td><td>File not found (batch mode)</td></tr>
+      <tr><td><code>4</code></td><td>Query returned FALSE</td></tr>
+    </tbody>
+  </table>
+
+  <p>Exit codes allow integration with shell scripts and CI pipelines:</p>
+
+  <pre>
+#!/bin/bash
+./bin/AGISystem2Raw.sh --exec "ask Is system consistent?" --json
+if [ $? -eq 0 ]; then
+  echo "System is consistent"
+else
+  echo "Inconsistency detected"
+  exit 1
+fi</pre>
+
+  <h2>Environment Variables</h2>
+
+  <table class="command-table">
+    <thead>
+      <tr><th>Variable</th><th>Description</th><th>Default</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>AGIS2_PROFILE</code></td><td>Configuration profile</td><td><code>manual_test</code></td></tr>
+      <tr><td><code>AGIS2_DATA_DIR</code></td><td>Data directory path</td><td><code>.AGISystem2/data</code></td></tr>
+      <tr><td><code>AGIS2_DEBUG</code></td><td>Enable debug output</td><td><code>0</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Integration Examples</h2>
+
+  <h3>CI/CD Pipeline</h3>
+  <pre>
+# .github/workflows/knowledge-test.yml
+- name: Test knowledge consistency
+  run: |
+    ./bin/AGISystem2Raw.sh --batch tests/rules.sys2dsl
+    ./bin/AGISystem2Raw.sh --exec "ask Is system consistent?" --json</pre>
+
+  <h3>Shell Script Automation</h3>
+  <pre>
+#!/bin/bash
+# load-and-query.sh
+
+# Load base knowledge
+./bin/AGISystem2Raw.sh --batch base_knowledge.sys2dsl
+
+# Query specific facts
+result=$(./bin/AGISystem2Raw.sh --exec "ask $1?" --json)
+echo "$result" | jq '.result.truth'</pre>
+
+  <h3>Node.js Integration</h3>
+  <pre>
+const { execSync } = require('child_process');
+
+function query(question) {
+  const result = execSync(
+    `./bin/AGISystem2Raw.sh --exec "ask ${question}?" --json`,
+    { encoding: 'utf8' }
+  );
+  return JSON.parse(result);
+}
+
+const answer = query('Is Dog an Animal');
+console.log(answer.result.truth); // TRUE_CERTAIN</pre>
+
+  <h2>Comparison with Chat Interface</h2>
+
+  <table class="comparison-table">
+    <thead>
+      <tr><th>Aspect</th><th>Raw CLI</th><th>Chat Interface</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Input</strong></td>
+        <td>Structured Sys2DSL commands</td>
+        <td>Natural language</td>
+      </tr>
+      <tr>
+        <td><strong>Determinism</strong></td>
+        <td>100% reproducible</td>
+        <td>LLM introduces variability</td>
+      </tr>
+      <tr>
+        <td><strong>Dependencies</strong></td>
+        <td>Node.js only</td>
+        <td>Node.js + LLM API</td>
+      </tr>
+      <tr>
+        <td><strong>Batch mode</strong></td>
+        <td>Full support</td>
+        <td>Interactive only</td>
+      </tr>
+      <tr>
+        <td><strong>Best for</strong></td>
+        <td>Testing, CI/CD, automation</td>
+        <td>Exploration, demos, learning</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer-nav">
+    <a href="index.html">CLI Overview</a> ·
+    <a href="chat-cli.html">Chat Interface</a> ·
+    <a href="../syntax/index.html">Syntax Reference</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>
