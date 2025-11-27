@@ -75,6 +75,28 @@ Query: Dog HAS_PROPERTY warm_blooded?
 Result: TRUE_CERTAIN (property inheritance)
 ```
 
+### 2.8 Argument Type Inference
+```
+Facts: [X R Y, Y IS_A T]
+Query: X R T?
+Result: TRUE_CERTAIN (argument type inference)
+
+Reasoning: If X has relation R with Y, and Y is of type T,
+then X has relation R with something of type T.
+```
+
+This inference pattern is fundamental for semantic reasoning:
+- It generalizes specific instances to their types
+- Works with any relation, not just IS_A
+- Enables questions about categories when only instances are known
+
+**Formal definition:**
+```
+∀X,Y,T,R: (X R Y) ∧ (Y IS_A T) → X R_some T
+```
+
+Where `R_some` means "R with some instance of".
+
 ---
 
 ## 3. API Interface
@@ -103,6 +125,7 @@ class InferenceEngine {
   inferComposition(subject, relation, object, facts) → InferenceResult
   inferDefault(subject, relation, object, facts) → InferenceResult
   inferInheritance(subject, relation, object, facts) → InferenceResult
+  inferArgumentType(subject, relation, objectType, facts) → InferenceResult
 
   // Build proof chain
   prove(subject, relation, object, facts) → ProofChain
@@ -122,7 +145,7 @@ class InferenceEngine {
 // Inference result
 {
   truth: 'TRUE_CERTAIN' | 'TRUE_DEFAULT' | 'PLAUSIBLE' | 'FALSE' | 'UNKNOWN',
-  method: 'direct' | 'transitive' | 'symmetric' | 'inverse' | 'composition' | 'default' | 'inheritance',
+  method: 'direct' | 'transitive' | 'symmetric' | 'inverse' | 'composition' | 'default' | 'inheritance' | 'argument_type_inference',
   confidence: 0.0 - 1.0,
   proof: ProofChain,       // How we got here
   assumptions: string[]     // For default reasoning
@@ -607,9 +630,83 @@ forwardChain(facts, maxIterations = 100) {
 # Expected: { truth: 'TRUE_CERTAIN', method: 'inheritance', inheritedFrom: 'mammal' }
 ```
 
+### 11.5 Argument Type Inference
+```sys2dsl
+# Basic argument type inference
+@f1 ASSERT X R Y
+@f2 ASSERT Y IS_A T
+@result INFER X R T
+# Expected: { truth: 'TRUE_CERTAIN', method: 'argument_type_inference' }
+
+# With transitive type chain
+@f1 ASSERT X R Y
+@f2 ASSERT Y IS_A T1
+@f3 ASSERT T1 IS_A T2
+@result INFER X R T2
+# Expected: { truth: 'TRUE_CERTAIN', method: 'argument_type_inference' }
+# Proof: X R Y, Y IS_A T1, T1 IS_A T2 → Y IS_A T2 → X R T2
+```
+
 ---
 
-## 12. Performance Optimizations
+## 12. Algorithm: Argument Type Inference
+
+```javascript
+inferArgumentType(subject, relation, objectType, facts) {
+  const subjectLower = subject.toLowerCase();
+  const relationUpper = relation.toUpperCase();
+  const objectTypeLower = objectType.toLowerCase();
+
+  // Find all facts where subject has this relation with something
+  const relatedFacts = facts.filter(f =>
+    f.subject.toLowerCase() === subjectLower &&
+    f.relation.toUpperCase() === relationUpper
+  );
+
+  // For each related object, check if it IS_A objectType (directly or transitively)
+  for (const fact of relatedFacts) {
+    const relatedObject = fact.object;
+    const objectTypes = this._getAllTypes(relatedObject, facts);
+
+    // Direct match: the related object IS the type we're asking about
+    if (relatedObject.toLowerCase() === objectTypeLower) {
+      return {
+        truth: 'TRUE_CERTAIN',
+        method: 'direct_type_match',
+        confidence: 1,
+        proof: {
+          steps: [
+            { fact: `${subject} ${relation} ${relatedObject}`, justification: 'direct_fact' },
+            { conclusion: `Therefore ${subject} ${relation} ${objectType}` }
+          ]
+        }
+      };
+    }
+
+    // Type inference: the related object is an instance of objectType
+    if (objectTypes.includes(objectTypeLower)) {
+      return {
+        truth: 'TRUE_CERTAIN',
+        method: 'argument_type_inference',
+        confidence: 0.95,
+        proof: {
+          steps: [
+            { fact: `${subject} ${relation} ${relatedObject}`, justification: 'direct_fact' },
+            { fact: `${relatedObject} IS_A ${objectType}`, justification: 'type_membership' },
+            { conclusion: `Therefore ${subject} ${relation} something that is ${objectType}` }
+          ]
+        }
+      };
+    }
+  }
+
+  return { truth: 'UNKNOWN', method: 'argument_type_inference', reason: 'no_type_match' };
+}
+```
+
+---
+
+## 13. Performance Optimizations
 
 - **Memoization**: Cache inference results for repeated queries
 - **Indexing**: Maintain indexes by relation type for fast rule matching

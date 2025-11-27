@@ -146,29 +146,38 @@ export async function handleAsk(ctx, message, details) {
           proof: inferResult.proof || null
         };
 
-        // If InferenceEngine returns UNKNOWN, check for negative inference via DISJOINT_WITH
-        if (result.truth === 'UNKNOWN' && relation === 'IS_A') {
-          const negativeResult = checkNegativeInference(subject, object, facts, inferenceEngine);
-          if (negativeResult.truth === 'FALSE') {
-            result = negativeResult;
-          } else {
-            // Apply closed-world assumption for IS_A if we have knowledge about the subject
-            const subjectTypes = getAllTypes(subject, facts);
-            if (subjectTypes.length > 0) {
-              // We know what types the subject has, and target is not among them
-              result = {
-                truth: 'FALSE',
-                method: 'closed_world_assumption',
-                confidence: 0.8,
-                explanation: `${subject} is known to be: ${subjectTypes.join(', ')}. There is no path to ${object}.`,
-                proof: {
-                  steps: [
-                    { fact: `${subject} has known types: ${subjectTypes.join(', ')}`, justification: 'known_types' },
-                    { fact: `No IS_A path exists from ${subject} to ${object}`, justification: 'no_transitive_path' },
-                    { conclusion: `Under closed-world assumption, ${subject} is not a ${object}` }
-                  ]
-                }
-              };
+        // If InferenceEngine returns UNKNOWN, try additional inference strategies
+        if (result.truth === 'UNKNOWN') {
+          // Strategy 1: Argument type inference
+          // "A EATS food?" with facts "A EATS b" and "b IS_A food" => TRUE
+          const argTypeResult = checkArgumentTypeInference(subject, relation, object, facts);
+          if (argTypeResult.truth !== 'UNKNOWN') {
+            result = argTypeResult;
+          }
+          // Strategy 2: For IS_A relations, check negative inference via DISJOINT_WITH
+          else if (relation === 'IS_A') {
+            const negativeResult = checkNegativeInference(subject, object, facts, inferenceEngine);
+            if (negativeResult.truth === 'FALSE') {
+              result = negativeResult;
+            } else {
+              // Apply closed-world assumption for IS_A if we have knowledge about the subject
+              const subjectTypes = getAllTypes(subject, facts);
+              if (subjectTypes.length > 0) {
+                // We know what types the subject has, and target is not among them
+                result = {
+                  truth: 'FALSE',
+                  method: 'closed_world_assumption',
+                  confidence: 0.8,
+                  explanation: `${subject} is known to be: ${subjectTypes.join(', ')}. There is no path to ${object}.`,
+                  proof: {
+                    steps: [
+                      { fact: `${subject} has known types: ${subjectTypes.join(', ')}`, justification: 'known_types' },
+                      { fact: `No IS_A path exists from ${subject} to ${object}`, justification: 'no_transitive_path' },
+                      { conclusion: `Under closed-world assumption, ${subject} is not a ${object}` }
+                    ]
+                  }
+                };
+              }
             }
           }
         }
@@ -293,6 +302,92 @@ function getAllTypes(entity, facts) {
   }
 
   return Array.from(types);
+}
+
+/**
+ * Check argument type inference
+ * E.g., "A EATS food?" with facts "A EATS b" and "b IS_A food" => TRUE
+ * This checks if subject has the given relation with any instance of the object type
+ */
+function checkArgumentTypeInference(subject, relation, objectType, facts) {
+  const subjectLower = subject.toLowerCase();
+  const relationUpper = relation.toUpperCase();
+  const objectTypeLower = objectType.toLowerCase();
+
+  // Find all facts where subject has this relation with something
+  const relatedFacts = facts.filter(f =>
+    f.subject.toLowerCase() === subjectLower &&
+    f.relation.toUpperCase() === relationUpper
+  );
+
+  // For each related object, check if it IS_A objectType
+  for (const fact of relatedFacts) {
+    const relatedObject = fact.object;
+    const objectTypes = getAllTypes(relatedObject, facts);
+
+    // Direct match: the related object IS the type we're asking about
+    if (relatedObject.toLowerCase() === objectTypeLower) {
+      return {
+        truth: 'TRUE_CERTAIN',
+        method: 'direct_type_match',
+        confidence: 1,
+        explanation: `${subject} ${relation} ${relatedObject}, and ${relatedObject} is exactly ${objectType}`,
+        proof: {
+          steps: [
+            { fact: `${subject} ${relation} ${relatedObject}`, justification: 'direct_fact' },
+            { conclusion: `Therefore ${subject} ${relation} ${objectType}` }
+          ]
+        }
+      };
+    }
+
+    // Type inference: the related object is an instance of objectType
+    if (objectTypes.includes(objectTypeLower)) {
+      return {
+        truth: 'TRUE_CERTAIN',
+        method: 'argument_type_inference',
+        confidence: 0.95,
+        explanation: `${subject} ${relation} ${relatedObject}, and ${relatedObject} IS_A ${objectType}`,
+        proof: {
+          steps: [
+            { fact: `${subject} ${relation} ${relatedObject}`, justification: 'direct_fact' },
+            { fact: `${relatedObject} IS_A ${objectType}`, justification: 'type_membership' },
+            { conclusion: `Therefore ${subject} ${relation} something that is ${objectType}` }
+          ]
+        }
+      };
+    }
+  }
+
+  // Also check reverse: maybe objectType instances have this relation with subject
+  // E.g., "food EATEN_BY A?" with "b EATEN_BY A" and "b IS_A food"
+  const reverseRelatedFacts = facts.filter(f =>
+    f.object.toLowerCase() === subjectLower &&
+    f.relation.toUpperCase() === relationUpper
+  );
+
+  for (const fact of reverseRelatedFacts) {
+    const relatedSubject = fact.subject;
+    const subjectTypes = getAllTypes(relatedSubject, facts);
+
+    if (relatedSubject.toLowerCase() === objectTypeLower ||
+        subjectTypes.includes(objectTypeLower)) {
+      return {
+        truth: 'TRUE_CERTAIN',
+        method: 'argument_type_inference_reverse',
+        confidence: 0.95,
+        explanation: `${relatedSubject} ${relation} ${subject}, and ${relatedSubject} IS_A ${objectType}`,
+        proof: {
+          steps: [
+            { fact: `${relatedSubject} ${relation} ${subject}`, justification: 'direct_fact' },
+            { fact: `${relatedSubject} IS_A ${objectType}`, justification: 'type_membership' }
+          ]
+        }
+      };
+    }
+  }
+
+  return { truth: 'UNKNOWN', method: 'no_argument_type_match' };
 }
 
 /**

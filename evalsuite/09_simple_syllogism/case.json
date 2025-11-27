@@ -1,0 +1,36 @@
+{
+  "id": "09_simple_syllogism",
+  "name": "Simple Syllogism - Socrates Mortality",
+  "description": "Tests basic transitive inference with the classic Socrates syllogism",
+
+  "theory": {
+    "natural_language": "All humans are mortal. Socrates is a human.",
+    "expected_facts": [
+      "human IS_A mortal",
+      "Socrates IS_A human"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Is Socrates mortal?",
+      "expected_answer": {
+        "natural_language": "Yes, Socrates is mortal because Socrates is a human and all humans are mortal.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Transitive: Socrates IS_A human, human IS_A mortal => Socrates IS_A mortal"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Is Socrates a human?",
+      "expected_answer": {
+        "natural_language": "Yes, Socrates is a human.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Direct fact: Socrates IS_A human"
+      }
+    }
+  ],
+
+  "tags": ["syllogism", "transitivity", "basic", "IS_A"]
+}

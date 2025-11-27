@@ -73,8 +73,10 @@ IMPORTANT RULES:
 4. For numeric values, create a concept (e.g., "Celsius100" not "100")
 5. Concepts should be lowercase for types, Capitalized for instances/individuals
 6. Relations are ALWAYS UPPERCASE with underscores
+7. CUSTOM VERBS ARE ALLOWED! Convert any verb to UPPERCASE (e.g., "kills" → "KILLS", "loves" → "LOVES")
+8. Work with ANY language - extract the semantic structure regardless of language
 
-Use these relations:
+Common relations (use these when applicable):
 - IS_A: category/type membership (e.g., "Dog IS_A mammal", "Fido IS_A dog")
 - PART_OF: mereological (e.g., "Wheel PART_OF car")
 - CAUSES / CAUSED_BY: causation (e.g., "Fire CAUSES smoke")
@@ -82,18 +84,29 @@ Use these relations:
 - REQUIRES: dependencies (e.g., "Driving REQUIRES license")
 - PERMITS / PROHIBITED_BY / PERMITTED_BY: permissions/rules
 - DISJOINT_WITH: mutual exclusion (e.g., "mortal DISJOINT_WITH immortal")
-- BOILS_AT / FREEZES_AT / MELTS_AT: phase transitions with temperature concepts
 - OWNS / OWNED_BY: ownership
+
+BUT you can also use CUSTOM RELATIONS when the text uses specific verbs:
+- "D kills A" → D KILLS A
+- "Lion eats Zebra" → Lion EATS Zebra
+- "D omoara A" (Romanian for "D kills A") → D OMOARA A or D KILLS A
+- "toate X fac Y" (Romanian for "all X do Y") → X DOES Y
+- "A loves B" → A LOVES B
+
+For quantifiers like "all/toate/every":
+- "All dogs bark" → dog BARKS (the type, not individuals)
+- "Toate pisicile mananca soareci" → pisica MANANCA soarece
 
 BAD examples (DO NOT do this):
 - "Fido HAS_PROPERTY Belongs to my neighbor" ❌
 - "Water HAS_PROPERTY liquid" ❌
-- "boiling_point=100" ❌
+- Returning empty facts when there's clearly a verb relating two concepts ❌
 
 GOOD examples (DO this):
 - "Fido OWNED_BY Neighbor" ✓
 - "Water IS_A liquid" ✓
-- "Water BOILS_AT Celsius100" ✓
+- "D KILLS A" ✓ (custom verb)
+- "Cat CHASES Mouse" ✓ (custom verb)
 
 Respond with JSON only:
 {
@@ -116,19 +129,51 @@ export function buildQuestionPrompt(question) {
 
 Question: "${question}"
 
-Determine:
-1. Is this a yes/no question about a specific fact?
-2. Is this asking "what" something is?
-3. Is this asking for causes/effects?
-4. Is this asking for a list of related facts?
+IMPORTANT RULES:
+1. The relation MUST be in UPPERCASE with underscores (e.g., IS_A, not "is" or "is a")
+2. The subject and object must be single concept names (no articles like "a" or "an")
+3. NORMALIZE TO SINGULAR! Convert plural nouns to singular (animals→animal, cats→cat, people→person)
+4. For "is X a Y?" questions, use relation=IS_A
+5. For "can X do Y?" questions, use relation=CAN or PERMITS
+6. For "does X cause Y?" questions, use relation=CAUSES
+7. PRESERVE CUSTOM VERBS! If the question uses a specific verb like "eats", "loves", "kills", convert it to UPPERCASE (EATS, LOVES, KILLS)
+8. Work with ANY language - extract the verb and convert to UPPERCASE
+
+Common relation mappings:
+- "is a", "is an" → IS_A
+- "causes", "cause" → CAUSES
+- "can", "is able to" → CAN or PERMITS
+- "has", "have" → HAS
+- "located in", "in" → LOCATED_IN
+
+CUSTOM VERB examples (IMPORTANT - preserve the verb!):
+- "Does A eat food?" → { subject: "A", relation: "EATS", object: "food" }
+- "A eats food?" → { subject: "A", relation: "EATS", object: "food" }
+- "Does Lion eat Zebra?" → { subject: "Lion", relation: "EATS", object: "Zebra" }
+- "Does Cat love Dog?" → { subject: "Cat", relation: "LOVES", object: "Dog" }
+- "A kills B?" → { subject: "A", relation: "KILLS", object: "B" }
+- "A omoara B?" (Romanian) → { subject: "A", relation: "OMOARA", object: "B" }
+- "Does Lion hunt animals?" → { subject: "Lion", relation: "HUNTS", object: "animal" } (SINGULAR!)
+- "Do cats chase mice?" → { subject: "cat", relation: "CHASES", object: "mouse" } (SINGULAR!)
+
+Standard examples:
+- "Is Socrates mortal?" → { subject: "Socrates", relation: "IS_A", object: "mortal" }
+- "Is a dog an animal?" → { subject: "dog", relation: "IS_A", object: "animal" }
+- "Does fire cause smoke?" → { subject: "fire", relation: "CAUSES", object: "smoke" }
+
+Question types:
+1. yes_no: questions answerable with true/false
+2. what_is: asking about identity/properties
+3. causes/effects: asking about causation
+4. list: asking for enumeration
 
 Respond with JSON only:
 {
   "type": "yes_no" | "what_is" | "causes" | "effects" | "list" | "unknown",
   "canonical": {
-    "subject": "the subject being asked about",
-    "relation": "the relation (if specific)",
-    "object": "the object (if specific)"
+    "subject": "ConceptName (no articles)",
+    "relation": "RELATION_IN_UPPERCASE",
+    "object": "ConceptName (no articles)"
   },
   "original": "original question",
   "confidence": 0.0-1.0
