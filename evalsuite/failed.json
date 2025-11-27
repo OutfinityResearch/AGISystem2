@@ -4,9 +4,9 @@
       "id": "02_physical_properties",
       "name": "Physical Properties and Substances",
       "failedQueries": [
-        "q3"
+        "q1"
       ],
-      "lastRun": "2025-11-27T17:12:27.066Z"
+      "lastRun": "2025-11-27T17:35:03.947Z"
     },
     {
       "id": "03_deontic_reasoning",
@@ -15,11 +15,333 @@
         "q3"
       ],
       "lastRun": "2025-11-27T17:12:27.066Z"
+    },
+    {
+      "id": "04_counterfactual",
+      "name": "Counterfactual Reasoning - What If Scenarios",
+      "failedQueries": [
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "05_abductive",
+      "name": "Abductive Reasoning - Finding Explanations",
+      "failedQueries": [
+        "q1"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "06_analogy",
+      "name": "Analogical Reasoning - Structural Mapping",
+      "failedQueries": [
+        "q1",
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "08_multi_theory",
+      "name": "Multiple Theory Layers and Context Switching",
+      "failedQueries": [
+        "q1"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "14_gdpr_rights",
+      "name": "GDPR Rights and Lawful Bases",
+      "failedQueries": [
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "15_quality_manual_versions",
+      "name": "Quality Manual Precedence and Versioning",
+      "failedQueries": [
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "16_sop_conflicts",
+      "name": "Standard Operating Procedure Conflicts",
+      "failedQueries": [
+        "q2",
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "17_qc_thresholds",
+      "name": "Quality Control Thresholds",
+      "failedQueries": [
+        "q2",
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "18_audit_trail",
+      "name": "Audit Trail Completeness",
+      "failedQueries": [
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "19_style_guidelines_tone",
+      "name": "Tone and Voice Rules",
+      "failedQueries": [
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "20_editorial_voice_person",
+      "name": "Point of View and Consistent Person",
+      "failedQueries": [
+        "q1",
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "21_series_consistency",
+      "name": "Character Continuity in a Series",
+      "failedQueries": [
+        "q2",
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "22_literary_motifs",
+      "name": "Motif and Symbol Consistency",
+      "failedQueries": [
+        "q1"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "23_timeline_consistency",
+      "name": "Chronology and Temporal Consistency",
+      "failedQueries": [
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "24_factchecking_sources",
+      "name": "Fact-Checking Against Sources",
+      "failedQueries": [
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "25_deontic_priority",
+      "name": "Deontic Priority Rules",
+      "failedQueries": [
+        "q2",
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "27_procurement_rules",
+      "name": "Procurement Thresholds and Approvals",
+      "failedQueries": [
+        "q1",
+        "q3",
+        "q4"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "28_risk_controls",
+      "name": "Risk Controls and Compensating Measures",
+      "failedQueries": [
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "29_counterfactual_reg_change",
+      "name": "Counterfactual Regulatory Change",
+      "failedQueries": [
+        "q1",
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "30_abductive_noncompliance",
+      "name": "Abductive Non-Compliance Diagnosis",
+      "failedQueries": [
+        "q1",
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "33_effective_dates",
+      "name": "Effective Dates and Sunset Clauses",
+      "failedQueries": [
+        "q1"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "34_axiology_masks_content",
+      "name": "Axiology Masking for Content Neutrality",
+      "failedQueries": [
+        "q2",
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "35_combined_reasoning_commands",
+      "name": "Combined Reasoning: Validate, Prove, Hypothesize",
+      "failedQueries": [
+        "q1",
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "36_multi_theory_departments",
+      "name": "Department-Specific Theories",
+      "failedQueries": [
+        "q1",
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "38_definition_based_inference",
+      "name": "Definition-Based Inference for Defect Severity",
+      "failedQueries": [
+        "q1",
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "42_bias_pay_equity",
+      "name": "Pay Equity Bias Check",
+      "failedQueries": [
+        "q1"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "43_bias_news_political_mask",
+      "name": "Political Sentiment Masking in News Summary",
+      "failedQueries": [
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "44_bias_pronoun_resolution",
+      "name": "Pronoun Resolution Without Gender Stereotypes",
+      "failedQueries": [
+        "q1",
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "45_bias_hiring_masking",
+      "name": "Hiring Decision with Demographic Masking",
+      "failedQueries": [
+        "q1"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "46_bias_toxicity_vs_fact",
+      "name": "Toxic Language Masking vs. Factual Core",
+      "failedQueries": [
+        "q1"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "48_bias_language_register",
+      "name": "Language Register Bias",
+      "failedQueries": [
+        "q1"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "49_bias_counterfactual_mask_switch",
+      "name": "Counterfactual Mask Switching",
+      "failedQueries": [
+        "q1",
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "50_bias_scorecard_weighting",
+      "name": "Scorecard Weighting Without Sensitive Attributes",
+      "failedQueries": [
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "51_abductive_fire_investigation",
+      "name": "Abductive Reasoning - Fire Investigation",
+      "failedQueries": [
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "52_abductive_system_failure",
+      "name": "Abductive Reasoning - System Failure Analysis",
+      "failedQueries": [
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "53_abductive_quality_defect",
+      "name": "Abductive Reasoning - Manufacturing Quality Defect",
+      "failedQueries": [
+        "q1",
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "54_abductive_economic_indicator",
+      "name": "Abductive Reasoning - Economic Indicator Analysis",
+      "failedQueries": [
+        "q1"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
+    },
+    {
+      "id": "55_abductive_security_incident",
+      "name": "Abductive Reasoning - Security Incident Response",
+      "failedQueries": [
+        "q1",
+        "q2"
+      ],
+      "lastRun": "2025-11-27T17:35:03.947Z"
     }
   ],
-  "lastUpdated": "2025-11-27T17:12:27.066Z",
+  "lastUpdated": "2025-11-27T17:35:03.948Z",
   "rangeInfo": {
-    "lastFrom": 1,
-    "lastTo": 3
+    "lastFrom": null,
+    "lastTo": null
   }
 }

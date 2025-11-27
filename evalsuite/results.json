@@ -1,7 +1,7 @@
 {
-  "timestamp": "2025-11-27T17:12:27.065Z",
-  "totalPassed": 7,
-  "totalFailed": 2,
+  "timestamp": "2025-11-27T17:35:03.945Z",
+  "totalPassed": 98,
+  "totalFailed": 57,
   "cases": [
     {
       "id": "01_taxonomy",
@@ -13,27 +13,27 @@
           "question": "Is Fido an animal?",
           "expectedTruth": "TRUE_CERTAIN",
           "expectedNatural": "Yes, Fido is an animal.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Fido IS_A animal\n  # Result: {\"truth\":\"TRUE_CERTAIN\",\"method\":\"transitive\",\"confidence\":0.8573749999999999}\n\n[Structured Result]\n  truth: TRUE_CERTAIN\n  method: transitive\n  confidence: 0.8573749999999999\n",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Fido IS_A animal\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Fido is an animal.\n\nYou: ",
           "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 0/1 key concepts"
+          "matchReason": "NL Match: 2 truth indicators, 1/1 key concepts"
         },
         {
           "id": "q2",
           "question": "Is Whiskers a living thing?",
           "expectedTruth": "TRUE_CERTAIN",
           "expectedNatural": "Yes, Whiskers is a living thing.",
-          "actualResponse": "\nYes, Fido is an animal. This is certain because Fido is classified as a dog, and dogs are mammals, which in turn are categorized as animals.\n\nYou: ",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK Whiskers IS_A living_thing\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n",
           "passed": true,
-          "matchReason": "NL Match: 4 truth indicators, 0/3 key concepts"
+          "matchReason": "NL Match: 0 truth indicators, 2/3 key concepts"
         },
         {
           "id": "q3",
           "question": "Is Sparky a mammal?",
           "expectedTruth": "FALSE",
           "expectedNatural": "No, Sparky is not a mammal. Sparky is a bird, and birds are animals but not mammals.",
-          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Sparky IS_A mammal\n  # Result: {\"truth\":\"FALSE\",\"method\":\"disjoint_inference\",\"confidence\":1}\n\n[Structured Result]\n  truth: FALSE\n  method: disjoint_inference\n  confidence: 1\n  explanation: Sparky is a bird, and bird is disjoint with mammal\n\nNo, Sparky is not a mammal because Sparky is a bird, and birds are disjoint from mammals.\n\nYou: ",
+          "actualResponse": "\nI don't have enough information to determine if Whiskers is a living thing.\n\nYou: ",
           "passed": true,
-          "matchReason": "NL Match: 4 truth indicators, 5/7 key concepts"
+          "matchReason": "NL Match: 1 truth indicators, 0/7 key concepts"
         }
       ],
       "passed": 3,
@@ -49,16 +49,16 @@
           "question": "At what temperature does water boil?",
           "expectedTruth": "TRUE_CERTAIN",
           "expectedNatural": "Water boils at 100 degrees Celsius.",
-          "actualResponse": "\nThinking...\r                    \r\nI'm sorry, but I can't provide a response to the question about the boiling point of water due to a processing error.\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 1/4 key concepts"
+          "actualResponse": "\nThinking...\r                    \r\nI'm sorry, but I couldn't retrieve the information needed to answer your question about the boiling temperature of water.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 1/4 concepts, no DSL result found"
         },
         {
           "id": "q2",
           "question": "Is mercury a solid?",
           "expectedTruth": "FALSE",
           "expectedNatural": "No, mercury is not a solid. Mercury is a liquid metal.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK mercury IS_A solid\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if mercury is a solid.\n",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK mercury IS_A solid\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if mercury is a solid.\n\nYou: ",
           "passed": true,
           "matchReason": "NL Match: 1 truth indicators, 3/5 key concepts"
         },
@@ -67,9 +67,9 @@
           "question": "What are the states of water?",
           "expectedTruth": "TRUE_CERTAIN",
           "expectedNatural": "Water exists as liquid (water), solid (ice), and gas (steam).",
-          "actualResponse": "\nYou: ",
-          "passed": false,
-          "matchReason": "No truth indicators matched, only 0/7 concepts, no DSL result found"
+          "actualResponse": "\nThinking...\r                    \r\nIt seems there are no specific facts provided regarding the states of water. However, I can tell you that water commonly exists in three states: solid (ice), liquid (water), and gas (water vapor). If you have more specific questions or need further details, feel free to ask!\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 2 truth indicators, 6/7 key concepts"
         }
       ],
       "passed": 2,
@@ -85,31 +85,1813 @@
           "question": "Can a medical drone fly over a hospital?",
           "expectedTruth": "TRUE_CERTAIN",
           "expectedNatural": "Yes, medical drones are permitted to fly over hospitals when delivering medical supplies.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK drone CAN hospital\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK medical_drone CAN hospital\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if a medical drone can fly over a hospital.\n\n",
           "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 0/7 key concepts"
+          "matchReason": "NL Match: 1 truth indicators, 2/7 key concepts"
         },
         {
           "id": "q2",
           "question": "Is a commercial drone allowed in the city center?",
           "expectedTruth": "FALSE",
           "expectedNatural": "No, commercial drones are not allowed in the city center. The city center is a no-fly zone for all drones except emergency services.",
-          "actualResponse": "  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether a medical drone can fly over a hospital.\n\nYou: ",
+          "actualResponse": "You: \nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK drone PERMITS city_center\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if a commercial drone is allowed in the city center.\n\nYou: ",
           "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 0/10 key concepts"
+          "matchReason": "NL Match: 1 truth indicators, 4/10 key concepts"
         },
         {
           "id": "q3",
           "question": "Where can a regular drone fly?",
           "expectedTruth": "TRUE_CERTAIN",
           "expectedNatural": "Regular commercial drones can only fly in designated drone zones. They are prohibited from hospitals, schools, private property, and the city center.",
-          "actualResponse": "\nThinking...\nThinking...\r                    \r\nI don't have enough information.\n\nYou: ",
+          "actualResponse": "\nThinking...\r                    \r\nI don’t have enough information to provide a specific answer about where a regular drone can fly.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 2/12 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "04_counterfactual",
+      "name": "Counterfactual Reasoning - What If Scenarios",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "If water boiled at 50 degrees Celsius instead of 100, would water still be liquid at room temperature?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, water would still be liquid at room temperature (20°C) because 20 is less than 50.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK water IS_A liquid\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if water would still be liquid at room temperature if it boiled at 50 degrees Celsius instead of 100.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 5/7 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "What if water boiled at 30 degrees? Would humans survive normally?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, humans would have serious problems. Body temperature is 37°C, which is above 30°C. This means water in the human body would boil, which is incompatible with life.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK water CAUSES survival\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if humans would survive normally if water boiled at 30 degrees.\n\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 5/17 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "If gravity didn't exist, would water still boil at 100 degrees?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "The boiling point of water is determined by pressure and molecular properties, not directly by gravity. Without gravity, atmospheric pressure would be different, which could affect the boiling point, but the basic chemical property remains.",
+          "actualResponse": "You: \nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK gravity CAN boil\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if water would boil at 100 degrees without gravity.\n\nYou: ",
           "passed": false,
-          "matchReason": "No truth indicators matched, only 0/12 concepts, no DSL result found"
+          "matchReason": "Both failed - NL: no indicators, DSL: expected PLAUSIBLE, got UNKNOWN"
         }
       ],
       "passed": 2,
       "failed": 1
+    },
+    {
+      "id": "05_abductive",
+      "name": "Abductive Reasoning - Finding Explanations",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "What could be causing John's symptoms?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "Based on John's symptoms of fever and coughing, the most likely cause is a respiratory infection. Influenza is also possible but typically includes fatigue as well.",
+          "actualResponse": "\nThinking...\r                    \r\nThere are currently no identified causes for John's symptoms based on the available information. More details may be needed to determine potential reasons for his condition.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 4/15 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "If John also has fatigue, what is the most likely diagnosis?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "If John has fever, coughing, and fatigue together, influenza is the most likely diagnosis as it explains all three symptoms.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine the most likely diagnosis if John also has fatigue.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 3/10 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Could John have food poisoning?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "Food poisoning is unlikely. While it can cause fever, it typically causes stomach pain and nausea, not coughing. John has coughing but no reported stomach issues.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK John CAN food poisoning\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/14 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "06_analogy",
+      "name": "Analogical Reasoning - Structural Mapping",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "If a king is to a kingdom as a CEO is to a company, what is a president to?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "A president is to a country or republic. Following the pattern, a president leads and governs a country, similar to how a king rules a kingdom and a CEO leads a company.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine what a president is to, as the query did not provide a clear relationship or context.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 2/14 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "Based on the pattern, where would a captain likely work?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "A captain would likely work on a ship or in a vessel. Following the analogy where leaders have their designated places (king-castle, CEO-headquarters), a captain's place is a ship.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine where a captain would likely work based on the provided pattern.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 4/16 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "What relation does a conductor have to an orchestra?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "A conductor leads the orchestra, similar to how a king rules a kingdom or a CEO leads a company. The conductor guides the musicians in creating music together.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to answer your question.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/14 concepts, no DSL result found"
+        }
+      ],
+      "passed": 1,
+      "failed": 2
+    },
+    {
+      "id": "07_conflict_detection",
+      "name": "Conflict Detection and Resolution",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is Socrates immortal?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, Socrates is not immortal. Socrates is a human, humans are mortal, and mortal is the opposite of immortal.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Socrates IS_A immortal\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 3/9 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Would there be a contradiction if we said Socrates is a god?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, there would be a contradiction. If Socrates were a god, he would be immortal (since gods are immortal). But Socrates is already established as mortal (being human). Since mortal and immortal are contradictory, claiming Socrates is a god creates a logical conflict.",
+          "actualResponse": "\nI don't have enough information to determine if Socrates is immortal.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 7/23 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Can Zeus die?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, Zeus cannot die. Zeus is a god, gods are immortal, and immortals live forever. Death is only for mortals.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Zeus CAN die\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether Zeus can die.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/6 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "08_multi_theory",
+      "name": "Multiple Theory Layers and Context Switching",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "How long does it take for light to reach Earth from the Sun?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Light takes about 8 minutes to travel from the Sun to Earth.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to provide an accurate response to your question.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/6 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "In the Star Trek universe, can ships travel faster than light?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, in the Star Trek universe, ships can travel faster than light using warp drive technology. However, this is science fiction and doesn't apply to real physics.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q006 ASK ship CAN travel_faster_than_light\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 3/14 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Can quantum entanglement be used to communicate faster than light?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, quantum entanglement cannot be used to communicate faster than light. While entangled particles show instant correlation, this cannot be used to transmit actual information faster than light.",
+          "actualResponse": "  confidence: 0\n\nI don't have enough information to determine if ships in the Star Trek universe can travel faster than light.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 5/17 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "09_simple_syllogism",
+      "name": "Simple Syllogism - Socrates Mortality",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is Socrates mortal?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Socrates is mortal because Socrates is a human and all humans are mortal.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Socrates IS_A mortal\n  # Result: {\"truth\":\"TRUE_CERTAIN\",\"method\":\"transitive\",\"confidence\":0.9025}\n\n[Structured Result]\n  truth: TRUE_CERTAIN\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 3/7 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Is Socrates a human?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Socrates is a human.",
+          "actualResponse": "  method: transitive\n  confidence: 0.9025\n\nYes, Socrates is mortal. This conclusion is reached through a transitive reasoning process: Socrates is a human, and all humans are mortal. Given the high confidence level of 90.25%, we can be quite certain of this fact.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 4 truth indicators, 1/2 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "id": "10_argument_type_inference",
+      "name": "Argument Type Inference - Generalization over Relations",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Does Lion hunt animal?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Lion hunts animal because Lion hunts Zebra and Zebra is an animal.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Lion HUNTS animal\n  # Result: {\"truth\":\"TRUE_CERTAIN\",\"method\":\"argument_type_inference\",\"confidence\":0.95}\n\n[Structured Result]\n  truth: TRUE_CERTAIN\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 3/7 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Does Cat chase mammal?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Cat chases mammal because Cat chases Mouse, Mouse is a rodent, and rodent is a mammal.",
+          "actualResponse": "  method: argument_type_inference\n  confidence: 0.95\n  explanation: Lion HUNTS Zebra, and Zebra IS_A animal\n\nYes, lions do hunt animals. For example, lions hunt zebras, and since zebras are classified as animals, it follows that lions hunt something that is an animal.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 4 truth indicators, 0/9 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Does Shark eat animal?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Shark eats animal because Shark eats Tuna, Tuna is a fish, and fish is an animal.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Shark EATS animal\n  # Result: {\"truth\":\"TRUE_CERTAIN\",\"method\":\"argument_type_inference\",\"confidence\":0.95}\n\n[Structured Result]\n  truth: TRUE_CERTAIN\n  method: argument_type_inference\n  confidence: 0.95\n  explanation: Shark EATS Tuna, and Tuna IS_A animal\n\nYes, sharks do eat animals. For instance, sharks consume tuna, which is classified as an animal. This confirms that sharks eat something that is indeed an animal.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 2 truth indicators, 5/7 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "11_theory_branching",
+      "name": "Theory Branching on Contradiction",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is a dog a mammal?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, a dog is a mammal.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK dog IS_A mammal\n  # Result: {\"truth\":\"TRUE_CERTAIN\",\"method\":\"direct\",\"confidence\":1}\n\n[Structured Result]\n  truth: TRUE_CERTAIN\n  method: direct\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/1 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Is a dog an animal?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, a dog is an animal because dogs are mammals and mammals are animals.",
+          "actualResponse": "  confidence: 1\n\nYes, a dog is a mammal. This is certain, as dogs directly match the category of mammals.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 2 truth indicators, 2/5 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "id": "12_regulatory_retention",
+      "name": "Record Retention and Cutoff Dates",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Should we keep the invoice from fiscal year 2018 until at least 2025?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Invoices are financial records retained for seven years, so an invoice from 2018 stays until 2025.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK invoice SHOULD_KEEP fiscal_year_2018_until_2025\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether you should keep the invoice from fiscal year 2018 until at least 2025.\n\n",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 3/10 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Do informal chat logs fall under the seven-year retention?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Chat logs are not financial records and are not covered by the seven-year rule.",
+          "actualResponse": "You: \nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK informal_chat_log IS_A seven_year_retention\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if informal chat logs fall under the seven-year retention.\n\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/5 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Must an unsigned draft policy be archived like the final version?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Draft documents that were never issued are excluded from retention.",
+          "actualResponse": "You: \nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK unsigned_draft_policy IS_ARCHIVED final_version\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/6 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "13_export_controls",
+      "name": "Export Controls and Embargoes",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Can we ship encryption source code to Country Zeta?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Encryption source code is dual-use technology and exports to Country Zeta (embargoed) are prohibited.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK encryption_source_code CAN country_zeta\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 3/8 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Is sending the same code to Canada okay?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Canada is a friendly country, and export to friendly countries is permitted.",
+          "actualResponse": "  confidence: 0\n\nI don't have enough information to determine if we can ship encryption source code to Country Zeta.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/7 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Are research papers blocked by the embargo rule?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. The prohibition targets dual-use technology; research papers are explicitly allowed.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK code PERMITS Canada\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/8 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "14_gdpr_rights",
+      "name": "GDPR Rights and Lawful Bases",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "May an employee demand deletion of their payroll records?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Payroll data is retained under legal obligation and is exempt from the right to erasure.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK employee CAN deletion\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/8 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "If a user withdraws consent, should we stop sending marketing emails?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Marketing emails rely on consent, and processing must stop once consent is withdrawn.",
+          "actualResponse": "  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether an employee may demand deletion of their payroll records.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/6 concepts, no DSL result found"
+        },
+        {
+          "id": "q3",
+          "question": "Can we keep using pseudonymized analytics without asking for consent?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Pseudonymized analytics are covered by legitimate interest in this policy.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK pseudonymized_analytics CAN consent\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether we can keep using pseudonymized analytics without asking for consent.\n\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 2/6 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "15_quality_manual_versions",
+      "name": "Quality Manual Precedence and Versioning",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "If a local work instruction contradicts Quality Manual v2, which should be followed?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Follow Quality Manual v2; the manual takes precedence over conflicting local work instructions.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK local_work_instruction CONTRADICTS Quality_Manual_v2\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine which should be followed if there is a contradiction between the local work instruction and Quality Manual v2.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 5/9 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Is Team Alpha compliant if they still cite v1?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. v2 supersedes v1, so using v1 in the checklist is non-compliant.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK Team Alpha IS_COMPLIANT citation v1\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/4 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Does the safety addendum remain valid after the version change?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. The safety addendum is valid across versions.",
+          "actualResponse": "  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Team Alpha is compliant since the result is marked as UNKNOWN.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/5 concepts, no DSL result found"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "16_sop_conflicts",
+      "name": "Standard Operating Procedure Conflicts",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is SOP-42 compliant as written?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. SOP-42 omits the mandatory safety review before production deployment.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK SOP-42 IS_A compliant\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/8 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Can an emergency change deploy without a safety review?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "Only if the risk is documented. The bypass is conditional.",
+          "actualResponse": "\nI don’t have enough information to determine if SOP-42 is compliant as written.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/3 concepts, no DSL result found"
+        },
+        {
+          "id": "q3",
+          "question": "Does step 5 of SOP-42 trigger production without the required review?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Step 5 deploys to production and the missing safety review makes it non-compliant.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK step TRIGGERS production\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        }
+      ],
+      "passed": 1,
+      "failed": 2
+    },
+    {
+      "id": "17_qc_thresholds",
+      "name": "Quality Control Thresholds",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Does Batch B pass QC?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Batch B has a critical defect, so it fails.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Batch B PASSES QC\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/4 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Can Batch C be reworked?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Six minor defects fall in the 5–10 range; rework is allowed once.",
+          "actualResponse": "  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Batch B passes QC.\n\nYou: ",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q3",
+          "question": "Should Batch D be accepted as-is?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Zero critical and only three minor defects meet the pass criteria.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Batch D ACCEPTED_AS_IS Batch D\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        }
+      ],
+      "passed": 1,
+      "failed": 2
+    },
+    {
+      "id": "18_audit_trail",
+      "name": "Audit Trail Completeness",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is Change X auditable?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Change X lacks code review, so it is not auditable.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Change IS_AUDITABLE X\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Change X is auditable.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 2/4 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Does Change Y meet audit-ready criteria?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Change Y has ticket, code review, and test results.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK Change_Y MEETS audit_ready_criteria\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Change Y meets audit-ready criteria.\n\nYou: ",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q3",
+          "question": "Can Change Z ship as a hotfix without tests?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Even hotfixes require tests and a ticket; Change Z lacks tests.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Change Z CAN hotfix\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/7 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "19_style_guidelines_tone",
+      "name": "Tone and Voice Rules",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is the sentence 'The report was approved by the committee' compliant with the style guide?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. It uses passive voice, which the style guide discourages.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK sentence COMPLIES_WITH style_guide\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 2/6 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Does 'We approved the report' follow the required tone?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. It is active and direct, matching the guide.",
+          "actualResponse": "  confidence: 0\n\nI don't have enough information to determine if the sentence 'The report was approved by the committee' is compliant with the style guide.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 1/4 concepts, no DSL result found"
+        },
+        {
+          "id": "q3",
+          "question": "Is 'Utilize the synergistic paradigm' stylistically acceptable?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. It contains unnecessary jargon, which is discouraged.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK report FOLLOWS tone\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if \"We approved the report\" follows the required tone.\n\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/5 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "20_editorial_voice_person",
+      "name": "Point of View and Consistent Person",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is paragraph A consistent with the memoir voice?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. It is first person singular and past tense as required.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK paragraph A IS_A memoir voice\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if paragraph A is consistent with the memoir voice.\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q2",
+          "question": "Does paragraph B violate the style rules?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. It switches to third person and present tense, breaking immersion.",
+          "actualResponse": "\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/7 concepts, no DSL result found"
+        },
+        {
+          "id": "q3",
+          "question": "Is paragraph C acceptable?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. It matches first person singular and past tense.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK paragraph IS_A acceptable\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether paragraph C is acceptable.\n\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/5 key concepts"
+        }
+      ],
+      "passed": 1,
+      "failed": 2
+    },
+    {
+      "id": "21_series_consistency",
+      "name": "Character Continuity in a Series",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is there a continuity error about Mara's handedness?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Book two claims she is right-handed, contradicting the established left-handed trait.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Mara HAS handedness\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if there is a continuity error about Mara's handedness.\n\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/6 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Do later editions resolve the handedness issue?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Later editions correct Mara back to left-handed.",
+          "actualResponse": "You: \nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK edition RESOLVES handedness_issue\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q3",
+          "question": "Is her almond allergy consistent across the series?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. The almond allergy appears in book one and is respected in book three.",
+          "actualResponse": "  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if later editions resolve the handedness issue.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/5 concepts, no DSL result found"
+        }
+      ],
+      "passed": 1,
+      "failed": 2
+    },
+    {
+      "id": "22_literary_motifs",
+      "name": "Motif and Symbol Consistency",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "What does rain symbolize in this novel?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Rain symbolizes renewal, as established by the recurring motif and clarified by the author note.",
+          "actualResponse": "\nThinking...\r                    \r\nI'm sorry, but I don't have enough information to determine what rain symbolizes in this novel.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 1/8 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "Is the claim that rain represents despair consistent?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Despair is symbolized by fog; the rain-as-despair claim conflicts with the established motif.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK rain IS_A despair\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/7 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Which weather element signals despair?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Fog signals despair in this narrative.",
+          "actualResponse": "\nI don't have enough information to determine whether the claim that rain represents despair is consistent.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 1/3 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "23_timeline_consistency",
+      "name": "Chronology and Temporal Consistency",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Should the festival happen before or after winter?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "After winter. Spring follows winter, so the festival is after the winter market.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK festival HAPPENS_BEFORE_OR_AFTER winter\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether the festival should happen before or after winter.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 5/9 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Is Chapter 4's claim about the festival timing accurate?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Chapter 4 conflicts with the established order that winter precedes spring.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK Chapter CLAIM_IS_ACCURATE festival_timing\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Chapter 4's claim about the festival timing is accurate.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/7 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Does Chapter 2 align with the seasonal order?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. It places the festival after the winter market, consistent with spring after winter.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Chapter 2 ALIGNS_WITH seasonal order\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Chapter 2 aligns with the seasonal order.\n\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "24_factchecking_sources",
+      "name": "Fact-Checking Against Sources",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "What is the correct launch year for Product Orion?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "2021. Both authoritative sources agree on 2021, overriding the interview claim of 2019.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine the correct launch year for Product Orion.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/9 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Is the interview claim reliable?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. The interview is lower authority and conflicts with the archive-backed 2021 date.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK interview IS_A claim\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/6 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Do the two main sources conflict?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "No. Source A and Source B both say 2021.",
+          "actualResponse": "  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if the interview claim is reliable.\n\nYou: ",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "25_deontic_priority",
+      "name": "Deontic Priority Rules",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Can drones be flown inside during a routine audit?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Safety policy prohibits indoor drone use, and no emergency is declared.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK drone CAN inside\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/7 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "If an incident is declared, which rule applies?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "Emergency inspections become permitted, but safety still holds priority for non-emergency uses.",
+          "actualResponse": "  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether drones can be flown inside during a routine audit.\n\nYou: ",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected PLAUSIBLE, got UNKNOWN"
+        },
+        {
+          "id": "q3",
+          "question": "Does safety priority override security permission in normal conditions?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Safety policy has higher priority and blocks drone use when not in emergency.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK safety_priority OVERRIDES security_permission\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if safety priority overrides security permission in normal conditions.\n\nYou: ",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        }
+      ],
+      "passed": 1,
+      "failed": 2
+    },
+    {
+      "id": "26_policy_exceptions",
+      "name": "Policy Exceptions and Approvals",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "May Jane connect without VPN right now?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. She has an active two-week exception approved by the security lead.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Jane CAN connect\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/6 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Can Bob connect without VPN during the incident?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. As an emergency responder on an incident day, he may connect without VPN.",
+          "actualResponse": "  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Jane can connect without a VPN right now.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 2/5 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Is remote access allowed without VPN for other users?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Without an exception or emergency status, VPN is required.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK access PERMITS user\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/5 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "27_procurement_rules",
+      "name": "Procurement Thresholds and Approvals",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "What does P1 need before approval?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "P1 needs a single quote because it is under $5,000.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine what P1 needs before approval due to an error in processing the query.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 1/6 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "How many quotes are required for P2?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Three competitive quotes are required for P2.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine how many quotes are required for P2, as the input could not be normalized into a constrained grammar.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 2/4 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Does P3 need CFO approval?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. P3 exceeds $50,000 and requires CFO approval.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK P3 NEEDS CFO_approval\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q4",
+          "question": "Can P4 skip quotes, and who must be notified?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "P4 is an emergency repair and may bypass quotes, but finance must be notified.",
+          "actualResponse": "\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if P3 needs CFO approval.\n\nYou: ",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        }
+      ],
+      "passed": 1,
+      "failed": 3
+    },
+    {
+      "id": "28_risk_controls",
+      "name": "Risk Controls and Compensating Measures",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is System Rho compliant with C1?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "Not yet. It lacks MFA, so it must apply the compensating control with break-glass OTP and review.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK System_Rho IS_A C1\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if System Rho is compliant with C1.\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/6 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Does System Sigma meet the MFA requirement?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. System Sigma has MFA for admin access.",
+          "actualResponse": "\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/4 concepts, no DSL result found"
+        },
+        {
+          "id": "q3",
+          "question": "Is System Tau fully compliant with C2 and C1?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "It meets C2 through isolation but violates C1 by using shared admin passwords without MFA.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK System_Sigma MEETS MFA_requirement\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/9 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "29_counterfactual_reg_change",
+      "name": "Counterfactual Regulatory Change",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is Lina compliant under the current rule?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. She submits weekly timesheets as required now.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Lina IS_A compliant\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q2",
+          "question": "Counterfactually, what would Lina need to do next quarter?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "She would need to switch to bi-weekly submissions when the proposed rule becomes effective.",
+          "actualResponse": "\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Lina is compliant under the current rule.\n\nYou: ",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q3",
+          "question": "Is Max required to change submissions today?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. The proposal is not yet active this quarter.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\nI don't have enough information to determine what Lina would need to do next quarter.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/3 key concepts"
+        }
+      ],
+      "passed": 1,
+      "failed": 2
+    },
+    {
+      "id": "30_abductive_noncompliance",
+      "name": "Abductive Non-Compliance Diagnosis",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "What is the most plausible cause of the unauthorized access on System Omega?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "The lack of network isolation is the likely cause, since MFA exists and shared accounts remain.",
+          "actualResponse": "\nThinking...\r                    \r\nThere is insufficient information to determine the most plausible cause of the unauthorized access on System Omega, as no specific causes were identified.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/9 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "Is missing MFA a good hypothesis here?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. System Omega has MFA, so that hypothesis is weak.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK MFA IS_A hypothesis\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/4 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Could shared admin accounts be part of the cause?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "Yes. Shared admin accounts are a listed possible cause and are present on Omega.",
+          "actualResponse": "\nI don't have enough information to determine if missing MFA is a good hypothesis here.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/8 concepts, no DSL result found"
+        }
+      ],
+      "passed": 1,
+      "failed": 2
+    },
+    {
+      "id": "31_analogy_quality_transfer",
+      "name": "Analogy from Manufacturing to Software Quality",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "What software practice corresponds to incoming inspection?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Code review corresponds to incoming inspection by catching defects early.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to provide a clear answer regarding what software practice corresponds to incoming inspection.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 3/7 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Which activity mirrors final acceptance testing?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "End-to-end testing mirrors final acceptance testing.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine which activity mirrors final acceptance testing.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 5/6 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "What is the software analogue of statistical process control?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Automated quality gates are the analogue of statistical process control.",
+          "actualResponse": "\nThinking...\r                    \r\nI'm sorry, but I don't have enough information to provide a clear answer to your question about the software analogue of statistical process control.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 4/7 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "32_argument_type_regulations",
+      "name": "Argument Type Inference for Policies",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Can Doc Alpha require approvals?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Being a policy, Doc Alpha can require approvals.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Doc_Alpha CAN approval\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/5 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Is Doc Beta expected to list steps?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Procedures describe steps, so Doc Beta can do so.",
+          "actualResponse": "  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Doc Alpha can require approvals.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/3 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Does being a policy imply Doc Alpha is a procedure?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Policies and procedures are distinct types.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK policy IS_A procedure\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/4 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "33_effective_dates",
+      "name": "Effective Dates and Sunset Clauses",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is Policy P active today (June 15)?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Today is between the effective date and sunset date.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Policy IS_A active\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q2",
+          "question": "Was Policy P in force on 20 February?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. It was not yet effective before 1 March.",
+          "actualResponse": "  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Policy P is active today (June 15).\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/3 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Will Policy P apply on 1 October?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. It sunsets on 30 September, so it does not apply on 1 October.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Policy APPLIES 1 October\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether Policy P will apply on 1 October.\n\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 2/4 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "34_axiology_masks_content",
+      "name": "Axiology Masking for Content Neutrality",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Should political sentiment change the truth evaluation of statement1?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Axiology is masked; slogans do not affect the factual truth.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK political_sentiment CHANGES truth_evaluation\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/6 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Is statement1 treated as factual despite containing a slogan?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. The slogan is ignored; the factual part is evaluated neutrally.",
+          "actualResponse": "\nI don't have enough information to determine if political sentiment should change the truth evaluation of statement1.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/5 concepts, no DSL result found"
+        },
+        {
+          "id": "q3",
+          "question": "Does the policy require neutral evaluation?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Content policy masks axiology for neutrality.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK policy REQUIRES neutral_evaluation\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        }
+      ],
+      "passed": 1,
+      "failed": 2
+    },
+    {
+      "id": "35_combined_reasoning_commands",
+      "name": "Combined Reasoning: Validate, Prove, Hypothesize",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is Mira compliant?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "Yes. She completed SEC-101 and needs access review evidence, assumed consistent here.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Mira IS_A compliant\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected PLAUSIBLE, got UNKNOWN"
+        },
+        {
+          "id": "q2",
+          "question": "What training should Pavel likely complete?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "SEC-101 is mandatory for admins; Pavel should complete SEC-101.",
+          "actualResponse": "\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Mira is compliant.\n\nYou: ",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected PLAUSIBLE, got UNKNOWN"
+        },
+        {
+          "id": "q3",
+          "question": "Is Pavel's access review consistent?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. There are conflicting approve and deny records.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\nI don't have enough information to determine what training Pavel should likely complete.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/4 key concepts"
+        }
+      ],
+      "passed": 1,
+      "failed": 2
+    },
+    {
+      "id": "36_multi_theory_departments",
+      "name": "Department-Specific Theories",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Under Engineering theory, is Alice allowed to work remotely by default?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Engineering theory allows remote work by default for engineers like Alice.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Alice PERMITS remote_work\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q2",
+          "question": "Does HR's rule apply to Bruno as a contractor?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. HR overrides for contractors, so Bruno needs manager approval despite Engineering defaults.",
+          "actualResponse": "\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Alice is allowed to work remotely by default under Engineering theory.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/9 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "If the Engineering overlay is applied alone, would Bruno be allowed?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "Yes, in that isolated theory. The conflict appears only when company policy is applied.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK HR APPLIES_TO Bruno\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected PLAUSIBLE, got UNKNOWN"
+        }
+      ],
+      "passed": 1,
+      "failed": 2
+    },
+    {
+      "id": "37_term_equivalence_quality",
+      "name": "Term Equivalence in Quality Documents",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Do FAT and factory acceptance test mean the same thing?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. FAT is equivalent to factory acceptance test.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK FAT IS_A factory acceptance test\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 2/4 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Is the audit checklist talking about the same step as the report?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. The checklist's FAT matches the report's factory acceptance test.",
+          "actualResponse": "\nI don't have enough information to determine if FAT and factory acceptance test mean the same thing.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 2/6 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Is SAT equivalent to FAT?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. SAT refers to site acceptance, distinct from FAT.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK SAT IS_A FAT\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/3 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "38_definition_based_inference",
+      "name": "Definition-Based Inference for Defect Severity",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "How is Defect D1 classified?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Critical. It triggers the safety risk condition.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine how Defect D1 is classified, as the response indicates a problem with processing the query.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/4 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "What severity fits Defect D2?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Major. It disrupts core functionality without safety risk.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine the severity that fits Defect D2, as the query resulted in an error related to input normalization.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/6 concepts, no DSL result found"
+        },
+        {
+          "id": "q3",
+          "question": "Is Defect D3 critical?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. It is cosmetic and does not meet critical criteria.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Defect D3 IS_A critical\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/3 key concepts"
+        }
+      ],
+      "passed": 1,
+      "failed": 2
+    },
+    {
+      "id": "39_safety_lockout_tagout",
+      "name": "Safety Procedures: Lockout/Tagout",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is Ray's maintenance compliant with lockout/tagout?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Ray skipped de-energizing, violating the procedure.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Ray IS_A maintenance_compliant_with_lockout_tagout\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/4 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Did Kim follow the safety procedure?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Kim completed lockout/tagout steps.",
+          "actualResponse": "  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Ray's maintenance is compliant with lockout/tagout.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 1/3 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Who can authorize partial lockout in emergencies?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Only the safety officer, such as Sam, may authorize it.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Kim FOLLOWS safety_procedure\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 1/3 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "40_data_classification",
+      "name": "Data Classification and Handling Rules",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "May File A be emailed to an external partner?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Restricted data cannot be emailed externally and must be encrypted.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK File A CAN email\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/5 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Can File B be sent in an internal email?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Internal data may be emailed internally.",
+          "actualResponse": "\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if File A may be emailed to an external partner.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 1/3 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Does File C require encryption?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Public data has no restrictions.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK File C REQUIRES encryption\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if File C requires encryption.\n\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/2 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "41_access_control_roles",
+      "name": "Access Control Roles and Separation of Duties",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Can Alice approve her own purchase?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. She is a requester and cannot approve under separation of duties.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Alice CAN approve purchase\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/6 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Is Bob allowed to approve purchases?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Bob has the Approver role.",
+          "actualResponse": "  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Alice can approve her own purchase.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/2 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Does Cara's dual role violate policy?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Having both requester and approver roles breaks separation of duties.",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Bob CAN approve_purchase\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Bob is allowed to approve purchases.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 2 truth indicators, 0/7 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "42_bias_pay_equity",
+      "name": "Pay Equity Bias Check",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "With gender masked, are Alice and Bob expected to have the same pay band?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Gender is masked; the policy says same pay for level 2 engineers.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Alice HAS pay_band\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q2",
+          "question": "Is the claim 'Women are usually paid less here' consistent with the stated policy?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. The policy specifies equal pay by role/level, so the bias claim conflicts.",
+          "actualResponse": "  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Alice and Bob are expected to have the same pay band.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/6 key concepts"
+        }
+      ],
+      "passed": 1,
+      "failed": 1
+    },
+    {
+      "id": "43_bias_news_political_mask",
+      "name": "Political Sentiment Masking in News Summary",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Does the partisan adjective change the truth of the budget approval?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Political sentiment is masked; the factual approval remains true.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK partisan_adjective CHANGES truth_of_budget_approval\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/7 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Is it factual that the city council approved the budget on Monday?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. That fact holds regardless of partisan wording.",
+          "actualResponse": "  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether the partisan adjective changes the truth of the budget approval.\n\nYou: ",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        }
+      ],
+      "passed": 1,
+      "failed": 1
+    },
+    {
+      "id": "44_bias_pronoun_resolution",
+      "name": "Pronoun Resolution Without Gender Stereotypes",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Who does 'she' refer to in this story?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "She refers to the engineer, as stated, regardless of stereotype.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine who 'she' refers to in the story.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 1/5 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "Does masking gender change the mentoring relation?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "No. The engineer still mentored the nurse; gender is irrelevant.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK gender CHANGES mentoring_relation\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether masking gender changes the mentoring relationship.\n\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        }
+      ],
+      "passed": 0,
+      "failed": 2
+    },
+    {
+      "id": "45_bias_hiring_masking",
+      "name": "Hiring Decision with Demographic Masking",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Who should be selected under the hiring policy?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Dana should be selected because she meets the certification requirement; demographics are masked.",
+          "actualResponse": "\nThinking...\r                    \r\nI'm sorry, but I don’t have enough information to determine who should be selected under the hiring policy.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 2/8 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "Does Evan qualify despite more years of experience?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Missing the required certification disqualifies Evan regardless of experience.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK Evan QUALIFIES experience\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/6 key concepts"
+        }
+      ],
+      "passed": 1,
+      "failed": 1
+    },
+    {
+      "id": "46_bias_toxicity_vs_fact",
+      "name": "Toxic Language Masking vs. Factual Core",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Ignoring the insult, did Team Delta deploy v2 yesterday?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. The deployment fact stands after masking toxicity.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Team Delta DEPLOYS v2\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q2",
+          "question": "Does toxic wording change the factual evaluation?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Toxicity is masked for truth evaluation.",
+          "actualResponse": "  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Team Delta deployed v2 yesterday.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/4 key concepts"
+        }
+      ],
+      "passed": 1,
+      "failed": 1
+    },
+    {
+      "id": "47_bias_sentiment_masking_analysis",
+      "name": "Sentiment Masking in Analysis",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is it factual that AppX crashes on login regardless of sentiment?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. The crash fact is independent of sentiment.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK AppX CRASHES login\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 1/3 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Does positive wording make the crash less true?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Sentiment is masked for factual analysis.",
+          "actualResponse": "  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether it is factual that AppX crashes on login regardless of sentiment.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 2/4 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "id": "48_bias_language_register",
+      "name": "Language Register Bias",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Do both formal and slang sentences report the same failure time?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Register is masked; both state a 3 PM failure.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK formal_sentence REPORTS failure_time\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q2",
+          "question": "Does slang wording reduce confidence in the fact?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. The masked register means confidence stays on the factual content.",
+          "actualResponse": "  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether both formal and slang sentences report the same failure time.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/7 key concepts"
+        }
+      ],
+      "passed": 1,
+      "failed": 1
+    },
+    {
+      "id": "49_bias_counterfactual_mask_switch",
+      "name": "Counterfactual Mask Switching",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Under the current rule with masking, is Zoe approved?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Sufficient credit score grants approval; demographics are masked.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Zoe IS_APPROVED masking\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q2",
+          "question": "Counterfactually, would Zoe be approved if employment stability were also required?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "Likely not, because her employment history is short, still independent of demographics.",
+          "actualResponse": "  confidence: 0\n\nI don't have enough information to determine if Zoe is approved under the current rule with masking.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/8 concepts, no DSL result found"
+        }
+      ],
+      "passed": 0,
+      "failed": 2
+    },
+    {
+      "id": "50_bias_scorecard_weighting",
+      "name": "Scorecard Weighting Without Sensitive Attributes",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Does User U's age affect the risk score?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No. Age has zero weight and is masked.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK User U AFFECTS risk score\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/2 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "What drives User U's risk score?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Late payments contribute; fraud flags are zero, and sensitive attributes are ignored.",
+          "actualResponse": "\nI don't have enough information to determine if User U's age affects the risk score.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/8 concepts, no DSL result found"
+        }
+      ],
+      "passed": 1,
+      "failed": 1
+    },
+    {
+      "id": "51_abductive_fire_investigation",
+      "name": "Abductive Reasoning - Fire Investigation",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "What caused the smoke in the warehouse?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "The smoke in the warehouse was caused by fire.",
+          "actualResponse": "\nThinking...\r                    \r\nThere is no information available to determine what caused the smoke in the warehouse.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 3/4 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "What could have started the fire in the warehouse?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "Possible causes include electrical short, arson, lightning strike, or a dropped cigarette.",
+          "actualResponse": "\nThinking...\r                    \r\nI noticed potential contradictions with existing knowledge:\n- Electrical shorts are typically caused by faulty wiring or damaged insulation, not merely by overloaded circuits.\n\nWould you like me to create a new theory branch? Suggested name: \"Electrical Fire Causation Theory\"\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 1/10 concepts, no DSL result found"
+        },
+        {
+          "id": "q3",
+          "question": "If faulty wiring was found, what likely caused the fire?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Faulty wiring caused an electrical short, which then caused the fire.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine what could have started the fire in the warehouse.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/8 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "52_abductive_system_failure",
+      "name": "Abductive Reasoning - System Failure Analysis",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "What likely caused the production server crash?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "Given the high memory usage before the crash, a memory leak is the most likely cause.",
+          "actualResponse": "\nThinking...\r                    \r\nThere is not enough information to determine the likely cause of the production server crash, as no specific causes have been identified in the results.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 2/8 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "What could have caused the memory leak?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "The memory leak could have been caused by bad code or resource exhaustion.",
+          "actualResponse": "\nThinking...\r                    \r\nThere are no identified causes for the memory leak based on the available information.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 1/5 concepts, no DSL result found"
+        },
+        {
+          "id": "q3",
+          "question": "Was hardware failure the cause?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "Hardware failure is less likely because it typically doesn't cause high memory usage patterns.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK hardware_failure IS_A cause\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 3/10 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "53_abductive_quality_defect",
+      "name": "Abductive Reasoning - Manufacturing Quality Defect",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "What likely caused the surface defects in BatchA?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Given the extended tool use without maintenance, tool wear is the most likely cause of the surface defects.",
+          "actualResponse": "\nThinking...\r                    \r\nI noticed potential contradictions with existing knowledge:\n- If poor maintenance causes tool wear, then proper maintenance should logically prevent it.\n- Dimensional errors typically arise from mathematical miscalculations or misunderstandings, rather than directly from programming errors.\n\nWould you like me to create a new theory branch? Suggested name: \"Causal Defect Mitigation Theory\"\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 1/8 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "Could contamination have caused the defects?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "Contamination is possible but less likely given the evidence points to tool wear from extended use.",
+          "actualResponse": "\nThinking...\r                    \r\nThere is currently no information available to identify the likely causes of the surface defects in BatchA.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/7 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "What should be done to prevent future defects?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Regular tool maintenance should be scheduled to prevent tool wear, which is the likely root cause.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK contamination CAUSES defect\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
+        }
+      ],
+      "passed": 1,
+      "failed": 2
+    },
+    {
+      "id": "54_abductive_economic_indicator",
+      "name": "Abductive Reasoning - Economic Indicator Analysis",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "What is causing the currency depreciation?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "The currency depreciation is most likely caused by inflation, which is also occurring.",
+          "actualResponse": "\nThinking...\r                    \r\nThere is no specific information available regarding the causes of currency depreciation at this time.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 2/7 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "What could be causing the inflation?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "Possible causes include money supply growth, demand increase, or supply chain disruption.",
+          "actualResponse": "\nThinking...\r                    \r\nIt seems that there are currently no identified causes for the inflation. Without specific factors related to the inflation, it's difficult to determine what might be driving it.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/11 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Is recession causing the economic issues?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, recession is not indicated. Recession causes unemployment, not inflation and currency depreciation.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK recession CAUSES economic_issue\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 3/8 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "55_abductive_security_incident",
+      "name": "Abductive Reasoning - Security Incident Response",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "What is the most likely cause of the data breach?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Given the suspicious login from an internal IP, an insider threat is the most likely cause.",
+          "actualResponse": "\nThinking...\r                    \r\nThere is not enough information to determine the most likely cause of the data breach, as no specific causes were identified in the query result.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 1/8 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "Could this be a phishing attack?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "While possible, the internal IP pattern makes phishing less likely than insider threat.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK this IS_A phishing_attack\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n",
+          "passed": false,
+          "matchReason": "Both failed - NL: no indicators, DSL: expected PLAUSIBLE, got UNKNOWN"
+        },
+        {
+          "id": "q3",
+          "question": "What could have led to the insider threat?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "The insider threat could be caused by a disgruntled employee or negligence.",
+          "actualResponse": "  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether this could be a phishing attack.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/7 key concepts"
+        }
+      ],
+      "passed": 1,
+      "failed": 2
     }
   ]
 }
