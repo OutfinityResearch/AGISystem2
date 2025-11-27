@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Evaluation Suite</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>AGISystem2 – Sita de evaluare</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../guides/conceptual_spaces.html">Theory</a> ·
+      <a href="index.html">Architecture</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../usage-cli/index.html">CLI</a> ·
+      <a href="../wiki/index.html">Wiki</a> ·
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
+    <div class="sub-nav">
+      <strong>Architecture:</strong>
+      <a href="index.html">Overview</a> ·
+      <a href="geometry.html">Geometry</a> ·
+      <a href="knowledge.html">Knowledge</a> ·
+      <a href="reasoning.html">Reasoning</a> ·
+      <a href="language.html">Language</a> ·
+      <a href="storage.html">Storage</a> ·
+      <a href="configuration.html">Configuration</a> ·
+      <a href="evalsuite.html">Eval Suite</a>
+    </div>
+  </div>
+
+  <p>Sita de evaluare verifica daca implementarea respecta contractele arhitecturale end-to-end: ingestie in Sys2DSL, encodare geometrica determinista, organizare in teorii, reasoning deductiv/abductiv/analogic si raspuns explicabil. Fiecare caz este o poveste scurta in limbaj natural care se transforma in fapte asteptate si interogari verificate.</p>
+
+  <div class="section-intro">
+    <p><strong>Link direct catre suita:</strong> <a href="https://github.com/salboaie/AGISystem2/tree/main/evalsuite">evalsuite/</a> (README, runSuite.js, rezultate)</p>
+    <p><strong>Comenzi rapide:</strong></p>
+<pre>node evalsuite/runSuite.js --dry-run
+node evalsuite/runSuite.js --case 03_deontic_reasoning --verbose</pre>
+  </div>
+
+  <h2>Cum este structurata suita</h2>
+  <p>Fiecare folder numerotat contine un <code>case.json</code> cu trei blocuri esentiale: <code>theory.natural_language</code> (textul brut de invatat), <code>theory.expected_facts</code> (faptele pe care encoderul trebuie sa le derive) si <code>queries</code> (intrebari in limbaj natural cu raspunsuri asteptate si nivel de adevar). Optional, o intrebare poate defini un bloc <code>counterfactual</code> pentru a activa o teorie temporara. Rularea suitei scrie un <code>results.json</code> sumar, util pentru CI.</p>
+
+  <h2>Cazuri ilustrative</h2>
+
+  <h3>01_taxonomy - lanturi IS_A tranzitive</h3>
+  <ul>
+    <li>Context: mamifere, animale, pasari, instantiere de exemplare (Fido, Whiskers, Sparky).</li>
+    <li>Intrebare cheie: "Is Fido an animal?" trebuie sa traverseze Dog -> Mammal -> Animal, iar "Is Sparky a mammal?" trebuie sa raspunda fals pe baza disjunctiei implicite.</li>
+    <li>Testeaza: inferenta tranzitiva, propagare negativa pe lanturi si coerenta clasei de baza.</li>
+  </ul>
+
+  <h3>02_physical_properties - stari de agregare si comparatii</h3>
+  <ul>
+    <li>Context: apa la diverse temperaturi (Celsius0, Celsius100), gheata si abur, metale cu topire/densitate.</li>
+    <li>Intrebari: temperatura de fierbere a apei, daca mercurul este solid, si enumerarea starilor apei.</li>
+    <li>Testeaza: fapte directe BOILS_AT/FREEZES_AT, disjunctie solid vs liquid si compunerea starilor derivata din sinonime (ice, steam).</li>
+  </ul>
+
+  <h3>03_deontic_reasoning - permisiuni si interdictii</h3>
+  <ul>
+    <li>Context: spatii aeriene (spital, scoala, proprietate privata, centru) si exceptii pentru MedicalDrone, PoliceDrone, CommercialDrone.</li>
+    <li>Intrebari: override-ul permisiunii medicale peste interdictia generala, interdictia pentru drone comerciale in centru, zona permisa implicita.</li>
+    <li>Testeaza: combinarea PERMITTED_IN/PROHIBITED_FROM, mostenirea regulilor pe subtipuri si rezolvarea de conflicte normative.</li>
+  </ul>
+
+  <h3>04_counterfactual - scenarii what-if</h3>
+  <ul>
+    <li>Context: punct de fierbere al apei, temperaturi de camera/corp, dependenta de supravietuire umana de apa lichida.</li>
+    <li>Intrebari: ce se intampla daca apa fierbe la 50C sau 30C, si un caz mai speculativ fara gravitatie.</li>
+    <li>Testeaza: aplicarea unei teorii temporare cu <code>removes</code>, recalcularea verdictelor si tratamentul raspunsurilor PLAUSIBLE cand lantul cauzal este incomplet.</li>
+  </ul>
+
+  <h3>05_abductive - cea mai buna explicatie</h3>
+  <ul>
+    <li>Context: simptome (febra, tuse, oboseala) si cauze candidate (infectii, alergii, gripa, toxiinfectie alimentara).</li>
+    <li>Intrebari: diagnostic pentru febra+tuse (respiratory infection), adaugarea oboselii (influenza), eliminarea ipotezei food poisoning.</li>
+    <li>Testeaza: scorarea acoperirii simptomelor, preferinta pentru ipoteza cu acoperire maxima si excluderea cauzelor partiale.</li>
+  </ul>
+
+  <h3>06_analogy - transfer structural</h3>
+  <ul>
+    <li>Context: pattern lider-organizatie-loc (rege-regat-castel, CEO-companie-HQ, parinte-familie-casa, profesor-clasa).</li>
+    <li>Intrebari: presedinte la ce conduce, unde lucreaza un capitan, ce relatie are un dirijor cu orchestra.</li>
+    <li>Testeaza: mapare analoga a relatiei de conducere si a locului asociat, inclusiv generare de completari plauzibile.</li>
+  </ul>
+
+  <h3>07_conflict_detection - disjunctii si contradictii</h3>
+  <ul>
+    <li>Context: muritor vs nemuritor (Socrate, Zeus), disjunctii explicite si proprietati derivate (moarte vs viata eterna).</li>
+    <li>Intrebari: imortalitatea lui Socrate, conflictul daca Socrate ar fi zeu, mortalitatea lui Zeus.</li>
+    <li>Testeaza: DISJOINT_WITH, verificari CHECK_WOULD_CONTRADICT si respectarea consecventei in raspuns.</li>
+  </ul>
+
+  <h3>08_multi_theory - comutare intre contexte</h3>
+  <ul>
+    <li>Context: fizica standard (viteza luminii, limite), scenarii SF (warp drive, hyperspace), si perspectiva cuantica (entanglement fara transfer de informatie).</li>
+    <li>Intrebari: timpul luminii pana la Pamant, posibilitatea vitezelor superluminice in Star Trek, folosirea entanglement-ului pentru comunicare.</li>
+    <li>Testeaza: izolarea teoriilor paralele, raspunsuri diferentiate real vs fictiune si evitarea extrapolarii nepermise.</li>
+  </ul>
+
+  <h2>Ce ar trebui sa verifici cand rulezi sita</h2>
+  <ul>
+    <li>Encoderul extrage toate <code>expected_facts</code> (verifica rezultate partiale in <code>--verbose</code>).</li>
+    <li>Reasonerul respecta nivelele de adevar (<code>TRUE_CERTAIN</code>, <code>FALSE</code>, <code>PLAUSIBLE</code>, <code>UNKNOWN</code>) si furnizeaza explicatii legate de traseul de inferenta.</li>
+    <li>Manipularea teoriilor temporare nu polueaza baza permanenta (rezultatele revin la normal dupa un caz contrafactual).</li>
+    <li>Rularea completa produce un <code>results.json</code> stabil, util pentru trenduri de regressie.</li>
+  </ul>
+
+  <div class="footer-nav">
+    <a href="configuration.html">← Configuration</a> ·
+    <a href="index.html">Overview →</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

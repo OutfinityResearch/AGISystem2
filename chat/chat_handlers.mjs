@@ -13,6 +13,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
 import {
   buildFactExtractionPrompt,
   buildQuestionPrompt,
@@ -20,6 +21,11 @@ import {
   buildContradictionPrompt,
   buildTheoryNamePrompt
 } from './prompts.mjs';
+
+// Import InferenceEngine and ContradictionDetector
+const require = createRequire(import.meta.url);
+const InferenceEngine = require('../src/reason/inference_engine.js');
+const ContradictionDetector = require('../src/reason/contradiction_detector.js');
 
 /**
  * Handle teaching new facts
@@ -122,21 +128,73 @@ export async function handleAsk(ctx, message, details) {
 
   let result;
   try {
+    // Get all facts for inference
+    const env = session.run(['@r FACTS_MATCHING ? ? ?']);
+    const facts = env.r || [];
+
     if (parsedQuestion?.type === 'yes_no' && parsedQuestion.canonical) {
       const { subject, relation, object } = parsedQuestion.canonical;
       if (subject && relation && object) {
-        const env = session.run([`@q ASK "${subject} ${relation} ${object}?"`]);
-        result = env.q || env.result || {};
+        // Use InferenceEngine for better reasoning
+        const inferenceEngine = new InferenceEngine({});
+        const inferResult = inferenceEngine.infer(subject, relation, object, facts);
+
+        result = {
+          truth: inferResult.truth,
+          method: inferResult.method,
+          confidence: inferResult.confidence || 0,
+          proof: inferResult.proof || null
+        };
+
+        // If InferenceEngine returns UNKNOWN, check for negative inference via DISJOINT_WITH
+        if (result.truth === 'UNKNOWN' && relation === 'IS_A') {
+          const negativeResult = checkNegativeInference(subject, object, facts, inferenceEngine);
+          if (negativeResult.truth === 'FALSE') {
+            result = negativeResult;
+          } else {
+            // Apply closed-world assumption for IS_A if we have knowledge about the subject
+            const subjectTypes = getAllTypes(subject, facts);
+            if (subjectTypes.length > 0) {
+              // We know what types the subject has, and target is not among them
+              result = {
+                truth: 'FALSE',
+                method: 'closed_world_assumption',
+                confidence: 0.8,
+                explanation: `${subject} is known to be: ${subjectTypes.join(', ')}. There is no path to ${object}.`,
+                proof: {
+                  steps: [
+                    { fact: `${subject} has known types: ${subjectTypes.join(', ')}`, justification: 'known_types' },
+                    { fact: `No IS_A path exists from ${subject} to ${object}`, justification: 'no_transitive_path' },
+                    { conclusion: `Under closed-world assumption, ${subject} is not a ${object}` }
+                  ]
+                }
+              };
+            }
+          }
+        }
+
         actions.push({ type: 'query', query: parsedQuestion.canonical, result });
       }
+    } else if (parsedQuestion?.type === 'causes' || parsedQuestion?.type === 'effects') {
+      const subject = parsedQuestion.canonical?.subject || '';
+      const causeFacts = facts.filter(f =>
+        (f.relation === 'CAUSES' && f.subject.toLowerCase() === subject.toLowerCase()) ||
+        (f.relation === 'CAUSED_BY' && f.object.toLowerCase() === subject.toLowerCase())
+      );
+      result = { causes: causeFacts.map(f => f.relation === 'CAUSES' ? f.object : f.subject) };
+      actions.push({ type: 'causes_query', result });
     } else if (parsedQuestion?.type === 'list') {
       const subject = parsedQuestion.canonical?.subject || '';
-      const env = session.run([`@r FACTS_MATCHING ${subject || '?'} ? ?`]);
-      result = { facts: env.r || [] };
+      const matchingFacts = facts.filter(f =>
+        f.subject.toLowerCase().includes(subject.toLowerCase()) ||
+        f.object.toLowerCase().includes(subject.toLowerCase())
+      );
+      result = { facts: matchingFacts };
       actions.push({ type: 'list_facts', result });
     } else {
-      const env = session.run([`@q ASK "${message}"`]);
-      result = env.q || env.result || {};
+      // General query - try to extract subject/relation/object and use inference
+      const env2 = session.run([`@q ASK "${message}"`]);
+      result = env2.q || env2.result || {};
       actions.push({ type: 'query', result });
     }
   } catch (err) {
@@ -146,6 +204,95 @@ export async function handleAsk(ctx, message, details) {
 
   const nlResponse = await generateResponse(ctx, result, message);
   return { response: nlResponse, actions };
+}
+
+/**
+ * Check for negative inference using DISJOINT_WITH
+ * E.g., "Is Sparky a mammal?" when Sparky IS_A bird and bird DISJOINT_WITH mammal
+ */
+function checkNegativeInference(subject, targetType, facts, inferenceEngine) {
+  // Find all types of subject
+  const subjectTypes = getAllTypes(subject, facts);
+
+  // Check if any of subject's types are disjoint with targetType
+  for (const subjectType of subjectTypes) {
+    // Direct disjointness
+    const disjoint = facts.find(f =>
+      f.relation === 'DISJOINT_WITH' &&
+      ((f.subject.toLowerCase() === subjectType.toLowerCase() && f.object.toLowerCase() === targetType.toLowerCase()) ||
+       (f.object.toLowerCase() === subjectType.toLowerCase() && f.subject.toLowerCase() === targetType.toLowerCase()))
+    );
+
+    if (disjoint) {
+      return {
+        truth: 'FALSE',
+        method: 'disjoint_inference',
+        confidence: 1.0,
+        explanation: `${subject} is a ${subjectType}, and ${subjectType} is disjoint with ${targetType}`,
+        proof: {
+          steps: [
+            { fact: `${subject} IS_A ${subjectType}`, justification: 'type_membership' },
+            { fact: `${subjectType} DISJOINT_WITH ${targetType}`, justification: 'disjointness_constraint' },
+            { conclusion: `Therefore ${subject} cannot be a ${targetType}` }
+          ]
+        }
+      };
+    }
+
+    // Check ancestors of targetType for disjointness
+    const targetAncestors = getAllTypes(targetType, facts);
+    for (const ancestor of targetAncestors) {
+      const ancestorDisjoint = facts.find(f =>
+        f.relation === 'DISJOINT_WITH' &&
+        ((f.subject.toLowerCase() === subjectType.toLowerCase() && f.object.toLowerCase() === ancestor.toLowerCase()) ||
+         (f.object.toLowerCase() === subjectType.toLowerCase() && f.subject.toLowerCase() === ancestor.toLowerCase()))
+      );
+
+      if (ancestorDisjoint) {
+        return {
+          truth: 'FALSE',
+          method: 'inherited_disjoint_inference',
+          confidence: 0.95,
+          explanation: `${subject} is a ${subjectType}, which is disjoint with ${ancestor} (ancestor of ${targetType})`,
+          proof: {
+            steps: [
+              { fact: `${subject} IS_A ${subjectType}`, justification: 'type_membership' },
+              { fact: `${targetType} IS_A ${ancestor}`, justification: 'type_hierarchy' },
+              { fact: `${subjectType} DISJOINT_WITH ${ancestor}`, justification: 'disjointness_constraint' }
+            ]
+          }
+        };
+      }
+    }
+  }
+
+  return { truth: 'UNKNOWN', method: 'no_disjoint_found' };
+}
+
+/**
+ * Get all types (direct and inherited) for an entity
+ */
+function getAllTypes(entity, facts) {
+  const types = new Set();
+  const queue = [entity.toLowerCase()];
+  const visited = new Set();
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    if (visited.has(current)) continue;
+    visited.add(current);
+
+    const directTypes = facts
+      .filter(f => f.relation === 'IS_A' && f.subject.toLowerCase() === current)
+      .map(f => f.object.toLowerCase());
+
+    for (const t of directTypes) {
+      types.add(t);
+      queue.push(t);
+    }
+  }
+
+  return Array.from(types);
 }
 
 /**

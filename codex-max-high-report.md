@@ -1,0 +1,25 @@
+# AGISystem2 – Gap Analysis vs. Specs (Sys2DSL, Theories, Queries)
+
+Goal: check current implementation against URS/FS/DS expectations for accepting arbitrary theories and queries (Sys2DSL end-to-end, layered reasoning, full typologies).
+
+## Capability Verdict
+- System is **not ready** to accept “any theories and any queries”. Input handling is restricted to a tiny canonical grammar; Sys2DSL interpreter is partial and largely disconnected from the engine; theory layering and provenance are effectively absent; reasoning only covers basic graph lookups with minimal geometric checks.
+
+## Key Findings (spec deviations)
+- **Input/translation coverage (URS-011, FS-03, DS[/theory/Sys2DSL_syntax])**: `TranslatorBridge` only normalises a handful of canonical patterns and throws on everything else (`src/interface/translator_bridge.js:1-33`), so arbitrary queries or theory lines will be rejected. `NLParser` only understands “Is X Y?” or `Subject REL Object` (`src/ingest/parser.js:6-85`), far below the Sys2DSL grammar (variables, masks, patterns, lists).
+- **Sys2DSL interpreter completeness (FS-14, DS[/theory/Sys2DSL_commands])**: Commands return ad-hoc objects without the typed values/truth objects specified; variable immutability/types are not enforced. Many required commands (mask construction, theory binding, explainability exports) are missing or stubs.
+- **Theory layering / what-if (URS-003/006, FS-02)**: DSL theory commands keep a local array and snapshots only (`src/theory/dsl_commands_theory.js:16-153`), never interact with `TheoryStack` or storage. `EngineAPI.pushTheory` constructs `TheoryLayer` with wrong arguments (`src/interface/api.js:172-179`), so layering is effectively broken. Counterfactuals just append facts to a temporary array (`src/interface/api.js:244-270`) and bypass geometric overlays.
+- **Reasoning typologies + provenance (URS-004/015, FS-05/07)**: `EngineAPI.ask` devolves to direct fact lookup with no inference, mask control, or theory selection, and returns no reasoning trace (`src/interface/api.js:124-160`). `Reasoner` only offers basic inclusion bands; no active theory list, mask provenance, or acceptance band explanation (`src/reason/reasoner.js:237-260`). Abductive/analogical functions exist but are not integrated into ASK or Sys2DSL flows.
+- **Mask/bias handling (FS-12, DS[/global_arch])**: Relevance, bias, and explicit masks are never combined; `BiasController` is unused by `Reasoner.answer`, and `ASK_MASKED` is absent at API level.
+- **Learning, polysemy, and clustering (FS-01/04)**: `ConceptStore` tracks only the first diamond; clustering only widens or appends without merge/split policies, and geometric learning is minimal. Inductive envelope building, polysemy-aware aggregation, and property-axis inscription are far from spec.
+- **Persistence/versioning (FS-10, URS-020)**: Facts and concepts live only in memory; `StorageAdapter` is unused for facts and diamonds, so theories cannot be versioned or reloaded.
+- **Safety/validation (FS-13, URS-021)**: `ContradictionDetector`/`ValidationEngine` are not wired into ingestion or ASK; contradictions are never surfaced as refusal states.
+
+## Recommendations to reach “any theory / any query” capability
+1) **Complete Sys2DSL front door**: Implement the full parser per DS (tokens, statements, variable immutability), return typed values/truth objects, and expose all required commands (ASK_MASKED, VALIDATE, PROVE, TO_JSON/EXPLAIN). Make Sys2DSL the only accepted interface or add a deterministic NL→Sys2DSL bridge.
+2) **Wire DSL to engine state**: Connect theory commands to `TheoryStack`/`TheoryLayer` (create layers with overrides, attach facts, persist via `StorageAdapter`); fix `pushTheory` signature and ensure counterfactual contexts use composed overlays, not fact snapshots.
+3) **Upgrade reasoning pipeline**: Route ASK/CF/ABDUCT/ANALOGICAL through `Reasoner` with masks+bias, theory composition, retrieval, and inference engine support; return provenance (active layers, dimensions, distances, acceptance band) as required by URS-004/FS-07.
+4) **Geometric learning + masks**: Implement inductive envelope building with proper clustering/merge policies, maintain multiple diamonds per concept, honour property-axis mapping, and combine relevance/bias/explicit masks in `MathEngine.distanceMaskedL1`.
+5) **Persistence & versioning**: Persist concepts/facts/theory text + caches via `StorageAdapter`; add snapshots and reload paths so theories can be shared and versioned; audit every ingest/update.
+6) **Validation and conflict handling**: Invoke contradiction/consistency checks during ingestion and before answering; surface `CONFLICT`/refusal bands when stacks disagree (URS-021).
+7) **Test and determinism matrix**: Add end-to-end tests covering Sys2DSL scripts, theory overlays, masked queries, abductive/analogical flows, counterfactual branches, and dimension configurations {512,1024,2048,4096}; benchmark retrieval and clustering to keep CPU-only latency in check (URS-007).

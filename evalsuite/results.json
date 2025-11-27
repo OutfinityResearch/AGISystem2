@@ -1,0 +1,295 @@
+{
+  "timestamp": "2025-11-27T11:34:57.091Z",
+  "totalPassed": 18,
+  "totalFailed": 6,
+  "cases": [
+    {
+      "id": "01_taxonomy",
+      "name": "Animal Taxonomy and Inheritance",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is Fido an animal?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Fido is an animal.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Fido is animal\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether Fido is an animal.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 2 truth indicators, 1/1 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Is Whiskers a living thing?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Whiskers is a living thing.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK Whiskers is a living thing\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether Whiskers is a living thing.\n\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 3/3 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Is Sparky a mammal?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, Sparky is not a mammal. Sparky is a bird, and birds are animals but not mammals.",
+          "actualResponse": "You: \nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Sparky is a mammal\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Sparky is a mammal.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 3/7 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "02_physical_properties",
+      "name": "Physical Properties and Substances",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "At what temperature does water boil?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Water boils at 100 degrees Celsius.",
+          "actualResponse": "\nThinking...\r                    \r\nI noticed potential contradictions with existing knowledge:\n- Steam is the gaseous form of water and does not exist as a liquid.\n- It is a known fact that gold is denser than iron.\n- Mercury is known to be a metal that is liquid at room temperature, thus contradicting the assertion that it is a liquid.\n\nWould you like me to create a new theory branch? Suggested name: \"Phase Dynamics Theory\"\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/4 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Is mercury a solid?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, mercury is not a solid. Mercury is a liquid metal.",
+          "actualResponse": "\nThinking...\r                    \r\nI'm sorry, but I can't provide a specific answer to your question about the boiling temperature of water due to a processing issue. However, water typically boils at 100 degrees Celsius or 212 degrees Fahrenheit at sea level.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/5 concepts, no DSL result found"
+        },
+        {
+          "id": "q3",
+          "question": "What are the states of water?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Water exists as liquid (water), solid (ice), and gas (steam).",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK mercury is a solid\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if mercury is a solid.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/7 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "03_deontic_reasoning",
+      "name": "Deontic Reasoning - Permissions and Prohibitions",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Can a medical drone fly over a hospital?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, medical drones are permitted to fly over hospitals when delivering medical supplies.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK medical drone can fly over hospital\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether a medical drone can fly over a hospital.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 2/7 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Is a commercial drone allowed in the city center?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, commercial drones are not allowed in the city center. The city center is a no-fly zone for all drones except emergency services.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK commercial drone allowed in city center\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if a commercial drone is allowed in the city center.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 4/10 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Where can a regular drone fly?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Regular commercial drones can only fly in designated drone zones. They are prohibited from hospitals, schools, private property, and the city center.",
+          "actualResponse": "\nThinking...\r                    \r\nThere is not enough information to provide a specific answer about where a regular drone can fly.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 2/12 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "04_counterfactual",
+      "name": "Counterfactual Reasoning - What If Scenarios",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "If water boiled at 50 degrees Celsius instead of 100, would water still be liquid at room temperature?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, water would still be liquid at room temperature (20°C) because 20 is less than 50.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK water boiling point liquid state at room temperature\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether water would still be liquid at room temperature if it boiled at 50 degrees Celsius instead of 100.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 5/7 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "What if water boiled at 30 degrees? Would humans survive normally?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, humans would have serious problems. Body temperature is 37°C, which is above 30°C. This means water in the human body would boil, which is incompatible with life.",
+          "actualResponse": "\nThinking...\r                    \r\nNo, humans would not survive normally if water boiled at 30 degrees. This is because water boiling at such a low temperature would create an environment far too hostile for human life, leading to severe physiological stress and inability to maintain body functions.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 2 truth indicators, 6/17 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "If gravity didn't exist, would water still boil at 100 degrees?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "The boiling point of water is determined by pressure and molecular properties, not directly by gravity. Without gravity, atmospheric pressure would be different, which could affect the boiling point, but the basic chemical property remains.",
+          "actualResponse": "\nThinking...\r                    \r\nNo, if gravity didn't exist, water would not boil at 100 degrees Celsius because boiling is a process that relies on atmospheric pressure, which is determined by gravity. Without gravity, pressure would be significantly different, affecting the boiling point of water.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 15/24 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "05_abductive",
+      "name": "Abductive Reasoning - Finding Explanations",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "What could be causing John's symptoms?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "Based on John's symptoms of fever and coughing, the most likely cause is a respiratory infection. Influenza is also possible but typically includes fatigue as well.",
+          "actualResponse": "\nThinking...\r                    \r\nThere are no identified causes for John's symptoms based on the available information.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 4/15 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "If John also has fatigue, what is the most likely diagnosis?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "If John has fever, coughing, and fatigue together, influenza is the most likely diagnosis as it explains all three symptoms.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine the most likely diagnosis for John given his fatigue.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 0 truth indicators, 3/10 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Could John have food poisoning?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "Food poisoning is unlikely. While it can cause fever, it typically causes stomach pain and nausea, not coughing. John has coughing but no reported stomach issues.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK John could have food poisoning\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 1/14 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    },
+    {
+      "id": "06_analogy",
+      "name": "Analogical Reasoning - Structural Mapping",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "If a king is to a kingdom as a CEO is to a company, what is a president to?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "A president is to a country or republic. Following the pattern, a president leads and governs a country, similar to how a king rules a kingdom and a CEO leads a company.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to provide a definitive answer.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/14 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "Based on the pattern, where would a captain likely work?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "A captain would likely work on a ship or in a vessel. Following the analogy where leaders have their designated places (king-castle, CEO-headquarters), a captain's place is a ship.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @f001 ASSERT king RULES_OVER kingdom\n  @f002 ASSERT king MAKES_DECISIONS_FOR people\n  @f003 ASSERT king LIVES_IN castle\n  @f004 ASSERT king WEARS crown\n  @f005 ASSERT CEO LEADS company\n  @f006 ASSERT CEO MAKES_DECISIONS_FOR employees\n  @f007 ASSERT CEO WORKS_IN headquarters\n  @f008 ASSERT parent GUIDES family\n  @f009 ASSERT parent MAKES_DECISIONS_FOR children\n  @f010 ASSERT parent LIVES_IN family_home\n  @f011 ASSERT emperor RULES_OVER empire\n  @f012 ASSERT emperor LIVES_IN palace\n  @f013 ASSERT teacher LEADS classroom\n  @f014 ASSERT teacher GUIDES students\n  @f015 ASSERT kingdom HAS_LEADER king\n  @f016 ASSERT company HAS_LEADER CEO\n  @f017 ASSERT family HAS_LEADER parent\n  @f018 ASSERT empire HAS_LEADER emperor\n  @f019 ASSERT classroom HAS_LEADER teacher\n\nGot it! I've learned 19 fact(s):\n- king RULES_OVER kingdom\n- king MAKES_DECISIONS_FOR people\n- king LIVES_IN castle\n- king WEARS crown\n- CEO LEADS company\n- CEO MAKES_DECISIONS_FOR employees\n- CEO WORKS_IN headquarters\n- parent GUIDES family\n- parent MAKES_DECISIONS_FOR children\n- parent LIVES_IN family_home\n- emperor RULES_OVER empire\n- emperor LIVES_IN palace\n- teacher LEADS classroom\n- teacher GUIDES students\n- kingdom HAS_LEADER king\n- company HAS_LEADER CEO\n- family HAS_LEADER parent\n- empire HAS_LEADER emperor\n- classroom HAS_LEADER teacher\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/16 concepts, no DSL result found"
+        },
+        {
+          "id": "q3",
+          "question": "What relation does a conductor have to an orchestra?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "A conductor leads the orchestra, similar to how a king rules a kingdom or a CEO leads a company. The conductor guides the musicians in creating music together.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/14 concepts, no DSL result found"
+        }
+      ],
+      "passed": 0,
+      "failed": 3
+    },
+    {
+      "id": "07_conflict_detection",
+      "name": "Conflict Detection and Resolution",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is Socrates immortal?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, Socrates is not immortal. Socrates is a human, humans are mortal, and mortal is the opposite of immortal.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine if Socrates is immortal.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 5/9 key concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Would there be a contradiction if we said Socrates is a god?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, there would be a contradiction. If Socrates were a god, he would be immortal (since gods are immortal). But Socrates is already established as mortal (being human). Since mortal and immortal are contradictory, claiming Socrates is a god creates a logical conflict.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK Socrates is a god\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 3/23 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Can Zeus die?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, Zeus cannot die. Zeus is a god, gods are immortal, and immortals live forever. Death is only for mortals.",
+          "actualResponse": "  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether there would be a contradiction if we said Socrates is a god.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 0/6 key concepts"
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "id": "08_multi_theory",
+      "name": "Multiple Theory Layers and Context Switching",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "How long does it take for light to reach Earth from the Sun?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Light takes about 8 minutes to travel from the Sun to Earth.",
+          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to provide an answer to that question.\n\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/6 concepts, no DSL result found"
+        },
+        {
+          "id": "q2",
+          "question": "In the Star Trek universe, can ships travel faster than light?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, in the Star Trek universe, ships can travel faster than light using warp drive technology. However, this is science fiction and doesn't apply to real physics.",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q006 ASK ships can travel faster than light\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 4/14 key concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Can quantum entanglement be used to communicate faster than light?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, quantum entanglement cannot be used to communicate faster than light. While entangled particles show instant correlation, this cannot be used to transmit actual information faster than light.",
+          "actualResponse": "\nIn the Star Trek universe, I don't have enough information to definitively answer if ships can travel faster than light.\n\nYou: ",
+          "passed": true,
+          "matchReason": "NL Match: 1 truth indicators, 5/17 key concepts"
+        }
+      ],
+      "passed": 2,
+      "failed": 1
+    }
+  ]
+}

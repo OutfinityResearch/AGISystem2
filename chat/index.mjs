@@ -21,7 +21,14 @@ export { ChatEngine, ChatREPL };
 
 // CLI entry point
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const repl = new ChatREPL();
+  // Parse CLI arguments
+  const args = process.argv.slice(2);
+  const options = {
+    debug: args.includes('--debug'),
+    noColor: args.includes('--no-color')
+  };
+
+  const repl = new ChatREPL(options);
   repl.start().catch((err) => {
     console.error('Failed to start chat:', err.message);
     process.exit(1);

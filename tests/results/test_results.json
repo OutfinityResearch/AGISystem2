@@ -1,9 +1,9 @@
 {
-  "timestamp": "2025-11-26T17:44:41.612Z",
+  "timestamp": "2025-11-27T09:05:19.176Z",
   "profile": "auto_test",
   "summary": {
-    "total": 29,
-    "passed": 29,
+    "total": 32,
+    "passed": 32,
     "failed": 0,
     "skipped": 0,
     "timeout": 0
@@ -110,6 +110,24 @@
       "passed": 1,
       "failed": 0,
       "total": 1
+    },
+    "phase2_integration": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "phase3_benchmarks": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "phase3_edge_cases": {
+      "status": "passed",
+      "passed": 29,
+      "failed": 0,
+      "total": 29
     },
     "property_mapping": {
       "status": "passed",

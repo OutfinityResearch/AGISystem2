@@ -1,7 +1,26 @@
+/**
+ * Encoder - Transforms parsed facts into geometric vectors
+ *
+ * Uses permutation binding to encode relations geometrically.
+ * The relation permutes the object vector before adding to subject.
+ *
+ * DS: DS(/ingest/encoder.js)
+ */
+
 const VectorSpace = require('../core/vector_space');
 const MathEngine = require('../core/math_engine');
 
 class Encoder {
+  /**
+   * Create an encoder
+   * @param {Object} deps - Dependencies
+   * @param {Config} deps.config - Configuration
+   * @param {VectorSpace} [deps.vspace] - Vector space instance
+   * @param {MathEngine} [deps.math] - Math engine
+   * @param {RelationPermuter} [deps.permuter] - Relation permuter for geometric binding
+   * @param {ConceptStore} deps.store - Concept store
+   * @param {ClusterManager} [deps.cluster] - Cluster manager
+   */
   constructor({ config, vspace, math, permuter, store, cluster }) {
     this.config = config;
     this.vspace = vspace || new VectorSpace(config);
@@ -10,46 +29,170 @@ class Encoder {
     this.store = store;
     this.cluster = cluster;
     this.horizon = config.get('recursionHorizon');
+    this.dimensions = config.get('dimensions');
   }
 
+  /**
+   * Encode a fact node into a vector
+   * Uses permutation binding: vec = subject_vec + permute(object_vec, relation)
+   *
+   * @param {Object} node - Parsed fact {subject, relation, object}
+   * @param {number} [depth=0] - Recursion depth
+   * @returns {Int8Array} Encoded vector
+   */
   encodeNode(node, depth = 0) {
     if (depth > this.horizon) {
       return this.vspace.createVector();
     }
 
+    // Create base vector from subject
+    const subjectVec = this._encodeToken(node.subject);
+
+    // If no relation or object, return subject vector
+    if (!node.relation || !node.object) {
+      return subjectVec;
+    }
+
+    // Encode the object
+    const objectVec = this._encodeToken(node.object);
+
+    // Apply relation permutation if permuter is available
+    let boundObject = objectVec;
+    if (this.permuter && node.relation) {
+      try {
+        const permTable = this.permuter.get(node.relation);
+        boundObject = this.math.permute
+          ? this.math.permute(objectVec, permTable)
+          : MathEngine.permute(objectVec, permTable);
+      } catch (e) {
+        // Relation not registered - try to register it dynamically
+        try {
+          this.permuter.register(node.relation);
+          const permTable = this.permuter.get(node.relation);
+          boundObject = this.math.permute
+            ? this.math.permute(objectVec, permTable)
+            : MathEngine.permute(objectVec, permTable);
+        } catch (e2) {
+          // Fall back to unpermuted object
+          boundObject = objectVec;
+        }
+      }
+    }
+
+    // Combine subject and permuted object using saturated addition
+    const result = this.math.addSaturated
+      ? this.math.addSaturated(subjectVec, boundObject)
+      : MathEngine.addSaturated(subjectVec, boundObject);
+
+    // Handle special property encodings (legacy support for HAS_PROPERTY)
+    if (node.relation === 'HAS_PROPERTY') {
+      this._encodePropertyObject(node.object, result);
+    }
+
+    // Handle specific relation-based dimension activation
+    this._activateRelationDimensions(node, result);
+
+    return result;
+  }
+
+  /**
+   * Encode a token (concept name) into a vector
+   * Uses deterministic hashing to spread across dimensions
+   *
+   * @param {string} token - Token to encode
+   * @returns {Int8Array} Token vector
+   */
+  _encodeToken(token) {
     const vec = this.vspace.createVector();
 
-    // Simple baseline: mark a couple of dimensions based on subject and object
-    // so that vectors are not completely zero and concepts separate slightly.
-    const dims = this.vspace.dimensions;
-    const markSubject = 0;
-    const markObject = 1 < dims ? 1 : 0;
+    if (!token || typeof token !== 'string') {
+      return vec;
+    }
 
-    const subjectHash = this._hashToken(node.subject);
-    const objectHash = this._hashToken(node.object);
-    vec[markSubject] = subjectHash;
-    vec[markObject] = objectHash;
+    // Use multiple hash functions to spread the token across dimensions
+    const dims = this.dimensions;
 
-    // Property-like objects under HAS_PROPERTY (e.g., boiling_point=100) can
-    // project into specific ontology axes (such as Temperature) when the key
-    // and value are recognised. This keeps the overall scheme simple while
-    // allowing more interpretable dimensions for well-known physical properties.
-    if (node && typeof node.relation === 'string' && node.relation === 'HAS_PROPERTY') {
-      this._encodePropertyObject(node.object, vec);
+    // Primary hash: determines main activation dimensions
+    let hash1 = 0;
+    let hash2 = 0;
+    for (let i = 0; i < token.length; i++) {
+      const c = token.charCodeAt(i);
+      hash1 = ((hash1 << 5) - hash1 + c) | 0;
+      hash2 = ((hash2 << 7) + hash2 + c) | 0;
+    }
+
+    // Activate several dimensions based on hashes
+    const numActivations = Math.min(8, Math.ceil(dims / 64));
+    for (let i = 0; i < numActivations; i++) {
+      const dim = Math.abs((hash1 + i * hash2) % dims);
+      const sign = ((hash1 >> i) & 1) === 0 ? 1 : -1;
+      const magnitude = 20 + (Math.abs(hash2 >> (i * 4)) % 40); // 20-60 range
+
+      let value = sign * magnitude;
+      if (value > 127) value = 127;
+      if (value < -127) value = -127;
+
+      // Saturated add to handle collisions
+      const current = vec[dim];
+      let newVal = current + value;
+      if (newVal > 127) newVal = 127;
+      if (newVal < -127) newVal = -127;
+      vec[dim] = newVal;
     }
 
     return vec;
   }
 
+  /**
+   * Ingest a fact into the concept store
+   *
+   * @param {Object} node - Parsed fact {subject, relation, object}
+   * @param {string} conceptId - Target concept ID (usually the subject)
+   * @returns {Int8Array} The encoded vector
+   */
   ingestFact(node, conceptId) {
     const vec = this.encodeNode(node, 0);
     const concept = this.store.ensureConcept(conceptId);
+
     if (this.cluster) {
       this.cluster.updateClusters(concept, vec);
     }
+
+    // Mark store as dirty for retriever
+    if (this.store._dirty !== undefined) {
+      this.store._dirty = true;
+    }
+
     return vec;
   }
 
+  /**
+   * Decode a vector back to potential concepts (approximate)
+   * Uses inverse permutation for relation unbinding
+   *
+   * @param {Int8Array} vec - Vector to decode
+   * @param {string} relation - Relation to unbind
+   * @returns {Int8Array} Unbound vector
+   */
+  decodeRelation(vec, relation) {
+    if (!this.permuter || !relation) {
+      return vec;
+    }
+
+    try {
+      const invTable = this.permuter.inverse(relation);
+      return this.math.permute
+        ? this.math.permute(vec, invTable)
+        : MathEngine.permute(vec, invTable);
+    } catch (e) {
+      return vec;
+    }
+  }
+
+  /**
+   * Legacy hash function for backwards compatibility
+   * @private
+   */
   _hashToken(token) {
     if (!token) {
       return 0;
@@ -67,6 +210,10 @@ class Encoder {
     return acc;
   }
 
+  /**
+   * Encode property=value patterns into specific dimensions
+   * @private
+   */
   _encodePropertyObject(objectToken, vec) {
     if (!objectToken || typeof objectToken !== 'string') {
       return;
@@ -78,21 +225,81 @@ class Encoder {
     const key = parts[0].trim();
     const rawValue = parts[1].trim();
 
-    // Numeric temperature mapping: boiling_point=NNN → Temperature axis (dimension 4).
-    if (key === 'boiling_point') {
+    // Map known properties to ontology dimensions
+    const propertyAxes = {
+      boiling_point: 4,  // Temperature axis
+      temperature: 4,
+      weight: 2,         // Mass axis
+      mass: 2,
+      size: 3,           // Size axis
+      age: 10            // Temporal axis
+    };
+
+    const axis = propertyAxes[key];
+    if (axis !== undefined && axis >= 0 && axis < vec.length) {
       const num = Number(rawValue);
-      if (!Number.isFinite(num)) {
-        return;
-      }
-      const axis = 4; // Temperature axis, see DS[/knowledge/dimensions].
-      if (axis >= 0 && axis < vec.length) {
+      if (Number.isFinite(num)) {
         let v = Math.round(num);
-        if (v > 127) {
-          v = 127;
-        } else if (v < -127) {
-          v = -127;
-        }
+        if (v > 127) v = 127;
+        if (v < -127) v = -127;
         vec[axis] = v;
+      }
+    }
+  }
+
+  /**
+   * Alias for encodeNode - encode a fact node into a vector
+   * @param {Object} node - Parsed fact {subject, relation, object}
+   * @returns {Int8Array} Encoded vector
+   */
+  encode(node) {
+    return this.encodeNode(node, 0);
+  }
+
+  /**
+   * Encode multiple nodes in batch
+   * @param {Array<Object>} nodes - Array of parsed facts
+   * @returns {Array<Int8Array>} Array of encoded vectors
+   */
+  encodeBatch(nodes) {
+    if (!Array.isArray(nodes)) {
+      return [];
+    }
+    return nodes.map(node => this.encodeNode(node, 0));
+  }
+
+  /**
+   * Activate specific dimensions based on relation type
+   * @private
+   */
+  _activateRelationDimensions(node, vec) {
+    if (!node.relation) return;
+
+    // Relation-specific dimension activations
+    const relationDims = {
+      IS_A: [0],           // Taxonomic
+      PART_OF: [1],        // Mereological
+      HAS_PART: [1],
+      CAUSES: [5],         // Causal
+      CAUSED_BY: [5],
+      LOCATED_IN: [6],     // Spatial
+      CONTAINS: [6],
+      BEFORE: [7],         // Temporal
+      AFTER: [7],
+      PERMITS: [256],      // Deontic (axiology range)
+      PROHIBITS: [257],
+      OBLIGATES: [258]
+    };
+
+    const dims = relationDims[node.relation];
+    if (dims && Array.isArray(dims)) {
+      for (const dim of dims) {
+        if (dim >= 0 && dim < vec.length) {
+          // Add a small activation to mark this relation type
+          let val = vec[dim] + 10;
+          if (val > 127) val = 127;
+          vec[dim] = val;
+        }
       }
     }
   }

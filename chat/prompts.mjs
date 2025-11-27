@@ -66,13 +66,34 @@ export function buildFactExtractionPrompt(text) {
 
 Text: "${text}"
 
-Use these relations when appropriate:
-- IS_A: category/type (e.g., "Dog IS_A Animal")
-- HAS_PROPERTY: attributes (e.g., "Water HAS_PROPERTY liquid")
-- CAUSES / CAUSED_BY: causation (e.g., "Fire CAUSES Smoke")
+IMPORTANT RULES:
+1. Each subject and object must be a CONCEPT NAME (single word or underscore_connected)
+2. NEVER use descriptions as objects (wrong: "Belongs to my neighbor", correct: "NeighborProperty")
+3. For properties/attributes, use IS_A with a concept (e.g., "Water IS_A liquid" not "Water HAS_PROPERTY liquid")
+4. For numeric values, create a concept (e.g., "Celsius100" not "100")
+5. Concepts should be lowercase for types, Capitalized for instances/individuals
+6. Relations are ALWAYS UPPERCASE with underscores
+
+Use these relations:
+- IS_A: category/type membership (e.g., "Dog IS_A mammal", "Fido IS_A dog")
+- PART_OF: mereological (e.g., "Wheel PART_OF car")
+- CAUSES / CAUSED_BY: causation (e.g., "Fire CAUSES smoke")
 - LOCATED_IN: location (e.g., "Paris LOCATED_IN France")
-- REQUIRES: dependencies (e.g., "Driving REQUIRES License")
-- PERMITS / PROHIBITED_BY: permissions/rules
+- REQUIRES: dependencies (e.g., "Driving REQUIRES license")
+- PERMITS / PROHIBITED_BY / PERMITTED_BY: permissions/rules
+- DISJOINT_WITH: mutual exclusion (e.g., "mortal DISJOINT_WITH immortal")
+- BOILS_AT / FREEZES_AT / MELTS_AT: phase transitions with temperature concepts
+- OWNS / OWNED_BY: ownership
+
+BAD examples (DO NOT do this):
+- "Fido HAS_PROPERTY Belongs to my neighbor" ❌
+- "Water HAS_PROPERTY liquid" ❌
+- "boiling_point=100" ❌
+
+GOOD examples (DO this):
+- "Fido OWNED_BY Neighbor" ✓
+- "Water IS_A liquid" ✓
+- "Water BOILS_AT Celsius100" ✓
 
 Respond with JSON only:
 {
@@ -128,8 +149,11 @@ Result: ${JSON.stringify(result, null, 2)}
 
 Guidelines:
 - Be concise but informative
-- If the answer is uncertain, explain why
-- If facts support the answer, briefly mention them
+- For TRUE_CERTAIN: Answer affirmatively with confidence
+- For FALSE: Answer negatively and explain why (e.g., "No, X is not Y because X is a Z and Z is disjoint with Y")
+- For UNKNOWN: Say you don't have enough information
+- For PLAUSIBLE: Say it's likely/possible but not certain
+- If there's a proof or explanation in the result, use it to explain
 - Use the same language as the original question
 
 Respond with the natural language answer only (no JSON).`;

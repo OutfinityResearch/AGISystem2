@@ -141,6 +141,44 @@ export class ChatREPL {
   }
 
   /**
+   * Generate deterministic variable name for DSL output
+   */
+  _generateVarName(prefix, index) {
+    return `${prefix}${String(index).padStart(3, '0')}`;
+  }
+
+  /**
+   * Format result as Sys2DSL representation
+   */
+  _formatAsDSL(result, queryIndex) {
+    const varName = this._generateVarName('q', queryIndex);
+    const lines = [];
+
+    if (result.actions) {
+      for (const action of result.actions) {
+        if (action.type === 'fact_added' && action.fact) {
+          const f = action.fact;
+          const fVar = this._generateVarName('f', this._factCounter++);
+          lines.push(`@${fVar} ASSERT ${f.subject} ${f.relation} ${f.object}`);
+        }
+        if (action.type === 'query' && action.query) {
+          const q = action.query;
+          lines.push(`@${varName} ASK ${q.subject || '?'} ${q.relation || 'IS_A'} ${q.object || '?'}`);
+          if (action.result) {
+            lines.push(`# Result: ${JSON.stringify({
+              truth: action.result.truth,
+              method: action.result.method,
+              confidence: action.result.confidence
+            })}`);
+          }
+        }
+      }
+    }
+
+    return lines;
+  }
+
+  /**
    * Process user input and display response
    */
   async _processInput(input) {
@@ -156,19 +194,46 @@ export class ChatREPL {
     process.stdout.write(this._color('dim', '\nThinking...'));
 
     try {
+      this._queryCounter = (this._queryCounter || 0) + 1;
+      this._factCounter = this._factCounter || 1;
+
       const result = await this.engine.processMessage(trimmed);
 
       // Clear thinking indicator
       process.stdout.write('\r' + ' '.repeat(20) + '\r');
 
-      // Display response
-      console.log(this._color('green', '\n' + result.response));
+      // In debug mode, show Sys2DSL representation first
+      if (this.options.debug) {
+        const dslLines = this._formatAsDSL(result, this._queryCounter);
+        if (dslLines.length > 0) {
+          console.log(this._color('magenta', '\n[DSL Representation]'));
+          for (const line of dslLines) {
+            console.log(this._color('yellow', '  ' + line));
+          }
+        }
 
-      // Show any interesting actions in debug mode
-      if (this.options.debug && result.actions.length > 0) {
-        console.log(this._color('dim', '\nActions: ' +
-          result.actions.map(a => a.type).join(', ')));
+        // Show structured result
+        if (result.actions && result.actions.length > 0) {
+          for (const action of result.actions) {
+            if (action.result && action.result.truth) {
+              console.log(this._color('cyan', '\n[Structured Result]'));
+              console.log(this._color('dim', '  truth: ') + this._color('bright', action.result.truth));
+              if (action.result.method) {
+                console.log(this._color('dim', '  method: ') + action.result.method);
+              }
+              if (action.result.confidence !== undefined) {
+                console.log(this._color('dim', '  confidence: ') + action.result.confidence);
+              }
+              if (action.result.explanation) {
+                console.log(this._color('dim', '  explanation: ') + action.result.explanation);
+              }
+            }
+          }
+        }
       }
+
+      // Display natural language response
+      console.log(this._color('green', '\n' + result.response));
 
       console.log('');
     } catch (err) {

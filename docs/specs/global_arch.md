@@ -11,11 +11,103 @@ This design specification captures the cross-cutting geometric model, reasoning 
 - Summarise the key end-to-end flows (Ingest, Answer, Conflict Handling, Validation) that FS-01…FS-16 rely on.
 - This DS is exercised indirectly by the entire test suite (`geometry`, `ingestion`, `reasoning`, `Sys2DSL`, `validation`, `bias`, `temporal`, `persistence`) rather than by a dedicated module.
 
+## System Architecture Overview
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                           AGISystem2 Architecture                            │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│   ┌─────────────┐     ┌─────────────────────────────────────────────────┐   │
+│   │   CLI /     │     │              Interface Layer                    │   │
+│   │   Agent     │────►│  System2Session  │  TheoryDSLEngine (Sys2DSL)   │   │
+│   │   API       │     └─────────────────────────────────────────────────┘   │
+│   └─────────────┘                          │                                │
+│                                            ▼                                │
+│   ┌─────────────────────────────────────────────────────────────────────┐   │
+│   │                         Reasoning Layer                              │   │
+│   │  ┌──────────────┐  ┌──────────────┐  ┌────────────────────────────┐ │   │
+│   │  │   Reasoner   │  │  Retriever   │  │   ValidationEngine         │ │   │
+│   │  │  (ASK/PROVE) │  │  (LSH/Brute) │  │  (consistency/proofs)      │ │   │
+│   │  └──────────────┘  └──────────────┘  └────────────────────────────┘ │   │
+│   └─────────────────────────────────────────────────────────────────────┘   │
+│                                            │                                │
+│                                            ▼                                │
+│   ┌─────────────────────────────────────────────────────────────────────┐   │
+│   │                        Knowledge Layer                               │   │
+│   │  ┌──────────────┐  ┌──────────────┐  ┌────────────────────────────┐ │   │
+│   │  │ ConceptStore │  │ TheoryStack  │  │   TheoryLayer              │ │   │
+│   │  │  (diamonds)  │  │  (overlays)  │  │  (overrides/masks)         │ │   │
+│   │  └──────────────┘  └──────────────┘  └────────────────────────────┘ │   │
+│   └─────────────────────────────────────────────────────────────────────┘   │
+│                                            │                                │
+│                                            ▼                                │
+│   ┌─────────────────────────────────────────────────────────────────────┐   │
+│   │                           Core Layer                                 │   │
+│   │  ┌──────────────┐  ┌──────────────┐  ┌────────────────────────────┐ │   │
+│   │  │ VectorSpace  │  │BoundedDiamond│  │   MathEngine               │ │   │
+│   │  │ (Int8Array)  │  │ (regions)    │  │  (saturated ops, L1 dist)  │ │   │
+│   │  └──────────────┘  └──────────────┘  └────────────────────────────┘ │   │
+│   │  ┌──────────────┐  ┌──────────────┐                                 │   │
+│   │  │RelationPerm- │  │ClusterManager│                                 │   │
+│   │  │uter (shuffle)│  │ (polysemy)   │                                 │   │
+│   │  └──────────────┘  └──────────────┘                                 │   │
+│   └─────────────────────────────────────────────────────────────────────┘   │
+│                                            │                                │
+│                                            ▼                                │
+│   ┌─────────────────────────────────────────────────────────────────────┐   │
+│   │                        Ingest Layer                                  │   │
+│   │  ┌──────────────┐  ┌──────────────┐  ┌────────────────────────────┐ │   │
+│   │  │   Parser     │  │   Encoder    │  │   Persistence              │ │   │
+│   │  │  (Sys2DSL)   │  │ (vec bind)   │  │  (SQLite/JSON)             │ │   │
+│   │  └──────────────┘  └──────────────┘  └────────────────────────────┘ │   │
+│   └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Reasoning Typologies (Geometric Operations)
 
 AGISystem2 exposes a family of reasoning modes, all grounded in the same geometric conceptual space:
 
-- **Deductive:** point/volume inclusion within diamonds (strict/fuzzy). A deductive answer corresponds to checking whether a query vector lies inside a concept’s bounded region under the active masks and theory layers.
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                       REASONING TYPOLOGIES DIAGRAM                              │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│   DEDUCTIVE                    INDUCTIVE                   ABDUCTIVE            │
+│   ═════════                    ═════════                   ═════════            │
+│   Point in region?             Build region from points    Find causes          │
+│                                                                                 │
+│   ┌───────────┐               ┌───────────┐               ┌───────────┐        │
+│   │  concept  │               │    • •    │               │  effect   │        │
+│   │    •?     │ → TRUE/FALSE  │   •   •   │ → new region  │     ↑     │        │
+│   │   query   │               │    • •    │               │  cause?   │        │
+│   └───────────┘               └───────────┘               └───────────┘        │
+│                                                                                 │
+│   ANALOGICAL                   COUNTERFACTUAL              DEONTIC              │
+│   ══════════                   ══════════════              ═══════              │
+│   Transfer relations           What-if reasoning           Norms/permissions    │
+│                                                                                 │
+│   A ─rel─► B                   Base + Overlay              ┌─────────┐          │
+│   C ─???─► ?                   ═══════════════             │PERMITTED│          │
+│                                ┌───────────┐               │ region  │          │
+│   ? ≈ C + (B - A)              │  "if X"   │ temporary     ├─────────┤          │
+│                                │ override  │ layer         │FORBIDDEN│          │
+│                                └───────────┘               │ region  │          │
+│                                                            └─────────┘          │
+│                                                                                 │
+│   TEMPORAL/CAUSAL              SPARSITY/ATTENTION          VALIDATION           │
+│   ═══════════════              ══════════════════          ══════════           │
+│   Time-ordered chains          Focus on subspaces          Check consistency    │
+│                                                                                 │
+│   t₀ ─rot─► t₁ ─rot─► t₂      Mask: [1,1,0,0,1...]        Theory₁ ∩ Theory₂    │
+│   (rotational encoding)        (only active dims)          = conflicts?         │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
+
+- **Deductive:** point/volume inclusion within diamonds (strict/fuzzy). A deductive answer corresponds to checking whether a query vector lies inside a concept's bounded region under the active masks and theory layers.
 - **Inductive:** envelope construction (min/max, centroid, L1 radius) to form new diamonds from examples. Concepts are learned as unions of diamonds that summarise observed points.
 - **Abductive:** inverse permutation probing plus nearest-neighbour lookup for best-explanation hypotheses. Given an observation, the system applies inverse relation permutations and retrieval to generate plausible causes.
 - **Analogical:** vector translation (delta application) to map relations across domains. The system reuses relation deltas (`B − A`) to predict analogues (`D ≈ C + (B − A)`), then retrieves nearby concepts.
@@ -51,6 +143,92 @@ Any module that deviates from these rules must call out the deviation explicitly
 ## Key Flows
 
 These flows summarise how the engine behaves end-to-end; they are refined in the module-level DS docs but kept here as a single global picture.
+
+### Flow Diagrams
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                            INGEST FLOW                                          │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│   "Dog IS_A Animal"                                                             │
+│         │                                                                       │
+│         ▼                                                                       │
+│   ┌───────────┐    ┌───────────┐    ┌───────────┐    ┌───────────┐             │
+│   │  Parser   │───►│  Encoder  │───►│ Concept   │───►│ Cluster   │             │
+│   │ (Sys2DSL) │    │ (permute  │    │  Store    │    │ Manager   │             │
+│   │           │    │  + bind)  │    │ (diamond) │    │ (polysemy)│             │
+│   └───────────┘    └───────────┘    └───────────┘    └───────────┘             │
+│         │                │                │                │                    │
+│   subject,          Int8Array        Update bounds    Split if                  │
+│   relation,         vector           min/max/center   divergent                 │
+│   object                                   │                                    │
+│                                            ▼                                    │
+│                                     ┌───────────┐    ┌───────────┐             │
+│                                     │Persistence│───►│ AuditLog  │             │
+│                                     │ (SQLite)  │    │           │             │
+│                                     └───────────┘    └───────────┘             │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                            ANSWER FLOW (ASK)                                    │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│   "@q ASK Dog IS_A Animal"                                                      │
+│         │                                                                       │
+│         ▼                                                                       │
+│   ┌───────────┐    ┌───────────┐    ┌───────────┐    ┌───────────┐             │
+│   │ DSL       │───►│ Theory    │───►│ Reasoner  │───►│ Retriever │             │
+│   │ Engine    │    │  Stack    │    │ (optimist/│    │ (LSH or   │             │
+│   │ (parse)   │    │ (compose) │    │  skeptic) │    │  brute)   │             │
+│   └───────────┘    └───────────┘    └───────────┘    └───────────┘             │
+│         │                │                │                │                    │
+│   Parse query      Apply layers      Adversarial      Find nearest              │
+│   + variables      to base diamond   inclusion test   if needed                 │
+│                                            │                                    │
+│                                            ▼                                    │
+│                                     ┌───────────────────────────┐               │
+│                                     │  Result:                  │               │
+│                                     │  {truth: TRUE_CERTAIN,    │               │
+│                                     │   confidence: 0.95,       │               │
+│                                     │   provenance: [...]}      │               │
+│                                     └───────────────────────────┘               │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                         THEORY STACK COMPOSITION                                │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│   Base Concept (from ConceptStore)                                              │
+│   ┌─────────────────────────────────────┐                                       │
+│   │  BoundedDiamond                     │                                       │
+│   │  min: [-10, -5, 0, ...]             │                                       │
+│   │  max: [10, 15, 20, ...]             │                                       │
+│   │  center: [0, 5, 10, ...]            │                                       │
+│   └──────────────────┬──────────────────┘                                       │
+│                      │                                                          │
+│                      ▼  Layer 1: Law_Theory (priority: 10)                      │
+│   ┌─────────────────────────────────────┐                                       │
+│   │  Override dims [256..260]           │   ← Axiology dims                     │
+│   │  (deontic constraints)              │                                       │
+│   └──────────────────┬──────────────────┘                                       │
+│                      │                                                          │
+│                      ▼  Layer 2: Session_Override (priority: 20)                │
+│   ┌─────────────────────────────────────┐                                       │
+│   │  Override dims [4] (temperature)    │   ← Counterfactual: "if boiling=50"   │
+│   │  min: 45, max: 55                   │                                       │
+│   └──────────────────┬──────────────────┘                                       │
+│                      │                                                          │
+│                      ▼                                                          │
+│   ┌─────────────────────────────────────┐                                       │
+│   │  Composed Diamond (runtime)         │   ← Used for reasoning                │
+│   │  Base + Layer1 + Layer2 applied     │                                       │
+│   └─────────────────────────────────────┘                                       │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
 
 - **Ingest**
   - Parse text (or Sys2DSL fact) → canonical subject–relation–object triple → vector encoding via `Encoder` → superposition update in `ConceptStore` → clustering check via `ClusterManager` → update bounded diamonds → persist and index → record audit entry.

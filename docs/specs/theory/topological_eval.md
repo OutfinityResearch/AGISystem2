@@ -9,6 +9,53 @@ It complements the `TheoryDSLEngine` and `Sys2DSL_arch` design specs by focusing
 - complexity and performance bounds;
 - determinism and error handling (cycles, undefined variables).
 
+## Visual Overview
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                   TOPOLOGICAL EVALUATION OVERVIEW                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   Sys2DSL Script (text order does NOT determine execution order):           │
+│   ┌─────────────────────────────────────────────────────────────────────┐   │
+│   │  @result BOOL_AND $a $b     ← Line 1 (depends on @a and @b)         │   │
+│   │  @a ASK Water IS_A liquid   ← Line 2 (no dependencies)              │   │
+│   │  @b ASK Ice IS_A solid      ← Line 3 (no dependencies)              │   │
+│   └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│         │                                                                   │
+│         ▼ Parse & Build Dependency Graph                                    │
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────────────┐   │
+│   │                    DEPENDENCY GRAPH                                 │   │
+│   │                                                                     │   │
+│   │         @a ─────────────┐                                           │   │
+│   │      (no deps)          │                                           │   │
+│   │                         ▼                                           │   │
+│   │                     @result                                         │   │
+│   │                         ▲                                           │   │
+│   │         @b ─────────────┘                                           │   │
+│   │      (no deps)                                                      │   │
+│   │                                                                     │   │
+│   └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│         │                                                                   │
+│         ▼ Topological Sort (Kahn's algorithm)                               │
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────────────┐   │
+│   │                    EXECUTION ORDER                                  │   │
+│   │                                                                     │   │
+│   │   Step 1: Execute @a (no dependencies) ─► { truth: TRUE_CERTAIN }   │   │
+│   │   Step 2: Execute @b (no dependencies) ─► { truth: TRUE_CERTAIN }   │   │
+│   │   Step 3: Execute @result (deps satisfied) ─► BOOL_AND($a, $b)      │   │
+│   │                                                                     │   │
+│   │   Note: @a and @b could run in parallel (no edge between them)      │   │
+│   │                                                                     │   │
+│   └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Evaluation Model
 
 ### Statements and Dependencies
@@ -41,6 +88,34 @@ It complements the `TheoryDSLEngine` and `Sys2DSL_arch` design specs by focusing
   - reports a clear error (including the variables involved),
   - and refuses to execute the script.
 - References to variables that are never produced by any statement are also errors unless the implementation chooses to treat them as a special constant (the design encourages explicit producer statements to keep programmes auditable).
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         CYCLE ERROR DETECTION                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   Script with cycle:                                                        │
+│   ┌─────────────────────────────────────────────────────────────────────┐   │
+│   │  @a BOOL_AND $b TRUE    ← @a needs $b                               │   │
+│   │  @b BOOL_AND $a TRUE    ← @b needs $a  → CYCLE!                     │   │
+│   └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│   Dependency graph:                                                         │
+│                                                                             │
+│         ┌────────────────────────┐                                          │
+│         │                        │                                          │
+│         ▼                        │                                          │
+│        @a ─────────────────────► @b                                         │
+│         ▲                        │                                          │
+│         │                        │                                          │
+│         └────────────────────────┘                                          │
+│                                                                             │
+│   Error: CYCLE_ERROR                                                        │
+│   Message: "Circular dependency detected: @a → @b → @a"                     │
+│   Script execution: REFUSED                                                 │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Complexity and Performance
 

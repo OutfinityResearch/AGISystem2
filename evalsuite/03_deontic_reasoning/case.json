@@ -1,0 +1,54 @@
+{
+  "id": "03_deontic_reasoning",
+  "name": "Deontic Reasoning - Permissions and Prohibitions",
+  "description": "Tests normative reasoning about what is permitted, prohibited, and obligatory",
+
+  "theory": {
+    "natural_language": "In our city, there are strict rules about drone flights. Drones are prohibited from flying over hospitals for safety reasons. Drones are also prohibited from flying over schools during school hours. However, medical delivery drones have special permissions - they are allowed to fly over hospitals when delivering medical supplies. Police drones are permitted to fly anywhere during emergencies. Regular commercial drones can only fly in designated drone zones. Flying over private property without permission is prohibited for all drones. The city center is a no-fly zone for all drones except emergency services.",
+    "expected_facts": [
+      "Drone PROHIBITED_FROM HospitalAirspace",
+      "Drone PROHIBITED_FROM SchoolAirspace",
+      "MedicalDrone IS_A Drone",
+      "MedicalDrone PERMITTED_IN HospitalAirspace",
+      "PoliceDrone IS_A Drone",
+      "PoliceDrone PERMITTED_IN EmergencyZone",
+      "CommercialDrone IS_A Drone",
+      "CommercialDrone PERMITTED_IN DroneZone",
+      "Drone PROHIBITED_FROM PrivateProperty",
+      "Drone PROHIBITED_FROM CityCenter",
+      "EmergencyDrone PERMITTED_IN CityCenter"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Can a medical drone fly over a hospital?",
+      "expected_answer": {
+        "natural_language": "Yes, medical drones are permitted to fly over hospitals when delivering medical supplies.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "MedicalDrone PERMITTED_IN HospitalAirspace overrides general drone prohibition"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Is a commercial drone allowed in the city center?",
+      "expected_answer": {
+        "natural_language": "No, commercial drones are not allowed in the city center. The city center is a no-fly zone for all drones except emergency services.",
+        "truth": "FALSE",
+        "explanation": "Drone PROHIBITED_FROM CityCenter applies to CommercialDrone, no override exists"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Where can a regular drone fly?",
+      "expected_answer": {
+        "natural_language": "Regular commercial drones can only fly in designated drone zones. They are prohibited from hospitals, schools, private property, and the city center.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "CommercialDrone PERMITTED_IN DroneZone, with multiple prohibitions elsewhere"
+      }
+    }
+  ],
+
+  "tags": ["deontic", "permissions", "prohibitions", "norms", "rules"]
+}

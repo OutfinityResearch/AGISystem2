@@ -4,6 +4,68 @@ ID: DS(/knowledge/dimensions)
 
 Purpose: fixed partition of ontology/axiology axes used across all profiles. Remaining dimensions (>=384) are empirical/latent. Unused axes stay 0.
 
+## Visual: Dimension Partition Layout
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                      DIMENSION SPACE LAYOUT (N=512 typical)                     │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│   Int8Array[512] - Each dimension stores value in [-127, +127]                  │
+│                                                                                 │
+│   ┌─────────────────────────────────────────────────────────────────────────┐   │
+│   │                                                                         │   │
+│   │  ONTOLOGY (0-255)          AXIOLOGY (256-383)     EMPIRICAL (384+)      │   │
+│   │  ══════════════════        ═════════════════      ═══════════════       │   │
+│   │  Physical/factual          Values/norms           Learned/latent        │   │
+│   │  world properties          ethics/deontic         domain-specific       │   │
+│   │                                                                         │   │
+│   │  ┌───────────────┐        ┌───────────────┐      ┌───────────────┐      │   │
+│   │  │ 0-31: Physical│        │256-275: Moral │      │384-511:       │      │   │
+│   │  │  matter,solid │        │  good/bad,    │      │  Reserved for │      │   │
+│   │  │  mass,temp... │        │  harm,benefit │      │  learned dims │      │   │
+│   │  ├───────────────┤        ├───────────────┤      │  (zero until  │      │   │
+│   │  │32-63: Time    │        │276-295: Legal │      │   populated)  │      │   │
+│   │  │  duration,    │        │  permissible  │      │               │      │   │
+│   │  │  sequence...  │        │  obligation   │      └───────────────┘      │   │
+│   │  ├───────────────┤        ├───────────────┤                             │   │
+│   │  │64-95: Agency  │        │296-319: Util- │                             │   │
+│   │  │  cognition,   │        │  ity/Value    │                             │   │
+│   │  │  intention... │        │  profit,cost  │                             │   │
+│   │  ├───────────────┤        ├───────────────┤                             │   │
+│   │  │96-143: Legal/ │        │320-335: Emot- │                             │   │
+│   │  │  Artifact/    │        │  ion/Affect   │                             │   │
+│   │  │  Financial    │        │  fear,joy...  │                             │   │
+│   │  ├───────────────┤        ├───────────────┤                             │   │
+│   │  │144-223: Know- │        │336-383:       │                             │   │
+│   │  │  ledge/Math/  │        │  Reserved     │                             │   │
+│   │  │  Process/Risk │        │  (zero)       │                             │   │
+│   │  ├───────────────┤        └───────────────┘                             │   │
+│   │  │224-255:       │                                                      │   │
+│   │  │  Reserved     │                                                      │   │
+│   │  └───────────────┘                                                      │   │
+│   │                                                                         │   │
+│   └─────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                 │
+│   dim[0]        dim[255]     dim[256]      dim[383]    dim[384]      dim[511]  │
+│   ├──────────────┤           ├──────────────┤          ├──────────────┤        │
+│        ONTOLOGY                  AXIOLOGY                 EMPIRICAL            │
+│      (256 dims)                (128 dims)               (128+ dims)            │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+   EXAMPLE: A concept like "water" might have:
+   ═══════════════════════════════════════════
+
+   dim[0]  Physicality:     +80  (highly physical)
+   dim[1]  Solidity:        -50  (liquid, not solid)
+   dim[4]  Temperature:     +20  (room temp default)
+   dim[7]  Phase:           +40  (liquid phase)
+   dim[256] Moral valence:    0  (morally neutral)
+   dim[272] Legality:         0  (not legally relevant)
+   dim[384+] Empirical:       0  (no learned features yet)
+```
+
 ## Ontology Axes (0–255)
 - 0 Physicality (matter/energy presence)
 - 1 Solidity (fluid→solid)

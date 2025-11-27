@@ -15,6 +15,38 @@ Status: DRAFT v1.0
 
 There is NO syntax that compresses multiple points into one. Each entity occupies its own location in the space.
 
+### Visual: The Conceptual Space
+
+```
+                     CONCEPTUAL SPACE (N-dimensional)
+    ┌────────────────────────────────────────────────────────────┐
+    │                                                            │
+    │     ┌─────────────────┐                                    │
+    │     │  animal         │  ← Concept (BoundedDiamond region) │
+    │     │  ┌───────────┐  │                                    │
+    │     │  │  mammal   │  │  ← Nested concept (subsumption)    │
+    │     │  │    •Fido  │  │  ← Fact/Instance (point)           │
+    │     │  │    •Rex   │  │                                    │
+    │     │  └───────────┘  │                                    │
+    │     │       •Bird1    │                                    │
+    │     └─────────────────┘                                    │
+    │                    ╲                                       │
+    │                     ╲ IS_A (relation = directed edge)      │
+    │                      ╲                                     │
+    │     ┌──────────────┐  ╲   ┌─────────────┐                  │
+    │     │ temperature  │   ╲  │  liquid     │                  │
+    │     │  •Celsius100 │    ╲ │   •Water    │                  │
+    │     │  •Celsius0   │     ╲│             │                  │
+    │     └──────────────┘      └─────────────┘                  │
+    │                                                            │
+    └────────────────────────────────────────────────────────────┘
+
+    Legend:
+    ┌───┐ = BoundedDiamond (concept region with min/max bounds)
+    •    = Point (fact/instance within a region)
+    ───► = Relation (directed connection between points)
+```
+
 ---
 
 ## 2. The Problem with `property=value`
@@ -44,6 +76,25 @@ Relation A: water ──HAS_PROPERTY──► boiling_point
 Relation B: boiling_point ──HAS_VALUE──► Celsius100
    OR
 Relation C: water ──BOILS_AT──► Celsius100 (direct)
+```
+
+### Visual: Why property=value is Wrong
+
+```
+    WRONG (compressed):                    CORRECT (decomposed):
+    ─────────────────────                  ─────────────────────────────────
+
+    ┌───────────────────┐                  ┌─────────┐  HAS_PROPERTY  ┌──────────────┐
+    │      water        │                  │  water  │ ─────────────► │ boiling_point│
+    │                   │                  └─────────┘                └──────┬───────┘
+    │ boiling_point=100 │  ← String,                                        │
+    │   (NOT a point!)  │    no geometry!                                   │ HAS_VALUE
+    └───────────────────┘                                                   ▼
+                                                                   ┌───────────────┐
+    Problem: "100" has no                                          │  Celsius100   │
+    position in space!                                             │  (a POINT in  │
+                                                                   │   space!)     │
+                                                                   └───────────────┘
 ```
 
 ### 2.3 Why This Matters
@@ -163,6 +214,41 @@ Define values as concepts in hierarchies:
 
 ## 5. The Three Forms of Knowledge
 
+### Visual: Knowledge Forms in Geometric Space
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         CONCEPTUAL SPACE                                    │
+│                                                                             │
+│   CONCEPTS (lowercase)              FACTS (Capitalized)                     │
+│   ═══════════════════              ═══════════════════                      │
+│   BoundedDiamond regions           Points within regions                    │
+│                                                                             │
+│   ┌─────────────────────┐                                                   │
+│   │      animal         │  ← concept region (min/max bounds per dimension)  │
+│   │   ┌─────────────┐   │                                                   │
+│   │   │   mammal    │   │  ← subconcept (smaller region, IS_A animal)       │
+│   │   │  •Fido      │   │  ← fact (point inside mammal region)              │
+│   │   │  •Lassie    │   │                                                   │
+│   │   └─────────────┘   │                                                   │
+│   │      •Eagle1        │  ← fact (in animal but not mammal)                │
+│   └─────────────────────┘                                                   │
+│              │                                                              │
+│              │ RELATIONS (UPPERCASE)                                        │
+│              │ ═════════════════════                                        │
+│              │ Directed edges + permutation transforms                      │
+│              │                                                              │
+│              │ IS_A                                                         │
+│              ▼                                                              │
+│   ┌─────────────────────┐                                                   │
+│   │   living_thing      │                                                   │
+│   └─────────────────────┘                                                   │
+│                                                                             │
+│   Relation = edge connecting points + permutation table for vector binding  │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
 ### 5.1 Concepts (lowercase) = Type Regions
 
 ```
@@ -191,6 +277,35 @@ RELATION = ALL_CAPS word
          = also a concept (can be queried/modified)
 
 Examples: IS_A, CAUSES, BOILS_AT, LOCATED_IN
+```
+
+### 5.4 Permutation Binding Diagram
+
+```
+   ENCODING: "Dog IS_A Animal"
+   ════════════════════════════
+
+   Step 1: Encode subject          Step 2: Encode object
+   ┌─────────────────────┐         ┌─────────────────────┐
+   │  "Dog" → hash →     │         │  "Animal" → hash →  │
+   │  subject_vec        │         │  object_vec         │
+   │  [23, -5, 0, 12...] │         │  [10, 8, -3, 5...]  │
+   └─────────────────────┘         └─────────────────────┘
+                                             │
+                                             ▼
+   Step 3: Permute object by relation   ┌─────────────────────────┐
+   ════════════════════════════════     │  permute(object, IS_A)  │
+   IS_A has a deterministic             │  [5, -3, 10, 8...]      │
+   permutation table                    │  (dimensions shuffled)   │
+                                        └─────────────────────────┘
+                                             │
+                                             ▼
+   Step 4: Combine (saturated add)     ┌─────────────────────────┐
+   ═══════════════════════════════     │  subject + permuted_obj │
+                                       │  = result_vec           │
+   result = subject_vec                │  [28, -8, 10, 20...]    │
+          + permute(object_vec, IS_A)  │  (clamped to [-127,127])│
+                                       └─────────────────────────┘
 ```
 
 ---

@@ -1,0 +1,62 @@
+{
+  "id": "04_counterfactual",
+  "name": "Counterfactual Reasoning - What If Scenarios",
+  "description": "Tests hypothetical reasoning with temporary theory modifications",
+
+  "theory": {
+    "natural_language": "In normal physics, water boils at 100 degrees Celsius at sea level pressure. Humans need liquid water to survive. At temperatures above the boiling point, water becomes steam. At temperatures below the freezing point of 0 degrees Celsius, water becomes ice. The average room temperature is about 20 degrees Celsius. The human body temperature is approximately 37 degrees Celsius. Water at body temperature is still liquid because 37 is less than 100.",
+    "expected_facts": [
+      "Water BOILS_AT Celsius100",
+      "Water FREEZES_AT Celsius0",
+      "Human REQUIRES LiquidWater",
+      "RoomTemperature EQUALS Celsius20",
+      "BodyTemperature EQUALS Celsius37",
+      "Water AT_ROOM_TEMPERATURE IS_A liquid",
+      "Water AT_BODY_TEMPERATURE IS_A liquid"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "If water boiled at 50 degrees Celsius instead of 100, would water still be liquid at room temperature?",
+      "expected_answer": {
+        "natural_language": "Yes, water would still be liquid at room temperature (20°C) because 20 is less than 50.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Counterfactual: With BOILS_AT Celsius50, room temp 20 < 50, so still liquid"
+      },
+      "counterfactual": {
+        "temporary_fact": "Water BOILS_AT Celsius50",
+        "removes": "Water BOILS_AT Celsius100"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "What if water boiled at 30 degrees? Would humans survive normally?",
+      "expected_answer": {
+        "natural_language": "No, humans would have serious problems. Body temperature is 37°C, which is above 30°C. This means water in the human body would boil, which is incompatible with life.",
+        "truth": "FALSE",
+        "explanation": "Counterfactual: Body temp 37 > boiling point 30 means water would vaporize in the body"
+      },
+      "counterfactual": {
+        "temporary_fact": "Water BOILS_AT Celsius30",
+        "removes": "Water BOILS_AT Celsius100"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "If gravity didn't exist, would water still boil at 100 degrees?",
+      "expected_answer": {
+        "natural_language": "The boiling point of water is determined by pressure and molecular properties, not directly by gravity. Without gravity, atmospheric pressure would be different, which could affect the boiling point, but the basic chemical property remains.",
+        "truth": "PLAUSIBLE",
+        "explanation": "This requires reasoning about indirect effects - gravity affects pressure which affects boiling"
+      },
+      "counterfactual": {
+        "temporary_fact": "Gravity EQUALS Zero",
+        "note": "Complex counterfactual requiring causal chain reasoning"
+      }
+    }
+  ],
+
+  "tags": ["counterfactual", "what-if", "physics", "hypothetical"]
+}
