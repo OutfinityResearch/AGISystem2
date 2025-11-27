@@ -1,0 +1,49 @@
+{
+  "id": "36_multi_theory_departments",
+  "name": "Department-Specific Theories",
+  "description": "Different departments maintain separate theory overlays with conflicting norms",
+
+  "theory": {
+    "natural_language": "The HR theory says remote work requires manager approval. The Engineering theory says remote work is default-allowed for engineers. In company-wide policy, HR overrides for contractors. Alice is an engineer. Bruno is a contractor in Engineering.",
+    "expected_facts": [
+      "HR_theory SAYS remote_work REQUIRES manager_approval",
+      "ENG_theory SAYS remote_work ALLOWED_BY_DEFAULT true",
+      "company_policy HR_overrides_for contractors",
+      "Alice IS_A engineer",
+      "Bruno IS_A contractor",
+      "Bruno IS_IN engineering"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Under Engineering theory, is Alice allowed to work remotely by default?",
+      "expected_answer": {
+        "natural_language": "Yes. Engineering theory allows remote work by default for engineers like Alice.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "ENG_theory SAYS remote_work ALLOWED_BY_DEFAULT true ∧ Alice IS_A engineer"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Does HR's rule apply to Bruno as a contractor?",
+      "expected_answer": {
+        "natural_language": "Yes. HR overrides for contractors, so Bruno needs manager approval despite Engineering defaults.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "company_policy HR_overrides_for contractors ∧ Bruno IS_A contractor"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "If the Engineering overlay is applied alone, would Bruno be allowed?",
+      "expected_answer": {
+        "natural_language": "Yes, in that isolated theory. The conflict appears only when company policy is applied.",
+        "truth": "PLAUSIBLE",
+        "explanation": "ENG_theory alone allows remote_work by default"
+      }
+    }
+  ],
+
+  "tags": ["multi_theory", "policy", "conflict", "overlay"]
+}

@@ -1,0 +1,51 @@
+{
+  "id": "28_risk_controls",
+  "name": "Risk Controls and Compensating Measures",
+  "description": "Tests reasoning about mandatory controls and compensating controls",
+
+  "theory": {
+    "natural_language": "Control C1 requires multi-factor authentication (MFA) for admin access. If MFA is unavailable, a compensating control requires break-glass accounts with one-time passwords and post-incident review. Control C2 requires network isolation. System Rho lacks MFA temporarily. System Sigma has MFA. System Tau is isolated but uses shared admin passwords.",
+    "expected_facts": [
+      "C1 REQUIRES mfa_for_admin",
+      "compensating_control FOR mfa_unavailable IS break_glass_with_otp",
+      "compensating_control ALSO_REQUIRES post_incident_review",
+      "C2 REQUIRES network_isolation",
+      "SystemRho LACKS mfa_for_admin",
+      "SystemSigma HAS mfa_for_admin",
+      "SystemTau HAS network_isolation",
+      "SystemTau USES shared_admin_passwords"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Is System Rho compliant with C1?",
+      "expected_answer": {
+        "natural_language": "Not yet. It lacks MFA, so it must apply the compensating control with break-glass OTP and review.",
+        "truth": "FALSE",
+        "explanation": "SystemRho LACKS mfa_for_admin ⇒ apply compensating_control break_glass_with_otp + post_incident_review"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Does System Sigma meet the MFA requirement?",
+      "expected_answer": {
+        "natural_language": "Yes. System Sigma has MFA for admin access.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "SystemSigma HAS mfa_for_admin"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Is System Tau fully compliant with C2 and C1?",
+      "expected_answer": {
+        "natural_language": "It meets C2 through isolation but violates C1 by using shared admin passwords without MFA.",
+        "truth": "FALSE",
+        "explanation": "SystemTau HAS network_isolation ∧ SystemTau USES shared_admin_passwords ∧ lacks MFA"
+      }
+    }
+  ],
+
+  "tags": ["risk", "controls", "compensating", "security"]
+}

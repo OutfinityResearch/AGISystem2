@@ -1,0 +1,46 @@
+{
+  "id": "33_effective_dates",
+  "name": "Effective Dates and Sunset Clauses",
+  "description": "Temporal reasoning about start/end dates of rules",
+
+  "theory": {
+    "natural_language": "Policy P becomes effective on 1 March and sunsets on 30 September. Before 1 March it is not in force. After 30 September it no longer applies. Today is 15 June. Query asks about 1 October as well.",
+    "expected_facts": [
+      "PolicyP EFFECTIVE_FROM March1",
+      "PolicyP SUNSETS_ON September30",
+      "today IS June15"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Is Policy P active today (June 15)?",
+      "expected_answer": {
+        "natural_language": "Yes. Today is between the effective date and sunset date.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "March1 <= June15 <= September30"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Was Policy P in force on 20 February?",
+      "expected_answer": {
+        "natural_language": "No. It was not yet effective before 1 March.",
+        "truth": "FALSE",
+        "explanation": "20Feb < EFFECTIVE_FROM March1"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Will Policy P apply on 1 October?",
+      "expected_answer": {
+        "natural_language": "No. It sunsets on 30 September, so it does not apply on 1 October.",
+        "truth": "FALSE",
+        "explanation": "1Oct > SUNSETS_ON September30"
+      }
+    }
+  ],
+
+  "tags": ["temporal", "policy", "effective_date", "sunset"]
+}

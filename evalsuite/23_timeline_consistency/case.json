@@ -1,0 +1,48 @@
+{
+  "id": "23_timeline_consistency",
+  "name": "Chronology and Temporal Consistency",
+  "description": "Checks ordering of events and temporal contradictions",
+
+  "theory": {
+    "natural_language": "In the story, the festival occurs every spring. Chapter 2 states the festival happened after the winter market. Chapter 4 mistakenly says the festival was before winter. The epilogue corrects that spring follows winter.",
+    "expected_facts": [
+      "festival OCCURS_IN spring",
+      "winter PRECEDES spring",
+      "Chapter2 CLAIMS festival after_winter_market",
+      "Chapter4 CLAIMS festival before_winter",
+      "epilogue CORRECTS season_order winter_before_spring"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Should the festival happen before or after winter?",
+      "expected_answer": {
+        "natural_language": "After winter. Spring follows winter, so the festival is after the winter market.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "winter PRECEDES spring ∧ festival OCCURS_IN spring"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Is Chapter 4's claim about the festival timing accurate?",
+      "expected_answer": {
+        "natural_language": "No. Chapter 4 conflicts with the established order that winter precedes spring.",
+        "truth": "FALSE",
+        "explanation": "Chapter4 CLAIMS festival before_winter ∧ epilogue CORRECTS season_order"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Does Chapter 2 align with the seasonal order?",
+      "expected_answer": {
+        "natural_language": "Yes. It places the festival after the winter market, consistent with spring after winter.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Chapter2 CLAIMS festival after_winter_market ∧ winter PRECEDES spring"
+      }
+    }
+  ],
+
+  "tags": ["literary", "temporal", "consistency", "order"]
+}

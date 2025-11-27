@@ -1,0 +1,49 @@
+{
+  "id": "24_factchecking_sources",
+  "name": "Fact-Checking Against Sources",
+  "description": "Comparing claims with authoritative sources for consistency",
+
+  "theory": {
+    "natural_language": "Source A states that Product Orion launched in 2021. Source B states the same. An interview transcript claims Product Orion launched in 2019. The corporate archive is considered authoritative over interviews.",
+    "expected_facts": [
+      "SourceA CLAIMS Orion launched_2021",
+      "SourceB CLAIMS Orion launched_2021",
+      "Interview CLAIMS Orion launched_2019",
+      "corporate_archive AUTHORITY_LEVEL high",
+      "interview AUTHORITY_LEVEL low",
+      "source_priority corporate_archive OVER interview"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "What is the correct launch year for Product Orion?",
+      "expected_answer": {
+        "natural_language": "2021. Both authoritative sources agree on 2021, overriding the interview claim of 2019.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "SourceA and SourceB agree on launched_2021 ∧ source_priority corporate_archive OVER interview"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Is the interview claim reliable?",
+      "expected_answer": {
+        "natural_language": "No. The interview is lower authority and conflicts with the archive-backed 2021 date.",
+        "truth": "FALSE",
+        "explanation": "Interview CLAIMS 2019 ∧ corporate_archive higher authority"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Do the two main sources conflict?",
+      "expected_answer": {
+        "natural_language": "No. Source A and Source B both say 2021.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "SourceA CLAIMS launched_2021 ∧ SourceB CLAIMS launched_2021"
+      }
+    }
+  ],
+
+  "tags": ["factchecking", "sources", "authority", "consistency"]
+}

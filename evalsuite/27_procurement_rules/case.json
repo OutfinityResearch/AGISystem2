@@ -1,0 +1,62 @@
+{
+  "id": "27_procurement_rules",
+  "name": "Procurement Thresholds and Approvals",
+  "description": "Combines numeric thresholds with approval workflows",
+
+  "theory": {
+    "natural_language": "Purchases under $5,000 require a single quote. Purchases between $5,000 and $50,000 require three competitive quotes. Over $50,000 requires CFO approval. Emergency repairs may bypass quotes but still notify finance. Purchase P1 is $3,000. Purchase P2 is $20,000. Purchase P3 is $75,000. Purchase P4 is an emergency repair of $12,000.",
+    "expected_facts": [
+      "purchase<5000 REQUIRES single_quote",
+      "purchase_between5000_50000 REQUIRES three_quotes",
+      "purchase>50000 REQUIRES CFO_approval",
+      "emergency_repair MAY_BYPASS quotes",
+      "emergency_repair MUST_NOTIFY finance",
+      "P1 amount 3000",
+      "P2 amount 20000",
+      "P3 amount 75000",
+      "P4 IS_A emergency_repair",
+      "P4 amount 12000"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "What does P1 need before approval?",
+      "expected_answer": {
+        "natural_language": "P1 needs a single quote because it is under $5,000.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "P1 amount 3000 ⇒ purchase<5000 REQUIRES single_quote"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "How many quotes are required for P2?",
+      "expected_answer": {
+        "natural_language": "Three competitive quotes are required for P2.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "P2 amount 20000 ⇒ purchase_between5000_50000 REQUIRES three_quotes"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Does P3 need CFO approval?",
+      "expected_answer": {
+        "natural_language": "Yes. P3 exceeds $50,000 and requires CFO approval.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "P3 amount 75000 ⇒ purchase>50000 REQUIRES CFO_approval"
+      }
+    },
+    {
+      "id": "q4",
+      "natural_language": "Can P4 skip quotes, and who must be notified?",
+      "expected_answer": {
+        "natural_language": "P4 is an emergency repair and may bypass quotes, but finance must be notified.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "P4 IS_A emergency_repair ⇒ MAY_BYPASS quotes ∧ MUST_NOTIFY finance"
+      }
+    }
+  ],
+
+  "tags": ["procurement", "numeric", "workflow", "approvals"]
+}

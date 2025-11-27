@@ -23,6 +23,15 @@ class AuditLog {
     const line = `${JSON.stringify(record)}\n`;
     fs.appendFileSync(this.filePath, line, 'utf8');
   }
+
+  /**
+   * Alias for write() - logs an event with type and data
+   * @param {string} eventType - Type of event being logged
+   * @param {Object} data - Event data to log
+   */
+  log(eventType, data) {
+    this.write({ event: eventType, ...data });
+  }
 }
 
 module.exports = AuditLog;

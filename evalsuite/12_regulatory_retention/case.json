@@ -1,0 +1,49 @@
+{
+  "id": "12_regulatory_retention",
+  "name": "Record Retention and Cutoff Dates",
+  "description": "Compliance with retention rules and exception for drafts/duplicates",
+
+  "theory": {
+    "natural_language": "According to the retention schedule, financial records must be retained for seven years. Tax filings are financial records. Invoices are financial records. Chat logs are not financial records. Draft documents that were never issued are excluded from retention. Certified copies count as originals.",
+    "expected_facts": [
+      "financial_record RETAIN_FOR years7",
+      "tax_filing IS_A financial_record",
+      "invoice IS_A financial_record",
+      "chat_log NOT_IS_A financial_record",
+      "draft_document EXCLUDED_FROM_RETENTION true",
+      "certified_copy COUNTS_AS original"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Should we keep the invoice from fiscal year 2018 until at least 2025?",
+      "expected_answer": {
+        "natural_language": "Yes. Invoices are financial records retained for seven years, so an invoice from 2018 stays until 2025.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "invoice IS_A financial_record ∧ financial_record RETAIN_FOR years7"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Do informal chat logs fall under the seven-year retention?",
+      "expected_answer": {
+        "natural_language": "No. Chat logs are not financial records and are not covered by the seven-year rule.",
+        "truth": "FALSE",
+        "explanation": "chat_log NOT_IS_A financial_record"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Must an unsigned draft policy be archived like the final version?",
+      "expected_answer": {
+        "natural_language": "No. Draft documents that were never issued are excluded from retention.",
+        "truth": "FALSE",
+        "explanation": "draft_document EXCLUDED_FROM_RETENTION true"
+      }
+    }
+  ],
+
+  "tags": ["regulation", "retention", "deontic", "policy"]
+}

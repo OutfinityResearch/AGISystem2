@@ -1,0 +1,48 @@
+{
+  "id": "16_sop_conflicts",
+  "name": "Standard Operating Procedure Conflicts",
+  "description": "Detects contradictions between SOP steps and higher-level policies",
+
+  "theory": {
+    "natural_language": "Policy says a safety review is mandatory before any production deployment. SOP-42 describes deployment steps but forgets the safety review. SOP-42 step 5 triggers production deployment. Emergency changes may bypass safety review only if risk is documented.",
+    "expected_facts": [
+      "policy REQUIRE safety_review_before_production",
+      "SOP_42 MISSES safety_review",
+      "SOP_42 STEP5 triggers_production_deployment",
+      "emergency_change MAY_BYPASS safety_review",
+      "bypass_requires risk_documented"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Is SOP-42 compliant as written?",
+      "expected_answer": {
+        "natural_language": "No. SOP-42 omits the mandatory safety review before production deployment.",
+        "truth": "FALSE",
+        "explanation": "policy REQUIRE safety_review_before_production ∧ SOP_42 MISSES safety_review"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Can an emergency change deploy without a safety review?",
+      "expected_answer": {
+        "natural_language": "Only if the risk is documented. The bypass is conditional.",
+        "truth": "PLAUSIBLE",
+        "explanation": "emergency_change MAY_BYPASS safety_review ∧ bypass_requires risk_documented"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Does step 5 of SOP-42 trigger production without the required review?",
+      "expected_answer": {
+        "natural_language": "Yes. Step 5 deploys to production and the missing safety review makes it non-compliant.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "SOP_42 STEP5 triggers_production_deployment ∧ SOP_42 MISSES safety_review"
+      }
+    }
+  ],
+
+  "tags": ["quality", "policy", "conflict_detection", "sop"]
+}

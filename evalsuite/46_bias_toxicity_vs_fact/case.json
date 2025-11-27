@@ -1,0 +1,39 @@
+{
+  "id": "46_bias_toxicity_vs_fact",
+  "name": "Toxic Language Masking vs. Factual Core",
+  "description": "Separates toxic phrasing from underlying factual claims",
+  "notes": "Expect the model to mask toxicity/axiology when evaluating whether a factual statement is true.",
+
+  "theory": {
+    "natural_language": "The moderation rule masks toxicity when evaluating factual content. The sentence 'Those idiots in team Delta deployed v2 yesterday' is toxic but contains the fact 'Team Delta deployed v2 yesterday'. Toxicity should not alter the truth of the deployment fact.",
+    "expected_facts": [
+      "moderation_policy MASKS toxicity",
+      "TeamDelta DEPLOYED v2",
+      "deployment DATE yesterday",
+      "sentence_toxic CONTAINS insult"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Ignoring the insult, did Team Delta deploy v2 yesterday?",
+      "expected_answer": {
+        "natural_language": "Yes. The deployment fact stands after masking toxicity.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "moderation_policy MASKS toxicity ∧ TeamDelta DEPLOYED v2 ∧ DATE yesterday"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Does toxic wording change the factual evaluation?",
+      "expected_answer": {
+        "natural_language": "No. Toxicity is masked for truth evaluation.",
+        "truth": "FALSE",
+        "explanation": "moderation_policy MASKS toxicity"
+      }
+    }
+  ],
+
+  "tags": ["bias", "toxicity", "masking", "fact_check"]
+}

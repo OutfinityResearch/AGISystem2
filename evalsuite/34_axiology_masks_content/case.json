@@ -1,0 +1,48 @@
+{
+  "id": "34_axiology_masks_content",
+  "name": "Axiology Masking for Content Neutrality",
+  "description": "Tests masking of value-laden dimensions during reasoning",
+
+  "theory": {
+    "natural_language": "The content policy masks axiology dimensions when evaluating factual claims. Political sentiment should not influence whether a statement is true. The statement 'The budget was approved on Monday' is factual. The phrase includes a political slogan but slogans should be masked out.",
+    "expected_facts": [
+      "content_policy MASKS axiology",
+      "political_sentiment SHOULD_NOT_AFFECT truth_evaluation",
+      "statement1 IS \"The budget was approved on Monday\"",
+      "statement1 IS_FACTUAL true",
+      "statement1 CONTAINS slogan"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Should political sentiment change the truth evaluation of statement1?",
+      "expected_answer": {
+        "natural_language": "No. Axiology is masked; slogans do not affect the factual truth.",
+        "truth": "FALSE",
+        "explanation": "content_policy MASKS axiology ∧ political_sentiment SHOULD_NOT_AFFECT truth_evaluation"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Is statement1 treated as factual despite containing a slogan?",
+      "expected_answer": {
+        "natural_language": "Yes. The slogan is ignored; the factual part is evaluated neutrally.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "statement1 IS_FACTUAL true ∧ slogan masked"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Does the policy require neutral evaluation?",
+      "expected_answer": {
+        "natural_language": "Yes. Content policy masks axiology for neutrality.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "content_policy MASKS axiology"
+      }
+    }
+  ],
+
+  "tags": ["bias_control", "mask", "content", "axiology"]
+}

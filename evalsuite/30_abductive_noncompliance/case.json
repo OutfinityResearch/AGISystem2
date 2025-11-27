@@ -1,0 +1,49 @@
+{
+  "id": "30_abductive_noncompliance",
+  "name": "Abductive Non-Compliance Diagnosis",
+  "description": "Infer likely missing control based on observed failure",
+
+  "theory": {
+    "natural_language": "Audit finding: unauthorized production access occurred. Common causes include missing MFA, shared admin accounts, or lack of network isolation. System Omega uses shared admin accounts. System Omega has MFA. System Omega lacks network isolation.",
+    "expected_facts": [
+      "unauthorized_access POSSIBLE_CAUSE missing_mfa",
+      "unauthorized_access POSSIBLE_CAUSE shared_admin_accounts",
+      "unauthorized_access POSSIBLE_CAUSE no_network_isolation",
+      "SystemOmega USES shared_admin_accounts",
+      "SystemOmega HAS mfa",
+      "SystemOmega LACKS network_isolation"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "What is the most plausible cause of the unauthorized access on System Omega?",
+      "expected_answer": {
+        "natural_language": "The lack of network isolation is the likely cause, since MFA exists and shared accounts remain.",
+        "truth": "PLAUSIBLE",
+        "explanation": "SystemOmega LACKS network_isolation ∧ shared_admin_accounts present"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Is missing MFA a good hypothesis here?",
+      "expected_answer": {
+        "natural_language": "No. System Omega has MFA, so that hypothesis is weak.",
+        "truth": "FALSE",
+        "explanation": "SystemOmega HAS mfa"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Could shared admin accounts be part of the cause?",
+      "expected_answer": {
+        "natural_language": "Yes. Shared admin accounts are a listed possible cause and are present on Omega.",
+        "truth": "PLAUSIBLE",
+        "explanation": "unauthorized_access POSSIBLE_CAUSE shared_admin_accounts ∧ SystemOmega USES shared_admin_accounts"
+      }
+    }
+  ],
+
+  "tags": ["abductive", "security", "root_cause", "risk"]
+}

@@ -206,9 +206,19 @@ export class ChatEngine {
   }
 
   /**
-   * Detect user intent using LLM
+   * Detect user intent - heuristics first for reliability, LLM for ambiguous cases
    */
   async _detectIntent(message) {
+    // First try deterministic heuristics - they're reliable
+    const heuristic = this._heuristicIntentDetection(message);
+
+    // If heuristics are confident (>0.7), use them directly
+    // This ensures deterministic behavior for common patterns
+    if (heuristic.confidence >= 0.7) {
+      return heuristic;
+    }
+
+    // For ambiguous cases, try LLM
     const prompt = buildIntentPrompt(message);
 
     try {
@@ -221,39 +231,62 @@ export class ChatEngine {
       // Parse JSON response
       const jsonMatch = response.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
-        return JSON.parse(jsonMatch[0]);
+        const llmIntent = JSON.parse(jsonMatch[0]);
+        // Only use LLM result if it's confident
+        if (llmIntent.confidence >= 0.7) {
+          return llmIntent;
+        }
       }
-    } catch (err) {
-      // Fallback to simple heuristics
+    } catch {
+      // Continue with heuristic result
     }
 
-    // Simple heuristic fallback
-    return this._heuristicIntentDetection(message);
+    // Fall back to heuristic result
+    return heuristic;
   }
 
   /**
-   * Fallback heuristic intent detection
+   * Fallback heuristic intent detection - deterministic and reliable
    */
   _heuristicIntentDetection(message) {
-    const lower = message.toLowerCase();
+    const lower = message.toLowerCase().trim();
 
+    // Questions - ask intent
     if (lower.includes('?') || lower.startsWith('is ') || lower.startsWith('what ') ||
-        lower.startsWith('why ') || lower.startsWith('how ') || lower.startsWith('does ')) {
-      return { intent: 'ask', confidence: 0.6, details: {} };
+        lower.startsWith('why ') || lower.startsWith('how ') || lower.startsWith('does ') ||
+        lower.startsWith('can ') || lower.startsWith('could ') || lower.startsWith('would ')) {
+      return { intent: 'ask', confidence: 0.8, details: {} };
     }
+
+    // Import files
     if (lower.includes('import') || lower.includes('load file')) {
-      return { intent: 'import', confidence: 0.7, details: {} };
+      return { intent: 'import', confidence: 0.8, details: {} };
     }
-    if (lower.includes('theory') || lower.includes('context') || lower.includes('branch')) {
-      return { intent: 'manage_theory', confidence: 0.6, details: {} };
+
+    // Theory management - only when explicitly requested
+    if ((lower.includes('theory') && (lower.includes('create') || lower.includes('new') ||
+         lower.includes('pop') || lower.includes('save') || lower.includes('list'))) ||
+        lower.startsWith('push ') || lower.startsWith('pop ')) {
+      return { intent: 'manage_theory', confidence: 0.8, details: {} };
     }
-    if (lower.startsWith('list ') || lower.includes('show me')) {
-      return { intent: 'list', confidence: 0.6, details: {} };
+
+    // List commands
+    if (lower.startsWith('list ') || lower.startsWith('show ')) {
+      return { intent: 'list', confidence: 0.7, details: {} };
     }
+
+    // Help
     if (lower.includes('help')) {
       return { intent: 'help', confidence: 0.9, details: {} };
     }
 
+    // Declarative statements are teach intent (X are/is Y patterns)
+    // Pattern: "Subject are/is Object" - common teaching pattern
+    if (/\b(are|is)\b/.test(lower) && !lower.includes('?')) {
+      return { intent: 'teach', confidence: 0.8, details: {} };
+    }
+
+    // Default to teach for unknown declarative content
     return { intent: 'teach', confidence: 0.5, details: {} };
   }
 

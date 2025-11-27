@@ -1,0 +1,53 @@
+{
+  "id": "39_safety_lockout_tagout",
+  "name": "Safety Procedures: Lockout/Tagout",
+  "description": "Ensures mandatory steps in safety procedures and conflict checks",
+
+  "theory": {
+    "natural_language": "Lockout/tagout requires de-energizing equipment, applying locks, and placing warning tags before maintenance. Bypassing lockout is prohibited. In emergencies, only the safety officer may authorize partial lockout. Technician Ray applied tags but did not de-energize. Technician Kim followed all steps. Safety officer Sam authorized partial lockout during an emergency.",
+    "expected_facts": [
+      "lockout_tagout REQUIRES de_energize",
+      "lockout_tagout REQUIRES apply_locks",
+      "lockout_tagout REQUIRES warning_tags",
+      "bypass PROHIBITED true",
+      "emergency_partial_lockout MAY_BE_AUTHORIZED_BY safety_officer",
+      "Ray APPLIED warning_tags",
+      "Ray SKIPPED de_energize",
+      "Kim COMPLETED lockout_tagout",
+      "Sam IS_A safety_officer",
+      "partial_lockout AUTHORIZED_BY Sam"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Is Ray's maintenance compliant with lockout/tagout?",
+      "expected_answer": {
+        "natural_language": "No. Ray skipped de-energizing, violating the procedure.",
+        "truth": "FALSE",
+        "explanation": "lockout_tagout REQUIRES de_energize ∧ Ray SKIPPED de_energize"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Did Kim follow the safety procedure?",
+      "expected_answer": {
+        "natural_language": "Yes. Kim completed lockout/tagout steps.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Kim COMPLETED lockout_tagout"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Who can authorize partial lockout in emergencies?",
+      "expected_answer": {
+        "natural_language": "Only the safety officer, such as Sam, may authorize it.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "emergency_partial_lockout MAY_BE_AUTHORIZED_BY safety_officer ∧ Sam IS_A safety_officer"
+      }
+    }
+  ],
+
+  "tags": ["safety", "procedure", "deontic", "lockout_tagout"]
+}

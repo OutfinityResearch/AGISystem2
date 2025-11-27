@@ -1,0 +1,49 @@
+{
+  "id": "14_gdpr_rights",
+  "name": "GDPR Rights and Lawful Bases",
+  "description": "Reasoning about data subject rights, erasure exceptions, and lawful bases",
+
+  "theory": {
+    "natural_language": "Under GDPR, data subjects have the right to erasure unless retention is required by legal obligation. Payroll data must be retained for statutory purposes. Marketing consent provides a lawful basis for processing emails. Consent can be withdrawn. If consent is withdrawn, marketing processing must stop. Pseudonymized analytics are allowed for legitimate interest.",
+    "expected_facts": [
+      "data_subject RIGHT erasure",
+      "payroll_data RETENTION_REQUIRED legal_obligation",
+      "marketing_email LAWFUL_BASIS consent",
+      "consent CAN_BE withdrawn",
+      "processing_on_withdrawn_consent PROHIBITED true",
+      "pseudonymized_analytics LAWFUL_BASIS legitimate_interest"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "May an employee demand deletion of their payroll records?",
+      "expected_answer": {
+        "natural_language": "No. Payroll data is retained under legal obligation and is exempt from the right to erasure.",
+        "truth": "FALSE",
+        "explanation": "payroll_data RETENTION_REQUIRED legal_obligation overrides RIGHT erasure"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "If a user withdraws consent, should we stop sending marketing emails?",
+      "expected_answer": {
+        "natural_language": "Yes. Marketing emails rely on consent, and processing must stop once consent is withdrawn.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "marketing_email LAWFUL_BASIS consent ∧ consent withdrawn ⇒ processing_on_withdrawn_consent PROHIBITED true"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Can we keep using pseudonymized analytics without asking for consent?",
+      "expected_answer": {
+        "natural_language": "Yes. Pseudonymized analytics are covered by legitimate interest in this policy.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "pseudonymized_analytics LAWFUL_BASIS legitimate_interest"
+      }
+    }
+  ],
+
+  "tags": ["regulation", "privacy", "deontic", "exception", "lawful_basis"]
+}

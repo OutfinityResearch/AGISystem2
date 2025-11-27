@@ -73,18 +73,10 @@ UPPERCASE     = relation/verb OR command
 
 ### 2.5 Line Structure
 
-```sys2dsl
-# One command per line (preferred)
-@var1 COMMAND param1 param2
-@var2 COMMAND param3
-
-# Multiple commands on same line (separated by semicolon)
-@var1 COMMAND param1; @var2 COMMAND param2
-
-# Line continuation (backslash at end)
-@result LONG_COMMAND param1 param2 \
-        param3 param4
-```
+- One statement per line, starting with `@var`.
+- Multiple statements on the same physical line are allowed **only** if each statement begins with its own `@` (the parser splits on `@`, not on `;`).  
+- Semicolons are treated as regular characters; they do **not** delimit statements.  
+- Backslash continuations are **not** supported.
 
 ---
 
@@ -117,6 +109,8 @@ Every statement:
 ### 3.3 Parameter Syntax
 
 Parameters can be:
+
+> Note: Unquoted `property=value` tokens in subject/object positions are rejected by the current parser. If you must carry such text, quote it (e.g., `"temp=100"`) or model it as a named concept instead.
 
 #### 3.3.1 Triplet Form (Subject RELATION Object)
 ```sys2dsl
@@ -475,12 +469,19 @@ This is handled by external translator (LLM) with pinned prompts for determinism
 
 ### 11.1 Commands (see DS(/theory/Sys2DSL_commands) for full list)
 
+Currently implemented commands (grouped):
 ```
-ASK, ASK_MASKED, ASSERT, FACTS_MATCHING, BIND_CONCEPT, BIND_RELATION,
-DEFINE_CONCEPT, DEFINE_RELATION, MODIFY_RELATION, VALIDATE, PROVE,
-HYPOTHESIZE, INSPECT, MASK_PARTITIONS, MASK_DIMS, BOOL_AND, BOOL_OR,
-MERGE_LISTS, PICK_FIRST, NONEMPTY, LIST_THEORIES, LOAD_THEORY,
-SAVE_THEORY, MERGE_THEORY, FORGET, TO_NATURAL, CF
+Queries: ASK, ASK_MASKED, CF, ABDUCT
+Facts: ASSERT, FACTS_MATCHING
+Logic/validation: VALIDATE, PROVE, HYPOTHESIZE, ANALOGICAL
+Inference: INFER, FORWARD_CHAIN, DEFINE_RULE, DEFINE_DEFAULT, WHY
+Contradiction/cardinality: CHECK_CONTRADICTION, CHECK_WOULD_CONTRADICT, REGISTER_FUNCTIONAL, REGISTER_CARDINALITY
+Masks: MASK_PARTITIONS, MASK_DIMS, ASK_MASKED
+Lists/booleans: BOOL_AND, BOOL_OR, BOOL_NOT, NONEMPTY, MERGE_LISTS, PICK_FIRST, PICK_LAST, COUNT, FILTER, POLARITY_DECIDE
+Concepts/relations: BIND_CONCEPT, BIND_POINT, BIND_RELATION, DEFINE_CONCEPT, DEFINE_RELATION, INSPECT, LITERAL
+Memory: RETRACT, GET_USAGE, FORGET, BOOST, PROTECT, UNPROTECT
+Theory: LIST_THEORIES, LOAD_THEORY, SAVE_THEORY, MERGE_THEORY, THEORY_PUSH, THEORY_POP, RESET_SESSION
+Output: TO_NATURAL, TO_JSON, EXPLAIN, FORMAT, SUMMARIZE
 ```
 
 ### 11.2 Truth Values
@@ -501,15 +502,14 @@ ontology, axiology, empirical
 
 ```ebnf
 script          = { statement } ;
-statement       = var_decl COMMAND params [ ";" ] ;
+statement       = var_decl COMMAND params ;
 var_decl        = "@" IDENTIFIER ;
 params          = { param } ;
 param           = var_ref | triplet | token | pattern | string | number ;
 var_ref         = "$" IDENTIFIER ;
 triplet         = subject RELATION object ;
 subject         = CONCEPT | FACT | "?" ;
-object          = CONCEPT | FACT | "?" | property_value ;
-property_value  = IDENTIFIER "=" value ;
+object          = CONCEPT | FACT | "?" ;
 pattern         = ( CONCEPT | FACT | "?" ) RELATION ( CONCEPT | FACT | "?" ) ;
 token           = CONCEPT | FACT | RELATION ;
 string          = '"' { char } '"' ;
@@ -560,6 +560,8 @@ LETTER          = LOWER | UPPER ;
 @tempMask MASK_DIMS temperature pressure
 @answer2 ASK_MASKED $tempMask Steam IS_A gas
 ```
+
+> `MASK_DIMS` names must be resolvable via `config.dimensionNames` or be numeric indices; otherwise the command raises an error.
 
 ### 13.4 Theory Management
 

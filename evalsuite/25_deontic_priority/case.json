@@ -1,0 +1,47 @@
+{
+  "id": "25_deontic_priority",
+  "name": "Deontic Priority Rules",
+  "description": "Permits vs. prohibitions with priority ordering",
+
+  "theory": {
+    "natural_language": "Safety policy prohibits using drones inside warehouses. Security policy permits drone use for emergency inspections. Safety policy has higher priority than security policy. Emergency overrides apply only when an incident is declared.",
+    "expected_facts": [
+      "SafetyPolicy PROHIBITS drone_use_inside",
+      "SecurityPolicy PERMITS drone_use_for_emergency",
+      "SafetyPolicy PRIORITY higher_than SecurityPolicy",
+      "emergency_override REQUIRES incident_declared true"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Can drones be flown inside during a routine audit?",
+      "expected_answer": {
+        "natural_language": "No. Safety policy prohibits indoor drone use, and no emergency is declared.",
+        "truth": "FALSE",
+        "explanation": "SafetyPolicy PROHIBITS drone_use_inside ∧ no incident_declared"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "If an incident is declared, which rule applies?",
+      "expected_answer": {
+        "natural_language": "Emergency inspections become permitted, but safety still holds priority for non-emergency uses.",
+        "truth": "PLAUSIBLE",
+        "explanation": "SecurityPolicy PERMITS emergency use ∧ emergency_override requires incident"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Does safety priority override security permission in normal conditions?",
+      "expected_answer": {
+        "natural_language": "Yes. Safety policy has higher priority and blocks drone use when not in emergency.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "SafetyPolicy PRIORITY higher_than SecurityPolicy ∧ no emergency"
+      }
+    }
+  ],
+
+  "tags": ["deontic", "priority", "safety", "regulation"]
+}

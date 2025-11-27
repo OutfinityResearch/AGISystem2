@@ -114,7 +114,8 @@ test('New message cancels pending and processes normally', async () => {
   const engine = new ChatEngine({});
   await engine.initialize();
 
-  await engine.processMessage('Whales are fish.');
+  // Use facts that create deterministic contradiction (same subject, two IS_A)
+  await engine.processMessage('Whales are mammals. Whales are fish.');
   assert(engine.pendingAction !== null, 'Should have pending action');
 
   // Send completely different message

@@ -1,0 +1,52 @@
+{
+  "id": "17_qc_thresholds",
+  "name": "Quality Control Thresholds",
+  "description": "Numeric thresholds for defects and pass/fail grading",
+
+  "theory": {
+    "natural_language": "Batch A passes if critical defects are zero and minor defects are fewer than five. Any critical defect fails the batch. Rework is allowed once if minor defects are between five and ten. Batches with more than ten minor defects fail. Batch B has one critical defect. Batch C has six minor defects. Batch D has zero critical and three minor defects.",
+    "expected_facts": [
+      "batch PASS_IF critical_defects=0",
+      "batch PASS_IF minor_defects<5",
+      "critical_defect FAILS batch",
+      "rework_allowed IF minor_defects_between5and10",
+      "minor_defects>10 FAILS batch",
+      "BatchB critical_defects 1",
+      "BatchC minor_defects 6",
+      "BatchD critical_defects 0",
+      "BatchD minor_defects 3"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Does Batch B pass QC?",
+      "expected_answer": {
+        "natural_language": "No. Batch B has a critical defect, so it fails.",
+        "truth": "FALSE",
+        "explanation": "BatchB critical_defects 1 ∧ critical_defect FAILS batch"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Can Batch C be reworked?",
+      "expected_answer": {
+        "natural_language": "Yes. Six minor defects fall in the 5–10 range; rework is allowed once.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "BatchC minor_defects 6 ∧ rework_allowed IF minor_defects_between5and10"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Should Batch D be accepted as-is?",
+      "expected_answer": {
+        "natural_language": "Yes. Zero critical and only three minor defects meet the pass criteria.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "BatchD critical_defects 0 ∧ BatchD minor_defects 3 <5"
+      }
+    }
+  ],
+
+  "tags": ["quality", "numeric", "threshold", "qc"]
+}

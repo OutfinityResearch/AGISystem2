@@ -1,0 +1,46 @@
+{
+  "id": "31_analogy_quality_transfer",
+  "name": "Analogy from Manufacturing to Software Quality",
+  "description": "Uses analogy to map quality practices across domains",
+
+  "theory": {
+    "natural_language": "In manufacturing, incoming inspection is like code review in software: both catch defects early. Final acceptance testing in manufacturing is analogous to end-to-end testing. Statistical process control aligns with automated quality gates. The software team asks how to replicate manufacturing controls.",
+    "expected_facts": [
+      "incoming_inspection ANALOGOUS_TO code_review",
+      "final_acceptance_testing ANALOGOUS_TO end_to_end_testing",
+      "statistical_process_control ANALOGOUS_TO automated_quality_gates"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "What software practice corresponds to incoming inspection?",
+      "expected_answer": {
+        "natural_language": "Code review corresponds to incoming inspection by catching defects early.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "incoming_inspection ANALOGOUS_TO code_review"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Which activity mirrors final acceptance testing?",
+      "expected_answer": {
+        "natural_language": "End-to-end testing mirrors final acceptance testing.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "final_acceptance_testing ANALOGOUS_TO end_to_end_testing"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "What is the software analogue of statistical process control?",
+      "expected_answer": {
+        "natural_language": "Automated quality gates are the analogue of statistical process control.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "statistical_process_control ANALOGOUS_TO automated_quality_gates"
+      }
+    }
+  ],
+
+  "tags": ["analogy", "quality", "mapping", "software"]
+}

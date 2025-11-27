@@ -1,0 +1,50 @@
+{
+  "id": "26_policy_exceptions",
+  "name": "Policy Exceptions and Approvals",
+  "description": "Combines exception handling with approval chains",
+
+  "theory": {
+    "natural_language": "Remote access requires VPN. An exception can be granted by the security lead for a two-week window. Emergency responders may connect without VPN during incidents. Analyst Jane has an approved exception ending in fourteen days. Bob is an emergency responder today.",
+    "expected_facts": [
+      "remote_access REQUIRES vpn",
+      "exception CAN_BE_GRANTED_BY security_lead",
+      "exception WINDOW two_weeks",
+      "emergency_responder MAY_CONNECT_WITHOUT vpn DURING incident",
+      "AnalystJane HAS exception_active true",
+      "Bob IS_A emergency_responder",
+      "today IS incident_day"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "May Jane connect without VPN right now?",
+      "expected_answer": {
+        "natural_language": "Yes. She has an active two-week exception approved by the security lead.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "AnalystJane HAS exception_active true ∧ exception granted"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Can Bob connect without VPN during the incident?",
+      "expected_answer": {
+        "natural_language": "Yes. As an emergency responder on an incident day, he may connect without VPN.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Bob IS_A emergency_responder ∧ today IS incident_day ∧ emergency_responder MAY_CONNECT_WITHOUT vpn"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Is remote access allowed without VPN for other users?",
+      "expected_answer": {
+        "natural_language": "No. Without an exception or emergency status, VPN is required.",
+        "truth": "FALSE",
+        "explanation": "remote_access REQUIRES vpn ∧ no exception"
+      }
+    }
+  ],
+
+  "tags": ["policy", "exception", "approval", "deontic"]
+}

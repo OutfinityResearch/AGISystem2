@@ -22,6 +22,32 @@ class ContradictionDetector {
     this.functionalRelations.add('BORN_IN');
     this.functionalRelations.add('BIOLOGICAL_MOTHER');
     this.functionalRelations.add('BIOLOGICAL_FATHER');
+
+    // Default disjoint pairs for common biological/categorical concepts
+    // These are injected into contradiction checks automatically
+    // All stored in lowercase - matching is case-insensitive
+    this.defaultDisjointPairs = [
+      // Biological classes
+      ['mammal', 'fish'],
+      ['mammal', 'bird'],
+      ['mammal', 'reptile'],
+      ['mammal', 'amphibian'],
+      ['mammal', 'insect'],
+      ['bird', 'fish'],
+      ['bird', 'reptile'],
+      ['fish', 'insect'],
+      // Common animals
+      ['cat', 'dog'],
+      ['cat', 'bird'],
+      ['cat', 'fish'],
+      ['dog', 'bird'],
+      ['dog', 'fish'],
+      // Other categories
+      ['animal', 'plant'],
+      ['living', 'dead'],
+      ['mortal', 'immortal'],
+      ['true', 'false']
+    ];
   }
 
   /**
@@ -63,13 +89,36 @@ class ContradictionDetector {
 
     if (!report.consistent) {
       // Find contradictions involving the new fact
-      const involving = report.contradictions.filter((c) =>
-        c.facts && c.facts.some((f) =>
-          f.subject === newFact.subject
-          && f.relation === newFact.relation
-          && f.object === newFact.object
-        )
-      );
+      // Check multiple ways the new fact could be involved
+      const involving = report.contradictions.filter((c) => {
+        // Check if new fact is in the facts array
+        if (c.facts && c.facts.some((f) =>
+          f.subject === newFact.subject &&
+          f.relation === newFact.relation &&
+          f.object === newFact.object
+        )) {
+          return true;
+        }
+
+        // For DISJOINT_VIOLATION, check if entity matches and types match
+        if (c.type === 'DISJOINT_VIOLATION' && c.entity === newFact.subject) {
+          // The new fact's object should be one of the disjoint types
+          const newObjNorm = this._normalize(newFact.object);
+          const typesNorm = c.types.map(t => this._normalize(t));
+          if (typesNorm.includes(newObjNorm)) {
+            return true;
+          }
+        }
+
+        // For FUNCTIONAL_VIOLATION, check subject and relation
+        if (c.type === 'FUNCTIONAL_VIOLATION' &&
+            c.subject === newFact.subject &&
+            c.relation === newFact.relation) {
+          return true;
+        }
+
+        return false;
+      });
 
       return {
         wouldContradict: involving.length > 0,
@@ -97,9 +146,14 @@ class ContradictionDetector {
 
     // Check each entity against disjoint pairs
     for (const [entity, types] of typeAssignments) {
+      // Build normalized set for matching (lowercase, singular form)
+      const typesNorm = new Set([...types].map(t => this._normalize(t)));
+
       for (const [typeA, typeB] of disjointPairs) {
-        const hasA = types.has(typeA) || this._hasAncestor(types, typeA, facts);
-        const hasB = types.has(typeB) || this._hasAncestor(types, typeB, facts);
+        const typeANorm = this._normalize(typeA);
+        const typeBNorm = this._normalize(typeB);
+        const hasA = typesNorm.has(typeANorm) || this._hasAncestorNormalized(types, typeANorm, facts);
+        const hasB = typesNorm.has(typeBNorm) || this._hasAncestorNormalized(types, typeBNorm, facts);
 
         if (hasA && hasB) {
           const causingFacts = this._findTypeFacts(entity, typeA, typeB, facts);
@@ -281,9 +335,16 @@ class ContradictionDetector {
 
   _getDisjointPairs(facts) {
     const pairs = [];
+
+    // Add default disjoint pairs (case-insensitive matching will be done later)
+    for (const pair of this.defaultDisjointPairs) {
+      pairs.push(pair);
+    }
+
+    // Add explicit DISJOINT_WITH from facts
     for (const fact of facts) {
       if (fact.relation === 'DISJOINT_WITH') {
-        pairs.push([fact.subject, fact.object]);
+        pairs.push([fact.subject.toLowerCase(), fact.object.toLowerCase()]);
       }
     }
     return pairs;
@@ -311,6 +372,43 @@ class ContradictionDetector {
       }
     }
     return false;
+  }
+
+  _hasAncestorInsensitive(types, targetLower, facts) {
+    for (const type of types) {
+      const ancestors = this._getAncestors(type, facts);
+      // Check case-insensitive
+      for (const anc of ancestors) {
+        if (anc.toLowerCase() === targetLower) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  _hasAncestorNormalized(types, targetNorm, facts) {
+    for (const type of types) {
+      const ancestors = this._getAncestors(type, facts);
+      for (const anc of ancestors) {
+        if (this._normalize(anc) === targetNorm) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Normalize a concept name for matching (lowercase, remove trailing 's' for basic plural handling)
+   */
+  _normalize(term) {
+    const lower = term.toLowerCase();
+    // Simple plural normalization: remove trailing 's' if word is >3 chars
+    if (lower.length > 3 && lower.endsWith('s') && !lower.endsWith('ss')) {
+      return lower.slice(0, -1);
+    }
+    return lower;
   }
 
   _getAncestors(concept, facts, visited = new Set()) {

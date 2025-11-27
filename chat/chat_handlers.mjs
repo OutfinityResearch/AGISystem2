@@ -632,37 +632,80 @@ I automatically detect contradictions and suggest creating theory branches when 
 
 /**
  * Check for contradictions with existing facts
+ * Uses deterministic ContradictionDetector first, LLM as supplementary check
  */
 export async function checkContradictions(ctx, newFacts) {
   const { llmAgent, session } = ctx;
   const contradictions = [];
 
+  // Get existing facts from session
   const env = session.run(['@r FACTS_MATCHING ? ? ?']);
   const existingFacts = env.r || [];
 
+  // Convert to format ContradictionDetector expects
+  const existingFactObjects = existingFacts.map(f => {
+    if (typeof f === 'string') {
+      const parts = f.split(/\s+/);
+      return { subject: parts[0], relation: parts[1], object: parts.slice(2).join(' ') };
+    }
+    return f;
+  });
+
+  // Step 1: Deterministic contradiction detection
+  const detector = new ContradictionDetector();
+
   for (const newFact of newFacts) {
-    const prompt = buildContradictionPrompt(newFact, existingFacts);
+    // Check if adding this fact would create contradictions
+    const allFacts = [...existingFactObjects, newFact];
+    const report = detector.detectAll(allFacts);
 
-    try {
-      const response = await llmAgent.complete({
-        prompt,
-        mode: 'fast',
-        context: { intent: 'check-contradiction' }
-      });
+    if (!report.consistent) {
+      for (const c of report.contradictions) {
+        // Check if this contradiction involves the new fact
+        const involvesNew =
+          (c.facts && c.facts.some(f => f.subject === newFact.subject)) ||
+          (c.entity === newFact.subject);
 
-      const jsonMatch = response.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        const result = JSON.parse(jsonMatch[0]);
-        if (result.contradicts && result.severity !== 'none') {
+        if (involvesNew) {
           contradictions.push({
             newFact,
-            conflicts: result.conflicts,
-            reason: result.conflicts?.[0]?.reason || 'Potential contradiction detected'
+            conflicts: [{ reason: c.explanation }],
+            reason: c.explanation,
+            type: c.type
           });
         }
       }
-    } catch {
-      // Continue without contradiction check
+    }
+  }
+
+  // Step 2: If deterministic check found nothing, use LLM for semantic contradictions
+  // (e.g., "hot" contradicts "cold" even without explicit DISJOINT_WITH)
+  if (contradictions.length === 0 && llmAgent) {
+    for (const newFact of newFacts) {
+      const prompt = buildContradictionPrompt(newFact, existingFacts);
+
+      try {
+        const response = await llmAgent.complete({
+          prompt,
+          mode: 'fast',
+          context: { intent: 'check-contradiction' }
+        });
+
+        const jsonMatch = response.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const result = JSON.parse(jsonMatch[0]);
+          if (result.contradicts && result.severity !== 'none') {
+            contradictions.push({
+              newFact,
+              conflicts: result.conflicts,
+              reason: result.conflicts?.[0]?.reason || 'Potential contradiction detected',
+              type: 'LLM_SEMANTIC'
+            });
+          }
+        }
+      } catch {
+        // Continue without LLM check
+      }
     }
   }
 

@@ -1,0 +1,49 @@
+{
+  "id": "13_export_controls",
+  "name": "Export Controls and Embargoes",
+  "description": "Permits, prohibitions, and inverse reasoning for export destinations",
+
+  "theory": {
+    "natural_language": "Company policy states that export of dual-use technology to embargoed countries is prohibited. Country Zeta is embargoed. Export to friendly countries is permitted. Canada is a friendly country. Exporting research papers is allowed. Source code that implements encryption is dual-use technology.",
+    "expected_facts": [
+      "export_of dual_use_technology PROHIBITED_TO embargoed_country",
+      "CountryZeta IS_A embargoed_country",
+      "export_to friendly_country PERMITTED true",
+      "Canada IS_A friendly_country",
+      "research_paper EXPORT_ALLOWED true",
+      "encryption_source_code IS_A dual_use_technology"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Can we ship encryption source code to Country Zeta?",
+      "expected_answer": {
+        "natural_language": "No. Encryption source code is dual-use technology and exports to Country Zeta (embargoed) are prohibited.",
+        "truth": "FALSE",
+        "explanation": "encryption_source_code IS_A dual_use_technology ∧ CountryZeta IS_A embargoed_country"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Is sending the same code to Canada okay?",
+      "expected_answer": {
+        "natural_language": "Yes. Canada is a friendly country, and export to friendly countries is permitted.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Canada IS_A friendly_country ∧ export_to friendly_country PERMITTED true"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Are research papers blocked by the embargo rule?",
+      "expected_answer": {
+        "natural_language": "No. The prohibition targets dual-use technology; research papers are explicitly allowed.",
+        "truth": "FALSE",
+        "explanation": "research_paper EXPORT_ALLOWED true ∧ not dual_use_technology"
+      }
+    }
+  ],
+
+  "tags": ["regulation", "export", "deontic", "inverse", "permitted"]
+}

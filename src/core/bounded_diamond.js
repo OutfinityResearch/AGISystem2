@@ -147,6 +147,50 @@ class BoundedDiamond {
   distance(point, maskOverride) {
     return MathEngine.distanceMaskedL1(point, this, maskOverride);
   }
+
+  /**
+   * Expand diamond to include a new observation vector
+   * @param {Int8Array} vector - New observation to include
+   */
+  expand(vector) {
+    const dim = this.center.length;
+
+    // Update min/max bounds to include the new vector
+    for (let i = 0; i < dim; i++) {
+      const value = vector[i] || 0;
+      if (value < this.minValues[i]) {
+        this.minValues[i] = value;
+      }
+      if (value > this.maxValues[i]) {
+        this.maxValues[i] = value;
+      }
+    }
+
+    // Recalculate center
+    for (let i = 0; i < dim; i++) {
+      this.center[i] = (this.minValues[i] + this.maxValues[i]) >> 1;
+    }
+
+    // Recalculate L1 radius
+    let distance = 0;
+    for (let i = 0; i < dim; i++) {
+      const diff = vector[i] - this.center[i];
+      distance += diff >= 0 ? diff : -diff;
+    }
+    if (distance > this.l1Radius) {
+      this.l1Radius = distance;
+    }
+
+    // Update relevance mask for non-zero dimensions
+    for (let i = 0; i < dim; i++) {
+      const value = vector[i];
+      if (value !== 0) {
+        const byteIndex = (i / 8) | 0;
+        const bitIndex = i % 8;
+        this.relevanceMask[byteIndex] |= 1 << bitIndex;
+      }
+    }
+  }
 }
 
 module.exports = BoundedDiamond;

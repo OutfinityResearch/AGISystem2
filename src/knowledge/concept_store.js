@@ -141,9 +141,9 @@ class ConceptStore {
       label: entry.label,
       diamonds: entry.diamonds.map(d => ({
         center: d.center ? Array.from(d.center) : [],
-        radius: d.radius || 0,
-        minBounds: d.minBounds ? Array.from(d.minBounds) : [],
-        maxBounds: d.maxBounds ? Array.from(d.maxBounds) : []
+        l1Radius: d.l1Radius || 0,
+        minValues: d.minValues ? Array.from(d.minValues) : [],
+        maxValues: d.maxValues ? Array.from(d.maxValues) : []
       })),
       usage: this.getUsageStats(conceptId),
       timestamp: new Date().toISOString()
