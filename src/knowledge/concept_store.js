@@ -241,6 +241,53 @@ class ConceptStore {
       .filter(f => f && !f._deleted);
   }
 
+  /**
+   * Create a snapshot of all facts for later restoration
+   * Used by theory layers for counterfactual reasoning
+   * @returns {Array} Deep copy of facts array
+   */
+  snapshotFacts() {
+    return this._facts
+      .filter(f => !f._deleted)
+      .map(f => ({
+        subject: f.subject,
+        relation: f.relation,
+        object: f.object
+      }));
+  }
+
+  /**
+   * Restore facts from a snapshot, replacing current facts
+   * Used by THEORY_POP to revert to previous state
+   * @param {Array} snapshot - Facts array from snapshotFacts()
+   */
+  restoreFacts(snapshot) {
+    // Clear current facts and index
+    this._facts = [];
+    this._factIndex.clear();
+
+    // Re-add each fact from snapshot
+    for (const fact of snapshot) {
+      const factId = this._facts.length;
+      this._facts.push({
+        subject: fact.subject,
+        relation: fact.relation,
+        object: fact.object,
+        _id: factId
+      });
+
+      // Rebuild index
+      if (!this._factIndex.has(fact.subject)) {
+        this._factIndex.set(fact.subject, []);
+      }
+      this._factIndex.get(fact.subject).push(factId);
+    }
+
+    if (this.audit) {
+      this.audit.log('facts_restored', { count: snapshot.length });
+    }
+  }
+
   // =========================================================================
   // Usage Tracking (DS:/knowledge/usage_tracking)
   // =========================================================================

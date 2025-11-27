@@ -90,8 +90,11 @@ class DSLCommandsTheory {
       ? this.parser.expandString(argTokens[0], env).replace(/^name=["']?|["']?$/g, '')
       : `layer_${this._theoryStack.length}`;
 
-    // Snapshot current facts
-    const snapshot = this.conceptStore.getFacts().map((f) => ({ ...f }));
+    // Use snapshotFacts() if available, otherwise getFacts()
+    const snapshot = this.conceptStore.snapshotFacts
+      ? this.conceptStore.snapshotFacts()
+      : this.conceptStore.getFacts().map((f) => ({ ...f }));
+
     this._factSnapshots.push(snapshot);
     this._theoryStack.push({ name, pushedAt: new Date().toISOString() });
 
@@ -114,8 +117,10 @@ class DSLCommandsTheory {
     const popped = this._theoryStack.pop();
     const snapshot = this._factSnapshots.pop();
 
-    // Restore facts (simplified - would need proper implementation)
-    // This is a placeholder for actual state restoration
+    // Restore facts to the snapshot state
+    if (snapshot && this.conceptStore.restoreFacts) {
+      this.conceptStore.restoreFacts(snapshot);
+    }
 
     return {
       ok: true,

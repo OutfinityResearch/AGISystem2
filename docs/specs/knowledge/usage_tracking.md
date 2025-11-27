@@ -2,7 +2,21 @@
 
 ID: DS(/knowledge/usage_tracking)
 
-Status: DRAFT v1.0
+Status: DRAFT v1.1
+
+## Implementation Status
+
+| Feature | Status | Location |
+|---------|--------|----------|
+| Per-concept usage metrics | ✅ ACTIVE | `ConceptStore._usageMetrics` |
+| Priority calculation | ✅ ACTIVE | `ConceptStore.getUsageStats()` |
+| GET_USAGE command | ✅ ACTIVE | `DSLCommandsMemory.cmdGetUsage()` |
+| BOOST command | ✅ ACTIVE | `DSLCommandsMemory.cmdBoost()` |
+| FORGET command | ✅ ACTIVE | `DSLCommandsMemory.cmdForget()` |
+| PROTECT/UNPROTECT | ✅ ACTIVE | `DSLCommandsMemory.cmdProtect()` |
+| Retrieval ordering by priority | ⚠️ PLANNED | See section 5.1 |
+| HYPOTHESIZE ranking by priority | ⚠️ PLANNED | See section 5.3 |
+| ABDUCT ranking by priority | ⚠️ PLANNED | For abductive reasoning |
 
 ## 1. Overview
 
@@ -11,6 +25,7 @@ This document specifies the usage tracking system that monitors how often concep
 1. **Prioritization**: Frequently used concepts appear first in search results
 2. **Forgetting**: Unused concepts can be removed to manage memory
 3. **Learning**: The system learns which knowledge is valuable
+4. **Hypothesis Ranking**: In abductive reasoning, higher-priority concepts make more likely explanations
 
 ### 1.1 Design Principles
 
@@ -24,6 +39,7 @@ This document specifies the usage tracking system that monitors how often concep
 - DS(/knowledge/forgetting) - Forgetting mechanisms
 - DS(/knowledge/concept_store.js) - Concept storage
 - DS(/theory/Sys2DSL_commands) - Commands that affect usage
+- DS(/reason/abductive) - Abductive reasoning (uses priority for ranking)
 
 ---
 
@@ -115,7 +131,22 @@ When a fact `A IS_A B` is queried:
 
 ## 4. Priority Calculation
 
-### 4.1 Priority Formula
+### 4.1 Priority Formula (Current Implementation)
+
+The **active implementation** in `ConceptStore.getUsageStats()` uses:
+
+```javascript
+// Actual implementation in concept_store.js:301-320
+priority = (recency * 0.4) + (frequency * 0.6)
+
+where:
+  recency = Math.max(0, 1 - (recencyDays / 30))   // Decays over 30 days
+  frequency = Math.min(1, Math.log10(usageCount + 1) / 3)  // Log scale, max ~1000 uses
+```
+
+### 4.2 Planned Extended Formula
+
+Future versions may extend to include importance:
 
 ```javascript
 priority = (α * frequency) + (β * recency) + (γ * importance)
@@ -130,7 +161,7 @@ where:
   γ = 0.3  // importance weight
 ```
 
-### 4.2 Normalization
+### 4.3 Normalization
 
 ```javascript
 normalize(value, max) = Math.min(1.0, value / max)
@@ -139,7 +170,7 @@ normalize(value, max) = Math.min(1.0, value / max)
 // This makes frequency relative to the most-used concept
 ```
 
-### 4.3 Configuration
+### 4.4 Configuration
 
 ```javascript
 // In config profile:
@@ -160,15 +191,17 @@ normalize(value, max) = Math.min(1.0, value / max)
 
 ## 5. Impact on Operations
 
-### 5.1 Retrieval Ordering
+### 5.1 Retrieval Ordering (⚠️ PLANNED)
 
-When `Retriever.nearest()` finds multiple candidates:
+**Status**: Not yet integrated. Currently `Retriever.nearest()` uses only geometric distance.
+
+When integrated, `Retriever.nearest()` should find multiple candidates and combine scores:
 
 ```javascript
-// Original: sorted by geometric distance only
+// Current: sorted by geometric distance only
 candidates.sort((a, b) => a.distance - b.distance)
 
-// With usage tracking: combined score
+// Planned: combined score with usage priority
 candidates.sort((a, b) => {
   const scoreA = (1 - a.distance) * 0.7 + a.priority * 0.3
   const scoreB = (1 - b.distance) * 0.7 + b.priority * 0.3
@@ -176,19 +209,28 @@ candidates.sort((a, b) => {
 })
 ```
 
-### 5.2 FACTS_MATCHING Results
+### 5.2 FACTS_MATCHING Results (⚠️ PLANNED)
 
-Results are ordered by:
+Results should be ordered by:
 1. Pattern match relevance
 2. Usage priority (higher first)
 3. Recency (more recent first)
 
-### 5.3 HYPOTHESIZE Ranking
+### 5.3 HYPOTHESIZE/ABDUCT Ranking (⚠️ PLANNED - Key Use Case)
 
-Hypotheses are ranked by:
-1. Geometric plausibility
-2. Usage count of candidate causes (frequently used = more likely relevant)
-3. Recency
+**This is the primary purpose of usage priority in reasoning.**
+
+In abductive reasoning (finding explanations for observations), hypotheses should be ranked by:
+1. Geometric plausibility (does the hypothesis geometrically explain the observation?)
+2. **Usage priority** (frequently used concepts are more likely explanations)
+3. Recency (recently discussed concepts are more contextually relevant)
+
+Example: When explaining "John has fever":
+- If "Flu" has priority=0.8 (frequently discussed in medical context)
+- And "Malaria" has priority=0.3 (rarely mentioned)
+- Both are plausible causes, but "Flu" ranks higher as more likely hypothesis
+
+**Integration point**: `Reasoner.abduct()` should call `conceptStore.getUsageStats()` to weight candidates.
 
 ---
 

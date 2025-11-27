@@ -5,6 +5,7 @@
  * - VALIDATE: Check theory consistency
  * - PROVE: Attempt to prove statements
  * - HYPOTHESIZE: Generate hypotheses based on patterns
+ * - ABDUCT: Abductive reasoning - find causes for observations (with priority ranking)
  * - ANALOGICAL: Perform analogical reasoning
  * - CHECK_CONTRADICTION: Detect contradictions in knowledge base
  * - CHECK_WOULD_CONTRADICT: Check if new fact would cause contradiction
@@ -12,16 +13,18 @@
  * - REGISTER_CARDINALITY: Set cardinality constraints
  *
  * See also: DS(/reason/contradiction_detector), DS(/theory/dsl_commands_inference)
+ * See also: DS(/knowledge/usage_tracking) - Priority weighting for hypothesis ranking
  *
  * @module theory/dsl_commands_reasoning
  */
 
 class DSLCommandsReasoning {
-  constructor({ conceptStore, contradictionDetector, parser, coreCommands }) {
+  constructor({ conceptStore, contradictionDetector, parser, coreCommands, reasoner }) {
     this.conceptStore = conceptStore;
     this.contradictionDetector = contradictionDetector;
     this.parser = parser;
     this.coreCommands = coreCommands;
+    this.reasoner = reasoner;
   }
 
   // =========================================================================
@@ -192,6 +195,118 @@ class DSLCommandsReasoning {
       subject,
       hypotheses: unique.slice(0, limit),
       count: unique.length
+    };
+  }
+
+  /**
+   * ABDUCT: Abductive reasoning - find causes for an observation
+   *
+   * Given an observation (effect), finds candidate causes ranked by:
+   * 1. Usage priority (frequently used concepts more likely to be relevant)
+   * 2. Depth (direct causes rank higher than transitive)
+   *
+   * Syntax: @var ABDUCT observation [limit=N] [transitive] [noTransitive]
+   *
+   * Examples:
+   *   @causes ABDUCT fever
+   *   @causes ABDUCT "high blood pressure" limit=3 noTransitive
+   *
+   * Returns hypotheses sorted by combined score (priority - depth penalty)
+   */
+  cmdAbduct(argTokens, env, facts) {
+    if (argTokens.length < 1) {
+      throw new Error('ABDUCT expects an observation to explain');
+    }
+
+    const observation = this.parser.expandString(argTokens[0], env);
+    let limit = 5;
+    let transitive = true;
+    let maxDepth = 3;
+
+    // Parse options
+    for (let i = 1; i < argTokens.length; i++) {
+      const arg = this.parser.expandString(argTokens[i], env);
+      if (arg.startsWith('limit=')) {
+        limit = parseInt(arg.split('=')[1], 10);
+      } else if (arg.startsWith('maxDepth=')) {
+        maxDepth = parseInt(arg.split('=')[1], 10);
+      } else if (arg === 'noTransitive') {
+        transitive = false;
+      } else if (arg === 'transitive') {
+        transitive = true;
+      }
+    }
+
+    // Use Reasoner.abductCause if available
+    if (this.reasoner && this.reasoner.abductCause) {
+      const result = this.reasoner.abductCause(observation, null, {
+        k: limit,
+        transitive,
+        maxDepth
+      });
+      return {
+        observation,
+        bestHypothesis: result.hypothesis,
+        confidence: result.band,
+        hypotheses: result.hypotheses,
+        count: result.hypotheses.length,
+        method: 'reasoner'
+      };
+    }
+
+    // Fallback: simple fact-based search with priority ranking
+    const norm = (v) => (typeof v === 'string' ? v.trim().toLowerCase() : v);
+    const targetNorm = norm(observation);
+    const candidates = [];
+
+    for (const fact of facts) {
+      const subjectNorm = norm(fact.subject);
+      const objectNorm = norm(fact.object);
+
+      if (fact.relation === 'CAUSES' && objectNorm === targetNorm) {
+        candidates.push({
+          hypothesis: fact.subject,
+          band: 'PLAUSIBLE',
+          depth: 0,
+          viaFact: fact
+        });
+      } else if (fact.relation === 'CAUSED_BY' && subjectNorm === targetNorm) {
+        candidates.push({
+          hypothesis: fact.object,
+          band: 'PLAUSIBLE',
+          depth: 0,
+          viaFact: fact
+        });
+      }
+    }
+
+    // Add priority scores
+    const rankedHypotheses = candidates.map(c => {
+      let priorityScore = 0.5;
+      if (this.conceptStore && this.conceptStore.getUsageStats) {
+        const stats = this.conceptStore.getUsageStats(c.hypothesis);
+        if (stats && stats.priority !== undefined) {
+          priorityScore = stats.priority;
+        }
+      }
+      return {
+        ...c,
+        priorityScore: Math.round(priorityScore * 100) / 100,
+        combinedScore: Math.round(priorityScore * 100) / 100
+      };
+    });
+
+    // Sort by priority
+    rankedHypotheses.sort((a, b) => b.combinedScore - a.combinedScore);
+    const topHypotheses = rankedHypotheses.slice(0, limit);
+
+    return {
+      observation,
+      bestHypothesis: topHypotheses[0]?.hypothesis || null,
+      confidence: topHypotheses[0]?.band || 'FALSE',
+      hypotheses: topHypotheses,
+      count: topHypotheses.length,
+      method: 'fallback'
     };
   }
 

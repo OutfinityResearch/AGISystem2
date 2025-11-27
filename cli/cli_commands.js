@@ -226,7 +226,20 @@ function executeCommand(line, session, theoriesRoot) {
           result.error = 'Missing theory name';
           break;
         }
+        // Security: validate theory name to prevent path traversal
+        // Only allow alphanumeric, underscore, dash, and dot (not leading)
+        if (!/^[a-zA-Z0-9][a-zA-Z0-9_.-]*$/.test(name)) {
+          result.error = 'Invalid theory name. Use only letters, numbers, underscore, dash.';
+          break;
+        }
         const filePath = path.join(theoriesRoot, `${name}.sys2dsl`);
+        // Double-check: resolved path must be inside theoriesRoot
+        const resolvedPath = path.resolve(filePath);
+        const resolvedRoot = path.resolve(theoriesRoot);
+        if (!resolvedPath.startsWith(resolvedRoot + path.sep)) {
+          result.error = 'Invalid theory path';
+          break;
+        }
         if (!fs.existsSync(filePath)) {
           result.error = `Theory file not found: ${filePath}`;
           break;

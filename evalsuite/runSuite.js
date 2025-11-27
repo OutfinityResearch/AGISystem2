@@ -11,9 +11,18 @@
  *
  * Options:
  *   --case <id>     Run only specific case (e.g., 01_taxonomy)
+ *   --from <n>      Start from case number N (1-indexed)
+ *   --to <m>        End at case number M (inclusive)
+ *   --runFailed     Run only previously failed cases (from failed.json)
  *   --verbose       Show detailed output
  *   --dry-run       Parse cases without running AGISystem2
  *   --timeout <ms>  Timeout per interaction (default: 30000)
+ *
+ * Examples:
+ *   node evalsuite/runSuite.js --from 1 --to 10    # Run cases 1-10
+ *   node evalsuite/runSuite.js --from 20 --to 30   # Run cases 20-30
+ *   node evalsuite/runSuite.js --runFailed         # Run only failed tests
+ *   node evalsuite/runSuite.js --case 05_abductive # Run specific case
  */
 
 const { spawn } = require('child_process');
@@ -24,6 +33,7 @@ const readline = require('readline');
 // Configuration
 const SUITE_DIR = __dirname;
 const AGI_SCRIPT = path.join(__dirname, '..', 'bin', 'AGISystem2.sh');
+const FAILED_FILE = path.join(__dirname, 'failed.json');
 const DEFAULT_TIMEOUT = 30000;
 
 // ANSI colors
@@ -42,6 +52,86 @@ function log(msg, color = '') {
   console.log(`${color}${msg}${colors.reset}`);
 }
 
+/**
+ * Display usage/options at startup
+ */
+function showUsage() {
+  log(`\n${'─'.repeat(60)}`, colors.gray);
+  log(`  Available Options:`, colors.bright);
+  log(`${'─'.repeat(60)}`, colors.gray);
+  log(`  --from <n>      Start from case number N (1-indexed)`, colors.cyan);
+  log(`  --to <m>        End at case number M (inclusive)`, colors.cyan);
+  log(`  --runFailed     Run only previously failed cases`, colors.cyan);
+  log(`  --case <id>     Run specific case by ID`, colors.cyan);
+  log(`  --verbose       Show detailed output`, colors.cyan);
+  log(`  --dry-run       Validate cases without running`, colors.cyan);
+  log(`  --timeout <ms>  Set timeout per interaction`, colors.cyan);
+  log(`${'─'.repeat(60)}`, colors.gray);
+  log(`  Examples:`, colors.bright);
+  log(`    node evalsuite/runSuite.js --from 1 --to 10`, colors.gray);
+  log(`    node evalsuite/runSuite.js --runFailed`, colors.gray);
+  log(`    node evalsuite/runSuite.js --case 05_abductive`, colors.gray);
+  log(`${'─'.repeat(60)}\n`, colors.gray);
+}
+
+/**
+ * Load previously failed cases from failed.json
+ */
+function loadFailedCases() {
+  if (!fs.existsSync(FAILED_FILE)) {
+    return { cases: [], lastUpdated: null };
+  }
+  try {
+    return JSON.parse(fs.readFileSync(FAILED_FILE, 'utf-8'));
+  } catch (e) {
+    log(`  Warning: Could not parse failed.json: ${e.message}`, colors.yellow);
+    return { cases: [], lastUpdated: null };
+  }
+}
+
+/**
+ * Save failed cases to failed.json (merge with existing, don't overwrite from other ranges)
+ */
+function saveFailedCases(newFailedCases, rangeFrom, rangeTo) {
+  let existing = loadFailedCases();
+
+  // Remove existing entries for cases in current range (they will be updated)
+  const casesInRange = new Set(newFailedCases.map(c => c.id));
+
+  // Keep cases outside current range, remove those in range (will be re-added if failed)
+  existing.cases = existing.cases.filter(c => {
+    // If this case is in our current run range, remove it (we'll add back if still failing)
+    const caseNum = parseInt(c.id.split('_')[0], 10);
+    if (rangeFrom !== null && rangeTo !== null) {
+      if (caseNum >= rangeFrom && caseNum <= rangeTo) {
+        return false; // Remove - will be re-added if still failing
+      }
+    }
+    return true; // Keep cases outside our range
+  });
+
+  // Add new failed cases
+  for (const failedCase of newFailedCases) {
+    // Check if already exists (by id)
+    const existingIdx = existing.cases.findIndex(c => c.id === failedCase.id);
+    if (existingIdx === -1) {
+      existing.cases.push(failedCase);
+    } else {
+      existing.cases[existingIdx] = failedCase;
+    }
+  }
+
+  // Sort by case ID
+  existing.cases.sort((a, b) => a.id.localeCompare(b.id));
+
+  existing.lastUpdated = new Date().toISOString();
+  existing.rangeInfo = { lastFrom: rangeFrom, lastTo: rangeTo };
+
+  fs.writeFileSync(FAILED_FILE, JSON.stringify(existing, null, 2));
+  log(`\n  Failed cases saved to: ${FAILED_FILE}`, colors.gray);
+  log(`  Total failed cases tracked: ${existing.cases.length}`, colors.yellow);
+}
+
 function logSection(title) {
   log(`\n${'═'.repeat(60)}`, colors.cyan);
   log(`  ${title}`, colors.cyan + colors.bright);
@@ -56,10 +146,29 @@ function logResult(passed, message) {
 
 /**
  * Discover all test cases in the suite directory
+ * @param {Object} options - Filter options
+ * @param {string} options.filterCase - Run only specific case by ID
+ * @param {number} options.from - Start from case number (1-indexed)
+ * @param {number} options.to - End at case number (inclusive)
+ * @param {boolean} options.runFailed - Run only previously failed cases
  */
-function discoverCases(filterCase = null) {
-  const cases = [];
+function discoverCases(options = {}) {
+  const { filterCase, from, to, runFailed } = options;
+
+  let cases = [];
   const entries = fs.readdirSync(SUITE_DIR, { withFileTypes: true });
+
+  // If runFailed mode, load failed cases first
+  let failedCaseIds = null;
+  if (runFailed) {
+    const failedData = loadFailedCases();
+    if (failedData.cases.length === 0) {
+      log(`  No failed cases found in ${FAILED_FILE}`, colors.yellow);
+      return [];
+    }
+    failedCaseIds = new Set(failedData.cases.map(c => c.id));
+    log(`  Running ${failedCaseIds.size} previously failed case(s)`, colors.yellow);
+  }
 
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
@@ -78,7 +187,23 @@ function discoverCases(filterCase = null) {
     }
   }
 
-  return cases.sort((a, b) => a._dir.localeCompare(b._dir));
+  // Sort by directory name (which includes case number)
+  cases.sort((a, b) => a._dir.localeCompare(b._dir));
+
+  // Apply range filter (--from and --to)
+  if (from !== null || to !== null) {
+    const startIdx = from !== null ? from - 1 : 0;
+    const endIdx = to !== null ? to : cases.length;
+    cases = cases.slice(startIdx, endIdx);
+    log(`  Filtered to range: cases ${startIdx + 1} to ${Math.min(endIdx, cases.length + startIdx)}`, colors.gray);
+  }
+
+  // Apply runFailed filter
+  if (failedCaseIds) {
+    cases = cases.filter(c => failedCaseIds.has(c.id));
+  }
+
+  return cases;
 }
 
 /**
@@ -513,6 +638,9 @@ async function main() {
 
   const options = {
     filterCase: null,
+    from: null,
+    to: null,
+    runFailed: args.includes('--runFailed'),
     verbose: args.includes('--verbose') || args.includes('-v'),
     dryRun: args.includes('--dry-run'),
     timeout: DEFAULT_TIMEOUT
@@ -524,19 +652,50 @@ async function main() {
     options.filterCase = args[caseIdx + 1];
   }
 
+  // Parse --from argument
+  const fromIdx = args.indexOf('--from');
+  if (fromIdx !== -1 && args[fromIdx + 1]) {
+    options.from = parseInt(args[fromIdx + 1], 10);
+  }
+
+  // Parse --to argument
+  const toIdx = args.indexOf('--to');
+  if (toIdx !== -1 && args[toIdx + 1]) {
+    options.to = parseInt(args[toIdx + 1], 10);
+  }
+
   // Parse --timeout argument
   const timeoutIdx = args.indexOf('--timeout');
   if (timeoutIdx !== -1 && args[timeoutIdx + 1]) {
     options.timeout = parseInt(args[timeoutIdx + 1], 10);
   }
 
+  // Show usage at startup
+  showUsage();
+
   logSection('AGISystem2 Evaluation Suite');
   log(`  Suite directory: ${SUITE_DIR}`);
   log(`  AGI script: ${AGI_SCRIPT}`);
   log(`  Timeout: ${options.timeout}ms`);
 
+  // Show active filters
+  if (options.from !== null || options.to !== null) {
+    log(`  Range: ${options.from || 1} to ${options.to || 'end'}`, colors.cyan);
+  }
+  if (options.runFailed) {
+    log(`  Mode: Running FAILED cases only`, colors.yellow);
+  }
+  if (options.filterCase) {
+    log(`  Filter: ${options.filterCase}`, colors.cyan);
+  }
+
   // Discover test cases
-  const cases = discoverCases(options.filterCase);
+  const cases = discoverCases({
+    filterCase: options.filterCase,
+    from: options.from,
+    to: options.to,
+    runFailed: options.runFailed
+  });
   log(`\n  Found ${cases.length} test case(s)`, colors.bright);
 
   if (cases.length === 0) {
@@ -601,6 +760,21 @@ async function main() {
     cases: allResults
   }, null, 2));
   log(`\n  Results written to: ${resultsPath}`, colors.gray);
+
+  // Save failed cases to failed.json (merge with existing)
+  const failedCasesForSave = allResults
+    .filter(r => r.failed > 0)
+    .map(r => ({
+      id: r.id,
+      name: r.name,
+      failedQueries: r.queries.filter(q => !q.passed).map(q => q.id),
+      lastRun: new Date().toISOString()
+    }));
+
+  if (failedCasesForSave.length > 0 || options.from !== null || options.to !== null) {
+    // Save even if no failures in this range (to clear old failures)
+    saveFailedCases(failedCasesForSave, options.from, options.to);
+  }
 
   process.exit(totalFailed > 0 ? 1 : 0);
 }

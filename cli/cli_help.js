@@ -80,6 +80,7 @@ function printMainHelp(color) {
   console.log(`${color.section}Introspection${color.reset}:`);
   console.log(`  ${color.command}config${color.reset}               - print current config snapshot (profile, dims, limits)`);
   console.log(`  ${color.command}run <dsl>${color.reset}            - execute raw DSL statement`);
+  console.log(`  ${color.command}debug${color.reset}                - toggle debug mode (shows DSL and results)`);
   console.log(`  ${color.command}exit${color.reset} / ${color.command}quit${color.reset}          - end the session\n`);
   console.log(`Type ${color.command}help syntax${color.reset} for more detail on permitted sentences and relations.`);
 }

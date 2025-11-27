@@ -1,0 +1,25 @@
+{
+  "cases": [
+    {
+      "id": "02_physical_properties",
+      "name": "Physical Properties and Substances",
+      "failedQueries": [
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:12:27.066Z"
+    },
+    {
+      "id": "03_deontic_reasoning",
+      "name": "Deontic Reasoning - Permissions and Prohibitions",
+      "failedQueries": [
+        "q3"
+      ],
+      "lastRun": "2025-11-27T17:12:27.066Z"
+    }
+  ],
+  "lastUpdated": "2025-11-27T17:12:27.066Z",
+  "rangeInfo": {
+    "lastFrom": 1,
+    "lastTo": 3
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "id": "53_abductive_quality_defect",
+  "name": "Abductive Reasoning - Manufacturing Quality Defect",
+  "description": "Tests finding causes of product defects in manufacturing context",
+
+  "theory": {
+    "natural_language": "In manufacturing, surface defects can be caused by contamination, tool wear, or incorrect settings. Contamination is caused by dirty environment or improper handling. Tool wear is caused by excessive use or poor maintenance. Incorrect settings are caused by operator error or calibration drift. Dimensional errors are caused by thermal expansion, tool deflection, or programming errors. Assembly defects are caused by missing parts, incorrect torque, or misalignment. A batch of parts showed surface defects and the tools had been used for 500 hours without maintenance.",
+    "expected_facts": [
+      "Contamination CAUSES SurfaceDefect",
+      "ToolWear CAUSES SurfaceDefect",
+      "IncorrectSettings CAUSES SurfaceDefect",
+      "DirtyEnvironment CAUSES Contamination",
+      "ImproperHandling CAUSES Contamination",
+      "ExcessiveUse CAUSES ToolWear",
+      "PoorMaintenance CAUSES ToolWear",
+      "OperatorError CAUSES IncorrectSettings",
+      "CalibrationDrift CAUSES IncorrectSettings",
+      "ThermalExpansion CAUSES DimensionalError",
+      "ToolDeflection CAUSES DimensionalError",
+      "ProgrammingError CAUSES DimensionalError",
+      "MissingParts CAUSES AssemblyDefect",
+      "IncorrectTorque CAUSES AssemblyDefect",
+      "Misalignment CAUSES AssemblyDefect",
+      "BatchA HAS_DEFECT SurfaceDefect",
+      "Tools HAS_CONDITION ExtendedUse",
+      "Tools HAS_CONDITION NoRecentMaintenance"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "What likely caused the surface defects in BatchA?",
+      "expected_answer": {
+        "natural_language": "Given the extended tool use without maintenance, tool wear is the most likely cause of the surface defects.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "ToolWear CAUSES SurfaceDefect; ExtendedUse + NoRecentMaintenance -> ToolWear"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Could contamination have caused the defects?",
+      "expected_answer": {
+        "natural_language": "Contamination is possible but less likely given the evidence points to tool wear from extended use.",
+        "truth": "PLAUSIBLE",
+        "explanation": "Contamination CAUSES SurfaceDefect but no supporting evidence for dirty environment"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "What should be done to prevent future defects?",
+      "expected_answer": {
+        "natural_language": "Regular tool maintenance should be scheduled to prevent tool wear, which is the likely root cause.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "PoorMaintenance CAUSES ToolWear; fixing root cause prevents effect"
+      }
+    }
+  ],
+
+  "tags": ["abductive", "manufacturing", "quality", "root-cause", "preventive"]
+}

@@ -19,6 +19,31 @@ const {
 const { initSampleTheories } = require('./cli_commands');
 
 /**
+ * Validate and resolve a theory file path securely
+ * Prevents path traversal attacks
+ * @param {string} name - Theory name
+ * @param {string} theoriesRoot - Root directory for theories
+ * @returns {{valid: boolean, path?: string, error?: string}}
+ */
+function validateTheoryPath(name, theoriesRoot) {
+  // Only allow alphanumeric, underscore, dash, and dot (not leading)
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9_.-]*$/.test(name)) {
+    return { valid: false, error: 'Invalid theory name. Use only letters, numbers, underscore, dash.' };
+  }
+  const filePath = path.join(theoriesRoot, `${name}.sys2dsl`);
+  // Double-check: resolved path must be inside theoriesRoot
+  const resolvedPath = path.resolve(filePath);
+  const resolvedRoot = path.resolve(theoriesRoot);
+  if (!resolvedPath.startsWith(resolvedRoot + path.sep)) {
+    return { valid: false, error: 'Invalid theory path' };
+  }
+  return { valid: true, path: filePath };
+}
+
+// Debug mode state
+let debugMode = false;
+
+/**
  * Run the interactive REPL
  * @param {Object} session - DSL session
  * @param {string} theoriesRoot - Path to theories directory
@@ -72,15 +97,29 @@ function handleCommand(cmd, args, session, theoriesRoot, color, rl) {
     case 'add': {
       const fact = args.trim();
       if (!fact) { console.log('Usage: add <Subject REL Object>'); break; }
-      session.run([`@f ASSERT ${fact}`]);
+      const dslCmd = `@f ASSERT ${fact}`;
+      if (debugMode) {
+        console.log(`${color.dim}[DSL] ${dslCmd}${color.reset}`);
+      }
+      const env = session.run([dslCmd]);
+      if (debugMode) {
+        console.log(`${color.dim}[Result] ${JSON.stringify(env.f || {})}${color.reset}`);
+      }
       console.log(`${color.label}OK${color.reset} ${color.dim}(fact ingested via Sys2DSL)${color.reset}`);
       break;
     }
 
     case 'ask': {
       const question = args.trim();
-      const env = session.run([`@q ASK "${question}"`]);
+      const dslCmd = `@q ASK "${question}"`;
+      if (debugMode) {
+        console.log(`${color.dim}[DSL] ${dslCmd}${color.reset}`);
+      }
+      const env = session.run([dslCmd]);
       const res = env.q || env.result || {};
+      if (debugMode) {
+        console.log(`${color.dim}[Result] ${JSON.stringify(res)}${color.reset}`);
+      }
       if (res && Object.prototype.hasOwnProperty.call(res, 'band')) {
         console.log(`${color.label}Result${color.reset}: ${color.example}${res.truth}${color.reset}  ${color.label}Band${color.reset}: ${color.example}${res.band}${color.reset}`);
       } else {
@@ -92,8 +131,15 @@ function handleCommand(cmd, args, session, theoriesRoot, color, rl) {
     case 'retract': {
       const fact = args.trim();
       if (!fact) { console.log('Usage: retract <Subject REL Object>'); break; }
-      const env = session.run([`@r RETRACT ${fact}`]);
+      const dslCmd = `@r RETRACT ${fact}`;
+      if (debugMode) {
+        console.log(`${color.dim}[DSL] ${dslCmd}${color.reset}`);
+      }
+      const env = session.run([dslCmd]);
       const res = env.r || {};
+      if (debugMode) {
+        console.log(`${color.dim}[Result] ${JSON.stringify(res)}${color.reset}`);
+      }
       console.log(res.ok
         ? `${color.label}OK${color.reset} ${color.dim}(fact retracted)${color.reset}`
         : `${color.dim}No matching fact found${color.reset}`);
@@ -103,8 +149,15 @@ function handleCommand(cmd, args, session, theoriesRoot, color, rl) {
     case 'prove': {
       const statement = args.trim();
       if (!statement) { console.log('Usage: prove <Subject REL Object>'); break; }
-      const env = session.run([`@r PROVE ${statement}`]);
+      const dslCmd = `@r PROVE ${statement}`;
+      if (debugMode) {
+        console.log(`${color.dim}[DSL] ${dslCmd}${color.reset}`);
+      }
+      const env = session.run([dslCmd]);
       const res = env.r || {};
+      if (debugMode) {
+        console.log(`${color.dim}[Result] ${JSON.stringify(res)}${color.reset}`);
+      }
       if (res.proven) {
         console.log(`${color.label}PROVEN${color.reset} ${color.dim}(method: ${res.method}, confidence: ${res.confidence})${color.reset}`);
         if (res.chain) console.log(`${color.dim}Chain: ${res.chain.join(' → ')}${color.reset}`);
@@ -131,8 +184,15 @@ function handleCommand(cmd, args, session, theoriesRoot, color, rl) {
     case 'hypothesize': {
       const subject = args.trim();
       if (!subject) { console.log('Usage: hypothesize <subject>'); break; }
-      const env = session.run([`@r HYPOTHESIZE ${subject}`]);
+      const dslCmd = `@r HYPOTHESIZE ${subject}`;
+      if (debugMode) {
+        console.log(`${color.dim}[DSL] ${dslCmd}${color.reset}`);
+      }
+      const env = session.run([dslCmd]);
       const res = env.r || {};
+      if (debugMode) {
+        console.log(`${color.dim}[Result] ${JSON.stringify(res)}${color.reset}`);
+      }
       console.log(`${color.label}Hypotheses for${color.reset} ${color.example}${res.subject}${color.reset}:`);
       for (const h of res.hypotheses || []) {
         console.log(`  - ${h.subject} ${color.example}${h.relation}${color.reset} ${h.object} ${color.dim}(basis: ${h.basis})${color.reset}`);
@@ -148,8 +208,15 @@ function handleCommand(cmd, args, session, theoriesRoot, color, rl) {
       if (parts.length < 1 || !parts[0]) { console.log('Usage: abduct <observation> [REL]'); break; }
       const observation = parts[0];
       const relation = parts.length >= 2 ? parts[1] : null;
-      const env = session.run([relation ? `@h ABDUCT ${observation} ${relation}` : `@h ABDUCT ${observation}`]);
+      const dslCmd = relation ? `@h ABDUCT ${observation} ${relation}` : `@h ABDUCT ${observation}`;
+      if (debugMode) {
+        console.log(`${color.dim}[DSL] ${dslCmd}${color.reset}`);
+      }
+      const env = session.run([dslCmd]);
       const res = env.h || {};
+      if (debugMode) {
+        console.log(`${color.dim}[Result] ${JSON.stringify(res)}${color.reset}`);
+      }
       console.log(`${color.label}Hypothesis${color.reset}: ${color.example}${res.hypothesis}${color.reset}  ${color.label}Band${color.reset}: ${color.example}${res.band}${color.reset}`);
       break;
     }
@@ -159,8 +226,15 @@ function handleCommand(cmd, args, session, theoriesRoot, color, rl) {
       if (split.length < 2) { console.log('Usage: cf <question> | <fact1> ; <fact2> ; ...'); break; }
       const question = split[0].trim();
       const facts = split.slice(1).join('|').split(';').map((s) => s.trim()).filter((s) => s.length > 0);
-      const env = session.run([`@cf CF "${question}" | ${facts.join(' ; ')}`]);
+      const dslCmd = `@cf CF "${question}" | ${facts.join(' ; ')}`;
+      if (debugMode) {
+        console.log(`${color.dim}[DSL] ${dslCmd}${color.reset}`);
+      }
+      const env = session.run([dslCmd]);
       const res = env.cf || {};
+      if (debugMode) {
+        console.log(`${color.dim}[Result] ${JSON.stringify(res)}${color.reset}`);
+      }
       console.log(`${color.label}Result (counterfactual)${color.reset}: ${color.example}${res.truth}${color.reset}`);
       break;
     }
@@ -317,12 +391,16 @@ function handleCommand(cmd, args, session, theoriesRoot, color, rl) {
     case 'show-theory': {
       const name = args.trim();
       if (!name) { console.log('Usage: show-theory <name>'); break; }
-      const filePath = path.join(theoriesRoot, `${name}.sys2dsl`);
-      if (!fs.existsSync(filePath)) {
-        console.log(`${color.error}No such theory file${color.reset}: ${filePath}`);
+      const validation = validateTheoryPath(name, theoriesRoot);
+      if (!validation.valid) {
+        console.log(`${color.error}${validation.error}${color.reset}`);
+        break;
+      }
+      if (!fs.existsSync(validation.path)) {
+        console.log(`${color.error}No such theory file${color.reset}: ${validation.path}`);
       } else {
-        const content = fs.readFileSync(filePath, 'utf8');
-        console.log(`${color.section}--- ${filePath} ---${color.reset}\n${content}`);
+        const content = fs.readFileSync(validation.path, 'utf8');
+        console.log(`${color.section}--- ${validation.path} ---${color.reset}\n${content}`);
       }
       break;
     }
@@ -330,12 +408,16 @@ function handleCommand(cmd, args, session, theoriesRoot, color, rl) {
     case 'load-theory': {
       const name = args.trim();
       if (!name) { console.log('Usage: load-theory <name>'); break; }
-      const filePath = path.join(theoriesRoot, `${name}.sys2dsl`);
-      if (!fs.existsSync(filePath)) {
-        console.log(`${color.error}Theory file not found${color.reset}: ${filePath}`);
+      const validation = validateTheoryPath(name, theoriesRoot);
+      if (!validation.valid) {
+        console.log(`${color.error}${validation.error}${color.reset}`);
         break;
       }
-      const content = fs.readFileSync(filePath, 'utf8');
+      if (!fs.existsSync(validation.path)) {
+        console.log(`${color.error}Theory file not found${color.reset}: ${validation.path}`);
+        break;
+      }
+      const content = fs.readFileSync(validation.path, 'utf8');
       session.appendTheory(content);
       console.log(`${color.label}Loaded theory${color.reset} ${color.example}${name}${color.reset}`);
       break;
@@ -346,12 +428,16 @@ function handleCommand(cmd, args, session, theoriesRoot, color, rl) {
       if (split.length < 2) { console.log('Usage: apply-theory <name> <question...>'); break; }
       const name = split[0];
       const question = split.slice(1).join(' ');
-      const filePath = path.join(theoriesRoot, `${name}.sys2dsl`);
-      if (!fs.existsSync(filePath)) {
-        console.log(`${color.error}Theory file not found${color.reset}: ${filePath}`);
+      const validation = validateTheoryPath(name, theoriesRoot);
+      if (!validation.valid) {
+        console.log(`${color.error}${validation.error}${color.reset}`);
         break;
       }
-      const content = fs.readFileSync(filePath, 'utf8');
+      if (!fs.existsSync(validation.path)) {
+        console.log(`${color.error}Theory file not found${color.reset}: ${validation.path}`);
+        break;
+      }
+      const content = fs.readFileSync(validation.path, 'utf8');
       session.appendTheory(content);
       const env = session.run([`@q ASK "${question}"`]);
       const res = env.q || env.result || {};
@@ -369,6 +455,15 @@ function handleCommand(cmd, args, session, theoriesRoot, color, rl) {
     case 'check-magic':
       handleDomainHelper(cmd, args, session, color);
       break;
+
+    case 'debug': {
+      debugMode = !debugMode;
+      console.log(`${color.label}Debug mode${color.reset}: ${debugMode ? `${color.example}ON${color.reset}` : `${color.dim}OFF${color.reset}`}`);
+      if (debugMode) {
+        console.log(`${color.dim}DSL commands and results will be shown for each operation${color.reset}`);
+      }
+      break;
+    }
 
     case 'exit':
     case 'quit':

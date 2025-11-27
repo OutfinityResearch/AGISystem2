@@ -1,0 +1,60 @@
+{
+  "id": "52_abductive_system_failure",
+  "name": "Abductive Reasoning - System Failure Analysis",
+  "description": "Tests finding root causes of system failures with multiple possible explanations",
+
+  "theory": {
+    "natural_language": "In IT systems, server crashes can be caused by memory leaks, disk full, or hardware failure. Memory leaks are caused by bad code or resource exhaustion. Disk full is caused by log accumulation or data growth. Hardware failure is caused by overheating or component wear. Overheating is caused by fan failure or poor ventilation. Network timeouts can be caused by high load or network congestion. Database errors are caused by connection pool exhaustion or query timeout. The production server crashed and showed high memory usage before the crash.",
+    "expected_facts": [
+      "MemoryLeak CAUSES ServerCrash",
+      "DiskFull CAUSES ServerCrash",
+      "HardwareFailure CAUSES ServerCrash",
+      "BadCode CAUSES MemoryLeak",
+      "ResourceExhaustion CAUSES MemoryLeak",
+      "LogAccumulation CAUSES DiskFull",
+      "DataGrowth CAUSES DiskFull",
+      "Overheating CAUSES HardwareFailure",
+      "ComponentWear CAUSES HardwareFailure",
+      "FanFailure CAUSES Overheating",
+      "PoorVentilation CAUSES Overheating",
+      "HighLoad CAUSES NetworkTimeout",
+      "NetworkCongestion CAUSES NetworkTimeout",
+      "ConnectionPoolExhaustion CAUSES DatabaseError",
+      "QueryTimeout CAUSES DatabaseError",
+      "ProductionServer HAS_SYMPTOM ServerCrash",
+      "ProductionServer HAS_SYMPTOM HighMemoryUsage"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "What likely caused the production server crash?",
+      "expected_answer": {
+        "natural_language": "Given the high memory usage before the crash, a memory leak is the most likely cause.",
+        "truth": "PLAUSIBLE",
+        "explanation": "MemoryLeak CAUSES ServerCrash; HighMemoryUsage corroborates this hypothesis"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "What could have caused the memory leak?",
+      "expected_answer": {
+        "natural_language": "The memory leak could have been caused by bad code or resource exhaustion.",
+        "truth": "PLAUSIBLE",
+        "explanation": "BadCode or ResourceExhaustion both CAUSE MemoryLeak"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Was hardware failure the cause?",
+      "expected_answer": {
+        "natural_language": "Hardware failure is less likely because it typically doesn't cause high memory usage patterns.",
+        "truth": "FALSE",
+        "explanation": "HardwareFailure CAUSES ServerCrash but doesn't explain HighMemoryUsage"
+      }
+    }
+  ],
+
+  "tags": ["abductive", "IT", "debugging", "root-cause", "priority-ranking"]
+}

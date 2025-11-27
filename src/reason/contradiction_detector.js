@@ -173,6 +173,37 @@ class ContradictionDetector {
       }
     }
 
+    // Check type-level contradictions: "Birds IS_A mammal" where bird DISJOINT mammal
+    // This catches the case where a type is declared a subtype of its disjoint type
+    for (const fact of facts) {
+      if (fact.relation !== 'IS_A') continue;
+
+      const subjectNorm = this._normalize(fact.subject);
+      const objectNorm = this._normalize(fact.object);
+
+      for (const [typeA, typeB] of disjointPairs) {
+        const typeANorm = this._normalize(typeA);
+        const typeBNorm = this._normalize(typeB);
+
+        // Check if subject IS_A object where subject and object are disjoint types
+        // e.g., "Birds IS_A mammal" when bird DISJOINT mammal
+        if ((subjectNorm === typeANorm && objectNorm === typeBNorm) ||
+            (subjectNorm === typeBNorm && objectNorm === typeANorm)) {
+          contradictions.push({
+            type: 'DISJOINT_VIOLATION',
+            severity: 'ERROR',
+            entity: fact.subject,
+            types: [typeA, typeB],
+            facts: [fact],
+            explanation: `${fact.subject} cannot be a ${fact.object} because ${typeA} and ${typeB} are disjoint types`,
+            resolution: [
+              `Retract the fact "${fact.subject} IS_A ${fact.object}"`
+            ]
+          });
+        }
+      }
+    }
+
     return contradictions;
   }
 

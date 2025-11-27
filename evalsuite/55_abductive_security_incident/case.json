@@ -1,0 +1,60 @@
+{
+  "id": "55_abductive_security_incident",
+  "name": "Abductive Reasoning - Security Incident Response",
+  "description": "Tests finding causes of security incidents with priority-weighted hypotheses",
+
+  "theory": {
+    "natural_language": "In cybersecurity, data breaches can be caused by phishing attacks, unpatched vulnerabilities, or insider threats. Phishing attacks are caused by social engineering or fake emails. Unpatched vulnerabilities are caused by delayed updates or legacy systems. Insider threats are caused by disgruntled employees or negligence. Malware infections are caused by drive-by downloads, infected attachments, or USB devices. Unauthorized access is caused by stolen credentials, brute force attacks, or session hijacking. The company network showed data exfiltration and suspicious login patterns from an internal IP address.",
+    "expected_facts": [
+      "PhishingAttack CAUSES DataBreach",
+      "UnpatchedVulnerability CAUSES DataBreach",
+      "InsiderThreat CAUSES DataBreach",
+      "SocialEngineering CAUSES PhishingAttack",
+      "FakeEmails CAUSES PhishingAttack",
+      "DelayedUpdates CAUSES UnpatchedVulnerability",
+      "LegacySystems CAUSES UnpatchedVulnerability",
+      "DisgruntledEmployee CAUSES InsiderThreat",
+      "Negligence CAUSES InsiderThreat",
+      "DriveByDownload CAUSES MalwareInfection",
+      "InfectedAttachment CAUSES MalwareInfection",
+      "USBDevice CAUSES MalwareInfection",
+      "StolenCredentials CAUSES UnauthorizedAccess",
+      "BruteForceAttack CAUSES UnauthorizedAccess",
+      "SessionHijacking CAUSES UnauthorizedAccess",
+      "CompanyNetwork HAS_INCIDENT DataExfiltration",
+      "CompanyNetwork HAS_INCIDENT SuspiciousLoginFromInternalIP"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "What is the most likely cause of the data breach?",
+      "expected_answer": {
+        "natural_language": "Given the suspicious login from an internal IP, an insider threat is the most likely cause.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "InsiderThreat CAUSES DataBreach; internal IP pattern strongly suggests insider"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Could this be a phishing attack?",
+      "expected_answer": {
+        "natural_language": "While possible, the internal IP pattern makes phishing less likely than insider threat.",
+        "truth": "PLAUSIBLE",
+        "explanation": "PhishingAttack CAUSES DataBreach but external indicators not present"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "What could have led to the insider threat?",
+      "expected_answer": {
+        "natural_language": "The insider threat could be caused by a disgruntled employee or negligence.",
+        "truth": "PLAUSIBLE",
+        "explanation": "DisgruntledEmployee or Negligence both CAUSE InsiderThreat"
+      }
+    }
+  ],
+
+  "tags": ["abductive", "security", "incident-response", "priority", "internal-threat"]
+}

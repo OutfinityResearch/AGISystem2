@@ -229,14 +229,29 @@ class EngineAPI {
     return this.validation.abstractQuery(spec);
   }
 
-  abduct(observation, relation) {
-    const result = this.reasoner.abductCause(observation);
+  /**
+   * Abductive reasoning: find causes for an observation
+   *
+   * Returns multiple hypotheses ranked by usage priority.
+   * Higher-priority (frequently used) concepts rank higher as they're
+   * more likely to be relevant explanations.
+   *
+   * @param {string} observation - The effect to explain
+   * @param {string} [relation] - Optional relation filter (CAUSES, CAUSED_BY)
+   * @param {Object} [options] - Options
+   * @param {number} [options.k=5] - Number of hypotheses to return
+   * @param {boolean} [options.transitive=true] - Follow transitive causes
+   * @returns {Object} Result with hypotheses array
+   */
+  abduct(observation, relation, options = {}) {
+    const result = this.reasoner.abductCause(observation, null, options);
     this.audit.write({
       kind: 'abduct',
       observation,
       relation,
       hypothesis: result.hypothesis,
-      band: result.band
+      band: result.band,
+      hypothesesCount: result.hypotheses?.length || 0
     });
     return result;
   }

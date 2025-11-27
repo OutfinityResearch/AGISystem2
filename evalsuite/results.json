@@ -1,7 +1,7 @@
 {
-  "timestamp": "2025-11-27T15:15:16.383Z",
-  "totalPassed": 37,
-  "totalFailed": 12,
+  "timestamp": "2025-11-27T17:12:27.065Z",
+  "totalPassed": 7,
+  "totalFailed": 2,
   "cases": [
     {
       "id": "01_taxonomy",
@@ -13,27 +13,27 @@
           "question": "Is Fido an animal?",
           "expectedTruth": "TRUE_CERTAIN",
           "expectedNatural": "Yes, Fido is an animal.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Fido IS_A animal\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Fido is an animal.\n\nYou: ",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Fido IS_A animal\n  # Result: {\"truth\":\"TRUE_CERTAIN\",\"method\":\"transitive\",\"confidence\":0.8573749999999999}\n\n[Structured Result]\n  truth: TRUE_CERTAIN\n  method: transitive\n  confidence: 0.8573749999999999\n",
           "passed": true,
-          "matchReason": "NL Match: 2 truth indicators, 1/1 key concepts"
+          "matchReason": "NL Match: 1 truth indicators, 0/1 key concepts"
         },
         {
           "id": "q2",
           "question": "Is Whiskers a living thing?",
           "expectedTruth": "TRUE_CERTAIN",
           "expectedNatural": "Yes, Whiskers is a living thing.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK Whiskers IS_A living_thing\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Whiskers is a living thing.\n\nYou: ",
+          "actualResponse": "\nYes, Fido is an animal. This is certain because Fido is classified as a dog, and dogs are mammals, which in turn are categorized as animals.\n\nYou: ",
           "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 3/3 key concepts"
+          "matchReason": "NL Match: 4 truth indicators, 0/3 key concepts"
         },
         {
           "id": "q3",
           "question": "Is Sparky a mammal?",
           "expectedTruth": "FALSE",
           "expectedNatural": "No, Sparky is not a mammal. Sparky is a bird, and birds are animals but not mammals.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Sparky IS_A mammal\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Sparky IS_A mammal\n  # Result: {\"truth\":\"FALSE\",\"method\":\"disjoint_inference\",\"confidence\":1}\n\n[Structured Result]\n  truth: FALSE\n  method: disjoint_inference\n  confidence: 1\n  explanation: Sparky is a bird, and bird is disjoint with mammal\n\nNo, Sparky is not a mammal because Sparky is a bird, and birds are disjoint from mammals.\n\nYou: ",
           "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 2/7 key concepts"
+          "matchReason": "NL Match: 4 truth indicators, 5/7 key concepts"
         }
       ],
       "passed": 3,
@@ -49,7 +49,7 @@
           "question": "At what temperature does water boil?",
           "expectedTruth": "TRUE_CERTAIN",
           "expectedNatural": "Water boils at 100 degrees Celsius.",
-          "actualResponse": "\nThinking...\r                    \r\nI'm sorry, but I can't provide an answer to the question about the boiling temperature of water due to a processing error.\n\nYou: ",
+          "actualResponse": "\nThinking...\r                    \r\nI'm sorry, but I can't provide a response to the question about the boiling point of water due to a processing error.\n\nYou: ",
           "passed": true,
           "matchReason": "NL Match: 1 truth indicators, 1/4 key concepts"
         },
@@ -58,7 +58,7 @@
           "question": "Is mercury a solid?",
           "expectedTruth": "FALSE",
           "expectedNatural": "No, mercury is not a solid. Mercury is a liquid metal.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK mercury IS_A solid\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if mercury is a solid.\n\nYou: ",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK mercury IS_A solid\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if mercury is a solid.\n",
           "passed": true,
           "matchReason": "NL Match: 1 truth indicators, 3/5 key concepts"
         },
@@ -67,13 +67,13 @@
           "question": "What are the states of water?",
           "expectedTruth": "TRUE_CERTAIN",
           "expectedNatural": "Water exists as liquid (water), solid (ice), and gas (steam).",
-          "actualResponse": "\nThinking...\r                    \r\nIt appears there are no specific facts provided regarding the states of water. However, generally, water can exist in three primary states: solid (ice), liquid (water), and gas (vapor).\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 2 truth indicators, 5/7 key concepts"
+          "actualResponse": "\nYou: ",
+          "passed": false,
+          "matchReason": "No truth indicators matched, only 0/7 concepts, no DSL result found"
         }
       ],
-      "passed": 3,
-      "failed": 0
+      "passed": 2,
+      "failed": 1
     },
     {
       "id": "03_deontic_reasoning",
@@ -85,517 +85,31 @@
           "question": "Can a medical drone fly over a hospital?",
           "expectedTruth": "TRUE_CERTAIN",
           "expectedNatural": "Yes, medical drones are permitted to fly over hospitals when delivering medical supplies.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK medical_drone CAN hospital\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether a medical drone can fly over a hospital.\n\n",
+          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK drone CAN hospital\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
           "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 2/7 key concepts"
+          "matchReason": "NL Match: 1 truth indicators, 0/7 key concepts"
         },
         {
           "id": "q2",
           "question": "Is a commercial drone allowed in the city center?",
           "expectedTruth": "FALSE",
           "expectedNatural": "No, commercial drones are not allowed in the city center. The city center is a no-fly zone for all drones except emergency services.",
-          "actualResponse": "You: \nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK drone PERMITS city_center\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "actualResponse": "  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether a medical drone can fly over a hospital.\n\nYou: ",
           "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 1/10 key concepts"
+          "matchReason": "NL Match: 1 truth indicators, 0/10 key concepts"
         },
         {
           "id": "q3",
           "question": "Where can a regular drone fly?",
           "expectedTruth": "TRUE_CERTAIN",
           "expectedNatural": "Regular commercial drones can only fly in designated drone zones. They are prohibited from hospitals, schools, private property, and the city center.",
-          "actualResponse": "  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if a commercial drone is allowed in the city center.\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 3/12 key concepts"
-        }
-      ],
-      "passed": 3,
-      "failed": 0
-    },
-    {
-      "id": "04_counterfactual",
-      "name": "Counterfactual Reasoning - What If Scenarios",
-      "theoryLoaded": true,
-      "queries": [
-        {
-          "id": "q1",
-          "question": "If water boiled at 50 degrees Celsius instead of 100, would water still be liquid at room temperature?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, water would still be liquid at room temperature (20°C) because 20 is less than 50.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK water IS_A liquid\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
+          "actualResponse": "\nThinking...\nThinking...\r                    \r\nI don't have enough information.\n\nYou: ",
           "passed": false,
-          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
-        },
-        {
-          "id": "q2",
-          "question": "What if water boiled at 30 degrees? Would humans survive normally?",
-          "expectedTruth": "FALSE",
-          "expectedNatural": "No, humans would have serious problems. Body temperature is 37°C, which is above 30°C. This means water in the human body would boil, which is incompatible with life.",
-          "actualResponse": "  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether water would still be liquid at room temperature if it boiled at 50 degrees Celsius instead of 100.\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 4/17 key concepts"
-        },
-        {
-          "id": "q3",
-          "question": "If gravity didn't exist, would water still boil at 100 degrees?",
-          "expectedTruth": "PLAUSIBLE",
-          "expectedNatural": "The boiling point of water is determined by pressure and molecular properties, not directly by gravity. Without gravity, atmospheric pressure would be different, which could affect the boiling point, but the basic chemical property remains.",
-          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK water CAUSES survival\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether humans would survive normally if water boiled at 30 degrees.\n\nYou: ",
-          "passed": false,
-          "matchReason": "Both failed - NL: no indicators, DSL: expected PLAUSIBLE, got UNKNOWN"
-        }
-      ],
-      "passed": 1,
-      "failed": 2
-    },
-    {
-      "id": "05_abductive",
-      "name": "Abductive Reasoning - Finding Explanations",
-      "theoryLoaded": true,
-      "queries": [
-        {
-          "id": "q1",
-          "question": "What could be causing John's symptoms?",
-          "expectedTruth": "PLAUSIBLE",
-          "expectedNatural": "Based on John's symptoms of fever and coughing, the most likely cause is a respiratory infection. Influenza is also possible but typically includes fatigue as well.",
-          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine the causes of John's symptoms.\n\nYou: ",
-          "passed": false,
-          "matchReason": "No truth indicators matched, only 3/15 concepts, no DSL result found"
-        },
-        {
-          "id": "q2",
-          "question": "If John also has fatigue, what is the most likely diagnosis?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "If John has fever, coughing, and fatigue together, influenza is the most likely diagnosis as it explains all three symptoms.",
-          "actualResponse": "\nThinking...\r                    \r\nI'm sorry, but I don't have enough information to determine the most likely diagnosis for John, given that he also has fatigue.\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 0 truth indicators, 3/10 key concepts"
-        },
-        {
-          "id": "q3",
-          "question": "Could John have food poisoning?",
-          "expectedTruth": "FALSE",
-          "expectedNatural": "Food poisoning is unlikely. While it can cause fever, it typically causes stomach pain and nausea, not coughing. John has coughing but no reported stomach issues.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK John CAN food_poisoning\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if John could have food poisoning.\n",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 1/14 key concepts"
+          "matchReason": "No truth indicators matched, only 0/12 concepts, no DSL result found"
         }
       ],
       "passed": 2,
       "failed": 1
-    },
-    {
-      "id": "06_analogy",
-      "name": "Analogical Reasoning - Structural Mapping",
-      "theoryLoaded": true,
-      "queries": [
-        {
-          "id": "q1",
-          "question": "If a king is to a kingdom as a CEO is to a company, what is a president to?",
-          "expectedTruth": "PLAUSIBLE",
-          "expectedNatural": "A president is to a country or republic. Following the pattern, a president leads and governs a country, similar to how a king rules a kingdom and a CEO leads a company.",
-          "actualResponse": "\nThinking...\r                    \r\nI don't have enough information to determine what a president corresponds to in the same analogy.\n\nYou: ",
-          "passed": false,
-          "matchReason": "No truth indicators matched, only 2/14 concepts, no DSL result found"
-        },
-        {
-          "id": "q2",
-          "question": "Based on the pattern, where would a captain likely work?",
-          "expectedTruth": "PLAUSIBLE",
-          "expectedNatural": "A captain would likely work on a ship or in a vessel. Following the analogy where leaders have their designated places (king-castle, CEO-headquarters), a captain's place is a ship.",
-          "actualResponse": "\nThinking...\r                    \r\nI'm sorry, but based on the current information, I don't have enough details to determine where a captain would likely work.\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 4/16 key concepts"
-        },
-        {
-          "id": "q3",
-          "question": "What relation does a conductor have to an orchestra?",
-          "expectedTruth": "PLAUSIBLE",
-          "expectedNatural": "A conductor leads the orchestra, similar to how a king rules a kingdom or a CEO leads a company. The conductor guides the musicians in creating music together.",
-          "actualResponse": "\nThinking...\r                    \r\nIt seems there was an issue with processing your question. However, to answer your original question: A conductor leads an orchestra, coordinating the musicians and shaping the interpretation of the musical piece.\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 0 truth indicators, 7/14 key concepts"
-        }
-      ],
-      "passed": 2,
-      "failed": 1
-    },
-    {
-      "id": "07_conflict_detection",
-      "name": "Conflict Detection and Resolution",
-      "theoryLoaded": true,
-      "queries": [
-        {
-          "id": "q1",
-          "question": "Is Socrates immortal?",
-          "expectedTruth": "FALSE",
-          "expectedNatural": "No, Socrates is not immortal. Socrates is a human, humans are mortal, and mortal is the opposite of immortal.",
-          "actualResponse": "\nThinking...\r                    \r\nI noticed potential contradictions with existing knowledge:\n- Socrates is known to be a philosopher who engaged in dialogues and exploration of ethics, not a figure associated with killing.\n- If Zeus kills immortals, it contradicts his own immortality as it implies that even he can kill other gods.\n- Socrates believed in the limitations of human knowledge and famously stated, 'I know that I know nothing', which contradicts the idea of possessing divine wisdom.\n- The statement implies that mortals, who are living beings, are capable of causing death, yet it also states that 'KILLS' die, which presents a contradiction in the context of mortality.\n- An immortal being, by definition, does not die and thus cannot kill something that lives forever.\n- Death is typically understood as the cessation of life, while eternal life implies an unending existence. Thus, they are directly opposite concepts.\n\nWould you like me to create a new theory branch? Suggested name: \"Eternal Paradoxes Theory\"\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 3 truth indicators, 4/9 key concepts"
-        },
-        {
-          "id": "q2",
-          "question": "Would there be a contradiction if we said Socrates is a god?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, there would be a contradiction. If Socrates were a god, he would be immortal (since gods are immortal). But Socrates is already established as mortal (being human). Since mortal and immortal are contradictory, claiming Socrates is a god creates a logical conflict.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK Socrates IS_A immortal\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether Socrates is immortal.\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 0 truth indicators, 7/23 key concepts"
-        },
-        {
-          "id": "q3",
-          "question": "Can Zeus die?",
-          "expectedTruth": "FALSE",
-          "expectedNatural": "No, Zeus cannot die. Zeus is a god, gods are immortal, and immortals live forever. Death is only for mortals.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Socrates IS_A god\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether there would be a contradiction if we said Socrates is a god.\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 0/6 key concepts"
-        }
-      ],
-      "passed": 3,
-      "failed": 0
-    },
-    {
-      "id": "08_multi_theory",
-      "name": "Multiple Theory Layers and Context Switching",
-      "theoryLoaded": true,
-      "queries": [
-        {
-          "id": "q1",
-          "question": "How long does it take for light to reach Earth from the Sun?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Light takes about 8 minutes to travel from the Sun to Earth.",
-          "actualResponse": "\nThinking...\r                    \r\nI don’t have enough information to determine how long it takes for light to reach Earth from the Sun.\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 0 truth indicators, 2/6 key concepts"
-        },
-        {
-          "id": "q2",
-          "question": "In the Star Trek universe, can ships travel faster than light?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, in the Star Trek universe, ships can travel faster than light using warp drive technology. However, this is science fiction and doesn't apply to real physics.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q006 ASK ship CAN travel_faster_than_light\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether ships in the Star Trek universe can travel faster than light.\n",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 4/14 key concepts"
-        },
-        {
-          "id": "q3",
-          "question": "Can quantum entanglement be used to communicate faster than light?",
-          "expectedTruth": "FALSE",
-          "expectedNatural": "No, quantum entanglement cannot be used to communicate faster than light. While entangled particles show instant correlation, this cannot be used to transmit actual information faster than light.",
-          "actualResponse": "\nYou: ",
-          "passed": false,
-          "matchReason": "No truth indicators matched, only 0/17 concepts, no DSL result found"
-        }
-      ],
-      "passed": 2,
-      "failed": 1
-    },
-    {
-      "id": "09_simple_syllogism",
-      "name": "Simple Syllogism - Socrates Mortality",
-      "theoryLoaded": true,
-      "queries": [
-        {
-          "id": "q1",
-          "question": "Is Socrates mortal?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, Socrates is mortal because Socrates is a human and all humans are mortal.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Socrates IS_A mortal\n  # Result: {\"truth\":\"TRUE_CERTAIN\",\"method\":\"transitive\",\"confidence\":0.9025}\n\n[Structured Result]\n",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 3/7 key concepts"
-        },
-        {
-          "id": "q2",
-          "question": "Is Socrates a human?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, Socrates is a human.",
-          "actualResponse": "  truth: TRUE_CERTAIN\n  method: transitive\n  confidence: 0.9025\n\nYes, Socrates is mortal. This conclusion is certain because Socrates is a human, and all humans are classified as mortal.\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 4 truth indicators, 1/2 key concepts"
-        }
-      ],
-      "passed": 2,
-      "failed": 0
-    },
-    {
-      "id": "10_argument_type_inference",
-      "name": "Argument Type Inference - Generalization over Relations",
-      "theoryLoaded": true,
-      "queries": [
-        {
-          "id": "q1",
-          "question": "Does Lion hunt animal?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, Lion hunts animal because Lion hunts Zebra and Zebra is an animal.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Lion HUNTS animal\n  # Result: {\"truth\":\"TRUE_CERTAIN\",\"method\":\"argument_type_inference\",\"confidence\":0.95}\n\n[Structured Result]\n  truth: TRUE_CERTAIN\n  method: argument_type_inference\n  confidence: 0.95\n  explanation: Lion HUNTS Zebra, and Zebra IS_A animal\n\nYes, a lion does hunt animals. Specifically, lions hunt zebras, and since zebras are classified as animals, it is clear that lions hunt something that is an animal.\n",
-          "passed": true,
-          "matchReason": "NL Match: 5 truth indicators, 6/7 key concepts"
-        },
-        {
-          "id": "q2",
-          "question": "Does Cat chase mammal?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, Cat chases mammal because Cat chases Mouse, Mouse is a rodent, and rodent is a mammal.",
-          "actualResponse": "\nYou: ",
-          "passed": false,
-          "matchReason": "No truth indicators matched, only 0/9 concepts, no DSL result found"
-        },
-        {
-          "id": "q3",
-          "question": "Does Shark eat animal?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, Shark eats animal because Shark eats Tuna, Tuna is a fish, and fish is an animal.",
-          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK Shark EATS animal\n  # Result: {\"truth\":\"TRUE_CERTAIN\",\"method\":\"argument_type_inference\",\"confidence\":0.95}\n\n[Structured Result]\n  truth: TRUE_CERTAIN\n  method: argument_type_inference\n  confidence: 0.95\n  explanation: Shark EATS Tuna, and Tuna IS_A animal\n\nYes, sharks eat animals. For example, sharks eat tuna, and since tuna is an animal, it is certain that sharks consume animals.\n\n",
-          "passed": true,
-          "matchReason": "NL Match: 4 truth indicators, 4/7 key concepts"
-        }
-      ],
-      "passed": 2,
-      "failed": 1
-    },
-    {
-      "id": "11_theory_branching",
-      "name": "Theory Branching on Contradiction",
-      "theoryLoaded": true,
-      "queries": [
-        {
-          "id": "q1",
-          "question": "Is a dog a mammal?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, a dog is a mammal.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK dog IS_A mammal\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n",
-          "passed": false,
-          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
-        },
-        {
-          "id": "q2",
-          "question": "Is a dog an animal?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, a dog is an animal because dogs are mammals and mammals are animals.",
-          "actualResponse": "  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether a dog is a mammal.\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 0/5 key concepts"
-        }
-      ],
-      "passed": 1,
-      "failed": 1
-    },
-    {
-      "id": "12_regulatory_retention",
-      "name": "Record Retention and Cutoff Dates",
-      "theoryLoaded": true,
-      "queries": [
-        {
-          "id": "q1",
-          "question": "Should we keep the invoice from fiscal year 2018 until at least 2025?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes. Invoices are financial records retained for seven years, so an invoice from 2018 stays until 2025.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK invoice SHOULD_KEEP fiscal_year_2018_until_2025\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether you should keep the invoice from fiscal year 2018 until at least 2025.\n\n",
-          "passed": true,
-          "matchReason": "NL Match: 0 truth indicators, 3/10 key concepts"
-        },
-        {
-          "id": "q2",
-          "question": "Do informal chat logs fall under the seven-year retention?",
-          "expectedTruth": "FALSE",
-          "expectedNatural": "No. Chat logs are not financial records and are not covered by the seven-year rule.",
-          "actualResponse": "You: \nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK informal_chat_log IS_A seven_year_retention\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether informal chat logs fall under the seven-year retention requirement.\n",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 1/5 key concepts"
-        },
-        {
-          "id": "q3",
-          "question": "Must an unsigned draft policy be archived like the final version?",
-          "expectedTruth": "FALSE",
-          "expectedNatural": "No. Draft documents that were never issued are excluded from retention.",
-          "actualResponse": "\nYou: ",
-          "passed": false,
-          "matchReason": "No truth indicators matched, only 0/6 concepts, no DSL result found"
-        }
-      ],
-      "passed": 2,
-      "failed": 1
-    },
-    {
-      "id": "13_export_controls",
-      "name": "Export Controls and Embargoes",
-      "theoryLoaded": true,
-      "queries": [
-        {
-          "id": "q1",
-          "question": "Can we ship encryption source code to Country Zeta?",
-          "expectedTruth": "FALSE",
-          "expectedNatural": "No. Encryption source code is dual-use technology and exports to Country Zeta (embargoed) are prohibited.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK encryption_source_code CAN Country_Zeta\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if we can ship encryption source code to Country Zeta.\n",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 3/8 key concepts"
-        },
-        {
-          "id": "q2",
-          "question": "Is sending the same code to Canada okay?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes. Canada is a friendly country, and export to friendly countries is permitted.",
-          "actualResponse": "\nYou: ",
-          "passed": false,
-          "matchReason": "No truth indicators matched, only 0/7 concepts, no DSL result found"
-        },
-        {
-          "id": "q3",
-          "question": "Are research papers blocked by the embargo rule?",
-          "expectedTruth": "FALSE",
-          "expectedNatural": "No. The prohibition targets dual-use technology; research papers are explicitly allowed.",
-          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK research_paper IS_BLOCKED_BY embargo_rule\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 1/8 key concepts"
-        }
-      ],
-      "passed": 2,
-      "failed": 1
-    },
-    {
-      "id": "14_gdpr_rights",
-      "name": "GDPR Rights and Lawful Bases",
-      "theoryLoaded": true,
-      "queries": [
-        {
-          "id": "q1",
-          "question": "May an employee demand deletion of their payroll records?",
-          "expectedTruth": "FALSE",
-          "expectedNatural": "No. Payroll data is retained under legal obligation and is exempt from the right to erasure.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK employee CAN deletion\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether an employee can demand deletion of their payroll records.\n",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 1/8 key concepts"
-        },
-        {
-          "id": "q2",
-          "question": "If a user withdraws consent, should we stop sending marketing emails?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes. Marketing emails rely on consent, and processing must stop once consent is withdrawn.",
-          "actualResponse": "\nYou: ",
-          "passed": false,
-          "matchReason": "No truth indicators matched, only 0/6 concepts, no DSL result found"
-        },
-        {
-          "id": "q3",
-          "question": "Can we keep using pseudonymized analytics without asking for consent?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes. Pseudonymized analytics are covered by legitimate interest in this policy.",
-          "actualResponse": "\nThinking...\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK pseudonymized_analytics CAN consent\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don’t have enough information to determine whether we can keep using pseudonymized analytics without asking for consent.\n",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 2/6 key concepts"
-        }
-      ],
-      "passed": 2,
-      "failed": 1
-    },
-    {
-      "id": "15_quality_manual_versions",
-      "name": "Quality Manual Precedence and Versioning",
-      "theoryLoaded": true,
-      "queries": [
-        {
-          "id": "q1",
-          "question": "If a local work instruction contradicts Quality Manual v2, which should be followed?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Follow Quality Manual v2; the manual takes precedence over conflicting local work instructions.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK local_work_instruction CONTRADICTS Quality_Manual_v2\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine which should be followed in the case of a contradiction between a local work instruction and the Quality Manual v2.\n\n",
-          "passed": true,
-          "matchReason": "NL Match: 0 truth indicators, 5/9 key concepts"
-        },
-        {
-          "id": "q2",
-          "question": "Is Team Alpha compliant if they still cite v1?",
-          "expectedTruth": "FALSE",
-          "expectedNatural": "No. v2 supersedes v1, so using v1 in the checklist is non-compliant.",
-          "actualResponse": "You: \nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK Team_Alpha IS_COMPLIANT v1\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Team Alpha is compliant if they still cite v1.\n\n",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 0/4 key concepts"
-        },
-        {
-          "id": "q3",
-          "question": "Does the safety addendum remain valid after the version change?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes. The safety addendum is valid across versions.",
-          "actualResponse": "You: \nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK safety_addendum REMAINS_VALID version_change\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n",
-          "passed": true,
-          "matchReason": "NL Match: 0 truth indicators, 3/5 key concepts"
-        }
-      ],
-      "passed": 3,
-      "failed": 0
-    },
-    {
-      "id": "16_sop_conflicts",
-      "name": "Standard Operating Procedure Conflicts",
-      "theoryLoaded": true,
-      "queries": [
-        {
-          "id": "q1",
-          "question": "Is SOP-42 compliant as written?",
-          "expectedTruth": "FALSE",
-          "expectedNatural": "No. SOP-42 omits the mandatory safety review before production deployment.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK SOP-42 IS_A compliant\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if SOP-42 is compliant as written.\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 1/8 key concepts"
-        },
-        {
-          "id": "q2",
-          "question": "Can an emergency change deploy without a safety review?",
-          "expectedTruth": "PLAUSIBLE",
-          "expectedNatural": "Only if the risk is documented. The bypass is conditional.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK emergency_change CAN safety_review\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if an emergency change can deploy without a safety review.\n\nYou: ",
-          "passed": false,
-          "matchReason": "Both failed - NL: no indicators, DSL: expected PLAUSIBLE, got UNKNOWN"
-        },
-        {
-          "id": "q3",
-          "question": "Does step 5 of SOP-42 trigger production without the required review?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes. Step 5 deploys to production and the missing safety review makes it non-compliant.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q004 ASK step 5 of SOP-42 TRIGGERS production without required review\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine whether step 5 of SOP-42 triggers production without the required review.\n\n",
-          "passed": false,
-          "matchReason": "Both failed - NL: no indicators, DSL: expected TRUE_CERTAIN, got UNKNOWN"
-        }
-      ],
-      "passed": 1,
-      "failed": 2
-    },
-    {
-      "id": "17_qc_thresholds",
-      "name": "Quality Control Thresholds",
-      "theoryLoaded": true,
-      "queries": [
-        {
-          "id": "q1",
-          "question": "Does Batch B pass QC?",
-          "expectedTruth": "FALSE",
-          "expectedNatural": "No. Batch B has a critical defect, so it fails.",
-          "actualResponse": "\nThinking...\r                    \r\n[DSL Representation]\n  @q002 ASK Batch B PASSES QC\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Batch B passes QC.\n\n",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 1/4 key concepts"
-        },
-        {
-          "id": "q2",
-          "question": "Can Batch C be reworked?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes. Six minor defects fall in the 5–10 range; rework is allowed once.",
-          "actualResponse": "You: \nThinking...\r                    \r\n[DSL Representation]\n  @q003 ASK Batch_C CAN rework\n  # Result: {\"truth\":\"UNKNOWN\",\"method\":\"exhausted\",\"confidence\":0}\n",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 1/6 key concepts"
-        },
-        {
-          "id": "q3",
-          "question": "Should Batch D be accepted as-is?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes. Zero critical and only three minor defects meet the pass criteria.",
-          "actualResponse": "\n[Structured Result]\n  truth: UNKNOWN\n  method: exhausted\n  confidence: 0\n\nI don't have enough information to determine if Batch C can be reworked.\n\nYou: ",
-          "passed": true,
-          "matchReason": "NL Match: 1 truth indicators, 0/5 key concepts"
-        }
-      ],
-      "passed": 3,
-      "failed": 0
     }
   ]
 }

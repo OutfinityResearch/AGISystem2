@@ -49,7 +49,16 @@ class Reasoner {
 
   abductive(observation, relation) {
     // hyp = math.inversePermute(observation, permuter.inverse(relation))
-    // return retriever.nearest(hyp)
+    // candidates = retriever.nearest(hyp, {limit: 10})
+    //
+    // Rank by combined score (see DS:/knowledge/usage_tracking section 5.3):
+    // for each candidate:
+    //   usageStats = store.getUsageStats(candidate.label)
+    //   geometricScore = 1 - (candidate.distance / maxDistance)
+    //   priorityScore = usageStats?.priority || 0.5
+    //   combinedScore = geometricScore * 0.7 + priorityScore * 0.3
+    //
+    // return candidates.sortBy(combinedScore, descending)
   }
 
   counterfactual(conceptId, tempLayer) {

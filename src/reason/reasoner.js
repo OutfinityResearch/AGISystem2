@@ -67,14 +67,38 @@ class Reasoner {
     };
   }
 
-  abductive(observationVector, relationName) {
+  /**
+   * Geometric abductive reasoning with priority-weighted ranking
+   *
+   * Given an observation vector and a relation, finds candidate hypotheses
+   * that could explain the observation via inverse permutation.
+   *
+   * Ranking combines:
+   * - Geometric score (70%): How well the hypothesis geometrically explains observation
+   * - Priority score (30%): Usage-based priority from ConceptStore
+   *
+   * @param {Int8Array} observationVector - The observation to explain
+   * @param {string} relationName - The relation to invert (e.g., 'CAUSES')
+   * @param {Object} options - Options
+   * @param {number} [options.k=5] - Number of candidates to return
+   * @param {number} [options.geometricWeight=0.7] - Weight for geometric score
+   * @param {number} [options.priorityWeight=0.3] - Weight for priority score
+   * @returns {Object} Result with hypotheses array and best hypothesis
+   */
+  abductive(observationVector, relationName, options = {}) {
+    const k = options.k || 5;
+    const geometricWeight = options.geometricWeight ?? 0.7;
+    const priorityWeight = options.priorityWeight ?? 0.3;
+
     if (!this.permuter || !relationName || !this.retriever) {
       return {
         concept: null,
         distance: null,
-        band: 'FALSE'
+        band: 'FALSE',
+        hypotheses: []
       };
     }
+
     let table;
     try {
       table = this.permuter.get(relationName);
@@ -82,26 +106,70 @@ class Reasoner {
       return {
         concept: null,
         distance: null,
-        band: 'FALSE'
+        band: 'FALSE',
+        hypotheses: []
       };
     }
+
     const hypVector = this.math.inversePermute
       ? this.math.inversePermute(observationVector, table)
       : MathEngine.inversePermute(observationVector, table);
-    const candidates = this.retriever.nearest(hypVector, { k: 1 });
+
+    // Get more candidates than needed for re-ranking
+    const candidates = this.retriever.nearest(hypVector, { k: Math.max(k * 2, 10) });
     if (!candidates || candidates.length === 0) {
       return {
         concept: null,
         distance: null,
-        band: 'FALSE'
+        band: 'FALSE',
+        hypotheses: []
       };
     }
-    const best = candidates[0];
-    const bandInfo = this.adversarialCheck(hypVector, best.diamond);
+
+    // Calculate max distance for normalization
+    const maxDistance = Math.max(...candidates.map(c => c.distance), 1);
+
+    // Rank candidates by combined score
+    const rankedHypotheses = candidates.map(candidate => {
+      const bandInfo = this.adversarialCheck(hypVector, candidate.diamond);
+
+      // Geometric score: closer = higher score (0 to 1)
+      const geometricScore = 1 - (candidate.distance / maxDistance);
+
+      // Priority score from usage tracking (0 to 1)
+      let priorityScore = 0.5; // default for unknown concepts
+      if (this.conceptStore && this.conceptStore.getUsageStats) {
+        const stats = this.conceptStore.getUsageStats(candidate.label);
+        if (stats && stats.priority !== undefined) {
+          priorityScore = stats.priority;
+        }
+      }
+
+      // Combined score
+      const combinedScore = (geometricScore * geometricWeight) + (priorityScore * priorityWeight);
+
+      return {
+        concept: candidate.label,
+        distance: candidate.distance,
+        band: bandInfo.band,
+        geometricScore: Math.round(geometricScore * 100) / 100,
+        priorityScore: Math.round(priorityScore * 100) / 100,
+        combinedScore: Math.round(combinedScore * 100) / 100
+      };
+    });
+
+    // Sort by combined score (descending)
+    rankedHypotheses.sort((a, b) => b.combinedScore - a.combinedScore);
+
+    // Take top k
+    const topHypotheses = rankedHypotheses.slice(0, k);
+    const best = topHypotheses[0] || null;
+
     return {
-      concept: best.label,
-      distance: best.distance,
-      band: bandInfo.band
+      concept: best ? best.concept : null,
+      distance: best ? best.distance : null,
+      band: best ? best.band : 'FALSE',
+      hypotheses: topHypotheses
     };
   }
 
@@ -293,20 +361,124 @@ class Reasoner {
     return { truth: 'FALSE' };
   }
 
-  abductCause(observation, contextStack = null) {
+  /**
+   * Fact-based abductive reasoning with priority-weighted ranking
+   *
+   * Given an observation, finds candidate causes from CAUSES/CAUSED_BY facts,
+   * ranked by usage priority. This is the "backward chaining" approach.
+   *
+   * @param {string} observation - The effect/observation to explain
+   * @param {Array} contextStack - Optional theory context
+   * @param {Object} options - Options
+   * @param {number} [options.k=5] - Number of candidates to return
+   * @param {boolean} [options.transitive=true] - Follow transitive causes
+   * @param {number} [options.maxDepth=3] - Max depth for transitive search
+   * @returns {Object} Result with hypotheses array ranked by priority
+   */
+  abductCause(observation, contextStack = null, options = {}) {
+    const k = options.k || 5;
+    const transitive = options.transitive !== false;
+    const maxDepth = options.maxDepth || 3;
+
     const facts = this._getFacts(contextStack);
-    const candidates = [];
-    for (const fact of facts) {
-      if (fact.relation === 'CAUSES' && fact.object === observation) {
-        candidates.push(fact.subject);
-      } else if (fact.relation === 'CAUSED_BY' && fact.subject === observation) {
-        candidates.push(fact.object);
+    const norm = (v) => (typeof v === 'string' ? v.trim().toLowerCase() : v);
+    const targetNorm = norm(observation);
+
+    // Collect all candidate causes with their depth
+    const candidateMap = new Map(); // cause -> { depth, directFact }
+    const visited = new Set();
+    const queue = [{ obs: targetNorm, depth: 0 }];
+
+    while (queue.length > 0) {
+      const { obs, depth } = queue.shift();
+
+      if (visited.has(obs)) continue;
+      visited.add(obs);
+
+      for (const fact of facts) {
+        const subjectNorm = norm(fact.subject);
+        const objectNorm = norm(fact.object);
+
+        // Find causes: X CAUSES observation OR observation CAUSED_BY X
+        if (fact.relation === 'CAUSES' && objectNorm === obs) {
+          if (!candidateMap.has(subjectNorm)) {
+            candidateMap.set(subjectNorm, {
+              cause: fact.subject, // preserve original case
+              depth,
+              fact,
+              isTransitive: depth > 0
+            });
+          }
+          // Queue for transitive search if enabled
+          if (transitive && depth < maxDepth) {
+            queue.push({ obs: subjectNorm, depth: depth + 1 });
+          }
+        } else if (fact.relation === 'CAUSED_BY' && subjectNorm === obs) {
+          if (!candidateMap.has(objectNorm)) {
+            candidateMap.set(objectNorm, {
+              cause: fact.object, // preserve original case
+              depth,
+              fact,
+              isTransitive: depth > 0
+            });
+          }
+          if (transitive && depth < maxDepth) {
+            queue.push({ obs: objectNorm, depth: depth + 1 });
+          }
+        }
       }
     }
-    if (candidates.length === 0) {
-      return { hypothesis: null, band: 'FALSE' };
+
+    if (candidateMap.size === 0) {
+      return {
+        hypothesis: null,
+        band: 'FALSE',
+        hypotheses: []
+      };
     }
-    return { hypothesis: candidates[0], band: 'PLAUSIBLE' };
+
+    // Rank candidates by priority (from usage tracking)
+    const rankedHypotheses = [];
+    for (const [causeNorm, info] of candidateMap) {
+      let priorityScore = 0.5; // default
+      if (this.conceptStore && this.conceptStore.getUsageStats) {
+        const stats = this.conceptStore.getUsageStats(info.cause);
+        if (stats && stats.priority !== undefined) {
+          priorityScore = stats.priority;
+        }
+      }
+
+      // Depth penalty: direct causes rank higher than transitive
+      const depthPenalty = info.depth * 0.1;
+      const adjustedScore = Math.max(0, priorityScore - depthPenalty);
+
+      rankedHypotheses.push({
+        hypothesis: info.cause,
+        band: 'PLAUSIBLE',
+        priorityScore: Math.round(priorityScore * 100) / 100,
+        depth: info.depth,
+        isTransitive: info.isTransitive,
+        combinedScore: Math.round(adjustedScore * 100) / 100,
+        viaFact: {
+          subject: info.fact.subject,
+          relation: info.fact.relation,
+          object: info.fact.object
+        }
+      });
+    }
+
+    // Sort by combined score (descending)
+    rankedHypotheses.sort((a, b) => b.combinedScore - a.combinedScore);
+
+    // Take top k
+    const topHypotheses = rankedHypotheses.slice(0, k);
+    const best = topHypotheses[0] || null;
+
+    return {
+      hypothesis: best ? best.hypothesis : null,
+      band: best ? best.band : 'FALSE',
+      hypotheses: topHypotheses
+    };
   }
 
   factExists(subject, relation, object, contextStack = null) {
