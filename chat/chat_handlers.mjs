@@ -72,6 +72,16 @@ export async function handleTeach(ctx, message, details) {
   const contradictions = await checkContradictions(ctx, facts);
   if (contradictions.length > 0) {
     const suggestion = await suggestTheoryBranch(ctx, facts, contradictions);
+
+    // Set pending action for confirmation
+    if (ctx.setPendingAction) {
+      ctx.setPendingAction('create_theory_branch', {
+        facts,
+        contradictions,
+        suggestion
+      });
+    }
+
     return {
       response: `I noticed potential contradictions with existing knowledge:\n` +
         contradictions.map(c => `- ${c.reason}`).join('\n') +

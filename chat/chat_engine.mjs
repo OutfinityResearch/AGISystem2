@@ -38,6 +38,8 @@ export class ChatEngine {
     this.currentTheory = 'default';
     this.conversationHistory = [];
     this.initialized = false;
+    // Pending state for confirmations
+    this.pendingAction = null; // { type: 'create_theory_branch', data: {...} }
   }
 
   /**
@@ -127,7 +129,8 @@ export class ChatEngine {
       session: this.session,
       theoriesRoot: this.theoriesRoot,
       currentTheory: this.currentTheory,
-      setCurrentTheory: (name) => { this.currentTheory = name; }
+      setCurrentTheory: (name) => { this.currentTheory = name; },
+      setPendingAction: (type, data) => this.setPendingAction(type, data)
     };
   }
 
@@ -151,6 +154,15 @@ export class ChatEngine {
 
     // Add to conversation history
     this.conversationHistory.push({ role: 'user', content: trimmed });
+
+    // Check for pending action confirmation
+    if (this.pendingAction) {
+      const confirmResult = await this._handlePendingConfirmation(trimmed);
+      if (confirmResult) {
+        this.conversationHistory.push({ role: 'assistant', content: confirmResult.response });
+        return confirmResult;
+      }
+    }
 
     try {
       // Detect intent using LLM
@@ -243,6 +255,107 @@ export class ChatEngine {
     }
 
     return { intent: 'teach', confidence: 0.5, details: {} };
+  }
+
+  /**
+   * Check if message is a confirmation
+   */
+  _isConfirmation(message) {
+    const lower = message.toLowerCase().trim();
+    const confirmPatterns = [
+      'yes', 'yeah', 'yep', 'sure', 'ok', 'okay', 'da', 'sigur',
+      'yes please', 'go ahead', 'do it', 'please', 'confirm',
+      'y', 'aye', 'affirmative', 'absolutely', 'definitely'
+    ];
+    return confirmPatterns.some(p => lower === p || lower.startsWith(p + ' ') || lower.startsWith(p + ','));
+  }
+
+  /**
+   * Check if message is a rejection
+   */
+  _isRejection(message) {
+    const lower = message.toLowerCase().trim();
+    const rejectPatterns = [
+      'no', 'nope', 'nah', 'cancel', 'nu', 'stop', 'nevermind',
+      'never mind', 'forget it', 'don\'t', 'do not', 'n'
+    ];
+    return rejectPatterns.some(p => lower === p || lower.startsWith(p + ' ') || lower.startsWith(p + ','));
+  }
+
+  /**
+   * Handle pending action confirmation
+   * @returns {object|null} Result if handled, null if not a confirmation
+   */
+  async _handlePendingConfirmation(message) {
+    if (!this.pendingAction) return null;
+
+    const isConfirm = this._isConfirmation(message);
+    const isReject = this._isRejection(message);
+
+    // If neither confirm nor reject, it's a new message - cancel pending and return null
+    if (!isConfirm && !isReject) {
+      this.pendingAction = null;
+      return null;
+    }
+
+    const pending = this.pendingAction;
+    this.pendingAction = null; // Clear pending state
+
+    if (isReject) {
+      return {
+        response: 'Okay, I won\'t create a new theory branch. The facts were not added.',
+        actions: [{ type: 'confirmation_rejected', pendingType: pending.type }]
+      };
+    }
+
+    // Handle confirmation based on pending action type
+    if (pending.type === 'create_theory_branch') {
+      const { suggestion, facts } = pending.data;
+      const ctx = this._getHandlerContext();
+
+      try {
+        // Create the new theory branch
+        const theoryName = suggestion.name || `theory_${Date.now()}`;
+        this.session.run([`@r THEORY_PUSH name="${theoryName}"`]);
+        this.currentTheory = theoryName;
+
+        // Add the facts to the new branch
+        const added = [];
+        for (const fact of facts) {
+          try {
+            this.session.run([`@f ASSERT ${fact.subject} ${fact.relation} ${fact.object}`]);
+            added.push(fact);
+          } catch (err) {
+            // Skip failed facts
+          }
+        }
+
+        return {
+          response: `Created new theory branch "${theoryName}".\n\n` +
+            `Added ${added.length} fact(s) to this branch:\n` +
+            added.map(f => `- ${f.subject} ${f.relation} ${f.object}`).join('\n') +
+            `\n\nYou're now working in the "${theoryName}" context.`,
+          actions: [
+            { type: 'theory_created', name: theoryName },
+            ...added.map(f => ({ type: 'fact_added', fact: f }))
+          ]
+        };
+      } catch (err) {
+        return {
+          response: `Error creating theory branch: ${err.message}`,
+          actions: [{ type: 'error', error: err.message }]
+        };
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Set a pending action that requires confirmation
+   */
+  setPendingAction(type, data) {
+    this.pendingAction = { type, data };
   }
 
   /**

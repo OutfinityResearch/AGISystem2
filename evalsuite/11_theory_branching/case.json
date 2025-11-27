@@ -1,0 +1,62 @@
+{
+  "id": "11_theory_branching",
+  "name": "Theory Branching on Contradiction",
+  "description": "Tests the system's ability to detect contradictions and create alternative theory branches when confirmed by the user",
+
+  "theory": {
+    "natural_language": "Dogs are mammals. Cats are mammals. Mammals are animals. Birds are animals. Birds can fly.",
+    "expected_facts": [
+      "dog IS_A mammal",
+      "cat IS_A mammal",
+      "mammal IS_A animal",
+      "bird IS_A animal",
+      "bird CAN fly"
+    ]
+  },
+
+  "interactions": [
+    {
+      "id": "i1",
+      "type": "teach_contradiction",
+      "input": "Dogs are birds.",
+      "expected_behavior": {
+        "detects_contradiction": true,
+        "asks_confirmation": true,
+        "suggested_branch": true
+      }
+    },
+    {
+      "id": "i2",
+      "type": "confirm",
+      "input": "yes",
+      "expected_behavior": {
+        "creates_branch": true,
+        "adds_facts": true,
+        "switches_context": true
+      }
+    }
+  ],
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Is a dog a mammal?",
+      "expected_answer": {
+        "natural_language": "Yes, a dog is a mammal.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Direct fact: dog IS_A mammal"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Is a dog an animal?",
+      "expected_answer": {
+        "natural_language": "Yes, a dog is an animal because dogs are mammals and mammals are animals.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Transitive: dog IS_A mammal, mammal IS_A animal"
+      }
+    }
+  ],
+
+  "tags": ["contradiction", "theory_branching", "confirmation", "multi_turn"]
+}
