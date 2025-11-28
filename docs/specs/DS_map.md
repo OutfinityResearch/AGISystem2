@@ -31,11 +31,18 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 - `src/ingest/clustering.js` → `.specs/ingest/clustering.js.md` — Class `ClusterManager`: detect divergence, split/merge bounded diamonds, manage cluster labels.
 
 ## Reasoning and Retrieval
-- `src/reason/reasoner.js` → `.specs/reason/reasoner.js.md` — Class `Reasoner`: assemble runtime concepts, run optimist/sceptic validation, handle conflict prompts.
+- `src/reason/reasoner.js` → `.specs/reason/reasoner.js.md` — Class `Reasoner`: assemble runtime concepts, run optimist/sceptic validation, handle conflict prompts. **Delegates computable relations to plugins**.
 - `src/reason/retrieval.js` → `.specs/reason/retrieval.js.md` — Class `Retriever`: blind decoding using relation hints, probing, LSH/nearest-neighbor lookup.
 - `src/reason/bias_control.js` → `.specs/reason/bias_control.js.md` — Class `BiasController`: apply ontological/axiological masks, audit mode toggles.
 - `src/reason/validation.js` → `.specs/reason/validation.js.md` — Class `ValidationEngine`: symbolic/abstract interpretation over theory stacks and conceptual space to prove inclusion/exclusion, reachability, and consistency without mutating state.
 - `src/reason/temporal_memory.js` → `.specs/reason/temporal_memory.js.md` — Class `TemporalMemory`: rotational working memory and causal permutations for time reasoning.
+
+## Compute Plugins (External Computation)
+- `src/plugins/registry.js` → `.specs/plugins/registry.js.md` — Class `PluginRegistry`: manages compute plugins (math, physics, logic, datetime); provides uniform interface for plugin registration, relation mapping, and evaluation delegation. Uses computable dimensions (16-31) for numeric encoding.
+- `src/plugins/math.js` → `.specs/plugins/math.js.md` — Class `MathPlugin`: arithmetic operations (PLUS, MINUS, TIMES, DIVIDED_BY) and numeric comparisons (LESS_THAN, GREATER_THAN, EQUALS_VALUE). Extracts numeric values from concept labels (e.g., "celsius_20" → 20).
+- `(planned)` `src/plugins/physics.js` — Unit conversions (CONVERTS_TO, HAS_UNIT).
+- `(planned)` `src/plugins/logic.js` — Propositional logic (IMPLIES, AND, OR, NOT).
+- `(planned)` `src/plugins/datetime.js` — Calendar/time operations (BEFORE, AFTER, DURING, DURATION_OF).
 
 ## Sys2DSL Engine
 - `src/theory/dsl_engine.js` → `.specs/theory/dsl_engine.js.md` — Class `TheoryDSLEngine` (Sys2DSL interpreter): interpret Sys2DSL command lines from theory files and sessions, bind variables, and invoke core reasoning primitives (ask, abduct, counterfactual, fact search, mask control) without embedding domain-specific logic in engine code.

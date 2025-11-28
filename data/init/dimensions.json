@@ -8,6 +8,62 @@
       "reserved": false
     },
     {
+      "index": 16,
+      "name": "NumericValue",
+      "partition": "computable",
+      "description": "Encoded numeric value for computable concepts. Uses log-scale encoding for wide range.",
+      "reserved": true
+    },
+    {
+      "index": 17,
+      "name": "NumericScale",
+      "partition": "computable",
+      "description": "Order of magnitude (10^n) for numeric values. Enables comparison across scales.",
+      "reserved": true
+    },
+    {
+      "index": 18,
+      "name": "UnitDomain",
+      "partition": "computable",
+      "description": "Physical dimension category: 0=dimensionless, 1=length, 2=mass, 3=time, 4=temperature, 5=amount, 6=current, 7=luminosity.",
+      "reserved": true
+    },
+    {
+      "index": 19,
+      "name": "UnitBase",
+      "partition": "computable",
+      "description": "Base SI unit within domain. Combined with UnitDomain to identify exact unit.",
+      "reserved": true
+    },
+    {
+      "index": 20,
+      "name": "UnitPrefix",
+      "partition": "computable",
+      "description": "SI prefix as power of 10: -12=pico, -9=nano, -6=micro, -3=milli, 0=base, 3=kilo, 6=mega, 9=giga.",
+      "reserved": true
+    },
+    {
+      "index": 21,
+      "name": "ComputeDomain",
+      "partition": "computable",
+      "description": "Which compute plugin handles this: 0=none, 1=math, 2=physics, 3=chemistry, 4=logic, 5=datetime.",
+      "reserved": true
+    },
+    {
+      "index": 22,
+      "name": "ComputeOperationType",
+      "partition": "computable",
+      "description": "Type of computation: 0=none, 1=compare, 2=arithmetic, 3=convert, 4=solve, 5=balance.",
+      "reserved": true
+    },
+    {
+      "index": 23,
+      "name": "ComputePrecision",
+      "partition": "computable",
+      "description": "Required precision level: 0=exact, 1=high, 2=medium, 3=approximate.",
+      "reserved": true
+    },
+    {
       "index": 1,
       "name": "Mereological",
       "partition": "ontology",
@@ -307,7 +363,8 @@
   },
 
   "partitions": {
-    "ontology": { "start": 0, "end": 255 },
+    "computable": { "start": 16, "end": 31, "description": "Reserved dimensions for numeric values, units, and compute plugin metadata" },
+    "ontology": { "start": 0, "end": 255, "excludes": [16, 17, 18, 19, 20, 21, 22, 23] },
     "axiology": { "start": 256, "end": 383 },
     "empirical": { "start": 384, "end": null }
   },
@@ -332,6 +389,40 @@
     "PERMITTED_BY": { "transitive": false, "symmetric": false, "inverse": "PERMITS" },
     "PROHIBITS": { "transitive": false, "symmetric": false, "inverse": "PROHIBITED_BY" },
     "PROHIBITED_BY": { "transitive": false, "symmetric": false, "inverse": "PROHIBITS" },
-    "HAS_PROPERTY": { "transitive": false, "symmetric": false }
+    "HAS_PROPERTY": { "transitive": false, "symmetric": false },
+
+    "LESS_THAN": { "transitive": true, "symmetric": false, "inverse": "GREATER_THAN", "computable": "math" },
+    "GREATER_THAN": { "transitive": true, "symmetric": false, "inverse": "LESS_THAN", "computable": "math" },
+    "EQUALS_VALUE": { "transitive": true, "symmetric": true, "computable": "math" },
+    "PLUS": { "transitive": false, "symmetric": true, "computable": "math" },
+    "MINUS": { "transitive": false, "symmetric": false, "computable": "math" },
+    "TIMES": { "transitive": false, "symmetric": true, "computable": "math" },
+    "DIVIDED_BY": { "transitive": false, "symmetric": false, "computable": "math" },
+    "CONVERTS_TO": { "transitive": true, "symmetric": false, "computable": "physics" },
+    "HAS_VALUE": { "transitive": false, "symmetric": false, "computable": "math" },
+    "HAS_UNIT": { "transitive": false, "symmetric": false, "computable": "physics" }
+  },
+
+  "computePlugins": {
+    "math": {
+      "relations": ["LESS_THAN", "GREATER_THAN", "EQUALS_VALUE", "PLUS", "MINUS", "TIMES", "DIVIDED_BY", "HAS_VALUE"],
+      "dimensions": ["NumericValue", "NumericScale"],
+      "description": "Arithmetic operations and numeric comparisons"
+    },
+    "physics": {
+      "relations": ["CONVERTS_TO", "HAS_UNIT"],
+      "dimensions": ["UnitDomain", "UnitBase", "UnitPrefix"],
+      "description": "Unit conversions and physical calculations"
+    },
+    "logic": {
+      "relations": ["IMPLIES", "AND", "OR", "NOT"],
+      "dimensions": [],
+      "description": "Propositional and first-order logic operations"
+    },
+    "datetime": {
+      "relations": ["BEFORE", "AFTER", "DURING", "DURATION_OF"],
+      "dimensions": [],
+      "description": "Calendar and time calculations"
+    }
   }
 }

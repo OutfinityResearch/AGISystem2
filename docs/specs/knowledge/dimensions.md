@@ -21,26 +21,30 @@ Purpose: fixed partition of ontology/axiology axes used across all profiles. Rem
 │   │  world properties          ethics/deontic         domain-specific       │   │
 │   │                                                                         │   │
 │   │  ┌───────────────┐        ┌───────────────┐      ┌───────────────┐      │   │
-│   │  │ 0-31: Physical│        │256-275: Moral │      │384-511:       │      │   │
+│   │  │ 0-15: Physical│        │256-275: Moral │      │384-511:       │      │   │
 │   │  │  matter,solid │        │  good/bad,    │      │  Reserved for │      │   │
 │   │  │  mass,temp... │        │  harm,benefit │      │  learned dims │      │   │
 │   │  ├───────────────┤        ├───────────────┤      │  (zero until  │      │   │
-│   │  │32-63: Time    │        │276-295: Legal │      │   populated)  │      │   │
-│   │  │  duration,    │        │  permissible  │      │               │      │   │
-│   │  │  sequence...  │        │  obligation   │      └───────────────┘      │   │
+│   │  │⚡16-31:       │        │276-295: Legal │      │   populated)  │      │   │
+│   │  │ COMPUTABLE    │        │  permissible  │      │               │      │   │
+│   │  │ (plugins)     │        │  obligation   │      └───────────────┘      │   │
 │   │  ├───────────────┤        ├───────────────┤                             │   │
-│   │  │64-95: Agency  │        │296-319: Util- │                             │   │
-│   │  │  cognition,   │        │  ity/Value    │                             │   │
-│   │  │  intention... │        │  profit,cost  │                             │   │
+│   │  │32-63: Time    │        │296-319: Util- │                             │   │
+│   │  │  duration,    │        │  ity/Value    │                             │   │
+│   │  │  sequence...  │        │  profit,cost  │                             │   │
 │   │  ├───────────────┤        ├───────────────┤                             │   │
-│   │  │96-143: Legal/ │        │320-335: Emot- │                             │   │
-│   │  │  Artifact/    │        │  ion/Affect   │                             │   │
-│   │  │  Financial    │        │  fear,joy...  │                             │   │
+│   │  │64-95: Agency  │        │320-335: Emot- │                             │   │
+│   │  │  cognition,   │        │  ion/Affect   │                             │   │
+│   │  │  intention... │        │  fear,joy...  │                             │   │
 │   │  ├───────────────┤        ├───────────────┤                             │   │
-│   │  │144-223: Know- │        │336-383:       │                             │   │
-│   │  │  ledge/Math/  │        │  Reserved     │                             │   │
-│   │  │  Process/Risk │        │  (zero)       │                             │   │
+│   │  │96-143: Legal/ │        │336-383:       │                             │   │
+│   │  │  Artifact/    │        │  Reserved     │                             │   │
+│   │  │  Financial    │        │  (zero)       │                             │   │
 │   │  ├───────────────┤        └───────────────┘                             │   │
+│   │  │144-223: Know- │                                                      │   │
+│   │  │  ledge/Math/  │                                                      │   │
+│   │  │  Process/Risk │                                                      │   │
+│   │  ├───────────────┤                                                      │   │
 │   │  │224-255:       │                                                      │   │
 │   │  │  Reserved     │                                                      │   │
 │   │  └───────────────┘                                                      │   │
@@ -66,9 +70,57 @@ Purpose: fixed partition of ontology/axiology axes used across all profiles. Rem
    dim[384+] Empirical:       0  (no learned features yet)
 ```
 
+## Computable Partition (16–31) — Reserved for Compute Plugins
+
+The computable partition is a **special reserved range** within the ontology space that enables
+external computation plugins (math, physics, chemistry, logic, datetime) to handle formal operations.
+
+**Key Principle**: Concepts remain in the vector space, but some have numeric values encoded in
+the computable dimensions. When a relation marked as "computable" is evaluated, the system
+delegates to the appropriate plugin rather than using semantic similarity.
+
+### Computable Dimensions Layout
+
+| Index | Name | Description |
+|-------|------|-------------|
+| 16 | NumericValue | Encoded numeric value (log-scale for wide range) |
+| 17 | NumericScale | Order of magnitude (10^n) |
+| 18 | UnitDomain | Physical dimension: 0=dimensionless, 1=length, 2=mass, 3=time, 4=temperature... |
+| 19 | UnitBase | Base SI unit within domain |
+| 20 | UnitPrefix | SI prefix as power of 10: -3=milli, 0=base, 3=kilo, 6=mega... |
+| 21 | ComputeDomain | Which plugin: 0=none, 1=math, 2=physics, 3=chemistry, 4=logic, 5=datetime |
+| 22 | ComputeOperationType | Type: 0=none, 1=compare, 2=arithmetic, 3=convert, 4=solve |
+| 23 | ComputePrecision | Precision: 0=exact, 1=high, 2=medium, 3=approximate |
+
+### Computable Relations
+
+Relations marked with `computable: "plugin_name"` in dimensions.json are delegated to plugins:
+
+| Relation | Plugin | Description |
+|----------|--------|-------------|
+| LESS_THAN, GREATER_THAN, EQUALS_VALUE | math | Numeric comparisons |
+| PLUS, MINUS, TIMES, DIVIDED_BY | math | Arithmetic operations |
+| HAS_VALUE | math | Value extraction |
+| CONVERTS_TO, HAS_UNIT | physics | Unit conversions |
+| IMPLIES, AND, OR, NOT | logic | Propositional logic |
+| BEFORE, AFTER, DURING, DURATION_OF | datetime | Calendar/time |
+
+### How It Works
+
+1. **Fact check**: System first checks if the relation exists as an explicit fact
+2. **Plugin delegation**: If not found and relation is computable, extract numeric values and delegate to plugin
+3. **Uniform result**: Plugin returns same structure as semantic reasoning: `{ truth, confidence, method: 'computed' }`
+
+Example: `ASK celsius_20 LESS_THAN celsius_50`
+- Extracts 20 from "celsius_20", 50 from "celsius_50"
+- Math plugin computes: 20 < 50 → TRUE_CERTAIN
+- Returns: `{ truth: 'TRUE_CERTAIN', confidence: 1.0, method: 'computed', plugin: 'math' }`
+
+---
+
 ## Ontology Axes (0–255)
 - 0 Physicality (matter/energy presence)
-- 1 Solidity (fluid→solid)
+- 1 Mereological (part-whole relationships)
 - 2 Mass/Weight
 - 3 Size/Scale (macro vs. micro)
 - 4 Temperature (physical; e.g., boiling point of water)
@@ -83,22 +135,8 @@ Purpose: fixed partition of ontology/axiology axes used across all profiles. Rem
 - 13 Causality Strength
 - 14 Determinism vs. Stochasticity
 - 15 Reversibility
-- 16 Composition/Material
-- 17 State Change Propensity (reactivity)
-- 18 Energy Flow (producer/consumer)
-- 19 Connectivity (open vs. isolated)
-- 20 Orientation/Directionality
-- 21 Motion/Velocity
-- 22 Acceleration/Force
-- 23 Stability/Volatility
-- 24 Fragility/Robustness
-- 25 Visibility/Observability
-- 26 Signal/Information Carrier
-- 27 Noise Sensitivity
-- 28 Capacity (storage/carrying)
-- 29 Interface/Surface (contact suitability)
-- 30 Containment (container vs. content)
-- 31 Shape Regularity
+- 16–23 **[COMPUTABLE - see Computable Partition section above]**
+- 24–31 Reserved for computable expansion
 - 32 Time-Order Anchor (sequence position)
 - 33 Recency
 - 34 Historical/Archaic flag

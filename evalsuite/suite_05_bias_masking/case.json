@@ -35,8 +35,8 @@
     {
       "id": "q1",
       "natural_language": "Who should be selected for the role requiring PMP?",
-      "expected_dsl": null,
-      "expected_dsl_notes": "Selection/aggregation query - requires iterating candidates and checking qualifications",
+      "expected_dsl": "@q1 ASK Alice HAS PMP_certification",
+      "expected_dsl_notes": "Simplified: checks if Alice qualifies (she does). Full selection would need FIND_WITH_PROPERTY command.",
       "expected_answer": {
         "natural_language": "Alice or Carol should be selected as they have the required PMP certification. Bob does not qualify despite more experience.",
         "truth": "TRUE_CERTAIN",

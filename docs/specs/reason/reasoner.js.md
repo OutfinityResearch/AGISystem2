@@ -3,9 +3,9 @@
 ID: DS(/reason/reasoner.js)
 
 Class `Reasoner`
-- **Role**: Execute reasoning flows: assemble runtime concepts via `TheoryStack`, evaluate membership/adversarial bounds, support geometric reasoning modes (deductive, abductive, analogical, counterfactual, temporal) and produce graded answers with provenance.
-- **Pattern**: Service orchestrator. SOLID: single responsibility for reasoning; delegates parsing/encoding/retrieval elsewhere.
-- **Key Collaborators**: `TheoryStack`, `ConceptStore`, `MathEngine`, `BoundedDiamond`, `BiasController`, `ValidationEngine`, `TemporalMemory`, `Retriever`, `Config`.
+- **Role**: Execute reasoning flows: assemble runtime concepts via `TheoryStack`, evaluate membership/adversarial bounds, support geometric reasoning modes (deductive, abductive, analogical, counterfactual, temporal) and produce graded answers with provenance. Delegates computable relations (math, physics, logic) to external plugins.
+- **Pattern**: Service orchestrator. SOLID: single responsibility for reasoning; delegates parsing/encoding/retrieval elsewhere; delegates formal computation to plugins.
+- **Key Collaborators**: `TheoryStack`, `ConceptStore`, `MathEngine`, `BoundedDiamond`, `BiasController`, `ValidationEngine`, `TemporalMemory`, `Retriever`, `Config`, `PluginRegistry`, `MathPlugin`.
 
 ## Public API
 - `constructor(deps)` (includes `config` to access limits such as `maxReasonerIterations`).
@@ -71,8 +71,49 @@ class Reasoner {
 }
 ```
 
+## Compute Plugin Integration
+
+The Reasoner integrates with external compute plugins for formal operations that are better handled by deterministic code rather than semantic reasoning.
+
+### Plugin Delegation Flow (in `factExists`)
+```js
+factExists(subject, relation, object, contextStack) {
+  // 1. Check for direct fact first (even for computable relations)
+  if (directFactExists) return { truth: 'TRUE_CERTAIN', method: 'direct' };
+
+  // 2. If computable relation, delegate to plugin
+  if (pluginRegistry.isComputable(relation)) {
+    const subjectValue = pluginRegistry.extractNumericValue(subject, store);
+    const objectValue = pluginRegistry.extractNumericValue(object, store);
+    if (subjectValue || objectValue) {
+      return pluginRegistry.evaluate(relation, subjectValue, objectValue);
+      // Returns: { truth, confidence, method: 'computed', plugin: 'math' }
+    }
+  }
+
+  // 3. Fall through to semantic reasoning
+  return { truth: 'UNKNOWN', method: 'no_evidence' };
+}
+```
+
+### Supported Computable Relations
+| Relation | Plugin | Operation |
+|----------|--------|-----------|
+| LESS_THAN, GREATER_THAN | math | Numeric comparison |
+| EQUALS_VALUE | math | Equality with epsilon |
+| PLUS, MINUS, TIMES, DIVIDED_BY | math | Arithmetic |
+| HAS_VALUE | math | Value extraction |
+| CONVERTS_TO, HAS_UNIT | physics | Unit conversion |
+
+### Key Design Principles
+- **Facts first**: Direct facts always take precedence over computation
+- **Uniform result**: Plugins return same structure as semantic reasoning
+- **Graceful fallback**: If value extraction fails, fall through to semantic path
+- **Plugin registration**: At construction, Reasoner creates PluginRegistry and registers MathPlugin
+
 ## Notes/Constraints
 - Deterministic outputs; record active stack and thresholds.
 - Keep core flows geometric; text I/O handled elsewhere.
 - Avoid storing state in Reasoner; rely on injected dependencies.
-- Long-running traversals must respect `maxReasonerIterations` from `Config`. When the limit is exceeded, Reasoner should stop and return a timeout-like outcome (for example `UNKNOWN_TIMEOUT`) rather than blocking indefinitely; this applies to graph expansions (e.g., transitive `IS_A` chains) and any future search-based methods.***
+- Long-running traversals must respect `maxReasonerIterations` from `Config`. When the limit is exceeded, Reasoner should stop and return a timeout-like outcome (for example `UNKNOWN_TIMEOUT`) rather than blocking indefinitely; this applies to graph expansions (e.g., transitive `IS_A` chains) and any future search-based methods.
+- Compute plugins are stateless; they receive inputs and return results without side effects.***

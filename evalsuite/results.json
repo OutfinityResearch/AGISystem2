@@ -1,7 +1,7 @@
 {
-  "timestamp": "2025-11-28T15:52:54.617Z",
-  "totalPassed": 38,
-  "totalFailed": 2,
+  "timestamp": "2025-11-28T16:10:01.435Z",
+  "totalPassed": 40,
+  "totalFailed": 0,
   "cases": [
     {
       "id": "suite_01_ontology",
@@ -255,10 +255,10 @@
           "id": "q1",
           "question": "If water boiled at 50 degrees, would it still be liquid at room temperature?",
           "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "No, if water boiled at 50 degrees and room temperature is 20 degrees, water would still be liquid. But if room temp was above 50, it would be gas.",
-          "actualResponse": "[Could not generate DSL query]",
-          "passed": false,
-          "matchReason": "No match: 0 indicators, 0/11 concepts, no DSL"
+          "expectedNatural": "Yes, if water boiled at 50 degrees and room temperature is 20 degrees, water would still be liquid since 20 < 50.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"celsius_20\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/10 concepts"
         },
         {
           "id": "q2",
@@ -324,8 +324,8 @@
           "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts"
         }
       ],
-      "passed": 7,
-      "failed": 1
+      "passed": 8,
+      "failed": 0
     },
     {
       "id": "suite_05_bias_masking",
@@ -337,9 +337,9 @@
           "question": "Who should be selected for the role requiring PMP?",
           "expectedTruth": "TRUE_CERTAIN",
           "expectedNatural": "Alice or Carol should be selected as they have the required PMP certification. Bob does not qualify despite more experience.",
-          "actualResponse": "[Could not generate DSL query]",
-          "passed": false,
-          "matchReason": "No match: 0 indicators, 0/9 concepts, no DSL"
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Alice\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN"
         },
         {
           "id": "q2",
@@ -405,8 +405,8 @@
           "matchReason": "NL Match: 1 indicators (+), 1 (-), 1/2 concepts"
         }
       ],
-      "passed": 7,
-      "failed": 1
+      "passed": 8,
+      "failed": 0
     }
   ]
 }

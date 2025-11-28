@@ -5,16 +5,72 @@ ID: DS(/init/dimensions.json)
 This file materializes the ontology/axiology/empirical dimension catalog as JSON. It must be compatible with `.specs/knowledge/dimensions.md` and the fixed partitions enforced by `Config`.
 
 ## Structure
-- Top-level: object with a single `axes` array.
+- Top-level: object with keys:
+  - `axes`: Array of dimension definitions
+  - `partitions`: Partition boundaries (ontology, axiology, empirical, computable)
+  - `propertyMappings`: Property name → dimension name mappings
+  - `relationMappings`: Relation → affected dimensions
+  - `relationProperties`: Relation metadata including transitivity, symmetry, inverses, and **computable plugin assignment**
+  - `computePlugins`: Plugin definitions with relations and dimensions
+
 - Each entry in `axes` is an object with:
   - `index`: integer, 0-based, in [0, dimensions-1].
   - `name`: short string identifier (e.g., `"Physicality"`, `"MoralValence"`).
-  - `partition`: one of `"ontology"`, `"axiology"`, `"empirical"`.
+  - `partition`: one of `"ontology"`, `"axiology"`, `"empirical"`, `"computable"`.
   - `description`: human-readable explanation of the axis.
   - `reserved`: boolean; `true` if axis is reserved for future use and should stay zero unless explicitly set.
 
+## Computable Partition (16–31)
+
+A special reserved range for compute plugin metadata:
+
+| Index | Name | Description |
+|-------|------|-------------|
+| 16 | NumericValue | Encoded numeric value (log-scale) |
+| 17 | NumericScale | Order of magnitude (10^n) |
+| 18 | UnitDomain | Physical dimension: 0=dimensionless, 1=length, 2=mass, 3=time, 4=temperature |
+| 19 | UnitBase | Base SI unit within domain |
+| 20 | UnitPrefix | SI prefix as power of 10 |
+| 21 | ComputeDomain | Plugin: 0=none, 1=math, 2=physics, 3=chemistry, 4=logic, 5=datetime |
+| 22 | ComputeOperationType | Type: 0=none, 1=compare, 2=arithmetic, 3=convert, 4=solve |
+| 23 | ComputePrecision | Precision: 0=exact, 1=high, 2=medium, 3=approximate |
+
+## Relation Properties with Computable Assignment
+
+Relations can be marked as computable by adding the `computable` field:
+
+```json
+"relationProperties": {
+  "LESS_THAN": { "transitive": true, "symmetric": false, "inverse": "GREATER_THAN", "computable": "math" },
+  "PLUS": { "transitive": false, "symmetric": true, "computable": "math" },
+  "CONVERTS_TO": { "transitive": true, "symmetric": false, "computable": "physics" }
+}
+```
+
+## Compute Plugin Definitions
+
+```json
+"computePlugins": {
+  "math": {
+    "relations": ["LESS_THAN", "GREATER_THAN", "EQUALS_VALUE", "PLUS", "MINUS", "TIMES", "DIVIDED_BY", "HAS_VALUE"],
+    "dimensions": ["NumericValue", "NumericScale"],
+    "description": "Arithmetic operations and numeric comparisons"
+  },
+  "physics": {
+    "relations": ["CONVERTS_TO", "HAS_UNIT"],
+    "dimensions": ["UnitDomain", "UnitBase", "UnitPrefix"],
+    "description": "Unit conversions and physical calculations"
+  }
+}
+```
+
 ## Constraints
-Ontology axes should eventually cover indices 0–255 with `partition: "ontology"`, but initial versions of the file may only specify a well-defined subset of those indices as long as they respect the fixed partition and are consistent with the catalogue. Axiology axes should similarly cover indices 256–383 with `partition: "axiology"`, but can begin as a subset. Any axis with `partition: "empirical"` must have `index >= 384`. Names and descriptions must be consistent with `.specs/knowledge/dimensions.md`, and there must be no duplicate indices or names within the file.***
+- Ontology axes cover indices 0–255 with `partition: "ontology"`, excluding the computable range 16-31.
+- Computable axes cover indices 16–31 with `partition: "computable"` and `reserved: true`.
+- Axiology axes cover indices 256–383 with `partition: "axiology"`.
+- Empirical axes have `index >= 384` with `partition: "empirical"`.
+- Names and descriptions must be consistent with `.specs/knowledge/dimensions.md`.
+- No duplicate indices or names within the file.***
 
 ## Proposed Initial Content (excerpt)
 ```json

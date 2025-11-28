@@ -19,6 +19,14 @@ Defines functional behavior of the neuro-symbolic engine that ingests Sys2DSL co
 - <a id="FS-05"></a>**FS-05 Reasoning Engine:** Assemble runtime concept definitions by flattening active theory layers; perform adversarial validation (optimist/sceptic radii) to return True/Plausible/False. Explicitly flag empty intersections as conflicts requiring user direction.
 - <a id="FS-06"></a>**FS-06 Retrieval & Decoding:** Provide blind decoding by inspecting relation-hint masks; probe with inverse permutations; perform LSH or equivalent nearest-neighbor lookup to retrieve candidate concepts and associated theories.
 
+### Compute Plugin Architecture
+- <a id="FS-18"></a>**FS-18 Compute Plugin Delegation:** Support external computation plugins for formal operations (math, physics, chemistry, logic, datetime) that are better handled by deterministic code than semantic reasoning:
+  - **Plugin Interface**: Plugins implement `evaluate(relation, subject, object)` returning `{ truth, confidence, value?, computed?, reason? }`.
+  - **Computable Relations**: Relations marked with `computable: "plugin_name"` in `dimensions.json` are delegated to plugins (e.g., LESS_THAN → math, CONVERTS_TO → physics).
+  - **Computable Dimensions (16-31)**: Reserved dimension range for numeric values, units, and computation metadata (NumericValue, NumericScale, UnitDomain, UnitBase, UnitPrefix, ComputeDomain, ComputeOperationType, ComputePrecision).
+  - **Facts First**: Direct facts in the knowledge base always take precedence over computed results.
+  - **Uniform Results**: Plugin results match the standard reasoning result structure for seamless integration.
+
 ### Explainability and Provenance
 - <a id="FS-07"></a>**FS-07 Provenance & Explainability:** For every answer, return: active theories, contributing dimensions (per relevance mask), acceptance band used, and any overrides applied. Provide a concise natural-language justification.
 
@@ -84,6 +92,7 @@ Defines functional behavior of the neuro-symbolic engine that ingests Sys2DSL co
 | FS-15 | NEW | Ontology discovery commands |
 | FS-16 | NEW | Base theory preloading |
 | FS-17 | NEW | Theory meta-information registry |
+| FS-18 | NEW | Compute plugin delegation |
 | - | FS-08 | Consolidated into FS-02 |
 | - | FS-16 | Consolidated into FS-08 |
 

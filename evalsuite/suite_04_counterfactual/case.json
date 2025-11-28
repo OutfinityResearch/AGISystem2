@@ -9,6 +9,8 @@
       "water BOILS_AT celsius_100",
       "ice MELTS_AT celsius_0",
       "room_temperature IS celsius_20",
+      "celsius_20 LESS_THAN celsius_50",
+      "celsius_50 LESS_THAN celsius_100",
       "water IS_A liquid",
       "human REQUIRES water",
       "fire REQUIRES oxygen",
@@ -29,10 +31,10 @@
     {
       "id": "q1",
       "natural_language": "If water boiled at 50 degrees, would it still be liquid at room temperature?",
-      "expected_dsl": null,
-      "expected_dsl_notes": "Requires mathematical comparison (20 < 50) - not expressible in current DSL",
+      "expected_dsl": "@q1 ASK celsius_20 LESS_THAN celsius_50",
+      "expected_dsl_notes": "Room temp (20) < hypothetical boiling point (50), so water stays liquid",
       "expected_answer": {
-        "natural_language": "No, if water boiled at 50 degrees and room temperature is 20 degrees, water would still be liquid. But if room temp was above 50, it would be gas.",
+        "natural_language": "Yes, if water boiled at 50 degrees and room temperature is 20 degrees, water would still be liquid since 20 < 50.",
         "truth": "TRUE_CERTAIN",
         "explanation": "20 < 50, so water stays liquid at room temp"
       }

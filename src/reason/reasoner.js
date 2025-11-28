@@ -1,4 +1,6 @@
 const MathEngine = require('../core/math_engine');
+const PluginRegistry = require('../plugins/registry');
+const MathPlugin = require('../plugins/math');
 
 class Reasoner {
   constructor(storeOrDeps) {
@@ -22,6 +24,10 @@ class Reasoner {
       this.config = null;
       this.permuter = null;
     }
+
+    // Initialize compute plugin registry
+    this.pluginRegistry = new PluginRegistry();
+    this.pluginRegistry.register('math', new MathPlugin());
   }
 
   analogical(sourceA, sourceB, targetC, options = {}) {
@@ -533,6 +539,9 @@ class Reasoner {
    * - FALSE when explicit negation exists (NOT_R or PROHIBITED relations)
    * - UNKNOWN when no evidence either way
    *
+   * For computable relations (LESS_THAN, PLUS, etc.), delegates to the
+   * appropriate compute plugin which returns computed results.
+   *
    * @param {string} subject - The subject
    * @param {string} relation - The relation
    * @param {string} object - The object
@@ -545,7 +554,7 @@ class Reasoner {
     const sNorm = norm(subject);
     const oNorm = norm(object);
 
-    // Check for direct fact
+    // Check for direct fact first (even for computable relations)
     const exists = facts.some((f) => {
       const fSub = norm(f.subject);
       const fRel = f.relation;
@@ -555,6 +564,18 @@ class Reasoner {
 
     if (exists) {
       return { truth: 'TRUE_CERTAIN', confidence: 1.0, method: 'direct' };
+    }
+
+    // Check if this is a computable relation - delegate to plugin
+    if (this.pluginRegistry && this.pluginRegistry.isComputable(relation)) {
+      // Extract numeric values for subject and object
+      const subjectValue = this.pluginRegistry.extractNumericValue(subject, this.conceptStore);
+      const objectValue = this.pluginRegistry.extractNumericValue(object, this.conceptStore);
+
+      // If we can extract values, compute the result
+      if (subjectValue !== null || objectValue !== null) {
+        return this.pluginRegistry.evaluate(relation, subjectValue || subject, objectValue || object);
+      }
     }
 
     // Check for explicit negation (NOT_R pattern or PROHIBITED_FROM)
