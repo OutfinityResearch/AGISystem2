@@ -9,6 +9,7 @@
 
 const VectorSpace = require('../core/vector_space');
 const MathEngine = require('../core/math_engine');
+const DimensionRegistry = require('../core/dimension_registry');
 
 class Encoder {
   /**
@@ -20,8 +21,9 @@ class Encoder {
    * @param {RelationPermuter} [deps.permuter] - Relation permuter for geometric binding
    * @param {ConceptStore} deps.store - Concept store
    * @param {ClusterManager} [deps.cluster] - Cluster manager
+   * @param {DimensionRegistry} [deps.dimensionRegistry] - Dimension registry for semantic mappings
    */
-  constructor({ config, vspace, math, permuter, store, cluster }) {
+  constructor({ config, vspace, math, permuter, store, cluster, dimensionRegistry }) {
     this.config = config;
     this.vspace = vspace || new VectorSpace(config);
     this.math = math || MathEngine;
@@ -30,6 +32,7 @@ class Encoder {
     this.cluster = cluster;
     this.horizon = config.get('recursionHorizon');
     this.dimensions = config.get('dimensions');
+    this.dimRegistry = dimensionRegistry || DimensionRegistry.getShared();
   }
 
   /**
@@ -212,6 +215,7 @@ class Encoder {
 
   /**
    * Encode property=value patterns into specific dimensions
+   * Uses DimensionRegistry to lookup axis indices dynamically.
    * @private
    */
   _encodePropertyObject(objectToken, vec) {
@@ -222,20 +226,12 @@ class Encoder {
     if (parts.length !== 2) {
       return;
     }
-    const key = parts[0].trim();
+    const key = parts[0].trim().toLowerCase();
     const rawValue = parts[1].trim();
 
-    // Map known properties to ontology dimensions
-    const propertyAxes = {
-      boiling_point: 4,  // Temperature axis
-      temperature: 4,
-      weight: 2,         // Mass axis
-      mass: 2,
-      size: 3,           // Size axis
-      age: 10            // Temporal axis
-    };
+    // Use DimensionRegistry to get axis index for this property
+    const axis = this.dimRegistry.getPropertyAxis(key);
 
-    const axis = propertyAxes[key];
     if (axis !== undefined && axis >= 0 && axis < vec.length) {
       const num = Number(rawValue);
       if (Number.isFinite(num)) {
@@ -270,29 +266,16 @@ class Encoder {
 
   /**
    * Activate specific dimensions based on relation type
+   * Uses DimensionRegistry to lookup axis indices dynamically.
    * @private
    */
   _activateRelationDimensions(node, vec) {
     if (!node.relation) return;
 
-    // Relation-specific dimension activations
-    const relationDims = {
-      IS_A: [0],           // Taxonomic
-      PART_OF: [1],        // Mereological
-      HAS_PART: [1],
-      CAUSES: [5],         // Causal
-      CAUSED_BY: [5],
-      LOCATED_IN: [6],     // Spatial
-      CONTAINS: [6],
-      BEFORE: [7],         // Temporal
-      AFTER: [7],
-      PERMITS: [256],      // Deontic (axiology range)
-      PROHIBITS: [257],
-      OBLIGATES: [258]
-    };
+    // Use DimensionRegistry to get axis indices for this relation
+    const dims = this.dimRegistry.getRelationAxes(node.relation);
 
-    const dims = relationDims[node.relation];
-    if (dims && Array.isArray(dims)) {
+    if (dims && dims.length > 0) {
       for (const dim of dims) {
         if (dim >= 0 && dim < vec.length) {
           // Add a small activation to mark this relation type
@@ -304,5 +287,6 @@ class Encoder {
     }
   }
 }
+
 
 module.exports = Encoder;

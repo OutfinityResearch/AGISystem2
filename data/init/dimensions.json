@@ -8,6 +8,13 @@
       "reserved": false
     },
     {
+      "index": 1,
+      "name": "Mereological",
+      "partition": "ontology",
+      "description": "Part-whole relationships; encodes mereological structure.",
+      "reserved": false
+    },
+    {
       "index": 2,
       "name": "MassScale",
       "partition": "ontology",
@@ -266,5 +273,65 @@
       "description": "First empirical latent axis reserved for learned features; semantics emerge from data.",
       "reserved": false
     }
-  ]
+  ],
+
+  "propertyMappings": {
+    "boiling_point": "Temperature",
+    "temperature": "Temperature",
+    "temp": "Temperature",
+    "weight": "MassScale",
+    "mass": "MassScale",
+    "size": "SizeScale",
+    "extent": "SizeScale",
+    "age": "TemporalPersistence",
+    "duration": "Duration",
+    "frequency": "Frequency",
+    "pressure": "Pressure",
+    "density": "Density",
+    "phase": "Phase"
+  },
+
+  "relationMappings": {
+    "IS_A": ["Physicality"],
+    "PART_OF": ["Mereological"],
+    "HAS_PART": ["Mereological"],
+    "CAUSES": ["CausalityStrength"],
+    "CAUSED_BY": ["CausalityStrength"],
+    "LOCATED_IN": ["LocationSpecificity"],
+    "CONTAINS": ["LocationSpecificity"],
+    "BEFORE": ["TemporalPersistence"],
+    "AFTER": ["TemporalPersistence"],
+    "PERMITS": ["MoralValence"],
+    "PROHIBITS": ["MoralValence"],
+    "OBLIGATES": ["MoralValence"]
+  },
+
+  "partitions": {
+    "ontology": { "start": 0, "end": 255 },
+    "axiology": { "start": 256, "end": 383 },
+    "empirical": { "start": 384, "end": null }
+  },
+
+  "relationProperties": {
+    "IS_A": { "transitive": true, "symmetric": false },
+    "PART_OF": { "transitive": true, "symmetric": false },
+    "HAS_PART": { "transitive": true, "symmetric": false, "inverse": "PART_OF" },
+    "ANCESTOR_OF": { "transitive": true, "symmetric": false },
+    "LOCATED_IN": { "transitive": true, "symmetric": false },
+    "CONTAINS": { "transitive": true, "symmetric": false, "inverse": "LOCATED_IN" },
+    "REQUIRES": { "transitive": true, "symmetric": false },
+    "EQUIVALENT_TO": { "transitive": true, "symmetric": true },
+    "DISJOINT_WITH": { "transitive": false, "symmetric": true },
+    "SIBLING_OF": { "transitive": false, "symmetric": true },
+    "MARRIED_TO": { "transitive": false, "symmetric": true },
+    "PARENT_OF": { "transitive": false, "symmetric": false, "inverse": "CHILD_OF" },
+    "CHILD_OF": { "transitive": false, "symmetric": false, "inverse": "PARENT_OF" },
+    "CAUSES": { "transitive": false, "symmetric": false, "inverse": "CAUSED_BY" },
+    "CAUSED_BY": { "transitive": false, "symmetric": false, "inverse": "CAUSES" },
+    "PERMITS": { "transitive": false, "symmetric": false, "inverse": "PERMITTED_BY" },
+    "PERMITTED_BY": { "transitive": false, "symmetric": false, "inverse": "PERMITS" },
+    "PROHIBITS": { "transitive": false, "symmetric": false, "inverse": "PROHIBITED_BY" },
+    "PROHIBITED_BY": { "transitive": false, "symmetric": false, "inverse": "PROHIBITS" },
+    "HAS_PROPERTY": { "transitive": false, "symmetric": false }
+  }
 }

@@ -19,8 +19,28 @@ import {
   buildQuestionPrompt,
   buildResponsePrompt,
   buildContradictionPrompt,
-  buildTheoryNamePrompt
+  buildTheoryNamePrompt,
+  buildOntologyFactsPrompt
 } from './prompts.mjs';
+
+/**
+ * Configuration for ontology auto-discovery
+ */
+export const ONTOLOGY_CONFIG = {
+  maxIterations: 5,           // Maximum MISSING → generate cycles
+  minFactsPerConcept: 5,      // Minimum facts to generate per concept
+  maxFactsPerConcept: 15,     // Maximum facts to generate per concept
+  enabled: true               // Enable/disable auto-discovery
+};
+
+/**
+ * Configuration for contradiction checking
+ */
+export const CONTRADICTION_CONFIG = {
+  enableLLMSemanticCheck: false,  // LLM semantic check causes false positives
+  enableDeterministicCheck: true, // Keep deterministic check (DISJOINT_WITH, etc.)
+  blockOnContradiction: false     // If true, don't add facts when contradictions found
+};
 
 // Import InferenceEngine and ContradictionDetector
 const require = createRequire(import.meta.url);
@@ -68,9 +88,14 @@ export async function handleTeach(ctx, message, details) {
     };
   }
 
-  // Check for contradictions before adding
-  const contradictions = await checkContradictions(ctx, facts);
-  if (contradictions.length > 0) {
+  // Check for contradictions before adding (if enabled)
+  let contradictions = [];
+  if (CONTRADICTION_CONFIG.enableDeterministicCheck || CONTRADICTION_CONFIG.enableLLMSemanticCheck) {
+    contradictions = await checkContradictions(ctx, facts);
+  }
+
+  // If blocking on contradictions is enabled and we found some, ask user
+  if (CONTRADICTION_CONFIG.blockOnContradiction && contradictions.length > 0) {
     const suggestion = await suggestTheoryBranch(ctx, facts, contradictions);
 
     // Set pending action for confirmation
@@ -91,7 +116,7 @@ export async function handleTeach(ctx, message, details) {
     };
   }
 
-  // Add facts to current session
+  // Add facts to current session (even if contradictions were found, unless blocking)
   const added = [];
   for (const fact of facts) {
     try {
@@ -112,11 +137,120 @@ export async function handleTeach(ctx, message, details) {
 }
 
 /**
+ * Perform ontology auto-discovery cycle
+ * Recursively finds missing concepts and generates facts for them
+ *
+ * @param {object} ctx - Context with llmAgent, session
+ * @param {string} message - Original question for context
+ * @param {number} iteration - Current iteration (for recursion limit)
+ * @returns {Promise<{factsAdded: number, iterations: number, conceptsDiscovered: string[]}>}
+ */
+async function performOntologyDiscovery(ctx, message, iteration = 0) {
+  const { llmAgent, session } = ctx;
+  const maxIterations = ONTOLOGY_CONFIG.maxIterations;
+
+  if (!ONTOLOGY_CONFIG.enabled || iteration >= maxIterations) {
+    return { factsAdded: 0, iterations: iteration, conceptsDiscovered: [] };
+  }
+
+  // Step 1: Check for missing concepts
+  let missingResult;
+  try {
+    const env = session.run([`@m MISSING "${message.replace(/"/g, '\\"')}"`]);
+    missingResult = env.m;
+  } catch (err) {
+    // MISSING command not available or failed
+    return { factsAdded: 0, iterations: iteration, conceptsDiscovered: [] };
+  }
+
+  // If no missing concepts, we're done
+  if (!missingResult || !missingResult.missing || missingResult.missing.length === 0) {
+    return { factsAdded: 0, iterations: iteration, conceptsDiscovered: [] };
+  }
+
+  const missingConcepts = missingResult.missing;
+
+  // Step 2: Get existing facts for context
+  const factsEnv = session.run(['@r FACTS_MATCHING ? ? ?']);
+  const existingFacts = factsEnv.r || [];
+
+  // Step 3: Generate facts for missing concepts using LLM
+  const prompt = buildOntologyFactsPrompt(missingConcepts, message, existingFacts);
+  let generatedFacts = [];
+
+  try {
+    const response = await llmAgent.complete({
+      prompt,
+      mode: 'fast',
+      context: { intent: 'generate-ontology-facts' }
+    });
+
+    const jsonMatch = response.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0]);
+      generatedFacts = parsed.facts || [];
+    }
+  } catch (err) {
+    // LLM failed, return what we have
+    return { factsAdded: 0, iterations: iteration, conceptsDiscovered: [] };
+  }
+
+  // Step 4: Add generated facts to knowledge base
+  let factsAdded = 0;
+  const conceptsDiscovered = new Set();
+
+  for (const fact of generatedFacts) {
+    if (!fact.subject || !fact.relation || !fact.object) continue;
+
+    try {
+      session.run([`@f ASSERT ${fact.subject} ${fact.relation} ${fact.object}`]);
+      factsAdded++;
+      conceptsDiscovered.add(fact.subject);
+      conceptsDiscovered.add(fact.object);
+    } catch (err) {
+      // Skip failed facts (might be duplicates or invalid)
+    }
+  }
+
+  // Step 5: If we added facts, recurse to check for more missing concepts
+  if (factsAdded > 0) {
+    const nextResult = await performOntologyDiscovery(ctx, message, iteration + 1);
+    return {
+      factsAdded: factsAdded + nextResult.factsAdded,
+      iterations: nextResult.iterations,
+      conceptsDiscovered: [...conceptsDiscovered, ...nextResult.conceptsDiscovered]
+    };
+  }
+
+  return {
+    factsAdded,
+    iterations: iteration + 1,
+    conceptsDiscovered: [...conceptsDiscovered]
+  };
+}
+
+/**
  * Handle questions
  */
 export async function handleAsk(ctx, message, details) {
   const { llmAgent, session } = ctx;
   const actions = [];
+
+  // Step 0: Perform ontology auto-discovery before answering
+  let discoveryResult = { factsAdded: 0, iterations: 0, conceptsDiscovered: [] };
+  try {
+    discoveryResult = await performOntologyDiscovery(ctx, message);
+    if (discoveryResult.factsAdded > 0) {
+      actions.push({
+        type: 'ontology_discovery',
+        factsAdded: discoveryResult.factsAdded,
+        iterations: discoveryResult.iterations,
+        conceptsDiscovered: discoveryResult.conceptsDiscovered
+      });
+    }
+  } catch (err) {
+    // Discovery failed, continue with query anyway
+  }
 
   const prompt = buildQuestionPrompt(message);
   let parsedQuestion = null;
@@ -138,7 +272,7 @@ export async function handleAsk(ctx, message, details) {
 
   let result;
   try {
-    // Get all facts for inference
+    // Get all facts for inference (now includes discovered facts)
     const env = session.run(['@r FACTS_MATCHING ? ? ?']);
     const facts = env.r || [];
 
@@ -651,36 +785,38 @@ export async function checkContradictions(ctx, newFacts) {
     return f;
   });
 
-  // Step 1: Deterministic contradiction detection
-  const detector = new ContradictionDetector();
+  // Step 1: Deterministic contradiction detection (if enabled)
+  if (CONTRADICTION_CONFIG.enableDeterministicCheck) {
+    const detector = new ContradictionDetector();
 
-  for (const newFact of newFacts) {
-    // Check if adding this fact would create contradictions
-    const allFacts = [...existingFactObjects, newFact];
-    const report = detector.detectAll(allFacts);
+    for (const newFact of newFacts) {
+      // Check if adding this fact would create contradictions
+      const allFacts = [...existingFactObjects, newFact];
+      const report = detector.detectAll(allFacts);
 
-    if (!report.consistent) {
-      for (const c of report.contradictions) {
-        // Check if this contradiction involves the new fact
-        const involvesNew =
-          (c.facts && c.facts.some(f => f.subject === newFact.subject)) ||
-          (c.entity === newFact.subject);
+      if (!report.consistent) {
+        for (const c of report.contradictions) {
+          // Check if this contradiction involves the new fact
+          const involvesNew =
+            (c.facts && c.facts.some(f => f.subject === newFact.subject)) ||
+            (c.entity === newFact.subject);
 
-        if (involvesNew) {
-          contradictions.push({
-            newFact,
-            conflicts: [{ reason: c.explanation }],
-            reason: c.explanation,
-            type: c.type
-          });
+          if (involvesNew) {
+            contradictions.push({
+              newFact,
+              conflicts: [{ reason: c.explanation }],
+              reason: c.explanation,
+              type: c.type
+            });
+          }
         }
       }
     }
   }
 
-  // Step 2: If deterministic check found nothing, use LLM for semantic contradictions
-  // (e.g., "hot" contradicts "cold" even without explicit DISJOINT_WITH)
-  if (contradictions.length === 0 && llmAgent) {
+  // Step 2: LLM semantic check (if enabled and deterministic found nothing)
+  // Note: This is disabled by default as it causes many false positives
+  if (CONTRADICTION_CONFIG.enableLLMSemanticCheck && contradictions.length === 0 && llmAgent) {
     for (const newFact of newFacts) {
       const prompt = buildContradictionPrompt(newFact, existingFacts);
 

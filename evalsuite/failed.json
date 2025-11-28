@@ -1,36 +1,39 @@
 {
   "cases": [
     {
+      "id": "01_taxonomy",
+      "name": "Animal Taxonomy and Inheritance",
+      "failedQueries": [
+        "q2"
+      ],
+      "lastRun": "2025-11-28T12:20:49.071Z"
+    },
+    {
       "id": "02_physical_properties",
       "name": "Physical Properties and Substances",
       "failedQueries": [
-        "q1"
-      ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
-    },
-    {
-      "id": "03_deontic_reasoning",
-      "name": "Deontic Reasoning - Permissions and Prohibitions",
-      "failedQueries": [
+        "q1",
         "q3"
       ],
-      "lastRun": "2025-11-27T17:12:27.066Z"
+      "lastRun": "2025-11-28T12:30:11.546Z"
     },
     {
       "id": "04_counterfactual",
       "name": "Counterfactual Reasoning - What If Scenarios",
       "failedQueries": [
+        "q2",
         "q3"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T12:20:49.071Z"
     },
     {
       "id": "05_abductive",
       "name": "Abductive Reasoning - Finding Explanations",
       "failedQueries": [
-        "q1"
+        "q1",
+        "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T12:28:32.375Z"
     },
     {
       "id": "06_analogy",
@@ -39,7 +42,7 @@
         "q1",
         "q3"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:50:00.966Z"
     },
     {
       "id": "08_multi_theory",
@@ -47,23 +50,42 @@
       "failedQueries": [
         "q1"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:50:00.966Z"
+    },
+    {
+      "id": "12_regulatory_retention",
+      "name": "Record Retention and Cutoff Dates",
+      "failedQueries": [
+        "q1",
+        "q3"
+      ],
+      "lastRun": "2025-11-28T10:50:00.966Z"
+    },
+    {
+      "id": "13_export_controls",
+      "name": "Export Controls and Embargoes",
+      "failedQueries": [
+        "q3"
+      ],
+      "lastRun": "2025-11-28T10:50:00.966Z"
     },
     {
       "id": "14_gdpr_rights",
       "name": "GDPR Rights and Lawful Bases",
       "failedQueries": [
-        "q2"
+        "q2",
+        "q3"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:50:00.966Z"
     },
     {
       "id": "15_quality_manual_versions",
       "name": "Quality Manual Precedence and Versioning",
       "failedQueries": [
+        "q1",
         "q3"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:50:00.966Z"
     },
     {
       "id": "16_sop_conflicts",
@@ -72,24 +94,23 @@
         "q2",
         "q3"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:39:57.358Z"
     },
     {
       "id": "17_qc_thresholds",
       "name": "Quality Control Thresholds",
       "failedQueries": [
-        "q2",
-        "q3"
+        "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:39:57.358Z"
     },
     {
       "id": "18_audit_trail",
       "name": "Audit Trail Completeness",
       "failedQueries": [
-        "q2"
+        "q1"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:39:57.358Z"
     },
     {
       "id": "19_style_guidelines_tone",
@@ -97,16 +118,17 @@
       "failedQueries": [
         "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:39:57.358Z"
     },
     {
       "id": "20_editorial_voice_person",
       "name": "Point of View and Consistent Person",
       "failedQueries": [
         "q1",
-        "q2"
+        "q2",
+        "q3"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:39:57.358Z"
     },
     {
       "id": "21_series_consistency",
@@ -115,7 +137,7 @@
         "q2",
         "q3"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:46:06.681Z"
     },
     {
       "id": "22_literary_motifs",
@@ -123,23 +145,7 @@
       "failedQueries": [
         "q1"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
-    },
-    {
-      "id": "23_timeline_consistency",
-      "name": "Chronology and Temporal Consistency",
-      "failedQueries": [
-        "q3"
-      ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
-    },
-    {
-      "id": "24_factchecking_sources",
-      "name": "Fact-Checking Against Sources",
-      "failedQueries": [
-        "q3"
-      ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:46:06.681Z"
     },
     {
       "id": "25_deontic_priority",
@@ -148,7 +154,7 @@
         "q2",
         "q3"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:46:06.681Z"
     },
     {
       "id": "27_procurement_rules",
@@ -158,15 +164,15 @@
         "q3",
         "q4"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:48:07.152Z"
     },
     {
       "id": "28_risk_controls",
       "name": "Risk Controls and Compensating Measures",
       "failedQueries": [
-        "q2"
+        "q3"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:48:07.152Z"
     },
     {
       "id": "29_counterfactual_reg_change",
@@ -175,16 +181,23 @@
         "q1",
         "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:48:07.152Z"
     },
     {
       "id": "30_abductive_noncompliance",
       "name": "Abductive Non-Compliance Diagnosis",
       "failedQueries": [
-        "q1",
         "q3"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:48:07.152Z"
+    },
+    {
+      "id": "32_argument_type_regulations",
+      "name": "Argument Type Inference for Policies",
+      "failedQueries": [
+        "q2"
+      ],
+      "lastRun": "2025-11-28T09:50:06.607Z"
     },
     {
       "id": "33_effective_dates",
@@ -192,16 +205,15 @@
       "failedQueries": [
         "q1"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:50:06.607Z"
     },
     {
       "id": "34_axiology_masks_content",
       "name": "Axiology Masking for Content Neutrality",
       "failedQueries": [
-        "q2",
         "q3"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:50:06.607Z"
     },
     {
       "id": "35_combined_reasoning_commands",
@@ -210,7 +222,7 @@
         "q1",
         "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:50:06.607Z"
     },
     {
       "id": "36_multi_theory_departments",
@@ -219,7 +231,15 @@
         "q1",
         "q3"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:52:18.696Z"
+    },
+    {
+      "id": "37_term_equivalence_quality",
+      "name": "Term Equivalence in Quality Documents",
+      "failedQueries": [
+        "q2"
+      ],
+      "lastRun": "2025-11-28T09:52:18.696Z"
     },
     {
       "id": "38_definition_based_inference",
@@ -228,15 +248,23 @@
         "q1",
         "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:52:18.696Z"
     },
     {
-      "id": "42_bias_pay_equity",
-      "name": "Pay Equity Bias Check",
+      "id": "39_safety_lockout_tagout",
+      "name": "Safety Procedures: Lockout/Tagout",
       "failedQueries": [
-        "q1"
+        "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:52:18.696Z"
+    },
+    {
+      "id": "41_access_control_roles",
+      "name": "Access Control Roles and Separation of Duties",
+      "failedQueries": [
+        "q3"
+      ],
+      "lastRun": "2025-11-28T10:53:24.749Z"
     },
     {
       "id": "43_bias_news_political_mask",
@@ -244,7 +272,7 @@
       "failedQueries": [
         "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:53:24.749Z"
     },
     {
       "id": "44_bias_pronoun_resolution",
@@ -253,7 +281,7 @@
         "q1",
         "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:53:24.749Z"
     },
     {
       "id": "45_bias_hiring_masking",
@@ -261,15 +289,16 @@
       "failedQueries": [
         "q1"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:53:24.749Z"
     },
     {
-      "id": "46_bias_toxicity_vs_fact",
-      "name": "Toxic Language Masking vs. Factual Core",
+      "id": "47_bias_sentiment_masking_analysis",
+      "name": "Sentiment Masking in Analysis",
       "failedQueries": [
-        "q1"
+        "q1",
+        "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:53:24.749Z"
     },
     {
       "id": "48_bias_language_register",
@@ -277,7 +306,7 @@
       "failedQueries": [
         "q1"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:53:24.749Z"
     },
     {
       "id": "49_bias_counterfactual_mask_switch",
@@ -286,7 +315,7 @@
         "q1",
         "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:53:24.749Z"
     },
     {
       "id": "50_bias_scorecard_weighting",
@@ -294,7 +323,7 @@
       "failedQueries": [
         "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T10:53:24.749Z"
     },
     {
       "id": "51_abductive_fire_investigation",
@@ -302,44 +331,97 @@
       "failedQueries": [
         "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:41:50.569Z"
     },
     {
       "id": "52_abductive_system_failure",
       "name": "Abductive Reasoning - System Failure Analysis",
       "failedQueries": [
+        "q1",
         "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:41:50.569Z"
     },
     {
       "id": "53_abductive_quality_defect",
       "name": "Abductive Reasoning - Manufacturing Quality Defect",
       "failedQueries": [
         "q1",
+        "q2",
         "q3"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:41:50.569Z"
     },
     {
       "id": "54_abductive_economic_indicator",
       "name": "Abductive Reasoning - Economic Indicator Analysis",
       "failedQueries": [
-        "q1"
+        "q1",
+        "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:41:50.569Z"
     },
     {
       "id": "55_abductive_security_incident",
       "name": "Abductive Reasoning - Security Incident Response",
       "failedQueries": [
-        "q1",
         "q2"
       ],
-      "lastRun": "2025-11-27T17:35:03.947Z"
+      "lastRun": "2025-11-28T09:41:50.569Z"
+    },
+    {
+      "id": "suite_01_ontology",
+      "name": "Comprehensive Ontology & Taxonomy",
+      "failedQueries": [
+        "q1",
+        "q4",
+        "q7"
+      ],
+      "lastRun": "2025-11-28T12:54:56.865Z"
+    },
+    {
+      "id": "suite_02_causation",
+      "name": "Comprehensive Causation & Abduction",
+      "failedQueries": [
+        "q3",
+        "q4",
+        "q5",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-11-28T12:55:48.950Z"
+    },
+    {
+      "id": "suite_03_deontic",
+      "name": "Comprehensive Deontic Rules & Permissions",
+      "failedQueries": [
+        "q2",
+        "q7"
+      ],
+      "lastRun": "2025-11-28T12:56:32.935Z"
+    },
+    {
+      "id": "suite_04_counterfactual",
+      "name": "Comprehensive Counterfactual & Temporal",
+      "failedQueries": [
+        "q2",
+        "q3"
+      ],
+      "lastRun": "2025-11-28T12:58:07.858Z"
+    },
+    {
+      "id": "suite_05_bias_masking",
+      "name": "Comprehensive Bias Control & Masking",
+      "failedQueries": [
+        "q1",
+        "q4",
+        "q5",
+        "q7"
+      ],
+      "lastRun": "2025-11-28T12:59:26.130Z"
     }
   ],
-  "lastUpdated": "2025-11-27T17:35:03.948Z",
+  "lastUpdated": "2025-11-28T12:59:26.137Z",
   "rangeInfo": {
     "lastFrom": null,
     "lastTo": null

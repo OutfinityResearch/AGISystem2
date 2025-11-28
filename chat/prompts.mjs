@@ -235,6 +235,70 @@ Respond with JSON only:
 }
 
 /**
+ * Build prompt to generate facts for missing concepts
+ * Used in ontology auto-discovery cycle
+ * @param {object[]} missingConcepts - Concepts not in knowledge base
+ * @param {string} questionContext - The original question for context
+ * @param {object[]} existingFacts - Existing facts for context
+ * @returns {string} Prompt for fact generation
+ */
+export function buildOntologyFactsPrompt(missingConcepts, questionContext, existingFacts = []) {
+  const conceptList = missingConcepts.map(c =>
+    `- ${c.name} (${c.suggestedType || 'unknown type'})`
+  ).join('\n');
+
+  const existingContext = existingFacts.length > 0
+    ? `\nExisting facts in knowledge base:\n${existingFacts.slice(0, 20).map(f => `- ${f.subject} ${f.relation} ${f.object}`).join('\n')}`
+    : '';
+
+  return `Generate facts to define these missing concepts in context of a question.
+
+Question context: "${questionContext}"
+
+Missing concepts that need definition:
+${conceptList}
+${existingContext}
+
+IMPORTANT RULES:
+1. Generate 5-15 facts per concept to define it well
+2. ALWAYS include an IS_A fact for each concept (e.g., "Doctor IS_A profession")
+3. Include relevant properties and relationships
+4. Use ONLY these standard relations:
+   - IS_A: category/type (REQUIRED for each concept)
+   - HAS_PROPERTY: attributes
+   - PART_OF / HAS_PART: composition
+   - CAUSES / CAUSED_BY: causation
+   - LOCATED_IN / CONTAINS: location
+   - REQUIRES / REQUIRED_BY: dependencies
+   - PERMITS / PERMITTED_BY / PROHIBITS / PROHIBITED_BY: rules
+   - CAN / CANNOT: abilities
+   - DISJOINT_WITH: mutual exclusion
+5. Be consistent with existing facts if provided
+6. Focus on facts relevant to answering the question
+7. Use lowercase for general types, Capitalized for specific instances
+
+Example for "Doctor" in context "Can a doctor treat a patient?":
+- Doctor IS_A profession
+- Doctor IS_A medical_professional
+- Doctor HAS_PROPERTY medical_license
+- Doctor CAN treat
+- Doctor CAN diagnose
+- Doctor REQUIRES medical_training
+- treatment REQUIRES Doctor
+- Patient TREATED_BY Doctor
+
+Respond with JSON only:
+{
+  "facts": [
+    {"subject": "Concept", "relation": "RELATION", "object": "OtherConcept"},
+    ...
+  ],
+  "conceptsCovered": ["list of concepts that were defined"],
+  "confidence": 0.0-1.0
+}`;
+}
+
+/**
  * Build prompt to suggest a theory name
  * @param {object[]} facts - Facts in the new theory branch
  * @param {string} reason - Why the branch was created

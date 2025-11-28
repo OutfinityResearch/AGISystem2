@@ -37,6 +37,14 @@ Defines functional behavior of the neuro-symbolic engine that ingests Sys2DSL co
 ### Sys2DSL
 - <a id="FS-14"></a>**FS-14 Sys2DSL Theory Programs:** Expose a small, deterministic line-oriented DSL (Sys2DSL) that lets users and domain authors define reusable reasoning programmes in text theory files. Sys2DSL composes core primitives (ask, abduct, counterfactual queries, fact search, requirement coverage checks, mask control) into higher-level checks without embedding domain-specific logic inside the engine code.
 
+### Ontology Introspection
+- <a id="FS-15"></a>**FS-15 Ontology Discovery Commands:** Provide DSL commands that enable introspection of the knowledge base to support ontology auto-discovery:
+  - `EXPLAIN_CONCEPT <concept>`: Returns structured information about what the system knows about a concept, including IS_A types, properties, relations, and all facts where it appears.
+  - `MISSING "<statement>"`: Analyzes a statement or script and returns a list of concepts that are not defined in the knowledge base, with type suggestions and questions to help define them.
+  - `WHAT_IS <concept>`: Returns a simple natural-language description of a concept based on its IS_A relations and properties.
+
+  These commands enable LLM-assisted ontology population by identifying knowledge gaps before executing queries.
+
 ## Requirement Cross-Reference
 
 | New ID | Original IDs | Consolidation Notes |
@@ -55,6 +63,7 @@ Defines functional behavior of the neuro-symbolic engine that ingests Sys2DSL co
 | FS-12 | FS-12 | Unchanged |
 | FS-13 | FS-14 | Renumbered |
 | FS-14 | FS-15 | Renumbered |
+| FS-15 | NEW | Ontology discovery commands |
 | - | FS-08 | Consolidated into FS-02 |
 | - | FS-16 | Consolidated into FS-08 |
 

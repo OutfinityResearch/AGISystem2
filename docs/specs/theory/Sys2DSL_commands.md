@@ -1187,7 +1187,177 @@ For relation:
 
 ---
 
-## 11. Command Summary Table
+## 11. Ontology Introspection Commands
+
+These commands enable LLM-assisted ontology discovery by providing introspection into what the knowledge base knows and what is missing.
+
+### 11.1 EXPLAIN_CONCEPT
+
+**Purpose:** Explain what the system knows about a concept.
+
+**Syntax:**
+```sys2dsl
+@info EXPLAIN_CONCEPT conceptName
+```
+
+**Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| conceptName | string | The concept to explain (can include variables via `$var`) |
+
+**Returns:**
+```javascript
+{
+  concept: string,        // original input
+  normalized: string,     // normalized form
+  exists: boolean,        // whether known to system
+  isUpperCase: boolean,   // indicates proper noun/type
+  asSubject: [...],       // facts where concept is subject
+  asObject: [...],        // facts where concept is object
+  types: [...],           // IS_A relationships
+  properties: [...],      // HAS_PROPERTY/HAS relationships
+  relations: [...],       // other relationships
+  summary: string         // natural language summary
+}
+```
+
+**Example:**
+```sys2dsl
+# What does the system know about Water?
+@water EXPLAIN_CONCEPT Water
+# Returns: exists=true, types=['Liquid', 'Substance'],
+#          properties=[{property:'boiling_point', relation:'HAS_PROPERTY'}], ...
+
+# Check an unknown concept
+@foo EXPLAIN_CONCEPT UnknownThing
+# Returns: exists=false, summary="Concept 'UnknownThing' is not known.
+#          Please add facts using 'add UnknownThing IS_A <type>'."
+```
+
+**Notes:**
+- Case-insensitive matching for concept lookup
+- Returns empty arrays if concept not found (exists=false)
+- Useful for LLM to check what system knows before querying
+
+---
+
+### 11.2 MISSING
+
+**Purpose:** Find undefined concepts in a statement or script.
+
+**Syntax:**
+```sys2dsl
+@gaps MISSING "statement or script text"
+```
+
+**Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| text | string | Statement(s) to analyze for missing concepts |
+
+**Returns:**
+```javascript
+{
+  input: string,           // truncated input text
+  totalConcepts: number,   // concepts found in input
+  missingCount: number,    // concepts not in knowledge base
+  definedCount: number,    // concepts already defined
+  missing: [
+    {
+      name: string,              // concept name
+      context: string,           // surrounding text
+      suggestedType: string,     // heuristic type guess
+      suggestedQuestions: [...]  // questions to define it
+    },
+    ...
+  ],
+  defined: [
+    {
+      name: string,
+      context: string,
+      factCount: number  // how many facts involve this concept
+    },
+    ...
+  ],
+  suggestions: string  // formatted suggestions for LLM
+}
+```
+
+**Example:**
+```sys2dsl
+# Check what's missing before running a query
+@check MISSING "Doctor TREATS Patient USING Medicine"
+
+# Returns:
+#   missing: [
+#     { name: 'Doctor', suggestedType: 'Agent or Role', ... },
+#     { name: 'Patient', suggestedType: 'Agent or Role', ... },
+#     { name: 'Medicine', suggestedType: 'Entity or Instance', ... }
+#   ]
+#   suggestions: "Found 3 undefined concepts. To use these, please define:
+#     - Doctor: Agent or Role
+#     - Patient: Agent or Role
+#     - Medicine: Entity or Instance"
+```
+
+**Notes:**
+- Extracts concepts using:
+  - Capitalized words (likely proper nouns/concepts)
+  - Subject/object positions in triple patterns
+- Skips known relation names (IS_A, CAUSES, etc.)
+- Type suggestions based on word endings (-er/-or → Agent, -tion → Process, etc.)
+- Designed for LLM to call before running complex queries
+
+---
+
+### 11.3 WHAT_IS
+
+**Purpose:** Simple identity query about a concept.
+
+**Syntax:**
+```sys2dsl
+@desc WHAT_IS conceptName
+```
+
+**Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| conceptName | string | The concept to describe |
+
+**Returns:**
+```javascript
+{
+  concept: string,      // original input
+  known: boolean,       // whether found in KB
+  types: [...],         // IS_A values
+  properties: [...],    // HAS/HAS_PROPERTY values
+  description: string   // natural language description
+}
+```
+
+**Example:**
+```sys2dsl
+@desc WHAT_IS Dog
+# Returns:
+#   known: true,
+#   types: ['Mammal', 'Animal'],
+#   properties: ['four_legs', 'fur'],
+#   description: "'Dog' is a Mammal, Animal with four_legs, fur."
+
+@desc WHAT_IS Xyzzy
+# Returns:
+#   known: false,
+#   description: "I don't have information about 'Xyzzy' in my knowledge base."
+```
+
+**Notes:**
+- Simpler than EXPLAIN_CONCEPT - just identity/classification
+- Returns natural language description ready for display
+- Useful for quick checks without full fact enumeration
+
+---
+
+## 12. Command Summary Table
 
 | Command | Category | Purpose |
 |---------|----------|---------|
@@ -1227,12 +1397,16 @@ For relation:
 | TO_NATURAL | Output | Convert to text |
 | TO_JSON | Output | Export JSON |
 | EXPLAIN | Output | Detailed explanation |
+| EXPLAIN_CONCEPT | Ontology | Explain what system knows about concept |
+| MISSING | Ontology | Find undefined concepts in statement |
+| WHAT_IS | Ontology | Simple identity query |
 
 ---
 
-## 12. Version History
+## 13. Version History
 
 | Version | Changes |
 |---------|---------|
 | 1.0 | Initial command set |
 | 2.0 | Added: DEFINE_RELATION, MODIFY_RELATION, VALIDATE, PROVE, HYPOTHESIZE, memory commands, output commands |
+| 2.1 | Added: EXPLAIN_CONCEPT, MISSING, WHAT_IS for ontology introspection (FS-15) |

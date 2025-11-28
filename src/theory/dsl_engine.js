@@ -17,6 +17,7 @@
 
 const ContradictionDetector = require('../reason/contradiction_detector');
 const InferenceEngine = require('../reason/inference_engine');
+const DimensionRegistry = require('../core/dimension_registry');
 const DSLParser = require('./dsl_parser');
 const DSLCommandsCore = require('./dsl_commands_core');
 const DSLCommandsMemory = require('./dsl_commands_memory');
@@ -24,6 +25,7 @@ const DSLCommandsTheory = require('./dsl_commands_theory');
 const DSLCommandsReasoning = require('./dsl_commands_reasoning');
 const DSLCommandsInference = require('./dsl_commands_inference');
 const DSLCommandsOutput = require('./dsl_commands_output');
+const DSLCommandsOntology = require('./dsl_commands_ontology');
 
 class TheoryDSLEngine {
   constructor({ api, conceptStore, config }) {
@@ -77,6 +79,13 @@ class TheoryDSLEngine {
 
     this.outputCommands = new DSLCommandsOutput({
       parser: this.parser
+    });
+
+    // Initialize ontology introspection commands
+    this.ontologyCommands = new DSLCommandsOntology({
+      conceptStore,
+      parser: this.parser,
+      dimRegistry: DimensionRegistry.getShared()
     });
   }
 
@@ -252,6 +261,14 @@ class TheoryDSLEngine {
         return this.outputCommands.cmdFormat(argTokens, env);
       case 'SUMMARIZE':
         return this.outputCommands.cmdSummarize(argTokens, env);
+
+      // Ontology Introspection Commands
+      case 'EXPLAIN_CONCEPT':
+        return this.ontologyCommands.cmdExplainConcept(argTokens, env);
+      case 'MISSING':
+        return this.ontologyCommands.cmdMissing(argTokens, env);
+      case 'WHAT_IS':
+        return this.ontologyCommands.cmdWhatIs(argTokens, env);
 
       default:
         throw new Error(`Unknown DSL command '${command}'`);

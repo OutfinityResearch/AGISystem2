@@ -10,13 +10,16 @@
  * @module theory/dsl_commands_core
  */
 
+const DimensionRegistry = require('../core/dimension_registry');
+
 class DSLCommandsCore {
-  constructor({ api, conceptStore, config, parser }) {
+  constructor({ api, conceptStore, config, parser, dimensionRegistry }) {
     this.api = api;
     this.conceptStore = conceptStore;
     this.config = config;
     this.parser = parser;
     this._relationDefs = new Map();
+    this.dimRegistry = dimensionRegistry || DimensionRegistry.getShared();
   }
 
   // =========================================================================
@@ -460,23 +463,26 @@ class DSLCommandsCore {
   // =========================================================================
 
   getRelationProperties(relation) {
+    // First check local overrides
     if (this._relationDefs.has(relation)) {
       return this._relationDefs.get(relation);
     }
-    const defaults = {
-      IS_A: { symmetric: false, transitive: true },
-      HAS_PROPERTY: { symmetric: false, transitive: false },
-      LOCATED_IN: { symmetric: false, transitive: true },
-      DISJOINT_WITH: { symmetric: true, transitive: false }
-    };
-    return defaults[relation] || { symmetric: false, transitive: false };
+    // Then use DimensionRegistry (single source of truth)
+    return this.dimRegistry.getRelationProperties(relation);
   }
 
   _resolveDimensionIndexByName(name) {
+    // First try DimensionRegistry for axis lookup by name
+    const axisIndex = this.dimRegistry.getAxisIndex(name);
+    if (axisIndex !== undefined) {
+      return axisIndex;
+    }
+    // Fallback to legacy config dimensionNames
     const dimNames = this.config.get('dimensionNames') || {};
     if (dimNames[name] !== undefined) {
       return dimNames[name];
     }
+    // Try parsing as numeric index
     const num = parseInt(name, 10);
     if (!isNaN(num) && num >= 0 && num < this.config.get('dimensions')) {
       return num;

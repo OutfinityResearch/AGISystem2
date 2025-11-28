@@ -11,12 +11,15 @@
  * - Property inheritance
  */
 
+const DimensionRegistry = require('../core/dimension_registry');
+
 class InferenceEngine {
   constructor(deps = {}) {
     this.store = deps.store || null;
     this.reasoner = deps.reasoner || null;
     this.detector = deps.detector || null; // ContradictionDetector
     this.config = deps.config || null;
+    this.dimRegistry = deps.dimensionRegistry || DimensionRegistry.getShared();
 
     // Custom rules: { name, head, body }
     this.rules = [];
@@ -24,36 +27,20 @@ class InferenceEngine {
     // Default reasoning rules
     this.defaults = [];
 
-    // Relation properties cache
+    // Relation properties cache - populated from DimensionRegistry
     this.relationProperties = new Map();
 
-    // Initialize with known relation properties
+    // Initialize relation properties from registry
     this._initRelationProperties();
   }
 
   _initRelationProperties() {
-    // Transitive relations
-    this.relationProperties.set('IS_A', { transitive: true, symmetric: false });
-    this.relationProperties.set('PART_OF', { transitive: true, symmetric: false });
-    this.relationProperties.set('ANCESTOR_OF', { transitive: true, symmetric: false });
-    this.relationProperties.set('LOCATED_IN', { transitive: true, symmetric: false });
-    this.relationProperties.set('REQUIRES', { transitive: true, symmetric: false });
-
-    // Symmetric relations
-    this.relationProperties.set('EQUIVALENT_TO', { transitive: true, symmetric: true });
-    this.relationProperties.set('DISJOINT_WITH', { transitive: false, symmetric: true });
-    this.relationProperties.set('SIBLING_OF', { transitive: false, symmetric: true });
-    this.relationProperties.set('MARRIED_TO', { transitive: false, symmetric: true });
-
-    // Inverse pairs
-    this.relationProperties.set('PARENT_OF', { inverse: 'CHILD_OF' });
-    this.relationProperties.set('CHILD_OF', { inverse: 'PARENT_OF' });
-    this.relationProperties.set('CAUSES', { inverse: 'CAUSED_BY' });
-    this.relationProperties.set('CAUSED_BY', { inverse: 'CAUSES' });
-    this.relationProperties.set('HAS_PART', { inverse: 'PART_OF' });
-    this.relationProperties.set('CONTAINS', { inverse: 'LOCATED_IN' });
-    this.relationProperties.set('PERMITS', { inverse: 'PERMITTED_BY' });
-    this.relationProperties.set('PROHIBITS', { inverse: 'PROHIBITED_BY' });
+    // Load relation properties from DimensionRegistry (single source of truth)
+    const relationNames = this.dimRegistry.getRelationPropertyNames();
+    for (const name of relationNames) {
+      const props = this.dimRegistry.getRelationProperties(name);
+      this.relationProperties.set(name, props);
+    }
   }
 
   /**
