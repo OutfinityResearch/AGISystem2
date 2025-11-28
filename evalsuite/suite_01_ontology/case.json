@@ -39,6 +39,7 @@
     {
       "id": "q1",
       "natural_language": "Is Fido a living thing?",
+      "expected_dsl": "@q1 ASK Fido IS_A living_thing",
       "expected_answer": {
         "natural_language": "Yes, Fido is a living thing through the chain: Fido → dog → mammal → animal → living thing.",
         "truth": "TRUE_CERTAIN",
@@ -48,6 +49,7 @@
     {
       "id": "q2",
       "natural_language": "Is Sparky a mammal?",
+      "expected_dsl": "@q2 ASK Sparky IS_A mammal",
       "expected_answer": {
         "natural_language": "No, Sparky is a bird and birds are disjoint with mammals.",
         "truth": "FALSE",
@@ -57,6 +59,7 @@
     {
       "id": "q3",
       "natural_language": "Is Whiskers an animal?",
+      "expected_dsl": "@q3 ASK Whiskers IS_A animal",
       "expected_answer": {
         "natural_language": "Yes, Whiskers is a cat, cats are mammals, mammals are animals.",
         "truth": "TRUE_CERTAIN",
@@ -66,6 +69,7 @@
     {
       "id": "q4",
       "natural_language": "Is Paris in Europe?",
+      "expected_dsl": "@q4 ASK Paris LOCATED_IN Europe",
       "expected_answer": {
         "natural_language": "Yes, Paris is in France and France is in Europe.",
         "truth": "TRUE_CERTAIN",
@@ -75,6 +79,7 @@
     {
       "id": "q5",
       "natural_language": "Is Tokyo in Europe?",
+      "expected_dsl": "@q5 ASK Tokyo LOCATED_IN Europe",
       "expected_answer": {
         "natural_language": "No, Tokyo is in Japan which is in Asia, not Europe.",
         "truth": "FALSE",
@@ -84,6 +89,7 @@
     {
       "id": "q6",
       "natural_language": "Is a software engineer an engineer?",
+      "expected_dsl": "@q6 ASK software_engineer IS_A engineer",
       "expected_answer": {
         "natural_language": "Yes, software engineers are a type of engineer.",
         "truth": "TRUE_CERTAIN",
@@ -93,6 +99,7 @@
     {
       "id": "q7",
       "natural_language": "Do doctors help patients?",
+      "expected_dsl": "@q7 ASK doctor HELPS patient",
       "expected_answer": {
         "natural_language": "Yes, doctors are medical professionals and medical professionals help patients.",
         "truth": "TRUE_CERTAIN",
@@ -102,6 +109,7 @@
     {
       "id": "q8",
       "natural_language": "Does a Tesla have wheels?",
+      "expected_dsl": "@q8 ASK Tesla HAS wheel",
       "expected_answer": {
         "natural_language": "Yes, Tesla is a car and cars have wheels.",
         "truth": "TRUE_CERTAIN",

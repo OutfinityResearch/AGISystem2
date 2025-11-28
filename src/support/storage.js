@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
 class StorageAdapter {
   constructor({ config, audit }) {
@@ -8,6 +9,12 @@ class StorageAdapter {
     const persistence = config.getPersistenceStrategy();
     this.strategy = persistence.strategy;
     this.storageRoot = persistence.params.storageRoot;
+
+    // Redirect relative paths (like ./.data_dev) to temp directory to avoid polluting workspace
+    if (this.strategy === 'file_binary' && this.storageRoot.startsWith('./.')) {
+      this.storageRoot = path.join(os.tmpdir(), 'agisystem2-data');
+    }
+
     this._memoryConcepts = new Map();
     this._memoryTheories = new Map();
     if (this.strategy === 'file_binary') {

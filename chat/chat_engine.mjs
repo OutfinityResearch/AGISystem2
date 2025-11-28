@@ -247,9 +247,42 @@ export class ChatEngine {
 
   /**
    * Fallback heuristic intent detection - deterministic and reliable
+   *
+   * Priority order:
+   * 1. Long declarative text (>100 chars with statements) → teach
+   * 2. Explicit help requests → help
+   * 3. Questions → ask
+   * 4. Commands (import, theory, list) → respective intents
+   * 5. Short declarative statements → teach
    */
   _heuristicIntentDetection(message) {
     const lower = message.toLowerCase().trim();
+
+    // PRIORITY 1: Long declarative text with multiple statements is almost always teach intent
+    // This handles theory loading where text contains words like "help" in context
+    // e.g., "Medical professionals help patients" should be teach, not help
+    const hasMultipleStatements = (lower.match(/\./g) || []).length >= 2;
+    const isLongText = message.length > 100;
+    const hasDeclarativePatterns = /\b(are|is|has|have|causes?|requires?|permits?)\b/i.test(lower);
+
+    if (isLongText && hasMultipleStatements && hasDeclarativePatterns) {
+      return { intent: 'teach', confidence: 0.95, details: {} };
+    }
+
+    // PRIORITY 2: Help - only match EXPLICIT help requests, not incidental uses
+    // Must be: standalone "help", starts with "help", or "/help"
+    // NOT: "professionals help patients" (help used as verb in context)
+    const isExplicitHelpRequest =
+      lower === 'help' ||
+      lower === '/help' ||
+      lower.startsWith('help me') ||
+      lower.startsWith('i need help') ||
+      lower.startsWith('can you help') ||
+      /^(please\s+)?help\b/.test(lower);
+
+    if (isExplicitHelpRequest) {
+      return { intent: 'help', confidence: 0.9, details: {} };
+    }
 
     // Questions - ask intent
     if (lower.includes('?') || lower.startsWith('is ') || lower.startsWith('what ') ||
@@ -273,11 +306,6 @@ export class ChatEngine {
     // List commands
     if (lower.startsWith('list ') || lower.startsWith('show ')) {
       return { intent: 'list', confidence: 0.7, details: {} };
-    }
-
-    // Help
-    if (lower.includes('help')) {
-      return { intent: 'help', confidence: 0.9, details: {} };
     }
 
     // Declarative statements are teach intent (X are/is Y patterns)

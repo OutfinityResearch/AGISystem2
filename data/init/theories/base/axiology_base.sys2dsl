@@ -1,0 +1,114 @@
+# =============================================================================
+# BASE AXIOLOGY THEORY - Foundational Facts About Values and Norms
+# =============================================================================
+# This theory is automatically loaded at system initialization.
+# Contains universally accepted facts about ethics, permissions, and values.
+# Version: 1.0
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SECTION 1: Moral Categories
+# -----------------------------------------------------------------------------
+
+@v001 ASSERT moral_value IS_A abstract_entity
+@v002 ASSERT good IS_A moral_value
+@v003 ASSERT bad IS_A moral_value
+@v004 ASSERT neutral IS_A moral_value
+@v005 ASSERT good DISJOINT_WITH bad
+
+# -----------------------------------------------------------------------------
+# SECTION 2: Universal Ethical Principles
+# -----------------------------------------------------------------------------
+
+# Harm principles
+@v010 ASSERT harm IS_A bad
+@v011 ASSERT killing IS_A harm
+@v012 ASSERT stealing IS_A harm
+@v013 ASSERT lying IS_A harm
+@v014 ASSERT violence IS_A harm
+
+# Benefit principles
+@v020 ASSERT benefit IS_A good
+@v021 ASSERT helping IS_A benefit
+@v022 ASSERT protecting IS_A benefit
+@v023 ASSERT healing IS_A benefit
+@v024 ASSERT teaching IS_A benefit
+
+# -----------------------------------------------------------------------------
+# SECTION 3: Deontic Modalities
+# -----------------------------------------------------------------------------
+
+@v030 ASSERT obligation IS_A deontic_status
+@v031 ASSERT permission IS_A deontic_status
+@v032 ASSERT prohibition IS_A deontic_status
+@v033 ASSERT obligation DISJOINT_WITH prohibition
+
+# Universal prohibitions
+@v040 ASSERT murder PROHIBITED_BY universal_ethics
+@v041 ASSERT theft PROHIBITED_BY universal_ethics
+@v042 ASSERT fraud PROHIBITED_BY universal_ethics
+@v043 ASSERT torture PROHIBITED_BY universal_ethics
+
+# Universal permissions
+@v050 ASSERT self_defense PERMITTED_BY universal_ethics
+@v051 ASSERT free_speech PERMITTED_BY universal_ethics
+@v052 ASSERT privacy PERMITTED_BY universal_ethics
+
+# -----------------------------------------------------------------------------
+# SECTION 4: Rights and Duties
+# -----------------------------------------------------------------------------
+
+@v060 ASSERT right IS_A normative_status
+@v061 ASSERT duty IS_A normative_status
+@v062 ASSERT human_right IS_A right
+
+# Fundamental rights
+@v065 ASSERT life IS_A human_right
+@v066 ASSERT liberty IS_A human_right
+@v067 ASSERT dignity IS_A human_right
+@v068 ASSERT equality IS_A human_right
+
+# -----------------------------------------------------------------------------
+# SECTION 5: Professional Ethics
+# -----------------------------------------------------------------------------
+
+# Medical ethics
+@v070 ASSERT patient_consent REQUIRED_FOR medical_treatment
+@v071 ASSERT confidentiality REQUIRED_FOR medical_practice
+@v072 ASSERT do_no_harm REQUIRED_FOR medical_practice
+
+# General professional ethics
+@v080 ASSERT honesty REQUIRED_FOR professional_conduct
+@v081 ASSERT competence REQUIRED_FOR professional_conduct
+@v082 ASSERT accountability REQUIRED_FOR professional_conduct
+
+# -----------------------------------------------------------------------------
+# SECTION 6: Fairness and Justice
+# -----------------------------------------------------------------------------
+
+@v090 ASSERT fairness IS_A good
+@v091 ASSERT justice IS_A good
+@v092 ASSERT equality IS_A fairness
+@v093 ASSERT impartiality IS_A fairness
+
+# Bias masking principles
+@v100 ASSERT gender NOT_FACTOR_IN hiring_decision
+@v101 ASSERT race NOT_FACTOR_IN hiring_decision
+@v102 ASSERT age NOT_FACTOR_IN hiring_decision
+@v103 ASSERT religion NOT_FACTOR_IN hiring_decision
+
+# Merit-based evaluation
+@v110 ASSERT skills FACTOR_IN hiring_decision
+@v111 ASSERT experience FACTOR_IN hiring_decision
+@v112 ASSERT qualifications FACTOR_IN hiring_decision
+
+# -----------------------------------------------------------------------------
+# SECTION 7: Trust and Reliability
+# -----------------------------------------------------------------------------
+
+@v120 ASSERT trustworthiness IS_A good
+@v121 ASSERT reliability IS_A trustworthiness
+@v122 ASSERT consistency IS_A trustworthiness
+@v123 ASSERT transparency IS_A trustworthiness
+
+# End of base axiology

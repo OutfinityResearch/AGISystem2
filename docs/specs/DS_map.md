@@ -15,6 +15,8 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 - `src/knowledge/theory_layer.js` → `.specs/knowledge/theory_layer.js.md` — Class `TheoryLayer`: overlays for min/max/radius/masks; provenance metadata.
 - `src/knowledge/theory_stack.js` → `.specs/knowledge/theory_stack.js.md` — Class `TheoryStack`: selection, stacking, runtime synthesis of active theories; conflict detection; meta-rational comparisons.
 - `theories (data spec)` → `.specs/knowledge/base_theories.md` — Base and test theory defaults (partitions, root constraints, sample layers for testing).
+- `data/init/theories/base/ontology_base.sys2dsl` → `.specs/init/ontology_base.md` — **Base ontology facts (93)**: fundamental categories (entity, living_thing, object), taxonomy (animals, plants, artifacts), geography, professions.
+- `data/init/theories/base/axiology_base.sys2dsl` → `.specs/init/axiology_base.md` — **Base axiology facts (63)**: moral values, deontic modalities (PERMITTED, PROHIBITED, OBLIGATORY), rights, fairness principles, ethical domains.
 - `relations (data spec)` → `.specs/knowledge/default_relations.md` — Default relation set (OWL-inspired) with permutation characteristics and test guidance.
 - `dimensions (data spec)` → `.specs/knowledge/dimensions.md` — Ontology/axiology axis catalog (fixed partitions).
 - `(memory spec)` → `.specs/knowledge/usage_tracking.md` — **Usage tracking and prioritization**: counters, frequency-based ranking, priority calculation.
@@ -37,6 +39,10 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 
 ## Sys2DSL Engine
 - `src/theory/dsl_engine.js` → `.specs/theory/dsl_engine.js.md` — Class `TheoryDSLEngine` (Sys2DSL interpreter): interpret Sys2DSL command lines from theory files and sessions, bind variables, and invoke core reasoning primitives (ask, abduct, counterfactual, fact search, mask control) without embedding domain-specific logic in engine code.
+- `src/theory/dsl_commands_theory.js` → `.specs/theory/dsl_commands_theory.js.md` — Class `DSLCommandsTheory`: theory management DSL commands (LIST_THEORIES, LOAD_THEORY, SAVE_THEORY, MERGE_THEORY, DELETE_THEORY, THEORY_PUSH, THEORY_POP, RESET_SESSION). Uses pluggable storage interface.
+- `src/theory/theory_storage.js` → `.specs/theory/theory_storage.js.md` — Class `TheoryStorage`: pluggable storage interface for theories with adapters (FileStorageAdapter, MemoryStorageAdapter). Supports both `.sys2dsl` (DSL) and `.theory.json` (JSON) formats.
+- `src/theory/meta_theory_registry.js` → `.specs/theory/meta_theory_registry.js.md` — Class `MetaTheoryRegistry`: registry of available theories with metadata (domain, version, dependencies, applicability rules). Tracks usage statistics (load counts, query success rates) and suggests applicable theories. Implements FS-17.
+- `src/theory/theory_preloader.js` → `.specs/theory/theory_preloader.js.md` — Class `TheoryPreloader`: fast loading of base ontology and axiology theories with JSON caching for ~10x speedup. Loaded automatically at session creation unless skipPreload=true.
 - `(language spec)` → `.specs/theory/Sys2DSL_syntax.md` — **Complete Sys2DSL language specification**: syntax, token types, case conventions, grammar (EBNF), evaluation model, session lifecycle.
 - `(command reference)` → `.specs/theory/Sys2DSL_commands.md` — **Full command reference**: all commands organized by category (query, assertion, concept, relation, theory, reasoning, mask, utility, memory, output).
 - `(data mapping)` → `.specs/theory/Sys2DSL_arch.md` — Sys2DSL data mapping: how scripts map to internal structures, value types, mask application.

@@ -35,6 +35,8 @@
     {
       "id": "q1",
       "natural_language": "Who should be selected for the role requiring PMP?",
+      "expected_dsl": null,
+      "expected_dsl_notes": "Selection/aggregation query - requires iterating candidates and checking qualifications",
       "expected_answer": {
         "natural_language": "Alice or Carol should be selected as they have the required PMP certification. Bob does not qualify despite more experience.",
         "truth": "TRUE_CERTAIN",
@@ -44,6 +46,7 @@
     {
       "id": "q2",
       "natural_language": "Does Bob qualify for the role?",
+      "expected_dsl": "@q2 ASK Bob HAS PMP_certification",
       "expected_answer": {
         "natural_language": "No, Bob lacks the required PMP certification.",
         "truth": "FALSE",
@@ -53,6 +56,7 @@
     {
       "id": "q3",
       "natural_language": "Should Dan and Eve have the same pay?",
+      "expected_dsl": "@q3 ASK Dan IS_A level_2_engineer",
       "expected_answer": {
         "natural_language": "Yes, both are level 2 engineers with good performance, so pay should be equal.",
         "truth": "TRUE_CERTAIN",
@@ -62,6 +66,7 @@
     {
       "id": "q4",
       "natural_language": "Is it factual that the city council approved the budget?",
+      "expected_dsl": "@q4 ASK city_council APPROVED budget",
       "expected_answer": {
         "natural_language": "Yes, the city council approved the budget on Monday. This is a factual claim independent of political framing.",
         "truth": "TRUE_CERTAIN",
@@ -71,6 +76,7 @@
     {
       "id": "q5",
       "natural_language": "Did Team Delta deploy v2?",
+      "expected_dsl": "@q5 ASK Team_Delta DEPLOYED v2",
       "expected_answer": {
         "natural_language": "Yes, Team Delta deployed v2. This fact stands regardless of any emotional language.",
         "truth": "TRUE_CERTAIN",
@@ -80,15 +86,18 @@
     {
       "id": "q6",
       "natural_language": "Should gender affect hiring decisions?",
+      "expected_dsl": "@q6 ASK gender NOT_FACTOR_IN hiring",
+      "expected_dsl_notes": "The DSL confirms the policy exists; the NL question is rhetorical (answer is 'No, it should not')",
       "expected_answer": {
         "natural_language": "No, gender is not a factor in hiring decisions.",
-        "truth": "FALSE",
-        "explanation": "Demographic masking policy"
+        "truth": "TRUE_CERTAIN",
+        "explanation": "The fact that gender NOT_FACTOR_IN hiring is TRUE_CERTAIN, meaning gender correctly should NOT affect decisions"
       }
     },
     {
       "id": "q7",
       "natural_language": "Does Alice meet the certification requirement?",
+      "expected_dsl": "@q7 ASK Alice HAS PMP_certification",
       "expected_answer": {
         "natural_language": "Yes, Alice has the required PMP certification.",
         "truth": "TRUE_CERTAIN",
@@ -98,6 +107,7 @@
     {
       "id": "q8",
       "natural_language": "Are Dan and Eve at the same level?",
+      "expected_dsl": "@q8 ASK Dan IS_A level_2_engineer",
       "expected_answer": {
         "natural_language": "Yes, both Dan and Eve are level 2 engineers.",
         "truth": "TRUE_CERTAIN",

@@ -29,8 +29,12 @@ class DimensionRegistry {
     if (options.spec) {
       this._loadFromSpec(options.spec);
     } else {
+      // Find dimensions.json relative to project root, not cwd
+      // __dirname is /path/to/AGISystem2/src/core
+      // We need /path/to/AGISystem2/data/init/dimensions.json
+      const projectRoot = path.resolve(__dirname, '..', '..');
       const dimensionsPath = options.dimensionsPath ||
-        path.join(process.cwd(), 'data', 'init', 'dimensions.json');
+        path.join(projectRoot, 'data', 'init', 'dimensions.json');
       this._loadFromFile(dimensionsPath);
     }
   }

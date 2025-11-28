@@ -17,6 +17,34 @@ const Retriever = require('../reason/retrieval');
 const TemporalMemory = require('../reason/temporal_memory');
 const ValidationEngine = require('../reason/validation');
 
+// Relations that support transitive reasoning (chaining)
+// e.g., friction CAUSES heat, heat CAUSES expansion → friction CAUSES expansion
+const TRANSITIVE_RELATIONS = new Set([
+  'IS_A',
+  'LOCATED_IN',
+  'PART_OF',
+  'HAS_PART',
+  'CONTAINS',
+  'SUBSET_OF',
+  'MEMBER_OF',
+  'CAUSES',      // friction → heat → expansion
+  'BEFORE',      // WW1 → WW2 → Cold War
+  'AFTER',       // testing → development (inverse of BEFORE)
+  'LEADS_TO'     // similar to CAUSES
+]);
+
+// Relations that support inheritance via IS_A chains
+// e.g., Tesla IS_A car, car HAS wheel → Tesla HAS wheel
+const INHERITABLE_RELATIONS = new Set([
+  'HAS',
+  'HELPS',
+  'CAN',
+  'PROVIDES',
+  'REQUIRES',
+  'DESIGNS',
+  'PRODUCES'
+]);
+
 class EngineAPI {
   constructor(deps) {
     const {
@@ -127,6 +155,13 @@ class EngineAPI {
     let result;
     if (ast.relation === 'IS_A') {
       result = this.reasoner.deduceIsA(ast.subject, ast.object);
+    } else if (TRANSITIVE_RELATIONS.has(ast.relation)) {
+      // Use transitive reasoning for relations like LOCATED_IN, PART_OF, etc.
+      result = this.reasoner.deduceTransitive(ast.subject, ast.relation, ast.object);
+    } else if (INHERITABLE_RELATIONS.has(ast.relation)) {
+      // Use inheritance reasoning for relations like HAS, HELPS, etc.
+      // e.g., if Tesla IS_A car and car HAS wheel, then Tesla HAS wheel
+      result = this.reasoner.deduceWithInheritance(ast.subject, ast.relation, ast.object);
     } else {
       result = this.reasoner.factExists(ast.subject, ast.relation, ast.object);
     }
@@ -155,6 +190,8 @@ class EngineAPI {
       relation: ast.relation,
       object: ast.object,
       truth: merged.truth,
+      confidence: merged.confidence,
+      method: merged.method,
       band: merged.band
     });
     return merged;

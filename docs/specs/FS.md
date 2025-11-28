@@ -28,6 +28,8 @@ Defines functional behavior of the neuro-symbolic engine that ingests Sys2DSL co
 
 ### Persistence and Administration
 - <a id="FS-10"></a>**FS-10 Persistence & Versioning:** Store theories separately from runtime memory; enable versioned snapshots and reload. Maintain audit logs of theory changes and ingested facts.
+  - **Pluggable Storage**: Theory storage uses a pluggable adapter interface (`TheoryStorage`). Default implementation uses file system with `.sys2dsl` (DSL text) and `.theory.json` (structured facts) formats. Custom adapters can be provided for database, cloud, or in-memory storage.
+  - DSL commands (`LOAD_THEORY`, `SAVE_THEORY`, etc.) work directly with storage, enabling use as a library without CLI.
 - <a id="FS-11"></a>**FS-11 Administrative Operations:** Provide commands to list theories, inspect concept bounds, view conflicts, and trigger re-clustering events without modifying raw data.
 
 ### Safety and Validation
@@ -44,6 +46,22 @@ Defines functional behavior of the neuro-symbolic engine that ingests Sys2DSL co
   - `WHAT_IS <concept>`: Returns a simple natural-language description of a concept based on its IS_A relations and properties.
 
   These commands enable LLM-assisted ontology population by identifying knowledge gaps before executing queries.
+
+### Base Theories and Initialization
+- <a id="FS-16"></a>**FS-16 Base Theory Preloading:** System automatically loads foundational theories at session initialization:
+  - **Ontology Base** (`data/init/theories/base/ontology_base.sys2dsl`): Fundamental facts about categories (entity, physical_entity, abstract_entity), living things (mammal, bird, animal), spatial relations (continent, country, city), temporal relations (BEFORE, AFTER), causal relations, human roles, and artifacts.
+  - **Axiology Base** (`data/init/theories/base/axiology_base.sys2dsl`): Foundational value facts about ethics (good, bad, harm, benefit), deontic modalities (obligation, permission, prohibition), rights and duties, professional ethics, fairness principles, and bias masking rules.
+  - **Caching Mechanism**: Theories are compiled to JSON cache on first load; subsequent loads use cache for ~10x faster initialization. Cache is automatically invalidated when source files change.
+  - Sessions can opt out of preloading via `skipPreload: true` for testing isolation.
+
+### Meta-Theory Registry
+- <a id="FS-17"></a>**FS-17 Theory Meta-Information:** Maintain a registry of available theories with metadata:
+  - Theory name, description, domain, and version
+  - Priority and applicability rules
+  - Dependencies on other theories
+  - Reasoning mode preferences (which inference methods work best)
+  - Usage statistics (success rates of different reasoning strategies)
+  This enables intelligent theory selection and reasoning strategy optimization.
 
 ## Requirement Cross-Reference
 
@@ -64,6 +82,8 @@ Defines functional behavior of the neuro-symbolic engine that ingests Sys2DSL co
 | FS-13 | FS-14 | Renumbered |
 | FS-14 | FS-15 | Renumbered |
 | FS-15 | NEW | Ontology discovery commands |
+| FS-16 | NEW | Base theory preloading |
+| FS-17 | NEW | Theory meta-information registry |
 | - | FS-08 | Consolidated into FS-02 |
 | - | FS-16 | Consolidated into FS-08 |
 

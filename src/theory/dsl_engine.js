@@ -211,6 +211,10 @@ class TheoryDSLEngine {
         return this.theoryCommands.cmdSaveTheory(argTokens, env);
       case 'MERGE_THEORY':
         return this.theoryCommands.cmdMergeTheory(argTokens, env);
+      case 'DELETE_THEORY':
+        return this.theoryCommands.cmdDeleteTheory(argTokens, env);
+      case 'THEORY_INFO':
+        return this.theoryCommands.cmdTheoryInfo(argTokens, env);
       case 'THEORY_PUSH':
         return this.theoryCommands.cmdTheoryPush(argTokens, env);
       case 'THEORY_POP':

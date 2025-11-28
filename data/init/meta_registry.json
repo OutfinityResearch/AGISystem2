@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "lastUpdated": "2025-11-28T15:51:37.369Z",
+  "theories": [
+    {
+      "id": "test_animals",
+      "name": "test_animals",
+      "description": "",
+      "domain": "general",
+      "version": "1.0",
+      "priority": 0,
+      "dependencies": [],
+      "preferredMethods": [],
+      "applicability": {},
+      "stats": {
+        "loadCount": 0,
+        "queryCount": 0,
+        "successCount": 0,
+        "lastUsed": null
+      },
+      "registeredAt": "2025-11-28T15:51:37.360Z"
+    },
+    {
+      "id": "birds",
+      "name": "birds",
+      "description": "",
+      "domain": "general",
+      "version": "1.0",
+      "priority": 0,
+      "dependencies": [],
+      "preferredMethods": [],
+      "applicability": {},
+      "stats": {
+        "loadCount": 10,
+        "queryCount": 0,
+        "successCount": 0,
+        "lastUsed": "2025-11-28T15:51:37.362Z"
+      },
+      "registeredAt": "2025-11-28T15:51:37.362Z"
+    },
+    {
+      "id": "geography",
+      "name": "geography",
+      "description": "",
+      "domain": "general",
+      "version": "1.0",
+      "priority": 0,
+      "dependencies": [],
+      "preferredMethods": [],
+      "applicability": {},
+      "stats": {
+        "loadCount": 10,
+        "queryCount": 0,
+        "successCount": 0,
+        "lastUsed": "2025-11-28T15:51:37.364Z"
+      },
+      "registeredAt": "2025-11-28T15:51:37.364Z"
+    },
+    {
+      "id": "extra_facts",
+      "name": "extra_facts",
+      "description": "",
+      "domain": "general",
+      "version": "1.0",
+      "priority": 0,
+      "dependencies": [],
+      "preferredMethods": [],
+      "applicability": {},
+      "stats": {
+        "loadCount": 9,
+        "queryCount": 0,
+        "successCount": 0,
+        "lastUsed": "2025-11-28T15:51:37.369Z"
+      },
+      "registeredAt": "2025-11-28T15:51:37.368Z"
+    }
+  ],
+  "reasoningStats": {}
+}

@@ -20,7 +20,15 @@ class AgentSystem2 {
     this.translator = new TranslatorBridge();
   }
 
-  createSession({ baseTheoryFile, id } = {}) {
+  /**
+   * Create a new session
+   * @param {Object} options
+   * @param {string} [options.baseTheoryFile] - Custom theory file to load
+   * @param {string} [options.id] - Session ID
+   * @param {boolean} [options.loadBaseTheories=true] - Load ontology_base and axiology_base
+   * @param {boolean} [options.skipPreload=false] - Skip all preloading (for tests)
+   */
+  createSession({ baseTheoryFile, id, loadBaseTheories, skipPreload } = {}) {
     const engine = new EngineAPI({
       config: this.config,
       audit: this.audit,
@@ -28,7 +36,13 @@ class AgentSystem2 {
       translator: this.translator,
       baseTheoryFile
     });
-    const session = new System2Session({ id, engine, baseTheoryFile });
+    const session = new System2Session({
+      id,
+      engine,
+      baseTheoryFile,
+      loadBaseTheories,
+      skipPreload
+    });
     return session;
   }
 }

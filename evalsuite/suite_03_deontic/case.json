@@ -31,6 +31,7 @@
     {
       "id": "q1",
       "natural_language": "Can a medical drone fly over a hospital?",
+      "expected_dsl": "@q1 ASK medical_drone PERMITTED_TO fly_over_hospital",
       "expected_answer": {
         "natural_language": "Yes, medical drones are permitted to fly over hospitals.",
         "truth": "TRUE_CERTAIN",
@@ -40,6 +41,7 @@
     {
       "id": "q2",
       "natural_language": "Is a commercial drone allowed in the city center?",
+      "expected_dsl": "@q2 ASK commercial_drone PERMITTED_TO city_center",
       "expected_answer": {
         "natural_language": "No, commercial drones are prohibited from city centers.",
         "truth": "FALSE",
@@ -49,6 +51,7 @@
     {
       "id": "q3",
       "natural_language": "Can an intern access confidential files?",
+      "expected_dsl": "@q3 ASK intern PERMITTED_TO access_confidential_files",
       "expected_answer": {
         "natural_language": "No, interns are prohibited from accessing confidential files.",
         "truth": "FALSE",
@@ -58,6 +61,7 @@
     {
       "id": "q4",
       "natural_language": "Can a manager access confidential files?",
+      "expected_dsl": "@q4 ASK manager PERMITTED_TO access_confidential_files",
       "expected_answer": {
         "natural_language": "Yes, managers are permitted to access confidential files.",
         "truth": "TRUE_CERTAIN",
@@ -67,6 +71,7 @@
     {
       "id": "q5",
       "natural_language": "Does an international transfer require a compliance check?",
+      "expected_dsl": "@q5 ASK international_transfer REQUIRES compliance_check",
       "expected_answer": {
         "natural_language": "Yes, international transfers require a compliance check.",
         "truth": "TRUE_CERTAIN",
@@ -76,6 +81,7 @@
     {
       "id": "q6",
       "natural_language": "Can a nurse prescribe medication?",
+      "expected_dsl": "@q6 ASK nurse PERMITTED_TO prescribe_medication",
       "expected_answer": {
         "natural_language": "No, nurses can only administer medication, not prescribe it. Only doctors can prescribe.",
         "truth": "FALSE",
@@ -85,6 +91,7 @@
     {
       "id": "q7",
       "natural_language": "Is patient consent required for treatment?",
+      "expected_dsl": "@q7 ASK treatment REQUIRES patient_consent",
       "expected_answer": {
         "natural_language": "Yes, treatment requires patient consent.",
         "truth": "TRUE_CERTAIN",
@@ -94,6 +101,7 @@
     {
       "id": "q8",
       "natural_language": "Can a customer view their own account?",
+      "expected_dsl": "@q8 ASK customer PERMITTED_TO view_own_account",
       "expected_answer": {
         "natural_language": "Yes, customers are permitted to view their own accounts.",
         "truth": "TRUE_CERTAIN",

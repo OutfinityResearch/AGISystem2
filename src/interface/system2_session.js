@@ -1,7 +1,16 @@
 const TheoryDSLEngine = require('../theory/dsl_engine');
+const TheoryPreloader = require('../theory/theory_preloader');
 
 class System2Session {
-  constructor({ id, engine, baseTheoryFile } = {}) {
+  /**
+   * @param {Object} options
+   * @param {string} [options.id] - Session ID
+   * @param {Object} options.engine - EngineAPI instance
+   * @param {string} [options.baseTheoryFile] - Custom theory file to load
+   * @param {boolean} [options.loadBaseTheories=true] - Load ontology_base and axiology_base
+   * @param {boolean} [options.skipPreload=false] - Skip all preloading (for tests)
+   */
+  constructor({ id, engine, baseTheoryFile, loadBaseTheories = true, skipPreload = false } = {}) {
     this.id = id || `session_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
     this.engine = engine;
     this.dsl = new TheoryDSLEngine({
@@ -11,8 +20,16 @@ class System2Session {
     });
     this.env = {};
     this.activeTheoryLines = [];
+    this._baseTheoriesLoaded = false;
+    this._preloadStats = null;
+
+    // Load base theories (ontology + axiology) unless skipped
+    if (loadBaseTheories && !skipPreload) {
+      this._loadBaseTheories();
+    }
+
+    // Load custom theory file if specified
     if (baseTheoryFile) {
-      // The engine/storage decide how to resolve and load theory text; session just applies it.
       if (this.engine.storage && typeof this.engine.storage.loadTheoryText === 'function') {
         const text = this.engine.storage.loadTheoryText(baseTheoryFile);
         if (text) {
@@ -20,6 +37,36 @@ class System2Session {
         }
       }
     }
+  }
+
+  /**
+   * Load base ontology and axiology theories
+   * Uses cached versions for speed when available
+   * @private
+   */
+  _loadBaseTheories() {
+    try {
+      const preloader = new TheoryPreloader({
+        conceptStore: this.engine.conceptStore
+      });
+
+      // Synchronous load (preloader handles async internally but we call sync methods)
+      const result = preloader.loadBaseTheories();
+
+      this._baseTheoriesLoaded = true;
+      this._preloadStats = result;
+    } catch (e) {
+      // Base theory loading failure is not fatal - system works without them
+      console.warn(`TheoryPreloader: Failed to load base theories: ${e.message}`);
+    }
+  }
+
+  /**
+   * Get statistics about preloaded theories
+   * @returns {Object|null} Preload stats or null if not loaded
+   */
+  getPreloadStats() {
+    return this._preloadStats;
   }
 
   run(textOrLines) {

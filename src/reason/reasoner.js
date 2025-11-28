@@ -329,24 +329,63 @@ class Reasoner {
     };
   }
 
+  /**
+   * Check if subject IS_A object via transitive chain
+   *
+   * Returns:
+   * - TRUE_CERTAIN with confidence when found via chain
+   * - FALSE when DISJOINT_WITH relation exists
+   * - UNKNOWN when no evidence found (subject exists but no path to object)
+   *
+   * @param {string} subject - The subject to check
+   * @param {string} object - The type to check against
+   * @param {Array} contextStack - Optional theory context
+   * @returns {Object} Result with truth, confidence, and method
+   */
   deduceIsA(subject, object, contextStack = null) {
     const facts = this._getFacts(contextStack);
     const norm = (v) => (typeof v === 'string' ? v.trim().toLowerCase() : v);
     const target = norm(object);
+    const subjectNorm = norm(subject);
     const visited = new Set();
-    const stack = [norm(subject)];
+    const stack = [{ node: subjectNorm, depth: 0 }];
     const maxSteps = this.config && this.config.get('maxReasonerIterations')
       ? this.config.get('maxReasonerIterations')
       : Number.MAX_SAFE_INTEGER;
     let steps = 0;
+
+    // Check if subject even exists in the knowledge base
+    const subjectExists = facts.some(f =>
+      norm(f.subject) === subjectNorm || norm(f.object) === subjectNorm
+    );
+
+    // Check for explicit DISJOINT_WITH relations (FALSE case)
+    const disjoint = facts.some(f => {
+      if (f.relation !== 'DISJOINT_WITH') return false;
+      const s = norm(f.subject);
+      const o = norm(f.object);
+      // subject's type is disjoint with target type
+      return (s === subjectNorm && o === target) || (s === target && o === subjectNorm);
+    });
+    if (disjoint) {
+      return { truth: 'FALSE', confidence: 1.0, method: 'disjoint' };
+    }
+
     while (stack.length > 0) {
       steps += 1;
       if (steps > maxSteps) {
-        return { truth: 'UNKNOWN_TIMEOUT' };
+        return { truth: 'UNKNOWN', confidence: 0, method: 'timeout' };
       }
-      const current = stack.pop();
+      const { node: current, depth } = stack.pop();
       if (current === target) {
-        return { truth: 'TRUE_CERTAIN' };
+        // Confidence decays slightly with chain depth (0.95^depth)
+        const confidence = Math.pow(0.95, depth);
+        return {
+          truth: 'TRUE_CERTAIN',
+          confidence: Math.round(confidence * 100) / 100,
+          method: depth === 0 ? 'direct' : 'transitive',
+          depth
+        };
       }
       if (visited.has(current)) {
         continue;
@@ -354,11 +393,16 @@ class Reasoner {
       visited.add(current);
       for (const fact of facts) {
         if (fact.relation === 'IS_A' && norm(fact.subject) === current) {
-          stack.push(norm(fact.object));
+          stack.push({ node: norm(fact.object), depth: depth + 1 });
         }
       }
     }
-    return { truth: 'FALSE' };
+
+    // No path found - return UNKNOWN if subject exists, FALSE if subject is completely unknown
+    if (subjectExists) {
+      return { truth: 'UNKNOWN', confidence: 0, method: 'no_path' };
+    }
+    return { truth: 'UNKNOWN', confidence: 0, method: 'unknown_subject' };
   }
 
   /**
@@ -481,18 +525,248 @@ class Reasoner {
     };
   }
 
+  /**
+   * Check if a fact exists directly in the knowledge base
+   *
+   * Returns:
+   * - TRUE_CERTAIN with confidence 1.0 when fact exists directly
+   * - FALSE when explicit negation exists (NOT_R or PROHIBITED relations)
+   * - UNKNOWN when no evidence either way
+   *
+   * @param {string} subject - The subject
+   * @param {string} relation - The relation
+   * @param {string} object - The object
+   * @param {Array} contextStack - Optional theory context
+   * @returns {Object} Result with truth, confidence, and method
+   */
   factExists(subject, relation, object, contextStack = null) {
     const facts = this._getFacts(contextStack);
     const norm = (v) => (typeof v === 'string' ? v.trim().toLowerCase() : v);
     const sNorm = norm(subject);
     const oNorm = norm(object);
+
+    // Check for direct fact
     const exists = facts.some((f) => {
       const fSub = norm(f.subject);
       const fRel = f.relation;
       const fObj = norm(f.object);
       return fSub === sNorm && fRel === relation && fObj === oNorm;
     });
-    return { truth: exists ? 'TRUE_CERTAIN' : 'FALSE' };
+
+    if (exists) {
+      return { truth: 'TRUE_CERTAIN', confidence: 1.0, method: 'direct' };
+    }
+
+    // Check for explicit negation (NOT_R pattern or PROHIBITED_FROM)
+    const negationRelation = 'NOT_' + relation;
+    const hasNegation = facts.some((f) => {
+      const fSub = norm(f.subject);
+      const fRel = f.relation;
+      const fObj = norm(f.object);
+      return fSub === sNorm && fRel === negationRelation && fObj === oNorm;
+    });
+
+    if (hasNegation) {
+      return { truth: 'FALSE', confidence: 1.0, method: 'explicit_negation' };
+    }
+
+    // Check if PROHIBITED_FROM exists for permission-related queries
+    if (relation === 'PERMITTED_TO' || relation === 'CAN') {
+      const isProhibited = facts.some((f) => {
+        const fSub = norm(f.subject);
+        const fRel = f.relation;
+        const fObj = norm(f.object);
+        return fSub === sNorm && fRel === 'PROHIBITED_FROM' && fObj === oNorm;
+      });
+      if (isProhibited) {
+        return { truth: 'FALSE', confidence: 1.0, method: 'prohibited' };
+      }
+    }
+
+    // Check if subject exists in knowledge base at all
+    const subjectExists = facts.some(f =>
+      norm(f.subject) === sNorm || norm(f.object) === sNorm
+    );
+
+    // No evidence found - return UNKNOWN
+    return {
+      truth: 'UNKNOWN',
+      confidence: 0,
+      method: subjectExists ? 'no_evidence' : 'unknown_subject'
+    };
+  }
+
+  /**
+   * Type inheritance reasoning - check if subject has relation via IS_A chain
+   *
+   * If X IS_A Y and Y has relation R to Z, then X inherits that relation.
+   * Example: Tesla IS_A car, car HAS wheel → Tesla HAS wheel
+   *          doctor IS_A medical_professional, medical_professional HELPS patient → doctor HELPS patient
+   *
+   * Returns:
+   * - TRUE_CERTAIN with confidence when found (direct or inherited)
+   * - FALSE when explicit negation found
+   * - UNKNOWN when no evidence found
+   *
+   * @param {string} subject - The subject to check
+   * @param {string} relation - The relation to look for
+   * @param {string} object - The object in the relation
+   * @param {Array} contextStack - Optional theory context
+   * @returns {Object} Result with truth, confidence, and method
+   */
+  deduceWithInheritance(subject, relation, object, contextStack = null) {
+    // First check direct fact
+    const direct = this.factExists(subject, relation, object, contextStack);
+    if (direct.truth === 'TRUE_CERTAIN') {
+      return direct;
+    }
+    // If explicitly negated, return FALSE
+    if (direct.truth === 'FALSE' && direct.method !== 'no_evidence') {
+      return direct;
+    }
+
+    // Then check via IS_A chain: find all types that subject IS_A
+    const facts = this._getFacts(contextStack);
+    const norm = (v) => (typeof v === 'string' ? v.trim().toLowerCase() : v);
+    const subjectNorm = norm(subject);
+    const visited = new Set();
+    const stack = [{ node: subjectNorm, depth: 0 }];
+    const maxSteps = this.config && this.config.get('maxReasonerIterations')
+      ? this.config.get('maxReasonerIterations')
+      : Number.MAX_SAFE_INTEGER;
+    let steps = 0;
+
+    while (stack.length > 0) {
+      steps += 1;
+      if (steps > maxSteps) {
+        return { truth: 'UNKNOWN', confidence: 0, method: 'timeout' };
+      }
+      const { node: current, depth } = stack.pop();
+      if (visited.has(current)) {
+        continue;
+      }
+      visited.add(current);
+
+      // Check if current type has the relation to object
+      const hasRelation = facts.some((f) => {
+        const fSub = norm(f.subject);
+        const fRel = f.relation;
+        const fObj = norm(f.object);
+        return fSub === current && fRel === relation && fObj === norm(object);
+      });
+      if (hasRelation) {
+        // Confidence decays with inheritance depth
+        const confidence = Math.pow(0.95, depth);
+        return {
+          truth: 'TRUE_CERTAIN',
+          confidence: Math.round(confidence * 100) / 100,
+          method: depth === 0 ? 'direct' : 'inheritance',
+          inheritedFrom: current,
+          depth
+        };
+      }
+
+      // Find IS_A parents to continue traversal
+      for (const fact of facts) {
+        if (fact.relation === 'IS_A' && norm(fact.subject) === current) {
+          stack.push({ node: norm(fact.object), depth: depth + 1 });
+        }
+      }
+    }
+
+    // Check if subject exists in knowledge base
+    const subjectExists = facts.some(f =>
+      norm(f.subject) === subjectNorm || norm(f.object) === subjectNorm
+    );
+
+    return {
+      truth: 'UNKNOWN',
+      confidence: 0,
+      method: subjectExists ? 'no_evidence' : 'unknown_subject'
+    };
+  }
+
+  /**
+   * Transitive relation reasoning - follows chains for configurable relations
+   *
+   * Works like deduceIsA but for any transitive relation.
+   * Example: Paris LOCATED_IN France, France LOCATED_IN Europe
+   *          → Paris LOCATED_IN Europe (via transitivity)
+   *
+   * Returns:
+   * - TRUE_CERTAIN with confidence when path found
+   * - FALSE when explicit negation exists
+   * - UNKNOWN when no path found but subject exists
+   *
+   * @param {string} subject - Starting subject
+   * @param {string} relation - The relation to traverse (LOCATED_IN, HAS_PART, etc.)
+   * @param {string} object - Target object to reach
+   * @param {Array} contextStack - Optional theory context
+   * @returns {Object} Result with truth, confidence, and method
+   */
+  deduceTransitive(subject, relation, object, contextStack = null) {
+    const facts = this._getFacts(contextStack);
+    const norm = (v) => (typeof v === 'string' ? v.trim().toLowerCase() : v);
+    const target = norm(object);
+    const subjectNorm = norm(subject);
+    const visited = new Set();
+    const stack = [{ node: subjectNorm, depth: 0 }];
+    const maxSteps = this.config && this.config.get('maxReasonerIterations')
+      ? this.config.get('maxReasonerIterations')
+      : Number.MAX_SAFE_INTEGER;
+    let steps = 0;
+
+    // Check for explicit negation (NOT_LOCATED_IN, etc.)
+    const negationRelation = 'NOT_' + relation;
+    const hasNegation = facts.some((f) => {
+      const fSub = norm(f.subject);
+      const fRel = f.relation;
+      const fObj = norm(f.object);
+      return fSub === subjectNorm && fRel === negationRelation && fObj === target;
+    });
+    if (hasNegation) {
+      return { truth: 'FALSE', confidence: 1.0, method: 'explicit_negation' };
+    }
+
+    while (stack.length > 0) {
+      steps += 1;
+      if (steps > maxSteps) {
+        return { truth: 'UNKNOWN', confidence: 0, method: 'timeout' };
+      }
+      const { node: current, depth } = stack.pop();
+      if (current === target) {
+        // Confidence decays with chain depth
+        const confidence = Math.pow(0.95, depth);
+        return {
+          truth: 'TRUE_CERTAIN',
+          confidence: Math.round(confidence * 100) / 100,
+          method: depth === 0 ? 'direct' : 'transitive',
+          depth
+        };
+      }
+      if (visited.has(current)) {
+        continue;
+      }
+      visited.add(current);
+
+      // Find all facts where current is the subject with the given relation
+      for (const fact of facts) {
+        if (fact.relation === relation && norm(fact.subject) === current) {
+          stack.push({ node: norm(fact.object), depth: depth + 1 });
+        }
+      }
+    }
+
+    // Check if subject exists in knowledge base
+    const subjectExists = facts.some(f =>
+      norm(f.subject) === subjectNorm || norm(f.object) === subjectNorm
+    );
+
+    return {
+      truth: 'UNKNOWN',
+      confidence: 0,
+      method: subjectExists ? 'no_path' : 'unknown_subject'
+    };
   }
 }
 

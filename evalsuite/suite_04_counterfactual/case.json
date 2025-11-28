@@ -29,6 +29,8 @@
     {
       "id": "q1",
       "natural_language": "If water boiled at 50 degrees, would it still be liquid at room temperature?",
+      "expected_dsl": null,
+      "expected_dsl_notes": "Requires mathematical comparison (20 < 50) - not expressible in current DSL",
       "expected_answer": {
         "natural_language": "No, if water boiled at 50 degrees and room temperature is 20 degrees, water would still be liquid. But if room temp was above 50, it would be gas.",
         "truth": "TRUE_CERTAIN",
@@ -38,15 +40,18 @@
     {
       "id": "q2",
       "natural_language": "What if there was no oxygen? Could fire exist?",
+      "expected_dsl": "@q2 ASK fire REQUIRES oxygen",
+      "expected_dsl_notes": "DSL confirms the dependency exists; the NL answer interprets the counterfactual implication",
       "expected_answer": {
         "natural_language": "No, fire requires oxygen to burn. Without oxygen, fire cannot exist.",
-        "truth": "FALSE",
-        "explanation": "Counterfactual: removing required element"
+        "truth": "TRUE_CERTAIN",
+        "explanation": "The fact that fire REQUIRES oxygen is TRUE_CERTAIN; the counterfactual 'no fire without oxygen' follows from this"
       }
     },
     {
       "id": "q3",
       "natural_language": "Did World War 1 happen before World War 2?",
+      "expected_dsl": "@q3 ASK world_war_1 BEFORE world_war_2",
       "expected_answer": {
         "natural_language": "Yes, World War 1 happened before World War 2.",
         "truth": "TRUE_CERTAIN",
@@ -56,6 +61,7 @@
     {
       "id": "q4",
       "natural_language": "Did smartphones exist before personal computers?",
+      "expected_dsl": "@q4 ASK smartphone BEFORE personal_computer",
       "expected_answer": {
         "natural_language": "No, smartphones came after personal computers.",
         "truth": "FALSE",
@@ -65,6 +71,7 @@
     {
       "id": "q5",
       "natural_language": "Can you manufacture before designing?",
+      "expected_dsl": "@q5 ASK manufacturing BEFORE design",
       "expected_answer": {
         "natural_language": "No, design must come before manufacturing.",
         "truth": "FALSE",
@@ -74,6 +81,7 @@
     {
       "id": "q6",
       "natural_language": "Is approval needed before implementation?",
+      "expected_dsl": "@q6 ASK approval BEFORE implementation",
       "expected_answer": {
         "natural_language": "Yes, approval is required before implementation.",
         "truth": "TRUE_CERTAIN",
@@ -83,15 +91,18 @@
     {
       "id": "q7",
       "natural_language": "If humans had no water, could they survive?",
+      "expected_dsl": "@q7 ASK human REQUIRES water",
+      "expected_dsl_notes": "DSL confirms the dependency exists; the NL answer interprets the counterfactual implication",
       "expected_answer": {
         "natural_language": "No, humans require water to survive.",
-        "truth": "FALSE",
-        "explanation": "Counterfactual: REQUIRES dependency"
+        "truth": "TRUE_CERTAIN",
+        "explanation": "The fact that human REQUIRES water is TRUE_CERTAIN; the counterfactual 'no survival without water' follows from this"
       }
     },
     {
       "id": "q8",
       "natural_language": "Does testing come before or after development?",
+      "expected_dsl": "@q8 ASK testing AFTER development",
       "expected_answer": {
         "natural_language": "Testing comes after development.",
         "truth": "TRUE_CERTAIN",

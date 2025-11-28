@@ -1,41 +1,6 @@
 {
   "cases": [
     {
-      "id": "01_taxonomy",
-      "name": "Animal Taxonomy and Inheritance",
-      "failedQueries": [
-        "q2"
-      ],
-      "lastRun": "2025-11-28T12:20:49.071Z"
-    },
-    {
-      "id": "02_physical_properties",
-      "name": "Physical Properties and Substances",
-      "failedQueries": [
-        "q1",
-        "q3"
-      ],
-      "lastRun": "2025-11-28T12:30:11.546Z"
-    },
-    {
-      "id": "04_counterfactual",
-      "name": "Counterfactual Reasoning - What If Scenarios",
-      "failedQueries": [
-        "q2",
-        "q3"
-      ],
-      "lastRun": "2025-11-28T12:20:49.071Z"
-    },
-    {
-      "id": "05_abductive",
-      "name": "Abductive Reasoning - Finding Explanations",
-      "failedQueries": [
-        "q1",
-        "q2"
-      ],
-      "lastRun": "2025-11-28T12:28:32.375Z"
-    },
-    {
       "id": "06_analogy",
       "name": "Analogical Reasoning - Structural Mapping",
       "failedQueries": [
@@ -373,55 +338,45 @@
       "id": "suite_01_ontology",
       "name": "Comprehensive Ontology & Taxonomy",
       "failedQueries": [
-        "q1",
-        "q4",
-        "q7"
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-11-28T12:54:56.865Z"
+      "lastRun": "2025-11-28T14:54:48.772Z"
     },
     {
       "id": "suite_02_causation",
       "name": "Comprehensive Causation & Abduction",
       "failedQueries": [
-        "q3",
-        "q4",
-        "q5",
-        "q7",
         "q8"
       ],
-      "lastRun": "2025-11-28T12:55:48.950Z"
+      "lastRun": "2025-11-28T15:38:22.709Z"
     },
     {
       "id": "suite_03_deontic",
       "name": "Comprehensive Deontic Rules & Permissions",
       "failedQueries": [
-        "q2",
-        "q7"
+        "q3"
       ],
-      "lastRun": "2025-11-28T12:56:32.935Z"
+      "lastRun": "2025-11-28T15:19:48.844Z"
     },
     {
       "id": "suite_04_counterfactual",
       "name": "Comprehensive Counterfactual & Temporal",
       "failedQueries": [
-        "q2",
-        "q3"
+        "q1"
       ],
-      "lastRun": "2025-11-28T12:58:07.858Z"
+      "lastRun": "2025-11-28T15:52:54.618Z"
     },
     {
       "id": "suite_05_bias_masking",
       "name": "Comprehensive Bias Control & Masking",
       "failedQueries": [
-        "q1",
-        "q4",
-        "q5",
-        "q7"
+        "q1"
       ],
-      "lastRun": "2025-11-28T12:59:26.130Z"
+      "lastRun": "2025-11-28T15:52:54.618Z"
     }
   ],
-  "lastUpdated": "2025-11-28T12:59:26.137Z",
+  "lastUpdated": "2025-11-28T15:52:54.618Z",
   "rangeInfo": {
     "lastFrom": null,
     "lastTo": null

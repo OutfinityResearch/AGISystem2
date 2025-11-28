@@ -128,7 +128,8 @@ async function run({ profile }) {
       '@reset RESET_SESSION',
       '@list LIST_THEORIES'
     ]);
-    return env.list && env.list.count === 0;
+    // RESET_SESSION should clear theory stack (depth=0) and current theory
+    return env.reset && env.reset.ok === true && env.list && env.list.depth === 0;
   });
 
   // =========================================================================

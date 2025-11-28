@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-11-28T11:48:47.929Z",
+  "timestamp": "2025-11-28T15:51:42.611Z",
   "profile": "auto_test",
   "summary": {
     "total": 1,
@@ -9,11 +9,11 @@
     "timeout": 0
   },
   "suites": {
-    "sys2dsl_commands": {
+    "storage_adapter": {
       "status": "passed",
-      "passed": 20,
+      "passed": 1,
       "failed": 0,
-      "total": 20
+      "total": 1
     }
   }
 }
