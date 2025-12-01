@@ -100,7 +100,7 @@ Validates that a triplet argument does not contain `property=value` syntax.
 
 ### Wildcards in Patterns
 ```
-@matches FACTS_MATCHING ? IS_A Animal
+@matches INSTANCES_OF Animal
 ```
 
 ## Algorithm: Topological Sort (Kahn's)

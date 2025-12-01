@@ -108,7 +108,7 @@ Returns:
 
 ### JSON Export
 ```sys2dsl
-@facts FACTS_MATCHING ? IS_A Animal
+@facts INSTANCES_OF Animal
 @json TO_JSON $facts pretty
 # → { json: "[\n  {...},\n  {...}\n]" }
 ```
@@ -135,7 +135,7 @@ Returns:
 
 ### Fact Summary
 ```sys2dsl
-@allFacts FACTS_MATCHING ? ? ?
+@allFacts FACTS_MATCHING
 @summary SUMMARIZE $allFacts maxItems=5
 # → {
 #   summary: "Dog IS_A mammal\nCat IS_A mammal\n...",

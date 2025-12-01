@@ -149,6 +149,12 @@ class TheoryDSLEngine {
         return this.coreCommands.cmdAbduct(argTokens, env);
       case 'FACTS_MATCHING':
         return this.coreCommands.cmdFactsMatching(argTokens, env, facts);
+      case 'FACTS_WITH_RELATION':
+        return this.coreCommands.cmdFactsWithRelation(argTokens, env, facts);
+      case 'FACTS_WITH_OBJECT':
+        return this.coreCommands.cmdFactsWithObject(argTokens, env, facts);
+      case 'INSTANCES_OF':
+        return this.coreCommands.cmdInstancesOf(argTokens, env, facts);
       case 'ALL_REQUIREMENTS_SATISFIED':
         return this.coreCommands.cmdAllRequirementsSatisfied(argTokens, env);
 

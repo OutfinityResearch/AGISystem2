@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-01T18:55:44.078Z",
+  "timestamp": "2025-12-01T21:54:21.092Z",
   "totalPassed": 248,
   "totalFailed": 0,
   "cases": [
@@ -15,7 +15,8 @@
           "expectedNatural": "Yes, Fido is a living thing through the chain: Fido → dog → mammal → animal → living thing.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.81,\"method\":\"transitive\",\"depth\":4,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"living_thing\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 3/8 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 3/8 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -24,7 +25,8 @@
           "expectedNatural": "No, Sparky is a bird and birds are disjoint with mammals.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_path\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"mammal\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 2 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 2 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -33,7 +35,8 @@
           "expectedNatural": "Yes, Whiskers is a cat, cats are mammals, mammals are animals.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.86,\"method\":\"transitive\",\"depth\":3,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"animal\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -42,7 +45,8 @@
           "expectedNatural": "Yes, Paris is in France and France is in Europe.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.9,\"method\":\"transitive\",\"depth\":2,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Paris\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -51,7 +55,8 @@
           "expectedNatural": "No, Tokyo is in Japan which is in Asia, not Europe.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_path\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Tokyo\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 2 indicators (+), 0 (-), 1/5 concepts"
+          "matchReason": "NL Match: 2 indicators (+), 0 (-), 1/5 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -60,7 +65,8 @@
           "expectedNatural": "Yes, software engineers are a type of engineer.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"engineer\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -69,7 +75,8 @@
           "expectedNatural": "Yes, doctors are medical professionals and medical professionals help patients.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"inheritance\",\"inheritedFrom\":\"medical_professional\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"doctor\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 1 (-), 2/6 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 1 (-), 2/6 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -78,7 +85,8 @@
           "expectedNatural": "Yes, Tesla is a car and cars have wheels.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"inheritance\",\"inheritedFrom\":\"car\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Tesla\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 1 (-), 1/2 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 1 (-), 1/2 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -96,7 +104,8 @@
           "expectedNatural": "Yes, infection causes fever.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"infection\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/3 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/3 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -105,7 +114,8 @@
           "expectedNatural": "Yes, friction causes heat and heat causes expansion.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.9,\"method\":\"transitive\",\"depth\":2,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"friction\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -114,7 +124,8 @@
           "expectedNatural": "John has fever and coughing, so respiratory infection is most likely.",
           "actualResponse": "{\"hypothesis\":\"infection\",\"band\":\"PLAUSIBLE\",\"hypotheses\":[{\"hypothesis\":\"infection\",\"band\":\"PLAUSIBLE\",\"priorityScore\":0.5,\"depth\":0,\"isTransitive\":false,\"combinedScore\":0.5,\"viaFact\":{\"subject\":\"infection\",\"relation\":\"CAUSES\",\"object\":\"fever\"}},{\"hypothesis\":\"inflammation\",\"band\":\"PLAUSIBLE\",\"priorityScore\":0.46,\"depth\":0,\"isTransitive\":false,\"combinedScore\":0.46,\"viaFact\":{\"subject\":\"inflammation\",\"relation\":\"CAUSES\",\"object\":\"fever\"}}]}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong PLAUSIBLE indicators"
+          "matchReason": "Pattern Match: Found strong PLAUSIBLE indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -123,7 +134,8 @@
           "expectedNatural": "Yes, Mary has stomach pain and nausea which are caused by food poisoning.",
           "actualResponse": "{\"hypothesis\":\"food_poisoning\",\"band\":\"PLAUSIBLE\",\"hypotheses\":[{\"hypothesis\":\"food_poisoning\",\"band\":\"PLAUSIBLE\",\"priorityScore\":0.52,\"depth\":0,\"isTransitive\":false,\"combinedScore\":0.52,\"viaFact\":{\"subject\":\"food_poisoning\",\"relation\":\"CAUSES\",\"object\":\"stomach_pain\"}}]}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong PLAUSIBLE indicators"
+          "matchReason": "Pattern Match: Found strong PLAUSIBLE indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -132,7 +144,8 @@
           "expectedNatural": "Yes, deforestation causes climate change which causes extreme weather.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.9,\"method\":\"transitive\",\"depth\":2,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"deforestation\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -141,7 +154,8 @@
           "expectedNatural": "Yes, electricity causes magnetism.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"electricity\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/3 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/3 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -150,7 +164,8 @@
           "expectedNatural": "Not certain - John has fever and coughing but we don't know about fatigue.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"John\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -159,7 +174,8 @@
           "expectedNatural": "Headaches can be caused by dehydration, stress, or high blood pressure.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"dehydration\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/6 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/6 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -177,7 +193,8 @@
           "expectedNatural": "Yes, medical drones are permitted to fly over hospitals.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"medical_drone\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -186,7 +203,8 @@
           "expectedNatural": "No, commercial drones are prohibited from city centers.",
           "actualResponse": "{\"truth\":\"FALSE\",\"confidence\":1,\"method\":\"prohibited\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"commercial_drone\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -195,7 +213,8 @@
           "expectedNatural": "No, interns are prohibited from accessing confidential files.",
           "actualResponse": "{\"truth\":\"FALSE\",\"confidence\":1,\"method\":\"prohibited\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"intern\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/5 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/5 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -204,7 +223,8 @@
           "expectedNatural": "Yes, managers are permitted to access confidential files.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"manager\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -213,7 +233,8 @@
           "expectedNatural": "Yes, international transfers require a compliance check.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"international_transfer\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/5 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/5 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -222,7 +243,8 @@
           "expectedNatural": "No, nurses can only administer medication, not prescribe it. Only doctors can prescribe.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"nurse\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 2 indicators (+), 0 (-), 0/6 concepts"
+          "matchReason": "NL Match: 2 indicators (+), 0 (-), 0/6 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -231,7 +253,8 @@
           "expectedNatural": "Yes, treatment requires patient consent.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"treatment\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -240,7 +263,8 @@
           "expectedNatural": "Yes, customers are permitted to view their own accounts.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"customer\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -258,7 +282,8 @@
           "expectedNatural": "Yes, if water boiled at 50 degrees and room temperature is 20 degrees, water would still be liquid since 20 < 50.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"celsius_20\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/10 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/10 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -267,7 +292,8 @@
           "expectedNatural": "No, fire requires oxygen to burn. Without oxygen, fire cannot exist.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"fire\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/7 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/7 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -276,7 +302,8 @@
           "expectedNatural": "Yes, World War 1 happened before World War 2.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"world_war_1\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -285,7 +312,8 @@
           "expectedNatural": "No, smartphones came after personal computers.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_path\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"smartphone\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 2 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 2 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -294,7 +322,8 @@
           "expectedNatural": "No, design must come before manufacturing.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_path\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"manufacturing\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "Weak NL Match (DSL UNKNOWN but 1 text indicators for FALSE)"
+          "matchReason": "Weak NL Match (DSL UNKNOWN but 1 text indicators for FALSE)",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -303,7 +332,8 @@
           "expectedNatural": "Yes, approval is required before implementation.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"approval\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -312,7 +342,8 @@
           "expectedNatural": "No, humans require water to survive.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"human\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -321,7 +352,8 @@
           "expectedNatural": "Testing comes after development.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"testing\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -339,7 +371,8 @@
           "expectedNatural": "Alice or Carol should be selected as they have the required PMP certification. Bob does not qualify despite more experience.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Alice\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -348,7 +381,8 @@
           "expectedNatural": "No, Bob lacks the required PMP certification.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Bob\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 2 indicators (+), 0 (-), 0/3 concepts"
+          "matchReason": "NL Match: 2 indicators (+), 0 (-), 0/3 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -357,7 +391,8 @@
           "expectedNatural": "Yes, both are level 2 engineers with good performance, so pay should be equal.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"level_2_engineer\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -366,7 +401,8 @@
           "expectedNatural": "Yes, the city council approved the budget on Monday. This is a factual claim independent of political framing.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"city_council\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/9 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/9 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -375,7 +411,8 @@
           "expectedNatural": "Yes, Team Delta deployed v2. This fact stands regardless of any emotional language.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"Team_Delta\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/6 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/6 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -384,7 +421,8 @@
           "expectedNatural": "No, gender is not a factor in hiring decisions.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"gender\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -393,7 +431,8 @@
           "expectedNatural": "Yes, Alice has the required PMP certification.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Alice\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 1 (-), 1/3 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 1 (-), 1/3 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -402,7 +441,8 @@
           "expectedNatural": "Yes, both Dan and Eve are level 2 engineers.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"level_2_engineer\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 1 (-), 1/2 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 1 (-), 1/2 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -420,7 +460,8 @@
           "expectedNatural": "Yes, Ion is married to Maria. This is inferred from the symmetric property of MARRIED_TO - since Maria is married to Ion, Ion is also married to Maria.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"symmetric\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Ion\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: symmetric)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: symmetric)",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -429,7 +470,8 @@
           "expectedNatural": "Yes, Ana is the child of Maria. This is inferred from the inverse relation - since Maria is parent of Ana, Ana is child of Maria.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"inverse\",\"inverseRelation\":\"PARENT_OF\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Ana\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 2 indicators (+), 1 (-), 3/10 concepts"
+          "matchReason": "NL Match: 2 indicators (+), 1 (-), 3/10 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -438,7 +480,8 @@
           "expectedNatural": "Yes, Mihai is a sibling of Ana. SIBLING_OF is symmetric, so if Ana is sibling of Mihai, then Mihai is sibling of Ana.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"symmetric\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"Mihai\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/8 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/8 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -447,7 +490,8 @@
           "expectedNatural": "France. The analogy is: Bucharest is the capital of Romania, so Paris (being a capital) is the capital of France.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"analogy\":\"Bucharest : Romania :: Paris : Mihai\",\"result\":\"Mihai\",\"delta\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,47,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-24,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,37,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,57,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,48,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-31,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-55,0,0,0,0,0,0,0,0,0,0,0,0,51,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-42,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-23,27,0,0,0],\"confidence\":0.9835968017578125}",
           "passed": true,
-          "matchReason": "NL Match: 2 indicators (+), 0 (-), 3/10 concepts"
+          "matchReason": "NL Match: 2 indicators (+), 0 (-), 3/10 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -456,7 +500,8 @@
           "expectedNatural": "Student. The analogy is: Doctor treats patient, so teacher (in the same professional pattern) teaches student.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"analogy\":\"doctor : patient :: teacher : Mihai\",\"result\":\"Mihai\",\"delta\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,44,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,50,0,0,0,-44,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,0,0,0,0,0,0,0,0,0,0,0,49,0,0,0,0,0,33,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-21,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,47,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-26,0,0,0,0,0,0,-34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-29,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-58,0,0,0,0,0,0,42,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-59,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-48,0,0,0,0,0,0,0,0],\"confidence\":0.9819488525390625}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 3/10 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 3/10 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -465,7 +510,8 @@
           "expectedNatural": "Found 6 pairs: Bucharest-Romania, Paris-France, Berlin-Germany, Madrid-Spain, Rome-Italy, London-United Kingdom.",
           "actualResponse": "[{\"subject\":\"Bucharest\",\"relation\":\"CAPITAL_OF\",\"object\":\"Romania\"},{\"subject\":\"Paris\",\"relation\":\"CAPITAL_OF\",\"object\":\"France\"},{\"subject\":\"Berlin\",\"relation\":\"CAPITAL_OF\",\"object\":\"Germany\"},{\"subject\":\"Madrid\",\"relation\":\"CAPITAL_OF\",\"object\":\"Spain\"},{\"subject\":\"Rome\",\"relation\":\"CAPITAL_OF\",\"object\":\"Italy\"},{\"subject\":\"London\",\"relation\":\"CAPITAL_OF\",\"object\":\"United_Kingdom\"}]",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/9 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/9 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -474,7 +520,8 @@
           "expectedNatural": "Ion has two children: Ana and Mihai.",
           "actualResponse": "[{\"subject\":\"Ion\",\"relation\":\"PARENT_OF\",\"object\":\"Ana\"},{\"subject\":\"Ion\",\"relation\":\"PARENT_OF\",\"object\":\"Mihai\"}]",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -483,7 +530,8 @@
           "expectedNatural": "Ana's parents are Maria and Ion.",
           "actualResponse": "[{\"subject\":\"Maria\",\"relation\":\"PARENT_OF\",\"object\":\"Ana\"},{\"subject\":\"Ion\",\"relation\":\"PARENT_OF\",\"object\":\"Ana\"}]",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/3 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/3 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -501,7 +549,8 @@
           "expectedNatural": "Yes, Ion is the grandparent of Andrei. Ion is parent of Maria, and Maria is parent of Andrei, so by the grandparent rule, Ion is grandparent of Andrei.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"method\":\"composition\",\"rule\":\"grandparent_rule\",\"confidence\":0.9,\"proof\":{\"goal\":{\"subject\":\"Ion\",\"relation\":\"GRANDPARENT_OF\",\"object\":\"Andrei\"},\"steps\":[{\"pattern\":{\"subject\":\"?x\",\"relation\":\"PARENT_OF\",\"object\":\"?y\"},\"match\":{\"subject\":\"Ion\",\"relation\":\"PARENT_OF\",\"object\":\"Maria\"}},{\"pattern\":{\"subject\":\"?y\",\"relation\":\"PARENT_OF\",\"object\":\"?z\"},\"match\":{\"subject\":\"Maria\",\"relation\":\"PARENT_OF\",\"object\":\"Andrei\"},\"proof\":{\"goal\":{\"subject\":\"Maria\",\"relation\":\"PARENT_OF\",\"object\":\"Andrei\"},\"steps\":[{\"fact\":{\"subject\":\"Maria\",\"relation\":\"PARENT_OF\",\"object\":\"Andrei\"},\"justification\":\"direct_match\"}],\"valid\":true}}],\"rule\":\"grandparent_rule\",\"valid\":true},\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Ion\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 2 indicators (+), 1 (-), 6/11 concepts"
+          "matchReason": "NL Match: 2 indicators (+), 1 (-), 6/11 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -510,7 +559,8 @@
           "expectedNatural": "Yes, Ana is the grandparent of Elena. Ana is parent of Maria, and Maria is parent of Elena.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"method\":\"composition\",\"rule\":\"grandparent_rule\",\"confidence\":0.9,\"proof\":{\"goal\":{\"subject\":\"Ana\",\"relation\":\"GRANDPARENT_OF\",\"object\":\"Elena\"},\"steps\":[{\"pattern\":{\"subject\":\"?x\",\"relation\":\"PARENT_OF\",\"object\":\"?y\"},\"match\":{\"subject\":\"Ana\",\"relation\":\"PARENT_OF\",\"object\":\"Maria\"}},{\"pattern\":{\"subject\":\"?y\",\"relation\":\"PARENT_OF\",\"object\":\"?z\"},\"match\":{\"subject\":\"Maria\",\"relation\":\"PARENT_OF\",\"object\":\"Elena\"},\"proof\":{\"goal\":{\"subject\":\"Maria\",\"relation\":\"PARENT_OF\",\"object\":\"Elena\"},\"steps\":[{\"fact\":{\"subject\":\"Maria\",\"relation\":\"PARENT_OF\",\"object\":\"Elena\"},\"justification\":\"direct_match\"}],\"valid\":true}}],\"rule\":\"grandparent_rule\",\"valid\":true},\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Ana\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 2 indicators (+), 1 (-), 4/7 concepts"
+          "matchReason": "NL Match: 2 indicators (+), 1 (-), 4/7 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -519,7 +569,8 @@
           "expectedNatural": "Yes, Vasile is an uncle of Maria. Vasile is sibling of Ion, and Ion is parent of Maria.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"method\":\"composition\",\"rule\":\"uncle_aunt_rule\",\"confidence\":0.9,\"proof\":{\"goal\":{\"subject\":\"Vasile\",\"relation\":\"UNCLE_OR_AUNT_OF\",\"object\":\"Maria\"},\"steps\":[{\"pattern\":{\"subject\":\"?x\",\"relation\":\"SIBLING_OF\",\"object\":\"?y\"},\"match\":{\"subject\":\"Vasile\",\"relation\":\"SIBLING_OF\",\"object\":\"Ion\"}},{\"pattern\":{\"subject\":\"?y\",\"relation\":\"PARENT_OF\",\"object\":\"?z\"},\"match\":{\"subject\":\"Ion\",\"relation\":\"PARENT_OF\",\"object\":\"Maria\"},\"proof\":{\"goal\":{\"subject\":\"Ion\",\"relation\":\"PARENT_OF\",\"object\":\"Maria\"},\"steps\":[{\"fact\":{\"subject\":\"Ion\",\"relation\":\"PARENT_OF\",\"object\":\"Maria\"},\"justification\":\"direct_match\"}],\"valid\":true}}],\"rule\":\"uncle_aunt_rule\",\"valid\":true},\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Vasile\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 2 indicators (+), 1 (-), 5/7 concepts"
+          "matchReason": "NL Match: 2 indicators (+), 1 (-), 5/7 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -528,7 +579,8 @@
           "expectedNatural": "Yes, Ion is an ancestor of Andrei through the chain: Ion is parent of Maria (so ancestor), and Maria is parent of Andrei (so Ion is ancestor of Andrei too).",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"method\":\"composition\",\"rule\":\"ancestor_transitive_rule\",\"confidence\":0.9,\"proof\":{\"goal\":{\"subject\":\"Ion\",\"relation\":\"ANCESTOR_OF\",\"object\":\"Andrei\"},\"steps\":[{\"pattern\":{\"subject\":\"?x\",\"relation\":\"ANCESTOR_OF\",\"object\":\"?y\"},\"match\":{\"subject\":\"Ion\",\"relation\":\"ANCESTOR_OF\",\"object\":\"Maria\",\"derivedBy\":\"ancestor_direct_rule\"}},{\"pattern\":{\"subject\":\"?y\",\"relation\":\"PARENT_OF\",\"object\":\"?z\"},\"match\":{\"subject\":\"Maria\",\"relation\":\"PARENT_OF\",\"object\":\"Andrei\"},\"proof\":{\"goal\":{\"subject\":\"Maria\",\"relation\":\"PARENT_OF\",\"object\":\"Andrei\"},\"steps\":[{\"fact\":{\"subject\":\"Maria\",\"relation\":\"PARENT_OF\",\"object\":\"Andrei\"},\"justification\":\"direct_match\"}],\"valid\":true}}],\"rule\":\"ancestor_transitive_rule\",\"valid\":true},\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Ion\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 2 indicators (+), 1 (-), 9/13 concepts"
+          "matchReason": "NL Match: 2 indicators (+), 1 (-), 9/13 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -537,7 +589,8 @@
           "expectedNatural": "Yes, Andrei and Cosmin are cousins. They share Ion as a common grandparent (Ion->Maria->Andrei and Ion's sibling Vasile->Cosmin implies shared great-grandparent level), and they are not siblings.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"Andrei\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "Weak NL Match (DSL UNKNOWN but 1 text indicators for TRUE_CERTAIN)"
+          "matchReason": "Weak NL Match (DSL UNKNOWN but 1 text indicators for TRUE_CERTAIN)",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -546,7 +599,8 @@
           "expectedNatural": "Proof chain: 1) Ion PARENT_OF Maria (fact), 2) Maria PARENT_OF Andrei (fact), 3) By grandparent_rule: Ion GRANDPARENT_OF Andrei (derived).",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"proven\":true,\"method\":\"composition\",\"proof\":{\"goal\":{\"subject\":\"Ion\",\"relation\":\"GRANDPARENT_OF\",\"object\":\"Andrei\"},\"steps\":[{\"pattern\":{\"subject\":\"?x\",\"relation\":\"PARENT_OF\",\"object\":\"?y\"},\"match\":{\"subject\":\"Ion\",\"relation\":\"PARENT_OF\",\"object\":\"Maria\"}},{\"pattern\":{\"subject\":\"?y\",\"relation\":\"PARENT_OF\",\"object\":\"?z\"},\"match\":{\"subject\":\"Maria\",\"relation\":\"PARENT_OF\",\"object\":\"Andrei\"},\"proof\":{\"goal\":{\"subject\":\"Maria\",\"relation\":\"PARENT_OF\",\"object\":\"Andrei\"},\"steps\":[{\"fact\":{\"subject\":\"Maria\",\"relation\":\"PARENT_OF\",\"object\":\"Andrei\"},\"justification\":\"direct_match\"}],\"valid\":true}}],\"rule\":\"grandparent_rule\",\"valid\":true},\"confidence\":0.9}",
           "passed": true,
-          "matchReason": "NL Match: 2 indicators (+), 0 (-), 8/13 concepts"
+          "matchReason": "NL Match: 2 indicators (+), 0 (-), 8/13 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -555,7 +609,8 @@
           "expectedNatural": "Forward chaining derives multiple new facts: grandparent relations (Ion and Ana are grandparents of Andrei and Elena), uncle relations (Vasile is uncle of Maria), ancestor relations (multiple levels), and cousin relations.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"derived\":[{\"subject\":\"Ion\",\"relation\":\"ANCESTOR_OF\",\"object\":\"Maria\",\"derivedBy\":\"ancestor_direct_rule\"},{\"subject\":\"Maria\",\"relation\":\"ANCESTOR_OF\",\"object\":\"Andrei\",\"derivedBy\":\"ancestor_direct_rule\"},{\"subject\":\"Maria\",\"relation\":\"ANCESTOR_OF\",\"object\":\"Elena\",\"derivedBy\":\"ancestor_direct_rule\"},{\"subject\":\"Ana\",\"relation\":\"ANCESTOR_OF\",\"object\":\"Maria\",\"derivedBy\":\"ancestor_direct_rule\"},{\"subject\":\"Vasile\",\"relation\":\"ANCESTOR_OF\",\"object\":\"Cosmin\",\"derivedBy\":\"ancestor_direct_rule\"},{\"subject\":\"Ion\",\"relation\":\"ANCESTOR_OF\",\"object\":\"Andrei\",\"derivedBy\":\"transitive_closure\"},{\"subject\":\"Ion\",\"relation\":\"ANCESTOR_OF\",\"object\":\"Elena\",\"derivedBy\":\"transitive_closure\"},{\"subject\":\"Ana\",\"relation\":\"ANCESTOR_OF\",\"object\":\"Andrei\",\"derivedBy\":\"transitive_closure\"},{\"subject\":\"Ana\",\"relation\":\"ANCESTOR_OF\",\"object\":\"Elena\",\"derivedBy\":\"transitive_closure\"},{\"subject\":\"Ion\",\"relation\":\"SIBLING_OF\",\"object\":\"Vasile\",\"derivedBy\":\"symmetric_closure\"},{\"subject\":\"Ana\",\"relation\":\"MARRIED_TO\",\"object\":\"Ion\",\"derivedBy\":\"symmetric_closure\"}],\"count\":11,\"originalCount\":163}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/21 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/21 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -564,7 +619,8 @@
           "expectedNatural": "Yes, Andrei and Elena are siblings - they share the same parent Maria.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"Andrei\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "Weak NL Match (DSL UNKNOWN but 1 text indicators for TRUE_CERTAIN)"
+          "matchReason": "Weak NL Match (DSL UNKNOWN but 1 text indicators for TRUE_CERTAIN)",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -582,7 +638,8 @@
           "expectedNatural": "Yes, Tweety can fly. Tweety is a bird, and birds can fly by default. Tweety is not one of the exceptions (penguin, ostrich, kiwi, emu).",
           "actualResponse": "{\"truth\":\"TRUE_DEFAULT\",\"method\":\"default\",\"confidence\":0.8,\"assumptions\":[\"Tweety is a typical bird\"],\"proof\":{\"goal\":{\"subject\":\"Tweety\",\"relation\":\"CAN\",\"object\":\"fly\"},\"steps\":[{\"rule\":\"birds_fly\",\"justification\":\"default_rule\"},{\"assumption\":\"Tweety IS_A bird\",\"justification\":\"type_check\"}],\"defeasible\":true},\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Tweety\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_DEFAULT, got TRUE_DEFAULT (method: default)"
+          "matchReason": "DSL Match: Expected TRUE_DEFAULT, got TRUE_DEFAULT (method: default)",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -591,7 +648,8 @@
           "expectedNatural": "No, Opus cannot fly. Although Opus is a bird (penguins are birds), penguins are an exception to the flying rule.",
           "actualResponse": "{\"truth\":\"FALSE\",\"method\":\"default\",\"reason\":\"exception_applies\",\"exception\":\"penguin\",\"proof\":{\"goal\":{\"subject\":\"Opus\",\"relation\":\"CAN\",\"object\":\"fly\"},\"steps\":[{\"exception\":\"penguin\",\"justification\":\"blocked_by_exception\"}],\"defeasible\":true},\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Opus\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected FALSE, got FALSE (method: default)"
+          "matchReason": "DSL Match: Expected FALSE, got FALSE (method: default)",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -600,7 +658,8 @@
           "expectedNatural": "Yes, Rex gives birth to live young. Rex is a dog, dogs are mammals, and mammals give birth to live young by default. Dogs are not an exception.",
           "actualResponse": "{\"truth\":\"TRUE_DEFAULT\",\"method\":\"default\",\"confidence\":0.8,\"assumptions\":[\"Rex is a typical mammal\"],\"proof\":{\"goal\":{\"subject\":\"Rex\",\"relation\":\"GIVES_BIRTH_TO\",\"object\":\"live_young\"},\"steps\":[{\"rule\":\"mammals_live_birth\",\"justification\":\"default_rule\"},{\"assumption\":\"Rex IS_A mammal\",\"justification\":\"type_check\"}],\"defeasible\":true},\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Rex\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_DEFAULT, got TRUE_DEFAULT (method: default)"
+          "matchReason": "DSL Match: Expected TRUE_DEFAULT, got TRUE_DEFAULT (method: default)",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -609,7 +668,8 @@
           "expectedNatural": "No, Perry does not give birth to live young. Perry is a platypus, and platypuses are an exception - they lay eggs despite being mammals.",
           "actualResponse": "{\"truth\":\"FALSE\",\"method\":\"default\",\"reason\":\"exception_applies\",\"exception\":\"platypus\",\"proof\":{\"goal\":{\"subject\":\"Perry\",\"relation\":\"GIVES_BIRTH_TO\",\"object\":\"live_young\"},\"steps\":[{\"exception\":\"platypus\",\"justification\":\"blocked_by_exception\"}],\"defeasible\":true},\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Perry\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 1 (-), 4/10 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 1 (-), 4/10 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -618,7 +678,8 @@
           "expectedNatural": "Yes, Nemo lives in water. Nemo is a goldfish, goldfish are fish, and fish live in water by default.",
           "actualResponse": "{\"truth\":\"TRUE_DEFAULT\",\"method\":\"default\",\"confidence\":0.8,\"assumptions\":[\"Nemo is a typical fish\"],\"proof\":{\"goal\":{\"subject\":\"Nemo\",\"relation\":\"LIVES_IN\",\"object\":\"water\"},\"steps\":[{\"rule\":\"fish_aquatic\",\"justification\":\"default_rule\"},{\"assumption\":\"Nemo IS_A fish\",\"justification\":\"type_check\"}],\"defeasible\":true},\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Nemo\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_DEFAULT, got TRUE_DEFAULT (method: default)"
+          "matchReason": "DSL Match: Expected TRUE_DEFAULT, got TRUE_DEFAULT (method: default)",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -627,7 +688,8 @@
           "expectedNatural": "No, or at least not exclusively. Muddy is a mudskipper, and mudskippers are an exception - they can survive on land.",
           "actualResponse": "{\"truth\":\"FALSE\",\"method\":\"default\",\"reason\":\"exception_applies\",\"exception\":\"mudskipper\",\"proof\":{\"goal\":{\"subject\":\"Muddy\",\"relation\":\"LIVES_IN\",\"object\":\"water\"},\"steps\":[{\"exception\":\"mudskipper\",\"justification\":\"blocked_by_exception\"}],\"defeasible\":true},\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Muddy\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected FALSE, got FALSE (method: default)"
+          "matchReason": "DSL Match: Expected FALSE, got FALSE (method: default)",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -636,7 +698,8 @@
           "expectedNatural": "Yes, Scales is cold-blooded. Scales is a lizard, lizards are reptiles, and all reptiles are cold-blooded with no exceptions.",
           "actualResponse": "{\"truth\":\"TRUE_DEFAULT\",\"method\":\"default\",\"confidence\":0.8,\"assumptions\":[\"Scales is a typical reptile\"],\"proof\":{\"goal\":{\"subject\":\"Scales\",\"relation\":\"IS\",\"object\":\"cold_blooded\"},\"steps\":[{\"rule\":\"reptiles_cold\",\"justification\":\"default_rule\"},{\"assumption\":\"Scales IS_A reptile\",\"justification\":\"type_check\"}],\"defeasible\":true},\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Scales\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_DEFAULT, got TRUE_DEFAULT (method: default)"
+          "matchReason": "DSL Match: Expected TRUE_DEFAULT, got TRUE_DEFAULT (method: default)",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -645,7 +708,8 @@
           "expectedNatural": "No, Speedy cannot fly. Speedy is an ostrich, and ostriches are an exception to the birds-can-fly rule.",
           "actualResponse": "{\"truth\":\"FALSE\",\"method\":\"default\",\"reason\":\"exception_applies\",\"exception\":\"ostrich\",\"proof\":{\"goal\":{\"subject\":\"Speedy\",\"relation\":\"CAN\",\"object\":\"fly\"},\"steps\":[{\"exception\":\"ostrich\",\"justification\":\"blocked_by_exception\"}],\"defeasible\":true},\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Speedy\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 2 (-), 3/8 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 2 (-), 3/8 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -663,7 +727,8 @@
           "expectedNatural": "Yes, this would be a contradiction. John is already recorded as born in Chicago, and BORN_IN is a functional relation - a person can only be born in one place.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"wouldContradict\":true,\"reason\":\"FUNCTIONAL_VIOLATION\",\"contradictions\":[{\"type\":\"FUNCTIONAL_VIOLATION\",\"severity\":\"ERROR\",\"subject\":\"John\",\"relation\":\"BORN_IN\",\"values\":[\"Chicago\",\"New_York\"],\"facts\":[{\"subject\":\"John\",\"relation\":\"BORN_IN\",\"object\":\"Chicago\"},{\"subject\":\"John\",\"relation\":\"BORN_IN\",\"object\":\"New_York\"}],\"explanation\":\"John has multiple BORN_IN values: Chicago, New_York (BORN_IN should be single-valued)\",\"resolution\":[\"Retract \\\"John BORN_IN Chicago\\\"\",\"Retract \\\"John BORN_IN New_York\\\"\"]}],\"proposedFact\":{\"subject\":\"John\",\"relation\":\"BORN_IN\",\"object\":\"New_York\"}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 5/10 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 5/10 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -672,7 +737,8 @@
           "expectedNatural": "Yes, this would be a contradiction. John already has Mary as biological mother, and BIOLOGICAL_MOTHER is functional.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"wouldContradict\":true,\"reason\":\"FUNCTIONAL_VIOLATION\",\"contradictions\":[{\"type\":\"FUNCTIONAL_VIOLATION\",\"severity\":\"ERROR\",\"subject\":\"John\",\"relation\":\"BIOLOGICAL_MOTHER\",\"values\":[\"Mary\",\"Susan\"],\"facts\":[{\"subject\":\"John\",\"relation\":\"BIOLOGICAL_MOTHER\",\"object\":\"Mary\"},{\"subject\":\"John\",\"relation\":\"BIOLOGICAL_MOTHER\",\"object\":\"Susan\"}],\"explanation\":\"John has multiple BIOLOGICAL_MOTHER values: Mary, Susan (BIOLOGICAL_MOTHER should be single-valued)\",\"resolution\":[\"Retract \\\"John BIOLOGICAL_MOTHER Mary\\\"\",\"Retract \\\"John BIOLOGICAL_MOTHER Susan\\\"\"]}],\"proposedFact\":{\"subject\":\"John\",\"relation\":\"BIOLOGICAL_MOTHER\",\"object\":\"Susan\"}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 3/7 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 3/7 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -681,7 +747,8 @@
           "expectedNatural": "Yes, this would be a contradiction. John is currently recorded as alive, and alive and dead are disjoint - a person cannot be both.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"wouldContradict\":true,\"reason\":\"DISJOINT_VIOLATION\",\"contradictions\":[{\"type\":\"DISJOINT_VIOLATION\",\"severity\":\"ERROR\",\"entity\":\"John\",\"types\":[\"alive\",\"dead\"],\"facts\":[{\"subject\":\"John\",\"relation\":\"IS_A\",\"object\":\"alive\"},{\"subject\":\"John\",\"relation\":\"IS_A\",\"object\":\"dead\"},{\"subject\":\"alive\",\"relation\":\"DISJOINT_WITH\",\"object\":\"dead\"}],\"explanation\":\"John cannot be both alive and dead (they are disjoint)\",\"resolution\":[\"Retract a fact making John a alive\",\"Retract a fact making John a dead\"]},{\"type\":\"DISJOINT_VIOLATION\",\"severity\":\"ERROR\",\"entity\":\"John\",\"types\":[\"alive\",\"dead\"],\"facts\":[{\"subject\":\"John\",\"relation\":\"IS_A\",\"object\":\"alive\"},{\"subject\":\"John\",\"relation\":\"IS_A\",\"object\":\"dead\"},{\"subject\":\"alive\",\"relation\":\"DISJOINT_WITH\",\"object\":\"dead\"}],\"explanation\":\"John cannot be both alive and dead (they are disjoint)\",\"resolution\":[\"Retract a fact making John a alive\",\"Retract a fact making John a dead\"]}],\"proposedFact\":{\"subject\":\"John\",\"relation\":\"IS_A\",\"object\":\"dead\"}}",
           "passed": true,
-          "matchReason": "NL Match: 3 indicators (+), 3 (-), 4/10 concepts"
+          "matchReason": "NL Match: 3 indicators (+), 3 (-), 4/10 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -690,7 +757,8 @@
           "expectedNatural": "Yes, the current theory is consistent. No functional constraints are violated, no disjoint types are assigned to the same entity, and cardinality constraints are satisfied.",
           "actualResponse": "{\"consistent\":true,\"issues\":[],\"scope\":\"all\",\"factCount\":170}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/13 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/13 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -699,7 +767,8 @@
           "expectedNatural": "No, if John already has 3 doctors, adding a fourth would violate the cardinality constraint (max 3 doctors per patient).",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"wouldContradict\":true,\"reason\":\"CARDINALITY_MAX_VIOLATION\",\"contradictions\":[{\"type\":\"CARDINALITY_MAX_VIOLATION\",\"severity\":\"ERROR\",\"subject\":\"John\",\"relation\":\"HAS_DOCTOR\",\"count\":4,\"maximum\":3,\"facts\":[{\"subject\":\"John\",\"relation\":\"HAS_DOCTOR\",\"object\":\"DrSmith\"},{\"subject\":\"John\",\"relation\":\"HAS_DOCTOR\",\"object\":\"DrJones\"},{\"subject\":\"John\",\"relation\":\"HAS_DOCTOR\",\"object\":\"DrWilson\"},{\"subject\":\"John\",\"relation\":\"HAS_DOCTOR\",\"object\":\"DrBrown\"}],\"explanation\":\"John has 4 HAS_DOCTOR relations, but maximum is 3\",\"resolution\":[\"Retract \\\"John HAS_DOCTOR DrSmith\\\"\",\"Retract \\\"John HAS_DOCTOR DrJones\\\"\",\"Retract \\\"John HAS_DOCTOR DrWilson\\\"\",\"Retract \\\"John HAS_DOCTOR DrBrown\\\"\"]}],\"proposedFact\":{\"subject\":\"John\",\"relation\":\"HAS_DOCTOR\",\"object\":\"DrBrown\"}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/10 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/10 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -708,7 +777,8 @@
           "expectedNatural": "Yes, this would be a contradiction. Mammals and fish are disjoint categories - nothing can be both a mammal and a fish.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"wouldContradict\":true,\"reason\":\"DISJOINT_VIOLATION\",\"contradictions\":[{\"type\":\"DISJOINT_VIOLATION\",\"severity\":\"ERROR\",\"entity\":\"cat\",\"types\":[\"mammal\",\"fish\"],\"facts\":[{\"subject\":\"cat\",\"relation\":\"IS_A\",\"object\":\"mammal\"},{\"subject\":\"cat\",\"relation\":\"IS_A\",\"object\":\"fish\"}],\"explanation\":\"cat cannot be both mammal and fish (they are disjoint)\",\"resolution\":[\"Retract a fact making cat a mammal\",\"Retract a fact making cat a fish\"]},{\"type\":\"DISJOINT_VIOLATION\",\"severity\":\"ERROR\",\"entity\":\"cat\",\"types\":[\"cat\",\"fish\"],\"facts\":[{\"subject\":\"cat\",\"relation\":\"IS_A\",\"object\":\"fish\"}],\"explanation\":\"cat cannot be a fish because cat and fish are disjoint types\",\"resolution\":[\"Retract the fact \\\"cat IS_A fish\\\"\"]}],\"proposedFact\":{\"subject\":\"cat\",\"relation\":\"IS_A\",\"object\":\"fish\"}}",
           "passed": true,
-          "matchReason": "NL Match: 3 indicators (+), 3 (-), 3/8 concepts"
+          "matchReason": "NL Match: 3 indicators (+), 3 (-), 3/8 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -717,7 +787,8 @@
           "expectedNatural": "No, this would be a contradiction. The diagnosis is already confirmed, and confirmed and ruled_out are disjoint states.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"wouldContradict\":true,\"reason\":\"FUNCTIONAL_VIOLATION\",\"contradictions\":[{\"type\":\"FUNCTIONAL_VIOLATION\",\"severity\":\"ERROR\",\"subject\":\"diabetes_diagnosis\",\"relation\":\"STATUS\",\"values\":[\"confirmed\",\"ruled_out\"],\"facts\":[{\"subject\":\"diabetes_diagnosis\",\"relation\":\"STATUS\",\"object\":\"confirmed\"},{\"subject\":\"diabetes_diagnosis\",\"relation\":\"STATUS\",\"object\":\"ruled_out\"}],\"explanation\":\"diabetes_diagnosis has multiple STATUS values: confirmed, ruled_out (STATUS should be single-valued)\",\"resolution\":[\"Retract \\\"diabetes_diagnosis STATUS confirmed\\\"\",\"Retract \\\"diabetes_diagnosis STATUS ruled_out\\\"\"]}],\"proposedFact\":{\"subject\":\"diabetes_diagnosis\",\"relation\":\"STATUS\",\"object\":\"ruled_out\"}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 1 (-), 5/9 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 1 (-), 5/9 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -726,7 +797,8 @@
           "expectedNatural": "BORN_IN is registered as a functional relation, meaning each subject can have at most one value for this relation. A person can only be born in one place - this is a real-world constraint that the system enforces.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"wouldContradict\":true,\"reason\":\"FUNCTIONAL_VIOLATION\",\"contradictions\":[{\"type\":\"FUNCTIONAL_VIOLATION\",\"severity\":\"ERROR\",\"subject\":\"TestPerson\",\"relation\":\"BORN_IN\",\"values\":[\"PlaceA\",\"PlaceB\"],\"facts\":[{\"subject\":\"TestPerson\",\"relation\":\"BORN_IN\",\"object\":\"PlaceA\"},{\"subject\":\"TestPerson\",\"relation\":\"BORN_IN\",\"object\":\"PlaceB\"}],\"explanation\":\"TestPerson has multiple BORN_IN values: PlaceA, PlaceB (BORN_IN should be single-valued)\",\"resolution\":[\"Retract \\\"TestPerson BORN_IN PlaceA\\\"\",\"Retract \\\"TestPerson BORN_IN PlaceB\\\"\"]}],\"proposedFact\":{\"subject\":\"TestPerson\",\"relation\":\"BORN_IN\",\"object\":\"PlaceB\"}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 6/14 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 6/14 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -744,7 +816,8 @@
           "expectedNatural": "Yes, water would still be liquid at room temperature (20 degrees) if it boiled at 50 degrees, since 20 < 50.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"water\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -753,7 +826,8 @@
           "expectedNatural": "No, fire could not exist without oxygen. Fire requires oxygen to burn, so in a world without oxygen, fire is impossible.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"fire\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -762,7 +836,8 @@
           "expectedNatural": "Plausibly yes. If Napoleon had won Waterloo instead of losing, the French Empire might have continued since its end was a consequence of the defeat.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Napoleon\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -771,7 +846,8 @@
           "expectedNatural": "In the no-gravity layer, objects would not fall because we retracted the causal relationship. After THEORY_POP, normal gravity rules apply again.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"gravity\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -780,7 +856,8 @@
           "expectedNatural": "Yes, after popping the counterfactual layer, we return to base reality where gravity causes objects to fall.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"gravity\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/11 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/11 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -789,7 +866,8 @@
           "expectedNatural": "Yes, nested layers work. In inner layer, both changes are visible. After popping inner, water boils at 100 again but Napoleon still won. After popping outer, both revert to base reality.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"water\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -798,7 +876,8 @@
           "expectedNatural": "If smartphones didn't require electricity, they could theoretically function without power. However, this counterfactual removes a fundamental dependency.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"smartphone\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -807,7 +886,8 @@
           "expectedNatural": "In the test layer, Roman Empire fell in 500 AD (as asserted). After popping, the base theory shows 476 AD unchanged. Layers are properly isolated.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"Roman_Empire\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/12 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/12 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -825,7 +905,8 @@
           "expectedNatural": "If the farmer leaves the wolf and goat alone on either bank, the wolf will eat the goat. This is a constraint that must be avoided.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"wolf_and_goat_alone\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/8 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/8 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -834,7 +915,8 @@
           "expectedNatural": "The farmer must take the goat first. This is the only safe first move because: leaving wolf+goat alone = goat eaten, leaving goat+cabbage alone = cabbage eaten, but wolf+cabbage alone is safe.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"first_move\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/16 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/16 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -843,7 +925,8 @@
           "expectedNatural": "No, 7 crossings is the minimum. The constraints force specific moves, and there is no shorter valid sequence.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"wolf_goat_cabbage\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -852,7 +935,8 @@
           "expectedNatural": "7 moves are needed. The formula is 2^n - 1, so for n=3: 2^3 - 1 = 8 - 1 = 7.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"hanoi_3_disks\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -861,7 +945,8 @@
           "expectedNatural": "No, a larger disk cannot be placed on a smaller disk. This is a fundamental rule of the Towers of Hanoi.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"large_on_small\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/8 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/8 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -870,7 +955,8 @@
           "expectedNatural": "The recursive pattern is: 1) Move n-1 disks from source to auxiliary peg, 2) Move the largest disk from source to target peg, 3) Move n-1 disks from auxiliary to target peg. Base case: 1 disk = 1 move.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"hanoi\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -879,7 +965,8 @@
           "expectedNatural": "15 moves are needed. Using the formula 2^n - 1: 2^4 - 1 = 16 - 1 = 15.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"hanoi_4_disks\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -888,7 +975,8 @@
           "expectedNatural": "After taking the wolf to the right bank (crossing 3), the farmer must bring the goat back because leaving wolf+goat together on the right bank would result in the wolf eating the goat. The goat acts as a 'shuttle' that must be carefully managed.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"crossing_4\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/18 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/18 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -906,7 +994,8 @@
           "expectedNatural": "32,767 moves are needed. Using 2^15 - 1 = 32768 - 1 = 32767.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"hanoi_15_disks\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -915,7 +1004,8 @@
           "expectedNatural": "1,048,575 moves are needed. Using 2^20 - 1 = 1048576 - 1 = 1048575. This is over 1 million moves!",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"hanoi_20_disks\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -924,7 +1014,8 @@
           "expectedNatural": "1,048,575 seconds, which is approximately 12.1 days (1048575 / 86400 ≈ 12.14 days).",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"hanoi_20_time_seconds\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -933,7 +1024,8 @@
           "expectedNatural": "The 15th Fibonacci number (F(15)) is 610. Sequence: ...233, 377, 610...",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"fibonacci_15\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/6 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/6 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -942,7 +1034,8 @@
           "expectedNatural": "The 20th Fibonacci number (F(20)) is 6765.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"fibonacci_20\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -951,7 +1044,8 @@
           "expectedNatural": "15! = 1,307,674,368,000 (over 1.3 trillion).",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"factorial_15\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -960,7 +1054,8 @@
           "expectedNatural": "The number of moves approximately doubles with each additional disk. Specifically, moves(n+1) = 2 × moves(n) + 1. This is exponential growth O(2^n).",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"exponential_growth\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/12 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/12 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -969,7 +1064,8 @@
           "expectedNatural": "No, it is not practically feasible. At 1 move per second, it would take over 12 days of continuous operation. At a more realistic 1 move per 5 seconds, it would take about 60 days. The exponential nature makes large instances impractical.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"hanoi_20\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -987,7 +1083,8 @@
           "expectedNatural": "Yes, Alice has enrollments. She is enrolled in Math101 and Physics201.",
           "actualResponse": "{\"ok\":true}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -996,7 +1093,8 @@
           "expectedNatural": "Yes, Bob has enrollments - he is enrolled in Math101 and Chemistry101.",
           "actualResponse": "{\"ok\":true}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -1005,7 +1103,8 @@
           "expectedNatural": "Yes, Alice is enrolled in both Math101 and Physics201.",
           "actualResponse": "{\"ok\":true}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -1014,7 +1113,8 @@
           "expectedNatural": "Yes, Alice can take Physics301 because she has completed Physics201 which is its prerequisite.",
           "actualResponse": "{\"ok\":true}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/7 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/7 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -1023,7 +1123,8 @@
           "expectedNatural": "Yes, Bob can take Math201 because he has completed Math101.",
           "actualResponse": "{\"ok\":true}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -1032,7 +1133,8 @@
           "expectedNatural": "Yes, Employee_1 is a Manager and Managers can access both finance_data and hr_data.",
           "actualResponse": "{\"ok\":true}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/6 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/6 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -1041,7 +1143,8 @@
           "expectedNatural": "No, Employee_2 is an Engineer and Engineers cannot access finance_data (only tech_data and code_repo).",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Engineer\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -1050,7 +1153,8 @@
           "expectedNatural": "Yes, Flu causes all three symptoms that Patient_A has (fever, cough, fatigue), making it a likely diagnosis.",
           "actualResponse": "{\"ok\":true}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/10 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/10 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q9",
@@ -1059,7 +1163,8 @@
           "expectedNatural": "No, Cold only causes cough and mild_fever, not fever and fatigue. Cold doesn't explain all symptoms.",
           "actualResponse": "{\"truth\":\"FALSE\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/8 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/8 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q10",
@@ -1068,7 +1173,8 @@
           "expectedNatural": "Yes, combined Alice and Bob have enrollments (Alice: Math101, Physics201; Bob: Math101, Chemistry101).",
           "actualResponse": "{\"ok\":true}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/8 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/8 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q11",
@@ -1077,7 +1183,8 @@
           "expectedNatural": "Yes, even if Alice drops Math101, she still has Physics201.",
           "actualResponse": "{\"ok\":true}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q12",
@@ -1086,7 +1193,8 @@
           "expectedNatural": "Yes, Alice still has Physics201 enrollment even after removing Math101.",
           "actualResponse": "{\"ok\":true}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/7 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/7 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 12,
@@ -1104,7 +1212,8 @@
           "expectedNatural": "Unknown - XyzzyUnknown123 is not a known concept in the knowledge base.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"animal\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -1113,7 +1222,8 @@
           "expectedNatural": "No facts exist about NonExistent. The result list is empty.",
           "actualResponse": "{\"truth\":\"FALSE\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/6 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/6 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -1122,7 +1232,8 @@
           "expectedNatural": "Zero facts - UnknownThing is not in the knowledge base.",
           "actualResponse": "{\"ok\":true}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -1131,7 +1242,8 @@
           "expectedNatural": "The fact 'Dog IS_A animal' - Dog has at least one known fact.",
           "actualResponse": "{\"ok\":true}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -1140,7 +1252,8 @@
           "expectedNatural": "No facts exist about NonExistent.",
           "actualResponse": "{\"truth\":\"FALSE\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -1149,7 +1262,8 @@
           "expectedNatural": "No - Cat is an animal but there is no fact saying Cat is a plant.",
           "actualResponse": "{\"truth\":\"FALSE\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -1158,7 +1272,8 @@
           "expectedNatural": "Yes - Cat is an animal (even though we don't know about plant).",
           "actualResponse": "{\"ok\":true}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/6 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/6 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -1167,7 +1282,8 @@
           "expectedNatural": "The merged list is empty since both source lists are empty.",
           "actualResponse": "{\"truth\":\"FALSE\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/6 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/6 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q9",
@@ -1176,7 +1292,8 @@
           "expectedNatural": "Negating UNKNOWN should still be UNKNOWN - we can't determine the negation of something we don't know.",
           "actualResponse": "{\"truth\":\"UNKNOWN\"}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q10",
@@ -1185,7 +1302,8 @@
           "expectedNatural": "Filtering an empty list returns an empty list, so NONEMPTY is FALSE.",
           "actualResponse": "{\"truth\":\"FALSE\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/7 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/7 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q11",
@@ -1194,7 +1312,8 @@
           "expectedNatural": "Yes, pushing and popping an empty theory layer should not affect existing facts. Cat is still an animal.",
           "actualResponse": "{\"ok\":true}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/11 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/11 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q12",
@@ -1203,7 +1322,8 @@
           "expectedNatural": "No contradictions found - the knowledge base is consistent.",
           "actualResponse": "{\"consistent\":true,\"contradictions\":[],\"summary\":\"No contradictions found.\",\"factCount\":160}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong FALSE indicators"
+          "matchReason": "Pattern Match: Found strong FALSE indicators",
+          "hasDslExplanation": false
         }
       ],
       "passed": 12,
@@ -1221,7 +1341,8 @@
           "expectedNatural": "Yes. Even with an ontology mask applied, Tiger is known to be a mammal.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"mammal\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0},\"maskSpec\":\"ontology\"}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -1230,7 +1351,8 @@
           "expectedNatural": "Yes, Bonsai is a plant; masking the Physicality axis should not remove the known fact.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"plant\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0},\"maskSpec\":\"Physicality\"}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -1239,7 +1361,8 @@
           "expectedNatural": "Yes. Axiology mask affects moral dimensions, not taxonomic facts about animals.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"bird\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0},\"maskSpec\":\"axiology\"}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -1248,7 +1371,8 @@
           "expectedNatural": "Yes. Ontology mask doesn't hide axiology facts like prohibitions.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"Theft\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0},\"maskSpec\":\"ontology\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/5 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/5 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -1257,7 +1381,8 @@
           "expectedNatural": "Yes. Even with combined masks, the basic IS_A fact is preserved.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"virtue\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0},\"maskSpec\":\"ontology,axiology\"}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -1266,7 +1391,8 @@
           "expectedNatural": "Yes. Rock is known to be a mineral.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"mineral\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -1275,7 +1401,8 @@
           "expectedNatural": "Yes. The IS_A relation is preserved even when axiology partitions are masked.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"good_action\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0},\"maskSpec\":\"axiology\"}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -1284,7 +1411,8 @@
           "expectedNatural": "Yes. Baseline ASK returns the asserted fact.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"Water\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -1302,7 +1430,8 @@
           "expectedNatural": "Yes. KeepMe was protected before forgetting, so it should still be known as important.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"important_thing\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -1311,7 +1440,8 @@
           "expectedNatural": "No information remains about DropMe; it was removed by forgetting.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"temporary_thing\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -1320,7 +1450,8 @@
           "expectedNatural": "Yes. Protected concepts survive any threshold-based forgetting.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"essential_thing\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -1329,7 +1460,8 @@
           "expectedNatural": "No. After unprotecting, TempData is subject to forgetting.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"throwaway_thing\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -1338,7 +1470,8 @@
           "expectedNatural": "Yes. Protected Archive survives even aggressive forgetting thresholds.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"old_data\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -1347,7 +1480,8 @@
           "expectedNatural": "Yes. Multiple PROTECT calls are idempotent; concept remains protected.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"vital_thing\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -1356,7 +1490,8 @@
           "expectedNatural": "No. Unprotected low-usage concepts are forgotten.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"scratch_item\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -1365,7 +1500,8 @@
           "expectedNatural": "No. Scratch2 was also unprotected and had low usage.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"scratch_item\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -1383,7 +1519,8 @@
           "expectedNatural": "No. After retracting, the fact should no longer be present until reloaded.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"DiskA\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -1392,7 +1529,8 @@
           "expectedNatural": "Yes. Loading the saved theory restores the fact that DiskA is part of the Computer.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"DiskA\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/6 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/6 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -1401,7 +1539,8 @@
           "expectedNatural": "Yes. The theory was saved as memory_backup and successfully reloaded.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"MemoryB\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -1410,7 +1549,8 @@
           "expectedNatural": "No. Without reloading, the retracted fact stays gone.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"CPUC\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -1419,7 +1559,8 @@
           "expectedNatural": "Yes. The full save-retract-reload cycle restores the fact.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"NetworkD\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -1428,7 +1569,8 @@
           "expectedNatural": "Yes. Facts not retracted remain in the store.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"PowerSupply\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -1437,7 +1579,8 @@
           "expectedNatural": "No. The fact was retracted and there's no saved backup to restore from.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"CoolingFan\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -1446,7 +1589,8 @@
           "expectedNatural": "Yes. The second save overwrites the first; reload gets the newer version.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"test_item\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/6 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/6 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -1464,7 +1608,8 @@
           "expectedNatural": "EU has a prohibition, so the decision should be negative.",
           "actualResponse": "{\"truth\":\"FALSE\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -1473,7 +1618,8 @@
           "expectedNatural": "US has a permission fact and no prohibition, so the decision should be true.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -1482,7 +1628,8 @@
           "expectedNatural": "Yes. DrugB has only permission facts, no prohibitions.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -1491,7 +1638,8 @@
           "expectedNatural": "Yes. DrugB is permitted in US too.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -1500,7 +1648,8 @@
           "expectedNatural": "Yes, decision is FALSE because drugC is prohibited in EU.",
           "actualResponse": "{\"truth\":\"FALSE\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/5 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/5 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -1509,7 +1658,8 @@
           "expectedNatural": "Yes, decision is FALSE because drugC is prohibited in US too.",
           "actualResponse": "{\"truth\":\"FALSE\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/5 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/5 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -1518,7 +1668,8 @@
           "expectedNatural": "ProductX is permitted in US.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -1527,7 +1678,8 @@
           "expectedNatural": "ProductX is prohibited in Asia.",
           "actualResponse": "{\"truth\":\"FALSE\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -1545,7 +1697,8 @@
           "expectedNatural": "Yes, this is definitely true.",
           "actualResponse": "{\"text\":\"Yes, this is definitely true.\"}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong TRUE_CERTAIN indicators"
+          "matchReason": "Pattern Match: Found strong TRUE_CERTAIN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -1554,7 +1707,8 @@
           "expectedNatural": "Unknown - the concept is not in the KB.",
           "actualResponse": "{\"text\":\"Truth value: UNKNOWN\"}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -1563,7 +1717,8 @@
           "expectedNatural": "Yes, Grass is a green thing.",
           "actualResponse": "{\"text\":\"Yes, this is definitely true.\"}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong TRUE_CERTAIN indicators"
+          "matchReason": "Pattern Match: Found strong TRUE_CERTAIN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -1572,7 +1727,8 @@
           "expectedNatural": "JSON output with truth: TRUE_CERTAIN",
           "actualResponse": "{\"json\":\"{\\\"truth\\\":\\\"TRUE_CERTAIN\\\",\\\"confidence\\\":1,\\\"method\\\":\\\"direct\\\",\\\"band\\\":\\\"TRUE_CERTAIN\\\",\\\"provenance\\\":{\\\"conceptId\\\":\\\"Sun\\\",\\\"distance\\\":0,\\\"scepticRadius\\\":0,\\\"optimistRadius\\\":0}}\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/3 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/3 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -1581,7 +1737,8 @@
           "expectedNatural": "Yes, Ice has property cold.",
           "actualResponse": "{\"text\":\"Yes, this is definitely true.\"}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong TRUE_CERTAIN indicators"
+          "matchReason": "Pattern Match: Found strong TRUE_CERTAIN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -1590,7 +1747,8 @@
           "expectedNatural": "Yes, Fire can burn.",
           "actualResponse": "{\"text\":\"Yes, this is definitely true.\"}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong TRUE_CERTAIN indicators"
+          "matchReason": "Pattern Match: Found strong TRUE_CERTAIN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -1599,7 +1757,8 @@
           "expectedNatural": "No, Bird cannot swim (not in KB).",
           "actualResponse": "{\"text\":\"Truth value: UNKNOWN\"}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -1608,7 +1767,8 @@
           "expectedNatural": "JSON output confirming Fish can swim.",
           "actualResponse": "{\"json\":\"{\\\"truth\\\":\\\"TRUE_CERTAIN\\\",\\\"confidence\\\":1,\\\"method\\\":\\\"direct\\\",\\\"band\\\":\\\"TRUE_CERTAIN\\\",\\\"provenance\\\":{\\\"conceptId\\\":\\\"Fish\\\",\\\"distance\\\":0,\\\"scepticRadius\\\":0,\\\"optimistRadius\\\":0}}\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -1626,7 +1786,8 @@
           "expectedNatural": "There are fruits; the list is non-empty.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -1635,7 +1796,8 @@
           "expectedNatural": "There are no spaceships in the facts.",
           "actualResponse": "{\"truth\":\"FALSE\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -1644,7 +1806,8 @@
           "expectedNatural": "There are vehicles in the KB.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -1653,7 +1816,8 @@
           "expectedNatural": "Vehicle summary created; list is non-empty.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -1662,7 +1826,8 @@
           "expectedNatural": "Animals exist in the KB.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -1671,7 +1836,8 @@
           "expectedNatural": "No robots in the KB.",
           "actualResponse": "{\"truth\":\"FALSE\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/1 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/1 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -1680,7 +1846,8 @@
           "expectedNatural": "All 4 fruits summarized; list is non-empty.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -1689,7 +1856,8 @@
           "expectedNatural": "Apple has at least one IS_A fact.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -1707,7 +1875,8 @@
           "expectedNatural": "Yes. ImportantNote was asserted, boosted to 5, above threshold 3.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"note\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -1716,7 +1885,8 @@
           "expectedNatural": "No. ScratchNote had low usage (1) and was forgotten.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"scratch\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -1725,7 +1895,8 @@
           "expectedNatural": "Yes. CriticalItem was boosted to 20, above threshold 10.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"item\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -1734,7 +1905,8 @@
           "expectedNatural": "No. TempItem was not boosted and is below threshold.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"temp\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -1743,7 +1915,8 @@
           "expectedNatural": "Yes. Boost of 4 + initial usage of 1 = 5, equals threshold 5.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"task\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -1752,7 +1925,8 @@
           "expectedNatural": "Yes. LowPriority boosted to 8+1=9, above threshold 5.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"work\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -1761,7 +1935,8 @@
           "expectedNatural": "Yes. Essential boosted to 5+1=6, above threshold 5.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"concept\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -1770,7 +1945,8 @@
           "expectedNatural": "No. Disposable had no boost (usage=1), below threshold 5.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"junk\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -1788,7 +1964,8 @@
           "expectedNatural": "No. After retraction, the fact should not be present.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"RobotA\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -1797,7 +1974,8 @@
           "expectedNatural": "Yes. MERGE_THEORY should bring back the saved fact.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"RobotA\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -1806,7 +1984,8 @@
           "expectedNatural": "Yes. Complete cycle restores the fact.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"RobotB\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -1815,7 +1994,8 @@
           "expectedNatural": "Yes. The fact is still present after saving (save doesn't remove).",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"DroneC\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/7 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/7 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -1824,7 +2004,8 @@
           "expectedNatural": "Yes. Merging restores the DroneC fact.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"DroneC\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -1833,7 +2014,8 @@
           "expectedNatural": "Yes. Untouched facts remain accessible.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"VehicleD\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -1842,7 +2024,8 @@
           "expectedNatural": "Yes. First patch merged restores ServerE.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"ServerE\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -1851,7 +2034,8 @@
           "expectedNatural": "Yes. Second patch merged restores LaptopF.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"LaptopF\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -1864,75 +2048,75 @@
       "queries": [
         {
           "id": "q1",
-          "question": "Section 1 - The Causal Chain: What sequence of events leads from greenhouse gases to coastal threats?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "The causal chain: trapped heat causes temperature rise, which causes ice cap melting, which causes sea level rise. Sea level rise then threatens coastal cities. Additionally, heat waves cause deaths, air pollution causes respiratory illness, and droughts cause food price rises.",
-          "actualResponse": "[{\"subject\":\"trapped_heat\",\"relation\":\"CAUSES\",\"object\":\"temperature_rise\"},{\"subject\":\"temperature_rise\",\"relation\":\"CAUSES\",\"object\":\"ice_cap_melting\"},{\"subject\":\"ice_cap_melting\",\"relation\":\"CAUSES\",\"object\":\"sea_level_rise\"},{\"subject\":\"air_pollution\",\"relation\":\"CAUSES\",\"object\":\"respiratory_illness\"}]",
+          "question": "Section 1: What is the causal chain from greenhouse gases to coastal threats?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 4 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q2",
-          "question": "Section 1 - Sources: What releases greenhouse gases into the atmosphere?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Deforestation and fossil fuel burning both release carbon dioxide.",
-          "actualResponse": "[{\"subject\":\"deforestation\",\"relation\":\"RELEASES\",\"object\":\"carbon_dioxide\"},{\"subject\":\"fossil_fuel_burning\",\"relation\":\"RELEASES\",\"object\":\"carbon_dioxide\"}]",
+          "question": "Section 1: What releases greenhouse gases?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q3",
-          "question": "Section 2 - Economic Costs: What are the financial burdens of climate change and mitigation?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Carbon tax costs businesses money. Climate adaptation costs governments billions.",
-          "actualResponse": "[{\"subject\":\"carbon_tax\",\"relation\":\"COSTS\",\"object\":\"businesses\"},{\"subject\":\"climate_adaptation\",\"relation\":\"COSTS\",\"object\":\"billions\"}]",
+          "question": "Section 2: What are the costs vs benefits of climate action?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q4",
-          "question": "Section 2 - Economic Benefits: What positive economic effects do green solutions provide?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Renewable energy creates jobs.",
-          "actualResponse": "[{\"subject\":\"renewable_energy\",\"relation\":\"CREATES\",\"object\":\"jobs\"}]",
+          "question": "Section 3: Compile emission reduction methods",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q5",
-          "question": "Section 3 - Available Solutions: What technologies or methods can reduce emissions?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Electric vehicles reduce emissions. Public transit reduces emissions. Carbon tax reduces emissions.",
-          "actualResponse": "[{\"subject\":\"electric_vehicles\",\"relation\":\"REDUCE\",\"object\":\"emissions\"}]",
+          "question": "Section 3: What generates clean electricity?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q6",
-          "question": "Section 3 - Clean Energy: What sources generate clean electricity?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Solar power and wind power both generate clean electricity.",
-          "actualResponse": "[{\"subject\":\"solar_power\",\"relation\":\"GENERATES\",\"object\":\"clean_electricity\"},{\"subject\":\"wind_power\",\"relation\":\"GENERATES\",\"object\":\"clean_electricity\"}]",
+          "question": "Section 4: What are human health impacts?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q7",
-          "question": "Section 4 - Human Impacts: What are the direct effects on human health and society?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Water scarcity affects agriculture.",
-          "actualResponse": "[{\"subject\":\"water_scarcity\",\"relation\":\"AFFECTS\",\"object\":\"agriculture\"}]",
+          "question": "Section 5: What policy mechanisms exist?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q8",
-          "question": "Section 5 - Policy Tools: What mechanisms do governments use to address climate change?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "The Paris Agreement sets emission targets.",
-          "actualResponse": "[{\"subject\":\"Paris_Agreement\",\"relation\":\"SETS\",\"object\":\"emission_targets\"}]",
+          "question": "Section 6 - Synthesis: Prove the full climate argument",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         }
       ],
       "passed": 8,
@@ -1945,75 +2129,75 @@
       "queries": [
         {
           "id": "q1",
-          "question": "INTRODUCTION - Historical Timeline: What are the key milestones in AI history that should open the essay?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Key milestones: Transformers architecture was introduced in 2017.",
-          "actualResponse": "[{\"subject\":\"transformers\",\"relation\":\"INTRODUCED_IN\",\"object\":\"2017\"}]",
+          "question": "INTRODUCTION - Historical Timeline: What are the key milestones in AI history?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q2",
-          "question": "INTRODUCTION - Origins: When and where did the field of AI formally begin?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "The term artificial intelligence was coined in 1956 at the Dartmouth conference.",
-          "actualResponse": "[{\"subject\":\"artificial_intelligence\",\"relation\":\"COINED_IN\",\"object\":\"1956\"}]",
+          "question": "INTRODUCTION - Origins: When and where did AI formally begin?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q3",
-          "question": "BODY PARAGRAPH 1 - Technical Foundations: What powers modern AI systems?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Backpropagation enables network training. The attention mechanism enables transformers.",
-          "actualResponse": "[{\"subject\":\"backpropagation\",\"relation\":\"ENABLES\",\"object\":\"network_training\"},{\"subject\":\"attention_mechanism\",\"relation\":\"ENABLES\",\"object\":\"transformers\"},{\"subject\":\"AI\",\"relation\":\"ENABLES\",\"object\":\"autonomous_navigation\"}]",
+          "question": "BODY PARAGRAPH 1 - Technical Foundations: What enables modern AI systems?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 3 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q4",
           "question": "BODY PARAGRAPH 1 - Learning Methods: How do AI systems acquire knowledge?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Deep learning uses multiple hidden layers. Reinforcement learning uses reward signals.",
-          "actualResponse": "[{\"subject\":\"deep_learning\",\"relation\":\"USES\",\"object\":\"multiple_hidden_layers\"},{\"subject\":\"reinforcement_learning\",\"relation\":\"USES\",\"object\":\"reward_signals\"}]",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q5",
-          "question": "BODY PARAGRAPH 2 - Current Applications: What practical tasks does AI perform today?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "AI assists in medical diagnosis.",
-          "actualResponse": "[{\"subject\":\"AI\",\"relation\":\"ASSISTS\",\"object\":\"medical_diagnosis\"}]",
+          "question": "BODY PARAGRAPH 2 - Current Applications: What practical tasks does AI perform?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q6",
           "question": "BODY PARAGRAPH 3 - Societal Concerns: What risks and ethical issues does AI raise?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "AI surveillance raises privacy concerns.",
-          "actualResponse": "[{\"subject\":\"AI_surveillance\",\"relation\":\"RAISES\",\"object\":\"privacy_concerns\"}]",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q7",
-          "question": "BODY PARAGRAPH 3 - Negative Impacts: What harms might AI cause to society?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "AI automation may displace jobs.",
-          "actualResponse": "[{\"subject\":\"AI_automation\",\"relation\":\"MAY_DISPLACE\",\"object\":\"jobs\"}]",
+          "question": "BODY PARAGRAPH 3 - Negative Impacts: What harms might AI cause?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q8",
-          "question": "CONCLUSION - Future Outlook: What developments might transform AI going forward?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Quantum computing may accelerate AI development.",
-          "actualResponse": "[{\"subject\":\"quantum_computing\",\"relation\":\"MAY_ACCELERATE\",\"object\":\"AI\"}]",
+          "question": "CONCLUSION - Future Outlook: What developments might transform AI?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         }
       ],
       "passed": 8,
@@ -2031,7 +2215,8 @@
           "expectedNatural": "Yes, Alice is an employee.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"employee\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)",
+          "hasDslExplanation": false
         },
         {
           "id": "q2",
@@ -2040,7 +2225,8 @@
           "expectedNatural": "Bob works in Sales.",
           "actualResponse": "[{\"subject\":\"Bob\",\"relation\":\"WORKS_IN\",\"object\":\"Sales\"}]",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "LIST Match: Found 1 result(s)",
+          "hasDslExplanation": false
         },
         {
           "id": "q3",
@@ -2049,7 +2235,8 @@
           "expectedNatural": "No, Alice is not a manager.",
           "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_path\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"manager\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 2 indicators (+), 0 (-), 0/2 concepts"
+          "matchReason": "NL Match: 2 indicators (+), 0 (-), 0/2 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q4",
@@ -2058,7 +2245,8 @@
           "expectedNatural": "Engineering has a budget of 100000.",
           "actualResponse": "[{\"subject\":\"Engineering\",\"relation\":\"HAS_BUDGET\",\"object\":\"100000\"}]",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "LIST Match: Found 1 result(s)",
+          "hasDslExplanation": false
         },
         {
           "id": "q5",
@@ -2067,7 +2255,8 @@
           "expectedNatural": "Alice and Bob are employees.",
           "actualResponse": "[{\"subject\":\"Alice\",\"relation\":\"IS_A\",\"object\":\"employee\"},{\"subject\":\"Bob\",\"relation\":\"IS_A\",\"object\":\"employee\"}]",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "LIST Match: Found 2 result(s)",
+          "hasDslExplanation": false
         },
         {
           "id": "q6",
@@ -2076,7 +2265,8 @@
           "expectedNatural": "Alice earns 70000.",
           "actualResponse": "[{\"subject\":\"Alice\",\"relation\":\"HAS_SALARY\",\"object\":\"70000\"}]",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "LIST Match: Found 1 result(s)",
+          "hasDslExplanation": false
         },
         {
           "id": "q7",
@@ -2085,7 +2275,8 @@
           "expectedNatural": "Yes, managers can access all files.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"manager\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts",
+          "hasDslExplanation": false
         },
         {
           "id": "q8",
@@ -2094,7 +2285,8 @@
           "expectedNatural": "Employees can access department files.",
           "actualResponse": "[{\"subject\":\"employee\",\"relation\":\"CAN_ACCESS\",\"object\":\"department_files\"}]",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "LIST Match: Found 1 result(s)",
+          "hasDslExplanation": false
         }
       ],
       "passed": 8,
@@ -2107,75 +2299,75 @@
       "queries": [
         {
           "id": "q1",
-          "question": "PLAN STEP 1: What is the first tool to execute and what parameter does it need?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Step 1 executes fetch_url with url parameter.",
-          "actualResponse": "[{\"subject\":\"step_1\",\"relation\":\"EXECUTES\",\"object\":\"fetch_url\"}]",
+          "question": "PLAN STEP 1: What is the first tool and what parameter does it need?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q2",
-          "question": "DEPENDENCY CHECK: What must be produced before parse_html can run?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "parse_html takes raw_html (which comes from fetch_url).",
-          "actualResponse": "[{\"subject\":\"parse_html\",\"relation\":\"TAKES\",\"object\":\"raw_html\"}]",
+          "question": "DEPENDENCY CHECK: What does parse_html need before it can run?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q3",
-          "question": "PLAN STEP 3: What does extract_data need as inputs?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "extract_data takes dom_tree and selector.",
-          "actualResponse": "[{\"subject\":\"extract_data\",\"relation\":\"TAKES\",\"object\":\"dom_tree\"},{\"subject\":\"extract_data\",\"relation\":\"TAKES\",\"object\":\"selector\"}]",
+          "question": "PLAN STEP 3: What inputs does extract_data need?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q4",
-          "question": "DATA FLOW: Where does step_4 get its input from?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Step 4 gets input from step 3.",
-          "actualResponse": "[{\"subject\":\"step_4\",\"relation\":\"INPUT_FROM\",\"object\":\"step_3\"}]",
+          "question": "DATA FLOW: Verify the chain from step_2 to step_4",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q5",
           "question": "GOAL DECOMPOSITION: What sequence produces json_data?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "json_data requires first having extracted_list, then applying transform_json.",
-          "actualResponse": "[{\"subject\":\"json_data\",\"relation\":\"REQUIRES_FIRST\",\"object\":\"extracted_list\"}]",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q6",
-          "question": "PARAMETER MAPPING: Which steps need configuration parameters (not just data flow)?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Step 1 needs url, step 3 needs selector, step 5 needs filepath.",
-          "actualResponse": "[{\"subject\":\"step_1\",\"relation\":\"WITH_PARAM\",\"object\":\"url\"},{\"subject\":\"step_3\",\"relation\":\"WITH_PARAM\",\"object\":\"selector\"},{\"subject\":\"step_5\",\"relation\":\"WITH_PARAM\",\"object\":\"filepath\"}]",
+          "question": "PARAMETER MAPPING: Which steps need configuration parameters?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 3 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q7",
           "question": "FINAL STEP: What produces the archive output?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "compress_archive produces archive.",
-          "actualResponse": "[{\"subject\":\"compress_archive\",\"relation\":\"PRODUCES\",\"object\":\"archive\"}]",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q8",
-          "question": "FULL CHAIN: What tool does step_6 execute?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Step 6 executes compress_archive.",
-          "actualResponse": "[{\"subject\":\"step_6\",\"relation\":\"EXECUTES\",\"object\":\"compress_archive\"}]",
+          "question": "FULL CHAIN: Verify the complete 6-step pipeline",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         }
       ],
       "passed": 8,
@@ -2188,75 +2380,75 @@
       "queries": [
         {
           "id": "q1",
-          "question": "INIT: What parameters does the checkout stage need to start the pipeline?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Checkout needs repository and branch parameters.",
-          "actualResponse": "[{\"subject\":\"checkout\",\"relation\":\"WITH_PARAM\",\"object\":\"repository\"},{\"subject\":\"checkout\",\"relation\":\"WITH_PARAM\",\"object\":\"branch\"}]",
+          "question": "INIT: What parameters does checkout need?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q2",
-          "question": "PARALLEL CANDIDATES: Which stages can run in parallel after checkout (both need source_code)?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Build and unit_test both take source_code and can potentially run in parallel.",
-          "actualResponse": "[{\"subject\":\"build\",\"relation\":\"TAKES\",\"object\":\"source_code\"},{\"subject\":\"unit_test\",\"relation\":\"TAKES\",\"object\":\"source_code\"}]",
+          "question": "PARALLEL: Which stages take source_code?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q3",
-          "question": "DEPENDENCY: What does deploy_prod require before it can execute?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "deploy_prod requires approval_status.",
-          "actualResponse": "[{\"subject\":\"deploy_prod\",\"relation\":\"REQUIRES\",\"object\":\"approval_status\"}]",
+          "question": "DEPENDENCY: What does deploy_prod require?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q4",
-          "question": "STEP 5 EXECUTION: What does step 5 run and what does it need?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Step 5 runs deploy_staging.",
-          "actualResponse": "[{\"subject\":\"step_5\",\"relation\":\"RUNS\",\"object\":\"deploy_staging\"}]",
+          "question": "STEP 5: What does deploy_staging produce?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q5",
-          "question": "SECURITY GATE: What does the security stage produce that could block the pipeline?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Security produces vulnerability_report.",
-          "actualResponse": "[{\"subject\":\"security\",\"relation\":\"PRODUCES\",\"object\":\"vulnerability_report\"}]",
+          "question": "SECURITY: What does security scan produce?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q6",
-          "question": "FAILURE HANDLING: What triggers a pipeline abort?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "unit_test_failure and critical_vulnerability both trigger pipeline_abort.",
-          "actualResponse": "[{\"subject\":\"unit_test_failure\",\"relation\":\"TRIGGERS\",\"object\":\"pipeline_abort\"},{\"subject\":\"critical_vulnerability\",\"relation\":\"TRIGGERS\",\"object\":\"pipeline_abort\"}]",
+          "question": "FAILURE: What triggers pipeline abort?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q7",
-          "question": "ROLLBACK TRIGGER: What condition triggers a rollback?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "integration_test_failure triggers rollback.",
-          "actualResponse": "[{\"subject\":\"integration_test_failure\",\"relation\":\"TRIGGERS\",\"object\":\"rollback\"}]",
+          "question": "ROLLBACK: What triggers rollback?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"integration_test_failure\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q8",
-          "question": "FINAL OUTPUT: What is produced at the end of a successful pipeline?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "deploy_prod produces production_deployment.",
-          "actualResponse": "[{\"subject\":\"deploy_prod\",\"relation\":\"PRODUCES\",\"object\":\"production_deployment\"}]",
+          "question": "FINAL: What is produced at pipeline end?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         }
       ],
       "passed": 8,
@@ -2269,75 +2461,75 @@
       "queries": [
         {
           "id": "q1",
-          "question": "INIT: What is the first API call and what variable does it produce?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Call 1 invokes auth_api and outputs auth_token to variable token.",
-          "actualResponse": "[{\"subject\":\"call_1\",\"relation\":\"INVOKES\",\"object\":\"auth_api\"}]",
+          "question": "INIT: What is the first API call?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q2",
-          "question": "TOKEN USAGE: Which calls need the authentication token?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "call_2, call_3, call_5, and call_6 all use the token variable.",
-          "actualResponse": "[{\"subject\":\"call_2\",\"relation\":\"USES_VAR\",\"object\":\"token\"},{\"subject\":\"call_3\",\"relation\":\"USES_VAR\",\"object\":\"token\"},{\"subject\":\"call_5\",\"relation\":\"USES_VAR\",\"object\":\"token\"},{\"subject\":\"call_6\",\"relation\":\"USES_VAR\",\"object\":\"token\"}]",
+          "question": "TOKEN: Which calls use the token?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 4 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q3",
-          "question": "CALL 5 SETUP: What variables and parameters does the payment call need?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Call 5 uses token and total variables.",
-          "actualResponse": "[{\"subject\":\"call_5\",\"relation\":\"USES_VAR\",\"object\":\"token\"},{\"subject\":\"call_5\",\"relation\":\"USES_VAR\",\"object\":\"total\"}]",
+          "question": "PAYMENT: What does call_5 need?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q4",
-          "question": "ORDER CREATION: What does call_6 need from previous calls?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Call 6 uses token, items, and txn from previous calls.",
-          "actualResponse": "[{\"subject\":\"call_6\",\"relation\":\"USES_VAR\",\"object\":\"token\"},{\"subject\":\"call_6\",\"relation\":\"USES_VAR\",\"object\":\"items\"},{\"subject\":\"call_6\",\"relation\":\"USES_VAR\",\"object\":\"txn\"}]",
+          "question": "ORDER: What variables does call_6 use?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 3 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q5",
-          "question": "USER INPUT: Which calls require external parameters (not from previous calls)?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Calls need: credentials, user_id, promo_code, payment_method, address, email.",
-          "actualResponse": "[{\"subject\":\"call_1\",\"relation\":\"WITH_PARAM\",\"object\":\"credentials\"},{\"subject\":\"call_2\",\"relation\":\"WITH_PARAM\",\"object\":\"user_id\"},{\"subject\":\"call_4\",\"relation\":\"WITH_PARAM\",\"object\":\"promo_code\"},{\"subject\":\"call_5\",\"relation\":\"WITH_PARAM\",\"object\":\"payment_method\"},{\"subject\":\"call_7\",\"relation\":\"WITH_PARAM\",\"object\":\"address\"},{\"subject\":\"call_8\",\"relation\":\"WITH_PARAM\",\"object\":\"email\"}]",
+          "question": "OUTPUTS: What does call_4 output?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 6 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q6",
-          "question": "ERROR: What happens if payment is declined?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Declined payment aborts with payment_error.",
-          "actualResponse": "[{\"subject\":\"declined\",\"relation\":\"ABORTS_WITH\",\"object\":\"payment_error\"}]",
+          "question": "ERROR: What happens on declined payment?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"declined\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q7",
-          "question": "SHIPPING SETUP: What does call_7 output and to which variable?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Call 7 outputs tracking_number to variable tracking.",
-          "actualResponse": "[{\"subject\":\"call_7\",\"relation\":\"OUTPUTS\",\"object\":\"tracking_number\"}]",
+          "question": "SHIPPING: What does call_7 output?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q8",
-          "question": "FINAL CALL: What does the notification call need to send confirmation?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Call 8 uses order and tracking variables.",
-          "actualResponse": "[{\"subject\":\"call_8\",\"relation\":\"USES_VAR\",\"object\":\"order\"},{\"subject\":\"call_8\",\"relation\":\"USES_VAR\",\"object\":\"tracking\"}]",
+          "question": "NOTIFICATION: What does call_8 use?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         }
       ],
       "passed": 8,
@@ -2350,75 +2542,75 @@
       "queries": [
         {
           "id": "q1",
-          "question": "PREP LIST: What ingredients does prep_2 need and what does it produce?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "prep_2 takes eggs_4pcs and parmesan_100g to make egg_mixture.",
-          "actualResponse": "[{\"subject\":\"prep_2\",\"relation\":\"TAKES\",\"object\":\"eggs_4pcs\"},{\"subject\":\"prep_2\",\"relation\":\"TAKES\",\"object\":\"parmesan_100g\"}]",
+          "question": "PREP: What does prep_2 need and produce?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q2",
-          "question": "PARALLELIZATION: What tasks can run in parallel during prep?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "prep_1, prep_2, and prep_3 can run in parallel.",
-          "actualResponse": "[{\"subject\":\"prep_parallel\",\"relation\":\"CAN_RUN\",\"object\":\"prep_1\"},{\"subject\":\"prep_parallel\",\"relation\":\"CAN_RUN\",\"object\":\"prep_2\"},{\"subject\":\"prep_parallel\",\"relation\":\"CAN_RUN\",\"object\":\"prep_3\"}]",
+          "question": "PARALLEL: What tasks can run parallel during prep?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 3 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q3",
-          "question": "DEPENDENCY: What must complete before cook_2 can start?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "cook_2 runs after prep_1 and prep_3.",
-          "actualResponse": "[{\"subject\":\"cook_2\",\"relation\":\"AFTER\",\"object\":\"prep_1\"},{\"subject\":\"cook_2\",\"relation\":\"AFTER\",\"object\":\"prep_3\"}]",
+          "question": "DEPENDENCY: What must complete before cook_2?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q4",
-          "question": "RESOURCE CONFLICT: What tasks use burner_1?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "prep_4 and cook_1 both use burner_1 (sequentially).",
-          "actualResponse": "[{\"subject\":\"prep_4\",\"relation\":\"USES\",\"object\":\"burner_1\"},{\"subject\":\"cook_1\",\"relation\":\"USES\",\"object\":\"burner_1\"}]",
+          "question": "RESOURCE: What tasks use burner_1?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q5",
           "question": "TIMING: How long does cook_1 take?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "cook_1 takes 12 minutes.",
-          "actualResponse": "[{\"subject\":\"cook_1\",\"relation\":\"DURATION\",\"object\":\"12min\"}]",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q6",
-          "question": "ASSEMBLY DEPS: What does assemble_1 need from cooking phase?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "assemble_1 takes cooked_pasta and crispy_bacon.",
-          "actualResponse": "[{\"subject\":\"assemble_1\",\"relation\":\"TAKES\",\"object\":\"cooked_pasta\"},{\"subject\":\"assemble_1\",\"relation\":\"TAKES\",\"object\":\"crispy_bacon\"}]",
+          "question": "ASSEMBLY: What does assemble_1 need from cooking?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q7",
-          "question": "FINAL STEP: What produces the final_dish?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "assemble_3 outputs final_dish.",
-          "actualResponse": "[{\"subject\":\"assemble_3\",\"relation\":\"OUTPUTS\",\"object\":\"final_dish\"}]",
+          "question": "FINAL: What produces final_dish?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q8",
-          "question": "PAN USAGE: Which tasks need the pan?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "cook_2 and assemble_1 use pan_1.",
-          "actualResponse": "[{\"subject\":\"cook_2\",\"relation\":\"USES\",\"object\":\"pan_1\"},{\"subject\":\"assemble_1\",\"relation\":\"USES\",\"object\":\"pan_1\"}]",
+          "question": "PAN: Which tasks use pan_1?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         }
       ],
       "passed": 8,
@@ -2431,75 +2623,75 @@
       "queries": [
         {
           "id": "q1",
-          "question": "FOUNDATION: What must be created first before any other resources?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "vpc_main outputs vpc_id, which is needed by all other resources.",
-          "actualResponse": "[{\"subject\":\"vpc_main\",\"relation\":\"OUTPUTS\",\"object\":\"vpc_id\"}]",
+          "question": "FOUNDATION: What does vpc_main produce?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q2",
-          "question": "DEPENDENCY CHAIN: What resources depend on vpc_main?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "subnet_public, subnet_private, and sg_web all depend on vpc_main.",
-          "actualResponse": "[{\"subject\":\"subnet_public\",\"relation\":\"AFTER\",\"object\":\"vpc_main\"},{\"subject\":\"subnet_private\",\"relation\":\"AFTER\",\"object\":\"vpc_main\"},{\"subject\":\"sg_web\",\"relation\":\"AFTER\",\"object\":\"vpc_main\"}]",
+          "question": "DEPENDENCY: What depends on vpc_main?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 3 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q3",
           "question": "SECURITY: What ports does sg_web allow?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "sg_web allows port_443 and port_80.",
-          "actualResponse": "[{\"subject\":\"sg_web\",\"relation\":\"ALLOWS\",\"object\":\"port_443\"},{\"subject\":\"sg_web\",\"relation\":\"ALLOWS\",\"object\":\"port_80\"}]",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q4",
-          "question": "EC2 PREREQS: What must exist before ec2_web_1 can be created?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "ec2_web_1 requires subnet_public and sg_web to exist first.",
-          "actualResponse": "[{\"subject\":\"ec2_web_1\",\"relation\":\"AFTER\",\"object\":\"subnet_public\"},{\"subject\":\"ec2_web_1\",\"relation\":\"AFTER\",\"object\":\"sg_web\"}]",
+          "question": "EC2 PREREQS: What must exist before ec2_web_1?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q5",
           "question": "LOAD BALANCER: What does alb_main target?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "alb_main targets instance_web_1_id and instance_web_2_id.",
-          "actualResponse": "[{\"subject\":\"alb_main\",\"relation\":\"TARGETS\",\"object\":\"instance_web_1_id\"},{\"subject\":\"alb_main\",\"relation\":\"TARGETS\",\"object\":\"instance_web_2_id\"}]",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q6",
-          "question": "COST ANALYSIS: What is the monthly cost of rds_primary?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "rds_primary costs 50_dollars_month.",
-          "actualResponse": "[{\"subject\":\"rds_primary\",\"relation\":\"COSTS\",\"object\":\"50_dollars_month\"}]",
+          "question": "COST: What is rds_primary monthly cost?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q7",
-          "question": "DATABASE DEPS: What does rds_primary need before creation?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "rds_primary needs subnet_priv_id and sg_db_id.",
-          "actualResponse": "[{\"subject\":\"rds_primary\",\"relation\":\"NEEDS\",\"object\":\"subnet_priv_id\"},{\"subject\":\"rds_primary\",\"relation\":\"NEEDS\",\"object\":\"sg_db_id\"}]",
+          "question": "DATABASE DEPS: What does rds_primary need?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         },
         {
           "id": "q8",
-          "question": "FINAL STEP: What resource completes the infrastructure?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "route53_record outputs dns_name as the final public endpoint.",
-          "actualResponse": "[{\"subject\":\"route53_record\",\"relation\":\"OUTPUTS\",\"object\":\"dns_name\"}]",
+          "question": "FINAL: What resource completes infrastructure?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
           "passed": true,
-          "matchReason": "LIST Match: Found 1 result(s)"
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "hasDslExplanation": true
         }
       ],
       "passed": 8,

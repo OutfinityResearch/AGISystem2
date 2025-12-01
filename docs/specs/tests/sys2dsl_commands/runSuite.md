@@ -35,10 +35,11 @@ Steps/Assertions:
   - `@q ASK Fire IS_A liquid` returns FALSE or UNKNOWN
   - Verify response includes provenance fields
 
-- FACTS_MATCHING:
-  - `@facts FACTS_MATCHING "? IS_A liquid"` returns list of matching facts
-  - `@facts FACTS_MATCHING "Water ? ?"` returns facts about Water
-  - Empty pattern returns all facts (with limit)
+- FACTS_MATCHING (Polymorphic):
+  - `@facts INSTANCES_OF liquid` returns all X where X IS_A liquid
+  - `@facts FACTS_MATCHING Water` returns facts about Water (1-arg)
+  - `@facts FACTS_MATCHING Water IS_A` returns facts matching Water IS_A (2-arg)
+  - `@facts FACTS_MATCHING` returns all facts (0-arg)
 
 - CONCEPTS_SIMILAR:
   - After ingesting Water and Ice, `@similar CONCEPTS_SIMILAR Water limit=5` returns related concepts

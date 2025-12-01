@@ -79,17 +79,17 @@
     {
       "id": "q6",
       "natural_language": "Find all capital-country pairs",
-      "expected_dsl": "@q6 FACTS_MATCHING ? CAPITAL_OF ?",
+      "expected_dsl": "@q6 FACTS_WITH_RELATION CAPITAL_OF",
       "expected_answer": {
         "natural_language": "Found 6 pairs: Bucharest-Romania, Paris-France, Berlin-Germany, Madrid-Spain, Rome-Italy, London-United Kingdom.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "Pattern matching with wildcards returns all matching facts"
+        "explanation": "FACTS_WITH_RELATION returns all facts with the given relation"
       }
     },
     {
       "id": "q7",
       "natural_language": "Who are the children of Ion?",
-      "expected_dsl": "@q7 FACTS_MATCHING Ion PARENT_OF ?",
+      "expected_dsl": "@q7 FACTS_MATCHING Ion PARENT_OF",
       "expected_answer": {
         "natural_language": "Ion has two children: Ana and Mihai.",
         "truth": "TRUE_CERTAIN",
@@ -99,7 +99,7 @@
     {
       "id": "q8",
       "natural_language": "Who are Ana's parents?",
-      "expected_dsl": "@q8 FACTS_MATCHING ? PARENT_OF Ana",
+      "expected_dsl": "@q8 FACTS_WITH_OBJECT Ana",
       "expected_answer": {
         "natural_language": "Ana's parents are Maria and Ion.",
         "truth": "TRUE_CERTAIN",

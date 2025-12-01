@@ -207,7 +207,7 @@ Define values as concepts in hierarchies:
 
 # Now we can reason about temperatures
 @q1 ASK Celsius100 IS_A high_temperature  # TRUE
-@q2 FACTS_MATCHING ? IS_A temperature      # All temperatures
+@q2 INSTANCES_OF temperature      # All temperatures
 ```
 
 ---
@@ -398,18 +398,18 @@ Variables can substitute for ANY point:
 
 ## 8. Impact on Commands
 
-### 8.1 FACTS_MATCHING
+### 8.1 FACTS_MATCHING (Polymorphic)
 
-Now works with clean patterns:
+FACTS_MATCHING supports 0-3 arguments:
 
 ```sys2dsl
-# Find all things that boil at some temperature
-@results FACTS_MATCHING ? BOILS_AT ?
+# Find all things that boil at some temperature (use specialized command)
+@results FACTS_WITH_RELATION BOILS_AT
 
-# Find all properties of water (multiple relations)
-@props1 FACTS_MATCHING water BOILS_AT ?
-@props2 FACTS_MATCHING water FREEZES_AT ?
-@props3 FACTS_MATCHING water HAS_DENSITY ?
+# Find all properties of water (multiple relations, 2-arg form)
+@props1 FACTS_MATCHING water BOILS_AT
+@props2 FACTS_MATCHING water FREEZES_AT
+@props3 FACTS_MATCHING water HAS_DENSITY
 @all MERGE_LISTS $props1 $props2
 @all2 MERGE_LISTS $all $props3
 ```
@@ -420,9 +420,9 @@ Now values are concepts we can reason about:
 
 ```sys2dsl
 # What substances boil at high temperatures?
-@high_temps FACTS_MATCHING ? IS_A high_temperature
+@high_temps INSTANCES_OF high_temperature
 @first_high PICK_FIRST $high_temps
-@substances FACTS_MATCHING ? BOILS_AT $first_high
+@substances FACTS_WITH_OBJECT $first_high
 ```
 
 ---

@@ -78,7 +78,7 @@ Executes a single CLI command and returns structured result.
 
 | Command | Syntax | DSL Translation |
 |---------|--------|-----------------|
-| `facts` | `facts [pattern]` | `@r FACTS_MATCHING <pattern> ? ?` |
+| `facts` | `facts [pattern]` | `@r FACTS_MATCHING <pattern>` |
 | `concepts` | `concepts` | Direct: `conceptStore.listConcepts()` |
 | `usage` | `usage <concept>` | `@r GET_USAGE <concept>` |
 | `inspect` | `inspect <concept>` | `@r INSPECT <concept>` |

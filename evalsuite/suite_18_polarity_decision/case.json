@@ -19,7 +19,7 @@
     {
       "id": "q1",
       "natural_language": "For EU, does negative evidence dominate for drugA?",
-      "expected_dsl": "@neg FACTS_MATCHING drugA PROHIBITED_IN ?\n@pos FACTS_MATCHING drugA PERMITTED_IN ?\n@regsEU LITERAL [\"eu\"]\n@q1 POLARITY_DECIDE $neg $pos $regsEU",
+      "expected_dsl": "@neg FACTS_MATCHING drugA PROHIBITED_IN\n@pos FACTS_MATCHING drugA PERMITTED_IN\n@regsEU LITERAL [\"eu\"]\n@q1 POLARITY_DECIDE $neg $pos $regsEU",
       "expected_answer": {
         "natural_language": "EU has a prohibition, so the decision should be negative.",
         "truth": "FALSE",
@@ -39,7 +39,7 @@
     {
       "id": "q3",
       "natural_language": "Is drugB permitted in EU (only positive evidence)?",
-      "expected_dsl": "@negB FACTS_MATCHING drugB PROHIBITED_IN ?\n@posB FACTS_MATCHING drugB PERMITTED_IN ?\n@regsEU2 LITERAL [\"eu\"]\n@q3 POLARITY_DECIDE $negB $posB $regsEU2",
+      "expected_dsl": "@negB FACTS_MATCHING drugB PROHIBITED_IN\n@posB FACTS_MATCHING drugB PERMITTED_IN\n@regsEU2 LITERAL [\"eu\"]\n@q3 POLARITY_DECIDE $negB $posB $regsEU2",
       "expected_answer": {
         "natural_language": "Yes. DrugB has only permission facts, no prohibitions.",
         "truth": "TRUE_CERTAIN",
@@ -59,7 +59,7 @@
     {
       "id": "q5",
       "natural_language": "Is drugC prohibited in EU (only negative evidence)?",
-      "expected_dsl": "@negC FACTS_MATCHING drugC PROHIBITED_IN ?\n@posC FACTS_MATCHING drugC PERMITTED_IN ?\n@regsEU3 LITERAL [\"eu\"]\n@q5 POLARITY_DECIDE $negC $posC $regsEU3",
+      "expected_dsl": "@negC FACTS_MATCHING drugC PROHIBITED_IN\n@posC FACTS_MATCHING drugC PERMITTED_IN\n@regsEU3 LITERAL [\"eu\"]\n@q5 POLARITY_DECIDE $negC $posC $regsEU3",
       "expected_answer": {
         "natural_language": "Yes, decision is FALSE because drugC is prohibited in EU.",
         "truth": "FALSE",
@@ -79,7 +79,7 @@
     {
       "id": "q7",
       "natural_language": "What about productX in US (positive only)?",
-      "expected_dsl": "@negX FACTS_MATCHING productX PROHIBITED_IN ?\n@posX FACTS_MATCHING productX PERMITTED_IN ?\n@regsUS4 LITERAL [\"us\"]\n@q7 POLARITY_DECIDE $negX $posX $regsUS4",
+      "expected_dsl": "@negX FACTS_MATCHING productX PROHIBITED_IN\n@posX FACTS_MATCHING productX PERMITTED_IN\n@regsUS4 LITERAL [\"us\"]\n@q7 POLARITY_DECIDE $negX $posX $regsUS4",
       "expected_answer": {
         "natural_language": "ProductX is permitted in US.",
         "truth": "TRUE_CERTAIN",

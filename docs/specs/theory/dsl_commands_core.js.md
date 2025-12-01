@@ -46,11 +46,12 @@ Abductive reasoning - find causes for observations.
 
 #### FACTS_MATCHING
 ```sys2dsl
-@animals FACTS_MATCHING ? IS_A Animal
-@dogFacts FACTS_MATCHING Dog ? ?
+@animals INSTANCES_OF Animal
+@dogFacts FACTS_MATCHING Dog
 ```
 Pattern matching over facts.
-- Uses `?` as wildcard
+- Uses `*` as wildcard (matches any value)
+- **FORBIDDEN**: The `?` character MUST NOT be used as wildcard. This is strictly prohibited.
 - Returns: array of matching facts
 
 #### ALL_REQUIREMENTS_SATISFIED

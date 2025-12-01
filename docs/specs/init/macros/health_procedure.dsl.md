@@ -24,8 +24,8 @@ Reusable Sys2DSL macro that checks whether all requirements for a medical/health
 
 ## Algorithm
 
-1. Collect all requirements: facts matching `"$procId REQUIRES ?"`
-2. Collect all satisfied conditions via `"? GIVEN yes"` or `"? PRESENT yes"`
+1. Collect all requirements: facts matching `$procId REQUIRES` (polymorphic 2-arg form)
+2. Collect all satisfied conditions via `GIVEN` and `PRESENT` relations, filtered for object=yes
 3. Merge satisfaction lists
 4. Check if every requirement has a matching satisfaction fact
 
@@ -33,9 +33,11 @@ Reusable Sys2DSL macro that checks whether all requirements for a medical/health
 
 ```sys2dsl
 # Health procedure compliance macro
-@reqs FACTS_MATCHING "$procId REQUIRES ?"
-@satGiven FACTS_MATCHING "? GIVEN yes"
-@satPresent FACTS_MATCHING "? PRESENT yes"
+@reqs FACTS_MATCHING $procId REQUIRES
+@givenAll FACTS_WITH_RELATION GIVEN
+@satGiven FILTER $givenAll object=yes
+@presentAll FACTS_WITH_RELATION PRESENT
+@satPresent FILTER $presentAll object=yes
 @allSat MERGE_LISTS $satGiven $satPresent
 @result ALL_REQUIREMENTS_SATISFIED $reqs $allSat
 ```
@@ -57,7 +59,9 @@ Reusable Sys2DSL macro that checks whether all requirements for a medical/health
 
 ## Commands Used
 
-- `FACTS_MATCHING`: Query facts by pattern
+- `FACTS_MATCHING`: Query facts by subject+relation (polymorphic)
+- `FACTS_WITH_RELATION`: Query facts by relation type
+- `FILTER`: Filter list by attribute
 - `MERGE_LISTS`: Combine two fact lists
 - `ALL_REQUIREMENTS_SATISFIED`: Check requirement coverage
 

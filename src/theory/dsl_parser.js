@@ -240,14 +240,13 @@ class DSLParser {
 
   /**
    * Check if a pattern token matches a value.
-   * @param {string} patternToken - Pattern ('?' is wildcard)
+   * Simple string equality - no wildcards needed.
+   * Use polymorphic FACTS_MATCHING instead (1, 2, or 3 args).
+   * @param {string} patternToken - Pattern to match
    * @param {string} value - Value to match
    * @returns {boolean}
    */
   tokenMatches(patternToken, value) {
-    if (patternToken === '?') {
-      return true;
-    }
     return String(patternToken) === String(value);
   }
 

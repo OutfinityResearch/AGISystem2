@@ -12,10 +12,12 @@ async function run({ profile }) {
   session.run(script);
 
   const baseEnv = session.run([
-    '@reqs FACTS_MATCHING "ProcedureX REQUIRES ?" ',
-    '@satGiven FACTS_MATCHING "? GIVEN yes" ',
-    '@satPresent FACTS_MATCHING "? PRESENT yes" ',
-    '@allSat MERGE_LISTS $satGiven $satPresent',
+    '@reqs FACTS_MATCHING ProcedureX REQUIRES',
+    '@satGiven FACTS_WITH_RELATION GIVEN',
+    '@satGivenYes FILTER $satGiven object=yes',
+    '@satPresent FACTS_WITH_RELATION PRESENT',
+    '@satPresentYes FILTER $satPresent object=yes',
+    '@allSat MERGE_LISTS $satGivenYes $satPresentYes',
     '@result ALL_REQUIREMENTS_SATISFIED $reqs $allSat'
   ]);
   const baseCompliance = baseEnv.result || {};
@@ -28,10 +30,12 @@ async function run({ profile }) {
   const ingestExtras = extraFacts.map((l, idx) => `@e${idx} ASSERT ${l}`);
   session.run(ingestExtras);
   const cfEnv = session.run([
-    '@reqs2 FACTS_MATCHING "ProcedureX REQUIRES ?" ',
-    '@satGiven2 FACTS_MATCHING "? GIVEN yes" ',
-    '@satPresent2 FACTS_MATCHING "? PRESENT yes" ',
-    '@allSat2 MERGE_LISTS $satGiven2 $satPresent2',
+    '@reqs2 FACTS_MATCHING ProcedureX REQUIRES',
+    '@satGiven2 FACTS_WITH_RELATION GIVEN',
+    '@satGivenYes2 FILTER $satGiven2 object=yes',
+    '@satPresent2 FACTS_WITH_RELATION PRESENT',
+    '@satPresentYes2 FILTER $satPresent2 object=yes',
+    '@allSat2 MERGE_LISTS $satGivenYes2 $satPresentYes2',
     '@result2 ALL_REQUIREMENTS_SATISFIED $reqs2 $allSat2'
   ]);
   const cfCompliance = cfEnv.result2 || {};
@@ -39,8 +43,8 @@ async function run({ profile }) {
 
   const regs = ['GDPR', 'HIPAA'];
   const envRegs = session.run([
-    '@neg FACTS_MATCHING "ExportData PROHIBITED_BY ?" ',
-    '@pos FACTS_MATCHING "ExportData PERMITTED_BY ?" ',
+    '@neg FACTS_MATCHING ExportData PROHIBITED_BY',
+    '@pos FACTS_MATCHING ExportData PERMITTED_BY',
     '@regsVar ASSERT ExportData HAS_PROPERTY regs' // dummy to bind name; regs list passed from JS
   ]);
   // Use POLARITY_DECIDE manually with regs array from JS.

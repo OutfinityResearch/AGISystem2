@@ -1,10 +1,10 @@
 {
   "id": "suite_26_tool_planning",
   "name": "Tool Chain Planning - Web Scraping Pipeline",
-  "description": "Tests ability to plan a multi-step tool chain for web scraping. Given a goal like 'get processed data from URL', system must find the sequence: fetch→parse→transform→save, resolving dependencies and parameter passing between steps.",
+  "description": "Tests multi-step tool chain planning with DSL-validatable proof chains. Each query verifies dependencies and data flow using multi-statement DSL that can be executed without LLM.",
 
   "theory": {
-    "natural_language": "TOOL DEFINITIONS: The fetch_url tool takes a url parameter and produces raw_html output. The parse_html tool takes raw_html parameter and produces dom_tree output. The extract_data tool takes dom_tree and selector parameters and produces extracted_list output. The transform_json tool takes extracted_list parameter and produces json_data output. The save_file tool takes json_data and filepath parameters and produces saved_file output. The compress_archive tool takes saved_file parameter and produces archive output. COMPOSITION RULES: To get dom_tree you must first fetch_url then parse_html. To get extracted_list you must first have dom_tree then extract_data. To get json_data you must first have extracted_list then transform_json. To get saved_file you must first have json_data then save_file. To get archive you must first have saved_file then compress_archive. EXECUTION SEQUENCE: Step 1 is fetch_url with url parameter. Step 2 is parse_html with raw_html from step 1. Step 3 is extract_data with dom_tree from step 2 and selector config. Step 4 is transform_json with extracted_list from step 3. Step 5 is save_file with json_data from step 4 and filepath config. Step 6 is compress_archive with saved_file from step 5.",
+    "natural_language": "TOOL DEFINITIONS: The fetch_url tool takes a url parameter and produces raw_html output. The parse_html tool takes raw_html parameter and produces dom_tree output. The extract_data tool takes dom_tree and selector parameters and produces extracted_list output. The transform_json tool takes extracted_list parameter and produces json_data output. The save_file tool takes json_data and filepath parameters and produces saved_file output. The compress_archive tool takes saved_file parameter and produces archive output. COMPOSITION RULES: To get dom_tree you must first fetch_url then parse_html. To get json_data you must first have extracted_list. EXECUTION SEQUENCE: Step 1 is fetch_url with url parameter. Step 2 is parse_html with raw_html from step 1. Step 3 is extract_data with dom_tree from step 2. Step 4 is transform_json with extracted_list from step 3. Step 5 is save_file with json_data from step 4. Step 6 is compress_archive with saved_file from step 5.",
     "expected_facts": [
       "fetch_url TAKES url",
       "fetch_url PRODUCES raw_html",
@@ -20,16 +20,7 @@
       "save_file PRODUCES saved_file",
       "compress_archive TAKES saved_file",
       "compress_archive PRODUCES archive",
-      "dom_tree REQUIRES_FIRST fetch_url",
-      "dom_tree REQUIRES_THEN parse_html",
-      "extracted_list REQUIRES_FIRST dom_tree",
-      "extracted_list REQUIRES_THEN extract_data",
       "json_data REQUIRES_FIRST extracted_list",
-      "json_data REQUIRES_THEN transform_json",
-      "saved_file REQUIRES_FIRST json_data",
-      "saved_file REQUIRES_THEN save_file",
-      "archive REQUIRES_FIRST saved_file",
-      "archive REQUIRES_THEN compress_archive",
       "step_1 EXECUTES fetch_url",
       "step_1 WITH_PARAM url",
       "step_2 EXECUTES parse_html",
@@ -50,85 +41,69 @@
   "queries": [
     {
       "id": "q1",
-      "natural_language": "PLAN STEP 1: What is the first tool to execute and what parameter does it need?",
-      "expected_dsl": "@q1 FACTS_MATCHING step_1 EXECUTES ?",
+      "natural_language": "PLAN STEP 1: What is the first tool and what parameter does it need?",
+      "expected_dsl": "@exec ASK step_1 EXECUTES fetch_url\n@param ASK step_1 WITH_PARAM url\n@q1 BOOL_AND $exec $param",
       "expected_answer": {
-        "natural_language": "Step 1 executes fetch_url with url parameter.",
-        "truth": "LIST",
-        "explanation": "First step identification with parameter"
+        "dsl_explanation": "@e1 ASK step_1 EXECUTES fetch_url\n@p1 ASK step_1 WITH_PARAM url\n@step1_valid BOOL_AND $e1 $p1\n# Result: @step1_valid.truth = TRUE_CERTAIN proves: step_1 executes fetch_url with url parameter"
       }
     },
     {
       "id": "q2",
-      "natural_language": "DEPENDENCY CHECK: What must be produced before parse_html can run?",
-      "expected_dsl": "@q2 FACTS_MATCHING parse_html TAKES ?",
+      "natural_language": "DEPENDENCY CHECK: What does parse_html need before it can run?",
+      "expected_dsl": "@takes ASK parse_html TAKES raw_html\n@produces ASK fetch_url PRODUCES raw_html\n@q2 BOOL_AND $takes $produces",
       "expected_answer": {
-        "natural_language": "parse_html takes raw_html (which comes from fetch_url).",
-        "truth": "LIST",
-        "explanation": "Dependency resolution"
+        "dsl_explanation": "@dep1 ASK parse_html TAKES raw_html\n@dep2 ASK fetch_url PRODUCES raw_html\n@chain BOOL_AND $dep1 $dep2\n# Result: @chain.truth = TRUE_CERTAIN proves: parse_html needs raw_html which fetch_url produces"
       }
     },
     {
       "id": "q3",
-      "natural_language": "PLAN STEP 3: What does extract_data need as inputs?",
-      "expected_dsl": "@q3 FACTS_MATCHING extract_data TAKES ?",
+      "natural_language": "PLAN STEP 3: What inputs does extract_data need?",
+      "expected_dsl": "@input1 ASK extract_data TAKES dom_tree\n@input2 ASK extract_data TAKES selector\n@q3 BOOL_AND $input1 $input2",
       "expected_answer": {
-        "natural_language": "extract_data takes dom_tree and selector.",
-        "truth": "LIST",
-        "explanation": "Multi-input tool requirements"
+        "dsl_explanation": "@i1 ASK extract_data TAKES dom_tree\n@i2 ASK extract_data TAKES selector\n@both_inputs BOOL_AND $i1 $i2\n# Result: @both_inputs.truth = TRUE_CERTAIN proves: extract_data takes dom_tree AND selector"
       }
     },
     {
       "id": "q4",
-      "natural_language": "DATA FLOW: Where does step_4 get its input from?",
-      "expected_dsl": "@q4 FACTS_MATCHING step_4 INPUT_FROM ?",
+      "natural_language": "DATA FLOW: Verify the chain from step_2 to step_4",
+      "expected_dsl": "@flow1 ASK step_3 INPUT_FROM step_2\n@flow2 ASK step_4 INPUT_FROM step_3\n@q4 BOOL_AND $flow1 $flow2",
       "expected_answer": {
-        "natural_language": "Step 4 gets input from step 3.",
-        "truth": "LIST",
-        "explanation": "Data flow between steps"
+        "dsl_explanation": "@f1 ASK step_3 INPUT_FROM step_2\n@f2 ASK step_4 INPUT_FROM step_3\n@flow_valid BOOL_AND $f1 $f2\n# Result: @flow_valid.truth = TRUE_CERTAIN proves: step_2 → step_3 → step_4 data flow"
       }
     },
     {
       "id": "q5",
       "natural_language": "GOAL DECOMPOSITION: What sequence produces json_data?",
-      "expected_dsl": "@q5 FACTS_MATCHING json_data REQUIRES_FIRST ?",
+      "expected_dsl": "@req ASK json_data REQUIRES_FIRST extracted_list\n@produces ASK transform_json PRODUCES json_data\n@takes ASK transform_json TAKES extracted_list\n@chain1 BOOL_AND $req $produces\n@q5 BOOL_AND $chain1 $takes",
       "expected_answer": {
-        "natural_language": "json_data requires first having extracted_list, then applying transform_json.",
-        "truth": "LIST",
-        "explanation": "Backward chaining from goal"
+        "dsl_explanation": "@r1 ASK json_data REQUIRES_FIRST extracted_list\n@r2 ASK transform_json PRODUCES json_data\n@r3 ASK transform_json TAKES extracted_list\n@c1 BOOL_AND $r1 $r2\n@full_chain BOOL_AND $c1 $r3\n# Result: @full_chain.truth = TRUE_CERTAIN proves: json_data needs extracted_list → transform_json"
       }
     },
     {
       "id": "q6",
-      "natural_language": "PARAMETER MAPPING: Which steps need configuration parameters (not just data flow)?",
-      "expected_dsl": "@q6 FACTS_MATCHING ? WITH_PARAM ?",
+      "natural_language": "PARAMETER MAPPING: Which steps need configuration parameters?",
+      "expected_dsl": "@config1 ASK step_1 WITH_PARAM url\n@config2 ASK step_3 WITH_PARAM selector\n@config3 ASK step_5 WITH_PARAM filepath\n@c1 BOOL_AND $config1 $config2\n@q6 BOOL_AND $c1 $config3",
       "expected_answer": {
-        "natural_language": "Step 1 needs url, step 3 needs selector, step 5 needs filepath.",
-        "truth": "LIST",
-        "explanation": "Configuration vs data parameters"
+        "dsl_explanation": "@p1 ASK step_1 WITH_PARAM url\n@p2 ASK step_3 WITH_PARAM selector\n@p3 ASK step_5 WITH_PARAM filepath\n@pair1 BOOL_AND $p1 $p2\n@all_params BOOL_AND $pair1 $p3\n# Result: @all_params.truth = TRUE_CERTAIN proves: url (step_1), selector (step_3), filepath (step_5)"
       }
     },
     {
       "id": "q7",
       "natural_language": "FINAL STEP: What produces the archive output?",
-      "expected_dsl": "@q7 FACTS_MATCHING ? PRODUCES archive",
+      "expected_dsl": "@produces ASK compress_archive PRODUCES archive\n@takes ASK compress_archive TAKES saved_file\n@q7 BOOL_AND $produces $takes",
       "expected_answer": {
-        "natural_language": "compress_archive produces archive.",
-        "truth": "LIST",
-        "explanation": "Final step identification"
+        "dsl_explanation": "@p1 ASK compress_archive PRODUCES archive\n@t1 ASK compress_archive TAKES saved_file\n@final BOOL_AND $p1 $t1\n# Result: @final.truth = TRUE_CERTAIN proves: compress_archive takes saved_file → produces archive"
       }
     },
     {
       "id": "q8",
-      "natural_language": "FULL CHAIN: What tool does step_6 execute?",
-      "expected_dsl": "@q8 FACTS_MATCHING step_6 EXECUTES ?",
+      "natural_language": "FULL CHAIN: Verify the complete 6-step pipeline",
+      "expected_dsl": "@s1 ASK step_1 EXECUTES fetch_url\n@s2 ASK step_2 EXECUTES parse_html\n@s3 ASK step_3 EXECUTES extract_data\n@s4 ASK step_4 EXECUTES transform_json\n@s5 ASK step_5 EXECUTES save_file\n@s6 ASK step_6 EXECUTES compress_archive\n@early BOOL_AND $s1 $s2\n@mid1 BOOL_AND $s3 $s4\n@mid2 BOOL_AND $s5 $s6\n@half1 BOOL_AND $early $mid1\n@q8 BOOL_AND $half1 $mid2",
       "expected_answer": {
-        "natural_language": "Step 6 executes compress_archive.",
-        "truth": "LIST",
-        "explanation": "Last step in the execution plan"
+        "dsl_explanation": "@e1 ASK step_1 EXECUTES fetch_url\n@e2 ASK step_2 EXECUTES parse_html\n@e3 ASK step_3 EXECUTES extract_data\n@e4 ASK step_4 EXECUTES transform_json\n@e5 ASK step_5 EXECUTES save_file\n@e6 ASK step_6 EXECUTES compress_archive\n@p1 BOOL_AND $e1 $e2\n@p2 BOOL_AND $e3 $e4\n@p3 BOOL_AND $e5 $e6\n@h1 BOOL_AND $p1 $p2\n@full_pipeline BOOL_AND $h1 $p3\n# Result: @full_pipeline.truth = TRUE_CERTAIN proves 6-step chain: fetch_url → parse_html → extract_data → transform_json → save_file → compress_archive"
       }
     }
   ],
 
-  "tags": ["tool_planning", "sequencing", "web_scraping", "pipeline", "data_flow", "parameter_passing"]
+  "tags": ["tool_planning", "sequencing", "web_scraping", "pipeline", "data_flow", "multi_statement", "dsl_validatable"]
 }

@@ -132,9 +132,9 @@ Parameters can be:
 
 #### 3.3.4 Pattern with Wildcards
 ```sys2dsl
-@matches FACTS_MATCHING ? IS_A animal
-@causes FACTS_MATCHING Water CAUSES ?
-@all FACTS_MATCHING ? ? ?
+@matches INSTANCES_OF animal
+@causes FACTS_MATCHING Water CAUSES
+@all FACTS_MATCHING
 ```
 
 #### 3.3.5 Mixed Forms
@@ -268,9 +268,7 @@ PROHIBITS        # deontic prohibition
 @f3 ASSERT water HAS_PROPERTY boiling_point  # water (concept) has property
 
 # Query about concept
-@q1 ASK dog IS_A animal                # Is the type "dog" a subtype of "animal"?
-
-# Query about fact
+@q1 ASK dog IS_A animal                # Is the type "dog" a subtype of "animal"* # Query about fact
 @q2 ASK Fido IS_A mammal               # Is Fido (specific dog) a mammal?
 ```
 
@@ -546,7 +544,7 @@ LETTER          = LOWER | UPPER ;
 
 # Query the knowledge
 @q1 ASK Water IS_A substance
-@q2 FACTS_MATCHING Water ? ?
+@q2 FACTS_MATCHING Water
 ```
 
 ### 13.3 Masked Reasoning
@@ -596,7 +594,7 @@ LETTER          = LOWER | UPPER ;
 ```sys2dsl
 # Given observation, find possible causes
 @observation ASSERT Patient HAS_SYMPTOM fever
-@hypotheses HYPOTHESIZE Patient HAS_SYMPTOM fever CAUSED_BY ?
+@hypotheses HYPOTHESIZE Patient HAS_SYMPTOM fever CAUSED_BY *
 ```
 
 ### 13.7 Defining New Relations

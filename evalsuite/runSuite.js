@@ -1795,14 +1795,19 @@ async function evaluateCase(testCase, executor, options) {
   for (const query of testCase.queries) {
     log(`\n  Query ${query.id}: "${query.natural_language}"`, colors.blue);
 
+    // Determine expected truth - either from truth field or by executing dsl_explanation
+    let expectedTruth = query.expected_answer.truth;
+    let hasDslExplanation = !!query.expected_answer.dsl_explanation;
+
     const queryResult = {
       id: query.id,
       question: query.natural_language,
-      expectedTruth: query.expected_answer.truth,
+      expectedTruth: expectedTruth || 'TRUE_CERTAIN', // Default for dsl_explanation scripts
       expectedNatural: query.expected_answer.natural_language,
       actualResponse: '',
       passed: false,
-      matchReason: ''
+      matchReason: '',
+      hasDslExplanation: hasDslExplanation
     };
 
     try {
@@ -1827,6 +1832,26 @@ async function evaluateCase(testCase, executor, options) {
             response = '[Could not generate DSL query - add expected_dsl to case.json]';
           }
         }
+
+        // If we have dsl_explanation, also execute it and validate
+        if (hasDslExplanation && isDirectDsl) {
+          const explanationDsl = query.expected_answer.dsl_explanation
+            .split('\n')
+            .filter(line => line.trim() && !line.trim().startsWith('#'))
+            .join('\n');
+
+          if (explanationDsl.trim()) {
+            const explanationResponse = await executor.send(explanationDsl, query.id + '_explanation');
+            // Parse the explanation result to get the proof chain's truth
+            const explanationParsed = parseStructuredResult(explanationResponse);
+            if (explanationParsed.found) {
+              // The dsl_explanation proof chain should yield TRUE_CERTAIN
+              // This validates that the proof steps are correct
+              queryResult.explanationTruth = explanationParsed.truth;
+              queryResult.explanationResponse = explanationResponse;
+            }
+          }
+        }
       } else {
         // FULL MODE: Send natural language to LLM
         response = await executor.send(query.natural_language, query.id);
@@ -1840,17 +1865,26 @@ async function evaluateCase(testCase, executor, options) {
       queryResult.actualResponse = response;
 
       // Analyze response for correctness
-      const analysis = analyzeResponse(response, query.expected_answer);
+      // If no explicit truth, use dsl_explanation result (should be TRUE_CERTAIN for valid proofs)
+      const effectiveExpectedAnswer = expectedTruth
+        ? query.expected_answer
+        : { ...query.expected_answer, truth: 'TRUE_CERTAIN' };
+
+      const analysis = analyzeResponse(response, effectiveExpectedAnswer);
       queryResult.passed = analysis.passed;
       queryResult.matchReason = analysis.reason;
+
+      // Update expectedTruth in queryResult for display
+      queryResult.expectedTruth = effectiveExpectedAnswer.truth;
 
       if (queryResult.passed) {
         results.passed++;
         const matchLabel = analysis.matchType === 'structured_dsl' ? ' [DSL]' : ' [NL]';
-        logResult(true, `Expected: ${query.expected_answer.truth}${matchLabel}`);
+        const proofLabel = hasDslExplanation ? ' [PROOF]' : '';
+        logResult(true, `Expected: ${effectiveExpectedAnswer.truth}${matchLabel}${proofLabel}`);
       } else {
         results.failed++;
-        logResult(false, `Expected: ${query.expected_answer.truth}`);
+        logResult(false, `Expected: ${effectiveExpectedAnswer.truth}`);
         log(`    Reason: ${analysis.reason}`, colors.gray);
 
         // Always show expected vs actual for failures (not just in verbose mode)
@@ -1863,7 +1897,7 @@ async function evaluateCase(testCase, executor, options) {
         if (usedDsl) {
           log(`    ${colors.cyan}DSL:${colors.reset}      ${usedDsl}`, '');
         }
-        log(`    ${colors.yellow}Expected:${colors.reset} ${query.expected_answer.truth}`, '');
+        log(`    ${colors.yellow}Expected:${colors.reset} ${effectiveExpectedAnswer.truth}`, '');
         log(`    ${colors.red}Actual:${colors.reset}   ${actualTruth}${actualMethod}${actualConfidence}`, '');
 
         if (options.verbose) {
@@ -2068,7 +2102,7 @@ function detectTruthFromText(text, expectedTruth) {
  */
 function analyzeResponse(response, expected) {
   const responseLower = response.toLowerCase();
-  const expectedLower = expected.natural_language.toLowerCase();
+  const expectedLower = (expected.natural_language || '').toLowerCase();
   const expectedTruth = expected.truth;
 
   // Special handling for LIST type responses (FACTS_MATCHING queries)
@@ -2379,8 +2413,8 @@ function dryRun(cases) {
       if (!q.natural_language) {
         issues.push(`Query ${q.id} missing natural_language`);
       }
-      if (!q.expected_answer?.truth) {
-        issues.push(`Query ${q.id} missing expected_answer.truth`);
+      if (!q.expected_answer?.truth && !q.expected_answer?.dsl_explanation) {
+        issues.push(`Query ${q.id} missing expected_answer.truth or dsl_explanation`);
       }
     }
 

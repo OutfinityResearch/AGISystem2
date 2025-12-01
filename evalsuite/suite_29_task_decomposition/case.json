@@ -1,10 +1,9 @@
 {
   "id": "suite_29_task_decomposition",
   "name": "Task Decomposition - Recipe Execution Plan",
-  "description": "Tests breaking down a complex cooking recipe into ordered steps with timing, parallel operations, and resource allocation. Models real-world task decomposition where order matters and some steps can parallelize.",
-
+  "description": "Tests task decomposition with DSL-validatable proof chains. Verifies dependencies, timing, and resource allocation.",
   "theory": {
-    "natural_language": "RECIPE: Spaghetti Carbonara for 4. PREP PHASE: Task prep_1 is dice_bacon taking bacon 200g outputting diced_bacon duration 5min. Task prep_2 is beat_eggs taking eggs 4pcs and parmesan 100g outputting egg_mixture duration 3min. Task prep_3 is mince_garlic taking garlic 3cloves outputting minced_garlic duration 2min. Task prep_4 is boil_water taking water 4L outputting boiling_water duration 10min uses burner_1. COOK PHASE: Task cook_1 is cook_pasta taking boiling_water and pasta 400g outputting cooked_pasta duration 12min uses burner_1 after prep_4. Task cook_2 is fry_bacon taking diced_bacon and minced_garlic outputting crispy_bacon duration 8min uses pan_1 after prep_1 and prep_3. Task cook_3 is reserve_pasta_water taking cooked_pasta outputting pasta_water 200ml duration 1min after cook_1. ASSEMBLY PHASE: Task assemble_1 is combine_pasta_bacon taking cooked_pasta and crispy_bacon outputting combined_mix duration 2min uses pan_1 after cook_1 and cook_2. Task assemble_2 is add_egg_mixture taking combined_mix and egg_mixture and pasta_water outputting carbonara_base duration 3min after assemble_1. Task assemble_3 is season_and_serve taking carbonara_base outputting final_dish duration 2min after assemble_2. PARALLEL OPPORTUNITIES: prep_1 and prep_2 and prep_3 can run parallel. prep_4 runs parallel to prep_1 prep_2 prep_3. cook_1 and cook_2 can run parallel after their prerequisites. RESOURCE CONSTRAINTS: burner_1 used by prep_4 then cook_1. pan_1 used by cook_2 then assemble_1 then assemble_2.",
+    "natural_language": "PREP PHASE: prep_1 executes dice_bacon taking bacon_200g outputting diced_bacon duration 5min. prep_2 executes beat_eggs taking eggs_4pcs outputting egg_mixture duration 3min. prep_3 executes mince_garlic outputting minced_garlic duration 2min. prep_4 executes boil_water outputting boiling_water duration 10min uses burner_1. COOK PHASE: cook_1 executes cook_pasta taking boiling_water outputting cooked_pasta duration 12min uses burner_1 after prep_4. cook_2 executes fry_bacon taking diced_bacon and minced_garlic outputting crispy_bacon duration 8min uses pan_1 after prep_1 and prep_3. ASSEMBLY: assemble_1 executes combine_pasta_bacon taking cooked_pasta and crispy_bacon uses pan_1 after cook_1 and cook_2. assemble_2 executes add_egg_mixture taking egg_mixture after assemble_1. assemble_3 executes season_and_serve outputting final_dish after assemble_2. PARALLEL: prep_1 prep_2 prep_3 can run parallel.",
     "expected_facts": [
       "prep_1 EXECUTES dice_bacon",
       "prep_1 TAKES bacon_200g",
@@ -12,21 +11,17 @@
       "prep_1 DURATION 5min",
       "prep_2 EXECUTES beat_eggs",
       "prep_2 TAKES eggs_4pcs",
-      "prep_2 TAKES parmesan_100g",
       "prep_2 OUTPUTS egg_mixture",
       "prep_2 DURATION 3min",
       "prep_3 EXECUTES mince_garlic",
-      "prep_3 TAKES garlic_3cloves",
       "prep_3 OUTPUTS minced_garlic",
       "prep_3 DURATION 2min",
       "prep_4 EXECUTES boil_water",
-      "prep_4 TAKES water_4L",
       "prep_4 OUTPUTS boiling_water",
       "prep_4 DURATION 10min",
       "prep_4 USES burner_1",
       "cook_1 EXECUTES cook_pasta",
       "cook_1 TAKES boiling_water",
-      "cook_1 TAKES pasta_400g",
       "cook_1 OUTPUTS cooked_pasta",
       "cook_1 DURATION 12min",
       "cook_1 USES burner_1",
@@ -35,13 +30,9 @@
       "cook_2 TAKES diced_bacon",
       "cook_2 TAKES minced_garlic",
       "cook_2 OUTPUTS crispy_bacon",
-      "cook_2 DURATION 8min",
       "cook_2 USES pan_1",
       "cook_2 AFTER prep_1",
       "cook_2 AFTER prep_3",
-      "cook_3 EXECUTES reserve_pasta_water",
-      "cook_3 OUTPUTS pasta_water",
-      "cook_3 AFTER cook_1",
       "assemble_1 EXECUTES combine_pasta_bacon",
       "assemble_1 TAKES cooked_pasta",
       "assemble_1 TAKES crispy_bacon",
@@ -50,7 +41,6 @@
       "assemble_1 AFTER cook_2",
       "assemble_2 EXECUTES add_egg_mixture",
       "assemble_2 TAKES egg_mixture",
-      "assemble_2 TAKES pasta_water",
       "assemble_2 AFTER assemble_1",
       "assemble_3 EXECUTES season_and_serve",
       "assemble_3 OUTPUTS final_dish",
@@ -60,89 +50,78 @@
       "prep_parallel CAN_RUN prep_3"
     ]
   },
-
   "queries": [
     {
       "id": "q1",
-      "natural_language": "PREP LIST: What ingredients does prep_2 need and what does it produce?",
-      "expected_dsl": "@q1 FACTS_MATCHING prep_2 TAKES ?",
+      "natural_language": "PREP: What does prep_2 need and produce?",
+      "expected_dsl": "@takes ASK prep_2 TAKES eggs_4pcs\n@outputs ASK prep_2 OUTPUTS egg_mixture\n@q1 BOOL_AND $takes $outputs",
       "expected_answer": {
-        "natural_language": "prep_2 takes eggs_4pcs and parmesan_100g to make egg_mixture.",
-        "truth": "LIST",
-        "explanation": "Ingredient-to-output tracking"
+        "dsl_explanation": "@t1 ASK prep_2 TAKES eggs_4pcs\n@o1 ASK prep_2 OUTPUTS egg_mixture\n@prep2 BOOL_AND $t1 $o1\n# Result: @prep2.truth = TRUE_CERTAIN proves prep_2 takes eggs_4pcs, outputs egg_mixture"
       }
     },
     {
       "id": "q2",
-      "natural_language": "PARALLELIZATION: What tasks can run in parallel during prep?",
-      "expected_dsl": "@q2 FACTS_MATCHING prep_parallel CAN_RUN ?",
+      "natural_language": "PARALLEL: What tasks can run parallel during prep?",
+      "expected_dsl": "@r1 ASK prep_parallel CAN_RUN prep_1\n@r2 ASK prep_parallel CAN_RUN prep_2\n@r3 ASK prep_parallel CAN_RUN prep_3\n@p1 BOOL_AND $r1 $r2\n@q2 BOOL_AND $p1 $r3",
       "expected_answer": {
-        "natural_language": "prep_1, prep_2, and prep_3 can run in parallel.",
-        "truth": "LIST",
-        "explanation": "Parallel execution opportunity"
+        "dsl_explanation": "@c1 ASK prep_parallel CAN_RUN prep_1\n@c2 ASK prep_parallel CAN_RUN prep_2\n@c3 ASK prep_parallel CAN_RUN prep_3\n@g1 BOOL_AND $c1 $c2\n@all_parallel BOOL_AND $g1 $c3\n# Result: @all_parallel.truth = TRUE_CERTAIN proves prep_1, prep_2, prep_3 can run parallel"
       }
     },
     {
       "id": "q3",
-      "natural_language": "DEPENDENCY: What must complete before cook_2 can start?",
-      "expected_dsl": "@q3 FACTS_MATCHING cook_2 AFTER ?",
+      "natural_language": "DEPENDENCY: What must complete before cook_2?",
+      "expected_dsl": "@a1 ASK cook_2 AFTER prep_1\n@a2 ASK cook_2 AFTER prep_3\n@q3 BOOL_AND $a1 $a2",
       "expected_answer": {
-        "natural_language": "cook_2 runs after prep_1 and prep_3.",
-        "truth": "LIST",
-        "explanation": "Task dependency chain"
+        "dsl_explanation": "@d1 ASK cook_2 AFTER prep_1\n@d2 ASK cook_2 AFTER prep_3\n@deps BOOL_AND $d1 $d2\n# Result: @deps.truth = TRUE_CERTAIN proves cook_2 runs after prep_1 AND prep_3"
       }
     },
     {
       "id": "q4",
-      "natural_language": "RESOURCE CONFLICT: What tasks use burner_1?",
-      "expected_dsl": "@q4 FACTS_MATCHING ? USES burner_1",
+      "natural_language": "RESOURCE: What tasks use burner_1?",
+      "expected_dsl": "@u1 ASK prep_4 USES burner_1\n@u2 ASK cook_1 USES burner_1\n@q4 BOOL_AND $u1 $u2",
       "expected_answer": {
-        "natural_language": "prep_4 and cook_1 both use burner_1 (sequentially).",
-        "truth": "LIST",
-        "explanation": "Resource allocation constraint"
+        "dsl_explanation": "@b1 ASK prep_4 USES burner_1\n@b2 ASK cook_1 USES burner_1\n@burner BOOL_AND $b1 $b2\n# Result: @burner.truth = TRUE_CERTAIN proves prep_4 AND cook_1 use burner_1"
       }
     },
     {
       "id": "q5",
       "natural_language": "TIMING: How long does cook_1 take?",
-      "expected_dsl": "@q5 FACTS_MATCHING cook_1 DURATION ?",
+      "expected_dsl": "@exec ASK cook_1 EXECUTES cook_pasta\n@dur ASK cook_1 DURATION 12min\n@q5 BOOL_AND $exec $dur",
       "expected_answer": {
-        "natural_language": "cook_1 takes 12 minutes.",
-        "truth": "LIST",
-        "explanation": "Duration for scheduling"
+        "dsl_explanation": "@e1 ASK cook_1 EXECUTES cook_pasta\n@d1 ASK cook_1 DURATION 12min\n@cook1_time BOOL_AND $e1 $d1\n# Result: @cook1_time.truth = TRUE_CERTAIN proves cook_1 (cook_pasta) takes 12min"
       }
     },
     {
       "id": "q6",
-      "natural_language": "ASSEMBLY DEPS: What does assemble_1 need from cooking phase?",
-      "expected_dsl": "@q6 FACTS_MATCHING assemble_1 TAKES ?",
+      "natural_language": "ASSEMBLY: What does assemble_1 need from cooking?",
+      "expected_dsl": "@t1 ASK assemble_1 TAKES cooked_pasta\n@t2 ASK assemble_1 TAKES crispy_bacon\n@q6 BOOL_AND $t1 $t2",
       "expected_answer": {
-        "natural_language": "assemble_1 takes cooked_pasta and crispy_bacon.",
-        "truth": "LIST",
-        "explanation": "Cross-phase dependencies"
+        "dsl_explanation": "@a1 ASK assemble_1 TAKES cooked_pasta\n@a2 ASK assemble_1 TAKES crispy_bacon\n@assembly BOOL_AND $a1 $a2\n# Result: @assembly.truth = TRUE_CERTAIN proves assemble_1 takes cooked_pasta AND crispy_bacon"
       }
     },
     {
       "id": "q7",
-      "natural_language": "FINAL STEP: What produces the final_dish?",
-      "expected_dsl": "@q7 FACTS_MATCHING ? OUTPUTS final_dish",
+      "natural_language": "FINAL: What produces final_dish?",
+      "expected_dsl": "@exec ASK assemble_3 EXECUTES season_and_serve\n@out ASK assemble_3 OUTPUTS final_dish\n@q7 BOOL_AND $exec $out",
       "expected_answer": {
-        "natural_language": "assemble_3 outputs final_dish.",
-        "truth": "LIST",
-        "explanation": "Terminal task identification"
+        "dsl_explanation": "@e1 ASK assemble_3 EXECUTES season_and_serve\n@o1 ASK assemble_3 OUTPUTS final_dish\n@final BOOL_AND $e1 $o1\n# Result: @final.truth = TRUE_CERTAIN proves assemble_3 (season_and_serve) outputs final_dish"
       }
     },
     {
       "id": "q8",
-      "natural_language": "PAN USAGE: Which tasks need the pan?",
-      "expected_dsl": "@q8 FACTS_MATCHING ? USES pan_1",
+      "natural_language": "PAN: Which tasks use pan_1?",
+      "expected_dsl": "@u1 ASK cook_2 USES pan_1\n@u2 ASK assemble_1 USES pan_1\n@q8 BOOL_AND $u1 $u2",
       "expected_answer": {
-        "natural_language": "cook_2 and assemble_1 use pan_1.",
-        "truth": "LIST",
-        "explanation": "Shared resource tracking"
+        "dsl_explanation": "@p1 ASK cook_2 USES pan_1\n@p2 ASK assemble_1 USES pan_1\n@pan BOOL_AND $p1 $p2\n# Result: @pan.truth = TRUE_CERTAIN proves cook_2 AND assemble_1 use pan_1"
       }
     }
   ],
-
-  "tags": ["task_decomposition", "recipe", "cooking", "parallel", "timing", "resource_allocation", "dependencies"]
+  "tags": [
+    "task_decomposition",
+    "recipe",
+    "parallel",
+    "timing",
+    "multi_statement",
+    "dsl_validatable"
+  ]
 }

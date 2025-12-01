@@ -11,7 +11,7 @@
 #       * if any regulation permits and none prohibits -> TRUE_CERTAIN
 #       * if there are no matching permits or prohibitions -> FALSE
 
-@prohib FACTS_MATCHING "$actionId PROHIBITED_BY ?"
-@permit FACTS_MATCHING "$actionId PERMITTED_BY ?"
+@prohib FACTS_MATCHING "$actionId PROHIBITED_BY"
+@permit FACTS_MATCHING "$actionId PERMITTED_BY"
 @result POLARITY_DECIDE $prohib $permit $regs
 

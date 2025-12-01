@@ -26,24 +26,21 @@ Reusable Sys2DSL macro for narrative/fiction scenarios that checks if a characte
 ## Algorithm
 
 Three conditions must ALL hold:
-1. Actor casts magic: `"$actorId CASTS Magic"`
-2. Actor is in the city: `"$actorId LOCATED_IN $cityId"`
-3. Magic is permitted in city via either:
-   - `"? PERMITS Magic_IN $cityId"`
-   - `"? PERMITS Magic_IN_$cityId"`
+1. Actor casts magic: `$actorId CASTS Magic`
+2. Actor is in the city: `$actorId LOCATED_IN $cityId`
+3. Magic is permitted in city (check for PERMITS relation facts with target city)
 
 ## Script Content
 
 ```sys2dsl
 # Narrative magic permission macro
-@casts FACTS_MATCHING "$actorId CASTS Magic"
-@locs FACTS_MATCHING "$actorId LOCATED_IN $cityId"
-@perm1 FACTS_MATCHING "? PERMITS Magic_IN $cityId"
-@perm2 FACTS_MATCHING "? PERMITS Magic_IN_$cityId"
-@permAll MERGE_LISTS $perm1 $perm2
+@casts FACTS_MATCHING $actorId CASTS Magic
+@locs FACTS_MATCHING $actorId LOCATED_IN $cityId
+@permAll FACTS_WITH_RELATION PERMITS
+@permCity FILTER $permAll object=Magic_IN_$cityId
 @hasMagic NONEMPTY $casts
 @hasLoc NONEMPTY $locs
-@perm NONEMPTY $permAll
+@perm NONEMPTY $permCity
 @both BOOL_AND $hasMagic $hasLoc
 @result BOOL_AND $both $perm
 ```
@@ -70,8 +67,9 @@ Three conditions must ALL hold:
 
 ## Commands Used
 
-- `FACTS_MATCHING`: Query facts by pattern
-- `MERGE_LISTS`: Combine permission facts
+- `FACTS_MATCHING`: Query facts by subject+relation+object (polymorphic)
+- `FACTS_WITH_RELATION`: Query facts by relation type
+- `FILTER`: Filter list by attribute
 - `NONEMPTY`: Check if list has elements
 - `BOOL_AND`: Logical conjunction
 

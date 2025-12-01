@@ -1,10 +1,10 @@
 {
   "id": "suite_24_expand_essay",
   "name": "Essay Composition - The Evolution and Impact of Artificial Intelligence",
-  "description": "Tests ability to gather knowledge for writing a structured essay. The system must extract: 1) Historical context for introduction, 2) Technical foundations for body paragraph 1, 3) Current applications for body paragraph 2, 4) Societal implications for body paragraph 3, 5) Future outlook for conclusion. Each query maps to a section an essay writer would need.",
+  "description": "Tests structured essay composition using DSL to gather and validate facts. Each section requires multi-statement proof chains that demonstrate the reasoning. Explanations are DSL scripts that can be validated without LLM.",
 
   "theory": {
-    "natural_language": "HISTORICAL FOUNDATIONS: Alan Turing proposed the Turing test in 1950. The term artificial intelligence was coined at Dartmouth in 1956. The first expert systems emerged in the 1970s. The AI winter occurred in the 1980s due to funding cuts. Machine learning revival began in the 1990s. Deep learning breakthrough happened in 2012 with ImageNet. Transformers architecture was introduced in 2017. ChatGPT launched in November 2022. TECHNICAL CONCEPTS: Neural networks are inspired by biological brains. Deep learning uses multiple hidden layers. Backpropagation enables network training. GPUs accelerate matrix computations. Attention mechanism enables transformers. Large language models learn from text corpora. Reinforcement learning uses reward signals. Computer vision processes visual data. CURRENT APPLICATIONS: AI powers recommendation systems on streaming platforms. AI enables autonomous vehicle navigation. AI assists doctors in medical diagnosis. AI detects fraud in financial transactions. AI translates languages in real time. AI generates art and music creatively. AI writes code and assists programmers. AI moderates content on social media. SOCIETAL IMPLICATIONS: AI automation may displace certain jobs. AI bias can perpetuate discrimination. AI surveillance raises privacy concerns. AI decisions lack transparency sometimes. AI weapons pose ethical dilemmas. AI can spread misinformation rapidly. AI requires significant energy resources. AI benefits are not equally distributed. FUTURE DIRECTIONS: AGI remains a long-term research goal. AI safety research is growing rapidly. AI regulation is being developed globally. AI augmentation may enhance human capabilities. AI in education could personalize learning. AI in healthcare could revolutionize treatment. Quantum computing may accelerate AI. Neuromorphic chips may improve efficiency.",
+    "natural_language": "HISTORICAL FOUNDATIONS: Alan Turing proposed the Turing test in 1950. The term artificial intelligence was coined at Dartmouth in 1956. The first expert systems emerged in the 1970s. The AI winter occurred in the 1980s due to funding cuts. Machine learning revival began in the 1990s. Deep learning breakthrough happened in 2012 with ImageNet. Transformers architecture was introduced in 2017. ChatGPT launched in November 2022. TECHNICAL CONCEPTS: Neural networks are inspired by biological brains. Deep learning uses multiple hidden layers. Backpropagation enables network training. GPUs accelerate matrix computations. Attention mechanism enables transformers. Large language models learn from text corpora. Reinforcement learning uses reward signals. Computer vision processes visual data. CURRENT APPLICATIONS: AI powers recommendation systems. AI enables autonomous navigation. AI assists medical diagnosis. AI detects fraud. AI translates languages. AI generates art. AI writes code. AI moderates content. SOCIETAL IMPLICATIONS: AI automation may displace jobs. AI bias can perpetuate discrimination. AI surveillance raises privacy concerns. AI decisions lack transparency. AI weapons pose ethical dilemmas. AI can spread misinformation. AI requires energy resources. AI benefits are not equally distributed. FUTURE DIRECTIONS: AGI remains a long-term research goal. AI safety research is growing rapidly. AI regulation is being developed globally. AI augmentation may enhance human capabilities. AI in education could personalize learning. AI in healthcare could revolutionize treatment. Quantum computing may accelerate AI. Neuromorphic chips may improve efficiency.",
     "expected_facts": [
       "Turing_test PROPOSED_BY Alan_Turing",
       "Turing_test PROPOSED_IN 1950",
@@ -55,85 +55,69 @@
   "queries": [
     {
       "id": "q1",
-      "natural_language": "INTRODUCTION - Historical Timeline: What are the key milestones in AI history that should open the essay?",
-      "expected_dsl": "@q1 FACTS_MATCHING ? INTRODUCED_IN ?",
+      "natural_language": "INTRODUCTION - Historical Timeline: What are the key milestones in AI history?",
+      "expected_dsl": "@milestone1 ASK Turing_test PROPOSED_IN 1950\n@milestone2 ASK artificial_intelligence COINED_IN 1956\n@milestone3 ASK deep_learning_breakthrough HAPPENED_IN 2012\n@milestone4 ASK transformers INTRODUCED_IN 2017\n@milestone5 ASK ChatGPT LAUNCHED_IN 2022\n@early BOOL_AND $milestone1 $milestone2\n@modern BOOL_AND $milestone3 $milestone4\n@timeline BOOL_AND $early $modern\n@q1 BOOL_AND $timeline $milestone5",
       "expected_answer": {
-        "natural_language": "Key milestones: Transformers architecture was introduced in 2017.",
-        "truth": "LIST",
-        "explanation": "Historical events for essay introduction"
+        "dsl_explanation": "@m1 ASK Turing_test PROPOSED_IN 1950\n@m2 ASK artificial_intelligence COINED_IN 1956\n@m3 ASK deep_learning_breakthrough HAPPENED_IN 2012\n@m4 ASK transformers INTRODUCED_IN 2017\n@m5 ASK ChatGPT LAUNCHED_IN 2022\n@check1 BOOL_AND $m1 $m2\n@check2 BOOL_AND $m3 $m4\n@check3 BOOL_AND $check1 $check2\n@all_milestones BOOL_AND $check3 $m5\n# Result: @all_milestones.truth = TRUE_CERTAIN proves timeline: 1950 → 1956 → 2012 → 2017 → 2022"
       }
     },
     {
       "id": "q2",
-      "natural_language": "INTRODUCTION - Origins: When and where did the field of AI formally begin?",
-      "expected_dsl": "@q2 FACTS_MATCHING artificial_intelligence COINED_IN ?",
+      "natural_language": "INTRODUCTION - Origins: When and where did AI formally begin?",
+      "expected_dsl": "@coined_at ASK artificial_intelligence COINED_AT Dartmouth\n@coined_in ASK artificial_intelligence COINED_IN 1956\n@q2 BOOL_AND $coined_at $coined_in",
       "expected_answer": {
-        "natural_language": "The term artificial intelligence was coined in 1956 at the Dartmouth conference.",
-        "truth": "LIST",
-        "explanation": "Founding moment for essay opening"
+        "dsl_explanation": "@place ASK artificial_intelligence COINED_AT Dartmouth\n@year ASK artificial_intelligence COINED_IN 1956\n@origin BOOL_AND $place $year\n# Result: @origin.truth = TRUE_CERTAIN proves: AI coined at Dartmouth in 1956"
       }
     },
     {
       "id": "q3",
-      "natural_language": "BODY PARAGRAPH 1 - Technical Foundations: What powers modern AI systems?",
-      "expected_dsl": "@q3 FACTS_MATCHING ? ENABLES ?",
+      "natural_language": "BODY PARAGRAPH 1 - Technical Foundations: What enables modern AI systems?",
+      "expected_dsl": "@enable1 ASK backpropagation ENABLES network_training\n@enable2 ASK attention_mechanism ENABLES transformers\n@inspired ASK neural_networks INSPIRED_BY biological_brains\n@accel ASK GPUs ACCELERATE matrix_computations\n@foundations1 BOOL_AND $enable1 $enable2\n@foundations2 BOOL_AND $inspired $accel\n@q3 BOOL_AND $foundations1 $foundations2",
       "expected_answer": {
-        "natural_language": "Backpropagation enables network training. The attention mechanism enables transformers.",
-        "truth": "LIST",
-        "explanation": "Technical foundations for body paragraph explaining how AI works"
+        "dsl_explanation": "@f1 ASK backpropagation ENABLES network_training\n@f2 ASK attention_mechanism ENABLES transformers\n@f3 ASK neural_networks INSPIRED_BY biological_brains\n@f4 ASK GPUs ACCELERATE matrix_computations\n@tech1 BOOL_AND $f1 $f2\n@tech2 BOOL_AND $f3 $f4\n@all_tech BOOL_AND $tech1 $tech2\n# Result: @all_tech.truth = TRUE_CERTAIN proves: backpropagation, attention, neural networks, GPUs"
       }
     },
     {
       "id": "q4",
       "natural_language": "BODY PARAGRAPH 1 - Learning Methods: How do AI systems acquire knowledge?",
-      "expected_dsl": "@q4 FACTS_MATCHING ? USES ?",
+      "expected_dsl": "@method1 ASK deep_learning USES multiple_hidden_layers\n@method2 ASK reinforcement_learning USES reward_signals\n@method3 ASK large_language_models LEARN_FROM text_corpora\n@learn1 BOOL_AND $method1 $method2\n@q4 BOOL_AND $learn1 $method3",
       "expected_answer": {
-        "natural_language": "Deep learning uses multiple hidden layers. Reinforcement learning uses reward signals.",
-        "truth": "LIST",
-        "explanation": "Learning mechanisms for technical explanation section"
+        "dsl_explanation": "@l1 ASK deep_learning USES multiple_hidden_layers\n@l2 ASK reinforcement_learning USES reward_signals\n@l3 ASK large_language_models LEARN_FROM text_corpora\n@check1 BOOL_AND $l1 $l2\n@all_methods BOOL_AND $check1 $l3\n# Result: @all_methods.truth = TRUE_CERTAIN proves: deep_learning, reinforcement_learning, LLMs"
       }
     },
     {
       "id": "q5",
-      "natural_language": "BODY PARAGRAPH 2 - Current Applications: What practical tasks does AI perform today?",
-      "expected_dsl": "@q5 FACTS_MATCHING AI ASSISTS ?",
+      "natural_language": "BODY PARAGRAPH 2 - Current Applications: What practical tasks does AI perform?",
+      "expected_dsl": "@app1 ASK AI ASSISTS medical_diagnosis\n@app2 ASK AI DETECTS fraud\n@app3 ASK AI TRANSLATES languages\n@app4 ASK AI GENERATES art\n@app5 ASK AI WRITES code\n@apps1 BOOL_AND $app1 $app2\n@apps2 BOOL_AND $app3 $app4\n@apps3 BOOL_AND $apps1 $apps2\n@q5 BOOL_AND $apps3 $app5",
       "expected_answer": {
-        "natural_language": "AI assists in medical diagnosis.",
-        "truth": "LIST",
-        "explanation": "Application examples for practical impact section"
+        "dsl_explanation": "@a1 ASK AI ASSISTS medical_diagnosis\n@a2 ASK AI DETECTS fraud\n@a3 ASK AI TRANSLATES languages\n@a4 ASK AI GENERATES art\n@a5 ASK AI WRITES code\n@pair1 BOOL_AND $a1 $a2\n@pair2 BOOL_AND $a3 $a4\n@group BOOL_AND $pair1 $pair2\n@all_apps BOOL_AND $group $a5\n# Result: @all_apps.truth = TRUE_CERTAIN proves 5 applications: diagnosis, fraud, translation, art, code"
       }
     },
     {
       "id": "q6",
       "natural_language": "BODY PARAGRAPH 3 - Societal Concerns: What risks and ethical issues does AI raise?",
-      "expected_dsl": "@q6 FACTS_MATCHING ? RAISES ?",
+      "expected_dsl": "@risk1 ASK AI_surveillance RAISES privacy_concerns\n@risk2 ASK AI_decisions LACK transparency\n@risk3 ASK AI_weapons POSE ethical_dilemmas\n@risk4 ASK AI_bias CAN_PERPETUATE discrimination\n@ethical1 BOOL_AND $risk1 $risk2\n@ethical2 BOOL_AND $risk3 $risk4\n@q6 BOOL_AND $ethical1 $ethical2",
       "expected_answer": {
-        "natural_language": "AI surveillance raises privacy concerns.",
-        "truth": "LIST",
-        "explanation": "Ethical concerns for balanced discussion section"
+        "dsl_explanation": "@r1 ASK AI_surveillance RAISES privacy_concerns\n@r2 ASK AI_decisions LACK transparency\n@r3 ASK AI_weapons POSE ethical_dilemmas\n@r4 ASK AI_bias CAN_PERPETUATE discrimination\n@concerns1 BOOL_AND $r1 $r2\n@concerns2 BOOL_AND $r3 $r4\n@all_risks BOOL_AND $concerns1 $concerns2\n# Result: @all_risks.truth = TRUE_CERTAIN proves: privacy, transparency, weapons, bias issues"
       }
     },
     {
       "id": "q7",
-      "natural_language": "BODY PARAGRAPH 3 - Negative Impacts: What harms might AI cause to society?",
-      "expected_dsl": "@q7 FACTS_MATCHING ? MAY_DISPLACE ?",
+      "natural_language": "BODY PARAGRAPH 3 - Negative Impacts: What harms might AI cause?",
+      "expected_dsl": "@harm1 ASK AI_automation MAY_DISPLACE jobs\n@harm2 ASK AI CAN_SPREAD misinformation\n@harm3 ASK AI REQUIRES energy_resources\n@harm4 ASK AI_benefits NOT_EQUALLY distributed\n@neg1 BOOL_AND $harm1 $harm2\n@neg2 BOOL_AND $harm3 $harm4\n@q7 BOOL_AND $neg1 $neg2",
       "expected_answer": {
-        "natural_language": "AI automation may displace jobs.",
-        "truth": "LIST",
-        "explanation": "Negative implications for critical analysis section"
+        "dsl_explanation": "@h1 ASK AI_automation MAY_DISPLACE jobs\n@h2 ASK AI CAN_SPREAD misinformation\n@h3 ASK AI REQUIRES energy_resources\n@h4 ASK AI_benefits NOT_EQUALLY distributed\n@harms1 BOOL_AND $h1 $h2\n@harms2 BOOL_AND $h3 $h4\n@all_harms BOOL_AND $harms1 $harms2\n# Result: @all_harms.truth = TRUE_CERTAIN proves: job displacement, misinformation, energy, inequality"
       }
     },
     {
       "id": "q8",
-      "natural_language": "CONCLUSION - Future Outlook: What developments might transform AI going forward?",
-      "expected_dsl": "@q8 FACTS_MATCHING ? MAY_ACCELERATE ?",
+      "natural_language": "CONCLUSION - Future Outlook: What developments might transform AI?",
+      "expected_dsl": "@future1 ASK quantum_computing MAY_ACCELERATE AI\n@future2 ASK neuromorphic_chips MAY_IMPROVE efficiency\n@future3 ASK AI_augmentation MAY_ENHANCE human_capabilities\n@future4 ASK AGI IS_A long_term_goal\n@tech_future BOOL_AND $future1 $future2\n@human_future BOOL_AND $future3 $future4\n@q8 BOOL_AND $tech_future $human_future",
       "expected_answer": {
-        "natural_language": "Quantum computing may accelerate AI development.",
-        "truth": "LIST",
-        "explanation": "Future possibilities for essay conclusion"
+        "dsl_explanation": "@f1 ASK quantum_computing MAY_ACCELERATE AI\n@f2 ASK neuromorphic_chips MAY_IMPROVE efficiency\n@f3 ASK AI_augmentation MAY_ENHANCE human_capabilities\n@f4 ASK AGI IS_A long_term_goal\n@tech BOOL_AND $f1 $f2\n@vision BOOL_AND $f3 $f4\n@all_future BOOL_AND $tech $vision\n# Result: @all_future.truth = TRUE_CERTAIN proves: quantum, neuromorphic, augmentation, AGI"
       }
     }
   ],
 
-  "tags": ["essay_writing", "composition", "AI_history", "structured_content", "expansion", "argumentation"]
+  "tags": ["essay_writing", "composition", "AI_history", "structured_content", "multi_statement", "dsl_validatable"]
 }

@@ -165,7 +165,7 @@ System: "Got it! I've learned 1 fact: lion IS_A mammal"
 |---------|---------|
 | `THEORY_PUSH name="..."` | Create and switch to new theory layer |
 | `ASSERT S R O` | Add fact to current theory |
-| `FACTS_MATCHING ? ? ?` | Retrieve facts for contradiction checking |
+| `FACTS_MATCHING` | Retrieve facts for contradiction checking |
 
 ---
 

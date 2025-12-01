@@ -51,7 +51,7 @@
     {
       "id": "q1",
       "natural_language": "Find all courses Alice is enrolled in and check if the list is non-empty.",
-      "expected_dsl": "@courses FACTS_MATCHING Alice ENROLLED_IN ?\n@hasEnrollments NONEMPTY $courses",
+      "expected_dsl": "@courses FACTS_MATCHING Alice ENROLLED_IN\n@hasEnrollments NONEMPTY $courses",
       "expected_answer": {
         "natural_language": "Yes, Alice has enrollments. She is enrolled in Math101 and Physics201.",
         "truth": "TRUE_CERTAIN",
@@ -61,7 +61,7 @@
     {
       "id": "q2",
       "natural_language": "Does Bob have at least one enrollment?",
-      "expected_dsl": "@bobCourses FACTS_MATCHING Bob ENROLLED_IN ?\n@hasEnrollments NONEMPTY $bobCourses",
+      "expected_dsl": "@bobCourses FACTS_MATCHING Bob ENROLLED_IN\n@hasEnrollments NONEMPTY $bobCourses",
       "expected_answer": {
         "natural_language": "Yes, Bob has enrollments - he is enrolled in Math101 and Chemistry101.",
         "truth": "TRUE_CERTAIN",
@@ -81,7 +81,7 @@
     {
       "id": "q4",
       "natural_language": "Can Alice take Physics301 (which requires Physics201)?",
-      "expected_dsl": "@prereq FACTS_MATCHING ? PREREQUISITE_FOR Physics301\n@first PICK_FIRST $prereq\n@aliceHas ASK Alice ENROLLED_IN Physics201",
+      "expected_dsl": "@prereq FACTS_WITH_OBJECT Physics301\n@first PICK_FIRST $prereq\n@aliceHas ASK Alice ENROLLED_IN Physics201",
       "expected_answer": {
         "natural_language": "Yes, Alice can take Physics301 because she has completed Physics201 which is its prerequisite.",
         "truth": "TRUE_CERTAIN",
@@ -91,7 +91,7 @@
     {
       "id": "q5",
       "natural_language": "Can Bob take Math201 (which requires Math101)?",
-      "expected_dsl": "@prereqMath FACTS_MATCHING ? PREREQUISITE_FOR Math201\n@bobHasMath ASK Bob ENROLLED_IN Math101",
+      "expected_dsl": "@prereqMath FACTS_WITH_OBJECT Math201\n@bobHasMath ASK Bob ENROLLED_IN Math101",
       "expected_answer": {
         "natural_language": "Yes, Bob can take Math201 because he has completed Math101.",
         "truth": "TRUE_CERTAIN",
@@ -101,7 +101,7 @@
     {
       "id": "q6",
       "natural_language": "Does Employee_1 (a Manager) have access to both finance_data and hr_data?",
-      "expected_dsl": "@role FACTS_MATCHING Employee_1 HAS_ROLE ?\n@financeAccess ASK Manager CAN_ACCESS finance_data\n@hrAccess ASK Manager CAN_ACCESS hr_data\n@bothAccess BOOL_AND $financeAccess $hrAccess",
+      "expected_dsl": "@role FACTS_MATCHING Employee_1 HAS_ROLE\n@financeAccess ASK Manager CAN_ACCESS finance_data\n@hrAccess ASK Manager CAN_ACCESS hr_data\n@bothAccess BOOL_AND $financeAccess $hrAccess",
       "expected_answer": {
         "natural_language": "Yes, Employee_1 is a Manager and Managers can access both finance_data and hr_data.",
         "truth": "TRUE_CERTAIN",
@@ -111,7 +111,7 @@
     {
       "id": "q7",
       "natural_language": "Can Employee_2 (an Engineer) access finance_data?",
-      "expected_dsl": "@role2 FACTS_MATCHING Employee_2 HAS_ROLE ?\n@q7 ASK Engineer CAN_ACCESS finance_data",
+      "expected_dsl": "@role2 FACTS_MATCHING Employee_2 HAS_ROLE\n@q7 ASK Engineer CAN_ACCESS finance_data",
       "expected_answer": {
         "natural_language": "No, Employee_2 is an Engineer and Engineers cannot access finance_data (only tech_data and code_repo).",
         "truth": "UNKNOWN",
@@ -121,7 +121,7 @@
     {
       "id": "q8",
       "natural_language": "Find all symptoms Patient_A has and check if flu could explain them all.",
-      "expected_dsl": "@symptoms FACTS_MATCHING Patient_A HAS_SYMPTOM ?\n@fluCausesFever ASK Flu CAUSES fever\n@fluCausesCough ASK Flu CAUSES cough\n@fluCausesFatigue ASK Flu CAUSES fatigue\n@all3 BOOL_AND $fluCausesFever $fluCausesCough\n@fluExplainsAll BOOL_AND $all3 $fluCausesFatigue",
+      "expected_dsl": "@symptoms FACTS_MATCHING Patient_A HAS_SYMPTOM\n@fluCausesFever ASK Flu CAUSES fever\n@fluCausesCough ASK Flu CAUSES cough\n@fluCausesFatigue ASK Flu CAUSES fatigue\n@all3 BOOL_AND $fluCausesFever $fluCausesCough\n@fluExplainsAll BOOL_AND $all3 $fluCausesFatigue",
       "expected_answer": {
         "natural_language": "Yes, Flu causes all three symptoms that Patient_A has (fever, cough, fatigue), making it a likely diagnosis.",
         "truth": "TRUE_CERTAIN",
@@ -141,7 +141,7 @@
     {
       "id": "q10",
       "natural_language": "Combine Alice's and Bob's course lists - do they have any combined enrollments?",
-      "expected_dsl": "@aliceCourses FACTS_MATCHING Alice ENROLLED_IN ?\n@bobCourses2 FACTS_MATCHING Bob ENROLLED_IN ?\n@allCourses MERGE_LISTS $aliceCourses $bobCourses2\n@hasCombined NONEMPTY $allCourses",
+      "expected_dsl": "@aliceCourses FACTS_MATCHING Alice ENROLLED_IN\n@bobCourses2 FACTS_MATCHING Bob ENROLLED_IN\n@allCourses MERGE_LISTS $aliceCourses $bobCourses2\n@hasCombined NONEMPTY $allCourses",
       "expected_answer": {
         "natural_language": "Yes, combined Alice and Bob have enrollments (Alice: Math101, Physics201; Bob: Math101, Chemistry101).",
         "truth": "TRUE_CERTAIN",
@@ -151,7 +151,7 @@
     {
       "id": "q11",
       "natural_language": "In a hypothetical scenario where Alice drops Math101, does she still have any enrollments?",
-      "expected_dsl": "@push1 THEORY_PUSH name=hypothetical\n@retract1 RETRACT Alice ENROLLED_IN Math101\n@remaining FACTS_MATCHING Alice ENROLLED_IN ?\n@stillEnrolled NONEMPTY $remaining\n@pop1 THEORY_POP",
+      "expected_dsl": "@push1 THEORY_PUSH name=hypothetical\n@retract1 RETRACT Alice ENROLLED_IN Math101\n@remaining FACTS_MATCHING Alice ENROLLED_IN\n@stillEnrolled NONEMPTY $remaining\n@pop1 THEORY_POP",
       "expected_answer": {
         "natural_language": "Yes, even if Alice drops Math101, she still has Physics201.",
         "truth": "TRUE_CERTAIN",
@@ -161,7 +161,7 @@
     {
       "id": "q12",
       "natural_language": "After hypothetically removing Math101, does Alice still have enrollments?",
-      "expected_dsl": "@push2 THEORY_PUSH name=compare\n@retract2 RETRACT Alice ENROLLED_IN Math101\n@newList FACTS_MATCHING Alice ENROLLED_IN ?\n@hasNew NONEMPTY $newList\n@pop2 THEORY_POP",
+      "expected_dsl": "@push2 THEORY_PUSH name=compare\n@retract2 RETRACT Alice ENROLLED_IN Math101\n@newList FACTS_MATCHING Alice ENROLLED_IN\n@hasNew NONEMPTY $newList\n@pop2 THEORY_POP",
       "expected_answer": {
         "natural_language": "Yes, Alice still has Physics201 enrollment even after removing Math101.",
         "truth": "TRUE_CERTAIN",

@@ -55,8 +55,8 @@ Setup:
 
 Assertions:
 - Combined theory contains facts from both layers
-- `@facts FACTS_MATCHING "? IS_A molecule"` returns H2O
-- `@facts FACTS_MATCHING "water ? ?"` returns both physics and chemistry facts
+- `@facts INSTANCES_OF molecule` returns H2O
+- `@facts FACTS_MATCHING water` returns both physics and chemistry facts
 
 ---
 

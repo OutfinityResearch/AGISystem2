@@ -73,13 +73,13 @@ These actions form the stable core required for the MLP; they are intentionally 
   - Supports both `CAUSES` and `CAUSED_BY` (and future causal relations) depending on facts.
 
 - `FACTS_MATCHING <pattern>`
-  - Pattern syntax: `SUBJ REL OBJ...` with `?` wildcards (e.g., `? REQUIRES ?`, `$proc REQUIRES ?`, `? PERMITS Magic_IN $city`).
+  - Pattern syntax: `SUBJ REL OBJ...` with `?` wildcards (e.g., `? REQUIRES *`, `$proc REQUIRES *`, `? PERMITS Magic_IN $city`).
   - Searches across base facts (and optional additional contexts supplied by the caller) via `ConceptStore.getFacts()`.
   - Returns an array of `{subject, relation, object}` triples.
 
 - `ALL_REQUIREMENTS_SATISFIED <requirementsVar> <satisfiedVar>`
   - Reads two variables from the environment:
-    - `$requirementsVar`: list of required items (e.g., all objects from `ProcedureX REQUIRES ?`).
+    - `$requirementsVar`: list of required items (e.g., all objects from `ProcedureX REQUIRES *`).
     - `$satisfiedVar`: list of facts that might satisfy them (e.g., `Consent GIVEN yes`, `AuditTrail PRESENT yes`).
   - Returns a normalised truth object `{ truth: 'TRUE_CERTAIN' | 'FALSE' }` by checking that every requirement is covered.
 
@@ -138,9 +138,11 @@ The exact set of primitives may evolve, but every addition must:
   - Canonical facts in the constrained grammar (`Subject REL Object`) that prepare the conceptual space (root knowledge, domain axioms).
   - Sys2DSL assignments of the form `@varName action ...` that define intermediate values and final decisions.
 - A typical health-compliance programme might look like:
-  - `@reqs FACTS_MATCHING "$procId REQUIRES ?"`
-  - `@satGiven FACTS_MATCHING "? GIVEN yes"`
-  - `@satPresent FACTS_MATCHING "? PRESENT yes"`
+  - `@reqs FACTS_MATCHING $procId REQUIRES`
+  - `@givenAll FACTS_WITH_RELATION GIVEN`
+  - `@satGiven FILTER $givenAll object=yes`
+  - `@presentAll FACTS_WITH_RELATION PRESENT`
+  - `@satPresent FILTER $presentAll object=yes`
   - `@allSat MERGE_LISTS $satGiven $satPresent`
   - `@result ALL_REQUIREMENTS_SATISFIED $reqs $allSat`
 - CLI and higher-level APIs agree on conventional result variable names (`result`, `decision`, etc.) when interpreting outcomes.

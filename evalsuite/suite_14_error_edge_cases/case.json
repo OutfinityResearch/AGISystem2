@@ -27,7 +27,7 @@
     {
       "id": "q2",
       "natural_language": "What facts do we have about NonExistent?",
-      "expected_dsl": "@facts FACTS_MATCHING NonExistent ? ?\n@q2 NONEMPTY $facts",
+      "expected_dsl": "@facts FACTS_MATCHING NonExistent\n@q2 NONEMPTY $facts",
       "expected_answer": {
         "natural_language": "No facts exist about NonExistent. The result list is empty.",
         "truth": "FALSE",
@@ -37,7 +37,7 @@
     {
       "id": "q3",
       "natural_language": "How many facts do we have about UnknownThing?",
-      "expected_dsl": "@unknownFacts FACTS_MATCHING UnknownThing ? ?\n@count COUNT $unknownFacts",
+      "expected_dsl": "@unknownFacts FACTS_MATCHING UnknownThing\n@count COUNT $unknownFacts",
       "expected_answer": {
         "natural_language": "Zero facts - UnknownThing is not in the knowledge base.",
         "truth": "TRUE_CERTAIN",
@@ -47,7 +47,7 @@
     {
       "id": "q4",
       "natural_language": "What is the first fact about Dog?",
-      "expected_dsl": "@dogFacts FACTS_MATCHING Dog ? ?\n@first PICK_FIRST $dogFacts",
+      "expected_dsl": "@dogFacts FACTS_MATCHING Dog\n@first PICK_FIRST $dogFacts",
       "expected_answer": {
         "natural_language": "The fact 'Dog IS_A animal' - Dog has at least one known fact.",
         "truth": "TRUE_CERTAIN",
@@ -57,7 +57,7 @@
     {
       "id": "q5",
       "natural_language": "What is the first fact about NonExistent?",
-      "expected_dsl": "@emptyFacts FACTS_MATCHING NonExistent ? ?\n@q5 NONEMPTY $emptyFacts",
+      "expected_dsl": "@emptyFacts FACTS_MATCHING NonExistent\n@q5 NONEMPTY $emptyFacts",
       "expected_answer": {
         "natural_language": "No facts exist about NonExistent.",
         "truth": "FALSE",
@@ -87,7 +87,7 @@
     {
       "id": "q8",
       "natural_language": "Does merging two empty lists give an empty list?",
-      "expected_dsl": "@empty1 FACTS_MATCHING Xyzzy1 ? ?\n@empty2 FACTS_MATCHING Xyzzy2 ? ?\n@merged MERGE_LISTS $empty1 $empty2\n@q8 NONEMPTY $merged",
+      "expected_dsl": "@empty1 FACTS_MATCHING Xyzzy1\n@empty2 FACTS_MATCHING Xyzzy2\n@merged MERGE_LISTS $empty1 $empty2\n@q8 NONEMPTY $merged",
       "expected_answer": {
         "natural_language": "The merged list is empty since both source lists are empty.",
         "truth": "FALSE",
@@ -107,7 +107,7 @@
     {
       "id": "q10",
       "natural_language": "Can we filter an empty list without errors (returns empty)?",
-      "expected_dsl": "@emptyList FACTS_MATCHING NothingHere ? ?\n@filtered FILTER $emptyList relation=IS_A\n@q10 NONEMPTY $filtered",
+      "expected_dsl": "@emptyList FACTS_MATCHING NothingHere\n@filtered FILTER $emptyList relation=IS_A\n@q10 NONEMPTY $filtered",
       "expected_answer": {
         "natural_language": "Filtering an empty list returns an empty list, so NONEMPTY is FALSE.",
         "truth": "FALSE",

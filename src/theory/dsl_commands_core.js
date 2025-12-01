@@ -82,28 +82,117 @@ class DSLCommandsCore {
     return this.api.abduct(observation, relation);
   }
 
+  /**
+   * FACTS_MATCHING - Polymorphic fact query command
+   *
+   * Accepts 1, 2, or 3 arguments:
+   *   FACTS_MATCHING Subject                    - all facts about Subject
+   *   FACTS_MATCHING Subject RELATION           - all facts: Subject RELATION ?
+   *   FACTS_MATCHING Subject RELATION Object    - exact match
+   *
+   * Composes with variables:
+   *   @dogs FACTS_MATCHING Dog IS_A
+   *   @first PICK_FIRST $dogs
+   *   @related FACTS_MATCHING $first.object     - chain queries
+   */
   cmdFactsMatching(argTokens, env, facts) {
-    const patternRaw = argTokens.join(' ');
-    const pattern = this.parser.expandString(patternRaw, env).trim();
-    if (!pattern) {
-      return [];
+    if (argTokens.length === 0) {
+      return facts; // Return all facts if no arguments
     }
-    const parts = pattern.split(/\s+/);
-    if (parts.length < 3) {
-      throw new Error(`FACTS_MATCHING pattern must have at least three tokens: '${pattern}'`);
+
+    // Expand all tokens with variable substitution
+    const expandedTokens = argTokens.map(t => this.parser.expandString(t, env).trim());
+
+    // Handle variable references that might be fact objects
+    const resolveFactField = (token) => {
+      if (token.startsWith('$')) {
+        const resolved = this.parser.resolveVar(token, env);
+        if (resolved && typeof resolved === 'object') {
+          // If it's a fact object, we might want subject/object/relation
+          return resolved.subject || resolved.object || resolved.relation || String(resolved);
+        }
+        return String(resolved || '');
+      }
+      return token;
+    };
+
+    const tokens = expandedTokens.map(resolveFactField).filter(t => t.length > 0);
+
+    if (tokens.length === 0) {
+      return facts;
     }
-    const subP = parts[0];
-    const relP = parts[1];
-    const objP = parts.slice(2).join(' ');
+
     const matches = [];
-    for (const f of facts) {
-      if (this.parser.tokenMatches(subP, f.subject)
-        && this.parser.tokenMatches(relP, f.relation)
-        && this.parser.tokenMatches(objP, f.object)) {
-        matches.push(f);
+
+    if (tokens.length === 1) {
+      // FACTS_MATCHING Subject - all facts where subject matches
+      const subP = tokens[0];
+      for (const f of facts) {
+        if (String(f.subject) === subP || String(f.object) === subP) {
+          matches.push(f);
+        }
+      }
+    } else if (tokens.length === 2) {
+      // FACTS_MATCHING Subject RELATION - all facts matching subject and relation
+      const subP = tokens[0];
+      const relP = tokens[1];
+      for (const f of facts) {
+        if (String(f.subject) === subP && String(f.relation) === relP) {
+          matches.push(f);
+        }
+      }
+    } else {
+      // FACTS_MATCHING Subject RELATION Object - exact match
+      const subP = tokens[0];
+      const relP = tokens[1];
+      const objP = tokens.slice(2).join(' ');
+      for (const f of facts) {
+        if (String(f.subject) === subP
+            && String(f.relation) === relP
+            && String(f.object) === objP) {
+          matches.push(f);
+        }
       }
     }
+
     return matches;
+  }
+
+  /**
+   * FACTS_WITH_RELATION - Find all facts with a specific relation
+   *   FACTS_WITH_RELATION IS_A              - all IS_A facts
+   *   FACTS_WITH_RELATION CAUSES            - all CAUSES facts
+   */
+  cmdFactsWithRelation(argTokens, env, facts) {
+    if (argTokens.length === 0) {
+      return facts;
+    }
+    const relation = this.parser.expandString(argTokens[0], env).trim();
+    return facts.filter(f => String(f.relation) === relation);
+  }
+
+  /**
+   * FACTS_WITH_OBJECT - Find all facts with a specific object
+   *   FACTS_WITH_OBJECT Animal             - all facts where object=Animal
+   */
+  cmdFactsWithObject(argTokens, env, facts) {
+    if (argTokens.length === 0) {
+      return facts;
+    }
+    const object = this.parser.expandString(argTokens.join(' '), env).trim();
+    return facts.filter(f => String(f.object) === object);
+  }
+
+  /**
+   * INSTANCES_OF - Shorthand for finding all subjects with IS_A relation to object
+   *   INSTANCES_OF Animal                  - all X where X IS_A Animal
+   */
+  cmdInstancesOf(argTokens, env, facts) {
+    if (argTokens.length === 0) {
+      return [];
+    }
+    const type = this.parser.expandString(argTokens.join(' '), env).trim();
+    return facts.filter(f => String(f.relation) === 'IS_A' && String(f.object) === type);
   }
 
   cmdAllRequirementsSatisfied(argTokens, env) {

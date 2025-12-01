@@ -446,7 +446,7 @@ Usage tracking affects ordering but NOT truth values:
 # "water" has usageCount = 1000
 # "h2o" has usageCount = 5
 
-@results FACTS_MATCHING ? IS_A liquid
+@results INSTANCES_OF liquid
 
 # Results ordered:
 # 1. Water (high usage, appears first)

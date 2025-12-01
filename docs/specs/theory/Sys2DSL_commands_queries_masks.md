@@ -78,18 +78,18 @@ Reference for all query commands (`ASK`, `ASK_MASKED`, `FACTS_MATCHING`) and mas
 **Parameters:**
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| subject | concept \| fact \| ? | Subject pattern (? = wildcard) |
-| RELATION | relation \| ? | Relation pattern (? = wildcard) |
-| object | concept \| fact \| ? | Object pattern (? = wildcard) |
+| subject | concept \| fact \| `* | Subject pattern (? = wildcard) |
+| RELATION | relation \| `* | Relation pattern (? = wildcard) |
+| object | concept \| fact \| `* | Object pattern (? = wildcard) |
 
 **Returns:** Array of matching facts `{ subject, relation, object, factId }`
 
 **Examples:**
 ```sys2dsl
-@aboutWater FACTS_MATCHING Water ? ?
-@allIsA FACTS_MATCHING ? IS_A ?
-@causesFear FACTS_MATCHING ? CAUSES Fear
-@allFacts FACTS_MATCHING ? ? ?
+@aboutWater FACTS_MATCHING Water
+@allIsA FACTS_WITH_RELATION IS_A
+@causesFear FACTS_WITH_OBJECT Fear
+@allFacts FACTS_MATCHING
 ```
 
 ---

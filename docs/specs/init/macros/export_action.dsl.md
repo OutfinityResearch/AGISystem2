@@ -25,8 +25,8 @@ Reusable Sys2DSL macro that determines if an export action is permitted, prohibi
 
 ## Algorithm
 
-1. Find all prohibitions: facts matching `"$actionId PROHIBITED_BY ?"`
-2. Find all permissions: facts matching `"$actionId PERMITTED_BY ?"`
+1. Find all prohibitions: facts matching `"$actionId PROHIBITED_BY *"`
+2. Find all permissions: facts matching `"$actionId PERMITTED_BY *"`
 3. Apply polarity decision logic:
    - If any regulation both prohibits AND permits → `CONFLICT`
    - If any regulation prohibits and none permits → `FALSE`
@@ -37,8 +37,8 @@ Reusable Sys2DSL macro that determines if an export action is permitted, prohibi
 
 ```sys2dsl
 # Export action decision macro
-@prohib FACTS_MATCHING "$actionId PROHIBITED_BY ?"
-@permit FACTS_MATCHING "$actionId PERMITTED_BY ?"
+@prohib FACTS_MATCHING "$actionId PROHIBITED_BY"
+@permit FACTS_MATCHING "$actionId PERMITTED_BY"
 @result POLARITY_DECIDE $prohib $permit $regs
 ```
 
