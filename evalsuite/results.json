@@ -1,6 +1,6 @@
 {
-  "timestamp": "2025-12-01T12:38:44.800Z",
-  "totalPassed": 160,
+  "timestamp": "2025-12-01T17:16:33.265Z",
+  "totalPassed": 208,
   "totalFailed": 0,
   "cases": [
     {
@@ -1535,7 +1535,7 @@
     },
     {
       "id": "suite_19_output_format",
-      "name": "Output Formatting: TO_NATURAL",
+      "name": "Output Formatting: TO_NATURAL and TO_JSON",
       "theoryLoaded": true,
       "queries": [
         {
@@ -1555,9 +1555,63 @@
           "actualResponse": "{\"text\":\"Truth value: UNKNOWN\"}",
           "passed": true,
           "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+        },
+        {
+          "id": "q3",
+          "question": "Convert a TRUE_CERTAIN result about Grass to natural language.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Grass is a green thing.",
+          "actualResponse": "{\"text\":\"Yes, this is definitely true.\"}",
+          "passed": true,
+          "matchReason": "Pattern Match: Found strong TRUE_CERTAIN indicators"
+        },
+        {
+          "id": "q4",
+          "question": "Convert Sun's hot property query to JSON format.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "JSON output with truth: TRUE_CERTAIN",
+          "actualResponse": "{\"json\":\"{\\\"truth\\\":\\\"TRUE_CERTAIN\\\",\\\"confidence\\\":1,\\\"method\\\":\\\"direct\\\",\\\"band\\\":\\\"TRUE_CERTAIN\\\",\\\"provenance\\\":{\\\"conceptId\\\":\\\"Sun\\\",\\\"distance\\\":0,\\\"scepticRadius\\\":0,\\\"optimistRadius\\\":0}}\"}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/3 concepts"
+        },
+        {
+          "id": "q5",
+          "question": "Format Ice's cold property result.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Ice has property cold.",
+          "actualResponse": "{\"text\":\"Yes, this is definitely true.\"}",
+          "passed": true,
+          "matchReason": "Pattern Match: Found strong TRUE_CERTAIN indicators"
+        },
+        {
+          "id": "q6",
+          "question": "Convert Fire's ability to burn to natural language.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Fire can burn.",
+          "actualResponse": "{\"text\":\"Yes, this is definitely true.\"}",
+          "passed": true,
+          "matchReason": "Pattern Match: Found strong TRUE_CERTAIN indicators"
+        },
+        {
+          "id": "q7",
+          "question": "Convert a FALSE result (wrong fact) to natural language.",
+          "expectedTruth": "UNKNOWN",
+          "expectedNatural": "No, Bird cannot swim (not in KB).",
+          "actualResponse": "{\"text\":\"Truth value: UNKNOWN\"}",
+          "passed": true,
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+        },
+        {
+          "id": "q8",
+          "question": "Convert Fish swimming ability to JSON.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "JSON output confirming Fish can swim.",
+          "actualResponse": "{\"json\":\"{\\\"truth\\\":\\\"TRUE_CERTAIN\\\",\\\"confidence\\\":1,\\\"method\\\":\\\"direct\\\",\\\"band\\\":\\\"TRUE_CERTAIN\\\",\\\"provenance\\\":{\\\"conceptId\\\":\\\"Fish\\\",\\\"distance\\\":0,\\\"scepticRadius\\\":0,\\\"optimistRadius\\\":0}}\"}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts"
         }
       ],
-      "passed": 2,
+      "passed": 8,
       "failed": 0
     },
     {
@@ -1582,9 +1636,63 @@
           "actualResponse": "{\"truth\":\"FALSE\"}",
           "passed": true,
           "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Count all vehicles and check if non-empty.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "There are vehicles in the KB.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts"
+        },
+        {
+          "id": "q4",
+          "question": "Summarize vehicles with maxItems=1.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Vehicle summary created; list is non-empty.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+        },
+        {
+          "id": "q5",
+          "question": "Match all animals and verify non-empty.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Animals exist in the KB.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts"
+        },
+        {
+          "id": "q6",
+          "question": "Check for non-existent robots category.",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No robots in the KB.",
+          "actualResponse": "{\"truth\":\"FALSE\"}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/1 concepts"
+        },
+        {
+          "id": "q7",
+          "question": "Summarize fruits with maxItems=4 (all of them).",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "All 4 fruits summarized; list is non-empty.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts"
+        },
+        {
+          "id": "q8",
+          "question": "Match specific subject Apple and check.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Apple has at least one IS_A fact.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts"
         }
       ],
-      "passed": 2,
+      "passed": 8,
       "failed": 0
     },
     {
@@ -1594,24 +1702,78 @@
       "queries": [
         {
           "id": "q1",
-          "question": "After boosting ImportantNote and forgetting low-usage concepts, is ImportantNote still known?",
+          "question": "Create and boost ImportantNote, then forget - should survive.",
           "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes. ImportantNote was boosted above the threshold and should still be present.",
+          "expectedNatural": "Yes. ImportantNote was asserted, boosted to 5, above threshold 3.",
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"note\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
           "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
         },
         {
           "id": "q2",
-          "question": "After the same forgetting pass, is ScratchNote still known?",
+          "question": "Create ScratchNote without boosting, then forget - should be removed.",
           "expectedTruth": "UNKNOWN",
-          "expectedNatural": "No. ScratchNote had low usage and should have been forgotten.",
-          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"note\",\"reason\":\"NO_CONCEPT\"}}",
+          "expectedNatural": "No. ScratchNote had low usage (1) and was forgotten.",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"scratch\",\"reason\":\"NO_CONCEPT\"}}",
+          "passed": true,
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+        },
+        {
+          "id": "q3",
+          "question": "Create and boost CriticalItem with high value, use high threshold.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. CriticalItem was boosted to 20, above threshold 10.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"item\",\"reason\":\"NO_CONCEPT\"}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+        },
+        {
+          "id": "q4",
+          "question": "Create TempItem, don't boost, use high threshold - should be removed.",
+          "expectedTruth": "UNKNOWN",
+          "expectedNatural": "No. TempItem was not boosted and is below threshold.",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"temp\",\"reason\":\"NO_CONCEPT\"}}",
+          "passed": true,
+          "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
+        },
+        {
+          "id": "q5",
+          "question": "Create HighPriority, boost to exactly threshold, should survive.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Boost of 4 + initial usage of 1 = 5, equals threshold 5.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"task\",\"reason\":\"NO_CONCEPT\"}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+        },
+        {
+          "id": "q6",
+          "question": "Create LowPriority, boost above threshold, should survive.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. LowPriority boosted to 8+1=9, above threshold 5.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"work\",\"reason\":\"NO_CONCEPT\"}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+        },
+        {
+          "id": "q7",
+          "question": "Create Essential, boost to 5, threshold 5, should survive.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Essential boosted to 5+1=6, above threshold 5.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"concept\",\"reason\":\"NO_CONCEPT\"}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+        },
+        {
+          "id": "q8",
+          "question": "Create Disposable, no boost, threshold 5, should be removed.",
+          "expectedTruth": "UNKNOWN",
+          "expectedNatural": "No. Disposable had no boost (usage=1), below threshold 5.",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"unknown_subject\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"junk\",\"reason\":\"NO_CONCEPT\"}}",
           "passed": true,
           "matchReason": "Pattern Match: Found strong UNKNOWN indicators"
         }
       ],
-      "passed": 2,
+      "passed": 8,
       "failed": 0
     },
     {
@@ -1636,9 +1798,306 @@
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"RobotA\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
           "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Save, retract, merge cycle for RobotB and BatteryY.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Complete cycle restores the fact.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"RobotB\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+        },
+        {
+          "id": "q4",
+          "question": "After saving, can we verify the theory was saved successfully?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. The fact is still present after saving (save doesn't remove).",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"DroneC\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/7 concepts"
+        },
+        {
+          "id": "q5",
+          "question": "Now merge the drone patch and verify restoration.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Merging restores the DroneC fact.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"DroneC\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts"
+        },
+        {
+          "id": "q6",
+          "question": "Verify VehicleD uses FuelCell without any retraction (baseline).",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Untouched facts remain accessible.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"VehicleD\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/4 concepts"
+        },
+        {
+          "id": "q7",
+          "question": "Save multiple patches and merge them in sequence.",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. First patch merged restores ServerE.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"ServerE\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts"
+        },
+        {
+          "id": "q8",
+          "question": "After merging laptop_patch, is LaptopF restored?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes. Second patch merged restores LaptopF.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"LaptopF\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/5 concepts"
         }
       ],
-      "passed": 2,
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "id": "suite_23_summarize_perspective",
+      "name": "Summarization from Different Perspectives",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Does renewable energy create jobs?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, renewable energy creates jobs.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"renewable_energy\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 1 (-), 2/4 concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Does climate change affect health?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, climate change affects health.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"climate_change\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/4 concepts"
+        },
+        {
+          "id": "q3",
+          "question": "What causes global warming?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Carbon emissions cause global warming.",
+          "actualResponse": "[{\"subject\":\"carbon_emissions\",\"relation\":\"CAUSES\",\"object\":\"global_warming\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q4",
+          "question": "What reduces carbon emissions?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Renewable energy and planting trees reduce carbon emissions.",
+          "actualResponse": "[{\"subject\":\"renewable_energy\",\"relation\":\"REDUCES\",\"object\":\"carbon_emissions\"},{\"subject\":\"planting_trees\",\"relation\":\"REDUCES\",\"object\":\"carbon_emissions\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q5",
+          "question": "What types of renewable energy exist?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Solar power and wind power are types of renewable energy.",
+          "actualResponse": "[{\"subject\":\"solar_power\",\"relation\":\"IS_A\",\"object\":\"renewable_energy\"},{\"subject\":\"wind_power\",\"relation\":\"IS_A\",\"object\":\"renewable_energy\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q6",
+          "question": "Does sea level rise threaten coastal cities?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, sea level rise threatens coastal cities.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"sea_level_rise\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts"
+        },
+        {
+          "id": "q7",
+          "question": "What does global warming cause?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Global warming causes ice melting.",
+          "actualResponse": "[{\"subject\":\"global_warming\",\"relation\":\"CAUSES\",\"object\":\"ice_melting\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q8",
+          "question": "What increases carbon emissions?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Deforestation increases carbon emissions.",
+          "actualResponse": "[{\"subject\":\"deforestation\",\"relation\":\"INCREASES\",\"object\":\"carbon_emissions\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        }
+      ],
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "id": "suite_24_expand_essay",
+      "name": "Essay Generation and Knowledge Expansion",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "What can AI do?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "AI can recognize images, understand speech, and translate languages.",
+          "actualResponse": "[{\"subject\":\"AI\",\"relation\":\"CAN\",\"object\":\"recognize_images\"},{\"subject\":\"AI\",\"relation\":\"CAN\",\"object\":\"understand_speech\"},{\"subject\":\"AI\",\"relation\":\"CAN\",\"object\":\"translate_languages\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 3 result(s)"
+        },
+        {
+          "id": "q2",
+          "question": "Does AI raise privacy concerns?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, AI raises privacy concerns.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"AI\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+        },
+        {
+          "id": "q3",
+          "question": "When was the term AI coined?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "The term AI was coined in 1956.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"term_AI\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts"
+        },
+        {
+          "id": "q4",
+          "question": "Is deep learning a type of machine learning?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, deep learning is a type of machine learning.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"machine_learning\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 1 (-), 2/3 concepts"
+        },
+        {
+          "id": "q5",
+          "question": "What does AI increase?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "AI increases productivity.",
+          "actualResponse": "[{\"subject\":\"AI\",\"relation\":\"INCREASES\",\"object\":\"productivity\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q6",
+          "question": "Does AI assist in medical diagnosis?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, AI assists in medical diagnosis.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"AI\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+        },
+        {
+          "id": "q7",
+          "question": "What does AI help in?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "AI helps in drug discovery.",
+          "actualResponse": "[{\"subject\":\"AI\",\"relation\":\"HELPS_IN\",\"object\":\"drug_discovery\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q8",
+          "question": "Does AI need regulation?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, AI needs regulation.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"AI\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+        }
+      ],
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "id": "suite_25_theory_management",
+      "name": "Theory Stack Management and Hypothetical Reasoning",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is Alice an employee?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Alice is an employee.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"employee\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: transitive)"
+        },
+        {
+          "id": "q2",
+          "question": "Where does Bob work?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Bob works in Sales.",
+          "actualResponse": "[{\"subject\":\"Bob\",\"relation\":\"WORKS_IN\",\"object\":\"Sales\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q3",
+          "question": "Is Alice a manager?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, Alice is not a manager.",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_path\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"manager\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 2 indicators (+), 0 (-), 0/2 concepts"
+        },
+        {
+          "id": "q4",
+          "question": "What is the Engineering budget?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Engineering has a budget of 100000.",
+          "actualResponse": "[{\"subject\":\"Engineering\",\"relation\":\"HAS_BUDGET\",\"object\":\"100000\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q5",
+          "question": "Who are the employees?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Alice and Bob are employees.",
+          "actualResponse": "[{\"subject\":\"Alice\",\"relation\":\"IS_A\",\"object\":\"employee\"},{\"subject\":\"Bob\",\"relation\":\"IS_A\",\"object\":\"employee\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q6",
+          "question": "What is Alice's salary?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Alice earns 70000.",
+          "actualResponse": "[{\"subject\":\"Alice\",\"relation\":\"HAS_SALARY\",\"object\":\"70000\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q7",
+          "question": "Can managers access all files?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, managers can access all files.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"manager\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts"
+        },
+        {
+          "id": "q8",
+          "question": "What can employees access?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Employees can access department files.",
+          "actualResponse": "[{\"subject\":\"employee\",\"relation\":\"CAN_ACCESS\",\"object\":\"department_files\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        }
+      ],
+      "passed": 8,
       "failed": 0
     }
   ]

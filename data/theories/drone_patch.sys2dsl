@@ -1,11 +1,11 @@
 # =============================================================================
-# network_backup
+# drone_patch
 # =============================================================================
 # =============================================================================
 
-# Theory: network_backup
-# Saved: 2025-12-01T17:16:33.140Z
-# Facts: 643
+# Theory: drone_patch
+# Saved: 2025-12-01T17:16:33.204Z
+# Facts: 653
 
 @f001 ASSERT undefined undefined undefined
 @f002 ASSERT undefined undefined undefined
@@ -163,13 +163,13 @@
 @f154 ASSERT undefined undefined undefined
 @f155 ASSERT undefined undefined undefined
 @f156 ASSERT undefined undefined undefined
-@f157 ASSERT NetworkD CONNECTS_TO Router
-@f158 ASSERT PowerSupply POWERS Computer
-@f159 ASSERT CoolingFan COOLS Server
-@f160 ASSERT GraphicsCard PART_OF Workstation
-@f161 ASSERT Switch CONNECTS_TO Router
-@f162 ASSERT undefined undefined undefined
-@f163 ASSERT undefined undefined undefined
+@f157 ASSERT RobotB USES BatteryY
+@f158 ASSERT DroneC USES MotorZ
+@f159 ASSERT VehicleD USES FuelCell
+@f160 ASSERT ServerE USES PowerUnit
+@f161 ASSERT LaptopF USES Battery
+@f162 ASSERT PhoneG USES MicroBattery
+@f163 ASSERT TabletH USES SlimBattery
 @f164 ASSERT undefined undefined undefined
 @f165 ASSERT undefined undefined undefined
 @f166 ASSERT undefined undefined undefined
@@ -323,16 +323,16 @@
 @f314 ASSERT undefined undefined undefined
 @f315 ASSERT undefined undefined undefined
 @f316 ASSERT undefined undefined undefined
-@f317 ASSERT MemoryB PART_OF Server
-@f318 ASSERT NetworkD CONNECTS_TO Router
-@f319 ASSERT PowerSupply POWERS Computer
-@f320 ASSERT CoolingFan COOLS Server
-@f321 ASSERT GraphicsCard PART_OF Workstation
-@f322 ASSERT Switch CONNECTS_TO Router
-@f323 ASSERT undefined undefined undefined
-@f324 ASSERT undefined undefined undefined
-@f325 ASSERT undefined undefined undefined
-@f326 ASSERT undefined undefined undefined
+@f317 ASSERT undefined undefined undefined
+@f318 ASSERT undefined undefined undefined
+@f319 ASSERT undefined undefined undefined
+@f320 ASSERT RobotB USES BatteryY
+@f321 ASSERT DroneC USES MotorZ
+@f322 ASSERT VehicleD USES FuelCell
+@f323 ASSERT ServerE USES PowerUnit
+@f324 ASSERT LaptopF USES Battery
+@f325 ASSERT PhoneG USES MicroBattery
+@f326 ASSERT TabletH USES SlimBattery
 @f327 ASSERT undefined undefined undefined
 @f328 ASSERT undefined undefined undefined
 @f329 ASSERT undefined undefined undefined
@@ -483,19 +483,19 @@
 @f474 ASSERT undefined undefined undefined
 @f475 ASSERT undefined undefined undefined
 @f476 ASSERT undefined undefined undefined
-@f477 ASSERT MemoryB PART_OF Server
-@f478 ASSERT NetworkD CONNECTS_TO Router
-@f479 ASSERT PowerSupply POWERS Computer
-@f480 ASSERT CoolingFan COOLS Server
-@f481 ASSERT GraphicsCard PART_OF Workstation
-@f482 ASSERT Switch CONNECTS_TO Router
-@f483 ASSERT undefined undefined undefined
-@f484 ASSERT undefined undefined undefined
-@f485 ASSERT undefined undefined undefined
-@f486 ASSERT undefined undefined undefined
-@f487 ASSERT undefined undefined undefined
-@f488 ASSERT undefined undefined undefined
-@f489 ASSERT undefined undefined undefined
+@f477 ASSERT undefined undefined undefined
+@f478 ASSERT undefined undefined undefined
+@f479 ASSERT undefined undefined undefined
+@f480 ASSERT undefined undefined undefined
+@f481 ASSERT undefined undefined undefined
+@f482 ASSERT undefined undefined undefined
+@f483 ASSERT RobotB USES BatteryY
+@f484 ASSERT DroneC USES MotorZ
+@f485 ASSERT VehicleD USES FuelCell
+@f486 ASSERT ServerE USES PowerUnit
+@f487 ASSERT LaptopF USES Battery
+@f488 ASSERT PhoneG USES MicroBattery
+@f489 ASSERT TabletH USES SlimBattery
 @f490 ASSERT undefined undefined undefined
 @f491 ASSERT undefined undefined undefined
 @f492 ASSERT undefined undefined undefined
@@ -644,9 +644,19 @@
 @f635 ASSERT undefined undefined undefined
 @f636 ASSERT undefined undefined undefined
 @f637 ASSERT undefined undefined undefined
-@f638 ASSERT MemoryB PART_OF Server
-@f639 ASSERT NetworkD CONNECTS_TO Router
-@f640 ASSERT PowerSupply POWERS Computer
-@f641 ASSERT CoolingFan COOLS Server
-@f642 ASSERT GraphicsCard PART_OF Workstation
-@f643 ASSERT Switch CONNECTS_TO Router
+@f638 ASSERT undefined undefined undefined
+@f639 ASSERT undefined undefined undefined
+@f640 ASSERT undefined undefined undefined
+@f641 ASSERT undefined undefined undefined
+@f642 ASSERT undefined undefined undefined
+@f643 ASSERT undefined undefined undefined
+@f644 ASSERT undefined undefined undefined
+@f645 ASSERT undefined undefined undefined
+@f646 ASSERT RobotA USES BatteryX
+@f647 ASSERT RobotB USES BatteryY
+@f648 ASSERT DroneC USES MotorZ
+@f649 ASSERT VehicleD USES FuelCell
+@f650 ASSERT ServerE USES PowerUnit
+@f651 ASSERT LaptopF USES Battery
+@f652 ASSERT PhoneG USES MicroBattery
+@f653 ASSERT TabletH USES SlimBattery

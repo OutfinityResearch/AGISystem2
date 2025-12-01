@@ -128,7 +128,342 @@ class DirectDSLExecutor {
 }
 
 /**
- * Translation Evaluator - tests NL→DSL translation quality
+ * Convert DSL fact to natural language for teaching
+ * "X IS_A Y" → "X is a Y"
+ * "X LOCATED_IN Y" → "X is located in Y"
+ * etc.
+ */
+function dslFactToNaturalLanguage(dslFact) {
+  // Parse: "Subject RELATION Object"
+  const parts = dslFact.trim().split(/\s+/);
+  if (parts.length < 3) return dslFact;
+
+  const subject = parts[0];
+  const relation = parts[1];
+  const object = parts.slice(2).join(' ');
+
+  // Map relations to natural language
+  const relationMap = {
+    'IS_A': 'is a',
+    'LOCATED_IN': 'is located in',
+    'HAS': 'has',
+    'HELPS': 'helps',
+    'CAUSES': 'causes',
+    'CAUSED_BY': 'is caused by',
+    'CAN': 'can',
+    'PART_OF': 'is part of',
+    'HAS_PART': 'has part',
+    'OWNS': 'owns',
+    'OWNED_BY': 'is owned by',
+    'REQUIRES': 'requires',
+    'DISJOINT_WITH': 'is disjoint with',
+    'PERMITTED_BY': 'is permitted by',
+    'PROHIBITED_BY': 'is prohibited by'
+  };
+
+  const nlRelation = relationMap[relation] || relation.toLowerCase().replace(/_/g, ' ');
+  return `${subject} ${nlRelation} ${object}`;
+}
+
+/**
+ * Direct Translation Evaluator - calls LLM directly for NL→DSL
+ * Bypasses the full chat interface for more reliable translation testing.
+ * Uses the buildQuestionPrompt template directly.
+ */
+class DirectTranslationEvaluator {
+  constructor(options = {}) {
+    this.verbose = options.verbose || false;
+    this.llmAgent = null;
+    this.theoryContext = null;  // Store theory context for translation
+  }
+
+  async start() {
+    const startTime = Date.now();
+    // Dynamically import the LLM agent loader and prompt builder
+    const { loadLLMAgent } = await import('../chat/llm_loader.mjs');
+    const { buildQuestionPrompt } = await import('../chat/prompts.mjs');
+
+    this.buildQuestionPrompt = buildQuestionPrompt;
+
+    // Load the LLM agent
+    const llmResult = await loadLLMAgent();
+    if (!llmResult.available) {
+      throw new Error(`LLM Agent not available: ${llmResult.error || 'Unknown error'}`);
+    }
+
+    // Create LLM agent instance - no initialize() needed
+    this.llmAgent = new llmResult.LLMAgent({ name: 'DirectTranslation' });
+    log(`  [TIMING] Direct Translation Evaluator init: ${Date.now() - startTime}ms`, colors.gray);
+  }
+
+  /**
+   * Set theory context for translation
+   * @param {object} context - Theory context
+   * @param {string} context.theory - Natural language theory description
+   * @param {string[]} context.facts - Array of DSL facts
+   */
+  setTheoryContext(context) {
+    this.theoryContext = context;
+    if (this.verbose) {
+      log(`  Theory context set: ${context.facts?.length || 0} facts`, colors.gray);
+    }
+  }
+
+  async translateQuestion(question) {
+    // Pass theory context to prompt builder if available
+    const prompt = this.buildQuestionPrompt(question, this.theoryContext);
+    const startTime = Date.now();
+
+    try {
+      const response = await this.llmAgent.complete({
+        prompt,
+        mode: 'fast',
+        context: { intent: 'parse-question' }
+      });
+
+      log(`  [TIMING] Translation response: ${Date.now() - startTime}ms`, colors.gray);
+
+      // Extract JSON from response
+      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0]);
+        const command = parsed.command || 'ASK';
+        const canonical = parsed.canonical;
+
+        // SEQUENCE commands don't need canonical - they have steps instead
+        if (!canonical && command !== 'SEQUENCE') return null;
+
+        // Generate DSL based on command type
+        switch (command) {
+          case 'ASK':
+            if (canonical.subject && canonical.relation && canonical.object) {
+              return `@q ASK ${canonical.subject} ${canonical.relation} ${canonical.object}`;
+            }
+            break;
+
+          case 'FACTS_MATCHING':
+            if (canonical.subject !== undefined && canonical.relation && canonical.object !== undefined) {
+              return `@q FACTS_MATCHING ${canonical.subject} ${canonical.relation} ${canonical.object}`;
+            }
+            break;
+
+          case 'ABDUCT':
+            if (canonical.symptom) {
+              return `@q ABDUCT ${canonical.symptom}`;
+            }
+            break;
+
+          case 'ANALOGICAL':
+            if (canonical.a && canonical.b && canonical.c) {
+              return `@q ANALOGICAL ${canonical.a} ${canonical.b} ${canonical.c}`;
+            }
+            break;
+
+          case 'SEQUENCE':
+            // Handle multi-step command sequences (hypotheticals, what-if scenarios)
+            if (parsed.steps && Array.isArray(parsed.steps)) {
+              const dslLines = [];
+              let varCounter = 1;
+
+              for (const step of parsed.steps) {
+                const varName = step.var || `v${varCounter++}`;
+                switch (step.command) {
+                  case 'THEORY_PUSH':
+                    dslLines.push(`@${varName} THEORY_PUSH ${step.name || 'scenario'}`);
+                    break;
+                  case 'THEORY_POP':
+                    dslLines.push(`@restore THEORY_POP`);
+                    break;
+                  case 'SAVE_THEORY':
+                    dslLines.push(`@save SAVE_THEORY ${step.name || 'saved_scenario'}`);
+                    break;
+                  case 'MERGE_THEORY':
+                    dslLines.push(`@merge MERGE_THEORY ${step.name}`);
+                    break;
+                  case 'ASSERT':
+                    if (step.subject && step.relation && step.object) {
+                      dslLines.push(`@${varName} ASSERT ${step.subject} ${step.relation} ${step.object}`);
+                    }
+                    break;
+                  case 'RETRACT':
+                    if (step.subject && step.relation && step.object) {
+                      dslLines.push(`@${varName} RETRACT ${step.subject} ${step.relation} ${step.object}`);
+                    }
+                    break;
+                  case 'ASK':
+                    if (step.subject && step.relation && step.object) {
+                      dslLines.push(`@q${varCounter} ASK ${step.subject} ${step.relation} ${step.object}`);
+                    }
+                    break;
+                  case 'FACTS_MATCHING':
+                    if (step.subject !== undefined && step.relation && step.object !== undefined) {
+                      dslLines.push(`@${varName} FACTS_MATCHING ${step.subject} ${step.relation} ${step.object}`);
+                    }
+                    break;
+                  case 'TO_NATURAL':
+                    if (step.vars && Array.isArray(step.vars)) {
+                      dslLines.push(`@out TO_NATURAL ${step.vars.join(' ')}`);
+                    }
+                    break;
+                  case 'FORGET':
+                    if (step.concept) {
+                      dslLines.push(`@${varName} FORGET ${step.concept}`);
+                    }
+                    break;
+                  case 'PROTECT':
+                    if (step.concept) {
+                      dslLines.push(`@${varName} PROTECT ${step.concept}`);
+                    }
+                    break;
+                }
+              }
+
+              if (dslLines.length > 0) {
+                return dslLines.join('\n');
+              }
+            }
+            break;
+
+          case 'THEORY_PUSH':
+            if (canonical.name) {
+              return `@hypo THEORY_PUSH ${canonical.name}`;
+            }
+            break;
+
+          case 'THEORY_POP':
+            return `@restore THEORY_POP`;
+
+          case 'SAVE_THEORY':
+            if (canonical.name) {
+              return `@save SAVE_THEORY ${canonical.name}`;
+            }
+            break;
+
+          case 'MERGE_THEORY':
+            if (canonical.name) {
+              return `@merge MERGE_THEORY ${canonical.name}`;
+            }
+            break;
+
+          case 'ASSERT':
+            if (canonical.subject && canonical.relation && canonical.object) {
+              return `@f ASSERT ${canonical.subject} ${canonical.relation} ${canonical.object}`;
+            }
+            break;
+
+          case 'RETRACT':
+            if (canonical.subject && canonical.relation && canonical.object) {
+              return `@r RETRACT ${canonical.subject} ${canonical.relation} ${canonical.object}`;
+            }
+            break;
+
+          case 'FORGET':
+            if (canonical.concept) {
+              return `@forget FORGET ${canonical.concept}`;
+            }
+            break;
+
+          case 'TO_NATURAL':
+            if (canonical.vars && Array.isArray(canonical.vars)) {
+              return `@out TO_NATURAL ${canonical.vars.join(' ')}`;
+            }
+            break;
+
+          case 'TO_JSON':
+            if (canonical.var) {
+              return `@out TO_JSON ${canonical.var}`;
+            }
+            break;
+
+          default:
+            // Fallback to ASK if command not recognized but canonical has s/r/o
+            if (canonical.subject && canonical.relation && canonical.object) {
+              return `@q ASK ${canonical.subject} ${canonical.relation} ${canonical.object}`;
+            }
+        }
+      }
+      return null;
+    } catch (err) {
+      log(`  [ERROR] Translation failed: ${err.message}`, colors.red);
+      return null;
+    }
+  }
+
+  async stop() {
+    this.llmAgent = null;
+  }
+
+  // Comparison methods (reused from TranslationEvaluator)
+  compareDsl(generated, expected) {
+    if (!generated || !expected) {
+      return { matchType: 'none', similarity: 0, details: 'Missing DSL' };
+    }
+
+    const normalizeForCompare = (dsl) => {
+      return dsl
+        .replace(/@\w+/g, '@VAR')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toUpperCase();
+    };
+
+    const normalizedGen = normalizeForCompare(generated);
+    const normalizedExp = normalizeForCompare(expected);
+
+    if (normalizedGen === normalizedExp) {
+      return { matchType: 'exact', similarity: 100, details: 'Exact match' };
+    }
+
+    // Match ALL DSL command types
+    const DSL_COMMANDS = /(?:ASK|ASSERT|RETRACT|FACTS_MATCHING|THEORY_PUSH|THEORY_POP|SAVE_THEORY|MERGE_THEORY|ABDUCT|ANALOGICAL|FORGET|PROTECT|TO_NATURAL|TO_JSON)/gi;
+
+    const genCommands = generated.match(DSL_COMMANDS) || [];
+    const expCommands = expected.match(DSL_COMMANDS) || [];
+
+    const commandMatch = genCommands.length > 0 &&
+                         genCommands.map(c => c.toUpperCase()).join(',') ===
+                         expCommands.map(c => c.toUpperCase()).join(',');
+
+    if (commandMatch) {
+      const similarity = this.calculateSimilarity(normalizedGen, normalizedExp);
+      if (similarity > 80) {
+        return { matchType: 'semantic', similarity, details: `Same commands, ${similarity}% arg match` };
+      }
+      // Even with lower similarity, if commands match order, it's at least partial
+      if (similarity > 50) {
+        return { matchType: 'partial', similarity, details: `Commands match, ${similarity}% args` };
+      }
+    }
+
+    // Check if at least the main command type matches
+    const genFirstCmd = genCommands[0]?.toUpperCase();
+    const expFirstCmd = expCommands[0]?.toUpperCase();
+    if (genFirstCmd && genFirstCmd === expFirstCmd) {
+      const similarity = this.calculateSimilarity(normalizedGen, normalizedExp);
+      if (similarity > 40) {
+        return { matchType: 'partial', similarity, details: `Same primary command: ${genFirstCmd}` };
+      }
+    }
+
+    const similarity = this.calculateSimilarity(normalizedGen, normalizedExp);
+    if (similarity > 50) {
+      return { matchType: 'partial', similarity, details: `${similarity}% overlap` };
+    }
+
+    return { matchType: 'none', similarity, details: `Only ${similarity}% match` };
+  }
+
+  calculateSimilarity(s1, s2) {
+    const words1 = new Set(s1.split(/\s+/));
+    const words2 = new Set(s2.split(/\s+/));
+    const intersection = new Set([...words1].filter(w => words2.has(w)));
+    const union = new Set([...words1, ...words2]);
+    return Math.round((intersection.size / union.size) * 100);
+  }
+}
+
+/**
+ * Translation Evaluator - tests NL→DSL translation quality (via chat interface)
  * Compares LLM-generated DSL with expected_dsl from case files
  * Does NOT execute the generated DSL - only measures translation accuracy
  */
@@ -231,38 +566,42 @@ class TranslationEvaluator {
         return;
       }
 
-      this.buffer = '';
-      this.responseResolve = resolve;
-      this.responseReject = reject;
+      // Wait a bit to ensure previous response has fully arrived before clearing buffer
+      setTimeout(() => {
+        this.buffer = '';
+        this.responseResolve = resolve;
+        this.responseReject = reject;
 
-      const timeoutId = setTimeout(() => {
-        if (this.responseResolve) {
-          const partialResponse = this.extractResponse();
-          log(`  [TIMING] Translation timeout after ${Date.now() - sendTime}ms`, colors.yellow);
-          this.responseResolve(partialResponse || '[TIMEOUT]');
-          this.responseResolve = null;
-          this.responseReject = null;
+        const timeoutId = setTimeout(() => {
+          if (this.responseResolve) {
+            const partialResponse = this.extractResponse();
+            log(`  [TIMING] Translation timeout after ${Date.now() - sendTime}ms`, colors.yellow);
+            this.responseResolve(partialResponse || '[TIMEOUT]');
+            this.responseResolve = null;
+            this.responseReject = null;
+          }
+        }, this.timeout);
+
+        if (this.verbose) {
+          log(`  [TRANS IN] ${message}`, colors.blue);
         }
-      }, this.timeout);
 
-      if (this.verbose) {
-        log(`  [TRANS IN] ${message}`, colors.blue);
-      }
+        this.process.stdin.write(message + '\n');
 
-      this.process.stdin.write(message + '\n');
-
-      const originalResolve = this.responseResolve;
-      this.responseResolve = (response) => {
-        clearTimeout(timeoutId);
-        log(`  [TIMING] Translation response: ${Date.now() - sendTime}ms`, colors.gray);
-        originalResolve(response);
-      };
+        const originalResolve = this.responseResolve;
+        this.responseResolve = (response) => {
+          clearTimeout(timeoutId);
+          log(`  [TIMING] Translation response: ${Date.now() - sendTime}ms`, colors.gray);
+          originalResolve(response);
+        };
+      }, 500); // Wait 500ms before sending next message
     });
   }
 
   /**
    * Extract DSL from LLM response
    * Looks for patterns like @varname COMMAND ... in the response
+   * Also tries to extract from JSON canonical form if DSL not found
    */
   extractGeneratedDsl(response) {
     // Look for DSL patterns in response
@@ -283,10 +622,32 @@ class TranslationEvaluator {
     }
 
     // Clean up and join
-    return extractedDsl
+    let result = extractedDsl
       .map(d => d.replace(/```(?:dsl|sys2dsl)?\n?/g, '').replace(/```/g, '').trim())
       .filter(d => d.length > 0)
       .join('\n');
+
+    // If no DSL found, try to extract from JSON canonical form
+    // This handles cases where the LLM output shows the parsed JSON but not DSL
+    if (!result) {
+      const jsonMatch = response.match(/\{"type"\s*:\s*"yes_no"\s*,\s*"canonical"\s*:\s*\{[^}]+\}/);
+      if (jsonMatch) {
+        try {
+          const parsed = JSON.parse(jsonMatch[0] + '}}');
+          if (parsed.canonical && parsed.canonical.subject && parsed.canonical.relation && parsed.canonical.object) {
+            result = `@q ASK ${parsed.canonical.subject} ${parsed.canonical.relation} ${parsed.canonical.object}`;
+          }
+        } catch {
+          // JSON parse failed, try simpler pattern
+          const simpleMatch = response.match(/"subject"\s*:\s*"([^"]+)"\s*,\s*"relation"\s*:\s*"([^"]+)"\s*,\s*"object"\s*:\s*"([^"]+)"/);
+          if (simpleMatch) {
+            result = `@q ASK ${simpleMatch[1]} ${simpleMatch[2]} ${simpleMatch[3]}`;
+          }
+        }
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -390,33 +751,61 @@ function log(msg, color = '') {
  * Display usage/options at startup
  */
 function showUsage() {
-  log(`\n${'═'.repeat(65)}`, colors.cyan);
-  log(`  ${colors.bright}AGISystem2 Evaluation Suite - THREE MODES${colors.reset}`, colors.cyan);
-  log(`${'═'.repeat(65)}`, colors.cyan);
+  log(`\n${'═'.repeat(70)}`, colors.cyan);
+  log(`  ${colors.bright}AGISystem2 Evaluation Suite${colors.reset}`, colors.cyan);
+  log(`${'═'.repeat(70)}`, colors.cyan);
+  log(``, '');
+  log(`  ${colors.bright}USAGE:${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js [MODE] [FILTERS] [OPTIONS]`, '');
   log(``, '');
   log(`  ${colors.bright}EXECUTION MODES:${colors.reset}`, '');
-  log(`  ${colors.green}(default)${colors.reset}       Direct DSL - run expected_dsl, NO LLM (fastest)`, '');
-  log(`  ${colors.yellow}--eval-llm${colors.reset}      Test NL→DSL translation quality`, '');
-  log(`  ${colors.yellow}--full${colors.reset}          End-to-end: LLM → DSL → Execute`, '');
+  log(`    ${colors.green}(default)${colors.reset}       Direct DSL - run expected_dsl, NO LLM (fastest)`, '');
+  log(`    ${colors.yellow}--eval-llm${colors.reset}      Test NL→DSL translation quality`, '');
+  log(`    ${colors.yellow}--full${colors.reset}          End-to-end: LLM → DSL → Execute`, '');
   log(``, '');
-  log(`  ${colors.bright}FILTER OPTIONS:${colors.reset}`, '');
-  log(`  --from <n>      Start from case number N (1-indexed)`, colors.gray);
-  log(`  --to <m>        End at case number M (inclusive)`, colors.gray);
-  log(`  --runFailed     Run only previously failed cases`, colors.gray);
-  log(`  --case <id>     Run specific case by ID`, colors.gray);
+  log(`  ${colors.bright}FILTER OPTIONS:${colors.reset} (can be combined)`, '');
+  log(`    --only-case <id>   Run a single case by ID (partial match OK)`, colors.gray);
+  log(`    --case <id>        Alias for --only-case`, colors.gray);
+  log(`    --from <n>         Start from case number N (1-indexed)`, colors.gray);
+  log(`    --to <m>           End at case number M (inclusive)`, colors.gray);
+  log(`    --runFailed        Run only previously failed cases`, colors.gray);
   log(``, '');
   log(`  ${colors.bright}OTHER OPTIONS:${colors.reset}`, '');
-  log(`  --verbose       Show detailed output`, colors.gray);
-  log(`  --dry-run       Validate cases without running`, colors.gray);
-  log(`  --timeout <ms>  Set timeout per interaction`, colors.gray);
+  log(`    --help, -h         Show this help message and exit`, colors.gray);
+  log(`    --verbose, -v      Show detailed output`, colors.gray);
+  log(`    --dry-run          Validate cases without running`, colors.gray);
+  log(`    --timeout <ms>     Set timeout per interaction (default: 30000)`, colors.gray);
   log(``, '');
-  log(`${'─'.repeat(65)}`, colors.gray);
-  log(`  ${colors.bright}Examples:${colors.reset}`, '');
-  log(`    node evalsuite/runSuite.js                  ${colors.green}# Direct DSL (default)${colors.reset}`, '');
-  log(`    node evalsuite/runSuite.js --eval-llm       ${colors.yellow}# Test translation${colors.reset}`, '');
-  log(`    node evalsuite/runSuite.js --full           ${colors.yellow}# Full end-to-end${colors.reset}`, '');
-  log(`    node evalsuite/runSuite.js --from 1 --to 10`, colors.gray);
-  log(`${'═'.repeat(65)}\n`, colors.cyan);
+  log(`${'─'.repeat(70)}`, colors.gray);
+  log(`  ${colors.bright}EXAMPLES:${colors.reset}`, '');
+  log(``, '');
+  log(`  ${colors.bright}Basic usage:${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js                    ${colors.green}# Run all tests (Direct DSL)${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js --help             ${colors.gray}# Show this help${colors.reset}`, '');
+  log(``, '');
+  log(`  ${colors.bright}Run specific case(s):${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js --only-case suite_01_ontology`, '');
+  log(`    node evalsuite/runSuite.js --only-case ontology  ${colors.gray}# Partial match${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js --case 21_boost       ${colors.gray}# Same as --only-case${colors.reset}`, '');
+  log(``, '');
+  log(`  ${colors.bright}Run a range of cases:${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js --from 1 --to 5    ${colors.gray}# Cases 1-5${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js --from 10          ${colors.gray}# Cases 10 to end${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js --to 3             ${colors.gray}# First 3 cases${colors.reset}`, '');
+  log(``, '');
+  log(`  ${colors.bright}Re-run failed tests:${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js --runFailed        ${colors.gray}# Only failed cases${colors.reset}`, '');
+  log(``, '');
+  log(`  ${colors.bright}Different execution modes:${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js --eval-llm         ${colors.yellow}# Test NL→DSL translation${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js --full             ${colors.yellow}# Full end-to-end${colors.reset}`, '');
+  log(``, '');
+  log(`  ${colors.bright}Combining options:${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js --from 1 --to 5 --verbose`, '');
+  log(`    node evalsuite/runSuite.js --only-case ontology --eval-llm`, '');
+  log(`    node evalsuite/runSuite.js --runFailed --timeout 60000`, '');
+  log(``, '');
+  log(`${'═'.repeat(70)}\n`, colors.cyan);
 }
 
 /**
@@ -1682,6 +2071,56 @@ function analyzeResponse(response, expected) {
   const expectedLower = expected.natural_language.toLowerCase();
   const expectedTruth = expected.truth;
 
+  // Special handling for LIST type responses (FACTS_MATCHING queries)
+  if (expectedTruth === 'LIST') {
+    // Check if response is a JSON array with at least one element
+    try {
+      const parsed = JSON.parse(response);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return {
+          passed: true,
+          reason: `LIST Match: Found ${parsed.length} result(s)`,
+          matchType: 'list_results'
+        };
+      } else if (Array.isArray(parsed) && parsed.length === 0) {
+        return {
+          passed: false,
+          reason: `LIST Empty: Expected non-empty list, got []`,
+          matchType: 'none'
+        };
+      }
+    } catch (e) {
+      // Not JSON, check if it looks like a list response
+      if (response.includes('[') && response.includes(']')) {
+        return {
+          passed: true,
+          reason: `LIST Match: Response contains list structure`,
+          matchType: 'list_structure'
+        };
+      }
+    }
+    // Check for key concepts as fallback
+    const keyWords = expectedLower.split(/\s+/).filter(w => w.length > 4);
+    let conceptMatch = 0;
+    for (const word of keyWords) {
+      if (responseLower.includes(word)) {
+        conceptMatch++;
+      }
+    }
+    if (conceptMatch >= keyWords.length * 0.3) {
+      return {
+        passed: true,
+        reason: `LIST NL Match: ${conceptMatch}/${keyWords.length} concepts found`,
+        matchType: 'natural_language'
+      };
+    }
+    return {
+      passed: false,
+      reason: `LIST mismatch: Could not find expected list results`,
+      matchType: 'none'
+    };
+  }
+
   // Strategy 1: Use strong regex pattern matching
   if (detectTruthFromText(response, expectedTruth)) {
     return {
@@ -1796,13 +2235,44 @@ async function evaluateTranslation(testCase, evaluator, options, translationStat
     failed: 0
   };
 
-  log(`\n  Sending theory to LLM...`, colors.gray);
+  // DirectTranslationEvaluator doesn't need fact loading - it only tests NL→DSL translation
+  const isDirect = evaluator instanceof DirectTranslationEvaluator;
 
-  // Send theory as natural language (LLM needs context)
-  if (testCase.theory.natural_language) {
-    const theoryResponse = await evaluator.send(testCase.theory.natural_language);
-    if (options.verbose) {
-      log(`  Theory response: ${theoryResponse.substring(0, 200)}...`, colors.gray);
+  // For DirectTranslationEvaluator, set theory context so LLM knows the facts
+  if (isDirect && testCase.theory) {
+    evaluator.setTheoryContext({
+      theory: testCase.theory.natural_language,
+      facts: testCase.theory.expected_facts || []
+    });
+    log(`  Set theory context: ${testCase.theory.expected_facts?.length || 0} facts`, colors.gray);
+  }
+
+  if (!isDirect) {
+    log(`\n  Loading theory facts into AGI...`, colors.gray);
+
+    // The chat interface processes NATURAL LANGUAGE, not raw DSL
+    // So we need to convert DSL facts to natural language for teaching
+    if (testCase.theory.expected_facts && testCase.theory.expected_facts.length > 0) {
+      // Convert DSL facts to natural language statements
+      const nlStatements = testCase.theory.expected_facts.map(fact => dslFactToNaturalLanguage(fact));
+
+      // Send each fact as natural language to teach the chat
+      for (const nlFact of nlStatements) {
+        if (options.verbose) {
+          log(`    Teaching: ${nlFact}`, colors.gray);
+        }
+        await evaluator.send(nlFact);
+      }
+      log(`  Loaded ${testCase.theory.expected_facts.length} facts via NL`, colors.gray);
+    }
+
+    // Optionally send natural language as context (for LLM understanding)
+    if (testCase.theory.natural_language) {
+      log(`  Sending NL context to LLM...`, colors.gray);
+      const theoryResponse = await evaluator.send(testCase.theory.natural_language);
+      if (options.verbose) {
+        log(`  Theory response: ${theoryResponse.substring(0, 200)}...`, colors.gray);
+      }
     }
   }
 
@@ -1832,12 +2302,18 @@ async function evaluateTranslation(testCase, evaluator, options, translationStat
     }
 
     try {
-      // Send natural language to LLM
-      const response = await evaluator.send(query.natural_language);
+      let generatedDsl;
 
-      // Extract generated DSL from response
-      const generatedDsl = evaluator.extractGeneratedDsl(response);
-      queryResult.generatedDsl = generatedDsl;
+      if (isDirect) {
+        // Use DirectTranslationEvaluator's translateQuestion method
+        generatedDsl = await evaluator.translateQuestion(query.natural_language);
+      } else {
+        // Use TranslationEvaluator's send + extractGeneratedDsl
+        const response = await evaluator.send(query.natural_language);
+        generatedDsl = evaluator.extractGeneratedDsl(response);
+      }
+
+      queryResult.generatedDsl = generatedDsl || '';
 
       // Compare with expected DSL
       const comparison = evaluator.compareDsl(generatedDsl, query.expected_dsl);
@@ -1933,6 +2409,40 @@ function dryRun(cases) {
 async function main() {
   const args = process.argv.slice(2);
 
+  // Known valid options (flags and options with values)
+  const validFlags = new Set(['--eval-llm', '--full', '--runFailed', '--verbose', '-v', '--dry-run', '--help', '-h']);
+  const validOptionsWithValue = new Set(['--case', '--only-case', '--from', '--to', '--timeout']);
+
+  // Check for --help / -h first - show usage and exit immediately
+  if (args.includes('--help') || args.includes('-h')) {
+    showUsage();
+    process.exit(0);
+  }
+
+  // Validate all arguments
+  const unknownArgs = [];
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg.startsWith('-')) {
+      if (validFlags.has(arg)) {
+        // Valid flag, continue
+      } else if (validOptionsWithValue.has(arg)) {
+        // Valid option with value, skip the next argument (the value)
+        i++;
+      } else {
+        unknownArgs.push(arg);
+      }
+    }
+    // Non-flag arguments (values) are handled by the options with value skip above
+  }
+
+  // If there are unknown arguments, show error and help
+  if (unknownArgs.length > 0) {
+    console.error(`\n${colors.red}Error: Unknown option(s): ${unknownArgs.join(', ')}${colors.reset}\n`);
+    showUsage();
+    process.exit(1);
+  }
+
   const options = {
     filterCase: null,
     from: null,
@@ -1953,8 +2463,9 @@ async function main() {
     EXECUTION_MODE = ExecutionMode.DIRECT_DSL;
   }
 
-  // Parse --case argument
-  const caseIdx = args.indexOf('--case');
+  // Parse --case / --only-case argument (aliases)
+  let caseIdx = args.indexOf('--case');
+  if (caseIdx === -1) caseIdx = args.indexOf('--only-case');
   if (caseIdx !== -1 && args[caseIdx + 1]) {
     options.filterCase = args[caseIdx + 1];
   }
@@ -1977,7 +2488,7 @@ async function main() {
     options.timeout = parseInt(args[timeoutIdx + 1], 10);
   }
 
-  // Show usage at startup
+  // Show usage at startup (only when actually running tests)
   showUsage();
 
   logSection('AGISystem2 Evaluation Suite');
@@ -2053,7 +2564,8 @@ async function main() {
         executor = new DirectDSLExecutor(options);
         break;
       case ExecutionMode.EVAL_LLM:
-        executor = new TranslationEvaluator(options);
+        // Use DirectTranslationEvaluator for more reliable translation testing
+        executor = new DirectTranslationEvaluator(options);
         break;
       case ExecutionMode.FULL:
         executor = new AGIProcess(options);

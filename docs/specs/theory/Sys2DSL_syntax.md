@@ -469,14 +469,14 @@ This is handled by external translator (LLM) with pinned prompts for determinism
 
 ### 11.1 Commands (see DS(/theory/Sys2DSL_commands) for full list)
 
-Currently implemented commands (grouped):
+Currently implemented commands (grouped). Recommended high-level entry points: QUERY, WHATIF, SUGGEST, SUMMARIZE_FACTS, MANAGE_THEORY, MEMORY, MASK, FORMAT_RESULT (see DS(/theory/Sys2DSL_highlevel.md)). Granular/legacy commands:
 ```
-Queries: ASK, ASK_MASKED, CF, ABDUCT
+Queries: QUERY, ASK, ASK_MASKED, CF, ABDUCT
 Facts: ASSERT, FACTS_MATCHING
 Logic/validation: VALIDATE, PROVE, HYPOTHESIZE, ANALOGICAL
 Inference: INFER, FORWARD_CHAIN, DEFINE_RULE, DEFINE_DEFAULT, WHY
 Contradiction/cardinality: CHECK_CONTRADICTION, CHECK_WOULD_CONTRADICT, REGISTER_FUNCTIONAL, REGISTER_CARDINALITY
-Masks: MASK_PARTITIONS, MASK_DIMS, ASK_MASKED
+Masks: MASK, MASK_PARTITIONS, MASK_DIMS, ASK_MASKED
 Lists/booleans: BOOL_AND, BOOL_OR, BOOL_NOT, NONEMPTY, MERGE_LISTS, PICK_FIRST, PICK_LAST, COUNT, FILTER, POLARITY_DECIDE
 Concepts/relations: BIND_CONCEPT, BIND_POINT, BIND_RELATION, DEFINE_CONCEPT, DEFINE_RELATION, INSPECT, LITERAL
 Memory: RETRACT, GET_USAGE, FORGET, BOOST, PROTECT, UNPROTECT

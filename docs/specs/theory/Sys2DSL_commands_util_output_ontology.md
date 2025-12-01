@@ -5,7 +5,7 @@ ID: DS(/theory/Sys2DSL_commands_util_output_ontology)
 Status: DRAFT v1.0
 
 ## Scope
-Commands that manipulate lists/booleans, emit results, and introspect ontology knowledge.
+Commands that manipulate lists/booleans, emit results, and introspect ontology knowledge. These are granular/legacy surfaces; for NL-friendly usage prefer the high-level commands in `Sys2DSL_highlevel.md` (QUERY, SUMMARIZE_FACTS, FORMAT_RESULT, MASK, etc.), which call these internally.
 
 ---
 

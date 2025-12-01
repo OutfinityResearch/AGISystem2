@@ -1,10 +1,10 @@
 # =============================================================================
-# memory_backup
+# robotb_patch
 # =============================================================================
 # =============================================================================
 
-# Theory: memory_backup
-# Saved: 2025-12-01T17:16:33.133Z
+# Theory: robotb_patch
+# Saved: 2025-12-01T17:16:33.199Z
 # Facts: 327
 
 @f001 ASSERT undefined undefined undefined
@@ -163,13 +163,13 @@
 @f154 ASSERT undefined undefined undefined
 @f155 ASSERT undefined undefined undefined
 @f156 ASSERT undefined undefined undefined
-@f157 ASSERT MemoryB PART_OF Server
-@f158 ASSERT CPUC PART_OF Workstation
-@f159 ASSERT NetworkD CONNECTS_TO Router
-@f160 ASSERT PowerSupply POWERS Computer
-@f161 ASSERT CoolingFan COOLS Server
-@f162 ASSERT GraphicsCard PART_OF Workstation
-@f163 ASSERT Switch CONNECTS_TO Router
+@f157 ASSERT RobotB USES BatteryY
+@f158 ASSERT DroneC USES MotorZ
+@f159 ASSERT VehicleD USES FuelCell
+@f160 ASSERT ServerE USES PowerUnit
+@f161 ASSERT LaptopF USES Battery
+@f162 ASSERT PhoneG USES MicroBattery
+@f163 ASSERT TabletH USES SlimBattery
 @f164 ASSERT undefined undefined undefined
 @f165 ASSERT undefined undefined undefined
 @f166 ASSERT undefined undefined undefined
@@ -326,11 +326,11 @@
 @f317 ASSERT undefined undefined undefined
 @f318 ASSERT undefined undefined undefined
 @f319 ASSERT undefined undefined undefined
-@f320 ASSERT DiskA PART_OF Computer
-@f321 ASSERT MemoryB PART_OF Server
-@f322 ASSERT CPUC PART_OF Workstation
-@f323 ASSERT NetworkD CONNECTS_TO Router
-@f324 ASSERT PowerSupply POWERS Computer
-@f325 ASSERT CoolingFan COOLS Server
-@f326 ASSERT GraphicsCard PART_OF Workstation
-@f327 ASSERT Switch CONNECTS_TO Router
+@f320 ASSERT RobotA USES BatteryX
+@f321 ASSERT RobotB USES BatteryY
+@f322 ASSERT DroneC USES MotorZ
+@f323 ASSERT VehicleD USES FuelCell
+@f324 ASSERT ServerE USES PowerUnit
+@f325 ASSERT LaptopF USES Battery
+@f326 ASSERT PhoneG USES MicroBattery
+@f327 ASSERT TabletH USES SlimBattery

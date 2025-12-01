@@ -16,7 +16,7 @@ constructor({ inferenceEngine, parser })
 
 ## Commands Implemented
 
-### INFER
+### INFER (subcommand of QUERY)
 ```sys2dsl
 @result INFER Dog IS_A Animal
 @result INFER Dog IS_A Animal method=transitive
@@ -50,7 +50,7 @@ Returns:
 }
 ```
 
-### FORWARD_CHAIN
+### FORWARD_CHAIN (advanced/subcommand)
 ```sys2dsl
 @derived FORWARD_CHAIN
 @derived FORWARD_CHAIN maxIterations=50
@@ -69,7 +69,7 @@ Returns:
 }
 ```
 
-### DEFINE_RULE
+### DEFINE_RULE (advanced)
 ```sys2dsl
 @rule DEFINE_RULE GRANDPARENT_OF head=?x GRANDPARENT_OF ?z body=?x PARENT_OF ?y body=?y PARENT_OF ?z
 ```
@@ -87,7 +87,7 @@ Example: Uncle rule
 @rule DEFINE_RULE UNCLE_OF head=?x UNCLE_OF ?z body=?x SIBLING_OF ?y body=?y PARENT_OF ?z
 ```
 
-### DEFINE_DEFAULT
+### DEFINE_DEFAULT (advanced)
 ```sys2dsl
 @default DEFINE_DEFAULT birds_fly typical=Bird property=CAN value=fly exceptions=Penguin,Ostrich
 ```

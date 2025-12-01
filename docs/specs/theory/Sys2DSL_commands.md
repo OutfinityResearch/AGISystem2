@@ -5,7 +5,10 @@ ID: DS(/theory/Sys2DSL_commands)
 Status: DRAFT v2.1 (split)
 
 ## Overview
-The full Sys2DSL command reference has been split into focused specs for readability. This index lists all commands and links to the detailed documents. Syntax follows `@var COMMAND args…` as defined in DS(/theory/Sys2DSL_syntax). For a small, natural-language-friendly surface, use the **high-level set** described in `Sys2DSL_highlevel.md` (QUERY, WHATIF, SUGGEST, SUMMARIZE_FACTS, MANAGE_THEORY, MEMORY, MASK, FORMAT_RESULT), which fan out into the granular commands below.
+The full Sys2DSL command reference has been split into focused specs for readability. This index lists all commands and links to the detailed documents. Syntax follows `@var COMMAND args…` as defined in DS(/theory/Sys2DSL_syntax).
+
+- **Recommended (NL-friendly) surface**: `QUERY`, `WHATIF`, `SUGGEST`, `SUMMARIZE_FACTS`, `MANAGE_THEORY`, `MEMORY`, `MASK`, `FORMAT_RESULT`, `EXPLAIN_QUERY` — see `Sys2DSL_highlevel.md`. These fan out into the granular commands automatically.
+- **Granular/legacy commands**: Listed below for precision and backward compatibility.
 
 ## Split Specifications
 - **Query & Mask** — ASK, ASK_MASKED, FACTS_MATCHING, MASK_PARTITIONS, MASK_DIMS, MASK_CONCEPT  

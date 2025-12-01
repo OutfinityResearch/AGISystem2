@@ -24,8 +24,8 @@ Commands that trigger reasoning flows: validation, proofs, hypothesis generation
 
 ---
 
-### 1.2 PROVE
-**Purpose:** Prove a statement using inference and validation.
+### 1.2 PROVE (subcommand of QUERY/EXPLAIN_QUERY)
+**Purpose:** Prove a statement using inference and validation. In the high-level API, `QUERY ... proof=true` or `EXPLAIN_QUERY ...` calls PROVE under the hood.
 
 **Syntax:**
 ```sys2dsl
@@ -48,8 +48,8 @@ Commands that trigger reasoning flows: validation, proofs, hypothesis generation
 
 ---
 
-### 1.4 CF (Counterfactual)
-**Purpose:** Answer a question under temporary facts (push/pop theory).
+### 1.4 CF (subcommand of WHATIF)
+**Purpose:** Answer a question under temporary facts (push/pop theory). High-level form: `WHATIF "<question>" | fact1 ; fact2`.
 
 **Syntax:**
 ```sys2dsl
@@ -60,8 +60,8 @@ Commands that trigger reasoning flows: validation, proofs, hypothesis generation
 
 ---
 
-### 1.5 ABDUCT
-**Purpose:** Abductive reasoning for causes/effects via facts or geometry.
+### 1.5 ABDUCT (subcommand of SUGGEST)
+**Purpose:** Abductive reasoning for causes/effects via facts or geometry. High-level form: `SUGGEST observation [relation]`; SUGGEST may fall back to ANALOGICAL when abductive results are empty.
 
 **Syntax:**
 ```sys2dsl

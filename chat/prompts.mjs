@@ -125,45 +125,313 @@ Respond with JSON only:
 
 /**
  * Build prompt to convert natural language question to Sys2DSL query
+ *
+ * This is a MODULAR prompt with clear structure:
+ * 1. TASK - what we want to accomplish
+ * 2. KNOWLEDGE CONTEXT - facts from the current theory (if provided)
+ * 3. COMMAND TYPE DETECTION - what kind of DSL command to generate
+ * 4. CONCEPT NORMALIZATION - how to normalize concepts
+ * 5. RELATION MAPPING - how to map verbs to relations
+ * 6. OUTPUT FORMAT - exact JSON structure required
+ * 7. EXAMPLES - comprehensive examples covering all patterns
+ *
  * @param {string} question - Natural language question
+ * @param {object} context - Optional context with theory facts
+ * @param {string} context.theory - Natural language description of current theory
+ * @param {string[]} context.facts - Array of DSL facts in current theory
  * @returns {string} Prompt for DSL generation
  */
-export function buildQuestionPrompt(question) {
-  return `Generate a Sys2DSL query for this natural language question.
+export function buildQuestionPrompt(question, context = null) {
+  // Build context section if provided
+  let contextSection = '';
+  if (context) {
+    contextSection = `
+═══════════════════════════════════════════════════════════════════════
+CURRENT KNOWLEDGE BASE (use these facts for concrete values):
+═══════════════════════════════════════════════════════════════════════
+`;
+    if (context.theory) {
+      contextSection += `\nDescription: ${context.theory}\n`;
+    }
+    if (context.facts && context.facts.length > 0) {
+      contextSection += `\nFacts (DSL format):\n${context.facts.map(f => `  ${f}`).join('\n')}\n`;
+    }
+    contextSection += `
+IMPORTANT: When generating RETRACT or ASSERT commands, use EXACT values from the facts above.
+For example, if the facts show "Alice HAS_SALARY 70000", use that exact value in RETRACT.
+`;
+  }
 
-Question: "${question}"
+  return `TASK: Convert this natural language question/command to Sys2DSL.
 
-OUTPUT FORMAT - respond with ONLY this JSON (no explanation):
+QUESTION: "${question}"
+${contextSection}
+
+═══════════════════════════════════════════════════════════════════════
+STEP 1: DETECT COMMAND TYPE
+═══════════════════════════════════════════════════════════════════════
+
+Identify what type of DSL command(s) is needed. Multiple commands can be combined:
+
+QUERY COMMANDS:
+| Pattern                                    | Command         | DSL Format                        |
+|--------------------------------------------|-----------------|-----------------------------------|
+| Yes/no questions (Is X a Y?)               | ASK             | ASK subject RELATION object       |
+| "Find all X" / "List all" / "Who are"      | FACTS_MATCHING  | FACTS_MATCHING subject RELATION object (use ? for wildcards) |
+| "What could cause" / "Diagnose"            | ABDUCT          | ABDUCT symptom                    |
+| "X is to Y as Z is to ?"                   | ANALOGICAL      | ANALOGICAL A B C                  |
+
+THEORY MANAGEMENT (for hypothetical/what-if scenarios):
+| Pattern                                    | Command         | DSL Format                        |
+|--------------------------------------------|-----------------|-----------------------------------|
+| "What if..." / "Suppose..." / "Imagine..." | THEORY_PUSH     | THEORY_PUSH scenario_name         |
+| "Restore" / "Go back" / "Undo hypothesis"  | THEORY_POP      | THEORY_POP                        |
+| "Save this scenario" / "Save as..."        | SAVE_THEORY     | SAVE_THEORY name                  |
+| "Merge scenario" / "Apply saved..."        | MERGE_THEORY    | MERGE_THEORY name                 |
+
+FACT MANAGEMENT:
+| Pattern                                    | Command         | DSL Format                        |
+|--------------------------------------------|-----------------|-----------------------------------|
+| "Add fact" / "Assert that"                 | ASSERT          | ASSERT subject RELATION object    |
+| "Remove fact" / "Retract"                  | RETRACT         | RETRACT subject RELATION object   |
+| "Forget about X" / "Remove all about"      | FORGET          | FORGET concept                    |
+
+OUTPUT FORMATTING:
+| Pattern                                    | Command         | DSL Format                        |
+|--------------------------------------------|-----------------|-----------------------------------|
+| "Summarize" / "Write about" / "Generate"   | TO_NATURAL      | TO_NATURAL var1 var2...           |
+| "As JSON" / "In JSON format"               | TO_JSON         | TO_JSON var                       |
+
+IMPORTANT: Complex requests require MULTIPLE commands in sequence!
+
+═══════════════════════════════════════════════════════════════════════
+STEP 2: CONCEPT NORMALIZATION
+═══════════════════════════════════════════════════════════════════════
+
+Extract concepts following these rules:
+• Named entities (specific individuals): Capitalized (Fido, Tokyo, Sparky, Tesla)
+• Generic types/categories: lowercase (dog, mammal, city, wheel, patient)
+• Multi-word concepts: use underscore (software_engineer, living_thing)
+• Remove articles: "a/an/the" → (nothing)
+• Use singular form: "wheels" → "wheel", "patients" → "patient"
+• Wildcards: use ? for unknown values in FACTS_MATCHING
+
+═══════════════════════════════════════════════════════════════════════
+STEP 3: RELATION MAPPING
+═══════════════════════════════════════════════════════════════════════
+
+| Pattern                          | Relation       | Example                          |
+|----------------------------------|----------------|----------------------------------|
+| "is/are X a Y"                   | IS_A           | Fido IS_A dog                    |
+| "is/are X in/at/located in Y"   | LOCATED_IN     | Tokyo LOCATED_IN Japan           |
+| "does X have Y"                  | HAS            | Tesla HAS wheel                  |
+| "does X use Y"                   | USES           | DroneA USES MotorX               |
+| "does X cause Y"                 | CAUSES         | fire CAUSES smoke                |
+| "does X require Y"               | REQUIRES       | human REQUIRES water             |
+| "is X part of Y"                 | PART_OF        | wheel PART_OF car                |
+| "did X happen before Y"          | BEFORE         | ww1 BEFORE ww2                   |
+| "did X come after Y"             | AFTER          | testing AFTER development        |
+| "can X do Y" (permission)        | PERMITTED_TO   | nurse PERMITTED_TO prescribe     |
+| "is X allowed to Y"              | PERMITTED_TO   | intern PERMITTED_TO access       |
+| "is X married to Y"              | MARRIED_TO     | Ion MARRIED_TO Maria             |
+| "is X sibling of Y"              | SIBLING_OF     | Ana SIBLING_OF Mihai             |
+| "is X child of Y"                | CHILD_OF       | Ana CHILD_OF Maria               |
+| "is X parent of Y"               | PARENT_OF      | Maria PARENT_OF Ana              |
+| "is X capital of Y"              | CAPITAL_OF     | Paris CAPITAL_OF France          |
+| "does X fly/swim/run/etc"        | CAN            | bird CAN fly                     |
+
+═══════════════════════════════════════════════════════════════════════
+STEP 4: OUTPUT FORMAT (JSON only)
+═══════════════════════════════════════════════════════════════════════
+
+For ASK commands (most common):
 {
+  "command": "ASK",
   "type": "yes_no",
-  "canonical": { "subject": "X", "relation": "REL", "object": "Y" },
-  "confidence": 0.9
+  "canonical": {
+    "subject": "<subject>",
+    "relation": "<RELATION>",
+    "object": "<object>"
+  },
+  "confidence": 0.95
 }
 
-SYNTAX RULES:
-- subject/object: concept names, lowercase for types (dog, mammal), Capitalized for instances (Fido, Tokyo)
-- relation: UPPERCASE with underscores (IS_A, LOCATED_IN, CAUSES)
-- Remove articles (a, an, the) from concepts
-- Singular form (dogs→dog, animals→animal)
-- Multi-word concepts use underscore (living_thing, software_engineer)
+For FACTS_MATCHING commands (list/find queries):
+{
+  "command": "FACTS_MATCHING",
+  "type": "list",
+  "canonical": {
+    "subject": "<subject or ?>",
+    "relation": "<RELATION>",
+    "object": "<object or ?>"
+  },
+  "confidence": 0.95
+}
 
-RELATION MAPPING:
-"is a/an" → IS_A | "in/located in" → LOCATED_IN | "causes/cause" → CAUSES
-"has/have" → HAS | "part of" → PART_OF | "helps/help" → HELPS
-"requires/needs" → REQUIRES | "can/able to" → CAN | "permits/allows" → PERMITS
-"prohibits/forbids" → PROHIBITED_BY | Any other verb → UPPERCASE (eats→EATS)
+For ABDUCT commands (diagnosis/cause finding):
+{
+  "command": "ABDUCT",
+  "type": "diagnosis",
+  "canonical": {
+    "symptom": "<observed symptom>"
+  },
+  "confidence": 0.95
+}
 
-EXAMPLES:
-"Is Fido a dog?" → {"type":"yes_no","canonical":{"subject":"Fido","relation":"IS_A","object":"dog"},"confidence":0.95}
-"Is Tokyo in Europe?" → {"type":"yes_no","canonical":{"subject":"Tokyo","relation":"LOCATED_IN","object":"Europe"},"confidence":0.95}
-"Do doctors help patients?" → {"type":"yes_no","canonical":{"subject":"doctor","relation":"HELPS","object":"patient"},"confidence":0.95}
-"Does fire cause smoke?" → {"type":"yes_no","canonical":{"subject":"fire","relation":"CAUSES","object":"smoke"},"confidence":0.95}
-"Is a bird a mammal?" → {"type":"yes_no","canonical":{"subject":"bird","relation":"IS_A","object":"mammal"},"confidence":0.95}
-"Does Tesla have wheels?" → {"type":"yes_no","canonical":{"subject":"Tesla","relation":"HAS","object":"wheel"},"confidence":0.95}
-"Is a software engineer an engineer?" → {"type":"yes_no","canonical":{"subject":"software_engineer","relation":"IS_A","object":"engineer"},"confidence":0.95}
-"Can a drone fly over a hospital?" → {"type":"yes_no","canonical":{"subject":"drone","relation":"CAN","object":"fly_over_hospital"},"confidence":0.9}
+For ANALOGICAL commands (A:B :: C:?):
+{
+  "command": "ANALOGICAL",
+  "type": "analogy",
+  "canonical": {
+    "a": "<first term>",
+    "b": "<second term>",
+    "c": "<third term>"
+  },
+  "confidence": 0.95
+}
 
-Respond with JSON only:`;
+For SEQUENCE (multiple commands - use for hypotheticals, what-if, multi-step):
+{
+  "command": "SEQUENCE",
+  "type": "multi_step",
+  "steps": [
+    {"command": "THEORY_PUSH", "name": "scenario_name"},
+    {"command": "ASSERT", "subject": "X", "relation": "REL", "object": "Y"},
+    {"command": "ASK", "subject": "X", "relation": "REL", "object": "Y"},
+    {"command": "THEORY_POP"}
+  ],
+  "confidence": 0.95
+}
+
+For THEORY_PUSH (start hypothetical scenario):
+{
+  "command": "THEORY_PUSH",
+  "type": "hypothetical",
+  "canonical": {"name": "scenario_name"},
+  "confidence": 0.95
+}
+
+For ASSERT/RETRACT (add/remove facts):
+{
+  "command": "ASSERT",
+  "type": "fact_management",
+  "canonical": {"subject": "X", "relation": "REL", "object": "Y"},
+  "confidence": 0.95
+}
+
+For TO_NATURAL (summarize/generate text from facts):
+{
+  "command": "TO_NATURAL",
+  "type": "summarize",
+  "canonical": {"vars": ["var1", "var2"]},
+  "confidence": 0.95
+}
+
+═══════════════════════════════════════════════════════════════════════
+EXAMPLES (input → output)
+═══════════════════════════════════════════════════════════════════════
+
+ASK EXAMPLES (yes/no questions):
+
+"Is Fido a dog?"
+{"command":"ASK","type":"yes_no","canonical":{"subject":"Fido","relation":"IS_A","object":"dog"},"confidence":0.95}
+
+"Does DroneA use MotorX?"
+{"command":"ASK","type":"yes_no","canonical":{"subject":"DroneA","relation":"USES","object":"MotorX"},"confidence":0.95}
+
+"Can a nurse prescribe medication?"
+{"command":"ASK","type":"yes_no","canonical":{"subject":"nurse","relation":"PERMITTED_TO","object":"prescribe_medication"},"confidence":0.95}
+
+"Did World War 1 happen before World War 2?"
+{"command":"ASK","type":"yes_no","canonical":{"subject":"world_war_1","relation":"BEFORE","object":"world_war_2"},"confidence":0.95}
+
+"Does fire cause smoke?"
+{"command":"ASK","type":"yes_no","canonical":{"subject":"fire","relation":"CAUSES","object":"smoke"},"confidence":0.95}
+
+"Is Ion married to Maria?"
+{"command":"ASK","type":"yes_no","canonical":{"subject":"Ion","relation":"MARRIED_TO","object":"Maria"},"confidence":0.95}
+
+"Does human require water?"
+{"command":"ASK","type":"yes_no","canonical":{"subject":"human","relation":"REQUIRES","object":"water"},"confidence":0.95}
+
+"Is approval needed before implementation?"
+{"command":"ASK","type":"yes_no","canonical":{"subject":"approval","relation":"BEFORE","object":"implementation"},"confidence":0.95}
+
+"Is patient consent required for treatment?"
+{"command":"ASK","type":"yes_no","canonical":{"subject":"treatment","relation":"REQUIRES","object":"patient_consent"},"confidence":0.95}
+
+"Can a customer view their own account?"
+{"command":"ASK","type":"yes_no","canonical":{"subject":"customer","relation":"PERMITTED_TO","object":"view_own_account"},"confidence":0.95}
+
+"Does testing come before or after development?"
+{"command":"ASK","type":"yes_no","canonical":{"subject":"testing","relation":"AFTER","object":"development"},"confidence":0.95}
+
+"If humans had no water, could they survive?"
+{"command":"ASK","type":"yes_no","canonical":{"subject":"human","relation":"REQUIRES","object":"water"},"confidence":0.95}
+
+FACTS_MATCHING EXAMPLES (list/find queries with ? wildcards):
+
+"Find all capital-country pairs"
+{"command":"FACTS_MATCHING","type":"list","canonical":{"subject":"?","relation":"CAPITAL_OF","object":"?"},"confidence":0.95}
+
+"Who are the children of Ion?"
+{"command":"FACTS_MATCHING","type":"list","canonical":{"subject":"Ion","relation":"PARENT_OF","object":"?"},"confidence":0.95}
+
+"Who are Ana's parents?"
+{"command":"FACTS_MATCHING","type":"list","canonical":{"subject":"?","relation":"PARENT_OF","object":"Ana"},"confidence":0.95}
+
+"List all things that cause fever"
+{"command":"FACTS_MATCHING","type":"list","canonical":{"subject":"?","relation":"CAUSES","object":"fever"},"confidence":0.95}
+
+"What are all the types of vehicles?"
+{"command":"FACTS_MATCHING","type":"list","canonical":{"subject":"?","relation":"IS_A","object":"vehicle"},"confidence":0.95}
+
+ABDUCT EXAMPLES (diagnosis/cause finding):
+
+"What could cause John's symptoms?"
+{"command":"ABDUCT","type":"diagnosis","canonical":{"symptom":"fever"},"confidence":0.95}
+
+"Could Mary have food poisoning?"
+{"command":"ABDUCT","type":"diagnosis","canonical":{"symptom":"stomach_pain"},"confidence":0.95}
+
+ANALOGICAL EXAMPLES (A:B :: C:?):
+
+"Bucharest is to Romania as Paris is to what?"
+{"command":"ANALOGICAL","type":"analogy","canonical":{"a":"Bucharest","b":"Romania","c":"Paris"},"confidence":0.95}
+
+"Doctor is to patient as teacher is to what?"
+{"command":"ANALOGICAL","type":"analogy","canonical":{"a":"doctor","b":"patient","c":"teacher"},"confidence":0.95}
+
+SEQUENCE EXAMPLES (multi-step hypothetical scenarios):
+
+"What if Alice became a manager? Could she then access all files?"
+{"command":"SEQUENCE","type":"multi_step","steps":[{"command":"THEORY_PUSH","name":"alice_manager"},{"command":"ASSERT","subject":"Alice","relation":"IS_A","object":"manager"},{"command":"ASK","subject":"Alice","relation":"CAN_ACCESS","object":"all_files"},{"command":"THEORY_POP"}],"confidence":0.95}
+
+"Suppose we double the Engineering budget to 200000. Save this scenario."
+{"command":"SEQUENCE","type":"multi_step","steps":[{"command":"THEORY_PUSH","name":"budget_increase"},{"command":"RETRACT","subject":"Engineering","relation":"HAS_BUDGET","object":"100000"},{"command":"ASSERT","subject":"Engineering","relation":"HAS_BUDGET","object":"200000"},{"command":"SAVE_THEORY","name":"budget_increase_scenario"}],"confidence":0.95}
+
+"If Bob transferred to Engineering, could he access Engineering files? Then restore."
+{"command":"SEQUENCE","type":"multi_step","steps":[{"command":"THEORY_PUSH","name":"bob_transfer"},{"command":"RETRACT","subject":"Bob","relation":"WORKS_IN","object":"Sales"},{"command":"ASSERT","subject":"Bob","relation":"WORKS_IN","object":"Engineering"},{"command":"ASK","subject":"Bob","relation":"CAN_ACCESS","object":"department_files"},{"command":"THEORY_POP"}],"confidence":0.95}
+
+"Create a cost-cutting scenario: reduce Alice salary to 60000, save it, then restore."
+{"command":"SEQUENCE","type":"multi_step","steps":[{"command":"THEORY_PUSH","name":"cost_cutting"},{"command":"RETRACT","subject":"Alice","relation":"HAS_SALARY","object":"70000"},{"command":"ASSERT","subject":"Alice","relation":"HAS_SALARY","object":"60000"},{"command":"SAVE_THEORY","name":"cost_cutting_plan"},{"command":"THEORY_POP"}],"confidence":0.95}
+
+SUMMARIZE/ESSAY EXAMPLES (TO_NATURAL with FACTS_MATCHING):
+
+"Summarize the economic impacts of climate change."
+{"command":"SEQUENCE","type":"summarize","steps":[{"command":"FACTS_MATCHING","var":"jobs","subject":"?","relation":"CREATES","object":"jobs"},{"command":"FACTS_MATCHING","var":"costs","subject":"?","relation":"COSTS","object":"money"},{"command":"FACTS_MATCHING","var":"affects","subject":"?","relation":"AFFECTS","object":"businesses"},{"command":"TO_NATURAL","vars":["jobs","costs","affects"]}],"confidence":0.95}
+
+"Write a brief introduction about what AI can do."
+{"command":"SEQUENCE","type":"summarize","steps":[{"command":"FACTS_MATCHING","var":"capabilities","subject":"AI","relation":"CAN","object":"?"},{"command":"FACTS_MATCHING","var":"assists","subject":"AI","relation":"ASSISTS_IN","object":"?"},{"command":"FACTS_MATCHING","var":"enables","subject":"AI","relation":"ENABLES","object":"?"},{"command":"TO_NATURAL","vars":["capabilities","assists","enables"]}],"confidence":0.95}
+
+"What solutions reduce carbon emissions?"
+{"command":"FACTS_MATCHING","type":"list","canonical":{"subject":"?","relation":"REDUCES","object":"carbon_emissions"},"confidence":0.95}
+
+"Compare what increases vs decreases carbon emissions."
+{"command":"SEQUENCE","type":"compare","steps":[{"command":"FACTS_MATCHING","var":"increases","subject":"?","relation":"INCREASES","object":"carbon_emissions"},{"command":"FACTS_MATCHING","var":"decreases","subject":"?","relation":"REDUCES","object":"carbon_emissions"},{"command":"TO_NATURAL","vars":["increases","decreases"]}],"confidence":0.95}
+
+═══════════════════════════════════════════════════════════════════════
+OUTPUT (JSON only, no explanation):`;
 }
 
 /**

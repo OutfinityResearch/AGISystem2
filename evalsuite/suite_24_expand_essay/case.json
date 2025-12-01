@@ -1,0 +1,119 @@
+{
+  "id": "suite_24_expand_essay",
+  "name": "Essay Generation and Knowledge Expansion",
+  "description": "Tests ability to query structured content for essays and reports from knowledge base",
+
+  "theory": {
+    "natural_language": "Artificial Intelligence facts: Machine learning is a type of AI. Deep learning is a type of machine learning. Neural networks power deep learning. AI can recognize images. AI can understand speech. AI can translate languages. AI assists in medical diagnosis. AI helps in drug discovery. AI enables autonomous vehicles. Ethical concerns: AI raises privacy concerns. AI may cause job displacement. AI bias affects decisions. AI needs regulation. AI should be transparent. Benefits: AI increases productivity. AI reduces human error. AI enables personalization. AI accelerates research. Historical context: Alan Turing proposed the Turing test. The term AI was coined in 1956. Expert systems emerged in the 1980s. Deep learning breakthrough in 2012. ChatGPT launched in 2022.",
+    "expected_facts": [
+      "machine_learning IS_A AI",
+      "deep_learning IS_A machine_learning",
+      "neural_networks POWERS deep_learning",
+      "AI CAN recognize_images",
+      "AI CAN understand_speech",
+      "AI CAN translate_languages",
+      "AI ASSISTS_IN medical_diagnosis",
+      "AI HELPS_IN drug_discovery",
+      "AI ENABLES autonomous_vehicles",
+      "AI RAISES privacy_concerns",
+      "AI MAY_CAUSE job_displacement",
+      "AI_bias AFFECTS decisions",
+      "AI NEEDS regulation",
+      "AI SHOULD_BE transparent",
+      "AI INCREASES productivity",
+      "AI REDUCES human_error",
+      "AI ENABLES personalization",
+      "AI ACCELERATES research",
+      "Alan_Turing PROPOSED Turing_test",
+      "term_AI COINED_IN 1956",
+      "expert_systems EMERGED_IN 1980s",
+      "deep_learning_breakthrough OCCURRED_IN 2012",
+      "ChatGPT LAUNCHED_IN 2022"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "What can AI do?",
+      "expected_dsl": "@q1 FACTS_MATCHING AI CAN ?",
+      "expected_answer": {
+        "natural_language": "AI can recognize images, understand speech, and translate languages.",
+        "truth": "LIST",
+        "explanation": "AI capabilities extracted"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Does AI raise privacy concerns?",
+      "expected_dsl": "@q2 ASK AI RAISES privacy_concerns",
+      "expected_answer": {
+        "natural_language": "Yes, AI raises privacy concerns.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Privacy concern confirmed"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "When was the term AI coined?",
+      "expected_dsl": "@q3 ASK term_AI COINED_IN 1956",
+      "expected_answer": {
+        "natural_language": "The term AI was coined in 1956.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Historical fact confirmed"
+      }
+    },
+    {
+      "id": "q4",
+      "natural_language": "Is deep learning a type of machine learning?",
+      "expected_dsl": "@q4 ASK deep_learning IS_A machine_learning",
+      "expected_answer": {
+        "natural_language": "Yes, deep learning is a type of machine learning.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Hierarchical IS_A relationship"
+      }
+    },
+    {
+      "id": "q5",
+      "natural_language": "What does AI increase?",
+      "expected_dsl": "@q5 FACTS_MATCHING AI INCREASES ?",
+      "expected_answer": {
+        "natural_language": "AI increases productivity.",
+        "truth": "LIST",
+        "explanation": "AI benefit extracted"
+      }
+    },
+    {
+      "id": "q6",
+      "natural_language": "Does AI assist in medical diagnosis?",
+      "expected_dsl": "@q6 ASK AI ASSISTS_IN medical_diagnosis",
+      "expected_answer": {
+        "natural_language": "Yes, AI assists in medical diagnosis.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Healthcare application confirmed"
+      }
+    },
+    {
+      "id": "q7",
+      "natural_language": "What does AI help in?",
+      "expected_dsl": "@q7 FACTS_MATCHING AI HELPS_IN ?",
+      "expected_answer": {
+        "natural_language": "AI helps in drug discovery.",
+        "truth": "LIST",
+        "explanation": "AI applications extracted"
+      }
+    },
+    {
+      "id": "q8",
+      "natural_language": "Does AI need regulation?",
+      "expected_dsl": "@q8 ASK AI NEEDS regulation",
+      "expected_answer": {
+        "natural_language": "Yes, AI needs regulation.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Regulatory need confirmed"
+      }
+    }
+  ],
+
+  "tags": ["essay", "generation", "expansion", "comprehensive", "AI"]
+}

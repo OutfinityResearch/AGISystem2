@@ -1,0 +1,118 @@
+{
+  "id": "suite_23_summarize_perspective",
+  "name": "Summarization from Different Perspectives",
+  "description": "Tests the ability to summarize knowledge from specific viewpoints, filtering facts through perspective masks",
+
+  "theory": {
+    "natural_language": "Climate change facts: Carbon emissions cause global warming. Global warming causes ice melting. Ice melting causes sea level rise. Sea level rise threatens coastal cities. Renewable energy reduces carbon emissions. Solar power is renewable energy. Wind power is renewable energy. Electric vehicles reduce emissions. Deforestation increases carbon emissions. Planting trees reduces carbon emissions. Economic perspective: Renewable energy creates jobs. Carbon tax affects businesses. Climate adaptation costs money. Green technology is an investment. Social perspective: Climate change affects health. Heat waves cause deaths. Air pollution causes respiratory disease. Climate refugees are increasing. Environmental perspective: Biodiversity loss accelerates. Coral reefs are dying. Species extinction increases. Ecosystems are disrupted.",
+    "expected_facts": [
+      "carbon_emissions CAUSES global_warming",
+      "global_warming CAUSES ice_melting",
+      "ice_melting CAUSES sea_level_rise",
+      "sea_level_rise THREATENS coastal_cities",
+      "renewable_energy REDUCES carbon_emissions",
+      "solar_power IS_A renewable_energy",
+      "wind_power IS_A renewable_energy",
+      "electric_vehicles REDUCES emissions",
+      "deforestation INCREASES carbon_emissions",
+      "planting_trees REDUCES carbon_emissions",
+      "renewable_energy CREATES jobs",
+      "carbon_tax AFFECTS businesses",
+      "climate_adaptation COSTS money",
+      "green_technology IS_A investment",
+      "climate_change AFFECTS health",
+      "heat_waves CAUSES deaths",
+      "air_pollution CAUSES respiratory_disease",
+      "climate_refugees INCREASING true",
+      "biodiversity_loss ACCELERATING true",
+      "coral_reefs DYING true",
+      "species_extinction INCREASING true",
+      "ecosystems DISRUPTED true"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Does renewable energy create jobs?",
+      "expected_dsl": "@q1 ASK renewable_energy CREATES jobs",
+      "expected_answer": {
+        "natural_language": "Yes, renewable energy creates jobs.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Economic benefit confirmed"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Does climate change affect health?",
+      "expected_dsl": "@q2 ASK climate_change AFFECTS health",
+      "expected_answer": {
+        "natural_language": "Yes, climate change affects health.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Health impact confirmed"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "What causes global warming?",
+      "expected_dsl": "@q3 FACTS_MATCHING ? CAUSES global_warming",
+      "expected_answer": {
+        "natural_language": "Carbon emissions cause global warming.",
+        "truth": "LIST",
+        "explanation": "Cause of global warming extracted"
+      }
+    },
+    {
+      "id": "q4",
+      "natural_language": "What reduces carbon emissions?",
+      "expected_dsl": "@q4 FACTS_MATCHING ? REDUCES carbon_emissions",
+      "expected_answer": {
+        "natural_language": "Renewable energy and planting trees reduce carbon emissions.",
+        "truth": "LIST",
+        "explanation": "Solutions for reducing emissions"
+      }
+    },
+    {
+      "id": "q5",
+      "natural_language": "What types of renewable energy exist?",
+      "expected_dsl": "@q5 FACTS_MATCHING ? IS_A renewable_energy",
+      "expected_answer": {
+        "natural_language": "Solar power and wind power are types of renewable energy.",
+        "truth": "LIST",
+        "explanation": "Renewable energy types extracted"
+      }
+    },
+    {
+      "id": "q6",
+      "natural_language": "Does sea level rise threaten coastal cities?",
+      "expected_dsl": "@q6 ASK sea_level_rise THREATENS coastal_cities",
+      "expected_answer": {
+        "natural_language": "Yes, sea level rise threatens coastal cities.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Threat to coastal areas confirmed"
+      }
+    },
+    {
+      "id": "q7",
+      "natural_language": "What does global warming cause?",
+      "expected_dsl": "@q7 FACTS_MATCHING global_warming CAUSES ?",
+      "expected_answer": {
+        "natural_language": "Global warming causes ice melting.",
+        "truth": "LIST",
+        "explanation": "Effects of global warming"
+      }
+    },
+    {
+      "id": "q8",
+      "natural_language": "What increases carbon emissions?",
+      "expected_dsl": "@q8 FACTS_MATCHING ? INCREASES carbon_emissions",
+      "expected_answer": {
+        "natural_language": "Deforestation increases carbon emissions.",
+        "truth": "LIST",
+        "explanation": "Sources of emissions extracted"
+      }
+    }
+  ],
+
+  "tags": ["summarization", "perspective", "filtering", "comprehensive", "climate"]
+}

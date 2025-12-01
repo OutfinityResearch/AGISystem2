@@ -1,11 +1,11 @@
 # =============================================================================
-# storage_case17
+# cost_cutting_plan
 # =============================================================================
 # =============================================================================
 
-# Theory: storage_case17
-# Saved: 2025-12-01T17:16:33.128Z
-# Facts: 164
+# Theory: cost_cutting_plan
+# Saved: 2025-12-01T17:11:46.929Z
+# Facts: 169
 
 @f001 ASSERT undefined undefined undefined
 @f002 ASSERT undefined undefined undefined
@@ -163,11 +163,16 @@
 @f154 ASSERT undefined undefined undefined
 @f155 ASSERT undefined undefined undefined
 @f156 ASSERT undefined undefined undefined
-@f157 ASSERT DiskA PART_OF Computer
-@f158 ASSERT MemoryB PART_OF Server
-@f159 ASSERT CPUC PART_OF Workstation
-@f160 ASSERT NetworkD CONNECTS_TO Router
-@f161 ASSERT PowerSupply POWERS Computer
-@f162 ASSERT CoolingFan COOLS Server
-@f163 ASSERT GraphicsCard PART_OF Workstation
-@f164 ASSERT Switch CONNECTS_TO Router
+@f157 ASSERT Alice IS_A employee
+@f158 ASSERT Bob IS_A employee
+@f159 ASSERT Alice WORKS_IN Engineering
+@f160 ASSERT Bob WORKS_IN Sales
+@f161 ASSERT Sales HAS_BUDGET 80000
+@f162 ASSERT Bob HAS_SALARY 60000
+@f163 ASSERT employee CAN_ACCESS department_files
+@f164 ASSERT manager CAN_ACCESS all_files
+@f165 ASSERT Alice IS_A manager FALSE
+@f166 ASSERT Bob IS_A manager FALSE
+@f167 ASSERT Engineering HAS_BUDGET 200000
+@f168 ASSERT Alice HAS_SALARY 60000
+@f169 ASSERT Bob HAS_SALARY 50000

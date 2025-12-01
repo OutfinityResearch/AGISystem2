@@ -1,0 +1,133 @@
+{
+  "id": "suite_26_tool_planning",
+  "name": "Tool Usage Planning and Sequencing",
+  "description": "Tests the ability to plan sequences of tool calls to accomplish goals, understanding tool capabilities and dependencies",
+
+  "theory": {
+    "natural_language": "Available tools for data processing: fetch_url tool retrieves web content and requires a URL input. parse_html tool extracts data from HTML and requires HTML content input. save_file tool writes data to disk and requires data and filename inputs. send_email tool sends messages and requires recipient and content inputs. compress_file tool creates archives and requires a file path input. validate_data tool checks data format and requires data input. transform_json tool converts formats and requires JSON input. Available tools for image processing: load_image tool reads image files and requires a file path. resize_image tool changes dimensions and requires an image and size. apply_filter tool adds effects and requires an image and filter name. save_image tool writes image to disk and requires an image and path. Tool dependencies: parse_html requires output from fetch_url. save_file can accept output from any tool. compress_file requires output from save_file. resize_image requires output from load_image. apply_filter requires output from resize_image or load_image. send_email requires output from save_file or transform_json.",
+    "expected_facts": [
+      "fetch_url IS_A tool",
+      "fetch_url REQUIRES url_input",
+      "fetch_url PRODUCES html_content",
+      "parse_html IS_A tool",
+      "parse_html REQUIRES html_content",
+      "parse_html PRODUCES structured_data",
+      "save_file IS_A tool",
+      "save_file REQUIRES data",
+      "save_file REQUIRES filename",
+      "save_file PRODUCES file_path",
+      "send_email IS_A tool",
+      "send_email REQUIRES recipient",
+      "send_email REQUIRES content",
+      "compress_file IS_A tool",
+      "compress_file REQUIRES file_path",
+      "compress_file PRODUCES archive_path",
+      "validate_data IS_A tool",
+      "validate_data REQUIRES data",
+      "transform_json IS_A tool",
+      "transform_json REQUIRES json_input",
+      "load_image IS_A tool",
+      "load_image REQUIRES file_path",
+      "load_image PRODUCES image",
+      "resize_image IS_A tool",
+      "resize_image REQUIRES image",
+      "resize_image REQUIRES size",
+      "resize_image PRODUCES image",
+      "apply_filter IS_A tool",
+      "apply_filter REQUIRES image",
+      "apply_filter REQUIRES filter_name",
+      "save_image IS_A tool",
+      "save_image REQUIRES image",
+      "save_image REQUIRES path",
+      "parse_html DEPENDS_ON fetch_url",
+      "compress_file DEPENDS_ON save_file",
+      "resize_image DEPENDS_ON load_image",
+      "apply_filter DEPENDS_ON load_image"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "What does fetch_url produce?",
+      "expected_dsl": "@q1 FACTS_MATCHING fetch_url PRODUCES ?",
+      "expected_answer": {
+        "natural_language": "fetch_url produces html_content.",
+        "truth": "LIST",
+        "explanation": "Tool output capability"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "What does parse_html require?",
+      "expected_dsl": "@q2 FACTS_MATCHING parse_html REQUIRES ?",
+      "expected_answer": {
+        "natural_language": "parse_html requires html_content.",
+        "truth": "LIST",
+        "explanation": "Tool input requirement"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Does parse_html depend on fetch_url?",
+      "expected_dsl": "@q3 ASK parse_html DEPENDS_ON fetch_url",
+      "expected_answer": {
+        "natural_language": "Yes, parse_html depends on fetch_url.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Tool dependency confirmed"
+      }
+    },
+    {
+      "id": "q4",
+      "natural_language": "What tools are available?",
+      "expected_dsl": "@q4 FACTS_MATCHING ? IS_A tool",
+      "expected_answer": {
+        "natural_language": "Available tools: fetch_url, parse_html, save_file, send_email, compress_file, validate_data, transform_json, load_image, resize_image, apply_filter, save_image.",
+        "truth": "LIST",
+        "explanation": "List all tools"
+      }
+    },
+    {
+      "id": "q5",
+      "natural_language": "What does resize_image depend on?",
+      "expected_dsl": "@q5 FACTS_MATCHING resize_image DEPENDS_ON ?",
+      "expected_answer": {
+        "natural_language": "resize_image depends on load_image.",
+        "truth": "LIST",
+        "explanation": "Image tool dependency"
+      }
+    },
+    {
+      "id": "q6",
+      "natural_language": "What does save_file require?",
+      "expected_dsl": "@q6 FACTS_MATCHING save_file REQUIRES ?",
+      "expected_answer": {
+        "natural_language": "save_file requires data and filename.",
+        "truth": "LIST",
+        "explanation": "Multiple requirements"
+      }
+    },
+    {
+      "id": "q7",
+      "natural_language": "Does compress_file depend on save_file?",
+      "expected_dsl": "@q7 ASK compress_file DEPENDS_ON save_file",
+      "expected_answer": {
+        "natural_language": "Yes, compress_file depends on save_file.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Archive tool dependency"
+      }
+    },
+    {
+      "id": "q8",
+      "natural_language": "What produces an image?",
+      "expected_dsl": "@q8 FACTS_MATCHING ? PRODUCES image",
+      "expected_answer": {
+        "natural_language": "load_image and resize_image produce images.",
+        "truth": "LIST",
+        "explanation": "Tools that output images"
+      }
+    }
+  ],
+
+  "tags": ["tool_planning", "sequencing", "dependencies", "agentic"]
+}

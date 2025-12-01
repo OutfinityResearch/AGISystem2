@@ -1,33 +1,92 @@
 {
   "id": "suite_21_boost_forget",
   "name": "Boost Before Forgetting",
-  "description": "Boost a concept's usage so it survives a forgetting pass while an unboosted, low-usage concept is removed.",
+  "description": "Tests BOOST command to increase concept usage so it survives forgetting passes. Each query creates its own isolated facts to test boost/forget independently.",
   "theory": {
-    "natural_language": "We track two notes: ImportantNote and ScratchNote. We will boost ImportantNote to increase its usage, then run forgetting with a threshold that should drop low-usage concepts. ImportantNote should survive; ScratchNote should be gone.",
+    "natural_language": "Base theory with minimal facts. Each query will create and test its own concepts for boost/forget scenarios.",
     "expected_facts": [
-      "ImportantNote IS_A note",
-      "ScratchNote IS_A note"
+      "BaseEntity IS_A thing"
     ]
   },
   "queries": [
     {
       "id": "q1",
-      "natural_language": "After boosting ImportantNote and forgetting low-usage concepts, is ImportantNote still known?",
-      "expected_dsl": "@boost BOOST ImportantNote 5\n@forget FORGET threshold=3\n@q1 ASK ImportantNote IS_A note",
+      "natural_language": "Create and boost ImportantNote, then forget - should survive.",
+      "expected_dsl": "@a1 ASSERT ImportantNote IS_A note\n@boost BOOST ImportantNote 5\n@forget FORGET threshold=3\n@q1 ASK ImportantNote IS_A note",
       "expected_answer": {
-        "natural_language": "Yes. ImportantNote was boosted above the threshold and should still be present.",
+        "natural_language": "Yes. ImportantNote was asserted, boosted to 5, above threshold 3.",
         "truth": "TRUE_CERTAIN",
         "explanation": "BOOST raises usageCount; FORGET threshold=3 removes only low-usage concepts."
       }
     },
     {
       "id": "q2",
-      "natural_language": "After the same forgetting pass, is ScratchNote still known?",
-      "expected_dsl": "@q2 ASK ScratchNote IS_A note",
+      "natural_language": "Create ScratchNote without boosting, then forget - should be removed.",
+      "expected_dsl": "@a2 ASSERT ScratchNote IS_A scratch\n@forget2 FORGET threshold=3\n@q2 ASK ScratchNote IS_A scratch",
       "expected_answer": {
-        "natural_language": "No. ScratchNote had low usage and should have been forgotten.",
+        "natural_language": "No. ScratchNote had low usage (1) and was forgotten.",
         "truth": "UNKNOWN",
-        "explanation": "FORGET threshold=3 removes the unboosted ScratchNote."
+        "explanation": "FORGET threshold=3 removes unboosted ScratchNote."
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Create and boost CriticalItem with high value, use high threshold.",
+      "expected_dsl": "@a3 ASSERT CriticalItem IS_A item\n@boost2 BOOST CriticalItem 20\n@forget3 FORGET threshold=10\n@q3 ASK CriticalItem IS_A item",
+      "expected_answer": {
+        "natural_language": "Yes. CriticalItem was boosted to 20, above threshold 10.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "High boost value ensures survival against high threshold."
+      }
+    },
+    {
+      "id": "q4",
+      "natural_language": "Create TempItem, don't boost, use high threshold - should be removed.",
+      "expected_dsl": "@a4 ASSERT TempItem IS_A temp\n@forget4 FORGET threshold=10\n@q4 ASK TempItem IS_A temp",
+      "expected_answer": {
+        "natural_language": "No. TempItem was not boosted and is below threshold.",
+        "truth": "UNKNOWN",
+        "explanation": "Unboosted TempItem removed by threshold=10 forget."
+      }
+    },
+    {
+      "id": "q5",
+      "natural_language": "Create HighPriority, boost to exactly threshold, should survive.",
+      "expected_dsl": "@a5 ASSERT HighPriority IS_A task\n@boost3 BOOST HighPriority 4\n@forget5 FORGET threshold=5\n@q5 ASK HighPriority IS_A task",
+      "expected_answer": {
+        "natural_language": "Yes. Boost of 4 + initial usage of 1 = 5, equals threshold 5.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Usage >= threshold means survival."
+      }
+    },
+    {
+      "id": "q6",
+      "natural_language": "Create LowPriority, boost above threshold, should survive.",
+      "expected_dsl": "@a6 ASSERT LowPriority IS_A work\n@boost4 BOOST LowPriority 8\n@forget6 FORGET threshold=5\n@q6 ASK LowPriority IS_A work",
+      "expected_answer": {
+        "natural_language": "Yes. LowPriority boosted to 8+1=9, above threshold 5.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Sufficient boost ensures survival."
+      }
+    },
+    {
+      "id": "q7",
+      "natural_language": "Create Essential, boost to 5, threshold 5, should survive.",
+      "expected_dsl": "@a7 ASSERT Essential IS_A concept\n@boost5 BOOST Essential 5\n@forget7 FORGET threshold=5\n@q7 ASK Essential IS_A concept",
+      "expected_answer": {
+        "natural_language": "Yes. Essential boosted to 5+1=6, above threshold 5.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Usage 6 >= threshold 5 means survival."
+      }
+    },
+    {
+      "id": "q8",
+      "natural_language": "Create Disposable, no boost, threshold 5, should be removed.",
+      "expected_dsl": "@a8 ASSERT Disposable IS_A junk\n@forget8 FORGET threshold=5\n@q8 ASK Disposable IS_A junk",
+      "expected_answer": {
+        "natural_language": "No. Disposable had no boost (usage=1), below threshold 5.",
+        "truth": "UNKNOWN",
+        "explanation": "Unboosted concept removed by forget."
       }
     }
   ]

@@ -278,6 +278,15 @@ export async function handleAsk(ctx, message, details) {
 
     if (parsedQuestion?.type === 'yes_no' && parsedQuestion.canonical) {
       const { subject, relation, object } = parsedQuestion.canonical;
+
+      // Always add the query action if we have canonical form (for DSL representation)
+      // This ensures [DSL Representation] is always shown in debug mode
+      const canonicalQuery = {
+        subject: subject || '?',
+        relation: relation || 'IS_A',
+        object: object || '?'
+      };
+
       if (subject && relation && object) {
         // Use InferenceEngine for better reasoning
         const inferenceEngine = new InferenceEngine({});
@@ -325,9 +334,18 @@ export async function handleAsk(ctx, message, details) {
             }
           }
         }
-
-        actions.push({ type: 'query', query: parsedQuestion.canonical, result });
+      } else {
+        // Incomplete parse - still record what we could extract
+        result = {
+          truth: 'UNKNOWN',
+          method: 'incomplete_parse',
+          confidence: 0,
+          explanation: `Could not fully parse question. Extracted: subject=${subject || '?'}, relation=${relation || '?'}, object=${object || '?'}`
+        };
       }
+
+      // Always add query action to ensure DSL is shown
+      actions.push({ type: 'query', query: canonicalQuery, result });
     } else if (parsedQuestion?.type === 'causes' || parsedQuestion?.type === 'effects') {
       const subject = parsedQuestion.canonical?.subject || '';
       const causeFacts = facts.filter(f =>
@@ -348,7 +366,8 @@ export async function handleAsk(ctx, message, details) {
       // General query - try to extract subject/relation/object and use inference
       const env2 = session.run([`@q ASK "${message}"`]);
       result = env2.q || env2.result || {};
-      actions.push({ type: 'query', result });
+      // Include a placeholder query object so DSL representation can be generated
+      actions.push({ type: 'query', query: { subject: '?', relation: 'QUERY', object: message }, result });
     }
   } catch (err) {
     result = { error: err.message };

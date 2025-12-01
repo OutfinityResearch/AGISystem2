@@ -9,15 +9,6 @@
       "lastRun": "2025-11-28T10:39:57.358Z"
     },
     {
-      "id": "25_deontic_priority",
-      "name": "Deontic Priority Rules",
-      "failedQueries": [
-        "q2",
-        "q3"
-      ],
-      "lastRun": "2025-11-28T09:46:06.681Z"
-    },
-    {
       "id": "27_procurement_rules",
       "name": "Procurement Thresholds and Approvals",
       "failedQueries": [
@@ -239,165 +230,321 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T11:20:54.871Z"
+      "lastRun": "2025-12-01T14:32:34.493Z"
     },
     {
       "id": "suite_02_causation",
       "name": "Comprehensive Causation & Abduction",
       "failedQueries": [
-        "q1",
-        "q2",
         "q3",
-        "q4",
-        "q5",
-        "q6",
-        "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T09:55:44.945Z"
+      "lastRun": "2025-12-01T17:06:26.480Z"
     },
     {
       "id": "suite_03_deontic",
       "name": "Comprehensive Deontic Rules & Permissions",
       "failedQueries": [
-        "q1",
-        "q2",
-        "q3",
-        "q4",
-        "q6",
-        "q7",
-        "q8"
+        "q2"
       ],
-      "lastRun": "2025-12-01T09:55:44.945Z"
+      "lastRun": "2025-12-01T17:06:26.480Z"
     },
     {
       "id": "suite_04_counterfactual",
       "name": "Comprehensive Counterfactual & Temporal",
       "failedQueries": [
+        "q1",
         "q2",
-        "q4",
-        "q6",
-        "q8"
+        "q4"
       ],
-      "lastRun": "2025-12-01T08:11:31.619Z"
+      "lastRun": "2025-12-01T17:06:26.480Z"
     },
     {
       "id": "suite_05_bias_masking",
       "name": "Comprehensive Bias Control & Masking",
       "failedQueries": [
         "q1",
+        "q2",
         "q3",
-        "q4",
-        "q6",
-        "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T08:11:31.619Z"
+      "lastRun": "2025-12-01T17:06:26.480Z"
     },
     {
       "id": "suite_06_analogic_symmetric",
       "name": "Analogical Reasoning & Symmetric/Inverse Relations",
       "failedQueries": [
         "q4",
-        "q5"
+        "q5",
+        "q6",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-01T09:22:10.497Z"
+      "lastRun": "2025-12-01T15:05:49.859Z"
     },
     {
       "id": "suite_07_compositional_rules",
       "name": "Compositional Rules & Forward Chaining",
       "failedQueries": [
-        "q6"
+        "q1",
+        "q2",
+        "q3",
+        "q5",
+        "q6",
+        "q7"
       ],
-      "lastRun": "2025-12-01T09:23:16.985Z"
+      "lastRun": "2025-12-01T17:06:26.480Z"
     },
     {
       "id": "suite_08_default_reasoning",
       "name": "Default Reasoning with Exceptions (Non-Monotonic Logic)",
       "failedQueries": [
-        "q1",
         "q3",
+        "q4",
         "q5",
         "q7"
       ],
-      "lastRun": "2025-12-01T09:19:29.463Z"
+      "lastRun": "2025-12-01T17:06:26.480Z"
     },
     {
       "id": "suite_09_contradictions",
       "name": "Contradiction Detection & Constraint Validation",
       "failedQueries": [
-        "q5"
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-01T09:25:58.080Z"
+      "lastRun": "2025-12-01T17:06:26.480Z"
     },
     {
       "id": "suite_10_theory_layers",
       "name": "Theory Layering & Advanced Counterfactual Reasoning",
       "failedQueries": [
+        "q1",
         "q2",
+        "q3",
         "q4",
-        "q7"
+        "q5",
+        "q6",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-01T09:28:56.259Z"
+      "lastRun": "2025-12-01T17:06:26.480Z"
+    },
+    {
+      "id": "suite_11_recursive_small",
+      "name": "Recursive Planning Problems - Small Scale",
+      "failedQueries": [
+        "q1",
+        "q5",
+        "q6"
+      ],
+      "lastRun": "2025-12-01T17:06:26.480Z"
+    },
+    {
+      "id": "suite_12_recursive_large",
+      "name": "Recursive Planning Problems - Large Scale",
+      "failedQueries": [
+        "q3",
+        "q6",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-01T17:06:26.480Z"
     },
     {
       "id": "suite_13_variable_composition",
       "name": "Variable Chaining & Multi-Step Composition",
       "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
         "q7",
-        "q9"
+        "q8",
+        "q9",
+        "q10",
+        "q11",
+        "q12"
       ],
-      "lastRun": "2025-12-01T09:31:53.844Z"
+      "lastRun": "2025-12-01T17:06:26.480Z"
     },
     {
       "id": "suite_14_error_edge_cases",
       "name": "Error Handling & Edge Cases",
       "failedQueries": [
-        "q5"
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8",
+        "q9",
+        "q10",
+        "q11",
+        "q12"
       ],
-      "lastRun": "2025-12-01T11:55:38.027Z"
+      "lastRun": "2025-12-01T17:06:26.480Z"
     },
     {
       "id": "suite_15_masks",
       "name": "Masking & Dimension Registry",
       "failedQueries": [
-        "q7",
-        "q8"
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q7"
       ],
-      "lastRun": "2025-12-01T12:31:59.234Z"
+      "lastRun": "2025-12-01T17:06:26.480Z"
     },
     {
       "id": "suite_16_memory_forgetting",
       "name": "Memory Management: Protect & Forget",
       "failedQueries": [
+        "q1",
         "q3",
+        "q4",
         "q5",
-        "q6"
+        "q6",
+        "q7"
       ],
-      "lastRun": "2025-12-01T12:31:59.234Z"
+      "lastRun": "2025-12-01T17:06:26.480Z"
     },
     {
       "id": "suite_17_theory_storage",
       "name": "Theory Storage: Save, Retract, Reload",
       "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
         "q4",
-        "q7"
+        "q5",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-01T12:35:27.378Z"
+      "lastRun": "2025-12-01T17:06:26.480Z"
+    },
+    {
+      "id": "suite_18_polarity_decision",
+      "name": "Polarity Decision with FACTS_MATCHING",
+      "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-01T17:06:26.480Z"
+    },
+    {
+      "id": "suite_19_output_format",
+      "name": "Output Formatting: TO_NATURAL and TO_JSON",
+      "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-01T17:06:26.480Z"
     },
     {
       "id": "suite_20_format_summarize",
       "name": "FORMAT & SUMMARIZE with FACTS_MATCHING",
       "failedQueries": [
         "q1",
-        "q2"
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-01T11:55:38.027Z"
+      "lastRun": "2025-12-01T17:06:26.480Z"
+    },
+    {
+      "id": "suite_21_boost_forget",
+      "name": "Boost Before Forgetting",
+      "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-01T17:06:26.480Z"
+    },
+    {
+      "id": "suite_22_merge_theory_patch",
+      "name": "Merge a Saved Patch into the Base Theory",
+      "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-01T17:06:26.480Z"
+    },
+    {
+      "id": "suite_23_summarize_perspective",
+      "name": "Summarization from Different Perspectives",
+      "failedQueries": [
+        "q1",
+        "q2",
+        "q4",
+        "q5",
+        "q8"
+      ],
+      "lastRun": "2025-12-01T17:13:58.796Z"
+    },
+    {
+      "id": "suite_24_expand_essay",
+      "name": "Essay Generation and Knowledge Expansion",
+      "failedQueries": [
+        "q2",
+        "q5"
+      ],
+      "lastRun": "2025-12-01T17:13:58.796Z"
+    },
+    {
+      "id": "suite_25_theory_management",
+      "name": "Theory Stack Management and Hypothetical Reasoning",
+      "failedQueries": [
+        "q2",
+        "q4",
+        "q5",
+        "q6",
+        "q8"
+      ],
+      "lastRun": "2025-12-01T17:11:57.348Z"
     }
   ],
-  "lastUpdated": "2025-12-01T12:35:52.424Z",
+  "lastUpdated": "2025-12-01T17:15:17.150Z",
   "rangeInfo": {
-    "lastFrom": 15,
-    "lastTo": 17
+    "lastFrom": 23,
+    "lastTo": 25
   }
 }

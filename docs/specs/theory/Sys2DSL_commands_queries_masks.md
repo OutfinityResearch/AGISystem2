@@ -11,8 +11,8 @@ Reference for all query commands (`ASK`, `ASK_MASKED`, `FACTS_MATCHING`) and mas
 
 ## 1. Query Commands
 
-### 1.1 ASK
-**Purpose:** Query the truth value of a statement within the current theory.
+### 1.1 ASK (subcommand of QUERY)
+**Purpose:** Query the truth value of a statement within the current theory. In the high-level API, use `QUERY subject RELATION object [mode=...]` which calls ASK first.
 
 **Syntax:**
 ```sys2dsl
@@ -49,8 +49,8 @@ Reference for all query commands (`ASK`, `ASK_MASKED`, `FACTS_MATCHING`) and mas
 
 ---
 
-### 1.2 ASK_MASKED
-**Purpose:** Query with specific dimensions masked (filtered).
+### 1.2 ASK_MASKED (subcommand of QUERY with mask)
+**Purpose:** Query with specific dimensions masked (filtered). In the high-level API, supply `mask=$maskVar` to `QUERY`.
 
 **Syntax:**
 ```sys2dsl
@@ -67,8 +67,8 @@ Reference for all query commands (`ASK`, `ASK_MASKED`, `FACTS_MATCHING`) and mas
 
 ---
 
-### 1.3 FACTS_MATCHING
-**Purpose:** Find all facts matching a pattern.
+### 1.3 FACTS_MATCHING (subcommand of SUMMARIZE_FACTS)
+**Purpose:** Find all facts matching a pattern. In the high-level API, use `SUMMARIZE_FACTS subject RELATION object`, which internally calls FACTS_MATCHING then SUMMARIZE.
 
 **Syntax:**
 ```sys2dsl
