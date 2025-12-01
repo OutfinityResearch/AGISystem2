@@ -31,14 +31,14 @@ class DSLParser {
         if (!seg) {
           return;
         }
-        const parts = seg.split(/\s+/);
-        if (parts.length < 2 || !parts[0].startsWith('@')) {
+        // Smart tokenize: preserve quoted strings as single tokens
+        const args = this._tokenizeArgs(seg);
+        if (args.length < 2 || !args[0].startsWith('@')) {
           throw new Error(`Invalid Sys2DSL statement: '${seg}'`);
         }
-        const varName = parts[0].slice(1);
-        const command = parts[1].toUpperCase();
-        const args = parts.slice(2);
-        statements.push({ varName, command, args, raw: seg });
+        const varName = args[0].slice(1);
+        const command = args[1].toUpperCase();
+        statements.push({ varName, command, args: args.slice(2), raw: seg });
       };
 
       // Within each line, if additional '@' appear, treat them as new statements.
@@ -58,6 +58,46 @@ class DSLParser {
     }
 
     return statements;
+  }
+
+  /**
+   * Tokenize a segment respecting quoted strings
+   * Handles: key="value with spaces" key2=value
+   * @param {string} segment - Raw segment to tokenize
+   * @returns {string[]} - Array of tokens
+   */
+  _tokenizeArgs(segment) {
+    const tokens = [];
+    let current = '';
+    let inQuote = false;
+    let quoteChar = null;
+
+    for (let i = 0; i < segment.length; i++) {
+      const ch = segment[i];
+
+      if (!inQuote && (ch === '"' || ch === "'")) {
+        inQuote = true;
+        quoteChar = ch;
+        current += ch;
+      } else if (inQuote && ch === quoteChar) {
+        inQuote = false;
+        current += ch;
+        quoteChar = null;
+      } else if (!inQuote && /\s/.test(ch)) {
+        if (current.length > 0) {
+          tokens.push(current);
+          current = '';
+        }
+      } else {
+        current += ch;
+      }
+    }
+
+    if (current.length > 0) {
+      tokens.push(current);
+    }
+
+    return tokens;
   }
 
   /**

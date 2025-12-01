@@ -48,9 +48,24 @@ class InferenceEngine {
    */
   infer(subject, relation, object, facts, options = {}) {
     const maxDepth = options.maxDepth || (this.config && this.config.get('recursionHorizon')) || 10;
-    const methods = options.methods || [
+
+    // Check if there are default rules with exceptions for this relation
+    // If so, we must check defaults BEFORE inheritance to handle exceptions correctly
+    const hasDefaultWithExceptions = this.defaults.some(
+      d => d.property === relation && d.exceptions && d.exceptions.length > 0
+    );
+
+    // Default method order
+    let methods = options.methods || [
       'direct', 'transitive', 'symmetric', 'inverse', 'composition', 'inheritance', 'default'
     ];
+
+    // If there are defaults with exceptions, put 'default' before 'inheritance'
+    if (hasDefaultWithExceptions && !options.methods) {
+      methods = [
+        'direct', 'transitive', 'symmetric', 'inverse', 'composition', 'default', 'inheritance'
+      ];
+    }
 
     // Try each inference method in order
     for (const method of methods) {
@@ -81,7 +96,7 @@ class InferenceEngine {
           continue;
       }
 
-      if (result.truth === 'TRUE_CERTAIN' || result.truth === 'TRUE_DEFAULT') {
+      if (result.truth === 'TRUE_CERTAIN' || result.truth === 'TRUE_DEFAULT' || result.truth === 'FALSE') {
         return result;
       }
     }
@@ -488,28 +503,54 @@ class InferenceEngine {
     return bindings;
   }
 
-  _satisfyBody(bodyPatterns, bindings, facts, maxDepth) {
+  _satisfyBody(bodyPatterns, bindings, facts, maxDepth, visited = new Set()) {
     if (bodyPatterns.length === 0) {
       return { satisfied: true, steps: [] };
+    }
+
+    if (maxDepth <= 0) {
+      return { satisfied: false };
     }
 
     const [first, ...rest] = bodyPatterns;
     const instantiated = this._instantiate(first, bindings);
 
-    // If fully instantiated, check directly
+    // If fully instantiated, try full inference (not just direct) to support recursive rules
     if (!this._hasVariables(instantiated)) {
-      const result = this.inferDirect(
+      // Create a key to prevent infinite recursion
+      const queryKey = `${instantiated.subject}|${instantiated.relation}|${instantiated.object}`;
+      if (visited.has(queryKey)) {
+        return { satisfied: false };
+      }
+      const newVisited = new Set(visited);
+      newVisited.add(queryKey);
+
+      // First try direct lookup (fast path)
+      let result = this.inferDirect(
         instantiated.subject,
         instantiated.relation,
         instantiated.object,
         facts
       );
+
+      // If direct fails, try recursive composition (for rules like ANCESTOR)
+      if (result.truth !== 'TRUE_CERTAIN' && maxDepth > 1) {
+        result = this._inferCompositionRecursive(
+          instantiated.subject,
+          instantiated.relation,
+          instantiated.object,
+          facts,
+          maxDepth - 1,
+          newVisited
+        );
+      }
+
       if (result.truth === 'TRUE_CERTAIN') {
-        const restResult = this._satisfyBody(rest, bindings, facts, maxDepth);
+        const restResult = this._satisfyBody(rest, bindings, facts, maxDepth - 1, newVisited);
         if (restResult.satisfied) {
           return {
             satisfied: true,
-            steps: [{ pattern: first, match: instantiated }, ...restResult.steps]
+            steps: [{ pattern: first, match: instantiated, proof: result.proof }, ...restResult.steps]
           };
         }
       }
@@ -518,9 +559,14 @@ class InferenceEngine {
 
     // Find all matching facts and try each binding
     const matches = this._findMatches(instantiated, facts);
-    for (const match of matches) {
+
+    // Also find matches derivable via composition rules (for recursive rules)
+    const derivedMatches = this._findDerivedMatches(instantiated, facts, maxDepth - 1, visited);
+    const allMatches = [...matches, ...derivedMatches];
+
+    for (const match of allMatches) {
       const newBindings = { ...bindings, ...this._extractBindings(first, match) };
-      const restResult = this._satisfyBody(rest, newBindings, facts, maxDepth - 1);
+      const restResult = this._satisfyBody(rest, newBindings, facts, maxDepth - 1, visited);
       if (restResult.satisfied) {
         return {
           satisfied: true,
@@ -530,6 +576,151 @@ class InferenceEngine {
     }
 
     return { satisfied: false };
+  }
+
+  /**
+   * Find matches that can be derived via composition rules
+   * This supports recursive rules like ANCESTOR_OF
+   */
+  _findDerivedMatches(pattern, facts, maxDepth, visited) {
+    if (maxDepth <= 0) return [];
+
+    const derivedMatches = [];
+    const relation = pattern.relation;
+
+    // Find rules that produce this relation
+    const applicableRules = this.rules.filter((r) => r.head.relation === relation);
+    if (applicableRules.length === 0) return [];
+
+    // For each rule, try to find bindings that could produce matches for our pattern
+    for (const rule of applicableRules) {
+      // For patterns like "Ion ANCESTOR_OF ?y", we need to find all possible ?y values
+      // by applying the rule with ?x=Ion
+
+      // Get first body pattern and find all its matches (both base and derived)
+      const firstBodyPattern = rule.body[0];
+
+      // Instantiate first body pattern with known bindings from search pattern
+      const partialBindings = {};
+      if (!pattern.subject.startsWith('?')) {
+        partialBindings[rule.head.subject] = pattern.subject;
+      }
+      if (!pattern.object.startsWith('?')) {
+        partialBindings[rule.head.object] = pattern.object;
+      }
+
+      const instantiatedFirst = this._instantiate(firstBodyPattern, partialBindings);
+
+      // Find base facts matching
+      let bodyMatches = this._findMatches(instantiatedFirst, facts);
+
+      // Also find derived matches for the first body pattern (recursively)
+      if (this._hasVariables(instantiatedFirst)) {
+        const derivedBodyMatches = this._findDerivedMatches(instantiatedFirst, facts, maxDepth - 1, visited);
+        bodyMatches = [...bodyMatches, ...derivedBodyMatches];
+      }
+
+      for (const bodyMatch of bodyMatches) {
+        // Check if this body match is compatible with our search pattern
+        const bodyBindings = this._extractBindings(firstBodyPattern, bodyMatch);
+
+        // Merge with partial bindings
+        Object.assign(bodyBindings, partialBindings);
+
+        // Does this produce a compatible head binding?
+        let compatible = true;
+        if (!pattern.subject.startsWith('?')) {
+          const headSubjectVar = rule.head.subject;
+          if (headSubjectVar.startsWith('?') && bodyBindings[headSubjectVar] && bodyBindings[headSubjectVar] !== pattern.subject) {
+            compatible = false;
+          }
+        }
+        if (!pattern.object.startsWith('?')) {
+          const headObjectVar = rule.head.object;
+          if (headObjectVar.startsWith('?') && bodyBindings[headObjectVar] && bodyBindings[headObjectVar] !== pattern.object) {
+            compatible = false;
+          }
+        }
+
+        if (!compatible) continue;
+
+        // Try to satisfy the rest of the rule body
+        const headBindings = { ...bodyBindings };
+        if (!pattern.subject.startsWith('?')) {
+          headBindings[rule.head.subject] = pattern.subject;
+        }
+        if (!pattern.object.startsWith('?')) {
+          headBindings[rule.head.object] = pattern.object;
+        }
+
+        const restResult = this._satisfyBody(rule.body.slice(1), headBindings, facts, maxDepth - 1, visited);
+        if (restResult.satisfied) {
+          // Build the derived fact
+          const derivedFact = {
+            subject: headBindings[rule.head.subject] || rule.head.subject,
+            relation: relation,
+            object: headBindings[rule.head.object] || rule.head.object,
+            derivedBy: rule.name
+          };
+
+          // Only add if it matches our search pattern and not already found
+          if (this._factMatchesPattern(derivedFact, pattern)) {
+            const key = `${derivedFact.subject}|${derivedFact.relation}|${derivedFact.object}`;
+            const alreadyHave = derivedMatches.some(d =>
+              d.subject === derivedFact.subject &&
+              d.relation === derivedFact.relation &&
+              d.object === derivedFact.object
+            );
+            if (!alreadyHave) {
+              derivedMatches.push(derivedFact);
+            }
+          }
+        }
+      }
+    }
+
+    return derivedMatches;
+  }
+
+  _factMatchesPattern(fact, pattern) {
+    if (!pattern.subject.startsWith('?') && fact.subject !== pattern.subject) return false;
+    if (!pattern.object.startsWith('?') && fact.object !== pattern.object) return false;
+    if (fact.relation !== pattern.relation) return false;
+    return true;
+  }
+
+  /**
+   * Recursive composition inference (helper for _satisfyBody)
+   * Allows rules to use derived facts from other rules
+   */
+  _inferCompositionRecursive(subject, relation, object, facts, maxDepth, visited) {
+    // Find rules that produce this relation
+    const applicableRules = this.rules.filter((r) => r.head.relation === relation);
+
+    for (const rule of applicableRules) {
+      // Try to unify rule head with query
+      const headBindings = this._unify(rule.head, { subject, relation, object });
+      if (!headBindings) continue;
+
+      // Try to satisfy rule body with visited set to prevent cycles
+      const bodyResult = this._satisfyBody(rule.body, headBindings, facts, maxDepth, visited);
+      if (bodyResult.satisfied) {
+        return {
+          truth: 'TRUE_CERTAIN',
+          method: 'composition',
+          rule: rule.name,
+          confidence: 0.9,
+          proof: {
+            goal: { subject, relation, object },
+            steps: bodyResult.steps,
+            rule: rule.name,
+            valid: true
+          }
+        };
+      }
+    }
+
+    return { truth: 'UNKNOWN', method: 'composition', reason: 'no_rule_matched' };
   }
 
   _instantiate(pattern, bindings) {

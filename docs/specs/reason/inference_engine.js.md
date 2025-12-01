@@ -420,11 +420,16 @@ _satisfyBody(bodyPatterns, bindings, facts, maxDepth) {
 ```javascript
 inferDefault(subject, relation, object, facts) {
   // Find applicable default rules
+  // Default rule structure: { name, typicalType, property, value, exceptions }
   for (const defaultRule of this.defaults) {
-    if (defaultRule.typical.property !== relation) continue;
+    // Check if relation matches the default's property
+    if (defaultRule.property !== relation) continue;
+
+    // Check if object matches the default's value
+    if (defaultRule.value !== object) continue;
 
     // Check if subject is of the typical type
-    const isType = this.infer(subject, 'IS_A', defaultRule.typical.type, { methods: ['direct', 'transitive'] });
+    const isType = this.infer(subject, 'IS_A', defaultRule.typicalType, facts, { methods: ['direct', 'transitive'] });
     if (isType.truth !== 'TRUE_CERTAIN') continue;
 
     // Check for exceptions
@@ -439,19 +444,17 @@ inferDefault(subject, relation, object, facts) {
     }
 
     // Default applies
-    if (defaultRule.typical.value === true && object === defaultRule.typical.property) {
-      return {
-        truth: 'TRUE_DEFAULT',
-        method: 'default',
-        confidence: 0.8,
-        assumptions: [`${subject} is a typical ${defaultRule.typical.type}`],
-        proof: {
-          goal: { subject, relation, object },
-          steps: [{ type: 'default', rule: defaultRule.name }],
-          defeasible: true
-        }
-      };
-    }
+    return {
+      truth: 'TRUE_DEFAULT',
+      method: 'default',
+      confidence: 0.8,
+      assumptions: [`${subject} is a typical ${defaultRule.typicalType}`],
+      proof: {
+        goal: { subject, relation, object },
+        steps: [{ type: 'default', rule: defaultRule.name }],
+        defeasible: true
+      }
+    };
   }
 
   return { truth: 'UNKNOWN', method: 'default' };
@@ -459,7 +462,7 @@ inferDefault(subject, relation, object, facts) {
 
 _isException(subject, exceptions, facts) {
   for (const exc of exceptions) {
-    const result = this.infer(subject, 'IS_A', exc, { methods: ['direct', 'transitive'] });
+    const result = this.infer(subject, 'IS_A', exc, facts, { methods: ['direct', 'transitive'] });
     if (result.truth === 'TRUE_CERTAIN') {
       return exc;
     }

@@ -19,9 +19,10 @@
  */
 
 class DSLCommandsReasoning {
-  constructor({ conceptStore, contradictionDetector, parser, coreCommands, reasoner }) {
+  constructor({ conceptStore, contradictionDetector, inferenceEngine, parser, coreCommands, reasoner }) {
     this.conceptStore = conceptStore;
     this.contradictionDetector = contradictionDetector;
+    this.inferenceEngine = inferenceEngine;
     this.parser = parser;
     this.coreCommands = coreCommands;
     this.reasoner = reasoner;
@@ -81,6 +82,8 @@ class DSLCommandsReasoning {
   /**
    * PROVE: Attempt to prove a statement
    * Syntax: @var PROVE Subject Relation Object
+   *
+   * Uses InferenceEngine if available (supports composition rules like GRANDPARENT_OF)
    */
   cmdProve(argTokens, env, facts) {
     if (argTokens.length < 3) {
@@ -90,18 +93,35 @@ class DSLCommandsReasoning {
     const relation = this.parser.expandString(argTokens[1], env);
     const object = this.parser.expandString(argTokens.slice(2).join(' '), env);
 
+    // First, try InferenceEngine if available (handles composition rules)
+    if (this.inferenceEngine) {
+      const result = this.inferenceEngine.infer(subject, relation, object, facts, {
+        maxDepth: 10
+      });
+      if (result.truth === 'TRUE_CERTAIN' || result.truth === 'TRUE_DEFAULT') {
+        return {
+          truth: result.truth,
+          proven: true,
+          method: result.method,
+          proof: result.proof,
+          confidence: result.confidence || 1.0
+        };
+      }
+    }
+
+    // Fallback to direct lookup
     const direct = facts.find(
       (f) => f.subject === subject && f.relation === relation && f.object === object
     );
     if (direct) {
-      return { proven: true, method: 'direct', confidence: 1.0 };
+      return { truth: 'TRUE_CERTAIN', proven: true, method: 'direct', confidence: 1.0 };
     }
 
     const props = this.coreCommands.getRelationProperties(relation);
     if (props.transitive) {
       const chain = this._findTransitiveChain(subject, relation, object, facts);
       if (chain) {
-        return { proven: true, method: 'transitive', chain, confidence: 0.9 };
+        return { truth: 'TRUE_CERTAIN', proven: true, method: 'transitive', chain, confidence: 0.9 };
       }
     }
 
@@ -110,11 +130,11 @@ class DSLCommandsReasoning {
         (f) => f.subject === object && f.relation === relation && f.object === subject
       );
       if (reverse) {
-        return { proven: true, method: 'symmetric', confidence: 1.0 };
+        return { truth: 'TRUE_CERTAIN', proven: true, method: 'symmetric', confidence: 1.0 };
       }
     }
 
-    return { proven: false, method: 'exhausted', confidence: 0 };
+    return { truth: 'UNKNOWN', proven: false, method: 'exhausted', confidence: 0 };
   }
 
   _findTransitiveChain(start, relation, end, facts, visited = new Set()) {
@@ -312,21 +332,35 @@ class DSLCommandsReasoning {
 
   /**
    * ANALOGICAL: Perform analogical reasoning
+   * Syntax: @var ANALOGICAL A B C  (positional: A:B :: C:?)
    * Syntax: @var ANALOGICAL source_a=A source_b=B target_c=C
    */
   cmdAnalogical(argTokens, env) {
+    let source_a, source_b, target_c;
     const params = {};
-    for (const token of argTokens) {
-      const expanded = this.parser.expandString(token, env);
-      if (expanded.includes('=')) {
-        const [key, value] = expanded.split('=');
-        params[key] = value;
+
+    // Check if using positional arguments (3 args without '=')
+    const positionalArgs = argTokens.filter(t => !t.includes('='));
+    if (positionalArgs.length >= 3) {
+      source_a = this.parser.expandString(positionalArgs[0], env);
+      source_b = this.parser.expandString(positionalArgs[1], env);
+      target_c = this.parser.expandString(positionalArgs[2], env);
+    } else {
+      // Named parameters
+      for (const token of argTokens) {
+        const expanded = this.parser.expandString(token, env);
+        if (expanded.includes('=')) {
+          const [key, value] = expanded.split('=');
+          params[key] = value;
+        }
       }
+      source_a = params.source_a;
+      source_b = params.source_b;
+      target_c = params.target_c;
     }
 
-    const { source_a, source_b, target_c } = params;
     if (!source_a || !source_b || !target_c) {
-      throw new Error('ANALOGICAL requires source_a, source_b, and target_c parameters');
+      throw new Error('ANALOGICAL requires 3 positional args (A B C) or source_a=A source_b=B target_c=C');
     }
 
     const conceptA = this.conceptStore.getConcept(source_a);
@@ -334,7 +368,7 @@ class DSLCommandsReasoning {
     const conceptC = this.conceptStore.getConcept(target_c);
 
     if (!conceptA || !conceptB || !conceptC) {
-      return { error: 'One or more concepts not found', params };
+      return { error: 'One or more concepts not found', source_a, source_b, target_c, params };
     }
 
     const centerA = conceptA.diamonds[0]?.center || new Int8Array(this.conceptStore.dimensions);
@@ -367,11 +401,13 @@ class DSLCommandsReasoning {
       }
     }
 
+    const confidence = nearest ? Math.max(0, 1 - nearestDist / (centerA.length * 128)) : 0;
     return {
+      truth: nearest ? 'TRUE_CERTAIN' : 'UNKNOWN',
       analogy: `${source_a} : ${source_b} :: ${target_c} : ${nearest || '?'}`,
       result: nearest,
       delta: Array.from(delta),
-      confidence: nearest ? Math.max(0, 1 - nearestDist / (centerA.length * 128)) : 0
+      confidence
     };
   }
 
@@ -423,6 +459,7 @@ class DSLCommandsReasoning {
     const result = this.contradictionDetector.wouldContradict(newFact, facts);
 
     return {
+      truth: result.wouldContradict ? 'TRUE_CERTAIN' : 'FALSE',
       wouldContradict: result.wouldContradict,
       reason: result.reason,
       contradictions: result.contradictions || [],

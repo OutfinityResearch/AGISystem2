@@ -13,24 +13,28 @@
 /**
  * System prompt for the AGISystem2 assistant
  */
-export const SYSTEM_PROMPT = `You are AGISystem2, a knowledge reasoning assistant.
-You help users manage theories (collections of facts), ask questions, and reason about knowledge.
+export const SYSTEM_PROMPT = `You are AGISystem2. Your ONLY job is translating to Sys2DSL.
 
-Your capabilities:
-1. Learn new facts from natural language
-2. Answer questions using stored knowledge
-3. Detect contradictions between facts
-4. Manage multiple theories (knowledge contexts)
-5. Import facts from text files
+FOR EVERY USER MESSAGE:
+1. If teaching facts: output @fNNN ASSERT subject RELATION object
+2. If asking question: output @qNNN ASK subject RELATION object
 
-Facts are stored as Subject-Relation-Object triples.
-Common relations: IS_A, HAS_PROPERTY, CAUSES, CAUSED_BY, LOCATED_IN, REQUIRES, PERMITS, PROHIBITED_BY
+NEVER skip DSL generation. NEVER answer directly. ALWAYS output DSL FIRST.
 
-When the user teaches you something, extract facts as triples.
-When the user asks questions, translate to queries and explain results.
-If you detect potential contradictions, suggest creating a new theory branch.
+RELATION TABLE:
+is/are a/an → IS_A | in/at/located → LOCATED_IN | has/have → HAS
+causes → CAUSES | helps → HELPS | requires → REQUIRES | can → CAN
 
-Always respond naturally in the user's language.`;
+CONCEPT RULES:
+- lowercase for types (dog, mammal)
+- Capitalized for instances (Fido, Tokyo)
+- underscore for multi-word (living_thing)
+- no articles (a/an/the)
+- singular form
+
+Example response for "Is Tokyo in Europe?":
+[DSL Representation]
+  @q001 ASK Tokyo LOCATED_IN Europe`;
 
 /**
  * Build prompt to detect user intent
@@ -120,64 +124,46 @@ Respond with JSON only:
 }
 
 /**
- * Build prompt to convert natural language question to canonical form
+ * Build prompt to convert natural language question to Sys2DSL query
  * @param {string} question - Natural language question
- * @returns {string} Prompt for question parsing
+ * @returns {string} Prompt for DSL generation
  */
 export function buildQuestionPrompt(question) {
-  return `Convert this natural language question to a canonical query format.
+  return `Generate a Sys2DSL query for this natural language question.
 
 Question: "${question}"
 
-IMPORTANT RULES:
-1. The relation MUST be in UPPERCASE with underscores (e.g., IS_A, not "is" or "is a")
-2. The subject and object must be single concept names (no articles like "a" or "an")
-3. NORMALIZE TO SINGULAR! Convert plural nouns to singular (animals→animal, cats→cat, people→person)
-4. For "is X a Y?" questions, use relation=IS_A
-5. For "can X do Y?" questions, use relation=CAN or PERMITS
-6. For "does X cause Y?" questions, use relation=CAUSES
-7. PRESERVE CUSTOM VERBS! If the question uses a specific verb like "eats", "loves", "kills", convert it to UPPERCASE (EATS, LOVES, KILLS)
-8. Work with ANY language - extract the verb and convert to UPPERCASE
-
-Common relation mappings:
-- "is a", "is an" → IS_A
-- "causes", "cause" → CAUSES
-- "can", "is able to" → CAN or PERMITS
-- "has", "have" → HAS
-- "located in", "in" → LOCATED_IN
-
-CUSTOM VERB examples (IMPORTANT - preserve the verb!):
-- "Does A eat food?" → { subject: "A", relation: "EATS", object: "food" }
-- "A eats food?" → { subject: "A", relation: "EATS", object: "food" }
-- "Does Lion eat Zebra?" → { subject: "Lion", relation: "EATS", object: "Zebra" }
-- "Does Cat love Dog?" → { subject: "Cat", relation: "LOVES", object: "Dog" }
-- "A kills B?" → { subject: "A", relation: "KILLS", object: "B" }
-- "A omoara B?" (Romanian) → { subject: "A", relation: "OMOARA", object: "B" }
-- "Does Lion hunt animals?" → { subject: "Lion", relation: "HUNTS", object: "animal" } (SINGULAR!)
-- "Do cats chase mice?" → { subject: "cat", relation: "CHASES", object: "mouse" } (SINGULAR!)
-
-Standard examples:
-- "Is Socrates mortal?" → { subject: "Socrates", relation: "IS_A", object: "mortal" }
-- "Is a dog an animal?" → { subject: "dog", relation: "IS_A", object: "animal" }
-- "Does fire cause smoke?" → { subject: "fire", relation: "CAUSES", object: "smoke" }
-
-Question types:
-1. yes_no: questions answerable with true/false
-2. what_is: asking about identity/properties
-3. causes/effects: asking about causation
-4. list: asking for enumeration
-
-Respond with JSON only:
+OUTPUT FORMAT - respond with ONLY this JSON (no explanation):
 {
-  "type": "yes_no" | "what_is" | "causes" | "effects" | "list" | "unknown",
-  "canonical": {
-    "subject": "ConceptName (no articles)",
-    "relation": "RELATION_IN_UPPERCASE",
-    "object": "ConceptName (no articles)"
-  },
-  "original": "original question",
-  "confidence": 0.0-1.0
-}`;
+  "type": "yes_no",
+  "canonical": { "subject": "X", "relation": "REL", "object": "Y" },
+  "confidence": 0.9
+}
+
+SYNTAX RULES:
+- subject/object: concept names, lowercase for types (dog, mammal), Capitalized for instances (Fido, Tokyo)
+- relation: UPPERCASE with underscores (IS_A, LOCATED_IN, CAUSES)
+- Remove articles (a, an, the) from concepts
+- Singular form (dogs→dog, animals→animal)
+- Multi-word concepts use underscore (living_thing, software_engineer)
+
+RELATION MAPPING:
+"is a/an" → IS_A | "in/located in" → LOCATED_IN | "causes/cause" → CAUSES
+"has/have" → HAS | "part of" → PART_OF | "helps/help" → HELPS
+"requires/needs" → REQUIRES | "can/able to" → CAN | "permits/allows" → PERMITS
+"prohibits/forbids" → PROHIBITED_BY | Any other verb → UPPERCASE (eats→EATS)
+
+EXAMPLES:
+"Is Fido a dog?" → {"type":"yes_no","canonical":{"subject":"Fido","relation":"IS_A","object":"dog"},"confidence":0.95}
+"Is Tokyo in Europe?" → {"type":"yes_no","canonical":{"subject":"Tokyo","relation":"LOCATED_IN","object":"Europe"},"confidence":0.95}
+"Do doctors help patients?" → {"type":"yes_no","canonical":{"subject":"doctor","relation":"HELPS","object":"patient"},"confidence":0.95}
+"Does fire cause smoke?" → {"type":"yes_no","canonical":{"subject":"fire","relation":"CAUSES","object":"smoke"},"confidence":0.95}
+"Is a bird a mammal?" → {"type":"yes_no","canonical":{"subject":"bird","relation":"IS_A","object":"mammal"},"confidence":0.95}
+"Does Tesla have wheels?" → {"type":"yes_no","canonical":{"subject":"Tesla","relation":"HAS","object":"wheel"},"confidence":0.95}
+"Is a software engineer an engineer?" → {"type":"yes_no","canonical":{"subject":"software_engineer","relation":"IS_A","object":"engineer"},"confidence":0.95}
+"Can a drone fly over a hospital?" → {"type":"yes_no","canonical":{"subject":"drone","relation":"CAN","object":"fly_over_hospital"},"confidence":0.9}
+
+Respond with JSON only:`;
 }
 
 /**

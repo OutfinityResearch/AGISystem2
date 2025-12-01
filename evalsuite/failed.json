@@ -1,116 +1,12 @@
 {
   "cases": [
     {
-      "id": "06_analogy",
-      "name": "Analogical Reasoning - Structural Mapping",
-      "failedQueries": [
-        "q1",
-        "q3"
-      ],
-      "lastRun": "2025-11-28T10:50:00.966Z"
-    },
-    {
-      "id": "08_multi_theory",
-      "name": "Multiple Theory Layers and Context Switching",
-      "failedQueries": [
-        "q1"
-      ],
-      "lastRun": "2025-11-28T10:50:00.966Z"
-    },
-    {
-      "id": "12_regulatory_retention",
-      "name": "Record Retention and Cutoff Dates",
-      "failedQueries": [
-        "q1",
-        "q3"
-      ],
-      "lastRun": "2025-11-28T10:50:00.966Z"
-    },
-    {
-      "id": "13_export_controls",
-      "name": "Export Controls and Embargoes",
-      "failedQueries": [
-        "q3"
-      ],
-      "lastRun": "2025-11-28T10:50:00.966Z"
-    },
-    {
-      "id": "14_gdpr_rights",
-      "name": "GDPR Rights and Lawful Bases",
-      "failedQueries": [
-        "q2",
-        "q3"
-      ],
-      "lastRun": "2025-11-28T10:50:00.966Z"
-    },
-    {
-      "id": "15_quality_manual_versions",
-      "name": "Quality Manual Precedence and Versioning",
-      "failedQueries": [
-        "q1",
-        "q3"
-      ],
-      "lastRun": "2025-11-28T10:50:00.966Z"
-    },
-    {
-      "id": "16_sop_conflicts",
-      "name": "Standard Operating Procedure Conflicts",
-      "failedQueries": [
-        "q2",
-        "q3"
-      ],
-      "lastRun": "2025-11-28T10:39:57.358Z"
-    },
-    {
-      "id": "17_qc_thresholds",
-      "name": "Quality Control Thresholds",
-      "failedQueries": [
-        "q2"
-      ],
-      "lastRun": "2025-11-28T10:39:57.358Z"
-    },
-    {
-      "id": "18_audit_trail",
-      "name": "Audit Trail Completeness",
-      "failedQueries": [
-        "q1"
-      ],
-      "lastRun": "2025-11-28T10:39:57.358Z"
-    },
-    {
       "id": "19_style_guidelines_tone",
       "name": "Tone and Voice Rules",
       "failedQueries": [
         "q2"
       ],
       "lastRun": "2025-11-28T10:39:57.358Z"
-    },
-    {
-      "id": "20_editorial_voice_person",
-      "name": "Point of View and Consistent Person",
-      "failedQueries": [
-        "q1",
-        "q2",
-        "q3"
-      ],
-      "lastRun": "2025-11-28T10:39:57.358Z"
-    },
-    {
-      "id": "21_series_consistency",
-      "name": "Character Continuity in a Series",
-      "failedQueries": [
-        "q2",
-        "q3"
-      ],
-      "lastRun": "2025-11-28T09:46:06.681Z"
-    },
-    {
-      "id": "22_literary_motifs",
-      "name": "Motif and Symbol Consistency",
-      "failedQueries": [
-        "q1"
-      ],
-      "lastRun": "2025-11-28T09:46:06.681Z"
     },
     {
       "id": "25_deontic_priority",
@@ -338,28 +234,41 @@
       "id": "suite_01_ontology",
       "name": "Comprehensive Ontology & Taxonomy",
       "failedQueries": [
-        "q2"
+        "q2",
+        "q5",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-01T08:11:31.619Z"
+      "lastRun": "2025-12-01T11:20:54.871Z"
     },
     {
       "id": "suite_02_causation",
       "name": "Comprehensive Causation & Abduction",
       "failedQueries": [
+        "q1",
+        "q2",
         "q3",
         "q4",
         "q5",
+        "q6",
+        "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T08:11:31.619Z"
+      "lastRun": "2025-12-01T09:55:44.945Z"
     },
     {
       "id": "suite_03_deontic",
       "name": "Comprehensive Deontic Rules & Permissions",
       "failedQueries": [
-        "q2"
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q6",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-01T08:11:31.619Z"
+      "lastRun": "2025-12-01T09:55:44.945Z"
     },
     {
       "id": "suite_04_counterfactual",
@@ -392,63 +301,103 @@
         "q4",
         "q5"
       ],
-      "lastRun": "2025-12-01T08:48:25.283Z"
+      "lastRun": "2025-12-01T09:22:10.497Z"
     },
     {
       "id": "suite_07_compositional_rules",
       "name": "Compositional Rules & Forward Chaining",
       "failedQueries": [
-        "q1",
-        "q2",
-        "q3",
-        "q4",
-        "q6",
-        "q7"
+        "q6"
       ],
-      "lastRun": "2025-12-01T08:48:25.283Z"
+      "lastRun": "2025-12-01T09:23:16.985Z"
     },
     {
       "id": "suite_08_default_reasoning",
       "name": "Default Reasoning with Exceptions (Non-Monotonic Logic)",
       "failedQueries": [
         "q1",
-        "q2",
         "q3",
         "q5",
-        "q7",
-        "q8"
+        "q7"
       ],
-      "lastRun": "2025-12-01T08:48:25.283Z"
+      "lastRun": "2025-12-01T09:19:29.463Z"
     },
     {
       "id": "suite_09_contradictions",
       "name": "Contradiction Detection & Constraint Validation",
       "failedQueries": [
-        "q3",
-        "q5",
-        "q6",
-        "q7",
-        "q8"
+        "q5"
       ],
-      "lastRun": "2025-12-01T08:48:25.283Z"
+      "lastRun": "2025-12-01T09:25:58.080Z"
     },
     {
       "id": "suite_10_theory_layers",
       "name": "Theory Layering & Advanced Counterfactual Reasoning",
       "failedQueries": [
-        "q1",
         "q2",
-        "q3",
-        "q6",
+        "q4",
+        "q7"
+      ],
+      "lastRun": "2025-12-01T09:28:56.259Z"
+    },
+    {
+      "id": "suite_13_variable_composition",
+      "name": "Variable Chaining & Multi-Step Composition",
+      "failedQueries": [
+        "q7",
+        "q9"
+      ],
+      "lastRun": "2025-12-01T09:31:53.844Z"
+    },
+    {
+      "id": "suite_14_error_edge_cases",
+      "name": "Error Handling & Edge Cases",
+      "failedQueries": [
+        "q5"
+      ],
+      "lastRun": "2025-12-01T11:55:38.027Z"
+    },
+    {
+      "id": "suite_15_masks",
+      "name": "Masking & Dimension Registry",
+      "failedQueries": [
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T08:48:25.283Z"
+      "lastRun": "2025-12-01T12:31:59.234Z"
+    },
+    {
+      "id": "suite_16_memory_forgetting",
+      "name": "Memory Management: Protect & Forget",
+      "failedQueries": [
+        "q3",
+        "q5",
+        "q6"
+      ],
+      "lastRun": "2025-12-01T12:31:59.234Z"
+    },
+    {
+      "id": "suite_17_theory_storage",
+      "name": "Theory Storage: Save, Retract, Reload",
+      "failedQueries": [
+        "q4",
+        "q7"
+      ],
+      "lastRun": "2025-12-01T12:35:27.378Z"
+    },
+    {
+      "id": "suite_20_format_summarize",
+      "name": "FORMAT & SUMMARIZE with FACTS_MATCHING",
+      "failedQueries": [
+        "q1",
+        "q2"
+      ],
+      "lastRun": "2025-12-01T11:55:38.027Z"
     }
   ],
-  "lastUpdated": "2025-12-01T08:48:25.283Z",
+  "lastUpdated": "2025-12-01T12:35:52.424Z",
   "rangeInfo": {
-    "lastFrom": null,
-    "lastTo": null
+    "lastFrom": 15,
+    "lastTo": 17
   }
 }

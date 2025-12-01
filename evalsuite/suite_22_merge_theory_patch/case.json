@@ -1,0 +1,33 @@
+{
+  "id": "suite_22_merge_theory_patch",
+  "name": "Merge a Saved Patch into the Base Theory",
+  "description": "Save the current facts as a patch, retract a fact, then MERGE_THEORY to bring the patch back into the session.",
+  "theory": {
+    "natural_language": "We know RobotA uses BatteryX. We will save this theory as robot_patch, remove the fact, verify it is gone, then merge the saved patch back and confirm the fact returns.",
+    "expected_facts": [
+      "RobotA USES BatteryX"
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "After saving and retracting, is RobotA still using BatteryX?",
+      "expected_dsl": "@save SAVE_THEORY robot_patch\n@retract RETRACT RobotA USES BatteryX\n@q1 ASK RobotA USES BatteryX",
+      "expected_answer": {
+        "natural_language": "No. After retraction, the fact should not be present.",
+        "truth": "UNKNOWN",
+        "explanation": "RETRACT removes the fact from the current session."
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "After merging the saved patch, does RobotA use BatteryX again?",
+      "expected_dsl": "@merge MERGE_THEORY robot_patch\n@q2 ASK RobotA USES BatteryX",
+      "expected_answer": {
+        "natural_language": "Yes. MERGE_THEORY should bring back the saved fact.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "MERGE_THEORY loads facts from robot_patch back into the store."
+      }
+    }
+  ]
+}

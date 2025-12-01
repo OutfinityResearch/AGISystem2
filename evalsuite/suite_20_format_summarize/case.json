@@ -1,0 +1,35 @@
+{
+  "id": "suite_20_format_summarize",
+  "name": "FORMAT & SUMMARIZE with FACTS_MATCHING",
+  "description": "Exercises FORMAT variable expansion and SUMMARIZE list rendering; uses NONEMPTY to preserve a truth-bearing result.",
+  "theory": {
+    "natural_language": "We know Apple is a fruit and Banana is a fruit. Car is a vehicle. We will match fruits, summarize them, and format a textual status. We will also check a non-existent category to ensure NONEMPTY returns FALSE.",
+    "expected_facts": [
+      "Apple IS_A fruit",
+      "Banana IS_A fruit",
+      "Car IS_A vehicle"
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Summarize known fruits and format the result status.",
+      "expected_dsl": "@fruitFacts FACTS_MATCHING ? IS_A fruit\n@summary SUMMARIZE $fruitFacts maxItems=2\n@q1 NONEMPTY $fruitFacts",
+      "expected_answer": {
+        "natural_language": "There are fruits; the list is non-empty.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "NONEMPTY on matched fruits returns TRUE_CERTAIN; SUMMARIZE is exercised but result truth comes from NONEMPTY."
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Check a missing category and format the negative outcome.",
+      "expected_dsl": "@missing FACTS_MATCHING ? IS_A spaceship\n@q2 NONEMPTY $missing",
+      "expected_answer": {
+        "natural_language": "There are no spaceships in the facts.",
+        "truth": "FALSE",
+        "explanation": "NONEMPTY on an empty match list returns FALSE."
+      }
+    }
+  ]
+}

@@ -153,17 +153,34 @@ class EngineAPI {
     const canonical = this.translator.normalise(question);
     const ast = this.parser.parseQuestion(canonical);
     let result;
-    if (ast.relation === 'IS_A') {
-      result = this.reasoner.deduceIsA(ast.subject, ast.object);
-    } else if (TRANSITIVE_RELATIONS.has(ast.relation)) {
-      // Use transitive reasoning for relations like LOCATED_IN, PART_OF, etc.
-      result = this.reasoner.deduceTransitive(ast.subject, ast.relation, ast.object);
-    } else if (INHERITABLE_RELATIONS.has(ast.relation)) {
-      // Use inheritance reasoning for relations like HAS, HELPS, etc.
-      // e.g., if Tesla IS_A car and car HAS wheel, then Tesla HAS wheel
-      result = this.reasoner.deduceWithInheritance(ast.subject, ast.relation, ast.object);
-    } else {
-      result = this.reasoner.factExists(ast.subject, ast.relation, ast.object);
+
+    // Get facts for inference
+    const facts = this.conceptStore.getFacts();
+
+    // First, try InferenceEngine if it has registered rules or defaults
+    // This handles composition rules and default reasoning
+    const inferenceEngine = this.dsl && this.dsl.inferenceEngine;
+    if (inferenceEngine && (inferenceEngine.rules.length > 0 || inferenceEngine.defaults.length > 0)) {
+      const inferResult = inferenceEngine.infer(ast.subject, ast.relation, ast.object, facts);
+      if (inferResult.truth === 'TRUE_CERTAIN' || inferResult.truth === 'TRUE_DEFAULT' || inferResult.truth === 'FALSE') {
+        result = inferResult;
+      }
+    }
+
+    // If InferenceEngine didn't resolve, fall back to basic reasoning
+    if (!result || result.truth === 'UNKNOWN') {
+      if (ast.relation === 'IS_A') {
+        result = this.reasoner.deduceIsA(ast.subject, ast.object);
+      } else if (TRANSITIVE_RELATIONS.has(ast.relation)) {
+        // Use transitive reasoning for relations like LOCATED_IN, PART_OF, etc.
+        result = this.reasoner.deduceTransitive(ast.subject, ast.relation, ast.object);
+      } else if (INHERITABLE_RELATIONS.has(ast.relation)) {
+        // Use inheritance reasoning for relations like HAS, HELPS, etc.
+        // e.g., if Tesla IS_A car and car HAS wheel, then Tesla HAS wheel
+        result = this.reasoner.deduceWithInheritance(ast.subject, ast.relation, ast.object);
+      } else {
+        result = this.reasoner.factExists(ast.subject, ast.relation, ast.object);
+      }
     }
     let geom = null;
     try {

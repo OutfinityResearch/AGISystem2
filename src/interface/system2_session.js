@@ -13,11 +13,11 @@ class System2Session {
   constructor({ id, engine, baseTheoryFile, loadBaseTheories = true, skipPreload = false } = {}) {
     this.id = id || `session_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
     this.engine = engine;
-    this.dsl = new TheoryDSLEngine({
-      api: engine,
-      conceptStore: engine.conceptStore,
-      config: engine.config
-    });
+
+    // IMPORTANT: Use the engine's DSL instance to share InferenceEngine state
+    // This ensures DEFINE_RULE commands affect the same InferenceEngine used by ASK
+    this.dsl = engine.dsl;
+
     this.env = {};
     this.activeTheoryLines = [];
     this._baseTheoriesLoaded = false;

@@ -209,6 +209,8 @@ class DSLCommandsCore {
       throw new Error('PICK_FIRST expects a list variable');
     }
     const list = this.parser.resolveVarAsArray(argTokens[0], env);
+    // Return first element directly for backward compatibility
+    // Callers expect the raw element, not a wrapped object
     return list.length > 0 ? list[0] : null;
   }
 

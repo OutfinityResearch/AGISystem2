@@ -22,6 +22,7 @@ class ContradictionDetector {
     this.functionalRelations.add('BORN_IN');
     this.functionalRelations.add('BIOLOGICAL_MOTHER');
     this.functionalRelations.add('BIOLOGICAL_FATHER');
+    this.functionalRelations.add('STATUS');
 
     // Default disjoint pairs for common biological/categorical concepts
     // These are injected into contradiction checks automatically
@@ -45,8 +46,11 @@ class ContradictionDetector {
       // Other categories
       ['animal', 'plant'],
       ['living', 'dead'],
+      ['alive', 'dead'],
       ['mortal', 'immortal'],
-      ['true', 'false']
+      ['true', 'false'],
+      ['confirmed', 'ruled_out'],
+      ['active', 'terminated']
     ];
   }
 

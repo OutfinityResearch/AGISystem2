@@ -61,6 +61,7 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 - `src/theory/theory_preloader.js` → `.specs/theory/theory_preloader.js.md` — Class `TheoryPreloader`: fast loading of base ontology and axiology theories with JSON caching for ~10x speedup. Loaded automatically at session creation unless skipPreload=true.
 - `(language spec)` → `.specs/theory/Sys2DSL_syntax.md` — **Complete Sys2DSL language specification**: syntax, token types, case conventions, grammar (EBNF), evaluation model, session lifecycle.
 - `(command reference)` → `.specs/theory/Sys2DSL_commands.md` — **Full command reference**: all commands organized by category (query, assertion, concept, relation, theory, reasoning, mask, utility, memory, output).
+- `(high-level commands)` → `.specs/theory/Sys2DSL_highlevel.md` — Consolidated, NL-friendly command set (QUERY/WHATIF/SUGGEST/etc.) that internally dispatches to the granular commands above.
 - `(data mapping)` → `.specs/theory/Sys2DSL_arch.md` — Sys2DSL data mapping: how scripts map to internal structures, value types, mask application.
 - `(eval spec)` → `.specs/theory/topological_eval.md` — Topological evaluation and dependency resolution.
 
@@ -72,11 +73,27 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 - `src/support/audit_log.js` → `.specs/support/audit_log.js.md` — Class `AuditLog`: append-only logs for theory changes, ingestions, clustering events, translator calls.
 - `src/support/storage.js` → `.specs/support/storage.js.md` — Class `StorageAdapter`: pluggable persistence backends (default binary-on-disk hierarchy) for concepts and theories.
 
+## Chat Interface (Natural Language)
+- `chat/index.mjs` → `.specs/chat/index.mjs.md` — Module entry point: re-exports chat components, `createChatEngine()` factory for wiring dependencies.
+- `chat/chat_repl.mjs` → `.specs/chat/chat_repl.mjs.md` — Class `ChatREPL`: interactive Read-Eval-Print Loop for natural language interaction. Readline interface, command history, special commands (quit, help, clear).
+- `chat/chat_handlers.mjs` → `.specs/chat/chat_handlers.mjs.md` — Intent handlers: `handleTeach`, `handleAsk`, `handleImport`. Maps intents to Sys2DSL commands.
+- `chat/prompts.mjs` → `.specs/chat/prompts.mjs.md` — LLM prompt templates: `detectIntent`, `extractFacts`, relation mapping (natural language → Sys2DSL relations).
+- `chat/llm_loader.mjs` → `.specs/chat/llm_loader.mjs.md` — Dynamic loader for AchillesAgentLib: lazy loading, graceful degradation when LLM unavailable.
+
 ## Use Case Specifications
 - `(use case)` → `.specs/interface/usecase_define_theory.md` — **Defining Theories**: how to create, load, save, and merge theories.
 - `(use case)` → `.specs/interface/usecase_validate.md` — **Validating Consistency**: how to check for contradictions and conflicts.
 - `(use case)` → `.specs/interface/usecase_hypothesize.md` — **Generating Hypotheses**: abductive reasoning from observations to causes.
 - `(use case)` → `.specs/interface/usecase_prove.md` — **Proving Theorems**: deductive reasoning and proof construction.
+
+## Command Line Interface (CLI)
+- `cli/agisystem2-cli.js` → `.specs/cli/agisystem2-cli.js.md` — Main CLI entry point: interactive REPL, batch mode, single-command execution. Creates `.AGISystem2/` directory structure.
+- `cli/cli_commands.js` → `.specs/cli/cli_commands.js.md` — Command executor: translates CLI commands to Sys2DSL statements. Supports facts, queries, reasoning, theory management, memory operations.
+- `cli/cli_interactive.js` → `.specs/cli/cli_interactive.js.md` — Interactive REPL handler: colored output, debug mode, domain helpers (check-procedure, check-export, check-magic).
+- `cli/cli_help.js` → `.specs/cli/cli_help.js.md` — Help documentation system: color schemes, command references, syntax help, usage examples.
+
+## Build Scripts
+- `scripts/build_theories.js` → `.specs/scripts/build_theories.js.md` — Theory layer builder: converts JSON theory descriptions to compact binary format (AGTL). Deterministic output for reproducible builds.
 
 ## Testing Harness
 - `tests/runTests.js` → `.specs/tests/runTests.js.md` — CLI harness for suite discovery and execution across test profiles (auto/manual/prod-like).

@@ -1,0 +1,34 @@
+{
+  "id": "suite_21_boost_forget",
+  "name": "Boost Before Forgetting",
+  "description": "Boost a concept's usage so it survives a forgetting pass while an unboosted, low-usage concept is removed.",
+  "theory": {
+    "natural_language": "We track two notes: ImportantNote and ScratchNote. We will boost ImportantNote to increase its usage, then run forgetting with a threshold that should drop low-usage concepts. ImportantNote should survive; ScratchNote should be gone.",
+    "expected_facts": [
+      "ImportantNote IS_A note",
+      "ScratchNote IS_A note"
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "After boosting ImportantNote and forgetting low-usage concepts, is ImportantNote still known?",
+      "expected_dsl": "@boost BOOST ImportantNote 5\n@forget FORGET threshold=3\n@q1 ASK ImportantNote IS_A note",
+      "expected_answer": {
+        "natural_language": "Yes. ImportantNote was boosted above the threshold and should still be present.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "BOOST raises usageCount; FORGET threshold=3 removes only low-usage concepts."
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "After the same forgetting pass, is ScratchNote still known?",
+      "expected_dsl": "@q2 ASK ScratchNote IS_A note",
+      "expected_answer": {
+        "natural_language": "No. ScratchNote had low usage and should have been forgotten.",
+        "truth": "UNKNOWN",
+        "explanation": "FORGET threshold=3 removes the unboosted ScratchNote."
+      }
+    }
+  ]
+}

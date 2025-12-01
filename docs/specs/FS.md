@@ -71,6 +71,22 @@ Defines functional behavior of the neuro-symbolic engine that ingests Sys2DSL co
   - Usage statistics (success rates of different reasoning strategies)
   This enables intelligent theory selection and reasoning strategy optimization.
 
+### Orthogonal Architecture Layers
+- <a id="FS-19"></a>**FS-19 Reasoning Engine Layer (DSL-in → DSL-out):** The core reasoning engine operates exclusively on Sys2DSL format. It accepts Sys2DSL commands as input and produces Sys2DSL-formatted results. This layer is deterministic and operates without any LLM dependency. It can be tested in isolation using direct DSL commands.
+
+- <a id="FS-20"></a>**FS-20 NL↔DSL Translation Layer (Optional):** A separate, optional layer handles bidirectional translation between natural language and Sys2DSL:
+  - **NL→DSL (Parsing)**: Converts natural language questions/statements to Sys2DSL commands
+  - **DSL→NL (Generation)**: Converts Sys2DSL results to natural language explanations
+  - This layer is LLM-dependent and non-deterministic
+  - Translation quality is measured independently from reasoning correctness
+
+- <a id="FS-21"></a>**FS-21 Independent Testability:** The evaluation suite MUST support independent testing of each layer:
+  - Default mode: Direct DSL execution (tests reasoning only)
+  - `--eval-llm` mode: Tests NL→DSL translation quality
+  - `--full` mode: Tests end-to-end pipeline
+
+  See [ARCH-LAYERS](architecture/orthogonal_layers.md) for detailed architecture.
+
 ## Requirement Cross-Reference
 
 | New ID | Original IDs | Consolidation Notes |

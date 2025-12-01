@@ -2,27 +2,45 @@
 /**
  * AGISystem2 Evaluation Suite Runner
  *
- * Runs test cases against the AGISystem2 chat interface to validate
- * that the LLM correctly translates natural language to Sys2DSL
- * and that the reasoning engine produces expected answers.
+ * THREE EXECUTION MODES:
+ *
+ * 1. DEFAULT (no flag) - Direct DSL Execution
+ *    - Runs expected_dsl directly against reasoning engine
+ *    - NO LLM involved - tests pure reasoning capabilities
+ *    - Fastest mode (~10x faster than LLM modes)
+ *    - Validates that the reasoning engine works correctly
+ *
+ * 2. --eval-llm - Translation Quality Evaluation
+ *    - Tests NL→DSL translation accuracy
+ *    - Sends natural_language to LLM, compares generated DSL with expected_dsl
+ *    - Reports: exact match %, semantic similarity, common errors
+ *    - Does NOT execute the generated DSL
+ *
+ * 3. --full - End-to-End Evaluation
+ *    - Full pipeline: NL → LLM → DSL → Reasoning Engine → Answer
+ *    - Tests both translation AND reasoning together
+ *    - Most realistic but slowest mode
  *
  * Usage:
  *   node evalsuite/runSuite.js [options]
  *
  * Options:
+ *   --eval-llm      Test NL→DSL translation quality (compare with expected_dsl)
+ *   --full          End-to-end: LLM generates DSL, then execute it
  *   --case <id>     Run only specific case (e.g., 01_taxonomy)
  *   --from <n>      Start from case number N (1-indexed)
  *   --to <m>        End at case number M (inclusive)
  *   --runFailed     Run only previously failed cases (from failed.json)
  *   --verbose       Show detailed output
- *   --dry-run       Parse cases without running AGISystem2
+ *   --dry-run       Parse cases without running
  *   --timeout <ms>  Timeout per interaction (default: 30000)
  *
  * Examples:
+ *   node evalsuite/runSuite.js                     # Default: direct DSL (no LLM)
+ *   node evalsuite/runSuite.js --eval-llm          # Test translation quality
+ *   node evalsuite/runSuite.js --full              # Full end-to-end test
  *   node evalsuite/runSuite.js --from 1 --to 10    # Run cases 1-10
- *   node evalsuite/runSuite.js --from 20 --to 30   # Run cases 20-30
- *   node evalsuite/runSuite.js --runFailed         # Run only failed tests
- *   node evalsuite/runSuite.js --case 05_abductive # Run specific case
+ *   node evalsuite/runSuite.js --runFailed         # Re-run failed tests
  */
 
 const { spawn } = require('child_process');
@@ -36,8 +54,19 @@ const AGI_SCRIPT = path.join(__dirname, '..', 'bin', 'AGISystem2.sh');
 const FAILED_FILE = path.join(__dirname, 'failed.json');
 const DEFAULT_TIMEOUT = 30000;
 
-// Direct DSL mode - bypass LLM, use pre-translated DSL from case files
-let DIRECT_DSL_MODE = false;
+/**
+ * Execution mode enumeration
+ * @readonly
+ * @enum {string}
+ */
+const ExecutionMode = {
+  DIRECT_DSL: 'direct-dsl',  // DEFAULT: Run expected_dsl directly, no LLM
+  EVAL_LLM: 'eval-llm',      // Test NL→DSL translation quality
+  FULL: 'full'               // End-to-end: LLM generates DSL, execute it
+};
+
+// Current execution mode (default: DIRECT_DSL - no LLM)
+let EXECUTION_MODE = ExecutionMode.DIRECT_DSL;
 
 /**
  * Direct DSL Executor - runs DSL commands directly without LLM
@@ -59,7 +88,7 @@ class DirectDSLExecutor {
     log(`  [TIMING] Direct DSL init: ${Date.now() - startTime}ms`, colors.gray);
   }
 
-  async send(message) {
+  async send(message, queryId = null) {
     const sendTime = Date.now();
 
     // Check if message looks like DSL (starts with @)
@@ -68,11 +97,18 @@ class DirectDSLExecutor {
       const lines = message.split('\n').filter(l => l.trim());
       this.session.run(lines);
 
-      // Extract result from last variable
+      // Extract result - prefer queryId variable if provided, else use last variable
       const varMatch = message.match(/@(\w+)/g);
       if (varMatch) {
-        const lastVar = varMatch[varMatch.length - 1].slice(1);
-        const result = this.session.getVar(lastVar);
+        let targetVar;
+        if (queryId) {
+          // Look for variable matching the query ID (e.g., @q2 for query q2)
+          targetVar = queryId;
+        } else {
+          // Fallback to last variable
+          targetVar = varMatch[varMatch.length - 1].slice(1);
+        }
+        const result = this.session.getVar(targetVar);
         log(`  [TIMING] Direct DSL exec: ${Date.now() - sendTime}ms`, colors.gray);
         return JSON.stringify(result || { ok: true });
       }
@@ -88,6 +124,249 @@ class DirectDSLExecutor {
   async stop() {
     this.session = null;
     this.agent = null;
+  }
+}
+
+/**
+ * Translation Evaluator - tests NL→DSL translation quality
+ * Compares LLM-generated DSL with expected_dsl from case files
+ * Does NOT execute the generated DSL - only measures translation accuracy
+ */
+class TranslationEvaluator {
+  constructor(options = {}) {
+    this.verbose = options.verbose || false;
+    this.timeout = options.timeout || DEFAULT_TIMEOUT;
+    this.process = null;
+    this.buffer = '';
+    this.responseResolve = null;
+    this.responseReject = null;
+    this.translationStats = {
+      exactMatch: 0,
+      semanticMatch: 0,
+      partialMatch: 0,
+      noMatch: 0,
+      errors: []
+    };
+  }
+
+  async start() {
+    const startTime = Date.now();
+    return new Promise((resolve, reject) => {
+      if (!fs.existsSync(AGI_SCRIPT)) {
+        reject(new Error(`AGISystem2.sh not found at ${AGI_SCRIPT}`));
+        return;
+      }
+
+      // Use --debug to get structured DSL output
+      this.process = spawn('bash', [AGI_SCRIPT, '--no-color', '--debug'], {
+        stdio: ['pipe', 'pipe', 'pipe'],
+        env: { ...process.env }
+      });
+
+      this.process.on('error', (err) => {
+        reject(new Error(`Failed to start AGISystem2: ${err.message}`));
+      });
+
+      this.process.on('exit', (code) => {
+        if (this.verbose) {
+          log(`  [AGI] Process exited with code ${code}`, colors.gray);
+        }
+      });
+
+      this.process.stdout.on('data', (data) => {
+        const text = data.toString();
+        this.buffer += text;
+
+        if (this.verbose) {
+          log(`  [TRANS OUT] ${text.trim()}`, colors.gray);
+        }
+
+        if (this.isResponseComplete()) {
+          if (this.responseResolve) {
+            const response = this.extractResponse();
+            this.responseResolve(response);
+            this.responseResolve = null;
+            this.responseReject = null;
+          }
+        }
+      });
+
+      this.process.stderr.on('data', (data) => {
+        if (this.verbose) {
+          log(`  [TRANS ERR] ${data.toString().trim()}`, colors.yellow);
+        }
+      });
+
+      setTimeout(() => {
+        log(`  [TIMING] Translation evaluator start: ${Date.now() - startTime}ms`, colors.gray);
+        resolve();
+      }, 2000);
+    });
+  }
+
+  isResponseComplete() {
+    const promptPatterns = [/\n>\s*$/, /\nYou:\s*$/, /\nInput:\s*$/, /\n\?\s*$/];
+    for (const pattern of promptPatterns) {
+      if (pattern.test(this.buffer)) return true;
+    }
+    if (this.buffer.includes('"truth"') && this.buffer.includes('}')) return true;
+    return false;
+  }
+
+  extractResponse() {
+    const response = this.buffer;
+    this.buffer = '';
+    return response;
+  }
+
+  /**
+   * Send NL query and extract generated DSL
+   * Returns: { generatedDsl: string, rawResponse: string }
+   */
+  async send(message) {
+    const sendTime = Date.now();
+    return new Promise((resolve, reject) => {
+      if (!this.process) {
+        reject(new Error('Translation evaluator not started'));
+        return;
+      }
+
+      this.buffer = '';
+      this.responseResolve = resolve;
+      this.responseReject = reject;
+
+      const timeoutId = setTimeout(() => {
+        if (this.responseResolve) {
+          const partialResponse = this.extractResponse();
+          log(`  [TIMING] Translation timeout after ${Date.now() - sendTime}ms`, colors.yellow);
+          this.responseResolve(partialResponse || '[TIMEOUT]');
+          this.responseResolve = null;
+          this.responseReject = null;
+        }
+      }, this.timeout);
+
+      if (this.verbose) {
+        log(`  [TRANS IN] ${message}`, colors.blue);
+      }
+
+      this.process.stdin.write(message + '\n');
+
+      const originalResolve = this.responseResolve;
+      this.responseResolve = (response) => {
+        clearTimeout(timeoutId);
+        log(`  [TIMING] Translation response: ${Date.now() - sendTime}ms`, colors.gray);
+        originalResolve(response);
+      };
+    });
+  }
+
+  /**
+   * Extract DSL from LLM response
+   * Looks for patterns like @varname COMMAND ... in the response
+   */
+  extractGeneratedDsl(response) {
+    // Look for DSL patterns in response
+    const dslPatterns = [
+      // Pattern: lines starting with @
+      /@\w+\s+(?:ASK|ASSERT|FACTS_MATCHING|NONEMPTY|BOOL_AND|BOOL_OR|COUNT|PICK_FIRST|MERGE_LISTS|ABDUCT|INFER|THEORY_PUSH|THEORY_POP|RETRACT|FILTER)[^\n]*/gi,
+      // Pattern: in code blocks
+      /```(?:dsl|sys2dsl)?\n([\s\S]*?)```/gi
+    ];
+
+    let extractedDsl = [];
+
+    for (const pattern of dslPatterns) {
+      const matches = response.match(pattern);
+      if (matches) {
+        extractedDsl.push(...matches);
+      }
+    }
+
+    // Clean up and join
+    return extractedDsl
+      .map(d => d.replace(/```(?:dsl|sys2dsl)?\n?/g, '').replace(/```/g, '').trim())
+      .filter(d => d.length > 0)
+      .join('\n');
+  }
+
+  /**
+   * Compare generated DSL with expected DSL
+   * Returns: { matchType: 'exact'|'semantic'|'partial'|'none', similarity: number, details: string }
+   */
+  compareDsl(generated, expected) {
+    if (!generated || !expected) {
+      return { matchType: 'none', similarity: 0, details: 'Missing DSL' };
+    }
+
+    // Normalize for comparison
+    const normalizeForCompare = (dsl) => {
+      return dsl
+        .replace(/@\w+/g, '@VAR')  // Normalize variable names
+        .replace(/\s+/g, ' ')       // Normalize whitespace
+        .trim()
+        .toUpperCase();
+    };
+
+    const normalizedGen = normalizeForCompare(generated);
+    const normalizedExp = normalizeForCompare(expected);
+
+    // Exact match (after normalization)
+    if (normalizedGen === normalizedExp) {
+      return { matchType: 'exact', similarity: 100, details: 'Exact match' };
+    }
+
+    // Semantic match - same commands in same order
+    const genCommands = generated.match(/(?:ASK|ASSERT|FACTS_MATCHING|NONEMPTY|BOOL_AND|BOOL_OR|COUNT|PICK_FIRST|MERGE_LISTS|ABDUCT|INFER|THEORY_PUSH|THEORY_POP|RETRACT|FILTER)/gi) || [];
+    const expCommands = expected.match(/(?:ASK|ASSERT|FACTS_MATCHING|NONEMPTY|BOOL_AND|BOOL_OR|COUNT|PICK_FIRST|MERGE_LISTS|ABDUCT|INFER|THEORY_PUSH|THEORY_POP|RETRACT|FILTER)/gi) || [];
+
+    const commandMatch = genCommands.length > 0 &&
+                         genCommands.map(c => c.toUpperCase()).join(',') ===
+                         expCommands.map(c => c.toUpperCase()).join(',');
+
+    if (commandMatch) {
+      // Check if arguments are similar
+      const similarity = this.calculateSimilarity(normalizedGen, normalizedExp);
+      if (similarity > 80) {
+        return { matchType: 'semantic', similarity, details: `Same commands, ${similarity}% arg match` };
+      }
+    }
+
+    // Partial match - some overlap
+    const similarity = this.calculateSimilarity(normalizedGen, normalizedExp);
+    if (similarity > 50) {
+      return { matchType: 'partial', similarity, details: `${similarity}% overlap` };
+    }
+
+    return { matchType: 'none', similarity, details: `Only ${similarity}% match` };
+  }
+
+  /**
+   * Calculate similarity between two strings (Jaccard-like)
+   */
+  calculateSimilarity(s1, s2) {
+    const words1 = new Set(s1.split(/\s+/));
+    const words2 = new Set(s2.split(/\s+/));
+    const intersection = new Set([...words1].filter(w => words2.has(w)));
+    const union = new Set([...words1, ...words2]);
+    return Math.round((intersection.size / union.size) * 100);
+  }
+
+  getStats() {
+    return this.translationStats;
+  }
+
+  async stop() {
+    if (this.process) {
+      try {
+        this.process.stdin.write('/exit\n');
+      } catch (e) {}
+      setTimeout(() => {
+        if (this.process) {
+          this.process.kill();
+          this.process = null;
+        }
+      }, 1000);
+    }
   }
 }
 
@@ -111,24 +390,33 @@ function log(msg, color = '') {
  * Display usage/options at startup
  */
 function showUsage() {
-  log(`\n${'─'.repeat(60)}`, colors.gray);
-  log(`  Available Options:`, colors.bright);
-  log(`${'─'.repeat(60)}`, colors.gray);
-  log(`  --from <n>      Start from case number N (1-indexed)`, colors.cyan);
-  log(`  --to <m>        End at case number M (inclusive)`, colors.cyan);
-  log(`  --runFailed     Run only previously failed cases`, colors.cyan);
-  log(`  --case <id>     Run specific case by ID`, colors.cyan);
-  log(`  --verbose       Show detailed output`, colors.cyan);
-  log(`  --dry-run       Validate cases without running`, colors.cyan);
-  log(`  --timeout <ms>  Set timeout per interaction`, colors.cyan);
-  log(`  --direct-dsl    Use pre-translated DSL (skip LLM, ~10x faster)`, colors.cyan);
-  log(`${'─'.repeat(60)}`, colors.gray);
-  log(`  Examples:`, colors.bright);
+  log(`\n${'═'.repeat(65)}`, colors.cyan);
+  log(`  ${colors.bright}AGISystem2 Evaluation Suite - THREE MODES${colors.reset}`, colors.cyan);
+  log(`${'═'.repeat(65)}`, colors.cyan);
+  log(``, '');
+  log(`  ${colors.bright}EXECUTION MODES:${colors.reset}`, '');
+  log(`  ${colors.green}(default)${colors.reset}       Direct DSL - run expected_dsl, NO LLM (fastest)`, '');
+  log(`  ${colors.yellow}--eval-llm${colors.reset}      Test NL→DSL translation quality`, '');
+  log(`  ${colors.yellow}--full${colors.reset}          End-to-end: LLM → DSL → Execute`, '');
+  log(``, '');
+  log(`  ${colors.bright}FILTER OPTIONS:${colors.reset}`, '');
+  log(`  --from <n>      Start from case number N (1-indexed)`, colors.gray);
+  log(`  --to <m>        End at case number M (inclusive)`, colors.gray);
+  log(`  --runFailed     Run only previously failed cases`, colors.gray);
+  log(`  --case <id>     Run specific case by ID`, colors.gray);
+  log(``, '');
+  log(`  ${colors.bright}OTHER OPTIONS:${colors.reset}`, '');
+  log(`  --verbose       Show detailed output`, colors.gray);
+  log(`  --dry-run       Validate cases without running`, colors.gray);
+  log(`  --timeout <ms>  Set timeout per interaction`, colors.gray);
+  log(``, '');
+  log(`${'─'.repeat(65)}`, colors.gray);
+  log(`  ${colors.bright}Examples:${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js                  ${colors.green}# Direct DSL (default)${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js --eval-llm       ${colors.yellow}# Test translation${colors.reset}`, '');
+  log(`    node evalsuite/runSuite.js --full           ${colors.yellow}# Full end-to-end${colors.reset}`, '');
   log(`    node evalsuite/runSuite.js --from 1 --to 10`, colors.gray);
-  log(`    node evalsuite/runSuite.js --runFailed`, colors.gray);
-  log(`    node evalsuite/runSuite.js --case 05_abductive`, colors.gray);
-  log(`    node evalsuite/runSuite.js --direct-dsl     # Fast mode`, colors.gray);
-  log(`${'─'.repeat(60)}\n`, colors.gray);
+  log(`${'═'.repeat(65)}\n`, colors.cyan);
 }
 
 /**
@@ -1003,8 +1291,11 @@ function generateDSLQuery(query, expectedFacts) {
 
 /**
  * Evaluate a single test case
+ * Used in DIRECT_DSL and FULL modes
  */
-async function evaluateCase(testCase, agi, options) {
+async function evaluateCase(testCase, executor, options) {
+  const isDirectDsl = EXECUTION_MODE === ExecutionMode.DIRECT_DSL;
+
   const results = {
     id: testCase.id,
     name: testCase.name,
@@ -1016,19 +1307,93 @@ async function evaluateCase(testCase, agi, options) {
 
   log(`\n  Loading theory...`, colors.gray);
 
-  // In direct DSL mode, use expected_facts directly
-  if (DIRECT_DSL_MODE && testCase.theory.expected_facts) {
+  // In direct DSL mode, use expected_facts directly (no LLM)
+  if (isDirectDsl && testCase.theory.expected_facts) {
     const dslLines = testCase.theory.expected_facts.map((fact, i) =>
       `@f${String(i + 1).padStart(3, '0')} ASSERT ${fact}`
     );
-    const theoryResponse = await agi.send(dslLines.join('\n'));
+
+    // Load composition rules if defined
+    if (testCase.theory.rules && Array.isArray(testCase.theory.rules)) {
+      let ruleIdx = 0;
+      for (const rule of testCase.theory.rules) {
+        ruleIdx++;
+        // Convert rule to DEFINE_RULE command
+        // Rule format: { name, head: "?x REL ?z", body: ["?x REL1 ?y", "?y REL2 ?z"] }
+        const bodyArgs = rule.body.map(b => `body="${b}"`).join(' ');
+        dslLines.push(`@rule${ruleIdx} DEFINE_RULE name=${rule.name} head="${rule.head}" ${bodyArgs}`);
+      }
+      log(`  Registering ${testCase.theory.rules.length} composition rules`, colors.gray);
+    }
+
+    // Load default reasoning rules if defined
+    if (testCase.theory.defaults && Array.isArray(testCase.theory.defaults)) {
+      let defIdx = 0;
+      for (const def of testCase.theory.defaults) {
+        defIdx++;
+        // Convert default to DEFINE_DEFAULT command
+        // Default format: { name, default: "?x CAN fly", condition: "?x IS_A bird", exceptions: ["penguin", "ostrich"] }
+        const excArgs = (def.exceptions || []).map(e => `exception=${e}`).join(' ');
+
+        // Parse the default pattern to extract property and value
+        const defaultParts = def.default.split(/\s+/);
+        const property = defaultParts.length >= 2 ? defaultParts[1] : 'HAS';
+        const value = defaultParts.length >= 3 ? defaultParts.slice(2).join('_') : 'unknown';
+
+        // Parse condition to get the typical type
+        const condParts = def.condition.split(/\s+/);
+        const typicalType = condParts.length >= 3 ? condParts[2] : 'thing';
+
+        dslLines.push(`@default${defIdx} DEFINE_DEFAULT name=${def.name} type=${typicalType} property=${property} value=${value} ${excArgs}`);
+      }
+      log(`  Registering ${testCase.theory.defaults.length} default reasoning rules`, colors.gray);
+    }
+
+    // Load constraint definitions if defined
+    if (testCase.theory.constraints) {
+      const constraints = testCase.theory.constraints;
+
+      // Register functional relations
+      if (constraints.functional && Array.isArray(constraints.functional)) {
+        let funcIdx = 0;
+        for (const func of constraints.functional) {
+          funcIdx++;
+          dslLines.push(`@func${funcIdx} REGISTER_FUNCTIONAL ${func.relation}`);
+        }
+        log(`  Registering ${constraints.functional.length} functional constraints`, colors.gray);
+      }
+
+      // Register cardinality constraints
+      if (constraints.cardinality && Array.isArray(constraints.cardinality)) {
+        let cardIdx = 0;
+        for (const card of constraints.cardinality) {
+          cardIdx++;
+          const minArg = card.min !== undefined ? `min=${card.min}` : '';
+          const maxArg = card.max !== undefined ? `max=${card.max}` : '';
+          dslLines.push(`@card${cardIdx} REGISTER_CARDINALITY ${card.subject_type} ${card.relation} ${minArg} ${maxArg}`);
+        }
+        log(`  Registering ${constraints.cardinality.length} cardinality constraints`, colors.gray);
+      }
+
+      // Register disjoint pairs as facts
+      if (constraints.disjoint && Array.isArray(constraints.disjoint)) {
+        let disjIdx = 0;
+        for (const pair of constraints.disjoint) {
+          if (Array.isArray(pair) && pair.length >= 2) {
+            disjIdx++;
+            dslLines.push(`@disj${disjIdx} ASSERT ${pair[0]} DISJOINT_WITH ${pair[1]}`);
+          }
+        }
+        log(`  Registering ${constraints.disjoint.length} disjoint constraints`, colors.gray);
+      }
+    }
+
+    const theoryResponse = await executor.send(dslLines.join('\n'));
     results.theoryLoaded = true;
     log(`  Loaded ${testCase.theory.expected_facts.length} facts directly`, colors.gray);
   } else {
-    // Send the theory as natural language
-    // Note: expected_facts are available in case.json but loading them individually
-    // is too slow. The LLM should extract facts from natural_language.
-    const theoryResponse = await agi.send(testCase.theory.natural_language);
+    // FULL mode: Send the theory as natural language to LLM
+    const theoryResponse = await executor.send(testCase.theory.natural_language);
     results.theoryLoaded = !theoryResponse.includes('error') &&
                             !theoryResponse.includes('Error');
 
@@ -1055,25 +1420,27 @@ async function evaluateCase(testCase, agi, options) {
       let response;
       let usedDsl = null;
 
-      // In direct DSL mode, construct ASK query from expected_facts pattern
-      if (DIRECT_DSL_MODE && query.expected_dsl) {
-        // Use pre-defined expected_dsl from case.json (best practice - fully documented)
-        usedDsl = query.expected_dsl;
-        response = await agi.send(usedDsl);
-      } else if (DIRECT_DSL_MODE && query.dsl_query) {
-        // Legacy: Use pre-defined DSL query if available
-        usedDsl = query.dsl_query;
-        response = await agi.send(usedDsl);
-      } else if (DIRECT_DSL_MODE) {
-        // Fallback: auto-generate DSL query from natural language pattern
-        usedDsl = generateDSLQuery(query, testCase.theory.expected_facts);
-        if (usedDsl) {
-          response = await agi.send(usedDsl);
+      if (isDirectDsl) {
+        // DIRECT DSL MODE: Use expected_dsl directly (no LLM)
+        if (query.expected_dsl) {
+          usedDsl = query.expected_dsl;
+          response = await executor.send(usedDsl, query.id);
+        } else if (query.dsl_query) {
+          // Legacy field
+          usedDsl = query.dsl_query;
+          response = await executor.send(usedDsl, query.id);
         } else {
-          response = '[Could not generate DSL query]';
+          // Fallback: auto-generate DSL (no LLM, just pattern matching)
+          usedDsl = generateDSLQuery(query, testCase.theory.expected_facts);
+          if (usedDsl) {
+            response = await executor.send(usedDsl, query.id);
+          } else {
+            response = '[Could not generate DSL query - add expected_dsl to case.json]';
+          }
         }
       } else {
-        response = await agi.send(query.natural_language);
+        // FULL MODE: Send natural language to LLM
+        response = await executor.send(query.natural_language, query.id);
       }
 
       // Log the DSL used for debugging/documentation
@@ -1169,17 +1536,32 @@ function parseStructuredResult(response) {
 
   // Try to parse raw JSON in response (for Direct DSL mode)
   if (!result.found) {
-    const jsonMatch = response.match(/({[\s\S]*?"(?:truth|band)"[\s\S]*?})/);
-    if (jsonMatch) {
-      try {
-        const parsed = JSON.parse(jsonMatch[1]);
+    // For Direct DSL mode, the response is usually the whole JSON object
+    // Try to parse the entire response as JSON first
+    try {
+      const parsed = JSON.parse(response);
+      if (parsed && (parsed.truth || parsed.band)) {
         result.found = true;
-        // Support both 'truth' (ASK) and 'band' (ABDUCT)
         result.truth = parsed.truth || parsed.band;
         result.method = parsed.method;
         result.confidence = parsed.confidence;
-      } catch (e) {
-        // Ignore parse errors
+      }
+    } catch (e) {
+      // Not valid JSON, try regex extraction
+      // Use a greedy match to get the full JSON object
+      const jsonMatch = response.match(/^\s*({[\s\S]+})\s*$/);
+      if (jsonMatch) {
+        try {
+          const parsed = JSON.parse(jsonMatch[1]);
+          if (parsed && (parsed.truth || parsed.band)) {
+            result.found = true;
+            result.truth = parsed.truth || parsed.band;
+            result.method = parsed.method;
+            result.confidence = parsed.confidence;
+          }
+        } catch (e2) {
+          // Ignore parse errors
+        }
       }
     }
   }
@@ -1196,7 +1578,8 @@ function parseStructuredResult(response) {
       const match = response.match(pattern);
       if (match) {
         const truth = match[1].toUpperCase();
-        if (['TRUE_CERTAIN', 'TRUE', 'FALSE', 'PLAUSIBLE', 'UNKNOWN'].includes(truth)) {
+        // Include TRUE_DEFAULT for default reasoning results
+        if (['TRUE_CERTAIN', 'TRUE', 'TRUE_DEFAULT', 'FALSE', 'PLAUSIBLE', 'UNKNOWN'].includes(truth)) {
           result.found = true;
           result.truth = truth;
           break;
@@ -1399,6 +1782,103 @@ function analyzeResponse(response, expected) {
 }
 
 /**
+ * Evaluate translation quality for a single test case
+ * Used in EVAL_LLM mode - tests NL→DSL translation accuracy
+ * Does NOT execute the generated DSL
+ */
+async function evaluateTranslation(testCase, evaluator, options, translationStats) {
+  const results = {
+    id: testCase.id,
+    name: testCase.name,
+    theoryLoaded: true,  // Not relevant for translation eval
+    queries: [],
+    passed: 0,
+    failed: 0
+  };
+
+  log(`\n  Sending theory to LLM...`, colors.gray);
+
+  // Send theory as natural language (LLM needs context)
+  if (testCase.theory.natural_language) {
+    const theoryResponse = await evaluator.send(testCase.theory.natural_language);
+    if (options.verbose) {
+      log(`  Theory response: ${theoryResponse.substring(0, 200)}...`, colors.gray);
+    }
+  }
+
+  // Evaluate translation for each query
+  for (const query of testCase.queries) {
+    log(`\n  Query ${query.id}: "${query.natural_language}"`, colors.blue);
+
+    const queryResult = {
+      id: query.id,
+      question: query.natural_language,
+      expectedDsl: query.expected_dsl || '[not defined]',
+      generatedDsl: '',
+      passed: false,
+      matchType: 'none',
+      similarity: 0,
+      details: ''
+    };
+
+    // Skip if no expected_dsl defined
+    if (!query.expected_dsl) {
+      queryResult.details = 'No expected_dsl in case.json - cannot evaluate translation';
+      results.failed++;
+      translationStats.none++;
+      logResult(false, `No expected_dsl defined for comparison`);
+      results.queries.push(queryResult);
+      continue;
+    }
+
+    try {
+      // Send natural language to LLM
+      const response = await evaluator.send(query.natural_language);
+
+      // Extract generated DSL from response
+      const generatedDsl = evaluator.extractGeneratedDsl(response);
+      queryResult.generatedDsl = generatedDsl;
+
+      // Compare with expected DSL
+      const comparison = evaluator.compareDsl(generatedDsl, query.expected_dsl);
+      queryResult.matchType = comparison.matchType;
+      queryResult.similarity = comparison.similarity;
+      queryResult.details = comparison.details;
+
+      // Consider exact and semantic matches as "passed"
+      if (comparison.matchType === 'exact' || comparison.matchType === 'semantic') {
+        queryResult.passed = true;
+        results.passed++;
+        translationStats[comparison.matchType === 'exact' ? 'exact' : 'semantic']++;
+
+        const color = comparison.matchType === 'exact' ? colors.green : colors.cyan;
+        logResult(true, `${comparison.matchType.toUpperCase()} match (${comparison.similarity}%)`);
+      } else {
+        results.failed++;
+        translationStats[comparison.matchType === 'partial' ? 'partial' : 'none']++;
+
+        logResult(false, `${comparison.matchType.toUpperCase()} (${comparison.similarity}%)`);
+        log(`    ${colors.cyan}Expected DSL:${colors.reset}`, '');
+        log(`      ${query.expected_dsl.replace(/\n/g, '\n      ')}`, colors.gray);
+        log(`    ${colors.yellow}Generated DSL:${colors.reset}`, '');
+        log(`      ${generatedDsl || '[none extracted]'}`, colors.gray);
+        log(`    ${colors.gray}Details: ${comparison.details}${colors.reset}`, '');
+      }
+
+    } catch (err) {
+      results.failed++;
+      translationStats.none++;
+      queryResult.details = `Error: ${err.message}`;
+      logResult(false, `Error: ${err.message}`);
+    }
+
+    results.queries.push(queryResult);
+  }
+
+  return results;
+}
+
+/**
  * Run dry-run mode (parse and validate cases without executing)
  */
 function dryRun(cases) {
@@ -1460,12 +1940,18 @@ async function main() {
     runFailed: args.includes('--runFailed'),
     verbose: args.includes('--verbose') || args.includes('-v'),
     dryRun: args.includes('--dry-run'),
-    directDsl: args.includes('--direct-dsl'),
     timeout: DEFAULT_TIMEOUT
   };
 
-  // Set global mode
-  DIRECT_DSL_MODE = options.directDsl;
+  // Determine execution mode (DEFAULT is DIRECT_DSL - no LLM)
+  if (args.includes('--eval-llm')) {
+    EXECUTION_MODE = ExecutionMode.EVAL_LLM;
+  } else if (args.includes('--full')) {
+    EXECUTION_MODE = ExecutionMode.FULL;
+  } else {
+    // Default mode: direct DSL execution (no LLM)
+    EXECUTION_MODE = ExecutionMode.DIRECT_DSL;
+  }
 
   // Parse --case argument
   const caseIdx = args.indexOf('--case');
@@ -1498,16 +1984,26 @@ async function main() {
   log(`  Suite directory: ${SUITE_DIR}`);
   log(`  AGI script: ${AGI_SCRIPT}`);
   log(`  Timeout: ${options.timeout}ms`);
-  if (DIRECT_DSL_MODE) {
-    log(`  Mode: DIRECT DSL (no LLM, ~10x faster)`, colors.green);
-  }
+
+  // Display current mode prominently
+  const modeColors = {
+    [ExecutionMode.DIRECT_DSL]: colors.green,
+    [ExecutionMode.EVAL_LLM]: colors.yellow,
+    [ExecutionMode.FULL]: colors.cyan
+  };
+  const modeDescriptions = {
+    [ExecutionMode.DIRECT_DSL]: 'DIRECT DSL (no LLM - pure reasoning test)',
+    [ExecutionMode.EVAL_LLM]: 'EVAL LLM (test NL→DSL translation quality)',
+    [ExecutionMode.FULL]: 'FULL (end-to-end: LLM → DSL → Execute)'
+  };
+  log(`  Mode: ${modeDescriptions[EXECUTION_MODE]}`, modeColors[EXECUTION_MODE]);
 
   // Show active filters
   if (options.from !== null || options.to !== null) {
     log(`  Range: ${options.from || 1} to ${options.to || 'end'}`, colors.cyan);
   }
   if (options.runFailed) {
-    log(`  Mode: Running FAILED cases only`, colors.yellow);
+    log(`  Filter: Running FAILED cases only`, colors.yellow);
   }
   if (options.filterCase) {
     log(`  Filter: ${options.filterCase}`, colors.cyan);
@@ -1533,95 +2029,152 @@ async function main() {
     process.exit(valid ? 0 : 1);
   }
 
-  // Full run
+  // Run based on execution mode
   let totalPassed = 0;
   let totalFailed = 0;
   const allResults = [];
+
+  // Translation stats for EVAL_LLM mode
+  const translationStats = { exact: 0, semantic: 0, partial: 0, none: 0 };
 
   for (const testCase of cases) {
     logSection(`Case: ${testCase.id} - ${testCase.name}`);
 
     // Choose executor based on mode
-    const agi = DIRECT_DSL_MODE
-      ? new DirectDSLExecutor(options)
-      : new AGIProcess(options);
+    let executor;
+    const executorNames = {
+      [ExecutionMode.DIRECT_DSL]: 'Direct DSL Executor',
+      [ExecutionMode.EVAL_LLM]: 'Translation Evaluator',
+      [ExecutionMode.FULL]: 'AGISystem2 (Full)'
+    };
+
+    switch (EXECUTION_MODE) {
+      case ExecutionMode.DIRECT_DSL:
+        executor = new DirectDSLExecutor(options);
+        break;
+      case ExecutionMode.EVAL_LLM:
+        executor = new TranslationEvaluator(options);
+        break;
+      case ExecutionMode.FULL:
+        executor = new AGIProcess(options);
+        break;
+    }
 
     try {
-      log(`  Starting ${DIRECT_DSL_MODE ? 'Direct DSL' : 'AGISystem2'}...`, colors.gray);
-      await agi.start();
+      log(`  Starting ${executorNames[EXECUTION_MODE]}...`, colors.gray);
+      await executor.start();
 
-      const result = await evaluateCase(testCase, agi, options);
+      let result;
+      if (EXECUTION_MODE === ExecutionMode.EVAL_LLM) {
+        // Translation evaluation mode
+        result = await evaluateTranslation(testCase, executor, options, translationStats);
+      } else {
+        // Direct DSL or Full mode
+        result = await evaluateCase(testCase, executor, options);
+      }
+
       allResults.push(result);
-
       totalPassed += result.passed;
       totalFailed += result.failed;
 
     } catch (err) {
       log(`  Error running case: ${err.message}`, colors.red);
+      if (options.verbose) {
+        console.error(err.stack);
+      }
       totalFailed += testCase.queries.length;
     } finally {
-      await agi.stop();
+      await executor.stop();
     }
   }
 
-  // Final summary
+  // Final summary - different format based on execution mode
   logSection('EVALUATION SUMMARY');
 
-  // Calculate detailed statistics
-  let dslPassed = 0;    // Passed via DSL reasoning
-  let nlPassed = 0;     // Passed via NL matching
-  let noDslQuery = 0;   // Failed because couldn't generate DSL query
-  let dslMismatch = 0;  // DSL query ran but got wrong answer
-  let otherFailed = 0;  // Other failures
+  const totalQueries = totalPassed + totalFailed;
 
-  for (const result of allResults) {
-    for (const query of result.queries) {
-      if (query.passed) {
-        if (query.matchReason && query.matchReason.includes('DSL Match')) {
-          dslPassed++;
+  if (EXECUTION_MODE === ExecutionMode.EVAL_LLM) {
+    // Translation quality summary
+    const totalTranslated = translationStats.exact + translationStats.semantic +
+                            translationStats.partial + translationStats.none;
+    const goodTranslation = translationStats.exact + translationStats.semantic;
+    const translationRate = totalTranslated > 0
+      ? (goodTranslation / totalTranslated * 100).toFixed(1)
+      : 'N/A';
+
+    log(`\n  ${colors.bright}╔══════════════════════════════════════════════════════════╗${colors.reset}`);
+    log(`  ${colors.bright}║         TRANSLATION QUALITY STATISTICS                    ║${colors.reset}`);
+    log(`  ${colors.bright}╠══════════════════════════════════════════════════════════╣${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset} ${colors.cyan}NL→DSL Translation Results:${colors.reset}                            ${colors.bright}║${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset}   ${colors.green}✓ Exact:${colors.reset}    ${String(translationStats.exact).padStart(3)}  (perfect match)                   ${colors.bright}║${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset}   ${colors.cyan}✓ Semantic:${colors.reset} ${String(translationStats.semantic).padStart(3)}  (same commands, similar args)     ${colors.bright}║${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset}   ${colors.yellow}○ Partial:${colors.reset}  ${String(translationStats.partial).padStart(3)}  (50-80% overlap)                  ${colors.bright}║${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset}   ${colors.red}✗ None:${colors.reset}     ${String(translationStats.none).padStart(3)}  (poor or no translation)          ${colors.bright}║${colors.reset}`);
+    log(`  ${colors.bright}╠══════════════════════════════════════════════════════════╣${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset} ${colors.bright}TRANSLATION ACCURACY:${colors.reset} ${translationRate}%                            ${colors.bright}║${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset}   (exact + semantic matches / total)                      ${colors.bright}║${colors.reset}`);
+    log(`  ${colors.bright}╚══════════════════════════════════════════════════════════╝${colors.reset}`);
+
+  } else {
+    // Reasoning engine summary (DIRECT_DSL and FULL modes)
+    let dslPassed = 0;
+    let nlPassed = 0;
+    let noDslQuery = 0;
+    let dslMismatch = 0;
+    let otherFailed = 0;
+
+    for (const result of allResults) {
+      for (const query of result.queries) {
+        if (query.passed) {
+          if (query.matchReason && query.matchReason.includes('DSL Match')) {
+            dslPassed++;
+          } else {
+            nlPassed++;
+          }
         } else {
-          nlPassed++;
-        }
-      } else {
-        if (query.matchReason && query.matchReason.includes('no DSL')) {
-          noDslQuery++;
-        } else if (query.matchReason && query.matchReason.includes('DSL mismatch')) {
-          dslMismatch++;
-        } else {
-          otherFailed++;
+          if (query.matchReason && query.matchReason.includes('no DSL')) {
+            noDslQuery++;
+          } else if (query.matchReason && query.matchReason.includes('DSL mismatch')) {
+            dslMismatch++;
+          } else {
+            otherFailed++;
+          }
         }
       }
     }
-  }
 
-  // Detailed breakdown
-  const totalQueries = totalPassed + totalFailed;
-  const dslAttempted = dslPassed + dslMismatch;
-  const dslTranslated = dslAttempted; // queries that got a DSL translation and ran
-  const pureReasoningRate = dslAttempted > 0
-    ? (dslPassed / dslAttempted * 100).toFixed(1)
-    : 'N/A';
+    const dslAttempted = dslPassed + dslMismatch;
+    const pureReasoningRate = dslAttempted > 0
+      ? (dslPassed / dslAttempted * 100).toFixed(1)
+      : 'N/A';
 
-  log(`\n  ${colors.bright}╔══════════════════════════════════════════════════════════╗${colors.reset}`);
-  log(`  ${colors.bright}║           REASONING ENGINE STATISTICS                     ║${colors.reset}`);
-  log(`  ${colors.bright}╠══════════════════════════════════════════════════════════╣${colors.reset}`);
-  log(`  ${colors.bright}║${colors.reset} ${colors.cyan}DSL QUERIES (Pure Reasoning):${colors.reset}                          ${colors.bright}║${colors.reset}`);
-  log(`  ${colors.bright}║${colors.reset}   ${colors.green}✓ Passed:${colors.reset} ${String(dslPassed).padStart(3)}  (reasoning correct)                 ${colors.bright}║${colors.reset}`);
-  log(`  ${colors.bright}║${colors.reset}   ${colors.red}✗ Failed:${colors.reset} ${String(dslMismatch).padStart(3)}  (reasoning error)                   ${colors.bright}║${colors.reset}`);
-  log(`  ${colors.bright}║${colors.reset}   ${colors.yellow}─ Total:${colors.reset}  ${String(dslAttempted).padStart(3)}  ${colors.cyan}→ Accuracy: ${pureReasoningRate}%${colors.reset}               ${colors.bright}║${colors.reset}`);
-  log(`  ${colors.bright}╠══════════════════════════════════════════════════════════╣${colors.reset}`);
-  log(`  ${colors.bright}║${colors.reset} ${colors.gray}NL PATTERN MATCHING (Fallback):${colors.reset}                        ${colors.bright}║${colors.reset}`);
-  log(`  ${colors.bright}║${colors.reset}   ${colors.green}✓ Matched:${colors.reset} ${String(nlPassed).padStart(2)}  (text indicators)                  ${colors.bright}║${colors.reset}`);
-  log(`  ${colors.bright}║${colors.reset}   ${colors.red}✗ No DSL:${colors.reset}  ${String(noDslQuery).padStart(2)}  (couldn't translate NL→DSL)         ${colors.bright}║${colors.reset}`);
-  if (otherFailed > 0) {
-    log(`  ${colors.bright}║${colors.reset}   ${colors.red}✗ Other:${colors.reset}   ${String(otherFailed).padStart(2)}                                      ${colors.bright}║${colors.reset}`);
+    const modeLabel = EXECUTION_MODE === ExecutionMode.DIRECT_DSL
+      ? 'DIRECT DSL (Pure Reasoning - No LLM)'
+      : 'FULL MODE (LLM + Reasoning)';
+
+    log(`\n  ${colors.bright}╔══════════════════════════════════════════════════════════╗${colors.reset}`);
+    log(`  ${colors.bright}║  ${modeLabel.padEnd(54)}║${colors.reset}`);
+    log(`  ${colors.bright}╠══════════════════════════════════════════════════════════╣${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset} ${colors.cyan}DSL QUERIES (Reasoning Engine):${colors.reset}                        ${colors.bright}║${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset}   ${colors.green}✓ Passed:${colors.reset} ${String(dslPassed).padStart(3)}  (reasoning correct)                 ${colors.bright}║${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset}   ${colors.red}✗ Failed:${colors.reset} ${String(dslMismatch).padStart(3)}  (reasoning error)                   ${colors.bright}║${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset}   ${colors.yellow}─ Total:${colors.reset}  ${String(dslAttempted).padStart(3)}  ${colors.cyan}→ Accuracy: ${pureReasoningRate}%${colors.reset}               ${colors.bright}║${colors.reset}`);
+    if (EXECUTION_MODE === ExecutionMode.FULL || nlPassed > 0 || noDslQuery > 0) {
+      log(`  ${colors.bright}╠══════════════════════════════════════════════════════════╣${colors.reset}`);
+      log(`  ${colors.bright}║${colors.reset} ${colors.gray}NL PATTERN MATCHING (Fallback):${colors.reset}                        ${colors.bright}║${colors.reset}`);
+      log(`  ${colors.bright}║${colors.reset}   ${colors.green}✓ Matched:${colors.reset} ${String(nlPassed).padStart(2)}  (text indicators)                  ${colors.bright}║${colors.reset}`);
+      log(`  ${colors.bright}║${colors.reset}   ${colors.red}✗ No DSL:${colors.reset}  ${String(noDslQuery).padStart(2)}  (couldn't generate/translate DSL)  ${colors.bright}║${colors.reset}`);
+      if (otherFailed > 0) {
+        log(`  ${colors.bright}║${colors.reset}   ${colors.red}✗ Other:${colors.reset}   ${String(otherFailed).padStart(2)}                                      ${colors.bright}║${colors.reset}`);
+      }
+    }
+    log(`  ${colors.bright}╠══════════════════════════════════════════════════════════╣${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset} ${colors.bright}TOTALS:${colors.reset}                                                ${colors.bright}║${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset}   Queries:  ${String(totalQueries).padStart(3)}                                       ${colors.bright}║${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset}   ${colors.green}Passed:${colors.reset}   ${String(totalPassed).padStart(3)} (${((totalPassed / totalQueries) * 100).toFixed(1)}%)                               ${colors.bright}║${colors.reset}`);
+    log(`  ${colors.bright}║${colors.reset}   ${colors.red}Failed:${colors.reset}   ${String(totalFailed).padStart(3)}                                       ${colors.bright}║${colors.reset}`);
+    log(`  ${colors.bright}╚══════════════════════════════════════════════════════════╝${colors.reset}`);
   }
-  log(`  ${colors.bright}╠══════════════════════════════════════════════════════════╣${colors.reset}`);
-  log(`  ${colors.bright}║${colors.reset} ${colors.bright}TOTALS:${colors.reset}                                                ${colors.bright}║${colors.reset}`);
-  log(`  ${colors.bright}║${colors.reset}   Queries:  ${String(totalQueries).padStart(3)}                                       ${colors.bright}║${colors.reset}`);
-  log(`  ${colors.bright}║${colors.reset}   ${colors.green}Passed:${colors.reset}   ${String(totalPassed).padStart(3)} (${((totalPassed / totalQueries) * 100).toFixed(1)}%)                               ${colors.bright}║${colors.reset}`);
-  log(`  ${colors.bright}║${colors.reset}   ${colors.red}Failed:${colors.reset}   ${String(totalFailed).padStart(3)}                                       ${colors.bright}║${colors.reset}`);
-  log(`  ${colors.bright}╚══════════════════════════════════════════════════════════╝${colors.reset}`);
 
   // Per-case summary
   log(`\n  ${colors.bright}Per-Case Results:${colors.reset}`);

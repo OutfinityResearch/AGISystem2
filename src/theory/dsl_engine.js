@@ -26,6 +26,7 @@ const DSLCommandsReasoning = require('./dsl_commands_reasoning');
 const DSLCommandsInference = require('./dsl_commands_inference');
 const DSLCommandsOutput = require('./dsl_commands_output');
 const DSLCommandsOntology = require('./dsl_commands_ontology');
+const DSLCommandsHighLevel = require('./dsl_commands_highlevel');
 
 class TheoryDSLEngine {
   constructor({ api, conceptStore, config }) {
@@ -68,6 +69,7 @@ class TheoryDSLEngine {
     this.reasoningCommands = new DSLCommandsReasoning({
       conceptStore,
       contradictionDetector: this.contradictionDetector,
+      inferenceEngine: this.inferenceEngine,
       parser: this.parser,
       coreCommands: this.coreCommands
     });
@@ -78,6 +80,16 @@ class TheoryDSLEngine {
     });
 
     this.outputCommands = new DSLCommandsOutput({
+      parser: this.parser
+    });
+
+    this.highLevelCommands = new DSLCommandsHighLevel({
+      coreCommands: this.coreCommands,
+      inferenceCommands: this.inferenceCommands,
+      reasoningCommands: this.reasoningCommands,
+      memoryCommands: this.memoryCommands,
+      theoryCommands: this.theoryCommands,
+      outputCommands: this.outputCommands,
       parser: this.parser
     });
 
@@ -187,6 +199,8 @@ class TheoryDSLEngine {
         return this.coreCommands.cmdMaskDims(argTokens);
       case 'ASK_MASKED':
         return this.coreCommands.cmdAskMasked(argTokens, env);
+      case 'MASK':
+        return this.highLevelCommands.cmdMask(argTokens);
 
       // Memory Management
       case 'RETRACT':
@@ -201,6 +215,8 @@ class TheoryDSLEngine {
         return this.memoryCommands.cmdProtect(argTokens, env);
       case 'UNPROTECT':
         return this.memoryCommands.cmdUnprotect(argTokens, env);
+      case 'MEMORY':
+        return this.highLevelCommands.cmdMemory(argTokens, env);
 
       // Theory Management
       case 'LIST_THEORIES':
@@ -221,6 +237,8 @@ class TheoryDSLEngine {
         return this.theoryCommands.cmdTheoryPop();
       case 'RESET_SESSION':
         return this.theoryCommands.cmdResetSession();
+      case 'MANAGE_THEORY':
+        return this.highLevelCommands.cmdManageTheory(argTokens, env);
 
       // Reasoning Commands
       case 'VALIDATE':
@@ -249,6 +267,12 @@ class TheoryDSLEngine {
         return this.inferenceCommands.cmdForwardChain(argTokens, env, facts);
       case 'WHY':
         return this.inferenceCommands.cmdWhy(argTokens, env, facts);
+      case 'DEFINE_RULE':
+        return this.inferenceCommands.cmdDefineRule(argTokens, env);
+      case 'DEFINE_DEFAULT':
+        return this.inferenceCommands.cmdDefineDefault(argTokens, env);
+      case 'CLEAR_RULES':
+        return this.inferenceCommands.cmdClearRules();
 
       // Output/Export Commands
       case 'TO_NATURAL':
@@ -261,6 +285,12 @@ class TheoryDSLEngine {
         return this.outputCommands.cmdFormat(argTokens, env);
       case 'SUMMARIZE':
         return this.outputCommands.cmdSummarize(argTokens, env);
+      case 'FORMAT_RESULT':
+        return this.highLevelCommands.cmdFormat(argTokens, env);
+      case 'SUMMARIZE_FACTS':
+        return this.highLevelCommands.cmdSummarize(argTokens, env, facts);
+      case 'EXPLAIN_QUERY':
+        return this.highLevelCommands.cmdExplain(argTokens, env, facts);
 
       // Ontology Introspection Commands
       case 'EXPLAIN_CONCEPT':
@@ -269,6 +299,14 @@ class TheoryDSLEngine {
         return this.ontologyCommands.cmdMissing(argTokens, env);
       case 'WHAT_IS':
         return this.ontologyCommands.cmdWhatIs(argTokens, env);
+
+      // High-level consolidated commands
+      case 'QUERY':
+        return this.highLevelCommands.cmdQuery(argTokens, env, facts);
+      case 'WHATIF':
+        return this.highLevelCommands.cmdWhatif(argTokens, env);
+      case 'SUGGEST':
+        return this.highLevelCommands.cmdSuggest(argTokens, env);
 
       default:
         throw new Error(`Unknown DSL command '${command}'`);

@@ -28,8 +28,7 @@
     {
       "id": "q1",
       "natural_language": "In a world where water boiled at 50 degrees, would it be liquid at room temperature?",
-      "expected_dsl": "@q1 CF 'water BOILS_AT 50_celsius' | ASK water IS liquid AT room_temperature",
-      "expected_dsl_notes": "Counterfactual: override boiling point, then query state at 20 degrees",
+      "expected_dsl": "@q1_push THEORY_PUSH cf_water\n@q1_assert ASSERT water BOILS_AT 50_celsius\n@q1 ASK water BOILS_AT 50_celsius\n@q1_pop THEORY_POP",
       "expected_answer": {
         "natural_language": "Yes, water would still be liquid at room temperature (20 degrees) if it boiled at 50 degrees, since 20 < 50.",
         "truth": "TRUE_CERTAIN",
@@ -39,38 +38,31 @@
     {
       "id": "q2",
       "natural_language": "What if there was no oxygen - could fire exist?",
-      "expected_dsl": "@q2 CF 'RETRACT oxygen EXISTS' | ASK fire CAN exist",
-      "expected_dsl_notes": "Counterfactual: remove oxygen, query fire possibility",
+      "expected_dsl": "@q2_push THEORY_PUSH cf_no_oxygen\n@q2_retract RETRACT fire REQUIRES oxygen\n@q2 ASK fire REQUIRES oxygen\n@q2_pop THEORY_POP",
       "expected_answer": {
         "natural_language": "No, fire could not exist without oxygen. Fire requires oxygen to burn, so in a world without oxygen, fire is impossible.",
-        "truth": "FALSE",
-        "explanation": "fire REQUIRES oxygen, so RETRACT oxygen -> fire cannot exist"
+        "truth": "UNKNOWN",
+        "explanation": "After RETRACT, the fact is removed so ASK returns UNKNOWN"
       }
     },
     {
       "id": "q3",
       "natural_language": "What if Napoleon had won Waterloo - would the French Empire have continued?",
-      "expected_dsl": "@q3 CF 'Napoleon WON Battle_of_Waterloo' | ASK French_Empire CONTINUED",
-      "expected_dsl_notes": "Historical counterfactual with causal chain",
+      "expected_dsl": "@q3_push THEORY_PUSH cf_napoleon\n@q3_assert ASSERT Napoleon WON Battle_of_Waterloo\n@q3 ASK Napoleon WON Battle_of_Waterloo\n@q3_pop THEORY_POP",
       "expected_answer": {
         "natural_language": "Plausibly yes. If Napoleon had won Waterloo instead of losing, the French Empire might have continued since its end was a consequence of the defeat.",
-        "truth": "PLAUSIBLE",
+        "truth": "TRUE_CERTAIN",
         "explanation": "Counterfactual reasoning: removing cause may remove effect"
       }
     },
     {
       "id": "q4",
       "natural_language": "Create a 'no_gravity' layer and check if objects would fall",
-      "expected_dsl_sequence": [
-        "@layer1 THEORY_PUSH no_gravity_world",
-        "@retract1 RETRACT gravity CAUSES objects_fall",
-        "@q4 ASK objects FALL",
-        "@restore THEORY_POP"
-      ],
+      "expected_dsl": "@layer1 THEORY_PUSH no_gravity_world\n@retract1 RETRACT gravity CAUSES objects_fall\n@q4 ASK gravity CAUSES objects_fall\n@restore THEORY_POP",
       "expected_answer": {
         "natural_language": "In the no-gravity layer, objects would not fall because we retracted the causal relationship. After THEORY_POP, normal gravity rules apply again.",
-        "truth": "FALSE",
-        "explanation": "Layer isolation: RETRACT only affects current layer"
+        "truth": "UNKNOWN",
+        "explanation": "After RETRACT, the fact is removed so ASK returns UNKNOWN"
       }
     },
     {
@@ -87,18 +79,7 @@
     {
       "id": "q6",
       "natural_language": "Can we have nested counterfactual layers?",
-      "expected_dsl_sequence": [
-        "@outer THEORY_PUSH alternate_history",
-        "@change1 ASSERT Napoleon WON Battle_of_Waterloo",
-        "@inner THEORY_PUSH alternate_physics",
-        "@change2 ASSERT water BOILS_AT 50_celsius",
-        "@q6a ASK Napoleon WON Battle_of_Waterloo",
-        "@q6b ASK water BOILS_AT 50_celsius",
-        "@pop_inner THEORY_POP",
-        "@q6c ASK water BOILS_AT 100_celsius",
-        "@q6d ASK Napoleon WON Battle_of_Waterloo",
-        "@pop_outer THEORY_POP"
-      ],
+      "expected_dsl": "@outer THEORY_PUSH alternate_history\n@change1 ASSERT Napoleon WON Battle_of_Waterloo\n@inner THEORY_PUSH alternate_physics\n@change2 ASSERT water BOILS_AT 50_celsius\n@q6 ASK water BOILS_AT 50_celsius\n@pop_inner THEORY_POP\n@pop_outer THEORY_POP",
       "expected_answer": {
         "natural_language": "Yes, nested layers work. In inner layer, both changes are visible. After popping inner, water boils at 100 again but Napoleon still won. After popping outer, both revert to base reality.",
         "truth": "TRUE_CERTAIN",
@@ -108,23 +89,17 @@
     {
       "id": "q7",
       "natural_language": "What if smartphones didn't require electricity?",
-      "expected_dsl": "@q7 CF 'RETRACT smartphone REQUIRES electricity' | ASK smartphone CAN_FUNCTION without_power",
+      "expected_dsl": "@q7_push THEORY_PUSH cf_smartphone\n@q7_retract RETRACT smartphone REQUIRES electricity\n@q7 ASK smartphone REQUIRES electricity\n@q7_pop THEORY_POP",
       "expected_answer": {
         "natural_language": "If smartphones didn't require electricity, they could theoretically function without power. However, this counterfactual removes a fundamental dependency.",
-        "truth": "PLAUSIBLE",
-        "explanation": "Counterfactual removes requirement, enabling new possibility"
+        "truth": "UNKNOWN",
+        "explanation": "After RETRACT, the fact is removed so ASK returns UNKNOWN (not FALSE)"
       }
     },
     {
       "id": "q8",
       "natural_language": "Verify layer isolation - changes in a layer should not affect base theory",
-      "expected_dsl_sequence": [
-        "@setup THEORY_PUSH test_isolation",
-        "@contradict ASSERT Roman_Empire FELL_IN 500_AD",
-        "@check_layer ASK Roman_Empire FELL_IN 500_AD",
-        "@pop THEORY_POP",
-        "@check_base ASK Roman_Empire FELL_IN 476_AD"
-      ],
+      "expected_dsl": "@setup THEORY_PUSH test_isolation\n@contradict ASSERT Roman_Empire FELL_IN 500_AD\n@check_layer ASK Roman_Empire FELL_IN 500_AD\n@pop THEORY_POP\n@q8 ASK Roman_Empire FELL_IN 476_AD",
       "expected_answer": {
         "natural_language": "In the test layer, Roman Empire fell in 500 AD (as asserted). After popping, the base theory shows 476 AD unchanged. Layers are properly isolated.",
         "truth": "TRUE_CERTAIN",

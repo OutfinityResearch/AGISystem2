@@ -1,0 +1,33 @@
+{
+  "id": "suite_19_output_format",
+  "name": "Output Formatting: TO_NATURAL",
+  "description": "Ensures TO_NATURAL produces meaningful text for TRUE and UNKNOWN truths without changing the underlying truth value.",
+  "theory": {
+    "natural_language": "We know the sky is blue. We do not know anything about UnknownConcept123. We will ask about both and convert the results to natural language.",
+    "expected_facts": [
+      "Sky IS_A blue_thing"
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Convert a true ASK result to natural language.",
+      "expected_dsl": "@ans ASK Sky IS_A blue_thing\n@q1 TO_NATURAL $ans",
+      "expected_answer": {
+        "natural_language": "Yes, this is definitely true.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "TO_NATURAL on a TRUE_CERTAIN result should yield an affirmative text."
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Convert an unknown ASK result to natural language.",
+      "expected_dsl": "@unk ASK UnknownConcept123 IS_A something\n@q2 TO_NATURAL $unk",
+      "expected_answer": {
+        "natural_language": "Unknown - the concept is not in the KB.",
+        "truth": "UNKNOWN",
+        "explanation": "TO_NATURAL should report UNKNOWN when the ASK result is unknown."
+      }
+    }
+  ]
+}

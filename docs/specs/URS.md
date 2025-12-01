@@ -25,6 +25,11 @@
 - <a id="URS-015"></a>**URS-015:** Expose geometric reasoning modes to users: deductive (inclusion), inductive (envelope building), abductive (inverse relation probing), analogical (vector translation), counterfactual/non-monotonic (theory layering), temporal/causal (rotations), deontic/normative (forbidden/obligation volumes), sparsity/attention (relevance masks), and validation/abstract interpretation runs for consistency checks.
 - <a id="URS-016"></a>**URS-016:** Use English as the primary interaction language; other languages require an external translation/LLM bridge.
 
+## Orthogonal Architecture Layers
+- <a id="URS-022"></a>**URS-022:** The system architecture MUST maintain strict separation between two orthogonal layers: (1) the **Reasoning Engine** which operates exclusively on Sys2DSL (deterministic, LLM-independent), and (2) the **NL↔DSL Translation Layer** which converts between natural language and Sys2DSL (optional, LLM-dependent). See [ARCH-LAYERS](architecture/orthogonal_layers.md).
+- <a id="URS-023"></a>**URS-023:** The Reasoning Engine MUST accept Sys2DSL input and produce Sys2DSL output, independently testable without any NL processing.
+- <a id="URS-024"></a>**URS-024:** The NL↔DSL Translation Layer MUST be independently testable, measuring translation quality separately from reasoning correctness.
+
 ## Constraints and Assumptions
 - <a id="URS-017"></a>**URS-017:** Determinism over stochasticity: identical inputs and theory stacks must yield identical outputs.
 - <a id="URS-018"></a>**URS-018:** Explanations must cite the theory layers and semantic dimensions that drive outcomes.

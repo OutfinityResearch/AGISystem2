@@ -41,6 +41,17 @@
     <pre><code>@varName COMMAND arg1 arg2 ...</code></pre>
 
     <div class="arch-note">
+      <strong>Design spec links (split by area):</strong>
+      <ul>
+        <li><a href="../specs/theory/Sys2DSL_commands_queries_masks.md">Queries &amp; Masks</a></li>
+        <li><a href="../specs/theory/Sys2DSL_commands_assertions_entities.md">Assertions, Concepts &amp; Relations</a></li>
+        <li><a href="../specs/theory/Sys2DSL_commands_theory_memory.md">Theory Management &amp; Memory</a></li>
+        <li><a href="../specs/theory/Sys2DSL_commands_reasoning.md">Reasoning</a></li>
+        <li><a href="../specs/theory/Sys2DSL_commands_util_output_ontology.md">Utility, Output &amp; Ontology Introspection</a></li>
+      </ul>
+    </div>
+
+    <div class="arch-note">
       <strong>Architecture Integration:</strong> All commands execute through the <code>TheoryDSLEngine</code> which routes to specialized handlers: <code>DSLCommandsCore</code>, <code>DSLCommandsReasoning</code>, <code>DSLCommandsInference</code>, etc. Results are stored in the script environment and can be referenced by subsequent commands using <code>$varName</code>.
     </div>
   </section>
