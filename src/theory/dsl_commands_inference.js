@@ -4,8 +4,6 @@
  * Implements Sys2DSL commands for inference reasoning:
  * - INFER: Multi-method inference attempts
  * - FORWARD_CHAIN: Derive conclusions via forward chaining
- * - DEFINE_RULE: Define composition/inference rules
- * - DEFINE_DEFAULT: Define default reasoning rules
  * - WHY: Explain inference results
  *
  * See also: DS(/reason/inference_engine), DS(/theory/dsl_commands_reasoning)
@@ -79,89 +77,6 @@ class DSLCommandsInference {
       count: newFacts.length,
       originalCount: facts.length
     };
-  }
-
-  /**
-   * DEFINE_RULE: Define a composition/inference rule
-   * Syntax: @var DEFINE_RULE name head=?x REL ?z body=?x REL1 ?y body=?y REL2 ?z
-   */
-  cmdDefineRule(argTokens, env) {
-    if (argTokens.length < 1) {
-      throw new Error('DEFINE_RULE expects at least a rule name');
-    }
-
-    const name = this.parser.expandString(argTokens[0], env);
-    let head = null;
-    const body = [];
-
-    for (let i = 1; i < argTokens.length; i++) {
-      const arg = this.parser.expandString(argTokens[i], env);
-
-      if (arg.startsWith('head=')) {
-        const parts = arg.substring(5).split(/\s+/);
-        if (parts.length >= 3) {
-          head = { subject: parts[0], relation: parts[1], object: parts[2] };
-        }
-      } else if (arg.startsWith('body=')) {
-        const parts = arg.substring(5).split(/\s+/);
-        if (parts.length >= 3) {
-          body.push({ subject: parts[0], relation: parts[1], object: parts[2] });
-        }
-      }
-    }
-
-    if (!head || body.length === 0) {
-      throw new Error('DEFINE_RULE requires head=... and at least one body=...');
-    }
-
-    this.inferenceEngine.registerRule({ name, head, body });
-
-    return { ok: true, name, head, body };
-  }
-
-  /**
-   * DEFINE_DEFAULT: Define a default reasoning rule
-   * Syntax: @var DEFINE_DEFAULT name typical=Type property value exceptions=E1,E2
-   */
-  cmdDefineDefault(argTokens, env) {
-    if (argTokens.length < 1) {
-      throw new Error('DEFINE_DEFAULT expects a rule name');
-    }
-
-    const name = this.parser.expandString(argTokens[0], env);
-    let typicalType = null;
-    let property = null;
-    let value = null;
-    const exceptions = [];
-
-    for (let i = 1; i < argTokens.length; i++) {
-      const arg = this.parser.expandString(argTokens[i], env);
-
-      if (arg.startsWith('typical=')) {
-        typicalType = arg.split('=')[1];
-      } else if (arg.startsWith('property=')) {
-        property = arg.split('=')[1];
-      } else if (arg.startsWith('value=')) {
-        value = arg.split('=')[1];
-      } else if (arg.startsWith('exceptions=')) {
-        const excs = arg.split('=')[1];
-        exceptions.push(...excs.split(','));
-      }
-    }
-
-    if (!typicalType || !property) {
-      throw new Error('DEFINE_DEFAULT requires typical=... and property=...');
-    }
-
-    this.inferenceEngine.registerDefault({
-      name,
-      typicalType,
-      property,
-      value: value || property,
-      exceptions
-    });
-
-    return { ok: true, name, typicalType, property, value, exceptions };
   }
 
   /**

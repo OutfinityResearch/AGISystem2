@@ -9,6 +9,7 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 - `src/core/bounded_diamond.js` → `.specs/core/bounded_diamond.js.md` — Class `BoundedDiamond`: hyper-rectangle + L1 ball + relevance mask; membership, merge/split.
 - `src/core/relation_permuter.js` → `.specs/core/relation_permuter.js.md` — Class `RelationPermuter`: deterministic shuffle generation, forward/inverse apply, registry of relation roles.
 - `src/core/math_engine.js` → `.specs/core/math_engine.js.md` — Module `MathEngine`: stateless vector ops (distance, saturated add, permutations, rotations).
+- `src/core/dimension_registry.js` → `.specs/core/dimension_registry.js.md` — Class `DimensionRegistry`: central registry for dimension semantics (property→axis, relation→axes mappings, relation properties). Singleton pattern with shared instance.
 
 ## Knowledge and Theories
 - `src/knowledge/concept_store.js` → `.specs/knowledge/concept_store.js.md` — Class `ConceptStore`: persistence of concepts/facts, cluster management for polysemy, versioned snapshots.
@@ -31,7 +32,9 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 - `src/ingest/clustering.js` → `.specs/ingest/clustering.js.md` — Class `ClusterManager`: detect divergence, split/merge bounded diamonds, manage cluster labels.
 
 ## Reasoning and Retrieval
-- `src/reason/reasoner.js` → `.specs/reason/reasoner.js.md` — Class `Reasoner`: assemble runtime concepts, run optimist/sceptic validation, handle conflict prompts. **Delegates computable relations to plugins**.
+- `src/reason/reasoner.js` → `.specs/reason/reasoner.js.md` — Class `Reasoner`: geometric reasoning (deduction, abduction, analogy), optimist/sceptic validation, computable relation delegation to plugins. Methods: `answer`, `deduceIsA`, `abductive`, `abductCause`, `analogical`, `factExists`, `deduceWithInheritance`, `deduceTransitive`.
+- `src/reason/inference_engine.js` → `.specs/reason/inference_engine.js.md` — Class `InferenceEngine`: logical inference (direct, transitive, symmetric, inverse, composition, inheritance, default). Forward chaining, rule registration, proof construction.
+- `src/reason/contradiction_detector.js` → `.specs/reason/contradiction_detector.js.md` — Class `ContradictionDetector`: detects disjointness violations, functional relation violations, taxonomic cycles, cardinality violations. Pre-addition contradiction checking.
 - `src/reason/retrieval.js` → `.specs/reason/retrieval.js.md` — Class `Retriever`: blind decoding using relation hints, probing, LSH/nearest-neighbor lookup.
 - `src/reason/bias_control.js` → `.specs/reason/bias_control.js.md` — Class `BiasController`: apply ontological/axiological masks, audit mode toggles.
 - `src/reason/validation.js` → `.specs/reason/validation.js.md` — Class `ValidationEngine`: symbolic/abstract interpretation over theory stacks and conceptual space to prove inclusion/exclusion, reachability, and consistency without mutating state.
@@ -46,6 +49,12 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 
 ## Sys2DSL Engine
 - `src/theory/dsl_engine.js` → `.specs/theory/dsl_engine.js.md` — Class `TheoryDSLEngine` (Sys2DSL interpreter): interpret Sys2DSL command lines from theory files and sessions, bind variables, and invoke core reasoning primitives (ask, abduct, counterfactual, fact search, mask control) without embedding domain-specific logic in engine code.
+- `src/theory/dsl_parser.js` → `.specs/theory/dsl_parser.js.md` — Class `DSLParser`: parses Sys2DSL scripts, handles dependency-based execution order (Kahn's algorithm), variable expansion, pattern matching.
+- `src/theory/dsl_commands_core.js` → `.specs/theory/dsl_commands_core.js.md` — Class `DSLCommandsCore`: fundamental DSL commands (ASK, CF, ABDUCT, ASSERT, FACTS_MATCHING, boolean ops, list ops, concept/relation binding, masking).
+- `src/theory/dsl_commands_memory.js` → `.specs/theory/dsl_commands_memory.js.md` — Class `DSLCommandsMemory`: knowledge lifecycle commands (RETRACT, GET_USAGE, FORGET, BOOST, PROTECT, UNPROTECT).
+- `src/theory/dsl_commands_reasoning.js` → `.specs/theory/dsl_commands_reasoning.js.md` — Class `DSLCommandsReasoning`: validation and reasoning commands (VALIDATE, PROVE, HYPOTHESIZE, ABDUCT with ranking, ANALOGICAL, CHECK_CONTRADICTION, CHECK_WOULD_CONTRADICT, constraint registration).
+- `src/theory/dsl_commands_inference.js` → `.specs/theory/dsl_commands_inference.js.md` — Class `DSLCommandsInference`: inference commands (INFER, FORWARD_CHAIN, DEFINE_RULE, DEFINE_DEFAULT, WHY).
+- `src/theory/dsl_commands_output.js` → `.specs/theory/dsl_commands_output.js.md` — Class `DSLCommandsOutput`: output formatting commands (TO_NATURAL, TO_JSON, EXPLAIN, FORMAT, SUMMARIZE).
 - `src/theory/dsl_commands_theory.js` → `.specs/theory/dsl_commands_theory.js.md` — Class `DSLCommandsTheory`: theory management DSL commands (LIST_THEORIES, LOAD_THEORY, SAVE_THEORY, MERGE_THEORY, DELETE_THEORY, THEORY_PUSH, THEORY_POP, RESET_SESSION). Uses pluggable storage interface.
 - `src/theory/theory_storage.js` → `.specs/theory/theory_storage.js.md` — Class `TheoryStorage`: pluggable storage interface for theories with adapters (FileStorageAdapter, MemoryStorageAdapter). Supports both `.sys2dsl` (DSL) and `.theory.json` (JSON) formats.
 - `src/theory/meta_theory_registry.js` → `.specs/theory/meta_theory_registry.js.md` — Class `MetaTheoryRegistry`: registry of available theories with metadata (domain, version, dependencies, applicability rules). Tracks usage statistics (load counts, query success rates) and suggests applicable theories. Implements FS-17.

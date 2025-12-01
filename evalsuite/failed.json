@@ -338,43 +338,39 @@
       "id": "suite_01_ontology",
       "name": "Comprehensive Ontology & Taxonomy",
       "failedQueries": [
-        "q2",
-        "q5",
-        "q6"
+        "q2"
       ],
-      "lastRun": "2025-11-28T16:01:43.481Z"
+      "lastRun": "2025-12-01T08:11:31.619Z"
     },
     {
       "id": "suite_02_causation",
       "name": "Comprehensive Causation & Abduction",
       "failedQueries": [
-        "q2",
         "q3",
         "q4",
         "q5",
-        "q6",
         "q8"
       ],
-      "lastRun": "2025-11-28T16:01:43.481Z"
+      "lastRun": "2025-12-01T08:11:31.619Z"
     },
     {
       "id": "suite_03_deontic",
       "name": "Comprehensive Deontic Rules & Permissions",
       "failedQueries": [
-        "q7",
-        "q8"
+        "q2"
       ],
-      "lastRun": "2025-11-28T16:01:43.481Z"
+      "lastRun": "2025-12-01T08:11:31.619Z"
     },
     {
       "id": "suite_04_counterfactual",
       "name": "Comprehensive Counterfactual & Temporal",
       "failedQueries": [
+        "q2",
         "q4",
         "q6",
         "q8"
       ],
-      "lastRun": "2025-11-28T16:01:43.481Z"
+      "lastRun": "2025-12-01T08:11:31.619Z"
     },
     {
       "id": "suite_05_bias_masking",
@@ -383,15 +379,76 @@
         "q1",
         "q3",
         "q4",
+        "q6",
         "q7",
         "q8"
       ],
-      "lastRun": "2025-11-28T16:01:43.481Z"
+      "lastRun": "2025-12-01T08:11:31.619Z"
+    },
+    {
+      "id": "suite_06_analogic_symmetric",
+      "name": "Analogical Reasoning & Symmetric/Inverse Relations",
+      "failedQueries": [
+        "q4",
+        "q5"
+      ],
+      "lastRun": "2025-12-01T08:48:25.283Z"
+    },
+    {
+      "id": "suite_07_compositional_rules",
+      "name": "Compositional Rules & Forward Chaining",
+      "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q6",
+        "q7"
+      ],
+      "lastRun": "2025-12-01T08:48:25.283Z"
+    },
+    {
+      "id": "suite_08_default_reasoning",
+      "name": "Default Reasoning with Exceptions (Non-Monotonic Logic)",
+      "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q5",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-01T08:48:25.283Z"
+    },
+    {
+      "id": "suite_09_contradictions",
+      "name": "Contradiction Detection & Constraint Validation",
+      "failedQueries": [
+        "q3",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-01T08:48:25.283Z"
+    },
+    {
+      "id": "suite_10_theory_layers",
+      "name": "Theory Layering & Advanced Counterfactual Reasoning",
+      "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q6",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-01T08:48:25.283Z"
     }
   ],
-  "lastUpdated": "2025-11-28T16:10:01.436Z",
+  "lastUpdated": "2025-12-01T08:48:25.283Z",
   "rangeInfo": {
-    "lastFrom": 1,
-    "lastTo": 5
+    "lastFrom": null,
+    "lastTo": null
   }
 }

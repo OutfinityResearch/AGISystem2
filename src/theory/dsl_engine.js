@@ -247,10 +247,6 @@ class TheoryDSLEngine {
         return this.inferenceCommands.cmdInfer(argTokens, env, facts);
       case 'FORWARD_CHAIN':
         return this.inferenceCommands.cmdForwardChain(argTokens, env, facts);
-      case 'DEFINE_RULE':
-        return this.inferenceCommands.cmdDefineRule(argTokens, env);
-      case 'DEFINE_DEFAULT':
-        return this.inferenceCommands.cmdDefineDefault(argTokens, env);
       case 'WHY':
         return this.inferenceCommands.cmdWhy(argTokens, env, facts);
 

@@ -105,30 +105,31 @@ Where `R_some` means "R with some instance of".
 
 ```javascript
 class InferenceEngine {
-  constructor({ store, reasoner, detector, config }) {
+  constructor({ store, reasoner, detector, config, dimensionRegistry }) {
     this.store = store;
     this.reasoner = reasoner;
     this.detector = detector; // ContradictionDetector
     this.config = config;
+    this.dimRegistry = dimensionRegistry; // Source of truth for relation properties
     this.rules = [];          // Custom inference rules
     this.defaults = [];       // Default reasoning rules
+    this.relationProperties = new Map(); // Cached from dimRegistry
   }
 
   // Main inference entry point
-  infer(subject, relation, object, options = {}) → InferenceResult
+  infer(subject, relation, object, facts, options = {}) → InferenceResult
 
   // Specific inference methods
   inferDirect(subject, relation, object, facts) → InferenceResult
-  inferTransitive(subject, relation, object, facts) → InferenceResult
+  inferTransitive(subject, relation, object, facts, maxDepth) → InferenceResult
   inferSymmetric(subject, relation, object, facts) → InferenceResult
   inferInverse(subject, relation, object, facts) → InferenceResult
-  inferComposition(subject, relation, object, facts) → InferenceResult
+  inferComposition(subject, relation, object, facts, maxDepth) → InferenceResult
   inferDefault(subject, relation, object, facts) → InferenceResult
-  inferInheritance(subject, relation, object, facts) → InferenceResult
-  inferArgumentType(subject, relation, objectType, facts) → InferenceResult
+  inferInheritance(subject, relation, object, facts, maxDepth) → InferenceResult
 
   // Build proof chain
-  prove(subject, relation, object, facts) → ProofChain
+  prove(subject, relation, object, facts, options) → ProofChain | null
 
   // Find all conclusions from a fact set
   forwardChain(facts, maxIterations) → Fact[]
@@ -136,8 +137,11 @@ class InferenceEngine {
   // Register custom rules
   registerRule(rule: InferenceRule)
   registerDefault(defaultRule: DefaultRule)
+  setRelationProperties(relation, properties)
 }
 ```
+
+**Note**: `inferArgumentType` from earlier drafts is not implemented in current code. For type-based inference, use `inferInheritance` which handles the IS_A chain traversal.
 
 ### 3.2 Data Structures
 
@@ -171,12 +175,17 @@ class InferenceEngine {
   ]
 }
 
-// Default rule
+// Default rule (as implemented)
 {
   name: string,
-  typical: { type: 'bird', property: 'can_fly', value: true },
+  typicalType: 'bird',     // The type this default applies to
+  property: 'CAN',         // The relation
+  value: 'fly',            // The object/value
   exceptions: ['Penguin', 'Ostrich', 'Kiwi']
 }
+
+// Note: Earlier drafts used typical: { type, property, value } structure.
+// Current implementation uses flat structure with typicalType, property, value fields.
 ```
 
 ---

@@ -1,17 +1,20 @@
-# Design Spec: Contradiction Detection Engine
+# Design Spec: src/reason/contradiction_detector.js
 
-ID: DS(/reason/contradiction_detection)
+ID: DS(/reason/contradiction_detector.js)
 
-Status: DRAFT v1.0
+Status: IMPLEMENTED v1.0
 
 ## 1. Purpose
 
-Detect logical contradictions in the knowledge base, including:
-- **Direct contradictions**: A and NOT A
-- **Disjointness violations**: X IS_A A and X IS_A B where A DISJOINT_WITH B
+Detect logical contradictions in the knowledge base. **Currently implemented:**
+- **Disjointness violations**: X IS_A A and X IS_A B where A DISJOINT_WITH B (including default pairs)
 - **Functional constraint violations**: X REL Y and X REL Z where REL is functional
-- **Temporal inconsistencies**: Facts that conflict at the same time point
+- **Taxonomic inconsistencies**: Cycles in IS_A hierarchy, inherited disjointness
 - **Cardinality violations**: More instances than allowed by constraints
+
+**Not yet implemented (marked as TODO):**
+- Direct negations (A and NOT A)
+- Temporal inconsistencies
 
 ---
 
@@ -56,12 +59,13 @@ Fact: Bob PARENT_OF Alice
 → CONTRADICTION (circular parenthood)
 ```
 
-### 2.6 Type 6: Temporal Contradiction
+### 2.6 Type 6: Temporal Contradiction (TODO - Not Implemented)
 ```
 Fact: Alice LOCATED_IN Paris [time=T1]
 Fact: Alice LOCATED_IN Tokyo [time=T1]
 → CONTRADICTION (same time, exclusive locations)
 ```
+**Note**: Temporal contradiction detection is not yet implemented in the current codebase.
 
 ### 2.7 Type 7: Cardinality Violation
 ```
@@ -84,36 +88,54 @@ class ContradictionDetector {
     this.store = store;
     this.reasoner = reasoner;
     this.config = config;
-    this.constraints = new Map(); // Functional, cardinality constraints
+    this.functionalRelations = new Set(['BORN_IN', 'BIOLOGICAL_MOTHER', 'BIOLOGICAL_FATHER']);
+    this.cardinalityConstraints = new Map(); // "subject|relation" → { min, max }
+    this.defaultDisjointPairs = [...]; // Pre-defined biological/categorical disjoint pairs
   }
 
   // Main entry point: check all facts for contradictions
   detectAll(facts, options = {}) → ContradictionReport
+  // options: { checkDisjointness, checkFunctional, checkTaxonomic, checkCardinality }
+  // Note: checkTemporal not yet implemented
 
   // Check if adding a new fact would cause contradiction
   wouldContradict(newFact, existingFacts) → ContradictionResult
 
   // Check specific contradiction types
-  checkDisjointness(facts) → Contradiction[]
+  checkDisjointness(facts) → Contradiction[]  // Includes default pairs + explicit DISJOINT_WITH
   checkFunctional(facts) → Contradiction[]
-  checkTaxonomic(facts) → Contradiction[]
-  checkTemporal(facts) → Contradiction[]
+  checkTaxonomic(facts) → Contradiction[]     // Cycles + inherited disjointness
   checkCardinality(facts) → Contradiction[]
 
   // Register constraints
   registerFunctionalRelation(relationName)
-  registerCardinalityConstraint(subject, relation, min, max)
+  registerCardinalityConstraint(subjectType, relation, min, max)
 }
 ```
 
-### 3.2 Data Structures
+### 3.2 Default Disjoint Pairs
+
+The implementation includes pre-defined disjoint pairs for common categories:
+- Biological: mammal/fish, mammal/bird, mammal/reptile, bird/fish, etc.
+- Animals: cat/dog, cat/bird, dog/fish, etc.
+- Categories: animal/plant, living/dead, true/false
+
+These are checked automatically without requiring explicit DISJOINT_WITH facts.
+
+### 3.3 Data Structures
 
 ```javascript
 // Contradiction result
 {
-  type: 'DISJOINT_VIOLATION' | 'FUNCTIONAL_VIOLATION' | 'TAXONOMIC' | 'TEMPORAL' | 'CARDINALITY',
+  type: 'DISJOINT_VIOLATION' | 'FUNCTIONAL_VIOLATION' | 'TAXONOMIC_CYCLE' | 'INHERITED_DISJOINT' | 'CARDINALITY_MIN_VIOLATION' | 'CARDINALITY_MAX_VIOLATION',
   severity: 'ERROR' | 'WARNING',
-  facts: [fact1, fact2, ...],  // The conflicting facts
+  entity?: string,              // For DISJOINT_VIOLATION
+  types?: [typeA, typeB],       // For DISJOINT_VIOLATION
+  subject?: string,             // For FUNCTIONAL_VIOLATION
+  relation?: string,            // For FUNCTIONAL/CARDINALITY
+  values?: string[],            // For FUNCTIONAL_VIOLATION
+  cycle?: string[],             // For TAXONOMIC_CYCLE
+  facts: [fact1, fact2, ...],   // The conflicting facts
   explanation: string,          // Human-readable explanation
   resolution: string[]          // Suggested resolutions
 }

@@ -1,6 +1,7 @@
 const MathEngine = require('../core/math_engine');
 const PluginRegistry = require('../plugins/registry');
 const MathPlugin = require('../plugins/math');
+const DimensionRegistry = require('../core/dimension_registry');
 
 class Reasoner {
   constructor(storeOrDeps) {
@@ -14,6 +15,7 @@ class Reasoner {
       this.temporal = deps.temporal || null;
       this.config = deps.config || null;
       this.permuter = deps.permuter || null;
+      this.dimRegistry = deps.dimRegistry || DimensionRegistry.getShared();
     } else {
       this.conceptStore = storeOrDeps;
       this.stack = null;
@@ -23,6 +25,7 @@ class Reasoner {
       this.temporal = null;
       this.config = null;
       this.permuter = null;
+      this.dimRegistry = DimensionRegistry.getShared();
     }
 
     // Initialize compute plugin registry
@@ -601,6 +604,34 @@ class Reasoner {
       });
       if (isProhibited) {
         return { truth: 'FALSE', confidence: 1.0, method: 'prohibited' };
+      }
+    }
+
+    // Check symmetric relation: if R is symmetric and B R A exists, then A R B is true
+    const relProps = this.dimRegistry ? this.dimRegistry.getRelationProperties(relation) : null;
+    if (relProps && relProps.symmetric) {
+      const symmetricExists = facts.some((f) => {
+        const fSub = norm(f.subject);
+        const fRel = f.relation;
+        const fObj = norm(f.object);
+        return fSub === oNorm && fRel === relation && fObj === sNorm;
+      });
+      if (symmetricExists) {
+        return { truth: 'TRUE_CERTAIN', confidence: 1.0, method: 'symmetric' };
+      }
+    }
+
+    // Check inverse relation: if R has inverse R', and B R' A exists, then A R B is true
+    if (relProps && relProps.inverse) {
+      const inverseRel = relProps.inverse;
+      const inverseExists = facts.some((f) => {
+        const fSub = norm(f.subject);
+        const fRel = f.relation;
+        const fObj = norm(f.object);
+        return fSub === oNorm && fRel === inverseRel && fObj === sNorm;
+      });
+      if (inverseExists) {
+        return { truth: 'TRUE_CERTAIN', confidence: 1.0, method: 'inverse', inverseRelation: inverseRel };
       }
     }
 

@@ -1,0 +1,824 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Sys2DSL Command Reference</title>
+  <link rel="stylesheet" href="../reference/style.css">
+  <style>
+    .cmd-table { width: 100%; border-collapse: collapse; margin: 1em 0; }
+    .cmd-table th, .cmd-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    .cmd-table th { background: #f5f5f5; }
+    .cmd-table code { background: #f8f8f8; padding: 2px 4px; }
+    .category-section { margin-bottom: 2em; }
+    .arch-note { background: #e8f4e8; padding: 10px; border-left: 3px solid #4a4; margin: 1em 0; }
+    .warning { background: #fff3cd; padding: 10px; border-left: 3px solid #ffc107; margin: 1em 0; }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Sys2DSL Command Reference</h1>
+    <div class="sub-nav">
+      <strong>Categories:</strong>
+      <a href="#query">Query</a> ·
+      <a href="#assertion">Assertion</a> ·
+      <a href="#concept">Concept</a> ·
+      <a href="#relation">Relation</a> ·
+      <a href="#theory">Theory</a> ·
+      <a href="#reasoning">Reasoning</a> ·
+      <a href="#inference">Inference</a> ·
+      <a href="#memory">Memory</a> ·
+      <a href="#mask">Mask</a> ·
+      <a href="#utility">Utility</a> ·
+      <a href="#output">Output</a> ·
+      <a href="#ontology">Ontology</a>
+    </div>
+  </div>
+
+  <section>
+    <h2>Overview</h2>
+    <p>This page provides a complete reference for all 50+ Sys2DSL commands. Commands are organized by functional category. Each command follows the standard syntax:</p>
+    <pre><code>@varName COMMAND arg1 arg2 ...</code></pre>
+
+    <div class="arch-note">
+      <strong>Architecture Integration:</strong> All commands execute through the <code>TheoryDSLEngine</code> which routes to specialized handlers: <code>DSLCommandsCore</code>, <code>DSLCommandsReasoning</code>, <code>DSLCommandsInference</code>, etc. Results are stored in the script environment and can be referenced by subsequent commands using <code>$varName</code>.
+    </div>
+  </section>
+
+  <section id="query" class="category-section">
+    <h2>1. Query Commands</h2>
+    <p>Commands for querying the knowledge base. These read from the ConceptStore and current theory stack.</p>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr>
+        <td><code>ASK</code></td>
+        <td>Query truth value of a statement</td>
+        <td><code>@result ASK Subject RELATION Object</code></td>
+      </tr>
+      <tr>
+        <td><code>ASK_MASKED</code></td>
+        <td>Query with dimension mask applied</td>
+        <td><code>@result ASK_MASKED $mask Subject RELATION Object</code></td>
+      </tr>
+      <tr>
+        <td><code>FACTS_MATCHING</code></td>
+        <td>Find all facts matching a pattern</td>
+        <td><code>@results FACTS_MATCHING Subject ? Object</code></td>
+      </tr>
+      <tr>
+        <td><code>ALL_REQUIREMENTS_SATISFIED</code></td>
+        <td>Check if all requirements are met</td>
+        <td><code>@result ALL_REQUIREMENTS_SATISFIED $reqs $satisfied</code></td>
+      </tr>
+    </table>
+
+    <h3>ASK</h3>
+    <p><strong>Purpose:</strong> Query the truth value of a statement within the current theory.</p>
+    <pre><code>@q1 ASK Dog IS_A Animal
+@q2 ASK Water BOILS_AT Celsius100
+@q3 ASK Alice KNOWS Bob</code></pre>
+
+    <p><strong>Returns:</strong></p>
+    <pre><code>{
+  truth: 'TRUE_CERTAIN' | 'PLAUSIBLE' | 'FALSE' | 'UNKNOWN' | 'CONFLICT',
+  confidence: number,      // 0.0 - 1.0
+  provenance: [...]        // reasoning chain
+}</code></pre>
+
+    <div class="arch-note">
+      <strong>Internal Flow:</strong> ASK dispatches to <code>Reasoner.ask()</code> which checks <code>ConceptStore.getFacts()</code> for direct matches, then uses <code>InferenceEngine</code> for transitive, symmetric, and inverse relations. Results pass through <code>DimensionRegistry</code> for relation property lookup.
+    </div>
+
+    <h3>ASK_MASKED</h3>
+    <p><strong>Purpose:</strong> Query with specific dimensions filtered out. Useful for bias control.</p>
+    <pre><code>@ontologyMask MASK_PARTITIONS ontology
+@result ASK_MASKED $ontologyMask Water IS_A liquid</code></pre>
+
+    <h3>FACTS_MATCHING</h3>
+    <p><strong>Purpose:</strong> Pattern search across all facts. Use <code>?</code> as wildcard.</p>
+    <pre><code>@aboutDog FACTS_MATCHING Dog ? ?          # All facts about Dog
+@allIsA FACTS_MATCHING ? IS_A ?            # All IS_A relationships
+@causesFear FACTS_MATCHING ? CAUSES Fear   # What causes Fear</code></pre>
+
+    <p><strong>Returns:</strong> Array of matching facts with <code>{ subject, relation, object, factId }</code>.</p>
+  </section>
+
+  <section id="assertion" class="category-section">
+    <h2>2. Assertion Commands</h2>
+    <p>Commands for adding and removing facts. These modify the working theory layer.</p>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr>
+        <td><code>ASSERT</code></td>
+        <td>Add a new fact</td>
+        <td><code>@result ASSERT Subject RELATION Object</code></td>
+      </tr>
+      <tr>
+        <td><code>RETRACT</code></td>
+        <td>Remove a fact</td>
+        <td><code>@result RETRACT Subject RELATION Object</code></td>
+      </tr>
+    </table>
+
+    <h3>ASSERT</h3>
+    <p><strong>Purpose:</strong> Add a new fact to the current working theory.</p>
+    <pre><code>@f1 ASSERT Dog IS_A Animal
+@f2 ASSERT Alice KNOWS Bob
+@f3 ASSERT Water HAS_PROPERTY transparent</code></pre>
+
+    <p><strong>Returns:</strong></p>
+    <pre><code>{
+  ok: boolean,
+  factId: string,
+  conceptId: string,       // for subject
+  objectConceptId: string, // for object
+  created: boolean,        // true if new
+  usageCount: number       // usage counter
+}</code></pre>
+
+    <div class="arch-note">
+      <strong>Internal Flow:</strong> ASSERT calls <code>api.add()</code> which encodes concepts via <code>Encoder</code>, stores in <code>ConceptStore</code>, and updates usage tracking in <code>UsageTracker</code>. Facts go to the working theory layer (session-local) until saved with <code>SAVE_THEORY</code>.
+    </div>
+
+    <h3>RETRACT</h3>
+    <p><strong>Purpose:</strong> Remove a fact from the current working theory.</p>
+    <pre><code>@r1 RETRACT Water IS_A solid   # Remove incorrect fact</code></pre>
+
+    <div class="warning">
+      <strong>Note:</strong> RETRACT only affects the working theory layer. Base theories loaded with <code>LOAD_THEORY</code> are immutable.
+    </div>
+  </section>
+
+  <section id="concept" class="category-section">
+    <h2>3. Concept Commands</h2>
+    <p>Commands for working with concepts. Concepts are stored as diamond regions in the vector space.</p>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr>
+        <td><code>BIND_CONCEPT</code></td>
+        <td>Get reference to a concept</td>
+        <td><code>@ref BIND_CONCEPT conceptName</code></td>
+      </tr>
+      <tr>
+        <td><code>DEFINE_CONCEPT</code></td>
+        <td>Create concept with dimensions</td>
+        <td><code>@ref DEFINE_CONCEPT name dim1=val1 ...</code></td>
+      </tr>
+      <tr>
+        <td><code>INSPECT</code></td>
+        <td>Get detailed concept info</td>
+        <td><code>@info INSPECT $ref</code></td>
+      </tr>
+      <tr>
+        <td><code>LITERAL</code></td>
+        <td>Create a literal value</td>
+        <td><code>@val LITERAL "some text"</code></td>
+      </tr>
+    </table>
+
+    <h3>BIND_CONCEPT</h3>
+    <p><strong>Purpose:</strong> Get a reference to a concept for further operations.</p>
+    <pre><code>@waterRef BIND_CONCEPT water
+@props INSPECT $waterRef</code></pre>
+
+    <p><strong>Returns:</strong></p>
+    <pre><code>{
+  kind: 'conceptRef',
+  label: string,
+  id: string,
+  diamondCount: number,  // polysemy count
+  usageCount: number
+}</code></pre>
+
+    <h3>DEFINE_CONCEPT</h3>
+    <p><strong>Purpose:</strong> Explicitly create a new concept with specific dimension values.</p>
+    <pre><code>@newConcept DEFINE_CONCEPT electric_car \
+            physicality=80 \
+            artifact_device=100 \
+            computation_capability=60</code></pre>
+
+    <div class="arch-note">
+      <strong>Internal Flow:</strong> DEFINE_CONCEPT creates a diamond in the vector space with the specified dimension values. If the concept already exists, returns the existing reference without overwriting.
+    </div>
+
+    <h3>INSPECT</h3>
+    <p><strong>Purpose:</strong> Get detailed information about a concept, including its diamond structure.</p>
+    <pre><code>@info INSPECT $waterRef
+# Returns: diamonds array with center/min/max coordinates, usage stats</code></pre>
+  </section>
+
+  <section id="relation" class="category-section">
+    <h2>4. Relation Commands</h2>
+    <p>Commands for working with relations (verbs). Relations have properties defined in <code>dimensions.json</code>.</p>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr>
+        <td><code>BIND_RELATION</code></td>
+        <td>Get reference to a relation</td>
+        <td><code>@ref BIND_RELATION RELATION_NAME</code></td>
+      </tr>
+      <tr>
+        <td><code>DEFINE_RELATION</code></td>
+        <td>Create a new relation</td>
+        <td><code>@ref DEFINE_RELATION NAME inverse=... symmetric=...</code></td>
+      </tr>
+      <tr>
+        <td><code>BIND_POINT</code></td>
+        <td>Create a point in vector space</td>
+        <td><code>@point BIND_POINT dim1=val1 ...</code></td>
+      </tr>
+    </table>
+
+    <h3>BIND_RELATION</h3>
+    <p><strong>Purpose:</strong> Get a reference to a relation with its properties.</p>
+    <pre><code>@causesRel BIND_RELATION CAUSES
+@props INSPECT $causesRel</code></pre>
+
+    <p><strong>Returns:</strong></p>
+    <pre><code>{
+  kind: 'relationRef',
+  name: string,
+  inverse: string | null,
+  symmetric: boolean,
+  transitive: boolean
+}</code></pre>
+
+    <h3>DEFINE_RELATION</h3>
+    <p><strong>Purpose:</strong> Create a new custom relation (verb).</p>
+    <pre><code>@teachRel DEFINE_RELATION TEACHES \
+          inverse=TAUGHT_BY \
+          symmetric=false \
+          transitive=false
+
+@f1 ASSERT Professor TEACHES Student
+@f2 ASSERT Student TAUGHT_BY Professor</code></pre>
+
+    <div class="arch-note">
+      <strong>Internal Flow:</strong> Relations are registered in <code>DimensionRegistry</code>. Each relation gets a deterministic permutation vector generated from its name. The inverse relation (if specified) is automatically registered.
+    </div>
+  </section>
+
+  <section id="theory" class="category-section">
+    <h2>5. Theory Management Commands</h2>
+    <p>Commands for managing theory layers and persistence. Theories enable modular, stackable knowledge.</p>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr>
+        <td><code>THEORY_PUSH</code></td>
+        <td>Push new theory layer</td>
+        <td><code>@_ THEORY_PUSH name="layerName"</code></td>
+      </tr>
+      <tr>
+        <td><code>THEORY_POP</code></td>
+        <td>Pop and discard top layer</td>
+        <td><code>@_ THEORY_POP</code></td>
+      </tr>
+      <tr>
+        <td><code>LIST_THEORIES</code></td>
+        <td>List available theories</td>
+        <td><code>@list LIST_THEORIES</code></td>
+      </tr>
+      <tr>
+        <td><code>LOAD_THEORY</code></td>
+        <td>Load theory from file</td>
+        <td><code>@loaded LOAD_THEORY name</code></td>
+      </tr>
+      <tr>
+        <td><code>SAVE_THEORY</code></td>
+        <td>Save working theory</td>
+        <td><code>@saved SAVE_THEORY name</code></td>
+      </tr>
+      <tr>
+        <td><code>MERGE_THEORY</code></td>
+        <td>Merge theories</td>
+        <td><code>@result MERGE_THEORY target strategy</code></td>
+      </tr>
+      <tr>
+        <td><code>DELETE_THEORY</code></td>
+        <td>Delete a saved theory</td>
+        <td><code>@result DELETE_THEORY name</code></td>
+      </tr>
+      <tr>
+        <td><code>THEORY_INFO</code></td>
+        <td>Get theory metadata</td>
+        <td><code>@info THEORY_INFO name</code></td>
+      </tr>
+      <tr>
+        <td><code>RESET_SESSION</code></td>
+        <td>Clear working theory</td>
+        <td><code>@_ RESET_SESSION</code></td>
+      </tr>
+    </table>
+
+    <h3>THEORY_PUSH / THEORY_POP</h3>
+    <p><strong>Purpose:</strong> Create temporary theory layers for exploration or counterfactual reasoning.</p>
+    <pre><code>@_ THEORY_PUSH name="exploration"
+@f1 ASSERT Gravity IS_A fiction     # Temporary fact
+@q1 ASK Things FLOAT always         # Query in this context
+@_ THEORY_POP                        # Discard changes</code></pre>
+
+    <div class="arch-note">
+      <strong>Internal Flow:</strong> Theory layers are managed by <code>TheoryStack</code> in <code>ConceptStore</code>. Each layer has its own facts that shadow (but don't modify) lower layers. <code>THEORY_POP</code> discards all changes in the top layer.
+    </div>
+
+    <h3>LOAD_THEORY / SAVE_THEORY</h3>
+    <p><strong>Purpose:</strong> Persist and load theories from <code>data/theories/</code> directory.</p>
+    <pre><code>@base LOAD_THEORY physics_fundamentals
+@domain LOAD_THEORY medical_knowledge
+# ... add domain-specific facts ...
+@saved SAVE_THEORY my_combined_theory</code></pre>
+  </section>
+
+  <section id="reasoning" class="category-section">
+    <h2>6. Reasoning Commands</h2>
+    <p>Commands for logical reasoning, validation, and hypothesis generation.</p>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr>
+        <td><code>VALIDATE</code></td>
+        <td>Check theory consistency</td>
+        <td><code>@result VALIDATE</code></td>
+      </tr>
+      <tr>
+        <td><code>PROVE</code></td>
+        <td>Prove a statement</td>
+        <td><code>@proof PROVE Subject RELATION Object</code></td>
+      </tr>
+      <tr>
+        <td><code>HYPOTHESIZE</code></td>
+        <td>Generate hypotheses</td>
+        <td><code>@hyp HYPOTHESIZE observation</code></td>
+      </tr>
+      <tr>
+        <td><code>CF</code></td>
+        <td>Counterfactual query</td>
+        <td><code>@result CF query | hypothetical_fact</code></td>
+      </tr>
+      <tr>
+        <td><code>ABDUCT</code></td>
+        <td>Abductive reasoning</td>
+        <td><code>@causes ABDUCT observation RELATION</code></td>
+      </tr>
+      <tr>
+        <td><code>ANALOGICAL</code></td>
+        <td>Analogical reasoning</td>
+        <td><code>@result ANALOGICAL source target</code></td>
+      </tr>
+      <tr>
+        <td><code>CHECK_CONTRADICTION</code></td>
+        <td>Check for contradictions</td>
+        <td><code>@result CHECK_CONTRADICTION</code></td>
+      </tr>
+      <tr>
+        <td><code>CHECK_WOULD_CONTRADICT</code></td>
+        <td>Check if fact would contradict</td>
+        <td><code>@result CHECK_WOULD_CONTRADICT Subject RELATION Object</code></td>
+      </tr>
+      <tr>
+        <td><code>REGISTER_FUNCTIONAL</code></td>
+        <td>Register functional constraint</td>
+        <td><code>@_ REGISTER_FUNCTIONAL RELATION</code></td>
+      </tr>
+      <tr>
+        <td><code>REGISTER_CARDINALITY</code></td>
+        <td>Register cardinality constraint</td>
+        <td><code>@_ REGISTER_CARDINALITY RELATION min max</code></td>
+      </tr>
+    </table>
+
+    <h3>VALIDATE</h3>
+    <p><strong>Purpose:</strong> Check the current theory for logical consistency and contradictions.</p>
+    <pre><code>@f1 ASSERT Water IS_A solid
+@f2 ASSERT Water IS_A liquid
+@check VALIDATE
+# Returns: conflicts about Water being both solid and liquid</code></pre>
+
+    <p><strong>Returns:</strong></p>
+    <pre><code>{
+  valid: boolean,
+  conflicts: [
+    { fact1: {...}, fact2: {...}, reason: string },
+    ...
+  ],
+  warnings: [...]
+}</code></pre>
+
+    <h3>CF (Counterfactual)</h3>
+    <p><strong>Purpose:</strong> Query under hypothetical conditions without permanently modifying the theory.</p>
+    <pre><code>@cf CF Water IS_A gas | Water TEMPERATURE_AT Celsius150
+# Asks: "Would water be a gas if it were at 150 degrees?"</code></pre>
+
+    <div class="arch-note">
+      <strong>Internal Flow:</strong> CF creates a temporary theory layer, adds the hypothetical facts, runs the query, then discards the layer. The original theory remains unchanged.
+    </div>
+
+    <h3>PROVE</h3>
+    <p><strong>Purpose:</strong> Attempt to prove a statement with a reasoning chain.</p>
+    <pre><code>@proof PROVE Dog IS_A LivingThing
+# Returns: proof chain showing Dog IS_A Animal IS_A LivingThing</code></pre>
+
+    <h3>ABDUCT</h3>
+    <p><strong>Purpose:</strong> Find possible causes/explanations using inverse reasoning.</p>
+    <pre><code>@causes ABDUCT Smoke CAUSED_BY
+# Returns: candidates like Fire, ChemicalReaction, etc.</code></pre>
+
+    <h3>ANALOGICAL</h3>
+    <p><strong>Purpose:</strong> Transfer properties from a source domain to a target domain based on structural similarity.</p>
+    <pre><code>@analog ANALOGICAL atom:solar_system
+# Maps electron:planet, nucleus:sun based on ORBITS relationship</code></pre>
+  </section>
+
+  <section id="inference" class="category-section">
+    <h2>7. Inference Commands</h2>
+    <p>Commands for multi-method inference and explanation.</p>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr>
+        <td><code>INFER</code></td>
+        <td>Multi-method inference</td>
+        <td><code>@result INFER Subject RELATION Object [method=X]</code></td>
+      </tr>
+      <tr>
+        <td><code>FORWARD_CHAIN</code></td>
+        <td>Derive all conclusions</td>
+        <td><code>@derived FORWARD_CHAIN [maxIterations=N]</code></td>
+      </tr>
+      <tr>
+        <td><code>WHY</code></td>
+        <td>Explain inference result</td>
+        <td><code>@exp WHY Subject RELATION Object</code></td>
+      </tr>
+    </table>
+
+    <h3>INFER</h3>
+    <p><strong>Purpose:</strong> Attempt to infer a statement using all available methods.</p>
+    <pre><code>@result INFER Grandpa ANCESTOR_OF Grandson method=transitive proof=true</code></pre>
+
+    <p><strong>Methods available:</strong></p>
+    <ul>
+      <li><code>direct</code> - Direct fact lookup</li>
+      <li><code>transitive</code> - Follow transitive relations</li>
+      <li><code>symmetric</code> - Check symmetric relations (e.g., MARRIED_TO)</li>
+      <li><code>inverse</code> - Check inverse relations (e.g., PARENT_OF/CHILD_OF)</li>
+      <li><code>composition</code> - Apply composition rules</li>
+      <li><code>inheritance</code> - Use IS_A hierarchy</li>
+      <li><code>default</code> - Apply default reasoning</li>
+    </ul>
+
+    <div class="arch-note">
+      <strong>Internal Flow:</strong> INFER delegates to <code>InferenceEngine.infer()</code> which tries methods in sequence. The engine uses <code>DimensionRegistry</code> to check relation properties (symmetric, transitive, inverse).
+    </div>
+
+    <h3>FORWARD_CHAIN</h3>
+    <p><strong>Purpose:</strong> Derive all possible conclusions from current facts using inference rules.</p>
+    <pre><code>@derived FORWARD_CHAIN maxIterations=100
+# Returns: { derived: [...], count: N, originalCount: M }</code></pre>
+
+    <h3>WHY</h3>
+    <p><strong>Purpose:</strong> Explain why a statement is true or false.</p>
+    <pre><code>@exp WHY Dog IS_A LivingThing
+# Returns detailed reasoning chain with each step justified</code></pre>
+  </section>
+
+  <section id="memory" class="category-section">
+    <h2>8. Memory Management Commands</h2>
+    <p>Commands for managing concept memory, usage tracking, and forgetting.</p>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr>
+        <td><code>GET_USAGE</code></td>
+        <td>Get usage statistics</td>
+        <td><code>@stats GET_USAGE conceptName</code></td>
+      </tr>
+      <tr>
+        <td><code>FORGET</code></td>
+        <td>Remove low-usage concepts</td>
+        <td><code>@result FORGET threshold=N</code></td>
+      </tr>
+      <tr>
+        <td><code>BOOST</code></td>
+        <td>Increase usage count</td>
+        <td><code>@_ BOOST conceptName amount</code></td>
+      </tr>
+      <tr>
+        <td><code>PROTECT</code></td>
+        <td>Protect from forgetting</td>
+        <td><code>@_ PROTECT conceptName</code></td>
+      </tr>
+      <tr>
+        <td><code>UNPROTECT</code></td>
+        <td>Remove protection</td>
+        <td><code>@_ UNPROTECT conceptName</code></td>
+      </tr>
+    </table>
+
+    <h3>GET_USAGE</h3>
+    <p><strong>Purpose:</strong> Get usage statistics for a concept.</p>
+    <pre><code>@stats GET_USAGE water
+# Returns: { usageCount, lastUsed, createdAt, assertCount, queryCount }</code></pre>
+
+    <h3>FORGET</h3>
+    <p><strong>Purpose:</strong> Remove concepts/facts with low usage to manage memory.</p>
+    <pre><code>@cleaned FORGET threshold=5      # Remove if usageCount < 5
+@old FORGET older_than=30d        # Remove if not used in 30 days</code></pre>
+
+    <div class="arch-note">
+      <strong>Internal Flow:</strong> FORGET uses <code>UsageTracker</code> to identify candidates and <code>ForgettingEngine</code> to safely remove them. Protected concepts are never forgotten.
+    </div>
+
+    <h3>BOOST / PROTECT / UNPROTECT</h3>
+    <p><strong>Purpose:</strong> Manually control concept priority and protection.</p>
+    <pre><code>@_ PROTECT CoreConcept           # Never forget this
+@_ BOOST ImportantTerm 100       # Increase priority
+@_ UNPROTECT TemporaryConcept    # Allow forgetting</code></pre>
+  </section>
+
+  <section id="mask" class="category-section">
+    <h2>9. Mask Commands</h2>
+    <p>Commands for creating dimension masks. Masks enable bias control and focused queries.</p>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr>
+        <td><code>MASK_PARTITIONS</code></td>
+        <td>Mask by partition</td>
+        <td><code>@mask MASK_PARTITIONS partition1 partition2</code></td>
+      </tr>
+      <tr>
+        <td><code>MASK_DIMS</code></td>
+        <td>Mask by dimension names</td>
+        <td><code>@mask MASK_DIMS dim1 dim2</code></td>
+      </tr>
+    </table>
+
+    <h3>MASK_PARTITIONS</h3>
+    <p><strong>Purpose:</strong> Create a mask that includes only specified partitions (ontology, axiology, empirical).</p>
+    <pre><code>@ontologyMask MASK_PARTITIONS ontology
+@valueMask MASK_PARTITIONS axiology
+@combinedMask MASK_PARTITIONS ontology axiology</code></pre>
+
+    <div class="arch-note">
+      <strong>Partitions:</strong>
+      <ul>
+        <li><code>ontology</code> - Physical, factual dimensions (what IS)</li>
+        <li><code>axiology</code> - Value, normative dimensions (what SHOULD BE)</li>
+        <li><code>empirical</code> - Learned, statistical dimensions</li>
+      </ul>
+    </div>
+
+    <h3>MASK_DIMS</h3>
+    <p><strong>Purpose:</strong> Create a mask for specific named dimensions.</p>
+    <pre><code>@thermoMask MASK_DIMS temperature pressure
+@ethicsMask MASK_DIMS moral_valence legality trust_level</code></pre>
+  </section>
+
+  <section id="utility" class="category-section">
+    <h2>10. Utility Commands</h2>
+    <p>Boolean operations and list manipulation.</p>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr>
+        <td><code>BOOL_AND</code></td>
+        <td>Logical AND</td>
+        <td><code>@result BOOL_AND $a $b</code></td>
+      </tr>
+      <tr>
+        <td><code>BOOL_OR</code></td>
+        <td>Logical OR</td>
+        <td><code>@result BOOL_OR $a $b</code></td>
+      </tr>
+      <tr>
+        <td><code>BOOL_NOT</code></td>
+        <td>Logical NOT</td>
+        <td><code>@result BOOL_NOT $a</code></td>
+      </tr>
+      <tr>
+        <td><code>NONEMPTY</code></td>
+        <td>Check if list non-empty</td>
+        <td><code>@result NONEMPTY $list</code></td>
+      </tr>
+      <tr>
+        <td><code>MERGE_LISTS</code></td>
+        <td>Concatenate lists</td>
+        <td><code>@combined MERGE_LISTS $list1 $list2</code></td>
+      </tr>
+      <tr>
+        <td><code>PICK_FIRST</code></td>
+        <td>Get first element</td>
+        <td><code>@first PICK_FIRST $list</code></td>
+      </tr>
+      <tr>
+        <td><code>PICK_LAST</code></td>
+        <td>Get last element</td>
+        <td><code>@last PICK_LAST $list</code></td>
+      </tr>
+      <tr>
+        <td><code>COUNT</code></td>
+        <td>Count elements</td>
+        <td><code>@n COUNT $list</code></td>
+      </tr>
+      <tr>
+        <td><code>FILTER</code></td>
+        <td>Filter list</td>
+        <td><code>@filtered FILTER $list condition</code></td>
+      </tr>
+      <tr>
+        <td><code>POLARITY_DECIDE</code></td>
+        <td>Decide based on polarity</td>
+        <td><code>@result POLARITY_DECIDE $truthValue</code></td>
+      </tr>
+    </table>
+
+    <h3>Boolean Operations</h3>
+    <pre><code>@q1 ASK Dog IS_A Animal
+@q2 ASK Dog HAS_PROPERTY fur
+@both BOOL_AND $q1 $q2        # True if both true
+@either BOOL_OR $q1 $q2       # True if either true
+@notQ1 BOOL_NOT $q1           # Negation</code></pre>
+
+    <h3>List Operations</h3>
+    <pre><code>@list1 FACTS_MATCHING Dog ? ?
+@list2 FACTS_MATCHING Cat ? ?
+@all MERGE_LISTS $list1 $list2
+@first PICK_FIRST $all
+@count COUNT $all
+@hasItems NONEMPTY $all</code></pre>
+  </section>
+
+  <section id="output" class="category-section">
+    <h2>11. Output Commands</h2>
+    <p>Commands for formatting and exporting results.</p>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr>
+        <td><code>TO_NATURAL</code></td>
+        <td>Convert to natural language</td>
+        <td><code>@text TO_NATURAL $result</code></td>
+      </tr>
+      <tr>
+        <td><code>TO_JSON</code></td>
+        <td>Export as JSON</td>
+        <td><code>@json TO_JSON $result</code></td>
+      </tr>
+      <tr>
+        <td><code>EXPLAIN</code></td>
+        <td>Detailed explanation</td>
+        <td><code>@exp EXPLAIN $result</code></td>
+      </tr>
+      <tr>
+        <td><code>FORMAT</code></td>
+        <td>Format with template</td>
+        <td><code>@formatted FORMAT $result template="..."</code></td>
+      </tr>
+      <tr>
+        <td><code>SUMMARIZE</code></td>
+        <td>Summarize results</td>
+        <td><code>@summary SUMMARIZE $results</code></td>
+      </tr>
+    </table>
+
+    <h3>TO_NATURAL</h3>
+    <p><strong>Purpose:</strong> Convert a result to human-readable text.</p>
+    <pre><code>@answer ASK Water IS_A liquid
+@readable TO_NATURAL $answer
+# Returns: "Yes, water is a liquid (confidence: 95%)"</code></pre>
+
+    <h3>EXPLAIN</h3>
+    <p><strong>Purpose:</strong> Get a detailed explanation of how a result was derived.</p>
+    <pre><code>@result ASK Dog IS_A LivingThing
+@exp EXPLAIN $result
+# Returns: step-by-step reasoning chain</code></pre>
+  </section>
+
+  <section id="ontology" class="category-section">
+    <h2>12. Ontology Introspection Commands</h2>
+    <p>Commands for exploring what the system knows and doesn't know.</p>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr>
+        <td><code>EXPLAIN_CONCEPT</code></td>
+        <td>Explain what system knows</td>
+        <td><code>@info EXPLAIN_CONCEPT conceptName</code></td>
+      </tr>
+      <tr>
+        <td><code>MISSING</code></td>
+        <td>Find undefined concepts</td>
+        <td><code>@gaps MISSING "statement"</code></td>
+      </tr>
+      <tr>
+        <td><code>WHAT_IS</code></td>
+        <td>Simple identity query</td>
+        <td><code>@desc WHAT_IS conceptName</code></td>
+      </tr>
+    </table>
+
+    <h3>EXPLAIN_CONCEPT</h3>
+    <p><strong>Purpose:</strong> Get comprehensive information about what the system knows about a concept.</p>
+    <pre><code>@water EXPLAIN_CONCEPT Water
+# Returns: types, properties, relationships, usage stats</code></pre>
+
+    <p><strong>Returns:</strong></p>
+    <pre><code>{
+  concept: string,
+  normalized: string,
+  exists: boolean,
+  asSubject: [...],    // facts where concept is subject
+  asObject: [...],     // facts where concept is object
+  types: [...],        // IS_A relationships
+  properties: [...],   // HAS_PROPERTY values
+  summary: string      // natural language summary
+}</code></pre>
+
+    <h3>MISSING</h3>
+    <p><strong>Purpose:</strong> Find undefined concepts in a statement before executing it.</p>
+    <pre><code>@gaps MISSING "Doctor TREATS Patient USING Medicine"
+# Returns: which concepts are undefined, with suggestions</code></pre>
+
+    <div class="arch-note">
+      <strong>Use Case:</strong> Call MISSING before complex queries to identify what facts need to be added first. Useful for LLM integration where the system can report what knowledge is missing.
+    </div>
+
+    <h3>WHAT_IS</h3>
+    <p><strong>Purpose:</strong> Quick identity query - what type of thing is this?</p>
+    <pre><code>@desc WHAT_IS Dog
+# Returns: "'Dog' is a Mammal, Animal with four_legs, fur."</code></pre>
+  </section>
+
+  <section>
+    <h2>Command Summary Table</h2>
+    <table class="cmd-table">
+      <tr><th>Category</th><th>Commands</th><th>Count</th></tr>
+      <tr><td>Query</td><td>ASK, ASK_MASKED, FACTS_MATCHING, ALL_REQUIREMENTS_SATISFIED</td><td>4</td></tr>
+      <tr><td>Assertion</td><td>ASSERT, RETRACT</td><td>2</td></tr>
+      <tr><td>Concept</td><td>BIND_CONCEPT, DEFINE_CONCEPT, INSPECT, LITERAL</td><td>4</td></tr>
+      <tr><td>Relation</td><td>BIND_RELATION, DEFINE_RELATION, BIND_POINT</td><td>3</td></tr>
+      <tr><td>Theory</td><td>THEORY_PUSH, THEORY_POP, LIST_THEORIES, LOAD_THEORY, SAVE_THEORY, MERGE_THEORY, DELETE_THEORY, THEORY_INFO, RESET_SESSION</td><td>9</td></tr>
+      <tr><td>Reasoning</td><td>VALIDATE, PROVE, HYPOTHESIZE, CF, ABDUCT, ANALOGICAL, CHECK_CONTRADICTION, CHECK_WOULD_CONTRADICT, REGISTER_FUNCTIONAL, REGISTER_CARDINALITY</td><td>10</td></tr>
+      <tr><td>Inference</td><td>INFER, FORWARD_CHAIN, WHY</td><td>3</td></tr>
+      <tr><td>Memory</td><td>GET_USAGE, FORGET, BOOST, PROTECT, UNPROTECT</td><td>5</td></tr>
+      <tr><td>Mask</td><td>MASK_PARTITIONS, MASK_DIMS</td><td>2</td></tr>
+      <tr><td>Utility</td><td>BOOL_AND, BOOL_OR, BOOL_NOT, NONEMPTY, MERGE_LISTS, PICK_FIRST, PICK_LAST, COUNT, FILTER, POLARITY_DECIDE</td><td>10</td></tr>
+      <tr><td>Output</td><td>TO_NATURAL, TO_JSON, EXPLAIN, FORMAT, SUMMARIZE</td><td>5</td></tr>
+      <tr><td>Ontology</td><td>EXPLAIN_CONCEPT, MISSING, WHAT_IS</td><td>3</td></tr>
+      <tr><td colspan="2"><strong>Total</strong></td><td><strong>60</strong></td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Architecture Overview</h2>
+    <p>How commands connect to the internal architecture:</p>
+
+    <pre><code>
+User/LLM Input
+     |
+     v
+TranslatorBridge  ─────────────────────────────────────────────────┐
+     |                                                              |
+     v                                                              |
+TheoryDSLEngine ─────> DSLParser (tokenize, resolve variables)      |
+     |                                                              |
+     ├──> DSLCommandsCore ─────> api.ask(), api.add()               |
+     |         |                      |                             |
+     |         v                      v                             |
+     |    Reasoner ──────────> ConceptStore ───> StorageAdapter     |
+     |         |                      |                             |
+     |         v                      v                             |
+     |    InferenceEngine       TheoryStack                         |
+     |         |                                                    |
+     |         v                                                    |
+     ├──> DSLCommandsReasoning ─> ContradictionDetector             |
+     |                                                              |
+     ├──> DSLCommandsInference ─> InferenceEngine                   |
+     |                                                              |
+     ├──> DSLCommandsTheory ────> TheoryManager                     |
+     |                                                              |
+     ├──> DSLCommandsMemory ────> UsageTracker, ForgettingEngine    |
+     |                                                              |
+     ├──> DSLCommandsOntology ──> DimensionRegistry                 |
+     |                                                              |
+     └──> DSLCommandsOutput ────> (formatting utilities)            |
+                                                                    |
+                                                 DimensionRegistry ─┘
+                                                 (relation properties)
+    </code></pre>
+  </section>
+
+  <div class="footer-nav">
+    <a href="index.html">Back to Syntax overview</a>
+    <a href="../index.html">Back to Documentation</a>
+  </div>
+  </div>
+  <script src="../reference/nav2.js"></script>
+</body>
+</html>

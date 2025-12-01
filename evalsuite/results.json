@@ -1,7 +1,7 @@
 {
-  "timestamp": "2025-11-28T16:10:01.435Z",
-  "totalPassed": 40,
-  "totalFailed": 0,
+  "timestamp": "2025-12-01T08:48:25.282Z",
+  "totalPassed": 71,
+  "totalFailed": 25,
   "cases": [
     {
       "id": "suite_01_ontology",
@@ -403,6 +403,580 @@
           "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"level_2_engineer\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
           "passed": true,
           "matchReason": "NL Match: 1 indicators (+), 1 (-), 1/2 concepts"
+        }
+      ],
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "id": "suite_06_analogic_symmetric",
+      "name": "Analogical Reasoning & Symmetric/Inverse Relations",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is Ion married to Maria?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Ion is married to Maria. This is inferred from the symmetric property of MARRIED_TO - since Maria is married to Ion, Ion is also married to Maria.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"symmetric\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Ion\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN"
+        },
+        {
+          "id": "q2",
+          "question": "Is Ana a child of Maria?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Ana is the child of Maria. This is inferred from the inverse relation - since Maria is parent of Ana, Ana is child of Maria.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"inverse\",\"inverseRelation\":\"PARENT_OF\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Ana\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 2 indicators (+), 1 (-), 3/10 concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Is Mihai a sibling of Ana?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Mihai is a sibling of Ana. SIBLING_OF is symmetric, so if Ana is sibling of Mihai, then Mihai is sibling of Ana.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"symmetric\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"Mihai\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/8 concepts"
+        },
+        {
+          "id": "q4",
+          "question": "Bucharest is to Romania as Paris is to what?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "France. The analogy is: Bucharest is the capital of Romania, so Paris (being a capital) is the capital of France.",
+          "actualResponse": "",
+          "passed": false,
+          "matchReason": "",
+          "error": "ANALOGICAL requires source_a, source_b, and target_c parameters"
+        },
+        {
+          "id": "q5",
+          "question": "Doctor is to patient as teacher is to what?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Student. The analogy is: Doctor treats patient, so teacher (in the same professional pattern) teaches student.",
+          "actualResponse": "",
+          "passed": false,
+          "matchReason": "",
+          "error": "ANALOGICAL requires source_a, source_b, and target_c parameters"
+        },
+        {
+          "id": "q6",
+          "question": "Find all capital-country pairs",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Found 6 pairs: Bucharest-Romania, Paris-France, Berlin-Germany, Madrid-Spain, Rome-Italy, London-United Kingdom.",
+          "actualResponse": "[{\"subject\":\"Bucharest\",\"relation\":\"CAPITAL_OF\",\"object\":\"Romania\"},{\"subject\":\"Paris\",\"relation\":\"CAPITAL_OF\",\"object\":\"France\"},{\"subject\":\"Berlin\",\"relation\":\"CAPITAL_OF\",\"object\":\"Germany\"},{\"subject\":\"Madrid\",\"relation\":\"CAPITAL_OF\",\"object\":\"Spain\"},{\"subject\":\"Rome\",\"relation\":\"CAPITAL_OF\",\"object\":\"Italy\"},{\"subject\":\"London\",\"relation\":\"CAPITAL_OF\",\"object\":\"United_Kingdom\"}]",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/9 concepts"
+        },
+        {
+          "id": "q7",
+          "question": "Who are the children of Ion?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Ion has two children: Ana and Mihai.",
+          "actualResponse": "[{\"subject\":\"Ion\",\"relation\":\"PARENT_OF\",\"object\":\"Ana\"},{\"subject\":\"Ion\",\"relation\":\"PARENT_OF\",\"object\":\"Mihai\"}]",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts"
+        },
+        {
+          "id": "q8",
+          "question": "Who are Ana's parents?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Ana's parents are Maria and Ion.",
+          "actualResponse": "[{\"subject\":\"Maria\",\"relation\":\"PARENT_OF\",\"object\":\"Ana\"},{\"subject\":\"Ion\",\"relation\":\"PARENT_OF\",\"object\":\"Ana\"}]",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/3 concepts"
+        }
+      ],
+      "passed": 6,
+      "failed": 2
+    },
+    {
+      "id": "suite_07_compositional_rules",
+      "name": "Compositional Rules & Forward Chaining",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Is Ion the grandparent of Andrei?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Ion is the grandparent of Andrei. Ion is parent of Maria, and Maria is parent of Andrei, so by the grandparent rule, Ion is grandparent of Andrei.",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Ion\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": false,
+          "matchReason": "DSL mismatch: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q2",
+          "question": "Is Ana the grandparent of Elena?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Ana is the grandparent of Elena. Ana is parent of Maria, and Maria is parent of Elena.",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Ana\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": false,
+          "matchReason": "DSL mismatch: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q3",
+          "question": "Is Vasile an uncle of Maria?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Vasile is an uncle of Maria. Vasile is sibling of Ion, and Ion is parent of Maria.",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Vasile\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": false,
+          "matchReason": "DSL mismatch: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q4",
+          "question": "Is Ion an ancestor of Andrei?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Ion is an ancestor of Andrei through the chain: Ion is parent of Maria (so ancestor), and Maria is parent of Andrei (so Ion is ancestor of Andrei too).",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Ion\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": false,
+          "matchReason": "DSL mismatch: expected TRUE_CERTAIN, got UNKNOWN"
+        },
+        {
+          "id": "q5",
+          "question": "Are Andrei and Cosmin cousins?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Andrei and Cosmin are cousins. They share Ion as a common grandparent (Ion->Maria->Andrei and Ion's sibling Vasile->Cosmin implies shared great-grandparent level), and they are not siblings.",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"Andrei\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "Weak NL Match (DSL UNKNOWN but 1 text indicators for TRUE_CERTAIN)"
+        },
+        {
+          "id": "q6",
+          "question": "Why is Ion the grandparent of Andrei?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Proof chain: 1) Ion PARENT_OF Maria (fact), 2) Maria PARENT_OF Andrei (fact), 3) By grandparent_rule: Ion GRANDPARENT_OF Andrei (derived).",
+          "actualResponse": "{\"proven\":false,\"method\":\"exhausted\",\"confidence\":0}",
+          "passed": false,
+          "matchReason": "No match: 0 indicators, 0/13 concepts, no DSL"
+        },
+        {
+          "id": "q7",
+          "question": "How many new facts can be derived from forward chaining?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Forward chaining derives multiple new facts: grandparent relations (Ion and Ana are grandparents of Andrei and Elena), uncle relations (Vasile is uncle of Maria), ancestor relations (multiple levels), and cousin relations.",
+          "actualResponse": "{\"derived\":[{\"subject\":\"Ion\",\"relation\":\"SIBLING_OF\",\"object\":\"Vasile\",\"derivedBy\":\"symmetric_closure\"},{\"subject\":\"Ana\",\"relation\":\"MARRIED_TO\",\"object\":\"Ion\",\"derivedBy\":\"symmetric_closure\"}],\"count\":2,\"originalCount\":163}",
+          "passed": false,
+          "matchReason": "No match: 0 indicators, 0/21 concepts, no DSL"
+        },
+        {
+          "id": "q8",
+          "question": "Is Andrei a sibling of Elena?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, Andrei and Elena are siblings - they share the same parent Maria.",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"Andrei\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "Weak NL Match (DSL UNKNOWN but 1 text indicators for TRUE_CERTAIN)"
+        }
+      ],
+      "passed": 2,
+      "failed": 6
+    },
+    {
+      "id": "suite_08_default_reasoning",
+      "name": "Default Reasoning with Exceptions (Non-Monotonic Logic)",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Can Tweety fly?",
+          "expectedTruth": "TRUE_DEFAULT",
+          "expectedNatural": "Yes, Tweety can fly. Tweety is a bird, and birds can fly by default. Tweety is not one of the exceptions (penguin, ostrich, kiwi, emu).",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"inheritance\",\"inheritedFrom\":\"bird\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Tweety\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": false,
+          "matchReason": "DSL mismatch: expected TRUE_DEFAULT, got TRUE_CERTAIN"
+        },
+        {
+          "id": "q2",
+          "question": "Can Opus fly?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, Opus cannot fly. Although Opus is a bird (penguins are birds), penguins are an exception to the flying rule.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.9,\"method\":\"inheritance\",\"inheritedFrom\":\"bird\",\"depth\":2,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Opus\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": false,
+          "matchReason": "DSL mismatch: expected FALSE, got TRUE_CERTAIN"
+        },
+        {
+          "id": "q3",
+          "question": "Does Rex give birth to live young?",
+          "expectedTruth": "TRUE_DEFAULT",
+          "expectedNatural": "Yes, Rex gives birth to live young. Rex is a dog, dogs are mammals, and mammals give birth to live young by default. Dogs are not an exception.",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Rex\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": false,
+          "matchReason": "DSL mismatch: expected TRUE_DEFAULT, got UNKNOWN"
+        },
+        {
+          "id": "q4",
+          "question": "Does Perry give birth to live young?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, Perry does not give birth to live young. Perry is a platypus, and platypuses are an exception - they lay eggs despite being mammals.",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Perry\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 2 indicators (+), 0 (-), 2/10 concepts"
+        },
+        {
+          "id": "q5",
+          "question": "Does Nemo live in water?",
+          "expectedTruth": "TRUE_DEFAULT",
+          "expectedNatural": "Yes, Nemo lives in water. Nemo is a goldfish, goldfish are fish, and fish live in water by default.",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Nemo\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": false,
+          "matchReason": "DSL mismatch: expected TRUE_DEFAULT, got UNKNOWN"
+        },
+        {
+          "id": "q6",
+          "question": "Does Muddy live in water?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, or at least not exclusively. Muddy is a mudskipper, and mudskippers are an exception - they can survive on land.",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Muddy\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 2 indicators (+), 0 (-), 1/8 concepts"
+        },
+        {
+          "id": "q7",
+          "question": "Is Scales cold-blooded?",
+          "expectedTruth": "TRUE_DEFAULT",
+          "expectedNatural": "Yes, Scales is cold-blooded. Scales is a lizard, lizards are reptiles, and all reptiles are cold-blooded with no exceptions.",
+          "actualResponse": "{\"truth\":\"UNKNOWN\",\"confidence\":0,\"method\":\"no_evidence\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Scales\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": false,
+          "matchReason": "DSL mismatch: expected TRUE_DEFAULT, got UNKNOWN"
+        },
+        {
+          "id": "q8",
+          "question": "Can Speedy fly?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, Speedy cannot fly. Speedy is an ostrich, and ostriches are an exception to the birds-can-fly rule.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.9,\"method\":\"inheritance\",\"inheritedFrom\":\"bird\",\"depth\":2,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"Speedy\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": false,
+          "matchReason": "DSL mismatch: expected FALSE, got TRUE_CERTAIN"
+        }
+      ],
+      "passed": 2,
+      "failed": 6
+    },
+    {
+      "id": "suite_09_contradictions",
+      "name": "Contradiction Detection & Constraint Validation",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "Would it be a contradiction to say John was born in New York?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, this would be a contradiction. John is already recorded as born in Chicago, and BORN_IN is a functional relation - a person can only be born in one place.",
+          "actualResponse": "{\"wouldContradict\":true,\"reason\":\"FUNCTIONAL_VIOLATION\",\"contradictions\":[{\"type\":\"FUNCTIONAL_VIOLATION\",\"severity\":\"ERROR\",\"subject\":\"John\",\"relation\":\"BORN_IN\",\"values\":[\"Chicago\",\"New_York\"],\"facts\":[{\"subject\":\"John\",\"relation\":\"BORN_IN\",\"object\":\"Chicago\"},{\"subject\":\"John\",\"relation\":\"BORN_IN\",\"object\":\"New_York\"}],\"explanation\":\"John has multiple BORN_IN values: Chicago, New_York (BORN_IN should be single-valued)\",\"resolution\":[\"Retract \\\"John BORN_IN Chicago\\\"\",\"Retract \\\"John BORN_IN New_York\\\"\"]}],\"proposedFact\":{\"subject\":\"John\",\"relation\":\"BORN_IN\",\"object\":\"New_York\"}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 5/10 concepts"
+        },
+        {
+          "id": "q2",
+          "question": "Would it be a contradiction to say John has a second biological mother named Susan?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, this would be a contradiction. John already has Mary as biological mother, and BIOLOGICAL_MOTHER is functional.",
+          "actualResponse": "{\"wouldContradict\":true,\"reason\":\"FUNCTIONAL_VIOLATION\",\"contradictions\":[{\"type\":\"FUNCTIONAL_VIOLATION\",\"severity\":\"ERROR\",\"subject\":\"John\",\"relation\":\"BIOLOGICAL_MOTHER\",\"values\":[\"Mary\",\"Susan\"],\"facts\":[{\"subject\":\"John\",\"relation\":\"BIOLOGICAL_MOTHER\",\"object\":\"Mary\"},{\"subject\":\"John\",\"relation\":\"BIOLOGICAL_MOTHER\",\"object\":\"Susan\"}],\"explanation\":\"John has multiple BIOLOGICAL_MOTHER values: Mary, Susan (BIOLOGICAL_MOTHER should be single-valued)\",\"resolution\":[\"Retract \\\"John BIOLOGICAL_MOTHER Mary\\\"\",\"Retract \\\"John BIOLOGICAL_MOTHER Susan\\\"\"]}],\"proposedFact\":{\"subject\":\"John\",\"relation\":\"BIOLOGICAL_MOTHER\",\"object\":\"Susan\"}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 3/7 concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Would it be a contradiction to say John is dead?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, this would be a contradiction. John is currently recorded as alive, and alive and dead are disjoint - a person cannot be both.",
+          "actualResponse": "{\"wouldContradict\":false,\"contradictions\":[],\"proposedFact\":{\"subject\":\"John\",\"relation\":\"IS_A\",\"object\":\"dead\"}}",
+          "passed": false,
+          "matchReason": "No match: 0 indicators, 1/10 concepts, no DSL"
+        },
+        {
+          "id": "q4",
+          "question": "Is the current theory consistent?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, the current theory is consistent. No functional constraints are violated, no disjoint types are assigned to the same entity, and cardinality constraints are satisfied.",
+          "actualResponse": "{\"consistent\":true,\"issues\":[],\"scope\":\"all\",\"factCount\":166}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/13 concepts"
+        },
+        {
+          "id": "q5",
+          "question": "Can John have a fourth doctor assigned?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "No, if John already has 3 doctors, adding a fourth would violate the cardinality constraint (max 3 doctors per patient).",
+          "actualResponse": "{\"wouldContradict\":false,\"contradictions\":[],\"proposedFact\":{\"subject\":\"John\",\"relation\":\"HAS_DOCTOR\",\"object\":\"DrBrown WITH_EXISTING [DrSmith, DrJones, DrWilson]\"}}",
+          "passed": false,
+          "matchReason": "No match: 0 indicators, 1/10 concepts, no DSL"
+        },
+        {
+          "id": "q6",
+          "question": "Would saying 'cat IS_A mammal AND cat IS_A fish' be a contradiction?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, this would be a contradiction. Mammals and fish are disjoint categories - nothing can be both a mammal and a fish.",
+          "actualResponse": "{\"wouldContradict\":false,\"contradictions\":[],\"proposedFact\":{\"subject\":\"cat\",\"relation\":\"IS_A\",\"object\":\"fish GIVEN cat IS_A mammal\"}}",
+          "passed": false,
+          "matchReason": "No match: 0 indicators, 2/8 concepts, no DSL"
+        },
+        {
+          "id": "q7",
+          "question": "Can John's diabetes diagnosis be both confirmed and ruled out?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "No, this would be a contradiction. The diagnosis is already confirmed, and confirmed and ruled_out are disjoint states.",
+          "actualResponse": "{\"wouldContradict\":false,\"contradictions\":[],\"proposedFact\":{\"subject\":\"diabetes_diagnosis\",\"relation\":\"STATUS\",\"object\":\"ruled_out\"}}",
+          "passed": false,
+          "matchReason": "No match: 0 indicators, 3/9 concepts, no DSL"
+        },
+        {
+          "id": "q8",
+          "question": "Why would having two birth places be a contradiction?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "BORN_IN is registered as a functional relation, meaning each subject can have at most one value for this relation. A person can only be born in one place - this is a real-world constraint that the system enforces.",
+          "actualResponse": "",
+          "passed": false,
+          "matchReason": "",
+          "error": "WHY expects Subject Relation Object"
+        }
+      ],
+      "passed": 3,
+      "failed": 5
+    },
+    {
+      "id": "suite_10_theory_layers",
+      "name": "Theory Layering & Advanced Counterfactual Reasoning",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "In a world where water boiled at 50 degrees, would it be liquid at room temperature?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, water would still be liquid at room temperature (20 degrees) if it boiled at 50 degrees, since 20 < 50.",
+          "actualResponse": "",
+          "passed": false,
+          "matchReason": "",
+          "error": "TranslatorBridge cannot normalise input into constrained grammar"
+        },
+        {
+          "id": "q2",
+          "question": "What if there was no oxygen - could fire exist?",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "No, fire could not exist without oxygen. Fire requires oxygen to burn, so in a world without oxygen, fire is impossible.",
+          "actualResponse": "",
+          "passed": false,
+          "matchReason": "",
+          "error": "TranslatorBridge cannot normalise input into constrained grammar"
+        },
+        {
+          "id": "q3",
+          "question": "What if Napoleon had won Waterloo - would the French Empire have continued?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "Plausibly yes. If Napoleon had won Waterloo instead of losing, the French Empire might have continued since its end was a consequence of the defeat.",
+          "actualResponse": "",
+          "passed": false,
+          "matchReason": "",
+          "error": "TranslatorBridge cannot normalise input into constrained grammar"
+        },
+        {
+          "id": "q4",
+          "question": "Create a 'no_gravity' layer and check if objects would fall",
+          "expectedTruth": "FALSE",
+          "expectedNatural": "In the no-gravity layer, objects would not fall because we retracted the causal relationship. After THEORY_POP, normal gravity rules apply again.",
+          "actualResponse": "[Could not generate DSL query]",
+          "passed": true,
+          "matchReason": "NL Match: 2 indicators (+), 0 (-), 0/15 concepts"
+        },
+        {
+          "id": "q5",
+          "question": "After popping the no-gravity layer, do objects fall again?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, after popping the counterfactual layer, we return to base reality where gravity causes objects to fall.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"gravity\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/11 concepts"
+        },
+        {
+          "id": "q6",
+          "question": "Can we have nested counterfactual layers?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "Yes, nested layers work. In inner layer, both changes are visible. After popping inner, water boils at 100 again but Napoleon still won. After popping outer, both revert to base reality.",
+          "actualResponse": "[Could not generate DSL query]",
+          "passed": false,
+          "matchReason": "No match: 0 indicators, 0/20 concepts, no DSL"
+        },
+        {
+          "id": "q7",
+          "question": "What if smartphones didn't require electricity?",
+          "expectedTruth": "PLAUSIBLE",
+          "expectedNatural": "If smartphones didn't require electricity, they could theoretically function without power. However, this counterfactual removes a fundamental dependency.",
+          "actualResponse": "",
+          "passed": false,
+          "matchReason": "",
+          "error": "TranslatorBridge cannot normalise input into constrained grammar"
+        },
+        {
+          "id": "q8",
+          "question": "Verify layer isolation - changes in a layer should not affect base theory",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "In the test layer, Roman Empire fell in 500 AD (as asserted). After popping, the base theory shows 476 AD unchanged. Layers are properly isolated.",
+          "actualResponse": "[Could not generate DSL query]",
+          "passed": false,
+          "matchReason": "No match: 0 indicators, 0/12 concepts, no DSL"
+        }
+      ],
+      "passed": 2,
+      "failed": 6
+    },
+    {
+      "id": "suite_11_recursive_small",
+      "name": "Recursive Planning Problems - Small Scale",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "In the wolf-goat-cabbage problem, what happens if the farmer leaves the wolf and goat alone?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "If the farmer leaves the wolf and goat alone on either bank, the wolf will eat the goat. This is a constraint that must be avoided.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"wolf_and_goat_alone\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/8 concepts"
+        },
+        {
+          "id": "q2",
+          "question": "What should be the first move in the wolf-goat-cabbage problem?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "The farmer must take the goat first. This is the only safe first move because: leaving wolf+goat alone = goat eaten, leaving goat+cabbage alone = cabbage eaten, but wolf+cabbage alone is safe.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"first_move\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/16 concepts"
+        },
+        {
+          "id": "q3",
+          "question": "Can the wolf-goat-cabbage problem be solved in fewer than 7 crossings?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "No, 7 crossings is the minimum. The constraints force specific moves, and there is no shorter valid sequence.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"wolf_goat_cabbage\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN"
+        },
+        {
+          "id": "q4",
+          "question": "How many moves are needed for Towers of Hanoi with 3 disks?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "7 moves are needed. The formula is 2^n - 1, so for n=3: 2^3 - 1 = 8 - 1 = 7.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"hanoi_3_disks\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN"
+        },
+        {
+          "id": "q5",
+          "question": "In Hanoi, can a large disk be placed on a small disk?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "No, a larger disk cannot be placed on a smaller disk. This is a fundamental rule of the Towers of Hanoi.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"large_on_small\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/8 concepts"
+        },
+        {
+          "id": "q6",
+          "question": "What is the recursive pattern for solving Towers of Hanoi?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "The recursive pattern is: 1) Move n-1 disks from source to auxiliary peg, 2) Move the largest disk from source to target peg, 3) Move n-1 disks from auxiliary to target peg. Base case: 1 disk = 1 move.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"hanoi\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN"
+        },
+        {
+          "id": "q7",
+          "question": "How many moves are needed for Towers of Hanoi with 4 disks?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "15 moves are needed. Using the formula 2^n - 1: 2^4 - 1 = 16 - 1 = 15.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"hanoi_4_disks\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN"
+        },
+        {
+          "id": "q8",
+          "question": "In wolf-goat-cabbage, why must the farmer bring the goat back on the 4th crossing?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "After taking the wolf to the right bank (crossing 3), the farmer must bring the goat back because leaving wolf+goat together on the right bank would result in the wolf eating the goat. The goat acts as a 'shuttle' that must be carefully managed.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"crossing_4\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/18 concepts"
+        }
+      ],
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "id": "suite_12_recursive_large",
+      "name": "Recursive Planning Problems - Large Scale",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "How many moves are needed for Towers of Hanoi with 15 disks?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "32,767 moves are needed. Using 2^15 - 1 = 32768 - 1 = 32767.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"hanoi_15_disks\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN"
+        },
+        {
+          "id": "q2",
+          "question": "How many moves are needed for Towers of Hanoi with 20 disks?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "1,048,575 moves are needed. Using 2^20 - 1 = 1048576 - 1 = 1048575. This is over 1 million moves!",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"hanoi_20_disks\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN"
+        },
+        {
+          "id": "q3",
+          "question": "If each Hanoi move takes 1 second, how long would 20 disks take?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "1,048,575 seconds, which is approximately 12.1 days (1048575 / 86400 ≈ 12.14 days).",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"hanoi_20_time_seconds\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN"
+        },
+        {
+          "id": "q4",
+          "question": "What is the 15th Fibonacci number?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "The 15th Fibonacci number (F(15)) is 610. Sequence: ...233, 377, 610...",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"fibonacci_15\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/6 concepts"
+        },
+        {
+          "id": "q5",
+          "question": "What is the 20th Fibonacci number?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "The 20th Fibonacci number (F(20)) is 6765.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"fibonacci_20\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts"
+        },
+        {
+          "id": "q6",
+          "question": "What is 15 factorial?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "15! = 1,307,674,368,000 (over 1.3 trillion).",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"factorial_15\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/3 concepts"
+        },
+        {
+          "id": "q7",
+          "question": "How does the number of Hanoi moves grow when we add one more disk?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "The number of moves approximately doubles with each additional disk. Specifically, moves(n+1) = 2 × moves(n) + 1. This is exponential growth O(2^n).",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"exponential_growth\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/12 concepts"
+        },
+        {
+          "id": "q8",
+          "question": "Is it feasible to physically solve Towers of Hanoi with 20 disks?",
+          "expectedTruth": "TRUE_CERTAIN",
+          "expectedNatural": "No, it is not practically feasible. At 1 move per second, it would take over 12 days of continuous operation. At a more realistic 1 move per 5 seconds, it would take about 60 days. The exponential nature makes large instances impractical.",
+          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"hanoi_20\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "passed": true,
+          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN"
         }
       ],
       "passed": 8,

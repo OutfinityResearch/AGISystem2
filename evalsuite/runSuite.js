@@ -1096,9 +1096,29 @@ async function evaluateCase(testCase, agi, options) {
         results.failed++;
         logResult(false, `Expected: ${query.expected_answer.truth}`);
         log(`    Reason: ${analysis.reason}`, colors.gray);
+
+        // Always show expected vs actual for failures (not just in verbose mode)
+        const structured = parseStructuredResult(response);
+        const actualTruth = structured.found ? structured.truth : 'NOT_PARSED';
+        const actualMethod = structured.method ? ` (method: ${structured.method})` : '';
+        const actualConfidence = structured.confidence ? ` [conf: ${structured.confidence}]` : '';
+
+        // Show DSL used (helps debugging)
+        if (usedDsl) {
+          log(`    ${colors.cyan}DSL:${colors.reset}      ${usedDsl}`, '');
+        }
+        log(`    ${colors.yellow}Expected:${colors.reset} ${query.expected_answer.truth}`, '');
+        log(`    ${colors.red}Actual:${colors.reset}   ${actualTruth}${actualMethod}${actualConfidence}`, '');
+
         if (options.verbose) {
           log(`    Expected NL: ${query.expected_answer.natural_language}`, colors.gray);
-          log(`    Actual: ${response.substring(0, 300)}...`, colors.gray);
+          // Show more of the response for debugging
+          const responsePreview = response.length > 500 ? response.substring(0, 500) + '...' : response;
+          log(`    Raw response: ${responsePreview}`, colors.gray);
+        } else {
+          // Even without verbose, show a compact response preview
+          const compactResponse = response.replace(/\s+/g, ' ').substring(0, 150);
+          log(`    Response: ${compactResponse}${response.length > 150 ? '...' : ''}`, colors.gray);
         }
       }
     } catch (err) {
