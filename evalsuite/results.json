@@ -1,6 +1,6 @@
 {
-  "timestamp": "2025-12-01T17:16:33.265Z",
-  "totalPassed": 208,
+  "timestamp": "2025-12-01T18:55:44.078Z",
+  "totalPassed": 248,
   "totalFailed": 0,
   "cases": [
     {
@@ -1859,78 +1859,78 @@
     },
     {
       "id": "suite_23_summarize_perspective",
-      "name": "Summarization from Different Perspectives",
+      "name": "Structured Report Generation - Climate Policy Analysis",
       "theoryLoaded": true,
       "queries": [
         {
           "id": "q1",
-          "question": "Does renewable energy create jobs?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, renewable energy creates jobs.",
-          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"renewable_energy\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "question": "Section 1 - The Causal Chain: What sequence of events leads from greenhouse gases to coastal threats?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "The causal chain: trapped heat causes temperature rise, which causes ice cap melting, which causes sea level rise. Sea level rise then threatens coastal cities. Additionally, heat waves cause deaths, air pollution causes respiratory illness, and droughts cause food price rises.",
+          "actualResponse": "[{\"subject\":\"trapped_heat\",\"relation\":\"CAUSES\",\"object\":\"temperature_rise\"},{\"subject\":\"temperature_rise\",\"relation\":\"CAUSES\",\"object\":\"ice_cap_melting\"},{\"subject\":\"ice_cap_melting\",\"relation\":\"CAUSES\",\"object\":\"sea_level_rise\"},{\"subject\":\"air_pollution\",\"relation\":\"CAUSES\",\"object\":\"respiratory_illness\"}]",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 1 (-), 2/4 concepts"
+          "matchReason": "LIST Match: Found 4 result(s)"
         },
         {
           "id": "q2",
-          "question": "Does climate change affect health?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, climate change affects health.",
-          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"climate_change\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "question": "Section 1 - Sources: What releases greenhouse gases into the atmosphere?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Deforestation and fossil fuel burning both release carbon dioxide.",
+          "actualResponse": "[{\"subject\":\"deforestation\",\"relation\":\"RELEASES\",\"object\":\"carbon_dioxide\"},{\"subject\":\"fossil_fuel_burning\",\"relation\":\"RELEASES\",\"object\":\"carbon_dioxide\"}]",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 2/4 concepts"
+          "matchReason": "LIST Match: Found 2 result(s)"
         },
         {
           "id": "q3",
-          "question": "What causes global warming?",
+          "question": "Section 2 - Economic Costs: What are the financial burdens of climate change and mitigation?",
           "expectedTruth": "LIST",
-          "expectedNatural": "Carbon emissions cause global warming.",
-          "actualResponse": "[{\"subject\":\"carbon_emissions\",\"relation\":\"CAUSES\",\"object\":\"global_warming\"}]",
+          "expectedNatural": "Carbon tax costs businesses money. Climate adaptation costs governments billions.",
+          "actualResponse": "[{\"subject\":\"carbon_tax\",\"relation\":\"COSTS\",\"object\":\"businesses\"},{\"subject\":\"climate_adaptation\",\"relation\":\"COSTS\",\"object\":\"billions\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q4",
+          "question": "Section 2 - Economic Benefits: What positive economic effects do green solutions provide?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Renewable energy creates jobs.",
+          "actualResponse": "[{\"subject\":\"renewable_energy\",\"relation\":\"CREATES\",\"object\":\"jobs\"}]",
           "passed": true,
           "matchReason": "LIST Match: Found 1 result(s)"
         },
         {
-          "id": "q4",
-          "question": "What reduces carbon emissions?",
-          "expectedTruth": "LIST",
-          "expectedNatural": "Renewable energy and planting trees reduce carbon emissions.",
-          "actualResponse": "[{\"subject\":\"renewable_energy\",\"relation\":\"REDUCES\",\"object\":\"carbon_emissions\"},{\"subject\":\"planting_trees\",\"relation\":\"REDUCES\",\"object\":\"carbon_emissions\"}]",
-          "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
-        },
-        {
           "id": "q5",
-          "question": "What types of renewable energy exist?",
+          "question": "Section 3 - Available Solutions: What technologies or methods can reduce emissions?",
           "expectedTruth": "LIST",
-          "expectedNatural": "Solar power and wind power are types of renewable energy.",
-          "actualResponse": "[{\"subject\":\"solar_power\",\"relation\":\"IS_A\",\"object\":\"renewable_energy\"},{\"subject\":\"wind_power\",\"relation\":\"IS_A\",\"object\":\"renewable_energy\"}]",
+          "expectedNatural": "Electric vehicles reduce emissions. Public transit reduces emissions. Carbon tax reduces emissions.",
+          "actualResponse": "[{\"subject\":\"electric_vehicles\",\"relation\":\"REDUCE\",\"object\":\"emissions\"}]",
           "passed": true,
-          "matchReason": "LIST Match: Found 2 result(s)"
+          "matchReason": "LIST Match: Found 1 result(s)"
         },
         {
           "id": "q6",
-          "question": "Does sea level rise threaten coastal cities?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, sea level rise threatens coastal cities.",
-          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"sea_level_rise\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "question": "Section 3 - Clean Energy: What sources generate clean electricity?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Solar power and wind power both generate clean electricity.",
+          "actualResponse": "[{\"subject\":\"solar_power\",\"relation\":\"GENERATES\",\"object\":\"clean_electricity\"},{\"subject\":\"wind_power\",\"relation\":\"GENERATES\",\"object\":\"clean_electricity\"}]",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 1/4 concepts"
+          "matchReason": "LIST Match: Found 2 result(s)"
         },
         {
           "id": "q7",
-          "question": "What does global warming cause?",
+          "question": "Section 4 - Human Impacts: What are the direct effects on human health and society?",
           "expectedTruth": "LIST",
-          "expectedNatural": "Global warming causes ice melting.",
-          "actualResponse": "[{\"subject\":\"global_warming\",\"relation\":\"CAUSES\",\"object\":\"ice_melting\"}]",
+          "expectedNatural": "Water scarcity affects agriculture.",
+          "actualResponse": "[{\"subject\":\"water_scarcity\",\"relation\":\"AFFECTS\",\"object\":\"agriculture\"}]",
           "passed": true,
           "matchReason": "LIST Match: Found 1 result(s)"
         },
         {
           "id": "q8",
-          "question": "What increases carbon emissions?",
+          "question": "Section 5 - Policy Tools: What mechanisms do governments use to address climate change?",
           "expectedTruth": "LIST",
-          "expectedNatural": "Deforestation increases carbon emissions.",
-          "actualResponse": "[{\"subject\":\"deforestation\",\"relation\":\"INCREASES\",\"object\":\"carbon_emissions\"}]",
+          "expectedNatural": "The Paris Agreement sets emission targets.",
+          "actualResponse": "[{\"subject\":\"Paris_Agreement\",\"relation\":\"SETS\",\"object\":\"emission_targets\"}]",
           "passed": true,
           "matchReason": "LIST Match: Found 1 result(s)"
         }
@@ -1940,80 +1940,80 @@
     },
     {
       "id": "suite_24_expand_essay",
-      "name": "Essay Generation and Knowledge Expansion",
+      "name": "Essay Composition - The Evolution and Impact of Artificial Intelligence",
       "theoryLoaded": true,
       "queries": [
         {
           "id": "q1",
-          "question": "What can AI do?",
+          "question": "INTRODUCTION - Historical Timeline: What are the key milestones in AI history that should open the essay?",
           "expectedTruth": "LIST",
-          "expectedNatural": "AI can recognize images, understand speech, and translate languages.",
-          "actualResponse": "[{\"subject\":\"AI\",\"relation\":\"CAN\",\"object\":\"recognize_images\"},{\"subject\":\"AI\",\"relation\":\"CAN\",\"object\":\"understand_speech\"},{\"subject\":\"AI\",\"relation\":\"CAN\",\"object\":\"translate_languages\"}]",
+          "expectedNatural": "Key milestones: Transformers architecture was introduced in 2017.",
+          "actualResponse": "[{\"subject\":\"transformers\",\"relation\":\"INTRODUCED_IN\",\"object\":\"2017\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q2",
+          "question": "INTRODUCTION - Origins: When and where did the field of AI formally begin?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "The term artificial intelligence was coined in 1956 at the Dartmouth conference.",
+          "actualResponse": "[{\"subject\":\"artificial_intelligence\",\"relation\":\"COINED_IN\",\"object\":\"1956\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q3",
+          "question": "BODY PARAGRAPH 1 - Technical Foundations: What powers modern AI systems?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Backpropagation enables network training. The attention mechanism enables transformers.",
+          "actualResponse": "[{\"subject\":\"backpropagation\",\"relation\":\"ENABLES\",\"object\":\"network_training\"},{\"subject\":\"attention_mechanism\",\"relation\":\"ENABLES\",\"object\":\"transformers\"},{\"subject\":\"AI\",\"relation\":\"ENABLES\",\"object\":\"autonomous_navigation\"}]",
           "passed": true,
           "matchReason": "LIST Match: Found 3 result(s)"
         },
         {
-          "id": "q2",
-          "question": "Does AI raise privacy concerns?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, AI raises privacy concerns.",
-          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"AI\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
-          "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
-        },
-        {
-          "id": "q3",
-          "question": "When was the term AI coined?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "The term AI was coined in 1956.",
-          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"TRUE_CERTAIN\",\"provenance\":{\"conceptId\":\"term_AI\",\"distance\":0,\"scepticRadius\":0,\"optimistRadius\":0}}",
-          "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/2 concepts"
-        },
-        {
           "id": "q4",
-          "question": "Is deep learning a type of machine learning?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, deep learning is a type of machine learning.",
-          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":0.95,\"method\":\"transitive\",\"depth\":1,\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"machine_learning\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "question": "BODY PARAGRAPH 1 - Learning Methods: How do AI systems acquire knowledge?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Deep learning uses multiple hidden layers. Reinforcement learning uses reward signals.",
+          "actualResponse": "[{\"subject\":\"deep_learning\",\"relation\":\"USES\",\"object\":\"multiple_hidden_layers\"},{\"subject\":\"reinforcement_learning\",\"relation\":\"USES\",\"object\":\"reward_signals\"}]",
           "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 1 (-), 2/3 concepts"
+          "matchReason": "LIST Match: Found 2 result(s)"
         },
         {
           "id": "q5",
-          "question": "What does AI increase?",
+          "question": "BODY PARAGRAPH 2 - Current Applications: What practical tasks does AI perform today?",
           "expectedTruth": "LIST",
-          "expectedNatural": "AI increases productivity.",
-          "actualResponse": "[{\"subject\":\"AI\",\"relation\":\"INCREASES\",\"object\":\"productivity\"}]",
+          "expectedNatural": "AI assists in medical diagnosis.",
+          "actualResponse": "[{\"subject\":\"AI\",\"relation\":\"ASSISTS\",\"object\":\"medical_diagnosis\"}]",
           "passed": true,
           "matchReason": "LIST Match: Found 1 result(s)"
         },
         {
           "id": "q6",
-          "question": "Does AI assist in medical diagnosis?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, AI assists in medical diagnosis.",
-          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"AI\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "question": "BODY PARAGRAPH 3 - Societal Concerns: What risks and ethical issues does AI raise?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "AI surveillance raises privacy concerns.",
+          "actualResponse": "[{\"subject\":\"AI_surveillance\",\"relation\":\"RAISES\",\"object\":\"privacy_concerns\"}]",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+          "matchReason": "LIST Match: Found 1 result(s)"
         },
         {
           "id": "q7",
-          "question": "What does AI help in?",
+          "question": "BODY PARAGRAPH 3 - Negative Impacts: What harms might AI cause to society?",
           "expectedTruth": "LIST",
-          "expectedNatural": "AI helps in drug discovery.",
-          "actualResponse": "[{\"subject\":\"AI\",\"relation\":\"HELPS_IN\",\"object\":\"drug_discovery\"}]",
+          "expectedNatural": "AI automation may displace jobs.",
+          "actualResponse": "[{\"subject\":\"AI_automation\",\"relation\":\"MAY_DISPLACE\",\"object\":\"jobs\"}]",
           "passed": true,
           "matchReason": "LIST Match: Found 1 result(s)"
         },
         {
           "id": "q8",
-          "question": "Does AI need regulation?",
-          "expectedTruth": "TRUE_CERTAIN",
-          "expectedNatural": "Yes, AI needs regulation.",
-          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\",\"confidence\":1,\"method\":\"direct\",\"band\":\"FALSE\",\"provenance\":{\"conceptId\":\"AI\",\"distance\":null,\"scepticRadius\":0,\"optimistRadius\":0}}",
+          "question": "CONCLUSION - Future Outlook: What developments might transform AI going forward?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Quantum computing may accelerate AI development.",
+          "actualResponse": "[{\"subject\":\"quantum_computing\",\"relation\":\"MAY_ACCELERATE\",\"object\":\"AI\"}]",
           "passed": true,
-          "matchReason": "DSL Match: Expected TRUE_CERTAIN, got TRUE_CERTAIN (method: direct)"
+          "matchReason": "LIST Match: Found 1 result(s)"
         }
       ],
       "passed": 8,
@@ -2093,6 +2093,411 @@
           "expectedTruth": "LIST",
           "expectedNatural": "Employees can access department files.",
           "actualResponse": "[{\"subject\":\"employee\",\"relation\":\"CAN_ACCESS\",\"object\":\"department_files\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        }
+      ],
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "id": "suite_26_tool_planning",
+      "name": "Tool Chain Planning - Web Scraping Pipeline",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "PLAN STEP 1: What is the first tool to execute and what parameter does it need?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Step 1 executes fetch_url with url parameter.",
+          "actualResponse": "[{\"subject\":\"step_1\",\"relation\":\"EXECUTES\",\"object\":\"fetch_url\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q2",
+          "question": "DEPENDENCY CHECK: What must be produced before parse_html can run?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "parse_html takes raw_html (which comes from fetch_url).",
+          "actualResponse": "[{\"subject\":\"parse_html\",\"relation\":\"TAKES\",\"object\":\"raw_html\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q3",
+          "question": "PLAN STEP 3: What does extract_data need as inputs?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "extract_data takes dom_tree and selector.",
+          "actualResponse": "[{\"subject\":\"extract_data\",\"relation\":\"TAKES\",\"object\":\"dom_tree\"},{\"subject\":\"extract_data\",\"relation\":\"TAKES\",\"object\":\"selector\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q4",
+          "question": "DATA FLOW: Where does step_4 get its input from?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Step 4 gets input from step 3.",
+          "actualResponse": "[{\"subject\":\"step_4\",\"relation\":\"INPUT_FROM\",\"object\":\"step_3\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q5",
+          "question": "GOAL DECOMPOSITION: What sequence produces json_data?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "json_data requires first having extracted_list, then applying transform_json.",
+          "actualResponse": "[{\"subject\":\"json_data\",\"relation\":\"REQUIRES_FIRST\",\"object\":\"extracted_list\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q6",
+          "question": "PARAMETER MAPPING: Which steps need configuration parameters (not just data flow)?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Step 1 needs url, step 3 needs selector, step 5 needs filepath.",
+          "actualResponse": "[{\"subject\":\"step_1\",\"relation\":\"WITH_PARAM\",\"object\":\"url\"},{\"subject\":\"step_3\",\"relation\":\"WITH_PARAM\",\"object\":\"selector\"},{\"subject\":\"step_5\",\"relation\":\"WITH_PARAM\",\"object\":\"filepath\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 3 result(s)"
+        },
+        {
+          "id": "q7",
+          "question": "FINAL STEP: What produces the archive output?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "compress_archive produces archive.",
+          "actualResponse": "[{\"subject\":\"compress_archive\",\"relation\":\"PRODUCES\",\"object\":\"archive\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q8",
+          "question": "FULL CHAIN: What tool does step_6 execute?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Step 6 executes compress_archive.",
+          "actualResponse": "[{\"subject\":\"step_6\",\"relation\":\"EXECUTES\",\"object\":\"compress_archive\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        }
+      ],
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "id": "suite_27_workflow_planning",
+      "name": "Workflow Execution - CI/CD Deployment Pipeline",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "INIT: What parameters does the checkout stage need to start the pipeline?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Checkout needs repository and branch parameters.",
+          "actualResponse": "[{\"subject\":\"checkout\",\"relation\":\"WITH_PARAM\",\"object\":\"repository\"},{\"subject\":\"checkout\",\"relation\":\"WITH_PARAM\",\"object\":\"branch\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q2",
+          "question": "PARALLEL CANDIDATES: Which stages can run in parallel after checkout (both need source_code)?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Build and unit_test both take source_code and can potentially run in parallel.",
+          "actualResponse": "[{\"subject\":\"build\",\"relation\":\"TAKES\",\"object\":\"source_code\"},{\"subject\":\"unit_test\",\"relation\":\"TAKES\",\"object\":\"source_code\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q3",
+          "question": "DEPENDENCY: What does deploy_prod require before it can execute?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "deploy_prod requires approval_status.",
+          "actualResponse": "[{\"subject\":\"deploy_prod\",\"relation\":\"REQUIRES\",\"object\":\"approval_status\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q4",
+          "question": "STEP 5 EXECUTION: What does step 5 run and what does it need?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Step 5 runs deploy_staging.",
+          "actualResponse": "[{\"subject\":\"step_5\",\"relation\":\"RUNS\",\"object\":\"deploy_staging\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q5",
+          "question": "SECURITY GATE: What does the security stage produce that could block the pipeline?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Security produces vulnerability_report.",
+          "actualResponse": "[{\"subject\":\"security\",\"relation\":\"PRODUCES\",\"object\":\"vulnerability_report\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q6",
+          "question": "FAILURE HANDLING: What triggers a pipeline abort?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "unit_test_failure and critical_vulnerability both trigger pipeline_abort.",
+          "actualResponse": "[{\"subject\":\"unit_test_failure\",\"relation\":\"TRIGGERS\",\"object\":\"pipeline_abort\"},{\"subject\":\"critical_vulnerability\",\"relation\":\"TRIGGERS\",\"object\":\"pipeline_abort\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q7",
+          "question": "ROLLBACK TRIGGER: What condition triggers a rollback?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "integration_test_failure triggers rollback.",
+          "actualResponse": "[{\"subject\":\"integration_test_failure\",\"relation\":\"TRIGGERS\",\"object\":\"rollback\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q8",
+          "question": "FINAL OUTPUT: What is produced at the end of a successful pipeline?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "deploy_prod produces production_deployment.",
+          "actualResponse": "[{\"subject\":\"deploy_prod\",\"relation\":\"PRODUCES\",\"object\":\"production_deployment\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        }
+      ],
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "id": "suite_28_api_orchestration",
+      "name": "API Call Sequencing - E-Commerce Order Flow",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "INIT: What is the first API call and what variable does it produce?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Call 1 invokes auth_api and outputs auth_token to variable token.",
+          "actualResponse": "[{\"subject\":\"call_1\",\"relation\":\"INVOKES\",\"object\":\"auth_api\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q2",
+          "question": "TOKEN USAGE: Which calls need the authentication token?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "call_2, call_3, call_5, and call_6 all use the token variable.",
+          "actualResponse": "[{\"subject\":\"call_2\",\"relation\":\"USES_VAR\",\"object\":\"token\"},{\"subject\":\"call_3\",\"relation\":\"USES_VAR\",\"object\":\"token\"},{\"subject\":\"call_5\",\"relation\":\"USES_VAR\",\"object\":\"token\"},{\"subject\":\"call_6\",\"relation\":\"USES_VAR\",\"object\":\"token\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 4 result(s)"
+        },
+        {
+          "id": "q3",
+          "question": "CALL 5 SETUP: What variables and parameters does the payment call need?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Call 5 uses token and total variables.",
+          "actualResponse": "[{\"subject\":\"call_5\",\"relation\":\"USES_VAR\",\"object\":\"token\"},{\"subject\":\"call_5\",\"relation\":\"USES_VAR\",\"object\":\"total\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q4",
+          "question": "ORDER CREATION: What does call_6 need from previous calls?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Call 6 uses token, items, and txn from previous calls.",
+          "actualResponse": "[{\"subject\":\"call_6\",\"relation\":\"USES_VAR\",\"object\":\"token\"},{\"subject\":\"call_6\",\"relation\":\"USES_VAR\",\"object\":\"items\"},{\"subject\":\"call_6\",\"relation\":\"USES_VAR\",\"object\":\"txn\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 3 result(s)"
+        },
+        {
+          "id": "q5",
+          "question": "USER INPUT: Which calls require external parameters (not from previous calls)?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Calls need: credentials, user_id, promo_code, payment_method, address, email.",
+          "actualResponse": "[{\"subject\":\"call_1\",\"relation\":\"WITH_PARAM\",\"object\":\"credentials\"},{\"subject\":\"call_2\",\"relation\":\"WITH_PARAM\",\"object\":\"user_id\"},{\"subject\":\"call_4\",\"relation\":\"WITH_PARAM\",\"object\":\"promo_code\"},{\"subject\":\"call_5\",\"relation\":\"WITH_PARAM\",\"object\":\"payment_method\"},{\"subject\":\"call_7\",\"relation\":\"WITH_PARAM\",\"object\":\"address\"},{\"subject\":\"call_8\",\"relation\":\"WITH_PARAM\",\"object\":\"email\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 6 result(s)"
+        },
+        {
+          "id": "q6",
+          "question": "ERROR: What happens if payment is declined?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Declined payment aborts with payment_error.",
+          "actualResponse": "[{\"subject\":\"declined\",\"relation\":\"ABORTS_WITH\",\"object\":\"payment_error\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q7",
+          "question": "SHIPPING SETUP: What does call_7 output and to which variable?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Call 7 outputs tracking_number to variable tracking.",
+          "actualResponse": "[{\"subject\":\"call_7\",\"relation\":\"OUTPUTS\",\"object\":\"tracking_number\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q8",
+          "question": "FINAL CALL: What does the notification call need to send confirmation?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "Call 8 uses order and tracking variables.",
+          "actualResponse": "[{\"subject\":\"call_8\",\"relation\":\"USES_VAR\",\"object\":\"order\"},{\"subject\":\"call_8\",\"relation\":\"USES_VAR\",\"object\":\"tracking\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        }
+      ],
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "id": "suite_29_task_decomposition",
+      "name": "Task Decomposition - Recipe Execution Plan",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "PREP LIST: What ingredients does prep_2 need and what does it produce?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "prep_2 takes eggs_4pcs and parmesan_100g to make egg_mixture.",
+          "actualResponse": "[{\"subject\":\"prep_2\",\"relation\":\"TAKES\",\"object\":\"eggs_4pcs\"},{\"subject\":\"prep_2\",\"relation\":\"TAKES\",\"object\":\"parmesan_100g\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q2",
+          "question": "PARALLELIZATION: What tasks can run in parallel during prep?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "prep_1, prep_2, and prep_3 can run in parallel.",
+          "actualResponse": "[{\"subject\":\"prep_parallel\",\"relation\":\"CAN_RUN\",\"object\":\"prep_1\"},{\"subject\":\"prep_parallel\",\"relation\":\"CAN_RUN\",\"object\":\"prep_2\"},{\"subject\":\"prep_parallel\",\"relation\":\"CAN_RUN\",\"object\":\"prep_3\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 3 result(s)"
+        },
+        {
+          "id": "q3",
+          "question": "DEPENDENCY: What must complete before cook_2 can start?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "cook_2 runs after prep_1 and prep_3.",
+          "actualResponse": "[{\"subject\":\"cook_2\",\"relation\":\"AFTER\",\"object\":\"prep_1\"},{\"subject\":\"cook_2\",\"relation\":\"AFTER\",\"object\":\"prep_3\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q4",
+          "question": "RESOURCE CONFLICT: What tasks use burner_1?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "prep_4 and cook_1 both use burner_1 (sequentially).",
+          "actualResponse": "[{\"subject\":\"prep_4\",\"relation\":\"USES\",\"object\":\"burner_1\"},{\"subject\":\"cook_1\",\"relation\":\"USES\",\"object\":\"burner_1\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q5",
+          "question": "TIMING: How long does cook_1 take?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "cook_1 takes 12 minutes.",
+          "actualResponse": "[{\"subject\":\"cook_1\",\"relation\":\"DURATION\",\"object\":\"12min\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q6",
+          "question": "ASSEMBLY DEPS: What does assemble_1 need from cooking phase?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "assemble_1 takes cooked_pasta and crispy_bacon.",
+          "actualResponse": "[{\"subject\":\"assemble_1\",\"relation\":\"TAKES\",\"object\":\"cooked_pasta\"},{\"subject\":\"assemble_1\",\"relation\":\"TAKES\",\"object\":\"crispy_bacon\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q7",
+          "question": "FINAL STEP: What produces the final_dish?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "assemble_3 outputs final_dish.",
+          "actualResponse": "[{\"subject\":\"assemble_3\",\"relation\":\"OUTPUTS\",\"object\":\"final_dish\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q8",
+          "question": "PAN USAGE: Which tasks need the pan?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "cook_2 and assemble_1 use pan_1.",
+          "actualResponse": "[{\"subject\":\"cook_2\",\"relation\":\"USES\",\"object\":\"pan_1\"},{\"subject\":\"assemble_1\",\"relation\":\"USES\",\"object\":\"pan_1\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        }
+      ],
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "id": "suite_30_resource_planning",
+      "name": "Resource Planning - Cloud Infrastructure Provisioning",
+      "theoryLoaded": true,
+      "queries": [
+        {
+          "id": "q1",
+          "question": "FOUNDATION: What must be created first before any other resources?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "vpc_main outputs vpc_id, which is needed by all other resources.",
+          "actualResponse": "[{\"subject\":\"vpc_main\",\"relation\":\"OUTPUTS\",\"object\":\"vpc_id\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q2",
+          "question": "DEPENDENCY CHAIN: What resources depend on vpc_main?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "subnet_public, subnet_private, and sg_web all depend on vpc_main.",
+          "actualResponse": "[{\"subject\":\"subnet_public\",\"relation\":\"AFTER\",\"object\":\"vpc_main\"},{\"subject\":\"subnet_private\",\"relation\":\"AFTER\",\"object\":\"vpc_main\"},{\"subject\":\"sg_web\",\"relation\":\"AFTER\",\"object\":\"vpc_main\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 3 result(s)"
+        },
+        {
+          "id": "q3",
+          "question": "SECURITY: What ports does sg_web allow?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "sg_web allows port_443 and port_80.",
+          "actualResponse": "[{\"subject\":\"sg_web\",\"relation\":\"ALLOWS\",\"object\":\"port_443\"},{\"subject\":\"sg_web\",\"relation\":\"ALLOWS\",\"object\":\"port_80\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q4",
+          "question": "EC2 PREREQS: What must exist before ec2_web_1 can be created?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "ec2_web_1 requires subnet_public and sg_web to exist first.",
+          "actualResponse": "[{\"subject\":\"ec2_web_1\",\"relation\":\"AFTER\",\"object\":\"subnet_public\"},{\"subject\":\"ec2_web_1\",\"relation\":\"AFTER\",\"object\":\"sg_web\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q5",
+          "question": "LOAD BALANCER: What does alb_main target?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "alb_main targets instance_web_1_id and instance_web_2_id.",
+          "actualResponse": "[{\"subject\":\"alb_main\",\"relation\":\"TARGETS\",\"object\":\"instance_web_1_id\"},{\"subject\":\"alb_main\",\"relation\":\"TARGETS\",\"object\":\"instance_web_2_id\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q6",
+          "question": "COST ANALYSIS: What is the monthly cost of rds_primary?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "rds_primary costs 50_dollars_month.",
+          "actualResponse": "[{\"subject\":\"rds_primary\",\"relation\":\"COSTS\",\"object\":\"50_dollars_month\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 1 result(s)"
+        },
+        {
+          "id": "q7",
+          "question": "DATABASE DEPS: What does rds_primary need before creation?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "rds_primary needs subnet_priv_id and sg_db_id.",
+          "actualResponse": "[{\"subject\":\"rds_primary\",\"relation\":\"NEEDS\",\"object\":\"subnet_priv_id\"},{\"subject\":\"rds_primary\",\"relation\":\"NEEDS\",\"object\":\"sg_db_id\"}]",
+          "passed": true,
+          "matchReason": "LIST Match: Found 2 result(s)"
+        },
+        {
+          "id": "q8",
+          "question": "FINAL STEP: What resource completes the infrastructure?",
+          "expectedTruth": "LIST",
+          "expectedNatural": "route53_record outputs dns_name as the final public endpoint.",
+          "actualResponse": "[{\"subject\":\"route53_record\",\"relation\":\"OUTPUTS\",\"object\":\"dns_name\"}]",
           "passed": true,
           "matchReason": "LIST Match: Found 1 result(s)"
         }

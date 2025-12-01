@@ -9,41 +9,6 @@
       "lastRun": "2025-11-28T10:39:57.358Z"
     },
     {
-      "id": "27_procurement_rules",
-      "name": "Procurement Thresholds and Approvals",
-      "failedQueries": [
-        "q1",
-        "q3",
-        "q4"
-      ],
-      "lastRun": "2025-11-28T09:48:07.152Z"
-    },
-    {
-      "id": "28_risk_controls",
-      "name": "Risk Controls and Compensating Measures",
-      "failedQueries": [
-        "q3"
-      ],
-      "lastRun": "2025-11-28T09:48:07.152Z"
-    },
-    {
-      "id": "29_counterfactual_reg_change",
-      "name": "Counterfactual Regulatory Change",
-      "failedQueries": [
-        "q1",
-        "q2"
-      ],
-      "lastRun": "2025-11-28T09:48:07.152Z"
-    },
-    {
-      "id": "30_abductive_noncompliance",
-      "name": "Abductive Non-Compliance Diagnosis",
-      "failedQueries": [
-        "q3"
-      ],
-      "lastRun": "2025-11-28T09:48:07.152Z"
-    },
-    {
       "id": "32_argument_type_regulations",
       "name": "Argument Type Inference for Policies",
       "failedQueries": [
@@ -542,9 +507,9 @@
       "lastRun": "2025-12-01T17:11:57.348Z"
     }
   ],
-  "lastUpdated": "2025-12-01T17:15:17.150Z",
+  "lastUpdated": "2025-12-01T17:24:44.659Z",
   "rangeInfo": {
     "lastFrom": 23,
-    "lastTo": 25
+    "lastTo": 30
   }
 }

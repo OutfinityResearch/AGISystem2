@@ -1,0 +1,159 @@
+{
+  "id": "suite_30_resource_planning",
+  "name": "Resource Planning - Cloud Infrastructure Provisioning",
+  "description": "Tests planning cloud infrastructure deployment with resource constraints, dependencies, and cost optimization. Must reason about: VPC before subnets, subnets before instances, security groups before attaching, load balancers after instances.",
+
+  "theory": {
+    "natural_language": "INFRASTRUCTURE PLAN: Resource vpc_main uses terraform_vpc with cidr 10.0.0.0/16 and region us-east-1 outputting vpc_id costing 0 dollars. Resource subnet_public uses terraform_subnet with vpc_id and cidr 10.0.1.0/24 and availability_zone us-east-1a outputting subnet_pub_id costing 0 dollars after vpc_main. Resource subnet_private uses terraform_subnet with vpc_id and cidr 10.0.2.0/24 and availability_zone us-east-1b outputting subnet_priv_id costing 0 dollars after vpc_main. Resource sg_web uses terraform_security_group with vpc_id and ingress_port 443 and ingress_port 80 outputting sg_web_id costing 0 dollars after vpc_main. Resource sg_db uses terraform_security_group with vpc_id and ingress_port 5432 and source sg_web outputting sg_db_id costing 0 dollars after sg_web. Resource ec2_web_1 uses terraform_instance with ami ami-123 and instance_type t3.medium and subnet subnet_pub_id and security_group sg_web_id outputting instance_web_1_id costing 30 dollars_month after subnet_public and sg_web. Resource ec2_web_2 uses terraform_instance with ami ami-123 and instance_type t3.medium and subnet subnet_pub_id and security_group sg_web_id outputting instance_web_2_id costing 30 dollars_month after subnet_public and sg_web. Resource rds_primary uses terraform_rds with engine postgres and instance_class db.t3.medium and subnet_group subnet_priv_id and security_group sg_db_id outputting rds_endpoint costing 50 dollars_month after subnet_private and sg_db. Resource alb_main uses terraform_alb with subnets subnet_pub_id and security_group sg_web_id and targets instance_web_1_id and targets instance_web_2_id outputting alb_dns costing 20 dollars_month after ec2_web_1 and ec2_web_2. Resource route53_record uses terraform_route53 with zone_id Z123 and name app.example.com and alias alb_dns outputting dns_name costing 0.50 dollars_month after alb_main. COST SUMMARY: Total monthly cost is 160.50 dollars.",
+    "expected_facts": [
+      "vpc_main USES terraform_vpc",
+      "vpc_main WITH_PARAM cidr_10.0.0.0/16",
+      "vpc_main WITH_PARAM region_us-east-1",
+      "vpc_main OUTPUTS vpc_id",
+      "vpc_main COSTS 0_dollars",
+      "subnet_public USES terraform_subnet",
+      "subnet_public NEEDS vpc_id",
+      "subnet_public WITH_PARAM cidr_10.0.1.0/24",
+      "subnet_public OUTPUTS subnet_pub_id",
+      "subnet_public AFTER vpc_main",
+      "subnet_private USES terraform_subnet",
+      "subnet_private NEEDS vpc_id",
+      "subnet_private WITH_PARAM cidr_10.0.2.0/24",
+      "subnet_private OUTPUTS subnet_priv_id",
+      "subnet_private AFTER vpc_main",
+      "sg_web USES terraform_security_group",
+      "sg_web NEEDS vpc_id",
+      "sg_web ALLOWS port_443",
+      "sg_web ALLOWS port_80",
+      "sg_web OUTPUTS sg_web_id",
+      "sg_web AFTER vpc_main",
+      "sg_db USES terraform_security_group",
+      "sg_db NEEDS vpc_id",
+      "sg_db ALLOWS port_5432",
+      "sg_db SOURCE sg_web",
+      "sg_db OUTPUTS sg_db_id",
+      "sg_db AFTER sg_web",
+      "ec2_web_1 USES terraform_instance",
+      "ec2_web_1 WITH_PARAM ami_ami-123",
+      "ec2_web_1 WITH_PARAM type_t3.medium",
+      "ec2_web_1 NEEDS subnet_pub_id",
+      "ec2_web_1 NEEDS sg_web_id",
+      "ec2_web_1 OUTPUTS instance_web_1_id",
+      "ec2_web_1 COSTS 30_dollars_month",
+      "ec2_web_1 AFTER subnet_public",
+      "ec2_web_1 AFTER sg_web",
+      "ec2_web_2 USES terraform_instance",
+      "ec2_web_2 OUTPUTS instance_web_2_id",
+      "ec2_web_2 COSTS 30_dollars_month",
+      "ec2_web_2 AFTER subnet_public",
+      "rds_primary USES terraform_rds",
+      "rds_primary WITH_PARAM engine_postgres",
+      "rds_primary NEEDS subnet_priv_id",
+      "rds_primary NEEDS sg_db_id",
+      "rds_primary OUTPUTS rds_endpoint",
+      "rds_primary COSTS 50_dollars_month",
+      "rds_primary AFTER subnet_private",
+      "rds_primary AFTER sg_db",
+      "alb_main USES terraform_alb",
+      "alb_main NEEDS subnet_pub_id",
+      "alb_main NEEDS sg_web_id",
+      "alb_main TARGETS instance_web_1_id",
+      "alb_main TARGETS instance_web_2_id",
+      "alb_main OUTPUTS alb_dns",
+      "alb_main COSTS 20_dollars_month",
+      "alb_main AFTER ec2_web_1",
+      "alb_main AFTER ec2_web_2",
+      "route53_record USES terraform_route53",
+      "route53_record NEEDS alb_dns",
+      "route53_record OUTPUTS dns_name",
+      "route53_record COSTS 0.50_dollars_month",
+      "route53_record AFTER alb_main",
+      "total_cost EQUALS 160.50_dollars_month"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "FOUNDATION: What must be created first before any other resources?",
+      "expected_dsl": "@q1 FACTS_MATCHING vpc_main OUTPUTS ?",
+      "expected_answer": {
+        "natural_language": "vpc_main outputs vpc_id, which is needed by all other resources.",
+        "truth": "LIST",
+        "explanation": "Root resource identification"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "DEPENDENCY CHAIN: What resources depend on vpc_main?",
+      "expected_dsl": "@q2 FACTS_MATCHING ? AFTER vpc_main",
+      "expected_answer": {
+        "natural_language": "subnet_public, subnet_private, and sg_web all depend on vpc_main.",
+        "truth": "LIST",
+        "explanation": "First-level dependencies"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "SECURITY: What ports does sg_web allow?",
+      "expected_dsl": "@q3 FACTS_MATCHING sg_web ALLOWS ?",
+      "expected_answer": {
+        "natural_language": "sg_web allows port_443 and port_80.",
+        "truth": "LIST",
+        "explanation": "Security group rules"
+      }
+    },
+    {
+      "id": "q4",
+      "natural_language": "EC2 PREREQS: What must exist before ec2_web_1 can be created?",
+      "expected_dsl": "@q4 FACTS_MATCHING ec2_web_1 AFTER ?",
+      "expected_answer": {
+        "natural_language": "ec2_web_1 requires subnet_public and sg_web to exist first.",
+        "truth": "LIST",
+        "explanation": "Instance prerequisites"
+      }
+    },
+    {
+      "id": "q5",
+      "natural_language": "LOAD BALANCER: What does alb_main target?",
+      "expected_dsl": "@q5 FACTS_MATCHING alb_main TARGETS ?",
+      "expected_answer": {
+        "natural_language": "alb_main targets instance_web_1_id and instance_web_2_id.",
+        "truth": "LIST",
+        "explanation": "Load balancer configuration"
+      }
+    },
+    {
+      "id": "q6",
+      "natural_language": "COST ANALYSIS: What is the monthly cost of rds_primary?",
+      "expected_dsl": "@q6 FACTS_MATCHING rds_primary COSTS ?",
+      "expected_answer": {
+        "natural_language": "rds_primary costs 50_dollars_month.",
+        "truth": "LIST",
+        "explanation": "Database cost tracking"
+      }
+    },
+    {
+      "id": "q7",
+      "natural_language": "DATABASE DEPS: What does rds_primary need before creation?",
+      "expected_dsl": "@q7 FACTS_MATCHING rds_primary NEEDS ?",
+      "expected_answer": {
+        "natural_language": "rds_primary needs subnet_priv_id and sg_db_id.",
+        "truth": "LIST",
+        "explanation": "Database prerequisites"
+      }
+    },
+    {
+      "id": "q8",
+      "natural_language": "FINAL STEP: What resource completes the infrastructure?",
+      "expected_dsl": "@q8 FACTS_MATCHING route53_record OUTPUTS ?",
+      "expected_answer": {
+        "natural_language": "route53_record outputs dns_name as the final public endpoint.",
+        "truth": "LIST",
+        "explanation": "Terminal resource in dependency graph"
+      }
+    }
+  ],
+
+  "tags": ["resource_planning", "cloud", "terraform", "infrastructure", "dependencies", "cost_optimization", "aws"]
+}

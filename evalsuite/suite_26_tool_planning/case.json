@@ -1,133 +1,134 @@
 {
   "id": "suite_26_tool_planning",
-  "name": "Tool Usage Planning and Sequencing",
-  "description": "Tests the ability to plan sequences of tool calls to accomplish goals, understanding tool capabilities and dependencies",
+  "name": "Tool Chain Planning - Web Scraping Pipeline",
+  "description": "Tests ability to plan a multi-step tool chain for web scraping. Given a goal like 'get processed data from URL', system must find the sequence: fetch→parse→transform→save, resolving dependencies and parameter passing between steps.",
 
   "theory": {
-    "natural_language": "Available tools for data processing: fetch_url tool retrieves web content and requires a URL input. parse_html tool extracts data from HTML and requires HTML content input. save_file tool writes data to disk and requires data and filename inputs. send_email tool sends messages and requires recipient and content inputs. compress_file tool creates archives and requires a file path input. validate_data tool checks data format and requires data input. transform_json tool converts formats and requires JSON input. Available tools for image processing: load_image tool reads image files and requires a file path. resize_image tool changes dimensions and requires an image and size. apply_filter tool adds effects and requires an image and filter name. save_image tool writes image to disk and requires an image and path. Tool dependencies: parse_html requires output from fetch_url. save_file can accept output from any tool. compress_file requires output from save_file. resize_image requires output from load_image. apply_filter requires output from resize_image or load_image. send_email requires output from save_file or transform_json.",
+    "natural_language": "TOOL DEFINITIONS: The fetch_url tool takes a url parameter and produces raw_html output. The parse_html tool takes raw_html parameter and produces dom_tree output. The extract_data tool takes dom_tree and selector parameters and produces extracted_list output. The transform_json tool takes extracted_list parameter and produces json_data output. The save_file tool takes json_data and filepath parameters and produces saved_file output. The compress_archive tool takes saved_file parameter and produces archive output. COMPOSITION RULES: To get dom_tree you must first fetch_url then parse_html. To get extracted_list you must first have dom_tree then extract_data. To get json_data you must first have extracted_list then transform_json. To get saved_file you must first have json_data then save_file. To get archive you must first have saved_file then compress_archive. EXECUTION SEQUENCE: Step 1 is fetch_url with url parameter. Step 2 is parse_html with raw_html from step 1. Step 3 is extract_data with dom_tree from step 2 and selector config. Step 4 is transform_json with extracted_list from step 3. Step 5 is save_file with json_data from step 4 and filepath config. Step 6 is compress_archive with saved_file from step 5.",
     "expected_facts": [
-      "fetch_url IS_A tool",
-      "fetch_url REQUIRES url_input",
-      "fetch_url PRODUCES html_content",
-      "parse_html IS_A tool",
-      "parse_html REQUIRES html_content",
-      "parse_html PRODUCES structured_data",
-      "save_file IS_A tool",
-      "save_file REQUIRES data",
-      "save_file REQUIRES filename",
-      "save_file PRODUCES file_path",
-      "send_email IS_A tool",
-      "send_email REQUIRES recipient",
-      "send_email REQUIRES content",
-      "compress_file IS_A tool",
-      "compress_file REQUIRES file_path",
-      "compress_file PRODUCES archive_path",
-      "validate_data IS_A tool",
-      "validate_data REQUIRES data",
-      "transform_json IS_A tool",
-      "transform_json REQUIRES json_input",
-      "load_image IS_A tool",
-      "load_image REQUIRES file_path",
-      "load_image PRODUCES image",
-      "resize_image IS_A tool",
-      "resize_image REQUIRES image",
-      "resize_image REQUIRES size",
-      "resize_image PRODUCES image",
-      "apply_filter IS_A tool",
-      "apply_filter REQUIRES image",
-      "apply_filter REQUIRES filter_name",
-      "save_image IS_A tool",
-      "save_image REQUIRES image",
-      "save_image REQUIRES path",
-      "parse_html DEPENDS_ON fetch_url",
-      "compress_file DEPENDS_ON save_file",
-      "resize_image DEPENDS_ON load_image",
-      "apply_filter DEPENDS_ON load_image"
+      "fetch_url TAKES url",
+      "fetch_url PRODUCES raw_html",
+      "parse_html TAKES raw_html",
+      "parse_html PRODUCES dom_tree",
+      "extract_data TAKES dom_tree",
+      "extract_data TAKES selector",
+      "extract_data PRODUCES extracted_list",
+      "transform_json TAKES extracted_list",
+      "transform_json PRODUCES json_data",
+      "save_file TAKES json_data",
+      "save_file TAKES filepath",
+      "save_file PRODUCES saved_file",
+      "compress_archive TAKES saved_file",
+      "compress_archive PRODUCES archive",
+      "dom_tree REQUIRES_FIRST fetch_url",
+      "dom_tree REQUIRES_THEN parse_html",
+      "extracted_list REQUIRES_FIRST dom_tree",
+      "extracted_list REQUIRES_THEN extract_data",
+      "json_data REQUIRES_FIRST extracted_list",
+      "json_data REQUIRES_THEN transform_json",
+      "saved_file REQUIRES_FIRST json_data",
+      "saved_file REQUIRES_THEN save_file",
+      "archive REQUIRES_FIRST saved_file",
+      "archive REQUIRES_THEN compress_archive",
+      "step_1 EXECUTES fetch_url",
+      "step_1 WITH_PARAM url",
+      "step_2 EXECUTES parse_html",
+      "step_2 INPUT_FROM step_1",
+      "step_3 EXECUTES extract_data",
+      "step_3 INPUT_FROM step_2",
+      "step_3 WITH_PARAM selector",
+      "step_4 EXECUTES transform_json",
+      "step_4 INPUT_FROM step_3",
+      "step_5 EXECUTES save_file",
+      "step_5 INPUT_FROM step_4",
+      "step_5 WITH_PARAM filepath",
+      "step_6 EXECUTES compress_archive",
+      "step_6 INPUT_FROM step_5"
     ]
   },
 
   "queries": [
     {
       "id": "q1",
-      "natural_language": "What does fetch_url produce?",
-      "expected_dsl": "@q1 FACTS_MATCHING fetch_url PRODUCES ?",
+      "natural_language": "PLAN STEP 1: What is the first tool to execute and what parameter does it need?",
+      "expected_dsl": "@q1 FACTS_MATCHING step_1 EXECUTES ?",
       "expected_answer": {
-        "natural_language": "fetch_url produces html_content.",
+        "natural_language": "Step 1 executes fetch_url with url parameter.",
         "truth": "LIST",
-        "explanation": "Tool output capability"
+        "explanation": "First step identification with parameter"
       }
     },
     {
       "id": "q2",
-      "natural_language": "What does parse_html require?",
-      "expected_dsl": "@q2 FACTS_MATCHING parse_html REQUIRES ?",
+      "natural_language": "DEPENDENCY CHECK: What must be produced before parse_html can run?",
+      "expected_dsl": "@q2 FACTS_MATCHING parse_html TAKES ?",
       "expected_answer": {
-        "natural_language": "parse_html requires html_content.",
+        "natural_language": "parse_html takes raw_html (which comes from fetch_url).",
         "truth": "LIST",
-        "explanation": "Tool input requirement"
+        "explanation": "Dependency resolution"
       }
     },
     {
       "id": "q3",
-      "natural_language": "Does parse_html depend on fetch_url?",
-      "expected_dsl": "@q3 ASK parse_html DEPENDS_ON fetch_url",
+      "natural_language": "PLAN STEP 3: What does extract_data need as inputs?",
+      "expected_dsl": "@q3 FACTS_MATCHING extract_data TAKES ?",
       "expected_answer": {
-        "natural_language": "Yes, parse_html depends on fetch_url.",
-        "truth": "TRUE_CERTAIN",
-        "explanation": "Tool dependency confirmed"
+        "natural_language": "extract_data takes dom_tree and selector.",
+        "truth": "LIST",
+        "explanation": "Multi-input tool requirements"
       }
     },
     {
       "id": "q4",
-      "natural_language": "What tools are available?",
-      "expected_dsl": "@q4 FACTS_MATCHING ? IS_A tool",
+      "natural_language": "DATA FLOW: Where does step_4 get its input from?",
+      "expected_dsl": "@q4 FACTS_MATCHING step_4 INPUT_FROM ?",
       "expected_answer": {
-        "natural_language": "Available tools: fetch_url, parse_html, save_file, send_email, compress_file, validate_data, transform_json, load_image, resize_image, apply_filter, save_image.",
+        "natural_language": "Step 4 gets input from step 3.",
         "truth": "LIST",
-        "explanation": "List all tools"
+        "explanation": "Data flow between steps"
       }
     },
     {
       "id": "q5",
-      "natural_language": "What does resize_image depend on?",
-      "expected_dsl": "@q5 FACTS_MATCHING resize_image DEPENDS_ON ?",
+      "natural_language": "GOAL DECOMPOSITION: What sequence produces json_data?",
+      "expected_dsl": "@q5 FACTS_MATCHING json_data REQUIRES_FIRST ?",
       "expected_answer": {
-        "natural_language": "resize_image depends on load_image.",
+        "natural_language": "json_data requires first having extracted_list, then applying transform_json.",
         "truth": "LIST",
-        "explanation": "Image tool dependency"
+        "explanation": "Backward chaining from goal"
       }
     },
     {
       "id": "q6",
-      "natural_language": "What does save_file require?",
-      "expected_dsl": "@q6 FACTS_MATCHING save_file REQUIRES ?",
+      "natural_language": "PARAMETER MAPPING: Which steps need configuration parameters (not just data flow)?",
+      "expected_dsl": "@q6 FACTS_MATCHING ? WITH_PARAM ?",
       "expected_answer": {
-        "natural_language": "save_file requires data and filename.",
+        "natural_language": "Step 1 needs url, step 3 needs selector, step 5 needs filepath.",
         "truth": "LIST",
-        "explanation": "Multiple requirements"
+        "explanation": "Configuration vs data parameters"
       }
     },
     {
       "id": "q7",
-      "natural_language": "Does compress_file depend on save_file?",
-      "expected_dsl": "@q7 ASK compress_file DEPENDS_ON save_file",
+      "natural_language": "FINAL STEP: What produces the archive output?",
+      "expected_dsl": "@q7 FACTS_MATCHING ? PRODUCES archive",
       "expected_answer": {
-        "natural_language": "Yes, compress_file depends on save_file.",
-        "truth": "TRUE_CERTAIN",
-        "explanation": "Archive tool dependency"
+        "natural_language": "compress_archive produces archive.",
+        "truth": "LIST",
+        "explanation": "Final step identification"
       }
     },
     {
       "id": "q8",
-      "natural_language": "What produces an image?",
-      "expected_dsl": "@q8 FACTS_MATCHING ? PRODUCES image",
+      "natural_language": "FULL CHAIN: What tool does step_6 execute?",
+      "expected_dsl": "@q8 FACTS_MATCHING step_6 EXECUTES ?",
       "expected_answer": {
-        "natural_language": "load_image and resize_image produce images.",
+        "natural_language": "Step 6 executes compress_archive.",
         "truth": "LIST",
-        "explanation": "Tools that output images"
+        "explanation": "Last step in the execution plan"
       }
     }
   ],
 
-  "tags": ["tool_planning", "sequencing", "dependencies", "agentic"]
+  "tags": ["tool_planning", "sequencing", "web_scraping", "pipeline", "data_flow", "parameter_passing"]
 }

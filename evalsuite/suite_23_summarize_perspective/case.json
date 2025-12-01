@@ -1,118 +1,131 @@
 {
   "id": "suite_23_summarize_perspective",
-  "name": "Summarization from Different Perspectives",
-  "description": "Tests the ability to summarize knowledge from specific viewpoints, filtering facts through perspective masks",
+  "name": "Structured Report Generation - Climate Policy Analysis",
+  "description": "Tests ability to gather and structure knowledge for a multi-section policy report on climate change. Simulates essay writing where the system must: 1) Identify the causal chain, 2) Extract economic implications, 3) Find solutions, 4) Assess social impacts, 5) Draw conclusions from the evidence.",
 
   "theory": {
-    "natural_language": "Climate change facts: Carbon emissions cause global warming. Global warming causes ice melting. Ice melting causes sea level rise. Sea level rise threatens coastal cities. Renewable energy reduces carbon emissions. Solar power is renewable energy. Wind power is renewable energy. Electric vehicles reduce emissions. Deforestation increases carbon emissions. Planting trees reduces carbon emissions. Economic perspective: Renewable energy creates jobs. Carbon tax affects businesses. Climate adaptation costs money. Green technology is an investment. Social perspective: Climate change affects health. Heat waves cause deaths. Air pollution causes respiratory disease. Climate refugees are increasing. Environmental perspective: Biodiversity loss accelerates. Coral reefs are dying. Species extinction increases. Ecosystems are disrupted.",
+    "natural_language": "SCIENTIFIC EVIDENCE: Carbon dioxide is a greenhouse gas. Greenhouse gases trap heat. Trapped heat causes temperature rise. Temperature rise causes ice cap melting. Ice cap melting causes sea level rise. Sea level rise threatens coastal cities. Methane is a greenhouse gas. Deforestation releases carbon dioxide. Fossil fuel burning releases carbon dioxide. ECONOMIC FACTORS: Carbon tax reduces emissions. Carbon tax costs businesses money. Renewable energy creates jobs. Renewable energy requires initial investment. Green technology attracts venture capital. Climate adaptation costs governments billions. Energy efficiency saves money long-term. SOLUTIONS AVAILABLE: Solar power generates clean electricity. Wind power generates clean electricity. Electric vehicles reduce emissions. Public transit reduces emissions. Reforestation absorbs carbon dioxide. Carbon capture technology is emerging. Nuclear power is low carbon. SOCIAL IMPACTS: Heat waves cause deaths. Air pollution causes respiratory illness. Climate refugees are increasing globally. Food prices rise due to droughts. Water scarcity affects agriculture. Extreme weather destroys infrastructure. POLICY RESPONSES: Paris Agreement sets emission targets. Carbon markets enable trading. Building codes improve efficiency. Vehicle standards reduce pollution. Subsidies encourage renewables. Research funding advances technology.",
     "expected_facts": [
-      "carbon_emissions CAUSES global_warming",
-      "global_warming CAUSES ice_melting",
-      "ice_melting CAUSES sea_level_rise",
+      "carbon_dioxide IS_A greenhouse_gas",
+      "greenhouse_gases TRAP heat",
+      "trapped_heat CAUSES temperature_rise",
+      "temperature_rise CAUSES ice_cap_melting",
+      "ice_cap_melting CAUSES sea_level_rise",
       "sea_level_rise THREATENS coastal_cities",
-      "renewable_energy REDUCES carbon_emissions",
-      "solar_power IS_A renewable_energy",
-      "wind_power IS_A renewable_energy",
-      "electric_vehicles REDUCES emissions",
-      "deforestation INCREASES carbon_emissions",
-      "planting_trees REDUCES carbon_emissions",
+      "methane IS_A greenhouse_gas",
+      "deforestation RELEASES carbon_dioxide",
+      "fossil_fuel_burning RELEASES carbon_dioxide",
+      "carbon_tax REDUCES emissions",
+      "carbon_tax COSTS businesses",
       "renewable_energy CREATES jobs",
-      "carbon_tax AFFECTS businesses",
-      "climate_adaptation COSTS money",
-      "green_technology IS_A investment",
-      "climate_change AFFECTS health",
-      "heat_waves CAUSES deaths",
-      "air_pollution CAUSES respiratory_disease",
-      "climate_refugees INCREASING true",
-      "biodiversity_loss ACCELERATING true",
-      "coral_reefs DYING true",
-      "species_extinction INCREASING true",
-      "ecosystems DISRUPTED true"
+      "renewable_energy REQUIRES initial_investment",
+      "green_technology ATTRACTS venture_capital",
+      "climate_adaptation COSTS billions",
+      "energy_efficiency SAVES money",
+      "solar_power GENERATES clean_electricity",
+      "wind_power GENERATES clean_electricity",
+      "electric_vehicles REDUCE emissions",
+      "public_transit REDUCES emissions",
+      "reforestation ABSORBS carbon_dioxide",
+      "carbon_capture IS_A emerging_technology",
+      "nuclear_power IS_A low_carbon_source",
+      "heat_waves CAUSE deaths",
+      "air_pollution CAUSES respiratory_illness",
+      "climate_refugees INCREASING globally",
+      "droughts CAUSE food_price_rise",
+      "water_scarcity AFFECTS agriculture",
+      "extreme_weather DESTROYS infrastructure",
+      "Paris_Agreement SETS emission_targets",
+      "carbon_markets ENABLE trading",
+      "building_codes IMPROVE efficiency",
+      "vehicle_standards REDUCE pollution",
+      "subsidies ENCOURAGE renewables",
+      "research_funding ADVANCES technology"
     ]
   },
 
   "queries": [
     {
       "id": "q1",
-      "natural_language": "Does renewable energy create jobs?",
-      "expected_dsl": "@q1 ASK renewable_energy CREATES jobs",
+      "natural_language": "Section 1 - The Causal Chain: What sequence of events leads from greenhouse gases to coastal threats?",
+      "expected_dsl": "@q1 FACTS_MATCHING ? CAUSES ?",
       "expected_answer": {
-        "natural_language": "Yes, renewable energy creates jobs.",
-        "truth": "TRUE_CERTAIN",
-        "explanation": "Economic benefit confirmed"
+        "natural_language": "The causal chain: trapped heat causes temperature rise, which causes ice cap melting, which causes sea level rise. Sea level rise then threatens coastal cities. Additionally, heat waves cause deaths, air pollution causes respiratory illness, and droughts cause food price rises.",
+        "truth": "LIST",
+        "explanation": "Extracts the full causal chain needed for Section 1 of the report"
       }
     },
     {
       "id": "q2",
-      "natural_language": "Does climate change affect health?",
-      "expected_dsl": "@q2 ASK climate_change AFFECTS health",
+      "natural_language": "Section 1 - Sources: What releases greenhouse gases into the atmosphere?",
+      "expected_dsl": "@q2 FACTS_MATCHING ? RELEASES carbon_dioxide",
       "expected_answer": {
-        "natural_language": "Yes, climate change affects health.",
-        "truth": "TRUE_CERTAIN",
-        "explanation": "Health impact confirmed"
+        "natural_language": "Deforestation and fossil fuel burning both release carbon dioxide.",
+        "truth": "LIST",
+        "explanation": "Identifies emission sources for the introduction section"
       }
     },
     {
       "id": "q3",
-      "natural_language": "What causes global warming?",
-      "expected_dsl": "@q3 FACTS_MATCHING ? CAUSES global_warming",
+      "natural_language": "Section 2 - Economic Costs: What are the financial burdens of climate change and mitigation?",
+      "expected_dsl": "@q3 FACTS_MATCHING ? COSTS ?",
       "expected_answer": {
-        "natural_language": "Carbon emissions cause global warming.",
+        "natural_language": "Carbon tax costs businesses money. Climate adaptation costs governments billions.",
         "truth": "LIST",
-        "explanation": "Cause of global warming extracted"
+        "explanation": "Economic burden facts for cost-benefit analysis section"
       }
     },
     {
       "id": "q4",
-      "natural_language": "What reduces carbon emissions?",
-      "expected_dsl": "@q4 FACTS_MATCHING ? REDUCES carbon_emissions",
+      "natural_language": "Section 2 - Economic Benefits: What positive economic effects do green solutions provide?",
+      "expected_dsl": "@q4 FACTS_MATCHING renewable_energy CREATES ?",
       "expected_answer": {
-        "natural_language": "Renewable energy and planting trees reduce carbon emissions.",
+        "natural_language": "Renewable energy creates jobs.",
         "truth": "LIST",
-        "explanation": "Solutions for reducing emissions"
+        "explanation": "Economic benefits to balance the costs section"
       }
     },
     {
       "id": "q5",
-      "natural_language": "What types of renewable energy exist?",
-      "expected_dsl": "@q5 FACTS_MATCHING ? IS_A renewable_energy",
+      "natural_language": "Section 3 - Available Solutions: What technologies or methods can reduce emissions?",
+      "expected_dsl": "@q5 FACTS_MATCHING ? REDUCE emissions",
       "expected_answer": {
-        "natural_language": "Solar power and wind power are types of renewable energy.",
+        "natural_language": "Electric vehicles reduce emissions. Public transit reduces emissions. Carbon tax reduces emissions.",
         "truth": "LIST",
-        "explanation": "Renewable energy types extracted"
+        "explanation": "Comprehensive list of emission reduction solutions"
       }
     },
     {
       "id": "q6",
-      "natural_language": "Does sea level rise threaten coastal cities?",
-      "expected_dsl": "@q6 ASK sea_level_rise THREATENS coastal_cities",
+      "natural_language": "Section 3 - Clean Energy: What sources generate clean electricity?",
+      "expected_dsl": "@q6 FACTS_MATCHING ? GENERATES clean_electricity",
       "expected_answer": {
-        "natural_language": "Yes, sea level rise threatens coastal cities.",
-        "truth": "TRUE_CERTAIN",
-        "explanation": "Threat to coastal areas confirmed"
+        "natural_language": "Solar power and wind power both generate clean electricity.",
+        "truth": "LIST",
+        "explanation": "Clean energy options for the solutions section"
       }
     },
     {
       "id": "q7",
-      "natural_language": "What does global warming cause?",
-      "expected_dsl": "@q7 FACTS_MATCHING global_warming CAUSES ?",
+      "natural_language": "Section 4 - Human Impacts: What are the direct effects on human health and society?",
+      "expected_dsl": "@q7 FACTS_MATCHING ? AFFECTS ?",
       "expected_answer": {
-        "natural_language": "Global warming causes ice melting.",
+        "natural_language": "Water scarcity affects agriculture.",
         "truth": "LIST",
-        "explanation": "Effects of global warming"
+        "explanation": "Social impact facts for human dimension section"
       }
     },
     {
       "id": "q8",
-      "natural_language": "What increases carbon emissions?",
-      "expected_dsl": "@q8 FACTS_MATCHING ? INCREASES carbon_emissions",
+      "natural_language": "Section 5 - Policy Tools: What mechanisms do governments use to address climate change?",
+      "expected_dsl": "@q8 FACTS_MATCHING ? SETS ?",
       "expected_answer": {
-        "natural_language": "Deforestation increases carbon emissions.",
+        "natural_language": "The Paris Agreement sets emission targets.",
         "truth": "LIST",
-        "explanation": "Sources of emissions extracted"
+        "explanation": "Policy framework facts for recommendations section"
       }
     }
   ],
 
-  "tags": ["summarization", "perspective", "filtering", "comprehensive", "climate"]
+  "tags": ["summarization", "report_generation", "structured_output", "climate", "policy_analysis", "essay"]
 }

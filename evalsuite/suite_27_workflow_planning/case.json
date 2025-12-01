@@ -1,0 +1,144 @@
+{
+  "id": "suite_27_workflow_planning",
+  "name": "Workflow Execution - CI/CD Deployment Pipeline",
+  "description": "Tests planning a complete CI/CD pipeline with concrete steps, parameters, and conditional branching. System must reason about: build → test → security scan → deploy staging → integration test → approval → deploy production.",
+
+  "theory": {
+    "natural_language": "PIPELINE STAGES: Stage checkout executes git_clone with repository and branch parameters and produces source_code. Stage build executes npm_build with source_code input and build_config parameter and produces artifact_bundle. Stage unit_test executes jest_runner with source_code input and test_config parameter and produces test_report. Stage security executes snyk_scan with artifact_bundle input and produces vulnerability_report. Stage deploy_staging executes kubectl_apply with artifact_bundle and staging_namespace parameters and produces staging_deployment. Stage integration_test executes cypress_run with staging_deployment input and produces integration_report. Stage approval executes manual_gate with integration_report input and produces approval_status. Stage deploy_prod executes kubectl_apply with artifact_bundle and prod_namespace parameters and requires approval_status and produces production_deployment. EXECUTION ORDER: Pipeline step 1 runs checkout outputting source_code. Pipeline step 2 runs build needing source_code outputting artifact_bundle. Pipeline step 3 runs unit_test needing source_code outputting test_report. Pipeline step 4 runs security needing artifact_bundle outputting vulnerability_report. Pipeline step 5 runs deploy_staging needing artifact_bundle outputting staging_deployment. Pipeline step 6 runs integration_test needing staging_deployment outputting integration_report. Pipeline step 7 runs approval needing integration_report outputting approval_status. Pipeline step 8 runs deploy_prod needing artifact_bundle and approval_status outputting production_deployment. FAILURE HANDLING: If unit_test fails then pipeline aborts. If security finds critical then pipeline aborts. If integration_test fails then rollback staging_deployment.",
+    "expected_facts": [
+      "checkout EXECUTES git_clone",
+      "checkout WITH_PARAM repository",
+      "checkout WITH_PARAM branch",
+      "checkout PRODUCES source_code",
+      "build EXECUTES npm_build",
+      "build TAKES source_code",
+      "build WITH_PARAM build_config",
+      "build PRODUCES artifact_bundle",
+      "unit_test EXECUTES jest_runner",
+      "unit_test TAKES source_code",
+      "unit_test WITH_PARAM test_config",
+      "unit_test PRODUCES test_report",
+      "security EXECUTES snyk_scan",
+      "security TAKES artifact_bundle",
+      "security PRODUCES vulnerability_report",
+      "deploy_staging EXECUTES kubectl_apply",
+      "deploy_staging TAKES artifact_bundle",
+      "deploy_staging WITH_PARAM staging_namespace",
+      "deploy_staging PRODUCES staging_deployment",
+      "integration_test EXECUTES cypress_run",
+      "integration_test TAKES staging_deployment",
+      "integration_test PRODUCES integration_report",
+      "approval EXECUTES manual_gate",
+      "approval TAKES integration_report",
+      "approval PRODUCES approval_status",
+      "deploy_prod EXECUTES kubectl_apply",
+      "deploy_prod TAKES artifact_bundle",
+      "deploy_prod REQUIRES approval_status",
+      "deploy_prod WITH_PARAM prod_namespace",
+      "deploy_prod PRODUCES production_deployment",
+      "step_1 RUNS checkout",
+      "step_2 RUNS build",
+      "step_2 NEEDS source_code",
+      "step_3 RUNS unit_test",
+      "step_3 NEEDS source_code",
+      "step_4 RUNS security",
+      "step_4 NEEDS artifact_bundle",
+      "step_5 RUNS deploy_staging",
+      "step_5 NEEDS artifact_bundle",
+      "step_6 RUNS integration_test",
+      "step_6 NEEDS staging_deployment",
+      "step_7 RUNS approval",
+      "step_7 NEEDS integration_report",
+      "step_8 RUNS deploy_prod",
+      "step_8 NEEDS approval_status",
+      "unit_test_failure TRIGGERS pipeline_abort",
+      "critical_vulnerability TRIGGERS pipeline_abort",
+      "integration_test_failure TRIGGERS rollback"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "INIT: What parameters does the checkout stage need to start the pipeline?",
+      "expected_dsl": "@q1 FACTS_MATCHING checkout WITH_PARAM ?",
+      "expected_answer": {
+        "natural_language": "Checkout needs repository and branch parameters.",
+        "truth": "LIST",
+        "explanation": "Initial configuration parameters"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "PARALLEL CANDIDATES: Which stages can run in parallel after checkout (both need source_code)?",
+      "expected_dsl": "@q2 FACTS_MATCHING ? TAKES source_code",
+      "expected_answer": {
+        "natural_language": "Build and unit_test both take source_code and can potentially run in parallel.",
+        "truth": "LIST",
+        "explanation": "Parallelization opportunity detection"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "DEPENDENCY: What does deploy_prod require before it can execute?",
+      "expected_dsl": "@q3 FACTS_MATCHING deploy_prod REQUIRES ?",
+      "expected_answer": {
+        "natural_language": "deploy_prod requires approval_status.",
+        "truth": "LIST",
+        "explanation": "Gate dependency for production"
+      }
+    },
+    {
+      "id": "q4",
+      "natural_language": "STEP 5 EXECUTION: What does step 5 run and what does it need?",
+      "expected_dsl": "@q4 FACTS_MATCHING step_5 RUNS ?",
+      "expected_answer": {
+        "natural_language": "Step 5 runs deploy_staging.",
+        "truth": "LIST",
+        "explanation": "Mid-pipeline step identification"
+      }
+    },
+    {
+      "id": "q5",
+      "natural_language": "SECURITY GATE: What does the security stage produce that could block the pipeline?",
+      "expected_dsl": "@q5 FACTS_MATCHING security PRODUCES ?",
+      "expected_answer": {
+        "natural_language": "Security produces vulnerability_report.",
+        "truth": "LIST",
+        "explanation": "Security output for decision making"
+      }
+    },
+    {
+      "id": "q6",
+      "natural_language": "FAILURE HANDLING: What triggers a pipeline abort?",
+      "expected_dsl": "@q6 FACTS_MATCHING ? TRIGGERS pipeline_abort",
+      "expected_answer": {
+        "natural_language": "unit_test_failure and critical_vulnerability both trigger pipeline_abort.",
+        "truth": "LIST",
+        "explanation": "Abort conditions"
+      }
+    },
+    {
+      "id": "q7",
+      "natural_language": "ROLLBACK TRIGGER: What condition triggers a rollback?",
+      "expected_dsl": "@q7 FACTS_MATCHING ? TRIGGERS rollback",
+      "expected_answer": {
+        "natural_language": "integration_test_failure triggers rollback.",
+        "truth": "LIST",
+        "explanation": "Rollback condition"
+      }
+    },
+    {
+      "id": "q8",
+      "natural_language": "FINAL OUTPUT: What is produced at the end of a successful pipeline?",
+      "expected_dsl": "@q8 FACTS_MATCHING deploy_prod PRODUCES ?",
+      "expected_answer": {
+        "natural_language": "deploy_prod produces production_deployment.",
+        "truth": "LIST",
+        "explanation": "Final pipeline output"
+      }
+    }
+  ],
+
+  "tags": ["cicd", "pipeline", "deployment", "workflow", "devops", "sequencing", "failure_handling"]
+}

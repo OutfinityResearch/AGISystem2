@@ -1,119 +1,139 @@
 {
   "id": "suite_24_expand_essay",
-  "name": "Essay Generation and Knowledge Expansion",
-  "description": "Tests ability to query structured content for essays and reports from knowledge base",
+  "name": "Essay Composition - The Evolution and Impact of Artificial Intelligence",
+  "description": "Tests ability to gather knowledge for writing a structured essay. The system must extract: 1) Historical context for introduction, 2) Technical foundations for body paragraph 1, 3) Current applications for body paragraph 2, 4) Societal implications for body paragraph 3, 5) Future outlook for conclusion. Each query maps to a section an essay writer would need.",
 
   "theory": {
-    "natural_language": "Artificial Intelligence facts: Machine learning is a type of AI. Deep learning is a type of machine learning. Neural networks power deep learning. AI can recognize images. AI can understand speech. AI can translate languages. AI assists in medical diagnosis. AI helps in drug discovery. AI enables autonomous vehicles. Ethical concerns: AI raises privacy concerns. AI may cause job displacement. AI bias affects decisions. AI needs regulation. AI should be transparent. Benefits: AI increases productivity. AI reduces human error. AI enables personalization. AI accelerates research. Historical context: Alan Turing proposed the Turing test. The term AI was coined in 1956. Expert systems emerged in the 1980s. Deep learning breakthrough in 2012. ChatGPT launched in 2022.",
+    "natural_language": "HISTORICAL FOUNDATIONS: Alan Turing proposed the Turing test in 1950. The term artificial intelligence was coined at Dartmouth in 1956. The first expert systems emerged in the 1970s. The AI winter occurred in the 1980s due to funding cuts. Machine learning revival began in the 1990s. Deep learning breakthrough happened in 2012 with ImageNet. Transformers architecture was introduced in 2017. ChatGPT launched in November 2022. TECHNICAL CONCEPTS: Neural networks are inspired by biological brains. Deep learning uses multiple hidden layers. Backpropagation enables network training. GPUs accelerate matrix computations. Attention mechanism enables transformers. Large language models learn from text corpora. Reinforcement learning uses reward signals. Computer vision processes visual data. CURRENT APPLICATIONS: AI powers recommendation systems on streaming platforms. AI enables autonomous vehicle navigation. AI assists doctors in medical diagnosis. AI detects fraud in financial transactions. AI translates languages in real time. AI generates art and music creatively. AI writes code and assists programmers. AI moderates content on social media. SOCIETAL IMPLICATIONS: AI automation may displace certain jobs. AI bias can perpetuate discrimination. AI surveillance raises privacy concerns. AI decisions lack transparency sometimes. AI weapons pose ethical dilemmas. AI can spread misinformation rapidly. AI requires significant energy resources. AI benefits are not equally distributed. FUTURE DIRECTIONS: AGI remains a long-term research goal. AI safety research is growing rapidly. AI regulation is being developed globally. AI augmentation may enhance human capabilities. AI in education could personalize learning. AI in healthcare could revolutionize treatment. Quantum computing may accelerate AI. Neuromorphic chips may improve efficiency.",
     "expected_facts": [
-      "machine_learning IS_A AI",
-      "deep_learning IS_A machine_learning",
-      "neural_networks POWERS deep_learning",
-      "AI CAN recognize_images",
-      "AI CAN understand_speech",
-      "AI CAN translate_languages",
-      "AI ASSISTS_IN medical_diagnosis",
-      "AI HELPS_IN drug_discovery",
-      "AI ENABLES autonomous_vehicles",
-      "AI RAISES privacy_concerns",
-      "AI MAY_CAUSE job_displacement",
-      "AI_bias AFFECTS decisions",
-      "AI NEEDS regulation",
-      "AI SHOULD_BE transparent",
-      "AI INCREASES productivity",
-      "AI REDUCES human_error",
-      "AI ENABLES personalization",
-      "AI ACCELERATES research",
-      "Alan_Turing PROPOSED Turing_test",
-      "term_AI COINED_IN 1956",
-      "expert_systems EMERGED_IN 1980s",
-      "deep_learning_breakthrough OCCURRED_IN 2012",
-      "ChatGPT LAUNCHED_IN 2022"
+      "Turing_test PROPOSED_BY Alan_Turing",
+      "Turing_test PROPOSED_IN 1950",
+      "artificial_intelligence COINED_AT Dartmouth",
+      "artificial_intelligence COINED_IN 1956",
+      "expert_systems EMERGED_IN 1970s",
+      "AI_winter OCCURRED_IN 1980s",
+      "AI_winter CAUSED_BY funding_cuts",
+      "machine_learning REVIVED_IN 1990s",
+      "deep_learning_breakthrough HAPPENED_IN 2012",
+      "transformers INTRODUCED_IN 2017",
+      "ChatGPT LAUNCHED_IN 2022",
+      "neural_networks INSPIRED_BY biological_brains",
+      "deep_learning USES multiple_hidden_layers",
+      "backpropagation ENABLES network_training",
+      "GPUs ACCELERATE matrix_computations",
+      "attention_mechanism ENABLES transformers",
+      "large_language_models LEARN_FROM text_corpora",
+      "reinforcement_learning USES reward_signals",
+      "computer_vision PROCESSES visual_data",
+      "AI POWERS recommendation_systems",
+      "AI ENABLES autonomous_navigation",
+      "AI ASSISTS medical_diagnosis",
+      "AI DETECTS fraud",
+      "AI TRANSLATES languages",
+      "AI GENERATES art",
+      "AI WRITES code",
+      "AI MODERATES content",
+      "AI_automation MAY_DISPLACE jobs",
+      "AI_bias CAN_PERPETUATE discrimination",
+      "AI_surveillance RAISES privacy_concerns",
+      "AI_decisions LACK transparency",
+      "AI_weapons POSE ethical_dilemmas",
+      "AI CAN_SPREAD misinformation",
+      "AI REQUIRES energy_resources",
+      "AI_benefits NOT_EQUALLY distributed",
+      "AGI IS_A long_term_goal",
+      "AI_safety_research GROWING rapidly",
+      "AI_regulation BEING_DEVELOPED globally",
+      "AI_augmentation MAY_ENHANCE human_capabilities",
+      "AI_education COULD_PERSONALIZE learning",
+      "AI_healthcare COULD_REVOLUTIONIZE treatment",
+      "quantum_computing MAY_ACCELERATE AI",
+      "neuromorphic_chips MAY_IMPROVE efficiency"
     ]
   },
 
   "queries": [
     {
       "id": "q1",
-      "natural_language": "What can AI do?",
-      "expected_dsl": "@q1 FACTS_MATCHING AI CAN ?",
+      "natural_language": "INTRODUCTION - Historical Timeline: What are the key milestones in AI history that should open the essay?",
+      "expected_dsl": "@q1 FACTS_MATCHING ? INTRODUCED_IN ?",
       "expected_answer": {
-        "natural_language": "AI can recognize images, understand speech, and translate languages.",
+        "natural_language": "Key milestones: Transformers architecture was introduced in 2017.",
         "truth": "LIST",
-        "explanation": "AI capabilities extracted"
+        "explanation": "Historical events for essay introduction"
       }
     },
     {
       "id": "q2",
-      "natural_language": "Does AI raise privacy concerns?",
-      "expected_dsl": "@q2 ASK AI RAISES privacy_concerns",
+      "natural_language": "INTRODUCTION - Origins: When and where did the field of AI formally begin?",
+      "expected_dsl": "@q2 FACTS_MATCHING artificial_intelligence COINED_IN ?",
       "expected_answer": {
-        "natural_language": "Yes, AI raises privacy concerns.",
-        "truth": "TRUE_CERTAIN",
-        "explanation": "Privacy concern confirmed"
+        "natural_language": "The term artificial intelligence was coined in 1956 at the Dartmouth conference.",
+        "truth": "LIST",
+        "explanation": "Founding moment for essay opening"
       }
     },
     {
       "id": "q3",
-      "natural_language": "When was the term AI coined?",
-      "expected_dsl": "@q3 ASK term_AI COINED_IN 1956",
+      "natural_language": "BODY PARAGRAPH 1 - Technical Foundations: What powers modern AI systems?",
+      "expected_dsl": "@q3 FACTS_MATCHING ? ENABLES ?",
       "expected_answer": {
-        "natural_language": "The term AI was coined in 1956.",
-        "truth": "TRUE_CERTAIN",
-        "explanation": "Historical fact confirmed"
+        "natural_language": "Backpropagation enables network training. The attention mechanism enables transformers.",
+        "truth": "LIST",
+        "explanation": "Technical foundations for body paragraph explaining how AI works"
       }
     },
     {
       "id": "q4",
-      "natural_language": "Is deep learning a type of machine learning?",
-      "expected_dsl": "@q4 ASK deep_learning IS_A machine_learning",
+      "natural_language": "BODY PARAGRAPH 1 - Learning Methods: How do AI systems acquire knowledge?",
+      "expected_dsl": "@q4 FACTS_MATCHING ? USES ?",
       "expected_answer": {
-        "natural_language": "Yes, deep learning is a type of machine learning.",
-        "truth": "TRUE_CERTAIN",
-        "explanation": "Hierarchical IS_A relationship"
+        "natural_language": "Deep learning uses multiple hidden layers. Reinforcement learning uses reward signals.",
+        "truth": "LIST",
+        "explanation": "Learning mechanisms for technical explanation section"
       }
     },
     {
       "id": "q5",
-      "natural_language": "What does AI increase?",
-      "expected_dsl": "@q5 FACTS_MATCHING AI INCREASES ?",
+      "natural_language": "BODY PARAGRAPH 2 - Current Applications: What practical tasks does AI perform today?",
+      "expected_dsl": "@q5 FACTS_MATCHING AI ASSISTS ?",
       "expected_answer": {
-        "natural_language": "AI increases productivity.",
+        "natural_language": "AI assists in medical diagnosis.",
         "truth": "LIST",
-        "explanation": "AI benefit extracted"
+        "explanation": "Application examples for practical impact section"
       }
     },
     {
       "id": "q6",
-      "natural_language": "Does AI assist in medical diagnosis?",
-      "expected_dsl": "@q6 ASK AI ASSISTS_IN medical_diagnosis",
+      "natural_language": "BODY PARAGRAPH 3 - Societal Concerns: What risks and ethical issues does AI raise?",
+      "expected_dsl": "@q6 FACTS_MATCHING ? RAISES ?",
       "expected_answer": {
-        "natural_language": "Yes, AI assists in medical diagnosis.",
-        "truth": "TRUE_CERTAIN",
-        "explanation": "Healthcare application confirmed"
+        "natural_language": "AI surveillance raises privacy concerns.",
+        "truth": "LIST",
+        "explanation": "Ethical concerns for balanced discussion section"
       }
     },
     {
       "id": "q7",
-      "natural_language": "What does AI help in?",
-      "expected_dsl": "@q7 FACTS_MATCHING AI HELPS_IN ?",
+      "natural_language": "BODY PARAGRAPH 3 - Negative Impacts: What harms might AI cause to society?",
+      "expected_dsl": "@q7 FACTS_MATCHING ? MAY_DISPLACE ?",
       "expected_answer": {
-        "natural_language": "AI helps in drug discovery.",
+        "natural_language": "AI automation may displace jobs.",
         "truth": "LIST",
-        "explanation": "AI applications extracted"
+        "explanation": "Negative implications for critical analysis section"
       }
     },
     {
       "id": "q8",
-      "natural_language": "Does AI need regulation?",
-      "expected_dsl": "@q8 ASK AI NEEDS regulation",
+      "natural_language": "CONCLUSION - Future Outlook: What developments might transform AI going forward?",
+      "expected_dsl": "@q8 FACTS_MATCHING ? MAY_ACCELERATE ?",
       "expected_answer": {
-        "natural_language": "Yes, AI needs regulation.",
-        "truth": "TRUE_CERTAIN",
-        "explanation": "Regulatory need confirmed"
+        "natural_language": "Quantum computing may accelerate AI development.",
+        "truth": "LIST",
+        "explanation": "Future possibilities for essay conclusion"
       }
     }
   ],
 
-  "tags": ["essay", "generation", "expansion", "comprehensive", "AI"]
+  "tags": ["essay_writing", "composition", "AI_history", "structured_content", "expansion", "argumentation"]
 }
