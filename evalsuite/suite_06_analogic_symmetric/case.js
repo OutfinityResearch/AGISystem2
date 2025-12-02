@@ -1,0 +1,123 @@
+/**
+ * Test Case: Analogical Reasoning & Symmetric/Inverse Relations
+ * Tests ANALOGICAL reasoning, symmetric relations (MARRIED_TO, SIBLING_OF), inverse relations (PARENT_OF/CHILD_OF), and pattern matching with FACTS_MATCHING
+ * Version: 3.0
+ */
+
+module.exports = {
+  id: "suite_06_analogic_symmetric",
+  name: "Analogical Reasoning & Symmetric/Inverse Relations",
+  description: "Tests ANALOGICAL reasoning, symmetric relations (MARRIED_TO, SIBLING_OF), inverse relations (PARENT_OF/CHILD_OF), and pattern matching with FACTS_MATCHING",
+  theory: {
+    natural_language: "Family relations: Maria is married to Ion. Marriage is symmetric - if Maria is married to Ion, then Ion is married to Maria. Maria is the parent of Ana. Ion is also the parent of Ana. Ana is the sibling of Mihai. Maria is the parent of Mihai. Parent-child is an inverse relation - if Maria is parent of Ana, then Ana is child of Maria. Geography with capitals: Bucharest is the capital of Romania. Paris is the capital of France. Berlin is the capital of Germany. Madrid is the capital of Spain. Rome is the capital of Italy. London is the capital of United Kingdom. Professional analogies: Doctor treats patients. Teacher teaches students. Lawyer represents clients. Chef cooks food.",
+    expected_facts: [
+          "Maria MARRIED_TO Ion",
+          "Maria PARENT_OF Ana",
+          "Ion PARENT_OF Ana",
+          "Ana SIBLING_OF Mihai",
+          "Maria PARENT_OF Mihai",
+          "Ion PARENT_OF Mihai",
+          "Bucharest CAPITAL_OF Romania",
+          "Paris CAPITAL_OF France",
+          "Berlin CAPITAL_OF Germany",
+          "Madrid CAPITAL_OF Spain",
+          "Rome CAPITAL_OF Italy",
+          "London CAPITAL_OF United_Kingdom",
+          "doctor TREATS patient",
+          "teacher TEACHES student",
+          "lawyer REPRESENTS client",
+          "chef COOKS food"
+    ]
+  },
+  queries: [
+    {
+      id: "q1",
+      natural_language: "Is Ion married to Maria?",
+      expected_dsl: `@q1 Ion MARRIED_TO Maria`,
+      expected_answer: {
+        natural_language: "Yes, Ion is married to Maria. This is inferred from the symmetric property of MARRIED_TO - since Maria is married to Ion, Ion is also married to Maria.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Symmetric relation inference: MARRIED_TO is symmetric",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q2",
+      natural_language: "Is Ana a child of Maria?",
+      expected_dsl: `@q2 Ana CHILD_OF Maria`,
+      expected_answer: {
+        natural_language: "Yes, Ana is the child of Maria. This is inferred from the inverse relation - since Maria is parent of Ana, Ana is child of Maria.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Inverse relation inference: CHILD_OF is inverse of PARENT_OF",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q3",
+      natural_language: "Is Mihai a sibling of Ana?",
+      expected_dsl: `@q3 Mihai SIBLING_OF Ana`,
+      expected_answer: {
+        natural_language: "Yes, Mihai is a sibling of Ana. SIBLING_OF is symmetric, so if Ana is sibling of Mihai, then Mihai is sibling of Ana.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Symmetric relation inference: SIBLING_OF is symmetric",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q4",
+      natural_language: "Bucharest is to Romania as Paris is to what?",
+      expected_dsl: `@q4 ANALOGICAL Bucharest Romania Paris`,
+      expected_answer: {
+        natural_language: "France. The analogy is: Bucharest is the capital of Romania, so Paris (being a capital) is the capital of France.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Analogical reasoning: A:B :: C:D pattern with CAPITAL_OF relation",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q5",
+      natural_language: "Doctor is to patient as teacher is to what?",
+      expected_dsl: `@q5 ANALOGICAL doctor patient teacher`,
+      expected_answer: {
+        natural_language: "Student. The analogy is: Doctor treats patient, so teacher (in the same professional pattern) teaches student.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Analogical reasoning: professional role to served entity pattern",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q6",
+      natural_language: "Find all capital-country pairs",
+      expected_dsl: `@q6 FACTS_WITH_RELATION CAPITAL_OF`,
+      expected_answer: {
+        natural_language: "Found 6 pairs: Bucharest-Romania, Paris-France, Berlin-Germany, Madrid-Spain, Rome-Italy, London-United Kingdom.",
+        truth: "TRUE_CERTAIN",
+        explanation: "FACTS_WITH_RELATION returns all facts with the given relation",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q7",
+      natural_language: "Who are the children of Ion?",
+      expected_dsl: `@q7 Ion FACTS any PARENT_OF`,
+      expected_answer: {
+        natural_language: "Ion has two children: Ana and Mihai.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Pattern matching to find all objects of PARENT_OF relation",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q8",
+      natural_language: "Who are Ana's parents?",
+      expected_dsl: `@q8 FACTS_WITH_OBJECT Ana`,
+      expected_answer: {
+        natural_language: "Ana's parents are Maria and Ion.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Pattern matching to find all subjects with PARENT_OF Ana",
+        existence: "positive"
+      }
+    }
+  ],
+  version: "3.0"
+};

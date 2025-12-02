@@ -18,73 +18,79 @@ constructor({ conceptStore, parser })
 
 ### RETRACT
 ```sys2dsl
-@result RETRACT Dog IS_A mammal
-@result RETRACT $subject $relation $object
+@result Dog RETRACT mammal
+@result $subject RETRACT $object
 ```
-Removes a fact from the knowledge base.
+Removes a fact from the knowledge base using v3 triple syntax.
+- Format: `@var Subject RETRACT Object`
+- Note: Relation is inferred from context or can be specified via extended syntax
 - Matches exact subject/relation/object
 - Returns: `{ ok: boolean, removed: number, subject, relation, object }`
 
 ### GET_USAGE
 ```sys2dsl
-@stats GET_USAGE Dog
+@stats Dog GET_USAGE none
 ```
-Queries usage statistics for a concept.
+Queries usage statistics for a concept using v3 triple syntax.
+- Format: `@var ConceptName GET_USAGE Object`
 - Returns usage stats from ConceptStore or error if not found
 - Stats include: accessCount, lastAccessed, priority, protected status
 
 ### FORGET
 ```sys2dsl
 # Forget by usage threshold
-@result FORGET threshold=5
+@result criteria FORGET threshold_5
 
 # Forget concepts older than X days
-@result FORGET olderThan=30d
+@result criteria FORGET olderThan_30d
 
 # Forget specific concept
-@result FORGET concept=OldConcept
+@result OldConcept FORGET none
 
 # Forget by pattern
-@result FORGET pattern=temp_*
+@result pattern FORGET temp_*
 
 # Preview without deletion
-@result FORGET threshold=5 dryRun
+@result criteria FORGET threshold_5_dryRun
 ```
-Removes concepts based on criteria.
+Removes concepts based on criteria using v3 triple syntax.
+- Format: `@var Subject FORGET Criteria`
 
-**Criteria Options:**
-- `threshold=N` - Forget concepts with usage count < N
-- `olderThan=Xd` - Forget concepts not accessed in X days
-- `concept=label` - Forget specific concept
-- `pattern=pat` - Forget concepts matching pattern
-- `dryRun` - Preview without actual deletion
+**Criteria Options (underscore notation):**
+- `threshold_N` - Forget concepts with usage count < N
+- `olderThan_Xd` - Forget concepts not accessed in X days
+- `none` - Forget specific concept (when Subject is concept name)
+- `pattern_*` - Pattern as object
+- `dryRun` suffix - Preview without actual deletion
 
 Returns: `{ removed: [...], count, dryRun }`
 
 ### BOOST
 ```sys2dsl
-@result BOOST Dog
-@result BOOST ImportantConcept 50
+@result Dog BOOST none
+@result ImportantConcept BOOST amount_50
 ```
-Increases usage count for a concept.
-- First arg: concept label
-- Optional second arg: amount (default: 10)
+Increases usage count for a concept using v3 triple syntax.
+- Format: `@var ConceptName BOOST Amount`
+- Amount: `none` (default 10) or `amount_N` for specific value
 - Makes concept less likely to be forgotten during cleanup
 - Returns: `{ ok: true, label, amount }`
 
 ### PROTECT
 ```sys2dsl
-@result PROTECT CoreConcept
+@result CoreConcept PROTECT none
 ```
-Marks concept as protected from forgetting.
+Marks concept as protected from forgetting using v3 triple syntax.
+- Format: `@var ConceptName PROTECT Object`
 - Protected concepts are never removed by FORGET operations
 - Returns: `{ ok: true, label, protected: true }`
 
 ### UNPROTECT
 ```sys2dsl
-@result UNPROTECT CoreConcept
+@result CoreConcept UNPROTECT none
 ```
-Removes protection from a concept.
+Removes protection from a concept using v3 triple syntax.
+- Format: `@var ConceptName UNPROTECT Object`
 - Concept becomes eligible for forgetting again
 - Returns: `{ ok: true, label, protected: false }`
 
@@ -93,30 +99,30 @@ Removes protection from a concept.
 ### Cleanup Low-Usage Concepts
 ```sys2dsl
 # First preview what would be forgotten
-@preview FORGET threshold=3 dryRun
+@preview criteria FORGET threshold_3_dryRun
 
 # Actually forget
-@result FORGET threshold=3
+@result criteria FORGET threshold_3
 ```
 
 ### Protect Important Concepts
 ```sys2dsl
 # Protect core ontology concepts
-@_ PROTECT Animal
-@_ PROTECT Person
-@_ PROTECT Location
+@r1 Animal PROTECT none
+@r2 Person PROTECT none
+@r3 Location PROTECT none
 
 # Boost frequently used concepts
-@_ BOOST Dog 100
+@r4 Dog BOOST amount_100
 ```
 
 ### Retract Incorrect Facts
 ```sys2dsl
 # Retract specific fact
-@removed RETRACT Whale IS_A Fish
+@removed Whale RETRACT Fish
 
 # Assert correct fact
-@added ASSERT Whale IS_A Mammal
+@added Whale IS_A Mammal
 ```
 
 ## Integration with ConceptStore
@@ -130,6 +136,7 @@ These commands delegate to ConceptStore methods:
 - `UNPROTECT` → `unprotect(label)`
 
 ## Notes/Constraints
+- All commands follow strict triple syntax `@var Subject VERB Object`
 - RETRACT only removes exact matches (no pattern matching)
 - FORGET respects protected concepts even with pattern matching
 - Usage statistics persist across sessions (stored with concepts)

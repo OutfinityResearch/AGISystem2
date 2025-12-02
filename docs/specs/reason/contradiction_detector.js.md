@@ -351,27 +351,27 @@ _cmdValidate(argTokens, env, facts) {
 
 ### 9.1 Disjointness
 ```sys2dsl
-@f1 ASSERT Cat DISJOINT_WITH Dog
-@f2 ASSERT Fluffy IS_A Cat
-@f3 ASSERT Fluffy IS_A Dog
-@result CHECK_CONTRADICTION
+@f1 Cat DISJOINT_WITH Dog
+@f2 Fluffy IS_A Cat
+@f3 Fluffy IS_A Dog
+@result any CHECK_CONTRADICTION any
 # Expected: { consistent: false, contradictions: [DISJOINT_VIOLATION] }
 ```
 
 ### 9.2 Functional
 ```sys2dsl
-@_ REGISTER_FUNCTIONAL BORN_IN
-@f1 ASSERT Alice BORN_IN Paris
-@f2 ASSERT Alice BORN_IN London
-@result CHECK_CONTRADICTION
+@_ BORN_IN REGISTER_FUNCTIONAL any
+@f1 Alice BORN_IN Paris
+@f2 Alice BORN_IN London
+@result any CHECK_CONTRADICTION any
 # Expected: { consistent: false, contradictions: [FUNCTIONAL_VIOLATION] }
 ```
 
 ### 9.3 Would Contradict
 ```sys2dsl
-@f1 ASSERT Cat DISJOINT_WITH Dog
-@f2 ASSERT Fluffy IS_A Cat
-@test CHECK_WOULD_CONTRADICT Fluffy IS_A Dog
+@f1 Cat DISJOINT_WITH Dog
+@f2 Fluffy IS_A Cat
+@test Fluffy CHECK_WOULD_CONTRADICT Dog
 # Expected: { wouldContradict: true, reason: 'DISJOINT_VIOLATION' }
 ```
 

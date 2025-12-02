@@ -21,15 +21,25 @@ class DSLCommandsMemory {
 
   /**
    * RETRACT: Remove a fact from the knowledge base
-   * Syntax: @var RETRACT Subject Relation Object
+   * v3 Syntax: @var Subject RETRACT Object (implies IS_A relation)
+   * Legacy: @var RETRACT Subject Relation Object
    */
   cmdRetract(argTokens, env) {
-    if (argTokens.length < 3) {
-      throw new Error('RETRACT expects at least three tokens: Subject REL Object');
+    let subject, relation, object;
+
+    if (argTokens.length >= 3) {
+      // Legacy format: Subject Relation Object
+      subject = this.parser.expandString(argTokens[0], env);
+      relation = this.parser.expandString(argTokens[1], env);
+      object = this.parser.expandString(argTokens.slice(2).join(' '), env);
+    } else if (argTokens.length === 2) {
+      // v3 format: Subject Object (IS_A implied)
+      subject = this.parser.expandString(argTokens[0], env);
+      relation = 'IS_A';
+      object = this.parser.expandString(argTokens[1], env);
+    } else {
+      throw new Error('RETRACT expects: Subject RETRACT Object (v3) or Subject Relation Object');
     }
-    const subject = this.parser.expandString(argTokens[0], env);
-    const relation = this.parser.expandString(argTokens[1], env);
-    const object = this.parser.expandString(argTokens.slice(2).join(' '), env);
 
     const facts = this.conceptStore.getFacts();
     let removed = 0;

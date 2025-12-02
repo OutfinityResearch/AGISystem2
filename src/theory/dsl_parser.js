@@ -1,12 +1,21 @@
 /**
  * DS(/theory/dsl_parser.js) - Sys2DSL Parser and Topological Sorter
  *
- * Handles parsing of Sys2DSL scripts and dependency-based execution order.
+ * Handles parsing of Sys2DSL v3.0 strict triple syntax.
+ *
+ * v3.0 Syntax: Every statement is exactly 4 tokens:
+ *   @variable Subject VERB Object
  *
  * Key concepts:
- * - Statements: @varName COMMAND args...
+ * - Statements: @varName Subject VERB Object (exactly 4 tokens)
+ * - VERB is the command (position 2)
+ * - Subject/Object are arguments (positions 1 and 3)
  * - Variables: $varName references
  * - Topological ordering: Kahn's algorithm for dependency resolution
+ *
+ * Semantic interpretation:
+ * - @_ prefix: Assertion (add fact or execute effectful command)
+ * - @varName prefix: Query (capture result in variable)
  *
  * @module theory/dsl_parser
  */
@@ -14,8 +23,9 @@
 class DSLParser {
   /**
    * Split input lines into statement objects.
+   * v3.0 Syntax: @variable Subject VERB Object (exactly 4 tokens)
    * @param {string[]} lines - Raw Sys2DSL lines
-   * @returns {Array<{varName: string, command: string, args: string[], raw: string}>}
+   * @returns {Array<{varName: string, command: string, subject: string, object: string, args: string[], raw: string}>}
    */
   splitIntoStatements(lines) {
     const statements = [];
@@ -32,13 +42,34 @@ class DSLParser {
           return;
         }
         // Smart tokenize: preserve quoted strings as single tokens
-        const args = this._tokenizeArgs(seg);
-        if (args.length < 2 || !args[0].startsWith('@')) {
-          throw new Error(`Invalid Sys2DSL statement: '${seg}'`);
+        const tokens = this._tokenizeArgs(seg);
+
+        // v3.0 strict: exactly 4 tokens required
+        if (tokens.length !== 4) {
+          throw new Error(
+            `Invalid Sys2DSL v3 statement: '${seg}'. ` +
+            `Expected exactly 4 tokens: @variable Subject VERB Object. ` +
+            `Got ${tokens.length} tokens: [${tokens.join(', ')}]`
+          );
         }
-        const varName = args[0].slice(1);
-        const command = args[1].toUpperCase();
-        statements.push({ varName, command, args: args.slice(2), raw: seg });
+        if (!tokens[0].startsWith('@')) {
+          throw new Error(`Invalid Sys2DSL statement: '${seg}'. Must start with @variable`);
+        }
+
+        const varName = tokens[0].slice(1);     // Position 0: @variable
+        const subject = tokens[1];               // Position 1: Subject
+        const command = tokens[2].toUpperCase(); // Position 2: VERB (command)
+        const object = tokens[3];                // Position 3: Object
+
+        // Args include subject and object for command handlers
+        statements.push({
+          varName,
+          command,
+          subject,
+          object,
+          args: [subject, object],
+          raw: seg
+        });
       };
 
       // Within each line, if additional '@' appear, treat them as new statements.
@@ -110,6 +141,8 @@ class DSLParser {
     const nameToStmt = new Map();
 
     for (const stmt of statements) {
+      // Every statement MUST have a unique variable name
+      // There is no @_ placeholder - all statements are relations with results
       if (nameToStmt.has(stmt.varName)) {
         throw new Error(`Duplicate Sys2DSL variable '${stmt.varName}'`);
       }

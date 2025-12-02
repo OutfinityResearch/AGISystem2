@@ -2,14 +2,133 @@
 
 ID: DS(/Sys2DSL-grammar)
 
+Status: v3.0 - Unified Triple Syntax
+
 This is the **syntactic specification** for Sys2DSL. For semantics, see [Sys2DSL-spec.md](./Sys2DSL-spec.md).
+
+## Design Philosophy
+
+Sys2DSL v3.0 follows these core principles:
+
+1. **Everything is a Triple** - All statements have the form `Subject VERB Object`
+2. **Everything is a Point** - Verbs, concepts, facts, results - all are points in conceptual space
+3. **No Special Commands** - What were "commands" are now verbs defined in the base theory
+4. **Declarative Execution** - Statement order doesn't matter; execution follows topological dependencies
+5. **Naming Determines Type** - The case convention of names determines the point type
+
+---
+
+## ⛔ INVIOLABLE RULE: Strict Triple Syntax
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  EVERY statement MUST be exactly:  @variable Subject VERB Object            │
+│                                                                             │
+│  • Exactly 3 components after @variable (Subject, VERB, Object)             │
+│  • NO additional arguments allowed                                          │
+│  • NO property=value syntax in triplet positions                            │
+│  • NO inline JSON or compound tokens                                        │
+│  • This rule is INVIOLABLE - no exceptions, no extensions                   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Why This Matters
+
+This uniformity enables:
+- **Uniform parsing**: One grammar rule for all statements
+- **Geometric consistency**: Every element is a point in conceptual space
+- **Composability**: Results chain cleanly via `$variable` references
+
+### Handling Complex Values (FS-22, FS-23)
+
+Complex operations requiring multiple inputs MUST use **chaining**:
+
+```sys2dsl
+# WRONG - 4 components:
+@result subject PROJECT_DIM existence $value
+
+# CORRECT - chain via intermediate point:
+@pair existence DIM_PAIR $value        # Create point representing (dim, value)
+@result subject SET_DIM $pair           # Use compound point
+```
+
+See [FS.md](./FS.md) FS-22 and FS-23 for canonical patterns.
+
+---
+
+## Statement Separation
+
+Statements are separated by:
+- **Newline** - Each line is a separate statement
+- **`@` symbol** - Start of a new variable declaration acts as separator
+- **Semicolon `;`** - Optional, retained for backwards compatibility inside BEGIN/END blocks
+
+```sys2dsl
+# Multiple statements - all equivalent:
+
+# Newline separated (preferred)
+@_ Dog IS_A animal
+@_ Cat IS_A animal
+@q Dog IS_A mammal
+
+# @ as separator on same line
+@_ Dog IS_A animal @_ Cat IS_A animal @q Dog IS_A mammal
+
+# Semicolon (optional, mainly inside BEGIN/END)
+@_ Dog IS_A animal; @_ Cat IS_A animal; @q Dog IS_A mammal
+```
+
+**Note:** The `@` symbol is sufficient as a statement terminator because it unambiguously marks the start of a new statement.
+
+---
+
+## Effectful Verbs (Theory & Memory Operations)
+
+Some verbs have **side effects** beyond returning a point. These are called **effectful verbs**:
+
+### Theory Stack Verbs
+These verbs operate on the theory layer stack (copy-on-write working memory):
+
+| Verb | Side Effect |
+|------|-------------|
+| `PUSH` | Creates new layer on theory stack |
+| `POP` | Removes and discards top layer |
+| `COMMIT` | Merges top layer into parent |
+| `LOAD` | Loads persisted theory as new layer |
+| `SAVE` | Persists current state to storage |
+
+### Memory Management Verbs
+These verbs modify concept existence/priority:
+
+| Verb | Side Effect |
+|------|-------------|
+| `BOOST` | Increases existence/priority of subject |
+| `FORGET` | Decreases existence of matching concepts |
+| `PROTECT` | Marks subject as protected from forgetting |
+| `RETRACT` | Sets subject's existence to negative |
+
+### Key Point
+Despite their side effects, these verbs **strictly follow triple syntax**:
+```sys2dsl
+@_ hypothetical PUSH any      # Side effect: push new layer
+@_ any POP any                # Side effect: pop top layer
+@_ Dog PROTECT any            # Side effect: mark Dog protected
+```
+
+The side effects are implementation details; the syntax is uniform.
+
+See [Sys2DSL_commands_theory_memory.md](./theory/Sys2DSL_commands_theory_memory.md) for complete documentation.
+
+---
 
 ## Lexical Structure
 
 ### Character Set
 - UTF-8 encoding
-- Case-sensitive identifiers
-- Whitespace: space, tab, newline (statement separators)
+- Case-sensitive identifiers (case determines semantics!)
+- Whitespace: space, tab, newline (ignored except as token separators)
 
 ### Comments
 ```sys2dsl
@@ -17,389 +136,553 @@ This is the **syntactic specification** for Sys2DSL. For semantics, see [Sys2DSL
 # Comments start with # and extend to end of line
 ```
 
-### Tokens
+---
 
-#### Variable Declaration
+## Naming Conventions (Critical!)
+
+The naming convention of a declaration determines the **type of point** created:
+
 ```
+┌─────────────────────────────────────────────────────────────────┐
+│              NAMING CONVENTION → POINT TYPE                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Pattern                        │  Point Type    │  kind        │
+│  ───────────────────────────────│────────────────│──────────    │
+│                                 │                │              │
+│  @ALL_CAPS or @ALL_CAPS_123     │  Verb/Relation │  "verb"      │
+│  Examples: @IS_A, @CAUSES,      │                │              │
+│            @GRANDPARENT_OF      │                │              │
+│                                 │                │              │
+│  @all_lowercase or @lower_123   │  Concept       │  "concept"   │
+│  Examples: @animal, @danger,    │                │              │
+│            @living_thing        │                │              │
+│                                 │                │              │
+│  @First_upper_rest_lower        │  Fact/Instance │  "fact"      │
+│  Examples: @Dog, @Grivei,       │                │              │
+│            @Universe, @Paris    │                │              │
+│                                 │                │              │
+│  @_                             │  Temporary     │  "temp"      │
+│  (underscore only - ignore      │  (no result    │              │
+│   result, side-effect only)     │   stored)      │              │
+│                                 │                │              │
+│  @return                        │  Return value  │  (special)   │
+│  (inside BEGIN/END blocks)      │  of compound   │              │
+│                                 │                │              │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Examples
+
+```sys2dsl
+# Defining a VERB (all caps)
+@GRANDPARENT_OF BEGIN
+  @p1 subject PARENT_OF freevar1
+  @return freevar1 PARENT_OF object
+END
+
+# Defining a CONCEPT (all lowercase)
+@dangerous_animal BEGIN
+  @c1 subject IS_A animal
+  @c2 subject HAS danger
+  @return $c1 AND $c2
+END
+
+# Defining a FACT (first cap, rest lower)
+@Dangerous_dog BEGIN
+  @f1 subject IS_A Dog
+  @return $f1 AND $danger_trait
+END
+
+# Temporary result (ignored)
+@_ Dog IS_A animal
+
+# Return from compound (inside BEGIN/END)
+@return result FINAL_VALUE any
+```
+
+---
+
+## Tokens
+
+### Variable Declaration
+```ebnf
 VAR_DECL ::= '@' IDENTIFIER
+           | '@' '_'
+           | '@' 'return'
 ```
-Examples: `@result`, `@q1`, `@fact_list`
+Examples: `@result`, `@MY_VERB`, `@animal`, `@Dog`, `@_`, `@return`
 
-#### Variable Reference
-```
+### Variable Reference
+```ebnf
 VAR_REF ::= '$' IDENTIFIER
 ```
-Examples: `$result`, `$q1`, `$fact_list`
+Examples: `$result`, `$my_concept`, `$Dog`
 
-#### Identifier
-```
-IDENTIFIER ::= [A-Za-z_] [A-Za-z0-9_]*
-```
-Examples: `Dog`, `IS_A`, `temperature_rise`, `q1`
+### Identifier Patterns
+```ebnf
+IDENTIFIER ::= VERB_ID | CONCEPT_ID | FACT_ID | TEMP_ID
 
-#### Commands (Keywords)
-```
-COMMAND ::=
-    # Query Commands
-    'ASK' | 'ASK_MASKED' | 'FACTS_MATCHING' | 'FACTS_WITH_RELATION' | 'FACTS_WITH_OBJECT'
-  | 'INSTANCES_OF' | 'ALL_REQUIREMENTS_SATISFIED'
-    # Assertion Commands
-  | 'ASSERT' | 'RETRACT'
-    # Reasoning Commands
-  | 'CF' | 'ABDUCT' | 'PROVE' | 'ANALOGICAL' | 'HYPOTHESIZE' | 'VALIDATE'
-  | 'CHECK_CONTRADICTION' | 'CHECK_WOULD_CONTRADICT'
-  | 'REGISTER_FUNCTIONAL' | 'REGISTER_CARDINALITY'
-    # Inference Commands
-  | 'INFER' | 'FORWARD_CHAIN' | 'WHY' | 'DEFINE_RULE' | 'DEFINE_DEFAULT' | 'CLEAR_RULES'
-    # Boolean/List Operations
-  | 'BOOL_AND' | 'BOOL_OR' | 'BOOL_NOT' | 'NONEMPTY'
-  | 'MERGE_LISTS' | 'PICK_FIRST' | 'PICK_LAST' | 'COUNT' | 'FILTER' | 'POLARITY_DECIDE'
-    # Theory Management
-  | 'THEORY_PUSH' | 'THEORY_POP' | 'LIST_THEORIES' | 'SAVE_THEORY' | 'LOAD_THEORY'
-  | 'MERGE_THEORY' | 'DELETE_THEORY' | 'THEORY_INFO' | 'RESET_SESSION'
-    # Concept/Relation Binding
-  | 'BIND_CONCEPT' | 'BIND_POINT' | 'BIND_RELATION'
-  | 'DEFINE_CONCEPT' | 'DEFINE_RELATION' | 'INSPECT' | 'LITERAL'
-    # Masking
-  | 'MASK_PARTITIONS' | 'MASK_DIMS'
-    # Memory Management
-  | 'GET_USAGE' | 'FORGET' | 'BOOST' | 'PROTECT' | 'UNPROTECT'
-    # Output Commands
-  | 'SUMMARIZE' | 'TO_NATURAL' | 'TO_JSON' | 'FORMAT' | 'EXPLAIN'
-    # Ontology Introspection
-  | 'EXPLAIN_CONCEPT' | 'MISSING' | 'WHAT_IS'
-    # High-Level Commands (wrap multiple granular commands)
-  | 'QUERY' | 'WHATIF' | 'SUGGEST' | 'MANAGE_THEORY' | 'MEMORY' | 'MASK'
-  | 'FORMAT_RESULT' | 'SUMMARIZE_FACTS' | 'EXPLAIN_QUERY'
+VERB_ID    ::= [A-Z] [A-Z0-9_]*           # All uppercase (verbs/relations)
+CONCEPT_ID ::= [a-z] [a-z0-9_]*           # All lowercase (concepts)
+FACT_ID    ::= [A-Z] [a-z0-9_]*           # First upper, rest lower (facts)
+TEMP_ID    ::= '_'                         # Underscore only (temporary)
 ```
 
-#### Wildcard
+### Special Identifiers
+```ebnf
+SPECIAL_ID ::= 'any'                       # Wildcard concept
+             | 'subject'                   # Implicit subject in verb definition
+             | 'object'                    # Implicit object in verb definition
+             | 'freevar' [0-9]+            # Free variable in verb definition
 ```
-WILDCARD ::= '*'
-```
-The asterisk `*` matches any value in pattern contexts.
 
-**Note**: The question mark `?` is NOT a valid wildcard. Use `*` exclusively.
-
-#### String Literals
-```
-STRING ::= '"' [^"]* '"' | "'" [^']* "'"
-```
-Examples: `"Dog IS_A Animal"`, `'temperature=100'`
-
-#### Numeric Literals
-```
+### Numeric Values
+```ebnf
 NUMBER ::= '-'? [0-9]+ ('.' [0-9]+)?
 ```
-Examples: `42`, `-3.14`, `0.5`
+Examples: `127`, `-127`, `0`, `64`, `3.14`
+
+### String Literals
+```ebnf
+STRING ::= '"' [^"]* '"' | "'" [^']* "'"
+```
+Examples: `"hello world"`, `'temperature=100'`
+
+---
 
 ## Grammar
 
 ### Program Structure
-```
+```ebnf
 PROGRAM ::= STATEMENT*
 
-STATEMENT ::= VAR_DECL COMMAND ARGUMENT*
+STATEMENT ::= SIMPLE_STATEMENT SEPARATOR?
+            | COMPOUND_STATEMENT
 
-ARGUMENT ::=
-    VAR_REF
-  | STRING
-  | IDENTIFIER
-  | WILDCARD
-  | NUMBER
-  | KEY_VALUE
+SIMPLE_STATEMENT ::= VAR_DECL SUBJECT VERB OBJECT
 
-KEY_VALUE ::= IDENTIFIER '=' VALUE
-VALUE ::= STRING | NUMBER | IDENTIFIER
+# Statements separated by newline, @ (next statement), or optional ;
+SEPARATOR ::= NEWLINE | ';'
+
+COMPOUND_STATEMENT ::= VAR_DECL 'BEGIN' INNER_STATEMENT+ 'END'
+
+# Inside BEGIN/END: newline or ; separates, @ starts next statement
+INNER_STATEMENT ::= SIMPLE_STATEMENT (NEWLINE | ';')?
+                  | RETURN_STATEMENT (NEWLINE | ';')?
+
+RETURN_STATEMENT ::= '@return' SUBJECT VERB OBJECT
 ```
 
-### Statement Forms
+**Note:** Semicolons are **optional**. The `@` symbol at the start of a new VAR_DECL implicitly terminates the previous statement. Newlines also act as statement separators.
 
-#### Basic Statement
+### Triple Components
+```ebnf
+SUBJECT ::= CONCEPT_ID | FACT_ID | VAR_REF | SPECIAL_ID
+VERB    ::= VERB_ID | VAR_REF
+OBJECT  ::= CONCEPT_ID | FACT_ID | VAR_REF | SPECIAL_ID | NUMBER | STRING
+```
+
+### Compound Definition Forms
+```ebnf
+# Multi-line form (recommended for readability)
+COMPOUND_MULTILINE ::= VAR_DECL 'BEGIN'
+                         INNER_STATEMENT+
+                       'END'
+
+# Single-line form (compact)
+COMPOUND_SINGLELINE ::= VAR_DECL 'BEGIN' INNER_STATEMENT+ 'END'
+```
+
+---
+
+## Statement Forms
+
+### Simple Triple Statement
+Every simple statement is a triple: Subject VERB Object.
+
 ```sys2dsl
-@varName COMMAND arg1 arg2 ...
+@result Subject VERB Object
 ```
 
-#### Multi-Statement Line
-Multiple statements can appear on one line:
+Examples:
 ```sys2dsl
-@a ASK Dog IS_A Animal @b ASK Cat IS_A Animal
+@_ Dog IS_A animal              # Dog is an animal (fact)
+@r Dog QUERY animal             # Query if Dog relates to animal
+@v Dog FACTS any                # Get all facts about Dog
+@c $a AND $b                    # Boolean AND of two results
 ```
 
-#### Multi-Line Scripts
+### Compound Definition (BEGIN/END)
+
+Compound statements define new verbs, concepts, or facts with internal logic.
+
+**Multi-line form:**
 ```sys2dsl
-@premise1 ASK Dog IS_A Mammal
-@premise2 ASK Mammal IS_A Animal
-@conclusion BOOL_AND $premise1 $premise2
+@GRANDPARENT_OF BEGIN
+  @p1 subject PARENT_OF freevar1;
+  @p2 freevar1 PARENT_OF object;
+  @return subject GRANDPARENT_OF object;
+END
 ```
 
-## Command Syntax Reference
-
-### Query Commands
-
-#### ASK
-```
-ASK_STMT ::= VAR_DECL 'ASK' (STRING | TRIPLET)
-TRIPLET ::= IDENTIFIER RELATION IDENTIFIER
-RELATION ::= [A-Z_]+
-```
+**Single-line form:**
 ```sys2dsl
-@q ASK "Is Dog an Animal?"
-@q ASK Dog IS_A Animal
-@q ASK $subject $relation $object
+@GRANDPARENT_OF BEGIN @p1 subject PARENT_OF freevar1; @p2 freevar1 PARENT_OF object; @return subject GRANDPARENT_OF object; END
 ```
 
-#### ASK_MASKED
-```
-ASK_MASKED_STMT ::= VAR_DECL 'ASK_MASKED' VAR_REF (STRING | TRIPLET)
-```
+### The @return Convention
+
+Inside a BEGIN/END block, `@return` marks the statement whose result is the return value of the compound definition.
+
 ```sys2dsl
-@q ASK_MASKED $mask "Dog IS_A Animal"
-@q ASK_MASKED $ontology_mask Dog IS_A Animal
+@MY_VERB BEGIN
+  @step1 subject DO_SOMETHING freevar1;
+  @step2 freevar1 DO_MORE object;
+  @return $step2 FINALIZE any;      # This is returned when MY_VERB is invoked
+END
 ```
 
-#### FACTS_MATCHING (Polymorphic)
-```
-FACTS_MATCHING_STMT ::= VAR_DECL 'FACTS_MATCHING' [IDENTIFIER [RELATION [OBJECT]]]
-# 0 args: all facts
-# 1 arg:  facts where subject or object matches
-# 2 args: facts matching subject + relation
-# 3 args: exact match (subject + relation + object)
-```
+If no `@return` is specified, the last statement (topologically) is the return value.
+
+### Temporary Results (@_)
+
+Use `@_` when you don't need the result but want the side effect:
+
 ```sys2dsl
-@all_facts FACTS_MATCHING              # all facts
-@dog_facts FACTS_MATCHING Dog          # facts about Dog
-@dog_is FACTS_MATCHING Dog IS_A        # Dog IS_A ?
-@exact FACTS_MATCHING Dog IS_A Animal  # exact match
+@_ Dog IS_A animal              # Assert fact, don't store result
+@_ theory_name LOAD any         # Load theory, ignore return
 ```
 
-#### Specialized Query Commands
+---
+
+## Special Concepts
+
+### `any` - The Wildcard Concept
+
+`any` is a predefined concept that matches anything. It replaces wildcards (`*`, `?`).
+
 ```sys2dsl
-@animals INSTANCES_OF Animal           # all X where X IS_A Animal
-@causes FACTS_WITH_RELATION CAUSES     # all facts with CAUSES relation
-@heat_facts FACTS_WITH_OBJECT heat     # all facts with object=heat
+@all_facts any RELATES any              # All facts (subject=any, object=any)
+@dog_facts Dog FACTS any                # All facts about Dog
+@animals any IS_A animal                # All instances of animal
+@dog_rels Dog any any                   # All relations where Dog is subject
 ```
 
-#### CF (Counterfactual)
-```
-CF_STMT ::= VAR_DECL 'CF' STRING
-# String format: "question | fact1 ; fact2 ; ..."
-```
+**Important:** `any` is a real concept with a point in space, not syntax sugar.
+
+### Implicit Variables in Verb Definitions
+
+Inside BEGIN/END for verbs, these are implicit:
+
+| Variable | Meaning |
+|----------|---------|
+| `subject` | The left argument when the verb is invoked |
+| `object` | The right argument when the verb is invoked |
+| `freevar1`, `freevar2`, ... | Free variables for intermediate bindings |
+
 ```sys2dsl
-@cf CF "Water BOILS_AT Celsius50 | pressure=0.1atm"
+@UNCLE_OF BEGIN
+  @p1 subject SIBLING_OF freevar1;      # subject = whoever invokes UNCLE_OF
+  @p2 freevar1 PARENT_OF object;        # object = the second argument
+  @return subject UNCLE_OF object;
+END
+
+# Usage:
+@r Bob UNCLE_OF Alice                   # subject=Bob, object=Alice
 ```
 
-#### ABDUCT
-```
-ABDUCT_STMT ::= VAR_DECL 'ABDUCT' (STRING | IDENTIFIER) OPTION*
-OPTION ::= 'limit=' NUMBER | 'transitive' | 'noTransitive' | 'maxDepth=' NUMBER
-```
+---
+
+## Numeric Constants
+
+Constants are created using the `NUMERIC_VALUE` relation:
+
 ```sys2dsl
-@causes ABDUCT fever
-@causes ABDUCT "high_temperature" limit=5 noTransitive
+@positive NUMERIC_VALUE 127
+@negative NUMERIC_VALUE -127
+@zero NUMERIC_VALUE 0
+@half NUMERIC_VALUE 64
 ```
 
-### Assertion Commands
+These create constant points that can be used in dimension operations:
 
-#### ASSERT
-```
-ASSERT_STMT ::= VAR_DECL 'ASSERT' IDENTIFIER RELATION IDENTIFIER+
-```
 ```sys2dsl
-@f ASSERT Dog IS_A Animal
-@f ASSERT Paris LOCATED_IN France
+@_ Dog ONTO_EXISTENCE $positive         # Set Dog's existence to +127
+@ex Dog READ_DIM existence              # Read Dog's existence dimension
 ```
 
-#### RETRACT
+---
+
+## Predefined Relations (Geometric Primitives)
+
+These relations are hardcoded because they perform fundamental geometric operations:
+
 ```
-RETRACT_STMT ::= VAR_DECL 'RETRACT' IDENTIFIER RELATION IDENTIFIER+
+┌─────────────────────────────────────────────────────────────────┐
+│              GEOMETRIC PRIMITIVES (Hardcoded)                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Relation          │  Geometric Operation                      │
+│  ──────────────────│──────────────────────────────────────     │
+│  NUMERIC_VALUE     │  Create constant point                    │
+│  READ_DIM          │  Read dimension value from point          │
+│  PROJECT_DIM       │  Set dimension value on point             │
+│  ZERO_DIMS         │  Zero specified dimensions                │
+│  ATTRACT           │  Move point toward another                │
+│  EXTEND            │  Expand diamond boundary                  │
+│  NEW_COMPOSITE     │  Create composite point from two          │
+│  INDUCT            │  Geometric induction (extend from examples)│
+│  DEDUCT            │  Geometric deduction (project to parent)  │
+│  ABDUCT_PRIM       │  Geometric abduction (reverse inference)  │
+│  ANALOGIZE_PRIM    │  Vector transfer between domains          │
+│  PERMUTE           │  Apply relation permutation               │
+│  MIN               │  Numeric minimum                          │
+│  MAX               │  Numeric maximum                          │
+│  PLUS              │  Numeric addition                         │
+│  MINUS             │  Numeric subtraction                      │
+│  MULTIPLY          │  Numeric multiplication                   │
+│  DIVIDE            │  Numeric division                         │
+│  EQUALS            │  Numeric equality check                   │
+│  GREATER_THAN      │  Numeric comparison                       │
+│  LESS_THAN         │  Numeric comparison                       │
+│  KIND              │  Set/read point kind                      │
+│  PRIMITIVE         │  Mark as primitive (for documentation)    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
+
+All other relations (IS_A, CAUSES, AND, OR, QUERY, etc.) are defined as verbs in the base theory using these primitives.
+
+---
+
+## Execution Model
+
+### Declarative, Not Imperative
+
+Sys2DSL is **declarative**. Statement order does not matter. Execution order is determined by **topological sort** of dependencies.
+
 ```sys2dsl
-@r RETRACT Dog IS_A Fish
+# These execute in dependency order, not textual order:
+@result $a AND $b                       # Executes THIRD (depends on $a, $b)
+@a Dog IS_A animal                      # Executes FIRST (no dependencies)
+@b Cat IS_A animal                      # Executes FIRST (no dependencies)
 ```
 
-### Boolean Commands
+### Dependency Resolution
 
-```
-BOOL_STMT ::= VAR_DECL ('BOOL_AND' | 'BOOL_OR') VAR_REF VAR_REF
-            | VAR_DECL 'BOOL_NOT' VAR_REF
-            | VAR_DECL 'NONEMPTY' VAR_REF
-```
+Dependencies are created by variable references (`$var`):
+
 ```sys2dsl
-@and BOOL_AND $a $b
-@or BOOL_OR $a $b
-@not BOOL_NOT $a
-@has NONEMPTY $list
+@step3 $step2 PROCESS $step1    # Depends on step1 and step2
+@step1 input1 TRANSFORM any     # No dependencies
+@step2 input2 TRANSFORM any     # No dependencies
 ```
 
-### List Commands
+Execution order: `step1`, `step2` (parallel), then `step3`.
 
-```
-LIST_STMT ::=
-    VAR_DECL 'MERGE_LISTS' VAR_REF VAR_REF
-  | VAR_DECL 'PICK_FIRST' VAR_REF
-  | VAR_DECL 'PICK_LAST' VAR_REF
-  | VAR_DECL 'COUNT' VAR_REF
-  | VAR_DECL 'FILTER' VAR_REF KEY_VALUE
-```
+### Circular Dependencies
+
+Circular dependencies are an error:
+
 ```sys2dsl
-@merged MERGE_LISTS $list1 $list2
-@first PICK_FIRST $facts
-@last PICK_LAST $facts
-@n COUNT $facts
-@filtered FILTER $facts relation=IS_A
+@a $b TRANSFORM any             # ERROR: circular dependency
+@b $a TRANSFORM any             # a depends on b, b depends on a
 ```
 
-### Theory Commands
+---
 
-```
-THEORY_STMT ::=
-    VAR_DECL 'THEORY_PUSH' ('name=' IDENTIFIER)?
-  | VAR_DECL 'THEORY_POP'
-  | VAR_DECL 'SAVE_THEORY' IDENTIFIER
-  | VAR_DECL 'LOAD_THEORY' IDENTIFIER
-  | VAR_DECL 'MERGE_THEORY' IDENTIFIER
-```
+## Point Types and Inspection
+
+Every point in space has a `kind` field:
+
+| kind | Created by | Description |
+|------|------------|-------------|
+| `"verb"` | `@VERB_NAME` declarations | Verb/relation definition |
+| `"relation"` | System primitives | Hardcoded geometric relations |
+| `"concept"` | `@concept_name` declarations | Concept center point |
+| `"fact"` | `@Fact_name` declarations | Fact/instance point |
+| `"composite"` | AND, OR, compound operations | Composite result |
+| `"constant"` | `NUMERIC_VALUE` | Numeric constant |
+| `"control"` | `CONTROLS` relation | Execution control point |
+| `"any"` | Predefined | The wildcard concept |
+
+Inspect a point:
 ```sys2dsl
-@push THEORY_PUSH name=hypothetical
-@pop THEORY_POP
-@save SAVE_THEORY my_theory
-@load LOAD_THEORY base_theory
-@merge MERGE_THEORY external_facts
+@info Dog INSPECT any           # Returns point details including kind
 ```
 
-### Mask Commands
+---
 
-```
-MASK_STMT ::=
-    VAR_DECL 'MASK_PARTITIONS' IDENTIFIER+
-  | VAR_DECL 'MASK_DIMS' IDENTIFIER+
-```
-```sys2dsl
-@m MASK_PARTITIONS ontology axiology
-@m MASK_DIMS Temperature Mass Location
-```
+## Complete EBNF Grammar
 
-### Reasoning Commands
+```ebnf
+(* Sys2DSL v3.0 Complete Grammar *)
 
-```
-REASONING_STMT ::=
-    VAR_DECL 'PROVE' IDENTIFIER RELATION IDENTIFIER+
-  | VAR_DECL 'HYPOTHESIZE' IDENTIFIER RELATION? OPTION*
-  | VAR_DECL 'ANALOGICAL' IDENTIFIER IDENTIFIER IDENTIFIER
-  | VAR_DECL 'VALIDATE' IDENTIFIER?
-  | VAR_DECL 'CHECK_CONTRADICTION' OPTION*
-  | VAR_DECL 'CHECK_WOULD_CONTRADICT' IDENTIFIER RELATION IDENTIFIER+
-```
-```sys2dsl
-@proof PROVE Fido IS_A LivingThing
-@hypo HYPOTHESIZE Dog CAN limit=5
-@analogy ANALOGICAL King Queen Man
-@valid VALIDATE
-@contra CHECK_CONTRADICTION disjointness functional
-@would CHECK_WOULD_CONTRADICT Dog IS_A Plant
-```
+program        = { statement } ;
 
-### Binding Commands
+statement      = simple_stmt | compound_stmt ;
 
-```
-BIND_STMT ::=
-    VAR_DECL 'BIND_CONCEPT' IDENTIFIER
-  | VAR_DECL 'BIND_POINT' (VAR_REF | IDENTIFIER)
-  | VAR_DECL 'BIND_RELATION' IDENTIFIER
-  | VAR_DECL 'DEFINE_CONCEPT' IDENTIFIER OPTION*
-  | VAR_DECL 'DEFINE_RELATION' IDENTIFIER PROPERTY*
-  | VAR_DECL 'INSPECT' IDENTIFIER
-```
-```sys2dsl
-@cref BIND_CONCEPT Dog
-@pref BIND_POINT $cref
-@rref BIND_RELATION IS_A
-@def DEFINE_CONCEPT Temperature vector=[0,0,100]
-@rel DEFINE_RELATION SIBLING_OF symmetric
-@snap INSPECT Dog
-```
+simple_stmt    = var_decl , subject , verb , object ;
 
-### Output Commands
+compound_stmt  = var_decl , 'BEGIN' , inner_stmts , 'END' ;
 
-```
-OUTPUT_STMT ::=
-    VAR_DECL 'TO_NATURAL' VAR_REF+
-  | VAR_DECL 'TO_JSON' VAR_REF
-  | VAR_DECL 'SUMMARIZE' VAR_REF OPTION*
-  | VAR_DECL 'FORMAT' VAR_REF STRING?
-```
-```sys2dsl
-@nl TO_NATURAL $facts
-@json TO_JSON $result
-@sum SUMMARIZE $facts maxItems=5
-@fmt FORMAT $result "template: {truth}"
+inner_stmts    = inner_stmt , { inner_stmt } ;
+
+inner_stmt     = ( simple_stmt | return_stmt ) , ';' ;
+
+return_stmt    = '@return' , subject , verb , object ;
+
+var_decl       = '@' , ( identifier | '_' | 'return' ) ;
+
+subject        = concept_id | fact_id | var_ref | special_id ;
+
+verb           = verb_id | var_ref ;
+
+object         = concept_id | fact_id | var_ref | special_id
+               | number | string ;
+
+var_ref        = '$' , identifier ;
+
+identifier     = verb_id | concept_id | fact_id ;
+
+verb_id        = upper , { upper | digit | '_' } ;
+
+concept_id     = lower , { lower | digit | '_' } ;
+
+fact_id        = upper , { lower | digit | '_' } ;
+
+special_id     = 'any' | 'subject' | 'object'
+               | 'freevar' , digit , { digit } ;
+
+number         = [ '-' ] , digit , { digit } , [ '.' , digit , { digit } ] ;
+
+string         = '"' , { char - '"' } , '"'
+               | "'" , { char - "'" } , "'" ;
+
+upper          = 'A' | 'B' | ... | 'Z' ;
+lower          = 'a' | 'b' | ... | 'z' ;
+digit          = '0' | '1' | ... | '9' ;
+char           = (* any UTF-8 character *) ;
+
+(* Comments: # to end of line *)
 ```
 
-## Operator Precedence
-
-Sys2DSL uses explicit variable references rather than operator precedence. Evaluation order is determined by data dependencies via topological sort.
-
-## Reserved Words
-
-The following are reserved and cannot be used as identifiers:
-- All COMMAND keywords (ASK, ASSERT, etc.)
-- `TRUE_CERTAIN`, `TRUE_DEFAULT`, `PLAUSIBLE`, `FALSE`, `UNKNOWN`, `CONFLICT`
-
-## Error Recovery
-
-### Syntax Errors
-| Error | Message Pattern | Fix |
-|-------|-----------------|-----|
-| Missing @ | `Invalid Sys2DSL statement: 'X'` | Add @var prefix |
-| Missing command | `Invalid Sys2DSL statement` | Add command after @var |
-| Unclosed quote | Parse fails | Close string with matching quote |
-| Circular dep | `Cyclic Sys2DSL dependencies` | Remove circular $refs |
-| Duplicate var | `Duplicate Sys2DSL variable` | Use unique var names |
+---
 
 ## Examples
 
-### Simple Query
+### Simple Assertions
 ```sys2dsl
-@q ASK Dog IS_A Animal
+@_ Dog IS_A animal
+@_ Cat IS_A animal
+@_ Grivei IS_A Dog
+@_ Paris LOCATED_IN France
 ```
 
-### Pattern Matching with Wildcard
+### Queries with `any`
 ```sys2dsl
-@animals INSTANCES_OF Animal
-@count COUNT $animals
-@has_animals NONEMPTY $animals
+@all_animals any IS_A animal            # What is an animal?
+@dog_facts Dog FACTS any                # All facts about Dog
+@what_causes any CAUSES fever           # What causes fever?
+@dog_relations Dog any Cat              # Relations between Dog and Cat
 ```
 
-### Proof Chain
+### Defining a Verb
 ```sys2dsl
-@p1 ASK Dog IS_A Mammal
-@p2 ASK Mammal IS_A Animal
-@p3 ASK Animal IS_A LivingThing
-@chain1 BOOL_AND $p1 $p2
-@proof BOOL_AND $chain1 $p3
+@GRANDPARENT_OF BEGIN
+  @p1 subject PARENT_OF freevar1;
+  @p2 freevar1 PARENT_OF object;
+  @return subject HAS_RELATION grandparent;
+END
+
+# Usage:
+@r Alice GRANDPARENT_OF Charlie
 ```
 
-### Theory Layer with Hypothetical
+### Defining a Concept
 ```sys2dsl
-@push THEORY_PUSH name=what_if
-@hypo ASSERT Water BOILS_AT Celsius50
-@check ASK Water BOILS_AT Celsius50
-@pop THEORY_POP
-@restored ASK Water BOILS_AT Celsius100
+@dangerous_animal BEGIN
+  @is_animal subject IS_A animal;
+  @is_dangerous subject HAS dangerous;
+  @return $is_animal AND $is_dangerous;
+END
 ```
+
+### Boolean Logic
+```sys2dsl
+@a Dog IS_A animal
+@b Dog HAS fur
+@both $a AND $b
+@either $a OR $b
+@not_a $a NOT any
+```
+
+### Constants and Dimensions
+```sys2dsl
+@high NUMERIC_VALUE 100
+@_ Dog ONTO_EXISTENCE $high             # Dog definitely exists
+@ex Dog READ_DIM existence              # Read existence value
+```
+
+### Theory Management
+```sys2dsl
+@_ hypothetical PUSH any                # Push new theory layer
+@_ Unicorn IS_A animal                  # Assert in hypothetical
+@r Unicorn QUERY animal                 # Query in hypothetical
+@_ any POP any                          # Pop layer, discard changes
+```
+
+### Control Points
+```sys2dsl
+@depth NUMERIC_VALUE 5
+@_ $depth CONTROLS reasoning_depth      # Limit reasoning depth
+@limit NUMERIC_VALUE 10
+@_ $limit CONTROLS backtrack_limit      # Limit backtracking
+```
+
+---
+
+## Reserved Words
+
+The following cannot be used as custom identifiers:
+- `BEGIN`, `END` - Compound delimiters
+- `any` - Wildcard concept
+- `subject`, `object`, `freevar1`, ... - Implicit verb variables
+- `return` - Return marker (after @)
+- All primitive relation names (NUMERIC_VALUE, READ_DIM, etc.)
+
+---
+
+## Error Handling
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `Invalid declaration` | Missing @ prefix | Add `@` before variable name |
+| `Invalid triple` | Not exactly 3 components | Ensure Subject VERB Object |
+| `Circular dependency` | $a uses $b, $b uses $a | Restructure dependencies |
+| `Unknown verb` | Verb not defined | Define verb or check spelling |
+| `Type mismatch` | Wrong case convention | Check naming (CAPS/lower/First) |
+| `Missing return` | No @return in compound | Add @return or rely on last statement |
+| `Unclosed BEGIN` | Missing END | Add END to close compound |
+
+---
 
 ## Implementation References
 
-| Component | Specification | Source |
-|-----------|---------------|--------|
-| Tokenizer | This document | `src/theory/dsl_parser.js` |
-| Parser | This document | `src/theory/dsl_parser.js` |
-| Evaluator | [Sys2DSL-spec.md](./Sys2DSL-spec.md) | `src/theory/dsl_engine.js` |
-| Commands | [dsl_commands_*.js.md](./theory/) | `src/theory/dsl_commands_*.js` |
+| Component | Source |
+|-----------|--------|
+| Parser | `src/theory/dsl_parser.js` |
+| Engine | `src/theory/dsl_engine.js` |
+| Verb Executor | `src/theory/verb_executor.js` |
+| Base Theory Verbs | `data/theories/base/*.sys2dsl` |
+
+---
 
 ## See Also
 
 - [Sys2DSL-spec.md](./Sys2DSL-spec.md) - Semantic specification
-- [Sys2DSL_syntax.md](./theory/Sys2DSL_syntax.md) - Extended syntax notes
-- [dsl_parser.js.md](./theory/dsl_parser.js.md) - Parser implementation
+- [Sys2DSL_geometric_model.md](./theory/Sys2DSL_geometric_model.md) - Geometric model and v3 patterns
+- [topological_eval.md](./theory/topological_eval.md) - Evaluation model
+- [base/logic.sys2dsl](../init/theories/base/logic.sys2dsl) - Boolean logic verbs
+- [base/reasoning.sys2dsl](../init/theories/base/reasoning.sys2dsl) - Reasoning verbs

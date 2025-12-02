@@ -1,13 +1,21 @@
 /**
- * DS(/theory/dsl_commands_inference.js) - Inference DSL Commands
+ * DS(/theory/dsl_commands_inference.js) - Inference Relation Handlers v3.0
  *
- * Implements Sys2DSL commands for inference reasoning:
- * - INFER: Multi-method inference attempts
- * - FORWARD_CHAIN: Derive conclusions via forward chaining
- * - WHY: Explain inference results
- * - DEFINE_RULE: Register composition rules
- * - DEFINE_DEFAULT: Register default reasoning rules
- * - CLEAR_RULES: Clear all registered rules
+ * v3.0: All statements are relations between points in conceptual space.
+ * These handlers process inference-related relations.
+ *
+ * Syntax: @variable Subject VERB Object (exactly 4 tokens)
+ * - Subject = source point
+ * - VERB = relation type (INFER, WHY, FORWARD_CHAIN, etc.)
+ * - Object = target point
+ *
+ * Inference relations:
+ * - INFER: @result subject INFER object → inference about subject→object
+ * - WHY: @reason subject WHY object → explanation of subject→object relation
+ * - FORWARD_CHAIN: @derived any FORWARD_CHAIN any → forward chaining
+ * - DEFINE_RULE: Deprecated in v3.0 - use macro syntax instead
+ * - DEFINE_DEFAULT: Deprecated in v3.0 - use macro syntax instead
+ * - CLEAR_RULES: @_ any CLEAR_RULES any → clear registered rules
  *
  * See also: DS(/reason/inference_engine), DS(/theory/dsl_commands_reasoning)
  *
@@ -140,31 +148,43 @@ class DSLCommandsInference {
 
   /**
    * INFER: Attempt to infer a statement using all methods
-   * Syntax: @var INFER Subject Relation Object [method=X] [proof=true]
+   * v3.0 Syntax: @var Subject INFER Object (implies IS_A relation)
+   * Legacy Syntax: @var INFER Subject Relation Object [method=X] [proof=true]
    */
   cmdInfer(argTokens, env, facts) {
-    if (argTokens.length < 3) {
-      throw new Error('INFER expects Subject Relation Object');
-    }
+    const token0 = this.parser.expandString(argTokens[0] || '', env);
+    const token1 = this.parser.expandString(argTokens[1] || '', env);
 
-    const subject = this.parser.expandString(argTokens[0], env);
-    const relation = this.parser.expandString(argTokens[1], env);
-
-    let objectParts = [];
+    let subject, relation, object;
     const options = {};
-    for (let i = 2; i < argTokens.length; i++) {
-      const arg = this.parser.expandString(argTokens[i], env);
-      if (arg.startsWith('method=')) {
-        options.methods = [arg.split('=')[1]];
-      } else if (arg === 'proof=true') {
-        options.includeProof = true;
-      } else if (arg.startsWith('maxDepth=')) {
-        options.maxDepth = parseInt(arg.split('=')[1], 10);
-      } else {
-        objectParts.push(arg);
+
+    if (argTokens.length >= 3) {
+      // Legacy format: Subject Relation Object [options]
+      subject = token0;
+      relation = token1;
+
+      let objectParts = [];
+      for (let i = 2; i < argTokens.length; i++) {
+        const arg = this.parser.expandString(argTokens[i], env);
+        if (arg.startsWith('method=')) {
+          options.methods = [arg.split('=')[1]];
+        } else if (arg === 'proof=true') {
+          options.includeProof = true;
+        } else if (arg.startsWith('maxDepth=')) {
+          options.maxDepth = parseInt(arg.split('=')[1], 10);
+        } else {
+          objectParts.push(arg);
+        }
       }
+      object = objectParts.join(' ');
+    } else if (argTokens.length === 2 && token1 && token1.toLowerCase() !== 'any') {
+      // v3 format: Subject INFER Object (IS_A implied)
+      subject = token0;
+      relation = 'IS_A';
+      object = token1;
+    } else {
+      throw new Error('INFER expects: Subject INFER Object (v3) or Subject Relation Object');
     }
-    const object = objectParts.join(' ');
 
     const result = this.inferenceEngine.infer(subject, relation, object, facts, options);
 

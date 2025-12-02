@@ -94,16 +94,16 @@
 
     <h3>Example: Self-Assessment of Knowledge</h3>
     <pre><code># How much do we know about animals?
-@animalFacts FACTS_MATCHING ? IS_A animal
-@animalCount COUNT $animalFacts
+@animalFacts any FACTS animal
+@animalCount $animalFacts COUNT any
 
 # What concepts are most used?
-@dogUsage GET_USAGE Dog
-@catUsage GET_USAGE Cat
+@dogUsage Dog GET_USAGE any
+@catUsage Cat GET_USAGE any
 
 # Check knowledge coverage
-@hasTemperature NONEMPTY FACTS_MATCHING ? BOILS_AT ?
-@text TO_NATURAL $hasTemperature</code></pre>
+@hasTemperature any FACTS any
+@text $hasTemperature TO_NATURAL any</code></pre>
 
     <h2>2. Theory Layer: Context Management</h2>
     <p>The Theory Stack enables hypothetical reasoning and context switching.</p>
@@ -116,53 +116,53 @@
         <th>Example</th>
       </tr>
       <tr>
-        <td><code>THEORY_PUSH</code></td>
+        <td><code>PUSH</code></td>
         <td>Create new hypothetical layer</td>
-        <td><code>@_ THEORY_PUSH name="exploration"</code></td>
+        <td><code>@_ exploration PUSH any</code></td>
       </tr>
       <tr>
-        <td><code>THEORY_POP</code></td>
+        <td><code>POP</code></td>
         <td>Discard hypothetical layer</td>
-        <td><code>@_ THEORY_POP</code></td>
+        <td><code>@_ any POP any</code></td>
       </tr>
       <tr>
-        <td><code>LIST_THEORIES</code></td>
+        <td><code>THEORIES</code></td>
         <td>Show theory stack</td>
-        <td><code>@stack LIST_THEORIES</code></td>
+        <td><code>@stack any THEORIES any</code></td>
       </tr>
       <tr>
-        <td><code>LOAD_THEORY</code></td>
+        <td><code>LOAD</code></td>
         <td>Load saved theory</td>
-        <td><code>@_ LOAD_THEORY physics</code></td>
+        <td><code>@_ physics LOAD any</code></td>
       </tr>
       <tr>
-        <td><code>SAVE_THEORY</code></td>
+        <td><code>SAVE</code></td>
         <td>Save current layer</td>
-        <td><code>@_ SAVE_THEORY myDomain</code></td>
+        <td><code>@_ myDomain SAVE any</code></td>
       </tr>
     </table>
 
     <h3>Example: What-If Exploration</h3>
     <pre><code># Base knowledge
-@f1 ASSERT Ice IS_A solid
-@f2 ASSERT Water IS_A liquid
+@_ Ice IS_A solid
+@_ Water IS_A liquid
 
 # Explore hypothetical: what if ice was a liquid?
-@_ THEORY_PUSH name="hypothetical_ice"
-@h1 ASSERT Ice IS_A liquid
+@_ hypothetical_ice PUSH any
+@_ Ice IS_A liquid
 
 # Query in this context
-@q1 ASK Ice IS_A solid  # FALSE in this layer
+@q1 Ice IS_A solid  # FALSE in this layer
 
 # Check theory stack
-@stack LIST_THEORIES
+@stack any THEORIES any
 # Returns: ["base", "hypothetical_ice"]
 
 # Discard hypothetical
-@_ THEORY_POP
+@_ any POP any
 
 # Back to base
-@q2 ASK Ice IS_A solid  # TRUE again</code></pre>
+@q2 Ice IS_A solid  # TRUE again</code></pre>
 
     <h2>3. Reasoning Layer: Inference Introspection</h2>
     <p>Understand <em>how</em> conclusions are reached, not just <em>what</em> they are.</p>
@@ -218,14 +218,14 @@
 
     <h3>Example: Explanation Chain</h3>
     <pre><code># Establish knowledge
-@f1 ASSERT Dog IS_A mammal
-@f2 ASSERT mammal IS_A animal
+@_ Dog IS_A mammal
+@_ mammal IS_A animal
 
 # Prove a transitive conclusion
-@proof PROVE Dog IS_A animal
+@proof Dog PROVE animal
 
 # Get human-readable explanation
-@explanation EXPLAIN $proof
+@explanation $proof EXPLAIN any
 # Returns: "Dog IS_A animal because:
 #   1. Dog IS_A mammal (direct fact)
 #   2. mammal IS_A animal (direct fact)
@@ -233,22 +233,22 @@
 
     <h3>Example: Full Inference with Forward Chaining</h3>
     <pre><code># Establish knowledge with inference rules
-@f1 ASSERT Dog IS_A mammal
-@f2 ASSERT mammal IS_A animal
-@f3 ASSERT animal HAS_PROPERTY needs_food
+@_ Dog IS_A mammal
+@_ mammal IS_A animal
+@_ animal HAS_PROPERTY needs_food
 
 # Define a custom inference rule
-@r1 DEFINE_RULE "inheritance" | ?X IS_A ?Y ; ?Y HAS_PROPERTY ?P => ?X HAS_PROPERTY ?P
+@r1 inheritance DEFINE_RULE any
 
 # Forward chain to derive all conclusions
-@derived FORWARD_CHAIN
+@derived any FORWARD_CHAIN any
 
 # Query derived facts
-@result INFER Dog HAS_PROPERTY needs_food
+@result Dog HAS_PROPERTY needs_food
 # Returns: { truth: "TRUE_INFERRED", method: "inheritance", chain: [...] }
 
 # Understand why
-@why WHY Dog HAS_PROPERTY needs_food</code></pre>
+@why Dog WHY needs_food</code></pre>
 
     <h2>3.1 Contradiction Detection: Knowledge Consistency</h2>
     <p>The system actively monitors for logical contradictions and can prevent inconsistent facts from being added.</p>
@@ -313,31 +313,31 @@
 
     <h3>Example: Consistency Checking</h3>
     <pre><code># Establish type disjointness
-@d1 ASSERT Cat DISJOINT_WITH Dog
-@d2 ASSERT mammal DISJOINT_WITH reptile
+@_ Cat DISJOINT_WITH Dog
+@_ mammal DISJOINT_WITH reptile
 
 # Add some facts
-@f1 ASSERT Fluffy IS_A Cat
-@f2 ASSERT Rex IS_A Dog
+@_ Fluffy IS_A Cat
+@_ Rex IS_A Dog
 
 # Check consistency
-@report CHECK_CONTRADICTION
+@report any CHECK_CONTRADICTION any
 # Returns: { consistent: true, contradictions: [] }
 
 # Test hypothetical addition
-@test CHECK_WOULD_CONTRADICT Fluffy IS_A Dog
+@test Fluffy IS_A Dog
 # Returns: { wouldContradict: true, reason: "DISJOINT_VIOLATION",
 #            details: "Fluffy cannot be both Cat and Dog" }
 
 # Set up functional constraints
-@_ REGISTER_FUNCTIONAL BORN_IN
+@_ BORN_IN REGISTER_FUNCTIONAL any
 
 # This would be flagged:
-@f3 ASSERT Alice BORN_IN Paris
-@f4 ASSERT Alice BORN_IN London  # WARNING: functional violation
+@_ Alice BORN_IN Paris
+@_ Alice BORN_IN London  # WARNING: functional violation
 
 # Check again
-@report2 CHECK_CONTRADICTION
+@report2 any CHECK_CONTRADICTION any
 # Returns: { consistent: false, contradictions: [
 #   { type: "FUNCTIONAL_VIOLATION", subject: "Alice", relation: "BORN_IN", values: ["Paris", "London"] }
 # ]}</code></pre>
@@ -424,22 +424,22 @@
       <tr>
         <td><code>ASK_MASKED</code></td>
         <td>Query with mask</td>
-        <td><code>@q ASK_MASKED $m Water IS_A liquid</code></td>
+        <td><code>@q Water IS_A liquid</code></td>
       </tr>
     </table>
 
     <h3>Example: Bias Control</h3>
     <pre><code># Create mask that ignores value judgments
-@fairMask MASK_PARTITIONS ontology
+@fairMask ontology MASK_PARTITIONS any
 
 # Query without axiological bias
-@result ASK_MASKED $fairMask Candidate QUALIFIES_FOR Position
+@result Candidate ASK Position
 
 # Compare with full query
-@fullResult ASK Candidate QUALIFIES_FOR Position
+@fullResult Candidate ASK Position
 
 # Explain the difference
-@diff EXPLAIN_DIFFERENCE $result $fullResult</code></pre>
+@diff $result EXPLAIN_DIFFERENCE $fullResult</code></pre>
 
     <h2>6. Relation Introspection</h2>
     <p>Query and understand the relation system itself.</p>
@@ -481,7 +481,7 @@
 @value BIND_CONCEPT Celsius100
 
 # Compose dynamically
-@fact ASSERT $subject $relation $value
+@fact $subject $relation $value
 
 # The system "knows" it asserted Water BOILS_AT Celsius100
 @reflection GET_LAST_ASSERTION
@@ -508,7 +508,7 @@
       </tr>
       <tr>
         <td><strong>Hypothesize</strong></td>
-        <td>CF, THEORY_PUSH/POP, HYPOTHESIZE</td>
+        <td>CF, PUSH/POP, HYPOTHESIZE</td>
         <td>Exploring possibilities</td>
       </tr>
       <tr>
@@ -520,30 +520,30 @@
 
     <h2>9. Full Metacognitive Example</h2>
     <pre><code># === Domain Setup ===
-@r1 DEFINE_RELATION SYMPTOM_OF inverse=HAS_SYMPTOM
-@r2 DEFINE_RELATION TREATS inverse=TREATED_BY
+@r1 SYMPTOM_OF DEFINE_RELATION HAS_SYMPTOM
+@r2 TREATS DEFINE_RELATION TREATED_BY
 
-@f1 ASSERT Fever SYMPTOM_OF Infection
-@f2 ASSERT Headache SYMPTOM_OF Stress
-@f3 ASSERT Aspirin TREATS Headache
+@_ Fever SYMPTOM_OF Infection
+@_ Headache SYMPTOM_OF Stress
+@_ Aspirin TREATS Headache
 
 # === Self-Assessment ===
-@symptoms FACTS_MATCHING ? SYMPTOM_OF ?
-@treatments FACTS_MATCHING ? TREATS ?
-@symptomCount COUNT $symptoms
-@treatmentCount COUNT $treatments
+@symptoms SYMPTOM_OF FACTS any
+@treatments TREATS FACTS any
+@symptomCount $symptoms COUNT any
+@treatmentCount $treatments COUNT any
 
 # === Hypothetical Reasoning ===
-@_ THEORY_PUSH name="new_symptom_hypothesis"
-@h1 ASSERT Fatigue SYMPTOM_OF Infection
-@newSymptoms FACTS_MATCHING ? SYMPTOM_OF Infection
-@_ THEORY_POP
+@_ new_symptom_hypothesis PUSH any
+@_ Fatigue SYMPTOM_OF Infection
+@newSymptoms Infection FACTS any
+@_ any POP any
 
 # === Consistency Check ===
-@valid VALIDATE
+@valid any VALIDATE any
 
 # === Explanation ===
-@report TO_NATURAL "We know $symptomCount symptoms and $treatmentCount treatments"</code></pre>
+@report "We know $symptomCount symptoms and $treatmentCount treatments" TO_NATURAL any</code></pre>
 
     <h2>Technical References</h2>
     <ul>

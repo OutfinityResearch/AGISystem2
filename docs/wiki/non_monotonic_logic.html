@@ -98,8 +98,8 @@
       <rect x="20" y="245" width="520" height="80" rx="4" fill="#e1ecf7" stroke="#0f4c81" stroke-width="1"/>
       <text x="280" y="265" font-size="10" font-weight="bold" fill="#0f4c81" text-anchor="middle">Sys2DSL Syntax</text>
 
-      <text x="35" y="290" font-size="9" font-family="monospace" fill="#0f4c81">DEFAULT Bird CAN Fly              # Default rule</text>
-      <text x="35" y="310" font-size="9" font-family="monospace" fill="#e65100">EXCEPTION Penguin CANNOT Fly        # Override</text>
+      <text x="35" y="290" font-size="9" font-family="monospace" fill="#0f4c81">@_ Bird CAN Fly DEFAULT any       # Default rule</text>
+      <text x="35" y="310" font-size="9" font-family="monospace" fill="#e65100">@_ Penguin CANNOT Fly EXCEPTION any # Override</text>
     </svg>
     <p class="diagram-caption">Non-monotonic reasoning allows conclusions to be retracted when exceptions are discovered. AGISystem2 implements this through theory layers: defaults live in the base layer, and exceptions in higher layers override them. The "birds fly" default is retracted for Tweety when we learn Tweety is a penguin.</p>
   </div>
@@ -149,17 +149,17 @@
 
   <pre>
 # Define default rule
-DEFAULT Bird CAN Fly
+@_ Bird CAN Fly DEFAULT any
 
 # Define exception
-EXCEPTION Penguin CANNOT Fly
+@_ Penguin CANNOT Fly EXCEPTION any
 
 # Assertions
-ASSERT Tweety IS_A Penguin
-ASSERT Penguin IS_A Bird
+@_ Tweety IS_A Penguin
+@_ Penguin IS_A Bird
 
 # Query (non-monotonic resolution)
-ASK "Tweety CAN Fly?"
+@result Tweety CAN Fly
 # → FALSE (Penguin exception overrides Bird default)</pre>
 
   <h2>Priority Resolution</h2>
@@ -168,12 +168,12 @@ ASK "Tweety CAN Fly?"
 
   <pre>
 # Explicit priority
-DEFAULT PRIORITY=10 Employee gets=StandardBenefits
-DEFAULT PRIORITY=20 Executive gets=ExecutiveBenefits  # Higher priority wins
+@_ Employee HAS StandardBenefits DEFAULT 10
+@_ Executive HAS ExecutiveBenefits DEFAULT 20  # Higher priority wins
 
 # Specificity-based (automatic)
-DEFAULT Mammal IS warm_blooded      # General
-EXCEPTION Platypus IS cold_blooded   # Specific override</pre>
+@_ Mammal IS warm_blooded DEFAULT any         # General
+@_ Platypus IS cold_blooded EXCEPTION any      # Specific override</pre>
 
   <h2>Validation During Revision</h2>
 

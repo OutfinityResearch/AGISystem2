@@ -180,7 +180,7 @@ More common: concept is re-created through new assertions:
 ```sys2dsl
 # "rare_element" was forgotten
 # User asserts it again:
-@f1 ASSERT Rare_Element IS_A element
+@_ Rare_Element IS_A element
 
 # Concept is re-created fresh
 # Previous usage history is NOT restored
@@ -526,12 +526,12 @@ List all protected concepts:
 
 ```sys2dsl
 # Oops, forgot something important
-@recovered RECOVER concept=important_term
+@recovered important_term RECOVER any
 
 # If not in audit, re-create it:
-@f1 ASSERT Important_Term IS_A category
-@boost BOOST important_term 1000
-@protect PROTECT important_term
+@f1 Important_Term IS_A category
+@boost important_term BOOST 1000
+@protect important_term PROTECT any
 ```
 
 ---

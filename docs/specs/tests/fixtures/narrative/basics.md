@@ -10,11 +10,11 @@ Fixture for narrative consistency testing - establishes character, location, and
 
 ## Content
 
-```
-Alice IS_A Human
-Alice LOCATED_IN CityX
-CityX DISJOINT_WITH MagicZone
-Alice CASTS Magic
+```sys2dsl
+@_ Alice IS_A Human
+@_ Alice LOCATED_IN CityX
+@_ CityX DISJOINT_WITH MagicZone
+@_ Alice CASTS Magic
 ```
 
 ## Facts
@@ -48,7 +48,7 @@ This fixture establishes a scenario with potential inconsistency:
 ### With Permission Theory
 ```sys2dsl
 # Add permissive theory
-@_ ASSERT SomeTheory PERMITS Magic_IN CityX
+@_ SomeTheory PERMITS Magic_IN CityX
 
 # Now narrative is consistent
 @result VALIDATE

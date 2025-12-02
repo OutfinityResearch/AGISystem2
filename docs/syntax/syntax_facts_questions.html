@@ -13,17 +13,17 @@
   <p>Facts and questions in AGISystem2 are expressed exclusively through Sys2DSL, not as “free” text lines. Every fact or question is an instruction of the form <code>@var ACTION ...</code> inside a session or a theory file.</p>
 
   <h2>Facts in Sys2DSL (ASSERT)</h2>
-  <p>A fact is a Sys2DSL instruction that binds a variable to a canonical triple <code>Subject REL Object</code> and inserts it into the active theory.</p>
+  <p>A fact is a Sys2DSL instruction that binds a variable to a canonical triple <code>Subject VERB Object</code> and inserts it into the active theory.</p>
 
   <p>General form:</p>
-  <pre><code>@f1 ASSERT subject REL object</code></pre>
+  <pre><code>@_ subject ASSERT object</code></pre>
 
   <p>Examples of basic facts:</p>
-  <pre><code>@f1 ASSERT Dog IS_A Animal
-@f2 ASSERT Water BOILS_AT Celsius100
-@f3 ASSERT Celsius100 IS_A temperature
-@f4 ASSERT surgery_x REQUIRES consent
-@f5 ASSERT export_data PROHIBITED_BY GDPR</code></pre>
+  <pre><code>@_ Dog ASSERT Animal
+@_ Water ASSERT Celsius100
+@_ Celsius100 ASSERT temperature
+@_ surgery_x ASSERT consent
+@_ export_data ASSERT GDPR</code></pre>
   <p><strong>Note:</strong> Properties like boiling point are expressed using specific relations (e.g., <code>BOILS_AT</code>) that connect subjects to value concepts (e.g., <code>Celsius100</code>). This keeps values as first-class concepts that can be reasoned about independently.</p>
 
   <p>Conventions for tokens in the parameter list:</p>
@@ -36,19 +36,19 @@
   <p><code>ASSERT</code> instructions are the only ones that introduce new facts into the session theory; there is no implicit ingestion of “bare” lines. You may have multiple instructions in the same script; each <code>@</code> marks the start of a new statement, even if they appear on the same line.</p>
 
   <h2>Yes/No Questions (ASK)</h2>
-  <p>Questions are also Sys2DSL instructions, but instead of modifying the theory they bind a variable to a “truth object” that holds the result of reasoning. The form is:</p>
-  <pre><code>@q1 ASK "question-text?"</code></pre>
+  <p>Questions are also Sys2DSL instructions, but instead of modifying the theory they bind a variable to a "truth object" that holds the result of reasoning. The form is:</p>
+  <pre><code>@q1 subject ASK object</code></pre>
 
-  <p><code>question-text</code> is a string that follows the constrained grammar. For natural language it usually ends in <code>?</code>, but for canonical triples the trailing <code>?</code> is optional because the <code>ASK</code> action already marks the statement as a question.</p>
+  <p>Questions use the triple syntax where the verb ASK is placed between subject and object.</p>
   <ul>
     <li>simple natural‑language questions, normalised by the translator, such as:
-      <pre><code>@q1 ASK "Is Dog an Animal?"
-@q2 ASK "Is Water a Substance?"</code></pre>
+      <pre><code>@q1 "Is Dog an Animal?" ASK any
+@q2 "Is Water a Substance?" ASK any</code></pre>
     </li>
-    <li>canonical triples written as strings, for example:
-      <pre><code>@q3 ASK "Dog IS_A Animal"
-@q4 ASK "Water BOILS_AT Celsius100"
-@q5 ASK "export_data PROHIBITED_BY GDPR"</code></pre>
+    <li>canonical triples, for example:
+      <pre><code>@q3 Dog ASK Animal
+@q4 Water ASK Celsius100
+@q5 export_data ASK GDPR</code></pre>
     </li>
   </ul>
 
@@ -66,19 +66,19 @@
 
   <h2>Combining Facts and Questions in One Script</h2>
   <p>A typical Sys2DSL script that mixes facts and questions looks like this:</p>
-  <pre><code>@f1 ASSERT Dog IS_A Animal
-@f2 ASSERT Water BOILS_AT Celsius100
-@f3 ASSERT Celsius100 IS_A temperature
-@q1 ASK "Is Dog an Animal?"
-@q2 ASK "Water BOILS_AT Celsius100"</code></pre>
+  <pre><code>@_ Dog ASSERT Animal
+@_ Water ASSERT Celsius100
+@_ Celsius100 ASSERT temperature
+@q1 Dog ASK Animal
+@q2 Water ASK Celsius100</code></pre>
 
   <p>You can write the same instructions on a single line, for example:</p>
-  <pre><code>@f1 ASSERT Dog IS_A Animal @q1 ASK "Is Dog an Animal?"</code></pre>
+  <pre><code>@_ Dog ASSERT Animal @q1 Dog ASK Animal</code></pre>
 
   <p>The interpreter splits the script at each <code>@</code>, builds the dependency graph between variables and executes the instructions in a topological order so that <code>$</code> references are resolved correctly even if they appear “earlier” in the text.</p>
 
   <h2>Summary</h2>
-  <p>In the new syntax, facts and questions never appear as independent lines; they are always expressed as Sys2DSL instructions of the form <code>@var ASSERT ...</code>, <code>@var ASK ...</code> or <code>@var CF ...</code>. This guarantees a single, analyzable interaction form that is easy to compose into theory programmes.</p>
+  <p>In v3 triple syntax, facts and questions use the form <code>@var Subject VERB Object</code> where VERB can be ASSERT, ASK, or other verbs. This guarantees a single, analyzable interaction form that is easy to compose into theory programmes.</p>
 
   <h2>References</h2>
   <p>For implementation details, see the relevant design specifications (referenced by ID):</p>

@@ -20,82 +20,91 @@
     {
       "id": "q1",
       "natural_language": "Summarize known fruits and format the result status.",
-      "expected_dsl": "@fruitFacts INSTANCES_OF fruit\n@summary SUMMARIZE $fruitFacts maxItems=2\n@q1 NONEMPTY $fruitFacts",
+      "expected_dsl": "@fruitFacts any IS_A fruit\n@summary $fruitFacts SUMMARIZE any maxItems=2\n@q1 $fruitFacts NONEMPTY any",
       "expected_answer": {
         "natural_language": "There are fruits; the list is non-empty.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "NONEMPTY on matched fruits returns TRUE_CERTAIN; SUMMARIZE is exercised but result truth comes from NONEMPTY."
+        "explanation": "NONEMPTY on matched fruits returns TRUE_CERTAIN; SUMMARIZE is exercised but result truth comes from NONEMPTY.",
+        "existence": "positive"
       }
     },
     {
       "id": "q2",
       "natural_language": "Check a missing category and format the negative outcome.",
-      "expected_dsl": "@missing INSTANCES_OF spaceship\n@q2 NONEMPTY $missing",
+      "expected_dsl": "@missing any IS_A spaceship\n@q2 $missing NONEMPTY any",
       "expected_answer": {
         "natural_language": "There are no spaceships in the facts.",
         "truth": "FALSE",
-        "explanation": "NONEMPTY on an empty match list returns FALSE."
+        "explanation": "NONEMPTY on an empty match list returns FALSE.",
+        "existence": "negative"
       }
     },
     {
       "id": "q3",
       "natural_language": "Count all vehicles and check if non-empty.",
-      "expected_dsl": "@vehicleFacts INSTANCES_OF vehicle\n@count COUNT $vehicleFacts\n@q3 NONEMPTY $vehicleFacts",
+      "expected_dsl": "@vehicleFacts any IS_A vehicle\n@count $vehicleFacts COUNT any\n@q3 $vehicleFacts NONEMPTY any",
       "expected_answer": {
         "natural_language": "There are vehicles in the KB.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "Three vehicles exist; NONEMPTY returns TRUE_CERTAIN."
+        "explanation": "Three vehicles exist; NONEMPTY returns TRUE_CERTAIN.",
+        "existence": "positive"
       }
     },
     {
       "id": "q4",
       "natural_language": "Summarize vehicles with maxItems=1.",
-      "expected_dsl": "@vSummary SUMMARIZE $vehicleFacts maxItems=1\n@q4 NONEMPTY $vehicleFacts",
+      "expected_dsl": "@vSummary $vehicleFacts SUMMARIZE any maxItems=1\n@q4 $vehicleFacts NONEMPTY any",
       "expected_answer": {
         "natural_language": "Vehicle summary created; list is non-empty.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "SUMMARIZE limits output; NONEMPTY still true."
+        "explanation": "SUMMARIZE limits output; NONEMPTY still true.",
+        "existence": "positive"
       }
     },
     {
       "id": "q5",
       "natural_language": "Match all animals and verify non-empty.",
-      "expected_dsl": "@animalFacts INSTANCES_OF animal\n@q5 NONEMPTY $animalFacts",
+      "expected_dsl": "@animalFacts any IS_A animal\n@q5 $animalFacts NONEMPTY any",
       "expected_answer": {
         "natural_language": "Animals exist in the KB.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "Dog and Cat are animals; list is non-empty."
+        "explanation": "Dog and Cat are animals; list is non-empty.",
+        "existence": "positive"
       }
     },
     {
       "id": "q6",
       "natural_language": "Check for non-existent robots category.",
-      "expected_dsl": "@robots INSTANCES_OF robot\n@q6 NONEMPTY $robots",
+      "expected_dsl": "@robots any IS_A robot\n@q6 $robots NONEMPTY any",
       "expected_answer": {
         "natural_language": "No robots in the KB.",
         "truth": "FALSE",
-        "explanation": "No robot facts exist; NONEMPTY returns FALSE."
+        "explanation": "No robot facts exist; NONEMPTY returns FALSE.",
+        "existence": "negative"
       }
     },
     {
       "id": "q7",
       "natural_language": "Summarize fruits with maxItems=4 (all of them).",
-      "expected_dsl": "@allFruits INSTANCES_OF fruit\n@fullSummary SUMMARIZE $allFruits maxItems=4\n@q7 NONEMPTY $allFruits",
+      "expected_dsl": "@allFruits any IS_A fruit\n@fullSummary $allFruits SUMMARIZE any maxItems=4\n@q7 $allFruits NONEMPTY any",
       "expected_answer": {
         "natural_language": "All 4 fruits summarized; list is non-empty.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "All fruits included in summary; NONEMPTY true."
+        "explanation": "All fruits included in summary; NONEMPTY true.",
+        "existence": "positive"
       }
     },
     {
       "id": "q8",
       "natural_language": "Match specific subject Apple and check.",
-      "expected_dsl": "@appleFacts FACTS_MATCHING Apple IS_A\n@q8 NONEMPTY $appleFacts",
+      "expected_dsl": "@appleFacts Apple FACTS any IS_A\n@q8 $appleFacts NONEMPTY any",
       "expected_answer": {
         "natural_language": "Apple has at least one IS_A fact.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "Apple IS_A fruit exists; NONEMPTY returns TRUE_CERTAIN."
+        "explanation": "Apple IS_A fruit exists; NONEMPTY returns TRUE_CERTAIN.",
+        "existence": "positive"
       }
     }
-  ]
+  ],
+  "version": "3.0"
 }

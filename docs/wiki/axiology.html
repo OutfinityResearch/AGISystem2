@@ -153,11 +153,11 @@
 
   <pre>
 # Assert something is forbidden
-ASSERT Speeding PROHIBITED_BY TrafficLaw
+@_ Speeding PROHIBITED_BY TrafficLaw
 # Sets deontic dimensions to negative values
 
 # Query deontic status
-ASK "Speeding PERMITTED?"
+@result Speeding PERMITTED ?
 # → FALSE_CERTAIN (deontic dims strongly negative)</pre>
 
   <h2>Implementation</h2>

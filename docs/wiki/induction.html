@@ -118,17 +118,17 @@
 
   <pre>
 # First dog
-ASSERT Rover IS_A Dog
+@_ Rover IS_A Dog
 # Creates initial "Dog" diamond centered on Rover
 
 # More examples expand it
-ASSERT Buddy IS_A Dog
-ASSERT Max IS_A Dog
-ASSERT Luna IS_A Dog
+@_ Buddy IS_A Dog
+@_ Max IS_A Dog
+@_ Luna IS_A Dog
 # Diamond grows to encompass all
 
 # Query generalization
-ASK "Fido IS_A Dog?"
+@result Fido IS_A Dog
 # TRUE if Fido's vector falls inside the Dog diamond</pre>
 
   <h2>Splitting Concepts</h2>

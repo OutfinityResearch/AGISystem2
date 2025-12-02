@@ -217,7 +217,7 @@ Phase 2: Ontology Population
     add TREATS IS_A Relation
 
 Phase 3: Query Execution
-  LLM runs: @answer ASK Doctor CAN TREATS Patient
+  LLM runs: @answer Doctor CAN_TREAT Patient
 ```
 
 ## Test Coverage

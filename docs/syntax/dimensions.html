@@ -104,8 +104,8 @@
       <h3>1. Bias Control via Veil of Ignorance</h3>
       <p>The system can <strong>mask axiological dimensions</strong> during reasoning to ensure decisions are based purely on facts:</p>
       <pre><code># Query ignoring value judgments
-@mask MASK_PARTITIONS ontology
-@result ASK_MASKED $mask Alice QUALIFIES_FOR scholarship</code></pre>
+@mask ontology MASK_PARTITIONS any
+@result Alice ASK scholarship</code></pre>
       <p>This implements Rawls' "veil of ignorance" – decisions made without knowing protected attributes.</p>
 
       <h3>2. Auditability</h3>
@@ -118,34 +118,34 @@
       <h3>3. Contextual Reasoning</h3>
       <p>Different theory layers can apply different axiological content while sharing the same ontology:</p>
       <pre><code># Same facts, different normative frameworks
-@_ THEORY_PUSH name="EU_GDPR_context"
-@_ THEORY_PUSH name="US_HIPAA_context"</code></pre>
+@_ EU_GDPR_context PUSH any
+@_ US_HIPAA_context PUSH any</code></pre>
     </div>
 
     <h2>Working with Dimensions in Sys2DSL</h2>
 
     <h3>Masking by Partition</h3>
     <pre><code># Create a mask for ontology-only reasoning
-@ontMask MASK_PARTITIONS ontology
+@ontMask ontology MASK_PARTITIONS any
 
 # Create a mask for axiology-only reasoning
-@axiMask MASK_PARTITIONS axiology
+@axiMask axiology MASK_PARTITIONS any
 
 # Query with specific partition focus
-@result ASK_MASKED $ontMask Water IS_A liquid</code></pre>
+@result Water ASK liquid</code></pre>
 
     <h3>Masking by Specific Dimensions</h3>
     <pre><code># Mask specific conceptual dimensions
-@tempMask MASK_DIMS temperature pressure
-@locMask MASK_DIMS location spatial_proximity
+@tempMask temperature MASK_DIMS pressure
+@locMask location MASK_DIMS spatial_proximity
 
 # Query ignoring temperature-related dimensions
-@result ASK_MASKED $tempMask Ice IS_A solid</code></pre>
+@result Ice ASK solid</code></pre>
 
     <h3>Combining Masks</h3>
     <pre><code># Combine multiple masks
-@combined MASK_UNION $ontMask $tempMask
-@result ASK_MASKED $combined Water BOILS_AT Celsius100</code></pre>
+@combined $ontMask MASK_UNION $tempMask
+@result Water ASK Celsius100</code></pre>
 
     <h2>Configuration</h2>
     <p>Partition boundaries are configurable in <code>config.json</code>:</p>

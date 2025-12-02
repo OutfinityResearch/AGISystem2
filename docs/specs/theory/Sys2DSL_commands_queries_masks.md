@@ -1,130 +1,116 @@
-# Design Spec: Sys2DSL Query & Mask Commands
+# Design Spec: Sys2DSL Query & Mask Verbs
 
 ID: DS(/theory/Sys2DSL_commands_queries_masks)
 
-Status: DRAFT v1.0
+Status: v3.0 - Unified Triple Syntax
 
 ## Scope
-Reference for all query commands (`ASK`, `ASK_MASKED`, `FACTS_MATCHING`) and masking commands (`MASK_PARTITIONS`, `MASK_DIMS`, `MASK_CONCEPT`). Syntax follows the Sys2DSL line format `@var COMMAND args…`. See DS(/theory/Sys2DSL_syntax) for language rules.
+Reference for query and masking verbs. **v3.0 uses strict triple syntax**: `@variable Subject VERB Object`. There are NO separate "query" vs "assertion" commands - all operations use the same triple format.
+
+See [Sys2DSL-grammar.md](../Sys2DSL-grammar.md) for complete v3.0 syntax rules.
 
 ---
 
-## 1. Query Commands
+## 1. Query Verbs
 
-### 1.1 ASK (subcommand of QUERY)
-**Purpose:** Query the truth value of a statement within the current theory. In the high-level API, use `QUERY subject RELATION object [mode=...]` which calls ASK first.
+### 1.1 IS_A (Ontological Relation)
+**Purpose:** Assert or query type relationships. Whether this is a query or assertion is determined by geometric reasoning, not syntax.
 
-**Syntax:**
+**v3.0 Syntax:**
 ```sys2dsl
-@result ASK subject RELATION object
+@result Subject IS_A Object
 ```
 
 **Parameters:**
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| subject | concept \| fact | The subject of the query |
-| RELATION | relation | The relationship to test |
-| object | concept \| fact | The object of the query |
+| Subject | concept \| fact \| any | The subject entity |
+| Object | concept \| fact | The type/category |
 
-**Returns:**
-```javascript
-{
-  truth: 'TRUE_CERTAIN' | 'PLAUSIBLE' | 'FALSE' | 'UNKNOWN' | 'CONFLICT',
-  confidence: number,      // 0.0 - 1.0
-  provenance: [            // explanation chain
-    { step: 1, source: "base_theory", fact: "..." },
-    ...
-  ]
-}
-```
-
-**Example:**
-```sys2dsl
-@q1 ASK Water IS_A liquid
-@q2 ASK Dog CAUSES Fear
-@q3 ASK Alice KNOWS Bob
-```
-
-**Notes:** Uses adversarial reasoning (optimist/skeptic radii), respects current theory stack, deterministic for a fixed state.
-
----
-
-### 1.2 ASK_MASKED (subcommand of QUERY with mask)
-**Purpose:** Query with specific dimensions masked (filtered). In the high-level API, supply `mask=$maskVar` to `QUERY`.
-
-**Syntax:**
-```sys2dsl
-@result ASK_MASKED $mask subject RELATION object
-```
-
-**Parameters:** same as ASK, plus `$mask` reference from MASK commands.
-
-**Example:**
-```sys2dsl
-@physMask MASK_PARTITIONS ontology
-@result ASK_MASKED $physMask Water IS_A liquid
-```
-
----
-
-### 1.3 FACTS_MATCHING (subcommand of SUMMARIZE_FACTS)
-**Purpose:** Find all facts matching a pattern. In the high-level API, use `SUMMARIZE_FACTS subject RELATION object`, which internally calls FACTS_MATCHING then SUMMARIZE.
-
-**Syntax:**
-```sys2dsl
-@results FACTS_MATCHING subject RELATION object
-```
-
-**Parameters:**
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| subject | concept \| fact \| `* | Subject pattern (? = wildcard) |
-| RELATION | relation \| `* | Relation pattern (? = wildcard) |
-| object | concept \| fact \| `* | Object pattern (? = wildcard) |
-
-**Returns:** Array of matching facts `{ subject, relation, object, factId }`
+**Returns:** Point with existence dimension value indicating truth
 
 **Examples:**
 ```sys2dsl
-@aboutWater FACTS_MATCHING Water
-@allIsA FACTS_WITH_RELATION IS_A
-@causesFear FACTS_WITH_OBJECT Fear
-@allFacts FACTS_MATCHING
+@_ Dog IS_A animal           # Assert/verify Dog is an animal
+@_ Cat IS_A animal           # Assert/verify Cat is an animal
+@r Grivei IS_A Dog           # Check if Grivei is a Dog
+@animals any IS_A animal     # Find all animals (query with 'any')
 ```
+
+**Notes:**
+- Uses geometric reasoning (diamond overlap, distance metrics)
+- Respects current theory stack
+- Automatically validates for contradictions
+- Using `any` as subject triggers enumeration
 
 ---
 
-## 2. Mask Commands
+### 1.2 FACTS (Fact Enumeration)
+**Purpose:** Find all facts matching a pattern.
 
-### 2.1 MASK_PARTITIONS
-**Purpose:** Create a mask from named partitions (e.g., ontology/axiology).
-
-**Syntax:**
+**v3.0 Syntax:**
 ```sys2dsl
-@mask MASK_PARTITIONS ontology axiology
+@results Subject FACTS Object
 ```
 
-**Returns:** Mask reference usable in ASK_MASKED.
+**Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| Subject | concept \| fact \| any | Subject pattern (any = wildcard) |
+| Object | any | Always use `any` for object |
+
+**Returns:** Composite point containing list of matching facts
+
+**v3.0 Examples:**
+```sys2dsl
+@aboutWater Dog FACTS any        # All facts about Dog
+@allFacts any FACTS any          # All facts (both any)
+@dogRels Dog any Cat             # All relations between Dog and Cat
+```
+
 
 ---
 
-### 2.2 MASK_DIMS
-**Purpose:** Create a mask from explicit dimension names.
+### 1.3 QUERY (High-Level Query Verb)
+**Purpose:** Multi-strategy query that tries direct lookup, then inference.
 
-**Syntax:**
+**v3.0 Syntax:**
 ```sys2dsl
-@tempMask MASK_DIMS temperature pressure
+@result Subject QUERY Object
 ```
+
+**Notes:** QUERY is a compound verb that internally uses IS_A, FACTS, geometric reasoning, and inference as needed.
 
 ---
 
-### 2.3 MASK_CONCEPT
-**Purpose:** Create a mask based on concept relevance (uses diamond relevance masks).
+## 2. Mask Verbs
 
-**Syntax:**
+### 2.1 MASK (Dimension Masking)
+**Purpose:** Create a mask for filtering dimensions in reasoning.
+
+**v3.0 Syntax:**
 ```sys2dsl
-@mask MASK_CONCEPT Physics
-@result ASK_MASKED $mask Electron IS_A particle
+@mask Subject MASK Object
+```
+
+**Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| Subject | concept \| partition_name | What to mask |
+| Object | any | Always use `any` |
+
+**v3.0 Examples:**
+```sys2dsl
+@ontMask ontology MASK any        # Mask to ontology partition
+@physMask physical MASK any       # Mask to physical dimensions
+```
+
+
+**Using Masks:**
+```sys2dsl
+@mask ontology MASK any
+# Masks are applied at the theory layer level
+# or through control points - see theory documentation
 ```
 
 ---
@@ -133,3 +119,4 @@ Reference for all query commands (`ASK`, `ASK_MASKED`, `FACTS_MATCHING`) and mas
 | Version | Changes |
 |---------|---------|
 | 1.0 | Extracted query + mask commands from DS(/theory/Sys2DSL_commands) |
+| **3.0** | **Converted to v3.0 triple syntax. Removed ASK/ASSERT commands. FACTS_MATCHING → FACTS verb. MASK_PARTITIONS/MASK_DIMS → MASK verb. All examples updated to strict triple format.** |

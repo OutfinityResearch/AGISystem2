@@ -1,0 +1,182 @@
+# =============================================================================
+# BASE REASONING - Reasoning and Inference Verbs
+# =============================================================================
+# These define logical reasoning operations in the unified triple syntax.
+# Version: 3.0 - Strict Triple Syntax Compliant
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SECTION 1: Basic Inference
+# -----------------------------------------------------------------------------
+
+# INFER - General inference from subject about object
+# Tries multiple inference strategies
+@INFER BEGIN
+  @direct subject IS_A object
+  @trans subject INFER_TRANSITIVE object
+  @default subject INFER_DEFAULT object
+  @best $direct OR $trans
+  @return $best OR $default
+END
+
+# INFER_TRANSITIVE - Chain through intermediates
+@INFER_TRANSITIVE BEGIN
+  @mid subject IS_A freevar1
+  @final freevar1 IS_A object
+  @return $mid AND $final
+END
+
+# INFER_DEFAULT - Apply default reasoning
+@INFER_DEFAULT BEGIN
+  @dim_name default_ CONCAT object
+  @default_val subject READ_DIM $dim_name
+  @return $default_val GREATER_THAN zero
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 2: Proof Construction
+# -----------------------------------------------------------------------------
+
+# PROVE - Construct formal proof chain
+@PROVE BEGIN
+  @chain subject DEDUCT object
+  @pair proof_complete DIM_PAIR positive
+  @return $chain SET_DIM $pair
+END
+
+# DISPROVE - Prove the negation
+@DISPROVE BEGIN
+  @neg_obj object NOT any
+  @return subject PROVE $neg_obj
+END
+
+# VALIDATE - Check if fact is valid/consistent
+@VALIDATE BEGIN
+  @contradicts subject CHECK_CONTRADICTION object
+  @valid $contradicts NOT any
+  @pair validated DIM_PAIR positive
+  @return $valid SET_DIM $pair
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 3: Abductive Reasoning
+# -----------------------------------------------------------------------------
+
+# ABDUCT - Generate explanations for observation
+# Given effect, find possible causes
+@ABDUCT BEGIN
+  @causes any CAUSES subject
+  @pair hypothesis DIM_PAIR positive
+  @return $causes SET_DIM $pair
+END
+
+# HYPOTHESIZE - Generate hypothesis from evidence
+@HYPOTHESIZE BEGIN
+  @patterns subject INDUCT object
+  @pair hypothesis DIM_PAIR positive
+  @return $patterns SET_DIM $pair
+END
+
+# BEST_EXPLANATION - Select most likely explanation
+@BEST_EXPLANATION BEGIN
+  @hyps subject ABDUCT object
+  @scored $hyps RANK_BY_CONFIDENCE any
+  @return $scored FIRST any
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 4: Analogical Reasoning
+# -----------------------------------------------------------------------------
+
+# ANALOGIZE - A:B :: C:?
+# Subject is source pair, object is target
+@ANALOGIZE BEGIN
+  @vector subject ANALOGIZE_PRIM object
+  @pair analogy DIM_PAIR positive
+  @return $vector SET_DIM $pair
+END
+
+# SIMILAR_TO - Check if two concepts are similar
+@SIMILAR_TO BEGIN
+  @s_point subject INSPECT any
+  @o_point object INSPECT any
+  @dist $s_point ATTRACT $o_point
+  @sim $dist READ_DIM distance
+  @return $sim LESS_THAN medium
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 5: Contradiction Detection
+# -----------------------------------------------------------------------------
+
+# CHECK_CONTRADICTION - Check if subject contradicts object
+@CHECK_CONTRADICTION BEGIN
+  @s_ex subject READ_DIM existence
+  @o_ex object READ_DIM existence
+  @product $s_ex MULTIPLY $o_ex
+  @return $product LESS_THAN zero
+END
+
+# WOULD_CONTRADICT - Check if adding subject would contradict
+@WOULD_CONTRADICT BEGIN
+  @existing object FACTS any
+  @test subject CHECK_CONTRADICTION $existing
+  @return $test NONEMPTY any
+END
+
+# RESOLVE_CONFLICT - Attempt to resolve contradiction
+@RESOLVE_CONFLICT BEGIN
+  @s_conf subject READ_DIM confidence
+  @o_conf object READ_DIM confidence
+  @s_wins $s_conf GREATER_THAN $o_conf
+  @pair resolved DIM_PAIR positive
+  @return $s_wins SET_DIM $pair
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 6: Counterfactual Reasoning
+# -----------------------------------------------------------------------------
+
+# CF - Counterfactual: what if subject were object?
+@CF BEGIN
+  @_ hypothetical PUSH any
+  @_ subject IS_A object
+  @result subject INFER any
+  @_ any POP any
+  @pair counterfactual DIM_PAIR positive
+  @return $result SET_DIM $pair
+END
+
+# WHATIF - Alternative form of counterfactual
+@WHATIF BEGIN
+  @return subject CF object
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 7: Rule Application
+# -----------------------------------------------------------------------------
+
+# APPLY_RULE - Apply a defined rule
+@APPLY_RULE BEGIN
+  @rule_def subject INSPECT any
+  @pair_subj subject DIM_PAIR object
+  @bound $rule_def SET_DIM $pair_subj
+  @return $bound DEDUCT any
+END
+
+# FORWARD_CHAIN - Apply all applicable rules forward
+@FORWARD_CHAIN BEGIN
+  @rules any WITH_RELATION RULE
+  @applied $rules APPLY_RULE subject
+  @pair inferred DIM_PAIR positive
+  @return $applied SET_DIM $pair
+END
+
+# BACKWARD_CHAIN - Work backward from goal
+@BACKWARD_CHAIN BEGIN
+  @goal object INSPECT any
+  @prereqs $goal READ_DIM prerequisites
+  @return $prereqs PROVE subject
+END
+
+# End of reasoning verbs

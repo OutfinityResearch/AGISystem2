@@ -1,12 +1,17 @@
 /**
- * DS(/theory/dsl_engine.js) - Sys2DSL Engine
+ * DS(/theory/dsl_engine.js) - Sys2DSL Engine v3.0
  *
- * Main entry point for executing Sys2DSL scripts.
+ * Main entry point for executing Sys2DSL v3.0 strict triple syntax.
  * Composes modular command handlers for different capabilities.
  *
+ * v3.0 Syntax: @variable Subject VERB Object
+ * - VERB is the command (extracted from position 2)
+ * - Subject and Object are passed to command handlers
+ * - @_ prefix = assertion/effectful, @varName = query/capture result
+ *
  * Architecture:
- * - DSLParser: Parsing and variable resolution
- * - DSLCommandsCore: Basic commands (ASK, ASSERT, etc.)
+ * - DSLParser: Parsing and variable resolution (v3.0 strict)
+ * - DSLCommandsCore: Basic commands (relation verbs become assertions/queries)
  * - DSLCommandsMemory: Memory management (FORGET, BOOST, etc.)
  * - DSLCommandsTheory: Theory layers (PUSH, POP, etc.)
  * - DSLCommandsReasoning: Logic (INFER, PROVE, etc.)
@@ -102,7 +107,7 @@ class TheoryDSLEngine {
   }
 
   /**
-   * Execute a Sys2DSL script.
+   * Execute a Sys2DSL v3.0 script.
    * @param {string[]} lines - Script lines
    * @param {Object} options - Execution options
    * @returns {Object} - Variable environment after execution
@@ -118,7 +123,8 @@ class TheoryDSLEngine {
 
     for (const stmt of order) {
       const facts = this._getFacts(this._contextFacts);
-      const value = this._executeCommand(stmt.command, stmt.args, env, facts);
+      // v3.0: Pass statement with subject, object, command, and varName
+      const value = this._executeCommand(stmt, env, facts);
       env[stmt.varName] = value;
     }
 
@@ -135,18 +141,29 @@ class TheoryDSLEngine {
     return base.concat(contextFacts);
   }
 
-  _executeCommand(command, argTokens, env, facts) {
-    // Route to appropriate command handler
+  /**
+   * Execute a v3.0 statement.
+   * v3.0 Syntax: @variable Subject VERB Object
+   *
+   * @param {Object} stmt - Parsed statement {varName, command, subject, object, args}
+   * @param {Object} env - Variable environment
+   * @param {Array} facts - Available facts
+   * @returns {*} - Command result
+   */
+  _executeCommand(stmt, env, facts) {
+    const { varName, command, subject, object, args } = stmt;
+
+    // Expand variable references in subject and object
+    const expandedSubject = this.parser.expandString(subject, env);
+    const expandedObject = this.parser.expandString(object, env);
+    const argTokens = [expandedSubject, expandedObject];
+
+    // Route to appropriate command handler based on VERB
     switch (command) {
-      // Core Commands
-      case 'ASK':
-        return this.coreCommands.cmdAsk(argTokens, env);
-      case 'ASSERT':
-        return this.coreCommands.cmdAssert(argTokens, env);
-      case 'CF':
-        return this.coreCommands.cmdCounterfactual(argTokens, env);
-      case 'ABDUCT':
-        return this.coreCommands.cmdAbduct(argTokens, env);
+      // =========================================================================
+      // Query/Fact Commands
+      // =========================================================================
+      case 'FACTS':
       case 'FACTS_MATCHING':
         return this.coreCommands.cmdFactsMatching(argTokens, env, facts);
       case 'FACTS_WITH_RELATION':
@@ -158,31 +175,45 @@ class TheoryDSLEngine {
       case 'ALL_REQUIREMENTS_SATISFIED':
         return this.coreCommands.cmdAllRequirementsSatisfied(argTokens, env);
 
+      // =========================================================================
       // Boolean Operations
+      // NOTE: Pass raw tokens for variable resolution - don't string-expand
+      // =========================================================================
       case 'BOOL_AND':
-        return this.coreCommands.cmdBoolAnd(argTokens, env);
+      case 'AND':
+        return this.coreCommands.cmdBoolAnd([subject, object], env);
       case 'BOOL_OR':
-        return this.coreCommands.cmdBoolOr(argTokens, env);
+      case 'OR':
+        return this.coreCommands.cmdBoolOr([subject, object], env);
       case 'BOOL_NOT':
-        return this.coreCommands.cmdBoolNot(argTokens, env);
+      case 'NOT':
+        return this.coreCommands.cmdBoolNot([subject, object], env);
       case 'NONEMPTY':
-        return this.coreCommands.cmdNonEmpty(argTokens, env);
+        return this.coreCommands.cmdNonEmpty([subject, object], env);
 
+      // =========================================================================
       // List Operations
+      // NOTE: Pass raw tokens for variable resolution - don't string-expand
+      // =========================================================================
       case 'MERGE_LISTS':
-        return this.coreCommands.cmdMergeLists(argTokens, env);
+      case 'MERGE':
+        return this.coreCommands.cmdMergeLists([subject, object], env);
       case 'PICK_FIRST':
-        return this.coreCommands.cmdPickFirst(argTokens, env);
+      case 'FIRST':
+        return this.coreCommands.cmdPickFirst([subject, object], env);
       case 'PICK_LAST':
-        return this.coreCommands.cmdPickLast(argTokens, env);
+      case 'LAST':
+        return this.coreCommands.cmdPickLast([subject, object], env);
       case 'COUNT':
-        return this.coreCommands.cmdCount(argTokens, env);
+        return this.coreCommands.cmdCount([subject, object], env);
       case 'FILTER':
-        return this.coreCommands.cmdFilter(argTokens, env);
+        return this.coreCommands.cmdFilter([subject, object], env);
       case 'POLARITY_DECIDE':
-        return this.coreCommands.cmdPolarityDecide(argTokens, env);
+        return this.coreCommands.cmdPolarityDecide([subject, object], env);
 
+      // =========================================================================
       // Concept/Relation Binding
+      // =========================================================================
       case 'BIND_CONCEPT':
         return this.coreCommands.cmdBindConcept(argTokens, env);
       case 'BIND_POINT':
@@ -194,11 +225,29 @@ class TheoryDSLEngine {
       case 'DEFINE_RELATION':
         return this.coreCommands.cmdDefineRelation(argTokens, env);
       case 'INSPECT':
-        return this.coreCommands.cmdInspect(argTokens, env);
+        // Pass raw tokens - cmdInspect will resolve variables itself
+        return this.coreCommands.cmdInspect([subject, object], env);
       case 'LITERAL':
         return this.coreCommands.cmdLiteral(argTokens, env);
 
+      // =========================================================================
+      // Dimension Operations (v3.0)
+      // =========================================================================
+      case 'DIM_PAIR':
+        // Create dimension-value pair: @bp boiling_point DIM_PAIR 100
+        return this.coreCommands.cmdDimPair(expandedSubject, expandedObject, env);
+      case 'SET_DIM':
+        // Set dimension on concept: @var Water SET_DIM $bp
+        // NOTE: Pass raw object for variable resolution (don't string-expand objects)
+        return this.coreCommands.cmdSetDim(expandedSubject, object, env);
+      case 'HAS_DIM':
+        // Query dimension: @q Water HAS_DIM $bp
+        // NOTE: Pass raw object for variable resolution (don't string-expand objects)
+        return this.coreCommands.cmdHasDim(expandedSubject, object, env);
+
+      // =========================================================================
       // Masking
+      // =========================================================================
       case 'MASK_PARTITIONS':
         return this.coreCommands.cmdMaskPartitions(argTokens);
       case 'MASK_DIMS':
@@ -208,9 +257,12 @@ class TheoryDSLEngine {
       case 'MASK':
         return this.highLevelCommands.cmdMask(argTokens);
 
-      // Memory Management
+      // =========================================================================
+      // Memory Management (v3.0 verb names)
+      // =========================================================================
       case 'RETRACT':
         return this.memoryCommands.cmdRetract(argTokens, env);
+      case 'USAGE':
       case 'GET_USAGE':
         return this.memoryCommands.cmdGetUsage(argTokens, env);
       case 'FORGET':
@@ -224,29 +276,47 @@ class TheoryDSLEngine {
       case 'MEMORY':
         return this.highLevelCommands.cmdMemory(argTokens, env);
 
-      // Theory Management
+      // =========================================================================
+      // Theory Management (v3.0 verb names)
+      // =========================================================================
+      case 'THEORIES':
       case 'LIST_THEORIES':
         return this.theoryCommands.cmdListTheories();
+      case 'LOAD':
       case 'LOAD_THEORY':
-        return this.theoryCommands.cmdLoadTheory(argTokens, env);
+        // v3.0: @_ theoryName LOAD any
+        return this.theoryCommands.cmdLoadTheory([expandedSubject], env);
+      case 'SAVE':
       case 'SAVE_THEORY':
-        return this.theoryCommands.cmdSaveTheory(argTokens, env);
+        // v3.0: @_ theoryName SAVE any
+        return this.theoryCommands.cmdSaveTheory([expandedSubject], env);
+      case 'MERGE':
       case 'MERGE_THEORY':
         return this.theoryCommands.cmdMergeTheory(argTokens, env);
+      case 'DELETE':
       case 'DELETE_THEORY':
-        return this.theoryCommands.cmdDeleteTheory(argTokens, env);
+        return this.theoryCommands.cmdDeleteTheory([expandedSubject], env);
+      case 'INFO':
       case 'THEORY_INFO':
-        return this.theoryCommands.cmdTheoryInfo(argTokens, env);
+        return this.theoryCommands.cmdTheoryInfo([expandedSubject], env);
+      case 'PUSH':
       case 'THEORY_PUSH':
-        return this.theoryCommands.cmdTheoryPush(argTokens, env);
+        // v3.0: @_ layerName PUSH any
+        return this.theoryCommands.cmdTheoryPush([expandedSubject], env);
+      case 'POP':
       case 'THEORY_POP':
         return this.theoryCommands.cmdTheoryPop();
+      case 'COMMIT':
+        return this.theoryCommands.cmdCommit();
+      case 'RESET':
       case 'RESET_SESSION':
         return this.theoryCommands.cmdResetSession();
       case 'MANAGE_THEORY':
         return this.highLevelCommands.cmdManageTheory(argTokens, env);
 
+      // =========================================================================
       // Reasoning Commands
+      // =========================================================================
       case 'VALIDATE':
         return this.reasoningCommands.cmdValidate(argTokens, env, facts);
       case 'PROVE':
@@ -255,18 +325,29 @@ class TheoryDSLEngine {
         return this.reasoningCommands.cmdHypothesize(argTokens, env, facts);
       case 'ANALOGICAL':
         return this.reasoningCommands.cmdAnalogical(argTokens, env);
+      case 'ABDUCT':
+        // v3.0: @hyp observation ABDUCT any
+        return this.coreCommands.cmdAbduct([expandedSubject], env);
+      case 'CF':
+      case 'COUNTERFACTUAL':
+        return this.coreCommands.cmdCounterfactual(argTokens, env);
 
+      // =========================================================================
       // Contradiction Detection
+      // =========================================================================
       case 'CHECK_CONTRADICTION':
         return this.reasoningCommands.cmdCheckContradiction(argTokens, env, facts);
       case 'CHECK_WOULD_CONTRADICT':
+      case 'WOULD_CONTRADICT':
         return this.reasoningCommands.cmdCheckWouldContradict(argTokens, env, facts);
       case 'REGISTER_FUNCTIONAL':
         return this.reasoningCommands.cmdRegisterFunctional(argTokens, env);
       case 'REGISTER_CARDINALITY':
         return this.reasoningCommands.cmdRegisterCardinality(argTokens, env);
 
+      // =========================================================================
       // Inference Commands
+      // =========================================================================
       case 'INFER':
         return this.inferenceCommands.cmdInfer(argTokens, env, facts);
       case 'FORWARD_CHAIN':
@@ -280,7 +361,9 @@ class TheoryDSLEngine {
       case 'CLEAR_RULES':
         return this.inferenceCommands.cmdClearRules();
 
+      // =========================================================================
       // Output/Export Commands
+      // =========================================================================
       case 'TO_NATURAL':
         return this.outputCommands.cmdToNatural(argTokens, env);
       case 'TO_JSON':
@@ -298,7 +381,9 @@ class TheoryDSLEngine {
       case 'EXPLAIN_QUERY':
         return this.highLevelCommands.cmdExplain(argTokens, env, facts);
 
+      // =========================================================================
       // Ontology Introspection Commands
+      // =========================================================================
       case 'EXPLAIN_CONCEPT':
         return this.ontologyCommands.cmdExplainConcept(argTokens, env);
       case 'MISSING':
@@ -306,7 +391,9 @@ class TheoryDSLEngine {
       case 'WHAT_IS':
         return this.ontologyCommands.cmdWhatIs(argTokens, env);
 
+      // =========================================================================
       // High-level consolidated commands
+      // =========================================================================
       case 'QUERY':
         return this.highLevelCommands.cmdQuery(argTokens, env, facts);
       case 'WHATIF':
@@ -314,9 +401,47 @@ class TheoryDSLEngine {
       case 'SUGGEST':
         return this.highLevelCommands.cmdSuggest(argTokens, env);
 
+      // =========================================================================
+      // Default: Treat as relation verb
+      // =========================================================================
       default:
-        throw new Error(`Unknown DSL command '${command}'`);
+        // In v3.0, ALL statements are relations between points
+        // Unrecognized VERBs are treated as semantic relations
+        // The relation may have side effects (creating the fact if needed)
+        // and returns a result point with truth value
+        return this._handleRelation(expandedSubject, command, expandedObject);
     }
+  }
+
+  /**
+   * Handle semantic relation: @varName Subject VERB Object
+   * All statements are relations - they query and potentially create facts
+   * Returns a point with truth value
+   */
+  _handleRelation(subject, relation, object) {
+    this.parser.validateNoPropertyValue(subject, 'subject');
+    this.parser.validateNoPropertyValue(object, 'object');
+
+    // First, check if the relation exists (query)
+    const question = `${subject} ${relation} ${object}`;
+    const result = this.api.ask(question);
+
+    // If relation doesn't exist, create it (side effect)
+    if (result.truth === 'UNKNOWN' || result.truth === 'FALSE') {
+      const sentence = `${subject} ${relation} ${object}`;
+      this.api.ingest(sentence);
+      // Return success with the newly created relation
+      return {
+        truth: 'TRUE_CERTAIN',
+        created: true,
+        subject,
+        relation,
+        object
+      };
+    }
+
+    // Return the query result
+    return result;
   }
 }
 

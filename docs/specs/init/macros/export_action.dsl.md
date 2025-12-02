@@ -46,20 +46,20 @@ Reusable Sys2DSL macro that determines if an export action is permitted, prohibi
 
 ```sys2dsl
 # Setup regulatory facts
-@_ ASSERT ExportData PROHIBITED_BY GDPR
-@_ ASSERT ExportData PERMITTED_BY HIPAA
+@_ ExportData PROHIBITED_BY GDPR
+@_ ExportData PERMITTED_BY HIPAA
 
 # Check with only GDPR active
-@actionId LITERAL "ExportData"
-@regs LITERAL ["GDPR"]
+@actionId ExportData LITERAL any
+@regs GDPR LITERAL any
 # $result will be FALSE (prohibited by GDPR, not permitted)
 
 # Check with only HIPAA active
-@regs LITERAL ["HIPAA"]
+@regs HIPAA LITERAL any
 # $result will be TRUE_CERTAIN (permitted by HIPAA, not prohibited)
 
 # Check with both active
-@regs LITERAL ["GDPR", "HIPAA"]
+@regs GDPR,HIPAA LITERAL any
 # $result will be CONFLICT (both prohibit and permit)
 ```
 

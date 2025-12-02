@@ -10,11 +10,11 @@ Fixture for health procedure compliance testing - establishes requirements and r
 
 ## Content
 
-```
-ProcedureX REQUIRES Consent
-ProcedureX REQUIRES AuditTrail
-ExportData PROHIBITED_BY GDPR
-ExportData PERMITTED_BY HIPAA
+```sys2dsl
+@_ ProcedureX REQUIRES Consent
+@_ ProcedureX REQUIRES AuditTrail
+@_ ExportData PROHIBITED_BY GDPR
+@_ ExportData PERMITTED_BY HIPAA
 ```
 
 ## Facts
@@ -31,13 +31,15 @@ ExportData PERMITTED_BY HIPAA
 ### Procedure Compliance
 ```sys2dsl
 # All requirements satisfied
-@_ ASSERT Consent GIVEN yes
-@_ ASSERT AuditTrail PRESENT yes
+@given_val GIVEN DIM_PAIR yes
+@_ Consent SET_DIM @given_val
+@present_val PRESENT DIM_PAIR yes
+@_ AuditTrail SET_DIM @present_val
 @result ALL_REQUIREMENTS_SATISFIED ...
 # Returns: TRUE_CERTAIN
 
 # Missing requirement
-@_ RETRACT Consent GIVEN yes
+@_ RETRACT Consent SET_DIM @given_val
 # Returns: FALSE (Consent missing)
 ```
 

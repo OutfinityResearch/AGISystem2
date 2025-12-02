@@ -12,8 +12,8 @@ Minimal legal theory establishing basic deontic facts for permission/prohibition
 
 ```sys2dsl
 # Minimal law theory (Sys2DSL)
-@f1 ASSERT Killing PROHIBITS permitted
-@f2 ASSERT Helping PERMITS permitted
+@f1 Killing PROHIBITS permitted
+@f2 Helping PERMITS permitted
 ```
 
 ## Facts Defined
@@ -26,9 +26,9 @@ Minimal legal theory establishing basic deontic facts for permission/prohibition
 ## Semantic Notes
 
 The `permitted` object is a meta-level marker indicating the deontic status. This allows queries like:
-- `ASK Killing PROHIBITS permitted` → TRUE_CERTAIN
-- `ASK Helping PERMITS permitted` → TRUE_CERTAIN
-- `ASK Helping PROHIBITS permitted` → FALSE
+- `@q1 Killing PROHIBITS permitted` → TRUE_CERTAIN
+- `@q2 Helping PERMITS permitted` → TRUE_CERTAIN
+- `@q3 Helping PROHIBITS permitted` → FALSE
 
 ## Usage
 

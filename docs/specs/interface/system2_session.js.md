@@ -9,11 +9,13 @@ Class `System2Session`
 
 ## Sys2Session Command Model
 - Callers interact with a `System2Session` primarily by sending it one or more **Sys2DSL lines** of the form:
-  - `@varName action param1 param2 ...`
+  - `@varName Subject VERB Object`
 - Semantics:
   - `@varName` declares the name under which the result of this command is stored in the session environment.
-  - `action` is a verb drawn from the Sys2DSL action set (for example `ASSERT`, `ASK`, `ABDUCT`, `CF`, `FACTS_MATCHING`, `MASK`, etc.).
-  - `param*` are space-separated tokens interpreted according to the Sys2DSL rules:
+  - `Subject` is the first element in the triple (concept or entity).
+  - `VERB` is the relation/action drawn from the Sys2DSL verb set (for example `IS_A`, `HAS`, `CAUSES`, `ABDUCT`, etc.).
+  - `Object` is the target concept or entity.
+  - Tokens are interpreted according to Sys2DSL v3 rules:
     - Tokens starting with a lowercase letter denote **concept names** (types, categories).
     - Tokens starting with an uppercase letter denote **individuals or grounded entities** (proper names, concrete instances).
     - Tokens starting with `$` denote **variables** that refer to values stored earlier in the session environment.
@@ -53,6 +55,7 @@ class System2Session {
 
   run(textOrLines) {
     // const lines = normaliseToLines(textOrLines);
+    // Each line is a v3 triple: @var Subject VERB Object
     // this.env = this.dsl.runScript(lines, { initialEnv: this.env });
     // return this.env;
   }

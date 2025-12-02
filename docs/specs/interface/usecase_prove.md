@@ -2,7 +2,7 @@
 
 ID: DS(/interface/usecase_prove)
 
-Status: DRAFT v1.0
+Status: v3.0 - Unified Triple Syntax
 
 ## 1. Overview
 
@@ -32,7 +32,7 @@ Given a statement and a knowledge base:
 
 ```sys2dsl
 # Try to prove a statement
-@result PROVE Dog IS_A mammal
+@result Dog IS_A mammal
 
 # Returns:
 # {
@@ -51,7 +51,7 @@ Given a statement and a knowledge base:
 ### 2.2 Disproof
 
 ```sys2dsl
-@result PROVE Fish IS_A mammal
+@result Fish IS_A mammal
 
 # Returns:
 # {
@@ -72,7 +72,7 @@ Given a statement and a knowledge base:
 ### 2.3 Unknown Result
 
 ```sys2dsl
-@result PROVE Alien IS_A intelligent
+@result Alien IS_A intelligent
 
 # Returns:
 # {
@@ -95,7 +95,7 @@ Given a statement and a knowledge base:
 Start from known facts, derive new facts:
 
 ```sys2dsl
-@result PROVE A CAUSES D strategy=forward
+@result A CAUSES D
 
 # Engine:
 # 1. A CAUSES B (known)
@@ -109,7 +109,7 @@ Start from known facts, derive new facts:
 Start from goal, find supporting facts:
 
 ```sys2dsl
-@result PROVE A CAUSES D strategy=backward
+@result A CAUSES D
 
 # Engine:
 # 1. Goal: A CAUSES D
@@ -122,7 +122,7 @@ Start from goal, find supporting facts:
 ### 3.3 Mixed Strategy (Default)
 
 ```sys2dsl
-@result PROVE A CAUSES D strategy=mixed
+@result A CAUSES D
 
 # Uses both forward and backward, meeting in middle
 # More efficient for complex proofs
@@ -135,8 +135,8 @@ Start from goal, find supporting facts:
 ### 4.1 Depth Limited
 
 ```sys2dsl
-# Limit inference chain length
-@result PROVE A CAUSES Z max_depth=3
+# Limit inference chain length (use config or parameters)
+@result A CAUSES Z
 
 # Will not find proof requiring more than 3 steps
 ```
@@ -144,15 +144,17 @@ Start from goal, find supporting facts:
 ### 4.2 Theory Scoped
 
 ```sys2dsl
-# Only use facts from specific theories
-@result PROVE claim theories=[physics_basic, chemistry_basic]
+# Only use facts from specific theories (load relevant theories first)
+@loaded1 physics_basic PUSH any
+@loaded2 chemistry_basic PUSH any
+@result claim IS proven
 ```
 
 ### 4.3 Time Limited
 
 ```sys2dsl
-# Timeout for complex proofs
-@result PROVE complex_statement timeout=5000
+# Timeout for complex proofs (configure via system settings)
+@result complex_statement IS proven
 
 # Returns UNKNOWN if timeout exceeded
 ```
@@ -160,10 +162,12 @@ Start from goal, find supporting facts:
 ### 4.4 With Assumptions
 
 ```sys2dsl
-# Prove assuming certain facts
-@result PROVE conclusion assuming=[A IS_A B, C CAUSES D]
-
-# Temporary facts for this proof only
+# Prove assuming certain facts - create temporary theory branch
+@loaded temp_theory PUSH any
+@_ A IS_A B
+@_ C CAUSES D
+@result conclusion IS proven
+@popped any POP any
 ```
 
 ---
@@ -174,7 +178,7 @@ Start from goal, find supporting facts:
 
 ```sys2dsl
 # Actively search for counterexample
-@result FIND_COUNTEREXAMPLE all_birds CAN fly
+@result all_birds CAN fly
 
 # Returns:
 # {
@@ -194,7 +198,7 @@ Start from goal, find supporting facts:
 
 ```sys2dsl
 # Find ALL counterexamples
-@result FIND_ALL_COUNTEREXAMPLES all_birds CAN fly
+@result all_birds CAN fly
 
 # Returns:
 # {
@@ -214,7 +218,7 @@ Start from goal, find supporting facts:
 
 ```sys2dsl
 # Prove: All mammals breathe air
-@result PROVE_UNIVERSAL mammal REQUIRES oxygen
+@result mammal REQUIRES oxygen
 
 # Engine checks:
 # 1. Definition: mammal REQUIRES oxygen (direct fact)
@@ -226,7 +230,7 @@ Start from goal, find supporting facts:
 
 ```sys2dsl
 # Prove: Some bird can't fly
-@result PROVE_EXISTENTIAL bird CANNOT fly
+@result bird CANNOT fly
 
 # Engine:
 # 1. Find one bird that CANNOT fly
@@ -237,7 +241,7 @@ Start from goal, find supporting facts:
 
 ```sys2dsl
 # Prove: No fish is a mammal
-@result PROVE_NONE fish IS_A mammal
+@result fish IS_A mammal
 
 # Engine:
 # 1. fish DISJOINT_WITH mammal ✓
@@ -251,7 +255,7 @@ Start from goal, find supporting facts:
 ### 7.1 Natural Language Proof
 
 ```sys2dsl
-@proof PROVE Dog IS_A mammal
+@proof Dog IS_A mammal
 @explanation TO_NATURAL $proof
 
 # Returns:
@@ -266,7 +270,7 @@ Start from goal, find supporting facts:
 ### 7.2 Formal Proof Tree
 
 ```sys2dsl
-@proof PROVE Dog IS_A mammal
+@proof Dog IS_A mammal
 @tree PROOF_TREE $proof
 
 # Returns structured tree:
@@ -291,7 +295,7 @@ Start from goal, find supporting facts:
 ### 7.3 Step-by-Step
 
 ```sys2dsl
-@proof PROVE Dog IS_A mammal verbose=true
+@proof Dog IS_A mammal verbose=true
 
 # Returns each step as it's discovered
 ```
@@ -304,11 +308,11 @@ Start from goal, find supporting facts:
 
 ```sys2dsl
 # Load relevant theories
-@bio LOAD_THEORY biology
-@zoo LOAD_THEORY zoology
+@loaded1 biology PUSH any
+@loaded2 zoology PUSH any
 
 # Proof uses facts from both
-@result PROVE Whale IS_A mammal
+@result Whale IS_A mammal
 ```
 
 ### 8.2 Counterfactual Proof
@@ -324,7 +328,7 @@ Start from goal, find supporting facts:
 
 ```sys2dsl
 # If X then prove Y
-@result PROVE_IF X IS_A A THEN X IS_A B
+@result_IF X IS_A A THEN X IS_A B
 
 # Returns:
 # {
@@ -343,7 +347,7 @@ Start from goal, find supporting facts:
 ### 9.1 Partial Proof
 
 ```sys2dsl
-@result PROVE complex_claim
+@result complex_claim
 
 # If can't complete:
 # {
@@ -361,7 +365,7 @@ Start from goal, find supporting facts:
 ### 9.2 What's Missing
 
 ```sys2dsl
-@result PROVE claim
+@result claim
 @missing WHAT_MISSING $result
 
 # Returns facts that would complete the proof
@@ -371,7 +375,7 @@ Start from goal, find supporting facts:
 
 ```sys2dsl
 # Even if not certain, show plausible path
-@result PROVE_PLAUSIBLE claim min_confidence=0.7
+@result_PLAUSIBLE claim min_confidence=0.7
 
 # Returns proof with confidence scores
 ```
@@ -384,18 +388,18 @@ Start from goal, find supporting facts:
 
 ```sys2dsl
 # Load math theory
-@math LOAD_THEORY arithmetic
+@loaded arithmetic PUSH any
 
 # Define some facts
-@f1 ASSERT even_number HAS_PROPERTY divisible_by_2
-@f2 ASSERT 4 IS_A even_number
-@f3 ASSERT divisible_by_2 IMPLIES has_factor_2
+@_ even_number HAS_PROPERTY divisible_by_2
+@_ 4 IS_A even_number
+@_ divisible_by_2 IMPLIES has_factor_2
 ```
 
 ### 10.2 Simple Proof
 
 ```sys2dsl
-@result PROVE 4 HAS_PROPERTY divisible_by_2
+@result 4 HAS_PROPERTY divisible_by_2
 
 # Proof:
 # 1. 4 IS_A even_number (axiom)
@@ -406,7 +410,7 @@ Start from goal, find supporting facts:
 ### 10.3 Chain Proof
 
 ```sys2dsl
-@result PROVE 4 HAS has_factor_2
+@result 4 HAS has_factor_2
 
 # Proof:
 # 1. 4 IS_A even_number
@@ -423,21 +427,21 @@ Start from goal, find supporting facts:
 ### 11.1 Setup
 
 ```sys2dsl
-@law LOAD_THEORY contract_law
+@loaded contract_law PUSH any
 
 # Legal facts
-@f1 ASSERT Contract_A IS_A valid_contract
-@f2 ASSERT Party_X SIGNED Contract_A
-@f3 ASSERT Party_X RECEIVED consideration
-@f4 ASSERT valid_contract REQUIRES mutual_assent
-@f5 ASSERT valid_contract REQUIRES consideration
-@f6 ASSERT signing IMPLIES mutual_assent
+@_ Contract_A IS_A valid_contract
+@_ Party_X SIGNED Contract_A
+@_ Party_X RECEIVED consideration
+@_ valid_contract REQUIRES mutual_assent
+@_ valid_contract REQUIRES consideration
+@_ signing IMPLIES mutual_assent
 ```
 
 ### 11.2 Prove Contract Validity
 
 ```sys2dsl
-@result PROVE Contract_A IS valid
+@result Contract_A IS valid
 
 # Proof:
 # 1. Contract_A IS_A valid_contract (given)
@@ -451,7 +455,7 @@ Start from goal, find supporting facts:
 ### 11.3 Find Breach
 
 ```sys2dsl
-@result PROVE Contract_A IS breached
+@result Contract_A IS breached
 
 # If no breach facts:
 # {
@@ -473,7 +477,7 @@ Start from goal, find supporting facts:
 ### 12.1 Shortest Proof
 
 ```sys2dsl
-@result PROVE claim prefer=shortest
+@result claim prefer=shortest
 
 # Returns proof with fewest steps
 ```
@@ -481,7 +485,7 @@ Start from goal, find supporting facts:
 ### 12.2 Most Certain Proof
 
 ```sys2dsl
-@result PROVE claim prefer=certain
+@result claim prefer=certain
 
 # Returns proof using most certain facts
 ```
@@ -489,7 +493,7 @@ Start from goal, find supporting facts:
 ### 12.3 Most Explainable Proof
 
 ```sys2dsl
-@result PROVE claim prefer=explainable
+@result claim prefer=explainable
 
 # Returns proof easiest to understand
 ```
@@ -502,7 +506,7 @@ Start from goal, find supporting facts:
 
 ```sys2dsl
 # Prove something
-@proof PROVE claim
+@proof claim
 
 # Check if proof is consistent with theory
 @valid VALIDATE_PROOF $proof
@@ -512,10 +516,10 @@ Start from goal, find supporting facts:
 
 ```sys2dsl
 # Generate hypothesis
-@hyp HYPOTHESIZE effect CAUSED_BY ?
+@hyp effect CAUSED_BY ?
 
 # Try to prove top hypothesis
-@proofAttempt PROVE $hyp.hypotheses[0].hypothesis
+@proofAttempt $hyp.hypotheses[0].hypothesis
 ```
 
 ### 13.3 Prove for Validation
@@ -525,7 +529,7 @@ Start from goal, find supporting facts:
 @proposed NewFact IS_A type
 
 # Prove it's consistent
-@consistent PROVE_CONSISTENT $proposed
+@consistent $proposed
 ```
 
 ---
@@ -553,20 +557,20 @@ Start from goal, find supporting facts:
 
 ```sys2dsl
 # Try direct proof first
-@result PROVE simple_claim
+@result simple_claim
 
 # If fails, try with more context
-@result PROVE simple_claim max_depth=5
+@result simple_claim max_depth=5
 ```
 
 ### 15.2 Check Both Directions
 
 ```sys2dsl
 # Try to prove
-@prove PROVE claim
+@prove claim
 
 # Also try to disprove
-@disprove FIND_COUNTEREXAMPLE claim
+@disprove claim
 
 # Be suspicious if both fail
 ```
@@ -574,7 +578,7 @@ Start from goal, find supporting facts:
 ### 15.3 Understand Failures
 
 ```sys2dsl
-@result PROVE claim
+@result claim
 
 # If unknown, check why
 @why WHY_UNKNOWN $result

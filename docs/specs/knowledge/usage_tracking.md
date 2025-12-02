@@ -53,8 +53,8 @@ Each concept tracks:
 {
   // Core counters
   usageCount: number,        // Total usage (sum of below)
-  assertCount: number,       // Times used in ASSERT (as subject or object)
-  queryCount: number,        // Times used in ASK, FACTS_MATCHING
+  assertCount: number,       // Times used in triple statements (as subject or object)
+  queryCount: number,        // Times used in queries, FACTS_MATCHING
   inferenceCount: number,    // Times involved in reasoning chains
 
   // Temporal data
@@ -103,9 +103,9 @@ Each fact tracks:
 
 | Operation | Subject | Object | Relation | Fact |
 |-----------|---------|--------|----------|------|
-| ASSERT | +1 assertCount | +1 assertCount | +1 usageCount | created |
+| Triple statement (Subject VERB Object) | +1 assertCount | +1 assertCount | +1 usageCount | created |
 | RETRACT | - | - | - | deleted |
-| ASK | +1 queryCount | +1 queryCount | +1 usageCount | - |
+| Query triple (Subject VERB Object) | +1 queryCount | +1 queryCount | +1 usageCount | - |
 | FACTS_MATCHING | +1 per match | +1 per match | +1 per match | +1 per match |
 | BIND_CONCEPT | +1 queryCount | - | - | - |
 | HYPOTHESIZE | +1 inferenceCount | +1 inferenceCount | +1 usageCount | - |
@@ -115,17 +115,17 @@ Each fact tracks:
 ### 3.2 Timestamp Updates
 
 `lastUsedAt` is updated on ANY access:
-- Query (ASK, FACTS_MATCHING)
-- Assertion (ASSERT)
+- Query (triple statements returning results, FACTS_MATCHING)
+- Statement (triple statements creating facts)
 - Binding (BIND_CONCEPT, BIND_RELATION)
 - Reasoning (PROVE, HYPOTHESIZE, ABDUCT)
 
 ### 3.3 Inheritance
 
-When a fact `A IS_A B` is queried:
+When a triple statement `@result A IS_A B` is evaluated:
 - Both A and B get queryCount incremented
 - The relation IS_A gets usageCount incremented
-- If transitive chain is followed (A IS_A B IS_A C), all get incremented
+- If transitive chain is followed (A IS_A B IS_A C), all concepts and relations in the chain get incremented
 
 ---
 
@@ -290,7 +290,7 @@ Usage changes are logged:
   type: 'USAGE_UPDATE',
   timestamp: number,
   conceptId: string,
-  operation: 'ASSERT' | 'QUERY' | 'INFERENCE',
+  operation: 'TRIPLE_STATEMENT' | 'QUERY' | 'INFERENCE',
   previousCount: number,
   newCount: number
 }
@@ -407,7 +407,7 @@ Reset usage counters (admin operation):
 ### 9.2 Determinism
 
 Usage tracking affects ordering but NOT truth values:
-- ASK returns same truth regardless of usage
+- Query triples return same truth regardless of usage
 - Only ranking/ordering changes
 - For strict determinism in tests, disable usage tracking
 
@@ -426,16 +426,16 @@ Usage tracking affects ordering but NOT truth values:
 ```sys2dsl
 # Initial state: water has usageCount = 0
 
-@f1 ASSERT Water IS_A liquid
+@f1 Water IS_A liquid
 # water.assertCount = 1, water.usageCount = 1
 
-@q1 ASK Water IS_A substance
+@q1 Water IS_A substance
 # water.queryCount = 1, water.usageCount = 2
 
-@q2 ASK Water CAUSES hydration
+@q2 Water CAUSES hydration
 # water.queryCount = 2, water.usageCount = 3
 
-@stats GET_USAGE water
+@stats water GET_USAGE any
 # Returns: usageCount = 3, assertCount = 1, queryCount = 2
 ```
 
@@ -446,7 +446,7 @@ Usage tracking affects ordering but NOT truth values:
 # "water" has usageCount = 1000
 # "h2o" has usageCount = 5
 
-@results INSTANCES_OF liquid
+@results liquid INSTANCES_OF any
 
 # Results ordered:
 # 1. Water (high usage, appears first)
@@ -458,7 +458,7 @@ Usage tracking affects ordering but NOT truth values:
 
 ```sys2dsl
 # "cause_of_fire" used in proving something
-@proof PROVE fire REQUIRES oxygen
+@proof fire PROVE oxygen
 
 # During proof, "oxygen" used in inference chain
 # oxygen.inferenceCount += 1

@@ -3,7 +3,7 @@
 # =============================================================================
 # This theory is automatically loaded at system initialization.
 # Contains universally accepted facts about categories, properties, and relations.
-# Version: 1.0
+# Version: 3.0 - Unified Triple Syntax
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -11,167 +11,167 @@
 # -----------------------------------------------------------------------------
 
 # Top-level categories
-@f001 ASSERT entity IS_A thing
-@f002 ASSERT physical_entity IS_A entity
-@f003 ASSERT abstract_entity IS_A entity
-@f004 ASSERT physical_entity DISJOINT_WITH abstract_entity
+@_ entity IS_A thing
+@_ physical_entity IS_A entity
+@_ abstract_entity IS_A entity
+@_ physical_entity DISJOINT_WITH abstract_entity
 
 # Physical entities
-@f005 ASSERT object IS_A physical_entity
-@f006 ASSERT substance IS_A physical_entity
-@f007 ASSERT event IS_A physical_entity
-@f008 ASSERT process IS_A physical_entity
+@_ object IS_A physical_entity
+@_ substance IS_A physical_entity
+@_ event IS_A physical_entity
+@_ process IS_A physical_entity
 
 # Abstract entities
-@f009 ASSERT concept IS_A abstract_entity
-@f010 ASSERT number IS_A abstract_entity
-@f011 ASSERT property IS_A abstract_entity
-@f012 ASSERT relation IS_A abstract_entity
+@_ concept IS_A abstract_entity
+@_ number IS_A abstract_entity
+@_ property IS_A abstract_entity
+@_ relation IS_A abstract_entity
 
 # -----------------------------------------------------------------------------
 # SECTION 2: Living Things Hierarchy
 # -----------------------------------------------------------------------------
 
-@f020 ASSERT living_thing IS_A physical_entity
-@f021 ASSERT organism IS_A living_thing
-@f022 ASSERT animal IS_A organism
-@f023 ASSERT plant IS_A organism
-@f024 ASSERT animal DISJOINT_WITH plant
+@_ living_thing IS_A physical_entity
+@_ organism IS_A living_thing
+@_ animal IS_A organism
+@_ plant IS_A organism
+@_ animal DISJOINT_WITH plant
 
 # Animal taxonomy
-@f025 ASSERT vertebrate IS_A animal
-@f026 ASSERT invertebrate IS_A animal
-@f027 ASSERT vertebrate DISJOINT_WITH invertebrate
+@_ vertebrate IS_A animal
+@_ invertebrate IS_A animal
+@_ vertebrate DISJOINT_WITH invertebrate
 
-@f028 ASSERT mammal IS_A vertebrate
-@f029 ASSERT bird IS_A vertebrate
-@f030 ASSERT reptile IS_A vertebrate
-@f031 ASSERT fish IS_A vertebrate
-@f032 ASSERT amphibian IS_A vertebrate
+@_ mammal IS_A vertebrate
+@_ bird IS_A vertebrate
+@_ reptile IS_A vertebrate
+@_ fish IS_A vertebrate
+@_ amphibian IS_A vertebrate
 
-@f033 ASSERT mammal DISJOINT_WITH bird
-@f034 ASSERT mammal DISJOINT_WITH reptile
-@f035 ASSERT mammal DISJOINT_WITH fish
-@f036 ASSERT bird DISJOINT_WITH reptile
-@f037 ASSERT bird DISJOINT_WITH fish
+@_ mammal DISJOINT_WITH bird
+@_ mammal DISJOINT_WITH reptile
+@_ mammal DISJOINT_WITH fish
+@_ bird DISJOINT_WITH reptile
+@_ bird DISJOINT_WITH fish
 
 # Common animals
-@f040 ASSERT dog IS_A mammal
-@f041 ASSERT cat IS_A mammal
-@f042 ASSERT human IS_A mammal
-@f043 ASSERT horse IS_A mammal
-@f044 ASSERT whale IS_A mammal
-@f045 ASSERT sparrow IS_A bird
-@f046 ASSERT eagle IS_A bird
-@f047 ASSERT penguin IS_A bird
+@_ dog IS_A mammal
+@_ cat IS_A mammal
+@_ human IS_A mammal
+@_ horse IS_A mammal
+@_ whale IS_A mammal
+@_ sparrow IS_A bird
+@_ eagle IS_A bird
+@_ penguin IS_A bird
 
 # -----------------------------------------------------------------------------
 # SECTION 3: Physical Properties and States
 # -----------------------------------------------------------------------------
 
 # States of matter
-@f050 ASSERT solid IS_A physical_state
-@f051 ASSERT liquid IS_A physical_state
-@f052 ASSERT gas IS_A physical_state
-@f053 ASSERT plasma IS_A physical_state
-@f054 ASSERT solid DISJOINT_WITH liquid
-@f055 ASSERT solid DISJOINT_WITH gas
-@f056 ASSERT liquid DISJOINT_WITH gas
+@_ solid IS_A physical_state
+@_ liquid IS_A physical_state
+@_ gas IS_A physical_state
+@_ plasma IS_A physical_state
+@_ solid DISJOINT_WITH liquid
+@_ solid DISJOINT_WITH gas
+@_ liquid DISJOINT_WITH gas
 
 # Common substances
-@f060 ASSERT water IS_A substance
-@f061 ASSERT air IS_A substance
-@f062 ASSERT metal IS_A substance
-@f063 ASSERT wood IS_A substance
+@_ water IS_A substance
+@_ air IS_A substance
+@_ metal IS_A substance
+@_ wood IS_A substance
 
 # -----------------------------------------------------------------------------
 # SECTION 4: Spatial Relations
 # -----------------------------------------------------------------------------
 
 # Geographic hierarchy
-@f070 ASSERT location IS_A abstract_entity
-@f071 ASSERT place IS_A location
-@f072 ASSERT region IS_A location
-@f073 ASSERT country IS_A region
-@f074 ASSERT continent IS_A region
-@f075 ASSERT city IS_A place
-@f076 ASSERT building IS_A place
+@_ location IS_A abstract_entity
+@_ place IS_A location
+@_ region IS_A location
+@_ country IS_A region
+@_ continent IS_A region
+@_ city IS_A place
+@_ building IS_A place
 
 # Continents
-@f080 ASSERT Europe IS_A continent
-@f081 ASSERT Asia IS_A continent
-@f082 ASSERT Africa IS_A continent
-@f083 ASSERT North_America IS_A continent
-@f084 ASSERT South_America IS_A continent
-@f085 ASSERT Australia IS_A continent
-@f086 ASSERT Antarctica IS_A continent
+@_ Europe IS_A continent
+@_ Asia IS_A continent
+@_ Africa IS_A continent
+@_ North_America IS_A continent
+@_ South_America IS_A continent
+@_ Australia IS_A continent
+@_ Antarctica IS_A continent
 
 # -----------------------------------------------------------------------------
 # SECTION 5: Temporal Relations
 # -----------------------------------------------------------------------------
 
-@f090 ASSERT past BEFORE present
-@f091 ASSERT present BEFORE future
-@f092 ASSERT cause BEFORE effect
+@_ past BEFORE present
+@_ present BEFORE future
+@_ cause BEFORE effect
 
 # -----------------------------------------------------------------------------
 # SECTION 6: Causal Relations (Universal)
 # -----------------------------------------------------------------------------
 
-@f100 ASSERT heat CAUSES expansion
-@f101 ASSERT cold CAUSES contraction
-@f102 ASSERT fire REQUIRES oxygen
-@f103 ASSERT combustion REQUIRES fuel
-@f104 ASSERT life REQUIRES water
-@f105 ASSERT life REQUIRES energy
+@_ heat CAUSES expansion
+@_ cold CAUSES contraction
+@_ fire REQUIRES oxygen
+@_ combustion REQUIRES fuel
+@_ life REQUIRES water
+@_ life REQUIRES energy
 
 # -----------------------------------------------------------------------------
 # SECTION 7: Human Roles and Professions
 # -----------------------------------------------------------------------------
 
-@f110 ASSERT person IS_A human
-@f111 ASSERT professional IS_A person
-@f112 ASSERT medical_professional IS_A professional
-@f113 ASSERT doctor IS_A medical_professional
-@f114 ASSERT nurse IS_A medical_professional
-@f115 ASSERT engineer IS_A professional
-@f116 ASSERT software_engineer IS_A engineer
-@f117 ASSERT teacher IS_A professional
+@_ person IS_A human
+@_ professional IS_A person
+@_ medical_professional IS_A professional
+@_ doctor IS_A medical_professional
+@_ nurse IS_A medical_professional
+@_ engineer IS_A professional
+@_ software_engineer IS_A engineer
+@_ teacher IS_A professional
 
 # Professional capabilities (inherited by subtypes)
-@f120 ASSERT medical_professional CAN diagnose
-@f121 ASSERT medical_professional CAN treat
-@f122 ASSERT doctor CAN prescribe
-@f123 ASSERT engineer CAN design
-@f124 ASSERT teacher CAN educate
+@_ medical_professional CAN diagnose
+@_ medical_professional CAN treat
+@_ doctor CAN prescribe
+@_ engineer CAN design
+@_ teacher CAN educate
 
 # -----------------------------------------------------------------------------
 # SECTION 8: Artifacts and Vehicles
 # -----------------------------------------------------------------------------
 
-@f130 ASSERT artifact IS_A physical_entity
-@f131 ASSERT tool IS_A artifact
-@f132 ASSERT vehicle IS_A artifact
-@f133 ASSERT machine IS_A artifact
+@_ artifact IS_A physical_entity
+@_ tool IS_A artifact
+@_ vehicle IS_A artifact
+@_ machine IS_A artifact
 
-@f135 ASSERT car IS_A vehicle
-@f136 ASSERT truck IS_A vehicle
-@f137 ASSERT boat IS_A vehicle
-@f138 ASSERT airplane IS_A vehicle
-@f139 ASSERT bicycle IS_A vehicle
+@_ car IS_A vehicle
+@_ truck IS_A vehicle
+@_ boat IS_A vehicle
+@_ airplane IS_A vehicle
+@_ bicycle IS_A vehicle
 
-@f140 ASSERT car HAS wheel
-@f141 ASSERT truck HAS wheel
-@f142 ASSERT bicycle HAS wheel
-@f143 ASSERT boat DISJOINT_WITH wheeled_vehicle
+@_ car HAS wheel
+@_ truck HAS wheel
+@_ bicycle HAS wheel
+@_ boat DISJOINT_WITH wheeled_vehicle
 
 # -----------------------------------------------------------------------------
 # SECTION 9: Fundamental Logical Facts
 # -----------------------------------------------------------------------------
 
-@f150 ASSERT true DISJOINT_WITH false
-@f151 ASSERT mortal DISJOINT_WITH immortal
-@f152 ASSERT human IS_A mortal
-@f153 ASSERT alive DISJOINT_WITH dead
+@_ true DISJOINT_WITH false
+@_ mortal DISJOINT_WITH immortal
+@_ human IS_A mortal
+@_ alive DISJOINT_WITH dead
 
 # End of base ontology

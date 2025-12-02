@@ -2,7 +2,6 @@
   "id": "suite_23_summarize_perspective",
   "name": "Structured Report Generation - Climate Policy Analysis",
   "description": "Tests ability to gather and structure knowledge for multi-section reports. Explanations are DSL proof chains that can be validated without LLM.",
-
   "theory": {
     "natural_language": "SCIENTIFIC EVIDENCE: Carbon dioxide is a greenhouse gas. Greenhouse gases trap heat. Trapped heat causes temperature rise. Temperature rise causes ice cap melting. Ice cap melting causes sea level rise. Sea level rise threatens coastal cities. Methane is a greenhouse gas. Deforestation releases carbon dioxide. Fossil fuel burning releases carbon dioxide. ECONOMIC FACTORS: Carbon tax reduces emissions. Carbon tax costs businesses money. Renewable energy creates jobs. Renewable energy requires initial investment. Climate adaptation costs billions. Energy efficiency saves money. SOLUTIONS: Solar power generates clean electricity. Wind power generates clean electricity. Electric vehicles reduce emissions. Public transit reduces emissions. Reforestation absorbs carbon dioxide. SOCIAL IMPACTS: Heat waves cause deaths. Air pollution causes respiratory illness. Water scarcity affects agriculture. POLICY: Paris Agreement sets emission targets. Carbon markets enable trading. Building codes improve efficiency.",
     "expected_facts": [
@@ -34,12 +33,11 @@
       "building_codes IMPROVE efficiency"
     ]
   },
-
   "queries": [
     {
       "id": "q1",
       "natural_language": "Section 1: What is the causal chain from greenhouse gases to coastal threats?",
-      "expected_dsl": "@causal_facts FACTS_MATCHING\n@step1 ASK trapped_heat CAUSES temperature_rise\n@step2 ASK temperature_rise CAUSES ice_cap_melting\n@step3 ASK ice_cap_melting CAUSES sea_level_rise\n@chain1 BOOL_AND $step1 $step2\n@q1 BOOL_AND $chain1 $step3",
+      "expected_dsl": "@causal_facts FACTS_MATCHING\n@step1 trapped_heat CAUSES temperature_rise\n@step2 temperature_rise CAUSES ice_cap_melting\n@step3 ice_cap_melting CAUSES sea_level_rise\n@chain1 $step1 AND $step2\n@q1 $chain1 AND $step3",
       "expected_answer": {
         "dsl_explanation": "@step1 ASK trapped_heat CAUSES temperature_rise\n@step2 ASK temperature_rise CAUSES ice_cap_melting\n@step3 ASK ice_cap_melting CAUSES sea_level_rise\n@proof1 BOOL_AND $step1 $step2\n@proof2 BOOL_AND $proof1 $step3\n# Result: @proof2.truth = TRUE_CERTAIN proves chain: trapped_heat → temperature_rise → ice_cap_melting → sea_level_rise"
       }
@@ -47,7 +45,7 @@
     {
       "id": "q2",
       "natural_language": "Section 1: What releases greenhouse gases?",
-      "expected_dsl": "@sources FACTS_WITH_OBJECT carbon_dioxide\n@source_count COUNT $sources\n@deforest ASK deforestation RELEASES carbon_dioxide\n@fossil ASK fossil_fuel_burning RELEASES carbon_dioxide\n@q2 BOOL_AND $deforest $fossil",
+      "expected_dsl": "@sources FACTS_WITH_OBJECT carbon_dioxide\n@source_count $sources COUNT any\n@deforest deforestation RELEASES carbon_dioxide\n@fossil fossil_fuel_burning RELEASES carbon_dioxide\n@q2 $deforest AND $fossil",
       "expected_answer": {
         "dsl_explanation": "@source1 ASK deforestation RELEASES carbon_dioxide\n@source2 ASK fossil_fuel_burning RELEASES carbon_dioxide\n@both BOOL_AND $source1 $source2\n# Result: @both.truth = TRUE_CERTAIN proves: deforestation AND fossil_fuel_burning RELEASE carbon_dioxide"
       }
@@ -55,7 +53,7 @@
     {
       "id": "q3",
       "natural_language": "Section 2: What are the costs vs benefits of climate action?",
-      "expected_dsl": "@costs FACTS_MATCHING\n@benefits FACTS_MATCHING renewable_energy CREATES\n@tax_cost ASK carbon_tax COSTS businesses\n@jobs ASK renewable_energy CREATES jobs\n@cost_exists NONEMPTY $costs\n@benefit_exists NONEMPTY $benefits\n@q3 BOOL_AND $cost_exists $benefit_exists",
+      "expected_dsl": "@costs FACTS_MATCHING\n@benefits renewable_energy FACTS any CREATES\n@tax_cost carbon_tax COSTS businesses\n@jobs renewable_energy CREATES jobs\n@cost_exists $costs NONEMPTY any\n@benefit_exists $benefits NONEMPTY any\n@q3 $cost_exists AND $benefit_exists",
       "expected_answer": {
         "dsl_explanation": "@cost1 ASK carbon_tax COSTS businesses\n@cost2 ASK climate_adaptation COSTS billions\n@benefit1 ASK renewable_energy CREATES jobs\n@has_costs BOOL_AND $cost1 $cost2\n@has_both BOOL_AND $has_costs $benefit1\n# Result: @has_both.truth = TRUE_CERTAIN proves: costs (carbon_tax, climate_adaptation) AND benefits (jobs) exist"
       }
@@ -63,7 +61,7 @@
     {
       "id": "q4",
       "natural_language": "Section 3: Compile emission reduction methods",
-      "expected_dsl": "@reduce1 FACTS_WITH_OBJECT emissions\n@reduce2 FACTS_WITH_OBJECT emissions\n@all_reducers MERGE_LISTS $reduce1 $reduce2\n@ev ASK electric_vehicles REDUCE emissions\n@transit ASK public_transit REDUCES emissions\n@tax ASK carbon_tax REDUCES emissions\n@q4 NONEMPTY $all_reducers",
+      "expected_dsl": "@reduce1 FACTS_WITH_OBJECT emissions\n@reduce2 FACTS_WITH_OBJECT emissions\n@all_reducers MERGE_LISTS $reduce1 $reduce2\n@ev electric_vehicles REDUCE emissions\n@transit public_transit REDUCES emissions\n@tax carbon_tax REDUCES emissions\n@q4 $all_reducers NONEMPTY any",
       "expected_answer": {
         "dsl_explanation": "@r1 ASK electric_vehicles REDUCE emissions\n@r2 ASK public_transit REDUCES emissions\n@r3 ASK carbon_tax REDUCES emissions\n@check1 BOOL_AND $r1 $r2\n@all_verified BOOL_AND $check1 $r3\n# Result: @all_verified.truth = TRUE_CERTAIN proves 3 reduction methods: electric_vehicles, public_transit, carbon_tax"
       }
@@ -71,7 +69,7 @@
     {
       "id": "q5",
       "natural_language": "Section 3: What generates clean electricity?",
-      "expected_dsl": "@clean FACTS_WITH_OBJECT clean_electricity\n@solar ASK solar_power GENERATES clean_electricity\n@wind ASK wind_power GENERATES clean_electricity\n@q5 BOOL_AND $solar $wind",
+      "expected_dsl": "@clean FACTS_WITH_OBJECT clean_electricity\n@solar solar_power GENERATES clean_electricity\n@wind wind_power GENERATES clean_electricity\n@q5 $solar AND $wind",
       "expected_answer": {
         "dsl_explanation": "@gen1 ASK solar_power GENERATES clean_electricity\n@gen2 ASK wind_power GENERATES clean_electricity\n@both_clean BOOL_AND $gen1 $gen2\n# Result: @both_clean.truth = TRUE_CERTAIN proves: solar_power AND wind_power GENERATE clean_electricity"
       }
@@ -79,7 +77,7 @@
     {
       "id": "q6",
       "natural_language": "Section 4: What are human health impacts?",
-      "expected_dsl": "@health1 ASK heat_waves CAUSE deaths\n@health2 ASK air_pollution CAUSES respiratory_illness\n@health3 ASK water_scarcity AFFECTS agriculture\n@direct BOOL_AND $health1 $health2\n@q6 BOOL_AND $direct $health3",
+      "expected_dsl": "@health1 heat_waves CAUSE deaths\n@health2 air_pollution CAUSES respiratory_illness\n@health3 water_scarcity AFFECTS agriculture\n@direct $health1 AND $health2\n@q6 $direct AND $health3",
       "expected_answer": {
         "dsl_explanation": "@impact1 ASK heat_waves CAUSE deaths\n@impact2 ASK air_pollution CAUSES respiratory_illness\n@impact3 ASK water_scarcity AFFECTS agriculture\n@step1 BOOL_AND $impact1 $impact2\n@all_impacts BOOL_AND $step1 $impact3\n# Result: @all_impacts.truth = TRUE_CERTAIN proves 3 impacts: deaths, respiratory_illness, agriculture"
       }
@@ -87,7 +85,7 @@
     {
       "id": "q7",
       "natural_language": "Section 5: What policy mechanisms exist?",
-      "expected_dsl": "@p1 ASK Paris_Agreement SETS emission_targets\n@p2 ASK carbon_markets ENABLE trading\n@p3 ASK building_codes IMPROVE efficiency\n@policies BOOL_AND $p1 $p2\n@q7 BOOL_AND $policies $p3",
+      "expected_dsl": "@p1 Paris_Agreement SETS emission_targets\n@p2 carbon_markets ENABLE trading\n@p3 building_codes IMPROVE efficiency\n@policies $p1 AND $p2\n@q7 $policies AND $p3",
       "expected_answer": {
         "dsl_explanation": "@pol1 ASK Paris_Agreement SETS emission_targets\n@pol2 ASK carbon_markets ENABLE trading\n@pol3 ASK building_codes IMPROVE efficiency\n@check1 BOOL_AND $pol1 $pol2\n@all_policies BOOL_AND $check1 $pol3\n# Result: @all_policies.truth = TRUE_CERTAIN proves 3 mechanisms: Paris_Agreement, carbon_markets, building_codes"
       }
@@ -95,12 +93,19 @@
     {
       "id": "q8",
       "natural_language": "Section 6 - Synthesis: Prove the full climate argument",
-      "expected_dsl": "@premise1 ASK fossil_fuel_burning RELEASES carbon_dioxide\n@premise2 ASK carbon_dioxide IS_A greenhouse_gas\n@premise3 ASK trapped_heat CAUSES temperature_rise\n@premise4 ASK ice_cap_melting CAUSES sea_level_rise\n@solution1 ASK electric_vehicles REDUCE emissions\n@solution2 ASK reforestation ABSORBS carbon_dioxide\n@problem1 BOOL_AND $premise1 $premise2\n@problem2 BOOL_AND $premise3 $premise4\n@problem BOOL_AND $problem1 $problem2\n@solutions BOOL_AND $solution1 $solution2\n@q8 BOOL_AND $problem $solutions",
+      "expected_dsl": "@premise1 fossil_fuel_burning RELEASES carbon_dioxide\n@premise2 carbon_dioxide IS_A greenhouse_gas\n@premise3 trapped_heat CAUSES temperature_rise\n@premise4 ice_cap_melting CAUSES sea_level_rise\n@solution1 electric_vehicles REDUCE emissions\n@solution2 reforestation ABSORBS carbon_dioxide\n@problem1 $premise1 AND $premise2\n@problem2 $premise3 AND $premise4\n@problem $problem1 AND $problem2\n@solutions $solution1 AND $solution2\n@q8 $problem AND $solutions",
       "expected_answer": {
         "dsl_explanation": "@src ASK fossil_fuel_burning RELEASES carbon_dioxide\n@ghg ASK carbon_dioxide IS_A greenhouse_gas\n@heat ASK trapped_heat CAUSES temperature_rise\n@ice ASK ice_cap_melting CAUSES sea_level_rise\n@sol1 ASK electric_vehicles REDUCE emissions\n@sol2 ASK reforestation ABSORBS carbon_dioxide\n@cause_chain BOOL_AND $src $ghg\n@effect_chain BOOL_AND $heat $ice\n@problem_proven BOOL_AND $cause_chain $effect_chain\n@solutions_proven BOOL_AND $sol1 $sol2\n@full_argument BOOL_AND $problem_proven $solutions_proven\n# Result: @full_argument.truth = TRUE_CERTAIN proves complete climate argument with problem chain AND solutions"
       }
     }
   ],
-
-  "tags": ["summarization", "report_generation", "climate", "policy", "multi_statement", "dsl_validatable"]
+  "tags": [
+    "summarization",
+    "report_generation",
+    "climate",
+    "policy",
+    "multi_statement",
+    "dsl_validatable"
+  ],
+  "version": "3.0"
 }

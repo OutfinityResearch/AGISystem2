@@ -67,13 +67,13 @@
       <text x="420" y="40" font-size="11" font-weight="bold" fill="#4a5670" text-anchor="middle">Stack Operations</text>
 
       <rect x="320" y="55" width="200" height="25" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
-      <text x="330" y="72" font-size="9" fill="#2e7d32">THEORY_PUSH name="experiment"</text>
+      <text x="330" y="72" font-size="9" fill="#2e7d32">experiment PUSH any</text>
 
       <rect x="320" y="85" width="200" height="25" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="1"/>
-      <text x="330" y="102" font-size="9" fill="#e65100">THEORY_POP (discard top)</text>
+      <text x="330" y="102" font-size="9" fill="#e65100">any POP any (discard top)</text>
 
       <rect x="320" y="115" width="200" height="25" rx="4" fill="#e3f2fd" stroke="#1976d2" stroke-width="1"/>
-      <text x="330" y="132" font-size="9" fill="#1976d2">SAVE_THEORY / LOAD_THEORY</text>
+      <text x="330" y="132" font-size="9" fill="#1976d2">name SAVE any / name LOAD any</text>
 
       <!-- Query resolution -->
       <rect x="300" y="165" width="240" height="130" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
@@ -169,17 +169,17 @@
 
   <pre>
 # Push a new layer
-THEORY_PUSH name="experiment"
+experiment PUSH any
 
 # Add facts to current layer
-ASSERT Water IS_A Gas
-ASSERT Water TEMPERATURE_AT Celsius200
+@_ Water IS_A Gas
+@_ Water TEMPERATURE_AT Celsius200
 
 # Query (will find Gas, not Liquid)
-ASK "Water IS_A ?"
+@result Water IS_A ?
 
 # Pop to discard hypothetical
-THEORY_POP
+any POP any
 
 # Now Water IS_A Liquid again</pre>
 
@@ -190,7 +190,7 @@ THEORY_POP
     <li><a href="../architecture/knowledge.html#theory-layer">TheoryLayer</a> – Individual layer structure</li>
     <li><a href="counterfactual.html">Counterfactual Reasoning</a> – Using layers for "what-if"</li>
     <li><a href="non_monotonic_logic.html">Non-Monotonic Logic</a> – How layers enable belief revision</li>
-    <li><a href="../syntax/index.html">Syntax Reference</a> – THEORY_PUSH, THEORY_POP commands</li>
+    <li><a href="../syntax/index.html">Syntax Reference</a> – PUSH, POP commands</li>
   </ul>
 
   <div class="footer-nav">

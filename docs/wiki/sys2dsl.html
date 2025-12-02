@@ -46,27 +46,27 @@
     <tbody>
       <tr>
         <td>"Dogs are animals"</td>
-        <td><code>ASSERT Dog IS_A Animal</code></td>
+        <td><code>@_ Dog IS_A Animal</code></td>
       </tr>
       <tr>
         <td>"Fire causes smoke"</td>
-        <td><code>ASSERT Fire CAUSES Smoke</code></td>
+        <td><code>@_ Fire CAUSES Smoke</code></td>
       </tr>
       <tr>
         <td>"Paris is located in France"</td>
-        <td><code>ASSERT Paris LOCATED_IN France</code></td>
+        <td><code>@_ Paris LOCATED_IN France</code></td>
       </tr>
       <tr>
         <td>"A car has wheels"</td>
-        <td><code>ASSERT Car HAS_PART Wheel</code></td>
+        <td><code>@_ Car HAS_PART Wheel</code></td>
       </tr>
       <tr>
         <td>"Driving requires a license"</td>
-        <td><code>ASSERT Driving REQUIRES License</code></td>
+        <td><code>@_ Driving REQUIRES License</code></td>
       </tr>
       <tr>
         <td>"Speeding is prohibited by law"</td>
-        <td><code>ASSERT Speeding PROHIBITED_BY Law</code></td>
+        <td><code>@_ Speeding PROHIBITED_BY Law</code></td>
       </tr>
     </tbody>
   </table>
@@ -79,30 +79,30 @@
     <tbody>
       <tr>
         <td>"Is a dog an animal?"</td>
-        <td><code>ASK "Dog IS_A Animal?"</code></td>
+        <td><code>@result Dog IS_A Animal</code></td>
       </tr>
       <tr>
         <td>"What causes smoke?"</td>
-        <td><code>ASK "? CAUSES Smoke"</code></td>
+        <td><code>@result ? CAUSES Smoke</code></td>
       </tr>
       <tr>
         <td>"Where is Paris located?"</td>
-        <td><code>ASK "Paris LOCATED_IN ?"</code></td>
+        <td><code>@result Paris LOCATED_IN ?</code></td>
       </tr>
       <tr>
         <td>"What if water were a gas?"</td>
-        <td><code>CF "Water IS_A Gas?" | Water TEMPERATURE_AT Celsius200</code></td>
+        <td><code>cf_temp PUSH any; @_ Water IS_A Gas</code></td>
       </tr>
     </tbody>
   </table>
 
   <h2>Command Structure</h2>
 
-  <p>Every Sys2DSL command follows a consistent pattern:</p>
+  <p>Every Sys2DSL command follows a consistent triple pattern:</p>
 
-  <pre>@variable COMMAND arguments</pre>
+  <pre>@variable Subject Relation Object</pre>
 
-  <p>The <code>@variable</code> captures the result. The <code>COMMAND</code> specifies the operation. Arguments provide the data.</p>
+  <p>The <code>@variable</code> captures the result. All operations use the Subject-Relation-Object triple syntax.</p>
 
   <h3>Core Commands</h3>
   <table class="table-concept-index">
@@ -111,24 +111,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><code>ASSERT</code></td>
+        <td><code>@_ S R O</code></td>
         <td>Add a fact</td>
-        <td><code>@f ASSERT Dog IS_A Animal</code></td>
+        <td><code>@_ Dog IS_A Animal</code></td>
       </tr>
       <tr>
-        <td><code>ASK</code></td>
+        <td><code>@var S R O</code></td>
         <td>Query truth value</td>
-        <td><code>@q ASK "Dog IS_A Animal?"</code></td>
+        <td><code>@q Dog IS_A Animal</code></td>
       </tr>
       <tr>
-        <td><code>RETRACT</code></td>
-        <td>Remove a fact</td>
-        <td><code>@r RETRACT Dog IS_A Fish</code></td>
-      </tr>
-      <tr>
-        <td><code>FACTS_MATCHING</code></td>
+        <td><code>pattern FACTS any</code></td>
         <td>Find matching facts</td>
-        <td><code>@m FACTS_MATCHING ? IS_A Animal</code></td>
+        <td><code>@m ? IS_A Animal FACTS any</code></td>
       </tr>
     </tbody>
   </table>
@@ -140,24 +135,24 @@
     </thead>
     <tbody>
       <tr>
-        <td><code>THEORY_PUSH</code></td>
+        <td><code>name PUSH any</code></td>
         <td>Create new context layer</td>
-        <td><code>@_ THEORY_PUSH name="experiment"</code></td>
+        <td><code>experiment PUSH any</code></td>
       </tr>
       <tr>
-        <td><code>THEORY_POP</code></td>
+        <td><code>any POP any</code></td>
         <td>Discard top layer</td>
-        <td><code>@_ THEORY_POP</code></td>
+        <td><code>any POP any</code></td>
       </tr>
       <tr>
-        <td><code>LOAD_THEORY</code></td>
+        <td><code>name LOAD any</code></td>
         <td>Load theory file</td>
-        <td><code>@_ LOAD_THEORY medical</code></td>
+        <td><code>medical LOAD any</code></td>
       </tr>
       <tr>
-        <td><code>SAVE_THEORY</code></td>
+        <td><code>name SAVE any</code></td>
         <td>Save current state</td>
-        <td><code>@_ SAVE_THEORY session_1</code></td>
+        <td><code>session_1 SAVE any</code></td>
       </tr>
     </tbody>
   </table>
@@ -169,9 +164,9 @@
 
   <pre>
 # test_taxonomy.sys2dsl
-@f1 ASSERT Dog IS_A Mammal
-@f2 ASSERT Mammal IS_A Animal
-@q ASK "Dog IS_A Animal?"
+@_ Dog IS_A Mammal
+@_ Mammal IS_A Animal
+@q Dog IS_A Animal
 # Expected: TRUE_CERTAIN (transitive)</pre>
 
   <h3>CI/CD Integration</h3>
@@ -183,9 +178,9 @@
   <h3>Audit Logs</h3>
   <p>Every command execution is logged with timestamp and result:</p>
   <pre>
-2024-01-15 10:23:45 ASSERT Dog IS_A Animal → OK
-2024-01-15 10:23:46 ASK "Dog IS_A Animal?" → TRUE_CERTAIN (0.95)
-2024-01-15 10:23:47 THEORY_PUSH name="experiment" → depth=1</pre>
+2024-01-15 10:23:45 @_ Dog IS_A Animal → OK
+2024-01-15 10:23:46 @q Dog IS_A Animal → TRUE_CERTAIN (0.95)
+2024-01-15 10:23:47 experiment PUSH any → depth=1</pre>
 
   <h2>The Two Interfaces</h2>
 

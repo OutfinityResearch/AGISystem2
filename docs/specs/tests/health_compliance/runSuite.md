@@ -10,8 +10,8 @@ Profile: `manual_test`.
 
 Steps/Assertions:
 - Create a `System2Session` seeded with the base `law_minimal.sys2dsl` theory and the `health_compliance.sys2dsl` layer.
-- Ingest ProcedureX requirements from `fixtures/health/compliance.txt` using Sys2DSL `ASSERT` commands; query `"Is ProcedureX compliant without Consent?"` via `ASK` → FALSE (missing consent/audit).
-- Append additional facts `"Consent GIVEN yes"`, `"AuditTrail PRESENT yes"` through Sys2DSL; re-query → TRUE_CERTAIN.
+- Ingest ProcedureX requirements from `fixtures/health/compliance.txt` using Sys2DSL triple syntax; query `"Is ProcedureX compliant without Consent?"` via triple syntax → FALSE (missing consent/audit).
+- Append additional facts (e.g., `@gv GIVEN DIM_PAIR yes`, `@_ Consent SET_DIM @gv`) through Sys2DSL; re-query → TRUE_CERTAIN.
 - GDPR vs HIPAA conflict:
   - Express GDPR- and HIPAA-specific export rules as Sys2DSL theories.
   - With GDPR precedence active in the session theory → ExportData query yields FALSE.

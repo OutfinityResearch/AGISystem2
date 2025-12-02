@@ -190,29 +190,44 @@
       "id": "suite_01_ontology",
       "name": "Comprehensive Ontology & Taxonomy",
       "failedQueries": [
+        "q1",
         "q2",
+        "q3",
+        "q4",
         "q5",
+        "q6",
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T14:32:34.493Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_02_causation",
       "name": "Comprehensive Causation & Abduction",
       "failedQueries": [
-        "q3",
+        "q1",
+        "q2",
+        "q5",
+        "q6",
+        "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_03_deontic",
       "name": "Comprehensive Deontic Rules & Permissions",
       "failedQueries": [
-        "q2"
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_04_counterfactual",
@@ -220,9 +235,14 @@
       "failedQueries": [
         "q1",
         "q2",
-        "q4"
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_05_bias_masking",
@@ -231,21 +251,24 @@
         "q1",
         "q2",
         "q3",
-        "q8"
-      ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
-    },
-    {
-      "id": "suite_06_analogic_symmetric",
-      "name": "Analogical Reasoning & Symmetric/Inverse Relations",
-      "failedQueries": [
         "q4",
         "q5",
         "q6",
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T15:05:49.859Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
+    },
+    {
+      "id": "suite_06_analogic_symmetric",
+      "name": "Analogical Reasoning & Symmetric/Inverse Relations",
+      "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q7"
+      ],
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_07_compositional_rules",
@@ -254,22 +277,27 @@
         "q1",
         "q2",
         "q3",
+        "q4",
         "q5",
         "q6",
-        "q7"
+        "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_08_default_reasoning",
       "name": "Default Reasoning with Exceptions (Non-Monotonic Logic)",
       "failedQueries": [
+        "q1",
+        "q2",
         "q3",
         "q4",
         "q5",
-        "q7"
+        "q6",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_09_contradictions",
@@ -284,7 +312,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_10_theory_layers",
@@ -299,28 +327,37 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_11_recursive_small",
       "name": "Recursive Planning Problems - Small Scale",
       "failedQueries": [
         "q1",
+        "q2",
+        "q3",
+        "q4",
         "q5",
-        "q6"
+        "q6",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_12_recursive_large",
       "name": "Recursive Planning Problems - Large Scale",
       "failedQueries": [
+        "q1",
+        "q2",
         "q3",
+        "q4",
+        "q5",
         "q6",
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_13_variable_composition",
@@ -339,12 +376,13 @@
         "q11",
         "q12"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_14_error_edge_cases",
       "name": "Error Handling & Edge Cases",
       "failedQueries": [
+        "q1",
         "q2",
         "q3",
         "q4",
@@ -354,10 +392,9 @@
         "q8",
         "q9",
         "q10",
-        "q11",
-        "q12"
+        "q11"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_15_masks",
@@ -368,22 +405,26 @@
         "q3",
         "q4",
         "q5",
-        "q7"
+        "q6",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_16_memory_forgetting",
       "name": "Memory Management: Protect & Forget",
       "failedQueries": [
         "q1",
+        "q2",
         "q3",
         "q4",
         "q5",
         "q6",
-        "q7"
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_17_theory_storage",
@@ -394,10 +435,11 @@
         "q3",
         "q4",
         "q5",
+        "q6",
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_18_polarity_decision",
@@ -408,11 +450,9 @@
         "q3",
         "q4",
         "q5",
-        "q6",
-        "q7",
-        "q8"
+        "q7"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_19_output_format",
@@ -427,7 +467,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_20_format_summarize",
@@ -442,7 +482,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_21_boost_forget",
@@ -457,7 +497,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_22_merge_theory_patch",
@@ -468,18 +508,26 @@
         "q3",
         "q4",
         "q5",
+        "q6",
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T17:06:26.480Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_23_summarize_perspective",
       "name": "Structured Report Generation - Climate Policy Analysis",
       "failedQueries": [
-        "q5"
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-01T21:52:16.217Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_24_expand_essay",
@@ -494,19 +542,22 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T21:51:22.337Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_25_theory_management",
       "name": "Theory Stack Management and Hypothetical Reasoning",
       "failedQueries": [
+        "q1",
         "q2",
+        "q3",
         "q4",
         "q5",
         "q6",
+        "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T17:11:57.348Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_26_tool_planning",
@@ -521,7 +572,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T21:51:22.337Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_27_workflow_planning",
@@ -536,7 +587,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T21:51:22.337Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_28_api_orchestration",
@@ -551,7 +602,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T21:51:22.337Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_29_task_decomposition",
@@ -566,18 +617,25 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T21:51:22.337Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     },
     {
       "id": "suite_30_resource_planning",
       "name": "Resource Planning - Cloud Infrastructure Provisioning",
       "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
         "q8"
       ],
-      "lastRun": "2025-12-02T09:28:48.051Z"
+      "lastRun": "2025-12-02T16:30:39.158Z"
     }
   ],
-  "lastUpdated": "2025-12-02T09:28:48.056Z",
+  "lastUpdated": "2025-12-02T16:30:39.159Z",
   "rangeInfo": {
     "lastFrom": null,
     "lastTo": null

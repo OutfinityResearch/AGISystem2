@@ -1,0 +1,179 @@
+# =============================================================================
+# BASE OUTPUT - Output Formatting and Export Verbs
+# =============================================================================
+# These define operations for formatting and exporting results.
+# Version: 3.0 - Strict Triple Syntax Compliant
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SECTION 1: Natural Language Output
+# -----------------------------------------------------------------------------
+
+# TO_NATURAL - Convert subject to natural language
+@TO_NATURAL BEGIN
+  @info subject INSPECT any
+  @kind $info READ_DIM kind
+  @label $info READ_DIM label
+  @pair natural_text DIM_PAIR $label
+  @return $info SET_DIM $pair
+END
+
+# EXPLAIN - Generate explanation of subject
+@EXPLAIN BEGIN
+  @info subject INSPECT any
+  @proof $info READ_DIM proof_trace
+  @natural $proof TO_NATURAL any
+  @pair explanation DIM_PAIR positive
+  @return $natural SET_DIM $pair
+END
+
+# DESCRIBE - Generate description of concept
+@DESCRIBE BEGIN
+  @parents subject IS_A any
+  @children any IS_A subject
+  @properties subject HAS any
+  @desc $parents NEW_COMPOSITE $children
+  @full $desc NEW_COMPOSITE $properties
+  @return $full TO_NATURAL any
+END
+
+# SUMMARIZE - Create summary of fact list
+@SUMMARIZE BEGIN
+  @count subject COUNT any
+  @first subject FIRST any
+  @last subject LAST any
+  @summary $first NEW_COMPOSITE $count
+  @pair summarized DIM_PAIR positive
+  @return $summary SET_DIM $pair
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 2: Structured Output
+# -----------------------------------------------------------------------------
+
+# TO_JSON - Convert subject to JSON format
+@TO_JSON BEGIN
+  @info subject INSPECT any
+  @pair format DIM_PAIR json
+  @return $info SET_DIM $pair
+END
+
+# TO_TRIPLE - Convert to subject-verb-object triple
+@TO_TRIPLE BEGIN
+  @s subject READ_DIM subject
+  @v subject READ_DIM verb
+  @o subject READ_DIM object
+  @pair triple_format DIM_PAIR positive
+  @return subject SET_DIM $pair
+END
+
+# TO_GRAPH - Convert to graph representation
+@TO_GRAPH BEGIN
+  @nodes subject FACTS any
+  @edges $nodes READ_DIM relations
+  @pair graph_format DIM_PAIR positive
+  @return $edges SET_DIM $pair
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 3: Formatting Options
+# -----------------------------------------------------------------------------
+
+# FORMAT - Apply format template
+@FORMAT BEGIN
+  @template object INSPECT any
+  @data subject INSPECT any
+  @pair_template template DIM_PAIR $template
+  @formatted $data SET_DIM $pair_template
+  @return $formatted TO_NATURAL any
+END
+
+# INDENT - Add indentation to output
+@INDENT BEGIN
+  @text subject TO_NATURAL any
+  @pair indent DIM_PAIR object
+  @return $text SET_DIM $pair
+END
+
+# TRUNCATE - Limit output length
+@TRUNCATE BEGIN
+  @text subject TO_NATURAL any
+  @pair max_length DIM_PAIR object
+  @return $text SET_DIM $pair
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 4: Proof Output
+# -----------------------------------------------------------------------------
+
+# SHOW_PROOF - Display proof trace
+@SHOW_PROOF BEGIN
+  @trace subject READ_DIM proof_trace
+  @steps $trace FACTS any
+  @natural $steps TO_NATURAL any
+  @pair proof_display DIM_PAIR positive
+  @return $natural SET_DIM $pair
+END
+
+# SHOW_CHAIN - Display inference chain
+@SHOW_CHAIN BEGIN
+  @chain subject READ_DIM inference_chain
+  @return $chain TO_NATURAL any
+END
+
+# SHOW_WHY - Explain why result is what it is
+@SHOW_WHY BEGIN
+  @reason subject READ_DIM reason
+  @sources subject READ_DIM sources
+  @why $reason NEW_COMPOSITE $sources
+  @return $why TO_NATURAL any
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 5: Export Operations
+# -----------------------------------------------------------------------------
+
+# EXPORT - Export to external format
+@EXPORT BEGIN
+  @data subject TO_JSON any
+  @pair exported DIM_PAIR object
+  @return $data SET_DIM $pair
+END
+
+# RENDER - Render to visual format
+@RENDER BEGIN
+  @graph subject TO_GRAPH any
+  @pair rendered DIM_PAIR positive
+  @return $graph SET_DIM $pair
+END
+
+# PRINT - Output to console (side effect)
+@PRINT BEGIN
+  @text subject TO_NATURAL any
+  @pair printed DIM_PAIR positive
+  @return $text SET_DIM $pair
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 6: Comparison Output
+# -----------------------------------------------------------------------------
+
+# DIFF - Show differences between two points
+@DIFF BEGIN
+  @s_info subject INSPECT any
+  @o_info object INSPECT any
+  @changes $s_info NEW_COMPOSITE $o_info
+  @pair diff DIM_PAIR positive
+  @return $changes SET_DIM $pair
+END
+
+# COMPARE - Compare two results side by side
+@COMPARE BEGIN
+  @s_natural subject TO_NATURAL any
+  @o_natural object TO_NATURAL any
+  @comparison $s_natural NEW_COMPOSITE $o_natural
+  @pair comparison_flag DIM_PAIR positive
+  @return $comparison SET_DIM $pair
+END
+
+# End of output verbs

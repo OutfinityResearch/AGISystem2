@@ -50,47 +50,49 @@ Executes a single CLI command and returns structured result.
 
 ### Fact and Query Commands
 
-| Command | Syntax | DSL Translation |
-|---------|--------|-----------------|
-| `add` | `add <fact>` | `@f ASSERT <fact>` |
-| `ask` | `ask <question>` | `@q ASK "<question>"` |
-| `retract` | `retract <fact>` | `@r RETRACT <fact>` |
-| `abduct` | `abduct <obs> [REL]` | `@h ABDUCT <obs> [REL]` |
-| `cf` | `cf <q> \| <facts>` | `@cf CF "<q>" \| <facts>` |
+**v3.0 Note**: CLI commands now generate v3.0 strict triple syntax.
+
+| Command | Syntax | v3.0 DSL Translation |
+|---------|--------|---------------------|
+| `add` | `add <fact>` | `@_ Subject VERB Object` (parsed from fact) |
+| `ask` | `ask <question>` | `@q Subject VERB Object` (parsed from question) |
+| `retract` | `retract <fact>` | `@_ Subject RETRACT Object` |
+| `abduct` | `abduct <obs> [REL]` | `@h Observation ABDUCT Domain` |
+| `cf` | `cf <q> \| <facts>` | Uses PUSH/POP pattern with v3 syntax |
 
 ### Reasoning Commands
 
-| Command | Syntax | DSL Translation |
-|---------|--------|-----------------|
-| `prove` | `prove <statement>` | `@r PROVE <statement>` |
-| `validate` | `validate` | `@r VALIDATE` |
-| `hypothesize` | `hypothesize <subject>` | `@r HYPOTHESIZE <subject>` |
+| Command | Syntax | v3.0 DSL Translation |
+|---------|--------|---------------------|
+| `prove` | `prove <statement>` | `@r Subject VERB Object` (parsed) |
+| `validate` | `validate` | `@r any VALIDATE any` |
+| `hypothesize` | `hypothesize <subject>` | `@r Subject HYPOTHESIZE Domain` |
 
 ### Theory Layer Commands
 
-| Command | Syntax | DSL Translation |
-|---------|--------|-----------------|
-| `push` | `push [name]` | `@r THEORY_PUSH name="<name>"` |
-| `pop` | `pop` | `@r THEORY_POP` |
-| `layers` | `layers` | `@r LIST_THEORIES` |
+| Command | Syntax | v3.0 DSL Translation |
+|---------|--------|---------------------|
+| `push` | `push [name]` | `@r LayerName PUSH any` |
+| `pop` | `pop` | `@r any POP any` |
+| `layers` | `layers` | `@r any THEORIES any` |
 
 ### Knowledge Inspection
 
-| Command | Syntax | DSL Translation |
-|---------|--------|-----------------|
-| `facts` | `facts [pattern]` | `@r FACTS_MATCHING <pattern>` |
+| Command | Syntax | v3.0 DSL Translation |
+|---------|--------|---------------------|
+| `facts` | `facts [pattern]` | `@r Pattern FACTS any` |
 | `concepts` | `concepts` | Direct: `conceptStore.listConcepts()` |
-| `usage` | `usage <concept>` | `@r GET_USAGE <concept>` |
-| `inspect` | `inspect <concept>` | `@r INSPECT <concept>` |
+| `usage` | `usage <concept>` | `@r Concept USAGE any` |
+| `inspect` | `inspect <concept>` | `@r Concept INSPECT any` |
 
 ### Memory Management
 
-| Command | Syntax | DSL Translation |
-|---------|--------|-----------------|
-| `protect` | `protect <concept>` | `@r PROTECT <concept>` |
+| Command | Syntax | v3.0 DSL Translation |
+|---------|--------|---------------------|
+| `protect` | `protect <concept>` | `@r Concept PROTECT any` |
 | `unprotect` | `unprotect <concept>` | Direct: `conceptStore.unprotect()` |
-| `forget` | `forget <criteria>` | `@r FORGET <criteria>` |
-| `boost` | `boost <concept> [n]` | `@r BOOST <concept> <n>` |
+| `forget` | `forget <criteria>` | `@r Criteria FORGET any` |
+| `boost` | `boost <concept> [n]` | `@n NUMERIC_VALUE n; @r Concept BOOST $n` |
 
 ### Theory File Commands
 
@@ -154,19 +156,34 @@ Copies sample theory files from `data/init/theories/` to the user's theories dir
 
 ---
 
-## 6. Usage Example
+## 6. v3.0 Usage Example
 
 ```javascript
 const { executeCommand, initSampleTheories } = require('./cli_commands');
 
-// Execute command
-const result = executeCommand('add Dog IS_A Animal', session, theoriesRoot);
-// → { command: 'add', args: 'Dog IS_A Animal', result: { ok: true, action: 'asserted', fact: '...' }, timestamp: '...' }
+// v3.0: Execute command - generates triple syntax
+const result = executeCommand('add Dog IS_A animal', session, theoriesRoot);
+// Internally generates: @_ Dog IS_A animal
+// → { command: 'add', args: 'Dog IS_A animal', result: { ... }, timestamp: '...' }
 
 // Handle comments/empty lines
 const skipped = executeCommand('# This is a comment', session, theoriesRoot);
 // → { command: null, skipped: true, line: '# This is a comment', timestamp: '...' }
+
+// v3.0: Direct DSL execution
+const dslResult = executeCommand('run @r Dog IS_A animal', session, theoriesRoot);
+// Executes v3.0 strict triple syntax directly
 ```
+
+### v3.0 Migration Notes
+
+CLI commands automatically translate user-friendly syntax to v3.0 triples:
+- `add X IS_A Y` → generates `@_ X IS_A Y` (v3 triple)
+- `ask "question"` → parses to Subject-VERB-Object → generates `@q Subject VERB Object` (v3 triple)
+- `facts Dog` → generates `@r Dog FACTS any`
+- `push hypothetical` → generates `@r hypothetical PUSH any`
+
+The CLI layer handles the conversion, so users don't need to know v3 syntax details.
 
 ---
 

@@ -13,12 +13,12 @@ Steps/Assertions:
 ## Counter Increments
 
 - Assert counter:
-  - `@f ASSERT Dog IS_A animal` increments Dog's assertCount
+  - `@f Dog IS_A animal` increments Dog's assertCount
   - Second assertion increments count again
   - Verify `usageCount >= assertCount`
 
 - Query counter:
-  - `@q ASK Dog IS_A animal` increments Dog's queryCount
+  - `@q Dog IS_A animal` increments Dog's queryCount
   - Multiple queries increment proportionally
   - Verify queryCount reflects actual query count
 

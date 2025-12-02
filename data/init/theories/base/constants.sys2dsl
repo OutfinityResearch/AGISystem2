@@ -1,0 +1,67 @@
+# =============================================================================
+# BASE CONSTANTS - Standard Numeric Constants
+# =============================================================================
+# These define commonly used constant points for dimension values.
+# Version: 3.0
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SECTION 1: Existence Dimension Constants
+# -----------------------------------------------------------------------------
+# Used for truth values along the existence dimension
+
+@positive NUMERIC_VALUE 127
+@negative NUMERIC_VALUE -127
+@zero NUMERIC_VALUE 0
+
+# Intermediate certainty levels
+@high_positive NUMERIC_VALUE 100
+@low_positive NUMERIC_VALUE 50
+@low_negative NUMERIC_VALUE -50
+@high_negative NUMERIC_VALUE -100
+
+# Default truth levels
+@default_true NUMERIC_VALUE 80
+@default_false NUMERIC_VALUE -80
+@plausible NUMERIC_VALUE 40
+@implausible NUMERIC_VALUE -40
+
+# -----------------------------------------------------------------------------
+# SECTION 2: Diamond Radius Constants
+# -----------------------------------------------------------------------------
+# Used for specifying uncertainty boundaries
+
+@tight NUMERIC_VALUE 5
+@narrow NUMERIC_VALUE 15
+@medium NUMERIC_VALUE 30
+@wide NUMERIC_VALUE 60
+@maximum NUMERIC_VALUE 127
+
+# -----------------------------------------------------------------------------
+# SECTION 3: Control Constants
+# -----------------------------------------------------------------------------
+# Used for reasoning control parameters
+
+@depth_shallow NUMERIC_VALUE 3
+@depth_default NUMERIC_VALUE 5
+@depth_deep NUMERIC_VALUE 10
+@depth_exhaustive NUMERIC_VALUE 20
+
+@limit_low NUMERIC_VALUE 10
+@limit_default NUMERIC_VALUE 50
+@limit_high NUMERIC_VALUE 200
+
+@timeout_fast NUMERIC_VALUE 1000
+@timeout_default NUMERIC_VALUE 5000
+@timeout_long NUMERIC_VALUE 30000
+
+# -----------------------------------------------------------------------------
+# SECTION 4: Special Points
+# -----------------------------------------------------------------------------
+# The 'any' wildcard is predefined by the system
+# This documents it for reference
+
+# any - matches all points (diamond spans all dimensions with max radius)
+# Declared by system, not here
+
+# End of constants

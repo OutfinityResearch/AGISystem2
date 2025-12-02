@@ -61,7 +61,7 @@
     {
       "id": "q1",
       "natural_language": "FOUNDATION: What does vpc_main produce?",
-      "expected_dsl": "@uses ASK vpc_main USES terraform_vpc\n@out ASK vpc_main OUTPUTS vpc_id\n@q1 BOOL_AND $uses $out",
+      "expected_dsl": "@uses vpc_main USES terraform_vpc\n@out vpc_main OUTPUTS vpc_id\n@q1 $uses AND $out",
       "expected_answer": {
         "dsl_explanation": "@u1 ASK vpc_main USES terraform_vpc\n@o1 ASK vpc_main OUTPUTS vpc_id\n@vpc BOOL_AND $u1 $o1\n# Result: @vpc.truth = TRUE_CERTAIN proves vpc_main uses terraform_vpc outputting vpc_id"
       }
@@ -69,7 +69,7 @@
     {
       "id": "q2",
       "natural_language": "DEPENDENCY: What depends on vpc_main?",
-      "expected_dsl": "@d1 ASK subnet_public AFTER vpc_main\n@d2 ASK subnet_private AFTER vpc_main\n@d3 ASK sg_web AFTER vpc_main\n@p1 BOOL_AND $d1 $d2\n@q2 BOOL_AND $p1 $d3",
+      "expected_dsl": "@d1 subnet_public AFTER vpc_main\n@d2 subnet_private AFTER vpc_main\n@d3 sg_web AFTER vpc_main\n@p1 $d1 AND $d2\n@q2 $p1 AND $d3",
       "expected_answer": {
         "dsl_explanation": "@a1 ASK subnet_public AFTER vpc_main\n@a2 ASK subnet_private AFTER vpc_main\n@a3 ASK sg_web AFTER vpc_main\n@g1 BOOL_AND $a1 $a2\n@all_deps BOOL_AND $g1 $a3\n# Result: @all_deps.truth = TRUE_CERTAIN proves subnet_public, subnet_private, sg_web depend on vpc_main"
       }
@@ -77,7 +77,7 @@
     {
       "id": "q3",
       "natural_language": "SECURITY: What ports does sg_web allow?",
-      "expected_dsl": "@p1 ASK sg_web ALLOWS port_443\n@p2 ASK sg_web ALLOWS port_80\n@q3 BOOL_AND $p1 $p2",
+      "expected_dsl": "@p1 sg_web ALLOWS port_443\n@p2 sg_web ALLOWS port_80\n@q3 $p1 AND $p2",
       "expected_answer": {
         "dsl_explanation": "@a1 ASK sg_web ALLOWS port_443\n@a2 ASK sg_web ALLOWS port_80\n@ports BOOL_AND $a1 $a2\n# Result: @ports.truth = TRUE_CERTAIN proves sg_web allows port_443 AND port_80"
       }
@@ -85,7 +85,7 @@
     {
       "id": "q4",
       "natural_language": "EC2 PREREQS: What must exist before ec2_web_1?",
-      "expected_dsl": "@a1 ASK ec2_web_1 AFTER subnet_public\n@a2 ASK ec2_web_1 AFTER sg_web\n@q4 BOOL_AND $a1 $a2",
+      "expected_dsl": "@a1 ec2_web_1 AFTER subnet_public\n@a2 ec2_web_1 AFTER sg_web\n@q4 $a1 AND $a2",
       "expected_answer": {
         "dsl_explanation": "@p1 ASK ec2_web_1 AFTER subnet_public\n@p2 ASK ec2_web_1 AFTER sg_web\n@prereqs BOOL_AND $p1 $p2\n# Result: @prereqs.truth = TRUE_CERTAIN proves ec2_web_1 needs subnet_public AND sg_web"
       }
@@ -93,7 +93,7 @@
     {
       "id": "q5",
       "natural_language": "LOAD BALANCER: What does alb_main target?",
-      "expected_dsl": "@t1 ASK alb_main TARGETS instance_web_1_id\n@t2 ASK alb_main TARGETS instance_web_2_id\n@q5 BOOL_AND $t1 $t2",
+      "expected_dsl": "@t1 alb_main TARGETS instance_web_1_id\n@t2 alb_main TARGETS instance_web_2_id\n@q5 $t1 AND $t2",
       "expected_answer": {
         "dsl_explanation": "@i1 ASK alb_main TARGETS instance_web_1_id\n@i2 ASK alb_main TARGETS instance_web_2_id\n@targets BOOL_AND $i1 $i2\n# Result: @targets.truth = TRUE_CERTAIN proves alb_main targets instance_web_1_id AND instance_web_2_id"
       }
@@ -101,7 +101,7 @@
     {
       "id": "q6",
       "natural_language": "COST: What is rds_primary monthly cost?",
-      "expected_dsl": "@uses ASK rds_primary USES terraform_rds\n@cost ASK rds_primary COSTS 50_dollars_month\n@q6 BOOL_AND $uses $cost",
+      "expected_dsl": "@uses rds_primary USES terraform_rds\n@cost rds_primary COSTS 50_dollars_month\n@q6 $uses AND $cost",
       "expected_answer": {
         "dsl_explanation": "@u1 ASK rds_primary USES terraform_rds\n@c1 ASK rds_primary COSTS 50_dollars_month\n@rds BOOL_AND $u1 $c1\n# Result: @rds.truth = TRUE_CERTAIN proves rds_primary costs 50_dollars_month"
       }
@@ -109,7 +109,7 @@
     {
       "id": "q7",
       "natural_language": "DATABASE DEPS: What does rds_primary need?",
-      "expected_dsl": "@n1 ASK rds_primary NEEDS subnet_priv_id\n@n2 ASK rds_primary NEEDS sg_db_id\n@q7 BOOL_AND $n1 $n2",
+      "expected_dsl": "@n1 rds_primary NEEDS subnet_priv_id\n@n2 rds_primary NEEDS sg_db_id\n@q7 $n1 AND $n2",
       "expected_answer": {
         "dsl_explanation": "@d1 ASK rds_primary NEEDS subnet_priv_id\n@d2 ASK rds_primary NEEDS sg_db_id\n@deps BOOL_AND $d1 $d2\n# Result: @deps.truth = TRUE_CERTAIN proves rds_primary needs subnet_priv_id AND sg_db_id"
       }
@@ -117,7 +117,7 @@
     {
       "id": "q8",
       "natural_language": "FINAL: What resource completes infrastructure?",
-      "expected_dsl": "@out ASK route53_record OUTPUTS dns_name\n@after ASK route53_record AFTER alb_main\n@q8 BOOL_AND $out $afterxyz",
+      "expected_dsl": "@out route53_record OUTPUTS dns_name\n@after route53_record AFTER alb_main\n@q8 $out AND $afterxyz",
       "expected_answer": {
         "dsl_explanation": "@o1 ASK route53_record OUTPUTS dns_name\n@a1 ASK route53_record AFTER alb_main\n@final BOOL_AND $o1 $a1\n# Result: @final.truth = TRUE_CERTAIN proves route53_record outputs dns_name after alb_main"
       }
@@ -130,5 +130,6 @@
     "infrastructure",
     "multi_statement",
     "dsl_validatable"
-  ]
+  ],
+  "version": "3.0"
 }

@@ -56,7 +56,7 @@ Removes surrounding single or double quotes.
 tokenMatches(patternToken: string, value: string): boolean
 ```
 Checks if a pattern token matches a value.
-- `?` is wildcard (matches anything)
+- `any` is wildcard (matches anything)
 - Otherwise exact string match
 
 ### Validation
@@ -81,27 +81,47 @@ Validates that a triplet argument does not contain `property=value` syntax.
 }
 ```
 
-## Sys2DSL Syntax Handled
+## Sys2DSL v3.0 Syntax Handled
 
-### Basic Statement
+### Basic Triple Statement
 ```
-@varName COMMAND arg1 arg2 "quoted arg"
+@varName Subject VERB Object
 ```
+
+**CRITICAL**: v3.0 enforces strict triple syntax - exactly 4 tokens total (@varName + 3 components).
 
 ### Multiple Statements Per Line
 ```
-@a ASK "question" @b ASSERT X IS_A Y
+@a Dog IS_A mammal @b Cat IS_A mammal
 ```
 
 ### Variable References
 ```
-@result ASK "Is $subject a $type?"
+@result $subject IS_A $type
+@combined $a BOOL_AND $b
 ```
 
-### Wildcards in Patterns
+### Wildcards
 ```
-@matches INSTANCES_OF Animal
+@all any IS_A animal             # 'any' as wildcard
+@facts Dog FACTS any             # Query with 'any'
 ```
+
+### Example Verbs
+```
+@result Dog QUERY mammal
+@causes fever ABDUCT CAUSES
+@list any THEORIES any
+```
+
+### v3.0 Syntax Rules
+- **Required**: `@var Subject VERB Object` - All statements use triple syntax
+- **Subject position**: Concepts (lowercase), Individuals (First_cap), or variables ($var)
+- **VERB position**: Relations/operations in ALL_CAPS
+- **Object position**: Concepts, values, or variables
+- **Wildcard**: Use `any` concept
+- **Options**: Use underscore notation (e.g., `limit_5_maxDepth_3`)
+- **Separators**: Newline or `@` separates statements (semicolons optional)
 
 ## Algorithm: Topological Sort (Kahn's)
 
@@ -121,7 +141,7 @@ topologicalOrder(statements) {
 
 ## Usage Examples
 
-### Parse and Execute Script
+### Parse and Execute Script (v3.0)
 ```javascript
 const parser = new DSLParser();
 const lines = script.split('\n');
@@ -130,22 +150,47 @@ const ordered = parser.topologicalOrder(statements);
 
 const env = {};
 for (const stmt of ordered) {
+  // v3.0: stmt has varName, command (VERB), and args [Subject, Object]
   const result = engine.executeCommand(stmt.command, stmt.args, env);
   env[stmt.varName] = result;
 }
 ```
 
-### Variable Expansion
+### Variable Expansion (v3.0)
 ```javascript
 const parser = new DSLParser();
 const env = { subject: 'Dog', type: 'mammal' };
-const expanded = parser.expandString('Is $subject a $type?', env);
-// → 'Is Dog a mammal?'
+const expanded = parser.expandString('$subject IS_A $type', env);
+// → 'Dog IS_A mammal'
+
+// v3.0 examples
+const triple = '@f1 $subject IS_A $type';
+// Expands to: '@f1 Dog IS_A mammal'
 ```
 
-## Notes/Constraints
-- All commands are converted to uppercase during parsing
+## v3.0 Parser Notes/Constraints
+- **Strict Triple Syntax**: Parser enforces exactly 4 tokens total: `@varName Subject VERB Object`
+- **Verb Detection**: VERB position (2nd component) must be uppercase or variable reference
+- **No property=value**: Parser rejects unquoted `property=value` in Subject/Object positions
+- **Case Sensitivity**:
+  - ALL_CAPS → verb/relation/operation
+  - all_lower → concept/type
+  - First_cap → individual/instance
+  - $variable → variable reference
 - Variable names must be alphanumeric plus underscore
 - Self-references are detected and throw as cycles
 - Empty lines and comment-only lines are skipped
 - Quotes are stripped from expanded strings
+- The `any` token is recognized as a special wildcard concept
+- Options use underscore notation (e.g., `limit_5` not `limit=5`)
+
+## v3.0 Grammar Validation
+
+The parser validates:
+1. Statement starts with `@` (variable definition) or `$` (variable reference)
+2. Exactly 4 tokens total: `@varName Subject VERB Object`
+3. VERB position (2nd token after @) is uppercase or variable reference
+4. No `property=value` in Subject/Object positions (use underscore notation)
+5. `any` replaces all wildcards
+6. Variables referenced must be defined before use (topological order)
+7. BEGIN/END blocks for compound verb definitions (future extension)

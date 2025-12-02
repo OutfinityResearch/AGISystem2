@@ -1,0 +1,143 @@
+# =============================================================================
+# BASE PRIMITIVES - Declarations for Hardcoded Geometric Relations
+# =============================================================================
+# These relations are implemented in the geometric engine, not in DSL.
+# This file documents them and declares them for reference.
+# Version: 3.0
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SECTION 1: Core Value Operations
+# -----------------------------------------------------------------------------
+# These create and manipulate numeric values as points
+
+@_ NUMERIC_VALUE PRIMITIVE "Create constant point with numeric value"
+@_ READ_DIM PRIMITIVE "Read dimension value from a point"
+@_ PROJECT_DIM PRIMITIVE "Set dimension value on a point"
+@_ ZERO_DIMS PRIMITIVE "Zero specified dimensions on a point"
+
+# -----------------------------------------------------------------------------
+# SECTION 2: Point Manipulation
+# -----------------------------------------------------------------------------
+# These operate on points in conceptual space
+
+@_ ATTRACT PRIMITIVE "Move point toward another point"
+@_ EXTEND PRIMITIVE "Expand diamond boundary"
+@_ NEW_COMPOSITE PRIMITIVE "Create composite point from two points"
+@_ KIND PRIMITIVE "Set or read point kind"
+
+# -----------------------------------------------------------------------------
+# SECTION 3: Reasoning Primitives
+# -----------------------------------------------------------------------------
+# These perform fundamental geometric reasoning operations
+
+@_ INDUCT PRIMITIVE "Geometric induction - generalize from examples"
+@_ DEDUCT PRIMITIVE "Geometric deduction - project to parent"
+@_ ABDUCT_PRIM PRIMITIVE "Geometric abduction - reverse inference"
+@_ ANALOGIZE_PRIM PRIMITIVE "Vector transfer between domains"
+@_ PERMUTE PRIMITIVE "Apply relation permutation"
+
+# -----------------------------------------------------------------------------
+# SECTION 4: Numeric Operations
+# -----------------------------------------------------------------------------
+# These perform arithmetic on constant points
+
+@_ PLUS PRIMITIVE "Add two numeric values"
+@_ MINUS PRIMITIVE "Subtract numeric values"
+@_ MULTIPLY PRIMITIVE "Multiply numeric values"
+@_ DIVIDE PRIMITIVE "Divide numeric values"
+@_ MIN PRIMITIVE "Minimum of two values"
+@_ MAX PRIMITIVE "Maximum of two values"
+
+# -----------------------------------------------------------------------------
+# SECTION 5: Comparison Operations
+# -----------------------------------------------------------------------------
+# These compare numeric values
+
+@_ EQUALS PRIMITIVE "Check numeric equality"
+@_ GREATER_THAN PRIMITIVE "Check if first > second"
+@_ LESS_THAN PRIMITIVE "Check if first < second"
+
+# -----------------------------------------------------------------------------
+# SECTION 6: System Operations
+# -----------------------------------------------------------------------------
+# These interact with the system itself
+
+@_ CONTROLS PRIMITIVE "Set a control parameter"
+@_ READ_CONTROL PRIMITIVE "Read a control parameter"
+@_ INSPECT PRIMITIVE "Return point details"
+
+# -----------------------------------------------------------------------------
+# SECTION 6b: Compound Point Primitives (for strict triple syntax)
+# -----------------------------------------------------------------------------
+# These create compound points to enable chaining without violating triple syntax.
+# Per FS-22: Complex operations use intermediate point pattern.
+
+# DIM_PAIR - Create a point representing (dimension, value) pair
+# Usage: @pair dimension DIM_PAIR value
+# Returns: compound point that can be used with SET_DIM
+@_ DIM_PAIR PRIMITIVE "Create dimension-value pair point"
+
+# SET_DIM - Set dimension on subject using a dim-value pair
+# Usage: @result subject SET_DIM $dim_pair
+# The $dim_pair contains both dimension name and value
+@_ SET_DIM PRIMITIVE "Set dimension from pair point"
+
+# GET_DIM - Alias for READ_DIM for consistency
+@_ GET_DIM PRIMITIVE "Read dimension value from point (alias for READ_DIM)"
+
+# TRIPLE_OF - Create a point representing (s, r, o) triple
+# Usage: @triple subject TRIPLE_OF object  (with implicit relation from context)
+@_ TRIPLE_OF PRIMITIVE "Create triple point from subject and object"
+
+# WITH_DIM - Mark subject for dimension operation (curried pattern)
+# Usage: @marked subject WITH_DIM dimension; @result $marked SET_VALUE value
+@_ WITH_DIM PRIMITIVE "Mark point for dimension operation"
+
+# SET_VALUE - Apply value to marked point
+# Usage: @result $marked_point SET_VALUE value
+@_ SET_VALUE PRIMITIVE "Set value on marked point"
+
+# IDENTITY - Return subject unchanged (for @return statements)
+# Usage: @return $result IDENTITY any
+@_ IDENTITY PRIMITIVE "Return subject unchanged"
+
+# -----------------------------------------------------------------------------
+# SECTION 7: Search and Backtracking Primitives
+# -----------------------------------------------------------------------------
+# These control exploration of the solution space
+
+# Choice Point Management
+@_ CHOICE_POINT PRIMITIVE "Mark current state as branch point"
+@_ ALTERNATIVES PRIMITIVE "Get all possible next steps from point"
+@_ COMMIT_CHOICE PRIMITIVE "Make current choice permanent"
+@_ ABANDON_CHOICE PRIMITIVE "Undo choice and restore state"
+
+# Backtracking Control
+@_ BACKTRACK PRIMITIVE "Return to last choice point, try next alternative"
+@_ BACKTRACK_TO PRIMITIVE "Return to specific choice point"
+@_ FAIL PRIMITIVE "Mark current path as failed, trigger backtrack"
+@_ CUT PRIMITIVE "Commit to current path, prune all alternatives"
+
+# Depth/Breadth Checking
+@_ DEPTH_CHECK PRIMITIVE "Check if current depth within limit"
+@_ BREADTH_CHECK PRIMITIVE "Check if alternatives within limit"
+@_ CURRENT_DEPTH PRIMITIVE "Get current search depth"
+@_ CURRENT_BREADTH PRIMITIVE "Get alternatives count at current level"
+
+# Plausibility Measurement
+@_ DISTANCE_TO_GOAL PRIMITIVE "Geometric distance to goal point"
+@_ DIAMOND_INTERSECT PRIMITIVE "Compute diamond intersection volume"
+@_ DIAMOND_OVERLAP PRIMITIVE "Check if diamonds overlap"
+
+# Path Tracking
+@_ RECORD_VISITED PRIMITIVE "Mark point as visited"
+@_ IS_VISITED PRIMITIVE "Check if point was visited"
+@_ CLEAR_VISITED PRIMITIVE "Reset visited set"
+
+# Solution Collection
+@_ STORE_SOLUTION PRIMITIVE "Add solution to collection"
+@_ GET_SOLUTIONS PRIMITIVE "Retrieve collected solutions"
+@_ CLEAR_SOLUTIONS PRIMITIVE "Reset solution collection"
+
+# End of primitives declarations

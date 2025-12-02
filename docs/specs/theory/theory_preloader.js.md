@@ -109,8 +109,8 @@ Options:
 
 1. Cache is only used if mtime(cache) > mtime(source)
 2. DSL parsing tolerates comments and blank lines
-3. Only ASSERT statements are processed
-4. Duplicate facts are silently skipped
+3. Only triple statements are processed
+4. Duplicate triples are silently skipped
 5. Cache write failure is non-fatal
 
 ## Testing

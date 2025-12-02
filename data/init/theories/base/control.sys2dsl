@@ -1,0 +1,203 @@
+# =============================================================================
+# BASE CONTROL - Execution Control Verbs and Parameters
+# =============================================================================
+# These define control parameters for reasoning and execution.
+# Version: 3.0 - Strict Triple Syntax Compliant
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SECTION 1: Reasoning Depth Control
+# -----------------------------------------------------------------------------
+
+# SET_DEPTH - Set maximum reasoning depth
+@SET_DEPTH BEGIN
+  @pair reasoning_depth DIM_PAIR subject
+  @return session SET_DIM $pair
+END
+
+# GET_DEPTH - Get current reasoning depth limit
+@GET_DEPTH BEGIN
+  @return session READ_DIM reasoning_depth
+END
+
+# Default reasoning depth (loaded at init)
+@_ depth_default CONTROLS reasoning_depth
+
+# -----------------------------------------------------------------------------
+# SECTION 2: Backtracking Control
+# -----------------------------------------------------------------------------
+
+# SET_BACKTRACK - Set backtracking limit
+@SET_BACKTRACK BEGIN
+  @pair backtrack_limit DIM_PAIR subject
+  @return session SET_DIM $pair
+END
+
+# GET_BACKTRACK - Get current backtrack limit
+@GET_BACKTRACK BEGIN
+  @return session READ_DIM backtrack_limit
+END
+
+# Default backtrack limit (loaded at init)
+@_ limit_default CONTROLS backtrack_limit
+
+# -----------------------------------------------------------------------------
+# SECTION 3: Timeout Control
+# -----------------------------------------------------------------------------
+
+# SET_TIMEOUT - Set reasoning timeout in milliseconds
+@SET_TIMEOUT BEGIN
+  @pair timeout_ms DIM_PAIR subject
+  @return session SET_DIM $pair
+END
+
+# GET_TIMEOUT - Get current timeout
+@GET_TIMEOUT BEGIN
+  @return session READ_DIM timeout_ms
+END
+
+# Default timeout (loaded at init)
+@_ timeout_default CONTROLS timeout_ms
+
+# -----------------------------------------------------------------------------
+# SECTION 4: Confidence Thresholds
+# -----------------------------------------------------------------------------
+
+# SET_CONFIDENCE - Set minimum confidence threshold
+@SET_CONFIDENCE BEGIN
+  @pair confidence_threshold DIM_PAIR subject
+  @return session SET_DIM $pair
+END
+
+# GET_CONFIDENCE - Get current confidence threshold
+@GET_CONFIDENCE BEGIN
+  @return session READ_DIM confidence_threshold
+END
+
+# Default confidence threshold
+@_ plausible CONTROLS confidence_threshold
+
+# -----------------------------------------------------------------------------
+# SECTION 5: Inference Strategy
+# -----------------------------------------------------------------------------
+
+# SET_STRATEGY - Set inference strategy
+# Options: exhaustive, first_match, best_match
+@SET_STRATEGY BEGIN
+  @pair inference_strategy DIM_PAIR subject
+  @return session SET_DIM $pair
+END
+
+# GET_STRATEGY - Get current inference strategy
+@GET_STRATEGY BEGIN
+  @return session READ_DIM inference_strategy
+END
+
+# Default strategy
+@_ first_match CONTROLS inference_strategy
+
+# Strategy constants
+@exhaustive NUMERIC_VALUE 1
+@first_match NUMERIC_VALUE 2
+@best_match NUMERIC_VALUE 3
+
+# -----------------------------------------------------------------------------
+# SECTION 6: Mode Control
+# -----------------------------------------------------------------------------
+
+# SET_MODE - Set reasoning mode
+# Options: logical, geometric, hybrid
+@SET_MODE BEGIN
+  @pair reasoning_mode DIM_PAIR subject
+  @return session SET_DIM $pair
+END
+
+# GET_MODE - Get current reasoning mode
+@GET_MODE BEGIN
+  @return session READ_DIM reasoning_mode
+END
+
+# Mode constants
+@logical NUMERIC_VALUE 1
+@geometric NUMERIC_VALUE 2
+@hybrid NUMERIC_VALUE 3
+
+# Default mode
+@_ hybrid CONTROLS reasoning_mode
+
+# -----------------------------------------------------------------------------
+# SECTION 7: Debug and Trace Control
+# -----------------------------------------------------------------------------
+
+# ENABLE_TRACE - Enable execution tracing
+@ENABLE_TRACE BEGIN
+  @pair trace_enabled DIM_PAIR positive
+  @return session SET_DIM $pair
+END
+
+# DISABLE_TRACE - Disable execution tracing
+@DISABLE_TRACE BEGIN
+  @pair trace_enabled DIM_PAIR zero
+  @return session SET_DIM $pair
+END
+
+# SET_VERBOSITY - Set output verbosity level
+@SET_VERBOSITY BEGIN
+  @pair verbosity DIM_PAIR subject
+  @return session SET_DIM $pair
+END
+
+# Verbosity constants
+@quiet NUMERIC_VALUE 0
+@normal NUMERIC_VALUE 1
+@verbose NUMERIC_VALUE 2
+@debug NUMERIC_VALUE 3
+
+# Default verbosity
+@_ normal CONTROLS verbosity
+
+# -----------------------------------------------------------------------------
+# SECTION 8: Resource Limits
+# -----------------------------------------------------------------------------
+
+# SET_MAX_FACTS - Limit facts considered per query
+@SET_MAX_FACTS BEGIN
+  @pair max_facts DIM_PAIR subject
+  @return session SET_DIM $pair
+END
+
+# SET_MAX_RESULTS - Limit results returned
+@SET_MAX_RESULTS BEGIN
+  @pair max_results DIM_PAIR subject
+  @return session SET_DIM $pair
+END
+
+# Default limits
+@_ limit_high CONTROLS max_facts
+@_ limit_default CONTROLS max_results
+
+# -----------------------------------------------------------------------------
+# SECTION 9: Dimension Masking Control
+# -----------------------------------------------------------------------------
+
+# MASK_PARTITION - Mask a partition (ontology/axiology)
+@MASK_PARTITION BEGIN
+  @pair masked_partitions DIM_PAIR subject
+  @return session SET_DIM $pair
+END
+
+# MASK_DIMENSION - Mask specific dimensions
+@MASK_DIMENSION BEGIN
+  @pair masked_dims DIM_PAIR subject
+  @return session SET_DIM $pair
+END
+
+# UNMASK_ALL - Remove all masks
+@UNMASK_ALL BEGIN
+  @pair1 masked_partitions DIM_PAIR zero
+  @_ session SET_DIM $pair1
+  @pair2 masked_dims DIM_PAIR zero
+  @return session SET_DIM $pair2
+END
+
+# End of control verbs

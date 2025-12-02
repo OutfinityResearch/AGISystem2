@@ -160,8 +160,8 @@ const agent = new AgentSystem2({ profile: 'prod' });
 const session = agent.createSession();
 
 // Execute commands programmatically
-session.run(['@f ASSERT Dog IS_A Animal']);
-const result = session.run(['@q ASK "Is Dog an Animal?"']);
+session.run(['@f Dog IS_A Animal']);
+const result = session.run(['@q Dog IS_A Animal']);
 console.log(result.q.truth); // TRUE_CERTAIN</pre>
 
   <p>The library approach provides:</p>

@@ -18,9 +18,9 @@ It complements the `TheoryDSLEngine` and `Sys2DSL_arch` design specs by focusing
 │                                                                             │
 │   Sys2DSL Script (text order does NOT determine execution order):           │
 │   ┌─────────────────────────────────────────────────────────────────────┐   │
-│   │  @result BOOL_AND $a $b     ← Line 1 (depends on @a and @b)         │   │
-│   │  @a ASK Water IS_A liquid   ← Line 2 (no dependencies)              │   │
-│   │  @b ASK Ice IS_A solid      ← Line 3 (no dependencies)              │   │
+│   │  @result $a BOOL_AND $b     ← Line 1 (depends on @a and @b)         │   │
+│   │  @a Water IS_A liquid       ← Line 2 (no dependencies)              │   │
+│   │  @b Ice IS_A solid          ← Line 3 (no dependencies)              │   │
 │   └─────────────────────────────────────────────────────────────────────┘   │
 │                                                                             │
 │         │                                                                   │
@@ -47,7 +47,7 @@ It complements the `TheoryDSLEngine` and `Sys2DSL_arch` design specs by focusing
 │   │                                                                     │   │
 │   │   Step 1: Execute @a (no dependencies) ─► { truth: TRUE_CERTAIN }   │   │
 │   │   Step 2: Execute @b (no dependencies) ─► { truth: TRUE_CERTAIN }   │   │
-│   │   Step 3: Execute @result (deps satisfied) ─► BOOL_AND($a, $b)      │   │
+│   │   Step 3: Execute @result (deps satisfied) ─► $a BOOL_AND $b        │   │
 │   │                                                                     │   │
 │   │   Note: @a and @b could run in parallel (no edge between them)      │   │
 │   │                                                                     │   │
@@ -58,17 +58,17 @@ It complements the `TheoryDSLEngine` and `Sys2DSL_arch` design specs by focusing
 
 ## Evaluation Model
 
-### Statements and Dependencies
+### Statements and Dependencies (v3 Syntax)
 
-- Sys2DSL programmes consist of **statements** of the form:
-  - `@varName action param1 param2 ...`
-  - Multiple statements may appear on the same line, separated by `;` or by additional `@varName` markers.
+- Sys2DSL v3 programmes consist of **statements** of the form:
+  - `@varName Subject VERB Object`
+  - Multiple statements may appear on separate lines (recommended for clarity)
 - Each statement is identified by:
   - its **output variable** (`varName`), if any;
   - the set of **input variables** it references via `$name` tokens in its parameters.
 - From a script, the engine constructs a **dependency graph**:
   - nodes = statements (or their output variables),
-  - directed edges `A → B` when statement B depends on the value produced by statement A (for example, `@b ... $a ...`).
+  - directed edges `A → B` when statement B depends on the value produced by statement A (for example, `@b Subject VERB $a`).
 
 ### Topological Ordering
 
@@ -96,8 +96,8 @@ It complements the `TheoryDSLEngine` and `Sys2DSL_arch` design specs by focusing
 │                                                                             │
 │   Script with cycle:                                                        │
 │   ┌─────────────────────────────────────────────────────────────────────┐   │
-│   │  @a BOOL_AND $b TRUE    ← @a needs $b                               │   │
-│   │  @b BOOL_AND $a TRUE    ← @b needs $a  → CYCLE!                     │   │
+│   │  @a $b BOOL_AND true    ← @a needs $b                               │   │
+│   │  @b $a BOOL_AND true    ← @b needs $a  → CYCLE!                     │   │
 │   └─────────────────────────────────────────────────────────────────────┘   │
 │                                                                             │
 │   Dependency graph:                                                         │
@@ -165,7 +165,7 @@ It complements the `TheoryDSLEngine` and `Sys2DSL_arch` design specs by focusing
 ## Relationship to Reasoning Costs
 
 - Topological evaluation is a **front-end scheduling step**; it does not change the underlying reasoning complexity:
-  - the cost of each statement still depends on the action (`ASK`, `ASSERT`, `FACTS_MATCHING`, `MASK_*`, etc.) and the size of the knowledge base;
+  - the cost of each statement still depends on the operation type (triple assertions, `FACTS`, `MASK`, etc.) and the size of the knowledge base;
   - the ordering guarantees only that inputs are available when a statement runs.
 - In practice:
   - a single pass of topological scheduling is cheap compared with geometric operations (distance computations, clustering, retrieval);

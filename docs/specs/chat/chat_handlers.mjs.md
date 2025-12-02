@@ -20,7 +20,7 @@ Intent handlers for natural language chat interactions. Maps detected intents to
 ```javascript
 async handleTeach(intent: TeachIntent, engine: DSLEngine): Promise<string>
 ```
-Handles teaching/assertion intents by converting natural language to ASSERT commands.
+Handles teaching intents by converting natural language to triple statements.
 
 **Parameters:**
 - `intent.subject` (string) - Subject concept
@@ -29,7 +29,7 @@ Handles teaching/assertion intents by converting natural language to ASSERT comm
 - `engine` (DSLEngine) - DSL engine instance
 
 **Behavior:**
-1. Constructs ASSERT command: `@_ ASSERT {subject} {relation} {object}`
+1. Constructs triple syntax: `@_ {subject} {relation} {object}`
 2. Executes via `engine.executeLine()`
 3. Returns confirmation message
 
@@ -39,14 +39,14 @@ Handles teaching/assertion intents by converting natural language to ASSERT comm
 ```javascript
 async handleAsk(intent: AskIntent, engine: DSLEngine): Promise<string>
 ```
-Handles question intents by converting to ASK commands.
+Handles question intents by converting to query triples.
 
 **Parameters:**
 - `intent.question` (string) - Natural language question
 - `engine` (DSLEngine) - DSL engine instance
 
 **Behavior:**
-1. Constructs ASK command: `@result ASK "{question}"`
+1. Translates question to triple syntax: `@result {subject} {relation} {object}`
 2. Executes via `engine.executeLine()`
 3. Returns reasoning result or "Nu știu" if unknown
 
@@ -63,7 +63,7 @@ Handles theory import intents.
 - `engine` (DSLEngine) - DSL engine instance
 
 **Behavior:**
-1. Constructs LOAD_THEORY command: `@_ LOAD_THEORY {theoryName}`
+1. Constructs theory load command: `@_ {theoryName} LOAD any`
 2. Executes via `engine.executeLine()`
 3. Returns success/failure message
 

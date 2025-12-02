@@ -3,7 +3,7 @@
 ID: DS(/theory/dsl_commands_theory.js)
 
 Class `DSLCommandsTheory`
-- **Role**: Implements Sys2DSL commands for theory/context management: listing, loading, saving, merging theories; counterfactual layers (THEORY_PUSH/THEORY_POP); session reset.
+- **Role**: Implements Sys2DSL commands for theory/context management: listing, loading, saving, merging theories; counterfactual layers (PUSH/POP); session reset.
 - **Pattern**: Command handler collection; Uses pluggable storage interface.
 - **Key Collaborators**: `TheoryStorage`, `MetaTheoryRegistry`, `ConceptStore`, `DSLParser`.
 
@@ -21,81 +21,92 @@ constructor({ conceptStore, parser, storage, metaRegistry, theoriesDir })
 
 ## Commands Implemented
 
-### LIST_THEORIES
+### THEORIES
 ```sys2dsl
-@list LIST_THEORIES
+@list any THEORIES any
 ```
-Lists available and active theories.
+Lists available and active theories using v3 triple syntax.
+- Format: `@var Subject THEORIES Object`
 - Returns: `{ available: string[], active: string[], current: string|null, depth: number }`
 
-### LOAD_THEORY
+### LOAD
 ```sys2dsl
-@result LOAD_THEORY health_rules
-@result LOAD_THEORY $theoryName
+@result health_rules LOAD any
+@result $theoryName LOAD any
 ```
-Loads a theory by name from storage.
-- Parses ASSERT statements and adds facts to ConceptStore
+Loads a theory by name from storage using v3 triple syntax.
+- Format: `@var TheoryName LOAD Object`
+- Parses v3 triple statements and adds facts to ConceptStore
 - Registers theory in MetaTheoryRegistry
 - Records load for statistics
+- Parses `@var Subject VERB Object` triple format
 - Returns: `{ ok: boolean, name, loaded: number, errors?: string[], status: 'loaded' }`
 
-### SAVE_THEORY
+### SAVE
 ```sys2dsl
-@result SAVE_THEORY my_session
-@result SAVE_THEORY my_session domain="medical" version="1.0"
+@result my_session SAVE any
+@result my_session SAVE domain_medical_version_1.0
 ```
-Saves current facts to storage.
-- Supports optional metadata as key=value pairs
-- Generates DSL format with `@fNNN ASSERT` statements
+Saves current facts to storage using v3 triple syntax.
+- Format: `@var TheoryName SAVE Metadata`
+- Supports optional metadata in underscore notation
+- Generates v3 DSL format with `@fNNN Subject VERB Object` statements
 - Returns: `{ ok: boolean, name, factCount, conceptCount, timestamp, status: 'saved' }`
 
 ### MERGE_THEORY
 ```sys2dsl
-@result MERGE_THEORY additional_rules
+@result additional_rules MERGE_THEORY none
 ```
-Merges another theory into current knowledge (additive).
-- Does not clear existing facts
+Merges another theory into current knowledge using v3 triple syntax.
+- Format: `@var TheoryName MERGE_THEORY Object`
+- Does not clear existing facts (additive)
 - Returns: `{ ok: boolean, name, merged: number, totalFacts: number, status: 'merged' }`
 
 ### DELETE_THEORY
 ```sys2dsl
-@result DELETE_THEORY old_theory
+@result old_theory DELETE_THEORY none
 ```
-Deletes a theory from storage.
+Deletes a theory from storage using v3 triple syntax.
+- Format: `@var TheoryName DELETE_THEORY Object`
 - Also unregisters from MetaTheoryRegistry
 - Returns: `{ ok: boolean, name, status: 'deleted'|'not_found' }`
 
-### THEORY_PUSH
+### PUSH
 ```sys2dsl
-@result THEORY_PUSH
-@result THEORY_PUSH name="what_if_scenario"
+@result context PUSH any
+@result context PUSH what_if_scenario
 ```
-Creates new counterfactual layer.
+Creates new counterfactual layer using v3 triple syntax.
+- Format: `@var Subject PUSH LayerName`
 - Snapshots current facts
 - Pushes layer onto theory stack
 - Returns: `{ ok: boolean, name, depth, snapshotFacts }`
 
-### THEORY_POP
+### POP
 ```sys2dsl
-@result THEORY_POP
+@result context POP any
 ```
-Pops counterfactual layer, restoring previous state.
+Pops counterfactual layer, restoring previous state using v3 triple syntax.
+- Format: `@var Subject POP Object`
 - Restores facts from snapshot
 - Returns: `{ ok: boolean, popped: string, depth, restoredFacts }`
 
 ### RESET_SESSION
 ```sys2dsl
-@result RESET_SESSION
+@result session RESET_SESSION none
 ```
-Clears all session state (layers, snapshots, current theory).
+Clears all session state using v3 triple syntax.
+- Format: `@var Subject RESET_SESSION Object`
+- Clears layers, snapshots, current theory
 - Does not affect persisted knowledge
 - Returns: `{ ok: boolean, status: 'session_reset' }`
 
 ### THEORY_INFO
 ```sys2dsl
-@info THEORY_INFO health_rules
+@info health_rules THEORY_INFO none
 ```
-Gets detailed information about a theory.
+Gets detailed information about a theory using v3 triple syntax.
+- Format: `@var TheoryName THEORY_INFO Object`
 - Returns metadata, format, and statistics from MetaTheoryRegistry
 - Returns: `{ ok: boolean, name, format, metadata, stats, successRate }`
 
@@ -122,23 +133,24 @@ setMetaRegistry(registry): void   // Inject meta-registry
 ## Counterfactual Reasoning Flow
 
 ```
-1. THEORY_PUSH "hypothesis"
+1. @ctx context PUSH hypothesis
    → Snapshot current facts
    → Create new layer
 
-2. ASSERT HypotheticalFact IS_A Something
+2. @f1 HypotheticalFact IS_A Something
    → Adds to current (hypothetical) context
 
-3. ASK "Query about hypothetical?"
+3. @result Query ASK "Query about hypothetical?"
    → Reasons with base + hypothetical facts
 
-4. THEORY_POP
+4. @restore context POP any
    → Discard hypothetical facts
    → Restore to snapshot
 ```
 
 ## Notes/Constraints
+- All commands follow strict triple syntax `@var Subject VERB Object`
 - Theory layers are in-memory only (not persisted)
-- LOAD_THEORY only parses `@var ASSERT S R O` format
+- LOAD parses v3 `@var Subject VERB Object` format
 - Storage is pluggable - default uses file system
 - MetaTheoryRegistry tracks all loads and query successes

@@ -301,11 +301,11 @@
 
   <pre>
 # In Sys2DSL
-DEFINE_RELATION TREATS inverse=TREATED_BY transitive=false
+@_ TREATS DEFINE_RELATION inverse=TREATED_BY transitive=false
 
 # Usage
-ASSERT Aspirin TREATS Headache
-ASK "What TREATS Headache?"</pre>
+@_ Aspirin TREATS Headache
+@result ? TREATS Headache</pre>
 
   <h3>Custom Verb Properties</h3>
 
@@ -341,20 +341,20 @@ ASK "What TREATS Headache?"</pre>
 
   <pre>
 # Medical domain
-DEFINE_RELATION TREATS inverse=TREATED_BY
-DEFINE_RELATION CONTRAINDICATED_WITH symmetric=true
-DEFINE_RELATION METABOLIZED_BY inverse=METABOLIZES
+@_ TREATS DEFINE_RELATION inverse=TREATED_BY
+@_ CONTRAINDICATED_WITH DEFINE_RELATION symmetric=true
+@_ METABOLIZED_BY DEFINE_RELATION inverse=METABOLIZES
 
-ASSERT Aspirin TREATS Pain
-ASSERT Aspirin CONTRAINDICATED_WITH Warfarin
-ASSERT Aspirin METABOLIZED_BY Liver
+@_ Aspirin TREATS Pain
+@_ Aspirin CONTRAINDICATED_WITH Warfarin
+@_ Aspirin METABOLIZED_BY Liver
 
 # Legal domain
-DEFINE_RELATION GOVERNS inverse=GOVERNED_BY
-DEFINE_RELATION SUPERSEDES inverse=SUPERSEDED_BY transitive=true
+@_ GOVERNS DEFINE_RELATION inverse=GOVERNED_BY
+@_ SUPERSEDES DEFINE_RELATION inverse=SUPERSEDED_BY transitive=true
 
-ASSERT GDPR GOVERNS DataProcessing
-ASSERT Regulation_2023 SUPERSEDES Regulation_2020</pre>
+@_ GDPR GOVERNS DataProcessing
+@_ Regulation_2023 SUPERSEDES Regulation_2020</pre>
 
   <h2>Natural Language Mapping</h2>
 

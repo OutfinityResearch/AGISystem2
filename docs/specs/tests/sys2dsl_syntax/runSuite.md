@@ -13,9 +13,8 @@ Steps/Assertions:
 ## Lexical Structure Tests
 
 - Token recognition:
-  - Parse `@result ASK Water IS_A liquid` and verify tokens:
+  - Parse `@result Water IS_A liquid` and verify tokens:
     - `@result` = VARIABLE_DEF
-    - `ASK` = COMMAND
     - `Water` = FACT (Capitalized)
     - `IS_A` = RELATION (UPPERCASE)
     - `liquid` = CONCEPT (lowercase)
@@ -37,12 +36,13 @@ Steps/Assertions:
 ## Statement Syntax Tests
 
 - Basic statement form:
-  - `@var COMMAND param1 param2` parses to correct AST
+  - `@var Subject VERB Object` parses to correct AST (triple syntax)
+  - `@var COMMAND param1 param2` parses to correct AST (command syntax)
   - Missing `@var` prefix throws error
-  - Missing command throws error
+  - Missing verb/command throws error
 
 - Semicolon separation:
-  - `@a ASK Water IS_A liquid; @b ASK Fire IS_A element` produces two statements
+  - `@a Water IS_A liquid; @b Fire IS_A element` produces two statements
   - Verify both statements are correctly parsed
 
 - Line continuation:

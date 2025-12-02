@@ -1,8 +1,8 @@
 {
   "id": "suite_09_contradictions",
   "name": "Contradiction Detection & Constraint Validation",
-  "description": "Tests VALIDATE for consistency checking, CHECK_WOULD_CONTRADICT for pre-flight validation, REGISTER_FUNCTIONAL for single-value constraints, REGISTER_CARDINALITY for min/max constraints, and DISJOINT_WITH enforcement",
-
+  "description": "Tests automatic contradiction detection on fact creation, functional constraints, cardinality constraints, and DISJOINT_WITH enforcement. In v3.0, contradiction detection is AUTOMATIC - no special command needed.",
+  "version": "3.0",
   "theory": {
     "natural_language": "Medical records system with strict constraints. Functional constraints (single value only): A person can only be born in one place. A person can only have one biological mother. A person can only have one biological father. Cardinality constraints: A patient must have at least 1 doctor but no more than 3 doctors assigned. A doctor can have between 1 and 50 patients. Disjoint categories: A person cannot be both alive and dead. A diagnosis cannot be both confirmed and ruled_out. An employee cannot be both active and terminated. Current facts: Patient John was born in Chicago. John's biological mother is Mary. John's biological father is Robert. John is alive. John has DrSmith as doctor. John has DrJones as doctor. DrSmith is a cardiologist. DrJones is a neurologist. John's diagnosis of diabetes is confirmed.",
     "expected_facts": [
@@ -20,104 +20,152 @@
     ],
     "constraints": {
       "functional": [
-        {"relation": "BORN_IN", "description": "A person can only be born in one place"},
-        {"relation": "BIOLOGICAL_MOTHER", "description": "A person can only have one biological mother"},
-        {"relation": "BIOLOGICAL_FATHER", "description": "A person can only have one biological father"}
+        {
+          "relation": "BORN_IN",
+          "description": "A person can only be born in one place"
+        },
+        {
+          "relation": "BIOLOGICAL_MOTHER",
+          "description": "A person can only have one biological mother"
+        },
+        {
+          "relation": "BIOLOGICAL_FATHER",
+          "description": "A person can only have one biological father"
+        }
       ],
       "cardinality": [
-        {"subject_type": "patient", "relation": "HAS_DOCTOR", "min": 1, "max": 3},
-        {"subject_type": "doctor", "relation": "HAS_PATIENT", "min": 1, "max": 50}
+        {
+          "subject_type": "patient",
+          "relation": "HAS_DOCTOR",
+          "min": 1,
+          "max": 3
+        },
+        {
+          "subject_type": "doctor",
+          "relation": "HAS_PATIENT",
+          "min": 1,
+          "max": 50
+        }
       ],
       "disjoint": [
-        ["alive", "dead"],
-        ["confirmed", "ruled_out"],
-        ["active", "terminated"]
+        [
+          "alive",
+          "dead"
+        ],
+        [
+          "confirmed",
+          "ruled_out"
+        ],
+        [
+          "active",
+          "terminated"
+        ]
       ]
     }
   },
-
   "queries": [
     {
       "id": "q1",
       "natural_language": "Would it be a contradiction to say John was born in New York?",
-      "expected_dsl": "@q1 CHECK_WOULD_CONTRADICT John BORN_IN New_York",
+      "expected_dsl": "@q1 John BORN_IN New_York",
+      "expected_dsl_notes": "v3.0: Automatic conflict detection. Result has kind='conflict' if contradicts.",
       "expected_answer": {
         "natural_language": "Yes, this would be a contradiction. John is already recorded as born in Chicago, and BORN_IN is a functional relation - a person can only be born in one place.",
-        "truth": "TRUE_CERTAIN",
-        "explanation": "Functional constraint violation: BORN_IN allows only one value"
+        "truth": "CONFLICT",
+        "kind": "conflict",
+        "explanation": "Functional constraint violation: BORN_IN allows only one value. Result point has kind='conflict'."
       }
     },
     {
       "id": "q2",
       "natural_language": "Would it be a contradiction to say John has a second biological mother named Susan?",
-      "expected_dsl": "@q2 CHECK_WOULD_CONTRADICT John BIOLOGICAL_MOTHER Susan",
+      "expected_dsl": "@q2 John BIOLOGICAL_MOTHER Susan",
       "expected_answer": {
         "natural_language": "Yes, this would be a contradiction. John already has Mary as biological mother, and BIOLOGICAL_MOTHER is functional.",
-        "truth": "TRUE_CERTAIN",
+        "truth": "CONFLICT",
+        "kind": "conflict",
         "explanation": "Functional constraint: only one biological mother allowed"
       }
     },
     {
       "id": "q3",
       "natural_language": "Would it be a contradiction to say John is dead?",
-      "expected_dsl": "@q3 CHECK_WOULD_CONTRADICT John IS_A dead",
+      "expected_dsl": "@q3 John IS_A dead",
       "expected_answer": {
         "natural_language": "Yes, this would be a contradiction. John is currently recorded as alive, and alive and dead are disjoint - a person cannot be both.",
-        "truth": "TRUE_CERTAIN",
+        "truth": "CONFLICT",
+        "kind": "conflict",
         "explanation": "Disjoint violation: alive DISJOINT_WITH dead"
       }
     },
     {
       "id": "q4",
       "natural_language": "Is the current theory consistent?",
-      "expected_dsl": "@q4 VALIDATE",
+      "expected_dsl": "@q4 current_theory VALIDATE any",
       "expected_answer": {
         "natural_language": "Yes, the current theory is consistent. No functional constraints are violated, no disjoint types are assigned to the same entity, and cardinality constraints are satisfied.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "VALIDATE checks all constraints and finds no violations"
+        "kind": "fact",
+        "explanation": "VALIDATE checks all constraints and finds no violations",
+        "existence": "positive"
       }
     },
     {
       "id": "q5",
       "natural_language": "Can John have a fourth doctor assigned?",
-      "expected_dsl": "@q5_setup ASSERT John HAS_DOCTOR DrWilson\n@q5 CHECK_WOULD_CONTRADICT John HAS_DOCTOR DrBrown",
+      "expected_dsl": "@_ John HAS_DOCTOR DrWilson\n@q5 John HAS_DOCTOR DrBrown",
+      "expected_dsl_notes": "After adding DrWilson (3rd doctor), adding DrBrown (4th) should conflict with cardinality max=3",
       "expected_answer": {
         "natural_language": "No, if John already has 3 doctors, adding a fourth would violate the cardinality constraint (max 3 doctors per patient).",
-        "truth": "TRUE_CERTAIN",
+        "truth": "CONFLICT",
+        "kind": "conflict",
         "explanation": "Cardinality violation: max=3 for HAS_DOCTOR"
       }
     },
     {
       "id": "q6",
       "natural_language": "Would saying 'cat IS_A mammal AND cat IS_A fish' be a contradiction?",
-      "expected_dsl": "@q6_setup ASSERT cat IS_A mammal\n@q6 CHECK_WOULD_CONTRADICT cat IS_A fish",
+      "expected_dsl": "@_ cat IS_A mammal\n@q6 cat IS_A fish",
       "expected_answer": {
         "natural_language": "Yes, this would be a contradiction. Mammals and fish are disjoint categories - nothing can be both a mammal and a fish.",
-        "truth": "TRUE_CERTAIN",
+        "truth": "CONFLICT",
+        "kind": "conflict",
         "explanation": "Taxonomic contradiction via inherited disjointness"
       }
     },
     {
       "id": "q7",
       "natural_language": "Can John's diabetes diagnosis be both confirmed and ruled out?",
-      "expected_dsl": "@q7 CHECK_WOULD_CONTRADICT diabetes_diagnosis STATUS ruled_out",
+      "expected_dsl": "@q7 diabetes_diagnosis STATUS ruled_out",
       "expected_answer": {
         "natural_language": "No, this would be a contradiction. The diagnosis is already confirmed, and confirmed and ruled_out are disjoint states.",
-        "truth": "TRUE_CERTAIN",
+        "truth": "CONFLICT",
+        "kind": "conflict",
         "explanation": "Disjoint status values cannot coexist"
       }
     },
     {
       "id": "q8",
       "natural_language": "Why would having two birth places be a contradiction?",
-      "expected_dsl": "@q8_setup ASSERT TestPerson BORN_IN PlaceA\n@q8 CHECK_WOULD_CONTRADICT TestPerson BORN_IN PlaceB",
+      "expected_dsl": "@_ TestPerson BORN_IN PlaceA\n@conflict TestPerson BORN_IN PlaceB\n@q8 $conflict EXPLAIN any",
+      "expected_dsl_notes": "After conflict, use EXPLAIN to get reason",
       "expected_answer": {
         "natural_language": "BORN_IN is registered as a functional relation, meaning each subject can have at most one value for this relation. A person can only be born in one place - this is a real-world constraint that the system enforces.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "WHY explains the reasoning behind constraint"
+        "kind": "composite",
+        "explanation": "EXPLAIN returns reasoning about the conflict",
+        "existence": "positive"
       }
     }
   ],
-
-  "tags": ["contradictions", "constraints", "functional", "cardinality", "disjoint", "validation", "comprehensive"]
+  "tags": [
+    "contradictions",
+    "constraints",
+    "functional",
+    "cardinality",
+    "disjoint",
+    "validation",
+    "automatic-detection",
+    "v3.0"
+  ]
 }

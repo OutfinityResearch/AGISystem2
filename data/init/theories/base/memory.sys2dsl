@@ -1,0 +1,177 @@
+# =============================================================================
+# BASE MEMORY - Memory Management Verbs
+# =============================================================================
+# These define operations for managing knowledge persistence and lifecycle.
+# Version: 3.0 - Strict Triple Syntax Compliant
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SECTION 1: Forgetting Operations
+# -----------------------------------------------------------------------------
+
+# FORGET - Reduce existence of subject toward zero
+# Gradual forgetting, not instant deletion
+@FORGET BEGIN
+  @curr subject READ_DIM existence
+  @reduced $curr MULTIPLY low_positive
+  @new_ex $reduced DIVIDE positive
+  @pair existence DIM_PAIR $new_ex
+  @return subject SET_DIM $pair
+END
+
+# FORGET_COMPLETELY - Set existence to zero (full forget)
+@FORGET_COMPLETELY BEGIN
+  @pair existence DIM_PAIR zero
+  @return subject SET_DIM $pair
+END
+
+# RETRACT - Remove a specific fact (set existence negative)
+@RETRACT BEGIN
+  @pair existence DIM_PAIR negative
+  @return subject SET_DIM $pair
+END
+
+# DECAY - Natural decay of unused facts
+@DECAY BEGIN
+  @usage subject READ_DIM usage_count
+  @decay_rate $usage DIVIDE limit_default
+  @curr subject READ_DIM existence
+  @decayed $curr MINUS $decay_rate
+  @pair existence DIM_PAIR $decayed
+  @return subject SET_DIM $pair
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 2: Boosting Operations
+# -----------------------------------------------------------------------------
+
+# BOOST - Increase existence/salience of subject
+@BOOST BEGIN
+  @curr subject READ_DIM existence
+  @boosted $curr PLUS low_positive
+  @capped $boosted MIN positive
+  @pair existence DIM_PAIR $capped
+  @return subject SET_DIM $pair
+END
+
+# REINFORCE - Strengthen based on usage
+@REINFORCE BEGIN
+  @usage subject READ_DIM usage_count
+  @one NUMERIC_VALUE 1
+  @new_usage $usage PLUS $one
+  @pair_usage usage_count DIM_PAIR $new_usage
+  @_ subject SET_DIM $pair_usage
+  @return subject BOOST any
+END
+
+# PRIME - Temporarily boost for retrieval
+@PRIME BEGIN
+  @pair primed DIM_PAIR positive
+  @_ subject SET_DIM $pair
+  @return subject BOOST any
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 3: Protection Operations
+# -----------------------------------------------------------------------------
+
+# PROTECT - Mark subject as protected from forgetting
+@PROTECT BEGIN
+  @pair protected DIM_PAIR positive
+  @return subject SET_DIM $pair
+END
+
+# UNPROTECT - Remove protection from subject
+@UNPROTECT BEGIN
+  @pair protected DIM_PAIR zero
+  @return subject SET_DIM $pair
+END
+
+# IS_PROTECTED - Check if subject is protected
+@IS_PROTECTED BEGIN
+  @prot subject READ_DIM protected
+  @return $prot GREATER_THAN zero
+END
+
+# CORE - Mark as core knowledge (maximum protection)
+@CORE BEGIN
+  @_ subject PROTECT any
+  @pair core DIM_PAIR positive
+  @return subject SET_DIM $pair
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 4: Usage Tracking
+# -----------------------------------------------------------------------------
+
+# GET_USAGE - Get usage statistics for subject
+@GET_USAGE BEGIN
+  @count subject READ_DIM usage_count
+  @last subject READ_DIM last_used
+  @return subject INSPECT any
+END
+
+# RECORD_USE - Record that subject was used
+@RECORD_USE BEGIN
+  @count subject READ_DIM usage_count
+  @one NUMERIC_VALUE 1
+  @new_count $count PLUS $one
+  @pair_count usage_count DIM_PAIR $new_count
+  @_ subject SET_DIM $pair_count
+  @pair_time last_used DIM_PAIR now
+  @return subject SET_DIM $pair_time
+END
+
+# USAGE_RANK - Get subject's rank by usage
+@USAGE_RANK BEGIN
+  @count subject READ_DIM usage_count
+  @return $count INSPECT any
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 5: Garbage Collection
+# -----------------------------------------------------------------------------
+
+# COLLECT_GARBAGE - Remove low-existence points
+@COLLECT_GARBAGE BEGIN
+  @threshold NUMERIC_VALUE -50
+  @candidates any FILTER_BY_DIM existence
+  @filtered $candidates LESS_THAN $threshold
+  @return $filtered FORGET_COMPLETELY any
+END
+
+# COMPACT - Merge similar points
+@COMPACT BEGIN
+  @similar subject SIMILAR_TO any
+  @merged $similar NEW_COMPOSITE subject
+  @return $merged INSPECT any
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 6: Versioning
+# -----------------------------------------------------------------------------
+
+# VERSION - Get current version of subject
+@VERSION BEGIN
+  @return subject READ_DIM version
+END
+
+# ROLLBACK - Revert to previous version
+@ROLLBACK BEGIN
+  @curr subject READ_DIM version
+  @one NUMERIC_VALUE 1
+  @prev $curr MINUS $one
+  @pair version DIM_PAIR $prev
+  @return subject SET_DIM $pair
+END
+
+# SNAPSHOT - Create version snapshot
+@SNAPSHOT BEGIN
+  @curr subject READ_DIM version
+  @one NUMERIC_VALUE 1
+  @next $curr PLUS $one
+  @pair version DIM_PAIR $next
+  @return subject SET_DIM $pair
+END
+
+# End of memory verbs

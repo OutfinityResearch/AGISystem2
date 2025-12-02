@@ -2,11 +2,13 @@
 
 ID: DS(/interface/usecase_define_theory)
 
-Status: DRAFT v1.0
+Status: v3.0 - Unified Triple Syntax
 
 ## 1. Overview
 
-This document describes how to define, manage, and persist theories in AGISystem2. A theory is a named collection of facts, concepts, and relation definitions that can be loaded, extended, and saved.
+This document describes how to define, manage, and persist theories in AGISystem2 using **v3.0 strict triple syntax**. A theory is a named collection of facts, concepts, and verb definitions that can be loaded, extended, and saved.
+
+**All examples use v3.0 syntax**: `@variable Subject VERB Object`
 
 ### 1.1 What is a Theory?
 
@@ -30,69 +32,75 @@ A theory is:
 
 ---
 
-## 2. Creating a New Theory
+## 2. Creating a New Theory (v3.0)
 
 ### 2.1 Start Fresh
 
 ```sys2dsl
 # Begin with empty working theory (default on session start)
 
-# Add your facts
-@f1 ASSERT Water IS_A liquid
-@f2 ASSERT Water HAS_PROPERTY boiling_point
-@f3 ASSERT Ice IS_A solid
-@f4 ASSERT Ice IS_A water_form
+# Add your facts (v3.0: no ASSERT command)
+@_ Water IS_A liquid
+@_ Water HAS boiling_point
+@_ Ice IS_A solid
+@_ Ice IS_A water_form
 
-# Add your relations
-@r1 DEFINE_RELATION TRANSFORMS_TO \
-    inverse=TRANSFORMS_FROM \
-    symmetric=false \
-    transitive=false
+# Define custom verb using BEGIN/END
+@TRANSFORMS_TO BEGIN
+  @step1 subject CHANGES_STATE freevar1
+  @step2 freevar1 BECOMES object
+  @return subject TRANSFORMS_TO object
+END
 
-# Use the new relation
-@f5 ASSERT Water TRANSFORMS_TO Ice
-@f6 ASSERT Ice TRANSFORMS_TO Steam
+# Use the new verb
+@_ Water TRANSFORMS_TO Ice
+@_ Ice TRANSFORMS_TO Steam
 
-# Save as named theory
-@saved SAVE_THEORY physics_water
+# Save as named theory (v3.0 syntax)
+@_ physics_water SAVE any
 ```
 
 ### 2.2 Extend Existing Theory
 
 ```sys2dsl
-# Load base theory first
-@base LOAD_THEORY physics_fundamentals
+# Load base theory first (v3.0 syntax)
+@_ physics_fundamentals LOAD any
 
-# Add extensions
-@f1 ASSERT Helium IS_A noble_gas
-@f2 ASSERT Helium HAS_PROPERTY inert
+# Add extensions (v3.0: direct triple syntax)
+@_ Helium IS_A noble_gas
+@_ Helium HAS inert_property
 
 # Save as new theory (doesn't modify base)
-@saved SAVE_THEORY physics_gases
+@_ physics_gases SAVE any
 ```
 
-### 2.3 Theory File Format
+### 2.3 Theory File Format (v3.0)
 
-Saved theories are plain Sys2DSL text:
+Saved theories are plain Sys2DSL text using v3.0 strict triple syntax:
 
 ```sys2dsl
 # physics_water.sys2dsl
 # Theory: Basic water physics
-# Created: 2024-03-20
+# Created: 2025-12-02
 # Author: system
+# Version: 3.0
 
-# Concepts and facts
-@f1 ASSERT Water IS_A liquid
-@f2 ASSERT Water HAS_PROPERTY boiling_point
-@f3 ASSERT Ice IS_A solid
-@f4 ASSERT Ice IS_A water_form
+# Concepts and facts (v3.0: no ASSERT)
+@_ Water IS_A liquid
+@_ Water HAS boiling_point
+@_ Ice IS_A solid
+@_ Ice IS_A water_form
 
-# Custom relations
-@r1 DEFINE_RELATION TRANSFORMS_TO inverse=TRANSFORMS_FROM symmetric=false transitive=false
+# Custom verb definition (v3.0: BEGIN/END blocks)
+@TRANSFORMS_TO BEGIN
+  @step1 subject CHANGES_STATE freevar1
+  @step2 freevar1 BECOMES object
+  @return subject TRANSFORMS_TO object
+END
 
-# Facts using custom relations
-@f5 ASSERT Water TRANSFORMS_TO Ice
-@f6 ASSERT Ice TRANSFORMS_TO Steam
+# Facts using custom verb
+@_ Water TRANSFORMS_TO Ice
+@_ Ice TRANSFORMS_TO Steam
 ```
 
 ---
@@ -102,7 +110,7 @@ Saved theories are plain Sys2DSL text:
 ### 3.1 List Available Theories
 
 ```sys2dsl
-@theories LIST_THEORIES
+@theories any THEORIES any
 
 # Returns:
 # [
@@ -117,12 +125,12 @@ Saved theories are plain Sys2DSL text:
 
 ```sys2dsl
 # Load single theory
-@loaded LOAD_THEORY physics_fundamentals
+@loaded physics_fundamentals LOAD any
 
 # Load multiple (stacked, order matters)
-@base LOAD_THEORY base
-@domain LOAD_THEORY medical_knowledge
-@specialty LOAD_THEORY cardiology
+@base base LOAD any
+@domain medical_knowledge LOAD any
+@specialty cardiology LOAD any
 
 # Later theories override earlier ones on conflicts
 ```
@@ -131,17 +139,19 @@ Saved theories are plain Sys2DSL text:
 
 ```sys2dsl
 # Save current working theory
-@saved SAVE_THEORY my_theory
+@saved my_theory SAVE any
 
-# Save with metadata
-@saved SAVE_THEORY my_theory description="My custom physics theory"
+# Save with metadata (use dimensions)
+@p description DIM_PAIR "My custom physics theory"
+@_ my_theory SET_DIM $p
+@saved my_theory SAVE any
 ```
 
 ### 3.4 Merge Theories
 
 ```sys2dsl
 # Merge working theory into existing
-@result MERGE_THEORY target_theory append
+@result target_theory MERGE append
 
 # Strategies:
 # - append: Add new facts, keep existing
@@ -152,7 +162,7 @@ Saved theories are plain Sys2DSL text:
 ### 3.5 Theory Info
 
 ```sys2dsl
-@info THEORY_INFO physics_fundamentals
+@info physics_fundamentals INFO any
 
 # Returns:
 # {
@@ -174,9 +184,9 @@ Saved theories are plain Sys2DSL text:
 
 ```sys2dsl
 # Order determines override priority (later wins)
-@t1 LOAD_THEORY base                    # Priority: 1 (lowest)
-@t2 LOAD_THEORY physics_fundamentals    # Priority: 2
-@t3 LOAD_THEORY physics_water           # Priority: 3
+@t1 base LOAD any                       # Priority: 1 (lowest)
+@t2 physics_fundamentals LOAD any       # Priority: 2
+@t3 physics_water LOAD any              # Priority: 3
 # Working theory                        # Priority: 4 (highest)
 ```
 
@@ -192,17 +202,17 @@ Water boiling_point = 100
 Water boiling_point = 95
 
 # If both loaded, later one (high_altitude) wins
-@t1 LOAD_THEORY physics_fundamentals
-@t2 LOAD_THEORY physics_high_altitude
+@t1 physics_fundamentals LOAD any
+@t2 physics_high_altitude LOAD any
 
-@answer ASK Water HAS_PROPERTY boiling_point
+@answer Water HAS_PROPERTY boiling_point
 # Returns: 95 (from high_altitude)
 ```
 
 ### 4.3 Viewing Active Stack
 
 ```sys2dsl
-@stack THEORY_STACK
+@stack any STACK any
 
 # Returns:
 # [
@@ -256,7 +266,7 @@ medical_v2              ✓
 # physics_water.sys2dsl
 #
 # Theory: Water Physics
-# Version: 1.0
+# Version: 3.0
 # Author: Science Team
 # Created: 2024-03-20
 # Description: Physical properties and state transitions of water
@@ -268,15 +278,20 @@ medical_v2              ✓
 
 # === CONCEPTS ===
 
-@f1 ASSERT Water IS_A liquid
+@_ Water IS_A liquid
 # Water at standard conditions is a liquid
 
-@f2 ASSERT Ice IS_A solid
+@_ Ice IS_A solid
 # Frozen water
 
 # === CUSTOM RELATIONS ===
 
-@r1 DEFINE_RELATION TRANSFORMS_TO inverse=TRANSFORMS_FROM symmetric=false transitive=false
+# Use BEGIN/END blocks to define custom verbs
+@TRANSFORMS_TO BEGIN
+  @step1 subject CHANGES_STATE freevar1
+  @step2 freevar1 BECOMES object
+  @return subject TRANSFORMS_TO object
+END
 # State transitions between phases
 
 # === FACTS ===
@@ -302,87 +317,90 @@ Key relations: INDICATES, TREATS, CONTRADICTS
 ```sys2dsl
 # Start session
 # Load dependencies
-@dep1 LOAD_THEORY base
-@dep2 LOAD_THEORY biology
+@dep1 base LOAD any
+@dep2 biology LOAD any
 
-# Define domain-specific relations
-@r1 DEFINE_RELATION INDICATES \
-    inverse=INDICATED_BY \
-    symmetric=false \
-    transitive=false \
-    domain=ontology \
-    range=ontology
+# Define domain-specific relations using BEGIN/END blocks
+@INDICATES BEGIN
+  @step1 subject SUGGESTS object
+  @step2 subject CORRELATES_WITH object
+  @return subject INDICATES object
+END
 
-@r2 DEFINE_RELATION TREATS \
-    inverse=TREATED_BY \
-    symmetric=false \
-    transitive=false
+@TREATS BEGIN
+  @step1 subject REMEDIES object
+  @step2 object RESPONDS_TO subject
+  @return subject TREATS object
+END
 
-@r3 DEFINE_RELATION CONTRAINDICATES \
-    inverse=CONTRAINDICATED_BY \
-    symmetric=false \
-    transitive=false
+@CONTRAINDICATES BEGIN
+  @step1 subject UNSAFE_FOR object
+  @step2 subject WORSENS object
+  @return subject CONTRAINDICATES object
+END
 ```
 
 ### 6.3 Step 3: Add Core Concepts
 
 ```sys2dsl
 # Disease hierarchy
-@f1 ASSERT disease IS_A medical_condition
-@f2 ASSERT infection IS_A disease
-@f3 ASSERT bacterial_infection IS_A infection
-@f4 ASSERT viral_infection IS_A infection
+@_ disease IS_A medical_condition
+@_ infection IS_A disease
+@_ bacterial_infection IS_A infection
+@_ viral_infection IS_A infection
 
 # Symptom hierarchy
-@f10 ASSERT symptom IS_A medical_observation
-@f11 ASSERT fever IS_A symptom
-@f12 ASSERT cough IS_A symptom
-@f13 ASSERT fatigue IS_A symptom
+@_ symptom IS_A medical_observation
+@_ fever IS_A symptom
+@_ cough IS_A symptom
+@_ fatigue IS_A symptom
 ```
 
 ### 6.4 Step 4: Add Domain Knowledge
 
 ```sys2dsl
 # Symptom-disease relationships
-@f20 ASSERT fever INDICATES infection
-@f21 ASSERT cough INDICATES respiratory_infection
-@f22 ASSERT fatigue INDICATES viral_infection
+@_ fever INDICATES infection
+@_ cough INDICATES respiratory_infection
+@_ fatigue INDICATES viral_infection
 
 # Treatment relationships
-@f30 ASSERT antibiotic TREATS bacterial_infection
-@f31 ASSERT antiviral TREATS viral_infection
+@_ antibiotic TREATS bacterial_infection
+@_ antiviral TREATS viral_infection
 
 # Contraindications
-@f40 ASSERT antibiotic CONTRAINDICATES viral_infection
+@_ antibiotic CONTRAINDICATES viral_infection
 ```
 
 ### 6.5 Step 5: Validate and Save
 
 ```sys2dsl
 # Check for conflicts
-@valid VALIDATE
+@valid any VALIDATE any
 
 # If valid, save
-@saved SAVE_THEORY medical_diagnosis description="Medical diagnosis support"
+@p description DIM_PAIR "Medical diagnosis support"
+@_ medical_diagnosis SET_DIM $p
+@saved medical_diagnosis SAVE any
 
 # Verify it's listed
-@theories LIST_THEORIES
+@theories any THEORIES any
 ```
 
 ### 6.6 Step 6: Use the Theory
 
 ```sys2dsl
 # In a new session:
-@loaded LOAD_THEORY medical_diagnosis
+@loaded medical_diagnosis LOAD any
 
 # Now you can query:
-@q1 ASK fever INDICATES infection
+@q1 fever INDICATES infection
 # TRUE_CERTAIN
 
-@q2 HYPOTHESIZE Patient HAS_SYMPTOM fever INDICATES ?
+@q2 Patient HAS_SYMPTOM fever INDICATES ?
 # Returns: infection (and subtypes)
 
-@q3 ASK antibiotic TREATS viral_infection
+@q3 antibiotic TREATS viral_infection
 # FALSE (contraindicated)
 ```
 
@@ -415,8 +433,8 @@ git commit -m "Add medical diagnosis theory v1.0"
 
 ```sys2dsl
 # If using versioned file names:
-@v1 LOAD_THEORY medical_diagnosis_v1
-@v2 LOAD_THEORY medical_diagnosis_v2
+@v1 medical_diagnosis_v1 LOAD any
+@v2 medical_diagnosis_v2 LOAD any
 ```
 
 ---
@@ -427,8 +445,8 @@ git commit -m "Add medical diagnosis theory v1.0"
 
 ```sys2dsl
 # Standard loading pattern
-@base LOAD_THEORY base
-@domain LOAD_THEORY my_domain
+@base base LOAD any
+@domain my_domain LOAD any
 # Working theory for session-specific changes
 ```
 
@@ -436,13 +454,13 @@ git commit -m "Add medical diagnosis theory v1.0"
 
 ```sys2dsl
 # Load theory A, query
-@a LOAD_THEORY physics_classical
-@resultA ASK light IS_A particle
+@a physics_classical LOAD any
+@resultA light IS_A particle
 
 # Reset and load theory B
-@reset RESET_SESSION
-@b LOAD_THEORY physics_quantum
-@resultB ASK light IS_A particle
+@reset any RESET any
+@b physics_quantum LOAD any
+@resultB light IS_A particle
 
 # Compare results
 ```
@@ -453,12 +471,22 @@ git commit -m "Add medical diagnosis theory v1.0"
 # Create a template theory with placeholders
 # template_experiment.sys2dsl
 
-@r1 DEFINE_RELATION OBSERVES inverse=OBSERVED_BY symmetric=false transitive=false
-@r2 DEFINE_RELATION MEASURES inverse=MEASURED_BY symmetric=false transitive=false
+# Define custom verbs using BEGIN/END
+@OBSERVES BEGIN
+  @step1 subject MONITORS object
+  @step2 subject RECORDS object
+  @return subject OBSERVES object
+END
+
+@MEASURES BEGIN
+  @step1 subject QUANTIFIES object
+  @step2 subject EVALUATES object
+  @return subject MEASURES object
+END
 
 # User fills in specifics in working theory
-@f1 ASSERT Experiment_001 OBSERVES reaction_rate
-@f2 ASSERT Experiment_001 MEASURES temperature
+@_ Experiment_001 OBSERVES reaction_rate
+@_ Experiment_001 MEASURES temperature
 ```
 
 ---
@@ -469,27 +497,30 @@ git commit -m "Add medical diagnosis theory v1.0"
 
 ```sys2dsl
 # Check if theory exists
-@theories LIST_THEORIES
+@theories any THEORIES any
 
 # Check for syntax errors
-@validate VALIDATE theory=problem_theory
+@p theory DIM_PAIR problem_theory
+@_ validator SET_DIM $p
+@validate any VALIDATE any
 ```
 
 ### 9.2 Unexpected Results
 
 ```sys2dsl
 # Check active theory stack
-@stack THEORY_STACK
+@stack any STACK any
 
 # Check which theory a fact comes from
-@origin FACT_ORIGIN Water IS_A liquid
+@origin Water IS_A liquid
+@factInfo $origin INFO any
 ```
 
 ### 9.3 Merge Conflicts
 
 ```sys2dsl
 # Use interactive merge to see conflicts
-@result MERGE_THEORY target interactive
+@result target MERGE interactive
 
 # Returns conflicts for manual resolution
 # {

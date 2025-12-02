@@ -30,7 +30,7 @@ AGISystem2 is built on **two orthogonal, independently testable layers**:
 │                    REASONING ENGINE LAYER                       │
 │              (Deterministic, LLM-independent)                   │
 │                                                                 │
-│  Input:  Sys2DSL commands (@var COMMAND subject RELATION obj)   │
+│  Input:  Sys2DSL triples (@var Subject VERB Object)             │
 │  Output: Sys2DSL results (truth values, proofs, facts)          │
 │                                                                 │
 │  Components:                                                    │
@@ -51,9 +51,9 @@ AGISystem2 is built on **two orthogonal, independently testable layers**:
 
 ### Input Format
 ```sys2dsl
-@f1 ASSERT dog IS_A mammal
-@f2 ASSERT Fido IS_A dog
-@q1 ASK Fido IS_A mammal
+@_ dog IS_A mammal
+@_ Fido IS_A dog
+@q Fido IS_A mammal
 ```
 
 ### Output Format
@@ -77,7 +77,7 @@ node evalsuite/runSuite.js           # Default: Direct DSL execution
 ### NL→DSL Translation (Parsing)
 ```
 Input:  "Is Fido a mammal?"
-Output: @q1 ASK Fido IS_A mammal
+Output: @q Fido IS_A mammal    # v3 triple syntax
 ```
 
 ### DSL→NL Translation (Generation)
@@ -112,7 +112,7 @@ The case convention distinguishes **universal statements** (about types) from **
 |------|---------|---------|----------|
 | `lowercase` | Type/Concept/Class | `dog IS_A mammal` | ∀x: dog(x) → mammal(x) |
 | `Capitalized` | Instance/Individual | `Fido IS_A dog` | dog(Fido) |
-| `UPPERCASE` | Relation/Command | `IS_A`, `ASK` | Predicate or instruction |
+| `UPPERCASE` | Relation/VERB | `IS_A`, `CAUSES` | Predicate or relation |
 
 ### Implications
 - `dog IS_A mammal` applies to ALL dogs (type-level fact)

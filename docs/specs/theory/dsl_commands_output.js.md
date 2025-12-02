@@ -16,9 +16,10 @@ constructor({ parser })
 
 ### TO_NATURAL
 ```sys2dsl
-@text TO_NATURAL $result
+@text $result TO_NATURAL none
 ```
-Converts result to natural language.
+Converts result to natural language using v3 triple syntax.
+- Format: `@var Subject TO_NATURAL Object`
 
 **Handles:**
 - Truth values → "Yes, this is definitely true." / "No, this is false." / etc.
@@ -40,18 +41,20 @@ Returns: `{ text: string }`
 
 ### TO_JSON
 ```sys2dsl
-@json TO_JSON $result
-@json TO_JSON $result pretty
+@json $result TO_JSON none
+@json $result TO_JSON pretty
 ```
-Converts result to JSON string.
-- `pretty` option adds indentation (2 spaces)
+Converts result to JSON string using v3 triple syntax.
+- Format: `@var Subject TO_JSON Options`
+- Options: `none` for compact, `pretty` for indented
 - Returns: `{ json: string }`
 
 ### EXPLAIN
 ```sys2dsl
-@explanation EXPLAIN $result
+@explanation $result EXPLAIN none
 ```
-Generates detailed explanation for a result.
+Generates detailed explanation for a result using v3 triple syntax.
+- Format: `@var Subject EXPLAIN Object`
 
 **Handles:**
 - Proof results (proven/not proven, method, chain)
@@ -66,21 +69,24 @@ Returns: `{ explanation: string, result }`
 
 ### FORMAT
 ```sys2dsl
-@text FORMAT "The answer for $subject is: $result"
+@text template FORMAT "The answer for $subject is: $result"
 ```
-Formats a template with variable substitution.
+Formats a template with variable substitution using v3 triple syntax.
+- Format: `@var Subject FORMAT TemplateString`
 - Expands `$varName` references
 - Returns: `{ text: string }`
 
 ### SUMMARIZE
 ```sys2dsl
-@summary SUMMARIZE $factList
-@summary SUMMARIZE $factList maxItems=10
+@summary $factList SUMMARIZE none
+@summary $factList SUMMARIZE maxItems_10
 ```
-Creates a summary of facts/results.
+Creates a summary of facts/results using v3 triple syntax.
+- Format: `@var Subject SUMMARIZE Options`
 
 **Options:**
-- `maxItems=N` - Maximum items to show (default: 5)
+- `none` - Use defaults
+- `maxItems_N` - Maximum items to show (default: 5)
 
 **Handles:**
 - Arrays of facts → "Subject RELATION Object" per line
@@ -101,22 +107,22 @@ Returns:
 
 ### Human-Readable Output
 ```sys2dsl
-@result ASK "Is Dog a mammal?"
-@answer TO_NATURAL $result
+@result Query ASK "Is Dog a mammal?"
+@answer $result TO_NATURAL none
 # → { text: "Yes, this is definitely true." }
 ```
 
 ### JSON Export
 ```sys2dsl
-@facts INSTANCES_OF Animal
-@json TO_JSON $facts pretty
+@facts Animal INSTANCES_OF any
+@json $facts TO_JSON pretty
 # → { json: "[\n  {...},\n  {...}\n]" }
 ```
 
 ### Detailed Explanation
 ```sys2dsl
-@proof PROVE Dog IS_A Animal proof=true
-@explanation EXPLAIN $proof
+@proof Dog PROVE Animal
+@explanation $proof EXPLAIN none
 # → {
 #   explanation: "Attempted to prove statement using transitive method.\n
 #                 Found transitive chain: Dog → mammal → Animal\n
@@ -127,16 +133,16 @@ Returns:
 
 ### Template Formatting
 ```sys2dsl
-@subject LITERAL Dog
-@type LITERAL mammal
-@message FORMAT "The concept $subject belongs to category $type."
+@subject text LITERAL Dog
+@type text LITERAL mammal
+@message template FORMAT "The concept $subject belongs to category $type."
 # → { text: "The concept Dog belongs to category mammal." }
 ```
 
 ### Fact Summary
 ```sys2dsl
-@allFacts FACTS_MATCHING
-@summary SUMMARIZE $allFacts maxItems=5
+@allFacts any FACTS any
+@summary $allFacts SUMMARIZE maxItems_5
 # → {
 #   summary: "Dog IS_A mammal\nCat IS_A mammal\n...",
 #   total: 150,
@@ -179,6 +185,7 @@ Generated N hypothesis(es):
 ```
 
 ## Notes/Constraints
+- All commands follow strict triple syntax `@var Subject VERB Object`
 - TO_NATURAL handles common result types; falls back to JSON for unknown types
 - EXPLAIN provides more detail than TO_NATURAL
 - FORMAT uses same variable expansion as other DSL commands

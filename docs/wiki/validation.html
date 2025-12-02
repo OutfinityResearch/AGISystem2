@@ -93,16 +93,16 @@
       <rect x="20" y="215" width="250" height="90" rx="4" fill="#ffebee" stroke="#c62828" stroke-width="1"/>
       <text x="145" y="235" font-size="10" font-weight="bold" fill="#c62828" text-anchor="middle">Conflict Detection</text>
 
-      <text x="35" y="255" font-size="9" fill="#4a5670" font-family="monospace">ASSERT Dog IS_A Mammal</text>
-      <text x="35" y="270" font-size="9" fill="#c62828" font-family="monospace">ASSERT Dog IS_A Fish</text>
+      <text x="35" y="255" font-size="9" fill="#4a5670" font-family="monospace">@_ Dog IS_A Mammal</text>
+      <text x="35" y="270" font-size="9" fill="#c62828" font-family="monospace">@_ Dog IS_A Fish</text>
       <text x="35" y="290" font-size="9" fill="#c62828">⚠ Mammal ∩ Fish = ∅ → CONFLICT</text>
 
       <!-- Pass example -->
       <rect x="290" y="215" width="250" height="90" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1"/>
       <text x="415" y="235" font-size="10" font-weight="bold" fill="#2e7d32" text-anchor="middle">Valid Update</text>
 
-      <text x="305" y="255" font-size="9" fill="#4a5670" font-family="monospace">ASSERT Dog IS_A Mammal</text>
-      <text x="305" y="270" font-size="9" fill="#2e7d32" font-family="monospace">ASSERT Dog IS_A Animal</text>
+      <text x="305" y="255" font-size="9" fill="#4a5670" font-family="monospace">@_ Dog IS_A Mammal</text>
+      <text x="305" y="270" font-size="9" fill="#2e7d32" font-family="monospace">@_ Dog IS_A Animal</text>
       <text x="305" y="290" font-size="9" fill="#2e7d32">✓ Mammal ⊆ Animal → OK</text>
     </svg>
     <p class="diagram-caption">The ValidationEngine processes input through three stages: syntactic checks (valid DSL), semantic checks (valid dimensions and types), and consistency checks (no conflicts with existing knowledge). Conflicts are detected when assertions would place a concept in incompatible regions.</p>

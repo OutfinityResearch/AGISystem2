@@ -10,11 +10,11 @@ Fixture establishing parallel Crime-Penalty structures for analogical reasoning 
 
 ## Content
 
-```
-Theft IS_A Crime
-Jail IS_A Penalty
-Fraud IS_A Crime
-Fine IS_A Penalty
+```sys2dsl
+@_ Theft IS_A Crime
+@_ Jail IS_A Penalty
+@_ Fraud IS_A Crime
+@_ Fine IS_A Penalty
 ```
 
 ## Facts
@@ -43,10 +43,10 @@ Query: What penalty corresponds to Fraud? (Answer: Fine)
 
 ```sys2dsl
 # Load fixture
-@_ ASSERT Theft IS_A Crime
-@_ ASSERT Jail IS_A Penalty
-@_ ASSERT Fraud IS_A Crime
-@_ ASSERT Fine IS_A Penalty
+@_ Theft IS_A Crime
+@_ Jail IS_A Penalty
+@_ Fraud IS_A Crime
+@_ Fine IS_A Penalty
 
 # Analogical reasoning
 @result ANALOGICAL source_a=Theft source_b=Jail target_c=Fraud

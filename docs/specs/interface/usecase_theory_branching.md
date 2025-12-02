@@ -2,7 +2,7 @@
 
 ID: DS(/interface/usecase_theory_branching)
 
-Status: IMPLEMENTED v1.0
+Status: v3.0 - Unified Triple Syntax
 
 ## 1. Overview
 
@@ -61,10 +61,10 @@ User                    ChatEngine                 System
  │                          │  Check confirmation     │
  │                          │────────────────────────▶│
  │                          │                         │
- │                          │  THEORY_PUSH            │
+ │                          │  name PUSH any          │
  │                          │────────────────────────▶│
  │                          │                         │
- │                          │  ASSERT facts           │
+ │                          │  @_ S R O (facts)       │
  │                          │────────────────────────▶│
  │                          │                         │
  │  ◀────────────────────────                         │
@@ -163,9 +163,9 @@ System: "Got it! I've learned 1 fact: lion IS_A mammal"
 
 | Command | Purpose |
 |---------|---------|
-| `THEORY_PUSH name="..."` | Create and switch to new theory layer |
-| `ASSERT S R O` | Add fact to current theory |
-| `FACTS_MATCHING` | Retrieve facts for contradiction checking |
+| `@var name PUSH any` | Create and switch to new theory layer |
+| `@_ S R O` | Add fact to current theory |
+| `@var pattern FACTS any` | Retrieve facts for contradiction checking |
 
 ---
 
@@ -203,8 +203,8 @@ System: "Got it! I've learned 1 fact: lion IS_A mammal"
 
 | Error | Handling |
 |-------|----------|
-| THEORY_PUSH fails | Return error message, clear pendingAction |
-| ASSERT fails | Skip failed fact, continue with others |
+| name PUSH any fails | Return error message, clear pendingAction |
+| @_ S R O fails | Skip failed fact, continue with others |
 | LLM unavailable | Use heuristic contradiction detection |
 
 ---

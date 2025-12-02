@@ -108,17 +108,17 @@
 
   <pre>
 # Enable veil of ignorance mode
-VEIL_OF_IGNORANCE ON
+veil_mode ENABLE any
 
 # Or configure specific protected dimensions
-BIAS_MASK protected=[120,121,122,123] includeAxiology=true
+@_ protected_dims MASK [120,121,122,123]
 
 # All queries now use fair reasoning
-ASK "Should hire Candidate123?"
+@result Candidate123 SHOULD_HIRE ?
 # → Result based only on unmasked qualifications
 
 # Disable veil
-VEIL_OF_IGNORANCE OFF</pre>
+veil_mode DISABLE any</pre>
 
   <h2>Implementation</h2>
 

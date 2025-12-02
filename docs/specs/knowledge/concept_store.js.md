@@ -153,7 +153,7 @@ Returns facts where subject matches.
 snapshotFacts(): Array<{ subject: string, relation: string, object: string }>
 ```
 Creates deep copy of all facts for counterfactual reasoning.
-- Used by THEORY_PUSH to save state before hypothetical changes
+- Used by PUSH to save state before hypothetical changes
 
 ### restoreFacts(snapshot)
 ```javascript
@@ -162,7 +162,7 @@ restoreFacts(snapshot: Fact[]): void
 Replaces all facts with snapshot contents.
 - Clears existing facts and index
 - Re-adds each fact from snapshot
-- Used by THEORY_POP to revert to previous state
+- Used by POP to revert to previous state
 - Logs to audit
 
 ---

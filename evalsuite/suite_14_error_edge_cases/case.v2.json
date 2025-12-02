@@ -1,0 +1,140 @@
+{
+  "id": "suite_14_error_edge_cases",
+  "name": "Error Handling & Edge Cases",
+  "description": "Tests graceful error handling, UNKNOWN results for missing concepts, empty list handling, and boundary conditions. A robust system should handle these cases without crashing and return meaningful results.",
+
+  "theory": {
+    "natural_language": "A minimal knowledge base for testing edge cases. We have one known fact: Cat is an animal. Dog is an animal. Bird is an animal. We also know that Paris is in France. These are the ONLY facts we know - everything else should return UNKNOWN or FALSE appropriately.",
+    "expected_facts": [
+      "Cat IS_A animal",
+      "Dog IS_A animal",
+      "Bird IS_A animal",
+      "Paris LOCATED_IN France"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Is XyzzyUnknown123 an animal?",
+      "expected_dsl": "@q1 ASK XyzzyUnknown123 IS_A animal",
+      "expected_answer": {
+        "natural_language": "Unknown - XyzzyUnknown123 is not a known concept in the knowledge base.",
+        "truth": "UNKNOWN",
+        "explanation": "Query about completely unknown concept should return UNKNOWN, not crash"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "What facts do we have about NonExistent?",
+      "expected_dsl": "@facts FACTS_MATCHING NonExistent\n@q2 NONEMPTY $facts",
+      "expected_answer": {
+        "natural_language": "No facts exist about NonExistent. The result list is empty.",
+        "truth": "FALSE",
+        "explanation": "FACTS_MATCHING on unknown concept should return empty list, NONEMPTY should be FALSE"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "How many facts do we have about UnknownThing?",
+      "expected_dsl": "@unknownFacts FACTS_MATCHING UnknownThing\n@count COUNT $unknownFacts",
+      "expected_answer": {
+        "natural_language": "Zero facts - UnknownThing is not in the knowledge base.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "COUNT on empty list should return 0 without error"
+      }
+    },
+    {
+      "id": "q4",
+      "natural_language": "What is the first fact about Dog?",
+      "expected_dsl": "@dogFacts FACTS_MATCHING Dog\n@first PICK_FIRST $dogFacts",
+      "expected_answer": {
+        "natural_language": "The fact 'Dog IS_A animal' - Dog has at least one known fact.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "PICK_FIRST on non-empty list should return first element"
+      }
+    },
+    {
+      "id": "q5",
+      "natural_language": "What is the first fact about NonExistent?",
+      "expected_dsl": "@emptyFacts FACTS_MATCHING NonExistent\n@q5 NONEMPTY $emptyFacts",
+      "expected_answer": {
+        "natural_language": "No facts exist about NonExistent.",
+        "truth": "FALSE",
+        "explanation": "FACTS_MATCHING on empty should yield NONEMPTY = FALSE, without crashing."
+      }
+    },
+    {
+      "id": "q6",
+      "natural_language": "Is Cat both an animal AND a plant?",
+      "expected_dsl": "@isAnimal ASK Cat IS_A animal\n@isPlant ASK Cat IS_A plant\n@q6 BOOL_AND $isAnimal $isPlant",
+      "expected_answer": {
+        "natural_language": "No - Cat is an animal but there is no fact saying Cat is a plant.",
+        "truth": "FALSE",
+        "explanation": "BOOL_AND with one TRUE and one UNKNOWN/FALSE should be FALSE"
+      }
+    },
+    {
+      "id": "q7",
+      "natural_language": "Is Cat an animal OR a plant?",
+      "expected_dsl": "@isAnimal2 ASK Cat IS_A animal\n@isPlant2 ASK Cat IS_A plant\n@either BOOL_OR $isAnimal2 $isPlant2",
+      "expected_answer": {
+        "natural_language": "Yes - Cat is an animal (even though we don't know about plant).",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "BOOL_OR with one TRUE should be TRUE regardless of other value"
+      }
+    },
+    {
+      "id": "q8",
+      "natural_language": "Does merging two empty lists give an empty list?",
+      "expected_dsl": "@empty1 FACTS_MATCHING Xyzzy1\n@empty2 FACTS_MATCHING Xyzzy2\n@merged MERGE_LISTS $empty1 $empty2\n@q8 NONEMPTY $merged",
+      "expected_answer": {
+        "natural_language": "The merged list is empty since both source lists are empty.",
+        "truth": "FALSE",
+        "explanation": "MERGE_LISTS of two empty lists should be empty, NONEMPTY should be FALSE"
+      }
+    },
+    {
+      "id": "q9",
+      "natural_language": "What happens when we negate an UNKNOWN result?",
+      "expected_dsl": "@unknown ASK UnknownX IS_A UnknownY\n@q9 BOOL_NOT $unknown",
+      "expected_answer": {
+        "natural_language": "Negating UNKNOWN should still be UNKNOWN - we can't determine the negation of something we don't know.",
+        "truth": "UNKNOWN",
+        "explanation": "BOOL_NOT of UNKNOWN should remain UNKNOWN (three-valued logic)"
+      }
+    },
+    {
+      "id": "q10",
+      "natural_language": "Can we filter an empty list without errors (returns empty)?",
+      "expected_dsl": "@emptyList FACTS_MATCHING NothingHere\n@filtered FILTER $emptyList relation=IS_A\n@q10 NONEMPTY $filtered",
+      "expected_answer": {
+        "natural_language": "Filtering an empty list returns an empty list, so NONEMPTY is FALSE.",
+        "truth": "FALSE",
+        "explanation": "FILTER on empty list should return empty list, NONEMPTY=FALSE"
+      }
+    },
+    {
+      "id": "q11",
+      "natural_language": "Does THEORY_PUSH and THEORY_POP with no changes work correctly?",
+      "expected_dsl": "@pushEmpty THEORY_PUSH name=empty_layer\n@check ASK Cat IS_A animal\n@popEmpty THEORY_POP",
+      "expected_answer": {
+        "natural_language": "Yes, pushing and popping an empty theory layer should not affect existing facts. Cat is still an animal.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "THEORY_PUSH/POP with no modifications should be idempotent"
+      }
+    },
+    {
+      "id": "q12",
+      "natural_language": "Can we check for contradictions in a consistent knowledge base?",
+      "expected_dsl": "@q12 CHECK_CONTRADICTION",
+      "expected_answer": {
+        "natural_language": "No contradictions found - the knowledge base is consistent.",
+        "truth": "FALSE",
+        "explanation": "CHECK_CONTRADICTION on consistent KB should return FALSE (no contradictions)"
+      }
+    }
+  ],
+
+  "tags": ["error-handling", "edge-cases", "UNKNOWN", "empty-list", "graceful-degradation", "robustness"]
+}

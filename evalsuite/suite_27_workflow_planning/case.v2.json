@@ -1,0 +1,123 @@
+{
+  "id": "suite_27_workflow_planning",
+  "name": "Workflow Execution - CI/CD Deployment Pipeline",
+  "description": "Tests CI/CD pipeline planning with DSL-validatable proof chains. Each query verifies stage dependencies and execution order.",
+  "theory": {
+    "natural_language": "PIPELINE STAGES: Stage checkout executes git_clone with repository and branch parameters and produces source_code. Stage build executes npm_build with source_code input and build_config parameter and produces artifact_bundle. Stage unit_test executes jest_runner with source_code input and produces test_report. Stage security executes snyk_scan with artifact_bundle input and produces vulnerability_report. Stage deploy_staging executes kubectl_apply with artifact_bundle and produces staging_deployment. Stage integration_test executes cypress_run with staging_deployment input and produces integration_report. Stage approval executes manual_gate with integration_report input and produces approval_status. Stage deploy_prod executes kubectl_apply with artifact_bundle and requires approval_status and produces production_deployment.",
+    "expected_facts": [
+      "checkout EXECUTES git_clone",
+      "checkout WITH_PARAM repository",
+      "checkout WITH_PARAM branch",
+      "checkout PRODUCES source_code",
+      "build EXECUTES npm_build",
+      "build TAKES source_code",
+      "build WITH_PARAM build_config",
+      "build PRODUCES artifact_bundle",
+      "unit_test EXECUTES jest_runner",
+      "unit_test TAKES source_code",
+      "unit_test PRODUCES test_report",
+      "security EXECUTES snyk_scan",
+      "security TAKES artifact_bundle",
+      "security PRODUCES vulnerability_report",
+      "deploy_staging EXECUTES kubectl_apply",
+      "deploy_staging TAKES artifact_bundle",
+      "deploy_staging PRODUCES staging_deployment",
+      "integration_test EXECUTES cypress_run",
+      "integration_test TAKES staging_deployment",
+      "integration_test PRODUCES integration_report",
+      "approval EXECUTES manual_gate",
+      "approval TAKES integration_report",
+      "approval PRODUCES approval_status",
+      "deploy_prod EXECUTES kubectl_apply",
+      "deploy_prod TAKES artifact_bundle",
+      "deploy_prod REQUIRES approval_status",
+      "deploy_prod PRODUCES production_deployment",
+      "step_1 RUNS checkout",
+      "step_2 RUNS build",
+      "step_2 NEEDS source_code",
+      "step_3 RUNS unit_test",
+      "step_4 RUNS security",
+      "step_5 RUNS deploy_staging",
+      "step_6 RUNS integration_test",
+      "step_7 RUNS approval",
+      "step_8 RUNS deploy_prod",
+      "unit_test_failure TRIGGERS pipeline_abort",
+      "critical_vulnerability TRIGGERS pipeline_abort",
+      "integration_test_failure TRIGGERS rollback"
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "INIT: What parameters does checkout need?",
+      "expected_dsl": "@p1 ASK checkout WITH_PARAM repository\n@p2 ASK checkout WITH_PARAM branch\n@q1 BOOL_AND $p1 $p2",
+      "expected_answer": {
+        "dsl_explanation": "@r1 ASK checkout WITH_PARAM repository\n@r2 ASK checkout WITH_PARAM branch\n@both BOOL_AND $r1 $r2\n# Result: @both.truth = TRUE_CERTAIN proves checkout needs repository AND branch"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "PARALLEL: Which stages take source_code?",
+      "expected_dsl": "@t1 ASK build TAKES source_code\n@t2 ASK unit_test TAKES source_code\n@q2 BOOL_AND $t1 $t2",
+      "expected_answer": {
+        "dsl_explanation": "@s1 ASK build TAKES source_code\n@s2 ASK unit_test TAKES source_code\n@parallel BOOL_AND $s1 $s2\n# Result: @parallel.truth = TRUE_CERTAIN proves build AND unit_test take source_code (parallelizable)"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "DEPENDENCY: What does deploy_prod require?",
+      "expected_dsl": "@req ASK deploy_prod REQUIRES approval_status\n@takes ASK deploy_prod TAKES artifact_bundle\n@q3 BOOL_AND $req $takes",
+      "expected_answer": {
+        "dsl_explanation": "@r1 ASK deploy_prod REQUIRES approval_status\n@r2 ASK deploy_prod TAKES artifact_bundle\n@deps BOOL_AND $r1 $r2\n# Result: @deps.truth = TRUE_CERTAIN proves deploy_prod needs approval_status AND artifact_bundle"
+      }
+    },
+    {
+      "id": "q4",
+      "natural_language": "STEP 5: What does deploy_staging produce?",
+      "expected_dsl": "@runs ASK step_5 RUNS deploy_staging\n@produces ASK deploy_staging PRODUCES staging_deployment\n@q4 BOOL_AND $runs $produces",
+      "expected_answer": {
+        "dsl_explanation": "@s5 ASK step_5 RUNS deploy_staging\n@out ASK deploy_staging PRODUCES staging_deployment\n@step5_valid BOOL_AND $s5 $out\n# Result: @step5_valid.truth = TRUE_CERTAIN proves step_5 runs deploy_staging producing staging_deployment"
+      }
+    },
+    {
+      "id": "q5",
+      "natural_language": "SECURITY: What does security scan produce?",
+      "expected_dsl": "@exec ASK security EXECUTES snyk_scan\n@prod ASK security PRODUCES vulnerability_report\n@q5 BOOL_AND $exec $prod",
+      "expected_answer": {
+        "dsl_explanation": "@e1 ASK security EXECUTES snyk_scan\n@p1 ASK security PRODUCES vulnerability_report\n@sec BOOL_AND $e1 $p1\n# Result: @sec.truth = TRUE_CERTAIN proves security executes snyk_scan producing vulnerability_report"
+      }
+    },
+    {
+      "id": "q6",
+      "natural_language": "FAILURE: What triggers pipeline abort?",
+      "expected_dsl": "@f1 ASK unit_test_failure TRIGGERS pipeline_abort\n@f2 ASK critical_vulnerability TRIGGERS pipeline_abort\n@q6 BOOL_AND $f1 $f2",
+      "expected_answer": {
+        "dsl_explanation": "@a1 ASK unit_test_failure TRIGGERS pipeline_abort\n@a2 ASK critical_vulnerability TRIGGERS pipeline_abort\n@aborts BOOL_AND $a1 $a2\n# Result: @aborts.truth = TRUE_CERTAIN proves both unit_test_failure AND critical_vulnerability trigger abort"
+      }
+    },
+    {
+      "id": "q7",
+      "natural_language": "ROLLBACK: What triggers rollback?",
+      "expected_dsl": "@q7 ASK integration_test_failure TRIGGERS rollback",
+      "expected_answer": {
+        "dsl_explanation": "@rb ASK integration_test_failure TRIGGERS rollback\n# Result: @rb.truth = TRUE_CERTAIN proves integration_test_failure triggers rollback"
+      }
+    },
+    {
+      "id": "q8",
+      "natural_language": "FINAL: What is produced at pipeline end?",
+      "expected_dsl": "@exec ASK deploy_prod EXECUTES kubectl_apply\n@prod ASK deploy_prod PRODUCES production_deployment\n@q8 BOOL_AND $exec $prod",
+      "expected_answer": {
+        "dsl_explanation": "@e1 ASK deploy_prod EXECUTES kubectl_apply\n@p1 ASK deploy_prod PRODUCES production_deployment\n@final BOOL_AND $e1 $p1\n# Result: @final.truth = TRUE_CERTAIN proves deploy_prod executes kubectl_apply producing production_deployment"
+      }
+    }
+  ],
+  "tags": [
+    "cicd",
+    "pipeline",
+    "deployment",
+    "workflow",
+    "multi_statement",
+    "dsl_validatable"
+  ]
+}

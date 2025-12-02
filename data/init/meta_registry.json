@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastUpdated": "2025-12-02T09:28:47.952Z",
+  "lastUpdated": "2025-12-02T16:30:39.112Z",
   "theories": [
     {
       "id": "test_animals",
@@ -85,12 +85,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 41,
+        "loadCount": 42,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-02T09:28:47.813Z"
+        "lastUsed": "2025-12-02T16:30:39.082Z"
       },
-      "registeredAt": "2025-12-02T09:28:47.811Z"
+      "registeredAt": "2025-12-02T16:30:39.082Z"
     },
     {
       "id": "robot_patch",
@@ -103,12 +103,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 37,
+        "loadCount": 38,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-02T09:28:47.896Z"
+        "lastUsed": "2025-12-02T16:30:39.104Z"
       },
-      "registeredAt": "2025-12-02T09:28:47.894Z"
+      "registeredAt": "2025-12-02T16:30:39.103Z"
     },
     {
       "id": "memory_backup",
@@ -121,12 +121,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 29,
+        "loadCount": 30,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-02T09:28:47.818Z"
+        "lastUsed": "2025-12-02T16:30:39.084Z"
       },
-      "registeredAt": "2025-12-02T09:28:47.818Z"
+      "registeredAt": "2025-12-02T16:30:39.084Z"
     },
     {
       "id": "cpu_backup",
@@ -144,7 +144,7 @@
         "successCount": 0,
         "lastUsed": null
       },
-      "registeredAt": "2025-12-02T09:28:47.819Z"
+      "registeredAt": "2025-12-02T16:30:39.084Z"
     },
     {
       "id": "network_backup",
@@ -157,12 +157,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 29,
+        "loadCount": 30,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-02T09:28:47.831Z"
+        "lastUsed": "2025-12-02T16:30:39.086Z"
       },
-      "registeredAt": "2025-12-02T09:28:47.830Z"
+      "registeredAt": "2025-12-02T16:30:39.086Z"
     },
     {
       "id": "overwrite_test",
@@ -180,7 +180,7 @@
         "successCount": 0,
         "lastUsed": "2025-12-02T09:28:47.857Z"
       },
-      "registeredAt": "2025-12-02T09:28:47.856Z"
+      "registeredAt": "2025-12-02T16:30:39.087Z"
     },
     {
       "id": "robotb_patch",
@@ -193,12 +193,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 24,
+        "loadCount": 25,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-02T09:28:47.904Z"
+        "lastUsed": "2025-12-02T16:30:39.105Z"
       },
-      "registeredAt": "2025-12-02T09:28:47.904Z"
+      "registeredAt": "2025-12-02T16:30:39.105Z"
     },
     {
       "id": "drone_patch",
@@ -211,12 +211,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 24,
+        "loadCount": 25,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-02T09:28:47.914Z"
+        "lastUsed": "2025-12-02T16:30:39.107Z"
       },
-      "registeredAt": "2025-12-02T09:28:47.913Z"
+      "registeredAt": "2025-12-02T16:30:39.107Z"
     },
     {
       "id": "server_patch",
@@ -229,12 +229,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 24,
+        "loadCount": 25,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-02T09:28:47.936Z"
+        "lastUsed": "2025-12-02T16:30:39.110Z"
       },
-      "registeredAt": "2025-12-02T09:28:47.936Z"
+      "registeredAt": "2025-12-02T16:30:39.110Z"
     },
     {
       "id": "laptop_patch",
@@ -247,12 +247,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 24,
+        "loadCount": 25,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-02T09:28:47.952Z"
+        "lastUsed": "2025-12-02T16:30:39.112Z"
       },
-      "registeredAt": "2025-12-02T09:28:47.951Z"
+      "registeredAt": "2025-12-02T16:30:39.111Z"
     },
     {
       "id": "budget_increase_scenario",

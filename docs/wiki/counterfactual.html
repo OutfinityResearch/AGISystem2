@@ -93,11 +93,11 @@
       <rect x="20" y="160" width="280" height="120" rx="4" fill="#f5f7fb" stroke="#b0b6c4" stroke-width="1"/>
       <text x="160" y="180" font-size="10" font-weight="bold" fill="#4a5670" text-anchor="middle">Sys2DSL Commands</text>
 
-      <text x="35" y="200" font-size="9" fill="#4a5670" font-family="monospace">THEORY_PUSH name="what-if"</text>
-      <text x="35" y="218" font-size="9" fill="#e65100" font-family="monospace">ASSERT Water IS_A Gas</text>
-      <text x="35" y="236" font-size="9" fill="#2e7d32" font-family="monospace">ASK "Water IS_A ?" → Gas</text>
-      <text x="35" y="254" font-size="9" fill="#4a5670" font-family="monospace">THEORY_POP</text>
-      <text x="35" y="272" font-size="9" fill="#0f4c81" font-family="monospace">ASK "Water IS_A ?" → Liquid</text>
+      <text x="35" y="200" font-size="9" fill="#4a5670" font-family="monospace">what-if PUSH any</text>
+      <text x="35" y="218" font-size="9" fill="#e65100" font-family="monospace">@_ Water IS_A Gas</text>
+      <text x="35" y="236" font-size="9" fill="#2e7d32" font-family="monospace">@result Water IS_A ?</text>
+      <text x="35" y="254" font-size="9" fill="#4a5670" font-family="monospace">any POP any</text>
+      <text x="35" y="272" font-size="9" fill="#0f4c81" font-family="monospace">@result Water IS_A ?</text>
     </svg>
     <p class="diagram-caption">Counterfactual workflow: Push a hypothetical layer, add overriding facts, reason in the altered world, then pop to restore reality. The base knowledge is never modified—only temporarily shadowed by the hypothetical layer.</p>
   </div>
@@ -107,10 +107,10 @@
   <p>Counterfactuals use the <a href="../architecture/knowledge.html#theory-stack">TheoryStack</a> mechanism:</p>
 
   <ol>
-    <li><strong>THEORY_PUSH</strong> – Create a new layer for hypothetical facts</li>
-    <li><strong>ASSERT</strong> – Add counterfactual facts to the layer (these override base facts)</li>
-    <li><strong>ASK / reason</strong> – Query the system; it sees the hypothetical world</li>
-    <li><strong>THEORY_POP</strong> – Discard the layer; base knowledge is restored</li>
+    <li><strong>name PUSH any</strong> – Create a new layer for hypothetical facts</li>
+    <li><strong>@_ Subject Relation Object</strong> – Add counterfactual facts to the layer (these override base facts)</li>
+    <li><strong>@var Subject Relation Object</strong> – Query the system; it sees the hypothetical world</li>
+    <li><strong>any POP any</strong> – Discard the layer; base knowledge is restored</li>
   </ol>
 
   <p>The key insight is that the base knowledge is never modified. The hypothetical layer simply intercepts queries and returns overriding answers.</p>
@@ -150,31 +150,27 @@
   <p>For simple counterfactuals, use the CF command:</p>
 
   <pre>
-# Shorthand (push, assert, query, pop in one command)
-CF "Water IS_A Gas?" | Water TEMPERATURE_AT Celsius200
-# Temporarily assumes Water IS_A Gas and queries implications
-
-# Expanded equivalent
-THEORY_PUSH name="cf_temp"
-ASSERT Water IS_A Gas
-ASSERT Water TEMPERATURE_AT Celsius200
-ASK "Can fish survive in Water?"
-THEORY_POP</pre>
+# Counterfactual layer workflow
+cf_temp PUSH any
+@_ Water IS_A Gas
+@_ Water TEMPERATURE_AT Celsius200
+@result fish SURVIVES_IN Water
+any POP any</pre>
 
   <h2>Nested Counterfactuals</h2>
 
   <p>Multiple layers can be stacked for nested hypotheticals:</p>
 
   <pre>
-THEORY_PUSH name="layer1"
-ASSERT A IS_A B
-  THEORY_PUSH name="layer2"
-  ASSERT A IS_A C  # Overrides layer1's A IS_A B
-  ASK "A IS_A ?"   # → C
-  THEORY_POP
-ASK "A IS_A ?"     # → B (layer1 still active)
-THEORY_POP
-ASK "A IS_A ?"     # → (original value)</pre>
+layer1 PUSH any
+@_ A IS_A B
+  layer2 PUSH any
+  @_ A IS_A C      # Overrides layer1's A IS_A B
+  @result A IS_A ? # → C
+  any POP any
+@result A IS_A ?   # → B (layer1 still active)
+any POP any
+@result A IS_A ?   # → (original value)</pre>
 
   <h2>Related Documentation</h2>
 
@@ -182,7 +178,7 @@ ASK "A IS_A ?"     # → (original value)</pre>
     <li><a href="theory_layers.html">Theory Layers</a> – The underlying mechanism</li>
     <li><a href="../architecture/knowledge.html#theory-stack">TheoryStack</a> – Implementation details</li>
     <li><a href="non_monotonic_logic.html">Non-Monotonic Logic</a> – Belief revision</li>
-    <li><a href="../syntax/index.html">Syntax Reference</a> – THEORY_PUSH, CF commands</li>
+    <li><a href="../syntax/index.html">Syntax Reference</a> – PUSH, CF commands</li>
   </ul>
 
   <div class="footer-nav">

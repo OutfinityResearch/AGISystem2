@@ -31,6 +31,7 @@
 - <a id="URS-024"></a>**URS-024:** The NL↔DSL Translation Layer MUST be independently testable, measuring translation quality separately from reasoning correctness.
 
 ## Constraints and Assumptions
+- <a id="URS-025"></a>**URS-025:** Sys2DSL syntax is strictly `Subject VERB Object` triples. This uniformity is INVIOLABLE. Complex values (pairs, tuples, dimension-value assignments) MUST be represented as intermediate points in conceptual space, never as additional arguments. Chaining via intermediate variables is the canonical mechanism for composition.
 - <a id="URS-017"></a>**URS-017:** Determinism over stochasticity: identical inputs and theory stacks must yield identical outputs.
 - <a id="URS-018"></a>**URS-018:** Explanations must cite the theory layers and semantic dimensions that drive outcomes.
 - <a id="URS-019"></a>**URS-019:** Knowledge is stored as geometric constructs (vectors, bounded shapes) rather than free text.

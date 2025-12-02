@@ -1,0 +1,129 @@
+/**
+ * Test Case: Comprehensive Bias Control & Masking
+ * Tests axiological masking, demographic neutrality, and fair reasoning
+ * Version: 3.0
+ */
+
+module.exports = {
+  id: "suite_05_bias_masking",
+  name: "Comprehensive Bias Control & Masking",
+  description: "Tests axiological masking, demographic neutrality, and fair reasoning",
+  theory: {
+    natural_language: "Company hiring policy: Candidates are evaluated on skills, experience, and certifications. The required certification for the role is PMP. Candidate Alice has 5 years experience and PMP certification. Candidate Bob has 8 years experience but no PMP. Candidate Carol has 3 years and PMP certification. Gender, age, and ethnicity must not affect decisions. Pay equity policy: All level 2 engineers receive the same pay band regardless of demographics. Performance is measured by completed projects and peer reviews. Employee Dan is level 2 with good performance. Employee Eve is level 2 with good performance. Their genders are different but pay should be equal. Content moderation: Political sentiment should not affect factual evaluation. The city council approved the budget on Monday - this is factual regardless of political framing. Toxic language should be separated from factual claims. The statement 'Team Delta deployed v2 yesterday' is factual regardless of emotional language around it.",
+    expected_facts: [
+          "candidate EVALUATED_ON skills",
+          "candidate EVALUATED_ON experience",
+          "candidate EVALUATED_ON certifications",
+          "role REQUIRES PMP_certification",
+          "Alice HAS experience_5_years",
+          "Alice HAS PMP_certification",
+          "Bob HAS experience_8_years",
+          "Carol HAS experience_3_years",
+          "Carol HAS PMP_certification",
+          "gender NOT_FACTOR_IN hiring",
+          "age NOT_FACTOR_IN hiring",
+          "ethnicity NOT_FACTOR_IN hiring",
+          "level_2_engineer HAS pay_band_equal",
+          "Dan IS_A level_2_engineer",
+          "Dan HAS good_performance",
+          "Eve IS_A level_2_engineer",
+          "Eve HAS good_performance",
+          "political_sentiment NOT_FACTOR_IN factual_evaluation",
+          "city_council APPROVED budget",
+          "approval HAPPENED_ON Monday",
+          "toxic_language SEPARATE_FROM factual_claims",
+          "Team_Delta DEPLOYED v2"
+    ]
+  },
+  queries: [
+    {
+      id: "q1",
+      natural_language: "Who should be selected for the role requiring PMP?",
+      expected_dsl: `@q1 Alice HAS PMP_certification`,
+      expected_answer: {
+        natural_language: "Alice or Carol should be selected as they have the required PMP certification. Bob does not qualify despite more experience.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Selection based on required certification, not experience alone",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q2",
+      natural_language: "Does Bob qualify for the role?",
+      expected_dsl: `@q2 Bob HAS PMP_certification`,
+      expected_answer: {
+        natural_language: "No, Bob lacks the required PMP certification.",
+        truth: "FALSE",
+        explanation: "Missing required certification",
+        existence: "negative"
+      }
+    },
+    {
+      id: "q3",
+      natural_language: "Should Dan and Eve have the same pay?",
+      expected_dsl: `@q3 Dan IS_A level_2_engineer`,
+      expected_answer: {
+        natural_language: "Yes, both are level 2 engineers with good performance, so pay should be equal.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Same level + same performance = same pay, demographics masked",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q4",
+      natural_language: "Is it factual that the city council approved the budget?",
+      expected_dsl: `@q4 city_council APPROVED budget`,
+      expected_answer: {
+        natural_language: "Yes, the city council approved the budget on Monday. This is a factual claim independent of political framing.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Factual content separated from political sentiment",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q5",
+      natural_language: "Did Team Delta deploy v2?",
+      expected_dsl: `@q5 Team_Delta DEPLOYED v2`,
+      expected_answer: {
+        natural_language: "Yes, Team Delta deployed v2. This fact stands regardless of any emotional language.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Factual content separated from toxic language",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q6",
+      natural_language: "Should gender affect hiring decisions?",
+      expected_dsl: `@q6 gender NOT_FACTOR_IN hiring`,
+      expected_answer: {
+        natural_language: "No, gender is not a factor in hiring decisions.",
+        truth: "TRUE_CERTAIN",
+        explanation: "The fact that gender NOT_FACTOR_IN hiring is TRUE_CERTAIN, meaning gender correctly should NOT affect decisions",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q7",
+      natural_language: "Does Alice meet the certification requirement?",
+      expected_dsl: `@q7 Alice HAS PMP_certification`,
+      expected_answer: {
+        natural_language: "Yes, Alice has the required PMP certification.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Direct HAS fact matching REQUIRES",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q8",
+      natural_language: "Are Dan and Eve at the same level?",
+      expected_dsl: `@q8 Dan IS_A level_2_engineer`,
+      expected_answer: {
+        natural_language: "Yes, both Dan and Eve are level 2 engineers.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Both IS_A level_2_engineer",
+        existence: "positive"
+      }
+    }
+  ],
+  version: "3.0"
+};

@@ -48,7 +48,7 @@ The Sys2DSL interpreter operates over an environment map:
 - **Primitive**: string, number, boolean.
 - **Truth object**: `{ truth: 'TRUE_CERTAIN' | 'PLAUSIBLE' | 'FALSE' | 'UNKNOWN_TIMEOUT' | 'CONFLICT' }`.
 - **Fact triple**: `{ subject, relation, object }`.
-- **Array of facts**: lists returned by `FACTS_MATCHING`.
+- **Array of facts**: lists returned by `FACTS`.
 - **Concept reference**: `{ kind: 'conceptRef', label, id }`.
   - `label`: canonical concept name (lowercase token).
   - `id`: internal identifier in `ConceptStore`.
@@ -104,17 +104,19 @@ Sys2DSL programmes themselves do not manipulate `Variable` instances directly; t
 
 ## Mask Construction and Application
 
-### Building Masks
+### Building Masks (v3.0 Syntax)
 
-- `MASK_PARTITIONS <partition1> <partition2> ...`
-  - Each `partition` is resolved via `Config.getPartition(name)` (e.g. `ontology`, `axiology`, `empirical`).
-  - The interpreter constructs a `Uint8Array` mask where bits corresponding to the union of selected ranges are set to 1.
-  - Resulting value: `{ kind: 'maskRef', dims, spec: 'ontology,axiology' }`.
+- `@mask partition_name MASK any`
+  - Subject can be a partition name (e.g., `ontology`, `axiology`, `empirical`)
+  - Each partition is resolved via `Config.getPartition(name)`
+  - The interpreter constructs a `Uint8Array` mask where bits corresponding to the union of selected ranges are set to 1
+  - Resulting value: `{ kind: 'maskRef', dims, spec: 'ontology,axiology' }`
 
-- `MASK_DIMS <dimName1> <dimName2> ...`
-  - Each `dimName` is the symbolic name of an ontology or axiology axis from the dimension catalog (for example `Temperature`, `MoralValence`, `Legality`).
-  - The interpreter resolves names to indices (restricted to ontology/axiology ranges) and sets the corresponding bits in a `Uint8Array`.
-  - Result: `{ kind: 'maskRef', dims, spec: 'dimName1,dimName2,...' }`.
+- `@mask DimName1_DimName2_DimName3 MASK any`
+  - Subject can be dimension names combined with underscores
+  - Each `dimName` is the symbolic name of an ontology or axiology axis from the dimension catalog (e.g., `Temperature`, `MoralValence`, `Legality`)
+  - The interpreter resolves names to indices (restricted to ontology/axiology ranges) and sets the corresponding bits in a `Uint8Array`
+  - Result: `{ kind: 'maskRef', dims, spec: 'dimName1,dimName2,...' }`
 
 ### Effective Masks During Reasoning
 
@@ -132,11 +134,11 @@ effectiveMask = relevanceMask & biasMask & explicitMask
 
 If no explicit or bias mask is provided, the concept’s `relevanceMask` alone is used.
 
-### ASK vs. ASK_MASKED
+### Query Execution with Masks
 
-- `ASK <question-string>`:
-  - Normalises the question to a structured triple, encodes it, and calls `EngineAPI.ask` with the default mask (relevanceMask plus any bias mode).
-- `ASK_MASKED <maskVar> <question-string>`:
+- Queries use v3 triple syntax: `@var Subject VERB Object`
+  - Encodes the triple and calls `EngineAPI.ask` with the default mask (relevanceMask plus any bias mode).
+- `ASK_MASKED <maskVar> Subject VERB Object`:
   - Resolves `$maskVar` to a `maskRef`.
   - Combines masks as described above.
   - Passes the effective mask into `Reasoner` / `MathEngine.distanceMaskedL1` so that only selected dimensions influence the truth band.

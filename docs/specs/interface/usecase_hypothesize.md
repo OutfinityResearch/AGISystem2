@@ -2,7 +2,7 @@
 
 ID: DS(/interface/usecase_hypothesize)
 
-Status: DRAFT v1.0
+Status: v3.0 - Unified Triple Syntax
 
 ## 1. Overview
 
@@ -35,7 +35,7 @@ Hypotheses:  - Bacterial infection
 
 ```sys2dsl
 # Observation: Patient has fever
-@hyp HYPOTHESIZE Patient HAS_SYMPTOM fever CAUSED_BY ?
+@hyp Patient HAS_SYMPTOM fever CAUSED_BY ?
 
 # Returns:
 # {
@@ -67,7 +67,7 @@ Lower-level abductive command:
 
 ```sys2dsl
 # Find what could cause fever
-@causes ABDUCT fever CAUSED_BY
+@causes fever CAUSED_BY
 
 # Returns nearest concepts that have CAUSES relationship to fever
 ```
@@ -80,7 +80,7 @@ Lower-level abductive command:
 
 ```sys2dsl
 # Only consider diseases as hypotheses
-@hyp HYPOTHESIZE Patient HAS_SYMPTOM fever \
+@hyp Patient HAS_SYMPTOM fever \
      CAUSED_BY ? \
      where_type=disease
 
@@ -91,18 +91,18 @@ Lower-level abductive command:
 
 ```sys2dsl
 # Only consider physical causes (ontology partition)
-@mask MASK_PARTITIONS ontology
-@hyp HYPOTHESIZE_MASKED $mask Patient HAS_SYMPTOM fever CAUSED_BY ?
+@mask ontology MASK any
+@hyp $mask Patient HAS_SYMPTOM fever CAUSED_BY ?
 ```
 
 ### 3.3 With Theory Context
 
 ```sys2dsl
 # Load specialized theory first
-@med LOAD_THEORY infectious_diseases
+@loaded infectious_diseases PUSH any
 
 # Hypotheses limited to concepts in that theory
-@hyp HYPOTHESIZE Patient HAS_SYMPTOM fever CAUSED_BY ?
+@hyp Patient HAS_SYMPTOM fever CAUSED_BY ?
 ```
 
 ---
@@ -113,12 +113,12 @@ Lower-level abductive command:
 
 ```sys2dsl
 # Multiple observations to explain
-@obs1 ASSERT Patient HAS_SYMPTOM fever
-@obs2 ASSERT Patient HAS_SYMPTOM cough
-@obs3 ASSERT Patient HAS_SYMPTOM fatigue
+@_ Patient HAS_SYMPTOM fever
+@_ Patient HAS_SYMPTOM cough
+@_ Patient HAS_SYMPTOM fatigue
 
 # Find hypotheses that explain ALL symptoms
-@hyp HYPOTHESIZE_ALL Patient \
+@hyp Patient \
      HAS_SYMPTOM fever \
      HAS_SYMPTOM cough \
      HAS_SYMPTOM fatigue \
@@ -131,7 +131,7 @@ Lower-level abductive command:
 
 ```sys2dsl
 # Some symptoms more important
-@hyp HYPOTHESIZE_WEIGHTED Patient \
+@hyp Patient \
      HAS_SYMPTOM fever weight=0.8 \
      HAS_SYMPTOM cough weight=0.5 \
      HAS_SYMPTOM fatigue weight=0.3 \
@@ -158,7 +158,7 @@ Hypotheses are ranked by:
 
 ```sys2dsl
 # Change ranking weights
-@hyp HYPOTHESIZE Patient HAS_SYMPTOM fever CAUSED_BY ? \
+@hyp Patient HAS_SYMPTOM fever CAUSED_BY ? \
      rank_by=support \
      min_plausibility=0.5
 
@@ -171,7 +171,7 @@ Hypotheses are ranked by:
 
 ```sys2dsl
 # Get top N hypotheses
-@hyp HYPOTHESIZE Patient HAS_SYMPTOM fever CAUSED_BY ? limit=5
+@hyp Patient HAS_SYMPTOM fever CAUSED_BY ? limit=5
 ```
 
 ---
@@ -181,7 +181,7 @@ Hypotheses are ranked by:
 ### 6.1 Get Detailed Explanation
 
 ```sys2dsl
-@hyp HYPOTHESIZE Patient HAS_SYMPTOM fever CAUSED_BY ?
+@hyp Patient HAS_SYMPTOM fever CAUSED_BY ?
 
 # Get explanation for top hypothesis
 @explain EXPLAIN $hyp.hypotheses[0]
@@ -207,7 +207,7 @@ Hypotheses are ranked by:
 ### 6.2 Natural Language Output
 
 ```sys2dsl
-@hyp HYPOTHESIZE Patient HAS_SYMPTOM fever CAUSED_BY ?
+@hyp Patient HAS_SYMPTOM fever CAUSED_BY ?
 @readable TO_NATURAL $hyp
 
 # Returns:
@@ -224,7 +224,7 @@ Hypotheses are ranked by:
 ### 7.1 Check Consistency
 
 ```sys2dsl
-@hyp HYPOTHESIZE Patient HAS_SYMPTOM fever CAUSED_BY ?
+@hyp Patient HAS_SYMPTOM fever CAUSED_BY ?
 
 # Validate top hypothesis doesn't conflict with known facts
 @firstHyp PICK_FIRST $hyp.hypotheses
@@ -274,7 +274,7 @@ Hypotheses are ranked by:
 # Top: infection
 
 # Add new observation
-@obs ASSERT Patient HAS normal_white_blood_cell_count
+@_ Patient HAS normal_white_blood_cell_count
 
 # Re-hypothesize
 @hyp2 HYPOTHESIZE Patient HAS_SYMPTOM fever CAUSED_BY ?
@@ -285,12 +285,12 @@ Hypotheses are ranked by:
 
 ```sys2dsl
 # Rule out a hypothesis
-@hyp HYPOTHESIZE Patient HAS_SYMPTOM fever CAUSED_BY ? \
+@hyp Patient HAS_SYMPTOM fever CAUSED_BY ? \
      exclude=heat_exhaustion
 
 # Or based on contradicting fact
-@obs ASSERT Patient NOT_EXPOSED_TO high_temperature
-@hyp HYPOTHESIZE Patient HAS_SYMPTOM fever CAUSED_BY ?
+@_ Patient NOT_EXPOSED_TO high_temperature
+@hyp Patient HAS_SYMPTOM fever CAUSED_BY ?
 # heat_exhaustion automatically excluded
 ```
 
@@ -298,7 +298,7 @@ Hypotheses are ranked by:
 
 ```sys2dsl
 # We suspect infection, narrow it down
-@hyp HYPOTHESIZE Patient HAS infection \
+@hyp Patient HAS infection \
      IS_A ? \
      where_type=infection_subtype
 
@@ -323,7 +323,7 @@ Hypotheses are ranked by:
 # → positive blood culture, elevated WBC
 
 # If those observations added:
-@obs ASSERT Patient HAS elevated_wbc
+@_ Patient HAS elevated_wbc
 @step4 HYPOTHESIZE Patient HAS infection IS_A ?
 # → bacterial_infection rises
 ```
@@ -347,24 +347,24 @@ Hypotheses are ranked by:
 
 ```sys2dsl
 # Load medical knowledge
-@med LOAD_THEORY medical_knowledge
-@inf LOAD_THEORY infectious_diseases
+@loaded1 medical_knowledge PUSH any
+@loaded2 infectious_diseases PUSH any
 ```
 
 ### 10.2 Initial Observations
 
 ```sys2dsl
 # Patient presentation
-@o1 ASSERT Patient_X HAS_SYMPTOM high_fever
-@o2 ASSERT Patient_X HAS_SYMPTOM dry_cough
-@o3 ASSERT Patient_X HAS_SYMPTOM fatigue
-@o4 ASSERT Patient_X HAS_SYMPTOM body_aches
+@_ Patient_X HAS_SYMPTOM high_fever
+@_ Patient_X HAS_SYMPTOM dry_cough
+@_ Patient_X HAS_SYMPTOM fatigue
+@_ Patient_X HAS_SYMPTOM body_aches
 ```
 
 ### 10.3 Generate Hypotheses
 
 ```sys2dsl
-@hyp HYPOTHESIZE_ALL Patient_X \
+@hyp Patient_X \
     HAS_SYMPTOM high_fever \
     HAS_SYMPTOM dry_cough \
     HAS_SYMPTOM fatigue \
@@ -401,7 +401,7 @@ Hypotheses are ranked by:
 
 ```sys2dsl
 # Patient reports loss of smell
-@o5 ASSERT Patient_X HAS_SYMPTOM loss_of_smell
+@_ Patient_X HAS_SYMPTOM loss_of_smell
 
 # Re-hypothesize
 @hyp2 HYPOTHESIZE_ALL Patient_X \
@@ -433,12 +433,12 @@ Hypotheses are ranked by:
 ### 11.1 Technical Troubleshooting
 
 ```sys2dsl
-@tech LOAD_THEORY computer_diagnostics
+@loaded computer_diagnostics PUSH any
 
-@o1 ASSERT Server HAS_SYMPTOM slow_response
-@o2 ASSERT Server HAS_SYMPTOM high_cpu
+@_ Server HAS_SYMPTOM slow_response
+@_ Server HAS_SYMPTOM high_cpu
 
-@hyp HYPOTHESIZE Server HAS_SYMPTOM slow_response CAUSED_BY ?
+@hyp Server HAS_SYMPTOM slow_response CAUSED_BY ?
 
 # Returns: memory_leak, infinite_loop, ddos_attack, resource_exhaustion
 ```
@@ -446,11 +446,11 @@ Hypotheses are ranked by:
 ### 11.2 Scientific Discovery
 
 ```sys2dsl
-@sci LOAD_THEORY chemistry
+@loaded chemistry PUSH any
 
-@obs ASSERT Reaction PRODUCES blue_precipitate
+@_ Reaction PRODUCES blue_precipitate
 
-@hyp HYPOTHESIZE Reaction PRODUCES blue_precipitate CAUSED_BY ?
+@hyp Reaction PRODUCES blue_precipitate CAUSED_BY ?
 
 # Returns: copper_ion_presence, cobalt_compound, ...
 ```
@@ -458,11 +458,11 @@ Hypotheses are ranked by:
 ### 11.3 Legal Reasoning
 
 ```sys2dsl
-@law LOAD_THEORY contract_law
+@loaded contract_law PUSH any
 
-@obs ASSERT Contract IS breach
+@_ Contract IS breach
 
-@hyp HYPOTHESIZE Contract IS breach CAUSED_BY ?
+@hyp Contract IS breach CAUSED_BY ?
 
 # Returns: non_performance, late_delivery, quality_defect, ...
 ```
@@ -519,7 +519,7 @@ Hypotheses are ranked by:
 ### 13.2 Always Validate
 
 ```sys2dsl
-@hyp HYPOTHESIZE ...
+@hyp ...
 @valid VALIDATE_HYPOTHESIS $hyp.hypotheses[0]
 
 # Don't accept hypotheses that conflict with known facts

@@ -75,9 +75,9 @@
       <!-- Sys2DSL -->
       <rect x="290" y="50" width="140" height="80" rx="6" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
       <text x="360" y="70" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Sys2DSL</text>
-      <text x="360" y="90" font-size="8" fill="#4a5670" text-anchor="middle">ASSERT Dog IS_A Mammal</text>
-      <text x="360" y="105" font-size="8" fill="#4a5670" text-anchor="middle">ASSERT Fire CAUSES Smoke</text>
-      <text x="360" y="120" font-size="8" fill="#4a5670" text-anchor="middle">ASK "Cat IS_A Animal?"</text>
+      <text x="360" y="90" font-size="8" fill="#4a5670" text-anchor="middle">@_ Dog IS_A Mammal</text>
+      <text x="360" y="105" font-size="8" fill="#4a5670" text-anchor="middle">@_ Fire CAUSES Smoke</text>
+      <text x="360" y="120" font-size="8" fill="#4a5670" text-anchor="middle">@q Cat IS_A Animal</text>
 
       <!-- Engine -->
       <rect x="450" y="60" width="90" height="60" rx="6" fill="#e1ecf7" stroke="#0f4c81" stroke-width="2"/>
@@ -109,32 +109,32 @@
     <tbody>
       <tr>
         <td><strong>ASSERT</strong></td>
-        <td><code>ASSERT Subject RELATION Object</code></td>
+        <td><code>@_ Subject RELATION Object</code></td>
         <td>Add a fact to the knowledge base</td>
       </tr>
       <tr>
         <td><strong>ASK</strong></td>
-        <td><code>ASK "Subject RELATION Object?"</code></td>
+        <td><code>@var Subject RELATION Object</code></td>
         <td>Query for truth value</td>
       </tr>
       <tr>
         <td><strong>RETRACT</strong></td>
-        <td><code>RETRACT Subject RELATION Object</code></td>
+        <td><code>@_ Subject RELATION_NOT Object</code></td>
         <td>Remove a fact</td>
       </tr>
       <tr>
-        <td><strong>THEORY_PUSH</strong></td>
-        <td><code>THEORY_PUSH name="name"</code></td>
+        <td><strong>PUSH</strong></td>
+        <td><code>@_ name PUSH any</code></td>
         <td>Create new theory layer</td>
       </tr>
       <tr>
-        <td><strong>THEORY_POP</strong></td>
-        <td><code>THEORY_POP</code></td>
+        <td><strong>POP</strong></td>
+        <td><code>@_ any POP any</code></td>
         <td>Discard top theory layer</td>
       </tr>
       <tr>
         <td><strong>FACTS_MATCHING</strong></td>
-        <td><code>FACTS_MATCHING pattern</code></td>
+        <td><code>@var pattern FACTS any</code></td>
         <td>Query for matching facts</td>
       </tr>
     </tbody>
@@ -182,7 +182,7 @@ SIMILAR_TO, DIFFERENT_FROM</pre>
   </ol>
 
   <pre>
-// Input: "ASSERT Dog IS_A Animal"
+// Input: "@_ Dog IS_A Animal"
 // Output AST:
 {
   type: "ASSERT",
@@ -199,7 +199,7 @@ SIMILAR_TO, DIFFERENT_FROM</pre>
 ParseError at line 3, column 15:
   Expected: RELATION keyword (IS_A, CAUSES, PART_OF, ...)
   Found: "belongs_to"
-  Context: "ASSERT Dog belongs_to Person"
+  Context: "@_ Dog belongs_to Person"
                        ^^^^^^^^^</pre>
 
   <h2 id="encoder">Fact Encoder</h2>
@@ -278,22 +278,22 @@ where:
     </thead>
     <tbody>
       <tr>
-        <td><code>ASK "S R O?"</code></td>
+        <td><code>@var S R O</code></td>
         <td>Yes/No</td>
         <td>Inclusion check of S in O via R</td>
       </tr>
       <tr>
-        <td><code>ASK "S R ?"</code></td>
+        <td><code>@var S R ?</code></td>
         <td>What</td>
         <td>Find all O where S R O is true</td>
       </tr>
       <tr>
-        <td><code>ASK "? R O"</code></td>
+        <td><code>@var ? R O</code></td>
         <td>Who/What</td>
         <td>Find all S where S R O is true</td>
       </tr>
       <tr>
-        <td><code>ASK "? R ?"</code></td>
+        <td><code>@var ? R ?</code></td>
         <td>List</td>
         <td>List all facts with relation R</td>
       </tr>
@@ -307,17 +307,17 @@ where:
 
   <pre>
 # test_taxonomy.sys2dsl
-ASSERT Dog IS_A Mammal
-ASSERT Mammal IS_A Animal
-ASK "Dog IS_A Animal?"  # Expected: TRUE_CERTAIN</pre>
+@_ Dog IS_A Mammal
+@_ Mammal IS_A Animal
+@result Dog IS_A Animal  # Expected: TRUE_CERTAIN</pre>
 
   <h3>Auditability</h3>
   <p>Every operation is logged with its exact command, enabling complete audit trails:</p>
 
   <pre>
-2024-01-15 10:23:45 [INFO] ASSERT Dog IS_A Animal → OK
-2024-01-15 10:23:46 [INFO] ASK "Dog IS_A Animal?" → TRUE_CERTAIN (0.95)
-2024-01-15 10:23:47 [INFO] THEORY_PUSH name="experiment_1" → depth=1</pre>
+2024-01-15 10:23:45 [INFO] @_ Dog IS_A Animal → OK
+2024-01-15 10:23:46 [INFO] @result Dog IS_A Animal → TRUE_CERTAIN (0.95)
+2024-01-15 10:23:47 [INFO] @_ experiment_1 PUSH any → depth=1</pre>
 
   <h3>Reproducibility</h3>
   <p>The deterministic grammar ensures that replaying the same command sequence always produces identical results—essential for debugging and verification.</p>

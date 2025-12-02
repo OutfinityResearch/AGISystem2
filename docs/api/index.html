@@ -55,34 +55,34 @@ const session = agent.createSession();</pre>
 
   <pre>
 // Add facts
-session.run(['@f ASSERT Dog IS_A Animal']);
-session.run(['@f ASSERT Cat IS_A Animal']);
+session.run(['@f Dog IS_A Animal']);
+session.run(['@f Cat IS_A Animal']);
 
 // Query
-const env = session.run(['@q ASK "Is Dog an Animal?"']);
+const env = session.run(['@q Dog IS_A Animal']);
 console.log(env.q.truth);  // "TRUE_CERTAIN"
 
 // Get matching facts
-const matches = session.run(['@r FACTS_MATCHING ? IS_A Animal']);
+const matches = session.run(['@r ? IS_A Animal FACTS any']);
 console.log(matches.r);  // [{ subject: 'Dog', relation: 'IS_A', object: 'Animal' }, ...]</pre>
 
   <h3>Theory Management</h3>
   <pre>
 // Push new theory layer
-session.run(['@_ THEORY_PUSH name="experiment"']);
+session.run(['@_ experiment PUSH any']);
 
 // Add facts to layer
-session.run(['@f ASSERT Water IS_A Solid']);  // Hypothetical
+session.run(['@f Water IS_A Solid']);  // Hypothetical
 
 // Query in this context
-const env = session.run(['@q ASK "Is Water a Solid?"']);
+const env = session.run(['@q Water IS_A Solid']);
 console.log(env.q.truth);  // "TRUE_CERTAIN"
 
 // Pop layer (discards facts)
-session.run(['@_ THEORY_POP']);
+session.run(['@_ any POP any']);
 
 // Original state restored
-const env2 = session.run(['@q ASK "Is Water a Solid?"']);
+const env2 = session.run(['@q Water IS_A Solid']);
 console.log(env2.q.truth);  // "FALSE" or "UNKNOWN"</pre>
 
   <h3>Counterfactual Queries</h3>
@@ -97,15 +97,15 @@ console.log(env.cf.truth);</pre>
 
   <h3>Load Theory File</h3>
   <pre>
-session.run(['@_ LOAD_THEORY medical_knowledge']);</pre>
+session.run(['@_ medical_knowledge LOAD any']);</pre>
 
   <h3>Save Theory</h3>
   <pre>
-session.run(['@_ SAVE_THEORY my_session']);</pre>
+session.run(['@_ my_session SAVE any']);</pre>
 
   <h3>List All Facts</h3>
   <pre>
-const env = session.run(['@facts FACTS_MATCHING ? ? ?']);
+const env = session.run(['@facts ? ? ? FACTS any']);
 for (const fact of env.facts) {
   console.log(`${fact.subject} ${fact.relation} ${fact.object}`);
 }</pre>

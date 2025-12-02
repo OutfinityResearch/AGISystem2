@@ -17,25 +17,25 @@
 
   <p>Example: a minimal health‑compliance theory file <code>health_compliance.sys2dsl</code>:</p>
   <pre><code># Basic procedural requirements for ProcedureX
-@req1 ASSERT ProcedureX REQUIRES Consent
-@req2 ASSERT ProcedureX REQUIRES AuditTrail
+@_ ProcedureX ASSERT Consent
+@_ ProcedureX ASSERT AuditTrail
 
-@needs FACTS_MATCHING "ProcedureX REQUIRES ?"
-@given FACTS_MATCHING "? GIVEN yes"
-@present FACTS_MATCHING "? PRESENT yes"
-@allSat MERGE_LISTS $given $present
-@decision ALL_REQUIREMENTS_SATISFIED $needs $allSat</code></pre>
+@needs "ProcedureX REQUIRES ?" FACTS any
+@given "? GIVEN yes" FACTS any
+@present "? PRESENT yes" FACTS any
+@allSat $given MERGE_LISTS $present
+@decision $needs ALL_REQUIREMENTS_SATISFIED $allSat</code></pre>
 
   <p>Example: a small narrative theory file <code>scifi_magic.sys2dsl</code> that introduces a concept and immediately reuses it via variable references:</p>
   <pre><code># Baseline facts about Alice and CityX
-@c1 ASSERT Alice IS_A Human
-@c2 ASSERT Alice LOCATED_IN CityX
-@magic ASSERT Alice CASTS Magic
+@_ Alice ASSERT Human
+@_ Alice ASSERT CityX
+@_ Alice ASSERT Magic
 
-@MagicTheory ASSERT SciFi_TechMagic PERMITS Magic_IN CityX
-@scenarioFacts MERGE_LISTS $magic $MagicTheory
-@maskOntology MASK_PARTITIONS ontology
-@check ASK_MASKED $maskOntology "Alice CASTS Magic?"</code></pre>
+@_ SciFi_TechMagic ASSERT CityX
+@scenarioFacts $magic MERGE_LISTS $MagicTheory
+@maskOntology ontology MASK_PARTITIONS any
+@check Alice ASK Magic</code></pre>
 
   <p>There is no special syntax for “rules” beyond these Sys2DSL statements. What makes a file a theory is how the engine uses it: it reads all statements and treats their effects as additional context while answering questions or running validations, without permanent changes to long‑term memory unless you also ingest the same facts separately.</p>
 
@@ -44,15 +44,15 @@
 
   <p>Example: a theory file that defines a concept and immediately uses it in derived checks, independent of textual order:</p>
   <pre><code># Derived checks first
-@bpFact ASSERT Water BOILS_AT Celsius100
-@tempFact ASSERT Celsius100 IS_A temperature
-@waterPoint BIND_POINT Water
-@tempMask MASK_DIMS Temperature
-@checkBP ASK_MASKED $tempMask "Water BOILS_AT Celsius100?"
+@_ Water ASSERT Celsius100
+@_ Celsius100 ASSERT temperature
+@waterPoint Water BIND_POINT any
+@tempMask Temperature MASK_DIMS any
+@checkBP Water ASK Celsius100
 
 # Definition of reusable bundles below
-@waterConcept BIND_CONCEPT Water
-@facts FACTS_MATCHING "Water BOILS_AT ?"</code></pre>
+@waterConcept Water BIND_CONCEPT any
+@facts "Water BOILS_AT ?" FACTS any</code></pre>
 
   <p>Even though <code>@waterConcept</code> appears later in the file, any statement that uses <code>$waterConcept</code> will be executed after its definition. Circular references (for example <code>@a</code> depending on <code>$b</code> and <code>@b</code> on <code>$a</code>) are rejected with deterministic errors.</p>
 

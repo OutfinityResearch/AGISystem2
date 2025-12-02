@@ -12,14 +12,14 @@ Steps/Assertions:
 
 ## Knowledge Commands
 
-- ASSERT:
-  - `@f ASSERT Water IS_A liquid` creates fact and returns success
-  - `@f ASSERT Water HAS_PROPERTY boiling_point 100` creates property fact
+- Triple Syntax (using @_ for assertion without capture):
+  - `@f Water IS_A liquid` creates fact and returns success
+  - `@bp_val boiling_point DIM_PAIR 100` then `@f Water SET_DIM @bp_val` creates property fact
   - Duplicate assertion returns existing fact reference
   - Verify fact is retrievable via FACTS_MATCHING
 
 - RETRACT:
-  - After ASSERT, `@r RETRACT Water IS_A liquid` removes fact
+  - After triple assertion, `@r RETRACT Water IS_A liquid` removes fact
   - Retract non-existent fact returns empty/no-op
   - Verify fact no longer appears in FACTS_MATCHING
 
@@ -30,9 +30,9 @@ Steps/Assertions:
 
 ## Query Commands
 
-- ASK:
-  - `@q ASK Water IS_A liquid` returns truth verdict (TRUE_CERTAIN after assertion)
-  - `@q ASK Fire IS_A liquid` returns FALSE or UNKNOWN
+- Query (queries use triple syntax):
+  - `@q Water IS_A liquid` returns truth verdict (TRUE_CERTAIN after assertion)
+  - `@q Fire IS_A liquid` returns FALSE or UNKNOWN
   - Verify response includes provenance fields
 
 - FACTS_MATCHING (Polymorphic):
@@ -47,15 +47,15 @@ Steps/Assertions:
 
 ## Theory Commands
 
-- THEORY_PUSH / THEORY_POP:
-  - `@t THEORY_PUSH "test_layer"` creates new theory layer
+- PUSH / POP:
+  - `@_ test_layer PUSH any` creates new theory layer
   - Assertions in pushed layer are isolated
-  - `@t THEORY_POP` removes layer and its facts
+  - `@_ any POP any` removes layer and its facts
   - Verify base facts remain after pop
 
-- THEORY_SAVE / THEORY_LOAD:
-  - `@s THEORY_SAVE "my_theory"` persists current theory
-  - After clearing, `@l THEORY_LOAD "my_theory"` restores it
+- SAVE / LOAD:
+  - `@_ my_theory SAVE any` persists current theory
+  - After clearing, `@_ my_theory LOAD any` restores it
   - Verify facts are restored correctly
 
 ## Reasoning Commands
@@ -71,9 +71,9 @@ Steps/Assertions:
 
 ## Mask Commands
 
-- MASK_PARTITIONS / ASK_MASKED:
+- MASK_PARTITIONS:
   - `@m MASK_PARTITIONS ontology` creates ontology mask
-  - `@q ASK_MASKED $m "Water IS_A liquid"` uses masked reasoning
+  - `@q Water IS_A liquid` with mask `$m` uses masked reasoning
   - Verify result includes maskSpec field
 
 ## Meta Commands
@@ -84,7 +84,7 @@ Steps/Assertions:
   - Verify type preservation (number vs string)
 
 Sample Outputs:
-- ASSERT returns `{success: true, factId: "..."}`
-- ASK returns `{truth: "TRUE_CERTAIN", confidence: 1.0, provenance: {...}}`
+- Triple syntax assertion returns `{success: true, factId: "..."}`
+- Triple syntax query returns `{truth: "TRUE_CERTAIN", confidence: 1.0, provenance: {...}}`
 - FACTS_MATCHING returns array of fact objects
 - VALIDATE returns `{consistent: true, conflicts: []}`

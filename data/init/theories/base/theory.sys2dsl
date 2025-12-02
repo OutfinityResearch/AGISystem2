@@ -1,0 +1,181 @@
+# =============================================================================
+# BASE THEORY - Theory Layer Management Verbs
+# =============================================================================
+# These define operations for managing theory layers (working memory layers).
+# Version: 3.0 - Strict Triple Syntax Compliant
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SECTION 1: Layer Operations
+# -----------------------------------------------------------------------------
+
+# PUSH - Create new theory layer
+# Subject is optional name for the layer
+@PUSH BEGIN
+  @layer_id subject INSPECT any
+  @new_layer $layer_id NEW_COMPOSITE session
+  @pair_type layer_type DIM_PAIR hypothetical
+  @_ $new_layer SET_DIM $pair_type
+  @pair_active active DIM_PAIR positive
+  @return $new_layer SET_DIM $pair_active
+END
+
+# POP - Remove top theory layer
+# Discards all changes in that layer
+@POP BEGIN
+  @top current_layer INSPECT any
+  @parent $top READ_DIM parent_layer
+  @pair_inactive active DIM_PAIR zero
+  @_ $top SET_DIM $pair_inactive
+  @pair_active active DIM_PAIR positive
+  @return $parent SET_DIM $pair_active
+END
+
+# COMMIT - Merge top layer into parent
+# Unlike POP, preserves changes
+@COMMIT BEGIN
+  @top current_layer INSPECT any
+  @parent $top READ_DIM parent_layer
+  @merged $top ATTRACT $parent
+  @pair_inactive active DIM_PAIR zero
+  @_ $top SET_DIM $pair_inactive
+  @pair_active active DIM_PAIR positive
+  @return $merged SET_DIM $pair_active
+END
+
+# DISCARD - Alias for POP
+@DISCARD BEGIN
+  @return any POP any
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 2: Theory Persistence
+# -----------------------------------------------------------------------------
+
+# SAVE - Save current theory to storage
+# Subject is the name to save as
+@SAVE BEGIN
+  @current current_layer INSPECT any
+  @pair_name saved_name DIM_PAIR subject
+  @_ $current SET_DIM $pair_name
+  @pair_saved saved DIM_PAIR positive
+  @return subject SET_DIM $pair_saved
+END
+
+# LOAD - Load theory from storage
+# Subject is the name to load
+@LOAD BEGIN
+  @stored subject INSPECT any
+  @_ $stored PUSH any
+  @pair loaded DIM_PAIR positive
+  @return $stored SET_DIM $pair
+END
+
+# DELETE - Delete theory from storage
+@DELETE BEGIN
+  @pair existence DIM_PAIR zero
+  @return subject SET_DIM $pair
+END
+
+# MERGE - Merge external theory into current
+@MERGE BEGIN
+  @external subject INSPECT any
+  @current current_layer INSPECT any
+  @merged $external ATTRACT $current
+  @pair merged_flag DIM_PAIR positive
+  @return $merged SET_DIM $pair
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 3: Theory Queries
+# -----------------------------------------------------------------------------
+
+# LIST_THEORIES - Get all saved theories (alias: THEORIES)
+@THEORIES BEGIN
+  @return any WITH_RELATION saved_theory
+END
+
+# THEORY_INFO - Get info about a theory
+@THEORY_INFO BEGIN
+  @info subject INSPECT any
+  @facts subject FACTS any
+  @count $facts COUNT any
+  @pair fact_count DIM_PAIR $count
+  @return $info SET_DIM $pair
+END
+
+# CURRENT_THEORY - Get current active theory
+@CURRENT_THEORY BEGIN
+  @return current_layer INSPECT any
+END
+
+# LAYER_DEPTH - Get current layer depth
+@LAYER_DEPTH BEGIN
+  @return current_layer READ_DIM depth
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 4: Session Management
+# -----------------------------------------------------------------------------
+
+# RESET_SESSION - Clear all temporary layers (alias: RESET)
+@RESET BEGIN
+  @depth current_layer READ_DIM depth
+  @_ any POP_ALL any
+  @pair reset DIM_PAIR positive
+  @return session SET_DIM $pair
+END
+
+# NEW_SESSION - Start fresh session
+@NEW_SESSION BEGIN
+  @_ any RESET any
+  @_ session PUSH any
+  @pair new DIM_PAIR positive
+  @return session SET_DIM $pair
+END
+
+# CHECKPOINT - Save session state for rollback
+@CHECKPOINT BEGIN
+  @state current_layer INSPECT any
+  @_ $state SNAPSHOT any
+  @pair checkpoint DIM_PAIR $state
+  @return subject SET_DIM $pair
+END
+
+# RESTORE - Restore to checkpoint
+@RESTORE BEGIN
+  @checkpoint subject READ_DIM checkpoint
+  @return $checkpoint LOAD any
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 5: Layer Properties
+# -----------------------------------------------------------------------------
+
+# SET_READONLY - Make layer read-only
+@SET_READONLY BEGIN
+  @pair readonly DIM_PAIR positive
+  @return subject SET_DIM $pair
+END
+
+# SET_WRITABLE - Make layer writable
+@SET_WRITABLE BEGIN
+  @pair readonly DIM_PAIR zero
+  @return subject SET_DIM $pair
+END
+
+# IS_READONLY - Check if layer is read-only
+@IS_READONLY BEGIN
+  @ro subject READ_DIM readonly
+  @return $ro GREATER_THAN zero
+END
+
+# TAG - Add metadata tag to layer
+@TAG BEGIN
+  @tags subject READ_DIM tags
+  @new_tags $tags NEW_COMPOSITE object
+  @pair tags DIM_PAIR $new_tags
+  @return subject SET_DIM $pair
+END
+
+# End of theory verbs

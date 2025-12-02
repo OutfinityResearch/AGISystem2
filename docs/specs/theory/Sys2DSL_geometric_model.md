@@ -49,23 +49,11 @@ There is NO syntax that compresses multiple points into one. Each entity occupie
 
 ---
 
-## 2. The Problem with `property=value`
+## 2. Geometric Decomposition
 
-### 2.1 What's Wrong
+### 2.1 The Hidden Structure
 
-The syntax `subject HAS_PROPERTY property=value` is **geometrically incoherent** because it tries to encode multiple distinct points as a single token:
-
-```
-water HAS_PROPERTY boiling_point=100
-       └────┬────┘ └──────┬──────┘
-            │              │
-     One relation    TWO concepts compressed!
-                     (boiling_point AND 100)
-```
-
-### 2.2 The Hidden Structure
-
-What this actually represents:
+Every property-value relationship involves multiple distinct points in conceptual space:
 
 ```
 Point 1: water              (concept)
@@ -78,82 +66,78 @@ Relation B: boiling_point ──HAS_VALUE──► Celsius100
 Relation C: water ──BOILS_AT──► Celsius100 (direct)
 ```
 
-### Visual: Why property=value is Wrong
+### Visual: Correct Decomposition
 
 ```
-    WRONG (compressed):                    CORRECT (decomposed):
-    ─────────────────────                  ─────────────────────────────────
+    CORRECT (decomposed):
+    ─────────────────────────────────
 
-    ┌───────────────────┐                  ┌─────────┐  HAS_PROPERTY  ┌──────────────┐
-    │      water        │                  │  water  │ ─────────────► │ boiling_point│
-    │                   │                  └─────────┘                └──────┬───────┘
-    │ boiling_point=100 │  ← String,                                        │
-    │   (NOT a point!)  │    no geometry!                                   │ HAS_VALUE
-    └───────────────────┘                                                   ▼
-                                                                   ┌───────────────┐
-    Problem: "100" has no                                          │  Celsius100   │
-    position in space!                                             │  (a POINT in  │
-                                                                   │   space!)     │
-                                                                   └───────────────┘
+    ┌─────────┐  HAS_PROPERTY  ┌──────────────┐
+    │  water  │ ─────────────► │ boiling_point│
+    └─────────┘                └──────┬───────┘
+                                      │
+                                      │ HAS_VALUE
+                                      ▼
+                             ┌───────────────┐
+                             │  Celsius100   │
+                             │  (a POINT in  │
+                             │   space!)     │
+                             └───────────────┘
 ```
 
-### 2.3 Why This Matters
+### 2.2 Why This Matters
 
-1. **Reasoning**: Can't reason about `100` independently (e.g., "what else has value 100?")
-2. **Queries**: Can't find all properties without parsing strings
-3. **Composition**: Can't combine values as concepts
-4. **Geometry**: The value has no position in space - it's just a string!
+1. **Reasoning**: Can reason about `Celsius100` independently (e.g., "what else has value Celsius100?")
+2. **Queries**: Can find all properties through proper relations
+3. **Composition**: Can combine values as concepts
+4. **Geometry**: Every value has a position in space
 
 ---
 
 ## 3. Correct Decomposition Patterns
 
-### 3.1 Pattern A: Property-Value Chain
+### 3.1 Pattern A: DIM_PAIR (Recommended for v3)
 
 ```sys2dsl
-# Define the concepts
-@c1 DEFINE_CONCEPT boiling_point
-@c2 DEFINE_CONCEPT Celsius100
-
-# Assert the relationships
-@f1 ASSERT water HAS_PROPERTY boiling_point
-@f2 ASSERT boiling_point OF_WATER HAS_VALUE Celsius100
+# Use the DIM_PAIR pattern to set dimensional properties
+@p boiling_point DIM_PAIR Celsius100
+@_ Water SET_DIM $p
 ```
 
-**Pro**: Explicit structure
-**Con**: Verbose, needs context (OF_WATER)
+**Pro**: Geometrically correct, efficient, v3 standard
+**Con**: Requires DIM_PAIR verb support
 
-### 3.2 Pattern B: Reified Fact (Recommended for complex)
-
-```sys2dsl
-# Create a fact node that links everything
-@fact1 DEFINE_CONCEPT WaterBoilingFact
-
-@f1 ASSERT WaterBoilingFact SUBJECT water
-@f2 ASSERT WaterBoilingFact PROPERTY boiling_point
-@f3 ASSERT WaterBoilingFact VALUE Celsius100
-```
-
-**Pro**: Full flexibility, queryable
-**Con**: Most verbose
-
-### 3.3 Pattern C: Direct Relation (Recommended for simple)
+### 3.2 Pattern B: Direct Relation (Simple cases)
 
 ```sys2dsl
 # Use a specific relation that encodes the property
-@f1 ASSERT water BOILS_AT Celsius100
+@_ Water BOILS_AT Celsius100
 ```
 
 **Pro**: Simple, one statement
 **Con**: Requires defining many relations
 
-### 3.4 Pattern D: Value as Concept
+### 3.3 Pattern C: Reified Fact (Complex metadata)
+
+```sys2dsl
+# Create a fact node that links everything (for complex cases)
+@fact WaterBoilingFact REIFY any
+
+@_ WaterBoilingFact HAS_SUBJECT Water
+@_ WaterBoilingFact HAS_PROPERTY boiling_point
+@_ WaterBoilingFact HAS_VALUE Celsius100
+```
+
+**Pro**: Full flexibility, queryable, supports metadata
+**Con**: Most verbose
+
+### 3.4 Pattern D: Value Hierarchy
 
 ```sys2dsl
 # The value itself is a concept in a measurement hierarchy
-@f1 ASSERT Celsius100 IS_A temperature
-@f2 ASSERT Celsius100 IS_A boiling_temperature
-@f3 ASSERT water HAS_BOILING_POINT Celsius100
+@_ Celsius100 IS_A temperature
+@_ Celsius100 IS_A boiling_temperature
+@_ Water HAS_BOILING_POINT Celsius100
 ```
 
 **Pro**: Values are first-class, can reason about them
@@ -163,51 +147,64 @@ Relation C: water ──BOILS_AT──► Celsius100 (direct)
 
 ## 4. Recommended Approach
 
-### 4.1 Simple Properties: Use Direct Relations
+### 4.1 Dimensional Properties: Use DIM_PAIR (Recommended)
 
-For common properties, define specific relations:
+For physical/measurable properties, use DIM_PAIR pattern:
 
 ```sys2dsl
-# Define relations
-@r1 DEFINE_RELATION BOILS_AT inverse=BOILING_POINT_OF
-@r2 DEFINE_RELATION FREEZES_AT inverse=FREEZING_POINT_OF
-@r3 DEFINE_RELATION WEIGHS inverse=WEIGHT_OF
-@r4 DEFINE_RELATION HAS_COLOR inverse=COLOR_OF
+# Set dimensional properties on concepts
+@p1 boiling_point DIM_PAIR Celsius100
+@_ Water SET_DIM $p1
 
-# Use them directly
-@f1 ASSERT water BOILS_AT Celsius100
-@f2 ASSERT water FREEZES_AT Celsius0
-@f3 ASSERT Elephant WEIGHS TonsScale5
-@f4 ASSERT Sky HAS_COLOR Blue
+@p2 freezing_point DIM_PAIR Celsius0
+@_ Water SET_DIM $p2
+
+@p3 weight DIM_PAIR TonsScale5
+@_ Elephant SET_DIM $p3
+
+@p4 color DIM_PAIR Blue
+@_ Sky SET_DIM $p4
 ```
 
-### 4.2 Complex Properties: Use Reification
+### 4.2 Simple Relations: Direct Verb Use
+
+For simple relational properties:
+
+```sys2dsl
+# Use direct relations
+@_ Water BOILS_AT Celsius100
+@_ Water FREEZES_AT Celsius0
+@_ Elephant WEIGHS TonsScale5
+@_ Sky HAS_COLOR Blue
+```
+
+### 4.3 Complex Properties: Use Reification
 
 For properties that need context or metadata:
 
 ```sys2dsl
 # "Water boils at 100°C at sea level pressure"
-@fact DEFINE_CONCEPT WaterBoilingSeaLevel
-@f1 ASSERT WaterBoilingSeaLevel SUBJECT water
-@f2 ASSERT WaterBoilingSeaLevel RELATION BOILS_AT
-@f3 ASSERT WaterBoilingSeaLevel VALUE Celsius100
-@f4 ASSERT WaterBoilingSeaLevel CONDITION SeaLevelPressure
+@fact WaterBoilingSeaLevel REIFY any
+@_ WaterBoilingSeaLevel HAS_SUBJECT Water
+@_ WaterBoilingSeaLevel HAS_RELATION BOILS_AT
+@_ WaterBoilingSeaLevel HAS_VALUE Celsius100
+@_ WaterBoilingSeaLevel HAS_CONDITION SeaLevelPressure
 ```
 
-### 4.3 Value Hierarchies
+### 4.4 Value Hierarchies
 
 Define values as concepts in hierarchies:
 
 ```sys2dsl
 # Temperature values
-@t1 ASSERT Celsius0 IS_A temperature
-@t2 ASSERT Celsius100 IS_A temperature
-@t3 ASSERT Celsius100 IS_A high_temperature
-@t4 ASSERT Celsius0 IS_A low_temperature
+@_ Celsius0 IS_A temperature
+@_ Celsius100 IS_A temperature
+@_ Celsius100 IS_A high_temperature
+@_ Celsius0 IS_A low_temperature
 
 # Now we can reason about temperatures
-@q1 ASK Celsius100 IS_A high_temperature  # TRUE
-@q2 INSTANCES_OF temperature      # All temperatures
+@q1 Celsius100 IS_A high_temperature  # TRUE
+@q2 temperature INSTANCES any         # All temperatures
 ```
 
 ---
@@ -312,39 +309,41 @@ Examples: IS_A, CAUSES, BOILS_AT, LOCATED_IN
 
 ## 6. Syntax Rules
 
-### 6.1 Valid Statement Forms
+### 6.1 Valid Statement Forms (v3)
 
 ```sys2dsl
-# subject VERB complement - all three are separate points
-@var ASSERT subject RELATION complement
-@var ASK subject RELATION complement
-@var PROVE subject RELATION complement
+# Subject VERB Object - all three are separate concepts
+@var subject RELATION object
+@var subject VERB object
 ```
 
-### 6.2 FORBIDDEN: Compound Tokens
+### 6.2 Valid Patterns Only
 
 ```sys2dsl
-# WRONG - property=value is not allowed
-@f ASSERT water HAS_PROPERTY boiling_point=100
+# CORRECT - use DIM_PAIR pattern
+@p boiling_point DIM_PAIR Celsius100
+@_ Water SET_DIM $p
 
-# WRONG - nested structures
-@f ASSERT water HAS properties=[boiling_point, density]
+# CORRECT - use direct relations
+@_ Water BOILS_AT Celsius100
 
-# WRONG - inline JSON
-@f ASSERT water DATA {"temp": 100}
+# CORRECT - use reification for complex cases
+@fact WaterBoilingFact REIFY any
+@_ WaterBoilingFact HAS_SUBJECT Water
+@_ WaterBoilingFact HAS_VALUE Celsius100
 ```
 
 ### 6.3 Variable Composition
 
-Variables can substitute for ANY point:
+Variables can substitute for ANY concept:
 
 ```sys2dsl
-@subj BIND_CONCEPT water
-@rel BIND_RELATION BOILS_AT
-@val BIND_CONCEPT Celsius100
+@subj Water BIND any
+@val Celsius100 BIND any
 
-@fact ASSERT $subj $rel $val
-# Expands to: water BOILS_AT Celsius100
+@p boiling_point DIM_PAIR $val
+@_ $subj SET_DIM $p
+# Sets water's boiling point to Celsius100
 ```
 
 ---
@@ -354,114 +353,110 @@ Variables can substitute for ANY point:
 ### 7.1 Physical Properties
 
 ```sys2dsl
-# OLD (WRONG):
-@f ASSERT water HAS_PROPERTY boiling_point=100
-@f ASSERT iron HAS_PROPERTY density=7.87
+# DIM_PAIR pattern:
+@p1 boiling_point DIM_PAIR Celsius100
+@_ Water SET_DIM $p1
 
-# NEW (CORRECT):
-@f1 ASSERT water BOILS_AT Celsius100
-@f2 ASSERT iron HAS_DENSITY DensityIron
-@f3 ASSERT DensityIron IS_A high_density
+@p2 density DIM_PAIR Density787
+@_ Iron SET_DIM $p2
+@_ Density787 IS_A high_density
+
+# Direct relation:
+@_ Water BOILS_AT Celsius100
+@_ Iron HAS_DENSITY Density787
 ```
 
 ### 7.2 Person Attributes
 
 ```sys2dsl
-# OLD (WRONG):
-@f ASSERT Alice HAS_PROPERTY age=30
-@f ASSERT Alice HAS_PROPERTY occupation=doctor
+# DIM_PAIR pattern:
+@p1 age DIM_PAIR Years30
+@_ Alice SET_DIM $p1
 
-# NEW (CORRECT):
-@f1 ASSERT Alice HAS_AGE Years30
-@f2 ASSERT Alice HAS_OCCUPATION doctor
-@f3 ASSERT Alice IS_A doctor
-# Or simply:
-@f4 ASSERT Alice IS_A person
-@f5 ASSERT Alice WORKS_AS doctor
-@f6 ASSERT Alice AGED Years30
+@p2 occupation DIM_PAIR doctor
+@_ Alice SET_DIM $p2
+
+# Direct relations:
+@_ Alice HAS_AGE Years30
+@_ Alice IS_A doctor
+@_ Alice WORKS_AS doctor
 ```
 
 ### 7.3 Configuration/Settings
 
 ```sys2dsl
-# OLD (WRONG):
-@f ASSERT System HAS_SETTING timeout=5000
+# DIM_PAIR pattern:
+@p timeout DIM_PAIR Milliseconds5000
+@_ System SET_DIM $p
 
-# NEW (CORRECT):
-@f1 ASSERT System HAS_TIMEOUT Milliseconds5000
-# Or with hierarchy:
-@f2 ASSERT Milliseconds5000 IS_A duration
-@f3 ASSERT Milliseconds5000 IS_A short_duration
+# With hierarchy:
+@_ Milliseconds5000 IS_A duration
+@_ Milliseconds5000 IS_A short_duration
+@_ System HAS_TIMEOUT Milliseconds5000
 ```
 
 ---
 
 ## 8. Impact on Commands
 
-### 8.1 FACTS_MATCHING (Polymorphic)
+### 8.1 Querying Facts (v3)
 
-FACTS_MATCHING supports 0-3 arguments:
+Query facts using subject-verb-object pattern:
 
 ```sys2dsl
-# Find all things that boil at some temperature (use specialized command)
-@results FACTS_WITH_RELATION BOILS_AT
+# Find all facts about Water
+@props Water FACTS any
 
-# Find all properties of water (multiple relations, 2-arg form)
-@props1 FACTS_MATCHING water BOILS_AT
-@props2 FACTS_MATCHING water FREEZES_AT
-@props3 FACTS_MATCHING water HAS_DENSITY
-@all MERGE_LISTS $props1 $props2
-@all2 MERGE_LISTS $all $props3
+# Find specific relationship
+@boiling Water BOILS_AT any
+
+# Find all things that boil at Celsius100
+@substances any BOILS_AT Celsius100
 ```
 
 ### 8.2 Reasoning About Values
 
-Now values are concepts we can reason about:
+Values are concepts we can reason about:
 
 ```sys2dsl
 # What substances boil at high temperatures?
-@high_temps INSTANCES_OF high_temperature
-@first_high PICK_FIRST $high_temps
-@substances FACTS_WITH_OBJECT $first_high
+@high_temps high_temperature INSTANCES any
+@first_high $high_temps FIRST any
+@substances any BOILS_AT $first_high
 ```
 
 ---
 
 ## 9. Implementation Changes Required
 
-### 9.1 Parser Update
+### 9.1 Parser Implementation (v3)
 
-The parser MUST reject `=` in tokens (except in command parameters like `inverse=`):
+The v3 parser validates triple syntax and supports DIM_PAIR patterns.
 
-```javascript
-// In dsl_engine.js
-if (token.includes('=') && !isCommandParameter(token)) {
-  throw new Error(`Invalid token '${token}': property=value syntax not allowed. Use separate concepts.`);
-}
-```
+### 9.2 Documentation Standard
 
-### 9.2 Documentation Update
+All documentation uses v3 syntax with DIM_PAIR patterns.
 
-All examples using `property=value` must be rewritten.
+### 9.3 Test Coverage
 
-### 9.3 Test Update
-
-Add tests that verify rejection of `property=value`.
+Tests verify:
+- Proper handling of DIM_PAIR patterns
+- Correct encoding of dimensional properties
+- Triple syntax validation
 
 ---
 
-## 10. Migration Guide
+## 10. Syntax Summary
 
-For existing code using `property=value`:
+Standard v3 triple syntax:
 
-| Old Syntax | New Syntax |
-|------------|------------|
-| `HAS_PROPERTY x=y` | `HAS_X Y` or `X IS Y` |
-| `threshold=5` | Keep for command params only |
-| `name="value"` | Keep for command params only |
-| `inverse=REL` | Keep for DEFINE_RELATION |
+| Pattern | Syntax |
+|---------|--------|
+| DIM_PAIR pattern | `@p x DIM_PAIR y` then `@_ Subject SET_DIM $p` |
+| Direct relation | `@_ Subject VERB Object` |
+| Reification | `@fact F REIFY any` then `@_ F HAS_SUBJECT S` |
 
-**Rule**: `=` is only valid in **command parameters**, never in **triplet arguments**.
+**Rule**: Command parameters (e.g., `inverse=REL` in DEFINE_RELATION) can use `=`, but subject-verb-object triplets must not.
 
 ---
 
@@ -471,7 +466,7 @@ For existing code using `property=value`:
 2. **No compression** of multiple points into one token
 3. **Values are concepts** with their own position in space
 4. **Relations connect points** - they don't embed data
-5. **`property=value` is forbidden** in triplets
+5. **Triple syntax** for all subject-verb-object statements
 6. **Variables compose** to build complex statements from simple points
 
 ---

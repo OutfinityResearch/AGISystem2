@@ -2,7 +2,6 @@
   "id": "suite_25_theory_management",
   "name": "Theory Stack Management and Hypothetical Reasoning",
   "description": "Tests ability to manage theory layers for what-if scenarios, contradictions, and hypothetical reasoning",
-
   "theory": {
     "natural_language": "Base facts about a company: Alice is an employee. Bob is an employee. Alice works in Engineering. Bob works in Sales. Engineering budget is 100000. Sales budget is 80000. Alice salary is 70000. Bob salary is 60000. Company policy: Employees can access their department files. Managers can access all files. Alice is not a manager. Bob is not a manager.",
     "expected_facts": [
@@ -20,22 +19,22 @@
       "Bob IS_A manager FALSE"
     ]
   },
-
   "queries": [
     {
       "id": "q1",
       "natural_language": "Is Alice an employee?",
-      "expected_dsl": "@q1 ASK Alice IS_A employee",
+      "expected_dsl": "@q1 Alice IS_A employee",
       "expected_answer": {
         "natural_language": "Yes, Alice is an employee.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "Basic fact check"
+        "explanation": "Basic fact check",
+        "existence": "positive"
       }
     },
     {
       "id": "q2",
       "natural_language": "Where does Bob work?",
-      "expected_dsl": "@q2 FACTS_MATCHING Bob WORKS_IN",
+      "expected_dsl": "@q2 Bob FACTS any WORKS_IN",
       "expected_answer": {
         "natural_language": "Bob works in Sales.",
         "truth": "LIST",
@@ -45,17 +44,18 @@
     {
       "id": "q3",
       "natural_language": "Is Alice a manager?",
-      "expected_dsl": "@q3 ASK Alice IS_A manager",
+      "expected_dsl": "@q3 Alice IS_A manager",
       "expected_answer": {
         "natural_language": "No, Alice is not a manager.",
         "truth": "FALSE",
-        "explanation": "Alice is explicitly not a manager"
+        "explanation": "Alice is explicitly not a manager",
+        "existence": "negative"
       }
     },
     {
       "id": "q4",
       "natural_language": "What is the Engineering budget?",
-      "expected_dsl": "@q4 FACTS_MATCHING Engineering HAS_BUDGET",
+      "expected_dsl": "@q4 Engineering FACTS any HAS_BUDGET",
       "expected_answer": {
         "natural_language": "Engineering has a budget of 100000.",
         "truth": "LIST",
@@ -65,7 +65,7 @@
     {
       "id": "q5",
       "natural_language": "Who are the employees?",
-      "expected_dsl": "@q5 INSTANCES_OF employee",
+      "expected_dsl": "@q5 any IS_A employee",
       "expected_answer": {
         "natural_language": "Alice and Bob are employees.",
         "truth": "LIST",
@@ -75,7 +75,7 @@
     {
       "id": "q6",
       "natural_language": "What is Alice's salary?",
-      "expected_dsl": "@q6 FACTS_MATCHING Alice HAS_SALARY",
+      "expected_dsl": "@q6 Alice FACTS any HAS_SALARY",
       "expected_answer": {
         "natural_language": "Alice earns 70000.",
         "truth": "LIST",
@@ -85,17 +85,18 @@
     {
       "id": "q7",
       "natural_language": "Can managers access all files?",
-      "expected_dsl": "@q7 ASK manager CAN_ACCESS all_files",
+      "expected_dsl": "@q7 manager CAN_ACCESS all_files",
       "expected_answer": {
         "natural_language": "Yes, managers can access all files.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "Manager access policy"
+        "explanation": "Manager access policy",
+        "existence": "positive"
       }
     },
     {
       "id": "q8",
       "natural_language": "What can employees access?",
-      "expected_dsl": "@q8 FACTS_MATCHING employee CAN_ACCESS",
+      "expected_dsl": "@q8 employee FACTS any CAN_ACCESS",
       "expected_answer": {
         "natural_language": "Employees can access department files.",
         "truth": "LIST",
@@ -103,6 +104,11 @@
       }
     }
   ],
-
-  "tags": ["theory_management", "basic_queries", "employee", "company"]
+  "tags": [
+    "theory_management",
+    "basic_queries",
+    "employee",
+    "company"
+  ],
+  "version": "3.0"
 }

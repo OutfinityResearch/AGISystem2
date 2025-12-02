@@ -88,14 +88,14 @@
 
     <h3>Examples</h3>
     <pre><code># Taxonomy assertions
-@f1 ASSERT Dog IS_A mammal
-@f2 ASSERT mammal IS_A animal
-@f3 ASSERT Cat IS_A mammal
-@f4 ASSERT Dog DISJOINT_WITH Cat
+@_ Dog ASSERT mammal
+@_ mammal ASSERT animal
+@_ Cat ASSERT mammal
+@_ Dog ASSERT Cat
 
 # Query with transitive closure
-@q1 ASK Dog IS_A animal        # TRUE (via transitivity)
-@q2 ASK Dog DISJOINT_WITH Cat  # TRUE</code></pre>
+@q1 Dog ASK animal        # TRUE (via transitivity)
+@q2 Dog ASK Cat  # TRUE</code></pre>
 
     <h2>Mereological Relations (Part-Whole)</h2>
     <p>Relations for compositional structure:</p>
@@ -129,11 +129,11 @@
 
     <h3>Examples</h3>
     <pre><code># Mereological structure
-@f1 ASSERT Engine PART_OF Car
-@f2 ASSERT Piston PART_OF Engine
+@_ Engine ASSERT Car
+@_ Piston ASSERT Engine
 
 # Query transitivity
-@q1 ASK Piston PART_OF Car     # TRUE (via Engine)</code></pre>
+@q1 Piston ASK Car     # TRUE (via Engine)</code></pre>
 
     <h2>Spatial Relations</h2>
     <p>Relations for location and containment:</p>
@@ -161,11 +161,11 @@
 
     <h3>Examples</h3>
     <pre><code># Spatial assertions
-@f1 ASSERT Paris LOCATED_IN France
-@f2 ASSERT France LOCATED_IN Europe
+@_ Paris ASSERT France
+@_ France ASSERT Europe
 
 # Spatial query
-@q1 ASK Paris LOCATED_IN Europe  # May require explicit rule</code></pre>
+@q1 Paris ASK Europe  # May require explicit rule</code></pre>
 
     <h2>Causal Relations</h2>
     <p>Relations for cause-effect reasoning:</p>
@@ -199,11 +199,11 @@
 
     <h3>Examples</h3>
     <pre><code># Causal assertions
-@f1 ASSERT Fire CAUSES Smoke
-@f2 ASSERT Rain CAUSES WetGround
+@_ Fire ASSERT Smoke
+@_ Rain ASSERT WetGround
 
 # Abductive reasoning (find causes)
-@causes ABDUCT Smoke CAUSED_BY
+@causes Smoke ABDUCT any
 # Returns: [Fire, ...]</code></pre>
 
     <h2>Deontic Relations (Norms)</h2>
@@ -244,12 +244,12 @@
 
     <h3>Examples</h3>
     <pre><code># Normative assertions
-@f1 ASSERT GDPR PERMITS ConsentBasedProcessing
-@f2 ASSERT GDPR PROHIBITS UnconsentedDataSale
-@f3 ASSERT OurSystem COMPLIES_WITH GDPR
+@_ GDPR ASSERT ConsentBasedProcessing
+@_ GDPR ASSERT UnconsentedDataSale
+@_ OurSystem ASSERT GDPR
 
 # Compliance check
-@q1 ASK OurSystem VIOLATES GDPR  # Should be FALSE</code></pre>
+@q1 OurSystem ASK GDPR  # Should be FALSE</code></pre>
 
     <h2>Domain-Specific Relations</h2>
     <p>Pre-defined relations for specific use cases:</p>
@@ -299,33 +299,33 @@
     <p>A relation is <strong>functional</strong> if each subject can have at most one object:</p>
 
     <pre><code># Declare BORN_IN as functional (one value only)
-@_ REGISTER_FUNCTIONAL BORN_IN
+@_ BORN_IN REGISTER_FUNCTIONAL any
 
 # This is valid:
-@f1 ASSERT Alice BORN_IN Paris
+@_ Alice ASSERT Paris
 
 # This would cause a FUNCTIONAL_VIOLATION:
-@f2 ASSERT Alice BORN_IN London  # Contradiction!</code></pre>
+@_ Alice ASSERT London  # Contradiction!</code></pre>
 
     <h3>Cardinality Constraints</h3>
     <p>Limit how many relations of a type an entity can have:</p>
 
     <pre><code># Person can have 0-2 biological parents
-@_ REGISTER_CARDINALITY Person HAS_BIOLOGICAL_PARENT 0 2
+@_ Person REGISTER_CARDINALITY HAS_BIOLOGICAL_PARENT
 
 # This is valid:
-@f1 ASSERT Alice HAS_BIOLOGICAL_PARENT Bob
-@f2 ASSERT Alice HAS_BIOLOGICAL_PARENT Carol
+@_ Alice ASSERT Bob
+@_ Alice ASSERT Carol
 
 # This would cause a CARDINALITY_MAX_VIOLATION:
-@f3 ASSERT Alice HAS_BIOLOGICAL_PARENT Dave  # Third parent!</code></pre>
+@_ Alice ASSERT Dave  # Third parent!</code></pre>
 
     <h3>Checking for Violations</h3>
     <pre><code># Check all facts for constraint violations
-@report CHECK_CONTRADICTION
+@report any CHECK_CONTRADICTION any
 
 # Test before adding a fact
-@test CHECK_WOULD_CONTRADICT Alice BORN_IN London
+@test Alice CHECK_WOULD_CONTRADICT London
 # Returns: { wouldContradict: true, reason: "FUNCTIONAL_VIOLATION" }</code></pre>
 
     <h2>Relation Encoding</h2>

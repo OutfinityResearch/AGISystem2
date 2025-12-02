@@ -597,64 +597,59 @@ forwardChain(facts, maxIterations = 100) {
 
 ### 11.1 Transitive IS_A
 ```sys2dsl
-@f1 ASSERT Dog IS_A mammal
-@f2 ASSERT mammal IS_A animal
-@f3 ASSERT animal IS_A living_thing
-@result INFER Dog IS_A living_thing
+@f1 Dog IS_A mammal
+@f2 mammal IS_A animal
+@f3 animal IS_A living_thing
+@result Dog INFER living_thing
 # Expected: { truth: 'TRUE_CERTAIN', method: 'transitive', proof: {...} }
 ```
 
 ### 11.2 Composition Rule
 ```sys2dsl
-@rule DEFINE_RULE UNCLE_OF
-  @body ?x SIBLING_OF ?y
-  @body ?y PARENT_OF ?z
-  @head ?x UNCLE_OF ?z
+@rule UNCLE_OF DEFINE_RULE body=?x_SIBLING_OF_?y_body=?y_PARENT_OF_?z_head=?x_UNCLE_OF_?z
 
-@f1 ASSERT Bob SIBLING_OF Alice
-@f2 ASSERT Alice PARENT_OF Charlie
-@result INFER Bob UNCLE_OF Charlie
+@f1 Bob SIBLING_OF Alice
+@f2 Alice PARENT_OF Charlie
+@result Bob INFER Charlie
 # Expected: { truth: 'TRUE_CERTAIN', method: 'composition', rule: 'UNCLE_OF' }
 ```
 
 ### 11.3 Default Reasoning
 ```sys2dsl
-@default DEFINE_DEFAULT
-  @typical bird CAN fly
-  @exceptions Penguin Ostrich
+@default bird DEFINE_DEFAULT typical=bird_CAN_fly_exceptions=Penguin,Ostrich
 
-@f1 ASSERT Tweety IS_A bird
-@f2 ASSERT Pete IS_A Penguin
-@f3 ASSERT Penguin IS_A bird
+@f1 Tweety IS_A bird
+@f2 Pete IS_A Penguin
+@f3 Penguin IS_A bird
 
-@q1 INFER Tweety CAN fly
+@q1 Tweety INFER fly
 # Expected: { truth: 'TRUE_DEFAULT' }
 
-@q2 INFER Pete CAN fly
+@q2 Pete INFER fly
 # Expected: { truth: 'FALSE', reason: 'exception_applies' }
 ```
 
 ### 11.4 Property Inheritance
 ```sys2dsl
-@f1 ASSERT mammal HAS_PROPERTY warm_blooded
-@f2 ASSERT Dog IS_A mammal
-@result INFER Dog HAS_PROPERTY warm_blooded
+@f1 mammal HAS_PROPERTY warm_blooded
+@f2 Dog IS_A mammal
+@result Dog INFER warm_blooded
 # Expected: { truth: 'TRUE_CERTAIN', method: 'inheritance', inheritedFrom: 'mammal' }
 ```
 
 ### 11.5 Argument Type Inference
 ```sys2dsl
 # Basic argument type inference
-@f1 ASSERT X R Y
-@f2 ASSERT Y IS_A T
-@result INFER X R T
+@f1 X R Y
+@f2 Y IS_A T
+@result X INFER T
 # Expected: { truth: 'TRUE_CERTAIN', method: 'argument_type_inference' }
 
 # With transitive type chain
-@f1 ASSERT X R Y
-@f2 ASSERT Y IS_A T1
-@f3 ASSERT T1 IS_A T2
-@result INFER X R T2
+@f1 X R Y
+@f2 Y IS_A T1
+@f3 T1 IS_A T2
+@result X INFER T2
 # Expected: { truth: 'TRUE_CERTAIN', method: 'argument_type_inference' }
 # Proof: X R Y, Y IS_A T1, T1 IS_A T2 → Y IS_A T2 → X R T2
 ```

@@ -9,8 +9,8 @@ Fixtures: `fixtures/concepts/basic.txt`, `fixtures/counterfactual/boil50.txt`, S
 Profile: `auto_test`.
 
 Steps/Assertions:
-- Ingest basics through a `System2Session` using Sys2DSL `ASSERT` commands; base query `"Is water boiling at 50?"` via `ASK` → FALSE.
-- Apply a counterfactual layer by loading and appending the `physics_test.sys2dsl` theory (or equivalent overrides from `boil50.txt`) to the session’s theory; query again → TRUE_CERTAIN.
+- Ingest basics through a `System2Session` using Sys2DSL triple syntax (e.g., `@bp_val boiling_point DIM_PAIR 100`, `@_ Water SET_DIM @bp_val`); base query via triple syntax → FALSE.
+- Apply a counterfactual layer by loading and appending the `physics_test.sys2dsl` theory (or equivalent overrides from `boil50.txt`) to the session's theory; query again → TRUE_CERTAIN.
 - Ensure the base theory stack (without the counterfactual lines) remains unaffected for other sessions.
 - ValidationEngine reports override provenance (layer name, relevant temperature dimension).
 

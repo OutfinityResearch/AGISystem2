@@ -1,16 +1,33 @@
 /**
- * DS(/theory/dsl_commands_reasoning.js) - Reasoning DSL Commands
+ * DS(/theory/dsl_commands_reasoning.js) - Reasoning DSL Commands v3.0
  *
- * Implements Sys2DSL commands for logical reasoning and validation:
+ * Implements Sys2DSL v3.0 commands for logical reasoning and validation.
+ *
+ * v3.0 Syntax: @variable Subject VERB Object (exactly 4 tokens)
+ * - Subject is passed as first argument
+ * - Object is passed as second argument
+ *
+ * Commands:
  * - VALIDATE: Check theory consistency
- * - PROVE: Attempt to prove statements
+ *   v3: @result scope VALIDATE any
+ *
+ * - PROVE: Attempt to prove statement (subject=query_var, object=any)
+ *   v3: @result query_var PROVE any (where query_var is from @q Subject REL Object)
+ *
  * - HYPOTHESIZE: Generate hypotheses based on patterns
- * - ABDUCT: Abductive reasoning - find causes for observations (with priority ranking)
- * - ANALOGICAL: Perform analogical reasoning
- * - CHECK_CONTRADICTION: Detect contradictions in knowledge base
- * - CHECK_WOULD_CONTRADICT: Check if new fact would cause contradiction
- * - REGISTER_FUNCTIONAL: Mark relation as functional (single-valued)
- * - REGISTER_CARDINALITY: Set cardinality constraints
+ *   v3: @hyps pattern HYPOTHESIZE any
+ *
+ * - ABDUCT: Find causes for observation (subject=observation, object=any)
+ *   v3: @causes observation ABDUCT any
+ *
+ * - ANALOGICAL: Analogical reasoning (subject=A_B pair, object=C)
+ *   v3: @result A_B ANALOGICAL C
+ *
+ * - CHECK_CONTRADICTION: Detect contradictions
+ *   v3: @result concept CHECK_CONTRADICTION any
+ *
+ * - WOULD_CONTRADICT: Check if concept would contradict
+ *   v3: @result concept WOULD_CONTRADICT other_concept
  *
  * See also: DS(/reason/contradiction_detector), DS(/theory/dsl_commands_inference)
  * See also: DS(/knowledge/usage_tracking) - Priority weighting for hypothesis ranking
@@ -34,9 +51,12 @@ class DSLCommandsReasoning {
 
   /**
    * VALIDATE: Check consistency of current theory
-   * Syntax: @var VALIDATE [scope]
+   * v3.0 Syntax: @result scope VALIDATE any
+   * - Subject (argTokens[0]) = scope to validate
+   * - Object (argTokens[1]) = any (ignored)
    */
   cmdValidate(argTokens, env, facts) {
+    // v3.0: Subject is scope, Object is any
     const scope = argTokens.length > 0 ? this.parser.expandString(argTokens[0], env) : 'all';
     const issues = [];
 
@@ -81,17 +101,45 @@ class DSLCommandsReasoning {
 
   /**
    * PROVE: Attempt to prove a statement
-   * Syntax: @var PROVE Subject Relation Object
+   * v3.0 Syntax: @result Subject PROVE Object (implies IS_A relation)
+   * Legacy Syntax: @result "Subject REL Object" PROVE any
+   *
+   * Alternative: @result $query_var PROVE any (if query_var is a fact/query result)
    *
    * Uses InferenceEngine if available (supports composition rules like GRANDPARENT_OF)
    */
   cmdProve(argTokens, env, facts) {
-    if (argTokens.length < 3) {
-      throw new Error('PROVE expects Subject Relation Object');
+    const token0 = this.parser.expandString(argTokens[0] || '', env);
+    const token1 = this.parser.expandString(argTokens[1] || '', env);
+
+    let subject, relation, object;
+
+    // Check if token0 resolved to a fact object from a variable
+    if (typeof token0 === 'object' && token0.subject) {
+      subject = token0.subject;
+      relation = token0.relation;
+      object = token0.object;
+    } else if (argTokens.length === 2 && token1 && token1.toLowerCase() !== 'any') {
+      // v3 format: Subject PROVE Object (IS_A implied)
+      subject = token0;
+      relation = 'IS_A';
+      object = token1;
+    } else {
+      // Legacy format: "Subject REL Object" PROVE any
+      const parts = String(token0).trim().split(/\s+/);
+      if (parts.length >= 3) {
+        subject = parts[0];
+        relation = parts[1];
+        object = parts.slice(2).join(' ');
+      } else if (parts.length === 1 && token1 && token1.toLowerCase() !== 'any') {
+        // Fallback: treat as v3 format
+        subject = parts[0];
+        relation = 'IS_A';
+        object = token1;
+      } else {
+        throw new Error('PROVE expects: Subject PROVE Object (v3) or "Subject REL Object" format');
+      }
     }
-    const subject = this.parser.expandString(argTokens[0], env);
-    const relation = this.parser.expandString(argTokens[1], env);
-    const object = this.parser.expandString(argTokens.slice(2).join(' '), env);
 
     // First, try InferenceEngine if available (handles composition rules)
     if (this.inferenceEngine) {

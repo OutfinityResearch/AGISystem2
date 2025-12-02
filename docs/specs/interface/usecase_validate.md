@@ -2,7 +2,7 @@
 
 ID: DS(/interface/usecase_validate)
 
-Status: DRAFT v1.0
+Status: IMPLEMENTED v1.0
 
 ## 1. Overview
 
@@ -32,7 +32,7 @@ Validation checks that:
 
 ```sys2dsl
 # Check if current theory stack is consistent
-@result VALIDATE
+@result
 
 # Returns:
 # {
@@ -46,12 +46,12 @@ Validation checks that:
 
 ```sys2dsl
 # Add conflicting facts
-@f1 ASSERT Water IS_A solid
-@f2 ASSERT Water IS_A liquid
-@f3 ASSERT solid DISJOINT_WITH liquid
+@_  Water IS_A solid
+@_  Water IS_A liquid
+@_  solid DISJOINT_WITH liquid
 
 # Validate
-@result VALIDATE
+@result
 
 # Returns:
 # {
@@ -77,13 +77,13 @@ Validation checks that:
 Two types declared as disjoint both apply to same entity:
 
 ```sys2dsl
-@f1 ASSERT Animal IS_A living_thing
-@f2 ASSERT Rock IS_A non_living_thing
-@f3 ASSERT living_thing DISJOINT_WITH non_living_thing
+@_  Animal IS_A living_thing
+@_  Rock IS_A non_living_thing
+@_  living_thing DISJOINT_WITH non_living_thing
 
 # Conflict:
-@f4 ASSERT Coral IS_A Animal
-@f5 ASSERT Coral IS_A Rock    # ERROR: Animal and Rock are disjoint
+@_  Coral IS_A Animal
+@_  Coral IS_A Rock    # ERROR: Animal and Rock are disjoint
 ```
 
 ### 3.2 Transitivity Conflict
@@ -91,9 +91,9 @@ Two types declared as disjoint both apply to same entity:
 Transitive closure leads to contradiction:
 
 ```sys2dsl
-@f1 ASSERT A IS_A B
-@f2 ASSERT B IS_A C
-@f3 ASSERT C DISJOINT_WITH A    # ERROR: A IS_A C by transitivity
+@_  A IS_A B
+@_  B IS_A C
+@_  C DISJOINT_WITH A    # ERROR: A IS_A C by transitivity
 ```
 
 ### 3.3 Inverse Relation Conflict
@@ -101,8 +101,8 @@ Transitive closure leads to contradiction:
 Inverse relations don't match:
 
 ```sys2dsl
-@f1 ASSERT Alice PARENT_OF Bob
-@f2 ASSERT Bob PARENT_OF Alice    # ERROR if PARENT_OF inverse is CHILD_OF
+@_  Alice PARENT_OF Bob
+@_  Bob PARENT_OF Alice    # ERROR if PARENT_OF inverse is CHILD_OF
 ```
 
 ### 3.4 Functional Relation Violation
@@ -111,8 +111,8 @@ Functional relation has multiple values:
 
 ```sys2dsl
 # If BORN_IN is functional (one value only):
-@f1 ASSERT Alice BORN_IN Paris
-@f2 ASSERT Alice BORN_IN London    # ERROR: can only be born in one place
+@_  Alice BORN_IN Paris
+@_  Alice BORN_IN London    # ERROR: can only be born in one place
 ```
 
 ### 3.5 Symmetry Conflict
@@ -121,7 +121,7 @@ Symmetric relation not bidirectional:
 
 ```sys2dsl
 # EQUIVALENT_TO is symmetric
-@f1 ASSERT A EQUIVALENT_TO B
+@_  A EQUIVALENT_TO B
 # If B EQUIVALENT_TO A is not inferable, inconsistency
 ```
 
@@ -133,7 +133,7 @@ Symmetric relation not bidirectional:
 
 ```sys2dsl
 # Check if new fact would cause conflict
-@check VALIDATE_FACT Water IS_A gas
+@check Water IS_A gas
 
 # Returns:
 # {
@@ -144,7 +144,7 @@ Symmetric relation not bidirectional:
 # }
 
 # Only assert if valid
-@ifValid ASSERT Water IS_A gas    # Would fail
+@_  Water IS_A gas    # Would fail
 ```
 
 ### 4.2 Validate Script Before Running
@@ -152,12 +152,12 @@ Symmetric relation not bidirectional:
 ```sys2dsl
 # Validate a multi-line script
 @script """
-@f1 ASSERT NewConcept IS_A type1
-@f2 ASSERT NewConcept IS_A type2
-@f3 ASSERT type1 DISJOINT_WITH type2
+@_  NewConcept IS_A type1
+@_  NewConcept IS_A type2
+@_  type1 DISJOINT_WITH type2
 """
 
-@check VALIDATE_SCRIPT $script
+@check $script
 
 # Returns conflicts without executing
 ```
@@ -165,7 +165,7 @@ Symmetric relation not bidirectional:
 ### 4.3 Validate Theory Before Loading
 
 ```sys2dsl
-@check VALIDATE_THEORY new_theory
+@check new_theory
 
 # Returns:
 # {
@@ -184,7 +184,7 @@ Symmetric relation not bidirectional:
 ### 5.1 Identify Conflicting Facts
 
 ```sys2dsl
-@result VALIDATE
+@result
 
 # If conflicts found:
 # conflicts: [
@@ -201,10 +201,10 @@ Symmetric relation not bidirectional:
 
 ```sys2dsl
 # Decide which fact to remove
-@removed RETRACT X IS_A B
+@removed X IS_A B
 
 # Re-validate
-@result VALIDATE
+@result
 # Should now be valid
 ```
 
@@ -213,16 +213,16 @@ Symmetric relation not bidirectional:
 ```sys2dsl
 # Instead of removing, override in current layer
 # The base theory keeps the fact, but current layer negates it
-@override OVERRIDE X IS_A B negated=true
+@override X IS_A B negated=true
 ```
 
 ### 5.4 Add Exception
 
 ```sys2dsl
 # Sometimes conflicts are intentional (exceptions)
-@exception ASSERT X IS_A A
-@exception2 ASSERT X IS_A B
-@allowConflict ALLOW_CONFLICT X IS_A B reason="X is a hybrid"
+@_  X IS_A A
+@_  X IS_A B
+@allowConflict X IS_A B reason="X is a hybrid"
 ```
 
 ---
@@ -244,7 +244,7 @@ Symmetric relation not bidirectional:
 
 ```sys2dsl
 # Define domain-specific validation rule
-@rule DEFINE_VALIDATION_RULE no_circular_management """
+@rule no_circular_management """
   NOT EXISTS (
     X MANAGES Y AND Y MANAGES X
   )
@@ -260,7 +260,7 @@ Symmetric relation not bidirectional:
 ### 7.1 Strict Mode
 
 ```sys2dsl
-@result VALIDATE mode=strict
+@result mode=strict
 
 # Checks:
 # - All built-in rules
@@ -271,7 +271,7 @@ Symmetric relation not bidirectional:
 ### 7.2 Lenient Mode
 
 ```sys2dsl
-@result VALIDATE mode=lenient
+@result mode=lenient
 
 # Checks:
 # - Only critical conflicts (disjoint, functional)
@@ -281,7 +281,7 @@ Symmetric relation not bidirectional:
 ### 7.3 Quick Mode
 
 ```sys2dsl
-@result VALIDATE mode=quick
+@result mode=quick
 
 # Checks:
 # - Only recent changes
@@ -297,18 +297,19 @@ Symmetric relation not bidirectional:
 
 ```sys2dsl
 # Enable auto-validation
-@config SET auto_validate=true
+@p dim DIM_PAIR auto_validate
+@_ system SET_DIM $p
 
-# Now every ASSERT is validated first
-@f1 ASSERT Water IS_A gas
+# Now every assertion is validated first
+@_  Water IS_A gas
 # Automatically checks for conflicts before asserting
 ```
 
 ### 8.2 Validation Hooks
 
 ```sys2dsl
-# Run custom check after each assertion
-@hook ON_ASSERT VALIDATE mode=quick
+# Run custom check after each triple statement
+@hook ON_TRIPLE VALIDATE mode=quick
 ```
 
 ### 8.3 Periodic Validation
@@ -335,22 +336,22 @@ Symmetric relation not bidirectional:
 
 ```sys2dsl
 # Load medical theory
-@med LOAD_THEORY medical_knowledge
+@_  medical_knowledge
 
 # Define constraints
-@c1 ASSERT bacterial_infection DISJOINT_WITH viral_infection
-@c2 ASSERT antibiotic TREATS bacterial_infection
-@c3 ASSERT antibiotic CONTRAINDICATES viral_infection
+@_  bacterial_infection DISJOINT_WITH viral_infection
+@_  antibiotic TREATS bacterial_infection
+@_  antibiotic CONTRAINDICATES viral_infection
 ```
 
 ### 9.2 Validate New Diagnosis
 
 ```sys2dsl
 # Proposed treatment
-@treatment ASSERT Patient_001 RECEIVES antibiotic
+@_  Patient_001 RECEIVES antibiotic
 
 # What infection does patient have?
-@diagnosis ASSERT Patient_001 HAS infection
+@_  Patient_001 HAS infection
 
 # Validate consistency
 @check VALIDATE
@@ -362,7 +363,7 @@ Symmetric relation not bidirectional:
 
 ```sys2dsl
 # Add viral diagnosis
-@viral ASSERT Patient_001 HAS viral_infection
+@_  Patient_001 HAS viral_infection
 
 # Validate again
 @check VALIDATE
@@ -388,7 +389,7 @@ Symmetric relation not bidirectional:
 ### 10.1 Summary Report
 
 ```sys2dsl
-@report VALIDATION_REPORT
+@report
 
 # Returns:
 # {
@@ -407,7 +408,7 @@ Symmetric relation not bidirectional:
 ### 10.2 Conflict History
 
 ```sys2dsl
-@history VALIDATION_HISTORY limit=10
+@history limit=10
 
 # Returns last 10 validation runs with results
 ```
@@ -415,8 +416,8 @@ Symmetric relation not bidirectional:
 ### 10.3 Export Report
 
 ```sys2dsl
-@report VALIDATION_REPORT format=json
-@export TO_FILE $report path="validation_report.json"
+@report format=json
+@export $report path="validation_report.json"
 ```
 
 ---
@@ -427,32 +428,32 @@ Symmetric relation not bidirectional:
 
 ```sys2dsl
 # After each significant change
-@f1 ASSERT NewFact IS_A something
+@_  NewFact IS_A something
 @check VALIDATE mode=quick
 
 # Before saving
-@fullCheck VALIDATE mode=strict
-@saved SAVE_THEORY my_theory
+@fullCheck mode=strict
+@saved my_theory
 ```
 
 ### 11.2 Define Domain Constraints First
 
 ```sys2dsl
 # Start theory with constraints
-@d1 ASSERT type_a DISJOINT_WITH type_b
-@d2 ASSERT relation_x FUNCTIONAL
+@_  type_a DISJOINT_WITH type_b
+@_  relation_x FUNCTIONAL
 
 # Then add facts
-@f1 ASSERT Entity IS_A type_a
+@_  Entity IS_A type_a
 ```
 
 ### 11.3 Use Validation in Tests
 
 ```sys2dsl
 # Test script
-@setup LOAD_THEORY test_theory
-@valid VALIDATE
-@assert EQUALS $valid.valid true
+@setup test_theory LOAD any
+@valid any VALIDATE any
+@check $valid.valid EQUALS true
 ```
 
 ---
@@ -463,7 +464,7 @@ Symmetric relation not bidirectional:
 
 ```sys2dsl
 # Validation fails but conflicts not clear
-@detailed VALIDATE verbose=true
+@detailed verbose=true
 
 # Shows full reasoning chain for each conflict
 ```
@@ -472,7 +473,7 @@ Symmetric relation not bidirectional:
 
 ```sys2dsl
 # Identify which theory introduced conflict
-@origins CONFLICT_ORIGINS
+@origins
 
 # Returns:
 # {
@@ -488,10 +489,10 @@ Symmetric relation not bidirectional:
 
 ```sys2dsl
 # Validation taking too long
-@result VALIDATE mode=quick timeout=5000
+@result mode=quick timeout=5000
 
 # Or validate subset
-@result VALIDATE scope=recent_changes
+@result scope=recent_changes
 ```
 
 ---

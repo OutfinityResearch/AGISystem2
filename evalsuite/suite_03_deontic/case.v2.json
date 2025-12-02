@@ -1,0 +1,114 @@
+{
+  "id": "suite_03_deontic",
+  "name": "Comprehensive Deontic Rules & Permissions",
+  "description": "Tests PERMITS, PROHIBITS, REQUIRES, OBLIGATES for regulatory and policy reasoning",
+
+  "theory": {
+    "natural_language": "In drone regulations: Medical drones are permitted to fly over hospitals. Commercial drones are prohibited from flying in city centers. All drones require registration. Emergency drones are permitted everywhere. Regular drones can only fly in rural areas. In workplace: Employees are required to wear safety equipment in the factory. Managers are permitted to access confidential files. Interns are prohibited from accessing confidential files. All employees must complete safety training. In finance: Transactions over 10000 dollars require approval. International transfers require compliance check. Cash withdrawals over 5000 require ID verification. Customers are permitted to view their own accounts. In healthcare: Doctors are permitted to prescribe medication. Nurses are permitted to administer prescribed medication. Only doctors can prescribe controlled substances. Patients are required to give consent for treatment. Medical records require patient authorization to share.",
+    "expected_facts": [
+      "medical_drone PERMITTED_TO fly_over_hospital",
+      "commercial_drone PROHIBITED_FROM city_center",
+      "drone REQUIRES registration",
+      "emergency_drone PERMITTED_TO fly_everywhere",
+      "regular_drone PERMITTED_TO fly_rural_area",
+      "employee REQUIRED_TO wear_safety_equipment",
+      "manager PERMITTED_TO access_confidential_files",
+      "intern PROHIBITED_FROM access_confidential_files",
+      "employee REQUIRED_TO complete_safety_training",
+      "large_transaction REQUIRES approval",
+      "international_transfer REQUIRES compliance_check",
+      "large_cash_withdrawal REQUIRES id_verification",
+      "customer PERMITTED_TO view_own_account",
+      "doctor PERMITTED_TO prescribe_medication",
+      "nurse PERMITTED_TO administer_medication",
+      "controlled_substance REQUIRES doctor_prescription",
+      "treatment REQUIRES patient_consent",
+      "medical_record_sharing REQUIRES patient_authorization"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "Can a medical drone fly over a hospital?",
+      "expected_dsl": "@q1 ASK medical_drone PERMITTED_TO fly_over_hospital",
+      "expected_answer": {
+        "natural_language": "Yes, medical drones are permitted to fly over hospitals.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Direct PERMITTED_TO fact"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "Is a commercial drone allowed in the city center?",
+      "expected_dsl": "@q2 ASK commercial_drone PERMITTED_TO city_center",
+      "expected_answer": {
+        "natural_language": "No, commercial drones are prohibited from city centers.",
+        "truth": "FALSE",
+        "explanation": "PROHIBITED_FROM fact"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "Can an intern access confidential files?",
+      "expected_dsl": "@q3 ASK intern PERMITTED_TO access_confidential_files",
+      "expected_answer": {
+        "natural_language": "No, interns are prohibited from accessing confidential files.",
+        "truth": "FALSE",
+        "explanation": "PROHIBITED_FROM fact"
+      }
+    },
+    {
+      "id": "q4",
+      "natural_language": "Can a manager access confidential files?",
+      "expected_dsl": "@q4 ASK manager PERMITTED_TO access_confidential_files",
+      "expected_answer": {
+        "natural_language": "Yes, managers are permitted to access confidential files.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "PERMITTED_TO fact"
+      }
+    },
+    {
+      "id": "q5",
+      "natural_language": "Does an international transfer require a compliance check?",
+      "expected_dsl": "@q5 ASK international_transfer REQUIRES compliance_check",
+      "expected_answer": {
+        "natural_language": "Yes, international transfers require a compliance check.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Direct REQUIRES fact"
+      }
+    },
+    {
+      "id": "q6",
+      "natural_language": "Can a nurse prescribe medication?",
+      "expected_dsl": "@q6 ASK nurse PERMITTED_TO prescribe_medication",
+      "expected_answer": {
+        "natural_language": "No, nurses can only administer medication, not prescribe it. Only doctors can prescribe.",
+        "truth": "FALSE",
+        "explanation": "Nurse has PERMITTED_TO administer, not prescribe"
+      }
+    },
+    {
+      "id": "q7",
+      "natural_language": "Is patient consent required for treatment?",
+      "expected_dsl": "@q7 ASK treatment REQUIRES patient_consent",
+      "expected_answer": {
+        "natural_language": "Yes, treatment requires patient consent.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Direct REQUIRES fact"
+      }
+    },
+    {
+      "id": "q8",
+      "natural_language": "Can a customer view their own account?",
+      "expected_dsl": "@q8 ASK customer PERMITTED_TO view_own_account",
+      "expected_answer": {
+        "natural_language": "Yes, customers are permitted to view their own accounts.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "PERMITTED_TO fact"
+      }
+    }
+  ],
+
+  "tags": ["deontic", "permissions", "prohibitions", "requirements", "regulatory", "comprehensive"]
+}

@@ -131,15 +131,15 @@
 
   <pre>
 # Direct deduction
-ASK "Dog IS_A Animal?"
+@result Dog IS_A Animal
 # → TRUE_CERTAIN (Dog ⊂ Mammal ⊂ Animal)
 
 # Failed deduction
-ASK "Cat IS_A Dog?"
+@result Cat IS_A Dog
 # → FALSE_CERTAIN (disjoint regions)
 
 # Unknown (missing link)
-ASK "Widget IS_A Animal?"
+@result Widget IS_A Animal
 # → UNKNOWN (Widget not in knowledge base)</pre>
 
   <h2>Comparison with Classical Logic</h2>

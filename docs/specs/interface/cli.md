@@ -190,20 +190,20 @@ api.prove(...);
 
 ## Command Reference
 
-| Command | DSL Equivalent | Description |
-|---------|---------------|-------------|
-| `add X R Y` | `@_ ASSERT X R Y` | Add fact |
-| `ask Q` | `@r ASK "Q"` | Query |
-| `retract X R Y` | `@_ RETRACT X R Y` | Remove fact |
-| `prove X R Y` | `@r PROVE X R Y` | Prove statement |
-| `validate` | `@r VALIDATE` | Check consistency |
-| `push name` | `@_ THEORY_PUSH name="name"` | Push layer |
-| `pop` | `@_ THEORY_POP` | Pop layer |
-| `layers` | `@r LIST_THEORIES` | Show layers |
-| `usage C` | `@r GET_USAGE C` | Usage stats |
-| `protect C` | `@_ PROTECT C` | Protect concept |
-| `forget ...` | `@r FORGET ...` | Forget concepts |
-| `boost C N` | `@_ BOOST C N` | Boost usage |
+| Command | DSL Equivalent (v3 Triple Syntax) | Description |
+|---------|-----------------------------------|-------------|
+| `add X R Y` | `@_ X R Y` | Add fact |
+| `ask Q` | `@q Subject VERB Object` | Query (NL→triple) |
+| `retract X R Y` | `@_ X RETRACT Y` | Remove fact |
+| `prove X R Y` | `@r X R Y` | Prove statement |
+| `validate` | `@r any VALIDATE any` | Check consistency |
+| `push name` | `@_ name PUSH any` | Push layer |
+| `pop` | `@_ any POP any` | Pop layer |
+| `layers` | `@r any THEORIES any` | Show layers |
+| `usage C` | `@r C USAGE any` | Usage stats |
+| `protect C` | `@_ C PROTECT any` | Protect concept |
+| `forget ...` | `@r Criteria FORGET any` | Forget concepts |
+| `boost C N` | `@_ C BOOST N` | Boost usage |
 
 ## Error Handling
 

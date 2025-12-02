@@ -2,7 +2,6 @@
   "id": "suite_02_causation",
   "name": "Comprehensive Causation & Abduction",
   "description": "Tests CAUSES, CAUSED_BY, causal chains, and abductive reasoning for diagnosis",
-
   "theory": {
     "natural_language": "In medicine: Infections cause fever. Inflammation causes fever. Fever causes sweating. Respiratory infections cause coughing. Allergies cause coughing. Smoking causes coughing. Dehydration causes headaches. Stress causes headaches. High blood pressure causes headaches. When someone has fever AND coughing together, respiratory infection is most likely. When someone has fever, coughing AND fatigue, influenza is likely. Food poisoning causes stomach pain, nausea, and vomiting. In physics: Heat causes expansion. Friction causes heat. Electricity causes magnetism. Magnetism can cause electricity. In environment: Pollution causes health problems. Deforestation causes climate change. Climate change causes extreme weather. Patient John has fever and coughing. Patient Mary has stomach pain and nausea.",
     "expected_facts": [
@@ -33,26 +32,27 @@
       "Mary HAS nausea"
     ]
   },
-
   "queries": [
     {
       "id": "q1",
       "natural_language": "Does infection cause fever?",
-      "expected_dsl": "@q1 ASK infection CAUSES fever",
+      "expected_dsl": "@q1 infection CAUSES fever",
       "expected_answer": {
         "natural_language": "Yes, infection causes fever.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "Direct CAUSES fact"
+        "explanation": "Direct CAUSES fact",
+        "existence": "positive"
       }
     },
     {
       "id": "q2",
       "natural_language": "Does friction cause expansion?",
-      "expected_dsl": "@q2 ASK friction CAUSES expansion",
+      "expected_dsl": "@q2 friction CAUSES expansion",
       "expected_answer": {
         "natural_language": "Yes, friction causes heat and heat causes expansion.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "Transitive CAUSES chain"
+        "explanation": "Transitive CAUSES chain",
+        "existence": "positive"
       }
     },
     {
@@ -78,44 +78,54 @@
     {
       "id": "q5",
       "natural_language": "Does deforestation cause extreme weather?",
-      "expected_dsl": "@q5 ASK deforestation CAUSES extreme_weather",
+      "expected_dsl": "@q5 deforestation CAUSES extreme_weather",
       "expected_answer": {
         "natural_language": "Yes, deforestation causes climate change which causes extreme weather.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "Transitive CAUSES"
+        "explanation": "Transitive CAUSES",
+        "existence": "positive"
       }
     },
     {
       "id": "q6",
       "natural_language": "Can electricity cause magnetism?",
-      "expected_dsl": "@q6 ASK electricity CAUSES magnetism",
+      "expected_dsl": "@q6 electricity CAUSES magnetism",
       "expected_answer": {
         "natural_language": "Yes, electricity causes magnetism.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "Direct CAUSES"
+        "explanation": "Direct CAUSES",
+        "existence": "positive"
       }
     },
     {
       "id": "q7",
       "natural_language": "Does John have influenza?",
-      "expected_dsl": "@q7 ASK John HAS influenza",
+      "expected_dsl": "@q7 John HAS influenza",
       "expected_answer": {
         "natural_language": "Not certain - John has fever and coughing but we don't know about fatigue.",
         "truth": "UNKNOWN",
-        "explanation": "Missing fatigue symptom for influenza diagnosis"
+        "explanation": "Missing fatigue symptom for influenza diagnosis",
+        "existence": "zero"
       }
     },
     {
       "id": "q8",
       "natural_language": "What causes headaches?",
-      "expected_dsl": "@q8 ASK dehydration CAUSES headache",
+      "expected_dsl": "@q8 dehydration CAUSES headache",
       "expected_answer": {
         "natural_language": "Headaches can be caused by dehydration, stress, or high blood pressure.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "Multiple causes enumeration"
+        "explanation": "Multiple causes enumeration",
+        "existence": "positive"
       }
     }
   ],
-
-  "tags": ["causation", "abduction", "diagnosis", "chains", "comprehensive"]
+  "tags": [
+    "causation",
+    "abduction",
+    "diagnosis",
+    "chains",
+    "comprehensive"
+  ],
+  "version": "3.0"
 }

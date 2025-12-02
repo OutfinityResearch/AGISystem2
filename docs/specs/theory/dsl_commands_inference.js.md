@@ -16,19 +16,19 @@ constructor({ inferenceEngine, parser })
 
 ## Commands Implemented
 
-### INFER (subcommand of QUERY)
+### INFER (v3.0 Triple Syntax)
 ```sys2dsl
-@result INFER Dog IS_A Animal
-@result INFER Dog IS_A Animal method=transitive
-@result INFER Dog HAS_PROPERTY warm_blooded proof=true
-@result INFER $subject $relation $object maxDepth=5
+@result Dog INFER Animal
+@result Dog INFER_method_transitive Animal
+@result Dog INFER_proof warm_blooded
+@result $subject INFER_maxDepth_5 $object
 ```
 Attempts to infer a statement using all available methods.
 
-**Options:**
-- `method=X` - Use specific method only (direct, transitive, symmetric, inverse, composition, inheritance, default)
-- `proof=true` - Include proof chain in result
-- `maxDepth=N` - Maximum depth for recursive methods
+**v3.0 Options (underscore notation):**
+- `INFER_method_X` - Use specific method only (direct, transitive, symmetric, inverse, composition, inheritance, default)
+- `INFER_proof` - Include proof chain in result
+- `INFER_maxDepth_N` - Maximum depth for recursive methods
 
 **Inference Methods (in order):**
 1. `direct` - Exact fact lookup
@@ -50,10 +50,10 @@ Returns:
 }
 ```
 
-### FORWARD_CHAIN (advanced/subcommand)
+### FORWARD_CHAIN (v3.0 Triple Syntax)
 ```sys2dsl
-@derived FORWARD_CHAIN
-@derived FORWARD_CHAIN maxIterations=50
+@derived any FORWARD_CHAIN any
+@derived any FORWARD_CHAIN_maxIterations_50 any
 ```
 Derives all possible conclusions via forward chaining.
 - Applies composition rules
@@ -69,45 +69,43 @@ Returns:
 }
 ```
 
-### DEFINE_RULE (advanced)
+### DEFINE_RULE (v3.0 Triple Syntax)
 ```sys2dsl
-@rule DEFINE_RULE GRANDPARENT_OF head=?x GRANDPARENT_OF ?z body=?x PARENT_OF ?y body=?y PARENT_OF ?z
+@rule GRANDPARENT_OF DEFINE_RULE "?x PARENT_OF ?y AND ?y PARENT_OF ?z"
 ```
 Defines a composition/inference rule.
 
-**Syntax:**
-- `name` - Rule name (first arg)
-- `head=?x REL ?z` - Conclusion pattern
-- `body=?x REL1 ?y` - Premise pattern (multiple allowed)
+**v3.0 Syntax:**
+- Subject: Rule name (e.g., GRANDPARENT_OF)
+- VERB: DEFINE_RULE
+- Object: Rule body as string with AND/OR logic
 
 **Variables:** Use `?name` for pattern variables.
 
 Example: Uncle rule
 ```sys2dsl
-@rule DEFINE_RULE UNCLE_OF head=?x UNCLE_OF ?z body=?x SIBLING_OF ?y body=?y PARENT_OF ?z
+@rule UNCLE_OF DEFINE_RULE "?x SIBLING_OF ?y AND ?y PARENT_OF ?z"
 ```
 
-### DEFINE_DEFAULT (advanced)
+### DEFINE_DEFAULT (v3.0 Triple Syntax)
 ```sys2dsl
-@default DEFINE_DEFAULT birds_fly typical=Bird property=CAN value=fly exceptions=Penguin,Ostrich
+@default Bird_CAN_fly DEFINE_DEFAULT "typical Bird exceptions Penguin_Ostrich"
 ```
 Defines a default reasoning rule (non-monotonic).
 
-**Parameters:**
-- `name` - Rule name (first arg)
-- `typical=Type` - Type that typically has property
-- `property=REL` - The relation/property
-- `value=V` - The default value
-- `exceptions=E1,E2` - Comma-separated exception types
+**v3.0 Syntax:**
+- Subject: Rule pattern with underscores (Type_Property_Value)
+- VERB: DEFINE_DEFAULT
+- Object: String with typical type and exceptions (underscore-separated)
 
 **Semantics:**
 - If X IS_A Type and X is not an exception, then X has property with default value
 - Returns `TRUE_DEFAULT` (not `TRUE_CERTAIN`) to indicate defeasibility
 
-### WHY
+### WHY (v3.0 Triple Syntax)
 ```sys2dsl
-@explanation WHY Dog IS_A Animal
-@explanation WHY Tweety CAN fly
+@explanation Dog WHY Animal
+@explanation Tweety WHY_CAN fly
 ```
 Explains why something is true/false with detailed reasoning chain.
 
@@ -150,59 +148,59 @@ Confidence: 90.3%
 
 ## Usage Examples
 
-### Multi-Method Inference
+### Multi-Method Inference (v3.0)
 ```sys2dsl
 # Let inference engine try all methods
-@result INFER Poodle IS_A Animal
+@result Poodle INFER Animal
 
 # Force specific method
-@result INFER Bob SIBLING_OF Alice method=symmetric
+@result Bob INFER_method_symmetric Alice
 
 # Get proof chain
-@result INFER Dog HAS_PROPERTY warm_blooded proof=true
+@result Dog INFER_proof warm_blooded
 ```
 
-### Define Family Relations
+### Define Family Relations (v3.0)
 ```sys2dsl
 # Define rules
-@_ DEFINE_RULE GRANDPARENT_OF head=?x GRANDPARENT_OF ?z body=?x PARENT_OF ?y body=?y PARENT_OF ?z
-@_ DEFINE_RULE UNCLE_OF head=?x UNCLE_OF ?z body=?x SIBLING_OF ?y body=?y PARENT_OF ?z
+@_ GRANDPARENT_OF DEFINE_RULE "?x PARENT_OF ?y AND ?y PARENT_OF ?z"
+@_ UNCLE_OF DEFINE_RULE "?x SIBLING_OF ?y AND ?y PARENT_OF ?z"
 
 # Assert facts
-@_ ASSERT Alice PARENT_OF Bob
-@_ ASSERT Bob PARENT_OF Charlie
-@_ ASSERT Dave SIBLING_OF Bob
+@_ Alice PARENT_OF Bob
+@_ Bob PARENT_OF Charlie
+@_ Dave SIBLING_OF Bob
 
 # Query derived relations
-@gp INFER Alice GRANDPARENT_OF Charlie
-@uncle INFER Dave UNCLE_OF Charlie
+@gp Alice INFER_GRANDPARENT_OF Charlie
+@uncle Dave INFER_UNCLE_OF Charlie
 ```
 
-### Default Reasoning with Exceptions
+### Default Reasoning with Exceptions (v3.0)
 ```sys2dsl
 # Define default: birds typically fly
-@_ DEFINE_DEFAULT birds_fly typical=Bird property=CAN value=fly exceptions=Penguin,Ostrich,Kiwi
+@_ Bird_CAN_fly DEFINE_DEFAULT "typical Bird exceptions Penguin_Ostrich_Kiwi"
 
 # Assert facts
-@_ ASSERT Tweety IS_A Bird
-@_ ASSERT Pete IS_A Penguin
-@_ ASSERT Penguin IS_A Bird
+@_ Tweety IS_A Bird
+@_ Pete IS_A Penguin
+@_ Penguin IS_A Bird
 
 # Query
-@q1 INFER Tweety CAN fly
+@q1 Tweety INFER_CAN fly
 # → { truth: 'TRUE_DEFAULT', assumptions: ['Tweety is a typical Bird'] }
 
-@q2 INFER Pete CAN fly
+@q2 Pete INFER_CAN fly
 # → { truth: 'FALSE', reason: 'exception_applies', exception: 'Penguin' }
 ```
 
-### Forward Chaining
+### Forward Chaining (v3.0)
 ```sys2dsl
 # Derive all conclusions
-@new FORWARD_CHAIN maxIterations=100
+@new any FORWARD_CHAIN_maxIterations_100 any
 
 # Check what was derived
-@count COUNT $new
+@count $new COUNT any
 ```
 
 ## Notes/Constraints

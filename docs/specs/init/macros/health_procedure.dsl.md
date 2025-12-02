@@ -46,13 +46,13 @@ Reusable Sys2DSL macro that checks whether all requirements for a medical/health
 
 ```sys2dsl
 # Setup facts
-@_ ASSERT ProcedureX REQUIRES Consent
-@_ ASSERT ProcedureX REQUIRES AuditTrail
-@_ ASSERT Consent GIVEN yes
-@_ ASSERT AuditTrail PRESENT yes
+@_ ProcedureX REQUIRES Consent
+@_ ProcedureX REQUIRES AuditTrail
+@_ Consent GIVEN yes
+@_ AuditTrail PRESENT yes
 
 # Run macro with procId=ProcedureX
-@procId LITERAL "ProcedureX"
+@procId ProcedureX LITERAL any
 # ... include macro ...
 # $result will be TRUE_CERTAIN
 ```

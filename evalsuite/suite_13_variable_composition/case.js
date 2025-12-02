@@ -1,0 +1,244 @@
+/**
+ * Test Case: Variable Chaining & Multi-Step Composition
+ * Tests the core power of Sys2DSL: composing complex reasoning through variable references ($varName). This is the fundamental mechanism for building complex queries from simpler components. Each query tests progressively more complex variable chaining patterns.
+ * Version: 3.0
+ */
+
+module.exports = {
+  id: "suite_13_variable_composition",
+  name: "Variable Chaining & Multi-Step Composition",
+  description: "Tests the core power of Sys2DSL: composing complex reasoning through variable references ($varName). This is the fundamental mechanism for building complex queries from simpler components. Each query tests progressively more complex variable chaining patterns.",
+  theory: {
+    natural_language: "Student enrollment system: Alice is enrolled in Math101 and Physics201. Bob is enrolled in Math101 and Chemistry101. Math101 is a prerequisite for Math201. Physics201 is a prerequisite for Physics301. Chemistry101 is a prerequisite for Chemistry201. Math201 is an advanced course. Physics301 is an advanced course. Chemistry201 is an advanced course. To take an advanced course, students must complete its prerequisites. Product inventory: Warehouse_A has ProductX quantity 50. Warehouse_B has ProductX quantity 30. Warehouse_C has ProductY quantity 100. ProductX has minimum_stock 40. ProductY has minimum_stock 80. A warehouse needs restocking if quantity is below minimum_stock. Access control: Employee_1 has role Manager. Employee_2 has role Engineer. Managers can access finance_data. Managers can access hr_data. Engineers can access tech_data. Engineers can access code_repo. Sensitive data requires manager approval. Medical diagnosis: Patient_A has symptom fever. Patient_A has symptom cough. Patient_A has symptom fatigue. Flu causes fever. Flu causes cough. Flu causes fatigue. Cold causes cough. Cold causes mild_fever. Pneumonia causes fever. Pneumonia causes cough. Pneumonia causes difficulty_breathing. If a condition causes ALL symptoms a patient has, it's a likely diagnosis.",
+    expected_facts: [
+          "Alice ENROLLED_IN Math101",
+          "Alice ENROLLED_IN Physics201",
+          "Bob ENROLLED_IN Math101",
+          "Bob ENROLLED_IN Chemistry101",
+          "Math101 PREREQUISITE_FOR Math201",
+          "Physics201 PREREQUISITE_FOR Physics301",
+          "Chemistry101 PREREQUISITE_FOR Chemistry201",
+          "Math201 IS_A advanced_course",
+          "Physics301 IS_A advanced_course",
+          "Chemistry201 IS_A advanced_course",
+          "Warehouse_A HAS ProductX",
+          "Warehouse_A HAS_QUANTITY 50",
+          "Warehouse_B HAS ProductX",
+          "Warehouse_B HAS_QUANTITY 30",
+          "Warehouse_C HAS ProductY",
+          "Warehouse_C HAS_QUANTITY 100",
+          "ProductX HAS minimum_stock",
+          "ProductX MINIMUM_STOCK 40",
+          "ProductY HAS minimum_stock",
+          "ProductY MINIMUM_STOCK 80",
+          "Employee_1 HAS_ROLE Manager",
+          "Employee_2 HAS_ROLE Engineer",
+          "Manager CAN_ACCESS finance_data",
+          "Manager CAN_ACCESS hr_data",
+          "Engineer CAN_ACCESS tech_data",
+          "Engineer CAN_ACCESS code_repo",
+          "sensitive_data REQUIRES manager_approval",
+          "Patient_A HAS_SYMPTOM fever",
+          "Patient_A HAS_SYMPTOM cough",
+          "Patient_A HAS_SYMPTOM fatigue",
+          "Flu CAUSES fever",
+          "Flu CAUSES cough",
+          "Flu CAUSES fatigue",
+          "Cold CAUSES cough",
+          "Cold CAUSES mild_fever",
+          "Pneumonia CAUSES fever",
+          "Pneumonia CAUSES cough",
+          "Pneumonia CAUSES difficulty_breathing"
+    ]
+  },
+  queries: [
+    {
+      id: "q1",
+      natural_language: "Find all courses Alice is enrolled in and check if the list is non-empty.",
+      expected_dsl: `
+        @courses Alice FACTS any ENROLLED_IN
+        @hasEnrollments $courses NONEMPTY any
+      `,
+      expected_answer: {
+        natural_language: "Yes, Alice has enrollments. She is enrolled in Math101 and Physics201.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Basic chaining: FACTS_MATCHING result passed to NONEMPTY via $courses",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q2",
+      natural_language: "Does Bob have at least one enrollment?",
+      expected_dsl: `
+        @bobCourses Bob FACTS any ENROLLED_IN
+        @hasEnrollments $bobCourses NONEMPTY any
+      `,
+      expected_answer: {
+        natural_language: "Yes, Bob has enrollments - he is enrolled in Math101 and Chemistry101.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Chaining FACTS_MATCHING to NONEMPTY: Bob has 2 enrollments so TRUE",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q3",
+      natural_language: "Is Alice enrolled in both Math101 and Physics201?",
+      expected_dsl: `
+        @q1 Alice ENROLLED_IN Math101
+        @q2 Alice ENROLLED_IN Physics201
+        @both $q1 AND $q2
+      `,
+      expected_answer: {
+        natural_language: "Yes, Alice is enrolled in both Math101 and Physics201.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Multi-ASK composition: two ASK results combined with BOOL_AND",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q4",
+      natural_language: "Can Alice take Physics301 (which requires Physics201)?",
+      expected_dsl: `
+        @prereq FACTS_WITH_OBJECT Physics301
+        @first PICK_FIRST $prereq
+        @aliceHas Alice ENROLLED_IN Physics201
+      `,
+      expected_answer: {
+        natural_language: "Yes, Alice can take Physics301 because she has completed Physics201 which is its prerequisite.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Prerequisite chain: find prereq, check if student has it",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q5",
+      natural_language: "Can Bob take Math201 (which requires Math101)?",
+      expected_dsl: `
+        @prereqMath FACTS_WITH_OBJECT Math201
+        @bobHasMath Bob ENROLLED_IN Math101
+      `,
+      expected_answer: {
+        natural_language: "Yes, Bob can take Math201 because he has completed Math101.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Same pattern as q4 but for Bob and Math",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q6",
+      natural_language: "Does Employee_1 (a Manager) have access to both finance_data and hr_data?",
+      expected_dsl: `
+        @role Employee_1 FACTS any HAS_ROLE
+        @financeAccess Manager CAN_ACCESS finance_data
+        @hrAccess Manager CAN_ACCESS hr_data
+        @bothAccess $financeAccess AND $hrAccess
+      `,
+      expected_answer: {
+        natural_language: "Yes, Employee_1 is a Manager and Managers can access both finance_data and hr_data.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Role lookup + permission check via BOOL_AND composition",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q7",
+      natural_language: "Can Employee_2 (an Engineer) access finance_data?",
+      expected_dsl: `
+        @role2 Employee_2 FACTS any HAS_ROLE
+        @q7 Engineer CAN_ACCESS finance_data
+      `,
+      expected_answer: {
+        natural_language: "No, Employee_2 is an Engineer and Engineers cannot access finance_data (only tech_data and code_repo).",
+        truth: "UNKNOWN",
+        explanation: "Role check shows Engineer, which has no finance_data access (returns UNKNOWN since no explicit fact)",
+        existence: "zero"
+      }
+    },
+    {
+      id: "q8",
+      natural_language: "Find all symptoms Patient_A has and check if flu could explain them all.",
+      expected_dsl: `
+        @symptoms Patient_A FACTS any HAS_SYMPTOM
+        @fluCausesFever Flu CAUSES fever
+        @fluCausesCough Flu CAUSES cough
+        @fluCausesFatigue Flu CAUSES fatigue
+        @all3 $fluCausesFever AND $fluCausesCough
+        @fluExplainsAll $all3 AND $fluCausesFatigue
+      `,
+      expected_answer: {
+        natural_language: "Yes, Flu causes all three symptoms that Patient_A has (fever, cough, fatigue), making it a likely diagnosis.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Complex multi-step: gather symptoms, check each against flu, AND all results",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q9",
+      natural_language: "Does Cold explain all of Patient_A's symptoms?",
+      expected_dsl: `
+        @coldFever Cold CAUSES fever
+        @coldCough Cold CAUSES cough
+        @coldFatigue Cold CAUSES fatigue
+        @coldAll $coldFever AND $coldCough
+        @q9 $coldAll AND $coldFatigue
+      `,
+      expected_answer: {
+        natural_language: "No, Cold only causes cough and mild_fever, not fever and fatigue. Cold doesn't explain all symptoms.",
+        truth: "FALSE",
+        explanation: "Cold doesn't cause fever (only mild_fever) or fatigue, so BOOL_AND chain fails",
+        existence: "negative"
+      }
+    },
+    {
+      id: "q10",
+      natural_language: "Combine Alice's and Bob's course lists - do they have any combined enrollments?",
+      expected_dsl: `
+        @aliceCourses Alice FACTS any ENROLLED_IN
+        @bobCourses2 Bob FACTS any ENROLLED_IN
+        @allCourses MERGE_LISTS $aliceCourses $bobCourses2
+        @hasCombined $allCourses NONEMPTY any
+      `,
+      expected_answer: {
+        natural_language: "Yes, combined Alice and Bob have enrollments (Alice: Math101, Physics201; Bob: Math101, Chemistry101).",
+        truth: "TRUE_CERTAIN",
+        explanation: "Aggregation pattern: FACTS_MATCHING × 2 → MERGE_LISTS → NONEMPTY = TRUE",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q11",
+      natural_language: "In a hypothetical scenario where Alice drops Math101, does she still have any enrollments?",
+      expected_dsl: `
+        @push1 name PUSH any=hypothetical
+        @retract1 Alice RETRACT Math101
+        @remaining Alice FACTS any ENROLLED_IN
+        @stillEnrolled $remaining NONEMPTY any
+        @pop1 any POP any
+      `,
+      expected_answer: {
+        natural_language: "Yes, even if Alice drops Math101, she still has Physics201.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Theory layer test: PUSH → RETRACT → check → POP. Variable holds result across operations.",
+        existence: "positive"
+      }
+    },
+    {
+      id: "q12",
+      natural_language: "After hypothetically removing Math101, does Alice still have enrollments?",
+      expected_dsl: `
+        @push2 name PUSH any=compare
+        @retract2 Alice RETRACT Math101
+        @newList Alice FACTS any ENROLLED_IN
+        @hasNew $newList NONEMPTY any
+        @pop2 any POP any
+      `,
+      expected_answer: {
+        natural_language: "Yes, Alice still has Physics201 enrollment even after removing Math101.",
+        truth: "TRUE_CERTAIN",
+        explanation: "Theory layer with unique variable names: push2, retract2, pop2",
+        existence: "positive"
+      }
+    }
+  ],
+  version: "3.0"
+};

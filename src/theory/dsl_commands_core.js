@@ -1,11 +1,20 @@
 /**
- * DS(/theory/dsl_commands_core.js) - Core DSL Commands
+ * DS(/theory/dsl_commands_core.js) - Core DSL Commands v3.0
  *
- * Implements fundamental Sys2DSL commands for knowledge manipulation:
- * - ASK, ASSERT, CF, ABDUCT
- * - FACTS_MATCHING, ALL_REQUIREMENTS_SATISFIED
- * - Boolean operations, list operations
- * - Concept/relation binding
+ * Implements fundamental Sys2DSL v3.0 commands for knowledge manipulation.
+ *
+ * v3.0 Changes:
+ * - ASK/ASSERT are deprecated (implicit via @varName vs @_ prefix)
+ * - New dimension operations: DIM_PAIR, SET_DIM, HAS_DIM
+ * - All commands use strict triple syntax: @var Subject VERB Object
+ *
+ * Command categories:
+ * - Fact queries: FACTS, INSTANCES_OF, ALL_REQUIREMENTS_SATISFIED
+ * - Boolean operations: AND, OR, NOT, NONEMPTY
+ * - List operations: MERGE, FIRST, LAST, COUNT, FILTER
+ * - Concept/relation binding: BIND_CONCEPT, DEFINE_CONCEPT, etc.
+ * - Dimension operations: DIM_PAIR, SET_DIM, HAS_DIM
+ * - Reasoning: CF (counterfactual), ABDUCT
  *
  * @module theory/dsl_commands_core
  */
@@ -26,6 +35,10 @@ class DSLCommandsCore {
   // Query Commands
   // =========================================================================
 
+  /**
+   * @deprecated v3.0 - Use @varName Subject VERB Object syntax instead
+   * In v3.0, queries are implicit when varName !== '_'
+   */
   cmdAsk(argTokens, env) {
     const questionRaw = argTokens.join(' ');
     const question = this.parser.expandString(questionRaw, env);
@@ -55,6 +68,10 @@ class DSLCommandsCore {
     return this.api.counterfactualAsk(question, facts);
   }
 
+  /**
+   * @deprecated v3.0 - Use @_ Subject VERB Object syntax instead
+   * In v3.0, assertions are implicit when varName === '_'
+   */
   cmdAssert(argTokens, env) {
     if (argTokens.length < 3) {
       throw new Error('ASSERT expects at least three tokens: Subject REL Object');
@@ -116,19 +133,22 @@ class DSLCommandsCore {
       return token;
     };
 
-    const tokens = expandedTokens.map(resolveFactField).filter(t => t.length > 0);
+    // In v3 syntax, "any" is a wildcard placeholder - filter it out
+    const tokens = expandedTokens
+      .map(resolveFactField)
+      .filter(t => t.length > 0 && t.toLowerCase() !== 'any');
 
     if (tokens.length === 0) {
-      return facts;
+      return facts; // "any any" means return all facts
     }
 
     const matches = [];
 
     if (tokens.length === 1) {
-      // FACTS_MATCHING Subject - all facts where subject matches
-      const subP = tokens[0];
+      // FACTS_MATCHING Subject - all facts where subject OR object matches
+      const pattern = tokens[0];
       for (const f of facts) {
-        if (String(f.subject) === subP || String(f.object) === subP) {
+        if (String(f.subject) === pattern || String(f.object) === pattern) {
           matches.push(f);
         }
       }
@@ -461,9 +481,20 @@ class DSLCommandsCore {
 
   cmdInspect(argTokens, env) {
     if (argTokens.length < 1) {
-      throw new Error('INSPECT expects a concept label');
+      throw new Error('INSPECT expects a concept label or variable reference');
     }
-    const label = this.parser.expandString(argTokens[0], env);
+    const token = argTokens[0];
+
+    // If it's a variable reference, return the resolved object directly
+    if (token && token.startsWith('$')) {
+      const resolved = this.parser.resolveVar(token, env);
+      if (resolved !== undefined) {
+        return resolved;
+      }
+    }
+
+    // Otherwise, treat as concept label and get snapshot
+    const label = this.parser.expandString(token, env);
     return this.conceptStore.snapshot(label);
   }
 
@@ -579,6 +610,89 @@ class DSLCommandsCore {
       return num;
     }
     return null;
+  }
+
+  // =========================================================================
+  // v3.0 Dimension Operations
+  // =========================================================================
+
+  /**
+   * DIM_PAIR - Create a dimension-value pair
+   * v3.0 Syntax: @bp boiling_point DIM_PAIR 100
+   *
+   * Creates a reference that can be used with SET_DIM and HAS_DIM.
+   * Returns: { dimension: string, value: string }
+   */
+  cmdDimPair(dimension, value, env) {
+    this.parser.validateNoPropertyValue(dimension, 'dimension');
+    this.parser.validateNoPropertyValue(value, 'value');
+
+    return {
+      type: 'dim_pair',
+      dimension,
+      value
+    };
+  }
+
+  /**
+   * SET_DIM - Set a dimension on a concept
+   * v3.0 Syntax: @_ Water SET_DIM $bp
+   *
+   * Applies a dimension-value pair to a concept.
+   * The dimPair argument should be a result from DIM_PAIR command.
+   */
+  cmdSetDim(concept, dimPairRef, env) {
+    this.parser.validateNoPropertyValue(concept, 'concept');
+
+    // Resolve dimPair reference
+    let dimPair = dimPairRef;
+    if (typeof dimPairRef === 'string' && dimPairRef.startsWith('$')) {
+      dimPair = this.parser.resolveVar(dimPairRef, env);
+    }
+
+    if (!dimPair || dimPair.type !== 'dim_pair') {
+      throw new Error(
+        `SET_DIM expects a dimension pair from DIM_PAIR command. ` +
+        `Got: ${JSON.stringify(dimPair)}`
+      );
+    }
+
+    // Add the dimension as a fact: concept HAS_DIMENSION dimension:value
+    const sentence = `${concept} HAS_${dimPair.dimension.toUpperCase()} ${dimPair.value}`;
+    this.api.ingest(sentence);
+
+    return {
+      ok: true,
+      concept,
+      dimension: dimPair.dimension,
+      value: dimPair.value
+    };
+  }
+
+  /**
+   * HAS_DIM - Query if a concept has a dimension value
+   * v3.0 Syntax: @q Water HAS_DIM $bp
+   *
+   * Checks if a concept has the specified dimension value.
+   * Returns query result (TRUE_CERTAIN, FALSE, UNKNOWN).
+   */
+  cmdHasDim(concept, dimPairRef, env) {
+    // Resolve dimPair reference
+    let dimPair = dimPairRef;
+    if (typeof dimPairRef === 'string' && dimPairRef.startsWith('$')) {
+      dimPair = this.parser.resolveVar(dimPairRef, env);
+    }
+
+    if (!dimPair || dimPair.type !== 'dim_pair') {
+      throw new Error(
+        `HAS_DIM expects a dimension pair from DIM_PAIR command. ` +
+        `Got: ${JSON.stringify(dimPair)}`
+      );
+    }
+
+    // Query: concept HAS_DIMENSION value
+    const question = `${concept} HAS_${dimPair.dimension.toUpperCase()} ${dimPair.value}`;
+    return this.api.ask(question);
   }
 }
 

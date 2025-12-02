@@ -37,7 +37,7 @@ Defines functional behavior of the neuro-symbolic engine that ingests Sys2DSL co
 ### Persistence and Administration
 - <a id="FS-10"></a>**FS-10 Persistence & Versioning:** Store theories separately from runtime memory; enable versioned snapshots and reload. Maintain audit logs of theory changes and ingested facts.
   - **Pluggable Storage**: Theory storage uses a pluggable adapter interface (`TheoryStorage`). Default implementation uses file system with `.sys2dsl` (DSL text) and `.theory.json` (structured facts) formats. Custom adapters can be provided for database, cloud, or in-memory storage.
-  - DSL commands (`LOAD_THEORY`, `SAVE_THEORY`, etc.) work directly with storage, enabling use as a library without CLI.
+  - DSL commands (`LOAD`, `SAVE`, etc.) work directly with storage, enabling use as a library without CLI.
 - <a id="FS-11"></a>**FS-11 Administrative Operations:** Provide commands to list theories, inspect concept bounds, view conflicts, and trigger re-clustering events without modifying raw data.
 
 ### Safety and Validation
@@ -46,6 +46,41 @@ Defines functional behavior of the neuro-symbolic engine that ingests Sys2DSL co
 
 ### Sys2DSL
 - <a id="FS-14"></a>**FS-14 Sys2DSL Theory Programs:** Expose a small, deterministic line-oriented DSL (Sys2DSL) that lets users and domain authors define reusable reasoning programmes in text theory files. Sys2DSL composes core primitives (ask, abduct, counterfactual queries, fact search, requirement coverage checks, mask control) into higher-level checks without embedding domain-specific logic inside the engine code.
+
+- <a id="FS-22"></a>**FS-22 Strict Triple Syntax (INVIOLABLE):** Every Sys2DSL statement MUST be exactly `@variable Subject VERB Object` - no exceptions. This uniformity enables:
+  - **Uniform parsing**: One grammar rule for all statements
+  - **Uniform execution**: Every statement creates/modifies points and returns a point
+  - **Composability**: Results chain via `$variable` references
+
+  Complex operations requiring multiple inputs (dimension + value, source + target, etc.) MUST use one of these canonical patterns:
+
+  1. **Intermediate Point Pattern**: Create a point representing the compound value
+     ```sys2dsl
+     @dim_val existence DIM_PAIR $new_value;    # Creates point representing (existence, $new_value)
+     @result subject SET_DIM $dim_val;           # Uses the compound point
+     ```
+
+  2. **Chained Operation Pattern**: Decompose into sequential operations
+     ```sys2dsl
+     @with_dim subject WITH_DIM existence;       # Mark subject for dimension operation
+     @result $with_dim SET_VALUE $new_value;     # Apply value to marked point
+     ```
+
+  3. **Curried Verb Pattern**: Verbs that return specialized verbs
+     ```sys2dsl
+     @setter SET_DIM_FOR existence;              # Returns a verb that sets existence
+     @result subject $setter $new_value;         # Apply the specialized verb
+     ```
+
+  The choice of pattern depends on semantic clarity; all produce points that can be reasoned about geometrically.
+
+- <a id="FS-23"></a>**FS-23 Values as Points:** Every value in Sys2DSL is a point in conceptual space:
+  - **Numbers**: Created via `NUMERIC_VALUE`, stored as constant points
+  - **Dimension names**: Predefined concept points (`existence`, `deontic`, etc.)
+  - **Pairs/Tuples**: Created via `DIM_PAIR`, `TRIPLE_OF`, etc. - stored as composite points
+  - **Lists**: Points with `kind: "list"` containing references to item points
+
+  This ensures uniformity: there are no "special" values that require grammar extensions.
 
 ### Ontology Introspection
 - <a id="FS-15"></a>**FS-15 Ontology Discovery Commands:** Provide DSL commands that enable introspection of the knowledge base to support ontology auto-discovery:

@@ -12,10 +12,10 @@ Base theory file containing facts for health/medical compliance testing. Establi
 
 ```sys2dsl
 # Health compliance theory (Sys2DSL)
-@f1 ASSERT ProcedureX REQUIRES Consent
-@f2 ASSERT ProcedureX REQUIRES AuditTrail
-@f3 ASSERT ExportData PROHIBITED_BY GDPR
-@f4 ASSERT ExportData PERMITTED_BY HIPAA
+@f1 ProcedureX REQUIRES Consent
+@f2 ProcedureX REQUIRES AuditTrail
+@f3 ExportData PROHIBITED_BY GDPR
+@f4 ExportData PERMITTED_BY HIPAA
 ```
 
 ## Facts Defined

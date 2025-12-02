@@ -71,7 +71,7 @@ class FileStorageAdapter {
 # @author: System
 # =============================================================================
 
-@f001 ASSERT Patient IS_A Person
+@f001 Patient IS_A Person
 ```
 
 **JSON Format:**
@@ -123,7 +123,7 @@ for (const line of lines) {
 ```javascript
 const facts = conceptStore.getFacts();
 const lines = facts.map((f, i) =>
-  `@f${String(i+1).padStart(3,'0')} ASSERT ${f.subject} ${f.relation} ${f.object}`
+  `@f${String(i+1).padStart(3,'0')} ${f.subject} ${f.relation} ${f.object}`
 );
 
 storage.saveTheory('my_session', lines.join('\n'), {
@@ -162,7 +162,7 @@ const storage = new TheoryStorage({
 const memAdapter = new TheoryStorage.MemoryStorageAdapter();
 const storage = new TheoryStorage({ adapter: memAdapter });
 
-storage.saveTheory('test', '@f1 ASSERT X IS_A Y');
+storage.saveTheory('test', '@f1 X IS_A Y');
 // ... run tests ...
 memAdapter.clear();
 ```
@@ -180,9 +180,9 @@ loadTheoryLines(theoryId) {
       .filter(l => l && !l.startsWith('#'));
   }
   if (data.format === 'json') {
-    // Convert facts to ASSERT statements
+    // Convert facts to triple statements
     return data.content.map((f, i) =>
-      `@f${String(i+1).padStart(3,'0')} ASSERT ${f.subject} ${f.relation} ${f.object}`
+      `@f${String(i+1).padStart(3,'0')} ${f.subject} ${f.relation} ${f.object}`
     );
   }
 }

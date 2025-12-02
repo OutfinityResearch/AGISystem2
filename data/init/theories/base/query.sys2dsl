@@ -1,0 +1,161 @@
+# =============================================================================
+# BASE QUERY - Query and Pattern Matching Verbs
+# =============================================================================
+# These define how to query the conceptual space for facts and relationships.
+# Version: 3.0
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SECTION 1: Basic Queries
+# -----------------------------------------------------------------------------
+
+# IS_A - Taxonomic relationship (fundamental)
+# Returns truth of "subject is a kind of object"
+@IS_A BEGIN
+  @s_point subject INSPECT any
+  @o_point object INSPECT any
+  @dist $s_point DEDUCT $o_point
+  @return $dist READ_DIM existence
+END
+
+# HAS - Property relationship
+# Returns truth of "subject has property object"
+@HAS BEGIN
+  @rel subject READ_DIM $object
+  @return $rel GREATER_THAN zero
+END
+
+# RELATES - Check if any relation exists
+# Returns truth of "subject relates to object somehow"
+@RELATES BEGIN
+  @facts subject FACTS object
+  @return $facts NONEMPTY any
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 2: Fact Retrieval
+# -----------------------------------------------------------------------------
+
+# FACTS - Get all facts about subject with optional object filter
+# Returns list of related facts
+@FACTS BEGIN
+  @return subject INDUCT object
+END
+
+# INSTANCES - Get all instances of a concept
+# Reverse of IS_A: what things are this?
+@INSTANCES BEGIN
+  @return any IS_A subject
+END
+
+# SUBTYPES - Get all subtypes of a concept
+# Direct children in taxonomy
+@SUBTYPES BEGIN
+  @return any IS_A subject
+END
+
+# SUPERTYPES - Get all supertypes of a concept
+# Parents in taxonomy
+@SUPERTYPES BEGIN
+  @return subject IS_A any
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 3: Pattern Matching
+# -----------------------------------------------------------------------------
+
+# MATCHING - Find facts matching a pattern
+# Subject, object, or both can be 'any' for wildcards
+@MATCHING BEGIN
+  @return subject RELATES object
+END
+
+# WITH_RELATION - Find facts with specific relation
+# Subject is the relation to match
+@WITH_RELATION BEGIN
+  @return any subject any
+END
+
+# WITH_OBJECT - Find facts with specific object
+# Subject is the object to match
+@WITH_OBJECT BEGIN
+  @return any any subject
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 4: Filtered Queries
+# -----------------------------------------------------------------------------
+
+# FILTER - Filter a list by predicate
+@FILTER BEGIN
+  @return subject INDUCT object
+END
+
+# COUNT_RESULTS - Count matching results
+@COUNT_RESULTS BEGIN
+  @list subject FACTS object
+  @return $list COUNT any
+END
+
+# FIRST - Get first result from a query
+@FIRST BEGIN
+  @list subject FACTS object
+  @return $list READ_DIM first
+END
+
+# LAST - Get last result from a query
+@LAST BEGIN
+  @list subject FACTS object
+  @return $list READ_DIM last
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 5: Relationship Queries
+# -----------------------------------------------------------------------------
+
+# CAUSES - Causal relationship
+@CAUSES BEGIN
+  @return subject READ_DIM causal_$object
+END
+
+# PART_OF - Mereological relationship
+@PART_OF BEGIN
+  @return subject READ_DIM part_$object
+END
+
+# LOCATED_IN - Spatial relationship
+@LOCATED_IN BEGIN
+  @return subject READ_DIM location_$object
+END
+
+# BEFORE - Temporal relationship
+@BEFORE BEGIN
+  @s_time subject READ_DIM temporal
+  @o_time object READ_DIM temporal
+  @return $s_time LESS_THAN $o_time
+END
+
+# AFTER - Temporal relationship (inverse of BEFORE)
+@AFTER BEGIN
+  @return object BEFORE subject
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 6: Existence Queries
+# -----------------------------------------------------------------------------
+
+# EXISTS - Check if subject exists in knowledge base
+@EXISTS BEGIN
+  @info subject INSPECT any
+  @ex $info READ_DIM existence
+  @return $ex GREATER_THAN zero
+END
+
+# UNKNOWN_Q - Check if subject is unknown
+@UNKNOWN_Q BEGIN
+  @info subject INSPECT any
+  @ex $info READ_DIM existence
+  @return $ex EQUALS zero
+END
+
+# End of query verbs

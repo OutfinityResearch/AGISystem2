@@ -105,27 +105,27 @@ Components of trustworthiness:
 ### Ethical Reasoning
 ```sys2dsl
 # Check if action is prohibited
-@result ASK "Is murder prohibited by universal_ethics?"  # TRUE_CERTAIN
+@result murder PROHIBITED_BY universal_ethics  # TRUE_CERTAIN
 
 # Check professional requirements
-@result ASK "Is patient_consent required for medical_treatment?"  # TRUE_CERTAIN
+@result patient_consent REQUIRED_FOR medical_treatment  # TRUE_CERTAIN
 ```
 
 ### Bias Control Integration
 ```sys2dsl
 # Use with BiasController for fair decision-making
-@mask MASK_PARTITIONS axiology
-@result ASK_MASKED $mask "Should gender affect hiring?"  # FALSE (NOT_FACTOR_IN)
+@mask axiology MASK_PARTITIONS any
+@result gender NOT_FACTOR_IN hiring_decision  # TRUE (protected attribute)
 ```
 
 ### Compliance Checking
 ```sys2dsl
 # Validate medical procedure
-@consent ASK "Does procedure have patient_consent?"
-@confidential ASK "Is confidentiality maintained?"
-@safe ASK "Does procedure follow do_no_harm?"
-@compliant BOOL_AND $consent $confidential
-@compliant BOOL_AND $compliant $safe
+@consent procedure HAS patient_consent
+@confidential procedure MAINTAINS confidentiality
+@safe procedure FOLLOWS do_no_harm
+@compliant $consent AND $confidential
+@compliant $compliant AND $safe
 ```
 
 ---
@@ -164,12 +164,12 @@ biasController.shouldMask('skills', 'hiring_decision'); // false
 # Then add domain-specific rules
 
 # Legal domain
-@_ ASSERT due_process REQUIRED_FOR legal_proceeding
-@_ ASSERT presumption_of_innocence REQUIRED_FOR criminal_trial
+@_ due_process REQUIRED_FOR legal_proceeding
+@_ presumption_of_innocence REQUIRED_FOR criminal_trial
 
 # Medical domain (beyond base)
-@_ ASSERT informed_consent REQUIRED_FOR surgery
-@_ ASSERT second_opinion PERMITTED_BY medical_ethics
+@_ informed_consent REQUIRED_FOR surgery
+@_ second_opinion PERMITTED_BY medical_ethics
 ```
 
 ---

@@ -1,0 +1,112 @@
+{
+  "id": "suite_10_theory_layers",
+  "name": "Theory Layering & Advanced Counterfactual Reasoning",
+  "description": "Tests THEORY_PUSH/POP for isolated counterfactual contexts, CF command for what-if scenarios, RETRACT for fact removal, layer isolation, and MERGE_THEORY for combining theories",
+
+  "theory": {
+    "natural_language": "Base reality facts about physics and history. Physics: Water boils at 100 degrees Celsius at sea level. Water freezes at 0 degrees Celsius. Room temperature is approximately 20 degrees Celsius. Fire requires oxygen to burn. Gravity causes objects to fall downward. Metal expands when heated. History: Napoleon lost the Battle of Waterloo in 1815. The French Empire ended after Waterloo. World War 1 happened before World War 2. The Internet was invented after television. The Roman Empire fell in 476 AD. Technology: Electricity was discovered before the internet. Smartphones require electricity to function. Cars require fuel or electricity to operate.",
+    "expected_facts": [
+      "water BOILS_AT 100_celsius",
+      "water FREEZES_AT 0_celsius",
+      "room_temperature IS 20_celsius",
+      "fire REQUIRES oxygen",
+      "gravity CAUSES objects_fall",
+      "metal EXPANDS_WHEN heated",
+      "Napoleon LOST Battle_of_Waterloo",
+      "Battle_of_Waterloo HAPPENED_IN 1815",
+      "French_Empire ENDED_AFTER Waterloo",
+      "WW1 BEFORE WW2",
+      "Internet INVENTED_AFTER television",
+      "Roman_Empire FELL_IN 476_AD",
+      "electricity DISCOVERED_BEFORE internet",
+      "smartphone REQUIRES electricity",
+      "car REQUIRES fuel_or_electricity"
+    ]
+  },
+
+  "queries": [
+    {
+      "id": "q1",
+      "natural_language": "In a world where water boiled at 50 degrees, would it be liquid at room temperature?",
+      "expected_dsl": "@q1_push THEORY_PUSH cf_water\n@q1_assert ASSERT water BOILS_AT 50_celsius\n@q1 ASK water BOILS_AT 50_celsius\n@q1_pop THEORY_POP",
+      "expected_answer": {
+        "natural_language": "Yes, water would still be liquid at room temperature (20 degrees) if it boiled at 50 degrees, since 20 < 50.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "CF creates isolated context where boiling point is 50, room temp 20 < 50"
+      }
+    },
+    {
+      "id": "q2",
+      "natural_language": "What if there was no oxygen - could fire exist?",
+      "expected_dsl": "@q2_push THEORY_PUSH cf_no_oxygen\n@q2_retract RETRACT fire REQUIRES oxygen\n@q2 ASK fire REQUIRES oxygen\n@q2_pop THEORY_POP",
+      "expected_answer": {
+        "natural_language": "No, fire could not exist without oxygen. Fire requires oxygen to burn, so in a world without oxygen, fire is impossible.",
+        "truth": "UNKNOWN",
+        "explanation": "After RETRACT, the fact is removed so ASK returns UNKNOWN"
+      }
+    },
+    {
+      "id": "q3",
+      "natural_language": "What if Napoleon had won Waterloo - would the French Empire have continued?",
+      "expected_dsl": "@q3_push THEORY_PUSH cf_napoleon\n@q3_assert ASSERT Napoleon WON Battle_of_Waterloo\n@q3 ASK Napoleon WON Battle_of_Waterloo\n@q3_pop THEORY_POP",
+      "expected_answer": {
+        "natural_language": "Plausibly yes. If Napoleon had won Waterloo instead of losing, the French Empire might have continued since its end was a consequence of the defeat.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Counterfactual reasoning: removing cause may remove effect"
+      }
+    },
+    {
+      "id": "q4",
+      "natural_language": "Create a 'no_gravity' layer and check if objects would fall",
+      "expected_dsl": "@layer1 THEORY_PUSH no_gravity_world\n@retract1 RETRACT gravity CAUSES objects_fall\n@q4 ASK gravity CAUSES objects_fall\n@restore THEORY_POP",
+      "expected_answer": {
+        "natural_language": "In the no-gravity layer, objects would not fall because we retracted the causal relationship. After THEORY_POP, normal gravity rules apply again.",
+        "truth": "UNKNOWN",
+        "explanation": "After RETRACT, the fact is removed so ASK returns UNKNOWN"
+      }
+    },
+    {
+      "id": "q5",
+      "natural_language": "After popping the no-gravity layer, do objects fall again?",
+      "expected_dsl": "@q5 ASK gravity CAUSES objects_fall",
+      "expected_dsl_notes": "Verify base theory is restored after THEORY_POP",
+      "expected_answer": {
+        "natural_language": "Yes, after popping the counterfactual layer, we return to base reality where gravity causes objects to fall.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "THEORY_POP restores previous layer state"
+      }
+    },
+    {
+      "id": "q6",
+      "natural_language": "Can we have nested counterfactual layers?",
+      "expected_dsl": "@outer THEORY_PUSH alternate_history\n@change1 ASSERT Napoleon WON Battle_of_Waterloo\n@inner THEORY_PUSH alternate_physics\n@change2 ASSERT water BOILS_AT 50_celsius\n@q6 ASK water BOILS_AT 50_celsius\n@pop_inner THEORY_POP\n@pop_outer THEORY_POP",
+      "expected_answer": {
+        "natural_language": "Yes, nested layers work. In inner layer, both changes are visible. After popping inner, water boils at 100 again but Napoleon still won. After popping outer, both revert to base reality.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Layer stacking: inner sees outer changes, pops restore correctly"
+      }
+    },
+    {
+      "id": "q7",
+      "natural_language": "What if smartphones didn't require electricity?",
+      "expected_dsl": "@q7_push THEORY_PUSH cf_smartphone\n@q7_retract RETRACT smartphone REQUIRES electricity\n@q7 ASK smartphone REQUIRES electricity\n@q7_pop THEORY_POP",
+      "expected_answer": {
+        "natural_language": "If smartphones didn't require electricity, they could theoretically function without power. However, this counterfactual removes a fundamental dependency.",
+        "truth": "UNKNOWN",
+        "explanation": "After RETRACT, the fact is removed so ASK returns UNKNOWN (not FALSE)"
+      }
+    },
+    {
+      "id": "q8",
+      "natural_language": "Verify layer isolation - changes in a layer should not affect base theory",
+      "expected_dsl": "@setup THEORY_PUSH test_isolation\n@contradict ASSERT Roman_Empire FELL_IN 500_AD\n@check_layer ASK Roman_Empire FELL_IN 500_AD\n@pop THEORY_POP\n@q8 ASK Roman_Empire FELL_IN 476_AD",
+      "expected_answer": {
+        "natural_language": "In the test layer, Roman Empire fell in 500 AD (as asserted). After popping, the base theory shows 476 AD unchanged. Layers are properly isolated.",
+        "truth": "TRUE_CERTAIN",
+        "explanation": "Complete isolation: layer changes don't leak to base"
+      }
+    }
+  ],
+
+  "tags": ["counterfactual", "theory-layers", "what-if", "isolation", "temporal", "physics", "history", "comprehensive"]
+}

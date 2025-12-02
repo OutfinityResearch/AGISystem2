@@ -52,7 +52,7 @@ Debug mode: ON
 DSL commands and results will be shown for each operation
 
 AGIS2> add Dog IS_A Animal
-[DSL] @f ASSERT Dog IS_A Animal
+[DSL] @_ Dog IS_A Animal
 [Result] {"subject":"Dog","relation":"IS_A","object":"Animal"}
 OK (fact ingested via Sys2DSL)
 ```

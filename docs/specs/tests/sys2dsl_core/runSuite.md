@@ -10,7 +10,7 @@ Profile: `auto_test`.
 
 Steps/Assertions:
 - Topological evaluation:
-  - Ingest a basic fact `dog IS_A Animal` via Sys2DSL `ASSERT`.
+  - Ingest a basic fact `dog IS_A Animal` via Sys2DSL triple syntax.
   - Run a Sys2DSL script where a variable depends on others declared later in the file:
     - `@b BOOL_AND $a $a`
     - `@a NONEMPTY $list`
@@ -23,7 +23,7 @@ Steps/Assertions:
   - Verify that the interpreter detects the cyclic dependency between `a` and `b` and throws a deterministic error.
 - Masked queries:
   - Build an ontology mask via `@m MASK_PARTITIONS ontology`.
-  - Run `@q ASK_MASKED $m "dog IS_A Animal?"`.
+  - Run `@q dog IS_A animal` with mask `$m`.
   - Verify that the query returns a truth verdict and that the result object includes a `maskSpec` field equal to `"ontology"`.
 
 Sample:

@@ -2,102 +2,79 @@
 
 ID: DS(/theory/Sys2DSL_commands)
 
-Status: DRAFT v2.2 (updated)
+Status: v3.0 - Unified Triple Syntax
 
 ## Overview
-The full Sys2DSL command reference has been split into focused specs for readability. This index lists all **67 commands** and links to the detailed documents. Syntax follows `@var COMMAND args…` as defined in DS(/theory/Sys2DSL_syntax).
+The full Sys2DSL verb reference has been organized into focused specs for readability. This index lists all verbs and links to the detailed documents.
 
-- **Recommended (NL-friendly) surface**: `QUERY`, `WHATIF`, `SUGGEST`, `SUMMARIZE_FACTS`, `MANAGE_THEORY`, `MEMORY`, `MASK`, `FORMAT_RESULT`, `EXPLAIN_QUERY` — see `Sys2DSL_highlevel.md`. These fan out into the granular commands automatically.
-- **Granular commands**: Listed below for precision and direct access.
+**IMPORTANT**: In v3.0, there are NO "commands" - everything is a **verb** in the unified triple syntax `@variable Subject VERB Object`. What were previously called "commands" are now verbs defined in the base theory files.
+
+**v3.0 Syntax Notes:**
+- All statements: `@variable Subject VERB Object` (strict triple)
+- No ASK/ASSERT commands - queries and assertions are implicit based on verb semantics
+- `any` replaces wildcards (`*`, `?`)
+- `@_` for throwaway results (side-effects only)
+- No semicolons at end of statements (newline or `@` separates statements)
 
 ## Split Specifications
-- **Query & Mask** — ASK, ASK_MASKED, FACTS_MATCHING, MASK_PARTITIONS, MASK_DIMS, MASK_CONCEPT  
+- **Query & Mask** — IS_A, FACTS, INSTANCES, MASK verbs
   See `Sys2DSL_commands_queries_masks.md`
-- **Assertion, Concepts & Relations** — ASSERT, RETRACT, BIND/DEFINE/INSPECT (concepts), BIND/DEFINE/MODIFY (relations)  
+- **Assertion, Concepts & Relations** — IS_A, HAS, BIND/DEFINE/INSPECT verbs
   See `Sys2DSL_commands_assertions_entities.md`
-- **Theory Management & Memory** — LIST/LOAD/SAVE/MERGE/RESET, GET_USAGE, FORGET, BOOST  
+- **Theory Management & Memory** — PUSH, POP, LOAD, SAVE, FORGET, BOOST verbs
   See `Sys2DSL_commands_theory_memory.md`
-- **Reasoning** — VALIDATE, PROVE, HYPOTHESIZE, CF, ABDUCT  
+- **Reasoning** — VALIDATE, PROVE, HYPOTHESIZE, ABDUCT verbs
   See `Sys2DSL_commands_reasoning.md`
-- **Utility, Output & Ontology** — BOOL_*, MERGE_LISTS, PICK_*, NONEMPTY, COUNT, FILTER, TO_NATURAL, TO_JSON, EXPLAIN, EXPLAIN_CONCEPT, MISSING, WHAT_IS  
+- **Utility, Output & Ontology** — AND, OR, NOT, TO_NATURAL, SUMMARIZE verbs
   See `Sys2DSL_commands_util_output_ontology.md`
 
-## Command Summary Table
+## Verb Summary Table (v3.0)
 
-| Command | Category | Purpose |
-|---------|----------|---------|
-| **QUERY** | High-Level | Multi-strategy query (ASK → INFER) |
-| **WHATIF** | High-Level | Counterfactual reasoning |
-| **SUGGEST** | High-Level | Generate hypotheses (abduct/analogical) |
-| **MANAGE_THEORY** | High-Level | Theory storage operations |
-| **MEMORY** | High-Level | Memory lifecycle operations |
-| **MASK** | High-Level | Build dimension masks |
-| **FORMAT_RESULT** | High-Level | Format results |
-| **SUMMARIZE_FACTS** | High-Level | Find and summarize facts |
-| **EXPLAIN_QUERY** | High-Level | Proof with explanation |
-| ASK | Query | Query truth of statement |
-| ASK_MASKED | Query | Query with dimension mask |
-| FACTS_MATCHING | Query | Find matching facts (polymorphic) |
-| FACTS_WITH_RELATION | Query | Find facts by relation |
-| FACTS_WITH_OBJECT | Query | Find facts by object |
-| INSTANCES_OF | Query | Find instances of type |
-| ALL_REQUIREMENTS_SATISFIED | Query | Check requirements |
-| ASSERT | Assertion | Add fact |
-| RETRACT | Assertion | Remove fact |
-| BIND_CONCEPT | Concept | Get concept reference |
-| DEFINE_CONCEPT | Concept | Create new concept |
-| INSPECT | Concept | Get detailed info |
-| LITERAL | Concept | Create literal value |
-| BIND_RELATION | Relation | Get relation reference |
-| DEFINE_RELATION | Relation | Create new relation |
-| BIND_POINT | Relation | Create point in vector space |
-| LIST_THEORIES | Theory | List available theories |
-| LOAD_THEORY | Theory | Load theory |
-| SAVE_THEORY | Theory | Save working theory |
-| MERGE_THEORY | Theory | Merge theories |
-| DELETE_THEORY | Theory | Delete theory |
-| THEORY_INFO | Theory | Get theory metadata |
-| THEORY_PUSH | Theory | Push new theory layer |
-| THEORY_POP | Theory | Pop theory layer |
-| RESET_SESSION | Theory | Clear working theory |
-| VALIDATE | Reasoning | Check consistency |
-| PROVE | Reasoning | Prove statement |
-| HYPOTHESIZE | Reasoning | Generate hypotheses |
-| CF | Reasoning | Counterfactual query |
-| ABDUCT | Reasoning | Abductive reasoning |
-| ANALOGICAL | Reasoning | Analogical reasoning |
-| CHECK_CONTRADICTION | Reasoning | Detect contradictions |
-| CHECK_WOULD_CONTRADICT | Reasoning | Check if fact would contradict |
-| REGISTER_FUNCTIONAL | Reasoning | Mark relation as functional |
-| REGISTER_CARDINALITY | Reasoning | Set cardinality constraints |
-| INFER | Inference | Multi-method inference |
-| FORWARD_CHAIN | Inference | Derive conclusions |
-| WHY | Inference | Explain inference |
-| DEFINE_RULE | Inference | Register composition rule |
-| DEFINE_DEFAULT | Inference | Register default rule |
-| CLEAR_RULES | Inference | Clear all rules |
-| MASK_PARTITIONS | Mask | Mask by partition |
-| MASK_DIMS | Mask | Mask by dimensions |
-| BOOL_AND/OR/NOT | Utility | Boolean operations |
-| MERGE_LISTS | Utility | Combine lists |
-| PICK_FIRST/LAST | Utility | List access |
-| NONEMPTY | Utility | List check |
-| COUNT | Utility | List count |
-| FILTER | Utility | List filter |
-| POLARITY_DECIDE | Utility | Decide based on polarity |
-| GET_USAGE | Memory | Get usage stats |
-| FORGET | Memory | Remove unused |
-| BOOST | Memory | Increase priority |
-| PROTECT | Memory | Protect from forgetting |
-| UNPROTECT | Memory | Remove protection |
-| TO_NATURAL | Output | Convert to text |
-| TO_JSON | Output | Export JSON |
-| EXPLAIN | Output | Detailed explanation |
-| FORMAT | Output | Format with template |
-| SUMMARIZE | Output | Summarize results |
-| EXPLAIN_CONCEPT | Ontology | Explain known facts about concept |
-| MISSING | Ontology | Find undefined concepts in statement |
-| WHAT_IS | Ontology | Simple identity query |
+**Note:** Examples use v3.0 syntax: `@var Subject VERB Object`
+
+| Verb | Category | v3.0 Syntax Example |
+|------|----------|---------------------|
+| **QUERY** | High-Level | `@r subject QUERY object` |
+| **PROVE** | High-Level | `@p subject PROVE object` |
+| **HYPOTHESIZE** | High-Level | `@h subject HYPOTHESIZE object` |
+| **EXPLORE** | High-Level | `@e subject EXPLORE domain` |
+| **SUMMARIZE** | High-Level | `@s subject SUMMARIZE any` |
+| IS_A | Ontology | `@_ Dog IS_A animal` |
+| HAS | Property | `@_ Dog HAS fur` |
+| CAUSES | Causal | `@_ Fire CAUSES smoke` |
+| FACTS | Query | `@f Dog FACTS any` |
+| INSTANCES | Query | `@i any IS_A animal` (returns all instances) |
+| RETRACT | Mutation | `@_ subject RETRACT object` (remove fact) |
+| INSPECT | Concept | `@i Dog INSPECT any` |
+| PUSH | Theory | `@_ theory_name PUSH any` |
+| POP | Theory | `@_ any POP any` |
+| LOAD | Theory | `@_ theory_name LOAD any` |
+| SAVE | Theory | `@_ theory_name SAVE any` |
+| THEORIES | Theory | `@list any THEORIES any` (list all theories) |
+| MASK | Masking | `@m partition MASK any` |
+| AND | Logic | `@r $a AND $b` |
+| OR | Logic | `@r $a OR $b` |
+| NOT | Logic | `@r $a NOT any` |
+| IMPLIES | Logic | `@r $a IMPLIES $b` |
+| FORGET | Memory | `@_ concept FORGET any` |
+| BOOST | Memory | `@_ concept BOOST any` |
+| PROTECT | Memory | `@_ concept PROTECT any` |
+| TO_NATURAL | Output | `@text result TO_NATURAL any` |
+| ABDUCT | Reasoning | `@h observation ABDUCT domain` |
+| VALIDATE | Reasoning | `@v subject VALIDATE object` |
+| ANALOGIZE | Reasoning | `@a source ANALOGIZE target` |
+
+**Geometric Primitives** (hardcoded relations):
+| Primitive | Purpose | Example |
+|-----------|---------|---------|
+| NUMERIC_VALUE | Create constant | `@n NUMERIC_VALUE 127` |
+| READ_DIM | Read dimension | `@v Dog READ_DIM existence` |
+| PROJECT_DIM | Set dimension | Use DIM_PAIR pattern |
+| ATTRACT | Move point | `@_ point1 ATTRACT point2` |
+| EXTEND | Expand diamond | `@_ concept EXTEND delta` |
+| INDUCT | Generalize | `@g examples INDUCT any` |
+| DEDUCT | Specialize | `@s parent DEDUCT any` |
+
 
 ## Version History
 
@@ -108,3 +85,4 @@ The full Sys2DSL command reference has been split into focused specs for readabi
 | 2.1 | Added ontology introspection commands |
 | 2.2 | Split into five focused specs; this file now serves as index + summary |
 | 2.3 | Added: FACTS_WITH_RELATION, FACTS_WITH_OBJECT, INSTANCES_OF, INFER, FORWARD_CHAIN, WHY, DEFINE_RULE, DEFINE_DEFAULT, CLEAR_RULES, high-level commands (QUERY, WHATIF, SUGGEST, etc.). Total: 67 commands. Removed deprecated MODIFY_RELATION, MASK_CONCEPT (not implemented). |
+| **3.0** | **Complete redesign: All "commands" converted to verbs. Strict triple syntax: `@var Subject VERB Object`. No ASK/ASSERT - queries/assertions implicit. `any` replaces wildcards. Removed semicolons. Updated all documentation.** |

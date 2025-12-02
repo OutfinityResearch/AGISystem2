@@ -46,47 +46,47 @@
 
       <h3>Threshold-Based Forgetting</h3>
       <p>Remove concepts with usage count below a threshold:</p>
-      <pre>@result FORGET threshold=5</pre>
+      <pre>@result threshold=5 FORGET any</pre>
       <p>This removes all unprotected concepts used fewer than 5 times.</p>
 
       <h3>Pattern-Based Forgetting</h3>
       <p>Remove concepts matching a glob pattern:</p>
-      <pre>@result FORGET pattern=temp_*</pre>
+      <pre>@result temp_* FORGET any</pre>
       <p>This removes temporary concepts like <code>temp_session_1</code>, <code>temp_query</code>, etc.</p>
 
       <h3>Specific Concept Forgetting</h3>
       <p>Remove a specific concept by name:</p>
-      <pre>@result FORGET concept=ObsoleteConcept</pre>
+      <pre>@result ObsoleteConcept FORGET any</pre>
 
       <h3>Dry Run Mode</h3>
       <p>Preview what would be forgotten without actually removing:</p>
-      <pre>@preview FORGET threshold=10 dryRun=true</pre>
+      <pre>@preview threshold=10 FORGET dryRun</pre>
     </div>
 
     <div class="technical-implementation">
       <h2>Protection Mechanisms</h2>
       <p>Critical concepts can be protected from any forgetting operation:</p>
 
-      <pre>@_ PROTECT CoreConcept
-@_ PROTECT Water
-@_ PROTECT fundamental_axiom</pre>
+      <pre>CoreConcept PROTECT any
+Water PROTECT any
+fundamental_axiom PROTECT any</pre>
 
       <p>Protected concepts:</p>
       <ul>
         <li>Cannot be removed by FORGET commands</li>
         <li>Are preserved across sessions</li>
-        <li>Can be unprotected when no longer critical: <code>@_ UNPROTECT CoreConcept</code></li>
+        <li>Can be unprotected when no longer critical: <code>CoreConcept UNPROTECT any</code></li>
       </ul>
 
       <p>List all protected concepts:</p>
-      <pre>@list LIST_PROTECTED</pre>
+      <pre>@list any LIST PROTECTED</pre>
     </div>
 
     <div class="technical-implementation">
       <h2>Priority Boosting</h2>
       <p>Manually increase a concept's priority to prevent forgetting:</p>
-      <pre>@_ BOOST ImportantConcept 100   # Add 100 to usage count
-@_ BOOST Water                   # Default: add 10</pre>
+      <pre>ImportantConcept BOOST 100   # Add 100 to usage count
+Water BOOST any                  # Default: add 10</pre>
 
       <p>This is useful when:</p>
       <ul>

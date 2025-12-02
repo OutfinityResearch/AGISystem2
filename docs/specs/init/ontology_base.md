@@ -109,25 +109,25 @@ Key mutual exclusions enforced:
 const session = agent.createSession(); // Loads ontology_base automatically
 
 // Manual loading
-session.execute('@_ LOAD_THEORY ontology_base');
+session.execute('@_ ontology_base LOAD any');
 ```
 
 ### Querying
 ```sys2dsl
 # Check taxonomy
-@result ASK "Is dog a mammal?"        # TRUE_CERTAIN
-@result ASK "Is dog an animal?"       # TRUE_CERTAIN (transitive)
-@result ASK "Is whale a fish?"        # FALSE (whale IS_A mammal)
+@result dog IS_A mammal        # TRUE_CERTAIN
+@result dog IS_A animal        # TRUE_CERTAIN (transitive)
+@result whale IS_A fish        # FALSE (whale IS_A mammal)
 
 # Check disjointness
-@result CHECK_WOULD_CONTRADICT Fido IS_A cat  # If Fido IS_A dog
+@result Fido WOULD_CONTRADICT cat  # If Fido IS_A dog
 ```
 
 ### Extension
 ```sys2dsl
 # Add domain-specific facts on top of base ontology
-@_ ASSERT Fido IS_A dog
-@_ ASSERT Fido LOCATED_IN Paris
+@_ Fido IS_A dog
+@_ Fido LOCATED_IN Paris
 ```
 
 ---

@@ -9,12 +9,12 @@ Fixtures: `fixtures/narrative/basics.txt`, SciFi tech-magic theory (`scifi_techm
 Profile: `manual_test`.
 
 Steps/Assertions:
-- Use Sys2DSL `ASSERT` commands in a `System2Session` to ingest basics: `Alice IS_A Human`, `CityX DISJOINT_WITH MagicZone`, `Alice CASTS Magic_IN CityX` → expect a conflict (magic disallowed) when querying permissions.
-- Append the `SciFi_TechMagic` theory from `scifi_techmagic.sys2dsl` permitting tech-magic in CityX → conflict resolves; query `"Is Alice allowed to cast magic in CityX?"` → TRUE/PLAUSIBLE with provenance citing the SciFi layer.
-- Continuity: append Chapter2 facts (e.g. `Alice IS_A Human` again) and confirm no contradiction across chapters.
+- Use Sys2DSL triple syntax in a `System2Session` to ingest basics: `@_ Alice IS_A Human`, `@_ CityX DISJOINT_WITH MagicZone`, `@_ Alice CASTS Magic_IN CityX` → expect a conflict (magic disallowed) when querying permissions.
+- Append the `SciFi_TechMagic` theory from `scifi_techmagic.sys2dsl` permitting tech-magic in CityX → conflict resolves; query via triple syntax → TRUE/PLAUSIBLE with provenance citing the SciFi layer.
+- Continuity: append Chapter2 facts (e.g. `@_ Alice IS_A Human` again) and confirm no contradiction across chapters.
 - Genre rules (optional theory) may enforce payoff/foreshadowing; validation flags missing payoff if foreshadow events lack resolution (simplified check).
 
 Sample:
 - Base: conflict on Alice casting magic in CityX (CityX disallows) → reported.
-- With SciFi_TechMagic: query `"Can Alice cast magic in CityX?"` → TRUE/PLAUSIBLE; provenance layer=Scifi_TechMagic.
-- Continuity: `"Is Alice Human in Chapter2?"` → TRUE_CERTAIN unless contradicted.***
+- With SciFi_TechMagic: query via triple syntax → TRUE/PLAUSIBLE; provenance layer=Scifi_TechMagic.
+- Continuity: query via triple syntax → TRUE_CERTAIN unless contradicted.***

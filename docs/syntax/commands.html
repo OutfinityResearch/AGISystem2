@@ -77,7 +77,7 @@
       <tr>
         <td><code>WHATIF</code></td>
         <td>Counterfactual reasoning</td>
-        <td>CF (THEORY_PUSH + ASSERT + ASK + THEORY_POP)</td>
+        <td>CF (PUSH + ASSERT + ASK + POP)</td>
       </tr>
       <tr>
         <td><code>EXPLAIN_QUERY</code></td>
@@ -97,7 +97,7 @@
       <tr>
         <td><code>MANAGE_THEORY</code></td>
         <td>Theory storage operations</td>
-        <td>LIST_THEORIES, SAVE_THEORY, LOAD_THEORY, MERGE_THEORY, DELETE_THEORY</td>
+        <td>THEORIES, SAVE, LOAD, MERGE_THEORY, DELETE_THEORY</td>
       </tr>
       <tr>
         <td><code>MEMORY</code></td>
@@ -118,9 +118,9 @@
 
     <h3>QUERY</h3>
     <p><strong>Purpose:</strong> Multi-strategy query that tries ASK first, then falls back to INFER if unknown.</p>
-    <pre><code>@result QUERY Dog IS_A Animal
-@result QUERY Dog IS_A Animal mode=logical proof=true
-@result QUERY Dog IS_A Animal mask=$ontologyMask</code></pre>
+    <pre><code>@result Dog QUERY Animal
+@result Dog QUERY Animal
+@result Dog QUERY Animal</code></pre>
 
     <h3>WHATIF</h3>
     <p><strong>Purpose:</strong> Counterfactual query - answer a question under hypothetical conditions.</p>
@@ -134,10 +134,11 @@
 
     <h3>MANAGE_THEORY</h3>
     <p><strong>Purpose:</strong> Single entry point for theory storage operations.</p>
-    <pre><code>@list MANAGE_THEORY action=LIST
-@ok MANAGE_THEORY action=SAVE name=my_theory
-@ok MANAGE_THEORY action=LOAD name=base_ontology
-@ok MANAGE_THEORY action=DELETE name=old_theory</code></pre>
+    <pre><code>@list any MANAGE_THEORY any
+@p action DIM_PAIR LIST
+@ok action SET_DIM any
+@p name DIM_PAIR my_theory
+@ok name SET_DIM any</code></pre>
 
     <h3>MEMORY</h3>
     <p><strong>Purpose:</strong> Single entry point for memory lifecycle operations.</p>
@@ -161,12 +162,12 @@
       <tr>
         <td><code>ASK</code></td>
         <td>Query truth value of a statement</td>
-        <td><code>@result ASK Subject RELATION Object</code></td>
+        <td><code>@result Subject ASK Object</code></td>
       </tr>
       <tr>
         <td><code>ASK_MASKED</code></td>
         <td>Query with dimension mask applied</td>
-        <td><code>@result ASK_MASKED $mask Subject RELATION Object</code></td>
+        <td><code>@result Subject ASK_MASKED Object</code></td>
       </tr>
       <tr>
         <td><code>FACTS_MATCHING</code></td>
@@ -197,9 +198,9 @@
 
     <h3>ASK</h3>
     <p><strong>Purpose:</strong> Query the truth value of a statement within the current theory.</p>
-    <pre><code>@q1 ASK Dog IS_A Animal
-@q2 ASK Water BOILS_AT Celsius100
-@q3 ASK Alice KNOWS Bob</code></pre>
+    <pre><code>@q1 Dog IS_A Animal
+@q2 Water BOILS_AT Celsius100
+@q3 Alice KNOWS Bob</code></pre>
 
     <p><strong>Returns:</strong></p>
     <pre><code>{
@@ -214,15 +215,15 @@
 
     <h3>ASK_MASKED</h3>
     <p><strong>Purpose:</strong> Query with specific dimensions filtered out. Useful for bias control.</p>
-    <pre><code>@ontologyMask MASK_PARTITIONS ontology
-@result ASK_MASKED $ontologyMask Water IS_A liquid</code></pre>
+    <pre><code>@ontologyMask ontology MASK_PARTITIONS any
+@result Water IS_A liquid</code></pre>
 
     <h3>FACTS_MATCHING (Polymorphic)</h3>
     <p><strong>Purpose:</strong> Pattern search across all facts. Accepts 0-3 arguments for flexible matching.</p>
-    <pre><code>@all FACTS_MATCHING                        # All facts (0 args)
-@aboutDog FACTS_MATCHING Dog               # All facts about Dog (1 arg)
-@dogIsA FACTS_MATCHING Dog IS_A            # Dog IS_A ? (2 args)
-@exact FACTS_MATCHING Dog IS_A Animal      # Exact match (3 args)</code></pre>
+    <pre><code>@all any FACTS any                         # All facts (0 args)
+@aboutDog Dog FACTS any                    # All facts about Dog (1 arg)
+@dogIsA Dog FACTS IS_A                     # Dog IS_A ? (2 args)
+@exact Dog FACTS Animal                    # Exact match (3 args)</code></pre>
 
     <div class="warning">
       <strong>Note:</strong> Sys2DSL does NOT support <code>?</code> or <code>*</code> wildcards. Use polymorphic commands or specialized queries (<code>FACTS_WITH_RELATION</code>, <code>FACTS_WITH_OBJECT</code>, <code>INSTANCES_OF</code>) instead.
@@ -245,7 +246,7 @@
       <tr>
         <td><code>ASSERT</code></td>
         <td>Add a new fact</td>
-        <td><code>@result ASSERT Subject RELATION Object</code></td>
+        <td><code>@_ Subject ASSERT Object</code></td>
       </tr>
       <tr>
         <td><code>RETRACT</code></td>
@@ -256,9 +257,9 @@
 
     <h3>ASSERT</h3>
     <p><strong>Purpose:</strong> Add a new fact to the current working theory.</p>
-    <pre><code>@f1 ASSERT Dog IS_A Animal
-@f2 ASSERT Alice KNOWS Bob
-@f3 ASSERT Water HAS_PROPERTY transparent</code></pre>
+    <pre><code>@_ Dog IS_A Animal
+@_ Alice KNOWS Bob
+@_ Water HAS_PROPERTY transparent</code></pre>
 
     <p><strong>Returns:</strong></p>
     <pre><code>{
@@ -271,15 +272,15 @@
 }</code></pre>
 
     <div class="arch-note">
-      <strong>Internal Flow:</strong> ASSERT calls <code>api.add()</code> which encodes concepts via <code>Encoder</code>, stores in <code>ConceptStore</code>, and updates usage tracking in <code>UsageTracker</code>. Facts go to the working theory layer (session-local) until saved with <code>SAVE_THEORY</code>.
+      <strong>Internal Flow:</strong> Triple statements call <code>api.add()</code> which encodes concepts via <code>Encoder</code>, stores in <code>ConceptStore</code>, and updates usage tracking in <code>UsageTracker</code>. Facts go to the working theory layer (session-local) until saved with <code>SAVE</code>.
     </div>
 
     <h3>RETRACT</h3>
     <p><strong>Purpose:</strong> Remove a fact from the current working theory.</p>
-    <pre><code>@r1 RETRACT Water IS_A solid   # Remove incorrect fact</code></pre>
+    <pre><code>@r1 Water IS_A solid   # Remove incorrect fact</code></pre>
 
     <div class="warning">
-      <strong>Note:</strong> RETRACT only affects the working theory layer. Base theories loaded with <code>LOAD_THEORY</code> are immutable.
+      <strong>Note:</strong> RETRACT only affects the working theory layer. Base theories loaded with <code>LOAD</code> are immutable.
     </div>
   </section>
 
@@ -386,8 +387,8 @@
           symmetric=false \
           transitive=false
 
-@f1 ASSERT Professor TEACHES Student
-@f2 ASSERT Student TAUGHT_BY Professor</code></pre>
+@f1 Professor TEACHES Student
+@f2 Student TAUGHT_BY Professor</code></pre>
 
     <div class="arch-note">
       <strong>Internal Flow:</strong> Relations are registered in <code>DimensionRegistry</code>. Each relation gets a deterministic permutation vector generated from its name. The inverse relation (if specified) is automatically registered.
@@ -401,29 +402,29 @@
     <table class="cmd-table">
       <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
       <tr>
-        <td><code>THEORY_PUSH</code></td>
+        <td><code>PUSH</code></td>
         <td>Push new theory layer</td>
-        <td><code>@_ THEORY_PUSH name="layerName"</code></td>
+        <td><code>@_ layerName PUSH any</code></td>
       </tr>
       <tr>
-        <td><code>THEORY_POP</code></td>
+        <td><code>POP</code></td>
         <td>Pop and discard top layer</td>
-        <td><code>@_ THEORY_POP</code></td>
+        <td><code>@_ any POP any</code></td>
       </tr>
       <tr>
-        <td><code>LIST_THEORIES</code></td>
+        <td><code>THEORIES</code></td>
         <td>List available theories</td>
-        <td><code>@list LIST_THEORIES</code></td>
+        <td><code>@list any THEORIES any</code></td>
       </tr>
       <tr>
-        <td><code>LOAD_THEORY</code></td>
+        <td><code>LOAD</code></td>
         <td>Load theory from file</td>
-        <td><code>@loaded LOAD_THEORY name</code></td>
+        <td><code>@loaded name LOAD any</code></td>
       </tr>
       <tr>
-        <td><code>SAVE_THEORY</code></td>
+        <td><code>SAVE</code></td>
         <td>Save working theory</td>
-        <td><code>@saved SAVE_THEORY name</code></td>
+        <td><code>@saved name SAVE any</code></td>
       </tr>
       <tr>
         <td><code>MERGE_THEORY</code></td>
@@ -447,23 +448,23 @@
       </tr>
     </table>
 
-    <h3>THEORY_PUSH / THEORY_POP</h3>
+    <h3>PUSH / POP</h3>
     <p><strong>Purpose:</strong> Create temporary theory layers for exploration or counterfactual reasoning.</p>
-    <pre><code>@_ THEORY_PUSH name="exploration"
-@f1 ASSERT Gravity IS_A fiction     # Temporary fact
-@q1 ASK Things FLOAT always         # Query in this context
-@_ THEORY_POP                        # Discard changes</code></pre>
+    <pre><code>@_ exploration PUSH any
+@_ Gravity IS_A fiction              # Temporary fact
+@q1 Things IS_ALWAYS true            # Query in this context
+@_ any POP any                       # Discard changes</code></pre>
 
     <div class="arch-note">
-      <strong>Internal Flow:</strong> Theory layers are managed by <code>TheoryStack</code> in <code>ConceptStore</code>. Each layer has its own facts that shadow (but don't modify) lower layers. <code>THEORY_POP</code> discards all changes in the top layer.
+      <strong>Internal Flow:</strong> Theory layers are managed by <code>TheoryStack</code> in <code>ConceptStore</code>. Each layer has its own facts that shadow (but don't modify) lower layers. <code>POP</code> discards all changes in the top layer.
     </div>
 
-    <h3>LOAD_THEORY / SAVE_THEORY</h3>
+    <h3>LOAD / SAVE</h3>
     <p><strong>Purpose:</strong> Persist and load theories from <code>data/theories/</code> directory.</p>
-    <pre><code>@base LOAD_THEORY physics_fundamentals
-@domain LOAD_THEORY medical_knowledge
+    <pre><code>@base physics_fundamentals LOAD any
+@domain medical_knowledge LOAD any
 # ... add domain-specific facts ...
-@saved SAVE_THEORY my_combined_theory</code></pre>
+@saved my_combined_theory SAVE any</code></pre>
   </section>
 
   <section id="reasoning" class="category-section">
@@ -526,9 +527,9 @@
 
     <h3>VALIDATE</h3>
     <p><strong>Purpose:</strong> Check the current theory for logical consistency and contradictions.</p>
-    <pre><code>@f1 ASSERT Water IS_A solid
-@f2 ASSERT Water IS_A liquid
-@check VALIDATE
+    <pre><code>@_ Water IS_A solid
+@_ Water IS_A liquid
+@check any VALIDATE any
 # Returns: conflicts about Water being both solid and liquid</code></pre>
 
     <p><strong>Returns:</strong></p>
@@ -805,8 +806,8 @@
     </table>
 
     <h3>Boolean Operations</h3>
-    <pre><code>@q1 ASK Dog IS_A Animal
-@q2 ASK Dog HAS_PROPERTY fur
+    <pre><code>@q1 Dog IS_A Animal
+@q2 Dog HAS_PROPERTY fur
 @both BOOL_AND $q1 $q2        # True if both true
 @either BOOL_OR $q1 $q2       # True if either true
 @notQ1 BOOL_NOT $q1           # Negation</code></pre>
@@ -855,13 +856,13 @@
 
     <h3>TO_NATURAL</h3>
     <p><strong>Purpose:</strong> Convert a result to human-readable text.</p>
-    <pre><code>@answer ASK Water IS_A liquid
+    <pre><code>@answer Water IS_A liquid
 @readable TO_NATURAL $answer
 # Returns: "Yes, water is a liquid (confidence: 95%)"</code></pre>
 
     <h3>EXPLAIN</h3>
     <p><strong>Purpose:</strong> Get a detailed explanation of how a result was derived.</p>
-    <pre><code>@result ASK Dog IS_A LivingThing
+    <pre><code>@result Dog IS_A LivingThing
 @exp EXPLAIN $result
 # Returns: step-by-step reasoning chain</code></pre>
   </section>
@@ -929,7 +930,7 @@
       <tr><td>Assertion</td><td>ASSERT, RETRACT</td><td>2</td></tr>
       <tr><td>Concept</td><td>BIND_CONCEPT, DEFINE_CONCEPT, INSPECT, LITERAL</td><td>4</td></tr>
       <tr><td>Relation</td><td>BIND_RELATION, DEFINE_RELATION, BIND_POINT</td><td>3</td></tr>
-      <tr><td>Theory</td><td>THEORY_PUSH, THEORY_POP, LIST_THEORIES, LOAD_THEORY, SAVE_THEORY, MERGE_THEORY, DELETE_THEORY, THEORY_INFO, RESET_SESSION</td><td>9</td></tr>
+      <tr><td>Theory</td><td>PUSH, POP, THEORIES, LOAD, SAVE, MERGE_THEORY, DELETE_THEORY, THEORY_INFO, RESET_SESSION</td><td>9</td></tr>
       <tr><td>Reasoning</td><td>VALIDATE, PROVE, HYPOTHESIZE, CF, ABDUCT, ANALOGICAL, CHECK_CONTRADICTION, CHECK_WOULD_CONTRADICT, REGISTER_FUNCTIONAL, REGISTER_CARDINALITY</td><td>10</td></tr>
       <tr><td>Inference</td><td>INFER, FORWARD_CHAIN, WHY, DEFINE_RULE, DEFINE_DEFAULT, CLEAR_RULES</td><td>6</td></tr>
       <tr><td>Memory</td><td>GET_USAGE, FORGET, BOOST, PROTECT, UNPROTECT</td><td>5</td></tr>

@@ -43,13 +43,13 @@
     <li>you may write a single instruction per line or several instructions on the same line, as long as each starts with its own <code>@</code>:</li>
   </ul>
 
-  <pre><code>@f1 ASSERT Dog IS_A Animal
-@f2 ASSERT Water BOILS_AT Celsius100
-@f3 ASSERT Celsius100 IS_A temperature
-@q1 ASK "Is Dog an Animal?"
-@q2 ASK "Water BOILS_AT Celsius100?"</code></pre>
+  <pre><code>@_ Dog IS_A Animal
+@_ Water BOILS_AT Celsius100
+@_ Celsius100 IS_A temperature
+@q1 "Is Dog an Animal?" ASK any
+@q2 "Water BOILS_AT Celsius100?" ASK any</code></pre>
 
-  <pre><code>@f1 ASSERT Dog IS_A Animal @q1 ASK "Is Dog an Animal?"</code></pre>
+  <pre><code>@_ Dog IS_A Animal @q1 "Is Dog an Animal?" ASK any</code></pre>
 
   <p>Instead of executing lines strictly in textual order, the interpreter first builds a dependency graph between variables (based on <code>$name</code> occurrences) and evaluates instructions in a topological order. This allows you to write:</p>
 
@@ -63,41 +63,42 @@
   <p>Sys2DSL commands are organized into functional categories. See DS(/theory/Sys2DSL_commands) for the complete reference with 40+ commands.</p>
 
   <h3>Query Commands</h3>
-  <pre><code>@q1 ASK Dog IS_A Animal                    # Query truth value
-@q2 ASK "Is Dog an Animal?"                # Natural question form
-@masked ASK_MASKED $ontologyMask Dog IS_A Animal  # Masked query
-@facts FACTS_MATCHING Dog ? ?              # Pattern search</code></pre>
+  <pre><code>@q1 Dog IS_A Animal                        # Query truth value
+@q2 "Is Dog an Animal?" ASK any            # Natural question form
+@masked Dog IS_A Animal                    # Masked query
+@facts Dog FACTS any                       # Pattern search</code></pre>
 
   <h3>Assertion Commands</h3>
-  <pre><code>@f1 ASSERT Dog IS_A Animal
-@f2 ASSERT Water BOILS_AT Celsius100
-@r1 RETRACT Dog IS_A Fish                  # Remove fact</code></pre>
+  <pre><code>@_ Dog IS_A Animal
+@_ Water BOILS_AT Celsius100
+@r1 Dog IS_A Fish                          # Remove fact</code></pre>
 
   <h3>Reasoning Commands</h3>
-  <pre><code>@proof PROVE Dog IS_A LivingThing          # Prove with chain
-@valid VALIDATE                            # Check consistency
-@hyp HYPOTHESIZE Smoke                     # Generate hypotheses
-@cf CF "Water IS_A gas?" | Water TEMPERATURE_AT Celsius150
-@abd ABDUCT Smoke CAUSED_BY                # Abductive reasoning</code></pre>
+  <pre><code>@proof Dog PROVE LivingThing               # Prove with chain
+@valid any VALIDATE any                    # Check consistency
+@hyp Smoke HYPOTHESIZE any                 # Generate hypotheses
+@cf "Water IS_A gas?" CF any
+@abd Smoke ABDUCT any                      # Abductive reasoning</code></pre>
 
   <h3>Theory Layer Commands</h3>
-  <pre><code>@_ THEORY_PUSH name="exploration"          # Push new layer
-@_ THEORY_POP                              # Pop and discard
-@stack LIST_THEORIES                       # Show layer stack
-@load LOAD_THEORY physics_basics           # Load from file
-@save SAVE_THEORY my_domain                # Save to file</code></pre>
+  <pre><code>@_ exploration PUSH any                    # Push new layer
+@_ any POP any                             # Pop and discard
+@stack any THEORIES any                    # Show layer stack
+@load physics_basics LOAD any              # Load from file
+@save my_domain SAVE any                   # Save to file</code></pre>
 
   <h3>Memory Management Commands</h3>
-  <pre><code>@stats GET_USAGE Water                     # Usage statistics
-@_ PROTECT ImportantConcept                # Protect from forgetting
-@_ UNPROTECT TempConcept                   # Remove protection
-@clean FORGET threshold=5                  # Remove low-usage
-@_ BOOST Water 50                          # Increase priority</code></pre>
+  <pre><code>@stats Water GET_USAGE any                 # Usage statistics
+@_ ImportantConcept PROTECT any            # Protect from forgetting
+@_ TempConcept UNPROTECT any               # Remove protection
+@p threshold DIM_PAIR 5
+@clean threshold FORGET any                # Remove low-usage
+@_ Water BOOST 50                          # Increase priority</code></pre>
 
   <h3>Mask Commands</h3>
-  <pre><code>@m1 MASK_PARTITIONS ontology               # By partition
-@m2 MASK_DIMS temperature pressure         # By dimensions
-@m3 MASK_CONCEPT $waterRef                 # By concept relevance</code></pre>
+  <pre><code>@m1 ontology MASK_PARTITIONS any           # By partition
+@m2 temperature MASK_DIMS pressure         # By dimensions
+@m3 $waterRef MASK_CONCEPT any             # By concept relevance</code></pre>
 
   <h3>Utility Commands</h3>
   <pre><code>@and BOOL_AND $q1 $q2                      # Boolean AND
@@ -109,22 +110,22 @@
 @nonEmpty NONEMPTY $list                   # Check if non-empty</code></pre>
 
   <h3>Output Commands</h3>
-  <pre><code>@text TO_NATURAL $result                   # Human-readable
-@json TO_JSON $result                      # JSON export
-@exp EXPLAIN $result                       # Detailed explanation</code></pre>
+  <pre><code>@text $result TO_NATURAL any               # Human-readable
+@json $result TO_JSON any                  # JSON export
+@exp $result EXPLAIN any                   # Detailed explanation</code></pre>
 
   <h2>Complete Example</h2>
   <p>A compliance check programme demonstrating multiple command types:</p>
   <pre><code># Fetch procedure requirements
-@reqs FACTS_MATCHING "$procId REQUIRES ?"
-@satGiven FACTS_MATCHING "? GIVEN yes"
-@satPresent FACTS_MATCHING "? PRESENT yes"
-@allSat MERGE_LISTS $satGiven $satPresent
-@result ALL_REQUIREMENTS_SATISFIED $reqs $allSat
+@reqs "$procId REQUIRES ?" FACTS any
+@satGiven "? GIVEN yes" FACTS any
+@satPresent "? PRESENT yes" FACTS any
+@allSat $satGiven MERGE_LISTS $satPresent
+@result $reqs ALL_REQUIREMENTS_SATISFIED $allSat
 
 # Check and report
-@check ASK ProcedureX COMPLIANT yes
-@explanation EXPLAIN $check</code></pre>
+@check ProcedureX IS_COMPLIANT yes
+@explanation $check EXPLAIN any</code></pre>
 
   <h2>Sys2DSL in Theory Files vs. Sessions</h2>
   <p>The same language is used in two contexts:</p>

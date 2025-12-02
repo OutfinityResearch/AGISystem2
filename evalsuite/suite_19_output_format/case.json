@@ -19,82 +19,91 @@
     {
       "id": "q1",
       "natural_language": "Convert a true ASK result to natural language.",
-      "expected_dsl": "@ans ASK Sky IS_A blue_thing\n@q1 TO_NATURAL $ans",
+      "expected_dsl": "@ans Sky IS_A blue_thing\n@q1 $ans TO_NATURAL any",
       "expected_answer": {
         "natural_language": "Yes, this is definitely true.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "TO_NATURAL on a TRUE_CERTAIN result should yield an affirmative text."
+        "explanation": "TO_NATURAL on a TRUE_CERTAIN result should yield an affirmative text.",
+        "existence": "positive"
       }
     },
     {
       "id": "q2",
       "natural_language": "Convert an unknown ASK result to natural language.",
-      "expected_dsl": "@unk ASK UnknownConcept123 IS_A something\n@q2 TO_NATURAL $unk",
+      "expected_dsl": "@unk UnknownConcept123 IS_A something\n@q2 $unk TO_NATURAL any",
       "expected_answer": {
         "natural_language": "Unknown - the concept is not in the KB.",
         "truth": "UNKNOWN",
-        "explanation": "TO_NATURAL should report UNKNOWN when the ASK result is unknown."
+        "explanation": "TO_NATURAL should report UNKNOWN when the ASK result is unknown.",
+        "existence": "zero"
       }
     },
     {
       "id": "q3",
       "natural_language": "Convert a TRUE_CERTAIN result about Grass to natural language.",
-      "expected_dsl": "@ans2 ASK Grass IS_A green_thing\n@q3 TO_NATURAL $ans2",
+      "expected_dsl": "@ans2 Grass IS_A green_thing\n@q3 $ans2 TO_NATURAL any",
       "expected_answer": {
         "natural_language": "Yes, Grass is a green thing.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "TO_NATURAL converts the truth value to human-readable text."
+        "explanation": "TO_NATURAL converts the truth value to human-readable text.",
+        "existence": "positive"
       }
     },
     {
       "id": "q4",
       "natural_language": "Convert Sun's hot property query to JSON format.",
-      "expected_dsl": "@ans3 ASK Sun HAS_PROPERTY hot\n@q4 TO_JSON $ans3",
+      "expected_dsl": "@ans3 Sun HAS_PROPERTY hot\n@q4 $ans3 TO_JSON any",
       "expected_answer": {
         "natural_language": "JSON output with truth: TRUE_CERTAIN",
         "truth": "TRUE_CERTAIN",
-        "explanation": "TO_JSON produces structured JSON output preserving truth value."
+        "explanation": "TO_JSON produces structured JSON output preserving truth value.",
+        "existence": "positive"
       }
     },
     {
       "id": "q5",
       "natural_language": "Format Ice's cold property result.",
-      "expected_dsl": "@ans4 ASK Ice HAS_PROPERTY cold\n@q5 TO_NATURAL $ans4",
+      "expected_dsl": "@ans4 Ice HAS_PROPERTY cold\n@q5 $ans4 TO_NATURAL any",
       "expected_answer": {
         "natural_language": "Yes, Ice has property cold.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "TO_NATURAL handles HAS_PROPERTY relations."
+        "explanation": "TO_NATURAL handles HAS_PROPERTY relations.",
+        "existence": "positive"
       }
     },
     {
       "id": "q6",
       "natural_language": "Convert Fire's ability to burn to natural language.",
-      "expected_dsl": "@ans5 ASK Fire CAN burn\n@q6 TO_NATURAL $ans5",
+      "expected_dsl": "@ans5 Fire CAN burn\n@q6 $ans5 TO_NATURAL any",
       "expected_answer": {
         "natural_language": "Yes, Fire can burn.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "TO_NATURAL handles CAN relations appropriately."
+        "explanation": "TO_NATURAL handles CAN relations appropriately.",
+        "existence": "positive"
       }
     },
     {
       "id": "q7",
       "natural_language": "Convert a FALSE result (wrong fact) to natural language.",
-      "expected_dsl": "@ans6 ASK Bird CAN swim\n@q7 TO_NATURAL $ans6",
+      "expected_dsl": "@ans6 Bird CAN swim\n@q7 $ans6 TO_NATURAL any",
       "expected_answer": {
         "natural_language": "No, Bird cannot swim (not in KB).",
         "truth": "UNKNOWN",
-        "explanation": "Bird CAN swim is not asserted; TO_NATURAL reflects UNKNOWN."
+        "explanation": "Bird CAN swim is not asserted; TO_NATURAL reflects UNKNOWN.",
+        "existence": "zero"
       }
     },
     {
       "id": "q8",
       "natural_language": "Convert Fish swimming ability to JSON.",
-      "expected_dsl": "@ans7 ASK Fish CAN swim\n@q8 TO_JSON $ans7",
+      "expected_dsl": "@ans7 Fish CAN swim\n@q8 $ans7 TO_JSON any",
       "expected_answer": {
         "natural_language": "JSON output confirming Fish can swim.",
         "truth": "TRUE_CERTAIN",
-        "explanation": "TO_JSON on TRUE_CERTAIN produces valid JSON."
+        "explanation": "TO_JSON on TRUE_CERTAIN produces valid JSON.",
+        "existence": "positive"
       }
     }
-  ]
+  ],
+  "version": "3.0"
 }

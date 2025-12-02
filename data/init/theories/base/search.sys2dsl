@@ -1,0 +1,313 @@
+# =============================================================================
+# BASE SEARCH - Search and Exploration Verbs
+# =============================================================================
+# Defines search strategies and exploration control for reasoning.
+# Uses hardcoded search primitives (CHOICE_POINT, BACKTRACK, etc.)
+# Version: 3.0 - Strict Triple Syntax Compliant
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SECTION 1: Search Strategy Verbs
+# -----------------------------------------------------------------------------
+
+# SEARCH_DEPTH_FIRST - Classic DFS with backtracking
+@SEARCH_DEPTH_FIRST BEGIN
+  @depth_ok max_search_depth DEPTH_CHECK any
+  @_ $depth_ok FAIL_IF_FALSE depth_exceeded
+  @cp subject CHOICE_POINT any
+  @alts subject ALTERNATIVES object
+  @ranked $alts RANK_PATHS any
+  @next $ranked FIRST any
+  @result $next SEARCH_DEPTH_FIRST object
+  @found $result REACHED_GOAL object
+  @_ $found CUT_IF_TRUE any
+  @return $result IDENTITY any
+END
+
+# SEARCH_BREADTH_FIRST - Level by level exploration
+@SEARCH_BREADTH_FIRST BEGIN
+  @breadth_ok max_search_breadth BREADTH_CHECK any
+  @level subject ALTERNATIVES object
+  @pruned $level TAKE max_search_breadth
+  @results $pruned EXPLORE_LEVEL object
+  @found $results FILTER reached_goal
+  @has_found $found NONEMPTY any
+  @_ $has_found CUT_IF_TRUE any
+  @next_level $results FLATTEN any
+  @return $next_level SEARCH_BREADTH_FIRST object
+END
+
+# SEARCH_BEST_FIRST - Always expand most promising
+@SEARCH_BEST_FIRST BEGIN
+  @alts subject ALTERNATIVES object
+  @ranked $alts RANK_PATHS any
+  @best $ranked FIRST any
+  @at_goal $best REACHED_GOAL object
+  @_ $at_goal CUT_IF_TRUE any
+  @result $best SEARCH_BEST_FIRST object
+  @return $result IDENTITY any
+END
+
+# SEARCH_BEAM - Keep top-k at each level
+@SEARCH_BEAM BEGIN
+  @alts subject ALTERNATIVES object
+  @ranked $alts RANK_PATHS any
+  @beam $ranked TAKE beam_width
+  @explored $beam EXPLORE_ALL object
+  @merged $explored MERGE_RESULTS any
+  @found $merged FILTER reached_goal
+  @has_found $found NONEMPTY any
+  @_ $has_found CUT_IF_TRUE any
+  @return $merged SEARCH_BEAM object
+END
+
+# SEARCH_ITERATIVE_DEEPENING - Incrementally deeper DFS
+@SEARCH_ITERATIVE_DEEPENING BEGIN
+  @d current_depth_limit READ_CONTROL any
+  @result subject SEARCH_WITH_DEPTH $d
+  @found $result REACHED_GOAL object
+  @_ $found CUT_IF_TRUE any
+  @one NUMERIC_VALUE 1
+  @deeper $d PLUS $one
+  @max max_search_depth READ_CONTROL any
+  @exceeded $deeper GREATER_THAN $max
+  @_ $exceeded FAIL_IF_TRUE max_depth_exceeded
+  @_ $deeper CONTROLS current_depth_limit
+  @return subject SEARCH_ITERATIVE_DEEPENING object
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 2: Exploration Helpers
+# -----------------------------------------------------------------------------
+
+# EXPLORE - Single step exploration
+@EXPLORE BEGIN
+  @_ subject RECORD_VISITED any
+  @next subject STEP_TOWARD object
+  @return $next IDENTITY any
+END
+
+# EXPLORE_ALL - Explore all alternatives
+@EXPLORE_ALL BEGIN
+  @results subject MAP_EXPLORE object
+  @return $results IDENTITY any
+END
+
+# EXPLORE_LEVEL - Explore one level breadth-wise
+@EXPLORE_LEVEL BEGIN
+  @items subject ITEMS any
+  @explored $items MAP_EXPLORE object
+  @return $explored IDENTITY any
+END
+
+# STEP_TOWARD - Single inference step toward goal
+@STEP_TOWARD BEGIN
+  @rels subject OUTGOING_RELATIONS any
+  @relevant $rels FILTER_TOWARD object
+  @best $relevant BEST_FIRST any
+  @next subject APPLY_REL $best
+  @return $next IDENTITY any
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 3: Goal Detection
+# -----------------------------------------------------------------------------
+
+# REACHED_GOAL - Check if current point satisfies goal
+@REACHED_GOAL BEGIN
+  @dist subject DISTANCE_TO_GOAL object
+  @threshold goal_threshold READ_CONTROL any
+  @reached $dist LESS_THAN $threshold
+  @return $reached IDENTITY any
+END
+
+# GOAL_OVERLAP - Check diamond overlap with goal
+@GOAL_OVERLAP BEGIN
+  @s_diamond subject READ_DIM diamond
+  @g_diamond object READ_DIM diamond
+  @overlap $s_diamond DIAMOND_INTERSECT $g_diamond
+  @return $overlap GREATER_THAN zero
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 4: Plausibility and Ranking
+# -----------------------------------------------------------------------------
+
+# PLAUSIBILITY - Compute path plausibility score
+@PLAUSIBILITY BEGIN
+  @dist subject DISTANCE_TO_GOAL freevar1
+  @dist_score $dist INVERT_NORMALIZE any
+  @len subject READ_DIM path_length
+  @len_score $len INVERT_NORMALIZE any
+  @conf subject READ_DIM min_confidence
+  @coh subject COHERENCE any
+  # Combine scores using chained additions
+  @part1 $dist_score PLUS $len_score
+  @part2 $part1 PLUS $conf
+  @score $part2 PLUS $coh
+  @return $score IDENTITY any
+END
+
+# RANK_PATHS - Sort paths by plausibility
+@RANK_PATHS BEGIN
+  @scored subject MAP_PLAUSIBILITY any
+  @sorted $scored SORT_DESC plausibility
+  @return $sorted IDENTITY any
+END
+
+# COHERENCE - How well path fits existing knowledge
+@COHERENCE BEGIN
+  @existing any FACTS any
+  @path_facts subject FACTS any
+  @overlaps $existing DIAMOND_OVERLAP $path_facts
+  @conflicts $existing CHECK_CONTRADICTION $path_facts
+  @score $overlaps MINUS $conflicts
+  @return $score NORMALIZE any
+END
+
+# BEST_FIRST - Select highest plausibility
+@BEST_FIRST BEGIN
+  @ranked subject RANK_PATHS any
+  @return $ranked FIRST any
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 5: Backtracking Control
+# -----------------------------------------------------------------------------
+
+# FAIL_IF_FALSE - Trigger failure if condition is false
+@FAIL_IF_FALSE BEGIN
+  @cond subject READ_DIM existence
+  @is_false $cond LESS_THAN zero
+  @_ $is_false FAIL object
+  @return subject IDENTITY any
+END
+
+# FAIL_IF_TRUE - Trigger failure if condition is true
+@FAIL_IF_TRUE BEGIN
+  @cond subject READ_DIM existence
+  @is_true $cond GREATER_THAN zero
+  @_ $is_true FAIL object
+  @return subject IDENTITY any
+END
+
+# CUT_IF_TRUE - Commit if condition true
+@CUT_IF_TRUE BEGIN
+  @cond subject READ_DIM existence
+  @is_true $cond GREATER_THAN zero
+  @_ $is_true CUT any
+  @return subject IDENTITY any
+END
+
+# BACKTRACK_IF_FAIL - Backtrack if result indicates failure
+@BACKTRACK_IF_FAIL BEGIN
+  @failed subject READ_DIM failed
+  @is_failed $failed GREATER_THAN zero
+  @_ $is_failed BACKTRACK any
+  @return subject IDENTITY any
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 6: Search with Constraints
+# -----------------------------------------------------------------------------
+
+# SEARCH_WITH_DEPTH - Search with specific depth limit
+@SEARCH_WITH_DEPTH BEGIN
+  @old_limit max_search_depth READ_CONTROL any
+  @_ subject CONTROLS max_search_depth
+  @result freevar1 SEARCH_DEPTH_FIRST object
+  @_ $old_limit CONTROLS max_search_depth
+  @return $result IDENTITY any
+END
+
+# SEARCH_WITH_BREADTH - Search with specific breadth limit
+@SEARCH_WITH_BREADTH BEGIN
+  @old_limit max_search_breadth READ_CONTROL any
+  @_ subject CONTROLS max_search_breadth
+  @result freevar1 SEARCH_BREADTH_FIRST object
+  @_ $old_limit CONTROLS max_search_breadth
+  @return $result IDENTITY any
+END
+
+# SEARCH_WITH_TIMEOUT - Search with time limit
+@SEARCH_WITH_TIMEOUT BEGIN
+  @old_timeout timeout_ms READ_CONTROL any
+  @_ subject CONTROLS timeout_ms
+  @result freevar1 SEARCH_BEST_FIRST object
+  @_ $old_timeout CONTROLS timeout_ms
+  @return $result IDENTITY any
+END
+
+# SEARCH_FIND_ALL - Find all solutions (up to limit)
+@SEARCH_FIND_ALL BEGIN
+  @solutions any COLLECT_SOLUTIONS subject
+  @limited $solutions TAKE max_solutions
+  @return $limited IDENTITY any
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 7: Result Handling
+# -----------------------------------------------------------------------------
+
+# MERGE_RESULTS - Combine results from parallel exploration
+@MERGE_RESULTS BEGIN
+  @items subject ITEMS any
+  @unique $items DEDUPLICATE any
+  @return $unique IDENTITY any
+END
+
+# COLLECT_SOLUTIONS - Collect all found solutions
+@COLLECT_SOLUTIONS BEGIN
+  @result subject SEARCH_DEPTH_FIRST object
+  @found $result REACHED_GOAL object
+  @_ $found STORE_SOLUTION $result
+  @_ any BACKTRACK any
+  @return subject COLLECT_SOLUTIONS object
+END
+
+# PARTIAL_RESULT - Get best result even if incomplete
+@PARTIAL_RESULT BEGIN
+  @closest subject READ_DIM closest_point
+  @dist $closest DISTANCE_TO_GOAL object
+  @pair partial DIM_PAIR positive
+  @return $closest SET_DIM $pair
+END
+
+# -----------------------------------------------------------------------------
+# SECTION 8: Default Control Settings
+# -----------------------------------------------------------------------------
+
+# Search depth limits
+@depth_shallow NUMERIC_VALUE 3
+@depth_default NUMERIC_VALUE 10
+@depth_deep NUMERIC_VALUE 20
+@_ $depth_default CONTROLS max_search_depth
+
+# Search breadth limits
+@breadth_narrow NUMERIC_VALUE 5
+@breadth_default NUMERIC_VALUE 50
+@breadth_wide NUMERIC_VALUE 200
+@_ $breadth_default CONTROLS max_search_breadth
+
+# Beam width
+@beam_narrow NUMERIC_VALUE 3
+@beam_default NUMERIC_VALUE 5
+@beam_wide NUMERIC_VALUE 10
+@_ $beam_default CONTROLS beam_width
+
+# Goal threshold (distance considered "reached")
+@threshold_exact NUMERIC_VALUE 0
+@threshold_close NUMERIC_VALUE 5
+@threshold_approximate NUMERIC_VALUE 15
+@_ $threshold_close CONTROLS goal_threshold
+
+# Maximum solutions
+@one NUMERIC_VALUE 1
+@few NUMERIC_VALUE 5
+@many NUMERIC_VALUE 20
+@_ $one CONTROLS max_solutions
+
+# Initial depth for iterative deepening
+@_ $one CONTROLS current_depth_limit
+
+# End of search verbs

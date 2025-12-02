@@ -28,7 +28,8 @@ This design specification captures the cross-cutting geometric model, reasoning 
 │   │                         Reasoning Layer                              │   │
 │   │  ┌──────────────┐  ┌──────────────┐  ┌────────────────────────────┐ │   │
 │   │  │   Reasoner   │  │  Retriever   │  │   ValidationEngine         │ │   │
-│   │  │  (ASK/PROVE) │  │  (LSH/Brute) │  │  (consistency/proofs)      │ │   │
+│   │  │  (queries/   │  │  (LSH/Brute) │  │  (consistency/proofs)      │ │   │
+│   │  │   proofs)    │  │              │  │                            │ │   │
 │   │  └──────────────┘  └──────────────┘  └────────────────────────────┘ │   │
 │   └─────────────────────────────────────────────────────────────────────┘   │
 │                                            │                                │
@@ -136,7 +137,7 @@ The following rules apply everywhere in the engine:
   - Theory overrides must not mutate stored base concepts. Base concepts remain stable; runtime synthesis combines overlays on demand via `TheoryStack` and `TheoryLayer`.
   - Temporary layers (counterfactuals, non-monotonic scenarios) are applied to cloned stacks or context arrays and discarded after use.
 - **Property tokens**
-  - Property-like tokens `key=value` under `HAS_PROPERTY` are treated as single concept labels and, where configured (e.g., `boiling_point=100`), map deterministically into specific ontology dimensions (Temperature axis) as described in `DS[/ingest/encoder.js]`.
+  - Property-value pairs using the DIM_PAIR pattern (e.g., `@p boiling_point DIM_PAIR Celsius100`) map deterministically into specific ontology dimensions (Temperature axis) as described in `DS[/ingest/encoder.js]`.
 
 Any module that deviates from these rules must call out the deviation explicitly in its own DS and justify it relative to URS/NFS.
 
@@ -172,10 +173,10 @@ These flows summarise how the engine behaves end-to-end; they are refined in the
 └─────────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                            ANSWER FLOW (ASK)                                    │
+│                            QUERY FLOW                                           │
 ├─────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                 │
-│   "@q ASK Dog IS_A Animal"                                                      │
+│   "@q Dog IS_A animal"                                                          │
 │         │                                                                       │
 │         ▼                                                                       │
 │   ┌───────────┐    ┌───────────┐    ┌───────────┐    ┌───────────┐             │
@@ -232,8 +233,8 @@ These flows summarise how the engine behaves end-to-end; they are refined in the
 
 - **Ingest**
   - Parse text (or Sys2DSL fact) → canonical subject–relation–object triple → vector encoding via `Encoder` → superposition update in `ConceptStore` → clustering check via `ClusterManager` → update bounded diamonds → persist and index → record audit entry.
-- **Answer**
-  - Receive query + optional context (Sys2DSL `ASK`/`ASK_MASKED`/`CF`) → select theory stack (or multiple stacks for comparison) → synthesise runtime concept definition from base + overlays → perform adversarial check (optimist/sceptic radii) via `Reasoner` → use `Retriever` if needed → produce boolean/graded answer (`truth`, `band`) plus provenance (active theories, masks, distances).
+- **Query Processing**
+  - Receive query in v3 triple syntax (e.g., `@q Subject VERB Object`) + optional context → select theory stack (or multiple stacks for comparison) → synthesise runtime concept definition from base + overlays → perform adversarial check (optimist/sceptic radii) via `Reasoner` → use `Retriever` if needed → produce boolean/graded answer (`truth`, `band`) plus provenance (active theories, masks, distances).
 - **Conflict Handling**
   - Detect empty intersections or high collinearity between ontological and axiological axes; identify contradictions between layers or masks.
   - Surface conflicts via `Reasoner`/`ValidationEngine` and prompt callers (through Sys2DSL programmes or session APIs) for precedence, masking strategies, or alternative stacks.

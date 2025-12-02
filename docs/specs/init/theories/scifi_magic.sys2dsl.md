@@ -12,10 +12,10 @@ Narrative theory for sci-fi/fantasy scenarios demonstrating location-based magic
 
 ```sys2dsl
 # Sci-fi tech-magic theory (Sys2DSL)
-@f1 ASSERT Alice IS_A Human
-@f2 ASSERT Alice LOCATED_IN CityX
-@f3 ASSERT Alice CASTS Magic
-@f4 ASSERT SciFi_TechMagic PERMITS Magic_IN CityX
+@f1 Alice IS_A Human
+@f2 Alice LOCATED_IN CityX
+@f3 Alice CASTS Magic
+@f4 SciFi_TechMagic PERMITS Magic_IN_CityX
 ```
 
 ## Facts Defined

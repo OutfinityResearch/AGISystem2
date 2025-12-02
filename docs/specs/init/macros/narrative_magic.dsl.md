@@ -49,19 +49,19 @@ Three conditions must ALL hold:
 
 ```sys2dsl
 # Setup world facts
-@_ ASSERT Alice IS_A Human
-@_ ASSERT Alice LOCATED_IN CityX
-@_ ASSERT Alice CASTS Magic
-@_ ASSERT SciFi_TechMagic PERMITS Magic_IN CityX
+@_ Alice IS_A Human
+@_ Alice LOCATED_IN CityX
+@_ Alice CASTS Magic
+@_ SciFi_TechMagic PERMITS Magic_IN_CityX
 
 # Run macro
-@actorId LITERAL "Alice"
-@cityId LITERAL "CityX"
+@actorId Alice LITERAL any
+@cityId CityX LITERAL any
 # ... include macro ...
 # $result will be TRUE_CERTAIN (Alice can cast magic in CityX)
 
 # Without permission fact:
-@_ RETRACT SciFi_TechMagic PERMITS Magic_IN CityX
+@_ SciFi_TechMagic RETRACT Magic_IN_CityX
 # $result will be FALSE (no permission theory active)
 ```
 

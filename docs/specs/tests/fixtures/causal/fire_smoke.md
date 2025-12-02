@@ -10,9 +10,9 @@ Fixture establishing bidirectional causal relationship for abductive reasoning t
 
 ## Content
 
-```
-Fire CAUSES Smoke
-Smoke CAUSED_BY Fire
+```sys2dsl
+@_ Fire CAUSES Smoke
+@_ Smoke CAUSED_BY Fire
 ```
 
 ## Facts
@@ -34,8 +34,8 @@ The inverse form enables abductive reasoning: "Given smoke, what caused it?"
 
 ```sys2dsl
 # Load fixture facts
-@_ ASSERT Fire CAUSES Smoke
-@_ ASSERT Smoke CAUSED_BY Fire
+@_ Fire CAUSES Smoke
+@_ Smoke CAUSED_BY Fire
 
 # Abductive query: what causes smoke?
 @causes ABDUCT observation=Smoke relation=CAUSED_BY

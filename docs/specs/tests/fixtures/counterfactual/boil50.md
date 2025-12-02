@@ -10,39 +10,45 @@ Fixture for counterfactual reasoning tests - establishes an alternative physics 
 
 ## Content
 
-```
-Water HAS_PROPERTY boiling_point=50
+```sys2dsl
+@bp50 boiling_point DIM_PAIR 50
+@_ Water SET_DIM @bp50
 ```
 
 ## Facts
 
 | Subject | Relation | Object | Notes |
 |---------|----------|--------|-------|
-| Water | HAS_PROPERTY | boiling_point=50 | Counterfactual value (real: 100°C) |
+| boiling_point | DIM_PAIR | 50 | Dimension-value pair |
+| Water | SET_DIM | boiling_point | Counterfactual value (real: 100°C) |
 
 ## Counterfactual Semantics
 
 This fixture creates a temporary theory layer that overrides the normal boiling point:
-- Base theory: `Water HAS_PROPERTY boiling_point=100`
-- Counterfactual layer: `Water HAS_PROPERTY boiling_point=50`
+- Base theory: `@bp boiling_point DIM_PAIR 100` then `@_ Water SET_DIM @bp`
+- Counterfactual layer: `@bp boiling_point DIM_PAIR 50` then `@_ Water SET_DIM @bp`
 
 ## Usage
 
 ```sys2dsl
 # Base facts (normal physics)
-@_ ASSERT Water HAS_PROPERTY boiling_point=100
+@bp100 boiling_point DIM_PAIR 100
+@_ Water SET_DIM @bp100
 
 # Push counterfactual layer
-@_ THEORY_PUSH name="alt_physics"
-@_ ASSERT Water HAS_PROPERTY boiling_point=50
+@_ alt_physics PUSH any
+@bp50 boiling_point DIM_PAIR 50
+@_ Water SET_DIM @bp50
 
 # Query in counterfactual world
-@q ASK Water HAS_PROPERTY boiling_point=50
+@check50 boiling_point DIM_PAIR 50
+@q Water HAS_DIM @check50
 # Returns: TRUE_CERTAIN (in this layer)
 
 # Pop back to reality
-@_ THEORY_POP
-@q ASK Water HAS_PROPERTY boiling_point=100
+@_ any POP any
+@check100 boiling_point DIM_PAIR 100
+@q Water HAS_DIM @check100
 # Returns: TRUE_CERTAIN (base layer)
 ```
 
@@ -55,7 +61,7 @@ This fixture creates a temporary theory layer that overrides the normal boiling 
 ## Test Coverage
 
 - Suite: `counterfactual_layering`
-- Tests: THEORY_PUSH/POP, property override, layer isolation
+- Tests: PUSH/POP, property override, layer isolation
 
 ## Requirements Trace
 
