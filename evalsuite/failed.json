@@ -572,21 +572,14 @@
       "id": "suite_30_resource_planning",
       "name": "Resource Planning - Cloud Infrastructure Provisioning",
       "failedQueries": [
-        "q1",
-        "q2",
-        "q3",
-        "q4",
-        "q5",
-        "q6",
-        "q7",
         "q8"
       ],
-      "lastRun": "2025-12-01T21:51:22.337Z"
+      "lastRun": "2025-12-02T09:28:48.051Z"
     }
   ],
-  "lastUpdated": "2025-12-01T21:52:16.217Z",
+  "lastUpdated": "2025-12-02T09:28:48.056Z",
   "rangeInfo": {
-    "lastFrom": 23,
-    "lastTo": 30
+    "lastFrom": null,
+    "lastTo": null
   }
 }

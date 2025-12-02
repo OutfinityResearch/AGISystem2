@@ -117,7 +117,7 @@
     {
       "id": "q8",
       "natural_language": "FINAL: What resource completes infrastructure?",
-      "expected_dsl": "@out ASK route53_record OUTPUTS dns_name\n@after ASK route53_record AFTER alb_main\n@q8 BOOL_AND $out $after",
+      "expected_dsl": "@out ASK route53_record OUTPUTS dns_name\n@after ASK route53_record AFTER alb_main\n@q8 BOOL_AND $out $afterxyz",
       "expected_answer": {
         "dsl_explanation": "@o1 ASK route53_record OUTPUTS dns_name\n@a1 ASK route53_record AFTER alb_main\n@final BOOL_AND $o1 $a1\n# Result: @final.truth = TRUE_CERTAIN proves route53_record outputs dns_name after alb_main"
       }

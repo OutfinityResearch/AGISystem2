@@ -20,6 +20,7 @@
     <h1>Sys2DSL Command Reference</h1>
     <div class="sub-nav">
       <strong>Categories:</strong>
+      <a href="#highlevel" style="color:#4a4;font-weight:bold">High-Level</a> ·
       <a href="#query">Query</a> ·
       <a href="#assertion">Assertion</a> ·
       <a href="#concept">Concept</a> ·
@@ -37,8 +38,14 @@
 
   <section>
     <h2>Overview</h2>
-    <p>This page provides a complete reference for all 50+ Sys2DSL commands. Commands are organized by functional category. Each command follows the standard syntax:</p>
+    <p>This page provides a complete reference for all <strong>67 Sys2DSL commands</strong>. Commands are organized by functional category. Each command follows the standard syntax:</p>
     <pre><code>@varName COMMAND arg1 arg2 ...</code></pre>
+
+    <div class="arch-note">
+      <strong>High-Level API (Recommended):</strong> For simpler NL→DSL generation, use these consolidated commands that try multiple strategies internally:
+      <code>QUERY</code>, <code>WHATIF</code>, <code>SUGGEST</code>, <code>SUMMARIZE_FACTS</code>, <code>MANAGE_THEORY</code>, <code>MEMORY</code>, <code>MASK</code>, <code>FORMAT_RESULT</code>, <code>EXPLAIN_QUERY</code>.
+      See <a href="../specs/theory/Sys2DSL_highlevel.md">Sys2DSL_highlevel.md</a>.
+    </div>
 
     <div class="arch-note">
       <strong>Design spec links (split by area):</strong>
@@ -52,8 +59,92 @@
     </div>
 
     <div class="arch-note">
-      <strong>Architecture Integration:</strong> All commands execute through the <code>TheoryDSLEngine</code> which routes to specialized handlers: <code>DSLCommandsCore</code>, <code>DSLCommandsReasoning</code>, <code>DSLCommandsInference</code>, etc. Results are stored in the script environment and can be referenced by subsequent commands using <code>$varName</code>.
+      <strong>Architecture Integration:</strong> All commands execute through the <code>TheoryDSLEngine</code> which routes to specialized handlers: <code>DSLCommandsCore</code>, <code>DSLCommandsReasoning</code>, <code>DSLCommandsInference</code>, <code>DSLCommandsHighLevel</code>, etc. Results are stored in the script environment and can be referenced by subsequent commands using <code>$varName</code>.
     </div>
+  </section>
+
+  <section id="highlevel" class="category-section">
+    <h2>0. High-Level Commands (Recommended)</h2>
+    <p>These consolidated commands try multiple strategies internally and are recommended for NL→DSL generation. They wrap the granular commands below for simpler usage.</p>
+
+    <table class="cmd-table">
+      <tr><th>Command</th><th>Purpose</th><th>Wraps</th></tr>
+      <tr>
+        <td><code>QUERY</code></td>
+        <td>Multi-strategy query (ASK → INFER fallback)</td>
+        <td>ASK, ASK_MASKED, INFER</td>
+      </tr>
+      <tr>
+        <td><code>WHATIF</code></td>
+        <td>Counterfactual reasoning</td>
+        <td>CF (THEORY_PUSH + ASSERT + ASK + THEORY_POP)</td>
+      </tr>
+      <tr>
+        <td><code>EXPLAIN_QUERY</code></td>
+        <td>Proof-oriented query with explanation</td>
+        <td>PROVE, EXPLAIN</td>
+      </tr>
+      <tr>
+        <td><code>SUGGEST</code></td>
+        <td>Generate hypotheses (abduct → analogical)</td>
+        <td>ABDUCT, ANALOGICAL</td>
+      </tr>
+      <tr>
+        <td><code>SUMMARIZE_FACTS</code></td>
+        <td>Find and summarize matching facts</td>
+        <td>FACTS_MATCHING, SUMMARIZE</td>
+      </tr>
+      <tr>
+        <td><code>MANAGE_THEORY</code></td>
+        <td>Theory storage operations</td>
+        <td>LIST_THEORIES, SAVE_THEORY, LOAD_THEORY, MERGE_THEORY, DELETE_THEORY</td>
+      </tr>
+      <tr>
+        <td><code>MEMORY</code></td>
+        <td>Memory lifecycle operations</td>
+        <td>BOOST, FORGET, PROTECT, UNPROTECT, GET_USAGE</td>
+      </tr>
+      <tr>
+        <td><code>MASK</code></td>
+        <td>Build dimension masks</td>
+        <td>MASK_PARTITIONS, MASK_DIMS</td>
+      </tr>
+      <tr>
+        <td><code>FORMAT_RESULT</code></td>
+        <td>Format results (natural/json/summary)</td>
+        <td>TO_NATURAL, TO_JSON, SUMMARIZE</td>
+      </tr>
+    </table>
+
+    <h3>QUERY</h3>
+    <p><strong>Purpose:</strong> Multi-strategy query that tries ASK first, then falls back to INFER if unknown.</p>
+    <pre><code>@result QUERY Dog IS_A Animal
+@result QUERY Dog IS_A Animal mode=logical proof=true
+@result QUERY Dog IS_A Animal mask=$ontologyMask</code></pre>
+
+    <h3>WHATIF</h3>
+    <p><strong>Purpose:</strong> Counterfactual query - answer a question under hypothetical conditions.</p>
+    <pre><code>@cf WHATIF "Water IS_A gas | Water TEMPERATURE_AT Celsius150"
+# Temporarily asserts facts after |, runs query, then reverts</code></pre>
+
+    <h3>SUGGEST</h3>
+    <p><strong>Purpose:</strong> Generate hypotheses via abduction, with analogical fallback.</p>
+    <pre><code>@causes SUGGEST fever                    # Abductive: what causes fever?
+@analog SUGGEST King Queen Man           # Analogical: King:Queen :: Man:?</code></pre>
+
+    <h3>MANAGE_THEORY</h3>
+    <p><strong>Purpose:</strong> Single entry point for theory storage operations.</p>
+    <pre><code>@list MANAGE_THEORY action=LIST
+@ok MANAGE_THEORY action=SAVE name=my_theory
+@ok MANAGE_THEORY action=LOAD name=base_ontology
+@ok MANAGE_THEORY action=DELETE name=old_theory</code></pre>
+
+    <h3>MEMORY</h3>
+    <p><strong>Purpose:</strong> Single entry point for memory lifecycle operations.</p>
+    <pre><code>@stats MEMORY action=USAGE target=Dog
+@ok MEMORY action=BOOST target=ImportantConcept
+@ok MEMORY action=PROTECT target=CoreConcept
+@removed MEMORY action=FORGET threshold=2</code></pre>
   </section>
 
   <section id="query" class="category-section">
@@ -62,6 +153,11 @@
 
     <table class="cmd-table">
       <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr>
+        <td><code>QUERY</code> <span style="color:#4a4">(high-level)</span></td>
+        <td>Multi-strategy query (ASK → INFER fallback)</td>
+        <td><code>@result QUERY Subject RELATION Object [mode=logical|geometric|both] [proof=true]</code></td>
+      </tr>
       <tr>
         <td><code>ASK</code></td>
         <td>Query truth value of a statement</td>
@@ -74,8 +170,23 @@
       </tr>
       <tr>
         <td><code>FACTS_MATCHING</code></td>
-        <td>Find all facts matching a pattern</td>
-        <td><code>@results FACTS_MATCHING Subject ? Object</code></td>
+        <td>Find all facts matching a pattern (polymorphic)</td>
+        <td><code>@results FACTS_MATCHING [Subject] [RELATION] [Object]</code></td>
+      </tr>
+      <tr>
+        <td><code>FACTS_WITH_RELATION</code></td>
+        <td>Find all facts with specific relation</td>
+        <td><code>@results FACTS_WITH_RELATION IS_A</code></td>
+      </tr>
+      <tr>
+        <td><code>FACTS_WITH_OBJECT</code></td>
+        <td>Find all facts with specific object</td>
+        <td><code>@results FACTS_WITH_OBJECT Animal</code></td>
+      </tr>
+      <tr>
+        <td><code>INSTANCES_OF</code></td>
+        <td>Find all subjects with IS_A to type</td>
+        <td><code>@results INSTANCES_OF Animal</code></td>
       </tr>
       <tr>
         <td><code>ALL_REQUIREMENTS_SATISFIED</code></td>
@@ -106,13 +217,23 @@
     <pre><code>@ontologyMask MASK_PARTITIONS ontology
 @result ASK_MASKED $ontologyMask Water IS_A liquid</code></pre>
 
-    <h3>FACTS_MATCHING</h3>
-    <p><strong>Purpose:</strong> Pattern search across all facts. Use <code>?</code> as wildcard.</p>
-    <pre><code>@aboutDog FACTS_MATCHING Dog ? ?          # All facts about Dog
-@allIsA FACTS_MATCHING ? IS_A ?            # All IS_A relationships
-@causesFear FACTS_MATCHING ? CAUSES Fear   # What causes Fear</code></pre>
+    <h3>FACTS_MATCHING (Polymorphic)</h3>
+    <p><strong>Purpose:</strong> Pattern search across all facts. Accepts 0-3 arguments for flexible matching.</p>
+    <pre><code>@all FACTS_MATCHING                        # All facts (0 args)
+@aboutDog FACTS_MATCHING Dog               # All facts about Dog (1 arg)
+@dogIsA FACTS_MATCHING Dog IS_A            # Dog IS_A ? (2 args)
+@exact FACTS_MATCHING Dog IS_A Animal      # Exact match (3 args)</code></pre>
+
+    <div class="warning">
+      <strong>Note:</strong> Sys2DSL does NOT support <code>?</code> or <code>*</code> wildcards. Use polymorphic commands or specialized queries (<code>FACTS_WITH_RELATION</code>, <code>FACTS_WITH_OBJECT</code>, <code>INSTANCES_OF</code>) instead.
+    </div>
 
     <p><strong>Returns:</strong> Array of matching facts with <code>{ subject, relation, object, factId }</code>.</p>
+
+    <h3>Specialized Query Commands</h3>
+    <pre><code>@animals INSTANCES_OF Animal               # All X where X IS_A Animal
+@causes FACTS_WITH_RELATION CAUSES         # All facts with CAUSES relation
+@heat_facts FACTS_WITH_OBJECT heat         # All facts with object=heat</code></pre>
   </section>
 
   <section id="assertion" class="category-section">
@@ -447,14 +568,14 @@
 
   <section id="inference" class="category-section">
     <h2>7. Inference Commands</h2>
-    <p>Commands for multi-method inference and explanation.</p>
+    <p>Commands for multi-method inference, rule definition, and explanation.</p>
 
     <table class="cmd-table">
       <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
       <tr>
         <td><code>INFER</code></td>
         <td>Multi-method inference</td>
-        <td><code>@result INFER Subject RELATION Object [method=X]</code></td>
+        <td><code>@result INFER Subject RELATION Object [method=X] [proof=true]</code></td>
       </tr>
       <tr>
         <td><code>FORWARD_CHAIN</code></td>
@@ -465,6 +586,21 @@
         <td><code>WHY</code></td>
         <td>Explain inference result</td>
         <td><code>@exp WHY Subject RELATION Object</code></td>
+      </tr>
+      <tr>
+        <td><code>DEFINE_RULE</code></td>
+        <td>Register composition/inference rule</td>
+        <td><code>@r DEFINE_RULE name=X head="pattern" body="pattern"</code></td>
+      </tr>
+      <tr>
+        <td><code>DEFINE_DEFAULT</code></td>
+        <td>Register default reasoning rule</td>
+        <td><code>@d DEFINE_DEFAULT name=X type=T property=P value=V [exception=E]</code></td>
+      </tr>
+      <tr>
+        <td><code>CLEAR_RULES</code></td>
+        <td>Clear all registered rules</td>
+        <td><code>@_ CLEAR_RULES</code></td>
       </tr>
     </table>
 
@@ -496,6 +632,25 @@
     <p><strong>Purpose:</strong> Explain why a statement is true or false.</p>
     <pre><code>@exp WHY Dog IS_A LivingThing
 # Returns detailed reasoning chain with each step justified</code></pre>
+
+    <h3>DEFINE_RULE</h3>
+    <p><strong>Purpose:</strong> Register a composition/inference rule for complex relationship reasoning.</p>
+    <pre><code>@r1 DEFINE_RULE name=grandparent \
+    head="?x GRANDPARENT_OF ?z" \
+    body="?x PARENT_OF ?y" \
+    body="?y PARENT_OF ?z"</code></pre>
+    <p>Rules enable deriving new facts from existing ones via pattern matching.</p>
+
+    <h3>DEFINE_DEFAULT</h3>
+    <p><strong>Purpose:</strong> Register a default reasoning rule with optional exceptions.</p>
+    <pre><code>@d1 DEFINE_DEFAULT name=birds_fly \
+    type=bird property=CAN value=fly \
+    exception=penguin exception=ostrich</code></pre>
+    <p>Default reasoning applies typical properties unless explicitly overridden.</p>
+
+    <h3>CLEAR_RULES</h3>
+    <p><strong>Purpose:</strong> Clear all registered inference rules and defaults.</p>
+    <pre><code>@_ CLEAR_RULES</code></pre>
   </section>
 
   <section id="memory" class="category-section">
@@ -770,19 +925,20 @@
     <h2>Command Summary Table</h2>
     <table class="cmd-table">
       <tr><th>Category</th><th>Commands</th><th>Count</th></tr>
-      <tr><td>Query</td><td>ASK, ASK_MASKED, FACTS_MATCHING, ALL_REQUIREMENTS_SATISFIED</td><td>4</td></tr>
+      <tr><td>Query</td><td>ASK, ASK_MASKED, FACTS_MATCHING, FACTS_WITH_RELATION, FACTS_WITH_OBJECT, INSTANCES_OF, ALL_REQUIREMENTS_SATISFIED</td><td>7</td></tr>
       <tr><td>Assertion</td><td>ASSERT, RETRACT</td><td>2</td></tr>
       <tr><td>Concept</td><td>BIND_CONCEPT, DEFINE_CONCEPT, INSPECT, LITERAL</td><td>4</td></tr>
       <tr><td>Relation</td><td>BIND_RELATION, DEFINE_RELATION, BIND_POINT</td><td>3</td></tr>
       <tr><td>Theory</td><td>THEORY_PUSH, THEORY_POP, LIST_THEORIES, LOAD_THEORY, SAVE_THEORY, MERGE_THEORY, DELETE_THEORY, THEORY_INFO, RESET_SESSION</td><td>9</td></tr>
       <tr><td>Reasoning</td><td>VALIDATE, PROVE, HYPOTHESIZE, CF, ABDUCT, ANALOGICAL, CHECK_CONTRADICTION, CHECK_WOULD_CONTRADICT, REGISTER_FUNCTIONAL, REGISTER_CARDINALITY</td><td>10</td></tr>
-      <tr><td>Inference</td><td>INFER, FORWARD_CHAIN, WHY</td><td>3</td></tr>
+      <tr><td>Inference</td><td>INFER, FORWARD_CHAIN, WHY, DEFINE_RULE, DEFINE_DEFAULT, CLEAR_RULES</td><td>6</td></tr>
       <tr><td>Memory</td><td>GET_USAGE, FORGET, BOOST, PROTECT, UNPROTECT</td><td>5</td></tr>
       <tr><td>Mask</td><td>MASK_PARTITIONS, MASK_DIMS</td><td>2</td></tr>
       <tr><td>Utility</td><td>BOOL_AND, BOOL_OR, BOOL_NOT, NONEMPTY, MERGE_LISTS, PICK_FIRST, PICK_LAST, COUNT, FILTER, POLARITY_DECIDE</td><td>10</td></tr>
       <tr><td>Output</td><td>TO_NATURAL, TO_JSON, EXPLAIN, FORMAT, SUMMARIZE</td><td>5</td></tr>
       <tr><td>Ontology</td><td>EXPLAIN_CONCEPT, MISSING, WHAT_IS</td><td>3</td></tr>
-      <tr><td colspan="2"><strong>Total</strong></td><td><strong>60</strong></td></tr>
+      <tr><td style="background:#e8f4e8"><strong>High-Level</strong></td><td style="background:#e8f4e8">QUERY, WHATIF, SUGGEST, MANAGE_THEORY, MEMORY, MASK, FORMAT_RESULT, SUMMARIZE_FACTS, EXPLAIN_QUERY</td><td style="background:#e8f4e8">9</td></tr>
+      <tr><td colspan="2"><strong>Total (Granular + High-Level)</strong></td><td><strong>67</strong></td></tr>
     </table>
   </section>
 

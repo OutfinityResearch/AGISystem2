@@ -1,7 +1,7 @@
 {
-  "timestamp": "2025-12-01T21:54:21.092Z",
-  "totalPassed": 248,
-  "totalFailed": 0,
+  "timestamp": "2025-12-02T09:28:48.048Z",
+  "totalPassed": 247,
+  "totalFailed": 1,
   "cases": [
     {
       "id": "suite_01_ontology",
@@ -2688,14 +2688,14 @@
           "id": "q8",
           "question": "FINAL: What resource completes infrastructure?",
           "expectedTruth": "TRUE_CERTAIN",
-          "actualResponse": "{\"truth\":\"TRUE_CERTAIN\"}",
-          "passed": true,
-          "matchReason": "NL Match: 1 indicators (+), 0 (-), 0/0 concepts",
+          "actualResponse": "{\"truth\":\"FALSE\"}",
+          "passed": false,
+          "matchReason": "DSL mismatch: expected TRUE_CERTAIN, got FALSE",
           "hasDslExplanation": true
         }
       ],
-      "passed": 8,
-      "failed": 0
+      "passed": 7,
+      "failed": 1
     }
   ]
 }

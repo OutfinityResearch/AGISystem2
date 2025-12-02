@@ -40,20 +40,37 @@ Examples: `Dog`, `IS_A`, `temperature_rise`, `q1`
 #### Commands (Keywords)
 ```
 COMMAND ::=
-    'ASK' | 'ASK_MASKED' | 'ASSERT' | 'RETRACT'
-  | 'FACTS_MATCHING' | 'CF' | 'ABDUCT' | 'PROVE'
-  | 'BOOL_AND' | 'BOOL_OR' | 'BOOL_NOT' | 'NONEMPTY'
-  | 'MERGE_LISTS' | 'PICK_FIRST' | 'PICK_LAST' | 'COUNT' | 'FILTER'
-  | 'THEORY_PUSH' | 'THEORY_POP' | 'SAVE_THEORY' | 'LOAD_THEORY' | 'MERGE_THEORY'
-  | 'BIND_CONCEPT' | 'BIND_POINT' | 'BIND_RELATION'
-  | 'DEFINE_CONCEPT' | 'DEFINE_RELATION' | 'INSPECT'
-  | 'MASK_PARTITIONS' | 'MASK_DIMS'
-  | 'ANALOGICAL' | 'HYPOTHESIZE' | 'VALIDATE'
+    # Query Commands
+    'ASK' | 'ASK_MASKED' | 'FACTS_MATCHING' | 'FACTS_WITH_RELATION' | 'FACTS_WITH_OBJECT'
+  | 'INSTANCES_OF' | 'ALL_REQUIREMENTS_SATISFIED'
+    # Assertion Commands
+  | 'ASSERT' | 'RETRACT'
+    # Reasoning Commands
+  | 'CF' | 'ABDUCT' | 'PROVE' | 'ANALOGICAL' | 'HYPOTHESIZE' | 'VALIDATE'
   | 'CHECK_CONTRADICTION' | 'CHECK_WOULD_CONTRADICT'
   | 'REGISTER_FUNCTIONAL' | 'REGISTER_CARDINALITY'
-  | 'ALL_REQUIREMENTS_SATISFIED' | 'POLARITY_DECIDE'
-  | 'SUMMARIZE' | 'TO_NATURAL' | 'TO_JSON' | 'FORMAT'
-  | 'LITERAL' | 'FORGET' | 'BOOST' | 'PROTECT'
+    # Inference Commands
+  | 'INFER' | 'FORWARD_CHAIN' | 'WHY' | 'DEFINE_RULE' | 'DEFINE_DEFAULT' | 'CLEAR_RULES'
+    # Boolean/List Operations
+  | 'BOOL_AND' | 'BOOL_OR' | 'BOOL_NOT' | 'NONEMPTY'
+  | 'MERGE_LISTS' | 'PICK_FIRST' | 'PICK_LAST' | 'COUNT' | 'FILTER' | 'POLARITY_DECIDE'
+    # Theory Management
+  | 'THEORY_PUSH' | 'THEORY_POP' | 'LIST_THEORIES' | 'SAVE_THEORY' | 'LOAD_THEORY'
+  | 'MERGE_THEORY' | 'DELETE_THEORY' | 'THEORY_INFO' | 'RESET_SESSION'
+    # Concept/Relation Binding
+  | 'BIND_CONCEPT' | 'BIND_POINT' | 'BIND_RELATION'
+  | 'DEFINE_CONCEPT' | 'DEFINE_RELATION' | 'INSPECT' | 'LITERAL'
+    # Masking
+  | 'MASK_PARTITIONS' | 'MASK_DIMS'
+    # Memory Management
+  | 'GET_USAGE' | 'FORGET' | 'BOOST' | 'PROTECT' | 'UNPROTECT'
+    # Output Commands
+  | 'SUMMARIZE' | 'TO_NATURAL' | 'TO_JSON' | 'FORMAT' | 'EXPLAIN'
+    # Ontology Introspection
+  | 'EXPLAIN_CONCEPT' | 'MISSING' | 'WHAT_IS'
+    # High-Level Commands (wrap multiple granular commands)
+  | 'QUERY' | 'WHATIF' | 'SUGGEST' | 'MANAGE_THEORY' | 'MEMORY' | 'MASK'
+  | 'FORMAT_RESULT' | 'SUMMARIZE_FACTS' | 'EXPLAIN_QUERY'
 ```
 
 #### Wildcard

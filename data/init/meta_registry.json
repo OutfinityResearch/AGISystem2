@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastUpdated": "2025-12-01T21:54:21.018Z",
+  "lastUpdated": "2025-12-02T09:28:47.952Z",
   "theories": [
     {
       "id": "test_animals",
@@ -85,12 +85,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 38,
+        "loadCount": 41,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-01T21:54:20.915Z"
+        "lastUsed": "2025-12-02T09:28:47.813Z"
       },
-      "registeredAt": "2025-12-01T21:54:20.913Z"
+      "registeredAt": "2025-12-02T09:28:47.811Z"
     },
     {
       "id": "robot_patch",
@@ -103,12 +103,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 34,
+        "loadCount": 37,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-01T21:54:20.976Z"
+        "lastUsed": "2025-12-02T09:28:47.896Z"
       },
-      "registeredAt": "2025-12-01T21:54:20.976Z"
+      "registeredAt": "2025-12-02T09:28:47.894Z"
     },
     {
       "id": "memory_backup",
@@ -121,12 +121,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 26,
+        "loadCount": 29,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-01T21:54:20.919Z"
+        "lastUsed": "2025-12-02T09:28:47.818Z"
       },
-      "registeredAt": "2025-12-01T21:54:20.919Z"
+      "registeredAt": "2025-12-02T09:28:47.818Z"
     },
     {
       "id": "cpu_backup",
@@ -144,7 +144,7 @@
         "successCount": 0,
         "lastUsed": null
       },
-      "registeredAt": "2025-12-01T21:54:20.921Z"
+      "registeredAt": "2025-12-02T09:28:47.819Z"
     },
     {
       "id": "network_backup",
@@ -157,12 +157,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 26,
+        "loadCount": 29,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-01T21:54:20.930Z"
+        "lastUsed": "2025-12-02T09:28:47.831Z"
       },
-      "registeredAt": "2025-12-01T21:54:20.930Z"
+      "registeredAt": "2025-12-02T09:28:47.830Z"
     },
     {
       "id": "overwrite_test",
@@ -175,12 +175,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 26,
+        "loadCount": 29,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-01T21:54:20.948Z"
+        "lastUsed": "2025-12-02T09:28:47.857Z"
       },
-      "registeredAt": "2025-12-01T21:54:20.948Z"
+      "registeredAt": "2025-12-02T09:28:47.856Z"
     },
     {
       "id": "robotb_patch",
@@ -193,12 +193,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 21,
+        "loadCount": 24,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-01T21:54:20.981Z"
+        "lastUsed": "2025-12-02T09:28:47.904Z"
       },
-      "registeredAt": "2025-12-01T21:54:20.980Z"
+      "registeredAt": "2025-12-02T09:28:47.904Z"
     },
     {
       "id": "drone_patch",
@@ -211,12 +211,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 21,
+        "loadCount": 24,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-01T21:54:20.988Z"
+        "lastUsed": "2025-12-02T09:28:47.914Z"
       },
-      "registeredAt": "2025-12-01T21:54:20.988Z"
+      "registeredAt": "2025-12-02T09:28:47.913Z"
     },
     {
       "id": "server_patch",
@@ -229,12 +229,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 21,
+        "loadCount": 24,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-01T21:54:21.005Z"
+        "lastUsed": "2025-12-02T09:28:47.936Z"
       },
-      "registeredAt": "2025-12-01T21:54:21.005Z"
+      "registeredAt": "2025-12-02T09:28:47.936Z"
     },
     {
       "id": "laptop_patch",
@@ -247,12 +247,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 21,
+        "loadCount": 24,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-01T21:54:21.018Z"
+        "lastUsed": "2025-12-02T09:28:47.952Z"
       },
-      "registeredAt": "2025-12-01T21:54:21.018Z"
+      "registeredAt": "2025-12-02T09:28:47.951Z"
     },
     {
       "id": "budget_increase_scenario",
