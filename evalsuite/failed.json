@@ -39,7 +39,7 @@
       "failedQueries": [
         "q7"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:32:09.461Z"
     },
     {
       "id": "suite_06_analogic_symmetric",
@@ -61,17 +61,15 @@
         "q5",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:17:36.072Z"
     },
     {
       "id": "suite_08_default_reasoning",
       "name": "Comprehensive Default Reasoning with Exceptions (Non-Monotonic Logic)",
       "failedQueries": [
-        "q2",
-        "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:32:43.419Z"
     },
     {
       "id": "suite_09_contradictions",
@@ -82,7 +80,7 @@
         "q3",
         "q5"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:16:34.264Z"
     },
     {
       "id": "suite_10_theory_layers",
@@ -120,7 +118,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:00:49.715Z"
     },
     {
       "id": "suite_13_variable_composition",
@@ -134,7 +132,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:03:26.922Z"
     },
     {
       "id": "suite_14_error_edge_cases",
@@ -146,7 +144,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:11:14.692Z"
     },
     {
       "id": "suite_15_masks",
@@ -156,21 +154,15 @@
         "q6",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:21:25.733Z"
     },
     {
       "id": "suite_16_memory_forgetting",
       "name": "Comprehensive Memory Management & Retention Policies",
       "failedQueries": [
-        "q2",
-        "q3",
-        "q4",
-        "q5",
-        "q6",
-        "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:05:54.703Z"
     },
     {
       "id": "suite_17_theory_storage",
@@ -181,7 +173,7 @@
         "q6",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:28:42.607Z"
     },
     {
       "id": "suite_18_polarity_decision",
@@ -193,7 +185,7 @@
         "q6",
         "q7"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:13:00.306Z"
     },
     {
       "id": "suite_19_output_format",
@@ -202,7 +194,7 @@
         "q1",
         "q7"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:30:07.449Z"
     },
     {
       "id": "suite_20_format_summarize",
@@ -213,7 +205,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:30:41.401Z"
     },
     {
       "id": "suite_21_boost_forget",
@@ -226,7 +218,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:06:24.677Z"
     },
     {
       "id": "suite_22_merge_theory_patch",
@@ -241,7 +233,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:02:19.841Z"
     },
     {
       "id": "suite_23_summarize_perspective",
@@ -251,7 +243,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:31:33.596Z"
     },
     {
       "id": "suite_24_expand_essay",
@@ -263,7 +255,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:14:35.806Z"
     },
     {
       "id": "suite_25_theory_management",
@@ -277,7 +269,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:07:33.775Z"
     },
     {
       "id": "suite_26_tool_planning",
@@ -291,7 +283,7 @@
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T18:56:17.864Z"
+      "lastRun": "2025-12-03T19:08:18.815Z"
     },
     {
       "id": "suite_27_workflow_planning",
@@ -347,7 +339,7 @@
       "lastRun": "2025-12-03T18:46:06.354Z"
     }
   ],
-  "lastUpdated": "2025-12-03T18:57:17.235Z",
+  "lastUpdated": "2025-12-03T19:32:43.425Z",
   "rangeInfo": {
     "lastFrom": null,
     "lastTo": null

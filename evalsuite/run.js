@@ -923,6 +923,10 @@ async function main() {
 
   // Per-case summary with quality indicators
   log(`\n  ${colors.bright}Per-Case Quality:${colors.reset}`);
+
+  // Calculate column widths for alignment
+  const maxIdLen = Math.max(...allResults.map(r => r.id.length));
+
   for (const result of allResults) {
     const totalTasks = result.passed + result.failed;
     const cs = result.caseSummary;
@@ -943,13 +947,11 @@ async function main() {
     const passColor = result.failed === 0 ? colors.green : colors.yellow;
 
     // Format real metrics arrays for per-task data
-    const rsArr = cs.reasoningSteps || [];
-    const plArr = cs.proofLengths || [];
-
-    // Calculate summary stats
-    const avgRs = rsArr.length > 0 ? (rsArr.reduce((a,b) => a+b, 0) / rsArr.length).toFixed(1) : '0';
-    const maxRs = rsArr.length > 0 ? Math.max(...rsArr) : 0;
-    const avgPl = plArr.length > 0 ? (plArr.reduce((a,b) => a+b, 0) / plArr.length).toFixed(0) : '0';
+    // work[] = stepsExecuted (actual BFS iterations - total reasoning work)
+    // dsl[] = PROOF_DSL line count (specification length)
+    const workArr = cs.reasoningSteps || [];   // Renamed from steps - now shows actual BFS work
+    const dslArr = cs.proofLengths || [];      // Renamed from proof - shows DSL spec size
+    const factsArr = cs.factsVerifiedCounts || [];  // Facts verified per task
 
     // Build readable complexity summary (e.g., "2 moderate, 3 complex, 3 deep")
     const compWords = [];
@@ -960,10 +962,18 @@ async function main() {
     if (cs.complexityDistribution.sophisticated > 0) compWords.push(`${cs.complexityDistribution.sophisticated} deep`);
     const compSummary = compWords.length > 0 ? compWords.join(', ') : 'no proofs';
 
-    // Everything on ONE line - elegant format
-    const stepsStr = rsArr.join(' ');
-    const proofStr = plArr.join(' ');
-    log(`    ${passColor}${result.passed}/${totalTasks}${colors.reset} ${result.id}  reasoning(${stepsStr}) proof(${proofStr})  ${compSummary}  ${cs.qualitySummary}`, '');
+    // Padded columns for alignment
+    const passStr = `${result.passed}/${totalTasks}`.padEnd(4);
+    const idStr = result.id.padEnd(maxIdLen + 1);
+    const workStr = workArr.map(n => String(n).padStart(2)).join(' ');
+    const dslStr = dslArr.map(n => String(n).padStart(2)).join(' ');
+    const compStr = compSummary.padEnd(42);
+    const qualStr = cs.qualitySummary.padEnd(50);
+
+    // Everything on ONE line - elegant aligned format with square brackets
+    // work[] = actual BFS steps executed by reasoner (total reasoning effort)
+    // dsl[] = PROOF_DSL line count (specification complexity)
+    log(`    ${passColor}${passStr}${colors.reset} ${idStr} work[${workStr}] dsl[${dslStr}]  ${compStr} ${qualStr}`, '');
   }
 
   // Write results

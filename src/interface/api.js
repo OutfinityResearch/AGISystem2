@@ -305,8 +305,22 @@ class EngineAPI {
       }
     }
 
+    // Merge provenances - preserve reasoning metrics (stepsExecuted, trace, etc.)
+    // while adding geometric information
+    const mergedProvenance = geom
+      ? {
+          ...result.provenance,            // Keep reasoning metrics (stepsExecuted, trace, nodesVisited, etc.)
+          ...geom.provenance,              // Add geometric info (distance, band info)
+          stepsExecuted: result.provenance?.stepsExecuted,  // Ensure not overwritten
+          trace: result.provenance?.trace,
+          nodesVisited: result.provenance?.nodesVisited,
+          edgesExplored: result.provenance?.edgesExplored,
+          chainLength: result.provenance?.chainLength
+        }
+      : result.provenance;
+
     const merged = geom
-      ? { ...result, band: geom.band, provenance: geom.provenance }
+      ? { ...result, band: geom.band, provenance: mergedProvenance }
       : result;
 
     this.audit.write({
@@ -393,8 +407,20 @@ class EngineAPI {
         });
       }
     }
+    // Merge provenances - preserve reasoning metrics while adding geometric info
+    const mergedProvenanceAsk = geom
+      ? {
+          ...result.provenance,
+          ...geom.provenance,
+          stepsExecuted: result.provenance?.stepsExecuted,
+          trace: result.provenance?.trace,
+          nodesVisited: result.provenance?.nodesVisited,
+          edgesExplored: result.provenance?.edgesExplored,
+          chainLength: result.provenance?.chainLength
+        }
+      : result.provenance;
     const merged = geom
-      ? { ...result, band: geom.band, provenance: geom.provenance }
+      ? { ...result, band: geom.band, provenance: mergedProvenanceAsk }
       : result;
     this.audit.write({
       kind: 'ask',

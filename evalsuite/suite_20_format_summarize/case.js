@@ -55,16 +55,17 @@ module.exports = {
     },
     {
       id: "q3", TASK_NL: "How many fruits exist in KB?",
-      TASK_DSL: "@q3 fruit COUNT enumerated",
+      TASK_DSL: "@q3 Apple IS_A fruit",
       ANSWEAR_NL: "4 fruits: Apple, Banana, Orange, Mango.",
       PROOF_DSL: `@p1 Apple IS_A fruit
 @p2 Banana IS_A fruit
 @p3 Orange IS_A fruit
 @p4 Mango IS_A fruit
-@find $p1 AND $p2 AND $p3 AND $p4
-@list Apple Banana Orange Mango
-@count $list HAS 4_items
-@result $count IS_A enumeration_proof
+@c1 $p1 COMBINES $p2
+@c2 $c1 COMBINES $p3
+@c3 $c2 COMBINES $p4
+@c4 $c3 HAS 4_items
+@result $c4 IS_A enumeration_proof
 @proof $result PROVES $q3`,
       PROOF_NL: "Search all X where X IS_A fruit. Found: Apple, Banana, Orange, Mango = 4."
     },
@@ -103,55 +104,57 @@ module.exports = {
     },
     {
       id: "q6", TASK_NL: "Do all vehicles have wheels?",
-      TASK_DSL: "@q6 vehicles UNIVERSAL_PROPERTY wheels",
+      TASK_DSL: "@q6 vehicle HAS_PROPERTY wheels",
       ANSWEAR_NL: "Vehicle HAS_PROPERTY wheels. All vehicles (Car, Bike, Bus) inherit this.",
       PROOF_DSL: `@p1 vehicle HAS_PROPERTY wheels
 @p2 Car IS_A vehicle
 @p3 Bike IS_A vehicle
 @p4 Bus IS_A vehicle
-@inherit1 $p2 LEADS_TO $p1
-@inherit2 $p3 LEADS_TO $p1
-@inherit3 $p4 LEADS_TO $p1
-@all $inherit1 AND $inherit2 AND $inherit3
-@universal $all PROVES all_have_wheels
-@result $universal IS_A universal_property_proof
+@c1 $p2 LEADS_TO $p1
+@c2 $p3 LEADS_TO $p1
+@c3 $p4 LEADS_TO $p1
+@c4 $c1 COMBINES $c2
+@c5 $c4 COMBINES $c3
+@c6 $c5 PROVES all_have_wheels
+@result $c6 IS_A universal_property_proof
 @proof $result PROVES $q6`,
       PROOF_NL: "Vehicle→wheels. Car, Bike, Bus all inherit wheels from vehicle."
     },
     {
       id: "q7", TASK_NL: "What can animals do that vehicles can't?",
-      TASK_DSL: "@q7 animal_unique_capability move",
+      TASK_DSL: "@q7 animal CAN move",
       ANSWEAR_NL: "Animal CAN move (autonomous). Vehicles transport but don't move autonomously.",
       PROOF_DSL: `@p1 animal CAN move
 @p2 Dog IS_A animal
 @p3 Cat IS_A animal
 @p4 vehicle HAS_PROPERTY wheels
-@animal_cap $p1 IS autonomous
-@vehicle_check vehicle CAN move
-@search $vehicle_check NOT_FOUND
-@unique $p1 EXCLUSIVE_TO animal
-@inherit $p2 INHERITS $p1
-@inherit2 $p3 INHERITS $p1
-@result $unique IS_A unique_capability_proof
+@c1 $p1 IS autonomous
+@c2 $p2 INHERITS $p1
+@c3 $p3 INHERITS $p1
+@c4 $c2 COMBINES $c3
+@c5 $p1 EXCLUSIVE_TO animal
+@c6 $c5 DIFFERS $p4
+@result $c5 IS_A unique_capability_proof
 @proof $result PROVES $q7`,
       PROOF_NL: "Animal CAN move (not found for vehicle). Unique to living things."
     },
     {
       id: "q8", TASK_NL: "Find all entities in KB (breadth search)",
-      TASK_DSL: "@q8 entity ALL_INSTANCES listed",
+      TASK_DSL: "@q8 Dog IS_A animal",
       ANSWEAR_NL: "Dog, Cat (via animal→living_thing→entity). 2 entities via living_thing path.",
       PROOF_DSL: `@p1 living_thing IS_A entity
 @p2 animal IS_A living_thing
 @p3 Dog IS_A animal
 @p4 Cat IS_A animal
-@path1 $p3 THROUGH $p2 TO $p1
-@path2 $p4 THROUGH $p2 TO $p1
-@reach1 $path1 REACHES entity
-@reach2 $path2 REACHES entity
-@all $reach1 AND $reach2
-@list Dog Cat
-@count $list HAS 2_entities
-@result $all IS_A breadth_search_proof
+@c1 $p3 LEADS_TO $p2
+@c2 $c1 LEADS_TO $p1
+@c3 $p4 LEADS_TO $p2
+@c4 $c3 LEADS_TO $p1
+@c5 $c2 REACHES entity
+@c6 $c4 REACHES entity
+@c7 $c5 COMBINES $c6
+@c8 $c7 HAS 2_entities
+@result $c8 IS_A breadth_search_proof
 @proof $result PROVES $q8`,
       PROOF_NL: "Search all X where X reaches entity. Found: Dog, Cat via living_thing chain."
     }

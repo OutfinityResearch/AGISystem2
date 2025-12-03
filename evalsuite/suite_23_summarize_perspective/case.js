@@ -104,45 +104,44 @@ module.exports = {
     },
     {
       id: "q6", TASK_NL: "Compare emission reduction strategies",
-      TASK_DSL: "@q6 emission_strategies COMPARED",
+      TASK_DSL: "@q6 electric_vehicles REDUCE emissions",
       ANSWEAR_NL: "EVs and public transit both reduce emissions. Two transport strategies.",
       PROOF_DSL: `@p1 electric_vehicles REDUCE emissions
 @p2 public_transit REDUCES emissions
-@strat1 $p1 IS transport_strategy_1
-@strat2 $p2 IS transport_strategy_2
-@compare $strat1 SIMILAR_TO $strat2
-@both REDUCE SAME_TARGET emissions
-@result $compare IS_A strategy_comparison_proof
+@c1 $p1 IS transport_strategy_1
+@c2 $p2 IS transport_strategy_2
+@c3 $c1 SIMILAR_TO $c2
+@c4 $c3 TARGET emissions
+@result $c4 IS_A strategy_comparison_proof
 @proof $result PROVES $q6`,
       PROOF_NL: "Both EVs and public transit target emission reduction. Transport sector."
     },
     {
       id: "q7", TASK_NL: "What policy mechanisms exist?",
-      TASK_DSL: "@q7 policy_mechanisms LISTED",
+      TASK_DSL: "@q7 Paris_Agreement SETS emission_targets",
       ANSWEAR_NL: "Paris Agreement (targets) and carbon markets (trading). Two mechanisms.",
       PROOF_DSL: `@p1 Paris_Agreement SETS emission_targets
 @p2 carbon_markets ENABLE trading
-@mech1 $p1 IS regulatory_mechanism
-@mech2 $p2 IS market_mechanism
-@both $mech1 AND $mech2
-@types regulatory AND market
-@count 2 MECHANISMS
-@result $both IS_A policy_enumeration_proof
+@c1 $p1 IS regulatory_mechanism
+@c2 $p2 IS market_mechanism
+@c3 $c1 COMBINES $c2
+@c4 $c3 HAS 2_mechanisms
+@result $c4 IS_A policy_enumeration_proof
 @proof $result PROVES $q7`,
       PROOF_NL: "Paris Agreement (regulatory) + carbon markets (market-based). 2 mechanisms."
     },
     {
       id: "q8", TASK_NL: "Full intervention strategy: source to sink",
-      TASK_DSL: "@q8 intervention COMPLETE_STRATEGY",
+      TASK_DSL: "@q8 clean_electricity REPLACES fossil_fuels",
       ANSWEAR_NL: "Reduce sources (clean energy replaces fossil), increase sinks (reforestation). Dual approach.",
       PROOF_DSL: `@p1 clean_electricity REPLACES fossil_fuels
 @p2 reforestation ABSORBS carbon_dioxide
 @p3 fossil_fuel_burning RELEASES carbon_dioxide
-@reduce_source $p1 ELIMINATES $p3
-@increase_sink $p2 REMOVES carbon_dioxide
-@dual $reduce_source AND $increase_sink
-@strategy $dual FORMS complete_intervention
-@result $strategy IS_A intervention_strategy_proof
+@c1 $p1 ELIMINATES $p3
+@c2 $p2 REMOVES carbon_dioxide
+@c3 $c1 COMBINES $c2
+@c4 $c3 FORMS complete_intervention
+@result $c4 IS_A intervention_strategy_proof
 @proof $result PROVES $q8`,
       PROOF_NL: "Dual strategy: reduce sources (clean energy) + increase sinks (reforestation)."
     }

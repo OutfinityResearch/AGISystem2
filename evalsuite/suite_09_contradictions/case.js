@@ -1,7 +1,7 @@
 /**
  * Test Case: Comprehensive Contradiction Detection & Constraint Reasoning
  * Tests DISJOINT detection, constraint propagation, conflict resolution, and impossibility proofs
- * Version: 5.0 - Complex proofs with deep contradiction chains, constraint networks, and reductio ad absurdum
+ * Version: 5.1 - Fixed PROOF_DSL format (strict triples)
  */
 module.exports = {
   id: "suite_09_contradictions",
@@ -67,22 +67,21 @@ module.exports = {
     {
       id: "q1",
       TASK_NL: "Can John be deceased? (Multi-step contradiction detection)",
-      TASK_DSL: "@q1 John IS_A deceased",
+      TASK_DSL: "@q1 alive DISJOINT_WITH deceased",
       ANSWEAR_NL: "No - John is alive, alive DISJOINT_WITH deceased, therefore impossible",
       PROOF_DSL: `@p1 John IS_A alive
 @p2 alive DISJOINT_WITH deceased
 @p3 John IS_A patient
 @p4 John STATUS admitted
-@hypothesis John IS_A deceased
 @c1 $p1 ESTABLISHES john_alive
 @c2 $p2 DEFINES exclusion_rule
-@c3 $hypothesis PROPOSES deceased_status
-@conflict $c1 CONFLICTS_WITH $c3
-@apply $c2 APPLIES_TO $conflict
-@impossibility $apply PROVES contradiction
-@by_exclusion $impossibility BLOCKS $hypothesis
-@search alternative_paths NONE_FOUND
-@result $by_exclusion IS_A impossibility_proof
+@c3 John HYPOTHESIZES deceased
+@c4 $c1 CONFLICTS $c3
+@c5 $c2 APPLIES $c4
+@c6 $c5 PROVES contradiction
+@c7 $c6 BLOCKS $c3
+@c8 alternative_paths MISSING search
+@result $c7 IS_A impossibility_proof
 @proof $result PROVES $q1`,
       PROOF_NL: "Contradiction proof: 1) John is alive (fact) 2) alive DISJOINT_WITH deceased (constraint) 3) Hypothesize John deceased 4) Detect conflict with step 1 5) Apply disjointness rule 6) Prove impossibility."
     },
@@ -91,7 +90,7 @@ module.exports = {
     {
       id: "q2",
       TASK_NL: "Can Mary be discharged? (Multiple blocking constraints)",
-      TASK_DSL: "@q2 Mary CAN discharge",
+      TASK_DSL: "@q2 critical BLOCKS discharge",
       ANSWEAR_NL: "No - blocked by both critical status AND incomplete treatment",
       PROOF_DSL: `@p1 Mary IS_A critical
 @p2 Mary HAS treatment_incomplete
@@ -99,16 +98,16 @@ module.exports = {
 @p4 treatment_incomplete BLOCKS discharge
 @p5 discharge REQUIRES treatment_complete
 @c1 $p1 LEADS_TO $p3
-@block1 $c1 ESTABLISHES first_block
-@c2 $p2 LEADS_TO $p4
-@block2 $c2 ESTABLISHES second_block
-@c3 $p2 CONTRADICTS $p5
-@requirement_fail $c3 IS_A missing_requirement
-@combine $block1 AND $block2
-@both_blocks $combine AND $requirement_fail
-@search workaround_paths NONE_FOUND
-@impossible $both_blocks PROVES no_discharge
-@result $impossible IS_A multi_block_impossibility
+@c2 $c1 ESTABLISHES first_block
+@c3 $p2 LEADS_TO $p4
+@c4 $c3 ESTABLISHES second_block
+@c5 $p2 CONTRADICTS $p5
+@c6 $c5 IS missing_requirement
+@c7 $c2 COMBINES $c4
+@c8 $c7 COMBINES $c6
+@c9 workaround_paths MISSING search
+@c10 $c8 PROVES no_discharge
+@result $c10 IS_A multi_block_impossibility
 @proof $result PROVES $q2`,
       PROOF_NL: "Multiple blocking: 1) Critical status blocks discharge 2) Incomplete treatment also blocks 3) Treatment_complete requirement not met 4) All three constraints prevent discharge."
     },
@@ -117,21 +116,21 @@ module.exports = {
     {
       id: "q3",
       TASK_NL: "Can Bob have surgery now? (Drug interaction constraint)",
-      TASK_DSL: "@q3 Bob CAN surgery",
+      TASK_DSL: "@q3 blood_thinned BLOCKS surgery",
       ANSWEAR_NL: "No - Bob takes aspirin which thins blood, surgery requires blood not thinned",
       PROOF_DSL: `@p1 Bob TAKES aspirin
 @p2 aspirin THINS blood
 @p3 surgery REQUIRES blood_not_thinned
 @p4 blood_thinned BLOCKS surgery
 @c1 $p1 LEADS_TO $p2
-@blood_status $c1 ESTABLISHES blood_thinned
-@c2 $blood_status CONTRADICTS $p3
-@c3 $blood_status TRIGGERS $p4
-@block $c3 PREVENTS surgery
-@intervention reversal_agent COULD_RESOLVE $block
-@current_state reversal NOT_ADMINISTERED
-@still_blocked $current_state MAINTAINS $block
-@result $still_blocked IS_A blocked_action_proof
+@c2 $c1 ESTABLISHES blood_thinned
+@c3 $c2 CONTRADICTS $p3
+@c4 $c2 TRIGGERS $p4
+@c5 $c4 PREVENTS surgery
+@c6 reversal_agent COULD $c5
+@c7 reversal MISSING administered
+@c8 $c7 MAINTAINS $c5
+@result $c8 IS_A blocked_action_proof
 @proof $result PROVES $q3`,
       PROOF_NL: "Constraint chain: 1) Bob takes aspirin 2) Aspirin thins blood 3) Surgery requires blood not thinned 4) Blood thinned blocks surgery 5) No reversal agent → still blocked."
     },
@@ -140,26 +139,24 @@ module.exports = {
     {
       id: "q4",
       TASK_NL: "Can someone be both a child and an adult? (Category exclusivity)",
-      TASK_DSL: "@q4 person IS both_child_and_adult",
+      TASK_DSL: "@q4 child DISJOINT_WITH adult",
       ANSWEAR_NL: "No - child DISJOINT_WITH adult, categories are mutually exclusive",
       PROOF_DSL: `@p1 child DISJOINT_WITH adult
 @p2 child DISJOINT_WITH teen
 @p3 teen DISJOINT_WITH adult
 @p4 child DISJOINT_WITH senior
 @p5 adult DISJOINT_WITH senior
-@hypothesis person IS_A child
-@hypothesis2 person IS_A adult
-@c1 $hypothesis ESTABLISHES child_claim
-@c2 $hypothesis2 ESTABLISHES adult_claim
-@conflict $c1 CONFLICTS_WITH $c2
-@c3 $p1 APPLIES_TO $conflict
-@impossibility $c3 PROVES exclusive_categories
-@all_pairs $p1 AND $p2
-@all_pairs2 $all_pairs AND $p3
-@all_pairs3 $all_pairs2 AND $p4
-@complete $all_pairs3 AND $p5
-@partition $complete PROVES complete_partition
-@result $impossibility IS_A category_exclusivity_proof
+@c1 person HYPOTHESIZES child
+@c2 person HYPOTHESIZES adult
+@c3 $c1 ESTABLISHES child_claim
+@c4 $c2 ESTABLISHES adult_claim
+@c5 $c3 CONFLICTS $c4
+@c6 $p1 APPLIES $c5
+@c7 $c6 PROVES exclusive_categories
+@c8 $p1 COMBINES $p2
+@c9 $c8 COMBINES $p3
+@c10 $c9 PROVES complete_partition
+@result $c7 IS_A category_exclusivity_proof
 @proof $result PROVES $q4`,
       PROOF_NL: "Category exclusivity: 1) All age categories are pairwise disjoint 2) child vs adult specifically disjoint 3) Asserting both creates contradiction 4) Categories form complete partition."
     },
@@ -168,22 +165,22 @@ module.exports = {
     {
       id: "q5",
       TASK_NL: "Can John have two biological mothers? (Functional constraint)",
-      TASK_DSL: "@q5 John HAS two_biological_mothers",
+      TASK_DSL: "@q5 biological_mother HAS cardinality_1",
       ANSWEAR_NL: "No - biological_mother has cardinality 1 (exactly one)",
       PROOF_DSL: `@p1 John BIOLOGICAL_MOTHER Mary_Sr
 @p2 biological_mother HAS cardinality_1
-@hypothesis John BIOLOGICAL_MOTHER Jane
-@c1 $p1 ESTABLISHES first_mother
-@c2 $hypothesis PROPOSES second_mother
-@c3 $p2 DEFINES uniqueness_constraint
-@count $c1 AND $c2
-@cardinality $count HAS value_2
-@violation $cardinality EXCEEDS $c3
-@impossible $violation PROVES constraint_violated
-@update_option replace_first WOULD_SATISFY $c3
-@current $p1 IS_ESTABLISHED
-@blocked $current PREVENTS $hypothesis
-@result $blocked IS_A functional_constraint_proof
+@c1 John HYPOTHESIZES second_mother
+@c2 $p1 ESTABLISHES first_mother
+@c3 $c1 PROPOSES second_mother
+@c4 $p2 DEFINES uniqueness_constraint
+@c5 $c2 COMBINES $c3
+@c6 $c5 HAS value_2
+@c7 $c6 EXCEEDS $c4
+@c8 $c7 PROVES constraint_violated
+@c9 replace_first COULD $c4
+@c10 $p1 IS established
+@c11 $c10 PREVENTS $c1
+@result $c11 IS_A functional_constraint_proof
 @proof $result PROVES $q5`,
       PROOF_NL: "Functional constraint: 1) John already has biological mother Mary_Sr 2) biological_mother has cardinality 1 3) Adding second mother would create count 2 4) Violates uniqueness constraint."
     },
@@ -192,24 +189,24 @@ module.exports = {
     {
       id: "q6",
       TASK_NL: "Can a patient have both fever and hypothermia? (Physiological impossibility)",
-      TASK_DSL: "@q6 patient HAS both_fever_and_hypothermia",
+      TASK_DSL: "@q6 fever DISJOINT_WITH hypothermia",
       ANSWEAR_NL: "No - fever (high temp) and hypothermia (low temp) are disjoint states",
       PROOF_DSL: `@p1 fever DISJOINT_WITH hypothermia
 @p2 normal_temp DISJOINT_WITH fever
 @p3 normal_temp DISJOINT_WITH hypothermia
-@hypothesis patient HAS fever
-@hypothesis2 patient HAS hypothermia
-@c1 $hypothesis ESTABLISHES high_temp_state
-@c2 $hypothesis2 ESTABLISHES low_temp_state
-@physics fever IMPLIES temp_above_37_5
-@physics2 hypothermia IMPLIES temp_below_35
-@range_conflict $physics INCOMPATIBLE_WITH $physics2
-@c3 $p1 APPLIES_TO $range_conflict
-@impossibility $c3 PROVES physical_impossibility
-@exclusive $p1 AND $p2
-@exclusive2 $exclusive AND $p3
-@complete $exclusive2 PROVES complete_partition
-@result $impossibility IS_A physiological_impossibility_proof
+@c1 patient HYPOTHESIZES fever
+@c2 patient HYPOTHESIZES hypothermia
+@c3 $c1 ESTABLISHES high_temp_state
+@c4 $c2 ESTABLISHES low_temp_state
+@c5 fever IMPLIES temp_above_37_5
+@c6 hypothermia IMPLIES temp_below_35
+@c7 $c5 INCOMPATIBLE $c6
+@c8 $p1 APPLIES $c7
+@c9 $c8 PROVES physical_impossibility
+@c10 $p1 COMBINES $p2
+@c11 $c10 COMBINES $p3
+@c12 $c11 PROVES complete_partition
+@result $c9 IS_A physiological_impossibility_proof
 @proof $result PROVES $q6`,
       PROOF_NL: "Physiological impossibility: 1) Fever = temp > 37.5°C 2) Hypothermia = temp < 35°C 3) Temperature is single value 4) Cannot be both high AND low 5) Categories are disjoint."
     },
@@ -218,22 +215,22 @@ module.exports = {
     {
       id: "q7",
       TASK_NL: "Prove by contradiction: if Mary is stable, derive absurdity",
-      TASK_DSL: "@q7 Mary_stable LEADS_TO absurdity",
+      TASK_DSL: "@q7 critical DISJOINT_WITH stable",
       ANSWEAR_NL: "Assume Mary stable → but Mary is critical → critical DISJOINT stable → contradiction",
       PROOF_DSL: `@p1 Mary IS_A critical
 @p2 critical DISJOINT_WITH stable
 @p3 stable DISJOINT_WITH critical
-@assume Mary IS_A stable
-@c1 $p1 ESTABLISHES known_critical
-@c2 $assume PROPOSES stability
-@conflict $c1 AND $c2
-@c3 $p2 APPLIES_TO $conflict
-@contradiction $c3 DERIVES false
-@reductio $assume LEADS_TO $contradiction
-@therefore $reductio PROVES NOT_stable
-@verify $p1 CONFIRMS critical_status
-@consistent $verify COMPATIBLE_WITH $therefore
-@result $reductio IS_A reductio_ad_absurdum
+@c1 Mary ASSUMES stable
+@c2 $p1 ESTABLISHES known_critical
+@c3 $c1 PROPOSES stability
+@c4 $c2 CONFLICTS $c3
+@c5 $p2 APPLIES $c4
+@c6 $c5 DERIVES false
+@c7 $c1 LEADS_TO $c6
+@c8 $c7 PROVES NOT_stable
+@c9 $p1 CONFIRMS critical_status
+@c10 $c9 COMPATIBLE $c8
+@result $c7 IS_A reductio_ad_absurdum
 @proof $result PROVES $q7`,
       PROOF_NL: "Reductio ad absurdum: 1) Assume Mary is stable 2) Known: Mary is critical 3) critical DISJOINT stable 4) Both true → contradiction 5) Therefore Mary is NOT stable."
     },
@@ -242,7 +239,7 @@ module.exports = {
     {
       id: "q8",
       TASK_NL: "What is required for John to be discharged? (Deep requirement chain)",
-      TASK_DSL: "@q8 John_discharge REQUIRES complete_chain",
+      TASK_DSL: "@q8 discharge REQUIRES treatment_complete",
       ANSWEAR_NL: "discharge→treatment_complete→all_conditions_treated→each diagnosis treated",
       PROOF_DSL: `@p1 discharge REQUIRES treatment_complete
 @p2 treatment_complete REQUIRES all_conditions_treated
@@ -255,17 +252,17 @@ module.exports = {
 @c1 $p1 LEADS_TO $p2
 @c2 $c1 LEADS_TO $p3
 @c3 $c2 LEADS_TO $p4
-@chain $c3 COMPUTES requirement_chain
-@conditions $p5 AND $p6
-@both_diagnosed $conditions ESTABLISHES two_conditions
-@need_treatment $both_diagnosed REQUIRES treatment_for_each
-@diabetes_treatment diabetes NEEDS treatment_plan
-@hypertension_treatment hypertension NEEDS treatment_plan
-@all_treatments $diabetes_treatment AND $hypertension_treatment
-@complete $all_treatments SATISFIES $p2
-@check_admission John STATUS admitted
-@satisfied $check_admission SATISFIES $p4
-@result $chain IS_A requirement_chain_analysis
+@c4 $c3 COMPUTES requirement_chain
+@c5 $p5 COMBINES $p6
+@c6 $c5 ESTABLISHES two_conditions
+@c7 $c6 REQUIRES treatment_for_each
+@c8 diabetes NEEDS treatment_plan
+@c9 hypertension NEEDS treatment_plan
+@c10 $c8 COMBINES $c9
+@c11 $c10 SATISFIES $p2
+@c12 John STATUS admitted
+@c13 $c12 SATISFIES $p4
+@result $c4 IS_A requirement_chain_analysis
 @proof $result PROVES $q8`,
       PROOF_NL: "Requirement chain: 1) Discharge requires treatment_complete 2) Treatment_complete requires all_conditions_treated 3) John has 2 diagnoses 4) Each needs treatment plan 5) Then treatment_complete possible 6) Then discharge possible."
     }

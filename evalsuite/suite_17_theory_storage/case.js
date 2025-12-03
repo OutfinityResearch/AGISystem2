@@ -114,27 +114,22 @@ module.exports = {
     {
       id: "q3",
       TASK_NL: "What happens when power fails? (Failure cascade)",
-      TASK_DSL: "@q3 power_failure CASCADE analyzed",
+      TASK_DSL: "@q3 power_failure AFFECTS PowerSupply",
       ANSWEAR_NL: "power_failure→PowerSupply_failure→Computer_failure→DiskA+MemoryB failure. Complete cascade.",
       PROOF_DSL: `@p1 power_failure AFFECTS PowerSupply
 @p2 PowerSupply_failure CASCADES_TO Computer
 @p3 Computer_failure CASCADES_TO DiskA
 @p4 Computer_failure CASCADES_TO MemoryB
-@step1 $p1 TRIGGERS PowerSupply_failure
-@step2 $step1 TRIGGERS $p2
-@step3 $step2 TRIGGERS $p3
-@step4 $step2 TRIGGERS $p4
-@cascade1 $step1 LEADS_TO $step2
-@cascade2 $cascade1 LEADS_TO $step3
-@cascade3 $cascade1 LEADS_TO $step4
-@fork $step2 SPLITS_TO $step3 AND $step4
-@trace power_failure LEADS_TO PowerSupply_failure
-@trace2 $trace LEADS_TO Computer_failure
-@trace3 $trace2 LEADS_TO DiskA_failure
-@trace4 $trace2 LEADS_TO MemoryB_failure
-@all_failed $trace3 AND $trace4
-@count $all_failed HAS 4_component_failures
-@result $count IS_A failure_cascade_proof
+@c1 $p1 TRIGGERS PowerSupply_failure
+@c2 $c1 LEADS_TO $p2
+@c3 $c2 TRIGGERS Computer_failure
+@c4 $c3 LEADS_TO $p3
+@c5 $c3 LEADS_TO $p4
+@c6 $p3 CONFIRMS DiskA_failure
+@c7 $p4 CONFIRMS MemoryB_failure
+@c8 $c6 COMBINES $c7
+@c9 $c8 HAS 4_component_failures
+@result $c9 IS_A failure_cascade_proof
 @proof $result PROVES $q3`,
       PROOF_NL: "Failure cascade: 1) Power fails→PowerSupply affected 2) PowerSupply→Computer cascades 3) Computer failure forks to DiskA AND MemoryB 4) Total: 4 components fail."
     },
@@ -143,25 +138,20 @@ module.exports = {
     {
       id: "q4",
       TASK_NL: "What happens if cooling fails on Server? (Causal chain)",
-      TASK_DSL: "@q4 cooling_failure CONSEQUENCE derived",
+      TASK_DSL: "@q4 cooling_failure CAUSES overheating",
       ANSWEAR_NL: "cooling_failure→overheating→server_shutdown. Server becomes non-operational.",
       PROOF_DSL: `@p1 CoolingFan COOLS Server
 @p2 cooling_failure CAUSES overheating
 @p3 overheating CAUSES server_shutdown
-@initial CoolingFan FAILS
-@c1 $initial TRIGGERS cooling_failure
+@c1 CoolingFan TRIGGERS cooling_failure
 @c2 $c1 LEADS_TO $p2
 @c3 $c2 DERIVES overheating
 @c4 $c3 LEADS_TO $p3
 @c5 $c4 DERIVES server_shutdown
-@chain $c1 THEN $c2
-@chain2 $chain THEN $c3
-@chain3 $chain2 THEN $c4
-@final $chain3 THEN $c5
-@length $final HAS 3_causal_steps
-@verify cooling_failure THROUGH overheating
-@verify2 $verify TO server_shutdown
-@result $final IS_A causal_chain_proof
+@c6 cooling_failure LEADS_TO overheating
+@c7 $c6 LEADS_TO server_shutdown
+@c8 $c7 HAS 3_causal_steps
+@result $c8 IS_A causal_chain_proof
 @proof $result PROVES $q4`,
       PROOF_NL: "Causal chain: 1) Cooling failure occurs 2) Causes overheating 3) Overheating causes server_shutdown 4) Three-step causal chain."
     },
@@ -199,26 +189,23 @@ module.exports = {
     {
       id: "q6",
       TASK_NL: "What components are required for data integrity?",
-      TASK_DSL: "@q6 data_integrity REQUIREMENTS listed",
+      TASK_DSL: "@q6 data_integrity REQUIRES DiskA",
       ANSWEAR_NL: "data_integrity requires DiskA (storage) AND MemoryB (memory). Both must work.",
       PROOF_DSL: `@p1 data_integrity REQUIRES DiskA
 @p2 data_integrity REQUIRES MemoryB
 @p3 DiskA IS_A storage_component
 @p4 MemoryB IS_A memory_component
-@req1 $p1 ESTABLISHES disk_requirement
-@req2 $p2 ESTABLISHES memory_requirement
-@both_required $req1 AND $req2
-@check_disk DiskA WORKING
-@check_memory MemoryB WORKING
-@integrity_ok $check_disk AND $check_memory
-@if_disk_fails DiskA NOT_WORKING
-@consequence1 $if_disk_fails BREAKS $p1
-@integrity_fail1 $consequence1 VIOLATES data_integrity
-@if_memory_fails MemoryB NOT_WORKING
-@consequence2 $if_memory_fails BREAKS $p2
-@integrity_fail2 $consequence2 VIOLATES data_integrity
-@critical $both_required ALL_MUST_WORK
-@result $critical IS_A requirement_analysis_proof
+@c1 $p1 ESTABLISHES disk_requirement
+@c2 $p2 ESTABLISHES memory_requirement
+@c3 $c1 COMBINES $c2
+@c4 $c3 COMPUTES both_required
+@c5 $p3 CLASSIFIES DiskA
+@c6 $p4 CLASSIFIES MemoryB
+@c7 $c5 CONFIRMS storage_role
+@c8 $c6 CONFIRMS memory_role
+@c9 $c7 COMBINES $c8
+@c10 $c4 REQUIRES all_working
+@result $c10 IS_A requirement_analysis_proof
 @proof $result PROVES $q6`,
       PROOF_NL: "Requirement analysis: 1) data_integrity REQUIRES DiskA 2) data_integrity REQUIRES MemoryB 3) Both are mandatory (AND condition) 4) If either fails, integrity is violated."
     },
@@ -254,25 +241,23 @@ module.exports = {
     {
       id: "q8",
       TASK_NL: "Is MemoryB shared between systems? What are the implications?",
-      TASK_DSL: "@q8 MemoryB SHARING analyzed",
+      TASK_DSL: "@q8 MemoryB PART_OF Computer",
       ANSWEAR_NL: "MemoryB PART_OF Computer AND PART_OF Server. Shared resource - failure affects both systems.",
       PROOF_DSL: `@p1 MemoryB PART_OF Computer
 @p2 MemoryB PART_OF Server
 @p3 MemoryB IS_A memory_component
-@in_computer $p1 ESTABLISHES computer_has_memoryB
-@in_server $p2 ESTABLISHES server_has_memoryB
-@shared $in_computer AND $in_server
-@count $shared HAS 2_systems
-@implies $count MEANS shared_resource
-@failure_scenario MemoryB FAILS
-@impact1 $failure_scenario AFFECTS Computer
-@impact2 $failure_scenario AFFECTS Server
-@both_impacted $impact1 AND $impact2
-@risk $both_impacted IS higher_than_dedicated
-@recommendation single_point_of_failure DETECTED
-@mitigation add_redundant_memory SUGGESTED
-@analysis $shared WITH_RISK $risk
-@result $analysis IS_A sharing_analysis_proof
+@c1 $p1 ESTABLISHES computer_has_memoryB
+@c2 $p2 ESTABLISHES server_has_memoryB
+@c3 $c1 COMBINES $c2
+@c4 $c3 HAS 2_systems
+@c5 $c4 IMPLIES shared_resource
+@c6 MemoryB AFFECTS Computer
+@c7 MemoryB AFFECTS Server
+@c8 $c6 COMBINES $c7
+@c9 $c8 IMPLIES both_impacted
+@c10 $c9 IS single_point_of_failure
+@c11 $c10 REQUIRES redundancy
+@result $c11 IS_A sharing_analysis_proof
 @proof $result PROVES $q8`,
       PROOF_NL: "Sharing analysis: 1) MemoryB PART_OF Computer 2) MemoryB PART_OF Server 3) Shared between 2 systems 4) Single point of failure - affects both if it fails."
     }

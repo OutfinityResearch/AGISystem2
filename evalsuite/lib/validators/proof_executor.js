@@ -146,6 +146,13 @@ function executeProof({ theoryDSL, taskDSL, proofDSL, taskId }) {
     // depth=1 means direct fact, depth>1 means derived via transitive chain
     const method = depth === 1 ? 'direct' : (depth > 1 ? 'transitive' : (askResult?.method || 'unknown'));
 
+    // Extract search statistics from provenance (total work done by reasoner)
+    const stepsExecuted = askResult?.provenance?.stepsExecuted || 1;
+    const nodesVisited = askResult?.provenance?.nodesVisited || 1;
+    const edgesExplored = askResult?.provenance?.edgesExplored || 0;
+    const chainLength = askResult?.provenance?.chainLength || depth || 1;
+    const trace = askResult?.provenance?.trace || [];  // Full exploration trace
+
     if (isTrue) {
       result.factsVerified.push({
         variable: fact.variable,
@@ -153,6 +160,11 @@ function executeProof({ theoryDSL, taskDSL, proofDSL, taskId }) {
         truth: truth,
         method: method,
         depth: depth,
+        stepsExecuted: stepsExecuted,  // BFS steps (total reasoning work)
+        nodesVisited: nodesVisited,    // Graph nodes explored
+        edgesExplored: edgesExplored,  // Relations tried
+        chainLength: chainLength,       // Path length in result
+        trace: trace,                   // Full exploration trace for debugging
         verified: true
       });
     } else {
@@ -161,6 +173,10 @@ function executeProof({ theoryDSL, taskDSL, proofDSL, taskId }) {
         fact: factTriple,
         truth: truth,
         reason: askResult?.provenance?.reason || 'Not found in KB',
+        stepsExecuted: stepsExecuted,  // Even failed searches do work
+        nodesVisited: nodesVisited,
+        edgesExplored: edgesExplored,
+        trace: trace,                   // Trace even for failed searches
         verified: false
       });
     }

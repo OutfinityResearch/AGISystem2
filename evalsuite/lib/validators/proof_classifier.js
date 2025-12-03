@@ -279,8 +279,9 @@ function classifyTestCase(queryResults, testCase) {
     avgDepth: 0,
     maxDepth: 0,
     // NEW: Arrays for per-task metrics
-    reasoningSteps: [],    // Real reasoning depth from askDSL per task
-    proofLengths: [],      // PROOF_DSL line count per task
+    reasoningSteps: [],    // Sum of inference chain depths per task (hops in transitive queries)
+    proofLengths: [],      // PROOF_DSL line count per task (specification size)
+    factsVerifiedCounts: [], // Number of facts actually verified per task
     maxReasoningDepths: [], // Max depth among verified facts per task
     qualitySummary: ''
   };
@@ -324,18 +325,35 @@ function classifyTestCase(queryResults, testCase) {
     const proofLines = (task.PROOF_DSL || '').split('\n').filter(l => l.trim() && !l.trim().startsWith('#'));
     summary.proofLengths.push(proofLines.length);
 
-    // reasoningSteps = sum of actual reasoning depths from verified facts
-    // maxReasoningDepth = max depth among all verified facts for this task
-    let taskReasoningSteps = 0;
-    let taskMaxDepth = 0;
+    // Collect comprehensive reasoning metrics from verified/missing facts
+    let taskReasoningSteps = 0;  // Sum of stepsExecuted (actual BFS work)
+    let taskEdgesExplored = 0;   // Sum of edgesExplored (relations tried)
+    let taskNodesVisited = 0;    // Sum of nodesVisited (graph nodes)
+    let taskMaxDepth = 0;        // Max chain depth
+    let taskFactsCount = 0;      // Number of facts verified
+
+    // Count from verified facts
     if (queryResult.proofResult?.factsVerified) {
       for (const fact of queryResult.proofResult.factsVerified) {
+        taskReasoningSteps += fact.stepsExecuted || 1;
+        taskEdgesExplored += fact.edgesExplored || 0;
+        taskNodesVisited += fact.nodesVisited || 1;
         const depth = fact.depth || 1;
-        taskReasoningSteps += depth;
         if (depth > taskMaxDepth) taskMaxDepth = depth;
+        taskFactsCount++;
       }
     }
+    // Also count work from missing facts (failed searches still do work!)
+    if (queryResult.proofResult?.factsMissing) {
+      for (const fact of queryResult.proofResult.factsMissing) {
+        taskReasoningSteps += fact.stepsExecuted || 1;
+        taskEdgesExplored += fact.edgesExplored || 0;
+        taskNodesVisited += fact.nodesVisited || 1;
+      }
+    }
+
     summary.reasoningSteps.push(taskReasoningSteps);
+    summary.factsVerifiedCounts.push(taskFactsCount);
     summary.maxReasoningDepths.push(taskMaxDepth);
   }
 

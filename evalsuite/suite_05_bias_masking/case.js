@@ -51,6 +51,8 @@ module.exports = {
     "Frank HAS good_performance",
     "level_2_employee EARNS pay_band_B",
     "level_3_employee EARNS pay_band_C",
+    // Pay band comparison
+    "pay_band_C GREATER_THAN pay_band_B",
     // Content evaluation
     "factual_claim INDEPENDENT_OF political_framing",
     "factual_claim INDEPENDENT_OF emotional_language",

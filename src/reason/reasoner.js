@@ -656,10 +656,13 @@ class Reasoner {
 
     let bestResult = null;
 
+    // Trace: collect all relations explored for debugging/explainability
+    const trace = [];  // Array of { from, to, relation, existence, followed: boolean }
+
     while (queue.length > 0) {
       steps += 1;
       if (steps > maxSteps) {
-        return bestResult || {
+        const timeoutResult = bestResult || {
           truth: 'UNKNOWN',
           confidence: 0,
           existence: 0,
@@ -672,6 +675,9 @@ class Reasoner {
             timestamp: new Date().toISOString()
           }
         };
+        // Include trace even on timeout
+        timeoutResult.provenance.trace = trace;
+        return timeoutResult;
       }
 
       // Sort queue by pathExistence descending (explore best paths first)
@@ -733,10 +739,23 @@ class Reasoner {
 
         // New path existence is min of current path and this edge
         const newPathExistence = Math.min(pathExistence, factExistence);
+        const nextNode = norm(fact.object);
+
+        // Record this edge exploration in trace
+        const followed = newPathExistence >= minExistence;
+        trace.push({
+          from: current,
+          to: nextNode,
+          relation: fact.relation,
+          existence: factExistence,
+          pathExistence: newPathExistence,
+          followed: followed,
+          reason: !followed ? 'below_threshold' :
+                  (visited.get(nextNode)?.bestExistence >= newPathExistence ? 'already_visited_better' : 'queued')
+        });
 
         // Only follow if above minimum threshold
-        if (newPathExistence >= minExistence) {
-          const nextNode = norm(fact.object);
+        if (followed) {
           const nextVisited = visited.get(nextNode);
 
           // Only queue if we have a better path
@@ -754,6 +773,10 @@ class Reasoner {
 
     // Return best result if found
     if (bestResult) {
+      // Add trace to successful result
+      bestResult.provenance.trace = trace;
+      bestResult.provenance.nodesVisited = visited.size;
+      bestResult.provenance.edgesExplored = trace.length;
       return bestResult;
     }
 
@@ -770,6 +793,8 @@ class Reasoner {
           reason: 'No IS_A path found from subject to target',
           stepsExecuted: steps,
           nodesVisited: visited.size,
+          edgesExplored: trace.length,
+          trace: trace,  // Full exploration trace for debugging
           timestamp: new Date().toISOString()
         }
       };
@@ -783,6 +808,10 @@ class Reasoner {
         activeTheories,
         query: { subject, relation: 'IS_A', object },
         reason: 'Subject not found in knowledge base',
+        stepsExecuted: 0,
+        nodesVisited: 0,
+        edgesExplored: 0,
+        trace: [],  // Empty trace - subject not found
         timestamp: new Date().toISOString()
       }
     };
@@ -975,6 +1004,15 @@ class Reasoner {
     const sNorm = norm(subject);
     const oNorm = norm(object);
 
+    // Create base provenance for direct fact lookups
+    const baseProvenance = {
+      query: { subject, relation, object },
+      stepsExecuted: 1,  // Direct lookups = 1 step
+      nodesVisited: 1,
+      edgesExplored: 0,
+      timestamp: new Date().toISOString()
+    };
+
     // Check for direct fact first (even for computable relations)
     const exists = facts.some((f) => {
       const fSub = norm(f.subject);
@@ -984,7 +1022,13 @@ class Reasoner {
     });
 
     if (exists) {
-      return { truth: 'TRUE_CERTAIN', confidence: 1.0, method: 'direct' };
+      return {
+        truth: 'TRUE_CERTAIN',
+        confidence: 1.0,
+        method: 'direct',
+        depth: 1,
+        provenance: { ...baseProvenance, reason: 'Direct fact found' }
+      };
     }
 
     // Check if this is a computable relation - delegate to plugin
@@ -1009,7 +1053,13 @@ class Reasoner {
     });
 
     if (hasNegation) {
-      return { truth: 'FALSE', confidence: 1.0, method: 'explicit_negation' };
+      return {
+        truth: 'FALSE',
+        confidence: 1.0,
+        method: 'explicit_negation',
+        depth: 1,
+        provenance: { ...baseProvenance, reason: 'Explicit negation found' }
+      };
     }
 
     // Check if PROHIBITED_FROM exists for permission-related queries
@@ -1021,7 +1071,13 @@ class Reasoner {
         return fSub === sNorm && fRel === 'PROHIBITED_FROM' && fObj === oNorm;
       });
       if (isProhibited) {
-        return { truth: 'FALSE', confidence: 1.0, method: 'prohibited' };
+        return {
+          truth: 'FALSE',
+          confidence: 1.0,
+          method: 'prohibited',
+          depth: 1,
+          provenance: { ...baseProvenance, reason: 'Prohibited relation found' }
+        };
       }
     }
 
@@ -1035,7 +1091,13 @@ class Reasoner {
         return fSub === oNorm && fRel === relation && fObj === sNorm;
       });
       if (symmetricExists) {
-        return { truth: 'TRUE_CERTAIN', confidence: 1.0, method: 'symmetric' };
+        return {
+          truth: 'TRUE_CERTAIN',
+          confidence: 1.0,
+          method: 'symmetric',
+          depth: 1,
+          provenance: { ...baseProvenance, reason: 'Symmetric relation found' }
+        };
       }
     }
 
@@ -1049,7 +1111,14 @@ class Reasoner {
         return fSub === oNorm && fRel === inverseRel && fObj === sNorm;
       });
       if (inverseExists) {
-        return { truth: 'TRUE_CERTAIN', confidence: 1.0, method: 'inverse', inverseRelation: inverseRel };
+        return {
+          truth: 'TRUE_CERTAIN',
+          confidence: 1.0,
+          method: 'inverse',
+          inverseRelation: inverseRel,
+          depth: 1,
+          provenance: { ...baseProvenance, reason: 'Inverse relation found' }
+        };
       }
     }
 
@@ -1062,7 +1131,12 @@ class Reasoner {
     return {
       truth: 'UNKNOWN',
       confidence: 0,
-      method: subjectExists ? 'no_evidence' : 'unknown_subject'
+      method: subjectExists ? 'no_evidence' : 'unknown_subject',
+      depth: 0,
+      provenance: {
+        ...baseProvenance,
+        reason: subjectExists ? 'No evidence found' : 'Unknown subject'
+      }
     };
   }
 

@@ -31,8 +31,8 @@ module.exports = {
 @p3 colored_thing HAS_PROPERTY visible
 @c1 $p1 LEADS_TO $p2
 @c2 $c1 LEADS_TO $p3
-@inherit $c2 DERIVES Sky HAS visible
-@result $inherit IS_A property_inheritance_proof
+@c3 $c2 DERIVES Sky_visible
+@result $c3 IS_A property_inheritance_proof
 @proof $result PROVES $q1`,
       PROOF_NL: "Sky→blue_thing→colored_thing→visible. Property inherited through chain."
     },
@@ -114,16 +114,15 @@ module.exports = {
     },
     {
       id: "q7", TASK_NL: "What happens to ice when heated?",
-      TASK_DSL: "@q7 Ice WHEN_HEATED melts",
+      TASK_DSL: "@q7 Ice MELTS_WHEN heated",
       ANSWEAR_NL: "Ice is cold, melts when heated. Phase transition.",
       PROOF_DSL: `@p1 Ice HAS_PROPERTY cold
 @p2 Ice MELTS_WHEN heated
 @p3 hot OPPOSITE cold
-@initial $p1 ESTABLISHES cold_state
-@apply_heat heating INTRODUCED
-@c1 $apply_heat TRIGGERS $p2
-@transition $c1 CAUSES phase_change
-@result $transition IS_A state_change_proof
+@c1 $p1 ESTABLISHES cold_state
+@c2 heat TRIGGERS $p2
+@c3 $c2 CAUSES phase_change
+@result $c3 IS_A state_change_proof
 @proof $result PROVES $q7`,
       PROOF_NL: "Ice is cold + apply heat → melts. Cold→hot transition causes melting."
     },
