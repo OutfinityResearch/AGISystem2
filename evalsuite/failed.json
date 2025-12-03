@@ -4,53 +4,42 @@
       "id": "suite_01_ontology",
       "name": "Comprehensive Ontology & Taxonomy",
       "failedQueries": [
-        "q1",
-        "q2",
-        "q3",
-        "q4",
-        "q5",
-        "q6",
-        "q7",
-        "q8"
+        "q5"
       ],
-      "lastRun": "2025-12-03T11:49:08.952Z"
+      "lastRun": "2025-12-03T17:16:47.346Z"
     },
     {
       "id": "suite_02_causation",
       "name": "Comprehensive Causation & Abduction",
       "failedQueries": [
-        "q3",
-        "q8"
+        "q2"
       ],
-      "lastRun": "2025-12-03T11:13:14.222Z"
+      "lastRun": "2025-12-03T17:18:55.095Z"
     },
     {
       "id": "suite_03_deontic",
       "name": "Comprehensive Deontic Rules & Permissions",
       "failedQueries": [
         "q2",
-        "q3",
-        "q6"
+        "q8"
       ],
-      "lastRun": "2025-12-03T13:36:34.663Z"
+      "lastRun": "2025-12-03T17:18:55.095Z"
     },
     {
       "id": "suite_04_counterfactual",
       "name": "Comprehensive Counterfactual & Temporal",
       "failedQueries": [
-        "q4",
-        "q5",
-        "q7"
+        "q5"
       ],
-      "lastRun": "2025-12-03T13:36:34.663Z"
+      "lastRun": "2025-12-03T17:18:55.095Z"
     },
     {
       "id": "suite_05_bias_masking",
       "name": "Comprehensive Bias Control & Masking",
       "failedQueries": [
-        "q2"
+        "q7"
       ],
-      "lastRun": "2025-12-03T11:26:40.115Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_06_analogic_symmetric",
@@ -66,48 +55,76 @@
     },
     {
       "id": "suite_07_compositional_rules",
-      "name": "Compositional Rules & Forward Chaining",
+      "name": "Comprehensive Compositional Rules & Forward Chaining",
       "failedQueries": [
-        "q6",
-        "q7"
+        "q4",
+        "q5",
+        "q8"
       ],
-      "lastRun": "2025-12-03T11:15:51.315Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_08_default_reasoning",
-      "name": "Default Reasoning with Exceptions (Non-Monotonic Logic)",
+      "name": "Comprehensive Default Reasoning with Exceptions (Non-Monotonic Logic)",
       "failedQueries": [
-        "q1"
+        "q2",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-03T13:36:34.663Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_09_contradictions",
-      "name": "Contradiction Detection & Constraint Validation",
+      "name": "Comprehensive Contradiction Detection & Constraint Reasoning",
       "failedQueries": [
         "q1",
         "q2",
         "q3",
-        "q5",
-        "q6",
-        "q7",
-        "q8"
+        "q5"
       ],
-      "lastRun": "2025-12-03T11:17:50.493Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_10_theory_layers",
-      "name": "Theory Layering & Advanced Counterfactual Reasoning",
+      "name": "Comprehensive Theory Layering & Counterfactual Worlds",
       "failedQueries": [
-        "q2",
-        "q4",
-        "q7"
+        "q5",
+        "q8"
       ],
-      "lastRun": "2025-12-03T13:36:34.663Z"
+      "lastRun": "2025-12-03T18:56:54.150Z"
+    },
+    {
+      "id": "suite_11_recursive_small",
+      "name": "Comprehensive Recursive Planning & State Space Search",
+      "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-03T18:57:17.229Z"
+    },
+    {
+      "id": "suite_12_recursive_large",
+      "name": "Comprehensive Recursive Computation at Scale",
+      "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_13_variable_composition",
-      "name": "Variable Chaining & Multi-Step Composition",
+      "name": "Comprehensive Variable Composition & Multi-Domain Reasoning",
       "failedQueries": [
         "q1",
         "q2",
@@ -115,167 +132,222 @@
         "q5",
         "q6",
         "q7",
-        "q8",
-        "q9",
-        "q10",
-        "q11",
-        "q12"
+        "q8"
       ],
-      "lastRun": "2025-12-03T11:17:50.493Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_14_error_edge_cases",
-      "name": "Error Handling & Edge Cases",
+      "name": "Comprehensive Error Handling & Boundary Reasoning",
       "failedQueries": [
+        "q2",
         "q4",
-        "q6",
-        "q8",
-        "q9",
-        "q10",
-        "q12"
+        "q5",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-03T13:36:34.663Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_15_masks",
-      "name": "Masking & Dimension Registry",
+      "name": "Comprehensive Masking, Perspectives & Multi-Dimensional Classification",
       "failedQueries": [
-        "q1",
-        "q2",
-        "q3",
         "q4",
-        "q5",
-        "q7"
+        "q6",
+        "q8"
       ],
-      "lastRun": "2025-12-03T11:17:50.493Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_16_memory_forgetting",
-      "name": "Memory Management: Protect & Forget",
+      "name": "Comprehensive Memory Management & Retention Policies",
       "failedQueries": [
         "q2",
+        "q3",
         "q4",
+        "q5",
+        "q6",
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T11:22:13.029Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_17_theory_storage",
-      "name": "Theory Storage: Save, Retract, Reload",
+      "name": "Comprehensive Theory Storage & Hardware Dependency Reasoning",
       "failedQueries": [
-        "q1",
-        "q2",
         "q3",
         "q4",
-        "q5",
-        "q7",
+        "q6",
         "q8"
       ],
-      "lastRun": "2025-12-03T11:17:50.493Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_18_polarity_decision",
-      "name": "Polarity Decision with FACTS_MATCHING",
+      "name": "Comprehensive Polarity Decision & Regulatory Conflict Resolution",
       "failedQueries": [
-        "q1",
         "q2",
         "q3",
-        "q4",
         "q5",
         "q6",
-        "q7",
-        "q8"
+        "q7"
       ],
-      "lastRun": "2025-12-03T11:17:50.493Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_19_output_format",
-      "name": "Output Formatting: TO_NATURAL and TO_JSON",
+      "name": "Comprehensive Output Format & Physical Property Reasoning",
       "failedQueries": [
         "q1",
-        "q2",
-        "q3",
-        "q4",
-        "q5",
-        "q6",
-        "q7",
-        "q8"
+        "q7"
       ],
-      "lastRun": "2025-12-03T11:17:50.493Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_20_format_summarize",
-      "name": "FORMAT & SUMMARIZE with FACTS_MATCHING",
+      "name": "Comprehensive Format & Summarize - Category Hierarchy Reasoning",
       "failedQueries": [
-        "q1",
-        "q2",
-        "q4",
+        "q3",
         "q6",
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T11:20:58.691Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_21_boost_forget",
-      "name": "Boost Before Forgetting",
+      "name": "Comprehensive Boost/Forget - Priority Inheritance & Decay",
       "failedQueries": [
-        "q2",
-        "q4",
+        "q1",
+        "q3",
+        "q5",
+        "q6",
+        "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T11:22:13.029Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_22_merge_theory_patch",
-      "name": "Merge a Saved Patch into the Base Theory",
+      "name": "Comprehensive Merge Theory - Component Compatibility & Power Analysis",
       "failedQueries": [
         "q1",
         "q2",
         "q3",
         "q4",
         "q5",
+        "q6",
         "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T11:17:50.493Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_23_summarize_perspective",
-      "name": "Structured Report Generation - Climate Policy Analysis",
+      "name": "Comprehensive Climate Policy - Causal Chain Analysis",
+      "failedQueries": [
+        "q6",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-03T18:56:17.864Z"
+    },
+    {
+      "id": "suite_24_expand_essay",
+      "name": "Comprehensive AI Evolution - Timeline & Capability Analysis",
       "failedQueries": [
         "q1",
-        "q2",
-        "q3",
         "q4",
-        "q5"
+        "q6",
+        "q7",
+        "q8"
       ],
-      "lastRun": "2025-12-03T11:20:58.691Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
     },
     {
       "id": "suite_25_theory_management",
-      "name": "Theory Stack Management and Hypothetical Reasoning",
+      "name": "Comprehensive Theory Management - Company Access Control",
       "failedQueries": [
         "q2",
         "q3",
         "q4",
         "q5",
         "q6",
+        "q7",
         "q8"
       ],
-      "lastRun": "2025-12-03T11:20:58.691Z"
+      "lastRun": "2025-12-03T18:56:17.864Z"
+    },
+    {
+      "id": "suite_26_tool_planning",
+      "name": "Comprehensive Tool Planning - Pipeline Dependency Analysis",
+      "failedQueries": [
+        "q1",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-03T18:56:17.864Z"
+    },
+    {
+      "id": "suite_27_workflow_planning",
+      "name": "Comprehensive CI/CD Pipeline - Dependency Chain Analysis",
+      "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-03T18:46:46.176Z"
+    },
+    {
+      "id": "suite_28_api_orchestration",
+      "name": "Comprehensive API Orchestration - E-Commerce Flow Analysis",
+      "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-03T18:37:44.291Z"
+    },
+    {
+      "id": "suite_29_task_decomposition",
+      "name": "Comprehensive Recipe Execution - Task Dependency Analysis",
+      "failedQueries": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8"
+      ],
+      "lastRun": "2025-12-03T18:37:44.291Z"
     },
     {
       "id": "suite_30_resource_planning",
-      "name": "Resource Planning - Cloud Infrastructure Provisioning",
+      "name": "Comprehensive Cloud Infrastructure - Dependency & Cost Analysis",
       "failedQueries": [
         "q8"
       ],
-      "lastRun": "2025-12-03T11:26:40.775Z"
+      "lastRun": "2025-12-03T18:46:06.354Z"
     }
   ],
-  "lastUpdated": "2025-12-03T13:36:34.664Z",
+  "lastUpdated": "2025-12-03T18:57:17.235Z",
   "rangeInfo": {
     "lastFrom": null,
     "lastTo": null

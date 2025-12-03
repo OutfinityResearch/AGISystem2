@@ -29,7 +29,29 @@ This document defines the User Requirements for implementing Trustworthy AI capa
 
 No exceptions. No special operators (`?`, `IF THEN`, `BEGIN END` blocks outside macros). Hooks, queries, conditions - everything is expressed as relations/facts.
 
-### 1.3 Scope
+### 1.3 API and Mode Model
+
+The system provides two API entry points that set the **initial** engine mode:
+
+| API Method | Initial Mode | Default Behavior |
+|------------|--------------|------------------|
+| `session.run(dsl)` | LEARNING | Creates facts with CERTAIN existence |
+| `session.ask(query)` | QUERY | Read-only, derives, returns existence |
+
+**Internal modes can be switched** during execution via DSL relations:
+
+```sys2dsl
+@m1 session SET_MODE learning   # switch to LEARNING
+@m2 session SET_MODE query      # switch to QUERY
+@m3 session GET_MODE any        # read current mode
+```
+
+This allows flexible workflows:
+- Start with `run()` in LEARNING mode
+- Switch to QUERY mode for read-only operations
+- Switch back to LEARNING to add more facts
+
+### 1.4 Scope
 
 This URS covers:
 
@@ -96,29 +118,50 @@ Result: A IS_A C (existence = min(127,64) capped at 64 = 64)
 - Facts added receive existence = CERTAIN (+127)
 - This is the "teaching" mode - trusted input
 - Theory loading uses LEARNING mode
+- `session.run()` starts in this mode
 
 **DSL**:
 ```sys2dsl
+# Explicit mode switch (if needed)
 @m1 session SET_MODE learning
 @f1 Dog IS_A Mammal
 # f1 gets existence = 127
 ```
 
-#### URS-TAI-011: Reasoning Mode
+#### URS-TAI-011: Query Mode
 
-**Requirement**: In REASONING mode:
-- Facts added receive existence = UNPROVEN (-64)
-- The system attempts to demonstrate (prove) these facts
-- If demonstrated, existence upgrades to DEMONSTRATED (+64)
+**Requirement**: In QUERY mode:
+- Read-only operations - does NOT create facts
+- Derives facts via transitive reasoning
+- Returns existence level of found/derived facts
+- Returns UNKNOWN for missing facts (open-world)
+- `session.ask()` starts in this mode
 
 **DSL**:
 ```sys2dsl
-@m1 session SET_MODE reasoning
-@h1 Platypus IS_A Mammal
-# h1 gets existence = -64, needs demonstration
+# Switch to query mode for read-only section
+@m1 session SET_MODE query
+# Any assertions in this mode are blocked or ignored
 ```
 
-#### URS-TAI-012: Mode-Independent Variants
+#### URS-TAI-012: Mode Switching
+
+**Requirement**: Modes can be switched during execution:
+
+```sys2dsl
+# Start in learning (via run())
+@f1 Dog IS_A Mammal           # created with CERTAIN
+
+# Switch to query mode
+@m1 session SET_MODE query
+# ... read-only operations ...
+
+# Switch back to learning
+@m2 session SET_MODE learning
+@f2 Cat IS_A Mammal           # created with CERTAIN
+```
+
+#### URS-TAI-013: Mode-Independent Variants
 
 **Requirement**: Explicit existence variants SHALL override mode defaults:
 

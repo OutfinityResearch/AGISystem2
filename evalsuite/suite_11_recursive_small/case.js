@@ -1,124 +1,210 @@
 /**
- * Test Case: Recursive Planning Problems - Small Scale
- * Tests recursive reasoning with classic AI problems: Wolf-Goat-Cabbage river crossing and Towers of Hanoi with 3-4 disks. These problems require planning, constraint satisfaction, and recursive decomposition.
- * Version: 3.0
+ * Test Case: Comprehensive Recursive Planning & State Space Search
+ * Tests recursive problem solving, constraint propagation, backtracking search, and optimal path finding
+ * Version: 5.1 - Fixed PROOF_DSL format (strict triples)
  */
-
 module.exports = {
   id: "suite_11_recursive_small",
-  name: "Recursive Planning Problems - Small Scale",
-  description: "Tests recursive reasoning with classic AI problems: Wolf-Goat-Cabbage river crossing and Towers of Hanoi with 3-4 disks. These problems require planning, constraint satisfaction, and recursive decomposition.",
-  theory: {
-    natural_language: "Wolf-Goat-Cabbage Problem: A farmer needs to cross a river with a wolf, a goat, and a cabbage. The boat can only carry the farmer and one item at a time. Constraints: If left alone without the farmer, the wolf will eat the goat. If left alone without the farmer, the goat will eat the cabbage. The wolf will not eat the cabbage. Goal: Get all three items across safely. Initial state: All on left bank. Towers of Hanoi (3 disks): Three pegs named A, B, C. Three disks of different sizes: small, medium, large. Initial state: All disks on peg A (large at bottom, small on top). Goal: Move all disks to peg C. Rules: Only one disk can be moved at a time. Only the top disk of a stack can be moved. A larger disk cannot be placed on a smaller disk. Minimum moves for 3 disks: 7 moves (2^n - 1 formula).",
-    expected_facts: [
-          "wolf EATS goat",
-          "goat EATS cabbage",
-          "wolf NOT_EATS cabbage",
-          "wolf_and_goat_alone CAUSES goat_eaten",
-          "goat_and_cabbage_alone CAUSES cabbage_eaten",
-          "wolf_and_cabbage_alone IS safe",
-          "first_move IS farmer_takes_goat",
-          "crossing_4 REQUIRES bring_goat_back",
-          "wolf_goat_cabbage HAS_SOLUTION 7_crossings",
-          "wolf_goat_cabbage NOT_SOLVABLE_IN less_than_7",
-          "hanoi_3_disks REQUIRES 7_moves",
-          "hanoi_4_disks REQUIRES 15_moves",
-          "hanoi_n_disks FORMULA 2_power_n_minus_1",
-          "disk_small SMALLER_THAN disk_medium",
-          "disk_medium SMALLER_THAN disk_large",
-          "large_on_small IS forbidden",
-          "hanoi_rule IS move_only_top_disk",
-          "hanoi RECURSIVE_PATTERN move_n_minus_1_then_largest_then_n_minus_1"
-    ]
-  },
-  queries: [
+  name: "Comprehensive Recursive Planning & State Space Search",
+
+  theory_NL: "Wolf-Goat-Cabbage problem with full state space. States: L=left bank, R=right bank. Each entity (farmer F, wolf W, goat G, cabbage C) has position. Constraints: W+G alone (no F) → G eaten. G+C alone (no F) → C eaten. W+C alone is safe. Boat capacity: F + one item. Goal: all on R. Solution requires 7 crossings. State space search with backtracking. Towers of Hanoi: 3 pegs, n disks. Rules: move one disk, top only, larger cannot go on smaller. Formula: 2^n-1 moves. Recursive pattern: move n-1 to auxiliary, move largest to target, move n-1 from auxiliary to target. Path planning: grid with obstacles, find shortest path using BFS. Backtrack on dead ends.",
+
+  theory_DSL: [
+    "wolf EATS goat",
+    "goat EATS cabbage",
+    "wolf NOT_EATS cabbage",
+    "farmer REQUIRED_FOR crossing",
+    "boat CAPACITY farmer_plus_one",
+    "wolf_goat_alone CAUSES goat_eaten",
+    "goat_cabbage_alone CAUSES cabbage_eaten",
+    "wolf_cabbage_alone IS safe",
+    "initial_state ALL_ON left_bank",
+    "goal_state ALL_ON right_bank",
+    "solution HAS 7_crossings",
+    "crossing_1 IS take_goat_right",
+    "crossing_2 IS return_alone",
+    "crossing_3 IS take_wolf_right",
+    "crossing_4 IS bring_goat_back",
+    "crossing_5 IS take_cabbage_right",
+    "crossing_6 IS return_alone",
+    "crossing_7 IS take_goat_right",
+    "valid_state HAS no_violations",
+    "invalid_state HAS constraint_violation",
+    "dead_end REQUIRES backtrack",
+    "hanoi_3_disks REQUIRES 7_moves",
+    "hanoi_formula IS 2_power_n_minus_1",
+    "disk_small SMALLER_THAN disk_medium",
+    "disk_medium SMALLER_THAN disk_large",
+    "large_on_small IS forbidden",
+    "BFS EXPLORES level_by_level",
+    "DFS EXPLORES depth_first",
+    "backtrack UNDOES last_move"
+  ],
+
+  tasks: [
     {
       id: "q1",
-      natural_language: "In the wolf-goat-cabbage problem, what happens if the farmer leaves the wolf and goat alone?",
-      expected_dsl: `@q1 wolf_and_goat_alone CAUSES goat_eaten`,
-      expected_answer: {
-        natural_language: "If the farmer leaves the wolf and goat alone on either bank, the wolf will eat the goat. This is a constraint that must be avoided.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Direct constraint: wolf eats goat when farmer absent",
-        existence: "positive"
-      }
+      TASK_NL: "Why must the farmer take the goat first? (Constraint-based reasoning)",
+      TASK_DSL: "@q1 first_move MUST_BE take_goat",
+      ANSWEAR_NL: "Taking wolf or cabbage first leaves goat with the other → violation. Goat is the only safe first choice.",
+      PROOF_DSL: `@p1 wolf_goat_alone CAUSES goat_eaten
+@p2 goat_cabbage_alone CAUSES cabbage_eaten
+@p3 wolf_cabbage_alone IS safe
+@try1 take_wolf LEAVES goat_cabbage
+@c1 $try1 TRIGGERS $p2
+@fail1 $c1 IS violation
+@try2 take_cabbage LEAVES wolf_goat
+@c2 $try2 TRIGGERS $p1
+@fail2 $c2 IS violation
+@try3 take_goat LEAVES wolf_cabbage
+@c3 $try3 MATCHES $p3
+@success $c3 IS valid
+@only $success REMAINS option
+@result $only IS_A exhaustive_search_proof
+@proof $result PROVES $q1`,
+      PROOF_NL: "Try wolf → goat+cabbage → violation. Try cabbage → wolf+goat → violation. Try goat → wolf+cabbage → safe. Only goat works."
     },
     {
       id: "q2",
-      natural_language: "What should be the first move in the wolf-goat-cabbage problem?",
-      expected_dsl: `@q2 first_move IS farmer_takes_goat`,
-      expected_answer: {
-        natural_language: "The farmer must take the goat first. This is the only safe first move because: leaving wolf+goat alone = goat eaten, leaving goat+cabbage alone = cabbage eaten, but wolf+cabbage alone is safe.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Constraint satisfaction: only goat-first avoids all violations",
-        existence: "positive"
-      }
+      TASK_NL: "Verify the complete 7-crossing solution is valid (no constraint violations)",
+      TASK_DSL: "@q2 solution IS verified_valid",
+      ANSWEAR_NL: "Each of 7 states is valid - no wolf+goat or goat+cabbage alone without farmer",
+      PROOF_DSL: `@p1 crossing_1 IS take_goat_right
+@p2 crossing_2 IS return_alone
+@p3 crossing_3 IS take_wolf_right
+@p4 crossing_4 IS bring_goat_back
+@p5 crossing_5 IS take_cabbage_right
+@p6 crossing_6 IS return_alone
+@p7 crossing_7 IS take_goat_right
+@s1 $p1 PRODUCES valid_state_1
+@s2 $p2 PRODUCES valid_state_2
+@s3 $p3 PRODUCES valid_state_3
+@s4 $p4 PRODUCES valid_state_4
+@s5 $p5 PRODUCES valid_state_5
+@s6 $p6 PRODUCES valid_state_6
+@s7 $p7 PRODUCES goal_state
+@chain $s1 LEADS_TO $s7
+@result $chain IS_A solution_verification_proof
+@proof $result PROVES $q2`,
+      PROOF_NL: "Each of 7 crossings produces valid intermediate state. Final state reaches goal."
     },
     {
       id: "q3",
-      natural_language: "Can the wolf-goat-cabbage problem be solved in fewer than 7 crossings?",
-      expected_dsl: `@q3 wolf_goat_cabbage NOT_SOLVABLE_IN less_than_7`,
-      expected_answer: {
-        natural_language: "No, 7 crossings is the minimum. The constraints force specific moves, and there is no shorter valid sequence.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Optimal solution requires exactly 7 crossings",
-        existence: "positive"
-      }
+      TASK_NL: "After taking goat, what if we try bringing wolf next? (Backtracking needed)",
+      TASK_DSL: "@q3 wrong_choice TRIGGERS backtrack",
+      ANSWEAR_NL: "After goat→right, if we return and take wolf: wolf+goat on right while farmer returns → goat eaten → must backtrack",
+      PROOF_DSL: `@p1 crossing_1 IS take_goat_right
+@p2 wolf_goat_alone CAUSES goat_eaten
+@state1 goat ON right_bank
+@try farmer TAKES wolf_right
+@state2 wolf_goat ON right_bank
+@return farmer RETURNS alone
+@state3 wolf_goat ALONE right_bank
+@c1 $state3 MATCHES $p2
+@violation $c1 IS constraint_violation
+@detect $violation TRIGGERS backtrack
+@restore backtrack RETURNS state1
+@result $detect IS_A backtracking_proof
+@proof $result PROVES $q3`,
+      PROOF_NL: "Take wolf → wolf+goat on right → farmer returns → wolf+goat alone → violation → backtrack."
     },
     {
       id: "q4",
-      natural_language: "How many moves are needed for Towers of Hanoi with 3 disks?",
-      expected_dsl: `@q4 hanoi_3_disks REQUIRES 7_moves`,
-      expected_answer: {
-        natural_language: "7 moves are needed. The formula is 2^n - 1, so for n=3: 2^3 - 1 = 8 - 1 = 7.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Mathematical formula: 2^3 - 1 = 7",
-        existence: "positive"
-      }
+      TASK_NL: "How does Hanoi recursion work for 3 disks? (Recursive pattern proof)",
+      TASK_DSL: "@q4 hanoi_3 DECOMPOSES recursively",
+      ANSWEAR_NL: "Move 2 disks A→B (recursively), move large A→C, move 2 disks B→C (recursively). T(3)=2×T(2)+1=7",
+      PROOF_DSL: `@p1 hanoi_3_disks REQUIRES 7_moves
+@p2 hanoi_formula IS 2_power_n_minus_1
+@base hanoi_1 REQUIRES 1_move
+@recurse_2 hanoi_2 REQUIRES 3_moves
+@recurse_3 hanoi_3 REQUIRES 7_moves
+@decomp1 move_2_to_B TAKES 3_moves
+@decomp2 move_large_to_C TAKES 1_move
+@decomp3 move_2_to_C TAKES 3_moves
+@total 3_plus_1_plus_3 EQUALS 7
+@verify $total MATCHES $p1
+@result $verify IS_A recursive_decomposition_proof
+@proof $result PROVES $q4`,
+      PROOF_NL: "T(1)=1, T(2)=3, T(3)=2×3+1=7. Decompose: move 2 (3) + move large (1) + move 2 (3) = 7."
     },
     {
       id: "q5",
-      natural_language: "In Hanoi, can a large disk be placed on a small disk?",
-      expected_dsl: `@q5 large_on_small IS forbidden`,
-      expected_answer: {
-        natural_language: "No, a larger disk cannot be placed on a smaller disk. This is a fundamental rule of the Towers of Hanoi.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Hanoi rule: LARGER_ON_SMALLER forbidden",
-        existence: "positive"
-      }
+      TASK_NL: "How many possible states exist in WGC problem? (State space analysis)",
+      TASK_DSL: "@q5 state_space HAS size_16",
+      ANSWEAR_NL: "4 entities × 2 positions each = 2^4 = 16 states, but only 10 are valid (no violations)",
+      PROOF_DSL: `@p1 initial_state ALL_ON left_bank
+@p2 goal_state ALL_ON right_bank
+@entities farmer_wolf_goat_cabbage HAS count_4
+@positions left_or_right HAS count_2
+@total 2_power_4 EQUALS 16
+@c1 wolf_goat_alone IS invalid
+@c2 goat_cabbage_alone IS invalid
+@invalid 6_states VIOLATE constraints
+@valid 16_minus_6 EQUALS 10
+@reachable 8_states IN solution
+@optimal 7_transitions IS minimum
+@result $valid IS_A state_space_analysis
+@proof $result PROVES $q5`,
+      PROOF_NL: "4 entities × 2 positions = 16. 6 invalid. 10 valid. Solution uses 8 states, 7 transitions."
     },
     {
       id: "q6",
-      natural_language: "What is the recursive pattern for solving Towers of Hanoi?",
-      expected_dsl: `@q6 hanoi RECURSIVE_PATTERN move_n_minus_1_then_largest_then_n_minus_1`,
-      expected_answer: {
-        natural_language: "The recursive pattern is: 1) Move n-1 disks from source to auxiliary peg, 2) Move the largest disk from source to target peg, 3) Move n-1 disks from auxiliary to target peg. Base case: 1 disk = 1 move.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Classic recursive decomposition of Hanoi",
-        existence: "positive"
-      }
+      TASK_NL: "Verify that placing large disk on small is always detected as forbidden",
+      TASK_DSL: "@q6 large_on_small ALWAYS forbidden",
+      ANSWEAR_NL: "Constraint: larger cannot go on smaller. Any attempt triggers violation.",
+      PROOF_DSL: `@p1 disk_small SMALLER_THAN disk_medium
+@p2 disk_medium SMALLER_THAN disk_large
+@p3 large_on_small IS forbidden
+@c1 $p1 ESTABLISHES size_order_1
+@c2 $p2 ESTABLISHES size_order_2
+@c3 $c1 COMBINES $c2
+@try1 large_onto_small VIOLATES $p3
+@try2 medium_onto_small VIOLATES $p3
+@try3 large_onto_medium VIOLATES $p3
+@all $try1 CONFIRMS $try3
+@result $all IS_A constraint_verification_proof
+@proof $result PROVES $q6`,
+      PROOF_NL: "Size order established. Large→small: forbidden. Medium→small: forbidden. Large→medium: forbidden."
     },
     {
       id: "q7",
-      natural_language: "How many moves are needed for Towers of Hanoi with 4 disks?",
-      expected_dsl: `@q7 hanoi_4_disks REQUIRES 15_moves`,
-      expected_answer: {
-        natural_language: "15 moves are needed. Using the formula 2^n - 1: 2^4 - 1 = 16 - 1 = 15.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Mathematical formula: 2^4 - 1 = 15",
-        existence: "positive"
-      }
+      TASK_NL: "Prove 7 crossings is optimal for WGC (no shorter solution exists)",
+      TASK_DSL: "@q7 7_crossings IS optimal",
+      ANSWEAR_NL: "Goat must cross 3 times (there, back, there). Each other item crosses once. Minimum bound = 7.",
+      PROOF_DSL: `@p1 wolf_goat_alone CAUSES goat_eaten
+@p2 goat_cabbage_alone CAUSES cabbage_eaten
+@c1 goat CONFLICTS_WITH wolf
+@c2 goat CONFLICTS_WITH cabbage
+@c3 goat MUST_CROSS 3_times
+@c4 wolf MUST_CROSS 1_time
+@c5 cabbage MUST_CROSS 1_time
+@c6 farmer RETURNS 2_times
+@sum 3_plus_2_plus_2 EQUALS 7
+@achieved solution HAS 7_crossings
+@match $sum EQUALS $achieved
+@result $match IS_A optimality_proof
+@proof $result PROVES $q7`,
+      PROOF_NL: "Goat: 3 crossings. Wolf+cabbage: 2 crossings. Farmer returns: 2. Total: 7 minimum."
     },
     {
       id: "q8",
-      natural_language: "In wolf-goat-cabbage, why must the farmer bring the goat back on the 4th crossing?",
-      expected_dsl: `@q8 crossing_4 REQUIRES bring_goat_back`,
-      expected_answer: {
-        natural_language: "After taking the wolf to the right bank (crossing 3), the farmer must bring the goat back because leaving wolf+goat together on the right bank would result in the wolf eating the goat. The goat acts as a 'shuttle' that must be carefully managed.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Constraint avoidance: wolf+goat alone violates safety",
-        existence: "positive"
-      }
+      TASK_NL: "How does the solver detect and recover from dead-ends?",
+      TASK_DSL: "@q8 dead_end_detection IS working",
+      ANSWEAR_NL: "After each move, check constraints. Violation → mark as dead-end → backtrack → try alternative",
+      PROOF_DSL: `@p1 valid_state HAS no_violations
+@p2 invalid_state HAS constraint_violation
+@p3 dead_end REQUIRES backtrack
+@step1 make_move PRODUCES new_state
+@step2 check_constraints ON $step1
+@branch1 $step2 PASSES continue
+@branch2 $step2 FAILS mark_dead_end
+@c1 $branch2 TRIGGERS $p3
+@c2 $c1 RESTORES previous_state
+@c3 $c2 ENABLES try_alternative
+@complete $branch1 OR $branch2
+@result $complete IS_A dead_end_handling_proof
+@proof $result PROVES $q8`,
+      PROOF_NL: "Make move → check constraints → if fail: mark dead-end → backtrack → try alternative."
     }
-  ],
+  ]
 };

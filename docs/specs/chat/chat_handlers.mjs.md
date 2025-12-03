@@ -2,141 +2,116 @@
 
 ID: DS(/chat/chat_handlers.mjs)
 
-Status: IMPLEMENTED v1.0
+Status: IMPLEMENTED v2.0
 
 ## 1. Purpose
 
-Intent handlers for natural language chat interactions. Maps detected intents to Sys2DSL commands and executes them through the DSL engine.
+Facade module for natural language chat intent handling. Provides a stable, thin API that `ChatEngine` uses to route intents while delegating implementation to specialised sub‑modules.
 
-**File**: `chat/chat_handlers.mjs`
-**Module Type**: ESM
-**Exports**: Named functions
-
----
-
-## 2. Handler Functions
-
-### handleTeach(intent, engine)
-```javascript
-async handleTeach(intent: TeachIntent, engine: DSLEngine): Promise<string>
-```
-Handles teaching intents by converting natural language to triple statements.
-
-**Parameters:**
-- `intent.subject` (string) - Subject concept
-- `intent.relation` (string) - Relation type
-- `intent.object` (string) - Object concept
-- `engine` (DSLEngine) - DSL engine instance
-
-**Behavior:**
-1. Constructs triple syntax: `@_ {subject} {relation} {object}`
-2. Executes via `engine.executeLine()`
-3. Returns confirmation message
-
-**Returns:** `"OK, am înregistrat: {subject} {relation} {object}"`
-
-### handleAsk(intent, engine)
-```javascript
-async handleAsk(intent: AskIntent, engine: DSLEngine): Promise<string>
-```
-Handles question intents by converting to query triples.
-
-**Parameters:**
-- `intent.question` (string) - Natural language question
-- `engine` (DSLEngine) - DSL engine instance
-
-**Behavior:**
-1. Translates question to triple syntax: `@result {subject} {relation} {object}`
-2. Executes via `engine.executeLine()`
-3. Returns reasoning result or "Nu știu" if unknown
-
-**Returns:** Result string or uncertainty message
-
-### handleImport(intent, engine)
-```javascript
-async handleImport(intent: ImportIntent, engine: DSLEngine): Promise<string>
-```
-Handles theory import intents.
-
-**Parameters:**
-- `intent.theoryName` (string) - Theory to load
-- `engine` (DSLEngine) - DSL engine instance
-
-**Behavior:**
-1. Constructs theory load command: `@_ {theoryName} LOAD any`
-2. Executes via `engine.executeLine()`
-3. Returns success/failure message
-
-**Returns:** Load confirmation or error message
+**File**: `chat/chat_handlers.mjs`  
+**Module Type**: ESM  
+**Exports**: Named functions and configuration objects
 
 ---
 
-## 3. Intent Data Structures
+## 2. Responsibilities
 
-### TeachIntent
-```javascript
-{
-  type: 'teach',
-  subject: string,
-  relation: string,
-  object: string
-}
+- Expose high‑level handlers:
+  - `handleTeach`, `handleAsk`, `handleImport`
+  - `handleTheoryManagement`, `handleList`, `handleHelp`
+- Re‑export configuration and helpers used across chat:
+  - `ONTOLOGY_CONFIG`, `CONTRADICTION_CONFIG`
+  - `checkContradictions`, `suggestTheoryBranch`, `generateResponse`
+- Delegate implementation to:
+  - DS(/chat/handler_utils.mjs) – deterministic helpers
+  - DS(/chat/handlers_teach.mjs) – teaching and contradictions
+  - DS(/chat/handlers_ask.mjs) – question answering
+  - DS(/chat/handlers_theory.mjs) – import, theory management, listing, help
+
+The module itself contains no business logic; it only adapts the handler context (e.g. adding `ontologyConfig`) and forwards calls.
+
+---
+
+## 3. Public API
+
+### `async handleTeach(ctx, message, details?): Promise<HandlerResult>`
+- Delegates to `handlers_teach.handleTeach(ctx, message, details)`.
+- `ctx` is the handler context constructed by `ChatEngine` (see DS(/chat/chat_engine.mjs)).
+
+### `async handleAsk(ctx, message, details?): Promise<HandlerResult>`
+- Injects `ontologyConfig` into the context:
+  - `const extendedCtx = { ...ctx, ontologyConfig: ONTOLOGY_CONFIG }`
+- Delegates to `handlers_ask.handleAsk(extendedCtx, message, details)`.
+
+### `async handleImport(ctx, message, details?)`
+- Delegates to `handlers_theory.handleImport(ctx, message, details)`.
+
+### `async handleTheoryManagement(ctx, message, details?)`
+- Delegates to `handlers_theory.handleTheoryManagement(ctx, message, details)`.
+
+### `async handleList(ctx, details?)`
+- Delegates to `handlers_theory.handleList(ctx, details)`.
+
+### `handleHelp()`
+- Delegates to `handlers_theory.handleHelp()`.
+
+### Re‑exports
+
+```ts
+export const ONTOLOGY_CONFIG: typeof import('./handlers_teach.mjs').ONTOLOGY_CONFIG;
+export const CONTRADICTION_CONFIG: typeof import('./handlers_teach.mjs').CONTRADICTION_CONFIG;
+
+export function checkContradictions(ctx, newFacts);
+export function suggestTheoryBranch(ctx, facts, contradictions);
+export function generateResponse(ctx, result, originalQuestion);
 ```
 
-### AskIntent
-```javascript
-{
-  type: 'ask',
-  question: string
-}
-```
-
-### ImportIntent
-```javascript
-{
-  type: 'import',
-  theoryName: string
-}
-```
+These are simple forwarders so that existing code and specs that referenced the legacy monolithic module keep working.
 
 ---
 
 ## 4. Usage Example
 
-```javascript
-import { handleTeach, handleAsk, handleImport } from './chat_handlers.mjs';
-import { DSLEngine } from '../src/language/dsl_engine.js';
+```ts
+import {
+  handleTeach,
+  handleAsk,
+  handleImport,
+  handleTheoryManagement,
+  handleList,
+  handleHelp
+} from './chat_handlers.mjs';
 
-const engine = new DSLEngine({ /* deps */ });
+// Minimal context as constructed by ChatEngine
+const ctx = {
+  llmAgent,
+  session,
+  theoriesRoot,
+  currentTheory: 'default',
+  setCurrentTheory: (name) => { ctx.currentTheory = name; },
+  setPendingAction: (type, data) => { /* stored by ChatEngine */ }
+};
 
-// Teaching
-const teachIntent = { type: 'teach', subject: 'Dog', relation: 'IS_A', object: 'Animal' };
-const result1 = await handleTeach(teachIntent, engine);
-// → "OK, am înregistrat: Dog IS_A Animal"
-
-// Asking
-const askIntent = { type: 'ask', question: 'Is Dog an Animal?' };
-const result2 = await handleAsk(askIntent, engine);
-// → "TRUE_CERTAIN" or similar
-
-// Importing
-const importIntent = { type: 'import', theoryName: 'medical_ethics' };
-const result3 = await handleImport(importIntent, engine);
-// → "Teoria medical_ethics a fost încărcată."
+const teachResult = await handleTeach(ctx, 'Dogs are animals', {});
+const askResult = await handleAsk(ctx, 'Is a dog an animal?', {});
+const importResult = await handleImport(ctx, 'Import file my_facts.txt', {});
 ```
 
 ---
 
 ## 5. Error Handling
 
-- DSL execution errors are caught and returned as user-friendly messages
-- Unknown intents are passed through with generic response
-- Engine exceptions are logged but don't crash the handler
+- All low‑level errors are handled inside the sub‑modules:
+  - LLM parsing errors yield deterministic fallbacks or user‑friendly messages.
+  - Session/DSL errors are captured and reported in the returned `actions` array.
+- `chat_handlers.mjs` only forwards rejections from sub‑modules; callers should treat any thrown error as fatal and surface an error message (as `ChatEngine` already does).
 
 ---
 
 ## 6. Related Documents
 
-- DS(/chat/prompts.mjs) - Generates intents from natural language
-- DS(/chat/chat_repl.mjs) - Uses handlers in REPL loop
-- DS(/language/dsl_engine.js) - Executes generated commands
+- DS(/chat/chat_engine.mjs) – Uses all handlers for intent routing.
+- DS(/chat/handler_utils.mjs) – Shared deterministic helpers.
+- DS(/chat/handlers_teach.mjs) – Teaching and contradictions.
+- DS(/chat/handlers_ask.mjs) – Question answering.
+- DS(/chat/handlers_theory.mjs) – Import and theory management.

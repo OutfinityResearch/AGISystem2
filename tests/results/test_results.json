@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-12-03T12:03:46.544Z",
+  "timestamp": "2025-12-03T14:50:26.042Z",
   "profile": "auto_test",
   "summary": {
     "total": 36,
-    "passed": 34,
-    "failed": 1,
+    "passed": 35,
+    "failed": 0,
     "skipped": 1,
     "timeout": 0
   },
@@ -46,76 +46,10 @@
       "total": 1
     },
     "cli_integration": {
-      "status": "failed",
-      "passed": 3,
-      "failed": 16,
-      "total": 19,
-      "errors": [
-        {
-          "name": "CLI --help works",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "exec: add fact returns ok",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "exec: ask returns truth value",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "exec: config returns snapshot",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "batch: basic_facts.txt executes without critical errors",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "batch: basic_facts.txt has correct command count",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "batch: theory_layers.txt executes successfully",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "batch: memory_management.txt executes successfully",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "batch: abduction_reasoning.txt executes successfully",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "batch: dsl_execution.txt executes successfully",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "batch: ask commands return truth values",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "batch: prove commands return proven status",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "batch: validate command returns consistency status",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "batch: JSON output has required structure",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "batch: commands have timestamps",
-          "error": "spawnSync /bin/sh EPERM"
-        },
-        {
-          "name": "exec: unknown command returns error",
-          "error": "spawnSync /bin/sh EPERM"
-        }
-      ]
+      "status": "passed",
+      "passed": 19,
+      "failed": 0,
+      "total": 19
     },
     "concept_store": {
       "status": "passed",

@@ -46,57 +46,84 @@ const EXISTENCE = {
 
 ## 3. Session Modes
 
-### 3.1 Mode Definitions
+### 3.1 API Entry Points
 
-| Mode | Default Existence | Use Case |
-|------|-------------------|----------|
-| LEARNING | +127 (CERTAIN) | Teaching, theory loading, trusted input |
-| REASONING | -64 (UNPROVEN) | Exploration, hypothesis, needs demonstration |
+| API Method | Initial Mode | Behavior |
+|------------|--------------|----------|
+| `session.run(dsl)` | LEARNING | Executes DSL, creates facts |
+| `session.ask(query)` | QUERY | Read-only, derives, returns existence |
 
-### 3.2 Mode Semantics
+### 3.2 Mode Definitions
 
-**LEARNING Mode** (Default):
+| Mode | Behavior | Default Existence |
+|------|----------|-------------------|
+| LEARNING | Creates facts (trusted input) | CERTAIN (+127) |
+| QUERY | Read-only, derives, no creation | N/A (doesn't create) |
+
+### 3.3 Mode Semantics
+
+**LEARNING Mode**:
+- `session.run()` starts in this mode
 - User/teacher is trusted source
-- Facts are authoritative
+- Facts created are authoritative (CERTAIN)
 - Theory files load in this mode
 
-**REASONING Mode**:
-- System is exploring/hypothesizing
-- Facts start as UNPROVEN
-- System attempts to demonstrate (prove) them
-- If proof found: upgrade to DEMONSTRATED (+64)
-- If contradiction found: downgrade to IMPOSSIBLE (-127)
+**QUERY Mode**:
+- `session.ask()` starts in this mode
+- Read-only - does NOT create facts
+- Derives facts via transitive reasoning
+- Returns existence level of found/derived facts
+- Returns UNKNOWN for missing (open-world)
 
-### 3.3 DSL Mode Setting
+### 3.4 Mode Switching via DSL
+
+Modes can be switched during execution:
 
 ```sys2dsl
-# Set mode via relation
-@m1 session SET_MODE learning
-@m2 session SET_MODE reasoning
+# Switch modes via relation
+@m1 session SET_MODE learning   # switch to LEARNING
+@m2 session SET_MODE query      # switch to QUERY
 
-# Query mode
+# Read current mode
 @mode session GET_MODE any
 ```
 
-### 3.4 Implementation
+### 3.5 Implementation
 
 ```javascript
 class Session {
   constructor() {
-    this.mode = 'learning';  // Default
+    this.mode = 'learning';  // Default for run()
   }
 
+  // API entry points set initial mode
+  run(dsl) {
+    this.mode = 'learning';
+    return this.execute(dsl);
+  }
+
+  ask(query) {
+    this.mode = 'query';
+    return this.executeQuery(query);
+  }
+
+  // Mode can be changed during execution
   setMode(mode) {
-    if (!['learning', 'reasoning'].includes(mode)) {
+    if (!['learning', 'query'].includes(mode)) {
       throw new Error(`Invalid mode: ${mode}`);
     }
     this.mode = mode;
   }
 
   getDefaultExistence() {
+    // Only LEARNING mode creates facts
     return this.mode === 'learning'
       ? EXISTENCE.CERTAIN
-      : EXISTENCE.UNPROVEN;
+      : null;  // QUERY mode doesn't create
+  }
+
+  canCreateFacts() {
+    return this.mode === 'learning';
   }
 }
 ```
@@ -308,42 +335,57 @@ Result: { found: true, existence: 64 }
 
 ---
 
-## 9. Reasoning Mode Flow
+## 9. Hypothesis Flow (Explicit UNPROVEN)
 
-### 9.1 Hypothesis-Proof Cycle
+### 9.1 Adding Hypotheses
 
-In REASONING mode:
+To add a hypothesis that needs proving, use explicit IS_A_UNPROVEN:
 
-1. **Add hypothesis**: existence = UNPROVEN (-64)
-2. **Attempt proof**: search for supporting facts
-3. **If proven**: upgrade to DEMONSTRATED (+64)
-4. **If contradicted**: set to IMPOSSIBLE (-127)
+```sys2dsl
+# In LEARNING mode, add as unproven hypothesis
+@h1 Yeti IS_A_UNPROVEN Mammal    # existence = -64
+```
+
+### 9.2 Proof Attempt
+
+The system can attempt to prove hypotheses:
 
 ```javascript
-async processReasoningHypothesis(subject, relation, object) {
-  // Start as UNPROVEN
-  const hypothesis = this.addFact(subject, relation, object, EXISTENCE.UNPROVEN);
+async attemptProof(subject, relation, object) {
+  // Search for supporting chain
+  const chain = await this.reasoner.findChain(subject, relation, object);
 
-  // Attempt to demonstrate
-  const proof = await this.attemptProof(subject, relation, object);
-
-  if (proof.success) {
-    hypothesis._existence = EXISTENCE.DEMONSTRATED;
-    hypothesis._provenance.derivedFrom = proof.supportingFacts;
-    hypothesis._provenance.rule = proof.rule;
-    return { status: 'demonstrated', fact: hypothesis };
+  if (chain.found) {
+    // Upgrade to DEMONSTRATED
+    const fact = this.store.getFact(subject, relation, object);
+    fact._existence = EXISTENCE.DEMONSTRATED;
+    fact._provenance.derivedFrom = chain.facts.map(f => f.factId);
+    fact._provenance.rule = chain.rule;
+    return { status: 'demonstrated', fact };
   }
 
   // Check for contradiction
-  const contradiction = this.checkContradiction(subject, relation, object);
-  if (contradiction) {
-    hypothesis._existence = EXISTENCE.IMPOSSIBLE;
-    return { status: 'impossible', fact: hypothesis, conflict: contradiction };
+  const conflict = this.checkContradiction(subject, relation, object);
+  if (conflict) {
+    const fact = this.store.getFact(subject, relation, object);
+    fact._existence = EXISTENCE.IMPOSSIBLE;
+    return { status: 'impossible', fact, conflict };
   }
 
   // Remains unproven
-  return { status: 'unproven', fact: hypothesis };
+  return { status: 'unproven' };
 }
+```
+
+### 9.3 Example Workflow
+
+```sys2dsl
+# Add hypothesis
+@h1 Platypus IS_A_UNPROVEN Mammal
+
+# Later, if proven via external evidence:
+@p1 Platypus IS_A_DEMONSTRATED Mammal
+# This upgrades existence from -64 to +64
 ```
 
 ---

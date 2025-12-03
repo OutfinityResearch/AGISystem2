@@ -77,7 +77,11 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 ## Chat Interface (Natural Language)
 - `chat/index.mjs` → `.specs/chat/index.mjs.md` — Module entry point: re-exports chat components, `createChatEngine()` factory for wiring dependencies.
 - `chat/chat_repl.mjs` → `.specs/chat/chat_repl.mjs.md` — Class `ChatREPL`: interactive Read-Eval-Print Loop for natural language interaction. Readline interface, command history, special commands (quit, help, clear).
-- `chat/chat_handlers.mjs` → `.specs/chat/chat_handlers.mjs.md` — Intent handlers: `handleTeach`, `handleAsk`, `handleImport`. Maps intents to Sys2DSL commands.
+- `chat/chat_handlers.mjs` → `.specs/chat/chat_handlers.mjs.md` — Facade for chat intent handlers: delegates to teaching, asking, theory management and listing modules.
+- `chat/handler_utils.mjs` → `.specs/chat/handler_utils.mjs.md` — Shared lexical/logic helpers for deterministic parsing and inference.
+- `chat/handlers_teach.mjs` → `.specs/chat/handlers_teach.mjs.md` — Teaching and contradiction handling over the current theory.
+- `chat/handlers_ask.mjs` → `.specs/chat/handlers_ask.mjs.md` — Question answering and NL response generation.
+- `chat/handlers_theory.mjs` → `.specs/chat/handlers_theory.mjs.md` — File import, theory management, listing and help.
 - `chat/prompts.mjs` → `.specs/chat/prompts.mjs.md` — LLM prompt templates: `detectIntent`, `extractFacts`, relation mapping (natural language → Sys2DSL relations).
 - `chat/llm_loader.mjs` → `.specs/chat/llm_loader.mjs.md` — Dynamic loader for AchillesAgentLib: lazy loading, graceful degradation when LLM unavailable.
 

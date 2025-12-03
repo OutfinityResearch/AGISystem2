@@ -533,7 +533,16 @@
             { spec: 'interface/usecase_validate.md', name: 'Use Case: Validating Consistency.', dsId: 'DS[/interface/usecase_validate]', reqs: 'FS-05, FS-13; NFS-006', coverage: 'full', testSuite: 'usecase_integration', isNew: true },
             { spec: 'interface/usecase_hypothesize.md', name: 'Use Case: Generating Hypotheses (abduction).', dsId: 'DS[/interface/usecase_hypothesize]', reqs: 'FS-05, FS-06; NFS-003', coverage: 'full', testSuite: 'usecase_integration', isNew: true },
             { spec: 'interface/usecase_prove.md', name: 'Use Case: Proving Theorems (deduction).', dsId: 'DS[/interface/usecase_prove]', reqs: 'FS-05, FS-13; NFS-006', coverage: 'full', testSuite: 'usecase_integration', isNew: true },
-            { spec: 'cli/AGISystem2.sh.md', name: 'AGISystem2 CLI launcher and LLM setup.', dsId: 'DS[/cli/AGISystem2.sh]', reqs: 'FS-08, FS-09, FS-11; NFS-018', coverage: 'partial', testSuite: 'cli_integration', isNew: true },
+            { spec: 'cli/agisystem2-cli.js.md', name: 'AGISystem2 Raw CLI entrypoint.', dsId: 'DS[/cli/agisystem2-cli.js]', reqs: 'FS-08, FS-09, FS-11; NFS-018', coverage: 'partial', testSuite: 'cli_integration', isNew: true },
+
+            // Chat interface
+            { spec: 'chat/chat_engine.mjs.md', name: 'ChatEngine: LLM-backed natural language interface.', dsId: 'DS[/chat/chat_engine.mjs]', reqs: 'FS-08, FS-09, FS-11; NFS-018', coverage: 'partial', testSuite: 'chat_interface', isNew: true },
+            { spec: 'chat/chat_repl.mjs.md', name: 'ChatREPL: interactive shell for chat.', dsId: 'DS[/chat/chat_repl.mjs]', reqs: 'FS-08, FS-11; NFS-018', coverage: 'partial', testSuite: 'chat_interface', isNew: true },
+            { spec: 'chat/chat_handlers.mjs.md', name: 'ChatHandlers facade: route intents to teach/ask/import/list.', dsId: 'DS[/chat/chat_handlers.mjs]', reqs: 'FS-08, FS-09; NFS-018', coverage: 'partial', testSuite: 'chat_interface', isNew: true },
+            { spec: 'chat/handler_utils.mjs.md', name: 'Chat handler utilities: deterministic parsing and inference.', dsId: 'DS[/chat/handler_utils.mjs]', reqs: 'FS-03, FS-09; NFS-022', coverage: 'partial', testSuite: 'chat_interface', isNew: true },
+            { spec: 'chat/handlers_teach.mjs.md', name: 'Teaching and contradiction handlers for chat.', dsId: 'DS[/chat/handlers_teach.mjs]', reqs: 'FS-03, FS-05; NFS-006', coverage: 'partial', testSuite: 'chat_interface', isNew: true },
+            { spec: 'chat/handlers_ask.mjs.md', name: 'Question answering handlers for chat.', dsId: 'DS[/chat/handlers_ask.mjs]', reqs: 'FS-05, FS-06; NFS-003', coverage: 'partial', testSuite: 'chat_interface', isNew: true },
+            { spec: 'chat/handlers_theory.mjs.md', name: 'Theory management and import handlers for chat.', dsId: 'DS[/chat/handlers_theory.mjs]', reqs: 'FS-02, FS-10; NFS-013', coverage: 'partial', testSuite: 'chat_interface', isNew: true },
 
             // Support and storage
             { spec: 'support/config.js.md', name: 'Config: profiles, dimension and recursion limits.', dsId: 'DS[/support/config.js]', reqs: 'FS-01, FS-10, FS-12; NFS-013', coverage: 'full', testSuite: 'config_profiles' },

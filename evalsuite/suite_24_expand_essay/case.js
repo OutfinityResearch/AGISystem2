@@ -1,211 +1,149 @@
 /**
- * Test Case: Essay Composition - The Evolution and Impact of Artificial Intelligence
- * Tests structured essay composition using DSL to gather and validate facts. Each section requires multi-statement proof chains that demonstrate the reasoning. Explanations are DSL scripts that can be validated without LLM.
- * Version: 3.0
+ * Test Case: Comprehensive AI Evolution - Timeline & Capability Analysis
+ * Tests AI history chains, capability reasoning, and technology evolution
+ * Version: 5.0 - Complex proofs with timeline analysis and capability inference
  */
-
 module.exports = {
   id: "suite_24_expand_essay",
-  name: "Essay Composition - The Evolution and Impact of Artificial Intelligence",
-  description: "Tests structured essay composition using DSL to gather and validate facts. Each section requires multi-statement proof chains that demonstrate the reasoning. Explanations are DSL scripts that can be validated without LLM.",
-  theory: {
-    natural_language: "HISTORICAL FOUNDATIONS: Alan Turing proposed the Turing test in 1950. The term artificial intelligence was coined at Dartmouth in 1956. The first expert systems emerged in the 1970s. The AI winter occurred in the 1980s due to funding cuts. Machine learning revival began in the 1990s. Deep learning breakthrough happened in 2012 with ImageNet. Transformers architecture was introduced in 2017. ChatGPT launched in November 2022. TECHNICAL CONCEPTS: Neural networks are inspired by biological brains. Deep learning uses multiple hidden layers. Backpropagation enables network training. GPUs accelerate matrix computations. Attention mechanism enables transformers. Large language models learn from text corpora. Reinforcement learning uses reward signals. Computer vision processes visual data. CURRENT APPLICATIONS: AI powers recommendation systems. AI enables autonomous navigation. AI assists medical diagnosis. AI detects fraud. AI translates languages. AI generates art. AI writes code. AI moderates content. SOCIETAL IMPLICATIONS: AI automation may displace jobs. AI bias can perpetuate discrimination. AI surveillance raises privacy concerns. AI decisions lack transparency. AI weapons pose ethical dilemmas. AI can spread misinformation. AI requires energy resources. AI benefits are not equally distributed. FUTURE DIRECTIONS: AGI remains a long-term research goal. AI safety research is growing rapidly. AI regulation is being developed globally. AI augmentation may enhance human capabilities. AI in education could personalize learning. AI in healthcare could revolutionize treatment. Quantum computing may accelerate AI. Neuromorphic chips may improve efficiency.",
-    expected_facts: [
-          "Turing_test PROPOSED_BY Alan_Turing",
-          "Turing_test PROPOSED_IN 1950",
-          "artificial_intelligence COINED_AT Dartmouth",
-          "artificial_intelligence COINED_IN 1956",
-          "expert_systems EMERGED_IN 1970s",
-          "AI_winter OCCURRED_IN 1980s",
-          "AI_winter CAUSED_BY funding_cuts",
-          "machine_learning REVIVED_IN 1990s",
-          "deep_learning_breakthrough HAPPENED_IN 2012",
-          "transformers INTRODUCED_IN 2017",
-          "ChatGPT LAUNCHED_IN 2022",
-          "neural_networks INSPIRED_BY biological_brains",
-          "deep_learning USES multiple_hidden_layers",
-          "backpropagation ENABLES network_training",
-          "GPUs ACCELERATE matrix_computations",
-          "attention_mechanism ENABLES transformers",
-          "large_language_models LEARN_FROM text_corpora",
-          "reinforcement_learning USES reward_signals",
-          "computer_vision PROCESSES visual_data",
-          "AI POWERS recommendation_systems",
-          "AI ENABLES autonomous_navigation",
-          "AI ASSISTS medical_diagnosis",
-          "AI DETECTS fraud",
-          "AI TRANSLATES languages",
-          "AI GENERATES art",
-          "AI WRITES code",
-          "AI MODERATES content",
-          "AI_automation MAY_DISPLACE jobs",
-          "AI_bias CAN_PERPETUATE discrimination",
-          "AI_surveillance RAISES privacy_concerns",
-          "AI_decisions LACK transparency",
-          "AI_weapons POSE ethical_dilemmas",
-          "AI CAN_SPREAD misinformation",
-          "AI REQUIRES energy_resources",
-          "AI_benefits NOT_EQUALLY distributed",
-          "AGI IS_A long_term_goal",
-          "AI_safety_research GROWING rapidly",
-          "AI_regulation BEING_DEVELOPED globally",
-          "AI_augmentation MAY_ENHANCE human_capabilities",
-          "AI_education COULD_PERSONALIZE learning",
-          "AI_healthcare COULD_REVOLUTIONIZE treatment",
-          "quantum_computing MAY_ACCELERATE AI",
-          "neuromorphic_chips MAY_IMPROVE efficiency"
-    ]
-  },
-  queries: [
-    {
-      id: "q1",
-      natural_language: "INTRODUCTION - Historical Timeline: What are the key milestones in AI history?",
-      expected_dsl: `
-        @milestone1 Turing_test PROPOSED_IN 1950
-        @milestone2 artificial_intelligence COINED_IN 1956
-        @milestone3 deep_learning_breakthrough HAPPENED_IN 2012
-        @milestone4 transformers INTRODUCED_IN 2017
-        @milestone5 ChatGPT LAUNCHED_IN 2022
-        @early $milestone1 AND $milestone2
-        @modern $milestone3 AND $milestone4
-        @timeline $early AND $modern
-        @q1 $timeline AND $milestone5
-      `,
-      expected_answer: {
-        natural_language: undefined,
-        truth: undefined,
-        explanation: undefined,
-        existence: undefined
-      }
-    },
-    {
-      id: "q2",
-      natural_language: "INTRODUCTION - Origins: When and where did AI formally begin?",
-      expected_dsl: `
-        @coined_at artificial_intelligence COINED_AT Dartmouth
-        @coined_in artificial_intelligence COINED_IN 1956
-        @q2 $coined_at AND $coined_in
-      `,
-      expected_answer: {
-        natural_language: undefined,
-        truth: undefined,
-        explanation: undefined,
-        existence: undefined
-      }
-    },
-    {
-      id: "q3",
-      natural_language: "BODY PARAGRAPH 1 - Technical Foundations: What enables modern AI systems?",
-      expected_dsl: `
-        @enable1 backpropagation ENABLES network_training
-        @enable2 attention_mechanism ENABLES transformers
-        @inspired neural_networks INSPIRED_BY biological_brains
-        @accel GPUs ACCELERATE matrix_computations
-        @foundations1 $enable1 AND $enable2
-        @foundations2 $inspired AND $accel
-        @q3 $foundations1 AND $foundations2
-      `,
-      expected_answer: {
-        natural_language: undefined,
-        truth: undefined,
-        explanation: undefined,
-        existence: undefined
-      }
-    },
-    {
-      id: "q4",
-      natural_language: "BODY PARAGRAPH 1 - Learning Methods: How do AI systems acquire knowledge?",
-      expected_dsl: `
-        @method1 deep_learning USES multiple_hidden_layers
-        @method2 reinforcement_learning USES reward_signals
-        @method3 large_language_models LEARN_FROM text_corpora
-        @learn1 $method1 AND $method2
-        @q4 $learn1 AND $method3
-      `,
-      expected_answer: {
-        natural_language: undefined,
-        truth: undefined,
-        explanation: undefined,
-        existence: undefined
-      }
-    },
-    {
-      id: "q5",
-      natural_language: "BODY PARAGRAPH 2 - Current Applications: What practical tasks does AI perform?",
-      expected_dsl: `
-        @app1 AI ASSISTS medical_diagnosis
-        @app2 AI DETECTS fraud
-        @app3 AI TRANSLATES languages
-        @app4 AI GENERATES art
-        @app5 AI WRITES code
-        @apps1 $app1 AND $app2
-        @apps2 $app3 AND $app4
-        @apps3 $apps1 AND $apps2
-        @q5 $apps3 AND $app5
-      `,
-      expected_answer: {
-        natural_language: undefined,
-        truth: undefined,
-        explanation: undefined,
-        existence: undefined
-      }
-    },
-    {
-      id: "q6",
-      natural_language: "BODY PARAGRAPH 3 - Societal Concerns: What risks and ethical issues does AI raise?",
-      expected_dsl: `
-        @risk1 AI_surveillance RAISES privacy_concerns
-        @risk2 AI_decisions LACK transparency
-        @risk3 AI_weapons POSE ethical_dilemmas
-        @risk4 AI_bias CAN_PERPETUATE discrimination
-        @ethical1 $risk1 AND $risk2
-        @ethical2 $risk3 AND $risk4
-        @q6 $ethical1 AND $ethical2
-      `,
-      expected_answer: {
-        natural_language: undefined,
-        truth: undefined,
-        explanation: undefined,
-        existence: undefined
-      }
-    },
-    {
-      id: "q7",
-      natural_language: "BODY PARAGRAPH 3 - Negative Impacts: What harms might AI cause?",
-      expected_dsl: `
-        @harm1 AI_automation MAY_DISPLACE jobs
-        @harm2 AI CAN_SPREAD misinformation
-        @harm3 AI REQUIRES energy_resources
-        @harm4 AI_benefits NOT_EQUALLY distributed
-        @neg1 $harm1 AND $harm2
-        @neg2 $harm3 AND $harm4
-        @q7 $neg1 AND $neg2
-      `,
-      expected_answer: {
-        natural_language: undefined,
-        truth: undefined,
-        explanation: undefined,
-        existence: undefined
-      }
-    },
-    {
-      id: "q8",
-      natural_language: "CONCLUSION - Future Outlook: What developments might transform AI?",
-      expected_dsl: `
-        @future1 quantum_computing MAY_ACCELERATE AI
-        @future2 neuromorphic_chips MAY_IMPROVE efficiency
-        @future3 AI_augmentation MAY_ENHANCE human_capabilities
-        @future4 AGI IS_A long_term_goal
-        @tech_future $future1 AND $future2
-        @human_future $future3 AND $future4
-        @q8 $tech_future AND $human_future
-      `,
-      expected_answer: {
-        natural_language: undefined,
-        truth: undefined,
-        explanation: undefined,
-        existence: undefined
-      }
-    }
+  name: "Comprehensive AI Evolution - Timeline & Capability Analysis",
+
+  theory_NL: "AI timeline: Turing test (1950) → Dartmouth (1956) → deep learning (2012) → transformers (2017) → ChatGPT (2022). Technical: neural nets inspired by brains, deep learning uses layers, GPUs accelerate computation. Capabilities: AI assists diagnosis, translates, generates art, writes code. Goals: AGI is long-term, safety research growing.",
+
+  theory_DSL: [
+    "Turing_test PROPOSED_IN 1950", "artificial_intelligence COINED_AT Dartmouth",
+    "artificial_intelligence COINED_IN 1956", "deep_learning_breakthrough HAPPENED_IN 2012",
+    "transformers INTRODUCED_IN 2017", "ChatGPT LAUNCHED_IN 2022",
+    "neural_networks INSPIRED_BY biological_brains", "deep_learning USES multiple_hidden_layers",
+    "GPUs ACCELERATE matrix_computations", "transformers USE attention_mechanism",
+    "AI ASSISTS medical_diagnosis", "AI TRANSLATES languages", "AI GENERATES art", "AI WRITES code",
+    "AGI IS_A long_term_goal", "AI_safety_research GROWING rapidly",
+    "1950 BEFORE 1956", "1956 BEFORE 2012", "2012 BEFORE 2017", "2017 BEFORE 2022"
   ],
+
+  tasks: [
+    {
+      id: "q1", TASK_NL: "What is the AI timeline in order?",
+      TASK_DSL: "@q1 AI_timeline ORDERED",
+      ANSWEAR_NL: "1950 (Turing) → 1956 (Dartmouth) → 2012 (deep learning) → 2017 (transformers) → 2022 (ChatGPT)",
+      PROOF_DSL: `@p1 Turing_test PROPOSED_IN 1950
+@p2 artificial_intelligence COINED_IN 1956
+@p3 deep_learning_breakthrough HAPPENED_IN 2012
+@p4 transformers INTRODUCED_IN 2017
+@p5 ChatGPT LAUNCHED_IN 2022
+@o1 1950 BEFORE 1956
+@o2 1956 BEFORE 2012
+@o3 2012 BEFORE 2017
+@o4 2017 BEFORE 2022
+@chain $o1 THEN $o2 THEN $o3 THEN $o4
+@timeline 5 MILESTONES ordered
+@result $timeline IS_A timeline_proof
+@proof $result PROVES $q1`,
+      PROOF_NL: "5 milestones ordered: 1950→1956→2012→2017→2022."
+    },
+    {
+      id: "q2", TASK_NL: "How are neural networks related to biology?",
+      TASK_DSL: "@q2 neural_networks BIOLOGICAL_BASIS explained",
+      ANSWEAR_NL: "Neural networks inspired by biological brains. Uses layers like brain neurons.",
+      PROOF_DSL: `@p1 neural_networks INSPIRED_BY biological_brains
+@p2 deep_learning USES multiple_hidden_layers
+@bio $p1 ESTABLISHES biological_analogy
+@struct $p2 MIRRORS neuron_layers
+@combine $bio AND $struct
+@result $combine IS_A biological_basis_proof
+@proof $result PROVES $q2`,
+      PROOF_NL: "Neural nets inspired by brains, use layered structure like neurons."
+    },
+    {
+      id: "q3", TASK_NL: "What enables modern AI performance?",
+      TASK_DSL: "@q3 AI_performance ENABLERS listed",
+      ANSWEAR_NL: "GPUs accelerate computation + transformers use attention. Hardware + architecture.",
+      PROOF_DSL: `@p1 GPUs ACCELERATE matrix_computations
+@p2 transformers USE attention_mechanism
+@hw $p1 IS hardware_enabler
+@arch $p2 IS architecture_enabler
+@both $hw AND $arch
+@synergy $both ENABLES modern_performance
+@result $synergy IS_A enabler_analysis_proof
+@proof $result PROVES $q3`,
+      PROOF_NL: "GPUs (hardware) + transformers (architecture) enable performance."
+    },
+    {
+      id: "q4", TASK_NL: "What are all AI capabilities?",
+      TASK_DSL: "@q4 AI_capabilities ENUMERATED",
+      ANSWEAR_NL: "AI: assists diagnosis, translates, generates art, writes code. 4 capabilities.",
+      PROOF_DSL: `@p1 AI ASSISTS medical_diagnosis
+@p2 AI TRANSLATES languages
+@p3 AI GENERATES art
+@p4 AI WRITES code
+@cap1 $p1 IS capability_1
+@cap2 $p2 IS capability_2
+@cap3 $p3 IS capability_3
+@cap4 $p4 IS capability_4
+@all $cap1 AND $cap2 AND $cap3 AND $cap4
+@count $all HAS 4_capabilities
+@result $count IS_A capability_enumeration_proof
+@proof $result PROVES $q4`,
+      PROOF_NL: "4 AI capabilities: diagnosis, translation, art, code."
+    },
+    {
+      id: "q5", TASK_NL: "What is the gap between Dartmouth and deep learning?",
+      TASK_DSL: "@q5 AI_winter GAP analyzed",
+      ANSWEAR_NL: "Dartmouth 1956 → Deep learning 2012. 56-year gap (AI winters).",
+      PROOF_DSL: `@p1 artificial_intelligence COINED_IN 1956
+@p2 deep_learning_breakthrough HAPPENED_IN 2012
+@gap 2012 MINUS 1956
+@years $gap EQUALS 56
+@period $years IS long_gap
+@explanation AI_winters CAUSED stagnation
+@result $period IS_A gap_analysis_proof
+@proof $result PROVES $q5`,
+      PROOF_NL: "1956 to 2012 = 56 years. Long gap due to AI winters."
+    },
+    {
+      id: "q6", TASK_NL: "How fast did AI advance after 2012?",
+      TASK_DSL: "@q6 recent_AI_acceleration ANALYZED",
+      ANSWEAR_NL: "2012→2017→2022: Deep learning, transformers, ChatGPT in 10 years. Rapid acceleration.",
+      PROOF_DSL: `@p1 deep_learning_breakthrough HAPPENED_IN 2012
+@p2 transformers INTRODUCED_IN 2017
+@p3 ChatGPT LAUNCHED_IN 2022
+@span 2022 MINUS 2012 EQUALS 10
+@milestones 3 IN 10_years
+@rate $milestones IS rapid
+@compare 56_years VS 10_years
+@acceleration $compare SHOWS speedup
+@result $acceleration IS_A acceleration_proof
+@proof $result PROVES $q6`,
+      PROOF_NL: "3 major breakthroughs in 10 years vs 56-year gap before. Massive acceleration."
+    },
+    {
+      id: "q7", TASK_NL: "What are current AI concerns?",
+      TASK_DSL: "@q7 AI_concerns IDENTIFIED",
+      ANSWEAR_NL: "AGI is long-term goal, safety research growing. Balancing capability and safety.",
+      PROOF_DSL: `@p1 AGI IS_A long_term_goal
+@p2 AI_safety_research GROWING rapidly
+@goal $p1 IS future_capability
+@concern $p2 IS safety_focus
+@balance $goal AND $concern
+@tension capability VS safety
+@result $balance IS_A concern_analysis_proof
+@proof $result PROVES $q7`,
+      PROOF_NL: "AGI goal + safety research = capability vs safety tension."
+    },
+    {
+      id: "q8", TASK_NL: "Trace: Turing to ChatGPT (full evolution)",
+      TASK_DSL: "@q8 AI_evolution FULL_TRACE",
+      ANSWEAR_NL: "Turing test → AI coined → deep learning → transformers → ChatGPT. 72-year evolution.",
+      PROOF_DSL: `@p1 Turing_test PROPOSED_IN 1950
+@p2 artificial_intelligence COINED_IN 1956
+@p3 deep_learning_breakthrough HAPPENED_IN 2012
+@p4 transformers INTRODUCED_IN 2017
+@p5 ChatGPT LAUNCHED_IN 2022
+@total 2022 MINUS 1950 EQUALS 72
+@chain $p1 THEN $p2 THEN $p3 THEN $p4 THEN $p5
+@evolution 5 STAGES over 72_years
+@result $evolution IS_A evolution_trace_proof
+@proof $result PROVES $q8`,
+      PROOF_NL: "72-year evolution: Turing(1950)→Dartmouth(1956)→DL(2012)→Transformers(2017)→ChatGPT(2022)."
+    }
+  ]
 };
