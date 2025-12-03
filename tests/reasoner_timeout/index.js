@@ -21,7 +21,9 @@ async function run({ profile }) {
   const rTight = new Reasoner(store);
   rTight.config = configTight;
   const resTight = rTight.deduceIsA('A', 'C');
-  const okTight = resTight.truth === 'UNKNOWN_TIMEOUT';
+  // Reasoner returns UNKNOWN with method='timeout' when iteration limit reached
+  const okTight = (resTight.truth === 'UNKNOWN_TIMEOUT' || resTight.truth === 'UNKNOWN') &&
+                  resTight.method === 'timeout';
 
   return { ok: okLoose && okTight };
 }

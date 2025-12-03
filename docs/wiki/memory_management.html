@@ -29,8 +29,8 @@
 
       <ul>
         <li><strong>usageCount</strong>: Total accesses (queries + assertions + inferences)</li>
-        <li><strong>assertCount</strong>: Times used as subject/object in ASSERT</li>
-        <li><strong>queryCount</strong>: Times used in ASK, PROVE, or CF queries</li>
+        <li><strong>assertCount</strong>: Times used as subject or object in triple facts (for example <code>@_ Dog IS_A animal</code>)</li>
+        <li><strong>queryCount</strong>: Times used in query triples and reasoning verbs (for example <code>QUERY</code>, <code>PROVE</code>, counterfactuals)</li>
         <li><strong>lastUsed</strong>: Timestamp of most recent access</li>
         <li><strong>createdAt</strong>: When the concept was first introduced</li>
       </ul>

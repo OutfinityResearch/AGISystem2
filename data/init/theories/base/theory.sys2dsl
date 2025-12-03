@@ -15,7 +15,7 @@
   @layer_id subject INSPECT any
   @new_layer $layer_id NEW_COMPOSITE session
   @pair_type layer_type DIM_PAIR hypothetical
-  @_ $new_layer SET_DIM $pair_type
+  @set_type $new_layer SET_DIM $pair_type
   @pair_active active DIM_PAIR positive
   @return $new_layer SET_DIM $pair_active
 END
@@ -26,7 +26,7 @@ END
   @top current_layer INSPECT any
   @parent $top READ_DIM parent_layer
   @pair_inactive active DIM_PAIR zero
-  @_ $top SET_DIM $pair_inactive
+  @deactivate $top SET_DIM $pair_inactive
   @pair_active active DIM_PAIR positive
   @return $parent SET_DIM $pair_active
 END
@@ -38,7 +38,7 @@ END
   @parent $top READ_DIM parent_layer
   @merged $top ATTRACT $parent
   @pair_inactive active DIM_PAIR zero
-  @_ $top SET_DIM $pair_inactive
+  @deactivate $top SET_DIM $pair_inactive
   @pair_active active DIM_PAIR positive
   @return $merged SET_DIM $pair_active
 END
@@ -57,7 +57,7 @@ END
 @SAVE BEGIN
   @current current_layer INSPECT any
   @pair_name saved_name DIM_PAIR subject
-  @_ $current SET_DIM $pair_name
+  @set_name $current SET_DIM $pair_name
   @pair_saved saved DIM_PAIR positive
   @return subject SET_DIM $pair_saved
 END
@@ -66,7 +66,7 @@ END
 # Subject is the name to load
 @LOAD BEGIN
   @stored subject INSPECT any
-  @_ $stored PUSH any
+  @push_it $stored PUSH any
   @pair loaded DIM_PAIR positive
   @return $stored SET_DIM $pair
 END
@@ -121,15 +121,15 @@ END
 # RESET_SESSION - Clear all temporary layers (alias: RESET)
 @RESET BEGIN
   @depth current_layer READ_DIM depth
-  @_ any POP_ALL any
+  @pop_all any POP_ALL any
   @pair reset DIM_PAIR positive
   @return session SET_DIM $pair
 END
 
 # NEW_SESSION - Start fresh session
 @NEW_SESSION BEGIN
-  @_ any RESET any
-  @_ session PUSH any
+  @reset_it any RESET any
+  @push_it session PUSH any
   @pair new DIM_PAIR positive
   @return session SET_DIM $pair
 END
@@ -137,7 +137,7 @@ END
 # CHECKPOINT - Save session state for rollback
 @CHECKPOINT BEGIN
   @state current_layer INSPECT any
-  @_ $state SNAPSHOT any
+  @snap $state SNAPSHOT any
   @pair checkpoint DIM_PAIR $state
   @return subject SET_DIM $pair
 END

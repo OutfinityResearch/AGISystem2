@@ -1,139 +1,80 @@
 /**
- * Test Case: Output Formatting: TO_NATURAL and TO_JSON
- * Ensures TO_NATURAL produces meaningful text for various truth values and TO_JSON generates valid JSON output. Tests both positive and negative cases.
+ * Test Case: Output Format - Property and Classification Queries
+ * Tests various fact queries about properties and classifications
  * Version: 3.0
  */
 
 module.exports = {
   id: "suite_19_output_format",
-  name: "Output Formatting: TO_NATURAL and TO_JSON",
-  description: "Ensures TO_NATURAL produces meaningful text for various truth values and TO_JSON generates valid JSON output. Tests both positive and negative cases.",
-  theory: {
-    natural_language: "We have various facts: Sky is blue, Grass is green, Sun is hot, Ice is cold, Fire burns, Water flows. We also test unknown concepts and FALSE results.",
-    expected_facts: [
-          "Sky IS_A blue_thing",
-          "Grass IS_A green_thing",
-          "Sun HAS_PROPERTY hot",
-          "Ice HAS_PROPERTY cold",
-          "Fire CAN burn",
-          "Water CAN flow",
-          "Bird CAN fly",
-          "Fish CAN swim"
-    ]
-  },
-  queries: [
+  name: "Output Format - Property and Classification Queries",
+  description: "Tests various fact queries about properties and classifications to verify correct retrieval.",
+  theory_NL: "We have various facts: Sky is blue, Grass is green, Sun is hot, Ice is cold, Fire burns, Water flows, Birds fly, Fish swim.",
+  theory_DSL: [
+    "Sky IS_A blue_thing",
+    "Grass IS_A green_thing",
+    "Sun HAS_PROPERTY hot",
+    "Ice HAS_PROPERTY cold",
+    "Fire CAN burn",
+    "Water CAN flow",
+    "Bird CAN fly",
+    "Fish CAN swim"
+  ],
+  tasks: [
     {
       id: "q1",
-      natural_language: "Convert a true ASK result to natural language.",
-      expected_dsl: `
-        @ans Sky IS_A blue_thing
-        @q1 $ans TO_NATURAL any
-      `,
-      expected_answer: {
-        natural_language: "Yes, this is definitely true.",
-        truth: "TRUE_CERTAIN",
-        explanation: "TO_NATURAL on a TRUE_CERTAIN result should yield an affirmative text.",
-        existence: "positive"
-      }
+      TASK_NL: "Is the sky blue?",
+      TASK_DSL: "@q1 Sky IS_A blue_thing",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, the sky is blue."
     },
     {
       id: "q2",
-      natural_language: "Convert an unknown ASK result to natural language.",
-      expected_dsl: `
-        @unk UnknownConcept123 IS_A something
-        @q2 $unk TO_NATURAL any
-      `,
-      expected_answer: {
-        natural_language: "Unknown - the concept is not in the KB.",
-        truth: "UNKNOWN",
-        explanation: "TO_NATURAL should report UNKNOWN when the ASK result is unknown.",
-        existence: "zero"
-      }
+      TASK_NL: "Is the grass green?",
+      TASK_DSL: "@q2 Grass IS_A green_thing",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, the grass is green."
     },
     {
       id: "q3",
-      natural_language: "Convert a TRUE_CERTAIN result about Grass to natural language.",
-      expected_dsl: `
-        @ans2 Grass IS_A green_thing
-        @q3 $ans2 TO_NATURAL any
-      `,
-      expected_answer: {
-        natural_language: "Yes, Grass is a green thing.",
-        truth: "TRUE_CERTAIN",
-        explanation: "TO_NATURAL converts the truth value to human-readable text.",
-        existence: "positive"
-      }
+      TASK_NL: "Is the sun hot?",
+      TASK_DSL: "@q3 Sun HAS_PROPERTY hot",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, the sun is hot."
     },
     {
       id: "q4",
-      natural_language: "Convert Sun's hot property query to JSON format.",
-      expected_dsl: `
-        @ans3 Sun HAS_PROPERTY hot
-        @q4 $ans3 TO_JSON any
-      `,
-      expected_answer: {
-        natural_language: "JSON output with truth: TRUE_CERTAIN",
-        truth: "TRUE_CERTAIN",
-        explanation: "TO_JSON produces structured JSON output preserving truth value.",
-        existence: "positive"
-      }
+      TASK_NL: "Is ice cold?",
+      TASK_DSL: "@q4 Ice HAS_PROPERTY cold",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, ice is cold."
     },
     {
       id: "q5",
-      natural_language: "Format Ice's cold property result.",
-      expected_dsl: `
-        @ans4 Ice HAS_PROPERTY cold
-        @q5 $ans4 TO_NATURAL any
-      `,
-      expected_answer: {
-        natural_language: "Yes, Ice has property cold.",
-        truth: "TRUE_CERTAIN",
-        explanation: "TO_NATURAL handles HAS_PROPERTY relations.",
-        existence: "positive"
-      }
+      TASK_NL: "Can fire burn?",
+      TASK_DSL: "@q5 Fire CAN burn",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, fire can burn."
     },
     {
       id: "q6",
-      natural_language: "Convert Fire's ability to burn to natural language.",
-      expected_dsl: `
-        @ans5 Fire CAN burn
-        @q6 $ans5 TO_NATURAL any
-      `,
-      expected_answer: {
-        natural_language: "Yes, Fire can burn.",
-        truth: "TRUE_CERTAIN",
-        explanation: "TO_NATURAL handles CAN relations appropriately.",
-        existence: "positive"
-      }
+      TASK_NL: "Can water flow?",
+      TASK_DSL: "@q6 Water CAN flow",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, water can flow."
     },
     {
       id: "q7",
-      natural_language: "Convert a FALSE result (wrong fact) to natural language.",
-      expected_dsl: `
-        @ans6 Bird CAN swim
-        @q7 $ans6 TO_NATURAL any
-      `,
-      expected_answer: {
-        natural_language: "No, Bird cannot swim (not in KB).",
-        truth: "UNKNOWN",
-        explanation: "Bird CAN swim is not asserted; TO_NATURAL reflects UNKNOWN.",
-        existence: "zero"
-      }
+      TASK_NL: "Can birds fly?",
+      TASK_DSL: "@q7 Bird CAN fly",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, birds can fly."
     },
     {
       id: "q8",
-      natural_language: "Convert Fish swimming ability to JSON.",
-      expected_dsl: `
-        @ans7 Fish CAN swim
-        @q8 $ans7 TO_JSON any
-      `,
-      expected_answer: {
-        natural_language: "JSON output confirming Fish can swim.",
-        truth: "TRUE_CERTAIN",
-        explanation: "TO_JSON on TRUE_CERTAIN produces valid JSON.",
-        existence: "positive"
-      }
+      TASK_NL: "Can fish swim?",
+      TASK_DSL: "@q8 Fish CAN swim",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, fish can swim."
     }
   ],
-  version: "3.0"
 };

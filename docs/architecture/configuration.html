@@ -89,7 +89,7 @@ const agent = new AgentSystem2({ profile: 'prod' });</pre>
   <h3>Environment Variable</h3>
   <pre>
 export AGIS2_PROFILE=manual_test
-./bin/AGISystem2Raw.sh</pre>
+node cli/agisystem2-cli.js --exec "ask Is system consistent?" --json</pre>
 
   <h3>Overrides</h3>
   <p>Override specific settings while using a base profile:</p>

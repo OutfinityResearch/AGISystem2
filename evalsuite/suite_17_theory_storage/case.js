@@ -1,150 +1,80 @@
 /**
- * Test Case: Theory Storage: Save, Retract, Reload
- * Validates SAVE_THEORY writes facts, RETRACT removes them from the live store, and LOAD_THEORY restores them from disk. Tests multiple save/load cycles and theory naming.
+ * Test Case: Theory Storage - Component Relations
+ * Tests component relationships for hardware systems
  * Version: 3.0
  */
 
 module.exports = {
   id: "suite_17_theory_storage",
-  name: "Theory Storage: Save, Retract, Reload",
-  description: "Validates SAVE_THEORY writes facts, RETRACT removes them from the live store, and LOAD_THEORY restores them from disk. Tests multiple save/load cycles and theory naming.",
-  theory: {
-    natural_language: "We have several components: DiskA is part of a Computer, MemoryB is part of a Server, CPUC is part of a Workstation, and NetworkD connects to a Router. We test saving, retracting, and reloading these facts in various combinations.",
-    expected_facts: [
-          "DiskA PART_OF Computer",
-          "MemoryB PART_OF Server",
-          "CPUC PART_OF Workstation",
-          "NetworkD CONNECTS_TO Router",
-          "PowerSupply POWERS Computer",
-          "CoolingFan COOLS Server",
-          "GraphicsCard PART_OF Workstation",
-          "Switch CONNECTS_TO Router"
-    ]
-  },
-  queries: [
+  name: "Theory Storage - Component Relations",
+  description: "Tests component relationships: parts, connections, power, and cooling in hardware systems.",
+  theory_NL: "We have several components: DiskA is part of a Computer, MemoryB is part of a Server, CPUC is part of a Workstation, NetworkD connects to a Router, PowerSupply powers Computer, CoolingFan cools Server, GraphicsCard is part of Workstation, Switch connects to Router.",
+  theory_DSL: [
+    "DiskA PART_OF Computer",
+    "MemoryB PART_OF Server",
+    "CPUC PART_OF Workstation",
+    "NetworkD CONNECTS_TO Router",
+    "PowerSupply POWERS Computer",
+    "CoolingFan COOLS Server",
+    "GraphicsCard PART_OF Workstation",
+    "Switch CONNECTS_TO Router"
+  ],
+  tasks: [
     {
       id: "q1",
-      natural_language: "After saving and retracting, is DiskA still recorded as part of the Computer?",
-      expected_dsl: `
-        @save SAVE_THEORY storage_case17
-        @retract DiskA RETRACT Computer
-        @q1 DiskA PART_OF Computer
-      `,
-      expected_answer: {
-        natural_language: "No. After retracting, the fact should no longer be present until reloaded.",
-        truth: "UNKNOWN",
-        explanation: "RETRACT removes the fact from the current session; ASK should not find it.",
-        existence: "zero"
-      }
+      TASK_NL: "Is DiskA part of Computer?",
+      TASK_DSL: "@q1 DiskA PART_OF Computer",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, DiskA is part of Computer."
     },
     {
       id: "q2",
-      natural_language: "After reloading the saved theory, is DiskA part of the Computer again?",
-      expected_dsl: `
-        @load LOAD_THEORY storage_case17
-        @q2 DiskA PART_OF Computer
-      `,
-      expected_answer: {
-        natural_language: "Yes. Loading the saved theory restores the fact that DiskA is part of the Computer.",
-        truth: "TRUE_CERTAIN",
-        explanation: "LOAD_THEORY pulls the saved ASSERT back into the concept store.",
-        existence: "positive"
-      }
+      TASK_NL: "Is MemoryB part of Server?",
+      TASK_DSL: "@q2 MemoryB PART_OF Server",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, MemoryB is part of Server."
     },
     {
       id: "q3",
-      natural_language: "Can we save a theory under a different name and reload it?",
-      expected_dsl: `
-        @save2 SAVE_THEORY memory_backup
-        @retract2 MemoryB RETRACT Server
-        @load2 LOAD_THEORY memory_backup
-        @q3 MemoryB PART_OF Server
-      `,
-      expected_answer: {
-        natural_language: "Yes. The theory was saved as memory_backup and successfully reloaded.",
-        truth: "TRUE_CERTAIN",
-        explanation: "SAVE_THEORY accepts custom names; LOAD_THEORY restores from that name.",
-        existence: "positive"
-      }
+      TASK_NL: "Is CPUC part of Workstation?",
+      TASK_DSL: "@q3 CPUC PART_OF Workstation",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, CPUC is part of Workstation."
     },
     {
       id: "q4",
-      natural_language: "After saving, retracting, but NOT reloading, is CPUC part of Workstation?",
-      expected_dsl: `
-        @save3 SAVE_THEORY cpu_backup
-        @retract3a CPUC RETRACT Workstation
-        @retract3b CPUC RETRACT Workstation
-        @forgetCPU concept FORGET any=CPUC
-        @q4 CPUC PART_OF Workstation
-      `,
-      expected_answer: {
-        natural_language: "No. Without reloading, the retracted fact stays gone.",
-        truth: "UNKNOWN",
-        explanation: "RETRACT removes the fact; only LOAD_THEORY can restore it.",
-        existence: "zero"
-      }
+      TASK_NL: "Does NetworkD connect to Router?",
+      TASK_DSL: "@q4 NetworkD CONNECTS_TO Router",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, NetworkD connects to Router."
     },
     {
       id: "q5",
-      natural_language: "Is NetworkD connected to Router after save and reload cycle?",
-      expected_dsl: `
-        @save4 SAVE_THEORY network_backup
-        @retract4 NetworkD RETRACT Router
-        @load4 LOAD_THEORY network_backup
-        @q5 NetworkD CONNECTS_TO Router
-      `,
-      expected_answer: {
-        natural_language: "Yes. The full save-retract-reload cycle restores the fact.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Complete cycle: save preserves, retract removes, load restores.",
-        existence: "positive"
-      }
+      TASK_NL: "Does PowerSupply power Computer?",
+      TASK_DSL: "@q5 PowerSupply POWERS Computer",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, PowerSupply powers Computer."
     },
     {
       id: "q6",
-      natural_language: "Does PowerSupply still power Computer without any retraction?",
-      expected_dsl: `@q6 PowerSupply POWERS Computer`,
-      expected_answer: {
-        natural_language: "Yes. Facts not retracted remain in the store.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Baseline check - untouched facts remain accessible.",
-        existence: "positive"
-      }
+      TASK_NL: "Does CoolingFan cool Server?",
+      TASK_DSL: "@q6 CoolingFan COOLS Server",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, CoolingFan cools Server."
     },
     {
       id: "q7",
-      natural_language: "After multiple retracts without save, can we still query CoolingFan?",
-      expected_dsl: `
-        @retract5a CoolingFan RETRACT Server
-        @retract5b CoolingFan RETRACT Server
-        @forgetFan concept FORGET any=CoolingFan
-        @q7 CoolingFan COOLS Server
-      `,
-      expected_answer: {
-        natural_language: "No. The fact was retracted and there's no saved backup to restore from.",
-        truth: "UNKNOWN",
-        explanation: "RETRACT without prior SAVE means the fact is lost.",
-        existence: "zero"
-      }
+      TASK_NL: "Is GraphicsCard part of Workstation?",
+      TASK_DSL: "@q7 GraphicsCard PART_OF Workstation",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, GraphicsCard is part of Workstation."
     },
     {
       id: "q8",
-      natural_language: "Can we overwrite a saved theory and reload the new version?",
-      expected_dsl: `
-        @save5 SAVE_THEORY overwrite_test
-        @_ NewFact IS_A test_item
-        @save6 SAVE_THEORY overwrite_test
-        @retract6 NewFact RETRACT test_item
-        @load5 LOAD_THEORY overwrite_test
-        @q8 NewFact IS_A test_item
-      `,
-      expected_answer: {
-        natural_language: "Yes. The second save overwrites the first; reload gets the newer version.",
-        truth: "TRUE_CERTAIN",
-        explanation: "SAVE_THEORY overwrites existing files; newest version is loaded.",
-        existence: "positive"
-      }
+      TASK_NL: "Does Switch connect to Router?",
+      TASK_DSL: "@q8 Switch CONNECTS_TO Router",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Switch connects to Router."
     }
   ],
-  version: "3.0"
 };

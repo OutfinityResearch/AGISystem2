@@ -33,111 +33,174 @@ function executeCommand(line, session, theoriesRoot) {
   try {
     switch (cmd.toLowerCase()) {
       case 'add': {
+        // v3 syntax: @_ Subject VERB Object
         const fact = args.trim();
         if (!fact) {
           result.error = 'Missing fact';
           break;
         }
-        session.run([`@f ASSERT ${fact}`]);
+        // Parse "Subject VERB Object" into triplet
+        const parts = fact.split(/\s+/);
+        if (parts.length < 3) {
+          result.error = 'Fact must be: Subject VERB Object';
+          break;
+        }
+        const [subject, verb, ...objParts] = parts;
+        const object = objParts.join('_'); // Join remaining as object
+        session.run([`@add ${subject} ${verb} ${object}`]);
         result.result = { ok: true, action: 'asserted', fact };
         break;
       }
       case 'ask': {
+        // v3 syntax: @q Subject VERB Object (query binding)
         const question = args.trim();
-        const env = session.run([`@q ASK "${question}"`]);
+        // Parse question: "Dog IS_A Animal?" or "Is Dog an Animal?"
+        // Remove trailing ? and common prefixes
+        let cleaned = question.replace(/\?$/, '').trim();
+        cleaned = cleaned.replace(/^(Is|Does|Can|Will|Has)\s+/i, '').trim();
+        cleaned = cleaned.replace(/\s+(a|an)\s+/gi, ' IS_A ').trim();
+        const parts = cleaned.split(/\s+/);
+        if (parts.length < 3) {
+          result.error = 'Question must resolve to: Subject VERB Object';
+          break;
+        }
+        const [subject, verb, ...objParts] = parts;
+        const object = objParts.join('_');
+        const env = session.run([`@q ${subject} ${verb} ${object}`]);
         const res = env.q || env.result || {};
         result.result = { truth: res.truth, band: res.band };
         break;
       }
       case 'retract': {
+        // v3 syntax: @r Subject RETRACT Object
         const fact = args.trim();
         if (!fact) {
           result.error = 'Missing fact';
           break;
         }
-        const env = session.run([`@r RETRACT ${fact}`]);
+        const parts = fact.split(/\s+/);
+        if (parts.length < 3) {
+          result.error = 'Fact must be: Subject VERB Object';
+          break;
+        }
+        const [subject, _verb, ...objParts] = parts;
+        const object = objParts.join('_');
+        const env = session.run([`@r ${subject} RETRACT ${object}`]);
         result.result = env.r || { ok: false };
         break;
       }
       case 'prove': {
+        // v3 syntax: @r Subject PROVE Object
         const statement = args.trim();
         if (!statement) {
           result.error = 'Missing statement';
           break;
         }
-        const env = session.run([`@r PROVE ${statement}`]);
+        const parts = statement.split(/\s+/);
+        if (parts.length < 3) {
+          result.error = 'Statement must be: Subject VERB Object';
+          break;
+        }
+        const [subject, _verb, ...objParts] = parts;
+        const object = objParts.join('_');
+        const env = session.run([`@r ${subject} PROVE ${object}`]);
         result.result = env.r || {};
         break;
       }
       case 'validate': {
-        const env = session.run(['@r VALIDATE']);
+        // v3 syntax: @r Subject VERB Object (4 tokens required)
+        const env = session.run(['@r current_theory VALIDATE any']);
         result.result = env.r || {};
         break;
       }
       case 'hypothesize': {
+        // v3 syntax: @r Subject HYPOTHESIZE Object
         const subject = args.trim();
         if (!subject) {
           result.error = 'Missing subject';
           break;
         }
-        const env = session.run([`@r HYPOTHESIZE ${subject}`]);
+        const env = session.run([`@r ${subject} HYPOTHESIZE any`]);
         result.result = env.r || {};
         break;
       }
       case 'abduct': {
+        // v3 syntax: @h Subject ABDUCT Object
         const parts = args.split(/\s+/);
         if (parts.length < 1 || !parts[0]) {
           result.error = 'Missing observation';
           break;
         }
         const observation = parts[0];
-        const relation = parts.length >= 2 ? parts[1] : null;
-        const env = session.run([
-          relation
-            ? `@h ABDUCT ${observation} ${relation}`
-            : `@h ABDUCT ${observation}`
-        ]);
+        const target = parts.length >= 2 ? parts[1] : 'any';
+        const env = session.run([`@h ${observation} ABDUCT ${target}`]);
         result.result = env.h || {};
         break;
       }
       case 'cf': {
+        // v3 syntax: Counterfactual needs special handling
+        // CLI syntax: cf Subject VERB Object? | Fact1 ; Fact2 ; ...
         const split = args.split('|');
         if (split.length < 2) {
           result.error = 'Missing counterfactual facts (use | separator)';
           break;
         }
-        const question = split[0].trim();
+        const question = split[0].trim().replace(/\?$/, '');
         const factsPart = split.slice(1).join('|');
         const facts = factsPart
           .split(';')
           .map((s) => s.trim())
           .filter((s) => s.length > 0);
-        const env = session.run([`@cf CF "${question}" | ${facts.join(' ; ')}`]);
+        // Parse question into triplet
+        const qParts = question.split(/\s+/);
+        if (qParts.length < 3) {
+          result.error = 'Question must be: Subject VERB Object';
+          break;
+        }
+        const [qSubject, qVerb, ...qObjParts] = qParts;
+        const qObject = qObjParts.join('_');
+        // Use THEORY_PUSH/POP for counterfactual exploration
+        session.run(['@cfPush cf_layer THEORY_PUSH any']);
+        // Add counterfactual facts
+        let cfIdx = 0;
+        for (const fact of facts) {
+          const fParts = fact.split(/\s+/);
+          if (fParts.length >= 3) {
+            const [fSubject, fVerb, ...fObjParts] = fParts;
+            session.run([`@cfFact${cfIdx} ${fSubject} ${fVerb} ${fObjParts.join('_')}`]);
+            cfIdx++;
+          }
+        }
+        // Query in counterfactual world
+        const env = session.run([`@cf ${qSubject} ${qVerb} ${qObject}`]);
+        // Pop the layer to restore original state
+        session.run(['@cfPop any THEORY_POP any']);
         result.result = env.cf || {};
         break;
       }
       case 'push': {
+        // v3 syntax: @r name THEORY_PUSH any
         const name = args.trim() || `layer_${Date.now()}`;
-        const env = session.run([`@r THEORY_PUSH name="${name}"`]);
+        const env = session.run([`@r ${name} THEORY_PUSH any`]);
         result.result = { ok: true, name, depth: (env.r || {}).depth };
         break;
       }
       case 'pop': {
-        const env = session.run(['@r THEORY_POP']);
+        // v3 syntax: @r any THEORY_POP any
+        const env = session.run(['@r any THEORY_POP any']);
         result.result = env.r || {};
         break;
       }
       case 'layers': {
-        const env = session.run(['@r LIST_THEORIES']);
+        // v3 syntax: @r any LIST_THEORIES any
+        const env = session.run(['@r any LIST_THEORIES any']);
         result.result = env.r || {};
         break;
       }
       case 'facts': {
-        const pattern = args.trim();
-        const dsl = pattern
-          ? `@r FACTS_MATCHING ${pattern} ? ?`
-          : '@r FACTS_MATCHING ? ? ?';
-        const env = session.run([dsl]);
+        // v3 syntax: @r pattern FACTS_MATCHING any
+        const pattern = args.trim() || 'any';
+        const env = session.run([`@r ${pattern} FACTS_MATCHING any`]);
         result.result = { facts: env.r || [], count: (env.r || []).length };
         break;
       }
@@ -148,32 +211,35 @@ function executeCommand(line, session, theoriesRoot) {
         break;
       }
       case 'usage': {
+        // v3 syntax: @r concept GET_USAGE any
         const concept = args.trim();
         if (!concept) {
           result.error = 'Missing concept';
           break;
         }
-        const env = session.run([`@r GET_USAGE ${concept}`]);
+        const env = session.run([`@r ${concept} GET_USAGE any`]);
         result.result = env.r || {};
         break;
       }
       case 'inspect': {
+        // v3 syntax: @r concept INSPECT any
         const concept = args.trim();
         if (!concept) {
           result.error = 'Missing concept';
           break;
         }
-        const env = session.run([`@r INSPECT ${concept}`]);
+        const env = session.run([`@r ${concept} INSPECT any`]);
         result.result = env.r || null;
         break;
       }
       case 'protect': {
+        // v3 syntax: @r concept PROTECT any
         const concept = args.trim();
         if (!concept) {
           result.error = 'Missing concept';
           break;
         }
-        session.run([`@r PROTECT ${concept}`]);
+        session.run([`@r ${concept} PROTECT any`]);
         result.result = { ok: true, protected: concept };
         break;
       }
@@ -189,25 +255,27 @@ function executeCommand(line, session, theoriesRoot) {
         break;
       }
       case 'forget': {
+        // v3 syntax: @r criteria FORGET any
         const criteria = args.trim();
         if (!criteria) {
           result.error = 'Missing criteria';
           break;
         }
-        const env = session.run([`@r FORGET ${criteria}`]);
+        const env = session.run([`@r ${criteria} FORGET any`]);
         result.result = env.r || {};
         break;
       }
       case 'boost': {
+        // v3 syntax: @r concept BOOST amount
         const parts = args.trim().split(/\s+/);
         if (!parts[0]) {
           result.error = 'Missing concept';
           break;
         }
         const concept = parts[0];
-        const amount = parts[1] ? parseInt(parts[1], 10) : 10;
-        session.run([`@r BOOST ${concept} ${amount}`]);
-        result.result = { ok: true, boosted: concept, amount };
+        const amount = parts[1] ? parts[1] : '10';
+        session.run([`@r ${concept} BOOST ${amount}`]);
+        result.result = { ok: true, boosted: concept, amount: parseInt(amount, 10) };
         break;
       }
       case 'run': {

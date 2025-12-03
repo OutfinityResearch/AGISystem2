@@ -25,6 +25,7 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 - `data/init/dimensions.json` → `.specs/init/dimensions.json.md` — JSON layout for dimension catalog instances.
 - `data/init/relations.json` → `.specs/init/relations.json.md` — JSON layout for default relation instances.
 - `data/init/config_profile.json` → `.specs/init/config_profile.json.md` — JSON layout for profile selection and seeds.
+- `data/init/meta_registry.json` → `.specs/init/meta_registry.json.md` — Registry of built-in theories/profiles and their identifiers for discovery.
 
 ## Ingestion and Learning
 - `src/ingest/parser.js` → `.specs/ingest/parser.js.md` — Class `NLParser`: parse text into subject–relation–object trees; configurable recursion horizon.
@@ -98,6 +99,9 @@ Each code file in `src/**` must have a matching DS markdown under `.specs/**` wi
 ## Testing Harness
 - `tests/runTests.js` → `.specs/tests/runTests.js.md` — CLI harness for suite discovery and execution across test profiles (auto/manual/prod-like).
 - `tests/fixtures` → `.specs/tests/fixtures.md` — Shared test inputs/expected outcomes for suites.
+
+## Additional Sample Theories
+- `data/init/theories/positioning.sys2dsl` → `.specs/theory/base/positioning.sys2dsl.md` — Sample spatial/positional theory used for documentation and tests.
 
 ## Open DS Questions
 - Dimension configuration (minimum 512, optionally higher for production) affects masks, permutations, storage formats, and test fixtures; each DS must state supported configs and defaults.

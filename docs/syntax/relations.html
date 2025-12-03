@@ -88,14 +88,14 @@
 
     <h3>Examples</h3>
     <pre><code># Taxonomy assertions
-@_ Dog ASSERT mammal
-@_ mammal ASSERT animal
-@_ Cat ASSERT mammal
-@_ Dog ASSERT Cat
+@_ Dog IS_A mammal
+@_ mammal IS_A animal
+@_ Cat IS_A mammal
+@_ Dog DISJOINT_WITH Cat
 
 # Query with transitive closure
-@q1 Dog ASK animal        # TRUE (via transitivity)
-@q2 Dog ASK Cat  # TRUE</code></pre>
+@q1 Dog IS_A animal        # TRUE (via transitivity)
+@q2 Cat IS_A animal        # TRUE</code></pre>
 
     <h2>Mereological Relations (Part-Whole)</h2>
     <p>Relations for compositional structure:</p>
@@ -129,11 +129,11 @@
 
     <h3>Examples</h3>
     <pre><code># Mereological structure
-@_ Engine ASSERT Car
-@_ Piston ASSERT Engine
+@_ Engine PART_OF Car
+@_ Piston PART_OF Engine
 
 # Query transitivity
-@q1 Piston ASK Car     # TRUE (via Engine)</code></pre>
+@q1 Piston PART_OF Car     # TRUE (via Engine)</code></pre>
 
     <h2>Spatial Relations</h2>
     <p>Relations for location and containment:</p>
@@ -161,11 +161,11 @@
 
     <h3>Examples</h3>
     <pre><code># Spatial assertions
-@_ Paris ASSERT France
-@_ France ASSERT Europe
+@_ Paris LOCATED_IN France
+@_ France LOCATED_IN Europe
 
 # Spatial query
-@q1 Paris ASK Europe  # May require explicit rule</code></pre>
+@q1 Paris LOCATED_IN Europe  # May require explicit rule</code></pre>
 
     <h2>Causal Relations</h2>
     <p>Relations for cause-effect reasoning:</p>
@@ -199,11 +199,11 @@
 
     <h3>Examples</h3>
     <pre><code># Causal assertions
-@_ Fire ASSERT Smoke
-@_ Rain ASSERT WetGround
+@_ Fire CAUSES Smoke
+@_ Rain CAUSES WetGround
 
 # Abductive reasoning (find causes)
-@causes Smoke ABDUCT any
+@causes Smoke ABDUCT CAUSES
 # Returns: [Fire, ...]</code></pre>
 
     <h2>Deontic Relations (Norms)</h2>
@@ -244,12 +244,17 @@
 
     <h3>Examples</h3>
     <pre><code># Normative assertions
-@_ GDPR ASSERT ConsentBasedProcessing
-@_ GDPR ASSERT UnconsentedDataSale
-@_ OurSystem ASSERT GDPR
+@_ GDPR PERMITS ConsentBasedProcessing
+@_ GDPR PROHIBITS UnconsentedDataSale
+@_ OurSystem COMPLIES_WITH GDPR
+
+# Contradiction example (multiple parents)
+@_ Alice HAS_PARENT Paris
+@_ Alice HAS_PARENT London
+@_ Alice HAS_PARENT Bob
 
 # Compliance check
-@q1 OurSystem ASK GDPR  # Should be FALSE</code></pre>
+@q1 OurSystem COMPLIES_WITH GDPR</code></pre>
 
     <h2>Domain-Specific Relations</h2>
     <p>Pre-defined relations for specific use cases:</p>

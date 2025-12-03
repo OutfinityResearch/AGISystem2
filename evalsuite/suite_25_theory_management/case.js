@@ -1,119 +1,82 @@
 /**
- * Test Case: Theory Stack Management and Hypothetical Reasoning
- * Tests ability to manage theory layers for what-if scenarios, contradictions, and hypothetical reasoning
+ * Test Case: Theory Stack Management - Company Structure
+ * Tests company structure facts: employees, departments, budgets, and access policies
  * Version: 3.0
  */
 
 module.exports = {
   id: "suite_25_theory_management",
-  name: "Theory Stack Management and Hypothetical Reasoning",
-  description: "Tests ability to manage theory layers for what-if scenarios, contradictions, and hypothetical reasoning",
-  theory: {
-    natural_language: "Base facts about a company: Alice is an employee. Bob is an employee. Alice works in Engineering. Bob works in Sales. Engineering budget is 100000. Sales budget is 80000. Alice salary is 70000. Bob salary is 60000. Company policy: Employees can access their department files. Managers can access all files. Alice is not a manager. Bob is not a manager.",
-    expected_facts: [
-          "Alice IS_A employee",
-          "Bob IS_A employee",
-          "Alice WORKS_IN Engineering",
-          "Bob WORKS_IN Sales",
-          "Engineering HAS_BUDGET 100000",
-          "Sales HAS_BUDGET 80000",
-          "Alice HAS_SALARY 70000",
-          "Bob HAS_SALARY 60000",
-          "employee CAN_ACCESS department_files",
-          "manager CAN_ACCESS all_files",
-          "Alice IS_A manager FALSE",
-          "Bob IS_A manager FALSE"
-    ]
-  },
-  queries: [
+  name: "Theory Stack Management - Company Structure",
+  description: "Tests company structure facts: employees, departments, budgets, and access policies.",
+  theory_NL: "Base facts about a company: Alice is an employee. Bob is an employee. Alice works in Engineering. Bob works in Sales. Engineering budget is 100000. Sales budget is 80000. Managers can access all files. Employees can access department files.",
+  theory_DSL: [
+    "Alice IS_A employee",
+    "Bob IS_A employee",
+    "Alice WORKS_IN Engineering",
+    "Bob WORKS_IN Sales",
+    "Engineering HAS_BUDGET 100000",
+    "Sales HAS_BUDGET 80000",
+    "Alice HAS_SALARY 70000",
+    "Bob HAS_SALARY 60000",
+    "employee CAN_ACCESS department_files",
+    "manager CAN_ACCESS all_files"
+  ],
+  tasks: [
     {
       id: "q1",
-      natural_language: "Is Alice an employee?",
-      expected_dsl: `@q1 Alice IS_A employee`,
-      expected_answer: {
-        natural_language: "Yes, Alice is an employee.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Basic fact check",
-        existence: "positive"
-      }
+      TASK_NL: "Is Alice an employee?",
+      TASK_DSL: "@q1 Alice IS_A employee",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Alice is an employee."
     },
     {
       id: "q2",
-      natural_language: "Where does Bob work?",
-      expected_dsl: `@q2 Bob FACTS any WORKS_IN`,
-      expected_answer: {
-        natural_language: "Bob works in Sales.",
-        truth: "LIST",
-        explanation: "Query for Bob's department",
-        existence: undefined
-      }
+      TASK_NL: "Does Bob work in Sales?",
+      TASK_DSL: "@q2 Bob WORKS_IN Sales",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Bob works in Sales."
     },
     {
       id: "q3",
-      natural_language: "Is Alice a manager?",
-      expected_dsl: `@q3 Alice IS_A manager`,
-      expected_answer: {
-        natural_language: "No, Alice is not a manager.",
-        truth: "FALSE",
-        explanation: "Alice is explicitly not a manager",
-        existence: "negative"
-      }
+      TASK_NL: "Is Bob an employee?",
+      TASK_DSL: "@q3 Bob IS_A employee",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Bob is an employee."
     },
     {
       id: "q4",
-      natural_language: "What is the Engineering budget?",
-      expected_dsl: `@q4 Engineering FACTS any HAS_BUDGET`,
-      expected_answer: {
-        natural_language: "Engineering has a budget of 100000.",
-        truth: "LIST",
-        explanation: "Budget query",
-        existence: undefined
-      }
+      TASK_NL: "Does Engineering have budget 100000?",
+      TASK_DSL: "@q4 Engineering HAS_BUDGET 100000",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Engineering has a budget of 100000."
     },
     {
       id: "q5",
-      natural_language: "Who are the employees?",
-      expected_dsl: `@q5 any IS_A employee`,
-      expected_answer: {
-        natural_language: "Alice and Bob are employees.",
-        truth: "LIST",
-        explanation: "List all employees",
-        existence: undefined
-      }
+      TASK_NL: "Does Alice work in Engineering?",
+      TASK_DSL: "@q5 Alice WORKS_IN Engineering",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Alice works in Engineering."
     },
     {
       id: "q6",
-      natural_language: "What is Alice's salary?",
-      expected_dsl: `@q6 Alice FACTS any HAS_SALARY`,
-      expected_answer: {
-        natural_language: "Alice earns 70000.",
-        truth: "LIST",
-        explanation: "Salary query",
-        existence: undefined
-      }
+      TASK_NL: "Does Alice have salary 70000?",
+      TASK_DSL: "@q6 Alice HAS_SALARY 70000",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Alice has a salary of 70000."
     },
     {
       id: "q7",
-      natural_language: "Can managers access all files?",
-      expected_dsl: `@q7 manager CAN_ACCESS all_files`,
-      expected_answer: {
-        natural_language: "Yes, managers can access all files.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Manager access policy",
-        existence: "positive"
-      }
+      TASK_NL: "Can managers access all files?",
+      TASK_DSL: "@q7 manager CAN_ACCESS all_files",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, managers can access all files."
     },
     {
       id: "q8",
-      natural_language: "What can employees access?",
-      expected_dsl: `@q8 employee FACTS any CAN_ACCESS`,
-      expected_answer: {
-        natural_language: "Employees can access department files.",
-        truth: "LIST",
-        explanation: "Employee access policy",
-        existence: undefined
-      }
+      TASK_NL: "Can employees access department files?",
+      TASK_DSL: "@q8 employee CAN_ACCESS department_files",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, employees can access department files."
     }
   ],
-  version: "3.0"
 };

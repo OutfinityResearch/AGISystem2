@@ -21,7 +21,7 @@ END
 END
 
 # Default reasoning depth (loaded at init)
-@_ depth_default CONTROLS reasoning_depth
+@init_depth depth_default CONTROLS reasoning_depth
 
 # -----------------------------------------------------------------------------
 # SECTION 2: Backtracking Control
@@ -39,7 +39,7 @@ END
 END
 
 # Default backtrack limit (loaded at init)
-@_ limit_default CONTROLS backtrack_limit
+@init_backtrack limit_default CONTROLS backtrack_limit
 
 # -----------------------------------------------------------------------------
 # SECTION 3: Timeout Control
@@ -57,7 +57,7 @@ END
 END
 
 # Default timeout (loaded at init)
-@_ timeout_default CONTROLS timeout_ms
+@init_timeout timeout_default CONTROLS timeout_ms
 
 # -----------------------------------------------------------------------------
 # SECTION 4: Confidence Thresholds
@@ -75,7 +75,7 @@ END
 END
 
 # Default confidence threshold
-@_ plausible CONTROLS confidence_threshold
+@init_confidence plausible CONTROLS confidence_threshold
 
 # -----------------------------------------------------------------------------
 # SECTION 5: Inference Strategy
@@ -94,7 +94,7 @@ END
 END
 
 # Default strategy
-@_ first_match CONTROLS inference_strategy
+@init_strategy first_match CONTROLS inference_strategy
 
 # Strategy constants
 @exhaustive NUMERIC_VALUE 1
@@ -123,7 +123,7 @@ END
 @hybrid NUMERIC_VALUE 3
 
 # Default mode
-@_ hybrid CONTROLS reasoning_mode
+@init_mode hybrid CONTROLS reasoning_mode
 
 # -----------------------------------------------------------------------------
 # SECTION 7: Debug and Trace Control
@@ -154,7 +154,7 @@ END
 @debug NUMERIC_VALUE 3
 
 # Default verbosity
-@_ normal CONTROLS verbosity
+@init_verbosity normal CONTROLS verbosity
 
 # -----------------------------------------------------------------------------
 # SECTION 8: Resource Limits
@@ -173,8 +173,8 @@ END
 END
 
 # Default limits
-@_ limit_high CONTROLS max_facts
-@_ limit_default CONTROLS max_results
+@init_max_facts limit_high CONTROLS max_facts
+@init_max_results limit_default CONTROLS max_results
 
 # -----------------------------------------------------------------------------
 # SECTION 9: Dimension Masking Control
@@ -195,7 +195,7 @@ END
 # UNMASK_ALL - Remove all masks
 @UNMASK_ALL BEGIN
   @pair1 masked_partitions DIM_PAIR zero
-  @_ session SET_DIM $pair1
+  @set1 session SET_DIM $pair1
   @pair2 masked_dims DIM_PAIR zero
   @return session SET_DIM $pair2
 END

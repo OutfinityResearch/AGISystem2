@@ -40,6 +40,21 @@ class ConceptStore {
 
     // Protection for forgetting
     this._protected = new Set(); // concept labels that cannot be forgotten
+
+    // =========================================================================
+    // Existence Tracking (v3.0)
+    // =========================================================================
+    // Index for fast existence-level queries: subject -> sorted array by existence
+    this._existenceIndex = new Map(); // subject -> { entries: [{factId, existence}] }
+
+    // Existence level constants
+    this.EXISTENCE = {
+      IMPOSSIBLE: -127,   // Contradicted by facts
+      UNPROVEN: -64,      // Asserted but not verified
+      POSSIBLE: 0,        // Consistent but not established
+      DEMONSTRATED: 64,   // Derived via reasoning
+      CERTAIN: 127        // From theory/axioms
+    };
   }
 
   // =========================================================================
@@ -155,13 +170,41 @@ class ConceptStore {
   // =========================================================================
 
   /**
-   * Add fact triple
+   * Add fact triple with optional existence level
    * @param {Object} triple - {subject, relation, object}
+   * @param {Object} [options] - Options including existence level
+   * @param {number} [options.existence=127] - Existence level (-127 to 127)
    * @returns {number} Fact ID (index)
    */
-  addFact(triple) {
+  addFact(triple, options = {}) {
+    const existence = typeof options.existence === 'number'
+      ? options.existence
+      : this.EXISTENCE.CERTAIN;
+
+    // Version unification: check for existing fact with same triple
+    const existingBest = this.getBestExistenceFact(triple.subject, triple.relation, triple.object);
+    if (existingBest) {
+      if (existingBest._existence >= existence) {
+        // Don't create duplicate - higher or equal certainty already exists
+        // Just record usage for the existing fact
+        this._recordUsage(triple.subject, 'assert');
+        if (triple.object) {
+          this._recordUsage(triple.object, 'assert');
+        }
+        return existingBest._id;
+      } else {
+        // Upgrade existing fact to higher existence level
+        this.upgradeExistence(existingBest._id, existence);
+        this._recordUsage(triple.subject, 'assert');
+        if (triple.object) {
+          this._recordUsage(triple.object, 'assert');
+        }
+        return existingBest._id;
+      }
+    }
+
     const factId = this._facts.length;
-    const fact = { ...triple, _id: factId };
+    const fact = { ...triple, _id: factId, _existence: existence };
     this._facts.push(fact);
 
     // Index by subject
@@ -169,6 +212,9 @@ class ConceptStore {
       this._factIndex.set(triple.subject, []);
     }
     this._factIndex.get(triple.subject).push(factId);
+
+    // Update existence index (sorted by existence descending)
+    this._updateExistenceIndex(triple.subject, factId, existence);
 
     // Track usage for subject and object concepts
     this._recordUsage(triple.subject, 'assert');
@@ -184,7 +230,7 @@ class ConceptStore {
 
     // Audit log
     if (this.audit) {
-      this.audit.log('fact_added', { factId, triple });
+      this.audit.log('fact_added', { factId, triple, existence });
     }
 
     return factId;
@@ -209,6 +255,13 @@ class ConceptStore {
     if (subjectFacts) {
       const idx = subjectFacts.indexOf(factId);
       if (idx !== -1) subjectFacts.splice(idx, 1);
+    }
+
+    // Remove from existence index
+    const existenceList = this._existenceIndex.get(fact.subject);
+    if (existenceList) {
+      const existIdx = existenceList.entries.findIndex(e => e.factId === factId);
+      if (existIdx !== -1) existenceList.entries.splice(existIdx, 1);
     }
 
     // Audit log
@@ -241,10 +294,165 @@ class ConceptStore {
       .filter(f => f && !f._deleted);
   }
 
+  // =========================================================================
+  // Existence Tracking Methods (v3.0)
+  // =========================================================================
+
+  /**
+   * Update the existence index for a subject (sorted descending by existence)
+   * @private
+   * @param {string} subject - Subject label
+   * @param {number} factId - Fact ID
+   * @param {number} existence - Existence level (-127 to 127)
+   */
+  _updateExistenceIndex(subject, factId, existence) {
+    if (!this._existenceIndex.has(subject)) {
+      this._existenceIndex.set(subject, { entries: [] });
+    }
+
+    const list = this._existenceIndex.get(subject);
+    const entry = { factId, existence };
+
+    // Binary search insert to maintain descending order by existence
+    let left = 0;
+    let right = list.entries.length;
+
+    while (left < right) {
+      const mid = Math.floor((left + right) / 2);
+      if (list.entries[mid].existence > existence) {
+        left = mid + 1;
+      } else {
+        right = mid;
+      }
+    }
+
+    list.entries.splice(left, 0, entry);
+  }
+
+  /**
+   * Get the fact with highest existence for a given subject/relation/object triple
+   * Used for version unification (higher existence wins)
+   * @param {string} subject - Subject label
+   * @param {string} relation - Relation type
+   * @param {string} [object] - Object label (optional)
+   * @returns {Object|null} Fact with highest existence or null
+   */
+  getBestExistenceFact(subject, relation, object) {
+    const facts = this.getFactsBySubject(subject);
+
+    // Filter by relation and object, keeping track of highest existence
+    let best = null;
+    let bestExistence = -128; // Lower than IMPOSSIBLE
+
+    for (const fact of facts) {
+      if (fact.relation !== relation) continue;
+      if (object !== undefined && fact.object !== object) continue;
+
+      const factExistence = fact._existence !== undefined
+        ? fact._existence
+        : this.EXISTENCE.CERTAIN;
+
+      if (factExistence > bestExistence) {
+        best = fact;
+        bestExistence = factExistence;
+      }
+    }
+
+    return best;
+  }
+
+  /**
+   * Get all facts with existence level at or above threshold
+   * @param {number} minExistence - Minimum existence level (inclusive)
+   * @returns {Array} Facts meeting threshold
+   */
+  getFactsByExistence(minExistence) {
+    return this._facts
+      .filter(f => {
+        if (f._deleted) return false;
+        const existence = f._existence !== undefined ? f._existence : this.EXISTENCE.CERTAIN;
+        return existence >= minExistence;
+      });
+  }
+
+  /**
+   * Get facts for a subject with their existence levels
+   * Returns sorted by existence (highest first)
+   * @param {string} subject - Subject label
+   * @returns {Array} Facts with _existence field, sorted descending
+   */
+  getFactsWithExistence(subject) {
+    const list = this._existenceIndex.get(subject);
+    if (!list) return [];
+
+    return list.entries
+      .map(e => this._facts[e.factId])
+      .filter(f => f && !f._deleted);
+  }
+
+  /**
+   * Get facts for a subject filtered by relation and existence level
+   * @param {string} subject - Subject label
+   * @param {string} relation - Relation type
+   * @param {number} [minExistence] - Minimum existence level
+   * @returns {Array} Matching facts
+   */
+  getFactsBySubjectAndRelation(subject, relation, minExistence) {
+    const facts = this.getFactsBySubject(subject);
+
+    return facts.filter(f => {
+      if (f.relation !== relation) return false;
+      if (minExistence !== undefined) {
+        const existence = f._existence !== undefined ? f._existence : this.EXISTENCE.CERTAIN;
+        if (existence < minExistence) return false;
+      }
+      return true;
+    });
+  }
+
+  /**
+   * Update existence level for an existing fact
+   * Only upgrades (higher existence replaces lower)
+   * @param {number} factId - Fact ID
+   * @param {number} newExistence - New existence level
+   * @returns {boolean} True if upgraded
+   */
+  upgradeExistence(factId, newExistence) {
+    const fact = this._facts[factId];
+    if (!fact || fact._deleted) return false;
+
+    const currentExistence = fact._existence !== undefined ? fact._existence : this.EXISTENCE.CERTAIN;
+    if (newExistence <= currentExistence) return false;
+
+    // Update the fact
+    fact._existence = newExistence;
+
+    // Update existence index (remove and re-insert to maintain sort)
+    const list = this._existenceIndex.get(fact.subject);
+    if (list) {
+      const idx = list.entries.findIndex(e => e.factId === factId);
+      if (idx !== -1) {
+        list.entries.splice(idx, 1);
+        this._updateExistenceIndex(fact.subject, factId, newExistence);
+      }
+    }
+
+    if (this.audit) {
+      this.audit.log('existence_upgraded', {
+        factId,
+        from: currentExistence,
+        to: newExistence,
+        triple: { subject: fact.subject, relation: fact.relation, object: fact.object }
+      });
+    }
+
+    return true;
+  }
+
   /**
    * Create a snapshot of all facts for later restoration
    * Used by theory layers for counterfactual reasoning
-   * @returns {Array} Deep copy of facts array
+   * @returns {Array} Deep copy of facts array with existence levels
    */
   snapshotFacts() {
     return this._facts
@@ -252,7 +460,8 @@ class ConceptStore {
       .map(f => ({
         subject: f.subject,
         relation: f.relation,
-        object: f.object
+        object: f.object,
+        _existence: f._existence !== undefined ? f._existence : this.EXISTENCE.CERTAIN
       }));
   }
 
@@ -262,25 +471,32 @@ class ConceptStore {
    * @param {Array} snapshot - Facts array from snapshotFacts()
    */
   restoreFacts(snapshot) {
-    // Clear current facts and index
+    // Clear current facts and indices
     this._facts = [];
     this._factIndex.clear();
+    this._existenceIndex.clear();
 
     // Re-add each fact from snapshot
     for (const fact of snapshot) {
       const factId = this._facts.length;
+      const existence = fact._existence !== undefined ? fact._existence : this.EXISTENCE.CERTAIN;
+
       this._facts.push({
         subject: fact.subject,
         relation: fact.relation,
         object: fact.object,
-        _id: factId
+        _id: factId,
+        _existence: existence
       });
 
-      // Rebuild index
+      // Rebuild subject index
       if (!this._factIndex.has(fact.subject)) {
         this._factIndex.set(fact.subject, []);
       }
       this._factIndex.get(fact.subject).push(factId);
+
+      // Rebuild existence index
+      this._updateExistenceIndex(fact.subject, factId, existence);
     }
 
     if (this.audit) {
@@ -576,6 +792,225 @@ class ConceptStore {
       protected: protectedList,
       skipped: protectedList.length
     };
+  }
+
+  // =========================================================================
+  // FS-10/NFS-007: Persistence via StorageAdapter
+  // =========================================================================
+
+  /**
+   * Save current store state to storage
+   * Persists facts, concepts, and usage metrics
+   * @returns {boolean} Success status
+   */
+  saveToStorage() {
+    if (!this.storage) {
+      return false;
+    }
+
+    try {
+      const snapshot = this.createFullSnapshot();
+      const result = this.storage.saveStoreSnapshot(snapshot);
+
+      if (this.audit) {
+        this.audit.log('store_saved', {
+          facts: snapshot.facts.length,
+          concepts: snapshot.concepts.length,
+          timestamp: snapshot.timestamp
+        });
+      }
+
+      return result;
+    } catch (e) {
+      if (this.audit) {
+        this.audit.log('store_save_error', { error: e.message });
+      }
+      return false;
+    }
+  }
+
+  /**
+   * Load store state from storage
+   * Restores facts, concepts, and usage metrics
+   * @returns {boolean} Success status
+   */
+  loadFromStorage() {
+    if (!this.storage) {
+      return false;
+    }
+
+    try {
+      const snapshot = this.storage.loadStoreSnapshot();
+      if (!snapshot) {
+        return false;
+      }
+
+      this.restoreFromSnapshot(snapshot);
+
+      if (this.audit) {
+        this.audit.log('store_loaded', {
+          facts: this._facts.length,
+          concepts: this._concepts.size,
+          timestamp: snapshot.timestamp
+        });
+      }
+
+      return true;
+    } catch (e) {
+      if (this.audit) {
+        this.audit.log('store_load_error', { error: e.message });
+      }
+      return false;
+    }
+  }
+
+  /**
+   * Create a full snapshot of the store state
+   * @returns {Object} Full snapshot including facts, concepts, and usage
+   */
+  createFullSnapshot() {
+    // Snapshot facts with existence
+    const facts = this._facts
+      .filter(f => !f._deleted)
+      .map(f => ({
+        subject: f.subject,
+        relation: f.relation,
+        object: f.object,
+        _existence: f._existence !== undefined ? f._existence : this.EXISTENCE.CERTAIN
+      }));
+
+    // Snapshot concepts (serialize diamonds)
+    const concepts = [];
+    for (const [label, entry] of this._concepts.entries()) {
+      concepts.push({
+        label,
+        diamonds: entry.diamonds.map(d => ({
+          id: d.id,
+          label: d.label,
+          center: d.center ? Array.from(d.center) : [],
+          l1Radius: d.l1Radius,
+          minValues: d.minValues ? Array.from(d.minValues) : [],
+          maxValues: d.maxValues ? Array.from(d.maxValues) : []
+        }))
+      });
+    }
+
+    // Snapshot usage metrics
+    const usageMetrics = {};
+    for (const [label, metrics] of this._usageMetrics.entries()) {
+      usageMetrics[label] = { ...metrics };
+    }
+
+    // Snapshot protected concepts
+    const protectedConcepts = Array.from(this._protected);
+
+    return {
+      version: '3.0',
+      timestamp: new Date().toISOString(),
+      dimensions: this.dimensions,
+      facts,
+      concepts,
+      usageMetrics,
+      protectedConcepts
+    };
+  }
+
+  /**
+   * Restore store state from a snapshot
+   * @param {Object} snapshot - Full snapshot
+   */
+  restoreFromSnapshot(snapshot) {
+    // Clear current state
+    this._facts = [];
+    this._factIndex.clear();
+    this._existenceIndex.clear();
+    this._concepts.clear();
+    this._usageMetrics.clear();
+    this._protected.clear();
+
+    // Restore facts
+    if (Array.isArray(snapshot.facts)) {
+      for (const fact of snapshot.facts) {
+        const factId = this._facts.length;
+        const existence = fact._existence !== undefined ? fact._existence : this.EXISTENCE.CERTAIN;
+
+        this._facts.push({
+          subject: fact.subject,
+          relation: fact.relation,
+          object: fact.object,
+          _id: factId,
+          _existence: existence
+        });
+
+        // Rebuild indices
+        if (!this._factIndex.has(fact.subject)) {
+          this._factIndex.set(fact.subject, []);
+        }
+        this._factIndex.get(fact.subject).push(factId);
+        this._updateExistenceIndex(fact.subject, factId, existence);
+      }
+    }
+
+    // Restore concepts (requires BoundedDiamond)
+    if (Array.isArray(snapshot.concepts)) {
+      for (const conceptData of snapshot.concepts) {
+        const diamonds = conceptData.diamonds.map(d => {
+          const diamond = new BoundedDiamond(d.id, d.label, this.dimensions);
+          if (d.center) {
+            for (let i = 0; i < d.center.length; i++) {
+              diamond.center[i] = d.center[i];
+            }
+          }
+          if (d.minValues) {
+            for (let i = 0; i < d.minValues.length; i++) {
+              diamond.minValues[i] = d.minValues[i];
+            }
+          }
+          if (d.maxValues) {
+            for (let i = 0; i < d.maxValues.length; i++) {
+              diamond.maxValues[i] = d.maxValues[i];
+            }
+          }
+          diamond.l1Radius = d.l1Radius || 0;
+          return diamond;
+        });
+
+        this._concepts.set(conceptData.label, {
+          label: conceptData.label,
+          diamonds
+        });
+      }
+    }
+
+    // Restore usage metrics
+    if (snapshot.usageMetrics && typeof snapshot.usageMetrics === 'object') {
+      for (const [label, metrics] of Object.entries(snapshot.usageMetrics)) {
+        this._usageMetrics.set(label, { ...metrics });
+      }
+    }
+
+    // Restore protected concepts
+    if (Array.isArray(snapshot.protectedConcepts)) {
+      for (const label of snapshot.protectedConcepts) {
+        this._protected.add(label);
+      }
+    }
+  }
+
+  /**
+   * Check if storage is configured
+   * @returns {boolean}
+   */
+  hasStorage() {
+    return this.storage !== null;
+  }
+
+  /**
+   * Set storage adapter
+   * @param {StorageAdapter} storage
+   */
+  setStorage(storage) {
+    this.storage = storage;
   }
 }
 

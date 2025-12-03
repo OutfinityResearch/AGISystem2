@@ -100,7 +100,7 @@
 
   <p>Sys2DSL commands follow a consistent grammar. The full syntax reference is in the <a href="../syntax/index.html">Syntax Guide</a>.</p>
 
-  <h3>Command Types</h3>
+  <h3>Command Types (v2 legacy view)</h3>
 
   <table class="table-concept-index">
     <thead>
@@ -108,14 +108,14 @@
     </thead>
     <tbody>
       <tr>
-        <td><strong>ASSERT</strong></td>
-        <td><code>@_ Subject RELATION Object</code></td>
-        <td>Add a fact to the knowledge base</td>
+        <td><strong>Triple fact</strong></td>
+        <td><code>@_ Subject VERB Object</code></td>
+        <td>Add or update a fact in the knowledge base using verbs like <code>IS_A</code>, <code>HAS</code>, <code>CAUSES</code></td>
       </tr>
       <tr>
-        <td><strong>ASK</strong></td>
-        <td><code>@var Subject RELATION Object</code></td>
-        <td>Query for truth value</td>
+        <td><strong>Triple query</strong></td>
+        <td><code>@var Subject VERB Object</code></td>
+        <td>Query for truth value or retrieve composite results (for example with <code>FACTS</code>, <code>INSTANCES</code>, <code>QUERY</code>)</td>
       </tr>
       <tr>
         <td><strong>RETRACT</strong></td>
@@ -133,9 +133,9 @@
         <td>Discard top theory layer</td>
       </tr>
       <tr>
-        <td><strong>FACTS_MATCHING</strong></td>
-        <td><code>@var pattern FACTS any</code></td>
-        <td>Query for matching facts</td>
+        <td><strong>FACTS</strong></td>
+        <td><code>@var Subject FACTS any</code></td>
+        <td>Query for matching facts using the <code>FACTS</code> verb (replaces <code>FACTS_MATCHING</code>)</td>
       </tr>
     </tbody>
   </table>
@@ -182,13 +182,12 @@ SIMILAR_TO, DIFFERENT_FROM</pre>
   </ol>
 
   <pre>
-// Input: "@_ Dog IS_A Animal"
-// Output AST:
+// Input: "@_ Dog IS_A animal"
+// Output (conceptual triple representation):
 {
-  type: "ASSERT",
   subject: { type: "Identifier", value: "Dog" },
-  relation: { type: "Relation", value: "IS_A" },
-  object: { type: "Identifier", value: "Animal" }
+  verb:    { type: "Relation",  value: "IS_A" },
+  object:  { type: "Identifier", value: "animal" }
 }</pre>
 
   <h3>Error Handling</h3>

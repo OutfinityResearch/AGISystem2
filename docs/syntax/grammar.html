@@ -14,19 +14,19 @@
   <p>AGISystem2 deliberately understands only a small, precise interaction language. At the engine boundary, everything is expressed as Sys2DSL statements built from simple subject–relation–object shapes. The goal is not to mimic human style but to provide a form that can be mapped into high-dimensional conceptual space without ambiguity. This page describes those canonical shapes, how they appear in Sys2DSL, and how they relate to any upstream natural-language normalisation.</p>
 
   <h2>The Canonical Assertion and Question Forms</h2>
-  <p>Every core fact has three parts: subject, verb, and object. In canonical v3 triple form this is <code>Subject VERB Object</code>, such as <code>Dog ASSERT Animal</code>, which says that the concept labelled "Dog" belongs to the broader concept "Animal". Properties are expressed using specific verbs that connect subjects to value concepts: <code>Water ASSERT Celsius100</code> means the concept "Water" has its boiling point at the value concept "Celsius100".</p>
+  <p>Every core fact has three parts: subject, verb, and object. In canonical v3 triple form this is <code>Subject VERB Object</code>, such as <code>Dog IS_A animal</code>, which says that the concept labelled "Dog" belongs to the broader concept "animal". Properties are expressed using specific verbs that connect subjects to value concepts: <code>Water BOILS_AT Celsius100</code> means the concept "Water" has its boiling point at the value concept "Celsius100".</p>
   <p>In Sys2DSL v3, such assertions are always written as triple statements, for example:</p>
-  <pre><code>@_ Dog ASSERT Animal
-@_ Water ASSERT Celsius100
-@_ Celsius100 ASSERT temperature</code></pre>
+  <pre><code>@_ Dog IS_A animal
+@_ Water BOILS_AT Celsius100
+@_ Celsius100 IS_A temperature</code></pre>
   <p>From a geometric perspective, both subjects and values are points in conceptual space. Relations like <code>BOILS_AT</code> connect them through permutation binding. This approach keeps values as first-class concepts that can be reasoned about independently (e.g., "what else has this temperature?").</p>
-  <p>Questions follow the same subject–verb–object backbone but use ASK as the verb. In Sys2DSL v3 they appear as <code>@q Dog ASK Animal</code> or <code>@q Water ASK Celsius100</code>. Internally, the parser and encoder reconstruct the triple and ask whether the corresponding point lies inside the appropriate concept region. In other words, both assertions and questions ultimately become vectors, masks, and bounded‑diamond membership tests, as explained in the Conceptual Spaces and Reasoning chapters.</p>
+  <p>Questions follow the same subject–verb–object backbone but use the same verbs; the distinction between “assertion” and “question” is semantic, not syntactic. For example, <code>@q Dog IS_A animal</code> queries whether Dog lies inside the region for animal. When you want higher-level behaviour, you can use verbs like <code>QUERY</code> or wildcards like <code>any</code>, for example <code>@q Dog QUERY animal</code> or <code>@animals any IS_A animal</code>. Internally, both assertions and questions ultimately become vectors, masks, and bounded‑diamond membership tests, as explained in the Conceptual Spaces and Reasoning chapters.</p>
 
   <h2>Counterfactual and Deontic Forms</h2>
   <p>Some statements describe temporary, hypothetical contexts rather than facts that should be stored permanently. In Sys2DSL v3 these are expressed with the CF verb. For example:</p>
   <pre><code>@cf "Water BOILS_AT Celsius50?" CF any</code></pre>
   <p>For the duration of this reasoning step, the engine adds the given fact as a temporary overlay and answers the question under that overlay. The corresponding geometric adjustments are confined to a cloned theory stack and discarded after the query completes, leaving the base theory unchanged.</p>
-  <p>Normative sentences rely on deontic verbs such as <code>PERMITS</code>, <code>PROHIBITS</code>, and <code>OBLIGATES</code>. A statement like <code>@_ ExportData ASSERT GDPR</code> assigns a deontic status to the action "ExportData" under the regime labelled "GDPR". Causal and temporal relations use verbs such as <code>CAUSES</code>/<code>CAUSED_BY</code> and <code>BEFORE</code>/<code>AFTER</code>. Structural relations include <code>IS_A</code>, <code>PART_OF</code>/<code>HAS_PART</code>, and <code>LOCATED_IN</code>/<code>CONTAINS</code>. Property relations use specific verbs like <code>BOILS_AT</code>, <code>HAS_COLOR</code>, <code>WEIGHS</code>. Relation definitions and their geometric mappings are specified in the relation design specs and the RelationPermuter.</p>
+  <p>Normative sentences rely on deontic verbs such as <code>PERMITS</code>, <code>PROHIBITS</code>, and <code>OBLIGATES</code>. A statement like <code>@_ ExportData REGULATED_BY GDPR</code> assigns a deontic status to the action "ExportData" under the regime labelled "GDPR". Causal and temporal relations use verbs such as <code>CAUSES</code>/<code>CAUSED_BY</code> and <code>BEFORE</code>/<code>AFTER</code>. Structural relations include <code>IS_A</code>, <code>PART_OF</code>/<code>HAS_PART</code>, and <code>LOCATED_IN</code>/<code>CONTAINS</code>. Property relations use specific verbs like <code>BOILS_AT</code>, <code>HAS_COLOR</code>, <code>WEIGHS</code>. Relation definitions and their geometric mappings are specified in the relation design specs and the RelationPermuter.</p>
 
   <h2>What the Engine Rejects</h2>
   <p>The constrained grammar is intentionally strict about what it accepts. At the Sys2DSL level, every fact or question must be expressible as a small number of tokens in a subject–relation–object pattern. Free‑form requests such as “Tell me a story” or “Give me advice” do not map directly to this grammar; they belong outside AGISystem2 or must first be normalised to canonical triples.</p>
@@ -39,22 +39,22 @@
   <h2>Concrete Examples</h2>
   <pre>
 Assertion:
-  @_ Dog ASSERT Animal
+  @_ Dog IS_A animal
 Property (value as concept):
-  @_ Water ASSERT Celsius100
-  @_ Celsius100 ASSERT temperature
-Question:
-  @q1 Water ASK Celsius100
-Counterfactual:
-  @cf "Water BOILS_AT Celsius50?" CF any
+  @_ Celsius100 IS_A temperature
+  @_ Water BOILS_AT Celsius100
+Question (truth check):
+  @q1 Dog IS_A animal
+Pattern query:
+  @animals any IS_A animal
 Deontic:
-  @_ ExportData ASSERT GDPR
+  @_ ExportData REGULATED_BY GDPR
 Causal:
-  @_ Fire ASSERT Smoke
+  @_ Fire CAUSES Smoke
 Temporal:
-  @_ EventA ASSERT EventB
+  @_ EventA BEFORE EventB
 Structural:
-  @_ Engine ASSERT Car
+  @_ Engine PART_OF Car
   </pre>
   <p>These examples are deliberately simple, but they capture the core shapes that the engine understands. More complex scenarios are expressed as Sys2DSL programmes that build on these triples, bind concepts and points, apply masks, and combine intermediate results via variables and topological evaluation.</p>
 

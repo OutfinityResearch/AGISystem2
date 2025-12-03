@@ -10,81 +10,83 @@
   <div class="nav-header">
     <h1>Facts and Questions</h1>
   </div>
-  <p>Facts and questions in AGISystem2 are expressed exclusively through Sys2DSL, not as “free” text lines. Every fact or question is an instruction of the form <code>@var ACTION ...</code> inside a session or a theory file.</p>
+  <p>Facts and questions in AGISystem2 are expressed exclusively through Sys2DSL, not as “free” text lines. Every interaction is a triple statement of the form <code>@var Subject VERB Object</code> inside a session or a theory file.</p>
 
-  <h2>Facts in Sys2DSL (ASSERT)</h2>
-  <p>A fact is a Sys2DSL instruction that binds a variable to a canonical triple <code>Subject VERB Object</code> and inserts it into the active theory.</p>
+  <h2>Facts in Sys2DSL (Triple Assertions)</h2>
+  <p>A fact is a Sys2DSL instruction that binds a variable to a canonical triple <code>Subject VERB Object</code> and updates the active theory. There is no special <code>ASSERT</code> command in v3.0 – you simply use verbs such as <code>IS_A</code>, <code>HAS</code>, <code>CAUSES</code>, etc.</p>
 
   <p>General form:</p>
-  <pre><code>@_ subject ASSERT object</code></pre>
+  <pre><code>@_ Subject VERB Object</code></pre>
 
   <p>Examples of basic facts:</p>
-  <pre><code>@_ Dog ASSERT Animal
-@_ Water ASSERT Celsius100
-@_ Celsius100 ASSERT temperature
-@_ surgery_x ASSERT consent
-@_ export_data ASSERT GDPR</code></pre>
-  <p><strong>Note:</strong> Properties like boiling point are expressed using specific relations (e.g., <code>BOILS_AT</code>) that connect subjects to value concepts (e.g., <code>Celsius100</code>). This keeps values as first-class concepts that can be reasoned about independently.</p>
+  <pre><code>@_ Dog IS_A animal
+@_ Water HAS boiling_point
+@_ Water BOILS_AT Celsius100
+@_ surgery_x REQUIRES consent
+@_ export_data REGULATED_BY GDPR</code></pre>
+  <p><strong>Note:</strong> Properties like boiling point are expressed using specific verbs (for example <code>BOILS_AT</code>) that connect subjects to value concepts (for example <code>Celsius100</code>). This keeps values as first-class concepts that can be reasoned about independently.</p>
 
   <p>Conventions for tokens in the parameter list:</p>
   <ul>
-    <li>a word starting with a lowercase letter (<code>dog</code>, <code>water</code>, <code>export_data</code>) is treated as a concept name;</li>
-    <li>a word starting with an uppercase letter (<code>Alice</code>, <code>CityX</code>) is treated as an individual or concrete instance;</li>
+    <li>a word starting with a lowercase letter (<code>animal</code>, <code>water</code>, <code>export_data</code>) is treated as a concept name;</li>
+    <li>a word starting with an uppercase letter (<code>Dog</code>, <code>Alice</code>, <code>CityX</code>) is treated as an individual or concrete instance (a fact point);</li>
     <li>a word starting with <code>$</code> (<code>$factList</code>) is a reference to a variable already defined in the script.</li>
   </ul>
 
-  <p><code>ASSERT</code> instructions are the only ones that introduce new facts into the session theory; there is no implicit ingestion of “bare” lines. You may have multiple instructions in the same script; each <code>@</code> marks the start of a new statement, even if they appear on the same line.</p>
+  <p>Any triple statement that uses verbs like <code>IS_A</code>, <code>HAS</code>, <code>CAUSES</code>, etc. both creates/updates points in conceptual space and returns a result point. There is no separate “assert vs query” syntax – that distinction is semantic, not syntactic.</p>
 
-  <h2>Yes/No Questions (ASK)</h2>
-  <p>Questions are also Sys2DSL instructions, but instead of modifying the theory they bind a variable to a "truth object" that holds the result of reasoning. The form is:</p>
-  <pre><code>@q1 subject ASK object</code></pre>
+  <h2>Yes/No Questions (Triple Queries)</h2>
+  <p>Questions are also Sys2DSL instructions. They bind a variable to a result point whose existence dimension encodes the truth value. The form is still:</p>
+  <pre><code>@q1 Subject VERB Object</code></pre>
 
-  <p>Questions use the triple syntax where the verb ASK is placed between subject and object.</p>
-  <ul>
-    <li>simple natural‑language questions, normalised by the translator, such as:
-      <pre><code>@q1 "Is Dog an Animal?" ASK any
-@q2 "Is Water a Substance?" ASK any</code></pre>
-    </li>
-    <li>canonical triples, for example:
-      <pre><code>@q3 Dog ASK Animal
-@q4 Water ASK Celsius100
-@q5 export_data ASK GDPR</code></pre>
-    </li>
-  </ul>
+  <p>Typical yes/no queries use the same verbs as assertions:</p>
+  <pre><code>@q1 Dog IS_A animal
+@q2 Water BOILS_AT Celsius100
+@q3 export_data REGULATED_BY GDPR</code></pre>
 
-  <p>In all cases, the result is stored in the variable <code>@qN</code> and can be read or combined by other instructions (for example in more complex Sys2DSL programmes). There is no separate sugar mode: questions always go through <code>@var ASK ...</code>.</p>
+  <p>To enumerate or “ask what/which”, use the <code>any</code> wildcard and dedicated query verbs from the v3.0 spec:</p>
+  <pre><code>@animals any IS_A animal        # All animals
+@dogFacts Dog FACTS any          # All facts about Dog
+@causes any CAUSES smoke         # What causes smoke?
+@result Dog QUERY animal         # High-level query verb</code></pre>
+
+  <p>In all cases, the result is stored in the variable (for example <code>@q1</code>) and can be read or combined by other instructions. See the design specs for <code>IS_A</code>, <code>FACTS</code> and <code>QUERY</code> in the <code>Sys2DSL_commands*</code> documents for exact semantics.</p>
 
   <h2>Counterfactual Questions (CF)</h2>
-  <p>Counterfactuals use a dedicated action but remain a single Sys2DSL instruction. General form:</p>
-  <pre><code>@cfVar CF "question-text" | Fact1 ; Fact2 ; ...</code></pre>
+  <p>Counterfactuals can be expressed either via high-level verbs like <code>WHATIF</code> or via the <code>CF</code> verb described in the core command spec. In both cases we still use triple syntax.</p>
 
-  <p>Simple example (asking "what if water boiled at 50°C?"):</p>
-  <pre><code>@cf CF "Water BOILS_AT Celsius50"
-     | Water BOILS_AT Celsius50</code></pre>
+  <p>High-level example (see <code>Sys2DSL_highlevel.md</code>):</p>
+  <pre><code>@result Water WHATIF gas</code></pre>
 
-  <p>The list of assumptions after <code>|</code> uses the same “Subject REL Object” grammar as <code>ASSERT</code>, separated by <code>;</code> when there are multiple facts. Internally, the engine treats these facts as a temporary theory layer for the given question, without modifying the session’s base theory.</p>
+  <p>Core <code>CF</code> form from DS(/theory/dsl_commands_core.js):</p>
+  <pre><code>@result Query CF "Water IS_A gas? | Water BOILS_AT Celsius50"</code></pre>
+
+  <p>Here <code>Query</code> is the subject, <code>CF</code> is the verb, and the object is a structured string that contains a question and a list of hypothetical facts separated by <code>|</code> and <code>;</code>. Internally, the engine uses theory layers so that these assumptions do not modify the base theory.</p>
 
   <h2>Combining Facts and Questions in One Script</h2>
   <p>A typical Sys2DSL script that mixes facts and questions looks like this:</p>
-  <pre><code>@_ Dog ASSERT Animal
-@_ Water ASSERT Celsius100
-@_ Celsius100 ASSERT temperature
-@q1 Dog ASK Animal
-@q2 Water ASK Celsius100</code></pre>
+  <pre><code>@_ Dog IS_A animal
+@_ Water BOILS_AT Celsius100
+@_ Celsius100 IS_A temperature
+@q1 Dog IS_A animal
+@q2 Water BOILS_AT Celsius100</code></pre>
 
   <p>You can write the same instructions on a single line, for example:</p>
-  <pre><code>@_ Dog ASSERT Animal @q1 Dog ASK Animal</code></pre>
+  <pre><code>@_ Dog IS_A animal @q1 Dog IS_A animal</code></pre>
 
   <p>The interpreter splits the script at each <code>@</code>, builds the dependency graph between variables and executes the instructions in a topological order so that <code>$</code> references are resolved correctly even if they appear “earlier” in the text.</p>
 
   <h2>Summary</h2>
-  <p>In v3 triple syntax, facts and questions use the form <code>@var Subject VERB Object</code> where VERB can be ASSERT, ASK, or other verbs. This guarantees a single, analyzable interaction form that is easy to compose into theory programmes.</p>
+  <p>In v3.0 triple syntax, both facts and questions use the unified form <code>@var Subject VERB Object</code>. There is no separate <code>ASSERT</code>/<code>ASK</code> command layer; instead, verbs like <code>IS_A</code>, <code>HAS</code>, <code>FACTS</code>, <code>QUERY</code>, <code>WHATIF</code>, etc. all follow the same triple pattern. This guarantees a single, analyzable interaction form that is easy to compose into theory programmes.</p>
 
   <h2>References</h2>
   <p>For implementation details, see the relevant design specifications (referenced by ID):</p>
   <ul>
-    <li>DS[/theory/dsl_engine.js] – Sys2DSL interpreter and the <code>ASSERT</code>, <code>ASK</code>, <code>CF</code> actions.</li>
-    <li>DS[/ingest/parser.js] – grammar for <code>Subject REL Object</code> triples.</li>
+    <li>DS[/theory/Sys2DSL-spec.md] – semantic specification (no distinction between query and assertion).</li>
+    <li>DS[/theory/Sys2DSL-grammar.md] – grammar for <code>@var Subject VERB Object</code> triples.</li>
+    <li>DS[/theory/Sys2DSL_commands_assertions_entities.md] – <code>IS_A</code>, <code>HAS</code>, and related verbs.</li>
+    <li>DS[/theory/Sys2DSL_commands_queries_masks.md] – <code>IS_A</code>, <code>FACTS</code>, <code>QUERY</code>, and mask verbs.</li>
+    <li>DS[/theory/Sys2DSL_highlevel.md] – high-level verbs such as <code>QUERY</code>, <code>WHATIF</code>, and <code>SUMMARIZE_FACTS</code>.</li>
     <li>DS[/interface/system2_session.js] – how Sys2DSL scripts are sent to and evaluated inside a session.</li>
   </ul>
 

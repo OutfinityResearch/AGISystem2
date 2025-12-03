@@ -23,8 +23,15 @@ export { ChatEngine, ChatREPL };
 if (import.meta.url === `file://${process.argv[1]}`) {
   // Parse CLI arguments
   const args = process.argv.slice(2);
+  let debug = true;
+  if (args.includes('--no-debug')) {
+    debug = false;
+  } else if (args.includes('--debug')) {
+    debug = true;
+  }
+
   const options = {
-    debug: args.includes('--debug'),
+    debug,
     noColor: args.includes('--no-color')
   };
 

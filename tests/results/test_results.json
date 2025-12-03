@@ -1,19 +1,293 @@
 {
-  "timestamp": "2025-12-02T21:50:41.505Z",
+  "timestamp": "2025-12-03T12:03:46.544Z",
   "profile": "auto_test",
   "summary": {
-    "total": 1,
-    "passed": 1,
-    "failed": 0,
-    "skipped": 0,
+    "total": 36,
+    "passed": 34,
+    "failed": 1,
+    "skipped": 1,
     "timeout": 0
   },
   "suites": {
+    "abductive_causal": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "abductive_geometric": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "agentic_session_api": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "analogical_reasoning": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "bias_control": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "bounded_diamond": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "cli_integration": {
+      "status": "failed",
+      "passed": 3,
+      "failed": 16,
+      "total": 19,
+      "errors": [
+        {
+          "name": "CLI --help works",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "exec: add fact returns ok",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "exec: ask returns truth value",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "exec: config returns snapshot",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "batch: basic_facts.txt executes without critical errors",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "batch: basic_facts.txt has correct command count",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "batch: theory_layers.txt executes successfully",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "batch: memory_management.txt executes successfully",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "batch: abduction_reasoning.txt executes successfully",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "batch: dsl_execution.txt executes successfully",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "batch: ask commands return truth values",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "batch: prove commands return proven status",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "batch: validate command returns consistency status",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "batch: JSON output has required structure",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "batch: commands have timestamps",
+          "error": "spawnSync /bin/sh EPERM"
+        },
+        {
+          "name": "exec: unknown command returns error",
+          "error": "spawnSync /bin/sh EPERM"
+        }
+      ]
+    },
+    "concept_store": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "config_profiles": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "contradiction_detector": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "core_math": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "counterfactual_layering": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "dimensions_catalog": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "existence_dimension": {
+      "status": "passed",
+      "passed": 16,
+      "failed": 0,
+      "total": 16
+    },
+    "forgetting": {
+      "status": "passed",
+      "passed": 11,
+      "failed": 0,
+      "total": 11
+    },
+    "health_compliance": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "inference_engine": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "is_a_existence": {
+      "status": "passed",
+      "passed": 14,
+      "failed": 0,
+      "total": 14
+    },
+    "narrative_consistency": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "phase2_integration": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "phase3_benchmarks": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "phase3_edge_cases": {
+      "status": "passed",
+      "passed": 29,
+      "failed": 0,
+      "total": 29
+    },
+    "property_mapping": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "reason_smoke": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "reasoner_timeout": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "relation_permuter": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "storage_adapter": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "suites": {
+      "status": "skipped",
+      "reason": "no index.js"
+    },
     "sys2dsl_commands": {
       "status": "passed",
       "passed": 30,
       "failed": 0,
       "total": 30
+    },
+    "sys2dsl_core": {
+      "status": "passed",
+      "passed": 10,
+      "failed": 0,
+      "total": 10
+    },
+    "temporal_memory": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "theory_layering": {
+      "status": "passed",
+      "passed": 12,
+      "failed": 0,
+      "total": 12
+    },
+    "theory_persistence": {
+      "status": "passed",
+      "passed": 8,
+      "failed": 0,
+      "total": 8
+    },
+    "translator_bridge_normalization": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
+    },
+    "usage_tracking": {
+      "status": "passed",
+      "passed": 11,
+      "failed": 0,
+      "total": 11
+    },
+    "vector_space": {
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "total": 1
     }
   }
 }

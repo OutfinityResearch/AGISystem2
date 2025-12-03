@@ -71,9 +71,9 @@
         <th>Example</th>
       </tr>
       <tr>
-        <td><code>FACTS_MATCHING</code></td>
-        <td>Query facts by pattern</td>
-        <td><code>@facts FACTS_MATCHING Dog ? ?</code></td>
+        <td><code>FACTS</code></td>
+        <td>Query facts via triple pattern</td>
+        <td><code>@facts Dog FACTS any</code></td>
       </tr>
       <tr>
         <td><code>GET_USAGE</code></td>
@@ -380,21 +380,22 @@
     </table>
 
     <h3>Example: Memory Maintenance</h3>
-    <pre><code># Check what's rarely used
-@lowUsage FACTS_MATCHING ? usage_count LessThan 3
+    <pre><code># Check what's rarely used (pattern via FACTS)
+@lowUsage any FACTS any
 
 # Protect critical concepts
-@_ PROTECT Water
-@_ PROTECT fundamental_axiom
+@_ Water PROTECT any
+@_ fundamental_axiom PROTECT any
 
 # Boost important domain concepts
-@_ BOOST CustomerData 100
+@_ CustomerData BOOST any
 
-# Clean up (dry run first)
-@preview FORGET threshold=5 dryRun=true
+# Clean up (dry run) using control concepts (see Sys2DSL_commands_theory_memory)
+@threshold NUMERIC_VALUE 5
+@preview $threshold FORGET any
 
-# Actually forget
-@result FORGET threshold=5</code></pre>
+# Actually forget (production profile may run this periodically)
+@result $threshold FORGET any</code></pre>
 
     <h2>5. Dimension Masks: Attention Focus</h2>
     <p>Masks control which dimensions participate in reasoning – a form of selective attention.</p>
@@ -407,14 +408,9 @@
         <th>Example</th>
       </tr>
       <tr>
-        <td><code>MASK_PARTITIONS</code></td>
-        <td>Mask by partition</td>
-        <td><code>@m MASK_PARTITIONS ontology</code></td>
-      </tr>
-      <tr>
-        <td><code>MASK_DIMS</code></td>
-        <td>Mask specific dims</td>
-        <td><code>@m MASK_DIMS temperature color</code></td>
+        <td><code>MASK</code></td>
+        <td>Create a mask by partition or dimension names</td>
+        <td><code>@m ontology MASK any</code></td>
       </tr>
       <tr>
         <td><code>MASK_CONCEPT</code></td>
@@ -430,31 +426,29 @@
 
     <h3>Example: Bias Control</h3>
     <pre><code># Create mask that ignores value judgments
-@fairMask ontology MASK_PARTITIONS any
+@fairMask ontology MASK any
 
-# Query without axiological bias
-@result Candidate ASK Position
+# Query without axiological bias (mask used at theory/engine level)
+@result Candidate QUERY Position
 
 # Compare with full query
-@fullResult Candidate ASK Position
+@fullResult Candidate QUERY Position
 
-# Explain the difference
+# Explain the difference (domain-specific verb)
 @diff $result EXPLAIN_DIFFERENCE $fullResult</code></pre>
 
     <h2>6. Relation Introspection</h2>
     <p>Query and understand the relation system itself.</p>
 
     <h3>Relation Introspection Commands</h3>
-    <pre><code># List all known relations
-@rels LIST_RELATIONS
+    <pre><code># Get properties of a relation as a point
+@rel IS_A BIND_RELATION any
+@info $rel INSPECT any
+# Returns: metadata including symmetry, transitivity, inverse
 
-# Get properties of a relation
-@info GET_RELATION_INFO IS_A
-# Returns: { symmetric: false, transitive: true, inverse: null }
-
-# Find relations between concepts
-@links GET_RELATIONS_BETWEEN Dog mammal
-# Returns: ["IS_A"]</code></pre>
+# Find relations between concepts via FACTS
+@links Dog FACTS any
+# Filter links in client code to focus on Dog→mammal relationships</code></pre>
 
     <h2>7. Script Evaluation: Understanding Execution</h2>
     <p>The DSL engine itself can be introspected.</p>
@@ -463,9 +457,9 @@
     <p>Scripts are evaluated in <strong>topological order</strong> based on variable dependencies:</p>
 
     <pre><code># These can appear in any order in the file
-@b BOOL_AND $a $a    # Depends on @a
-@a NONEMPTY $list    # Depends on @list
-@list FACTS_MATCHING dog IS_A ?  # No dependencies
+@b $a BOOL_AND $a          # Depends on @a
+@a $list NONEMPTY any      # Depends on @list
+@list Dog FACTS any        # No dependencies
 
 # Execution order:
 # 1. @list (no deps)
@@ -475,17 +469,17 @@
     <h3>Variable Composition</h3>
     <p>Variables enable metacognitive composition:</p>
 
-    <pre><code># Store a concept reference
-@subject BIND_CONCEPT Water
-@relation BIND_RELATION BOILS_AT
-@value BIND_CONCEPT Celsius100
+    <pre><code># Store concept and relation references
+@subject Water BIND any
+@relation BOILS_AT BIND_RELATION any
+@value Celsius100 BIND any
 
-# Compose dynamically
-@fact $subject $relation $value
+# Compose dynamically via triple
+@fact Water BOILS_AT Celsius100
 
-# The system "knows" it asserted Water BOILS_AT Celsius100
-@reflection GET_LAST_ASSERTION
-# Returns: { subject: "Water", relation: "BOILS_AT", object: "Celsius100" }</code></pre>
+# The system "knows" this fact and can expose it via FACTS
+@reflection Water FACTS any
+# Returns a list including Water BOILS_AT Celsius100</code></pre>
 
     <h2>8. The Four Use Cases of Sys2DSL</h2>
     <p>Understanding the system's metacognitive purpose:</p>
@@ -498,7 +492,7 @@
       </tr>
       <tr>
         <td><strong>Define Theory</strong></td>
-        <td>ASSERT, DEFINE_RELATION</td>
+        <td>triple facts (IS_A, HAS, CAUSES, ...), DEFINE_RELATION</td>
         <td>Building the knowledge base</td>
       </tr>
       <tr>
@@ -513,7 +507,7 @@
       </tr>
       <tr>
         <td><strong>Prove</strong></td>
-        <td>PROVE, ASK, EXPLAIN</td>
+        <td>PROVE, QUERY, EXPLAIN</td>
         <td>Deriving and explaining conclusions</td>
       </tr>
     </table>

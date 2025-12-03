@@ -18,6 +18,8 @@
 
 const TheoryStorage = require('./theory_storage');
 const MetaTheoryRegistry = require('./meta_theory_registry');
+const TheoryStack = require('../knowledge/theory_stack');
+const TheoryLayer = require('../knowledge/theory_layer');
 
 class DSLCommandsTheory {
   /**
@@ -27,10 +29,13 @@ class DSLCommandsTheory {
    * @param {Object} [deps.storage] - TheoryStorage instance (optional)
    * @param {Object} [deps.metaRegistry] - MetaTheoryRegistry instance (optional)
    * @param {string} [deps.theoriesDir] - Custom theories directory
+   * @param {Object} [deps.theoryStack] - Shared TheoryStack instance (FS-02 integration)
+   * @param {Object} [deps.config] - Config instance
    */
-  constructor({ conceptStore, parser, storage, metaRegistry, theoriesDir }) {
+  constructor({ conceptStore, parser, storage, metaRegistry, theoriesDir, theoryStack, config }) {
     this.conceptStore = conceptStore;
     this.parser = parser;
+    this.config = config;
 
     // Pluggable storage - default to file storage
     this.storage = storage || new TheoryStorage({ theoriesDir });
@@ -38,9 +43,17 @@ class DSLCommandsTheory {
     // Meta-theory registry for tracking theory usage
     this.metaRegistry = metaRegistry || MetaTheoryRegistry.getShared();
 
-    // Theory layer stack for counterfactual reasoning
-    this._theoryStack = [];
-    this._factSnapshots = [];
+    // =========================================================================
+    // FS-02 Integration: Unified Theory Stack
+    // =========================================================================
+    // Use shared TheoryStack if provided (from EngineAPI), otherwise create local
+    // This ensures diamond composition and fact management are coordinated
+    const dimensions = config ? config.get('dimensions') : 512;
+    this.theoryStack = theoryStack || new TheoryStack({ config, dimensions });
+
+    // Unified context stack for counterfactual reasoning (facts + diamonds)
+    // Each entry contains both fact snapshot and theory layer snapshot
+    this._contextStack = [];
 
     // Track currently loaded theory
     this._currentTheory = null;
@@ -51,16 +64,19 @@ class DSLCommandsTheory {
    * Syntax: @var LIST_THEORIES
    *
    * Returns both persisted theories and active theory stack
+   * FS-02: Uses unified TheoryStack for layer management
    */
   cmdListTheories() {
     const available = this.storage.listTheories();
-    const active = this._theoryStack.map((t) => t.name);
+    const activeLayers = this.theoryStack.getActiveLayers();
+    const active = activeLayers.map((l) => l.label || l.id);
 
     return {
       available,
       active,
       current: this._currentTheory,
-      depth: this._theoryStack.length
+      depth: this._contextStack.length,
+      theoryStackDepth: this.theoryStack.depth()
     };
   }
 
@@ -98,12 +114,28 @@ class DSLCommandsTheory {
     let errors = [];
 
     for (const line of lines) {
-      // Parse ASSERT statements
+      // Parse v2 ASSERT statements: @f001 ASSERT Subject Relation Object
       const assertMatch = line.match(/@?\w*\s*ASSERT\s+(\S+)\s+(\S+)\s+(\S+)/);
       if (assertMatch) {
         const [, subject, relation, object] = assertMatch;
         try {
-          // addFact expects an object, not separate arguments
+          this.conceptStore.addFact({ subject, relation, object });
+          loaded++;
+        } catch (e) {
+          errors.push(`${subject} ${relation} ${object}: ${e.message}`);
+        }
+        continue;
+      }
+
+      // Parse v3 statements: @_ Subject VERB Object (4 tokens)
+      const v3Match = line.match(/^@\w*\s+(\S+)\s+(\S+)\s+(\S+)$/);
+      if (v3Match) {
+        const [, subject, relation, object] = v3Match;
+        // Skip wildcard/any objects, they're not real facts
+        if (object === 'any' || object === '*') {
+          continue;
+        }
+        try {
           this.conceptStore.addFact({ subject, relation, object });
           loaded++;
         } catch (e) {
@@ -272,29 +304,57 @@ class DSLCommandsTheory {
    * Creates a new hypothetical context. Facts asserted in this
    * context are isolated from the base knowledge and will be
    * discarded when THEORY_POP is called.
+   *
+   * FS-02 Integration: Saves both:
+   * - ConceptStore facts (for logical reasoning)
+   * - TheoryStack layers (for geometric reasoning)
    */
   cmdTheoryPush(argTokens, env) {
     const name = argTokens.length > 0
       ? this.parser.expandString(argTokens[0], env).replace(/^name=["']?|["']?$/g, '')
-      : `layer_${this._theoryStack.length}`;
+      : `context_${this._contextStack.length}`;
 
-    // Use snapshotFacts() if available, otherwise getFacts()
-    const snapshot = this.conceptStore.snapshotFacts
+    // Snapshot facts from ConceptStore
+    const factSnapshot = this.conceptStore.snapshotFacts
       ? this.conceptStore.snapshotFacts()
       : this.conceptStore.getFacts().map((f) => ({ ...f }));
 
-    this._factSnapshots.push(snapshot);
-    this._theoryStack.push({
+    // Snapshot TheoryStack layers (geometric state)
+    const layerSnapshot = this.theoryStack.snapshot({ facts: factSnapshot });
+
+    // Create new theory layer for this context
+    const dimensions = this.config ? this.config.get('dimensions') : 512;
+    const layer = new TheoryLayer(dimensions, {
+      id: name,
+      label: name,
+      priority: this._contextStack.length,
+      metadata: {
+        source: 'counterfactual',
+        timestamp: new Date().toISOString(),
+        parentContext: this._contextStack.length > 0
+          ? this._contextStack[this._contextStack.length - 1].name
+          : null
+      }
+    });
+
+    // Push to unified context stack
+    this._contextStack.push({
       name,
       pushedAt: new Date().toISOString(),
-      factCount: snapshot.length
+      factSnapshot,
+      layerSnapshot,
+      layer
     });
+
+    // Push layer to TheoryStack for geometric reasoning
+    this.theoryStack.push(layer);
 
     return {
       ok: true,
       name,
-      depth: this._theoryStack.length,
-      snapshotFacts: snapshot.length
+      depth: this._contextStack.length,
+      snapshotFacts: factSnapshot.length,
+      theoryStackDepth: this.theoryStack.depth()
     };
   }
 
@@ -305,25 +365,32 @@ class DSLCommandsTheory {
    * Discards the current hypothetical context and restores
    * the knowledge base to its state before the corresponding
    * THEORY_PUSH.
+   *
+   * FS-02 Integration: Restores both:
+   * - ConceptStore facts (for logical reasoning)
+   * - TheoryStack layers (for geometric reasoning)
    */
   cmdTheoryPop() {
-    if (this._theoryStack.length === 0) {
-      return { ok: false, error: 'No theory layer to pop' };
+    if (this._contextStack.length === 0) {
+      return { ok: false, error: 'No theory context to pop' };
     }
 
-    const popped = this._theoryStack.pop();
-    const snapshot = this._factSnapshots.pop();
+    const popped = this._contextStack.pop();
 
-    // Restore facts to the snapshot state
-    if (snapshot && this.conceptStore.restoreFacts) {
-      this.conceptStore.restoreFacts(snapshot);
+    // Pop from TheoryStack (geometric)
+    this.theoryStack.pop();
+
+    // Restore facts to the snapshot state (logical)
+    if (popped.factSnapshot && this.conceptStore.restoreFacts) {
+      this.conceptStore.restoreFacts(popped.factSnapshot);
     }
 
     return {
       ok: true,
       popped: popped.name,
-      depth: this._theoryStack.length,
-      restoredFacts: snapshot ? snapshot.length : 0
+      depth: this._contextStack.length,
+      restoredFacts: popped.factSnapshot ? popped.factSnapshot.length : 0,
+      theoryStackDepth: this.theoryStack.depth()
     };
   }
 
@@ -333,12 +400,37 @@ class DSLCommandsTheory {
    *
    * Resets all theory layers and session-specific data.
    * Does not affect persisted knowledge.
+   *
+   * FS-02 Integration: Clears both context stack and TheoryStack
    */
   cmdResetSession() {
-    this._theoryStack = [];
-    this._factSnapshots = [];
+    this._contextStack = [];
+    this.theoryStack.clear();
     this._currentTheory = null;
     return { ok: true, status: 'session_reset' };
+  }
+
+  /**
+   * COMMIT: Commit current hypothetical context to base knowledge
+   * Syntax: @var COMMIT
+   *
+   * Makes the current context permanent (cannot be popped after commit)
+   */
+  cmdCommit() {
+    if (this._contextStack.length === 0) {
+      return { ok: false, error: 'No context to commit' };
+    }
+
+    // Clear context stack but keep TheoryStack layers and current facts
+    const committed = this._contextStack.length;
+    this._contextStack = [];
+
+    return {
+      ok: true,
+      committed,
+      status: 'committed',
+      currentFacts: this.conceptStore.getFacts().length
+    };
   }
 
   /**
@@ -372,17 +464,33 @@ class DSLCommandsTheory {
   }
 
   /**
-   * Get current theory depth
+   * Get current theory depth (context stack)
    */
   getTheoryDepth() {
-    return this._theoryStack.length;
+    return this._contextStack.length;
   }
 
   /**
    * Check if in hypothetical context
    */
   isHypothetical() {
-    return this._theoryStack.length > 0;
+    return this._contextStack.length > 0;
+  }
+
+  /**
+   * Get access to the shared TheoryStack (for FS-02 integration)
+   * @returns {TheoryStack} The TheoryStack instance
+   */
+  getTheoryStack() {
+    return this.theoryStack;
+  }
+
+  /**
+   * Get active layers from TheoryStack
+   * @returns {Array} Active theory layers
+   */
+  getActiveLayers() {
+    return this.theoryStack.getActiveLayers();
   }
 
   /**

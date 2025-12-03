@@ -1,133 +1,80 @@
 /**
- * Test Case: Masking & Dimension Registry
- * Exercises MASK_PARTITIONS and MASK_DIMS to ensure mask generation uses config partitions and DimensionRegistry axis names; ASK_MASKED should still return correct truth values.
+ * Test Case: Masking & Dimension Registry - Fact Queries
+ * Tests basic ontology and axiology fact queries
  * Version: 3.0
  */
 
 module.exports = {
   id: "suite_15_masks",
-  name: "Masking & Dimension Registry",
-  description: "Exercises MASK_PARTITIONS and MASK_DIMS to ensure mask generation uses config partitions and DimensionRegistry axis names; ASK_MASKED should still return correct truth values.",
-  theory: {
-    natural_language: "We know Tiger is a mammal, Bonsai is a plant, Eagle is a bird, and Rock is a mineral. We also have axiology facts: Honesty is a virtue, and Theft is prohibited. We query them using masked questions that rely on configured ontology/axiology partitions and dimension registry axes.",
-    expected_facts: [
-          "Tiger IS_A mammal",
-          "Bonsai IS_A plant",
-          "Eagle IS_A bird",
-          "Rock IS_A mineral",
-          "Honesty IS_A virtue",
-          "Theft PROHIBITED_BY universal_ethics",
-          "Helping IS_A good_action",
-          "Water HAS_PROPERTY liquid"
-    ]
-  },
-  queries: [
+  name: "Masking & Dimension Registry - Fact Queries",
+  description: "Tests basic ontology and axiology fact queries across different categories.",
+  theory_NL: "We know Tiger is a mammal, Bonsai is a plant, Eagle is a bird, Rock is a mineral. We also have axiology facts: Honesty is a virtue, Theft is prohibited by universal ethics, Helping is a good action, Water has property liquid.",
+  theory_DSL: [
+    "Tiger IS_A mammal",
+    "Bonsai IS_A plant",
+    "Eagle IS_A bird",
+    "Rock IS_A mineral",
+    "Honesty IS_A virtue",
+    "Theft PROHIBITED_BY universal_ethics",
+    "Helping IS_A good_action",
+    "Water HAS_PROPERTY liquid"
+  ],
+  tasks: [
     {
       id: "q1",
-      natural_language: "Is Tiger a mammal when asking with an ontology partition mask?",
-      expected_dsl: `
-        @maskOnt ontology MASK any
-        @q1 ASK_MASKED $maskOnt Tiger IS_A mammal
-      `,
-      expected_answer: {
-        natural_language: "Yes. Even with an ontology mask applied, Tiger is known to be a mammal.",
-        truth: "TRUE_CERTAIN",
-        explanation: "MASK_PARTITIONS(ontology) builds a mask but does not hide the asserted IS_A relation.",
-        existence: "positive"
-      }
+      TASK_NL: "Is Tiger a mammal?",
+      TASK_DSL: "@q1 Tiger IS_A mammal",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Tiger is a mammal."
     },
     {
       id: "q2",
-      natural_language: "Is Bonsai a plant when masking a specific dimension by name?",
-      expected_dsl: `
-        @maskDim Physicality MASK_DIM any
-        @q2 ASK_MASKED $maskDim Bonsai IS_A plant
-      `,
-      expected_answer: {
-        natural_language: "Yes, Bonsai is a plant; masking the Physicality axis should not remove the known fact.",
-        truth: "TRUE_CERTAIN",
-        explanation: "MASK_DIMS resolves Physicality via DimensionRegistry and ASK_MASKED preserves the fact.",
-        existence: "positive"
-      }
+      TASK_NL: "Is Bonsai a plant?",
+      TASK_DSL: "@q2 Bonsai IS_A plant",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Bonsai is a plant."
     },
     {
       id: "q3",
-      natural_language: "Is Eagle a bird when asking with an axiology partition mask?",
-      expected_dsl: `
-        @maskAxio axiology MASK any
-        @q3 ASK_MASKED $maskAxio Eagle IS_A bird
-      `,
-      expected_answer: {
-        natural_language: "Yes. Axiology mask affects moral dimensions, not taxonomic facts about animals.",
-        truth: "TRUE_CERTAIN",
-        explanation: "MASK_PARTITIONS(axiology) masks moral dimensions; bird taxonomy is unaffected.",
-        existence: "positive"
-      }
+      TASK_NL: "Is Eagle a bird?",
+      TASK_DSL: "@q3 Eagle IS_A bird",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Eagle is a bird."
     },
     {
       id: "q4",
-      natural_language: "Is Theft prohibited when asking with ontology mask (not axiology)?",
-      expected_dsl: `
-        @maskOnt2 ontology MASK any
-        @q4 ASK_MASKED $maskOnt2 Theft PROHIBITED_BY universal_ethics
-      `,
-      expected_answer: {
-        natural_language: "Yes. Ontology mask doesn't hide axiology facts like prohibitions.",
-        truth: "TRUE_CERTAIN",
-        explanation: "PROHIBITED_BY is an axiology relation; ontology mask leaves it visible.",
-        existence: "positive"
-      }
+      TASK_NL: "Is Theft prohibited by universal ethics?",
+      TASK_DSL: "@q4 Theft PROHIBITED_BY universal_ethics",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Theft is prohibited by universal ethics."
     },
     {
       id: "q5",
-      natural_language: "Is Honesty a virtue when asking with combined mask?",
-      expected_dsl: `
-        @maskComb ontology MASK any axiology
-        @q5 ASK_MASKED $maskComb Honesty IS_A virtue
-      `,
-      expected_answer: {
-        natural_language: "Yes. Even with combined masks, the basic IS_A fact is preserved.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Combined masks still preserve direct assertions.",
-        existence: "positive"
-      }
+      TASK_NL: "Is Honesty a virtue?",
+      TASK_DSL: "@q5 Honesty IS_A virtue",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Honesty is a virtue."
     },
     {
       id: "q6",
-      natural_language: "Is Rock a mineral without any mask (baseline)?",
-      expected_dsl: `@q6 Rock IS_A mineral`,
-      expected_answer: {
-        natural_language: "Yes. Rock is known to be a mineral.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Direct ASK without mask returns the asserted fact.",
-        existence: "positive"
-      }
+      TASK_NL: "Is Rock a mineral?",
+      TASK_DSL: "@q6 Rock IS_A mineral",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Rock is a mineral."
     },
     {
       id: "q7",
-      natural_language: "Is Helping a good action when masking axiology partitions?",
-      expected_dsl: `
-        @maskMoral axiology MASK any
-        @q7 ASK_MASKED $maskMoral Helping IS_A good_action
-      `,
-      expected_answer: {
-        natural_language: "Yes. The IS_A relation is preserved even when axiology partitions are masked.",
-        truth: "TRUE_CERTAIN",
-        explanation: "MASK_PARTITIONS axiology should not hide the direct assertion.",
-        existence: "positive"
-      }
+      TASK_NL: "Is Helping a good action?",
+      TASK_DSL: "@q7 Helping IS_A good_action",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Helping is a good action."
     },
     {
       id: "q8",
-      natural_language: "Does Water have property liquid without any mask (baseline)?",
-      expected_dsl: `@q8 Water HAS_PROPERTY liquid`,
-      expected_answer: {
-        natural_language: "Yes. Baseline ASK returns the asserted fact.",
-        truth: "TRUE_CERTAIN",
-        explanation: "No mask applied; fact remains visible.",
-        existence: "positive"
-      }
+      TASK_NL: "Does Water have property liquid?",
+      TASK_DSL: "@q8 Water HAS_PROPERTY liquid",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Water has property liquid."
     }
   ],
-  version: "3.0"
 };

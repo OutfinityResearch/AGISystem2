@@ -9,9 +9,10 @@
 #   ./bin/AGISystem2.sh [options]
 #
 # Options:
-#   --help, -h     Show help
-#   --debug        Enable debug output
-#   --no-color     Disable colored output
+#   --help, -h      Show help
+#   --debug         Force enable DSL debug view
+#   --no-debug      Disable DSL debug view (no DSL print)
+#   --no-color      Disable colored output
 #
 # Environment Variables:
 #   NODE_PATH      Additional paths to search for modules
@@ -96,7 +97,7 @@ fi
 for arg in "$@"; do
   if [ "$arg" = "--help" ] || [ "$arg" = "-h" ]; then
     cat << 'HELPTEXT'
-AGISystem2 Chat Interface
+    AGISystem2 Chat Interface
 
 A natural language interface for AGISystem2 knowledge reasoning.
 
@@ -104,9 +105,10 @@ USAGE:
     AGISystem2.sh [OPTIONS]
 
 OPTIONS:
-    --help, -h     Show this help message
-    --debug        Enable debug output
-    --no-color     Disable colored output
+    --help, -h      Show this help message
+    --debug         Force enable DSL debug view
+    --no-debug      Disable DSL debug view (natural language only)
+    --no-color      Disable colored output
 
 ENVIRONMENT:
     At least one LLM API key must be set:

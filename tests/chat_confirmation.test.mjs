@@ -104,7 +104,9 @@ test('Rejection "cancel" cancels operation', async () => {
   const engine = new ChatEngine({});
   await engine.initialize();
 
-  await engine.processMessage('Snakes are mammals.');
+  // Use a fact that creates a clear contradiction with base ontology
+  // (bird DISJOINT_WITH mammal) so a theory branch is suggested
+  await engine.processMessage('Birds are mammals.');
   const r = await engine.processMessage('cancel');
   assert(r.response.includes("won't create"), 'Should indicate cancellation');
 });
@@ -141,7 +143,10 @@ test('Theory branch contains the contradicting facts', async () => {
   const engine = new ChatEngine({});
   await engine.initialize();
 
-  await engine.processMessage('Elephants are insects.');
+  // Use a fact that contradicts base ontology (whale IS_A mammal,
+  // mammal DISJOINT_WITH fish) so the new fact is added into a
+  // separate theory branch after confirmation.
+  await engine.processMessage('Whales are fish.');
   const r = await engine.processMessage('yes');
 
   // Check that facts were added
@@ -152,11 +157,11 @@ test('Theory branch contains the contradicting facts', async () => {
   assert(r.response.includes('fact(s)'), 'Should mention facts added');
 
   // Verify the facts in actions
-  const hasElephant = factActions.some(a =>
-    a.fact.subject.toLowerCase().includes('elephant') ||
-    a.fact.object.toLowerCase().includes('elephant')
+  const hasWhale = factActions.some(a =>
+    a.fact.subject.toLowerCase().includes('whale') ||
+    a.fact.object.toLowerCase().includes('whale')
   );
-  assert(hasElephant, 'Should have Elephant in added facts');
+  assert(hasWhale, 'Should have Whale in added facts');
 });
 
 // Run all tests

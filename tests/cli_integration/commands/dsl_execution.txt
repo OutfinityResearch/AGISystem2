@@ -1,14 +1,14 @@
 # Test: Direct DSL execution
 # Tests: run command with various DSL statements
 
-# Direct ASSERT
-run @f ASSERT Robot IS_A Machine
+# Direct assertion (v3 syntax: @varName Subject VERB Object)
+run @f0 Robot IS_A Machine
 
-# Direct ASK
-run @q ASK "Robot IS_A Machine?"
+# Direct query (v3 syntax: @variable Subject VERB Object)
+run @q Robot IS_A Machine
 
-# Direct PROVE
-run @r PROVE Robot IS_A Machine
+# Direct PROVE (v3 syntax: @variable Subject PROVE Object)
+run @r Robot PROVE Machine
 
 # Config snapshot
 config
@@ -18,3 +18,4 @@ facts
 
 # Inspect concept
 inspect Robot
+

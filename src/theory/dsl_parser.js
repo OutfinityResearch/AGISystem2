@@ -141,8 +141,16 @@ class DSLParser {
     const nameToStmt = new Map();
 
     for (const stmt of statements) {
-      // Every statement MUST have a unique variable name
-      // There is no @_ placeholder - all statements are relations with results
+      // @_ is a special "discard" variable that can be used multiple times
+      // It means "execute this statement but don't capture the result"
+      if (stmt.varName === '_') {
+        stmt.deps = new Set();
+        stmt.dependents = [];
+        stmt.inDegree = 0;
+        continue; // Don't add to nameToStmt - can appear multiple times
+      }
+
+      // All other variable names must be unique
       if (nameToStmt.has(stmt.varName)) {
         throw new Error(`Duplicate Sys2DSL variable '${stmt.varName}'`);
       }

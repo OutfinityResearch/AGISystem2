@@ -3,10 +3,58 @@
 const fs = require('fs');
 const path = require('path');
 
+/**
+ * Find the tests root directory.
+ * Searches in order:
+ * 1. ./tests (running from project root)
+ * 2. Current directory (running from within tests/)
+ * 3. Script's directory (__dirname)
+ */
+function findTestsRoot() {
+  const cwd = process.cwd();
+
+  // Option 1: ./tests exists (running from project root)
+  const testsInCwd = path.join(cwd, 'tests');
+  if (fs.existsSync(testsInCwd) && fs.statSync(testsInCwd).isDirectory()) {
+    // Verify it's actually a tests directory (has subdirectories with index.js)
+    const entries = fs.readdirSync(testsInCwd, { withFileTypes: true });
+    const hasTestSuites = entries.some(e =>
+      e.isDirectory() && fs.existsSync(path.join(testsInCwd, e.name, 'index.js'))
+    );
+    if (hasTestSuites) {
+      return testsInCwd;
+    }
+  }
+
+  // Option 2: Current directory IS the tests directory
+  const cwdEntries = fs.readdirSync(cwd, { withFileTypes: true });
+  const cwdHasTestSuites = cwdEntries.some(e =>
+    e.isDirectory() && fs.existsSync(path.join(cwd, e.name, 'index.js'))
+  );
+  if (cwdHasTestSuites) {
+    return cwd;
+  }
+
+  // Option 3: Use script's directory (__dirname)
+  const scriptDir = __dirname;
+  if (fs.existsSync(scriptDir) && fs.statSync(scriptDir).isDirectory()) {
+    const scriptEntries = fs.readdirSync(scriptDir, { withFileTypes: true });
+    const scriptHasTestSuites = scriptEntries.some(e =>
+      e.isDirectory() && fs.existsSync(path.join(scriptDir, e.name, 'index.js'))
+    );
+    if (scriptHasTestSuites) {
+      return scriptDir;
+    }
+  }
+
+  return null;
+}
+
 async function main() {
-  const testsRoot = path.join(process.cwd(), 'tests');
-  if (!fs.existsSync(testsRoot)) {
+  const testsRoot = findTestsRoot();
+  if (!testsRoot) {
     console.log('No tests directory found.');
+    console.log('Run from project root (with tests/ subdirectory) or from within tests/ directory.');
     process.exit(0);
   }
 

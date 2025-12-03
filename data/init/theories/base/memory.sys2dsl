@@ -60,14 +60,14 @@ END
   @one NUMERIC_VALUE 1
   @new_usage $usage PLUS $one
   @pair_usage usage_count DIM_PAIR $new_usage
-  @_ subject SET_DIM $pair_usage
+  @set_usage subject SET_DIM $pair_usage
   @return subject BOOST any
 END
 
 # PRIME - Temporarily boost for retrieval
 @PRIME BEGIN
   @pair primed DIM_PAIR positive
-  @_ subject SET_DIM $pair
+  @set_primed subject SET_DIM $pair
   @return subject BOOST any
 END
 
@@ -95,7 +95,7 @@ END
 
 # CORE - Mark as core knowledge (maximum protection)
 @CORE BEGIN
-  @_ subject PROTECT any
+  @protect_it subject PROTECT any
   @pair core DIM_PAIR positive
   @return subject SET_DIM $pair
 END
@@ -117,7 +117,7 @@ END
   @one NUMERIC_VALUE 1
   @new_count $count PLUS $one
   @pair_count usage_count DIM_PAIR $new_count
-  @_ subject SET_DIM $pair_count
+  @set_count subject SET_DIM $pair_count
   @pair_time last_used DIM_PAIR now
   @return subject SET_DIM $pair_time
 END

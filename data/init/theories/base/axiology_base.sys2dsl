@@ -10,105 +10,105 @@
 # SECTION 1: Moral Categories
 # -----------------------------------------------------------------------------
 
-@_ moral_value IS_A abstract_entity
-@_ good IS_A moral_value
-@_ bad IS_A moral_value
-@_ neutral IS_A moral_value
-@_ good DISJOINT_WITH bad
+@ax13 moral_value IS_A abstract_entity
+@ax14 good IS_A moral_value
+@ax15 bad IS_A moral_value
+@ax16 neutral IS_A moral_value
+@ax17 good DISJOINT_WITH bad
 
 # -----------------------------------------------------------------------------
 # SECTION 2: Universal Ethical Principles
 # -----------------------------------------------------------------------------
 
 # Harm principles
-@_ harm IS_A bad
-@_ killing IS_A harm
-@_ stealing IS_A harm
-@_ lying IS_A harm
-@_ violence IS_A harm
+@ax24 harm IS_A bad
+@ax25 killing IS_A harm
+@ax26 stealing IS_A harm
+@ax27 lying IS_A harm
+@ax28 violence IS_A harm
 
 # Benefit principles
-@_ benefit IS_A good
-@_ helping IS_A benefit
-@_ protecting IS_A benefit
-@_ healing IS_A benefit
-@_ teaching IS_A benefit
+@ax31 benefit IS_A good
+@ax32 helping IS_A benefit
+@ax33 protecting IS_A benefit
+@ax34 healing IS_A benefit
+@ax35 teaching IS_A benefit
 
 # -----------------------------------------------------------------------------
 # SECTION 3: Deontic Modalities
 # -----------------------------------------------------------------------------
 
-@_ obligation IS_A deontic_status
-@_ permission IS_A deontic_status
-@_ prohibition IS_A deontic_status
-@_ obligation DISJOINT_WITH prohibition
+@ax41 obligation IS_A deontic_status
+@ax42 permission IS_A deontic_status
+@ax43 prohibition IS_A deontic_status
+@ax44 obligation DISJOINT_WITH prohibition
 
 # Universal prohibitions
-@_ murder PROHIBITED_BY universal_ethics
-@_ theft PROHIBITED_BY universal_ethics
-@_ fraud PROHIBITED_BY universal_ethics
-@_ torture PROHIBITED_BY universal_ethics
+@ax47 murder PROHIBITED_BY universal_ethics
+@ax48 theft PROHIBITED_BY universal_ethics
+@ax49 fraud PROHIBITED_BY universal_ethics
+@ax50 torture PROHIBITED_BY universal_ethics
 
 # Universal permissions
-@_ self_defense PERMITTED_BY universal_ethics
-@_ free_speech PERMITTED_BY universal_ethics
-@_ privacy PERMITTED_BY universal_ethics
+@ax53 self_defense PERMITTED_BY universal_ethics
+@ax54 free_speech PERMITTED_BY universal_ethics
+@ax55 privacy PERMITTED_BY universal_ethics
 
 # -----------------------------------------------------------------------------
 # SECTION 4: Rights and Duties
 # -----------------------------------------------------------------------------
 
-@_ right IS_A normative_status
-@_ duty IS_A normative_status
-@_ human_right IS_A right
+@ax61 right IS_A normative_status
+@ax62 duty IS_A normative_status
+@ax63 human_right IS_A right
 
 # Fundamental rights
-@_ life IS_A human_right
-@_ liberty IS_A human_right
-@_ dignity IS_A human_right
-@_ equality IS_A human_right
+@ax66 life IS_A human_right
+@ax67 liberty IS_A human_right
+@ax68 dignity IS_A human_right
+@ax69 equality IS_A human_right
 
 # -----------------------------------------------------------------------------
 # SECTION 5: Professional Ethics
 # -----------------------------------------------------------------------------
 
 # Medical ethics
-@_ patient_consent REQUIRED_FOR medical_treatment
-@_ confidentiality REQUIRED_FOR medical_practice
-@_ do_no_harm REQUIRED_FOR medical_practice
+@ax76 patient_consent REQUIRED_FOR medical_treatment
+@ax77 confidentiality REQUIRED_FOR medical_practice
+@ax78 do_no_harm REQUIRED_FOR medical_practice
 
 # General professional ethics
-@_ honesty REQUIRED_FOR professional_conduct
-@_ competence REQUIRED_FOR professional_conduct
-@_ accountability REQUIRED_FOR professional_conduct
+@ax81 honesty REQUIRED_FOR professional_conduct
+@ax82 competence REQUIRED_FOR professional_conduct
+@ax83 accountability REQUIRED_FOR professional_conduct
 
 # -----------------------------------------------------------------------------
 # SECTION 6: Fairness and Justice
 # -----------------------------------------------------------------------------
 
-@_ fairness IS_A good
-@_ justice IS_A good
-@_ equality IS_A fairness
-@_ impartiality IS_A fairness
+@ax89 fairness IS_A good
+@ax90 justice IS_A good
+@ax91 equality IS_A fairness
+@ax92 impartiality IS_A fairness
 
 # Bias masking principles
-@_ gender NOT_FACTOR_IN hiring_decision
-@_ race NOT_FACTOR_IN hiring_decision
-@_ age NOT_FACTOR_IN hiring_decision
-@_ religion NOT_FACTOR_IN hiring_decision
+@ax95 gender NOT_FACTOR_IN hiring_decision
+@ax96 race NOT_FACTOR_IN hiring_decision
+@ax97 age NOT_FACTOR_IN hiring_decision
+@ax98 religion NOT_FACTOR_IN hiring_decision
 
 # Merit-based evaluation
-@_ skills FACTOR_IN hiring_decision
-@_ experience FACTOR_IN hiring_decision
-@_ qualifications FACTOR_IN hiring_decision
+@ax101 skills FACTOR_IN hiring_decision
+@ax102 experience FACTOR_IN hiring_decision
+@ax103 qualifications FACTOR_IN hiring_decision
 
 # -----------------------------------------------------------------------------
 # SECTION 7: Trust and Reliability
 # -----------------------------------------------------------------------------
 
-@_ trustworthiness IS_A good
-@_ reliability IS_A trustworthiness
-@_ consistency IS_A trustworthiness
-@_ transparency IS_A trustworthiness
+@ax109 trustworthiness IS_A good
+@ax110 reliability IS_A trustworthiness
+@ax111 consistency IS_A trustworthiness
+@ax112 transparency IS_A trustworthiness
 
 # End of base axiology

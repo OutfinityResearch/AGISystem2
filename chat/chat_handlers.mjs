@@ -24,6 +24,136 @@ import {
 } from './prompts.mjs';
 
 /**
+ * Lightweight lexical normalization for deterministic logic demos.
+ * Maps natural language words (EN/RO) to base ontology concept names.
+ */
+const LOGIC_LEXICON = {
+  // Human / person
+  man: 'human',
+  men: 'human',
+  human: 'human',
+  humans: 'human',
+  person: 'human',
+  people: 'human',
+  om: 'human',
+  oameni: 'human',
+
+  // Mortality
+  mortal: 'mortal',
+  mortals: 'mortal',
+  muritor: 'mortal',
+  muritori: 'mortal'
+};
+
+// Irregular plural → singular normalization for concept names
+const IRREGULAR_PLURALS = {
+  people: 'person',
+  men: 'man',
+  women: 'woman',
+  children: 'child',
+  mice: 'mouse',
+  geese: 'goose',
+  teeth: 'tooth',
+  feet: 'foot',
+  // Romanian basics
+  oameni: 'om',
+  copii: 'copil'
+};
+
+function normalizeConceptToken(token) {
+  const w = String(token).trim().toLowerCase();
+
+  // Explicit mappings first (logic lexicon, irregular plurals)
+  if (LOGIC_LEXICON[w]) return LOGIC_LEXICON[w];
+  if (IRREGULAR_PLURALS[w]) return IRREGULAR_PLURALS[w];
+
+  // Heuristic singularization – only for all-lowercase concept-like names
+  if (!/^[a-z_]+$/.test(w)) return w;
+
+  if (w.endsWith('ies') && w.length > 3) {
+    return w.slice(0, -3) + 'y'; // stories -> story
+  }
+  if (w.endsWith('ses') || w.endsWith('xes') || w.endsWith('zes') || w.endsWith('ches') || w.endsWith('shes')) {
+    return w.slice(0, -2); // boxes -> box
+  }
+  if (w.endsWith('s') && !w.endsWith('ss')) {
+    return w.slice(0, -1); // dogs -> dog
+  }
+
+  return w;
+}
+
+function normalizeConceptName(name) {
+  return normalizeConceptToken(name);
+}
+
+/**
+ * Deterministic fact extraction for simple syllogistic patterns.
+ * Supports minimal English/Romanian forms like:
+ *  - "Socrates is a human."
+ *  - "Humans are mortal."
+ *  - "All men are mortal."
+ */
+function extractFactsDeterministic(message) {
+  const facts = [];
+  const sentences = String(message)
+    .split(/[.\n;]/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  for (const sentence of sentences) {
+    const lower = sentence.toLowerCase();
+
+    // Pattern: "All X are Y" / "Every X is/are Y"
+    let m = lower.match(/^(all|every)\s+([a-z_]+)\s+(?:are|is)\s+([a-z_]+)\s*$/);
+    if (m) {
+      const subject = normalizeConceptName(m[2]);
+      const object = normalizeConceptName(m[3]);
+      facts.push({ subject, relation: 'IS_A', object });
+      continue;
+    }
+
+    // Pattern: "X are Y"
+    m = lower.match(/^([a-z_]+)\s+are\s+([a-z_]+)\s*$/);
+    if (m) {
+      const subject = normalizeConceptName(m[1]);
+      const object = normalizeConceptName(m[2]);
+      facts.push({ subject, relation: 'IS_A', object });
+      continue;
+    }
+
+    // Pattern: "X is a/an Y"
+    m = lower.match(/^(.+?)\s+is\s+(?:a|an)\s+([a-z_]+)\s*$/);
+    if (m) {
+      const rawSubject = m[1].trim();
+      const object = normalizeConceptName(m[2]);
+      facts.push({ subject: rawSubject, relation: 'IS_A', object });
+      continue;
+    }
+
+    // Pattern: "X is Y" (no article)
+    m = lower.match(/^(.+?)\s+is\s+([a-z_]+)\s*$/);
+    if (m) {
+      const rawSubject = m[1].trim();
+      const object = normalizeConceptName(m[2]);
+      facts.push({ subject: rawSubject, relation: 'IS_A', object });
+      continue;
+    }
+
+    // Romanian: "X este un/ o Y" / "X e un/ o Y"
+    m = lower.match(/^(.+?)\s+(?:este|e)\s+(?:un|o)\s+([a-z_]+)\s*$/);
+    if (m) {
+      const rawSubject = m[1].trim();
+      const object = normalizeConceptName(m[2]);
+      facts.push({ subject: rawSubject, relation: 'IS_A', object });
+      continue;
+    }
+  }
+
+  return facts;
+}
+
+/**
  * Configuration for ontology auto-discovery
  */
 export const ONTOLOGY_CONFIG = {
@@ -39,7 +169,7 @@ export const ONTOLOGY_CONFIG = {
 export const CONTRADICTION_CONFIG = {
   enableLLMSemanticCheck: false,  // LLM semantic check causes false positives
   enableDeterministicCheck: true, // Keep deterministic check (DISJOINT_WITH, etc.)
-  blockOnContradiction: false     // If true, don't add facts when contradictions found
+  blockOnContradiction: true      // If true, don't add facts when contradictions found
 };
 
 // Import InferenceEngine and ContradictionDetector
@@ -61,6 +191,7 @@ export async function handleTeach(ctx, message, details) {
   // Extract facts using LLM
   const prompt = buildFactExtractionPrompt(message);
   let facts = [];
+  let usedDeterministic = false;
 
   try {
     const response = await llmAgent.complete({
@@ -78,6 +209,41 @@ export async function handleTeach(ctx, message, details) {
     if (details?.facts) {
       facts = details.facts;
     }
+  }
+
+  // Keep only well-formed triples; if nothing usable, we'll try deterministic parse
+  facts = (facts || []).filter(
+    (f) => f && typeof f.subject === 'string' && typeof f.relation === 'string' && typeof f.object === 'string'
+  );
+
+  // Normalize plural/singular for concept-style names (lowercase) in LLM facts
+  facts = facts.map((f) => {
+    const out = { ...f };
+    if (out.subject && out.subject === out.subject.toLowerCase()) {
+      out.subject = normalizeConceptName(out.subject);
+    }
+    if (out.object && out.object === out.object.toLowerCase()) {
+      out.object = normalizeConceptName(out.object);
+    }
+    return out;
+  });
+
+  // Deterministic fallback for simple logical statements
+  if (!facts || facts.length === 0) {
+    const deterministicFacts = extractFactsDeterministic(message);
+    if (deterministicFacts.length > 0) {
+      facts = deterministicFacts;
+      usedDeterministic = true;
+    }
+  }
+
+  // Debug: record what we think the extracted facts are
+  if (facts && facts.length > 0) {
+    actions.push({
+      type: 'fact_extraction',
+      source: details?.facts ? 'intent_details' : (usedDeterministic ? 'deterministic' : 'llm'),
+      facts: facts.map((f) => ({ subject: f.subject, relation: f.relation, object: f.object }))
+    });
   }
 
   if (facts.length === 0) {
@@ -118,9 +284,11 @@ export async function handleTeach(ctx, message, details) {
 
   // Add facts to current session (even if contradictions were found, unless blocking)
   const added = [];
+  let factIdx = 0;
   for (const fact of facts) {
     try {
-      session.run([`@f ASSERT ${fact.subject} ${fact.relation} ${fact.object}`]);
+      session.run([`@learn${factIdx} ${fact.subject} ${fact.relation} ${fact.object}`]);
+      factIdx++;
       added.push(fact);
       actions.push({ type: 'fact_added', fact });
     } catch (err) {
@@ -171,7 +339,7 @@ async function performOntologyDiscovery(ctx, message, iteration = 0) {
   const missingConcepts = missingResult.missing;
 
   // Step 2: Get existing facts for context
-  const factsEnv = session.run(['@r FACTS_MATCHING ? ? ?']);
+  const factsEnv = session.run(['@r any FACTS_MATCHING any']);
   const existingFacts = factsEnv.r || [];
 
   // Step 3: Generate facts for missing concepts using LLM
@@ -203,7 +371,7 @@ async function performOntologyDiscovery(ctx, message, iteration = 0) {
     if (!fact.subject || !fact.relation || !fact.object) continue;
 
     try {
-      session.run([`@f ASSERT ${fact.subject} ${fact.relation} ${fact.object}`]);
+      session.run([`@disc${factsAdded} ${fact.subject} ${fact.relation} ${fact.object}`]);
       factsAdded++;
       conceptsDiscovered.add(fact.subject);
       conceptsDiscovered.add(fact.object);
@@ -270,10 +438,32 @@ export async function handleAsk(ctx, message, details) {
     // Continue with best effort
   }
 
+  // If LLM returned an empty or unusable object (e.g., {} from a fake LLM),
+  // fall back to deterministic parsing.
+  if (!parsedQuestion || typeof parsedQuestion.type !== 'string') {
+    parsedQuestion = null;
+  }
+
+  // Deterministic fallback for simple yes/no "IS_A" questions
+  if (!parsedQuestion) {
+    const fallback = fallbackParseYesNoQuestion(message);
+    if (fallback) {
+      parsedQuestion = fallback;
+    }
+  }
+
+  // Deterministic fallback for simple causal questions
+  if (!parsedQuestion) {
+    const causalFallback = fallbackParseCausalQuestion(message);
+    if (causalFallback) {
+      parsedQuestion = causalFallback;
+    }
+  }
+
   let result;
   try {
     // Get all facts for inference (now includes discovered facts)
-    const env = session.run(['@r FACTS_MATCHING ? ? ?']);
+    const env = session.run(['@r any FACTS_MATCHING any']);
     const facts = env.r || [];
 
     if (parsedQuestion?.type === 'yes_no' && parsedQuestion.canonical) {
@@ -376,6 +566,87 @@ export async function handleAsk(ctx, message, details) {
 
   const nlResponse = await generateResponse(ctx, result, message);
   return { response: nlResponse, actions };
+}
+
+/**
+ * Fallback parser for simple yes/no questions about type membership.
+ * Examples:
+ *  - "Is Socrates a human?"
+ *  - "Is Socrates mortal?"
+ *  - "Este Socrate un om?"
+ */
+function fallbackParseYesNoQuestion(message) {
+  const trimmed = String(message).trim().replace(/\?+$/, '');
+
+  // English: "Is X a/an Y"
+  let m = trimmed.match(/^Is\s+(.+?)\s+(?:a|an)\s+(.+)$/i);
+  if (m) {
+    const subject = m[1].trim();
+    const object = normalizeConceptName(m[2]);
+    return {
+      type: 'yes_no',
+      canonical: {
+        subject,
+        relation: 'IS_A',
+        object
+      }
+    };
+  }
+
+  // English: "Is X Y"
+  m = trimmed.match(/^Is\s+(.+?)\s+(.+)$/i);
+  if (m) {
+    const subject = m[1].trim();
+    const object = normalizeConceptName(m[2]);
+    return {
+      type: 'yes_no',
+      canonical: {
+        subject,
+        relation: 'IS_A',
+        object
+      }
+    };
+  }
+
+  // Romanian: "Este X un/ o Y" / "E X un/ o Y"
+  m = trimmed.match(/^(?:Este|E)\s+(.+?)\s+(?:un|o)\s+(.+)$/i);
+  if (m) {
+    const subject = m[1].trim();
+    const object = normalizeConceptName(m[2]);
+    return {
+      type: 'yes_no',
+      canonical: {
+        subject,
+        relation: 'IS_A',
+        object
+      }
+    };
+  }
+
+  return null;
+}
+
+/**
+ * Fallback parser for simple causal questions.
+ * Example:
+ *  - "What does heat cause?"
+ */
+function fallbackParseCausalQuestion(message) {
+  const trimmed = String(message).trim().replace(/\?+$/, '');
+
+  // English: "What does X cause?"
+  const m = trimmed.match(/^What\s+does\s+(.+?)\s+cause$/i);
+  if (m) {
+    const subject = normalizeConceptName(m[1]);
+    return {
+      type: 'causes',
+      canonical: {
+        subject
+      }
+    };
+  }
+
+  return null;
 }
 
 /**
@@ -605,7 +876,7 @@ export async function handleImport(ctx, message, details) {
           const parsed = JSON.parse(jsonMatch[0]);
           for (const fact of (parsed.facts || [])) {
             try {
-              session.run([`@f ASSERT ${fact.subject} ${fact.relation} ${fact.object}`]);
+              session.run([`@imp${totalFacts} ${fact.subject} ${fact.relation} ${fact.object}`]);
               totalFacts++;
             } catch {
               // Skip failed facts
@@ -642,7 +913,7 @@ export async function handleTheoryManagement(ctx, message, details) {
     const nameMatch = message.match(/(?:create|new)\s+(?:theory\s+)?["']?([a-zA-Z0-9_]+)["']?/i);
     const name = nameMatch?.[1] || `theory_${Date.now()}`;
 
-    session.run([`@r THEORY_PUSH name="${name}"`]);
+    session.run([`@r ${name} THEORY_PUSH any`]);
     setCurrentTheory(name);
     actions.push({ type: 'theory_created', name });
 
@@ -653,7 +924,7 @@ export async function handleTheoryManagement(ctx, message, details) {
   }
 
   if (lower.includes('pop') || lower.includes('discard')) {
-    const env = session.run(['@r THEORY_POP']);
+    const env = session.run(['@r any THEORY_POP any']);
     actions.push({ type: 'theory_popped', result: env.r });
 
     return {
@@ -663,7 +934,7 @@ export async function handleTheoryManagement(ctx, message, details) {
   }
 
   if (lower.includes('list') || lower.includes('show')) {
-    const env = session.run(['@r LIST_THEORIES']);
+    const env = session.run(['@r any LIST_THEORIES any']);
     const theories = env.r || {};
     actions.push({ type: 'theories_listed', theories });
 
@@ -678,7 +949,7 @@ export async function handleTheoryManagement(ctx, message, details) {
     const name = nameMatch?.[1] || currentTheory;
     const filepath = path.join(theoriesRoot, `${name}.sys2dsl`);
 
-    const env = session.run(['@r FACTS_MATCHING ? ? ?']);
+    const env = session.run(['@r any FACTS_MATCHING any']);
     const facts = env.r || [];
     const content = facts.map(f => `${f.subject} ${f.relation} ${f.object}`).join('\n');
     fs.writeFileSync(filepath, content, 'utf8');
@@ -709,7 +980,7 @@ export async function handleList(ctx, details) {
   const actions = [];
 
   if (what === 'facts' || what === 'all') {
-    const env = session.run(['@r FACTS_MATCHING ? ? ?']);
+    const env = session.run(['@r any FACTS_MATCHING any']);
     const facts = env.r || [];
     actions.push({ type: 'facts_listed', facts });
 
@@ -792,7 +1063,7 @@ export async function checkContradictions(ctx, newFacts) {
   const contradictions = [];
 
   // Get existing facts from session
-  const env = session.run(['@r FACTS_MATCHING ? ? ?']);
+  const env = session.run(['@r any FACTS_MATCHING any']);
   const existingFacts = env.r || [];
 
   // Convert to format ContradictionDetector expects
@@ -808,16 +1079,21 @@ export async function checkContradictions(ctx, newFacts) {
   if (CONTRADICTION_CONFIG.enableDeterministicCheck) {
     const detector = new ContradictionDetector();
 
-    for (const newFact of newFacts) {
-      // Check if adding this fact would create contradictions
-      const allFacts = [...existingFactObjects, newFact];
-      const report = detector.detectAll(allFacts);
+    // Evaluate contradictions on the combined set of existing + all new facts.
+    // This ensures contradictions between multiple new facts in the same
+    // teaching batch are detected (e.g., "Cats are mammals. Cats are fish.").
+    const allFacts = [...existingFactObjects, ...newFacts];
+    const report = detector.detectAll(allFacts);
 
-      if (!report.consistent) {
+    if (!report.consistent) {
+      for (const newFact of newFacts) {
         for (const c of report.contradictions) {
-          // Check if this contradiction involves the new fact
           const involvesNew =
-            (c.facts && c.facts.some(f => f.subject === newFact.subject)) ||
+            (c.facts && c.facts.some(f =>
+              f.subject === newFact.subject &&
+              f.relation === newFact.relation &&
+              f.object === newFact.object
+            )) ||
             (c.entity === newFact.subject);
 
           if (involvesNew) {

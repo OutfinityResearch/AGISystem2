@@ -172,8 +172,8 @@
   <h3>CI/CD Integration</h3>
   <pre>
 # In GitHub Actions or similar
-./bin/AGISystem2Raw.sh --batch tests/knowledge_base.sys2dsl
-./bin/AGISystem2Raw.sh --exec "ask Is system consistent?" --json</pre>
+node cli/agisystem2-cli.js --batch tests/knowledge_base.sys2dsl
+node cli/agisystem2-cli.js --exec "ask Is system consistent?" --json</pre>
 
   <h3>Audit Logs</h3>
   <p>Every command execution is logged with timestamp and result:</p>

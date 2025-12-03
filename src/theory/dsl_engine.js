@@ -34,10 +34,18 @@ const DSLCommandsOntology = require('./dsl_commands_ontology');
 const DSLCommandsHighLevel = require('./dsl_commands_highlevel');
 
 class TheoryDSLEngine {
-  constructor({ api, conceptStore, config }) {
+  /**
+   * @param {Object} deps - Dependencies
+   * @param {Object} deps.api - EngineAPI instance
+   * @param {Object} deps.conceptStore - ConceptStore instance
+   * @param {Object} deps.config - Config instance
+   * @param {Object} [deps.theoryStack] - Shared TheoryStack (FS-02 integration)
+   */
+  constructor({ api, conceptStore, config, theoryStack }) {
     this.api = api;
     this.conceptStore = conceptStore;
     this.config = config;
+    this.theoryStack = theoryStack;  // May be undefined, DSLCommandsTheory will create if needed
 
     // Initialize parser
     this.parser = new DSLParser();
@@ -66,10 +74,16 @@ class TheoryDSLEngine {
       parser: this.parser
     });
 
+    // FS-02 Integration: Pass shared theoryStack for unified layering
     this.theoryCommands = new DSLCommandsTheory({
       conceptStore,
-      parser: this.parser
+      parser: this.parser,
+      config,
+      theoryStack
     });
+
+    // Expose theoryStack from DSLCommandsTheory (may be created there if not provided)
+    this.theoryStack = this.theoryCommands.getTheoryStack();
 
     this.reasoningCommands = new DSLCommandsReasoning({
       conceptStore,
@@ -402,6 +416,18 @@ class TheoryDSLEngine {
         return this.highLevelCommands.cmdSuggest(argTokens, env);
 
       // =========================================================================
+      // IS_A Variants (v3.0 existence tracking)
+      // =========================================================================
+      case 'IS_A':
+      case 'IS_A_CERTAIN':
+      case 'IS_A_PROVEN':
+      case 'IS_A_POSSIBLE':
+      case 'IS_A_UNPROVEN':
+        // Route IS_A variants through relation handler
+        // api.ingest() will apply appropriate existence level
+        return this._handleRelation(expandedSubject, command, expandedObject);
+
+      // =========================================================================
       // Default: Treat as relation verb
       // =========================================================================
       default:
@@ -417,23 +443,48 @@ class TheoryDSLEngine {
    * Handle semantic relation: @varName Subject VERB Object
    * All statements are relations - they query and potentially create facts
    * Returns a point with truth value
+   *
+   * For IS_A variants (IS_A_CERTAIN, IS_A_PROVEN, IS_A_POSSIBLE, IS_A_UNPROVEN),
+   * the appropriate existence level is applied when creating the fact.
+   *
+   * IMPORTANT: Uses DSL-only API (askDSL/ingestDSL) to ensure:
+   * - FS-19 compliance: DSL-in → DSL-out, no NL processing
+   * - URS-022 compliance: Strict separation between Reasoning Engine and NL layer
+   * - Deterministic, LLM-independent operation
    */
   _handleRelation(subject, relation, object) {
     this.parser.validateNoPropertyValue(subject, 'subject');
     this.parser.validateNoPropertyValue(object, 'object');
 
-    // First, check if the relation exists (query)
-    const question = `${subject} ${relation} ${object}`;
-    const result = this.api.ask(question);
+    // IS_A existence levels map
+    const IS_A_EXISTENCE_MAP = {
+      'IS_A': 127,          // Default to CERTAIN
+      'IS_A_CERTAIN': 127,  // CERTAIN
+      'IS_A_PROVEN': 64,    // DEMONSTRATED
+      'IS_A_POSSIBLE': 0,   // POSSIBLE
+      'IS_A_UNPROVEN': -64  // UNPROVEN
+    };
 
-    // If relation doesn't exist, create it (side effect)
+    // Build the triple object (DSL format)
+    const triple = { subject, relation, object };
+
+    // First, check if the relation exists (query) - use DSL-only API
+    const result = this.api.askDSL(triple);
+
+    // If relation doesn't exist, create it (side effect) - use DSL-only API
     if (result.truth === 'UNKNOWN' || result.truth === 'FALSE') {
-      const sentence = `${subject} ${relation} ${object}`;
-      this.api.ingest(sentence);
+      // Determine existence level
+      const existence = IS_A_EXISTENCE_MAP[relation] !== undefined
+        ? IS_A_EXISTENCE_MAP[relation]
+        : (this.conceptStore.EXISTENCE ? this.conceptStore.EXISTENCE.CERTAIN : 127);
+
+      this.api.ingestDSL(triple, { existence });
+
       // Return success with the newly created relation
       return {
         truth: 'TRUE_CERTAIN',
         created: true,
+        existence,
         subject,
         relation,
         object

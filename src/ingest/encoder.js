@@ -285,6 +285,42 @@ class Encoder {
         }
       }
     }
+
+    // Encode existence level for IS_A variants
+    this._encodeExistence(node, vec);
+  }
+
+  /**
+   * Encode existence level into the Existence dimension
+   * For IS_A variants, uses the relation's defined existence level.
+   * For facts with explicit _existence, uses that value.
+   * @private
+   */
+  _encodeExistence(node, vec) {
+    const existenceIndex = this.dimRegistry.getExistenceIndex();
+    if (existenceIndex === undefined || existenceIndex >= vec.length) {
+      return;
+    }
+
+    let existenceLevel = null;
+
+    // Check if node has explicit _existence (from fact)
+    if (node._existence !== undefined) {
+      existenceLevel = node._existence;
+    }
+    // Check if relation has a defined existence level (IS_A variants)
+    else if (this.dimRegistry.isIsAVariant && this.dimRegistry.isIsAVariant(node.relation)) {
+      existenceLevel = this.dimRegistry.getRelationExistenceLevel(node.relation);
+    }
+
+    // Encode existence level if available
+    if (existenceLevel !== null) {
+      // Clamp to Int8 range
+      let val = existenceLevel;
+      if (val > 127) val = 127;
+      if (val < -127) val = -127;
+      vec[existenceIndex] = val;
+    }
   }
 }
 

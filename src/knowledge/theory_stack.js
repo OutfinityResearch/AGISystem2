@@ -283,14 +283,17 @@ class TheoryStack {
   /**
    * Create a snapshot of the current stack state
    * Used for counterfactual reasoning - can be restored later
+   * @param {Object} [options] - Snapshot options
+   * @param {Array} [options.facts] - Facts to include in snapshot
    * @returns {Object} Snapshot object
    */
-  snapshot() {
+  snapshot(options = {}) {
     return {
       timestamp: new Date().toISOString(),
       layerCount: this.layers.length,
       layers: this.layers.map(l => l.toJSON()),
-      layerIds: this.layers.map(l => l.id)
+      layerIds: this.layers.map(l => l.id),
+      facts: options.facts || null  // External fact snapshot for unified state
     };
   }
 

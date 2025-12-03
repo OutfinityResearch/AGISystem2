@@ -377,14 +377,16 @@ export class ChatEngine {
       try {
         // Create the new theory branch
         const theoryName = suggestion.name || `theory_${Date.now()}`;
-        this.session.run([`@r THEORY_PUSH name="${theoryName}"`]);
+        this.session.run([`@r ${theoryName} THEORY_PUSH any`]);
         this.currentTheory = theoryName;
 
         // Add the facts to the new branch
         const added = [];
+        let branchIdx = 0;
         for (const fact of facts) {
           try {
-            this.session.run([`@f ASSERT ${fact.subject} ${fact.relation} ${fact.object}`]);
+            this.session.run([`@branch${branchIdx} ${fact.subject} ${fact.relation} ${fact.object}`]);
+            branchIdx++;
             added.push(fact);
           } catch (err) {
             // Skip failed facts

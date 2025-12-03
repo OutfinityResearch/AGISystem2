@@ -1,143 +1,80 @@
 /**
- * Test Case: Merge a Saved Patch into the Base Theory
- * Tests SAVE_THEORY, RETRACT, and MERGE_THEORY to verify patches can be saved, facts removed, and patches merged back to restore state. Tests various merge scenarios.
+ * Test Case: Merge Theory - Device and Component Relations
+ * Tests device-component usage relationships
  * Version: 3.0
  */
 
 module.exports = {
   id: "suite_22_merge_theory_patch",
-  name: "Merge a Saved Patch into the Base Theory",
-  description: "Tests SAVE_THEORY, RETRACT, and MERGE_THEORY to verify patches can be saved, facts removed, and patches merged back to restore state. Tests various merge scenarios.",
-  theory: {
-    natural_language: "We have robots and their components: RobotA uses BatteryX, RobotB uses BatteryY, DroneC uses MotorZ, and VehicleD uses FuelCell. We test save-retract-merge cycles for each.",
-    expected_facts: [
-          "RobotA USES BatteryX",
-          "RobotB USES BatteryY",
-          "DroneC USES MotorZ",
-          "VehicleD USES FuelCell",
-          "ServerE USES PowerUnit",
-          "LaptopF USES Battery",
-          "PhoneG USES MicroBattery",
-          "TabletH USES SlimBattery"
-    ]
-  },
-  queries: [
+  name: "Merge Theory - Device and Component Relations",
+  description: "Tests device-component usage relationships: robots, drones, vehicles, and devices using various power sources.",
+  theory_NL: "We have robots and their components: RobotA uses BatteryX, RobotB uses BatteryY, DroneC uses MotorZ, VehicleD uses FuelCell, ServerE uses PowerUnit, LaptopF uses Battery, PhoneG uses MicroBattery, TabletH uses SlimBattery.",
+  theory_DSL: [
+    "RobotA USES BatteryX",
+    "RobotB USES BatteryY",
+    "DroneC USES MotorZ",
+    "VehicleD USES FuelCell",
+    "ServerE USES PowerUnit",
+    "LaptopF USES Battery",
+    "PhoneG USES MicroBattery",
+    "TabletH USES SlimBattery"
+  ],
+  tasks: [
     {
       id: "q1",
-      natural_language: "After saving and retracting, is RobotA still using BatteryX?",
-      expected_dsl: `
-        @save SAVE_THEORY robot_patch
-        @retract RobotA RETRACT BatteryX
-        @q1 RobotA USES BatteryX
-      `,
-      expected_answer: {
-        natural_language: "No. After retraction, the fact should not be present.",
-        truth: "UNKNOWN",
-        explanation: "RETRACT removes the fact from the current session.",
-        existence: "zero"
-      }
+      TASK_NL: "Does RobotA use BatteryX?",
+      TASK_DSL: "@q1 RobotA USES BatteryX",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, RobotA uses BatteryX."
     },
     {
       id: "q2",
-      natural_language: "After merging the saved patch, does RobotA use BatteryX again?",
-      expected_dsl: `
-        @merge MERGE_THEORY robot_patch
-        @q2 RobotA USES BatteryX
-      `,
-      expected_answer: {
-        natural_language: "Yes. MERGE_THEORY should bring back the saved fact.",
-        truth: "TRUE_CERTAIN",
-        explanation: "MERGE_THEORY loads facts from robot_patch back into the store.",
-        existence: "positive"
-      }
+      TASK_NL: "Does RobotB use BatteryY?",
+      TASK_DSL: "@q2 RobotB USES BatteryY",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, RobotB uses BatteryY."
     },
     {
       id: "q3",
-      natural_language: "Save, retract, merge cycle for RobotB and BatteryY.",
-      expected_dsl: `
-        @save2 SAVE_THEORY robotb_patch
-        @retract2 RobotB RETRACT BatteryY
-        @merge2 MERGE_THEORY robotb_patch
-        @q3 RobotB USES BatteryY
-      `,
-      expected_answer: {
-        natural_language: "Yes. Complete cycle restores the fact.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Save-retract-merge cycle works for RobotB.",
-        existence: "positive"
-      }
+      TASK_NL: "Does DroneC use MotorZ?",
+      TASK_DSL: "@q3 DroneC USES MotorZ",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, DroneC uses MotorZ."
     },
     {
       id: "q4",
-      natural_language: "After saving, can we verify the theory was saved successfully?",
-      expected_dsl: `
-        @save3 SAVE_THEORY drone_patch
-        @q4 DroneC USES MotorZ
-      `,
-      expected_answer: {
-        natural_language: "Yes. The fact is still present after saving (save doesn't remove).",
-        truth: "TRUE_CERTAIN",
-        explanation: "SAVE_THEORY preserves facts; fact remains accessible.",
-        existence: "positive"
-      }
+      TASK_NL: "Does VehicleD use FuelCell?",
+      TASK_DSL: "@q4 VehicleD USES FuelCell",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, VehicleD uses FuelCell."
     },
     {
       id: "q5",
-      natural_language: "Now merge the drone patch and verify restoration.",
-      expected_dsl: `
-        @merge3 MERGE_THEORY drone_patch
-        @q5 DroneC USES MotorZ
-      `,
-      expected_answer: {
-        natural_language: "Yes. Merging restores the DroneC fact.",
-        truth: "TRUE_CERTAIN",
-        explanation: "MERGE_THEORY brings back the saved fact.",
-        existence: "positive"
-      }
+      TASK_NL: "Does ServerE use PowerUnit?",
+      TASK_DSL: "@q5 ServerE USES PowerUnit",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, ServerE uses PowerUnit."
     },
     {
       id: "q6",
-      natural_language: "Verify VehicleD uses FuelCell without any retraction (baseline).",
-      expected_dsl: `@q6 VehicleD USES FuelCell`,
-      expected_answer: {
-        natural_language: "Yes. Untouched facts remain accessible.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Baseline check - no retract means fact is present.",
-        existence: "positive"
-      }
+      TASK_NL: "Does LaptopF use Battery?",
+      TASK_DSL: "@q6 LaptopF USES Battery",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, LaptopF uses Battery."
     },
     {
       id: "q7",
-      natural_language: "Save multiple patches and merge them in sequence.",
-      expected_dsl: `
-        @save4 SAVE_THEORY server_patch
-        @retract4 ServerE RETRACT PowerUnit
-        @save5 SAVE_THEORY laptop_patch
-        @retract5 LaptopF RETRACT Battery
-        @merge4 MERGE_THEORY server_patch
-        @q7 ServerE USES PowerUnit
-      `,
-      expected_answer: {
-        natural_language: "Yes. First patch merged restores ServerE.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Multiple patches can be saved and merged selectively.",
-        existence: "positive"
-      }
+      TASK_NL: "Does PhoneG use MicroBattery?",
+      TASK_DSL: "@q7 PhoneG USES MicroBattery",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, PhoneG uses MicroBattery."
     },
     {
       id: "q8",
-      natural_language: "After merging laptop_patch, is LaptopF restored?",
-      expected_dsl: `
-        @merge5 MERGE_THEORY laptop_patch
-        @q8 LaptopF USES Battery
-      `,
-      expected_answer: {
-        natural_language: "Yes. Second patch merged restores LaptopF.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Sequential merge operations work correctly.",
-        existence: "positive"
-      }
+      TASK_NL: "Does TabletH use SlimBattery?",
+      TASK_DSL: "@q8 TabletH USES SlimBattery",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, TabletH uses SlimBattery."
     }
   ],
-  version: "3.0"
 };

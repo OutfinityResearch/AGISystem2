@@ -6,7 +6,8 @@ async function run({ profile }) {
 
   // Ingest canonical facts via Sys2DSL using proper geometric model syntax.
   // In the geometric model, values are separate concepts - no property=value allowed.
-  session.run(['@f ASSERT Water BOILS_AT Celsius100']);
+  // v3 syntax: @varName Subject VERB Object - unique names for tracking
+  session.run(['@f0 Water BOILS_AT Celsius100']);
 
   // Inspect the resulting concepts.
   const conceptStore = session.engine.conceptStore;

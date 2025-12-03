@@ -104,8 +104,8 @@
       <h3>1. Bias Control via Veil of Ignorance</h3>
       <p>The system can <strong>mask axiological dimensions</strong> during reasoning to ensure decisions are based purely on facts:</p>
       <pre><code># Query ignoring value judgments
-@mask ontology MASK_PARTITIONS any
-@result Alice ASK scholarship</code></pre>
+@mask ontology MASK any
+@result Alice QUERY scholarship</code></pre>
       <p>This implements Rawls' "veil of ignorance" – decisions made without knowing protected attributes.</p>
 
       <h3>2. Auditability</h3>
@@ -126,26 +126,21 @@
 
     <h3>Masking by Partition</h3>
     <pre><code># Create a mask for ontology-only reasoning
-@ontMask ontology MASK_PARTITIONS any
+@ontMask ontology MASK any
 
 # Create a mask for axiology-only reasoning
-@axiMask axiology MASK_PARTITIONS any
+@axiMask axiology MASK any
 
-# Query with specific partition focus
-@result Water ASK liquid</code></pre>
+# Query with specific partition focus (mask applied via theory/engine config)
+@result Water IS_A liquid</code></pre>
 
     <h3>Masking by Specific Dimensions</h3>
-    <pre><code># Mask specific conceptual dimensions
-@tempMask temperature MASK_DIMS pressure
-@locMask location MASK_DIMS spatial_proximity
+    <pre><code># Mask specific conceptual dimensions via names
+@tempMask Temperature_Pressure MASK any
+@locMask location MASK any
 
 # Query ignoring temperature-related dimensions
-@result Ice ASK solid</code></pre>
-
-    <h3>Combining Masks</h3>
-    <pre><code># Combine multiple masks
-@combined $ontMask MASK_UNION $tempMask
-@result Water ASK Celsius100</code></pre>
+@result Ice IS_A solid</code></pre>
 
     <h2>Configuration</h2>
     <p>Partition boundaries are configurable in <code>config.json</code>:</p>

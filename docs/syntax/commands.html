@@ -38,11 +38,11 @@
 
   <section>
     <h2>Overview</h2>
-    <p>This page provides a complete reference for all <strong>67 Sys2DSL commands</strong>. Commands are organized by functional category. Each command follows the standard syntax:</p>
-    <pre><code>@varName COMMAND arg1 arg2 ...</code></pre>
+    <p>This page provides a reference for the Sys2DSL verb set. Verbs are organized by functional category. In v3.0, every statement follows strict triple syntax:</p>
+    <pre><code>@varName Subject VERB Object</code></pre>
 
     <div class="arch-note">
-      <strong>High-Level API (Recommended):</strong> For simpler NL→DSL generation, use these consolidated commands that try multiple strategies internally:
+      <strong>High-Level API (Recommended):</strong> For simpler NL→DSL generation, use these consolidated verbs that try multiple strategies internally (still in triple form):
       <code>QUERY</code>, <code>WHATIF</code>, <code>SUGGEST</code>, <code>SUMMARIZE_FACTS</code>, <code>MANAGE_THEORY</code>, <code>MEMORY</code>, <code>MASK</code>, <code>FORMAT_RESULT</code>, <code>EXPLAIN_QUERY</code>.
       See <a href="../specs/theory/Sys2DSL_highlevel.md">Sys2DSL_highlevel.md</a>.
     </div>
@@ -65,19 +65,19 @@
 
   <section id="highlevel" class="category-section">
     <h2>0. High-Level Commands (Recommended)</h2>
-    <p>These consolidated commands try multiple strategies internally and are recommended for NL→DSL generation. They wrap the granular commands below for simpler usage.</p>
+    <p>These consolidated verbs try multiple strategies internally and are recommended for NL→DSL generation. They wrap the granular verbs below for simpler usage.</p>
 
     <table class="cmd-table">
       <tr><th>Command</th><th>Purpose</th><th>Wraps</th></tr>
       <tr>
         <td><code>QUERY</code></td>
-        <td>Multi-strategy query (ASK → INFER fallback)</td>
-        <td>ASK, ASK_MASKED, INFER</td>
+        <td>Multi-strategy query (direct geometric + inference)</td>
+        <td>IS_A, FACTS, INFER</td>
       </tr>
       <tr>
         <td><code>WHATIF</code></td>
         <td>Counterfactual reasoning</td>
-        <td>CF (PUSH + ASSERT + ASK + POP)</td>
+        <td>PUSH + triple fact + inference + POP (see Sys2DSL_highlevel.md)</td>
       </tr>
       <tr>
         <td><code>EXPLAIN_QUERY</code></td>
@@ -92,7 +92,7 @@
       <tr>
         <td><code>SUMMARIZE_FACTS</code></td>
         <td>Find and summarize matching facts</td>
-        <td>FACTS_MATCHING, SUMMARIZE</td>
+        <td>FACTS, SUMMARIZE</td>
       </tr>
       <tr>
         <td><code>MANAGE_THEORY</code></td>
@@ -107,7 +107,7 @@
       <tr>
         <td><code>MASK</code></td>
         <td>Build dimension masks</td>
-        <td>MASK_PARTITIONS, MASK_DIMS</td>
+        <td><code>@mask Subject MASK any</code> (replaces <code>MASK_PARTITIONS</code>/<code>MASK_DIMS</code>)</td>
       </tr>
       <tr>
         <td><code>FORMAT_RESULT</code></td>
@@ -149,30 +149,20 @@
   </section>
 
   <section id="query" class="category-section">
-    <h2>1. Query Commands</h2>
-    <p>Commands for querying the knowledge base. These read from the ConceptStore and current theory stack.</p>
+    <h2>1. Query Verbs</h2>
+    <p>Verbs for querying the knowledge base. These read from the ConceptStore and current theory stack.</p>
 
     <table class="cmd-table">
       <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
       <tr>
         <td><code>QUERY</code> <span style="color:#4a4">(high-level)</span></td>
-        <td>Multi-strategy query (ASK → INFER fallback)</td>
-        <td><code>@result QUERY Subject RELATION Object [mode=logical|geometric|both] [proof=true]</code></td>
+        <td>Multi-strategy query over a triple</td>
+        <td><code>@result Subject QUERY Object</code></td>
       </tr>
       <tr>
-        <td><code>ASK</code></td>
-        <td>Query truth value of a statement</td>
-        <td><code>@result Subject ASK Object</code></td>
-      </tr>
-      <tr>
-        <td><code>ASK_MASKED</code></td>
-        <td>Query with dimension mask applied</td>
-        <td><code>@result Subject ASK_MASKED Object</code></td>
-      </tr>
-      <tr>
-        <td><code>FACTS_MATCHING</code></td>
-        <td>Find all facts matching a pattern (polymorphic)</td>
-        <td><code>@results FACTS_MATCHING [Subject] [RELATION] [Object]</code></td>
+        <td><code>FACTS</code></td>
+        <td>Find all facts matching a pattern</td>
+        <td><code>@results Subject FACTS Object</code> (with <code>any</code> as wildcard)</td>
       </tr>
       <tr>
         <td><code>FACTS_WITH_RELATION</code></td>
@@ -196,11 +186,11 @@
       </tr>
     </table>
 
-    <h3>ASK</h3>
-    <p><strong>Purpose:</strong> Query the truth value of a statement within the current theory.</p>
-    <pre><code>@q1 Dog IS_A Animal
+    <h3>IS_A / QUERY</h3>
+    <p><strong>Purpose:</strong> Query the truth value of a statement within the current theory using <code>IS_A</code> or the high-level <code>QUERY</code> verb.</p>
+    <pre><code>@q1 Dog IS_A animal
 @q2 Water BOILS_AT Celsius100
-@q3 Alice KNOWS Bob</code></pre>
+@q3 Alice QUERY friend</code></pre>
 
     <p><strong>Returns:</strong></p>
     <pre><code>{
@@ -210,66 +200,43 @@
 }</code></pre>
 
     <div class="arch-note">
-      <strong>Internal Flow:</strong> ASK dispatches to <code>Reasoner.ask()</code> which checks <code>ConceptStore.getFacts()</code> for direct matches, then uses <code>InferenceEngine</code> for transitive, symmetric, and inverse relations. Results pass through <code>DimensionRegistry</code> for relation property lookup.
+      <strong>Internal Flow:</strong> Query verbs dispatch to the reasoner, which checks <code>ConceptStore.getFacts()</code> for direct matches, then uses <code>InferenceEngine</code> for transitive, symmetric, and inverse relations. Results pass through <code>DimensionRegistry</code> for relation property lookup.
     </div>
 
-    <h3>ASK_MASKED</h3>
-    <p><strong>Purpose:</strong> Query with specific dimensions filtered out. Useful for bias control.</p>
-    <pre><code>@ontologyMask ontology MASK_PARTITIONS any
-@result Water IS_A liquid</code></pre>
-
-    <h3>FACTS_MATCHING (Polymorphic)</h3>
-    <p><strong>Purpose:</strong> Pattern search across all facts. Accepts 0-3 arguments for flexible matching.</p>
-    <pre><code>@all any FACTS any                         # All facts (0 args)
-@aboutDog Dog FACTS any                    # All facts about Dog (1 arg)
-@dogIsA Dog FACTS IS_A                     # Dog IS_A ? (2 args)
-@exact Dog FACTS Animal                    # Exact match (3 args)</code></pre>
+    <h3>FACTS</h3>
+    <p><strong>Purpose:</strong> Pattern search across all facts using the unified triple syntax.</p>
+    <pre><code>@all any FACTS any              # All facts
+@aboutDog Dog FACTS any         # All facts about Dog
+@dogIsA Dog FACTS IS_A          # Dog IS_A ?
+@exact Dog FACTS animal         # Exact match</code></pre>
 
     <div class="warning">
-      <strong>Note:</strong> Sys2DSL does NOT support <code>?</code> or <code>*</code> wildcards. Use polymorphic commands or specialized queries (<code>FACTS_WITH_RELATION</code>, <code>FACTS_WITH_OBJECT</code>, <code>INSTANCES_OF</code>) instead.
-    </div>
-
-    <p><strong>Returns:</strong> Array of matching facts with <code>{ subject, relation, object, factId }</code>.</p>
-
-    <h3>Specialized Query Commands</h3>
-    <pre><code>@animals INSTANCES_OF Animal               # All X where X IS_A Animal
-@causes FACTS_WITH_RELATION CAUSES         # All facts with CAUSES relation
-@heat_facts FACTS_WITH_OBJECT heat         # All facts with object=heat</code></pre>
+      <strong>Note:</strong> Sys2DSL does NOT support <code>?</code> or <code>*</code> wildcards. Use the <code>any</code> concept in triple position or specialized verbs (for example <code>INSTANCES</code>) instead.</div>
   </section>
 
   <section id="assertion" class="category-section">
-    <h2>2. Assertion Commands</h2>
-    <p>Commands for adding and removing facts. These modify the working theory layer.</p>
+    <h2>2. Assertion / Update Verbs</h2>
+    <p>Verbs for adding and removing facts. These modify the working theory layer.</p>
 
     <table class="cmd-table">
-      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr><th>Verb</th><th>Purpose</th><th>Syntax</th></tr>
       <tr>
-        <td><code>ASSERT</code></td>
+        <td><code>IS_A</code>, <code>HAS</code>, etc.</td>
         <td>Add a new fact</td>
-        <td><code>@_ Subject ASSERT Object</code></td>
+        <td><code>@_ Subject VERB Object</code></td>
       </tr>
       <tr>
         <td><code>RETRACT</code></td>
         <td>Remove a fact</td>
-        <td><code>@result RETRACT Subject RELATION Object</code></td>
+        <td><code>@result Subject RETRACT Object</code></td>
       </tr>
     </table>
 
-    <h3>ASSERT</h3>
-    <p><strong>Purpose:</strong> Add a new fact to the current working theory.</p>
-    <pre><code>@_ Dog IS_A Animal
+    <h3>Triple Facts</h3>
+    <p><strong>Purpose:</strong> Add a new fact to the current working theory using the unified triple format.</p>
+    <pre><code>@_ Dog IS_A animal
 @_ Alice KNOWS Bob
-@_ Water HAS_PROPERTY transparent</code></pre>
-
-    <p><strong>Returns:</strong></p>
-    <pre><code>{
-  ok: boolean,
-  factId: string,
-  conceptId: string,       // for subject
-  objectConceptId: string, // for object
-  created: boolean,        // true if new
-  usageCount: number       // usage counter
-}</code></pre>
+@_ Water BOILS_AT Celsius100</code></pre>
 
     <div class="arch-note">
       <strong>Internal Flow:</strong> Triple statements call <code>api.add()</code> which encodes concepts via <code>Encoder</code>, stores in <code>ConceptStore</code>, and updates usage tracking in <code>UsageTracker</code>. Facts go to the working theory layer (session-local) until saved with <code>SAVE</code>.
@@ -277,70 +244,50 @@
 
     <h3>RETRACT</h3>
     <p><strong>Purpose:</strong> Remove a fact from the current working theory.</p>
-    <pre><code>@r1 Water IS_A solid   # Remove incorrect fact</code></pre>
+    <pre><code>@r1 Water RETRACT solid   # Remove incorrect assertion</code></pre>
 
     <div class="warning">
-      <strong>Note:</strong> RETRACT only affects the working theory layer. Base theories loaded with <code>LOAD</code> are immutable.
-    </div>
+      <strong>Note:</strong> RETRACT only affects the working theory layer. Base theories loaded with <code>LOAD</code> are immutable.</div>
   </section>
 
   <section id="concept" class="category-section">
-    <h2>3. Concept Commands</h2>
-    <p>Commands for working with concepts. Concepts are stored as diamond regions in the vector space.</p>
+    <h2>3. Concept Verbs</h2>
+    <p>Verbs for working with concepts. Concepts are stored as diamond regions in the vector space.</p>
 
     <table class="cmd-table">
-      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr><th>Verb</th><th>Purpose</th><th>Syntax</th></tr>
       <tr>
-        <td><code>BIND_CONCEPT</code></td>
-        <td>Get reference to a concept</td>
-        <td><code>@ref BIND_CONCEPT conceptName</code></td>
+        <td><code>BIND</code></td>
+        <td>Get or create a concept/fact reference</td>
+        <td><code>@ref ConceptName BIND any</code></td>
       </tr>
       <tr>
-        <td><code>DEFINE_CONCEPT</code></td>
-        <td>Create concept with dimensions</td>
-        <td><code>@ref DEFINE_CONCEPT name dim1=val1 ...</code></td>
+        <td><code>BIND_POINT</code></td>
+        <td>Get point representation</td>
+        <td><code>@point ConceptName BIND_POINT any</code></td>
       </tr>
       <tr>
         <td><code>INSPECT</code></td>
         <td>Get detailed concept info</td>
-        <td><code>@info INSPECT $ref</code></td>
+        <td><code>@info ConceptName INSPECT any</code></td>
       </tr>
       <tr>
         <td><code>LITERAL</code></td>
         <td>Create a literal value</td>
-        <td><code>@val LITERAL "some text"</code></td>
+        <td><code>@val type LITERAL "some text"</code></td>
       </tr>
     </table>
 
-    <h3>BIND_CONCEPT</h3>
-    <p><strong>Purpose:</strong> Get a reference to a concept for further operations.</p>
-    <pre><code>@waterRef BIND_CONCEPT water
-@props INSPECT $waterRef</code></pre>
+    <h3>BIND</h3>
+    <p><strong>Purpose:</strong> Get a reference to a concept or fact for further operations.</p>
+    <pre><code>@waterRef water BIND any
+@props $waterRef INSPECT any</code></pre>
 
-    <p><strong>Returns:</strong></p>
-    <pre><code>{
-  kind: 'conceptRef',
-  label: string,
-  id: string,
-  diamondCount: number,  // polysemy count
-  usageCount: number
-}</code></pre>
-
-    <h3>DEFINE_CONCEPT</h3>
-    <p><strong>Purpose:</strong> Explicitly create a new concept with specific dimension values.</p>
-    <pre><code>@newConcept DEFINE_CONCEPT electric_car \
-            physicality=80 \
-            artifact_device=100 \
-            computation_capability=60</code></pre>
-
-    <div class="arch-note">
-      <strong>Internal Flow:</strong> DEFINE_CONCEPT creates a diamond in the vector space with the specified dimension values. If the concept already exists, returns the existing reference without overwriting.
-    </div>
-
-    <h3>INSPECT</h3>
-    <p><strong>Purpose:</strong> Get detailed information about a concept, including its diamond structure.</p>
-    <pre><code>@info INSPECT $waterRef
-# Returns: diamonds array with center/min/max coordinates, usage stats</code></pre>
+    <h3>BIND_POINT</h3>
+    <p><strong>Purpose:</strong> Resolve a concept into its geometric representation.</p>
+    <pre><code>@waterPoint water BIND_POINT any
+@info water INSPECT any
+# Returns: diamonds array with center/radii, usage stats</code></pre>
   </section>
 
   <section id="relation" class="category-section">
@@ -713,38 +660,20 @@
     <p>Commands for creating dimension masks. Masks enable bias control and focused queries.</p>
 
     <table class="cmd-table">
-      <tr><th>Command</th><th>Purpose</th><th>Syntax</th></tr>
+      <tr><th>Verb</th><th>Purpose</th><th>Syntax</th></tr>
       <tr>
-        <td><code>MASK_PARTITIONS</code></td>
-        <td>Mask by partition</td>
-        <td><code>@mask MASK_PARTITIONS partition1 partition2</code></td>
-      </tr>
-      <tr>
-        <td><code>MASK_DIMS</code></td>
-        <td>Mask by dimension names</td>
-        <td><code>@mask MASK_DIMS dim1 dim2</code></td>
+        <td><code>MASK</code></td>
+        <td>Mask by partition or dimension names</td>
+        <td><code>@mask Subject MASK any</code></td>
       </tr>
     </table>
 
-    <h3>MASK_PARTITIONS</h3>
-    <p><strong>Purpose:</strong> Create a mask that includes only specified partitions (ontology, axiology, empirical).</p>
-    <pre><code>@ontologyMask MASK_PARTITIONS ontology
-@valueMask MASK_PARTITIONS axiology
-@combinedMask MASK_PARTITIONS ontology axiology</code></pre>
-
-    <div class="arch-note">
-      <strong>Partitions:</strong>
-      <ul>
-        <li><code>ontology</code> - Physical, factual dimensions (what IS)</li>
-        <li><code>axiology</code> - Value, normative dimensions (what SHOULD BE)</li>
-        <li><code>empirical</code> - Learned, statistical dimensions</li>
-      </ul>
-    </div>
-
-    <h3>MASK_DIMS</h3>
-    <p><strong>Purpose:</strong> Create a mask for specific named dimensions.</p>
-    <pre><code>@thermoMask MASK_DIMS temperature pressure
-@ethicsMask MASK_DIMS moral_valence legality trust_level</code></pre>
+    <h3>MASK (v3.0)</h3>
+    <p><strong>Purpose:</strong> Create a mask for partitions or specific named dimensions using the unified triple syntax.</p>
+    <pre><code>@ontologyMask ontology MASK any
+@valueMask axiology MASK any
+@thermoMask Temperature_Pressure MASK any
+@ethicsMask MoralValence_Legality_Trust MASK any</code></pre>
   </section>
 
   <section id="utility" class="category-section">
@@ -813,9 +742,9 @@
 @notQ1 BOOL_NOT $q1           # Negation</code></pre>
 
     <h3>List Operations</h3>
-    <pre><code>@list1 FACTS_MATCHING Dog ? ?
-@list2 FACTS_MATCHING Cat ? ?
-@all MERGE_LISTS $list1 $list2
+    <pre><code>@list1 Dog FACTS any
+@list2 Cat FACTS any
+@all $list1 MERGE_LISTS $list2
 @first PICK_FIRST $all
 @count COUNT $all
 @hasItems NONEMPTY $all</code></pre>
@@ -926,15 +855,15 @@
     <h2>Command Summary Table</h2>
     <table class="cmd-table">
       <tr><th>Category</th><th>Commands</th><th>Count</th></tr>
-      <tr><td>Query</td><td>ASK, ASK_MASKED, FACTS_MATCHING, FACTS_WITH_RELATION, FACTS_WITH_OBJECT, INSTANCES_OF, ALL_REQUIREMENTS_SATISFIED</td><td>7</td></tr>
-      <tr><td>Assertion</td><td>ASSERT, RETRACT</td><td>2</td></tr>
+      <tr><td>Query</td><td>IS_A, FACTS, FACTS_WITH_RELATION, FACTS_WITH_OBJECT, INSTANCES_OF, ALL_REQUIREMENTS_SATISFIED</td><td>6</td></tr>
+      <tr><td>Assertion</td><td>triple facts (IS_A, HAS, ...), RETRACT</td><td>2</td></tr>
       <tr><td>Concept</td><td>BIND_CONCEPT, DEFINE_CONCEPT, INSPECT, LITERAL</td><td>4</td></tr>
       <tr><td>Relation</td><td>BIND_RELATION, DEFINE_RELATION, BIND_POINT</td><td>3</td></tr>
       <tr><td>Theory</td><td>PUSH, POP, THEORIES, LOAD, SAVE, MERGE_THEORY, DELETE_THEORY, THEORY_INFO, RESET_SESSION</td><td>9</td></tr>
       <tr><td>Reasoning</td><td>VALIDATE, PROVE, HYPOTHESIZE, CF, ABDUCT, ANALOGICAL, CHECK_CONTRADICTION, CHECK_WOULD_CONTRADICT, REGISTER_FUNCTIONAL, REGISTER_CARDINALITY</td><td>10</td></tr>
       <tr><td>Inference</td><td>INFER, FORWARD_CHAIN, WHY, DEFINE_RULE, DEFINE_DEFAULT, CLEAR_RULES</td><td>6</td></tr>
       <tr><td>Memory</td><td>GET_USAGE, FORGET, BOOST, PROTECT, UNPROTECT</td><td>5</td></tr>
-      <tr><td>Mask</td><td>MASK_PARTITIONS, MASK_DIMS</td><td>2</td></tr>
+      <tr><td>Mask</td><td>MASK</td><td>1</td></tr>
       <tr><td>Utility</td><td>BOOL_AND, BOOL_OR, BOOL_NOT, NONEMPTY, MERGE_LISTS, PICK_FIRST, PICK_LAST, COUNT, FILTER, POLARITY_DECIDE</td><td>10</td></tr>
       <tr><td>Output</td><td>TO_NATURAL, TO_JSON, EXPLAIN, FORMAT, SUMMARIZE</td><td>5</td></tr>
       <tr><td>Ontology</td><td>EXPLAIN_CONCEPT, MISSING, WHAT_IS</td><td>3</td></tr>

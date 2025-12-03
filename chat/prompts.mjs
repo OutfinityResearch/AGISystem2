@@ -68,7 +68,13 @@ Respond with JSON only:
 export function buildFactExtractionPrompt(text) {
   return `Extract facts from this text as Subject-Relation-Object triples.
 
-Text: "${text}"
+RAW TEXT (may include bullets, headings, separators):
+"${text}"
+
+PREPROCESSING RULES (VERY IMPORTANT):
+- Ignore purely structural/formatting lines: markdown bullets (-, *, •), numbered lists (1., 2.), headings (#, ##), separators (----, ====), code fences (triple quotes or fenced code blocks), and empty lines.
+- Focus ONLY on declarative statements that express relationships between concepts (subject–verb–object).
+- If the same fact appears multiple times (e.g., in a bullet list and in prose), only output it ONCE.
 
 IMPORTANT RULES:
 1. Each subject and object must be a CONCEPT NAME (single word or underscore_connected)
@@ -77,17 +83,21 @@ IMPORTANT RULES:
 4. For numeric values, create a concept (e.g., "Celsius100" not "100")
 5. Concepts should be lowercase for types, Capitalized for instances/individuals
 6. Relations are ALWAYS UPPERCASE with underscores
-7. CUSTOM VERBS ARE ALLOWED! Convert any verb to UPPERCASE (e.g., "kills" → "KILLS", "loves" → "LOVES")
-8. Work with ANY language - extract the semantic structure regardless of language
+7. ALWAYS normalize types to SINGULAR form (dogs → dog, patients → patient, oameni → om). Treat plural/singular of the same type as the SAME CONCEPT.
+8. Prefer using the BASE RELATION SET from Sys2DSL when possible instead of inventing new verbs.
+9. CUSTOM VERBS ARE STILL ALLOWED when none of the base relations apply (convert verb to UPPERCASE).
+10. Work with ANY language - extract the semantic structure regardless of language.
 
 Common relations (use these when applicable):
-- IS_A: category/type membership (e.g., "Dog IS_A mammal", "Fido IS_A dog")
+- IS_A: category/type membership (e.g., "dog IS_A mammal", "Fido IS_A dog")
+- HAS: simple attribute possession (e.g., "car HAS wheel")
 - PART_OF: mereological (e.g., "Wheel PART_OF car")
-- CAUSES / CAUSED_BY: causation (e.g., "Fire CAUSES smoke")
+- CAUSES / CAUSED_BY: causation (e.g., "fire CAUSES smoke")
 - LOCATED_IN: location (e.g., "Paris LOCATED_IN France")
-- REQUIRES: dependencies (e.g., "Driving REQUIRES license")
+- REQUIRES: dependencies (e.g., "human REQUIRES water")
 - PERMITS / PROHIBITED_BY / PERMITTED_BY: permissions/rules
-- DISJOINT_WITH: mutual exclusion (e.g., "mortal DISJOINT_WITH immortal")
+- DISJOINT_WITH: mutual exclusion (e.g., "mammal DISJOINT_WITH reptile", "mortal DISJOINT_WITH immortal")
+- CAN: abilities/capabilities (e.g., "bird CAN fly")
 - OWNS / OWNED_BY: ownership
 
 BUT you can also use CUSTOM RELATIONS when the text uses specific verbs:
@@ -164,7 +174,12 @@ For example, if the facts show "Alice HAS_SALARY 70000", use that exact value in
 
   return `TASK: Convert this natural language question/command to Sys2DSL.
 
-QUESTION: "${question}"
+RAW QUESTION (may contain bullets, headings, separators around it):
+"${question}"
+
+PREPROCESSING RULES:
+- Ignore markdown bullets, headings, horizontal rules, code fences and other purely formatting lines.
+- If the user pasted a whole document, focus on the actual question/instruction, not on table-of-contents, section titles, or decorative separators.
 ${contextSection}
 
 ═══════════════════════════════════════════════════════════════════════
@@ -368,6 +383,15 @@ ASK EXAMPLES (yes/no questions):
 
 "If humans had no water, could they survive?"
 {"command":"ASK","type":"yes_no","canonical":{"subject":"human","relation":"REQUIRES","object":"water"},"confidence":0.95}
+
+ABDUCT EXAMPLES (cause/diagnosis questions):
+
+"What could cause John's symptoms?"
+{"command":"ABDUCT","type":"diagnosis","canonical":{"symptom":"fever"},"confidence":0.95}
+
+"What could cause headaches?"
+{"command":"ABDUCT","type":"diagnosis","canonical":{"symptom":"headache"},"confidence":0.95}
+
 
 FACTS_MATCHING EXAMPLES (list/find queries with ? wildcards):
 

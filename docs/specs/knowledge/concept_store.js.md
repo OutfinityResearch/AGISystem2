@@ -2,7 +2,7 @@
 
 ID: DS(/knowledge/concept_store.js)
 
-Status: IMPLEMENTED v2.0
+Status: IMPLEMENTED v3.0 (with Existence Tracking)
 
 Class `ConceptStore`
 - **Role**: Central repository for concepts, facts, and usage tracking. Manages concept storage with `BoundedDiamond` clusters, fact triple storage with indexing, usage metrics for priority-based reasoning, and forgetting mechanisms for memory management.
@@ -37,10 +37,12 @@ constructor(deps)
   _concepts: Map<label, ConceptEntry>,
   _facts: Array<Fact>,
   _factIndex: Map<subject, number[]>,
+  _existenceIndex: Map<subject, { entries: Array<{factId, existence}> }>,  // v3.0
   _usageMetrics: Map<label, UsageMetrics>,
   _factUsage: Map<factId, UsageMetrics>,
   _relationUsage: Map<relation, UsageMetrics>,
-  _protected: Set<label>
+  _protected: Set<label>,
+  EXISTENCE: { IMPOSSIBLE: -127, UNPROVEN: -64, POSSIBLE: 0, DEMONSTRATED: 64, CERTAIN: 127 }  // v3.0
 }
 ```
 
@@ -113,16 +115,22 @@ Creates immutable snapshot of concept state.
 
 ## 3. Fact Management API
 
-### addFact(triple)
+### addFact(triple, options)
 ```javascript
-addFact(triple: { subject: string, relation: string, object: string }): number
+addFact(
+  triple: { subject: string, relation: string, object: string },
+  options?: { existence?: number }
+): number
 ```
-Adds fact triple to store.
+Adds fact triple to store with optional existence level.
+- `options.existence` - Existence level (-127 to 127), defaults to CERTAIN (127)
 - Returns fact ID (index)
-- Indexes by subject for fast lookup
+- **Version unification**: If a higher existence version exists, skips adding duplicate
+- **Existence upgrade**: If lower existence exists, upgrades it to new level
+- Indexes by subject and existence for fast lookup
 - Records usage for subject and object concepts
 - Records relation usage
-- Logs to audit
+- Logs to audit with existence level
 
 ### removeFact(factId)
 ```javascript
@@ -160,14 +168,68 @@ Creates deep copy of all facts for counterfactual reasoning.
 restoreFacts(snapshot: Fact[]): void
 ```
 Replaces all facts with snapshot contents.
-- Clears existing facts and index
-- Re-adds each fact from snapshot
+- Clears existing facts, subject index, and existence index
+- Re-adds each fact from snapshot with preserved existence levels
+- Rebuilds existence index for fast lookup
 - Used by POP to revert to previous state
 - Logs to audit
 
 ---
 
-## 4. Usage Tracking API
+## 4. Existence Tracking API (v3.0)
+
+Implements epistemic status tracking per DS(/knowledge/dimensions) Existence dimension.
+
+### getBestExistenceFact(subject, relation, object)
+```javascript
+getBestExistenceFact(
+  subject: string,
+  relation: string,
+  object?: string
+): Fact | null
+```
+Returns the fact with highest existence level for a triple.
+- Used for version unification (higher existence wins)
+- If `object` is omitted, returns best existence for any object with that subject/relation
+
+### getFactsByExistence(minExistence)
+```javascript
+getFactsByExistence(minExistence: number): Fact[]
+```
+Returns all facts with existence >= minExistence.
+- Use `store.EXISTENCE.CERTAIN` for axioms only
+- Use `store.EXISTENCE.DEMONSTRATED` for proven facts
+
+### getFactsWithExistence(subject)
+```javascript
+getFactsWithExistence(subject: string): Fact[]
+```
+Returns facts for subject sorted by existence (highest first).
+- Uses existence index for O(1) "best existence" lookup
+- Excludes deleted facts
+
+### getFactsBySubjectAndRelation(subject, relation, minExistence)
+```javascript
+getFactsBySubjectAndRelation(
+  subject: string,
+  relation: string,
+  minExistence?: number
+): Fact[]
+```
+Returns facts filtered by subject, relation, and optional existence threshold.
+
+### upgradeExistence(factId, newExistence)
+```javascript
+upgradeExistence(factId: number, newExistence: number): boolean
+```
+Upgrades a fact to higher existence level.
+- Returns false if current existence >= newExistence (no downgrade)
+- Updates existence index to maintain sort order
+- Logs to audit
+
+---
+
+## 5. Usage Tracking API
 
 Implements DS(/knowledge/usage_tracking) for priority-based reasoning and forgetting.
 
@@ -295,6 +357,7 @@ Removes concepts based on criteria.
   relation: string,
   object: string,
   _id: number,
+  _existence: number,     // v3.0: Existence level (-127 to 127)
   _deleted?: boolean
 }
 ```
@@ -329,6 +392,34 @@ store.addFact({ subject: 'Dog', relation: 'HAS_PROPERTY', object: 'loyal' });
 // Query
 const facts = store.getFactsBySubject('Dog');
 // → [{ subject: 'Dog', relation: 'IS_A', object: 'Animal' }, ...]
+```
+
+### Existence-Aware Facts (v3.0)
+```javascript
+// Add facts with different existence levels
+store.addFact(
+  { subject: 'Dog', relation: 'IS_A', object: 'Animal' },
+  { existence: store.EXISTENCE.CERTAIN }  // Axiom
+);
+
+store.addFact(
+  { subject: 'Unicorn', relation: 'IS_A', object: 'Horse' },
+  { existence: store.EXISTENCE.POSSIBLE }  // Hypothetical
+);
+
+// Query facts by existence level
+const axioms = store.getFactsByExistence(store.EXISTENCE.CERTAIN);
+const allKnown = store.getFactsByExistence(store.EXISTENCE.POSSIBLE);
+
+// Get best existence for a triple
+const best = store.getBestExistenceFact('Dog', 'IS_A', 'Animal');
+console.log(best._existence);  // → 127 (CERTAIN)
+
+// Version unification: higher existence wins
+store.addFact(
+  { subject: 'Dog', relation: 'IS_A', object: 'Animal' },
+  { existence: store.EXISTENCE.POSSIBLE }  // Ignored - CERTAIN already exists
+);
 ```
 
 ### Counterfactual Reasoning

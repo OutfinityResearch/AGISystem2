@@ -311,21 +311,57 @@ class Reasoner {
     };
   }
 
+  /**
+   * Answer a geometric query with full provenance (FS-05/FS-07)
+   *
+   * @param {Int8Array} queryVector - Query vector
+   * @param {string} conceptId - Concept to check against
+   * @param {Object} [options] - Options
+   * @param {Array} [options.contextStack] - Theory context
+   * @param {Uint8Array} [options.mask] - Dimension mask
+   * @returns {Object} Result with provenance including active theories, dimensions, acceptance band
+   */
   answer(queryVector, conceptId, options = {}) {
     const contextStack = options.contextStack || (this.stack && this.stack.getActiveLayers && this.stack.getActiveLayers()) || null;
     const maskOverride = options.mask || null;
     const diamond = this.composeConcept(conceptId, contextStack);
+
+    // Build active theories provenance (FS-05)
+    const activeTheories = [];
+    if (contextStack && Array.isArray(contextStack)) {
+      for (const layer of contextStack) {
+        activeTheories.push({
+          id: layer.id,
+          label: layer.label,
+          priority: layer.priority,
+          source: layer.metadata?.source || 'unknown'
+        });
+      }
+    }
+
     if (!diamond) {
       return {
         result: 'UNKNOWN',
         band: 'FALSE',
         provenance: {
           conceptId,
-          reason: 'NO_CONCEPT'
+          reason: 'NO_CONCEPT',
+          activeTheories,
+          contributingDimensions: [],
+          acceptanceBand: null,
+          overrides: []
         }
       };
     }
+
     const check = this.adversarialCheck(queryVector, diamond, maskOverride);
+
+    // Build contributing dimensions list (FS-07)
+    const contributingDimensions = this._getContributingDimensions(queryVector, diamond, maskOverride);
+
+    // Build overrides list from layers
+    const overrides = this._getLayerOverrides(contextStack, diamond);
+
     return {
       result: check.truth,
       band: check.band,
@@ -333,9 +369,123 @@ class Reasoner {
         conceptId,
         distance: check.distance,
         scepticRadius: check.scepticRadius,
-        optimistRadius: check.optimistRadius
+        optimistRadius: check.optimistRadius,
+        // FS-05/FS-07 Enhanced provenance:
+        activeTheories,
+        contributingDimensions,
+        acceptanceBand: {
+          sceptic: check.scepticRadius,
+          optimist: check.optimistRadius,
+          bandUsed: check.band
+        },
+        overrides,
+        timestamp: new Date().toISOString()
       }
     };
+  }
+
+  /**
+   * Get dimensions that contributed most to the distance calculation
+   * @private
+   */
+  _getContributingDimensions(queryVector, diamond, mask) {
+    const contributions = [];
+    const dims = queryVector.length;
+
+    for (let i = 0; i < dims; i++) {
+      // Skip masked dimensions
+      if (mask) {
+        const byteIndex = Math.floor(i / 8);
+        const bitIndex = i % 8;
+        if ((mask[byteIndex] & (1 << bitIndex)) === 0) {
+          continue;
+        }
+      }
+
+      // Calculate contribution to distance
+      const qVal = queryVector[i];
+      const dMin = diamond.minValues[i];
+      const dMax = diamond.maxValues[i];
+      const dCenter = diamond.center ? diamond.center[i] : Math.floor((dMin + dMax) / 2);
+
+      let contribution = 0;
+      if (qVal < dMin) {
+        contribution = dMin - qVal;
+      } else if (qVal > dMax) {
+        contribution = qVal - dMax;
+      }
+
+      if (contribution > 0) {
+        contributions.push({
+          dimension: i,
+          contribution,
+          queryValue: qVal,
+          diamondMin: dMin,
+          diamondMax: dMax,
+          diamondCenter: dCenter
+        });
+      }
+    }
+
+    // Sort by contribution (descending) and return top contributors
+    contributions.sort((a, b) => b.contribution - a.contribution);
+    return contributions.slice(0, 10);  // Top 10 contributors
+  }
+
+  /**
+   * Get overrides from theory layers
+   * @private
+   */
+  _getLayerOverrides(contextStack, diamond) {
+    const overrides = [];
+
+    if (!contextStack || !Array.isArray(contextStack)) {
+      return overrides;
+    }
+
+    for (const layer of contextStack) {
+      if (!layer.definitionMask) continue;
+
+      const layerOverrides = {
+        layerId: layer.id,
+        dimensions: []
+      };
+
+      for (let i = 0; i < layer.dimensions; i++) {
+        if (layer.covers && layer.covers(i)) {
+          layerOverrides.dimensions.push({
+            dimension: i,
+            overrideMin: layer.overrideMin ? layer.overrideMin[i] : null,
+            overrideMax: layer.overrideMax ? layer.overrideMax[i] : null
+          });
+        }
+      }
+
+      if (layerOverrides.dimensions.length > 0) {
+        overrides.push(layerOverrides);
+      }
+    }
+
+    return overrides;
+  }
+
+  /**
+   * Build active theories list for provenance (FS-05)
+   * @private
+   */
+  _buildActiveTheories(contextStack) {
+    const activeTheories = [];
+    if (contextStack && Array.isArray(contextStack)) {
+      for (const layer of contextStack) {
+        activeTheories.push({
+          id: layer.id,
+          label: layer.label,
+          priority: layer.priority,
+          source: layer.metadata?.source || 'unknown'
+        });
+      }
+    }
+    return activeTheories;
   }
 
   /**
@@ -412,6 +562,274 @@ class Reasoner {
       return { truth: 'UNKNOWN', confidence: 0, method: 'no_path' };
     }
     return { truth: 'UNKNOWN', confidence: 0, method: 'unknown_subject' };
+  }
+
+  /**
+   * Check if subject IS_A object via transitive chain with existence tracking
+   *
+   * This is the existence-aware version of deduceIsA that:
+   * - Searches all IS_A variants (IS_A_CERTAIN, IS_A_PROVEN, IS_A_POSSIBLE, IS_A_UNPROVEN)
+   * - Tracks existence levels through the chain
+   * - Uses min(existence) for transitive paths (conservative approach)
+   * - Returns the path with highest existence level
+   *
+   * @param {string} subject - The subject to check
+   * @param {string} object - The type to check against
+   * @param {Object} [options] - Options
+   * @param {number} [options.minExistence] - Minimum existence level to accept
+   * @param {Array} [options.contextStack] - Theory context
+   * @returns {Object} Result with truth, confidence, existence, method, and path
+   */
+  deduceIsAWithExistence(subject, object, options = {}) {
+    const contextStack = options.contextStack || null;
+    const minExistence = options.minExistence !== undefined ? options.minExistence : -128;
+
+    // Get facts from store with existence info
+    const storeFacts = this.conceptStore.getFactsBySubject
+      ? this._getFactsWithExistence(contextStack)
+      : this._getFacts(contextStack);
+
+    // Build active theories for provenance (FS-05)
+    const activeTheories = this._buildActiveTheories(contextStack);
+
+    const norm = (v) => (typeof v === 'string' ? v.trim().toLowerCase() : v);
+    const target = norm(object);
+    const subjectNorm = norm(subject);
+
+    // IS_A relation variants (all mapped to IS_A base relation)
+    const isARelations = ['IS_A', 'IS_A_CERTAIN', 'IS_A_PROVEN', 'IS_A_POSSIBLE', 'IS_A_UNPROVEN'];
+
+    // Existence level map for explicit relation variants
+    const relationExistenceMap = {
+      'IS_A': null, // Uses fact's _existence
+      'IS_A_CERTAIN': 127,
+      'IS_A_PROVEN': 64,
+      'IS_A_POSSIBLE': 0,
+      'IS_A_UNPROVEN': -64
+    };
+
+    // Check if subject exists in the knowledge base
+    const subjectExists = storeFacts.some(f =>
+      norm(f.subject) === subjectNorm || norm(f.object) === subjectNorm
+    );
+
+    // Check for DISJOINT_WITH relations (explicit FALSE)
+    const disjoint = storeFacts.some(f => {
+      if (f.relation !== 'DISJOINT_WITH') return false;
+      const s = norm(f.subject);
+      const o = norm(f.object);
+      return (s === subjectNorm && o === target) || (s === target && o === subjectNorm);
+    });
+    if (disjoint) {
+      return {
+        truth: 'FALSE',
+        confidence: 1.0,
+        existence: this.conceptStore.EXISTENCE ? this.conceptStore.EXISTENCE.IMPOSSIBLE : -127,
+        method: 'disjoint',
+        provenance: {
+          activeTheories,
+          query: { subject, relation: 'IS_A', object },
+          reason: 'DISJOINT_WITH relation exists',
+          timestamp: new Date().toISOString()
+        }
+      };
+    }
+
+    // BFS with existence tracking
+    // Each queue entry tracks: node, path existence (min so far), depth, path
+    const maxSteps = this.config && this.config.get('maxReasonerIterations')
+      ? this.config.get('maxReasonerIterations')
+      : Number.MAX_SAFE_INTEGER;
+    let steps = 0;
+
+    // Track best path to each node (by existence level)
+    const visited = new Map(); // node -> { bestExistence, depth, path }
+
+    // Priority queue (sorted by existence descending)
+    // Start with CERTAIN existence (127) for the subject itself
+    const queue = [{
+      node: subjectNorm,
+      pathExistence: 127, // Subject itself is certain
+      depth: 0,
+      path: [subject]
+    }];
+
+    let bestResult = null;
+
+    while (queue.length > 0) {
+      steps += 1;
+      if (steps > maxSteps) {
+        return bestResult || {
+          truth: 'UNKNOWN',
+          confidence: 0,
+          existence: 0,
+          method: 'timeout',
+          provenance: {
+            activeTheories,
+            query: { subject, relation: 'IS_A', object },
+            reason: 'Max iterations exceeded',
+            stepsExecuted: steps,
+            timestamp: new Date().toISOString()
+          }
+        };
+      }
+
+      // Sort queue by pathExistence descending (explore best paths first)
+      queue.sort((a, b) => b.pathExistence - a.pathExistence);
+      const { node: current, pathExistence, depth, path } = queue.shift();
+
+      // Found target!
+      if (current === target) {
+        // Only accept if above minimum existence threshold
+        if (pathExistence >= minExistence) {
+          // Track best result (highest existence)
+          if (!bestResult || pathExistence > bestResult.existence) {
+            const confidence = Math.pow(0.95, depth);
+            bestResult = {
+              truth: 'TRUE_CERTAIN',
+              confidence: Math.round(confidence * 100) / 100,
+              existence: pathExistence,
+              method: depth === 0 ? 'direct' : 'transitive',
+              depth,
+              path,
+              provenance: {
+                activeTheories,
+                query: { subject, relation: 'IS_A', object },
+                chainLength: depth,
+                pathExistence,
+                stepsExecuted: steps,
+                timestamp: new Date().toISOString()
+              }
+            };
+          }
+        }
+        continue;
+      }
+
+      // Skip if we've visited this node with equal or better existence
+      const visitedEntry = visited.get(current);
+      if (visitedEntry && visitedEntry.bestExistence >= pathExistence) {
+        continue;
+      }
+      visited.set(current, { bestExistence: pathExistence, depth, path });
+
+      // Explore all IS_A edges from current node
+      for (const fact of storeFacts) {
+        const factSubject = norm(fact.subject);
+        if (factSubject !== current) continue;
+        if (!isARelations.includes(fact.relation)) continue;
+
+        // Determine fact's existence level
+        let factExistence;
+        if (relationExistenceMap[fact.relation] !== null) {
+          // Explicit IS_A variant - use relation's defined existence
+          factExistence = relationExistenceMap[fact.relation];
+        } else {
+          // Plain IS_A - use fact's _existence field or default to CERTAIN
+          factExistence = fact._existence !== undefined
+            ? fact._existence
+            : (this.conceptStore.EXISTENCE ? this.conceptStore.EXISTENCE.CERTAIN : 127);
+        }
+
+        // New path existence is min of current path and this edge
+        const newPathExistence = Math.min(pathExistence, factExistence);
+
+        // Only follow if above minimum threshold
+        if (newPathExistence >= minExistence) {
+          const nextNode = norm(fact.object);
+          const nextVisited = visited.get(nextNode);
+
+          // Only queue if we have a better path
+          if (!nextVisited || newPathExistence > nextVisited.bestExistence) {
+            queue.push({
+              node: nextNode,
+              pathExistence: newPathExistence,
+              depth: depth + 1,
+              path: [...path, fact.object]
+            });
+          }
+        }
+      }
+    }
+
+    // Return best result if found
+    if (bestResult) {
+      return bestResult;
+    }
+
+    // No path found
+    if (subjectExists) {
+      return {
+        truth: 'UNKNOWN',
+        confidence: 0,
+        existence: 0,
+        method: 'no_path',
+        provenance: {
+          activeTheories,
+          query: { subject, relation: 'IS_A', object },
+          reason: 'No IS_A path found from subject to target',
+          stepsExecuted: steps,
+          nodesVisited: visited.size,
+          timestamp: new Date().toISOString()
+        }
+      };
+    }
+    return {
+      truth: 'UNKNOWN',
+      confidence: 0,
+      existence: 0,
+      method: 'unknown_subject',
+      provenance: {
+        activeTheories,
+        query: { subject, relation: 'IS_A', object },
+        reason: 'Subject not found in knowledge base',
+        timestamp: new Date().toISOString()
+      }
+    };
+  }
+
+  /**
+   * Get facts with existence information preserved
+   * @private
+   */
+  _getFactsWithExistence(contextStack) {
+    // Get base facts from store (with _existence field)
+    let facts;
+    if (this.conceptStore._facts) {
+      facts = this.conceptStore._facts
+        .filter(f => !f._deleted)
+        .map(f => ({
+          subject: f.subject,
+          relation: f.relation,
+          object: f.object,
+          _existence: f._existence !== undefined
+            ? f._existence
+            : (this.conceptStore.EXISTENCE ? this.conceptStore.EXISTENCE.CERTAIN : 127)
+        }));
+    } else {
+      facts = this.conceptStore.getFacts().map(f => ({
+        ...f,
+        _existence: 127 // Default for legacy stores
+      }));
+    }
+
+    // Add context stack facts
+    if (contextStack && contextStack.length > 0) {
+      for (const layer of contextStack) {
+        if (layer && Array.isArray(layer.facts)) {
+          for (const f of layer.facts) {
+            facts.push({
+              subject: f.subject,
+              relation: f.relation,
+              object: f.object,
+              _existence: f._existence !== undefined ? f._existence : 127
+            });
+          }
+        }
+      }
+    }
+
+    return facts;
   }
 
   /**

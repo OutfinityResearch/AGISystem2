@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastUpdated": "2025-12-02T16:30:39.112Z",
+  "lastUpdated": "2025-12-03T12:03:50.179Z",
   "theories": [
     {
       "id": "test_animals",
@@ -18,7 +18,7 @@
         "successCount": 0,
         "lastUsed": null
       },
-      "registeredAt": "2025-12-01T08:39:07.535Z"
+      "registeredAt": "2025-12-03T12:03:50.167Z"
     },
     {
       "id": "birds",
@@ -31,12 +31,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 14,
+        "loadCount": 21,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-01T08:39:07.537Z"
+        "lastUsed": "2025-12-03T12:03:50.172Z"
       },
-      "registeredAt": "2025-12-01T08:39:07.537Z"
+      "registeredAt": "2025-12-03T12:03:50.170Z"
     },
     {
       "id": "geography",
@@ -49,12 +49,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 14,
+        "loadCount": 21,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-01T08:39:07.539Z"
+        "lastUsed": "2025-12-03T12:03:50.175Z"
       },
-      "registeredAt": "2025-12-01T08:39:07.538Z"
+      "registeredAt": "2025-12-03T12:03:50.174Z"
     },
     {
       "id": "extra_facts",
@@ -67,12 +67,12 @@
       "preferredMethods": [],
       "applicability": {},
       "stats": {
-        "loadCount": 13,
+        "loadCount": 20,
         "queryCount": 0,
         "successCount": 0,
-        "lastUsed": "2025-12-01T08:39:07.542Z"
+        "lastUsed": "2025-12-03T12:03:50.179Z"
       },
-      "registeredAt": "2025-12-01T08:39:07.542Z"
+      "registeredAt": "2025-12-03T12:03:50.179Z"
     },
     {
       "id": "storage_case17",

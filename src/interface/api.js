@@ -17,33 +17,30 @@ const Retriever = require('../reason/retrieval');
 const TemporalMemory = require('../reason/temporal_memory');
 const ValidationEngine = require('../reason/validation');
 
-// Relations that support transitive reasoning (chaining)
-// e.g., friction CAUSES heat, heat CAUSES expansion → friction CAUSES expansion
-const TRANSITIVE_RELATIONS = new Set([
+const DimensionRegistry = require('../core/dimension_registry');
+
+// =========================================================================
+// FS-SR-03: Relation properties from DimensionRegistry (not hardcoded)
+// =========================================================================
+
+// IS_A variants map to base IS_A relation with different existence levels
+// When querying with IS_A, all variants are searched and best existence is returned
+const IS_A_VARIANTS = new Set([
   'IS_A',
-  'LOCATED_IN',
-  'PART_OF',
-  'HAS_PART',
-  'CONTAINS',
-  'SUBSET_OF',
-  'MEMBER_OF',
-  'CAUSES',      // friction → heat → expansion
-  'BEFORE',      // WW1 → WW2 → Cold War
-  'AFTER',       // testing → development (inverse of BEFORE)
-  'LEADS_TO'     // similar to CAUSES
+  'IS_A_CERTAIN',
+  'IS_A_PROVEN',
+  'IS_A_POSSIBLE',
+  'IS_A_UNPROVEN'
 ]);
 
-// Relations that support inheritance via IS_A chains
-// e.g., Tesla IS_A car, car HAS wheel → Tesla HAS wheel
-const INHERITABLE_RELATIONS = new Set([
-  'HAS',
-  'HELPS',
-  'CAN',
-  'PROVIDES',
-  'REQUIRES',
-  'DESIGNS',
-  'PRODUCES'
-]);
+// Map IS_A variants to their existence levels
+const IS_A_EXISTENCE_MAP = {
+  'IS_A': null,         // Uses fact's _existence field
+  'IS_A_CERTAIN': 127,  // CERTAIN
+  'IS_A_PROVEN': 64,    // DEMONSTRATED
+  'IS_A_POSSIBLE': 0,   // POSSIBLE
+  'IS_A_UNPROVEN': -64  // UNPROVEN
+};
 
 class EngineAPI {
   constructor(deps) {
@@ -64,6 +61,10 @@ class EngineAPI {
     this.permuter.bootstrapDefaults();
     this.parser = new NLParser(this.config.get('recursionHorizon'));
     this.translator = translator || new TranslatorBridge();
+
+    // FS-SR-03: Use DimensionRegistry for relation properties
+    this.dimRegistry = DimensionRegistry.getShared();
+
     this.cluster = new ClusterManager({
       config: this.config,
       math: MathEngine,
@@ -107,10 +108,12 @@ class EngineAPI {
       permuter: this.permuter,
       config: this.config
     });
+    // FS-02 Integration: Pass shared theoryStack for unified layering
     this.dsl = new TheoryDSLEngine({
       api: this,
       conceptStore: this.conceptStore,
-      config: this.config
+      config: this.config,
+      theoryStack: this.theoryStack
     });
     this._macroCache = {};
 
@@ -126,16 +129,44 @@ class EngineAPI {
     }
   }
 
-  ingest(text) {
+  /**
+   * Ingest a fact into the knowledge base
+   *
+   * For IS_A variants, the appropriate existence level is automatically applied:
+   * - IS_A_CERTAIN: existence=127
+   * - IS_A_PROVEN: existence=64
+   * - IS_A_POSSIBLE: existence=0
+   * - IS_A_UNPROVEN: existence=-64
+   *
+   * @param {string} text - Natural language assertion
+   * @param {Object} [options] - Options
+   * @param {number} [options.existence] - Override existence level (-127 to 127)
+   */
+  ingest(text, options = {}) {
     const canonical = this.translator.normalise(text);
     const ast = this.parser.parseAssertion(canonical);
     this.conceptStore.ensureConcept(ast.subject);
     this.conceptStore.ensureConcept(ast.object);
+
+    // Determine existence level
+    let existence;
+    if (options.existence !== undefined) {
+      // Explicit existence override
+      existence = options.existence;
+    } else if (IS_A_EXISTENCE_MAP[ast.relation] !== null && IS_A_EXISTENCE_MAP[ast.relation] !== undefined) {
+      // IS_A variant with defined existence level
+      existence = IS_A_EXISTENCE_MAP[ast.relation];
+    } else {
+      // Default to CERTAIN for theory facts
+      existence = this.conceptStore.EXISTENCE ? this.conceptStore.EXISTENCE.CERTAIN : 127;
+    }
+
     this.conceptStore.addFact({
       subject: ast.subject,
       relation: ast.relation,
       object: ast.object
-    });
+    }, { existence });
+
     try {
       this.encoder.ingestFact(ast, ast.subject);
     } catch (e) {
@@ -146,8 +177,155 @@ class EngineAPI {
         });
       }
     }
-    this.audit.write({ kind: 'ingest', sentence: canonical });
+    this.audit.write({ kind: 'ingest', sentence: canonical, existence });
   }
+
+  // =========================================================================
+  // DSL-ONLY API (FS-19: DSL-in → DSL-out, no NL processing)
+  // These methods bypass TranslatorBridge for deterministic, LLM-independent operation
+  // =========================================================================
+
+  /**
+   * Ingest a fact directly from DSL (no NL processing)
+   * Implements FS-19: Reasoning Engine Layer (DSL-in → DSL-out)
+   *
+   * @param {Object} triple - Pre-parsed triple {subject, relation, object}
+   * @param {Object} [options] - Options
+   * @param {number} [options.existence] - Existence level (-127 to 127)
+   * @returns {Object} Result with factId and status
+   */
+  ingestDSL(triple, options = {}) {
+    if (!triple || !triple.subject || !triple.relation || !triple.object) {
+      throw new Error('ingestDSL requires {subject, relation, object}');
+    }
+
+    this.conceptStore.ensureConcept(triple.subject);
+    this.conceptStore.ensureConcept(triple.object);
+
+    // Determine existence level
+    let existence;
+    if (options.existence !== undefined) {
+      existence = options.existence;
+    } else if (IS_A_EXISTENCE_MAP[triple.relation] !== null && IS_A_EXISTENCE_MAP[triple.relation] !== undefined) {
+      existence = IS_A_EXISTENCE_MAP[triple.relation];
+    } else {
+      existence = this.conceptStore.EXISTENCE ? this.conceptStore.EXISTENCE.CERTAIN : 127;
+    }
+
+    const factId = this.conceptStore.addFact({
+      subject: triple.subject,
+      relation: triple.relation,
+      object: triple.object
+    }, { existence });
+
+    // Encode into vector space
+    try {
+      this.encoder.ingestFact(triple, triple.subject);
+    } catch (e) {
+      if (this.audit) {
+        this.audit.write({ kind: 'ingestDSLEncodingError', message: e.message });
+      }
+    }
+
+    this.audit.write({
+      kind: 'ingestDSL',
+      triple,
+      existence,
+      factId
+    });
+
+    return { ok: true, factId, existence };
+  }
+
+  /**
+   * Query directly from DSL (no NL processing)
+   * Implements FS-19: Reasoning Engine Layer (DSL-in → DSL-out)
+   *
+   * @param {Object} triple - Pre-parsed triple {subject, relation, object}
+   * @param {Object} [options] - Options
+   * @param {Object} [options.mask] - Dimension mask
+   * @param {boolean} [options.withExistence] - Include existence level in result
+   * @returns {Object} Query result with truth, confidence, provenance
+   */
+  askDSL(triple, options = {}) {
+    if (!triple || !triple.subject || !triple.relation || !triple.object) {
+      throw new Error('askDSL requires {subject, relation, object}');
+    }
+
+    const { subject, relation, object } = triple;
+    let result;
+
+    // Get facts for inference
+    const facts = this.conceptStore.getFacts();
+
+    // First, try InferenceEngine if it has registered rules or defaults
+    const inferenceEngine = this.dsl && this.dsl.inferenceEngine;
+    if (inferenceEngine && (inferenceEngine.rules.length > 0 || inferenceEngine.defaults.length > 0)) {
+      const inferResult = inferenceEngine.infer(subject, relation, object, facts);
+      if (inferResult.truth === 'TRUE_CERTAIN' || inferResult.truth === 'TRUE_DEFAULT' || inferResult.truth === 'FALSE') {
+        result = inferResult;
+      }
+    }
+
+    // If InferenceEngine didn't resolve, fall back to basic reasoning
+    if (!result || result.truth === 'UNKNOWN') {
+      if (IS_A_VARIANTS.has(relation)) {
+        const minExistence = IS_A_EXISTENCE_MAP[relation] !== null
+          ? IS_A_EXISTENCE_MAP[relation]
+          : undefined;
+
+        result = this.reasoner.deduceIsAWithExistence(subject, object, { minExistence });
+
+        if (result.existence !== undefined && !options.withExistence) {
+          result = { ...result, depth: result.depth, method: result.method };
+        }
+      } else if (this.dimRegistry.isTransitive(relation)) {
+        // FS-SR-03: Use DimensionRegistry for transitive check
+        result = this.reasoner.deduceTransitive(subject, relation, object);
+      } else if (this.dimRegistry.isInheritable(relation)) {
+        // FS-SR-03: Use DimensionRegistry for inheritable check
+        result = this.reasoner.deduceWithInheritance(subject, relation, object);
+      } else {
+        result = this.reasoner.factExists(subject, relation, object);
+      }
+    }
+
+    // Geometric reasoning
+    let geom = null;
+    try {
+      if (this.encoder && typeof this.encoder.encodeNode === 'function') {
+        const queryVector = this.encoder.encodeNode(triple, 0);
+        const conceptId = relation === 'IS_A' ? object : subject;
+        const mask = options.mask || null;
+        geom = this.reasoner.answer(queryVector, conceptId, { mask });
+      }
+    } catch (e) {
+      if (this.audit) {
+        this.audit.write({ kind: 'askDSLGeometryError', message: e.message });
+      }
+    }
+
+    const merged = geom
+      ? { ...result, band: geom.band, provenance: geom.provenance }
+      : result;
+
+    this.audit.write({
+      kind: 'askDSL',
+      triple,
+      truth: merged.truth,
+      confidence: merged.confidence,
+      existence: merged.existence,
+      method: merged.method,
+      band: merged.band
+    });
+
+    return merged;
+  }
+
+  // =========================================================================
+  // NL-AWARE API (FS-20: Optional NL↔DSL Translation Layer)
+  // These methods use TranslatorBridge for natural language processing
+  // =========================================================================
 
   ask(question, options = {}) {
     const canonical = this.translator.normalise(question);
@@ -169,14 +347,31 @@ class EngineAPI {
 
     // If InferenceEngine didn't resolve, fall back to basic reasoning
     if (!result || result.truth === 'UNKNOWN') {
-      if (ast.relation === 'IS_A') {
-        result = this.reasoner.deduceIsA(ast.subject, ast.object);
-      } else if (TRANSITIVE_RELATIONS.has(ast.relation)) {
-        // Use transitive reasoning for relations like LOCATED_IN, PART_OF, etc.
+      if (IS_A_VARIANTS.has(ast.relation)) {
+        // IS_A umbrella: search all IS_A variants and return best existence
+        // For specific variants (IS_A_PROVEN etc), filter by their minimum existence
+        const minExistence = IS_A_EXISTENCE_MAP[ast.relation] !== null
+          ? IS_A_EXISTENCE_MAP[ast.relation]
+          : undefined;
+
+        result = this.reasoner.deduceIsAWithExistence(ast.subject, ast.object, {
+          minExistence
+        });
+
+        // Backward compatibility: convert existence-aware result to legacy format if needed
+        if (result.existence !== undefined && !options.withExistence) {
+          // Keep result as-is but add legacy fields
+          result = {
+            ...result,
+            depth: result.depth,
+            method: result.method
+          };
+        }
+      } else if (this.dimRegistry.isTransitive(ast.relation)) {
+        // FS-SR-03: Use DimensionRegistry for transitive check
         result = this.reasoner.deduceTransitive(ast.subject, ast.relation, ast.object);
-      } else if (INHERITABLE_RELATIONS.has(ast.relation)) {
-        // Use inheritance reasoning for relations like HAS, HELPS, etc.
-        // e.g., if Tesla IS_A car and car HAS wheel, then Tesla HAS wheel
+      } else if (this.dimRegistry.isInheritable(ast.relation)) {
+        // FS-SR-03: Use DimensionRegistry for inheritable check
         result = this.reasoner.deduceWithInheritance(ast.subject, ast.relation, ast.object);
       } else {
         result = this.reasoner.factExists(ast.subject, ast.relation, ast.object);
@@ -208,6 +403,7 @@ class EngineAPI {
       object: ast.object,
       truth: merged.truth,
       confidence: merged.confidence,
+      existence: merged.existence,
       method: merged.method,
       band: merged.band
     });

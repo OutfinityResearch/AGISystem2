@@ -25,9 +25,9 @@
     </div>
 
     <h2>Basic Syntax: DEFINE_RELATION</h2>
-    <p>Use the <code>DEFINE_RELATION</code> command to create a new verb:</p>
+    <p>Use the <code>DEFINE_RELATION</code> verb in triple form to create a new verb:</p>
 
-    <pre><code>@relDef DEFINE_RELATION name [properties...]</code></pre>
+    <pre><code>@relDef RelationName DEFINE_RELATION properties</code></pre>
 
     <h3>Parameters</h3>
     <table class="table-concept-index">
@@ -37,31 +37,21 @@
         <th>Description</th>
       </tr>
       <tr>
-        <td><code>name</code></td>
+        <td><code>RelationName</code></td>
         <td>Required</td>
-        <td>The relation name (ALL_CAPS convention)</td>
+        <td>The relation name in subject position (ALL_CAPS convention)</td>
       </tr>
       <tr>
-        <td><code>symmetric</code></td>
-        <td>Optional flag</td>
-        <td>If present, A REL B implies B REL A</td>
-      </tr>
-      <tr>
-        <td><code>transitive</code></td>
-        <td>Optional flag</td>
-        <td>If present, A REL B and B REL C implies A REL C</td>
-      </tr>
-      <tr>
-        <td><code>inverse=NAME</code></td>
+        <td><code>properties</code></td>
         <td>Optional</td>
-        <td>Names the inverse relation</td>
+        <td>Property specification (for example <code>symmetric</code>, <code>transitive</code>, or an inverse marker)</td>
       </tr>
     </table>
 
     <h2>Examples</h2>
 
     <h3>Simple Relation</h3>
-    <pre><code># Define a temperature relation
+    <pre><code># Define a temperature relation (properties kept simple here)
 @r1 BOILS_AT DEFINE_RELATION any
 
 # Use it
@@ -70,8 +60,8 @@
 
     <h3>Relation with Inverse</h3>
     <pre><code># Define a bidirectional relation pair
-@r1 TEACHES DEFINE_RELATION TAUGHT_BY
-@r2 TAUGHT_BY DEFINE_RELATION TEACHES
+@r1 TEACHES DEFINE_RELATION any
+@r2 TAUGHT_BY DEFINE_RELATION any
 
 # Now both work
 @_ Alice TEACHES Math
@@ -143,7 +133,7 @@
 
       <h4>Pattern C: Reified Fact</h4>
       <pre><code># Create a fact node for complex properties
-@fact DEFINE_CONCEPT WaterBoilingFact
+@fact WaterBoilingFact IS_A fact
 @f1 WaterBoilingFact HAS_SUBJECT Water
 @f2 WaterBoilingFact HAS_PROPERTY boiling_point
 @f3 WaterBoilingFact HAS_VALUE Celsius100
@@ -154,9 +144,9 @@
 
     <h3>Temperature Domain</h3>
     <pre><code># Define temperature relations
-@r1 BOILS_AT DEFINE_RELATION BOILING_POINT_OF
-@r2 FREEZES_AT DEFINE_RELATION FREEZING_POINT_OF
-@r3 MELTS_AT DEFINE_RELATION MELTING_POINT_OF
+@r1 BOILS_AT DEFINE_RELATION any
+@r2 FREEZES_AT DEFINE_RELATION any
+@r3 MELTS_AT DEFINE_RELATION any
 
 # Define value concepts
 @_ Celsius0 IS_A temperature
@@ -171,9 +161,9 @@
 
     <h3>Employment Domain</h3>
     <pre><code># Define employment relations
-@r1 WORKS_AT DEFINE_RELATION EMPLOYS
-@r2 MANAGES DEFINE_RELATION MANAGED_BY
-@r3 REPORTS_TO DEFINE_RELATION HAS_REPORT
+@r1 WORKS_AT DEFINE_RELATION any
+@r2 MANAGES DEFINE_RELATION any
+@r3 REPORTS_TO DEFINE_RELATION any
 
 # Use them
 @_ Alice WORKS_AT TechCorp
@@ -186,8 +176,8 @@
 
     <h3>Medical Domain</h3>
     <pre><code># Define medical relations
-@r1 TREATS DEFINE_RELATION TREATED_BY
-@r2 SYMPTOM_OF DEFINE_RELATION HAS_SYMPTOM
+@r1 TREATS DEFINE_RELATION any
+@r2 SYMPTOM_OF DEFINE_RELATION any
 @r3 CONTRAINDICATED_WITH DEFINE_RELATION any
 
 # Use them
@@ -196,29 +186,28 @@
 @_ DrugA CONTRAINDICATED_WITH DrugB</code></pre>
 
     <h2>Querying Custom Relations</h2>
-    <p>Custom relations work with all query commands:</p>
+    <p>Custom relations work with all triple-based query verbs:</p>
 
     <pre><code># Direct query
 @q1 Water BOILS_AT Celsius100
 
 # Pattern matching
-@temps BOILS_AT FACTS any
+@temps any FACTS BOILS_AT
 @waterFacts Water FACTS any
 
-# With masks
-@mask temperature MASK_DIMS any
+# With masks (see Sys2DSL_commands_queries_masks)
+@mask Temperature_Mass MASK any
 @q2 Water FREEZES_AT Celsius0</code></pre>
 
     <h2>Relation Introspection</h2>
-    <p>Query information about relations:</p>
+    <p>Query information about relations using the standard concept/inspection verbs:</p>
 
-    <pre><code># Get relation properties
-@info GET_RELATION_INFO BOILS_AT
-# Returns: { name: "BOILS_AT", inverse: "BOILING_POINT_OF", symmetric: false, transitive: false }
+    <pre><code># Get relation properties as a point
+@rel BOILS_AT BIND_RELATION any
+@info $rel INSPECT any
 
-# List all registered relations
-@rels LIST_RELATIONS
-# Returns: ["IS_A", "PART_OF", "BOILS_AT", ...]</code></pre>
+# List all registered relations via theory or storage APIs
+@rels any THEORIES any   # See Sys2DSL_commands_util_output_ontology for ontology introspection</code></pre>
 
     <h2>Best Practices</h2>
 

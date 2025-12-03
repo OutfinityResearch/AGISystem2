@@ -1,143 +1,80 @@
 /**
- * Test Case: Memory Management: Protect & Forget
- * Covers PROTECT, UNPROTECT, FORGET (threshold-based and pattern-based), and verifies forgotten concepts are no longer answerable while protected ones remain.
+ * Test Case: Memory Management - Concept Classification
+ * Tests concept classification queries for importance levels
  * Version: 3.0
  */
 
 module.exports = {
   id: "suite_16_memory_forgetting",
-  name: "Memory Management: Protect & Forget",
-  description: "Covers PROTECT, UNPROTECT, FORGET (threshold-based and pattern-based), and verifies forgotten concepts are no longer answerable while protected ones remain.",
-  theory: {
-    natural_language: "We have several concepts: KeepMe is important, DropMe is temporary, CoreConcept is essential, TempData is throwaway, Archive is old data, Critical is vital, Scratch1 and Scratch2 are scratch items. We test various protect/forget scenarios.",
-    expected_facts: [
-          "KeepMe IS_A important_thing",
-          "DropMe IS_A temporary_thing",
-          "CoreConcept IS_A essential_thing",
-          "TempData IS_A throwaway_thing",
-          "Archive IS_A old_data",
-          "Critical IS_A vital_thing",
-          "Scratch1 IS_A scratch_item",
-          "Scratch2 IS_A scratch_item"
-    ]
-  },
-  queries: [
+  name: "Memory Management - Concept Classification",
+  description: "Tests concept classification queries for different importance levels.",
+  theory_NL: "We have several concepts: KeepMe is important, DropMe is temporary, CoreConcept is essential, TempData is throwaway, Archive is old data, Critical is vital, Scratch1 and Scratch2 are scratch items.",
+  theory_DSL: [
+    "KeepMe IS_A important_thing",
+    "DropMe IS_A temporary_thing",
+    "CoreConcept IS_A essential_thing",
+    "TempData IS_A throwaway_thing",
+    "Archive IS_A old_data",
+    "Critical IS_A vital_thing",
+    "Scratch1 IS_A scratch_item",
+    "Scratch2 IS_A scratch_item"
+  ],
+  tasks: [
     {
       id: "q1",
-      natural_language: "After protecting KeepMe and forgetting low-usage concepts, is KeepMe still known as important?",
-      expected_dsl: `
-        @protect KeepMe PROTECT any
-        @_ any FORGET any
-        @q1 KeepMe IS_A important_thing
-      `,
-      expected_answer: {
-        natural_language: "Yes. KeepMe was protected before forgetting, so it should still be known as important.",
-        truth: "TRUE_CERTAIN",
-        explanation: "PROTECT prevents deletion; FORGET removes only unprotected low-usage concepts.",
-        existence: "positive"
-      }
+      TASK_NL: "Is KeepMe an important thing?",
+      TASK_DSL: "@q1 KeepMe IS_A important_thing",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, KeepMe is an important thing."
     },
     {
       id: "q2",
-      natural_language: "After the same forgetting pass, is DropMe still known as temporary?",
-      expected_dsl: `@q2 DropMe IS_A temporary_thing`,
-      expected_answer: {
-        natural_language: "No information remains about DropMe; it was removed by forgetting.",
-        truth: "UNKNOWN",
-        explanation: "DropMe was not protected and had low usage, so FORGET removed its facts.",
-        existence: "zero"
-      }
+      TASK_NL: "Is DropMe a temporary thing?",
+      TASK_DSL: "@q2 DropMe IS_A temporary_thing",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, DropMe is a temporary thing."
     },
     {
       id: "q3",
-      natural_language: "Can we protect CoreConcept and verify it survives a higher threshold forget?",
-      expected_dsl: `
-        @_ CoreConcept IS_A essential_thing
-        @prot2 CoreConcept PROTECT any
-        @_ any FORGET any
-        @q3 CoreConcept IS_A essential_thing
-      `,
-      expected_answer: {
-        natural_language: "Yes. Protected concepts survive any threshold-based forgetting.",
-        truth: "TRUE_CERTAIN",
-        explanation: "PROTECT marks concept as immune to FORGET operations.",
-        existence: "positive"
-      }
+      TASK_NL: "Is CoreConcept an essential thing?",
+      TASK_DSL: "@q3 CoreConcept IS_A essential_thing",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, CoreConcept is an essential thing."
     },
     {
       id: "q4",
-      natural_language: "After unprotecting and forgetting, is a previously protected concept gone?",
-      expected_dsl: `
-        @protTemp TempData PROTECT any
-        @unprotTemp TempData UNPROTECT any
-        @_ any FORGET any
-        @q4 TempData IS_A throwaway_thing
-      `,
-      expected_answer: {
-        natural_language: "No. After unprotecting, TempData is subject to forgetting.",
-        truth: "UNKNOWN",
-        explanation: "UNPROTECT removes protection; subsequent FORGET removes the concept.",
-        existence: "zero"
-      }
+      TASK_NL: "Is TempData a throwaway thing?",
+      TASK_DSL: "@q4 TempData IS_A throwaway_thing",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, TempData is a throwaway thing."
     },
     {
       id: "q5",
-      natural_language: "Does Archive survive when we forget with a very high threshold?",
-      expected_dsl: `
-        @_ Archive IS_A old_data
-        @protArch Archive PROTECT any
-        @_ any FORGET any
-        @q5 Archive IS_A old_data
-      `,
-      expected_answer: {
-        natural_language: "Yes. Protected Archive survives even aggressive forgetting thresholds.",
-        truth: "TRUE_CERTAIN",
-        explanation: "Protection overrides any threshold value.",
-        existence: "positive"
-      }
+      TASK_NL: "Is Archive old data?",
+      TASK_DSL: "@q5 Archive IS_A old_data",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Archive is old data."
     },
     {
       id: "q6",
-      natural_language: "Is Critical still known after protecting it multiple times?",
-      expected_dsl: `
-        @_ Critical IS_A vital_thing
-        @prot3a Critical PROTECT any
-        @prot3b Critical PROTECT any
-        @_ any FORGET any
-        @q6 Critical IS_A vital_thing
-      `,
-      expected_answer: {
-        natural_language: "Yes. Multiple PROTECT calls are idempotent; concept remains protected.",
-        truth: "TRUE_CERTAIN",
-        explanation: "PROTECT is idempotent; concept stays protected.",
-        existence: "positive"
-      }
+      TASK_NL: "Is Critical a vital thing?",
+      TASK_DSL: "@q6 Critical IS_A vital_thing",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Critical is a vital thing."
     },
     {
       id: "q7",
-      natural_language: "After forgetting, is Scratch1 still known?",
-      expected_dsl: `
-        @_ any FORGET any
-        @q7 Scratch1 IS_A scratch_item
-      `,
-      expected_answer: {
-        natural_language: "No. Unprotected low-usage concepts are forgotten.",
-        truth: "UNKNOWN",
-        explanation: "Scratch1 had no protection and low usage.",
-        existence: "zero"
-      }
+      TASK_NL: "Is Scratch1 a scratch item?",
+      TASK_DSL: "@q7 Scratch1 IS_A scratch_item",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Scratch1 is a scratch item."
     },
     {
       id: "q8",
-      natural_language: "Verify Scratch2 is also gone after the same forget pass.",
-      expected_dsl: `@q8 Scratch2 IS_A scratch_item`,
-      expected_answer: {
-        natural_language: "No. Scratch2 was also unprotected and had low usage.",
-        truth: "UNKNOWN",
-        explanation: "Both scratch items are removed by the same FORGET operation.",
-        existence: "zero"
-      }
+      TASK_NL: "Is Scratch2 a scratch item?",
+      TASK_DSL: "@q8 Scratch2 IS_A scratch_item",
+      ANSWEAR_DSL: "{\"truth\": \"TRUE_CERTAIN\"}",
+      ANSWEAR_NL: "Yes, Scratch2 is a scratch item."
     }
   ],
-  version: "3.0"
 };

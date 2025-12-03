@@ -27,7 +27,7 @@
     </div>
   </div>
 
-  <p>The Raw CLI (<code>AGISystem2Raw.sh</code>) provides direct access to the AGISystem2 engine through structured Sys2DSL commands. It is designed for automation, testing, and scripting scenarios where determinism and precise control are essential. Unlike the <a href="chat-cli.html">Chat Interface</a>, it requires no external LLM dependencies and executes commands exactly as specified.</p>
+  <p>The Raw CLI (entrypoint <code>cli/agisystem2-cli.js</code>) provides direct access to the AGISystem2 engine through structured Sys2DSL commands. It is designed for automation, testing, and scripting scenarios where determinism and precise control are essential. Unlike the <a href="chat-cli.html">Chat Interface</a>, it requires no external LLM dependencies and executes commands exactly as specified.</p>
 
   <div class="diagram">
     <svg viewBox="0 0 480 160" role="img" aria-label="Raw CLI command flow from shell to engine">
@@ -40,7 +40,7 @@
       <!-- Shell input -->
       <rect x="10" y="50" width="100" height="60" rx="6" fill="#f5f7fb" stroke="#0f4c81" stroke-width="2"/>
       <text x="60" y="72" font-size="9" font-weight="bold" fill="#0f4c81" text-anchor="middle">Shell / Script</text>
-      <text x="60" y="87" font-size="7" fill="#4a5670" text-anchor="middle">AGISystem2Raw.sh</text>
+      <text x="60" y="87" font-size="7" fill="#4a5670" text-anchor="middle">node cli/agisystem2-cli.js</text>
       <text x="60" y="100" font-size="7" fill="#4a5670" text-anchor="middle">--exec, --batch</text>
 
       <!-- Parser -->
@@ -85,7 +85,7 @@
   <h3>Interactive Mode</h3>
   <pre>
 # Start interactive REPL
-./bin/AGISystem2Raw.sh
+node cli/agisystem2-cli.js
 
 # The prompt appears:
 AGIS2&gt; </pre>
@@ -93,16 +93,16 @@ AGIS2&gt; </pre>
   <h3>Batch Mode</h3>
   <pre>
 # Execute single command
-./bin/AGISystem2Raw.sh --exec "add Dog IS_A Animal"
+node cli/agisystem2-cli.js --exec "add Dog IS_A Animal"
 
 # Execute with JSON output
-./bin/AGISystem2Raw.sh --exec "ask Is Dog an Animal?" --json
+node cli/agisystem2-cli.js --exec "ask Is Dog an Animal?" --json
 
 # Execute multiple commands from file
-./bin/AGISystem2Raw.sh --batch commands.sys2dsl
+node cli/agisystem2-cli.js --batch commands.sys2dsl
 
 # Pipe commands via stdin
-echo "add Cat IS_A Animal" | ./bin/AGISystem2Raw.sh --batch -</pre>
+echo "add Cat IS_A Animal" | node cli/agisystem2-cli.js --batch -</pre>
 
   <h2>Command Syntax</h2>
 
@@ -183,14 +183,14 @@ Loaded 15 facts from medical_knowledge.sys2dsl</pre>
 
   <h3>Text Output (Default)</h3>
   <pre>
-$ ./bin/AGISystem2Raw.sh --exec "ask Is Dog an Animal?"
+$ node cli/agisystem2-cli.js --exec "ask Is Dog an Animal?"
 Result: TRUE_CERTAIN
 Confidence: 0.95
 Reasoning: Direct inclusion in concept "Animal"</pre>
 
   <h3>JSON Output</h3>
   <pre>
-$ ./bin/AGISystem2Raw.sh --exec "ask Is Dog an Animal?" --json
+$ node cli/agisystem2-cli.js --exec "ask Is Dog an Animal?" --json
 {
   "success": true,
   "result": {
@@ -211,10 +211,10 @@ $ ./bin/AGISystem2Raw.sh --exec "ask Is Dog an Animal?" --json
 AGIS2&gt; @result Dog IS_A ?
 
 # Use variable in subsequent command
-AGIS2&gt; @facts Dog ? ? FACTS any
+AGIS2&gt; @facts Dog FACTS any
 
 # Chain operations
-AGIS2&gt; @f Bird IS_A Animal
+AGIS2&gt; @_ Bird IS_A Animal
 AGIS2&gt; @q Bird IS_A Animal
 AGIS2&gt; echo @q.truth
 TRUE_CERTAIN</pre>
@@ -243,7 +243,7 @@ TRUE_CERTAIN</pre>
 @_ Water EXTINGUISHES Fire</pre>
 
   <p>Execute with:</p>
-  <pre>./bin/AGISystem2Raw.sh --batch comments.sys2dsl</pre>
+  <pre>node cli/agisystem2-cli.js --batch comments.sys2dsl</pre>
 
   <h2>Exit Codes</h2>
 
@@ -264,7 +264,7 @@ TRUE_CERTAIN</pre>
 
   <pre>
 #!/bin/bash
-./bin/AGISystem2Raw.sh --exec "ask Is system consistent?" --json
+node cli/agisystem2-cli.js --exec "ask Is system consistent?" --json
 if [ $? -eq 0 ]; then
   echo "System is consistent"
 else
@@ -292,8 +292,8 @@ fi</pre>
 # .github/workflows/knowledge-test.yml
 - name: Test knowledge consistency
   run: |
-    ./bin/AGISystem2Raw.sh --batch tests/rules.sys2dsl
-    ./bin/AGISystem2Raw.sh --exec "ask Is system consistent?" --json</pre>
+    node cli/agisystem2-cli.js --batch tests/rules.sys2dsl
+    node cli/agisystem2-cli.js --exec "ask Is system consistent?" --json</pre>
 
   <h3>Shell Script Automation</h3>
   <pre>
@@ -301,10 +301,10 @@ fi</pre>
 # load-and-query.sh
 
 # Load base knowledge
-./bin/AGISystem2Raw.sh --batch base_knowledge.sys2dsl
+node cli/agisystem2-cli.js --batch base_knowledge.sys2dsl
 
 # Query specific facts
-result=$(./bin/AGISystem2Raw.sh --exec "ask $1?" --json)
+result=$(node cli/agisystem2-cli.js --exec "ask $1?" --json)
 echo "$result" | jq '.result.truth'</pre>
 
   <h3>Node.js Integration</h3>
@@ -313,7 +313,7 @@ const { execSync } = require('child_process');
 
 function query(question) {
   const result = execSync(
-    `./bin/AGISystem2Raw.sh --exec "ask ${question}?" --json`,
+    `node cli/agisystem2-cli.js --exec "ask ${question}?" --json`,
     { encoding: 'utf8' }
   );
   return JSON.parse(result);

@@ -139,10 +139,10 @@ END
 
 # CF - Counterfactual: what if subject were object?
 @CF BEGIN
-  @_ hypothetical PUSH any
-  @_ subject IS_A object
+  @push_cf hypothetical PUSH any
+  @assert_cf subject IS_A object
   @result subject INFER any
-  @_ any POP any
+  @pop_cf any POP any
   @pair counterfactual DIM_PAIR positive
   @return $result SET_DIM $pair
 END

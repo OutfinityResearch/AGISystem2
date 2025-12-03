@@ -34,7 +34,7 @@ module.exports = {
       natural_language: "In a world where water boiled at 50 degrees, would it be liquid at room temperature?",
       expected_dsl: `
         @q1_push cf_water PUSH any
-        @_ water BOILS_AT 50_celsius
+        @cf1 water BOILS_AT 50_celsius
         @q1 water BOILS_AT 50_celsius
         @q1_pop any POP any
       `,
@@ -66,7 +66,7 @@ module.exports = {
       natural_language: "What if Napoleon had won Waterloo - would the French Empire have continued?",
       expected_dsl: `
         @q3_push cf_napoleon PUSH any
-        @_ Napoleon WON Battle_of_Waterloo
+        @cf2 Napoleon WON Battle_of_Waterloo
         @q3 Napoleon WON Battle_of_Waterloo
         @q3_pop any POP any
       `,
@@ -109,9 +109,9 @@ module.exports = {
       natural_language: "Can we have nested counterfactual layers?",
       expected_dsl: `
         @outer alternate_history PUSH any
-        @_ Napoleon WON Battle_of_Waterloo
+        @cf3 Napoleon WON Battle_of_Waterloo
         @inner alternate_physics PUSH any
-        @_ water BOILS_AT 50_celsius
+        @cf4 water BOILS_AT 50_celsius
         @q6 water BOILS_AT 50_celsius
         @pop_inner any POP any
         @pop_outer any POP any
@@ -144,7 +144,7 @@ module.exports = {
       natural_language: "Verify layer isolation - changes in a layer should not affect base theory",
       expected_dsl: `
         @setup test_isolation PUSH any
-        @_ Roman_Empire FELL_IN 500_AD
+        @cf5 Roman_Empire FELL_IN 500_AD
         @check_layer Roman_Empire FELL_IN 500_AD
         @pop any POP any
         @q8 Roman_Empire FELL_IN 476_AD
@@ -157,5 +157,4 @@ module.exports = {
       }
     }
   ],
-  version: "3.0"
 };

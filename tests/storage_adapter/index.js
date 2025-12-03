@@ -24,7 +24,8 @@ async function run() {
   const fileAudit = new AuditLog({ mode: 'memory' });
   const fileStore = new StorageAdapter({ config: fileConfig, audit: fileAudit });
   const theoryId = 't1';
-  const theoryText = '@f ASSERT dog IS_A Animal\n';
+  // v3 syntax: @varName Subject VERB Object - unique names for tracking
+  const theoryText = '@f0 dog IS_A Animal\n';
   fileStore.saveTheoryText(theoryId, theoryText);
   const loadedText = fileStore.loadTheoryText(theoryId);
   ok = ok && typeof loadedText === 'string' && loadedText.includes('dog IS_A Animal');

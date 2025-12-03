@@ -91,6 +91,47 @@ delegates to the appropriate plugin rather than using semantic similarity.
 | 21 | ComputeDomain | Which plugin: 0=none, 1=math, 2=physics, 3=chemistry, 4=logic, 5=datetime |
 | 22 | ComputeOperationType | Type: 0=none, 1=compare, 2=arithmetic, 3=convert, 4=solve |
 | 23 | ComputePrecision | Precision: 0=exact, 1=high, 2=medium, 3=approximate |
+| 24 | **Existence** | Epistemic status of a fact (see Existence Dimension below) |
+
+### Existence Dimension (Index 24)
+
+The **Existence dimension** tracks the epistemic status of facts - how certain we are that a fact is true.
+This enables distinguishing between facts learned from theory vs. facts derived through reasoning.
+
+#### Existence Levels
+
+| Value | Name | Description |
+|-------|------|-------------|
+| -127 | IMPOSSIBLE | Contradicted by other facts (e.g., DISJOINT_WITH) |
+| -64 | UNPROVEN | Asserted but not verified; hypothetical |
+| 0 | POSSIBLE | Consistent with knowledge but not established |
+| +64 | DEMONSTRATED | Derived via reasoning (transitive chains, inference) |
+| +127 | CERTAIN | From theory/axioms; learned directly |
+
+#### IS_A Variants
+
+IS_A relations support existence-level variants that explicitly encode epistemic status:
+
+| Relation | Existence Level | Use Case |
+|----------|----------------|----------|
+| IS_A | Umbrella | Searches all variants, returns best existence |
+| IS_A_CERTAIN | 127 | Axioms, definitions (e.g., "Dog IS_A_CERTAIN Animal") |
+| IS_A_PROVEN | 64 | Empirically verified (e.g., "Electron IS_A_PROVEN Lepton") |
+| IS_A_POSSIBLE | 0 | Hypothetical (e.g., "Unicorn IS_A_POSSIBLE Horse") |
+| IS_A_UNPROVEN | -64 | Unverified claims (e.g., "Bigfoot IS_A_UNPROVEN Primate") |
+
+#### Version Unification
+
+When multiple existence levels exist for the same fact triple, the system uses **version unification**:
+- Higher existence always wins (no duplicates created)
+- A fact can only be upgraded, never downgraded
+- This prevents reasoning from reducing certainty of axioms
+
+#### Transitive Chain Existence
+
+For transitive chains (e.g., A IS_A B, B IS_A C → A IS_A C), existence propagates conservatively:
+- **min(existence)** across the chain determines the result
+- Example: Unicorn IS_A_POSSIBLE Horse (0), Horse IS_A Animal (127) → Unicorn IS_A Animal with existence=0
 
 ### Computable Relations
 
@@ -136,7 +177,8 @@ Example: `ASK celsius_20 LESS_THAN celsius_50`
 - 14 Determinism vs. Stochasticity
 - 15 Reversibility
 - 16–23 **[COMPUTABLE - see Computable Partition section above]**
-- 24–31 Reserved for computable expansion
+- 24 **Existence** (epistemic status - see Computable Partition section)
+- 25–31 Reserved for computable expansion
 - 32 Time-Order Anchor (sequence position)
 - 33 Recency
 - 34 Historical/Archaic flag

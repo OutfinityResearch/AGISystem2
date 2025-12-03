@@ -13,14 +13,14 @@
 # SEARCH_DEPTH_FIRST - Classic DFS with backtracking
 @SEARCH_DEPTH_FIRST BEGIN
   @depth_ok max_search_depth DEPTH_CHECK any
-  @_ $depth_ok FAIL_IF_FALSE depth_exceeded
+  @fail1 $depth_ok FAIL_IF_FALSE depth_exceeded
   @cp subject CHOICE_POINT any
   @alts subject ALTERNATIVES object
   @ranked $alts RANK_PATHS any
   @next $ranked FIRST any
   @result $next SEARCH_DEPTH_FIRST object
   @found $result REACHED_GOAL object
-  @_ $found CUT_IF_TRUE any
+  @cut1 $found CUT_IF_TRUE any
   @return $result IDENTITY any
 END
 
@@ -32,7 +32,7 @@ END
   @results $pruned EXPLORE_LEVEL object
   @found $results FILTER reached_goal
   @has_found $found NONEMPTY any
-  @_ $has_found CUT_IF_TRUE any
+  @cut2 $has_found CUT_IF_TRUE any
   @next_level $results FLATTEN any
   @return $next_level SEARCH_BREADTH_FIRST object
 END
@@ -43,7 +43,7 @@ END
   @ranked $alts RANK_PATHS any
   @best $ranked FIRST any
   @at_goal $best REACHED_GOAL object
-  @_ $at_goal CUT_IF_TRUE any
+  @cut3 $at_goal CUT_IF_TRUE any
   @result $best SEARCH_BEST_FIRST object
   @return $result IDENTITY any
 END
@@ -57,7 +57,7 @@ END
   @merged $explored MERGE_RESULTS any
   @found $merged FILTER reached_goal
   @has_found $found NONEMPTY any
-  @_ $has_found CUT_IF_TRUE any
+  @cut4 $has_found CUT_IF_TRUE any
   @return $merged SEARCH_BEAM object
 END
 
@@ -66,13 +66,13 @@ END
   @d current_depth_limit READ_CONTROL any
   @result subject SEARCH_WITH_DEPTH $d
   @found $result REACHED_GOAL object
-  @_ $found CUT_IF_TRUE any
+  @cut5 $found CUT_IF_TRUE any
   @one NUMERIC_VALUE 1
   @deeper $d PLUS $one
   @max max_search_depth READ_CONTROL any
   @exceeded $deeper GREATER_THAN $max
-  @_ $exceeded FAIL_IF_TRUE max_depth_exceeded
-  @_ $deeper CONTROLS current_depth_limit
+  @fail2 $exceeded FAIL_IF_TRUE max_depth_exceeded
+  @ctrl1 $deeper CONTROLS current_depth_limit
   @return subject SEARCH_ITERATIVE_DEEPENING object
 END
 
@@ -82,7 +82,7 @@ END
 
 # EXPLORE - Single step exploration
 @EXPLORE BEGIN
-  @_ subject RECORD_VISITED any
+  @visit subject RECORD_VISITED any
   @next subject STEP_TOWARD object
   @return $next IDENTITY any
 END
@@ -179,7 +179,7 @@ END
 @FAIL_IF_FALSE BEGIN
   @cond subject READ_DIM existence
   @is_false $cond LESS_THAN zero
-  @_ $is_false FAIL object
+  @fail3 $is_false FAIL object
   @return subject IDENTITY any
 END
 
@@ -187,7 +187,7 @@ END
 @FAIL_IF_TRUE BEGIN
   @cond subject READ_DIM existence
   @is_true $cond GREATER_THAN zero
-  @_ $is_true FAIL object
+  @fail4 $is_true FAIL object
   @return subject IDENTITY any
 END
 
@@ -195,7 +195,7 @@ END
 @CUT_IF_TRUE BEGIN
   @cond subject READ_DIM existence
   @is_true $cond GREATER_THAN zero
-  @_ $is_true CUT any
+  @cut6 $is_true CUT any
   @return subject IDENTITY any
 END
 
@@ -203,7 +203,7 @@ END
 @BACKTRACK_IF_FAIL BEGIN
   @failed subject READ_DIM failed
   @is_failed $failed GREATER_THAN zero
-  @_ $is_failed BACKTRACK any
+  @bt1 $is_failed BACKTRACK any
   @return subject IDENTITY any
 END
 
@@ -214,27 +214,27 @@ END
 # SEARCH_WITH_DEPTH - Search with specific depth limit
 @SEARCH_WITH_DEPTH BEGIN
   @old_limit max_search_depth READ_CONTROL any
-  @_ subject CONTROLS max_search_depth
+  @ctrl2 subject CONTROLS max_search_depth
   @result freevar1 SEARCH_DEPTH_FIRST object
-  @_ $old_limit CONTROLS max_search_depth
+  @ctrl3 $old_limit CONTROLS max_search_depth
   @return $result IDENTITY any
 END
 
 # SEARCH_WITH_BREADTH - Search with specific breadth limit
 @SEARCH_WITH_BREADTH BEGIN
   @old_limit max_search_breadth READ_CONTROL any
-  @_ subject CONTROLS max_search_breadth
+  @ctrl4 subject CONTROLS max_search_breadth
   @result freevar1 SEARCH_BREADTH_FIRST object
-  @_ $old_limit CONTROLS max_search_breadth
+  @ctrl5 $old_limit CONTROLS max_search_breadth
   @return $result IDENTITY any
 END
 
 # SEARCH_WITH_TIMEOUT - Search with time limit
 @SEARCH_WITH_TIMEOUT BEGIN
   @old_timeout timeout_ms READ_CONTROL any
-  @_ subject CONTROLS timeout_ms
+  @ctrl6 subject CONTROLS timeout_ms
   @result freevar1 SEARCH_BEST_FIRST object
-  @_ $old_timeout CONTROLS timeout_ms
+  @ctrl7 $old_timeout CONTROLS timeout_ms
   @return $result IDENTITY any
 END
 
@@ -260,8 +260,8 @@ END
 @COLLECT_SOLUTIONS BEGIN
   @result subject SEARCH_DEPTH_FIRST object
   @found $result REACHED_GOAL object
-  @_ $found STORE_SOLUTION $result
-  @_ any BACKTRACK any
+  @store1 $found STORE_SOLUTION $result
+  @bt2 any BACKTRACK any
   @return subject COLLECT_SOLUTIONS object
 END
 
@@ -281,33 +281,33 @@ END
 @depth_shallow NUMERIC_VALUE 3
 @depth_default NUMERIC_VALUE 10
 @depth_deep NUMERIC_VALUE 20
-@_ $depth_default CONTROLS max_search_depth
+@init_depth $depth_default CONTROLS max_search_depth
 
 # Search breadth limits
 @breadth_narrow NUMERIC_VALUE 5
 @breadth_default NUMERIC_VALUE 50
 @breadth_wide NUMERIC_VALUE 200
-@_ $breadth_default CONTROLS max_search_breadth
+@init_breadth $breadth_default CONTROLS max_search_breadth
 
 # Beam width
 @beam_narrow NUMERIC_VALUE 3
 @beam_default NUMERIC_VALUE 5
 @beam_wide NUMERIC_VALUE 10
-@_ $beam_default CONTROLS beam_width
+@init_beam $beam_default CONTROLS beam_width
 
 # Goal threshold (distance considered "reached")
 @threshold_exact NUMERIC_VALUE 0
 @threshold_close NUMERIC_VALUE 5
 @threshold_approximate NUMERIC_VALUE 15
-@_ $threshold_close CONTROLS goal_threshold
+@init_threshold $threshold_close CONTROLS goal_threshold
 
 # Maximum solutions
 @one NUMERIC_VALUE 1
 @few NUMERIC_VALUE 5
 @many NUMERIC_VALUE 20
-@_ $one CONTROLS max_solutions
+@init_solutions $one CONTROLS max_solutions
 
 # Initial depth for iterative deepening
-@_ $one CONTROLS current_depth_limit
+@init_iter_depth $one CONTROLS current_depth_limit
 
 # End of search verbs

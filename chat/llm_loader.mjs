@@ -131,6 +131,30 @@ function findLibraryPath() {
  * @returns {Promise<{LLMAgent: Function, available: boolean, error?: string}>}
  */
 export async function loadLLMAgent() {
+  // Test/demo mode: provide a minimal fake LLMAgent that always returns "{}"
+  // This allows offline tests (no AchillesAgentLib, no API keys) while the
+  // rest of the chat stack still exercises reasoning deterministically.
+  if (process.env.AGISYSTEM2_FAKE_LLM === '1') {
+    class FakeLLMAgent {
+      constructor(options = {}) {
+        this.name = options.name || 'FakeLLM';
+      }
+
+      // Return a minimal JSON object; downstream code treats empty results
+      // as "no parse", triggering deterministic fallbacks in handlers.
+      async complete() {
+        return '{}';
+      }
+    }
+
+    return {
+      available: true,
+      LLMAgent: FakeLLMAgent,
+      extractKeyValuePairs: () => ({}),
+      responseToJSON: () => ({})
+    };
+  }
+
   // First try direct import (works if properly installed in node_modules)
   try {
     const lib = await import(LIBRARY_NAME);
@@ -188,6 +212,14 @@ export async function loadLLMAgent() {
  * @returns {{configured: boolean, providers: string[]}}
  */
 export function checkAPIKeys() {
+  // In fake/offline mode we don't require real API keys.
+  if (process.env.AGISYSTEM2_FAKE_LLM === '1') {
+    return {
+      configured: true,
+      providers: ['FakeLLM']
+    };
+  }
+
   const providers = [];
 
   if (process.env.OPENAI_API_KEY) providers.push('OpenAI');

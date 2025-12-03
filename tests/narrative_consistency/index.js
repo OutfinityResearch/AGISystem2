@@ -8,32 +8,39 @@ async function run({ profile }) {
 
   const fixturePath = path.join(process.cwd(), 'tests', 'fixtures', 'narrative', 'basics.txt');
   const lines = fs.readFileSync(fixturePath, 'utf8').split(/\r?\n/).filter((l) => l.trim().length > 0);
-  const script = lines.map((l, idx) => `@f${idx} ASSERT ${l}`);
+  // v3 syntax: @varName Subject VERB Object - unique names for tracking
+  const script = lines.map((l, idx) => `@line${idx} ${l}`);
   session.run(script);
 
+  // v3 syntax: Query facts directly with @var Subject VERB Object
   const baseEnv = session.run([
-    '@cast FACTS_MATCHING "Alice CASTS Magic"',
-    '@loc FACTS_MATCHING "Alice LOCATED_IN CityX"',
-    '@dis FACTS_MATCHING "CityX DISJOINT_WITH MagicZone"'
+    '@cast Alice CASTS Magic',
+    '@loc Alice LOCATED_IN CityX',
+    '@dis CityX DISJOINT_WITH MagicZone'
   ]);
-  const castFacts = baseEnv.cast || [];
-  const locFacts = baseEnv.loc || [];
-  const disFacts = baseEnv.dis || [];
+  const castResult = baseEnv.cast || {};
+  const locResult = baseEnv.loc || {};
+  const disResult = baseEnv.dis || {};
+  // Check if all facts exist (in v3, queries create facts, so check created flag)
   const baseMagic = {
-    truth: castFacts.length > 0 && locFacts.length > 0 && disFacts.length > 0
-      ? 'FALSE'
+    truth: castResult.truth === 'TRUE_CERTAIN' &&
+           locResult.truth === 'TRUE_CERTAIN' &&
+           disResult.truth === 'TRUE_CERTAIN'
+      ? 'FALSE'  // Magic is forbidden if all conditions are met
       : 'TRUE_CERTAIN'
   };
   const okBaseForbidden = baseMagic.truth === 'FALSE';
 
-  const cfFacts = ['SciFi_TechMagic PERMITS Magic_IN CityX'];
-  session.run([`@e0 ASSERT ${cfFacts[0]}`]);
-  const sciFiEnv = session.run(['@allow FACTS_MATCHING "SciFi_TechMagic PERMITS Magic_IN CityX"']);
-  const allowFacts = sciFiEnv.allow || [];
-  const sciFiMagic = { truth: allowFacts.length > 0 ? 'TRUE_CERTAIN' : 'FALSE' };
+  // Add sci-fi fact that permits magic
+  session.run(['@sciFi SciFi_TechMagic PERMITS Magic_IN_CityX']);
+  // v3 query: check if the permission exists
+  const sciFiEnv = session.run(['@allow SciFi_TechMagic PERMITS Magic_IN_CityX']);
+  const allowResult = sciFiEnv.allow || {};
+  const sciFiMagic = { truth: allowResult.truth === 'TRUE_CERTAIN' ? 'TRUE_CERTAIN' : 'FALSE' };
   const okSciFiAllowed = sciFiMagic.truth === 'TRUE_CERTAIN';
 
-  const humanEnv = session.run(['@human ASK "Alice IS_A Human?"']);
+  // v3 query syntax: @variable Subject VERB Object
+  const humanEnv = session.run(['@human Alice IS_A Human']);
   const human = humanEnv.human || {};
   const okHuman = human.truth === 'TRUE_CERTAIN';
 
