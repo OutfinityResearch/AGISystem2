@@ -53,11 +53,11 @@ export function initPositionVectors(geometry = DEFAULT_GEOMETRY) {
 
 /**
  * Get geometry from vector (strategy-agnostic)
- * @param {Object} vector - Vector (dense-binary or FSP)
+ * @param {Object} vector - Vector (dense-binary or SPHDC)
  * @returns {number}
  */
 function getVectorGeometry(vector) {
-  // dense-binary uses .geometry, FSP uses .maxSize
+  // dense-binary uses .geometry, SPHDC uses .maxSize
   return vector.geometry || vector.maxSize || DEFAULT_GEOMETRY;
 }
 

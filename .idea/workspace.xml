@@ -5,17 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="added a new HDC strategy, wip">
-      <change afterPath="$PROJECT_DIR$/docs/research/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/theory/strategies/fractal-semantic.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/stress-limits.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/guides/sphdc-comparison.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/theory/holographic-representations.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hdc/sphdc-contract.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/architecture/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/architecture/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/api/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/api/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/guides/fsp-comparison.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/guides/hdc-strategies.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/hdc-strategies.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/guides/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/strategies/dense-binary.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/strategies/dense-binary.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS15-Fractal-Semantic-Polynomials.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/src/hdc/fractal-semantic.mjs.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/strategies/dense-binary.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/syntax/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/syntax/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/theory/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/constants.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/constants.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/position.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/position.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hdc/fsp-contract.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/fractal-semantic.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/index.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/sparse-polynomial.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/sparse-polynomial.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/vocabulary.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/vocabulary.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +103,7 @@
       <workItem from="1765450432887" duration="75000" />
       <workItem from="1765553684173" duration="619000" />
       <workItem from="1765783559936" duration="115000" />
-      <workItem from="1765869847094" duration="7608000" />
+      <workItem from="1765869847094" duration="10485000" />
     </task>
     <task id="LOCAL-00001" summary="1st public version of AGISystem2">
       <option name="closed" value="true" />
@@ -340,7 +353,23 @@
       <option name="project" value="LOCAL" />
       <updated>1765878186589</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="added a new HDC strategy, wip">
+      <option name="closed" value="true" />
+      <created>1765880041338</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1765880041338</updated>
+    </task>
+    <task id="LOCAL-00033" summary="added a new HDC strategy, wip">
+      <option name="closed" value="true" />
+      <created>1765880724118</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1765880724118</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

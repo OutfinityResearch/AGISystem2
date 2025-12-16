@@ -22,7 +22,7 @@
   </div>
 
   <div class="section-intro">
-    <p>AGISystem2 is built on <strong>Hyperdimensional Computing (HDC)</strong>, a computational paradigm that represents information as high-dimensional binary vectors. This foundation enables deterministic, explainable reasoning with mathematical guarantees.</p>
+    <p>AGISystem2 is built on <strong>Hyperdimensional Computing (HDC)</strong>, a computational paradigm that represents information as high-dimensional vectors. This foundation enables deterministic, explainable reasoning with mathematical guarantees.</p>
   </div>
 
   <h2>Why Hyperdimensional Computing?</h2>
@@ -45,411 +45,200 @@
 
     <div class="section-card">
       <h3>Efficiency</h3>
-      <p>Core operations (XOR, majority vote) are extremely fast on modern hardware. Similarity is computed via simple bit counting.</p>
+      <p>Core operations are extremely fast on modern hardware. The mathematical structure allows for hardware-friendly implementations.</p>
     </div>
   </div>
 
-  <h2>The Hypervector</h2>
+  <h2>Core Concepts</h2>
 
-  <p>The fundamental data structure is a <strong>hypervector</strong> - a binary vector with thousands of dimensions (default: 32,768 bits = 4KB).</p>
+  <h3>The Hypervector</h3>
 
-  <div class="diagram-container">
-    <div class="diagram-title">Hypervector Structure (32,768 bits)</div>
-    <svg viewBox="0 0 800 120" xmlns="http://www.w3.org/2000/svg">
-      <!-- Main vector bar -->
-      <rect x="50" y="40" width="700" height="40" rx="5" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
-
-      <!-- Bit markers -->
-      <text x="55" y="65" font-size="10" fill="#333">1</text>
-      <text x="70" y="65" font-size="10" fill="#333">0</text>
-      <text x="85" y="65" font-size="10" fill="#333">1</text>
-      <text x="100" y="65" font-size="10" fill="#333">1</text>
-      <text x="115" y="65" font-size="10" fill="#333">0</text>
-      <text x="130" y="65" font-size="10" fill="#333">0</text>
-      <text x="145" y="65" font-size="10" fill="#333">1</text>
-      <text x="160" y="65" font-size="10" fill="#333">0</text>
-      <text x="175" y="65" font-size="10" fill="#666">...</text>
-
-      <text x="700" y="65" font-size="10" fill="#333">1</text>
-      <text x="715" y="65" font-size="10" fill="#333">0</text>
-      <text x="730" y="65" font-size="10" fill="#333">1</text>
-
-      <!-- Labels -->
-      <text x="50" y="30" font-size="11" fill="#666">Bit 0</text>
-      <text x="680" y="30" font-size="11" fill="#666">Bit 32,767</text>
-
-      <!-- Storage note -->
-      <text x="400" y="100" text-anchor="middle" font-size="12" fill="#666">512 words x 64 bits = 32,768 bits (4 KB)</text>
-    </svg>
-  </div>
-
-  <h3>Quasi-Orthogonality Property</h3>
-
-  <p>In high-dimensional spaces, randomly generated vectors are <strong>almost orthogonal</strong> to each other:</p>
-
-  <table>
-    <tr>
-      <th>Property</th>
-      <th>Value (32K dimensions)</th>
-    </tr>
-    <tr>
-      <td>Expected similarity of random vectors</td>
-      <td>0.500</td>
-    </tr>
-    <tr>
-      <td>Standard deviation</td>
-      <td>~0.003</td>
-    </tr>
-    <tr>
-      <td>99% confidence interval</td>
-      <td>[0.492, 0.508]</td>
-    </tr>
-    <tr>
-      <td>Probability of sim > 0.55</td>
-      <td>< 0.0001%</td>
-    </tr>
-  </table>
-
-  <p><strong>Implication:</strong> Any randomly initialized vector is "far enough" from all others to serve as a unique symbol.</p>
-
-  <h2>The Three Core Operations</h2>
-
-  <h3>1. BIND (XOR) - Association</h3>
-
-  <div class="diagram-container">
-    <div class="diagram-title">Bind Operation: A XOR B</div>
-    <svg viewBox="0 0 600 150" xmlns="http://www.w3.org/2000/svg">
-      <!-- Vector A -->
-      <rect x="50" y="20" width="200" height="30" rx="3" fill="#e3f2fd" stroke="#1976d2"/>
-      <text x="150" y="40" text-anchor="middle" font-size="11">A: 1 0 1 1 0 0 1 0 ...</text>
-
-      <!-- Vector B -->
-      <rect x="50" y="60" width="200" height="30" rx="3" fill="#e8f5e9" stroke="#4caf50"/>
-      <text x="150" y="80" text-anchor="middle" font-size="11">B: 0 1 1 0 0 1 1 0 ...</text>
-
-      <!-- XOR symbol -->
-      <circle cx="300" cy="55" r="20" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
-      <text x="300" y="60" text-anchor="middle" font-size="14" font-weight="bold">XOR</text>
-
-      <!-- Result -->
-      <rect x="350" y="40" width="200" height="30" rx="3" fill="#fce4ec" stroke="#e91e63"/>
-      <text x="450" y="60" text-anchor="middle" font-size="11">A&oplus;B: 1 1 0 1 0 1 0 0 ...</text>
-
-      <!-- Properties -->
-      <text x="50" y="120" font-size="10" fill="#666">Properties: Commutative, Associative, Self-inverse (A&oplus;A=0), Reversible ((A&oplus;B)&oplus;B=A)</text>
-    </svg>
-  </div>
-
-  <p><strong>Purpose:</strong> Create associations and tag concepts with roles.</p>
-  <ul>
-    <li><code>loves(John, Mary) = Loves XOR (Pos1 XOR John) XOR (Pos2 XOR Mary)</code></li>
-    <li>Role binding: <code>Agent XOR John</code></li>
-  </ul>
-
-  <h3>2. BUNDLE (Majority Vote) - Superposition</h3>
-
-  <div class="diagram-container">
-    <div class="diagram-title">Bundle Operation: Majority([A, B, C])</div>
-    <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
-      <!-- Vectors -->
-      <rect x="50" y="20" width="180" height="25" rx="3" fill="#e3f2fd" stroke="#1976d2"/>
-      <text x="140" y="37" text-anchor="middle" font-size="10">A: 1 0 1 1 0 0 1 0</text>
-
-      <rect x="50" y="50" width="180" height="25" rx="3" fill="#e8f5e9" stroke="#4caf50"/>
-      <text x="140" y="67" text-anchor="middle" font-size="10">B: 0 1 1 0 0 1 1 0</text>
-
-      <rect x="50" y="80" width="180" height="25" rx="3" fill="#fff3e0" stroke="#ff9800"/>
-      <text x="140" y="97" text-anchor="middle" font-size="10">C: 1 1 1 0 1 0 0 0</text>
-
-      <!-- Majority symbol -->
-      <circle cx="300" cy="67" r="25" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2"/>
-      <text x="300" y="62" text-anchor="middle" font-size="10">MAJ</text>
-      <text x="300" y="75" text-anchor="middle" font-size="10">vote</text>
-
-      <!-- Result -->
-      <rect x="360" y="55" width="190" height="25" rx="3" fill="#fce4ec" stroke="#e91e63"/>
-      <text x="455" y="72" text-anchor="middle" font-size="10">Result: 1 1 1 0 0 0 1 0</text>
-
-      <!-- Explanation -->
-      <text x="50" y="130" font-size="10" fill="#666">Each bit: majority wins (2/3 or more)</text>
-      <text x="50" y="145" font-size="10" fill="#666">Bit 0: A=1, B=0, C=1 &rarr; majority=1</text>
-      <text x="50" y="160" font-size="10" fill="#666">Result is similar to ALL inputs (sim > 0.5)</text>
-    </svg>
-  </div>
-
-  <p><strong>Purpose:</strong> Store multiple items in one vector (superposition).</p>
-  <p><strong>Key property:</strong> The result is similar to all inputs, enabling content-addressable memory.</p>
-
-  <h3>3. SIMILARITY - Comparison</h3>
-
-  <pre><code>similarity(A, B) = 1 - (hamming_distance(A, B) / dimension)
-
-Output interpretation:
-  1.0  : Identical vectors
-  0.5  : Unrelated (random)
-  0.0  : Inverse (bitwise NOT)</code></pre>
-
-  <table>
-    <tr>
-      <th>Similarity Range</th>
-      <th>Interpretation</th>
-      <th>Action</th>
-    </tr>
-    <tr>
-      <td>> 0.80</td>
-      <td>Strong match</td>
-      <td>Trust the result</td>
-    </tr>
-    <tr>
-      <td>0.65 - 0.80</td>
-      <td>Good match</td>
-      <td>Probably correct</td>
-    </tr>
-    <tr>
-      <td>0.55 - 0.65</td>
-      <td>Weak match</td>
-      <td>Verify if critical</td>
-    </tr>
-    <tr>
-      <td>< 0.55</td>
-      <td>Poor/no match</td>
-      <td>Don't trust</td>
-    </tr>
-  </table>
-
-  <h2>Position Vectors: Argument Ordering</h2>
-
-  <p>XOR is commutative, so we need a mechanism to distinguish argument positions:</p>
-
-  <div class="diagram-container">
-    <div class="diagram-title">Position Vectors Solve Argument Order</div>
-    <svg viewBox="0 0 700 160" xmlns="http://www.w3.org/2000/svg">
-      <!-- Without positions (wrong) -->
-      <rect x="20" y="20" width="300" height="60" rx="5" fill="#ffebee" stroke="#f44336"/>
-      <text x="170" y="40" text-anchor="middle" font-size="11" fill="#c62828">WITHOUT positions:</text>
-      <text x="170" y="55" text-anchor="middle" font-size="10" fill="#333">loves(John, Mary) = Loves XOR John XOR Mary</text>
-      <text x="170" y="70" text-anchor="middle" font-size="10" fill="#333">loves(Mary, John) = Loves XOR Mary XOR John</text>
-      <text x="300" y="100" text-anchor="end" font-size="12" fill="#f44336" font-weight="bold">IDENTICAL! (wrong)</text>
-
-      <!-- With positions (correct) -->
-      <rect x="380" y="20" width="300" height="60" rx="5" fill="#e8f5e9" stroke="#4caf50"/>
-      <text x="530" y="40" text-anchor="middle" font-size="11" fill="#2e7d32">WITH positions:</text>
-      <text x="530" y="55" text-anchor="middle" font-size="10" fill="#333">loves(J,M) = Loves XOR (Pos1 XOR J) XOR (Pos2 XOR M)</text>
-      <text x="530" y="70" text-anchor="middle" font-size="10" fill="#333">loves(M,J) = Loves XOR (Pos1 XOR M) XOR (Pos2 XOR J)</text>
-      <text x="680" y="100" text-anchor="end" font-size="12" fill="#4caf50" font-weight="bold">DIFFERENT! (correct)</text>
-
-      <!-- Pos vectors list -->
-      <text x="350" y="140" text-anchor="middle" font-size="11" fill="#666">Pre-defined: Pos1, Pos2, Pos3, ..., Pos20</text>
-    </svg>
-  </div>
-
-  <h2>The Reasoning Equation</h2>
-
-  <p>All queries reduce to this fundamental equation:</p>
+  <p>The fundamental data structure is a <strong>hypervector</strong> - a high-dimensional representation where each concept occupies a unique region in the vector space.</p>
 
   <div class="alert alert-info">
-    <strong>Answer = Knowledge XOR Query<sup>-1</sup></strong>
-    <p>Where Query<sup>-1</sup> is the partial query (everything except the hole). In XOR, a value is its own inverse.</p>
+    <strong>Key Insight:</strong> In high-dimensional spaces, randomly generated vectors are almost orthogonal to each other. This "quasi-orthogonality" property means any new concept gets a representation that doesn't interfere with existing ones.
   </div>
 
-  <h3>Example Derivation</h3>
-
-  <pre><code># Stored fact
-fact = Loves XOR (Pos1 XOR John) XOR (Pos2 XOR Mary)
-
-# Query: Who loves Mary? (query variable ?who in position 1)
-partial = Loves XOR (Pos2 XOR Mary)
-
-# Unbind from KB
-candidate = KB XOR partial
-         = fact XOR partial   (if KB contains fact)
-         = (Pos1 XOR John) XOR noise
-
-# Extract answer
-raw = Pos1 XOR candidate = John XOR noise
-
-# Find best match
-answer = mostSimilar(raw, vocabulary) = "John"</code></pre>
-
-  <h2>Capacity and Accuracy</h2>
-
-  <p>Bundle capacity determines how many facts can be stored before accuracy degrades:</p>
+  <h3>The Three Core Operations</h3>
 
   <table>
     <tr>
-      <th>Facts in KB</th>
-      <th>Expected Similarity</th>
-      <th>Quality</th>
+      <th>Operation</th>
+      <th>Purpose</th>
+      <th>Mathematical Property</th>
     </tr>
     <tr>
-      <td>10</td>
-      <td>~0.66</td>
-      <td>Excellent</td>
+      <td><strong>BIND</strong></td>
+      <td>Create associations between concepts</td>
+      <td>Self-inverse: (A BIND B) BIND B = A</td>
     </tr>
     <tr>
-      <td>50</td>
-      <td>~0.57</td>
-      <td>Good</td>
+      <td><strong>BUNDLE</strong></td>
+      <td>Combine multiple vectors into one</td>
+      <td>Result is similar to all inputs</td>
     </tr>
     <tr>
-      <td>100</td>
-      <td>~0.55</td>
-      <td>Usable</td>
-    </tr>
-    <tr>
-      <td>200</td>
-      <td>~0.535</td>
-      <td>Threshold</td>
-    </tr>
-    <tr>
-      <td>500</td>
-      <td>~0.52</td>
-      <td>Poor (noise)</td>
+      <td><strong>SIMILARITY</strong></td>
+      <td>Measure relatedness</td>
+      <td>Range [0, 1], 0.5 = unrelated</td>
     </tr>
   </table>
 
-  <h2>Why Not Permutation?</h2>
+  <h3>Position Vectors</h3>
 
-  <p>Traditional HDC uses permutation (bit rotation) for argument ordering. We use position vectors instead because:</p>
+  <p>Because BIND is commutative, we need a mechanism to distinguish argument positions. Position vectors (Pos1, Pos2, ..., Pos20) solve this:</p>
 
-  <div class="alert alert-warning">
-    <strong>Permutation breaks geometry extension:</strong>
-    <p>When extending a 16K vector to 32K by cloning, permutation produces different results than permuting then extending. Position vectors (XOR-based) extend correctly because XOR distributes over cloning.</p>
+  <pre><code>// Without positions: loves(John, Mary) = loves(Mary, John) (WRONG!)
+// With positions:
+fact = Loves BIND (Pos1 BIND John) BIND (Pos2 BIND Mary)  // loves(John, Mary)
+fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) - DIFFERENT!</code></pre>
+
+  <h3>The Reasoning Equation</h3>
+
+  <p>All queries reduce to this fundamental principle:</p>
+
+  <div class="alert alert-info">
+    <strong>Answer = Knowledge BIND Query<sup>-1</sup></strong>
+    <p>Since BIND is self-inverse, "unbinding" the known parts of a query from the knowledge base reveals the unknown parts.</p>
+  </div>
+
+  <h2>HDC Strategies</h2>
+
+  <p>AGISystem2 implements multiple HDC strategies, each with different internal representations while maintaining the same mathematical contract:</p>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3>Dense-Binary</h3>
+      <p>Classic HDC with fixed-length binary vectors. Uses XOR for binding and majority vote for bundling.</p>
+      <p><a href="strategies/dense-binary.html">Full Documentation &rarr;</a></p>
+    </div>
+
+    <div class="section-card">
+      <h3>Sparse Polynomial (SPHDC)</h3>
+      <p>Set-based HDC with k integer exponents. Uses Cartesian XOR for binding and Jaccard index for similarity.</p>
+      <p><a href="strategies/sparse-polynomial.html">Full Documentation &rarr;</a></p>
+    </div>
   </div>
 
   <h2>Mathematical Guarantees</h2>
 
+  <p>Regardless of which strategy is used, the following properties are guaranteed:</p>
+
   <ul>
     <li><strong>Closure:</strong> All operations produce valid hypervectors</li>
     <li><strong>Determinism:</strong> Same inputs always produce same outputs</li>
-    <li><strong>Approximate reversibility:</strong> Bind is perfectly reversible; Bundle is approximately recoverable via similarity</li>
-    <li><strong>Compositionality:</strong> Complex structures built from simple parts</li>
-    <li><strong>Graceful degradation:</strong> Accuracy decreases smoothly with capacity</li>
+    <li><strong>Approximate Reversibility:</strong> BIND is self-inverse; BUNDLE is approximately recoverable</li>
+    <li><strong>Compositionality:</strong> Complex structures are built from simple parts</li>
+    <li><strong>Graceful Degradation:</strong> Accuracy decreases smoothly as capacity is reached</li>
   </ul>
 
-  <h2>HDC Strategies</h2>
+  <h2>Holographic Representations</h2>
 
-  <p>AGISystem2 implements two HDC strategies with different trade-offs. Both achieve 100% accuracy on the eval suite (126/126 tests).</p>
+  <p>AGISystem2's approach to knowledge representation has deep roots in <strong>holographic computing</strong> - a paradigm where information is distributed across the entire representation rather than localized in specific positions. <a href="holographic-representations.html">Read the full documentation &rarr;</a></p>
 
-  <div class="section-grid">
-    <div class="section-card">
-      <h3>🎯 Dense Binary Strategy</h3>
-      <p>Classic HDC with 2048-bit binary vectors. Uses XOR for binding, majority vote for bundling, Hamming distance for similarity.</p>
-      <ul>
-        <li>✓ 2048 bits (256 bytes/vector)</li>
-        <li>✓ Standard HDC semantics</li>
-        <li>✓ 35% HDC retrieval success</li>
-        <li>✗ Larger memory footprint</li>
-      </ul>
-      <p><a href="strategies/dense-binary.html">Detailed Documentation →</a></p>
-    </div>
+  <h3>Historical Context</h3>
 
-    <div class="section-card">
-      <h3>🔢 Sparse Polynomial HDC (SPHDC)</h3>
-      <p>Sparse HDC with k=4 BigInt exponents. Uses Cartesian XOR for binding, Jaccard index for similarity.</p>
-      <ul>
-        <li>✓ k=4 exponents (32 bytes/vector)</li>
-        <li>✓ 8x smaller, 1.5x faster</li>
-        <li>✓ Scalable to BigInt space (2^256)</li>
-        <li>✗ 0% HDC retrieval success</li>
-      </ul>
-      <p><a href="strategies/sparse-polynomial.html">Detailed Documentation →</a></p>
-    </div>
+  <p>The concept of holographic representations in computing traces back to several foundational works:</p>
+
+  <ul>
+    <li><strong>1960s:</strong> Holography principles (Gabor) inspire distributed representation ideas</li>
+    <li><strong>1990s:</strong> Plate's Holographic Reduced Representations (HRR) - circular convolution binding</li>
+    <li><strong>2000s:</strong> Kanerva's Hyperdimensional Computing - binary vectors with XOR binding</li>
+    <li><strong>2010s:</strong> Vector Symbolic Architectures (VSA) as unifying framework</li>
+  </ul>
+
+  <div class="alert alert-info">
+    <strong>Key Insight:</strong> Just as in optical holography where each fragment contains information about the whole image, holographic computing distributes information across all dimensions of the vector. This provides natural noise tolerance and content-addressable memory.
   </div>
 
-  <h2>Strategy Comparison</h2>
+  <h3>The Holographic Property</h3>
 
-  <div class="diagram-container">
-    <div class="diagram-title">Dense Binary vs FSP Strategy</div>
-    <svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 800px;">
-      <!-- Dense Binary -->
-      <rect x="50" y="30" width="320" height="180" rx="12" fill="#e3f2fd" stroke="#1976d2" stroke-width="3"/>
-      <text x="210" y="55" text-anchor="middle" font-weight="bold" font-size="14" fill="#1976d2">Dense Binary</text>
+  <p>When we bind two concepts A and B, the result contains "holographic traces" of both:</p>
 
-      <!-- Dense features -->
-      <text x="70" y="80" font-size="11" fill="#333">• 2048-bit binary vectors</text>
-      <text x="70" y="100" font-size="11" fill="#333">• Memory: 256 bytes/vector</text>
-      <text x="70" y="120" font-size="11" fill="#333">• Bind: XOR (O(64) ops)</text>
-      <text x="70" y="140" font-size="11" fill="#333">• Similarity: Hamming distance</text>
-      <text x="70" y="160" font-size="11" fill="#333">• HDC retrieval: 35% success</text>
+  <pre><code>// A BIND B is "holographically" related to both A and B
+// Unbinding recovers the original:
+(A BIND B) BIND B = A    // B is the "key" to recover A
+(A BIND B) BIND A = B    // A is the "key" to recover B</code></pre>
 
-      <!-- Dense visual -->
-      <rect x="70" y="170" width="280" height="25" rx="4" fill="#bbdefb" stroke="#1976d2"/>
-      <text x="210" y="187" text-anchor="middle" font-family="monospace" font-size="9" fill="#333">[10110010...01101001] (2048 bits)</text>
+  <p>This is analogous to optical holography where the reference beam is needed to reconstruct the image.</p>
 
-      <!-- FSP -->
-      <rect x="430" y="30" width="320" height="180" rx="12" fill="#e8f5e9" stroke="#4caf50" stroke-width="3"/>
-      <text x="590" y="55" text-anchor="middle" font-weight="bold" font-size="14" fill="#4caf50">SPHDC (k=4)</text>
+  <h3>A Programming Language for Holographic Computation</h3>
 
-      <!-- FSP features -->
-      <text x="450" y="80" font-size="11" fill="#333">• 4 × 64-bit BigInt exponents</text>
-      <text x="450" y="100" font-size="11" fill="#333">• Memory: 32 bytes/vector (8x smaller)</text>
-      <text x="450" y="120" font-size="11" fill="#333">• Bind: Cartesian XOR (O(16) ops)</text>
-      <text x="450" y="140" font-size="11" fill="#333">• Similarity: Jaccard index</text>
-      <text x="450" y="160" font-size="11" fill="#333">• HDC retrieval: 0% success</text>
-
-      <!-- FSP visual -->
-      <rect x="450" y="170" width="280" height="25" rx="4" fill="#c8e6c9" stroke="#4caf50"/>
-      <text x="590" y="187" text-anchor="middle" font-family="monospace" font-size="9" fill="#333">{0x7a3f..., 0x2c8e..., 0x5d1a..., 0x9f4b...}</text>
-
-      <!-- Results -->
-      <rect x="50" y="225" width="700" height="40" rx="8" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
-      <text x="400" y="250" text-anchor="middle" font-size="12" fill="#e65100">Both: 100% eval accuracy (126/126) | FSP: 1.5x faster, 8x smaller memory</text>
-    </svg>
-  </div>
-
-  <h2>Strategy Selection Guide</h2>
+  <p>AGISystem2's DSL (Domain Specific Language) provides high-level primitives for holographic computation:</p>
 
   <table>
     <tr>
-      <th>Use Case</th>
-      <th>Recommended Strategy</th>
-      <th>Reason</th>
+      <th>DSL Primitive</th>
+      <th>Holographic Operation</th>
+      <th>Purpose</th>
     </tr>
     <tr>
-      <td>Pure symbolic reasoning</td>
-      <td><strong style="color:#4caf50">SPHDC (k=4)</strong></td>
-
-      <td>100% accuracy, 1.5x faster, 8x smaller</td>
+      <td><code>relation arg1 arg2</code></td>
+      <td>Encode structured fact</td>
+      <td>Create holographic record</td>
     </tr>
     <tr>
-      <td>Memory-constrained environments</td>
-      <td><strong style="color:#4caf50">SPHDC (k=2 or k=1)</strong></td>
-      <td>8-16 bytes per vector, still 100% accurate</td>
+      <td><code>query relation ?var</code></td>
+      <td>Holographic unbinding</td>
+      <td>Content-addressable retrieval</td>
     </tr>
     <tr>
-      <td>Similarity-based retrieval</td>
-      <td><strong style="color:#1976d2">Dense Binary</strong></td>
-      <td>35% HDC Master Equation success (vs 0% FSP)</td>
+      <td><code>prove goal</code></td>
+      <td>Recursive unbinding + matching</td>
+      <td>Logical inference via retrieval</td>
     </tr>
     <tr>
-      <td>Research/comparison</td>
-      <td><strong style="color:#1976d2">Dense Binary</strong></td>
-      <td>Standard HDC semantics for benchmarking</td>
-    </tr>
-    <tr>
-      <td>Maximum speed</td>
-      <td><strong style="color:#4caf50">SPHDC (k=1)</strong></td>
-      <td>Single XOR op per bind, 24ms total suite</td>
+      <td><code>bundle [facts]</code></td>
+      <td>Superposition of records</td>
+      <td>Build knowledge base</td>
     </tr>
   </table>
+
+  <p>The DSL abstracts away the underlying vector operations, allowing programmers to think in terms of relations, rules, and queries while the system performs holographic computation underneath.</p>
+
+  <h3>Backtracking and Search</h3>
+
+  <p>The holographic representation enables interesting possibilities for search and backtracking:</p>
+
+  <ul>
+    <li><strong>Parallel Retrieval:</strong> All facts matching a query pattern are activated simultaneously</li>
+    <li><strong>Confidence-Ordered Results:</strong> Multiple candidates emerge ranked by similarity</li>
+    <li><strong>State Preservation:</strong> The vector state before binding can be preserved for backtracking</li>
+    <li><strong>Compositional Rollback:</strong> Since BIND is self-inverse, computations can be "undone" algebraically</li>
+  </ul>
+
+  <h3>Connections to Homomorphic Encryption</h3>
+
+  <p>There is an intriguing parallel between holographic representations and homomorphic encryption:</p>
+
+  <div class="alert alert-warning">
+    <strong>Conceptual Link:</strong> Just as homomorphic encryption allows computation on encrypted data without decryption, holographic binding allows <em>composition</em> of concepts without "unpacking" their internal structure. The vector for "loves(John, Mary)" is meaningful without explicitly storing "John" or "Mary" as separate retrievable entities.
+  </div>
+
+  <p>This suggests potential applications in:</p>
+
+  <ul>
+    <li><strong>Privacy-Preserving Reasoning:</strong> Queries can be answered without exposing raw facts</li>
+    <li><strong>Secure Knowledge Sharing:</strong> Holographic representations can be shared without revealing atomic concepts (if concept vectors are kept private)</li>
+    <li><strong>Deterministic Initialization:</strong> Using cryptographic hashes for concept vector generation provides both determinism and privacy</li>
+  </ul>
+
+  <p>While not equivalent to formal homomorphic encryption, the holographic paradigm offers similar "compute without decode" properties in a probabilistic, similarity-based setting.</p>
 
   <h2>Further Reading</h2>
 
   <ul>
-    <li><a href="strategies/dense-binary.html">Dense Binary Strategy - Detailed Documentation</a></li>
-    <li><a href="strategies/sparse-polynomial.html">SPHDC Strategy - Detailed Documentation</a></li>
-    <li><a href="../research/index.html">Research: HDC Strategy Stress Testing</a></li>
-    <li><a href="../specsLoader.html?spec=DS01-Theoretical-Foundation.md">DS01 - Theoretical Foundation Spec</a></li>
-    <li><a href="../specsLoader.html?spec=DS09-Core-HDC-Implementation.md">DS09 - Core HDC Implementation Spec</a></li>
+    <li><a href="strategies/dense-binary.html">Dense-Binary Strategy - In-Depth Theory</a></li>
+    <li><a href="strategies/sparse-polynomial.html">SPHDC Strategy - In-Depth Theory</a></li>
+    <li><a href="../specsLoader.html?spec=DS01-Theoretical-Foundation.md">DS01 - Theoretical Foundation Specification</a></li>
+    <li><a href="../specsLoader.html?spec=DS09-Core-HDC-Implementation.md">DS09 - Core HDC Implementation Specification</a></li>
     <li>Kanerva, P. (2009). "Hyperdimensional Computing: An Introduction to Computing in Distributed Representations"</li>
+    <li>Plate, T. (2003). "Holographic Reduced Representation: Distributed Representation for Cognitive Structures"</li>
+    <li>Gayler, R. (2003). "Vector Symbolic Architectures Answer Jackendoff's Challenges for Cognitive Neuroscience"</li>
   </ul>
 
   <div class="footer-nav">
     <p>HDC provides the mathematical foundation for deterministic, explainable AI with formal guarantees.</p>
-    <p style="margin-top: 10px;">
-      <a href="https://github.com/OutfinityResearch/AGISystem2/" target="_blank">GitHub: OutfinityResearch/AGISystem2</a>
-    </p>
   </div>
   </div>
 </body>

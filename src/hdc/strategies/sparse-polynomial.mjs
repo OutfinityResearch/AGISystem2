@@ -494,8 +494,7 @@ function serialize(vector) {
  * @returns {SPVector}
  */
 function deserialize(serialized) {
-  // Support both old 'fractal-semantic' and new 'sparse-polynomial' ids
-  if (serialized.strategyId !== 'sparse-polynomial' && serialized.strategyId !== 'fractal-semantic') {
+  if (serialized.strategyId !== 'sparse-polynomial') {
     throw new Error(`Cannot deserialize ${serialized.strategyId} with SPHDC strategy`);
   }
 
@@ -710,8 +709,5 @@ export const sparsePolynomialStrategy = {
   // Internal class (for advanced use)
   Vector: SPVector
 };
-
-// Backward compatibility alias
-export const fractalSemanticStrategy = sparsePolynomialStrategy;
 
 export default sparsePolynomialStrategy;

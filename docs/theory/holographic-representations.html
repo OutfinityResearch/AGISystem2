@@ -1,0 +1,382 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Holographic Representations - AGISystem2</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Holographic Representations</h1>
+    <small>
+      <a href="../index.html">Home</a> &middot;
+      <a href="../architecture/index.html">Architecture</a> &middot;
+      <a href="index.html">Theory</a> &middot;
+      <a href="../syntax/index.html">Syntax</a> &middot;
+      <a href="../api/index.html">APIs</a> &middot;
+      <a href="../wiki/index.html">Wiki</a> &middot;
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
+    <small>Distributed representations for compositional reasoning</small>
+  </div>
+
+  <div class="section-intro">
+    <p>Holographic computing is a paradigm where information is distributed across the entire representation rather than localized in specific positions. AGISystem2 builds on this foundation to enable compositional, content-addressable reasoning.</p>
+  </div>
+
+  <h2>Historical Development</h2>
+
+  <p>The concept of holographic representations in computing emerged from several distinct research threads that converged over decades:</p>
+
+  <h3>1. Optical Holography (1948)</h3>
+
+  <p>Dennis Gabor invented holography in 1948, demonstrating that a 3D image could be encoded onto a 2D medium such that:</p>
+
+  <ul>
+    <li>Each fragment of the medium contains information about the entire image</li>
+    <li>The image can only be reconstructed with the correct reference beam</li>
+    <li>Multiple images can be superimposed on the same medium</li>
+  </ul>
+
+  <p>These properties inspired computational analogues decades later.</p>
+
+  <h3>2. Distributed Representations in Neural Networks (1986)</h3>
+
+  <p>Hinton, McClelland, and Rumelhart introduced distributed representations in connectionist models, showing that concepts could be represented as patterns of activation across many neurons, rather than single "grandmother cells." Key insight: similar concepts have similar patterns.</p>
+
+  <h3>3. Holographic Reduced Representations (1995)</h3>
+
+  <p>Tony Plate developed HRR (Holographic Reduced Representations), using circular convolution as a binding operation:</p>
+
+  <pre><code>// Circular convolution binding
+c = a ⊛ b    where c[k] = Σᵢ a[i] × b[(k-i) mod n]
+
+// Key property: correlation unbinds
+a ≈ c ⊛ b⁻¹  where b⁻¹[i] = b[-i mod n]</code></pre>
+
+  <p>HRR enabled compositional structures in fixed-length vectors, proving that symbolic structures could be encoded holographically.</p>
+
+  <h3>4. Hyperdimensional Computing (2009)</h3>
+
+  <p>Pentti Kanerva formalized Hyperdimensional Computing (HDC), showing that in very high-dimensional spaces (d ≥ 1000):</p>
+
+  <ul>
+    <li>Random vectors are quasi-orthogonal with high probability</li>
+    <li>XOR binding is self-inverse: (A ⊕ B) ⊕ B = A</li>
+    <li>Majority-vote bundling preserves similarity to inputs</li>
+    <li>Operations are extremely efficient on binary hardware</li>
+  </ul>
+
+  <h3>5. Vector Symbolic Architectures (2003-present)</h3>
+
+  <p>Ross Gayler proposed VSA as a unifying framework encompassing HRR, MAP (Multiply-Add-Permute), BSC (Binary Spatter Codes), and other variants. VSA research established the theoretical foundations that AGISystem2 builds upon.</p>
+
+  <h2>The Holographic Principle in Computing</h2>
+
+  <p>What makes a representation "holographic"? Three essential properties:</p>
+
+  <h3>1. Distributed Encoding</h3>
+
+  <p>Information is spread across all dimensions of the vector. There is no single bit that encodes "John" or "loves" - the concept emerges from the pattern across thousands of dimensions.</p>
+
+  <pre><code>// "John" is not stored in bits 0-100, "Mary" in 101-200, etc.
+// Instead, both are patterns across ALL dimensions
+John = [1,0,1,1,0,0,1,0,1,1,0,1,...]   // pattern across d dimensions
+Mary = [0,1,1,0,1,1,0,0,1,0,1,0,...]   // different pattern, same dimensions</code></pre>
+
+  <p>Consequence: Partial information is everywhere. Even a fragment of the vector contains traces of the encoded content.</p>
+
+  <h3>2. Superposition</h3>
+
+  <p>Multiple structures can be superimposed in the same vector through bundling. The result is similar to all inputs:</p>
+
+  <pre><code>// Knowledge base as superposition of facts
+KB = bundle([fact₁, fact₂, fact₃, ..., factₙ])
+
+// Each fact leaves a "holographic trace" in KB
+similarity(KB, fact₁) > threshold
+similarity(KB, fact₂) > threshold</code></pre>
+
+  <p>This is directly analogous to optical holography, where multiple images can be recorded on the same photographic plate.</p>
+
+  <h3>3. Content-Addressable Retrieval</h3>
+
+  <p>Information can be retrieved by "unbinding" with a key - no explicit addresses or indices are needed:</p>
+
+  <pre><code>// Given: loves(John, Mary) encoded as
+fact = Loves ⊗ (Pos₁ ⊗ John) ⊗ (Pos₂ ⊗ Mary)
+
+// Query: "Who does John love?"
+query = Loves ⊗ (Pos₁ ⊗ John) ⊗ Pos₂
+
+// Answer emerges from unbinding
+answer = KB ⊗ query⁻¹
+// answer is similar to Mary</code></pre>
+
+  <p>The "reference beam" (query pattern) reconstructs the "image" (answer) from the holographic record.</p>
+
+  <h2>Mathematical Foundations</h2>
+
+  <h3>The Binding Equation</h3>
+
+  <p>The fundamental equation of holographic computation:</p>
+
+  <div class="alert alert-info">
+    <strong>Answer = Knowledge ⊗ Query⁻¹</strong>
+    <p>Given knowledge K encoding relation R(A, B), and a query Q encoding R(A, ?), the answer A retrieves B through the self-inverse property of binding.</p>
+  </div>
+
+  <p>Why this works mathematically:</p>
+
+  <pre><code>// Encoding: K = R ⊗ (P₁ ⊗ A) ⊗ (P₂ ⊗ B)
+// Query:    Q = R ⊗ (P₁ ⊗ A) ⊗ P₂
+
+// Since ⊗ is self-inverse: X ⊗ X = I (identity-like)
+K ⊗ Q = R ⊗ (P₁ ⊗ A) ⊗ (P₂ ⊗ B) ⊗ R ⊗ (P₁ ⊗ A) ⊗ P₂
+      = (R ⊗ R) ⊗ (P₁ ⊗ A ⊗ P₁ ⊗ A) ⊗ (P₂ ⊗ B ⊗ P₂)
+      ≈ I ⊗ I ⊗ B
+      ≈ B</code></pre>
+
+  <h3>Capacity and Interference</h3>
+
+  <p>Holographic memory has finite capacity. As more facts are bundled, interference increases:</p>
+
+  <pre><code>// Signal-to-noise ratio decreases with bundle size
+SNR ≈ √d / √n
+
+where:
+  d = vector dimension
+  n = number of bundled facts</code></pre>
+
+  <p>This explains why high dimensionality (d ≥ 1000) is essential: it provides sufficient capacity for practical knowledge bases while maintaining signal quality.</p>
+
+  <h3>Graceful Degradation</h3>
+
+  <p>Unlike discrete data structures, holographic representations degrade gracefully:</p>
+
+  <ul>
+    <li>Random bit flips reduce similarity but don't destroy information</li>
+    <li>Capacity overload causes accuracy to decrease smoothly, not catastrophically</li>
+    <li>Partial queries can still retrieve relevant (if less accurate) results</li>
+  </ul>
+
+  <h2>AGISystem2's DSL as Holographic Programming</h2>
+
+  <p>AGISystem2's domain-specific language can be understood as a programming language for holographic computation:</p>
+
+  <h3>Primitive Operations</h3>
+
+  <table>
+    <tr>
+      <th>DSL Syntax</th>
+      <th>Holographic Operation</th>
+      <th>Effect</th>
+    </tr>
+    <tr>
+      <td><code>relation arg1 arg2</code></td>
+      <td>Bind operator with positioned arguments</td>
+      <td>Create holographic record</td>
+    </tr>
+    <tr>
+      <td><code>?variable</code></td>
+      <td>Hole in pattern (unbind target)</td>
+      <td>Mark retrieval position</td>
+    </tr>
+    <tr>
+      <td><code>Implies (cond) (result)</code></td>
+      <td>Rule as conditional binding</td>
+      <td>Inference template</td>
+    </tr>
+    <tr>
+      <td><code>prove goal</code></td>
+      <td>Recursive unbinding + matching</td>
+      <td>Backward chaining via holographic retrieval</td>
+    </tr>
+  </table>
+
+  <h3>Example: Holographic Inference</h3>
+
+  <pre><code>// DSL program
+isA Socrates Human
+Implies (isA ?x Human) (isA ?x Mortal)
+prove isA Socrates Mortal
+
+// Holographic execution:
+// 1. Encode fact: F₁ = IsA ⊗ (P₁ ⊗ Socrates) ⊗ (P₂ ⊗ Human)
+// 2. Encode rule as conditional binding
+// 3. Prove = recursive unbinding:
+//    - Match goal against KB
+//    - If no direct match, find applicable rule
+//    - Recursively prove rule conditions
+//    - Chain bindings to construct proof</code></pre>
+
+  <h3>The Knowledge Base as Hologram</h3>
+
+  <p>The session's knowledge base is literally a holographic superposition:</p>
+
+  <pre><code>KB = bundle([fact₁, fact₂, ..., factₙ, rule₁, rule₂, ..., ruleₘ])</code></pre>
+
+  <p>Every query is an act of holographic reconstruction - using the query pattern as a "reference beam" to extract the encoded "image" (answer).</p>
+
+  <h2>Backtracking and Search</h2>
+
+  <p>The holographic paradigm enables interesting approaches to search and backtracking:</p>
+
+  <h3>Parallel Activation</h3>
+
+  <p>Unlike sequential search through a database, holographic querying activates all matching facts simultaneously:</p>
+
+  <pre><code>// Query: "What is X?"
+// All facts of form "isA X Y" activate in parallel
+// Results emerge ranked by similarity
+
+results = [
+  { answer: "Human", similarity: 0.87 },
+  { answer: "Philosopher", similarity: 0.72 },
+  { answer: "Greek", similarity: 0.65 }
+]</code></pre>
+
+  <h3>State Preservation for Backtracking</h3>
+
+  <p>Since binding is reversible, computation states can be preserved and restored algebraically:</p>
+
+  <pre><code>// State before choice point
+state₀ = current_binding
+
+// Try option A
+stateₐ = bind(state₀, optionA)
+// ... computation with optionA fails ...
+
+// Backtrack: state₀ is still available
+// Try option B
+stateᵦ = bind(state₀, optionB)
+// ... continue ...</code></pre>
+
+  <p>The self-inverse property means we don't need to explicitly save/restore state - we can algebraically "undo" operations.</p>
+
+  <h3>Confidence-Ordered Exploration</h3>
+
+  <p>Multiple candidates naturally emerge with confidence scores, enabling best-first search:</p>
+
+  <pre><code>// Holographic query returns multiple candidates
+candidates = topKSimilar(KB ⊗ query⁻¹, vocabulary, k=10)
+
+// Explore in confidence order
+for (candidate of candidates.sortBy(similarity)) {
+  result = explore(candidate)
+  if (result.success) return result
+  // Implicit backtrack: try next candidate
+}</code></pre>
+
+  <h2>Connections to Homomorphic Encryption</h2>
+
+  <p>There is a conceptual parallel between holographic computation and homomorphic encryption that suggests interesting applications:</p>
+
+  <h3>Computation Without Decoding</h3>
+
+  <p>Homomorphic encryption allows computation on encrypted data without decryption. Holographic binding has an analogous property:</p>
+
+  <div class="alert alert-info">
+    <strong>Holographic Composition:</strong> The vector for "loves(John, Mary)" is meaningful and can participate in computation without explicitly extracting "John" or "Mary" as separate entities. The composite encodes the relationship without exposing its components.
+  </div>
+
+  <pre><code>// Composite fact
+fact = Loves ⊗ (P₁ ⊗ John) ⊗ (P₂ ⊗ Mary)
+
+// We can:
+// - Check if "fact" is in KB (similarity check)
+// - Bundle "fact" with other facts
+// - Use "fact" in rule applications
+
+// Without ever:
+// - Explicitly extracting "John" from fact
+// - Storing "John" and "Mary" as separate retrievable entities</code></pre>
+
+  <h3>Deterministic Initialization and Privacy</h3>
+
+  <p>AGISystem2 generates concept vectors deterministically from names using cryptographic hashing:</p>
+
+  <pre><code>// Concept vector from name
+John_vector = createFromName("John", geometry)
+
+// Uses SHA-256 hash of name as seed
+// Deterministic: same name → same vector
+// One-way: cannot recover "John" from John_vector</code></pre>
+
+  <p>This provides:</p>
+
+  <ul>
+    <li><strong>Reproducibility:</strong> Same concept always maps to same vector</li>
+    <li><strong>Privacy potential:</strong> The vector doesn't reveal the concept name</li>
+    <li><strong>Secure sharing:</strong> Holographic records can be shared without revealing atomic concepts (if concept vectors are kept private)</li>
+  </ul>
+
+  <h3>Privacy-Preserving Reasoning</h3>
+
+  <p>Theoretical applications (not yet implemented):</p>
+
+  <ul>
+    <li><strong>Query without exposure:</strong> Answer queries about knowledge without revealing the raw facts</li>
+    <li><strong>Federated reasoning:</strong> Multiple parties contribute to a bundled KB without revealing individual contributions</li>
+    <li><strong>Differential privacy:</strong> Add noise to bundles while preserving aggregate query accuracy</li>
+  </ul>
+
+  <div class="alert alert-warning">
+    <strong>Note:</strong> These are conceptual possibilities, not formal security guarantees. Holographic representations provide "soft privacy" through distributional encoding, not cryptographic security. The parallel to homomorphic encryption is inspirational rather than mathematical equivalence.
+  </div>
+
+  <h2>Limitations and Trade-offs</h2>
+
+  <h3>Capacity Limits</h3>
+
+  <p>The number of facts that can be reliably retrieved from a bundled KB is limited by dimensionality:</p>
+
+  <pre><code>// Approximate capacity
+max_facts ≈ d / log(d)
+
+// For d = 2048: ~200-300 facts with high accuracy
+// For d = 10000: ~1000-1500 facts</code></pre>
+
+  <h3>Approximate Retrieval</h3>
+
+  <p>Holographic retrieval is inherently approximate. Results are ranked by similarity, not exact matches:</p>
+
+  <ul>
+    <li>High-confidence results are usually correct</li>
+    <li>Low-confidence results may be false positives</li>
+    <li>Verification may be needed for critical applications</li>
+  </ul>
+
+  <h3>Composition Depth</h3>
+
+  <p>Deep compositions (many nested bindings) accumulate noise:</p>
+
+  <pre><code>// Each binding level adds noise
+level_0: similarity ≈ 1.0
+level_1: similarity ≈ 0.95
+level_2: similarity ≈ 0.90
+level_3: similarity ≈ 0.85
+...</code></pre>
+
+  <p>AGISystem2 mitigates this through rule-based inference rather than deep holographic composition.</p>
+
+  <h2>Further Reading</h2>
+
+  <ul>
+    <li>Plate, T. (2003). "Holographic Reduced Representation: Distributed Representation for Cognitive Structures"</li>
+    <li>Kanerva, P. (2009). "Hyperdimensional Computing: An Introduction to Computing in Distributed Representations"</li>
+    <li>Gayler, R. (2003). "Vector Symbolic Architectures Answer Jackendoff's Challenges for Cognitive Neuroscience"</li>
+    <li>Schlegel et al. (2022). "A Comparison of Vector Symbolic Architectures"</li>
+    <li>Kleyko et al. (2021). "Vector Symbolic Architectures as a Computing Framework for Nanoscale Hardware"</li>
+    <li><a href="index.html">AGISystem2 Theory Overview</a></li>
+    <li><a href="strategies/dense-binary.html">Dense-Binary Strategy</a></li>
+    <li><a href="strategies/sparse-polynomial.html">Sparse Polynomial Strategy</a></li>
+  </ul>
+
+  <div class="footer-nav">
+    <p>Holographic representations enable compositional, content-addressable reasoning with mathematical elegance.</p>
+  </div>
+  </div>
+</body>
+</html>

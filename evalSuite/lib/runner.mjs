@@ -497,7 +497,7 @@ export async function runSuite(suite, options = {}) {
 
   // Use appropriate geometry for each strategy
   // SPHDC uses k=4 exponents - good balance of speed and safety margin
-  const geometry = (strategyId === 'sparse-polynomial' || strategyId === 'fractal-semantic') ? 4 : 2048;
+  const geometry = strategyId === 'sparse-polynomial' ? 4 : 2048;
   const session = new Session({ geometry });
 
   // 1. Load Core Theories

@@ -3,7 +3,7 @@
  * @module runtime/vocabulary
  *
  * Manages the mapping between atom names and their hypervectors.
- * Strategy-agnostic: works with any HDC strategy (dense-binary, FSP, etc.)
+ * Strategy-agnostic: works with any HDC strategy (dense-binary, SPHDC, etc.)
  */
 
 import { createFromName, serialize, deserialize, getStrategyId } from '../hdc/facade.mjs';
@@ -108,7 +108,7 @@ export class Vocabulary {
       }
       return parts.join(':');
     }
-    // For FSP: use first few exponents
+    // For SPHDC: use first few exponents
     if (vec.exponents) {
       const exps = Array.from(vec.exponents).slice(0, 4);
       return exps.map(e => e.toString(16)).join(':');

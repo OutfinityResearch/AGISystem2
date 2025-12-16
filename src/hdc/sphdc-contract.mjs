@@ -1,16 +1,16 @@
 /**
- * AGISystem2 - FSP Contract Definitions
- * @module hdc/fsp-contract
+ * AGISystem2 - SPHDC Contract Definitions
+ * @module hdc/sphdc-contract
  *
- * Defines the contract for Fractal Semantic Polynomials strategy.
- * FSP has different mathematical properties than dense binary due to sparsification.
+ * Defines the contract for Sparse Polynomial HDC (SPHDC) strategy.
+ * SPHDC has different mathematical properties than dense binary due to sparsification.
  */
 
 /**
- * FSP Contract Constants
- * These properties must be satisfied by the FSP strategy.
+ * SPHDC Contract Constants
+ * These properties must be satisfied by the SPHDC strategy.
  */
-export const FSP_CONTRACT = {
+export const SPHDC_CONTRACT = {
   /**
    * Bind is approximately self-inverse with statistical variation
    * bind(bind(a,b),b) should be similar to a (but not identical due to sparsification)
@@ -63,14 +63,14 @@ export const FSP_CONTRACT = {
 };
 
 /**
- * Validates that FSP strategy satisfies its specific contract.
- * Different from dense binary due to statistical nature of FSP.
+ * Validates that SPHDC strategy satisfies its specific contract.
+ * Different from dense binary due to statistical nature of SPHDC.
  *
  * @param {Object} strategy - Strategy to validate
  * @param {number} geometry - Test geometry
  * @returns {{valid: boolean, errors: string[]}}
  */
-export function validateFSPStrategy(strategy, geometry = 500) {
+export function validateSPHDCStrategy(strategy, geometry = 500) {
   const errors = [];
 
   // Check required methods exist
@@ -96,8 +96,8 @@ export function validateFSPStrategy(strategy, geometry = 500) {
   const bound = strategy.bind(v1, v2);
   const unbound = strategy.bind(bound, v2);
   const simAfterUnbind = strategy.similarity(v1, unbound);
-  
-  if (simAfterUnbind < 0.002) { // Very low threshold for FSP due to fundamental sparsification trade-offs
+
+  if (simAfterUnbind < 0.002) { // Very low threshold for SPHDC due to fundamental sparsification trade-offs
     errors.push(`Bind not approximately self-inverse: similarity after unbind = ${simAfterUnbind}`);
   }
 
@@ -114,12 +114,12 @@ export function validateFSPStrategy(strategy, geometry = 500) {
     errors.push(`Similarity not symmetric: ${simAB} vs ${simBA}`);
   }
 
-  // Test random baseline (much lower for FSP due to sparsification)
+  // Test random baseline (much lower for SPHDC due to sparsification)
   const r1 = strategy.createRandom(geometry, 42);
   const r2 = strategy.createRandom(geometry, 43);
   const simRandom = strategy.similarity(r1, r2);
-  const { expected, tolerance } = FSP_CONTRACT.RANDOM_BASELINE_SIMILARITY;
-  
+  const { expected, tolerance } = SPHDC_CONTRACT.RANDOM_BASELINE_SIMILARITY;
+
   if (Math.abs(simRandom - expected) > tolerance) {
     errors.push(`Random baseline off: ${simRandom} (expected ~${expected})`);
   }
@@ -127,19 +127,19 @@ export function validateFSPStrategy(strategy, geometry = 500) {
   // Test deterministic creation
   const name1 = strategy.createFromName('TestConcept', geometry);
   const name2 = strategy.createFromName('TestConcept', geometry);
-  
+
   if (!strategy.equals(name1, name2)) {
     errors.push('createFromName not deterministic');
   }
 
-  // Test bundle approximate retrievability (lower threshold for FSP)
+  // Test bundle approximate retrievability (lower threshold for SPHDC)
   const vec1 = strategy.createRandom(geometry, 45);
   const vec2 = strategy.createRandom(geometry, 46);
   const vec3 = strategy.createRandom(geometry, 47);
   const bundled = strategy.bundle([vec1, vec2, vec3]);
   const bundleSim = strategy.similarity(bundled, vec1);
-  
-  if (bundleSim < 0.3) { // Lower threshold for FSP
+
+  if (bundleSim < 0.3) { // Lower threshold for SPHDC
     errors.push(`Bundle not approximately retrievable: sim = ${bundleSim}`);
   }
 
@@ -147,7 +147,7 @@ export function validateFSPStrategy(strategy, geometry = 500) {
   const small1 = strategy.createRandom(50, 48);
   const small2 = strategy.createRandom(50, 49);
   const boundSmall = strategy.bind(small1, small2);
-  
+
   if (boundSmall.size() > 50) {
     errors.push(`Sparsification failed: size = ${boundSmall.size()}`);
   }
@@ -159,6 +159,6 @@ export function validateFSPStrategy(strategy, geometry = 500) {
 }
 
 export default {
-  FSP_CONTRACT,
-  validateFSPStrategy
+  SPHDC_CONTRACT,
+  validateSPHDCStrategy
 };

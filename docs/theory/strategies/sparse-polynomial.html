@@ -2,41 +2,50 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Sparse Polynomial HDC (SPHDC) - AGISystem2</title>
+  <title>Sparse Polynomial HDC (SPHDC) - Theory - AGISystem2</title>
   <link rel="stylesheet" href="../../reference/style.css">
   <style>
     .diagram-container { margin: 20px 0; }
-    .metric-box {
-      display: inline-block;
-      background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
-      color: white;
-      padding: 15px 25px;
-      border-radius: 10px;
-      margin: 5px;
-      text-align: center;
-    }
-    .metric-box h3 { margin: 0; font-size: 28px; }
-    .metric-box p { margin: 5px 0 0 0; opacity: 0.9; font-size: 12px; }
-    .code-block {
-      background: #263238;
-      color: #aed581;
-      padding: 15px;
-      border-radius: 8px;
-      font-family: monospace;
-      overflow-x: auto;
-    }
-    .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
-    .pros { background: #e8f5e9; padding: 15px; border-radius: 8px; border-left: 4px solid #4caf50; }
-    .cons { background: #ffebee; padding: 15px; border-radius: 8px; border-left: 4px solid #f44336; }
-    .discovery-box {
-      background: #fff3e0;
-      border-left: 4px solid #ff9800;
-      padding: 15px 20px;
+    .concept-box {
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      border-left: 4px solid #4caf50;
+      padding: 20px;
       margin: 20px 0;
       border-radius: 0 8px 8px 0;
     }
-    .k-table td { text-align: center; }
-    .k-table tr.recommended { background: #e8f5e9; }
+    .concept-box h4 { margin-top: 0; color: #2e7d32; }
+    .math-block {
+      background: #263238;
+      color: #aed581;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: monospace;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .definition {
+      background: #fff3e0;
+      border: 1px solid #ffb74d;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+    .definition strong { color: #e65100; }
+    .example-box {
+      background: #e3f2fd;
+      border: 1px solid #64b5f6;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+    .intuition {
+      background: #f3e5f5;
+      border-left: 4px solid #9c27b0;
+      padding: 15px 20px;
+      margin: 15px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .intuition em { color: #7b1fa2; font-style: normal; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -44,379 +53,483 @@
   <div class="nav-header">
     <h1>Sparse Polynomial HDC (SPHDC)</h1>
     <small>
-      <a href="../../index.html">Home</a> ·
-      <a href="../index.html">Theory</a> ·
-      <a href="dense-binary.html">Dense-Binary</a> ·
-      <a href="sparse-polynomial.html"><strong>SPHDC</strong></a> ·
-      <a href="../../research/index.html">Research</a>
+      <a href="../../index.html">Home</a> &middot;
+      <a href="../index.html">Theory</a> &middot;
+      <a href="dense-binary.html">Dense-Binary</a> &middot;
+      <a href="sparse-polynomial.html"><strong>SPHDC</strong></a>
     </small>
-    <small>Sparse polynomial HDC with XOR binding and Jaccard similarity</small>
+    <small>Conceptual Foundation: Set-Based Hyperdimensional Computing</small>
   </div>
 
   <div class="section-intro">
-    <p><strong>Sparse Polynomial HDC (SPHDC)</strong> represents concepts as sparse sets of 64-bit integer exponents. Instead of fixed binary vectors, each concept is a set of k BigInt values. Binding uses XOR (Cartesian product), and similarity uses Jaccard index.</p>
+    <p>Sparse Polynomial HDC (SPHDC) represents concepts as <strong>small finite sets of integers</strong> in a virtually infinite space. Instead of fixed-length bit vectors, each concept is a set of k elements drawn from the integers modulo 2<sup>64</sup>.</p>
   </div>
 
-  <h2>Key Metrics</h2>
-  <div style="text-align: center; margin: 20px 0;">
-    <div class="metric-box">
-      <h3>k=4</h3>
-      <p>exponents/vector</p>
-    </div>
-    <div class="metric-box">
-      <h3>32</h3>
-      <p>bytes memory</p>
-    </div>
-    <div class="metric-box">
-      <h3>100%</h3>
-      <p>eval accuracy</p>
-    </div>
-    <div class="metric-box">
-      <h3>60ms</h3>
-      <p>126 tests (1.5x faster)</p>
-    </div>
+  <h2>1. The Core Idea: Sets as Representations</h2>
+
+  <div class="concept-box">
+    <h4>Fundamental Insight</h4>
+    <p>In SPHDC, a <strong>concept</strong> is not a binary pattern but a <strong>finite set of integers</strong>. The "polynomial" in the name comes from viewing each integer as an exponent in a polynomial over GF(2), though the implementation directly uses set operations.</p>
   </div>
 
-  <h2>Vector Structure</h2>
-
-  <div class="diagram-container">
-    <svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 800px;">
-      <!-- Title -->
-      <text x="400" y="25" text-anchor="middle" font-weight="bold" font-size="14" fill="#4caf50">SPHDC Vector (k=4 exponents)</text>
-
-      <!-- Main representation - set of exponents -->
-      <rect x="100" y="45" width="600" height="60" rx="10" fill="#e8f5e9" stroke="#4caf50" stroke-width="3"/>
-      <text x="400" y="68" text-anchor="middle" font-size="12" fill="#2e7d32" font-weight="bold">Set of 64-bit Integer Exponents</text>
-
-      <!-- Exponent boxes -->
-      <g font-family="monospace" font-size="10">
-        <rect x="130" y="75" width="120" height="25" rx="4" fill="#4caf50"/>
-        <text x="190" y="92" text-anchor="middle" fill="white">0x7a3f9c2e1b8d4a5f</text>
-
-        <rect x="270" y="75" width="120" height="25" rx="4" fill="#4caf50"/>
-        <text x="330" y="92" text-anchor="middle" fill="white">0x2c8e1f4a6b9d3c7e</text>
-
-        <rect x="410" y="75" width="120" height="25" rx="4" fill="#4caf50"/>
-        <text x="470" y="92" text-anchor="middle" fill="white">0x5d1a8c3f9e2b7d4c</text>
-
-        <rect x="550" y="75" width="120" height="25" rx="4" fill="#4caf50"/>
-        <text x="610" y="92" text-anchor="middle" fill="white">0x9f4b2d7e1c6a8e3f</text>
-      </g>
-
-      <!-- Labels -->
-      <text x="190" y="118" text-anchor="middle" font-size="9" fill="#666">exp₀</text>
-      <text x="330" y="118" text-anchor="middle" font-size="9" fill="#666">exp₁</text>
-      <text x="470" y="118" text-anchor="middle" font-size="9" fill="#666">exp₂</text>
-      <text x="610" y="118" text-anchor="middle" font-size="9" fill="#666">exp₃</text>
-
-      <!-- Memory comparison -->
-      <rect x="100" y="135" width="600" height="70" rx="5" fill="#f5f5f5" stroke="#ddd"/>
-
-      <text x="400" y="155" text-anchor="middle" font-weight="bold" font-size="11">Memory Comparison</text>
-
-      <!-- Dense bar -->
-      <rect x="150" y="165" width="256" height="15" rx="2" fill="#1976d2"/>
-      <text x="278" y="177" text-anchor="middle" font-size="9" fill="white">Dense-Binary: 256 bytes</text>
-
-      <!-- SPHDC bar -->
-      <rect x="150" y="185" width="32" height="15" rx="2" fill="#4caf50"/>
-      <text x="200" y="197" text-anchor="start" font-size="9" fill="#333">SPHDC (k=4): 32 bytes (8x smaller)</text>
-    </svg>
+  <div class="definition">
+    <strong>Definition: SPVector</strong>
+    <p>An SPVector V is a finite set of k distinct 64-bit integers:</p>
+    <p style="text-align: center; font-family: monospace; font-size: 14px;">
+      V = { e<sub>0</sub>, e<sub>1</sub>, ..., e<sub>k-1</sub> } where e<sub>i</sub> &isin; Z<sub>2<sup>64</sup></sub>
+    </p>
   </div>
 
-  <h2>Core Operations</h2>
+  <h3>Why "Polynomial"?</h3>
 
-  <h3>1. BIND (Cartesian XOR)</h3>
+  <p>The name comes from the mathematical equivalence between sets of exponents and polynomials over GF(2):</p>
 
-  <div class="diagram-container">
-    <svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 800px;">
-      <!-- Vector A -->
-      <rect x="50" y="20" width="200" height="80" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
-      <text x="150" y="40" text-anchor="middle" font-size="11" fill="#2e7d32" font-weight="bold">Vector A (k=2)</text>
-      <rect x="70" y="50" width="70" height="20" rx="3" fill="#4caf50"/>
-      <text x="105" y="64" text-anchor="middle" font-size="8" fill="white">a₀</text>
-      <rect x="160" y="50" width="70" height="20" rx="3" fill="#4caf50"/>
-      <text x="195" y="64" text-anchor="middle" font-size="8" fill="white">a₁</text>
+  <div class="math-block">
+# A set of exponents {3, 7, 12} represents the polynomial:
+P(x) = x^3 + x^7 + x^12  (coefficients in GF(2), so + is XOR)
 
-      <!-- Vector B -->
-      <rect x="50" y="110" width="200" height="80" rx="8" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
-      <text x="150" y="130" text-anchor="middle" font-size="11" fill="#1565c0" font-weight="bold">Vector B (k=2)</text>
-      <rect x="70" y="140" width="70" height="20" rx="3" fill="#1976d2"/>
-      <text x="105" y="154" text-anchor="middle" font-size="8" fill="white">b₀</text>
-      <rect x="160" y="140" width="70" height="20" rx="3" fill="#1976d2"/>
-      <text x="195" y="154" text-anchor="middle" font-size="8" fill="white">b₁</text>
-
-      <!-- Operation symbol -->
-      <circle cx="320" cy="105" r="35" fill="#fff3e0" stroke="#ff9800" stroke-width="3"/>
-      <text x="320" y="100" text-anchor="middle" font-weight="bold" font-size="12" fill="#e65100">⊗</text>
-      <text x="320" y="115" text-anchor="middle" font-size="9" fill="#e65100">XOR all</text>
-
-      <!-- Result -->
-      <rect x="400" y="30" width="350" height="160" rx="8" fill="#fce4ec" stroke="#e91e63" stroke-width="2"/>
-      <text x="575" y="55" text-anchor="middle" font-size="11" fill="#c2185b" font-weight="bold">Result: A ⊗ B (k=4)</text>
-
-      <!-- Result exponents -->
-      <g font-size="8">
-        <rect x="420" y="70" width="70" height="20" rx="3" fill="#e91e63"/>
-        <text x="455" y="84" text-anchor="middle" fill="white">a₀ ⊕ b₀</text>
-
-        <rect x="500" y="70" width="70" height="20" rx="3" fill="#e91e63"/>
-        <text x="535" y="84" text-anchor="middle" fill="white">a₀ ⊕ b₁</text>
-
-        <rect x="580" y="70" width="70" height="20" rx="3" fill="#e91e63"/>
-        <text x="615" y="84" text-anchor="middle" fill="white">a₁ ⊕ b₀</text>
-
-        <rect x="660" y="70" width="70" height="20" rx="3" fill="#e91e63"/>
-        <text x="695" y="84" text-anchor="middle" fill="white">a₁ ⊕ b₁</text>
-      </g>
-
-      <!-- Formula -->
-      <text x="575" y="115" text-anchor="middle" font-size="10" fill="#333">A ⊗ B = { aᵢ ⊕ bⱼ | aᵢ ∈ A, bⱼ ∈ B }</text>
-      <text x="575" y="135" text-anchor="middle" font-size="10" fill="#666">Complexity: O(k²) = O(16) for k=4</text>
-
-      <!-- Sparsification note -->
-      <rect x="420" y="150" width="310" height="30" rx="4" fill="#fff3e0"/>
-      <text x="575" y="170" text-anchor="middle" font-size="9" fill="#e65100">If |result| > k: Min-Hash sparsification keeps k smallest</text>
-
-      <!-- Complexity comparison -->
-      <rect x="50" y="210" width="700" height="55" rx="5" fill="#f5f5f5" stroke="#ddd"/>
-      <text x="400" y="230" text-anchor="middle" font-weight="bold" font-size="11">Complexity Comparison</text>
-      <text x="200" y="250" text-anchor="middle" font-size="10" fill="#1976d2">Dense-Binary: O(64) XOR ops</text>
-      <text x="550" y="250" text-anchor="middle" font-size="10" fill="#4caf50">SPHDC (k=4): O(16) XOR ops (4x fewer)</text>
-    </svg>
+# XOR of two sets = XOR of polynomials
+{3, 7, 12} XOR {5, 7} = {3, 5, 12}  (7 cancels: 7 XOR 7 = 0)
+                      = x^3 + x^5 + x^12
   </div>
 
-  <h3>2. SIMILARITY (Jaccard Index)</h3>
+  <p>However, SPHDC uses a different binding operation (Cartesian product) that preserves structure better than pure polynomial XOR.</p>
 
-  <div class="diagram-container">
-    <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 700px;">
-      <!-- Formula -->
-      <rect x="50" y="20" width="600" height="50" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
-      <text x="350" y="50" text-anchor="middle" font-size="14" fill="#2e7d32">
-        similarity(A, B) = |A ∩ B| / |A ∪ B|
-      </text>
+  <h2>2. The k Parameter</h2>
 
-      <!-- Venn diagram -->
-      <circle cx="250" cy="120" r="50" fill="#4caf5044" stroke="#4caf50" stroke-width="2"/>
-      <text x="220" y="125" font-size="12" fill="#2e7d32">A</text>
-
-      <circle cx="320" cy="120" r="50" fill="#1976d244" stroke="#1976d2" stroke-width="2"/>
-      <text x="350" y="125" font-size="12" fill="#1565c0">B</text>
-
-      <!-- Intersection label -->
-      <text x="285" y="125" text-anchor="middle" font-size="10" fill="#333">∩</text>
-
-      <!-- Example -->
-      <rect x="420" y="80" width="230" height="80" rx="5" fill="#f5f5f5" stroke="#ddd"/>
-      <text x="535" y="100" text-anchor="middle" font-weight="bold" font-size="10">Example (k=4 each):</text>
-      <text x="535" y="120" text-anchor="middle" font-size="9" fill="#333">A = {1, 5, 9, 12}</text>
-      <text x="535" y="135" text-anchor="middle" font-size="9" fill="#333">B = {5, 9, 15, 20}</text>
-      <text x="535" y="150" text-anchor="middle" font-size="9" fill="#4caf50">sim = |{5,9}| / |{1,5,9,12,15,20}| = 2/6 = 0.33</text>
-    </svg>
+  <div class="definition">
+    <strong>Definition: k (Set Cardinality)</strong>
+    <p>The parameter <strong>k</strong> is the number of integers in each SPVector. It controls the trade-off between:</p>
+    <ul>
+      <li><strong>Memory:</strong> k &times; 8 bytes per vector</li>
+      <li><strong>Binding complexity:</strong> O(k<sup>2</sup>) operations</li>
+      <li><strong>Information capacity:</strong> Higher k = more distinctive representations</li>
+    </ul>
   </div>
 
-  <h2>The k Parameter</h2>
-
-  <div class="discovery-box">
-    <strong>Key Discovery:</strong> For pure symbolic reasoning, even k=1 (a single 64-bit hash) achieves 100% accuracy!
-    The system primarily uses symbolic KB matching and rule derivation, not similarity-based retrieval.
+  <div class="intuition">
+    <em>Intuition:</em> Think of k as the "vocabulary size" for each concept. With k=4, each concept is described by exactly 4 unique "words" (64-bit integers). More words = richer description, but more computation.
   </div>
 
-  <table class="k-table">
+  <h3>Understanding k Values</h3>
+
+  <table>
     <tr>
       <th>k Value</th>
-      <th>Pass Rate</th>
-      <th>Time (126 tests)</th>
-      <th>Memory/Vector</th>
-      <th>Ops/Bind</th>
-    </tr>
-    <tr>
-      <td>k=16</td>
-      <td>99%</td>
-      <td>989ms</td>
-      <td>128 bytes</td>
-      <td>256</td>
-    </tr>
-    <tr>
-      <td>k=8</td>
-      <td>99%</td>
-      <td>218ms</td>
-      <td>64 bytes</td>
-      <td>64</td>
-    </tr>
-    <tr class="recommended">
-      <td><strong>k=4 (default)</strong></td>
-      <td><strong>100%</strong></td>
-      <td><strong>60ms</strong></td>
-      <td><strong>32 bytes</strong></td>
-      <td><strong>16</strong></td>
-    </tr>
-    <tr>
-      <td>k=2</td>
-      <td>100%</td>
-      <td>29ms</td>
-      <td>16 bytes</td>
-      <td>4</td>
+      <th>Memory</th>
+      <th>Binding Ops</th>
+      <th>Interpretation</th>
     </tr>
     <tr>
       <td>k=1</td>
-      <td>100%</td>
-      <td>24ms</td>
       <td>8 bytes</td>
       <td>1</td>
+      <td>Single hash per concept (minimal)</td>
+    </tr>
+    <tr>
+      <td>k=2</td>
+      <td>16 bytes</td>
+      <td>4</td>
+      <td>Pair of identifiers</td>
+    </tr>
+    <tr>
+      <td><strong>k=4 (default)</strong></td>
+      <td><strong>32 bytes</strong></td>
+      <td><strong>16</strong></td>
+      <td>Balanced: distinct yet compact</td>
+    </tr>
+    <tr>
+      <td>k=8</td>
+      <td>64 bytes</td>
+      <td>64</td>
+      <td>Higher fidelity representations</td>
+    </tr>
+    <tr>
+      <td>k=16</td>
+      <td>128 bytes</td>
+      <td>256</td>
+      <td>Rich similarity gradients</td>
     </tr>
   </table>
 
-  <h2>How SPHDC Works</h2>
+  <h2>3. Binding: Cartesian XOR</h2>
+
+  <p>The binding operation in SPHDC creates associations between concepts using the <strong>Cartesian product with XOR</strong>.</p>
+
+  <div class="definition">
+    <strong>Definition: Cartesian XOR Binding</strong>
+    <p>Given sets A and B, their binding A &otimes; B is:</p>
+    <p style="text-align: center; font-family: monospace; font-size: 14px;">
+      A &otimes; B = { a &oplus; b | a &isin; A, b &isin; B }
+    </p>
+    <p>Every element of A is XORed with every element of B, producing |A| &times; |B| results.</p>
+  </div>
 
   <div class="diagram-container">
-    <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 800px;">
+    <svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 800px;">
       <!-- Title -->
-      <text x="400" y="25" text-anchor="middle" font-weight="bold" font-size="14" fill="#4caf50">SPHDC Concept Encoding</text>
+      <text x="400" y="25" text-anchor="middle" font-weight="bold" font-size="14" fill="#4caf50">Cartesian XOR Binding Operation</text>
 
-      <!-- Step 1: Name to Seed -->
-      <rect x="50" y="50" width="150" height="60" rx="8" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
-      <text x="125" y="75" text-anchor="middle" font-size="11" fill="#1565c0" font-weight="bold">Concept Name</text>
-      <text x="125" y="95" text-anchor="middle" font-family="monospace" font-size="10">"Dog"</text>
+      <!-- Set A -->
+      <rect x="50" y="50" width="200" height="120" rx="10" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+      <text x="150" y="75" text-anchor="middle" font-weight="bold" font-size="12" fill="#2e7d32">Set A (k=2)</text>
+      <circle cx="100" cy="110" r="25" fill="#4caf50"/>
+      <text x="100" y="115" text-anchor="middle" fill="white" font-size="11">a<tspan baseline-shift="sub" font-size="8">0</tspan></text>
+      <circle cx="200" cy="110" r="25" fill="#4caf50"/>
+      <text x="200" y="115" text-anchor="middle" fill="white" font-size="11">a<tspan baseline-shift="sub" font-size="8">1</tspan></text>
 
-      <!-- Arrow 1 -->
-      <path d="M200 80 L240 80" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
-      <text x="220" y="70" text-anchor="middle" font-size="9" fill="#666">hash</text>
+      <!-- Set B -->
+      <rect x="50" y="190" width="200" height="120" rx="10" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+      <text x="150" y="215" text-anchor="middle" font-weight="bold" font-size="12" fill="#1565c0">Set B (k=2)</text>
+      <circle cx="100" cy="250" r="25" fill="#1976d2"/>
+      <text x="100" y="255" text-anchor="middle" fill="white" font-size="11">b<tspan baseline-shift="sub" font-size="8">0</tspan></text>
+      <circle cx="200" cy="250" r="25" fill="#1976d2"/>
+      <text x="200" y="255" text-anchor="middle" fill="white" font-size="11">b<tspan baseline-shift="sub" font-size="8">1</tspan></text>
 
-      <!-- Step 2: Hash to Seed -->
-      <rect x="250" y="50" width="130" height="60" rx="8" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
-      <text x="315" y="75" text-anchor="middle" font-size="11" fill="#e65100" font-weight="bold">DJB2 Hash</text>
-      <text x="315" y="95" text-anchor="middle" font-family="monospace" font-size="10">seed=0x7b8c3d2e</text>
+      <!-- Operation symbol -->
+      <circle cx="320" cy="180" r="40" fill="#fff3e0" stroke="#ff9800" stroke-width="3"/>
+      <text x="320" y="175" text-anchor="middle" font-weight="bold" font-size="16" fill="#e65100">&otimes;</text>
+      <text x="320" y="195" text-anchor="middle" font-size="10" fill="#e65100">Cartesian</text>
+      <text x="320" y="208" text-anchor="middle" font-size="10" fill="#e65100">XOR</text>
 
-      <!-- Arrow 2 -->
-      <path d="M380 80 L420 80" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
-      <text x="400" y="70" text-anchor="middle" font-size="9" fill="#666">PRNG</text>
+      <!-- Arrows from A and B to operation -->
+      <path d="M250 120 Q280 150 290 165" stroke="#4caf50" stroke-width="2" fill="none" marker-end="url(#arrow3)"/>
+      <path d="M250 240 Q280 210 290 195" stroke="#1976d2" stroke-width="2" fill="none" marker-end="url(#arrow3)"/>
 
-      <!-- Step 3: Generate Exponents -->
-      <rect x="430" y="40" width="320" height="80" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
-      <text x="590" y="65" text-anchor="middle" font-size="11" fill="#2e7d32" font-weight="bold">Generate k Exponents</text>
+      <!-- Result -->
+      <rect x="420" y="80" width="330" height="200" rx="10" fill="#fce4ec" stroke="#e91e63" stroke-width="2"/>
+      <text x="585" y="105" text-anchor="middle" font-weight="bold" font-size="12" fill="#c2185b">Result: A &otimes; B (k=4)</text>
 
-      <g font-size="8">
-        <rect x="450" y="80" width="65" height="25" rx="3" fill="#4caf50"/>
-        <text x="482" y="96" text-anchor="middle" fill="white">exp₀</text>
+      <!-- Result elements -->
+      <g font-size="10">
+        <circle cx="480" cy="150" r="30" fill="#e91e63"/>
+        <text x="480" y="145" text-anchor="middle" fill="white">a<tspan baseline-shift="sub" font-size="7">0</tspan> &oplus; b<tspan baseline-shift="sub" font-size="7">0</tspan></text>
 
-        <rect x="525" y="80" width="65" height="25" rx="3" fill="#4caf50"/>
-        <text x="557" y="96" text-anchor="middle" fill="white">exp₁</text>
+        <circle cx="585" cy="150" r="30" fill="#e91e63"/>
+        <text x="585" y="145" text-anchor="middle" fill="white">a<tspan baseline-shift="sub" font-size="7">0</tspan> &oplus; b<tspan baseline-shift="sub" font-size="7">1</tspan></text>
 
-        <rect x="600" y="80" width="65" height="25" rx="3" fill="#4caf50"/>
-        <text x="632" y="96" text-anchor="middle" fill="white">exp₂</text>
+        <circle cx="690" cy="150" r="30" fill="#e91e63"/>
+        <text x="690" y="145" text-anchor="middle" fill="white">a<tspan baseline-shift="sub" font-size="7">1</tspan> &oplus; b<tspan baseline-shift="sub" font-size="7">0</tspan></text>
 
-        <rect x="675" y="80" width="65" height="25" rx="3" fill="#4caf50"/>
-        <text x="707" y="96" text-anchor="middle" fill="white">exp₃</text>
+        <circle cx="480" cy="230" r="30" fill="#e91e63"/>
+        <text x="480" y="225" text-anchor="middle" fill="white">a<tspan baseline-shift="sub" font-size="7">1</tspan> &oplus; b<tspan baseline-shift="sub" font-size="7">1</tspan></text>
       </g>
 
-      <!-- Relation encoding -->
-      <rect x="50" y="150" width="700" height="130" rx="8" fill="#f5f5f5" stroke="#ddd"/>
-      <text x="400" y="175" text-anchor="middle" font-weight="bold" font-size="12">Encoding a Relation: loves(John, Mary)</text>
-
-      <!-- Components -->
-      <rect x="80" y="195" width="100" height="30" rx="4" fill="#9c27b0"/>
-      <text x="130" y="215" text-anchor="middle" font-size="10" fill="white">Loves</text>
-
-      <text x="195" y="215" text-anchor="middle" font-size="14" fill="#333">⊗</text>
-
-      <rect x="210" y="195" width="130" height="30" rx="4" fill="#1976d2"/>
-      <text x="275" y="215" text-anchor="middle" font-size="10" fill="white">(Pos1 ⊗ John)</text>
-
-      <text x="355" y="215" text-anchor="middle" font-size="14" fill="#333">⊗</text>
-
-      <rect x="370" y="195" width="130" height="30" rx="4" fill="#4caf50"/>
-      <text x="435" y="215" text-anchor="middle" font-size="10" fill="white">(Pos2 ⊗ Mary)</text>
-
-      <text x="515" y="215" text-anchor="middle" font-size="14" fill="#333">=</text>
-
-      <rect x="530" y="195" width="190" height="30" rx="4" fill="#e91e63"/>
-      <text x="625" y="215" text-anchor="middle" font-size="10" fill="white">Fact Vector (k exponents)</text>
-
-      <!-- Note -->
-      <text x="400" y="265" text-anchor="middle" font-size="10" fill="#666">Position vectors (Pos1, Pos2, ...) ensure argument order is preserved</text>
+      <!-- Explanation -->
+      <text x="585" y="265" text-anchor="middle" font-size="10" fill="#666">2 &times; 2 = 4 elements (all pairs XORed)</text>
 
       <defs>
-        <marker id="arrow2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <marker id="arrow3" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h3>Why Cartesian XOR?</h3>
+
+  <div class="concept-box">
+    <h4>The Self-Inverse Property</h4>
+    <p>XOR is its own inverse: x &oplus; x = 0. This gives Cartesian XOR binding a crucial property:</p>
+    <p style="font-family: monospace; text-align: center; font-size: 14px;">
+      (A &otimes; B) &otimes; B &approx; A
+    </p>
+    <p>Binding with B, then binding again with B, approximately recovers A. This enables <strong>reversible encoding</strong> of structured information.</p>
+  </div>
+
+  <div class="example-box">
+    <strong>Example: Self-Inverse in Action</strong>
+    <pre style="margin: 10px 0;">
+A = {5, 9}
+B = {3, 7}
+
+A &otimes; B = {5&oplus;3, 5&oplus;7, 9&oplus;3, 9&oplus;7}
+       = {6, 2, 10, 14}
+
+(A &otimes; B) &otimes; B = {6, 2, 10, 14} &otimes; {3, 7}
+              = {6&oplus;3, 6&oplus;7, 2&oplus;3, 2&oplus;7, ...}
+              = {5, 1, 1, 5, 9, 13, 13, 9, ...}
+
+After removing duplicates and sparsifying: {5, 9, ...}
+The original A elements are recovered!</pre>
+  </div>
+
+  <h2>4. Sparsification: Keeping Sets Small</h2>
+
+  <p>When binding two k-sets, the result has up to k<sup>2</sup> elements. To maintain constant memory, we <strong>sparsify</strong> back to k elements.</p>
+
+  <div class="definition">
+    <strong>Definition: Min-Hash Sparsification</strong>
+    <p>Given a set S with |S| > k, select the k elements with the smallest hash values:</p>
+    <p style="font-family: monospace; text-align: center;">
+      sparsify(S, k) = k elements of S with min(hash(e))
+    </p>
+  </div>
+
+  <div class="intuition">
+    <em>Intuition:</em> Min-Hash sampling is like taking a "representative sample" of the set. Elements with the smallest hashes act as "fingerprints" that consistently identify the set, even when the full set is too large to store.
+  </div>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 700px;">
+      <!-- Before sparsification -->
+      <rect x="30" y="30" width="280" height="120" rx="8" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+      <text x="170" y="55" text-anchor="middle" font-weight="bold" font-size="11" fill="#e65100">Before: 16 elements</text>
+
+      <!-- Many circles -->
+      <g fill="#ff9800">
+        <circle cx="60" cy="85" r="12"/><circle cx="90" cy="85" r="12"/><circle cx="120" cy="85" r="12"/><circle cx="150" cy="85" r="12"/>
+        <circle cx="180" cy="85" r="12"/><circle cx="210" cy="85" r="12"/><circle cx="240" cy="85" r="12"/><circle cx="270" cy="85" r="12"/>
+        <circle cx="60" cy="120" r="12"/><circle cx="90" cy="120" r="12"/><circle cx="120" cy="120" r="12"/><circle cx="150" cy="120" r="12"/>
+        <circle cx="180" cy="120" r="12"/><circle cx="210" cy="120" r="12"/><circle cx="240" cy="120" r="12"/><circle cx="270" cy="120" r="12"/>
+      </g>
+
+      <!-- Arrow -->
+      <path d="M320 90 L380 90" stroke="#333" stroke-width="3" marker-end="url(#arrow4)"/>
+      <text x="350" y="75" text-anchor="middle" font-size="10" fill="#666">Min-Hash</text>
+      <text x="350" y="110" text-anchor="middle" font-size="9" fill="#666">keep k=4</text>
+
+      <!-- After sparsification -->
+      <rect x="400" y="50" width="260" height="80" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+      <text x="530" y="75" text-anchor="middle" font-weight="bold" font-size="11" fill="#2e7d32">After: k=4 elements</text>
+
+      <g fill="#4caf50">
+        <circle cx="450" cy="105" r="18"/>
+        <circle cx="500" cy="105" r="18"/>
+        <circle cx="550" cy="105" r="18"/>
+        <circle cx="600" cy="105" r="18"/>
+      </g>
+
+      <defs>
+        <marker id="arrow4" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
           <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
         </marker>
       </defs>
     </svg>
   </div>
 
-  <h2>Pros & Cons</h2>
+  <h3>Why Min-Hash Works</h3>
 
-  <div class="pros-cons">
-    <div class="pros">
-      <h3 style="color: #2e7d32; margin-top: 0;">Advantages</h3>
-      <ul>
-        <li><strong>8x smaller:</strong> 32 bytes vs 256 bytes</li>
-        <li><strong>1.5x faster:</strong> 60ms vs 91ms (126 tests)</li>
-        <li><strong>Fewer operations:</strong> O(k²) = O(16) for bind</li>
-        <li><strong>100% eval accuracy</strong></li>
-        <li><strong>Tunable k:</strong> Trade speed vs robustness</li>
-      </ul>
-    </div>
-    <div class="cons">
-      <h3 style="color: #c62828; margin-top: 0;">Limitations</h3>
-      <ul>
-        <li><strong>0% HDC retrieval:</strong> Jaccard not suited for Master Eq</li>
-        <li><strong>Less researched:</strong> Novel approach</li>
-        <li><strong>Sparsification needed:</strong> Min-Hash overhead</li>
-        <li><strong>BigInt ops:</strong> Slower than native 32-bit</li>
-      </ul>
-    </div>
+  <p>Min-Hash has a remarkable property: the probability that two sets share the same minimum hash equals their Jaccard similarity. This means sparsification preserves the essential similarity structure.</p>
+
+  <h2>5. Similarity: Jaccard Index</h2>
+
+  <p>Similarity between SPVectors is measured by how much their sets overlap.</p>
+
+  <div class="definition">
+    <strong>Definition: Jaccard Similarity</strong>
+    <p style="text-align: center; font-family: monospace; font-size: 16px;">
+      sim(A, B) = |A &cap; B| / |A &cup; B|
+    </p>
+    <p>The ratio of shared elements to total unique elements. Range: [0, 1].</p>
   </div>
 
-  <h2>When to Use SPHDC</h2>
+  <div class="diagram-container">
+    <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 700px;">
+      <!-- Venn diagram -->
+      <circle cx="200" cy="100" r="70" fill="#4caf5044" stroke="#4caf50" stroke-width="3"/>
+      <text x="150" y="100" font-size="14" fill="#2e7d32" font-weight="bold">A</text>
 
-  <table>
-    <tr>
-      <th>Use Case</th>
-      <th>Recommendation</th>
-    </tr>
-    <tr>
-      <td>Pure symbolic reasoning</td>
-      <td><strong style="color: #2e7d32;">Yes</strong> - 100% accuracy, 1.5x faster</td>
-    </tr>
-    <tr>
-      <td>Memory-constrained environment</td>
-      <td><strong style="color: #2e7d32;">Yes</strong> - 8x smaller vectors</td>
-    </tr>
-    <tr>
-      <td>Maximum speed needed</td>
-      <td><strong style="color: #2e7d32;">Yes</strong> - Use k=1 or k=2</td>
-    </tr>
-    <tr>
-      <td>Similarity-based retrieval</td>
-      <td><strong style="color: #c62828;">No</strong> - 0% HDC Master Equation success</td>
-    </tr>
-  </table>
+      <circle cx="280" cy="100" r="70" fill="#1976d244" stroke="#1976d2" stroke-width="3"/>
+      <text x="330" y="100" font-size="14" fill="#1565c0" font-weight="bold">B</text>
 
-  <h2>Configuration</h2>
+      <!-- Intersection highlight -->
+      <text x="240" y="105" text-anchor="middle" font-size="12" fill="#333">A&cap;B</text>
 
-  <div class="code-block">
-<pre>// Set strategy via environment variable
-export SYS2_HDC_STRATEGY=sparse-polynomial
+      <!-- Formula and interpretation -->
+      <rect x="400" y="40" width="270" height="120" rx="8" fill="#f5f5f5" stroke="#ddd"/>
+      <text x="535" y="65" text-anchor="middle" font-weight="bold" font-size="12">Jaccard Index</text>
 
-// Or programmatically
+      <text x="535" y="90" text-anchor="middle" font-family="monospace" font-size="12">
+        J(A,B) = |A&cap;B| / |A&cup;B|
+      </text>
+
+      <text x="420" y="115" font-size="10" fill="#666">0.0 = disjoint (no overlap)</text>
+      <text x="420" y="130" font-size="10" fill="#666">0.5 = half elements shared</text>
+      <text x="420" y="145" font-size="10" fill="#666">1.0 = identical sets</text>
+    </svg>
+  </div>
+
+  <div class="example-box">
+    <strong>Example: Computing Jaccard Similarity</strong>
+    <pre style="margin: 10px 0;">
+A = {1, 5, 9, 12}      (k=4)
+B = {5, 9, 15, 20}     (k=4)
+
+Intersection: A &cap; B = {5, 9}         |A&cap;B| = 2
+Union:        A &cup; B = {1, 5, 9, 12, 15, 20}  |A&cup;B| = 6
+
+Jaccard:      sim(A, B) = 2/6 = 0.333</pre>
+  </div>
+
+  <h2>6. Creating Concept Vectors</h2>
+
+  <p>Each concept gets a deterministic SPVector generated from its name.</p>
+
+  <div class="definition">
+    <strong>Algorithm: Deterministic Vector Creation</strong>
+    <ol>
+      <li>Hash the concept name to get a seed: <code>seed = DJB2("Dog")</code></li>
+      <li>Initialize a PRNG with the seed</li>
+      <li>Generate k unique random 64-bit integers using the PRNG</li>
+    </ol>
+  </div>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 800 150" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 800px;">
+      <!-- Step 1 -->
+      <rect x="50" y="40" width="120" height="60" rx="8" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+      <text x="110" y="65" text-anchor="middle" font-size="10" fill="#1565c0" font-weight="bold">Name</text>
+      <text x="110" y="85" text-anchor="middle" font-family="monospace" font-size="11">"Dog"</text>
+
+      <path d="M170 70 L210 70" stroke="#333" stroke-width="2" marker-end="url(#arrow5)"/>
+      <text x="190" y="60" text-anchor="middle" font-size="9" fill="#666">DJB2</text>
+
+      <!-- Step 2 -->
+      <rect x="220" y="40" width="130" height="60" rx="8" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+      <text x="285" y="65" text-anchor="middle" font-size="10" fill="#e65100" font-weight="bold">Seed</text>
+      <text x="285" y="85" text-anchor="middle" font-family="monospace" font-size="10">0x7b8c3d2e</text>
+
+      <path d="M350 70 L390 70" stroke="#333" stroke-width="2" marker-end="url(#arrow5)"/>
+      <text x="370" y="60" text-anchor="middle" font-size="9" fill="#666">PRNG</text>
+
+      <!-- Step 3 -->
+      <rect x="400" y="30" width="350" height="80" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+      <text x="575" y="55" text-anchor="middle" font-size="10" fill="#2e7d32" font-weight="bold">SPVector(Dog) = {k=4 exponents}</text>
+
+      <g font-size="8">
+        <rect x="420" y="70" width="70" height="25" rx="4" fill="#4caf50"/>
+        <text x="455" y="87" text-anchor="middle" fill="white">0x7a3f9c...</text>
+
+        <rect x="500" y="70" width="70" height="25" rx="4" fill="#4caf50"/>
+        <text x="535" y="87" text-anchor="middle" fill="white">0x2c8e1f...</text>
+
+        <rect x="580" y="70" width="70" height="25" rx="4" fill="#4caf50"/>
+        <text x="615" y="87" text-anchor="middle" fill="white">0x5d1a8c...</text>
+
+        <rect x="660" y="70" width="70" height="25" rx="4" fill="#4caf50"/>
+        <text x="695" y="87" text-anchor="middle" fill="white">0x9f4b2d...</text>
+      </g>
+
+      <defs>
+        <marker id="arrow5" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h2>7. Encoding Relations</h2>
+
+  <p>Structured knowledge is encoded by binding concepts with position vectors.</p>
+
+  <div class="definition">
+    <strong>Relation Encoding Formula</strong>
+    <p style="font-family: monospace; text-align: center; font-size: 13px;">
+      fact(loves, John, Mary) = Loves &otimes; (Pos1 &otimes; John) &otimes; (Pos2 &otimes; Mary)
+    </p>
+    <p>Position vectors (Pos1, Pos2, ...) are pre-defined constants that distinguish argument positions.</p>
+  </div>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 800px;">
+      <!-- Components -->
+      <rect x="50" y="50" width="100" height="50" rx="6" fill="#9c27b0"/>
+      <text x="100" y="80" text-anchor="middle" fill="white" font-size="11">Loves</text>
+
+      <text x="165" y="80" text-anchor="middle" font-size="18" fill="#333">&otimes;</text>
+
+      <rect x="180" y="50" width="150" height="50" rx="6" fill="#1976d2"/>
+      <text x="255" y="75" text-anchor="middle" fill="white" font-size="10">(Pos1 &otimes; John)</text>
+
+      <text x="345" y="80" text-anchor="middle" font-size="18" fill="#333">&otimes;</text>
+
+      <rect x="360" y="50" width="150" height="50" rx="6" fill="#4caf50"/>
+      <text x="435" y="75" text-anchor="middle" fill="white" font-size="10">(Pos2 &otimes; Mary)</text>
+
+      <text x="525" y="80" text-anchor="middle" font-size="18" fill="#333">=</text>
+
+      <rect x="540" y="40" width="210" height="70" rx="6" fill="#e91e63"/>
+      <text x="645" y="70" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Fact Vector</text>
+      <text x="645" y="90" text-anchor="middle" fill="white" font-size="9">{k exponents encoding</text>
+      <text x="645" y="105" text-anchor="middle" fill="white" font-size="9">"loves(John,Mary)"}</text>
+
+      <!-- Why positions matter -->
+      <rect x="50" y="130" width="700" height="55" rx="6" fill="#f5f5f5" stroke="#ddd"/>
+      <text x="400" y="150" text-anchor="middle" font-weight="bold" font-size="11">Why Position Vectors?</text>
+      <text x="400" y="168" text-anchor="middle" font-size="10" fill="#666">Without positions: loves(John,Mary) = loves(Mary,John) (wrong!)</text>
+      <text x="400" y="180" text-anchor="middle" font-size="10" fill="#666">With positions: different orderings produce different vectors</text>
+    </svg>
+  </div>
+
+  <h2>8. Querying: The Unbind Operation</h2>
+
+  <p>To answer queries, we "unbind" the known parts to recover the unknown.</p>
+
+  <div class="definition">
+    <strong>Query Principle</strong>
+    <p>Since binding is self-inverse, to find ?who in "loves(?who, Mary)":</p>
+    <p style="font-family: monospace; text-align: center;">
+      candidate = KB &otimes; Loves &otimes; (Pos2 &otimes; Mary)
+    </p>
+    <p>Then match candidate against vocabulary to find the answer.</p>
+  </div>
+
+  <div class="example-box">
+    <strong>Example: Query Resolution</strong>
+    <pre style="margin: 10px 0;">
+# KB contains: loves(John, Mary) encoded as fact_vector
+
+# Query: Who loves Mary?  (loves(?who, Mary))
+partial_query = Loves &otimes; (Pos2 &otimes; Mary)
+
+# Unbind from KB
+candidate = KB &otimes; partial_query
+         = fact_vector &otimes; Loves &otimes; (Pos2 &otimes; Mary)
+         = (Pos1 &otimes; John) + noise
+
+# Extract Pos1
+raw_answer = candidate &otimes; Pos1 &approx; John + noise
+
+# Match against vocabulary
+best_match = argmax(sim(raw_answer, vocab[name]))
+           = "John"</pre>
+  </div>
+
+  <h2>9. Mathematical Properties</h2>
+
+  <div class="concept-box">
+    <h4>Key Properties of SPHDC</h4>
+    <ul>
+      <li><strong>Approximate Self-Inverse:</strong> (A &otimes; B) &otimes; B &approx; A (with sparsification noise)</li>
+      <li><strong>Approximate Commutativity:</strong> A &otimes; B &approx; B &otimes; A</li>
+      <li><strong>Determinism:</strong> Same inputs always produce same outputs</li>
+      <li><strong>Bounded Memory:</strong> All vectors have exactly k elements</li>
+      <li><strong>Similarity Preservation:</strong> Min-Hash maintains approximate Jaccard distances</li>
+    </ul>
+  </div>
+
+  <h2>10. Configuration</h2>
+
+  <div class="math-block">
+// Initialize SPHDC strategy
 import { initHDC } from './src/hdc/facade.mjs';
 initHDC('sparse-polynomial');
 
-// Create session with k=4 (default for SPHDC)
+// Create session with default k=4
 const session = new Session({ geometry: 4 });
 
 // For maximum speed, use k=1
-const fastSession = new Session({ geometry: 1 });</pre>
+const fastSession = new Session({ geometry: 1 });
+
+// For richer representations, use k=8
+const richSession = new Session({ geometry: 8 });
   </div>
 
   <div class="footer-nav">
     <p>
-      <a href="dense-binary.html">← Dense-Binary Strategy</a> ·
-      <a href="../index.html">Back to Theory →</a>
-    </p>
-    <p style="margin-top: 10px;">
-      <a href="https://github.com/OutfinityResearch/AGISystem2/" target="_blank">GitHub: OutfinityResearch/AGISystem2</a>
+      <a href="../index.html">&larr; Back to Theory</a> &middot;
+      <a href="dense-binary.html">Dense-Binary Strategy &rarr;</a>
     </p>
   </div>
   </div>
