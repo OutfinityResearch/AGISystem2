@@ -16,6 +16,7 @@ import { QueryEngine } from '../reasoning/query.mjs';
 import { ProofEngine } from '../reasoning/prove.mjs';
 import { AbductionEngine } from '../reasoning/abduction.mjs';
 import { InductionEngine } from '../reasoning/induction.mjs';
+import { createQueryEngine, createProofEngine, isHolographicPriority, getReasoningPriority } from '../reasoning/index.mjs';
 import { textGenerator } from '../output/text-generator.mjs';
 import { findAll } from '../reasoning/find-all.mjs';
 
@@ -38,10 +39,14 @@ const MUTUALLY_EXCLUSIVE = {
 export class Session {
   constructor(options = {}) {
     this.geometry = options.geometry || getDefaultGeometry();
+    this.hdcStrategy = options.hdcStrategy || process.env.SYS2_HDC_STRATEGY || 'dense-binary';
+    this.reasoningPriority = options.reasoningPriority || getReasoningPriority();
     this.scope = new Scope();
     this.vocabulary = new Vocabulary(this.geometry);
     this.executor = new Executor(this);
-    this.queryEngine = new QueryEngine(this);
+
+    // Use dispatcher to create engines based on reasoning priority
+    this.queryEngine = createQueryEngine(this);
     this.abductionEngine = new AbductionEngine(this);
     this.inductionEngine = new InductionEngine(this);
     this.rules = [];
@@ -73,6 +78,8 @@ export class Session {
     };
 
     this.initOperators();
+
+    dbg('INIT', `Strategy: ${this.hdcStrategy}, Priority: ${this.reasoningPriority}`);
   }
 
   /**
@@ -418,7 +425,8 @@ export class Session {
         return { valid: false, reason: 'Empty goal' };
       }
 
-      const engine = new ProofEngine(this, { timeout: options.timeout || 2000 });
+      // Use dispatcher to create engine based on reasoning priority
+      const engine = createProofEngine(this, { timeout: options.timeout || 2000 });
       const result = engine.prove(ast.statements[0]);
 
       // Track statistics

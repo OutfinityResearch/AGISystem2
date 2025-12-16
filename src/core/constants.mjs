@@ -108,6 +108,73 @@ export function getThresholds(strategy = 'dense-binary') {
   return REASONING_THRESHOLDS[strategy] || REASONING_THRESHOLDS['dense-binary'];
 }
 
+// ============================================================================
+// REASONING PRIORITY MODE
+// ============================================================================
+
+/**
+ * Reasoning priority modes
+ *
+ * symbolicPriority: Symbolic reasoning first, HDC for storage/verification (default)
+ * holographicPriority: HDC operations first, symbolic for validation
+ */
+export const REASONING_PRIORITY = {
+  SYMBOLIC: 'symbolicPriority',
+  HOLOGRAPHIC: 'holographicPriority'
+};
+
+/**
+ * Get current reasoning priority from environment
+ * @returns {string} 'symbolicPriority' or 'holographicPriority'
+ */
+export function getReasoningPriority() {
+  return process.env.REASONING_PRIORITY || REASONING_PRIORITY.SYMBOLIC;
+}
+
+/**
+ * Check if holographic priority mode is enabled
+ * @returns {boolean}
+ */
+export function isHolographicPriority() {
+  return getReasoningPriority() === REASONING_PRIORITY.HOLOGRAPHIC;
+}
+
+/**
+ * Holographic mode thresholds
+ *
+ * These control HDC-first reasoning behavior:
+ * - UNBIND_MIN_SIMILARITY: Minimum similarity for HDC unbind candidates
+ * - UNBIND_MAX_CANDIDATES: Maximum candidates to validate symbolically
+ * - CSP_HEURISTIC_WEIGHT: Weight for HDC similarity in CSP domain ordering
+ * - VALIDATION_REQUIRED: Always validate HDC results with symbolic
+ * - FALLBACK_TO_SYMBOLIC: Fall back to symbolic if HDC fails
+ */
+export const HOLOGRAPHIC_THRESHOLDS = {
+  'dense-binary': {
+    UNBIND_MIN_SIMILARITY: 0.4,
+    UNBIND_MAX_CANDIDATES: 10,
+    CSP_HEURISTIC_WEIGHT: 0.7,
+    VALIDATION_REQUIRED: true,
+    FALLBACK_TO_SYMBOLIC: true
+  },
+  'sparse-polynomial': {
+    UNBIND_MIN_SIMILARITY: 0.02,
+    UNBIND_MAX_CANDIDATES: 10,
+    CSP_HEURISTIC_WEIGHT: 0.7,
+    VALIDATION_REQUIRED: true,
+    FALLBACK_TO_SYMBOLIC: true
+  }
+};
+
+/**
+ * Get holographic thresholds for a specific strategy
+ * @param {string} strategy - 'dense-binary' or 'sparse-polynomial'
+ * @returns {object} Holographic thresholds object
+ */
+export function getHolographicThresholds(strategy = 'dense-binary') {
+  return HOLOGRAPHIC_THRESHOLDS[strategy] || HOLOGRAPHIC_THRESHOLDS['dense-binary'];
+}
+
 // Query limits
 export const MAX_HOLES = 3;
 export const TOP_K_DEFAULT = 5;

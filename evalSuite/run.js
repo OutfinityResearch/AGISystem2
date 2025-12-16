@@ -5,11 +5,17 @@
  * Run evaluation suites to test NL->DSL transformation and reasoning.
  *
  * Usage:
- *   node evalSuite/run.js                           # Run all suites with both strategies
+ *   node evalSuite/run.js                           # Run all suites with 2 strategies (default)
  *   node evalSuite/run.js suite01                   # Run specific suite with both strategies
  *   node evalSuite/run.js --verbose                 # Show failure details
  *   node evalSuite/run.js --strategy=dense-binary   # Run with specific strategy only
  *   node evalSuite/run.js --compare                 # Run with both strategies and compare (default)
+ *   node evalSuite/run.js --all-modes               # Run with all 4 configurations (2 strategies × 2 reasoning priorities)
+ *   node evalSuite/run.js --priority=holographicPriority  # Run with specific reasoning priority
+ *
+ * Configurations:
+ *   HDC Strategies: dense-binary, sparse-polynomial
+ *   Reasoning Priorities: symbolicPriority (default), holographicPriority
  */
 
 import { discoverSuites, loadSuite } from './lib/loader.mjs';
@@ -23,15 +29,21 @@ import {
   reportMultiStrategyComparison
 } from './lib/reporter.mjs';
 import { listStrategies } from '../src/hdc/facade.mjs';
+import { REASONING_PRIORITY } from '../src/core/constants.mjs';
 
 // Parse command line arguments
 const args = process.argv.slice(2);
 const verbose = args.includes('--verbose') || args.includes('-v');
+const allModes = args.includes('--all-modes') || args.includes('--4way');
 const compareMode = args.includes('--compare') || !args.some(a => a.startsWith('--strategy='));
 
 // Extract specific strategy if provided
 const strategyArg = args.find(a => a.startsWith('--strategy='));
 const singleStrategy = strategyArg ? strategyArg.split('=')[1] : null;
+
+// Extract specific reasoning priority if provided
+const priorityArg = args.find(a => a.startsWith('--priority='));
+const singlePriority = priorityArg ? priorityArg.split('=')[1] : null;
 
 const specificSuites = args.filter(a => !a.startsWith('-') && !a.startsWith('--'));
 
@@ -92,25 +104,52 @@ async function main() {
         process.exit(1);
       }
       strategiesToRun = [singleStrategy];
-      console.log(`Running with strategy: ${singleStrategy}`);
     } else {
       strategiesToRun = availableStrategies;
-      console.log(`Running with ${strategiesToRun.length} strategies: ${strategiesToRun.join(', ')}`);
     }
 
-    // Results by strategy
-    const resultsByStrategy = {};
+    // Determine which reasoning priorities to run
+    const availablePriorities = [REASONING_PRIORITY.SYMBOLIC, REASONING_PRIORITY.HOLOGRAPHIC];
+    let prioritiesToRun;
 
-    // Run all suites for each strategy
-    for (const strategyId of strategiesToRun) {
+    if (singlePriority) {
+      if (!availablePriorities.includes(singlePriority)) {
+        console.error(`\x1b[31mUnknown priority: ${singlePriority}. Available: ${availablePriorities.join(', ')}\x1b[0m`);
+        process.exit(1);
+      }
+      prioritiesToRun = [singlePriority];
+    } else {
+      // Default: run ALL 4 configurations (2 strategies × 2 priorities)
+      // Be bold - show the full picture!
+      prioritiesToRun = availablePriorities;
+    }
+
+    // Build configuration list
+    const configurations = [];
+    for (const strategy of strategiesToRun) {
+      for (const priority of prioritiesToRun) {
+        configurations.push({ strategy, priority });
+      }
+    }
+
+    const configNames = configurations.map(c => `${c.strategy}/${c.priority.replace('Priority', '')}`);
+    console.log(`Running with ${configurations.length} configuration(s): ${configNames.join(', ')}`);
+
+    // Results by configuration (key = "strategy/priority")
+    const resultsByConfig = {};
+
+    // Run all suites for each configuration
+    for (const config of configurations) {
       if (interrupted) break;
+
+      const configKey = `${config.strategy}/${config.priority}`;
 
       console.log();
       console.log(`\x1b[1m\x1b[35m${'━'.repeat(80)}\x1b[0m`);
-      console.log(`\x1b[1m\x1b[35mHDC Strategy: ${strategyId}\x1b[0m`);
+      console.log(`\x1b[1m\x1b[35mConfiguration: ${config.strategy} + ${config.priority}\x1b[0m`);
       console.log(`\x1b[35m${'━'.repeat(80)}\x1b[0m`);
 
-      resultsByStrategy[strategyId] = [];
+      resultsByConfig[configKey] = [];
 
       for (const suiteName of suites) {
         if (interrupted) break;
@@ -122,8 +161,11 @@ async function main() {
           // Report header (shows Core theory stack)
           reportSuiteHeader(suite);
 
-          // Run tests with specific strategy
-          const { results, summary } = await runSuite(suite, { strategy: strategyId });
+          // Run tests with specific configuration (strategy + priority)
+          const { results, summary } = await runSuite(suite, {
+            strategy: config.strategy,
+            reasoningPriority: config.priority
+          });
 
           // Report results
           reportCaseResults(suite.cases, results);
@@ -136,13 +178,14 @@ async function main() {
             }
           }
 
-          resultsByStrategy[strategyId].push({
+          resultsByConfig[configKey].push({
             name: suite.name,
             suiteName,
             results,
             summary,
             cases: suite.cases,
-            strategyId
+            strategyId: config.strategy,
+            reasoningPriority: config.priority
           });
 
         } catch (err) {
@@ -153,22 +196,23 @@ async function main() {
         }
       }
 
-      // Show summary for this strategy
-      if (!interrupted && resultsByStrategy[strategyId].length > 0) {
+      // Show summary for this configuration
+      if (!interrupted && resultsByConfig[configKey].length > 0) {
         console.log();
-        console.log(`\x1b[1m\x1b[35mStrategy: ${strategyId} - Summary\x1b[0m`);
-        reportGlobalSummary(resultsByStrategy[strategyId]);
+        console.log(`\x1b[1m\x1b[35mConfiguration: ${configKey} - Summary\x1b[0m`);
+        reportGlobalSummary(resultsByConfig[configKey]);
       }
     }
 
-    // Multi-strategy comparison (if running multiple strategies)
-    if (!interrupted && strategiesToRun.length > 1) {
-      reportMultiStrategyComparison(resultsByStrategy);
+    // Multi-config comparison (if running multiple configs)
+    if (!interrupted && configurations.length > 1) {
+      // Convert to reportMultiStrategyComparison format (uses strategyId as key)
+      reportMultiStrategyComparison(resultsByConfig);
     }
 
     // Exit code based on results
-    const allPassed = Object.values(resultsByStrategy).every(strategyResults =>
-      strategyResults.every(s => s.summary.failed === 0)
+    const allPassed = Object.values(resultsByConfig).every(configResults =>
+      configResults.every(s => s.summary.failed === 0)
     );
     process.exit(allPassed ? 0 : 1);
 

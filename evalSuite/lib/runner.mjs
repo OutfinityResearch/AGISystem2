@@ -670,10 +670,18 @@ export async function runSuite(suite, options = {}) {
   const strategyId = options.strategy || process.env.SYS2_HDC_STRATEGY || 'dense-binary';
   initHDC(strategyId);
 
+  // Set reasoning priority if specified (for Session constructor)
+  const reasoningPriority = options.reasoningPriority || process.env.REASONING_PRIORITY || 'symbolicPriority';
+  process.env.REASONING_PRIORITY = reasoningPriority;
+
   // Use appropriate geometry for each strategy
   // SPHDC uses k=4 exponents - good balance of speed and safety margin
   const geometry = strategyId === 'sparse-polynomial' ? 4 : 2048;
-  const session = new Session({ geometry });
+  const session = new Session({
+    geometry,
+    hdcStrategy: strategyId,
+    reasoningPriority
+  });
 
   // 1. Load Core Theories
   loadCoreTheories(session);
