@@ -4,24 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better documentation">
-      <change afterPath="$PROJECT_DIR$/docs/theory/concepts/gf2.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/theory/concepts/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/theory/concepts/jaccard.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/theory/concepts/minhash.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/theory/privacy-hdc.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/theory/strategies/sphdc-analysis.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/agent-planning.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/compliance.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/research.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/use-cases/index.html" afterDir="false" />
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better documentation and project presentation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS00-Vision.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/wiki/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/wiki/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/api/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/api/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/architecture/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/architecture/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/guides/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS01-Theoretical-Foundation.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS02-DSL-Syntax.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS03-Architecture.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/matrix.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/matrix.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/hdc/fractal-semantic.test.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/vocabulary.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/vocabulary.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +89,7 @@
       <workItem from="1765450432887" duration="75000" />
       <workItem from="1765553684173" duration="619000" />
       <workItem from="1765783559936" duration="115000" />
-      <workItem from="1765869847094" duration="12375000" />
+      <workItem from="1765869847094" duration="14830000" />
     </task>
     <task id="LOCAL-00001" summary="1st public version of AGISystem2">
       <option name="closed" value="true" />
@@ -370,7 +363,31 @@
       <option name="project" value="LOCAL" />
       <updated>1765889256752</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="better documentation and project presentation">
+      <option name="closed" value="true" />
+      <created>1765891809829</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1765891809829</updated>
+    </task>
+    <task id="LOCAL-00036" summary="better documentation and project presentation">
+      <option name="closed" value="true" />
+      <created>1765891969187</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1765891969187</updated>
+    </task>
+    <task id="LOCAL-00037" summary="better documentation and project presentation">
+      <option name="closed" value="true" />
+      <created>1765894514767</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1765894514767</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -394,6 +411,7 @@
     <MESSAGE value="replaced with the best experiment, this becomes the standard architecture" />
     <MESSAGE value="added a new HDC strategy, wip" />
     <MESSAGE value="better documentation" />
-    <option name="LAST_COMMIT_MESSAGE" value="better documentation" />
+    <MESSAGE value="better documentation and project presentation" />
+    <option name="LAST_COMMIT_MESSAGE" value="better documentation and project presentation" />
   </component>
 </project>

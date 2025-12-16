@@ -147,7 +147,7 @@ describe('Vocabulary', () => {
       vocab.getOrCreate('foo');
       vocab.getOrCreate('bar');
 
-      const data = vocab.serialize();
+      const data = vocab.serializeVocab();
 
       assert.equal(data.geometry, 1024);
       assert.ok('foo' in data.atoms);
@@ -159,8 +159,8 @@ describe('Vocabulary', () => {
       original.getOrCreate('test1');
       original.getOrCreate('test2');
 
-      const data = original.serialize();
-      const restored = Vocabulary.deserialize(data);
+      const data = original.serializeVocab();
+      const restored = Vocabulary.deserializeVocab(data);
 
       assert.equal(restored.geometry, 1024);
       assert.equal(restored.size, 2);
@@ -172,8 +172,8 @@ describe('Vocabulary', () => {
       const original = new Vocabulary(2048);
       const origVec = original.getOrCreate('persistent');
 
-      const data = original.serialize();
-      const restored = Vocabulary.deserialize(data);
+      const data = original.serializeVocab();
+      const restored = Vocabulary.deserializeVocab(data);
       const restoredVec = restored.get('persistent');
 
       assert.ok(origVec.equals(restoredVec), 'vectors should be equal after deserialize');
