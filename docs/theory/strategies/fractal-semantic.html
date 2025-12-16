@@ -1,0 +1,424 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Fractal Semantic Polynomials (FSP) - AGISystem2</title>
+  <link rel="stylesheet" href="../../reference/style.css">
+  <style>
+    .diagram-container { margin: 20px 0; }
+    .metric-box {
+      display: inline-block;
+      background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      margin: 5px;
+      text-align: center;
+    }
+    .metric-box h3 { margin: 0; font-size: 28px; }
+    .metric-box p { margin: 5px 0 0 0; opacity: 0.9; font-size: 12px; }
+    .code-block {
+      background: #263238;
+      color: #aed581;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: monospace;
+      overflow-x: auto;
+    }
+    .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+    .pros { background: #e8f5e9; padding: 15px; border-radius: 8px; border-left: 4px solid #4caf50; }
+    .cons { background: #ffebee; padding: 15px; border-radius: 8px; border-left: 4px solid #f44336; }
+    .discovery-box {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .k-table td { text-align: center; }
+    .k-table tr.recommended { background: #e8f5e9; }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Fractal Semantic Polynomials (FSP)</h1>
+    <small>
+      <a href="../../index.html">Home</a> ·
+      <a href="../index.html">Theory</a> ·
+      <a href="dense-binary.html">Dense-Binary</a> ·
+      <a href="fractal-semantic.html"><strong>FSP</strong></a> ·
+      <a href="../../research/index.html">Research</a>
+    </small>
+    <small>Sparse polynomial HDC with XOR binding and Jaccard similarity</small>
+  </div>
+
+  <div class="section-intro">
+    <p><strong>Fractal Semantic Polynomials (FSP)</strong> represents concepts as sparse sets of 64-bit integer exponents. Instead of fixed binary vectors, each concept is a set of k BigInt values. Binding uses XOR (Cartesian product), and similarity uses Jaccard index.</p>
+  </div>
+
+  <h2>Key Metrics</h2>
+  <div style="text-align: center; margin: 20px 0;">
+    <div class="metric-box">
+      <h3>k=4</h3>
+      <p>exponents/vector</p>
+    </div>
+    <div class="metric-box">
+      <h3>32</h3>
+      <p>bytes memory</p>
+    </div>
+    <div class="metric-box">
+      <h3>100%</h3>
+      <p>eval accuracy</p>
+    </div>
+    <div class="metric-box">
+      <h3>60ms</h3>
+      <p>126 tests (1.5x faster)</p>
+    </div>
+  </div>
+
+  <h2>Vector Structure</h2>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 800px;">
+      <!-- Title -->
+      <text x="400" y="25" text-anchor="middle" font-weight="bold" font-size="14" fill="#4caf50">FSP Vector (k=4 exponents)</text>
+
+      <!-- Main representation - set of exponents -->
+      <rect x="100" y="45" width="600" height="60" rx="10" fill="#e8f5e9" stroke="#4caf50" stroke-width="3"/>
+      <text x="400" y="68" text-anchor="middle" font-size="12" fill="#2e7d32" font-weight="bold">Set of 64-bit Integer Exponents</text>
+
+      <!-- Exponent boxes -->
+      <g font-family="monospace" font-size="10">
+        <rect x="130" y="75" width="120" height="25" rx="4" fill="#4caf50"/>
+        <text x="190" y="92" text-anchor="middle" fill="white">0x7a3f9c2e1b8d4a5f</text>
+
+        <rect x="270" y="75" width="120" height="25" rx="4" fill="#4caf50"/>
+        <text x="330" y="92" text-anchor="middle" fill="white">0x2c8e1f4a6b9d3c7e</text>
+
+        <rect x="410" y="75" width="120" height="25" rx="4" fill="#4caf50"/>
+        <text x="470" y="92" text-anchor="middle" fill="white">0x5d1a8c3f9e2b7d4c</text>
+
+        <rect x="550" y="75" width="120" height="25" rx="4" fill="#4caf50"/>
+        <text x="610" y="92" text-anchor="middle" fill="white">0x9f4b2d7e1c6a8e3f</text>
+      </g>
+
+      <!-- Labels -->
+      <text x="190" y="118" text-anchor="middle" font-size="9" fill="#666">exp₀</text>
+      <text x="330" y="118" text-anchor="middle" font-size="9" fill="#666">exp₁</text>
+      <text x="470" y="118" text-anchor="middle" font-size="9" fill="#666">exp₂</text>
+      <text x="610" y="118" text-anchor="middle" font-size="9" fill="#666">exp₃</text>
+
+      <!-- Memory comparison -->
+      <rect x="100" y="135" width="600" height="70" rx="5" fill="#f5f5f5" stroke="#ddd"/>
+
+      <text x="400" y="155" text-anchor="middle" font-weight="bold" font-size="11">Memory Comparison</text>
+
+      <!-- Dense bar -->
+      <rect x="150" y="165" width="256" height="15" rx="2" fill="#1976d2"/>
+      <text x="278" y="177" text-anchor="middle" font-size="9" fill="white">Dense-Binary: 256 bytes</text>
+
+      <!-- FSP bar -->
+      <rect x="150" y="185" width="32" height="15" rx="2" fill="#4caf50"/>
+      <text x="200" y="197" text-anchor="start" font-size="9" fill="#333">FSP (k=4): 32 bytes (8x smaller)</text>
+    </svg>
+  </div>
+
+  <h2>Core Operations</h2>
+
+  <h3>1. BIND (Cartesian XOR)</h3>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 800px;">
+      <!-- Vector A -->
+      <rect x="50" y="20" width="200" height="80" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+      <text x="150" y="40" text-anchor="middle" font-size="11" fill="#2e7d32" font-weight="bold">Vector A (k=2)</text>
+      <rect x="70" y="50" width="70" height="20" rx="3" fill="#4caf50"/>
+      <text x="105" y="64" text-anchor="middle" font-size="8" fill="white">a₀</text>
+      <rect x="160" y="50" width="70" height="20" rx="3" fill="#4caf50"/>
+      <text x="195" y="64" text-anchor="middle" font-size="8" fill="white">a₁</text>
+
+      <!-- Vector B -->
+      <rect x="50" y="110" width="200" height="80" rx="8" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+      <text x="150" y="130" text-anchor="middle" font-size="11" fill="#1565c0" font-weight="bold">Vector B (k=2)</text>
+      <rect x="70" y="140" width="70" height="20" rx="3" fill="#1976d2"/>
+      <text x="105" y="154" text-anchor="middle" font-size="8" fill="white">b₀</text>
+      <rect x="160" y="140" width="70" height="20" rx="3" fill="#1976d2"/>
+      <text x="195" y="154" text-anchor="middle" font-size="8" fill="white">b₁</text>
+
+      <!-- Operation symbol -->
+      <circle cx="320" cy="105" r="35" fill="#fff3e0" stroke="#ff9800" stroke-width="3"/>
+      <text x="320" y="100" text-anchor="middle" font-weight="bold" font-size="12" fill="#e65100">⊗</text>
+      <text x="320" y="115" text-anchor="middle" font-size="9" fill="#e65100">XOR all</text>
+
+      <!-- Result -->
+      <rect x="400" y="30" width="350" height="160" rx="8" fill="#fce4ec" stroke="#e91e63" stroke-width="2"/>
+      <text x="575" y="55" text-anchor="middle" font-size="11" fill="#c2185b" font-weight="bold">Result: A ⊗ B (k=4)</text>
+
+      <!-- Result exponents -->
+      <g font-size="8">
+        <rect x="420" y="70" width="70" height="20" rx="3" fill="#e91e63"/>
+        <text x="455" y="84" text-anchor="middle" fill="white">a₀ ⊕ b₀</text>
+
+        <rect x="500" y="70" width="70" height="20" rx="3" fill="#e91e63"/>
+        <text x="535" y="84" text-anchor="middle" fill="white">a₀ ⊕ b₁</text>
+
+        <rect x="580" y="70" width="70" height="20" rx="3" fill="#e91e63"/>
+        <text x="615" y="84" text-anchor="middle" fill="white">a₁ ⊕ b₀</text>
+
+        <rect x="660" y="70" width="70" height="20" rx="3" fill="#e91e63"/>
+        <text x="695" y="84" text-anchor="middle" fill="white">a₁ ⊕ b₁</text>
+      </g>
+
+      <!-- Formula -->
+      <text x="575" y="115" text-anchor="middle" font-size="10" fill="#333">A ⊗ B = { aᵢ ⊕ bⱼ | aᵢ ∈ A, bⱼ ∈ B }</text>
+      <text x="575" y="135" text-anchor="middle" font-size="10" fill="#666">Complexity: O(k²) = O(16) for k=4</text>
+
+      <!-- Sparsification note -->
+      <rect x="420" y="150" width="310" height="30" rx="4" fill="#fff3e0"/>
+      <text x="575" y="170" text-anchor="middle" font-size="9" fill="#e65100">If |result| > k: Min-Hash sparsification keeps k smallest</text>
+
+      <!-- Complexity comparison -->
+      <rect x="50" y="210" width="700" height="55" rx="5" fill="#f5f5f5" stroke="#ddd"/>
+      <text x="400" y="230" text-anchor="middle" font-weight="bold" font-size="11">Complexity Comparison</text>
+      <text x="200" y="250" text-anchor="middle" font-size="10" fill="#1976d2">Dense-Binary: O(64) XOR ops</text>
+      <text x="550" y="250" text-anchor="middle" font-size="10" fill="#4caf50">FSP (k=4): O(16) XOR ops (4x fewer)</text>
+    </svg>
+  </div>
+
+  <h3>2. SIMILARITY (Jaccard Index)</h3>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 700px;">
+      <!-- Formula -->
+      <rect x="50" y="20" width="600" height="50" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+      <text x="350" y="50" text-anchor="middle" font-size="14" fill="#2e7d32">
+        similarity(A, B) = |A ∩ B| / |A ∪ B|
+      </text>
+
+      <!-- Venn diagram -->
+      <circle cx="250" cy="120" r="50" fill="#4caf5044" stroke="#4caf50" stroke-width="2"/>
+      <text x="220" y="125" font-size="12" fill="#2e7d32">A</text>
+
+      <circle cx="320" cy="120" r="50" fill="#1976d244" stroke="#1976d2" stroke-width="2"/>
+      <text x="350" y="125" font-size="12" fill="#1565c0">B</text>
+
+      <!-- Intersection label -->
+      <text x="285" y="125" text-anchor="middle" font-size="10" fill="#333">∩</text>
+
+      <!-- Example -->
+      <rect x="420" y="80" width="230" height="80" rx="5" fill="#f5f5f5" stroke="#ddd"/>
+      <text x="535" y="100" text-anchor="middle" font-weight="bold" font-size="10">Example (k=4 each):</text>
+      <text x="535" y="120" text-anchor="middle" font-size="9" fill="#333">A = {1, 5, 9, 12}</text>
+      <text x="535" y="135" text-anchor="middle" font-size="9" fill="#333">B = {5, 9, 15, 20}</text>
+      <text x="535" y="150" text-anchor="middle" font-size="9" fill="#4caf50">sim = |{5,9}| / |{1,5,9,12,15,20}| = 2/6 = 0.33</text>
+    </svg>
+  </div>
+
+  <h2>The k Parameter</h2>
+
+  <div class="discovery-box">
+    <strong>Key Discovery:</strong> For pure symbolic reasoning, even k=1 (a single 64-bit hash) achieves 100% accuracy!
+    The system primarily uses symbolic KB matching and rule derivation, not similarity-based retrieval.
+  </div>
+
+  <table class="k-table">
+    <tr>
+      <th>k Value</th>
+      <th>Pass Rate</th>
+      <th>Time (126 tests)</th>
+      <th>Memory/Vector</th>
+      <th>Ops/Bind</th>
+    </tr>
+    <tr>
+      <td>k=16</td>
+      <td>99%</td>
+      <td>989ms</td>
+      <td>128 bytes</td>
+      <td>256</td>
+    </tr>
+    <tr>
+      <td>k=8</td>
+      <td>99%</td>
+      <td>218ms</td>
+      <td>64 bytes</td>
+      <td>64</td>
+    </tr>
+    <tr class="recommended">
+      <td><strong>k=4 (default)</strong></td>
+      <td><strong>100%</strong></td>
+      <td><strong>60ms</strong></td>
+      <td><strong>32 bytes</strong></td>
+      <td><strong>16</strong></td>
+    </tr>
+    <tr>
+      <td>k=2</td>
+      <td>100%</td>
+      <td>29ms</td>
+      <td>16 bytes</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>k=1</td>
+      <td>100%</td>
+      <td>24ms</td>
+      <td>8 bytes</td>
+      <td>1</td>
+    </tr>
+  </table>
+
+  <h2>How FSP Works</h2>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 800px;">
+      <!-- Title -->
+      <text x="400" y="25" text-anchor="middle" font-weight="bold" font-size="14" fill="#4caf50">FSP Concept Encoding</text>
+
+      <!-- Step 1: Name to Seed -->
+      <rect x="50" y="50" width="150" height="60" rx="8" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+      <text x="125" y="75" text-anchor="middle" font-size="11" fill="#1565c0" font-weight="bold">Concept Name</text>
+      <text x="125" y="95" text-anchor="middle" font-family="monospace" font-size="10">"Dog"</text>
+
+      <!-- Arrow 1 -->
+      <path d="M200 80 L240 80" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+      <text x="220" y="70" text-anchor="middle" font-size="9" fill="#666">hash</text>
+
+      <!-- Step 2: Hash to Seed -->
+      <rect x="250" y="50" width="130" height="60" rx="8" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+      <text x="315" y="75" text-anchor="middle" font-size="11" fill="#e65100" font-weight="bold">DJB2 Hash</text>
+      <text x="315" y="95" text-anchor="middle" font-family="monospace" font-size="10">seed=0x7b8c3d2e</text>
+
+      <!-- Arrow 2 -->
+      <path d="M380 80 L420 80" stroke="#333" stroke-width="2" marker-end="url(#arrow2)"/>
+      <text x="400" y="70" text-anchor="middle" font-size="9" fill="#666">PRNG</text>
+
+      <!-- Step 3: Generate Exponents -->
+      <rect x="430" y="40" width="320" height="80" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+      <text x="590" y="65" text-anchor="middle" font-size="11" fill="#2e7d32" font-weight="bold">Generate k Exponents</text>
+
+      <g font-size="8">
+        <rect x="450" y="80" width="65" height="25" rx="3" fill="#4caf50"/>
+        <text x="482" y="96" text-anchor="middle" fill="white">exp₀</text>
+
+        <rect x="525" y="80" width="65" height="25" rx="3" fill="#4caf50"/>
+        <text x="557" y="96" text-anchor="middle" fill="white">exp₁</text>
+
+        <rect x="600" y="80" width="65" height="25" rx="3" fill="#4caf50"/>
+        <text x="632" y="96" text-anchor="middle" fill="white">exp₂</text>
+
+        <rect x="675" y="80" width="65" height="25" rx="3" fill="#4caf50"/>
+        <text x="707" y="96" text-anchor="middle" fill="white">exp₃</text>
+      </g>
+
+      <!-- Relation encoding -->
+      <rect x="50" y="150" width="700" height="130" rx="8" fill="#f5f5f5" stroke="#ddd"/>
+      <text x="400" y="175" text-anchor="middle" font-weight="bold" font-size="12">Encoding a Relation: loves(John, Mary)</text>
+
+      <!-- Components -->
+      <rect x="80" y="195" width="100" height="30" rx="4" fill="#9c27b0"/>
+      <text x="130" y="215" text-anchor="middle" font-size="10" fill="white">Loves</text>
+
+      <text x="195" y="215" text-anchor="middle" font-size="14" fill="#333">⊗</text>
+
+      <rect x="210" y="195" width="130" height="30" rx="4" fill="#1976d2"/>
+      <text x="275" y="215" text-anchor="middle" font-size="10" fill="white">(Pos1 ⊗ John)</text>
+
+      <text x="355" y="215" text-anchor="middle" font-size="14" fill="#333">⊗</text>
+
+      <rect x="370" y="195" width="130" height="30" rx="4" fill="#4caf50"/>
+      <text x="435" y="215" text-anchor="middle" font-size="10" fill="white">(Pos2 ⊗ Mary)</text>
+
+      <text x="515" y="215" text-anchor="middle" font-size="14" fill="#333">=</text>
+
+      <rect x="530" y="195" width="190" height="30" rx="4" fill="#e91e63"/>
+      <text x="625" y="215" text-anchor="middle" font-size="10" fill="white">Fact Vector (k exponents)</text>
+
+      <!-- Note -->
+      <text x="400" y="265" text-anchor="middle" font-size="10" fill="#666">Position vectors (Pos1, Pos2, ...) ensure argument order is preserved</text>
+
+      <defs>
+        <marker id="arrow2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h2>Pros & Cons</h2>
+
+  <div class="pros-cons">
+    <div class="pros">
+      <h3 style="color: #2e7d32; margin-top: 0;">Advantages</h3>
+      <ul>
+        <li><strong>8x smaller:</strong> 32 bytes vs 256 bytes</li>
+        <li><strong>1.5x faster:</strong> 60ms vs 91ms (126 tests)</li>
+        <li><strong>Fewer operations:</strong> O(k²) = O(16) for bind</li>
+        <li><strong>100% eval accuracy</strong></li>
+        <li><strong>Tunable k:</strong> Trade speed vs robustness</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h3 style="color: #c62828; margin-top: 0;">Limitations</h3>
+      <ul>
+        <li><strong>0% HDC retrieval:</strong> Jaccard not suited for Master Eq</li>
+        <li><strong>Less researched:</strong> Novel approach</li>
+        <li><strong>Sparsification needed:</strong> Min-Hash overhead</li>
+        <li><strong>BigInt ops:</strong> Slower than native 32-bit</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>When to Use FSP</h2>
+
+  <table>
+    <tr>
+      <th>Use Case</th>
+      <th>Recommendation</th>
+    </tr>
+    <tr>
+      <td>Pure symbolic reasoning</td>
+      <td><strong style="color: #2e7d32;">Yes</strong> - 100% accuracy, 1.5x faster</td>
+    </tr>
+    <tr>
+      <td>Memory-constrained environment</td>
+      <td><strong style="color: #2e7d32;">Yes</strong> - 8x smaller vectors</td>
+    </tr>
+    <tr>
+      <td>Maximum speed needed</td>
+      <td><strong style="color: #2e7d32;">Yes</strong> - Use k=1 or k=2</td>
+    </tr>
+    <tr>
+      <td>Similarity-based retrieval</td>
+      <td><strong style="color: #c62828;">No</strong> - 0% HDC Master Equation success</td>
+    </tr>
+  </table>
+
+  <h2>Configuration</h2>
+
+  <div class="code-block">
+<pre>// Set strategy via environment variable
+export SYS2_HDC_STRATEGY=fractal-semantic
+
+// Or programmatically
+import { initHDC } from './src/hdc/facade.mjs';
+initHDC('fractal-semantic');
+
+// Create session with k=4 (default for FSP)
+const session = new Session({ geometry: 4 });
+
+// For maximum speed, use k=1
+const fastSession = new Session({ geometry: 1 });</pre>
+  </div>
+
+  <div class="footer-nav">
+    <p>
+      <a href="dense-binary.html">← Dense-Binary Strategy</a> ·
+      <a href="../index.html">Back to Theory →</a>
+    </p>
+    <p style="margin-top: 10px;">
+      <a href="https://github.com/OutfinityResearch/AGISystem2/" target="_blank">GitHub: OutfinityResearch/AGISystem2</a>
+    </p>
+  </div>
+  </div>
+</body>
+</html>

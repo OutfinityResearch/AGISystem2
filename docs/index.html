@@ -15,7 +15,8 @@
       <a href="theory/index.html">Theory</a> ·
       <a href="syntax/index.html">Syntax</a> ·
       <a href="api/index.html">APIs</a> ·
-      <a href="specs/matrix.html">Specs</a>
+      <a href="specs/matrix.html">Specs</a> ·
+      <a href="research/index.html">Research</a>
     </small>
     <small>Neuro-symbolic reasoning with hyperdimensional computing</small>
   </div>
@@ -45,7 +46,7 @@
     </tr>
     <tr>
       <td><strong>HDC Strategies</strong></td>
-      <td>Pluggable implementations: <code>dense-binary</code> (default), with support for future strategies like sparse polynomial. Set via <code>SYS2_HDC_STRATEGY</code> env var.</td>
+      <td>Two implementations: <code>dense-binary</code> (2048-bit vectors) and <code>fractal-semantic</code> (FSP with k=4 exponents). Both achieve 100% eval accuracy. Set via <code>SYS2_HDC_STRATEGY</code> env var. See <a href="research/index.html">Research</a> for comparison.</td>
     </tr>
     <tr>
       <td><strong>Sessions</strong></td>
@@ -58,17 +59,48 @@
   </table>
 
   <h2>HDC Strategy Architecture</h2>
-  <pre><code>┌─────────────────────────────────────────────────────────┐
-│  Layer 4: Application (DSL, Session API)                │
-│  ─────────────────────────────────────────────────────  │
-│  Layer 3: Reasoning (Query, Prove, Rules)               │
-│  ─────────────────────────────────────────────────────  │
-│  Layer 2: HDC Operations Interface (bind, bundle, sim)  │  ← CONTRACT
-│  ═══════════════════════════════════════════════════════│
-│  Layer 1: HDC Implementation Strategy                   │  ← SWAPPABLE
-│           ├── dense-binary (Uint32Array, XOR, majority) │
-│           └── [future: sparse-polynomial, bigint, etc.] │
-└─────────────────────────────────────────────────────────┘</code></pre>
+  <div style="max-width: 700px; margin: 20px auto;">
+    <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;">
+      <!-- Background -->
+      <rect x="10" y="10" width="680" height="300" rx="15" fill="#f5f5f5" stroke="#ddd" stroke-width="2"/>
+
+      <!-- Layer 4: Application -->
+      <rect x="30" y="30" width="640" height="50" rx="8" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+      <text x="350" y="50" text-anchor="middle" font-weight="bold" font-size="13" fill="#1565c0">Layer 4: Application</text>
+      <text x="350" y="68" text-anchor="middle" font-size="11" fill="#333">DSL Parser · Session API · Natural Language Output</text>
+
+      <!-- Layer 3: Reasoning -->
+      <rect x="30" y="90" width="640" height="50" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+      <text x="350" y="110" text-anchor="middle" font-weight="bold" font-size="13" fill="#2e7d32">Layer 3: Reasoning Engine</text>
+      <text x="350" y="128" text-anchor="middle" font-size="11" fill="#333">Query · Prove · Transitive Chains · Rule Inference</text>
+
+      <!-- Layer 2: Contract (bold separator) -->
+      <rect x="30" y="150" width="640" height="50" rx="8" fill="#fff3e0" stroke="#ff9800" stroke-width="3"/>
+      <text x="350" y="170" text-anchor="middle" font-weight="bold" font-size="13" fill="#e65100">Layer 2: HDC Operations Interface</text>
+      <text x="350" y="188" text-anchor="middle" font-size="11" fill="#333">bind() · bundle() · similarity() · createFromName()</text>
+      <text x="670" y="175" text-anchor="end" font-size="10" fill="#ff9800" font-weight="bold">CONTRACT</text>
+
+      <!-- Separator line -->
+      <line x1="30" y1="210" x2="670" y2="210" stroke="#ff9800" stroke-width="4" stroke-dasharray="10,5"/>
+      <text x="350" y="223" text-anchor="middle" font-size="10" fill="#666">═══ SWAPPABLE IMPLEMENTATION ═══</text>
+
+      <!-- Layer 1: Strategies -->
+      <rect x="30" y="235" width="640" height="60" rx="8" fill="#fce4ec" stroke="#e91e63" stroke-width="2"/>
+      <text x="350" y="255" text-anchor="middle" font-weight="bold" font-size="13" fill="#c2185b">Layer 1: HDC Strategy Implementation</text>
+
+      <!-- Strategy boxes -->
+      <rect x="60" y="265" width="180" height="22" rx="4" fill="#1976d2" stroke="#0d47a1"/>
+      <text x="150" y="280" text-anchor="middle" font-size="10" fill="white" font-weight="bold">dense-binary (2048 bits)</text>
+
+      <rect x="260" y="265" width="180" height="22" rx="4" fill="#4caf50" stroke="#2e7d32"/>
+      <text x="350" y="280" text-anchor="middle" font-size="10" fill="white" font-weight="bold">fractal-semantic (k=4)</text>
+
+      <rect x="460" y="265" width="180" height="22" rx="4" fill="#9e9e9e" stroke="#616161"/>
+      <text x="550" y="280" text-anchor="middle" font-size="10" fill="white">future strategies...</text>
+
+      <text x="670" y="255" text-anchor="end" font-size="10" fill="#e91e63" font-weight="bold">SWAPPABLE</text>
+    </svg>
+  </div>
 
   <h2>Documentation Sections</h2>
 
@@ -101,6 +133,11 @@
     <div class="section-card">
       <h3><a href="guides/index.html">Guides</a></h3>
       <p>Conceptual guides: geometric reasoning, theory layering, <a href="guides/hdc-strategies.html">HDC strategies</a>, LLM integration.</p>
+    </div>
+
+    <div class="section-card" style="background: linear-gradient(135deg, #667eea22 0%, #764ba222 100%);">
+      <h3><a href="research/index.html">Research</a></h3>
+      <p>Experimental findings: HDC strategy stress testing, FSP vs Dense-Binary comparison, k-parameter optimization.</p>
     </div>
   </div>
 
@@ -206,7 +243,15 @@ printBenchmark(results);
   </ul>
 
   <div class="footer-nav">
-    <p>AGISystem2 provides deterministic, explainable reasoning with full proof traces. Current eval score: <strong>97%</strong> (363/376 tests passing).</p>
+    <p>AGISystem2 provides deterministic, explainable reasoning with full proof traces. Current eval score: <strong>100%</strong> (126/126 tests passing on both HDC strategies).</p>
+    <p style="margin-top: 10px;">
+      <a href="https://github.com/OutfinityResearch/AGISystem2/" target="_blank" style="color: #1976d2;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 5px;">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </svg>
+        GitHub: OutfinityResearch/AGISystem2
+      </a>
+    </p>
   </div>
   </div>
 

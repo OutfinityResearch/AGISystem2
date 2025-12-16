@@ -19,9 +19,9 @@ export const MAX_HOLES = 3;
 export const TOP_K_DEFAULT = 5;
 
 // Proof limits
-export const MAX_PROOF_DEPTH = 15;  // Support chains up to 15 steps
-export const PROOF_TIMEOUT_MS = 2000;
-export const MAX_REASONING_STEPS = 150;  // Total step limit to prevent infinite loops
+export const MAX_PROOF_DEPTH = 50;  // Support deep chains up to 50 steps
+export const PROOF_TIMEOUT_MS = 5000;  // 5 seconds timeout
+export const MAX_REASONING_STEPS = 1000;  // Total step limit to prevent infinite loops
 
 // Decoding limits
 export const MAX_NESTING_DEPTH = 3;

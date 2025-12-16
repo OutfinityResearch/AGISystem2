@@ -1,0 +1,329 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dense-Binary Strategy - AGISystem2</title>
+  <link rel="stylesheet" href="../../reference/style.css">
+  <style>
+    .diagram-container { margin: 20px 0; }
+    .metric-box {
+      display: inline-block;
+      background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      margin: 5px;
+      text-align: center;
+    }
+    .metric-box h3 { margin: 0; font-size: 28px; }
+    .metric-box p { margin: 5px 0 0 0; opacity: 0.9; font-size: 12px; }
+    .code-block {
+      background: #263238;
+      color: #aed581;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: monospace;
+      overflow-x: auto;
+    }
+    .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+    .pros { background: #e8f5e9; padding: 15px; border-radius: 8px; border-left: 4px solid #4caf50; }
+    .cons { background: #ffebee; padding: 15px; border-radius: 8px; border-left: 4px solid #f44336; }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Dense-Binary HDC Strategy</h1>
+    <small>
+      <a href="../../index.html">Home</a> ·
+      <a href="../index.html">Theory</a> ·
+      <a href="dense-binary.html"><strong>Dense-Binary</strong></a> ·
+      <a href="fractal-semantic.html">FSP</a> ·
+      <a href="../../research/index.html">Research</a>
+    </small>
+    <small>Classic Hyperdimensional Computing with binary vectors</small>
+  </div>
+
+  <div class="section-intro">
+    <p><strong>Dense-Binary</strong> is the classic HDC implementation using fixed-size binary vectors with XOR binding and majority-vote bundling. It provides fast, predictable performance for symbolic reasoning tasks.</p>
+  </div>
+
+  <h2>Key Metrics</h2>
+  <div style="text-align: center; margin: 20px 0;">
+    <div class="metric-box">
+      <h3>2048</h3>
+      <p>bits per vector</p>
+    </div>
+    <div class="metric-box">
+      <h3>256</h3>
+      <p>bytes memory</p>
+    </div>
+    <div class="metric-box">
+      <h3>100%</h3>
+      <p>eval accuracy</p>
+    </div>
+    <div class="metric-box">
+      <h3>91ms</h3>
+      <p>126 tests</p>
+    </div>
+  </div>
+
+  <h2>Vector Structure</h2>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 800px;">
+      <!-- Title -->
+      <text x="400" y="25" text-anchor="middle" font-weight="bold" font-size="14" fill="#1976d2">Dense-Binary Vector (2048 bits)</text>
+
+      <!-- Main vector representation -->
+      <rect x="50" y="40" width="700" height="50" rx="8" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+
+      <!-- Bit cells -->
+      <g font-family="monospace" font-size="11">
+        <rect x="60" y="50" width="25" height="30" fill="#bbdefb" stroke="#1976d2"/>
+        <text x="72" y="70" text-anchor="middle">1</text>
+
+        <rect x="85" y="50" width="25" height="30" fill="#e3f2fd" stroke="#1976d2"/>
+        <text x="97" y="70" text-anchor="middle">0</text>
+
+        <rect x="110" y="50" width="25" height="30" fill="#bbdefb" stroke="#1976d2"/>
+        <text x="122" y="70" text-anchor="middle">1</text>
+
+        <rect x="135" y="50" width="25" height="30" fill="#bbdefb" stroke="#1976d2"/>
+        <text x="147" y="70" text-anchor="middle">1</text>
+
+        <rect x="160" y="50" width="25" height="30" fill="#e3f2fd" stroke="#1976d2"/>
+        <text x="172" y="70" text-anchor="middle">0</text>
+
+        <text x="200" y="70" fill="#666">...</text>
+
+        <rect x="680" y="50" width="25" height="30" fill="#bbdefb" stroke="#1976d2"/>
+        <text x="692" y="70" text-anchor="middle">1</text>
+
+        <rect x="705" y="50" width="25" height="30" fill="#e3f2fd" stroke="#1976d2"/>
+        <text x="717" y="70" text-anchor="middle">0</text>
+      </g>
+
+      <!-- Labels -->
+      <text x="72" y="105" text-anchor="middle" font-size="9" fill="#666">bit 0</text>
+      <text x="705" y="105" text-anchor="middle" font-size="9" fill="#666">bit 2047</text>
+
+      <!-- Storage breakdown -->
+      <rect x="50" y="120" width="700" height="30" rx="5" fill="#f5f5f5" stroke="#ddd"/>
+      <text x="400" y="140" text-anchor="middle" font-size="11" fill="#333">64 × Uint32 words = 2048 bits = 256 bytes</text>
+
+      <!-- Memory layout -->
+      <g font-size="10">
+        <rect x="100" y="160" width="80" height="25" rx="3" fill="#1976d2"/>
+        <text x="140" y="177" text-anchor="middle" fill="white">Word 0</text>
+
+        <rect x="190" y="160" width="80" height="25" rx="3" fill="#1976d2"/>
+        <text x="230" y="177" text-anchor="middle" fill="white">Word 1</text>
+
+        <rect x="280" y="160" width="80" height="25" rx="3" fill="#1976d2"/>
+        <text x="320" y="177" text-anchor="middle" fill="white">Word 2</text>
+
+        <text x="380" y="177" fill="#666">...</text>
+
+        <rect x="420" y="160" width="80" height="25" rx="3" fill="#1976d2"/>
+        <text x="460" y="177" text-anchor="middle" fill="white">Word 63</text>
+      </g>
+    </svg>
+  </div>
+
+  <h2>Core Operations</h2>
+
+  <h3>1. BIND (XOR)</h3>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 700px;">
+      <!-- Vector A -->
+      <rect x="50" y="20" width="200" height="35" rx="5" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+      <text x="150" y="32" text-anchor="middle" font-size="10" fill="#1976d2" font-weight="bold">Vector A</text>
+      <text x="150" y="48" text-anchor="middle" font-family="monospace" font-size="11">10110010...</text>
+
+      <!-- Vector B -->
+      <rect x="50" y="65" width="200" height="35" rx="5" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+      <text x="150" y="77" text-anchor="middle" font-size="10" fill="#4caf50" font-weight="bold">Vector B</text>
+      <text x="150" y="93" text-anchor="middle" font-family="monospace" font-size="11">01100110...</text>
+
+      <!-- XOR operation -->
+      <circle cx="320" cy="60" r="30" fill="#fff3e0" stroke="#ff9800" stroke-width="3"/>
+      <text x="320" y="55" text-anchor="middle" font-weight="bold" font-size="14" fill="#e65100">XOR</text>
+      <text x="320" y="70" text-anchor="middle" font-size="10" fill="#e65100">(⊕)</text>
+
+      <!-- Arrow -->
+      <path d="M260 60 L280 60" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <path d="M360 60 L380 60" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <!-- Result -->
+      <rect x="400" y="42" width="250" height="35" rx="5" fill="#fce4ec" stroke="#e91e63" stroke-width="2"/>
+      <text x="525" y="54" text-anchor="middle" font-size="10" fill="#c2185b" font-weight="bold">Result: A ⊕ B</text>
+      <text x="525" y="70" text-anchor="middle" font-family="monospace" font-size="11">11010100...</text>
+
+      <!-- Properties -->
+      <rect x="50" y="115" width="600" height="55" rx="5" fill="#f5f5f5" stroke="#ddd"/>
+      <text x="350" y="135" text-anchor="middle" font-weight="bold" font-size="11" fill="#333">Properties</text>
+      <text x="150" y="155" text-anchor="middle" font-size="10" fill="#666">Commutative: A⊕B = B⊕A</text>
+      <text x="350" y="155" text-anchor="middle" font-size="10" fill="#666">Self-inverse: A⊕A = 0</text>
+      <text x="550" y="155" text-anchor="middle" font-size="10" fill="#666">Reversible: (A⊕B)⊕B = A</text>
+
+      <!-- Arrow marker definition -->
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <div class="code-block">
+<pre>// Bind implementation (O(64) for 2048 bits)
+function bind(a, b) {
+  const result = new Uint32Array(64);
+  for (let i = 0; i < 64; i++) {
+    result[i] = a.words[i] ^ b.words[i];  // XOR each 32-bit word
+  }
+  return { words: result, geometry: 2048 };
+}</pre>
+  </div>
+
+  <h3>2. BUNDLE (Majority Vote)</h3>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 700px;">
+      <!-- Input vectors -->
+      <rect x="50" y="20" width="150" height="30" rx="4" fill="#e3f2fd" stroke="#1976d2"/>
+      <text x="125" y="40" text-anchor="middle" font-size="10">A: 1 0 1 1 0 0 1 0</text>
+
+      <rect x="50" y="55" width="150" height="30" rx="4" fill="#e8f5e9" stroke="#4caf50"/>
+      <text x="125" y="75" text-anchor="middle" font-size="10">B: 0 1 1 0 0 1 1 0</text>
+
+      <rect x="50" y="90" width="150" height="30" rx="4" fill="#fff3e0" stroke="#ff9800"/>
+      <text x="125" y="110" text-anchor="middle" font-size="10">C: 1 1 1 0 1 0 0 0</text>
+
+      <!-- Majority operation -->
+      <circle cx="280" cy="75" r="35" fill="#f3e5f5" stroke="#9c27b0" stroke-width="3"/>
+      <text x="280" y="70" text-anchor="middle" font-weight="bold" font-size="12" fill="#7b1fa2">MAJ</text>
+      <text x="280" y="85" text-anchor="middle" font-size="9" fill="#7b1fa2">vote</text>
+
+      <!-- Result -->
+      <rect x="350" y="60" width="200" height="30" rx="4" fill="#fce4ec" stroke="#e91e63" stroke-width="2"/>
+      <text x="450" y="80" text-anchor="middle" font-size="10" font-weight="bold">Result: 1 1 1 0 0 0 1 0</text>
+
+      <!-- Bit-by-bit explanation -->
+      <rect x="50" y="140" width="500" height="70" rx="5" fill="#f5f5f5" stroke="#ddd"/>
+      <text x="300" y="160" text-anchor="middle" font-weight="bold" font-size="11">Bit-by-bit majority vote:</text>
+      <text x="300" y="180" text-anchor="middle" font-size="10" fill="#666">Bit 0: A=1, B=0, C=1 → 2 ones → majority = 1</text>
+      <text x="300" y="195" text-anchor="middle" font-size="10" fill="#666">Bit 4: A=0, B=0, C=1 → 1 one → majority = 0</text>
+    </svg>
+  </div>
+
+  <h3>3. SIMILARITY (Hamming)</h3>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 700 150" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 700px;">
+      <!-- Formula -->
+      <rect x="50" y="20" width="600" height="50" rx="8" fill="#e0f7fa" stroke="#00bcd4" stroke-width="2"/>
+      <text x="350" y="50" text-anchor="middle" font-size="14" fill="#006064">
+        similarity(A, B) = 1 - (popcount(A ⊕ B) / 2048)
+      </text>
+
+      <!-- Interpretation scale -->
+      <rect x="50" y="85" width="600" height="50" rx="5" fill="#f5f5f5"/>
+
+      <!-- Scale bar -->
+      <rect x="100" y="100" width="500" height="20" rx="3" fill="url(#simGradient)"/>
+
+      <!-- Labels -->
+      <text x="100" y="135" text-anchor="middle" font-size="10" fill="#666">0.0</text>
+      <text x="225" y="135" text-anchor="middle" font-size="10" fill="#c62828">Inverse</text>
+      <text x="350" y="135" text-anchor="middle" font-size="10" fill="#666">0.5 (random)</text>
+      <text x="475" y="135" text-anchor="middle" font-size="10" fill="#2e7d32">Related</text>
+      <text x="600" y="135" text-anchor="middle" font-size="10" fill="#666">1.0</text>
+
+      <defs>
+        <linearGradient id="simGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#f44336"/>
+          <stop offset="50%" style="stop-color:#ffeb3b"/>
+          <stop offset="100%" style="stop-color:#4caf50"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <h2>Pros & Cons</h2>
+
+  <div class="pros-cons">
+    <div class="pros">
+      <h3 style="color: #2e7d32; margin-top: 0;">Advantages</h3>
+      <ul>
+        <li><strong>Fast operations:</strong> O(64) XOR ops for bind</li>
+        <li><strong>Predictable memory:</strong> Fixed 256 bytes/vector</li>
+        <li><strong>Simple implementation:</strong> Standard bitwise ops</li>
+        <li><strong>Hardware-friendly:</strong> SIMD optimizable</li>
+        <li><strong>35% HDC retrieval success</strong></li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h3 style="color: #c62828; margin-top: 0;">Limitations</h3>
+      <ul>
+        <li><strong>Fixed dimension:</strong> Cannot adapt to problem size</li>
+        <li><strong>Bundle capacity:</strong> ~200 facts max reliable</li>
+        <li><strong>Higher memory:</strong> 8x more than FSP (k=4)</li>
+        <li><strong>Slower than FSP:</strong> 1.5x slower overall</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>When to Use Dense-Binary</h2>
+
+  <table>
+    <tr>
+      <th>Use Case</th>
+      <th>Recommendation</th>
+    </tr>
+    <tr>
+      <td>Similarity-based retrieval needed</td>
+      <td><strong style="color: #2e7d32;">Yes</strong> - 35% HDC success vs 0% for FSP</td>
+    </tr>
+    <tr>
+      <td>Research/comparison baseline</td>
+      <td><strong style="color: #2e7d32;">Yes</strong> - Standard HDC semantics</td>
+    </tr>
+    <tr>
+      <td>Maximum speed required</td>
+      <td><strong style="color: #c62828;">No</strong> - FSP is 1.5x faster</td>
+    </tr>
+    <tr>
+      <td>Memory-constrained environment</td>
+      <td><strong style="color: #c62828;">No</strong> - 256 bytes vs 32 bytes (FSP)</td>
+    </tr>
+  </table>
+
+  <h2>Configuration</h2>
+
+  <div class="code-block">
+<pre>// Set strategy via environment variable
+export SYS2_HDC_STRATEGY=dense-binary
+
+// Or programmatically
+import { initHDC } from './src/hdc/facade.mjs';
+initHDC('dense-binary');
+
+// Create session with custom geometry
+const session = new Session({ geometry: 2048 });</pre>
+  </div>
+
+  <div class="footer-nav">
+    <p>
+      <a href="../index.html">← Back to Theory</a> ·
+      <a href="fractal-semantic.html">Next: FSP Strategy →</a>
+    </p>
+    <p style="margin-top: 10px;">
+      <a href="https://github.com/OutfinityResearch/AGISystem2/" target="_blank">GitHub: OutfinityResearch/AGISystem2</a>
+    </p>
+  </div>
+  </div>
+</body>
+</html>

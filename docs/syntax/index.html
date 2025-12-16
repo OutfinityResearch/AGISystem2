@@ -10,13 +10,13 @@
   <div class="nav-header">
     <h1>Sys2DSL Syntax Reference</h1>
     <small>
-      <a href="../index.html">Home</a> &middot;
-      <a href="../architecture/index.html">Architecture</a> &middot;
-      <a href="../theory/index.html">Theory</a> &middot;
-      <a href="index.html">Syntax</a> &middot;
-      <a href="../api/index.html">APIs</a> &middot;
-      <a href="../wiki/index.html">Wiki</a> &middot;
-      <a href="../specs/matrix.html">Specs</a>
+      <a href="../index.html">Home</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../theory/index.html">Theory</a> ·
+      <a href="index.html"><strong>Syntax</strong></a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../specs/matrix.html">Specs</a> ·
+      <a href="../research/index.html">Research</a>
     </small>
     <small>Domain-Specific Language for knowledge representation</small>
   </div>
@@ -34,27 +34,50 @@
 
   <h2>Basic Statement Syntax</h2>
 
-  <pre><code>@destination operator arg1 arg2 arg3 ...</code></pre>
+  <p>Three statement forms with different storage behavior:</p>
 
-  <p>Every statement has:</p>
-  <ul>
-    <li><strong>@destination</strong> - Where to store the result (variable name)</li>
-    <li><strong>operator</strong> - The relation or action (verb)</li>
-    <li><strong>arguments</strong> - The participants (subject, object, etc.)</li>
-  </ul>
+  <table>
+    <tr>
+      <th>Form</th>
+      <th>In Scope</th>
+      <th>In KB</th>
+      <th>Use Case</th>
+    </tr>
+    <tr>
+      <td><code>operator arg1 arg2</code></td>
+      <td>No</td>
+      <td><strong>Yes</strong></td>
+      <td>Simple facts (anonymous, auto-persisted)</td>
+    </tr>
+    <tr>
+      <td><code>@var operator arg1 arg2</code></td>
+      <td><strong>Yes</strong></td>
+      <td>No</td>
+      <td>Temporary variable (for references)</td>
+    </tr>
+    <tr>
+      <td><code>@var:name operator arg1 arg2</code></td>
+      <td><strong>Yes</strong></td>
+      <td><strong>Yes</strong></td>
+      <td>Named persistent fact</td>
+    </tr>
+  </table>
 
   <h3>Examples</h3>
 
-  <pre><code># Simple fact
+  <pre><code># Anonymous fact (stored in KB only)
+isA Dog Animal
+loves John Mary
+
+# Scope-only variable (can reference later)
 @fact1 loves John Mary
+@rule1 Implies $fact1 $conclusion
 
-# With numeric argument
-@sale sell Alice Bob Car 1000
+# Named persistent fact (both scope and KB)
+@Person:Person __Category
+@myRule:inheritance Implies (isA ?x Dog) (isA ?x Animal)
 
-# Query with hole (unknown value)
-@answer buy ?who Book ?seller ?price
-
-# Discard result (underscore)
+# Discard result (execute but don't store)
 @_ Load $Commerce</code></pre>
 
   <h2>Token Types</h2>
@@ -152,30 +175,41 @@
     </tr>
   </table>
 
+  <h2>Comments</h2>
+
+  <pre><code># Line comment (shell style)
+// Line comment (C++ style)
+
+/* Block comment
+   can span multiple lines */</code></pre>
+
   <h2>Theory Definition</h2>
 
-  <p>Theories are named collections of atoms, macros, and rules:</p>
+  <p>Theories are named collections of atoms, macros, and rules. Four syntax variants supported:</p>
+
+  <h3>Primary Syntax (Recommended)</h3>
 
   <pre><code>@TheoryName theory GEOMETRY INIT_MODE
-
-    # Atom definitions
-    @AtomName:AtomName __Atom
-
-    # Exported atoms
-    @Person:Person __Category
-    @Place:Place __Category
-
-    # Macros
-    @MyMacro:myMacro macro param1 param2
-        # macro body
-        @result __Bundle $param1 $param2
-        return $result
-    end
-
-    # Rules
-    @rule1 Implies (isA ?x Human) (isA ?x Mortal)
-
+    # statements
 end</code></pre>
+
+  <h3>Bracket Syntax</h3>
+
+  <pre><code>theory Name {
+    # statements
+}</code></pre>
+
+  <h3>Begin/End Syntax</h3>
+
+  <pre><code>theory Name begin
+    # statements
+end</code></pre>
+
+  <h3>Legacy Bracket Syntax</h3>
+
+  <pre><code>theory Name [
+    # statements
+]</code></pre>
 
   <h3>Theory Parameters</h3>
 
@@ -187,8 +221,8 @@ end</code></pre>
     </tr>
     <tr>
       <td>GEOMETRY</td>
-      <td>1024, 8192, 32768, 65536</td>
-      <td>Vector dimension in bits</td>
+      <td>2048, 8192, 32768, etc.</td>
+      <td>Vector dimension (Dense-Binary) or k value (FSP)</td>
     </tr>
     <tr>
       <td>INIT_MODE</td>
@@ -196,6 +230,30 @@ end</code></pre>
       <td>How atoms are initialized</td>
     </tr>
   </table>
+
+  <h3>Complete Theory Example</h3>
+
+  <pre><code>@Animals theory 32768 deterministic
+
+    # Categories
+    @Animal:Animal __Category
+    @Dog:Dog __Category
+    @Cat:Cat __Category
+
+    # Taxonomy
+    isA Dog Animal
+    isA Cat Animal
+
+    # Properties
+    @bark:bark __Relation
+    @meow:meow __Relation
+
+    # Rules (build complex rules step by step)
+    @isDog isA ?x Dog
+    @canBark canDo ?x bark
+    @barkRule Implies $isDog $canBark
+
+end</code></pre>
 
   <h2>Macro Definition</h2>
 
@@ -452,16 +510,54 @@ end
     </tr>
   </table>
 
+  <h2>Import Statements</h2>
+
+  <p>Import theories to load their definitions:</p>
+
+  <pre><code>import Core       # Load core theory
+import Animals    # Load animals theory</code></pre>
+
+  <h2>Rule Declarations</h2>
+
+  <p>Define named rules with explicit syntax:</p>
+
+  <pre><code>rule MortalRule: (isA ?x Human) => (isA ?x Mortal)</code></pre>
+
+  <h2>List Syntax</h2>
+
+  <p>Lists use brackets with comma-separated items:</p>
+
+  <pre><code>@items __Bundle [Cat, Dog, Bird]
+@numbers __List [1, 2, 3, 4, 5]</code></pre>
+
+  <h2>Building Complex Rules</h2>
+
+  <p><strong>Note:</strong> Parenthesized compound expressions are NOT directly supported in the executor. Complex rules must be built by defining parts as separate statements, then referencing them:</p>
+
+  <pre><code># WRONG (parentheses parsed but not executed):
+# @rule Implies (And $cond1 $cond2) $conclusion
+
+# CORRECT (define parts separately):
+@cond1 hasState Door Open
+@cond2 isA Door Entrance
+@combined And $cond1 $cond2
+@conclusion canEnter Person Door
+@rule Implies $combined $conclusion</code></pre>
+
   <h2>Related Documentation</h2>
 
   <ul>
-    <li><a href="../specs/DS/DS02-DSL-Syntax.md">DS02 - Complete DSL Specification</a></li>
+    <li><a href="../specsLoader.html?spec=DS02-DSL-Syntax.md">DS02 - Complete DSL Specification</a></li>
     <li><a href="../api/index.html">API Reference</a> - Using DSL programmatically</li>
-    <li><a href="../specs/DS/DS07-Core-Theory.md">DS07 - Core Theory Reference</a></li>
+    <li><a href="../specsLoader.html?spec=DS07-Core-Theory.md">DS07 - Core Theory Reference</a></li>
+    <li><a href="../theory/index.html">HDC Theory</a> - How vectors encode semantics</li>
   </ul>
 
   <div class="footer-nav">
     <p>Sys2DSL provides a minimal, uniform syntax for representing knowledge as vector operations.</p>
+    <p style="margin-top: 10px;">
+      <a href="https://github.com/OutfinityResearch/AGISystem2/" target="_blank">GitHub: OutfinityResearch/AGISystem2</a>
+    </p>
   </div>
   </div>
 </body>

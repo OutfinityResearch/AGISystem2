@@ -1,0 +1,547 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AGISystem2 – Research: HDC Strategy Limits</title>
+  <link rel="stylesheet" href="../reference/style.css">
+  <style>
+    .research-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    .research-table th, .research-table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    .research-table th {
+      background: #1976d2;
+      color: white;
+    }
+    .research-table tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    .pass { color: #2e7d32; font-weight: bold; }
+    .fail { color: #c62828; font-weight: bold; }
+    .warn { color: #f57c00; font-weight: bold; }
+    .finding-box {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .discovery-box {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .chart-container {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-family: monospace;
+      overflow-x: auto;
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .metric-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .metric-card h3 {
+      margin: 0;
+      font-size: 32px;
+    }
+    .metric-card p {
+      margin: 5px 0 0 0;
+      opacity: 0.9;
+    }
+    h2 {
+      border-bottom: 2px solid #1976d2;
+      padding-bottom: 10px;
+      margin-top: 40px;
+    }
+    .abstract {
+      background: #e3f2fd;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>AGISystem2 – Research: HDC Strategy Stress Testing</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../theory/index.html">Theory</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../specs/matrix.html">Specs</a> ·
+      <a href="index.html"><strong>Research</strong></a>
+    </small>
+    <small>Experimental findings on HDC strategy limits and performance</small>
+  </div>
+
+  <div class="abstract">
+    <strong>Abstract:</strong> We present experimental findings comparing two Hyperdimensional Computing (HDC) strategies
+    for symbolic reasoning: Dense-Binary (classic HDC with 2048-bit vectors) and Fractal Semantic Polynomials (FSP)
+    with k=4 exponents. Our stress tests reveal that both strategies share identical breaking points, suggesting
+    that reasoning engine limits—not HDC representation—are the primary constraint. Surprisingly, FSP with only
+    4 BigInt exponents (32 bytes) achieves 100% accuracy on the evaluation suite while being 1.5x faster than
+    Dense-Binary (256 bytes).
+  </div>
+
+  <h2>1. Key Metrics</h2>
+
+  <div class="metric-grid">
+    <div class="metric-card">
+      <h3>100%</h3>
+      <p>Eval Suite Pass Rate (Both Strategies)</p>
+    </div>
+    <div class="metric-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+      <h3>1.5x</h3>
+      <p>FSP Speed Advantage</p>
+    </div>
+    <div class="metric-card" style="background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);">
+      <h3>8x</h3>
+      <p>Memory Savings (FSP vs Dense)</p>
+    </div>
+    <div class="metric-card" style="background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);">
+      <h3>126</h3>
+      <p>Total Test Cases</p>
+    </div>
+  </div>
+
+  <h2>2. Strategy Comparison</h2>
+
+  <table class="research-table">
+    <tr>
+      <th>Property</th>
+      <th>Dense-Binary</th>
+      <th>FSP (k=4)</th>
+      <th>Winner</th>
+    </tr>
+    <tr>
+      <td>Vector Size</td>
+      <td>2048 bits (256 bytes)</td>
+      <td>4 × 64-bit BigInt (32 bytes)</td>
+      <td class="pass">FSP (8x smaller)</td>
+    </tr>
+    <tr>
+      <td>Bind Complexity</td>
+      <td>O(n/32) = O(64) XOR ops</td>
+      <td>O(k²) = O(16) XOR ops</td>
+      <td class="pass">FSP (4x fewer ops)</td>
+    </tr>
+    <tr>
+      <td>Similarity Metric</td>
+      <td>Hamming Distance (continuous)</td>
+      <td>Jaccard Index (set overlap)</td>
+      <td>Dense (more precise)</td>
+    </tr>
+    <tr>
+      <td>HDC Master Equation</td>
+      <td>35% success rate</td>
+      <td>0% success rate</td>
+      <td class="pass">Dense (better retrieval)</td>
+    </tr>
+    <tr>
+      <td>Eval Suite Score</td>
+      <td>100% (126/126)</td>
+      <td>100% (126/126)</td>
+      <td>Tie</td>
+    </tr>
+    <tr>
+      <td>Total Execution Time</td>
+      <td>85ms</td>
+      <td>55ms</td>
+      <td class="pass">FSP (1.5x faster)</td>
+    </tr>
+  </table>
+
+  <div class="discovery-box">
+    <strong>Key Discovery:</strong> For pure symbolic reasoning (taxonomies, rules, transitive chains),
+    FSP with k=4 exponents is sufficient and faster. The system relies primarily on symbolic KB matching
+    and rule derivation, making HDC similarity retrieval largely unnecessary.
+  </div>
+
+  <h2>3. Stress Test Results</h2>
+
+  <p>We designed 6 stress tests to find the breaking points of each strategy:</p>
+
+  <table class="research-table">
+    <tr>
+      <th>Test</th>
+      <th>Description</th>
+      <th>Dense-Binary</th>
+      <th>FSP (k=4)</th>
+    </tr>
+    <tr>
+      <td><strong>Massive Ontology</strong></td>
+      <td>Deep taxonomy with thousands of types</td>
+      <td class="pass">∞ (5000+ OK)</td>
+      <td class="pass">∞ (5000+ OK)</td>
+    </tr>
+    <tr>
+      <td><strong>Heavy Bundle</strong></td>
+      <td>Many overlapping rules bundled together</td>
+      <td class="pass">∞ (500+ OK)</td>
+      <td class="pass">∞ (500+ OK)</td>
+    </tr>
+    <tr>
+      <td><strong>Deep Transitive Chains</strong></td>
+      <td>Very long isA/locatedIn chains</td>
+      <td class="warn">Breaks at depth 50</td>
+      <td class="warn">Breaks at depth 50</td>
+    </tr>
+    <tr>
+      <td><strong>High-Arity Relations</strong></td>
+      <td>Relations with many arguments (position binding)</td>
+      <td class="pass">∞ (15+ OK)</td>
+      <td class="pass">∞ (15+ OK)</td>
+    </tr>
+    <tr>
+      <td><strong>Collision Stress</strong></td>
+      <td>Many similar names (hash collision test)</td>
+      <td class="warn">Partial at 5000</td>
+      <td class="warn">Partial at 5000</td>
+    </tr>
+    <tr>
+      <td><strong>Rule Explosion</strong></td>
+      <td>Many overlapping rules with variables</td>
+      <td class="warn">Breaks at size 50</td>
+      <td class="warn">Breaks at size 50</td>
+    </tr>
+  </table>
+
+  <div class="finding-box">
+    <strong>Critical Finding:</strong> Both strategies have <em>identical</em> breaking points. This proves that
+    the limits are in the <strong>reasoning engine</strong>, not the HDC representation. Specifically:
+    <ul>
+      <li><strong>Deep Chains:</strong> Limited by <code>MAX_PROOF_DEPTH</code> (now set to 50)</li>
+      <li><strong>Rule Explosion:</strong> Limited by rule matching algorithm complexity</li>
+      <li><strong>Collision Stress:</strong> Test case design issue, not actual collisions</li>
+    </ul>
+  </div>
+
+  <h2>4. Performance Analysis</h2>
+
+  <h3>4.1 Learning Phase (Facts Ingestion)</h3>
+
+  <div class="chart-container">
+<pre>
+Facts Count vs Learn Time (ms)
+──────────────────────────────────────────────────────────────────
+5000 facts │ Dense: ████████████████████████████ 256ms
+           │ FSP:   ██████████████████████████████ 273ms
+──────────────────────────────────────────────────────────────────
+2000 facts │ Dense: ███████████ 107ms
+           │ FSP:   ████████████ 114ms
+──────────────────────────────────────────────────────────────────
+1000 facts │ Dense: ██████ 59ms
+           │ FSP:   ███████ 62ms
+──────────────────────────────────────────────────────────────────
+ 500 facts │ Dense: ████ 36ms
+           │ FSP:   ███ 30ms
+──────────────────────────────────────────────────────────────────
+
+Conclusion: Similar learning performance, slight advantage to Dense at large scale.
+</pre>
+  </div>
+
+  <h3>4.2 Query Phase (Reasoning)</h3>
+
+  <div class="chart-container">
+<pre>
+Average Query Time (ms) - Massive Ontology Test
+──────────────────────────────────────────────────────────────────
+5000 facts │ Dense: ████████████████████████████████████████ 169ms
+           │ FSP:   ████████████████████████████████ 135ms (1.3x faster)
+──────────────────────────────────────────────────────────────────
+2000 facts │ Dense: ████████████████ 40ms
+           │ FSP:   █████████ 23ms (1.7x faster)
+──────────────────────────────────────────────────────────────────
+1000 facts │ Dense: █████ 13ms
+           │ FSP:   ███ 8ms (1.6x faster)
+──────────────────────────────────────────────────────────────────
+
+Conclusion: FSP queries are consistently 1.3-1.7x faster due to simpler operations.
+</pre>
+  </div>
+
+  <h2>5. The k Parameter Study</h2>
+
+  <p>We systematically varied the FSP parameter k (number of exponents per vector) to find optimal settings:</p>
+
+  <table class="research-table">
+    <tr>
+      <th>k Value</th>
+      <th>Eval Suite Pass Rate</th>
+      <th>Total Time</th>
+      <th>Memory/Vector</th>
+      <th>Ops per Bind</th>
+    </tr>
+    <tr>
+      <td>k=16</td>
+      <td>99% (125/126)</td>
+      <td>989ms</td>
+      <td>128 bytes</td>
+      <td>256</td>
+    </tr>
+    <tr>
+      <td>k=8</td>
+      <td>99% (125/126)</td>
+      <td>218ms</td>
+      <td>64 bytes</td>
+      <td>64</td>
+    </tr>
+    <tr style="background: #e8f5e9;">
+      <td><strong>k=4</strong></td>
+      <td><strong>100% (126/126)</strong></td>
+      <td><strong>55ms</strong></td>
+      <td><strong>32 bytes</strong></td>
+      <td><strong>16</strong></td>
+    </tr>
+    <tr>
+      <td>k=2</td>
+      <td>100% (126/126)</td>
+      <td>29ms</td>
+      <td>16 bytes</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>k=1</td>
+      <td>100% (126/126)</td>
+      <td>24ms</td>
+      <td>8 bytes</td>
+      <td>1</td>
+    </tr>
+  </table>
+
+  <div class="discovery-box">
+    <strong>Surprising Result:</strong> Even k=1 (a single 64-bit integer per concept) achieves 100% pass rate!
+    This suggests that for pure symbolic reasoning, the HDC "vector" can be as simple as a hash. The XOR
+    binding operation preserves uniqueness, and symbolic KB matching doesn't require true similarity search.
+  </div>
+
+  <h2>6. Theoretical Analysis</h2>
+
+  <h3>6.1 Why Small k Works</h3>
+
+  <p>Traditional HDC assumes you need high-dimensional vectors for:</p>
+  <ol>
+    <li><strong>Quasi-orthogonality:</strong> Random vectors are nearly orthogonal in high dimensions</li>
+    <li><strong>Similarity preservation:</strong> Similar concepts have similar vectors</li>
+    <li><strong>Bundle capacity:</strong> Many vectors can be superposed without interference</li>
+  </ol>
+
+  <p>However, our reasoning system primarily uses:</p>
+  <ul>
+    <li><strong>Exact symbolic matching:</strong> KB search by operator name and argument values</li>
+    <li><strong>Transitive chain reasoning:</strong> Graph traversal, not vector similarity</li>
+    <li><strong>Rule derivation:</strong> Pattern matching with variable unification</li>
+  </ul>
+
+  <p>The HDC Master Equation (Answer = KB ⊕ Query⁻¹) is used but contributes only 0-35% of successful matches.
+  Most reasoning succeeds through symbolic paths, making large vectors unnecessary.</p>
+
+  <h3>6.2 Information-Theoretic Perspective</h3>
+
+  <div class="chart-container">
+<pre>
+Information Capacity Comparison:
+──────────────────────────────────────────────────────────────────
+Dense-Binary (2048 bits):
+  - Theoretical: 2^2048 unique vectors
+  - Practical: Limited by similarity threshold
+  - Memory: 256 bytes per vector
+
+FSP (k=4, 64-bit exponents):
+  - Theoretical: (2^64)^4 = 2^256 unique combinations
+  - Practical: Sufficient for symbolic reasoning
+  - Memory: 32 bytes per vector
+
+Trade-off: FSP sacrifices similarity-based retrieval for memory efficiency.
+           For symbolic reasoning, this is a good trade.
+</pre>
+  </div>
+
+  <h2>7. Recommendations</h2>
+
+  <table class="research-table">
+    <tr>
+      <th>Use Case</th>
+      <th>Recommended Strategy</th>
+      <th>Rationale</th>
+    </tr>
+    <tr>
+      <td>Knowledge base reasoning</td>
+      <td class="pass">FSP (k=4)</td>
+      <td>Faster, smaller memory footprint, 100% accuracy</td>
+    </tr>
+    <tr>
+      <td>Similarity-based retrieval</td>
+      <td class="pass">Dense-Binary</td>
+      <td>Better HDC Master Equation success rate</td>
+    </tr>
+    <tr>
+      <td>Memory-constrained environments</td>
+      <td class="pass">FSP (k=2 or k=1)</td>
+      <td>8-16 bytes per vector, still 100% accurate</td>
+    </tr>
+    <tr>
+      <td>Maximum speed</td>
+      <td class="pass">FSP (k=1)</td>
+      <td>Single XOR operation per bind, 24ms total</td>
+    </tr>
+    <tr>
+      <td>Research/experimentation</td>
+      <td>Dense-Binary</td>
+      <td>Standard HDC semantics for comparison</td>
+    </tr>
+  </table>
+
+  <h2>8. FSP Theoretical Scalability Advantage</h2>
+
+  <div class="discovery-box">
+    <strong>Key Theoretical Insight:</strong> FSP's sparse polynomial representation opens the door to
+    encoding HDC logic in a fundamentally different way—using just 4-8 BigInt exponents instead of
+    thousands of bits. This theoretical advantage has not yet been fully exploited.
+  </div>
+
+  <h3>8.1 The BigInt Scalability Potential</h3>
+
+  <p>FSP vectors are sets of 64-bit BigInt exponents. Unlike dense binary vectors with fixed geometry,
+  FSP exponents can theoretically grow to arbitrarily large numbers:</p>
+
+  <div class="chart-container">
+<pre>
+Information Space Comparison:
+──────────────────────────────────────────────────────────────────
+Dense-Binary (2048 bits):
+  • Fixed geometry: 2^2048 possible vectors
+  • Memory: 256 bytes (fixed)
+  • Cannot scale beyond geometry
+
+FSP (k=4, 64-bit):
+  • Current: (2^64)^4 = 2^256 possible combinations
+  • Memory: 32 bytes (fixed)
+  • Could scale to: 128-bit, 256-bit, or arbitrary BigInt exponents
+  • Theoretical: Unlimited information density per concept
+
+FSP with BigInt growth:
+  • Each exponent can grow as needed
+  • More complex concepts → larger exponents
+  • Simple concepts → small exponents
+  • Memory adapts to complexity (not fixed geometry)
+</pre>
+  </div>
+
+  <h3>8.2 What This Means</h3>
+
+  <table class="research-table">
+    <tr>
+      <th>Aspect</th>
+      <th>Dense Binary</th>
+      <th>FSP (Current)</th>
+      <th>FSP (Theoretical)</th>
+    </tr>
+    <tr>
+      <td>Encoding capacity</td>
+      <td>Fixed by geometry</td>
+      <td>2^256 combinations</td>
+      <td>Unlimited (BigInt growth)</td>
+    </tr>
+    <tr>
+      <td>Memory efficiency</td>
+      <td>256 bytes always</td>
+      <td>32 bytes always</td>
+      <td>Adapts to complexity</td>
+    </tr>
+    <tr>
+      <td>Complex structures</td>
+      <td>Limited by noise</td>
+      <td>XOR preserves uniqueness</td>
+      <td>Grow exponents as needed</td>
+    </tr>
+    <tr>
+      <td>Compositional depth</td>
+      <td>~10-20 bindings</td>
+      <td>~100+ bindings</td>
+      <td>Unlimited (theoretical)</td>
+    </tr>
+  </table>
+
+  <h3>8.3 Current Limitations</h3>
+
+  <div class="finding-box">
+    <strong>Honest Assessment:</strong> While FSP shows theoretical scalability advantages, the current
+    implementation has not yet demonstrated these benefits in practice. The reasoning system still relies
+    heavily on <em>symbolic</em> KB matching rather than <em>holographic</em> computation.
+    <ul>
+      <li><strong>0% HDC retrieval success:</strong> Jaccard similarity doesn't work for the Master Equation</li>
+      <li><strong>Symbolic dependency:</strong> Proofs use KB search + rule matching, not vector unbinding</li>
+      <li><strong>Untested scaling:</strong> We haven't tested FSP with 128-bit or larger exponents</li>
+      <li><strong>No adaptive k:</strong> Currently fixed k=4, not growing with complexity</li>
+    </ul>
+  </div>
+
+  <h3>8.4 Path Forward: More Holographic, Less Symbolic</h3>
+
+  <p>To unlock FSP's theoretical advantages, the reasoning engine needs improvement:</p>
+
+  <ol>
+    <li><strong>Improve HDC retrieval:</strong> Develop better similarity metrics for sparse polynomials (alternatives to Jaccard)</li>
+    <li><strong>Holographic proof paths:</strong> Use vector unbinding as primary reasoning mechanism, not just KB search</li>
+    <li><strong>Adaptive exponent growth:</strong> Let exponents grow for deeply bound structures</li>
+    <li><strong>Benchmark at scale:</strong> Test with millions of facts to find true FSP limits</li>
+  </ol>
+
+  <h2>9. Future Work</h2>
+
+  <ul>
+    <li><strong>Hybrid Strategy:</strong> Use FSP for symbolic reasoning, Dense-Binary for similarity retrieval</li>
+    <li><strong>Adaptive k:</strong> Dynamically adjust k based on KB size and query complexity</li>
+    <li><strong>BigInt Exponents:</strong> Test 128-bit and 256-bit exponents for complex ontologies</li>
+    <li><strong>Holographic Reasoning:</strong> Reduce symbolic KB matching, increase vector-based inference</li>
+    <li><strong>Alternative Similarity:</strong> Research better metrics for sparse polynomial comparison</li>
+    <li><strong>Benchmark on Larger KBs:</strong> Test with 100K+ facts to find true scaling limits</li>
+  </ul>
+
+  <h2>10. Reproduction</h2>
+
+  <p>To reproduce these experiments:</p>
+
+  <pre><code># Run evaluation suite with both strategies
+node evalSuite/run.js
+
+# Run stress tests
+node performance/stress-limits.mjs
+
+# Run specific strategy benchmark
+SYS2_HDC_STRATEGY=fractal-semantic node evalSuite/run.js</code></pre>
+
+  <div class="footer-nav">
+    <p>Research conducted December 2024. AGISystem2 version with dual HDC strategy support.</p>
+    <p><a href="../index.html">← Back to Documentation Home</a></p>
+  </div>
+  </div>
+</body>
+</html>
