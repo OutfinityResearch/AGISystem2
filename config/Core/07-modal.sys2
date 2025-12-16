@@ -1,0 +1,87 @@
+# Core Theory - Modal Primitives
+# Alethic, deontic, and epistemic modality
+# Auto-loaded by runtime
+
+# ===== Alethic (truth) =====
+
+@Possible:Possible __Property
+@Necessary:Necessary __Property
+@Impossible:Impossible __Property
+
+# ===== Deontic (obligation) =====
+
+@Permitted:Permitted __Property
+@Forbidden:Forbidden __Property
+@Obligatory:Obligatory __Property
+
+# ===== Epistemic (knowledge) =====
+
+@Known:Known __State
+@Believed:Believed __State
+@Unknown:Unknown __State
+
+# ===== Modal Macros =====
+
+# Possibility
+@PossibleMacro:possible macro proposition
+    @result __Role Possible $proposition
+    return $result
+end
+
+# Necessity
+@NecessaryMacro:necessary macro proposition
+    @result __Role Necessary $proposition
+    return $result
+end
+
+# Impossibility
+@ImpossibleMacro:impossible macro proposition
+    @result __Role Impossible $proposition
+    return $result
+end
+
+# ===== Epistemic Macros =====
+
+# Knowledge: agent knows proposition
+# Types: agent:Person, proposition:Abstract
+@KnowsMacro:knows macro agent proposition
+    @knower __Role Experiencer $agent
+    @content __Role Content $proposition
+    @state __Role Known (__Bundle $knower $content)
+    return $state
+end
+
+# Belief: agent believes proposition
+@BelievesMacro:believes macro agent proposition
+    @believer __Role Experiencer $agent
+    @content __Role Content $proposition
+    @state __Role Believed (__Bundle $believer $content)
+    return $state
+end
+
+# ===== Deontic Macros =====
+
+# Obligation: agent must do action
+# Types: agent:Person, action:Action|Event
+@MustMacro:must macro agent action
+    @obliged __Role Agent $agent
+    @act __Role Action $action
+    @result __Role Obligatory (__Bundle $obliged $act)
+    return $result
+end
+
+# Permission: agent may do action
+@MayMacro:may macro agent action
+    @permitted __Role Agent $agent
+    @act __Role Action $action
+    @result __Role Permitted (__Bundle $permitted $act)
+    return $result
+end
+
+# Prohibition: agent must not do action
+@MustNotMacro:mustNot macro agent action
+    @forbidden __Role Agent $agent
+    @act __Role Action $action
+    @result __Role Forbidden (__Bundle $forbidden $act)
+    return $result
+end

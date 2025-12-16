@@ -1,5 +1,0 @@
-ProcedureX REQUIRES Consent
-ProcedureX REQUIRES AuditTrail
-ExportData PROHIBITED_BY GDPR
-ExportData PERMITTED_BY HIPAA
-

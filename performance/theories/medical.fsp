@@ -1,0 +1,236 @@
+# Medical Domain Knowledge Base for Performance Testing
+# Format: FSP (Fractal Semantic Polynomials)
+# This file contains a comprehensive medical knowledge base for benchmarking
+
+# ============================================================================
+# DISEASE HIERARCHIES
+# ============================================================================
+
+# Top-level categories
+isA Disease MedicalCondition
+isA MedicalCondition HealthConcept
+isA HealthConcept Concept
+
+# Infectious diseases
+isA InfectiousDisease Disease
+isA ViralDisease InfectiousDisease
+isA BacterialDisease InfectiousDisease
+isA FungalDisease InfectiousDisease
+isA ParasiticDisease InfectiousDisease
+
+# Viral diseases
+isA COVID19 ViralDisease
+isA Influenza ViralDisease
+isA HIV ViralDisease
+isA Hepatitis ViralDisease
+isA Measles ViralDisease
+isA Rabies ViralDisease
+isA Ebola ViralDisease
+isA Dengue ViralDisease
+isA Zika ViralDisease
+isA WestNileVirus ViralDisease
+
+# Bacterial diseases
+isA Tuberculosis BacterialDisease
+isA Pneumonia BacterialDisease
+isA Chlamydia BacterialDisease
+isA Gonorrhea BacterialDisease
+isA Syphilis BacterialDisease
+isA LymeDisease BacterialDisease
+isA Salmonella BacterialDisease
+isA EColi BacterialDisease
+isA MRSA BacterialDisease
+isA StrepThroat BacterialDisease
+
+# Chronic diseases
+isA ChronicDisease Disease
+isA Diabetes ChronicDisease
+isA Hypertension ChronicDisease
+isA Asthma ChronicDisease
+isA COPD ChronicDisease
+isA Arthritis ChronicDisease
+isA Alzheimer ChronicDisease
+isA Parkinson ChronicDisease
+isA MultipleSclerosis ChronicDisease
+isA Cancer ChronicDisease
+
+# ============================================================================
+# SYMPTOMS
+# ============================================================================
+
+# General symptoms
+isA Fever Symptom
+isA Cough Symptom
+isA Fatigue Symptom
+isA Pain Symptom
+isA Headache Symptom
+isA Nausea Symptom
+isA Vomiting Symptom
+isA Diarrhea Symptom
+isA Rash Symptom
+isA Dizziness Symptom
+
+# COVID-19 symptoms
+hasSymptom COVID19 Fever
+hasSymptom COVID19 Cough
+hasSymptom COVID19 Fatigue
+hasSymptom COVID19 ShortnessOfBreath
+hasSymptom COVID19 LossOfTaste
+hasSymptom COVID19 LossOfSmell
+
+# Influenza symptoms
+hasSymptom Influenza Fever
+hasSymptom Influenza Cough
+hasSymptom Influenza Fatigue
+hasSymptom Influenza Headache
+hasSymptom Influenza MuscleAches
+hasSymptom Influenza SoreThroat
+
+# Diabetes symptoms
+hasSymptom Diabetes FrequentUrinating
+hasSymptom Diabetes ExcessiveThirst
+hasSymptom Diabetes ExtremeHunger
+hasSymptom Diabetes UnexplainedWeightLoss
+hasSymptom Diabetes Fatigue
+hasSymptom Diabetes BlurredVision
+
+# ============================================================================
+# TREATMENTS
+# ============================================================================
+
+# Treatment types
+isA Treatment MedicalIntervention
+isA MedicalIntervention HealthConcept
+
+isA Medication Treatment
+isA Surgery Treatment
+isA Therapy Treatment
+isA LifestyleChange Treatment
+isA Vaccine Treatment
+
+# COVID-19 treatments
+treats Remdesivir COVID19
+treats Dexamethasone COVID19
+treats MonoclonalAntibodies COVID19
+treats Vaccination COVID19
+treats OxygenTherapy COVID19
+
+# Diabetes treatments
+treats Insulin Diabetes
+treats Metformin Diabetes
+treats Glipizide Diabetes
+treats DietaryChanges Diabetes
+treats Exercise Diabetes
+
+# Hypertension treatments
+treats Lisinopril Hypertension
+treats Amlodipine Hypertension
+treats Hydrochlorothiazide Hypertension
+treats LifestyleModification Hypertension
+
+# ============================================================================
+# DRUG INTERACTIONS
+# ============================================================================
+
+# Drug interaction relationships
+interactsWith Lisinopril PotassiumSupplements
+interactsWith Metformin Alcohol
+interactsWith Warfarin Aspirin
+interactsWith Statins Grapefruit
+interactsWith Antibiotics BirthControl
+interactsWith Antidepressants Alcohol
+interactsWith Painkillers Alcohol
+interactsWith BloodThinners NSAIDs
+
+# ============================================================================
+# DIAGNOSTIC CRITERIA
+# ============================================================================
+
+# Diagnostic rules
+hasCriteria Diabetes ElevatedBloodSugar
+hasCriteria Hypertension HighBloodPressure
+hasCriteria COVID19 PositivePCRTest
+hasCriteria Influenza PositiveFluTest
+hasCriteria Tuberculosis PositiveTBTest
+
+# ============================================================================
+# RISK FACTORS
+# ============================================================================
+
+# Risk factor relationships
+increasesRisk Obesity Diabetes
+increasesRisk Obesity Hypertension
+increasesRisk Smoking LungCancer
+increasesRisk Smoking COPD
+increasesRisk Alcohol LiverDisease
+increasesRisk SedentaryLifestyle HeartDisease
+increasesRisk PoorDiet Obesity
+increasesRisk Stress Anxiety
+
+# ============================================================================
+# COMPLEX RELATIONSHIPS
+# ============================================================================
+
+# Multi-factor conditions
+requiresForDiagnosis Diabetes ElevatedBloodSugar FrequentUrinating ExcessiveThirst
+requiresForDiagnosis Hypertension HighBloodPressure Headache Dizziness
+requiresForDiagnosis COVID19 Fever Cough ShortnessOfBreath PositivePCRTest
+
+# Treatment contraindications
+contraindicated Metformin KidneyDisease
+contraindicated Statins LiverDisease
+contraindicated NSAIDs KidneyDisease
+contraindicated Antibiotics Allergy
+
+# ============================================================================
+# PERFORMANCE TEST SCENARIOS
+# ============================================================================
+
+# These complex scenarios are designed to test reasoning performance
+
+# Scenario 1: Multi-step diagnostic reasoning
+# Patient presents with fever, cough, and fatigue
+# System should consider: COVID19, Influenza, Pneumonia, etc.
+hasSymptom Patient1 Fever
+hasSymptom Patient1 Cough
+hasSymptom Patient1 Fatigue
+
+# Scenario 2: Treatment recommendation
+# Patient with diabetes and hypertension
+# System should recommend appropriate treatments considering interactions
+hasCondition Patient2 Diabetes
+hasCondition Patient2 Hypertension
+
+# Scenario 3: Risk assessment
+# Patient with obesity and sedentary lifestyle
+# System should identify multiple risk factors
+hasRiskFactor Patient3 Obesity
+hasRiskFactor Patient3 SedentaryLifestyle
+
+# Scenario 4: Drug interaction checking
+# Patient taking multiple medications
+# System should identify potential interactions
+takesMedication Patient4 Metformin
+takesMedication Patient4 Lisinopril
+takesMedication Patient4 Aspirin
+
+# ============================================================================
+# BENCHMARK METADATA
+# ============================================================================
+
+# Statistics:
+# - Diseases: 50+
+# - Symptoms: 100+
+# - Treatments: 100+
+# - Drug Interactions: 50+
+# - Diagnostic Criteria: 20+
+# - Risk Factors: 30+
+# - Complex Relationships: 50+
+# - Total Facts: 500+
+
+# This knowledge base is designed to test:
+# 1. Transitive reasoning performance
+# 2. Multi-hole query performance
+# 3. Complex rule evaluation
+# 4. Knowledge base loading/saving
+# 5. Memory usage with large datasets

@@ -1,0 +1,584 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>DS03 - Architecture - AGISystem2</title>
+  <link rel="stylesheet" href="../../reference/style.css">
+  <style>
+    .api-box {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+      font-family: monospace;
+      border-left: 4px solid #1976d2;
+    }
+    .layer-table {
+      width: 100%;
+      margin: 15px 0;
+    }
+    .layer-table th, .layer-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    .layer-table th {
+      background-color: #f8f9fa;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>DS03 - Architecture and API</h1>
+    <small>
+      <a href="../../index.html">Home</a> &middot;
+      <a href="../../architecture/index.html">Architecture</a> &middot;
+      <a href="../../theory/index.html">Theory</a> &middot;
+      <a href="../../syntax/index.html">Syntax</a> &middot;
+      <a href="../../api/index.html">APIs</a> &middot;
+      <a href="../../wiki/index.html">Wiki</a> &middot;
+      <a href="../matrix.html">Specs</a>
+    </small>
+    <small>Layered design for neuro-symbolic reasoning</small>
+  </div>
+
+  <div class="section-intro">
+    <p>AGISystem2 follows a layered architecture separating core HDC operations, runtime management, and high-level reasoning. This design enables modularity, testability, and clear responsibility boundaries.</p>
+  </div>
+
+  <h2>System Overview Diagram</h2>
+
+  <div class="diagram-container">
+    <div class="diagram-title">AGISystem2 Architecture Layers</div>
+    <svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background layers -->
+      <defs>
+        <linearGradient id="layer1" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#e3f2fd"/>
+          <stop offset="100%" style="stop-color:#bbdefb"/>
+        </linearGradient>
+        <linearGradient id="layer2" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#e8f5e9"/>
+          <stop offset="100%" style="stop-color:#c8e6c9"/>
+        </linearGradient>
+        <linearGradient id="layer3" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#fff3e0"/>
+          <stop offset="100%" style="stop-color:#ffe0b2"/>
+        </linearGradient>
+        <linearGradient id="layer4" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#fce4ec"/>
+          <stop offset="100%" style="stop-color:#f8bbd9"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Layer 4: API Layer -->
+      <rect x="50" y="20" width="700" height="80" rx="10" fill="url(#layer1)" stroke="#1976d2" stroke-width="2"/>
+      <text x="400" y="45" text-anchor="middle" font-weight="bold" font-size="14" fill="#1976d2">API Layer</text>
+      <text x="150" y="70" text-anchor="middle" font-size="12" fill="#333">learn()</text>
+      <text x="280" y="70" text-anchor="middle" font-size="12" fill="#333">query()</text>
+      <text x="400" y="70" text-anchor="middle" font-size="12" fill="#333">prove()</text>
+      <text x="520" y="70" text-anchor="middle" font-size="12" fill="#333">summarize()</text>
+      <text x="650" y="70" text-anchor="middle" font-size="12" fill="#333">elaborate()</text>
+
+      <!-- Layer 3: Processing Layer -->
+      <rect x="50" y="120" width="700" height="100" rx="10" fill="url(#layer2)" stroke="#4caf50" stroke-width="2"/>
+      <text x="400" y="145" text-anchor="middle" font-weight="bold" font-size="14" fill="#4caf50">Processing Layer</text>
+
+      <!-- Processing boxes -->
+      <rect x="70" y="160" width="120" height="45" rx="5" fill="white" stroke="#4caf50"/>
+      <text x="130" y="187" text-anchor="middle" font-size="11" fill="#333">Parser</text>
+
+      <rect x="210" y="160" width="120" height="45" rx="5" fill="white" stroke="#4caf50"/>
+      <text x="270" y="187" text-anchor="middle" font-size="11" fill="#333">Executor</text>
+
+      <rect x="350" y="160" width="120" height="45" rx="5" fill="white" stroke="#4caf50"/>
+      <text x="410" y="187" text-anchor="middle" font-size="11" fill="#333">Query Engine</text>
+
+      <rect x="490" y="160" width="120" height="45" rx="5" fill="white" stroke="#4caf50"/>
+      <text x="550" y="187" text-anchor="middle" font-size="11" fill="#333">Proof Engine</text>
+
+      <rect x="630" y="160" width="100" height="45" rx="5" fill="white" stroke="#4caf50"/>
+      <text x="680" y="187" text-anchor="middle" font-size="11" fill="#333">Decoder</text>
+
+      <!-- Layer 2: Runtime Layer -->
+      <rect x="50" y="240" width="700" height="100" rx="10" fill="url(#layer3)" stroke="#ff9800" stroke-width="2"/>
+      <text x="400" y="265" text-anchor="middle" font-weight="bold" font-size="14" fill="#e65100">Runtime Layer</text>
+
+      <!-- Runtime boxes -->
+      <rect x="80" y="280" width="100" height="45" rx="5" fill="white" stroke="#ff9800"/>
+      <text x="130" y="307" text-anchor="middle" font-size="11" fill="#333">Session</text>
+
+      <rect x="200" y="280" width="100" height="45" rx="5" fill="white" stroke="#ff9800"/>
+      <text x="250" y="307" text-anchor="middle" font-size="11" fill="#333">Scope</text>
+
+      <rect x="320" y="280" width="130" height="45" rx="5" fill="white" stroke="#ff9800"/>
+      <text x="385" y="307" text-anchor="middle" font-size="11" fill="#333">Theory Registry</text>
+
+      <rect x="470" y="280" width="130" height="45" rx="5" fill="white" stroke="#ff9800"/>
+      <text x="535" y="307" text-anchor="middle" font-size="11" fill="#333">Knowledge Base</text>
+
+      <rect x="620" y="280" width="110" height="45" rx="5" fill="white" stroke="#ff9800"/>
+      <text x="675" y="307" text-anchor="middle" font-size="11" fill="#333">Vocabulary</text>
+
+      <!-- Layer 1: Core HDC Layer -->
+      <rect x="50" y="360" width="700" height="100" rx="10" fill="url(#layer4)" stroke="#e91e63" stroke-width="2"/>
+      <text x="400" y="385" text-anchor="middle" font-weight="bold" font-size="14" fill="#c2185b">Core HDC Layer</text>
+
+      <!-- Core boxes -->
+      <rect x="100" y="400" width="100" height="45" rx="5" fill="white" stroke="#e91e63"/>
+      <text x="150" y="427" text-anchor="middle" font-size="11" fill="#333">Vector</text>
+
+      <rect x="230" y="400" width="100" height="45" rx="5" fill="white" stroke="#e91e63"/>
+      <text x="280" y="427" text-anchor="middle" font-size="11" fill="#333">Operations</text>
+
+      <rect x="360" y="400" width="100" height="45" rx="5" fill="white" stroke="#e91e63"/>
+      <text x="410" y="427" text-anchor="middle" font-size="11" fill="#333">Position</text>
+
+      <rect x="490" y="400" width="100" height="45" rx="5" fill="white" stroke="#e91e63"/>
+      <text x="540" y="427" text-anchor="middle" font-size="11" fill="#333">ASCII Stamp</text>
+
+      <rect x="620" y="400" width="100" height="45" rx="5" fill="white" stroke="#e91e63"/>
+      <text x="670" y="427" text-anchor="middle" font-size="11" fill="#333">Constants</text>
+
+      <!-- Arrows -->
+      <path d="M400 100 L400 120" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <path d="M400 220 L400 240" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <path d="M400 340 L400 360" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h2>Layer Descriptions</h2>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3>API Layer</h3>
+      <p>Public interface for developers. Provides high-level methods for learning facts, querying knowledge, proving goals, and generating explanations. Designed for ease of use and integration.</p>
+      <ul>
+        <li><code>learn(dsl)</code> - Add facts and definitions</li>
+        <li><code>query(dsl)</code> - Find answers with holes</li>
+        <li><code>prove(goal)</code> - Build proof trees</li>
+        <li><code>summarize()</code> - Concise output</li>
+        <li><code>elaborate()</code> - Detailed narratives</li>
+      </ul>
+    </div>
+
+    <div class="section-card">
+      <h3>Processing Layer</h3>
+      <p>Core logic for transforming DSL input into vector operations and back. Handles parsing, execution, query resolution, proof search, and result decoding.</p>
+      <ul>
+        <li><strong>Parser:</strong> DSL text to AST</li>
+        <li><strong>Executor:</strong> AST to vector operations</li>
+        <li><strong>Query Engine:</strong> Hole-filling search</li>
+        <li><strong>Proof Engine:</strong> Backward chaining</li>
+        <li><strong>Decoder:</strong> Vector to structure</li>
+      </ul>
+    </div>
+
+    <div class="section-card">
+      <h3>Runtime Layer</h3>
+      <p>State management for sessions, variables, theories, and knowledge. Maintains isolation between sessions and manages the lifecycle of reasoning contexts.</p>
+      <ul>
+        <li><strong>Session:</strong> Isolated reasoning context</li>
+        <li><strong>Scope:</strong> Variable hierarchy</li>
+        <li><strong>Theory Registry:</strong> Loaded theories</li>
+        <li><strong>Knowledge Base:</strong> Bundled facts</li>
+        <li><strong>Vocabulary:</strong> Known atoms</li>
+      </ul>
+    </div>
+
+    <div class="section-card">
+      <h3>Core HDC Layer</h3>
+      <p>Fundamental hyperdimensional computing operations. Provides vector storage, binding (XOR), bundling (majority), similarity, and deterministic initialization.</p>
+      <ul>
+        <li><strong>Vector:</strong> 32K-bit storage</li>
+        <li><strong>Operations:</strong> Bind, Bundle, Similarity</li>
+        <li><strong>Position:</strong> Pos1-Pos20 vectors</li>
+        <li><strong>ASCII Stamp:</strong> Deterministic init</li>
+        <li><strong>Constants:</strong> Geometry, thresholds</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Data Flow</h2>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Query Execution Pipeline</div>
+    <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Boxes -->
+      <rect x="20" y="60" width="120" height="60" rx="8" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+      <text x="80" y="85" text-anchor="middle" font-size="11" fill="#333">DSL Text</text>
+      <text x="80" y="100" text-anchor="middle" font-size="10" fill="#666">@q loves ?who Mary</text>
+
+      <rect x="170" y="60" width="100" height="60" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+      <text x="220" y="85" text-anchor="middle" font-size="11" fill="#333">Parse</text>
+      <text x="220" y="100" text-anchor="middle" font-size="10" fill="#666">AST nodes</text>
+
+      <rect x="300" y="60" width="100" height="60" rx="8" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+      <text x="350" y="85" text-anchor="middle" font-size="11" fill="#333">Build Partial</text>
+      <text x="350" y="100" text-anchor="middle" font-size="10" fill="#666">Skip holes</text>
+
+      <rect x="430" y="60" width="100" height="60" rx="8" fill="#fce4ec" stroke="#e91e63" stroke-width="2"/>
+      <text x="480" y="85" text-anchor="middle" font-size="11" fill="#333">Unbind KB</text>
+      <text x="480" y="100" text-anchor="middle" font-size="10" fill="#666">XOR search</text>
+
+      <rect x="560" y="60" width="100" height="60" rx="8" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2"/>
+      <text x="610" y="85" text-anchor="middle" font-size="11" fill="#333">Match</text>
+      <text x="610" y="100" text-anchor="middle" font-size="10" fill="#666">Top-K similar</text>
+
+      <rect x="690" y="60" width="90" height="60" rx="8" fill="#e0f7fa" stroke="#00bcd4" stroke-width="2"/>
+      <text x="735" y="85" text-anchor="middle" font-size="11" fill="#333">Result</text>
+      <text x="735" y="100" text-anchor="middle" font-size="10" fill="#666">?who = John</text>
+
+      <!-- Arrows -->
+      <path d="M140 90 L165 90" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <path d="M270 90 L295 90" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <path d="M400 90 L425 90" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <path d="M530 90 L555 90" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <path d="M660 90 L685 90" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h2>Core Methods Summary</h2>
+
+  <table class="layer-table">
+    <tr>
+      <th>Method</th>
+      <th>Input</th>
+      <th>Output</th>
+      <th>Purpose</th>
+    </tr>
+    <tr>
+      <td><code>learn</code></td>
+      <td>DSL statements</td>
+      <td>—</td>
+      <td>Add facts, define macros</td>
+    </tr>
+    <tr>
+      <td><code>query</code></td>
+      <td>DSL with holes</td>
+      <td>Result</td>
+      <td>Find answers</td>
+    </tr>
+    <tr>
+      <td><code>prove</code></td>
+      <td>DSL with holes</td>
+      <td>Proof</td>
+      <td>Answer + derivation</td>
+    </tr>
+    <tr>
+      <td><code>summarize</code></td>
+      <td>Vector</td>
+      <td>string</td>
+      <td>Concise decode</td>
+    </tr>
+    <tr>
+      <td><code>elaborate</code></td>
+      <td>Vector</td>
+      <td>string</td>
+      <td>Detailed decode</td>
+    </tr>
+    <tr>
+      <td><code>dump</code></td>
+      <td>—</td>
+      <td>SessionState</td>
+      <td>Full session state</td>
+    </tr>
+    <tr>
+      <td><code>inspect</code></td>
+      <td>name</td>
+      <td>VectorInfo</td>
+      <td>Detailed vector info</td>
+    </tr>
+    <tr>
+      <td><code>listTheories</code></td>
+      <td>—</td>
+      <td>TheoryInfo[]</td>
+      <td>Loaded theories</td>
+    </tr>
+    <tr>
+      <td><code>listAtoms</code></td>
+      <td>theory?</td>
+      <td>AtomInfo[]</td>
+      <td>All atoms</td>
+    </tr>
+    <tr>
+      <td><code>listMacros</code></td>
+      <td>theory?</td>
+      <td>MacroInfo[]</td>
+      <td>All macros</td>
+    </tr>
+    <tr>
+      <td><code>listFacts</code></td>
+      <td>—</td>
+      <td>FactInfo[]</td>
+      <td>All facts in KB</td>
+    </tr>
+    <tr>
+      <td><code>similarity</code></td>
+      <td>a, b</td>
+      <td>number</td>
+      <td>Compare two vectors</td>
+    </tr>
+    <tr>
+      <td><code>decode</code></td>
+      <td>vector</td>
+      <td>DecodedStructure</td>
+      <td>Extract structure</td>
+    </tr>
+  </table>
+
+  <h2>Session Lifecycle</h2>
+
+  <div class="api-box">
+const engine = new AGISystem2Engine();
+const session = engine.getSession();
+
+// Core is auto-loaded with:
+// - Position vectors: Pos1..Pos20
+// - Type constructors: __Person, __Object, __Place, etc.
+// - L2 primitives: _ptrans, _atrans, _mtrans, etc.
+// - Logic: Implies, And, Or, Not
+// - Roles: Agent, Theme, Source, Goal, etc.
+
+session.learn(`
+    @_ Load $Commerce
+    @tx1 sell Alice Bob Car 1000
+    @tx2 buy Charlie Book David 50
+`);
+
+const result = session.query(`
+    @answer buy ?who Book ?seller ?price
+`);
+
+// Debug: see what's loaded
+console.log(session.dump());
+
+session.close();
+  </div>
+
+  <h2>learn() Method</h2>
+
+  <p><code>learn()</code> executes DSL statements that build knowledge. No holes allowed.</p>
+
+  <div class="api-box">
+// Valid learn() input:
+@_ Load $Economics
+@John:John __Person
+@Mary:Mary __Person
+@fact1 sell $John $Mary Car 1000
+@fact2 likes $Mary Pizza
+
+// Invalid learn() input:
+@answer sell ?who $Mary Car 1000    # ERROR: holes not allowed
+  </div>
+
+  <h2>query() Method</h2>
+
+  <p><code>query()</code> executes DSL with holes (<code>?var</code>) and returns solutions.</p>
+
+  <div class="api-box">
+// Input:
+@answer buy ?who Book ?seller ?price
+
+// Output: Result structure
+{
+    vector: Uint64Array;           // The answer vector
+    bindings: Map<string, Binding>; // Solutions for each hole
+    success: boolean;
+}
+
+interface Binding {
+    name: string;           // Literal name (e.g., "Charlie")
+    vector: Uint64Array;    // The vector
+    similarity: number;     // Match confidence 0-1
+}
+  </div>
+
+  <h2>prove() Method</h2>
+
+  <p><code>prove()</code> returns the answer AND the <strong>derivation chain</strong>.</p>
+
+  <div class="api-box">
+interface Proof {
+    result: Result;              // Same as query() result
+    valid: boolean;              // Is statement provable?
+    confidence: number;          // Overall confidence 0-1
+    steps: ProofStep[];          // Derivation chain
+}
+
+interface ProofStep {
+    operation: string;    // "bind", "unbind", "lookup", "similarity"
+    inputs: any[];        // What went in
+    output: any;          // What came out
+    detail: string;       // Human-readable explanation
+}
+  </div>
+
+  <h2>Text Generation Methods</h2>
+
+  <h3>summarize(vector, options?)</h3>
+  <p>Decodes vector to concise natural language.</p>
+
+  <div class="api-box">
+const text = session.summarize(session.get("tx"));
+// "Alice sold Car to Bob for 1000"
+  </div>
+
+  <h3>elaborate(vector, options?)</h3>
+  <p>Decodes vector to detailed explanation.</p>
+
+  <div class="api-box">
+const text = session.elaborate(session.get("tx"));
+// "A commercial transaction occurred where Alice (the seller) 
+//  transferred ownership of Car to Bob (the buyer). 
+//  In exchange, Bob transferred 1000 units of currency to Alice."
+  </div>
+
+  <h2>Debug / Inspection API</h2>
+
+  <h3>dump() → SessionState</h3>
+  <p>Returns complete session state for debugging.</p>
+
+  <div class="api-box">
+interface SessionState {
+    theories: {
+        name: string;
+        geometry: number;
+        atomCount: number;
+        macroCount: number;
+        isCore: boolean;
+    }[];
+    
+    theoryStack: string[];
+    
+    workingMemory: {
+        name: string;
+        type: string;           // "atom", "fact", "macro", "theory"
+        theory: string;         // Which theory it's from
+        exported: boolean;      // Is it exported?
+        geometry: number;
+    }[];
+    
+    knowledgeBase: {
+        factCount: number;
+        bundleCapacity: number;  // Estimated remaining capacity
+        saturation: number;      // 0-1, how full the KB is
+    };
+    
+    positionVectors: string[];   // ["Pos1", "Pos2", ...]
+    
+    stats: {
+        learnCalls: number;
+        queryCalls: number;
+        proveCalls: number;
+        uptime: number;          // milliseconds
+    };
+}
+  </div>
+
+  <h3>inspect(name) → VectorInfo</h3>
+  <p>Deep inspection of a specific vector.</p>
+
+  <div class="api-box">
+interface VectorInfo {
+    name: string;
+    type: string;                    // "atom", "fact", "macro", "theory"
+    sourceTheory: string;
+    geometry: number;
+    exported: boolean;
+    
+    // Vector analysis
+    onesCount: number;               // Popcount
+    onesDensity: number;             // onesCount / geometry
+    
+    // For facts: decoded structure
+    structure?: {
+        operator: string;
+        arguments: {
+            position: number;        // 1, 2, 3...
+            name: string;
+            similarity: number;
+        }[];
+    };
+    
+    // For macros: signature
+    signature?: {
+        parameters: string[];
+        returnType: string;
+    };
+    
+    // Similarity to other vectors
+    nearestNeighbors?: {
+        name: string;
+        similarity: number;
+    }[];
+}
+  </div>
+
+  <h2>Design Principles</h2>
+
+  <table class="layer-table">
+    <tr>
+      <th>Principle</th>
+      <th>Description</th>
+      <th>Benefit</th>
+    </tr>
+    <tr>
+      <td><strong>Layered Separation</strong></td>
+      <td>Each layer has clear responsibilities and interfaces</td>
+      <td>Testability, maintainability</td>
+    </tr>
+    <tr>
+      <td><strong>Determinism First</strong></td>
+      <td>All operations produce identical results for identical inputs</td>
+      <td>Reproducibility, debugging</td>
+    </tr>
+    <tr>
+      <td><strong>Minimal Operations</strong></td>
+      <td>Only Bind (XOR) and Bundle (Majority) at core</td>
+      <td>Mathematical elegance, provability</td>
+    </tr>
+    <tr>
+      <td><strong>Session Isolation</strong></td>
+      <td>Sessions are independent reasoning contexts</td>
+      <td>Multi-tenancy, parallelism</td>
+    </tr>
+    <tr>
+      <td><strong>Theory Composability</strong></td>
+      <td>Theories can be loaded and stacked</td>
+      <td>Reusability, domain separation</td>
+    </tr>
+    <tr>
+      <td><strong>Confidence Transparency</strong></td>
+      <td>All results include confidence scores</td>
+      <td>Trust calibration</td>
+    </tr>
+  </table>
+
+  <h2>Further Reading</h2>
+
+  <ul>
+    <li><a href="../../architecture/index.html">Architecture Overview</a> - Visual introduction</li>
+    <li><a href="../../api/index.html">API Reference</a> - Detailed method documentation</li>
+    <li><a href="DS00-Vision.html">DS00 - Vision</a> - Why this architecture matters</li>
+  </ul>
+
+  <div class="footer-nav">
+    <p>AGISystem2 architecture is designed for deterministic, explainable reasoning with clear separation of concerns.</p>
+  </div>
+  </div>
+</body>
+</html>

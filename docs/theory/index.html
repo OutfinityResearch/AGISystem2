@@ -1,0 +1,343 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Theory - AGISystem2</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Theoretical Foundation</h1>
+    <small>
+      <a href="../index.html">Home</a> &middot;
+      <a href="../architecture/index.html">Architecture</a> &middot;
+      <a href="index.html">Theory</a> &middot;
+      <a href="../syntax/index.html">Syntax</a> &middot;
+      <a href="../api/index.html">APIs</a> &middot;
+      <a href="../wiki/index.html">Wiki</a> &middot;
+      <a href="../specs/matrix.html">Specs</a>
+    </small>
+    <small>Hyperdimensional Computing for neuro-symbolic AI</small>
+  </div>
+
+  <div class="section-intro">
+    <p>AGISystem2 is built on <strong>Hyperdimensional Computing (HDC)</strong>, a computational paradigm that represents information as high-dimensional binary vectors. This foundation enables deterministic, explainable reasoning with mathematical guarantees.</p>
+  </div>
+
+  <h2>Why Hyperdimensional Computing?</h2>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3>Determinism</h3>
+      <p>Unlike probabilistic neural networks, HDC operations are fully deterministic. The same input always produces the same output, enabling perfect reproducibility and debugging.</p>
+    </div>
+
+    <div class="section-card">
+      <h3>Compositionality</h3>
+      <p>Complex structures can be built from simple parts using only two operations (Bind and Bundle). This enables systematic construction and deconstruction of knowledge.</p>
+    </div>
+
+    <div class="section-card">
+      <h3>Noise Tolerance</h3>
+      <p>High-dimensional representations are naturally robust to noise and errors. Small perturbations don't significantly affect similarity comparisons.</p>
+    </div>
+
+    <div class="section-card">
+      <h3>Efficiency</h3>
+      <p>Core operations (XOR, majority vote) are extremely fast on modern hardware. Similarity is computed via simple bit counting.</p>
+    </div>
+  </div>
+
+  <h2>The Hypervector</h2>
+
+  <p>The fundamental data structure is a <strong>hypervector</strong> - a binary vector with thousands of dimensions (default: 32,768 bits = 4KB).</p>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Hypervector Structure (32,768 bits)</div>
+    <svg viewBox="0 0 800 120" xmlns="http://www.w3.org/2000/svg">
+      <!-- Main vector bar -->
+      <rect x="50" y="40" width="700" height="40" rx="5" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+
+      <!-- Bit markers -->
+      <text x="55" y="65" font-size="10" fill="#333">1</text>
+      <text x="70" y="65" font-size="10" fill="#333">0</text>
+      <text x="85" y="65" font-size="10" fill="#333">1</text>
+      <text x="100" y="65" font-size="10" fill="#333">1</text>
+      <text x="115" y="65" font-size="10" fill="#333">0</text>
+      <text x="130" y="65" font-size="10" fill="#333">0</text>
+      <text x="145" y="65" font-size="10" fill="#333">1</text>
+      <text x="160" y="65" font-size="10" fill="#333">0</text>
+      <text x="175" y="65" font-size="10" fill="#666">...</text>
+
+      <text x="700" y="65" font-size="10" fill="#333">1</text>
+      <text x="715" y="65" font-size="10" fill="#333">0</text>
+      <text x="730" y="65" font-size="10" fill="#333">1</text>
+
+      <!-- Labels -->
+      <text x="50" y="30" font-size="11" fill="#666">Bit 0</text>
+      <text x="680" y="30" font-size="11" fill="#666">Bit 32,767</text>
+
+      <!-- Storage note -->
+      <text x="400" y="100" text-anchor="middle" font-size="12" fill="#666">512 words x 64 bits = 32,768 bits (4 KB)</text>
+    </svg>
+  </div>
+
+  <h3>Quasi-Orthogonality Property</h3>
+
+  <p>In high-dimensional spaces, randomly generated vectors are <strong>almost orthogonal</strong> to each other:</p>
+
+  <table>
+    <tr>
+      <th>Property</th>
+      <th>Value (32K dimensions)</th>
+    </tr>
+    <tr>
+      <td>Expected similarity of random vectors</td>
+      <td>0.500</td>
+    </tr>
+    <tr>
+      <td>Standard deviation</td>
+      <td>~0.003</td>
+    </tr>
+    <tr>
+      <td>99% confidence interval</td>
+      <td>[0.492, 0.508]</td>
+    </tr>
+    <tr>
+      <td>Probability of sim > 0.55</td>
+      <td>< 0.0001%</td>
+    </tr>
+  </table>
+
+  <p><strong>Implication:</strong> Any randomly initialized vector is "far enough" from all others to serve as a unique symbol.</p>
+
+  <h2>The Three Core Operations</h2>
+
+  <h3>1. BIND (XOR) - Association</h3>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Bind Operation: A XOR B</div>
+    <svg viewBox="0 0 600 150" xmlns="http://www.w3.org/2000/svg">
+      <!-- Vector A -->
+      <rect x="50" y="20" width="200" height="30" rx="3" fill="#e3f2fd" stroke="#1976d2"/>
+      <text x="150" y="40" text-anchor="middle" font-size="11">A: 1 0 1 1 0 0 1 0 ...</text>
+
+      <!-- Vector B -->
+      <rect x="50" y="60" width="200" height="30" rx="3" fill="#e8f5e9" stroke="#4caf50"/>
+      <text x="150" y="80" text-anchor="middle" font-size="11">B: 0 1 1 0 0 1 1 0 ...</text>
+
+      <!-- XOR symbol -->
+      <circle cx="300" cy="55" r="20" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+      <text x="300" y="60" text-anchor="middle" font-size="14" font-weight="bold">XOR</text>
+
+      <!-- Result -->
+      <rect x="350" y="40" width="200" height="30" rx="3" fill="#fce4ec" stroke="#e91e63"/>
+      <text x="450" y="60" text-anchor="middle" font-size="11">A&oplus;B: 1 1 0 1 0 1 0 0 ...</text>
+
+      <!-- Properties -->
+      <text x="50" y="120" font-size="10" fill="#666">Properties: Commutative, Associative, Self-inverse (A&oplus;A=0), Reversible ((A&oplus;B)&oplus;B=A)</text>
+    </svg>
+  </div>
+
+  <p><strong>Purpose:</strong> Create associations and tag concepts with roles.</p>
+  <ul>
+    <li><code>loves(John, Mary) = Loves XOR (Pos1 XOR John) XOR (Pos2 XOR Mary)</code></li>
+    <li>Role binding: <code>Agent XOR John</code></li>
+  </ul>
+
+  <h3>2. BUNDLE (Majority Vote) - Superposition</h3>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Bundle Operation: Majority([A, B, C])</div>
+    <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
+      <!-- Vectors -->
+      <rect x="50" y="20" width="180" height="25" rx="3" fill="#e3f2fd" stroke="#1976d2"/>
+      <text x="140" y="37" text-anchor="middle" font-size="10">A: 1 0 1 1 0 0 1 0</text>
+
+      <rect x="50" y="50" width="180" height="25" rx="3" fill="#e8f5e9" stroke="#4caf50"/>
+      <text x="140" y="67" text-anchor="middle" font-size="10">B: 0 1 1 0 0 1 1 0</text>
+
+      <rect x="50" y="80" width="180" height="25" rx="3" fill="#fff3e0" stroke="#ff9800"/>
+      <text x="140" y="97" text-anchor="middle" font-size="10">C: 1 1 1 0 1 0 0 0</text>
+
+      <!-- Majority symbol -->
+      <circle cx="300" cy="67" r="25" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2"/>
+      <text x="300" y="62" text-anchor="middle" font-size="10">MAJ</text>
+      <text x="300" y="75" text-anchor="middle" font-size="10">vote</text>
+
+      <!-- Result -->
+      <rect x="360" y="55" width="190" height="25" rx="3" fill="#fce4ec" stroke="#e91e63"/>
+      <text x="455" y="72" text-anchor="middle" font-size="10">Result: 1 1 1 0 0 0 1 0</text>
+
+      <!-- Explanation -->
+      <text x="50" y="130" font-size="10" fill="#666">Each bit: majority wins (2/3 or more)</text>
+      <text x="50" y="145" font-size="10" fill="#666">Bit 0: A=1, B=0, C=1 &rarr; majority=1</text>
+      <text x="50" y="160" font-size="10" fill="#666">Result is similar to ALL inputs (sim > 0.5)</text>
+    </svg>
+  </div>
+
+  <p><strong>Purpose:</strong> Store multiple items in one vector (superposition).</p>
+  <p><strong>Key property:</strong> The result is similar to all inputs, enabling content-addressable memory.</p>
+
+  <h3>3. SIMILARITY - Comparison</h3>
+
+  <pre><code>similarity(A, B) = 1 - (hamming_distance(A, B) / dimension)
+
+Output interpretation:
+  1.0  : Identical vectors
+  0.5  : Unrelated (random)
+  0.0  : Inverse (bitwise NOT)</code></pre>
+
+  <table>
+    <tr>
+      <th>Similarity Range</th>
+      <th>Interpretation</th>
+      <th>Action</th>
+    </tr>
+    <tr>
+      <td>> 0.80</td>
+      <td>Strong match</td>
+      <td>Trust the result</td>
+    </tr>
+    <tr>
+      <td>0.65 - 0.80</td>
+      <td>Good match</td>
+      <td>Probably correct</td>
+    </tr>
+    <tr>
+      <td>0.55 - 0.65</td>
+      <td>Weak match</td>
+      <td>Verify if critical</td>
+    </tr>
+    <tr>
+      <td>< 0.55</td>
+      <td>Poor/no match</td>
+      <td>Don't trust</td>
+    </tr>
+  </table>
+
+  <h2>Position Vectors: Argument Ordering</h2>
+
+  <p>XOR is commutative, so we need a mechanism to distinguish argument positions:</p>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Position Vectors Solve Argument Order</div>
+    <svg viewBox="0 0 700 160" xmlns="http://www.w3.org/2000/svg">
+      <!-- Without positions (wrong) -->
+      <rect x="20" y="20" width="300" height="60" rx="5" fill="#ffebee" stroke="#f44336"/>
+      <text x="170" y="40" text-anchor="middle" font-size="11" fill="#c62828">WITHOUT positions:</text>
+      <text x="170" y="55" text-anchor="middle" font-size="10" fill="#333">loves(John, Mary) = Loves XOR John XOR Mary</text>
+      <text x="170" y="70" text-anchor="middle" font-size="10" fill="#333">loves(Mary, John) = Loves XOR Mary XOR John</text>
+      <text x="300" y="100" text-anchor="end" font-size="12" fill="#f44336" font-weight="bold">IDENTICAL! (wrong)</text>
+
+      <!-- With positions (correct) -->
+      <rect x="380" y="20" width="300" height="60" rx="5" fill="#e8f5e9" stroke="#4caf50"/>
+      <text x="530" y="40" text-anchor="middle" font-size="11" fill="#2e7d32">WITH positions:</text>
+      <text x="530" y="55" text-anchor="middle" font-size="10" fill="#333">loves(J,M) = Loves XOR (Pos1 XOR J) XOR (Pos2 XOR M)</text>
+      <text x="530" y="70" text-anchor="middle" font-size="10" fill="#333">loves(M,J) = Loves XOR (Pos1 XOR M) XOR (Pos2 XOR J)</text>
+      <text x="680" y="100" text-anchor="end" font-size="12" fill="#4caf50" font-weight="bold">DIFFERENT! (correct)</text>
+
+      <!-- Pos vectors list -->
+      <text x="350" y="140" text-anchor="middle" font-size="11" fill="#666">Pre-defined: Pos1, Pos2, Pos3, ..., Pos20</text>
+    </svg>
+  </div>
+
+  <h2>The Reasoning Equation</h2>
+
+  <p>All queries reduce to this fundamental equation:</p>
+
+  <div class="alert alert-info">
+    <strong>Answer = Knowledge XOR Query<sup>-1</sup></strong>
+    <p>Where Query<sup>-1</sup> is the partial query (everything except the hole). In XOR, a value is its own inverse.</p>
+  </div>
+
+  <h3>Example Derivation</h3>
+
+  <pre><code># Stored fact
+fact = Loves XOR (Pos1 XOR John) XOR (Pos2 XOR Mary)
+
+# Query: Who loves Mary? (query variable ?who in position 1)
+partial = Loves XOR (Pos2 XOR Mary)
+
+# Unbind from KB
+candidate = KB XOR partial
+         = fact XOR partial   (if KB contains fact)
+         = (Pos1 XOR John) XOR noise
+
+# Extract answer
+raw = Pos1 XOR candidate = John XOR noise
+
+# Find best match
+answer = mostSimilar(raw, vocabulary) = "John"</code></pre>
+
+  <h2>Capacity and Accuracy</h2>
+
+  <p>Bundle capacity determines how many facts can be stored before accuracy degrades:</p>
+
+  <table>
+    <tr>
+      <th>Facts in KB</th>
+      <th>Expected Similarity</th>
+      <th>Quality</th>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>~0.66</td>
+      <td>Excellent</td>
+    </tr>
+    <tr>
+      <td>50</td>
+      <td>~0.57</td>
+      <td>Good</td>
+    </tr>
+    <tr>
+      <td>100</td>
+      <td>~0.55</td>
+      <td>Usable</td>
+    </tr>
+    <tr>
+      <td>200</td>
+      <td>~0.535</td>
+      <td>Threshold</td>
+    </tr>
+    <tr>
+      <td>500</td>
+      <td>~0.52</td>
+      <td>Poor (noise)</td>
+    </tr>
+  </table>
+
+  <h2>Why Not Permutation?</h2>
+
+  <p>Traditional HDC uses permutation (bit rotation) for argument ordering. We use position vectors instead because:</p>
+
+  <div class="alert alert-warning">
+    <strong>Permutation breaks geometry extension:</strong>
+    <p>When extending a 16K vector to 32K by cloning, permutation produces different results than permuting then extending. Position vectors (XOR-based) extend correctly because XOR distributes over cloning.</p>
+  </div>
+
+  <h2>Mathematical Guarantees</h2>
+
+  <ul>
+    <li><strong>Closure:</strong> All operations produce valid hypervectors</li>
+    <li><strong>Determinism:</strong> Same inputs always produce same outputs</li>
+    <li><strong>Approximate reversibility:</strong> Bind is perfectly reversible; Bundle is approximately recoverable via similarity</li>
+    <li><strong>Compositionality:</strong> Complex structures built from simple parts</li>
+    <li><strong>Graceful degradation:</strong> Accuracy decreases smoothly with capacity</li>
+  </ul>
+
+  <h2>Further Reading</h2>
+
+  <ul>
+    <li><a href="../specs/DS/DS01-Theoretical-Foundation.md">DS01 - Complete Theoretical Foundation</a></li>
+    <li><a href="../specs/DS/DS09-Core-HDC-Implementation.md">DS09 - Core HDC Implementation</a></li>
+    <li>Kanerva, P. (2009). "Hyperdimensional Computing: An Introduction to Computing in Distributed Representations"</li>
+  </ul>
+
+  <div class="footer-nav">
+    <p>HDC provides the mathematical foundation for deterministic, explainable AI with formal guarantees.</p>
+  </div>
+  </div>
+</body>
+</html>

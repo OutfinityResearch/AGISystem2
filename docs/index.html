@@ -2,49 +2,268 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AGISystem2 – Vision & Guide</title>
+  <title>AGISystem2 – Documentation</title>
   <link rel="stylesheet" href="reference/style.css">
 </head>
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>AGISystem2 – Vision & Guide</h1>
+    <h1>AGISystem2 – Hyperdimensional Reasoning Engine</h1>
     <small>
       <a href="index.html">Home</a> ·
-      <a href="guides/conceptual_spaces.html">Theory</a> ·
       <a href="architecture/index.html">Architecture</a> ·
-      <a href="api/index.html">APIs</a> ·
+      <a href="theory/index.html">Theory</a> ·
       <a href="syntax/index.html">Syntax</a> ·
-      <a href="usage-cli/index.html">CLI</a> ·
-      <a href="wiki/index.html">Wiki</a> ·
+      <a href="api/index.html">APIs</a> ·
       <a href="specs/matrix.html">Specs</a>
     </small>
-    <small>Deterministic neuro-symbolic geometry for explainable reasoning</small>
+    <small>Neuro-symbolic reasoning with hyperdimensional computing</small>
   </div>
 
   <div class="section-intro">
-    <p>This guide documents a first prototype of AGISystem2, a deterministic neuro-symbolic engine intended to act as a genuine “System 2” for intelligent agents. Instead of generating text directly, it thinks in geometry: concepts are regions, facts are points, and context is a stack of theory layers that can hold competing views without losing track of why. The long-term vision is that such an engine can supervise fast, connectionist “System 1” components—LLMs or other neural models—by providing rigorous checking, explanation, and meta-rational guidance on top of quick but fallible intuition.</p>
+    <p>AGISystem2 is a <strong>Hyperdimensional Reasoning Engine</strong> for neuro-symbolic AI. It represents concepts, facts, relations and rules as high-dimensional vectors and executes reasoning through a formally defined DSL with full explainability.</p>
   </div>
 
-  <h2>What AGISystem2 Is Good For</h2>
-  <p>In the near term, AGISystem2 is meant to be a “thinking database”: a system that stores knowledge not as loose text or opaque embeddings, but as structured regions in a conceptual space, and that can perform rigorous, reproducible reasoning over that space. It is designed to replace or augment classic RAG setups by offering a deterministic layer that interprets retrieved information, checks consistency, and explains why a claim is accepted or rejected. Instead of asking a language model to improvise logical steps over retrieved passages, you can ask AGISystem2 to compute whether a candidate fact lies inside the appropriate region under the right theories and to attach a geometric demonstration.</p>
-  <p>This makes the engine a natural fit for complex consistency checks. Legal and regulatory compliance, internal policy enforcement, and standard-operating-procedure validation all require that many small rules fit together without hidden contradictions. AGISystem2 can ingest rules and facts about regulations, contracts, or business processes, represent them as concepts and theory layers, and then determine whether a given scenario falls inside a permitted region, a forbidden region, or a conflict zone that needs escalation. Because facts and values live on separate dimensions, it can also compare how the same scenario behaves under different legal regimes or value systems.</p>
-  <p>Another direction is narrative and creative work. A language model can generate a rich story, but it may forget earlier details about characters, locations, or world rules. By encoding characters, places, and narrative constraints as concepts and theories, AGISystem2 can act as a consistency oracle for long-form works: checking that a character behaves in ways compatible with earlier descriptions, that magic or technology follows the world’s rules, or that structural expectations for a genre are met. The engine does not replace creativity, but it gives authors, tools, or agents a way to ask “Is this scene still coherent with everything we have established so far?”.</p>
-  <p>In the longer term, the same machinery can encode scientific domains in a formal yet interpretable way. Ontological dimensions capture scientific quantities and structures, axiological dimensions capture methodological or ethical preferences, and theory layers capture particular models or schools of thought. Scientific articles, experimental setups, and results can be turned into points and regions in this space. The ambition is that AGISystem2 can act as a consistency checker for scientific claims: highlighting where a new paper fits existing theories, where it contradicts them, and which assumptions must change for the claims to hold. In that sense it moves a step toward “turning science into code” by giving scientific narratives a precise geometric counterpart.</p>
+  <h2>Key Features</h2>
+  <ul>
+    <li><strong>Deterministic Reasoning:</strong> Reproducible, explainable results with proof traces.</li>
+    <li><strong>Multi-Strategy HDC:</strong> Pluggable vector representations (dense binary, sparse polynomial, etc.).</li>
+    <li><strong>Transitive Chains:</strong> Automatic inference across taxonomies and spatial relations.</li>
+    <li><strong>Backward Chaining:</strong> Rule-based reasoning with And/Or conditions.</li>
+    <li><strong>Natural Language Output:</strong> DSL results converted to human-readable text.</li>
+  </ul>
 
-  <h2>How the Documentation Is Organised</h2>
-  <p>If you want to understand the theory behind the engine, start with the <a href="guides/conceptual_spaces.html">Conceptual Spaces</a> chapter. It introduces the idea that concepts are regions, facts are points, and reasoning is movement within a high-dimensional space, and it explains the split between ontological and axiological dimensions. The companion chapter on <a href="guides/reasoning.html">Reasoning</a> shows how deduction, induction, abduction, analogy, counterfactuals, temporal reasoning, and deontic reasoning all become geometric operations. For a deeper look at fairness and explanation, the <a href="guides/bias.html">Bias &amp; Values</a> and <a href="guides/explainability.html">Explainability</a> chapters describe how masks, bands, and theory layers support audits and proofs.</p>
-  <p>If you are more interested in how the engine is built, the <a href="architecture/index.html">Architecture</a> section provides a layered overview of the main modules and their responsibilities, from low-level vector operations up to theory stacking and validation. The reference pages on <a href="theory/dimensions.html">Empirical Space</a>, <a href="theory/ontology_dims.html">Ontology Dimensions</a>, <a href="theory/axiology_dims.html">Axiology Dimensions</a>, and <a href="usage-guide/ingestion.html">Ingestion</a> explain how the global vector space is structured and how statements are encoded into points and regions. The <a href="architecture/configuration.html">Configuration</a> page explains profiles (auto_test, manual_test, prod) and the trade-offs they make between precision, recall, and resource usage.</p>
-  <p>If you are integrating AGISystem2 into an agent or application, the main practical entry points are the <a href="api/index.html">APIs</a> page, which describes the high-level methods on EngineAPI and on agentic sessions; the <a href="syntax/index.html">Syntax</a> page, which gives the exact shapes of facts, questions, theories, and macros; and the <a href="usage-cli/index.html">CLI</a> chapter, which introduces the small command-line tool you can run in any working directory and which keeps its local state in a <code>.AGISystem2</code> folder. When you encounter unfamiliar terms or acronyms, the <a href="wiki/index.html">Wiki</a> provides short definitions and links back into the relevant theory chapters.</p>
+  <h2>Core Concepts</h2>
+  <table class="matrix-table">
+    <tr>
+      <td><strong>Hypervectors</strong></td>
+      <td>High-dimensional binary vectors (default 32,768 bits) representing concepts in geometric space. Operations: bind (XOR), bundle (majority), similarity (Hamming).</td>
+    </tr>
+    <tr>
+      <td><strong>DSL Syntax</strong></td>
+      <td>Statements have form <code>@dest operator arg1 arg2 ...</code> or <code>operator arg1 arg2</code> for anonymous facts.</td>
+    </tr>
+    <tr>
+      <td><strong>HDC Strategies</strong></td>
+      <td>Pluggable implementations: <code>dense-binary</code> (default), with support for future strategies like sparse polynomial. Set via <code>SYS2_HDC_STRATEGY</code> env var.</td>
+    </tr>
+    <tr>
+      <td><strong>Sessions</strong></td>
+      <td>Runtime contexts that load theories, accumulate facts in KB, and execute queries/proofs.</td>
+    </tr>
+    <tr>
+      <td><strong>Theories</strong></td>
+      <td>Reusable .sys2 files with facts and rules. Core theories define taxonomy, logic, and modal operators.</td>
+    </tr>
+  </table>
 
-  <h2>Other Chapters and Next Steps</h2>
-  <p>Beyond these core topics, there are chapters that describe learning dynamics, limits, and future directions. The <a href="guides/learning.html">Learning</a> chapter explains how concepts change over time through clustering, splitting, and merging of bounded diamonds, and how temporal memory interacts with long-term storage. The <a href="guides/limits.html">Limits</a> chapter is explicit about what the engine does not try to do and about the ways geometric representations can fail. The <a href="guides/roadmap.html">Roadmap</a> chapter sketches research directions such as richer temporal logics, deeper integration with external knowledge bases, and tighter coupling between AGISystem2 and generative “System 1” models.</p>
-  <p>If you are new to the project, reading Conceptual Spaces, Reasoning, and Architecture will give you a solid mental model. If you are building on the engine, the APIs, Syntax, and CLI pages are your main references. If you are auditing or working in sensitive domains, the Bias &amp; Values, Explainability, and Limits chapters are the most relevant starting points. Throughout the documentation, Quick Wiki remains the compact index of concepts that ties these threads together.</p>
+  <h2>HDC Strategy Architecture</h2>
+  <pre><code>┌─────────────────────────────────────────────────────────┐
+│  Layer 4: Application (DSL, Session API)                │
+│  ─────────────────────────────────────────────────────  │
+│  Layer 3: Reasoning (Query, Prove, Rules)               │
+│  ─────────────────────────────────────────────────────  │
+│  Layer 2: HDC Operations Interface (bind, bundle, sim)  │  ← CONTRACT
+│  ═══════════════════════════════════════════════════════│
+│  Layer 1: HDC Implementation Strategy                   │  ← SWAPPABLE
+│           ├── dense-binary (Uint32Array, XOR, majority) │
+│           └── [future: sparse-polynomial, bigint, etc.] │
+└─────────────────────────────────────────────────────────┘</code></pre>
+
+  <h2>Documentation Sections</h2>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3><a href="architecture/index.html">Architecture</a></h3>
+      <p>System layers: HDC core, runtime (Session, Executor), reasoning (Query, Prove), parser, and output generation.</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="theory/index.html">Foundational Theory</a></h3>
+      <p>Hyperdimensional computing principles: vector space algebra, bind/bundle operations, similarity metrics.</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="syntax/index.html">DSL Syntax</a></h3>
+      <p>Language reference: statements, operators, macros, theories, and Core theory definitions.</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="api/index.html">APIs</a></h3>
+      <p>Session API: learn(), query(), prove(), generateText(), elaborate(). HDC Facade: bind(), bundle(), similarity().</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="specs/matrix.html">Specifications</a></h3>
+      <p>Design specs (DS01-DS17), evaluation suites, and test coverage matrix.</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="guides/index.html">Guides</a></h3>
+      <p>Conceptual guides: geometric reasoning, theory layering, <a href="guides/hdc-strategies.html">HDC strategies</a>, LLM integration.</p>
+    </div>
+  </div>
+
+  <h2>Quick Start</h2>
+  <pre><code>import { Session } from './src/runtime/session.mjs';
+
+// Create session (loads Core theories automatically)
+const session = new Session({ geometry: 32768 });
+
+// Learn facts
+session.learn(`
+  isA Dog Animal
+  isA Rex Dog
+`);
+
+// Query
+const result = session.query('@q isA Rex ?what');
+console.log(result.bindings.get('what').answer); // "Dog"
+
+// Prove with transitive reasoning
+const proof = session.prove('@goal isA Rex Animal');
+console.log(proof.valid);  // true
+console.log(proof.method); // "transitive_chain"
+
+// Generate natural language
+const text = session.generateText('isA', ['Rex', 'Animal']);
+console.log(text); // "Rex is an animal."</code></pre>
+
+  <h2>DSL Syntax Quick Reference</h2>
+  <table class="matrix-table">
+    <tr><th>Form</th><th>In Scope</th><th>In KB</th><th>Use Case</th></tr>
+    <tr>
+      <td><code>operator arg1 arg2</code></td>
+      <td>No</td>
+      <td><strong>Yes</strong></td>
+      <td>Simple facts (anonymous, auto-persisted)</td>
+    </tr>
+    <tr>
+      <td><code>@var operator arg1 arg2</code></td>
+      <td><strong>Yes</strong></td>
+      <td>No</td>
+      <td>Temporary variable (for references)</td>
+    </tr>
+    <tr>
+      <td><code>@var:name operator arg1 arg2</code></td>
+      <td><strong>Yes</strong></td>
+      <td><strong>Yes</strong></td>
+      <td>Named persistent fact</td>
+    </tr>
+  </table>
+
+  <h3>Building Complex Rules</h3>
+  <p><strong>Note:</strong> Parenthesized compound expressions are NOT supported. Complex rules are built by defining parts as separate statements, then referencing them:</p>
+  <pre><code># WRONG (not supported):
+# @rule Implies (And $cond1 $cond2) $conclusion
+
+# CORRECT:
+@cond1 hasState Door Open
+@cond2 isA Door Entrance
+@combined And $cond1 $cond2
+@conclusion canEnter Person Door
+@rule Implies $combined $conclusion</code></pre>
+
+  <h2>Environment Variables</h2>
+  <table class="matrix-table">
+    <tr>
+      <td><code>SYS2_HDC_STRATEGY</code></td>
+      <td>HDC implementation to use. Default: <code>dense-binary</code></td>
+    </tr>
+    <tr>
+      <td><code>SYS2_GEOMETRY</code></td>
+      <td>Default vector geometry. Default: <code>32768</code> (must be divisible by 32)</td>
+    </tr>
+    <tr>
+      <td><code>SYS2_DEBUG</code></td>
+      <td>Enable debug logging. Set to <code>true</code> for verbose output.</td>
+    </tr>
+  </table>
+
+  <h2>Benchmarking HDC Strategies</h2>
+  <pre><code>import { benchmarkStrategy, printBenchmark } from './src/hdc/facade.mjs';
+
+const results = benchmarkStrategy('dense-binary', 8192, { iterations: 1000 });
+printBenchmark(results);
+
+// Output:
+// === HDC Strategy Benchmark ===
+// Strategy: dense-binary
+// Geometry: 8192
+// Operations:
+// ────────────────────────────────────────
+// bind           0.002 ms    650K ops/sec
+// similarity     0.004 ms    250K ops/sec
+// bundle         0.195 ms      5K ops/sec
+// ────────────────────────────────────────</code></pre>
+
+  <h2>Specification Documents</h2>
+  <ul>
+    <li><a href="specsLoader.html?spec=DS01-Theoretical-Foundation.md">DS01 – Theoretical Foundation</a></li>
+    <li><a href="specsLoader.html?spec=DS03-Architecture.md">DS03 – Architecture</a></li>
+    <li><a href="specsLoader.html?spec=DS09-Core-HDC.md">DS09 – HDC Core Implementation</a></li>
+    <li><a href="specsLoader.html?spec=DS_map.md">DS – Full Specification Map</a></li>
+  </ul>
 
   <div class="footer-nav">
-    <p>This documentation is part of the research work carried out by <a href="https://www.axiologic.net" target="_blank" rel="noopener noreferrer">Axiologic Research</a> within the <a href="https://www.achilles-project.eu/" target="_blank" rel="noopener noreferrer">ACHILLES</a> project on trustworthy AI. It is written as an experiment in close collaboration between human researchers and AI tools, using specification‑driven development to design and explain technologies for trustworthy AI and future AGI in a reproducible way.</p>
+    <p>AGISystem2 provides deterministic, explainable reasoning with full proof traces. Current eval score: <strong>97%</strong> (363/376 tests passing).</p>
   </div>
   </div>
-  <script src="reference/nav2.js"></script>
- </body>
- </html>
+
+  <style>
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+    .matrix-table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      vertical-align: top;
+    }
+    .matrix-table td:first-child {
+      width: 180px;
+      background: #f5f5f5;
+      font-family: 'Consolas', 'Monaco', monospace;
+    }
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .section-card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .section-card h3 {
+      margin-top: 0;
+    }
+    .section-card h3 a {
+      color: #1976d2;
+      text-decoration: none;
+    }
+    .section-card h3 a:hover {
+      text-decoration: underline;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      font-size: 13px;
+    }
+    code {
+      font-family: 'Consolas', 'Monaco', monospace;
+    }
+    .section-intro {
+      background: #e3f2fd;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+  </style>
+</body>
+</html>

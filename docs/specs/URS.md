@@ -1,73 +1,186 @@
-# AGISystem2 User Requirements Specification (URS)
-**Document ID:** URS
+# AGISystem2 - User Requirements Specification (URS)
 
-## Overview
-- <a id="URS-001"></a>**URS-001:** Users need a neuro-symbolic assistant that complements or replaces LLMs by providing deterministic, explainable answers grounded in geometric reasoning.
-- <a id="URS-002"></a>**URS-002:** Central paradigm: thinking as geometric navigation in a configurable conceptual space (>=512 dims) where concepts are unions of learned bounded diamonds; rules shape these volumes.
-- <a id="URS-003"></a>**URS-003:** The system must behave as a "System 2" reasoning partner: it maintains layered theories, can hold contradictions, and selects the appropriate context when answering (meta-rationality: multiple theories coexist; the engine chooses/justifies which layers govern a query).
+**Document Version:** 2.0
+**Status:** Draft
+**Classification:** GAMP Category 5 - Custom Application
+**Date:** 2024-12-15
 
-## Goals and Outcomes
-- <a id="URS-004"></a>**URS-004:** Provide consistent, reproducible answers with an attached reasoning trace ("demonstration") for every conclusion, including active theories, dimensional rationale, and acceptance band.
-- <a id="URS-005"></a>**URS-005:** Support teaching-by-mentoring: domain experts describe vocabulary, rules, and exceptions via Sys2DSL; the system internalizes them without manual coding and updates behavior immediately.
-- <a id="URS-006"></a>**URS-006:** Enable what-if exploration by spinning up temporary theories or parallel reasoning branches for simulation and counterfactual analysis.
-- <a id="URS-007"></a>**URS-007:** Operate efficiently on commodity CPUs (Node.js, no GPU/native/wasm) while handling large knowledge bases (millions of concepts/facts) with interactive latency.
+---
 
-## Primary User Types
-- <a id="URS-008"></a>**URS-008:** Domain experts (law, engineering, medicine) who teach rules, theories, and exceptions must be able to externalize knowledge without coding.
-- <a id="URS-009"></a>**URS-009:** Operators/analysts must be able to query the system for determinations, diagnostics, and audits.
-- <a id="URS-010"></a>**URS-010:** Integrators must be able to embed the system in applications, expecting deterministic API behavior and provenance.
+## 1. Document Purpose
 
-## Core Capabilities (User-Facing)
-- <a id="URS-011"></a>**URS-011:** Support Sys2DSL-based ingestion of facts, rules, and exceptions, with confirmations that definitions are understood. Natural language input is translated externally before reaching the engine.
-- <a id="URS-012"></a>**URS-012:** Provide query answering with explicit context selection and justification (which theories applied, which dimensions mattered).
-- <a id="URS-013"></a>**URS-013:** Provide narrative consultation: ingest scenarios with sequence handling and return determinations with confidence bands (True/Plausible/False).
-- <a id="URS-014"></a>**URS-014:** Support layered, possibly contradictory theories with explicit conflict signaling and prioritization prompts.
-- <a id="URS-015"></a>**URS-015:** Expose geometric reasoning modes to users: deductive (inclusion), inductive (envelope building), abductive (inverse relation probing), analogical (vector translation), counterfactual/non-monotonic (theory layering), temporal/causal (rotations), deontic/normative (forbidden/obligation volumes), sparsity/attention (relevance masks), and validation/abstract interpretation runs for consistency checks.
-- <a id="URS-016"></a>**URS-016:** Use English as the primary interaction language; other languages require an external translation/LLM bridge.
+This User Requirements Specification (URS) defines the high-level user needs and business requirements for AGISystem2 - a Hyperdimensional Reasoning Engine. Requirements are numbered using the format **URS-XX** for traceability.
 
-## Orthogonal Architecture Layers
-- <a id="URS-022"></a>**URS-022:** The system architecture MUST maintain strict separation between two orthogonal layers: (1) the **Reasoning Engine** which operates exclusively on Sys2DSL (deterministic, LLM-independent), and (2) the **NL↔DSL Translation Layer** which converts between natural language and Sys2DSL (optional, LLM-dependent). See [ARCH-LAYERS](architecture/orthogonal_layers.md).
-- <a id="URS-023"></a>**URS-023:** The Reasoning Engine MUST accept Sys2DSL input and produce Sys2DSL output, independently testable without any NL processing.
-- <a id="URS-024"></a>**URS-024:** The NL↔DSL Translation Layer MUST be independently testable, measuring translation quality separately from reasoning correctness.
+---
 
-## Constraints and Assumptions
-- <a id="URS-025"></a>**URS-025:** Sys2DSL syntax is strictly `Subject VERB Object` triples. This uniformity is INVIOLABLE. Complex values (pairs, tuples, dimension-value assignments) MUST be represented as intermediate points in conceptual space, never as additional arguments. Chaining via intermediate variables is the canonical mechanism for composition.
-- <a id="URS-017"></a>**URS-017:** Determinism over stochasticity: identical inputs and theory stacks must yield identical outputs.
-- <a id="URS-018"></a>**URS-018:** Explanations must cite the theory layers and semantic dimensions that drive outcomes.
-- <a id="URS-019"></a>**URS-019:** Knowledge is stored as geometric constructs (vectors, bounded shapes) rather than free text.
-- <a id="URS-020"></a>**URS-020:** Theory data is persisted separately from runtime working memory.
+## 2. System Overview
 
-## Success Criteria
-- <a id="URS-021"></a>**URS-021:** The system refuses to answer when contradictions make a conclusion impossible without user clarification.
+AGISystem2 is a neuro-symbolic reasoning system that provides deterministic, explainable AI capabilities using Hyperdimensional Computing (HDC). It is designed to complement Large Language Models (LLMs) by providing "System 2" thinking - deliberate, verifiable reasoning with full provenance.
 
-## Requirement Cross-Reference
+---
 
-The following table shows how the consolidated requirements map to the original IDs for traceability:
+## 3. Stakeholders
 
-| New ID | Original IDs | Consolidation Notes |
-|--------|--------------|---------------------|
-| URS-001 | URS-001 | Simplified, removed "natural-language inputs" (now Sys2DSL) |
-| URS-002 | URS-002 | Unchanged |
-| URS-003 | URS-003, URS-007, URS-016 (partial) | Merged meta-rationality definitions |
-| URS-004 | URS-005, URS-025 | Merged provenance/trace requirements |
-| URS-005 | URS-006, URS-026 | Merged teaching + immediate update |
-| URS-006 | URS-008, URS-018 | Merged what-if/temporary theories |
-| URS-007 | URS-009, URS-022, URS-028 | Merged CPU/performance/scale requirements |
-| URS-008 | URS-010 | Renumbered |
-| URS-009 | URS-011 | Renumbered |
-| URS-010 | URS-012 | Renumbered |
-| URS-011 | URS-004, URS-013 | Merged NL→Sys2DSL clarification |
-| URS-012 | URS-014 | Renumbered |
-| URS-013 | URS-015 | Renumbered |
-| URS-014 | URS-016 (partial) | Extracted layered theories (meta-rational in URS-003) |
-| URS-015 | URS-017 | Renumbered |
-| URS-016 | URS-019 | Renumbered |
-| URS-017 | URS-020 | Renumbered |
-| URS-018 | URS-021 | Renumbered |
-| URS-019 | URS-023 | Renumbered |
-| URS-020 | URS-024 | Renumbered |
-| URS-021 | URS-027 | Renumbered |
-| - | URS-022 | Consolidated into URS-007 |
-| - | URS-025 | Consolidated into URS-004 |
-| - | URS-026 | Consolidated into URS-005 |
-| - | URS-028 | Consolidated into URS-007 |
+| Stakeholder | Role | Needs |
+|-------------|------|-------|
+| AI Developers | Build reasoning applications | APIs, DSL, documentation |
+| Knowledge Engineers | Define domain theories | Theory authoring, validation |
+| Enterprise Users | Deploy compliant AI systems | Audit trails, explainability |
+| Researchers | Explore symbolic reasoning | Extensibility, transparency |
+| End Users | Interact with AI systems | Natural language explanations |
+
+---
+
+## 4. User Requirements
+
+### 4.1 Core Reasoning Requirements
+
+| ID | Requirement | Priority | Rationale |
+|----|-------------|----------|-----------|
+| **URS-01** | The system SHALL provide deterministic reasoning that produces identical results for identical inputs | MUST | Reproducibility is essential for verification and debugging |
+| **URS-02** | The system SHALL explain every reasoning step with a traceable proof chain | MUST | Explainability is core to trustworthy AI |
+| **URS-03** | The system SHALL detect and report contradictions in knowledge bases | MUST | Inconsistency detection prevents incorrect conclusions |
+| **URS-04** | The system SHALL support multiple reasoning types including deduction, abduction, and induction | SHOULD | Comprehensive reasoning covers more use cases |
+| **URS-05** | The system SHALL provide confidence scores for all query results | MUST | Users need to assess reliability of answers |
+
+### 4.2 Knowledge Management Requirements
+
+| ID | Requirement | Priority | Rationale |
+|----|-------------|----------|-----------|
+| **URS-06** | The system SHALL allow users to define domain-specific knowledge as theories | MUST | Domain customization is essential |
+| **URS-07** | The system SHALL support loading multiple theories simultaneously | MUST | Real applications combine multiple domains |
+| **URS-08** | The system SHALL provide a mechanism for versioning and branching theories | SHOULD | Theory evolution needs management |
+| **URS-09** | The system SHALL persist theories for reuse across sessions | MUST | Knowledge should not be transient |
+| **URS-10** | The system SHALL validate theories for internal consistency on load | SHOULD | Early error detection improves reliability |
+
+### 4.3 Language and Interface Requirements
+
+| ID | Requirement | Priority | Rationale |
+|----|-------------|----------|-----------|
+| **URS-11** | The system SHALL provide a Domain-Specific Language (DSL) for knowledge representation | MUST | Structured input ensures correctness |
+| **URS-12** | The DSL SHALL support Subject-Verb-Object triplet statements | MUST | Natural semantic structure |
+| **URS-13** | The system SHALL provide query syntax with "holes" for unknown values | MUST | Queries are the primary interaction mode |
+| **URS-14** | The system SHALL output explanations in natural language | MUST | Users need human-readable results |
+| **URS-15** | The system SHALL provide a JavaScript/TypeScript API | MUST | Integration with modern applications |
+
+### 4.4 Explainability Requirements
+
+| ID | Requirement | Priority | Rationale |
+|----|-------------|----------|-----------|
+| **URS-16** | The system SHALL generate replayable DSL traces for every operation | MUST | Full audit trail |
+| **URS-17** | The system SHALL support "summarize" output mode for concise explanations | MUST | Different verbosity levels needed |
+| **URS-18** | The system SHALL support "elaborate" output mode for detailed narratives | SHOULD | Some contexts need full explanations |
+| **URS-19** | The system SHALL indicate uncertainty and alternatives in results | MUST | Transparency about limitations |
+| **URS-20** | The system SHALL provide step-by-step proof derivations | MUST | Verification requires full derivation |
+
+### 4.5 Performance Requirements
+
+| ID | Requirement | Priority | Rationale |
+|----|-------------|----------|-----------|
+| **URS-21** | The system SHALL respond to simple queries within 100ms | SHOULD | Interactive use requires responsiveness |
+| **URS-22** | The system SHALL support knowledge bases with at least 200 facts | MUST | Minimum viable capacity |
+| **URS-23** | The system SHALL degrade gracefully when capacity limits are approached | MUST | Predictable behavior under load |
+| **URS-24** | The system SHALL provide warnings when approaching capacity limits | SHOULD | Proactive user notification |
+
+### 4.6 Integration Requirements
+
+| ID | Requirement | Priority | Rationale |
+|----|-------------|----------|-----------|
+| **URS-25** | The system SHALL integrate with LLMs for natural language input/output | SHOULD | Complement, not replace, LLMs |
+| **URS-26** | The system SHALL provide hooks for external tool integration | SHOULD | Extensibility for agents |
+| **URS-27** | The system SHALL support import/export of knowledge in standard formats | SHOULD | Interoperability |
+| **URS-28** | The system SHALL run in Node.js environments | MUST | Server-side deployment |
+| **URS-29** | The system SHALL support browser environments | SHOULD | Client-side applications |
+
+### 4.7 Compliance and Audit Requirements
+
+| ID | Requirement | Priority | Rationale |
+|----|-------------|----------|-----------|
+| **URS-30** | The system SHALL maintain complete audit logs of all reasoning operations | MUST | Regulatory compliance |
+| **URS-31** | The system SHALL support encoding of regulatory rules (e.g., GDPR, HIPAA) | SHOULD | Enterprise compliance use cases |
+| **URS-32** | The system SHALL allow real-time compliance checking against encoded rules | SHOULD | Proactive violation prevention |
+| **URS-33** | The system SHALL generate compliance reports on demand | SHOULD | Audit support |
+
+### 4.8 Security Requirements
+
+| ID | Requirement | Priority | Rationale |
+|----|-------------|----------|-----------|
+| **URS-34** | The system SHALL NOT store sensitive data in vector representations | MUST | Privacy by design |
+| **URS-35** | The system SHALL support theory access controls | SHOULD | Multi-tenant scenarios |
+| **URS-36** | The system SHALL validate all DSL input for safety | MUST | Input sanitization |
+
+### 4.9 Usability Requirements
+
+| ID | Requirement | Priority | Rationale |
+|----|-------------|----------|-----------|
+| **URS-37** | The system SHALL provide comprehensive API documentation | MUST | Developer adoption |
+| **URS-38** | The system SHALL provide example theories for common domains | SHOULD | Accelerate learning |
+| **URS-39** | The system SHALL provide clear error messages with remediation suggestions | MUST | Developer experience |
+| **URS-40** | The system SHALL provide debugging tools for inspecting vectors and KB state | SHOULD | Development support |
+| **URS-41** | The system SHALL support a `SYS2_DEBUG` environment variable to enable detailed trace logging | SHOULD | Facilitates debugging complex scenarios |
+
+### 4.10 HDC Strategy Requirements
+
+| ID | Requirement | Priority | Rationale |
+|----|-------------|----------|-----------|
+| **URS-42** | The system SHALL support pluggable HDC implementations via a strategy pattern | SHOULD | Allows experimentation with alternative vector representations |
+| **URS-43** | The system SHALL provide a default HDC strategy (dense-binary) that works out of the box | MUST | Users should not need to configure HDC to get started |
+| **URS-44** | The system SHALL allow HDC strategy selection via environment variable (`SYS2_HDC_STRATEGY`) | SHOULD | Runtime configuration without code changes |
+| **URS-45** | The system SHALL provide benchmarking tools to compare HDC strategy performance | SHOULD | Support for performance optimization |
+| **URS-46** | The system SHALL validate custom HDC strategies against a defined contract | SHOULD | Ensure correctness of new implementations |
+
+---
+
+## 5. Constraints
+
+| ID | Constraint | Description |
+|----|------------|-------------|
+| **CON-01** | Technology | Implementation in JavaScript/TypeScript |
+| **CON-02** | License | GNU AGPL v3 |
+| **CON-03** | Mathematical Foundation | Hyperdimensional Computing (HDC) |
+| **CON-04** | Operations | Limited to Bind (XOR) and Bundle (Majority) |
+| **CON-05** | Geometry | Default 32,768 bits, extensible |
+
+---
+
+## 6. Assumptions
+
+| ID | Assumption |
+|----|------------|
+| **ASM-01** | Users have basic understanding of symbolic reasoning concepts |
+| **ASM-02** | Domain knowledge can be expressed as Subject-Verb-Object triplets |
+| **ASM-03** | Knowledge bases will be reasonably sized (<500 facts per KB) |
+| **ASM-04** | LLM integration is optional, not required for core functionality |
+
+---
+
+## 7. Dependencies
+
+| ID | Dependency | Description |
+|----|------------|-------------|
+| **DEP-01** | Node.js | Runtime environment (v18+) |
+| **DEP-02** | BigInt | Native JavaScript BigInt for bit operations |
+| **DEP-03** | LLM Provider | Optional, for natural language elaboration |
+
+---
+
+## 8. Traceability
+
+This URS traces forward to:
+- **FS (Functional Specification)** - Detailed functional requirements
+- **NFS (Non-Functional Specification)** - Quality attributes
+- **DS (Design Specification)** - Technical design
+
+---
+
+## 9. Approval
+
+| Role | Name | Signature | Date |
+|------|------|-----------|------|
+| Product Owner | | | |
+| Technical Lead | | | |
+| Quality Assurance | | | |
+
+---
+
+*End of User Requirements Specification*

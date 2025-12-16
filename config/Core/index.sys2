@@ -1,0 +1,6 @@
+# Core Theory - Index (Simplified)
+# Only load theories without macro definitions
+
+@_ Load "./00-types.sys2"
+@_ Load "./01-positions.sys2"
+@_ Load "./09-roles.sys2"

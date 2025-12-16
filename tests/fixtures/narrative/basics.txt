@@ -1,5 +1,0 @@
-Alice IS_A Human
-Alice LOCATED_IN CityX
-CityX DISJOINT_WITH MagicZone
-Alice CASTS Magic
-

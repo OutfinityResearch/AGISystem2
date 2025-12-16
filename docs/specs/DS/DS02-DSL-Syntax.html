@@ -1,0 +1,501 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>DS02 - DSL Syntax - AGISystem2</title>
+  <link rel="stylesheet" href="../../reference/style.css">
+  <style>
+    .syntax-box {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+      font-family: monospace;
+      border-left: 4px solid #1976d2;
+      white-space: pre;
+    }
+    .token-table {
+      width: 100%;
+      margin: 15px 0;
+    }
+    .token-table th, .token-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    .token-table th {
+      background-color: #f8f9fa;
+    }
+    .token-table td:first-child {
+      font-family: monospace;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>DS02 - DSL Syntax Specification</h1>
+    <small>
+      <a href="../../index.html">Home</a> &middot;
+      <a href="../../architecture/index.html">Architecture</a> &middot;
+      <a href="../../theory/index.html">Theory</a> &middot;
+      <a href="../../syntax/index.html">Syntax</a> &middot;
+      <a href="../../api/index.html">APIs</a> &middot;
+      <a href="../../wiki/index.html">Wiki</a> &middot;
+      <a href="../matrix.html">Specs</a>
+    </small>
+    <small>Sys2DSL: Everything is a vector</small>
+  </div>
+
+  <div class="section-intro">
+    <p>Sys2DSL is a declarative language where <strong>everything is a semantic vector</strong>. The language follows a simple pattern: <code>@destination Operator arg1 arg2 arg3 ...</code></p>
+  </div>
+
+  <h2>Core Principle: Everything Is a Vector</h2>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Vector Types in Sys2DSL</div>
+    <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Atoms -->
+      <rect x="50" y="30" width="150" height="60" rx="10" fill="#e3f2fd" stroke="#1976d2"/>
+      <text x="125" y="50" text-anchor="middle" font-weight="bold" font-size="12" fill="#1976d2">Atoms</text>
+      <text x="125" y="70" text-anchor="middle" font-size="10" fill="#333">John, Red, Car</text>
+
+      <!-- Operators -->
+      <rect x="230" y="30" width="150" height="60" rx="10" fill="#e8f5e9" stroke="#4caf50"/>
+      <text x="305" y="50" text-anchor="middle" font-weight="bold" font-size="12" fill="#4caf50">Operators</text>
+      <text x="305" y="70" text-anchor="middle" font-size="10" fill="#333">sell, give, loves</text>
+
+      <!-- Facts -->
+      <rect x="410" y="30" width="150" height="60" rx="10" fill="#fff3e0" stroke="#ff9800"/>
+      <text x="485" y="50" text-anchor="middle" font-weight="bold" font-size="12" fill="#e65100">Facts</text>
+      <text x="485" y="70" text-anchor="middle" font-size="10" fill="#333">@fact1, @tx2</text>
+
+      <!-- Theories -->
+      <rect x="590" y="30" width="150" height="60" rx="10" fill="#fce4ec" stroke="#e91e63"/>
+      <text x="665" y="50" text-anchor="middle" font-weight="bold" font-size="12" fill="#c2185b">Theories</text>
+      <text x="665" y="70" text-anchor="middle" font-size="10" fill="#333">Economics, Physics</text>
+
+      <!-- All vector -->
+      <rect x="300" y="120" width="200" height="40" rx="10" fill="#f3e5f5" stroke="#9c27b0"/>
+      <text x="400" y="145" text-anchor="middle" font-weight="bold" font-size="14" fill="#9c27b0">ALL VECTORS</text>
+
+      <!-- Arrows -->
+      <path d="M125 90 L300 120" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <path d="M305 90 L300 120" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <path d="M485 90 L300 120" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <path d="M665 90 L300 120" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h2>Position-Based Syntax</h2>
+
+  <div class="syntax-box">
+@destination Operator arg1 arg2 arg3 ...
+  </div>
+
+  <table class="token-table">
+    <tr>
+      <th>Position</th>
+      <th>Role</th>
+      <th>What Happens</th>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Destination</td>
+      <td>New variable declared with @</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Operator</td>
+      <td>Vector bound into result</td>
+    </tr>
+    <tr>
+      <td>3+</td>
+      <td>Arguments</td>
+      <td>Position-tagged and bound</td>
+    </tr>
+  </table>
+
+  <div class="math-box">
+    The binding formula:
+    destination = Operator ⊕ (Pos1 ⊕ arg1) ⊕ (Pos2 ⊕ arg2) ⊕ (Pos3 ⊕ arg3) ⊕ ...
+  </div>
+
+  <h2>Tokens and Syntax</h2>
+
+  <table class="token-table">
+    <tr>
+      <th>Token</th>
+      <th>Syntax</th>
+      <th>Purpose</th>
+    </tr>
+    <tr>
+      <td>@var</td>
+      <td>Declaration</td>
+      <td>Create temporary variable (scope only, NOT KB)</td>
+    </tr>
+    <tr>
+      <td>@var:name</td>
+      <td>Declaration + KB</td>
+      <td>Create variable AND add to KB as name</td>
+    </tr>
+    <tr>
+      <td>@_</td>
+      <td>Discard</td>
+      <td>Result not needed</td>
+    </tr>
+    <tr>
+      <td>$var</td>
+      <td>Reference</td>
+      <td>Access any binding in scope</td>
+    </tr>
+    <tr>
+      <td>?var</td>
+      <td>Hole</td>
+      <td>Unknown to solve</td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>Literal</td>
+      <td>Vector from loaded theory</td>
+    </tr>
+    <tr>
+      <td>#</td>
+      <td>Comment</td>
+      <td>Ignored until EOL</td>
+    </tr>
+    <tr>
+      <td>(no prefix)</td>
+      <td>Anonymous</td>
+      <td>Add directly to KB</td>
+    </tr>
+  </table>
+
+  <h2>Persistence Rules</h2>
+
+  <table class="token-table">
+    <tr>
+      <th>Form</th>
+      <th>In Scope</th>
+      <th>In KB</th>
+      <th>Use Case</th>
+    </tr>
+    <tr>
+      <td><code>operator arg1 arg2</code></td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Simple facts</td>
+    </tr>
+    <tr>
+      <td><code>@var:name operator arg1 arg2</code></td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Named facts</td>
+    </tr>
+    <tr>
+      <td><code>@var operator arg1 arg2</code></td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>Temporary (for references)</td>
+    </tr>
+  </table>
+
+  <h2>Abstraction Levels and Naming Convention</h2>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Naming Convention Layers</div>
+    <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- L0 -->
+      <rect x="50" y="30" width="150" height="40" rx="5" fill="#e3f2fd" stroke="#1976d2"/>
+      <text x="125" y="55" text-anchor="middle" font-size="11">L0: ___name</text>
+      <text x="125" y="70" text-anchor="middle" font-size="10">HDC primitives</text>
+
+      <!-- L1 -->
+      <rect x="230" y="30" width="150" height="40" rx="5" fill="#e8f5e9" stroke="#4caf50"/>
+      <text x="305" y="55" text-anchor="middle" font-size="11">L1: __name</text>
+      <text x="305" y="70" text-anchor="middle" font-size="10">Structural ops</text>
+
+      <!-- L2 -->
+      <rect x="410" y="30" width="150" height="40" rx="5" fill="#fff3e0" stroke="#ff9800"/>
+      <text x="485" y="55" text-anchor="middle" font-size="11">L2: _name</text>
+      <text x="485" y="70" text-anchor="middle" font-size="10">Semantic primitives</text>
+
+      <!-- L3+ -->
+      <rect x="590" y="30" width="150" height="40" rx="5" fill="#fce4ec" stroke="#e91e63"/>
+      <text x="665" y="55" text-anchor="middle" font-size="11">L3+: name</text>
+      <text x="665" y="70" text-anchor="middle" font-size="10">Domain concepts</text>
+
+      <!-- Usage -->
+      <text x="125" y="120" text-anchor="middle" font-size="10" fill="#666">Runtime only</text>
+      <text x="305" y="120" text-anchor="middle" font-size="10" fill="#666">Core theory</text>
+      <text x="485" y="120" text-anchor="middle" font-size="10" fill="#666">Knowledge engineers</text>
+      <text x="665" y="120" text-anchor="middle" font-size="10" fill="#666">End users</text>
+    </svg>
+  </div>
+
+  <h2>The Core Theory</h2>
+
+  <p>Core is <strong>always loaded</strong> and <strong>cannot be unloaded</strong>. It defines:</p>
+
+  <table class="token-table">
+    <tr>
+      <th>Level</th>
+      <th>Definitions</th>
+    </tr>
+    <tr>
+      <td>L0 (<code>___</code>)</td>
+      <td><code>___Bind</code>, <code>___Bundle</code>, <code>___Similarity</code>, <code>___NewVector</code>, <code>___MostSimilar</code>, <code>___Extend</code></td>
+    </tr>
+    <tr>
+      <td>L1 (<code>__</code>)</td>
+      <td><code>__Atom</code>, <code>__Role</code>, <code>__Pair</code>, <code>__Event</code>, <code>__Bundle</code></td>
+    </tr>
+    <tr>
+      <td>L2 (<code>_</code>)</td>
+      <td><code>_ptrans</code>, <code>_atrans</code>, <code>_mtrans</code>, <code>_propel</code>, <code>_grasp</code>, <code>_ingest</code>, <code>_expel</code>, <code>_mbuild</code>, <code>_attend</code>, <code>_speak</code></td>
+    </tr>
+    <tr>
+      <td>Position</td>
+      <td><code>Pos1</code>, <code>Pos2</code>, <code>Pos3</code>, ..., <code>Pos20</code></td>
+    </tr>
+    <tr>
+      <td>Roles</td>
+      <td><code>Agent</code>, <code>Theme</code>, <code>Source</code>, <code>Goal</code>, <code>Recipient</code>, <code>Content</code>, <code>Instrument</code></td>
+    </tr>
+    <tr>
+      <td>Meta</td>
+      <td><code>Load</code>, <code>Unload</code>, <code>Export</code>, <code>Import</code></td>
+    </tr>
+  </table>
+
+  <h2>Statement Execution</h2>
+
+  <h3>Case 1: Operator has no macro</h3>
+  <div class="syntax-box">
+@fact Tall John
+# fact = Tall ⊕ (Pos1 ⊕ John)
+  </div>
+
+  <h3>Case 2: Operator has macro</h3>
+  <div class="syntax-box">
+@tx sell Alice Bob Car 100
+# 1. Execute sell macro → result
+# 2. tx = sell ⊕ result
+  </div>
+
+  <h3>Case 3: Multiple arguments</h3>
+  <div class="syntax-box">
+@rel Loves John Mary
+# rel = Loves ⊕ (Pos1 ⊕ John) ⊕ (Pos2 ⊕ Mary)
+
+# Note: Loves(John, Mary) ≠ Loves(Mary, John)
+# because Pos1 ⊕ John ≠ Pos1 ⊕ Mary
+  </div>
+
+  <h2>Macro Definition</h2>
+
+  <div class="syntax-box">
+@MacroName:export macro param1 param2
+    @step1 Operation $param1
+    @step2 Operation $step1 $param2
+    return $step2
+end
+  </div>
+
+  <p><code>return</code> specifies output. Without it, macro produces nothing.</p>
+
+  <h2>Theory Definition</h2>
+
+  <div class="syntax-box">
+@Name theory <geometry> <init> ... end
+
+@Economics theory 32768 deterministic
+    @Money __Atom
+    @Bank __Atom
+    
+    @SellMacro:sell macro seller buyer item price
+        @t1 _atrans $seller $item $seller $buyer
+        @t2 _atrans $buyer $price $buyer $seller
+        @both __Bundle $t1 $t2
+        return $both
+    end
+end
+  </div>
+
+  <h2>Theory Management as Verbs</h2>
+
+  <table class="token-table">
+    <tr>
+      <th>Operation</th>
+      <th>Syntax</th>
+      <th>What It Does</th>
+    </tr>
+    <tr>
+      <td>Load</td>
+      <td><code>@_ Load $Theory</code></td>
+      <td>Activate namespace</td>
+    </tr>
+    <tr>
+      <td>Unload</td>
+      <td><code>@_ Unload $Theory</code></td>
+      <td>Deactivate namespace</td>
+    </tr>
+    <tr>
+      <td>Export</td>
+      <td><code>@_ Export $var</code></td>
+      <td>Save to active theory</td>
+    </tr>
+    <tr>
+      <td>Import</td>
+      <td><code>@v Import $Theory name</code></td>
+      <td>Load specific atom</td>
+    </tr>
+  </table>
+
+  <h2>Complete Example</h2>
+
+  <div class="syntax-box">
+# Define a theory (creates vector + namespace)
+@Commerce theory 32768 deterministic
+
+    @Money __Atom
+    @Price __Atom
+    @Goods __Atom
+    
+    @SellMacro:sell macro seller buyer item price
+        @t1 _atrans $seller $item $seller $buyer
+        @t2 _atrans $buyer $price $buyer $seller
+        @both __Bundle $t1 $t2
+        return $both
+    end
+    
+    @BuyMacro:buy macro buyer item seller price
+        @t1 _atrans $buyer $item $seller $buyer
+        @t2 _atrans $buyer $price $buyer $seller
+        @both __Bundle $t1 $t2
+        return $both
+    end
+    
+end
+
+# Usage
+@_ Load $Commerce
+
+@tx1 sell Alice Bob Car 1000
+@tx2 buy Charlie Book David 50
+
+# Query
+@q buy ?who Book ?seller ?price
+
+# Meta - what theories are similar to Commerce?
+@related ___Similarity $Commerce $Economics
+
+# Cleanup (optional)
+@_ Unload $Commerce
+  </div>
+
+  <h2>Grammar (EBNF)</h2>
+
+  <div class="syntax-box">
+program      = { statement | macro_def | theory_block } ;
+
+statement    = "@" , ( "_" | ident [ ":" , ident ] ) , operation , { argument } , [ "#" , text ] , NL ;
+operation    = ident | "$" , ident ;
+argument     = "$" , ident | "?" , ident | ident | number ;
+
+macro_def    = "@" , ident , [ ":" , ident ] , "macro" , { ident } , NL ,
+               { statement } ,
+               "return" , "$" , ident , NL ,
+               "end" , NL ;
+
+theory_primary = "@" , ident , "theory" , number , init_type , NL ,
+                 { statement | macro_def } ,
+                 "end" , NL ;
+
+theory_brace   = "theory" , ident , "{" , NL ,
+                 { statement | macro_def } ,
+                 "}" , NL ;
+
+theory_begin   = "theory" , ident , "begin" , NL ,
+                 { statement | macro_def } ,
+                 "end" , NL ;
+
+theory_bracket = "theory" , ident , "[" , NL ,        (* deprecated *)
+                 { statement | macro_def } ,
+                 "]" , NL ;
+
+theory_block   = theory_primary | theory_brace | theory_begin | theory_bracket ;
+
+init_type    = "random" | "deterministic" ;
+
+ident        = ( letter | "_" ) , { letter | digit | "_" } ;
+number       = digit , { digit } ;
+  </div>
+
+  <h2>Summary</h2>
+
+  <table class="token-table">
+    <tr>
+      <th>Concept</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td><strong>Everything is vector</strong></td>
+      <td>Atoms, operators, facts, theories, Load/Export — all vectors</td>
+    </tr>
+    <tr>
+      <td><strong>Position vectors</strong></td>
+      <td>Pos1, Pos2, ... encode argument order (NOT permutation)</td>
+    </tr>
+    <tr>
+      <td><strong>Binding formula</strong></td>
+      <td><code>Op ⊕ (Pos1 ⊕ A1) ⊕ (Pos2 ⊕ A2) ⊕ ...</code></td>
+    </tr>
+    <tr>
+      <td><strong>@_</strong></td>
+      <td>Discard destination for side-effect operations</td>
+    </tr>
+    <tr>
+      <td><strong>Theory creates</strong></td>
+      <td>Vector (identity) + Namespace (content)</td>
+    </tr>
+    <tr>
+      <td><strong>Load/Unload/Export/Import</strong></td>
+      <td>Normal verbs defined in Core</td>
+    </tr>
+    <tr>
+      <td><strong>Underscore convention</strong></td>
+      <td><code>___</code>=L0, <code>__</code>=L1, <code>_</code>=L2, none=L3+</td>
+    </tr>
+    <tr>
+      <td><strong>Core</strong></td>
+      <td>Auto-loaded, defines all infrastructure including Pos1..Pos20</td>
+    </tr>
+    <tr>
+      <td><strong>Macros</strong></td>
+      <td>Define argument processing, can contain holes</td>
+    </tr>
+  </table>
+
+  <h2>Further Reading</h2>
+
+  <ul>
+    <li><a href="../../syntax/index.html">DSL Syntax Reference</a> - Quick reference guide</li>
+    <li><a href="DS07-Core-Theory.html">DS07 - Core Theory</a> - Complete Core theory reference</li>
+    <li><a href="DS03-Architecture.html">DS03 - Architecture</a> - How DSL is processed</li>
+  </ul>
+
+  <div class="footer-nav">
+    <p>Sys2DSL provides a uniform, vector-based syntax for building and querying knowledge.</p>
+  </div>
+  </div>
+</body>
+</html>

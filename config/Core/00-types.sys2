@@ -1,0 +1,24 @@
+# Core Theory - Type Markers
+# These define the type system for AGISystem2
+# Auto-loaded by runtime
+
+# ===== Type Markers =====
+@EntityType:EntityType ___NewVector
+@PersonType:PersonType ___NewVector
+@ObjectType:ObjectType ___NewVector
+@PlaceType:PlaceType ___NewVector
+@OrganizationType:OrganizationType ___NewVector
+@SubstanceType:SubstanceType ___NewVector
+@AbstractType:AbstractType ___NewVector
+@PropertyType:PropertyType ___NewVector
+@StateType:StateType ___NewVector
+@CategoryType:CategoryType ___NewVector
+@RelationType:RelationType ___NewVector
+@ActionType:ActionType ___NewVector
+@TimePointType:TimePointType ___NewVector
+@TimePeriodType:TimePeriodType ___NewVector
+@NumberType:NumberType ___NewVector
+@AmountType:AmountType ___NewVector
+@MeasureType:MeasureType ___NewVector
+@EventType:EventType ___NewVector
+@RoleType:RoleType ___NewVector

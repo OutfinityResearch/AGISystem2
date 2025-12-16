@@ -1,6 +1,0 @@
-# Health compliance theory (Sys2DSL)
-@f0 ProcedureX REQUIRES Consent
-@f1 ProcedureX REQUIRES AuditTrail
-@f2 ExportData PROHIBITED_BY GDPR
-@f3 ExportData PERMITTED_BY HIPAA
-

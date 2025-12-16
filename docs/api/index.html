@@ -2,142 +2,463 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>API Reference</title>
+  <title>API Reference - AGISystem2</title>
   <link rel="stylesheet" href="../reference/style.css">
 </head>
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>AGISystem2 – API Reference</h1>
+    <h1>API Reference</h1>
     <small>
-      <a href="../index.html">Home</a> ·
-      <a href="../guides/conceptual_spaces.html">Theory</a> ·
-      <a href="../architecture/index.html">Architecture</a> ·
-      <a href="index.html">APIs</a> ·
-      <a href="../syntax/index.html">Syntax</a> ·
-      <a href="../usage-cli/index.html">CLI</a> ·
-      <a href="../wiki/index.html">Wiki</a> ·
+      <a href="../index.html">Home</a> &middot;
+      <a href="../architecture/index.html">Architecture</a> &middot;
+      <a href="../theory/index.html">Theory</a> &middot;
+      <a href="../syntax/index.html">Syntax</a> &middot;
+      <a href="index.html">APIs</a> &middot;
+      <a href="../wiki/index.html">Wiki</a> &middot;
       <a href="../specs/matrix.html">Specs</a>
     </small>
+    <small>JavaScript/TypeScript API documentation</small>
   </div>
 
-  <p>This page describes how to obtain a session and the methods it exposes. For command syntax, see <a href="../syntax/index.html">Syntax Reference</a>. For architecture details, see <a href="../architecture/index.html">Architecture</a>.</p>
+  <div class="section-intro">
+    <p>AGISystem2 provides a JavaScript/TypeScript API for creating reasoning sessions, learning facts, querying knowledge, and generating explanations. All methods return structured result objects with confidence scores.</p>
+  </div>
 
-  <h2>Creating a Session</h2>
+  <h2>Quick Start</h2>
 
-  <pre>
-const AgentSystem2 = require('agisystem2');
+  <pre><code>import { createSpockEngine, createSessionApi } from 'agisystem2';
 
-// Create agent with profile
-const agent = new AgentSystem2({ profile: 'manual_test' });
+// Create engine with default geometry (32K bits)
+const engine = createSpockEngine({ dimensions: 32768 });
 
-// Create session
-const session = agent.createSession();</pre>
+// Create a session
+const session = engine.createSession();
+const api = createSessionApi(session);
 
-  <h3>Configuration Profiles</h3>
-  <table class="table-concept-index">
-    <thead>
-      <tr><th>Profile</th><th>Description</th></tr>
-    </thead>
-    <tbody>
-      <tr><td><code>auto_test</code></td><td>Fast, low memory, for automated tests</td></tr>
-      <tr><td><code>manual_test</code></td><td>Balanced, for development</td></tr>
-      <tr><td><code>prod</code></td><td>High precision, for production</td></tr>
-    </tbody>
+// Learn some facts
+api.learn(`
+  @f1 Socrates Is Human
+  @f2 Humans Are Mortal
+`);
+
+// Query the knowledge
+const result = api.query(`@q ?who Is Mortal`);
+console.log(result.bindings.who.answer); // "Socrates"
+console.log(result.confidence);          // ~0.75
+
+// Generate explanation
+const explanation = api.summarize(result);
+console.log(explanation.text); // "Socrates is Mortal"
+
+// Clean up
+session.close();</code></pre>
+
+  <h2>Engine API</h2>
+
+  <h3>createSpockEngine(options)</h3>
+
+  <p>Creates a new AGISystem2 engine instance.</p>
+
+  <table>
+    <tr>
+      <th>Option</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td><code>dimensions</code></td>
+      <td>number</td>
+      <td>32768</td>
+      <td>Vector geometry (1024, 8192, 32768, 65536)</td>
+    </tr>
+    <tr>
+      <td><code>theoryPaths</code></td>
+      <td>string[]</td>
+      <td>[]</td>
+      <td>Additional theory search paths</td>
+    </tr>
+    <tr>
+      <td><code>logLevel</code></td>
+      <td>string</td>
+      <td>"warn"</td>
+      <td>Logging level (debug, info, warn, error)</td>
+    </tr>
   </table>
 
-  <p>See <a href="../architecture/configuration.html">Configuration</a> for full parameter reference.</p>
+  <pre><code>const engine = createSpockEngine({
+  dimensions: 32768,
+  theoryPaths: ['./my-theories'],
+  logLevel: 'info'
+});</code></pre>
 
-  <h2>Session Methods</h2>
+  <h3>engine.createSession(options?)</h3>
 
-  <h3>run(commands)</h3>
-  <p>Execute an array of Sys2DSL commands. Returns environment with bound variables.</p>
+  <p>Creates a new isolated reasoning session.</p>
 
-  <pre>
-// Add facts
-session.run(['@f Dog IS_A Animal']);
-session.run(['@f Cat IS_A Animal']);
+  <pre><code>const session = engine.createSession({
+  name: 'my-session',
+  preloadTheories: ['Commerce', 'Physics']
+});</code></pre>
 
-// Query
-const env = session.run(['@q Dog IS_A Animal']);
-console.log(env.q.truth);  // "TRUE_CERTAIN"
+  <h2>Session API</h2>
 
-// Get matching facts
-const matches = session.run(['@r ? IS_A Animal FACTS any']);
-console.log(matches.r);  // [{ subject: 'Dog', relation: 'IS_A', object: 'Animal' }, ...]</pre>
+  <h3>session.learn(dsl)</h3>
 
-  <h3>Theory Management</h3>
-  <pre>
-// Push new theory layer
-session.run(['@_ experiment PUSH any']);
+  <p>Parses and executes DSL statements, adding facts and definitions to the session.</p>
 
-// Add facts to layer
-session.run(['@f Water IS_A Solid']);  // Hypothetical
+  <pre><code>const result = session.learn(`
+  @f1 loves John Mary
+  @f2 loves Bob Alice
+  @f3 parent John Charlie
+`);
 
-// Query in this context
-const env = session.run(['@q Water IS_A Solid']);
-console.log(env.q.truth);  // "TRUE_CERTAIN"
+// Result structure
+{
+  success: true,
+  statements: 3,
+  warnings: [],
+  errors: []
+}</code></pre>
 
-// Pop layer (discards facts)
-session.run(['@_ any POP any']);
+  <h3>session.query(dsl)</h3>
 
-// Original state restored
-const env2 = session.run(['@q Water IS_A Solid']);
-console.log(env2.q.truth);  // "FALSE" or "UNKNOWN"</pre>
+  <p>Executes a query with holes (?variables) and returns bindings.</p>
 
-  <h3>Counterfactual Queries</h3>
-  <pre>
-// Ask "what if" questions
-const env = session.run([
-  '@cf CF "Is ice Water?" | Water TEMPERATURE_AT CelsiusMinus10'
-]);
-console.log(env.cf.truth);</pre>
+  <pre><code>const result = session.query(`@q loves ?who Mary`);
 
-  <h2>Common Patterns</h2>
+// Result structure
+{
+  success: true,
+  bindings: {
+    "who": {
+      answer: "John",
+      similarity: 0.78,
+      alternatives: [
+        { value: "Bob", similarity: 0.52 }
+      ]
+    }
+  },
+  confidence: 0.78,
+  ambiguous: false
+}</code></pre>
 
-  <h3>Load Theory File</h3>
-  <pre>
-session.run(['@_ medical_knowledge LOAD any']);</pre>
+  <h3>session.prove(goal)</h3>
 
-  <h3>Save Theory</h3>
-  <pre>
-session.run(['@_ my_session SAVE any']);</pre>
+  <p>Attempts to prove a goal through backward chaining and returns a proof tree.</p>
 
-  <h3>List All Facts</h3>
-  <pre>
-const env = session.run(['@facts ? ? ? FACTS any']);
-for (const fact of env.facts) {
-  console.log(`${fact.subject} ${fact.relation} ${fact.object}`);
-}</pre>
+  <pre><code>const result = session.prove(`@goal isA Socrates Mortal`);
 
-  <h2>Return Values</h2>
+// Result structure
+{
+  valid: true,
+  proof: {
+    goal: "isA Socrates Mortal",
+    method: "rule",
+    rule: "humans_are_mortal",
+    premises: [
+      { goal: "isA Socrates Human", method: "direct", confidence: 0.95 }
+    ]
+  },
+  steps: [
+    { operation: "match", goal: "isA Socrates Mortal", result: "rule found" },
+    { operation: "prove", goal: "isA Socrates Human", result: "direct KB" }
+  ],
+  confidence: 0.92
+}</code></pre>
 
-  <p>Query results include:</p>
+  <h3>session.summarize(vector | result)</h3>
 
-  <table class="table-concept-index">
-    <thead>
-      <tr><th>Field</th><th>Description</th></tr>
-    </thead>
-    <tbody>
-      <tr><td><code>truth</code></td><td><code>TRUE_CERTAIN</code>, <code>TRUE_PLAUSIBLE</code>, <code>FALSE</code>, <code>UNKNOWN</code></td></tr>
-      <tr><td><code>confidence</code></td><td>Numeric confidence (0-1)</td></tr>
-      <tr><td><code>trace</code></td><td>Provenance trace (optional)</td></tr>
-    </tbody>
+  <p>Generates concise natural language from a vector or query result.</p>
+
+  <pre><code>const summary = session.summarize(queryResult);
+
+// Result structure
+{
+  success: true,
+  text: "John loves Mary.",
+  confidence: 0.78,
+  structure: { operator: "loves", arguments: [...] }
+}</code></pre>
+
+  <h3>session.elaborate(vector | result, options?)</h3>
+
+  <p>Generates detailed narrative explanation, optionally using LLM refinement.</p>
+
+  <pre><code>const detailed = session.elaborate(queryResult, { useLLM: true });
+
+// Result structure
+{
+  success: true,
+  text: "John has romantic feelings for Mary.",
+  baseText: "John loves Mary.",
+  confidence: 0.78,
+  llmRefined: true
+}</code></pre>
+
+  <h2>Inspection API</h2>
+
+  <h3>session.dump()</h3>
+
+  <p>Returns complete session state for debugging.</p>
+
+  <pre><code>const state = session.dump();
+
+// Result structure
+{
+  scope: { "f1": {...}, "f2": {...} },
+  facts: [
+    { name: "f1", dsl: "loves John Mary", confidence: 1.0 }
+  ],
+  vocabulary: { count: 156, theories: ["Core", "session"] },
+  theories: ["Core"],
+  stats: {
+    learnCalls: 3,
+    queryCalls: 1,
+    proveCalls: 0,
+    startTime: "2024-01-15T10:30:00Z"
+  }
+}</code></pre>
+
+  <h3>session.inspect(name)</h3>
+
+  <p>Returns detailed information about a named vector.</p>
+
+  <pre><code>const info = session.inspect("f1");
+
+// Result structure
+{
+  name: "f1",
+  type: "fact",
+  density: 0.501,
+  popcount: 16412,
+  similarTo: [
+    { name: "f2", similarity: 0.68 },
+    { name: "loves", similarity: 0.55 }
+  ],
+  structure: {
+    operator: "loves",
+    arguments: [
+      { position: 1, value: "John", confidence: 0.85 },
+      { position: 2, value: "Mary", confidence: 0.82 }
+    ]
+  },
+  inKB: true
+}</code></pre>
+
+  <h3>session.listTheories()</h3>
+
+  <pre><code>const theories = session.listTheories();
+// ["Core", "Commerce", "Physics"]</code></pre>
+
+  <h3>session.listAtoms(theory?)</h3>
+
+  <pre><code>const atoms = session.listAtoms("Core");
+// [{ name: "__Atom", theory: "Core" }, ...]</code></pre>
+
+  <h3>session.listMacros(theory?)</h3>
+
+  <pre><code>const macros = session.listMacros();
+// [{ name: "definePerson", params: ["name", "age"], theory: "People" }]</code></pre>
+
+  <h3>session.listFacts()</h3>
+
+  <pre><code>const facts = session.listFacts();
+// [{ name: "f1", dsl: "loves John Mary" }, ...]</code></pre>
+
+  <h3>session.similarity(a, b)</h3>
+
+  <pre><code>const sim = session.similarity("John", "Mary");
+// 0.502 (near random - unrelated concepts)</code></pre>
+
+  <h3>session.decode(vector)</h3>
+
+  <pre><code>const structure = session.decode(someVector);
+// { operator: "loves", arguments: [...], confidence: 0.82 }</code></pre>
+
+  <h2>Result Types</h2>
+
+  <h3>LearnResult</h3>
+
+  <pre><code>interface LearnResult {
+  success: boolean;
+  statements: number;
+  warnings: string[];
+  errors: Array&lt;{
+    message: string;
+    line: number;
+    column: number;
+  }&gt;;
+}</code></pre>
+
+  <h3>QueryResult</h3>
+
+  <pre><code>interface QueryResult {
+  success: boolean;
+  bindings: Record&lt;string, Binding&gt;;
+  confidence: number;
+  ambiguous: boolean;
+  reason?: string;
+}
+
+interface Binding {
+  answer: string;
+  similarity: number;
+  alternatives: Array&lt;{ value: string; similarity: number }&gt;;
+}</code></pre>
+
+  <h3>ProveResult</h3>
+
+  <pre><code>interface ProveResult {
+  valid: boolean;
+  proof: ProofTree | null;
+  steps: ProofStep[];
+  confidence: number;
+  reason?: string;
+}
+
+interface ProofTree {
+  goal: string;
+  method: "direct" | "rule" | "assumption";
+  rule?: string;
+  premises?: ProofTree[];
+  confidence: number;
+}
+
+interface ProofStep {
+  operation: string;
+  goal: string;
+  result: string;
+  timestamp: string;
+}</code></pre>
+
+  <h2>Error Handling</h2>
+
+  <pre><code>import { AGIError, ParseError, QueryError } from 'agisystem2';
+
+try {
+  const result = session.learn(`@invalid syntax!!!`);
+} catch (e) {
+  if (e instanceof ParseError) {
+    console.log(`Parse error at line ${e.line}, column ${e.column}`);
+    console.log(`Expected: ${e.expected}, Found: ${e.found}`);
+  } else if (e instanceof AGIError) {
+    console.log(`AGI error: ${e.message}`);
+  }
+}</code></pre>
+
+  <h2>Configuration</h2>
+
+  <h3>Geometry Selection</h3>
+
+  <table>
+    <tr>
+      <th>Geometry</th>
+      <th>Memory/Vector</th>
+      <th>KB Capacity</th>
+      <th>Use Case</th>
+    </tr>
+    <tr>
+      <td>1024</td>
+      <td>128 bytes</td>
+      <td>~10 facts</td>
+      <td>Toy examples</td>
+    </tr>
+    <tr>
+      <td>8192</td>
+      <td>1 KB</td>
+      <td>~50 facts</td>
+      <td>Small domains</td>
+    </tr>
+    <tr>
+      <td>32768</td>
+      <td>4 KB</td>
+      <td>~200 facts</td>
+      <td>Production (default)</td>
+    </tr>
+    <tr>
+      <td>65536</td>
+      <td>8 KB</td>
+      <td>~400 facts</td>
+      <td>Large KBs</td>
+    </tr>
   </table>
+
+  <h3>Confidence Thresholds</h3>
+
+  <pre><code>const engine = createSpockEngine({
+  thresholds: {
+    strongMatch: 0.80,    // Trust completely
+    goodMatch: 0.65,      // Probably correct
+    weakMatch: 0.55,      // Verify if critical
+    noMatch: 0.50         // Random noise
+  }
+});</code></pre>
+
+  <h2>Complete Example</h2>
+
+  <pre><code>import { createSpockEngine, createSessionApi } from 'agisystem2';
+
+async function reasoningExample() {
+  // Initialize
+  const engine = createSpockEngine({ dimensions: 32768 });
+  const session = engine.createSession();
+  const api = createSessionApi(session);
+
+  // Define domain knowledge
+  api.learn(`
+    # People
+    @f1 isA Socrates Human
+    @f2 isA Plato Human
+    @f3 isA Aristotle Human
+
+    # Relationships
+    @f4 teaches Socrates Plato
+    @f5 teaches Plato Aristotle
+
+    # Rules
+    @r1 Implies (isA ?x Human) (isA ?x Mortal)
+    @r2 Implies (teaches ?x ?y) (knows ?y ?x)
+  `);
+
+  // Query: Who is mortal?
+  const q1 = api.query(`@q isA ?who Mortal`);
+  console.log("Mortals:", q1.bindings.who.answer);
+
+  // Query: Who does Plato know?
+  const q2 = api.query(`@q knows Plato ?who`);
+  console.log("Plato knows:", q2.bindings.who.answer);
+
+  // Prove with explanation
+  const proof = api.prove(`@goal isA Socrates Mortal`);
+  console.log("Proof valid:", proof.valid);
+  console.log("Steps:", proof.steps.length);
+
+  // Generate explanation
+  const explanation = api.elaborate(proof, { useLLM: false });
+  console.log("Explanation:", explanation.text);
+
+  // Debug
+  console.log("Session stats:", session.dump().stats);
+
+  // Cleanup
+  session.close();
+}
+
+reasoningExample();</code></pre>
 
   <h2>Related Documentation</h2>
 
   <ul>
-    <li><a href="../syntax/index.html">Syntax Reference</a> – Command syntax details</li>
-    <li><a href="../architecture/language.html">Language Layer</a> – How commands are processed</li>
-    <li><a href="../usage-cli/index.html">CLI</a> – Command-line interface</li>
+    <li><a href="../syntax/index.html">DSL Syntax Reference</a></li>
+    <li><a href="../architecture/index.html">System Architecture</a></li>
+    <li><a href="../specs/DS/DS03-Architecture.md">DS03 - API Specification</a></li>
   </ul>
 
   <div class="footer-nav">
-    <a href="../index.html">Home</a> ·
-    <a href="../syntax/index.html">Syntax →</a>
+    <p>All API methods return structured results with confidence scores for transparent, verifiable reasoning.</p>
   </div>
   </div>
-  <script src="../reference/nav2.js"></script>
 </body>
 </html>

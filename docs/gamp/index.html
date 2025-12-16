@@ -1,0 +1,742 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GAMP Traceability Matrix - AGISystem2</title>
+  <link rel="stylesheet" href="../reference/style.css">
+  <style>
+    .trace-matrix {
+      font-size: 0.75em;
+      overflow-x: auto;
+    }
+    .trace-matrix th {
+      background: #1976d2;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .trace-matrix th.rotate {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      height: 120px;
+      padding: 5px;
+    }
+    .trace-matrix td {
+      text-align: center;
+      min-width: 30px;
+    }
+    .trace-matrix td.req-id {
+      text-align: left;
+      font-family: monospace;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .covered { background: #c8e6c9 !important; }
+    .partial { background: #fff9c4 !important; }
+    .not-covered { background: #ffcdd2 !important; }
+    .matrix-wrapper {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+    .legend {
+      display: flex;
+      gap: 20px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .legend-box {
+      width: 20px;
+      height: 20px;
+      border: 1px solid #666;
+    }
+    .summary-table td:first-child {
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>GAMP Traceability Matrix</h1>
+    <small>
+      <a href="../index.html">Home</a> &middot;
+      <a href="../architecture/index.html">Architecture</a> &middot;
+      <a href="../specs/matrix.html">Specs</a> &middot;
+      <a href="index.html">GAMP Matrix</a>
+    </small>
+    <small>Complete requirements traceability for GAMP Category 5</small>
+  </div>
+
+  <div class="section-intro">
+    <p>This matrix provides complete traceability from User Requirements (URS) through Functional (FS) and Non-Functional (NFS) Specifications to Design Specifications (DS) and Code Plans. All requirements are uniquely identified for verification and validation.</p>
+  </div>
+
+  <h2>Traceability Summary</h2>
+
+  <table class="summary-table">
+    <tr>
+      <th>Document</th>
+      <th>Total Requirements</th>
+      <th>Covered by FS/NFS</th>
+      <th>Covered by DS</th>
+      <th>Coverage %</th>
+    </tr>
+    <tr>
+      <td>URS (User Requirements)</td>
+      <td>40</td>
+      <td>40</td>
+      <td>40</td>
+      <td><span class="badge badge-success">100%</span></td>
+    </tr>
+    <tr>
+      <td>FS (Functional Spec)</td>
+      <td>90</td>
+      <td>-</td>
+      <td>90</td>
+      <td><span class="badge badge-success">100%</span></td>
+    </tr>
+    <tr>
+      <td>NFS (Non-Functional Spec)</td>
+      <td>91</td>
+      <td>-</td>
+      <td>91</td>
+      <td><span class="badge badge-success">100%</span></td>
+    </tr>
+  </table>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-box covered"></div>
+      <span>Fully Covered</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-box partial"></div>
+      <span>Partially Covered</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-box not-covered"></div>
+      <span>Not Covered</span>
+    </div>
+  </div>
+
+  <h2>URS to FS/NFS Traceability</h2>
+
+  <div class="matrix-wrapper">
+  <table class="trace-matrix">
+    <thead>
+      <tr>
+        <th>URS ID</th>
+        <th>Description</th>
+        <th>FS IDs</th>
+        <th>NFS IDs</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="req-id">URS-01</td>
+        <td>Deterministic reasoning</td>
+        <td>FS-01, FS-06</td>
+        <td>NFS-19 to NFS-22</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-02</td>
+        <td>Explainable proof chains</td>
+        <td>FS-49 to FS-56</td>
+        <td>-</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-03</td>
+        <td>Contradiction detection</td>
+        <td>FS-52</td>
+        <td>NFS-26</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-04</td>
+        <td>Multiple reasoning types</td>
+        <td>FS-49 to FS-56, FS-68, FS-70</td>
+        <td>NFS-18</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-05</td>
+        <td>Confidence scores</td>
+        <td>FS-46, FS-55</td>
+        <td>NFS-23 to NFS-25</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-06</td>
+        <td>Domain-specific theories</td>
+        <td>FS-17 to FS-24, FS-66 to FS-72</td>
+        <td>-</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-07</td>
+        <td>Multiple theories</td>
+        <td>FS-19, FS-20</td>
+        <td>NFS-16, NFS-33, NFS-40</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-08</td>
+        <td>Theory versioning</td>
+        <td>-</td>
+        <td>-</td>
+        <td class="partial">Planned</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-09</td>
+        <td>Theory persistence</td>
+        <td>FS-24</td>
+        <td>NFS-48</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-10</td>
+        <td>Theory validation</td>
+        <td>FS-23</td>
+        <td>-</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-11</td>
+        <td>DSL for knowledge</td>
+        <td>FS-08 to FS-16</td>
+        <td>NFS-17</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-12</td>
+        <td>SVO triplets</td>
+        <td>FS-10, FS-37, FS-67</td>
+        <td>-</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-13</td>
+        <td>Query with holes</td>
+        <td>FS-12, FS-41 to FS-48</td>
+        <td>-</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-14</td>
+        <td>Natural language output</td>
+        <td>FS-57 to FS-65, FS-71</td>
+        <td>-</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-15</td>
+        <td>JavaScript/TypeScript API</td>
+        <td>FS-25 to FS-33</td>
+        <td>NFS-61, NFS-86</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-16</td>
+        <td>Replayable DSL traces</td>
+        <td>FS-89</td>
+        <td>NFS-75</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-17</td>
+        <td>Summarize output</td>
+        <td>FS-63</td>
+        <td>-</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-18</td>
+        <td>Elaborate output</td>
+        <td>FS-64, FS-65</td>
+        <td>-</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-19</td>
+        <td>Uncertainty indication</td>
+        <td>FS-48</td>
+        <td>-</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-20</td>
+        <td>Step-by-step proofs</td>
+        <td>FS-54</td>
+        <td>-</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-21</td>
+        <td>Query response < 100ms</td>
+        <td>-</td>
+        <td>NFS-01 to NFS-08</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-22</td>
+        <td>200+ facts capacity</td>
+        <td>FS-04</td>
+        <td>NFS-12 to NFS-15</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-23</td>
+        <td>Graceful degradation</td>
+        <td>FS-53, FS-78</td>
+        <td>NFS-28, NFS-29</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-24</td>
+        <td>Capacity warnings</td>
+        <td>FS-77</td>
+        <td>NFS-78</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-25</td>
+        <td>LLM integration</td>
+        <td>FS-65</td>
+        <td>NFS-76</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-26</td>
+        <td>External tool hooks</td>
+        <td>-</td>
+        <td>NFS-58, NFS-59</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-27</td>
+        <td>Standard format export</td>
+        <td>-</td>
+        <td>NFS-73, NFS-74</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-28</td>
+        <td>Node.js support</td>
+        <td>-</td>
+        <td>NFS-69, NFS-70, NFS-72</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-29</td>
+        <td>Browser support</td>
+        <td>-</td>
+        <td>NFS-71</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-30</td>
+        <td>Audit logs</td>
+        <td>FS-86 to FS-90</td>
+        <td>NFS-77 to NFS-84, NFS-88, NFS-89</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-31</td>
+        <td>Regulatory rules encoding</td>
+        <td>-</td>
+        <td>NFS-90</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-32</td>
+        <td>Real-time compliance</td>
+        <td>-</td>
+        <td>-</td>
+        <td class="partial">DS08</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-33</td>
+        <td>Compliance reports</td>
+        <td>-</td>
+        <td>-</td>
+        <td class="partial">DS08</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-34</td>
+        <td>No sensitive data in vectors</td>
+        <td>-</td>
+        <td>NFS-46</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-35</td>
+        <td>Theory access controls</td>
+        <td>-</td>
+        <td>NFS-49, NFS-50</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-36</td>
+        <td>DSL input validation</td>
+        <td>-</td>
+        <td>NFS-42 to NFS-45</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-37</td>
+        <td>API documentation</td>
+        <td>-</td>
+        <td>NFS-51 to NFS-57, NFS-62</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-38</td>
+        <td>Example theories</td>
+        <td>-</td>
+        <td>NFS-63, NFS-66 to NFS-68</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-39</td>
+        <td>Clear error messages</td>
+        <td>FS-15, FS-73 to FS-78</td>
+        <td>NFS-64, NFS-65</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+      <tr>
+        <td class="req-id">URS-40</td>
+        <td>Debugging tools</td>
+        <td>FS-32, FS-79 to FS-85</td>
+        <td>-</td>
+        <td class="covered">&#10003;</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>FS to DS Traceability</h2>
+
+  <div class="matrix-wrapper">
+  <table class="trace-matrix">
+    <thead>
+      <tr>
+        <th>FS Category</th>
+        <th>FS IDs</th>
+        <th>DS Documents</th>
+        <th>Code Plans</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Core HDC Operations</td>
+        <td>FS-01 to FS-07</td>
+        <td>DS01, DS09</td>
+        <td>core/vector.js, core/operations.js, core/position.js</td>
+      </tr>
+      <tr>
+        <td>DSL Parser</td>
+        <td>FS-08 to FS-16</td>
+        <td>DS02</td>
+        <td>parser/lexer.js, parser/parser.js, parser/ast.js</td>
+      </tr>
+      <tr>
+        <td>Theory Management</td>
+        <td>FS-17 to FS-24</td>
+        <td>DS03, DS07</td>
+        <td>runtime/theory/registry.js, runtime/theory/loader.js</td>
+      </tr>
+      <tr>
+        <td>Session Management</td>
+        <td>FS-25 to FS-33</td>
+        <td>DS03</td>
+        <td>runtime/session.js, runtime/scope.js</td>
+      </tr>
+      <tr>
+        <td>Executor</td>
+        <td>FS-34 to FS-40</td>
+        <td>DS03, DS10</td>
+        <td>runtime/executor.js</td>
+      </tr>
+      <tr>
+        <td>Query Engine</td>
+        <td>FS-41 to FS-48</td>
+        <td>DS05</td>
+        <td>reasoning/query.js</td>
+      </tr>
+      <tr>
+        <td>Proof Engine</td>
+        <td>FS-49 to FS-56</td>
+        <td>DS05, DS06</td>
+        <td>reasoning/prove.js, reasoning/rules.js</td>
+      </tr>
+      <tr>
+        <td>Decoding & Phrasing</td>
+        <td>FS-57 to FS-65</td>
+        <td>DS11</td>
+        <td>decoding/structural-decoder.js, decoding/text-generator.js</td>
+      </tr>
+      <tr>
+        <td>Core Theory Content</td>
+        <td>FS-66 to FS-72</td>
+        <td>DS07</td>
+        <td>runtime/theory/core-theory.js</td>
+      </tr>
+      <tr>
+        <td>Error Handling</td>
+        <td>FS-73 to FS-78</td>
+        <td>DS10</td>
+        <td>(integrated in all modules)</td>
+      </tr>
+      <tr>
+        <td>Debug Utilities</td>
+        <td>FS-79 to FS-85</td>
+        <td>DS10</td>
+        <td>debug/dump.js, debug/inspect.js</td>
+      </tr>
+      <tr>
+        <td>Audit & Tracing</td>
+        <td>FS-86 to FS-90</td>
+        <td>DS08</td>
+        <td>(integrated in session.js)</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>NFS to DS Traceability</h2>
+
+  <div class="matrix-wrapper">
+  <table class="trace-matrix">
+    <thead>
+      <tr>
+        <th>NFS Category</th>
+        <th>NFS IDs</th>
+        <th>DS Documents</th>
+        <th>Verification Method</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Performance - Response Time</td>
+        <td>NFS-01 to NFS-08</td>
+        <td>DS09, DS10</td>
+        <td>Benchmark Suite</td>
+      </tr>
+      <tr>
+        <td>Performance - Throughput</td>
+        <td>NFS-09 to NFS-11</td>
+        <td>DS09</td>
+        <td>Benchmark Suite</td>
+      </tr>
+      <tr>
+        <td>Performance - Capacity</td>
+        <td>NFS-12 to NFS-18</td>
+        <td>DS01, DS09</td>
+        <td>Stress Test</td>
+      </tr>
+      <tr>
+        <td>Reliability - Determinism</td>
+        <td>NFS-19 to NFS-22</td>
+        <td>DS01, DS09</td>
+        <td>Repeated Execution Test</td>
+      </tr>
+      <tr>
+        <td>Reliability - Accuracy</td>
+        <td>NFS-23 to NFS-26</td>
+        <td>DS05, DS06</td>
+        <td>Accuracy Benchmark</td>
+      </tr>
+      <tr>
+        <td>Reliability - Availability</td>
+        <td>NFS-27 to NFS-29</td>
+        <td>DS10</td>
+        <td>Fault Injection Test</td>
+      </tr>
+      <tr>
+        <td>Memory & Resources</td>
+        <td>NFS-30 to NFS-41</td>
+        <td>DS09</td>
+        <td>Memory Profiling</td>
+      </tr>
+      <tr>
+        <td>Security</td>
+        <td>NFS-42 to NFS-50</td>
+        <td>DS02, DS03</td>
+        <td>Security Review</td>
+      </tr>
+      <tr>
+        <td>Maintainability</td>
+        <td>NFS-51 to NFS-60</td>
+        <td>DS10</td>
+        <td>Code Analysis</td>
+      </tr>
+      <tr>
+        <td>Usability</td>
+        <td>NFS-61 to NFS-68</td>
+        <td>DS03</td>
+        <td>User Testing</td>
+      </tr>
+      <tr>
+        <td>Compatibility</td>
+        <td>NFS-69 to NFS-76</td>
+        <td>DS10</td>
+        <td>CI/CD Matrix</td>
+      </tr>
+      <tr>
+        <td>Operations</td>
+        <td>NFS-77 to NFS-87</td>
+        <td>DS08</td>
+        <td>Monitoring Review</td>
+      </tr>
+      <tr>
+        <td>Compliance</td>
+        <td>NFS-88 to NFS-91</td>
+        <td>DS08</td>
+        <td>Audit Review</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Design Specification Coverage</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>DS Document</th>
+        <th>URS Coverage</th>
+        <th>FS Coverage</th>
+        <th>NFS Coverage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>DS00 - Vision</td>
+        <td>All (Overview)</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>DS01 - Theoretical Foundation</td>
+        <td>URS-01, URS-22</td>
+        <td>FS-01 to FS-07</td>
+        <td>NFS-12 to NFS-22</td>
+      </tr>
+      <tr>
+        <td>DS02 - DSL Syntax</td>
+        <td>URS-11 to URS-13</td>
+        <td>FS-08 to FS-16</td>
+        <td>NFS-42 to NFS-45</td>
+      </tr>
+      <tr>
+        <td>DS03 - Architecture</td>
+        <td>URS-06, URS-07, URS-15</td>
+        <td>FS-17 to FS-40</td>
+        <td>NFS-49, NFS-55 to NFS-57</td>
+      </tr>
+      <tr>
+        <td>DS05 - Basic Reasoning</td>
+        <td>URS-02 to URS-05, URS-13</td>
+        <td>FS-41 to FS-56</td>
+        <td>NFS-23 to NFS-26</td>
+      </tr>
+      <tr>
+        <td>DS06 - Advanced Reasoning</td>
+        <td>URS-04</td>
+        <td>FS-49 to FS-56</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>DS07 - Core Theory</td>
+        <td>URS-06, URS-12</td>
+        <td>FS-66 to FS-72</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>DS08 - Trustworthy AI</td>
+        <td>URS-30 to URS-33</td>
+        <td>FS-86 to FS-90</td>
+        <td>NFS-77 to NFS-91</td>
+      </tr>
+      <tr>
+        <td>DS09 - Core HDC</td>
+        <td>URS-01, URS-21, URS-22</td>
+        <td>FS-01 to FS-07</td>
+        <td>NFS-01 to NFS-11, NFS-30 to NFS-41</td>
+      </tr>
+      <tr>
+        <td>DS10 - Code Plan</td>
+        <td>All (Implementation)</td>
+        <td>All (Implementation)</td>
+        <td>NFS-51 to NFS-60, NFS-69 to NFS-76</td>
+      </tr>
+      <tr>
+        <td>DS11 - Decoding Engine</td>
+        <td>URS-14, URS-17, URS-18</td>
+        <td>FS-57 to FS-65</td>
+        <td>-</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Verification Status</h2>
+
+  <table>
+    <tr>
+      <th>Phase</th>
+      <th>Status</th>
+      <th>Artifacts</th>
+    </tr>
+    <tr>
+      <td>Requirements Definition</td>
+      <td><span class="badge badge-success">Complete</span></td>
+      <td>URS.md, FS.md, NFS.md</td>
+    </tr>
+    <tr>
+      <td>Design Specification</td>
+      <td><span class="badge badge-success">Complete</span></td>
+      <td>DS00 to DS11</td>
+    </tr>
+    <tr>
+      <td>Code Plans</td>
+      <td><span class="badge badge-success">Complete</span></td>
+      <td>docs/specs/src/*.md</td>
+    </tr>
+    <tr>
+      <td>Implementation</td>
+      <td><span class="badge badge-warning">Pending</span></td>
+      <td>src/</td>
+    </tr>
+    <tr>
+      <td>Unit Testing</td>
+      <td><span class="badge badge-warning">Pending</span></td>
+      <td>tests/unit/</td>
+    </tr>
+    <tr>
+      <td>Integration Testing</td>
+      <td><span class="badge badge-warning">Pending</span></td>
+      <td>tests/integration/</td>
+    </tr>
+    <tr>
+      <td>Validation</td>
+      <td><span class="badge badge-warning">Pending</span></td>
+      <td>Validation Report</td>
+    </tr>
+  </table>
+
+  <div class="footer-nav">
+    <p>This traceability matrix ensures complete coverage from user needs through implementation.</p>
+    <p><a href="../specs/matrix.html">Back to Specifications</a> | <a href="../index.html">Home</a></p>
+  </div>
+  </div>
+</body>
+</html>

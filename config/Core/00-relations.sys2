@@ -1,0 +1,34 @@
+# Core Theory - Relation Definitions
+# Defines properties of relations (transitive, symmetric, etc.)
+# Auto-loaded by runtime
+
+# ===== Transitive Relations =====
+# Relations where: R(A,B) AND R(B,C) => R(A,C)
+
+@isA:isA __TransitiveRelation
+@locatedIn:locatedIn __TransitiveRelation
+@partOf:partOf __TransitiveRelation
+@subclassOf:subclassOf __TransitiveRelation
+@containedIn:containedIn __TransitiveRelation
+@before:before __TransitiveRelation
+@after:after __TransitiveRelation
+@causes:causes __TransitiveRelation
+@appealsTo:appealsTo __TransitiveRelation
+@leadsTo:leadsTo __TransitiveRelation
+@enables:enables __TransitiveRelation
+@ancestorOf:ancestorOf __TransitiveRelation
+@descendantOf:descendantOf __TransitiveRelation
+
+# ===== Symmetric Relations =====
+# Relations where: R(A,B) => R(B,A)
+
+@siblingOf:siblingOf __SymmetricRelation
+@marriedTo:marriedTo __SymmetricRelation
+@near:near __SymmetricRelation
+@adjacent:adjacent __SymmetricRelation
+
+# ===== Reflexive Relations =====
+# Relations where: R(A,A) is always true
+
+@equals:equals __ReflexiveRelation
+@sameAs:sameAs __ReflexiveRelation

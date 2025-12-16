@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Dense Binary Strategy - AGISystem2</title>
+    <link rel="stylesheet" href="../../reference/style.css">
+</head>
+<body>
+    <div class="page">
+    <div class="nav-header">
+        <h1>Dense Binary Strategy</h1>
+        <small><a href="../index.html">← Back to Documentation</a></small>
+    </div>
+
+    <div class="section-intro">
+        <p>The dense binary strategy is the default HDC implementation in AGISystem2, using fixed-dimensional vectors and bitwise operations.</p>
+    </div>
+
+    <h2>Overview</h2>
+    <p>The dense binary strategy represents vectors as fixed-size bit arrays, typically using 32,768 bits (4KB) per vector. This approach is mature, well-tested, and offers excellent performance for most applications.</p>
+
+    <h3>Key Characteristics</h3>
+    <ul>
+        <li><strong>Binding Operation</strong>: Bitwise XOR (⊕)</li>
+        <li><strong>Bundle Operation</strong>: Majority vote per bit position</li>
+        <li><strong>Similarity</strong>: 1 - (Hamming distance / geometry)</li>
+        <li><strong>Memory</strong>: 4KB per vector (32,768 bits)</li>
+    </ul>
+
+    <h3>Mathematical Properties</h3>
+    <ul>
+        <li><strong>Self-Inverse</strong>: bind(bind(a,b), b) = a (perfect)</li>
+        <li><strong>Associative</strong>: bind(bind(a,b), c) = bind(a, bind(b,c)) (perfect)</li>
+        <li><strong>Commutative</strong>: bind(a,b) = bind(b,a) (perfect)</li>
+        <li><strong>Reflexive</strong>: similarity(a,a) = 1.0 (perfect)</li>
+        <li><strong>Symmetric</strong>: similarity(a,b) = similarity(b,a) (perfect)</li>
+    </ul>
+
+    <h3>Performance</h3>
+    <table class="matrix-table">
+        <tr>
+            <td><strong>Operation</strong></td>
+            <td><strong>Complexity</strong></td>
+            <td><strong>Performance</strong></td>
+        </tr>
+        <tr>
+            <td>Binding</td>
+            <td>O(n/32)</td>
+            <td>~255K ops/sec</td>
+        </tr>
+        <tr>
+            <td>Similarity</td>
+            <td>O(n/32)</td>
+            <td>~145K ops/sec</td>
+        </tr>
+        <tr>
+            <td>Bundle</td>
+            <td>O(n/32)</td>
+            <td>~948 ops/sec</td>
+        </tr>
+    </table>
+
+    <h3>Use Cases</h3>
+    <ul>
+        <li>General-purpose applications</li>
+        <li>Smaller knowledge bases (&lt;10K facts)</li>
+        <li>Applications requiring maximum performance</li>
+        <li>Backward compatibility scenarios</li>
+    </ul>
+
+    <div class="footer-nav">
+        <a href="../index.html">← Back to Documentation</a>
+    </div>
+    </div>
+
+    <style>
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .matrix-table td, .matrix-table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .matrix-table th {
+            background: #f5f5f5;
+        }
+    </style>
+</body>
+</html>

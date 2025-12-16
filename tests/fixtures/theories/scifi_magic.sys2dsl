@@ -1,6 +1,0 @@
-# Sci-fi tech-magic theory (Sys2DSL)
-@f0 Alice IS_A Human
-@f1 Alice LOCATED_IN CityX
-@f2 Alice CASTS Magic
-@f3 SciFi_TechMagic PERMITS Magic_IN CityX
-

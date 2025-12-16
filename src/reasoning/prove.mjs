@@ -1,0 +1,340 @@
+/**
+ * AGISystem2 - Proof Engine (Orchestration)
+ * @module reasoning/prove
+ *
+ * Main proof engine that orchestrates reasoning components:
+ * - Transitive reasoning (isA, locatedIn, partOf chains)
+ * - Variable unification (quantified rules)
+ * - Compound conditions (And/Or with backtracking)
+ * - KB pattern matching
+ * - Disjoint proofs (spatial negation)
+ *
+ * The proof strategy follows this priority:
+ * 1. Direct KB match (high confidence)
+ * 2. Transitive chain reasoning
+ * 3. Backward chaining with rules
+ * 4. Weak direct match
+ * 5. Disjoint proof for spatial relations
+ */
+
+import { MAX_PROOF_DEPTH, PROOF_TIMEOUT_MS, MAX_REASONING_STEPS } from '../core/constants.mjs';
+import { TransitiveReasoner } from './transitive.mjs';
+import { UnificationEngine } from './unification.mjs';
+import { ConditionProver } from './conditions.mjs';
+import { KBMatcher } from './kb-matching.mjs';
+import { DisjointProver } from './disjoint.mjs';
+
+/**
+ * Main proof engine - orchestrates all reasoning components
+ */
+export class ProofEngine {
+  /**
+   * Create proof engine
+   * @param {Session} session - Parent session with KB and rules
+   * @param {Object} options - Proof options
+   */
+  constructor(session, options = {}) {
+    this.session = session;
+    this.options = {
+      maxDepth: options.maxDepth || MAX_PROOF_DEPTH,
+      timeout: options.timeout || PROOF_TIMEOUT_MS
+    };
+
+    // Proof state
+    this.steps = [];
+    this.visited = new Set();
+    this.startTime = 0;
+    this.reasoningSteps = 0;
+    this.maxSteps = MAX_REASONING_STEPS;
+
+    // Initialize reasoning components
+    this.transitive = new TransitiveReasoner(this);
+    this.unification = new UnificationEngine(this);
+    this.conditions = new ConditionProver(this);
+    this.kbMatcher = new KBMatcher(this);
+    this.disjoint = new DisjointProver(this);
+  }
+
+  // ============================================================
+  // PUBLIC API
+  // ============================================================
+
+  /**
+   * Prove a goal statement
+   * @param {Statement} goal - Goal to prove
+   * @returns {ProofResult} Proof result with steps and confidence
+   */
+  prove(goal) {
+    this.resetState();
+
+    try {
+      const result = this.proveGoal(goal, 0);
+      result.goal = result.goal || goal.toString?.() || '';
+
+      if (!result.steps || result.steps.length === 0) {
+        result.steps = this.steps;
+      }
+
+      // Ensure confidence is set (default based on valid)
+      if (result.confidence === undefined) {
+        result.confidence = result.valid ? 0.8 : 0;
+      }
+
+      // Add proof field for API compatibility
+      result.proof = result.valid ? result.steps : null;
+
+      return result;
+    } catch (e) {
+      return {
+        valid: false,
+        reason: e.message,
+        goal: goal.toString?.() || '',
+        steps: this.steps,
+        confidence: 0,
+        proof: null
+      };
+    }
+  }
+
+  /**
+   * Try direct KB match (delegates to kbMatcher)
+   * @param {Vector} goalVector - Goal vector
+   * @param {string} goalStr - Goal string representation
+   * @returns {Object} Match result with success and confidence
+   */
+  tryDirectMatch(goalVector, goalStr) {
+    const result = this.kbMatcher.tryDirectMatch(goalVector, goalStr);
+    return {
+      success: result.valid,
+      confidence: result.confidence || 0
+    };
+  }
+
+  /**
+   * Combine confidences from multiple proof results
+   * Returns minimum confidence with chain penalty
+   * @param {Array} results - Array of results with confidence
+   * @returns {number} Combined confidence
+   */
+  combineConfidences(results) {
+    if (!results || results.length === 0) {
+      return 1.0;
+    }
+    const minConf = Math.min(...results.map(r => r.confidence || 0));
+    // Apply chain length penalty
+    return minConf * Math.pow(0.98, results.length);
+  }
+
+  // ============================================================
+  // ORCHESTRATION - Main Proof Loop
+  // ============================================================
+
+  /**
+   * Main proof loop with depth tracking
+   * Tries strategies in priority order:
+   * 1. Direct KB match (high confidence)
+   * 2. Transitive chain reasoning
+   * 3. Backward chaining with rules
+   * 4. Weak direct match
+   * 5. Disjoint proof
+   */
+  proveGoal(goal, depth) {
+    // Check limits
+    if (this.isTimedOut()) {
+      throw new Error('Proof timed out');
+    }
+    this.incrementSteps();
+    if (this.reasoningSteps > this.maxSteps) {
+      return { valid: false, reason: 'Step limit exceeded' };
+    }
+    if (depth > this.options.maxDepth) {
+      return { valid: false, reason: 'Depth limit exceeded' };
+    }
+
+    // Build goal vector and check cycles
+    const goalVec = this.session.executor.buildStatementVector(goal);
+    const goalHash = this.hashVector(goalVec);
+
+    if (this.visited.has(goalHash)) {
+      return { valid: false, reason: 'Cycle detected' };
+    }
+    this.visited.add(goalHash);
+
+    const goalStr = goal.toString();
+
+    // Check if goal is explicitly negated (blocks all proofs)
+    if (this.isGoalNegated(goal)) {
+      return { valid: false, reason: 'Goal is negated' };
+    }
+
+    // Strategy 1: Direct KB match (strong threshold)
+    const directResult = this.kbMatcher.tryDirectMatch(goalVec, goalStr);
+    if (directResult.valid && directResult.confidence > 0.7) {
+      directResult.steps = [{ operation: 'direct_match', fact: this.goalToFact(goal) }];
+      return directResult;
+    }
+
+    // Strategy 2: Transitive reasoning
+    const transitiveResult = this.transitive.tryTransitiveChain(goal, depth);
+    if (transitiveResult.valid) {
+      return transitiveResult;
+    }
+
+    // Strategy 3: Rule matching (backward chaining)
+    for (const rule of this.session.rules) {
+      this.session.reasoningStats.ruleAttempts++;
+      const ruleResult = this.kbMatcher.tryRuleMatch(goal, rule, depth);
+      if (ruleResult.valid) {
+        return ruleResult;
+      }
+    }
+
+    // Strategy 4: Weak direct match
+    if (directResult.valid && directResult.confidence > 0.55) {
+      directResult.steps = [{ operation: 'weak_match', fact: this.goalToFact(goal) }];
+      return directResult;
+    }
+
+    // Strategy 5: Disjoint proof for spatial relations
+    const disjointResult = this.disjoint.tryDisjointProof(goal, depth);
+    if (disjointResult.valid) {
+      return disjointResult;
+    }
+
+    return { valid: false, reason: 'No proof found' };
+  }
+
+  // ============================================================
+  // STATE MANAGEMENT
+  // ============================================================
+
+  /**
+   * Reset proof state for new proof
+   */
+  resetState() {
+    this.steps = [];
+    this.visited = new Set();
+    this.startTime = Date.now();
+    this.reasoningSteps = 0;
+  }
+
+  /**
+   * Check if proof has timed out
+   * @returns {boolean}
+   */
+  isTimedOut() {
+    return Date.now() - this.startTime > this.options.timeout;
+  }
+
+  /**
+   * Increment reasoning step counter
+   */
+  incrementSteps() {
+    this.reasoningSteps++;
+  }
+
+  /**
+   * Log a proof step
+   * @param {string} operation - Operation type
+   * @param {string} detail - Step details
+   */
+  logStep(operation, detail) {
+    this.steps.push({
+      operation,
+      detail,
+      timestamp: Date.now() - this.startTime
+    });
+  }
+
+  // ============================================================
+  // UTILITY METHODS (used by all components)
+  // ============================================================
+
+  /**
+   * Convert goal statement to DSL fact string
+   * @param {Object} goal - Goal statement
+   * @returns {string} Fact string "op arg1 arg2"
+   */
+  goalToFact(goal) {
+    const op = this.extractOperatorName(goal);
+    if (!op) return '';
+    const args = (goal.args || []).map(a => this.extractArgName(a) || '').filter(Boolean);
+    return `${op} ${args.join(' ')}`.trim();
+  }
+
+  /**
+   * Extract operator name from statement
+   * @param {Object} stmt - Statement AST
+   * @returns {string|null}
+   */
+  extractOperatorName(stmt) {
+    if (!stmt?.operator) return null;
+    return stmt.operator.name || stmt.operator.value || null;
+  }
+
+  /**
+   * Extract argument name from AST node
+   * @param {Object} arg - Argument node
+   * @returns {string|null}
+   */
+  extractArgName(arg) {
+    if (!arg) return null;
+    if (arg.type === 'Identifier') return arg.name;
+    if (arg.type === 'Reference') return arg.name;
+    return arg.name || arg.value || null;
+  }
+
+  /**
+   * Create hash for vector (cycle detection)
+   * @param {Object} vec - Vector
+   * @returns {string} Hash string
+   */
+  hashVector(vec) {
+    if (!vec?.data) return 'invalid:' + Math.random().toString(36);
+    const parts = [];
+    for (let i = 0; i < Math.min(4, vec.words || 0); i++) {
+      parts.push(vec.data[i]?.toString(16) || '0');
+    }
+    return parts.join(':');
+  }
+
+  /**
+   * Check if a goal is explicitly negated in the KB
+   * Looks for facts like "Not $ref" where $ref matches the goal
+   * @param {Object} goal - Goal statement
+   * @returns {boolean} True if goal is negated
+   */
+  isGoalNegated(goal) {
+    const goalVec = this.session.executor.buildStatementVector(goal);
+    if (!goalVec) return false;
+
+    // Look for Not statements in KB
+    for (const fact of this.session.kbFacts) {
+      const meta = fact.metadata;
+      if (!meta) continue;
+
+      // Check if this is a Not statement
+      if (meta.operator === 'Not') {
+        // Get the referenced name
+        const negatedRef = meta.args?.[0];
+        if (!negatedRef) continue;
+
+        // Look up the vector in scope
+        const refName = negatedRef.replace('$', '');
+        const negatedVec = this.session.scope.get(refName);
+
+        if (negatedVec) {
+          // Compare vectors using similarity
+          const sim = this.session.similarity(goalVec, negatedVec);
+          if (sim > 0.85) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+}
+
+export default ProofEngine;

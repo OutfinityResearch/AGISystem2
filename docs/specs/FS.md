@@ -1,165 +1,307 @@
-# AGISystem2 Functional Specification (FS)
+# AGISystem2 - Functional Specification (FS)
 
-## Scope
-Defines functional behavior of the neuro-symbolic engine that ingests Sys2DSL commands, encodes knowledge into a geometric conceptual space, reasons with layered theories, and returns deterministic answers with explanations. Implementation targets Node.js class-based modules.
+**Document Version:** 2.0
+**Status:** Draft
+**Classification:** GAMP Category 5 - Custom Application
+**Date:** 2024-12-15
 
-## Functional Requirements
+---
 
-### Concept Representation and Geometry
-- <a id="FS-01"></a>**FS-01 Concept Representation:** Represent every concept, fact, and query as fixed-width int arrays (Vector space with bounded diamonds: hyper-rectangle + L1 ball + relevance mask). Concepts are unions of one or more learned diamonds (clusters) sculpted through ingestion/learning. Dimension count is configurable (minimum 512; higher sizes for production) and drives ontology/axiology partitions and relation permutations.
+## 1. Document Purpose
 
-### Theory Management
-- <a id="FS-02"></a>**FS-02 Theory Layering and What-If:** Maintain a stack of theories (base + contextual overrides). Each layer can override dimension bounds/radius/masks and is addressable by name/context hints. The active stack is selected per query, enabling meta-rational handling of contradictory theories. Support creation of temporary theory layers and parallel evaluation branches; return comparative outcomes and deltas between branches when requested.
+This Functional Specification (FS) defines the detailed functional requirements for AGISystem2. Requirements are numbered using the format **FS-XX** for traceability to the URS and DS documents.
 
-### Ingestion and Learning
-- <a id="FS-03"></a>**FS-03 Ingestion Pipeline:** Parse Sys2DSL commands into subject-relation-object structures, enforce configurable recursion limits, and encode nodes into vectors using permutations and saturated addition. Confirm ingestion with summaries of applied rules.
-- <a id="FS-04"></a>**FS-04 Learning & Updates:** Accumulate empirical observations via algebraic superposition; expand or split concept diamonds when polysemy or contradiction appears (dynamic clustering). Deterministic inscription for ontological/axiological axes.
+---
 
-### Reasoning Engine
-- <a id="FS-05"></a>**FS-05 Reasoning Engine:** Assemble runtime concept definitions by flattening active theory layers; perform adversarial validation (optimist/sceptic radii) to return True/Plausible/False. Explicitly flag empty intersections as conflicts requiring user direction.
-- <a id="FS-06"></a>**FS-06 Retrieval & Decoding:** Provide blind decoding by inspecting relation-hint masks; probe with inverse permutations; perform LSH or equivalent nearest-neighbor lookup to retrieve candidate concepts and associated theories.
+## 2. System Architecture Overview
 
-### Compute Plugin Architecture
-- <a id="FS-18"></a>**FS-18 Compute Plugin Delegation:** Support external computation plugins for formal operations (math, physics, chemistry, logic, datetime) that are better handled by deterministic code than semantic reasoning:
-  - **Plugin Interface**: Plugins implement `evaluate(relation, subject, object)` returning `{ truth, confidence, value?, computed?, reason? }`.
-  - **Computable Relations**: Relations marked with `computable: "plugin_name"` in `dimensions.json` are delegated to plugins (e.g., LESS_THAN → math, CONVERTS_TO → physics).
-  - **Computable Dimensions (16-31)**: Reserved dimension range for numeric values, units, and computation metadata (NumericValue, NumericScale, UnitDomain, UnitBase, UnitPrefix, ComputeDomain, ComputeOperationType, ComputePrecision).
-  - **Facts First**: Direct facts in the knowledge base always take precedence over computed results.
-  - **Uniform Results**: Plugin results match the standard reasoning result structure for seamless integration.
+```
++------------------------------------------------------------------+
+|                        AGISystem2 Engine                          |
++------------------------------------------------------------------+
+|                                                                   |
+|  +-------------+  +-------------+  +---------------------------+ |
+|  |   Parser    |  |  Executor   |  |      Query Engine         | |
+|  |  (DSL->AST) |  | (AST->Vecs) |  |   (holes->answers)        | |
+|  +------+------+  +------+------+  +-----------+---------------+ |
+|         |                |                      |                 |
+|  +------+----------------+----------------------+--------------+  |
+|  |                    Runtime Layer                             | |
+|  |  Session | Scope | TheoryRegistry | KnowledgeBase            | |
+|  +-----------------------------+--------------------------------+  |
+|                                |                                  |
+|  +-----------------------------+--------------------------------+  |
+|  |                    HDC Facade (src/hdc/facade.mjs)            | |
+|  |  bind | bundle | similarity | createFromName | topKSimilar   | |
+|  +-----------------------------+--------------------------------+  |
+|                                |                                  |
+|  +-----------------------------+--------------------------------+  |
+|  |              HDC Strategy: dense-binary (DEFAULT)             | |
+|  |  DenseBinaryVector | Uint32Array | XOR bind | Majority bundle | |
+|  +---------------------------------------------------------------+  |
++------------------------------------------------------------------+
+```
 
-### Explainability and Provenance
-- <a id="FS-07"></a>**FS-07 Provenance & Explainability:** For every answer, return: active theories, contributing dimensions (per relevance mask), acceptance band used, and any overrides applied. Provide a concise natural-language justification.
+**Note:** The HDC layer uses a strategy pattern. The `dense-binary` strategy is the default. Alternative strategies can be selected via `SYS2_HDC_STRATEGY` environment variable.
 
-### Session and Interaction
-- <a id="FS-08"></a>**FS-08 Session-Based Interaction:** Provide a top-level entry class `AgentSystem2` that creates session-scoped `System2Session` objects. All ingestion of facts, queries, and theory updates from external callers must flow through `System2Session` APIs via Sys2DSL command lines. Direct access to internal modules (`ConceptStore`, `Reasoner`, `TheoryStack`, etc.) is not permitted for user code. Each session manages its own active theory, with explicit commands to persist or merge it.
-- <a id="FS-09"></a>**FS-09 Language Handling:** Core engine operates in English semantics; non-English inputs are routed through an external translation/LLM bridge with clear attribution in provenance. The bridge translates natural language to Sys2DSL before submission to the engine.
+---
 
-### Persistence and Administration
-- <a id="FS-10"></a>**FS-10 Persistence & Versioning:** Store theories separately from runtime memory; enable versioned snapshots and reload. Maintain audit logs of theory changes and ingested facts.
-  - **Pluggable Storage**: Theory storage uses a pluggable adapter interface (`TheoryStorage`). Default implementation uses file system with `.sys2dsl` (DSL text) and `.theory.json` (structured facts) formats. Custom adapters can be provided for database, cloud, or in-memory storage.
-  - DSL commands (`LOAD`, `SAVE`, etc.) work directly with storage, enabling use as a library without CLI.
-- <a id="FS-11"></a>**FS-11 Administrative Operations:** Provide commands to list theories, inspect concept bounds, view conflicts, and trigger re-clustering events without modifying raw data.
+## 3. Functional Requirements
 
-### Safety and Validation
-- <a id="FS-12"></a>**FS-12 Safety & Bias Controls:** Separate ontological and axiological dimensions; allow activation of masks (e.g., bias audits, veil-of-ignorance mode) that zero selected dimensions during reasoning.
-- <a id="FS-13"></a>**FS-13 Validation & Abstract Interpretation:** Support symbolic/abstract runs over the conceptual space to validate theory consistency, rule/program correctness, and mask effects without mutating state; surface counterexamples or contradictions geometrically.
+### 3.1 Core HDC Operations
 
-### Sys2DSL
-- <a id="FS-14"></a>**FS-14 Sys2DSL Theory Programs:** Expose a small, deterministic line-oriented DSL (Sys2DSL) that lets users and domain authors define reusable reasoning programmes in text theory files. Sys2DSL composes core primitives (ask, abduct, counterfactual queries, fact search, requirement coverage checks, mask control) into higher-level checks without embedding domain-specific logic inside the engine code.
+| ID | Requirement | Traces To | Verification |
+|----|-------------|-----------|--------------|
+| **FS-01** | The system SHALL implement Bind operation as bitwise XOR on vectors | URS-01 | Unit Test |
+| **FS-02** | The system SHALL implement Bundle operation as bitwise majority vote | URS-01 | Unit Test |
+| **FS-03** | The system SHALL implement Similarity as normalized Hamming distance | URS-05 | Unit Test |
+| **FS-04** | The system SHALL support vector geometries of 1024, 8192, 32768, and 65536 bits | URS-22 | Unit Test |
+| **FS-05** | The system SHALL provide position vectors Pos1 through Pos20 for argument ordering | URS-12 | Unit Test |
+| **FS-06** | The system SHALL initialize vectors deterministically using ASCII stamping | URS-01 | Unit Test |
+| **FS-07** | The system SHALL support vector extension (smaller to larger geometry) via cloning | URS-07 | Unit Test |
 
-- <a id="FS-22"></a>**FS-22 Strict Triple Syntax (INVIOLABLE):** Every Sys2DSL statement MUST be exactly `@variable Subject VERB Object` - no exceptions. This uniformity enables:
-  - **Uniform parsing**: One grammar rule for all statements
-  - **Uniform execution**: Every statement creates/modifies points and returns a point
-  - **Composability**: Results chain via `$variable` references
+### 3.1.1 HDC Strategy Management
 
-  Complex operations requiring multiple inputs (dimension + value, source + target, etc.) MUST use one of these canonical patterns:
+| ID | Requirement | Traces To | Verification |
+|----|-------------|-----------|--------------|
+| **FS-91** | The system SHALL provide a facade module (`src/hdc/facade.mjs`) as single entry point for all HDC operations | URS-42 | Integration Test |
+| **FS-92** | The system SHALL support strategy selection via `SYS2_HDC_STRATEGY` environment variable | URS-44 | Unit Test |
+| **FS-93** | The system SHALL default to `dense-binary` strategy when no strategy is specified | URS-43 | Unit Test |
+| **FS-94** | The system SHALL provide strategy registration via `registerStrategy(id, strategy)` | URS-42 | Unit Test |
+| **FS-95** | The system SHALL provide strategy enumeration via `listStrategies()` | URS-42 | Unit Test |
+| **FS-96** | The system SHALL provide `validateStrategy(strategy, geometry)` for contract validation | URS-46 | Unit Test |
+| **FS-97** | The system SHALL provide `benchmarkStrategy(strategyId, geometry, options)` for performance testing | URS-45 | Unit Test |
+| **FS-98** | The system SHALL provide `compareStrategies(strategyIds, geometry, options)` for multi-strategy comparison | URS-45 | Unit Test |
 
-  1. **Intermediate Point Pattern**: Create a point representing the compound value
-     ```sys2dsl
-     @dim_val existence DIM_PAIR $new_value;    # Creates point representing (existence, $new_value)
-     @result subject SET_DIM $dim_val;           # Uses the compound point
-     ```
+### 3.2 DSL Parser
 
-  2. **Chained Operation Pattern**: Decompose into sequential operations
-     ```sys2dsl
-     @with_dim subject WITH_DIM existence;       # Mark subject for dimension operation
-     @result $with_dim SET_VALUE $new_value;     # Apply value to marked point
-     ```
+| ID | Requirement | Traces To | Verification |
+|----|-------------|-----------|--------------|
+| **FS-08** | The parser SHALL tokenize DSL input into: AT, DOLLAR, QUESTION, COLON, IDENTIFIER, STRING, NUMBER | URS-11 | Unit Test |
+| **FS-09** | The parser SHALL recognize keywords: macro, end, return, theory | URS-11 | Unit Test |
+| **FS-10** | The parser SHALL parse statements in the form `@dest operator arg1 arg2 ...` | URS-12 | Unit Test |
+| **FS-11** | The parser SHALL support variable references with `$varName` syntax | URS-11 | Unit Test |
+| **FS-12** | The parser SHALL support query holes with `?holeName` syntax | URS-13 | Unit Test |
+| **FS-13** | The parser SHALL support export syntax `@varName:exportName` | URS-11 | Unit Test |
+| **FS-14** | The parser SHALL support multi-line macro definitions with indentation | URS-11 | Unit Test |
+| **FS-15** | The parser SHALL report errors with line and column numbers | URS-39 | Unit Test |
+| **FS-16** | The parser SHALL ignore comments starting with `#` | URS-11 | Unit Test |
 
-  3. **Curried Verb Pattern**: Verbs that return specialized verbs
-     ```sys2dsl
-     @setter SET_DIM_FOR existence;              # Returns a verb that sets existence
-     @result subject $setter $new_value;         # Apply the specialized verb
-     ```
+### 3.3 Theory Management
 
-  The choice of pattern depends on semantic clarity; all produce points that can be reasoned about geometrically.
+| ID | Requirement | Traces To | Verification |
+|----|-------------|-----------|--------------|
+| **FS-17** | The system SHALL parse theory definitions with syntax `@name theory geometry initMode ... end` | URS-06 | Unit Test |
+| **FS-18** | The system SHALL support deterministic and random initialization modes for theories | URS-06 | Unit Test |
+| **FS-19** | The system SHALL maintain a registry of loaded theories | URS-07 | Integration Test |
+| **FS-20** | The system SHALL resolve theory references with `$TheoryName` syntax | URS-07 | Unit Test |
+| **FS-21** | The system SHALL auto-load Core theory with foundational concepts | URS-06 | Integration Test |
+| **FS-22** | The system SHALL export atoms and macros with specified names | URS-06 | Unit Test |
+| **FS-23** | The system SHALL validate theory geometry and initialization mode | URS-10 | Unit Test |
+| **FS-24** | The system SHALL support loading theories from file paths | URS-09 | Integration Test |
 
-- <a id="FS-23"></a>**FS-23 Values as Points:** Every value in Sys2DSL is a point in conceptual space:
-  - **Numbers**: Created via `NUMERIC_VALUE`, stored as constant points
-  - **Dimension names**: Predefined concept points (`existence`, `deontic`, etc.)
-  - **Pairs/Tuples**: Created via `DIM_PAIR`, `TRIPLE_OF`, etc. - stored as composite points
-  - **Lists**: Points with `kind: "list"` containing references to item points
+### 3.4 Session Management
 
-  This ensures uniformity: there are no "special" values that require grammar extensions.
+| ID | Requirement | Traces To | Verification |
+|----|-------------|-----------|--------------|
+| **FS-25** | The system SHALL create sessions with configurable geometry | URS-15 | Unit Test |
+| **FS-26** | The session SHALL maintain scope for session-local variables | URS-15 | Unit Test |
+| **FS-27** | The session SHALL maintain a knowledge base as a bundled vector | URS-06 | Unit Test |
+| **FS-28** | The session SHALL maintain vocabulary of all known atoms | URS-06 | Unit Test |
+| **FS-29** | The session SHALL provide `learn(dsl)` method to add facts and definitions | URS-15 | Integration Test |
+| **FS-30** | The session SHALL provide `query(dsl)` method to retrieve information | URS-15 | Integration Test |
+| **FS-31** | The session SHALL provide `prove(goal)` method for proof construction | URS-15 | Integration Test |
+| **FS-32** | The session SHALL provide `dump()` method for state inspection | URS-40 | Unit Test |
+| **FS-33** | The session SHALL provide `close()` method to release resources | URS-15 | Unit Test |
 
-### Ontology Introspection
-- <a id="FS-15"></a>**FS-15 Ontology Discovery Commands:** Provide DSL commands that enable introspection of the knowledge base to support ontology auto-discovery:
-  - `EXPLAIN_CONCEPT <concept>`: Returns structured information about what the system knows about a concept, including IS_A types, properties, relations, and all facts where it appears.
-  - `MISSING "<statement>"`: Analyzes a statement or script and returns a list of concepts that are not defined in the knowledge base, with type suggestions and questions to help define them.
-  - `WHAT_IS <concept>`: Returns a simple natural-language description of a concept based on its IS_A relations and properties.
+### 3.5 Executor
 
-  These commands enable LLM-assisted ontology population by identifying knowledge gaps before executing queries.
+| ID | Requirement | Traces To | Verification |
+|----|-------------|-----------|--------------|
+| **FS-34** | The executor SHALL resolve identifiers from vocabulary | URS-11 | Unit Test |
+| **FS-35** | The executor SHALL resolve references from scope hierarchy | URS-11 | Unit Test |
+| **FS-36** | The executor SHALL auto-create atoms for unknown identifiers | URS-11 | Unit Test |
+| **FS-37** | The executor SHALL compute bindings as `Op XOR (Pos1 XOR Arg1) XOR (Pos2 XOR Arg2) ...` | URS-12 | Unit Test |
+| **FS-38** | The executor SHALL execute macros with parameter binding | URS-11 | Integration Test |
+| **FS-39** | The executor SHALL add facts to KB via bundling | URS-06 | Unit Test |
+| **FS-40** | The executor SHALL maintain scope hierarchy: Global -> Theory -> Session -> Macro | URS-11 | Unit Test |
 
-### Base Theories and Initialization
-- <a id="FS-16"></a>**FS-16 Base Theory Preloading:** System automatically loads foundational theories at session initialization:
-  - **Ontology Base** (`data/init/theories/base/ontology_base.sys2dsl`): Fundamental facts about categories (entity, physical_entity, abstract_entity), living things (mammal, bird, animal), spatial relations (continent, country, city), temporal relations (BEFORE, AFTER), causal relations, human roles, and artifacts.
-  - **Axiology Base** (`data/init/theories/base/axiology_base.sys2dsl`): Foundational value facts about ethics (good, bad, harm, benefit), deontic modalities (obligation, permission, prohibition), rights and duties, professional ethics, fairness principles, and bias masking rules.
-  - **Caching Mechanism**: Theories are compiled to JSON cache on first load; subsequent loads use cache for ~10x faster initialization. Cache is automatically invalidated when source files change.
-  - Sessions can opt out of preloading via `skipPreload: true` for testing isolation.
+### 3.6 Query Engine
 
-### Meta-Theory Registry
-- <a id="FS-17"></a>**FS-17 Theory Meta-Information:** Maintain a registry of available theories with metadata:
-  - Theory name, description, domain, and version
-  - Priority and applicability rules
-  - Dependencies on other theories
-  - Reasoning mode preferences (which inference methods work best)
-  - Usage statistics (success rates of different reasoning strategies)
-  This enables intelligent theory selection and reasoning strategy optimization.
+| ID | Requirement | Traces To | Verification |
+|----|-------------|-----------|--------------|
+| **FS-41** | The query engine SHALL identify holes (?name) in query statements | URS-13 | Unit Test |
+| **FS-42** | The query engine SHALL build partial vectors excluding holes | URS-13 | Unit Test |
+| **FS-43** | The query engine SHALL unbind partial from KB to extract candidates | URS-13 | Unit Test |
+| **FS-44** | The query engine SHALL remove position markers from candidates | URS-13 | Unit Test |
+| **FS-45** | The query engine SHALL find top-K similar atoms in vocabulary | URS-13 | Unit Test |
+| **FS-46** | The query engine SHALL calculate confidence from similarity scores | URS-05 | Unit Test |
+| **FS-47** | The query engine SHALL support queries with 1-3 holes | URS-13 | Unit Test |
+| **FS-48** | The query engine SHALL return alternatives when ambiguity exists | URS-19 | Unit Test |
 
-### Orthogonal Architecture Layers
-- <a id="FS-19"></a>**FS-19 Reasoning Engine Layer (DSL-in → DSL-out):** The core reasoning engine operates exclusively on Sys2DSL format. It accepts Sys2DSL commands as input and produces Sys2DSL-formatted results. This layer is deterministic and operates without any LLM dependency. It can be tested in isolation using direct DSL commands.
+### 3.7 Proof Engine
 
-- <a id="FS-20"></a>**FS-20 NL↔DSL Translation Layer (Optional):** A separate, optional layer handles bidirectional translation between natural language and Sys2DSL:
-  - **NL→DSL (Parsing)**: Converts natural language questions/statements to Sys2DSL commands
-  - **DSL→NL (Generation)**: Converts Sys2DSL results to natural language explanations
-  - This layer is LLM-dependent and non-deterministic
-  - Translation quality is measured independently from reasoning correctness
+| ID | Requirement | Traces To | Verification |
+|----|-------------|-----------|--------------|
+| **FS-49** | The proof engine SHALL implement backward chaining from goal | URS-04 | Integration Test |
+| **FS-50** | The proof engine SHALL match goals against rule conclusions | URS-04 | Unit Test |
+| **FS-51** | The proof engine SHALL recursively prove rule premises | URS-04 | Integration Test |
+| **FS-52** | The proof engine SHALL detect cycles in proof search | URS-03 | Unit Test |
+| **FS-53** | The proof engine SHALL enforce maximum proof depth limit | URS-23 | Unit Test |
+| **FS-54** | The proof engine SHALL build proof tree with all steps | URS-20 | Integration Test |
+| **FS-55** | The proof engine SHALL calculate combined confidence from premises | URS-05 | Unit Test |
+| **FS-56** | The proof engine SHALL support direct KB lookup as base case | URS-04 | Unit Test |
 
-- <a id="FS-21"></a>**FS-21 Independent Testability:** The evaluation suite MUST support independent testing of each layer:
-  - Default mode: Direct DSL execution (tests reasoning only)
-  - `--eval-llm` mode: Tests NL→DSL translation quality
-  - `--full` mode: Tests end-to-end pipeline
+### 3.8 Decoding and Phrasing
 
-  See [ARCH-LAYERS](architecture/orthogonal_layers.md) for detailed architecture.
+| ID | Requirement | Traces To | Verification |
+|----|-------------|-----------|--------------|
+| **FS-57** | The decoder SHALL extract operator from vector by similarity search | URS-14 | Unit Test |
+| **FS-58** | The decoder SHALL extract arguments by unbinding and position removal | URS-14 | Unit Test |
+| **FS-59** | The decoder SHALL handle nested/compound structures recursively | URS-14 | Unit Test |
+| **FS-60** | The phrasing engine SHALL store templates in format `{PosN:Role}` | URS-14 | Unit Test |
+| **FS-61** | The phrasing engine SHALL fill slots with decoded values | URS-14 | Unit Test |
+| **FS-62** | The phrasing engine SHALL select question words based on roles | URS-14 | Unit Test |
+| **FS-63** | The system SHALL provide `summarize(vector)` for concise output | URS-17 | Integration Test |
+| **FS-64** | The system SHALL provide `elaborate(vector)` for detailed output | URS-18 | Integration Test |
+| **FS-65** | The elaborate function SHALL optionally use LLM for fluency | URS-25 | Integration Test |
 
-## Requirement Cross-Reference
+### 3.9 Core Theory Content
 
-| New ID | Original IDs | Consolidation Notes |
-|--------|--------------|---------------------|
-| FS-01 | FS-01 | Unchanged |
-| FS-02 | FS-02, FS-08 | Merged theory layering + what-if/parallel reasoning |
-| FS-03 | FS-03 | Updated: NL → Sys2DSL |
-| FS-04 | FS-04 | Unchanged |
-| FS-05 | FS-05 | Unchanged |
-| FS-06 | FS-06 | Unchanged |
-| FS-07 | FS-07 | Unchanged |
-| FS-08 | FS-09, FS-16 | Merged session-based interaction (were duplicates) |
-| FS-09 | FS-10 | Renumbered, clarified NL→Sys2DSL translation |
-| FS-10 | FS-11 | Renumbered |
-| FS-11 | FS-13 | Renumbered |
-| FS-12 | FS-12 | Unchanged |
-| FS-13 | FS-14 | Renumbered |
-| FS-14 | FS-15 | Renumbered |
-| FS-15 | NEW | Ontology discovery commands |
-| FS-16 | NEW | Base theory preloading |
-| FS-17 | NEW | Theory meta-information registry |
-| FS-18 | NEW | Compute plugin delegation |
-| - | FS-08 | Consolidated into FS-02 |
-| - | FS-16 | Consolidated into FS-08 |
+| ID | Requirement | Traces To | Verification |
+|----|-------------|-----------|--------------|
+| **FS-66** | Core theory SHALL define category atoms: __Atom, __Relation, __Property, __State, __Entity, __Event, __Action | URS-06 | Unit Test |
+| **FS-67** | Core theory SHALL define position vectors: Pos1 through Pos20 | URS-12 | Unit Test |
+| **FS-68** | Core theory SHALL define logical operators: Implies, And, Or, Not, ForAll, Exists | URS-04 | Unit Test |
+| **FS-69** | Core theory SHALL define foundational relations: isA, hasProperty, hasState | URS-06 | Unit Test |
+| **FS-70** | Core theory SHALL define temporal relations: Before, After, During, Causes | URS-04 | Unit Test |
+| **FS-71** | Core theory SHALL define semantic roles: Agent, Theme, Goal, Source | URS-14 | Unit Test |
+| **FS-72** | Core theory SHALL define modal concepts: Possible, Necessary, Permitted | URS-04 | Unit Test |
 
-## Global Architecture Reference
+### 3.10 Error Handling
 
-The functional requirements above rely on a shared geometric reasoning model, data rules, and key flows that are specified in the global design spec:
+| ID | Requirement | Traces To | Verification |
+|----|-------------|-----------|--------------|
+| **FS-73** | The system SHALL return structured error objects with type, message, and location | URS-39 | Unit Test |
+| **FS-74** | Parse errors SHALL include line, column, expected, and found | URS-39 | Unit Test |
+| **FS-75** | Runtime errors SHALL include operation context | URS-39 | Unit Test |
+| **FS-76** | Query errors SHALL include reason: "no match", "ambiguous", "low confidence" | URS-39 | Unit Test |
+| **FS-77** | Capacity errors SHALL include current count and maximum limit | URS-24 | Unit Test |
+| **FS-78** | The system SHALL recover from single statement errors | URS-23 | Integration Test |
 
-- **DS[/global_arch]** – Global geometric architecture and reasoning model:
-  - reasoning typologies (deductive, inductive, abductive, analogical, counterfactual, temporal/causal, deontic, sparsity, validation/abstract);
-  - data and structural rules (vector ranges, partitions, relation permutations, theory overlays, property tokens);
-  - key flows (Ingest, Answer, Conflict Handling, Validation).
+### 3.11 Debug Utilities
 
-All module-level DS documents (`core`, `knowledge`, `ingest`, `reason`, `theory`, `interface`, `support`) must be interpreted in the context of DS[/global_arch]. FS-01...FS-14 are considered satisfied only when both the per-module behaviour and the global architecture constraints are met.
+| ID | Requirement | Traces To | Verification |
+|----|-------------|-----------|--------------|
+| **FS-79** | The system SHALL provide `inspect(name)` to analyze vectors | URS-40 | Unit Test |
+| **FS-80** | The system SHALL provide `listTheories()` to enumerate loaded theories | URS-40 | Unit Test |
+| **FS-81** | The system SHALL provide `listAtoms(theory?)` to enumerate atoms | URS-40 | Unit Test |
+| **FS-82** | The system SHALL provide `listMacros(theory?)` to enumerate macros | URS-40 | Unit Test |
+| **FS-83** | The system SHALL provide `listFacts()` to enumerate KB contents | URS-40 | Unit Test |
+| **FS-84** | The system SHALL provide `similarity(a, b)` for direct vector comparison | URS-40 | Unit Test |
+| **FS-85** | The system SHALL provide `decode(vector)` for structure extraction | URS-40 | Unit Test |
 
-## Open Issues / Design Risks
-- Configurable dimension counts (512 minimum, higher for production) require masks, permutations, and test suites to validate behavior across settings; supported values are restricted to {512, 1024, 2048, 4096} to simplify layout and testing.
-- Relation-hint structures must be sized so that false positives remain below 1% for typical workloads; the default is a 256-bit hint mask per vector with up to four hash functions, and must be validated empirically.
-- Clustering thresholds and polysemy detection criteria must be tuned per domain; the initial rule is to split when the masked L1 distance of a new point to the nearest diamond exceeds 1.5x that diamond's radius on ontology axes, and to consider merges when centroids are within 0.5x radius, but these factors may need adjustment.
-- Translation/LLM bridge behavior must remain deterministic; the initial strategy is to pin model ID, prompt, and decoding parameters (temperature=0, top_p=0) and to reject inputs when the bridge cannot produce valid Sys2DSL structures.
+### 3.12 Audit and Tracing
+
+| ID | Requirement | Traces To | Verification |
+|----|-------------|-----------|--------------|
+| **FS-86** | The system SHALL log all learn() calls with timestamp and DSL | URS-30 | Integration Test |
+| **FS-87** | The system SHALL log all query() calls with timestamp, DSL, and result | URS-30 | Integration Test |
+| **FS-88** | The system SHALL log all prove() calls with timestamp, goal, and validity | URS-30 | Integration Test |
+| **FS-89** | The system SHALL generate replayable DSL from proof traces | URS-16 | Integration Test |
+| **FS-90** | The system SHALL support export of audit log in JSON format | URS-30 | Unit Test |
+
+---
+
+## 4. Use Cases
+
+### UC-01: Learn Facts
+**Actor:** Developer
+**Precondition:** Session exists
+**Main Flow:**
+1. Developer calls `session.learn(dsl)`
+2. System parses DSL into AST
+3. System executes each statement
+4. System stores results in scope and KB
+5. System returns success status
+
+### UC-02: Query Knowledge
+**Actor:** Developer
+**Precondition:** Session has facts
+**Main Flow:**
+1. Developer calls `session.query(dslWithHoles)`
+2. System parses and identifies holes
+3. System builds partial vector
+4. System unbinds from KB
+5. System finds best matches
+6. System returns bindings with confidence
+
+### UC-03: Prove Goal
+**Actor:** Developer
+**Precondition:** Session has facts and rules
+**Main Flow:**
+1. Developer calls `session.prove(goal)`
+2. System attempts direct KB match
+3. If no match, system finds applicable rules
+4. System recursively proves premises
+5. System builds proof tree
+6. System returns validity and proof
+
+### UC-04: Load Theory
+**Actor:** Knowledge Engineer
+**Precondition:** Theory file exists
+**Main Flow:**
+1. User calls `session.learn("@_ Load $TheoryName")`
+2. System locates theory file
+3. System parses theory definition
+4. System registers atoms and macros
+5. System imports exports to vocabulary
+
+---
+
+## 5. Data Dictionary
+
+| Term | Definition |
+|------|------------|
+| Vector | 32768-bit binary array representing a concept |
+| Atom | Named vector representing a primitive concept |
+| Fact | Bound vector representing a relationship |
+| Theory | Collection of atoms, macros, and rules |
+| KB | Knowledge Base - bundled vector of all facts |
+| Hole | Query variable marked with ? prefix |
+| Binding | Association of hole name to answer value |
+| Confidence | Similarity score indicating match quality (0.0-1.0) |
+
+---
+
+## 6. Traceability Matrix
+
+| FS ID | URS IDs | DS Reference |
+|-------|---------|--------------|
+| FS-01 to FS-07 | URS-01, URS-05, URS-07, URS-12, URS-22 | DS09 |
+| FS-08 to FS-16 | URS-11, URS-12, URS-13, URS-39 | DS02 |
+| FS-17 to FS-24 | URS-06, URS-07, URS-09, URS-10 | DS03 |
+| FS-25 to FS-33 | URS-06, URS-15, URS-40 | DS03 |
+| FS-34 to FS-40 | URS-06, URS-11, URS-12 | DS10 |
+| FS-41 to FS-48 | URS-05, URS-13, URS-19 | DS05 |
+| FS-49 to FS-56 | URS-03, URS-04, URS-05, URS-20, URS-23 | DS05, DS06 |
+| FS-57 to FS-65 | URS-14, URS-17, URS-18, URS-25 | DS11 |
+| FS-66 to FS-72 | URS-04, URS-06, URS-12, URS-14 | DS07 |
+| FS-73 to FS-78 | URS-23, URS-24, URS-39 | DS10 |
+| FS-79 to FS-85 | URS-40 | DS10 |
+| FS-86 to FS-90 | URS-16, URS-30 | DS08 |
+| FS-91 to FS-98 | URS-42, URS-43, URS-44, URS-45, URS-46 | DS09 |
+
+---
+
+## 7. Approval
+
+| Role | Name | Signature | Date |
+|------|------|-----------|------|
+| Technical Lead | | | |
+| Quality Assurance | | | |
+| Product Owner | | | |
+
+---
+
+*End of Functional Specification*

@@ -1,0 +1,38 @@
+{
+  "name": "agisystem2",
+  "version": "1.0.0",
+  "description": "Holographic Distributed Computation Engine for Neuro-Symbolic Reasoning",
+  "type": "module",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./core": "./src/core/index.mjs",
+    "./util": "./src/util/index.mjs",
+    "./parser": "./src/parser/index.mjs",
+    "./runtime": "./src/runtime/index.mjs",
+    "./reasoning": "./src/reasoning/index.mjs",
+    "./decoding": "./src/decoding/index.mjs",
+    "./test-lib": "./src/test-lib/index.mjs"
+  },
+  "scripts": {
+    "tests": "node --test 'tests/**/*.mjs'",
+    "unit": "node --test 'tests/unit/**/*.mjs'",
+    "deep": "node --test 'tests/integration/**/*.mjs'",
+    "e2e": "node --test tests/integration/e2e-pipeline.test.mjs",
+    "eval": "node evalSuite/run.js",
+    "eval:verbose": "node evalSuite/run.js --verbose"
+  },
+  "keywords": [
+    "hdc",
+    "hyperdimensional",
+    "holographic",
+    "neuro-symbolic",
+    "reasoning",
+    "knowledge-base"
+  ],
+  "author": "",
+  "license": "AGPL-3.0",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

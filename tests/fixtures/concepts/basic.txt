@@ -1,2 +1,0 @@
-dog IS_A Animal
-Water BOILS_AT Celsius100

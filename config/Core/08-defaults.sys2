@@ -1,0 +1,53 @@
+# Core Theory - Default and Exception Handling
+# Non-monotonic reasoning support
+# Auto-loaded by runtime
+
+# ===== Default Atoms =====
+
+@Default:Default __Relation
+@Exception:Exception __Relation
+@Unless:Unless __Relation
+
+# ===== Default Macros =====
+
+# Default: category normally has property
+# Types: category:Category, property:Property|State
+@DefaultMacro:normally macro category property
+    @rule __Role Default (__Pair $category $property)
+    return $rule
+end
+
+# Exception: subcategory overrides default
+# Types: subcategory:Category, property:Property|State
+@ExceptionMacro:except macro subcategory property
+    @rule __Role Exception (__Pair $subcategory $property)
+    return $rule
+end
+
+# Unless: proposition holds unless condition
+@UnlessMacro:unless macro proposition condition
+    @negCond not $condition
+    @result implies $negCond $proposition
+    return $result
+end
+
+# ===== Typical/Atypical =====
+
+@Typical:Typical __Property
+@Atypical:Atypical __Property
+
+# typical: instance is typical member of category
+@TypicalMacro:typical macro instance category
+    @membership isA $instance $category
+    @typicality __Role Typical $instance
+    @result __Bundle $membership $typicality
+    return $result
+end
+
+# atypical: instance is atypical member of category
+@AtypicalMacro:atypical macro instance category
+    @membership isA $instance $category
+    @atypicality __Role Atypical $instance
+    @result __Bundle $membership $atypicality
+    return $result
+end

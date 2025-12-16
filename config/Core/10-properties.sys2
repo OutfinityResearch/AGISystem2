@@ -1,0 +1,112 @@
+# Core Theory - Property and State Macros
+# Attribute assignment and categorization
+# Auto-loaded by runtime
+
+# ===== Property/State Macros =====
+
+# hasProperty: entity has permanent property
+# Types: entity:Entity, property:Property
+@HasPropertyMacro:hasProperty macro entity property
+    @r1 __Role Theme $entity
+    @r2 __Role Attribute $property
+    @result __Bundle $r1 $r2
+    return $result
+end
+
+# inState: entity is in temporary state
+# Types: entity:Entity, state:State
+@InStateMacro:inState macro entity state
+    @r1 __Role Theme $entity
+    @r2 __Role State $state
+    @result __Bundle $r1 $r2
+    return $result
+end
+
+# ===== Category Macros =====
+
+# isA: entity is member of category
+# Types: entity:Entity, category:Category
+@IsAMacro:isA macro entity category
+    @r1 __Role Instance $entity
+    @r2 __Role Category $category
+    @result __Bundle $r1 $r2
+    return $result
+end
+
+# subclass: category1 is subclass of category2
+# Types: category1:Category, category2:Category
+@SubclassMacro:subclass macro subcategory supercategory
+    @r1 __Role Subclass $subcategory
+    @r2 __Role Superclass $supercategory
+    @result __Bundle $r1 $r2
+    return $result
+end
+
+# ===== Part-Whole Relations =====
+
+@PartOf:PartOf __Relation
+@HasPart:HasPart __Relation
+@MadeOf:MadeOf __Relation
+
+# partOf: part is part of whole
+@PartOfMacro:partOf macro part whole
+    @pair __Pair $part $whole
+    @result __Role PartOf $pair
+    return $result
+end
+
+# hasPart: whole has part
+@HasPartMacro:hasPart macro whole part
+    @pair __Pair $whole $part
+    @result __Role HasPart $pair
+    return $result
+end
+
+# madeOf: object is made of substance
+@MadeOfMacro:madeOf macro object substance
+    @pair __Pair $object $substance
+    @result __Role MadeOf $pair
+    return $result
+end
+
+# ===== Location Relations =====
+
+@At:At __Relation
+@In:In __Relation
+@On:On __Relation
+@Near:Near __Relation
+
+# at: entity is at location
+@AtMacro:at macro entity location
+    @r1 __Role Theme $entity
+    @r2 __Role Location $location
+    @result __Bundle $r1 $r2
+    return $result
+end
+
+# in: entity is in container
+@InMacro:in macro entity container
+    @r1 __Role Theme $entity
+    @r2 __Role Location $container
+    @r3 __Role Relation In
+    @result __Bundle $r1 $r2 $r3
+    return $result
+end
+
+# on: entity is on surface
+@OnMacro:on macro entity surface
+    @r1 __Role Theme $entity
+    @r2 __Role Location $surface
+    @r3 __Role Relation On
+    @result __Bundle $r1 $r2 $r3
+    return $result
+end
+
+# near: entity is near landmark
+@NearMacro:near macro entity landmark
+    @r1 __Role Theme $entity
+    @r2 __Role Location $landmark
+    @r3 __Role Relation Near
+    @result __Bundle $r1 $r2 $r3
+    return $result
+end

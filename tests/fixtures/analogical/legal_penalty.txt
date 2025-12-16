@@ -1,5 +1,0 @@
-Theft IS_A Crime
-Jail IS_A Penalty
-Fraud IS_A Crime
-Fine IS_A Penalty
-

@@ -1,0 +1,95 @@
+# Core Theory - Temporal Primitives
+# Temporal relations and causality
+# Auto-loaded by runtime
+
+# ===== Temporal Relation Atoms =====
+
+@Before:Before __Relation
+@After:After __Relation
+@During:During __Relation
+@Starts:Starts __Relation
+@Ends:Ends __Relation
+@Overlaps:Overlaps __Relation
+@Meets:Meets __Relation
+
+# ===== Causal Atoms =====
+
+@Causes:Causes __Relation
+@Enables:Enables __Relation
+@Prevents:Prevents __Relation
+
+# ===== Temporal Macros =====
+
+# Before: event1 happened before event2
+# Types: event1:Event, event2:Event
+@BeforeMacro:before macro event1 event2
+    @pair __Pair $event1 $event2
+    @result __Role Before $pair
+    return $result
+end
+
+# After: event1 happened after event2
+@AfterMacro:after macro event1 event2
+    @result before $event2 $event1
+    return $result
+end
+
+# During: event1 happened during event2
+@DuringMacro:during macro event1 event2
+    @pair __Pair $event1 $event2
+    @result __Role During $pair
+    return $result
+end
+
+# Starts: event1 starts when event2 starts
+@StartsMacro:starts macro event1 event2
+    @pair __Pair $event1 $event2
+    @result __Role Starts $pair
+    return $result
+end
+
+# Ends: event1 ends when event2 ends
+@EndsMacro:ends macro event1 event2
+    @pair __Pair $event1 $event2
+    @result __Role Ends $pair
+    return $result
+end
+
+# Overlaps: event1 overlaps with event2
+@OverlapsMacro:overlaps macro event1 event2
+    @pair __Pair $event1 $event2
+    @result __Role Overlaps $pair
+    return $result
+end
+
+# Meets: event1 ends exactly when event2 starts
+@MeetsMacro:meets macro event1 event2
+    @pair __Pair $event1 $event2
+    @result __Role Meets $pair
+    return $result
+end
+
+# ===== Causal Macros =====
+
+# Causes: cause led to effect
+# Types: cause:Event, effect:Event|State
+@CausesMacro:causes macro cause effect
+    @temporal before $cause $effect
+    @causal __Role Causes (__Pair $cause $effect)
+    @result __Bundle $temporal $causal
+    return $result
+end
+
+# Enables: enabler made possible enabled
+@EnablesMacro:enables macro enabler enabled
+    @pair __Pair $enabler $enabled
+    @result __Role Enables $pair
+    return $result
+end
+
+# Prevents: preventer stopped prevented
+@PreventsMacro:prevents macro preventer prevented
+    @pair __Pair $preventer $prevented
+    @result __Role Prevents $pair
+    return $result
+end

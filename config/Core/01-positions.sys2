@@ -1,0 +1,25 @@
+# Core Theory - Position Vectors
+# These replace permutation for argument ordering
+# Auto-loaded by runtime
+
+# ===== Position Vectors (Pos1-Pos20) =====
+@Pos1:Pos1 ___NewVector "__Pos1__" "Core"
+@Pos2:Pos2 ___NewVector "__Pos2__" "Core"
+@Pos3:Pos3 ___NewVector "__Pos3__" "Core"
+@Pos4:Pos4 ___NewVector "__Pos4__" "Core"
+@Pos5:Pos5 ___NewVector "__Pos5__" "Core"
+@Pos6:Pos6 ___NewVector "__Pos6__" "Core"
+@Pos7:Pos7 ___NewVector "__Pos7__" "Core"
+@Pos8:Pos8 ___NewVector "__Pos8__" "Core"
+@Pos9:Pos9 ___NewVector "__Pos9__" "Core"
+@Pos10:Pos10 ___NewVector "__Pos10__" "Core"
+@Pos11:Pos11 ___NewVector "__Pos11__" "Core"
+@Pos12:Pos12 ___NewVector "__Pos12__" "Core"
+@Pos13:Pos13 ___NewVector "__Pos13__" "Core"
+@Pos14:Pos14 ___NewVector "__Pos14__" "Core"
+@Pos15:Pos15 ___NewVector "__Pos15__" "Core"
+@Pos16:Pos16 ___NewVector "__Pos16__" "Core"
+@Pos17:Pos17 ___NewVector "__Pos17__" "Core"
+@Pos18:Pos18 ___NewVector "__Pos18__" "Core"
+@Pos19:Pos19 ___NewVector "__Pos19__" "Core"
+@Pos20:Pos20 ___NewVector "__Pos20__" "Core"

@@ -2,237 +2,355 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Wiki of Concepts</title>
+  <title>Wiki - AGISystem2</title>
   <link rel="stylesheet" href="../reference/style.css">
 </head>
 <body>
   <div class="page">
   <div class="nav-header">
-    <h1>AGISystem2 – Wiki of Concepts</h1>
+    <h1>Quick Wiki</h1>
     <small>
-      <a href="../index.html">Home</a> ·
-      <a href="../guides/conceptual_spaces.html">Theory</a> ·
-      <a href="../architecture/index.html">Architecture</a> ·
-      <a href="../api/index.html">APIs</a> ·
-      <a href="../syntax/index.html">Syntax</a> ·
-      <a href="../usage-cli/index.html">CLI</a> ·
-      <a href="index.html">Wiki</a> ·
+      <a href="../index.html">Home</a> &middot;
+      <a href="../architecture/index.html">Architecture</a> &middot;
+      <a href="../theory/index.html">Theory</a> &middot;
+      <a href="../syntax/index.html">Syntax</a> &middot;
+      <a href="../api/index.html">APIs</a> &middot;
+      <a href="index.html">Wiki</a> &middot;
       <a href="../specs/matrix.html">Specs</a>
     </small>
+    <small>Glossary of terms and concepts</small>
   </div>
 
-  <p>This wiki collects the theoretical and algorithmic concepts that underpin AGISystem2. Each page connects philosophical and mathematical ideas to the concrete way the system implements geometric reasoning, layered theories, and value-aware control.</p>
+  <div class="section-intro">
+    <p>A compact glossary of AGISystem2 terms, concepts, and their relationships. Click any term for detailed documentation.</p>
+  </div>
 
-  <h2>Architecture Documentation</h2>
-  <p>For system implementation details, see the <a href="../architecture/index.html">Architecture section</a>:</p>
-  <table class="table-concept-index">
-    <tr><th>Layer</th><th>Description</th></tr>
+  <h2>Core Concepts</h2>
+
+  <table>
     <tr>
-      <td><a href="../architecture/geometry.html">Geometry Layer</a></td>
-      <td>VectorSpace, MathEngine, BoundedDiamond, RelationPermuter</td>
+      <th>Term</th>
+      <th>Definition</th>
+      <th>See Also</th>
     </tr>
     <tr>
-      <td><a href="../architecture/knowledge.html">Knowledge Layer</a></td>
-      <td>ConceptStore, ClusterManager, TheoryStack, TheoryLayer</td>
+      <td><strong>Hypervector</strong></td>
+      <td>A high-dimensional binary vector (default 32,768 bits) that represents a concept, fact, or relationship. The fundamental data structure of AGISystem2.</td>
+      <td><a href="../theory/index.html">Theory</a></td>
     </tr>
     <tr>
-      <td><a href="../architecture/reasoning.html">Reasoning Layer</a></td>
-      <td>Reasoner, Retriever, BiasController, ValidationEngine</td>
+      <td><strong>Geometry</strong></td>
+      <td>The number of dimensions (bits) in a hypervector. Common values: 1024, 8192, 32768, 65536. Higher geometry = more capacity but more memory.</td>
+      <td><a href="../api/index.html">API</a></td>
     </tr>
     <tr>
-      <td><a href="../architecture/language.html">Language Layer</a></td>
-      <td>Sys2DSL Parser, Grammar, Encoder, Query Compiler</td>
+      <td><strong>Atom</strong></td>
+      <td>A named hypervector representing a primitive concept (e.g., "Person", "loves", "John"). Atoms are the building blocks of knowledge.</td>
+      <td><a href="../syntax/index.html">Syntax</a></td>
     </tr>
     <tr>
-      <td><a href="../architecture/storage.html">Storage</a></td>
-      <td>StorageAdapter, persistence, file formats</td>
+      <td><strong>Fact</strong></td>
+      <td>A bound hypervector encoding a relationship (e.g., "John loves Mary"). Created by binding atoms with position markers.</td>
+      <td><a href="../syntax/index.html">Syntax</a></td>
     </tr>
     <tr>
-      <td><a href="../architecture/configuration.html">Configuration</a></td>
-      <td>Profiles, parameters, tuning</td>
+      <td><strong>Theory</strong></td>
+      <td>A named collection of atoms, macros, and rules that defines a domain of knowledge. Theories can be loaded and composed.</td>
+      <td><a href="../syntax/index.html">Syntax</a></td>
     </tr>
     <tr>
-      <td><a href="sys2dsl.html">Sys2DSL</a></td>
-      <td>The domain-specific language for facts, questions, and theory programs</td>
+      <td><strong>Session</strong></td>
+      <td>An isolated reasoning context with its own scope, knowledge base, and vocabulary. Sessions are independent and can run in parallel.</td>
+      <td><a href="../api/index.html">API</a></td>
+    </tr>
+    <tr>
+      <td><strong>Knowledge Base (KB)</strong></td>
+      <td>A bundled hypervector containing all facts learned in a session. Used for query resolution via unbinding.</td>
+      <td><a href="../theory/index.html">Theory</a></td>
+    </tr>
+    <tr>
+      <td><strong>Vocabulary</strong></td>
+      <td>The set of all known atoms in a session. Used for similarity matching when resolving queries.</td>
+      <td><a href="../api/index.html">API</a></td>
     </tr>
   </table>
 
-  <h2>Theory & Guides</h2>
-  <p>For conceptual foundations, see the <a href="../guides/conceptual_spaces.html">Theory section</a>:</p>
-  <table class="table-concept-index">
-    <tr><th>Topic</th><th>Description</th></tr>
+  <h2>Operations</h2>
+
+  <table>
     <tr>
-      <td><a href="../guides/conceptual_spaces.html">Conceptual Spaces</a></td>
-      <td>Theory of geometric knowledge representation</td>
+      <th>Term</th>
+      <th>Definition</th>
+      <th>Properties</th>
     </tr>
     <tr>
-      <td><a href="../guides/reasoning.html">Reasoning</a></td>
-      <td>How reasoning modes map to geometric operations</td>
+      <td><strong>Bind (XOR)</strong></td>
+      <td>Bitwise XOR of two vectors. Creates associations between concepts. Used for building facts.</td>
+      <td>Commutative, Associative, Self-inverse, Reversible</td>
     </tr>
     <tr>
-      <td><a href="../guides/bias.html">Bias & Values</a></td>
-      <td>Fairness modes and value-aware reasoning</td>
+      <td><strong>Bundle (Majority)</strong></td>
+      <td>Bitwise majority vote across multiple vectors. Creates superpositions. Used for building the KB.</td>
+      <td>Result similar to all inputs, Not reversible, Capacity-limited</td>
     </tr>
     <tr>
-      <td><a href="../guides/explainability.html">Explainability</a></td>
-      <td>Provenance traces and audit support</td>
+      <td><strong>Similarity</strong></td>
+      <td>Normalized Hamming distance between vectors. Returns 0.0-1.0. Used for matching and retrieval.</td>
+      <td>1.0=identical, 0.5=random, 0.0=inverse</td>
     </tr>
     <tr>
-      <td><a href="../guides/learning.html">Learning</a></td>
-      <td>Concept evolution and adaptation</td>
-    </tr>
-    <tr>
-      <td><a href="../guides/relations.html">Relations</a></td>
-      <td>Relations, custom verbs, and permutation encoding</td>
-    </tr>
-    <tr>
-      <td><a href="../guides/limits.html">Limits</a></td>
-      <td>What the system does not do</td>
+      <td><strong>Unbind</strong></td>
+      <td>XOR with a partial query to extract unknown components from a bundled KB.</td>
+      <td>Same as Bind (XOR is self-inverse)</td>
     </tr>
   </table>
 
-  <h2>Reasoning and Logic</h2>
-  <table class="table-concept-index">
-    <tr><th>Concept</th><th>Description</th></tr>
+  <h2>DSL Terms</h2>
+
+  <table>
     <tr>
-      <td><a href="abduction.html">Abduction</a></td>
-      <td>Reasoning to the best explanation: inferring plausible causes from observations.</td>
+      <th>Term</th>
+      <th>Syntax</th>
+      <th>Description</th>
     </tr>
     <tr>
-      <td><a href="induction.html">Induction</a></td>
-      <td>Generalising from examples into rules by enveloping points in the conceptual space.</td>
+      <td><strong>Destination</strong></td>
+      <td><code>@name</code></td>
+      <td>Variable to store result</td>
     </tr>
     <tr>
-      <td><a href="deduction.html">Deduction</a></td>
-      <td>Deriving conclusions from premises, seen as checking inclusion between conceptual volumes.</td>
+      <td><strong>Export</strong></td>
+      <td><code>@name:export</code></td>
+      <td>Store and export with name</td>
     </tr>
     <tr>
-      <td><a href="analogy.html">Analogy</a></td>
-      <td>Transferring relations between domains by applying learned vector offsets.</td>
+      <td><strong>Discard</strong></td>
+      <td><code>@_</code></td>
+      <td>Execute but don't store</td>
     </tr>
     <tr>
-      <td><a href="non_monotonic_logic.html">Non-Monotonic Logic</a></td>
-      <td>Reasoning that allows withdrawing conclusions when new information appears.</td>
+      <td><strong>Reference</strong></td>
+      <td><code>$name</code></td>
+      <td>Access existing variable</td>
     </tr>
     <tr>
-      <td><a href="counterfactual.html">Counterfactuals</a></td>
-      <td>"What-if" questions evaluated through temporary theories.</td>
+      <td><strong>Hole</strong></td>
+      <td><code>?name</code></td>
+      <td>Unknown value to find</td>
     </tr>
     <tr>
-      <td><a href="deontic_logic.html">Deontic Logic</a></td>
-      <td>Modelling obligations and permissions with forbidden and obligatory volumes.</td>
+      <td><strong>Position Vector</strong></td>
+      <td><code>Pos1...Pos20</code></td>
+      <td>Markers for argument order</td>
     </tr>
     <tr>
-      <td><a href="narrative_consistency.html">Narrative Consistency</a></td>
-      <td>Keeping stories coherent over time and aligned with normative theories.</td>
-    </tr>
-    <tr>
-      <td><a href="symbolic_execution.html">Symbolic Execution</a></td>
-      <td>Exploring branches to find contradictions and counterexamples.</td>
-    </tr>
-    <tr>
-      <td><a href="abstract_interpretation.html">Abstract Interpretation</a></td>
-      <td>Static analysis via controlled abstractions.</td>
-    </tr>
-    <tr>
-      <td><a href="expert_system.html">Expert Systems</a></td>
-      <td>Rule-based predecessors with explicit knowledge and traceable explanations.</td>
+      <td><strong>Macro</strong></td>
+      <td><code>macro...end</code></td>
+      <td>Reusable statement template</td>
     </tr>
   </table>
 
-  <h2>Knowledge, Values and Governance</h2>
-  <table class="table-concept-index">
-    <tr><th>Concept</th><th>Description</th></tr>
+  <h2>Reasoning Terms</h2>
+
+  <table>
     <tr>
-      <td><a href="conceptual_spaces.html">Conceptual Spaces</a></td>
-      <td>Representing knowledge as points and volumes in a continuous space.</td>
+      <th>Term</th>
+      <th>Definition</th>
     </tr>
     <tr>
-      <td><a href="ontology.html">Ontology</a></td>
-      <td>The factual layer of dimensions that structures the objective world.</td>
+      <td><strong>Query</strong></td>
+      <td>A statement with holes that retrieves matching information from the KB.</td>
     </tr>
     <tr>
-      <td><a href="axiology.html">Axiology</a></td>
-      <td>The layer of values and moral judgements, separated from ontology for audit.</td>
+      <td><strong>Proof</strong></td>
+      <td>A tree of reasoning steps that derives a goal from known facts and rules.</td>
     </tr>
     <tr>
-      <td><a href="symbol_grounding.html">Symbol Grounding</a></td>
-      <td>Anchoring symbols in experience and geometry.</td>
+      <td><strong>Backward Chaining</strong></td>
+      <td>Proving a goal by recursively proving the premises of applicable rules.</td>
     </tr>
     <tr>
-      <td><a href="pragmatics.html">Pragmatics</a></td>
-      <td>How context influences the interpretation of facts and questions.</td>
+      <td><strong>Rule</strong></td>
+      <td>An implication (If P then Q) used for inference.</td>
     </tr>
     <tr>
-      <td><a href="bias.html">Bias</a></td>
-      <td>Systematic preferences that must be controlled explicitly.</td>
+      <td><strong>Confidence</strong></td>
+      <td>A score (0.0-1.0) indicating the reliability of a result.</td>
     </tr>
     <tr>
-      <td><a href="veil_of_ignorance.html">Veil of Ignorance</a></td>
-      <td>Rawlsian principle for fair scenarios.</td>
-    </tr>
-    <tr>
-      <td><a href="auditability.html">Auditability</a></td>
-      <td>Reconstructing and verifying every reasoning step.</td>
-    </tr>
-    <tr>
-      <td><a href="trustworthy_ai.html">Trustworthy AI</a></td>
-      <td>Criteria that make the system acceptable in critical domains.</td>
+      <td><strong>Binding</strong></td>
+      <td>The association of a query hole to its answer value.</td>
     </tr>
   </table>
 
-  <h2>Geometric and Algorithmic Foundations</h2>
-  <table class="table-concept-index">
-    <tr><th>Concept</th><th>Description</th></tr>
+  <h2>Output Terms</h2>
+
+  <table>
     <tr>
-      <td><a href="hyperdimensional_computing.html">Hyperdimensional Computing</a></td>
-      <td>Representing information via superposition and permutations.</td>
+      <th>Term</th>
+      <th>Definition</th>
     </tr>
     <tr>
-      <td><a href="lsh.html">Locality-Sensitive Hashing</a></td>
-      <td>Fast nearest-neighbour search in high-dimensional spaces.</td>
+      <td><strong>Decode</strong></td>
+      <td>Extract operator and arguments from a vector using similarity search.</td>
     </tr>
     <tr>
-      <td><a href="permutation_binding.html">Permutation Binding</a></td>
-      <td>Using permutations to bind subjects, relations and objects.</td>
+      <td><strong>Summarize</strong></td>
+      <td>Generate concise natural language from a decoded structure using templates.</td>
     </tr>
     <tr>
-      <td><a href="masked_l1_distance.html">Masked L1 Distance</a></td>
-      <td>Distance measure with masks that ignore specific subspaces.</td>
+      <td><strong>Elaborate</strong></td>
+      <td>Generate detailed narrative, optionally refined by LLM for fluency.</td>
     </tr>
     <tr>
-      <td><a href="bounded_diamonds.html">Bounded Diamonds</a></td>
-      <td>The shape of concepts: intersections of boxes and L1 balls.</td>
+      <td><strong>Phrasing Template</strong></td>
+      <td>A pattern like "{Pos1} loves {Pos2}" for generating text from structures.</td>
     </tr>
     <tr>
-      <td><a href="theory_layers.html">Theory Layers</a></td>
-      <td>Knowledge layers that can be stacked to handle context and contradictions.</td>
-    </tr>
-    <tr>
-      <td><a href="validation.html">Validation</a></td>
-      <td>Checking answers and theories for consistency.</td>
-    </tr>
-    <tr>
-      <td><a href="memory_management.html">Memory Management</a></td>
-      <td>Usage tracking, forgetting, and priority boosting.</td>
+      <td><strong>DSL Trace</strong></td>
+      <td>A replayable script recording all operations for audit and verification.</td>
     </tr>
   </table>
 
-  <h2>Syntax & CLI</h2>
-  <p>For practical usage:</p>
-  <ul>
-    <li><a href="../syntax/index.html">Syntax Reference</a> – Complete command syntax</li>
-    <li><a href="../syntax/relations.html">Relations</a> – All relation types</li>
-    <li><a href="../usage-cli/index.html">CLI Overview</a> – Command-line interfaces</li>
-    <li><a href="../usage-cli/raw-cli.html">Raw CLI</a> – Structured command interface</li>
-    <li><a href="../usage-cli/chat-cli.html">Chat Interface</a> – Natural language interface</li>
-  </ul>
+  <h2>Architectural Terms</h2>
+
+  <table>
+    <tr>
+      <th>Term</th>
+      <th>Definition</th>
+    </tr>
+    <tr>
+      <td><strong>Core HDC Layer</strong></td>
+      <td>Lowest layer: vector storage, Bind, Bundle, Similarity, ASCII stamp initialization.</td>
+    </tr>
+    <tr>
+      <td><strong>Runtime Layer</strong></td>
+      <td>State management: sessions, scopes, theory registry, KB, vocabulary.</td>
+    </tr>
+    <tr>
+      <td><strong>Processing Layer</strong></td>
+      <td>Logic: parser, executor, query engine, proof engine, decoder.</td>
+    </tr>
+    <tr>
+      <td><strong>API Layer</strong></td>
+      <td>Public interface: learn(), query(), prove(), summarize(), elaborate().</td>
+    </tr>
+    <tr>
+      <td><strong>Scope</strong></td>
+      <td>Variable namespace with hierarchy: Global > Theory > Session > Macro.</td>
+    </tr>
+    <tr>
+      <td><strong>ASCII Stamp</strong></td>
+      <td>Deterministic vector initialization from name strings for reproducibility.</td>
+    </tr>
+  </table>
+
+  <h2>Thresholds Reference</h2>
+
+  <table>
+    <tr>
+      <th>Threshold</th>
+      <th>Default</th>
+      <th>Meaning</th>
+    </tr>
+    <tr>
+      <td>Strong Match</td>
+      <td>> 0.80</td>
+      <td>High confidence, trust result</td>
+    </tr>
+    <tr>
+      <td>Good Match</td>
+      <td>0.65 - 0.80</td>
+      <td>Solid match, probably correct</td>
+    </tr>
+    <tr>
+      <td>Weak Match</td>
+      <td>0.55 - 0.65</td>
+      <td>Marginal, verify if critical</td>
+    </tr>
+    <tr>
+      <td>No Match</td>
+      <td>< 0.55</td>
+      <td>Near random, don't trust</td>
+    </tr>
+    <tr>
+      <td>KB Warning</td>
+      <td>100 facts</td>
+      <td>Approaching capacity limits</td>
+    </tr>
+    <tr>
+      <td>KB Critical</td>
+      <td>200 facts</td>
+      <td>Accuracy significantly degraded</td>
+    </tr>
+    <tr>
+      <td>KB Maximum</td>
+      <td>~500 facts</td>
+      <td>Unusable accuracy</td>
+    </tr>
+  </table>
+
+  <h2>Acronyms</h2>
+
+  <table>
+    <tr>
+      <th>Acronym</th>
+      <th>Full Name</th>
+    </tr>
+    <tr>
+      <td>GOS</td>
+      <td>Holographic Computation Engine</td>
+    </tr>
+    <tr>
+      <td>HDC</td>
+      <td>Hyperdimensional Computing</td>
+    </tr>
+    <tr>
+      <td>VSA</td>
+      <td>Vector Symbolic Architecture</td>
+    </tr>
+    <tr>
+      <td>KB</td>
+      <td>Knowledge Base</td>
+    </tr>
+    <tr>
+      <td>DSL</td>
+      <td>Domain-Specific Language</td>
+    </tr>
+    <tr>
+      <td>AST</td>
+      <td>Abstract Syntax Tree</td>
+    </tr>
+    <tr>
+      <td>LLM</td>
+      <td>Large Language Model</td>
+    </tr>
+  </table>
+
+  <h2>Related Pages</h2>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3><a href="../theory/index.html">Theory</a></h3>
+      <p>Mathematical foundations of HDC</p>
+    </div>
+    <div class="section-card">
+      <h3><a href="../syntax/index.html">Syntax</a></h3>
+      <p>Complete DSL reference</p>
+    </div>
+    <div class="section-card">
+      <h3><a href="../api/index.html">API</a></h3>
+      <p>JavaScript/TypeScript API</p>
+    </div>
+    <div class="section-card">
+      <h3><a href="../architecture/index.html">Architecture</a></h3>
+      <p>System design and modules</p>
+    </div>
+  </div>
 
   <div class="footer-nav">
-    <a href="../index.html">Home</a> ·
-    <a href="../architecture/index.html">Architecture</a>
+    <p>For detailed information, follow the links to specific documentation pages.</p>
   </div>
   </div>
-  <script src="../reference/nav2.js"></script>
 </body>
 </html>
