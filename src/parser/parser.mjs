@@ -18,7 +18,9 @@ import {
   TheoryDeclaration,
   ImportStatement,
   RuleDeclaration,
-  MacroDeclaration
+  MacroDeclaration,
+  SolveBlock,
+  SolveDeclaration
 } from './ast.mjs';
 
 export class ParseError extends Error {
@@ -90,7 +92,14 @@ export class Parser {
         return this.parseTheoryPrimary();
       }
 
-      // Not a theory, rewind and parse as normal statement
+      // Check for solve block syntax: @dest solve ... end
+      if (this.check(TOKEN_TYPES.KEYWORD) && this.peek().value === 'solve') {
+        // This is a solve block
+        this.pos = savedPos; // rewind
+        return this.parseSolveBlock();
+      }
+
+      // Not a theory or solve block, rewind and parse as normal statement
       this.pos = savedPos;
     }
 
@@ -537,6 +546,93 @@ export class Parser {
       throw new ParseError(`Expected '${value}', got '${token.value}'`, token);
     }
     return token;
+  }
+
+  /**
+   * Parse solve block: @dest solve ProblemType ... end
+   */
+  parseSolveBlock() {
+    const startLine = this.peek().line;
+    const startColumn = this.peek().column;
+
+    // Consume @destination (AT token already contains the destination name)
+    const destToken = this.expect(TOKEN_TYPES.AT);
+    const destination = destToken.value;
+
+    // Consume 'solve'
+    this.expect(TOKEN_TYPES.KEYWORD, 'solve');
+
+    // Get problem type
+    const problemTypeToken = this.expect(TOKEN_TYPES.IDENTIFIER);
+    const problemType = problemTypeToken.value;
+
+    this.skipNewlines();
+
+    // Parse declarations until 'end'
+    const declarations = [];
+    while (!this.isEof()) {
+      this.skipNewlines();
+      
+      if (this.check(TOKEN_TYPES.KEYWORD) && this.peek().value === 'end') {
+        this.advance(); // consume 'end'
+        break;
+      }
+
+      const decl = this.parseSolveDeclaration();
+      if (decl) declarations.push(decl);
+    }
+
+    return new SolveBlock(destination, problemType, declarations, startLine, startColumn);
+  }
+
+  /**
+   * Parse solve declaration: varName kind source
+   * e.g., "guests from Guest" or "noConflict conflictsWith"
+   */
+  parseSolveDeclaration() {
+    const line = this.peek().line;
+    const column = this.peek().column;
+
+    const solveKeywords = new Set(['from', 'noConflict', 'allDifferent']);
+    const isSolveKeywordToken = (token) => {
+      if (!token) return false;
+      if (token.type !== TOKEN_TYPES.KEYWORD && token.type !== TOKEN_TYPES.IDENTIFIER) {
+        return false;
+      }
+      return solveKeywords.has(token.value);
+    };
+
+    let varName, kind, source;
+    const firstToken = this.peek();
+
+    if (firstToken.type === TOKEN_TYPES.IDENTIFIER && !isSolveKeywordToken(firstToken)) {
+      // Pattern: identifier 'from' Identifier (e.g., "guests from Guest")
+      const varNameToken = this.advance();
+      varName = varNameToken.value;
+
+      const kindToken = this.advance();
+      if (!isSolveKeywordToken(kindToken) || kindToken.value !== 'from') {
+        throw new ParseError("Expected 'from' in solve declaration", kindToken || varNameToken);
+      }
+      kind = kindToken.value;
+
+      const sourceToken = this.expect(TOKEN_TYPES.IDENTIFIER);
+      source = sourceToken.value;
+    } else if (isSolveKeywordToken(firstToken)) {
+      // Pattern: solve keyword identifier (e.g., "noConflict conflictsWith")
+      const kindToken = this.advance();
+      kind = kindToken.value;
+
+      const sourceToken = this.expect(TOKEN_TYPES.IDENTIFIER);
+      source = sourceToken.value;
+
+      // For constraint declarations, varName mirrors the keyword kind
+      varName = kind;
+    } else {
+      throw new ParseError('Expected identifier or solve keyword in solve declaration', firstToken);
+    }
+
+    return new SolveDeclaration(varName, kind, source, line, column);
   }
 
   isEof() {

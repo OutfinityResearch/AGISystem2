@@ -17,6 +17,7 @@
  */
 
 import { similarity } from '../core/operations.mjs';
+import { getThresholds } from '../core/constants.mjs';
 
 /**
  * Abductive Reasoning Engine
@@ -28,6 +29,9 @@ export class AbductionEngine {
    */
   constructor(session) {
     this.session = session;
+    // Get strategy-dependent thresholds
+    const strategy = session?.hdcStrategy || 'dense-binary';
+    this.thresholds = getThresholds(strategy);
   }
 
   /**
@@ -94,7 +98,7 @@ export class AbductionEngine {
 
     // Vector similarity check
     const sim = similarity(rule.conclusion, obsVec);
-    if (sim < 0.5) {
+    if (sim < this.thresholds.SIMILARITY) {
       return { score: 0, bindings: null };
     }
 
@@ -197,7 +201,7 @@ export class AbductionEngine {
               hypothesis: `${meta.args[0]} causes ${effectName}`,
               cause: meta.args[0],
               effect: effectName,
-              score: 0.7,
+              score: this.thresholds.ABDUCTION_SCORE,
               explanation: `Causal chain: ${meta.args[0]} → ${effectName}`
             });
           }
@@ -226,21 +230,21 @@ export class AbductionEngine {
   findAnalogicalExplanations(obsVec, minSim) {
     const explanations = [];
 
-    // Require higher threshold for analogical reasoning (at least 0.6)
-    const analogyThreshold = Math.max(0.6, minSim);
+    // Require higher threshold for analogical reasoning (strategy-dependent)
+    const analogyThreshold = Math.max(this.thresholds.ANALOGY_MIN, minSim);
 
     for (const fact of this.session.kbFacts) {
       if (!fact.vector) continue;
 
       const sim = similarity(fact.vector, obsVec);
-      if (sim > analogyThreshold && sim < 0.95) { // Not exact match but strongly similar
+      if (sim > analogyThreshold && sim < this.thresholds.ANALOGY_MAX) { // Not exact match but strongly similar
         const meta = fact.metadata;
         if (meta?.operator && meta?.args) {
           explanations.push({
             type: 'analogical',
             hypothesis: `Similar to: ${meta.operator} ${meta.args.join(' ')}`,
             similarFact: fact.name || 'anonymous',
-            score: sim * 0.7, // Discount for analogy
+            score: sim * this.thresholds.ANALOGY_DISCOUNT, // Discount for analogy
             explanation: `By analogy with similar fact`
           });
         }

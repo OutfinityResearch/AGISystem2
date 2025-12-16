@@ -307,6 +307,67 @@ end
   ambiguous: false
 }</code></pre>
 
+  <h2>FindAll and CSP Queries</h2>
+
+  <p>In addition to similarity-based queries (best match), Sys2DSL supports enumeration queries that return ALL matches.</p>
+
+  <h3>FindAll Pattern</h3>
+
+  <pre><code># Standard query - returns best match
+@q loves ?who Mary
+# Result: { who: 'John' } (single best)
+
+# FindAll - returns ALL matches
+@all findAll seatedAt ?person Table1
+# Result: [{ person: 'Alice' }, { person: 'Bob' }]
+
+# Find all entities of a type
+@guests findAllOfType Guest
+# Result: ['Alice', 'Bob', 'Carol']</code></pre>
+
+  <h3>CSP Solver (Constraint Satisfaction)</h3>
+
+  <p>For combinatorial problems requiring ALL valid solutions:</p>
+
+  <pre><code># Define problem in KB
+isA Alice Guest
+isA Bob Guest
+isA Table1 Table
+isA Table2 Table
+conflictsWith Alice Bob
+
+# Solve via API
+session.solveWeddingSeating()
+# Result: [
+#   { Alice: 'Table1', Bob: 'Table2' },
+#   { Alice: 'Table2', Bob: 'Table1' }
+# ]</code></pre>
+
+  <table>
+    <tr>
+      <th>Method</th>
+      <th>Returns</th>
+      <th>Use Case</th>
+    </tr>
+    <tr>
+      <td><code>query</code></td>
+      <td>Best match</td>
+      <td>"Who loves Mary?"</td>
+    </tr>
+    <tr>
+      <td><code>findAll</code></td>
+      <td>All matches</td>
+      <td>"List everyone at Table1"</td>
+    </tr>
+    <tr>
+      <td><code>solveCSP</code></td>
+      <td>All valid assignments</td>
+      <td>"Find all seating arrangements"</td>
+    </tr>
+  </table>
+
+  <p>See <a href="../specsLoader.html?spec=DS16-CSP-Solver.md">DS16 - CSP Solver</a> for full documentation.</p>
+
   <h2>Built-in Operations</h2>
 
   <h3>L0: HDC Primitives (Runtime)</h3>
@@ -550,6 +611,7 @@ import Animals    # Load animals theory</code></pre>
     <li><a href="../specsLoader.html?spec=DS02-DSL-Syntax.md">DS02 - Complete DSL Specification</a></li>
     <li><a href="../api/index.html">API Reference</a> - Using DSL programmatically</li>
     <li><a href="../specsLoader.html?spec=DS07-Core-Theory.md">DS07 - Core Theory Reference</a></li>
+    <li><a href="../specsLoader.html?spec=DS16-CSP-Solver.md">DS16 - CSP Solver</a> - Constraint satisfaction and exhaustive search</li>
     <li><a href="../theory/index.html">HDC Theory</a> - How vectors encode semantics</li>
   </ul>
 

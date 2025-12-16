@@ -17,7 +17,7 @@
  * 5. Disjoint proof for spatial relations
  */
 
-import { MAX_PROOF_DEPTH, PROOF_TIMEOUT_MS, MAX_REASONING_STEPS } from '../core/constants.mjs';
+import { MAX_PROOF_DEPTH, PROOF_TIMEOUT_MS, MAX_REASONING_STEPS, getThresholds } from '../core/constants.mjs';
 import { TransitiveReasoner } from './transitive.mjs';
 import { UnificationEngine } from './unification.mjs';
 import { ConditionProver } from './conditions.mjs';
@@ -39,6 +39,10 @@ export class ProofEngine {
       maxDepth: options.maxDepth || MAX_PROOF_DEPTH,
       timeout: options.timeout || PROOF_TIMEOUT_MS
     };
+
+    // Get strategy-dependent thresholds
+    const strategy = session?.hdcStrategy || 'dense-binary';
+    this.thresholds = getThresholds(strategy);
 
     // Proof state
     this.steps = [];
@@ -77,7 +81,7 @@ export class ProofEngine {
 
       // Ensure confidence is set (default based on valid)
       if (result.confidence === undefined) {
-        result.confidence = result.valid ? 0.8 : 0;
+        result.confidence = result.valid ? this.thresholds.DEFAULT_CONFIDENCE : 0;
       }
 
       // Add proof field for API compatibility
@@ -121,8 +125,8 @@ export class ProofEngine {
       return 1.0;
     }
     const minConf = Math.min(...results.map(r => r.confidence || 0));
-    // Apply chain length penalty
-    return minConf * Math.pow(0.98, results.length);
+    // Apply chain length penalty using transitive decay
+    return minConf * Math.pow(this.thresholds.TRANSITIVE_DECAY, results.length);
   }
 
   // ============================================================
@@ -169,7 +173,7 @@ export class ProofEngine {
 
     // Strategy 1: Direct KB match (strong threshold)
     const directResult = this.kbMatcher.tryDirectMatch(goalVec, goalStr);
-    if (directResult.valid && directResult.confidence > 0.7) {
+    if (directResult.valid && directResult.confidence > this.thresholds.VERY_STRONG_MATCH) {
       directResult.steps = [{ operation: 'direct_match', fact: this.goalToFact(goal) }];
       return directResult;
     }
@@ -190,7 +194,7 @@ export class ProofEngine {
     }
 
     // Strategy 4: Weak direct match
-    if (directResult.valid && directResult.confidence > 0.55) {
+    if (directResult.valid && directResult.confidence > this.thresholds.STRONG_MATCH) {
       directResult.steps = [{ operation: 'weak_match', fact: this.goalToFact(goal) }];
       return directResult;
     }
@@ -326,7 +330,7 @@ export class ProofEngine {
         if (negatedVec) {
           // Compare vectors using similarity
           const sim = this.session.similarity(goalVec, negatedVec);
-          if (sim > 0.85) {
+          if (sim > this.thresholds.RULE_MATCH) {
             return true;
           }
         }

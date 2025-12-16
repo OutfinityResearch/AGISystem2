@@ -6,12 +6,17 @@
  * Proves that entities are NOT in a location via containment chain + disjointness.
  */
 
+import { getThresholds } from '../core/constants.mjs';
+
 /**
  * Disjoint reasoning engine
  */
 export class DisjointProver {
   constructor(proofEngine) {
     this.engine = proofEngine;
+    // Get strategy-dependent thresholds
+    const strategy = proofEngine.session?.hdcStrategy || 'dense-binary';
+    this.thresholds = getThresholds(strategy);
   }
 
   get session() {
@@ -47,7 +52,7 @@ export class DisjointProver {
         valid: true,
         result: false,
         method: 'disjoint_proof',
-        confidence: 0.95,
+        confidence: this.thresholds.DISJOINT_CONFIDENCE,
         goal: goal.toString(),
         steps: [
           ...chainResult.steps,

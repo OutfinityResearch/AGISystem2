@@ -9,6 +9,7 @@
 import { readFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { getThresholds } from '../core/constants.mjs';
 
 /**
  * Load transitive relations from config file
@@ -67,6 +68,9 @@ export const RESERVED_WORDS = new Set([
 export class TransitiveReasoner {
   constructor(proofEngine) {
     this.engine = proofEngine;
+    // Get strategy-dependent thresholds
+    const strategy = proofEngine.session?.hdcStrategy || 'dense-binary';
+    this.thresholds = getThresholds(strategy);
   }
 
   get session() {
@@ -114,7 +118,7 @@ export class TransitiveReasoner {
         return {
           valid: true,
           method: 'transitive_direct',
-          confidence: 0.9,
+          confidence: this.thresholds.TRANSITIVE_BASE,
           goal: goal.toString(),
           steps: [{ operation: 'transitive_found', fact: stepFact }]
         };
@@ -130,7 +134,7 @@ export class TransitiveReasoner {
         return {
           valid: true,
           method: 'transitive_chain',
-          confidence: chainResult.confidence * 0.98,
+          confidence: chainResult.confidence * this.thresholds.TRANSITIVE_DECAY,
           goal: goal.toString(),
           steps: [
             { operation: 'transitive_step', fact: stepFact },
@@ -181,7 +185,7 @@ export class TransitiveReasoner {
         return {
           valid: true,
           method: 'direct',
-          confidence: 0.9,
+          confidence: this.thresholds.TRANSITIVE_BASE,
           steps: [{ operation: 'transitive_match', fact: stepFact }]
         };
       }
@@ -197,7 +201,7 @@ export class TransitiveReasoner {
         return {
           valid: true,
           method: 'transitive_found',
-          confidence: 0.85,
+          confidence: this.thresholds.RULE_CONFIDENCE,
           steps: [{ operation: 'transitive_found', fact: stepFact }]
         };
       }
@@ -208,7 +212,7 @@ export class TransitiveReasoner {
         return {
           valid: true,
           method: 'transitive_chain',
-          confidence: chainResult.confidence * 0.98,
+          confidence: chainResult.confidence * this.thresholds.TRANSITIVE_DECAY,
           steps: [
             { operation: 'transitive_step', fact: stepFact },
             ...chainResult.steps

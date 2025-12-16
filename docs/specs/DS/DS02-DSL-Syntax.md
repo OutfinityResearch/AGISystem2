@@ -461,7 +461,90 @@ Note: The macro internally uses position vectors for its own structure.
 
 ---
 
-## 2.13 Summary
+## 2.13 FindAll and CSP Queries
+
+In addition to similarity-based queries that return the best match, Sys2DSL supports enumeration queries that return ALL matches.
+
+### 2.13.1 FindAll Pattern
+
+The `findAll` pattern returns every match, not just the best:
+
+```
+# Standard query - returns best match
+@answer sell ?seller Bob ?price
+# Result: { seller: 'Alice', price: '100' } (best match)
+
+# FindAll - returns ALL matches
+@all findAll seatedAt ?person Table1
+# Result: [{ person: 'Alice' }, { person: 'Bob' }, { person: 'Carol' }]
+```
+
+**Use cases:**
+- Enumerate all entities of a type
+- Find all relationships for a subject
+- Collect all instances before aggregation
+
+### 2.13.2 Type Enumeration
+
+Find all entities of a specific type:
+
+```
+# In KB:
+isA Alice Guest
+isA Bob Guest
+isA Carol Guest
+
+# Query
+@guests findAllOfType Guest
+# Result: ['Alice', 'Bob', 'Carol']
+```
+
+### 2.13.3 Constraint Satisfaction (CSP)
+
+For combinatorial problems requiring ALL valid solutions, use the CSP solver:
+
+**Wedding Seating Example:**
+```
+# Define guests and tables
+isA Alice Guest
+isA Bob Guest
+isA Table1 Table
+isA Table2 Table
+
+# Define conflicts
+conflictsWith Alice Bob
+conflictsWith Bob Alice
+
+# Solve (via API)
+@solutions solveWeddingSeating
+# Result: [
+#   { Alice: 'Table1', Bob: 'Table2' },
+#   { Alice: 'Table2', Bob: 'Table1' }
+# ]
+```
+
+**Generic CSP (Planned DSL Syntax):**
+```
+@solutions solve WeddingSeating
+  domain ?guest from Guest
+  domain ?table from Table
+  constraint Not sameTable ?g1 ?g2 when conflictsWith ?g1 ?g2
+end
+```
+
+**Note:** Currently CSP is accessed via the JavaScript API (`session.solveWeddingSeating()`, `session.solveCSP()`). See DS16 for full CSP documentation.
+
+### 2.13.4 Comparison: Query vs FindAll vs CSP
+
+| Method | Returns | Use Case |
+|--------|---------|----------|
+| `query` | Best match | "Who loves Mary?" |
+| `findAll` | All matches | "List everyone at Table1" |
+| `solveCSP` | All valid assignments | "Find all valid seating arrangements" |
+
+---
+
+## 2.14 Summary
 
 | Concept | Description |
 |---------|-------------|

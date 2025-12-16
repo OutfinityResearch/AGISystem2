@@ -8,6 +8,7 @@
 
 import { bind, unbind, bundle, topKSimilar } from '../core/operations.mjs';
 import { getPositionVector } from '../core/position.mjs';
+import { getThresholds } from '../core/constants.mjs';
 
 // Debug logging
 const DEBUG = process.env.SYS2_DEBUG === 'true';
@@ -16,18 +17,25 @@ function dbg(category, ...args) {
 }
 
 /**
- * Reserved words to filter from HDC results
+ * Core reserved words to filter from HDC results.
+ *
+ * NOTE: This list should ONLY contain logical operators and DSL keywords.
+ * Domain-specific terms (like 'GoodDriver', 'Passport', etc.) should NOT
+ * be here - HDC candidate validation via verifyHDCCandidate() handles
+ * filtering test-specific noise properly.
  */
 export const RESERVED = new Set([
+  // Logical operators
   'Implies', 'And', 'Or', 'Not', 'ForAll', 'Exists',
-  'True', 'False', 'can', 'cannot', 'must', 'has', 'isA',
+  'True', 'False',
+
+  // DSL relation operators (these are predicates, not entities)
+  'can', 'cannot', 'must', 'has', 'isA',
   'hasProperty', 'locatedIn', 'partOf', 'before', 'after',
-  'causes', 'enables', 'prevents', '__Relation', '__Role',
-  'Pay', 'Fly', 'Run', 'Swim',  // Skip action verbs as subjects
-  // Common object nouns that shouldn't be subjects
-  'Violations', 'License', 'Motive', 'Opportunity', 'Means',
-  'Cash', 'Card', 'Crypto', 'Nothing', 'ID', 'Passport',
-  'Fever', 'Cough', 'Educated', 'Caring', 'GoodDriver'
+  'causes', 'enables', 'prevents', 'conflictsWith',
+
+  // Internal markers
+  '__Relation', '__Role', '__TransitiveRelation', '__SymmetricRelation'
 ]);
 
 /**
@@ -107,6 +115,7 @@ export function verifyHDCCandidate(session, operatorName, knowns, candidate, hol
  */
 export function searchHDC(session, operatorName, knowns, holes, operatorVec) {
   const results = [];
+  const thresholds = getThresholds(session.hdcStrategy || 'dense-binary');
 
   if (session.kbFacts.length === 0) return results;
 
@@ -136,8 +145,8 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec) {
     const matches = topKSimilar(candidate, session.vocabulary.atoms, 15);
 
     for (const match of matches) {
-      // Higher threshold, filter invalid entities, and verify candidate
-      if (match.similarity > 0.5 && isValidEntity(match.name)) {
+      // Use strategy-dependent threshold, filter invalid entities, and verify candidate
+      if (match.similarity > thresholds.HDC_MATCH && isValidEntity(match.name)) {
         // Verify the candidate actually makes sense
         if (!verifyHDCCandidate(session, operatorName, knowns, match.name, hole.index)) {
           dbg('HDC', `Rejecting unverifiable candidate: ${match.name}`);
@@ -170,7 +179,7 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec) {
       const matches = topKSimilar(candidate, session.vocabulary.atoms, 5);
       holeCandidates.push({
         hole,
-        matches: matches.filter(m => m.similarity > 0.25)
+        matches: matches.filter(m => m.similarity > thresholds.VERIFICATION)
       });
     }
 

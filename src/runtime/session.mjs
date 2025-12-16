@@ -6,7 +6,7 @@
  * Coordinates learn, query, prove, and decode capabilities.
  */
 
-import { bind, bundle, similarity, topKSimilar, getDefaultGeometry } from '../core/operations.mjs';
+import { bind, bindAll, bundle, similarity, topKSimilar, getDefaultGeometry } from '../core/operations.mjs';
 import { withPosition, removePosition } from '../core/position.mjs';
 import { parse } from '../parser/parser.mjs';
 import { Scope } from './scope.mjs';
@@ -17,6 +17,9 @@ import { ProofEngine } from '../reasoning/prove.mjs';
 import { AbductionEngine } from '../reasoning/abduction.mjs';
 import { InductionEngine } from '../reasoning/induction.mjs';
 import { textGenerator } from '../output/text-generator.mjs';
+import { findAll } from '../reasoning/find-all.mjs';
+
+
 
 // Debug logging
 const DEBUG = process.env.SYS2_DEBUG === 'true';
@@ -99,20 +102,33 @@ export class Session {
 
       // Count actual facts: for Load statements, use factsLoaded; otherwise count results
       let factCount = 0;
+      let solveResult = null;
+      
       for (const r of result.results) {
         if (r && typeof r.factsLoaded === 'number') {
           factCount += r.factsLoaded;
+        } else if (r && r.type === 'solve') {
+          // Preserve solve results for CSP
+          solveResult = r;
+          factCount += 1; // Count as one "fact" for backward compatibility
         } else {
           factCount += 1;
         }
       }
 
-      return {
+      const response = {
         success: result.success,
         facts: factCount,
         errors: result.errors.map(e => e.message),
         warnings: this.warnings.slice()
       };
+      
+      // If this was a solve operation, include the detailed result
+      if (solveResult) {
+        response.solveResult = solveResult;
+      }
+      
+      return response;
     } catch (e) {
       return {
         success: false,
@@ -643,6 +659,32 @@ export class Session {
       scopeBindings: this.scope.localNames()
     };
   }
+
+  // ============================================================
+  // CSP and FindAll Methods
+  // ============================================================
+
+  /**
+   * Find ALL matches for a pattern (exhaustive enumeration)
+   * Unlike query() which returns best match, this returns all matches.
+   *
+   * @param {string} pattern - Pattern DSL with holes (e.g., "seatedAt ?person Table1")
+   * @param {Object} options - Options
+   * @returns {Object} Result with all bindings
+   *
+   * @example
+   * session.learn('seatedAt Alice Table1');
+   * session.learn('seatedAt Bob Table1');
+   * session.findAll('seatedAt ?person Table1');
+   * // Returns: { success: true, count: 2, results: [{bindings: {person: 'Alice'}}, ...] }
+   */
+  findAll(pattern, options = {}) {
+    dbg('FINDALL', 'Pattern:', pattern?.substring?.(0, 60) || pattern);
+    return findAll(this, pattern, options);
+  }
+
+
+
 
   close() {
     this.kb = null;

@@ -6,6 +6,7 @@
 import { NLTransformer } from '../../src/nlp/transformer.mjs';
 import { Session } from '../../src/runtime/session.mjs';
 import { initHDC, getStrategyId } from '../../src/hdc/facade.mjs';
+import { getThresholds } from '../../src/core/constants.mjs';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -169,6 +170,8 @@ function runNlToDsl(testCase, transformer, timeoutMs) {
 }
 
 
+
+
 // --- PHASE 2: REASONING ---
 
 async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
@@ -210,7 +213,7 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
 
   // Execute Async with Timeout
   const execution = await runAsyncWithTimeout((async () => {
-    
+
     // Setup first
     if (testCase.setup_dsl) {
       session.learn(testCase.setup_dsl);
@@ -218,17 +221,40 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
 
     if (testCase.action === 'learn') {
       return session.learn(dslToExecute);
-    } 
+    }
+    else if (testCase.action === 'listSolutions') {
+      // List all CSP solutions for a given solve destination (solutionRelation)
+      const destination = dslToExecute.trim();
+      const solutions = session.kbFacts.filter(f =>
+        f.metadata?.operator === 'cspSolution' &&
+        f.metadata?.solutionRelation === destination
+      );
+      return {
+        success: solutions.length > 0,
+        destination,
+        solutionCount: solutions.length,
+        solutions: solutions.map((sol, i) => ({
+          index: i + 1,
+          facts: sol.metadata?.facts || [],
+          assignments: sol.metadata?.assignments || []
+        }))
+      };
+    }
     else {
       // For query/prove, use the DSL
       const queryDsl = testCase.query_dsl || dslToExecute;
-      
+
       const sessionOptions = { timeout: timeoutMs };
 
       if (testCase.action === 'prove' || testCase.action === 'elaborate') {
         return session.prove(queryDsl, sessionOptions);
       } else {
-        return session.query(queryDsl, sessionOptions); // Assuming query also supports options now or will ignore them
+        // Solve blocks are executed via learn(), not query()
+        // Detect solve block: starts with @dest solve ProblemType
+        if (queryDsl.trim().match(/^@\w+\s+solve\s+/)) {
+          return session.learn(queryDsl);
+        }
+        return session.query(queryDsl, sessionOptions);
       }
     }
   })(), timeoutMs);
@@ -248,11 +274,16 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
   let passed = false;
   if (testCase.action === 'learn') passed = result.success;
   else if (testCase.action === 'prove' || testCase.action === 'elaborate') {
-      // Prove passes if it returns a valid structure (true or false), 
+      // Prove passes if it returns a valid structure (true or false),
       // correctness is checked in DSL->NL or expected_result
-      passed = true; 
+      passed = true;
+  } else if (testCase.action === 'listSolutions') {
+      // listSolutions passes if it returns valid structure
+      passed = result !== undefined && result !== null;
   } else {
-      passed = result.success;
+      // For query: success=false with valid structure means "no results found"
+      // which is a valid outcome - let DSL->NL handle output
+      passed = result !== undefined && result !== null;
   }
 
   return {
@@ -269,6 +300,8 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
 function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
   dbg('DSL->NL', 'Starting, expected_nl:', testCase.expected_nl?.substring(0, 40));
 
+
+
   if (!testCase.expected_nl) {
     dbg('DSL->NL', 'No expected_nl, skipping');
     return { passed: true, skipped: true };
@@ -284,13 +317,64 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
     dbg('DSL->NL', 'Action:', testCase.action, 'result keys:', Object.keys(result || {}));
 
     if (testCase.action === 'learn') {
+       // Check for solve results first (solve blocks return solveResult)
+       if (result.solveResult && result.solveResult.type === 'solve') {
+         const solveData = result.solveResult;
+         if (!solveData.success || solveData.solutionCount === 0) {
+           text = solveData.error || 'No valid solutions found.';
+         } else {
+           text = `Learned ${result.facts} facts`;
+         }
+       }
        // Include warnings (contradictions, etc.) in the output if present
-       if (result.warnings && result.warnings.length > 0) {
+       else if (result.warnings && result.warnings.length > 0) {
          text = result.warnings[0]; // First warning is most relevant
        } else {
          text = result.success ? `Learned ${result.facts} facts` : 'Failed';
        }
        dbg('DSL->NL', 'Learn text:', text);
+    }
+    // Handle listSolutions action - enumerate all CSP solutions grouped
+    else if (testCase.action === 'listSolutions') {
+      if (!result.success || result.solutionCount === 0) {
+        text = 'No valid solutions found.';
+      } else {
+        const solutionTexts = result.solutions.map((sol) => {
+          const factTexts = sol.facts.map(fact => {
+            const parts = fact.split(' ');
+            return session.generateText(parts[0], parts.slice(1)).replace(/\.$/, '');
+          });
+          return `Solution ${sol.index}: ${factTexts.join(', ')}`;
+        });
+        text = `Found ${result.solutionCount} solutions. ${solutionTexts.join('. ')}.`;
+      }
+      dbg('DSL->NL', 'listSolutions text:', text?.substring(0, 100));
+    }
+    // Handle solve results for query action
+    else if (result.solveResult && result.solveResult.type === 'solve') {
+      const solveData = result.solveResult;
+      if (!solveData.success || solveData.solutionCount === 0) {
+        text = solveData.error || 'No valid solutions found.';
+      } else {
+        const solutionTexts = solveData.solutions.map((sol, i) => {
+          const factTexts = sol.map(fact => {
+            // Use structured data if available, fall back to DSL parsing
+            if (fact.dsl) {
+              const parts = fact.dsl.split(' ');
+              return session.generateText(parts[0], parts.slice(1)).replace(/\.$/, '');
+            } else if (fact.predicate) {
+              return session.generateText(fact.predicate, [fact.subject, fact.object]).replace(/\.$/, '');
+            } else {
+              // Fallback for simple string format
+              const parts = fact.split(' ');
+              return session.generateText(parts[0], parts.slice(1)).replace(/\.$/, '');
+            }
+          });
+          return `${i + 1}. ${factTexts.join(', ')}`;
+        });
+        text = `Found ${solveData.solutionCount} valid seating arrangements: ${solutionTexts.join('. ')}.`;
+      }
+      dbg('DSL->NL', 'Solve text:', text);
     }
     else if (testCase.action === 'prove') {
        dbg('DSL->NL', 'Processing prove result, valid:', result?.valid, 'result:', result?.result);
@@ -390,27 +474,118 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
     else {
        // Reconstruct text for query
        dbg('DSL->NL', 'Query result bindings:', result.bindings ? 'yes' : 'no');
-       if (result.bindings) {
+       if (result.bindings && result.bindings.size > 0) {
            const texts = [];
            const query = testCase.query_dsl || testCase.input_dsl || '';
            const parts = query.trim().split(/\s+/).filter(p => !p.startsWith('@'));
            const op = parts[0];
            dbg('DSL->NL', 'Query op:', op, 'parts:', parts);
 
-           // Filter results: use matches with reasonable quality (score >= 0.5)
-           const allResults = result.allResults || [{bindings: result.bindings, score: 1}];
-           const goodResults = allResults.filter(r => (r.score || 1) >= 0.5);
-           const resultsToProcess = goodResults.length > 0 ? goodResults : [allResults[0]];
+           // Get all results - ensure bindings are Maps
+           const allResults = result.allResults || [];
+
+           // Reserved symbols to filter out (HDC noise)
+           const RESERVED = new Set([
+             'ForAll', 'And', 'Or', 'Not', 'Implies', 'Exists',
+             'isA', 'has', 'can', 'must', 'causes', 'implies',
+             'seatedAt', 'conflictsWith', 'locatedIn'
+           ]);
+
+           // Filter for reliable matches (direct, transitive, rule-derived, or compound_csp)
+           const reliableMethods = new Set(['direct', 'transitive', 'rule', 'rule_derived', 'compound_csp']);
+           const directMatches = allResults.filter(r => {
+             if (!r.bindings || !reliableMethods.has(r.method)) return false;
+             const hasBindings = r.bindings instanceof Map ?
+               r.bindings.size > 0 :
+               Object.keys(r.bindings).length > 0;
+             return hasBindings;
+           });
+
+           // Get strategy-dependent HDC threshold
+           const strategy = session.hdcStrategy || 'dense-binary';
+           const thresholds = getThresholds(strategy);
+           const hdcThreshold = thresholds.HDC_MATCH;
+
+           // Also include HDC matches above strategy-dependent threshold
+           const hdcMatches = allResults.filter(r => {
+             if (!r.bindings || reliableMethods.has(r.method)) return false; // Skip if already a reliable method
+             const hasBindings = r.bindings instanceof Map ?
+               r.bindings.size > 0 :
+               Object.keys(r.bindings).length > 0;
+             // Accept HDC matches above strategy-dependent threshold
+             if (!hasBindings || (r.score || 0) < hdcThreshold) return false;
+
+             // Filter out results with reserved symbols
+             if (r.bindings instanceof Map) {
+               for (const [k, v] of r.bindings) {
+                 if (RESERVED.has(v?.answer)) return false;
+               }
+             }
+             return true;
+           });
+
+           // Combine reliable matches with HDC matches, deduplicating by answer
+           const getFirstHoleAnswer = (r) => {
+             const holeName = parts.find(p => p.startsWith('?'))?.substring(1);
+             if (!holeName) return null;
+             return r.bindings instanceof Map ?
+               r.bindings.get(holeName)?.answer :
+               r.bindings?.[holeName]?.answer;
+           };
+
+           const seenAnswers = new Set();
+           const goodResults = [];
+           // Add directMatches first (higher priority)
+           for (const r of directMatches) {
+             const answer = getFirstHoleAnswer(r);
+             if (answer && !seenAnswers.has(answer)) {
+               seenAnswers.add(answer);
+               goodResults.push(r);
+             }
+           }
+           // Add hdcMatches that aren't duplicates
+           for (const r of hdcMatches) {
+             const answer = getFirstHoleAnswer(r);
+             if (answer && !seenAnswers.has(answer)) {
+               seenAnswers.add(answer);
+               goodResults.push(r);
+             }
+           }
+
+           // If no results with bindings in allResults, use main result.bindings
+           const resultsToProcess = goodResults.length > 0 ?
+             goodResults :
+             (result.bindings?.size > 0 ? [{bindings: result.bindings, score: 1, method: 'direct'}] : []);
 
            for(const r of resultsToProcess) {
+               // Handle both Map and plain object bindings
+               const getBinding = (name) => {
+                 if (r.bindings instanceof Map) {
+                   return r.bindings.get(name)?.answer;
+                 }
+                 return r.bindings[name]?.answer;
+               };
+
                const args = parts.slice(1).map(a => {
-                   if(a.startsWith('?')) return r.bindings.get(a.substring(1))?.answer || a;
+                   if(a.startsWith('?')) {
+                       const answer = getBinding(a.substring(1));
+                       // Filter out internal symbols (garbage HDC matches)
+                       if (answer && !answer.startsWith('__') && !['ForAll', 'And', 'Or', 'Not', 'Implies'].includes(answer)) {
+                           return answer;
+                       }
+                       return a; // Keep variable placeholder if no valid answer
+                   }
                    return a;
                });
+               // Skip if still has unresolved variables
+               if (args.some(a => a.startsWith('?'))) continue;
                dbg('DSL->NL', 'generateText args:', op, args);
-               texts.push(session.generateText(op, args));
+               // Remove trailing punctuation for consistent joining
+               const generatedText = session.generateText(op, args).replace(/[.!?]+$/, '');
+               texts.push(generatedText);
            }
-           text = [...new Set(texts)].join('. ');
+           // Join with '. ' and add final period
+           text = texts.length > 0 ? [...new Set(texts)].join('. ') + '.' : 'No results';
        } else {
            text = 'No results';
        }

@@ -8,6 +8,7 @@
 
 import { similarity } from '../core/operations.mjs';
 import { TRANSITIVE_RELATIONS } from './transitive.mjs';
+import { getThresholds } from '../core/constants.mjs';
 
 /**
  * KB matching engine
@@ -15,6 +16,9 @@ import { TRANSITIVE_RELATIONS } from './transitive.mjs';
 export class KBMatcher {
   constructor(proofEngine) {
     this.engine = proofEngine;
+    // Get strategy-dependent thresholds
+    const strategy = proofEngine.session?.hdcStrategy || 'dense-binary';
+    this.thresholds = getThresholds(strategy);
   }
 
   get session() {
@@ -43,7 +47,7 @@ export class KBMatcher {
       }
     }
 
-    if (bestSim > 0.5) {
+    if (bestSim > this.thresholds.SIMILARITY) {
       return {
         valid: true,
         method: 'direct',
@@ -84,7 +88,7 @@ export class KBMatcher {
             }
           }
           if (match) {
-            return { found: true, confidence: 0.95, fact };
+            return { found: true, confidence: this.thresholds.DIRECT_MATCH, fact };
           }
         }
       }
@@ -145,7 +149,7 @@ export class KBMatcher {
       if (matchOk) {
         matches.push({
           valid: true,
-          confidence: 0.9,
+          confidence: this.thresholds.CONDITION_CONFIDENCE,
           newBindings,
           steps: [{ operation: 'pattern_match', fact: `${op} ${meta.args.join(' ')}`, bindings: Object.fromEntries(newBindings) }]
         });
@@ -166,7 +170,7 @@ export class KBMatcher {
         newBindings.set(varName, target.value);
         matches.push({
           valid: true,
-          confidence: 0.85,
+          confidence: this.thresholds.RULE_CONFIDENCE,
           newBindings,
           steps: target.steps
         });
@@ -188,7 +192,7 @@ export class KBMatcher {
         if (ruleResult.valid) {
           matches.push({
             valid: true,
-            confidence: ruleResult.confidence || 0.85,
+            confidence: ruleResult.confidence || this.thresholds.RULE_CONFIDENCE,
             newBindings: new Map(),
             steps: ruleResult.steps || []
           });
@@ -242,7 +246,7 @@ export class KBMatcher {
         return {
           valid: true,
           method: 'rule_chain',
-          confidence: (condResult.confidence || 0.9) * 0.9,
+          confidence: (condResult.confidence || this.thresholds.CONDITION_CONFIDENCE) * this.thresholds.CONDITION_CONFIDENCE,
           steps: [
             { operation: 'rule_applied', fact: condStr, rule: rule.name },
             ...(condResult.steps || [])
@@ -270,7 +274,7 @@ export class KBMatcher {
     this.session.reasoningStats.similarityChecks++;
     const conclusionSim = similarity(goalVec, rule.conclusion);
 
-    if (conclusionSim > 0.7 && !rule.hasVariables) {
+    if (conclusionSim > this.thresholds.CONCLUSION_MATCH && !rule.hasVariables) {
       const conditionResult = this.engine.conditions.proveCondition(rule, depth + 1);
 
       if (conditionResult.valid) {
@@ -285,7 +289,7 @@ export class KBMatcher {
           valid: true,
           method: 'backward_chain',
           rule: rule.name,
-          confidence: Math.min(conclusionSim, conditionResult.confidence) * 0.95,
+          confidence: Math.min(conclusionSim, conditionResult.confidence) * this.thresholds.CONFIDENCE_DECAY,
           goal: goal.toString(),
           steps: [
             { operation: 'rule_match', rule: rule.name || rule.source, fact: conclusionFact },

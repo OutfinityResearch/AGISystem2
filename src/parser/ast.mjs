@@ -218,6 +218,41 @@ export class MacroDeclaration extends ASTNode {
   }
 }
 
+/**
+ * Solve block for CSP problems
+ * @solutions solve ProblemType ... end
+ */
+export class SolveBlock extends ASTNode {
+  constructor(destination, problemType, declarations, line, column) {
+    super('SolveBlock', line, column);
+    this.destination = destination;
+    this.problemType = problemType;
+    this.declarations = declarations;
+  }
+
+  toString() {
+    const decls = this.declarations.map(d => d.toString()).join('\n  ');
+    return `@${this.destination} solve ${this.problemType}\n  ${decls}\nend`;
+  }
+}
+
+/**
+ * Solve declaration within solve block
+ * varName kind source
+ */
+export class SolveDeclaration extends ASTNode {
+  constructor(varName, kind, source, line, column) {
+    super('SolveDeclaration', line, column);
+    this.varName = varName;
+    this.kind = kind;
+    this.source = source;
+  }
+
+  toString() {
+    return `${this.varName} ${this.kind} ${this.source}`;
+  }
+}
+
 export default {
   ASTNode,
   Program,
@@ -232,5 +267,7 @@ export default {
   TheoryDeclaration,
   ImportStatement,
   RuleDeclaration,
-  MacroDeclaration
+  MacroDeclaration,
+  SolveBlock,
+  SolveDeclaration
 };

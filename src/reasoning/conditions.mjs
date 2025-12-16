@@ -6,6 +6,7 @@
  */
 
 import { similarity } from '../core/operations.mjs';
+import { getThresholds } from '../core/constants.mjs';
 
 // Debug logging
 const DEBUG = process.env.SYS2_DEBUG === 'true';
@@ -19,6 +20,9 @@ function dbg(category, ...args) {
 export class ConditionProver {
   constructor(proofEngine) {
     this.engine = proofEngine;
+    // Get strategy-dependent thresholds
+    const strategy = proofEngine.session?.hdcStrategy || 'dense-binary';
+    this.thresholds = getThresholds(strategy);
   }
 
   get session() {
@@ -104,7 +108,7 @@ export class ConditionProver {
       return {
         valid: true,
         method: 'not_condition',
-        confidence: 0.9,
+        confidence: this.thresholds.CONDITION_CONFIDENCE,
         steps: [{ operation: 'not_proved', detail: 'inner condition cannot be proved' }]
       };
     }
@@ -130,7 +134,7 @@ export class ConditionProver {
       return {
         valid: true,
         method: 'and_instantiated',
-        confidence: 0.9,
+        confidence: this.thresholds.CONDITION_CONFIDENCE,
         steps: accumulatedSteps
       };
     }
@@ -198,7 +202,7 @@ export class ConditionProver {
         return {
           valid: true,
           method: 'or_instantiated',
-          confidence: partResult.confidence * 0.95,
+          confidence: partResult.confidence * this.thresholds.CONFIDENCE_DECAY,
           steps: partResult.steps
         };
       }
@@ -248,7 +252,7 @@ export class ConditionProver {
       if (transResult.valid) {
         return {
           valid: true,
-          confidence: transResult.confidence * 0.95,
+          confidence: transResult.confidence * this.thresholds.CONFIDENCE_DECAY,
           steps: [{ operation: 'transitive_proof', fact: condStr }, ...(transResult.steps || [])]
         };
       }
@@ -313,7 +317,7 @@ export class ConditionProver {
         dbg('UNBOUND', 'Found match:', `${op} ${meta.args.join(' ')}`, 'New bindings:', [...newBindings.entries()]);
         return {
           valid: true,
-          confidence: 0.9,
+          confidence: this.thresholds.CONDITION_CONFIDENCE,
           newBindings,
           steps: [{ operation: 'pattern_match', fact: `${op} ${meta.args.join(' ')}`, bindings: Object.fromEntries(newBindings) }]
         };
@@ -364,7 +368,7 @@ export class ConditionProver {
     for (const fact of this.session.kbFacts) {
       if (!fact.vector) continue;
       const sim = similarity(conditionVec, fact.vector);
-      if (sim > 0.7) {
+      if (sim > this.thresholds.CONCLUSION_MATCH) {
         // Build fact string from metadata
         let factStr = '';
         if (fact.metadata?.operator && fact.metadata?.args) {
@@ -382,7 +386,7 @@ export class ConditionProver {
     for (const rule of this.session.rules) {
       if (!rule.conclusion) continue;
       const conclusionSim = similarity(conditionVec, rule.conclusion);
-      if (conclusionSim > 0.7) {
+      if (conclusionSim > this.thresholds.CONCLUSION_MATCH) {
         const subResult = this.proveCondition(rule, depth + 1);
         if (subResult.valid) {
           // Extract conclusion fact text - try to resolve reference
@@ -410,7 +414,7 @@ export class ConditionProver {
           return {
             valid: true,
             method: 'chained_rule',
-            confidence: Math.min(conclusionSim, subResult.confidence) * 0.95,
+            confidence: Math.min(conclusionSim, subResult.confidence) * this.thresholds.CONFIDENCE_DECAY,
             steps: [
               { operation: 'chain_via_rule', rule: rule.name || rule.source, fact: conclusionFact },
               ...subResult.steps
@@ -463,7 +467,7 @@ export class ConditionProver {
       return {
         valid: true,
         method: 'not_condition',
-        confidence: 0.9,
+        confidence: this.thresholds.CONDITION_CONFIDENCE,
         steps: [{ operation: 'proving_not_condition' }]
       };
     }
@@ -500,7 +504,7 @@ export class ConditionProver {
     return {
       valid: true,
       method: 'and_condition',
-      confidence: minConfidence * 0.95,
+      confidence: minConfidence * this.thresholds.CONFIDENCE_DECAY,
       steps: [{ operation: 'proving_and_condition', parts: parts.length }, ...allSteps]
     };
   }
@@ -520,7 +524,7 @@ export class ConditionProver {
         return {
           valid: true,
           method: 'or_condition',
-          confidence: result.confidence * 0.95,
+          confidence: result.confidence * this.thresholds.CONFIDENCE_DECAY,
           steps: [{ operation: 'proving_or_condition' }, ...(result.steps || [])]
         };
       }

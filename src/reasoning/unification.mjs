@@ -6,6 +6,8 @@
  * AST manipulation and binding management.
  */
 
+import { getThresholds } from '../core/constants.mjs';
+
 // Debug logging
 const DEBUG = process.env.SYS2_DEBUG === 'true';
 function dbg(category, ...args) {
@@ -18,6 +20,9 @@ function dbg(category, ...args) {
 export class UnificationEngine {
   constructor(proofEngine) {
     this.engine = proofEngine;
+    // Get strategy-dependent thresholds
+    const strategy = proofEngine.session?.hdcStrategy || 'dense-binary';
+    this.thresholds = getThresholds(strategy);
   }
 
   get session() {
@@ -88,7 +93,7 @@ export class UnificationEngine {
         method: 'backward_chain_unified',
         rule: rule.name,
         bindings: Object.fromEntries(bindings),
-        confidence: condResult.confidence * 0.95,
+        confidence: condResult.confidence * this.thresholds.CONFIDENCE_DECAY,
         goal: goal.toString(),
         steps: [
           { operation: 'unification_match', rule: rule.name || rule.source, bindings: Object.fromEntries(bindings) },

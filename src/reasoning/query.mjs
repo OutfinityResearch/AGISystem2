@@ -23,6 +23,7 @@ import { searchHDC, isValidEntity, RESERVED } from './query-hdc.mjs';
 import { searchKBDirect, isTypeClass, isFactNegated, sameBindings, filterTypeClasses, filterNegated } from './query-kb.mjs';
 import { searchTransitive, isTransitiveRelation } from './query-transitive.mjs';
 import { searchViaRules } from './query-rules.mjs';
+import { searchCompoundSolutions } from './query-compound.mjs';
 
 // Debug logging
 const DEBUG = process.env.SYS2_DEBUG === 'true';
@@ -146,14 +147,26 @@ export class QueryEngine {
     }
     dbg('RULES', `Found ${ruleMatches.length} rule-derived matches`);
 
+    // SOURCE 5: Compound CSP solutions (HDC-bundled multi-assignment solutions)
+    const compoundMatches = searchCompoundSolutions(this.session, operatorName, knowns, holes);
+    for (const cm of compoundMatches) {
+      const exists = allResults.some(r =>
+        sameBindings(r.bindings, cm.bindings, holes)
+      );
+      if (!exists) {
+        allResults.push(cm);
+      }
+    }
+    dbg('COMPOUND', `Found ${compoundMatches.length} compound solution matches`);
+
     // Filter out type classes for modal operators (can, must, cannot)
     let filteredResults = filterTypeClasses(allResults, this.session, operatorName);
 
     // Also filter negated facts for rule_derived and hdc
     filteredResults = filterNegated(filteredResults, this.session, operatorName, knowns);
 
-    // Sort by: 1) method priority (direct > transitive > hdc > rule), 2) score
-    const methodPriority = { direct: 4, transitive: 3, rule_derived: 2, hdc: 1 };
+    // Sort by: 1) method priority (direct > transitive > compound_csp > rule > hdc), 2) score
+    const methodPriority = { direct: 5, transitive: 4, compound_csp: 3, rule_derived: 2, hdc: 1 };
     filteredResults.sort((a, b) => {
       const pa = methodPriority[a.method] || 0;
       const pb = methodPriority[b.method] || 0;

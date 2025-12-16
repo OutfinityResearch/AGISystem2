@@ -4,17 +4,50 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better documentation and project presentation">
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better documentation and project presentation, more tests for advcaed holographic reasoning">
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS16-CSP-Solver.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/reasoning/conditions.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/reasoning/kb-matching.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/reasoning/transitive.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/review_gemini.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/reasoning/csp/backtrack.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/reasoning/csp/constraint.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/reasoning/csp/domain.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/reasoning/csp/index.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/reasoning/csp/solver.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/reasoning/find-all.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/reasoning/query-compound.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/integration/csp-wedding-seating.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/csp-hdc.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/csp/solve-dsl.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/negation-exceptions.test.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/api/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/api/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/architecture/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/architecture/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/guides/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS01-Theoretical-Foundation.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS02-DSL-Syntax.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS03-Architecture.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/matrix.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/matrix.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/hdc/fractal-semantic.test.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/vocabulary.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/vocabulary.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FSP_IMPLEMENTATION_SUMMARY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMPLEMENTATION_COMPLETE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/debug_fsp.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS02-DSL-Syntax.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS02-DSL-Syntax.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/syntax/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/syntax/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite03_rules/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite03_rules/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite08_modal/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite08_modal/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite11_wedding_seating/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite11_wedding_seating/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mistral_improvements.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/constants.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/constants.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/text-generator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/text-generator.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/ast.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/ast.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/parser.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/parser.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/abduction.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/abduction.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/conditions.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/conditions.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/disjoint.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/disjoint.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/prove.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/transitive.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/transitive.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/unification.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/unification.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/executor.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/core-theories.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/core-theories.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +122,7 @@
       <workItem from="1765450432887" duration="75000" />
       <workItem from="1765553684173" duration="619000" />
       <workItem from="1765783559936" duration="115000" />
-      <workItem from="1765869847094" duration="14830000" />
+      <workItem from="1765869847094" duration="23513000" />
     </task>
     <task id="LOCAL-00001" summary="1st public version of AGISystem2">
       <option name="closed" value="true" />
@@ -387,7 +420,23 @@
       <option name="project" value="LOCAL" />
       <updated>1765894514767</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="better documentation and project presentation">
+      <option name="closed" value="true" />
+      <created>1765895829065</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1765895829065</updated>
+    </task>
+    <task id="LOCAL-00039" summary="better documentation and project presentation, more tests for advcaed holographic reasoning">
+      <option name="closed" value="true" />
+      <created>1765896267963</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1765896267963</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -412,6 +461,7 @@
     <MESSAGE value="added a new HDC strategy, wip" />
     <MESSAGE value="better documentation" />
     <MESSAGE value="better documentation and project presentation" />
-    <option name="LAST_COMMIT_MESSAGE" value="better documentation and project presentation" />
+    <MESSAGE value="better documentation and project presentation, more tests for advcaed holographic reasoning" />
+    <option name="LAST_COMMIT_MESSAGE" value="better documentation and project presentation, more tests for advcaed holographic reasoning" />
   </component>
 </project>
