@@ -6,7 +6,7 @@
  */
 
 import { denseBinaryStrategy } from './dense-binary.mjs';
-import { fractalSemanticStrategy } from './fractal-semantic.mjs';
+import { sparsePolynomialStrategy } from './sparse-polynomial.mjs';
 
 /**
  * Registry of available strategies
@@ -16,7 +16,10 @@ const strategies = new Map();
 
 // Register strategies
 strategies.set('dense-binary', denseBinaryStrategy);
-strategies.set('fractal-semantic', fractalSemanticStrategy);
+strategies.set('sparse-polynomial', sparsePolynomialStrategy);
+
+// Backward compatibility alias
+strategies.set('fractal-semantic', sparsePolynomialStrategy);
 
 /**
  * Get a strategy by ID
