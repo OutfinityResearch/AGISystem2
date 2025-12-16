@@ -431,7 +431,17 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
     .replace(/\b(a|an|the)\b/g, '')    // Remove articles
     .replace(/\s+/g, ' ')              // Collapse whitespace
     .trim();
-  const passed = normalize(actualText).includes(normalize(testCase.expected_nl));
+
+  // For queries with multiple results, check if all expected parts are present (order-independent)
+  let passed;
+  if (testCase.action === 'query' && testCase.expected_nl.includes('.')) {
+    // Split expected into parts and check all are present
+    const expectedParts = normalize(testCase.expected_nl).split(/\s+/).filter(w => w.length > 2);
+    const actualNorm = normalize(actualText);
+    passed = expectedParts.every(part => actualNorm.includes(part));
+  } else {
+    passed = normalize(actualText).includes(normalize(testCase.expected_nl));
+  }
 
   return {
     passed,

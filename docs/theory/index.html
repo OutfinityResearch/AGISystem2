@@ -327,16 +327,242 @@ answer = mostSimilar(raw, vocabulary) = "John"</code></pre>
     <li><strong>Graceful degradation:</strong> Accuracy decreases smoothly with capacity</li>
   </ul>
 
+  <h2>HDC Strategies</h2>
+
+  <p>AGISystem2 implements two HDC strategies with different trade-offs:</p>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3>🎯 Dense Binary Strategy</h3>
+      <p><strong>Default strategy</strong> - Uses compact binary vectors with XOR and majority operations.</p>
+      <ul>
+        <li>✓ Fastest operations</li>
+        <li>✓ Minimal memory usage</li>
+        <li>✓ Deterministic results</li>
+        <li>✗ Limited capacity (~200 facts)</li>
+      </ul>
+      <p><a href="../strategies/dense-binary.html">Detailed Documentation</a></p>
+    </div>
+
+    <div class="section-card">
+      <h3>🌌 Fractal Semantic Strategy</h3>
+      <p><strong>Advanced strategy</strong> - Uses hierarchical fractal patterns for enhanced capacity.</p>
+      <ul>
+        <li>✓ Higher capacity (~1000+ facts)</li>
+        <li>✓ Better noise tolerance</li>
+        <li>✓ Semantic clustering</li>
+        <li>✗ Slower operations</li>
+      </ul>
+      <p><a href="../strategies/fractal-semantic.html">Detailed Documentation</a></p>
+    </div>
+  </div>
+
+  <h2>Strategy Comparison</h2>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Dense Binary vs Fractal Semantic Strategy</div>
+    <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- Dense Binary -->
+      <rect x="50" y="30" width="300" height="200" rx="15" fill="#e3f2fd" stroke="#1976d2" stroke-width="3"/>
+      <text x="200" y="60" text-anchor="middle" font-weight="bold" font-size="14" fill="#1976d2">Dense Binary Strategy</text>
+
+      <!-- Dense features -->
+      <text x="100" y="90" text-anchor="start" font-size="11" fill="#333">• Vector: 32,768 bits (4KB)</text>
+      <text x="100" y="110" text-anchor="start" font-size="11" fill="#333">• Operations: XOR, Majority</text>
+      <text x="100" y="130" text-anchor="start" font-size="11" fill="#333">• Capacity: ~200 facts</text>
+      <text x="100" y="150" text-anchor="start" font-size="11" fill="#333">• Speed: O(geometry/64)</text>
+      <text x="100" y="170" text-anchor="start" font-size="11" fill="#333">• Use: General purpose</text>
+
+      <!-- Visual representation -->
+      <rect x="100" y="190" width="200" height="20" rx="3" fill="#bbdefb" stroke="#1976d2"/>
+      <text x="200" y="205" text-anchor="middle" font-size="10" fill="#333">[1010101010...10101010]</text>
+
+      <!-- Fractal Semantic -->
+      <rect x="450" y="30" width="300" height="200" rx="15" fill="#e8f5e9" stroke="#4caf50" stroke-width="3"/>
+      <text x="600" y="60" text-anchor="middle" font-weight="bold" font-size="14" fill="#4caf50">Fractal Semantic Strategy</text>
+
+      <!-- Fractal features -->
+      <text x="500" y="90" text-anchor="start" font-size="11" fill="#333">• Vector: 65,536 bits (8KB)</text>
+      <text x="500" y="110" text-anchor="start" font-size="11" fill="#333">• Operations: Fractal XOR, Hierarchical</text>
+      <text x="500" y="130" text-anchor="start" font-size="11" fill="#333">• Capacity: ~1000+ facts</text>
+      <text x="500" y="150" text-anchor="start" font-size="11" fill="#333">• Speed: O(geometry×log(geometry))</text>
+      <text x="500" y="170" text-anchor="start" font-size="11" fill="#333">• Use: Large knowledge bases</text>
+
+      <!-- Visual representation -->
+      <rect x="500" y="190" width="200" height="20" rx="3" fill="#c8e6c9" stroke="#4caf50"/>
+      <text x="600" y="205" text-anchor="middle" font-size="10" fill="#333">[🌿🌿🌿🌿🌿🌿🌿🌿...🌿🌿🌿🌿]</text>
+
+      <!-- Legend -->
+      <text x="400" y="250" text-anchor="middle" font-size="12" fill="#666">🌿 = Fractal pattern unit</text>
+    </svg>
+  </div>
+
+  <h3>Dense Binary Strategy Details</h3>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Dense Binary Vector Structure</div>
+    <svg viewBox="0 0 800 150" xmlns="http://www.w3.org/2000/svg">
+      <!-- Main vector -->
+      <rect x="50" y="40" width="700" height="30" rx="5" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+      <text x="400" y="60" text-anchor="middle" font-size="12" fill="#333">32,768-bit Binary Vector</text>
+
+      <!-- Bit pattern -->
+      <text x="100" y="90" font-size="10" fill="#333">Bit 0: 1</text>
+      <text x="150" y="90" font-size="10" fill="#333">Bit 1: 0</text>
+      <text x="200" y="90" font-size="10" fill="#333">Bit 2: 1</text>
+      <text x="250" y="90" font-size="10" fill="#333">...</text>
+      <text x="550" y="90" font-size="10" fill="#333">Bit 32,766: 0</text>
+      <text x="600" y="90" font-size="10" fill="#333">Bit 32,767: 1</text>
+
+      <!-- Storage info -->
+      <text x="400" y="120" text-anchor="middle" font-size="11" fill="#666">512 × 64-bit words = 4 KB total</text>
+
+      <!-- Operations -->
+      <rect x="50" y="130" width="180" height="25" rx="3" fill="#fff3e0" stroke="#ff9800"/>
+      <text x="140" y="147" text-anchor="middle" font-size="10">XOR: O(512 ops)</text>
+
+      <rect x="250" y="130" width="180" height="25" rx="3" fill="#f3e5f5" stroke="#9c27b0"/>
+      <text x="340" y="147" text-anchor="middle" font-size="10">Bundle: O(n×512)</text>
+
+      <rect x="450" y="130" width="180" height="25" rx="3" fill="#e0f7fa" stroke="#00bcd4"/>
+      <text x="540" y="147" text-anchor="middle" font-size="10">Similarity: O(512+sum)</text>
+    </svg>
+  </div>
+
+  <h3>Fractal Semantic Strategy Details</h3>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Fractal Semantic Vector Structure</div>
+    <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Level 3 -->
+      <rect x="100" y="30" width="600" height="30" rx="5" fill="#a5d6a7" stroke="#4caf50" stroke-width="2"/>
+      <text x="400" y="50" text-anchor="middle" font-size="11" fill="#2e7d32">Level 3: Full Vector (65,536 bits)</text>
+
+      <!-- Level 2 -->
+      <rect x="150" y="70" width="500" height="25" rx="3" fill="#c8e6c9" stroke="#4caf50"/>
+      <text x="400" y="87" text-anchor="middle" font-size="10" fill="#333">Level 2: 4 × 16,384-bit segments</text>
+
+      <!-- Level 1 -->
+      <rect x="200" y="105" width="400" height="20" rx="3" fill="#e8f5e9" stroke="#4caf50"/>
+      <text x="400" y="118" text-anchor="middle" font-size="10" fill="#333">Level 1: 16 × 4,096-bit fractals</text>
+
+      <!-- Level 0 -->
+      <rect x="250" y="135" width="300" height="15" rx="2" fill="#f1f8e9" stroke="#4caf50"/>
+      <text x="400" y="145" text-anchor="middle" font-size="9" fill="#333">Level 0: 64 × 1,024-bit base patterns</text>
+
+      <!-- Storage info -->
+      <text x="400" y="170" text-anchor="middle" font-size="11" fill="#666">1024 × 64-bit words = 8 KB total</text>
+
+      <!-- Operations -->
+      <rect x="100" y="180" width="180" height="25" rx="3" fill="#fff3e0" stroke="#ff9800"/>
+      <text x="190" y="197" text-anchor="middle" font-size="10">F-XOR: O(1024×log(1024))</text>
+
+      <rect x="300" y="180" width="180" height="25" rx="3" fill="#f3e5f5" stroke="#9c27b0"/>
+      <text x="390" y="197" text-anchor="middle" font-size="10">F-Bundle: O(n×1024×log)</text>
+
+      <rect x="500" y="180" width="180" height="25" rx="3" fill="#e0f7fa" stroke="#00bcd4"/>
+      <text x="590" y="197" text-anchor="middle" font-size="10">F-Similarity: O(1024×log)</text>
+
+      <!-- Fractal pattern legend -->
+      <text x="400" y="210" text-anchor="middle" font-size="10" fill="#666">🌿 = Self-similar fractal pattern at each level</text>
+    </svg>
+  </div>
+
+  <h2>Strategy Selection Guide</h2>
+
+  <table>
+    <tr>
+      <th>Use Case</th>
+      <th>Recommended Strategy</th>
+      <th>Reason</th>
+    </tr>
+    <tr>
+      <td>Small knowledge bases (< 200 facts)</td>
+      <td>Dense Binary</td>
+      <td>Optimal speed and memory efficiency</td>
+    </tr>
+    <tr>
+      <td>Medium knowledge bases (200-1000 facts)</td>
+      <td>Fractal Semantic</td>
+      <td>Better capacity with reasonable performance</td>
+    </tr>
+    <tr>
+      <td>Large knowledge bases (> 1000 facts)</td>
+      <td>Fractal Semantic</td>
+      <td>Higher capacity and noise tolerance</td>
+    </tr>
+    <tr>
+      <td>Real-time applications</td>
+      <td>Dense Binary</td>
+      <td>Fastest operations (O(geometry/64))</td>
+    </tr>
+    <tr>
+      <td>Batch processing</td>
+      <td>Fractal Semantic</td>
+      <td>Can handle more complex relationships</td>
+    </tr>
+  </table>
+
+  <h2>Performance Comparison</h2>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Operation Performance by Strategy</div>
+    <svg viewBox="0 0 800 250" xmlns="http://www.w3.org/2000/svg">
+      <!-- Axes -->
+      <line x1="100" y1="200" x2="700" y2="200" stroke="#333" stroke-width="2"/>
+      <line x1="100" y1="50" x2="100" y2="200" stroke="#333" stroke-width="2"/>
+
+      <!-- Y-axis labels -->
+      <text x="80" y="60" text-anchor="middle" font-size="10">Fast</text>
+      <text x="80" y="150" text-anchor="middle" font-size="10">Medium</text>
+      <text x="80" y="210" text-anchor="middle" font-size="10">Slow</text>
+
+      <!-- X-axis labels -->
+      <text x="200" y="220" text-anchor="middle" font-size="10">XOR/Bind</text>
+      <text x="400" y="220" text-anchor="middle" font-size="10">Bundle</text>
+      <text x="600" y="220" text-anchor="middle" font-size="10">Similarity</text>
+
+      <!-- Dense Binary bars -->
+      <rect x="150" y="70" width="40" height="130" fill="#1976d2" opacity="0.7"/>
+      <text x="170" y="210" text-anchor="middle" font-size="10" fill="#1976d2">Dense</text>
+
+      <rect x="350" y="100" width="40" height="100" fill="#1976d2" opacity="0.7"/>
+      <text x="370" y="210" text-anchor="middle" font-size="10" fill="#1976d2">Dense</text>
+
+      <rect x="550" y="80" width="40" height="120" fill="#1976d2" opacity="0.7"/>
+      <text x="570" y="210" text-anchor="middle" font-size="10" fill="#1976d2">Dense</text>
+
+      <!-- Fractal Semantic bars -->
+      <rect x="210" y="120" width="40" height="80" fill="#4caf50" opacity="0.7"/>
+      <text x="230" y="210" text-anchor="middle" font-size="10" fill="#4caf50">Fractal</text>
+
+      <rect x="410" y="150" width="40" height="50" fill="#4caf50" opacity="0.7"/>
+      <text x="430" y="210" text-anchor="middle" font-size="10" fill="#4caf50">Fractal</text>
+
+      <rect x="610" y="140" width="40" height="60" fill="#4caf50" opacity="0.7"/>
+      <text x="630" y="210" text-anchor="middle" font-size="10" fill="#4caf50">Fractal</text>
+
+      <!-- Legend -->
+      <circle cx="750" cy="80" r="8" fill="#1976d2"/>
+      <text x="770" y="85" text-anchor="start" font-size="10">Dense Binary</text>
+
+      <circle cx="750" cy="110" r="8" fill="#4caf50"/>
+      <text x="770" y="115" text-anchor="start" font-size="10">Fractal Semantic</text>
+    </svg>
+  </div>
+
   <h2>Further Reading</h2>
 
   <ul>
-    <li><a href="../specs/DS/DS01-Theoretical-Foundation.md">DS01 - Complete Theoretical Foundation</a></li>
-    <li><a href="../specs/DS/DS09-Core-HDC-Implementation.md">DS09 - Core HDC Implementation</a></li>
+    <li><a href="../specs/DS/DS01-Theoretical-Foundation.html">DS01 - Complete Theoretical Foundation</a></li>
+    <li><a href="../specs/DS/DS09-Core-HDC-Implementation.html">DS09 - Core HDC Implementation</a></li>
+    <li><a href="../strategies/dense-binary.html">Dense Binary Strategy Details</a></li>
+    <li><a href="../strategies/fractal-semantic.html">Fractal Semantic Strategy Details</a></li>
     <li>Kanerva, P. (2009). "Hyperdimensional Computing: An Introduction to Computing in Distributed Representations"</li>
   </ul>
 
   <div class="footer-nav">
-    <p>HDC provides the mathematical foundation for deterministic, explainable AI with formal guarantees.</p>
+    <p>HDC provides the mathematical foundation for deterministic, explainable AI with formal guarantees. Choose the right strategy based on your use case requirements.</p>
   </div>
   </div>
 </body>
