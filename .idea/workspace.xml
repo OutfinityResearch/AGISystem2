@@ -4,31 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="added a new HDC strategy, wip">
-      <change afterPath="$PROJECT_DIR$/docs/guides/sphdc-comparison.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/theory/holographic-representations.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/hdc/sphdc-contract.mjs" afterDir="false" />
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better documentation">
+      <change afterPath="$PROJECT_DIR$/docs/theory/concepts/gf2.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/theory/concepts/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/theory/concepts/jaccard.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/theory/concepts/minhash.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/theory/privacy-hdc.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/theory/strategies/sphdc-analysis.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/agent-planning.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/compliance.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/research.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/use-cases/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/api/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/api/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/guides/fsp-comparison.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/guides/hdc-strategies.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/hdc-strategies.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/guides/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/research/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS15-Fractal-Semantic-Polynomials.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/src/hdc/fractal-semantic.mjs.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/strategies/dense-binary.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/syntax/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/syntax/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS00-Vision.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/theory/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/position.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/position.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hdc/fsp-contract.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/fractal-semantic.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/index.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/sparse-polynomial.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/sparse-polynomial.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/vocabulary.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/vocabulary.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/wiki/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/wiki/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +96,7 @@
       <workItem from="1765450432887" duration="75000" />
       <workItem from="1765553684173" duration="619000" />
       <workItem from="1765783559936" duration="115000" />
-      <workItem from="1765869847094" duration="10485000" />
+      <workItem from="1765869847094" duration="12375000" />
     </task>
     <task id="LOCAL-00001" summary="1st public version of AGISystem2">
       <option name="closed" value="true" />
@@ -369,7 +362,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765880724118</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="better documentation">
+      <option name="closed" value="true" />
+      <created>1765889256752</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1765889256752</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -392,6 +393,7 @@
     <MESSAGE value="Better Documentation and WIP for code" />
     <MESSAGE value="replaced with the best experiment, this becomes the standard architecture" />
     <MESSAGE value="added a new HDC strategy, wip" />
-    <option name="LAST_COMMIT_MESSAGE" value="added a new HDC strategy, wip" />
+    <MESSAGE value="better documentation" />
+    <option name="LAST_COMMIT_MESSAGE" value="better documentation" />
   </component>
 </project>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Trustworthy AI - AGISystem2</title>
+  <link rel="stylesheet" href="../../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Trustworthy AI with AGISystem2</h1>
+    <small>
+      <a href="../../index.html">Home</a> &middot;
+      <a href="../index.html">Theory</a> &middot;
+      <a href="index.html">Trustworthy AI</a>
+    </small>
+    <small>Verifiable, explainable, auditable AI systems</small>
+  </div>
+
+  <div class="section-intro">
+    <p><strong>Trustworthy AI isn't about making AI less capable. It's about making AI verifiably capable</strong>&mdash;capable in ways we can check, explain, and trust. AGISystem2 provides the formal foundations for building AI systems that meet this standard.</p>
+  </div>
+
+  <h2>The Trust Problem in AI</h2>
+
+  <p>Modern AI systems face a fundamental credibility gap:</p>
+
+  <table>
+    <tr>
+      <th>Challenge</th>
+      <th>LLM Approach</th>
+      <th>AGISystem2 Approach</th>
+    </tr>
+    <tr>
+      <td><strong>Explainability</strong></td>
+      <td>Plausible-sounding confabulation</td>
+      <td>Actual proof traces with formal derivations</td>
+    </tr>
+    <tr>
+      <td><strong>Consistency</strong></td>
+      <td>May contradict itself across responses</td>
+      <td>Built-in contradiction detection</td>
+    </tr>
+    <tr>
+      <td><strong>Auditability</strong></td>
+      <td>Black box decisions</td>
+      <td>Every conclusion traceable to rules and facts</td>
+    </tr>
+    <tr>
+      <td><strong>Verification</strong></td>
+      <td>Post-hoc human review</td>
+      <td>Pre-execution formal checking</td>
+    </tr>
+    <tr>
+      <td><strong>Uncertainty</strong></td>
+      <td>Confidently wrong</td>
+      <td>Calibrated doubt with known limitations</td>
+    </tr>
+  </table>
+
+  <h2>How HDC Enables Trust</h2>
+
+  <p>AGISystem2's Hyperdimensional Computing foundation provides unique properties for trustworthy AI:</p>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3>Determinism</h3>
+      <p>Same input always produces same output. No probabilistic surprises. Perfect reproducibility for debugging and auditing.</p>
+    </div>
+
+    <div class="section-card">
+      <h3>Transparency</h3>
+      <p>Every reasoning step corresponds to explicit vector operations. The proof trace is the actual computation, not a post-hoc explanation.</p>
+    </div>
+
+    <div class="section-card">
+      <h3>Compositionality</h3>
+      <p>Complex structures built from simple parts via BIND and BUNDLE. Novel combinations work automatically through algebraic composition.</p>
+    </div>
+
+    <div class="section-card">
+      <h3>Graceful Degradation</h3>
+      <p>As knowledge bases grow, accuracy decreases smoothly rather than catastrophically. Systems can be designed to fail safely.</p>
+    </div>
+  </div>
+
+  <h2>Trustworthy AI Patterns</h2>
+
+  <p>AGISystem2 provides concrete implementation patterns for common trustworthy AI requirements:</p>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3><a href="agent-planning.html">AI Agent Planning</a></h3>
+      <p>Tool orchestration with formal preconditions and effects. Generate valid multi-step plans. Verify before execution. Explain failures and suggest alternatives.</p>
+      <p><strong>Key benefit:</strong> Plans verified before execution</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="creative-writing.html">Creative Writing Consistency</a></h3>
+      <p>Character consistency checking, world rule validation, editorial compliance, and bias detection for AI-assisted creative writing.</p>
+      <p><strong>Key benefit:</strong> Guardrails without stifling creativity</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="compliance.html">Compliance & Verification</a></h3>
+      <p>Encode regulations (GDPR, HIPAA, internal policies) formally. Real-time compliance checking. Automatic audit trail generation.</p>
+      <p><strong>Key benefit:</strong> Violations prevented, not just detected</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="scientific-reasoning.html">Scientific Reasoning</a></h3>
+      <p>Encode scientific theories formally. Validate research claims against established knowledge. Explore cross-theory connections and hypotheses.</p>
+      <p><strong>Key benefit:</strong> Formal rigor for research validation</p>
+    </div>
+  </div>
+
+  <h2>The Trustworthy AI Stack</h2>
+
+  <p>Building trustworthy AI systems with AGISystem2 follows a layered approach:</p>
+
+  <pre><code>
+  +--------------------------------------------------+
+  |              Application Layer                    |
+  |    Agent Planning | Compliance | Scientific       |
+  +--------------------------------------------------+
+  |               Theory Layer                        |
+  |    Domain rules, constraints, relationships       |
+  +--------------------------------------------------+
+  |              Reasoning Engine                     |
+  |    prove() / query() / elaborate()                |
+  +--------------------------------------------------+
+  |               HDC Foundation                      |
+  |    BIND / BUNDLE / SIMILARITY                     |
+  +--------------------------------------------------+
+  </code></pre>
+
+  <div class="alert alert-info">
+    <strong>Key Insight:</strong> Trust emerges from the combination of formal foundations (HDC mathematics) and explicit domain knowledge (theories). Neither alone is sufficient&mdash;you need both rigorous operations AND clear semantics.
+  </div>
+
+  <h2>Common Elements Across Patterns</h2>
+
+  <p>All trustworthy AI patterns in AGISystem2 share these characteristics:</p>
+
+  <ol>
+    <li><strong>Encode domain knowledge as theories</strong>&mdash;explicit facts, rules, and constraints</li>
+    <li><strong>Express rules as formal constraints</strong>&mdash;obligations, prohibitions, permissions</li>
+    <li><strong>Use prove() for validation with explanation</strong>&mdash;get reasoning traces, not just yes/no</li>
+    <li><strong>Generate detailed audit trails</strong>&mdash;every decision traceable</li>
+    <li><strong>Provide actionable remediation suggestions</strong>&mdash;not just "error" but "here's how to fix it"</li>
+  </ol>
+
+  <h2>Research Directions</h2>
+
+  <p>AGISystem2's approach to trustworthy AI opens several research directions:</p>
+
+  <ul>
+    <li><a href="research.html#formal-verification">Formal verification of AI reasoning chains</a></li>
+    <li><a href="research.html#privacy-preserving">Privacy-preserving reasoning</a> via HDC holographic properties</li>
+    <li><a href="research.html#llm-integration">LLM+HDC hybrid architectures</a> combining fluency with rigor</li>
+    <li><a href="research.html#continuous-compliance">Continuous compliance monitoring</a> for regulated industries</li>
+    <li><a href="research.html#bias-detection">Systematic bias detection</a> through pattern analysis</li>
+  </ul>
+
+  <p><a href="research.html">Full research directions document &rarr;</a></p>
+
+  <h2>Getting Started</h2>
+
+  <p>To build trustworthy AI applications with AGISystem2:</p>
+
+  <ol>
+    <li>Identify the trust requirements for your domain (explainability, auditability, compliance, etc.)</li>
+    <li>Model your domain as a theory with facts, rules, and constraints</li>
+    <li>Use the reasoning engine to validate actions before execution</li>
+    <li>Generate explanations and audit trails for all decisions</li>
+    <li>Handle uncertainty explicitly&mdash;distinguish "unknown" from "false"</li>
+  </ol>
+
+  <h2>Related Documentation</h2>
+
+  <ul>
+    <li><a href="../index.html">Theory Overview</a>&mdash;HDC foundations</li>
+    <li><a href="../privacy-hdc.html">Privacy-Preserving HDC</a>&mdash;information-theoretic analysis</li>
+    <li><a href="../../use-cases/index.html">Use Cases</a>&mdash;concrete application scenarios</li>
+    <li><a href="../../specsLoader.html?spec=DS08-ThurstworthyAI-Patterns.md">DS08 Specification</a>&mdash;detailed implementation patterns</li>
+  </ul>
+
+  <div class="footer-nav">
+    <p>
+      <a href="../index.html">&larr; Theory Overview</a>
+    </p>
+  </div>
+  </div>
+</body>
+</html>

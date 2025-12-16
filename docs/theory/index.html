@@ -120,6 +120,32 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
     </div>
   </div>
 
+  <h2>Trustworthy AI</h2>
+
+  <p>HDC's deterministic, explainable nature makes it ideal for building <strong>trustworthy AI systems</strong>&mdash;AI that can be verified, audited, and understood.</p>
+
+  <div class="section-grid">
+    <div class="section-card" style="background: linear-gradient(135deg, #4caf5022 0%, #8bc34a22 100%);">
+      <h3><a href="trustworthy-ai/index.html">Trustworthy AI Overview</a></h3>
+      <p>How HDC enables verifiable, explainable, auditable AI. Common patterns and approaches.</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="trustworthy-ai/agent-planning.html">Agent Planning</a></h3>
+      <p>Formal tool semantics, plan verification before execution, failure diagnosis.</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="trustworthy-ai/compliance.html">Compliance & Verification</a></h3>
+      <p>Real-time regulatory checking, automatic audit trails, remediation guidance.</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="trustworthy-ai/research.html">Research Directions</a></h3>
+      <p>Open problems: formal verification, privacy-preserving reasoning, LLM+HDC hybrids.</p>
+    </div>
+  </div>
+
   <h2>Mathematical Guarantees</h2>
 
   <p>Regardless of which strategy is used, the following properties are guaranteed:</p>
@@ -223,13 +249,17 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
     <li><strong>Deterministic Initialization:</strong> Using cryptographic hashes for concept vector generation provides both determinism and privacy</li>
   </ul>
 
-  <p>While not equivalent to formal homomorphic encryption, the holographic paradigm offers similar "compute without decode" properties in a probabilistic, similarity-based setting.</p>
+  <p>While not equivalent to formal homomorphic encryption, the holographic paradigm offers similar "compute without decode" properties in a probabilistic, similarity-based setting. <a href="privacy-hdc.html">Read the full analysis of HDC privacy properties &rarr;</a></p>
 
   <h2>Further Reading</h2>
 
   <ul>
+    <li><a href="trustworthy-ai/index.html">Trustworthy AI Patterns</a> - Building verifiable, explainable AI systems</li>
+    <li><a href="privacy-hdc.html">Privacy-Preserving HDC</a> - Towards homomorphic reasoning</li>
+    <li><a href="concepts/index.html">Theoretical Concepts</a> - GF(2), Jaccard, Min-Hash explained</li>
     <li><a href="strategies/dense-binary.html">Dense-Binary Strategy - In-Depth Theory</a></li>
     <li><a href="strategies/sparse-polynomial.html">SPHDC Strategy - In-Depth Theory</a></li>
+    <li><a href="strategies/sphdc-analysis.html">SPHDC Theoretical Analysis</a> - Mathematical deep-dive</li>
     <li><a href="../specsLoader.html?spec=DS01-Theoretical-Foundation.md">DS01 - Theoretical Foundation Specification</a></li>
     <li><a href="../specsLoader.html?spec=DS09-Core-HDC-Implementation.md">DS09 - Core HDC Implementation Specification</a></li>
     <li>Kanerva, P. (2009). "Hyperdimensional Computing: An Introduction to Computing in Distributed Representations"</li>

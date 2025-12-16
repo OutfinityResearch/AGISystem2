@@ -1,0 +1,261 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GF(2) - Galois Field with Two Elements - AGISystem2</title>
+  <link rel="stylesheet" href="../../reference/style.css">
+  <style>
+    .math { font-family: "Times New Roman", serif; font-style: italic; }
+    .formula {
+      background: #f8f9fa;
+      padding: 1em;
+      border-left: 3px solid #007bff;
+      margin: 1em 0;
+      overflow-x: auto;
+    }
+    .formula code { background: none; }
+    .truth-table {
+      border-collapse: collapse;
+      margin: 1em auto;
+    }
+    .truth-table td, .truth-table th {
+      border: 1px solid #ddd;
+      padding: 8px 16px;
+      text-align: center;
+    }
+    .truth-table th {
+      background: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>GF(2) - Galois Field with Two Elements</h1>
+    <small>
+      <a href="../../index.html">Home</a> &middot;
+      <a href="../index.html">Theory</a> &middot;
+      <a href="index.html">Concepts</a>
+    </small>
+    <small>The algebraic foundation for XOR-based computing</small>
+  </div>
+
+  <div class="section-intro">
+    <p><strong>GF(2)</strong> (also written as <span class="math">F<sub>2</sub></span>, <span class="math">Z/2Z</span>, or <span class="math">Z<sub>2</sub></span>) is the simplest possible <em>field</em> in abstract algebra. It contains exactly two elements and provides the mathematical foundation for why XOR operations are reversible.</p>
+  </div>
+
+  <h2>What is a Field?</h2>
+
+  <p>A <strong>field</strong> is an algebraic structure with two operations (addition and multiplication) satisfying certain axioms:</p>
+
+  <ul>
+    <li><strong>Closure:</strong> Operations on field elements produce field elements</li>
+    <li><strong>Associativity:</strong> (a + b) + c = a + (b + c)</li>
+    <li><strong>Commutativity:</strong> a + b = b + a</li>
+    <li><strong>Identity elements:</strong> 0 for addition, 1 for multiplication</li>
+    <li><strong>Inverses:</strong> Every element has an additive inverse; every non-zero element has a multiplicative inverse</li>
+    <li><strong>Distributivity:</strong> a × (b + c) = (a × b) + (a × c)</li>
+  </ul>
+
+  <p>Common examples: rational numbers (Q), real numbers (R), complex numbers (C). GF(2) is the smallest finite field.</p>
+
+  <h2>Definition of GF(2)</h2>
+
+  <p>GF(2) consists of exactly two elements:</p>
+
+  <div class="formula">
+    <code>GF(2) = { 0, 1 }</code>
+  </div>
+
+  <p>With two operations defined by the following tables:</p>
+
+  <h3>Addition in GF(2)</h3>
+
+  <table class="truth-table">
+    <tr>
+      <th>+</th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </table>
+
+  <div class="alert alert-info">
+    <strong>Key observation:</strong> This is identical to the XOR (exclusive or) truth table!
+    <br>
+    <code>1 + 1 = 0</code> (not 2, because 2 doesn't exist in GF(2))
+  </div>
+
+  <h3>Multiplication in GF(2)</h3>
+
+  <table class="truth-table">
+    <tr>
+      <th>×</th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </table>
+
+  <p>This is identical to the AND truth table.</p>
+
+  <h2>The Self-Inverse Property</h2>
+
+  <p>The most important property of GF(2) for HDC is that <strong>every element is its own additive inverse</strong>:</p>
+
+  <div class="formula">
+    <code>∀ a ∈ GF(2): a + a = 0</code>
+    <br><br>
+    Verification:
+    <br>
+    <code>0 + 0 = 0 ✓</code>
+    <br>
+    <code>1 + 1 = 0 ✓</code>
+  </div>
+
+  <p>This means: <strong>to subtract in GF(2), you simply add</strong>. There is no distinction between + and −.</p>
+
+  <h3>Why This Matters</h3>
+
+  <div class="formula">
+    If <code>a + b = c</code>, then <code>c + b = a</code>
+    <br><br>
+    Proof: <code>c + b = (a + b) + b = a + (b + b) = a + 0 = a</code>
+  </div>
+
+  <p>This is the foundation of <strong>reversible binding</strong> in Hyperdimensional Computing. If we encode <code>C = A ⊕ B</code>, we can recover A by computing <code>C ⊕ B = A</code>.</p>
+
+  <h2>Why "Galois Field"?</h2>
+
+  <p>Named after <strong>Évariste Galois</strong> (1811-1832), a French mathematician who developed the theory of finite fields before his death at age 20 in a duel. Galois showed that:</p>
+
+  <ul>
+    <li>Finite fields exist only for prime powers: GF(p<sup>n</sup>) where p is prime</li>
+    <li>GF(2) is the simplest case: p=2, n=1</li>
+    <li>Other examples: GF(3), GF(4), GF(5), GF(7), GF(8), GF(9), ...</li>
+  </ul>
+
+  <p>GF(2) is particularly important in computer science because computers naturally work with bits (0 and 1).</p>
+
+  <h2>Polynomials over GF(2)</h2>
+
+  <p>We can form polynomials with coefficients in GF(2):</p>
+
+  <div class="formula">
+    <code>P(x) = x<sup>7</sup> + x<sup>3</sup> + x + 1</code>
+    <br><br>
+    Coefficients: position 7 → 1, position 3 → 1, position 1 → 1, position 0 → 1
+    <br>
+    All other coefficients are 0.
+  </div>
+
+  <h3>Polynomial Addition</h3>
+
+  <p>When adding polynomials over GF(2), coefficients at each position are added mod 2:</p>
+
+  <div class="formula">
+    <code>P<sub>1</sub>(x) = x<sup>5</sup> + x<sup>3</sup> + x</code>
+    <br>
+    <code>P<sub>2</sub>(x) = x<sup>3</sup> + x<sup>2</sup> + 1</code>
+    <br><br>
+    <code>P<sub>1</sub> + P<sub>2</sub> = x<sup>5</sup> + x<sup>2</sup> + x + 1</code>
+    <br><br>
+    Notice: x<sup>3</sup> terms cancel because <code>1 + 1 = 0</code> in GF(2)
+  </div>
+
+  <h3>Set Representation</h3>
+
+  <p>A polynomial over GF(2) can be represented as the <strong>set of exponents</strong> where the coefficient is 1:</p>
+
+  <div class="formula">
+    <code>x<sup>7</sup> + x<sup>3</sup> + x + 1</code> → <code>{0, 1, 3, 7}</code>
+    <br><br>
+    Polynomial addition becomes <strong>symmetric difference</strong>:
+    <br>
+    <code>{1, 3, 5} + {0, 2, 3} = {0, 1, 2, 5}</code>
+    <br>
+    (position 3 cancels: appears in both sets)
+  </div>
+
+  <p>This isomorphism is the foundation of <a href="../strategies/sphdc-analysis.html">SPHDC</a>.</p>
+
+  <h2>Extension to Bit Vectors</h2>
+
+  <p>A binary vector of length n can be viewed as n independent GF(2) elements:</p>
+
+  <div class="formula">
+    <code>a = 01011010<sub>2</sub></code>
+    <br>
+    <code>b = 00111100<sub>2</sub></code>
+    <br><br>
+    <code>a ⊕ b = 01100110<sub>2</sub></code>
+    <br><br>
+    Each bit position operates independently in GF(2).
+  </div>
+
+  <p>The self-inverse property extends to entire bit vectors:</p>
+
+  <div class="formula">
+    <code>(a ⊕ b) ⊕ b = a</code>
+    <br><br>
+    <code>(01011010 ⊕ 00111100) ⊕ 00111100</code>
+    <br>
+    <code>= 01100110 ⊕ 00111100</code>
+    <br>
+    <code>= 01011010 ✓</code>
+  </div>
+
+  <h2>Applications in AGISystem2</h2>
+
+  <h3>Dense-Binary Strategy</h3>
+
+  <p>Uses XOR (GF(2) addition) directly on fixed-length binary vectors. The self-inverse property enables reversible binding:</p>
+
+  <div class="formula">
+    <code>Composite = A ⊕ B</code>
+    <br>
+    <code>A = Composite ⊕ B</code> (exact recovery)
+  </div>
+
+  <h3>SPHDC Strategy</h3>
+
+  <p>Uses the polynomial interpretation. Each concept is a sparse set of 64-bit exponents, representing an astronomically sparse polynomial over GF(2). Binding uses <a href="cartesian-xor.html">Cartesian XOR</a>.</p>
+
+  <h2>Further Reading</h2>
+
+  <ul>
+    <li><a href="../strategies/dense-binary.html">Dense-Binary Strategy</a></li>
+    <li><a href="../strategies/sphdc-analysis.html">SPHDC Theoretical Analysis</a></li>
+    <li><a href="xor.html">XOR Operations</a></li>
+    <li><a href="jaccard.html">Jaccard Similarity</a></li>
+    <li>Wikipedia: <a href="https://en.wikipedia.org/wiki/GF(2)">GF(2)</a></li>
+    <li>Wikipedia: <a href="https://en.wikipedia.org/wiki/Finite_field">Finite Field</a></li>
+  </ul>
+
+  <div class="footer-nav">
+    <p>
+      <a href="index.html">&larr; All Concepts</a> &middot;
+      <a href="../index.html">Theory Overview</a>
+    </p>
+  </div>
+  </div>
+</body>
+</html>

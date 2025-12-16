@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Jaccard Similarity - AGISystem2</title>
+  <link rel="stylesheet" href="../../reference/style.css">
+  <style>
+    .math { font-family: "Times New Roman", serif; font-style: italic; }
+    .formula {
+      background: #f8f9fa;
+      padding: 1em;
+      border-left: 3px solid #007bff;
+      margin: 1em 0;
+      overflow-x: auto;
+    }
+    .formula code { background: none; }
+    .venn {
+      display: flex;
+      justify-content: center;
+      margin: 2em 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Jaccard Similarity (Jaccard Index)</h1>
+    <small>
+      <a href="../../index.html">Home</a> &middot;
+      <a href="../index.html">Theory</a> &middot;
+      <a href="index.html">Concepts</a>
+    </small>
+    <small>Measuring similarity between sets</small>
+  </div>
+
+  <div class="section-intro">
+    <p>The <strong>Jaccard similarity coefficient</strong> (also called Jaccard index or Intersection over Union) measures similarity between two finite sets. It is defined as the size of the intersection divided by the size of the union.</p>
+  </div>
+
+  <h2>Definition</h2>
+
+  <p>For two sets A and B, the Jaccard similarity is:</p>
+
+  <div class="formula">
+    <code>J(A, B) = |A ∩ B| / |A ∪ B|</code>
+    <br><br>
+    Where:
+    <br>
+    <code>|A ∩ B|</code> = number of elements in both A and B (intersection)
+    <br>
+    <code>|A ∪ B|</code> = number of elements in A or B or both (union)
+  </div>
+
+  <div class="venn">
+    <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 400px;">
+      <!-- Set A -->
+      <circle cx="140" cy="100" r="70" fill="#4caf5044" stroke="#4caf50" stroke-width="3"/>
+      <text x="90" y="100" font-size="16" fill="#2e7d32" font-weight="bold">A</text>
+
+      <!-- Set B -->
+      <circle cx="220" cy="100" r="70" fill="#1976d244" stroke="#1976d2" stroke-width="3"/>
+      <text x="270" y="100" font-size="16" fill="#1565c0" font-weight="bold">B</text>
+
+      <!-- Intersection label -->
+      <text x="180" y="105" text-anchor="middle" font-size="12" fill="#333">A∩B</text>
+    </svg>
+  </div>
+
+  <h2>Properties</h2>
+
+  <table>
+    <tr>
+      <th>Property</th>
+      <th>Value</th>
+      <th>Meaning</th>
+    </tr>
+    <tr>
+      <td>Range</td>
+      <td>[0, 1]</td>
+      <td>Always between 0 and 1 inclusive</td>
+    </tr>
+    <tr>
+      <td>J(A, A)</td>
+      <td>1</td>
+      <td>Identical sets have similarity 1</td>
+    </tr>
+    <tr>
+      <td>J(A, B) when A ∩ B = ∅</td>
+      <td>0</td>
+      <td>Disjoint sets have similarity 0</td>
+    </tr>
+    <tr>
+      <td>Symmetry</td>
+      <td>J(A, B) = J(B, A)</td>
+      <td>Order doesn't matter</td>
+    </tr>
+  </table>
+
+  <h2>Examples</h2>
+
+  <h3>Example 1: Partial Overlap</h3>
+
+  <div class="formula">
+    <code>A = {1, 2, 3, 4}</code>
+    <br>
+    <code>B = {3, 4, 5, 6}</code>
+    <br><br>
+    <code>A ∩ B = {3, 4}</code> → |A ∩ B| = 2
+    <br>
+    <code>A ∪ B = {1, 2, 3, 4, 5, 6}</code> → |A ∪ B| = 6
+    <br><br>
+    <code>J(A, B) = 2/6 = 0.333</code>
+  </div>
+
+  <h3>Example 2: High Similarity</h3>
+
+  <div class="formula">
+    <code>A = {1, 2, 3, 4, 5}</code>
+    <br>
+    <code>B = {1, 2, 3, 4, 6}</code>
+    <br><br>
+    <code>A ∩ B = {1, 2, 3, 4}</code> → |A ∩ B| = 4
+    <br>
+    <code>A ∪ B = {1, 2, 3, 4, 5, 6}</code> → |A ∪ B| = 6
+    <br><br>
+    <code>J(A, B) = 4/6 = 0.667</code>
+  </div>
+
+  <h3>Example 3: No Overlap</h3>
+
+  <div class="formula">
+    <code>A = {1, 2, 3}</code>
+    <br>
+    <code>B = {4, 5, 6}</code>
+    <br><br>
+    <code>A ∩ B = {}</code> → |A ∩ B| = 0
+    <br>
+    <code>A ∪ B = {1, 2, 3, 4, 5, 6}</code> → |A ∪ B| = 6
+    <br><br>
+    <code>J(A, B) = 0/6 = 0</code>
+  </div>
+
+  <h2>Jaccard Distance</h2>
+
+  <p>The <strong>Jaccard distance</strong> is the complement of Jaccard similarity:</p>
+
+  <div class="formula">
+    <code>d<sub>J</sub>(A, B) = 1 - J(A, B) = |A △ B| / |A ∪ B|</code>
+    <br><br>
+    Where <code>A △ B</code> is the symmetric difference (elements in exactly one set).
+  </div>
+
+  <p>Jaccard distance is a proper metric: it satisfies non-negativity, identity, symmetry, and the triangle inequality.</p>
+
+  <h2>Why Jaccard for HDC?</h2>
+
+  <p>Jaccard similarity is ideal for set-based HDC strategies like <a href="../strategies/sphdc-analysis.html">SPHDC</a> because:</p>
+
+  <h3>1. Bounded Range</h3>
+  <p>Values always between 0 and 1, making it easy to interpret and compare.</p>
+
+  <h3>2. Captures Structural Overlap</h3>
+  <p>Measures how much two representations share, which aligns with semantic similarity.</p>
+
+  <h3>3. Efficient Estimation</h3>
+  <p>Can be efficiently estimated using <a href="minhash.html">Min-Hash</a> without computing full set intersection.</p>
+
+  <h3>4. Scale Invariant</h3>
+  <p>The ratio normalizes for set size, so large and small sets can be fairly compared.</p>
+
+  <h2>Comparison with Other Similarity Measures</h2>
+
+  <table>
+    <tr>
+      <th>Measure</th>
+      <th>Formula</th>
+      <th>Use Case</th>
+    </tr>
+    <tr>
+      <td><strong>Jaccard</strong></td>
+      <td>|A∩B| / |A∪B|</td>
+      <td>Set similarity, SPHDC</td>
+    </tr>
+    <tr>
+      <td>Dice</td>
+      <td>2|A∩B| / (|A|+|B|)</td>
+      <td>More weight to overlap</td>
+    </tr>
+    <tr>
+      <td>Cosine</td>
+      <td>A·B / (||A|| ||B||)</td>
+      <td>Vector angle similarity</td>
+    </tr>
+    <tr>
+      <td><a href="hamming.html">Hamming</a></td>
+      <td>1 - (differences/total)</td>
+      <td>Binary vectors, Dense-Binary HDC</td>
+    </tr>
+    <tr>
+      <td>Overlap</td>
+      <td>|A∩B| / min(|A|,|B|)</td>
+      <td>Subset detection</td>
+    </tr>
+  </table>
+
+  <h2>Implementation in AGISystem2</h2>
+
+  <p>In SPHDC, Jaccard similarity between two SPVectors is computed as:</p>
+
+  <div class="formula">
+    <pre style="margin: 0;">
+function jaccard(setA, setB) {
+  const intersection = new Set(
+    [...setA].filter(x => setB.has(x))
+  );
+  const union = new Set([...setA, ...setB]);
+
+  if (union.size === 0) return 1.0;  // Both empty
+  return intersection.size / union.size;
+}</pre>
+  </div>
+
+  <h2>Historical Context</h2>
+
+  <p>Named after <strong>Paul Jaccard</strong> (1868-1944), a Swiss botanist who introduced the coefficient in 1901 to compare the similarity of sample sets when studying plant distributions in the Swiss Alps.</p>
+
+  <p>Original application: comparing floral regions by the ratio of shared species to total species observed.</p>
+
+  <h2>Applications Beyond HDC</h2>
+
+  <ul>
+    <li><strong>Document similarity:</strong> Treating documents as sets of words/n-grams</li>
+    <li><strong>Recommendation systems:</strong> Comparing user preference sets</li>
+    <li><strong>Plagiarism detection:</strong> Comparing text as sets of shingles</li>
+    <li><strong>Image recognition:</strong> Intersection over Union (IoU) for bounding boxes</li>
+    <li><strong>Bioinformatics:</strong> Comparing gene sets, protein domains</li>
+    <li><strong>Social network analysis:</strong> Comparing friend sets, community overlap</li>
+  </ul>
+
+  <h2>Further Reading</h2>
+
+  <ul>
+    <li><a href="minhash.html">Min-Hash</a> - Efficient Jaccard estimation</li>
+    <li><a href="hamming.html">Hamming Similarity</a> - Alternative for binary vectors</li>
+    <li><a href="../strategies/sphdc-analysis.html">SPHDC Strategy</a> - Uses Jaccard similarity</li>
+    <li><a href="../strategies/dense-binary.html">Dense-Binary Strategy</a> - Uses Hamming similarity</li>
+    <li>Wikipedia: <a href="https://en.wikipedia.org/wiki/Jaccard_index">Jaccard Index</a></li>
+  </ul>
+
+  <div class="footer-nav">
+    <p>
+      <a href="index.html">&larr; All Concepts</a> &middot;
+      <a href="../index.html">Theory Overview</a>
+    </p>
+  </div>
+  </div>
+</body>
+</html>

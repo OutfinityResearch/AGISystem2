@@ -10,53 +10,72 @@
   <div class="nav-header">
     <h1>AGISystem2 – Hyperdimensional Reasoning Engine</h1>
     <small>
-      <a href="index.html">Home</a> ·
-      <a href="architecture/index.html">Architecture</a> ·
-      <a href="theory/index.html">Theory</a> ·
-      <a href="syntax/index.html">Syntax</a> ·
-      <a href="api/index.html">APIs</a> ·
-      <a href="specs/matrix.html">Specs</a> ·
-      <a href="research/index.html">Research</a>
+      <a href="index.html">Home</a> &middot;
+      <a href="architecture/index.html">Architecture</a> &middot;
+      <a href="theory/index.html">Theory</a> &middot;
+      <a href="syntax/index.html">Syntax</a> &middot;
+      <a href="api/index.html">APIs</a> &middot;
+      <a href="wiki/index.html">Wiki</a> &middot;
+      <a href="specs/matrix.html">Specs</a>
     </small>
     <small>Neuro-symbolic reasoning with hyperdimensional computing</small>
   </div>
 
   <div class="section-intro">
-    <p>AGISystem2 is a <strong>Hyperdimensional Reasoning Engine</strong> for neuro-symbolic AI. It represents concepts, facts, relations and rules as high-dimensional vectors and executes reasoning through a formally defined DSL with full explainability.</p>
+    <h2 style="margin-top: 0;">Why AGISystem2?</h2>
+    <p>Modern AI is powerful but untrustworthy. Large Language Models generate fluent text, but they <em>hallucinate facts</em>, <em>can't explain their reasoning</em>, and <em>forget everything between conversations</em>. Ask them "why?" and you get plausible-sounding confabulation, not actual reasoning traces.</p>
+    <p>Traditional Symbolic AI is transparent and precise, but brittle. One missing fact breaks the chain. It can't handle ambiguity or gracefully degrade when knowledge is incomplete.</p>
+    <p><strong>AGISystem2 provides System 2 thinking for AI</strong>&mdash;deliberate, logical, careful reasoning that complements the fast pattern recognition of neural networks. It represents knowledge as high-dimensional vectors and executes reasoning through formally defined operations with full explainability.</p>
   </div>
+
+  <div class="alert alert-info" style="margin: 20px 0; padding: 15px 20px; background: #fff3e0; border-left: 4px solid #ff9800; border-radius: 4px;">
+    <strong>Research Direction:</strong> AGISystem2 is an open-source research project exploring how hyperdimensional computing can provide <em>verifiable</em>, <em>explainable</em>, and <em>trustworthy</em> AI reasoning. It demonstrates that deterministic, mathematically grounded AI is practical and valuable.
+  </div>
+
+  <h2>What Makes AGISystem2 Different</h2>
+
+  <table class="matrix-table">
+    <tr>
+      <th>Capability</th>
+      <th>LLMs (System 1)</th>
+      <th>AGISystem2 (System 2)</th>
+    </tr>
+    <tr>
+      <td><strong>Multi-step reasoning</strong></td>
+      <td>Unreliable</td>
+      <td>Formal chains with proof traces</td>
+    </tr>
+    <tr>
+      <td><strong>Learning new facts</strong></td>
+      <td>Requires retraining</td>
+      <td>Instant integration</td>
+    </tr>
+    <tr>
+      <td><strong>Explaining decisions</strong></td>
+      <td>Confabulation</td>
+      <td>Actual derivation steps</td>
+    </tr>
+    <tr>
+      <td><strong>Detecting contradiction</strong></td>
+      <td>Averages everything</td>
+      <td>Explicit flags</td>
+    </tr>
+    <tr>
+      <td><strong>Knowing uncertainty</strong></td>
+      <td>Confidently wrong</td>
+      <td>Calibrated doubt</td>
+    </tr>
+  </table>
 
   <h2>Key Features</h2>
   <ul>
-    <li><strong>Deterministic Reasoning:</strong> Reproducible, explainable results with proof traces.</li>
-    <li><strong>Multi-Strategy HDC:</strong> Pluggable vector representations (dense binary, sparse polynomial, etc.).</li>
+    <li><strong>Deterministic Reasoning:</strong> Reproducible, explainable results with full proof traces.</li>
+    <li><strong>Multi-Strategy HDC:</strong> Pluggable vector representations (dense binary, sparse polynomial).</li>
     <li><strong>Transitive Chains:</strong> Automatic inference across taxonomies and spatial relations.</li>
     <li><strong>Backward Chaining:</strong> Rule-based reasoning with And/Or conditions.</li>
     <li><strong>Natural Language Output:</strong> DSL results converted to human-readable text.</li>
+    <li><strong>Trustworthy AI Patterns:</strong> Agent planning, compliance verification, bias detection.</li>
   </ul>
-
-  <h2>Core Concepts</h2>
-  <table class="matrix-table">
-    <tr>
-      <td><strong>Hypervectors</strong></td>
-      <td>High-dimensional binary vectors (default 32,768 bits) representing concepts in geometric space. Operations: bind (XOR), bundle (majority), similarity (Hamming).</td>
-    </tr>
-    <tr>
-      <td><strong>DSL Syntax</strong></td>
-      <td>Statements have form <code>@dest operator arg1 arg2 ...</code> or <code>operator arg1 arg2</code> for anonymous facts.</td>
-    </tr>
-    <tr>
-      <td><strong>HDC Strategies</strong></td>
-      <td>Two implementations: <code>dense-binary</code> (2048-bit vectors) and <code>sparse-polynomial</code> (SPHDC with k=4 exponents). Both achieve 100% eval accuracy. Set via <code>SYS2_HDC_STRATEGY</code> env var. See <a href="research/index.html">Research</a> for comparison.</td>
-    </tr>
-    <tr>
-      <td><strong>Sessions</strong></td>
-      <td>Runtime contexts that load theories, accumulate facts in KB, and execute queries/proofs.</td>
-    </tr>
-    <tr>
-      <td><strong>Theories</strong></td>
-      <td>Reusable .sys2 files with facts and rules. Core theories define taxonomy, logic, and modal operators.</td>
-    </tr>
-  </table>
 
   <h2>HDC Strategy Architecture</h2>
   <div style="max-width: 700px; margin: 20px auto;">
@@ -67,22 +86,22 @@
       <!-- Layer 4: Application -->
       <rect x="30" y="30" width="640" height="50" rx="8" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
       <text x="350" y="50" text-anchor="middle" font-weight="bold" font-size="13" fill="#1565c0">Layer 4: Application</text>
-      <text x="350" y="68" text-anchor="middle" font-size="11" fill="#333">DSL Parser · Session API · Natural Language Output</text>
+      <text x="350" y="68" text-anchor="middle" font-size="11" fill="#333">DSL Parser &middot; Session API &middot; Natural Language Output</text>
 
       <!-- Layer 3: Reasoning -->
       <rect x="30" y="90" width="640" height="50" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
       <text x="350" y="110" text-anchor="middle" font-weight="bold" font-size="13" fill="#2e7d32">Layer 3: Reasoning Engine</text>
-      <text x="350" y="128" text-anchor="middle" font-size="11" fill="#333">Query · Prove · Transitive Chains · Rule Inference</text>
+      <text x="350" y="128" text-anchor="middle" font-size="11" fill="#333">Query &middot; Prove &middot; Transitive Chains &middot; Rule Inference</text>
 
       <!-- Layer 2: Contract (bold separator) -->
       <rect x="30" y="150" width="640" height="50" rx="8" fill="#fff3e0" stroke="#ff9800" stroke-width="3"/>
       <text x="350" y="170" text-anchor="middle" font-weight="bold" font-size="13" fill="#e65100">Layer 2: HDC Operations Interface</text>
-      <text x="350" y="188" text-anchor="middle" font-size="11" fill="#333">bind() · bundle() · similarity() · createFromName()</text>
+      <text x="350" y="188" text-anchor="middle" font-size="11" fill="#333">bind() &middot; bundle() &middot; similarity() &middot; createFromName()</text>
       <text x="670" y="175" text-anchor="end" font-size="10" fill="#ff9800" font-weight="bold">CONTRACT</text>
 
       <!-- Separator line -->
       <line x1="30" y1="210" x2="670" y2="210" stroke="#ff9800" stroke-width="4" stroke-dasharray="10,5"/>
-      <text x="350" y="223" text-anchor="middle" font-size="10" fill="#666">═══ SWAPPABLE IMPLEMENTATION ═══</text>
+      <text x="350" y="223" text-anchor="middle" font-size="10" fill="#666">=== SWAPPABLE IMPLEMENTATION ===</text>
 
       <!-- Layer 1: Strategies -->
       <rect x="30" y="235" width="640" height="60" rx="8" fill="#fce4ec" stroke="#e91e63" stroke-width="2"/>
@@ -105,6 +124,11 @@
   <h2>Documentation Sections</h2>
 
   <div class="section-grid">
+    <div class="section-card" style="background: linear-gradient(135deg, #4caf5022 0%, #8bc34a22 100%);">
+      <h3><a href="use-cases/index.html">Use Cases</a></h3>
+      <p>Practical applications: trustworthy assistants, reliable agents, creative AI with guardrails, compliance automation, scientific reasoning.</p>
+    </div>
+
     <div class="section-card">
       <h3><a href="architecture/index.html">Architecture</a></h3>
       <p>System layers: HDC core, runtime (Session, Executor), reasoning (Query, Prove), parser, and output generation.</p>
@@ -112,7 +136,7 @@
 
     <div class="section-card">
       <h3><a href="theory/index.html">Foundational Theory</a></h3>
-      <p>Hyperdimensional computing principles: vector space algebra, bind/bundle operations, similarity metrics.</p>
+      <p>Hyperdimensional computing principles, <a href="theory/trustworthy-ai/index.html">trustworthy AI patterns</a>, <a href="theory/privacy-hdc.html">privacy analysis</a>.</p>
     </div>
 
     <div class="section-card">
@@ -135,9 +159,9 @@
       <p>Conceptual guides: geometric reasoning, theory layering, <a href="guides/hdc-strategies.html">HDC strategies</a>, LLM integration.</p>
     </div>
 
-    <div class="section-card" style="background: linear-gradient(135deg, #667eea22 0%, #764ba222 100%);">
-      <h3><a href="research/index.html">Research</a></h3>
-      <p>Experimental findings: HDC strategy stress testing, SPHDC vs Dense-Binary comparison, k-parameter optimization.</p>
+    <div class="section-card">
+      <h3><a href="wiki/index.html">Wiki</a></h3>
+      <p>Terminology, concepts, mathematical foundations. Quick reference for HDC, similarity measures, algebraic properties.</p>
     </div>
   </div>
 
@@ -166,90 +190,24 @@ console.log(proof.method); // "transitive_chain"
 const text = session.generateText('isA', ['Rex', 'Animal']);
 console.log(text); // "Rex is an animal."</code></pre>
 
-  <h2>DSL Syntax Quick Reference</h2>
-  <table class="matrix-table">
-    <tr><th>Form</th><th>In Scope</th><th>In KB</th><th>Use Case</th></tr>
-    <tr>
-      <td><code>operator arg1 arg2</code></td>
-      <td>No</td>
-      <td><strong>Yes</strong></td>
-      <td>Simple facts (anonymous, auto-persisted)</td>
-    </tr>
-    <tr>
-      <td><code>@var operator arg1 arg2</code></td>
-      <td><strong>Yes</strong></td>
-      <td>No</td>
-      <td>Temporary variable (for references)</td>
-    </tr>
-    <tr>
-      <td><code>@var:name operator arg1 arg2</code></td>
-      <td><strong>Yes</strong></td>
-      <td><strong>Yes</strong></td>
-      <td>Named persistent fact</td>
-    </tr>
-  </table>
-
-  <h3>Building Complex Rules</h3>
-  <p><strong>Note:</strong> Parenthesized compound expressions are NOT supported. Complex rules are built by defining parts as separate statements, then referencing them:</p>
-  <pre><code># WRONG (not supported):
-# @rule Implies (And $cond1 $cond2) $conclusion
-
-# CORRECT:
-@cond1 hasState Door Open
-@cond2 isA Door Entrance
-@combined And $cond1 $cond2
-@conclusion canEnter Person Door
-@rule Implies $combined $conclusion</code></pre>
-
-  <h2>Environment Variables</h2>
-  <table class="matrix-table">
-    <tr>
-      <td><code>SYS2_HDC_STRATEGY</code></td>
-      <td>HDC implementation to use. Default: <code>dense-binary</code></td>
-    </tr>
-    <tr>
-      <td><code>SYS2_GEOMETRY</code></td>
-      <td>Default vector geometry. Default: <code>32768</code> (must be divisible by 32)</td>
-    </tr>
-    <tr>
-      <td><code>SYS2_DEBUG</code></td>
-      <td>Enable debug logging. Set to <code>true</code> for verbose output.</td>
-    </tr>
-  </table>
-
-  <h2>Benchmarking HDC Strategies</h2>
-  <pre><code>import { benchmarkStrategy, printBenchmark } from './src/hdc/facade.mjs';
-
-const results = benchmarkStrategy('dense-binary', 8192, { iterations: 1000 });
-printBenchmark(results);
-
-// Output:
-// === HDC Strategy Benchmark ===
-// Strategy: dense-binary
-// Geometry: 8192
-// Operations:
-// ────────────────────────────────────────
-// bind           0.002 ms    650K ops/sec
-// similarity     0.004 ms    250K ops/sec
-// bundle         0.195 ms      5K ops/sec
-// ────────────────────────────────────────</code></pre>
-
   <h2>Specification Documents</h2>
   <ul>
-    <li><a href="specsLoader.html?spec=DS01-Theoretical-Foundation.md">DS01 – Theoretical Foundation</a></li>
-    <li><a href="specsLoader.html?spec=DS03-Architecture.md">DS03 – Architecture</a></li>
-    <li><a href="specsLoader.html?spec=DS09-Core-HDC.md">DS09 – HDC Core Implementation</a></li>
-    <li><a href="specsLoader.html?spec=DS_map.md">DS – Full Specification Map</a></li>
+    <li><a href="specsLoader.html?spec=DS00-Vision.md">DS00 &ndash; Vision</a> &ndash; Why AGISystem2 exists</li>
+    <li><a href="specsLoader.html?spec=DS01-Theoretical-Foundation.md">DS01 &ndash; Theoretical Foundation</a></li>
+    <li><a href="specsLoader.html?spec=DS03-Architecture.md">DS03 &ndash; Architecture</a></li>
+    <li><a href="specsLoader.html?spec=DS08-ThurstworthyAI-Patterns.md">DS08 &ndash; Trustworthy AI Patterns</a></li>
+    <li><a href="specsLoader.html?spec=DS09-Core-HDC-Implementation.md">DS09 &ndash; HDC Core Implementation</a></li>
+    <li><a href="specs/matrix.html">Full Specification Matrix</a></li>
   </ul>
 
   <div class="footer-nav">
     <p>AGISystem2 provides deterministic, explainable reasoning with full proof traces. Current eval score: <strong>100%</strong> (126/126 tests passing on both HDC strategies).</p>
     <p style="margin-top: 10px;">
-      <a href="https://github.com/OutfinityResearch/AGISystem2/" target="_blank" style="color: #1976d2;">
+      <a href="https://github.com/anthropics/AGISystem2/" target="_blank" style="color: #1976d2;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 5px;">
           <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
         </svg>
-        GitHub: OutfinityResearch/AGISystem2
+        GitHub Repository
       </a>
     </p>
   </div>
@@ -261,15 +219,18 @@ printBenchmark(results);
       border-collapse: collapse;
       margin: 15px 0;
     }
-    .matrix-table td {
+    .matrix-table th, .matrix-table td {
       border: 1px solid #ddd;
       padding: 12px;
       vertical-align: top;
+      text-align: left;
+    }
+    .matrix-table th {
+      background: #f5f5f5;
     }
     .matrix-table td:first-child {
       width: 180px;
-      background: #f5f5f5;
-      font-family: 'Consolas', 'Monaco', monospace;
+      font-weight: bold;
     }
     .section-grid {
       display: grid;
@@ -308,6 +269,10 @@ printBenchmark(results);
       padding: 15px 20px;
       border-radius: 8px;
       margin: 15px 0;
+    }
+    .alert-info {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
     }
   </style>
 </body>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Theoretical Concepts - AGISystem2</title>
+  <link rel="stylesheet" href="../../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Theoretical Concepts</h1>
+    <small>
+      <a href="../../index.html">Home</a> &middot;
+      <a href="../index.html">Theory</a> &middot;
+      <a href="index.html">Concepts</a>
+    </small>
+    <small>Mathematical foundations explained</small>
+  </div>
+
+  <div class="section-intro">
+    <p>This section provides detailed explanations of the mathematical and theoretical concepts underlying AGISystem2. Each page is designed to be accessible to software engineers who may not have a formal background in abstract algebra or information theory.</p>
+  </div>
+
+  <h2>Algebraic Foundations</h2>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3><a href="gf2.html">GF(2) - Galois Field</a></h3>
+      <p>The algebraic structure with two elements (0 and 1) that makes XOR operations self-inverse. Foundation for reversible binding in HDC.</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="xor.html">XOR Operations</a></h3>
+      <p>Bitwise exclusive-or and its properties. Why XOR is the natural choice for holographic binding.</p>
+    </div>
+  </div>
+
+  <h2>Similarity & Distance</h2>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3><a href="jaccard.html">Jaccard Similarity</a></h3>
+      <p>Set-based similarity measure: intersection over union. Used by SPHDC for comparing sparse polynomial representations.</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="hamming.html">Hamming Distance</a></h3>
+      <p>Bit-difference measure for binary vectors. Used by Dense-Binary HDC for similarity computation.</p>
+    </div>
+  </div>
+
+  <h2>Hashing & Sketching</h2>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3><a href="minhash.html">Min-Hash</a></h3>
+      <p>Locality-sensitive hashing for efficient Jaccard estimation. Enables SPHDC sparsification while preserving similarity.</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="bloom-filter.html">Bloom Filters</a></h3>
+      <p>Space-efficient probabilistic set membership. Used for fast rejection of non-matching candidates.</p>
+    </div>
+  </div>
+
+  <h2>Vector Operations</h2>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3><a href="binding.html">Binding Operations</a></h3>
+      <p>Creating associations between concepts. XOR for dense-binary, Cartesian XOR for SPHDC.</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="bundling.html">Bundling Operations</a></h3>
+      <p>Superposing multiple vectors into one. Majority vote for dense-binary, set union for SPHDC.</p>
+    </div>
+  </div>
+
+  <h2>Information Theory</h2>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3><a href="quasi-orthogonality.html">Quasi-Orthogonality</a></h3>
+      <p>Why random high-dimensional vectors are almost orthogonal. The blessing of dimensionality.</p>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="capacity.html">Capacity Analysis</a></h3>
+      <p>How many concepts can be stored? Signal-to-noise ratios and graceful degradation.</p>
+    </div>
+  </div>
+
+  <h2>Related Pages</h2>
+
+  <ul>
+    <li><a href="../index.html">Theory Overview</a> - High-level theoretical foundation</li>
+    <li><a href="../strategies/dense-binary.html">Dense-Binary Strategy</a> - Implementation using binary vectors</li>
+    <li><a href="../strategies/sparse-polynomial.html">SPHDC Strategy</a> - Implementation using sparse sets</li>
+    <li><a href="../strategies/sphdc-analysis.html">SPHDC Theoretical Analysis</a> - In-depth mathematical analysis</li>
+    <li><a href="../holographic-representations.html">Holographic Representations</a> - Historical context and theory</li>
+  </ul>
+
+  <div class="footer-nav">
+    <p>
+      <a href="../index.html">&larr; Theory Overview</a>
+    </p>
+  </div>
+  </div>
+</body>
+</html>
