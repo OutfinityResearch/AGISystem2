@@ -81,6 +81,54 @@ const TEMPLATES = {
     positions: [1, 2]
   },
 
+  // Seating / Event planning
+  seatedAt: {
+    pattern: '{Pos1} is seated at {Pos2}.',
+    positions: [1, 2]
+  },
+  conflictsWith: {
+    pattern: '{Pos1} conflicts with {Pos2}.',
+    positions: [1, 2]
+  },
+  tableConflict: {
+    pattern: 'There is a conflict at {Pos1} between {Pos2} and {Pos3}.',
+    positions: [1, 2, 3]
+  },
+
+  // Capabilities and states
+  can: {
+    pattern: '{Pos1} can {Pos2}.',
+    positions: [1, 2]
+  },
+  has: {
+    pattern: '{Pos1} has {Pos2}.',
+    positions: [1, 2]
+  },
+  isSuspect: {
+    pattern: '{Pos1} is a suspect.',
+    positions: [1]
+  },
+  hasStatus: {
+    pattern: '{Pos1} has status {Pos2}.',
+    positions: [1, 2]
+  },
+
+  // Temporal
+  before: {
+    pattern: '{Pos1} is before {Pos2}.',
+    positions: [1, 2]
+  },
+  after: {
+    pattern: '{Pos1} is after {Pos2}.',
+    positions: [1, 2]
+  },
+
+  // Causal
+  causes: {
+    pattern: '{Pos1} causes {Pos2}.',
+    positions: [1, 2]
+  },
+
   // Logical operators
   Implies: {
     pattern: 'If {Pos1} then {Pos2}.',

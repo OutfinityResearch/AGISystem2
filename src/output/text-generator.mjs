@@ -126,7 +126,12 @@ export class TextGenerator {
       eats: (a) => a.length >= 2 ? `${a[0]} eats ${a[1].toLowerCase()}.` : `eats(${a.join(', ')})`,
 
       // Alternatives
-      alternative: (a) => a.length >= 2 ? `${a[0]} is an alternative to ${a[1]}.` : `alternative(${a.join(', ')})`
+      alternative: (a) => a.length >= 2 ? `${a[0]} is an alternative to ${a[1]}.` : `alternative(${a.join(', ')})`,
+
+      // Event seating / Constraint satisfaction
+      seatedAt: (a) => a.length >= 2 ? `${a[0]} is seated at ${a[1]}.` : `seatedAt(${a.join(', ')})`,
+      conflictsWith: (a) => a.length >= 2 ? `${a[0]} conflicts with ${a[1]}.` : `conflictsWith(${a.join(', ')})`,
+      tableConflict: (a) => a.length >= 3 ? `There is a conflict at ${a[0]} between ${a[1]} and ${a[2]}.` : `tableConflict(${a.join(', ')})`
     };
 
     if (templates[operator]) {
