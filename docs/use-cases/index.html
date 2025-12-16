@@ -4,6 +4,27 @@
   <meta charset="utf-8">
   <title>Use Cases - AGISystem2</title>
   <link rel="stylesheet" href="../reference/style.css">
+  <style>
+    .tradeoff-note {
+      background: #fffde7;
+      border-left: 3px solid #ffc107;
+      padding: 10px 15px;
+      margin: 10px 0;
+      font-size: 13px;
+      color: #666;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+    .status-demonstrated { background: #c8e6c9; color: #2e7d32; }
+    .status-implemented { background: #fff3e0; color: #e65100; }
+    .status-theoretical { background: #e3f2fd; color: #1565c0; }
+  </style>
 </head>
 <body>
   <div class="page">
@@ -13,306 +34,312 @@
       <a href="../index.html">Home</a> &middot;
       <a href="index.html">Use Cases</a>
     </small>
-    <small>Practical applications of trustworthy AI</small>
+    <small>Practical applications with honest assessment</small>
   </div>
 
   <div class="section-intro">
-    <p>AGISystem2 enables AI applications that require <strong>verifiable reasoning</strong>, <strong>explainable decisions</strong>, and <strong>formal compliance</strong>. This page outlines concrete use cases where these capabilities provide significant value.</p>
+    <p>AGISystem2 is designed for applications where <strong>formal verification</strong>, <strong>complete traceability</strong>, and <strong>explicit reasoning</strong> are requirements. This page describes realistic use cases, including their limitations and trade-offs.</p>
   </div>
 
-  <h2>The AGISystem2 Advantage</h2>
+  <div class="alert alert-warning" style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+    <strong>Honest positioning:</strong> AGISystem2 complements LLMs for specific scenarios&mdash;it does not replace them. For many applications, LLMs alone are sufficient and more practical. Use AGISystem2 when the cost of errors or unexplainability is high.
+  </div>
 
-  <p>AGISystem2 provides <strong>System 2 thinking for AI</strong>&mdash;deliberate, logical, careful reasoning that complements the fast pattern recognition of LLMs.</p>
+  <h2>When to Use AGISystem2</h2>
+
+  <div class="section-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+    <div style="background: #e8f5e9; padding: 15px; border-radius: 8px;">
+      <h4 style="margin-top: 0; color: #2e7d32;">Good Fit</h4>
+      <ul style="margin-bottom: 0;">
+        <li>Decisions must be formally explainable</li>
+        <li>Regulatory compliance is mandatory</li>
+        <li>Audit trails are legally required</li>
+        <li>Domain can be formalized as rules</li>
+        <li>Consistency checking is valuable</li>
+        <li>Errors have significant consequences</li>
+      </ul>
+    </div>
+    <div style="background: #ffebee; padding: 15px; border-radius: 8px;">
+      <h4 style="margin-top: 0; color: #c62828;">Poor Fit</h4>
+      <ul style="margin-bottom: 0;">
+        <li>Open-ended creative tasks</li>
+        <li>Ambiguous natural language input</li>
+        <li>Domains that can't be formalized</li>
+        <li>"Good enough" is acceptable</li>
+        <li>Speed matters more than verification</li>
+        <li>No resources for domain modeling</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Capability Comparison (Nuanced)</h2>
 
   <table>
     <tr>
       <th>Capability</th>
-      <th>Current AI (System 1)</th>
-      <th>AGISystem2 (System 2)</th>
+      <th>LLMs</th>
+      <th>AGISystem2</th>
+      <th>Trade-off</th>
     </tr>
     <tr>
       <td>Pattern recognition</td>
-      <td>&check; Excellent</td>
-      <td>~ Similarity-based</td>
+      <td>Excellent</td>
+      <td>Similarity-based only</td>
+      <td>LLMs far superior for perception</td>
     </tr>
     <tr>
       <td>Multi-step reasoning</td>
-      <td>~ Unreliable</td>
-      <td>&check; Formal chains</td>
+      <td>Emergent, hard to verify</td>
+      <td>Explicit formal chains</td>
+      <td>AGISystem2 requires formalization</td>
     </tr>
     <tr>
       <td>Learning new facts</td>
-      <td>&cross; Requires retraining</td>
-      <td>&check; Instant</td>
+      <td>Requires retraining/context</td>
+      <td>Instant integration</td>
+      <td>AGISystem2 doesn't generalize</td>
     </tr>
     <tr>
       <td>Explaining reasoning</td>
-      <td>&cross; Confabulation</td>
-      <td>&check; Actual proof trace</td>
+      <td>Post-hoc rationalization</td>
+      <td>Actual derivation trace</td>
+      <td>Traces can be technical</td>
     </tr>
     <tr>
-      <td>Detecting contradiction</td>
-      <td>&cross; Averages everything</td>
-      <td>&check; Explicit flags</td>
+      <td>Natural language</td>
+      <td>Native capability</td>
+      <td>Requires bridge layer</td>
+      <td>AGISystem2 needs NL translation</td>
     </tr>
     <tr>
-      <td>Knowing uncertainty</td>
-      <td>&cross; Confidently wrong</td>
-      <td>&check; Calibrated doubt</td>
+      <td>Handling ambiguity</td>
+      <td>Robust</td>
+      <td>Requires disambiguation</td>
+      <td>LLMs more flexible</td>
     </tr>
   </table>
 
-  <h2>Use Case 1: Trustworthy AI Assistants</h2>
+  <hr>
 
-  <div class="alert alert-info">
-    <strong>Key Value:</strong> AI that can learn from conversation, answer questions with citations, and explain exactly how it reached each conclusion.
+  <h2>Use Case 1: Compliance Verification <span class="status-badge status-implemented">Implemented</span></h2>
+
+  <div class="alert alert-info" style="background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px; margin: 15px 0;">
+    <strong>Value proposition:</strong> Encode regulations as formal rules. Check actions before execution. Generate audit-ready trails.
   </div>
 
-  <h3>The Problem</h3>
-  <p>Current AI assistants hallucinate facts, can't explain their reasoning, and forget everything between conversations. Ask them "why?" and you get plausible-sounding confabulation.</p>
+  <h3>The Scenario</h3>
+  <p>Organizations face regulatory requirements (GDPR, HIPAA, internal policies) where violations have significant consequences. Current approach: periodic audits that find problems after they've occurred.</p>
 
-  <h3>The AGISystem2 Solution</h3>
+  <h3>How AGISystem2 Helps</h3>
   <ul>
-    <li><strong>Instant learning:</strong> New facts integrate immediately without retraining</li>
-    <li><strong>Cited answers:</strong> Every response traceable to specific facts</li>
-    <li><strong>Proof traces:</strong> Full reasoning chain available on request</li>
-    <li><strong>Honest uncertainty:</strong> "I don't know" when knowledge is missing</li>
+    <li><strong>Formal rule encoding:</strong> Regulations expressed as checkable constraints</li>
+    <li><strong>Pre-action validation:</strong> Operations checked before execution</li>
+    <li><strong>Automatic audit trails:</strong> Every decision traceable to specific rules</li>
+    <li><strong>Remediation guidance:</strong> Not just "violation" but "here's how to fix it"</li>
   </ul>
 
-  <h3>Example Interaction</h3>
-  <pre><code>User: "Spot is a dog"
-&rarr; Learned: isA(Spot, Dog)
+  <h3>Example</h3>
+  <pre><code>Action: MarketingTeam processes CustomerEmails
+Purpose: NewProductCampaign
 
-User: "Is Spot an animal?"
-&rarr; Yes. Proof: isA(Spot, Dog), isA(Dog, Animal) &therefore; isA(Spot, Animal)
+GDPR Analysis:
+  ✗ art6_consent: NOT SATISFIED
+    Existing consent: "marketing communications" (2023-06-01)
+    Required: Consent specific to NewProductCampaign
 
-User: "What do you know about Spot?"
-&rarr; Spot is a Dog. Dogs are Animals. Therefore Spot is an Animal.
-   Based on: 1 direct fact, 1 inherited fact.</code></pre>
+Required remediation:
+  Option A: Obtain specific consent
+  Option B: Complete Legitimate Interest Assessment</code></pre>
+
+  <div class="tradeoff-note">
+    <strong>Trade-off:</strong> Requires upfront investment in formalizing regulations. Ambiguous regulatory language must be interpreted and encoded&mdash;this interpretation is a human judgment, not automatic. The system verifies against the formalization, not against "true" regulatory intent.
+  </div>
+
+  <p><a href="../theory/trustworthy-ai/compliance.html">Compliance documentation &rarr;</a></p>
 
   <hr>
 
-  <h2>Use Case 2: AI Agents That Plan Reliably</h2>
+  <h2>Use Case 2: Agent Plan Verification <span class="status-badge status-implemented">Implemented</span></h2>
 
-  <div class="alert alert-info">
-    <strong>Key Value:</strong> Agents that verify plan validity before execution, explain failures, and replan when needed.
+  <div class="alert alert-info" style="background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px; margin: 15px 0;">
+    <strong>Value proposition:</strong> Verify AI agent plans before execution. Catch invalid plans before they cause damage.
   </div>
 
-  <h3>The Problem</h3>
-  <p>LLM-based agents generate plausible-looking but invalid plans. Failures only become apparent at execution time, often with damaging consequences.</p>
+  <h3>The Scenario</h3>
+  <p>LLM-based agents generate action plans, but these plans may violate preconditions or have unintended effects. Failures only become apparent at execution time.</p>
 
-  <h3>The AGISystem2 Solution</h3>
+  <h3>How AGISystem2 Helps</h3>
   <ul>
-    <li><strong>Formal tool semantics:</strong> Preconditions and effects explicitly defined</li>
-    <li><strong>Pre-execution validation:</strong> Plans checked before any action runs</li>
-    <li><strong>Failure diagnosis:</strong> Exact missing preconditions identified</li>
-    <li><strong>Automatic replanning:</strong> Valid alternatives generated when plans fail</li>
+    <li><strong>Formal tool semantics:</strong> Each tool's preconditions and effects defined</li>
+    <li><strong>Pre-execution checking:</strong> Plans validated before any action runs</li>
+    <li><strong>Failure diagnosis:</strong> Missing preconditions explicitly identified</li>
+    <li><strong>Alternative generation:</strong> Valid alternatives suggested when plans fail</li>
   </ul>
 
   <h3>Example</h3>
   <pre><code>Goal: "Send Q3 report to team"
 
-Current state: HasCredentials(EmailServer), HasCredentials(SalesDB)
-
 Generated plan:
-  1. Login(SalesDB)        &check; Pre: HasCredentials
-  2. QueryDatabase(Q3)     &check; Pre: Connected + Auth
-  3. Login(EmailServer)    &check; Pre: HasCredentials
-  4. SendEmail(Report)     &check; Pre: Connected + Auth + HasData
+  1. Login(SalesDB)        ✓ Pre: HasCredentials - satisfied
+  2. QueryDatabase(Q3)     ✓ Pre: Connected - will be satisfied
+  3. Login(EmailServer)    ✓ Pre: HasCredentials - satisfied
+  4. SendEmail(Report)     ✓ Pre: HasData - will be satisfied
 
-Plan Status: VALID &check; (all preconditions satisfiable)</code></pre>
+Plan Status: VALID ✓</code></pre>
 
-  <p><a href="../theory/trustworthy-ai/agent-planning.html">Full agent planning documentation &rarr;</a></p>
+  <div class="tradeoff-note">
+    <strong>Trade-off:</strong> Every tool must have formally defined preconditions and effects. This works for well-defined APIs but is difficult for fuzzy real-world actions. Plan generation itself still relies on LLMs; AGISystem2 only verifies.
+  </div>
+
+  <p><a href="../theory/trustworthy-ai/agent-planning.html">Agent planning documentation &rarr;</a></p>
 
   <hr>
 
-  <h2>Use Case 3: Creative AI with Guardrails</h2>
+  <h2>Use Case 3: Knowledge Base Reasoning <span class="status-badge status-demonstrated">Demonstrated</span></h2>
 
-  <div class="alert alert-info">
-    <strong>Key Value:</strong> AI-assisted creative writing with consistency checking, editorial compliance, and bias detection&mdash;without stifling creativity.
+  <div class="alert alert-info" style="background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px; margin: 15px 0;">
+    <strong>Value proposition:</strong> Taxonomic inference with complete traceability. Every conclusion traceable to source facts and rules.
   </div>
 
-  <h3>The Problem</h3>
-  <p>AI-generated content may contain character inconsistencies, world rule violations, editorial guideline breaches, or subtle biases that harm brand and audience.</p>
+  <h3>The Scenario</h3>
+  <p>Organizations need to query knowledge bases and understand exactly how answers were derived. "Why is X true?" should have a verifiable answer.</p>
 
-  <h3>The AGISystem2 Solution</h3>
+  <h3>How AGISystem2 Helps</h3>
   <ul>
-    <li><strong>Character consistency:</strong> Personality, knowledge, abilities tracked</li>
-    <li><strong>World rule validation:</strong> Universe rules respected (e.g., "death is permanent")</li>
-    <li><strong>Editorial compliance:</strong> Content guidelines formally encoded and checked</li>
-    <li><strong>Bias detection:</strong> Pattern analysis flags potential stereotypes</li>
+    <li><strong>Transitive inference:</strong> Automatic reasoning through IS_A hierarchies</li>
+    <li><strong>Proof traces:</strong> Complete derivation available for every query</li>
+    <li><strong>Contradiction detection:</strong> Inconsistencies flagged explicitly</li>
+    <li><strong>Incremental updates:</strong> New facts integrate without retraining</li>
   </ul>
 
-  <h3>Example Output</h3>
-  <pre><code>CONSISTENCY CHECK: Scene 42
+  <h3>Example</h3>
+  <pre><code>Facts:
+  isA(Spot, Dog)
+  isA(Dog, Animal)
+  isA(Animal, LivingThing)
 
-Character: Elena
-  Action: Prays to GoddessAethon
+Query: isA(Spot, LivingThing)?
 
-  &star; POTENTIAL INCONSISTENCY
+Result: TRUE
+Proof:
+  1. isA(Spot, Dog) [direct fact]
+  2. isA(Dog, Animal) [direct fact]
+  3. isA(Animal, LivingThing) [direct fact]
+  4. isA(Spot, LivingThing) [transitive chain: 1→2→3]</code></pre>
 
-  Elena's beliefs include:
-    - (not (trusts Elena Authority))
-    - Suspicious trait
-
-  Prayer implies:
-    - Trusting divine authority
-
-  Recommendations:
-    1. Add internal conflict
-    2. Make prayer bitter/challenging
-    3. Establish earlier faith development scene</code></pre>
+  <div class="tradeoff-note">
+    <strong>Trade-off:</strong> Works well for taxonomies and rule-based domains. Does not handle probabilistic reasoning, fuzzy categories, or exceptions gracefully. Knowledge must be explicitly encoded&mdash;the system doesn't learn from examples.
+  </div>
 
   <hr>
 
-  <h2>Use Case 4: Compliance Automation</h2>
+  <h2>Use Case 4: LLM Output Verification <span class="status-badge status-theoretical">Theoretical</span></h2>
 
-  <div class="alert alert-info">
-    <strong>Key Value:</strong> Real-time verification against regulations. Every action checked before execution. Audit-ready by design.
+  <div class="alert alert-info" style="background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px; margin: 15px 0;">
+    <strong>Value proposition:</strong> Check LLM outputs against formal constraints. Catch inconsistencies and hallucinations.
   </div>
 
-  <h3>The Problem</h3>
-  <p>GDPR fines reach 4% of global revenue. HIPAA violations cost up to $50,000 per incident. Periodic audits find problems after they've already occurred.</p>
+  <h3>The Scenario</h3>
+  <p>LLMs generate content that may contain factual errors or violate domain constraints. Human review is expensive and inconsistent.</p>
 
-  <h3>The AGISystem2 Solution</h3>
+  <h3>How AGISystem2 Could Help</h3>
   <ul>
-    <li><strong>Formal regulation encoding:</strong> GDPR, HIPAA, internal policies as checkable rules</li>
-    <li><strong>Pre-execution checking:</strong> Every data action validated before it runs</li>
-    <li><strong>Automatic audit trails:</strong> Complete decision history available instantly</li>
-    <li><strong>Remediation guidance:</strong> Not just "violation" but "here's how to fix it"</li>
+    <li><strong>Constraint checking:</strong> Verify LLM outputs against known rules</li>
+    <li><strong>Consistency checking:</strong> Flag contradictions with established facts</li>
+    <li><strong>Confidence calibration:</strong> Distinguish verified from unverified claims</li>
   </ul>
 
-  <h3>Example Check</h3>
-  <pre><code>Action: MarketingTeam processes CustomerEmails
-Purpose: NewProductCampaign
+  <h3>Conceptual Example</h3>
+  <pre><code>LLM output: "The water boiled at 50°C at standard pressure"
 
-GDPR Analysis:
-  &cross; art6_consent: NOT SATISFIED
-     Existing consent: "marketing communications" (2023-06-01)
-     Required: Consent specific to NewProductCampaign
+Knowledge base constraint:
+  boilingPoint(Water, StandardPressure) = 100°C
 
-Required remediation:
-  Option A: Obtain specific consent
-  Option B: Complete Legitimate Interest Assessment
+Verification result: INCONSISTENT
+  LLM claimed: 50°C
+  Known value: 100°C
+  Recommendation: Flag for review or reject</code></pre>
 
-Cannot proceed until remediation complete.</code></pre>
-
-  <p><a href="../theory/trustworthy-ai/compliance.html">Full compliance documentation &rarr;</a></p>
+  <div class="tradeoff-note">
+    <strong>Trade-off:</strong> Only catches errors that contradict formalized knowledge. Novel hallucinations outside the knowledge base cannot be detected. Requires extracting structured claims from LLM text (itself error-prone). This is a research direction, not a deployed capability.
+  </div>
 
   <hr>
 
-  <h2>Use Case 5: Scientific Reasoning Support</h2>
+  <h2>Use Case 5: Scientific Reasoning Support <span class="status-badge status-theoretical">Theoretical</span></h2>
 
-  <div class="alert alert-info">
-    <strong>Key Value:</strong> Encode theories formally. Check claims against established knowledge. Find cross-disciplinary connections.
+  <div class="alert alert-info" style="background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px; margin: 15px 0;">
+    <strong>Value proposition:</strong> Encode theories formally. Check claims against established knowledge. Explore hypotheticals.
   </div>
 
-  <h3>The Problem</h3>
-  <p>Scientific claims need validation against established theory. Cross-domain connections are hard to discover. "What if?" hypotheses are difficult to explore systematically.</p>
+  <h3>The Scenario</h3>
+  <p>Scientific claims need validation against established theory. "What if?" hypotheses are difficult to explore systematically.</p>
 
-  <h3>The AGISystem2 Solution</h3>
+  <h3>How AGISystem2 Could Help</h3>
   <ul>
-    <li><strong>Theory encoding:</strong> Laws, theorems, constraints as formal structures</li>
+    <li><strong>Theory encoding:</strong> Laws and constraints as formal structures</li>
     <li><strong>Claim validation:</strong> New results checked for consistency</li>
-    <li><strong>Cross-theory discovery:</strong> Automatic concept linking across domains</li>
-    <li><strong>Hypothesis exploration:</strong> "What would follow from X?"</li>
+    <li><strong>Hypothesis exploration:</strong> "What would follow if X?"</li>
   </ul>
 
-  <h3>Example Validation</h3>
+  <h3>Conceptual Example</h3>
   <pre><code>Claim: "Our engine achieved 95% efficiency"
        Operating between 300K and 400K
 
-Theoretical Analysis:
+Theoretical check:
   Carnot limit = 1 - (300/400) = 25%
 
-  &cross; INCONSISTENT WITH SECOND LAW
-     Claimed: 95%
-     Maximum allowed: 25%
+Result: INCONSISTENT WITH THERMODYNAMICS
+  Claimed: 95%
+  Maximum possible: 25%</code></pre>
 
-Possible explanations:
-  1. Measurement error
-  2. Not actually a cyclic process
-  3. Additional energy source</code></pre>
-
-  <hr>
-
-  <h2>Use Case 6: LLM Augmentation</h2>
-
-  <div class="alert alert-info">
-    <strong>Key Value:</strong> Combine LLM fluency with AGISystem2 rigor for AI that's both natural and reliable.
+  <div class="tradeoff-note">
+    <strong>Trade-off:</strong> Requires formalizing scientific theories&mdash;a significant undertaking. Works for well-understood, rule-based domains (thermodynamics limits, conservation laws). Does not handle cutting-edge research where the rules themselves are uncertain. This is a research direction.
   </div>
 
-  <h3>The Problem</h3>
-  <p>LLMs are fluent but unreliable. Symbolic systems are reliable but brittle. Neither alone meets real-world requirements.</p>
-
-  <h3>The Hybrid Solution</h3>
-  <table>
-    <tr>
-      <th>Task</th>
-      <th>LLM Role</th>
-      <th>AGISystem2 Role</th>
-    </tr>
-    <tr>
-      <td>Understanding</td>
-      <td>Parse natural language</td>
-      <td>Validate parsed structure</td>
-    </tr>
-    <tr>
-      <td>Planning</td>
-      <td>Propose candidate plans</td>
-      <td>Verify and optimize</td>
-    </tr>
-    <tr>
-      <td>Generation</td>
-      <td>Produce fluent text</td>
-      <td>Check consistency/compliance</td>
-    </tr>
-    <tr>
-      <td>Explanation</td>
-      <td>Verbalize naturally</td>
-      <td>Provide proof traces</td>
-    </tr>
-  </table>
-
   <hr>
 
-  <h2>Implementation Considerations</h2>
+  <h2>Implementation Reality</h2>
 
-  <h3>When to Use AGISystem2</h3>
+  <h3>What's Actually Working Today</h3>
   <ul>
-    <li><strong>Decisions must be explainable</strong>&mdash;medical, legal, financial</li>
-    <li><strong>Compliance is mandatory</strong>&mdash;regulated industries</li>
-    <li><strong>Consistency matters</strong>&mdash;long-form content, complex systems</li>
-    <li><strong>Verification is valuable</strong>&mdash;safety-critical applications</li>
-    <li><strong>Audit trails required</strong>&mdash;enterprise governance</li>
+    <li><strong>Taxonomic inference:</strong> IS_A hierarchies with transitive reasoning (126/126 eval tests passing)</li>
+    <li><strong>Rule-based reasoning:</strong> Backward chaining with And/Or conditions</li>
+    <li><strong>Proof traces:</strong> Complete derivation history for every conclusion</li>
+    <li><strong>Basic NL output:</strong> DSL results converted to readable text</li>
   </ul>
 
-  <h3>When LLMs May Be Sufficient</h3>
+  <h3>What's In Development</h3>
   <ul>
-    <li>Creative brainstorming without constraints</li>
-    <li>Casual conversation without stakes</li>
-    <li>Pattern recognition tasks</li>
-    <li>When "good enough" is acceptable</li>
+    <li>NL→DSL translation (requires LLM bridge)</li>
+    <li>Trustworthy AI pattern library</li>
+    <li>Integration examples with real systems</li>
   </ul>
 
-  <h2>Getting Started</h2>
+  <h3>What's Theoretical</h3>
+  <ul>
+    <li>Large-scale deployment validation</li>
+    <li>Complex domain formalization methodologies</li>
+    <li>Hybrid LLM+AGISystem2 architectures</li>
+  </ul>
+
+  <h2>Getting Started (Realistic)</h2>
 
   <ol>
-    <li>Identify your trust requirements (explainability, compliance, consistency, etc.)</li>
-    <li>Model your domain as a theory with facts, rules, and constraints</li>
-    <li>Use the reasoning engine to validate actions before execution</li>
-    <li>Generate explanations and audit trails as needed</li>
+    <li><strong>Assess fit:</strong> Does your use case require formal verification? Is the domain formalizable?</li>
+    <li><strong>Scope narrowly:</strong> Start with a specific, well-defined sub-domain</li>
+    <li><strong>Formalize carefully:</strong> Encode domain knowledge as theories (this is the hard part)</li>
+    <li><strong>Validate incrementally:</strong> Test with known cases before deploying</li>
+    <li><strong>Maintain continuously:</strong> Theories need updating as requirements change</li>
   </ol>
-
-  <p>See the <a href="../api/index.html">API documentation</a> for implementation details.</p>
 
   <h2>Related Documentation</h2>
 
   <ul>
+    <li><a href="../index.html">Main Documentation</a> &ndash; overview and positioning</li>
     <li><a href="../theory/trustworthy-ai/index.html">Trustworthy AI Overview</a></li>
-    <li><a href="../theory/index.html">Theory Foundation</a></li>
-    <li><a href="../specsLoader.html?spec=DS00-Vision.md">Vision Specification</a></li>
-    <li><a href="../specsLoader.html?spec=DS08-ThurstworthyAI-Patterns.md">Trustworthy AI Patterns Specification</a></li>
+    <li><a href="../theory/grounding-problem.html">Symbol Grounding Problem</a> &ndash; epistemological limitations</li>
+    <li><a href="../api/index.html">API Documentation</a></li>
   </ul>
 
   <div class="footer-nav">

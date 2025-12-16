@@ -22,62 +22,106 @@
   </div>
 
   <div class="section-intro">
-    <h2 style="margin-top: 0;">Why AGISystem2?</h2>
-    <p>Modern AI is powerful but untrustworthy. Large Language Models generate fluent text, but they <em>hallucinate facts</em>, <em>can't explain their reasoning</em>, and <em>forget everything between conversations</em>. Ask them "why?" and you get plausible-sounding confabulation, not actual reasoning traces.</p>
-    <p>Traditional Symbolic AI is transparent and precise, but brittle. One missing fact breaks the chain. It can't handle ambiguity or gracefully degrade when knowledge is incomplete.</p>
-    <p><strong>AGISystem2 provides System 2 thinking for AI</strong>&mdash;deliberate, logical, careful reasoning that complements the fast pattern recognition of neural networks. It represents knowledge as high-dimensional vectors and executes reasoning through formally defined operations with full explainability.</p>
+    <h2 style="margin-top: 0;">What is AGISystem2?</h2>
+    <p>AGISystem2 is a research project exploring <strong>formal reasoning engines</strong> that complement probabilistic AI systems. It implements mechanisms inspired by deliberative reasoning (sometimes called "System 2 thinking" in cognitive science) using hyperdimensional computing as the representational substrate.</p>
+    <p>The goal is not to replace neural networks, but to provide a <strong>complementary layer</strong> for scenarios where <em>trasabilitatea</em> (traceability), <em>verificabilitatea</em> (verifiability), and <em>explicabilitatea</em> (explainability) are requirements, not nice-to-haves.</p>
   </div>
 
   <div class="alert alert-info" style="margin: 20px 0; padding: 15px 20px; background: #fff3e0; border-left: 4px solid #ff9800; border-radius: 4px;">
-    <strong>Research Direction:</strong> AGISystem2 is an open-source research project exploring how hyperdimensional computing can provide <em>verifiable</em>, <em>explainable</em>, and <em>trustworthy</em> AI reasoning. It demonstrates that deterministic, mathematically grounded AI is practical and valuable.
+    <strong>Research Project:</strong> AGISystem2 is an open-source research project, not a finished product. It demonstrates that deterministic, mathematically grounded AI reasoning is practical for specific domains. We make no claims about artificial general intelligence or solving fundamental AI problems.
   </div>
 
-  <h2>What Makes AGISystem2 Different</h2>
+  <h2>Positioning: What Problem Does This Solve?</h2>
+
+  <p>For applications where <strong>verification is critical</strong>&mdash;compliance, auditing, legal decisions, safety-critical systems&mdash;probabilistic pattern matching alone may not suffice. AGISystem2 addresses this gap:</p>
+
+  <div class="positioning-box" style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin: 15px 0;">
+    <p style="margin: 0;"><strong>AGISystem2 is not an LLM and does not try to be.</strong> It is a complementary reasoning engine designed for scenarios where complete traceability and formal verification are requirements, not options.</p>
+  </div>
+
+  <h2>Capability Comparison (with Trade-offs)</h2>
 
   <table class="matrix-table">
     <tr>
       <th>Capability</th>
-      <th>LLMs (System 1)</th>
-      <th>AGISystem2 (System 2)</th>
+      <th>LLMs</th>
+      <th>AGISystem2</th>
+      <th>Trade-off</th>
     </tr>
     <tr>
       <td><strong>Multi-step reasoning</strong></td>
-      <td>Unreliable</td>
-      <td>Formal chains with proof traces</td>
+      <td>Emergent, difficult to verify</td>
+      <td>Explicit inference chains with traces</td>
+      <td>Requires prior formalization of domain</td>
     </tr>
     <tr>
       <td><strong>Learning new facts</strong></td>
-      <td>Requires retraining</td>
+      <td>Requires fine-tuning or context</td>
       <td>Instant integration</td>
+      <td>LLMs generalize; AGISystem2 does not</td>
     </tr>
     <tr>
       <td><strong>Explaining decisions</strong></td>
-      <td>Confabulation</td>
+      <td>Post-hoc rationalization</td>
       <td>Actual derivation steps</td>
+      <td>Derivations can be long/technical</td>
+    </tr>
+    <tr>
+      <td><strong>Handling ambiguity</strong></td>
+      <td>Robust to vague input</td>
+      <td>Requires disambiguation</td>
+      <td>LLMs more flexible for unclear input</td>
     </tr>
     <tr>
       <td><strong>Detecting contradiction</strong></td>
-      <td>Averages everything</td>
-      <td>Explicit flags</td>
+      <td>May not notice inconsistencies</td>
+      <td>Explicit contradiction flags</td>
+      <td>Limited to formalized contradictions</td>
     </tr>
     <tr>
-      <td><strong>Knowing uncertainty</strong></td>
-      <td>Confidently wrong</td>
-      <td>Calibrated doubt</td>
+      <td><strong>Natural language</strong></td>
+      <td>Native capability</td>
+      <td>Requires translation layer</td>
+      <td>AGISystem2 needs NL↔DSL bridge</td>
     </tr>
   </table>
 
-  <h2>Key Features</h2>
+  <p style="font-size: 13px; color: #666; margin-top: 10px;"><em>Note: "LLMs hallucinate" and similar claims are documented in research literature. See Ji et al. (2023) "Survey of Hallucination in NLG" and Turpin et al. (2023) on chain-of-thought unfaithfulness.</em></p>
+
+  <h2>Scope & Limitations</h2>
+
+  <div class="limitations-box" style="background: #fff3e0; padding: 15px; border-left: 4px solid #ff9800; border-radius: 0 8px 8px 0; margin: 15px 0;">
+    <p style="margin-top: 0;"><strong>What AGISystem2 does well:</strong></p>
+    <ul style="margin-bottom: 15px;">
+      <li>Taxonomic reasoning (IS_A hierarchies, transitive inference)</li>
+      <li>Rule-based inference with backward chaining</li>
+      <li>Explicit contradiction detection within formalized domains</li>
+      <li>Complete audit trails for every conclusion</li>
+    </ul>
+    <p><strong>What AGISystem2 does NOT do:</strong></p>
+    <ul style="margin-bottom: 15px;">
+      <li>Natural language understanding (requires external NL→DSL translation)</li>
+      <li>Creative generation or open-ended conversation</li>
+      <li>Learning from unstructured data</li>
+      <li>Handling domains that haven't been formally modeled</li>
+    </ul>
+    <p style="margin-bottom: 0;"><strong>Fundamental limitation:</strong> The system reasons correctly <em>within</em> a theory, but cannot guarantee the theory itself is correct. See <a href="theory/grounding-problem.html">The Symbol Grounding Problem</a> for an honest discussion of this epistemological limitation.</p>
+  </div>
+
+  <h2>Key Capabilities</h2>
+
   <ul>
-    <li><strong>Deterministic Reasoning:</strong> Reproducible, explainable results with full proof traces.</li>
-    <li><strong>Multi-Strategy HDC:</strong> Pluggable vector representations (dense binary, sparse polynomial).</li>
-    <li><strong>Transitive Chains:</strong> Automatic inference across taxonomies and spatial relations.</li>
-    <li><strong>Backward Chaining:</strong> Rule-based reasoning with And/Or conditions.</li>
-    <li><strong>Natural Language Output:</strong> DSL results converted to human-readable text.</li>
-    <li><strong>Trustworthy AI Patterns:</strong> Agent planning, compliance verification, bias detection.</li>
+    <li><strong>Deterministic Reasoning:</strong> Reproducible results with full proof traces. 🔬 <em>Demonstrated in evaluation suite</em></li>
+    <li><strong>Multi-Strategy HDC:</strong> Pluggable vector representations (dense binary, sparse polynomial). 🔬 <em>Implemented and tested</em></li>
+    <li><strong>Transitive Chains:</strong> Automatic inference across taxonomies. 🔬 <em>126/126 eval tests passing</em></li>
+    <li><strong>Backward Chaining:</strong> Rule-based reasoning with And/Or conditions. 🔬 <em>Implemented</em></li>
+    <li><strong>Natural Language Output:</strong> DSL results converted to human-readable text. 🏗️ <em>Basic implementation</em></li>
+    <li><strong>Trustworthy AI Patterns:</strong> Agent planning, compliance verification. 📐 <em>Theoretical framework, validation ongoing</em></li>
   </ul>
 
-  <h2>HDC Strategy Architecture</h2>
+  <p style="font-size: 12px; color: #666;">Legend: 🔬 Demonstrated (tested) | 🏗️ Implemented (evaluation ongoing) | 📐 Theoretical (conceptual framework)</p>
+
+  <h2>Architecture Overview</h2>
   <div style="max-width: 700px; margin: 20px auto;">
     <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;">
       <!-- Background -->
@@ -86,17 +130,17 @@
       <!-- Layer 4: Application -->
       <rect x="30" y="30" width="640" height="50" rx="8" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
       <text x="350" y="50" text-anchor="middle" font-weight="bold" font-size="13" fill="#1565c0">Layer 4: Application</text>
-      <text x="350" y="68" text-anchor="middle" font-size="11" fill="#333">DSL Parser &middot; Session API &middot; Natural Language Output</text>
+      <text x="350" y="68" text-anchor="middle" font-size="11" fill="#333">DSL Parser · Session API · Natural Language Output</text>
 
       <!-- Layer 3: Reasoning -->
       <rect x="30" y="90" width="640" height="50" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
       <text x="350" y="110" text-anchor="middle" font-weight="bold" font-size="13" fill="#2e7d32">Layer 3: Reasoning Engine</text>
-      <text x="350" y="128" text-anchor="middle" font-size="11" fill="#333">Query &middot; Prove &middot; Transitive Chains &middot; Rule Inference</text>
+      <text x="350" y="128" text-anchor="middle" font-size="11" fill="#333">Query · Prove · Transitive Chains · Rule Inference</text>
 
       <!-- Layer 2: Contract (bold separator) -->
       <rect x="30" y="150" width="640" height="50" rx="8" fill="#fff3e0" stroke="#ff9800" stroke-width="3"/>
       <text x="350" y="170" text-anchor="middle" font-weight="bold" font-size="13" fill="#e65100">Layer 2: HDC Operations Interface</text>
-      <text x="350" y="188" text-anchor="middle" font-size="11" fill="#333">bind() &middot; bundle() &middot; similarity() &middot; createFromName()</text>
+      <text x="350" y="188" text-anchor="middle" font-size="11" fill="#333">bind() · bundle() · similarity() · createFromName()</text>
       <text x="670" y="175" text-anchor="end" font-size="10" fill="#ff9800" font-weight="bold">CONTRACT</text>
 
       <!-- Separator line -->
@@ -126,7 +170,7 @@
   <div class="section-grid">
     <div class="section-card" style="background: linear-gradient(135deg, #4caf5022 0%, #8bc34a22 100%);">
       <h3><a href="use-cases/index.html">Use Cases</a></h3>
-      <p>Practical applications: trustworthy assistants, reliable agents, creative AI with guardrails, compliance automation, scientific reasoning.</p>
+      <p>Practical applications: compliance automation, agent planning verification, scientific reasoning support. Includes when NOT to use AGISystem2.</p>
     </div>
 
     <div class="section-card">
@@ -136,7 +180,7 @@
 
     <div class="section-card">
       <h3><a href="theory/index.html">Foundational Theory</a></h3>
-      <p>Hyperdimensional computing principles, <a href="theory/trustworthy-ai/index.html">trustworthy AI patterns</a>, <a href="theory/privacy-hdc.html">privacy analysis</a>.</p>
+      <p>HDC principles, <a href="theory/trustworthy-ai/index.html">trustworthy AI patterns</a>, <a href="theory/grounding-problem.html">epistemological limitations</a>, <a href="theory/privacy-hdc.html">privacy analysis</a>.</p>
     </div>
 
     <div class="section-card">
@@ -146,12 +190,12 @@
 
     <div class="section-card">
       <h3><a href="api/index.html">APIs</a></h3>
-      <p>Session API: learn(), query(), prove(), generateText(), elaborate(). HDC Facade: bind(), bundle(), similarity().</p>
+      <p>Session API: learn(), query(), prove(), generateText(). HDC Facade: bind(), bundle(), similarity().</p>
     </div>
 
     <div class="section-card">
       <h3><a href="specs/matrix.html">Specifications</a></h3>
-      <p>Design specs (DS01-DS17), evaluation suites, and test coverage matrix.</p>
+      <p>Design specs (DS01-DS14), evaluation suites, and test coverage matrix.</p>
     </div>
 
     <div class="section-card">
@@ -165,50 +209,52 @@
     </div>
   </div>
 
-  <h2>Quick Start</h2>
-  <pre><code>import { Session } from './src/runtime/session.mjs';
+  <h2>Honest Assessment</h2>
 
-// Create session (loads Core theories automatically)
-const session = new Session({ geometry: 32768 });
+  <div class="honest-box" style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 15px 0;">
+    <h3 style="margin-top: 0;">What We Claim</h3>
+    <ul>
+      <li><strong>Design claim:</strong> The system implements backward chaining with And/Or rules over HDC representations</li>
+      <li><strong>Capability claim:</strong> It enables detection of formal contradictions in knowledge bases</li>
+      <li><strong>Value claim:</strong> It provides transparency for scenarios requiring audit trails</li>
+    </ul>
 
-// Learn facts
-session.learn(`
-  isA Dog Animal
-  isA Rex Dog
-`);
+    <h3>What We're Exploring</h3>
+    <ul>
+      <li><strong>Research hypothesis:</strong> HDC representations can scale to more complex reasoning domains</li>
+      <li><strong>Research hypothesis:</strong> LLM+HDC hybrid architectures can combine fluency with rigor</li>
+      <li><strong>Research hypothesis:</strong> Formal theories can usefully constrain AI agent behavior</li>
+    </ul>
 
-// Query
-const result = session.query('@q isA Rex ?what');
-console.log(result.bindings.get('what').answer); // "Dog"
+    <h3>What We Don't Claim</h3>
+    <ul>
+      <li>Universal semantics or solved grounding problem</li>
+      <li>Replacement for LLMs or neural networks</li>
+      <li>Artificial general intelligence</li>
+      <li>Automatic scaling to arbitrary domains</li>
+    </ul>
+  </div>
 
-// Prove with transitive reasoning
-const proof = session.prove('@goal isA Rex Animal');
-console.log(proof.valid);  // true
-console.log(proof.method); // "transitive_chain"
+  <h2>The Meta-Rational Approach</h2>
 
-// Generate natural language
-const text = session.generateText('isA', ['Rex', 'Animal']);
-console.log(text); // "Rex is an animal."</code></pre>
+  <p>We adopt a pragmatic stance: <strong>theories are tools, not truths</strong>. AGISystem2 guarantees correct reasoning <em>within</em> a theory, not the correctness of the theory itself. This isn't a limitation to apologize for&mdash;it's how all formal systems work, from mathematics to legal codes.</p>
 
-  <h2>Specification Documents</h2>
-  <ul>
-    <li><a href="specsLoader.html?spec=DS00-Vision.md">DS00 &ndash; Vision</a> &ndash; Why AGISystem2 exists</li>
-    <li><a href="specsLoader.html?spec=DS01-Theoretical-Foundation.md">DS01 &ndash; Theoretical Foundation</a></li>
-    <li><a href="specsLoader.html?spec=DS03-Architecture.md">DS03 &ndash; Architecture</a></li>
-    <li><a href="specsLoader.html?spec=DS08-ThurstworthyAI-Patterns.md">DS08 &ndash; Trustworthy AI Patterns</a></li>
-    <li><a href="specsLoader.html?spec=DS09-Core-HDC-Implementation.md">DS09 &ndash; HDC Core Implementation</a></li>
-    <li><a href="specs/matrix.html">Full Specification Matrix</a></li>
-  </ul>
+  <p>The value proposition is practical: transform natural language specifications into formal theories that can be analyzed, debugged, and revised. This doesn't solve the grounding problem, but it makes specifications explicit and their consequences computable.</p>
+
+  <p><a href="theory/grounding-problem.html">Read our full discussion of epistemological limitations &rarr;</a></p>
 
   <div class="footer-nav">
     <p>Research conducted by <a href="https://www.axiologic.net" target="_blank" style="color: #1976d2;">Axiologic Research</a> as part of the European research project <a href="https://www.achilles-project.eu/" target="_blank" style="color: #1976d2;">Achilles</a>.</p>
     <p style="margin-top: 10px;">
-      <a href="https://github.com/anthropics/AGISystem2/" target="_blank" style="color: #1976d2;">
+      <a href="https://github.com/OutfinityResearch/AGISystem2/" target="_blank" style="color: #1976d2;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 5px;">
           <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
         </svg>
         GitHub Repository
       </a>
+    </p>
+    <p style="margin-top: 15px; padding: 10px; background: #fff3e0; border-left: 3px solid #ff9800; font-size: 12px; color: #666;">
+      <strong style="color: #e65100;">Disclaimer:</strong> This documentation was generated with AI assistance (LLMs) and may contain errors, exaggerations, or hallucinations. The system is open source&mdash;verify claims by examining the code, evaluation suites, and automated tests.
     </p>
   </div>
   </div>
@@ -221,16 +267,22 @@ console.log(text); // "Rex is an animal."</code></pre>
     }
     .matrix-table th, .matrix-table td {
       border: 1px solid #ddd;
-      padding: 12px;
+      padding: 10px;
       vertical-align: top;
       text-align: left;
+      font-size: 13px;
     }
     .matrix-table th {
       background: #f5f5f5;
     }
     .matrix-table td:first-child {
-      width: 180px;
+      width: 160px;
       font-weight: bold;
+    }
+    .matrix-table td:last-child {
+      background: #fffde7;
+      font-style: italic;
+      color: #666;
     }
     .section-grid {
       display: grid;

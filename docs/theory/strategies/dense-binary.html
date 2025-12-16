@@ -477,10 +477,11 @@ Interpretation: Nearly random (close to 0.5)</pre>
   <div class="definition">
     <strong>Algorithm: Deterministic Vector Creation</strong>
     <ol>
-      <li>Hash the concept name to get a seed: <code>seed = DJB2("Dog")</code></li>
+      <li>Hash the concept name to get a seed: <code>seed = <a href="../concepts/hash.html">DJB2</a>("Dog")</code></li>
       <li>Initialize a PRNG with the seed</li>
       <li>Generate n random bits (50% ones, 50% zeros)</li>
     </ol>
+    <p><a href="../concepts/hash.html">Read more about hash functions in HDC &rarr;</a></p>
   </div>
 
   <div class="concept-box">
@@ -580,20 +581,6 @@ similarity(raw_answer, "John") &asymp; 1.0  &rarr; Answer: John</pre>
       <li><strong>Fixed Memory:</strong> All vectors have exactly n bits</li>
       <li><strong>Graceful Degradation:</strong> Bundle capacity decreases smoothly</li>
     </ul>
-  </div>
-
-  <h2>10. Configuration</h2>
-
-  <div class="math-block">
-// Initialize Dense-Binary strategy
-import { initHDC } from './src/hdc/facade.mjs';
-initHDC('dense-binary');
-
-// Create session with default 2048-bit vectors
-const session = new Session({ geometry: 2048 });
-
-// For higher capacity, use larger dimensions
-const largeSession = new Session({ geometry: 32768 });
   </div>
 
   <div class="footer-nav">

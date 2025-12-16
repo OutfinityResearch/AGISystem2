@@ -370,10 +370,11 @@ Jaccard:      sim(A, B) = 2/6 = 0.333</pre>
   <div class="definition">
     <strong>Algorithm: Deterministic Vector Creation</strong>
     <ol>
-      <li>Hash the concept name to get a seed: <code>seed = DJB2("Dog")</code></li>
+      <li>Hash the concept name to get a seed: <code>seed = <a href="../concepts/hash.html">DJB2</a>("Dog")</code></li>
       <li>Initialize a PRNG with the seed</li>
       <li>Generate k unique random 64-bit integers using the PRNG</li>
     </ol>
+    <p><a href="../concepts/hash.html">Read more about hash functions in HDC &rarr;</a></p>
   </div>
 
   <div class="diagram-container">
@@ -508,23 +509,6 @@ best_match = argmax(sim(raw_answer, vocab[name]))
       <li><strong>Bounded Memory:</strong> All vectors have exactly k elements</li>
       <li><strong>Similarity Preservation:</strong> Min-Hash maintains approximate Jaccard distances</li>
     </ul>
-  </div>
-
-  <h2>10. Configuration</h2>
-
-  <div class="math-block">
-// Initialize SPHDC strategy
-import { initHDC } from './src/hdc/facade.mjs';
-initHDC('sparse-polynomial');
-
-// Create session with default k=4
-const session = new Session({ geometry: 4 });
-
-// For maximum speed, use k=1
-const fastSession = new Session({ geometry: 1 });
-
-// For richer representations, use k=8
-const richSession = new Session({ geometry: 8 });
   </div>
 
   <div class="footer-nav">
