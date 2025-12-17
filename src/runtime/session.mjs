@@ -19,6 +19,7 @@ import { InductionEngine } from '../reasoning/induction.mjs';
 import { createQueryEngine, createProofEngine, isHolographicPriority, getReasoningPriority } from '../reasoning/index.mjs';
 import { textGenerator } from '../output/text-generator.mjs';
 import { findAll } from '../reasoning/find-all.mjs';
+import { ComponentKB } from '../reasoning/component-kb.mjs';
 
 
 
@@ -52,6 +53,7 @@ export class Session {
     this.rules = [];
     this.kb = null;
     this.kbFacts = [];
+    this.componentKB = new ComponentKB(this);  // Component-indexed KB for fuzzy matching
     this.theories = new Map();
     this.operators = new Map();
     this.warnings = [];
@@ -67,7 +69,8 @@ export class Session {
       transitiveSteps: 0,
       maxProofDepth: 0,
       minProofDepth: Infinity,  // Track minimum proof depth (M)
-      totalProofSteps: 0,
+      totalProofSteps: 0,       // Successful proof chain steps
+      totalReasoningSteps: 0,   // ALL reasoning attempts (including backtracking)
       proofLengths: [],
       methods: {},
       operations: {},
@@ -292,7 +295,18 @@ export class Session {
       this.warnings.push(contradiction);
     }
 
-    this.kbFacts.push({ vector, name, metadata });
+    const fact = { vector, name, metadata };
+    this.kbFacts.push(fact);
+
+    // Index in component KB for fuzzy matching
+    this.componentKB.addFact(fact);
+
+    // Handle synonym declarations
+    if (metadata?.operator === 'synonym' && metadata?.args?.length === 2) {
+      this.componentKB.addSynonym(metadata.args[0], metadata.args[1]);
+      dbg('SYNONYM', `Registered synonym: ${metadata.args[0]} <-> ${metadata.args[1]}`);
+    }
+
     if (this.kb === null) {
       this.kb = vector.clone();
     } else {
@@ -380,7 +394,18 @@ export class Session {
         return { success: false, reason: 'Empty query' };
       }
 
-      const result = this.queryEngine.execute(ast.statements[0]);
+      // For multi-statement DSL, execute all statements except last as setup,
+      // then execute the last statement as the actual query
+      if (ast.statements.length > 1) {
+        const executor = new Executor(this);
+        for (let i = 0; i < ast.statements.length - 1; i++) {
+          executor.executeStatement(ast.statements[i]);
+        }
+      }
+
+      // Execute the last (or only) statement as the query
+      const queryStmt = ast.statements[ast.statements.length - 1];
+      const result = this.queryEngine.execute(queryStmt);
       this.reasoningStats.queries++;
 
       // Queries count as depth 5 for averaging (require KB traversal)
@@ -452,6 +477,10 @@ export class Session {
       // Track minimum proof depth (M) - all proofs count
       if (proofLength > 0 && proofLength < this.reasoningStats.minProofDepth) {
         this.reasoningStats.minProofDepth = proofLength;
+      }
+      // Track total reasoning steps (includes ALL backtracking attempts)
+      if (result.reasoningSteps) {
+        this.reasoningStats.totalReasoningSteps += result.reasoningSteps;
       }
       if (result.valid && result.method) {
         this.trackMethod(result.method);
@@ -633,8 +662,8 @@ export class Session {
       this.reasoningStats = {
         queries: 0, proofs: 0, kbScans: 0, similarityChecks: 0,
         ruleAttempts: 0, transitiveSteps: 0, maxProofDepth: 0,
-        minProofDepth: Infinity, totalProofSteps: 0, proofLengths: [],
-        methods: {}, operations: {},
+        minProofDepth: Infinity, totalProofSteps: 0, totalReasoningSteps: 0,
+        proofLengths: [], methods: {}, operations: {},
         hdcQueries: 0, hdcSuccesses: 0, hdcBindings: 0
       };
     }

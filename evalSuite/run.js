@@ -12,6 +12,12 @@
  *   node evalSuite/run.js --compare                 # Run with both strategies and compare (default)
  *   node evalSuite/run.js --all-modes               # Run with all 4 configurations (2 strategies × 2 reasoning priorities)
  *   node evalSuite/run.js --priority=holographicPriority  # Run with specific reasoning priority
+ *   node evalSuite/run.js --dense-dim=1024          # Set dense-binary vector dimension (default: 2048)
+ *   node evalSuite/run.js --sparse-k=6              # Set sparse-polynomial exponent count (default: 4)
+ *
+ * Geometry Parameters:
+ *   --dense-dim=N   Dense binary vector dimension (128, 256, 512, 1024, 2048, 4096)
+ *   --sparse-k=N    Sparse polynomial exponent count (2, 3, 4, 5, 6, 8)
  *
  * Configurations:
  *   HDC Strategies: dense-binary, sparse-polynomial
@@ -44,6 +50,13 @@ const singleStrategy = strategyArg ? strategyArg.split('=')[1] : null;
 // Extract specific reasoning priority if provided
 const priorityArg = args.find(a => a.startsWith('--priority='));
 const singlePriority = priorityArg ? priorityArg.split('=')[1] : null;
+
+// Extract geometry parameters
+const denseDimArg = args.find(a => a.startsWith('--dense-dim='));
+const denseDim = denseDimArg ? parseInt(denseDimArg.split('=')[1], 10) : 2048;
+
+const sparseKArg = args.find(a => a.startsWith('--sparse-k='));
+const sparseK = sparseKArg ? parseInt(sparseKArg.split('=')[1], 10) : 4;
 
 const specificSuites = args.filter(a => !a.startsWith('-') && !a.startsWith('--'));
 
@@ -124,16 +137,21 @@ async function main() {
       prioritiesToRun = availablePriorities;
     }
 
-    // Build configuration list
+    // Build configuration list with geometry
     const configurations = [];
     for (const strategy of strategiesToRun) {
       for (const priority of prioritiesToRun) {
-        configurations.push({ strategy, priority });
+        // Use appropriate geometry for each strategy
+        const geometry = strategy === 'sparse-polynomial' ? sparseK : denseDim;
+        configurations.push({ strategy, priority, geometry });
       }
     }
 
     const configNames = configurations.map(c => `${c.strategy}/${c.priority.replace('Priority', '')}`);
     console.log(`Running with ${configurations.length} configuration(s): ${configNames.join(', ')}`);
+    if (denseDimArg || sparseKArg) {
+      console.log(`Geometry: dense-dim=${denseDim}, sparse-k=${sparseK}`);
+    }
 
     // Results by configuration (key = "strategy/priority")
     const resultsByConfig = {};
@@ -161,10 +179,11 @@ async function main() {
           // Report header (shows Core theory stack)
           reportSuiteHeader(suite);
 
-          // Run tests with specific configuration (strategy + priority)
+          // Run tests with specific configuration (strategy + priority + geometry)
           const { results, summary } = await runSuite(suite, {
             strategy: config.strategy,
-            reasoningPriority: config.priority
+            reasoningPriority: config.priority,
+            geometry: config.geometry
           });
 
           // Report results

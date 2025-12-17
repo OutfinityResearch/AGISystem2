@@ -110,3 +110,42 @@ end
     @result __Bundle $r1 $r2 $r3
     return $result
 end
+
+# ===== Capability Relations =====
+# Previously hardcoded, now formally defined
+
+# can: entity has capability/ability
+# Types: entity:Entity, ability:Action|Abstract
+@Can:Can __Relation
+
+@CanMacro:can macro entity ability
+    @r1 __Role Theme $entity
+    @r2 __Role Attribute $ability
+    @result __Bundle $r1 $r2
+    return $result
+end
+
+# ===== Possession Relations =====
+
+# has: entity has/possesses something
+# Types: entity:Entity, possession:Entity|Property
+@Has:Has __Relation
+
+@HasMacro:has macro entity possession
+    @r1 __Role Theme $entity
+    @r2 __Role Attribute $possession
+    @result __Bundle $r1 $r2
+    return $result
+end
+
+# ===== Synonym Relation =====
+# Used for fuzzy matching and concept expansion
+
+# synonym: term1 is synonym of term2 (symmetric)
+@Synonym:Synonym __SymmetricRelation
+
+@SynonymMacro:synonym macro term1 term2
+    @pair __Pair $term1 $term2
+    @result __Role Synonym $pair
+    return $result
+end

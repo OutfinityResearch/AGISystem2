@@ -54,6 +54,7 @@ export function findAll(session, pattern, options = {}) {
 
   // Scan KB for all matches
   for (const fact of session.kbFacts) {
+    session.reasoningStats.kbScans++;
     if (results.length >= maxResults) break;
 
     const meta = fact.metadata;
@@ -139,6 +140,7 @@ function findTransitiveResults(session, operator, holes, knowns, maxResults) {
   const edges = new Map(); // from -> [to1, to2, ...]
 
   for (const fact of session.kbFacts) {
+    session.reasoningStats.kbScans++;
     const meta = fact.metadata;
     if (!meta || meta.operator !== operator) continue;
     if (!meta.args || meta.args.length !== 2) continue;

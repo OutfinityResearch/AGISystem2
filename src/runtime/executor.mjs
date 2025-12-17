@@ -174,13 +174,19 @@ export class Executor {
       throw new ExecutionError('Expected Statement node', stmt);
     }
 
-    // Check for special operators (Load, Unload)
+    // Check for special operators (Load, Unload, induce, bundle)
     const operatorName = this.extractName(stmt.operator);
     if (operatorName === 'Load') {
       return this.executeLoad(stmt);
     }
     if (operatorName === 'Unload') {
       return this.executeUnload(stmt);
+    }
+    if (operatorName === 'induce') {
+      return this.executeInduce(stmt);
+    }
+    if (operatorName === 'bundle') {
+      return this.executeBundle(stmt);
     }
 
     // Check if operator is a macro - if so, expand it
@@ -473,27 +479,28 @@ export class Executor {
 
   /**
    * Resolve expression to vector
-   * @param {Expression} expr - Expression node
+   * @param {Expression} expr - Expression node (can be AST class instance or plain object with type)
    * @returns {Vector}
    */
   resolveExpression(expr) {
-    if (expr instanceof Identifier) {
+    // Support both instanceof checks (parser AST) and type-based checks (manual construction)
+    if (expr instanceof Identifier || expr.type === 'Identifier') {
       return this.resolveIdentifier(expr);
     }
 
-    if (expr instanceof Hole) {
+    if (expr instanceof Hole || expr.type === 'Hole') {
       return this.resolveHole(expr);
     }
 
-    if (expr instanceof Reference) {
+    if (expr instanceof Reference || expr.type === 'Reference') {
       return this.resolveReference(expr);
     }
 
-    if (expr instanceof Literal) {
+    if (expr instanceof Literal || expr.type === 'Literal') {
       return this.resolveLiteral(expr);
     }
 
-    if (expr instanceof List) {
+    if (expr instanceof List || expr.type === 'List') {
       return this.resolveList(expr);
     }
 
@@ -735,6 +742,7 @@ export class Executor {
   findConflictPairs(relation) {
     const conflicts = [];
     for (const fact of this.session.kbFacts) {
+      this.session.reasoningStats.kbScans++;
       const meta = fact.metadata;
       if (meta?.operator === relation && meta.args?.length === 2) {
         const [p1, p2] = meta.args;
@@ -745,6 +753,143 @@ export class Executor {
       }
     }
     return conflicts;
+  }
+
+  /**
+   * Execute induce operator - extract common properties from multiple examples
+   * @induce [A, B, C] creates a pattern vector representing shared properties
+   */
+  executeInduce(stmt) {
+    // Get the list of items to induce from
+    if (stmt.args.length === 0) {
+      throw new ExecutionError('induce requires a list argument', stmt);
+    }
+
+    const listArg = stmt.args[0];
+    const items = listArg.items || [listArg];
+    const itemNames = items.map(item => this.extractName(item));
+
+    // Collect properties for each item
+    const itemProps = new Map(); // itemName -> Set of "op:arg1"
+    const componentKB = this.session?.componentKB;
+
+    for (const name of itemNames) {
+      const props = new Set();
+      if (componentKB) {
+        const facts = componentKB.findByArg0(name);
+        for (const f of facts) {
+          if (f.args?.[1]) {
+            props.add(`${f.operator}:${f.args[1]}`);
+          }
+        }
+      } else {
+        for (const fact of this.session.kbFacts) {
+          this.session.reasoningStats.kbScans++;
+          const meta = fact.metadata;
+          if (meta?.args?.[0] === name && meta?.args?.[1]) {
+            props.add(`${meta.operator}:${meta.args[1]}`);
+          }
+        }
+      }
+      itemProps.set(name, props);
+    }
+
+    // Find intersection of properties (what all items share)
+    let commonProps = null;
+    for (const [name, props] of itemProps) {
+      if (commonProps === null) {
+        commonProps = new Set(props);
+      } else {
+        for (const p of commonProps) {
+          if (!props.has(p)) {
+            commonProps.delete(p);
+          }
+        }
+      }
+    }
+
+    // Create a pattern vector by bundling the common property vectors
+    const propVectors = [];
+    const propMetadata = [];
+    for (const prop of commonProps || []) {
+      const [op, arg1] = prop.split(':');
+      const opVec = this.session.vocabulary.getOrCreate(op);
+      const arg1Vec = this.session.vocabulary.getOrCreate(arg1);
+      const propVec = bind(opVec, withPosition(1, arg1Vec));
+      propVectors.push(propVec);
+      propMetadata.push({ operator: op, arg: arg1 });
+    }
+
+    const patternVec = propVectors.length > 0 ? bundle(propVectors) : this.session.vocabulary.getOrCreate('__EMPTY_PATTERN__');
+
+    // Store in scope if destination provided
+    if (stmt.destination) {
+      this.session.scope.set(stmt.destination, patternVec);
+    }
+
+    // Also store metadata for querying
+    const resultName = stmt.destination || '__induce_result__';
+    this.session.kbFacts.push({
+      name: resultName,
+      vector: patternVec,
+      metadata: {
+        operator: 'inducePattern',
+        sources: itemNames,
+        commonProperties: propMetadata,
+        propertyCount: commonProps?.size || 0
+      }
+    });
+
+    return {
+      type: 'induce',
+      destination: stmt.destination,
+      sources: itemNames,
+      commonProperties: propMetadata,
+      propertyCount: commonProps?.size || 0,
+      vector: patternVec
+    };
+  }
+
+  /**
+   * Execute bundle operator - create a bundled vector from multiple items
+   * @bundle [A, B, C] creates a superposition of A, B, C vectors
+   */
+  executeBundle(stmt) {
+    if (stmt.args.length === 0) {
+      throw new ExecutionError('bundle requires a list argument', stmt);
+    }
+
+    const listArg = stmt.args[0];
+    const items = listArg.items || [listArg];
+    const itemVectors = items.map(item => this.resolveExpression(item));
+    const bundledVec = bundle(itemVectors);
+
+    // Store in scope if destination provided
+    if (stmt.destination) {
+      this.session.scope.set(stmt.destination, bundledVec);
+    }
+
+    // Store with metadata
+    const resultName = stmt.destination || '__bundle_result__';
+    const itemNames = items.map(item => this.extractName(item));
+
+    this.session.kbFacts.push({
+      name: resultName,
+      vector: bundledVec,
+      metadata: {
+        operator: 'bundlePattern',
+        items: itemNames,
+        itemCount: items.length
+      }
+    });
+
+    return {
+      type: 'bundle',
+      destination: stmt.destination,
+      items: itemNames,
+      itemCount: items.length,
+      vector: bundledVec
+    };
   }
 }
 

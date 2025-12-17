@@ -10,8 +10,8 @@
  * Same interface as QueryEngine - drop-in replacement.
  */
 
-import { bind, unbind, similarity, topKSimilar } from '../../core/operations.mjs';
-import { withPosition } from '../../core/position.mjs';
+import { bind, unbind, bundle, similarity, topKSimilar } from '../../core/operations.mjs';
+import { withPosition, getPositionVector } from '../../core/position.mjs';
 import { MAX_HOLES, getHolographicThresholds, getThresholds } from '../../core/constants.mjs';
 import { QueryEngine } from '../query.mjs';
 import { ProofEngine } from '../prove.mjs';
@@ -133,20 +133,39 @@ export class HolographicQueryEngine {
 
     dbg('RESULTS', `${validatedResults.length} validated results`);
 
-    // Step 4: Fallback to symbolic if no validated results
-    if (validatedResults.length === 0 && this.config.FALLBACK_TO_SYMBOLIC) {
-      dbg('FALLBACK', 'No HDC results validated, falling back to symbolic');
-      this.session.reasoningStats.symbolicFallbacks =
-        (this.session.reasoningStats.symbolicFallbacks || 0) + 1;
-
+    // Step 4: Always merge with symbolic results for completeness
+    // HDC may miss some results due to KB noise, so we supplement with symbolic
+    if (this.config.FALLBACK_TO_SYMBOLIC) {
       const symbolicResult = this.symbolicEngine.execute(statement);
-      // Mark as fallback
-      if (symbolicResult.allResults) {
-        for (const r of symbolicResult.allResults) {
-          r.method = r.method || 'symbolic_fallback';
+
+      if (symbolicResult.allResults && symbolicResult.allResults.length > 0) {
+        // Merge: HDC results first (with hdc_validated tag), then symbolic results not already found
+        const hdcAnswers = new Set();
+        for (const r of validatedResults) {
+          for (const [holeName, value] of r.bindings) {
+            hdcAnswers.add(value.answer);
+          }
         }
+
+        // Add symbolic results that weren't found by HDC
+        for (const r of symbolicResult.allResults) {
+          let isDuplicate = false;
+          if (r.bindings instanceof Map) {
+            for (const [holeName, value] of r.bindings) {
+              if (hdcAnswers.has(value.answer)) {
+                isDuplicate = true;
+                break;
+              }
+            }
+          }
+          if (!isDuplicate) {
+            r.method = r.method || 'symbolic_supplement';
+            validatedResults.push(r);
+          }
+        }
+
+        dbg('MERGE', `Merged ${validatedResults.length} results (HDC + symbolic)`);
       }
-      return symbolicResult;
     }
 
     // Build final result matching QueryEngine interface
@@ -170,7 +189,7 @@ export class HolographicQueryEngine {
     // Build partial query vector (without holes)
     let queryPartial = operator;
     for (const known of knowns) {
-      const posVec = this.session.getPositionVector(known.index);
+      const posVec = getPositionVector(known.index, this.session.geometry);
       queryPartial = bind(queryPartial, bind(posVec, known.vector));
     }
 
@@ -186,7 +205,7 @@ export class HolographicQueryEngine {
     const holeCandidates = new Map();
 
     for (const hole of holes) {
-      const posVec = this.session.getPositionVector(hole.index);
+      const posVec = getPositionVector(hole.index, this.session.geometry);
 
       // Unbind: candidate = KB ⊕ queryPartial ⊕ position⁻¹
       // This extracts what's at the hole position
@@ -197,6 +216,7 @@ export class HolographicQueryEngine {
       const topK = [];
 
       for (const [name, vec] of vocabulary) {
+        this.session.reasoningStats.similarityChecks++;
         const sim = similarity(unboundVec, vec);
         if (sim >= this.config.UNBIND_MIN_SIMILARITY) {
           topK.push({ name, similarity: sim });
@@ -220,14 +240,18 @@ export class HolographicQueryEngine {
    * @private
    */
   bundleKBFacts() {
+    // Use session's pre-bundled KB if available
+    if (this.session.kb) {
+      return this.session.kb;
+    }
+
+    // Fallback: bundle KB facts manually
     if (this.session.kbFacts && this.session.kbFacts.length > 0) {
-      // Use session's bundle if available
       const vectors = this.session.kbFacts
         .filter(f => f.vector)
         .map(f => f.vector);
 
       if (vectors.length > 0) {
-        const { bundle } = require('../../core/operations.mjs');
         return bundle(vectors);
       }
     }
@@ -241,18 +265,19 @@ export class HolographicQueryEngine {
   getVocabulary() {
     const vocab = new Map();
 
-    // From session atoms
-    if (this.session.atoms) {
-      for (const [name, vec] of this.session.atoms) {
+    // From session vocabulary atoms
+    if (this.session.vocabulary?.atoms) {
+      for (const [name, vec] of this.session.vocabulary.atoms) {
         if (!name.startsWith('__') && !name.startsWith('Pos')) {
           vocab.set(name, vec);
         }
       }
     }
 
-    // From KB fact metadata
+    // From KB fact metadata (add any entities not in vocabulary)
     if (this.session.kbFacts) {
       for (const fact of this.session.kbFacts) {
+        this.session.reasoningStats.kbScans++;
         if (fact.metadata?.args) {
           for (const arg of fact.metadata.args) {
             if (typeof arg === 'string' && !vocab.has(arg)) {

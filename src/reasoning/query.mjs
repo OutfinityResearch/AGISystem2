@@ -20,7 +20,7 @@ import { TRANSITIVE_RELATIONS } from './transitive.mjs';
 
 // Import sub-modules
 import { searchHDC, isValidEntity, RESERVED } from './query-hdc.mjs';
-import { searchKBDirect, isTypeClass, isFactNegated, sameBindings, filterTypeClasses, filterNegated } from './query-kb.mjs';
+import { searchKBDirect, isTypeClass, isFactNegated, sameBindings, filterTypeClasses, filterNegated, searchBundlePattern } from './query-kb.mjs';
 import { searchTransitive, isTransitiveRelation } from './query-transitive.mjs';
 import { searchViaRules } from './query-rules.mjs';
 import { searchCompoundSolutions } from './query-compound.mjs';
@@ -79,6 +79,11 @@ export class QueryEngine {
         bindings: new Map(),
         allResults: []
       };
+    }
+
+    // Special case: 'similar' operator - find similar concepts via HDC
+    if (operatorName === 'similar' && knowns.length === 1 && holes.length === 1) {
+      return this.searchSimilar(knowns[0], holes[0]);
     }
 
     // Step 2: Collect results from multiple sources
@@ -159,14 +164,26 @@ export class QueryEngine {
     }
     dbg('COMPOUND', `Found ${compoundMatches.length} compound solution matches`);
 
+    // SOURCE 6: Bundle/Induce pattern queries (find common properties)
+    const bundleMatches = searchBundlePattern(this.session, operatorName, knowns, holes);
+    for (const bm of bundleMatches) {
+      const exists = allResults.some(r =>
+        sameBindings(r.bindings, bm.bindings, holes)
+      );
+      if (!exists) {
+        allResults.push(bm);
+      }
+    }
+    dbg('BUNDLE', `Found ${bundleMatches.length} bundle pattern matches`);
+
     // Filter out type classes for modal operators (can, must, cannot)
     let filteredResults = filterTypeClasses(allResults, this.session, operatorName);
 
     // Also filter negated facts for rule_derived and hdc
     filteredResults = filterNegated(filteredResults, this.session, operatorName, knowns);
 
-    // Sort by: 1) method priority (direct > transitive > compound_csp > rule > hdc), 2) score
-    const methodPriority = { direct: 5, transitive: 4, compound_csp: 3, rule_derived: 2, hdc: 1 };
+    // Sort by: 1) method priority (direct > transitive > bundle > compound_csp > rule > hdc), 2) score
+    const methodPriority = { direct: 6, transitive: 5, bundle_common: 4, compound_csp: 3, rule_derived: 2, hdc: 1 };
     filteredResults.sort((a, b) => {
       const pa = methodPriority[a.method] || 0;
       const pb = methodPriority[b.method] || 0;
@@ -219,6 +236,7 @@ export class QueryEngine {
 
     const matches = [];
     for (const fact of this.session.kbFacts) {
+      this.session.reasoningStats.similarityChecks++;
       const sim = similarity(queryVec, fact.vector);
       if (sim > SIMILARITY_THRESHOLD) {
         matches.push({ similarity: sim, name: fact.name });
@@ -232,6 +250,118 @@ export class QueryEngine {
       matches,
       confidence: matches.length > 0 ? matches[0].similarity : 0,
       bindings: new Map()
+    };
+  }
+
+  /**
+   * Search for concepts similar to a given concept using property-based similarity
+   * Computes similarity based on shared properties (has, can, isA parent, etc.)
+   * @param {Object} known - The known concept {name, vector}
+   * @param {Object} hole - The hole to fill {name}
+   * @returns {QueryResult} Similar concepts ranked by property overlap
+   */
+  searchSimilar(known, hole) {
+    const knownName = known.name;
+    const componentKB = this.session?.componentKB;
+
+    // Collect properties of the known concept
+    const knownProps = new Set();
+    if (componentKB) {
+      // Get all facts about knownName
+      const facts = componentKB.findByArg0(knownName);
+      for (const f of facts) {
+        this.session.reasoningStats.kbScans++;
+        // Add "operator:arg1" as a property key
+        if (f.args?.[1]) {
+          knownProps.add(`${f.operator}:${f.args[1]}`);
+        }
+      }
+    } else {
+      // Fallback: scan KB directly
+      for (const fact of this.session.kbFacts) {
+        this.session.reasoningStats.kbScans++;
+        const meta = fact.metadata;
+        if (meta?.args?.[0] === knownName && meta?.args?.[1]) {
+          knownProps.add(`${meta.operator}:${meta.args[1]}`);
+        }
+      }
+    }
+
+    if (knownProps.size === 0) {
+      return { success: false, bindings: new Map(), allResults: [] };
+    }
+
+    // Find other concepts and count shared properties
+    const candidates = new Map(); // name -> {shared, total}
+    const processed = new Set([knownName]);
+
+    if (componentKB) {
+      for (const fact of componentKB.facts) {
+        this.session.reasoningStats.kbScans++;
+        const candidate = fact.args?.[0];
+        if (!candidate || processed.has(candidate)) continue;
+        if (['isA', 'has', 'can', 'likes', 'knows', 'owns', 'uses'].includes(candidate)) continue;
+
+        // Get this candidate's properties
+        if (!candidates.has(candidate)) {
+          const candFacts = componentKB.findByArg0(candidate);
+          const candProps = new Set();
+          for (const cf of candFacts) {
+            if (cf.args?.[1]) {
+              candProps.add(`${cf.operator}:${cf.args[1]}`);
+            }
+          }
+          // Count shared properties
+          let shared = 0;
+          for (const prop of candProps) {
+            if (knownProps.has(prop)) shared++;
+          }
+          if (candProps.size > 0) {
+            candidates.set(candidate, {
+              shared,
+              total: candProps.size,
+              similarity: shared / Math.max(knownProps.size, candProps.size)
+            });
+          }
+        }
+        processed.add(candidate);
+      }
+    }
+
+    // Sort by similarity (shared property ratio)
+    const results = [...candidates.entries()]
+      .filter(([_, data]) => data.shared > 0)
+      .sort((a, b) => b[1].similarity - a[1].similarity)
+      .slice(0, 10)
+      .map(([name, data]) => ({
+        name,
+        similarity: data.similarity,
+        shared: data.shared,
+        method: 'property_similarity'
+      }));
+
+    const allResults = results.map(r => ({
+      bindings: new Map([[hole.name, { answer: r.name, similarity: r.similarity, method: 'similar' }]]),
+      score: r.similarity,
+      method: 'similar'
+    }));
+
+    const bindings = new Map();
+    if (results.length > 0) {
+      bindings.set(hole.name, {
+        answer: results[0].name,
+        similarity: results[0].similarity,
+        alternatives: results.slice(1, 4).map(r => ({ value: r.name, similarity: r.similarity })),
+        method: 'similar'
+      });
+    }
+
+    return {
+      success: results.length > 0,
+      bindings,
+      confidence: results.length > 0 ? results[0].similarity : 0,
+      ambiguous: results.length > 1,
+      allResults
     };
   }
 

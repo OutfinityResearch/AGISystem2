@@ -785,7 +785,111 @@ LLM CHALLENGES:
 
 ---
 
-## 13.12 Summary
+## 13.12 Meta-Operator Result Handling
+
+### 13.12.1 Multi-Statement Query DSL
+
+When a query DSL contains multiple statements (e.g., pattern creation followed by query), the system handles them as follows:
+
+```
+MULTI-STATEMENT DSL EXAMPLE:
+
+@mammalPattern induce [Mammal1, Mammal2, Mammal3]
+@q3 has $mammalPattern ?property
+
+PROCESSING:
+1. Execute all statements except the last as "setup"
+   - @mammalPattern induce [...] creates the pattern and stores it
+2. Execute the last statement as the actual query
+   - @q3 has $mammalPattern ?property is the query
+3. DSL→NL decoding extracts the query line (the one with ? hole)
+   - Parses: "has $mammalPattern ?property"
+   - Generates text based on results
+```
+
+### 13.12.2 Bundle/Induce Pattern Query Results
+
+When querying using a bundled or induced pattern, the system finds properties common to all source entities:
+
+```
+BUNDLE PATTERN QUERY:
+
+KB Facts:
+  can Sparrow Fly
+  can Robin Fly
+  can Eagle Fly
+  @birdPattern bundle [Sparrow, Robin, Eagle]
+
+Query: @q can $birdPattern ?ability
+
+PROCESSING:
+1. searchBundlePattern() finds the pattern fact
+2. Extracts source entities: [Sparrow, Robin, Eagle]
+3. For each source, collects "can" properties
+4. Finds intersection (common properties): [Fly]
+5. Returns result with method: "bundle_common"
+
+RESULT:
+{
+  bindings: Map { "ability" → { answer: "Fly", similarity: 0.90, method: "bundle_common" } },
+  score: 0.90,
+  method: "bundle_common",
+  sources: ["Sparrow", "Robin", "Eagle"]
+}
+
+NL OUTPUT: "birdPattern can Fly."
+```
+
+### 13.12.3 Similar Operator Results
+
+The `similar` meta-operator uses property-based similarity to find related concepts:
+
+```
+SIMILAR QUERY: @q similar Car ?X
+
+PROCESSING:
+1. Collect properties of Car (has Wheels, has Engine, isA Vehicle)
+2. For each other concept, count shared properties
+3. Rank by property overlap ratio
+4. Return top matches
+
+RESULT:
+  - Truck: shares Wheels, Engine, Vehicle (0.75)
+  - Bicycle: shares Wheels, Vehicle (0.5)
+
+NL OUTPUT: "Car similars Truck. Car similars Bicycle."
+```
+
+### 13.12.4 Method Priority for Decoding
+
+Results from different methods are prioritized during DSL→NL decoding:
+
+| Priority | Method | Description |
+|----------|--------|-------------|
+| 6 | direct | Direct KB fact match |
+| 5 | transitive | Transitive chain inference |
+| 4 | bundle_common | Bundle/induce pattern intersection |
+| 3 | compound_csp | CSP solution results |
+| 2 | rule_derived | Rule-based inference |
+| 1 | hdc | HDC Master Equation unbinding |
+
+Higher priority methods are presented first in output text.
+
+### 13.12.5 Strategy-Dependent Thresholds
+
+Meta-operator scoring uses strategy-dependent thresholds from `REASONING_THRESHOLDS`:
+
+```javascript
+// In constants.mjs
+REASONING_THRESHOLDS['dense-binary'].BUNDLE_COMMON_SCORE = 0.90;
+REASONING_THRESHOLDS['sparse-polynomial'].BUNDLE_COMMON_SCORE = 0.90;
+```
+
+This ensures consistent behavior across different HDC strategies.
+
+---
+
+## 13.13 Summary
 
 | Component | Input | Output | Purpose |
 |-----------|-------|--------|---------|
@@ -811,3 +915,8 @@ The output text faithfully represents the decoded vector. The LLM may only impro
 ---
 
 *End of Chapter 13 - Decoding and Phrasing Engine*
+
+---
+
+**Document Version:** 1.1 (Updated December 2025)
+**Changes:** Added Section 13.12 for meta-operator result handling and multi-statement DSL processing.

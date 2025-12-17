@@ -6,6 +6,7 @@
  */
 
 import { similarity } from '../core/operations.mjs';
+import { getThresholds } from '../core/constants.mjs';
 
 // Debug logging
 const DEBUG = process.env.SYS2_DEBUG === 'true';
@@ -25,6 +26,7 @@ export function searchKBDirect(session, operatorName, knowns, holes) {
   const results = [];
 
   for (const fact of session.kbFacts) {
+    session.reasoningStats.kbScans++;
     const meta = fact.metadata;
     if (!meta || meta.operator !== operatorName) continue;
     if (!meta.args) continue;
@@ -74,6 +76,7 @@ export function searchKBDirect(session, operatorName, knowns, holes) {
  */
 export function isTypeClass(session, name) {
   for (const fact of session.kbFacts) {
+    session.reasoningStats.kbScans++;
     const meta = fact.metadata;
     if (meta?.operator === 'isA' && meta.args?.[1] === name) {
       return true;
@@ -91,6 +94,7 @@ export function isTypeClass(session, name) {
  */
 export function isFactNegated(session, operator, args) {
   for (const fact of session.kbFacts) {
+    session.reasoningStats.kbScans++;
     const meta = fact.metadata;
     if (meta?.operator !== 'Not') continue;
 
@@ -175,4 +179,103 @@ export function filterNegated(results, session, operatorName, knowns) {
     }
     return true;
   });
+}
+
+/**
+ * Search for common properties across bundle/induce pattern sources
+ * When querying with a bundled/induced pattern, find properties common to all sources
+ * @param {Session} session - Session with KB
+ * @param {string} operatorName - Query operator name (e.g., 'can', 'has')
+ * @param {Array} knowns - Known arguments (may include pattern references)
+ * @param {Array} holes - Holes to fill
+ * @returns {Array} Results with common properties
+ */
+export function searchBundlePattern(session, operatorName, knowns, holes) {
+  const results = [];
+  const strategy = session.hdcStrategy || 'dense-binary';
+  const thresholds = getThresholds(strategy);
+  const bundleScore = thresholds.BUNDLE_COMMON_SCORE;
+
+  // Check if any known is a bundle/induce pattern
+  for (const known of knowns) {
+    // Handle reference prefix ($mammalPattern -> mammalPattern)
+    const patternName = known.name?.startsWith('$') ? known.name.slice(1) : known.name;
+
+    // Look for bundle/induce pattern in KB
+    const patternFact = session.kbFacts.find(f =>
+      f.name === patternName &&
+      (f.metadata?.operator === 'bundlePattern' || f.metadata?.operator === 'inducePattern')
+    );
+
+    if (!patternFact) continue;
+
+    // induce stores 'sources', bundle stores 'items'
+    const sourceEntities = patternFact.metadata.sources || patternFact.metadata.items || [];
+    dbg('BUNDLE', `Found pattern: ${patternName}, sources:`, sourceEntities);
+
+    if (sourceEntities.length === 0) continue;
+
+    // For each source entity, collect properties for the given operator
+    const entityProperties = new Map(); // entity -> Set of property values
+
+    for (const entity of sourceEntities) {
+      const props = new Set();
+
+      for (const fact of session.kbFacts) {
+        session.reasoningStats.kbScans++;
+        const meta = fact.metadata;
+        if (!meta || meta.operator !== operatorName) continue;
+
+        // Check if this fact is about our entity (arg0 matches)
+        if (meta.args?.[0] === entity) {
+          const propValue = meta.args?.[1];
+          if (propValue) {
+            props.add(propValue);
+          }
+        }
+      }
+
+      entityProperties.set(entity, props);
+      dbg('BUNDLE', `Entity ${entity} has ${operatorName} properties:`, [...props]);
+    }
+
+    // Find intersection - properties common to ALL entities
+    let commonProps = null;
+    for (const [entity, props] of entityProperties) {
+      if (commonProps === null) {
+        commonProps = new Set(props);
+      } else {
+        // Intersection
+        commonProps = new Set([...commonProps].filter(p => props.has(p)));
+      }
+    }
+
+    if (!commonProps || commonProps.size === 0) {
+      dbg('BUNDLE', 'No common properties found');
+      continue;
+    }
+
+    dbg('BUNDLE', `Common properties:`, [...commonProps]);
+
+    // Create results for each common property
+    for (const prop of commonProps) {
+      const bindings = new Map();
+      for (const hole of holes) {
+        bindings.set(hole.name, {
+          answer: prop,
+          similarity: bundleScore,
+          method: 'bundle_common'
+        });
+      }
+
+      results.push({
+        bindings,
+        score: bundleScore,
+        method: 'bundle_common',
+        sources: sourceEntities
+      });
+    }
+  }
+
+  return results;
 }

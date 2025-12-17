@@ -32,3 +32,19 @@
 
 @equals:equals __ReflexiveRelation
 @sameAs:sameAs __ReflexiveRelation
+
+# ===== Family Relations =====
+# Previously hardcoded in tests, now formally defined
+
+@parent:parent __Relation
+@child:child __Relation
+@loves:loves __Relation
+@hates:hates __Relation
+@owns:owns __Relation
+
+# ===== Misc Relations =====
+# Used in tests and examples
+
+@likes:likes __Relation
+@trusts:trusts __Relation
+@conflictsWith:conflictsWith __SymmetricRelation

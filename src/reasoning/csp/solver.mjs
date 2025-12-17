@@ -194,6 +194,7 @@ export function solveWeddingSeating(session, options = {}) {
   // Get all conflicts from KB
   const conflicts = [];
   for (const fact of session.kbFacts) {
+    session.reasoningStats.kbScans++;
     const meta = fact.metadata;
     if (meta?.operator === 'conflictsWith' && meta.args?.length === 2) {
       const [p1, p2] = meta.args;

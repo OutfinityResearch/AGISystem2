@@ -14,6 +14,7 @@ import { similarity, bind } from '../../core/operations.mjs';
 import { withPosition } from '../../core/position.mjs';
 import { MAX_PROOF_DEPTH, PROOF_TIMEOUT_MS, MAX_REASONING_STEPS, getThresholds, getHolographicThresholds } from '../../core/constants.mjs';
 import { ProofEngine } from '../prove.mjs';
+import { TRANSITIVE_RELATIONS } from '../transitive.mjs';
 
 // Debug logging
 const DEBUG = process.env.SYS2_DEBUG === 'true';
@@ -78,6 +79,7 @@ export class HolographicProofEngine {
         dbg('HDC', `HDC proof succeeded: ${goal.toString?.() || ''}`);
         this.session.reasoningStats.hdcProofSuccesses =
           (this.session.reasoningStats.hdcProofSuccesses || 0) + 1;
+        hdcResult.reasoningSteps = this.reasoningSteps;
         return hdcResult;
       }
 
@@ -91,6 +93,8 @@ export class HolographicProofEngine {
         if (symbolicResult.valid) {
           symbolicResult.method = 'symbolic_fallback';
         }
+        // Include HDC reasoning steps + symbolic steps
+        symbolicResult.reasoningSteps = this.reasoningSteps + (symbolicResult.reasoningSteps || 0);
         return symbolicResult;
       }
 
@@ -100,7 +104,8 @@ export class HolographicProofEngine {
         goal: goal.toString?.() || '',
         steps: this.steps,
         confidence: 0,
-        proof: null
+        proof: null,
+        reasoningSteps: this.reasoningSteps
       };
 
     } catch (e) {
@@ -110,7 +115,8 @@ export class HolographicProofEngine {
         goal: goal.toString?.() || '',
         steps: this.steps,
         confidence: 0,
-        proof: null
+        proof: null,
+        reasoningSteps: this.reasoningSteps
       };
     }
   }
@@ -129,21 +135,37 @@ export class HolographicProofEngine {
     // Build goal vector
     const goalVec = this.session.executor.buildStatementVector(goal);
     if (!goalVec) {
-      return { valid: false, reason: 'Cannot build goal vector' };
+      return { valid: false, reason: 'Cannot build goal vector', goal: goalStr };
     }
 
     // Check if goal is explicitly negated first
     if (this.isGoalNegated(goal, goalVec)) {
-      return { valid: false, reason: 'Goal is negated' };
+      return { valid: false, reason: 'Goal is negated', goal: goalStr };
     }
 
     // Step 1: HDC direct KB similarity search
     const directMatch = this.hdcDirectSearch(goalVec, goalStr);
     if (directMatch.valid && directMatch.confidence >= this.thresholds.VERIFICATION) {
-      // Validate with symbolic
-      if (this.validateWithSymbolic(goal)) {
+      // Synonym matches are already validated through ComponentKB
+      if (directMatch.method === 'synonym_match') {
+        directMatch.goal = goalStr;
+        directMatch.steps = [{
+          operation: 'synonym_match',
+          fact: directMatch.matchedFact,
+          confidence: directMatch.confidence
+        }];
+        return directMatch;
+      }
+
+      // Validate non-synonym matches with symbolic
+      const symbolicProof = this.validateWithSymbolic(goal);
+      if (symbolicProof.valid) {
         directMatch.method = 'hdc_direct_validated';
-        directMatch.steps = [{ operation: 'hdc_direct', fact: goalStr, confidence: directMatch.confidence }];
+        directMatch.goal = goalStr;
+        // Use symbolic proof steps if available, otherwise just show the goal
+        directMatch.steps = (symbolicProof.steps && symbolicProof.steps.length > 0)
+          ? symbolicProof.steps
+          : [{ operation: 'hdc_direct', fact: goalStr, confidence: directMatch.confidence }];
         return directMatch;
       }
     }
@@ -153,6 +175,7 @@ export class HolographicProofEngine {
     if (this.isTransitiveRelation(opName)) {
       const transitiveResult = this.hdcTransitiveSearch(goal, goalVec);
       if (transitiveResult.valid) {
+        transitiveResult.goal = goalStr;
         return transitiveResult;
       }
     }
@@ -160,27 +183,59 @@ export class HolographicProofEngine {
     // Step 3: HDC rule matching
     const ruleResult = this.hdcRuleSearch(goal, goalVec);
     if (ruleResult.valid) {
+      ruleResult.goal = goalStr;
       return ruleResult;
     }
 
-    return { valid: false, reason: 'HDC proof not found' };
+    return { valid: false, reason: 'HDC proof not found', goal: goalStr };
   }
 
   /**
    * Direct HDC similarity search in KB
+   * Now with synonym-aware component matching
    * @private
    */
   hdcDirectSearch(goalVec, goalStr) {
     let bestSim = 0;
     let bestFact = null;
+    const componentKB = this.session.componentKB;
 
+    // First: try exact vector match in KB
     for (const fact of this.session.kbFacts) {
+      this.session.reasoningStats.kbScans++;
       if (!fact.vector) continue;
 
+      this.session.reasoningStats.similarityChecks++;
       const sim = similarity(goalVec, fact.vector);
       if (sim > bestSim) {
         bestSim = sim;
         bestFact = fact;
+      }
+    }
+
+    // Second: try component-based matching with synonyms
+    // Use synonyms unless we have a very high confidence match (>= 0.95)
+    const synonymThreshold = Math.max(this.thresholds.HDC_MATCH, 0.95);
+    if (bestSim < synonymThreshold && componentKB) {
+      const meta = this.extractGoalMetadata(goalStr);
+      if (meta?.operator && meta?.args?.length >= 1) {
+        // Look for synonym-expanded matches
+        const candidates = componentKB.findByOperatorAndArg0(meta.operator, meta.args[0]);
+        for (const fact of candidates) {
+          // Check if arg1 matches with synonyms
+          if (meta.args.length >= 2 && fact.args?.[1]) {
+            const synArgs = componentKB.expandSynonyms(meta.args[1]);
+            if (synArgs.has(fact.args[1])) {
+              dbg('SYNONYM', `Match via synonym: ${meta.args[1]} <-> ${fact.args[1]}`);
+              return {
+                valid: true,
+                confidence: 0.95, // High confidence for synonym match
+                matchedFact: `${fact.operator} ${fact.args.join(' ')}`,
+                method: 'synonym_match'
+              };
+            }
+          }
+        }
       }
     }
 
@@ -195,6 +250,27 @@ export class HolographicProofEngine {
     }
 
     return { valid: false, confidence: bestSim };
+  }
+
+  /**
+   * Extract metadata from goal string for component matching
+   * @private
+   */
+  extractGoalMetadata(goalStr) {
+    // Parse "operator arg0 arg1" format, skip @goal/@query prefixes
+    let parts = goalStr.split(/\s+/).filter(p => p.length > 0);
+
+    // Skip reference prefixes like @goal, @query, etc.
+    if (parts.length > 0 && parts[0].startsWith('@')) {
+      parts = parts.slice(1);
+    }
+
+    if (parts.length < 2) return null;
+
+    return {
+      operator: parts[0],
+      args: parts.slice(1)
+    };
   }
 
   /**
@@ -230,6 +306,7 @@ export class HolographicProofEngine {
           method: 'hdc_transitive_validated',
           steps: chain.map((step, i) => ({
             operation: 'transitive_step',
+            fact: `${opName} ${step.from} ${step.to}`,
             from: step.from,
             to: step.to,
             step: i + 1
@@ -278,31 +355,62 @@ export class HolographicProofEngine {
 
   /**
    * Find HDC-similar edges for a relation from a node
+   * Uses ComponentKB for efficient matching with synonym support
    * @private
    */
   findHDCEdges(relation, from) {
     const edges = [];
+    const componentKB = this.session.componentKB;
+
+    // Use ComponentKB for efficient component-based search
+    if (componentKB) {
+      // Get all facts matching this operator and arg0 (with synonyms)
+      const candidates = componentKB.findByOperatorAndArg0(relation, from);
+
+      for (const fact of candidates) {
+        const toArg = fact.args?.[1] || fact.metadata?.args?.[1];
+        if (toArg) {
+          // Compute similarity for ranking
+          const patternGoal = this.buildStepGoal(relation, from, toArg);
+          const patternVec = this.session.executor?.buildStatementVector?.(patternGoal);
+
+          if (patternVec && fact.vector) {
+            edges.push({
+              to: toArg,
+              similarity: similarity(patternVec, fact.vector)
+            });
+          } else {
+            // Direct metadata match - high confidence
+            edges.push({ to: toArg, similarity: 1.0 });
+          }
+        }
+      }
+      return edges;
+    }
+
+    // Fallback to linear scan if ComponentKB not available
     const fromVec = this.session.resolve({ name: from, type: 'Identifier' });
     const relVec = this.session.resolve({ name: relation, type: 'Identifier' });
 
     if (!fromVec || !relVec) return edges;
 
-    // Search KB for facts matching pattern: relation from ?
     for (const fact of this.session.kbFacts) {
+      this.session.reasoningStats.kbScans++;
       const meta = fact.metadata;
       if (!meta || meta.operator !== relation) continue;
       if (meta.args?.[0] !== from) continue;
 
       const toArg = meta.args?.[1];
       if (toArg) {
-        // Compute similarity for ranking
         const toVec = this.session.resolve({ name: toArg, type: 'Identifier' });
         if (toVec) {
-          const factVec = fact.vector;
-          if (factVec) {
+          const patternGoal = this.buildStepGoal(relation, from, toArg);
+          const patternVec = this.session.executor?.buildStatementVector?.(patternGoal);
+
+          if (patternVec && fact.vector) {
             edges.push({
               to: toArg,
-              similarity: similarity(factVec, fact.vector)
+              similarity: similarity(patternVec, fact.vector)
             });
           } else {
             edges.push({ to: toArg, similarity: 1.0 });
@@ -326,6 +434,7 @@ export class HolographicProofEngine {
       const conclusionVec = this.buildConclusionVector(rule);
       if (!conclusionVec) continue;
 
+      this.session.reasoningStats.similarityChecks++;
       const sim = similarity(goalVec, conclusionVec);
       if (sim < this.thresholds.CONCLUSION_MATCH) continue;
 
@@ -390,7 +499,9 @@ export class HolographicProofEngine {
       // Search KB for matching condition
       let bestSim = 0;
       for (const fact of this.session.kbFacts) {
+        this.session.reasoningStats.kbScans++;
         if (!fact.vector) continue;
+        this.session.reasoningStats.similarityChecks++;
         const sim = similarity(condVec, fact.vector);
         if (sim > bestSim) bestSim = sim;
       }
@@ -412,18 +523,19 @@ export class HolographicProofEngine {
   /**
    * Validate HDC result with symbolic proof
    * @private
+   * @returns {Object|boolean} Full proof result if validation required, true if not required
    */
   validateWithSymbolic(goal) {
     if (!this.config.VALIDATION_REQUIRED) {
-      return true;
+      return { valid: true, steps: [] };
     }
 
     try {
       const result = this.symbolicEngine.prove(goal);
-      return result.valid;
+      return result; // Return full result with steps
     } catch (e) {
       dbg('VALIDATE', `Symbolic validation error: ${e.message}`);
-      return false;
+      return { valid: false, steps: [] };
     }
   }
 
@@ -501,8 +613,8 @@ export class HolographicProofEngine {
    * @private
    */
   isTransitiveRelation(name) {
-    const transitiveRelations = ['isA', 'partOf', 'locatedIn', 'subTypeOf', 'ancestorOf'];
-    return transitiveRelations.includes(name);
+    // Use shared TRANSITIVE_RELATIONS from transitive.mjs
+    return TRANSITIVE_RELATIONS.has(name);
   }
 
   /**
@@ -520,6 +632,7 @@ export class HolographicProofEngine {
    */
   isGoalNegated(goal, goalVec) {
     for (const fact of this.session.kbFacts) {
+      this.session.reasoningStats.kbScans++;
       const meta = fact.metadata;
       if (!meta || meta.operator !== 'Not') continue;
 
@@ -530,6 +643,7 @@ export class HolographicProofEngine {
       const negatedVec = this.session.scope.get(refName);
 
       if (negatedVec) {
+        this.session.reasoningStats.similarityChecks++;
         const sim = similarity(goalVec, negatedVec);
         if (sim > this.thresholds.RULE_MATCH) {
           return true;

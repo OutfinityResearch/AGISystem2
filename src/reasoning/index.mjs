@@ -32,13 +32,31 @@ export { HolographicCSPSolver, buildConstraintSatisfaction, scoreCandidate, orde
 export { CSPSolver, solveWeddingSeating };
 
 /**
+ * Check if session or global config uses holographic priority
+ * Session option takes precedence over environment variable
+ * @param {Session} session - Session instance (optional)
+ * @returns {boolean}
+ */
+function sessionIsHolographic(session) {
+  // Session option takes precedence
+  if (session?.reasoningPriority === 'holographicPriority') {
+    return true;
+  }
+  if (session?.reasoningPriority === 'symbolicPriority') {
+    return false;
+  }
+  // Fall back to global (env var) setting
+  return isHolographicPriority();
+}
+
+/**
  * Create query engine based on reasoning priority
  * Uses static imports already loaded above (ESM compatible)
  * @param {Session} session - Session instance
  * @returns {QueryEngine|HolographicQueryEngine}
  */
 export function createQueryEngine(session) {
-  if (isHolographicPriority()) {
+  if (sessionIsHolographic(session)) {
     return new HolographicQueryEngine(session);
   }
   return new QueryEngine(session);
@@ -52,7 +70,7 @@ export function createQueryEngine(session) {
  * @returns {ProofEngine|HolographicProofEngine}
  */
 export function createProofEngine(session, options = {}) {
-  if (isHolographicPriority()) {
+  if (sessionIsHolographic(session)) {
     return new HolographicProofEngine(session, options);
   }
   return new ProofEngine(session, options);
@@ -66,7 +84,7 @@ export function createProofEngine(session, options = {}) {
  * @returns {CSPSolver|HolographicCSPSolver}
  */
 export function createCSPSolver(session, options = {}) {
-  if (isHolographicPriority()) {
+  if (sessionIsHolographic(session)) {
     return new HolographicCSPSolver(session, options);
   }
   return new CSPSolver(session, options);

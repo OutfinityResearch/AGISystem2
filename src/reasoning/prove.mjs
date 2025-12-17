@@ -19,6 +19,7 @@
 
 import { MAX_PROOF_DEPTH, PROOF_TIMEOUT_MS, MAX_REASONING_STEPS, getThresholds } from '../core/constants.mjs';
 import { TransitiveReasoner } from './transitive.mjs';
+import { PropertyInheritanceReasoner } from './property-inheritance.mjs';
 import { UnificationEngine } from './unification.mjs';
 import { ConditionProver } from './conditions.mjs';
 import { KBMatcher } from './kb-matching.mjs';
@@ -53,6 +54,7 @@ export class ProofEngine {
 
     // Initialize reasoning components
     this.transitive = new TransitiveReasoner(this);
+    this.propertyInheritance = new PropertyInheritanceReasoner(this);
     this.unification = new UnificationEngine(this);
     this.conditions = new ConditionProver(this);
     this.kbMatcher = new KBMatcher(this);
@@ -87,6 +89,9 @@ export class ProofEngine {
       // Add proof field for API compatibility
       result.proof = result.valid ? result.steps : null;
 
+      // Add total reasoning steps (includes all backtracking attempts)
+      result.reasoningSteps = this.reasoningSteps;
+
       return result;
     } catch (e) {
       return {
@@ -95,7 +100,8 @@ export class ProofEngine {
         goal: goal.toString?.() || '',
         steps: this.steps,
         confidence: 0,
-        proof: null
+        proof: null,
+        reasoningSteps: this.reasoningSteps
       };
     }
   }
@@ -178,10 +184,22 @@ export class ProofEngine {
       return directResult;
     }
 
+    // Strategy 1.5: Synonym-based matching
+    const synonymResult = this.trySynonymMatch(goal, depth);
+    if (synonymResult.valid) {
+      return synonymResult;
+    }
+
     // Strategy 2: Transitive reasoning
     const transitiveResult = this.transitive.tryTransitiveChain(goal, depth);
     if (transitiveResult.valid) {
       return transitiveResult;
+    }
+
+    // Strategy 2.5: Property inheritance (can Bird Fly + isA Tweety Bird => can Tweety Fly)
+    const inheritanceResult = this.propertyInheritance.tryPropertyInheritance(goal, depth);
+    if (inheritanceResult.valid) {
+      return inheritanceResult;
     }
 
     // Strategy 3: Rule matching (backward chaining)
@@ -206,6 +224,68 @@ export class ProofEngine {
     }
 
     return { valid: false, reason: 'No proof found' };
+  }
+
+  /**
+   * Try to prove goal using synonym expansion
+   * If goal is "isA X Y" and Y has synonym Z, try "isA X Z"
+   * @param {Object} goal - Goal statement
+   * @param {number} depth - Current proof depth
+   * @returns {Object} Proof result
+   */
+  trySynonymMatch(goal, depth) {
+    const componentKB = this.session?.componentKB;
+    if (!componentKB) {
+      return { valid: false };
+    }
+
+    // Extract operator and args
+    const op = goal.operator?.name || goal.operator?.value;
+    const args = goal.args?.map(a => a.name || a.value) || [];
+
+    if (args.length < 2) {
+      return { valid: false };
+    }
+
+    // Try synonym expansion on arg1 (the second argument)
+    // E.g., for "isA Rex Canine", check if Canine has synonym Dog
+    const arg0 = args[0];
+    const arg1 = args[1];
+    const synonyms = componentKB.expandSynonyms(arg1);
+
+    // Remove the original arg1 to avoid infinite recursion
+    synonyms.delete(arg1);
+
+    if (synonyms.size === 0) {
+      return { valid: false };
+    }
+
+    // Try to find a KB fact matching "op arg0 synonym"
+    for (const synonym of synonyms) {
+      this.session.reasoningStats.kbScans++;
+      const candidates = componentKB.findByOperatorAndArg0(op, arg0);
+
+      for (const fact of candidates) {
+        this.session.reasoningStats.kbScans++;
+        if (fact.args?.[1] === synonym) {
+          // Found: "op arg0 synonym" proves "op arg0 arg1" via synonym
+          return {
+            valid: true,
+            confidence: 0.95,
+            method: 'synonym_match',
+            matchedFact: `${fact.operator} ${fact.args.join(' ')}`,
+            steps: [{
+              operation: 'synonym_match',
+              fact: `${fact.operator} ${fact.args.join(' ')}`,
+              synonymUsed: `${arg1} <-> ${synonym}`,
+              confidence: 0.95
+            }]
+          };
+        }
+      }
+    }
+
+    return { valid: false };
   }
 
   // ============================================================
@@ -294,12 +374,24 @@ export class ProofEngine {
    * @returns {string} Hash string
    */
   hashVector(vec) {
-    if (!vec?.data) return 'invalid:' + Math.random().toString(36);
-    const parts = [];
-    for (let i = 0; i < Math.min(4, vec.words || 0); i++) {
-      parts.push(vec.data[i]?.toString(16) || '0');
+    // Support both dense-binary (data) and sparse-polynomial (exponents) vectors
+    if (!vec) return 'invalid:' + Math.random().toString(36);
+
+    // Dense-binary: use first 4 words
+    if (vec.data) {
+      const parts = [];
+      for (let i = 0; i < Math.min(4, vec.words || 0); i++) {
+        parts.push(vec.data[i]?.toString(16) || '0');
+      }
+      return parts.join(':');
     }
-    return parts.join(':');
+
+    // Sparse-polynomial: use exponents
+    if (vec.exponents) {
+      return [...vec.exponents].slice(0, 4).map(e => e.toString(16)).join(':');
+    }
+
+    return 'invalid:' + Math.random().toString(36);
   }
 
   /**
@@ -329,6 +421,7 @@ export class ProofEngine {
 
         if (negatedVec) {
           // Compare vectors using similarity
+          this.session.reasoningStats.similarityChecks++;
           const sim = this.session.similarity(goalVec, negatedVec);
           if (sim > this.thresholds.RULE_MATCH) {
             return true;

@@ -375,6 +375,75 @@ function similarity(a, b) {
 }
 
 /**
+ * Calculate containment similarity - what fraction of 'candidate' is in 'container'
+ *
+ * This is more appropriate than Jaccard for sparse-polynomial unbind operations
+ * where the unbind result contains the answer plus noise.
+ *
+ * containment(A, B) = |A ∩ B| / |A|
+ *
+ * @param {SPVector} candidate - The vector we're looking for (e.g., expected answer)
+ * @param {SPVector} container - The larger vector to search in (e.g., unbind result)
+ * @returns {number} Containment score in range [0, 1]
+ */
+function containment(candidate, container) {
+  if (candidate.size() === 0) return 1.0;
+
+  let found = 0;
+  for (const exp of candidate.exponents) {
+    if (container.exponents.has(exp)) found++;
+  }
+
+  return found / candidate.size();
+}
+
+/**
+ * Bind without sparsification - keeps all k² exponents
+ *
+ * Use this for intermediate computations where preserving all information
+ * is important. The result can be sparsified later with sparsifyTo().
+ *
+ * @param {SPVector} a
+ * @param {SPVector} b
+ * @returns {SPVector} Result with up to k² exponents
+ */
+function bindFull(a, b) {
+  if (!isSPVector(a) || !isSPVector(b)) {
+    throw new Error(`SPHDC bindFull requires SPVector inputs`);
+  }
+
+  const rawResults = new Set();
+
+  for (const expA of a.exponents) {
+    for (const expB of b.exponents) {
+      rawResults.add(expA ^ expB);
+    }
+  }
+
+  // Return full result without sparsification
+  // maxSize is set to actual size to indicate this is a "full" vector
+  return new SPVector(rawResults, rawResults.size);
+}
+
+/**
+ * Sparsify a vector to target size using Min-Hash
+ *
+ * Use after bindFull operations when you need to reduce memory usage
+ * or prepare for storage.
+ *
+ * @param {SPVector} vec - Vector to sparsify
+ * @param {number} targetK - Target number of exponents
+ * @returns {SPVector} Sparsified vector
+ */
+function sparsifyTo(vec, targetK) {
+  if (vec.size() <= targetK) {
+    return new SPVector(new Set(vec.exponents), targetK);
+  }
+
+  return sparsify(vec.exponents, targetK);
+}
+
+/**
  * Bundle multiple SP vectors (set union with sparsification)
  * @param {SPVector[]} vectors
  * @param {SPVector} [tieBreaker]
@@ -681,6 +750,7 @@ export const sparsePolynomialStrategy = {
 
   // Core operations
   bind,
+  bindFull,  // Bind without sparsification - preserves all k² exponents
   bindAll: (...vectors) => {
     if (vectors.length === 0) throw new Error('bindAll requires at least one vector');
     if (vectors.length === 1) return clone(vectors[0]);
@@ -692,7 +762,10 @@ export const sparsePolynomialStrategy = {
   },
   bundle,
   similarity,
+  containment,  // Containment similarity - better for unbind matching
   unbind: (composite, component) => bind(composite, component), // XOR is self-inverse
+  unbindFull: (composite, component) => bindFull(composite, component), // Unbind without sparsification
+  sparsifyTo,  // Explicit sparsification when needed
 
   // Utility functions
   clone,

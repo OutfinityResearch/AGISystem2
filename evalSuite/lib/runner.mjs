@@ -477,7 +477,12 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
        if (result.bindings && result.bindings.size > 0) {
            const texts = [];
            const query = testCase.query_dsl || testCase.input_dsl || '';
-           const parts = query.trim().split(/\s+/).filter(p => !p.startsWith('@'));
+
+           // For multi-statement DSL, find the line that contains a query (has ? hole)
+           const lines = query.trim().split('\n').map(l => l.trim()).filter(l => l);
+           const queryLine = lines.find(l => l.includes('?')) || lines[lines.length - 1];
+
+           const parts = queryLine.split(/\s+/).filter(p => !p.startsWith('@'));
            const op = parts[0];
            dbg('DSL->NL', 'Query op:', op, 'parts:', parts);
 
@@ -491,8 +496,8 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
              'seatedAt', 'conflictsWith', 'locatedIn'
            ]);
 
-           // Filter for reliable matches (direct, transitive, rule-derived, or compound_csp)
-           const reliableMethods = new Set(['direct', 'transitive', 'rule', 'rule_derived', 'compound_csp']);
+           // Filter for reliable matches (direct, transitive, bundle_common, rule-derived, compound_csp, hdc_validated, and symbolic_supplement)
+           const reliableMethods = new Set(['direct', 'transitive', 'bundle_common', 'rule', 'rule_derived', 'compound_csp', 'hdc_validated', 'hdc_transitive_validated', 'hdc_direct_validated', 'hdc_rule_validated', 'symbolic_supplement', 'symbolic_fallback']);
            const directMatches = allResults.filter(r => {
              if (!r.bindings || !reliableMethods.has(r.method)) return false;
              const hasBindings = r.bindings instanceof Map ?
@@ -674,14 +679,18 @@ export async function runSuite(suite, options = {}) {
   const reasoningPriority = options.reasoningPriority || process.env.REASONING_PRIORITY || 'symbolicPriority';
   process.env.REASONING_PRIORITY = reasoningPriority;
 
-  // Use appropriate geometry for each strategy
-  // SPHDC uses k=4 exponents - good balance of speed and safety margin
-  const geometry = strategyId === 'sparse-polynomial' ? 4 : 2048;
+  // Use geometry from options or defaults
+  // Dense-binary: vector dimension (default 2048)
+  // Sparse-polynomial: exponent count k (default 4)
+  const defaultGeometry = strategyId === 'sparse-polynomial' ? 4 : 2048;
+  const geometry = options.geometry || defaultGeometry;
   const session = new Session({
     geometry,
     hdcStrategy: strategyId,
     reasoningPriority
   });
+
+  dbg('CONFIG', `Strategy: ${strategyId}, Geometry: ${geometry}, Priority: ${reasoningPriority}`);
 
   // 1. Load Core Theories
   loadCoreTheories(session);
@@ -737,12 +746,14 @@ export async function runSuite(suite, options = {}) {
       reasoningStats,
       results, // Include results for detailed reporting
       strategyId, // Include which strategy was used
+      geometry, // Include geometry used
       durationMs: suiteDurationMs // Time to run suite
     },
     cases: suite.cases, // Include cases for detailed reporting
     name: suite.name,
     suiteName: suite.suiteName,
     strategyId, // Include strategy at suite level too
+    geometry, // Include geometry at suite level too
     durationMs: suiteDurationMs
   };
 }

@@ -32,7 +32,8 @@ export class KBMatcher {
    * @returns {Object} Match result with confidence
    */
   tryDirectMatch(goalVec, goalStr) {
-    if (!goalVec?.data) {
+    // Support both dense-binary (data) and sparse-polynomial (exponents) vectors
+    if (!goalVec || (!goalVec.data && !goalVec.exponents)) {
       return { valid: false, confidence: 0 };
     }
 

@@ -355,7 +355,8 @@ export class ConditionProver {
    * Prove simple condition vector
    */
   proveSimpleCondition(conditionVec, depth) {
-    if (!conditionVec?.data) {
+    // Support both dense-binary (data) and sparse-polynomial (exponents) vectors
+    if (!conditionVec || (!conditionVec.data && !conditionVec.exponents)) {
       return { valid: false, reason: 'Invalid condition' };
     }
 
@@ -544,7 +545,8 @@ export class ConditionProver {
     if (part.type === 'leaf' && part.vector) {
       return this.proveSimpleCondition(part.vector, depth);
     }
-    if (part.data) {
+    // Support both dense-binary (data) and sparse-polynomial (exponents) vectors
+    if (part.data || part.exponents) {
       return this.proveSimpleCondition(part, depth);
     }
     return { valid: false, reason: 'Invalid part structure' };

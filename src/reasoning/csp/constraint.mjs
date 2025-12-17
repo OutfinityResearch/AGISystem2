@@ -74,6 +74,7 @@ export class RelationalConstraint extends Constraint {
 
   checkInKB(args) {
     for (const fact of this.session.kbFacts) {
+      this.session.reasoningStats.kbScans++;
       const meta = fact.metadata;
       if (!meta || meta.operator !== this.relation) continue;
       if (!meta.args || meta.args.length !== args.length) continue;
@@ -249,6 +250,7 @@ export class NoConflictConstraint extends Constraint {
 
   checkConflict(p1, p2) {
     for (const fact of this.session.kbFacts) {
+      this.session.reasoningStats.kbScans++;
       const meta = fact.metadata;
       if (meta?.operator === 'conflictsWith') {
         if ((meta.args[0] === p1 && meta.args[1] === p2) ||

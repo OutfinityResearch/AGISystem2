@@ -63,7 +63,10 @@ export const REASONING_THRESHOLDS = {
     ANALOGY_DISCOUNT: 0.7,
     ABDUCTION_SCORE: 0.7,
     STRONG_MATCH: 0.55,
-    VERY_STRONG_MATCH: 0.7
+    VERY_STRONG_MATCH: 0.7,
+
+    // Bundle/Induce meta-operators
+    BUNDLE_COMMON_SCORE: 0.90
   },
 
   'sparse-polynomial': {
@@ -95,7 +98,10 @@ export const REASONING_THRESHOLDS = {
     ANALOGY_DISCOUNT: 0.7,
     ABDUCTION_SCORE: 0.7,
     STRONG_MATCH: 0.03,
-    VERY_STRONG_MATCH: 0.05
+    VERY_STRONG_MATCH: 0.05,
+
+    // Bundle/Induce meta-operators
+    BUNDLE_COMMON_SCORE: 0.90
   }
 };
 
