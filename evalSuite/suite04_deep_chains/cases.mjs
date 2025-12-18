@@ -125,7 +125,23 @@ export const steps = [
     action: 'query',
     input_nl: 'What is Paris?',
     input_dsl: '@q isA Paris ?what',
-    expected_nl: 'Paris is a City.'
+    expected_nl: 'Answer: City. Proof: Paris isA City. City isA Country. Country isA Continent. Continent isA Planet. Planet isA SolarSystem. SolarSystem isA Arm. Arm isA Galaxy. Galaxy isA Cluster. Cluster isA Supercluster. Supercluster isA Universe.'
+  },
+
+  // === QUERY: What galaxy-level container holds Paris? (deep proof expected) ===
+  {
+    action: 'query',
+    input_nl: 'Where is Paris along the chain up to Galaxy?',
+    input_dsl: '@q isA Paris Galaxy',
+    expected_nl: 'Answer: Galaxy. Proof: Paris isA City. City isA Country. Country isA Continent. Continent isA Planet. Planet isA SolarSystem. SolarSystem isA Arm. Arm isA Galaxy.'
+  },
+
+  // === QUERY: What causes Conflict in this chain? (causal proof) ===
+  {
+    action: 'query',
+    input_nl: 'List the causal path from Pollution to Conflict.',
+    input_dsl: '@q causes Pollution Conflict',
+    expected_nl: 'Answer: Pollution causes Conflict. Proof: Pollution causes ClimateChange. ClimateChange causes Drought. Drought causes CropFailure. CropFailure causes Famine. Famine causes Migration. Migration causes Conflict.'
   },
 
   // === NEGATIVE: Reverse temporal order ===

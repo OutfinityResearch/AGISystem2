@@ -254,7 +254,23 @@ export const steps = [
     action: 'query',
     input_nl: 'What can Rex do?',
     input_dsl: '@q can Rex ?ability',
-    expected_nl: 'Rex can Bark. Rex can Hunt.'
+    expected_nl: 'Answer: Bark. Hunt. Proof: Rex isA GermanShepherd -> Shepherd -> WorkingDog -> Dog -> Canine -> Carnivore. Dog can Bark. Carnivore can Hunt. Both inherited down to Rex.'
+  },
+
+  // === QUERY: What does Tweety inherit? (expect Fly and Feathers) ===
+  {
+    action: 'query',
+    input_nl: 'What can Tweety do or have from birds?',
+    input_dsl: '@q can Tweety ?ability',
+    expected_nl: 'Answer: Fly. Proof: Tweety isA HouseSparrow -> Sparrow -> Songbird -> Bird. Bird can Fly inherited.'
+  },
+
+  // === QUERY: What properties does Whiskers inherit deeply? ===
+  {
+    action: 'query',
+    input_nl: 'List inherited likes for Whiskers.',
+    input_dsl: '@q likes Whiskers ?thing',
+    expected_nl: 'Answer: Fish. Proof: Whiskers isA PersianCat -> DomesticCat -> Cat. Cat likes Fish inherited.'
   }
 ];
 

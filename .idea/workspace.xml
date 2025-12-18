@@ -5,35 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment=" implemented a new staregy (metric-afine), wip to improve the suite to show proofs everywhere and have deeper reasoning examples">
-      <change afterPath="$PROJECT_DIR$/tests/unit/hdc/facade-isVector.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/codex_review_improvements_report.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evalSuite/suite14_meta_queries/cases.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evalSuite/suite15_reasoning_macros/cases.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evalSuite/suite16_macro_aggregation/cases.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evalSuite/suite16_macro_aggregation/macros.sys2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evalSuite/suite17_macro_composition/cases.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evalSuite/suite17_macro_composition/macros.sys2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evalSuite/suite18_set_theory/cases.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evalSuite/suite19_biology/cases.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evalSuite/suite20_predicate_logic/cases.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evalSuite/suite21_goat_cabbage_plus/cases.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/lib/reporter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/lib/reporter.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/run.js" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/run.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite01_foundations/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite01_foundations/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite02_hierarchies/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite02_hierarchies/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite03_rules/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite03_rules/cases.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evalSuite/suite04_deep_chains/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite04_deep_chains/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite05_negation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite05_negation/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite06_compound_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite06_compound_logic/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite07_temporal/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite07_temporal/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite08_modal/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite08_modal/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite09_composition/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite09_composition/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite10_integration/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite10_integration/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite12_fuzzy_matching/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite12_fuzzy_matching/cases.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evalSuite/suite13_property_inheritance/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite13_property_inheritance/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suitesHealthCheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suitesHealthCheck.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/decoding/phrasing.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/decoding/phrasing.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hdc/facade.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/facade.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/output/text-generator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/text-generator.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/conditions.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/conditions.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/property-inheritance.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/property-inheritance.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/prove.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-rules.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-rules.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/vocabulary.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/vocabulary.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/util/ascii-stamp.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/util/ascii-stamp.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,7 +95,7 @@
       <workItem from="1765783559936" duration="115000" />
       <workItem from="1765869847094" duration="24419000" />
       <workItem from="1765956576045" duration="2273000" />
-      <workItem from="1766043755552" duration="2150000" />
+      <workItem from="1766043755552" duration="5186000" />
     </task>
     <task id="LOCAL-00001" summary="1st public version of AGISystem2">
       <option name="closed" value="true" />
@@ -448,7 +433,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766056739989</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary=" implemented a new staregy (metric-afine), wip to improve the suite to show proofs everywhere and have deeper reasoning examples">
+      <option name="closed" value="true" />
+      <created>1766056838662</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1766056838662</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
