@@ -150,7 +150,8 @@ export const steps = [
     action: 'query',
     input_nl: 'Who can pay?',
     input_dsl: '@q can ?who Pay',
-    expected_nl: 'Alice can Pay. Bob can Pay. Eve can Pay.'
+    expected_nl: 'Alice can Pay. Bob can Pay. Eve can Pay.',
+      // NOTE: Different configs produce different outputs - some include "Cash can Pay" (bug), some have no Proof
   },
 
   // === NEGATIVE: Deep search failure (5+ steps) ===

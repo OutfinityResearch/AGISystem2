@@ -18,6 +18,7 @@ import { AbductionEngine } from '../reasoning/abduction.mjs';
 import { InductionEngine } from '../reasoning/induction.mjs';
 import { createQueryEngine, createProofEngine, isHolographicPriority, getReasoningPriority } from '../reasoning/index.mjs';
 import { textGenerator } from '../output/text-generator.mjs';
+import { format as resultFormatterFormat } from '../output/result-formatter.mjs';
 import { findAll } from '../reasoning/find-all.mjs';
 import { ComponentKB } from '../reasoning/component-kb.mjs';
 
@@ -161,8 +162,8 @@ export class Session {
     }
 
     for (const stmt of ast.statements) {
-      const operatorName = this.extractOperatorName(stmt);
-      if (operatorName === 'Implies' && stmt.args.length >= 2) {
+      const operatorName = (this.extractOperatorName(stmt) || '').toLowerCase();
+      if (operatorName === 'implies' && stmt.args.length >= 2) {
         const condVec = this.executor.resolveExpression(stmt.args[0]);
         const concVec = this.executor.resolveExpression(stmt.args[1]);
         const conditionParts = this.extractCompoundCondition(stmt.args[0], stmtMap);
@@ -558,6 +559,16 @@ export class Session {
    */
   elaborate(proof) {
     return textGenerator.elaborate(proof);
+  }
+
+  /**
+   * Format query or prove result to natural language
+   * @param {Object} result - Result from query() or prove()
+   * @param {string} type - 'query' or 'prove'
+   * @returns {string} Natural language text
+   */
+  formatResult(result, type = 'query') {
+    return resultFormatterFormat(result, type);
   }
 
   /**

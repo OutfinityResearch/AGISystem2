@@ -8,8 +8,6 @@
 import { Vector } from '../core/vector.mjs';
 import { bind, bindAll, bundle, similarity } from '../core/operations.mjs';
 import { withPosition } from '../core/position.mjs';
-import { CSPSolver } from '../reasoning/csp/solver.mjs';
-import { findAllOfType } from '../reasoning/find-all.mjs';
 import {
   Statement,
   Identifier,
@@ -24,6 +22,10 @@ import {
 import { parse } from '../parser/parser.mjs';
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
+
+// Import extracted modules
+import { executeSolveBlock as executeSolveBlockImpl, findConflictPairs as findConflictPairsImpl } from './executor-solve.mjs';
+import { executeInduce as executeInduceImpl, executeBundle as executeBundleImpl } from './executor-meta-ops.mjs';
 
 export class ExecutionError extends Error {
   constructor(message, node) {
@@ -92,14 +94,25 @@ export class Executor {
     }
 
     // Store the macro definition
-    this.session.macros.set(macro.name, {
+    const macroDef = {
       name: macro.name,
       persistName: macro.persistName,
       params: macro.params,
       body: macro.body,
       returnExpr: macro.returnExpr,
       line: macro.line
-    });
+    };
+
+    // Primary key: declared name (e.g., @MacroName)
+    this.session.macros.set(macro.name, macroDef);
+    // Alias key: exported operator name (persistName) so that `operator args`
+    // invokes the macro per DS02 semantics (@MacroName:operator macro ...).
+    if (macro.persistName && macro.persistName !== macro.name) {
+      // Only set alias if not already defined to avoid accidental overwrite
+      if (!this.session.macros.has(macro.persistName)) {
+        this.session.macros.set(macro.persistName, macroDef);
+      }
+    }
 
     return {
       type: 'macro_definition',
@@ -564,332 +577,34 @@ export class Executor {
 
   /**
    * Execute solve block - runs CSP solver
+   * Delegates to executor-solve.mjs
    */
   executeSolveBlock(stmt) {
-    const solver = new CSPSolver(this.session, { timeout: 5000 });
-
-    // Process declarations to configure solver
-    let variableType = null;
-    let domainType = null;
-    const constraints = [];
-
-    for (const decl of stmt.declarations) {
-      if (decl.kind === 'from') {
-        // Domain declaration: guests from Guest, tables from Table
-        if (decl.varName === 'guests') {
-          variableType = decl.source;
-        } else if (decl.varName === 'tables') {
-          domainType = decl.source;
-        }
-      } else if (decl.kind === 'noConflict') {
-        // Constraint: noConflict conflictsWith
-        constraints.push({ type: 'noConflict', relation: decl.source });
-      } else if (decl.kind === 'allDifferent') {
-        constraints.push({ type: 'allDifferent', relation: decl.source });
-      }
-    }
-
-    // Get entities from KB
-    const variables = findAllOfType(this.session, variableType);
-    const domain = findAllOfType(this.session, domainType);
-
-    if (variables.length === 0) {
-      return {
-        type: 'solve',
-        destination: stmt.destination,
-        success: false,
-        error: `No ${variableType} entities found`,
-        solutionCount: 0,
-        solutions: []
-      };
-    }
-
-    if (domain.length === 0) {
-      return {
-        type: 'solve',
-        destination: stmt.destination,
-        success: false,
-        error: `No ${domainType} entities found`,
-        solutionCount: 0,
-        solutions: []
-      };
-    }
-
-    // Add variables with domain
-    for (const v of variables) {
-      solver.addVariable(v, domain);
-    }
-
-    // Add constraints
-    for (const c of constraints) {
-      if (c.type === 'noConflict') {
-        // Find all conflict pairs from KB
-        const conflicts = this.findConflictPairs(c.relation);
-        for (const [p1, p2] of conflicts) {
-          if (variables.includes(p1) && variables.includes(p2)) {
-            solver.addPredicate([p1, p2], (assignment) => {
-              const t1 = assignment.get(p1);
-              const t2 = assignment.get(p2);
-              if (t1 === undefined || t2 === undefined) return true;
-              return t1 !== t2;
-            });
-          }
-        }
-      }
-    }
-
-    // Solve
-    const result = solver.solve();
-
-    // The destination becomes the relation for all solution facts
-    // e.g., @seating solve ... → "seating Alice T1", "seating Bob T2"
-    const solutionRelation = stmt.destination;
-    const relationVec = this.session.vocabulary.getOrCreate(solutionRelation);
-
-    // HDC Compound Encoding: Each solution becomes a bundled hypervector
-    // solution_vec = bundle(bind(relation, pos1(entity), pos2(value)), ...)
-    const solutionVectors = [];
-
-    for (const solution of result.solutions) {
-      const assignmentVectors = [];
-
-      for (const [entity, value] of Object.entries(solution)) {
-        // Create positioned binding: relation(entity, value)
-        const entityVec = this.session.vocabulary.getOrCreate(entity);
-        const valueVec = this.session.vocabulary.getOrCreate(value);
-        // Bind: operator XOR pos1(entity) XOR pos2(value)
-        const assignment = bindAll(relationVec, withPosition(1, entityVec), withPosition(2, valueVec));
-        assignmentVectors.push(assignment);
-      }
-
-      // Bundle all assignments into compound solution vector
-      if (assignmentVectors.length > 0) {
-        // bundle() expects array of vectors, not spread
-        const solutionVec = bundle(assignmentVectors);
-        solutionVectors.push({
-          vector: solutionVec,
-          assignments: Object.entries(solution).map(([e, v]) => ({ entity: e, value: v }))
-        });
-      }
-    }
-
-    // Store compound solution vectors in KB (not individual facts)
-    let storedSolutions = 0;
-    if (result.success && solutionVectors.length > 0) {
-      for (let i = 0; i < solutionVectors.length; i++) {
-        const { vector, assignments } = solutionVectors[i];
-        const solutionName = `${stmt.destination}_sol${i + 1}`;
-
-        // Store compound vector in KB with metadata about its components
-        this.session.kbFacts.push({
-          name: solutionName,
-          vector: vector,
-          metadata: {
-            operator: 'cspSolution',
-            solutionRelation: solutionRelation,  // The relation name to query
-            problemType: stmt.problemType,
-            solutionIndex: i + 1,
-            assignments: assignments,
-            // Facts use the destination as the relation: "seating Alice T1"
-            facts: assignments.map(a => `${solutionRelation} ${a.entity} ${a.value}`)
-          }
-        });
-
-        // Also store individual facts with the destination as operator
-        // This makes "seating ?guest ?table" directly queryable via standard KB search
-        for (const { entity, value } of assignments) {
-          this.session.learn(`${solutionRelation} ${entity} ${value}`);
-        }
-
-        storedSolutions++;
-      }
-    }
-
-    // Return solutions with compound vectors for HDC-based retrieval
-    return {
-      type: 'solve',
-      destination: solutionRelation,
-      problemType: stmt.problemType,
-      success: result.success,
-      solutionCount: result.solutionCount,
-      storedSolutions,
-      // The relation to use in queries (the destination name)
-      queryRelation: solutionRelation,
-      // Include compound vectors for HDC queries
-      compoundSolutions: solutionVectors.map((sv, i) => ({
-        name: `${solutionRelation}_sol${i + 1}`,
-        vector: sv.vector,
-        assignments: sv.assignments
-      })),
-      // Structured facts for NL generation
-      solutions: result.solutions.map(sol => {
-        return Object.entries(sol).map(([entity, value]) => {
-          return {
-            predicate: solutionRelation,
-            subject: entity,
-            object: value,
-            dsl: `${solutionRelation} ${entity} ${value}`
-          };
-        });
-      }),
-      stats: result.stats
-    };
+    return executeSolveBlockImpl(this, stmt);
   }
 
   /**
    * Find all conflict pairs from KB
+   * Delegates to executor-solve.mjs
    */
   findConflictPairs(relation) {
-    const conflicts = [];
-    for (const fact of this.session.kbFacts) {
-      this.session.reasoningStats.kbScans++;
-      const meta = fact.metadata;
-      if (meta?.operator === relation && meta.args?.length === 2) {
-        const [p1, p2] = meta.args;
-        // Avoid duplicates
-        if (!conflicts.some(c => (c[0] === p1 && c[1] === p2) || (c[0] === p2 && c[1] === p1))) {
-          conflicts.push([p1, p2]);
-        }
-      }
-    }
-    return conflicts;
+    return findConflictPairsImpl(this, relation);
   }
 
   /**
    * Execute induce operator - extract common properties from multiple examples
-   * @induce [A, B, C] creates a pattern vector representing shared properties
+   * Delegates to executor-meta-ops.mjs
    */
   executeInduce(stmt) {
-    // Get the list of items to induce from
-    if (stmt.args.length === 0) {
-      throw new ExecutionError('induce requires a list argument', stmt);
-    }
-
-    const listArg = stmt.args[0];
-    const items = listArg.items || [listArg];
-    const itemNames = items.map(item => this.extractName(item));
-
-    // Collect properties for each item
-    const itemProps = new Map(); // itemName -> Set of "op:arg1"
-    const componentKB = this.session?.componentKB;
-
-    for (const name of itemNames) {
-      const props = new Set();
-      if (componentKB) {
-        const facts = componentKB.findByArg0(name);
-        for (const f of facts) {
-          if (f.args?.[1]) {
-            props.add(`${f.operator}:${f.args[1]}`);
-          }
-        }
-      } else {
-        for (const fact of this.session.kbFacts) {
-          this.session.reasoningStats.kbScans++;
-          const meta = fact.metadata;
-          if (meta?.args?.[0] === name && meta?.args?.[1]) {
-            props.add(`${meta.operator}:${meta.args[1]}`);
-          }
-        }
-      }
-      itemProps.set(name, props);
-    }
-
-    // Find intersection of properties (what all items share)
-    let commonProps = null;
-    for (const [name, props] of itemProps) {
-      if (commonProps === null) {
-        commonProps = new Set(props);
-      } else {
-        for (const p of commonProps) {
-          if (!props.has(p)) {
-            commonProps.delete(p);
-          }
-        }
-      }
-    }
-
-    // Create a pattern vector by bundling the common property vectors
-    const propVectors = [];
-    const propMetadata = [];
-    for (const prop of commonProps || []) {
-      const [op, arg1] = prop.split(':');
-      const opVec = this.session.vocabulary.getOrCreate(op);
-      const arg1Vec = this.session.vocabulary.getOrCreate(arg1);
-      const propVec = bind(opVec, withPosition(1, arg1Vec));
-      propVectors.push(propVec);
-      propMetadata.push({ operator: op, arg: arg1 });
-    }
-
-    const patternVec = propVectors.length > 0 ? bundle(propVectors) : this.session.vocabulary.getOrCreate('__EMPTY_PATTERN__');
-
-    // Store in scope if destination provided
-    if (stmt.destination) {
-      this.session.scope.set(stmt.destination, patternVec);
-    }
-
-    // Also store metadata for querying
-    const resultName = stmt.destination || '__induce_result__';
-    this.session.kbFacts.push({
-      name: resultName,
-      vector: patternVec,
-      metadata: {
-        operator: 'inducePattern',
-        sources: itemNames,
-        commonProperties: propMetadata,
-        propertyCount: commonProps?.size || 0
-      }
-    });
-
-    return {
-      type: 'induce',
-      destination: stmt.destination,
-      sources: itemNames,
-      commonProperties: propMetadata,
-      propertyCount: commonProps?.size || 0,
-      vector: patternVec
-    };
+    return executeInduceImpl(this, stmt);
   }
 
   /**
    * Execute bundle operator - create a bundled vector from multiple items
-   * @bundle [A, B, C] creates a superposition of A, B, C vectors
+   * Delegates to executor-meta-ops.mjs
    */
   executeBundle(stmt) {
-    if (stmt.args.length === 0) {
-      throw new ExecutionError('bundle requires a list argument', stmt);
-    }
-
-    const listArg = stmt.args[0];
-    const items = listArg.items || [listArg];
-    const itemVectors = items.map(item => this.resolveExpression(item));
-    const bundledVec = bundle(itemVectors);
-
-    // Store in scope if destination provided
-    if (stmt.destination) {
-      this.session.scope.set(stmt.destination, bundledVec);
-    }
-
-    // Store with metadata
-    const resultName = stmt.destination || '__bundle_result__';
-    const itemNames = items.map(item => this.extractName(item));
-
-    this.session.kbFacts.push({
-      name: resultName,
-      vector: bundledVec,
-      metadata: {
-        operator: 'bundlePattern',
-        items: itemNames,
-        itemCount: items.length
-      }
-    });
-
-    return {
-      type: 'bundle',
-      destination: stmt.destination,
-      items: itemNames,
-      itemCount: items.length,
-      vector: bundledVec
-    };
+    return executeBundleImpl(this, stmt);
   }
 }
 

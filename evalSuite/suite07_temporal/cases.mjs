@@ -149,7 +149,8 @@ export const steps = [
     action: 'query',
     input_nl: 'What does Deforestation cause?',
     input_dsl: '@q causes Deforestation ?effect',
-    expected_nl: 'Deforestation causes Erosion.'
+    expected_nl: 'Deforestation causes Erosion.',
+    
   }
 ];
 

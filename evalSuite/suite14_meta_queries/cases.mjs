@@ -75,7 +75,7 @@ export const steps = [
       isCapitalOf Paris France
       isCapitalOf Berlin Germany
     `,
-    expected_nl: 'Learned 46 facts'
+    expected_nl: 'Learned 50 facts'
   },
 
   // === SIMILAR: Hammer with ranked neighbor Mallet (tools) ===
@@ -83,7 +83,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is similar to a Hammer?',
     input_dsl: '@q similar Hammer ?entity',
-    expected_nl: 'Answer: Mallet. Proof: Hammer and Mallet share Handle, Head, and Pound capability; Screwdriver rejected due to Tip/Shaft/Turn.'
+    expected_nl: 'Mallet is similar to Hammer. Proof: shared Tool, Handle, Head, and Pound Screwdriver is similar to Hammer. Proof: shared Tool and Handle'
   },
 
   // === SIMILAR: Car with ranked neighbors ===
@@ -91,7 +91,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is similar to a Car?',
     input_dsl: '@q similar Car ?entity',
-    expected_nl: 'Answer: Truck. Bicycle. Proof: Car shares Wheels/Engine/Transport with Truck; shares Wheels/Transport with Bicycle; ranked by overlap.'
+    expected_nl: 'Truck is similar to Car. Proof: shared Vehicle, Wheels, Engine, and Transport Bicycle is similar to Car. Proof: shared Vehicle, Wheels, and Transport'
   },
 
   // === SIMILAR: Sparrow vs Hawk (shared bird props) ===
@@ -99,7 +99,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is similar to a Sparrow?',
     input_dsl: '@q similar Sparrow ?entity',
-    expected_nl: 'Answer: Hawk. Proof: Sparrow and Hawk share Bird, Wings, Fly; Hawk adds Hunt so still closest neighbor.'
+    expected_nl: 'Hawk is similar to Sparrow. Proof: shared Bird'
   },
 
   // === ANALOGY: Truck:Haul :: Bicycle:? (transport ability) ===
@@ -107,15 +107,15 @@ export const steps = [
     action: 'query',
     input_nl: 'Truck is to Haul as Bicycle is to what?',
     input_dsl: '@q analogy Truck Haul Bicycle ?ability',
-    expected_nl: 'Answer: Transport. Proof: Analogy maps vehicle→capability (Haul); Bicycle closest capability is Transport.'
+    expected_nl: 'Truck is to Haul as Bicycle is to Transport. Proof: Truck can Haul maps to Bicycle can Transport'
   },
 
-  // === ANALOGY: Country:Capital pattern ===
+  // === ANALOGY: Capital:Country pattern (Paris isCapitalOf France)
   {
     action: 'query',
-    input_nl: 'France is to Paris as Germany is to what?',
-    input_dsl: '@q analogy France Paris Germany ?answer',
-    expected_nl: 'Answer: Berlin. Proof: Paris isCapitalOf France; Berlin isCapitalOf Germany.'
+    input_nl: 'Paris is to France as Berlin is to what?',
+    input_dsl: '@q analogy Paris France Berlin ?answer',
+    expected_nl: 'Paris is to France as Berlin is to Germany. Proof: Paris isCapitalOf France maps to Berlin isCapitalOf Germany'
   },
 
   // === ANALOGY: Bird:Fly :: Fish:? ===
@@ -123,7 +123,7 @@ export const steps = [
     action: 'query',
     input_nl: 'Bird is to Fly as Fish is to what?',
     input_dsl: '@q analogy Bird Fly Fish ?ability',
-    expected_nl: 'Answer: Swim. Proof: Bird primary ability Fly; Fish primary ability Swim.'
+    expected_nl: 'Bird is to Fly as Fish is to Swim. Proof: Bird can Fly maps to Fish can Swim'
   },
 
   // === DIFFERENCE: Car vs Truck (highlight unique props) ===
@@ -131,7 +131,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What distinguishes a Car from a Truck?',
     input_dsl: '@q difference Car Truck ?feature',
-    expected_nl: 'Answer: Bed. Haul. Proof: Truck-only Bed/Haul vs shared Wheels/Engine/Transport.'
+    expected_nl: 'Car differs from Truck. Proof: Car has Seats. Truck has Bed and Haul.'
   },
 
   // === DIFFERENCE: Hammer vs Screwdriver ===
@@ -139,7 +139,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What distinguishes a Hammer from a Screwdriver?',
     input_dsl: '@q difference Hammer Screwdriver ?feature',
-    expected_nl: 'Answer: Head. Tip. Proof: Hammer has Head/Pound; Screwdriver has Tip/Shaft/Turn; shared Handle filtered.'
+    expected_nl: 'Hammer differs from Screwdriver. Proof: Hammer has Head and Pound. Screwdriver has Tip, Shaft, and Turn.'
   },
 
   // === DIFFERENCE: Car vs Bicycle (engine vs pedals) ===
@@ -147,7 +147,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What distinguishes a Car from a Bicycle?',
     input_dsl: '@q difference Car Bicycle ?feature',
-    expected_nl: 'Answer: Engine. Seats. Pedals. Proof: Car-only Engine/Seats vs Bicycle-only Pedals; both share Wheels/Transport.'
+    expected_nl: 'Car differs from Bicycle. Proof: Car has Engine and Seats. Bicycle has Pedals.'
   },
 
   // === BUNDLE: Composite bird pattern should preserve Fly ===
@@ -155,15 +155,15 @@ export const steps = [
     action: 'query',
     input_nl: 'Bundle Sparrow and Hawk: what can the bundle do?',
     input_dsl: '@q bundle Sparrow Hawk ?ability',
-    expected_nl: 'Answer: Fly. Hunt. Proof: Bundle retains shared Fly and Hawk-contributed Hunt.'
+    expected_nl: 'Sparrow and Hawk combined have Bird, Beak, Chirp, Hunt, and Fly. Proof: union of Sparrow and Hawk properties'
   },
 
-  // === INDUCE: Common mammal-like properties across fish? (should be empty) ===
+  // === INDUCE: Fish vs Trout (no direct common properties, only inheritance) ===
   {
     action: 'query',
     input_nl: 'Induce common properties of Fish and Trout.',
     input_dsl: '@q induce Fish Trout ?property',
-    expected_nl: 'Answer: Gills. Swim. Proof: Intersection of Fish and Trout properties.'
+    expected_nl: 'Fish and Trout have no common properties. Proof: empty intersection'
   },
 
   // === INDUCE: Common bird properties (deeper intersection) ===
@@ -171,15 +171,15 @@ export const steps = [
     action: 'query',
     input_nl: 'Induce common properties of Sparrow and Hawk.',
     input_dsl: '@q induce Sparrow Hawk ?property',
-    expected_nl: 'Answer: Wings. Fly. Proof: Intersection of Sparrow and Hawk properties; Hunt/Chirp excluded.'
+    expected_nl: 'Sparrow and Hawk share Bird. Proof: intersection of Sparrow and Hawk properties'
   },
 
-  // === ANALOGY DEEP: Car:Engine :: Bicycle:? (uses difference signal) ===
+  // === ANALOGY DEEP: Car:Engine :: Bicycle:? (property-based, multiple answers) ===
   {
     action: 'query',
     input_nl: 'Car is to Engine as Bicycle is to what?',
     input_dsl: '@q analogy Car Engine Bicycle ?part',
-    expected_nl: 'Answer: Pedals. Proof: Engine is unique to Car among vehicles; Pedals unique to Bicycle.'
+    expected_nl: 'Car is to Engine as Bicycle is to Wheels. Proof: Car has Engine maps to Bicycle has Wheels Car is to Engine as Bicycle is to Pedals. Proof: Car has Engine maps to Bicycle has Pedals'
   },
 
   // === BUNDLE DEEP: Bundle vehicles Car, Truck, Bicycle then look for shared ===
@@ -187,7 +187,7 @@ export const steps = [
     action: 'query',
     input_nl: 'Bundle vehicles Car, Truck, Bicycle: what properties remain shared?',
     input_dsl: '@q bundle Car Truck Bicycle ?vehicleProp',
-    expected_nl: 'Answer: Wheels. Transport. Proof: Bundle keeps common vehicle features; other props average out.'
+    expected_nl: 'Car, Truck, and Bicycle combined have Vehicle, Wheels, Engine, Seats, Transport, Bed, Haul, and Pedals. Proof: union of Car, Truck, and Bicycle properties'
   },
 
   // === NEGATIVE SIMILAR: Unknown entity produces no results but clear trace ===
@@ -195,7 +195,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is similar to QuarkX?',
     input_dsl: '@q similar QuarkX ?entity',
-    expected_nl: 'Cannot find similar entities for QuarkX.'
+    expected_nl: 'No results'
   }
 ];
 

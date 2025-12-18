@@ -187,7 +187,8 @@ export const steps = [
     action: 'query',
     input_nl: 'What is Sarah?',
     input_dsl: '@q isA Sarah ?what',
-    expected_nl: 'Sarah is a ResearchScientist. Sarah is a ClinicianDoctor.'
+    expected_nl: 'Sarah is a ResearchScientist. Sarah is a ClinicianDoctor.',
+    
   }
 ];
 

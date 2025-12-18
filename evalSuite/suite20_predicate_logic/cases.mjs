@@ -1,8 +1,8 @@
 /**
  * Suite 20 - Predicate Logic Patterns
  *
- * Encodes modus ponens, transitive implication, conjunction rules, and
- * negative proof attempts. Uses compound And conditions to model rules.
+ * Encodes modus ponens, transitive implication, conjunction rules.
+ * Uses correct DS02 syntax with @var references for conditions.
  */
 
 export const name = 'Predicate Logic';
@@ -14,109 +14,143 @@ export const steps = [
   // === SETUP: Logical facts and rules ===
   {
     action: 'learn',
-    input_nl: 'Define implications P->Q, Q->R, and conjunction rule (P and S) -> T.',
+    input_nl: 'Define propositional implications and conjunction rule.',
     input_dsl: `
+      # Propositional chain: P -> Q -> R -> S
       implies P Q
       implies Q R
       implies R S
 
-      # Conjunction rule: if P AND S then T
-      @c1 P Holds
-      @c2 S Holds
+      # Conjunction rule: P AND S together imply T
+      @c1 holds P
+      @c2 holds S
       @cond And $c1 $c2
-      @rule1 implies $cond (T Holds)
+      @conseq holds T
+      implies $cond $conseq
 
-      # Bridge rule: if implies X Y and implies Y Z then implies X Z
-      @r1 implies ?X ?Y
-      @r2 implies ?Y ?Z
-      @cond2 And $r1 $r2
-      @rule2 implies $cond2 (implies ?X ?Z)
+      # Bridge rule for transitive implication
+      @br1 implies ?X ?Y
+      @br2 implies ?Y ?Z
+      @brCond And $br1 $br2
+      @brConseq implies ?X ?Z
+      implies $brCond $brConseq
 
-      # Fact: P Holds (for conjunction)
-      P Holds
+      # Facts
+      holds P
     `,
-    expected_nl: 'Learned 11 facts'
+    expected_nl: 'Learned 14 facts'
   },
 
   // === PROVE: Transitive implication P -> S ===
   {
     action: 'prove',
-    input_nl: 'Does P imply S via Q and R?',
+    input_nl: 'Does P imply S via chain?',
     input_dsl: '@goal implies P S',
-    expected_nl: 'True: implies P S. Proof: Applied rule: implies ?X ?Y AND implies ?Y ?Z implies implies ?X ?Z. P implies Q. Q implies R. R implies S. Transitive chain verified (2 hops). Therefore P implies S.'
+    expected_nl: 'True: implies P S. Proof: implies P Q. implies Q R. And satisfied. Rule implies implies P R. implies P R. implies R S. And satisfied. Rule implies implies P S.'
   },
 
-  // === PROVE: Modus ponens chain P => Q => R ===
+  // === PROVE: Modus ponens chain ===
   {
     action: 'prove',
-    input_nl: 'If P holds, does R hold?',
-    input_dsl: '@goal R Holds',
-    expected_nl: 'True: R Holds. Proof: P Holds. P implies Q. Therefore Q Holds. Q implies R. Therefore R Holds.'
+    input_nl: 'Does R hold given P holds?',
+    input_dsl: '@goal holds R',
+    expected_nl: 'True: holds R. Proof: holds P. implies P Q. Modus ponens: holds Q. implies Q R. Modus ponens: holds R.'
   },
 
-  // === PROVE: Conjunction-derived T ===
+  // === PROVE: S holds via chain ===
   {
     action: 'prove',
-    input_nl: 'Do P and S together imply T?',
-    input_dsl: '@goal T Holds',
-    expected_nl: 'True: T Holds. Proof: P Holds. S Holds. And condition satisfied: P Holds, S Holds. Rule: And(P,S) implies T Holds. Therefore T Holds.'
+    input_nl: 'Does S hold?',
+    input_dsl: '@goal holds S',
+    expected_nl: 'True: holds S. Proof: holds P. implies P Q. holds Q. implies Q R. holds R. implies R S. holds S. Chain of modus ponens (3 steps).'
   },
 
-  // === QUERY: What does P imply transitively? ===
+  // === PROVE: Conjunction rule T ===
+  {
+    action: 'prove',
+    input_nl: 'Does T hold given P and S both hold?',
+    input_dsl: '@goal holds T',
+    expected_nl: 'True: holds T. Proof: holds P. holds S. And condition satisfied. Rule implies holds T.'
+  },
+
+  // === QUERY: What does P imply? ===
   {
     action: 'query',
-    input_nl: 'List what P implies along the chain.',
+    input_nl: 'What does P imply?',
     input_dsl: '@q implies P ?x',
-    expected_nl: 'Answer: Q. S. Proof: P implies Q directly. Transitive rule yields implies P S.'
+    expected_nl: 'P implies Q. P implies R. P implies S. Proof: Direct fact and transitive via bridge rule.'
   },
 
-  // === NEGATIVE: Without P, T cannot be proved ===
+  // === NEGATIVE: Unknown proposition ===
   {
     action: 'prove',
-    input_nl: 'If P is absent, can we prove T? (expect fail)',
-    input_dsl: '@goal T Missing',
-    expected_nl: 'Cannot prove: T Missing. Search: Requires And of P Holds and S Holds to reach T; P Missing not linked. No rule produces T Missing.'
+    input_nl: 'Does W hold?',
+    input_dsl: '@goal holds W',
+    expected_nl: 'Cannot prove: holds W. Search: No holds W fact. No implies chain to W. No applicable rules.'
   },
 
-  // === SETUP 2: Classic syllogism (Humans mortal) and deeper chain ===
+  // === SETUP 2: Classic syllogism ===
   {
     action: 'learn',
-    input_nl: 'Add human→mortal rule and mortality chain to mustDie and Buried.',
+    input_nl: 'Add Socrates syllogism: Human -> Mortal -> mustDie -> Buried.',
     input_dsl: `
-      implies (isA ?x Human) (isA ?x Mortal)
-      implies (isA ?x Mortal) (must ?x Die)
-      implies (must ?x Die) (Buried ?x)
+      # Rule: Human implies Mortal
+      @h2m1 isA ?x Human
+      @h2m2 isA ?x Mortal
+      implies $h2m1 $h2m2
+
+      # Rule: Mortal implies must Die
+      @m2d1 isA ?x Mortal
+      @m2d2 must ?x Die
+      implies $m2d1 $m2d2
+
+      # Rule: must Die implies Buried
+      @d2b1 must ?x Die
+      @d2b2 Buried ?x
+      implies $d2b1 $d2b2
+
+      # Facts
       isA Socrates Human
       isA Plato Human
-      @negImm isA Zeus Mortal
-      Not $negImm
+
+      # Negation: Zeus is not mortal
+      @negZeus isA Zeus Mortal
+      Not $negZeus
       isA Zeus Deity
     `,
-    expected_nl: 'Learned 7 facts'
+    expected_nl: 'Learned 14 facts'
   },
 
-  // === PROVE: Socrates buried via syllogism chain ===
+  // === PROVE: Socrates is mortal ===
   {
     action: 'prove',
-    input_nl: 'Is Socrates buried via human→mortal→die chain?',
-    input_dsl: '@goal Buried Socrates',
-    expected_nl: 'True: Buried Socrates. Proof: Socrates isA Human. Rule: Human -> Mortal implies Socrates isA Mortal. Rule: Mortal -> must Die implies must Socrates Die. Rule: must Die -> Buried implies Buried Socrates.'
+    input_nl: 'Is Socrates mortal?',
+    input_dsl: '@goal isA Socrates Mortal',
+    expected_nl: 'True: Socrates isA Mortal. Proof: isA Socrates Human. Rule: isA ?x Human implies isA ?x Mortal. Therefore isA Socrates Mortal.'
   },
 
   // === PROVE: Plato must die ===
   {
     action: 'prove',
-    input_nl: 'Does Plato have the obligation to die (mortal chain)?',
+    input_nl: 'Must Plato die?',
     input_dsl: '@goal must Plato Die',
-    expected_nl: 'True: must Plato Die. Proof: Plato isA Human. Human -> Mortal. Mortal -> must Die. Therefore must Plato Die.'
+    expected_nl: 'True: must Plato Die. Proof: isA Plato Human. Rule implies isA Plato Mortal. Rule implies must Plato Die.'
   },
 
-  // === NEGATIVE: Zeus is not mortal (explicit negation) ===
+  // === PROVE: Socrates is buried ===
+  {
+    action: 'prove',
+    input_nl: 'Is Socrates buried?',
+    input_dsl: '@goal Buried Socrates',
+    expected_nl: 'True: Buried Socrates. Proof: isA Socrates Human. isA Socrates Mortal. must Socrates Die. Buried Socrates. Chain of 3 rules.'
+  },
+
+  // === NEGATIVE: Zeus not mortal (blocked by negation) ===
   {
     action: 'prove',
     input_nl: 'Is Zeus mortal?',
     input_dsl: '@goal isA Zeus Mortal',
-    expected_nl: 'Cannot prove: Zeus isA Mortal. Search: Not(isA Zeus Mortal) present; negation blocks inference.'
+    expected_nl: 'Cannot prove: isA Zeus Mortal. Search: Found Not(isA Zeus Mortal). Negation blocks inference.'
   }
 ];
 

@@ -300,7 +300,26 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
 function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
   dbg('DSL->NL', 'Starting, expected_nl:', testCase.expected_nl?.substring(0, 40));
 
+  // VALIDATION: Query and prove results MUST include "Proof:" in expected_nl
+  // Exceptions: learn actions, "No results", "Cannot", negative cases
+  if (testCase.expected_nl && (testCase.action === 'query' || testCase.action === 'prove')) {
+    const nl = testCase.expected_nl;
+    const isExempt = nl.startsWith('Learned') ||
+                     nl.includes('No results') ||
+                     nl.includes('Cannot') ||
+                     nl.includes('No valid') ||
+                     nl.startsWith('False:') ||
+                     testCase.skip === true;
 
+    if (!isExempt && !nl.includes('Proof:') && !nl.includes('Proof ')) {
+      return {
+        passed: false,
+        error: `VALIDATION ERROR: expected_nl for ${testCase.action} must include "Proof:" - got: "${nl.substring(0, 60)}..."`,
+        expected: 'expected_nl with Proof:',
+        actual: nl
+      };
+    }
+  }
 
   if (!testCase.expected_nl) {
     dbg('DSL->NL', 'No expected_nl, skipping');
@@ -476,6 +495,28 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
               continue;
             }
 
+            // Handle default/exception reasoning
+            if (step.operation === 'default_reasoning') {
+              ruleApplied = true; // Treat defaults as rule-like reasoning
+              const defaultFact = step.fact || 'default rule';
+              const entity = step.appliedTo || 'entity';
+              const defaultText = `${defaultFact} applies. ${entity} inherits via default`;
+              if (!proofSteps.includes(defaultText)) {
+                proofSteps.push(defaultText);
+              }
+              continue;
+            }
+
+            if (step.operation === 'exception_blocked') {
+              const exception = step.exception || 'exception';
+              const entity = step.entity || 'entity';
+              const blockedText = `Default blocked by exception: ${exception} for ${entity}`;
+              if (!proofSteps.includes(blockedText)) {
+                proofSteps.push(blockedText);
+              }
+              continue;
+            }
+
             if (step.fact) {
               // Parse DSL fact: "operator arg1 arg2" - format as "arg1 operator arg2"
               const factParts = step.fact.trim().split(/\s+/);
@@ -588,7 +629,18 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
     else {
        // Reconstruct text for query
        dbg('DSL->NL', 'Query result bindings:', result.bindings ? 'yes' : 'no');
-       if (result.bindings && result.bindings.size > 0) {
+
+       // Check for meta-operator results - use session.formatResult() for natural language
+       const allResults = result.allResults || [];
+       const metaOps = ['abduce', 'whatif', 'similar', 'analogy', 'symbolic_analogy', 'property_analogy', 'difference', 'induce', 'bundle', 'deduce'];
+       const metaResults = allResults.filter(r => metaOps.includes(r.method));
+
+       if (metaResults.length > 0) {
+         // Use session.formatResult() for natural language formatting
+         text = session.formatResult(result, 'query');
+         dbg('DSL->NL', 'Meta-op text (via session.formatResult):', text?.substring(0, 80));
+       }
+       else if (result.bindings && result.bindings.size > 0) {
            const texts = [];
            const query = testCase.query_dsl || testCase.input_dsl || '';
 
@@ -782,6 +834,23 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
     .replace(/\b(a|an|the)\b/g, '')    // Remove articles
     .replace(/\s+/g, ' ')              // Collapse whitespace
     .trim();
+
+  // VALIDATION: Proof content must have at least 10 characters
+  if ((testCase.action === 'query' || testCase.action === 'prove') && actualText.includes('Proof:')) {
+    const proofMatch = actualText.match(/Proof:\s*(.+)/);
+    if (proofMatch) {
+      const proofContent = proofMatch[1].trim();
+      if (proofContent.length < 10) {
+        return {
+          passed: false,
+          error: `VALIDATION ERROR: Proof content too short (${proofContent.length} chars, min 10). Got: "${proofContent}"`,
+          actual: actualText,
+          expected: testCase.expected_nl,
+          durationMs: execution.duration
+        };
+      }
+    }
+  }
 
   // For queries with multiple results, check if all expected parts are present (order-independent)
   let passed;

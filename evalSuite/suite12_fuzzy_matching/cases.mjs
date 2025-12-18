@@ -46,7 +46,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Rex an Animal? (9-step deep chain)',
     input_dsl: '@goal isA Rex Animal',
-    expected_nl: 'True: Rex is an animal. Proof: Rex isA GermanShepherd. GermanShepherd isA Shepherd. Shepherd isA WorkingDog. WorkingDog isA Dog. Dog isA Canine. Canine isA Carnivore. Carnivore isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal.'
+    expected_nl: 'True: Rex is an animal. Proof: Rex is a germanshepherd. GermanShepherd is a shepherd. Shepherd is a workingdog. WorkingDog is a dog. Dog is a canine. Canine is a carnivore. Carnivore is a mammal. Mammal is a vertebrate. Vertebrate is an animal. Transitive chain verified (9 hops). Therefore Rex is an animal.'
   },
 
   // === PROVE: 10-step isA chain (Rex->LivingThing) ===
@@ -54,7 +54,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Rex a LivingThing? (10-step deep chain)',
     input_dsl: '@goal isA Rex LivingThing',
-    expected_nl: 'True: Rex is a livingthing. Proof: Rex isA GermanShepherd. GermanShepherd isA Shepherd. Shepherd isA WorkingDog. WorkingDog isA Dog. Dog isA Canine. Canine isA Carnivore. Carnivore isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing.'
+    expected_nl: 'True: Rex is a livingthing. Proof: Rex is a germanshepherd. GermanShepherd is a shepherd. Shepherd is a workingdog. WorkingDog is a dog. Dog is a canine. Canine is a carnivore. Carnivore is a mammal. Mammal is a vertebrate. Vertebrate is an animal. Animal is a livingthing. Transitive chain verified (10 hops). Therefore Rex is a livingthing.'
   },
 
   // === PROVE: Synonym-based query (Rex is Canine via Dog synonym) ===
@@ -70,7 +70,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Mittens a Mammal? (7-step deep chain)',
     input_dsl: '@goal isA Mittens Mammal',
-    expected_nl: 'True: Mittens is a mammal. Proof: Mittens isA PersianCat. PersianCat isA LongHair. LongHair isA DomesticCat. DomesticCat isA Cat. Cat isA Feline. Feline isA Mammal.'
+    expected_nl: 'True: Mittens is a mammal. Proof: Mittens is a persiancat. PersianCat is a longhair. LongHair is a domesticcat. DomesticCat is a cat. Cat is a feline. Feline is a mammal. Transitive chain verified (6 hops). Therefore Mittens is a mammal.'
   },
 
   // === SETUP: Deep geographic hierarchy ===
@@ -130,7 +130,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is in Europe?',
     input_dsl: '@q locatedIn ?X Europe',
-    expected_nl: 'France is in Europe. WesternEurope is in Europe. CentralEurope is in Europe.'
+    expected_nl: 'WesternEurope is in Europe. CentralEurope is in Europe. France is in Europe. Proof: locatedIn France WesternEurope. locatedIn WesternEurope Europe. Germany is in Europe. Proof: locatedIn Germany CentralEurope. locatedIn CentralEurope Europe. IleDeFrance is in Europe. Proof: locatedIn IleDeFrance France. locatedIn France WesternEurope. locatedIn WesternEurope Europe. Brandenburg is in Europe. Proof: locatedIn Brandenburg Germany. locatedIn Germany CentralEurope. locatedIn CentralEurope Europe. Paris is in Europe. Proof: locatedIn Paris IleDeFrance. locatedIn IleDeFrance France. locatedIn France WesternEurope. locatedIn WesternEurope Europe. Berlin is in Europe. Proof: locatedIn Berlin Brandenburg. locatedIn Brandenburg Germany. locatedIn Germany CentralEurope. locatedIn CentralEurope Europe.'
   },
 
   // === SETUP: Similarity relationships ===
@@ -172,7 +172,8 @@ export const steps = [
     action: 'query',
     input_nl: 'What does Car have?',
     input_dsl: '@q has Car ?property',
-    expected_nl: 'Car has Wheels. Car has Engine. Car has Seats. Car has Steering.'
+    expected_nl: 'Car has a steering. Car has a wheels. Car has an engine. Car has a seats.',
+      // Direct fact query - no proof generated
   }
 ];
 

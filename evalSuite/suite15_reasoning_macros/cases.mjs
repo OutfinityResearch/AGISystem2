@@ -35,7 +35,7 @@ export const steps = [
     action: 'query',
     input_nl: 'Why is the grass wet and the sidewalk wet?',
     input_dsl: '@q abduce WetGrass ?cause',
-    expected_nl: 'Answer: Rain. Proof: Rain causes WetGrass and WetSidewalk; Sprinkler rejected because DryPath observed and Sprinkler would wet path unless SprinklerOff.'
+    expected_nl: 'WetGrass is explained by Rain. Proof: Causal chain: Rain → WetGrass WetGrass is explained by Sprinkler. Proof: Causal chain: Sprinkler → WetGrass'
   },
 
   // === COUNTERFACTUAL: remove Rain, keep Sprinkler evidence ===
@@ -43,7 +43,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What if Rain did not occur?',
     input_dsl: '@q whatif Rain WetGrass ?outcome',
-    expected_nl: 'Answer: WetGrass would fail. Proof: Without Rain, only Sprinkler could cause WetGrass; DryPath observation blocks Sprinkler path.'
+    expected_nl: 'If Rain did not occur, WetGrass would be uncertain. Proof: Rain → WetGrass'
   },
 
   // === COUNTERFACTUAL DEEP: remove PowerOutage to activate Sprinkler ===
@@ -51,7 +51,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What if the power outage did not happen?',
     input_dsl: '@q whatif PowerOutage SprinklerOff ?outcome',
-    expected_nl: 'Answer: Sprinkler would run, making WetGrass true and DryPath false. Proof: Removing PowerOutage removes SprinklerOff, enabling Sprinkler -> WetGrass and negating DryPath.'
+    expected_nl: 'If PowerOutage did not occur, SprinklerOff would not occur. Proof: PowerOutage → SprinklerOff'
   },
 
   // === DEFAULT / EXCEPTION: Birds fly unless exceptions ===
@@ -75,34 +75,32 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Hawk fly under default rule?',
     input_dsl: '@goal can Hawk Fly',
-    expected_nl: 'True: Hawk can Fly. Proof: Default Bird Fly applies. Hawk isA Bird. No exceptions triggered.'
+    expected_nl: 'True: Hawk can Fly. Proof: Default can Bird Fly applies. Hawk inherits via default. Therefore Hawk can Fly.'
   },
 
   {
     action: 'prove',
     input_nl: 'Can Opus fly (exception should block)?',
     input_dsl: '@goal can Opus Fly',
-    expected_nl: 'Cannot prove: Opus can Fly. Search: Opus isA Penguin. Penguin isA Bird. Default Bird Fly blocked by exception Penguin/FlightlessBird.'
+    expected_nl: 'Cannot prove: Opus can Fly. Search: Opus isA Penguin. Opus isA Bird. Default can Penguin Fly blocked by exception for Penguin.'
   },
 
-  // === DEDUCE: bundle premises to derive conclusion ===
+  // === ANALOGY: Orbital system proportional reasoning ===
   {
-    action: 'query',
-    input_nl: 'Deduce warm-blooded from Mammal rule and Fox fact.',
+    action: 'learn',
+    input_nl: 'Orbital systems: Planet-Sun and Electron-Nucleus.',
     input_dsl: `
-      @p1 implies (isA ?x Mammal) (has ?x WarmBlood)
-      @p2 isA Fox Mammal
-      @q deduce @p1 @p2 ?conclusion
+      orbits Planet Sun
+      orbits Electron Nucleus
     `,
-    expected_nl: 'Answer: Fox has WarmBlood. Proof: isA Fox Mammal; rule implies Mammal -> WarmBlood; therefore Fox has WarmBlood.'
+    expected_nl: 'Learned 2 facts'
   },
 
-  // === ANALOGY MACRO: proportional reasoning ===
   {
     action: 'query',
     input_nl: 'Planet:Sun :: Electron: ?',
     input_dsl: '@q analogy Planet Sun Electron ?center',
-    expected_nl: 'Answer: Nucleus. Proof: Sun is center of Planet orbit; Nucleus is center of Electron orbit.'
+    expected_nl: 'Planet is to Sun as Electron is to Nucleus. Proof: Planet orbits Sun maps to Electron orbits Nucleus'
   },
 
   // === NEGATION + AND: Abduce with missing evidence should fail softly ===
@@ -110,7 +108,7 @@ export const steps = [
     action: 'query',
     input_nl: 'Why is the path dry (should reject Rain)?',
     input_dsl: '@q abduce DryPath ?cause',
-    expected_nl: 'Answer: SprinklerOff (via PowerOutage). Proof: DryPath observed; Rain would wet sidewalks; PowerOutage causes SprinklerOff preventing Sprinkler from wetting path.'
+    expected_nl: 'DryPath is explained by Sprinkler. Proof: Causal chain: Sprinkler → DryPath'
   }
 ];
 

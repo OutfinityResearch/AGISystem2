@@ -503,7 +503,7 @@ export class ConditionProver {
             conclusionFact = `${op} ${args.join(' ')}`;
           } else if (rule.source) {
             // Parse source to find conclusion reference: "@name Implies @cond @conc" or "$cond $conc"
-            const match = rule.source.match(/Implies\s+[@$]?(\w+)\s+[@$]?(\w+)/);
+            const match = rule.source.match(/Implies\s+[@$]?(\w+)\s+[@$]?(\w+)/i);
             if (match) {
               const refName = match[2]; // Second group is the conclusion
               // Look up the reference text

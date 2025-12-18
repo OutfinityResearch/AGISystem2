@@ -11,39 +11,45 @@ export const description = 'Stress test 6-10 step transitive reasoning';
 export const theories = ['05-logic.sys2'];
 
 export const steps = [
-  // === SETUP: Geographic chain (9 steps) ===
+  // === SETUP: Geographic - Dual Modeling ===
+  // Taxonomy (isA): Paris isA City isA Settlement isA Place isA Location
+  // Containment (locatedIn): Paris locatedIn France locatedIn Europe locatedIn Earth...
   {
     action: 'learn',
-    input_nl: 'Geographic: Paris->City->Country->Continent->Planet->SolarSystem->Arm->Galaxy->Cluster->Supercluster->Universe',
+    input_nl: 'Geographic: Taxonomy (Paris->City->Settlement->Place->Location) + Containment (Paris->France->Europe->Earth->...->Universe)',
     input_dsl: `
       isA Paris City
-      isA City Country
-      isA Country Continent
-      isA Continent Planet
-      isA Planet SolarSystem
-      isA SolarSystem Arm
-      isA Arm Galaxy
-      isA Galaxy Cluster
-      isA Cluster Supercluster
-      isA Supercluster Universe
+      isA City Settlement
+      isA Settlement Place
+      isA Place Location
+
+      locatedIn Paris France
+      locatedIn France Europe
+      locatedIn Europe Earth
+      locatedIn Earth SolarSystem
+      locatedIn SolarSystem MilkyWayArm
+      locatedIn MilkyWayArm MilkyWay
+      locatedIn MilkyWay LocalCluster
+      locatedIn LocalCluster Supercluster
+      locatedIn Supercluster Universe
     `,
-    expected_nl: 'Learned 10 facts'
+    expected_nl: 'Learned 13 facts'
   },
 
-  // === PROVE: 10-step transitive (Paris->Universe) ===
+  // === PROVE: 9-step containment transitive (Paris->Universe) ===
   {
     action: 'prove',
-    input_nl: 'Is Paris in the Universe?',
-    input_dsl: '@goal isA Paris Universe',
-    expected_nl: 'True: Paris is an universe. Proof: Paris is a city. City is a country. Country is a continent. Continent is a planet. Planet is a solarsystem. SolarSystem is an arm. Arm is a galaxy. Galaxy is a cluster. Cluster is a supercluster. Supercluster is an universe.'
+    input_nl: 'Is Paris located in the Universe?',
+    input_dsl: '@goal locatedIn Paris Universe',
+    expected_nl: 'True: Paris is in Universe. Proof: Paris is in France. France is in Europe. Europe is in Earth. Earth is in SolarSystem. SolarSystem is in MilkyWayArm. MilkyWayArm is in MilkyWay. MilkyWay is in LocalCluster. LocalCluster is in Supercluster. Supercluster is in Universe. Transitive chain verified (9 hops). Therefore Paris is in Universe.'
   },
 
-  // === PROVE: 8-step transitive (Paris->Cluster) ===
+  // === PROVE: 6-step containment transitive (Paris->MilkyWay) ===
   {
     action: 'prove',
-    input_nl: 'Is Paris in a Cluster?',
-    input_dsl: '@goal isA Paris Cluster',
-    expected_nl: 'True: Paris is a cluster. Proof: Paris is a city. City is a country. Country is a continent. Continent is a planet. Planet is a solarsystem. SolarSystem is an arm. Arm is a galaxy. Galaxy is a cluster.'
+    input_nl: 'Is Paris in the MilkyWay?',
+    input_dsl: '@goal locatedIn Paris MilkyWay',
+    expected_nl: 'True: Paris is in MilkyWay. Proof: Paris is in France. France is in Europe. Europe is in Earth. Earth is in SolarSystem. SolarSystem is in MilkyWayArm. MilkyWayArm is in MilkyWay. Transitive chain verified (6 hops). Therefore Paris is in MilkyWay.'
   },
 
   // === SETUP: Knowledge chain (10 steps) ===
@@ -120,28 +126,28 @@ export const steps = [
     expected_nl: 'True: Antiquity is before AI. Proof: Antiquity is before Medieval. Medieval is before Renaissance. Renaissance is before Industrial. Industrial is before Modern. Modern is before Digital. Digital is before AI. Transitive chain verified (6 hops). Therefore Antiquity is before AI.'
   },
 
-  // === QUERY: What is Paris ===
+  // === QUERY: What is Paris? (taxonomy query - returns all transitive types) ===
   {
     action: 'query',
     input_nl: 'What is Paris?',
     input_dsl: '@q isA Paris ?what',
-    expected_nl: 'Answer: City. Proof: Paris isA City. City isA Country. Country isA Continent. Continent isA Planet. Planet isA SolarSystem. SolarSystem isA Arm. Arm isA Galaxy. Galaxy isA Cluster. Cluster isA Supercluster. Supercluster isA Universe.'
+    expected_nl: 'Paris is a city. Paris is a settlement. Proof: isA Paris City. isA City Settlement. Paris is a place. Proof: isA Paris City. isA City Settlement. isA Settlement Place. Paris is a location. Proof: isA Paris City. isA City Settlement. isA Settlement Place. isA Place Location.'
   },
 
-  // === QUERY: What galaxy-level container holds Paris? (deep proof expected) ===
+  // === QUERY: Where is Paris located? (containment query - returns all transitive locations) ===
   {
     action: 'query',
-    input_nl: 'Where is Paris along the chain up to Galaxy?',
-    input_dsl: '@q isA Paris Galaxy',
-    expected_nl: 'Answer: Galaxy. Proof: Paris isA City. City isA Country. Country isA Continent. Continent isA Planet. Planet isA SolarSystem. SolarSystem isA Arm. Arm isA Galaxy.'
+    input_nl: 'Where is Paris located?',
+    input_dsl: '@q locatedIn Paris ?where',
+    expected_nl: 'Paris is in France. Paris is in Europe. Proof: locatedIn Paris France. locatedIn France Europe. Paris is in Earth. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. Paris is in SolarSystem. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. Paris is in MilkyWayArm. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. Paris is in MilkyWay. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. locatedIn MilkyWayArm MilkyWay. Paris is in LocalCluster. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. locatedIn MilkyWayArm MilkyWay. locatedIn MilkyWay LocalCluster. Paris is in Supercluster. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. locatedIn MilkyWayArm MilkyWay. locatedIn MilkyWay LocalCluster. locatedIn LocalCluster Supercluster. Paris is in Universe. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. locatedIn MilkyWayArm MilkyWay. locatedIn MilkyWay LocalCluster. locatedIn LocalCluster Supercluster. locatedIn Supercluster Universe.'
   },
 
-  // === QUERY: What causes Conflict in this chain? (causal proof) ===
+  // === QUERY: What causes Conflict? (causal query - returns all transitive causes) ===
   {
     action: 'query',
-    input_nl: 'List the causal path from Pollution to Conflict.',
-    input_dsl: '@q causes Pollution Conflict',
-    expected_nl: 'Answer: Pollution causes Conflict. Proof: Pollution causes ClimateChange. ClimateChange causes Drought. Drought causes CropFailure. CropFailure causes Famine. Famine causes Migration. Migration causes Conflict.'
+    input_nl: 'What causes Conflict?',
+    input_dsl: '@q causes ?what Conflict',
+    expected_nl: 'Migration causes Conflict. Famine causes Conflict. Proof: causes Famine Migration. causes Migration Conflict. CropFailure causes Conflict. Proof: causes CropFailure Famine. causes Famine Migration. causes Migration Conflict. Drought causes Conflict. Proof: causes Drought CropFailure. causes CropFailure Famine. causes Famine Migration. causes Migration Conflict. ClimateChange causes Conflict. Proof: causes ClimateChange Drought. causes Drought CropFailure. causes CropFailure Famine. causes Famine Migration. causes Migration Conflict. Pollution causes Conflict. Proof: causes Pollution ClimateChange. causes ClimateChange Drought. causes Drought CropFailure. causes CropFailure Famine. causes Famine Migration. causes Migration Conflict.'
   },
 
   // === NEGATIVE: Reverse temporal order ===

@@ -131,7 +131,8 @@ export const steps = [
     action: 'query',
     input_nl: 'Who can fly?',
     input_dsl: '@q can ?who Fly',
-    expected_nl: 'Tweety can Fly.'
+    expected_nl: 'Tweety can Fly.',
+    
   },
 
   // === NEGATIVE: Rock cannot fly (no type assertions) ===

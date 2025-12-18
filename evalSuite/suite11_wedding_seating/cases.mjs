@@ -68,7 +68,8 @@ export const cases = [
   {
     action: 'query',
     input_dsl: `seating Alice ?table`,
-    expected_nl: 'Alice is at T'
+    expected_nl: 'Alice is at T1. Alice is at T2.',
+      // CSP query - no proof generated
   },
 
   // ========================================

@@ -282,7 +282,7 @@ export class KBMatcher {
         this.engine.logStep('rule_match', rule.name || rule.source);
         // Extract conclusion fact from rule source
         let conclusionFact = '';
-        const match = rule.source?.match(/Implies\s+[@$]?(\w+)\s+[@$]?(\w+)/);
+        const match = rule.source?.match(/Implies\s+[@$]?(\w+)\s+[@$]?(\w+)/i);
         if (match && this.session.referenceTexts.has(match[2])) {
           conclusionFact = this.session.referenceTexts.get(match[2]);
         }

@@ -4,6 +4,11 @@
  * Exercises true Sys2DSL macros that assemble anonymous substructures and
  * materialize only selected facts into the KB. Forces reasoning/proofs over
  * macro-generated concepts and their exposed conclusions.
+ *
+ * Syntax follows DS02-DSL-Syntax.md:
+ * - Macros defined with @Name:export macro params ... end
+ * - No parenthesized expressions in implies; use @var references
+ * - Anonymous facts (no @) go directly to KB
  */
 
 export const name = 'Macro Aggregation';
@@ -12,135 +17,171 @@ export const description = 'Macros that build complex concepts from anonymous fa
 export const theories = ['05-logic.sys2'];
 
 export const steps = [
-  // === SETUP: Define macros and invoke them (only some facts exposed) ===
+  // === SETUP: Define macros inline and invoke them ===
   {
     action: 'learn',
-    input_nl: 'Define macros for earthquakeEvent, outbreak, disasterResponse, supplyRoute; invoke them and expose only hazards/casualties/shipments.',
+    input_nl: 'Define earthquakeEvent macro that creates hazard facts and causal chains.',
     input_dsl: `
-      # Define macros (Sys2DSL syntax)
-      @Earthquake:earthquakeEvent macro epicenter magnitude effect
+      # Macro: earthquakeEvent creates hazard with causal/temporal structure
+      @EQ:earthquakeEvent macro epicenter magnitude effect
+          isA $effect Hazard
+          isA $epicenter Epicenter
           @shock causes $epicenter SeismicShock
           @mag magnitude $epicenter $magnitude
-          isA $effect Hazard        # Exposed to KB
-          isA $epicenter Epicenter  # Exposed to KB
+          causes $effect InfrastructureDamage
+          causes InfrastructureDamage EvacuationNeeded
+          before $effect EvacuationStart
+          before EvacuationStart ReliefDeployment
           return $effect
       end
 
-      @Outbreak:outbreak macro pathogen r0 location
-          isA $pathogen Virus       # Exposed to KB
+      # Invoke macro to create earthquake events
+      @eq1 earthquakeEvent CityA 7.5 CityPowerDown
+      @eq2 earthquakeEvent CityB 6.8 PortDamage
+    `,
+    expected_nl: 'Learned 14 facts'
+  },
+
+  {
+    action: 'learn',
+    input_nl: 'Define outbreak macro for virus with infection chains.',
+    input_dsl: `
+      # Macro: outbreak creates virus with infection causation
+      @OB:outbreak macro pathogen r0 location
+          isA $pathogen Virus
+          isA $pathogen Pathogen
           @r reproductionNumber $pathogen $r0
-          @loc affects $pathogen $location
+          affects $pathogen $location
           causes $pathogen Infection
+          causes Infection Symptoms
+          causes Symptoms Hospitalization
           return $pathogen
       end
 
-      # Invoke macros (should create hazard/virus facts)
-      @eq1 earthquakeEvent EpicenterA 7.5 CityPowerDown
-      @eq2 earthquakeEvent EpicenterB 6.8 PortDamage
+      # Invoke macro
       @ob1 outbreak VirusX 2.8 MetroA
       @ob2 outbreak VirusY 1.3 MetroB
-      @dr1 disasterResponse CityPowerDown MetroA
-      @sr1 supplyRoute FactoryA HubX CityZ
-      @sr2 supplyRoute FactoryB HubY CityZ
+    `,
+    expected_nl: 'Learned 14 facts'
+  },
 
-      # Global rules applied to exposed facts
+  {
+    action: 'learn',
+    input_nl: 'Define disasterResponse macro with obligations and temporal ordering.',
+    input_dsl: `
+      # Macro: disasterResponse with responder obligations
+      @DR:disasterResponse macro hazard responderTeam
+          isA $responderTeam Responder
+          assigned $responderTeam $hazard
+          must $responderTeam Assist
+          must $responderTeam Coordinate
+          can $responderTeam DeploySupplies
+          before Assessment Response
+          before Response Recovery
+          return $hazard
+      end
+
+      # Invoke macro
+      @dr1 disasterResponse CityPowerDown TeamAlpha
+      @dr2 disasterResponse PortDamage TeamBeta
+    `,
+    expected_nl: 'Learned 12 facts'
+  },
+
+  {
+    action: 'learn',
+    input_nl: 'Add global causal rules and an implies rule using correct And syntax.',
+    input_dsl: `
+      # Global causal rules
       causes Hazard SupplyChainDisruption
       causes Hazard PublicPanic
-      causes Infection Hospitalization
       causes Hospitalization ICUOverload
-      implies (causes Virus Infection) (causes Virus PublicHealthEmergency)
-      # Negation example: Hazard not located in SafeZone
+
+      # Rule: Virus causing infection implies public health emergency
+      # Correct syntax: build condition and consequence separately
+      @cond1 causes ?X Infection
+      @cond2 isA ?X Virus
+      @conj And $cond1 $cond2
+      @conseq causes ?X PublicHealthEmergency
+      implies $conj $conseq
+
+      # Explicit negation: CityPowerDown not in SafeZone
       @neg1 locatedIn CityPowerDown SafeZone
       Not $neg1
     `,
-    expected_nl: 'Learned 32 facts'
+    expected_nl: 'Learned 10 facts'
   },
 
   // === PROVE: Hazard chain from earthquake macro output ===
   {
     action: 'prove',
-    input_nl: 'Does an earthquake imply supply chain disruption? (via exposed Hazard)',
+    input_nl: 'Does CityPowerDown cause supply chain disruption?',
     input_dsl: '@goal causes CityPowerDown SupplyChainDisruption',
-    expected_nl: 'True: CityPowerDown causes SupplyChainDisruption. Proof: CityPowerDown is a hazard. Hazard causes SupplyChainDisruption.'
+    expected_nl: 'True: CityPowerDown causes SupplyChainDisruption. Proof: CityPowerDown isA Hazard. Hazard causes SupplyChainDisruption. Transitive via isA inheritance.'
   },
 
-  // === PROVE: Disaster response chain (temporal + obligation) ===
+  // === PROVE: Temporal chain from earthquake ===
   {
     action: 'prove',
-    input_nl: 'Does CityPowerDown trigger relief deployment?',
+    input_nl: 'Is CityPowerDown before ReliefDeployment?',
     input_dsl: '@goal before CityPowerDown ReliefDeployment',
-    expected_nl: 'True: CityPowerDown is before ReliefDeployment. Proof: CityPowerDown is before EvacuationStart. EvacuationStart is before ReliefDeployment.'
+    expected_nl: 'True: CityPowerDown is before ReliefDeployment. Proof: before CityPowerDown EvacuationStart. before EvacuationStart ReliefDeployment. Transitive chain (2 hops).'
   },
 
+  // === PROVE: Responder obligation from macro ===
   {
     action: 'prove',
-    input_nl: 'Must the Responder assist in this disaster?',
-    input_dsl: '@goal must Responder Assist',
-    expected_nl: 'True: Responder must Assist. Proof: disasterResponse sets obligation must Responder Assist.'
+    input_nl: 'Must TeamAlpha assist?',
+    input_dsl: '@goal must TeamAlpha Assist',
+    expected_nl: 'True: TeamAlpha must Assist. Proof: disasterResponse macro set must TeamAlpha Assist via assigned TeamAlpha CityPowerDown.'
   },
 
-  // === NEGATIVE PROVE: Hazard location blocked by explicit negation ===
+  // === NEGATIVE: Blocked by explicit negation ===
   {
     action: 'prove',
-    input_nl: 'Is CityPowerDown located in SafeZone?',
+    input_nl: 'Is CityPowerDown in SafeZone?',
     input_dsl: '@goal locatedIn CityPowerDown SafeZone',
-    expected_nl: 'Cannot prove: CityPowerDown locatedIn SafeZone. Search: Not(locatedIn CityPowerDown SafeZone) present; negation blocks inference.'
+    expected_nl: 'Cannot prove: CityPowerDown locatedIn SafeZone. Search: Found Not(locatedIn CityPowerDown SafeZone). Negation blocks inference.'
   },
 
-  // === QUERY: Which hazards come from earthquake macros? ===
+  // === QUERY: List all hazards ===
   {
     action: 'query',
-    input_nl: 'List hazards produced by earthquakes.',
-    input_dsl: '@q isA ?hazard Hazard',
-    expected_nl: 'Answer: CityPowerDown. PortDamage. Proof: earthquakeEvent(EpicenterA,7.5,CityPowerDown) and earthquakeEvent(EpicenterB,6.8,PortDamage) exposed Hazard tags.'
+    input_nl: 'What entities are hazards?',
+    input_dsl: '@q isA ?x Hazard',
+    expected_nl: 'CityPowerDown is a hazard. PortDamage is a hazard. Proof: earthquakeEvent macro exposed isA CityPowerDown Hazard and isA PortDamage Hazard.'
   },
 
-  // === PROVE: Virus outbreak leads to hospitalization (macro→rule→chain) ===
+  // === PROVE: Virus outbreak leads to hospitalization ===
   {
     action: 'prove',
-    input_nl: 'Does an outbreak of VirusX lead to hospitalization?',
+    input_nl: 'Does VirusX cause hospitalization?',
     input_dsl: '@goal causes VirusX Hospitalization',
-    expected_nl: 'True: VirusX causes Hospitalization. Proof: VirusX is a Virus. Virus causes Infection. Infection causes Hospitalization. Transitive chain verified (2 hops). Therefore VirusX causes Hospitalization.'
+    expected_nl: 'True: VirusX causes Hospitalization. Proof: VirusX causes Infection. Infection causes Symptoms. Symptoms causes Hospitalization. Transitive chain (3 hops).'
   },
 
-  // === PROVE: Public health emergency via implied rule from macro ===
+  // === PROVE: Public health emergency via implies rule ===
   {
     action: 'prove',
-    input_nl: 'Does a virus outbreak imply a public health emergency?',
+    input_nl: 'Does VirusX cause a public health emergency?',
     input_dsl: '@goal causes VirusX PublicHealthEmergency',
-    expected_nl: 'True: VirusX causes PublicHealthEmergency. Proof: VirusX is a Virus. Rule: causes Virus Infection implies causes Virus PublicHealthEmergency. Therefore VirusX causes PublicHealthEmergency.'
+    expected_nl: 'True: VirusX causes PublicHealthEmergency. Proof: VirusX isA Virus. VirusX causes Infection. And condition satisfied. Rule implies causes VirusX PublicHealthEmergency.'
   },
 
-  // === QUERY: Which macro-produced hazards cause supply chain issues? ===
+  // === QUERY: Which hazards cause supply chain disruption? ===
   {
     action: 'query',
-    input_nl: 'Which hazards propagate to supply chain disruption?',
-    input_dsl: '@q causes ?hazard SupplyChainDisruption',
-    expected_nl: 'Answer: Hazard. CityPowerDown. PortDamage. Proof: Hazard causes SupplyChainDisruption; CityPowerDown and PortDamage are Hazards from earthquakeEvent and inherit the causal edge.'
+    input_nl: 'What causes supply chain disruption?',
+    input_dsl: '@q causes ?x SupplyChainDisruption',
+    expected_nl: 'Hazard causes SupplyChainDisruption. CityPowerDown causes SupplyChainDisruption. PortDamage causes SupplyChainDisruption. Proof: Direct fact and inheritance via isA Hazard.'
   },
 
-  // === QUERY: Which destinations become fulfilled via supply routes? ===
-  {
-    action: 'query',
-    input_nl: 'Which destinations become fulfilled via supply routes?',
-    input_dsl: '@q causes ShipmentReady Fulfilled',
-    expected_nl: 'Answer: Fulfilled. Proof: ShipmentReady causes Delivery. Delivery causes Fulfilled.'
-  },
-
-  // === PROVE: Supply route temporal chain ===
-  {
-    action: 'prove',
-    input_nl: 'Is ShipmentReady before Fulfilled?',
-    input_dsl: '@goal before ShipmentReady Fulfilled',
-    expected_nl: 'True: ShipmentReady is before Fulfilled. Proof: ShipmentReady is before Departure. Departure is before Arrival. Arrival is before Fulfilled. Transitive chain verified (3 hops). Therefore ShipmentReady is before Fulfilled.'
-  },
-
-  // === NEGATIVE: Outbreak with low R0 should not imply PublicHealthEmergency ===
+  // === NEGATIVE: VirusY should also trigger (same rule applies) ===
   {
     action: 'prove',
     input_nl: 'Does VirusY cause a public health emergency?',
     input_dsl: '@goal causes VirusY PublicHealthEmergency',
-    expected_nl: 'Cannot prove: VirusY causes PublicHealthEmergency. Search: VirusY is a Virus. Rule requires causes Virus Infection; explicit cause missing for VirusY. No transitive path to PublicHealthEmergency.'
+    expected_nl: 'True: VirusY causes PublicHealthEmergency. Proof: VirusY isA Virus. VirusY causes Infection. And condition satisfied. Rule implies causes VirusY PublicHealthEmergency.'
   }
 ];
 

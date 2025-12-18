@@ -11,6 +11,7 @@
  * - Direct KB search (query-kb.mjs)
  * - Transitive reasoning (query-transitive.mjs)
  * - Rule derivations (query-rules.mjs)
+ * - Meta-operators (query-meta-ops.mjs)
  */
 
 import { bind, similarity } from '../core/operations.mjs';
@@ -24,6 +25,23 @@ import { searchKBDirect, isTypeClass, isFactNegated, sameBindings, filterTypeCla
 import { searchTransitive, isTransitiveRelation } from './query-transitive.mjs';
 import { searchViaRules } from './query-rules.mjs';
 import { searchCompoundSolutions } from './query-compound.mjs';
+
+// Import meta-operators (DS17)
+import {
+  searchSimilar as searchSimilarOp,
+  searchPropertyInheritance as searchPropertyInheritanceOp,
+  isPropertyNegated,
+  getAllParentTypes,
+  entityIsA as entityIsAOp,
+  searchInduce,
+  searchBundle,
+  searchDifference,
+  searchAnalogy,
+  searchDeduce
+} from './query-meta-ops.mjs';
+
+// Import abduction engine
+import { AbductionEngine } from './abduction.mjs';
 
 // Debug logging
 const DEBUG = process.env.SYS2_DEBUG === 'true';
@@ -81,9 +99,48 @@ export class QueryEngine {
       };
     }
 
-    // Special case: 'similar' operator - find similar concepts via HDC
+    // Special case: 'similar' operator - find similar concepts via property matching
     if (operatorName === 'similar' && knowns.length === 1 && holes.length === 1) {
-      return this.searchSimilar(knowns[0], holes[0]);
+      return searchSimilarOp(this.session, knowns[0], holes[0]);
+    }
+
+    // Meta-operator: 'induce' - find common properties (intersection)
+    if (operatorName === 'induce' && knowns.length >= 2 && holes.length === 1) {
+      return searchInduce(this.session, knowns, holes[0]);
+    }
+
+    // Meta-operator: 'bundle' - combine all properties (union)
+    if (operatorName === 'bundle' && knowns.length >= 2 && holes.length === 1) {
+      return searchBundle(this.session, knowns, holes[0]);
+    }
+
+    // Meta-operator: 'difference' - find unique properties
+    if (operatorName === 'difference' && knowns.length === 2 && holes.length === 1) {
+      return searchDifference(this.session, knowns[0], knowns[1], holes[0]);
+    }
+
+    // Meta-operator: 'analogy' - A:B :: C:?
+    if (operatorName === 'analogy' && knowns.length === 3 && holes.length === 1) {
+      return searchAnalogy(this.session, knowns[0], knowns[1], knowns[2], holes[0]);
+    }
+
+    // Meta-operator: 'abduce' - find best explanation for an observation
+    if (operatorName === 'abduce' && knowns.length >= 1 && holes.length === 1) {
+      return this.searchAbduce(knowns, holes[0]);
+    }
+
+    // Meta-operator: 'whatif' - counterfactual reasoning
+    if (operatorName === 'whatif' && knowns.length >= 2 && holes.length === 1) {
+      return this.searchWhatif(knowns, holes[0]);
+    }
+
+    // Meta-operator: 'deduce' - forward-chaining deduction with filter
+    // Signature: deduce $source $filter ?result [depth] [limit]
+    if (operatorName === 'deduce' && knowns.length >= 2 && holes.length === 1) {
+      // Extract depth and limit from additional args (if present as numeric values)
+      const depth = this.extractNumericArg(statement.args, 3) || 1;
+      const limit = this.extractNumericArg(statement.args, 4) || 10;
+      return searchDeduce(this.session, knowns[0], knowns[1], holes[0], depth, limit);
     }
 
     // Step 2: Collect results from multiple sources
@@ -156,7 +213,7 @@ export class QueryEngine {
     const inheritableOps = new Set(['can', 'has', 'likes', 'knows', 'owns', 'uses']);
     if (inheritableOps.has(operatorName) && knowns.length === 1 && holes.length === 1 && knowns[0].index === 1) {
       const entityName = knowns[0].name;
-      const inheritMatches = this.searchPropertyInheritance(operatorName, entityName, holes[0].name);
+      const inheritMatches = searchPropertyInheritanceOp(this.session, operatorName, entityName, holes[0].name);
       for (const im of inheritMatches) {
         const exists = allResults.some(r =>
           sameBindings(r.bindings, im.bindings, holes)
@@ -269,345 +326,228 @@ export class QueryEngine {
     };
   }
 
+  // ============================================================================
+  // Delegate methods - implementations moved to query-meta-ops.mjs
+  // ============================================================================
+
   /**
-   * Search for concepts similar to a given concept using property-based similarity
-   * Computes similarity based on shared properties (has, can, isA parent, etc.)
-   * @param {Object} known - The known concept {name, vector}
-   * @param {Object} hole - The hole to fill {name}
-   * @returns {QueryResult} Similar concepts ranked by property overlap
+   * Search for concepts similar to a given concept
+   * @deprecated Use searchSimilarOp directly for new code
    */
   searchSimilar(known, hole) {
-    const knownName = known.name;
-    const componentKB = this.session?.componentKB;
-
-    // Collect properties of the known concept
-    const knownProps = new Set();
-    if (componentKB) {
-      // Get all facts about knownName
-      const facts = componentKB.findByArg0(knownName);
-      for (const f of facts) {
-        this.session.reasoningStats.kbScans++;
-        // Add "operator:arg1" as a property key
-        if (f.args?.[1]) {
-          knownProps.add(`${f.operator}:${f.args[1]}`);
-        }
-      }
-    } else {
-      // Fallback: scan KB directly
-      for (const fact of this.session.kbFacts) {
-        this.session.reasoningStats.kbScans++;
-        const meta = fact.metadata;
-        if (meta?.args?.[0] === knownName && meta?.args?.[1]) {
-          knownProps.add(`${meta.operator}:${meta.args[1]}`);
-        }
-      }
-    }
-
-    if (knownProps.size === 0) {
-      return { success: false, bindings: new Map(), allResults: [] };
-    }
-
-    // Find other concepts and count shared properties
-    const candidates = new Map(); // name -> {shared, total}
-    const processed = new Set([knownName]);
-
-    if (componentKB) {
-      for (const fact of componentKB.facts) {
-        this.session.reasoningStats.kbScans++;
-        const candidate = fact.args?.[0];
-        if (!candidate || processed.has(candidate)) continue;
-        if (['isA', 'has', 'can', 'likes', 'knows', 'owns', 'uses'].includes(candidate)) continue;
-
-        // Get this candidate's properties
-        if (!candidates.has(candidate)) {
-          const candFacts = componentKB.findByArg0(candidate);
-          const candProps = new Set();
-          for (const cf of candFacts) {
-            if (cf.args?.[1]) {
-              candProps.add(`${cf.operator}:${cf.args[1]}`);
-            }
-          }
-          // Count shared properties
-          let shared = 0;
-          for (const prop of candProps) {
-            if (knownProps.has(prop)) shared++;
-          }
-          if (candProps.size > 0) {
-            candidates.set(candidate, {
-              shared,
-              total: candProps.size,
-              similarity: shared / Math.max(knownProps.size, candProps.size)
-            });
-          }
-        }
-        processed.add(candidate);
-      }
-    }
-
-    // Sort by similarity (shared property ratio)
-    const results = [...candidates.entries()]
-      .filter(([_, data]) => data.shared > 0)
-      .sort((a, b) => b[1].similarity - a[1].similarity)
-      .slice(0, 10)
-      .map(([name, data]) => ({
-        name,
-        similarity: data.similarity,
-        shared: data.shared,
-        method: 'property_similarity'
-      }));
-
-    const allResults = results.map(r => ({
-      bindings: new Map([[hole.name, { answer: r.name, similarity: r.similarity, method: 'similar' }]]),
-      score: r.similarity,
-      method: 'similar'
-    }));
-
-    const bindings = new Map();
-    if (results.length > 0) {
-      bindings.set(hole.name, {
-        answer: results[0].name,
-        similarity: results[0].similarity,
-        alternatives: results.slice(1, 4).map(r => ({ value: r.name, similarity: r.similarity })),
-        method: 'similar'
-      });
-    }
-
-    return {
-      success: results.length > 0,
-      bindings,
-      confidence: results.length > 0 ? results[0].similarity : 0,
-      ambiguous: results.length > 1,
-      allResults
-    };
+    return searchSimilarOp(this.session, known, hole);
   }
 
   /**
    * Search for properties via isA inheritance chain
-   * e.g., can Rex Bark because Rex isA GermanShepherd isA Shepherd isA WorkingDog isA Dog, and Dog can Bark
-   * @param {string} operator - Property operator (can, has, etc.)
-   * @param {string} entityName - Entity to search properties for
-   * @param {string} holeName - Name of the hole variable
-   * @returns {Array} Query results with bindings and proof steps
+   * @deprecated Use searchPropertyInheritanceOp directly for new code
    */
   searchPropertyInheritance(operator, entityName, holeName) {
-    const results = [];
-    const visited = new Set();
-    const componentKB = this.session?.componentKB;
-
-    // Build isA chain for entity
-    const isAChain = [];
-    const queue = [{ entity: entityName, depth: 0, steps: [] }];
-
-    while (queue.length > 0) {
-      const { entity: current, depth, steps } = queue.shift();
-      if (visited.has(current)) continue;
-      visited.add(current);
-
-      // Find all properties at this level
-      const propsAtLevel = [];
-      if (componentKB) {
-        const facts = componentKB.findByOperatorAndArg0(operator, current);
-        for (const fact of facts) {
-          if (fact.args?.[1]) {
-            propsAtLevel.push({ value: fact.args[1], holder: current });
-          }
-        }
-      } else {
-        for (const fact of this.session.kbFacts) {
-          this.session.reasoningStats.kbScans++;
-          const meta = fact.metadata;
-          if (meta?.operator === operator && meta.args?.[0] === current && meta.args?.[1]) {
-            propsAtLevel.push({ value: meta.args[1], holder: current });
-          }
-        }
-      }
-
-      // Add results for this level
-      for (const prop of propsAtLevel) {
-        // Check if this property is negated for the original entity
-        if (this.isPropertyNegated(operator, entityName, prop.value)) {
-          continue;
-        }
-
-        // Build proof steps for inheritance
-        const fullSteps = [...steps, `${operator} ${prop.holder} ${prop.value}`];
-
-        const factBindings = new Map();
-        factBindings.set(holeName, {
-          answer: prop.value,
-          similarity: 0.9 - (depth * 0.05),
-          method: 'property_inheritance',
-          steps: fullSteps
-        });
-
-        results.push({
-          bindings: factBindings,
-          score: 0.9 - (depth * 0.05),
-          method: 'property_inheritance',
-          depth,
-          inheritedFrom: prop.holder
-        });
-      }
-
-      // Find parents via isA
-      if (componentKB) {
-        const isAFacts = componentKB.findByOperatorAndArg0('isA', current);
-        for (const fact of isAFacts) {
-          const parent = fact.args?.[1];
-          if (parent && !visited.has(parent)) {
-            const newSteps = [...steps, `isA ${current} ${parent}`];
-            queue.push({ entity: parent, depth: depth + 1, steps: newSteps });
-          }
-        }
-      } else {
-        for (const fact of this.session.kbFacts) {
-          const meta = fact.metadata;
-          if (meta?.operator === 'isA' && meta.args?.[0] === current) {
-            const parent = meta.args[1];
-            if (parent && !visited.has(parent)) {
-              const newSteps = [...steps, `isA ${current} ${parent}`];
-              queue.push({ entity: parent, depth: depth + 1, steps: newSteps });
-            }
-          }
-        }
-      }
-    }
-
-    return results;
+    return searchPropertyInheritanceOp(this.session, operator, entityName, holeName);
   }
 
   /**
-   * Check if a property is negated for an entity (directly or via type)
-   * Uses HDC similarity matching to compare against Not references
-   * @param {string} operator - Property operator
-   * @param {string} entity - Entity name
-   * @param {string} value - Property value
-   * @returns {boolean} True if negated
+   * Check if a property is negated for an entity
    */
   isPropertyNegated(operator, entity, value) {
-    // Check if there's a negation that applies to this entity or any parent type
-    const entitiesToCheck = [entity, ...this.getAllParentTypes(entity)];
-
-    for (const ent of entitiesToCheck) {
-      // Check direct negation via Not $ref pattern using HDC similarity
-      for (const fact of this.session.kbFacts) {
-        const meta = fact.metadata;
-        if (meta?.operator === 'Not') {
-          const negatedRef = meta.args?.[0];
-          if (negatedRef) {
-            const refName = negatedRef.replace(/^\$/, '');
-            const negatedVec = this.session.scope.get(refName);
-            if (!negatedVec) continue;
-
-            // Build a vector for the property we're checking
-            const checkFact = {
-              operator: { type: 'Identifier', name: operator },
-              args: [
-                { type: 'Identifier', name: ent },
-                { type: 'Identifier', name: value }
-              ]
-            };
-
-            const checkVec = this.session.executor.buildStatementVector(checkFact);
-            if (!checkVec) continue;
-
-            // Compare using HDC similarity
-            this.session.reasoningStats.similarityChecks++;
-            const sim = this.session.similarity(checkVec, negatedVec);
-
-            // Use threshold for match (0.85 is typical for rule matching)
-            if (sim > 0.85) {
-              return true;
-            }
-          }
-        }
-      }
-
-      // Also check for explicit "Not operator entity value" facts
-      for (const fact of this.session.kbFacts) {
-        const meta = fact.metadata;
-        if (!meta) continue;
-
-        if (meta.operator === 'Not' && meta.args?.length >= 3) {
-          const negOp = meta.args[0];
-          const negEntity = meta.args[1];
-          const negValue = meta.args[2];
-
-          if (negOp === operator && negEntity === ent && negValue === value) {
-            return true;
-          }
-        }
-      }
-    }
-
-    return false;
+    return isPropertyNegated(this.session, operator, entity, value);
   }
 
   /**
    * Get all parent types for an entity via isA chain
-   * @param {string} entity - Entity name
-   * @returns {Array<string>} Array of parent type names
    */
   getAllParentTypes(entity) {
-    const parents = [];
-    const visited = new Set();
-    const queue = [entity];
-
-    while (queue.length > 0) {
-      const current = queue.shift();
-      if (visited.has(current)) continue;
-      visited.add(current);
-
-      for (const fact of this.session.kbFacts) {
-        const meta = fact.metadata;
-        if (meta?.operator === 'isA' && meta.args?.[0] === current) {
-          const parent = meta.args[1];
-          if (parent && !visited.has(parent)) {
-            parents.push(parent);
-            queue.push(parent);
-          }
-        }
-      }
-    }
-    return parents;
+    return getAllParentTypes(this.session, entity);
   }
 
   /**
    * Check if entity is a type via isA chain
-   * @param {string} entity - Entity name
-   * @param {string} type - Type to check
-   * @returns {boolean} True if entity isA type
    */
   entityIsA(entity, type) {
-    const visited = new Set();
-    const queue = [entity];
-
-    while (queue.length > 0) {
-      const current = queue.shift();
-      if (current === type) return true;
-      if (visited.has(current)) continue;
-      visited.add(current);
-
-      for (const fact of this.session.kbFacts) {
-        const meta = fact.metadata;
-        if (meta?.operator === 'isA' && meta.args?.[0] === current) {
-          const parent = meta.args[1];
-          if (parent && !visited.has(parent)) {
-            queue.push(parent);
-          }
-        }
-      }
-    }
-    return false;
+    return entityIsAOp(this.session, entity, type);
   }
 
-  // Delegate methods for backwards compatibility
+  // Delegate methods for backwards compatibility with query-kb.mjs
   isTypeClass(name) {
     return isTypeClass(this.session, name);
   }
 
   isFactNegated(operator, args) {
     return isFactNegated(this.session, operator, args);
+  }
+
+  /**
+   * Extract a numeric argument from statement args at a given index
+   * @param {Array} args - Statement arguments
+   * @param {number} index - Zero-based index to check
+   * @returns {number|null} Numeric value or null
+   */
+  extractNumericArg(args, index) {
+    if (!args || index >= args.length) return null;
+    const arg = args[index];
+    if (arg?.type === 'Number') return arg.value;
+    if (typeof arg?.value === 'number') return arg.value;
+    const num = parseInt(arg?.value || arg?.name, 10);
+    return isNaN(num) ? null : num;
+  }
+
+  // ============================================================================
+  // Advanced Reasoning Operators (DS06)
+  // ============================================================================
+
+  /**
+   * Search for best explanation via abduction
+   * @param {Array} knowns - Observed facts to explain
+   * @param {Object} hole - The hole to fill with cause/explanation
+   * @returns {QueryResult} Abduction result
+   */
+  searchAbduce(knowns, hole) {
+    const engine = new AbductionEngine(this.session);
+    const observation = knowns[0];
+
+    // Build observation AST from known
+    const obsAST = {
+      type: 'Statement',
+      operator: { type: 'Identifier', name: 'observed' },
+      args: [{ type: 'Identifier', name: observation.name }]
+    };
+
+    const result = engine.abduce(obsAST);
+
+    const bindings = new Map();
+    if (result.success && result.bestExplanation) {
+      const cause = result.bestExplanation.cause || result.bestExplanation.hypothesis;
+      bindings.set(hole.name, {
+        answer: cause,
+        confidence: result.confidence,
+        method: 'abduce',
+        explanations: result.explanations
+      });
+    }
+
+    return {
+      success: result.success,
+      bindings,
+      confidence: result.confidence,
+      allResults: result.explanations?.map(e => ({
+        bindings: new Map([[hole.name, { answer: e.cause || e.hypothesis, confidence: e.score, method: 'abduce' }]]),
+        score: e.score,
+        method: 'abduce',
+        proof: {
+          operation: 'abduce',
+          observed: observation.name,
+          cause: e.cause || e.hypothesis,
+          explanation: e.explanation
+        }
+      })) || []
+    };
+  }
+
+  /**
+   * Search for counterfactual outcome - "what if X were not true?"
+   * @param {Array} knowns - [negatedFact, affectedFact]
+   * @param {Object} hole - The hole to fill with outcome
+   * @returns {QueryResult} Counterfactual result
+   */
+  searchWhatif(knowns, hole) {
+    const negatedFact = knowns[0]; // The fact we're negating
+    const affectedFact = knowns[1]; // The fact we're checking
+    const componentKB = this.session?.componentKB;
+
+    // Find causal chains from negatedFact to affectedFact
+    const causalPaths = [];
+
+    if (componentKB) {
+      // Find all "causes" relations involving negatedFact
+      const causeFacts = componentKB.findByOperator('causes');
+      const effectsOfNegated = new Set();
+
+      for (const fact of causeFacts) {
+        if (fact.args?.[0] === negatedFact.name) {
+          effectsOfNegated.add(fact.args[1]);
+        }
+      }
+
+      // Check if affectedFact is in the effects chain
+      const affectedName = affectedFact.name;
+      let outcome = 'unchanged';
+      let confidence = 0.5;
+
+      if (effectsOfNegated.has(affectedName)) {
+        // Direct causal link - negating cause negates effect
+        outcome = 'would_fail';
+        confidence = 0.9;
+        causalPaths.push({
+          path: [negatedFact.name, affectedName],
+          type: 'direct_cause'
+        });
+      } else {
+        // Check transitive effects
+        for (const effect of effectsOfNegated) {
+          // Does this effect cause the affected fact?
+          const secondaryFacts = componentKB.findByOperatorAndArg0('causes', effect);
+          for (const sf of secondaryFacts) {
+            if (sf.args?.[1] === affectedName) {
+              outcome = 'would_fail';
+              confidence = 0.85;
+              causalPaths.push({
+                path: [negatedFact.name, effect, affectedName],
+                type: 'transitive_cause'
+              });
+            }
+          }
+        }
+      }
+
+      // Check for alternative causes that would still produce affectedFact
+      const alternativeCauses = [];
+      for (const fact of causeFacts) {
+        if (fact.args?.[1] === affectedName && fact.args?.[0] !== negatedFact.name) {
+          alternativeCauses.push(fact.args[0]);
+        }
+      }
+
+      if (alternativeCauses.length > 0 && outcome === 'would_fail') {
+        // There are alternative explanations - outcome is uncertain
+        outcome = 'uncertain';
+        confidence = 0.6;
+      }
+
+      const bindings = new Map();
+      bindings.set(hole.name, {
+        answer: outcome,
+        confidence,
+        method: 'whatif',
+        causalPaths,
+        alternativeCauses
+      });
+
+      return {
+        success: true,
+        bindings,
+        confidence,
+        allResults: [{
+          bindings,
+          score: confidence,
+          method: 'whatif',
+          proof: {
+            operation: 'whatif',
+            negated: negatedFact.name,
+            affected: affectedName,
+            outcome,
+            paths: causalPaths
+          }
+        }]
+      };
+    }
+
+    // Fallback if no componentKB
+    return {
+      success: false,
+      bindings: new Map(),
+      reason: 'No componentKB for counterfactual reasoning',
+      allResults: []
+    };
   }
 }
 
