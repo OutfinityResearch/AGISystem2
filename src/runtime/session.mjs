@@ -19,6 +19,7 @@ import { InductionEngine } from '../reasoning/induction.mjs';
 import { createQueryEngine, createProofEngine, isHolographicPriority, getReasoningPriority } from '../reasoning/index.mjs';
 import { textGenerator } from '../output/text-generator.mjs';
 import { format as resultFormatterFormat } from '../output/result-formatter.mjs';
+import { ResponseTranslator } from '../output/response-translator.mjs';
 import { findAll } from '../reasoning/find-all.mjs';
 import { ComponentKB } from '../reasoning/component-kb.mjs';
 
@@ -59,6 +60,9 @@ export class Session {
     this.operators = new Map();
     this.warnings = [];
     this.referenceTexts = new Map(); // Maps reference names to fact strings
+    this.macros = new Map();
+    this.macroAliases = new Map();
+    this.responseTranslator = new ResponseTranslator(this);
 
     // Reasoning statistics
     this.reasoningStats = {
@@ -569,6 +573,15 @@ export class Session {
    */
   formatResult(result, type = 'query') {
     return resultFormatterFormat(result, type);
+  }
+
+  /**
+   * Describe a reasoning result using the response translator
+   * @param {Object} payload - includes action, reasoningResult, queryDsl
+   * @returns {string} Natural language text
+   */
+  describeResult(payload) {
+    return this.responseTranslator.translate(payload);
   }
 
   /**

@@ -5,43 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="prearing to add new reasoning methods">
-      <change afterPath="$PROJECT_DIR$/evalSuite/suite22_deduction/cases.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/output/result-formatter.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/defaults.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/prove-search-trace.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/query-inheritance.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/query-meta-ops.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/executor-meta-ops.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/deduce.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/defaults.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/whatif.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/debug-query.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/output/response-translator.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/output/response-translator.test.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite01_foundations/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite01_foundations/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite02_hierarchies/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite02_hierarchies/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite03_rules/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite03_rules/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite04_deep_chains/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite04_deep_chains/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite05_negation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite05_negation/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite06_compound_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite06_compound_logic/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite07_temporal/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite07_temporal/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite08_modal/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite08_modal/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite09_composition/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite09_composition/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite10_integration/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite10_integration/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite11_wedding_seating/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite11_wedding_seating/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite12_fuzzy_matching/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite12_fuzzy_matching/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite14_meta_queries/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite14_meta_queries/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite15_reasoning_macros/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite15_reasoning_macros/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite16_macro_aggregation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite16_macro_aggregation/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite17_macro_composition/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite17_macro_composition/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite18_set_theory/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite18_set_theory/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite19_biology/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite19_biology/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite20_predicate_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite20_predicate_logic/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite21_goat_cabbage_plus/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite21_goat_cabbage_plus/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/conditions.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/conditions.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/prove.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/executor.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
     </list>
@@ -120,7 +88,7 @@
       <workItem from="1765783559936" duration="115000" />
       <workItem from="1765869847094" duration="24419000" />
       <workItem from="1765956576045" duration="2273000" />
-      <workItem from="1766043755552" duration="7479000" />
+      <workItem from="1766043755552" duration="8749000" />
     </task>
     <task id="LOCAL-00001" summary="1st public version of AGISystem2">
       <option name="closed" value="true" />
@@ -474,7 +442,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766060094351</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="prearing to add new reasoning methods">
+      <option name="closed" value="true" />
+      <created>1766073952890</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1766073952890</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

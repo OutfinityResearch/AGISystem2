@@ -297,527 +297,24 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
 
 // --- PHASE 3: DSL -> NL (Decoding) ---
 
-function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
-  dbg('DSL->NL', 'Starting, expected_nl:', testCase.expected_nl?.substring(0, 40));
-
-  // VALIDATION: Query and prove results MUST include "Proof:" in expected_nl
-  // Exceptions: learn actions, "No results", "Cannot", negative cases
-  if (testCase.expected_nl && (testCase.action === 'query' || testCase.action === 'prove')) {
-    const nl = testCase.expected_nl;
-    const isExempt = nl.startsWith('Learned') ||
-                     nl.includes('No results') ||
-                     nl.includes('Cannot') ||
-                     nl.includes('No valid') ||
-                     nl.startsWith('False:') ||
-                     testCase.skip === true;
-
-    if (!isExempt && !nl.includes('Proof:') && !nl.includes('Proof ')) {
-      return {
-        passed: false,
-        error: `VALIDATION ERROR: expected_nl for ${testCase.action} must include "Proof:" - got: "${nl.substring(0, 60)}..."`,
-        expected: 'expected_nl with Proof:',
-        actual: nl
-      };
-    }
+function runDecoding(testCase, reasoningPhase, session, timeoutMs) {
+  const proofValidation = validateProofExpectation(testCase);
+  if (proofValidation) {
+    return proofValidation;
   }
-
   if (!testCase.expected_nl) {
-    dbg('DSL->NL', 'No expected_nl, skipping');
     return { passed: true, skipped: true };
   }
   if (!reasoningPhase.passed && !reasoningPhase.actual) {
-    dbg('DSL->NL', 'Reasoning failed, cannot decode');
     return { passed: false, skipped: true, error: 'Reasoning failed, cannot decode' };
   }
 
   const execution = runSyncWithTimeout(() => {
-    const result = reasoningPhase.actual;
-    let text = '';
-    dbg('DSL->NL', 'Action:', testCase.action, 'result keys:', Object.keys(result || {}));
-
-    if (testCase.action === 'learn') {
-       // Check for solve results first (solve blocks return solveResult)
-       if (result.solveResult && result.solveResult.type === 'solve') {
-         const solveData = result.solveResult;
-         if (!solveData.success || solveData.solutionCount === 0) {
-           text = solveData.error || 'No valid solutions found.';
-         } else {
-           text = `Learned ${result.facts} facts`;
-         }
-       }
-       // Include warnings (contradictions, etc.) in the output if present
-       else if (result.warnings && result.warnings.length > 0) {
-         text = result.warnings[0]; // First warning is most relevant
-       } else {
-         text = result.success ? `Learned ${result.facts} facts` : 'Failed';
-       }
-       dbg('DSL->NL', 'Learn text:', text);
-    }
-    // Handle listSolutions action - enumerate all CSP solutions grouped
-    else if (testCase.action === 'listSolutions') {
-      if (!result.success || result.solutionCount === 0) {
-        text = 'No valid solutions found.';
-      } else {
-        const solutionTexts = result.solutions.map((sol) => {
-          const factTexts = sol.facts.map(fact => {
-            const parts = fact.split(' ');
-            return session.generateText(parts[0], parts.slice(1)).replace(/\.$/, '');
-          });
-          return `Solution ${sol.index}: ${factTexts.join(', ')}`;
-        });
-        text = `Found ${result.solutionCount} solutions. ${solutionTexts.join('. ')}.`;
-      }
-      dbg('DSL->NL', 'listSolutions text:', text?.substring(0, 100));
-    }
-    // Handle solve results for query action
-    else if (result.solveResult && result.solveResult.type === 'solve') {
-      const solveData = result.solveResult;
-      if (!solveData.success || solveData.solutionCount === 0) {
-        text = solveData.error || 'No valid solutions found.';
-      } else {
-        const solutionTexts = solveData.solutions.map((sol, i) => {
-          const factTexts = sol.map(fact => {
-            // Use structured data if available, fall back to DSL parsing
-            if (fact.dsl) {
-              const parts = fact.dsl.split(' ');
-              return session.generateText(parts[0], parts.slice(1)).replace(/\.$/, '');
-            } else if (fact.predicate) {
-              return session.generateText(fact.predicate, [fact.subject, fact.object]).replace(/\.$/, '');
-            } else {
-              // Fallback for simple string format
-              const parts = fact.split(' ');
-              return session.generateText(parts[0], parts.slice(1)).replace(/\.$/, '');
-            }
-          });
-          return `${i + 1}. ${factTexts.join(', ')}`;
-        });
-        text = `Found ${solveData.solutionCount} valid seating arrangements: ${solutionTexts.join('. ')}.`;
-      }
-      dbg('DSL->NL', 'Solve text:', text);
-    }
-    else if (testCase.action === 'prove') {
-       dbg('DSL->NL', 'Processing prove result, valid:', result?.valid, 'result:', result?.result);
-
-       if (!result?.valid) {
-         // Failed proof - generate text for what couldn't be proven
-         let goalText = result?.goal || 'statement';
-         if (result?.goal) {
-           const parts = result.goal.trim().split(/\s+/).filter(p => !p.startsWith('@'));
-           if (parts.length >= 2) {
-             goalText = session.generateText(parts[0], parts.slice(1)).replace(/\.$/, '');
-           }
-         }
-         // Include search trace if available
-         if (result?.searchTrace) {
-           text = `Cannot prove: ${goalText}. ${result.searchTrace}`;
-         } else {
-           text = 'Cannot prove: ' + goalText;
-         }
-       } else if (result.result === false) {
-         // Disjoint proof - we proved the NEGATION (e.g., Tokyo NOT in Europe)
-         const steps = result.steps || [];
-         const proofSteps = [];
-
-         // Extract proof chain from steps
-         for (const step of steps) {
-           if (step.operation === 'chain_step' && step.from && step.to) {
-             const stepText = session.generateText('locatedIn', [step.from, step.to]).replace(/\.$/, '');
-             if (stepText && !proofSteps.includes(stepText)) {
-               proofSteps.push(stepText);
-             }
-           } else if (step.operation === 'disjoint_check') {
-             proofSteps.push(`${step.container} and ${step.target} are disjoint`);
-           }
-         }
-
-         // Get goal text
-         let goalText = '';
-         const goalString = result.goal;
-         if (goalString) {
-           const parts = goalString.trim().split(/\s+/).filter(p => !p.startsWith('@'));
-           if (parts.length >= 1) {
-             goalText = session.generateText(parts[0], parts.slice(1)).replace(/\.$/, '');
-           }
-         }
-
-         // Build negative proof output
-         if (goalText && proofSteps.length > 0) {
-           text = `False: NOT ${goalText}. Proof: ${proofSteps.join('. ')}.`;
-         } else if (goalText) {
-           text = `False: NOT ${goalText}`;
-         } else {
-           text = 'Proof valid (negative)';
-         }
-      } else {
-         // Success - directly decode proof step facts into propositions
-         const steps = result.steps || [];
-         const proofSteps = [];
-         let ruleApplied = false;
-         let chainOpsCount = 0;
-         let chainPrimaryOp = null;
-         const chainFacts = [];
-         let appliedRuleText = null;
-
-         for (const step of steps) {
-            // Highlight rule application steps
-            if (step.operation === 'rule_match' || step.operation === 'unification_match' || step.operation === 'rule_applied') {
-              ruleApplied = true;
-              let ruleName = step.rule || 'rule';
-              if (ruleName.includes('@causeAnd') || ruleName.includes('indirectConc')) {
-                ruleName = '(A causes B AND B causes C) implies wouldPrevent A C';
-              }
-              const factText = step.fact ? ` implies ${step.fact}` : '';
-              const ruleText = `Applied rule: ${ruleName}${factText}`;
-              appliedRuleText = ruleText;
-              if (!proofSteps.includes(ruleText)) {
-                proofSteps.push(ruleText);
-              }
-              continue;
-            }
-
-            if (step.operation === 'value_type_inheritance' && step.fact) {
-              const inheritText = `Inherited via value type: ${step.fact}`;
-              if (!proofSteps.includes(inheritText)) {
-                proofSteps.push(inheritText);
-              }
-              continue;
-            }
-
-            if (step.operation === 'and_satisfied') {
-              const detail = step.detail ? `: ${step.detail}` : '';
-              proofSteps.push(`And condition satisfied${detail}`);
-              continue;
-            }
-
-            if (step.operation === 'or_satisfied') {
-              const detail = step.detail ? ` via ${step.detail}` : '';
-              proofSteps.push(`Or condition satisfied${detail}`);
-              continue;
-            }
-
-            // Handle default/exception reasoning
-            if (step.operation === 'default_reasoning') {
-              ruleApplied = true; // Treat defaults as rule-like reasoning
-              const defaultFact = step.fact || 'default rule';
-              const entity = step.appliedTo || 'entity';
-              const defaultText = `${defaultFact} applies. ${entity} inherits via default`;
-              if (!proofSteps.includes(defaultText)) {
-                proofSteps.push(defaultText);
-              }
-              continue;
-            }
-
-            if (step.operation === 'exception_blocked') {
-              const exception = step.exception || 'exception';
-              const entity = step.entity || 'entity';
-              const blockedText = `Default blocked by exception: ${exception} for ${entity}`;
-              if (!proofSteps.includes(blockedText)) {
-                proofSteps.push(blockedText);
-              }
-              continue;
-            }
-
-            if (step.fact) {
-              // Parse DSL fact: "operator arg1 arg2" - format as "arg1 operator arg2"
-              const factParts = step.fact.trim().split(/\s+/);
-              if (factParts.length >= 3) {
-                const stepOp = factParts[0];
-                const args = factParts.slice(1);
-                if (['before', 'causes', 'isA', 'locatedIn', 'partOf'].includes(stepOp)) {
-                  chainPrimaryOp = chainPrimaryOp || stepOp;
-                  if (!chainPrimaryOp || chainPrimaryOp === stepOp) {
-                    chainOpsCount++;
-                  }
-                }
-                // Prefer generateText for natural phrasing
-                const generated = session.generateText(stepOp, args).replace(/[.!?]+$/, '');
-                const stepText = generated || `${args[0]} ${stepOp} ${args.slice(1).join(' ')}`;
-                if (stepText && !proofSteps.includes(stepText)) {
-                  proofSteps.push(stepText);
-                  chainFacts.push(stepText);
-                }
-              } else if (factParts.length === 2) {
-                // Unary: "operator X" -> "X operator"
-                const stepText = `${factParts[1]} ${factParts[0]}`;
-                if (stepText && !proofSteps.includes(stepText)) {
-                  proofSteps.push(stepText);
-                }
-              }
-            }
-         }
-
-         if (!ruleApplied && chainOpsCount >= 2) {
-           let chainLabel = 'Transitive chain';
-           if (chainPrimaryOp === 'causes') chainLabel = 'Causal chain';
-           proofSteps.push(`${chainLabel} verified (${chainOpsCount} hops)`);
-         }
-
-         // Add explicit search narrative for causal rule chains
-         if (ruleApplied && chainPrimaryOp === 'causes') {
-           const factSteps = chainFacts.filter(f => f.includes(' causes '));
-           if (factSteps.length > 0) {
-             const searches = factSteps.map((fact, idx) => {
-               const subj = fact.split(' ')[0];
-               const hole = String.fromCharCode('b'.charCodeAt(0) + idx);
-               return `Searched causes ${subj} ?${hole}. Found: ${fact}`;
-             });
-             const andLine = proofSteps.find(p => p.startsWith('And condition satisfied'));
-             const chainLine = chainOpsCount >= 2 ? `Causal chain verified (${chainOpsCount} hops)` : null;
-             const newProof = [...searches];
-             if (chainLine) newProof.push(chainLine);
-             if (andLine) newProof.push(andLine);
-             if (appliedRuleText) newProof.push(appliedRuleText);
-             proofSteps.length = 0;
-             proofSteps.push(...newProof);
-           }
-         }
-
-         // Get the goal text
-         let goalText = '';
-         const goalString = result.goal || (steps.length > 0 && steps[0].goal);
-         if (goalString) {
-           const parts = goalString.trim().split(/\s+/).filter(p => !p.startsWith('@'));
-           if (parts.length >= 1) {
-             goalText = session.generateText(parts[0], parts.slice(1)).replace(/\.$/, '');
-           }
-         }
-
-         // Guard against hallucinated single-step proofs (goal echoed but not in KB)
-         const goalParts = (result.goal || '').trim().split(/\s+/).filter(p => !p.startsWith('@'));
-         const goalOp = goalParts[0];
-         const goalArgs = goalParts.slice(1);
-         let goalFactInKb = false;
-         if (goalOp && goalArgs.length > 0 && Array.isArray(session?.kbFacts)) {
-           goalFactInKb = session.kbFacts.some(f => {
-             const meta = f.metadata;
-             if (!meta || meta.operator !== goalOp) return false;
-             const args = meta.args || [];
-             if (!Array.isArray(args) || args.length !== goalArgs.length) return false;
-             for (let i = 0; i < args.length; i++) {
-               if (args[i] !== goalArgs[i]) return false;
-             }
-             return true;
-           });
-         }
-         const trivialEcho = proofSteps.length <= 1 && !ruleApplied && chainOpsCount <= 1;
-         if (trivialEcho && !goalFactInKb) {
-           const goalDesc = goalText || 'goal';
-           text = `Cannot prove: ${goalDesc}. Search: Goal fact not found in KB; ignored low-confidence guess.`;
-           dbg('DSL->NL', 'Trivial echo guarded, goal not in KB');
-           return text;
-         }
-
-         // Build output with proof chain
-         if (goalText && proofSteps.length > 0) {
-           const proofBody = proofSteps.join('. ');
-           const conclusion = goalText ? ` Therefore ${goalText}.` : '';
-           text = `True: ${goalText}. Proof: ${proofBody}.${conclusion}`;
-         } else if (goalText) {
-           text = `True: ${goalText}`;
-         } else {
-           text = 'Proof valid';
-         }
-       }
-       dbg('DSL->NL', 'Prove result text:', text?.substring(0, 80));
-    }
-    else if (testCase.action === 'elaborate') {
-       dbg('DSL->NL', 'Calling session.elaborate()');
-       const el = session.elaborate(result);
-       text = el.text;
-       dbg('DSL->NL', 'Elaborate result:', text?.substring(0, 50));
-    }
-    else {
-       // Reconstruct text for query
-       dbg('DSL->NL', 'Query result bindings:', result.bindings ? 'yes' : 'no');
-
-       // Check for meta-operator results - use session.formatResult() for natural language
-       const allResults = result.allResults || [];
-       const metaOps = ['abduce', 'whatif', 'similar', 'analogy', 'symbolic_analogy', 'property_analogy', 'difference', 'induce', 'bundle', 'deduce'];
-       const metaResults = allResults.filter(r => metaOps.includes(r.method));
-
-       if (metaResults.length > 0) {
-         // Use session.formatResult() for natural language formatting
-         text = session.formatResult(result, 'query');
-         dbg('DSL->NL', 'Meta-op text (via session.formatResult):', text?.substring(0, 80));
-       }
-       else if (result.bindings && result.bindings.size > 0) {
-           const texts = [];
-           const query = testCase.query_dsl || testCase.input_dsl || '';
-
-           // For multi-statement DSL, find the line that contains a query (has ? hole)
-           const lines = query.trim().split('\n').map(l => l.trim()).filter(l => l);
-           const queryLine = lines.find(l => l.includes('?')) || lines[lines.length - 1];
-
-           const parts = queryLine.split(/\s+/).filter(p => !p.startsWith('@'));
-           const op = parts[0];
-           dbg('DSL->NL', 'Query op:', op, 'parts:', parts);
-
-           // Get all results - ensure bindings are Maps
-           const allResults = result.allResults || [];
-
-           // Reserved symbols to filter out (HDC noise)
-           const RESERVED = new Set([
-             'ForAll', 'And', 'Or', 'Not', 'Implies', 'Exists',
-             'isA', 'has', 'can', 'must', 'causes', 'implies',
-             'seatedAt', 'conflictsWith', 'locatedIn'
-           ]);
-
-           // Filter for reliable matches (direct, transitive, bundle_common, rule-derived, compound_csp, hdc_validated, and symbolic_supplement)
-           const reliableMethods = new Set(['direct', 'transitive', 'bundle_common', 'rule', 'rule_derived', 'compound_csp', 'property_inheritance', 'hdc_validated', 'hdc_transitive_validated', 'hdc_direct_validated', 'hdc_rule_validated', 'symbolic_supplement', 'symbolic_fallback']);
-           const directMatches = allResults.filter(r => {
-             if (!r.bindings || !reliableMethods.has(r.method)) return false;
-             const hasBindings = r.bindings instanceof Map ?
-               r.bindings.size > 0 :
-               Object.keys(r.bindings).length > 0;
-             return hasBindings;
-           });
-
-           // Get strategy-dependent HDC threshold
-           const strategy = session.hdcStrategy || 'dense-binary';
-           const thresholds = getThresholds(strategy);
-           const hdcThreshold = thresholds.HDC_MATCH;
-
-           // Also include HDC matches above strategy-dependent threshold
-           const hdcMatches = allResults.filter(r => {
-             if (!r.bindings || reliableMethods.has(r.method)) return false; // Skip if already a reliable method
-             const hasBindings = r.bindings instanceof Map ?
-               r.bindings.size > 0 :
-               Object.keys(r.bindings).length > 0;
-             // Accept HDC matches above strategy-dependent threshold
-             if (!hasBindings || (r.score || 0) < hdcThreshold) return false;
-
-             // Filter out results with reserved symbols
-             if (r.bindings instanceof Map) {
-               for (const [k, v] of r.bindings) {
-                 if (RESERVED.has(v?.answer)) return false;
-               }
-             }
-             return true;
-           });
-
-           // Combine reliable matches with HDC matches, deduplicating by answer
-           const getFirstHoleAnswer = (r) => {
-             const holeName = parts.find(p => p.startsWith('?'))?.substring(1);
-             if (!holeName) return null;
-             return r.bindings instanceof Map ?
-               r.bindings.get(holeName)?.answer :
-               r.bindings?.[holeName]?.answer;
-           };
-
-           const seenAnswers = new Set();
-           const goodResults = [];
-           // Add directMatches first (higher priority)
-           for (const r of directMatches) {
-             const answer = getFirstHoleAnswer(r);
-             if (answer && !seenAnswers.has(answer)) {
-               seenAnswers.add(answer);
-               goodResults.push(r);
-             }
-           }
-           // Add hdcMatches that aren't duplicates
-           for (const r of hdcMatches) {
-             const answer = getFirstHoleAnswer(r);
-             if (answer && !seenAnswers.has(answer)) {
-               seenAnswers.add(answer);
-               goodResults.push(r);
-             }
-           }
-
-           // If no results with bindings in allResults, use main result.bindings
-           const resultsToProcess = goodResults.length > 0 ?
-             goodResults :
-             (result.bindings?.size > 0 ? [{bindings: result.bindings, score: 1, method: 'direct'}] : []);
-
-           for(const r of resultsToProcess) {
-               // Handle both Map and plain object bindings
-               const getBinding = (name) => {
-                 if (r.bindings instanceof Map) {
-                   return r.bindings.get(name)?.answer;
-                 }
-                 return r.bindings[name]?.answer;
-               };
-
-               const args = parts.slice(1).map(a => {
-                   if(a.startsWith('?')) {
-                       const answer = getBinding(a.substring(1));
-                       // Filter out internal symbols (garbage HDC matches)
-                       if (answer && !answer.startsWith('__') && !['ForAll', 'And', 'Or', 'Not', 'Implies'].includes(answer)) {
-                           return answer;
-                       }
-                       return a; // Keep variable placeholder if no valid answer
-                   }
-                   return a;
-               });
-               // Skip if still has unresolved variables
-               if (args.some(a => a.startsWith('?'))) continue;
-               dbg('DSL->NL', 'generateText args:', op, args);
-               // Remove trailing punctuation for consistent joining
-               const generatedText = session.generateText(op, args).replace(/[.!?]+$/, '');
-
-               // Extract proof trace from the binding's steps if available
-               const holeName = parts.find(p => p.startsWith('?'))?.substring(1);
-               const bindingData = r.bindings instanceof Map ? r.bindings.get(holeName) : r.bindings?.[holeName];
-               const proofSteps = bindingData?.steps;
-
-               // Format result with proof trace if available
-               if (proofSteps && proofSteps.length > 0) {
-                 // Keep DSL format for proof chain: "isA X Y" not "X is a Y"
-                 const proofText = proofSteps.join('. ');
-                 texts.push(`${generatedText}. Proof: ${proofText}`);
-               } else {
-                 texts.push(generatedText);
-               }
-           }
-           // Join with '. ' and add final period
-           if (texts.length === 0 && op === 'can' && parts[2]) {
-             // Fallback: infer can X Pay via has X PaymentMethod (value inheritance style)
-             const target = parts[2];
-             const candidates = new Set();
-             for (const fact of session.kbFacts) {
-               const meta = fact.metadata;
-               if (meta?.operator === 'has') {
-                 const holder = meta.args?.[0];
-                 const value = meta.args?.[1];
-                 if (!holder || !value) continue;
-                 // Check if value isA target (transitively)
-                 const queue = [value];
-                 const visited = new Set();
-                 let matches = false;
-                 while (queue.length > 0) {
-                   const cur = queue.shift();
-                   if (visited.has(cur)) continue;
-                   visited.add(cur);
-                   if (cur === target) {
-                     matches = true;
-                     break;
-                   }
-                   for (const f2 of session.kbFacts) {
-                     const m2 = f2.metadata;
-                     if (m2?.operator === 'isA' && m2.args?.[0] === cur) {
-                       queue.push(m2.args[1]);
-                     }
-                   }
-                 }
-                 if (matches) {
-                   candidates.add(holder);
-                 }
-               }
-             }
-             if (candidates.size > 0) {
-               const fallbackTexts = [...candidates].map(holder => session.generateText(op, [holder, target]).replace(/[.!?]+$/, ''));
-               text = [...new Set(fallbackTexts)].join('. ') + '.';
-             } else {
-               text = 'No results';
-             }
-           } else {
-             text = texts.length > 0 ? [...new Set(texts)].join('. ') + '.' : 'No results';
-           }
-       } else {
-           text = 'No results';
-       }
-       dbg('DSL->NL', 'Final text:', text?.substring(0, 80));
-    }
-    return text || 'No output';
+    return session.describeResult({
+      action: testCase.action,
+      reasoningResult: reasoningPhase.actual,
+      queryDsl: testCase.query_dsl || testCase.input_dsl || ''
+    });
   }, timeoutMs, 'DSL->NL');
 
   if (!execution.success) {
@@ -825,50 +322,80 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
   }
 
   const actualText = execution.result;
-
-  // Comparison - normalize by removing punctuation, articles, and extra whitespace
-  const normalize = s => s.toLowerCase()
-    .replace(/\bisa\b/g, 'is a')       // Convert DSL "isA" to NL "is a"
-    .replace(/\bhasa\b/g, 'has a')     // Convert DSL "hasA" to NL "has a"
-    .replace(/[^\w\s]/g, '')           // Remove punctuation
-    .replace(/\b(a|an|the)\b/g, '')    // Remove articles
-    .replace(/\s+/g, ' ')              // Collapse whitespace
-    .trim();
-
-  // VALIDATION: Proof content must have at least 10 characters
-  if ((testCase.action === 'query' || testCase.action === 'prove') && actualText.includes('Proof:')) {
-    const proofMatch = actualText.match(/Proof:\s*(.+)/);
-    if (proofMatch) {
-      const proofContent = proofMatch[1].trim();
-      if (proofContent.length < 10) {
-        return {
-          passed: false,
-          error: `VALIDATION ERROR: Proof content too short (${proofContent.length} chars, min 10). Got: "${proofContent}"`,
-          actual: actualText,
-          expected: testCase.expected_nl,
-          durationMs: execution.duration
-        };
-      }
-    }
+  const proofLengthCheck = validateProofLength(testCase, actualText);
+  if (proofLengthCheck) {
+    proofLengthCheck.durationMs = execution.duration;
+    return proofLengthCheck;
   }
 
-  // For queries with multiple results, check if all expected parts are present (order-independent)
-  let passed;
-  if (testCase.action === 'query' && testCase.expected_nl.includes('.')) {
-    // Split expected into parts and check all are present
-    const expectedParts = normalize(testCase.expected_nl).split(/\s+/).filter(w => w.length > 2);
-    const actualNorm = normalize(actualText);
-    passed = expectedParts.every(part => actualNorm.includes(part));
-  } else {
-    passed = normalize(actualText).includes(normalize(testCase.expected_nl));
-  }
-
+  const passed = compareOutputs(testCase, actualText);
   return {
     passed,
     actual: actualText,
     expected: testCase.expected_nl,
     durationMs: execution.duration
   };
+}
+
+function validateProofExpectation(testCase) {
+  if (!testCase.expected_nl) return null;
+  if (testCase.action !== 'query' && testCase.action !== 'prove') return null;
+  const nl = testCase.expected_nl;
+  const isExempt = nl.startsWith('Learned') ||
+                   nl.includes('No results') ||
+                   nl.includes('Cannot') ||
+                   nl.includes('No valid') ||
+                   nl.startsWith('False:') ||
+                   testCase.skip === true;
+
+  if (!isExempt && !nl.includes('Proof:') && !nl.includes('Proof ')) {
+    return {
+      passed: false,
+      error: `VALIDATION ERROR: expected_nl for ${testCase.action} must include "Proof:" - got: "${nl.substring(0, 60)}..."`,
+      expected: 'expected_nl with Proof:',
+      actual: nl
+    };
+  }
+  return null;
+}
+
+function validateProofLength(testCase, actualText) {
+  if (!actualText || !actualText.includes('Proof:')) return null;
+  if (testCase.action !== 'query' && testCase.action !== 'prove') return null;
+
+  const proofMatch = actualText.match(/Proof:\s*(.+)/);
+  if (!proofMatch) return null;
+  const proofContent = proofMatch[1].trim();
+  if (proofContent.length < 10) {
+    return {
+      passed: false,
+      error: `VALIDATION ERROR: Proof content too short (${proofContent.length} chars, min 10). Got: "${proofContent}"`,
+      actual: actualText,
+      expected: testCase.expected_nl
+    };
+  }
+  return null;
+}
+
+function normalizeText(text) {
+  return (text || '')
+    .toLowerCase()
+    .replace(/\bisa\b/g, 'is a')
+    .replace(/\bhasa\b/g, 'has a')
+    .replace(/[^\w\s]/g, '')
+    .replace(/\b(a|an|the)\b/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function compareOutputs(testCase, actualText) {
+  const expected = testCase.expected_nl || '';
+  if (testCase.action === 'query' && expected.includes('.')) {
+    const expectedParts = normalizeText(expected).split(/\s+/).filter(w => w.length > 2);
+    const actualNorm = normalizeText(actualText);
+    return expectedParts.every(part => actualNorm.includes(part));
+  }
+  return normalizeText(actualText).includes(normalizeText(expected));
 }
 
 
@@ -895,7 +422,7 @@ export async function runCase(testCase, session = null, config = {}) {
   phases.reasoning = await runReasoning(testCase, phases.nlToDsl.actual, sess, timeouts.reasoning);
 
   // 3. DSL -> NL
-  phases.dslToNl = runDslToNl(testCase, phases.reasoning, sess, timeouts.dslToNl);
+  phases.dslToNl = runDecoding(testCase, phases.reasoning, sess, timeouts.dslToNl);
 
   // Overall Status
   // A case passes ONLY if all applicable phases passed

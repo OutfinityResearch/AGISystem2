@@ -88,10 +88,8 @@ export class Executor {
    * @returns {Object} Result
    */
   executeMacroDeclaration(macro) {
-    // Initialize macros map if needed
-    if (!this.session.macros) {
-      this.session.macros = new Map();
-    }
+    if (!this.session.macros) this.session.macros = new Map();
+    if (!this.session.macroAliases) this.session.macroAliases = new Map();
 
     // Store the macro definition
     const macroDef = {
@@ -103,14 +101,10 @@ export class Executor {
       line: macro.line
     };
 
-    // Primary key: declared name (e.g., @MacroName)
     this.session.macros.set(macro.name, macroDef);
-    // Alias key: exported operator name (persistName) so that `operator args`
-    // invokes the macro per DS02 semantics (@MacroName:operator macro ...).
     if (macro.persistName && macro.persistName !== macro.name) {
-      // Only set alias if not already defined to avoid accidental overwrite
-      if (!this.session.macros.has(macro.persistName)) {
-        this.session.macros.set(macro.persistName, macroDef);
+      if (!this.session.macroAliases.has(macro.persistName)) {
+        this.session.macroAliases.set(macro.persistName, macro.name);
       }
     }
 
@@ -129,7 +123,11 @@ export class Executor {
    * @returns {Vector} Result vector from macro expansion
    */
   expandMacro(macroName, args) {
-    const macro = this.session.macros?.get(macroName);
+    let macro = this.session.macros?.get(macroName);
+    if (!macro && this.session.macroAliases?.has(macroName)) {
+      const canonical = this.session.macroAliases.get(macroName);
+      macro = this.session.macros?.get(canonical);
+    }
     if (!macro) {
       throw new ExecutionError(`Unknown macro: ${macroName}`);
     }
