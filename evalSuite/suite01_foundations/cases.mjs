@@ -1,33 +1,22 @@
 /**
- * Suite 01 - Foundations
+ * Suite 01 - Foundations (Deep Chains)
  *
- * Basic learn/query/prove with modal, negation, and diverse operators.
- * Tests: direct facts, simple queries, negation blocking, modal facts.
+ * Basic learn/query/prove with deep transitive chains.
+ * Every proof must have 5+ steps with complete demonstration.
  */
 
 export const name = 'Foundations';
-export const description = 'Basic operations with modal and negation';
+export const description = 'Basic operations with deep chains and complete proofs';
 
 export const theories = ['05-logic.sys2'];
 
 export const steps = [
-  // === SETUP: Diverse facts with modal and negation + deep chain ===
+  // === SETUP: Deep chain organisms (8 levels) + animals (5 levels) ===
   {
     action: 'learn',
-    input_nl: 'Basic facts: Rex is a Dog. Dogs are Animals. Tweety can fly. Penguins cannot fly. Opus is a Penguin. Deep chain: Atom->Molecule->Cell->Tissue->Organ->Organism->Species->Ecosystem.',
+    input_nl: 'Deep chain: Carbon→Atom→Molecule→Cell→Tissue→Organ→Organism→Species→Ecosystem. Animals: Rex→Dog→Canine→Mammal→Vertebrate→Animal→LivingThing.',
     input_dsl: `
-      isA Rex Dog
-      isA Dog Animal
-      isA Animal LivingThing
-      can Tweety Fly
-      isA Tweety Bird
-      isA Penguin Bird
-      isA Opus Penguin
-      @negOpusFly can Opus Fly
-      Not $negOpusFly
-      before Morning Noon
-      before Noon Evening
-      causes Rain WetGround
+      isA Carbon Atom
       isA Atom Molecule
       isA Molecule Cell
       isA Cell Tissue
@@ -35,81 +24,97 @@ export const steps = [
       isA Organ Organism
       isA Organism Species
       isA Species Ecosystem
-      isA Carbon Atom
+      isA Rex Dog
+      isA Dog Canine
+      isA Canine Mammal
+      isA Mammal Vertebrate
+      isA Vertebrate Animal
+      isA Animal LivingThing
+      isA Tweety Sparrow
+      isA Sparrow Songbird
+      isA Songbird Bird
+      isA Bird FlyingAnimal
+      isA FlyingAnimal Vertebrate
+      can Tweety Fly
+      isA Penguin FlightlessBird
+      isA FlightlessBird Bird
+      isA Opus Penguin
+      @negOpusFly can Opus Fly
+      Not $negOpusFly
     `,
-    expected_nl: 'Learned 20 facts'
+    expected_nl: 'Learned 25 facts'
   },
 
-  // === PROVE: 3-step transitive ===
+  // === PROVE: 6-step Rex→LivingThing ===
   {
     action: 'prove',
-    input_nl: 'Is Rex a LivingThing?',
+    input_nl: 'Is Rex a LivingThing? (Rex→Dog→Canine→Mammal→Vertebrate→Animal→LivingThing)',
     input_dsl: '@goal isA Rex LivingThing',
-    expected_nl: 'True: Rex is a livingthing'
+    expected_nl: 'True: Rex is a livingthing. Proof: Rex isA Dog. Dog isA Canine. Canine isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing.'
   },
 
-  // === PROVE: 4-step (Carbon -> Tissue) ===
+  // === PROVE: 5-step Rex→Animal ===
   {
     action: 'prove',
-    input_nl: 'Is Carbon a Tissue?',
-    input_dsl: '@goal isA Carbon Tissue',
-    expected_nl: 'True: Carbon is a tissue'
+    input_nl: 'Is Rex an Animal? (Rex→Dog→Canine→Mammal→Vertebrate→Animal)',
+    input_dsl: '@goal isA Rex Animal',
+    expected_nl: 'True: Rex is an animal. Proof: Rex isA Dog. Dog isA Canine. Canine isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal.'
   },
 
-  // === PROVE: 5-step (Carbon -> Organ) ===
+  // === PROVE: 6-step Carbon→Organ ===
   {
     action: 'prove',
-    input_nl: 'Is Carbon an Organ?',
+    input_nl: 'Is Carbon an Organ? (Carbon→Atom→Molecule→Cell→Tissue→Organ)',
     input_dsl: '@goal isA Carbon Organ',
-    expected_nl: 'True: Carbon is an organ'
+    expected_nl: 'True: Carbon is an organ. Proof: Carbon isA Atom. Atom isA Molecule. Molecule isA Cell. Cell isA Tissue. Tissue isA Organ.'
   },
 
-  // === PROVE: Negation blocks ===
+  // === NEGATIVE: Negation blocks with search trace ===
   {
     action: 'prove',
-    input_nl: 'Can Opus fly?',
+    input_nl: 'Can Opus fly? (Opus→Penguin→FlightlessBird→Bird but negation blocks)',
     input_dsl: '@goal can Opus Fly',
-    expected_nl: 'Cannot prove: Opus can Fly'
+    expected_nl: 'Cannot prove: Opus can Fly. Search: Opus isA Penguin. Penguin isA FlightlessBird. FlightlessBird isA Bird. Found explicit negation: Not(can Opus Fly). Negation blocks inference.'
   },
 
-  // === PROVE: 6-step transitive (Carbon -> Organism) ===
+  // === PROVE: 7-step Carbon→Organism ===
   {
     action: 'prove',
-    input_nl: 'Is Carbon an Organism?',
+    input_nl: 'Is Carbon an Organism? (Carbon→Atom→Molecule→Cell→Tissue→Organ→Organism)',
     input_dsl: '@goal isA Carbon Organism',
-    expected_nl: 'True: Carbon is an organism'
+    expected_nl: 'True: Carbon is an organism. Proof: Carbon isA Atom. Atom isA Molecule. Molecule isA Cell. Cell isA Tissue. Tissue isA Organ. Organ isA Organism.'
   },
 
-  // === QUERY: Multiple results ===
+  // === QUERY: Multiple bird results ===
   {
     action: 'query',
     input_nl: 'What is a Bird?',
     input_dsl: '@q isA ?x Bird',
-    expected_nl: 'Tweety is a Bird. Penguin is a Bird. Opus is a Bird.'
+    expected_nl: 'Sparrow is a Bird. Songbird is a Bird. Tweety is a Bird. FlightlessBird is a Bird. Penguin is a Bird. Opus is a Bird.'
   },
 
-  // === QUERY: Temporal pairs ===
-  {
-    action: 'query',
-    input_nl: 'What comes before what?',
-    input_dsl: '@q before ?x ?y',
-    expected_nl: 'Morning is before Noon. Noon is before Evening.'
-  },
-
-  // === NEGATIVE: Unknown entity ===
+  // === PROVE: 6-step Tweety→LivingThing ===
   {
     action: 'prove',
-    input_nl: 'Is Charlie a Dog?',
+    input_nl: 'Is Tweety a LivingThing? (Tweety→Sparrow→Songbird→Bird→FlyingAnimal→Vertebrate→Animal→LivingThing)',
+    input_dsl: '@goal isA Tweety LivingThing',
+    expected_nl: 'True: Tweety is a livingthing. Proof: Tweety isA Sparrow. Sparrow isA Songbird. Songbird isA Bird. Bird isA FlyingAnimal. FlyingAnimal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing.'
+  },
+
+  // === NEGATIVE: Unknown entity with search trace ===
+  {
+    action: 'prove',
+    input_nl: 'Is Charlie a Dog? (Charlie not in KB)',
     input_dsl: '@goal isA Charlie Dog',
-    expected_nl: 'Cannot prove: Charlie is a dog'
+    expected_nl: 'Cannot prove: Charlie is a dog. Search: Searched isA Charlie Dog in KB. Not found. Searched isA Charlie ?type for transitive. Not found. Charlie has no type assertions. Entity unknown.'
   },
 
-  // === PROVE: Deep transitive chain (8-step) ===
+  // === PROVE: 8-step Carbon→Ecosystem ===
   {
     action: 'prove',
-    input_nl: 'Is Carbon an Ecosystem? (requires 8-step transitive)',
+    input_nl: 'Is Carbon an Ecosystem? (Carbon→Atom→Molecule→Cell→Tissue→Organ→Organism→Species→Ecosystem)',
     input_dsl: '@goal isA Carbon Ecosystem',
-    expected_nl: 'True: Carbon is an ecosystem. Proof: Carbon is an atom. Atom is a molecule. Molecule is a cell. Cell is a tissue. Tissue is an organ. Organ is an organism. Organism is a species. Species is an ecosystem.'
+    expected_nl: 'True: Carbon is an ecosystem. Proof: Carbon isA Atom. Atom isA Molecule. Molecule isA Cell. Cell isA Tissue. Tissue isA Organ. Organ isA Organism. Organism isA Species. Species isA Ecosystem.'
   }
 ];
 

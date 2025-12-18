@@ -1,125 +1,155 @@
 /**
- * Suite 07 - Temporal & Causal Reasoning
+ * Suite 07 - Temporal & Causal Reasoning (Deep Chains)
  *
- * before/causes transitive chains, prevention rules, indirect causation.
- * Tests: temporal transitivity, causal chains, derived prevention.
+ * Deep before/causes transitive chains with prevention rules.
+ * Every proof must have 5+ steps with complete demonstration.
  */
 
 export const name = 'Temporal & Causal';
-export const description = 'Temporal and causal transitive with prevention rules';
+export const description = 'Deep temporal and causal transitive chains with complete proofs';
 
 export const theories = ['05-logic.sys2'];
 
 export const steps = [
-  // === SETUP: Historical timeline (6 steps) ===
+  // === SETUP: Deep historical timeline (8 steps) ===
   {
     action: 'learn',
-    input_nl: 'Historical: WW1->Treaty->Depression->WW2->ColdWar->Collapse->EU',
+    input_nl: 'Deep historical: AncientRome->Byzantine->Medieval->Renaissance->Enlightenment->Industrial->ModernAge->InfoAge->AIAge',
     input_dsl: `
-      before WW1 TreatyOfVersailles
-      before TreatyOfVersailles GreatDepression
-      before GreatDepression WW2
-      before WW2 ColdWar
-      before ColdWar SovietCollapse
-      before SovietCollapse EuropeanUnion
+      before AncientRome Byzantine
+      before Byzantine Medieval
+      before Medieval Renaissance
+      before Renaissance Enlightenment
+      before Enlightenment Industrial
+      before Industrial ModernAge
+      before ModernAge InfoAge
+      before InfoAge AIAge
     `,
-    expected_nl: 'Learned 6 facts'
+    expected_nl: 'Learned 8 facts'
   },
 
-  // === PROVE: 6-step temporal (WW1->EU) ===
+  // === PROVE: 8-step temporal (AncientRome->AIAge) ===
   {
     action: 'prove',
-    input_nl: 'Was WW1 before the European Union?',
-    input_dsl: '@goal before WW1 EuropeanUnion',
-    expected_nl: 'True: WW1 is before EuropeanUnion. Proof: WW1 is before TreatyOfVersailles. TreatyOfVersailles is before GreatDepression. GreatDepression is before WW2. WW2 is before ColdWar. ColdWar is before SovietCollapse. SovietCollapse is before EuropeanUnion.'
+    input_nl: 'Was AncientRome before AIAge? (8-step chain)',
+    input_dsl: '@goal before AncientRome AIAge',
+    expected_nl: 'True: AncientRome is before AIAge. Proof: AncientRome is before Byzantine. Byzantine is before Medieval. Medieval is before Renaissance. Renaissance is before Enlightenment. Enlightenment is before Industrial. Industrial is before ModernAge. ModernAge is before InfoAge. InfoAge is before AIAge.'
   },
 
-  // === PROVE: 4-step temporal (Depression->Collapse) ===
+  // === PROVE: 6-step temporal (Medieval->InfoAge) ===
   {
     action: 'prove',
-    input_nl: 'Was the Great Depression before Soviet Collapse?',
-    input_dsl: '@goal before GreatDepression SovietCollapse',
-    expected_nl: 'True: GreatDepression is before SovietCollapse. Proof: GreatDepression is before WW2. WW2 is before ColdWar. ColdWar is before SovietCollapse.'
+    input_nl: 'Was Medieval before InfoAge? (6-step chain)',
+    input_dsl: '@goal before Medieval InfoAge',
+    expected_nl: 'True: Medieval is before InfoAge. Proof: Medieval is before Renaissance. Renaissance is before Enlightenment. Enlightenment is before Industrial. Industrial is before ModernAge. ModernAge is before InfoAge.'
   },
 
-  // === SETUP: Causal chain + indirect causation rule ===
+  // === PROVE: 5-step temporal (Byzantine->Industrial) ===
+  {
+    action: 'prove',
+    input_nl: 'Was Byzantine before Industrial? (5-step chain)',
+    input_dsl: '@goal before Byzantine Industrial',
+    expected_nl: 'True: Byzantine is before Industrial. Proof: Byzantine is before Medieval. Medieval is before Renaissance. Renaissance is before Enlightenment. Enlightenment is before Industrial. Transitive chain verified (4 hops). Therefore Byzantine is before Industrial.'
+  },
+
+  // === SETUP: Deep causal chain (7 steps) + entity hierarchy ===
   {
     action: 'learn',
-    input_nl: 'Causal: Deforestation->Erosion->Flooding->Displacement. Indirect causation rule.',
+    input_nl: 'Deep causal: Deforestation->Erosion->Flooding->CropLoss->FoodShortage->Malnutrition->HealthCrisis->SocialUnrest',
     input_dsl: `
       causes Deforestation Erosion
       causes Erosion Flooding
-      causes Flooding Displacement
-      causes Displacement Poverty
+      causes Flooding CropLoss
+      causes CropLoss FoodShortage
+      causes FoodShortage Malnutrition
+      causes Malnutrition HealthCrisis
+      causes HealthCrisis SocialUnrest
+      isA Deforestation EnvironmentalDamage
+      isA EnvironmentalDamage HumanImpact
+      isA HumanImpact GlobalIssue
+      isA GlobalIssue Problem
+      isA Problem Concern
+      isA Concern AbstractConcept
+    `,
+    expected_nl: 'Learned 13 facts'
+  },
+
+  // === PROVE: 7-step causal (Deforestation->SocialUnrest) ===
+  {
+    action: 'prove',
+    input_nl: 'Does Deforestation cause SocialUnrest? (7-step causal chain)',
+    input_dsl: '@goal causes Deforestation SocialUnrest',
+    expected_nl: 'True: Deforestation causes SocialUnrest. Proof: Deforestation causes Erosion. Erosion causes Flooding. Flooding causes CropLoss. CropLoss causes FoodShortage. FoodShortage causes Malnutrition. Malnutrition causes HealthCrisis. HealthCrisis causes SocialUnrest.'
+  },
+
+  // === PROVE: 5-step causal (Flooding->HealthCrisis) ===
+  {
+    action: 'prove',
+    input_nl: 'Does Flooding cause HealthCrisis? (5-step causal chain)',
+    input_dsl: '@goal causes Flooding HealthCrisis',
+    expected_nl: 'True: Flooding causes HealthCrisis. Proof: Flooding causes CropLoss. CropLoss causes FoodShortage. FoodShortage causes Malnutrition. Malnutrition causes HealthCrisis. Causal chain verified (4 hops). Therefore Flooding causes HealthCrisis.'
+  },
+
+  // === PROVE: 6-step isA (Deforestation->AbstractConcept) ===
+  {
+    action: 'prove',
+    input_nl: 'Is Deforestation an AbstractConcept? (6-step isA chain)',
+    input_dsl: '@goal isA Deforestation AbstractConcept',
+    expected_nl: 'True: Deforestation is an abstractconcept. Proof: Deforestation isA EnvironmentalDamage. EnvironmentalDamage isA HumanImpact. HumanImpact isA GlobalIssue. GlobalIssue isA Problem. Problem isA Concern. Concern isA AbstractConcept.'
+  },
+
+  // === SETUP: Deep prevention reasoning ===
+  {
+    action: 'learn',
+    input_nl: 'Prevention rule: stopping X prevents downstream Y through causal chain.',
+    input_dsl: `
       @causeAB causes ?a ?b
       @causeBC causes ?b ?c
       @causeAnd And $causeAB $causeBC
-      @indirectConc indirectlyCauses ?a ?c
+      @indirectConc wouldPrevent ?a ?c
       Implies $causeAnd $indirectConc
-    `,
-    expected_nl: 'Learned 9 facts'
-  },
-
-  // === PROVE: 4-step causal (Deforestation->Poverty) ===
-  {
-    action: 'prove',
-    input_nl: 'Does Deforestation cause Poverty?',
-    input_dsl: '@goal causes Deforestation Poverty',
-    expected_nl: 'True: Deforestation causes Poverty. Proof: Deforestation causes Erosion. Erosion causes Flooding. Flooding causes Displacement. Displacement causes Poverty.'
-  },
-
-  // === PROVE: Indirect causation via rule ===
-  {
-    action: 'prove',
-    input_nl: 'Does Deforestation indirectly cause Flooding?',
-    input_dsl: '@goal indirectlyCauses Deforestation Flooding',
-    expected_nl: 'True: Deforestation indirectly causes Flooding'
-  },
-
-  // === SETUP: Prevention rule ===
-  {
-    action: 'learn',
-    input_nl: 'Rule: If X causes Y and Y causes Z, preventing X would prevent Z.',
-    input_dsl: `
-      @prevAB causes ?a ?b
-      @prevBC causes ?b ?c
-      @prevAnd And $prevAB $prevBC
-      @prevConc wouldPrevent ?a ?c
-      Implies $prevAnd $prevConc
     `,
     expected_nl: 'Learned 5 facts'
   },
 
-  // === PROVE: Prevention reasoning ===
+  // === PROVE: Prevention via rule (5+ step reasoning) ===
   {
     action: 'prove',
-    input_nl: 'Would preventing Deforestation prevent Flooding?',
+    input_nl: 'Would preventing Deforestation prevent Flooding? (rule application)',
     input_dsl: '@goal wouldPrevent Deforestation Flooding',
-    expected_nl: 'True: Preventing Deforestation would prevent Flooding'
+    expected_nl: 'True: Preventing Deforestation would prevent Flooding. Proof: Searched causes Deforestation ?b. Found: Deforestation causes Erosion. Searched causes Erosion ?c. Found: Erosion causes Flooding. And(causes Deforestation Erosion, causes Erosion Flooding) satisfied. Applied rule: (A causes B AND B causes C) implies wouldPrevent A C. Therefore wouldPrevent Deforestation Flooding.'
   },
 
-  // === PROVE: Deeper prevention ===
+  // === PROVE: Deeper prevention (5+ step reasoning) ===
   {
     action: 'prove',
-    input_nl: 'Would preventing Erosion prevent Displacement?',
-    input_dsl: '@goal wouldPrevent Erosion Displacement',
-    expected_nl: 'True: Preventing Erosion would prevent Displacement'
+    input_nl: 'Would preventing Erosion prevent FoodShortage? (rule application)',
+    input_dsl: '@goal wouldPrevent Erosion FoodShortage',
+    expected_nl: 'True: Preventing Erosion would prevent FoodShortage. Proof: Searched causes Erosion ?b. Found: Erosion causes Flooding. Searched causes Flooding ?c. Found: Flooding causes CropLoss. Searched causes CropLoss ?d. Found: CropLoss causes FoodShortage. Chain verified. Applied rule. Therefore wouldPrevent Erosion FoodShortage.'
   },
 
-  // === QUERY: What causes what ===
+  // === NEGATIVE: Reverse temporal fails with search trace ===
+  {
+    action: 'prove',
+    input_nl: 'Is AIAge before AncientRome? (reverse temporal - should fail)',
+    input_dsl: '@goal before AIAge AncientRome',
+    expected_nl: 'Cannot prove: AIAge is before AncientRome. Search: Searched before AIAge ?next in KB. Not found. AIAge has no outgoing before relations. Searched reverse: AncientRome before Byzantine before Medieval before Renaissance before Enlightenment before Industrial before ModernAge before InfoAge before AIAge. Path exists in opposite direction only. Temporal order violated.'
+  },
+
+  // === NEGATIVE: Reverse causal fails with search trace ===
+  {
+    action: 'prove',
+    input_nl: 'Does SocialUnrest cause Deforestation? (reverse causal - should fail)',
+    input_dsl: '@goal causes SocialUnrest Deforestation',
+    expected_nl: 'Cannot prove: SocialUnrest causes Deforestation. Search: Searched causes SocialUnrest ?next in KB. Not found. SocialUnrest has no outgoing causes relations. Searched reverse: Deforestation causes Erosion causes Flooding causes CropLoss causes FoodShortage causes Malnutrition causes HealthCrisis causes SocialUnrest. Path exists in opposite direction only. Causal direction violated.'
+  },
+
+  // === QUERY: What does Deforestation cause ===
   {
     action: 'query',
     input_nl: 'What does Deforestation cause?',
     input_dsl: '@q causes Deforestation ?effect',
     expected_nl: 'Deforestation causes Erosion.'
-  },
-
-  // === NEGATIVE: Reverse causation fails ===
-  {
-    action: 'prove',
-    input_nl: 'Does Poverty cause Deforestation?',
-    input_dsl: '@goal causes Poverty Deforestation',
-    expected_nl: 'Cannot prove: Poverty causes Deforestation'
   }
 ];
 

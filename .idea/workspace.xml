@@ -5,48 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment=" tests for holographic reasoning">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS07-Core-Theory-Index.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS07a-HDC-Primitives.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS07b-Type-System.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS07c-Semantic-Primitives.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS07d-Logic.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS07e-Temporal-Modal.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS07f-Roles-Properties.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS07g-Bootstrap-Verbs.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS07h-Reasoning.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS17-Meta-Query-Operators.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evalSuite/analyze-geometry.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evalSuite/suite12_fuzzy_matching/cases.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evalSuite/suite13_property_inheritance/cases.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/component-kb.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/property-inheritance.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/component-kb.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/reasoning/holographic.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/reasoning/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/reasoning/symbolic.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS18-Metric-Affine-HDC.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/theory/strategies/metric-affine.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evalSuite/analyzeQueries.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evalSuite/suitesHealthCheck.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hdc/metric-affine-contract.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hdc/strategies/dense-binary-thresholds.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hdc/strategies/metric-affine.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hdc/strategies/sparse-polynomial-thresholds.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/00-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/00-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/10-properties.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/10-properties.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS07-Core-Theory.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS07-Core-Theory.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS11-Decoding-Phrasing-Engine.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS11-Decoding-Phrasing-Engine.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/lib/reporter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/lib/reporter.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evalSuite/run.js" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/run.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/review_gemini.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite01_foundations/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite01_foundations/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite02_hierarchies/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite02_hierarchies/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite03_rules/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite03_rules/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite04_deep_chains/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite04_deep_chains/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite05_negation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite05_negation/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite06_compound_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite06_compound_logic/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite07_temporal/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite07_temporal/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite08_modal/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite08_modal/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite09_composition/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite09_composition/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite10_integration/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite10_integration/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite12_fuzzy_matching/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite12_fuzzy_matching/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite13_property_inheritance/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite13_property_inheritance/cases.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/constants.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/constants.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/sparse-polynomial.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/sparse-polynomial.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/conditions.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/conditions.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/csp/constraint.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/csp/constraint.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/csp/solver.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/csp/solver.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/find-all.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/find-all.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/prove-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/prove-hdc-first.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/index.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/index.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/prove.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-kb.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-kb.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/executor.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/negation-exceptions.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/negation-exceptions.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,21 +61,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "/home/salboaie/work/assistos/website",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/salboaie/work/assistos/website&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/AGISystem2/docs/index.html" useBuiltInWebServerPort="true">
       <method v="2" />
@@ -123,6 +114,7 @@
       <workItem from="1765783559936" duration="115000" />
       <workItem from="1765869847094" duration="24419000" />
       <workItem from="1765956576045" duration="2273000" />
+      <workItem from="1766043755552" duration="1215000" />
     </task>
     <task id="LOCAL-00001" summary="1st public version of AGISystem2">
       <option name="closed" value="true" />

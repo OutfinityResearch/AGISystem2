@@ -7,6 +7,7 @@
 
 import { denseBinaryStrategy } from './dense-binary.mjs';
 import { sparsePolynomialStrategy } from './sparse-polynomial.mjs';
+import { metricAffineStrategy } from './metric-affine.mjs';
 
 /**
  * Registry of available strategies
@@ -17,6 +18,7 @@ const strategies = new Map();
 // Register strategies
 strategies.set('dense-binary', denseBinaryStrategy);
 strategies.set('sparse-polynomial', sparsePolynomialStrategy);
+strategies.set('metric-affine', metricAffineStrategy);
 
 /**
  * Get a strategy by ID

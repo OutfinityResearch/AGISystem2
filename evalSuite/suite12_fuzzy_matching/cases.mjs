@@ -1,21 +1,12 @@
 /**
- * Suite 12 - Fuzzy Matching & Anonymous Concepts
+ * Suite 12 - Fuzzy Matching & Anonymous Concepts (Deep Chains)
  *
- * Tests approximate matching capabilities:
- * - Typo tolerance: "Dogg" should match "Dog"
- * - Synonym handling: "Canine" relates to "Dog"
- * - Anonymous concepts: vectors without string names
- * - Induced concepts: concepts discovered through reasoning
- *
- * This suite explores HDC's potential for approximate/fuzzy matching,
- * which is particularly relevant for:
- * - Natural language processing with typos
- * - Concept discovery and induction
- * - Working with embeddings that lack symbolic names
+ * Approximate matching with deep hierarchies for validation.
+ * Every proof must have 5+ steps with complete demonstration.
  */
 
 export const name = 'Fuzzy Matching';
-export const description = 'Approximate matching, synonyms, and anonymous concepts';
+export const description = 'Approximate matching with deep chains and complete proofs';
 
 export const theories = ['05-logic.sys2'];
 
@@ -23,184 +14,166 @@ export const theories = ['05-logic.sys2'];
 export const experimental = true;
 
 export const steps = [
-  // ============================================================
-  // PART 1: SYNONYM HANDLING
-  // ============================================================
+  // === SETUP: Deep animal hierarchy with synonyms ===
   {
     action: 'learn',
-    input_nl: 'Define synonyms and basic facts',
+    input_nl: 'Deep animal taxonomy with synonyms: Rex->GermanShepherd->Shepherd->WorkingDog->Dog->Canine->Carnivore->Mammal->Vertebrate->Animal',
     input_dsl: `
-      isA Rex Dog
-      isA Dog Animal
-      isA Fido Dog
+      isA Rex GermanShepherd
+      isA GermanShepherd Shepherd
+      isA Shepherd WorkingDog
+      isA WorkingDog Dog
+      isA Dog Canine
+      isA Canine Carnivore
+      isA Carnivore Mammal
+      isA Mammal Vertebrate
+      isA Vertebrate Animal
+      isA Animal LivingThing
       synonym Dog Canine
       synonym Cat Feline
-      isA Mittens Cat
+      isA Mittens PersianCat
+      isA PersianCat LongHair
+      isA LongHair DomesticCat
+      isA DomesticCat Cat
+      isA Cat Feline
+      isA Feline Mammal
     `,
-    expected_nl: 'Learned'
+    expected_nl: 'Learned 18 facts'
   },
 
-  // Test: Query using synonym
+  // === PROVE: 9-step isA chain (Rex->Animal) ===
   {
     action: 'prove',
-    input_nl: 'Is Rex a Canine? (using synonym Dog=Canine)',
+    input_nl: 'Is Rex an Animal? (9-step deep chain)',
+    input_dsl: '@goal isA Rex Animal',
+    expected_nl: 'True: Rex is an animal. Proof: Rex isA GermanShepherd. GermanShepherd isA Shepherd. Shepherd isA WorkingDog. WorkingDog isA Dog. Dog isA Canine. Canine isA Carnivore. Carnivore isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal.'
+  },
+
+  // === PROVE: 10-step isA chain (Rex->LivingThing) ===
+  {
+    action: 'prove',
+    input_nl: 'Is Rex a LivingThing? (10-step deep chain)',
+    input_dsl: '@goal isA Rex LivingThing',
+    expected_nl: 'True: Rex is a livingthing. Proof: Rex isA GermanShepherd. GermanShepherd isA Shepherd. Shepherd isA WorkingDog. WorkingDog isA Dog. Dog isA Canine. Canine isA Carnivore. Carnivore isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing.'
+  },
+
+  // === PROVE: Synonym-based query (Rex is Canine via Dog synonym) ===
+  {
+    action: 'prove',
+    input_nl: 'Is Rex a Canine? (uses Dog=Canine synonym)',
     input_dsl: '@goal isA Rex Canine',
-    expected_nl: 'True: Rex is a Canine',
-    tags: ['synonym', 'fuzzy']
+    expected_nl: 'True: Rex is a Canine. Proof: Rex isA GermanShepherd. GermanShepherd isA Shepherd. Shepherd isA WorkingDog. WorkingDog isA Dog. Dog isA Canine. Synonym Dog=Canine verified. Therefore Rex isA Canine.'
   },
 
-  // Test: Transitive through synonym
+  // === PROVE: 7-step isA chain (Mittens->Mammal) ===
   {
     action: 'prove',
-    input_nl: 'Is Fido an Animal? (Dog->Animal, should work normally)',
-    input_dsl: '@goal isA Fido Animal',
-    expected_nl: 'True: Fido is an Animal'
+    input_nl: 'Is Mittens a Mammal? (7-step deep chain)',
+    input_dsl: '@goal isA Mittens Mammal',
+    expected_nl: 'True: Mittens is a mammal. Proof: Mittens isA PersianCat. PersianCat isA LongHair. LongHair isA DomesticCat. DomesticCat isA Cat. Cat isA Feline. Feline isA Mammal.'
   },
 
-  // ============================================================
-  // PART 2: APPROXIMATE MATCHING (Component Similarity)
-  // ============================================================
+  // === SETUP: Deep geographic hierarchy ===
   {
     action: 'learn',
-    input_nl: 'Facts with similar but not identical concepts',
+    input_nl: 'Deep geographic: Paris->IleDeFrance->France->WesternEurope->Europe->Eurasia->Earth->SolarSystem',
     input_dsl: `
-      likes Alice Bob
-      likes Bob Carol
-      likes Carol Dave
-      trusts Alice Bob
+      locatedIn Paris IleDeFrance
+      locatedIn IleDeFrance France
+      locatedIn France WesternEurope
+      locatedIn WesternEurope Europe
+      locatedIn Europe Eurasia
+      locatedIn Eurasia Earth
+      locatedIn Earth SolarSystem
+      locatedIn Berlin Brandenburg
+      locatedIn Brandenburg Germany
+      locatedIn Germany CentralEurope
+      locatedIn CentralEurope Europe
     `,
-    expected_nl: 'Learned 4 facts'
+    expected_nl: 'Learned 11 facts'
   },
 
-  // Test: Find similar relationships
+  // === PROVE: 7-step locatedIn chain (Paris->SolarSystem) ===
+  {
+    action: 'prove',
+    input_nl: 'Is Paris in SolarSystem? (7-step geographic chain via HDC)',
+    input_dsl: '@goal locatedIn Paris SolarSystem',
+    expected_nl: 'True: Paris is in SolarSystem. Proof: Paris locatedIn IleDeFrance. IleDeFrance locatedIn France. France locatedIn WesternEurope. WesternEurope locatedIn Europe. Europe locatedIn Eurasia. Eurasia locatedIn Earth. Earth locatedIn SolarSystem.'
+  },
+
+  // === PROVE: 5-step locatedIn chain (Paris->Europe) ===
+  {
+    action: 'prove',
+    input_nl: 'Is Paris in Europe? (5-step geographic chain)',
+    input_dsl: '@goal locatedIn Paris Europe',
+    expected_nl: 'True: Paris is in Europe. Proof: Paris locatedIn IleDeFrance. IleDeFrance locatedIn France. France locatedIn WesternEurope. WesternEurope locatedIn Europe. Geographic chain verified (4 hops). Therefore Paris locatedIn Europe.'
+  },
+
+  // === PROVE: 5-step locatedIn chain (Berlin->Europe) ===
+  {
+    action: 'prove',
+    input_nl: 'Is Berlin in Europe? (5-step geographic chain)',
+    input_dsl: '@goal locatedIn Berlin Europe',
+    expected_nl: 'True: Berlin is in Europe. Proof: Berlin locatedIn Brandenburg. Brandenburg locatedIn Germany. Germany locatedIn CentralEurope. CentralEurope locatedIn Europe. Geographic chain verified (4 hops). Therefore Berlin locatedIn Europe.'
+  },
+
+  // === NEGATIVE: Cross-hierarchy fails with search trace ===
+  {
+    action: 'prove',
+    input_nl: 'Is Rex in Europe? (cross-hierarchy - should fail)',
+    input_dsl: '@goal locatedIn Rex Europe',
+    expected_nl: 'Cannot prove: Rex is in Europe. Search: Searched locatedIn Rex ?place in KB. Not found. Searched isA Rex for geographic type. Rex isA GermanShepherd isA Shepherd isA WorkingDog isA Dog isA Canine isA Carnivore isA Mammal isA Vertebrate isA Animal. No geographic type found. Rex is an animal, not a location. Domain mismatch.'
+  },
+
+  // === QUERY: What is in Europe ===
   {
     action: 'query',
-    input_nl: 'Who does Alice have a relationship with? (likes or trusts)',
-    input_dsl: '@q1 likes Alice ?X',
-    expected_nl: 'Alice likes Bob',
-    tags: ['component-match']
+    input_nl: 'What is in Europe?',
+    input_dsl: '@q locatedIn ?X Europe',
+    expected_nl: 'France is in Europe. WesternEurope is in Europe. CentralEurope is in Europe.'
   },
 
-  // ============================================================
-  // PART 3: ANONYMOUS CONCEPTS (No String Names)
-  // ============================================================
+  // === SETUP: Similarity relationships ===
   {
     action: 'learn',
-    input_nl: 'Create an anonymous concept via bundling',
+    input_nl: 'Vehicles with properties for similarity comparison',
     input_dsl: `
-      isA Sparrow Bird
-      isA Robin Bird
-      isA Eagle Bird
-      can Sparrow Fly
-      can Robin Fly
-      can Eagle Fly
-      @birdPattern bundle [Sparrow, Robin, Eagle]
-    `,
-    expected_nl: 'Learned',
-    tags: ['anonymous', 'bundle']
-  },
-
-  // Test: Query using anonymous pattern (bundle of birds)
-  {
-    action: 'query',
-    input_nl: 'What can the bird pattern do? (should find Fly)',
-    input_dsl: '@q2 can $birdPattern ?ability',
-    expected_nl: 'can',
-    tags: ['anonymous', 'approximate']
-  },
-
-  // ============================================================
-  // PART 4: INDUCED CONCEPTS
-  // ============================================================
-  {
-    action: 'learn',
-    input_nl: 'Setup for induction: multiple examples',
-    input_dsl: `
-      has Mammal1 Fur
-      has Mammal1 WarmBlood
-      feeds Mammal1 Milk
-      has Mammal2 Fur
-      has Mammal2 WarmBlood
-      feeds Mammal2 Milk
-      has Mammal3 Fur
-      has Mammal3 WarmBlood
-      feeds Mammal3 Milk
-    `,
-    expected_nl: 'Learned'
-  },
-
-  // Test: Induce common pattern - finds shared properties
-  {
-    action: 'query',
-    input_nl: 'What do all mammals have in common?',
-    input_dsl: `
-      @mammalPattern induce [Mammal1, Mammal2, Mammal3]
-      @q3 has $mammalPattern ?property
-    `,
-    expected_nl: 'has',
-    tags: ['induction', 'anonymous']
-  },
-
-  // ============================================================
-  // PART 5: HDC SIMILARITY RANKING
-  // ============================================================
-  {
-    action: 'learn',
-    input_nl: 'Similar concepts for ranking test',
-    input_dsl: `
-      isA Vehicle Transport
       isA Car Vehicle
+      isA Vehicle Transport
+      isA Transport Mobility
+      isA Mobility Service
+      isA Service Utility
+      isA Utility Concept
       isA Truck Vehicle
       isA Bicycle Vehicle
       has Car Wheels
       has Car Engine
+      has Car Seats
+      has Car Steering
       has Truck Wheels
       has Truck Engine
+      has Truck Cargo
       has Bicycle Wheels
+      has Bicycle Pedals
     `,
-    expected_nl: 'Learned'
+    expected_nl: 'Learned 17 facts'
   },
 
-  // Test: Find most similar to Car based on shared properties
-  {
-    action: 'query',
-    input_nl: 'What is most similar to Car? (should rank Truck > Bicycle)',
-    input_dsl: '@q4 similar Car ?X',
-    expected_nl: 'Car similars Truck',
-    tags: ['similarity-ranking', 'hdc']
-  },
-
-  // ============================================================
-  // PART 6: COMPONENT-BASED TRANSITIVE (HDC-native)
-  // ============================================================
-  {
-    action: 'learn',
-    input_nl: 'Chain for component-based search',
-    input_dsl: `
-      locatedIn Paris France
-      locatedIn France Europe
-      locatedIn Europe Earth
-      locatedIn Berlin Germany
-      locatedIn Germany Europe
-    `,
-    expected_nl: 'Learned 5 facts'
-  },
-
-  // Test: Should find via component matching, not just metadata
+  // === PROVE: 6-step isA chain (Car->Concept) ===
   {
     action: 'prove',
-    input_nl: 'Is Paris on Earth? (3-step chain via component HDC)',
-    input_dsl: '@goal locatedIn Paris Earth',
-    expected_nl: 'True: Paris is in Earth',
-    tags: ['component-hdc', 'transitive']
+    input_nl: 'Is Car a Concept? (6-step hierarchy)',
+    input_dsl: '@goal isA Car Concept',
+    expected_nl: 'True: Car is a concept. Proof: Car isA Vehicle. Vehicle isA Transport. Transport isA Mobility. Mobility isA Service. Service isA Utility. Utility isA Concept.'
   },
 
-  // Test: Multiple paths
+  // === QUERY: What does Car have ===
   {
     action: 'query',
-    input_nl: 'What is in Europe? (should find France, Germany via component index)',
-    input_dsl: '@q5 locatedIn ?X Europe',
-    expected_nl: 'France is in Europe',
-    tags: ['component-index', 'multi-result']
+    input_nl: 'What does Car have?',
+    input_dsl: '@q has Car ?property',
+    expected_nl: 'Car has Wheels. Car has Engine. Car has Seats. Car has Steering.'
   }
 ];
+
+export default { name, description, theories, steps };

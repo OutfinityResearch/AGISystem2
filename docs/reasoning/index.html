@@ -1,0 +1,337 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Reasoning Engines - AGISystem2</title>
+  <link rel="stylesheet" href="../reference/style.css">
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Reasoning Engines</h1>
+    <small>
+      <a href="../index.html">Home</a> &middot;
+      <a href="../architecture/index.html">Architecture</a> &middot;
+      <a href="../theory/index.html">Theory</a> &middot;
+      <a href="index.html">Reasoning</a> &middot;
+      <a href="../api/index.html">APIs</a>
+    </small>
+    <small>Two reasoning approaches: Symbolic-first and Holographic-first</small>
+  </div>
+
+  <div class="section-intro">
+    <h2 style="margin-top: 0;">Overview</h2>
+    <p>AGISystem2 implements <strong>two distinct reasoning engines</strong> that can be used interchangeably based on the <code>reasoningPriority</code> configuration. Both engines share the same API interface but differ in their approach to proof search and query resolution.</p>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>Key Design Principle:</strong> Both engines are drop-in replacements for each other. The choice between them is a configuration option, not a code change. This allows seamless switching and A/B testing.
+  </div>
+
+  <h2>The Two Reasoning Paradigms</h2>
+
+  <div class="section-grid">
+    <div class="section-card" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-left: 4px solid #4caf50;">
+      <h3><a href="symbolic.html">Symbolic Reasoning Engine</a></h3>
+      <p><strong>Mode:</strong> <code>symbolicPriority</code> (default)</p>
+      <p>Classical logical reasoning with HDC for efficient storage and retrieval. Uses explicit rules, transitive chains, and backward chaining with symbolic validation at each step.</p>
+      <ul style="font-size: 0.9em; margin-top: 10px;">
+        <li>Deterministic proof search</li>
+        <li>Complete audit trails</li>
+        <li>HDC as acceleration layer</li>
+      </ul>
+    </div>
+
+    <div class="section-card" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 4px solid #1976d2;">
+      <h3><a href="holographic.html">Holographic Reasoning Engine</a></h3>
+      <p><strong>Mode:</strong> <code>holographicPriority</code></p>
+      <p>HDC-first approach using vector similarity to find candidate proofs, then validates with symbolic logic. Leverages the full power of hyperdimensional computing for pattern matching.</p>
+      <ul style="font-size: 0.9em; margin-top: 10px;">
+        <li>Similarity-guided search</li>
+        <li>Faster candidate discovery</li>
+        <li>Symbolic validation layer</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Architecture Comparison</h2>
+
+  <div class="diagram-container">
+    <div class="diagram-title">Reasoning Pipeline Comparison</div>
+    <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" style="max-width: 800px;">
+      <!-- Background -->
+      <rect x="5" y="5" width="390" height="390" rx="10" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+      <rect x="405" y="5" width="390" height="390" rx="10" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+
+      <!-- Titles -->
+      <text x="200" y="35" text-anchor="middle" font-weight="bold" font-size="16" fill="#2e7d32">Symbolic Priority</text>
+      <text x="600" y="35" text-anchor="middle" font-weight="bold" font-size="16" fill="#1565c0">Holographic Priority</text>
+
+      <!-- Symbolic Flow -->
+      <rect x="50" y="60" width="300" height="40" rx="5" fill="#4caf50"/>
+      <text x="200" y="85" text-anchor="middle" font-size="12" fill="white" font-weight="bold">1. Direct KB Match (Symbolic)</text>
+
+      <line x1="200" y1="100" x2="200" y2="120" stroke="#4caf50" stroke-width="2" marker-end="url(#arrow-green)"/>
+
+      <rect x="50" y="120" width="300" height="40" rx="5" fill="#66bb6a"/>
+      <text x="200" y="145" text-anchor="middle" font-size="12" fill="white" font-weight="bold">2. Transitive Chain Reasoning</text>
+
+      <line x1="200" y1="160" x2="200" y2="180" stroke="#4caf50" stroke-width="2"/>
+
+      <rect x="50" y="180" width="300" height="40" rx="5" fill="#81c784"/>
+      <text x="200" y="205" text-anchor="middle" font-size="12" fill="white" font-weight="bold">3. Backward Chaining (Rules)</text>
+
+      <line x1="200" y1="220" x2="200" y2="240" stroke="#4caf50" stroke-width="2"/>
+
+      <rect x="50" y="240" width="300" height="40" rx="5" fill="#a5d6a7"/>
+      <text x="200" y="265" text-anchor="middle" font-size="12" fill="#1b5e20" font-weight="bold">4. Weak Match / Disjoint Proof</text>
+
+      <line x1="200" y1="280" x2="200" y2="300" stroke="#4caf50" stroke-width="2"/>
+
+      <rect x="50" y="300" width="300" height="40" rx="5" fill="#c8e6c9" stroke="#4caf50" stroke-width="2"/>
+      <text x="200" y="320" text-anchor="middle" font-size="11" fill="#1b5e20">HDC used for storage/retrieval only</text>
+      <text x="200" y="335" text-anchor="middle" font-size="10" fill="#388e3c">Master Equation: KB search acceleration</text>
+
+      <!-- Holographic Flow -->
+      <rect x="450" y="60" width="300" height="40" rx="5" fill="#1976d2"/>
+      <text x="600" y="85" text-anchor="middle" font-size="12" fill="white" font-weight="bold">1. HDC Similarity Search</text>
+
+      <line x1="600" y1="100" x2="600" y2="120" stroke="#1976d2" stroke-width="2"/>
+
+      <rect x="450" y="120" width="300" height="40" rx="5" fill="#42a5f5"/>
+      <text x="600" y="145" text-anchor="middle" font-size="12" fill="white" font-weight="bold">2. Find Candidate Proofs (HDC)</text>
+
+      <line x1="600" y1="160" x2="600" y2="180" stroke="#1976d2" stroke-width="2"/>
+
+      <rect x="450" y="180" width="300" height="40" rx="5" fill="#64b5f6"/>
+      <text x="600" y="205" text-anchor="middle" font-size="12" fill="white" font-weight="bold">3. Symbolic Validation</text>
+
+      <line x1="600" y1="220" x2="600" y2="240" stroke="#1976d2" stroke-width="2"/>
+
+      <rect x="450" y="240" width="300" height="40" rx="5" fill="#90caf9"/>
+      <text x="600" y="265" text-anchor="middle" font-size="12" fill="#0d47a1" font-weight="bold">4. Fall back to Symbolic (if needed)</text>
+
+      <line x1="600" y1="280" x2="600" y2="300" stroke="#1976d2" stroke-width="2"/>
+
+      <rect x="450" y="300" width="300" height="40" rx="5" fill="#bbdefb" stroke="#1976d2" stroke-width="2"/>
+      <text x="600" y="320" text-anchor="middle" font-size="11" fill="#0d47a1">HDC drives proof search</text>
+      <text x="600" y="335" text-anchor="middle" font-size="10" fill="#1565c0">Master Equation: Answer = KB ⊕ Query⁻¹</text>
+
+      <!-- Legend -->
+      <rect x="200" y="360" width="400" height="30" rx="5" fill="#f5f5f5" stroke="#ddd"/>
+      <circle cx="250" cy="375" r="8" fill="#4caf50"/>
+      <text x="265" y="379" font-size="11" fill="#333">Symbolic operations</text>
+      <circle cx="450" cy="375" r="8" fill="#1976d2"/>
+      <text x="465" y="379" font-size="11" fill="#333">HDC operations</text>
+    </svg>
+  </div>
+
+  <h2>Key Components</h2>
+
+  <table>
+    <tr>
+      <th>Component</th>
+      <th>Symbolic Engine</th>
+      <th>Holographic Engine</th>
+    </tr>
+    <tr>
+      <td><strong>Proof Engine</strong></td>
+      <td><code>ProofEngine</code><br>prove.mjs</td>
+      <td><code>HolographicProofEngine</code><br>holographic/prove-hdc-first.mjs</td>
+    </tr>
+    <tr>
+      <td><strong>Query Engine</strong></td>
+      <td><code>QueryEngine</code><br>query.mjs</td>
+      <td><code>HolographicQueryEngine</code><br>holographic/query-hdc-first.mjs</td>
+    </tr>
+    <tr>
+      <td><strong>CSP Solver</strong></td>
+      <td><code>CSPSolver</code><br>csp/solver.mjs</td>
+      <td><code>HolographicCSPSolver</code><br>holographic/csp-hdc-heuristic.mjs</td>
+    </tr>
+    <tr>
+      <td><strong>Abduction</strong></td>
+      <td colspan="2" style="text-align: center;"><code>AbductionEngine</code> - Shared ("best explanation" reasoning)</td>
+    </tr>
+    <tr>
+      <td><strong>Induction</strong></td>
+      <td colspan="2" style="text-align: center;"><code>InductionEngine</code> - Shared (pattern generalization)</td>
+    </tr>
+  </table>
+
+  <h2>Selecting a Reasoning Mode</h2>
+
+  <h3>Via Environment Variable</h3>
+  <pre><code># Use holographic priority
+export SYS2_REASONING_PRIORITY=holographicPriority
+
+# Use symbolic priority (default)
+export SYS2_REASONING_PRIORITY=symbolicPriority</code></pre>
+
+  <h3>Via Session Configuration</h3>
+  <pre><code>// Symbolic priority (default)
+const session = new Session({ reasoningPriority: 'symbolicPriority' });
+
+// Holographic priority
+const session = new Session({ reasoningPriority: 'holographicPriority' });</code></pre>
+
+  <h3>Factory Functions</h3>
+  <pre><code>import { createQueryEngine, createProofEngine, createCSPSolver } from './reasoning/index.mjs';
+
+// Automatically selects engine based on session/env config
+const queryEngine = createQueryEngine(session);
+const proofEngine = createProofEngine(session);
+const cspSolver = createCSPSolver(session);</code></pre>
+
+  <h2>When to Use Which Engine?</h2>
+
+  <table class="matrix-table">
+    <tr>
+      <th>Scenario</th>
+      <th>Recommended</th>
+      <th>Rationale</th>
+    </tr>
+    <tr>
+      <td>High-stakes decisions requiring audit trails</td>
+      <td><span class="badge badge-success">Symbolic</span></td>
+      <td>Every step is explicitly logged and traceable</td>
+    </tr>
+    <tr>
+      <td>Large KB with many similar facts</td>
+      <td><span class="badge badge-primary">Holographic</span></td>
+      <td>HDC similarity excels at finding patterns in noise</td>
+    </tr>
+    <tr>
+      <td>Strict logical correctness required</td>
+      <td><span class="badge badge-success">Symbolic</span></td>
+      <td>No false positives from similarity matching</td>
+    </tr>
+    <tr>
+      <td>Exploratory queries ("find similar to X")</td>
+      <td><span class="badge badge-primary">Holographic</span></td>
+      <td>Native support for similarity-based search</td>
+    </tr>
+    <tr>
+      <td>Complex CSP with many constraints</td>
+      <td><span class="badge badge-primary">Holographic</span></td>
+      <td>HDC heuristics can prune search space faster</td>
+    </tr>
+    <tr>
+      <td>Formal verification / compliance</td>
+      <td><span class="badge badge-success">Symbolic</span></td>
+      <td>Deterministic, reproducible proofs</td>
+    </tr>
+  </table>
+
+  <h2>Shared Components</h2>
+
+  <p>Both engines share the following components that are used regardless of reasoning mode:</p>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3>AbductionEngine</h3>
+      <p>Implements "best explanation" reasoning. Given an observation, finds hypotheses that would explain it.</p>
+      <pre><code>// Find what explains "Tweety cannot fly"
+engine.abduce({ operator: 'cannot', args: ['Tweety', 'Fly'] })</code></pre>
+    </div>
+
+    <div class="section-card">
+      <h3>InductionEngine</h3>
+      <p>Discovers patterns and generalizes rules from KB facts. Learns from examples.</p>
+      <pre><code>// Induce rules from KB patterns
+engine.induceRules({ minExamples: 3 })
+// → "All Birds can Fly" (from Dog→Animal, Cat→Animal...)</code></pre>
+    </div>
+
+    <div class="section-card">
+      <h3>TransitiveReasoner</h3>
+      <p>Handles transitive relations like <code>isA</code>, <code>locatedIn</code>, <code>partOf</code>.</p>
+      <pre><code>// Tweety isA Bird, Bird isA Animal
+// → Tweety isA Animal (transitive chain)</code></pre>
+    </div>
+
+    <div class="section-card">
+      <h3>PropertyInheritanceReasoner</h3>
+      <p>Inherits properties along class hierarchies.</p>
+      <pre><code>// Bird can Fly, Tweety isA Bird
+// → Tweety can Fly (property inheritance)</code></pre>
+    </div>
+  </div>
+
+  <h2>Performance Characteristics</h2>
+
+  <table>
+    <tr>
+      <th>Metric</th>
+      <th>Symbolic</th>
+      <th>Holographic</th>
+    </tr>
+    <tr>
+      <td>Proof search strategy</td>
+      <td>Depth-first with backtracking</td>
+      <td>Similarity-guided + validation</td>
+    </tr>
+    <tr>
+      <td>KB size scaling</td>
+      <td>Linear scan possible</td>
+      <td>Sub-linear with HDC bundle</td>
+    </tr>
+    <tr>
+      <td>Memory usage</td>
+      <td>Lower (no bundles)</td>
+      <td>Higher (KB bundle + candidate sets)</td>
+    </tr>
+    <tr>
+      <td>Precision</td>
+      <td>100% (symbolic match)</td>
+      <td>High with validation layer</td>
+    </tr>
+    <tr>
+      <td>Recall for fuzzy queries</td>
+      <td>Limited to exact matches</td>
+      <td>Better for similarity queries</td>
+    </tr>
+  </table>
+
+  <div class="alert alert-warning">
+    <strong>Note:</strong> Both engines ultimately rely on symbolic validation for correctness. The holographic engine uses HDC to <em>find candidates faster</em>, not to replace symbolic proof.
+  </div>
+
+  <h2>Source Code Structure</h2>
+
+  <pre><code>src/reasoning/
+├── index.mjs                    # Factory functions, exports
+├── prove.mjs                    # ProofEngine (symbolic)
+├── query.mjs                    # QueryEngine (symbolic)
+├── abduction.mjs                # AbductionEngine (shared)
+├── induction.mjs                # InductionEngine (shared)
+├── transitive.mjs               # TransitiveReasoner
+├── property-inheritance.mjs     # PropertyInheritanceReasoner
+├── unification.mjs              # UnificationEngine
+├── conditions.mjs               # ConditionProver (And/Or)
+├── kb-matching.mjs              # KBMatcher
+├── disjoint.mjs                 # DisjointProver
+├── query-hdc.mjs                # HDC search utilities
+├── query-kb.mjs                 # Direct KB search
+├── query-transitive.mjs         # Transitive query support
+├── query-rules.mjs              # Rule-derived queries
+├── query-compound.mjs           # Compound CSP queries
+├── csp/
+│   ├── solver.mjs               # CSPSolver (symbolic)
+│   ├── constraint.mjs           # Constraint definitions
+│   ├── domain.mjs               # Domain management
+│   └── backtrack.mjs            # Backtracking search
+└── holographic/
+    ├── index.mjs                # Holographic exports
+    ├── prove-hdc-first.mjs      # HolographicProofEngine
+    ├── query-hdc-first.mjs      # HolographicQueryEngine
+    └── csp-hdc-heuristic.mjs    # HolographicCSPSolver</code></pre>
+
+  <div class="footer-nav">
+    <p><a href="symbolic.html">Next: Symbolic Reasoning Engine &rarr;</a></p>
+    <p><a href="holographic.html">Next: Holographic Reasoning Engine &rarr;</a></p>
+    <p style="margin-top: 20px;"><a href="../index.html">&larr; Back to Documentation Home</a></p>
+  </div>
+  </div>
+</body>
+</html>

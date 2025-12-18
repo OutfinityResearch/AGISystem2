@@ -3,13 +3,29 @@
  * @module core/constants
  */
 
+// Import strategy-specific thresholds from separate files
+import {
+  REASONING_THRESHOLDS as DENSE_BINARY_THRESHOLDS,
+  HOLOGRAPHIC_THRESHOLDS as DENSE_BINARY_HOLO
+} from '../hdc/strategies/dense-binary-thresholds.mjs';
+
+import {
+  REASONING_THRESHOLDS as SPARSE_POLY_THRESHOLDS,
+  HOLOGRAPHIC_THRESHOLDS as SPARSE_POLY_HOLO
+} from '../hdc/strategies/sparse-polynomial-thresholds.mjs';
+
+import {
+  REASONING_THRESHOLDS as METRIC_AFFINE_THRESHOLDS,
+  HOLOGRAPHIC_THRESHOLDS as METRIC_AFFINE_HOLO
+} from '../hdc/strategies/metric-affine.mjs';
+
 // Default geometry (vector dimension in bits)
 export const DEFAULT_GEOMETRY = 32768;
 
 // Position vector count
 export const MAX_POSITIONS = 20;
 
-// Legacy similarity thresholds (use REASONING_THRESHOLDS for new code)
+// Legacy similarity thresholds (use getThresholds() for new code)
 export const SIMILARITY_THRESHOLD = 0.5;
 export const STRONG_CONFIDENCE = 0.65;
 export const ORTHOGONAL_THRESHOLD = 0.55;
@@ -17,97 +33,25 @@ export const ORTHOGONAL_THRESHOLD = 0.55;
 /**
  * Strategy-dependent reasoning thresholds
  *
- * Dense-binary: Higher similarities (0.5-0.8) due to dense bit patterns
- * Sparse-polynomial: Lower similarities (0.05-0.2) due to sparse structure
+ * Thresholds are now loaded from per-strategy files:
+ * - dense-binary-thresholds.mjs
+ * - sparse-polynomial-thresholds.mjs
+ * - metric-affine.mjs (thresholds included in strategy file)
  *
- * Each strategy has different optimal thresholds for:
- * - SIMILARITY: Minimum similarity to consider a match
- * - HDC_MATCH: Minimum similarity for HDC Master Equation results
- * - VERIFICATION: Minimum similarity for solution verification
- * - ANALOGY: Minimum similarity for analogical reasoning
- * - RULE_MATCH: Similarity for rule-based matches
- * - TRANSITIVE_BASE: Base confidence for transitive chains
- * - TRANSITIVE_DECAY: Decay factor per step in transitive chains
- * - CONFIDENCE_DECAY: General confidence decay for derived results
- * - DIRECT_MATCH: Confidence for direct KB matches
- * - INDUCTION_MIN: Minimum confidence for inductive reasoning
- * - ANALOGY_DISCOUNT: Discount factor for analogical results
+ * Each strategy has different optimal thresholds based on:
+ * - Random baseline similarity
+ * - Similarity metric (Hamming, Jaccard, L1)
+ * - Vector representation properties
  */
 export const REASONING_THRESHOLDS = {
-  'dense-binary': {
-    // Similarity thresholds
-    SIMILARITY: 0.5,
-    HDC_MATCH: 0.5,
-    VERIFICATION: 0.4,
-    ANALOGY_MIN: 0.6,
-    ANALOGY_MAX: 0.95,
-    RULE_MATCH: 0.85,
-    CONCLUSION_MATCH: 0.7,
-
-    // Confidence values
-    DIRECT_MATCH: 0.95,
-    TRANSITIVE_BASE: 0.9,
-    TRANSITIVE_DECAY: 0.98,
-    TRANSITIVE_DEPTH_DECAY: 0.05,
-    CONFIDENCE_DECAY: 0.95,
-    RULE_CONFIDENCE: 0.85,
-    CONDITION_CONFIDENCE: 0.9,
-    DISJOINT_CONFIDENCE: 0.95,
-    DEFAULT_CONFIDENCE: 0.8,
-
-    // Induction thresholds
-    INDUCTION_MIN: 0.6,
-    INDUCTION_PATTERN: 0.5,
-
-    // Scoring
-    ANALOGY_DISCOUNT: 0.7,
-    ABDUCTION_SCORE: 0.7,
-    STRONG_MATCH: 0.55,
-    VERY_STRONG_MATCH: 0.7,
-
-    // Bundle/Induce meta-operators
-    BUNDLE_COMMON_SCORE: 0.90
-  },
-
-  'sparse-polynomial': {
-    // Similarity thresholds - much lower for sparse vectors
-    SIMILARITY: 0.05,
-    HDC_MATCH: 0.02,
-    VERIFICATION: 0.02,
-    ANALOGY_MIN: 0.03,
-    ANALOGY_MAX: 0.5,
-    RULE_MATCH: 0.1,
-    CONCLUSION_MATCH: 0.05,
-
-    // Confidence values - similar to dense-binary (logical confidence)
-    DIRECT_MATCH: 0.95,
-    TRANSITIVE_BASE: 0.9,
-    TRANSITIVE_DECAY: 0.98,
-    TRANSITIVE_DEPTH_DECAY: 0.05,
-    CONFIDENCE_DECAY: 0.95,
-    RULE_CONFIDENCE: 0.85,
-    CONDITION_CONFIDENCE: 0.9,
-    DISJOINT_CONFIDENCE: 0.95,
-    DEFAULT_CONFIDENCE: 0.8,
-
-    // Induction thresholds
-    INDUCTION_MIN: 0.3,
-    INDUCTION_PATTERN: 0.3,
-
-    // Scoring
-    ANALOGY_DISCOUNT: 0.7,
-    ABDUCTION_SCORE: 0.7,
-    STRONG_MATCH: 0.03,
-    VERY_STRONG_MATCH: 0.05,
-
-    // Bundle/Induce meta-operators
-    BUNDLE_COMMON_SCORE: 0.90
-  }
+  'dense-binary': DENSE_BINARY_THRESHOLDS,
+  'sparse-polynomial': SPARSE_POLY_THRESHOLDS,
+  'metric-affine': METRIC_AFFINE_THRESHOLDS
 };
 
 /**
  * Get thresholds for a specific strategy
- * @param {string} strategy - 'dense-binary' or 'sparse-polynomial'
+ * @param {string} strategy - Strategy ID
  * @returns {object} Thresholds object
  */
 export function getThresholds(strategy = 'dense-binary') {
@@ -148,7 +92,8 @@ export function isHolographicPriority() {
 /**
  * Holographic mode thresholds
  *
- * These control HDC-first reasoning behavior:
+ * Loaded from per-strategy threshold files.
+ * Controls HDC-first reasoning behavior:
  * - UNBIND_MIN_SIMILARITY: Minimum similarity for HDC unbind candidates
  * - UNBIND_MAX_CANDIDATES: Maximum candidates to validate symbolically
  * - CSP_HEURISTIC_WEIGHT: Weight for HDC similarity in CSP domain ordering
@@ -156,25 +101,14 @@ export function isHolographicPriority() {
  * - FALLBACK_TO_SYMBOLIC: Fall back to symbolic if HDC fails
  */
 export const HOLOGRAPHIC_THRESHOLDS = {
-  'dense-binary': {
-    UNBIND_MIN_SIMILARITY: 0.4,
-    UNBIND_MAX_CANDIDATES: 10,
-    CSP_HEURISTIC_WEIGHT: 0.7,
-    VALIDATION_REQUIRED: true,
-    FALLBACK_TO_SYMBOLIC: true
-  },
-  'sparse-polynomial': {
-    UNBIND_MIN_SIMILARITY: 0.02,
-    UNBIND_MAX_CANDIDATES: 10,
-    CSP_HEURISTIC_WEIGHT: 0.7,
-    VALIDATION_REQUIRED: true,
-    FALLBACK_TO_SYMBOLIC: true
-  }
+  'dense-binary': DENSE_BINARY_HOLO,
+  'sparse-polynomial': SPARSE_POLY_HOLO,
+  'metric-affine': METRIC_AFFINE_HOLO
 };
 
 /**
  * Get holographic thresholds for a specific strategy
- * @param {string} strategy - 'dense-binary' or 'sparse-polynomial'
+ * @param {string} strategy - Strategy ID
  * @returns {object} Holographic thresholds object
  */
 export function getHolographicThresholds(strategy = 'dense-binary') {

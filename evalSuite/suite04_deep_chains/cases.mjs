@@ -128,12 +128,12 @@ export const steps = [
     expected_nl: 'Paris is a City.'
   },
 
-  // === NEGATIVE ===
+  // === NEGATIVE: Reverse temporal order ===
   {
     action: 'prove',
-    input_nl: 'Is AI before Antiquity?',
+    input_nl: 'Is AI before Antiquity? (reverse order - should fail)',
     input_dsl: '@goal before AI Antiquity',
-    expected_nl: 'Cannot prove: AI is before Antiquity'
+    expected_nl: 'Cannot prove: AI is before Antiquity. Search: Searched before AI ?next. Not found. AI has no outgoing before relations. Searched reverse: Antiquity before Medieval before Renaissance before Industrial before Modern before Digital before AI. Path exists in opposite direction only. Temporal order violated.'
   }
 ];
 

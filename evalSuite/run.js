@@ -20,7 +20,7 @@
  *   --sparse-k=N    Sparse polynomial exponent count (2, 3, 4, 5, 6, 8)
  *
  * Configurations:
- *   HDC Strategies: dense-binary, sparse-polynomial
+ *   HDC Strategies: dense-binary, sparse-polynomial, metric-affine
  *   Reasoning Priorities: symbolicPriority (default), holographicPriority
  */
 
@@ -57,6 +57,9 @@ const denseDim = denseDimArg ? parseInt(denseDimArg.split('=')[1], 10) : 2048;
 
 const sparseKArg = args.find(a => a.startsWith('--sparse-k='));
 const sparseK = sparseKArg ? parseInt(sparseKArg.split('=')[1], 10) : 4;
+
+const metricDimArg = args.find(a => a.startsWith('--metric-dim='));
+const metricDim = metricDimArg ? parseInt(metricDimArg.split('=')[1], 10) : 32;
 
 const specificSuites = args.filter(a => !a.startsWith('-') && !a.startsWith('--'));
 
@@ -142,15 +145,22 @@ async function main() {
     for (const strategy of strategiesToRun) {
       for (const priority of prioritiesToRun) {
         // Use appropriate geometry for each strategy
-        const geometry = strategy === 'sparse-polynomial' ? sparseK : denseDim;
+        let geometry;
+        if (strategy === 'sparse-polynomial') {
+          geometry = sparseK;
+        } else if (strategy === 'metric-affine') {
+          geometry = metricDim;
+        } else {
+          geometry = denseDim;
+        }
         configurations.push({ strategy, priority, geometry });
       }
     }
 
     const configNames = configurations.map(c => `${c.strategy}/${c.priority.replace('Priority', '')}`);
     console.log(`Running with ${configurations.length} configuration(s): ${configNames.join(', ')}`);
-    if (denseDimArg || sparseKArg) {
-      console.log(`Geometry: dense-dim=${denseDim}, sparse-k=${sparseK}`);
+    if (denseDimArg || sparseKArg || metricDimArg) {
+      console.log(`Geometry: dense-dim=${denseDim}, sparse-k=${sparseK}, metric-dim=${metricDim}`);
     }
 
     // Results by configuration (key = "strategy/priority")

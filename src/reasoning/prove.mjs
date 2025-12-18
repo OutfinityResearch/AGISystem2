@@ -211,10 +211,23 @@ export class ProofEngine {
       }
     }
 
-    // Strategy 4: Weak direct match
+    // Strategy 4: Weak direct match (with entity existence verification)
+    // Weak matches can produce false positives for similar-looking facts,
+    // so we verify the entity actually exists in KB before accepting
     if (directResult.valid && directResult.confidence > this.thresholds.STRONG_MATCH) {
-      directResult.steps = [{ operation: 'weak_match', fact: this.goalToFact(goal) }];
-      return directResult;
+      const entityArg = goal.args?.[0] ? this.extractArgName(goal.args[0]) : null;
+      const componentKB = this.session?.componentKB;
+
+      // Only accept weak match if entity is known (appears in any KB fact)
+      const entityExists = entityArg && componentKB && (
+        componentKB.findByArg0(entityArg, false).length > 0 ||
+        componentKB.findByArg1(entityArg, false).length > 0
+      );
+
+      if (entityExists) {
+        directResult.steps = [{ operation: 'weak_match', fact: this.goalToFact(goal) }];
+        return directResult;
+      }
     }
 
     // Strategy 5: Disjoint proof for spatial relations

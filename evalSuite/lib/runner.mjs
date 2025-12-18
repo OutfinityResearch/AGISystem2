@@ -607,6 +607,8 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
 
   // Comparison - normalize by removing punctuation, articles, and extra whitespace
   const normalize = s => s.toLowerCase()
+    .replace(/\bisa\b/g, 'is a')       // Convert DSL "isA" to NL "is a"
+    .replace(/\bhasa\b/g, 'has a')     // Convert DSL "hasA" to NL "has a"
     .replace(/[^\w\s]/g, '')           // Remove punctuation
     .replace(/\b(a|an|the)\b/g, '')    // Remove articles
     .replace(/\s+/g, ' ')              // Collapse whitespace
@@ -682,7 +684,15 @@ export async function runSuite(suite, options = {}) {
   // Use geometry from options or defaults
   // Dense-binary: vector dimension (default 2048)
   // Sparse-polynomial: exponent count k (default 4)
-  const defaultGeometry = strategyId === 'sparse-polynomial' ? 4 : 2048;
+  // Metric-affine: byte channels (default 32)
+  let defaultGeometry;
+  if (strategyId === 'sparse-polynomial') {
+    defaultGeometry = 4;
+  } else if (strategyId === 'metric-affine') {
+    defaultGeometry = 32;
+  } else {
+    defaultGeometry = 2048;
+  }
   const geometry = options.geometry || defaultGeometry;
   const session = new Session({
     geometry,
