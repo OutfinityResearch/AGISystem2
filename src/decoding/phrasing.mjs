@@ -45,7 +45,7 @@ const TEMPLATES = {
     positions: [1, 2]
   },
   hasProperty: {
-    pattern: '{Pos1} has property {Pos2}.',
+    pattern: '{Pos1} has {Pos2}.',
     positions: [1, 2]
   },
   belongsTo: {

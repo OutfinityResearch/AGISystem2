@@ -5,7 +5,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { Vocabulary } from '../../../src/runtime/vocabulary.mjs';
-import { Vector } from '../../../src/core/vector.mjs';
+import { isVector, createRandom } from '../../../src/hdc/facade.mjs';
 import { similarity } from '../../../src/core/operations.mjs';
 
 describe('Vocabulary', () => {
@@ -22,7 +22,7 @@ describe('Vocabulary', () => {
       const vocab = new Vocabulary(1024);
       const vec = vocab.getOrCreate('John');
 
-      assert.ok(vec instanceof Vector, 'should return Vector');
+      assert.ok(isVector(vec), 'should return Vector');
       assert.equal(vec.geometry, 1024, 'should have correct geometry');
     });
 
@@ -63,7 +63,7 @@ describe('Vocabulary', () => {
     test('should handle special characters in names', () => {
       const vocab = new Vocabulary(1024);
       const v = vocab.getOrCreate('test_name_with_special!@#');
-      assert.ok(v instanceof Vector);
+      assert.ok(isVector(v));
     });
   });
 
@@ -77,7 +77,7 @@ describe('Vocabulary', () => {
       const vocab = new Vocabulary(1024);
       vocab.getOrCreate('known');
       const vec = vocab.get('known');
-      assert.ok(vec instanceof Vector);
+      assert.ok(isVector(vec));
     });
   });
 
@@ -104,7 +104,7 @@ describe('Vocabulary', () => {
 
     test('should return null for unknown vector', () => {
       const vocab = new Vocabulary(1024);
-      const unknownVec = new Vector(1024);
+      const unknownVec = createRandom(1024);
       const name = vocab.reverseLookup(unknownVec);
       assert.equal(name, null);
     });

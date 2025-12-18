@@ -189,6 +189,46 @@ export function reportFailureDetails(index, result) {
 }
 
 /**
+ * Report compact expected vs actual pairs for failed cases
+ * (single-line per failing phase with available comparison)
+ */
+export function reportFailureComparisons(cases, results, context = {}) {
+  const mismatches = [];
+
+  results.forEach((res, idx) => {
+    if (res.passed) return;
+
+    for (const [phaseName, phase] of Object.entries(res.phases || {})) {
+      if (phase?.expected !== undefined && phase?.actual !== undefined && !phase.passed) {
+        mismatches.push({
+          caseNum: idx + 1,
+          phaseName,
+          expected: phase.expected,
+          actual: phase.actual
+        });
+      }
+    }
+  });
+
+  if (mismatches.length === 0) return;
+
+  const suiteLabel = context.suiteName ? `${context.suiteName}${context.strategyId ? ' (' + context.strategyId + (context.reasoningPriority ? '/' + context.reasoningPriority : '') + ')' : ''}` : '';
+  if (suiteLabel) {
+    console.log(`${colors.yellow}${colors.bold}Failure diffs for ${suiteLabel}:${colors.reset}`);
+  } else {
+    console.log(`${colors.yellow}${colors.bold}Failure diffs:${colors.reset}`);
+  }
+
+  mismatches.forEach(m => {
+    const desc = cases?.[m.caseNum - 1]?.input_nl || `Case ${m.caseNum}`;
+    console.log(`${colors.dim}Case ${m.caseNum}${colors.reset} [${m.phaseName}] ${colors.dim}${desc}${colors.reset}`);
+    console.log(`  Expected: ${colors.green}${m.expected}${colors.reset}`);
+    console.log(`  Actual:   ${colors.red}${m.actual}${colors.reset}`);
+    console.log();
+  });
+}
+
+/**
  * Format number with K/M suffix for large values
  */
 function formatNum(n) {
@@ -652,6 +692,7 @@ export default {
   reportCaseResults,
   reportSuiteSummary,
   reportFailureDetails,
+  reportFailureComparisons,
   reportGlobalSummary,
   reportMultiStrategyComparison
 };

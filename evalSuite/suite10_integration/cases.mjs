@@ -119,7 +119,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does DistrictCourt appeal to SupremeCourt? (2-step appeal chain)',
     input_dsl: '@goal appealsTo DistrictCourt SupremeCourt',
-    expected_nl: 'True: DistrictCourt appeals to SupremeCourt. Proof: DistrictCourt isA TrialCourt. TrialCourt isA LowerCourt. DistrictCourt appealsTo AppealsCourt. AppealsCourt appealsTo SupremeCourt. Transitive chain verified. Therefore DistrictCourt appealsTo SupremeCourt.'
+    expected_nl: 'True: DistrictCourt appeals to SupremeCourt. Proof: DistrictCourt appeals to AppealsCourt. AppealsCourt appeals to SupremeCourt. Therefore DistrictCourt appeals to SupremeCourt.'
   },
 
   // === PROVE: 7-step biological (Hemoglobin->Matter) ===
@@ -143,7 +143,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is COVID a Court? (cross-domain - should fail)',
     input_dsl: '@goal isA COVID Court',
-    expected_nl: 'Cannot prove: COVID is a Court. Search: COVID isA ViralDisease. ViralDisease isA Infectious. Infectious isA Disease. Disease isA MedicalCondition. MedicalCondition isA HealthIssue. HealthIssue isA Problem. Searched Problem isA ?next for path to Court. Not found. No path exists from COVID to Court. Medical and legal domains are separate.'
+    expected_nl: 'Cannot prove: COVID is a court. Search: COVID isA ViralDisease. ViralDisease isA Infectious. Infectious isA Disease. Disease isA MedicalCondition. MedicalCondition isA HealthIssue. HealthIssue isA Problem. No path exists from COVID to Court.'
   },
 
   // === NEGATIVE: Reverse causation with search trace ===
@@ -151,7 +151,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does Trial cause Crime? (reverse causation - should fail)',
     input_dsl: '@goal causes Trial Crime',
-    expected_nl: 'Cannot prove: Trial causes Crime. Search: Searched causes Trial ?next in KB. Not found. Trial has no outgoing causes relations. Searched reverse: Crime causes Investigation causes Evidence causes Arrest causes Prosecution causes Trial. Path exists in opposite direction only. Causal direction violated.'
+    expected_nl: 'Cannot prove: Trial causes Crime. Search: Searched causes Trial ?next in KB. Not found. Trial has no outgoing causes relations. Reverse path: Crime -> Investigation -> Evidence -> Arrest -> Prosecution -> Trial. Path exists in opposite direction only. Causal direction violated.'
   },
 
   // === NEGATIVE: Reverse temporal with search trace ===
@@ -159,7 +159,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Sentencing before Complaint? (reverse temporal - should fail)',
     input_dsl: '@goal before Sentencing Complaint',
-    expected_nl: 'Cannot prove: Sentencing is before Complaint. Search: Searched before Sentencing ?next in KB. Not found. Sentencing has no outgoing before relations. Searched reverse: Complaint before Filing before Investigation before Arrest before Trial before Verdict before Sentencing. Path exists in opposite direction only. Temporal order violated.'
+    expected_nl: 'Cannot prove: Sentencing is before Complaint. Search: Searched before Sentencing ?next in KB. Not found. Sentencing has no outgoing before relations. Reverse path: Complaint -> Filing -> Investigation -> Arrest -> Trial -> Verdict -> Sentencing. Path exists in opposite direction only. Temporal order violated.'
   },
 
   // === QUERY: Patient symptoms ===

@@ -213,18 +213,46 @@ export class PropertyInheritanceReasoner {
 
   /**
    * Check for direct exception without recursion
+   * Handles both explicit "Not op entity value" and reference patterns "Not $ref"
    */
   hasDirectException(operator, entity, value) {
     for (const fact of this.session.kbFacts) {
       const meta = fact.metadata;
 
       if (meta?.operator === 'Not') {
+        // Check explicit pattern: Not op entity value
         const negatedOp = meta.args?.[0];
         const negatedEntity = meta.args?.[1];
         const negatedValue = meta.args?.[2];
 
         if (negatedOp === operator && negatedEntity === entity && negatedValue === value) {
           return true;
+        }
+
+        // Check reference pattern: Not $refName
+        // The args[0] might be a reference name (without $ prefix after parsing)
+        if (meta.args?.length === 1) {
+          const refName = meta.args[0]?.replace(/^\$/, '');
+          const negatedVec = this.session.scope.get(refName);
+          if (negatedVec) {
+            // Build a vector for the property we're checking
+            const checkFact = {
+              operator: { type: 'Identifier', name: operator },
+              args: [
+                { type: 'Identifier', name: entity },
+                { type: 'Identifier', name: value }
+              ]
+            };
+
+            const checkVec = this.session.executor?.buildStatementVector(checkFact);
+            if (checkVec) {
+              this.session.reasoningStats.similarityChecks++;
+              const sim = this.session.similarity(checkVec, negatedVec);
+              if (sim > this.thresholds.RULE_MATCH) {
+                return true;
+              }
+            }
+          }
         }
       }
     }

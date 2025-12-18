@@ -241,8 +241,12 @@ export function findLeafConditionMatches(session, condAST, initialBindings) {
         }
         newBindings.set(condArg.name, factArg);
       } else if (condArg?.name !== factArg) {
-        matchOk = false;
-        break;
+        const expected = condArg?.name;
+        const typeMatch = expected && reachesTransitively(session, 'isA', factArg, expected);
+        if (!typeMatch) {
+          matchOk = false;
+          break;
+        }
       }
     }
 

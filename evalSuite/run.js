@@ -31,6 +31,7 @@ import {
   reportCaseResults,
   reportSuiteSummary,
   reportFailureDetails,
+  reportFailureComparisons,
   reportGlobalSummary,
   reportMultiStrategyComparison
 } from './lib/reporter.mjs';
@@ -199,6 +200,13 @@ async function main() {
           // Report results
           reportCaseResults(suite.cases, results);
           reportSuiteSummary(summary, suite.cases);
+          if (summary.failed > 0) {
+            reportFailureComparisons(suite.cases, results, {
+              suiteName,
+              strategyId: config.strategy,
+              reasoningPriority: config.priority
+            });
+          }
 
           // Show failure details if verbose
           if (verbose) {

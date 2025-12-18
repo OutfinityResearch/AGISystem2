@@ -325,9 +325,40 @@ export function getVectorClass() {
 }
 
 /**
+ * Check if an object is a valid HDC vector from ANY registered strategy.
+ * Use this instead of `instanceof Vector` for multi-strategy compatibility.
+ *
+ * Supported vector types:
+ * - dense-binary: Uint32Array data + geometry (number of bits)
+ * - sparse-polynomial: Set exponents + geometry (k parameter)
+ * - metric-affine: Uint8Array data + geometry (number of dimensions)
+ *
+ * @param {any} obj - Object to check
+ * @returns {boolean} True if obj is a vector from any strategy
+ */
+export function isVector(obj) {
+  if (!obj || typeof obj !== 'object') return false;
+
+  // Must have geometry property (all strategies)
+  if (typeof obj.geometry !== 'number') return false;
+
+  // Check for strategy-specific data representations
+  // dense-binary: Uint32Array
+  if (obj.data instanceof Uint32Array) return true;
+  // metric-affine: Uint8Array
+  if (obj.data instanceof Uint8Array) return true;
+  // sparse-polynomial: Set of exponents
+  if (obj.exponents instanceof Set) return true;
+
+  return false;
+}
+
+/**
  * Vector class for backward compatibility
+ * @deprecated Use getVectorClass() for dynamic strategy support,
+ *             or isVector() to check if an object is a vector.
  * NOTE: This is evaluated at import time and uses the DEFAULT strategy.
- * For multi-strategy support, use getVectorClass() instead.
+ * instanceof checks will FAIL for vectors from non-default strategies!
  */
 export const Vector = getDefaultStrategy().Vector;
 
@@ -538,5 +569,7 @@ export default {
   printBenchmark,
 
   // Backward compat
-  Vector
+  Vector,
+  getVectorClass,
+  isVector
 };

@@ -641,19 +641,34 @@ function printSuiteReport(analysis, verbose) {
 }
 
 /**
- * Count actual proof steps from expected_nl
+ * Count explanation steps or sentences from expected_nl content
  */
-function countProofSteps(expectedNl) {
+function countStepsFromExpected(expectedNl) {
   if (!expectedNl) return 0;
-  const proofMatch = expectedNl.match(/Proof:\s*(.+)/i);
-  if (proofMatch) {
-    return proofMatch[1].split(/\.\s+/).filter(s => s.trim().length > 3).length;
-  }
-  const searchMatch = expectedNl.match(/Search:\s*(.+)/i);
-  if (searchMatch) {
-    return searchMatch[1].split(/\.\s+/).filter(s => s.trim().length > 3).length;
-  }
-  return 0;
+  const cleaned = expectedNl
+    .replace(/\b(Proof|Search|Answer):/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (!cleaned) return 0;
+
+  return cleaned
+    .split(/[.?!;]+/)
+    .map(sentence => sentence.trim())
+    .filter(sentence => sentence.length > 3)
+    .length;
+}
+
+/**
+ * Count raw word length from expected_nl (no heuristics)
+ */
+function countWordsFromExpected(expectedNl) {
+  if (!expectedNl) return 0;
+  return expectedNl
+    .split(/\s+/)
+    .map(word => word.trim())
+    .filter(Boolean)
+    .length;
 }
 
 /**
@@ -745,15 +760,15 @@ function printGlobalSummary(allAnalyses) {
 
       if (m.action === 'prove') {
         // Use actual step count from expected_nl
-        const steps = countProofSteps(analysis.expectedNls?.[i] || '');
+        const steps = countStepsFromExpected(analysis.expectedNls?.[i] || '');
         if (steps < 5) pShallow++;
         else if (steps <= 10) pNormal++;
         else pDeep++;
       } else if (m.action === 'query') {
-        // Estimate query complexity
-        const complexity = m.estimatedChainLength || 0;
-        if (complexity < 3) qShallow++;
-        else if (complexity <= 6) qNormal++;
+        // Use raw expected_nl length (word count) for query buckets
+        const wordCount = countWordsFromExpected(analysis.expectedNls?.[i] || '');
+        if (wordCount < 5) qShallow++;
+        else if (wordCount <= 10) qNormal++;
         else qDeep++;
       }
     }
@@ -812,7 +827,7 @@ function printGlobalSummary(allAnalyses) {
   console.log();
   console.log(`${C.dim}Legend: L=Learn, Q=Query, P=Prove${C.reset}`);
   console.log(`${C.dim}        P:<5=shallow(<5 steps), 5-10=normal, >10=deep${C.reset}`);
-  console.log(`${C.dim}        Q: estimated complexity based on KB depth${C.reset}`);
+  console.log(`${C.dim}        Q: output length from expected_nl (word count)${C.reset}`);
 
   // Summary stats
   console.log();

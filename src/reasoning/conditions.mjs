@@ -131,11 +131,12 @@ export class ConditionProver {
    */
   proveAndWithBacktracking(parts, partIndex, bindings, accumulatedSteps, depth) {
     if (partIndex >= parts.length) {
+      const detail = parts.map(p => this.instantiatePart(p, bindings)).filter(Boolean).join(', ');
       return {
         valid: true,
         method: 'and_instantiated',
         confidence: this.thresholds.CONDITION_CONFIDENCE,
-        steps: accumulatedSteps
+        steps: [...accumulatedSteps, { operation: 'and_satisfied', detail }]
       };
     }
 
@@ -203,7 +204,10 @@ export class ConditionProver {
           valid: true,
           method: 'or_instantiated',
           confidence: partResult.confidence * this.thresholds.CONFIDENCE_DECAY,
-          steps: partResult.steps
+          steps: [
+            ...(partResult.steps || []),
+            { operation: 'or_satisfied', detail: this.instantiatePart(part, bindings) }
+          ]
         };
       }
     }
@@ -257,6 +261,13 @@ export class ConditionProver {
         };
       }
 
+      // Value type inheritance: has X Y can be proven if has X Z and isA Z Y
+      // Example: has Alice PaymentMethod if has Alice CreditCard and isA CreditCard PaymentMethod
+      const valueInheritResult = this.tryValueTypeInheritance(condStr, depth);
+      if (valueInheritResult.valid) {
+        return valueInheritResult;
+      }
+
       if (depth < this.options.maxDepth) {
         const ruleResult = this.engine.kbMatcher.tryRuleChainForCondition(condStr, depth + 1);
         if (ruleResult.valid) {
@@ -268,6 +279,100 @@ export class ConditionProver {
     }
 
     return this.proveWithUnboundVars(condStr, bindings, depth);
+  }
+
+  /**
+   * Try value type inheritance: has X Y via has X Z where isA Z Y
+   * @param {string} condStr - Condition string like "has Alice PaymentMethod"
+   * @param {number} depth - Current depth
+   * @returns {Object} Proof result
+   */
+  tryValueTypeInheritance(condStr, depth) {
+    const parts = condStr.split(/\s+/);
+    if (parts.length < 3) return { valid: false };
+
+    const [operator, entity, targetType] = parts;
+
+    // Only applies to 'has' and similar possession operators
+    if (!['has', 'owns', 'holds', 'contains'].includes(operator)) {
+      return { valid: false };
+    }
+
+    dbg('VALUE_INHERIT', `Trying ${operator} ${entity} ${targetType} via value inheritance`);
+
+    // Find all things that entity 'has'
+    for (const fact of this.session.kbFacts) {
+      this.session.reasoningStats.kbScans++;
+      const meta = fact.metadata;
+
+      if (meta?.operator === operator && meta.args?.[0] === entity) {
+        const heldValue = meta.args[1];
+
+        // Check if heldValue isA targetType (direct or transitive)
+        const isAResult = this.checkIsATransitive(heldValue, targetType, depth);
+
+        if (isAResult.found) {
+          dbg('VALUE_INHERIT', `Found: ${entity} ${operator} ${heldValue}, and ${heldValue} isA ${targetType}`);
+
+          return {
+            valid: true,
+            confidence: this.thresholds.CONDITION_CONFIDENCE * this.thresholds.CONFIDENCE_DECAY,
+            steps: [
+              { operation: 'value_has', fact: `${operator} ${entity} ${heldValue}` },
+              ...isAResult.steps,
+              { operation: 'value_type_inheritance', fact: `${operator} ${entity} ${targetType}` }
+            ]
+          };
+        }
+      }
+    }
+
+    return { valid: false };
+  }
+
+  /**
+   * Check if X isA Y (directly or transitively)
+   * @param {string} child - Child type
+   * @param {string} parent - Parent type
+   * @param {number} depth - Current depth
+   * @returns {Object} { found: boolean, steps: Array }
+   */
+  checkIsATransitive(child, parent, depth, visited = new Set()) {
+    if (child === parent) {
+      return { found: true, steps: [] };
+    }
+
+    if (visited.has(child)) {
+      return { found: false, steps: [] };
+    }
+
+    if (depth > (this.options?.maxDepth || 10)) {
+      return { found: false, steps: [] };
+    }
+
+    visited.add(child);
+
+    for (const fact of this.session.kbFacts) {
+      this.session.reasoningStats.kbScans++;
+      const meta = fact.metadata;
+
+      if (meta?.operator === 'isA' && meta.args?.[0] === child) {
+        const directParent = meta.args[1];
+        const step = { operation: 'isA_chain', fact: `isA ${child} ${directParent}` };
+
+        if (directParent === parent) {
+          return { found: true, steps: [step] };
+        }
+
+        // Recurse
+        const recurse = this.checkIsATransitive(directParent, parent, depth + 1, visited);
+        if (recurse.found) {
+          return { found: true, steps: [step, ...recurse.steps] };
+        }
+      }
+    }
+
+    return { found: false, steps: [] };
   }
 
   /**
@@ -526,7 +631,11 @@ export class ConditionProver {
           valid: true,
           method: 'or_condition',
           confidence: result.confidence * this.thresholds.CONFIDENCE_DECAY,
-          steps: [{ operation: 'proving_or_condition' }, ...(result.steps || [])]
+          steps: [
+            { operation: 'proving_or_condition' },
+            ...(result.steps || []),
+            { operation: 'or_satisfied', detail: this.instantiatePart(part, new Map()) }
+          ]
         };
       }
     }
@@ -550,6 +659,21 @@ export class ConditionProver {
       return this.proveSimpleCondition(part, depth);
     }
     return { valid: false, reason: 'Invalid part structure' };
+  }
+
+  /**
+   * Instantiate a condition part for logging purposes
+   */
+  instantiatePart(part, bindings) {
+    if (!part) return '';
+    if (part.type === 'leaf' && part.ast) {
+      return this.engine.unification.instantiateAST(part.ast, bindings);
+    }
+    if (part.operator && part.args) {
+      const args = part.args.map(a => bindings.get(a.name) || a.name || a.value || '').filter(Boolean);
+      return `${part.operator.name || part.operator.value} ${args.join(' ')}`.trim();
+    }
+    return '';
   }
 }
 

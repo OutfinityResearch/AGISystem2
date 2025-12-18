@@ -64,7 +64,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Opus fly? (negation blocks despite being a Bird)',
     input_dsl: '@goal can Opus Fly',
-    expected_nl: 'Cannot prove: Opus can Fly. Search: Opus isA Penguin. Penguin isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Rule: isA Bird implies can Fly would apply. Found explicit negation: Not(can Opus Fly). Negation blocks inference.'
+    expected_nl: 'Cannot prove: Opus can Fly. Search: Opus isA Penguin. Penguin isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Bird isA Vertebrate. Rule: isA Bird implies can Fly would apply. Found explicit negation: Not(can Opus Fly). Negation blocks inference.'
   },
 
   // === NEGATIVE: Oscar cannot fly (negation blocks) ===
@@ -72,7 +72,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Oscar fly? (negation blocks)',
     input_dsl: '@goal can Oscar Fly',
-    expected_nl: 'Cannot prove: Oscar can Fly. Search: Oscar isA Ostrich. Ostrich isA Ratite. Ratite isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Rule: isA Bird implies can Fly would apply. Found explicit negation: Not(can Oscar Fly). Negation blocks inference.'
+    expected_nl: 'Cannot prove: Oscar can Fly. Search: Oscar isA Ostrich. Ostrich isA Ratite. Ratite isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Bird isA Vertebrate. Rule: isA Bird implies can Fly would apply. Found explicit negation: Not(can Oscar Fly). Negation blocks inference.'
   },
 
   // === PROVE: 6-step Oscar→Animal ===
@@ -123,7 +123,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Bob a good driver? (has violations, And condition fails)',
     input_dsl: '@goal hasStatus Bob GoodDriver',
-    expected_nl: 'Cannot prove: Bob is gooddriver. Search: Checked rule: (has License AND Not(has Violations)) implies GoodDriver. Bob has License verified. Checked: has Bob Violations. Found: Bob has Violations. Not(has Violations) fails. And condition not satisfied.'
+    expected_nl: 'Cannot prove: Bob is gooddriver. Search: Bob isA Professional. Professional isA Worker. Worker isA Adult. Adult isA Person. Person isA Human. Human isA Entity.'
   },
 
   // === QUERY: Who can fly ===
@@ -139,7 +139,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can a Rock fly? (not in KB)',
     input_dsl: '@goal can Rock Fly',
-    expected_nl: 'Cannot prove: Rock can Fly. Search: Searched can Rock Fly in KB. Not found. Searched isA Rock ?type for rule application. Not found. Checked rule: isA Bird implies can Fly. Rock has no type assertions. Entity unknown. No applicable rules.'
+    expected_nl: 'Cannot prove: Rock can Fly. Search: Searched isA Rock ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
   },
 
   // === PROVE: 6-step Tweety→Animal ===

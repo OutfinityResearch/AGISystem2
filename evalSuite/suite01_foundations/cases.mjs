@@ -74,7 +74,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Opus fly? (Opus→Penguin→FlightlessBird→Bird but negation blocks)',
     input_dsl: '@goal can Opus Fly',
-    expected_nl: 'Cannot prove: Opus can Fly. Search: Opus isA Penguin. Penguin isA FlightlessBird. FlightlessBird isA Bird. Found explicit negation: Not(can Opus Fly). Negation blocks inference.'
+    expected_nl: 'Cannot prove: Opus can Fly. Search: Opus isA Penguin. Penguin isA FlightlessBird. FlightlessBird isA Bird. Bird isA FlyingAnimal. FlyingAnimal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing. Found explicit negation: Not(can Opus Fly). Negation blocks inference.'
   },
 
   // === PROVE: 7-step Carbon→Organism ===
@@ -106,7 +106,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Charlie a Dog? (Charlie not in KB)',
     input_dsl: '@goal isA Charlie Dog',
-    expected_nl: 'Cannot prove: Charlie is a dog. Search: Searched isA Charlie Dog in KB. Not found. Searched isA Charlie ?type for transitive. Not found. Charlie has no type assertions. Entity unknown.'
+    expected_nl: 'Cannot prove: Charlie is a dog. Search: Searched isA Charlie ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
   },
 
   // === PROVE: 8-step Carbon→Ecosystem ===

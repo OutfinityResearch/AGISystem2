@@ -43,7 +43,7 @@ export class TextGenerator {
       isA: (a) => a.length >= 2 ? `${a[0]} is ${this.article(a[1])} ${a[1].toLowerCase()}.` : `isA(${a.join(', ')})`,
 
       // Properties
-      hasProperty: (a) => a.length >= 2 ? `${a[0]} is ${a[1].toLowerCase()}.` : `hasProperty(${a.join(', ')})`,
+      hasProperty: (a) => a.length >= 2 ? `${a[0]} has ${a[1]}.` : `hasProperty(${a.join(', ')})`,
 
       // Location
       locatedIn: (a) => a.length >= 2 ? `${a[0]} is in ${a[1]}.` : `locatedIn(${a.join(', ')})`,

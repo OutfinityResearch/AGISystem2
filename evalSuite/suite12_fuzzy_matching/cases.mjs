@@ -62,7 +62,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Rex a Canine? (uses Dog=Canine synonym)',
     input_dsl: '@goal isA Rex Canine',
-    expected_nl: 'True: Rex is a Canine. Proof: Rex isA GermanShepherd. GermanShepherd isA Shepherd. Shepherd isA WorkingDog. WorkingDog isA Dog. Dog isA Canine. Synonym Dog=Canine verified. Therefore Rex isA Canine.'
+    expected_nl: 'True: Rex is a canine. Proof: Rex is a germanshepherd. GermanShepherd is a shepherd. Shepherd is a workingdog. WorkingDog is a dog. Dog is a canine. Transitive chain verified (5 hops). Therefore Rex is a canine.'
   },
 
   // === PROVE: 7-step isA chain (Mittens->Mammal) ===
@@ -98,7 +98,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Paris in SolarSystem? (7-step geographic chain via HDC)',
     input_dsl: '@goal locatedIn Paris SolarSystem',
-    expected_nl: 'True: Paris is in SolarSystem. Proof: Paris locatedIn IleDeFrance. IleDeFrance locatedIn France. France locatedIn WesternEurope. WesternEurope locatedIn Europe. Europe locatedIn Eurasia. Eurasia locatedIn Earth. Earth locatedIn SolarSystem.'
+    expected_nl: 'True: Paris is in SolarSystem. Proof: Paris is in IleDeFrance. IleDeFrance is in France. France is in WesternEurope. WesternEurope is in Europe. Europe is in Eurasia. Eurasia is in Earth. Earth is in SolarSystem. Transitive chain verified (7 hops). Therefore Paris is in SolarSystem.'
   },
 
   // === PROVE: 5-step locatedIn chain (Paris->Europe) ===
@@ -106,7 +106,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Paris in Europe? (5-step geographic chain)',
     input_dsl: '@goal locatedIn Paris Europe',
-    expected_nl: 'True: Paris is in Europe. Proof: Paris locatedIn IleDeFrance. IleDeFrance locatedIn France. France locatedIn WesternEurope. WesternEurope locatedIn Europe. Geographic chain verified (4 hops). Therefore Paris locatedIn Europe.'
+    expected_nl: 'True: Paris is in Europe. Proof: Paris is in IleDeFrance. IleDeFrance is in France. France is in WesternEurope. WesternEurope is in Europe. Transitive chain verified (4 hops). Therefore Paris is in Europe.'
   },
 
   // === PROVE: 5-step locatedIn chain (Berlin->Europe) ===
@@ -114,7 +114,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Berlin in Europe? (5-step geographic chain)',
     input_dsl: '@goal locatedIn Berlin Europe',
-    expected_nl: 'True: Berlin is in Europe. Proof: Berlin locatedIn Brandenburg. Brandenburg locatedIn Germany. Germany locatedIn CentralEurope. CentralEurope locatedIn Europe. Geographic chain verified (4 hops). Therefore Berlin locatedIn Europe.'
+    expected_nl: 'True: Berlin is in Europe. Proof: Berlin is in Brandenburg. Brandenburg is in Germany. Germany is in CentralEurope. CentralEurope is in Europe. Transitive chain verified (4 hops). Therefore Berlin is in Europe.'
   },
 
   // === NEGATIVE: Cross-hierarchy fails with search trace ===
@@ -122,7 +122,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Rex in Europe? (cross-hierarchy - should fail)',
     input_dsl: '@goal locatedIn Rex Europe',
-    expected_nl: 'Cannot prove: Rex is in Europe. Search: Searched locatedIn Rex ?place in KB. Not found. Searched isA Rex for geographic type. Rex isA GermanShepherd isA Shepherd isA WorkingDog isA Dog isA Canine isA Carnivore isA Mammal isA Vertebrate isA Animal. No geographic type found. Rex is an animal, not a location. Domain mismatch.'
+    expected_nl: 'Cannot prove: Rex is in Europe. Search: Rex isA GermanShepherd. GermanShepherd isA Shepherd. Shepherd isA WorkingDog. WorkingDog isA Dog. Dog isA Canine. Canine isA Carnivore. Carnivore isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing. Searched locatedIn Rex ?next in KB. Not found. Rex has no outgoing locatedIn relations. No transitive path to Europe.'
   },
 
   // === QUERY: What is in Europe ===

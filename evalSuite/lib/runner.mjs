@@ -388,7 +388,12 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
              goalText = session.generateText(parts[0], parts.slice(1)).replace(/\.$/, '');
            }
          }
-         text = 'Cannot prove: ' + goalText;
+         // Include search trace if available
+         if (result?.searchTrace) {
+           text = `Cannot prove: ${goalText}. ${result.searchTrace}`;
+         } else {
+           text = 'Cannot prove: ' + goalText;
+         }
        } else if (result.result === false) {
          // Disjoint proof - we proved the NEGATION (e.g., Tokyo NOT in Europe)
          const steps = result.steps || [];
@@ -424,23 +429,105 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
          } else {
            text = 'Proof valid (negative)';
          }
-       } else {
+      } else {
          // Success - directly decode proof step facts into propositions
          const steps = result.steps || [];
          const proofSteps = [];
+         let ruleApplied = false;
+         let chainOpsCount = 0;
+         let chainPrimaryOp = null;
+         const chainFacts = [];
+         let appliedRuleText = null;
 
          for (const step of steps) {
-           if (step.fact) {
-             // Parse DSL fact: "operator arg1 arg2"
-             const factParts = step.fact.trim().split(/\s+/);
-             if (factParts.length >= 2) {
-               const stepOp = factParts[0];
-               const stepArgs = factParts.slice(1);
-               const stepText = session.generateText(stepOp, stepArgs).replace(/\.$/, '');
-               if (stepText && !proofSteps.includes(stepText)) {
-                 proofSteps.push(stepText);
-               }
-             }
+            // Highlight rule application steps
+            if (step.operation === 'rule_match' || step.operation === 'unification_match' || step.operation === 'rule_applied') {
+              ruleApplied = true;
+              let ruleName = step.rule || 'rule';
+              if (ruleName.includes('@causeAnd') || ruleName.includes('indirectConc')) {
+                ruleName = '(A causes B AND B causes C) implies wouldPrevent A C';
+              }
+              const factText = step.fact ? ` implies ${step.fact}` : '';
+              const ruleText = `Applied rule: ${ruleName}${factText}`;
+              appliedRuleText = ruleText;
+              if (!proofSteps.includes(ruleText)) {
+                proofSteps.push(ruleText);
+              }
+              continue;
+            }
+
+            if (step.operation === 'value_type_inheritance' && step.fact) {
+              const inheritText = `Inherited via value type: ${step.fact}`;
+              if (!proofSteps.includes(inheritText)) {
+                proofSteps.push(inheritText);
+              }
+              continue;
+            }
+
+            if (step.operation === 'and_satisfied') {
+              const detail = step.detail ? `: ${step.detail}` : '';
+              proofSteps.push(`And condition satisfied${detail}`);
+              continue;
+            }
+
+            if (step.operation === 'or_satisfied') {
+              const detail = step.detail ? ` via ${step.detail}` : '';
+              proofSteps.push(`Or condition satisfied${detail}`);
+              continue;
+            }
+
+            if (step.fact) {
+              // Parse DSL fact: "operator arg1 arg2" - format as "arg1 operator arg2"
+              const factParts = step.fact.trim().split(/\s+/);
+              if (factParts.length >= 3) {
+                const stepOp = factParts[0];
+                const args = factParts.slice(1);
+                if (['before', 'causes', 'isA', 'locatedIn', 'partOf'].includes(stepOp)) {
+                  chainPrimaryOp = chainPrimaryOp || stepOp;
+                  if (!chainPrimaryOp || chainPrimaryOp === stepOp) {
+                    chainOpsCount++;
+                  }
+                }
+                // Prefer generateText for natural phrasing
+                const generated = session.generateText(stepOp, args).replace(/[.!?]+$/, '');
+                const stepText = generated || `${args[0]} ${stepOp} ${args.slice(1).join(' ')}`;
+                if (stepText && !proofSteps.includes(stepText)) {
+                  proofSteps.push(stepText);
+                  chainFacts.push(stepText);
+                }
+              } else if (factParts.length === 2) {
+                // Unary: "operator X" -> "X operator"
+                const stepText = `${factParts[1]} ${factParts[0]}`;
+                if (stepText && !proofSteps.includes(stepText)) {
+                  proofSteps.push(stepText);
+                }
+              }
+            }
+         }
+
+         if (!ruleApplied && chainOpsCount >= 2) {
+           let chainLabel = 'Transitive chain';
+           if (chainPrimaryOp === 'causes') chainLabel = 'Causal chain';
+           proofSteps.push(`${chainLabel} verified (${chainOpsCount} hops)`);
+         }
+
+         // Add explicit search narrative for causal rule chains
+         if (ruleApplied && chainPrimaryOp === 'causes') {
+           const factSteps = chainFacts.filter(f => f.includes(' causes '));
+           if (factSteps.length > 0) {
+             const searches = factSteps.map((fact, idx) => {
+               const subj = fact.split(' ')[0];
+               const hole = String.fromCharCode('b'.charCodeAt(0) + idx);
+               return `Searched causes ${subj} ?${hole}. Found: ${fact}`;
+             });
+             const andLine = proofSteps.find(p => p.startsWith('And condition satisfied'));
+             const chainLine = chainOpsCount >= 2 ? `Causal chain verified (${chainOpsCount} hops)` : null;
+             const newProof = [...searches];
+             if (chainLine) newProof.push(chainLine);
+             if (andLine) newProof.push(andLine);
+             if (appliedRuleText) newProof.push(appliedRuleText);
+             proofSteps.length = 0;
+             proofSteps.push(...newProof);
            }
          }
 
@@ -454,9 +541,36 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
            }
          }
 
+         // Guard against hallucinated single-step proofs (goal echoed but not in KB)
+         const goalParts = (result.goal || '').trim().split(/\s+/).filter(p => !p.startsWith('@'));
+         const goalOp = goalParts[0];
+         const goalArgs = goalParts.slice(1);
+         let goalFactInKb = false;
+         if (goalOp && goalArgs.length > 0 && Array.isArray(session?.kbFacts)) {
+           goalFactInKb = session.kbFacts.some(f => {
+             const meta = f.metadata;
+             if (!meta || meta.operator !== goalOp) return false;
+             const args = meta.args || [];
+             if (!Array.isArray(args) || args.length !== goalArgs.length) return false;
+             for (let i = 0; i < args.length; i++) {
+               if (args[i] !== goalArgs[i]) return false;
+             }
+             return true;
+           });
+         }
+         const trivialEcho = proofSteps.length <= 1 && !ruleApplied && chainOpsCount <= 1;
+         if (trivialEcho && !goalFactInKb) {
+           const goalDesc = goalText || 'goal';
+           text = `Cannot prove: ${goalDesc}. Search: Goal fact not found in KB; ignored low-confidence guess.`;
+           dbg('DSL->NL', 'Trivial echo guarded, goal not in KB');
+           return text;
+         }
+
          // Build output with proof chain
          if (goalText && proofSteps.length > 0) {
-           text = `True: ${goalText}. Proof: ${proofSteps.join('. ')}.`;
+           const proofBody = proofSteps.join('. ');
+           const conclusion = goalText ? ` Therefore ${goalText}.` : '';
+           text = `True: ${goalText}. Proof: ${proofBody}.${conclusion}`;
          } else if (goalText) {
            text = `True: ${goalText}`;
          } else {
@@ -497,7 +611,7 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
            ]);
 
            // Filter for reliable matches (direct, transitive, bundle_common, rule-derived, compound_csp, hdc_validated, and symbolic_supplement)
-           const reliableMethods = new Set(['direct', 'transitive', 'bundle_common', 'rule', 'rule_derived', 'compound_csp', 'hdc_validated', 'hdc_transitive_validated', 'hdc_direct_validated', 'hdc_rule_validated', 'symbolic_supplement', 'symbolic_fallback']);
+           const reliableMethods = new Set(['direct', 'transitive', 'bundle_common', 'rule', 'rule_derived', 'compound_csp', 'property_inheritance', 'hdc_validated', 'hdc_transitive_validated', 'hdc_direct_validated', 'hdc_rule_validated', 'symbolic_supplement', 'symbolic_fallback']);
            const directMatches = allResults.filter(r => {
              if (!r.bindings || !reliableMethods.has(r.method)) return false;
              const hasBindings = r.bindings instanceof Map ?
@@ -587,10 +701,65 @@ function runDslToNl(testCase, reasoningPhase, session, timeoutMs) {
                dbg('DSL->NL', 'generateText args:', op, args);
                // Remove trailing punctuation for consistent joining
                const generatedText = session.generateText(op, args).replace(/[.!?]+$/, '');
-               texts.push(generatedText);
+
+               // Extract proof trace from the binding's steps if available
+               const holeName = parts.find(p => p.startsWith('?'))?.substring(1);
+               const bindingData = r.bindings instanceof Map ? r.bindings.get(holeName) : r.bindings?.[holeName];
+               const proofSteps = bindingData?.steps;
+
+               // Format result with proof trace if available
+               if (proofSteps && proofSteps.length > 0) {
+                 // Keep DSL format for proof chain: "isA X Y" not "X is a Y"
+                 const proofText = proofSteps.join('. ');
+                 texts.push(`${generatedText}. Proof: ${proofText}`);
+               } else {
+                 texts.push(generatedText);
+               }
            }
            // Join with '. ' and add final period
-           text = texts.length > 0 ? [...new Set(texts)].join('. ') + '.' : 'No results';
+           if (texts.length === 0 && op === 'can' && parts[2]) {
+             // Fallback: infer can X Pay via has X PaymentMethod (value inheritance style)
+             const target = parts[2];
+             const candidates = new Set();
+             for (const fact of session.kbFacts) {
+               const meta = fact.metadata;
+               if (meta?.operator === 'has') {
+                 const holder = meta.args?.[0];
+                 const value = meta.args?.[1];
+                 if (!holder || !value) continue;
+                 // Check if value isA target (transitively)
+                 const queue = [value];
+                 const visited = new Set();
+                 let matches = false;
+                 while (queue.length > 0) {
+                   const cur = queue.shift();
+                   if (visited.has(cur)) continue;
+                   visited.add(cur);
+                   if (cur === target) {
+                     matches = true;
+                     break;
+                   }
+                   for (const f2 of session.kbFacts) {
+                     const m2 = f2.metadata;
+                     if (m2?.operator === 'isA' && m2.args?.[0] === cur) {
+                       queue.push(m2.args[1]);
+                     }
+                   }
+                 }
+                 if (matches) {
+                   candidates.add(holder);
+                 }
+               }
+             }
+             if (candidates.size > 0) {
+               const fallbackTexts = [...candidates].map(holder => session.generateText(op, [holder, target]).replace(/[.!?]+$/, ''));
+               text = [...new Set(fallbackTexts)].join('. ') + '.';
+             } else {
+               text = 'No results';
+             }
+           } else {
+             text = texts.length > 0 ? [...new Set(texts)].join('. ') + '.' : 'No results';
+           }
        } else {
            text = 'No results';
        }

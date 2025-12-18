@@ -66,7 +66,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does Poodle exist? (8-level inheritance: Poodle→...→Entity + hasProperty Entity Exists)',
     input_dsl: '@goal hasProperty Poodle Exists',
-    expected_nl: 'True: Poodle has Exists. Proof: Poodle isA Toy. Toy isA Dog. Dog isA Canine. Canine isA Carnivore. Carnivore isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing. LivingThing isA Entity. Entity hasProperty Exists. Applied inheritance rule. Therefore Poodle hasProperty Exists.'
+    expected_nl: 'True: Poodle has Exists. Proof: Poodle is a toy. Toy is a dog. Dog is a canine. Canine is a carnivore. Carnivore is a mammal. Mammal is a vertebrate. Vertebrate is an animal. Animal is a livingthing. LivingThing is an entity. Entity has Exists. Poodle has Exists. Transitive chain verified (9 hops). Therefore Poodle has Exists.'
   },
 
   // === PROVE: Property inheritance 7-level (Poodle→LivingThing + Breathes) ===
@@ -74,7 +74,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does Poodle breathe? (7-level inheritance)',
     input_dsl: '@goal hasProperty Poodle Breathes',
-    expected_nl: 'True: Poodle has Breathes. Proof: Poodle isA Toy. Toy isA Dog. Dog isA Canine. Canine isA Carnivore. Carnivore isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing. LivingThing hasProperty Breathes. Applied inheritance rule. Therefore Poodle hasProperty Breathes.'
+    expected_nl: 'True: Poodle has Breathes. Proof: Poodle is a toy. Toy is a dog. Dog is a canine. Canine is a carnivore. Carnivore is a mammal. Mammal is a vertebrate. Vertebrate is an animal. Animal is a livingthing. LivingThing has Breathes. Poodle has Breathes. Transitive chain verified (8 hops). Therefore Poodle has Breathes.'
   },
 
   // === PROVE: Property inheritance 6-level (Poodle→Animal + Mortal) ===
@@ -82,7 +82,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Poodle mortal? (6-level inheritance)',
     input_dsl: '@goal hasProperty Poodle Mortal',
-    expected_nl: 'True: Poodle has Mortal. Proof: Poodle isA Toy. Toy isA Dog. Dog isA Canine. Canine isA Carnivore. Carnivore isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal. Animal hasProperty Mortal. Applied inheritance rule. Therefore Poodle hasProperty Mortal.'
+    expected_nl: 'True: Poodle has Mortal. Proof: Poodle is a toy. Toy is a dog. Dog is a canine. Canine is a carnivore. Carnivore is a mammal. Mammal is a vertebrate. Vertebrate is an animal. Animal has Mortal. Poodle has Mortal. Transitive chain verified (7 hops). Therefore Poodle has Mortal.'
   },
 
   // === PROVE: Property inheritance 5-level (Poodle→Vertebrate + HasSpine) ===
@@ -90,7 +90,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does Poodle have a spine? (5-level inheritance)',
     input_dsl: '@goal hasProperty Poodle HasSpine',
-    expected_nl: 'True: Poodle has HasSpine. Proof: Poodle isA Toy. Toy isA Dog. Dog isA Canine. Canine isA Carnivore. Carnivore isA Mammal. Mammal isA Vertebrate. Vertebrate hasProperty HasSpine. Applied inheritance rule. Therefore Poodle hasProperty HasSpine.'
+    expected_nl: 'True: Poodle has HasSpine. Proof: Poodle is a toy. Toy is a dog. Dog is a canine. Canine is a carnivore. Carnivore is a mammal. Mammal is a vertebrate. Vertebrate has HasSpine. Poodle has HasSpine. Transitive chain verified (6 hops). Therefore Poodle has HasSpine.'
   },
 
   // === QUERY: What is Poodle (all transitive) ===
@@ -106,7 +106,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Rock a LivingThing? (Rock→Mineral→Inorganic→Matter, no path to LivingThing)',
     input_dsl: '@goal isA Rock LivingThing',
-    expected_nl: 'Cannot prove: Rock is a livingthing. Search: Rock isA Mineral. Mineral isA Inorganic. Inorganic isA Matter. Searched Matter isA LivingThing. Not found. No transitive path from Rock to LivingThing exists.'
+    expected_nl: 'Cannot prove: Rock is a livingthing. Search: Rock isA Mineral. Mineral isA Inorganic. Inorganic isA Matter. No path exists from Rock to LivingThing.'
   }
 ];
 

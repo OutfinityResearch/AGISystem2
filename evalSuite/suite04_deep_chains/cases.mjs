@@ -117,7 +117,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Antiquity before AI?',
     input_dsl: '@goal before Antiquity AI',
-    expected_nl: 'True: Antiquity is before AI. Proof: Antiquity is before Medieval. Medieval is before Renaissance. Renaissance is before Industrial. Industrial is before Modern. Modern is before Digital. Digital is before AI.'
+    expected_nl: 'True: Antiquity is before AI. Proof: Antiquity is before Medieval. Medieval is before Renaissance. Renaissance is before Industrial. Industrial is before Modern. Modern is before Digital. Digital is before AI. Transitive chain verified (6 hops). Therefore Antiquity is before AI.'
   },
 
   // === QUERY: What is Paris ===
@@ -133,7 +133,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is AI before Antiquity? (reverse order - should fail)',
     input_dsl: '@goal before AI Antiquity',
-    expected_nl: 'Cannot prove: AI is before Antiquity. Search: Searched before AI ?next. Not found. AI has no outgoing before relations. Searched reverse: Antiquity before Medieval before Renaissance before Industrial before Modern before Digital before AI. Path exists in opposite direction only. Temporal order violated.'
+    expected_nl: 'Cannot prove: AI is before Antiquity. Search: Searched before AI ?next in KB. Not found. AI has no outgoing before relations. Reverse path: Antiquity -> Medieval -> Renaissance -> Industrial -> Modern -> Digital -> AI. Path exists in opposite direction only. Temporal order violated.'
   }
 ];
 

@@ -171,15 +171,27 @@ export class ProofEngine {
     this.visited.add(goalHash);
 
     const goalStr = goal.toString();
+    const goalOp = this.extractOperatorName(goal);
+    const goalArgs = (goal.args || []).map(a => this.extractArgName(a)).filter(Boolean);
+    const goalFactExists = goalOp ? this.factExists(goalOp, goalArgs[0], goalArgs[1]) : false;
 
     // Check if goal is explicitly negated (blocks all proofs)
-    if (this.isGoalNegated(goal)) {
-      return { valid: false, reason: 'Goal is negated' };
+    const negationInfo = this.checkGoalNegation(goal);
+    if (negationInfo.negated) {
+      const searchTrace = this.buildNegationSearchTrace(goal, negationInfo);
+      return {
+        valid: false,
+        reason: 'Goal is negated',
+        goal: goalStr,
+        searchTrace,
+        steps: this.steps
+      };
     }
 
     // Strategy 1: Direct KB match (strong threshold)
     const directResult = this.kbMatcher.tryDirectMatch(goalVec, goalStr);
-    if (directResult.valid && directResult.confidence > this.thresholds.VERY_STRONG_MATCH) {
+    const directMatchTrusted = directResult.valid && goalFactExists;
+    if (directMatchTrusted && directResult.confidence > this.thresholds.VERY_STRONG_MATCH) {
       directResult.steps = [{ operation: 'direct_match', fact: this.goalToFact(goal) }];
       return directResult;
     }
@@ -214,7 +226,7 @@ export class ProofEngine {
     // Strategy 4: Weak direct match (with entity existence verification)
     // Weak matches can produce false positives for similar-looking facts,
     // so we verify the entity actually exists in KB before accepting
-    if (directResult.valid && directResult.confidence > this.thresholds.STRONG_MATCH) {
+    if (directMatchTrusted && directResult.confidence > this.thresholds.STRONG_MATCH) {
       const entityArg = goal.args?.[0] ? this.extractArgName(goal.args[0]) : null;
       const componentKB = this.session?.componentKB;
 
@@ -236,7 +248,301 @@ export class ProofEngine {
       return disjointResult;
     }
 
-    return { valid: false, reason: 'No proof found' };
+    // Build detailed failure reason with search trace
+    const goalFact = this.goalToFact(goal);
+    const searchTrace = this.buildSearchTrace(goal, goalStr);
+
+    return {
+      valid: false,
+      reason: 'No proof found',
+      goal: goalStr,
+      searchTrace,
+      steps: this.steps
+    };
+  }
+
+  /**
+   * Build a search trace describing what was searched for failed proofs
+   * @param {Object} goal - Goal that failed
+   * @param {string} goalStr - Goal string representation
+   * @returns {string} Search trace description
+   */
+  buildSearchTrace(goal, goalStr) {
+    const traces = [];
+    const op = this.extractOperatorName(goal);
+    const args = (goal.args || []).map(a => this.extractArgName(a)).filter(Boolean);
+
+    if (args.length < 2) {
+      return `Searched ${goalStr} in KB. Not found.`;
+    }
+
+    const entity = args[0];
+    const target = args[1];
+    const componentKB = this.session?.componentKB;
+
+    // 1. Check if entity exists in KB
+    let entityExists = false;
+    let entityFacts = [];
+    if (componentKB) {
+      entityFacts = componentKB.findByArg0(entity, false);
+      // For temporal/causal facts, treat presence as source or target as existence
+      entityExists = entityFacts.length > 0 ||
+        componentKB.findByOperatorAndArg1(op, entity).length > 0 ||
+        componentKB.findByOperatorAndArg0(op, entity).length > 0;
+    } else {
+      for (const fact of this.session.kbFacts) {
+        const meta = fact.metadata;
+        if (meta?.args?.[0] === entity) {
+          entityExists = true;
+          entityFacts.push(meta);
+        }
+        if (meta?.args?.[1] === entity && meta.operator === op) {
+          entityExists = true;
+        }
+      }
+    }
+
+    if (!entityExists) {
+      traces.push(`Searched isA ${entity} ?type in KB. Not found`);
+      traces.push(`Entity unknown`);
+      traces.push(`No applicable inheritance paths`);
+      return `Search: ${traces.join('. ')}.`;
+    }
+
+    // 2. Get the isA chain for the entity
+    const isAChain = [];
+    let current = entity;
+    const visited = new Set();
+    while (current && !visited.has(current)) {
+      visited.add(current);
+      let nextParent = null;
+
+      if (componentKB) {
+        const isAFacts = componentKB.findByOperatorAndArg0('isA', current);
+        if (isAFacts.length > 0 && isAFacts[0].args?.[1]) {
+          nextParent = isAFacts[0].args[1];
+        }
+      } else {
+        for (const fact of this.session.kbFacts) {
+          const meta = fact.metadata;
+          if (meta?.operator === 'isA' && meta.args?.[0] === current) {
+            nextParent = meta.args[1];
+            break;
+          }
+        }
+      }
+
+      if (nextParent) {
+        isAChain.push(`${current} isA ${nextParent}`);
+        current = nextParent;
+      } else {
+        break;
+      }
+    }
+
+    if (isAChain.length > 0) {
+      traces.push(isAChain.join('. '));
+    }
+
+    // 3a. Check relevant rules for this operator to surface missing conditions
+    const ruleTrace = this.describeRuleCheck(op, entity);
+    if (ruleTrace) {
+      traces.push(ruleTrace);
+    }
+
+    // 3. Check what we were looking for and why it failed
+    if (op === 'isA') {
+      traces.push(`No path exists from ${entity} to ${target}`);
+    } else if (op === 'before') {
+      const edges = this.buildRelationEdges('before');
+      const outgoing = edges.get(entity) || [];
+      if (outgoing.length === 0) {
+        traces.push(`Searched before ${entity} ?next in KB. Not found`);
+        traces.push(`${entity} has no outgoing before relations`);
+      } else {
+        traces.push(`Searched before ${entity} ?next. Found: ${outgoing.join(', ')}`);
+      }
+
+      // Check reverse path (target -> entity)
+      const reversePath = this.findRelationPath(edges, target, entity);
+      if (reversePath.length > 0) {
+        traces.push(`Reverse path: ${reversePath.join(' -> ')}`);
+        traces.push('Path exists in opposite direction only');
+        traces.push('Temporal order violated');
+      } else {
+        traces.push(`No transitive path to ${target}`);
+      }
+    } else if (['can', 'has', 'likes', 'knows', 'owns', 'uses'].includes(op)) {
+      // Property inheritance - check if any ancestor has it
+      let found = false;
+      let checkedTypes = [];
+
+      // Check if the property exists for any type
+      for (const fact of this.session.kbFacts) {
+        const meta = fact.metadata;
+        if (meta?.operator === op && meta.args?.[1] === target) {
+          checkedTypes.push(meta.args[0]);
+          // Check if entity isA that type
+          const propHolder = meta.args[0];
+          if (isAChain.some(step => step.includes(propHolder))) {
+            found = true;
+            break;
+          }
+        }
+      }
+
+      if (!found && checkedTypes.length > 0) {
+        traces.push(`Checked: ${checkedTypes.slice(0, 3).map(t => `${t} ${op} ${target}`).join(', ')}`);
+        traces.push(`${entity} is not a ${checkedTypes.join(' or ')}`);
+        traces.push(`Property not inheritable`);
+      } else if (checkedTypes.length === 0) {
+        traces.push(`No ${op} ${target} facts found in KB`);
+      }
+    } else if (['locatedIn', 'causes', 'before', 'partOf'].includes(op)) {
+      traces.push(`Searched ${op} ${entity} ?next in KB. Not found`);
+      const edges = this.buildRelationEdges(op);
+      const outgoing = edges.get(entity) || [];
+      if (outgoing.length === 0) {
+        traces.push(`${entity} has no outgoing ${op} relations`);
+      }
+      const reversePath = this.findRelationPath(edges, target, entity);
+      if (reversePath.length > 0) {
+        traces.push(`Reverse path: ${reversePath.join(' -> ')}`);
+        traces.push('Path exists in opposite direction only');
+        const dirLabel = op === 'causes' ? 'Causal direction violated' : `${op} direction violated`;
+        traces.push(dirLabel);
+      } else {
+        traces.push(`No transitive path to ${target}`);
+      }
+    }
+
+    return traces.length > 0 ? `Search: ${traces.join('. ')}.` : `Searched ${goalStr}. Not found.`;
+  }
+
+  /**
+   * Build adjacency list for a binary relation in KB
+   */
+  buildRelationEdges(op) {
+    const edges = new Map();
+    for (const fact of this.session.kbFacts) {
+      const meta = fact.metadata;
+      if (meta?.operator === op && meta.args?.length >= 2) {
+        const from = meta.args[0];
+        const to = meta.args[1];
+        if (!edges.has(from)) edges.set(from, []);
+        edges.get(from).push(to);
+      }
+    }
+    return edges;
+  }
+
+  /**
+   * Find a path in a relation graph from start to target (BFS)
+   */
+  findRelationPath(edges, start, target) {
+    const queue = [[start, [start]]];
+    const visited = new Set();
+
+    while (queue.length > 0) {
+      const [node, path] = queue.shift();
+      if (node === target) return path;
+      if (visited.has(node)) continue;
+      visited.add(node);
+      const neighbors = edges.get(node) || [];
+      for (const n of neighbors) {
+        queue.push([n, [...path, n]]);
+      }
+    }
+    return [];
+  }
+
+  /**
+   * Describe rule checks for a failed proof (high level)
+   * @param {string} op - Goal operator
+   * @param {string} entity - Goal subject
+   * @returns {string|null} Trace summary
+   */
+  describeRuleCheck(op, entity) {
+    if (!this.session?.rules?.length) return null;
+
+    const matching = this.session.rules.filter(r => {
+      const concOp = r.conclusionAST?.operator?.name || r.conclusionAST?.operator?.value;
+      return concOp === op;
+    });
+    if (matching.length === 0) return null;
+
+    // Inspect first matching rule (deterministic)
+    const rule = matching[0];
+    const leaves = this.extractLeafConditions(rule.conditionParts);
+    if (leaves.length === 0) {
+      return `Checked rule: ${rule.name || rule.source}. Conditions could not be analyzed.`;
+    }
+
+    const found = [];
+    const missing = [];
+
+    for (const leaf of leaves) {
+      const args = [];
+      for (const arg of leaf.args || []) {
+        if (arg.isVariable) {
+          // Bind the first variable to the entity for a meaningful trace
+          args.push(arg.name === 'x' || arg.name === 'subject' ? entity : `?${arg.name}`);
+        } else {
+          args.push(arg.name);
+        }
+      }
+      const factStr = `${leaf.op} ${args.join(' ')}`.trim();
+      const exists = this.factExists(leaf.op, args[0], args[1]);
+      if (exists) found.push(factStr);
+      else missing.push(factStr);
+    }
+
+    let summary = `Checked rule: ${rule.name || rule.source}.`;
+    if (found.length > 0) summary += ` Found: ${found.join(', ')}.`;
+    if (missing.length > 0) summary += ` Missing: ${missing.join(', ')}.`;
+    return summary;
+  }
+
+  /**
+   * Extract leaf conditions from a compound condition structure
+   * @param {Object} condParts - conditionParts tree
+   * @returns {Array<{op:string,args:Array}>}
+   */
+  extractLeafConditions(condParts) {
+    if (!condParts) return [];
+    if (condParts.type === 'leaf' && condParts.ast) {
+      const op = condParts.ast.operator?.name || condParts.ast.operator?.value;
+      const args = (condParts.ast.args || []).map(a => ({
+        name: a.name || a.value || '',
+        isVariable: a.type === 'Hole'
+      }));
+      return [{ op, args }];
+    }
+    if (condParts.type === 'And' || condParts.type === 'Or') {
+      return condParts.parts.flatMap(p => this.extractLeafConditions(p));
+    }
+    if (condParts.type === 'Not') {
+      return this.extractLeafConditions(condParts.inner);
+    }
+    return [];
+  }
+
+  /**
+   * Check if a fact exists in KB (direct)
+   */
+  factExists(op, arg0, arg1) {
+    if (!arg0 || !op) return false;
+    if (this.session?.componentKB) {
+      const candidates = this.session.componentKB.findByOperatorAndArg0(op, arg0);
+      return candidates.some(c => (c.args?.[1] || '') === arg1);
+    }
+    for (const fact of this.session.kbFacts) {
+      const meta = fact.metadata;
+      if (meta?.operator === op && meta.args?.[0] === arg0) {
+        if (!arg1 || meta.args?.[1] === arg1) return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -405,6 +711,150 @@ export class ProofEngine {
     }
 
     return 'invalid:' + Math.random().toString(36);
+  }
+
+  /**
+   * Check if a goal is negated and return details
+   * @param {Object} goal - Goal statement
+   * @returns {Object} { negated: boolean, negationRef: string, negationType: string }
+   */
+  checkGoalNegation(goal) {
+    const goalVec = this.session.executor.buildStatementVector(goal);
+    if (!goalVec) return { negated: false };
+
+    for (const fact of this.session.kbFacts) {
+      const meta = fact.metadata;
+      if (!meta) continue;
+
+      if (meta.operator === 'Not') {
+        const negatedRef = meta.args?.[0];
+        if (!negatedRef) continue;
+
+        const refName = negatedRef.replace('$', '');
+        const negatedVec = this.session.scope.get(refName);
+
+        if (negatedVec) {
+          this.session.reasoningStats.similarityChecks++;
+          const sim = this.session.similarity(goalVec, negatedVec);
+          if (sim > this.thresholds.RULE_MATCH) {
+            return {
+              negated: true,
+              negationRef: refName,
+              negationType: 'explicit'
+            };
+          }
+        }
+      }
+    }
+
+    return { negated: false };
+  }
+
+  /**
+   * Build search trace for negated goals
+   * @param {Object} goal - Goal statement
+   * @param {Object} negationInfo - Negation details
+   * @returns {string} Search trace
+   */
+  buildNegationSearchTrace(goal, negationInfo) {
+    const traces = [];
+    const op = this.extractOperatorName(goal);
+    const args = (goal.args || []).map(a => this.extractArgName(a)).filter(Boolean);
+
+    if (args.length < 2) {
+      return `Search: Goal negated by Not(${negationInfo.negationRef}).`;
+    }
+
+    const entity = args[0];
+    const target = args[1];
+
+    // Find types that have the property we're checking (e.g., Bird for can Fly)
+    // Check both direct facts and rules
+    const typesWithProperty = new Set();
+    for (const fact of this.session.kbFacts) {
+      const meta = fact.metadata;
+      if (meta?.operator === op && meta.args?.[1] === target) {
+        typesWithProperty.add(meta.args[0]);
+      }
+    }
+
+    // Also check rules that derive the property
+    for (const rule of this.session.rules) {
+      if (!rule.conclusionAST) continue;
+      const concOp = rule.conclusionAST.operator?.name || rule.conclusionAST.operator?.value;
+      if (concOp === op) {
+        const ruleTargetArg = rule.conclusionAST.args?.[1];
+        const ruleTarget = ruleTargetArg?.name || ruleTargetArg?.value;
+        if (ruleTarget === target) {
+          // Find the type in the condition
+          const condAST = rule.conditionAST;
+          if (condAST) {
+            const condOp = condAST.operator?.name || condAST.operator?.value;
+            if (condOp === 'isA') {
+              const condType = condAST.args?.[1]?.name || condAST.args?.[1]?.value;
+              if (condType) {
+                typesWithProperty.add(condType);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Build isA chain for the entity, stopping at relevant type
+    const isAChain = [];
+    let current = entity;
+    const visited = new Set();
+    let foundRelevantType = null;
+
+    while (current && !visited.has(current)) {
+      visited.add(current);
+
+      // Check if we found a type that has the property
+      if (typesWithProperty.has(current)) {
+        foundRelevantType = current;
+        // Don't break - finish this step
+      }
+
+      let nextParent = null;
+      for (const fact of this.session.kbFacts) {
+        const meta = fact.metadata;
+        if (meta?.operator === 'isA' && meta.args?.[0] === current) {
+          nextParent = meta.args[1];
+          break;
+        }
+      }
+
+      if (nextParent) {
+        isAChain.push(`${current} isA ${nextParent}`);
+        current = nextParent;
+
+        // Stop after recording the step that reaches the relevant type
+        if (foundRelevantType && typesWithProperty.has(nextParent)) {
+          break;
+        }
+        if (foundRelevantType) {
+          break; // Stop one step after the relevant type
+        }
+      } else {
+        break;
+      }
+    }
+
+    if (isAChain.length > 0) {
+      traces.push(isAChain.join('. '));
+    }
+
+    // Check if there's a rule that would have applied
+    if (['can', 'has', 'likes', 'knows'].includes(op) && foundRelevantType) {
+      traces.push(`Rule: isA ${foundRelevantType} implies ${op} ${target} would apply`);
+    }
+
+    // Add negation info
+    traces.push(`Found explicit negation: Not(${op} ${entity} ${target})`);
+    traces.push('Negation blocks inference');
+
+    return `Search: ${traces.join('. ')}.`;
   }
 
   /**

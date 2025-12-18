@@ -5,14 +5,14 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { asciiStamp, asciiStampBatch } from '../../../src/util/ascii-stamp.mjs';
-import { Vector } from '../../../src/core/vector.mjs';
+import { isVector } from '../../../src/hdc/facade.mjs';
 import { similarity } from '../../../src/core/operations.mjs';
 
 describe('ASCII Stamp', () => {
   describe('asciiStamp', () => {
     test('should return a Vector', () => {
       const v = asciiStamp('test', 1024);
-      assert.ok(v instanceof Vector, 'should return Vector instance');
+      assert.ok(isVector(v), 'should return Vector instance');
     });
 
     test('should create vector with correct geometry', () => {
@@ -56,18 +56,18 @@ describe('ASCII Stamp', () => {
 
     test('should handle empty string', () => {
       const v = asciiStamp('', 1024);
-      assert.ok(v instanceof Vector, 'should handle empty string');
+      assert.ok(isVector(v), 'should handle empty string');
     });
 
     test('should handle long strings', () => {
       const longStr = 'a'.repeat(1000);
       const v = asciiStamp(longStr, 1024);
-      assert.ok(v instanceof Vector, 'should handle long strings');
+      assert.ok(isVector(v), 'should handle long strings');
     });
 
     test('should handle unicode strings', () => {
       const v = asciiStamp('日本語テスト', 1024);
-      assert.ok(v instanceof Vector, 'should handle unicode');
+      assert.ok(isVector(v), 'should handle unicode');
     });
 
     test('should handle special characters', () => {
@@ -91,7 +91,7 @@ describe('ASCII Stamp', () => {
       const vectors = asciiStampBatch('base', 5, 1024);
       assert.equal(vectors.length, 5, 'should return correct count');
       for (const v of vectors) {
-        assert.ok(v instanceof Vector, 'each item should be Vector');
+        assert.ok(isVector(v), 'each item should be Vector');
       }
     });
 
