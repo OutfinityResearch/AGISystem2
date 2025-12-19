@@ -1,0 +1,1577 @@
+# Psychology Theory - DSL Expressions
+# Comprehensive psychological knowledge with multi-line graphs
+# Coverage: Emotions, Cognition, Disorders, Development, Theories
+
+# ============================================================================
+# PART I: EMOTIONS TAXONOMY (200 facts)
+# ============================================================================
+
+# --- Basic Emotions (Ekman's Model) ---
+isA Joy BasicEmotion
+isA Sadness BasicEmotion
+isA Fear BasicEmotion
+isA Anger BasicEmotion
+isA Disgust BasicEmotion
+isA Surprise BasicEmotion
+
+@:BasicEmotion_Joy graph
+    @emotion isA Joy BasicEmotion
+    @facial hasExpression $emotion smile
+    @physiological causesResponse $emotion increased_heart_rate
+    @cognitive associatedWith $emotion positive_valence
+    @behavior leadsto $emotion approach_tendency
+    return Implies($emotion, positiveState($emotion))
+end
+
+@:BasicEmotion_Sadness graph
+    @emotion isA Sadness BasicEmotion
+    @facial hasExpression $emotion frown
+    @physiological causesResponse $emotion decreased_energy
+    @cognitive associatedWith $emotion negative_valence
+    @behavior leadsto $emotion withdrawal_tendency
+    @duration typicallyLasts $emotion prolonged
+    return Implies($emotion, negativeState($emotion))
+end
+
+@:BasicEmotion_Fear graph
+    @emotion isA Fear BasicEmotion
+    @facial hasExpression $emotion wide_eyes
+    @physiological activates $emotion fight_or_flight
+    @hormonal triggers $emotion adrenaline_release
+    @cognitive associated $emotion threat_perception
+    @behavior leadsto $emotion avoidance_or_escape
+    @adaptive hasFunction $emotion survival
+    return Implies($emotion, protectiveResponse($emotion))
+end
+
+@:BasicEmotion_Anger graph
+    @emotion isA Anger BasicEmotion
+    @facial hasExpression $emotion furrowed_brow
+    @physiological increases $emotion blood_pressure
+    @physiological increases $emotion muscle_tension
+    @cognitive associated $emotion goal_obstruction
+    @behavior leadsto $emotion aggressive_tendency
+    @adaptive canBe $emotion constructive_or_destructive
+    return Implies($emotion, confrontationResponse($emotion))
+end
+
+@:BasicEmotion_Disgust graph
+    @emotion isA Disgust BasicEmotion
+    @facial hasExpression $emotion nose_wrinkle
+    @physiological triggers $emotion nausea_response
+    @cognitive associated $emotion contamination_fear
+    @adaptive hasFunction $emotion disease_avoidance
+    @moral extends $emotion moral_disgust
+    return Implies($emotion, rejectionResponse($emotion))
+end
+
+@:BasicEmotion_Surprise graph
+    @emotion isA Surprise BasicEmotion
+    @facial hasExpression $emotion raised_eyebrows
+    @duration isA $emotion brief_emotion
+    @cognitive triggers $emotion attention_orienting
+    @cognitive leadsto $emotion reappraisal
+    @neutral canBecome $emotion positive_or_negative
+    return Implies($emotion, orientingResponse($emotion))
+end
+
+# --- Complex Emotions ---
+isA Pride ComplexEmotion
+isA Shame ComplexEmotion
+isA Guilt ComplexEmotion
+isA Jealousy ComplexEmotion
+isA Envy ComplexEmotion
+isA Embarrassment ComplexEmotion
+isA Love ComplexEmotion
+isA Gratitude ComplexEmotion
+isA Hope ComplexEmotion
+isA Contempt ComplexEmotion
+isA Anxiety ComplexEmotion
+isA Grief ComplexEmotion
+
+@:ComplexEmotion_Pride graph
+    @emotion isA Pride ComplexEmotion
+    @requires needsCognition $emotion self_evaluation
+    @requires needsCognition $emotion achievement_recognition
+    @social enhances $emotion social_status
+    @self boosts $emotion self_esteem
+    @cultural varies $emotion across_cultures
+    @danger canLeadTo $emotion hubris
+    return Implies($emotion, positiveSelfevaluation($emotion))
+end
+
+@:ComplexEmotion_Shame graph
+    @emotion isA Shame ComplexEmotion
+    @requires needsCognition $emotion self_awareness
+    @self threatens $emotion self_identity
+    @social involves $emotion public_exposure
+    @behavior leadsto $emotion hiding_concealment
+    @vs differs $emotion guilt
+    @shame focuses $emotion entire_self
+    @chronic canCause $emotion depression
+    return Implies($emotion, globalSelfnegation($emotion))
+end
+
+@:ComplexEmotion_Guilt graph
+    @emotion isA Guilt ComplexEmotion
+    @requires needsCognition $emotion moral_standards
+    @focus targets $emotion specific_behavior
+    @moral involves $emotion transgression
+    @behavior motivates $emotion reparation
+    @vs differs $emotion shame
+    @guilt focuses $emotion specific_action
+    @adaptive promotes $emotion prosocial_behavior
+    return Implies($emotion, moralSelfregulation($emotion))
+end
+
+@:ComplexEmotion_Jealousy graph
+    @emotion isA Jealousy ComplexEmotion
+    @requires involves $emotion three_parties
+    @threat perceives $emotion relationship_threat
+    @fear combines $emotion fear_and_anger
+    @cognitive includes $emotion possessiveness
+    @evolutionary hasRoots $emotion mate_guarding
+    @pathological canBecome $emotion obsessive
+    return Implies($emotion, relationshipProtection($emotion))
+end
+
+@:ComplexEmotion_Love graph
+    @emotion isA Love ComplexEmotion
+    @types includes $emotion romantic_love
+    @types includes $emotion parental_love
+    @types includes $emotion platonic_love
+    @chemical involves $emotion oxytocin
+    @chemical involves $emotion dopamine
+    @attachment creates $emotion bonding
+    @stages evolves $emotion passion_to_companionate
+    @universal isA $emotion human_universal
+    return Implies($emotion, attachmentBonding($emotion))
+end
+
+@:ComplexEmotion_Anxiety graph
+    @emotion isA Anxiety ComplexEmotion
+    @related derives $emotion fear
+    @focus targets $emotion future_threat
+    @cognitive involves $emotion worry
+    @physiological causes $emotion arousal
+    @chronic canBecome $emotion disorder
+    @adaptive canBe $emotion motivating
+    @maladaptive canBe $emotion paralyzing
+    return Implies($emotion, anticipatoryDistress($emotion))
+end
+
+# --- Emotion Theories ---
+isA JamesLangeTheory EmotionTheory
+isA CannonBardTheory EmotionTheory
+isA SchachterSingerTheory EmotionTheory
+isA LazarusTheory EmotionTheory
+isA FacialFeedbackHypothesis EmotionTheory
+
+@:JamesLange_Theory graph
+    @theory isA JamesLangeTheory EmotionTheory
+    @sequence states $theory physiology_precedes_emotion
+    @example describes $theory see_bear_run_then_fear
+    @claim asserts $theory bodily_changes_cause_emotion
+    @modern status $theory partially_supported
+    @criticism faces $theory emotions_without_arousal_exist
+    return Implies($theory, bodyFirst($theory))
+end
+
+@:SchachterSinger_TwoFactor graph
+    @theory isA SchachterSingerTheory EmotionTheory
+    @factors requires $theory physiological_arousal
+    @factors requires $theory cognitive_label
+    @process describes $theory arousal_plus_interpretation
+    @famous demonstrates $theory bridge_study
+    @famous demonstrates $theory adrenaline_experiment
+    @conclusion states $theory context_determines_emotion
+    return Implies($theory, arousalPlusLabel($theory))
+end
+
+@:Lazarus_CognitiveAppraisal graph
+    @theory isA LazarusTheory EmotionTheory
+    @primacy asserts $theory cognition_first
+    @process involves $theory primary_appraisal
+    @process involves $theory secondary_appraisal
+    @primary evaluates $theory threat_or_benefit
+    @secondary evaluates $theory coping_ability
+    @reappraisal allows $theory emotion_change
+    return Implies($theory, appraisalDriven($theory))
+end
+
+# --- Emotion Regulation ---
+isA Reappraisal EmotionRegulationStrategy
+isA Suppression EmotionRegulationStrategy
+isA Distraction EmotionRegulationStrategy
+isA Acceptance EmotionRegulationStrategy
+
+@:EmotionRegulation_Reappraisal graph
+    @strategy isA Reappraisal EmotionRegulationStrategy
+    @process involves $strategy cognitive_reframing
+    @timing occurs $strategy before_emotion_peaks
+    @effectiveness rated $strategy highly_effective
+    @health associated $strategy positive_outcomes
+    @example illustrates $strategy reinterpret_stressor
+    @antecedent isA $strategy antecedent_focused
+    return Implies($strategy, cognitiveReframing($strategy))
+end
+
+@:EmotionRegulation_Suppression graph
+    @strategy isA Suppression EmotionRegulationStrategy
+    @process involves $strategy hiding_expression
+    @timing occurs $strategy after_emotion_arises
+    @effectiveness rated $strategy less_effective
+    @cost causes $strategy cognitive_load
+    @health associated $strategy negative_outcomes
+    @response isA $strategy response_focused
+    return Implies($strategy, expressionInhibition($strategy))
+end
+
+# --- Emotional Intelligence ---
+isA EmotionalIntelligence Construct
+isA PerceivingEmotions EI_Component
+isA UnderstandingEmotions EI_Component
+isA ManagingEmotions EI_Component
+isA UsingEmotions EI_Component
+
+@:EmotionalIntelligence_Model graph
+    @construct isA EmotionalIntelligence Construct
+    @component includes $construct PerceivingEmotions
+    @component includes $construct UnderstandingEmotions
+    @component includes $construct ManagingEmotions
+    @component includes $construct UsingEmotions
+    @predictive correlates $construct life_success
+    @social enhances $construct relationships
+    @measure assessedBy $construct MSCEIT
+    return Implies($construct, emotionalSkills($construct))
+end
+
+# ============================================================================
+# PART II: COGNITION (250 facts)
+# ============================================================================
+
+# --- Memory Types ---
+isA SensoryMemory MemoryType
+isA ShortTermMemory MemoryType
+isA WorkingMemory MemoryType
+isA LongTermMemory MemoryType
+isA EpisodicMemory LongTermMemory
+isA SemanticMemory LongTermMemory
+isA ProceduralMemory LongTermMemory
+isA ImplicitMemory MemoryType
+isA ExplicitMemory MemoryType
+
+@:Memory_Sensory graph
+    @memory isA SensoryMemory MemoryType
+    @duration lasts $memory less_than_1_second
+    @capacity hasCapacity $memory very_large
+    @types includes $memory iconic_visual
+    @types includes $memory echoic_auditory
+    @function serves $memory initial_processing
+    @decay rapid $memory immediate_loss
+    return Implies($memory, briefStorage($memory))
+end
+
+@:Memory_ShortTerm graph
+    @memory isA ShortTermMemory MemoryType
+    @duration lasts $memory 15_to_30_seconds
+    @capacity limited $memory 7_plus_minus_2
+    @capacity miller_called $memory magical_number_seven
+    @maintenance requires $memory rehearsal
+    @interference susceptible $memory decay_and_interference
+    @modern renamed $memory working_memory
+    return Implies($memory, temporaryStorage($memory))
+end
+
+@:Memory_Working graph
+    @memory isA WorkingMemory MemoryType
+    @model described BaddeleyHitch $memory
+    @component includes $memory phonological_loop
+    @component includes $memory visuospatial_sketchpad
+    @component includes $memory central_executive
+    @component includes $memory episodic_buffer
+    @function enables $memory active_processing
+    @tasks supports $memory reasoning_comprehension
+    return Implies($memory, activeManipulation($memory))
+end
+
+@:Memory_LongTerm graph
+    @memory isA LongTermMemory MemoryType
+    @duration lasts $memory unlimited
+    @capacity hasCapacity $memory unlimited
+    @encoding requires $memory elaborative_rehearsal
+    @organization structured $memory schemas_networks
+    @retrieval depends $memory cues_and_context
+    @types divides $memory explicit_and_implicit
+    return Implies($memory, permanentStorage($memory))
+end
+
+@:Memory_Episodic graph
+    @memory isA EpisodicMemory LongTermMemory
+    @content stores $memory personal_experiences
+    @content stores $memory events_with_context
+    @awareness requires $memory conscious_recall
+    @example includes $memory autobiographical_memory
+    @brain involves $memory hippocampus
+    @vulnerable susceptible $memory forgetting
+    @tulving proposed Tulving $memory
+    return Implies($memory, experientialMemory($memory))
+end
+
+@:Memory_Semantic graph
+    @memory isA SemanticMemory LongTermMemory
+    @content stores $memory facts_and_concepts
+    @content stores $memory general_knowledge
+    @awareness requires $memory conscious_recall
+    @example includes $memory knowing_capitals
+    @example includes $memory language_knowledge
+    @organization structured $memory semantic_networks
+    @brain involves $memory temporal_lobe
+    return Implies($memory, factualKnowledge($memory))
+end
+
+@:Memory_Procedural graph
+    @memory isA ProceduralMemory LongTermMemory
+    @content stores $memory skills_and_habits
+    @awareness operates $memory without_conscious_thought
+    @acquisition requires $memory practice
+    @example includes $memory riding_bike
+    @example includes $memory typing
+    @brain involves $memory basal_ganglia
+    @brain involves $memory cerebellum
+    @retention highly $memory resistant_to_forgetting
+    return Implies($memory, skillMemory($memory))
+end
+
+# --- Memory Processes ---
+isA Encoding MemoryProcess
+isA Storage MemoryProcess
+isA Retrieval MemoryProcess
+isA Consolidation MemoryProcess
+isA Reconsolidation MemoryProcess
+
+@:MemoryProcess_Encoding graph
+    @process isA Encoding MemoryProcess
+    @function converts $process sensory_to_memory
+    @levels described LevelsOfProcessing $process
+    @shallow involves $process physical_features
+    @deep involves $process semantic_meaning
+    @deep superior $process better_retention
+    @strategies uses $process mnemonics_imagery
+    return Implies($process, memoryFormation($process))
+end
+
+@:MemoryProcess_Consolidation graph
+    @process isA Consolidation MemoryProcess
+    @function stabilizes $process memory_traces
+    @timing occurs $process after_encoding
+    @critical requires $process sleep
+    @brain involves $process hippocampus_to_cortex
+    @vulnerable during $process disruption_possible
+    @synaptic involves $process protein_synthesis
+    return Implies($process, memoryStabilization($process))
+end
+
+@:MemoryProcess_Retrieval graph
+    @process isA Retrieval MemoryProcess
+    @function accesses $process stored_information
+    @types includes $process recall
+    @types includes $process recognition
+    @cues depends $process retrieval_cues
+    @context affected $process encoding_specificity
+    @failure explains $process tip_of_tongue
+    return Implies($process, memoryAccess($process))
+end
+
+# --- Attention ---
+isA SelectiveAttention AttentionType
+isA DividedAttention AttentionType
+isA SustainedAttention AttentionType
+isA ExecutiveAttention AttentionType
+
+@:Attention_Selective graph
+    @attention isA SelectiveAttention AttentionType
+    @function focuses $attention specific_stimuli
+    @example demonstrates $attention cocktail_party_effect
+    @example demonstrates $attention dichotic_listening
+    @famous shows $attention invisible_gorilla
+    @theory explains $attention filter_theory
+    @theory explains $attention attenuation_theory
+    @limitation causes $attention inattentional_blindness
+    return Implies($attention, focusedProcessing($attention))
+end
+
+@:Attention_Divided graph
+    @attention isA DividedAttention AttentionType
+    @function handles $attention multiple_tasks
+    @difficulty depends $attention task_similarity
+    @difficulty depends $attention task_complexity
+    @automatic allows $attention dual_task_performance
+    @controlled limits $attention dual_task_performance
+    @example includes $attention driving_and_talking
+    @cost causes $attention performance_decrement
+    return Implies($attention, multitaskingAttempt($attention))
+end
+
+@:Attention_Sustained graph
+    @attention isA SustainedAttention AttentionType
+    @function maintains $attention vigilance
+    @duration requires $attention prolonged_focus
+    @challenge faces $attention attention_fatigue
+    @example includes $attention watchkeeping_tasks
+    @brain involves $attention right_hemisphere
+    @decline shows $attention vigilance_decrement
+    return Implies($attention, prolongedFocus($attention))
+end
+
+# --- Learning Theories ---
+isA ClassicalConditioning LearningType
+isA OperantConditioning LearningType
+isA ObservationalLearning LearningType
+isA LatentLearning LearningType
+
+@:Learning_Classical graph
+    @learning isA ClassicalConditioning LearningType
+    @founder discovered Pavlov $learning
+    @process pairs $learning neutral_with_unconditioned
+    @stimulus becomes $learning conditioned_stimulus
+    @response produces $learning conditioned_response
+    @example demonstrates $learning dogs_salivation
+    @phenomenon includes $learning acquisition_extinction
+    @phenomenon includes $learning generalization_discrimination
+    return Implies($learning, associativeLearning($learning))
+end
+
+@:Learning_Operant graph
+    @learning isA OperantConditioning LearningType
+    @founder developed Skinner $learning
+    @process modifies $learning behavior_by_consequences
+    @reinforcement increases $learning behavior_frequency
+    @punishment decreases $learning behavior_frequency
+    @positive adds $learning stimulus
+    @negative removes $learning stimulus
+    @schedule affects $learning acquisition_and_extinction
+    return Implies($learning, consequenceBasedLearning($learning))
+end
+
+@:Learning_Observational graph
+    @learning isA ObservationalLearning LearningType
+    @founder studied Bandura $learning
+    @process learns $learning by_watching_others
+    @famous demonstrates $learning bobo_doll_experiment
+    @requires needs $learning attention
+    @requires needs $learning retention
+    @requires needs $learning reproduction
+    @requires needs $learning motivation
+    @social involves $learning modeling_imitation
+    return Implies($learning, socialLearning($learning))
+end
+
+# --- Perception ---
+isA BottomUpProcessing PerceptionType
+isA TopDownProcessing PerceptionType
+isA DepthPerception PerceptionType
+isA MotionPerception PerceptionType
+isA FormPerception PerceptionType
+
+@:Perception_BottomUp graph
+    @perception isA BottomUpProcessing PerceptionType
+    @direction flows $perception sensation_to_cognition
+    @datadriven relies $perception sensory_input
+    @example illustrates $perception feature_detection
+    @contrast differs $perception top_down
+    @neural starts $perception receptors
+    return Implies($perception, datadriven($perception))
+end
+
+@:Perception_TopDown graph
+    @perception isA TopDownProcessing PerceptionType
+    @direction flows $perception cognition_to_sensation
+    @knowledgedriven uses $perception expectations_schemas
+    @example illustrates $perception context_effects
+    @example illustrates $perception perceptual_set
+    @contrast differs $perception bottom_up
+    @neural involves $perception higher_cortical_areas
+    return Implies($perception, conceptDriven($perception))
+end
+
+@:Perception_Depth graph
+    @perception isA DepthPerception PerceptionType
+    @function enables $perception 3D_from_2D
+    @cues includes $perception binocular_cues
+    @cues includes $perception monocular_cues
+    @binocular uses $perception retinal_disparity
+    @binocular uses $perception convergence
+    @monocular uses $perception linear_perspective
+    @monocular uses $perception interposition
+    @develops early $perception infancy
+    return Implies($perception, spatialAwareness($perception))
+end
+
+# --- Decision Making ---
+isA RationalDecision DecisionType
+isA BoundedRationality DecisionType
+isA Heuristics DecisionStrategy
+isA Biases CognitiveDistortion
+
+@:DecisionMaking_Heuristics graph
+    @strategy isA Heuristics DecisionStrategy
+    @function provides $strategy mental_shortcuts
+    @advantage offers $strategy efficiency
+    @disadvantage risks $strategy errors
+    @types includes $strategy availability_heuristic
+    @types includes $strategy representativeness_heuristic
+    @types includes $strategy anchoring_heuristic
+    @kahneman studied KahnemanTversky $strategy
+    return Implies($strategy, cognitiveShortcut($strategy))
+end
+
+@:Bias_Confirmation graph
+    @bias isA ConfirmationBias CognitiveBias
+    @tendency favors $bias confirming_evidence
+    @tendency ignores $bias disconfirming_evidence
+    @pervasive affects $bias all_domains
+    @example shows $bias selective_search
+    @example shows $bias selective_interpretation
+    @consequence leads $bias polarization
+    @mitigation requires $bias actively_seeking_disconfirmation
+    return Implies($bias, biasedSearch($bias))
+end
+
+@:Bias_Anchoring graph
+    @bias isA AnchoringBias CognitiveBias
+    @tendency relies $bias initial_information
+    @adjustment insufficient $bias from_anchor
+    @example shows $bias price_negotiations
+    @example shows $bias numeric_estimates
+    @robust persists $bias even_random_anchors
+    @unconscious operates $bias automatically
+    return Implies($bias, initialValueBias($bias))
+end
+
+# --- Language ---
+isA Phonology LanguageComponent
+isA Morphology LanguageComponent
+isA Syntax LanguageComponent
+isA Semantics LanguageComponent
+isA Pragmatics LanguageComponent
+
+@:Language_Acquisition graph
+    @process isA LanguageAcquisition DevelopmentalProcess
+    @debate contrasts $process nature_vs_nurture
+    @nativist proposes Chomsky LAD
+    @nativist argues $process innate_grammar
+    @learning proposes Skinner reinforcement
+    @learning argues $process environmental_input
+    @interactionist combines $process both_factors
+    @critical suggests $process sensitive_period
+    return Implies($process, languageDevelopment($process))
+end
+
+@:Language_Structure graph
+    @language hasComponent Language phonology
+    @language hasComponent Language morphology
+    @language hasComponent Language syntax
+    @language hasComponent Language semantics
+    @language hasComponent Language pragmatics
+    @phonology deals $language sounds
+    @morphology deals $language word_structure
+    @syntax deals $language sentence_structure
+    @semantics deals $language meaning
+    @pragmatics deals $language context_use
+    return Implies($language, hierarchicalStructure($language))
+end
+
+# --- Problem Solving ---
+isA Algorithm ProblemSolvingStrategy
+isA Heuristic ProblemSolvingStrategy
+isA TrialAndError ProblemSolvingStrategy
+isA Insight ProblemSolvingStrategy
+
+@:ProblemSolving_Insight graph
+    @strategy isA Insight ProblemSolvingStrategy
+    @process involves $strategy sudden_realization
+    @aha experiences $strategy aha_moment
+    @famous demonstrates $strategy Kohler_chimps
+    @famous demonstrates $strategy nine_dot_problem
+    @obstacle faces $strategy functional_fixedness
+    @obstacle faces $strategy mental_set
+    @incubation benefits $strategy taking_break
+    return Implies($strategy, suddenSolution($strategy))
+end
+
+# ============================================================================
+# PART III: PSYCHOLOGICAL DISORDERS (300 facts)
+# ============================================================================
+
+# --- Disorder Categories ---
+isA AnxietyDisorder DisorderCategory
+isA MoodDisorder DisorderCategory
+isA SchizophreniaSpectrum DisorderCategory
+isA PersonalityDisorder DisorderCategory
+isA NeurodevelopmentalDisorder DisorderCategory
+isA TraumaRelatedDisorder DisorderCategory
+isA ObsessiveCompulsiveDisorder DisorderCategory
+isA DissociativeDisorder DisorderCategory
+isA SomaticDisorder DisorderCategory
+isA EatingDisorder DisorderCategory
+
+# --- Anxiety Disorders ---
+isA GeneralizedAnxietyDisorder AnxietyDisorder
+isA PanicDisorder AnxietyDisorder
+isA SocialAnxietyDisorder AnxietyDisorder
+isA SpecificPhobia AnxietyDisorder
+isA Agoraphobia AnxietyDisorder
+
+@:Disorder_GeneralizedAnxiety graph
+    @disorder isA GeneralizedAnxietyDisorder AnxietyDisorder
+    @symptom involves $disorder excessive_worry
+    @symptom involves $disorder restlessness
+    @symptom involves $disorder fatigue
+    @symptom involves $disorder concentration_difficulty
+    @duration requires $disorder six_months_minimum
+    @pervasive affects $disorder multiple_domains
+    @treatment responds $disorder CBT_and_medication
+    @prevalence affects $disorder 3_to_5_percent
+    return Implies($disorder, chronicWorry($disorder))
+end
+
+@:Disorder_Panic graph
+    @disorder isA PanicDisorder AnxietyDisorder
+    @symptom involves $disorder panic_attacks
+    @attack includes $disorder palpitations
+    @attack includes $disorder sweating
+    @attack includes $disorder trembling
+    @attack includes $disorder shortness_of_breath
+    @attack includes $disorder chest_pain
+    @attack includes $disorder derealization
+    @fear develops $disorder fear_of_attacks
+    @avoidance leads $disorder behavioral_restriction
+    @treatment effective $disorder CBT_exposure
+    return Implies($disorder, recurringPanicAttacks($disorder))
+end
+
+@:Disorder_SocialAnxiety graph
+    @disorder isA SocialAnxietyDisorder AnxietyDisorder
+    @fear involves $disorder social_scrutiny
+    @fear involves $disorder negative_evaluation
+    @symptom includes $disorder blushing
+    @symptom includes $disorder trembling
+    @symptom includes $disorder avoidance
+    @interference impacts $disorder social_occupational_functioning
+    @cognition involves $disorder negative_self_beliefs
+    @treatment effective $disorder CBT_exposure_therapy
+    return Implies($disorder, socialFear($disorder))
+end
+
+@:Disorder_SpecificPhobia graph
+    @disorder isA SpecificPhobia AnxietyDisorder
+    @types includes $disorder animal_phobia
+    @types includes $disorder natural_environment_phobia
+    @types includes $disorder blood_injection_injury_phobia
+    @types includes $disorder situational_phobia
+    @fear excessive $disorder specific_object_or_situation
+    @recognition insight $disorder fear_is_excessive
+    @avoidance strong $disorder behavioral_avoidance
+    @treatment highly_effective $disorder exposure_therapy
+    return Implies($disorder, specificFear($disorder))
+end
+
+# --- Mood Disorders ---
+isA MajorDepressiveDisorder MoodDisorder
+isA PersistentDepressiveDisorder MoodDisorder
+isA BipolarIDisorder MoodDisorder
+isA BipolarIIDisorder MoodDisorder
+isA CyclothymicDisorder MoodDisorder
+
+@:Disorder_MajorDepression graph
+    @disorder isA MajorDepressiveDisorder MoodDisorder
+    @symptom core $disorder depressed_mood
+    @symptom core $disorder anhedonia
+    @symptom includes $disorder sleep_disturbance
+    @symptom includes $disorder appetite_change
+    @symptom includes $disorder fatigue
+    @symptom includes $disorder worthlessness
+    @symptom includes $disorder concentration_difficulty
+    @symptom includes $disorder suicidal_ideation
+    @duration requires $disorder two_weeks_minimum
+    @biological involves $disorder serotonin_norepinephrine
+    @treatment responds $disorder antidepressants_therapy
+    return Implies($disorder, majorDepressiveEpisode($disorder))
+end
+
+@:Disorder_BipolarI graph
+    @disorder isA BipolarIDisorder MoodDisorder
+    @episode requires $disorder manic_episode
+    @manic lasts $disorder one_week_minimum
+    @manic symptom $disorder elevated_mood
+    @manic symptom $disorder grandiosity
+    @manic symptom $disorder decreased_sleep_need
+    @manic symptom $disorder racing_thoughts
+    @manic symptom $disorder risk_taking
+    @also often $disorder depressive_episodes
+    @genetic highly $disorder heritable
+    @treatment requires $disorder mood_stabilizers
+    return Implies($disorder, manicEpisodes($disorder))
+end
+
+@:Disorder_BipolarII graph
+    @disorder isA BipolarIIDisorder MoodDisorder
+    @episode requires $disorder hypomanic_episode
+    @episode requires $disorder major_depressive_episode
+    @hypomanic lasts $disorder four_days_minimum
+    @hypomanic less_severe $disorder than_full_manic
+    @hypomanic not_cause $disorder severe_impairment
+    @depression more_prominent $disorder than_hypomania
+    @misdiagnosis often $disorder as_depression_only
+    @treatment requires $disorder mood_stabilizers
+    return Implies($disorder, hypomanicDepressive($disorder))
+end
+
+# --- Schizophrenia Spectrum ---
+isA Schizophrenia SchizophreniaSpectrum
+isA SchizophreniformDisorder SchizophreniaSpectrum
+isA SchizoaffectiveDisorder SchizophreniaSpectrum
+isA DelusionalDisorder SchizophreniaSpectrum
+
+@:Disorder_Schizophrenia graph
+    @disorder isA Schizophrenia SchizophreniaSpectrum
+    @positive symptom $disorder delusions
+    @positive symptom $disorder hallucinations
+    @positive symptom $disorder disorganized_speech
+    @positive symptom $disorder disorganized_behavior
+    @negative symptom $disorder flat_affect
+    @negative symptom $disorder avolition
+    @negative symptom $disorder alogia
+    @cognitive impairs $disorder executive_function
+    @cognitive impairs $disorder working_memory
+    @duration requires $disorder six_months_minimum
+    @onset typically $disorder late_adolescence_early_adulthood
+    @biological involves $disorder dopamine_hypothesis
+    @treatment requires $disorder antipsychotic_medication
+    return Implies($disorder, psychoticDisorder($disorder))
+end
+
+@:Disorder_Schizoaffective graph
+    @disorder isA SchizoaffectiveDisorder SchizophreniaSpectrum
+    @combines includes $disorder schizophrenia_symptoms
+    @combines includes $disorder mood_disorder_symptoms
+    @subtypes includes $disorder bipolar_type
+    @subtypes includes $disorder depressive_type
+    @mood concurrent $disorder with_psychosis
+    @mood independent $disorder psychosis_also_alone
+    @treatment requires $disorder antipsychotics_mood_stabilizers
+    return Implies($disorder, psychoticMood($disorder))
+end
+
+# --- Personality Disorders ---
+isA BorderlinePersonalityDisorder PersonalityDisorder
+isA AntisocialPersonalityDisorder PersonalityDisorder
+isA NarcissisticPersonalityDisorder PersonalityDisorder
+isA AvoidantPersonalityDisorder PersonalityDisorder
+isA ObsessiveCompulsivePersonalityDisorder PersonalityDisorder
+
+@:Disorder_BorderlinePersonality graph
+    @disorder isA BorderlinePersonalityDisorder PersonalityDisorder
+    @cluster belongsTo $disorder cluster_B_dramatic
+    @symptom involves $disorder unstable_relationships
+    @symptom involves $disorder identity_disturbance
+    @symptom involves $disorder fear_of_abandonment
+    @symptom involves $disorder impulsivity
+    @symptom involves $disorder self_harm
+    @symptom involves $disorder emotional_dysregulation
+    @symptom involves $disorder chronic_emptiness
+    @treatment effective $disorder DBT
+    @biological involves $disorder emotional_regulation_circuits
+    return Implies($disorder, emotionalInstability($disorder))
+end
+
+@:Disorder_AntisocialPersonality graph
+    @disorder isA AntisocialPersonalityDisorder PersonalityDisorder
+    @cluster belongsTo $disorder cluster_B_dramatic
+    @symptom involves $disorder disregard_for_others
+    @symptom involves $disorder deceitfulness
+    @symptom involves $disorder impulsivity
+    @symptom involves $disorder aggression
+    @symptom involves $disorder lack_of_remorse
+    @symptom involves $disorder irresponsibility
+    @precursor often $disorder conduct_disorder
+    @onset requires $disorder age_18_minimum
+    @related overlaps $disorder psychopathy
+    @treatment difficult $disorder poor_prognosis
+    return Implies($disorder, antisocialBehavior($disorder))
+end
+
+@:Disorder_NarcissisticPersonality graph
+    @disorder isA NarcissisticPersonalityDisorder PersonalityDisorder
+    @cluster belongsTo $disorder cluster_B_dramatic
+    @symptom involves $disorder grandiosity
+    @symptom involves $disorder need_for_admiration
+    @symptom involves $disorder lack_of_empathy
+    @symptom involves $disorder sense_of_entitlement
+    @symptom involves $disorder exploitativeness
+    @symptom involves $disorder envy
+    @fragile underlying $disorder low_self_esteem
+    @defensive uses $disorder narcissistic_defenses
+    @treatment challenging $disorder resistance_to_therapy
+    return Implies($disorder, pathologicalNarcissism($disorder))
+end
+
+# --- Trauma and Stress-Related ---
+isA PosttraumaticStressDisorder TraumaRelatedDisorder
+isA AcuteStressDisorder TraumaRelatedDisorder
+isA AdjustmentDisorder TraumaRelatedDisorder
+isA ReactiveAttachmentDisorder TraumaRelatedDisorder
+
+@:Disorder_PTSD graph
+    @disorder isA PosttraumaticStressDisorder TraumaRelatedDisorder
+    @cause requires $disorder trauma_exposure
+    @symptom cluster $disorder intrusion_symptoms
+    @intrusion includes $disorder flashbacks
+    @intrusion includes $disorder nightmares
+    @symptom cluster $disorder avoidance
+    @symptom cluster $disorder negative_cognitions_mood
+    @symptom cluster $disorder arousal_reactivity
+    @arousal includes $disorder hypervigilance
+    @arousal includes $disorder exaggerated_startle
+    @duration requires $disorder one_month_minimum
+    @biological involves $disorder HPA_axis_dysregulation
+    @treatment effective $disorder trauma_focused_CBT
+    @treatment effective $disorder EMDR
+    return Implies($disorder, traumaResponse($disorder))
+end
+
+# --- OCD and Related ---
+isA ObsessiveCompulsiveDisorder OCDRelated
+isA BodyDysmorphicDisorder OCDRelated
+isA HoardingDisorder OCDRelated
+isA TrichotillomaniaDisorder OCDRelated
+isA ExcoriationDisorder OCDRelated
+
+@:Disorder_OCD graph
+    @disorder isA ObsessiveCompulsiveDisorder OCDRelated
+    @symptom involves $disorder obsessions
+    @symptom involves $disorder compulsions
+    @obsessions are $disorder intrusive_thoughts
+    @obsessions cause $disorder anxiety
+    @compulsions are $disorder repetitive_behaviors
+    @compulsions reduce $disorder anxiety_temporarily
+    @themes includes $disorder contamination
+    @themes includes $disorder symmetry
+    @themes includes $disorder forbidden_thoughts
+    @insight varies $disorder good_to_absent
+    @biological involves $disorder serotonin_circuits
+    @brain involves $disorder cortico_striatal_circuits
+    @treatment goldstandard $disorder ERP_therapy
+    return Implies($disorder, obsessionsCompulsions($disorder))
+end
+
+# --- Neurodevelopmental Disorders ---
+isA AutismSpectrumDisorder NeurodevelopmentalDisorder
+isA AttentionDeficitHyperactivityDisorder NeurodevelopmentalDisorder
+isA IntellectualDisability NeurodevelopmentalDisorder
+isA SpecificLearningDisorder NeurodevelopmentalDisorder
+
+@:Disorder_AutismSpectrum graph
+    @disorder isA AutismSpectrumDisorder NeurodevelopmentalDisorder
+    @domain impairs $disorder social_communication
+    @symptom involves $disorder reduced_eye_contact
+    @symptom involves $disorder difficulty_reading_social_cues
+    @symptom involves $disorder difficulty_with_reciprocity
+    @domain involves $disorder restricted_repetitive_behaviors
+    @symptom includes $disorder stereotyped_movements
+    @symptom includes $disorder insistence_on_sameness
+    @symptom includes $disorder restricted_interests
+    @symptom includes $disorder sensory_sensitivities
+    @onset early $disorder early_childhood
+    @spectrum ranges $disorder requiring_support_to_independent
+    @strengths includes $disorder attention_to_detail
+    @strengths includes $disorder pattern_recognition
+    @treatment helps $disorder early_intervention_behavioral
+    return Implies($disorder, autismCharacteristics($disorder))
+end
+
+@:Disorder_ADHD graph
+    @disorder isA AttentionDeficitHyperactivityDisorder NeurodevelopmentalDisorder
+    @subtypes includes $disorder inattentive_type
+    @subtypes includes $disorder hyperactive_impulsive_type
+    @subtypes includes $disorder combined_type
+    @inattentive symptom $disorder difficulty_sustaining_attention
+    @inattentive symptom $disorder forgetfulness
+    @inattentive symptom $disorder disorganization
+    @hyperactive symptom $disorder fidgeting
+    @hyperactive symptom $disorder difficulty_sitting_still
+    @impulsive symptom $disorder interrupting
+    @impulsive symptom $disorder difficulty_waiting_turn
+    @onset early $disorder before_age_12
+    @biological involves $disorder dopamine_norepinephrine
+    @treatment effective $disorder stimulant_medication
+    @treatment effective $disorder behavioral_interventions
+    return Implies($disorder, attentionHyperactivity($disorder))
+end
+
+# --- Eating Disorders ---
+isA AnorexiaNervosa EatingDisorder
+isA BulimiaNervosa EatingDisorder
+isA BingeEatingDisorder EatingDisorder
+
+@:Disorder_AnorexiaNervosa graph
+    @disorder isA AnorexiaNervosa EatingDisorder
+    @symptom core $disorder restriction_of_intake
+    @symptom core $disorder intense_fear_of_weight_gain
+    @symptom core $disorder distorted_body_image
+    @weight significantly $disorder low_body_weight
+    @denial lack_of $disorder recognition_of_seriousness
+    @types includes $disorder restricting_type
+    @types includes $disorder binge_purge_type
+    @medical causes $disorder serious_complications
+    @medical risk $disorder highest_mortality_rate
+    @treatment requires $disorder multidisciplinary_approach
+    return Implies($disorder, severeRestriction($disorder))
+end
+
+@:Disorder_BulimiaNervosa graph
+    @disorder isA BulimiaNervosa EatingDisorder
+    @symptom involves $disorder binge_eating
+    @symptom involves $disorder compensatory_behaviors
+    @binge involves $disorder large_amount_food
+    @binge involves $disorder loss_of_control
+    @compensatory includes $disorder self_induced_vomiting
+    @compensatory includes $disorder laxative_misuse
+    @compensatory includes $disorder excessive_exercise
+    @frequency requires $disorder once_weekly_three_months
+    @evaluation overly $disorder influenced_by_body_shape
+    @medical causes $disorder electrolyte_imbalance
+    @treatment effective $disorder CBT
+    return Implies($disorder, bingePurgeCycle($disorder))
+end
+
+# --- Dissociative Disorders ---
+isA DissociativeIdentityDisorder DissociativeDisorder
+isA DissociativeAmnesia DissociativeDisorder
+isA DepersonalizationDerealizationDisorder DissociativeDisorder
+
+@:Disorder_DissociativeIdentity graph
+    @disorder isA DissociativeIdentityDisorder DissociativeDisorder
+    @formerly called $disorder multiple_personality_disorder
+    @symptom involves $disorder two_or_more_identities
+    @symptom involves $disorder gaps_in_memory
+    @identity distinct $disorder separate_personalities
+    @switch occurs $disorder between_identities
+    @cause associated $disorder severe_childhood_trauma
+    @controversy subject $disorder ongoing_debate
+    @treatment involves $disorder integration_therapy
+    return Implies($disorder, multipleIdentities($disorder))
+end
+
+# --- Substance Use Disorders ---
+isA SubstanceUseDisorder DisorderCategory
+isA AlcoholUseDisorder SubstanceUseDisorder
+isA OpioidUseDisorder SubstanceUseDisorder
+isA StimulantUseDisorder SubstanceUseDisorder
+
+@:Disorder_SubstanceUse graph
+    @disorder isA SubstanceUseDisorder DisorderCategory
+    @symptom involves $disorder impaired_control
+    @symptom involves $disorder social_impairment
+    @symptom involves $disorder risky_use
+    @symptom involves $disorder tolerance
+    @symptom involves $disorder withdrawal
+    @severity ranges $disorder mild_moderate_severe
+    @brain affects $disorder reward_pathways
+    @treatment includes $disorder medication_assisted
+    @treatment includes $disorder behavioral_therapy
+    @relapse common $disorder chronic_relapsing
+    return Implies($disorder, addictiveBehavior($disorder))
+end
+
+# --- Disorder Causation Models ---
+isA BiopsychosocialModel CausationModel
+isA DiathesisStressModel CausationModel
+isA BiologicalModel CausationModel
+
+@:Model_Biopsychosocial graph
+    @model isA BiopsychosocialModel CausationModel
+    @component includes $model biological_factors
+    @component includes $model psychological_factors
+    @component includes $model social_factors
+    @biological includes $model genetics_neurobiology
+    @psychological includes $model cognition_emotion
+    @social includes $model culture_relationships
+    @interaction emphasizes $model multifactorial_causation
+    @comprehensive provides $model holistic_understanding
+    return Implies($model, integrativeApproach($model))
+end
+
+@:Model_DiathesisStress graph
+    @model isA DiathesisStressModel CausationModel
+    @diathesis involves $model predisposition
+    @diathesis can_be $model genetic_or_psychological
+    @stress involves $model environmental_trigger
+    @interaction requires $model both_components
+    @explanation accounts $model why_some_develop_disorders
+    @prevention suggests $model reduce_stress_or_vulnerability
+    @application useful $model many_disorders
+    return Implies($model, vulnerabilityStress($model))
+end
+
+# ============================================================================
+# PART IV: DEVELOPMENTAL PSYCHOLOGY (150 facts)
+# ============================================================================
+
+# --- Developmental Stages ---
+isA Infancy DevelopmentalStage
+isA EarlyChildhood DevelopmentalStage
+isA MiddleChildhood DevelopmentalStage
+isA Adolescence DevelopmentalStage
+isA EarlyAdulthood DevelopmentalStage
+isA MiddleAdulthood DevelopmentalStage
+isA LateAdulthood DevelopmentalStage
+
+# --- Piaget's Stages ---
+isA SensorimotorStage PiagetStage
+isA PreoperationalStage PiagetStage
+isA ConcreteOperationalStage PiagetStage
+isA FormalOperationalStage PiagetStage
+
+@:Piaget_Sensorimotor graph
+    @stage isA SensorimotorStage PiagetStage
+    @age ranges $stage birth_to_2_years
+    @characteristic involves $stage learning_through_senses_actions
+    @achievement develops $stage object_permanence
+    @substages has $stage six_substages
+    @reflex begins $stage reflexive_schemas
+    @intentional develops $stage goal_directed_behavior
+    @symbolic emerges $stage mental_representations
+    return Implies($stage, sensoryMotor($stage))
+end
+
+@:Piaget_Preoperational graph
+    @stage isA PreoperationalStage PiagetStage
+    @age ranges $stage 2_to_7_years
+    @characteristic involves $stage symbolic_thought
+    @symbolic uses $stage language_and_pretend_play
+    @limitation shows $stage egocentrism
+    @limitation shows $stage centration
+    @limitation shows $stage lack_of_conservation
+    @famous demonstrates $stage three_mountains_task
+    @famous demonstrates $stage conservation_tasks
+    return Implies($stage, symbolicPrelogical($stage))
+end
+
+@:Piaget_ConcreteOperational graph
+    @stage isA ConcreteOperationalStage PiagetStage
+    @age ranges $stage 7_to_11_years
+    @achievement develops $stage conservation
+    @achievement develops $stage reversibility
+    @achievement develops $stage classification
+    @achievement develops $stage seriation
+    @logic applies $stage concrete_situations
+    @limitation struggles $stage abstract_hypothetical
+    @decentering overcomes $stage centration
+    return Implies($stage, concreteLogic($stage))
+end
+
+@:Piaget_FormalOperational graph
+    @stage isA FormalOperationalStage PiagetStage
+    @age ranges $stage 12_years_and_up
+    @achievement develops $stage abstract_thinking
+    @achievement develops $stage hypothetical_reasoning
+    @achievement develops $stage systematic_problem_solving
+    @reasoning uses $stage deductive_logic
+    @famous demonstrates $stage pendulum_problem
+    @limitation not_all $stage reach_this_stage
+    return Implies($stage, abstractLogic($stage))
+end
+
+# --- Erikson's Stages ---
+isA TrustVsMistrust EriksonStage
+isA AutonomyVsShame EriksonStage
+isA InitiativeVsGuilt EriksonStage
+isA IndustryVsInferiority EriksonStage
+isA IdentityVsRoleConfusion EriksonStage
+isA IntimacyVsIsolation EriksonStage
+isA GenerativityVsStagnation EriksonStage
+isA IntegrityVsDespair EriksonStage
+
+@:Erikson_TrustVsMistrust graph
+    @stage isA TrustVsMistrust EriksonStage
+    @age ranges $stage infancy
+    @conflict between $stage trust_and_mistrust
+    @caregiver depends $stage responsive_caregiving
+    @positive develops $stage hope
+    @negative develops $stage fear_suspicion
+    @foundation sets $stage later_relationships
+    return Implies($stage, basicTrust($stage))
+end
+
+@:Erikson_IdentityVsRoleConfusion graph
+    @stage isA IdentityVsRoleConfusion EriksonStage
+    @age ranges $stage adolescence
+    @conflict involves $stage identity_formation
+    @task explores $stage different_roles
+    @task explores $stage values_and_beliefs
+    @positive develops $stage fidelity
+    @positive achieves $stage coherent_identity
+    @negative results $stage role_confusion
+    @marcia expanded $stage identity_statuses
+    return Implies($stage, identityFormation($stage))
+end
+
+@:Erikson_GenerativityVsStagnation graph
+    @stage isA GenerativityVsStagnation EriksonStage
+    @age ranges $stage middle_adulthood
+    @conflict involves $stage contributing_to_society
+    @generativity includes $stage parenting
+    @generativity includes $stage mentoring
+    @generativity includes $stage creative_work
+    @positive develops $stage care
+    @negative results $stage self_absorption
+    return Implies($stage, productivity($stage))
+end
+
+# --- Attachment Theory ---
+isA SecureAttachment AttachmentStyle
+isA AvoidantAttachment AttachmentStyle
+isA AmbivalentAttachment AttachmentStyle
+isA DisorganizedAttachment AttachmentStyle
+
+@:Attachment_Theory graph
+    @theory developed Bowlby AttachmentTheory
+    @function serves AttachmentTheory survival
+    @function provides AttachmentTheory secure_base
+    @critical has AttachmentTheory sensitive_period
+    @internal creates AttachmentTheory working_models
+    @stability tends AttachmentTheory continuity
+    @famous assessed Ainsworth strange_situation
+    return Implies(AttachmentTheory, bondingSystem(AttachmentTheory))
+end
+
+@:Attachment_Secure graph
+    @style isA SecureAttachment AttachmentStyle
+    @percentage about $style 60_percent
+    @caregiver had $style responsive_sensitive
+    @behavior shows $style distress_at_separation
+    @behavior shows $style comfort_at_reunion
+    @exploration uses $style caregiver_as_base
+    @adult results $style healthy_relationships
+    @adult trusts $style self_and_others
+    return Implies($style, secureBase($style))
+end
+
+@:Attachment_Avoidant graph
+    @style isA AvoidantAttachment AttachmentStyle
+    @percentage about $style 20_percent
+    @caregiver had $style unresponsive_rejecting
+    @behavior shows $style little_distress_at_separation
+    @behavior shows $style avoidance_at_reunion
+    @strategy uses $style emotional_suppression
+    @adult results $style difficulty_with_intimacy
+    @adult dismisses $style attachment_needs
+    return Implies($style, avoidantPattern($style))
+end
+
+@:Attachment_Ambivalent graph
+    @style isA AmbivalentAttachment AttachmentStyle
+    @percentage about $style 15_percent
+    @caregiver had $style inconsistent_caregiving
+    @behavior shows $style extreme_distress_at_separation
+    @behavior shows $style ambivalence_at_reunion
+    @behavior shows $style difficulty_being_soothed
+    @strategy uses $style hyperactivating
+    @adult results $style anxiety_in_relationships
+    @adult fears $style abandonment
+    return Implies($style, anxiousPattern($style))
+end
+
+# --- Cognitive Development ---
+isA TheoryOfMind CognitiveMilestone
+isA ConservationUnderstanding CognitiveMilestone
+isA AbstractThinking CognitiveMilestone
+
+@:Development_TheoryOfMind graph
+    @milestone isA TheoryOfMind CognitiveMilestone
+    @definition understands $milestone mental_states_of_others
+    @age emerges $milestone around_4_years
+    @famous assessed $milestone false_belief_task
+    @famous assessed $milestone Sally_Anne_test
+    @requires needs $milestone perspective_taking
+    @deficit impaired $milestone in_autism
+    @importance enables $milestone social_cognition
+    return Implies($milestone, mentalizing($milestone))
+end
+
+# --- Language Development ---
+isA Babbling LanguageMilestone
+isA FirstWords LanguageMilestone
+isA TwoWordStage LanguageMilestone
+isA Telegraphic LanguageMilestone
+
+@:Language_Development_Stages graph
+    @development follows LanguageDevelopment universal_sequence
+    @babbling occurs $development 4_to_6_months
+    @first_words occurs $development 12_months
+    @vocabulary grows $development rapidly_after_18_months
+    @two_word occurs $development 18_to_24_months
+    @telegraphic occurs $development 2_to_3_years
+    @overregularization shows $development rule_learning
+    @critical suggests $development sensitive_period
+    return Implies($development, languageAcquisition($development))
+end
+
+# --- Moral Development (Kohlberg) ---
+isA PreconventionalMorality MoralStage
+isA ConventionalMorality MoralStage
+isA PostconventionalMorality MoralStage
+
+@:Moral_Preconventional graph
+    @stage isA PreconventionalMorality MoralStage
+    @level has $stage two_stages
+    @stage1 based $stage punishment_avoidance
+    @stage2 based $stage self_interest
+    @reasoning focused $stage consequences
+    @typical found $stage young_children
+    @egocentic primarily $stage self_oriented
+    return Implies($stage, consequenceBased($stage))
+end
+
+@:Moral_Conventional graph
+    @stage isA ConventionalMorality MoralStage
+    @level has $stage two_stages
+    @stage3 based $stage good_interpersonal_relationships
+    @stage4 based $stage maintaining_social_order
+    @reasoning focused $stage social_approval
+    @reasoning focused $stage law_and_order
+    @typical found $stage adolescents_adults
+    @society oriented $stage conformity
+    return Implies($stage, socialConformity($stage))
+end
+
+@:Moral_Postconventional graph
+    @stage isA PostconventionalMorality MoralStage
+    @level has $stage two_stages
+    @stage5 based $stage social_contract
+    @stage6 based $stage universal_ethical_principles
+    @reasoning focused $stage abstract_principles
+    @principled guided $stage justice_and_rights
+    @rare reached $stage few_individuals
+    @autonomous independently $stage reasoned
+    return Implies($stage, principleBased($stage))
+end
+
+# --- Aging and Late Adulthood ---
+isA FluidIntelligence IntelligenceType
+isA CrystalizedIntelligence IntelligenceType
+
+@:Aging_Intelligence graph
+    @fluid isA FluidIntelligence IntelligenceType
+    @crystallized isA CrystalizedIntelligence IntelligenceType
+    @fluid involves $fluid reasoning_speed
+    @fluid declines $fluid with_age
+    @crystallized involves $crystallized accumulated_knowledge
+    @crystallized maintains $crystallized or_improves_with_age
+    @compensation uses $crystallized to_offset_fluid_decline
+    return Implies(aging, differentialIntelligenceChanges(aging))
+end
+
+# ============================================================================
+# PART V: PSYCHOLOGICAL THEORIES AND SCHOOLS (100 facts)
+# ============================================================================
+
+# --- Schools of Psychology ---
+isA Behaviorism SchoolOfPsychology
+isA Psychoanalysis SchoolOfPsychology
+isA Humanism SchoolOfPsychology
+isA CognitivePsychology SchoolOfPsychology
+isA BiologicalPsychology SchoolOfPsychology
+isA EvolutionaryPsychology SchoolOfPsychology
+isA Gestalt SchoolOfPsychology
+
+@:School_Behaviorism graph
+    @school isA Behaviorism SchoolOfPsychology
+    @founder pioneered Watson $school
+    @founder developed Skinner $school
+    @focus studies $school observable_behavior
+    @rejects ignores $school mental_states
+    @method uses $school experimental_methods
+    @learning emphasizes $school conditioning
+    @application influences $school behavior_modification
+    @famous includes $school Little_Albert
+    @famous includes $school Skinner_box
+    return Implies($school, objectiveBehavior($school))
+end
+
+@:School_Psychoanalysis graph
+    @school isA Psychoanalysis SchoolOfPsychology
+    @founder created Freud $school
+    @focus studies $school unconscious_processes
+    @structure proposes $school id_ego_superego
+    @development emphasizes $school psychosexual_stages
+    @defense describes $school defense_mechanisms
+    @therapy uses $school free_association
+    @therapy uses $school dream_analysis
+    @influence shaped $school modern_psychology
+    @criticism faces $school lack_of_empiricism
+    return Implies($school, unconsciousMind($school))
+end
+
+@:School_Humanism graph
+    @school isA Humanism SchoolOfPsychology
+    @founder developed Maslow $school
+    @founder developed Rogers $school
+    @focus emphasizes $school personal_growth
+    @focus emphasizes $school self_actualization
+    @view holds $school inherent_goodness
+    @view holds $school free_will
+    @therapy uses $school client_centered
+    @therapy uses $school unconditional_positive_regard
+    @contrast rejects $school determinism
+    return Implies($school, humanPotential($school))
+end
+
+@:School_Cognitive graph
+    @school isA CognitivePsychology SchoolOfPsychology
+    @focus studies $school mental_processes
+    @focus studies $school information_processing
+    @metaphor uses $school computer_analogy
+    @topics includes $school memory_attention
+    @topics includes $school perception_problem_solving
+    @method uses $school experimental_research
+    @revolution replaced $school behaviorism_dominance
+    @application influences $school CBT
+    return Implies($school, mentalProcesses($school))
+end
+
+@:School_Biological graph
+    @school isA BiologicalPsychology SchoolOfPsychology
+    @focus studies $school brain_and_behavior
+    @focus studies $school neurotransmitters
+    @focus studies $school genetics
+    @method uses $school brain_imaging
+    @method uses $school lesion_studies
+    @topics includes $school neural_basis_behavior
+    @application informs $school psychopharmacology
+    return Implies($school, brainBehavior($school))
+end
+
+# --- Personality Theories ---
+isA TraitTheory PersonalityTheory
+isA PsychoanalyticPersonality PersonalityTheory
+isA SocialCognitiveTheory PersonalityTheory
+isA HumanisticPersonality PersonalityTheory
+
+@:Personality_BigFive graph
+    @theory isA TraitTheory PersonalityTheory
+    @model describes BigFiveModel five_factors
+    @factor includes BigFiveModel openness
+    @factor includes BigFiveModel conscientiousness
+    @factor includes BigFiveModel extraversion
+    @factor includes BigFiveModel agreeableness
+    @factor includes BigFiveModel neuroticism
+    @acronym OCEAN BigFiveModel
+    @stable shows BigFiveModel consistency_over_time
+    @universal found BigFiveModel across_cultures
+    @predictive correlates BigFiveModel life_outcomes
+    return Implies(BigFiveModel, fiveFactorStructure(BigFiveModel))
+end
+
+@:Personality_SocialCognitive graph
+    @theory isA SocialCognitiveTheory PersonalityTheory
+    @founder developed Bandura $theory
+    @concept proposes $theory reciprocal_determinism
+    @interaction between $theory person_behavior_environment
+    @selfefficacy emphasizes $theory belief_in_capability
+    @selfefficacy affects $theory motivation_and_performance
+    @learning involves $theory observational_learning
+    @agency emphasizes $theory human_agency
+    return Implies($theory, reciprocalInteraction($theory))
+end
+
+# --- Motivation Theories ---
+isA MaslowHierarchy MotivationTheory
+isA DriveReductionTheory MotivationTheory
+isA ArousalTheory MotivationTheory
+isA IncentiveTheory MotivationTheory
+isA SelfDeterminationTheory MotivationTheory
+
+@:Motivation_Maslow graph
+    @theory isA MaslowHierarchy MotivationTheory
+    @structure organized $theory hierarchical_pyramid
+    @level1 base $theory physiological_needs
+    @level2 above $theory safety_needs
+    @level3 above $theory love_belonging
+    @level4 above $theory esteem_needs
+    @level5 top $theory self_actualization
+    @principle states $theory lower_must_be_met_first
+    @selfactualization represents $theory peak_of_growth
+    @criticism faces $theory lack_of_empirical_support
+    return Implies($theory, needHierarchy($theory))
+end
+
+@:Motivation_SelfDetermination graph
+    @theory isA SelfDeterminationTheory MotivationTheory
+    @founder developed DeciRyan $theory
+    @need requires $theory autonomy
+    @need requires $theory competence
+    @need requires $theory relatedness
+    @intrinsic superior $theory intrinsic_motivation
+    @extrinsic can_undermine $theory extrinsic_rewards
+    @support environmental $theory satisfaction_of_needs
+    return Implies($theory, intrinsicMotivation($theory))
+end
+
+# --- Social Psychology Concepts ---
+isA Attribution SocialConcept
+isA Conformity SocialConcept
+isA Obedience SocialConcept
+isA GroupThink SocialConcept
+isA CognitiveDissonance SocialConcept
+
+@:Social_AttributionTheory graph
+    @theory describes AttributionTheory causal_explanations
+    @internal attributes $theory dispositional_factors
+    @external attributes $theory situational_factors
+    @bias shows $theory fundamental_attribution_error
+    @FAE overestimates $theory dispositional_causes
+    @selfserving shows $theory self_serving_bias
+    @actor differs $theory actor_observer_difference
+    return Implies($theory, causalAttribution($theory))
+end
+
+@:Social_CognitiveDissonance graph
+    @theory isA CognitiveDissonance SocialConcept
+    @founder proposed Festinger $theory
+    @discomfort occurs $theory inconsistent_cognitions
+    @motivation drives $theory reduce_dissonance
+    @strategies includes $theory change_behavior
+    @strategies includes $theory change_belief
+    @strategies includes $theory add_cognitions
+    @famous demonstrates $theory induced_compliance
+    @famous demonstrates $theory post_decision_dissonance
+    return Implies($theory, consistencyMotivation($theory))
+end
+
+@:Social_Conformity graph
+    @concept isA Conformity SocialConcept
+    @definition involves $concept matching_group_behavior
+    @normative based $concept desire_for_acceptance
+    @informational based $concept desire_for_accuracy
+    @famous studied Asch $concept
+    @asch demonstrated $concept line_judgment_task
+    @factors increases $concept group_size_unanimity
+    @factors decreases $concept presence_of_ally
+    return Implies($concept, groupInfluence($concept))
+end
+
+@:Social_Obedience graph
+    @concept isA Obedience SocialConcept
+    @definition involves $concept following_authority
+    @famous studied Milgram $concept
+    @milgram demonstrated $concept shock_experiment
+    @finding showed $concept high_obedience_rate
+    @factors increases $concept proximity_to_authority
+    @factors increases $concept legitimacy_of_authority
+    @factors decreases $concept proximity_to_victim
+    @ethical raised $concept ethical_concerns
+    return Implies($concept, authorityCompliance($concept))
+end
+
+# --- Therapeutic Approaches ---
+isA CognitiveBehavioralTherapy TherapyApproach
+isA PsychodynamicTherapy TherapyApproach
+isA HumanisticTherapy TherapyApproach
+isA BehaviorTherapy TherapyApproach
+
+@:Therapy_CBT graph
+    @therapy isA CognitiveBehavioralTherapy TherapyApproach
+    @founder developed Beck $therapy
+    @founder developed Ellis $therapy
+    @focus targets $therapy thoughts_and_behaviors
+    @assumption states $therapy thoughts_affect_feelings
+    @technique uses $therapy cognitive_restructuring
+    @technique uses $therapy behavioral_activation
+    @technique uses $therapy exposure
+    @evidence has $therapy strong_empirical_support
+    @application effective $therapy depression_anxiety
+    return Implies($therapy, cognitiveChange($therapy))
+end
+
+@:Therapy_Psychodynamic graph
+    @therapy isA PsychodynamicTherapy TherapyApproach
+    @roots derives $therapy psychoanalysis
+    @focus explores $therapy unconscious_conflicts
+    @focus explores $therapy past_relationships
+    @technique uses $therapy free_association
+    @technique uses $therapy transference_interpretation
+    @technique uses $therapy defense_analysis
+    @goal achieves $therapy insight
+    @duration typically $therapy long_term
+    return Implies($therapy, insightOriented($therapy))
+end
+
+@:Therapy_Humanistic graph
+    @therapy isA HumanisticTherapy TherapyApproach
+    @founder developed Rogers $therapy
+    @also_called known $therapy person_centered
+    @focus emphasizes $therapy present_experience
+    @focus emphasizes $therapy growth_potential
+    @conditions requires $therapy unconditional_positive_regard
+    @conditions requires $therapy empathy
+    @conditions requires $therapy genuineness
+    @client emphasizes $therapy self_direction
+    @nondirective uses $therapy reflective_listening
+    return Implies($therapy, clientCentered($therapy))
+end
+
+# --- Stress and Coping ---
+isA ProblemFocusedCoping CopingStrategy
+isA EmotionFocusedCoping CopingStrategy
+
+@:Stress_Coping graph
+    @problemfocused isA ProblemFocusedCoping CopingStrategy
+    @emotionfocused isA EmotionFocusedCoping CopingStrategy
+    @problemfocused targets $problemfocused stressor_directly
+    @problemfocused effective $problemfocused controllable_stressors
+    @emotionfocused targets $emotionfocused emotional_response
+    @emotionfocused effective $emotionfocused uncontrollable_stressors
+    @flexibility optimal $emotionfocused situation_appropriate
+    return Implies(coping, copingStrategies(coping))
+end
+
+@:Stress_Response graph
+    @response describes StressResponse fight_or_flight
+    @activates triggers StressResponse sympathetic_nervous_system
+    @hormonal releases StressResponse adrenaline_cortisol
+    @adaptive serves StressResponse survival_function
+    @chronic causes StressResponse health_problems
+    @GAS describes Selye general_adaptation_syndrome
+    @phases includes GAS alarm_resistance_exhaustion
+    return Implies(StressResponse, physiologicalActivation(StressResponse))
+end
+
+# Additional complex relationships
+@:EmotionCognitionLink graph
+    @emotion isA BasicEmotion
+    @cognition isA CognitiveProcess
+    @emotion influences @cognition
+    @cognition influences @emotion
+    @bidirectional relationship $emotion $cognition
+    return Implies(@emotion, affects(@cognition))
+end
+
+@:DisorderTreatmentLink graph
+    @disorder isA PsychologicalDisorder
+    @treatment isA TherapyApproach
+    @evidence supports $treatment $disorder
+    @outcome measured $treatment symptom_reduction
+    return Implies($treatment, effective($disorder))
+end
+
+@:DevelopmentCultureLink graph
+    @development isA DevelopmentalStage
+    @culture influences $development expression
+    @culture influences $development timing
+    @universal core $development milestones
+    @variation shows $development cultural_differences
+    return Implies($development, culturalContext($development))
+end

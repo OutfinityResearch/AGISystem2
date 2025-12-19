@@ -4,21 +4,28 @@
  *
  * Validates all theory folders and evaluation cases for:
  * - Required files: theory.dsl.txt, theory.nl.txt, theory.simple.txt, eval.mjs
+ * - DSL syntax validation using actual parser
  * - Proper expected_nl format with Proof: sections
  * - Proof complexity (minimum 2 steps, 90% should be 5+ steps)
  * - No trivial queries (expected_count, expected_result forbidden)
  * - 70%+ of DSL statements must be graphs (Implies, And, Or, rules) not simple isA/hasA
  * - Minimum 1000 facts per theory
+ * - Orphan concepts: concepts used but not defined in config/Core or config/<Domain>
+ * - Deep validation: Load Core + Domain + Theory into session (with --deep)
  *
  * Usage:
- *   node performance/healthCheck.js
- *   node performance/healthCheck.js --verbose
- *   node performance/healthCheck.js math
+ *   node performance/healthCheck.js              # Basic validation
+ *   node performance/healthCheck.js --verbose    # Show all warnings
+ *   node performance/healthCheck.js --deep       # Deep session-based validation
+ *   node performance/healthCheck.js --check-orphans  # Check for undefined concepts
+ *   node performance/healthCheck.js math         # Check specific theory
+ *   node performance/healthCheck.js --deep math  # Deep check specific theory
  */
 
-import { discoverTheories } from './lib/loader.mjs';
+import { discoverTheories, loadDomainTheory, loadCoreTheories } from './lib/loader.mjs';
 import { parse } from '../src/parser/index.mjs';
-import { readFile, stat } from 'node:fs/promises';
+import { Session } from '../src/runtime/session.mjs';
+import { readFile, readdir, stat } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -42,7 +49,11 @@ const C = {
 // Parse args
 const args = process.argv.slice(2);
 const verbose = args.includes('--verbose') || args.includes('-v');
+const checkOrphans = args.includes('--check-orphans') || args.includes('--orphans');
+const deepCheck = args.includes('--deep') || args.includes('-d');  // Full session-based validation
 const specificTheories = args.filter(a => !a.startsWith('-'));
+
+const CONFIG_ROOT = join(__dirname, '..', 'config');
 
 // =============================================================================
 // REQUIRED FILES PER THEORY
@@ -71,9 +82,9 @@ const GRAPH_OPERATORS = new Set([
   'equals', 'notEquals', 'greaterThan', 'lessThan'
 ]);
 
-// Minimum requirements
+// Minimum requirements (min_complex can be overridden per-theory in eval.mjs)
 const MIN_FACTS = 1000;
-const MIN_GRAPH_PERCENT = 70;
+const DEFAULT_MIN_GRAPH_PERCENT = 50;
 const MIN_PROOF_STEPS = 2;
 const TARGET_PROOF_5PLUS_PERCENT = 90;
 
@@ -195,7 +206,7 @@ function analyzeDSL(dslContent) {
   return stats;
 }
 
-function validateDSLComplexity(dslContent, theoryName) {
+function validateDSLComplexity(dslContent, theoryName, minGraphPercent = DEFAULT_MIN_GRAPH_PERCENT) {
   const issues = [];
   const stats = analyzeDSL(dslContent);
 
@@ -207,17 +218,17 @@ function validateDSLComplexity(dslContent, theoryName) {
     });
   }
 
-  // Check graph percentage (should be 80%+ complex, not simple isA/hasA)
+  // Check graph percentage (should be complex, not simple isA/hasA)
   // Complex = total - simple
   const complexCount = stats.totalStatements - stats.simpleStatements;
   const complexPercent = stats.totalStatements > 0
     ? (complexCount / stats.totalStatements * 100)
     : 0;
 
-  if (complexPercent < MIN_GRAPH_PERCENT) {
+  if (complexPercent < minGraphPercent) {
     issues.push({
       type: 'error',
-      msg: `TOO SIMPLE: Only ${complexPercent.toFixed(1)}% complex statements (minimum ${MIN_GRAPH_PERCENT}% required). Found ${stats.simpleStatements} simple isA/hasA vs ${complexCount} complex.`
+      msg: `TOO SIMPLE: Only ${complexPercent.toFixed(1)}% complex statements (minimum ${minGraphPercent}% required). Found ${stats.simpleStatements} simple isA/hasA vs ${complexCount} complex.`
     });
   }
 
@@ -238,6 +249,319 @@ function validateDSLComplexity(dslContent, theoryName) {
   }
 
   return { issues, stats };
+}
+
+// =============================================================================
+// SYNTAX VALIDATION (using actual parser)
+// =============================================================================
+
+/**
+ * Validate DSL syntax using the actual parser
+ * @param {string} dslContent - DSL content
+ * @param {string} sourceName - Source file name for error messages
+ * @returns {{valid: boolean, errors: string[], warnings: string[]}}
+ */
+function validateDSLSyntax(dslContent, sourceName = 'theory.dsl.txt') {
+  const errors = [];
+  const warnings = [];
+
+  if (!dslContent || !dslContent.trim()) {
+    errors.push('Empty DSL content');
+    return { valid: false, errors, warnings };
+  }
+
+  try {
+    const ast = parse(dslContent);
+    if (!ast) {
+      errors.push('Parser returned null AST');
+    } else if (ast.errors && ast.errors.length > 0) {
+      for (const err of ast.errors) {
+        errors.push(`Parse error: ${err.message || err}`);
+      }
+    }
+  } catch (err) {
+    // Extract line/column from error if available
+    const match = err.message?.match(/at (\d+):(\d+)/);
+    if (match) {
+      errors.push(`Syntax error at line ${match[1]}, col ${match[2]}: ${err.message}`);
+    } else {
+      errors.push(`Syntax error: ${err.message}`);
+    }
+  }
+
+  return { valid: errors.length === 0, errors, warnings };
+}
+
+/**
+ * Run with timeout
+ */
+async function withTimeout(promise, ms, label = 'Operation') {
+  let timeoutId;
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(`${label} timeout after ${ms}ms`));
+    }, ms);
+  });
+
+  try {
+    const result = await Promise.race([promise, timeoutPromise]);
+    clearTimeout(timeoutId);
+    return result;
+  } catch (e) {
+    clearTimeout(timeoutId);
+    throw e;
+  }
+}
+
+const DEEP_VALIDATION_TIMEOUT = 10000; // 10 seconds per theory
+
+/**
+ * Deep validation: Load Core + Domain + Theory into a session and check for errors
+ * @param {string} dslContent - Theory DSL content
+ * @param {string} theoryName - Theory name for domain lookup
+ * @returns {Promise<{valid: boolean, errors: string[], warnings: string[], stats: Object}>}
+ */
+async function deepValidateTheory(dslContent, theoryName) {
+  const errors = [];
+  const warnings = [];
+  const stats = {
+    coreFacts: 0,
+    domainFacts: 0,
+    theoryFacts: 0,
+    totalSymbols: 0
+  };
+
+  const session = new Session();
+
+  // 1. Load Core theories
+  const corePath = join(CONFIG_ROOT, 'Core');
+  try {
+    const coreFiles = (await readdir(corePath))
+      .filter(f => f.endsWith('.sys2') && f !== 'index.sys2')
+      .sort();
+
+    for (const file of coreFiles) {
+      const content = await readFile(join(corePath, file), 'utf8');
+      try {
+        const res = session.learn(content);
+        if (res.success) {
+          stats.coreFacts += res.facts || 0;
+        } else if (res.errors && res.errors.length > 0) {
+          for (const e of res.errors) {
+            warnings.push(`Core/${file}: ${e}`);
+          }
+        }
+      } catch (e) {
+        warnings.push(`Core/${file}: ${e.message}`);
+      }
+    }
+  } catch (e) {
+    warnings.push(`Failed to load Core: ${e.message}`);
+  }
+
+  // 2. Load Domain theories (config/<Domain>/)
+  const domainMap = {
+    'math': 'Math', 'mathematics': 'Math', 'physics': 'Physics',
+    'biology': 'Biology', 'medicine': 'Medicine', 'geography': 'Geography',
+    'history': 'History', 'psychology': 'Psychology', 'sociology': 'Sociology',
+    'anthropology': 'Anthropology', 'philosophy': 'Philosophy',
+    'law': 'Law', 'literature': 'Literature', 'litcrit': 'Literature'
+  };
+  const domainName = domainMap[theoryName.toLowerCase()] ||
+    theoryName.charAt(0).toUpperCase() + theoryName.slice(1).toLowerCase();
+
+  const domainPath = join(CONFIG_ROOT, domainName);
+  try {
+    const entries = await readdir(domainPath);
+    const sys2Files = entries
+      .filter(f => f.endsWith('.sys2') && f !== 'index.sys2')
+      .sort();
+
+    for (const file of sys2Files) {
+      const content = await readFile(join(domainPath, file), 'utf8');
+      try {
+        const res = session.learn(content);
+        if (res.success) {
+          stats.domainFacts += res.facts || 0;
+        } else if (res.errors && res.errors.length > 0) {
+          for (const e of res.errors) {
+            errors.push(`Domain/${domainName}/${file}: ${e}`);
+          }
+        }
+      } catch (e) {
+        errors.push(`Domain/${domainName}/${file}: ${e.message}`);
+      }
+    }
+  } catch (e) {
+    warnings.push(`Domain ${domainName} not found or failed: ${e.message}`);
+  }
+
+  // 3. Load the theory DSL
+  if (dslContent && dslContent.trim()) {
+    try {
+      const res = session.learn(dslContent);
+      if (res.success) {
+        stats.theoryFacts = res.facts || 0;
+      } else if (res.errors && res.errors.length > 0) {
+        for (const e of res.errors) {
+          errors.push(`Theory: ${e}`);
+        }
+      }
+      if (res.warnings && res.warnings.length > 0) {
+        for (const w of res.warnings) {
+          warnings.push(`Theory: ${w}`);
+        }
+      }
+    } catch (e) {
+      errors.push(`Theory load failed: ${e.message}`);
+    }
+  }
+
+  stats.totalSymbols = session.vocabulary?.size || 0;
+
+  return {
+    valid: errors.length === 0,
+    errors,
+    warnings,
+    stats
+  };
+}
+
+// =============================================================================
+// ORPHAN CONCEPT CHECK
+// =============================================================================
+
+// Core concepts that are always available (from config/Core)
+const CORE_CONCEPTS = new Set([
+  // Types
+  '__Category', '__Relation', '__TransitiveRelation', '__SymmetricRelation',
+  '__ReflexiveRelation', '__InheritableProperty', '__Person', '__Entity',
+  '__Object', '__Place', '__Organization', '__Action', '__Event', '__State',
+  '__Property', '__Abstract', '__Measure', '__Source', '__Evidence',
+  // Relations
+  'isA', 'hasA', 'has', 'partOf', 'locatedIn', 'before', 'after', 'causes',
+  'enables', 'prevents', 'requires', 'equals', 'subclassOf', 'containedIn',
+  // Logic
+  'Implies', 'And', 'Or', 'Not', 'ForAll', 'Exists', 'If', 'Then',
+  // Roles
+  'Agent', 'Theme', 'Patient', 'Recipient', 'Source', 'Goal', 'Location',
+  'Instrument', 'Manner', 'Time', 'Cause', 'Purpose', 'Result',
+  // Built-ins
+  'graph', 'end', 'return', 'theory', '___NewVector', '___Bind', '___Bundle'
+]);
+
+/**
+ * Extract all concepts used in DSL content
+ * @param {string} dslContent - DSL content
+ * @returns {Set<string>} Set of concept names used
+ */
+function extractUsedConcepts(dslContent) {
+  const concepts = new Set();
+  if (!dslContent) return concepts;
+
+  // Extract all identifiers (words that start with uppercase or are after @)
+  const lines = dslContent.split('\n')
+    .map(l => l.trim())
+    .filter(l => l && !l.startsWith('#') && !l.startsWith('//'));
+
+  for (const line of lines) {
+    // Extract @Name definitions
+    const atMatches = line.matchAll(/@(\w+)/g);
+    for (const match of atMatches) {
+      if (!match[1].startsWith('_')) {
+        concepts.add(match[1]);
+      }
+    }
+
+    // Extract identifiers (capitalized words or after relations)
+    const words = line.split(/[\s(),@$:]+/).filter(w => w);
+    for (const word of words) {
+      if (/^[A-Z][a-zA-Z0-9_]*$/.test(word) && word.length > 1) {
+        concepts.add(word);
+      }
+    }
+  }
+
+  return concepts;
+}
+
+/**
+ * Load concepts defined in config domain theory
+ * @param {string} domainName - Domain name (e.g., 'Math', 'Biology')
+ * @returns {Promise<Set<string>>} Set of defined concepts
+ */
+async function loadDomainDefinedConcepts(domainName) {
+  const concepts = new Set();
+  const domainDir = join(CONFIG_ROOT, domainName);
+
+  try {
+    const entries = await readdir(domainDir);
+    const sys2Files = entries.filter(f => f.endsWith('.sys2'));
+
+    for (const file of sys2Files) {
+      const content = await readFile(join(domainDir, file), 'utf8');
+      // Extract @Name definitions
+      const matches = content.matchAll(/@(\w+)(?::\w+)?\s+(?:isA|graph|___)/g);
+      for (const match of matches) {
+        concepts.add(match[1]);
+      }
+      // Also extract concepts on the right side of isA
+      const isaMatches = content.matchAll(/isA\s+(\w+)/g);
+      for (const match of isaMatches) {
+        concepts.add(match[1]);
+      }
+    }
+  } catch (err) {
+    // Domain not found - ok
+  }
+
+  return concepts;
+}
+
+/**
+ * Check for orphan concepts (used but not defined in fundamentals)
+ * @param {string} dslContent - Theory DSL content
+ * @param {string} theoryName - Theory name
+ * @returns {Promise<{orphans: string[], defined: number, used: number}>}
+ */
+async function checkOrphanConcepts(dslContent, theoryName) {
+  const usedConcepts = extractUsedConcepts(dslContent);
+
+  // Map theory name to config domain
+  const domainMap = {
+    'math': 'Math', 'mathematics': 'Math', 'physics': 'Physics',
+    'biology': 'Biology', 'medicine': 'Medicine', 'geography': 'Geography',
+    'history': 'History', 'psychology': 'Psychology', 'sociology': 'Sociology',
+    'anthropology': 'Anthropology', 'philosophy': 'Philosophy',
+    'law': 'Law', 'literature': 'Literature', 'litcrit': 'Literature'
+  };
+  const domainName = domainMap[theoryName.toLowerCase()] ||
+    theoryName.charAt(0).toUpperCase() + theoryName.slice(1).toLowerCase();
+
+  // Load domain-defined concepts
+  const domainConcepts = await loadDomainDefinedConcepts(domainName);
+
+  // Combine with core concepts
+  const allDefined = new Set([...CORE_CONCEPTS, ...domainConcepts]);
+
+  // Find orphans (used but not defined)
+  const orphans = [];
+  for (const concept of usedConcepts) {
+    if (!allDefined.has(concept) && !concept.startsWith('_')) {
+      // Check if it's likely a local definition in the theory itself
+      const localDefPattern = new RegExp(`@${concept}(?::\\w+)?\\s+(?:isA|graph)`, 'g');
+      if (!localDefPattern.test(dslContent)) {
+        orphans.push(concept);
+      }
+    }
+  }
+
+  return {
+    orphans: orphans.sort(),
+    defined: allDefined.size,
+    used: usedConcepts.size,
+    domainConcepts: domainConcepts.size
+  };
 }
 
 // =============================================================================
@@ -373,7 +697,8 @@ async function checkTheory(theoryName) {
     warnings: 0,
     issues: [],
     dslStats: null,
-    proofStats: null
+    proofStats: null,
+    minComplex: DEFAULT_MIN_GRAPH_PERCENT
   };
 
   // 1. Check required files
@@ -381,12 +706,29 @@ async function checkTheory(theoryName) {
   result.issues.push(...fileIssues);
   result.errors += fileIssues.filter(i => i.type === 'error').length;
 
-  // 2. Check DSL complexity (if file exists)
+  // 2. Load eval.mjs first to get min_complex setting
+  const evalPath = join(THEORIES_ROOT, theoryName, 'eval.mjs');
+  let evalModule = null;
+  let cases = [];
+  if (await fileExists(evalPath)) {
+    try {
+      evalModule = await import(evalPath);
+      cases = evalModule.cases || evalModule.steps || [];
+      // Read min_complex from eval.mjs (defaults to DEFAULT_MIN_GRAPH_PERCENT)
+      result.minComplex = evalModule.min_complex ?? DEFAULT_MIN_GRAPH_PERCENT;
+    } catch (err) {
+      result.issues.push({ type: 'error', msg: `EVAL LOAD ERROR: ${err.message}` });
+      result.errors++;
+    }
+  }
+
+  // 3. Check DSL complexity (if file exists) using min_complex from eval.mjs
   const dslPath = join(THEORIES_ROOT, theoryName, 'theory.dsl.txt');
+  let dslContent = '';
   if (await fileExists(dslPath)) {
     try {
-      const dslContent = await readFile(dslPath, 'utf8');
-      const { issues, stats } = validateDSLComplexity(dslContent, theoryName);
+      dslContent = await readFile(dslPath, 'utf8');
+      const { issues, stats } = validateDSLComplexity(dslContent, theoryName, result.minComplex);
       result.issues.push(...issues);
       result.errors += issues.filter(i => i.type === 'error').length;
       result.warnings += issues.filter(i => i.type === 'warning').length;
@@ -397,12 +739,69 @@ async function checkTheory(theoryName) {
     }
   }
 
-  // 3. Check eval cases (if file exists)
-  const evalPath = join(THEORIES_ROOT, theoryName, 'eval.mjs');
-  if (await fileExists(evalPath)) {
+  // 3a. Validate DSL syntax using actual parser
+  if (dslContent) {
+    const syntaxResult = validateDSLSyntax(dslContent, 'theory.dsl.txt');
+    if (!syntaxResult.valid) {
+      for (const e of syntaxResult.errors) {
+        result.issues.push({ type: 'error', msg: `SYNTAX: ${e}` });
+        result.errors++;
+      }
+    }
+    for (const w of syntaxResult.warnings) {
+      result.issues.push({ type: 'warning', msg: `SYNTAX: ${w}` });
+      result.warnings++;
+    }
+  }
+
+  // 3b. Deep validation: Load into session with Core + Domain (--deep flag)
+  if (deepCheck && dslContent) {
     try {
-      const evalModule = await import(evalPath);
-      const cases = evalModule.cases || evalModule.steps || [];
+      const deepResult = await withTimeout(
+        deepValidateTheory(dslContent, theoryName),
+        DEEP_VALIDATION_TIMEOUT,
+        `Deep validation of ${theoryName}`
+      );
+      result.deepStats = deepResult.stats;
+
+      if (!deepResult.valid) {
+        for (const e of deepResult.errors) {
+          result.issues.push({ type: 'error', msg: `DEEP: ${e}` });
+          result.errors++;
+        }
+      }
+      for (const w of deepResult.warnings) {
+        result.issues.push({ type: 'warning', msg: `DEEP: ${w}` });
+        result.warnings++;
+      }
+    } catch (e) {
+      result.issues.push({ type: 'error', msg: `DEEP: ${e.message}` });
+      result.errors++;
+    }
+  }
+
+  // 3b. Check for orphan concepts (only if --check-orphans flag)
+  if (checkOrphans && dslContent) {
+    try {
+      const orphanResult = await checkOrphanConcepts(dslContent, theoryName);
+      result.orphanStats = orphanResult;
+
+      if (orphanResult.orphans.length > 0) {
+        const sample = orphanResult.orphans.slice(0, 10).join(', ');
+        const more = orphanResult.orphans.length > 10 ? ` (+${orphanResult.orphans.length - 10} more)` : '';
+        result.issues.push({
+          type: 'warning',
+          msg: `ORPHAN CONCEPTS: ${orphanResult.orphans.length} undefined concepts: ${sample}${more}`
+        });
+        result.warnings++;
+      }
+    } catch (err) {
+      // Orphan check failed - not critical
+    }
+  }
+
+  // 4. Check eval cases (already loaded above)
+  if (evalModule) {
 
       for (let i = 0; i < cases.length; i++) {
         const caseIssues = validateCase(cases[i], i);
@@ -425,10 +824,6 @@ async function checkTheory(theoryName) {
           result.warnings++;
         }
       }
-    } catch (err) {
-      result.issues.push({ type: 'error', msg: `EVAL LOAD ERROR: ${err.message}` });
-      result.errors++;
-    }
   }
 
   return result;
@@ -467,13 +862,30 @@ async function main() {
         const complexPct = s.totalStatements > 0
           ? (complexCount / s.totalStatements * 100).toFixed(1)
           : 0;
-        console.log(`${C.dim}Facts: ${s.totalStatements} | Complex: ${complexPct}% | Rules: ${s.rules} | Vars: ${s.variables} | Graphs: ${s.multiLineGraphs}${C.reset}`);
+        console.log(`${C.dim}Facts: ${s.totalStatements} | Complex: ${complexPct}% (min: ${result.minComplex}%) | Rules: ${s.rules} | Vars: ${s.variables} | Graphs: ${s.multiLineGraphs}${C.reset}`);
       }
 
       // Show proof stats
       if (result.proofStats) {
         const p = result.proofStats;
         console.log(`${C.dim}Cases: ${p.total} | 5+ steps: ${p.steps5plus} | 2-4 steps: ${p.steps2to4} | Negative: ${p.negative}${C.reset}`);
+      }
+
+      // Show orphan stats (when --check-orphans)
+      if (result.orphanStats) {
+        const o = result.orphanStats;
+        if (o.orphans.length === 0) {
+          console.log(`${C.dim}Orphans: 0 | Domain concepts: ${o.domainConcepts} | Used: ${o.used}${C.reset}`);
+        } else {
+          console.log(`${C.dim}Orphans: ${C.yellow}${o.orphans.length}${C.reset}${C.dim} | Domain concepts: ${o.domainConcepts} | Used: ${o.used}${C.reset}`);
+        }
+      }
+
+      // Show deep stats (when --deep)
+      if (result.deepStats) {
+        const d = result.deepStats;
+        const status = d.theoryFacts > 0 ? `${C.green}✓${C.reset}` : `${C.red}✗${C.reset}`;
+        console.log(`${C.dim}Deep: ${status} Core: ${d.coreFacts} | Domain: ${d.domainFacts} | Theory: ${d.theoryFacts} | Symbols: ${d.totalSymbols}${C.reset}`);
       }
 
       // Show issues

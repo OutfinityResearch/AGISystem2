@@ -1,0 +1,77 @@
+# History - Fundamental Concepts
+
+# Event Concepts
+@HistoricalEvent isA __Event
+@War isA __Event
+@Revolution isA __Event
+@Colonization isA __Event
+@Independence isA __Event
+@Reform isA __Event
+@Conquest isA __Event
+
+# Temporal Concepts
+@Period isA __Category
+@Era isA __Category
+@Age isA __Category
+@Epoch isA __Category
+@Dynasty isA __Category
+@Century isA __Category
+@Decade isA __Category
+
+# Historical Actors
+@Actor isA __Category
+@Empire isA __Entity
+@Monarch isA __Person
+@Leader isA __Person
+@Institution isA __Entity
+@Civilization isA __Entity
+@StateActor isA __Entity
+
+# Political Forms
+@GovernmentForm isA __Category
+@Democracy isA __Category
+@Monarchy isA __Category
+@Republic isA __Category
+@Dictatorship isA __Category
+@Theocracy isA __Category
+
+# Source Concepts
+@Treaty isA __Category
+@PrimarySource isA __Category
+@SecondarySource isA __Category
+@Artifact isA __Category
+@Document isA __Category
+@Chronicle isA __Category
+@Archive isA __Category
+
+# Analytical Concepts
+@Chronology isA __Category
+@Interpretation isA __Category
+@Bias isA __Category
+@Continuity isA __Category
+@Rupture isA __Category
+@Change isA __Category
+@Causation isA __Category
+
+# Social Movements
+@SocialMovement isA __Category
+@ReformMovement isA __Category
+@RevolutionaryMovement isA __Category
+@NationalistMovement isA __Category
+@ReligiousMovement isA __Category
+
+# Economic Concepts
+@EconomicSystem isA __Category
+@Feudalism isA __Category
+@Capitalism isA __Category
+@Socialism isA __Category
+@Trade isA __Category
+@Commerce isA __Category
+
+# Cultural Concepts
+@CulturalMovement isA __Category
+@Renaissance isA __Category
+@Enlightenment isA __Category
+@Tradition isA __Category
+@Innovation isA __Category
+@Heritage isA __Category

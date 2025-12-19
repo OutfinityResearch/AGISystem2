@@ -22,7 +22,7 @@ import { TRANSITIVE_RELATIONS } from './transitive.mjs';
 // Import sub-modules
 import { searchHDC, isValidEntity, RESERVED } from './query-hdc.mjs';
 import { searchKBDirect, isTypeClass, isFactNegated, sameBindings, filterTypeClasses, filterNegated, searchBundlePattern } from './query-kb.mjs';
-import { searchTransitive, isTransitiveRelation } from './query-transitive.mjs';
+import { searchTransitive, isTransitiveRelation, findAllTransitiveTargets } from './query-transitive.mjs';
 import { searchViaRules } from './query-rules.mjs';
 import { searchCompoundSolutions } from './query-compound.mjs';
 import { debug_trace } from '../utils/debug.js';
@@ -31,6 +31,7 @@ import { debug_trace } from '../utils/debug.js';
 import {
   searchSimilar as searchSimilarOp,
   searchPropertyInheritance as searchPropertyInheritanceOp,
+  searchPropertyInheritanceByValue as searchPropertyInheritanceByValueOp,
   isPropertyNegated,
   getAllParentTypes,
   entityIsA as entityIsAOp,
@@ -214,20 +215,120 @@ export class QueryEngine {
     }
     dbg('RULES', `Found ${ruleMatches.length} rule-derived matches`);
 
-    // SOURCE 4.5: Property Inheritance (can/has/likes etc. through isA chain)
-    const inheritableOps = new Set(['can', 'has', 'likes', 'knows', 'owns', 'uses']);
-    if (inheritableOps.has(operatorName) && knowns.length === 1 && holes.length === 1 && knowns[0].index === 1) {
+    // SOURCE 4.5: Property Inheritance (can/has/likes/etc. through isA chain)
+    const inheritableOps = new Set([
+      'can', 'has', 'likes', 'knows', 'owns', 'uses',
+      'hasProperty', 'hasAbility', 'hasTrait', 'exhibits',
+      'causes', 'prevents', 'enables', 'requires',
+      'must', 'should', 'may'
+    ]);
+    const isInheritable = this.session?.useSemanticIndex && this.session?.semanticIndex?.isInheritableProperty
+      ? this.session.semanticIndex.isInheritableProperty(operatorName)
+      : inheritableOps.has(operatorName);
+
+    if (isInheritable && knowns.length === 1 && holes.length === 1) {
+      if (knowns[0].index === 1) {
+        const entityName = knowns[0].name;
+        const inheritMatches = searchPropertyInheritanceOp(this.session, operatorName, entityName, holes[0].name);
+        for (const im of inheritMatches) {
+          const exists = allResults.some(r =>
+            sameBindings(r.bindings, im.bindings, holes)
+          );
+          if (!exists) {
+            allResults.push(im);
+          }
+        }
+        dbg('INHERIT', `Found ${inheritMatches.length} property inheritance matches`);
+      } else if (knowns[0].index === 2) {
+        const valueName = knowns[0].name;
+        const inheritMatches = searchPropertyInheritanceByValueOp(this.session, operatorName, valueName, holes[0].name);
+        for (const im of inheritMatches) {
+          const exists = allResults.some(r =>
+            sameBindings(r.bindings, im.bindings, holes)
+          );
+          if (!exists) {
+            allResults.push(im);
+          }
+        }
+        dbg('INHERIT', `Found ${inheritMatches.length} property inheritance matches`);
+      }
+    }
+
+    // SOURCE 4.6: Element propagation via subsetOf (x ∈ A and A ⊆ B => x ∈ B)
+    if (operatorName === 'elementOf' && knowns.length === 1 && holes.length === 1 && knowns[0].index === 1) {
       const entityName = knowns[0].name;
-      const inheritMatches = searchPropertyInheritanceOp(this.session, operatorName, entityName, holes[0].name);
-      for (const im of inheritMatches) {
-        const exists = allResults.some(r =>
-          sameBindings(r.bindings, im.bindings, holes)
-        );
-        if (!exists) {
-          allResults.push(im);
+      const componentKB = this.session?.componentKB;
+      const baseSets = new Set();
+
+      if (componentKB) {
+        const facts = componentKB.findByOperatorAndArg0('elementOf', entityName);
+        for (const fact of facts) {
+          if (fact.args?.[1]) baseSets.add(fact.args[1]);
+        }
+      } else {
+        for (const fact of this.session.kbFacts) {
+          const meta = fact.metadata;
+          if (meta?.operator === 'elementOf' && meta.args?.[0] === entityName && meta.args?.[1]) {
+            baseSets.add(meta.args[1]);
+          }
         }
       }
-      dbg('INHERIT', `Found ${inheritMatches.length} property inheritance matches`);
+
+      for (const baseSet of baseSets) {
+        const targets = findAllTransitiveTargets(this.session, 'subsetOf', baseSet);
+        for (const target of targets) {
+          const steps = [`elementOf ${entityName} ${baseSet}`, ...target.steps];
+          const factBindings = new Map();
+          factBindings.set(holes[0].name, {
+            answer: target.value,
+            similarity: 0.85 - (target.depth * 0.05),
+            method: 'rule_derived',
+            steps
+          });
+
+          const exists = allResults.some(r =>
+            sameBindings(r.bindings, factBindings, holes)
+          );
+          if (!exists) {
+            allResults.push({
+              bindings: factBindings,
+              score: 0.85 - (target.depth * 0.05),
+              method: 'rule_derived',
+              steps
+            });
+          }
+        }
+      }
+      dbg('INHERIT', `Found ${baseSets.size} element propagation base sets`);
+    }
+
+    // SOURCE 4.7: Transitive implication results (P implies Q, Q implies R => P implies R)
+    if (operatorName === 'implies' && knowns.length === 1 && holes.length === 1 && knowns[0].index === 1) {
+      const antecedent = knowns[0].name;
+      const targets = findAllTransitiveTargets(this.session, 'implies', antecedent);
+      for (const target of targets) {
+        const factBindings = new Map();
+        factBindings.set(holes[0].name, {
+          answer: target.value,
+          similarity: 0.85 - (target.depth * 0.05),
+          method: 'transitive',
+          steps: target.steps
+        });
+
+        const exists = allResults.some(r =>
+          sameBindings(r.bindings, factBindings, holes)
+        );
+        if (!exists) {
+          allResults.push({
+            bindings: factBindings,
+            score: 0.85 - (target.depth * 0.05),
+            method: 'transitive',
+            depth: target.depth,
+            steps: target.steps
+          });
+        }
+      }
+      dbg('TRANSITIVE', `Found ${targets.length} transitive implies matches`);
     }
 
     // SOURCE 5: Compound CSP solutions (HDC-bundled multi-assignment solutions)

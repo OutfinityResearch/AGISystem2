@@ -1,0 +1,99 @@
+# Physics - Fundamental Concepts
+# Based on hardcoded_theory_analysis.md Section 8.2
+# Simple isA definitions only
+
+# ===== Quantity System =====
+Quantity isA __Category
+Mass isA __Property
+Mass isA Quantity
+Length isA __Property
+Length isA Quantity
+Time isA __Property
+Time isA Quantity
+Velocity isA __Property
+Velocity isA Quantity
+Acceleration isA __Property
+Acceleration isA Quantity
+Force isA __Property
+Force isA Quantity
+Energy isA __Property
+Energy isA Quantity
+Power isA __Property
+Power isA Quantity
+Charge isA __Property
+Charge isA Quantity
+
+# ===== Energy Hierarchy =====
+KineticEnergy isA Energy
+PotentialEnergy isA Energy
+ThermalEnergy isA Energy
+ElectromagneticEnergy isA Energy
+
+# ===== Unit System =====
+Unit isA __Category
+LengthUnit isA Unit
+Meter isA LengthUnit
+Kilometer isA LengthUnit
+Centimeter isA LengthUnit
+Millimeter isA LengthUnit
+TimeUnit isA Unit
+Second isA TimeUnit
+Minute isA TimeUnit
+Hour isA TimeUnit
+MassUnit isA Unit
+Kilogram isA MassUnit
+Gram isA MassUnit
+VelocityUnit isA Unit
+MeterPerSecond isA VelocityUnit
+KilometerPerHour isA VelocityUnit
+AccelerationUnit isA Unit
+MeterPerSecondSquared isA AccelerationUnit
+ForceUnit isA Unit
+Newton isA ForceUnit
+EnergyUnit isA Unit
+Joule isA EnergyUnit
+Calorie isA EnergyUnit
+PowerUnit isA Unit
+Watt isA PowerUnit
+ChargeUnit isA Unit
+Coulomb isA ChargeUnit
+
+# ===== Field Types =====
+Field isA __Category
+ElectricField isA Field
+MagneticField isA Field
+GravitationalField isA Field
+
+# ===== Conservation Laws =====
+ConservationLaw isA __Category
+EnergyConservation isA ConservationLaw
+MomentumConservation isA ConservationLaw
+ChargeConservation isA ConservationLaw
+AngularMomentumConservation isA ConservationLaw
+
+# ===== System Types =====
+System isA __Category
+IsolatedSystem isA System
+OpenSystem isA System
+ClosedSystem isA System
+
+# ===== Interaction Types =====
+Interaction isA __Category
+GravitationalInteraction isA Interaction
+ElectromagneticInteraction isA Interaction
+WeakInteraction isA Interaction
+StrongInteraction isA Interaction
+
+# ===== Boundary Conditions =====
+BoundaryCondition isA __Category
+DirichletBoundary isA BoundaryCondition
+NeumannBoundary isA BoundaryCondition
+PeriodicBoundary isA BoundaryCondition
+
+# ===== Measurement and Experiments =====
+Measurement isA __Category
+DirectMeasurement isA Measurement
+IndirectMeasurement isA Measurement
+Experiment isA __Category
+ControlledExperiment isA Experiment
+ObservationalExperiment isA Experiment

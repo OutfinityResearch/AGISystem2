@@ -1,3 +1,5 @@
+export const min_complex = 100;
+
 export const historyTests = [
     {
         name: "Egyptian civilization and Nile agriculture",

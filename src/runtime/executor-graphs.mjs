@@ -57,7 +57,11 @@ export function expandGraph(executor, graphName, args) {
       const paramName = graph.params[i];
       const argVec = i < args.length ? executor.resolveExpression(args[i]) : null;
       if (argVec) {
-        graphScope.set(paramName, argVec);
+        try {
+          graphScope.define(paramName, argVec);
+        } catch {
+          graphScope.set(paramName, argVec);
+        }
       }
     }
 
@@ -88,4 +92,3 @@ export function bindGraphInvocationResult(executor, stmt, graphResult) {
   const operatorVec = executor.resolveExpression(stmt.operator);
   return bind(operatorVec, graphResult);
 }
-

@@ -220,17 +220,20 @@ export default { name, description, theories, steps };
 | `input_dsl` | string | Yes | Equivalent DSL (reference for all actions) |
 | `expected_nl` | string (learn/prove), string[] (query) | Yes | Expected natural language response |
 | `proof_nl` | string (prove), string[] (query) | Conditional | Required for `query` and `prove`; omit for `learn` |
+| `alternative_proof_nl` | string (prove), string[] (query) | Optional | Alternate proof chain(s) accepted by runner (must match `proof_nl` shape) |
 
 **Note**: Step ordering is determined by array index - no explicit `step` field needed.
 
 **Proof Requirements**:
 - `expected_nl` MUST contain only the answer text (no "Proof:" or "Search:" sections).
 - For `prove`, `proof_nl` MUST describe the full reasoning chain or failure trace.
+- For `prove`, `alternative_proof_nl` MAY be provided as a fully valid alternative chain.
 - For `query`, `proof_nl` MUST be an array with one entry per answer, each entry containing the full reasoning chain that yields that answer (including all transitive links and rule applications).
 - For `query`, the number of answers in `expected_nl` MUST match the length of `proof_nl`.
 - For `query`, `expected_nl` MUST be an array with one answer per entry.
+- For `query`, `alternative_proof_nl` (if present) MUST mirror `proof_nl` length and structure.
 
-**Validation**: Both `expected_nl` and `proof_nl` are checked. `expected_nl` validates answers; `proof_nl` validates reasoning chains.
+**Validation**: `expected_nl` validates answers; `proof_nl` validates reasoning chains. If `alternative_proof_nl` is present, runner accepts either proof set as valid.
 
 ### 14.4.3 Action Types
 

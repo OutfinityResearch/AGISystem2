@@ -1,3 +1,5 @@
+export const min_complex = 99;
+
 export const tests = [
     {
         name: "Material culture encoding meaning",

@@ -201,7 +201,7 @@ export const steps = [
     input_nl: 'Can DrJones fly? (Human cannot fly without explicit fact)',
     input_dsl: '@goal can DrJones Fly',
     expected_nl: 'Cannot prove: DrJones can Fly.',
-    proof_nl: 'Search: DrJones isA Surgeon. Surgeon isA Specialist. Specialist isA Doctor. Doctor isA MedicalProfessional. MedicalProfessional isA Professional. Professional isA Worker. Worker isA Adult. Adult isA Person. Checked rule: Implies @humanThink @humanThinkC. Conditions could not be analyzed. No can Fly facts found in KB.'
+    proof_nl: 'Search: DrJones isA Surgeon. Surgeon isA Specialist. Specialist isA Doctor. Doctor isA MedicalProfessional. MedicalProfessional isA Professional. Professional isA Worker. Worker isA Adult. Adult isA Person. Checked rule: Implies @birdFly @birdFlyC. Missing: isA DrJones Bird. No can Fly facts found in KB.'
   },
 
   // === QUERY: Who can think ===
@@ -213,7 +213,7 @@ export const steps = [
       'Socrates can Think.'
     ],
     proof_nl: [
-      'Socrates isA Philosopher. Philosopher isA Thinker. Thinker isA Intellectual. Intellectual isA Human. Applied rule: Implies @humanThink @humanThinkC'
+      'isA Socrates Philosopher. isA Philosopher Thinker. isA Thinker Intellectual. isA Intellectual Human. Applied rule: Implies @humanThink @humanThinkC'
     ]
   }
 ];

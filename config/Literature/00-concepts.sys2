@@ -1,0 +1,118 @@
+# Literature - Fundamental Concepts
+
+# Literary Works
+Work isA __Category
+LiteraryWork isA Work
+Novel isA LiteraryWork
+Poetry isA LiteraryWork
+Drama isA LiteraryWork
+ShortStory isA LiteraryWork
+Essay isA LiteraryWork
+
+# Literary Actors
+Author isA __Category
+Poet isA Author
+Novelist isA Author
+Playwright isA Author
+Critic isA __Category
+Reader isA __Category
+
+# Genre Classification
+Genre isA __Category
+Fiction isA Genre
+NonFiction isA Genre
+Romance isA Fiction
+Mystery isA Fiction
+ScienceFiction isA Fiction
+Fantasy isA Fiction
+Biography isA NonFiction
+
+# Literary Elements
+Theme isA __Category
+Motif isA __Category
+Symbol isA __Category
+Imagery isA __Category
+Tone isA __Category
+Mood isA __Category
+
+# Narrative Structure
+Plot isA __Category
+Exposition isA Plot
+RisingAction isA Plot
+Climax isA Plot
+FallingAction isA Plot
+Resolution isA Plot
+Structure isA __Category
+
+# Character Concepts
+Character isA __Category
+Protagonist isA Character
+Antagonist isA Character
+FlatCharacter isA Character
+RoundCharacter isA Character
+DynamicCharacter isA Character
+StaticCharacter isA Character
+
+# Setting Concepts
+Setting isA __Category
+TemporalSetting isA Setting
+SpatialSetting isA Setting
+HistoricalSetting isA TemporalSetting
+ContemporarySetting isA TemporalSetting
+
+# Conflict Types
+Conflict isA __Category
+InternalConflict isA Conflict
+ExternalConflict isA Conflict
+PersonVsPerson isA ExternalConflict
+PersonVsSociety isA ExternalConflict
+PersonVsNature isA ExternalConflict
+PersonVsSelf isA InternalConflict
+
+# Narrative Techniques
+Narrator isA __Category
+FirstPerson isA Narrator
+ThirdPerson isA Narrator
+Omniscient isA ThirdPerson
+Limited isA ThirdPerson
+PointOfView isA __Category
+
+# Stylistic Devices
+Irony isA __Category
+DramaticIrony isA Irony
+VerbalIrony isA Irony
+SituationalIrony isA Irony
+Metaphor isA __Category
+Simile isA __Category
+Allegory isA __Category
+
+# Intertextuality
+Intertext isA __Category
+Allusion isA Intertext
+Parody isA Intertext
+Pastiche isA Intertext
+Reference isA Intertext
+
+# Critical Concepts
+Interpretation isA __Category
+Analysis isA __Category
+Claim isA __Category
+CounterClaim isA __Category
+Thesis isA Claim
+Argument isA __Category
+
+# Literary Movements
+LiteraryMovement isA __Category
+Romanticism isA LiteraryMovement
+Realism isA LiteraryMovement
+Modernism isA LiteraryMovement
+Postmodernism isA LiteraryMovement
+Naturalism isA LiteraryMovement
+
+# Critical Frameworks
+Framework isA __Category
+FeministCriticism isA Framework
+MarxistCriticism isA Framework
+PostcolonialCriticism isA Framework
+PsychoanalyticCriticism isA Framework
+NewCriticism isA Framework

@@ -1,3 +1,5 @@
+export const min_complex = 81;
+
 export const evaluationSuite = [
     {
         description: "Social group formation creates identity",

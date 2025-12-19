@@ -1,0 +1,84 @@
+# Biology - Fundamental Relations
+# Simple relation definitions without graph blocks
+
+# ===== Taxonomic Relations =====
+taxonOf isA __Relation
+belongsTo isA __TransitiveRelation
+descendsFrom isA __Relation
+ancestorOf isA __Relation
+classifiedAs isA __Relation
+
+# ===== Structural Relations =====
+partOf isA __TransitiveRelation
+contains isA __Relation
+composedOf isA __Relation
+formedFrom isA __Relation
+
+# ===== Genetic Relations =====
+expresses isA __Relation
+mutatesTo isA __Relation
+encodedBy isA __Relation
+transcribesTo isA __Relation
+translatesTo isA __Relation
+inheritsFrom isA __Relation
+regulatesExpression isA __Relation
+
+# ===== Ecological Relations =====
+predatorOf isA __Relation
+preyOf isA __Relation
+symbiosisWith isA __SymmetricRelation
+locatedIn isA __TransitiveRelation
+competesFor isA __SymmetricRelation
+dependsOn isA __Relation
+parasitizes isA __Relation
+pollinates isA __Relation
+
+# ===== Physiological Relations =====
+performs isA __Relation
+regulatedBy isA __Relation
+controls isA __Relation
+transports isA __Relation
+produces isA __Relation
+consumes isA __Relation
+secretes isA __Relation
+
+# ===== Evolutionary Relations =====
+evolvesFrom isA __Relation
+sharesAncestorWith isA __SymmetricRelation
+divergesFrom isA __Relation
+adaptsTo isA __Relation
+selectedFor isA __Relation
+homologousTo isA __SymmetricRelation
+analogousTo isA __SymmetricRelation
+
+# ===== Reproductive Relations =====
+reproducesBy isA __Relation
+parentOf isA __Relation
+offspringOf isA __Relation
+matesWith isA __SymmetricRelation
+fertilizes isA __Relation
+gestates isA __Relation
+
+# ===== Metabolic Relations =====
+metabolizes isA __Relation
+synthesizes isA __Relation
+breaks_down isA __Relation
+converts isA __Relation
+requires isA __Relation
+yields isA __Relation
+catalyzes isA __Relation
+
+# ===== Causal Relations =====
+causes isA __Relation
+triggers isA __Relation
+inhibits isA __Relation
+activates isA __Relation
+responds_to isA __Relation
+influences isA __Relation
+
+# ===== Property Relations =====
+hasTrait isA __Relation
+exhibits isA __Relation
+characterized_by isA __Relation
+displays isA __Relation
+manifests isA __Relation

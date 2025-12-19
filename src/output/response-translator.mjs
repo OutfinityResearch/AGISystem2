@@ -223,6 +223,7 @@ class ProveTranslator extends BaseTranslator {
     const SAFE_TOKEN_RE = /^[A-Za-z_][A-Za-z0-9_]*$/;
     const ALLOWED_FACT_STEP_OPS = new Set([
       'direct_match',
+      'direct_fact',
       'synonym_match',
       'transitive_step',
       'transitive_match',
@@ -244,11 +245,14 @@ class ProveTranslator extends BaseTranslator {
       'or_satisfied'
     ]);
 
+    const ALLOWED_UNARY_FACT_OPS = new Set(['holds']);
+
     const isPrintableFact = (fact) => {
       if (!fact || typeof fact !== 'string') return false;
       const parts = fact.trim().split(/\s+/);
-      if (parts.length < 3) return false;
+      if (parts.length < 2) return false;
       const op = parts[0];
+      if (parts.length === 2 && !ALLOWED_UNARY_FACT_OPS.has(op)) return false;
       if (!SAFE_TOKEN_RE.test(op)) return false;
       if (op.startsWith('__') || op.startsWith('Pos')) return false;
       return true;

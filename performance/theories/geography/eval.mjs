@@ -1,3 +1,5 @@
+export const min_complex = 78;
+
 export const evaluationTests = [
     {
         query: "China is in Asia and Beijing is its capital",

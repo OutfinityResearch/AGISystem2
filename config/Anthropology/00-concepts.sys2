@@ -1,0 +1,108 @@
+# Anthropology - Fundamental Concepts
+
+# Cultural Concepts
+Culture isA __Category
+Subculture isA Culture
+Worldview isA __Category
+Belief isA __Category
+Value isA __Category
+Symbol isA __Category
+Meaning isA __Category
+
+# Ritual Concepts
+Ritual isA __Category
+Ceremony isA Ritual
+RiteOfPassage isA Ritual
+ReligiousRitual isA Ritual
+SecularRitual isA Ritual
+Practice isA __Category
+
+# Mythological Concepts
+Myth isA __Category
+CreationMyth isA Myth
+OriginMyth isA Myth
+Legend isA __Category
+Folklore isA __Category
+Narrative isA __Category
+
+# Tradition & Taboo
+Tradition isA __Category
+Custom isA Tradition
+Taboo isA __Category
+Prohibition isA Taboo
+SacredObject isA __Category
+Totem isA __Category
+
+# Kinship System
+Kinship isA __Category
+Descent isA __Category
+Lineage isA Descent
+Patrilineal isA Descent
+Matrilineal isA Descent
+Bilateral isA Descent
+Clan isA __Category
+
+# Marriage & Family
+Marriage isA __Category
+Monogamy isA Marriage
+Polygamy isA Marriage
+Polygyny isA Polygamy
+Polyandry isA Polygamy
+Family isA __Category
+NuclearFamily isA Family
+ExtendedFamily isA Family
+
+# Economic Anthropology
+Exchange isA __Category
+Reciprocity isA Exchange
+Redistribution isA Exchange
+MarketExchange isA Exchange
+Gift isA __Category
+GiftEconomy isA __Category
+
+# Material Culture
+Artifact isA __Category
+Tool isA Artifact
+Pottery isA Artifact
+Weapon isA Artifact
+Technology isA __Category
+CraftWork isA __Category
+
+# Subsistence Patterns
+Subsistence isA __Category
+HuntingGathering isA Subsistence
+Pastoralism isA Subsistence
+Horticulture isA Subsistence
+Agriculture isA Subsistence
+Foraging isA HuntingGathering
+
+# Settlement Patterns
+Settlement isA __Category
+NomadicSettlement isA Settlement
+SedentarySettlement isA Settlement
+Village isA SedentarySettlement
+Hamlet isA SedentarySettlement
+Migration isA __Category
+
+# Identity Concepts
+Identity isA __Category
+Ethnicity isA Identity
+EthnicGroup isA __Category
+IndigenousPeople isA EthnicGroup
+Tribe isA __Category
+Nationality isA Identity
+
+# Language & Communication
+Language isA __Category
+Dialect isA Language
+Pidgin isA Language
+Creole isA Language
+Lingua isA Language
+OralTradition isA __Category
+
+# Cultural Change
+Acculturation isA __Category
+Assimilation isA Acculturation
+CulturalDiffusion isA __Category
+Syncretism isA __Category
+Adaptation isA __Category

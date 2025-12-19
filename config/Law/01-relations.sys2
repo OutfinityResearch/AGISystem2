@@ -1,0 +1,94 @@
+# Law - Fundamental Relations
+
+# Contractual Relations
+partyTo isA __Relation
+enters isA __Relation
+offers isA __Relation
+accepts isA __Relation
+forms isA __Relation
+
+# Obligation Relations
+obligates isA __Relation
+requires isA __Relation
+imposes isA __Relation
+binds isA __Relation
+
+# Breach Relations
+breachOf isA __Relation
+violates isA __Relation
+fails isA __Relation
+nonPerformance isA __Relation
+
+# Liability Relations
+liableFor isA __Relation
+responsibleFor isA __Relation
+accountableFor isA __Relation
+answerable isA __Relation
+
+# Normative Relations
+permits isA __Relation
+forbids isA __Relation
+prohibits isA __Relation
+authorizes isA __Relation
+
+# Governance Relations
+governedBy isA __Relation
+subjectedTo isA __Relation
+regulatedBy isA __Relation
+controlledBy isA __Relation
+
+# Precedent Relations
+precedentFor isA __Relation
+guides isA __Relation
+overrules isA __Relation
+
+# Evidentiary Relations
+evidenceFor isA __Relation
+proves isA __Relation
+supports isA __Relation
+corroborates isA __Relation
+rebuts isA __Relation
+
+# Proof Burden Relations
+standardOfProof isA __Relation
+burdenOn isA __Relation
+meets isA __Relation
+satisfies isA __Relation
+
+# Validity Relations
+valid isA __Relation
+enforceable isA __Relation
+binding isA __Relation
+void isA __Relation
+
+# Judicial Relations
+decides isA __Relation
+rules isA __Relation
+adjudicates isA __Relation
+issues isA __Relation
+renders isA __Relation
+
+# Rights Relations
+hasRight isA __Relation
+entitledTo isA __Relation
+claims isA __Relation
+exercises isA __Relation
+
+# Duty Relations
+hasDuty isA __Relation
+owes isA __Relation
+mustPerform isA __Relation
+obliged isA __Relation
+
+# Property Relations
+owns isA __Relation
+possesses isA __Relation
+transfers isA __Relation
+conveys isA __Relation
+
+# Criminal Justice Relations
+accuses isA __Relation
+prosecutes isA __Relation
+convicts isA __Relation
+acquits isA __Relation
+sentences isA __Relation

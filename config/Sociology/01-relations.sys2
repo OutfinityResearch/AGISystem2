@@ -1,0 +1,92 @@
+# Sociology - Fundamental Relations
+
+# Membership Relations
+memberOf isA __Relation
+belongsTo isA __Relation
+affiliatedWith isA __Relation
+participatesIn isA __Relation
+
+# Role & Status Relations
+hasRole isA __Relation
+hasStatus isA __Relation
+occupies isA __Relation
+assumes isA __Relation
+performs isA __Relation
+
+# Normative Relations
+hasNorm isA __Relation
+enforces isA __Relation
+deviatesFrom isA __Relation
+conformsTo isA __Relation
+violates isA __Relation
+
+# Power Relations
+influences isA __Relation
+powerOver isA __Relation
+dominates isA __Relation
+controls isA __Relation
+subordinateTo isA __Relation
+
+# Inequality Relations
+inequalityIn isA __Relation
+disadvantages isA __Relation
+privileges isA __Relation
+discriminates isA __Relation
+marginalizes isA __Relation
+
+# Network Relations
+networkTie isA __SymmetricRelation
+connectedTo isA __SymmetricRelation
+linkedWith isA __SymmetricRelation
+bridgesTo isA __Relation
+
+# Collective Action Relations
+collectiveAction isA __Relation
+mobilizes isA __Relation
+organizes isA __Relation
+protests isA __Relation
+advocates isA __Relation
+
+# Socialization Relations
+socializes isA __Relation
+transmits isA __Relation
+inculcates isA __Relation
+teaches isA __Relation
+
+# Cultural Relations
+shares isA __Relation
+adopts isA __Relation
+rejects isA __Relation
+assimilates isA __Relation
+integrates isA __Relation
+
+# Sanction Relations
+sanctions isA __Relation
+rewards isA __Relation
+punishes isA __Relation
+approves isA __Relation
+disapproves isA __Relation
+
+# Interaction Relations
+interactsWith isA __SymmetricRelation
+cooperates isA __SymmetricRelation
+competes isA __SymmetricRelation
+conflicts isA __SymmetricRelation
+
+# Institutional Relations
+institutionalizes isA __Relation
+governs isA __Relation
+regulates isA __Relation
+legitimizes isA __Relation
+
+# Stratification Relations
+stratifiedBy isA __Relation
+ranksAbove isA __Relation
+ranksBelow isA __Relation
+mobility isA __Relation
+
+# Influence Relations
+influencedBy isA __Relation
+shapedBy isA __Relation
+determinedBy isA __Relation
+affected isA __Relation

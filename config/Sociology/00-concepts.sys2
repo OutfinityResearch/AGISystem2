@@ -1,0 +1,104 @@
+# Sociology - Fundamental Concepts
+
+# Social Structures
+Society isA __Category
+Group isA __Category
+Organization isA Group
+Community isA Group
+Association isA Group
+Collective isA __Category
+
+# Institutional Concepts
+Institution isA __Category
+Family isA Institution
+Education isA Institution
+Economy isA Institution
+Religion isA Institution
+Government isA Institution
+Media isA Institution
+
+# Social Elements
+Norm isA __Category
+Role isA __Category
+Status isA __Category
+Position isA __Category
+Expectation isA __Category
+
+# Stratification
+Class isA __Category
+UpperClass isA Class
+MiddleClass isA Class
+WorkingClass isA Class
+LowerClass isA Class
+SocialMobility isA __Category
+
+# Power & Authority
+Power isA __Category
+Authority isA __Category
+LegalAuthority isA Authority
+TraditionalAuthority isA Authority
+CharismaticAuthority isA Authority
+Domination isA __Category
+
+# Inequality
+Inequality isA __Category
+SocialInequality isA Inequality
+EconomicInequality isA Inequality
+GenderInequality isA Inequality
+RacialInequality isA Inequality
+Discrimination isA __Category
+
+# Social Capital
+SocialCapital isA __Category
+BondingSocialCapital isA SocialCapital
+BridgingSocialCapital isA SocialCapital
+Network isA __Category
+Tie isA __Category
+StrongTie isA Tie
+WeakTie isA Tie
+
+# Social Processes
+Socialization isA __Category
+PrimarySocialization isA Socialization
+SecondarySocialization isA Socialization
+Assimilation isA __Category
+Integration isA __Category
+SocialChange isA __Category
+
+# Cultural Concepts
+Culture isA __Category
+Subculture isA Culture
+Counterculture isA Culture
+CulturalValue isA __Category
+Belief isA __Category
+Ideology isA __Category
+
+# Deviance & Control
+Deviance isA __Category
+Sanction isA __Category
+PositiveSanction isA Sanction
+NegativeSanction isA Sanction
+SocialControl isA __Category
+Conformity isA __Category
+
+# Collective Behavior
+CollectiveAction isA __Category
+SocialMovement isA CollectiveAction
+Protest isA CollectiveAction
+Riot isA CollectiveAction
+Mobilization isA __Category
+
+# Social Relations
+SocialRelation isA __Category
+PrimaryRelation isA SocialRelation
+SecondaryRelation isA SocialRelation
+FormalRelation isA SocialRelation
+InformalRelation isA SocialRelation
+
+# Migration & Demography
+Migration isA __Category
+Immigration isA Migration
+Emigration isA Migration
+Urbanization isA __Category
+Population isA __Category
+Demography isA __Category

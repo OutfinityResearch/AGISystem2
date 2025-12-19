@@ -175,10 +175,16 @@ export const steps = [
       @q deduce Virus $filter ?result 5 5
     `,
     expected_nl: [
-      'From Virus, deduce causes Infection Inflammation.'
+      'From Virus, deduce causes Infection Inflammation.',
+      'From Virus, deduce causes Inflammation Symptoms.',
+      'From Virus, deduce causes Symptoms Diagnosis.',
+      'From Virus, deduce causes Diagnosis Treatment.'
     ],
     proof_nl: [
-      'Virus via causes via Infection via causes via Inflammation'
+      'Virus via causes via Inflammation',
+      'Virus via causes via Inflammation via causes via Symptoms',
+      'Virus via causes via Inflammation via causes via Symptoms via causes via Diagnosis',
+      'Virus via causes via Inflammation via causes via Symptoms via causes via Diagnosis via causes via Treatment'
     ]
   },
 
@@ -212,10 +218,12 @@ export const steps = [
       @q deduce RawMaterial $filter ?result 2 3
     `,
     expected_nl: [
-      'From RawMaterial, deduce causes Production Assembly.'
+      'From RawMaterial, deduce causes Production Assembly.',
+      'From RawMaterial, deduce causes Assembly QualityCheck.'
     ],
     proof_nl: [
-      'RawMaterial via causes via Production via causes via Assembly'
+      'RawMaterial via causes via Assembly',
+      'RawMaterial via causes via Assembly via causes via QualityCheck'
     ]
   }
 ];

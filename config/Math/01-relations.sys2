@@ -1,0 +1,51 @@
+# Mathematics - Fundamental Relations
+
+# ===== Set Relations =====
+elementOf isA __Relation
+subsetOf isA __TransitiveRelation
+properSubsetOf isA subsetOf
+equals isA __SymmetricRelation
+disjointFrom isA __SymmetricRelation
+
+# ===== Function Relations =====
+definedOn isA __Relation
+mapsTo isA __Relation
+appliesTo isA __Relation
+composedWith isA __Relation
+inverseOf isA __SymmetricRelation
+
+# ===== Order Relations =====
+lessThan isA __Relation
+greaterThan isA __Relation
+lessThanOrEqual isA __Relation
+greaterThanOrEqual isA __Relation
+
+# ===== Proof Relations =====
+proves isA __Relation
+usesLemma isA __Relation
+followsFrom isA __Relation
+contradicts isA __SymmetricRelation
+counterExample isA __Relation
+
+# ===== Algebraic Relations =====
+isomorphicTo isA __SymmetricRelation
+homomorphicTo isA __Relation
+subgroupOf isA __TransitiveRelation
+normalSubgroupOf isA subgroupOf
+idealOf isA __Relation
+
+# ===== Geometric Relations =====
+parallelTo isA __SymmetricRelation
+perpendicularTo isA __SymmetricRelation
+congruentTo isA __SymmetricRelation
+similarTo isA __SymmetricRelation
+intersects isA __SymmetricRelation
+tangentTo isA __SymmetricRelation
+
+# ===== Calculus Relations =====
+convergesTo isA __Relation
+diverges isA __Relation
+continuousAt isA __Relation
+differentiableAt isA __Relation
+integrableOn isA __Relation
+boundedOn isA __Relation

@@ -1,3 +1,5 @@
+export const min_complex = 100;
+
 export const testCases = [
     {
         name: "Shakespearean Sonnet Structure",

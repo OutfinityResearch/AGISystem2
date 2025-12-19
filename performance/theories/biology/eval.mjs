@@ -11,6 +11,7 @@
 
 export const name = 'Biology';
 export const description = 'Taxonomy, cell biology, genetics, ecology, physiology, evolution - deep reasoning tests';
+export const min_complex = 76;
 
 export const cases = [
   // =============================================================================

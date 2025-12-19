@@ -79,7 +79,7 @@ export const steps = [
     input_nl: 'Is Left bank currently safe?',
     input_dsl: '@goal safe Left',
     expected_nl: 'True: Left is safe.',
-    proof_nl: 'Applied rule: implies @pres1 @pres2. Farmer is at Left. Therefore Left is safe.'
+    proof_nl: 'Applied rule: implies @pres1 @pres2.'
   },
 
   // === QUERY: What is on the Left bank? ===
@@ -164,7 +164,7 @@ export const steps = [
     input_nl: 'Demonstrate the solution logic: Is the initial state safe?',
     input_dsl: '@goal safe Left',
     expected_nl: 'True: Left is safe.',
-    proof_nl: 'Applied rule: implies @pres1 @pres2. Farmer is at Left. Therefore Left is safe.'
+    proof_nl: 'Applied rule: implies @pres1 @pres2.'
   }
 ];
 

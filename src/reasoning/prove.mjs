@@ -177,111 +177,131 @@ export class ProofEngine {
     // Build goal vector and check cycles
     const goalVec = this.session.executor.buildStatementVector(goal);
     const goalHash = this.hashVector(goalVec);
+    const goalKey = `goal:${goalHash}`;
 
-    if (this.visited.has(goalHash)) {
+    if (this.visited.has(goalKey)) {
       return { valid: false, reason: 'Cycle detected' };
     }
-    this.visited.add(goalHash);
+    this.visited.add(goalKey);
 
-    const goalStr = goal.toString();
-    const goalOp = this.extractOperatorName(goal);
-    const goalArgs = (goal.args || []).map(a => this.extractArgName(a)).filter(Boolean);
-    const goalFactExists = goalOp ? this.factExists(goalOp, goalArgs[0], goalArgs[1]) : false;
+    try {
+      const goalStr = goal.toString();
+      const goalOp = this.extractOperatorName(goal);
+      const goalArgs = (goal.args || []).map(a => this.extractArgName(a)).filter(Boolean);
+      const goalFactExists = goalOp ? this.factExists(goalOp, goalArgs[0], goalArgs[1]) : false;
 
-    // Check if goal is explicitly negated (blocks all proofs)
-    const negationInfo = this.checkGoalNegation(goal);
-    if (negationInfo.negated) {
-      const searchTrace = this.buildNegationSearchTrace(goal, negationInfo);
+      // Check if goal is explicitly negated (blocks all proofs)
+      const negationInfo = this.checkGoalNegation(goal);
+      if (negationInfo.negated) {
+        const searchTrace = this.buildNegationSearchTrace(goal, negationInfo);
+        return {
+          valid: false,
+          reason: 'Goal is negated',
+          goal: goalStr,
+          searchTrace,
+          steps: this.steps
+        };
+      }
+
+      // Strategy 1: Direct KB match (strong threshold)
+      const directResult = this.kbMatcher.tryDirectMatch(goalVec, goalStr);
+      const directMatchTrusted = directResult.valid && goalFactExists;
+      if (directMatchTrusted && directResult.confidence > this.thresholds.VERY_STRONG_MATCH) {
+        directResult.steps = [{ operation: 'direct_match', fact: this.goalToFact(goal) }];
+        return directResult;
+      }
+      if (goalFactExists) {
+        return {
+          valid: true,
+          method: 'direct_metadata',
+          confidence: this.thresholds.STRONG_MATCH,
+          goal: goalStr,
+          steps: [{ operation: 'direct_fact', fact: this.goalToFact(goal) }]
+        };
+      }
+
+      // Strategy 1.5: Synonym-based matching
+      const synonymResult = this.trySynonymMatch(goal, depth);
+      if (synonymResult.valid) {
+        return synonymResult;
+      }
+
+      // Strategy 2: Transitive reasoning
+      const transitiveResult = this.transitive.tryTransitiveChain(goal, depth);
+      if (transitiveResult.valid) {
+        return transitiveResult;
+      }
+
+      // Strategy 2.5: Property inheritance (can Bird Fly + isA Tweety Bird => can Tweety Fly)
+      const inheritanceResult = this.propertyInheritance.tryPropertyInheritance(goal, depth);
+      if (inheritanceResult.valid) {
+        return inheritanceResult;
+      }
+
+      // Strategy 2.6: Default/Exception reasoning (non-monotonic)
+      const defaultResult = this.tryDefaultReasoning(goal, depth);
+      if (defaultResult.valid) {
+        return defaultResult;
+      }
+      // If exception definitively blocks, return that result (no need to continue searching)
+      if (defaultResult.definitive) {
+        return defaultResult;
+      }
+
+      // Strategy 2.7: Modus ponens for propositional holds (implies P Q + holds P => holds Q)
+      const modusResult = this.tryImplicationModusPonens(goal, depth);
+      if (modusResult.valid) {
+        return modusResult;
+      }
+
+      // Strategy 3: Rule matching (backward chaining)
+      for (const rule of this.session.rules) {
+        this.session.reasoningStats.ruleAttempts++;
+        const ruleResult = this.kbMatcher.tryRuleMatch(goal, rule, depth);
+        if (ruleResult.valid) {
+          return ruleResult;
+        }
+      }
+
+      // Strategy 4: Weak direct match (with entity existence verification)
+      // Weak matches can produce false positives for similar-looking facts,
+      // so we verify the entity actually exists in KB before accepting
+      if (directMatchTrusted && directResult.confidence > this.thresholds.STRONG_MATCH) {
+        const entityArg = goal.args?.[0] ? this.extractArgName(goal.args[0]) : null;
+        const componentKB = this.session?.componentKB;
+
+        // Only accept weak match if entity is known (appears in any KB fact)
+        const entityExists = entityArg && componentKB && (
+          componentKB.findByArg0(entityArg, false).length > 0 ||
+          componentKB.findByArg1(entityArg, false).length > 0
+        );
+
+        if (entityExists) {
+          directResult.steps = [{ operation: 'weak_match', fact: this.goalToFact(goal) }];
+          return directResult;
+        }
+      }
+
+      // Strategy 5: Disjoint proof for spatial relations
+      const disjointResult = this.disjoint.tryDisjointProof(goal, depth);
+      if (disjointResult.valid) {
+        return disjointResult;
+      }
+
+      // Build detailed failure reason with search trace
+      const goalFact = this.goalToFact(goal);
+      const searchTrace = this.buildSearchTrace(goal, goalStr);
+
       return {
         valid: false,
-        reason: 'Goal is negated',
+        reason: 'No proof found',
         goal: goalStr,
         searchTrace,
         steps: this.steps
       };
+    } finally {
+      this.visited.delete(goalKey);
     }
-
-    // Strategy 1: Direct KB match (strong threshold)
-    const directResult = this.kbMatcher.tryDirectMatch(goalVec, goalStr);
-    const directMatchTrusted = directResult.valid && goalFactExists;
-    if (directMatchTrusted && directResult.confidence > this.thresholds.VERY_STRONG_MATCH) {
-      directResult.steps = [{ operation: 'direct_match', fact: this.goalToFact(goal) }];
-      return directResult;
-    }
-
-    // Strategy 1.5: Synonym-based matching
-    const synonymResult = this.trySynonymMatch(goal, depth);
-    if (synonymResult.valid) {
-      return synonymResult;
-    }
-
-    // Strategy 2: Transitive reasoning
-    const transitiveResult = this.transitive.tryTransitiveChain(goal, depth);
-    if (transitiveResult.valid) {
-      return transitiveResult;
-    }
-
-    // Strategy 2.5: Property inheritance (can Bird Fly + isA Tweety Bird => can Tweety Fly)
-    const inheritanceResult = this.propertyInheritance.tryPropertyInheritance(goal, depth);
-    if (inheritanceResult.valid) {
-      return inheritanceResult;
-    }
-
-    // Strategy 2.6: Default/Exception reasoning (non-monotonic)
-    const defaultResult = this.tryDefaultReasoning(goal, depth);
-    if (defaultResult.valid) {
-      return defaultResult;
-    }
-    // If exception definitively blocks, return that result (no need to continue searching)
-    if (defaultResult.definitive) {
-      return defaultResult;
-    }
-
-    // Strategy 3: Rule matching (backward chaining)
-    for (const rule of this.session.rules) {
-      this.session.reasoningStats.ruleAttempts++;
-      const ruleResult = this.kbMatcher.tryRuleMatch(goal, rule, depth);
-      if (ruleResult.valid) {
-        return ruleResult;
-      }
-    }
-
-    // Strategy 4: Weak direct match (with entity existence verification)
-    // Weak matches can produce false positives for similar-looking facts,
-    // so we verify the entity actually exists in KB before accepting
-    if (directMatchTrusted && directResult.confidence > this.thresholds.STRONG_MATCH) {
-      const entityArg = goal.args?.[0] ? this.extractArgName(goal.args[0]) : null;
-      const componentKB = this.session?.componentKB;
-
-      // Only accept weak match if entity is known (appears in any KB fact)
-      const entityExists = entityArg && componentKB && (
-        componentKB.findByArg0(entityArg, false).length > 0 ||
-        componentKB.findByArg1(entityArg, false).length > 0
-      );
-
-      if (entityExists) {
-        directResult.steps = [{ operation: 'weak_match', fact: this.goalToFact(goal) }];
-        return directResult;
-      }
-    }
-
-    // Strategy 5: Disjoint proof for spatial relations
-    const disjointResult = this.disjoint.tryDisjointProof(goal, depth);
-    if (disjointResult.valid) {
-      return disjointResult;
-    }
-
-    // Build detailed failure reason with search trace
-    const goalFact = this.goalToFact(goal);
-    const searchTrace = this.buildSearchTrace(goal, goalStr);
-
-    return {
-      valid: false,
-      reason: 'No proof found',
-      goal: goalStr,
-      searchTrace,
-      steps: this.steps
-    };
   }
 
   /**
@@ -302,6 +322,9 @@ export class ProofEngine {
     if (!arg0 || !op) return false;
     if (this.session?.componentKB) {
       const candidates = this.session.componentKB.findByOperatorAndArg0(op, arg0);
+      if (arg1 === undefined || arg1 === null) {
+        return candidates.some(c => (c.args?.length || 0) < 2 || c.args?.[1] === undefined);
+      }
       return candidates.some(c => (c.args?.[1] || '') === arg1);
     }
     for (const fact of this.session.kbFacts) {
@@ -464,18 +487,18 @@ export class ProofEngine {
     // Support both dense-binary (data) and sparse-polynomial (exponents) vectors
     if (!vec) return 'invalid:' + Math.random().toString(36);
 
-    // Dense-binary: use first 4 words
+    // Dense-binary: use first 8 words to reduce collisions
     if (vec.data) {
       const parts = [];
-      for (let i = 0; i < Math.min(4, vec.words || 0); i++) {
+      for (let i = 0; i < Math.min(8, vec.words || 0); i++) {
         parts.push(vec.data[i]?.toString(16) || '0');
       }
       return parts.join(':');
     }
 
-    // Sparse-polynomial: use exponents
+    // Sparse-polynomial: use first 8 exponents
     if (vec.exponents) {
-      return [...vec.exponents].slice(0, 4).map(e => e.toString(16)).join(':');
+      return [...vec.exponents].slice(0, 8).map(e => e.toString(16)).join(':');
     }
 
     return 'invalid:' + Math.random().toString(36);
@@ -624,7 +647,10 @@ export class ProofEngine {
       const types = this.defaults.getTypeHierarchy(entity);
       // Skip entity itself in chain (types[0] is entity, types[1+] are parents)
       const typeChain = types.slice(1, 4).map(t => `${entity} isA ${t}`).join('. ');
-      const searchTrace = `Search: ${typeChain}. Default ${op} ${result.fromType} ${value} blocked by exception for ${result.fromType}.`;
+      const blocked = Array.isArray(result.blocked) ? result.blocked[0] : null;
+      const defaultType = blocked?.default?.forType || result.fromType;
+      const exceptionType = blocked?.blockedBy?.forType || result.fromType;
+      const searchTrace = `Search: ${typeChain}. Default ${op} ${defaultType} ${value} blocked by exception for ${exceptionType}.`;
 
       return {
         valid: false,
@@ -643,6 +669,111 @@ export class ProofEngine {
     }
 
     return { valid: false };
+  }
+
+  /**
+   * Try modus ponens for propositional holds (implies P Q + holds P => holds Q).
+   * Supports compound antecedents via rule condition checking.
+   * @param {Object} goal - Goal statement
+   * @param {number} depth - Current proof depth
+   * @returns {Object} Proof result
+   */
+  tryImplicationModusPonens(goal, depth) {
+    const op = this.extractOperatorName(goal);
+    if (op !== 'holds') return { valid: false };
+
+    const args = (goal.args || []).map(a => this.extractArgName(a)).filter(Boolean);
+    if (args.length < 1) return { valid: false };
+    const target = args[0];
+
+    const candidates = [];
+    for (const rule of this.session.rules || []) {
+      const conc = rule.conclusionAST;
+      if (!conc) continue;
+
+      if (conc.type === 'Identifier' && conc.name === target) {
+        candidates.push(rule);
+        continue;
+      }
+
+      const concOp = this.extractOperatorName(conc);
+      if (concOp === 'holds') {
+        const concArgs = (conc.args || []).map(a => this.extractArgName(a)).filter(Boolean);
+        if (concArgs[0] === target) {
+          candidates.push(rule);
+        }
+      }
+    }
+
+    for (const rule of candidates) {
+      const condResult = this.proveImplicationCondition(rule, depth + 1);
+      if (!condResult.valid) continue;
+
+      const steps = [];
+      steps.push(...(condResult.steps || []));
+      const implicationFact = this.describeSimpleImplication(rule);
+      if (implicationFact) {
+        steps.push({ operation: 'direct_fact', fact: implicationFact });
+      }
+      steps.push({ operation: 'rule_application', fact: `holds ${target}` });
+
+      return {
+        valid: true,
+        method: 'modus_ponens',
+        confidence: (condResult.confidence || this.thresholds.RULE_CONFIDENCE) * this.thresholds.CONFIDENCE_DECAY,
+        goal: this.goalToFact(goal),
+        steps
+      };
+    }
+
+    return { valid: false };
+  }
+
+  /**
+   * Prove antecedent for an implication rule in propositional form.
+   * @param {Object} rule - Implication rule
+   * @param {number} depth - Current proof depth
+   * @returns {Object} Proof result
+   */
+  proveImplicationCondition(rule, depth) {
+    if (rule.conditionParts) {
+      return this.conditions.proveCondition(rule, depth);
+    }
+
+    const condAst = rule.conditionAST;
+    if (!condAst) return { valid: false };
+
+    if (condAst.type === 'Identifier' && condAst.name) {
+      const antecedent = new Statement(
+        null,
+        new Identifier('holds'),
+        [new Identifier(condAst.name)]
+      );
+      return this.proveGoal(antecedent, depth);
+    }
+
+    const condOp = this.extractOperatorName(condAst);
+    if (condOp === 'holds' || condAst.operator) {
+      return this.proveGoal(condAst, depth);
+    }
+
+    return { valid: false };
+  }
+
+  /**
+   * Render a simple implication fact for proofs when both sides are single tokens.
+   * @param {Object} rule - Implication rule
+   * @returns {string|null} Fact string or null if complex
+   */
+  describeSimpleImplication(rule) {
+    const cond = rule?.conditionAST;
+    const conc = rule?.conclusionAST;
+    if (!cond || !conc) return null;
+
+    if (cond.type !== 'Identifier' || conc.type !== 'Identifier') return null;
+    if (!cond.name || !conc.name) return null;
+
+    return `implies ${cond.name} ${conc.name}`;
   }
 }
 

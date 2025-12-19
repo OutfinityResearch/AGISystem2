@@ -11,6 +11,7 @@
 
 export const name = 'Mathematics';
 export const description = 'Number systems, sets, functions, geometry, algebra, calculus - deep reasoning tests';
+export const min_complex = 100;
 
 export const cases = [
   // =============================================================================

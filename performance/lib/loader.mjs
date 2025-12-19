@@ -40,6 +40,99 @@ export async function loadCoreTheories() {
 }
 
 /**
+ * Map performance theory names to config domain names
+ */
+const DOMAIN_MAP = {
+  'math': 'Math',
+  'mathematics': 'Math',
+  'physics': 'Physics',
+  'biology': 'Biology',
+  'medicine': 'Medicine',
+  'geography': 'Geography',
+  'history': 'History',
+  'psychology': 'Psychology',
+  'sociology': 'Sociology',
+  'anthropology': 'Anthropology',
+  'philosophy': 'Philosophy',
+  'law': 'Law',
+  'literature': 'Literature',
+  'litcrit': 'Literature'
+};
+
+/**
+ * Load domain-specific fundamental theory from config/<Domain>/
+ * @param {string} theoryName - Theory domain name (e.g., 'math', 'biology')
+ * @returns {Promise<string[]>} Array of domain theory content strings
+ */
+export async function loadDomainTheory(theoryName) {
+  const domainName = DOMAIN_MAP[theoryName.toLowerCase()] || capitalize(theoryName);
+  const domainDir = join(CONFIG_ROOT, domainName);
+  const theories = [];
+
+  try {
+    const entries = await readdir(domainDir);
+    const sys2Files = entries
+      .filter(f => f.endsWith('.sys2') && f !== 'index.sys2')
+      .sort();
+
+    for (const file of sys2Files) {
+      const content = await readFile(join(domainDir, file), 'utf8');
+      theories.push(content);
+    }
+  } catch (err) {
+    // Domain theory not found - this is ok, not all domains have config theories
+  }
+
+  return theories;
+}
+
+/**
+ * Discover available domain theories in config/
+ * @returns {Promise<string[]>} Array of domain names
+ */
+export async function discoverDomainTheories() {
+  const domains = [];
+  try {
+    const entries = await readdir(CONFIG_ROOT);
+    for (const entry of entries) {
+      if (entry === 'Core') continue; // Skip Core
+      const entryPath = join(CONFIG_ROOT, entry);
+      const entryStat = await stat(entryPath);
+      if (entryStat.isDirectory()) {
+        domains.push(entry);
+      }
+    }
+  } catch (err) {
+    // Config dir not accessible
+  }
+  return domains.sort();
+}
+
+/**
+ * Get all defined concepts from domain theory
+ * @param {string} theoryName - Theory domain name
+ * @returns {Promise<Set<string>>} Set of defined concept names
+ */
+export async function getDomainConcepts(theoryName) {
+  const theories = await loadDomainTheory(theoryName);
+  const concepts = new Set();
+
+  for (const content of theories) {
+    // Extract concepts defined with @Name pattern
+    const matches = content.matchAll(/@(\w+)(?::\w+)?\s+(?:isA|graph|___)/g);
+    for (const match of matches) {
+      concepts.add(match[1]);
+    }
+  }
+
+  return concepts;
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+/**
  * Discover all theory domains
  * @returns {Promise<string[]>} Array of domain names
  */
@@ -165,6 +258,9 @@ function countDSLFacts(dsl) {
 
 export default {
   loadCoreTheories,
+  loadDomainTheory,
+  discoverDomainTheories,
+  getDomainConcepts,
   discoverTheories,
   loadTheoryDSL,
   loadTheoryNL,

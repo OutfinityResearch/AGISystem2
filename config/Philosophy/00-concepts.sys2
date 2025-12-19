@@ -1,0 +1,117 @@
+# Philosophy - Fundamental Concepts
+
+# ===== Ethical Concepts =====
+MoralAgent isA __Category
+Value isA __Category
+MoralValue isA Value
+Good isA MoralValue
+Evil isA MoralValue
+Right isA __Category
+Wrong isA __Category
+
+# ===== Virtue Ethics =====
+Virtue isA __Category
+Vice isA __Category
+Courage isA Virtue
+Wisdom isA Virtue
+Justice isA Virtue
+Temperance isA Virtue
+Character isA __Category
+
+# ===== Deontological Concepts =====
+Duty isA __Category
+Obligation isA Duty
+Prohibition isA __Category
+Imperative isA __Category
+CategoricalImperative isA Imperative
+MaximM isA __Category
+
+# ===== Consequentialist Concepts =====
+Consequence isA __Category
+Outcome isA Consequence
+Utility isA __Category
+Harm isA Consequence
+Benefit isA Consequence
+Happiness isA Benefit
+Suffering isA Harm
+
+# ===== Justice & Rights =====
+Justice isA __Category
+DistributiveJustice isA Justice
+RetributiveJustice isA Justice
+ProceduralJustice isA Justice
+Fairness isA __Category
+Equality isA __Category
+Equity isA __Category
+
+# ===== Autonomy & Freedom =====
+Autonomy isA __Category
+Freedom isA __Category
+Liberty isA Freedom
+FreeWill isA __Category
+Agency isA __Category
+SelfDetermination isA Autonomy
+
+# ===== Epistemological Concepts =====
+Knowledge isA __Category
+Belief isA __Category
+TrueBelie isA Belief
+Justified isA __Category
+Justification isA __Category
+Evidence isA __Category
+Certainty isA __Category
+
+# ===== Logical Concepts =====
+Argument isA __Category
+Premise isA __Category
+Conclusion isA __Category
+Validity isA __Property
+Soundness isA __Property
+Inference isA __Category
+
+# ===== Fallacies =====
+Fallacy isA __Category
+FormalFallacy isA Fallacy
+InformalFallacy isA Fallacy
+AdHominem isA InformalFallacy
+StrawMan isA InformalFallacy
+FalseD isA InformalFallacy
+
+# ===== Metaphysical Concepts =====
+Being isA __Category
+Existence isA __Category
+Essence isA __Category
+Substance isA __Category
+Property isA __Category
+Universals isA __Category
+Particulars isA __Category
+
+# ===== Philosophy of Mind =====
+Mind isA __Category
+Consciousness isA __Category
+Qualia isA __Category
+Intentionality isA __Category
+MentalState isA __State
+Thought isA MentalState
+
+# ===== Ethics Frameworks =====
+EthicsFramework isA __Category
+Utilitarianism isA EthicsFramework
+Deontology isA EthicsFramework
+VirtueEthics isA EthicsFramework
+CareEthics isA EthicsFramework
+Consequentialism isA EthicsFramework
+
+# ===== Intention & Action =====
+Intention isA __Category
+Action isA __Action
+Volition isA __Category
+Responsibility isA __Category
+Accountability isA __Category
+
+# ===== Worldview Concepts =====
+Worldview isA __Category
+Paradigm isA __Category
+Framework isA __Category
+Perspective isA __Category
+Interpretation isA __Category

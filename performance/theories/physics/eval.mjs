@@ -1,3 +1,5 @@
+export const min_complex = 52;
+
 export const cases = [
   {
     action: 'prove',

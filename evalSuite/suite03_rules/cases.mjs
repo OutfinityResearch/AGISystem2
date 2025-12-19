@@ -94,7 +94,7 @@ export const steps = [
     input_nl: 'Is Mary a suspect? (has Motive but NOT Opportunity)',
     input_dsl: '@goal isSuspect Mary',
     expected_nl: 'Cannot prove: Mary is suspect.',
-    proof_nl: 'Searched @goal isSuspect Mary in KB. Not found.'
+    proof_nl: 'Search: Mary isA Civilian. Civilian isA Person. Person isA Entity. Checked rule: Implies @susAnd @susConc. Found: has Mary Motive. Missing: has Mary Opportunity.'
   },
 
   // === SETUP: Deep payment chain (6 levels Or rule + chained rules) ===

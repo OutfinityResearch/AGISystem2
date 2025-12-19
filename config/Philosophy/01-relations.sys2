@@ -1,0 +1,94 @@
+# Philosophy - Fundamental Relations
+
+# ===== Value Relations =====
+values isA __Relation
+esteems isA __Relation
+cherishes isA __Relation
+prizes isA __Relation
+
+# ===== Intention Relations =====
+intends isA __Relation
+purposes isA __Relation
+aims isA __Relation
+wills isA __Relation
+
+# ===== Causal Relations =====
+causes isA __Relation
+results isA __Relation
+produces isA __Relation
+brings isA __Relation
+
+# ===== Normative Relations =====
+harms isA __Relation
+benefits isA __Relation
+wrongs isA __Relation
+goods isA __Relation
+
+# ===== Deontic Relations =====
+obligatory isA __Relation
+forbidden isA __Relation
+permitted isA __Relation
+supererogatory isA __Relation
+
+# ===== Argumentative Relations =====
+supports isA __Relation
+refutes isA __Relation
+contradicts isA __SymmetricRelation
+entails isA __TransitiveRelation
+implies isA __TransitiveRelation
+
+# ===== Fallacy Relations =====
+fallacyOf isA __Relation
+commits isA __Relation
+invalidates isA __Relation
+undermines isA __Relation
+
+# ===== Epistemic Relations =====
+justifiedBy isA __Relation
+evidenceFor isA __Relation
+knows isA __Relation
+believes isA __Relation
+doubts isA __Relation
+
+# ===== Logical Relations =====
+follows isA __Relation
+deduces isA __Relation
+infers isA __Relation
+concludes isA __Relation
+
+# ===== Moral Relations =====
+morallyPermissible isA __Relation
+morallyRequired isA __Relation
+morallyForbidden isA __Relation
+morallyPraiseworthy isA __Relation
+morallyBlameworthy isA __Relation
+
+# ===== Virtue Relations =====
+hasVirtue isA __Relation
+exhibits isA __Relation
+embodies isA __Relation
+cultivates isA __Relation
+
+# ===== Justice Relations =====
+treats isA __Relation
+distributes isA __Relation
+deserves isA __Relation
+entitledTo isA __Relation
+
+# ===== Responsibility Relations =====
+responsibleFor isA __Relation
+accountableFor isA __Relation
+blameableFor isA __Relation
+creditableFor isA __Relation
+
+# ===== Metaphysical Relations =====
+exists isA __Relation
+instantiates isA __Relation
+exemplifies isA __Relation
+hasEssence isA __Relation
+
+# ===== Mind Relations =====
+thinks isA __Relation
+conceives isA __Relation
+represents isA __Relation
+aboutness isA __Relation

@@ -1,0 +1,68 @@
+# Biology - Fundamental Concepts
+
+# ===== Taxonomic Hierarchy =====
+Taxon isA __Category
+Domain isA Taxon
+Kingdom isA Taxon
+Phylum isA Taxon
+Class isA Taxon
+Order isA Taxon
+Family isA Taxon
+Genus isA Taxon
+Species isA Taxon
+
+# ===== Biological Entities (structural hierarchy) =====
+Organism isA __Category
+Cell isA __Category
+Tissue isA __Category
+Organ isA __Category
+OrganSystem isA __Category
+
+# ===== Genetic Concepts =====
+Gene isA __Category
+Protein isA __Category
+DNA isA __Category
+RNA isA __Category
+Mutation isA __Action
+Allele isA __Category
+Chromosome isA __Category
+Genome isA __Category
+
+# ===== Ecological Concepts =====
+Ecosystem isA __Category
+Population isA __Category
+Community isA __Category
+Habitat isA __Category
+Niche isA __Category
+Biome isA __Category
+
+# ===== Physiological Concepts =====
+Metabolism isA __Process
+Respiration isA Metabolism
+Photosynthesis isA Metabolism
+Digestion isA Metabolism
+Circulation isA Metabolism
+
+# ===== Molecular Concepts =====
+Molecule isA __Category
+Nucleotide isA Molecule
+AminoAcid isA Molecule
+Enzyme isA Protein
+Lipid isA Molecule
+Carbohydrate isA Molecule
+
+# ===== Cellular Structures =====
+Nucleus isA __Category
+Mitochondria isA __Category
+Ribosome isA __Category
+CellMembrane isA __Category
+Cytoplasm isA __Category
+Chloroplast isA __Category
+
+# ===== Life Processes =====
+Reproduction isA __Process
+Growth isA __Process
+Homeostasis isA __Process
+Response isA __Process
+Adaptation isA __Process
+Evolution isA __Process

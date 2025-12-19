@@ -1,0 +1,65 @@
+# Geography - Fundamental Relations
+
+# Spatial Relations
+@locatedIn isA __TransitiveRelation
+@borders isA __SymmetricRelation
+@contains isA __TransitiveRelation
+@adjacentTo isA __SymmetricRelation
+@surrounds isA __Relation
+
+# Political Relations
+@capitalOf isA __Relation
+@governedBy isA __Relation
+@territoryOf isA __Relation
+@annexedBy isA __Relation
+
+# Natural Feature Relations
+@flowsThrough isA __Relation
+@flowsInto isA __Relation
+@originatesAt isA __Relation
+@mountsTo isA __Relation
+@drains isA __Relation
+
+# Climate Relations
+@hasClimate isA __Relation
+@influencedBy isA __Relation
+@temperatureRange isA __Relation
+@precipitation isA __Relation
+
+# Resource Relations
+@hasResource isA __Relation
+@produces isA __Relation
+@exports isA __Relation
+@imports isA __Relation
+@depletes isA __Relation
+
+# Demographic Relations
+@population isA __Relation
+@density isA __Relation
+@growth isA __Relation
+@distribution isA __Relation
+
+# Movement Relations
+@migration isA __Relation
+@migratesFrom isA __Relation
+@migratesTo isA __Relation
+@routeBetween isA __Relation
+@connects isA __SymmetricRelation
+
+# Hazard Relations
+@hazardRisk isA __Relation
+@vulnerableTo isA __Relation
+@affectedBy isA __Relation
+@mitigates isA __Relation
+
+# Trade & Transport
+@tradeWith isA __SymmetricRelation
+@accessibleBy isA __Relation
+@connectedBy isA __Relation
+@distanceFrom isA __SymmetricRelation
+
+# Elevation Relations
+@elevation isA __Relation
+@higherThan isA __Relation
+@lowerThan isA __Relation
+@seaLevel isA __Relation

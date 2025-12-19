@@ -385,6 +385,7 @@ function validateProofExpectation(testCase) {
   if (!testCase.expected_nl) return null;
   if (testCase.action !== 'query' && testCase.action !== 'prove') return null;
   const proofNl = testCase.proof_nl;
+  const altProofNl = testCase.alternative_proof_nl;
   const proofMissing = proofNl === undefined ||
     proofNl === null ||
     (typeof proofNl === 'string' && proofNl.trim().length === 0) ||
@@ -435,6 +436,47 @@ function validateProofExpectation(testCase) {
         expected: `proof_nl length ${answerCount}`,
         actual: proofNl.length
       };
+    }
+  }
+
+  if (altProofNl !== undefined && altProofNl !== null) {
+    const altProofMissing =
+      (typeof altProofNl === 'string' && altProofNl.trim().length === 0) ||
+      (Array.isArray(altProofNl) && altProofNl.filter(p => typeof p === 'string' && p.trim().length > 0).length === 0);
+    if (altProofMissing) {
+      return {
+        passed: false,
+        error: 'VALIDATION ERROR: alternative_proof_nl is present but empty',
+        expected: 'alternative_proof_nl string or string[]',
+        actual: altProofNl
+      };
+    }
+    if (testCase.action === 'query' && !Array.isArray(altProofNl)) {
+      return {
+        passed: false,
+        error: 'VALIDATION ERROR: query cases must use alternative_proof_nl as an array (one proof per answer)',
+        expected: 'alternative_proof_nl string[]',
+        actual: altProofNl
+      };
+    }
+    if (testCase.action !== 'query' && Array.isArray(altProofNl)) {
+      return {
+        passed: false,
+        error: 'VALIDATION ERROR: prove cases must use alternative_proof_nl as a string',
+        expected: 'alternative_proof_nl string',
+        actual: altProofNl
+      };
+    }
+    if (testCase.action === 'query' && Array.isArray(altProofNl)) {
+      const answerCount = countQueryAnswers(testCase.expected_nl);
+      if (answerCount > 0 && altProofNl.length !== answerCount) {
+        return {
+          passed: false,
+          error: `VALIDATION ERROR: alternative_proof_nl length (${altProofNl.length}) does not match number of answers (${answerCount})`,
+          expected: `alternative_proof_nl length ${answerCount}`,
+          actual: altProofNl.length
+        };
+      }
     }
   }
   return null;
@@ -539,6 +581,7 @@ function proofIncludes(expectedProofNl, actualText) {
 function compareOutputs(testCase, actualText) {
   const expected = testCase.expected_nl || '';
   const proofNl = testCase.proof_nl;
+  const altProofNl = testCase.alternative_proof_nl;
 
   // For learn actions, just verify facts were learned (relaxed validation)
   // Exact fact counts are validated in healthCheck.js
@@ -566,11 +609,11 @@ function compareOutputs(testCase, actualText) {
     if (testCase.action === 'query' && Array.isArray(expected)) {
       const actualNorm = normalizeText(actualText);
       const mainOk = expected.every(entry => actualNorm.includes(normalizeText(entry)));
-      const proofOk = proofIncludes(proofNl, actualText);
+      const proofOk = proofIncludes(proofNl, actualText) || proofIncludes(altProofNl, actualText);
       return mainOk && proofOk;
     }
     const mainOk = normalizeText(actualText).includes(normalizeText(expected));
-    const proofOk = proofIncludes(proofNl, actualText);
+    const proofOk = proofIncludes(proofNl, actualText) || proofIncludes(altProofNl, actualText);
     return mainOk && proofOk;
   }
 

@@ -1,0 +1,52 @@
+# Medicine - Fundamental Relations
+# Simple isA definitions only
+
+# Symptomatology Relations
+@hasSymptom isA __Relation
+@hasSign isA __Relation
+@presents isA __Relation
+@manifestsAs isA __Relation
+
+# Diagnostic Relations
+@diagnoses isA __Relation
+@ordersTest isA __Relation
+@testResult isA __Relation
+@indicates isA __Relation
+@rulesOut isA __Relation
+
+# Treatment Relations
+@treats isA __Relation
+@prescribes isA __Relation
+@administers isA __Relation
+@improves isA __Relation
+@alleviates isA __Relation
+
+# Adverse Relations
+@contraindicatedFor isA __Relation
+@adverseEffect isA __Relation
+@interactsWith isA __SymmetricRelation
+@sensitiveFor isA __Relation
+
+# Risk & Causation
+@riskFactorFor isA __Relation
+@causedBy isA __Relation
+@predisposesTo isA __Relation
+@complicatedBy isA __Relation
+
+# Evidence Relations
+@evidenceLevel isA __Relation
+@supportedBy isA __Relation
+@basedOn isA __Relation
+@recommendedBy isA __Relation
+
+# Outcome Relations
+@leadsTo isA __Relation
+@resultsIn isA __Relation
+@prognosisOf isA __Relation
+@recoversFrom isA __Relation
+
+# Anatomical Relations
+@locatedIn isA __Relation
+@partOf isA __TransitiveRelation
+@affectedBy isA __Relation
+@innervates isA __Relation

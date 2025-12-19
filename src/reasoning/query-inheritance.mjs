@@ -111,6 +111,81 @@ export function searchPropertyInheritance(session, operator, entityName, holeNam
 }
 
 /**
+ * Search for entities that inherit a property value via isA chain
+ * e.g., causes ?x SupplyChainDisruption because Hazard causes SupplyChainDisruption
+ * @param {Session} session - Session instance
+ * @param {string} operator - Property operator
+ * @param {string} value - Property value
+ * @param {string} holeName - Name of the hole variable
+ * @returns {Array} Query results with bindings and proof steps
+ */
+export function searchPropertyInheritanceByValue(session, operator, value, holeName) {
+  const results = [];
+  const componentKB = session?.componentKB;
+
+  const holderFacts = componentKB
+    ? componentKB.findByOperatorAndArg1(operator, value)
+    : session.kbFacts.filter(f => f.metadata?.operator === operator && f.metadata?.args?.[1] === value)
+      .map(f => f.metadata);
+
+  const holders = new Set();
+  for (const fact of holderFacts) {
+    const holder = fact.args?.[0];
+    if (holder) holders.add(holder);
+  }
+
+  if (holders.size === 0) return results;
+
+  const candidates = new Set();
+  if (componentKB) {
+    const isAFacts = componentKB.findByOperator('isA');
+    for (const fact of isAFacts) {
+      if (fact.args?.[0]) candidates.add(fact.args[0]);
+    }
+  } else {
+    for (const fact of session.kbFacts) {
+      const meta = fact.metadata;
+      if (meta?.operator === 'isA' && meta.args?.[0]) {
+        candidates.add(meta.args[0]);
+      }
+    }
+  }
+
+  for (const holder of holders) {
+    candidates.add(holder);
+  }
+
+  for (const entity of candidates) {
+    for (const holder of holders) {
+      if (!entityIsA(session, entity, holder)) continue;
+      if (isPropertyNegated(session, operator, entity, value)) continue;
+
+      const chainSteps = findIsAPath(session, entity, holder) || [];
+      const depth = chainSteps.length;
+      const fullSteps = [...chainSteps, `${operator} ${holder} ${value}`];
+
+      const factBindings = new Map();
+      factBindings.set(holeName, {
+        answer: entity,
+        similarity: 0.9 - (depth * 0.05),
+        method: 'property_inheritance',
+        steps: fullSteps
+      });
+
+      results.push({
+        bindings: factBindings,
+        score: 0.9 - (depth * 0.05),
+        method: 'property_inheritance',
+        depth,
+        inheritedFrom: holder
+      });
+    }
+  }
+
+  return results;
+}
+
+/**
  * Check if a property is negated for an entity (directly or via type)
  * Uses HDC similarity matching to compare against Not references
  * @param {Session} session - Session instance
@@ -236,4 +311,57 @@ export function entityIsA(session, entity, type) {
     }
   }
   return false;
+}
+
+function findIsAPath(session, entity, targetType) {
+  if (entity === targetType) return [];
+
+  const visited = new Set([entity]);
+  const queue = [entity];
+  const prev = new Map();
+  const componentKB = session?.componentKB;
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    const parents = [];
+
+    if (componentKB) {
+      const facts = componentKB.findByOperatorAndArg0('isA', current);
+      for (const fact of facts) {
+        if (fact.args?.[1]) parents.push(fact.args[1]);
+      }
+    } else {
+      for (const fact of session.kbFacts) {
+        const meta = fact.metadata;
+        if (meta?.operator === 'isA' && meta.args?.[0] === current && meta.args?.[1]) {
+          parents.push(meta.args[1]);
+        }
+      }
+    }
+
+    for (const parent of parents) {
+      if (visited.has(parent)) continue;
+      visited.add(parent);
+      prev.set(parent, current);
+      if (parent === targetType) {
+        queue.length = 0;
+        break;
+      }
+      queue.push(parent);
+    }
+  }
+
+  if (!prev.has(targetType)) return null;
+
+  const nodes = [targetType];
+  while (prev.has(nodes[nodes.length - 1])) {
+    nodes.push(prev.get(nodes[nodes.length - 1]));
+  }
+  nodes.reverse();
+
+  const steps = [];
+  for (let i = 0; i < nodes.length - 1; i++) {
+    steps.push(`isA ${nodes[i]} ${nodes[i + 1]}`);
+  }
+  return steps;
 }

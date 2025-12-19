@@ -1,0 +1,5 @@
+# Psychology Domain Theory - Index
+# Fundamental psychological concepts and relations
+
+@_ Load "./00-concepts.sys2"
+@_ Load "./01-relations.sys2"

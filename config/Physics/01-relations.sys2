@@ -1,0 +1,64 @@
+# Physics - Fundamental Relations
+# Based on hardcoded_theory_analysis.md Section 8.13
+# Simple isA definitions only
+
+# ===== Measurement Relations =====
+hasQuantity isA __Relation
+measuredBy isA __Relation
+hasUnit isA __Relation
+hasValue isA __Relation
+hasUncertainty isA __Relation
+measuredAt isA __Relation
+calibratedWith isA __Relation
+
+# ===== Physical Relations =====
+conserves isA __Relation
+causedBy isA __Relation
+transformsTo isA __Relation
+relativeTo isA __Relation
+invariantUnder isA __Relation
+transferredBetween isA __Relation
+conservedIn isA __Relation
+
+# ===== Evidence Relations =====
+supportsLaw isA __Relation
+violatesLaw isA __Relation
+supportsHypothesis isA __Relation
+refutesHypothesis isA __Relation
+reproducibleBy isA __Relation
+
+# ===== System Relations =====
+partOfSystem isA __Relation
+partOfSystem isA __TransitiveRelation
+interactsWith isA __Relation
+interactsWith isA __SymmetricRelation
+constrainedBy isA __Relation
+satisfiesBoundary isA __Relation
+
+# ===== Field Relations =====
+hasField isA __Relation
+fieldStrengthAt isA __Relation
+exertsForceOn isA __Relation
+inFrame isA __Relation
+
+# ===== Temporal Relations =====
+before isA __Relation
+after isA __Relation
+simultaneous isA __Relation
+simultaneous isA __SymmetricRelation
+
+# ===== Causal Relations =====
+derivedFrom isA __Relation
+dependsOn isA __Relation
+proportionalTo isA __Relation
+proportionalTo isA __SymmetricRelation
+inverselyProportionalTo isA __Relation
+inverselyProportionalTo isA __SymmetricRelation
+
+# ===== Approximation Relations =====
+approxEquals isA __Relation
+approxEquals isA __SymmetricRelation
+approximates isA __Relation
+negligibleComparedTo isA __Relation
+dominates isA __Relation
+unitOf isA __Relation

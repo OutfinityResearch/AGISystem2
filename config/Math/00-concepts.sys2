@@ -1,0 +1,62 @@
+# Mathematics - Fundamental Concepts
+
+# ===== Number System Hierarchy =====
+Number isA __Entity
+NaturalNumber isA Number
+Integer isA Number
+NaturalNumber subsetOf Integer
+Rational isA Number
+Integer subsetOf Rational
+Real isA Number
+Rational subsetOf Real
+Complex isA Number
+Real subsetOf Complex
+
+# ===== Set Theory =====
+Set isA __Entity
+EmptySet isA Set
+FiniteSet isA Set
+InfiniteSet isA Set
+CountableSet isA InfiniteSet
+UncountableSet isA InfiniteSet
+PowerSet isA Set
+
+# ===== Algebraic Structures =====
+AlgebraicStructure isA __Entity
+Group isA AlgebraicStructure
+AbelianGroup isA Group
+Ring isA AlgebraicStructure
+Field isA Ring
+VectorSpace isA AlgebraicStructure
+Module isA AlgebraicStructure
+
+# ===== Functions =====
+Function isA __Entity
+Injection isA Function
+Surjection isA Function
+Bijection isA Function
+Bijection isA Injection
+Bijection isA Surjection
+
+# ===== Geometry =====
+GeometricObject isA __Entity
+Point isA GeometricObject
+Line isA GeometricObject
+Plane isA GeometricObject
+Triangle isA GeometricObject
+Circle isA GeometricObject
+Polygon isA GeometricObject
+
+# ===== Calculus =====
+Limit isA __Entity
+Derivative isA __Entity
+Integral isA __Entity
+Sequence isA __Entity
+Series isA __Entity
+
+# ===== Proof Theory =====
+Theorem isA __Entity
+Lemma isA Theorem
+Corollary isA Theorem
+Axiom isA __Entity
+Proof isA __Entity

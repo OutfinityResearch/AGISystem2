@@ -1,0 +1,5 @@
+# Medicine Domain Theory - Index
+# Fundamental medical concepts and relations
+
+@_ Load "./00-concepts.sys2"
+@_ Load "./01-relations.sys2"

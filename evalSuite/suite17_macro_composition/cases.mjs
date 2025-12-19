@@ -92,7 +92,7 @@ export const steps = [
     input_nl: 'Must TeamAlpha coordinate?',
     input_dsl: '@goal must TeamAlpha Coordinate',
     expected_nl: 'True: TeamAlpha must Coordinate.',
-    proof_nl: 'must TeamAlpha Protect. Rule: must ?T Protect implies must ?T Coordinate. Therefore must TeamAlpha Coordinate.'
+    proof_nl: 'Applied rule: implies @r2cond @r2conseq. Therefore TeamAlpha must Coordinate.'
   },
 
   // === PROVE: Team must train via can Mobilize rule ===
@@ -101,7 +101,7 @@ export const steps = [
     input_nl: 'Must TeamAlpha train?',
     input_dsl: '@goal must TeamAlpha Train',
     expected_nl: 'True: TeamAlpha must Train.',
-    proof_nl: 'can TeamAlpha Mobilize. Rule: can ?T Mobilize implies must ?T Train. Therefore must TeamAlpha Train.'
+    proof_nl: 'Applied rule: implies @r1cond @r1conseq. Therefore TeamAlpha must Train.'
   },
 
   // === PROVE: Temporal chain ===
@@ -110,7 +110,7 @@ export const steps = [
     input_nl: 'Is Planning before Completion?',
     input_dsl: '@goal before Planning Completion',
     expected_nl: 'True: Planning is before Completion.',
-    proof_nl: 'before Planning Deployment. before Deployment Completion. Transitive chain (2 hops).'
+    proof_nl: 'Planning is before Deployment. Deployment is before Completion. Transitive chain verified (2 hops). Therefore Planning is before Completion.'
   },
 
   // === NEGATIVE: Location blocked by negation ===
@@ -118,8 +118,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is TeamAlpha located in ReactorSite?',
     input_dsl: '@goal locatedIn TeamAlpha ReactorSite',
-    expected_nl: 'Cannot prove: TeamAlpha locatedIn ReactorSite.',
-    proof_nl: 'Search: Found Not(locatedIn TeamAlpha ReactorSite). Negation blocks inference.'
+    expected_nl: 'Cannot prove: TeamAlpha is in ReactorSite.',
+    proof_nl: 'Search: TeamAlpha isA ResponseTeam. Found explicit negation: Not(locatedIn TeamAlpha ReactorSite). Negation blocks inference.'
   },
 
   // === QUERY: What must TeamAlpha do? ===
@@ -134,8 +134,8 @@ export const steps = [
     ],
     proof_nl: [
       'must TeamAlpha Protect',
-      'can TeamAlpha Mobilize. Rule: can ?T Mobilize implies must ?T Train',
-      'must TeamAlpha Protect. Rule: must ?T Protect implies must ?T Coordinate'
+      'can TeamAlpha Mobilize. Applied rule: implies @r1cond @r1conseq',
+      'must TeamAlpha Protect. Applied rule: implies @r2cond @r2conseq'
     ]
   },
 
@@ -145,7 +145,7 @@ export const steps = [
     input_nl: 'Does SupplierA cause ProductReady?',
     input_dsl: '@goal causes SupplierA ProductReady',
     expected_nl: 'True: SupplierA causes ProductReady.',
-    proof_nl: 'causes SupplierA Supplies. causes Supplies Production. causes Production QA. causes QA ProductReady. Transitive chain (4 hops).'
+    proof_nl: 'SupplierA causes Supplies. Supplies causes Production. Production causes QA. QA causes ProductReady. Causal chain verified (4 hops). Therefore SupplierA causes ProductReady.'
   },
 
   // === PROVE: QA to Exportable ===
@@ -154,7 +154,7 @@ export const steps = [
     input_nl: 'Does QA cause Exportable?',
     input_dsl: '@goal causes QA Exportable',
     expected_nl: 'True: QA causes Exportable.',
-    proof_nl: 'causes QA ProductReady. causes ProductReady Exportable. Transitive chain (2 hops).'
+    proof_nl: 'QA causes ProductReady. ProductReady causes Exportable. Causal chain verified (2 hops). Therefore QA causes Exportable.'
   },
 
   // === QUERY: What is part of SupplyChain? ===
@@ -163,8 +163,8 @@ export const steps = [
     input_nl: 'What products are in the supply chain?',
     input_dsl: '@q partOf ?x SupplyChain',
     expected_nl: [
-      'Beam is partOf SupplyChain.',
-      'Battery is partOf SupplyChain.'
+      'Beam partOf SupplyChain.',
+      'Battery partOf SupplyChain.'
     ],
     proof_nl: [
       'partOf Beam SupplyChain',
@@ -178,7 +178,7 @@ export const steps = [
     input_nl: 'Does SupplierB cause ProductReady?',
     input_dsl: '@goal causes SupplierB ProductReady',
     expected_nl: 'True: SupplierB causes ProductReady.',
-    proof_nl: 'causes SupplierB Supplies. causes Supplies Production. causes Production QA. causes QA ProductReady. Transitive chain (4 hops).'
+    proof_nl: 'SupplierB causes Supplies. Supplies causes Production. Production causes QA. QA causes ProductReady. Causal chain verified (4 hops). Therefore SupplierB causes ProductReady.'
   }
 ];
 

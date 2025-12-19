@@ -7,6 +7,7 @@
 
 import { similarity } from '../core/operations.mjs';
 import { getThresholds } from '../core/constants.mjs';
+import { Statement, Identifier } from '../parser/ast.mjs';
 import { debug_trace } from '../utils/debug.js';
 
 function dbg(category, ...args) {
@@ -242,6 +243,20 @@ export class ConditionProver {
     dbg('SINGLE', 'Condition:', condStr, 'Bindings:', [...bindings.entries()]);
 
     if (!condStr.includes('?')) {
+      const parts = condStr.trim().split(/\s+/);
+      if (parts[0] === 'holds' && parts.length >= 2) {
+        const args = parts.slice(1).map(arg => new Identifier(arg));
+        const goal = new Statement(null, new Identifier('holds'), args);
+        const result = this.engine.proveGoal(goal, depth + 1);
+        if (result.valid) {
+          return {
+            valid: true,
+            confidence: result.confidence,
+            steps: result.steps
+          };
+        }
+      }
+
       const match = this.engine.kbMatcher.findMatchingFact(condStr);
       if (match.found) {
         return {
@@ -465,71 +480,76 @@ export class ConditionProver {
     }
 
     const condHash = this.engine.hashVector(conditionVec);
-    if (this.engine.visited.has(condHash)) {
+    const condKey = `cond:${condHash}`;
+    if (this.engine.visited.has(condKey)) {
       return { valid: false, reason: 'Cycle' };
     }
-    this.engine.visited.add(condHash);
+    this.engine.visited.add(condKey);
 
-    for (const fact of this.session.kbFacts) {
-      if (!fact.vector) continue;
-      const sim = similarity(conditionVec, fact.vector);
-      if (sim > this.thresholds.CONCLUSION_MATCH) {
-        // Build fact string from metadata
-        let factStr = '';
-        if (fact.metadata?.operator && fact.metadata?.args) {
-          factStr = `${fact.metadata.operator} ${fact.metadata.args.join(' ')}`;
-        }
-        return {
-          valid: true,
-          method: 'direct',
-          confidence: sim,
-          steps: [{ operation: 'condition_satisfied', confidence: sim, fact: factStr }]
-        };
-      }
-    }
-
-    for (const rule of this.session.rules) {
-      if (!rule.conclusion) continue;
-      const conclusionSim = similarity(conditionVec, rule.conclusion);
-      if (conclusionSim > this.thresholds.CONCLUSION_MATCH) {
-        const subResult = this.proveCondition(rule, depth + 1);
-        if (subResult.valid) {
-          // Extract conclusion fact text - try to resolve reference
-          let conclusionFact = '';
-          if (rule.conclusionAST?.operator) {
-            const op = rule.conclusionAST.operator.name || rule.conclusionAST.operator.value;
-            const args = (rule.conclusionAST.args || []).map(a => a.name || a.value).filter(Boolean);
-            conclusionFact = `${op} ${args.join(' ')}`;
-          } else if (rule.source) {
-            // Parse source to find conclusion reference: "@name Implies @cond @conc" or "$cond $conc"
-            const match = rule.source.match(/Implies\s+[@$]?(\w+)\s+[@$]?(\w+)/i);
-            if (match) {
-              const refName = match[2]; // Second group is the conclusion
-              // Look up the reference text
-              if (this.session.referenceTexts.has(refName)) {
-                conclusionFact = this.session.referenceTexts.get(refName);
-              } else {
-                conclusionFact = refName;
-              }
-            } else {
-              conclusionFact = rule.name || rule.source;
-            }
+    try {
+      for (const fact of this.session.kbFacts) {
+        if (!fact.vector) continue;
+        const sim = similarity(conditionVec, fact.vector);
+        if (sim > this.thresholds.CONCLUSION_MATCH) {
+          // Build fact string from metadata
+          let factStr = '';
+          if (fact.metadata?.operator && fact.metadata?.args) {
+            factStr = `${fact.metadata.operator} ${fact.metadata.args.join(' ')}`;
           }
-
           return {
             valid: true,
-            method: 'chained_rule',
-            confidence: Math.min(conclusionSim, subResult.confidence) * this.thresholds.CONFIDENCE_DECAY,
-            steps: [
-              { operation: 'chain_via_rule', rule: rule.name || rule.source, fact: conclusionFact },
-              ...subResult.steps
-            ]
+            method: 'direct',
+            confidence: sim,
+            steps: [{ operation: 'condition_satisfied', confidence: sim, fact: factStr }]
           };
         }
       }
-    }
 
-    return { valid: false, reason: 'Cannot prove condition' };
+      for (const rule of this.session.rules) {
+        if (!rule.conclusion) continue;
+        const conclusionSim = similarity(conditionVec, rule.conclusion);
+        if (conclusionSim > this.thresholds.CONCLUSION_MATCH) {
+          const subResult = this.proveCondition(rule, depth + 1);
+          if (subResult.valid) {
+            // Extract conclusion fact text - try to resolve reference
+            let conclusionFact = '';
+            if (rule.conclusionAST?.operator) {
+              const op = rule.conclusionAST.operator.name || rule.conclusionAST.operator.value;
+              const args = (rule.conclusionAST.args || []).map(a => a.name || a.value).filter(Boolean);
+              conclusionFact = `${op} ${args.join(' ')}`;
+            } else if (rule.source) {
+              // Parse source to find conclusion reference: "@name Implies @cond @conc" or "$cond $conc"
+              const match = rule.source.match(/Implies\s+[@$]?(\w+)\s+[@$]?(\w+)/i);
+              if (match) {
+                const refName = match[2]; // Second group is the conclusion
+                // Look up the reference text
+                if (this.session.referenceTexts.has(refName)) {
+                  conclusionFact = this.session.referenceTexts.get(refName);
+                } else {
+                  conclusionFact = refName;
+                }
+              } else {
+                conclusionFact = rule.name || rule.source;
+              }
+            }
+
+            return {
+              valid: true,
+              method: 'chained_rule',
+              confidence: Math.min(conclusionSim, subResult.confidence) * this.thresholds.CONFIDENCE_DECAY,
+              steps: [
+                { operation: 'chain_via_rule', rule: rule.name || rule.source, fact: conclusionFact },
+                ...subResult.steps
+              ]
+            };
+          }
+        }
+      }
+
+      return { valid: false, reason: 'Cannot prove condition' };
+    } finally {
+      this.engine.visited.delete(condKey);
+    }
   }
 
   /**
@@ -606,11 +626,16 @@ export class ConditionProver {
     }
 
     this.engine.logStep('and_success', `${parts.length} conditions`);
+    const detail = parts.map(p => this.instantiatePart(p, new Map())).filter(Boolean).join(', ');
     return {
       valid: true,
       method: 'and_condition',
       confidence: minConfidence * this.thresholds.CONFIDENCE_DECAY,
-      steps: [{ operation: 'proving_and_condition', parts: parts.length }, ...allSteps]
+      steps: [
+        { operation: 'proving_and_condition', parts: parts.length },
+        ...allSteps,
+        { operation: 'and_satisfied', detail }
+      ]
     };
   }
 
@@ -649,6 +674,19 @@ export class ConditionProver {
   provePart(part, depth) {
     if (part.type === 'And' || part.type === 'Or' || part.type === 'Not') {
       return this.proveCompoundCondition(part, depth);
+    }
+    if (part.type === 'leaf' && part.ast) {
+      const op = this.engine.extractOperatorName(part.ast);
+      if (op === 'holds') {
+        const result = this.engine.proveGoal(part.ast, depth + 1);
+        if (result.valid) {
+          return {
+            valid: true,
+            confidence: result.confidence,
+            steps: result.steps
+          };
+        }
+      }
     }
     if (part.type === 'leaf' && part.vector) {
       return this.proveSimpleCondition(part.vector, depth);

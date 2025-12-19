@@ -53,12 +53,14 @@ export function searchViaRules(session, operatorName, knowns, holes) {
     if (!unifyOk) continue;
 
     // Try to find values for holes by proving conditions
-    const holeVarNames = [];
+    const holeBindings = [];
     for (const hole of holes) {
       const argIndex = hole.index - 1;
       const concArg = concArgs[argIndex];
       if (concArg?.isVariable) {
-        holeVarNames.push({ holeName: hole.name, varName: concArg.name });
+        holeBindings.push({ holeName: hole.name, varName: concArg.name });
+      } else if (concArg?.name) {
+        holeBindings.push({ holeName: hole.name, constValue: concArg.name });
       }
     }
 
@@ -70,10 +72,10 @@ export function searchViaRules(session, operatorName, knowns, holes) {
       const factBindings = new Map();
       let valid = true;
 
-      for (const { holeName, varName } of holeVarNames) {
-        const value = cm.get(varName);
+      for (const binding of holeBindings) {
+        const value = binding.varName ? cm.get(binding.varName) : binding.constValue;
         if (value) {
-          factBindings.set(holeName, {
+          factBindings.set(binding.holeName, {
             answer: value,
             similarity: 0.85,
             method: 'rule_derived'

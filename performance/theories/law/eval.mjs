@@ -1,3 +1,5 @@
+export const min_complex = 94;
+
 export default {
     theory: "law",
     test_cases: [

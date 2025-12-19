@@ -13,6 +13,7 @@
 // Re-export inheritance helpers for backwards compatibility
 export {
   searchPropertyInheritance,
+  searchPropertyInheritanceByValue,
   isPropertyNegated,
   getAllParentTypes,
   entityIsA
@@ -23,6 +24,18 @@ import { debug_trace } from '../utils/debug.js';
 
 function dbg(category, ...args) {
   debug_trace(`[MetaOps:${category}]`, ...args);
+}
+
+const EXCLUDED_PROPERTY_OPERATORS = new Set([
+  'difference',
+  'bundlepattern',
+  'inducepattern'
+]);
+
+function shouldIncludeProperty(operator, value) {
+  if (!value) return false;
+  const key = String(operator || '').toLowerCase();
+  return !EXCLUDED_PROPERTY_OPERATORS.has(key);
 }
 
 /**
@@ -43,7 +56,7 @@ export function searchSimilar(session, known, hole) {
     const facts = componentKB.findByArg0(knownName);
     for (const f of facts) {
       session.reasoningStats.kbScans++;
-      if (f.args?.[1]) {
+      if (shouldIncludeProperty(f.operator, f.args?.[1])) {
         knownProps.add(`${f.operator}:${f.args[1]}`);
       }
     }
@@ -51,7 +64,7 @@ export function searchSimilar(session, known, hole) {
     for (const fact of session.kbFacts) {
       session.reasoningStats.kbScans++;
       const meta = fact.metadata;
-      if (meta?.args?.[0] === knownName && meta?.args?.[1]) {
+      if (meta?.args?.[0] === knownName && shouldIncludeProperty(meta.operator, meta.args?.[1])) {
         knownProps.add(`${meta.operator}:${meta.args[1]}`);
       }
     }
@@ -76,7 +89,7 @@ export function searchSimilar(session, known, hole) {
         const candFacts = componentKB.findByArg0(candidate);
         const candProps = new Set();
         for (const cf of candFacts) {
-          if (cf.args?.[1]) {
+          if (shouldIncludeProperty(cf.operator, cf.args?.[1])) {
             candProps.add(`${cf.operator}:${cf.args[1]}`);
           }
         }
@@ -113,7 +126,8 @@ export function searchSimilar(session, known, hole) {
     const candFacts = componentKB ? componentKB.findByArg0(candidateName) : [];
     const shared = [];
     for (const cf of candFacts) {
-      const prop = `${cf.operator}:${cf.args?.[1]}`;
+      if (!shouldIncludeProperty(cf.operator, cf.args?.[1])) continue;
+      const prop = `${cf.operator}:${cf.args[1]}`;
       if (knownProps.has(prop)) {
         shared.push(cf.args?.[1]);
       }
@@ -178,7 +192,7 @@ export function searchInduce(session, entities, hole) {
     const facts = componentKB.findByArg0(entity.name);
     for (const f of facts) {
       session.reasoningStats.kbScans++;
-      if (f.args?.[1]) {
+      if (shouldIncludeProperty(f.operator, f.args?.[1])) {
         props.add(`${f.operator}:${f.args[1]}`);
       }
     }
@@ -246,7 +260,7 @@ export function searchBundle(session, entities, hole) {
     const facts = componentKB.findByArg0(entity.name);
     for (const f of facts) {
       session.reasoningStats.kbScans++;
-      if (f.args?.[1]) {
+      if (shouldIncludeProperty(f.operator, f.args?.[1])) {
         allProps.add(`${f.operator}:${f.args[1]}`);
       }
     }
@@ -302,14 +316,14 @@ export function searchDifference(session, entityA, entityB, hole) {
   const propsA = new Set();
   for (const f of componentKB.findByArg0(entityA.name)) {
     session.reasoningStats.kbScans++;
-    if (f.args?.[1]) propsA.add(`${f.operator}:${f.args[1]}`);
+    if (shouldIncludeProperty(f.operator, f.args?.[1])) propsA.add(`${f.operator}:${f.args[1]}`);
   }
 
   // Get properties of B
   const propsB = new Set();
   for (const f of componentKB.findByArg0(entityB.name)) {
     session.reasoningStats.kbScans++;
-    if (f.args?.[1]) propsB.add(`${f.operator}:${f.args[1]}`);
+    if (shouldIncludeProperty(f.operator, f.args?.[1])) propsB.add(`${f.operator}:${f.args[1]}`);
   }
 
   // Find differences
@@ -395,10 +409,10 @@ export function searchAnalogy(session, knownA, knownB, knownC, hole) {
       const propsC = new Set();
 
       for (const f of componentKB.findByArg0(knownA.name)) {
-        if (f.args?.[1]) propsA.add(f.args[1]);
+        if (shouldIncludeProperty(f.operator, f.args?.[1])) propsA.add(f.args[1]);
       }
       for (const f of componentKB.findByArg0(knownC.name)) {
-        if (f.args?.[1]) propsC.add(f.args[1]);
+        if (shouldIncludeProperty(f.operator, f.args?.[1])) propsC.add(f.args[1]);
       }
 
       // If B is a property of A, find corresponding property of C

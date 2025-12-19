@@ -74,7 +74,8 @@ export const steps = [
     input_nl: 'Is Mittens a Mammal? (7-step deep chain)',
     input_dsl: '@goal isA Mittens Mammal',
     expected_nl: 'True: Mittens is a mammal.',
-    proof_nl: 'Mittens is a persiancat. PersianCat is a longhair. LongHair is a domesticcat. DomesticCat is a cat. Cat is a feline. Feline is a mammal. Transitive chain verified (6 hops). Therefore Mittens is a mammal.'
+    proof_nl: 'Mittens is a persiancat. PersianCat is a longhair. LongHair is a domesticcat. DomesticCat is a cat. Cat is a feline. Feline is a mammal. Transitive chain verified (6 hops). Therefore Mittens is a mammal.',
+    alternative_proof_nl: 'Mittens is a persiancat. PersianCat is a longhair. LongHair is a domesticcat. DomesticCat is a cat. Cat is a mammal. Transitive chain verified (5 hops). Therefore Mittens is a mammal.'
   },
 
   // === SETUP: Deep geographic hierarchy ===

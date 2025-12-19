@@ -65,7 +65,7 @@ export const steps = [
     input_nl: 'Can Cell respire?',
     input_dsl: '@goal can Cell Respire',
     expected_nl: 'True: Cell can Respire.',
-    proof_nl: 'has Cell Mitochondria. isA Cell Eukaryote. And condition satisfied. Rule implies can Cell Respire.'
+    proof_nl: 'Applied rule: implies @r1cond @r1conseq. Cell has a mitochondria. Cell is an eukaryote. And condition satisfied: has Cell Mitochondria, isA Cell Eukaryote. Therefore Cell can Respire.'
   },
 
   // === PROVE: Human can respire via chain ===
@@ -74,7 +74,7 @@ export const steps = [
     input_nl: 'Can Human respire?',
     input_dsl: '@goal can Human Respire',
     expected_nl: 'True: Human can Respire.',
-    proof_nl: 'has Human Cell. can Cell Respire. And condition satisfied. Rule implies can Human Respire.'
+    proof_nl: 'Applied rule: implies @r2cond @r2conseq. Applied rule: rule implies can Cell Respire. Cell has a mitochondria. Cell is an eukaryote. And condition satisfied: has Cell Mitochondria, isA Cell Eukaryote. Human has a cell. Cell can Respire. And condition satisfied: has Human Cell, can Cell Respire. Therefore Human can Respire.'
   },
 
   // === PROVE: ATP production via causal chain ===
@@ -83,7 +83,7 @@ export const steps = [
     input_nl: 'Does glucose cause ATP production?',
     input_dsl: '@goal causes Glucose ATP',
     expected_nl: 'True: Glucose causes ATP.',
-    proof_nl: 'causes Glucose Glycolysis. causes Glycolysis Pyruvate. causes Pyruvate KrebsCycle. causes KrebsCycle NADH. causes NADH ElectronTransport. causes ElectronTransport ATP. Transitive chain (6 hops).'
+    proof_nl: 'Glucose causes Glycolysis. Glycolysis causes Pyruvate. Pyruvate causes KrebsCycle. KrebsCycle causes NADH. NADH causes ElectronTransport. ElectronTransport causes ATP. Causal chain verified (6 hops). Therefore Glucose causes ATP.'
   },
 
   // === QUERY: What does glucose cause? ===
@@ -115,7 +115,7 @@ export const steps = [
     input_nl: 'Can Prokaryote respire?',
     input_dsl: '@goal can Prokaryote Respire',
     expected_nl: 'Cannot prove: Prokaryote can Respire.',
-    proof_nl: 'Search: No has Prokaryote Mitochondria. And condition not satisfied. No applicable rules.'
+    proof_nl: 'Search: Searched isA Prokaryote ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
   },
 
   // === SETUP 2: Virus severity rule ===
@@ -150,7 +150,7 @@ export const steps = [
     input_nl: 'Does VirusX cause organ failure?',
     input_dsl: '@goal causes VirusX OrganFailure',
     expected_nl: 'True: VirusX causes OrganFailure.',
-    proof_nl: 'has Human RiskFactor. causes VirusX Infection. And satisfied. Rule implies causes VirusX SevereOutcome. causes SevereOutcome OrganFailure. Transitive chain.'
+    proof_nl: 'VirusX causes CytokineStorm. CytokineStorm causes OrganFailure. Causal chain verified (2 hops). Therefore VirusX causes OrganFailure.'
   },
 
   // === NEGATIVE: DrugD blocked by negation ===
@@ -159,7 +159,7 @@ export const steps = [
     input_nl: 'Does DrugD cause ElectronTransport?',
     input_dsl: '@goal causes DrugD ElectronTransport',
     expected_nl: 'Cannot prove: DrugD causes ElectronTransport.',
-    proof_nl: 'Search: Found Not(causes DrugD ElectronTransport). Negation blocks inference.'
+    proof_nl: 'Search: Found explicit negation: Not(causes DrugD ElectronTransport). Negation blocks inference.'
   }
 ];
 

@@ -184,6 +184,16 @@ export class HolographicProofEngine {
       const transitiveResult = this.hdcTransitiveSearch(goal, goalVec);
       if (transitiveResult.valid) {
         transitiveResult.goal = goalStr;
+        if (this.config.VALIDATION_REQUIRED) {
+          const symbolicProof = this.validateWithSymbolic(goal);
+          if (symbolicProof.valid) {
+            return {
+              ...transitiveResult,
+              method: 'hdc_transitive_validated',
+              steps: symbolicProof.steps?.length ? symbolicProof.steps : transitiveResult.steps
+            };
+          }
+        }
         return transitiveResult;
       }
     }
@@ -193,6 +203,15 @@ export class HolographicProofEngine {
     if (ruleResult.valid) {
       ruleResult.goal = goalStr;
       return ruleResult;
+    }
+
+    if (this.config.FALLBACK_TO_SYMBOLIC) {
+      try {
+        const symbolic = this.symbolicEngine.prove(goal);
+        return symbolic;
+      } catch (e) {
+        dbg('VALIDATE', `Symbolic fallback error: ${e.message}`);
+      }
     }
 
     return { valid: false, reason: 'HDC proof not found', goal: goalStr };
@@ -461,14 +480,15 @@ export class HolographicProofEngine {
       // Try to satisfy conditions
       const conditionResult = this.checkConditionsHDC(rule);
       if (conditionResult.satisfied) {
-        // Validate with symbolic
-        if (this.validateRuleApplication(goal, rule)) {
+        // Validate with symbolic and capture proof steps
+        const symbolicProof = this.validateWithSymbolic(goal);
+        if (symbolicProof.valid) {
           return {
             valid: true,
             confidence: sim * conditionResult.confidence,
             method: 'hdc_rule_validated',
             rule: rule.label || rule.name || rule.id,
-            steps: [{
+            steps: symbolicProof.steps?.length ? symbolicProof.steps : [{
               operation: 'rule_application',
               rule: rule.label || rule.name || rule.id,
               ruleId: rule.id || null,

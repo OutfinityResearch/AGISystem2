@@ -118,7 +118,7 @@ export const steps = [
     input_nl: 'Does CityPowerDown cause supply chain disruption?',
     input_dsl: '@goal causes CityPowerDown SupplyChainDisruption',
     expected_nl: 'True: CityPowerDown causes SupplyChainDisruption.',
-    proof_nl: 'CityPowerDown isA Hazard. Hazard causes SupplyChainDisruption. Transitive via isA inheritance.'
+    proof_nl: 'CityPowerDown is a hazard. Hazard causes SupplyChainDisruption. CityPowerDown causes SupplyChainDisruption. Therefore CityPowerDown causes SupplyChainDisruption.'
   },
 
   // === PROVE: Temporal chain from earthquake ===
@@ -127,7 +127,7 @@ export const steps = [
     input_nl: 'Is CityPowerDown before ReliefDeployment?',
     input_dsl: '@goal before CityPowerDown ReliefDeployment',
     expected_nl: 'True: CityPowerDown is before ReliefDeployment.',
-    proof_nl: 'before CityPowerDown EvacuationStart. before EvacuationStart ReliefDeployment. Transitive chain (2 hops).'
+    proof_nl: 'CityPowerDown is before EvacuationStart. EvacuationStart is before ReliefDeployment. Transitive chain verified (2 hops). Therefore CityPowerDown is before ReliefDeployment.'
   },
 
   // === PROVE: Responder obligation from graph ===
@@ -136,7 +136,7 @@ export const steps = [
     input_nl: 'Must TeamAlpha assist?',
     input_dsl: '@goal must TeamAlpha Assist',
     expected_nl: 'True: TeamAlpha must Assist.',
-    proof_nl: 'disasterResponse graph set must TeamAlpha Assist via assigned TeamAlpha CityPowerDown.'
+    proof_nl: 'TeamAlpha must Assist. Therefore TeamAlpha must Assist.'
   },
 
   // === NEGATIVE: Blocked by explicit negation ===
@@ -144,8 +144,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is CityPowerDown in SafeZone?',
     input_dsl: '@goal locatedIn CityPowerDown SafeZone',
-    expected_nl: 'Cannot prove: CityPowerDown locatedIn SafeZone.',
-    proof_nl: 'Search: Found Not(locatedIn CityPowerDown SafeZone). Negation blocks inference.'
+    expected_nl: 'Cannot prove: CityPowerDown is in SafeZone.',
+    proof_nl: 'Search: CityPowerDown isA Hazard. Found explicit negation: Not(locatedIn CityPowerDown SafeZone). Negation blocks inference.'
   },
 
   // === QUERY: List all hazards ===
@@ -169,7 +169,7 @@ export const steps = [
     input_nl: 'Does VirusX cause hospitalization?',
     input_dsl: '@goal causes VirusX Hospitalization',
     expected_nl: 'True: VirusX causes Hospitalization.',
-    proof_nl: 'VirusX causes Infection. Infection causes Symptoms. Symptoms causes Hospitalization. Transitive chain (3 hops).'
+    proof_nl: 'VirusX causes Infection. Infection causes Symptoms. Symptoms causes Hospitalization. Causal chain verified (3 hops). Therefore VirusX causes Hospitalization.'
   },
 
   // === PROVE: Public health emergency via implies rule ===
@@ -178,7 +178,7 @@ export const steps = [
     input_nl: 'Does VirusX cause a public health emergency?',
     input_dsl: '@goal causes VirusX PublicHealthEmergency',
     expected_nl: 'True: VirusX causes PublicHealthEmergency.',
-    proof_nl: 'VirusX isA Virus. VirusX causes Infection. And condition satisfied. Rule implies causes VirusX PublicHealthEmergency.'
+    proof_nl: 'Applied rule: implies @conj @conseq. VirusX causes Infection. VirusX is a virus. And condition satisfied: causes VirusX Infection, isA VirusX Virus. Therefore VirusX causes PublicHealthEmergency.'
   },
 
   // === QUERY: Which hazards cause supply chain disruption? ===
@@ -204,7 +204,7 @@ export const steps = [
     input_nl: 'Does VirusY cause a public health emergency?',
     input_dsl: '@goal causes VirusY PublicHealthEmergency',
     expected_nl: 'True: VirusY causes PublicHealthEmergency.',
-    proof_nl: 'VirusY isA Virus. VirusY causes Infection. And condition satisfied. Rule implies causes VirusY PublicHealthEmergency.'
+    proof_nl: 'Applied rule: implies @conj @conseq. VirusY causes Infection. VirusY is a virus. And condition satisfied: causes VirusY Infection, isA VirusY Virus. Therefore VirusY causes PublicHealthEmergency.'
   }
 ];
 

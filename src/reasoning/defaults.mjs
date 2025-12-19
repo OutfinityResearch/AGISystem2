@@ -116,7 +116,8 @@ export class DefaultReasoner {
         confidence: 0.95,
         fromType: mostSpecificException.forType,
         reason: `Exception for ${mostSpecificException.forType} applies`,
-        method: 'exception_applied'
+        method: 'exception_applied',
+        blocked
       };
     }
 

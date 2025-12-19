@@ -1,0 +1,95 @@
+# Anthropology - Fundamental Relations
+
+# Cultural Practice Relations
+practices isA __Relation
+performs isA __Relation
+observes isA __Relation
+participatesIn isA __Relation
+
+# Belief Relations
+believesMyth isA __Relation
+believes isA __Relation
+values isA __Relation
+holds isA __Relation
+
+# Tradition Relations
+hasTradition isA __Relation
+maintains isA __Relation
+transmits isA __Relation
+preserves isA __Relation
+passes isA __Relation
+
+# Taboo Relations
+tabooAgainst isA __Relation
+forbids isA __Relation
+prohibits isA __Relation
+violates isA __Relation
+
+# Kinship Relations
+kinship isA __SymmetricRelation
+descentFrom isA __Relation
+relatedTo isA __SymmetricRelation
+ancestorOf isA __TransitiveRelation
+descendantOf isA __TransitiveRelation
+
+# Marriage Relations
+marriedTo isA __SymmetricRelation
+marries isA __Relation
+forms isA __Relation
+joinsWith isA __Relation
+
+# Economic Relations
+exchanges isA __Relation
+gives isA __Relation
+receives isA __Relation
+trades isA __SymmetricRelation
+reciprocates isA __Relation
+
+# Artifact Relations
+usesArtifact isA __Relation
+creates isA __Relation
+crafts isA __Relation
+produces isA __Relation
+
+# Spatial Relations
+settledIn isA __Relation
+inhabits isA __Relation
+occupies isA __Relation
+resides isA __Relation
+
+# Migration Relations
+migrates isA __Relation
+movesTo isA __Relation
+relocates isA __Relation
+disperses isA __Relation
+
+# Cultural Change Relations
+acculturatesWith isA __Relation
+assimilates isA __Relation
+adopts isA __Relation
+borrows isA __Relation
+diffuses isA __Relation
+
+# Identity Relations
+hasIdentity isA __Relation
+identifies isA __Relation
+belongsTo isA __Relation
+memberOf isA __Relation
+
+# Language Relations
+speaks isA __Relation
+communicates isA __Relation
+understands isA __Relation
+translates isA __Relation
+
+# Ritual Relations
+performsRitual isA __Relation
+initiates isA __Relation
+sanctifies isA __Relation
+commemorates isA __Relation
+
+# Symbolic Relations
+symbolizes isA __Relation
+represents isA __Relation
+signifies isA __Relation
+embodies isA __Relation

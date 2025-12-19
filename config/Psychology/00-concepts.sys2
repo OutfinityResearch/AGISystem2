@@ -1,0 +1,133 @@
+# Psychology - Fundamental Concepts
+
+# Emotional States
+@Emotion isA __State
+@Fear isA Emotion
+@Anger isA Emotion
+@Joy isA Emotion
+@Sadness isA Emotion
+@Disgust isA Emotion
+@Surprise isA Emotion
+@Anxiety isA Emotion
+@Guilt isA Emotion
+@Shame isA Emotion
+@Pride isA Emotion
+
+# Mood States
+@Mood isA __State
+@PositiveMood isA Mood
+@NegativeMood isA Mood
+@DepressedMood isA NegativeMood
+@ElevatedMood isA PositiveMood
+
+# Cognitive Concepts
+@Cognition isA __Category
+@Thinking isA Cognition
+@Reasoning isA Cognition
+@ProblemSolving isA Cognition
+@DecisionMaking isA Cognition
+@Judgment isA __Category
+
+# Memory Systems
+@Memory isA __Category
+@WorkingMemory isA Memory
+@LongTermMemory isA Memory
+@ShortTermMemory isA Memory
+@EpisodicMemory isA LongTermMemory
+@SemanticMemory isA LongTermMemory
+@ProceduralMemory isA LongTermMemory
+
+# Attention Types
+@Attention isA __Category
+@SelectiveAttention isA Attention
+@DividedAttention isA Attention
+@SustainedAttention isA Attention
+@FocusedAttention isA SelectiveAttention
+
+# Perception
+@Perception isA __Category
+@VisualPerception isA Perception
+@AuditoryPerception isA Perception
+@TactilePerception isA Perception
+@Proprioception isA Perception
+@SensoryProcessing isA __Category
+
+# Motivation
+@Motivation isA __State
+@IntrinsicMotivation isA Motivation
+@ExtrinsicMotivation isA Motivation
+@Drive isA __Category
+@Goal isA __Category
+@Incentive isA __Category
+
+# Personality
+@Trait isA __Property
+@Personality isA __Category
+@Temperament isA __Category
+@Character isA __Category
+@BigFiveTrait isA Trait
+
+# Learning & Conditioning
+@Reinforcement isA __Category
+@PositiveReinforcement isA Reinforcement
+@NegativeReinforcement isA Reinforcement
+@Punishment isA __Category
+@Conditioning isA __Category
+@ClassicalConditioning isA Conditioning
+@OperantConditioning isA Conditioning
+
+# Behavioral Concepts
+@Behavior isA __Action
+@AdaptiveBehavior isA Behavior
+@MaladaptiveBehavior isA Behavior
+@HabitualBehavior isA Behavior
+@Response isA Behavior
+
+# Clinical Psychology
+@Therapy isA __Action
+@CognitiveBehavioralTherapy isA Therapy
+@PsychodynamicTherapy isA Therapy
+@HumanisticTherapy isA Therapy
+@BehaviorTherapy isA Therapy
+@Psychotherapy isA Therapy
+
+# Psychological Disorders
+@Disorder isA __State
+@AnxietyDisorder isA Disorder
+@MoodDisorder isA Disorder
+@Depression isA MoodDisorder
+@BipolarDisorder isA MoodDisorder
+@SchizophreniaSpectrum isA Disorder
+@PersonalityDisorder isA Disorder
+@PTSD isA AnxietyDisorder
+@OCD isA AnxietyDisorder
+
+# Stress & Coping
+@Stressor isA __Category
+@Stress isA __State
+@Coping isA __Action
+@ProblemFocusedCoping isA Coping
+@EmotionFocusedCoping isA Coping
+@Resilience isA __Property
+
+# Self Concepts
+@SelfConcept isA __Category
+@SelfEsteem isA __Property
+@SelfEfficacy isA __Property
+@SelfAwareness isA __Property
+@Identity isA __Category
+
+# Cognitive Biases
+@Bias isA __Property
+@ConfirmationBias isA Bias
+@AvailabilityBias isA Bias
+@AnchoringBias isA Bias
+@HindsightBias isA Bias
+@CognitiveDistortion isA Bias
+
+# Social Psychology
+@Attitude isA __Category
+@Belief isA __Believed
+@Attribution isA __Category
+@Conformity isA __Category
+@Persuasion isA __Category

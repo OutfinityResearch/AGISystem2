@@ -22,12 +22,12 @@ export function buildSearchTrace(engine, goal, goalStr) {
   const args = (goal.args || []).map(a => engine.extractArgName(a)).filter(Boolean);
   const semanticIndex = engine.session?.useSemanticIndex ? engine.session?.semanticIndex : null;
 
-  if (args.length < 2) {
+  if (args.length < 1) {
     return `Searched ${goalStr} in KB. Not found.`;
   }
 
   const entity = args[0];
-  const target = args[1];
+  const target = args[1] || null;
   const componentKB = engine.session?.componentKB;
 
   // 1. Check if entity exists in KB
@@ -67,19 +67,22 @@ export function buildSearchTrace(engine, goal, goalStr) {
   }
 
   // 3a. Check relevant rules for this operator to surface missing conditions
-  const ruleTrace = describeRuleCheck(engine, op, entity);
+  const ruleTrace = describeRuleCheck(engine, op, entity, target);
   if (ruleTrace) {
     traces.push(ruleTrace);
   }
 
   // 3. Check what we were looking for and why it failed
+  if (!target) {
+    return traces.length > 0 ? `Search: ${traces.join('. ')}.` : `Searched ${goalStr}. Not found.`;
+  }
+  const isTransitive = (semanticIndex?.isTransitive?.(op)) || ['locatedIn', 'causes', 'before', 'partOf'].includes(op);
+  const isInheritable = (semanticIndex?.isInheritableProperty?.(op)) ||
+    ['can', 'has', 'likes', 'knows', 'owns', 'uses'].includes(op);
+
   if (op === 'isA') {
     traces.push(`No path exists from ${entity} to ${target}`);
-  } else if ((semanticIndex?.isInheritableProperty?.(op)) || ['can', 'has', 'likes', 'knows', 'owns', 'uses'].includes(op)) {
-    // Property inheritance - check if any ancestor has it
-    const traceResult = buildPropertyInheritanceTrace(engine, op, target, isAChain);
-    traces.push(...traceResult);
-  } else if ((semanticIndex?.isTransitive?.(op)) || ['locatedIn', 'causes', 'before', 'partOf'].includes(op)) {
+  } else if (isTransitive) {
     traces.push(`Searched ${op} ${entity} ?next in KB. Not found`);
     const edges = buildRelationEdges(engine, op);
     const outgoing = edges.get(entity) || [];
@@ -101,6 +104,10 @@ export function buildSearchTrace(engine, goal, goalStr) {
     } else {
       traces.push(`No transitive path to ${target}`);
     }
+  } else if (isInheritable) {
+    // Property inheritance - check if any ancestor has it
+    const traceResult = buildPropertyInheritanceTrace(engine, op, entity, target, isAChain);
+    traces.push(...traceResult);
   }
 
   return traces.length > 0 ? `Search: ${traces.join('. ')}.` : `Searched ${goalStr}. Not found.`;
@@ -156,10 +163,18 @@ function buildIsAChain(engine, entity, componentKB) {
  * @param {Array<string>} isAChain - isA chain steps
  * @returns {Array<string>} Trace entries
  */
-function buildPropertyInheritanceTrace(engine, op, target, isAChain) {
+function buildPropertyInheritanceTrace(engine, op, entity, target, isAChain) {
   const traces = [];
   let found = false;
   const checkedTypes = [];
+  const chainTypes = extractChainTypes(entity, isAChain);
+
+  const negation = findNegationOnChain(engine, op, target, chainTypes);
+  if (negation) {
+    traces.push(`Found explicit negation: Not(${negation})`);
+    traces.push('Negation blocks inheritance');
+    return traces;
+  }
 
   // Check if the property exists for any type
   for (const fact of engine.session.kbFacts) {
@@ -168,7 +183,7 @@ function buildPropertyInheritanceTrace(engine, op, target, isAChain) {
       checkedTypes.push(meta.args[0]);
       // Check if entity isA that type
       const propHolder = meta.args[0];
-      if (isAChain.some(step => step.includes(propHolder))) {
+      if (chainTypes.includes(propHolder)) {
         found = true;
         break;
       }
@@ -177,13 +192,80 @@ function buildPropertyInheritanceTrace(engine, op, target, isAChain) {
 
   if (!found && checkedTypes.length > 0) {
     traces.push(`Checked: ${checkedTypes.slice(0, 3).map(t => `${t} ${op} ${target}`).join(', ')}`);
-    traces.push(`Entity is not a ${checkedTypes.join(' or ')}`);
+    traces.push(`${entity} is not a ${checkedTypes.join(' or ')}`);
     traces.push(`Property not inheritable`);
   } else if (checkedTypes.length === 0) {
     traces.push(`No ${op} ${target} facts found in KB`);
   }
 
   return traces;
+}
+
+function extractChainTypes(entity, isAChain) {
+  const types = [];
+  if (entity) types.push(entity);
+  for (const step of isAChain) {
+    const match = step.match(/^(\S+)\s+isA\s+(\S+)$/);
+    if (!match) continue;
+    const child = match[1];
+    const parent = match[2];
+    if (child && !types.includes(child)) types.push(child);
+    if (parent && !types.includes(parent)) types.push(parent);
+  }
+  return types;
+}
+
+function findNegationOnChain(engine, op, target, chainTypes) {
+  if (!chainTypes.length) return null;
+  const threshold = engine.thresholds?.RULE_MATCH ?? 0.8;
+
+  for (const fact of engine.session.kbFacts) {
+    const meta = fact.metadata;
+    if (!meta) continue;
+
+    if (meta.operator === 'Not') {
+      if (meta.args?.length === 3) {
+        const [negOp, negEntity, negValue] = meta.args;
+        if (negOp === op && negValue === target && chainTypes.includes(negEntity)) {
+          return `${op} ${negEntity} ${target}`;
+        }
+      }
+
+      if (meta.args?.length === 1) {
+        const refName = meta.args[0]?.replace(/^\$/, '');
+        if (!refName) continue;
+        const negatedVec = engine.session.scope.get(refName);
+        if (!negatedVec) continue;
+
+        for (const chainType of chainTypes) {
+          const checkFact = {
+            operator: { type: 'Identifier', name: op },
+            args: [
+              { type: 'Identifier', name: chainType },
+              { type: 'Identifier', name: target }
+            ]
+          };
+          const checkVec = engine.session.executor?.buildStatementVector(checkFact);
+          if (!checkVec) continue;
+          engine.session.reasoningStats.similarityChecks++;
+          const sim = engine.session.similarity(checkVec, negatedVec);
+          if (sim > threshold) {
+            return `${op} ${chainType} ${target}`;
+          }
+        }
+      }
+    }
+
+    if (meta.operator === `Not ${op}` || meta.operator === `Not${op}`) {
+      const negEntity = meta.args?.[0];
+      const negValue = meta.args?.[1];
+      if (negValue === target && chainTypes.includes(negEntity)) {
+        return `${op} ${negEntity} ${target}`;
+      }
+    }
+  }
+
+  return null;
 }
 
 /**
@@ -237,18 +319,17 @@ export function findRelationPath(edges, start, target) {
  * @param {string} entity - Goal subject
  * @returns {string|null} Trace summary
  */
-export function describeRuleCheck(engine, op, entity) {
+export function describeRuleCheck(engine, op, entity, target = null) {
   if (!engine.session?.rules?.length) return null;
 
+  const targetOp = String(op || '').toLowerCase();
   const matching = engine.session.rules.filter(r => {
     const concOp = r.conclusionAST?.operator?.name || r.conclusionAST?.operator?.value;
-    return concOp === op;
+    return String(concOp || '').toLowerCase() === targetOp;
   });
   if (matching.length === 0) return null;
 
-  const goalArgs = (engine.extractArgs?.(entity) ? [] : []) || [];
-  const target = engine?.extractArgName ? null : null;
-  const rule = selectBestRule(matching, entity, op, engine);
+  const rule = selectBestRule(matching, target);
   const condParts = rule.conditionParts;
 
   if (condParts) {
@@ -264,6 +345,18 @@ export function describeRuleCheck(engine, op, entity) {
     if (found.length > 0) summary += ` Found: ${found.join(', ')}.`;
     if (missing.length > 0) summary += ` Missing: ${missing.join(', ')}.`;
     return summary;
+  }
+
+  if (rule.conditionAST) {
+    const analysis = evaluateConditionParts({ type: 'leaf', ast: rule.conditionAST }, entity, engine);
+    if (analysis) {
+      const found = dedupe(analysis.found || []);
+      const missing = dedupe(analysis.missing || []);
+      let summary = `Checked rule: ${rule.name || rule.source}.`;
+      if (found.length > 0) summary += ` Found: ${found.join(', ')}.`;
+      if (missing.length > 0) summary += ` Missing: ${missing.join(', ')}.`;
+      return summary;
+    }
   }
 
   const leaves = extractLeafConditions(rule.conditionParts);
@@ -295,6 +388,85 @@ export function describeRuleCheck(engine, op, entity) {
   if (found.length > 0) summary += ` Found: ${found.join(', ')}.`;
   if (missing.length > 0) summary += ` Missing: ${missing.join(', ')}.`;
   return summary;
+}
+
+function selectBestRule(rules, target) {
+  if (!target) return rules[0];
+  const exact = rules.find(rule => {
+    const args = rule.conclusionAST?.args || [];
+    if (args.length < 2) return false;
+    const arg1 = args[1];
+    if (!arg1) return false;
+    if (arg1.type === 'Variable' || arg1.type === 'Hole') return true;
+    const name = arg1.name || arg1.value;
+    return name === target;
+  });
+  return exact || rules[0];
+}
+
+function dedupe(items) {
+  return [...new Set(items.filter(Boolean))];
+}
+
+function evaluateConditionParts(part, entity, engine) {
+  if (!part) return null;
+  if (part.type === 'leaf' && part.ast) {
+    const op = part.ast.operator?.name || part.ast.operator?.value;
+    const rawArgs = (part.ast.args || []).map(a => ({
+      name: a.name || a.value || '',
+      type: a.type
+    }));
+    const resolved = rawArgs.map(arg => {
+      const isVar = arg.type === 'Hole' || arg.type === 'Variable';
+      if (!isVar) return arg.name;
+      return arg.name === 'x' || arg.name === 'subject' ? entity : `?${arg.name}`;
+    });
+    const factStr = `${op} ${resolved.join(' ')}`.trim();
+    const arg0 = resolved[0];
+    const arg1 = resolved[1];
+    const checkArg1 = arg1 && arg1.startsWith('?') ? null : arg1;
+    const exists = arg0 && !arg0.startsWith('?') && engine.factExists(op, arg0, checkArg1);
+    return {
+      satisfied: !!exists,
+      found: exists ? [factStr] : [],
+      missing: exists ? [] : [factStr]
+    };
+  }
+  if (part.type === 'And' && part.parts) {
+    const results = part.parts.map(p => evaluateConditionParts(p, entity, engine)).filter(Boolean);
+    const satisfied = results.every(r => r.satisfied);
+    return {
+      satisfied,
+      found: results.flatMap(r => r.found || []),
+      missing: results.flatMap(r => r.missing || [])
+    };
+  }
+  if (part.type === 'Or' && part.parts) {
+    const results = part.parts.map(p => evaluateConditionParts(p, entity, engine)).filter(Boolean);
+    const satisfiedBranches = results.filter(r => r.satisfied);
+    if (satisfiedBranches.length > 0) {
+      return {
+        satisfied: true,
+        found: satisfiedBranches.flatMap(r => r.found || []),
+        missing: []
+      };
+    }
+    return {
+      satisfied: false,
+      found: results.flatMap(r => r.found || []),
+      missing: results.flatMap(r => r.missing || [])
+    };
+  }
+  if (part.type === 'Not' && part.inner) {
+    const inner = evaluateConditionParts(part.inner, entity, engine);
+    if (!inner) return null;
+    return {
+      satisfied: !inner.satisfied,
+      found: [],
+      missing: inner.satisfied ? inner.found || [] : []
+    };
+  }
+  return null;
 }
 
 /**

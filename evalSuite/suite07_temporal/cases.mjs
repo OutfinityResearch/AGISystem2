@@ -124,7 +124,7 @@ export const steps = [
     input_nl: 'Would preventing Deforestation prevent Flooding? (rule application)',
     input_dsl: '@goal wouldPrevent Deforestation Flooding',
     expected_nl: 'True: Preventing Deforestation would prevent Flooding.',
-    proof_nl: 'Searched causes Deforestation ?b. Found: Deforestation causes Erosion. Searched causes Erosion ?c. Found: Erosion causes Flooding. Causal chain verified (2 hops). And condition satisfied: causes Deforestation Erosion, causes Erosion Flooding. Applied rule: (A causes B AND B causes C) implies wouldPrevent A C. Therefore Preventing Deforestation would prevent Flooding.'
+    proof_nl: 'Applied rule: (A causes B AND B causes C) implies wouldPrevent A C. Deforestation causes Erosion. Erosion causes Flooding. And condition satisfied: causes Deforestation Erosion, causes Erosion Flooding. Therefore Preventing Deforestation would prevent Flooding.'
   },
 
   // === PROVE: Deeper prevention (5+ step reasoning) ===
@@ -133,7 +133,7 @@ export const steps = [
     input_nl: 'Would preventing Erosion prevent FoodShortage? (rule application)',
     input_dsl: '@goal wouldPrevent Erosion FoodShortage',
     expected_nl: 'True: Preventing Erosion would prevent FoodShortage.',
-    proof_nl: 'Searched causes Erosion ?b. Found: Erosion causes Flooding. Searched causes Flooding ?c. Found: Flooding causes CropLoss. Searched causes CropLoss ?d. Found: CropLoss causes FoodShortage. Causal chain verified (3 hops). And condition satisfied: causes Erosion Flooding, causes Flooding FoodShortage. Applied rule: (A causes B AND B causes C) implies wouldPrevent A C. Therefore Preventing Erosion would prevent FoodShortage.'
+    proof_nl: 'Searched causes Flooding ?b. Found: Flooding causes CropLoss. Searched causes CropLoss ?c. Found: CropLoss causes FoodShortage. Searched causes Erosion ?d. Found: Erosion causes Flooding. Searched causes Flooding ?e. Found: Flooding causes FoodShortage. Causal chain verified (2 hops). And condition satisfied: causes Erosion Flooding, causes Flooding FoodShortage. Applied rule: (A causes B AND B causes C) implies wouldPrevent A C. Therefore Preventing Erosion would prevent FoodShortage.'
   },
 
   // === NEGATIVE: Reverse temporal fails with search trace ===

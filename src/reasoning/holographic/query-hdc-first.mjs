@@ -14,6 +14,7 @@ import { bind, unbind, bundle, similarity, topKSimilar } from '../../core/operat
 import { withPosition, getPositionVector } from '../../core/position.mjs';
 import { MAX_HOLES, getHolographicThresholds, getThresholds } from '../../core/constants.mjs';
 import { QueryEngine } from '../query.mjs';
+import { sameBindings } from '../query-kb.mjs';
 import { ProofEngine } from '../prove.mjs';
 import { buildProofObject } from '../proof-schema.mjs';
 import { validateProof } from '../proof-validator.mjs';
@@ -107,9 +108,9 @@ export class HolographicQueryEngine {
       this.session.reasoningStats.hdcValidationAttempts =
         (this.session.reasoningStats.hdcValidationAttempts || 0) + 1;
 
-      const isValid = this.validateCandidate(operatorName, knowns, holes, candidate);
+      const validation = this.validateCandidate(operatorName, knowns, holes, candidate);
 
-      if (isValid) {
+      if (validation.valid) {
         this.session.reasoningStats.hdcValidationSuccesses =
           (this.session.reasoningStats.hdcValidationSuccesses || 0) + 1;
 
@@ -119,7 +120,8 @@ export class HolographicQueryEngine {
           bindings.set(holeName, {
             answer: value.name,
             similarity: value.similarity,
-            method: 'hdc_validated'
+            method: 'hdc_validated',
+            steps: validation.steps || []
           });
         }
 
@@ -141,26 +143,30 @@ export class HolographicQueryEngine {
       const symbolicResult = this.symbolicEngine.execute(statement);
 
       if (symbolicResult.allResults && symbolicResult.allResults.length > 0) {
-        // Merge: HDC results first (with hdc_validated tag), then symbolic results not already found
-        const hdcAnswers = new Set();
-        for (const r of validatedResults) {
-          for (const [holeName, value] of r.bindings) {
-            hdcAnswers.add(value.answer);
-          }
-        }
-
-        // Add symbolic results that weren't found by HDC
-        for (const r of symbolicResult.allResults) {
-          let isDuplicate = false;
-          if (r.bindings instanceof Map) {
-            for (const [holeName, value] of r.bindings) {
-              if (hdcAnswers.has(value.answer)) {
-                isDuplicate = true;
-                break;
-              }
+        const hasSteps = (result) => {
+          if (result?.bindings instanceof Map) {
+            for (const [, value] of result.bindings) {
+              if (value?.steps && value.steps.length > 0) return true;
+            }
+          } else if (result?.bindings && typeof result.bindings === 'object') {
+            for (const value of Object.values(result.bindings)) {
+              if (value?.steps && value.steps.length > 0) return true;
             }
           }
-          if (!isDuplicate) {
+          return false;
+        };
+
+        // Add symbolic results that weren't found by HDC, or replace HDC duplicates
+        for (const r of symbolicResult.allResults) {
+          const existingIdx = validatedResults.findIndex(existing =>
+            sameBindings(existing.bindings, r.bindings, holes)
+          );
+          if (existingIdx >= 0) {
+            const existing = validatedResults[existingIdx];
+            if ((existing.method || '').startsWith('hdc') || (!hasSteps(existing) && hasSteps(r))) {
+              validatedResults[existingIdx] = r;
+            }
+          } else {
             r.method = r.method || 'symbolic_supplement';
             validatedResults.push(r);
           }
@@ -256,6 +262,7 @@ export class HolographicQueryEngine {
     // From session vocabulary atoms
     if (this.session.vocabulary?.atoms) {
       for (const [name, vec] of this.session.vocabulary.atoms) {
+        if (typeof name !== 'string') continue;
         if (!name.startsWith('__') && !name.startsWith('Pos')) {
           vocab.set(name, vec);
         }
@@ -368,18 +375,19 @@ export class HolographicQueryEngine {
       const statement = this.parseStatement(operatorName, args);
       const result = this.validatorEngine.prove(statement);
 
-      if (!result.valid) return false;
+      if (!result.valid) return { valid: false };
 
       // In theory-driven mode, require the proof to be machine-checkable.
       if (this.session?.proofValidationEnabled) {
         const proofObject = buildProofObject({ session: this.session, goalStatement: statement, result });
-        return validateProof(proofObject, this.session);
+        const ok = validateProof(proofObject, this.session);
+        return ok ? { valid: true, steps: this.extractProofFacts(result.steps) } : { valid: false };
       }
 
-      return true;
+      return { valid: true, steps: this.extractProofFacts(result.steps) };
     } catch (e) {
       dbg('VALIDATE', `Error: ${e.message}`);
-      return false;
+      return { valid: false };
     }
   }
 
@@ -394,6 +402,23 @@ export class HolographicQueryEngine {
       args: args.map(a => ({ type: 'Identifier', name: a, value: a })),
       toString: () => `${operatorName} ${args.join(' ')}`
     };
+  }
+
+  extractProofFacts(steps = []) {
+    const facts = [];
+    for (const step of steps) {
+      if (step?.fact && typeof step.fact === 'string') {
+        facts.push(step.fact);
+        continue;
+      }
+      if (step?.operation === 'and_satisfied' && typeof step.detail === 'string') {
+        const parts = step.detail.split(',').map(s => s.trim()).filter(Boolean);
+        for (const part of parts) {
+          facts.push(part);
+        }
+      }
+    }
+    return facts;
   }
 }
 

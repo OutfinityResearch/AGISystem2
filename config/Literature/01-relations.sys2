@@ -1,0 +1,104 @@
+# Literature - Fundamental Relations
+
+# Authorship Relations
+writtenBy isA __Relation
+authored isA __Relation
+composed isA __Relation
+creates isA __Relation
+
+# Genre Relations
+hasGenre isA __Relation
+belongsTo isA __Relation
+classifiedAs isA __Relation
+exemplifies isA __Relation
+
+# Thematic Relations
+hasTheme isA __Relation
+explores isA __Relation
+addresses isA __Relation
+examines isA __Relation
+
+# Symbolic Relations
+hasMotif isA __Relation
+usesSymbol isA __Relation
+symbolizes isA __Relation
+represents isA __Relation
+
+# Character Relations
+featuresCharacter isA __Relation
+develops isA __Relation
+portrays isA __Relation
+depicts isA __Relation
+
+# Setting Relations
+setIn isA __Relation
+takesPlace isA __Relation
+locates isA __Relation
+situates isA __Relation
+
+# Structural Relations
+hasStructure isA __Relation
+organizes isA __Relation
+arranges isA __Relation
+constructs isA __Relation
+
+# Conflict Relations
+hasConflict isA __Relation
+drives isA __Relation
+propels isA __Relation
+motivates isA __Relation
+
+# Intertextual Relations
+intertextWith isA __SymmetricRelation
+references isA __Relation
+alludes isA __Relation
+echoes isA __Relation
+parodies isA __Relation
+
+# Narrative Relations
+narrates isA __Relation
+tells isA __Relation
+recounts isA __Relation
+relates isA __Relation
+
+# Critical Interpretation
+claims isA __Relation
+argues isA __Relation
+asserts isA __Relation
+maintains isA __Relation
+
+# Textual Support
+supportedByText isA __Relation
+evidencedBy isA __Relation
+illustrated isA __Relation
+demonstrated isA __Relation
+
+# Counter Claims
+counterClaim isA __Relation
+contradicts isA __SymmetricRelation
+disputes isA __Relation
+challenges isA __Relation
+
+# Interpretive Relations
+interpretsAs isA __Relation
+reads isA __Relation
+understands isA __Relation
+construes isA __Relation
+
+# Stylistic Relations
+uses isA __Relation
+employs isA __Relation
+deploys isA __Relation
+utilizes isA __Relation
+
+# Influence Relations
+influences isA __Relation
+inspires isA __Relation
+shapes isA __Relation
+affects isA __Relation
+
+# Reception Relations
+receivedBy isA __Relation
+appreciated isA __Relation
+critiqued isA __Relation
+evaluated isA __Relation

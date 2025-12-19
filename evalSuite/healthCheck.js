@@ -95,6 +95,7 @@ function validateExpectedNl(testCase) {
   const issues = [];
   const expectedNl = testCase?.expected_nl;
   const proofNl = testCase?.proof_nl;
+  const altProofNl = testCase?.alternative_proof_nl;
   const action = testCase?.action;
   const inputDsl = testCase?.input_dsl;
   const requiresProof = action === 'query' || action === 'prove';
@@ -192,6 +193,51 @@ function validateExpectedNl(testCase) {
         issues.push({
           type: 'warning',
           msg: 'proof_nl should not include the "Proof:" label (runner adds/locates it in output); keep only proof content'
+        });
+      }
+    }
+  }
+
+  // Validate alternative_proof_nl shape (string or string[])
+  if (altProofNl !== undefined && altProofNl !== null) {
+    const okShape = typeof altProofNl === 'string' || (Array.isArray(altProofNl) && altProofNl.every(p => typeof p === 'string'));
+    if (!okShape) {
+      issues.push({
+        type: 'error',
+        msg: 'Invalid alternative_proof_nl type - must be a string or array of strings'
+      });
+    } else {
+      if (action === 'query' && !Array.isArray(altProofNl)) {
+        issues.push({
+          type: 'error',
+          msg: 'alternative_proof_nl must be an array for query actions (one proof per answer)'
+        });
+      } else if (action === 'query' && Array.isArray(altProofNl)) {
+        const answerCount = countQueryAnswers(expectedNl);
+        if (answerCount > 0 && altProofNl.length !== answerCount) {
+          issues.push({
+            type: 'error',
+            msg: `alternative_proof_nl length (${altProofNl.length}) does not match number of answers (${answerCount})`
+          });
+        }
+      } else if (action === 'prove' && Array.isArray(altProofNl)) {
+        issues.push({
+          type: 'error',
+          msg: 'alternative_proof_nl must be a string for prove actions'
+        });
+      }
+
+      const altText = Array.isArray(altProofNl) ? altProofNl.join(' ') : altProofNl;
+      if (typeof altText === 'string' && altText.trim().length < 10) {
+        issues.push({
+          type: 'warning',
+          msg: 'alternative_proof_nl is present but very short - consider adding more proof detail'
+        });
+      }
+      if (/\bProof:/i.test(altText)) {
+        issues.push({
+          type: 'warning',
+          msg: 'alternative_proof_nl should not include the "Proof:" label; keep only proof content'
         });
       }
     }

@@ -6,12 +6,12 @@
  * multiple HDC strategy configurations.
  *
  * Usage:
- *   node performance/run.js                          # Run all theories, all configs
+ *   node performance/run.js                          # Run ALL theories (default)
  *   node performance/run.js math                     # Run specific theory
+ *   node performance/run.js math biology physics     # Run multiple specific theories
  *   node performance/run.js --strategy=dense-binary  # Specific strategy only
  *   node performance/run.js --priority=holographicPriority  # Specific priority
  *   node performance/run.js --verbose                # Show case details
- *   node performance/run.js --compare                # Compare all configs (default)
  *   node performance/run.js --quick                  # Run with 1 config only
  *
  * Configurations tested by default:
@@ -65,8 +65,9 @@ process.on('SIGINT', () => {
 
 async function main() {
   console.log();
-  console.log('\x1b[1m\x1b[34mAGISystem2 - Performance Suite\x1b[0m');
-  console.log('\x1b[2mStress testing with large domain theories\x1b[0m');
+  console.log('\x1b[1m\x1b[34m┌────────────────────────────────────────────────────────────────────────────┐\x1b[0m');
+  console.log('\x1b[1m\x1b[34m│                    AGISystem2 - Performance Suite                         │\x1b[0m');
+  console.log('\x1b[1m\x1b[34m└────────────────────────────────────────────────────────────────────────────┘\x1b[0m');
   console.log();
 
   try {
@@ -89,8 +90,9 @@ async function main() {
         process.exit(1);
       }
     }
+    // Default: run ALL theories
 
-    console.log(`Found ${theories.length} theory domain(s): ${theories.join(', ')}`);
+    console.log(`Running ${theories.length} theory domain(s): ${theories.join(', ')}`);
 
     // Load all theories
     const loadedTheories = [];

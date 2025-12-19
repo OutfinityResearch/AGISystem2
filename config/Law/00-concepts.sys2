@@ -1,0 +1,111 @@
+# Law - Fundamental Concepts
+
+# Legal Entities
+LegalPerson isA __Category
+NaturalPerson isA LegalPerson
+JuridicalPerson isA LegalPerson
+Corporation isA JuridicalPerson
+Partnership isA JuridicalPerson
+LegalEntity isA __Category
+
+# Contract Concepts
+Contract isA __Category
+Agreement isA Contract
+Offer isA __Category
+Acceptance isA __Category
+Consideration isA __Category
+Covenant isA Contract
+
+# Contractual Breach
+Obligation isA __Category
+Breach isA __Category
+MaterialBreach isA Breach
+MinorBreach isA Breach
+Performance isA __Category
+NonPerformance isA __Category
+
+# Remedies & Damages
+Remedy isA __Category
+Damages isA Remedy
+CompensatoryDamages isA Damages
+PunitiveDamages isA Damages
+SpecificPerformance isA Remedy
+Injunction isA Remedy
+
+# Rights & Duties
+Right isA __Category
+LegalRight isA Right
+PropertyRight isA LegalRight
+PersonalRight isA LegalRight
+Duty isA __Category
+LegalDuty isA Duty
+
+# Prohibitions & Liability
+Prohibition isA __Category
+Liability isA __Category
+CriminalLiability isA Liability
+CivilLiability isA Liability
+StrictLiability isA Liability
+Negligence isA __Category
+
+# Legal Sources
+Statute isA __Category
+Regulation isA __Category
+CaseLaw isA __Category
+Precedent isA __Category
+Constitution isA Statute
+Legislation isA Statute
+
+# Legal Process
+Jurisdiction isA __Category
+Court isA __Category
+TrialCourt isA Court
+AppellateCourt isA Court
+SupremeCourt isA Court
+Tribunal isA __Category
+
+# Judicial Concepts
+Ruling isA __Category
+Judgment isA Ruling
+Verdict isA Ruling
+Order isA Ruling
+Decision isA Ruling
+Decree isA Ruling
+
+# Evidence Concepts
+Evidence isA __Category
+Testimony isA Evidence
+Documentary isA Evidence
+Physical isA Evidence
+Circumstantial isA Evidence
+Admissible isA __Category
+
+# Proof Standards
+BurdenOfProof isA __Category
+StandardOfProof isA __Category
+BeyondReasonableDoubt isA StandardOfProof
+PreponderanceOfEvidence isA StandardOfProof
+ClearAndConvincing isA StandardOfProof
+
+# Validity Concepts
+Validity isA __Category
+LegalValidity isA Validity
+Enforceability isA __Category
+Void isA __Category
+Voidable isA __Category
+
+# Criminal Law
+Crime isA __Category
+Felony isA Crime
+Misdemeanor isA Crime
+Offense isA __Category
+MensRea isA __Category
+ActusReus isA __Category
+
+# Property Law
+Property isA __Category
+RealProperty isA Property
+PersonalProperty isA Property
+IntangibleProperty isA Property
+Ownership isA __Category
+Possession isA __Category

@@ -1,0 +1,67 @@
+# History - Fundamental Relations
+
+# Temporal Relations
+@happenedDuring isA __Relation
+@before isA __TransitiveRelation
+@after isA __TransitiveRelation
+@contemporary isA __SymmetricRelation
+@precedes isA __Relation
+@follows isA __Relation
+
+# Causal Relations
+@causes isA __TransitiveRelation
+@consequenceOf isA __Relation
+@leadsTo isA __Relation
+@resultingIn isA __Relation
+@triggeredBy isA __Relation
+
+# Actor Relations
+@actorIn isA __Relation
+@alliedWith isA __SymmetricRelation
+@opposedTo isA __SymmetricRelation
+@leadBy isA __Relation
+@influencedBy isA __Relation
+
+# Treaty Relations
+@treatyBetween isA __Relation
+@signedBy isA __Relation
+@ratifiedBy isA __Relation
+@violatedBy isA __Relation
+
+# Source Relations
+@sourceFor isA __Relation
+@biasOf isA __Relation
+@interpretationOf isA __Relation
+@corroboratedBy isA __Relation
+@contradictedBy isA __Relation
+
+# Evidence Relations
+@confidence isA __Relation
+@evidenceFor isA __Relation
+@supports isA __Relation
+@refutes isA __Relation
+
+# Analytical Relations
+@continuity isA __Relation
+@rupture isA __Relation
+@transformation isA __Relation
+@persistence isA __Relation
+
+# Territorial Relations
+@conqueredBy isA __Relation
+@colonizedBy isA __Relation
+@liberatedBy isA __Relation
+@cededTo isA __Relation
+@annexed isA __Relation
+
+# Succession Relations
+@succeededBy isA __Relation
+@precededBy isA __Relation
+@dynasticLine isA __Relation
+@inheritedBy isA __Relation
+
+# Influence Relations
+@influences isA __Relation
+@inspiredBy isA __Relation
+@borrowedFrom isA __Relation
+@transmitted isA __Relation

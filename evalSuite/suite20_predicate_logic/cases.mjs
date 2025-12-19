@@ -46,8 +46,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does P imply S via chain?',
     input_dsl: '@goal implies P S',
-    expected_nl: 'True: implies P S.',
-    proof_nl: 'implies P Q. implies Q R. And satisfied. Rule implies implies P R. implies P R. implies R S. And satisfied. Rule implies implies P S.'
+    expected_nl: 'True: P implies S.',
+    proof_nl: 'Applied rule: implies @brCond @brConseq. Applied rule: rule implies implies Q S. Q implies R. R implies S. And condition satisfied: implies Q R, implies R S. P implies Q. Q implies S. And condition satisfied: implies P Q, implies Q S.'
   },
 
   // === PROVE: Modus ponens chain ===
@@ -55,8 +55,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does R hold given P holds?',
     input_dsl: '@goal holds R',
-    expected_nl: 'True: holds R.',
-    proof_nl: 'holds P. implies P Q. Modus ponens: holds Q. implies Q R. Modus ponens: holds R.'
+    expected_nl: 'True: R is holds.',
+    proof_nl: 'P holds. P implies Q. Q holds. Q implies R. R holds.'
   },
 
   // === PROVE: S holds via chain ===
@@ -64,8 +64,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does S hold?',
     input_dsl: '@goal holds S',
-    expected_nl: 'True: holds S.',
-    proof_nl: 'holds P. implies P Q. holds Q. implies Q R. holds R. implies R S. holds S. Chain of modus ponens (3 steps).'
+    expected_nl: 'True: S is holds.',
+    proof_nl: 'P holds. P implies Q. Q holds. Q implies R. R holds. R implies S. S holds.'
   },
 
   // === PROVE: Conjunction rule T ===
@@ -73,8 +73,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does T hold given P and S both hold?',
     input_dsl: '@goal holds T',
-    expected_nl: 'True: holds T.',
-    proof_nl: 'holds P. holds S. And condition satisfied. Rule implies holds T.'
+    expected_nl: 'True: T is holds.',
+    proof_nl: 'P holds. P implies Q. Q holds. Q implies R. R holds. R implies S. S holds. And condition satisfied: holds P, holds S. T holds.'
   },
 
   // === QUERY: What does P imply? ===
@@ -90,7 +90,7 @@ export const steps = [
     proof_nl: [
       'implies P Q',
       'implies P Q. implies Q R',
-      'implies P R. implies R S'
+      'implies Q R. implies R S'
     ]
   },
 
@@ -99,8 +99,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does W hold?',
     input_dsl: '@goal holds W',
-    expected_nl: 'Cannot prove: holds W.',
-    proof_nl: 'Search: No holds W fact. No implies chain to W. No applicable rules.'
+    expected_nl: 'Cannot prove: W is holds.',
+    proof_nl: 'Searched isA W ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
   },
 
   // === SETUP 2: Classic syllogism ===
@@ -140,8 +140,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Socrates mortal?',
     input_dsl: '@goal isA Socrates Mortal',
-    expected_nl: 'True: Socrates isA Mortal.',
-    proof_nl: 'isA Socrates Human. Rule: isA ?x Human implies isA ?x Mortal. Therefore isA Socrates Mortal.'
+    expected_nl: 'True: Socrates is a mortal.',
+    proof_nl: 'Applied rule: implies @h2m1 @h2m2.'
   },
 
   // === PROVE: Plato must die ===
@@ -149,8 +149,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Must Plato die?',
     input_dsl: '@goal must Plato Die',
-    expected_nl: 'True: must Plato Die.',
-    proof_nl: 'isA Plato Human. Rule implies isA Plato Mortal. Rule implies must Plato Die.'
+    expected_nl: 'True: Plato must Die.',
+    proof_nl: 'Applied rule: implies @m2d1 @m2d2. Applied rule: rule implies isA Plato Mortal.'
   },
 
   // === PROVE: Socrates is buried ===
@@ -158,8 +158,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Socrates buried?',
     input_dsl: '@goal Buried Socrates',
-    expected_nl: 'True: Buried Socrates.',
-    proof_nl: 'isA Socrates Human. isA Socrates Mortal. must Socrates Die. Buried Socrates. Chain of 3 rules.'
+    expected_nl: 'True: Socrates is Buried.',
+    proof_nl: 'Applied rule: implies @d2b1 @d2b2. Applied rule: rule implies must Socrates Die. Applied rule: rule implies isA Socrates Mortal.'
   },
 
   // === NEGATIVE: Zeus not mortal (blocked by negation) ===
@@ -167,8 +167,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Zeus mortal?',
     input_dsl: '@goal isA Zeus Mortal',
-    expected_nl: 'Cannot prove: isA Zeus Mortal.',
-    proof_nl: 'Search: Found Not(isA Zeus Mortal). Negation blocks inference.'
+    expected_nl: 'Cannot prove: Zeus is a mortal.',
+    proof_nl: 'Zeus isA Deity. Found explicit negation: Not(isA Zeus Mortal). Negation blocks inference.'
   }
 ];
 
