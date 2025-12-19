@@ -2846,7 +2846,7 @@ end
     @blue blueGlow $thresh (characteristic)
 end
 
-@:Bremsstrahlung_Radiation graph Radiation Deceleration Charge X-ray
+@:Bremsstrahlung_Radiation graph Radiation Deceleration Charge Xray
     @e isA $Energy PhotonEnergy
     @ke isA $Energy KineticEnergy
     @z isA $Integer AtomicNumber
