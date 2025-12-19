@@ -14,52 +14,14 @@
 
 import { getThresholds } from '../core/constants.mjs';
 import { TRANSITIVE_RELATIONS, RESERVED_WORDS } from './transitive.mjs';
-import { readFileSync, existsSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-
-/**
- * Load inheritable properties from Core theory config
- * Reads config/Core/00-relations.sys2 and extracts __InheritableProperty relations
- */
-function loadInheritableProperties() {
-  const defaults = new Set([
-    'can', 'has', 'likes', 'knows', 'owns', 'uses',
-    'hasProperty', 'hasAbility', 'hasTrait', 'exhibits'
-  ]);
-
-  try {
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-    const configPath = join(__dirname, '../../config/Core/00-relations.sys2');
-
-    if (!existsSync(configPath)) {
-      return defaults;
-    }
-
-    const content = readFileSync(configPath, 'utf-8');
-    const properties = new Set();
-
-    // Parse lines like "@can:can __InheritableProperty"
-    for (const line of content.split('\n')) {
-      const match = line.match(/@(\w+):\w+\s+__InheritableProperty/);
-      if (match) {
-        properties.add(match[1]);
-      }
-    }
-
-    return properties.size > 0 ? properties : defaults;
-  } catch (e) {
-    return defaults;
-  }
-}
+import { DEFAULT_SEMANTIC_INDEX } from '../runtime/semantic-index.mjs';
 
 /**
  * Relations that propagate DOWN the isA hierarchy
  * When `isA Child Parent`, properties of Parent apply to Child
  * Loaded from config/Core/00-relations.sys2
  */
-export const INHERITABLE_PROPERTIES = loadInheritableProperties();
+export const INHERITABLE_PROPERTIES = DEFAULT_SEMANTIC_INDEX.inheritableProperties;
 
 /**
  * Property Inheritance Reasoner
@@ -91,7 +53,11 @@ export class PropertyInheritanceReasoner {
     const operatorName = this.engine.extractOperatorName(goal);
 
     // Only handle inheritable properties
-    if (!operatorName || !INHERITABLE_PROPERTIES.has(operatorName)) {
+    const isInheritable =
+      (this.session?.semanticIndex?.isInheritableProperty?.(operatorName)) ??
+      (operatorName ? INHERITABLE_PROPERTIES.has(operatorName) : false);
+
+    if (!operatorName || !isInheritable) {
       return { valid: false };
     }
 

@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 import { ProofEngine } from '../../../src/reasoning/prove.mjs';
 import { Session } from '../../../src/runtime/session.mjs';
 import { parse } from '../../../src/parser/parser.mjs';
+import { validateProof } from '../../../src/reasoning/proof-validator.mjs';
 
 test('ProofEngine: constructor and basic operations', () => {
   const session = new Session({ geometry: 2048 });
@@ -44,6 +45,11 @@ test('ProofEngine: prove operations', () => {
   assert.ok('steps' in result);
   assert.ok(result.confidence >= 0 && result.confidence <= 1);
   assert.ok(Array.isArray(result.steps));
+
+  // DS19 incremental: proofObject exists via Session.prove; validate a direct proof using Session API.
+  const r2 = session.prove('@goal isA Socrates Human');
+  assert.ok(r2.proofObject);
+  assert.equal(validateProof(r2.proofObject, session), true);
 });
 
 test('ProofEngine: tryDirectMatch operations', () => {

@@ -38,6 +38,10 @@ export class ComponentKB {
 
     // Synonym mappings (bidirectional)
     this.synonyms = new Map();        // word -> Set of synonyms
+
+    // Canonical representative mapping (directional)
+    // alias -> canonical
+    this.canonicalMap = new Map();
   }
 
   /**
@@ -128,20 +132,90 @@ export class ComponentKB {
   }
 
   /**
-   * Get all synonyms for a word (including itself)
+   * Register a canonical representative mapping (directional).
+   * Example: canonical Car Automobile  => canonicalizeName('Car') === 'Automobile'
+   * @param {string} alias
+   * @param {string} canonical
+   */
+  addCanonical(alias, canonical) {
+    if (!alias || !canonical) return;
+    this.canonicalMap.set(alias, canonical);
+  }
+
+  /**
+   * Resolve canonical name by following canonicalMap chain.
+   * @param {string} word
+   * @returns {string}
+   */
+  resolveCanonical(word) {
+    let current = word;
+    const visited = new Set();
+    while (this.canonicalMap.has(current)) {
+      if (visited.has(current)) break;
+      visited.add(current);
+      current = this.canonicalMap.get(current);
+    }
+    return current;
+  }
+
+  /**
+   * Get all synonyms for a word (including itself).
+   * Uses transitive closure over the synonym graph (connected component).
    * @param {string} word - Word to expand
    * @returns {Set<string>} Set of equivalent words
    */
   expandSynonyms(word) {
-    const result = new Set([word]);
+    const visited = new Set();
+    const queue = [word];
 
-    if (this.synonyms.has(word)) {
-      for (const syn of this.synonyms.get(word)) {
-        result.add(syn);
+    while (queue.length > 0) {
+      const current = queue.shift();
+      if (visited.has(current)) continue;
+      visited.add(current);
+
+      const neighbors = this.synonyms.get(current);
+      if (!neighbors) continue;
+
+      for (const next of neighbors) {
+        if (!visited.has(next)) queue.push(next);
       }
     }
 
-    return result;
+    return visited;
+  }
+
+  /**
+   * Deterministic canonical representative for a synonym component.
+   * If no synonyms exist, returns the input.
+   * @param {string} word
+   * @returns {string}
+   */
+  canonicalizeName(word) {
+    // Prefer explicit canonical representative if configured.
+    if (this.canonicalMap.has(word)) {
+      return this.resolveCanonical(word);
+    }
+
+    const set = this.expandSynonyms(word);
+    if (!set || set.size === 0) return word;
+
+    // If any synonym has an explicit canonical representative, use it.
+    const canonicalCandidates = new Set();
+    for (const s of set) {
+      if (this.canonicalMap.has(s)) {
+        canonicalCandidates.add(this.resolveCanonical(s));
+      }
+    }
+    if (canonicalCandidates.size === 1) {
+      return [...canonicalCandidates][0];
+    }
+    if (canonicalCandidates.size > 1) {
+      // Deterministic tie-break if theory provided conflicting canonicals.
+      return [...canonicalCandidates].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))[0];
+    }
+
+    // Deterministic, stable fallback: lexicographically smallest token in component.
+    return [...set].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))[0];
   }
 
   /**

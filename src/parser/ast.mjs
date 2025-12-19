@@ -44,9 +44,14 @@ export class Statement extends ASTNode {
   }
 
   toString() {
-    const dest = this.destination
-      ? (this.persistName ? `@${this.destination}:${this.persistName} ` : `@${this.destination} `)
-      : '';
+    let dest = '';
+    if (this.destination) {
+      // @var or @var:name
+      dest = this.persistName ? `@${this.destination}:${this.persistName} ` : `@${this.destination} `;
+    } else if (this.persistName) {
+      // @:name (KB-only, no local variable)
+      dest = `@:${this.persistName} `;
+    }
     const args = this.args.map(a => a.toString()).join(' ');
     return `${dest}${this.operator.toString()} ${args}`.trim();
   }
@@ -212,9 +217,16 @@ export class GraphDeclaration extends ASTNode {
   }
 
   toString() {
-    const dest = this.persistName
-      ? `@${this.name}:${this.persistName}`
-      : `@${this.name}`;
+    let dest;
+    if (this.name) {
+      // @name or @name:persist
+      dest = this.persistName ? `@${this.name}:${this.persistName}` : `@${this.name}`;
+    } else if (this.persistName) {
+      // @:persist (KB-only, no local variable)
+      dest = `@:${this.persistName}`;
+    } else {
+      dest = '@_'; // fallback
+    }
     const params = this.params.join(' ');
     return `${dest} graph ${params} ... end`;
   }

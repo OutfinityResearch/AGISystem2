@@ -1,0 +1,114 @@
+import { bindAll, bundle } from '../core/operations.mjs';
+import { withPosition } from '../core/position.mjs';
+import { Statement, Identifier, Hole, Reference, Literal, List, Compound } from '../parser/ast.mjs';
+import { ExecutionError } from './execution-error.mjs';
+import { canonicalizeTokenName } from './canonicalize.mjs';
+
+export function buildStatementVector(executor, stmt) {
+  const operatorVec = resolveExpression(executor, stmt.operator);
+
+  const positionedArgs = [];
+  for (let i = 0; i < stmt.args.length; i++) {
+    const argVec = resolveExpression(executor, stmt.args[i]);
+    positionedArgs.push(withPosition(i + 1, argVec));
+  }
+
+  if (positionedArgs.length === 0) return operatorVec;
+  return bindAll(operatorVec, ...positionedArgs);
+}
+
+export function resolveExpression(executor, expr) {
+  if (expr instanceof Identifier || expr.type === 'Identifier') {
+    return resolveIdentifier(executor, expr);
+  }
+  if (expr instanceof Hole || expr.type === 'Hole') {
+    return resolveHole(executor, expr);
+  }
+  if (expr instanceof Reference || expr.type === 'Reference') {
+    return resolveReference(executor, expr);
+  }
+  if (expr instanceof Literal || expr.type === 'Literal') {
+    return resolveLiteral(executor, expr);
+  }
+  if (expr instanceof List || expr.type === 'List') {
+    return resolveList(executor, expr);
+  }
+  if (expr instanceof Compound || expr.type === 'Compound') {
+    return resolveCompound(executor, expr);
+  }
+
+  throw new ExecutionError(`Unknown expression type: ${expr.type}`, expr);
+}
+
+export function resolveIdentifier(executor, expr) {
+  if (executor.session.scope.has(expr.name)) {
+    return executor.session.scope.get(expr.name);
+  }
+
+  const isReserved =
+    executor.session?.operators?.has?.(expr.name) ||
+    expr.name === 'Load' ||
+    expr.name === 'Unload' ||
+    expr.name === 'induce' ||
+    expr.name === 'bundle' ||
+    expr.name === 'synonym' ||
+    expr.name === 'canonical' ||
+    expr.name === 'alias' ||
+    expr.name === 'Default' ||
+    expr.name === 'Exception' ||
+    expr.name === 'mutuallyExclusive';
+
+  const name = (executor.session?.canonicalizationEnabled && !isReserved)
+    ? canonicalizeTokenName(executor.session, expr.name)
+    : expr.name;
+
+  return executor.session.vocabulary.getOrCreate(name);
+}
+
+export function resolveHole(executor, expr) {
+  const holeName = `__HOLE_${expr.name}__`;
+  return executor.session.vocabulary.getOrCreate(holeName);
+}
+
+export function resolveReference(executor, expr) {
+  const vec = executor.session.scope.get(expr.name);
+  if (!vec) {
+    throw new ExecutionError(`Undefined reference: @${expr.name}`, expr);
+  }
+  return vec;
+}
+
+export function resolveLiteral(executor, expr) {
+  const strValue = String(expr.value);
+  return executor.session.vocabulary.getOrCreate(strValue);
+}
+
+export function resolveList(executor, expr) {
+  if (expr.items.length === 0) {
+    return executor.session.vocabulary.getOrCreate('__EMPTY_LIST__');
+  }
+  const itemVectors = expr.items.map(item => resolveExpression(executor, item));
+  return bundle(itemVectors);
+}
+
+export function resolveCompound(executor, expr) {
+  const operatorName = executor.extractName(expr.operator);
+  const isGraph = executor.session.graphs?.has(operatorName) ||
+                  executor.session.graphAliases?.has(operatorName);
+
+  if (isGraph) {
+    const result = executor.expandGraph(operatorName, expr.args);
+    if (result) return result;
+  }
+
+  const tempStmt = new Statement(
+    null,
+    expr.operator,
+    expr.args,
+    null,
+    expr.line,
+    expr.column
+  );
+  return buildStatementVector(executor, tempStmt);
+}
+

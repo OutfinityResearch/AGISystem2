@@ -162,9 +162,14 @@ export class HolographicProofEngine {
         directMatch.method = 'hdc_direct_validated';
         directMatch.goal = goalStr;
         // Use symbolic proof steps if available, otherwise just show the goal
-        directMatch.steps = (symbolicProof.steps && symbolicProof.steps.length > 0)
+        const baseSteps = (symbolicProof.steps && symbolicProof.steps.length > 0)
           ? symbolicProof.steps
           : [{ operation: 'hdc_direct', fact: goalStr, confidence: directMatch.confidence }];
+
+        directMatch.steps = [
+          ...baseSteps,
+          { operation: 'validation', method: 'symbolic', fact: goalStr, valid: true }
+        ];
         return directMatch;
       }
     }
@@ -448,10 +453,11 @@ export class HolographicProofEngine {
             valid: true,
             confidence: sim * conditionResult.confidence,
             method: 'hdc_rule_validated',
-            rule: rule.label,
+            rule: rule.label || rule.name || rule.id,
             steps: [{
               operation: 'rule_application',
-              rule: rule.label,
+              rule: rule.label || rule.name || rule.id,
+              ruleId: rule.id || null,
               confidence: conditionResult.confidence
             }]
           };

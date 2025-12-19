@@ -37,15 +37,40 @@ export const RESERVED = new Set([
   '__Relation', '__Role', '__TransitiveRelation', '__SymmetricRelation'
 ]);
 
+const RESERVED_CACHE = new WeakMap();
+
+function getReserved(session) {
+  if (!session || typeof session !== 'object') return RESERVED;
+  const cached = RESERVED_CACHE.get(session);
+  if (cached) return cached;
+
+  const set = new Set(RESERVED);
+
+  // Session-reserved operator tokens (DSL keywords/macros).
+  for (const op of session.operators?.keys?.() || []) {
+    set.add(op);
+  }
+
+  // Theory-derived relation/property tokens (mostly lower-case; still useful for safety).
+  const idx = session.semanticIndex;
+  for (const op of idx?.transitiveRelations || []) set.add(op);
+  for (const op of idx?.symmetricRelations || []) set.add(op);
+  for (const op of idx?.reflexiveRelations || []) set.add(op);
+  for (const op of idx?.inheritableProperties || []) set.add(op);
+
+  RESERVED_CACHE.set(session, set);
+  return set;
+}
+
 /**
  * Check if a name is a valid entity (not reserved/internal)
  */
-export function isValidEntity(name) {
+export function isValidEntity(name, session) {
   if (!name || typeof name !== 'string') return false;
   if (name.startsWith('_') || name.startsWith('?')) return false;
   if (name.startsWith('$') || name.startsWith('@')) return false;
   if (name.match(/^[a-z]+$/)) return false; // lowercase only = operator
-  if (RESERVED.has(name)) return false;
+  if (getReserved(session).has(name)) return false;
   return true;
 }
 
@@ -88,8 +113,12 @@ export function verifyHDCCandidate(session, operatorName, knowns, candidate, hol
     if (match) return true;
   }
 
-  // For "can" operator, check if derivable via rules (entity must be right type)
-  if (operatorName === 'can' || operatorName === 'must') {
+  // For inheritable operators, ensure candidate is a "typed" entity (has isA facts).
+  const isInheritable =
+    session?.semanticIndex?.isInheritableProperty?.(operatorName) ??
+    (operatorName === 'can' || operatorName === 'must');
+
+  if (isInheritable) {
     // Candidate should be something that has isA relations (a named entity)
     for (const fact of session.kbFacts) {
       const meta = fact.metadata;
@@ -141,11 +170,11 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec) {
     const candidate = unbind(answer, posVec);
 
     // Find top K matches in vocabulary
-    const matches = topKSimilar(candidate, session.vocabulary.atoms, 15);
+      const matches = topKSimilar(candidate, session.vocabulary.atoms, 15);
 
     for (const match of matches) {
       // Use strategy-dependent threshold, filter invalid entities, and verify candidate
-      if (match.similarity > thresholds.HDC_MATCH && isValidEntity(match.name)) {
+      if (match.similarity > thresholds.HDC_MATCH && isValidEntity(match.name, session)) {
         // Verify the candidate actually makes sense
         if (!verifyHDCCandidate(session, operatorName, knowns, match.name, hole.index)) {
           dbg('HDC', `Rejecting unverifiable candidate: ${match.name}`);

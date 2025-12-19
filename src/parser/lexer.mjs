@@ -140,6 +140,7 @@ export class Lexer {
 
   /**
    * Read @identifier token
+   * Supports: @var, @var:name, @:name, @_
    */
   readAtIdentifier() {
     const startLine = this.line;
@@ -147,6 +148,22 @@ export class Lexer {
     this.advance(); // skip @
 
     let value = '';
+
+    // Check for @:name shorthand (KB-only, no local variable)
+    if (this.peek() === ':') {
+      this.advance(); // skip :
+      let persistName = '';
+      while (!this.isEof() && (this.isAlphaNum(this.peek()) || this.peek() === '_' || this.peek() === '-')) {
+        persistName += this.advance();
+      }
+      if (persistName.length === 0) {
+        throw new LexerError('Expected name after @:', startLine, startColumn);
+      }
+      // Return ":name" format to indicate KB-only (no local var)
+      return new Token(TOKEN_TYPES.AT, `:${persistName}`, startLine, startColumn);
+    }
+
+    // Read the identifier after @
     while (!this.isEof() && (this.isAlphaNum(this.peek()) || this.peek() === '_' || this.peek() === '-')) {
       value += this.advance();
     }
@@ -169,7 +186,7 @@ export class Lexer {
     }
 
     // Return token with persist flag in value
-    // Format: "varname" or "varname:persistname"
+    // Format: "varname", "varname:persistname", or ":persistname"
     const tokenValue = persistName ? `${value}:${persistName}` : value;
     return new Token(TOKEN_TYPES.AT, tokenValue, startLine, startColumn);
   }

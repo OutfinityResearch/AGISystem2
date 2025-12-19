@@ -93,7 +93,11 @@ export function findAll(session, pattern, options = {}) {
   }
 
   // Add transitive results for transitive relations
-  if (includeTransitive && isTransitiveRelation(operatorName)) {
+  const isTransitive =
+    (session?.semanticIndex?.isTransitive?.(operatorName)) ??
+    isTransitiveRelationFallback(operatorName);
+
+  if (includeTransitive && isTransitive) {
     const transitiveResults = findTransitiveResults(session, operatorName, holes, knowns, maxResults - results.length);
     for (const tr of transitiveResults) {
       const isDuplicate = results.some(r =>
@@ -117,7 +121,7 @@ export function findAll(session, pattern, options = {}) {
 /**
  * Check if relation supports transitive reasoning
  */
-function isTransitiveRelation(operator) {
+function isTransitiveRelationFallback(operator) {
   return ['isA', 'locatedIn', 'partOf', 'subsetOf', 'before', 'after',
           'causes', 'appealsTo', 'leadsTo', 'enables', 'containedIn'].includes(operator);
 }

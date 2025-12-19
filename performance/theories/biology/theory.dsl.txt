@@ -1,0 +1,1881 @@
+# Biology Theory - DSL Expressions
+# Comprehensive biological knowledge with multi-line graphs
+# Coverage: Taxonomy, Cell Biology, Genetics, Ecology, Physiology
+
+# ============================================================================
+# PART I: TAXONOMY - Complete Hierarchy (Domains → Species)
+# ============================================================================
+
+# --- Domain Level ---
+isA Bacteria Domain
+isA Archaea Domain
+isA Eukarya Domain
+
+# --- Kingdom Level ---
+isA Animalia Kingdom
+isA Plantae Kingdom
+isA Fungi Kingdom
+isA Protista Kingdom
+isA Monera Kingdom
+
+# Kingdom to Domain relationships
+@:Kingdom_Eukarya_Animalia graph
+    @premise isA Animalia Kingdom
+    @domain isA Eukarya Domain
+    @relation belongsTo Animalia $domain
+    return $relation
+end
+
+@:Kingdom_Eukarya_Plantae graph
+    @premise isA Plantae Kingdom
+    @domain isA Eukarya Domain
+    @relation belongsTo Plantae $domain
+    return $relation
+end
+
+@:Kingdom_Eukarya_Fungi graph
+    @premise isA Fungi Kingdom
+    @domain isA Eukarya Domain
+    @relation belongsTo Fungi $domain
+    return $relation
+end
+
+# --- Phylum Level (Animals) ---
+isA Chordata Phylum
+isA Arthropoda Phylum
+isA Mollusca Phylum
+isA Annelida Phylum
+isA Cnidaria Phylum
+isA Porifera Phylum
+isA Echinodermata Phylum
+isA Nematoda Phylum
+isA Platyhelminthes Phylum
+
+@:Phylum_Animal_Chordata graph
+    @phylum isA Chordata Phylum
+    @kingdom isA Animalia Kingdom
+    @relation belongsTo Chordata $kingdom
+    return $relation
+end
+
+@:Phylum_Animal_Arthropoda graph
+    @phylum isA Arthropoda Phylum
+    @kingdom isA Animalia Kingdom
+    @relation belongsTo Arthropoda $kingdom
+    return $relation
+end
+
+@:Phylum_Animal_Mollusca graph
+    @phylum isA Mollusca Phylum
+    @kingdom isA Animalia Kingdom
+    @relation belongsTo Mollusca $kingdom
+    return $relation
+end
+
+# --- Phylum Level (Plants) ---
+isA Magnoliophyta Phylum
+isA Pinophyta Phylum
+isA Pteridophyta Phylum
+isA Bryophyta Phylum
+isA Chlorophyta Phylum
+
+@:Phylum_Plant_Magnoliophyta graph
+    @phylum isA Magnoliophyta Phylum
+    @kingdom isA Plantae Kingdom
+    @relation belongsTo Magnoliophyta $kingdom
+    return $relation
+end
+
+@:Phylum_Plant_Pinophyta graph
+    @phylum isA Pinophyta Phylum
+    @kingdom isA Plantae Kingdom
+    @relation belongsTo Pinophyta $kingdom
+    return $relation
+end
+
+# --- Class Level (Chordates) ---
+isA Mammalia Class
+isA Aves Class
+isA Reptilia Class
+isA Amphibia Class
+isA Actinopterygii Class
+isA Chondrichthyes Class
+
+@:Class_Chordata_Mammalia graph
+    @class isA Mammalia Class
+    @phylum isA Chordata Phylum
+    @relation belongsTo Mammalia $phylum
+    return $relation
+end
+
+@:Class_Chordata_Aves graph
+    @class isA Aves Class
+    @phylum isA Chordata Phylum
+    @relation belongsTo Aves $phylum
+    return $relation
+end
+
+@:Class_Chordata_Reptilia graph
+    @class isA Reptilia Class
+    @phylum isA Chordata Phylum
+    @relation belongsTo Reptilia $phylum
+    return $relation
+end
+
+@:Class_Chordata_Amphibia graph
+    @class isA Amphibia Class
+    @phylum isA Chordata Phylum
+    @relation belongsTo Amphibia $phylum
+    return $relation
+end
+
+@:Class_Chordata_Actinopterygii graph
+    @class isA Actinopterygii Class
+    @phylum isA Chordata Phylum
+    @relation belongsTo Actinopterygii $phylum
+    return $relation
+end
+
+# --- Class Level (Arthropods) ---
+isA Insecta Class
+isA Arachnida Class
+isA Crustacea Class
+isA Myriapoda Class
+
+@:Class_Arthropoda_Insecta graph
+    @class isA Insecta Class
+    @phylum isA Arthropoda Phylum
+    @relation belongsTo Insecta $phylum
+    return $relation
+end
+
+@:Class_Arthropoda_Arachnida graph
+    @class isA Arachnida Class
+    @phylum isA Arthropoda Phylum
+    @relation belongsTo Arachnida $phylum
+    return $relation
+end
+
+# --- Order Level (Mammals) ---
+isA Primates Order
+isA Carnivora Order
+isA Rodentia Order
+isA Chiroptera Order
+isA Cetacea Order
+isA Artiodactyla Order
+isA Perissodactyla Order
+isA Proboscidea Order
+isA Lagomorpha Order
+isA Marsupialia Order
+
+@:Order_Mammalia_Primates graph
+    @order isA Primates Order
+    @class isA Mammalia Class
+    @relation belongsTo Primates $class
+    return $relation
+end
+
+@:Order_Mammalia_Carnivora graph
+    @order isA Carnivora Order
+    @class isA Mammalia Class
+    @relation belongsTo Carnivora $class
+    return $relation
+end
+
+@:Order_Mammalia_Rodentia graph
+    @order isA Rodentia Order
+    @class isA Mammalia Class
+    @relation belongsTo Rodentia $class
+    return $relation
+end
+
+@:Order_Mammalia_Cetacea graph
+    @order isA Cetacea Order
+    @class isA Mammalia Class
+    @relation belongsTo Cetacea $class
+    return $relation
+end
+
+@:Order_Mammalia_Chiroptera graph
+    @order isA Chiroptera Order
+    @class isA Mammalia Class
+    @relation belongsTo Chiroptera $class
+    return $relation
+end
+
+@:Order_Mammalia_Artiodactyla graph
+    @order isA Artiodactyla Order
+    @class isA Mammalia Class
+    @relation belongsTo Artiodactyla $class
+    return $relation
+end
+
+@:Order_Mammalia_Proboscidea graph
+    @order isA Proboscidea Order
+    @class isA Mammalia Class
+    @relation belongsTo Proboscidea $class
+    return $relation
+end
+
+# --- Order Level (Birds) ---
+isA Passeriformes Order
+isA Falconiformes Order
+isA Strigiformes Order
+isA Anseriformes Order
+isA Galliformes Order
+isA Columbiformes Order
+isA Psittaciformes Order
+isA Piciformes Order
+isA Sphenisciformes Order
+
+@:Order_Aves_Passeriformes graph
+    @order isA Passeriformes Order
+    @class isA Aves Class
+    @relation belongsTo Passeriformes $class
+    return $relation
+end
+
+@:Order_Aves_Falconiformes graph
+    @order isA Falconiformes Order
+    @class isA Aves Class
+    @relation belongsTo Falconiformes $class
+    return $relation
+end
+
+@:Order_Aves_Strigiformes graph
+    @order isA Strigiformes Order
+    @class isA Aves Class
+    @relation belongsTo Strigiformes $class
+    return $relation
+end
+
+@:Order_Aves_Sphenisciformes graph
+    @order isA Sphenisciformes Order
+    @class isA Aves Class
+    @relation belongsTo Sphenisciformes $class
+    return $relation
+end
+
+# --- Order Level (Insects) ---
+isA Coleoptera Order
+isA Lepidoptera Order
+isA Hymenoptera Order
+isA Diptera Order
+isA Orthoptera Order
+isA Hemiptera Order
+isA Odonata Order
+
+@:Order_Insecta_Coleoptera graph
+    @order isA Coleoptera Order
+    @class isA Insecta Class
+    @relation belongsTo Coleoptera $class
+    return $relation
+end
+
+@:Order_Insecta_Lepidoptera graph
+    @order isA Lepidoptera Order
+    @class isA Insecta Class
+    @relation belongsTo Lepidoptera $class
+    return $relation
+end
+
+@:Order_Insecta_Hymenoptera graph
+    @order isA Hymenoptera Order
+    @class isA Insecta Class
+    @relation belongsTo Hymenoptera $class
+    return $relation
+end
+
+@:Order_Insecta_Diptera graph
+    @order isA Diptera Order
+    @class isA Insecta Class
+    @relation belongsTo Diptera $class
+    return $relation
+end
+
+# --- Family Level (Primates) ---
+isA Hominidae Family
+isA Pongidae Family
+isA Cercopithecidae Family
+isA Hylobatidae Family
+isA Lemuridae Family
+
+@:Family_Primates_Hominidae graph
+    @family isA Hominidae Family
+    @order isA Primates Order
+    @relation belongsTo Hominidae $order
+    return $relation
+end
+
+@:Family_Primates_Pongidae graph
+    @family isA Pongidae Family
+    @order isA Primates Order
+    @relation belongsTo Pongidae $order
+    return $relation
+end
+
+@:Family_Primates_Cercopithecidae graph
+    @family isA Cercopithecidae Family
+    @order isA Primates Order
+    @relation belongsTo Cercopithecidae $order
+    return $relation
+end
+
+# --- Family Level (Carnivora) ---
+isA Felidae Family
+isA Canidae Family
+isA Ursidae Family
+isA Mustelidae Family
+isA Phocidae Family
+
+@:Family_Carnivora_Felidae graph
+    @family isA Felidae Family
+    @order isA Carnivora Order
+    @relation belongsTo Felidae $order
+    return $relation
+end
+
+@:Family_Carnivora_Canidae graph
+    @family isA Canidae Family
+    @order isA Carnivora Order
+    @relation belongsTo Canidae $order
+    return $relation
+end
+
+@:Family_Carnivora_Ursidae graph
+    @family isA Ursidae Family
+    @order isA Carnivora Order
+    @relation belongsTo Ursidae $order
+    return $relation
+end
+
+# --- Genus Level (Hominidae) ---
+isA Homo Genus
+isA Pan Genus
+isA Gorilla Genus
+isA Pongo Genus
+isA Australopithecus Genus
+
+@:Genus_Hominidae_Homo graph
+    @genus isA Homo Genus
+    @family isA Hominidae Family
+    @relation belongsTo Homo $family
+    return $relation
+end
+
+@:Genus_Hominidae_Pan graph
+    @genus isA Pan Genus
+    @family isA Hominidae Family
+    @relation belongsTo Pan $family
+    return $relation
+end
+
+@:Genus_Hominidae_Gorilla graph
+    @genus isA Gorilla Genus
+    @family isA Hominidae Family
+    @relation belongsTo Gorilla $family
+    return $relation
+end
+
+# --- Genus Level (Felidae) ---
+isA Panthera Genus
+isA Felis Genus
+isA Acinonyx Genus
+isA Lynx Genus
+isA Puma Genus
+
+@:Genus_Felidae_Panthera graph
+    @genus isA Panthera Genus
+    @family isA Felidae Family
+    @relation belongsTo Panthera $family
+    return $relation
+end
+
+@:Genus_Felidae_Felis graph
+    @genus isA Felis Genus
+    @family isA Felidae Family
+    @relation belongsTo Felis $family
+    return $relation
+end
+
+@:Genus_Felidae_Acinonyx graph
+    @genus isA Acinonyx Genus
+    @family isA Felidae Family
+    @relation belongsTo Acinonyx $family
+    return $relation
+end
+
+# --- Genus Level (Canidae) ---
+isA Canis Genus
+isA Vulpes Genus
+isA Lycaon Genus
+isA Cuon Genus
+
+@:Genus_Canidae_Canis graph
+    @genus isA Canis Genus
+    @family isA Canidae Family
+    @relation belongsTo Canis $family
+    return $relation
+end
+
+@:Genus_Canidae_Vulpes graph
+    @genus isA Vulpes Genus
+    @family isA Canidae Family
+    @relation belongsTo Vulpes $family
+    return $relation
+end
+
+# --- Species Level (Homo) ---
+isA HomoSapiens Species
+isA HomoNeanderthalensis Species
+isA HomoErectus Species
+isA HomoHabilis Species
+
+@:Species_Homo_Sapiens graph
+    @species isA HomoSapiens Species
+    @genus isA Homo Genus
+    @relation belongsTo HomoSapiens $genus
+    @common commonName HomoSapiens "Human"
+    return $relation
+end
+
+@:Species_Homo_Neanderthalensis graph
+    @species isA HomoNeanderthalensis Species
+    @genus isA Homo Genus
+    @relation belongsTo HomoNeanderthalensis $genus
+    @common commonName HomoNeanderthalensis "Neanderthal"
+    return $relation
+end
+
+# --- Species Level (Panthera) ---
+isA PantheraLeo Species
+isA PantheraTigris Species
+isA PantheraOnca Species
+isA PantheraPardus Species
+isA PantheraUncia Species
+
+@:Species_Panthera_Leo graph
+    @species isA PantheraLeo Species
+    @genus isA Panthera Genus
+    @relation belongsTo PantheraLeo $genus
+    @common commonName PantheraLeo "Lion"
+    return $relation
+end
+
+@:Species_Panthera_Tigris graph
+    @species isA PantheraTigris Species
+    @genus isA Panthera Genus
+    @relation belongsTo PantheraTigris $genus
+    @common commonName PantheraTigris "Tiger"
+    return $relation
+end
+
+@:Species_Panthera_Onca graph
+    @species isA PantheraOnca Species
+    @genus isA Panthera Genus
+    @relation belongsTo PantheraOnca $genus
+    @common commonName PantheraOnca "Jaguar"
+    return $relation
+end
+
+@:Species_Panthera_Pardus graph
+    @species isA PantheraPardus Species
+    @genus isA Panthera Genus
+    @relation belongsTo PantheraPardus $genus
+    @common commonName PantheraPardus "Leopard"
+    return $relation
+end
+
+# --- Species Level (Canis) ---
+isA CanisLupus Species
+isA CanisFamiliaris Species
+isA CanisLatrans Species
+isA CanisAureus Species
+
+@:Species_Canis_Lupus graph
+    @species isA CanisLupus Species
+    @genus isA Canis Genus
+    @relation belongsTo CanisLupus $genus
+    @common commonName CanisLupus "Wolf"
+    return $relation
+end
+
+@:Species_Canis_Familiaris graph
+    @species isA CanisFamiliaris Species
+    @genus isA Canis Genus
+    @relation belongsTo CanisFamiliaris $genus
+    @common commonName CanisFamiliaris "Dog"
+    return $relation
+end
+
+# --- Species Level (Other notable) ---
+isA ElephantidaeAfricana Species
+isA PanTroglodytes Species
+isA GorillaGorilla Species
+isA UrsusArctos Species
+isA BalenopteraMusculus Species
+
+@:Species_Pan_Troglodytes graph
+    @species isA PanTroglodytes Species
+    @genus isA Pan Genus
+    @relation belongsTo PanTroglodytes $genus
+    @common commonName PanTroglodytes "Chimpanzee"
+    return $relation
+end
+
+@:Species_Gorilla_Gorilla graph
+    @species isA GorillaGorilla Species
+    @genus isA Gorilla Genus
+    @relation belongsTo GorillaGorilla $genus
+    @common commonName GorillaGorilla "Gorilla"
+    return $relation
+end
+
+# ============================================================================
+# PART II: CELL BIOLOGY
+# ============================================================================
+
+# --- Cell Types ---
+isA ProkaryoticCell CellType
+isA EukaryoticCell CellType
+isA AnimalCell CellType
+isA PlantCell CellType
+isA BacterialCell CellType
+isA ArchaealCell CellType
+
+@:Cell_Type_Hierarchy graph
+    @animal isA AnimalCell CellType
+    @plant isA PlantCell CellType
+    @euk isA EukaryoticCell CellType
+    @r1 isSubtypeOf AnimalCell $euk
+    @r2 isSubtypeOf PlantCell $euk
+    @combined And $r1 $r2
+    return $combined
+end
+
+@:Cell_Prokaryote_Types graph
+    @bacterial isA BacterialCell CellType
+    @archaeal isA ArchaealCell CellType
+    @prok isA ProkaryoticCell CellType
+    @r1 isSubtypeOf BacterialCell $prok
+    @r2 isSubtypeOf ArchaealCell $prok
+    @combined And $r1 $r2
+    return $combined
+end
+
+# --- Organelles ---
+isA Nucleus Organelle
+isA Mitochondrion Organelle
+isA Chloroplast Organelle
+isA EndoplasmicReticulum Organelle
+isA GolgiApparatus Organelle
+isA Ribosome Organelle
+isA Lysosome Organelle
+isA Peroxisome Organelle
+isA Vacuole Organelle
+isA Cytoskeleton Organelle
+isA CellMembrane Organelle
+isA CellWall Organelle
+
+@:Organelle_Nucleus graph
+    @org isA Nucleus Organelle
+    @function hasFunction Nucleus "genetic_control"
+    @contains containsDNA Nucleus true
+    @membrane hasDoubleMembrane Nucleus true
+    @euk foundIn Nucleus EukaryoticCell
+    @result And $function (And $contains (And $membrane $euk))
+    return $result
+end
+
+@:Organelle_Mitochondrion graph
+    @org isA Mitochondrion Organelle
+    @function hasFunction Mitochondrion "ATP_production"
+    @contains containsDNA Mitochondrion true
+    @membrane hasDoubleMembrane Mitochondrion true
+    @origin hasOrigin Mitochondrion "endosymbiotic"
+    @result And $function (And $contains (And $membrane $origin))
+    return $result
+end
+
+@:Organelle_Chloroplast graph
+    @org isA Chloroplast Organelle
+    @function hasFunction Chloroplast "photosynthesis"
+    @contains containsDNA Chloroplast true
+    @membrane hasDoubleMembrane Chloroplast true
+    @origin hasOrigin Chloroplast "endosymbiotic"
+    @plant foundIn Chloroplast PlantCell
+    @result And $function (And $contains (And $membrane (And $origin $plant)))
+    return $result
+end
+
+@:Organelle_ER graph
+    @org isA EndoplasmicReticulum Organelle
+    @rough isA RoughER SubOrganelle
+    @smooth isA SmoothER SubOrganelle
+    @r_func hasFunction RoughER "protein_synthesis"
+    @s_func hasFunction SmoothER "lipid_synthesis"
+    @result And $r_func $s_func
+    return $result
+end
+
+@:Organelle_Golgi graph
+    @org isA GolgiApparatus Organelle
+    @function hasFunction GolgiApparatus "protein_modification"
+    @structure hasStructure GolgiApparatus "stacked_cisternae"
+    @result And $function $structure
+    return $result
+end
+
+@:Organelle_Ribosome graph
+    @org isA Ribosome Organelle
+    @function hasFunction Ribosome "protein_synthesis"
+    @subunit1 hasSubunit Ribosome "large_subunit"
+    @subunit2 hasSubunit Ribosome "small_subunit"
+    @rna containsRNA Ribosome true
+    @universal foundIn Ribosome "all_cells"
+    @result And $function (And $subunit1 (And $subunit2 (And $rna $universal)))
+    return $result
+end
+
+@:Organelle_Lysosome graph
+    @org isA Lysosome Organelle
+    @function hasFunction Lysosome "digestion"
+    @enzyme containsEnzymes Lysosome "hydrolases"
+    @ph hasOptimalPH Lysosome "acidic"
+    @animal foundIn Lysosome AnimalCell
+    @result And $function (And $enzyme (And $ph $animal))
+    return $result
+end
+
+# --- Cell Processes ---
+isA Mitosis CellProcess
+isA Meiosis CellProcess
+isA Cytokinesis CellProcess
+isA Apoptosis CellProcess
+isA CellularRespiration CellProcess
+isA Photosynthesis CellProcess
+isA Endocytosis CellProcess
+isA Exocytosis CellProcess
+isA ActiveTransport CellProcess
+isA PassiveTransport CellProcess
+isA Osmosis CellProcess
+isA Diffusion CellProcess
+
+@:Process_Mitosis graph
+    @process isA Mitosis CellProcess
+    @result producesResult Mitosis "two_identical_cells"
+    @phases hasPhases Mitosis [Prophase Metaphase Anaphase Telophase]
+    @type isDivisionType Mitosis "asexual"
+    @chromosome chromosomeNumber Mitosis "diploid"
+    @conclusion And $result (And $phases (And $type $chromosome))
+    return $conclusion
+end
+
+@:Process_Meiosis graph
+    @process isA Meiosis CellProcess
+    @result producesResult Meiosis "four_haploid_cells"
+    @divisions hasDivisions Meiosis 2
+    @type isDivisionType Meiosis "sexual"
+    @recomb allowsCrossover Meiosis true
+    @conclusion And $result (And $divisions (And $type $recomb))
+    return $conclusion
+end
+
+@:Process_Cellular_Respiration graph
+    @process isA CellularRespiration CellProcess
+    @location occursIn CellularRespiration Mitochondrion
+    @input hasInput CellularRespiration "glucose_and_oxygen"
+    @output producesOutput CellularRespiration "ATP_CO2_water"
+    @stages hasStages CellularRespiration [Glycolysis KrebsCycle ElectronTransport]
+    @atp producesATP CellularRespiration 36
+    @conclusion And $location (And $input (And $output (And $stages $atp)))
+    return $conclusion
+end
+
+@:Process_Photosynthesis graph
+    @process isA Photosynthesis CellProcess
+    @location occursIn Photosynthesis Chloroplast
+    @input hasInput Photosynthesis "CO2_water_light"
+    @output producesOutput Photosynthesis "glucose_oxygen"
+    @light hasLightReactions Photosynthesis true
+    @dark hasDarkReactions Photosynthesis true
+    @equation equation Photosynthesis "6CO2+6H2O+light→C6H12O6+6O2"
+    @conclusion And $location (And $input (And $output (And $light (And $dark $equation))))
+    return $conclusion
+end
+
+@:Process_Apoptosis graph
+    @process isA Apoptosis CellProcess
+    @type isType Apoptosis "programmed_cell_death"
+    @trigger hasTriggerers Apoptosis [DNA_damage Signals Development]
+    @executor hasExecutors Apoptosis "caspases"
+    @controlled isControlled Apoptosis true
+    @vs differs Apoptosis Necrosis
+    @conclusion And $type (And $trigger (And $executor (And $controlled $vs)))
+    return $conclusion
+end
+
+# --- Mitosis Phases ---
+isA Prophase MitosisPhase
+isA Metaphase MitosisPhase
+isA Anaphase MitosisPhase
+isA Telophase MitosisPhase
+isA Interphase CellCyclePhase
+isA G1Phase CellCyclePhase
+isA SPhase CellCyclePhase
+isA G2Phase CellCyclePhase
+
+@:Mitosis_Phase_Order graph
+    @p1 isA Prophase MitosisPhase
+    @p2 isA Metaphase MitosisPhase
+    @p3 isA Anaphase MitosisPhase
+    @p4 isA Telophase MitosisPhase
+    @s1 follows Metaphase Prophase
+    @s2 follows Anaphase Metaphase
+    @s3 follows Telophase Anaphase
+    @seq And $s1 (And $s2 $s3)
+    return $seq
+end
+
+@:Cell_Cycle_Phases graph
+    @inter isA Interphase CellCyclePhase
+    @g1 isA G1Phase CellCyclePhase
+    @s isA SPhase CellCyclePhase
+    @g2 isA G2Phase CellCyclePhase
+    @sub1 isSubphaseOf G1Phase Interphase
+    @sub2 isSubphaseOf SPhase Interphase
+    @sub3 isSubphaseOf G2Phase Interphase
+    @dna dnaSynthesisIn SPhase true
+    @result And $sub1 (And $sub2 (And $sub3 $dna))
+    return $result
+end
+
+# --- Membrane Transport ---
+@:Transport_Passive graph
+    @process isA PassiveTransport CellProcess
+    @energy requiresEnergy PassiveTransport false
+    @direction movesWithGradient PassiveTransport true
+    @types hasTypes PassiveTransport [Diffusion Osmosis FacilitatedDiffusion]
+    @conclusion And $energy (And $direction $types)
+    return $conclusion
+end
+
+@:Transport_Active graph
+    @process isA ActiveTransport CellProcess
+    @energy requiresEnergy ActiveTransport true
+    @direction movesAgainstGradient ActiveTransport true
+    @atp requiresATP ActiveTransport true
+    @pump example ActiveTransport "sodium_potassium_pump"
+    @conclusion And $energy (And $direction (And $atp $pump))
+    return $conclusion
+end
+
+@:Transport_Osmosis graph
+    @process isA Osmosis CellProcess
+    @substance transports Osmosis "water"
+    @direction acrossGradient Osmosis "concentration"
+    @membrane acrossMembrane Osmosis "semipermeable"
+    @type isTypeOf Osmosis PassiveTransport
+    @conclusion And $substance (And $direction (And $membrane $type))
+    return $conclusion
+end
+
+# ============================================================================
+# PART III: GENETICS
+# ============================================================================
+
+# --- Nucleic Acids ---
+isA DNA NucleicAcid
+isA RNA NucleicAcid
+isA mRNA RNAType
+isA tRNA RNAType
+isA rRNA RNAType
+isA miRNA RNAType
+isA siRNA RNAType
+
+@:DNA_Structure graph
+    @mol isA DNA NucleicAcid
+    @structure hasStructure DNA "double_helix"
+    @backbone hasBackbone DNA "phosphate_deoxyribose"
+    @bases hasBases DNA [Adenine Thymine Guanine Cytosine]
+    @pairing basePairingRule DNA "A-T_G-C"
+    @direction hasDirectionality DNA "antiparallel"
+    @hydrogen hasHydrogenBonds DNA true
+    @result And $structure (And $backbone (And $bases (And $pairing (And $direction $hydrogen))))
+    return $result
+end
+
+@:RNA_Structure graph
+    @mol isA RNA NucleicAcid
+    @structure hasStructure RNA "single_stranded"
+    @backbone hasBackbone RNA "phosphate_ribose"
+    @bases hasBases RNA [Adenine Uracil Guanine Cytosine]
+    @pairing basePairingRule RNA "A-U_G-C"
+    @result And $structure (And $backbone (And $bases $pairing))
+    return $result
+end
+
+@:Central_Dogma graph
+    @dna isA DNA NucleicAcid
+    @rna isA RNA NucleicAcid
+    @protein isA Protein Macromolecule
+    @transcription processDNA_to_RNA Transcription
+    @translation processRNA_to_Protein Translation
+    @flow informationFlow "DNA→RNA→Protein"
+    @dogma centralDogma $flow
+    @result And $transcription (And $translation $dogma)
+    return $result
+end
+
+# --- Transcription ---
+@:Transcription_Process graph
+    @process isA Transcription GeneticProcess
+    @template hasTemplate Transcription DNA
+    @product producesProduct Transcription mRNA
+    @enzyme usesEnzyme Transcription "RNA_polymerase"
+    @location occursIn Transcription Nucleus
+    @direction direction Transcription "5_to_3_prime"
+    @promoter requiresPromoter Transcription true
+    @result And $template (And $product (And $enzyme (And $location (And $direction $promoter))))
+    return $result
+end
+
+@:Transcription_Stages graph
+    @init isA Initiation TranscriptionStage
+    @elong isA Elongation TranscriptionStage
+    @term isA Termination TranscriptionStage
+    @s1 follows Elongation Initiation
+    @s2 follows Termination Elongation
+    @init_desc initiation_involves Initiation "promoter_binding"
+    @elong_desc elongation_involves Elongation "RNA_synthesis"
+    @term_desc termination_involves Termination "release"
+    @result And $s1 (And $s2 (And $init_desc (And $elong_desc $term_desc)))
+    return $result
+end
+
+# --- Translation ---
+@:Translation_Process graph
+    @process isA Translation GeneticProcess
+    @template hasTemplate Translation mRNA
+    @product producesProduct Translation Protein
+    @site occursAt Translation Ribosome
+    @location occursIn Translation Cytoplasm
+    @codon usesCodon Translation true
+    @trna requirestRNA Translation true
+    @result And $template (And $product (And $site (And $location (And $codon $trna))))
+    return $result
+end
+
+@:Genetic_Code graph
+    @code isA GeneticCode Concept
+    @codons numberOfCodons GeneticCode 64
+    @amino numberOfAminoAcids GeneticCode 20
+    @start startCodon GeneticCode "AUG"
+    @stop stopCodons GeneticCode [UAA UAG UGA]
+    @degenerate isDegenerateCode GeneticCode true
+    @universal isUniversal GeneticCode "nearly"
+    @result And $codons (And $amino (And $start (And $stop (And $degenerate $universal))))
+    return $result
+end
+
+# --- Gene Expression Regulation ---
+@:Gene_Regulation_Prokaryote graph
+    @reg isA ProkaryoticRegulation GeneRegulation
+    @operon hasOperon ProkaryoticRegulation true
+    @lac example ProkaryoticRegulation "lac_operon"
+    @trp example ProkaryoticRegulation "trp_operon"
+    @inducible isInducible "lac_operon" true
+    @repressible isRepressible "trp_operon" true
+    @result And $operon (And $lac (And $trp (And $inducible $repressible)))
+    return $result
+end
+
+@:Gene_Regulation_Eukaryote graph
+    @reg isA EukaryoticRegulation GeneRegulation
+    @levels hasLevels EukaryoticRegulation [Epigenetic Transcriptional Posttranscriptional Translational Posttranslational]
+    @enhancer hasEnhancers EukaryoticRegulation true
+    @silencer hasSilencers EukaryoticRegulation true
+    @tf requiresTranscriptionFactors EukaryoticRegulation true
+    @result And $levels (And $enhancer (And $silencer $tf))
+    return $result
+end
+
+@:Epigenetic_Regulation graph
+    @epi isA Epigenetics GeneRegulation
+    @methyl hasMechanism Epigenetics "DNA_methylation"
+    @histone hasMechanism Epigenetics "histone_modification"
+    @inherit isHeritable Epigenetics true
+    @noSeq doesNotChangeSequence Epigenetics true
+    @result And $methyl (And $histone (And $inherit $noSeq))
+    return $result
+end
+
+# --- Mutations ---
+isA PointMutation MutationType
+isA FrameshiftMutation MutationType
+isA Deletion MutationType
+isA Insertion MutationType
+isA Substitution MutationType
+isA Translocation MutationType
+isA Inversion MutationType
+
+@:Mutation_Point graph
+    @mut isA PointMutation MutationType
+    @affects affectsBases PointMutation 1
+    @types hasSubtypes PointMutation [Transition Transversion]
+    @effects possibleEffects PointMutation [Silent Missense Nonsense]
+    @result And $affects (And $types $effects)
+    return $result
+end
+
+@:Mutation_Frameshift graph
+    @mut isA FrameshiftMutation MutationType
+    @cause causedBy FrameshiftMutation "insertion_or_deletion"
+    @shift shiftsReadingFrame FrameshiftMutation true
+    @effect hasEffect FrameshiftMutation "altered_protein"
+    @severe isSevere FrameshiftMutation true
+    @result And $cause (And $shift (And $effect $severe))
+    return $result
+end
+
+@:Mutation_Chromosomal graph
+    @del isA Deletion MutationType
+    @ins isA Insertion MutationType
+    @trans isA Translocation MutationType
+    @inv isA Inversion MutationType
+    @large allAre "chromosomal_mutations" "large_scale"
+    @del_def deletes Deletion "segment"
+    @trans_def moves Translocation "segment_to_other_chromosome"
+    @inv_def reverses Inversion "segment_orientation"
+    @result And $large (And $del_def (And $trans_def $inv_def))
+    return $result
+end
+
+# --- Inheritance Patterns ---
+@:Mendelian_Inheritance graph
+    @pattern isA MendelianInheritance InheritancePattern
+    @dom hasPattern MendelianInheritance "dominant"
+    @rec hasPattern MendelianInheritance "recessive"
+    @ratio hasRatio MendelianInheritance "3:1_monohybrid"
+    @law1 law MendelianInheritance "law_of_segregation"
+    @law2 law MendelianInheritance "law_of_independent_assortment"
+    @result And $dom (And $rec (And $ratio (And $law1 $law2)))
+    return $result
+end
+
+@:Non_Mendelian_Inheritance graph
+    @pattern isA NonMendelianInheritance InheritancePattern
+    @incomplete hasPattern NonMendelianInheritance "incomplete_dominance"
+    @codominant hasPattern NonMendelianInheritance "codominance"
+    @linked hasPattern NonMendelianInheritance "sex_linked"
+    @maternal hasPattern NonMendelianInheritance "maternal_inheritance"
+    @poly hasPattern NonMendelianInheritance "polygenic"
+    @result And $incomplete (And $codominant (And $linked (And $maternal $poly)))
+    return $result
+end
+
+# ============================================================================
+# PART IV: ECOLOGY
+# ============================================================================
+
+# --- Ecosystem Types ---
+isA TerrestrialEcosystem EcosystemType
+isA AquaticEcosystem EcosystemType
+isA MarineEcosystem EcosystemType
+isA FreshwaterEcosystem EcosystemType
+isA Forest EcosystemType
+isA Grassland EcosystemType
+isA Desert EcosystemType
+isA Tundra EcosystemType
+isA Wetland EcosystemType
+
+@:Ecosystem_Terrestrial_Types graph
+    @forest isA Forest EcosystemType
+    @grass isA Grassland EcosystemType
+    @desert isA Desert EcosystemType
+    @tundra isA Tundra EcosystemType
+    @terr isA TerrestrialEcosystem EcosystemType
+    @r1 isSubtypeOf Forest $terr
+    @r2 isSubtypeOf Grassland $terr
+    @r3 isSubtypeOf Desert $terr
+    @r4 isSubtypeOf Tundra $terr
+    @result And $r1 (And $r2 (And $r3 $r4))
+    return $result
+end
+
+@:Ecosystem_Aquatic_Types graph
+    @marine isA MarineEcosystem EcosystemType
+    @fresh isA FreshwaterEcosystem EcosystemType
+    @aqua isA AquaticEcosystem EcosystemType
+    @r1 isSubtypeOf MarineEcosystem $aqua
+    @r2 isSubtypeOf FreshwaterEcosystem $aqua
+    @result And $r1 $r2
+    return $result
+end
+
+# --- Biomes ---
+isA TropicalRainforest Biome
+isA TemperateForest Biome
+isA BorealForest Biome
+isA Savanna Biome
+isA Temperate_Grassland Biome
+isA Chaparral Biome
+isA Hot_Desert Biome
+isA Cold_Desert Biome
+isA Arctic_Tundra Biome
+isA Alpine_Tundra Biome
+isA Coral_Reef Biome
+isA Open_Ocean Biome
+isA Estuary Biome
+
+@:Biome_Tropical_Rainforest graph
+    @biome isA TropicalRainforest Biome
+    @climate hasClimate TropicalRainforest "hot_wet"
+    @temp hasTemperature TropicalRainforest "25-30C"
+    @rain hasRainfall TropicalRainforest ">200cm"
+    @diversity hasBiodiversity TropicalRainforest "highest"
+    @layers hasLayers TropicalRainforest [Emergent Canopy Understory Floor]
+    @result And $climate (And $temp (And $rain (And $diversity $layers)))
+    return $result
+end
+
+@:Biome_Desert graph
+    @biome isA Hot_Desert Biome
+    @climate hasClimate Hot_Desert "hot_dry"
+    @rain hasRainfall Hot_Desert "<25cm"
+    @adapt hasAdaptations Hot_Desert [Succulence Nocturnal WaterConservation]
+    @temp hasTemperature Hot_Desert "extreme_variation"
+    @result And $climate (And $rain (And $adapt $temp))
+    return $result
+end
+
+@:Biome_Tundra graph
+    @biome isA Arctic_Tundra Biome
+    @climate hasClimate Arctic_Tundra "cold_dry"
+    @temp hasTemperature Arctic_Tundra "-34_to_12C"
+    @perm hasPermafrost Arctic_Tundra true
+    @veg hasVegetation Arctic_Tundra [Lichens Mosses LowShrubs]
+    @season hasGrowingSeason Arctic_Tundra "50-60_days"
+    @result And $climate (And $temp (And $perm (And $veg $season)))
+    return $result
+end
+
+# --- Ecological Relationships ---
+isA Predation EcologicalRelationship
+isA Parasitism EcologicalRelationship
+isA Mutualism EcologicalRelationship
+isA Commensalism EcologicalRelationship
+isA Competition EcologicalRelationship
+isA Amensalism EcologicalRelationship
+
+@:Relationship_Predation graph
+    @rel isA Predation EcologicalRelationship
+    @effect1 effectOnPredator Predation "positive"
+    @effect2 effectOnPrey Predation "negative"
+    @interact interactionType Predation "consume"
+    @role1 rolePredator Predation "consumer"
+    @role2 rolePrey Predation "consumed"
+    @result And $effect1 (And $effect2 (And $interact (And $role1 $role2)))
+    return $result
+end
+
+@:Relationship_Mutualism graph
+    @rel isA Mutualism EcologicalRelationship
+    @effect1 effectOnSpecies1 Mutualism "positive"
+    @effect2 effectOnSpecies2 Mutualism "positive"
+    @example1 example Mutualism "bee_flower"
+    @example2 example Mutualism "clownfish_anemone"
+    @example3 example Mutualism "mycorrhizae"
+    @result And $effect1 (And $effect2 (And $example1 (And $example2 $example3)))
+    return $result
+end
+
+@:Relationship_Parasitism graph
+    @rel isA Parasitism EcologicalRelationship
+    @effect1 effectOnParasite Parasitism "positive"
+    @effect2 effectOnHost Parasitism "negative"
+    @type1 isA Ectoparasite ParasiteType
+    @type2 isA Endoparasite ParasiteType
+    @example example Parasitism [Tapeworm Tick Mistletoe]
+    @result And $effect1 (And $effect2 (And $type1 (And $type2 $example)))
+    return $result
+end
+
+@:Relationship_Competition graph
+    @rel isA Competition EcologicalRelationship
+    @effect1 effectOnSpecies1 Competition "negative"
+    @effect2 effectOnSpecies2 Competition "negative"
+    @intra isA Intraspecific CompetitionType
+    @inter isA Interspecific CompetitionType
+    @exclusion competitiveExclusion Competition "principle"
+    @result And $effect1 (And $effect2 (And $intra (And $inter $exclusion)))
+    return $result
+end
+
+# --- Food Web ---
+isA Producer TrophicLevel
+isA PrimaryConsumer TrophicLevel
+isA SecondaryConsumer TrophicLevel
+isA TertiaryConsumer TrophicLevel
+isA ApexPredator TrophicLevel
+isA Decomposer TrophicLevel
+
+@:Trophic_Levels graph
+    @prod isA Producer TrophicLevel
+    @prim isA PrimaryConsumer TrophicLevel
+    @sec isA SecondaryConsumer TrophicLevel
+    @tert isA TertiaryConsumer TrophicLevel
+    @apex isA ApexPredator TrophicLevel
+    @s1 feedsOn PrimaryConsumer Producer
+    @s2 feedsOn SecondaryConsumer PrimaryConsumer
+    @s3 feedsOn TertiaryConsumer SecondaryConsumer
+    @s4 feedsOn ApexPredator TertiaryConsumer
+    @result And $s1 (And $s2 (And $s3 $s4))
+    return $result
+end
+
+@:Energy_Transfer graph
+    @rule isA TenPercentRule EcologicalRule
+    @transfer energyTransfer "10_percent"
+    @loss energyLoss "90_percent_as_heat"
+    @limit limitsChainLength "typically_4-5_levels"
+    @pyramid producesEnergyPyramid true
+    @result And $transfer (And $loss (And $limit $pyramid))
+    return $result
+end
+
+@:Decomposition graph
+    @decomp isA Decomposer TrophicLevel
+    @org organisms Decomposer [Bacteria Fungi]
+    @role recyclesNutrients Decomposer true
+    @matter breakDownsOrganicMatter Decomposer true
+    @cycle completesNutrientCycle Decomposer true
+    @result And $org (And $role (And $matter $cycle))
+    return $result
+end
+
+# --- Biogeochemical Cycles ---
+isA CarbonCycle BiogeochemicalCycle
+isA NitrogenCycle BiogeochemicalCycle
+isA WaterCycle BiogeochemicalCycle
+isA PhosphorusCycle BiogeochemicalCycle
+isA SulfurCycle BiogeochemicalCycle
+
+@:Carbon_Cycle graph
+    @cycle isA CarbonCycle BiogeochemicalCycle
+    @photo photosynthesis "absorbs_CO2"
+    @resp respiration "releases_CO2"
+    @decomp decomposition "releases_CO2"
+    @fossil fossilFuels "stored_carbon"
+    @ocean oceanAbsorption "CO2_sink"
+    @result And $photo (And $resp (And $decomp (And $fossil $ocean)))
+    return $result
+end
+
+@:Nitrogen_Cycle graph
+    @cycle isA NitrogenCycle BiogeochemicalCycle
+    @fix nitrogenFixation "N2_to_NH3"
+    @nitri nitrification "NH3_to_NO3"
+    @assim assimilation "plants_uptake"
+    @denitri denitrification "NO3_to_N2"
+    @bacteria keyOrganisms NitrogenCycle [Rhizobium Nitrosomonas Nitrobacter]
+    @result And $fix (And $nitri (And $assim (And $denitri $bacteria)))
+    return $result
+end
+
+@:Water_Cycle graph
+    @cycle isA WaterCycle BiogeochemicalCycle
+    @evap evaporation "water_to_vapor"
+    @trans transpiration "plants_release_water"
+    @cond condensation "vapor_to_clouds"
+    @prec precipitation "clouds_to_rain"
+    @runoff runoff "water_to_ocean"
+    @infil infiltration "water_to_groundwater"
+    @result And $evap (And $trans (And $cond (And $prec (And $runoff $infil))))
+    return $result
+end
+
+# --- Population Ecology ---
+@:Population_Growth_Exponential graph
+    @growth isA ExponentialGrowth PopulationModel
+    @equation equation ExponentialGrowth "dN/dt=rN"
+    @condition condition ExponentialGrowth "unlimited_resources"
+    @curve producesJCurve ExponentialGrowth true
+    @rate intrinsicRate ExponentialGrowth "r"
+    @result And $equation (And $condition (And $curve $rate))
+    return $result
+end
+
+@:Population_Growth_Logistic graph
+    @growth isA LogisticGrowth PopulationModel
+    @equation equation LogisticGrowth "dN/dt=rN(K-N)/K"
+    @condition condition LogisticGrowth "limited_resources"
+    @curve producesSCurve LogisticGrowth true
+    @capacity carryingCapacity LogisticGrowth "K"
+    @result And $equation (And $condition (And $curve $capacity))
+    return $result
+end
+
+@:Population_Regulation graph
+    @reg isA PopulationRegulation EcologicalConcept
+    @density isDensityDependent PopulationRegulation [Competition Disease Predation]
+    @independent isDensityIndependent PopulationRegulation [Weather Disasters]
+    @result And $density $independent
+    return $result
+end
+
+# --- Succession ---
+@:Ecological_Succession_Primary graph
+    @succ isA PrimarySuccession EcologicalProcess
+    @start startsOn PrimarySuccession "bare_substrate"
+    @pioneer hasPioneerSpecies PrimarySuccession [Lichens Mosses]
+    @soil soilDevelopment PrimarySuccession "gradual"
+    @climax leadsToCommunity PrimarySuccession "climax_community"
+    @time timeScale PrimarySuccession "hundreds_to_thousands_years"
+    @result And $start (And $pioneer (And $soil (And $climax $time)))
+    return $result
+end
+
+@:Ecological_Succession_Secondary graph
+    @succ isA SecondarySuccession EcologicalProcess
+    @start startsOn SecondarySuccession "disturbed_area"
+    @soil hasSoil SecondarySuccession true
+    @seeds hasSeedBank SecondarySuccession true
+    @faster isFasterThan SecondarySuccession PrimarySuccession
+    @time timeScale SecondarySuccession "decades_to_century"
+    @result And $start (And $soil (And $seeds (And $faster $time)))
+    return $result
+end
+
+# ============================================================================
+# PART V: PHYSIOLOGY
+# ============================================================================
+
+# --- Organ Systems ---
+isA NervousSystem OrganSystem
+isA CirculatorySystem OrganSystem
+isA RespiratorySystem OrganSystem
+isA DigestiveSystem OrganSystem
+isA ExcretorySystem OrganSystem
+isA EndocrineSystem OrganSystem
+isA ImmuneSystem OrganSystem
+isA MusculoskelletalSystem OrganSystem
+isA ReproductiveSystem OrganSystem
+isA IntegumentarySystem OrganSystem
+isA LymphaticSystem OrganSystem
+
+@:System_Nervous graph
+    @sys isA NervousSystem OrganSystem
+    @organs hasOrgans NervousSystem [Brain SpinalCord Nerves]
+    @function hasFunction NervousSystem "control_and_coordination"
+    @divisions hasDivisions NervousSystem [CNS PNS]
+    @cells hasCells NervousSystem [Neurons Glia]
+    @signal signalType NervousSystem "electrical_and_chemical"
+    @result And $organs (And $function (And $divisions (And $cells $signal)))
+    return $result
+end
+
+@:System_Circulatory graph
+    @sys isA CirculatorySystem OrganSystem
+    @organs hasOrgans CirculatorySystem [Heart BloodVessels Blood]
+    @function hasFunction CirculatorySystem "transport"
+    @circuits hasCircuits CirculatorySystem [Pulmonary Systemic]
+    @types bloodVesselTypes CirculatorySystem [Arteries Veins Capillaries]
+    @result And $organs (And $function (And $circuits $types))
+    return $result
+end
+
+@:System_Respiratory graph
+    @sys isA RespiratorySystem OrganSystem
+    @organs hasOrgans RespiratorySystem [Lungs Trachea Bronchi Diaphragm]
+    @function hasFunction RespiratorySystem "gas_exchange"
+    @process1 performs RespiratorySystem "ventilation"
+    @process2 performs RespiratorySystem "external_respiration"
+    @unit functionalUnit RespiratorySystem "alveoli"
+    @result And $organs (And $function (And $process1 (And $process2 $unit)))
+    return $result
+end
+
+@:System_Digestive graph
+    @sys isA DigestiveSystem OrganSystem
+    @organs hasOrgans DigestiveSystem [Mouth Esophagus Stomach SmallIntestine LargeIntestine]
+    @accessory accessoryOrgans DigestiveSystem [Liver Pancreas Gallbladder]
+    @function hasFunction DigestiveSystem "nutrient_absorption"
+    @processes hasProcesses DigestiveSystem [Ingestion Digestion Absorption Elimination]
+    @result And $organs (And $accessory (And $function $processes))
+    return $result
+end
+
+@:System_Endocrine graph
+    @sys isA EndocrineSystem OrganSystem
+    @glands hasGlands EndocrineSystem [Pituitary Thyroid Adrenal Pancreas Gonads]
+    @function hasFunction EndocrineSystem "hormonal_regulation"
+    @signal signalType EndocrineSystem "chemical_hormones"
+    @feedback usesFeedback EndocrineSystem [Negative Positive]
+    @result And $glands (And $function (And $signal $feedback))
+    return $result
+end
+
+@:System_Immune graph
+    @sys isA ImmuneSystem OrganSystem
+    @organs hasOrgans ImmuneSystem [Thymus Spleen LymphNodes BoneMarrow]
+    @function hasFunction ImmuneSystem "defense"
+    @types hasTypes ImmuneSystem [Innate Adaptive]
+    @cells hasCells ImmuneSystem [Tcells Bcells Macrophages Neutrophils]
+    @result And $organs (And $function (And $types $cells))
+    return $result
+end
+
+# --- Homeostasis ---
+@:Homeostasis_Definition graph
+    @concept isA Homeostasis PhysiologicalConcept
+    @def definition Homeostasis "maintenance_of_stable_internal_environment"
+    @mech mechanisms Homeostasis [NegativeFeedback PositiveFeedback]
+    @var regulatedVariables Homeostasis [Temperature pH Glucose BloodPressure]
+    @result And $def (And $mech $var)
+    return $result
+end
+
+@:Negative_Feedback graph
+    @fb isA NegativeFeedback FeedbackMechanism
+    @action reverses NegativeFeedback "change_from_setpoint"
+    @common isMostCommon NegativeFeedback true
+    @ex1 example NegativeFeedback "thermoregulation"
+    @ex2 example NegativeFeedback "blood_glucose_regulation"
+    @ex3 example NegativeFeedback "blood_pressure_regulation"
+    @result And $action (And $common (And $ex1 (And $ex2 $ex3)))
+    return $result
+end
+
+@:Positive_Feedback graph
+    @fb isA PositiveFeedback FeedbackMechanism
+    @action amplifies PositiveFeedback "change_from_setpoint"
+    @rare isLessCommon PositiveFeedback true
+    @ex1 example PositiveFeedback "blood_clotting"
+    @ex2 example PositiveFeedback "labor_contractions"
+    @ex3 example PositiveFeedback "lactation"
+    @result And $action (And $rare (And $ex1 (And $ex2 $ex3)))
+    return $result
+end
+
+@:Thermoregulation graph
+    @process isA Thermoregulation HomeostasisProcess
+    @setpoint normalSetpoint Thermoregulation "37C"
+    @warm warmingMechanisms Thermoregulation [Shivering Vasoconstriction]
+    @cool coolingMechanisms Thermoregulation [Sweating Vasodilation]
+    @control controlCenter Thermoregulation "hypothalamus"
+    @result And $setpoint (And $warm (And $cool $control))
+    return $result
+end
+
+@:Blood_Glucose_Regulation graph
+    @process isA GlucoseRegulation HomeostasisProcess
+    @normal normalRange GlucoseRegulation "70-100mg/dL"
+    @high highGlucoseResponse GlucoseRegulation "insulin_release"
+    @low lowGlucoseResponse GlucoseRegulation "glucagon_release"
+    @organ controlOrgan GlucoseRegulation "pancreas"
+    @cells isletCells GlucoseRegulation [BetaCells AlphaCells]
+    @result And $normal (And $high (And $low (And $organ $cells)))
+    return $result
+end
+
+# --- Neural Signaling ---
+@:Action_Potential graph
+    @ap isA ActionPotential NeuralSignal
+    @rest restingPotential ActionPotential "-70mV"
+    @threshold threshold ActionPotential "-55mV"
+    @peak peakPotential ActionPotential "+40mV"
+    @phases hasPhases ActionPotential [Depolarization Repolarization Hyperpolarization]
+    @allOrNone followsAllOrNone ActionPotential true
+    @refractory hasRefractoryPeriod ActionPotential true
+    @result And $rest (And $threshold (And $peak (And $phases (And $allOrNone $refractory))))
+    return $result
+end
+
+@:Synaptic_Transmission graph
+    @syn isA SynapticTransmission NeuralProcess
+    @pre presynapticEvents SynapticTransmission [CalciumInflux VesicleFusion NeurotransmitterRelease]
+    @post postsynapticEvents SynapticTransmission [ReceptorBinding IonChannelOpening]
+    @neuro neurotransmitters SynapticTransmission [Acetylcholine Dopamine Serotonin GABA Glutamate]
+    @types synapseTypes SynapticTransmission [Excitatory Inhibitory]
+    @result And $pre (And $post (And $neuro $types))
+    return $result
+end
+
+# --- Hormonal Signaling ---
+@:Hormone_Types graph
+    @h isA Hormone SignalingMolecule
+    @steroid isA SteroidHormone HormoneType
+    @peptide isA PeptideHormone HormoneType
+    @amine isA AmineHormone HormoneType
+    @s_mech mechanism SteroidHormone "crosses_membrane_binds_intracellular_receptor"
+    @p_mech mechanism PeptideHormone "binds_surface_receptor_second_messenger"
+    @result And $steroid (And $peptide (And $amine (And $s_mech $p_mech)))
+    return $result
+end
+
+@:Hypothalamus_Pituitary_Axis graph
+    @axis isA HPAxis EndocrineAxis
+    @hypo produces Hypothalamus "releasing_hormones"
+    @ant produces AnteriorPituitary [GH TSH ACTH FSH LH Prolactin]
+    @post produces PosteriorPituitary [Oxytocin ADH]
+    @control controlsOtherGlands AnteriorPituitary true
+    @feedback usesNegativeFeedback HPAxis true
+    @result And $hypo (And $ant (And $post (And $control $feedback)))
+    return $result
+end
+
+# --- Immune Response ---
+@:Innate_Immunity graph
+    @imm isA InnateImmunity ImmuneResponse
+    @speed responseSpeed InnateImmunity "immediate"
+    @specific isSpecific InnateImmunity false
+    @barriers physicalBarriers InnateImmunity [Skin Mucosa]
+    @cells cells InnateImmunity [Macrophages Neutrophils NK_cells DendriticCells]
+    @inflam inflammatoryResponse InnateImmunity true
+    @result And $speed (And $specific (And $barriers (And $cells $inflam)))
+    return $result
+end
+
+@:Adaptive_Immunity graph
+    @imm isA AdaptiveImmunity ImmuneResponse
+    @speed responseSpeed AdaptiveImmunity "days_to_weeks"
+    @specific isSpecific AdaptiveImmunity true
+    @humoral humoralImmunity AdaptiveImmunity "B_cells_antibodies"
+    @cellular cellularImmunity AdaptiveImmunity "T_cells"
+    @memory hasMemory AdaptiveImmunity true
+    @result And $speed (And $specific (And $humoral (And $cellular $memory)))
+    return $result
+end
+
+@:Antibody_Structure graph
+    @ab isA Antibody Protein
+    @structure hasStructure Antibody "Y_shaped"
+    @chains hasChains Antibody [HeavyChain LightChain]
+    @regions hasRegions Antibody [VariableRegion ConstantRegion]
+    @binding antigenBindingSite Antibody "variable_region"
+    @classes antibodyClasses Antibody [IgG IgM IgA IgE IgD]
+    @result And $structure (And $chains (And $regions (And $binding $classes)))
+    return $result
+end
+
+# ============================================================================
+# PART VI: EVOLUTION
+# ============================================================================
+
+# --- Evolutionary Mechanisms ---
+isA NaturalSelection EvolutionaryMechanism
+isA GeneticDrift EvolutionaryMechanism
+isA GeneFlow EvolutionaryMechanism
+isA Mutation EvolutionaryMechanism
+
+@:Natural_Selection graph
+    @mech isA NaturalSelection EvolutionaryMechanism
+    @req1 requires NaturalSelection "variation"
+    @req2 requires NaturalSelection "heritability"
+    @req3 requires NaturalSelection "differential_reproduction"
+    @types hasTypes NaturalSelection [Directional Stabilizing Disruptive Sexual]
+    @result resultIn NaturalSelection "adaptation"
+    @darwin proposedBy NaturalSelection "Darwin"
+    @conclusion And $req1 (And $req2 (And $req3 (And $types (And $result $darwin))))
+    return $conclusion
+end
+
+@:Genetic_Drift graph
+    @mech isA GeneticDrift EvolutionaryMechanism
+    @type isType GeneticDrift "random_change"
+    @effect greaterEffectIn GeneticDrift "small_populations"
+    @bottleneck example GeneticDrift "bottleneck_effect"
+    @founder example GeneticDrift "founder_effect"
+    @result And $type (And $effect (And $bottleneck $founder))
+    return $result
+end
+
+@:Gene_Flow graph
+    @mech isA GeneFlow EvolutionaryMechanism
+    @def definition GeneFlow "movement_of_alleles_between_populations"
+    @effect1 effect GeneFlow "increases_genetic_variation_in_recipient"
+    @effect2 effect GeneFlow "reduces_differences_between_populations"
+    @result And $def (And $effect1 $effect2)
+    return $result
+end
+
+# --- Speciation ---
+isA AllopatricSpeciation SpeciationType
+isA SympatricSpeciation SpeciationType
+isA ParapatricSpeciation SpeciationType
+isA PeriopatricSpeciation SpeciationType
+
+@:Speciation_Allopatric graph
+    @spec isA AllopatricSpeciation SpeciationType
+    @barrier requiresBarrier AllopatricSpeciation "geographic"
+    @isolation isolationType AllopatricSpeciation "spatial"
+    @common isMostCommon AllopatricSpeciation true
+    @example example AllopatricSpeciation "Darwin_finches"
+    @result And $barrier (And $isolation (And $common $example))
+    return $result
+end
+
+@:Speciation_Sympatric graph
+    @spec isA SympatricSpeciation SpeciationType
+    @barrier requiresBarrier SympatricSpeciation "none_geographic"
+    @mechanism mechanism SympatricSpeciation "resource_partitioning_or_polyploidy"
+    @common isLessCommon SympatricSpeciation true
+    @example example SympatricSpeciation "apple_maggot_fly"
+    @result And $barrier (And $mechanism (And $common $example))
+    return $result
+end
+
+# --- Evidence for Evolution ---
+@:Fossil_Evidence graph
+    @ev isA FossilEvidence EvolutionaryEvidence
+    @shows shows FossilEvidence "sequence_of_life_forms"
+    @trans transitionalForms FossilEvidence [Archaeopteryx Tiktaalik]
+    @dating datingMethods FossilEvidence [RadiometricDating Stratigraphy]
+    @result And $shows (And $trans $dating)
+    return $result
+end
+
+@:Comparative_Anatomy graph
+    @ev isA ComparativeAnatomy EvolutionaryEvidence
+    @homo homologousStructures ComparativeAnatomy "common_ancestry"
+    @analog analogousStructures ComparativeAnatomy "convergent_evolution"
+    @vestig vestigialStructures ComparativeAnatomy "reduced_function"
+    @example1 homologyExample ComparativeAnatomy "vertebrate_limbs"
+    @example2 vestigialExample ComparativeAnatomy "human_appendix"
+    @result And $homo (And $analog (And $vestig (And $example1 $example2)))
+    return $result
+end
+
+@:Molecular_Evidence graph
+    @ev isA MolecularEvidence EvolutionaryEvidence
+    @dna dnaSimilarity MolecularEvidence "reflects_relatedness"
+    @protein proteinSimilarity MolecularEvidence "reflects_relatedness"
+    @universal universalCode MolecularEvidence "common_origin"
+    @clock molecularClock MolecularEvidence "mutation_rate_estimation"
+    @result And $dna (And $protein (And $universal $clock))
+    return $result
+end
+
+# --- Phylogenetics ---
+@:Phylogenetic_Tree graph
+    @tree isA PhylogeneticTree EvolutionaryDiagram
+    @represents represents PhylogeneticTree "evolutionary_relationships"
+    @node nodeRepresents PhylogeneticTree "common_ancestor"
+    @branch branchRepresents PhylogeneticTree "lineage"
+    @tip tipRepresents PhylogeneticTree "extant_or_extinct_taxon"
+    @methods constructionMethods PhylogeneticTree [Parsimony MaximumLikelihood Bayesian]
+    @result And $represents (And $node (And $branch (And $tip $methods)))
+    return $result
+end
+
+@:Cladistics graph
+    @method isA Cladistics ClassificationMethod
+    @basis basedOn Cladistics "shared_derived_characters"
+    @mono preferMonophyleticGroups Cladistics true
+    @clade definesClades Cladistics "ancestor_and_all_descendants"
+    @terms usesTerms Cladistics [Synapomorphy Plesiomorphy Autapomorphy]
+    @result And $basis (And $mono (And $clade $terms))
+    return $result
+end
+
+# ============================================================================
+# PART VII: BIOLOGICAL PRINCIPLES AND LAWS
+# ============================================================================
+
+# --- Laws and Principles ---
+@:Cell_Theory graph
+    @theory isA CellTheory BiologicalTheory
+    @tenet1 tenet CellTheory "all_living_things_composed_of_cells"
+    @tenet2 tenet CellTheory "cell_is_basic_unit_of_life"
+    @tenet3 tenet CellTheory "cells_arise_from_preexisting_cells"
+    @scientists proposedBy CellTheory [Schleiden Schwann Virchow]
+    @result And $tenet1 (And $tenet2 (And $tenet3 $scientists))
+    return $result
+end
+
+@:Germ_Theory graph
+    @theory isA GermTheory BiologicalTheory
+    @claim claims GermTheory "microorganisms_cause_disease"
+    @scientist proposedBy GermTheory "Pasteur_Koch"
+    @impact revolutionized GermTheory "medicine"
+    @kochPostulates hasPostulates GermTheory [Isolation Cultivation Reinfection Reisolation]
+    @result And $claim (And $scientist (And $impact $kochPostulates))
+    return $result
+end
+
+@:Theory_of_Evolution graph
+    @theory isA TheoryOfEvolution BiologicalTheory
+    @mechanism primaryMechanism TheoryOfEvolution "natural_selection"
+    @descent descentWithModification TheoryOfEvolution true
+    @common commonAncestry TheoryOfEvolution true
+    @scientist proposedBy TheoryOfEvolution [Darwin Wallace]
+    @modern modernSynthesis TheoryOfEvolution "integrates_genetics"
+    @result And $mechanism (And $descent (And $common (And $scientist $modern)))
+    return $result
+end
+
+@:Hardy_Weinberg_Principle graph
+    @principle isA HardyWeinbergEquilibrium PopulationGeneticsLaw
+    @equation equation HardyWeinbergEquilibrium "p²+2pq+q²=1"
+    @condition1 requires HardyWeinbergEquilibrium "no_mutation"
+    @condition2 requires HardyWeinbergEquilibrium "no_migration"
+    @condition3 requires HardyWeinbergEquilibrium "no_selection"
+    @condition4 requires HardyWeinbergEquilibrium "random_mating"
+    @condition5 requires HardyWeinbergEquilibrium "large_population"
+    @result And $equation (And $condition1 (And $condition2 (And $condition3 (And $condition4 $condition5))))
+    return $result
+end
+
+@:Competitive_Exclusion_Principle graph
+    @principle isA CompetitiveExclusionPrinciple EcologicalLaw
+    @states states CompetitiveExclusionPrinciple "two_species_cannot_occupy_same_niche"
+    @outcome outcome CompetitiveExclusionPrinciple "one_species_excluded"
+    @scientist proposedBy CompetitiveExclusionPrinciple "Gause"
+    @alternative alternativeOutcome CompetitiveExclusionPrinciple "niche_differentiation"
+    @result And $states (And $outcome (And $scientist $alternative))
+    return $result
+end
+
+@:Bergmanns_Rule graph
+    @rule isA BergmannsRule BiologicalRule
+    @states states BergmannsRule "body_size_increases_with_latitude"
+    @applies appliesTo BergmannsRule "endotherms"
+    @reason reason BergmannsRule "surface_area_to_volume_ratio"
+    @heat heatConservation BergmannsRule "larger_animals_conserve_heat_better"
+    @result And $states (And $applies (And $reason $heat))
+    return $result
+end
+
+@:Allens_Rule graph
+    @rule isA AllensRule BiologicalRule
+    @states states AllensRule "appendage_length_decreases_with_latitude"
+    @applies appliesTo AllensRule "endotherms"
+    @reason reason AllensRule "reduces_heat_loss"
+    @example example AllensRule "arctic_fox_ears_vs_desert_fox_ears"
+    @result And $states (And $applies (And $reason $example))
+    return $result
+end
+
+# --- Biogeography Rules ---
+@:Island_Biogeography graph
+    @theory isA IslandBiogeography EcologicalTheory
+    @equilibrium speciesEquilibrium IslandBiogeography "immigration_equals_extinction"
+    @size sizeEffect IslandBiogeography "larger_islands_more_species"
+    @distance distanceEffect IslandBiogeography "closer_islands_more_species"
+    @scientists proposedBy IslandBiogeography [MacArthur Wilson]
+    @result And $equilibrium (And $size (And $distance $scientists))
+    return $result
+end
+
+# ============================================================================
+# PART VIII: BIOTECHNOLOGY AND APPLICATIONS
+# ============================================================================
+
+# --- Molecular Techniques ---
+@:PCR graph
+    @tech isA PCR MolecularTechnique
+    @fullName fullName PCR "Polymerase_Chain_Reaction"
+    @function function PCR "amplify_DNA"
+    @components requires PCR [Template Primers dNTPs TaqPolymerase]
+    @steps hasSteps PCR [Denaturation Annealing Extension]
+    @inventor inventedBy PCR "Kary_Mullis"
+    @result And $fullName (And $function (And $components (And $steps $inventor)))
+    return $result
+end
+
+@:Gel_Electrophoresis graph
+    @tech isA GelElectrophoresis MolecularTechnique
+    @function function GelElectrophoresis "separate_DNA_by_size"
+    @principle principle GelElectrophoresis "smaller_moves_faster"
+    @matrix matrix GelElectrophoresis [Agarose Polyacrylamide]
+    @visual visualization GelElectrophoresis "ethidium_bromide_UV"
+    @result And $function (And $principle (And $matrix $visual))
+    return $result
+end
+
+@:DNA_Sequencing graph
+    @tech isA DNASequencing MolecularTechnique
+    @sanger isA SangerSequencing DNASequencing
+    @ngs isA NextGenSequencing DNASequencing
+    @sanger_meth method SangerSequencing "chain_termination"
+    @ngs_meth method NextGenSequencing "massive_parallel"
+    @result And $sanger (And $ngs (And $sanger_meth $ngs_meth))
+    return $result
+end
+
+@:CRISPR_Cas9 graph
+    @tech isA CRISPR GeneEditingTool
+    @function function CRISPR "gene_editing"
+    @mechanism mechanism CRISPR "targeted_DNA_cutting"
+    @components requires CRISPR [Cas9 GuideRNA]
+    @applications applications CRISPR [GeneTherapy Agriculture Research]
+    @precision precision CRISPR "high"
+    @result And $function (And $mechanism (And $components (And $applications $precision)))
+    return $result
+end
+
+# --- Genetic Engineering ---
+@:Recombinant_DNA graph
+    @tech isA RecombinantDNA GeneticEngineering
+    @process process RecombinantDNA "insert_foreign_gene_into_vector"
+    @vectors vectors RecombinantDNA [Plasmids Bacteriophages Cosmids]
+    @enzymes enzymesUsed RecombinantDNA [RestrictionEnzymes DNALigase]
+    @host hosts RecombinantDNA [Bacteria Yeast MammalianCells]
+    @result And $process (And $vectors (And $enzymes $host))
+    return $result
+end
+
+@:GMO graph
+    @concept isA GMO GeneticEngineering
+    @def definition GMO "genetically_modified_organism"
+    @plant plantExamples GMO [BtCorn RoundupReadySoy GoldenRice]
+    @animal animalExamples GMO [AquAdvantageSalmon]
+    @concerns concerns GMO [Safety Environment Ethics]
+    @result And $def (And $plant (And $animal $concerns))
+    return $result
+end
+
+# --- Stem Cells ---
+@:Stem_Cell_Types graph
+    @sc isA StemCell CellType
+    @toti isA TotipotentStemCell StemCell
+    @pluri isA PluripotentStemCell StemCell
+    @multi isA MultipotentStemCell StemCell
+    @toti_can differentiateTo TotipotentStemCell "all_cell_types_including_placenta"
+    @pluri_can differentiateTo PluripotentStemCell "all_body_cell_types"
+    @multi_can differentiateTo MultipotentStemCell "limited_cell_types"
+    @result And $toti_can (And $pluri_can $multi_can)
+    return $result
+end
+
+@:iPSC graph
+    @cell isA iPSC StemCell
+    @fullName fullName iPSC "induced_pluripotent_stem_cell"
+    @origin derivedFrom iPSC "adult_somatic_cells"
+    @factors reprogrammingFactors iPSC [Oct4 Sox2 Klf4 cMyc]
+    @discoverer discoveredBy iPSC "Yamanaka"
+    @applications applications iPSC [DiseaseModeling DrugTesting Therapy]
+    @result And $fullName (And $origin (And $factors (And $discoverer $applications)))
+    return $result
+end
+
+# ============================================================================
+# PART IX: TAXONOMY INFERENCE RULES
+# ============================================================================
+
+# --- Taxonomic Transitivity ---
+@:Taxonomy_Transitivity graph A B C
+    @premise1 belongsTo $A $B
+    @premise2 belongsTo $B $C
+    @conclusion belongsTo $A $C
+    @rule Implies (And $premise1 $premise2) $conclusion
+    return $rule
+end
+
+@:Kingdom_To_Domain_Inference graph K D
+    @p1 isA $K Kingdom
+    @p2 belongsTo $K $D
+    @p3 isA $D Domain
+    @premise And $p1 (And $p2 $p3)
+    @conclusion memberOfDomain $K $D
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Species_Classification_Chain graph S G F O C P K D
+    @s_g belongsTo $S $G
+    @g_f belongsTo $G $F
+    @f_o belongsTo $F $O
+    @o_c belongsTo $O $C
+    @c_p belongsTo $C $P
+    @p_k belongsTo $P $K
+    @k_d belongsTo $K $D
+    @chain And $s_g (And $g_f (And $f_o (And $o_c (And $c_p (And $p_k $k_d)))))
+    @conclusion hasFullTaxonomy $S [$G $F $O $C $P $K $D]
+    @rule Implies $chain $conclusion
+    return $rule
+end
+
+# --- Evolutionary Relationships ---
+@:Common_Ancestor_Inference graph A B Ancestor
+    @p1 descendsFrom $A $Ancestor
+    @p2 descendsFrom $B $Ancestor
+    @premise And $p1 $p2
+    @conclusion shareCommonAncestor $A $B $Ancestor
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Homology_Inference graph StructA StructB Ancestor
+    @p1 derivedFrom $StructA $Ancestor
+    @p2 derivedFrom $StructB $Ancestor
+    @premise And $p1 $p2
+    @conclusion areHomologous $StructA $StructB
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+# --- Ecological Inference ---
+@:Predator_Prey_Coevolution graph Predator Prey
+    @p1 preys Predator $Prey
+    @p2 hasAdaptation $Prey "escape_mechanism"
+    @p3 hasAdaptation $Predator "hunting_adaptation"
+    @premise And $p1 (And $p2 $p3)
+    @conclusion coevolve $Predator $Prey
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Niche_Inference graph Species1 Species2 Niche
+    @p1 occupiesNiche $Species1 $Niche
+    @p2 occupiesNiche $Species2 $Niche
+    @p3 coexist $Species1 $Species2
+    @premise And $p1 (And $p2 $p3)
+    @conclusion haveNicheDifferentiation $Species1 $Species2
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+# --- Physiological Inference ---
+@:Homeostasis_Disruption graph Variable SetPoint Mechanism
+    @p1 deviatesFrom $Variable $SetPoint
+    @p2 activates $Mechanism
+    @p3 restores $Mechanism $Variable $SetPoint
+    @premise And $p1 $p2
+    @conclusion maintainsHomeostasis $Mechanism $Variable
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Hormone_Action_Inference graph Hormone Gland Target Effect
+    @p1 producedBy $Hormone $Gland
+    @p2 actsOn $Hormone $Target
+    @premise And $p1 $p2
+    @conclusion causesEffect $Hormone $Effect $Target
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+# --- Genetic Inference ---
+@:Mendelian_Ratio_Inference graph Genotype1 Genotype2 Offspring
+    @p1 hasGenotype $Genotype1 "Aa"
+    @p2 hasGenotype $Genotype2 "Aa"
+    @premise And $p1 $p2
+    @c1 ratio $Offspring "AA" "1/4"
+    @c2 ratio $Offspring "Aa" "1/2"
+    @c3 ratio $Offspring "aa" "1/4"
+    @conclusion And $c1 (And $c2 $c3)
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Mutation_Effect_Inference graph Mutation Gene Protein Function
+    @p1 affectsGene $Mutation $Gene
+    @p2 encodesProtein $Gene $Protein
+    @p3 hasFunction $Protein $Function
+    @premise And $p1 (And $p2 $p3)
+    @conclusion mayAlterFunction $Mutation $Function
+    @rule Implies $premise $conclusion
+    return $rule
+end

@@ -1,0 +1,188 @@
+# Mathematics Theory - Natural Language Description
+
+## Introduction
+
+This theory covers fundamental concepts from pure mathematics, including set theory,
+number theory, Euclidean geometry, abstract algebra, mathematical logic, real analysis,
+and probability theory. The axioms and theorems presented here form the foundation of
+modern mathematical reasoning.
+
+## Part I: Set Theory (Zermelo-Fraenkel Axioms)
+
+Set theory provides the foundational language for all of mathematics. The Axiom of
+Extensionality states that two sets are equal if and only if they contain exactly
+the same elements. The Empty Set Axiom guarantees the existence of a set with no
+elements, denoted as the empty set.
+
+The Pairing Axiom asserts that for any two objects, there exists a set containing
+exactly those two objects. The Union Axiom states that for any collection of sets,
+there exists a set containing all elements that belong to at least one set in the
+collection.
+
+The Power Set Axiom guarantees that for any set A, there exists a set containing
+all subsets of A. Subset transitivity tells us that if A is a subset of B and B is
+a subset of C, then A must be a subset of C.
+
+De Morgan's Laws for sets describe the relationship between complements, unions,
+and intersections: the complement of a union equals the intersection of the
+complements, and the complement of an intersection equals the union of the complements.
+
+The Distributive Laws show how union and intersection interact: A union (B intersect C)
+equals (A union B) intersect (A union C), and similarly for the dual case.
+
+## Part II: Number Theory (Peano Axioms)
+
+The natural numbers are defined through Peano's five axioms. The first axiom states
+that zero is a natural number. The second axiom establishes that every natural number
+has a successor, which is also a natural number.
+
+The third axiom asserts that zero is not the successor of any natural number,
+establishing zero as the "first" natural number. The fourth axiom states that the
+successor function is injective: if the successors of two numbers are equal, then
+the numbers themselves are equal.
+
+The fifth axiom is the Principle of Mathematical Induction, which states that if a
+property holds for zero, and if whenever it holds for a number n it also holds for
+the successor of n, then the property holds for all natural numbers.
+
+Addition is defined recursively: n plus zero equals n, and n plus the successor of m
+equals the successor of (n plus m). Addition is commutative (a + b = b + a) and
+associative ((a + b) + c = a + (b + c)).
+
+Multiplication is similarly defined: n times zero equals zero, and n times the
+successor of m equals n plus (n times m). Multiplication is commutative, associative,
+and distributes over addition.
+
+The ordering relation on natural numbers satisfies transitivity: if a is less than
+or equal to b, and b is less than or equal to c, then a is less than or equal to c.
+Trichotomy ensures that for any two natural numbers, exactly one of three relations
+holds: less than, equal to, or greater than.
+
+The Fundamental Theorem of Arithmetic states that every natural number greater than
+one has a unique prime factorization. Bezout's Identity guarantees that for any two
+natural numbers, their greatest common divisor can be expressed as a linear combination
+of the two numbers.
+
+## Part III: Euclidean Geometry
+
+Euclid's five postulates define the foundations of plane geometry. The first postulate
+states that a straight line can be drawn between any two points. The second postulate
+allows any line segment to be extended indefinitely.
+
+The third postulate asserts that given any point and any distance, a circle can be
+drawn with that center and radius. The fourth postulate states that all right angles
+are congruent. The fifth postulate, the Parallel Postulate, states that through a
+point not on a given line, exactly one line parallel to the given line can be drawn.
+
+The Pythagorean Theorem states that in a right triangle, the square of the hypotenuse
+equals the sum of the squares of the other two sides. Thales' Theorem asserts that
+any angle inscribed in a semicircle is a right angle.
+
+Triangle congruence can be established through three criteria: SSS (three sides equal),
+SAS (two sides and the included angle equal), or ASA (two angles and the included
+side equal). Similar triangles have proportional sides and equal corresponding angles.
+
+The Triangle Inequality states that the sum of the lengths of any two sides of a
+triangle exceeds the length of the third side. The Midpoint Theorem shows that the
+segment connecting the midpoints of two sides of a triangle is parallel to the third
+side and half its length.
+
+## Part IV: Abstract Algebra (Group Theory)
+
+A group is a set equipped with a binary operation satisfying four axioms. Closure
+requires that combining any two elements produces an element in the set. Associativity
+requires that the grouping of operations does not affect the result.
+
+The Identity axiom requires the existence of an element that leaves all other elements
+unchanged when combined with them. The Inverse axiom requires that every element has
+an inverse that combines with it to produce the identity.
+
+An Abelian (commutative) group additionally satisfies that the order of operations
+does not matter. Lagrange's Theorem states that the order of any subgroup divides
+the order of the group.
+
+The First Isomorphism Theorem establishes a fundamental connection between
+homomorphisms, quotient groups, and images: the quotient of the domain by the kernel
+is isomorphic to the image.
+
+A ring is an algebraic structure with two operations (addition and multiplication)
+where addition forms an Abelian group and multiplication is associative and distributes
+over addition. A field is a commutative ring where every non-zero element has a
+multiplicative inverse.
+
+## Part V: Mathematical Logic
+
+Modus Ponens is the fundamental rule of logical inference: if P is true and P implies Q
+is true, then Q must be true. Modus Tollens is its contrapositive form: if Q is false
+and P implies Q, then P must be false.
+
+Hypothetical Syllogism chains implications: if P implies Q and Q implies R, then P
+implies R. Disjunctive Syllogism derives conclusions from disjunctions: if P or Q
+is true and P is false, then Q must be true.
+
+De Morgan's Laws for logic describe the negation of conjunctions and disjunctions:
+not (P and Q) equals (not P) or (not Q), and not (P or Q) equals (not P) and (not Q).
+
+The Law of Excluded Middle asserts that for any proposition P, either P or not-P is
+true. Reductio ad Absurdum allows us to conclude not-P if assuming P leads to a
+contradiction.
+
+Quantifier rules include Universal Instantiation (from "for all x, P(x)" conclude
+"P(a)" for any specific a) and Existential Generalization (from "P(a)" for some
+specific a, conclude "there exists x such that P(x)").
+
+## Part VI: Real Analysis
+
+The limit of a function at a point is defined using the epsilon-delta criterion: for
+every epsilon greater than zero, there exists a delta greater than zero such that if
+the distance from x to a is less than delta, then the distance from f(x) to L is less
+than epsilon.
+
+A function is continuous at a point if the limit at that point equals the function value
+at that point. The sum and product of continuous functions are continuous.
+
+The Intermediate Value Theorem states that if a continuous function takes values f(a)
+and f(b) at the endpoints of an interval, then it takes every value between f(a) and
+f(b) at some point in the interval.
+
+The derivative of a function at a point is the limit of the difference quotient as the
+increment approaches zero. Differentiability implies continuity. The Power Rule,
+Product Rule, Quotient Rule, and Chain Rule provide methods for computing derivatives.
+
+The Mean Value Theorem states that for a function continuous on a closed interval
+and differentiable on the open interval, there exists a point where the derivative
+equals the average rate of change. Rolle's Theorem is the special case where the
+endpoints have equal values.
+
+The Fundamental Theorem of Calculus connects differentiation and integration: the
+derivative of the integral function equals the original function, and the definite
+integral equals the difference of antiderivative values at the endpoints.
+
+## Part VII: Probability Theory
+
+Probability is formalized through Kolmogorov's axioms. The probability of any event
+is between zero and one. The probability of the entire sample space is one. For
+mutually exclusive events, the probability of their union equals the sum of their
+probabilities.
+
+The Complement Rule states that the probability of an event not occurring equals one
+minus the probability of it occurring. The Addition Rule for any two events states
+that P(A or B) equals P(A) plus P(B) minus P(A and B).
+
+Conditional probability P(A|B) is defined as P(A and B) divided by P(B). Two events
+are independent if and only if P(A and B) equals P(A) times P(B).
+
+Bayes' Theorem relates conditional probabilities: P(A|B) equals P(B|A) times P(A)
+divided by P(B). The Law of Total Probability expresses the probability of an event
+as a sum over a partition.
+
+The expected value is linear: E(X + Y) = E(X) + E(Y), and E(cX) = c*E(X). Variance
+measures the spread of a distribution: Var(X) = E(X^2) - (E(X))^2.
+
+Chebyshev's Inequality bounds the probability of deviating from the mean:
+P(|X - E(X)| >= k*sigma) <= 1/k^2.
+
+The Law of Large Numbers states that the sample mean converges to the expected value
+as the sample size increases. The Central Limit Theorem states that the standardized
+sum of independent random variables converges to a standard normal distribution.
+

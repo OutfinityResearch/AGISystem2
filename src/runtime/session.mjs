@@ -6,41 +6,62 @@
  * Coordinates learn, query, prove, and decode capabilities.
  */
 
-import { bind, bindAll, bundle, similarity, topKSimilar, getDefaultGeometry } from '../core/operations.mjs';
-import { withPosition, removePosition } from '../core/position.mjs';
+import { bundle, getDefaultGeometry, similarity } from '../core/operations.mjs';
+import { initHDC, getStrategyId } from '../hdc/facade.mjs';
 import { parse } from '../parser/parser.mjs';
 import { Scope } from './scope.mjs';
 import { Vocabulary } from './vocabulary.mjs';
 import { Executor } from './executor.mjs';
-import { QueryEngine } from '../reasoning/query.mjs';
-import { ProofEngine } from '../reasoning/prove.mjs';
 import { AbductionEngine } from '../reasoning/abduction.mjs';
 import { InductionEngine } from '../reasoning/induction.mjs';
-import { createQueryEngine, createProofEngine, isHolographicPriority, getReasoningPriority } from '../reasoning/index.mjs';
+import { createQueryEngine, getReasoningPriority } from '../reasoning/index.mjs';
 import { textGenerator } from '../output/text-generator.mjs';
 import { format as resultFormatterFormat } from '../output/result-formatter.mjs';
 import { ResponseTranslator } from '../output/response-translator.mjs';
 import { findAll } from '../reasoning/find-all.mjs';
 import { ComponentKB } from '../reasoning/component-kb.mjs';
 import { debug_trace, isDebugEnabled } from '../utils/debug.js';
+import { DEFAULT_SEMANTIC_INDEX } from './semantic-index.mjs';
+import { canonicalizeMetadata } from './canonicalize.mjs';
+import {
+  initOperators as initOperatorsImpl,
+  trackRules as trackRulesImpl,
+  resolveReferenceToAST as resolveReferenceToASTImpl,
+  extractVariables as extractVariablesImpl,
+  extractOperatorName as extractOperatorNameImpl,
+  extractCompoundCondition as extractCompoundConditionImpl
+} from './session-rules.mjs';
+import { checkContradiction as checkContradictionImpl } from './session-contradictions.mjs';
+import {
+  decodeVector as decodeVectorImpl,
+  extractArguments as extractArgumentsImpl,
+  summarizeVector as summarizeVectorImpl
+} from './session-inspection.mjs';
+import {
+  trackMethod as trackMethodImpl,
+  trackOperation as trackOperationImpl,
+  getReasoningStats as getReasoningStatsImpl
+} from './session-stats.mjs';
+import { loadCore as loadCoreImpl } from './session-core-load.mjs';
+import { learn as learnImpl } from './session-learn.mjs';
+import { query as queryImpl } from './session-query.mjs';
+import { prove as proveImpl } from './session-prove.mjs';
 
 function dbg(category, ...args) {
   debug_trace(`[Session:${category}]`, ...args);
 }
-
-// Mutually exclusive property/state pairs for contradiction detection
-const MUTUALLY_EXCLUSIVE = {
-  hasState: [['Open', 'Closed'], ['Alive', 'Dead'], ['On', 'Off'], ['Full', 'Empty']],
-  hasProperty: [['Hot', 'Cold'], ['Wet', 'Dry']],
-  before: [['after']],
-  after: [['before']]
-};
 
 export class Session {
   constructor(options = {}) {
     this.geometry = options.geometry || getDefaultGeometry();
     this.hdcStrategy = options.hdcStrategy || process.env.SYS2_HDC_STRATEGY || 'dense-binary';
     this.reasoningPriority = options.reasoningPriority || getReasoningPriority();
+
+    // Ensure the active HDC implementation matches the session's configured strategy.
+    // Note: HDC strategy selection is currently process-global via `hdc/facade`.
+    initHDC(this.hdcStrategy);
+    this.hdcStrategy = getStrategyId();
+
     this.scope = new Scope();
     this.vocabulary = new Vocabulary(this.geometry);
     this.executor = new Executor(this);
@@ -52,6 +73,7 @@ export class Session {
     this.rules = [];
     this.kb = null;
     this.kbFacts = [];
+    this.nextFactId = 1;
     this.componentKB = new ComponentKB(this);  // Component-indexed KB for fuzzy matching
     this.theories = new Map();
     this.operators = new Map();
@@ -61,6 +83,11 @@ export class Session {
     this.graphs = new Map();       // HDC point relationship graphs
     this.graphAliases = new Map();  // Aliases for graphs (persistName -> name)
     this.responseTranslator = new ResponseTranslator(this);
+    this.semanticIndex = DEFAULT_SEMANTIC_INDEX;
+    this.canonicalizationEnabled =
+      options.canonicalizationEnabled ?? (process.env.SYS2_CANONICAL === '1');
+    this.proofValidationEnabled =
+      options.proofValidationEnabled ?? (process.env.SYS2_PROOF_VALIDATE === '1');
 
     // Reasoning statistics
     this.reasoningStats = {
@@ -92,10 +119,7 @@ export class Session {
    * Initialize reserved operator vectors
    */
   initOperators() {
-    const reserved = ['Implies', 'And', 'Or', 'Not', 'ForAll', 'Exists'];
-    for (const op of reserved) {
-      this.operators.set(op, this.vocabulary.getOrCreate(op));
-    }
+    initOperatorsImpl(this);
   }
 
   /**
@@ -104,144 +128,48 @@ export class Session {
    * @returns {Object} Learning result
    */
   learn(dsl) {
-    this.warnings = [];
+    return learnImpl(this, dsl);
+  }
 
-    try {
-      const ast = parse(dsl);
-      const result = this.executor.executeProgram(ast);
-
-      // Track rules (Implies statements)
-      this.trackRules(ast);
-
-      // Count actual facts: for Load statements, use factsLoaded; otherwise count results
-      let factCount = 0;
-      let solveResult = null;
-      
-      for (const r of result.results) {
-        if (r && typeof r.factsLoaded === 'number') {
-          factCount += r.factsLoaded;
-        } else if (r && r.type === 'solve') {
-          // Preserve solve results for CSP
-          solveResult = r;
-          factCount += 1; // Count as one "fact" for backward compatibility
-        } else {
-          factCount += 1;
-        }
-      }
-
-      const response = {
-        success: result.success,
-        facts: factCount,
-        errors: result.errors.map(e => e.message),
-        warnings: this.warnings.slice()
-      };
-      
-      // If this was a solve operation, include the detailed result
-      if (solveResult) {
-        response.solveResult = solveResult;
-      }
-      
-      return response;
-    } catch (e) {
-      return {
-        success: false,
-        facts: 0,
-        errors: [e.message],
-        warnings: this.warnings.slice()
-      };
-    }
+  /**
+   * Load Core theories from `config/Core` into this session.
+   * This is a convenience helper to make "theory-driven" behavior easy to enable.
+   *
+   * @param {Object} [options]
+   * @param {string} [options.corePath] - default `./config/Core`
+   * @param {boolean} [options.includeIndex] - default false (index.sys2 uses Load with relative paths)
+   * @returns {{success: boolean, errors: Array<{file: string, errors: string[]}>}}
+   */
+  loadCore(options = {}) {
+    return loadCoreImpl(this, options);
   }
 
   /**
    * Track Implies rules from AST
    */
   trackRules(ast) {
-    const stmtMap = new Map();
-    for (const stmt of ast.statements) {
-      if (stmt.destination) {
-        stmtMap.set(stmt.destination, stmt);
-      }
-    }
-
-    for (const stmt of ast.statements) {
-      const operatorName = (this.extractOperatorName(stmt) || '').toLowerCase();
-      if (operatorName === 'implies' && stmt.args.length >= 2) {
-        const condVec = this.executor.resolveExpression(stmt.args[0]);
-        const concVec = this.executor.resolveExpression(stmt.args[1]);
-        const conditionParts = this.extractCompoundCondition(stmt.args[0], stmtMap);
-
-        // Resolve AST for condition and conclusion for variable unification
-        const conditionAST = this.resolveReferenceToAST(stmt.args[0], stmtMap);
-        const conclusionAST = this.resolveReferenceToAST(stmt.args[1], stmtMap);
-
-        // Extract variables from condition and conclusion
-        const conditionVars = this.extractVariables(conditionAST);
-        const conclusionVars = this.extractVariables(conclusionAST);
-        const hasVariables = conditionVars.length > 0 || conclusionVars.length > 0;
-
-        this.rules.push({
-          name: stmt.destination,
-          vector: this.executor.buildStatementVector(stmt),
-          source: stmt.toString(),
-          condition: condVec,
-          conclusion: concVec,
-          conditionParts,
-          // New: AST for unification
-          conditionAST,
-          conclusionAST,
-          conditionVars,
-          conclusionVars,
-          hasVariables
-        });
-      }
-    }
+    trackRulesImpl(this, ast);
   }
 
   /**
    * Resolve reference to its actual AST statement
    */
   resolveReferenceToAST(expr, stmtMap) {
-    if (expr.type === 'Reference') {
-      const stmt = stmtMap.get(expr.name);
-      if (stmt) {
-        return stmt;
-      }
-    }
-    return expr;
+    return resolveReferenceToASTImpl(expr, stmtMap);
   }
 
   /**
    * Extract variable names from AST
    */
   extractVariables(ast, vars = []) {
-    if (!ast) return vars;
-
-    if (ast.type === 'Hole') {
-      if (!vars.includes(ast.name)) {
-        vars.push(ast.name);
-      }
-    } else if (ast.type === 'Statement') {
-      if (ast.operator) this.extractVariables(ast.operator, vars);
-      if (ast.args) {
-        for (const arg of ast.args) {
-          this.extractVariables(arg, vars);
-        }
-      }
-    } else if (ast.args) {
-      for (const arg of ast.args) {
-        this.extractVariables(arg, vars);
-      }
-    }
-
-    return vars;
+    return extractVariablesImpl(ast, vars);
   }
 
   /**
    * Extract operator name from statement
    */
   extractOperatorName(stmt) {
-    if (!stmt?.operator) return null;
-    return stmt.operator.name || stmt.operator.value || null;
+    return extractOperatorNameImpl(stmt);
   }
 
   /**
@@ -249,50 +177,17 @@ export class Session {
    * Preserves AST for variable unification
    */
   extractCompoundCondition(expr, stmtMap) {
-    if (expr.type === 'Reference') {
-      const stmt = stmtMap.get(expr.name);
-      if (stmt) {
-        const op = this.extractOperatorName(stmt);
-        if (op === 'And' || op === 'Or') {
-          const parts = stmt.args.map(arg => {
-            const nested = this.extractCompoundCondition(arg, stmtMap);
-            if (nested) return nested;
-            // Resolve the reference to get the actual AST
-            const resolvedAST = this.resolveReferenceToAST(arg, stmtMap);
-            return {
-              type: 'leaf',
-              vector: this.executor.resolveExpression(arg),
-              ast: resolvedAST  // Preserve AST for unification
-            };
-          });
-          return { type: op, parts };
-        }
-        // Handle Not operator - negated condition
-        if (op === 'Not' && stmt.args?.length === 1) {
-          const inner = this.extractCompoundCondition(stmt.args[0], stmtMap);
-          if (inner) {
-            return { type: 'Not', inner };
-          }
-          // Not wrapping a simple statement
-          const resolvedAST = this.resolveReferenceToAST(stmt.args[0], stmtMap);
-          return {
-            type: 'Not',
-            inner: {
-              type: 'leaf',
-              vector: this.executor.resolveExpression(stmt.args[0]),
-              ast: resolvedAST
-            }
-          };
-        }
-      }
-    }
-    return null;
+    return extractCompoundConditionImpl(this, expr, stmtMap);
   }
 
   /**
    * Add vector to knowledge base
   */
   addToKB(vector, name = null, metadata = null) {
+    if (this.canonicalizationEnabled && metadata) {
+      metadata = canonicalizeMetadata(this, metadata);
+    }
+
     if (isDebugEnabled()) {
       const op = metadata?.operator || '?';
       const args = (metadata?.args || []).join(' ');
@@ -304,7 +199,7 @@ export class Session {
       this.warnings.push(contradiction);
     }
 
-    const fact = { vector, name, metadata };
+    const fact = { id: this.nextFactId++, vector, name, metadata };
     this.kbFacts.push(fact);
 
     // Index in component KB for fuzzy matching
@@ -314,6 +209,18 @@ export class Session {
     if (metadata?.operator === 'synonym' && metadata?.args?.length === 2) {
       this.componentKB.addSynonym(metadata.args[0], metadata.args[1]);
       dbg('SYNONYM', `Registered synonym: ${metadata.args[0]} <-> ${metadata.args[1]}`);
+    }
+
+    // Handle canonical representative declarations
+    if (metadata?.operator === 'canonical' && metadata?.args?.length === 2) {
+      this.componentKB.addCanonical(metadata.args[0], metadata.args[1]);
+      dbg('CANONICAL', `Registered canonical: ${metadata.args[0]} -> ${metadata.args[1]}`);
+    }
+
+    // Syntactic sugar: alias A B behaves like canonical A B (directional).
+    if (metadata?.operator === 'alias' && metadata?.args?.length === 2) {
+      this.componentKB.addCanonical(metadata.args[0], metadata.args[1]);
+      dbg('CANONICAL', `Registered alias: ${metadata.args[0]} -> ${metadata.args[1]}`);
     }
 
     if (this.kb === null) {
@@ -327,57 +234,7 @@ export class Session {
    * Check for contradictions
    */
   checkContradiction(metadata) {
-    if (!metadata?.operator || !metadata?.args) return null;
-    const { operator, args } = metadata;
-
-    // Check Not(P) when P exists
-    if (operator === 'Not' && args.length >= 1) {
-      const refVec = this.scope.get(args[0]);
-      if (refVec) {
-        for (const fact of this.kbFacts) {
-          if (fact.vector && similarity(fact.vector, refVec) > 0.9) {
-            return 'Warning: direct contradiction detected';
-          }
-        }
-      }
-    }
-
-    // Check temporal contradictions
-    if ((operator === 'before' || operator === 'after') && args.length >= 2) {
-      const oppositeOp = operator === 'before' ? 'after' : 'before';
-      for (const fact of this.kbFacts) {
-        if (fact.metadata?.operator === oppositeOp &&
-            fact.metadata.args[0] === args[0] &&
-            fact.metadata.args[1] === args[1]) {
-          return 'Warning: temporal contradiction';
-        }
-      }
-    }
-
-    // Check mutually exclusive pairs
-    const exclusions = MUTUALLY_EXCLUSIVE[operator];
-    if (!exclusions || args.length < 2) return null;
-
-    const subject = args[0];
-    const value = args[1];
-
-    let exclusiveValue = null;
-    for (const pair of exclusions) {
-      if (pair[0] === value) { exclusiveValue = pair[1]; break; }
-      if (pair[1] === value) { exclusiveValue = pair[0]; break; }
-    }
-
-    if (!exclusiveValue) return null;
-
-    for (const fact of this.kbFacts) {
-      if (fact.metadata?.operator === operator &&
-          fact.metadata.args[0] === subject &&
-          fact.metadata.args[1] === exclusiveValue) {
-        return `Warning: contradiction - ${subject} is both ${value} and ${exclusiveValue}`;
-      }
-    }
-
-    return null;
+    return checkContradictionImpl(this, metadata);
   }
 
   /**
@@ -397,45 +254,7 @@ export class Session {
    */
   query(dsl, options = {}) {
     dbg('QUERY', 'Starting:', dsl?.substring(0, 60));
-    try {
-      const ast = parse(dsl);
-      if (ast.statements.length === 0) {
-        return { success: false, reason: 'Empty query' };
-      }
-
-      // For multi-statement DSL, execute all statements except last as setup,
-      // then execute the last statement as the actual query
-      if (ast.statements.length > 1) {
-        const executor = new Executor(this);
-        for (let i = 0; i < ast.statements.length - 1; i++) {
-          executor.executeStatement(ast.statements[i]);
-        }
-      }
-
-      // Execute the last (or only) statement as the query
-      const queryStmt = ast.statements[ast.statements.length - 1];
-      const result = this.queryEngine.execute(queryStmt);
-      this.reasoningStats.queries++;
-
-      // Queries count as depth 5 for averaging (require KB traversal)
-      const QUERY_DEPTH = 5;
-      this.reasoningStats.proofLengths.push(QUERY_DEPTH);
-      this.reasoningStats.totalProofSteps += QUERY_DEPTH;
-      if (QUERY_DEPTH < this.reasoningStats.minProofDepth) {
-        this.reasoningStats.minProofDepth = QUERY_DEPTH;
-      }
-
-      // Track method used
-      if (result.success) {
-        const method = result.allResults?.[0]?.method || 'query_match';
-        this.trackMethod(method);
-        this.trackOperation('query_search');
-      }
-
-      return result;
-    } catch (e) {
-      return { success: false, reason: e.message };
-    }
+    return queryImpl(this, dsl, options);
   }
 
   /**
@@ -453,52 +272,7 @@ export class Session {
    */
   prove(dsl, options = {}) {
     dbg('PROVE', 'Starting:', dsl?.substring(0, 60));
-    try {
-      const ast = parse(dsl);
-      if (ast.statements.length === 0) {
-        return { valid: false, reason: 'Empty goal' };
-      }
-
-      // Use dispatcher to create engine based on reasoning priority
-      const engine = createProofEngine(this, { timeout: options.timeout || 2000 });
-      const result = engine.prove(ast.statements[0]);
-
-      // Track statistics
-      this.reasoningStats.proofs++;
-      // Compute proof length:
-      // - Failed proofs count as 5 (full KB search required)
-      // - All successful proofs count as at least 3 (minimum reasoning: KB scan + match + build chain)
-      const DEFAULT_SEARCH_DEPTH = 5;
-      const MIN_PROOF_DEPTH = 3;
-      let proofLength;
-      if (!result.valid) {
-        proofLength = DEFAULT_SEARCH_DEPTH;
-      } else {
-        const actualSteps = result.steps?.length || 1;
-        // Minimum reasoning depth: even simple proofs require KB scan, pattern matching, chain building
-        proofLength = Math.max(MIN_PROOF_DEPTH, actualSteps);
-      }
-      this.reasoningStats.proofLengths.push(proofLength);
-      this.reasoningStats.totalProofSteps += proofLength;
-      if (proofLength > this.reasoningStats.maxProofDepth) {
-        this.reasoningStats.maxProofDepth = proofLength;
-      }
-      // Track minimum proof depth (M) - all proofs count
-      if (proofLength > 0 && proofLength < this.reasoningStats.minProofDepth) {
-        this.reasoningStats.minProofDepth = proofLength;
-      }
-      // Track total reasoning steps (includes ALL backtracking attempts)
-      if (result.reasoningSteps) {
-        this.reasoningStats.totalReasoningSteps += result.reasoningSteps;
-      }
-      if (result.valid && result.method) {
-        this.trackMethod(result.method);
-      }
-
-      return result;
-    } catch (e) {
-      return { valid: false, reason: e.message };
-    }
+    return proveImpl(this, dsl, options);
   }
 
   /**
@@ -592,110 +366,35 @@ export class Session {
    * Decode vector to structure
    */
   decode(vector) {
-    const operatorCandidates = [];
-
-    for (const [name, opVec] of this.operators) {
-      const sim = similarity(vector, opVec);
-      if (sim > 0.4) operatorCandidates.push({ name, similarity: sim });
-    }
-
-    for (const [name, atomVec] of this.vocabulary.entries()) {
-      if (!this.operators.has(name)) {
-        const sim = similarity(vector, atomVec);
-        if (sim > 0.5) operatorCandidates.push({ name, similarity: sim });
-      }
-    }
-
-    if (operatorCandidates.length === 0) {
-      return { success: false, reason: 'No operator found' };
-    }
-
-    operatorCandidates.sort((a, b) => b.similarity - a.similarity);
-    const operator = operatorCandidates[0];
-    const args = this.extractArguments(vector, operator.name);
-
-    return {
-      success: true,
-      structure: {
-        operator: operator.name,
-        operatorConfidence: operator.similarity,
-        arguments: args,
-        confidence: operator.similarity
-      }
-    };
+    return decodeVectorImpl(this, vector);
   }
 
   /**
    * Extract arguments from vector
    */
   extractArguments(vector, operatorName) {
-    const opVec = this.vocabulary.get(operatorName);
-    const remainder = bind(vector, opVec);
-
-    const args = [];
-    for (let pos = 1; pos <= 5; pos++) {
-      const extracted = removePosition(pos, remainder);
-      const matches = topKSimilar(extracted, this.vocabulary.atoms, 3);
-
-      if (matches.length > 0 && matches[0].similarity > 0.45) {
-        args.push({
-          position: pos,
-          value: matches[0].name,
-          confidence: matches[0].similarity,
-          alternatives: matches.slice(1).map(m => ({ value: m.name, confidence: m.similarity }))
-        });
-      }
-    }
-
-    return args;
+    return extractArgumentsImpl(this, vector, operatorName);
   }
 
   /**
    * Summarize vector as natural language
    */
   summarize(vector) {
-    const decoded = this.decode(vector);
-    if (!decoded.success) {
-      return { success: false, text: 'Unable to decode' };
-    }
-
-    const { operator, arguments: args } = decoded.structure;
-    const text = this.generateText(operator, args);
-
-    return { success: true, text, structure: decoded.structure };
+    return summarizeVectorImpl(this, vector);
   }
 
   // Statistics tracking
 
   trackMethod(method) {
-    this.reasoningStats.methods[method] = (this.reasoningStats.methods[method] || 0) + 1;
+    trackMethodImpl(this, method);
   }
 
   trackOperation(operation) {
-    this.reasoningStats.operations[operation] = (this.reasoningStats.operations[operation] || 0) + 1;
+    trackOperationImpl(this, operation);
   }
 
   getReasoningStats(reset = false) {
-    const stats = { ...this.reasoningStats };
-    stats.avgProofLength = stats.proofLengths.length > 0
-      ? (stats.totalProofSteps / stats.proofLengths.length).toFixed(1)
-      : 0;
-    // Convert Infinity to 0 for display when no valid proofs recorded
-    if (stats.minProofDepth === Infinity) {
-      stats.minProofDepth = 0;
-    }
-    delete stats.proofLengths;
-
-    if (reset) {
-      this.reasoningStats = {
-        queries: 0, proofs: 0, kbScans: 0, similarityChecks: 0,
-        ruleAttempts: 0, transitiveSteps: 0, maxProofDepth: 0,
-        minProofDepth: Infinity, totalProofSteps: 0, totalReasoningSteps: 0,
-        proofLengths: [], methods: {}, operations: {},
-        hdcQueries: 0, hdcSuccesses: 0, hdcBindings: 0
-      };
-    }
-    return stats;
+    return getReasoningStatsImpl(this, reset);
   }
 
   // Utility methods

@@ -1,0 +1,34 @@
+# Core Theory - Constraints (DS19)
+#
+# This file defines constraints that the runtime can use for:
+# - contradiction warnings
+# - later: hard constraint checking / CSP integration
+#
+# Format notes:
+# - These are *facts* intentionally expressed in simple DSL lines so runtime can parse them
+#   with lightweight extraction for `SemanticIndex` (regex), without requiring full execution.
+#
+# mutuallyExclusive operator A B
+# Means: for same subject, `operator subject A` contradicts `operator subject B`.
+
+@MutuallyExclusive:mutuallyExclusive __Relation
+@InverseRelation:inverseRelation __Relation
+@ContradictsSameArgs:contradictsSameArgs __Relation
+
+# ===== States =====
+mutuallyExclusive hasState Open Closed
+mutuallyExclusive hasState Alive Dead
+mutuallyExclusive hasState On Off
+mutuallyExclusive hasState Full Empty
+
+# ===== Properties =====
+mutuallyExclusive hasProperty Hot Cold
+mutuallyExclusive hasProperty Wet Dry
+
+# ===== Temporal =====
+# before(A,B) and after(A,B) are contradictory (A cannot be both before and after B).
+contradictsSameArgs before after
+
+# Useful for future rewriting/canonicalization: after is the inverse of before.
+inverseRelation before after
+inverseRelation after before

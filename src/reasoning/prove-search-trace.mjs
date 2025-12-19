@@ -20,6 +20,7 @@ export function buildSearchTrace(engine, goal, goalStr) {
   const traces = [];
   const op = engine.extractOperatorName(goal);
   const args = (goal.args || []).map(a => engine.extractArgName(a)).filter(Boolean);
+  const semanticIndex = engine.session?.semanticIndex;
 
   if (args.length < 2) {
     return `Searched ${goalStr} in KB. Not found.`;
@@ -74,30 +75,11 @@ export function buildSearchTrace(engine, goal, goalStr) {
   // 3. Check what we were looking for and why it failed
   if (op === 'isA') {
     traces.push(`No path exists from ${entity} to ${target}`);
-  } else if (op === 'before') {
-    const edges = buildRelationEdges(engine, 'before');
-    const outgoing = edges.get(entity) || [];
-    if (outgoing.length === 0) {
-      traces.push(`Searched before ${entity} ?next in KB. Not found`);
-      traces.push(`${entity} has no outgoing before relations`);
-    } else {
-      traces.push(`Searched before ${entity} ?next. Found: ${outgoing.join(', ')}`);
-    }
-
-    // Check reverse path (target -> entity)
-    const reversePath = findRelationPath(edges, target, entity);
-    if (reversePath.length > 0) {
-      traces.push(`Reverse path: ${reversePath.join(' -> ')}`);
-      traces.push('Path exists in opposite direction only');
-      traces.push('Temporal order violated');
-    } else {
-      traces.push(`No transitive path to ${target}`);
-    }
-  } else if (['can', 'has', 'likes', 'knows', 'owns', 'uses'].includes(op)) {
+  } else if ((semanticIndex?.isInheritableProperty?.(op)) || ['can', 'has', 'likes', 'knows', 'owns', 'uses'].includes(op)) {
     // Property inheritance - check if any ancestor has it
     const traceResult = buildPropertyInheritanceTrace(engine, op, target, isAChain);
     traces.push(...traceResult);
-  } else if (['locatedIn', 'causes', 'before', 'partOf'].includes(op)) {
+  } else if ((semanticIndex?.isTransitive?.(op)) || ['locatedIn', 'causes', 'before', 'partOf'].includes(op)) {
     traces.push(`Searched ${op} ${entity} ?next in KB. Not found`);
     const edges = buildRelationEdges(engine, op);
     const outgoing = edges.get(entity) || [];
@@ -108,7 +90,13 @@ export function buildSearchTrace(engine, goal, goalStr) {
     if (reversePath.length > 0) {
       traces.push(`Reverse path: ${reversePath.join(' -> ')}`);
       traces.push('Path exists in opposite direction only');
-      const dirLabel = op === 'causes' ? 'Causal direction violated' : `${op} direction violated`;
+      const inverse = semanticIndex?.getInverseRelation?.(op);
+      const dirLabel =
+        op === 'causes'
+          ? 'Causal direction violated'
+          : inverse
+            ? `${op} direction violated (inverse=${inverse})`
+            : `${op} direction violated`;
       traces.push(dirLabel);
     } else {
       traces.push(`No transitive path to ${target}`);

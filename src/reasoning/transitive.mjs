@@ -6,53 +6,14 @@
  * Relation properties are loaded from config/Core/00-relations.sys2
  */
 
-import { readFileSync, existsSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
 import { getThresholds } from '../core/constants.mjs';
-
-/**
- * Load transitive relations from config file
- * Falls back to defaults if config not found
- */
-function loadTransitiveRelations() {
-  const defaults = new Set([
-    'isA', 'locatedIn', 'partOf', 'subclassOf', 'containedIn',
-    'before', 'after', 'causes', 'appealsTo', 'leadsTo', 'enables'
-  ]);
-
-  try {
-    // Try to find config file relative to this module
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-    const configPath = join(__dirname, '../../config/Core/00-relations.sys2');
-
-    if (!existsSync(configPath)) {
-      return defaults;
-    }
-
-    const content = readFileSync(configPath, 'utf-8');
-    const relations = new Set();
-
-    // Parse lines like "@isA:isA __TransitiveRelation"
-    for (const line of content.split('\n')) {
-      const match = line.match(/@(\w+):\w+\s+__TransitiveRelation/);
-      if (match) {
-        relations.add(match[1]);
-      }
-    }
-
-    return relations.size > 0 ? relations : defaults;
-  } catch (e) {
-    return defaults;
-  }
-}
+import { DEFAULT_SEMANTIC_INDEX } from '../runtime/semantic-index.mjs';
 
 /**
  * Transitive relations that support chaining
  * Loaded from config/Core/00-relations.sys2
  */
-export const TRANSITIVE_RELATIONS = loadTransitiveRelations();
+export const TRANSITIVE_RELATIONS = DEFAULT_SEMANTIC_INDEX.transitiveRelations;
 
 /**
  * Reserved words to exclude from intermediates
@@ -89,7 +50,11 @@ export class TransitiveReasoner {
    */
   tryTransitiveChain(goal, depth) {
     const operatorName = this.engine.extractOperatorName(goal);
-    if (!operatorName || !TRANSITIVE_RELATIONS.has(operatorName)) {
+    const isTransitive =
+      (this.session?.semanticIndex?.isTransitive?.(operatorName)) ??
+      (operatorName ? TRANSITIVE_RELATIONS.has(operatorName) : false);
+
+    if (!operatorName || !isTransitive) {
       return { valid: false };
     }
 
@@ -299,7 +264,10 @@ export class TransitiveReasoner {
     if (parts.length !== 3) return { valid: false };
 
     const [op, subject, target] = parts;
-    if (!TRANSITIVE_RELATIONS.has(op)) return { valid: false };
+    const isTransitive =
+      (this.session?.semanticIndex?.isTransitive?.(op)) ??
+      (op ? TRANSITIVE_RELATIONS.has(op) : false);
+    if (!isTransitive) return { valid: false };
 
     const simpleGoal = {
       operator: { name: op },

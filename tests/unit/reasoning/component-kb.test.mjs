@@ -109,6 +109,40 @@ describe('ComponentKB', () => {
       const dogSyns = kb.expandSynonyms('Dog');
       assert.ok(dogSyns.has('Canine'));
     });
+
+    test('should expand synonyms using transitive closure', () => {
+      const kb = new ComponentKB(null);
+
+      kb.addSynonym('Car', 'Automobile');
+      kb.addSynonym('Automobile', 'Vehicle');
+
+      const expanded = kb.expandSynonyms('Car');
+      assert.ok(expanded.has('Car'));
+      assert.ok(expanded.has('Automobile'));
+      assert.ok(expanded.has('Vehicle'));
+    });
+
+    test('should return deterministic canonical representative', () => {
+      const kb = new ComponentKB(null);
+
+      kb.addSynonym('zTerm', 'aTerm');
+      kb.addSynonym('aTerm', 'mTerm');
+
+      assert.strictEqual(kb.canonicalizeName('zTerm'), 'aTerm');
+      assert.strictEqual(kb.canonicalizeName('mTerm'), 'aTerm');
+    });
+
+    test('canonical representative overrides lexicographic fallback (and propagates via synonyms)', () => {
+      const kb = new ComponentKB(null);
+
+      kb.addSynonym('Car', 'Automobile');
+      kb.addCanonical('Car', 'Automobile');
+
+      // Even though "Automobile" < "Car" lexicographically, canonical mapping forces it.
+      assert.strictEqual(kb.canonicalizeName('Car'), 'Automobile');
+      // Propagates through synonyms closure.
+      assert.strictEqual(kb.canonicalizeName('Automobile'), 'Automobile');
+    });
   });
 
   describe('matchesWithSynonyms', () => {

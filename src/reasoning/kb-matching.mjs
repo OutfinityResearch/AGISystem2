@@ -256,7 +256,7 @@ export class KBMatcher {
           method: 'rule_chain',
           confidence: (condResult.confidence || this.thresholds.CONDITION_CONFIDENCE) * this.thresholds.CONDITION_CONFIDENCE,
           steps: [
-            { operation: 'rule_applied', fact: condStr, rule: rule.name },
+            { operation: 'rule_applied', fact: condStr, rule: rule.label || rule.name, ruleId: rule.id || null },
             ...(condResult.steps || [])
           ]
         };
@@ -300,7 +300,7 @@ export class KBMatcher {
           confidence: Math.min(conclusionSim, conditionResult.confidence) * this.thresholds.CONFIDENCE_DECAY,
           goal: goal.toString(),
           steps: [
-            { operation: 'rule_match', rule: rule.name || rule.source, fact: conclusionFact },
+            { operation: 'rule_match', rule: rule.label || rule.name || rule.source, ruleId: rule.id || null, fact: conclusionFact },
             ...conditionResult.steps
           ]
         };

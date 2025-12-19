@@ -62,6 +62,7 @@ Each argument is bound with its **position vector** (Pos1, Pos2, etc.) before be
 |-------|--------|---------|
 | `@var` | Declaration | Create **temporary** variable (scope only, NOT KB) |
 | `@var:name` | Declaration + KB | Create variable AND add to KB as `name` |
+| `@:name` | KB only | Add to KB as `name` without local variable |
 | `@_` | Discard | Result not needed |
 | `$var` | Reference | Access any binding in scope |
 | `?var` | Hole | Unknown to solve |
@@ -75,6 +76,7 @@ Each argument is bound with its **position vector** (Pos1, Pos2, etc.) before be
 |------|----------|-------|----------|
 | `operator arg1 arg2` | No | Yes | Simple facts |
 | `@var:name operator arg1 arg2` | Yes | Yes | Named facts |
+| `@:name operator arg1 arg2` | No | Yes | Named facts (no local ref needed) |
 | `@var operator arg1 arg2` | Yes | **No** | Temporary (for references) |
 
 **Example - Building a Negation:**
@@ -186,6 +188,20 @@ This ensures `prove love John Alice` returns **false** - the positive fact never
     @step1 Operation $param1
     @step2 Operation $step1 $param2
     return $step2
+end
+```
+
+**Shorthand for KB-only export** (no local variable needed):
+```
+@:Pythagorean_Theorem graph triangle
+    @premise isRightTriangle $triangle
+    @a leg1 $triangle
+    @b leg2 $triangle
+    @c hypotenuse $triangle
+    @sum add (square $a) (square $b)
+    @conclusion equals $sum (square $c)
+    @theorem Implies $premise $conclusion
+    return $theorem
 end
 ```
 
@@ -377,14 +393,15 @@ end
 ```ebnf
 program      = { statement | graph_def | theory_block } ;
 
-statement    = "@" , ( "_" | ident [ ":" , ident ] ) , operation , { argument } , [ "#" , text ] , NL ;
+destination  = "_" | ident [ ":" , ident ] | ":" , ident ;  (* @_, @var, @var:name, @:name *)
+statement    = "@" , destination , operation , { argument } , [ "#" , text ] , NL ;
 operation    = ident | "$" , ident ;
 argument     = "$" , ident | "?" , ident | ident | number | list | compound ;
 
 list         = "[" , { argument } , "]" ;
 compound     = "(" , ident , { argument } , ")" ;   (* nested graph call *)
 
-graph_def    = "@" , ident , [ ":" , ident ] , "graph" , { ident } , NL ,
+graph_def    = "@" , ( ident [ ":" , ident ] | ":" , ident ) , "graph" , { ident } , NL ,
                { statement } ,
                "return" , "$" , ident , NL ,
                "end" , NL ;

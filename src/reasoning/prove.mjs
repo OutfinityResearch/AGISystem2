@@ -580,9 +580,13 @@ export class ProofEngine {
   tryDefaultReasoning(goal, depth) {
     // Only applies to property operators (can, has, likes, etc.)
     const op = this.extractOperatorName(goal);
-    const inheritableOps = new Set(['can', 'has', 'likes', 'knows', 'owns', 'uses']);
 
-    if (!inheritableOps.has(op)) {
+    const semanticIndex = this.session?.semanticIndex;
+    const isDefaultable = semanticIndex?.isInheritableProperty
+      ? semanticIndex.isInheritableProperty(op)
+      : new Set(['can', 'has', 'likes', 'knows', 'owns', 'uses']).has(op);
+
+    if (!isDefaultable) {
       return { valid: false };
     }
 
