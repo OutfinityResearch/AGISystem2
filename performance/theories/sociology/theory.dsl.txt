@@ -10,7 +10,6 @@
     @members hasMember $Group $Individual
     @boundaries definesBoundary $Group $Criteria
     @identity createsIdentity $Group $GroupIdentity
-    @chain Implies (And $formation $members) $identity
     return $chain
 end
 
@@ -20,7 +19,6 @@ end
     @duration hasCharacteristic $Group LongDuration
     @interaction hasInteractionType $Group FaceToFace
     @examples includes $type Family
-    @chain Implies (And $type $intimacy $duration) $interaction
     return $chain
 end
 
@@ -30,7 +28,6 @@ end
     @purpose hasPurpose $Group SpecificGoal
     @impersonal hasCharacteristic $Group ImpersonalRelations
     @examples includes $type WorkOrganization
-    @chain Implies (And $type $formal) $impersonal
     return $chain
 end
 
@@ -40,7 +37,6 @@ end
     @loyalty showsLoyalty $Individual $ingroup
     @solidarity experiences $ingroup GroupSolidarity
     @boundaries creates $ingroup WeFeeling
-    @chain Implies (And $ingroup $identity) $loyalty
     return $chain
 end
 
@@ -50,7 +46,6 @@ end
     @boundaries maintainsBoundary $InGroup $outgroup
     @competition mayCompeteWith $InGroup $outgroup
     @stereotypes developsStereotypes $InGroup $outgroup
-    @chain Implies (And $outgroup $differentiation) $boundaries
     return $chain
 end
 
@@ -60,7 +55,6 @@ end
     @evaluation evaluatesSelf $Individual $refgroup
     @aspiration aspiresToJoin $Individual $refgroup
     @influence influences $refgroup Behavior
-    @chain Implies (And $refgroup $standards) $evaluation
     return $chain
 end
 
@@ -70,7 +64,6 @@ end
     @ties connectsVia $network SocialTies
     @density hasDensity $network $Density
     @centrality hasCentrality $Individual $Centrality
-    @chain Implies (And $network $nodes $ties) $structure
     return $chain
 end
 
@@ -81,7 +74,6 @@ end
     @weakchar hasCharacteristic $weakties Infrequent
     @bridging enables $weakties Bridging
     @strength determines $Tie NetworkStrength
-    @chain Implies (And $weakties $bridging) NetworkExpansion
     return $chain
 end
 
@@ -91,7 +83,6 @@ end
     @resources provides $capital OpportunityAccess
     @trust requiresTrust $capital SocialTrust
     @reciprocity based_on $capital Reciprocity
-    @chain Implies (And $capital $networks) $resources
     return $chain
 end
 
@@ -101,7 +92,6 @@ end
     @interaction hasPattern $community RegularInteraction
     @identity shares $community CommunityIdentity
     @belonging creates $community SenseOfBelonging
-    @chain Implies (And $community $territory $interaction) $identity
     return $chain
 end
 
@@ -115,7 +105,6 @@ end
     @inequality produces $stratification SocialInequality
     @distribution affects $stratification ResourceDistribution
     @dimensions hasDimension $stratification Class
-    @chain Implies (And $stratification $hierarchy) $inequality
     return $chain
 end
 
@@ -125,7 +114,6 @@ end
     @position determinedBy $class OccupationalStatus
     @power conferspower $class PoliticalPower
     @mobility enables $class ClassMobility
-    @chain Implies (And $class $economic) $position
     return $chain
 end
 
@@ -135,7 +123,6 @@ end
     @achievement basedOn $system Achievement
     @mobility allows $system SocialMobility
     @meritocracy idealizes $system Meritocracy
-    @chain Implies (And $system $open) $mobility
     return $chain
 end
 
@@ -145,7 +132,6 @@ end
     @ascription basedOn $system AscribedStatus
     @rigid hasCharacteristic $system RigidBoundaries
     @endogamy requires $system Endogamy
-    @chain Implies (And $system $closed $ascription) $rigid
     return $chain
 end
 
@@ -155,7 +141,6 @@ end
     @honor receives $status SocialHonor
     @recognition gains $status PublicRecognition
     @symbols displays $status StatusSymbols
-    @chain Implies (And $status $prestige) $honor
     return $chain
 end
 
@@ -165,7 +150,6 @@ end
     @influence exerts $power SocialInfluence
     @control enables $power ResourceControl
     @domination creates $power Domination
-    @chain Implies (And $power $authority) $influence
     return $chain
 end
 
@@ -175,7 +159,6 @@ end
     @status hasDimension $weberian SocialStatus
     @party hasDimension $weberian PoliticalParty
     @multidimensional isA $weberian MultidimensionalModel
-    @chain Implies (And $weberian $class $status) $party
     return $chain
 end
 
@@ -186,7 +169,6 @@ end
     @conflict exists $bourgeoisie $proletariat
     @exploitation exploits $bourgeoisie $proletariat
     @consciousness develops $proletariat ClassConsciousness
-    @chain Implies (And $marxian $exploitation) $conflict
     return $chain
 end
 
@@ -196,7 +178,6 @@ end
     @horizontal isA $mobility HorizontalMobility
     @intergenerational isA $mobility IntergenerationalMobility
     @intragenerational isA $mobility IntragenerationalMobility
-    @chain Implies (And $mobility $vertical) StatusChange
     return $chain
 end
 
@@ -206,7 +187,6 @@ end
     @education facilitates $upward EducationalAttainment
     @opportunity depends_on $upward OpportunityStructure
     @merit basedOn $upward MeritocraticPrinciples
-    @chain Implies (And $upward $achievement $education) $opportunity
     return $chain
 end
 
@@ -216,7 +196,6 @@ end
     @demotion includes $downward OccupationalDemotion
     @poverty risksOf $downward Poverty
     @factors causedBy $downward EconomicFactors
-    @chain Implies (And $downward $loss) $demotion
     return $chain
 end
 
@@ -226,7 +205,6 @@ end
     @social isA $inequality SocialInequality
     @political isA $inequality PoliticalInequality
     @consequences produces $inequality SocialProblems
-    @chain Implies (And $inequality $economic) $social
     return $chain
 end
 
@@ -236,7 +214,6 @@ end
     @relative isA $poverty RelativePoverty
     @deprivation experiences $poverty MaterialDeprivation
     @cycle creates $poverty PovertyyCycle
-    @chain Implies (And $poverty $absolute) $deprivation
     return $chain
 end
 
@@ -246,7 +223,6 @@ end
     @accumulation increases $concentration WealthAccumulation
     @inequality intensifies $concentration EconomicInequality
     @power confers $concentration PoliticalPower
-    @chain Implies (And $concentration $elite $accumulation) $inequality
     return $chain
 end
 
@@ -260,7 +236,6 @@ end
     @function performs $institution SocialFunction
     @norms establishes $institution SocialNorms
     @persistence shows $institution Persistence
-    @chain Implies (And $institution $structure $function) $norms
     return $chain
 end
 
@@ -270,7 +245,6 @@ end
     @reproduction performs $family BiologicalReproduction
     @socialization performs $family PrimarySocialization
     @support provides $family EmotionalSupport
-    @chain Implies (And $family $kinship $reproduction) $socialization
     return $chain
 end
 
@@ -280,7 +254,6 @@ end
     @children includes $nuclear DependentChildren
     @household forms $nuclear SingleHousehold
     @modern prevalent_in $nuclear ModernSociety
-    @chain Implies (And $nuclear $parents $children) $household
     return $chain
 end
 
@@ -290,7 +263,6 @@ end
     @kinship includes $extended ExtendedKin
     @support provides $extended MutualSupport
     @traditional prevalent_in $extended TraditionalSociety
-    @chain Implies (And $extended $multigenerational $kinship) $support
     return $chain
 end
 
@@ -300,7 +272,6 @@ end
     @norms governed_by $marriage MarriageNorms
     @legitimacy confers $marriage Legitimacy
     @variations has $marriage CulturalVariations
-    @chain Implies (And $marriage $union) $norms
     return $chain
 end
 
@@ -310,7 +281,6 @@ end
     @skills develops $education Skills
     @socialization performs $education SecondarySocialization
     @stratification affects $education SocialStratification
-    @chain Implies (And $education $knowledge $skills) $socialization
     return $chain
 end
 
@@ -320,7 +290,6 @@ end
     @curriculum follows $formal StandardizedCurriculum
     @credentials awards $formal EducationalCredentials
     @selection performs $formal SocialSelection
-    @chain Implies (And $formal $school $curriculum) $credentials
     return $chain
 end
 
@@ -330,7 +299,6 @@ end
     @values transmits $hidden SocialValues
     @norms reinforces $hidden BehaviorNorms
     @conformity promotes $hidden Conformity
-    @chain Implies (And $hidden $implicit $values) $norms
     return $chain
 end
 
@@ -340,7 +308,6 @@ end
     @status determines $credentialism SocialStatus
     @jobs requires $credentialism JobCredentials
     @inflation leads_to $credentialism CredentialInflation
-    @chain Implies (And $credentialism $credentials) $status
     return $chain
 end
 
@@ -350,7 +317,6 @@ end
     @distribution manages $economy Distribution
     @exchange facilitates $economy Exchange
     @systems has $economy EconomicSystems
-    @chain Implies (And $economy $production $distribution) $exchange
     return $chain
 end
 
@@ -360,7 +326,6 @@ end
     @market operates_through $capitalism FreeMarket
     @profit motivated_by $capitalism ProfitMotive
     @competition features $capitalism Competition
-    @chain Implies (And $capitalism $private $market) $profit
     return $chain
 end
 
@@ -370,7 +335,6 @@ end
     @planning uses $socialism CentralPlanning
     @equality aims_for $socialism EconomicEquality
     @welfare provides $socialism SocialWelfare
-    @chain Implies (And $socialism $collective $planning) $equality
     return $chain
 end
 
@@ -380,7 +344,6 @@ end
     @authority establishes $political Authority
     @governance performs $political Governance
     @legitimacy requires $political Legitimacy
-    @chain Implies (And $political $power $authority) $governance
     return $chain
 end
 
@@ -390,7 +353,6 @@ end
     @territory controls $state Territory
     @monopoly holds $state MonopolyOfForce
     @legitimacy requires $state LegitimateAuthority
-    @chain Implies (And $state $sovereignty $territory) $monopoly
     return $chain
 end
 
@@ -400,7 +362,6 @@ end
     @participation allows $democracy PoliticalParticipation
     @rights protects $democracy CivilRights
     @representation provides $democracy Representation
-    @chain Implies (And $democracy $elections $participation) $rights
     return $chain
 end
 
@@ -410,7 +371,6 @@ end
     @limited has $authoritarianism LimitedFreedom
     @control exercises $authoritarianism SocialControl
     @opposition suppresses $authoritarianism PoliticalOpposition
-    @chain Implies (And $authoritarianism $concentrated) $control
     return $chain
 end
 
@@ -420,7 +380,6 @@ end
     @beliefs provides $religion ReligiousBeliefs
     @rituals performs $religion Rituals
     @community creates $religion ReligiousCommunity
-    @chain Implies (And $religion $sacred $beliefs) $rituals
     return $chain
 end
 
@@ -430,7 +389,6 @@ end
     @solidarity creates $religion SocialSolidarity
     @control exercises $religion SocialControl
     @comfort offers $religion EmotionalComfort
-    @chain Implies (And $functions $meaning $solidarity) $control
     return $chain
 end
 
@@ -440,7 +398,6 @@ end
     @rationalization driven_by $secularization Rationalization
     @differentiation involves $secularization InstitutionalDifferentiation
     @modern characterizes $secularization ModernSociety
-    @chain Implies (And $secularization $rationalization) $differentiation
     return $chain
 end
 
@@ -454,7 +411,6 @@ end
     @internalization achieves $socialization NormInternalization
     @development produces $socialization SelfDevelopment
     @lifelong isA $socialization LifelongProcess
-    @chain Implies (And $socialization $learning) $internalization
     return $chain
 end
 
@@ -464,7 +420,6 @@ end
     @early occurs_during $primary Childhood
     @fundamental teaches $primary FundamentalSkills
     @identity forms $primary BasicIdentity
-    @chain Implies (And $primary $family $early) $fundamental
     return $chain
 end
 
@@ -474,7 +429,6 @@ end
     @later occurs_during $secondary LaterLife
     @specific teaches $secondary SpecificRoles
     @skills develops $secondary SpecializedSkills
-    @chain Implies (And $secondary $institutions $later) $specific
     return $chain
 end
 
@@ -484,7 +438,6 @@ end
     @peers isA $agents PeerGroup
     @school isA $agents School
     @media isA $agents MassMedia
-    @chain Implies (And $agents $family $peers) $school
     return $chain
 end
 
@@ -494,7 +447,6 @@ end
     @independence promotes $peers Independence
     @values transmits $peers PeerValues
     @pressure exerts $peers PeerPressure
-    @chain Implies (And $peers $equals) $independence
     return $chain
 end
 
@@ -504,7 +456,6 @@ end
     @messages transmits $media SocialMessages
     @influence exerts $media CulturalInfluence
     @reality shapes $media PerceivedReality
-    @chain Implies (And $media $mass $messages) $influence
     return $chain
 end
 
@@ -514,7 +465,6 @@ end
     @reflexivity requires $self SelfReflexivity
     @agency enables $self HumanAgency
     @social shaped_by $self SocialInteraction
-    @chain Implies (And $self $identity $reflexivity) $agency
     return $chain
 end
 
@@ -524,7 +474,6 @@ end
     @interpretation involves $lookinglass InterpretingJudgment
     @response develops $lookinglass SelfFeeling
     @cooley developed_by $lookinglass Cooley
-    @chain Implies (And $lookinglass $imagination $interpretation) $response
     return $chain
 end
 
@@ -534,7 +483,6 @@ end
     @empathy develops $roletaking Empathy
     @understanding achieves $roletaking SocialUnderstanding
     @mead theorized_by $roletaking Mead
-    @chain Implies (And $roletaking $perspective) $empathy
     return $chain
 end
 
@@ -544,7 +492,6 @@ end
     @norms internalize $generalized SocialNorms
     @self regulates $generalized SelfRegulation
     @stage final_stage $generalized SelfDevelopment
-    @chain Implies (And $generalized $society $norms) $self
     return $chain
 end
 
@@ -554,7 +501,6 @@ end
     @unlearning requires $resocialization UnlearningOldNorms
     @relearning requires $resocialization LearningNewNorms
     @total occurs_in $resocialization TotalInstitution
-    @chain Implies (And $resocialization $unlearning) $relearning
     return $chain
 end
 
@@ -564,7 +510,6 @@ end
     @isolated features $total IsolationFromSociety
     @resocialization performs $total Resocialization
     @examples includes $total Prison
-    @chain Implies (And $total $controlled $isolated) $resocialization
     return $chain
 end
 
@@ -578,7 +523,6 @@ end
     @learned acquired_through $culture Learning
     @symbolic uses $culture Symbols
     @adaptive isA $culture AdaptiveMechanism
-    @chain Implies (And $culture $shared $learned) $symbolic
     return $chain
 end
 
@@ -588,7 +532,6 @@ end
     @technology includes $material Technology
     @artifacts produces $material CulturalArtifacts
     @tangible characterized_by $material Tangibility
-    @chain Implies (And $material $objects) $technology
     return $chain
 end
 
@@ -598,7 +541,6 @@ end
     @beliefs includes $nonmaterial Beliefs
     @norms includes $nonmaterial Norms
     @intangible characterized_by $nonmaterial Intangibility
-    @chain Implies (And $nonmaterial $values $beliefs) $norms
     return $chain
 end
 
@@ -608,7 +550,6 @@ end
     @standards provides $values Standards
     @guiding guides $values Behavior
     @shared widely_shared $values SocietyMembers
-    @chain Implies (And $values $desirable) $standards
     return $chain
 end
 
@@ -618,7 +559,6 @@ end
     @expectations define $norms SocialExpectations
     @sanctions enforced_by $norms Sanctions
     @types has $norms FolkwaysMores
-    @chain Implies (And $norms $rules $expectations) $sanctions
     return $chain
 end
 
@@ -628,7 +568,6 @@ end
     @informal characterized_by $folkways InformalNorms
     @mild enforced_with $folkways MildSanctions
     @everyday govern $folkways EverydayBehavior
-    @chain Implies (And $folkways $conventions) $informal
     return $chain
 end
 
@@ -638,7 +577,6 @@ end
     @serious regarded_as $mores SeriousMatters
     @strong enforced_with $mores StrongSanctions
     @essential considered $mores EssentialNorms
-    @chain Implies (And $mores $moral $serious) $strong
     return $chain
 end
 
@@ -648,7 +586,6 @@ end
     @sacred often_related $taboos SacredBeliefs
     @severe punished_with $taboos SevereSanctions
     @universal often_considered $taboos Universal
-    @chain Implies (And $taboos $forbidden $sacred) $severe
     return $chain
 end
 
@@ -658,7 +595,6 @@ end
     @representation represents $symbols Ideas
     @communication enables $symbols Communication
     @arbitrary often_characterized $symbols ArbitraryRelation
-    @chain Implies (And $symbols $meaning) $representation
     return $chain
 end
 
@@ -668,7 +604,6 @@ end
     @grammar has $language Grammar
     @communication enables $language Communication
     @sapirwhorf theory $language LinguisticRelativity
-    @chain Implies (And $language $symbols $grammar) $communication
     return $chain
 end
 
@@ -678,7 +613,6 @@ end
     @shared shares $subculture LargerCulture
     @group associated_with $subculture SocialGroup
     @variation represents $subculture CulturalVariation
-    @chain Implies (And $subculture $distinct) $shared
     return $chain
 end
 
@@ -688,7 +622,6 @@ end
     @rejection rejects $counterculture MainstreamValues
     @alternative promotes $counterculture AlternativeValues
     @conflict creates $counterculture CulturalConflict
-    @chain Implies (And $counterculture $opposition) $rejection
     return $chain
 end
 
@@ -698,7 +631,6 @@ end
     @pluralism represents $diversity CulturalPluralism
     @difference recognizes $diversity Differences
     @multiculturalism promotes $diversity Multiculturalism
-    @chain Implies (And $diversity $variation) $pluralism
     return $chain
 end
 
@@ -708,7 +640,6 @@ end
     @superior judges_as $ethnocentrism Superior
     @judgment basis_for $ethnocentrism JudgingOthers
     @bias creates $ethnocentrism CulturalBias
-    @chain Implies (And $ethnocentrism $own $superior) $judgment
     return $chain
 end
 
@@ -718,7 +649,6 @@ end
     @understanding promotes $relativism Understanding
     @judgment suspends $relativism EthnocentricJudgment
     @respect encourages $relativism CulturalRespect
-    @chain Implies (And $relativism $context) $understanding
     return $chain
 end
 
@@ -728,7 +658,6 @@ end
     @diffusion occurs_through $change CulturalDiffusion
     @globalization accelerated_by $change Globalization
     @resistance faces $change CulturalResistance
-    @chain Implies (And $change $innovation $diffusion) $globalization
     return $chain
 end
 
@@ -738,7 +667,6 @@ end
     @culture changes_slower $lag Culture
     @gap creates $lag AdaptationGap
     @problems causes $lag SocialProblems
-    @chain Implies (And $lag $technology $culture) $gap
     return $chain
 end
 
@@ -752,7 +680,6 @@ end
     @norms violates $deviance SocialNorms
     @relative isA $deviance RelativeConcept
     @labeled socially_defined $deviance Labeling
-    @chain Implies (And $deviance $violation) $norms
     return $chain
 end
 
@@ -762,7 +689,6 @@ end
     @ideals exceeds $positive SocialIdeals
     @exceptional considered $positive ExceptionalBehavior
     @admiration receives $positive SocialAdmiration
-    @chain Implies (And $positive $overconformity) $ideals
     return $chain
 end
 
@@ -772,7 +698,6 @@ end
     @violation involves $negative NormViolation
     @sanctions receives $negative NegativeSanctions
     @stigma faces $negative Stigma
-    @chain Implies (And $negative $underconformity $violation) $sanctions
     return $chain
 end
 
@@ -782,7 +707,6 @@ end
     @violation violates $crime Law
     @punishment subject_to $crime FormalPunishment
     @types has $crime CrimeTypes
-    @chain Implies (And $crime $legal) $violation
     return $chain
 end
 
@@ -792,7 +716,6 @@ end
     @status committed_by $whitecollar HighStatus
     @powerful involves $whitecollar PowerfulIndividuals
     @underreported often_characterized $whitecollar Underreported
-    @chain Implies (And $whitecollar $occupation $status) $powerful
     return $chain
 end
 
@@ -802,7 +725,6 @@ end
     @conformity promotes $control Conformity
     @mechanisms uses $control ControlMechanisms
     @types has $control FormalInformal
-    @chain Implies (And $control $regulation) $conformity
     return $chain
 end
 
@@ -812,7 +734,6 @@ end
     @legal based_on $formal LegalRules
     @institutions involves $formal ControlInstitutions
     @sanctions imposes $formal FormalSanctions
-    @chain Implies (And $formal $official $legal) $institutions
     return $chain
 end
 
@@ -822,7 +743,6 @@ end
     @social based_on $informal SocialPressure
     @everyday occurs_in $informal EverydayInteraction
     @sanctions uses $informal InformalSanctions
-    @chain Implies (And $informal $unofficial) $social
     return $chain
 end
 
@@ -832,7 +752,6 @@ end
     @reaction emphasizes $labeling SocialReaction
     @stigma creates $labeling Stigma
     @identity affects $labeling DeviantIdentity
-    @chain Implies (And $labeling $definition $reaction) $stigma
     return $chain
 end
 
@@ -842,7 +761,6 @@ end
     @temporary often_characterized $primary Temporary
     @limited has $limited LimitedConsequences
     @identity not_yet_affects $primary SelfIdentity
-    @chain Implies (And $primary $initial) $temporary
     return $chain
 end
 
@@ -852,7 +770,6 @@ end
     @identity adopts $secondary DeviantIdentity
     @career develops $secondary DeviantCareer
     @stigma experiences $secondary MasterStatus
-    @chain Implies (And $secondary $labeled $identity) $career
     return $chain
 end
 
@@ -862,7 +779,6 @@ end
     @means emphasizes $strain LegitMeans
     @gap exists_between $strain GoalsMeansGap
     @merton developed_by $strain Merton
-    @chain Implies (And $strain $goals $means) $gap
     return $chain
 end
 
@@ -872,7 +788,6 @@ end
     @breakdown results_from $anomie NormBreakdown
     @confusion creates $anomie MoralConfusion
     @durkheim theorized_by $anomie Durkheim
-    @chain Implies (And $anomie $breakdown) $normlessness
     return $chain
 end
 
@@ -882,7 +797,6 @@ end
     @interaction occurs_through $differential SocialInteraction
     @techniques learns $differential CriminalTechniques
     @sutherland developed_by $differential Sutherland
-    @chain Implies (And $differential $learning $interaction) $techniques
     return $chain
 end
 
@@ -892,7 +806,6 @@ end
     @attachment includes $controltheory Attachment
     @commitment includes $controltheory Commitment
     @belief includes $controltheory Belief
-    @chain Implies (And $controltheory $bonds $attachment) $commitment
     return $chain
 end
 
@@ -906,7 +819,6 @@ end
     @patterns affects $change SocialPatterns
     @systems affects $change SocialSystems
     @types has $change ChangeTypes
-    @chain Implies (And $change $transformation) $patterns
     return $chain
 end
 
@@ -916,7 +828,6 @@ end
     @progressive often_viewed $evolutionary Progressive
     @stages occurs_in $evolutionary Stages
     @functionalist associated_with $evolutionary Functionalism
-    @chain Implies (And $evolutionary $gradual) $progressive
     return $chain
 end
 
@@ -926,7 +837,6 @@ end
     @fundamental involves $revolutionary FundamentalChange
     @dramatic produces $revolutionary DramaticTransformation
     @conflict often_involves $revolutionary Conflict
-    @chain Implies (And $revolutionary $rapid $fundamental) $dramatic
     return $chain
 end
 
@@ -936,7 +846,6 @@ end
     @modern transforms_to $modernization ModernSociety
     @development involves $modernization SocioeconomicDevelopment
     @rationalization characterized_by $modernization Rationalization
-    @chain Implies (And $modernization $traditional $modern) $development
     return $chain
 end
 
@@ -946,7 +855,6 @@ end
     @interconnection creates $globalization Interconnection
     @worldwide operates $globalization WorldwideScale
     @culture affects $globalization CulturalHomogenization
-    @chain Implies (And $globalization $integration $interconnection) $worldwide
     return $chain
 end
 
@@ -956,7 +864,6 @@ end
     @migration driven_by $urbanization RuralUrbanMigration
     @concentration creates $urbanization PopulationConcentration
     @modern characteristic_of $urbanization ModernSociety
-    @chain Implies (And $urbanization $cities $migration) $concentration
     return $chain
 end
 
@@ -966,7 +873,6 @@ end
     @technology uses $industrialization MechanizedTechnology
     @economy transforms $industrialization Economy
     @social produces $industrialization SocialChanges
-    @chain Implies (And $industrialization $manufacturing $technology) $economy
     return $chain
 end
 
@@ -976,7 +882,6 @@ end
     @organized characterized_by $movement Organization
     @change aims_for $movement SocialChange
     @types has $movement MovementTypes
-    @chain Implies (And $movement $collective $organized) $change
     return $chain
 end
 
@@ -986,7 +891,6 @@ end
     @specific targets $reform SpecificIssue
     @gradual promotes $reform GradualChange
     @system works_within $reform ExistingSystem
-    @chain Implies (And $reform $limited) $specific
     return $chain
 end
 
@@ -996,7 +900,6 @@ end
     @radical advocates $revmovement RadicalTransformation
     @total aims_for $revmovement TotalSystemChange
     @overthrow seeks_to $revmovement OverthrowSystem
-    @chain Implies (And $revmovement $fundamental $radical) $total
     return $chain
 end
 
@@ -1006,7 +909,6 @@ end
     @organization focuses_on $resource Organization
     @leadership requires $resource Leadership
     @rational views_as $resource RationalAction
-    @chain Implies (And $resource $resources $organization) $leadership
     return $chain
 end
 
@@ -1016,7 +918,6 @@ end
     @emergent features $collective EmergentNorms
     @unconventional often_characterized $collective Unconventional
     @types includes $collective CrowdsBehavior
-    @chain Implies (And $collective $spontaneous) $emergent
     return $chain
 end
 
@@ -1026,7 +927,6 @@ end
     @transformation produces $technology SocialTransformation
     @society affects $technology SocietyStructure
     @determinism theory $technology TechnologicalDeterminism
-    @chain Implies (And $technology $innovation $transformation) $society
     return $chain
 end
 
@@ -1040,7 +940,6 @@ end
     @equilibrium emphasizes $functionalism Equilibrium
     @functions analyzes $functionalism SocialFunctions
     @integration focuses_on $functionalism SocialIntegration
-    @chain Implies (And $functionalism $system $equilibrium) $functions
     return $chain
 end
 
@@ -1050,7 +949,6 @@ end
     @recognized are $manifest RecognizedConsequences
     @explicit are $manifest ExplicitPurposes
     @obvious usually_characterized $manifest Obvious
-    @chain Implies (And $manifest $intended) $recognized
     return $manifest
 end
 
@@ -1060,7 +958,6 @@ end
     @unrecognized are $latent UnrecognizedConsequences
     @implicit are $latent ImplicitEffects
     @hidden often_characterized $latent Hidden
-    @chain Implies (And $latent $unintended) $unrecognized
     return $chain
 end
 
@@ -1070,7 +967,6 @@ end
     @negative characterized_by $dysfunction NegativeEffects
     @instability creates $dysfunction SocialInstability
     @equilibrium threatens $dysfunction SystemEquilibrium
-    @chain Implies (And $dysfunction $disruptive) $negative
     return $chain
 end
 
@@ -1080,7 +976,6 @@ end
     @power focuses_on $conflict PowerRelations
     @competition sees $conflict ResourceCompetition
     @change views_as $change EngineOfChange
-    @chain Implies (And $conflict $inequality $power) $competition
     return $chain
 end
 
@@ -1090,7 +985,6 @@ end
     @proletariat between $classconflict WorkingClass
     @struggle characterized_by $classconflict ClassStruggle
     @marx theorized_by $classconflict Marx
-    @chain Implies (And $classconflict $bourgeoisie $proletariat) $struggle
     return $chain
 end
 
@@ -1100,7 +994,6 @@ end
     @domination examines $genderconflict MaleDomination
     @feminism associated_with $genderconflict FeministTheory
     @inequality addresses $genderconflict GenderInequality
-    @chain Implies (And $genderconflict $patriarchy) $domination
     return $chain
 end
 
@@ -1110,7 +1003,6 @@ end
     @interaction emphasizes $symbolic SocialInteraction
     @meaning analyzes $symbolic MeaningConstruction
     @micro isA $symbolic MicroLevel
-    @chain Implies (And $symbolic $symbols $interaction) $meaning
     return $chain
 end
 
@@ -1120,7 +1012,6 @@ end
     @interpretation involves $definition Interpretation
     @reality constructs $definition SocialReality
     @thomas theorem $definition ThomasTheorem
-    @chain Implies (And $definition $perception $interpretation) $reality
     return $chain
 end
 
@@ -1130,7 +1021,6 @@ end
     @frontstage includes $dramaturgy FrontStage
     @backstage includes $dramaturgy BackStage
     @goffman developed_by $dramaturgy Goffman
-    @chain Implies (And $dramaturgy $performance $frontstage) $backstage
     return $chain
 end
 
@@ -1140,7 +1030,6 @@ end
     @presentation manages $impression SelfPresentation
     @self constructs $impression PublicSelf
     @strategic characterized_by $impression StrategicBehavior
-    @chain Implies (And $impression $control) $presentation
     return $chain
 end
 
@@ -1150,7 +1039,6 @@ end
     @costs analyzes $exchange Costs
     @rational assumes $exchange RationalActors
     @maximization predicts $exchange RewardMaximization
-    @chain Implies (And $exchange $rewards $costs) $rational
     return $chain
 end
 
@@ -1160,7 +1048,6 @@ end
     @patriarchy critiques $feminist Patriarchy
     @equality advocates $feminist GenderEquality
     @intersectionality recognizes $feminist Intersectionality
-    @chain Implies (And $feminist $gender $patriarchy) $equality
     return $chain
 end
 
@@ -1170,7 +1057,6 @@ end
     @racism examines $crt StructuralRacism
     @power focuses_on $crt PowerInequality
     @justice advocates $crt RacialJustice
-    @chain Implies (And $crt $race $racism) $power
     return $chain
 end
 
@@ -1180,7 +1066,6 @@ end
     @plurality recognizes $postmodern Plurality
     @deconstruction uses $postmodern Deconstruction
     @metanarratives rejects $postmodern GrandNarratives
-    @chain Implies (And $postmodern $fragmentation) $plurality
     return $chain
 end
 
@@ -1194,7 +1079,6 @@ end
     @constructed socially_constructed $race RacialCategories
     @physical based_on $race PhysicalCharacteristics
     @arbitrary isA $race ArbitraryClassification
-    @chain Implies (And $race $social) $constructed
     return $chain
 end
 
@@ -1204,7 +1088,6 @@ end
     @shared shares $ethnicity CommonAncestry
     @heritage maintains $ethnicity CulturalHeritage
     @identity creates $ethnicity EthnicIdentity
-    @chain Implies (And $ethnicity $cultural $shared) $heritage
     return $chain
 end
 
@@ -1214,7 +1097,6 @@ end
     @discrimination practices $racism Discrimination
     @power combined_with $racism Power
     @structural can_be $racism StructuralRacism
-    @chain Implies (And $racism $prejudice $discrimination) $power
     return $chain
 end
 
@@ -1224,7 +1106,6 @@ end
     @attitudes involves $individual PrejudicedAttitudes
     @behaviors involves $individual DiscriminatoryBehaviors
     @interpersonal occurs_in $individual InterpersonalInteraction
-    @chain Implies (And $individual $personal $attitudes) $behaviors
     return $chain
 end
 
@@ -1234,7 +1115,6 @@ end
     @policies embedded_in $institutional Policies
     @embedded embedded_in $institutional Institutions
     @subtle often_characterized $institutional Subtle
-    @chain Implies (And $institutional $systemic $policies) $embedded
     return $chain
 end
 
@@ -1244,7 +1124,6 @@ end
     @judgment involves $prejudice Prejudgment
     @stereotypes based_on $prejudice Stereotypes
     @negative often_characterized $prejudice Negative
-    @chain Implies (And $prejudice $attitude $judgment) $stereotypes
     return $chain
 end
 
@@ -1254,7 +1133,6 @@ end
     @treatment involves $discrimination UnequalTreatment
     @unequal results_in $discrimination UnequalOutcomes
     @intentional can_be $discrimination IntentionalOrUnintentional
-    @chain Implies (And $discrimination $action) $treatment
     return $chain
 end
 
@@ -1264,7 +1142,6 @@ end
     @physical can_be $segregation PhysicalSeparation
     @social can_be $social SocialSeparation
     @dejure types $segregation DeJureDeFacto
-    @chain Implies (And $segregation $separation) $physical
     return $chain
 end
 
@@ -1274,7 +1151,6 @@ end
     @absorption leads_to $assimilation Absorption
     @mainstream into $assimilation MainstreamCulture
     @identity affects $assimilation MinorityIdentity
-    @chain Implies (And $assimilation $adoption $absorption) $mainstream
     return $chain
 end
 
@@ -1284,7 +1160,6 @@ end
     @coexistence promotes $pluralism PeacefulCoexistence
     @equality emphasizes $pluralism Equality
     @multiculturalism form_of $pluralism Multiculturalism
-    @chain Implies (And $pluralism $diversity $coexistence) $equality
     return $chain
 end
 
@@ -1294,7 +1169,6 @@ end
     @power lacks $minority SocialPower
     @discrimination experiences $minority Discrimination
     @distinctive has $minority DistinctiveCharacteristics
-    @chain Implies (And $minority $subordinate) $discrimination
     return $chain
 end
 
@@ -1308,7 +1182,6 @@ end
     @constructed socially_constructed $gender GenderRoles
     @roles includes $gender GenderExpectations
     @binary often_viewed $gender BinaryConstruction
-    @chain Implies (And $gender $social) $constructed
     return $chain
 end
 
@@ -1318,7 +1191,6 @@ end
     @physical includes $sex PhysicalCharacteristics
     @chromosomal determined_by $sex ChromosomalPatterns
     @distinct distinct_from $sex Gender
-    @chain Implies (And $sex $biological) $physical
     return $chain
 end
 
@@ -1328,7 +1200,6 @@ end
     @behaviors prescribes $roles AppropriateBehaviors
     @norms based_on $roles GenderNorms
     @learned acquired_through $roles Socialization
-    @chain Implies (And $roles $expectations) $behaviors
     return $chain
 end
 
@@ -1338,7 +1209,6 @@ end
     @inequality produces $genderstrat GenderInequality
     @power unequal_distribution $genderstrat Power
     @patriarchy form_of $genderstrat Patriarchy
-    @chain Implies (And $genderstrat $hierarchy) $inequality
     return $chain
 end
 
@@ -1348,7 +1218,6 @@ end
     @dominance characterized_by $patriarchy MaleAuthority
     @control exercises $patriarchy ControlOverWomen
     @institutional embedded_in $patriarchy Institutions
-    @chain Implies (And $patriarchy $male) $dominance
     return $chain
 end
 
@@ -1358,7 +1227,6 @@ end
     @discrimination practices $sexism GenderDiscrimination
     @gender based_on $gender Gender
     @institutional can_be $sexism InstitutionalSexism
-    @chain Implies (And $sexism $prejudice) $discrimination
     return $chain
 end
 
@@ -1368,7 +1236,6 @@ end
     @movement isA $feminism SocialMovement
     @empowerment seeks $feminism WomenEmpowerment
     @waves has $feminism FeministWaves
-    @chain Implies (And $feminism $equality) $empowerment
     return $chain
 end
 
@@ -1378,7 +1245,6 @@ end
     @identity forms $orientation SexualIdentity
     @expression manifests_in $orientation SexualExpression
     @spectrum exists_on $orientation Spectrum
-    @chain Implies (And $orientation $attraction) $identity
     return $chain
 end
 
@@ -1388,7 +1254,6 @@ end
     @normal treats_as $heteronormativity Normal
     @privileged privileges $heteronormativity Heterosexuality
     @marginalizes marginalizes $heteronormativity OtherOrientations
-    @chain Implies (And $heteronormativity $heterosexual) $privileged
     return $chain
 end
 
@@ -1398,7 +1263,6 @@ end
     @identification involves $identity GenderIdentification
     @expression manifests_in $identity GenderExpression
     @cisgender types $identity CisgenderTransgender
-    @chain Implies (And $identity $self) $identification
     return $chain
 end
 
@@ -1412,7 +1276,6 @@ end
     @efficiency increases $division Efficiency
     @interdependence produces $interdependence SocialInterdependence
     @durkheim theorized_by $division Durkheim
-    @chain Implies (And $division $specialization $efficiency) $interdependence
     return $chain
 end
 
@@ -1422,7 +1285,6 @@ end
     @powerlessness experiences $alienation Powerlessness
     @estrangement feels $alienation Estrangement
     @marx theorized_by $alienation Marx
-    @chain Implies (And $alienation $separation) $powerlessness
     return $chain
 end
 
@@ -1432,7 +1294,6 @@ end
     @rational basedOn $bureaucracy RationalPrinciples
     @hierarchy has $bureaucracy Hierarchy
     @weber theorized_by $bureaucracy Weber
-    @chain Implies (And $bureaucracy $formal $rational) $hierarchy
     return $chain
 end
 
@@ -1442,7 +1303,6 @@ end
     @calculation basedOn $rationalization Calculation
     @impersonal characterized_by $rationalization Impersonality
     @modern characterizes $rationalization ModernSociety
-    @chain Implies (And $rationalization $efficiency) $calculation
     return $chain
 end
 
@@ -1452,7 +1312,6 @@ end
     @calculability emphasizes $mcdonaldization Calculability
     @predictability emphasizes $predictability Predictability
     @control emphasizes $mcdonaldization Control
-    @chain Implies (And $mcdonaldization $efficiency $calculability) $predictability
     return $chain
 end
 
@@ -1462,7 +1321,6 @@ end
     @ranking involves $prestige OccupationRanking
     @evaluation based_on $evaluation SocialEvaluation
     @stratification relates_to $prestige SocialStratification
-    @chain Implies (And $prestige $status) $ranking
     return $chain
 end
 
@@ -1472,7 +1330,6 @@ end
     @demand includes $labormarket LaborDemand
     @employment determines $labormarket Employment
     @segmentation features $labormarket Segmentation
-    @chain Implies (And $labormarket $supply $demand) $employment
     return $chain
 end
 
@@ -1482,7 +1339,6 @@ end
     @economic has $economic EconomicConsequences
     @social has $social SocialConsequences
     @types has $unemployment UnemploymentTypes
-    @chain Implies (And $unemployment $joblessness) $economic
     return $chain
 end
 
@@ -1492,7 +1348,6 @@ end
     @trade increases $globalized InternationalTrade
     @corporations dominated_by $globalized Multinationals
     @inequality affects $inequality GlobalInequality
-    @chain Implies (And $globalized $integration $trade) $corporations
     return $chain
 end
 
@@ -1506,7 +1361,6 @@ end
     @composition has $composition DemographicComposition
     @distribution has $distribution GeographicDistribution
     @change undergoes $population PopulationChange
-    @chain Implies (And $population $size $composition) $distribution
     return $chain
 end
 
@@ -1516,7 +1370,6 @@ end
     @mortality changes $mortality MortalityRates
     @fertility changes $fertility FertilityRates
     @growth affects $growth PopulationGrowth
-    @chain Implies (And $transition $stages $mortality) $fertility
     return $chain
 end
 
@@ -1526,7 +1379,6 @@ end
     @women per $women Women
     @reproduction indicates $reproduction ReproductionLevel
     @factors influenced_by $factors SocialFactors
-    @chain Implies (And $fertility $births) $women
     return $chain
 end
 
@@ -1536,7 +1388,6 @@ end
     @population per $population Population
     @health indicates $health HealthConditions
     @life affects $life LifeExpectancy
-    @chain Implies (And $mortality $deaths) $population
     return $chain
 end
 
@@ -1546,7 +1397,6 @@ end
     @population of $population Population
     @geographic across $geographic GeographicBoundaries
     @types has $types MigrationTypes
-    @chain Implies (And $migration $movement) $geographic
     return $chain
 end
 
@@ -1556,7 +1406,6 @@ end
     @destination into $destination DestinationCountry
     @integration requires $integration SocialIntegration
     @policy governed_by $policy ImmigrationPolicy
-    @chain Implies (And $immigration $entry $destination) $integration
     return $chain
 end
 
@@ -1566,7 +1415,6 @@ end
     @origin from $origin OriginCountry
     @push driven_by $push PushFactors
     @pull driven_by $pull PullFactors
-    @chain Implies (And $emigration $departure) $origin
     return $chain
 end
 
@@ -1576,7 +1424,6 @@ end
     @birth affected_by $birth BirthRates
     @death affected_by $death DeathRates
     @exponential can_be $exponential ExponentialGrowth
-    @chain Implies (And $growth $birth $death) $increase
     return $chain
 end
 
@@ -1586,7 +1433,6 @@ end
     @resources strains $resources Resources
     @sustainability threatens $sustainability EnvironmentalSustainability
     @malthus theorized_by $malthus Malthus
-    @chain Implies (And $overpopulation $excess $resources) $sustainability
     return $chain
 end
 
@@ -1600,7 +1446,6 @@ end
     @environment studies $environment Environment
     @interaction analyzes $interaction SocietyEnvironmentInteraction
     @sustainability concerns $sustainability Sustainability
-    @chain Implies (And $environmental $society $environment) $interaction
     return $chain
 end
 
@@ -1610,7 +1455,6 @@ end
     @resources depletes $resources NaturalResources
     @impact indicates $impact EnvironmentalImpact
     @unsustainable often_characterized $unsustainable Unsustainable
-    @chain Implies (And $footprint $consumption) $resources
     return $chain
 end
 
@@ -1620,7 +1464,6 @@ end
     @pollution exposes_to $pollution EnvironmentalPollution
     @inequality form_of $inequality EnvironmentalInequality
     @justice concerns $justice EnvironmentalJustice
-    @chain Implies (And $envracism $minorities $pollution) $inequality
     return $chain
 end
 
@@ -1630,7 +1473,6 @@ end
     @social balances $social SocialEquity
     @environmental balances $environmental EnvironmentalProtection
     @future considers $future FutureGenerations
-    @chain Implies (And $sustainable $economic $social) $environmental
     return $chain
 end
 
@@ -1640,6 +1482,5 @@ end
     @warming causes $warming EnvironmentalChanges
     @social has $social SocialConsequences
     @inequality exacerbates $inequality GlobalInequality
-    @chain Implies (And $climate $global $warming) $social
     return $chain
 end

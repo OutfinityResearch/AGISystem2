@@ -5,7 +5,6 @@
     @bind requires LowerCourt $JudicialPrecedent
     @case applies Judge $CaseBasedReasoning
     @auth creates $prec $BindingAuthority
-    @doctrine Implies (And $prec $case) StarDecisis
     return $doctrine
 end
 
@@ -14,7 +13,6 @@ end
     @interp applies Judge $StatutoryInterpretation
     @supreme establishes Constitution $LegislativeSupremacy
     @limit restricts $supreme JudicialReview
-    @system Implies (And $code $interp) CivilLawJurisdiction
     return $system
 end
 
@@ -23,7 +21,6 @@ end
     @auth interprets ScholarCouncil $ReligiousText
     @binding creates $auth $InterpretativeAuthority
     @apply enforces ReligiousCourt $binding
-    @system Implies (And $text $auth) ReligiousLegalSystem
     return $system
 end
 
@@ -32,7 +29,6 @@ end
     @civil incorporates System $CivilLawElement
     @custom recognizes System $CustomaryLaw
     @blend combines (And $common $civil) MixedJurisdiction
-    @pluralism Implies (And $blend $custom) LegalPluralism
     return $pluralism
 end
 
@@ -41,7 +37,6 @@ end
     @conflict contradicts Statute $Constitution
     @review exercises Court $JudicialReview
     @invalid declares $review $StatuteInvalidity
-    @hierarchy Implies (And $supreme $conflict) $invalid
     return $hierarchy
 end
 
@@ -70,7 +65,6 @@ end
     @terms contains Offer $OfferTerms
     @match mirrors $acc $terms
     @exact requires CommonLaw $ExactMatch
-    @valid Implies (And $acc $match) ValidAcceptance
     return $valid
 end
 
@@ -79,7 +73,6 @@ end
     @disp mails Offeree $Dispatch
     @effect determines $disp $EffectiveDate
     @binding becomes Contract $effect
-    @rule Implies (And $acc $disp) AcceptanceOnDispatch
     return $rule
 end
 
@@ -97,7 +90,6 @@ end
     @promise makes Promisor AfterAction
     @invalid lacks $past $NoConsideration
     @unenf determines Court $Unenforceable
-    @rule Implies (And $past $promise) $unenf
     return $rule
 end
 
@@ -106,7 +98,6 @@ end
     @rely acts Promisee $ReasonableReliance
     @change detrimentally $rely ChangePosition
     @inj prevents Court $Injustice
-    @enforce Implies (And $prom (And $rely $inj)) EnforceableWithoutConsideration
     return $enforce
 end
 
@@ -115,7 +106,6 @@ end
     @escape retains Promisor UnlimitedDiscretion
     @invalid lacks $escape $NoRealObligation
     @fails constitutes $invalid $InvalidConsideration
-    @unenf Implies (And $appear $escape) UnenforcedContract
     return $unenf
 end
 
@@ -124,7 +114,6 @@ end
     @cons pays Offeree $Consideration
     @time specifies Agreement $TimeLimit
     @irrev creates (And $prom $cons) IrrevocableOffer
-    @binding Implies (And $irrev $time) BindingOption
     return $binding
 end
 
@@ -133,7 +122,6 @@ end
     @writ signs Merchant $WrittenAssurance
     @open promises $writ KeepOpenOffer
     @ucc governs UCC2_205 GoodsSale
-    @irrev Implies (And $merch (And $writ $ucc)) IrrevocableWithoutConsideration
     return $irrev
 end
 
@@ -144,7 +132,6 @@ end
     @material concerns $mistake $MaterialFact
     @basis forms $material ContractBasis
     @void allows Court $ContractVoidable
-    @remedy Implies (And $mistake $material) Rescission
     return $remedy
 end
 
@@ -153,7 +140,6 @@ end
     @knows aware Party2 $mistake
     @unfair constitutes $knows $Unconscionable
     @void allows Court VoidableByMistaken
-    @remedy Implies (And $mistake (And $knows $unfair)) RescissionAvailable
     return $remedy
 end
 
@@ -163,7 +149,6 @@ end
     @intent has Party1 $IntentToDeceive
     @rely acts Party2 $ReasonableReliance
     @fraud constitutes (And $false (And $material $intent)) Fraud
-    @void Implies (And $fraud $rely) VoidableContract
     return $void
 end
 
@@ -173,7 +158,6 @@ end
     @material concerns $false $MaterialFact
     @rely acts OtherParty $Reliance
     @misrep constitutes (And $false $material) InnocentMisrepresentation
-    @remedy Implies (And $misrep $rely) RescissionOnly
     return $remedy
 end
 
@@ -182,7 +166,6 @@ end
     @corner leaves Party2 $NoReasonableAlternative
     @consent gives Party2 $InvoluntaryConsent
     @duress constitutes (And $threat $corner) Duress
-    @void Implies (And $duress $consent) VoidableContract
     return $void
 end
 
@@ -218,7 +201,6 @@ end
     @contract enters $incomp Agreement
     @understand cannot $incomp $UnderstandsNature
     @adjud determines Court AdjudicatedIncompetent
-    @void Implies (And $incomp $adjud) VoidContract
     return $void
 end
 
@@ -227,7 +209,6 @@ end
     @contract enters $intox Agreement
     @understand cannot $intox $UnderstandsTransaction
     @know aware OtherParty $intox
-    @void Implies (And $intox (And $understand $know)) VoidableContract
     return $void
 end
 
@@ -247,7 +228,6 @@ end
     @sale transfers $land Ownership
     @writing requires SOF $WritingRequired
     @essential contains $writing EssentialTerms
-    @enforce Implies (And $land (And $sale $writing)) EnforceableIfWritten
     return $enforce
 end
 
@@ -256,7 +236,6 @@ end
     @impossible is $perf $PerformanceImpossible
     @year exceeds $impossible $WithinOneYear
     @writing requires SOF $WritingRequired
-    @enforce Implies (And $perf $year) MustBeWritten
     return $enforce
 end
 
@@ -265,7 +244,6 @@ end
     @price exceeds $goods $GoodsOver500
     @ucc governs UCC2_201 $goods
     @writing requires $ucc $WritingRequired
-    @enforce Implies (And $goods $price) MustBeWritten
     return $enforce
 end
 
@@ -274,7 +252,6 @@ end
     @confirm sends Party1 $WrittenConfirmation
     @receive gets Party2 $confirm
     @object fails Party2 WithinTenDays
-    @satisfy Implies (And $merch (And $confirm $object)) SatisfiesSOF
     return $satisfy
 end
 
@@ -284,7 +261,6 @@ end
     @possess takes Buyer Possession
     @improve makes Buyer Improvements
     @except creates (And $perf (And $possess $improve)) $SOFException
-    @enforce Implies (And $land $except) EnforceableWithoutWriting
     return $enforce
 end
 
@@ -295,7 +271,6 @@ end
     @plain applies Court $OrdinaryMeaning
     @exclude bars Court $NoExtrinsicEvidence
     @interp uses $plain TextualInterpretation
-    @rule Implies (And $lang $plain) StrictTextualReading
     return $rule
 end
 
@@ -304,7 +279,6 @@ end
     @allow admits Court $ExtrinsicEvidence
     @intent seeks Court $PartyIntent
     @construe interprets Court AgainstDrafter
-    @resolve Implies (And $ambig $allow) ContextualInterpretation
     return $resolve
 end
 
@@ -313,7 +287,6 @@ end
     @prior exists $PriorNegotiations
     @merge contains $integ MergerClause
     @exclude bars Court $prior
-    @rule Implies (And $integ $merge) NoExtrinsicTerms
     return $rule
 end
 
@@ -322,7 +295,6 @@ end
     @evidence offers Party $ExtrinsicEvidence
     @except allows Court DefenseEvidence
     @admit determines Court $Admissible
-    @rule Implies (And $fraud $evidence) PEREException
     return $rule
 end
 
@@ -331,7 +303,6 @@ end
     @perform acts Party SpecificWay
     @accept tolerates OtherParty $AcceptedWithoutObjection
     @interp informs $accept $ContractInterpretation
-    @rule Implies (And $repeat (And $perform $accept)) EstablishedMeaning
     return $rule
 end
 
@@ -340,7 +311,6 @@ end
     @same are $prior $SameParties
     @pattern establishes $prior TradePractice
     @aid uses Court $pattern
-    @rule Implies (And $prior $same) InformsCurrentContract
     return $rule
 end
 
@@ -349,7 +319,6 @@ end
     @expect have Parties $ReasonableExpectation
     @imply incorporates Contract $ImpliedTerm
     @usage informs $custom ContractMeaning
-    @rule Implies (And $custom $expect) ImpliedByUsage
     return $rule
 end
 
@@ -360,7 +329,6 @@ end
     @essence concerns $fail $GoesToEssence
     @substantial is $fail MaterialBreach
     @discharge releases OtherParty PerformanceObligation
-    @remedy Implies (And $fail $essence) ImmediateSuit
     return $remedy
 end
 
@@ -369,7 +337,6 @@ end
     @minor is $fail MinorBreach
     @continue must NonBreaching PerformOwn
     @damages entitled NonBreaching $DamagesOnly
-    @rule Implies (And $fail $minor) NoDischarge
     return $rule
 end
 
@@ -379,7 +346,6 @@ end
     @repud constitutes $refuse AnticBreach
     @immediate allows OtherParty $ImmediateRemedy
     @suspend may OtherParty SuspendPerformance
-    @rule Implies (And $refuse $before) ImmediateCauseOfAction
     return $rule
 end
 
@@ -388,7 +354,6 @@ end
     @request demands Party $RequestAssurance
     @fail refuses OtherParty Assurance
     @ucc governs UCC2_609 Transaction
-    @treat Implies (And $concern (And $request $fail)) AnticRepudiation
     return $treat
 end
 
@@ -397,7 +362,6 @@ end
     @minor has $perf $MinorDeviations
     @essential is $perf $EssentiallyCompleted
     @recover entitled Performer PaymentMinusDamages
-    @rule Implies (And $perf (And $minor $essential)) SubstantialPerformanceDoctrine
     return $rule
 end
 
@@ -406,7 +370,6 @@ end
     @conform requires UCC $ExactConformity
     @deviate fails Seller PerfectTender
     @reject may Buyer $RejectionRight
-    @rule Implies (And $goods $deviate) BuyerMayReject
     return $rule
 end
 
@@ -416,7 +379,6 @@ end
     @time has Contract $TimeRemaining
     @notice gives Seller PromptNotice
     @cure may Seller $OpportunityToCure
-    @rule Implies (And $nonconf (And $reject $time)) SellerCanCure
     return $rule
 end
 
@@ -425,7 +387,6 @@ end
     @impair has Delivery $SubstantialImpairment
     @whole affects $impair WholeContract
     @limit restricts UCC $RejectionLimited
-    @rule Implies (And $install $impair) LimitedRejectionRight
     return $rule
 end
 
@@ -436,7 +397,6 @@ end
     @before requires $event $BeforePerformanceDue
     @trigger creates $event PerformanceObligation
     @fail means NonOccurrence $NoOccurrenceNoObligation
-    @rule Implies (And $event $before) ConditionalDuty
     return $rule
 end
 
@@ -445,7 +405,6 @@ end
     @discharge terminates $event $DischargesObligation
     @excuse releases Party $PerformanceExcused
     @cease ends DutyToPerform $event
-    @rule Implies (And $event $discharge) ObligationEnds
     return $rule
 end
 
@@ -454,7 +413,6 @@ end
     @strict requires Law $StrictCompliance
     @no bars Court $NoSubstantialPerformance
     @literal demands $express ExactFulfillment
-    @rule Implies (And $express $strict) MustBeLiterallyFulfilled
     return $rule
 end
 
@@ -463,7 +421,6 @@ end
     @order determines $imply $OrderOfPerformance
     @fair ensures $order $Fairness
     @sequence establishes $fair ProperSequence
-    @rule Implies (And $imply $order) JudiciallyImposed
     return $rule
 end
 
@@ -472,7 +429,6 @@ end
     @mutual involves $simul $MutualExchange
     @tender must Party $TenderRequired
     @ready must BothParties ReadyToPerform
-    @rule Implies (And $simul $mutual) BothMustTender
     return $rule
 end
 
@@ -481,7 +437,6 @@ end
     @honest must Party $HonestDissatisfaction
     @subjective allows $satis $Subjective
     @good requires Law GoodFaith
-    @rule Implies (And $satis $honest) SubjectiveStandard
     return $rule
 end
 
@@ -502,7 +457,6 @@ end
     @expect entitled NonBreaching $BenefitOfBargain
     @position restores Damages $PutInPosition
     @if calculates Court $AsIfPerformed
-    @rule Implies (And $breach $expect) ExpectancyMeasure
     return $rule
 end
 
@@ -511,7 +465,6 @@ end
     @foresee were Damages $ForeseeableDamages
     @certain proves Party $ReasonablyCertain
     @compensate awards Court MoneyDamages
-    @rule Implies (And $loss (And $foresee $certain)) CompensatoryAward
     return $rule
 end
 
@@ -520,7 +473,6 @@ end
     @special are $indirect $SpecialDamages
     @foresee knew Breacher AtContractTime
     @consequential awards Court $special
-    @rule Implies (And $indirect (And $special $foresee)) ConsequentialAward
     return $rule
 end
 
@@ -538,7 +490,6 @@ end
     @efforts makes NonBreaching $ReasonableEfforts
     @avoid must NonBreaching $AvoidableLosses
     @reduce decreases AvoidedLosses RecoverableDamages
-    @rule Implies (And $duty $efforts) MitigationRequired
     return $rule
 end
 
@@ -547,7 +498,6 @@ end
     @restore puts Damages $RestorePosition
     @before returns Party PreContractState
     @alternative is $rely AlternativeMeasure
-    @rule Implies (And $rely $restore) RelianceRecovery
     return $rule
 end
 
@@ -556,7 +506,6 @@ end
     @confer provides OtherParty $ValueConferred
     @return awards Court $ReturnBenefit
     @quasi creates Law QuasiContract
-    @rule Implies (And $enrich $confer) RestitutionaryRecovery
     return $rule
 end
 
@@ -565,7 +514,6 @@ end
     @reason is $pre $ReasonableAtFormation
     @difficult are ActualDamages HardToProve
     @not verifies Court $NotPenalty
-    @enforce Implies (And $pre (And $reason $not)) EnforceLiquidated
     return $enforce
 end
 
@@ -574,7 +522,6 @@ end
     @punish has Clause $PunishPurpose
     @penalty determines Court PenaltyClause
     @void strikes Court $Unenforceable
-    @rule Implies (And $excess $punish) PenaltyNotEnforced
     return $rule
 end
 
@@ -583,7 +530,6 @@ end
     @no suffers Plaintiff $NoActualLoss
     @token awards Court $TokenAmount
     @vindicate recognizes Court LegalRight
-    @rule Implies (And $breach $no) NominalAward
     return $rule
 end
 
@@ -592,7 +538,6 @@ end
     @punish seeks Court $PunishDeter
     @rare are $punish $RareInContract
     @tort requires Usually TortiousConduct
-    @rule Implies (And $outrage $tort) PunitivePossible
     return $rule
 end
 
@@ -603,7 +548,6 @@ end
     @inadequate are MoneyDamages $InadequateLegalRemedy
     @land is $unique RealProperty
     @order grants Court $CourtOrders
-    @equit Implies (And $unique $inadequate) SpecificPerformance
     return $equit
 end
 
@@ -612,7 +556,6 @@ end
     @prohibit forbids $negative $ProhibitedAct
     @breach violates Party $negative
     @enjoin orders Court $CourtProhibits
-    @rule Implies (And $negative $breach) InjunctiveRelief
     return $rule
 end
 
@@ -621,7 +564,6 @@ end
     @restore seeks Party $RestoreStatus
     @return requires BothParties $StatusQuoAnte
     @cancel grants Court Cancellation
-    @rule Implies (And $void $restore) RescissionGranted
     return $rule
 end
 
@@ -630,7 +572,6 @@ end
     @true proves Party $TrueAgreement
     @differ differs Writing OralAgreement
     @rewrite orders Court $RewriteContract
-    @rule Implies (And $error $true) ReformationGranted
     return $rule
 end
 
@@ -639,7 +580,6 @@ end
     @determine seeks Party $JudicialDetermination
     @no requests Party $NoMoneyDamages
     @declare issues Court Declaration
-    @rule Implies (And $uncertain $determine) DeclaratoryRelief
     return $rule
 end
 
@@ -650,7 +590,6 @@ end
     @benefit flows Performance ThirdParty
     @rights has ThirdParty $ContractRights
     @sue may ThirdParty $CanSue
-    @rule Implies (And $intend $benefit) ThirdPartyRights
     return $rule
 end
 
@@ -659,7 +598,6 @@ end
     @promise makes Promisor $PromiseToPayDebt
     @creditor is ThirdParty Creditor
     @enforce may $creditor $Enforce
-    @rule Implies (And $debt $promise) CreditorBeneficiary
     return $rule
 end
 
@@ -668,7 +606,6 @@ end
     @intend names Promisee $IntendedDonee
     @benefit confers Promise GiftValue
     @enforce may Donee Contract
-    @rule Implies (And $gift $intend) DoneeBeneficiary
     return $rule
 end
 
@@ -677,7 +614,6 @@ end
     @no has ThirdParty $NoContractRights
     @cannot lacks ThirdParty StandingToSue
     @incidental is ThirdParty IncidentalOnly
-    @rule Implies (And $unintend $no) NoEnforcementRight
     return $rule
 end
 
@@ -686,7 +622,6 @@ end
     @assignee receives $transfer ContractRights
     @notify informs Assignee $ObligorNotification
     @obligor must ObligorPayee PerformToAssignee
-    @rule Implies (And $transfer $notify) ValidAssignment
     return $rule
 end
 
@@ -695,7 +630,6 @@ end
     @delegatee assumes $transfer PerformanceObligation
     @remain stays Delegator $RemainLiable
     @consent requires PersonalService ObligeeConsent
-    @rule Implies (And $transfer $delegatee) ValidDelegation
     return $rule
 end
 
@@ -705,7 +639,6 @@ end
     @breach violates $assign Clause
     @valid is $assign $ValidTransfer
     @remedy limited Obligor DamagesOnly
-    @rule Implies (And $prohibit $assign) $BreachNotVoid
     return $rule
 end
 
@@ -716,7 +649,6 @@ end
     @unforeseen occurs $UnforeseenEvent AfterFormation
     @no exists NoPartyFault
     @excuse discharges Court $PerformanceExcused
-    @rule Implies (And $impossible (And $unforeseen $no)) DischargeByImpossibility
     return $rule
 end
 
@@ -725,7 +657,6 @@ end
     @unforeseen arises $UnforeseenCircumstance
     @basic contradicts Event BasicAssumption
     @excuse may Court $ExcusePerformance
-    @rule Implies (And $extreme (And $unforeseen $basic)) UCCImpracticability
     return $rule
 end
 
@@ -735,7 +666,6 @@ end
     @destroy frustrates $unforeseen $purpose
     @value eliminates $destroy ContractValue
     @excuse discharges Court Performance
-    @rule Implies (And $purpose (And $unforeseen $destroy)) FrustrationDoctrine
     return $rule
 end
 
@@ -744,7 +674,6 @@ end
     @consent give BothParties $BothPartiesConsent
     @discharge releases Agreement $DischargesObligations
     @new constitutes $agree NewContract
-    @rule Implies (And $agree $consent) MutualRescission
     return $rule
 end
 
@@ -753,7 +682,6 @@ end
     @accord reach Parties $AgreementToSettle
     @perform completes Debtor $PerformanceOfAccord
     @satisfy discharges $perform OriginalClaim
-    @rule Implies (And $dispute (And $accord $perform)) AccordSatisfaction
     return $rule
 end
 
@@ -762,7 +690,6 @@ end
     @substitute agrees $new $SubstitutePerformance
     @discharge releases Agreement OriginalParty
     @intent require AllParties IntentToDischarge
-    @rule Implies (And $new (And $substitute $intent)) NovationOccurs
     return $rule
 end
 
@@ -771,7 +698,6 @@ end
     @mutual have Parties $MutualConsent
     @cons requires CommonLaw $ConsiderationRequired
     @no requires UCC NoConsideration
-    @valid Implies (And $change (Or $cons $no)) ValidModification
     return $valid
 end
 
@@ -793,7 +719,6 @@ end
     @trial sits $TrialCourt FirstLevel
     @bind establishes $supreme PrecedentForAll
     @review hears $appeal AppealsFrom
-    @hier Implies (And $supreme (And $appeal $trial)) JudicialHierarchy
     return $hier
 end
 
@@ -802,7 +727,6 @@ end
     @type involves Case $CaseType
     @grant authorizes Constitution $ConstitutionalGrant
     @match determines $power $type
-    @jurisdiction Implies (And $grant $match) SubjectMatterJurisdiction
     return $jurisdiction
 end
 
@@ -811,7 +735,6 @@ end
     @forum with $contact $ForumState
     @fair satisfies $contact $FairPlay
     @due meets Exercise DueProcess
-    @jurisdiction Implies (And $contact (And $forum $fair)) PersonalJurisdiction
     return $jurisdiction
 end
 
@@ -820,7 +743,6 @@ end
     @amount exceeds Claim $AmountInControversy
     @threshold is $amount Over75000
     @federal has $FederalCourt Jurisdiction
-    @rule Implies (And $diverse $threshold) DiversityJurisdiction
     return $rule
 end
 
@@ -829,7 +751,6 @@ end
     @plead appears $arise $WellPlead
     @complaint states $plead Complaint
     @federal has Court $FederalJurisdiction
-    @rule Implies (And $arise $plead) FedQuestionJurisdiction
     return $rule
 end
 
@@ -847,7 +768,6 @@ end
     @cause links Defendant $injury
     @redress can Court $Redressability
     @standing has Plaintiff ConstitutionalStanding
-    @rule Implies (And $injury (And $cause $redress)) ProperStanding
     return $rule
 end
 
@@ -856,7 +776,6 @@ end
     @ripe is Case $Ripeness
     @not is Case $Mootness
     @just determines Court $Justiciability
-    @rule Implies (And $actual (And $ripe (Not $not))) JusticiableCase
     return $rule
 end
 
@@ -865,7 +784,6 @@ end
     @appeal has Party $AppealRight
     @review conducts AppellateCourt DeNovoLaw
     @defer shows AppellateCourt ClearErrorFact
-    @standard Implies (And $final $appeal) AppellateJurisdiction
     return $standard
 end
 
@@ -874,7 +792,6 @@ end
     @supreme receives $SupremeCourt Petition
     @four vote Justices $RuleOfFour
     @grant issues Court CertGranted
-    @discretion Implies (And $petition $four) CertiorariJurisdiction
     return $discretion
 end
 
@@ -885,7 +802,6 @@ end
     @standard requires Civil $PreponderanceEvidence
     @prove must Plaintiff $ProveElements
     @more shows Evidence MoreLikelyThanNot
-    @satisfy Implies (And $burden (And $standard $more)) MeetsBurden
     return $satisfy
 end
 
@@ -894,7 +810,6 @@ end
     @material concerns $MaterialFact Case
     @judgment grants Court $JudgmentAsLawMatter
     @evidence views Court LightFavorableNonmovant
-    @rule Implies (And $no $material) SummaryJudgmentGranted
     return $rule
 end
 
@@ -903,7 +818,6 @@ end
     @claim lacks Complaint $LegalClaim
     @accept assumes Court AllegationsTrue
     @dismiss grants Court $Rule12b6
-    @rule Implies (And $fail $claim) DismissalGranted
     return $rule
 end
 
@@ -912,7 +826,6 @@ end
     @not is Information $NotPrivileged
     @broad allows FRCP $BroadScope
     @proportional limits Discovery ProportionalityRequirement
-    @compel Implies (And $relevant $not) DiscoveryPermitted
     return $compel
 end
 
@@ -921,7 +834,6 @@ end
     @confid maintains Client $ConfidentialCommunication
     @attorney provides Attorney CounselCommunication
     @protect shields Privilege $confid
-    @rule Implies (And $advice (And $confid $attorney)) PrivilegeApplies
     return $rule
 end
 
@@ -930,7 +842,6 @@ end
     @mental contains $prep $MentalImpressions
     @qualified provides Doctrine $QualifiedProtection
     @substantial requires Override SubstantialNeed
-    @rule Implies (And $prep $mental) WorkProductProtection
     return $rule
 end
 
@@ -940,7 +851,6 @@ end
     @typical has Representative $Typicality
     @adequate provides Representative $AdequateRepresentation
     @certify grants Court ClassCertification
-    @rule Implies (And $numerous (And $common (And $typical $adequate))) Rule23Satisfied
     return $rule
 end
 
@@ -949,7 +859,6 @@ end
     @same involves $FinalJudgment $SameParties
     @claim arises Suit $SameClaim
     @precludes bars Doctrine $PrecludesRelitigation
-    @rule Implies (And $final (And $same $claim)) ClaimPreclusion
     return $rule
 end
 
@@ -958,7 +867,6 @@ end
     @necessary was $issue $NecessaryToDetermination
     @final resulted Litigation FinalJudgment
     @precludes bars Doctrine Relitigation
-    @rule Implies (And $issue (And $necessary $final)) $IssuePreclusion
     return $rule
 end
 
@@ -967,7 +875,6 @@ end
     @service effects Plaintiff $ProperService
     @entry obtains Plaintiff $EntryOfDefault
     @judgment grants Court DefaultJudgment
-    @rule Implies (And $fail (And $service $entry)) JudgmentByDefault
     return $rule
 end
 
@@ -996,7 +903,6 @@ end
     @public protects Law $PublicWelfare
     @statutory creates Legislature $StatutoryOffense
     @liable is Defendant LiableWithoutIntent
-    @rule Implies (And $no (And $public $statutory)) StrictLiabilityCrime
     return $rule
 end
 
@@ -1005,7 +911,6 @@ end
     @but applies Test $ButForTest
     @not occurs HarmNotWithout DefendantAct
     @factual proves $but $FactualCausation
-    @rule Implies (And $actual $but) ButForCausation
     return $rule
 end
 
@@ -1013,7 +918,6 @@ end
     @legal requires Law $LegalCause
     @foresee was Result $Foreseeability
     @intervene breaks $InterveningCause ChainCausation
-    @proximate Implies (And $legal (And $foresee (Not $intervene))) ProximateCausation
     return $proximate
 end
 
@@ -1024,7 +928,6 @@ end
     @malice has Defendant $Malice
     @afore demonstrates $malice $Aforethought
     @human is Victim $Human
-    @murder Implies (And $kill (And $malice $human)) MurderOffense
     return $murder
 end
 
@@ -1033,7 +936,6 @@ end
     @dangerous is Felony $DangerousFelony
     @no requires FMR $NoMaliceRequired
     @liable is Defendant FelonyMurderer
-    @rule Implies (And $death $dangerous) FelonyMurderRule
     return $rule
 end
 
@@ -1042,7 +944,6 @@ end
     @no lacks Defendant $NoMalice
     @heat acts Defendant $HeatOfPassion
     @adequate has Provocation AdequateProvocation
-    @voluntary Implies (And $kill (And $no $heat)) VoluntaryManslaughter
     return $voluntary
 end
 
@@ -1051,7 +952,6 @@ end
     @property is Object $PersonalProperty
     @intent has Defendant $IntentToDeprive
     @another owns VictimOwner Property
-    @larceny Implies (And $take (And $property $intent)) LarcenyOffense
     return $larceny
 end
 
@@ -1060,7 +960,6 @@ end
     @force uses Defendant $Force
     @intim uses Defendant $Intimidation
     @from takes Defendant $FromPerson
-    @robbery Implies (And $larceny (Or $force $intim)) RobberyOffense
     return $robbery
 end
 
@@ -1069,7 +968,6 @@ end
     @dwell is Structure $Dwelling
     @night occurs $break $Nighttime
     @intent has Defendant $IntentToCommitFelony
-    @burglary Implies (And $break (And $dwell (And $night $intent))) CommonLawBurglary
     return $burglary
 end
 
@@ -1087,7 +985,6 @@ end
     @force is $apply $Force
     @person receives Victim $ToPerson
     @harmful is Contact HarmfulOrOffensive
-    @battery Implies (And $apply (And $force $person)) BatteryOffense
     return $battery
 end
 
@@ -1096,7 +993,6 @@ end
     @no lacks Victim $WithoutConsent
     @force uses Defendant $ForceOrThreat
     @capacity lacks Victim CapacityToConsent
-    @rape Implies (And $intercourse (Or $no (Or $force $capacity))) RapeOffense
     return $rape
 end
 
@@ -1105,7 +1001,6 @@ end
     @unlawful is $confine $UnlawfulConfinement
     @move transports Defendant $Movement
     @asport demonstrates $move $Asportation
-    @kidnap Implies (And $confine (And $unlawful $move)) KidnappingOffense
     return $kidnap
 end
 
@@ -1114,7 +1009,6 @@ end
     @malice has Defendant $MaliciousBurning
     @dwell is Structure $Dwelling
     @another owns VictimOwner $dwell
-    @arson Implies (And $burn (And $malice (And $dwell $another))) ArsonOffense
     return $arson
 end
 
@@ -1125,7 +1019,6 @@ end
     @belief has Defendant $ReasonableBelief
     @force uses Defendant $ProportionalForce
     @imminent is Threat ImminentHarm
-    @justify Implies (And $attack (And $belief (And $force $imminent))) SelfDefenseJustification
     return $justify
 end
 
@@ -1134,7 +1027,6 @@ end
     @belief has Defendant $ReasonableBelief
     @necessary uses Defendant $NecessaryForce
     @protect defends Defendant ThirdParty
-    @justify Implies (And $attack (And $belief $necessary)) DefenseOfOthersJustified
     return $justify
 end
 
@@ -1143,7 +1035,6 @@ end
     @lack demonstrates $disease $LackCapacity
     @know cannot Defendant $KnowWrong
     @test applies Jurisdiction $MNaghten
-    @insane Implies (And $disease (And $lack $know)) InsanityDefense
     return $insane
 end
 
@@ -1152,7 +1043,6 @@ end
     @negate affects $condition $NegateMensRea
     @partial provides Law $PartialDefense
     @reduce lowers $partial ChargeLevel
-    @rule Implies (And $condition $negate) DiminishedCapacityDefense
     return $rule
 end
 
@@ -1161,7 +1051,6 @@ end
     @specific requires Crime $SpecificIntent
     @negate prevents $intox $NegateMensRea
     @defense allows Law IntoxicationDefense
-    @rule Implies (And $intox (And $specific $negate)) IntoxDefenseAvailable
     return $rule
 end
 
@@ -1170,7 +1059,6 @@ end
     @imminent is Harm $ImminentHarm
     @no has Defendant $NoReasonableAlternative
     @coerce forces ThirdParty DefendantAct
-    @excuse Implies (And $threat (And $imminent $no)) DuressDefense
     return $excuse
 end
 
@@ -1179,7 +1067,6 @@ end
     @avoid prevents Act $AvoidGreaterHarm
     @no has Defendant $NoLegalAlternative
     @imminent is Harm ImminentThreat
-    @justify Implies (And $lesser (And $avoid $no)) NecessityDefense
     return $justify
 end
 
@@ -1188,7 +1075,6 @@ end
     @lack has Defendant $PredispositionLack
     @origin starts $induce $OriginatesWithPolice
     @test applies Jurisdiction SubjectiveTest
-    @entrap Implies (And $induce (And $lack $origin)) EntrapmentDefense
     return $entrap
 end
 
@@ -1197,7 +1083,6 @@ end
     @reason is $mistake $ReasonableBelief
     @negate affects $mistake $NegateMensRea
     @specific requires Crime SpecificIntent
-    @defense Implies (And $mistake (And $reason $negate)) MistakeOfFactDefense
     return $defense
 end
 
@@ -1206,7 +1091,6 @@ end
     @not is $ignore $NotExcuse
     @rare allows Exceptions $RareExceptions
     @rely depends $rare OfficialMisstatement
-    @rule Implies (And $ignore (Not $rare)) NoDefense
     return $rule
 end
 
@@ -1217,7 +1101,6 @@ end
     @seize takes Police Evidence
     @warrant requires Constitution $WarrantRequirement
     @probable needs Warrant $ProbableCause
-    @protect Implies (And $search (Not $warrant)) FourthAmendmentViolation
     return $protect
 end
 
@@ -1226,7 +1109,6 @@ end
     @suppress orders Court $SuppressEvidence
     @fruit extends Doctrine $FruitPoisonousTree
     @deter purposes Rule $deter
-    @remedy Implies (And $illegal $suppress) ExclusionaryRuleApplies
     return $remedy
 end
 
@@ -1235,7 +1117,6 @@ end
     @interrog questions Police $CustodialInterrogation
     @warn must Police $WarningRequired
     @self protects FifthAmendment $SelfIncrimination
-    @suppress Implies (And $custody (And $interrog (Not $warn))) StatementsExcluded
     return $suppress
 end
 
@@ -1244,7 +1125,6 @@ end
     @attorney has Defendant $AttorneyPresent
     @sixth protects $SixthAmendment RightToCounsel
     @appoint must Court IndigentDefendant
-    @rule Implies (And $critical (Not $attorney)) ConstitutionalViolation
     return $rule
 end
 
@@ -1253,7 +1133,6 @@ end
     @crime occurred $CrimeCommitted
     @suspect links $suspect $SuspectInvolved
     @facts support TotCircumstances $reason
-    @sufficient Implies (And $reason (And $crime $suspect)) ProbableCauseExists
     return $sufficient
 end
 
@@ -1262,7 +1141,6 @@ end
     @criminal suspects Officer $CriminalActivity
     @stop allows Terry $StopAndFrisk
     @brief permits Law BriefDetention
-    @rule Implies (And $facts $criminal) ReasonableSuspicionExists
     return $rule
 end
 
@@ -1281,7 +1159,6 @@ end
     @multiple attempts State $MultipleProsecutions
     @prohibit bars FifthAmendment $ProhibitedRetrials
     @jeopardy attaches Trial JurySworn
-    @protect Implies (And $same (And $multiple $jeopardy)) DoubleJeopardyViolation
     return $protect
 end
 
@@ -1290,7 +1167,6 @@ end
     @prejudice suffers Defendant $PrejudiceToDefendant
     @balance applies Court $BalancingTest
     @factors weighs Court BarkerFactors
-    @violate Implies (And $delay $prejudice) SpeedyTrialViolation
     return $violate
 end
 
@@ -1299,7 +1175,6 @@ end
     @witness presents Prosecution $AdverseWitness
     @testimony gives $witness $TestimonyUnderOath
     @confront requires SixthAmendment OpportunityToCross
-    @violate Implies (And $witness (Not $right)) ConfrontationViolation
     return $violate
 end
 
@@ -1309,7 +1184,6 @@ end
     @tend has Evidence $TendencyToProve
     @material is Fact $MaterialFact
     @probative increases $tend FactProbability
-    @admiss Implies (And $tend $material) RelevantEvidence
     @rule requires FRE401 $admiss
     return $rule
 end
@@ -1319,7 +1193,6 @@ end
     @value has Evidence ProbativeValue
     @outweigh exceeds $prejudice $value
     @exclude bars FRE403 Evidence
-    @rule Implies (And $prejudice $outweigh) ExcludeEvidence
     return $rule
 end
 
@@ -1329,7 +1202,6 @@ end
     @hearsay is (And $out $truth) HearsayStatement
     @inadmiss bars FRE802 $hearsay
     @except allows Law HearsayExceptions
-    @rule Implies (And $hearsay (Not $except)) Inadmissible
     return $rule
 end
 
@@ -1338,7 +1210,6 @@ end
     @perceive observes Declarant EventOccurrence
     @immediate gives $describe $ImmediateThereafter
     @except allows FRE803_1 $describe
-    @admiss Implies (And $describe (And $perceive $immediate)) HearsayException
     return $admiss
 end
 
@@ -1347,7 +1218,6 @@ end
     @stress under Declarant $StressOfExcitement
     @relate concerns Statement $RelatingToEvent
     @except allows FRE803_2 Statement
-    @admiss Implies (And $startling (And $stress $relate)) HearsayException
     return $admiss
 end
 
@@ -1356,7 +1226,6 @@ end
     @emotion reveals Statement $EmotionalCondition
     @then is State $ThenExisting
     @except allows FRE803_3 Statement
-    @admiss Implies (And $mental (And $emotion $then)) HearsayException
     return $admiss
 end
 
@@ -1366,7 +1235,6 @@ end
     @trust has Record $TrustworthySource
     @kept maintains Business RegularCourse
     @except allows FRE803_6 Record
-    @admiss Implies (And $routine (And $regular $trust)) HearsayException
     return $admiss
 end
 
@@ -1375,7 +1243,6 @@ end
     @authentic is Document $AuthenticCondition
     @no raises Document $NoSuspicion
     @except allows FRE803_16 Document
-    @admiss Implies (And $age (And $authentic $no)) HearsayException
     return $admiss
 end
 
@@ -1385,7 +1252,6 @@ end
     @opp had Party $OpportunityToCross
     @unavail is Witness Unavailable
     @except allows FRE804_b1 Testimony
-    @admiss Implies (And $prior (And $oath (And $opp $unavail))) HearsayException
     return $admiss
 end
 
@@ -1395,7 +1261,6 @@ end
     @cause concerns Statement $CauseOfDeath
     @imminent is Death ImminentDeath
     @except allows FRE804_b2 Statement
-    @admiss Implies (And $belief (And $homicide $cause)) HearsayException
     return $admiss
 end
 
@@ -1405,7 +1270,6 @@ end
     @trust has Statement $Trustworthy
     @unavail is Declarant Unavailable
     @except allows FRE804_b3 Statement
-    @admiss Implies (And $contrary (And $reason (And $trust $unavail))) HearsayException
     return $admiss
 end
 
@@ -1414,7 +1278,6 @@ end
     @prove offered $trait $ProveConduct
     @general bars FRE404 CharacterEvidence
     @except allows Law LimitedExceptions
-    @rule Implies (And $trait (And $prove (Not $except))) Inadmissible
     return $rule
 end
 
@@ -1424,7 +1287,6 @@ end
     @routine shows Pattern SemiAutomatic
     @habit constitutes $regular HabitEvidence
     @admiss allows FRE406 $habit
-    @rule Implies (And $regular $specific) AdmissibleHabit
     return $rule
 end
 
@@ -1434,7 +1296,6 @@ end
     @inadmiss bars FRE407 $repair
     @policy protects Law SafetyImprovements
     @except allows Other ImpeachmentOrOwnership
-    @rule Implies (And $repair (And $prove (Not $except))) Excluded
     return $rule
 end
 
@@ -1444,7 +1305,6 @@ end
     @inadmiss bars FRE408 $offer
     @policy encourages Law Settlement
     @except allows Other ProveWitnessbiasDelay
-    @rule Implies (And $dispute (And $offer (Not $except))) Excluded
     return $rule
 end
 
@@ -1453,7 +1313,6 @@ end
     @reliable uses Expert $ReliableMethod
     @helpful is Testimony $HelpfulToTrier
     @qualify determines Court ExpertQualification
-    @admiss Implies (And $special (And $reliable $helpful)) ExpertTestimonyAdmitted
     return $admiss
 end
 
@@ -1463,7 +1322,6 @@ end
     @error has Method $KnownErrorRate
     @accept has Method GeneralAcceptance
     @gatekeep applies Court DaubertGatekeeping
-    @admiss Implies (And $scientific (And $tested $error)) ReliableExpertise
     return $admiss
 end
 
@@ -1472,7 +1330,6 @@ end
     @known is $fact $GenerallyKnown
     @accurate verifiable $fact $AccurateSource
     @notice takes Court $JudicialNotice
-    @rule Implies (And $fact (Or $known $accurate)) NoProofRequired
     return $rule
 end
 
@@ -1482,7 +1339,6 @@ end
     @prove seeks Party $ProveTerms
     @content concerns $prove $DocumentContents
     @except allows Law DuplicateOrExcuse
-    @rule Implies (And $doc (And $prove (Not $except))) OriginalMandatory
     return $rule
 end
 
@@ -1492,7 +1348,6 @@ end
     @not requires Opinion $NotExpertise
     @rational based Opinion RationallyBased
     @admiss allows FRE701 LayOpinion
-    @rule Implies (And $perceive (And $helpful $not)) LayOpinionAdmissible
     return $rule
 end
 
@@ -1503,7 +1358,6 @@ end
     @full exercises Owner $FullOwnership
     @no contains Estate $NoConditions
     @alienable is Estate TransferableDeviseableInheritable
-    @absolute Implies (And $unlimited (And $full $no)) FeeSimpleAbsolute
     return $absolute
 end
 
@@ -1512,7 +1366,6 @@ end
     @present has LifeTenant $PresentPossessory
     @future creates Estate $RemainderOrReversion
     @waste prohibits Law CommittingWaste
-    @rule Implies (And $duration (And $present $future)) LifeEstate
     return $rule
 end
 
@@ -1521,7 +1374,6 @@ end
     @abolished has $ModernLaw FeeTail
     @historical was Estate CommonLawEstate
     @convert transforms ModernCourts FeeSimple
-    @rule Implies (And $lineal $abolished) NoLongerRecognized
     return $rule
 end
 
@@ -1530,7 +1382,6 @@ end
     @follow comes Interest $FollowsLifeEstate
     @vested is Remainder VestedRemainder
     @contingent is Remainder ContingentRemainder
-    @rule Implies (And $future (And $follow (Or $vested $contingent))) RemainderInterest
     return $rule
 end
 
@@ -1539,7 +1390,6 @@ end
     @after follows $return $AfterLesserEstate
     @automatic creates Law $AutomaticallyCreated
     @retain keeps Grantor FutureInterest
-    @rule Implies (And $return (And $after $automatic)) ReversionaryInterest
     return $rule
 end
 
@@ -1549,7 +1399,6 @@ end
     @non is Interest $NonPossessory
     @dominant benefits DominantTenement
     @servient burdens ServientTenement
-    @easement Implies (And $right (And $another $non)) EasementInterest
     return $easement
 end
 
@@ -1558,7 +1407,6 @@ end
     @burden restricts Easement $BurdensServient
     @runs transfers Easement $RunsWithLand
     @permanent is Easement PermanentAttachment
-    @rule Implies (And $benefit (And $burden $runs)) AppurtenantEasement
     return $rule
 end
 
@@ -1567,7 +1415,6 @@ end
     @no requires Easement $NoRequiredDominant
     @commercial is Type CommercialEasement
     @transfer allows $commercial Assignability
-    @rule Implies (And $personal $no) EasementInGross
     return $rule
 end
 
@@ -1577,7 +1424,6 @@ end
     @exclusive holds Possessor $ExclusiveHostile
     @statutory exceeds Duration StatutoryPeriod
     @title acquires Possessor TitleByPossession
-    @rule Implies (And $continuous (And $open (And $exclusive $statutory))) AdversePossessionTitle
     return $rule
 end
 
@@ -1587,7 +1433,6 @@ end
     @notice has Purchaser $NoticeToSubsequent
     @privity exists $Privity OriginalParties
     @run binds Covenant SuccessorOwners
-    @rule Implies (And $touch (And $intent (And $notice $privity))) RunningCovenant
     return $rule
 end
 
@@ -1596,7 +1441,6 @@ end
     @notice has Purchaser $NoticeToSuccessors
     @equitable enforces Court $EquitableEnforcement
     @injunction grants Court InjunctiveRelief
-    @rule Implies (And $restrict (And $notice $equitable)) EquitableServitude
     return $rule
 end
 
@@ -1605,7 +1449,6 @@ end
     @revers retains Landlord $ReversToLandlord
     @term creates Lease $TermOfYears
     @rent pays Tenant RentalPayment
-    @rule Implies (And $possess (And $revers $term)) LeaseRelationship
     return $rule
 end
 
@@ -1615,7 +1458,6 @@ end
     @cannot bars Law $CannotWaive
     @breach violates Landlord SubstandardConditions
     @remedy allows Tenant RepairOrLeave
-    @rule Implies (And $residential (And $fit $breach)) WarrantyBreach
     return $rule
 end
 
@@ -1624,7 +1466,6 @@ end
     @breach violates Landlord LeaseCovenant
     @leave must Tenant $TenantLeaves
     @excuse relieves $leave RentObligation
-    @rule Implies (And $interfere (And $breach $leave)) ConstructiveEviction
     return $rule
 end
 
@@ -1633,7 +1474,6 @@ end
     @permanent has Attachment $PermanentAttachment
     @intent demonstrates Annexor $IntentionToPermanent
     @fixture determines Law RealProperty
-    @rule Implies (And $personal (And $permanent $intent)) FixtureStatus
     return $rule
 end
 
@@ -1642,7 +1482,6 @@ end
     @real encumbers Mortgage $RealProperty
     @debt secures Mortgage $DebtObligation
     @foreclose may Lender ForeclosureRight
-    @rule Implies (And $security (And $real $debt)) MortgageInterest
     return $rule
 end
 
@@ -1651,7 +1490,6 @@ end
     @record requires Law $RecordTitle
     @notice provides Recording $NoticeToSubsequent
     @subsequent loses UnrecordedInterest Priority
-    @rule Implies (And $protect (And $record $notice)) RecordingActProtection
     return $rule
 end
 
@@ -1661,7 +1499,6 @@ end
     @no has Purchaser $NoNotice
     @protect favors Law BFPStatus
     @prevail defeats BFP PriorUnrecorded
-    @rule Implies (And $value (And $good $no)) BonafidePurchaser
     return $rule
 end
 
@@ -1670,7 +1507,6 @@ end
     @municipal enacts Authority $MunicipalRegulation
     @public serves Zoning $PublicWelfare
     @variance may Owner SeekException
-    @rule Implies (And $restrict (And $municipal $public)) ZoningPower
     return $rule
 end
 
@@ -1679,7 +1515,6 @@ end
     @public serves Taking $PublicUse
     @just requires Constitution $JustCompensation
     @condemn may Government CondemnProperty
-    @rule Implies (And $taking (And $public $just)) EmergentDomainPower
     return $rule
 end
 
@@ -1689,6 +1524,5 @@ end
     @substantial creates $unreason $SubstantialHarm
     @balance weighs Court UtilityVsHarm
     @remedy may Court Abatement
-    @rule Implies (And $unreason (And $use $substantial)) PrivateNuisance
     return $rule
 end

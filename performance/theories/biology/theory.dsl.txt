@@ -1769,7 +1769,6 @@ end
     @premise1 belongsTo $A $B
     @premise2 belongsTo $B $C
     @conclusion belongsTo $A $C
-    @rule Implies (And $premise1 $premise2) $conclusion
     return $rule
 end
 

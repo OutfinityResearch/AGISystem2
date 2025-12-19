@@ -20,7 +20,6 @@ isA Surprise BasicEmotion
     @physiological causesResponse $emotion increased_heart_rate
     @cognitive associatedWith $emotion positive_valence
     @behavior leadsto $emotion approach_tendency
-    return Implies($emotion, positiveState($emotion))
 end
 
 @:BasicEmotion_Sadness graph
@@ -30,7 +29,6 @@ end
     @cognitive associatedWith $emotion negative_valence
     @behavior leadsto $emotion withdrawal_tendency
     @duration typicallyLasts $emotion prolonged
-    return Implies($emotion, negativeState($emotion))
 end
 
 @:BasicEmotion_Fear graph
@@ -41,7 +39,6 @@ end
     @cognitive associated $emotion threat_perception
     @behavior leadsto $emotion avoidance_or_escape
     @adaptive hasFunction $emotion survival
-    return Implies($emotion, protectiveResponse($emotion))
 end
 
 @:BasicEmotion_Anger graph
@@ -52,7 +49,6 @@ end
     @cognitive associated $emotion goal_obstruction
     @behavior leadsto $emotion aggressive_tendency
     @adaptive canBe $emotion constructive_or_destructive
-    return Implies($emotion, confrontationResponse($emotion))
 end
 
 @:BasicEmotion_Disgust graph
@@ -62,7 +58,6 @@ end
     @cognitive associated $emotion contamination_fear
     @adaptive hasFunction $emotion disease_avoidance
     @moral extends $emotion moral_disgust
-    return Implies($emotion, rejectionResponse($emotion))
 end
 
 @:BasicEmotion_Surprise graph
@@ -72,7 +67,6 @@ end
     @cognitive triggers $emotion attention_orienting
     @cognitive leadsto $emotion reappraisal
     @neutral canBecome $emotion positive_or_negative
-    return Implies($emotion, orientingResponse($emotion))
 end
 
 # --- Complex Emotions ---
@@ -97,7 +91,6 @@ isA Grief ComplexEmotion
     @self boosts $emotion self_esteem
     @cultural varies $emotion across_cultures
     @danger canLeadTo $emotion hubris
-    return Implies($emotion, positiveSelfevaluation($emotion))
 end
 
 @:ComplexEmotion_Shame graph
@@ -109,7 +102,6 @@ end
     @vs differs $emotion guilt
     @shame focuses $emotion entire_self
     @chronic canCause $emotion depression
-    return Implies($emotion, globalSelfnegation($emotion))
 end
 
 @:ComplexEmotion_Guilt graph
@@ -121,7 +113,6 @@ end
     @vs differs $emotion shame
     @guilt focuses $emotion specific_action
     @adaptive promotes $emotion prosocial_behavior
-    return Implies($emotion, moralSelfregulation($emotion))
 end
 
 @:ComplexEmotion_Jealousy graph
@@ -132,7 +123,6 @@ end
     @cognitive includes $emotion possessiveness
     @evolutionary hasRoots $emotion mate_guarding
     @pathological canBecome $emotion obsessive
-    return Implies($emotion, relationshipProtection($emotion))
 end
 
 @:ComplexEmotion_Love graph
@@ -145,7 +135,6 @@ end
     @attachment creates $emotion bonding
     @stages evolves $emotion passion_to_companionate
     @universal isA $emotion human_universal
-    return Implies($emotion, attachmentBonding($emotion))
 end
 
 @:ComplexEmotion_Anxiety graph
@@ -157,7 +146,6 @@ end
     @chronic canBecome $emotion disorder
     @adaptive canBe $emotion motivating
     @maladaptive canBe $emotion paralyzing
-    return Implies($emotion, anticipatoryDistress($emotion))
 end
 
 # --- Emotion Theories ---
@@ -174,7 +162,6 @@ isA FacialFeedbackHypothesis EmotionTheory
     @claim asserts $theory bodily_changes_cause_emotion
     @modern status $theory partially_supported
     @criticism faces $theory emotions_without_arousal_exist
-    return Implies($theory, bodyFirst($theory))
 end
 
 @:SchachterSinger_TwoFactor graph
@@ -185,7 +172,6 @@ end
     @famous demonstrates $theory bridge_study
     @famous demonstrates $theory adrenaline_experiment
     @conclusion states $theory context_determines_emotion
-    return Implies($theory, arousalPlusLabel($theory))
 end
 
 @:Lazarus_CognitiveAppraisal graph
@@ -196,7 +182,6 @@ end
     @primary evaluates $theory threat_or_benefit
     @secondary evaluates $theory coping_ability
     @reappraisal allows $theory emotion_change
-    return Implies($theory, appraisalDriven($theory))
 end
 
 # --- Emotion Regulation ---
@@ -213,7 +198,6 @@ isA Acceptance EmotionRegulationStrategy
     @health associated $strategy positive_outcomes
     @example illustrates $strategy reinterpret_stressor
     @antecedent isA $strategy antecedent_focused
-    return Implies($strategy, cognitiveReframing($strategy))
 end
 
 @:EmotionRegulation_Suppression graph
@@ -224,7 +208,6 @@ end
     @cost causes $strategy cognitive_load
     @health associated $strategy negative_outcomes
     @response isA $strategy response_focused
-    return Implies($strategy, expressionInhibition($strategy))
 end
 
 # --- Emotional Intelligence ---
@@ -243,7 +226,6 @@ isA UsingEmotions EI_Component
     @predictive correlates $construct life_success
     @social enhances $construct relationships
     @measure assessedBy $construct MSCEIT
-    return Implies($construct, emotionalSkills($construct))
 end
 
 # ============================================================================
@@ -269,7 +251,6 @@ isA ExplicitMemory MemoryType
     @types includes $memory echoic_auditory
     @function serves $memory initial_processing
     @decay rapid $memory immediate_loss
-    return Implies($memory, briefStorage($memory))
 end
 
 @:Memory_ShortTerm graph
@@ -280,7 +261,6 @@ end
     @maintenance requires $memory rehearsal
     @interference susceptible $memory decay_and_interference
     @modern renamed $memory working_memory
-    return Implies($memory, temporaryStorage($memory))
 end
 
 @:Memory_Working graph
@@ -292,7 +272,6 @@ end
     @component includes $memory episodic_buffer
     @function enables $memory active_processing
     @tasks supports $memory reasoning_comprehension
-    return Implies($memory, activeManipulation($memory))
 end
 
 @:Memory_LongTerm graph
@@ -303,7 +282,6 @@ end
     @organization structured $memory schemas_networks
     @retrieval depends $memory cues_and_context
     @types divides $memory explicit_and_implicit
-    return Implies($memory, permanentStorage($memory))
 end
 
 @:Memory_Episodic graph
@@ -315,7 +293,6 @@ end
     @brain involves $memory hippocampus
     @vulnerable susceptible $memory forgetting
     @tulving proposed Tulving $memory
-    return Implies($memory, experientialMemory($memory))
 end
 
 @:Memory_Semantic graph
@@ -327,7 +304,6 @@ end
     @example includes $memory language_knowledge
     @organization structured $memory semantic_networks
     @brain involves $memory temporal_lobe
-    return Implies($memory, factualKnowledge($memory))
 end
 
 @:Memory_Procedural graph
@@ -340,7 +316,6 @@ end
     @brain involves $memory basal_ganglia
     @brain involves $memory cerebellum
     @retention highly $memory resistant_to_forgetting
-    return Implies($memory, skillMemory($memory))
 end
 
 # --- Memory Processes ---
@@ -358,7 +333,6 @@ isA Reconsolidation MemoryProcess
     @deep involves $process semantic_meaning
     @deep superior $process better_retention
     @strategies uses $process mnemonics_imagery
-    return Implies($process, memoryFormation($process))
 end
 
 @:MemoryProcess_Consolidation graph
@@ -369,7 +343,6 @@ end
     @brain involves $process hippocampus_to_cortex
     @vulnerable during $process disruption_possible
     @synaptic involves $process protein_synthesis
-    return Implies($process, memoryStabilization($process))
 end
 
 @:MemoryProcess_Retrieval graph
@@ -380,7 +353,6 @@ end
     @cues depends $process retrieval_cues
     @context affected $process encoding_specificity
     @failure explains $process tip_of_tongue
-    return Implies($process, memoryAccess($process))
 end
 
 # --- Attention ---
@@ -398,7 +370,6 @@ isA ExecutiveAttention AttentionType
     @theory explains $attention filter_theory
     @theory explains $attention attenuation_theory
     @limitation causes $attention inattentional_blindness
-    return Implies($attention, focusedProcessing($attention))
 end
 
 @:Attention_Divided graph
@@ -410,7 +381,6 @@ end
     @controlled limits $attention dual_task_performance
     @example includes $attention driving_and_talking
     @cost causes $attention performance_decrement
-    return Implies($attention, multitaskingAttempt($attention))
 end
 
 @:Attention_Sustained graph
@@ -421,7 +391,6 @@ end
     @example includes $attention watchkeeping_tasks
     @brain involves $attention right_hemisphere
     @decline shows $attention vigilance_decrement
-    return Implies($attention, prolongedFocus($attention))
 end
 
 # --- Learning Theories ---
@@ -439,7 +408,6 @@ isA LatentLearning LearningType
     @example demonstrates $learning dogs_salivation
     @phenomenon includes $learning acquisition_extinction
     @phenomenon includes $learning generalization_discrimination
-    return Implies($learning, associativeLearning($learning))
 end
 
 @:Learning_Operant graph
@@ -451,7 +419,6 @@ end
     @positive adds $learning stimulus
     @negative removes $learning stimulus
     @schedule affects $learning acquisition_and_extinction
-    return Implies($learning, consequenceBasedLearning($learning))
 end
 
 @:Learning_Observational graph
@@ -464,7 +431,6 @@ end
     @requires needs $learning reproduction
     @requires needs $learning motivation
     @social involves $learning modeling_imitation
-    return Implies($learning, socialLearning($learning))
 end
 
 # --- Perception ---
@@ -481,7 +447,6 @@ isA FormPerception PerceptionType
     @example illustrates $perception feature_detection
     @contrast differs $perception top_down
     @neural starts $perception receptors
-    return Implies($perception, datadriven($perception))
 end
 
 @:Perception_TopDown graph
@@ -492,7 +457,6 @@ end
     @example illustrates $perception perceptual_set
     @contrast differs $perception bottom_up
     @neural involves $perception higher_cortical_areas
-    return Implies($perception, conceptDriven($perception))
 end
 
 @:Perception_Depth graph
@@ -505,7 +469,6 @@ end
     @monocular uses $perception linear_perspective
     @monocular uses $perception interposition
     @develops early $perception infancy
-    return Implies($perception, spatialAwareness($perception))
 end
 
 # --- Decision Making ---
@@ -523,7 +486,6 @@ isA Biases CognitiveDistortion
     @types includes $strategy representativeness_heuristic
     @types includes $strategy anchoring_heuristic
     @kahneman studied KahnemanTversky $strategy
-    return Implies($strategy, cognitiveShortcut($strategy))
 end
 
 @:Bias_Confirmation graph
@@ -535,7 +497,6 @@ end
     @example shows $bias selective_interpretation
     @consequence leads $bias polarization
     @mitigation requires $bias actively_seeking_disconfirmation
-    return Implies($bias, biasedSearch($bias))
 end
 
 @:Bias_Anchoring graph
@@ -546,7 +507,6 @@ end
     @example shows $bias numeric_estimates
     @robust persists $bias even_random_anchors
     @unconscious operates $bias automatically
-    return Implies($bias, initialValueBias($bias))
 end
 
 # --- Language ---
@@ -565,7 +525,6 @@ isA Pragmatics LanguageComponent
     @learning argues $process environmental_input
     @interactionist combines $process both_factors
     @critical suggests $process sensitive_period
-    return Implies($process, languageDevelopment($process))
 end
 
 @:Language_Structure graph
@@ -579,7 +538,6 @@ end
     @syntax deals $language sentence_structure
     @semantics deals $language meaning
     @pragmatics deals $language context_use
-    return Implies($language, hierarchicalStructure($language))
 end
 
 # --- Problem Solving ---
@@ -597,7 +555,6 @@ isA Insight ProblemSolvingStrategy
     @obstacle faces $strategy functional_fixedness
     @obstacle faces $strategy mental_set
     @incubation benefits $strategy taking_break
-    return Implies($strategy, suddenSolution($strategy))
 end
 
 # ============================================================================
@@ -633,7 +590,6 @@ isA Agoraphobia AnxietyDisorder
     @pervasive affects $disorder multiple_domains
     @treatment responds $disorder CBT_and_medication
     @prevalence affects $disorder 3_to_5_percent
-    return Implies($disorder, chronicWorry($disorder))
 end
 
 @:Disorder_Panic graph
@@ -648,7 +604,6 @@ end
     @fear develops $disorder fear_of_attacks
     @avoidance leads $disorder behavioral_restriction
     @treatment effective $disorder CBT_exposure
-    return Implies($disorder, recurringPanicAttacks($disorder))
 end
 
 @:Disorder_SocialAnxiety graph
@@ -661,7 +616,6 @@ end
     @interference impacts $disorder social_occupational_functioning
     @cognition involves $disorder negative_self_beliefs
     @treatment effective $disorder CBT_exposure_therapy
-    return Implies($disorder, socialFear($disorder))
 end
 
 @:Disorder_SpecificPhobia graph
@@ -674,7 +628,6 @@ end
     @recognition insight $disorder fear_is_excessive
     @avoidance strong $disorder behavioral_avoidance
     @treatment highly_effective $disorder exposure_therapy
-    return Implies($disorder, specificFear($disorder))
 end
 
 # --- Mood Disorders ---
@@ -697,7 +650,6 @@ isA CyclothymicDisorder MoodDisorder
     @duration requires $disorder two_weeks_minimum
     @biological involves $disorder serotonin_norepinephrine
     @treatment responds $disorder antidepressants_therapy
-    return Implies($disorder, majorDepressiveEpisode($disorder))
 end
 
 @:Disorder_BipolarI graph
@@ -712,7 +664,6 @@ end
     @also often $disorder depressive_episodes
     @genetic highly $disorder heritable
     @treatment requires $disorder mood_stabilizers
-    return Implies($disorder, manicEpisodes($disorder))
 end
 
 @:Disorder_BipolarII graph
@@ -725,7 +676,6 @@ end
     @depression more_prominent $disorder than_hypomania
     @misdiagnosis often $disorder as_depression_only
     @treatment requires $disorder mood_stabilizers
-    return Implies($disorder, hypomanicDepressive($disorder))
 end
 
 # --- Schizophrenia Spectrum ---
@@ -749,7 +699,6 @@ isA DelusionalDisorder SchizophreniaSpectrum
     @onset typically $disorder late_adolescence_early_adulthood
     @biological involves $disorder dopamine_hypothesis
     @treatment requires $disorder antipsychotic_medication
-    return Implies($disorder, psychoticDisorder($disorder))
 end
 
 @:Disorder_Schizoaffective graph
@@ -761,7 +710,6 @@ end
     @mood concurrent $disorder with_psychosis
     @mood independent $disorder psychosis_also_alone
     @treatment requires $disorder antipsychotics_mood_stabilizers
-    return Implies($disorder, psychoticMood($disorder))
 end
 
 # --- Personality Disorders ---
@@ -783,7 +731,6 @@ isA ObsessiveCompulsivePersonalityDisorder PersonalityDisorder
     @symptom involves $disorder chronic_emptiness
     @treatment effective $disorder DBT
     @biological involves $disorder emotional_regulation_circuits
-    return Implies($disorder, emotionalInstability($disorder))
 end
 
 @:Disorder_AntisocialPersonality graph
@@ -799,7 +746,6 @@ end
     @onset requires $disorder age_18_minimum
     @related overlaps $disorder psychopathy
     @treatment difficult $disorder poor_prognosis
-    return Implies($disorder, antisocialBehavior($disorder))
 end
 
 @:Disorder_NarcissisticPersonality graph
@@ -814,7 +760,6 @@ end
     @fragile underlying $disorder low_self_esteem
     @defensive uses $disorder narcissistic_defenses
     @treatment challenging $disorder resistance_to_therapy
-    return Implies($disorder, pathologicalNarcissism($disorder))
 end
 
 # --- Trauma and Stress-Related ---
@@ -838,7 +783,6 @@ isA ReactiveAttachmentDisorder TraumaRelatedDisorder
     @biological involves $disorder HPA_axis_dysregulation
     @treatment effective $disorder trauma_focused_CBT
     @treatment effective $disorder EMDR
-    return Implies($disorder, traumaResponse($disorder))
 end
 
 # --- OCD and Related ---
@@ -863,7 +807,6 @@ isA ExcoriationDisorder OCDRelated
     @biological involves $disorder serotonin_circuits
     @brain involves $disorder cortico_striatal_circuits
     @treatment goldstandard $disorder ERP_therapy
-    return Implies($disorder, obsessionsCompulsions($disorder))
 end
 
 # --- Neurodevelopmental Disorders ---
@@ -888,7 +831,6 @@ isA SpecificLearningDisorder NeurodevelopmentalDisorder
     @strengths includes $disorder attention_to_detail
     @strengths includes $disorder pattern_recognition
     @treatment helps $disorder early_intervention_behavioral
-    return Implies($disorder, autismCharacteristics($disorder))
 end
 
 @:Disorder_ADHD graph
@@ -907,7 +849,6 @@ end
     @biological involves $disorder dopamine_norepinephrine
     @treatment effective $disorder stimulant_medication
     @treatment effective $disorder behavioral_interventions
-    return Implies($disorder, attentionHyperactivity($disorder))
 end
 
 # --- Eating Disorders ---
@@ -927,7 +868,6 @@ isA BingeEatingDisorder EatingDisorder
     @medical causes $disorder serious_complications
     @medical risk $disorder highest_mortality_rate
     @treatment requires $disorder multidisciplinary_approach
-    return Implies($disorder, severeRestriction($disorder))
 end
 
 @:Disorder_BulimiaNervosa graph
@@ -943,7 +883,6 @@ end
     @evaluation overly $disorder influenced_by_body_shape
     @medical causes $disorder electrolyte_imbalance
     @treatment effective $disorder CBT
-    return Implies($disorder, bingePurgeCycle($disorder))
 end
 
 # --- Dissociative Disorders ---
@@ -961,7 +900,6 @@ isA DepersonalizationDerealizationDisorder DissociativeDisorder
     @cause associated $disorder severe_childhood_trauma
     @controversy subject $disorder ongoing_debate
     @treatment involves $disorder integration_therapy
-    return Implies($disorder, multipleIdentities($disorder))
 end
 
 # --- Substance Use Disorders ---
@@ -982,7 +920,6 @@ isA StimulantUseDisorder SubstanceUseDisorder
     @treatment includes $disorder medication_assisted
     @treatment includes $disorder behavioral_therapy
     @relapse common $disorder chronic_relapsing
-    return Implies($disorder, addictiveBehavior($disorder))
 end
 
 # --- Disorder Causation Models ---
@@ -1000,7 +937,6 @@ isA BiologicalModel CausationModel
     @social includes $model culture_relationships
     @interaction emphasizes $model multifactorial_causation
     @comprehensive provides $model holistic_understanding
-    return Implies($model, integrativeApproach($model))
 end
 
 @:Model_DiathesisStress graph
@@ -1012,7 +948,6 @@ end
     @explanation accounts $model why_some_develop_disorders
     @prevention suggests $model reduce_stress_or_vulnerability
     @application useful $model many_disorders
-    return Implies($model, vulnerabilityStress($model))
 end
 
 # ============================================================================
@@ -1043,7 +978,6 @@ isA FormalOperationalStage PiagetStage
     @reflex begins $stage reflexive_schemas
     @intentional develops $stage goal_directed_behavior
     @symbolic emerges $stage mental_representations
-    return Implies($stage, sensoryMotor($stage))
 end
 
 @:Piaget_Preoperational graph
@@ -1056,7 +990,6 @@ end
     @limitation shows $stage lack_of_conservation
     @famous demonstrates $stage three_mountains_task
     @famous demonstrates $stage conservation_tasks
-    return Implies($stage, symbolicPrelogical($stage))
 end
 
 @:Piaget_ConcreteOperational graph
@@ -1069,7 +1002,6 @@ end
     @logic applies $stage concrete_situations
     @limitation struggles $stage abstract_hypothetical
     @decentering overcomes $stage centration
-    return Implies($stage, concreteLogic($stage))
 end
 
 @:Piaget_FormalOperational graph
@@ -1081,7 +1013,6 @@ end
     @reasoning uses $stage deductive_logic
     @famous demonstrates $stage pendulum_problem
     @limitation not_all $stage reach_this_stage
-    return Implies($stage, abstractLogic($stage))
 end
 
 # --- Erikson's Stages ---
@@ -1102,7 +1033,6 @@ isA IntegrityVsDespair EriksonStage
     @positive develops $stage hope
     @negative develops $stage fear_suspicion
     @foundation sets $stage later_relationships
-    return Implies($stage, basicTrust($stage))
 end
 
 @:Erikson_IdentityVsRoleConfusion graph
@@ -1115,7 +1045,6 @@ end
     @positive achieves $stage coherent_identity
     @negative results $stage role_confusion
     @marcia expanded $stage identity_statuses
-    return Implies($stage, identityFormation($stage))
 end
 
 @:Erikson_GenerativityVsStagnation graph
@@ -1127,7 +1056,6 @@ end
     @generativity includes $stage creative_work
     @positive develops $stage care
     @negative results $stage self_absorption
-    return Implies($stage, productivity($stage))
 end
 
 # --- Attachment Theory ---
@@ -1144,7 +1072,6 @@ isA DisorganizedAttachment AttachmentStyle
     @internal creates AttachmentTheory working_models
     @stability tends AttachmentTheory continuity
     @famous assessed Ainsworth strange_situation
-    return Implies(AttachmentTheory, bondingSystem(AttachmentTheory))
 end
 
 @:Attachment_Secure graph
@@ -1156,7 +1083,6 @@ end
     @exploration uses $style caregiver_as_base
     @adult results $style healthy_relationships
     @adult trusts $style self_and_others
-    return Implies($style, secureBase($style))
 end
 
 @:Attachment_Avoidant graph
@@ -1168,7 +1094,6 @@ end
     @strategy uses $style emotional_suppression
     @adult results $style difficulty_with_intimacy
     @adult dismisses $style attachment_needs
-    return Implies($style, avoidantPattern($style))
 end
 
 @:Attachment_Ambivalent graph
@@ -1181,7 +1106,6 @@ end
     @strategy uses $style hyperactivating
     @adult results $style anxiety_in_relationships
     @adult fears $style abandonment
-    return Implies($style, anxiousPattern($style))
 end
 
 # --- Cognitive Development ---
@@ -1198,7 +1122,6 @@ isA AbstractThinking CognitiveMilestone
     @requires needs $milestone perspective_taking
     @deficit impaired $milestone in_autism
     @importance enables $milestone social_cognition
-    return Implies($milestone, mentalizing($milestone))
 end
 
 # --- Language Development ---
@@ -1216,7 +1139,6 @@ isA Telegraphic LanguageMilestone
     @telegraphic occurs $development 2_to_3_years
     @overregularization shows $development rule_learning
     @critical suggests $development sensitive_period
-    return Implies($development, languageAcquisition($development))
 end
 
 # --- Moral Development (Kohlberg) ---
@@ -1232,7 +1154,6 @@ isA PostconventionalMorality MoralStage
     @reasoning focused $stage consequences
     @typical found $stage young_children
     @egocentic primarily $stage self_oriented
-    return Implies($stage, consequenceBased($stage))
 end
 
 @:Moral_Conventional graph
@@ -1244,7 +1165,6 @@ end
     @reasoning focused $stage law_and_order
     @typical found $stage adolescents_adults
     @society oriented $stage conformity
-    return Implies($stage, socialConformity($stage))
 end
 
 @:Moral_Postconventional graph
@@ -1256,7 +1176,6 @@ end
     @principled guided $stage justice_and_rights
     @rare reached $stage few_individuals
     @autonomous independently $stage reasoned
-    return Implies($stage, principleBased($stage))
 end
 
 # --- Aging and Late Adulthood ---
@@ -1271,7 +1190,6 @@ isA CrystalizedIntelligence IntelligenceType
     @crystallized involves $crystallized accumulated_knowledge
     @crystallized maintains $crystallized or_improves_with_age
     @compensation uses $crystallized to_offset_fluid_decline
-    return Implies(aging, differentialIntelligenceChanges(aging))
 end
 
 # ============================================================================
@@ -1298,7 +1216,6 @@ isA Gestalt SchoolOfPsychology
     @application influences $school behavior_modification
     @famous includes $school Little_Albert
     @famous includes $school Skinner_box
-    return Implies($school, objectiveBehavior($school))
 end
 
 @:School_Psychoanalysis graph
@@ -1312,7 +1229,6 @@ end
     @therapy uses $school dream_analysis
     @influence shaped $school modern_psychology
     @criticism faces $school lack_of_empiricism
-    return Implies($school, unconsciousMind($school))
 end
 
 @:School_Humanism graph
@@ -1326,7 +1242,6 @@ end
     @therapy uses $school client_centered
     @therapy uses $school unconditional_positive_regard
     @contrast rejects $school determinism
-    return Implies($school, humanPotential($school))
 end
 
 @:School_Cognitive graph
@@ -1339,7 +1254,6 @@ end
     @method uses $school experimental_research
     @revolution replaced $school behaviorism_dominance
     @application influences $school CBT
-    return Implies($school, mentalProcesses($school))
 end
 
 @:School_Biological graph
@@ -1351,7 +1265,6 @@ end
     @method uses $school lesion_studies
     @topics includes $school neural_basis_behavior
     @application informs $school psychopharmacology
-    return Implies($school, brainBehavior($school))
 end
 
 # --- Personality Theories ---
@@ -1372,7 +1285,6 @@ isA HumanisticPersonality PersonalityTheory
     @stable shows BigFiveModel consistency_over_time
     @universal found BigFiveModel across_cultures
     @predictive correlates BigFiveModel life_outcomes
-    return Implies(BigFiveModel, fiveFactorStructure(BigFiveModel))
 end
 
 @:Personality_SocialCognitive graph
@@ -1384,7 +1296,6 @@ end
     @selfefficacy affects $theory motivation_and_performance
     @learning involves $theory observational_learning
     @agency emphasizes $theory human_agency
-    return Implies($theory, reciprocalInteraction($theory))
 end
 
 # --- Motivation Theories ---
@@ -1405,7 +1316,6 @@ isA SelfDeterminationTheory MotivationTheory
     @principle states $theory lower_must_be_met_first
     @selfactualization represents $theory peak_of_growth
     @criticism faces $theory lack_of_empirical_support
-    return Implies($theory, needHierarchy($theory))
 end
 
 @:Motivation_SelfDetermination graph
@@ -1417,7 +1327,6 @@ end
     @intrinsic superior $theory intrinsic_motivation
     @extrinsic can_undermine $theory extrinsic_rewards
     @support environmental $theory satisfaction_of_needs
-    return Implies($theory, intrinsicMotivation($theory))
 end
 
 # --- Social Psychology Concepts ---
@@ -1435,7 +1344,6 @@ isA CognitiveDissonance SocialConcept
     @FAE overestimates $theory dispositional_causes
     @selfserving shows $theory self_serving_bias
     @actor differs $theory actor_observer_difference
-    return Implies($theory, causalAttribution($theory))
 end
 
 @:Social_CognitiveDissonance graph
@@ -1448,7 +1356,6 @@ end
     @strategies includes $theory add_cognitions
     @famous demonstrates $theory induced_compliance
     @famous demonstrates $theory post_decision_dissonance
-    return Implies($theory, consistencyMotivation($theory))
 end
 
 @:Social_Conformity graph
@@ -1460,7 +1367,6 @@ end
     @asch demonstrated $concept line_judgment_task
     @factors increases $concept group_size_unanimity
     @factors decreases $concept presence_of_ally
-    return Implies($concept, groupInfluence($concept))
 end
 
 @:Social_Obedience graph
@@ -1473,7 +1379,6 @@ end
     @factors increases $concept legitimacy_of_authority
     @factors decreases $concept proximity_to_victim
     @ethical raised $concept ethical_concerns
-    return Implies($concept, authorityCompliance($concept))
 end
 
 # --- Therapeutic Approaches ---
@@ -1493,7 +1398,6 @@ isA BehaviorTherapy TherapyApproach
     @technique uses $therapy exposure
     @evidence has $therapy strong_empirical_support
     @application effective $therapy depression_anxiety
-    return Implies($therapy, cognitiveChange($therapy))
 end
 
 @:Therapy_Psychodynamic graph
@@ -1506,7 +1410,6 @@ end
     @technique uses $therapy defense_analysis
     @goal achieves $therapy insight
     @duration typically $therapy long_term
-    return Implies($therapy, insightOriented($therapy))
 end
 
 @:Therapy_Humanistic graph
@@ -1520,7 +1423,6 @@ end
     @conditions requires $therapy genuineness
     @client emphasizes $therapy self_direction
     @nondirective uses $therapy reflective_listening
-    return Implies($therapy, clientCentered($therapy))
 end
 
 # --- Stress and Coping ---
@@ -1535,7 +1437,6 @@ isA EmotionFocusedCoping CopingStrategy
     @emotionfocused targets $emotionfocused emotional_response
     @emotionfocused effective $emotionfocused uncontrollable_stressors
     @flexibility optimal $emotionfocused situation_appropriate
-    return Implies(coping, copingStrategies(coping))
 end
 
 @:Stress_Response graph
@@ -1546,7 +1447,6 @@ end
     @chronic causes StressResponse health_problems
     @GAS describes Selye general_adaptation_syndrome
     @phases includes GAS alarm_resistance_exhaustion
-    return Implies(StressResponse, physiologicalActivation(StressResponse))
 end
 
 # Additional complex relationships
@@ -1556,7 +1456,6 @@ end
     @emotion influences @cognition
     @cognition influences @emotion
     @bidirectional relationship $emotion $cognition
-    return Implies(@emotion, affects(@cognition))
 end
 
 @:DisorderTreatmentLink graph
@@ -1564,7 +1463,6 @@ end
     @treatment isA TherapyApproach
     @evidence supports $treatment $disorder
     @outcome measured $treatment symptom_reduction
-    return Implies($treatment, effective($disorder))
 end
 
 @:DevelopmentCultureLink graph
@@ -1573,5 +1471,4 @@ end
     @culture influences $development timing
     @universal core $development milestones
     @variation shows $development cultural_differences
-    return Implies($development, culturalContext($development))
 end

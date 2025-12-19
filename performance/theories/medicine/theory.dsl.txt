@@ -10,7 +10,6 @@
     @fluid isFluid Blood Cardiovascular
     @process pumpsBlood Heart Blood
     @process circulatesThrough Blood Body
-    @chain Implies (And @organ @fluid) (And @process @process)
     return @chain
 end
 
@@ -19,7 +18,6 @@ end
     @gas exchangesGas Lung Oxygen CO2
     @process oxygenatesBlood Lung Blood
     @vital necessaryForLife Oxygen Metabolism
-    @chain Implies (And @organ @gas) (And @process @vital)
     return @chain
 end
 
@@ -28,7 +26,6 @@ end
     @structure isStructure SpinalCord CNS
     @tissue isNerve Nerve PNS
     @process controlsBody Brain AllFunctions
-    @chain Implies (And @organ @structure @tissue) @process
     return @chain
 end
 
@@ -37,7 +34,6 @@ end
     @organ2 isOrgan Intestine Digestive
     @chemical producesEnzyme Stomach Enzyme
     @process digestsFood Enzyme Nutrients
-    @chain Implies (And @organ @organ2 @chemical) @process
     return @chain
 end
 
@@ -47,7 +43,6 @@ end
     @fluid producesUrine Kidney Urine
     @process storesFluid Bladder Urine
     @function filtersBlood Kidney Waste
-    @chain Implies (And @organ @organ2 @fluid) (And @process @function)
     return @chain
 end
 
@@ -56,7 +51,6 @@ end
     @chemical producesHormone Gland Hormone
     @process regulatesBody Hormone Metabolism
     @feedback maintainsHomeostasis Hormone Balance
-    @chain Implies (And @structure @chemical) (And @process @feedback)
     return @chain
 end
 
@@ -66,7 +60,6 @@ end
     @structure isJoint Joint Skeletal
     @function providesSupport Bone Body
     @function2 enablesMovement Muscle Body
-    @chain Implies (And @tissue @tissue2 @structure) (And @function @function2)
     return @chain
 end
 
@@ -76,7 +69,6 @@ end
     @invader isPathogen Pathogen External
     @process attacksPathogen WhiteBloodCell Pathogen
     @process2 bindsToAntigen Antibody Pathogen
-    @chain Implies (And @cell @protein @invader) (And @process @process2)
     return @chain
 end
 
@@ -86,7 +78,6 @@ end
     @structure2 isNail Nail Integumentary
     @function protectsBody Skin Environment
     @function2 regulatesTemperature Skin Heat
-    @chain Implies (And @organ @structure @structure2) (And @function @function2)
     return @chain
 end
 
@@ -112,7 +103,6 @@ end
     @treat requiresTreatment HeartAttack Aspirin
     @treat2 requiresTreatment HeartAttack Nitroglycerin
     @emergency requiresEmergency HeartAttack Hospital
-    @chain Implies (And @sym @sym2 @cond) (And @treat @treat2 @emergency)
     return @chain
 end
 
@@ -123,7 +113,6 @@ end
     @risk2 increasesRisk HighBloodPressure HeartDisease
     @treat requiresTreatment HighBloodPressure Antihypertensive
     @lifestyle requiresModification Diet Exercise
-    @chain Implies (And @sym @chronic @risk) (And @treat @lifestyle)
     return @chain
 end
 
@@ -135,7 +124,6 @@ end
     @mech causesBloodClot AtrialFibrillation Atrium
     @treat requiresTreatment AtrialFibrillation Anticoagulant
     @monitor requiresMonitoring AtrialFibrillation INR
-    @chain Implies (And @sym @cond @risk @mech) (And @treat @monitor)
     return @chain
 end
 
@@ -147,7 +135,6 @@ end
     @path causedByWeakening Heart PumpFunction
     @treat requiresTreatment HeartFailure Diuretic
     @treat2 requiresTreatment HeartFailure ACEInhibitor
-    @chain Implies (And @sym @sym2 @sym3 @cond @path) (And @treat @treat2)
     return @chain
 end
 
@@ -158,7 +145,6 @@ end
     @risk riskFactor HighCholesterol CAD
     @treat requiresTreatment CAD Statin
     @proc mayRequireProcedure CAD Angioplasty
-    @chain Implies (And @sym @path @cond @risk) (And @treat @proc)
     return @chain
 end
 
@@ -170,7 +156,6 @@ end
     @risk increasesRisk DVT PulmonaryEmbolism
     @treat requiresTreatment DVT Heparin
     @treat2 requiresTreatment DVT Warfarin
-    @chain Implies (And @sym @sym2 @cond @path @risk) (And @treat @treat2)
     return @chain
 end
 
@@ -182,7 +167,6 @@ end
     @severe isSevere PulmonaryEmbolism LifeThreatening
     @treat requiresTreatment PulmonaryEmbolism Thrombolysis
     @support requiresSupport PulmonaryEmbolism Oxygen
-    @chain Implies (And @sym @sym2 @cond @path @severe) (And @treat @support)
     return @chain
 end
 
@@ -198,7 +182,6 @@ end
     @path causedByInfection Lung Bacteria
     @treat requiresTreatment Pneumonia Antibiotic
     @support mayRequireSupport Pneumonia Oxygen
-    @chain Implies (And @sym @sym2 @sym3 @cond @path) (And @treat @support)
     return @chain
 end
 
@@ -210,7 +193,6 @@ end
     @trigger triggeredBy Asthma Allergen
     @treat requiresTreatment Asthma Bronchodilator
     @treat2 requiresTreatment Asthma Corticosteroid
-    @chain Implies (And @sym @sym2 @cond @path) (And @treat @treat2)
     return @chain
 end
 
@@ -223,7 +205,6 @@ end
     @path causesObstruction COPD Airflow
     @treat requiresTreatment COPD Bronchodilator
     @support requiresSupport COPD Oxygen
-    @chain Implies (And @sym @sym2 @sym3 @cond @risk @path) (And @treat @support)
     return @chain
 end
 
@@ -237,7 +218,6 @@ end
     @treat requiresTreatment Tuberculosis Rifampin
     @treat2 requiresTreatment Tuberculosis Isoniazid
     @duration requiresLongTreatment Tuberculosis SixMonths
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @contagious) (And @treat @treat2 @duration)
     return @chain
 end
 
@@ -250,7 +230,6 @@ end
     @path causedByMutation LungCell Malignant
     @treat mayRequireTreatment LungCancer Chemotherapy
     @proc mayRequireProcedure LungCancer Surgery
-    @chain Implies (And @sym @sym2 @sym3 @cond @risk @path) (And @treat @proc)
     return @chain
 end
 
@@ -262,7 +241,6 @@ end
     @progressive isProgressive PulmonaryFibrosis Fatal
     @treat maySlowProgression PulmonaryFibrosis Pirfenidone
     @support requiresSupport PulmonaryFibrosis Oxygen
-    @chain Implies (And @sym @sym2 @cond @path @progressive) (And @treat @support)
     return @chain
 end
 
@@ -279,7 +257,6 @@ end
     @severe isSevere Stroke LifeThreatening
     @treat requiresImmediateTreatment Stroke TPA
     @window hasTimeWindow TPA ThreeHours
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @severe) (And @treat @window)
     return @chain
 end
 
@@ -292,7 +269,6 @@ end
     @path2 characterizedByPlaques Brain AmyloidBeta
     @progressive isProgressive Alzheimers Irreversible
     @treat maySupportCognition Alzheimers Donepezil
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @path2 @progressive) @treat
     return @chain
 end
 
@@ -305,7 +281,6 @@ end
     @progressive isProgressive Parkinsons Chronic
     @treat requiresTreatment Parkinsons Levodopa
     @treat2 requiresTreatment Parkinsons Carbidopa
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @progressive) (And @treat @treat2)
     return @chain
 end
 
@@ -318,7 +293,6 @@ end
     @autoimmune isAutoimmune MultipleSclerosis ImmuneAttack
     @relapsing hasPattern MultipleSclerosis RelapsingRemitting
     @treat requiresTreatment MultipleSclerosis Interferon
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune @relapsing) @treat
     return @chain
 end
 
@@ -330,7 +304,6 @@ end
     @recurrent isRecurrent Epilepsy Chronic
     @treat requiresTreatment Epilepsy Anticonvulsant
     @monitor requiresMonitoring Epilepsy EEG
-    @chain Implies (And @sym @sym2 @cond @path @recurrent) (And @treat @monitor)
     return @chain
 end
 
@@ -343,7 +316,6 @@ end
     @trigger triggeredBy Migraine Stress
     @treat requiresTreatment Migraine Triptan
     @prophylaxis mayRequireProphylaxis Migraine BetaBlocker
-    @chain Implies (And @sym @sym2 @sym3 @cond @path) (And @treat @prophylaxis)
     return @chain
 end
 
@@ -356,7 +328,6 @@ end
     @severe isSevere Meningitis LifeThreatening
     @treat requiresImmediateTreatment Meningitis Ceftriaxone
     @proc requiresProcedure Meningitis LumbarPuncture
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @severe) (And @treat @proc)
     return @chain
 end
 
@@ -372,7 +343,6 @@ end
     @mech dueToWeakening LowerEsophagealSphincter Function
     @treat requiresTreatment GERD ProtonPumpInhibitor
     @lifestyle requiresModification Diet Elevation
-    @chain Implies (And @sym @sym2 @cond @path @mech) (And @treat @lifestyle)
     return @chain
 end
 
@@ -384,7 +354,6 @@ end
     @mech causesErosion AcidExposure Mucosa
     @treat requiresTreatment PepticUlcer ProtonPumpInhibitor
     @treat2 requiresTreatment HPylori Antibiotic
-    @chain Implies (And @sym @sym2 @cond @path @mech) (And @treat @treat2)
     return @chain
 end
 
@@ -397,7 +366,6 @@ end
     @autoimmune isAutoimmune IBD ImmuneDisorder
     @treat requiresTreatment IBD Mesalamine
     @treat2 mayRequireTreatment IBD Immunosuppressant
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune) (And @treat @treat2)
     return @chain
 end
 
@@ -410,7 +378,6 @@ end
     @risk riskFactor Alcohol Cirrhosis
     @complication leadsToDysfunction Cirrhosis LiverFailure
     @treat mayRequireProcedure Cirrhosis LiverTransplant
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @complication) @treat
     return @chain
 end
 
@@ -423,7 +390,6 @@ end
     @viral hasTypes Hepatitis TypeABC
     @treat requiresTreatment HepatitisC Antiviral
     @prevent hasVaccine HepatitisB Vaccine
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @viral) (Or @treat @prevent)
     return @chain
 end
 
@@ -436,7 +402,6 @@ end
     @risk riskFactor Alcohol Pancreatitis
     @manage requiresManagement Pancreatitis NPO
     @support requiresSupport Pancreatitis IVFluids
-    @chain Implies (And @sym @sym2 @sym3 @cond @path) (And @manage @support)
     return @chain
 end
 
@@ -449,7 +414,6 @@ end
     @screen requiresScreening AgeOver50 Colonoscopy
     @treat requiresTreatment ColorectalCancer Surgery
     @treat2 mayRequireTreatment ColorectalCancer Chemotherapy
-    @chain Implies (And @sym @sym2 @sym3 @cond @path) (And @treat @treat2)
     return @chain
 end
 
@@ -466,7 +430,6 @@ end
     @autoimmune isAutoimmune DiabetesType1 ImmuneAttack
     @treat requiresTreatment DiabetesType1 Insulin
     @monitor requiresMonitoring DiabetesType1 BloodGlucose
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune) (And @treat @monitor)
     return @chain
 end
 
@@ -478,7 +441,6 @@ end
     @risk riskFactor Obesity DiabetesType2
     @treat requiresTreatment DiabetesType2 Metformin
     @lifestyle requiresModification Diet Exercise
-    @chain Implies (And @sym @sym2 @cond @path @risk) (And @treat @lifestyle)
     return @chain
 end
 
@@ -491,7 +453,6 @@ end
     @mech leadsToDysfunction Hypothyroidism Metabolism
     @treat requiresTreatment Hypothyroidism Levothyroxine
     @monitor requiresMonitoring Hypothyroidism TSH
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @mech) (And @treat @monitor)
     return @chain
 end
 
@@ -504,7 +465,6 @@ end
     @autoimmune causedByDisorder GravesDisease Antibodies
     @treat requiresTreatment Hyperthyroidism Methimazole
     @proc mayRequireProcedure Hyperthyroidism RadioiodineTherapy
-    @chain Implies (And @sym @sym2 @sym3 @cond @path) (And @treat @proc)
     return @chain
 end
 
@@ -517,7 +477,6 @@ end
     @cause dueToTumor PituitaryGland ACTH
     @treat requiresTreatment CushingsSyndrome Ketoconazole
     @proc mayRequireProcedure CushingsSyndrome Surgery
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @cause) (And @treat @proc)
     return @chain
 end
 
@@ -530,7 +489,6 @@ end
     @autoimmune isAutoimmune AddisonsDisease ImmuneDestruction
     @severe canCauseAddisonianCrisis AddisonsDisease LifeThreatening
     @treat requiresTreatment AddisonsDisease Hydrocortisone
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune) @treat
     return @chain
 end
 
@@ -548,7 +506,6 @@ end
     @progressive isProgressive CKD RenalFailure
     @treat requiresTreatment CKD ACEInhibitor
     @proc mayRequireProcedure CKD Dialysis
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @progressive) (And @treat @proc)
     return @chain
 end
 
@@ -561,7 +518,6 @@ end
     @common mostCommonPathogen EColi UTI
     @treat requiresTreatment UTI Antibiotic
     @risk riskFactor Female UTI
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @common) @treat
     return @chain
 end
 
@@ -574,7 +530,6 @@ end
     @severe isSevere AKI LifeThreatening
     @treat mayRequireTreatment AKI Dialysis
     @monitor requiresMonitoring AKI Creatinine
-    @chain Implies (And @sym @sym2 @cond @path @severe) (And @treat @monitor)
     return @chain
 end
 
@@ -587,7 +542,6 @@ end
     @mech leadsToDysfunction NephroticSyndrome ProteinLoss
     @treat requiresTreatment NephroticSyndrome Corticosteroid
     @monitor requiresMonitoring NephroticSyndrome UrineProtein
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @mech) (And @treat @monitor)
     return @chain
 end
 
@@ -601,7 +555,6 @@ end
     @manage requiresManagement KidneyStones Hydration
     @treat requiresPainControl KidneyStones Analgesic
     @proc mayRequireProcedure KidneyStones Lithotripsy
-    @chain Implies (And @sym @sym2 @sym3 @cond @path) (And @manage @treat @proc)
     return @chain
 end
 
@@ -619,7 +572,6 @@ end
     @emergency isEmergency Sepsis SepticShock
     @treat requiresImmediateTreatment Sepsis BroadSpectrumAntibiotic
     @support requiresSupport Sepsis IVFluids
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @severe @emergency) (And @treat @support)
     return @chain
 end
 
@@ -631,7 +583,6 @@ end
     @progressive progressesTo HIV AIDS
     @treat requiresTreatment HIV AntiretroviralTherapy
     @monitor requiresMonitoring HIV CD4Count
-    @chain Implies (And @sym @sym2 @cond @path @progressive) (And @treat @monitor)
     return @chain
 end
 
@@ -644,7 +595,6 @@ end
     @contagious isContagious Influenza Airborne
     @treat mayRequireTreatment Influenza Oseltamivir
     @prevent hasVaccine Influenza FluShot
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @contagious) (Or @treat @prevent)
     return @chain
 end
 
@@ -657,7 +607,6 @@ end
     @vector transmittedBy Mosquito Malaria
     @treat requiresTreatment Malaria Chloroquine
     @prevent requiresProphylaxis TravelToEndemic Antimalarial
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @vector) (And @treat @prevent)
     return @chain
 end
 
@@ -670,7 +619,6 @@ end
     @common commonPathogen Streptococcus Cellulitis
     @treat requiresTreatment Cellulitis BetaLactamAntibiotic
     @monitor requiresMonitoring Cellulitis SpreadOfErythema
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @common) (And @treat @monitor)
     return @chain
 end
 
@@ -684,7 +632,6 @@ end
     @severe isSevere Endocarditis LifeThreatening
     @treat requiresTreatment Endocarditis Vancomycin
     @proc mayRequireProcedure Endocarditis ValveReplacement
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @severe) (And @treat @proc)
     return @chain
 end
 
@@ -702,7 +649,6 @@ end
     @progressive causesDestruction RA Cartilage
     @treat requiresTreatment RA Methotrexate
     @treat2 mayRequireTreatment RA Biologic
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune @progressive) (And @treat @treat2)
     return @chain
 end
 
@@ -716,7 +662,6 @@ end
     @multi affectsMultipleSystems SLE Organs
     @treat requiresTreatment SLE Hydroxychloroquine
     @treat2 requiresTreatment SLE Corticosteroid
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune @multi) (And @treat @treat2)
     return @chain
 end
 
@@ -729,7 +674,6 @@ end
     @autoimmune isAutoimmune CeliacDisease ImmuneResponse
     @damage causesDamage CeliacDisease Villi
     @treat requiresTreatment CeliacDisease GlutenFreeDiet
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune @damage) @treat
     return @chain
 end
 
@@ -743,7 +687,6 @@ end
     @chronic isChronic Psoriasis Relapsing
     @treat requiresTreatment Psoriasis TopicalCorticosteroid
     @treat2 mayRequireTreatment Psoriasis Biologic
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune @chronic) (And @treat @treat2)
     return @chain
 end
 
@@ -753,7 +696,6 @@ end
     @cond indicatesCondition InsulinDeficiency Type1Diabetes
     @treat requiresLifelong Type1Diabetes InsulinTherapy
     @monitor requiresMonitoring Type1Diabetes HbA1c
-    @chain Implies (And @path @result @cond) (And @treat @monitor)
     return @chain
 end
 
@@ -770,7 +712,6 @@ end
     @common commonCause IronDeficiency Anemia
     @treat requiresTreatment IronDeficiencyAnemia IronSupplement
     @monitor requiresMonitoring Anemia CBC
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @common) (And @treat @monitor)
     return @chain
 end
 
@@ -783,7 +724,6 @@ end
     @severe isSevere Leukemia Cancer
     @treat requiresTreatment Leukemia Chemotherapy
     @proc mayRequireProcedure Leukemia BoneMarrowTransplant
-    @chain Implies (And @sym @sym2 @sym3 @cond @path @severe) (And @treat @proc)
     return @chain
 end
 
@@ -795,7 +735,6 @@ end
     @genetic isInherited Hemophilia XLinked
     @treat requiresTreatment Hemophilia FactorReplacement
     @emergency requiresEmergency SevereBleed ImmediateTreatment
-    @chain Implies (And @sym @sym2 @cond @path @genetic) (And @treat @emergency)
     return @chain
 end
 
@@ -808,7 +747,6 @@ end
     @genetic isInherited SickleCellDisease AutosomalRecessive
     @treat requiresTreatment SickleCellDisease Hydroxyurea
     @support requiresSupport PainCrisis Analgesic
-    @chain Implies (And @sym @sym2 @cond @path @mech @genetic) (And @treat @support)
     return @chain
 end
 
@@ -821,7 +759,6 @@ end
     @risk riskFactor Medication Thrombocytopenia
     @severe canCause SevereThrombocytopenia Hemorrhage
     @treat mayRequireTreatment Thrombocytopenia PlateletTransfusion
-    @chain Implies (And @sym @sym2 @sym3 @cond @path) @treat
     return @chain
 end
 
@@ -836,7 +773,6 @@ end
     @effect2 decreases BetaBlocker BloodPressure
     @indication indicatedFor BetaBlocker Hypertension
     @indication2 indicatedFor BetaBlocker Angina
-    @chain Implies (And @drug @mech) (And @effect @effect2 @indication @indication2)
     return @chain
 end
 
@@ -848,7 +784,6 @@ end
     @benefit decreases ACEInhibitor BloodPressure
     @indication indicatedFor ACEInhibitor Hypertension
     @indication2 indicatedFor ACEInhibitor HeartFailure
-    @chain Implies (And @drug @mech @result @effect) (And @benefit @indication @indication2)
     return @chain
 end
 
@@ -859,7 +794,6 @@ end
     @benefit lowers Statin LDL
     @indication indicatedFor Statin Hyperlipidemia
     @prevention reduces Statin CardiovascularRisk
-    @chain Implies (And @drug @mech @effect @benefit) (And @indication @prevention)
     return @chain
 end
 
@@ -870,7 +804,6 @@ end
     @benefit heals PPI Ulcer
     @indication indicatedFor PPI GERD
     @indication2 indicatedFor PPI PepticUlcer
-    @chain Implies (And @drug @mech @effect @benefit) (And @indication @indication2)
     return @chain
 end
 
@@ -882,7 +815,6 @@ end
     @effect2 hasEffect NSAID Analgesic
     @effect3 hasEffect NSAID Antipyretic
     @risk increasesRisk NSAID GIBleeding
-    @chain Implies (And @drug @mech @result) (And @effect1 @effect2 @effect3 @risk)
     return @chain
 end
 
@@ -893,7 +825,6 @@ end
     @effect2 causes Opioid Sedation
     @risk causesRisk Opioid RespiratoryDepression
     @addiction hasRisk Opioid Dependence
-    @chain Implies (And @drug @mech) (And @effect @effect2 @risk @addiction)
     return @chain
 end
 
@@ -904,7 +835,6 @@ end
     @effect2 provides Benzodiazepine Sedation
     @indication indicatedFor Benzodiazepine Anxiety
     @risk causesRisk Benzodiazepine Dependence
-    @chain Implies (And @drug @mech) (And @effect @effect2 @indication @risk)
     return @chain
 end
 
@@ -914,7 +844,6 @@ end
     @effect isBactericidal Penicillin GramPositive
     @indication indicatedFor Penicillin BacterialInfection
     @resistance hasResistance BetaLactamase Penicillin
-    @chain Implies (And @drug @mech @effect) @indication
     return @chain
 end
 
@@ -924,7 +853,6 @@ end
     @effect isBactericidal Fluoroquinolone BroadSpectrum
     @indication indicatedFor Fluoroquinolone UTI
     @risk increasesRisk Fluoroquinolone TendonRupture
-    @chain Implies (And @drug @mech @effect) (And @indication @risk)
     return @chain
 end
 
@@ -935,7 +863,6 @@ end
     @indication indicatedFor Warfarin AtrialFibrillation
     @monitor requiresMonitoring Warfarin INR
     @risk increasesRisk Warfarin Bleeding
-    @chain Implies (And @drug @mech @effect) (And @indication @monitor @risk)
     return @chain
 end
 
@@ -945,7 +872,6 @@ end
     @effect decreases Insulin BloodGlucose
     @indication indicatedFor Insulin DiabetesMellitus
     @risk causesRisk Insulin Hypoglycemia
-    @chain Implies (And @drug @mech @effect) (And @indication @risk)
     return @chain
 end
 
@@ -957,7 +883,6 @@ end
     @indication indicatedFor Corticosteroid AutoimmuneDisease
     @risk increasesRisk Corticosteroid Infection
     @risk2 causes Corticosteroid Osteoporosis
-    @chain Implies (And @drug @mech) (And @effect @effect2 @indication @risk @risk2)
     return @chain
 end
 
@@ -972,7 +897,6 @@ end
     @mech1 inhibitsClotting Warfarin Blood
     @mech2 damageMucosa NSAID GITract
     @warning contraindicatedCombination Warfarin NSAID
-    @chain Implies (And @drug1 @drug2 @mech1 @mech2) (And @interaction @warning)
     return @chain
 end
 
@@ -982,7 +906,6 @@ end
     @interaction increasesRisk CombinedUse Myopathy
     @severe canCause MyopathySevere Rhabdomyolysis
     @monitor requiresMonitoring StatinFibrate CPK
-    @chain Implies (And @drug1 @drug2 @interaction) (And @severe @monitor)
     return @chain
 end
 
@@ -992,7 +915,6 @@ end
     @interaction increasesRisk CombinedUse Hyperkalemia
     @mech decreasesExcretion ACEInhibitor Potassium
     @monitor requiresMonitoring ACE_Potassium SerumPotassium
-    @chain Implies (And @drug @supplement @mech) (And @interaction @monitor)
     return @chain
 end
 
@@ -1003,7 +925,6 @@ end
     @severe isSevere SerotoninSyndrome LifeThreatening
     @contraindication absoluteContraindication SSRI MAOI
     @washout requiresWashoutPeriod MAOI TwoWeeks
-    @chain Implies (And @drug1 @drug2) (And @interaction @severe @contraindication @washout)
     return @chain
 end
 
@@ -1018,7 +939,6 @@ end
     @detects visualizes Echo ValveAbnormality
     @indication indicatedFor Echo HeartFailure
     @noninvasive isNoninvasive Echocardiography Safe
-    @chain Implies (And @proc @method) (And @assesses @detects @indication @noninvasive)
     return @chain
 end
 
@@ -1029,7 +949,6 @@ end
     @detects identifies CTScan Pathology
     @risk exposesTo CTScan Radiation
     @contrast mayRequireContrast CTScan IVContrast
-    @chain Implies (And @proc @method @produces) (And @detects @risk @contrast)
     return @chain
 end
 
@@ -1040,7 +959,6 @@ end
     @best excellentFor MRI SoftTissue
     @safe noRadiation MRI Safer
     @contraindication contraindicatedWith MRI MetalImplants
-    @chain Implies (And @proc @method @produces) (And @best @safe @contraindication)
     return @chain
 end
 
@@ -1051,7 +969,6 @@ end
     @therapeutic canRemove Colonoscopy Polyps
     @screening indicatedForScreening Colonoscopy ColorectalCancer
     @prep requiresPreparation Colonoscopy BowelPrep
-    @chain Implies (And @proc @method) (And @detects @therapeutic @screening @prep)
     return @chain
 end
 
@@ -1061,7 +978,6 @@ end
     @detects identifies ECG ArrhythmiaAbnormality
     @indication indicatedFor ECG ChestPain
     @quick isQuick ECG Noninvasive
-    @chain Implies (And @proc @method) (And @detects @indication @quick)
     return @chain
 end
 
@@ -1071,7 +987,6 @@ end
     @detects identifies BloodCulture Bacteremia
     @indication indicatedFor BloodCulture Sepsis
     @guides determinesTreatment BloodCulture AntibioticChoice
-    @chain Implies (And @proc @method @detects) (And @indication @guides)
     return @chain
 end
 
@@ -1082,7 +997,6 @@ end
     @indication indicatedFor LumbarPuncture Meningitis
     @risk hasRisk LumbarPuncture Headache
     @contraindication contraindicatedWith LumbarPuncture IncreasedICP
-    @chain Implies (And @proc @method @analyzes) (And @indication @risk @contraindication)
     return @chain
 end
 
@@ -1097,7 +1011,6 @@ end
     @method usesGraft CABG VeinArtery
     @outcome improves CABG BloodFlow
     @risk hasRisk CABG Stroke
-    @chain Implies (And @proc @purpose @method) (And @indication @outcome @risk)
     return @chain
 end
 
@@ -1107,7 +1020,6 @@ end
     @indication indicatedFor Appendectomy Appendicitis
     @urgent isUrgent Appendectomy Emergency
     @risk preventsComplication Appendectomy Peritonitis
-    @chain Implies (And @proc @purpose @indication @urgent) @risk
     return @chain
 end
 
@@ -1118,7 +1030,6 @@ end
     @method uses HipReplacement Prosthesis
     @outcome improves HipReplacement Mobility
     @recovery requiresRehabilitation HipReplacement PhysicalTherapy
-    @chain Implies (And @proc @purpose @method) (And @indication @outcome @recovery)
     return @chain
 end
 
@@ -1129,7 +1040,6 @@ end
     @indication2 indicatedFor Thyroidectomy Hyperthyroidism
     @consequence requiresLifelong Thyroidectomy LevothyroxineReplacement
     @risk hasRisk Thyroidectomy HypoparathyroidismRecurrentLaryngealNerve
-    @chain Implies (And @proc @purpose) (And @indication @indication2 @consequence @risk)
     return @chain
 end
 
@@ -1140,7 +1050,6 @@ end
     @indication2 indicatedFor Nephrectomy NonFunctioningKidney
     @outcome canBeCurative Nephrectomy LocalizedCancer
     @note remainingKidney Nephrectomy AdequateFunction
-    @chain Implies (And @proc @purpose) (And @indication @indication2 @outcome @note)
     return @chain
 end
 
@@ -1155,7 +1064,6 @@ end
     @procedures2 performs Cardiologist CardiacCatheterization
     @treats managesCondition Cardiologist HeartFailure
     @treats2 managesCondition Cardiologist Arrhythmia
-    @chain Implies (And @role @expertise) (And @procedures @procedures2 @treats @treats2)
     return @chain
 end
 
@@ -1166,7 +1074,6 @@ end
     @treats managesCondition Pulmonologist Asthma
     @treats2 managesCondition Pulmonologist COPD
     @treats3 managesCondition Pulmonologist PulmonaryFibrosis
-    @chain Implies (And @role @expertise) (And @procedures @treats @treats2 @treats3)
     return @chain
 end
 
@@ -1177,7 +1084,6 @@ end
     @treats managesCondition Neurologist Epilepsy
     @treats2 managesCondition Neurologist Stroke
     @treats3 managesCondition Neurologist Parkinsons
-    @chain Implies (And @role @expertise) (And @procedures @treats @treats2 @treats3)
     return @chain
 end
 
@@ -1188,7 +1094,6 @@ end
     @procedures2 performs Gastroenterologist Endoscopy
     @treats managesCondition Gastroenterologist IBD
     @treats2 managesCondition Gastroenterologist Cirrhosis
-    @chain Implies (And @role @expertise) (And @procedures @procedures2 @treats @treats2)
     return @chain
 end
 
@@ -1198,7 +1103,6 @@ end
     @treats managesCondition Endocrinologist Diabetes
     @treats2 managesCondition Endocrinologist ThyroidDisease
     @treats3 managesCondition Endocrinologist AdrenalDisorders
-    @chain Implies (And @role @expertise) (And @treats @treats2 @treats3)
     return @chain
 end
 
@@ -1208,7 +1112,6 @@ end
     @treats managesCondition Nephrologist CKD
     @treats2 managesCondition Nephrologist AKI
     @procedures oversees Nephrologist Dialysis
-    @chain Implies (And @role @expertise) (And @treats @treats2 @procedures)
     return @chain
 end
 
@@ -1219,7 +1122,6 @@ end
     @treats2 managesCondition Hematologist Leukemia
     @treats3 managesCondition Hematologist Hemophilia
     @procedures interprets Hematologist BoneMarrowBiopsy
-    @chain Implies (And @role @expertise) (And @treats @treats2 @treats3 @procedures)
     return @chain
 end
 
@@ -1229,7 +1131,6 @@ end
     @treats prescribes Oncologist Chemotherapy
     @treats2 coordinates Oncologist RadiationTherapy
     @manages providesCareTo Oncologist CancerPatients
-    @chain Implies (And @role @expertise) (And @treats @treats2 @manages)
     return @chain
 end
 
@@ -1240,7 +1141,6 @@ end
     @treats2 managesCondition InfectiousDiseaseSpecialist HIV
     @treats3 managesCondition InfectiousDiseaseSpecialist Tuberculosis
     @advises provides InfectiousDiseaseSpecialist AntimicrobialStewardship
-    @chain Implies (And @role @expertise) (And @treats @treats2 @treats3 @advises)
     return @chain
 end
 
@@ -1250,7 +1150,6 @@ end
     @setting worksIn EmergencyMedicinePhysician EmergencyDepartment
     @manages triages EmergencyMedicinePhysician Patients
     @treats stabilizes EmergencyMedicinePhysician LifeThreateningConditions
-    @chain Implies (And @role @expertise @setting) (And @manages @treats)
     return @chain
 end
 
@@ -1266,7 +1165,6 @@ end
     @path damagesBloodVessels Hyperglycemia Microvasculature
     @prevention preventedBy GlycemicControl Complications
     @screen requiresScreening Diabetes RegularEyeExam
-    @chain Implies (And @condition @path) (And @compl1 @compl2 @compl3 @prevention @screen)
     return @chain
 end
 
@@ -1279,7 +1177,6 @@ end
     @risk increasesRisk MetabolicSyndrome Type2Diabetes
     @risk2 increasesRisk MetabolicSyndrome CardiovascularDisease
     @manage requiresManagement MetabolicSyndrome LifestyleModification
-    @chain Implies (And @syndrome @component @component2 @component3 @component4) (And @risk @risk2 @manage)
     return @chain
 end
 
@@ -1291,7 +1188,6 @@ end
     @path causedByRupture AtheroscleroticPlaque Thrombosis
     @urgent requiresUrgent ACS Revascularization
     @treat requiresTreatment ACS Antiplatelet
-    @chain Implies (And @syndrome @type1 @type2 @type3 @path) (And @urgent @treat)
     return @chain
 end
 
@@ -1304,7 +1200,6 @@ end
     @path causesInadequate Shock TissuePerfusion
     @result leadsTo Shock OrganFailure
     @treat requiresImmediate Shock Resuscitation
-    @chain Implies (And @condition @type1 @type2 @type3 @type4 @path) (And @result @treat)
     return @chain
 end
 
@@ -1317,7 +1212,6 @@ end
     @pathogen2 commonlyBy HAP Pseudomonas
     @severity assessedBy Pneumonia CURB65
     @treat requiresTreatment Pneumonia EmpiricalAntibiotic
-    @chain Implies (And @infection @type1 @type2 @type3) (And @pathogen1 @pathogen2 @severity @treat)
     return @chain
 end
 
@@ -1329,7 +1223,6 @@ end
     @modality3 includesModality RRT KidneyTransplant
     @function replacesFunction RRT KidneyFunction
     @removes eliminatesWaste RRT Toxins
-    @chain Implies (And @therapy @indication @modality1 @modality2 @modality3) (And @function @removes)
     return @chain
 end
 
@@ -1341,7 +1234,6 @@ end
     @contraindication contraindicatedIn Vaccine Immunocompromised
     @benefit preventsDisease Vaccine Infection
     @herd contributesTo HighVaccinationRate HerdImmunity
-    @chain Implies (And @intervention @mech @result) (And @schedule @benefit @herd)
     return @chain
 end
 
@@ -1353,7 +1245,6 @@ end
     @purpose determines Staging Prognosis
     @guides informs Staging TreatmentDecision
     @standard usedUniversally TNM Oncology
-    @chain Implies (And @system @component1 @component2 @component3) (And @purpose @guides @standard)
     return @chain
 end
 
@@ -1366,7 +1257,6 @@ end
     @example3 includes Resistance MDR_TB
     @solution requires Resistance AntimicrobialStewardship
     @prevention reducedBy Resistance AppropriateUse
-    @chain Implies (And @problem @cause @mech @example @example2 @example3) (And @solution @prevention)
     return @chain
 end
 
@@ -1378,7 +1268,6 @@ end
     @provides2 addresses PalliativeCare PsychologicalDistress
     @appropriate indicatedFor PalliativeCare TerminalIllness
     @team involvesInterdisciplinary PalliativeCare Team
-    @chain Implies (And @approach @focus @appropriate) (And @goal @provides @provides2 @team)
     return @chain
 end
 
@@ -1395,7 +1284,6 @@ end
     @screen diagnosedBy Osteoporosis DEXAScan
     @treat requiresTreatment Osteoporosis Bisphosphonate
     @prevent requiresAdequate Osteoporosis CalciumVitaminD
-    @chain Implies (And @condition @path @risk @complication) (And @screen @treat @prevent)
     return @chain
 end
 
@@ -1407,7 +1295,6 @@ end
     @screen requiresScreening Glaucoma Tonometry
     @treat requiresTreatment Glaucoma EyeDrops
     @urgent requiresEmergency AcuteGlaucoma Surgery
-    @chain Implies (And @condition @path @result @consequence) (And @screen @treat @urgent)
     return @chain
 end
 
@@ -1420,7 +1307,6 @@ end
     @acute treatAcuteWith Gout NSAIDColchicine
     @chronic preventWithLongterm Gout Allopurinol
     @lifestyle requiresModification Gout DietAlcohol
-    @chain Implies (And @condition @path @risk @sym) (And @acute @chronic @lifestyle)
     return @chain
 end
 
@@ -1433,7 +1319,6 @@ end
     @chronic isChronic Schizophrenia Lifelong
     @treat requiresTreatment Schizophrenia Antipsychotic
     @support requiresSupport Schizophrenia Psychosocial
-    @chain Implies (And @condition @sym @sym2 @sym3 @path @chronic) (And @treat @support)
     return @chain
 end
 
@@ -1446,7 +1331,6 @@ end
     @duration persistsForWeeks Depression TwoWeeks
     @treat requiresTreatment Depression SSRI
     @therapy benefitsFrom Depression Psychotherapy
-    @chain Implies (And @condition @sym @sym2 @sym3 @path @duration) (And @treat @therapy)
     return @chain
 end
 
@@ -1459,7 +1343,6 @@ end
     @path causedByDysfunction BipolarDisorder MoodRegulation
     @treat requiresTreatment BipolarDisorder MoodStabilizer
     @monitor requiresMonitoring BipolarDisorder LithiumLevel
-    @chain Implies (And @condition @episode1 @episode2 @sym @sym2) (And @treat @monitor)
     return @chain
 end
 
@@ -1472,7 +1355,6 @@ end
     @path causedByRapid Anaphylaxis HistamineRelease
     @emergency requiresImmediate Anaphylaxis Epinephrine
     @route administeredBy Epinephrine IM
-    @chain Implies (And @condition @sym @sym2 @sym3 @severe @path) (And @emergency @route)
     return @chain
 end
 
@@ -1484,7 +1366,6 @@ end
     @severe isSevere MyxedemaComa LifeThreatening
     @emergency requiresICU MyxedemaComa IVLevothyroxine
     @support requiresSupport MyxedemaComa Warming
-    @chain Implies (And @condition @sym @sym2 @sym3 @severe) (And @emergency @support)
     return @chain
 end
 
@@ -1496,7 +1377,6 @@ end
     @test showsChanges ECG STElevation
     @treat requiresTreatment Pericarditis NSAID
     @treat2 mayRequireTreatment Pericarditis Colchicine
-    @chain Implies (And @condition @sym @sym2 @finding @test) (And @treat @treat2)
     return @chain
 end
 
@@ -1508,7 +1388,6 @@ end
     @compl3 leadsToDevelopment PortalHypertension Splenomegaly
     @risk increasesRisk EsophagealVarices Bleeding
     @treat requiresTreatment EsophagealVarices BetaBlockerBandLigation
-    @chain Implies (And @condition @path @compl1 @compl2 @compl3 @risk) @treat
     return @chain
 end
 
@@ -1521,7 +1400,6 @@ end
     @trigger triggeredBy Stress InfectionSurgery
     @emergency requiresImmediate AdrenalCrisis IVHydrocortisone
     @support requiresSupport AdrenalCrisis IVFluidsElectrolytes
-    @chain Implies (And @condition @path @sym @sym2 @sym3 @trigger) (And @emergency @support)
     return @chain
 end
 
@@ -1534,7 +1412,6 @@ end
     @sym presentsSymptom Patient KussmaulsRespiration
     @treat requiresImmediateTreatment DKA IVInsulin
     @support requiresSupport DKA IVFluidsElectrolytes
-    @chain Implies (And @condition @path @lab @lab2 @lab3 @sym) (And @treat @support)
     return @chain
 end
 
@@ -1547,7 +1424,6 @@ end
     @cause triggeredBy Sepsis Pneumonia
     @treat requiresTreatment ARDS MechanicalVentilation
     @strategy uses ARDS LowTidalVolume
-    @chain Implies (And @condition @path @result @sym @sym2 @cause) (And @treat @strategy)
     return @chain
 end
 
@@ -1561,7 +1437,6 @@ end
     @test diagnosedBy MyastheniaGravis TensilonTest
     @treat requiresTreatment MyastheniaGravis Pyridostigmine
     @crisis hasEmergency MyastheniaGravis MyasthenicCrisis
-    @chain Implies (And @condition @path @sym @sym2 @sym3 @worse @test) (And @treat @crisis)
     return @chain
 end
 
@@ -1575,7 +1450,6 @@ end
     @treat requiresTreatment GBS IVIG
     @treat2 requiresTreatment GBS Plasmapheresis
     @monitor requiresMonitoring GBS RespiratoryFunction
-    @chain Implies (And @condition @path @sym @sym2 @preceded @severe) (And @treat @treat2 @monitor)
     return @chain
 end
 
@@ -1588,7 +1462,6 @@ end
     @imaging diagnosedBy Diverticulitis CTScan
     @treat requiresTreatment Diverticulitis AntibioticBowelRest
     @severe mayRequireSurgery ComplicatedDiverticulitis Resection
-    @chain Implies (And @condition @path @sym @sym2 @imaging) (And @treat @severe)
     return @chain
 end
 
@@ -1602,7 +1475,6 @@ end
     @imaging diagnosedBy AorticDissection CTAngiography
     @treat requiresImmediate AorticDissection BetaBlockerBPControl
     @surgery mayRequireEmergency TypeADissection Surgery
-    @chain Implies (And @condition @path @risk @sym @sym2 @finding @imaging) (And @treat @surgery)
     return @chain
 end
 
@@ -1615,7 +1487,6 @@ end
     @imaging showsInflammation CTAbdomen Pancreas
     @manage requiresManagement AcutePancreatitis NPO_IVFluids
     @proc mayRequireProcedure GallstonePancreatitis ERCP
-    @chain Implies (And @condition @cause @lab @lab2 @sym @imaging) (And @manage @proc)
     return @chain
 end
 
@@ -1629,7 +1500,6 @@ end
     @confirm confirmedBy PulmonaryHypertension RightHeartCatheterization
     @treat requiresTreatment PulmonaryHypertension Sildenafil
     @treat2 mayRequireTreatment PulmonaryHypertension Prostacyclin
-    @chain Implies (And @condition @path @sym @sym2 @severe @imaging @confirm) (And @treat @treat2)
     return @chain
 end
 
@@ -1643,7 +1513,6 @@ end
     @lifeThreat isSevere DeliriumTremens LifeThreatening
     @treat requiresTreatment AlcoholWithdrawal Benzodiazepine
     @monitor requiresMonitoring AlcoholWithdrawal CIWA_Score
-    @chain Implies (And @condition @path @sym @sym2 @sym3 @severe @lifeThreat) (And @treat @monitor)
     return @chain
 end
 
@@ -1656,7 +1525,6 @@ end
     @severe canProgressTo Preeclampsia Eclampsia
     @treat requiresTreatment Preeclampsia MagnesiumSulfate
     @definitive isCuredBy Preeclampsia Delivery
-    @chain Implies (And @condition @path @sym @sym2 @sym3 @severe) (And @treat @definitive)
     return @chain
 end
 
@@ -1669,6 +1537,5 @@ end
     @manage requiresManagement SickleCellCrisis AggressiveHydration
     @treat requiresPainControl SickleCellCrisis Opioids
     @exchange mayRequireProcedure SevereVasoOcclusiveCrisis ExchangeTransfusion
-    @chain Implies (And @condition @path @trigger @sym @organ) (And @manage @treat @exchange)
     return @chain
 end

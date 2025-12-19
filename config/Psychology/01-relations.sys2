@@ -1,99 +1,99 @@
 # Psychology - Fundamental Relations
 
 # Emotional Relations
-@experiences isA __Relation
-@feels isA __Relation
-@elicits isA __Relation
-@expressesEmotion isA __Relation
+experiences isA __Relation
+feels isA __Relation
+elicits isA __Relation
+expressesEmotion isA __Relation
 
 # Personality Relations
-@hasTrait isA __Relation
-@characterizedBy isA __Relation
-@displays isA __Relation
-@predisposedTo isA __Relation
+hasTrait isA __Relation
+characterizedBy isA __Relation
+displays isA __Relation
+predisposedTo isA __Relation
 
 # Belief & Knowledge
-@believes isA __Relation
-@knows isA __Relation
-@doubts isA __Relation
-@accepts isA __Relation
-@rejects isA __Relation
+believes isA __Relation
+knows isA __Relation
+doubts isA __Relation
+accepts isA __Relation
+rejects isA __Relation
 
 # Motivational Relations
-@motivatedBy isA __Relation
-@drivesToward isA __Relation
-@pursuesGoal isA __Relation
-@incentivizedBy isA __Relation
+motivatedBy isA __Relation
+drivesToward isA __Relation
+pursuesGoal isA __Relation
+incentivizedBy isA __Relation
 
 # Behavioral Relations
-@does isA __Relation
-@performs isA __Relation
-@exhibits isA __Relation
-@engagesIn isA __Relation
-@responds isA __Relation
+does isA __Relation
+performs isA __Relation
+exhibits isA __Relation
+engagesIn isA __Relation
+responds isA __Relation
 
 # Learning Relations
-@reinforcedBy isA __Relation
-@conditionedTo isA __Relation
-@learns isA __Relation
-@acquires isA __Relation
-@generalizes isA __Relation
+reinforcedBy isA __Relation
+conditionedTo isA __Relation
+learns isA __Relation
+acquires isA __Relation
+generalizes isA __Relation
 
 # Coping Relations
-@copingWith isA __Relation
-@manages isA __Relation
-@adaptsTo isA __Relation
-@regulatesEmotion isA __Relation
+copingWith isA __Relation
+manages isA __Relation
+adaptsTo isA __Relation
+regulatesEmotion isA __Relation
 
 # Clinical Relations
-@treatedBy isA __Relation
-@diagnosedWith isA __Relation
-@respondsTo isA __Relation
-@symptomatic isA __Relation
-@recoversFrom isA __Relation
+treatedBy isA __Relation
+diagnosedWith isA __Relation
+respondsTo isA __Relation
+symptomatic isA __Relation
+recoversFrom isA __Relation
 
 # Risk Relations
-@riskOf isA __Relation
-@triggeredBy isA __Relation
-@vulnerableTo isA __Relation
-@protectedBy isA __Relation
+riskOf isA __Relation
+triggeredBy isA __Relation
+vulnerableTo isA __Relation
+protectedBy isA __Relation
 
 # Causal Relations
-@causes isA __Relation
-@leadingTo isA __Relation
-@resultingIn isA __Relation
-@contributes isA __Relation
+causes isA __Relation
+leadingTo isA __Relation
+resultingIn isA __Relation
+contributes isA __Relation
 
 # Bias & Decision
-@biasInfluences isA __Relation
-@influences isA __Relation
-@affects isA __Relation
-@distorts isA __Relation
-@impairs isA __Relation
+biasInfluences isA __Relation
+influences isA __Relation
+affects isA __Relation
+distorts isA __Relation
+impairs isA __Relation
 
 # Cognitive Relations
-@processes isA __Relation
-@attends isA __Relation
-@perceives isA __Relation
-@remembers isA __Relation
-@retrieves isA __Relation
+processes isA __Relation
+attends isA __Relation
+perceives isA __Relation
+remembers isA __Relation
+retrieves isA __Relation
 
 # Memory Relations
-@stores isA __Relation
-@encodes isA __Relation
-@consolidates isA __Relation
-@recalls isA __Relation
-@forgets isA __Relation
+stores isA __Relation
+encodes isA __Relation
+consolidates isA __Relation
+recalls isA __Relation
+forgets isA __Relation
 
 # Social Influence
-@persuades isA __Relation
-@conformsTo isA __Relation
-@obeys isA __Relation
-@identifies isA __Relation
+persuades isA __Relation
+conformsTo isA __Relation
+obeys isA __Relation
+identifies isA __Relation
 
 # Attribution Relations
-@attributesTo isA __Relation
-@blames isA __Relation
-@credits isA __Relation
-@internalizes isA __Relation
-@externalizes isA __Relation
+attributesTo isA __Relation
+blames isA __Relation
+credits isA __Relation
+internalizes isA __Relation
+externalizes isA __Relation

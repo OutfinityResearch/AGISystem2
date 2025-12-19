@@ -27,11 +27,11 @@ shorten_path() {
 # Example: INCLUDED_NODE_MODULES=(my-shared-lib another-lib)
 INCLUDED_NODE_MODULES=()
 
-# Collect all JS/MJS, HTML and MD files, pruning node_modules entirely for speed.
+# Collect all JS/MJS, HTML, MD and SYS2 files, pruning node_modules entirely for speed.
 files_to_process=()
 while IFS= read -r -d '' file; do
   files_to_process+=("$file")
-done < <(find . -path "*/node_modules" -prune -o -type f \( -name "*.js" -o -name "*.mjs" -o -name "*.html" -o -name "*.md" \) -print0)
+done < <(find . -path "*/node_modules" -prune -o -type f \( -name "*.js" -o -name "*.mjs" -o -name "*.html" -o -name "*.md" -o -name "*.sys2" \) -print0)
 
 # Collect explicitly included node_modules (if any).
 if [[ ${#INCLUDED_NODE_MODULES[@]} -gt 0 ]]; then
@@ -45,24 +45,27 @@ if [[ ${#INCLUDED_NODE_MODULES[@]} -gt 0 ]]; then
 fi
 
 if [[ ${#files_to_process[@]} -eq 0 ]]; then
-  echo "No JavaScript, HTML, or Markdown files found."
+  echo "No JavaScript, HTML, Markdown, or Config files found."
   exit 0
 fi
 
 js_files=()
 html_files=()
 md_files=()
+sys2_files=()
 for file in "${files_to_process[@]}"; do
   case "$file" in
     *.js|*.mjs) js_files+=("$file") ;;
     *.html) html_files+=("$file") ;;
     *.md) md_files+=("$file") ;;
+    *.sys2) sys2_files+=("$file") ;;
   esac
 done
 
 total_js_lines=0
 total_html_lines=0
 total_md_lines=0
+total_sys2_lines=0
 
 # Render a category as a 3-column table, preserving original sort order
 render_category() {
@@ -143,6 +146,56 @@ if [[ ${#md_files[@]} -gt 0 ]]; then
   render_category "Markdown Files" md_rows
 fi
 
+# SYS2 config files section - afișare compactă pe folder
+if [[ ${#sys2_files[@]} -gt 0 ]]; then
+  # Extrage toate folder-urile unice din config
+  declare -A sys2_folders
+  for file in "${sys2_files[@]}"; do
+    # Extrage folder-ul din config/ (ex: config/Core -> Core)
+    folder=$(echo "$file" | sed 's|^./config/||' | cut -d'/' -f1)
+    sys2_folders["$folder"]=1
+  done
+
+  # Sortează folder-urile, dar pune Core la început
+  sorted_sys2_folders=()
+  if [[ -v sys2_folders["Core"] ]]; then
+    sorted_sys2_folders+=("Core")
+  fi
+  for folder in "${!sys2_folders[@]}"; do
+    if [[ "$folder" != "Core" ]]; then
+      sorted_sys2_folders+=("$folder")
+    fi
+  done
+
+  # Construiește array cu "lines folder" pentru afișare compactă
+  config_summary=()
+  for folder in "${sorted_sys2_folders[@]}"; do
+    folder_files=()
+    for file in "${sys2_files[@]}"; do
+      file_folder=$(echo "$file" | sed 's|^./config/||' | cut -d'/' -f1)
+      if [[ "$file_folder" == "$folder" ]]; then
+        folder_files+=("$file")
+      fi
+    done
+
+    if [[ ${#folder_files[@]} -gt 0 ]]; then
+      folder_sys2_output=$(printf '%s\0' "${folder_files[@]}" | xargs -0 wc -l | sort -n)
+      folder_total=$(echo "$folder_sys2_output" | tail -n 1 | awk '{print $1}')
+      config_summary+=("$folder_total $folder")
+    fi
+  done
+
+  # Afișează sumar compact folosind render_category
+  render_category "Config Files (config/*.sys2)" config_summary
+
+  # Calculează totalul SYS2
+  sys2_lines_output=$(printf '%s\0' "${sys2_files[@]}" | xargs -0 wc -l | sort -n)
+  total_sys2_lines_raw=$(echo "$sys2_lines_output" | tail -n 1 | awk '{print $1}')
+  if [[ -n "$total_sys2_lines_raw" ]]; then
+    total_sys2_lines=$total_sys2_lines_raw
+  fi
+fi
+
 # JS section last (cele mai importante) - grupate pe folder din rădăcină
 if [[ ${#js_files[@]} -gt 0 ]]; then
   # Extrage toate folder-urile unice din rădăcină
@@ -201,8 +254,9 @@ if [[ ${#js_files[@]} -gt 0 ]]; then
 fi
 
 echo "--- Summary ---"
-echo "Total HTML lines: ${total_html_lines:-0}"
-echo "Total MD lines:   ${total_md_lines:-0}"
-echo "Total JS lines:   ${total_js_lines:-0}"
-grand_total=$((total_js_lines + total_html_lines + total_md_lines))
-echo "Grand Total lines: $grand_total"
+echo "Total HTML lines:   ${total_html_lines:-0}"
+echo "Total MD lines:     ${total_md_lines:-0}"
+echo "Total Config lines: ${total_sys2_lines:-0}"
+echo "Total JS lines:     ${total_js_lines:-0}"
+grand_total=$((total_js_lines + total_html_lines + total_md_lines + total_sys2_lines))
+echo "Grand Total lines:  $grand_total"

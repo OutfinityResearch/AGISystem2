@@ -487,10 +487,11 @@ export class ProofEngine {
     // Support both dense-binary (data) and sparse-polynomial (exponents) vectors
     if (!vec) return 'invalid:' + Math.random().toString(36);
 
-    // Dense-binary: use first 8 words to reduce collisions
+    // Dense-binary / metric-affine: use first 8 entries to reduce collisions
     if (vec.data) {
       const parts = [];
-      for (let i = 0; i < Math.min(8, vec.words || 0); i++) {
+      const limit = Number.isFinite(vec.words) ? vec.words : vec.data.length;
+      for (let i = 0; i < Math.min(8, limit || 0); i++) {
         parts.push(vec.data[i]?.toString(16) || '0');
       }
       return parts.join(':');

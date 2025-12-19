@@ -19,7 +19,6 @@ end
     @p1 InPeriod $Period Prehistory
     @p2 Developed $Period $Technology
     @p3 Enabled $Technology $Society
-    @chain Implies (And $p1 $p2) $p3
     return $chain
 end
 
@@ -27,7 +26,6 @@ end
     @d1 Discovered Humans Fire
     @d2 Enabled Fire Cooking
     @d3 Improved Cooking $Survival
-    @chain Implies (And $d1 $d2) $d3
     return $chain
 end
 
@@ -47,7 +45,6 @@ end
     @c2 Built Egypt Pyramids
     @c3 ServedAs Pyramids Tombs
     @c4 HonoredThe Tombs Pharaohs
-    @chain Implies (And $c1 (And $c2 $c3)) $c4
     return $chain
 end
 
@@ -56,7 +53,6 @@ end
     @w2 UsedFor Hieroglyphics Writing
     @w3 Enabled Writing Communication
     @w4 Preserved Communication History
-    @chain Implies (And $w1 (And $w2 $w3)) $w4
     return $chain
 end
 
@@ -66,7 +62,6 @@ end
     @r3 Enriched Flooding Soil
     @r4 Enabled FertileSoil Agriculture
     @r5 Supported Agriculture Civilization
-    @chain Implies (And $r1 (And $r2 (And $r3 $r4))) $r5
     return $chain
 end
 
@@ -83,7 +78,6 @@ end
     @l2 Led RamsesII Military
     @l3 Expanded Military Territory
     @l4 Built RamsesII Monuments
-    @chain Implies (And $l1 (And $l2 $l3)) $l4
     return $chain
 end
 
@@ -101,7 +95,6 @@ end
     @w2 FirstKnown Cuneiform WritingSystem
     @w3 Used Cuneiform RecordKeeping
     @w4 Enabled RecordKeeping Trade
-    @chain Implies (And $w1 (And $w2 $w3)) $w4
     return $chain
 end
 
@@ -111,7 +104,6 @@ end
     @r3 FirstKnown CodeOfLaws WrittenLaw
     @r4 Established WrittenLaw Justice
     @r5 Organized Justice Society
-    @chain Implies (And $r1 (And $r2 (And $r3 $r4))) $r5
     return $chain
 end
 
@@ -121,7 +113,6 @@ end
     @g3 Enabled BothRivers Irrigation
     @g4 Supported Irrigation Agriculture
     @g5 Led Agriculture Cities
-    @chain Implies (And $g1 (And $g2 (And $g3 $g4))) $g5
     return $chain
 end
 
@@ -148,7 +139,6 @@ end
     @a3 FirstKnown Democracy DirectDemocracy
     @a4 Influenced DirectDemocracy ModernGovernment
     @a5 Allowed Democracy CitizenParticipation
-    @chain Implies (And $a1 (And $a2 (And $a3 $a4))) $a5
     return $chain
 end
 
@@ -158,7 +148,6 @@ end
     @s3 Created MilitaryTraining WarriorSociety
     @s4 Dominated WarriorSociety GreekWarfare
     @s5 Valued Sparta Discipline
-    @chain Implies (And $s1 (And $s2 (And $s3 $s4))) $s5
     return $chain
 end
 
@@ -180,7 +169,6 @@ end
     @p3 UsedFor SocraticMethod CriticalThinking
     @p4 Influenced CriticalThinking Philosophy
     @p5 Taught Socrates Plato
-    @chain Implies (And $p1 (And $p2 (And $p3 $p4))) $p5
     return $chain
 end
 
@@ -190,7 +178,6 @@ end
     @t3 Developed Plato TheoryOfForms
     @t4 Wrote Plato Republic
     @t5 Influenced TheoryOfForms WesternPhilosophy
-    @chain Implies (And $t1 (And $t2 (And $t3 $t4))) $t5
     return $chain
 end
 
@@ -200,7 +187,6 @@ end
     @a3 Developed Aristotle Logic
     @a4 Created Aristotle ScientificMethod
     @a5 Tutored Aristotle AlexanderTheGreat
-    @chain Implies (And $a1 (And $a2 (And $a3 $a4))) $a5
     return $chain
 end
 
@@ -210,7 +196,6 @@ end
     @c3 Conquered AlexanderTheGreat PersianEmpire
     @c4 Created AlexanderTheGreat HellenisticEmpire
     @c5 Spread HellenisticEmpire GreekCulture
-    @chain Implies (And $c1 (And $c2 (And $c3 $c4))) $c5
     return $chain
 end
 
@@ -220,7 +205,6 @@ end
     @w3 Won Athens Marathon
     @w4 Defended Sparta Thermopylae
     @w5 Preserved Victory GreekIndependence
-    @chain Implies (And $w1 (And $w2 (And $w3 $w4))) $w5
     return $chain
 end
 
@@ -230,7 +214,6 @@ end
     @pw3 Won Sparta War
     @pw4 Weakened War Greece
     @pw5 Led Weakness MacedonianConquest
-    @chain Implies (And $pw1 (And $pw2 (And $pw3 $pw4))) $pw5
     return $chain
 end
 
@@ -240,7 +223,6 @@ end
     @o3 United OlympicGames GreekCityStates
     @o4 Promoted OlympicGames PeacefulCompetition
     @o5 Influenced AncientOlympics ModernOlympics
-    @chain Implies (And $o1 (And $o2 (And $o3 $o4))) $o5
     return $chain
 end
 
@@ -263,7 +245,6 @@ end
     @f3 Started Rome SmallCity
     @f4 Grew SmallCity GreatEmpire
     @f5 Lasted RomanCivilization 1000Years
-    @chain Implies (And $f1 (And $f2 (And $f3 $f4))) $f5
     return $chain
 end
 
@@ -273,7 +254,6 @@ end
     @rs3 Represented Senate Aristocracy
     @rs4 Made Senate Laws
     @rs5 Controlled Senate Military
-    @chain Implies (And $rs1 (And $rs2 (And $rs3 $rs4))) $rs5
     return $chain
 end
 
@@ -283,7 +263,6 @@ end
     @jc3 Crossed JuliusCaesar Rubicon
     @jc4 Became JuliusCaesar Dictator
     @jc5 Assassinated JuliusCaesar Senate
-    @chain Implies (And $jc1 (And $jc2 (And $jc3 $jc4))) $jc5
     return $chain
 end
 
@@ -293,7 +272,6 @@ end
     @rcw3 Fought Octavian MarkAntony
     @rcw4 Won Octavian ActiumBattle
     @rcw5 Became Octavian Augustus
-    @chain Implies (And $rcw1 (And $rcw2 (And $rcw3 $rcw4))) $rcw5
     return $chain
 end
 
@@ -303,7 +281,6 @@ end
     @ae3 Ended Augustus Republic
     @ae4 Started Augustus Empire
     @ae5 Established Augustus PaxRomana
-    @chain Implies (And $ae1 (And $ae2 (And $ae3 $ae4))) $ae5
     return $chain
 end
 
@@ -313,7 +290,6 @@ end
     @pr3 Enabled PaxRomana Trade
     @pr4 Flourished Culture Empire
     @pr5 Spread Roman Culture
-    @chain Implies (And $pr1 (And $pr2 (And $pr3 $pr4))) $pr5
     return $chain
 end
 
@@ -323,7 +299,6 @@ end
     @re3 Invented Rome Concrete
     @re4 Connected Infrastructure Empire
     @re5 Influenced RomanEngineering ModernConstruction
-    @chain Implies (And $re1 (And $re2 (And $re3 $re4))) $re5
     return $chain
 end
 
@@ -333,7 +308,6 @@ end
     @rl3 Established RomanLaw RightsAndDuties
     @rl4 Influenced RomanLaw ModernLaw
     @rl5 Based ModernLaw CivilLaw
-    @chain Implies (And $rl1 (And $rl2 (And $rl3 $rl4))) $rl5
     return $chain
 end
 
@@ -343,7 +317,6 @@ end
     @cr3 Persecuted Rome Christians
     @cr4 Converted Constantine Christianity
     @cr5 Became Christianity OfficialReligion
-    @chain Implies (And $cr1 (And $cr2 (And $cr3 $cr4))) $cr5
     return $chain
 end
 
@@ -353,7 +326,6 @@ end
     @c3 Converted Constantine Christianity
     @c4 Legalized EdictOfMilan Christianity
     @c5 Founded Constantine Constantinople
-    @chain Implies (And $c1 (And $c2 (And $c3 $c4))) $c5
     return $chain
 end
 
@@ -363,7 +335,6 @@ end
     @rd3 Weakened Division Empire
     @rd4 Sacked Visigoths Rome
     @rd5 Fell WesternRome 476AD
-    @chain Implies (And $rd1 (And $rd2 (And $rd3 $rd4))) $rd5
     return $chain
 end
 
@@ -386,7 +357,6 @@ end
     @qsh3 Standardized QinShiHuang Writing
     @qsh4 Built QinShiHuang GreatWall
     @qsh5 Created QinShiHuang TerracottaArmy
-    @chain Implies (And $qsh1 (And $qsh2 (And $qsh3 $qsh4))) $qsh5
     return $chain
 end
 
@@ -396,7 +366,6 @@ end
     @gw3 Extended HanDynasty GreatWall
     @gw4 Longest GreatWall Structure
     @gw5 Symbol GreatWall China
-    @chain Implies (And $gw1 (And $gw2 (And $gw3 $gw4))) $gw5
     return $chain
 end
 
@@ -406,7 +375,6 @@ end
     @hdga3 Developed HanDynasty PaperMaking
     @hdga4 Established HanDynasty SilkRoad
     @hdga5 Flourished Culture Science
-    @chain Implies (And $hdga1 (And $hdga2 (And $hdga3 $hdga4))) $hdga5
     return $chain
 end
 
@@ -416,7 +384,6 @@ end
     @sr3 Traded SilkRoad Goods
     @sr4 Exchanged SilkRoad Ideas
     @sr5 Spread SilkRoad Culture
-    @chain Implies (And $sr1 (And $sr2 (And $sr3 $sr4))) $sr5
     return $chain
 end
 
@@ -426,7 +393,6 @@ end
     @cf3 Emphasized Confucianism Respect
     @cf4 Influenced Confucianism ChineseSociety
     @cf5 Spread Confucianism EastAsia
-    @chain Implies (And $cf1 (And $cf2 (And $cf3 $cf4))) $cf5
     return $chain
 end
 
@@ -436,7 +402,6 @@ end
     @ci3 Invented China Compass
     @ci4 Invented China PrintingPress
     @ci5 Transformed Inventions World
-    @chain Implies (And $ci1 (And $ci2 (And $ci3 $ci4))) $ci5
     return $chain
 end
 
@@ -463,7 +428,6 @@ end
     @ivc3 Developed IndusValley Plumbing
     @ivc4 Created IndusValley Writing
     @ivc5 Declined IndusValley UnknownReasons
-    @chain Implies (And $ivc1 (And $ivc2 (And $ivc3 $ivc4))) $ivc5
     return $chain
 end
 
@@ -473,7 +437,6 @@ end
     @a3 Regretted Ashoka Violence
     @a4 Converted Ashoka Buddhism
     @a5 Spread Ashoka BuddhistTeachings
-    @chain Implies (And $a1 (And $a2 (And $a3 $a4))) $a5
     return $chain
 end
 
@@ -483,7 +446,6 @@ end
     @bs3 Promoted Ashoka Buddhism
     @bs4 Spread Buddhism Asia
     @bs5 Influenced Buddhism Culture
-    @chain Implies (And $bs1 (And $bs2 (And $bs3 $bs4))) $bs5
     return $chain
 end
 
@@ -493,7 +455,6 @@ end
     @gga3 Advanced GuptaEmpire Mathematics
     @gga4 Developed GuptaEmpire Astronomy
     @gga5 Created GuptaEmpire ZeroConcept
-    @chain Implies (And $gga1 (And $gga2 (And $gga3 $gga4))) $gga5
     return $chain
 end
 
@@ -503,7 +464,6 @@ end
     @hp3 Taught Hinduism Karma
     @hp4 Influenced Hinduism IndianCulture
     @hp5 Practiced Hinduism CasteSystem
-    @chain Implies (And $hp1 (And $hp2 (And $hp3 $hp4))) $hp5
     return $chain
 end
 
@@ -523,7 +483,6 @@ end
     @bc3 Preserved Byzantine GreekRomanCulture
     @bc4 Lasted Byzantine 1000Years
     @bc5 Fell Byzantine 1453
-    @chain Implies (And $bc1 (And $bc2 (And $bc3 $bc4))) $bc5
     return $chain
 end
 
@@ -533,7 +492,6 @@ end
     @jc3 Built Justinian HagiaSophia
     @jc4 Codified Justinian RomanLaw
     @jc5 Preserved JustinianCode LegalKnowledge
-    @chain Implies (And $jc1 (And $jc2 (And $jc3 $jc4))) $jc5
     return $chain
 end
 
@@ -547,7 +505,6 @@ end
     @m3 Unified Muhammad Arabia
     @m4 Spread Islam Rapidly
     @m5 Created Islam Caliphate
-    @chain Implies (And $m1 (And $m2 (And $m3 $m4))) $m5
     return $chain
 end
 
@@ -557,7 +514,6 @@ end
     @ie3 Conquered Caliphate NorthAfrica
     @ie4 Reached Caliphate Spain
     @ie5 Spread Islam Science
-    @chain Implies (And $ie1 (And $ie2 (And $ie3 $ie4))) $ie5
     return $chain
 end
 
@@ -567,7 +523,6 @@ end
     @is3 Advanced Scholars Mathematics
     @is4 Developed Scholars Algebra
     @is5 Contributed Scholars Medicine
-    @chain Implies (And $is1 (And $is2 (And $is3 $is4))) $is5
     return $chain
 end
 
@@ -577,7 +532,6 @@ end
     @ac3 Built Abbasid HouseOfWisdom
     @ac4 Translated Scholars Texts
     @ac5 Flourished Baghdad Culture
-    @chain Implies (And $ac1 (And $ac2 (And $ac3 $ac4))) $ac5
     return $chain
 end
 
@@ -591,7 +545,6 @@ end
     @fs3 Served Vassals Lords
     @fs4 Protected Lords Vassals
     @fs5 Worked Serfs Land
-    @chain Implies (And $fs1 (And $fs2 (And $fs3 $fs4))) $fs5
     return $chain
 end
 
@@ -601,7 +554,6 @@ end
     @ch3 United Charlemagne WesternEurope
     @ch4 Promoted Charlemagne Education
     @ch5 Started Charlemagne CarolingianRenaissance
-    @chain Implies (And $ch1 (And $ch2 (And $ch3 $ch4))) $ch5
     return $chain
 end
 
@@ -615,7 +567,6 @@ end
     @vr3 Sailed Vikings LongShips
     @vr4 Settled Vikings Iceland
     @vr5 Reached Vikings America
-    @chain Implies (And $vr1 (And $vr2 (And $vr3 $vr4))) $vr5
     return $chain
 end
 
@@ -625,7 +576,6 @@ end
     @nc3 Won William HastingsBattle
     @nc4 Became William KingOfEngland
     @nc5 Transformed Norman EnglishCulture
-    @chain Implies (And $nc1 (And $nc2 (And $nc3 $nc4))) $nc5
     return $chain
 end
 
@@ -639,7 +589,6 @@ end
     @fc3 Fought Crusaders Muslims
     @fc4 Captured Crusaders Jerusalem
     @fc5 Established Crusaders CrusaderStates
-    @chain Implies (And $fc1 (And $fc2 (And $fc3 $fc4))) $fc5
     return $chain
 end
 
@@ -649,7 +598,6 @@ end
     @lc3 Failed MostCrusades
     @lc4 Weakened Crusades Byzantine
     @lc5 Strained Crusades ChristianMuslimRelations
-    @chain Implies (And $lc1 (And $lc2 (And $lc3 $lc4))) $lc5
     return $chain
 end
 
@@ -663,7 +611,6 @@ end
     @gk3 Created GenghisKhan Army
     @gk4 Conquered GenghisKhan Asia
     @gk5 Founded GenghisKhan LargestEmpire
-    @chain Implies (And $gk1 (And $gk2 (And $gk3 $gk4))) $gk5
     return $chain
 end
 
@@ -673,7 +620,6 @@ end
     @mc3 Conquered Mongols Persia
     @mc4 Reached Mongols Europe
     @mc5 Connected MongolEmpire EastWestTrade
-    @chain Implies (And $mc1 (And $mc2 (And $mc3 $mc4))) $mc5
     return $chain
 end
 
@@ -683,7 +629,6 @@ end
     @bd3 Killed BlackDeath ThirdOfPopulation
     @bd4 Devastated Plague Economy
     @bd5 Weakened Plague Feudalism
-    @chain Implies (And $bd1 (And $bd2 (And $bd3 $bd4))) $bd5
     return $chain
 end
 
@@ -693,7 +638,6 @@ end
     @hyw3 Claimed England FrenchThrone
     @hyw4 Led JoanOfArc French
     @hyw5 Won France War
-    @chain Implies (And $hyw1 (And $hyw2 (And $hyw3 $hyw4))) $hyw5
     return $chain
 end
 
@@ -703,7 +647,6 @@ end
     @joa3 Led JoanOfArc FrenchArmy
     @joa4 Lifted JoanOfArc OrleansSiege
     @joa5 Captured English JoanOfArc
-    @chain Implies (And $joa1 (And $joa2 (And $joa3 $joa4))) $joa5
     return $chain
 end
 
@@ -713,7 +656,6 @@ end
     @mc3 Forced Barons John
     @mc4 Signed John MagnaCarta
     @mc5 Limited MagnaCarta RoyalPower
-    @chain Implies (And $mc1 (And $mc2 (And $mc3 $mc4))) $mc5
     return $chain
 end
 
@@ -723,7 +665,6 @@ end
     @mu3 Founded Paris University
     @mu4 Created Oxford University
     @mu5 Preserved Universities Knowledge
-    @chain Implies (And $mu1 (And $mu2 (And $mu3 $mu4))) $mu5
     return $chain
 end
 
@@ -739,7 +680,6 @@ end
     @ir3 Flourished Renaissance Art
     @ir4 Advanced Renaissance Science
     @ir5 Emphasized Renaissance Humanism
-    @chain Implies (And $ir1 (And $ir2 (And $ir3 $ir4))) $ir5
     return $chain
 end
 
@@ -749,7 +689,6 @@ end
     @ldv3 Painted Leonardo LastSupper
     @ldv4 Designed Leonardo Inventions
     @ldv5 Exemplified Leonardo RenaissanceMan
-    @chain Implies (And $ldv1 (And $ldv2 (And $ldv3 $ldv4))) $ldv5
     return $chain
 end
 
@@ -759,7 +698,6 @@ end
     @m3 Painted Michelangelo SistineChapel
     @m4 Designed Michelangelo StPeters
     @m5 Mastered Michelangelo MultipleArts
-    @chain Implies (And $m1 (And $m2 (And $m3 $m4))) $m5
     return $chain
 end
 
@@ -769,7 +707,6 @@ end
     @mf3 Patronized Medici Artists
     @mf4 Supported Medici Scholars
     @mf5 Enabled Medici Renaissance
-    @chain Implies (And $mf1 (And $mf2 (And $mf3 $mf4))) $mf5
     return $chain
 end
 
@@ -779,7 +716,6 @@ end
     @pp3 Enabled PrintingPress MassProduction
     @pp4 Spread PrintingPress Literacy
     @pp5 Revolutionized PrintingPress Communication
-    @chain Implies (And $pp1 (And $pp2 (And $pp3 $pp4))) $pp5
     return $chain
 end
 
@@ -793,7 +729,6 @@ end
     @ml3 Criticized Luther Church
     @ml4 Started Luther Reformation
     @ml5 Founded Luther Protestantism
-    @chain Implies (And $ml1 (And $ml2 (And $ml3 $ml4))) $ml5
     return $chain
 end
 
@@ -803,7 +738,6 @@ end
     @rw3 Fought Catholics Protestants
     @rw4 Devastated Wars Europe
     @rw5 Ended Westphalia Peace
-    @chain Implies (And $rw1 (And $rw2 (And $rw3 $rw4))) $rw5
     return $chain
 end
 
@@ -817,7 +751,6 @@ end
     @cc3 Sailed Columbus West
     @cc4 Reached Columbus Americas
     @cc5 Started Columbus ColumbianExchange
-    @chain Implies (And $cc1 (And $cc2 (And $cc3 $cc4))) $cc5
     return $chain
 end
 
@@ -827,7 +760,6 @@ end
     @ce3 Exchanged ColumbianExchange Goods
     @ce4 Spread ColumbianExchange Diseases
     @ce5 Transformed ColumbianExchange World
-    @chain Implies (And $ce1 (And $ce2 (And $ce3 $ce4))) $ce5
     return $chain
 end
 
@@ -837,7 +769,6 @@ end
     @mc3 Sailed Magellan AroundWorld
     @mc4 Died Magellan Philippines
     @mc5 Completed Crew CircumNavigation
-    @chain Implies (And $mc1 (And $mc2 (And $mc3 $mc4))) $mc5
     return $chain
 end
 
@@ -847,7 +778,6 @@ end
     @sc3 Established Spain Colonies
     @sc4 Exploited Conquistadors Resources
     @sc5 Destroyed Conquest IndigenousCultures
-    @chain Implies (And $sc1 (And $sc2 (And $sc3 $sc4))) $sc5
     return $chain
 end
 
@@ -863,7 +793,6 @@ end
     @c3 Challenged HeliocentricTheory Geocentrism
     @c4 Showed Copernicus EarthOrbits
     @c5 Started Copernicus ScientificRevolution
-    @chain Implies (And $c1 (And $c2 (And $c3 $c4))) $c5
     return $chain
 end
 
@@ -873,7 +802,6 @@ end
     @g3 Observed Galileo JupiterMoons
     @g4 Supported Galileo Copernicus
     @g5 Tried Church Galileo
-    @chain Implies (And $g1 (And $g2 (And $g3 $g4))) $g5
     return $chain
 end
 
@@ -883,7 +811,6 @@ end
     @n3 Formulated Newton MotionLaws
     @n4 Invented Newton Calculus
     @n5 Unified Newton Physics
-    @chain Implies (And $n1 (And $n2 (And $n3 $n4))) $n5
     return $chain
 end
 
@@ -897,7 +824,6 @@ end
     @aor3 Questioned Enlightenment Authority
     @aor4 Promoted Enlightenment Science
     @aor5 Advanced Enlightenment HumanRights
-    @chain Implies (And $aor1 (And $aor2 (And $aor3 $aor4))) $aor5
     return $chain
 end
 
@@ -907,7 +833,6 @@ end
     @jl3 Proposed Locke NaturalRights
     @jl4 Advocated Locke SocialContract
     @jl5 Influenced Locke Democracy
-    @chain Implies (And $jl1 (And $jl2 (And $jl3 $jl4))) $jl5
     return $chain
 end
 
@@ -917,7 +842,6 @@ end
     @v3 Criticized Voltaire Church
     @v4 Defended Voltaire FreeSpeech
     @v5 Influenced Voltaire Revolution
-    @chain Implies (And $v1 (And $v2 (And $v3 $v4))) $v5
     return $chain
 end
 
@@ -927,7 +851,6 @@ end
     @r3 Argued Rousseau GeneralWill
     @r4 Influenced Rousseau Democracy
     @r5 Inspired Rousseau FrenchRevolution
-    @chain Implies (And $r1 (And $r2 (And $r3 $r4))) $r5
     return $chain
 end
 
@@ -943,7 +866,6 @@ end
     @cg3 Declared Colonists NoTaxationWithoutRepresentation
     @cg4 Boycotted Colonists BritishGoods
     @cg5 Escalated Resistance Conflict
-    @chain Implies (And $cg1 (And $cg2 (And $cg3 $cg4))) $cg5
     return $chain
 end
 
@@ -953,7 +875,6 @@ end
     @doi3 Declared Declaration Independence
     @doi4 Affirmed Declaration Rights
     @doi5 Inspired Declaration Democracy
-    @chain Implies (And $doi1 (And $doi2 (And $doi3 $doi4))) $doi5
     return $chain
 end
 
@@ -963,7 +884,6 @@ end
     @gw3 Won Washington YorktownBattle
     @gw4 Secured Washington Independence
     @gw5 Became Washington FirstPresident
-    @chain Implies (And $gw1 (And $gw2 (And $gw3 $gw4))) $gw5
     return $chain
 end
 
@@ -973,7 +893,6 @@ end
     @usc3 Drafted Convention Constitution
     @usc4 Established Constitution FederalGovernment
     @usc5 Created Constitution Republic
-    @chain Implies (And $usc1 (And $usc2 (And $usc3 $usc4))) $usc5
     return $chain
 end
 
@@ -987,7 +906,6 @@ end
     @fob3 Started Bastille Revolution
     @fob4 Spread Revolution France
     @fob5 Overthrew Revolution Monarchy
-    @chain Implies (And $fob1 (And $fob2 (And $fob3 $fob4))) $fob5
     return $chain
 end
 
@@ -997,7 +915,6 @@ end
     @rot3 Started Jacobins Terror
     @rot4 Executed Terror Thousands
     @rot5 Used Terror Guillotine
-    @chain Implies (And $rot1 (And $rot2 (And $rot3 $rot4))) $rot5
     return $chain
 end
 
@@ -1007,7 +924,6 @@ end
     @nr3 Staged Napoleon Coup
     @nr4 Became Napoleon Emperor
     @nr5 Dominated Napoleon Europe
-    @chain Implies (And $nr1 (And $nr2 (And $nr3 $nr4))) $nr5
     return $chain
 end
 
@@ -1017,7 +933,6 @@ end
     @nw3 Fought Coalition Nations
     @nw4 Invaded Napoleon Russia
     @nw5 Defeated Coalition Napoleon
-    @chain Implies (And $nw1 (And $nw2 (And $nw3 $nw4))) $nw5
     return $chain
 end
 
@@ -1027,7 +942,6 @@ end
     @cov3 Redrew Vienna Borders
     @cov4 Established Vienna BalanceOfPower
     @cov5 Restored Vienna Monarchies
-    @chain Implies (And $cov1 (And $cov2 (And $cov3 $cov4))) $cov5
     return $chain
 end
 
@@ -1043,7 +957,6 @@ end
     @se3 Enabled SteamEngine Railways
     @se4 Transformed SteamEngine Manufacturing
     @se5 Started SteamEngine IndustrialRevolution
-    @chain Implies (And $se1 (And $se2 (And $se3 $se4))) $se5
     return $chain
 end
 
@@ -1053,7 +966,6 @@ end
     @fs3 Employed Factories Workers
     @fs4 Produced Factories GoodsMass
     @fs5 Grew Cities Rapidly
-    @chain Implies (And $fs1 (And $fs2 (And $fs3 $fs4))) $fs5
     return $chain
 end
 
@@ -1063,7 +975,6 @@ end
     @rr3 Connected Railways Cities
     @rr4 Enabled Railways Commerce
     @rr5 Transformed Railways Society
-    @chain Implies (And $rr1 (And $rr2 (And $rr3 $rr4))) $rr5
     return $chain
 end
 
@@ -1073,7 +984,6 @@ end
     @lm3 Organized Workers Unions
     @lm4 Demanded Unions Rights
     @lm5 Fought Unions Reforms
-    @chain Implies (And $lm1 (And $lm2 (And $lm3 $lm4))) $lm5
     return $chain
 end
 
@@ -1083,7 +993,6 @@ end
     @km3 Developed Marx Communism
     @km4 Analyzed Marx Capitalism
     @km5 Inspired Marx Revolutions
-    @chain Implies (And $km1 (And $km2 (And $km3 $km4))) $km5
     return $chain
 end
 
@@ -1099,7 +1008,6 @@ end
     @iu3 Fought Garibaldi Austria
     @iu4 Created Unification Italy
     @iu5 Established Italy Kingdom
-    @chain Implies (And $iu1 (And $iu2 (And $iu3 $iu4))) $iu5
     return $chain
 end
 
@@ -1109,7 +1017,6 @@ end
     @gu3 Fought Bismarck Wars
     @gu4 Created Unification Germany
     @gu5 Proclaimed Germany Empire
-    @chain Implies (And $gu1 (And $gu2 (And $gu3 $gu4))) $gu5
     return $chain
 end
 
@@ -1123,7 +1030,6 @@ end
     @sc3 Divided Slavery Nation
     @sc4 Seceded South States
     @sc5 Started Secession CivilWar
-    @chain Implies (And $sc1 (And $sc2 (And $sc3 $sc4))) $sc5
     return $chain
 end
 
@@ -1133,7 +1039,6 @@ end
     @al3 Issued Lincoln EmancipationProclamation
     @al4 Freed Proclamation Slaves
     @al5 Assassinated Booth Lincoln
-    @chain Implies (And $al1 (And $al2 (And $al3 $al4))) $al5
     return $chain
 end
 
@@ -1143,7 +1048,6 @@ end
     @r3 Rebuilt Reconstruction South
     @r4 Granted Amendments CivilRights
     @r5 Failed Reconstruction Integration
-    @chain Implies (And $r1 (And $r2 (And $r3 $r4))) $r5
     return $chain
 end
 
@@ -1157,7 +1061,6 @@ end
     @sfa3 Met Berlin Conference
     @sfa4 Divided Conference Africa
     @sfa5 Exploited Colonizers Resources
-    @chain Implies (And $sfa1 (And $sfa2 (And $sfa3 $sfa4))) $sfa5
     return $chain
 end
 
@@ -1167,7 +1070,6 @@ end
     @be3 Controlled Britain Seas
     @be4 Became Britain SuperPower
     @be5 Dominated Empire QuarterOfWorld
-    @chain Implies (And $be1 (And $be2 (And $be3 $be4))) $be5
     return $chain
 end
 
@@ -1177,7 +1079,6 @@ end
     @ow3 Fought Britain China
     @ow4 Won Britain Wars
     @ow5 Forced Treaties China
-    @chain Implies (And $ow1 (And $ow2 (And $ow3 $ow4))) $ow5
     return $chain
 end
 
@@ -1193,7 +1094,6 @@ end
     @wc3 Assassinated Princip FranzFerdinand
     @wc4 Triggered Assassination War
     @wc5 Spread War Globally
-    @chain Implies (And $wc1 (And $wc2 (And $wc3 $wc4))) $wc5
     return $chain
 end
 
@@ -1203,7 +1103,6 @@ end
     @tw3 Created Trenches Stalemate
     @tw4 Used Armies NewWeapons
     @tw5 Caused WWI MillionsOfDeaths
-    @chain Implies (And $tw1 (And $tw2 (And $tw3 $tw4))) $tw5
     return $chain
 end
 
@@ -1213,7 +1112,6 @@ end
     @tov3 Blamed Treaty Germany
     @tov4 Imposed Treaty Reparations
     @tov5 Created Treaty Resentment
-    @chain Implies (And $tov1 (And $tov2 (And $tov3 $tov4))) $tov5
     return $chain
 end
 
@@ -1227,7 +1125,6 @@ end
     @br3 Seized Lenin Power
     @br4 Established Bolsheviks Communism
     @br5 Created Lenin SovietUnion
-    @chain Implies (And $br1 (And $br2 (And $br3 $br4))) $br5
     return $chain
 end
 
@@ -1237,7 +1134,6 @@ end
     @se3 Collectivized Stalin Agriculture
     @se4 Purged Stalin Millions
     @se5 Established Stalin TotalitarianState
-    @chain Implies (And $se1 (And $se2 (And $se3 $se4))) $se5
     return $chain
 end
 
@@ -1251,7 +1147,6 @@ end
     @smc3 Crashed StockMarket 1929
     @smc4 Triggered Crash Depression
     @smc5 Spread Depression Globally
-    @chain Implies (And $smc1 (And $smc2 (And $smc3 $smc4))) $smc5
     return $chain
 end
 
@@ -1261,7 +1156,6 @@ end
     @nd3 Implemented FDR NewDeal
     @nd4 Created NewDeal Programs
     @nd5 Recovered NewDeal Economy
-    @chain Implies (And $nd1 (And $nd2 (And $nd3 $nd4))) $nd5
     return $chain
 end
 
@@ -1275,7 +1169,6 @@ end
     @wc3 Rose Hitler Power
     @wc4 Invaded Germany Poland
     @wc5 Started Invasion WWII
-    @chain Implies (And $wc1 (And $wc2 (And $wc3 $wc4))) $wc5
     return $chain
 end
 
@@ -1285,7 +1178,6 @@ end
     @han3 Promoted Hitler Nazism
     @han4 Persecuted Nazis Jews
     @han5 Caused Holocaust Genocide
-    @chain Implies (And $han1 (And $han2 (And $han3 $han4))) $han5
     return $chain
 end
 
@@ -1295,7 +1187,6 @@ end
     @h3 Murdered Nazis Millions
     @h4 Committed Nazis Genocide
     @h5 Remain Holocaust WorstCrime
-    @chain Implies (And $h1 (And $h2 (And $h3 $h4))) $h5
     return $chain
 end
 
@@ -1305,7 +1196,6 @@ end
     @ph3 Declared USA WarOnJapan
     @ph4 Entered USA WWII
     @ph5 Turned Entry Tide
-    @chain Implies (And $ph1 (And $ph2 (And $ph3 $ph4))) $ph5
     return $chain
 end
 
@@ -1315,7 +1205,6 @@ end
     @dd3 Opened DDay SecondFront
     @dd4 Liberated Allies France
     @dd5 Led Liberation Victory
-    @chain Implies (And $dd1 (And $dd2 (And $dd3 $dd4))) $dd5
     return $chain
 end
 
@@ -1325,7 +1214,6 @@ end
     @ab3 Dropped USA Nagasaki
     @ab4 Surrendered Japan Unconditionally
     @ab5 Ended Surrender WWII
-    @chain Implies (And $ab1 (And $ab2 (And $ab3 $ab4))) $ab5
     return $chain
 end
 
@@ -1339,7 +1227,6 @@ end
     @ic3 Formed USA NATO
     @ic4 Formed USSR WarsawPact
     @ic5 Started Division ColdWar
-    @chain Implies (And $ic1 (And $ic2 (And $ic3 $ic4))) $ic5
     return $chain
 end
 
@@ -1349,7 +1236,6 @@ end
     @kw3 Intervened UN NorthKorea
     @kw4 Fought China UN
     @kw5 Ended War Stalemate
-    @chain Implies (And $kw1 (And $kw2 (And $kw3 $kw4))) $kw5
     return $chain
 end
 
@@ -1359,7 +1245,6 @@ end
     @vw3 Escalated USA Involvement
     @vw4 Opposed Americans War
     @vw5 Withdrew USA Vietnam
-    @chain Implies (And $vw1 (And $vw2 (And $vw3 $vw4))) $vw5
     return $chain
 end
 
@@ -1369,7 +1254,6 @@ end
     @cmc3 Blockaded Kennedy Cuba
     @cmc4 Confronted Superpowers Crisis
     @cmc5 Resolved Diplomacy Crisis
-    @chain Implies (And $cmc1 (And $cmc2 (And $cmc3 $cmc4))) $cmc5
     return $chain
 end
 
@@ -1379,7 +1263,6 @@ end
     @sr3 Competed USA USSR
     @sr4 Landed USA Moon
     @sr5 Won USA SpaceRace
-    @chain Implies (And $sr1 (And $sr2 (And $sr3 $sr4))) $sr5
     return $chain
 end
 
@@ -1393,7 +1276,6 @@ end
     @mlk3 Led King Marches
     @mlk4 Gave King DreamSpeech
     @mlk5 Assassinated MLK Murdered
-    @chain Implies (And $mlk1 (And $mlk2 (And $mlk3 $mlk4))) $mlk5
     return $chain
 end
 
@@ -1403,7 +1285,6 @@ end
     @cra3 Pressured Movement Government
     @cra4 Passed Congress CivilRightsAct
     @cra5 Banned CivilRightsAct Discrimination
-    @chain Implies (And $cra1 (And $cra2 (And $cra3 $cra4))) $cra5
     return $chain
 end
 
@@ -1413,7 +1294,6 @@ end
     @fosu3 Weakened Reforms Control
     @fosu4 Fell BerlinWall Germany
     @fosu5 Collapsed USSR 1991
-    @chain Implies (And $fosu1 (And $fosu2 (And $fosu3 $fosu4))) $fosu5
     return $chain
 end
 
@@ -1423,7 +1303,6 @@ end
     @bwf3 Symbolized BerlinWall ColdWar
     @bwf4 Fell BerlinWall 1989
     @bwf5 Reunified Germany Country
-    @chain Implies (And $bwf1 (And $bwf2 (And $bwf3 $bwf4))) $bwf5
     return $chain
 end
 
@@ -1443,7 +1322,6 @@ end
     @ir3 Enabled Internet Communication
     @ir4 Transformed Internet Society
     @ir5 Created Internet DigitalAge
-    @chain Implies (And $ir1 (And $ir2 (And $ir3 $ir4))) $ir5
     return $chain
 end
 
@@ -1453,7 +1331,6 @@ end
     @g3 Connected Globalization Economies
     @g4 Spread Globalization Culture
     @g5 Created Globalization Interdependence
-    @chain Implies (And $g1 (And $g2 (And $g3 $g4))) $g5
     return $chain
 end
 
@@ -1463,7 +1340,6 @@ end
     @cc3 Threatens ClimateChange Environment
     @cc4 Requires ClimateChange Action
     @cc5 Challenges ClimateChange Humanity
-    @chain Implies (And $cc1 (And $cc2 (And $cc3 $cc4))) $cc5
     return $chain
 end
 
@@ -1475,7 +1351,6 @@ end
     @arc3 Allowed Surplus Settlement
     @arc4 Led Settlement Cities
     @arc5 Created Cities Civilization
-    @chain Implies (And $arc1 (And $arc2 (And $arc3 $arc4))) $arc5
     return $chain
 end
 
@@ -1485,7 +1360,6 @@ end
     @wah3 Preserved Records Knowledge
     @wah4 Created Knowledge History
     @wah5 Allowed History Learning
-    @chain Implies (And $wah1 (And $wah2 (And $wah3 $wah4))) $wah5
     return $chain
 end
 
@@ -1495,7 +1369,6 @@ end
     @tac3 Enabled Routes Exchange
     @tac4 Spread Exchange Ideas
     @tac5 Mixed Ideas Cultures
-    @chain Implies (And $tac1 (And $tac2 (And $tac3 $tac4))) $tac5
     return $chain
 end
 
@@ -1505,7 +1378,6 @@ end
     @mi3 Led Conquest Empires
     @mi4 Changed Empires Geography
     @mi5 Shaped Geography History
-    @chain Implies (And $mi1 (And $mi2 (And $mi3 $mi4))) $mi5
     return $chain
 end
 
@@ -1515,7 +1387,6 @@ end
     @ri3 Controlled Institutions Education
     @ri4 Shaped Education Culture
     @ri5 Influenced Culture History
-    @chain Implies (And $ri1 (And $ri2 (And $ri3 $ri4))) $ri5
     return $chain
 end
 
@@ -1525,7 +1396,6 @@ end
     @pi3 Disrupted Death Economy
     @pi4 Weakened Economy Feudalism
     @pi5 Enabled Weakness ModernEra
-    @chain Implies (And $pi1 (And $pi2 (And $pi3 $pi4))) $pi5
     return $chain
 end
 
@@ -1535,7 +1405,6 @@ end
     @rhc3 Inspired Humanism Artists
     @rhc4 Created Artists Masterpieces
     @rhc5 Defined Renaissance Period
-    @chain Implies (And $rhc1 (And $rhc2 (And $rhc3 $rhc4))) $rhc5
     return $chain
 end
 
@@ -1545,7 +1414,6 @@ end
     @ec3 Colonized Europeans Territories
     @ec4 Established Colonization Trade
     @ec5 Changed Trade World
-    @chain Implies (And $ec1 (And $ec2 (And $ec3 $ec4))) $ec5
     return $chain
 end
 
@@ -1555,7 +1423,6 @@ end
     @smi3 Required Method Experiment
     @smi4 Generated Experiment Knowledge
     @smi5 Transformed Knowledge Science
-    @chain Implies (And $smi1 (And $smi2 (And $smi3 $smi4))) $smi5
     return $chain
 end
 
@@ -1565,7 +1432,6 @@ end
     @de3 Created Revolutions Republics
     @de4 Established Republics Democracy
     @de5 Spread Democracy World
-    @chain Implies (And $de1 (And $de2 (And $de3 $de4))) $de5
     return $chain
 end
 
@@ -1575,7 +1441,6 @@ end
     @iu3 Attracted Jobs Workers
     @iu4 Migrated Workers Cities
     @iu5 Grew Cities Rapidly
-    @chain Implies (And $iu1 (And $iu2 (And $iu3 $iu4))) $iu5
     return $chain
 end
 
@@ -1585,7 +1450,6 @@ end
     @nc3 United Identity Nations
     @nc4 Competed Nations Resources
     @nc5 Led Competition Wars
-    @chain Implies (And $nc1 (And $nc2 (And $nc3 $nc4))) $nc5
     return $chain
 end
 
@@ -1595,7 +1459,6 @@ end
     @ie3 Exploited Colonizers Resources
     @ie4 Enriched Resources Metropoles
     @ie5 Underdeveloped Exploitation Colonies
-    @chain Implies (And $ie1 (And $ie2 (And $ie3 $ie4))) $ie5
     return $chain
 end
 
@@ -1605,7 +1468,6 @@ end
     @wc3 Supported Russia Serbia
     @wc4 Mobilized Alliances Armies
     @wc5 Started Mobilization WWI
-    @chain Implies (And $wc1 (And $wc2 (And $wc3 $wc4))) $wc5
     return $chain
 end
 
@@ -1615,7 +1477,6 @@ end
     @vtw3 Created Blame Resentment
     @vtw4 Enabled Resentment Extremism
     @vtw5 Led Extremism WWII
-    @chain Implies (And $vtw1 (And $vtw2 (And $vtw3 $vtw4))) $vtw5
     return $chain
 end
 
@@ -1625,7 +1486,6 @@ end
     @cwp3 Supported Superpowers Proxies
     @cwp4 Fought Proxies Wars
     @cwp5 Spread Wars Globally
-    @chain Implies (And $cwp1 (And $cwp2 (And $cwp3 $cwp4))) $cwp5
     return $chain
 end
 
@@ -1635,7 +1495,6 @@ end
     @d3 Demanded Movements Independence
     @d4 Granted Empires Independence
     @d5 Created Decolonization Nations
-    @chain Implies (And $d1 (And $d2 (And $d3 $d4))) $d5
     return $chain
 end
 
@@ -1645,7 +1504,6 @@ end
     @ts3 Changed Technology Behavior
     @ts4 Transformed Behavior Society
     @ts5 Created Transformation NewEra
-    @chain Implies (And $ts1 (And $ts2 (And $ts3 $ts4))) $ts5
     return $chain
 end
 
@@ -1655,7 +1513,6 @@ end
     @cr3 Invented Engineers Television
     @cr4 Connected Technologies World
     @cr5 Created Connection GlobalVillage
-    @chain Implies (And $cr1 (And $cr2 (And $cr3 $cr4))) $cr5
     return $chain
 end
 
@@ -1665,7 +1522,6 @@ end
     @mp3 Developed Cures Treatments
     @mp4 Applied Treatments Patients
     @mp5 Extended Medicine Lifespan
-    @chain Implies (And $mp1 (And $mp2 (And $mp3 $mp4))) $mp5
     return $chain
 end
 
@@ -1689,7 +1545,6 @@ end
     @pa3 Traded Phoenicians Widely
     @pa4 Spread Trade Alphabet
     @pa5 Influenced Alphabet GreekAlphabet
-    @chain Implies (And $pa1 (And $pa2 (And $pa3 $pa4))) $pa5
     return $chain
 end
 
@@ -1703,7 +1558,6 @@ end
     @ctg3 Freed Cyrus Jews
     @ctg4 Practiced Cyrus Tolerance
     @ctg5 Created Cyrus LargestEmpire
-    @chain Implies (And $ctg1 (And $ctg2 (And $ctg3 $ctg4))) $ctg5
     return $chain
 end
 
@@ -1713,7 +1567,6 @@ end
     @pw3 Led Hannibal Army
     @pw4 Won Rome Wars
     @pw5 Destroyed Rome Carthage
-    @chain Implies (And $pw1 (And $pw2 (And $pw3 $pw4))) $pw5
     return $chain
 end
 
@@ -1723,7 +1576,6 @@ end
     @sr3 Fought Spartacus Romans
     @sr4 Suppressed Rome Rebellion
     @sr5 Crucified Rome Rebels
-    @chain Implies (And $sr1 (And $sr2 (And $sr3 $sr4))) $sr5
     return $chain
 end
 
@@ -1753,7 +1605,6 @@ end
     @tga3 Advanced TangDynasty Technology
     @tga4 Expanded TangDynasty Trade
     @tga5 Golden TangDynasty Age
-    @chain Implies (And $tga1 (And $tga2 (And $tga3 $tga4))) $tga5
     return $chain
 end
 
@@ -1763,7 +1614,6 @@ end
     @myd3 United YuanDynasty China
     @myd4 Welcomed KublaiKhan Foreigners
     @myd5 Met MarcoPolo KublaiKhan
-    @chain Implies (And $myd1 (And $myd2 (And $myd3 $myd4))) $myd5
     return $chain
 end
 
@@ -1773,7 +1623,6 @@ end
     @zhv3 Sailed ZhengHe IndianOcean
     @zhv4 Reached ZhengHe Africa
     @zhv5 Promoted ZhengHe ChinesePower
-    @chain Implies (And $zhv1 (And $zhv2 (And $zhv3 $zhv4))) $zhv5
     return $chain
 end
 
@@ -1787,7 +1636,6 @@ end
     @atg3 Practiced Akbar Tolerance
     @atg4 United Akbar Diverse
     @atg5 Flourished Culture Arts
-    @chain Implies (And $atg1 (And $atg2 (And $atg3 $atg4))) $atg5
     return $chain
 end
 
@@ -1797,7 +1645,6 @@ end
     @tm3 Honored TajMahal Wife
     @tm4 Exemplified TajMahal Architecture
     @tm5 Symbol TajMahal India
-    @chain Implies (And $tm1 (And $tm2 (And $tm3 $tm4))) $tm5
     return $chain
 end
 
@@ -1811,7 +1658,6 @@ end
     @cf3 Fell Constantinople 1453
     @cf4 Ended Fall Byzantine
     @cf5 Became Constantinople Istanbul
-    @chain Implies (And $cf1 (And $cf2 (And $cf3 $cf4))) $cf5
     return $chain
 end
 
@@ -1821,7 +1667,6 @@ end
     @stm3 Reformed Suleiman Laws
     @stm4 Patronized Suleiman Arts
     @stm5 Peak Suleiman OttomanPower
-    @chain Implies (And $stm1 (And $stm2 (And $stm3 $stm4))) $stm5
     return $chain
 end
 
@@ -1839,7 +1684,6 @@ end
     @mm3 Made MansaMusa Pilgrimage
     @mm4 Distributed MansaMusa Gold
     @mm5 Promoted MansaMusa Islam
-    @chain Implies (And $mm1 (And $mm2 (And $mm3 $mm4))) $mm5
     return $chain
 end
 
@@ -1853,7 +1697,6 @@ end
     @t3 Hub Timbuktu Trade
     @t4 Famous Timbuktu Libraries
     @t5 Attracted Timbuktu Scholars
-    @chain Implies (And $t1 (And $t2 (And $t3 $t4))) $t5
     return $chain
 end
 
@@ -1867,7 +1710,6 @@ end
     @t3 Located Tenochtitlan Lake
     @t4 Advanced Tenochtitlan Engineering
     @t5 Largest Tenochtitlan City
-    @chain Implies (And $t1 (And $t2 (And $t3 $t4))) $t5
     return $chain
 end
 
@@ -1881,7 +1723,6 @@ end
     @mp3 Advanced MachuPicchu Architecture
     @mp4 Abandoned MachuPicchu Unknown
     @mp5 Discovered MachuPicchu 1911
-    @chain Implies (And $mp1 (And $mp2 (And $mp3 $mp4))) $mp5
     return $chain
 end
 
@@ -1891,7 +1732,6 @@ end
     @sa3 Attacked Armada England
     @sa4 Defeated England Armada
     @sa5 Declined Spain Power
-    @chain Implies (And $sa1 (And $sa2 (And $sa3 $sa4))) $sa5
     return $chain
 end
 
@@ -1901,7 +1741,6 @@ end
     @e3 Encouraged ElizabethI Exploration
     @e4 Patronized ElizabethI Arts
     @e5 Golden ElizabethI Age
-    @chain Implies (And $e1 (And $e2 (And $e3 $e4))) $e5
     return $chain
 end
 
@@ -1911,7 +1750,6 @@ end
     @tyw3 Devastated ThirtyYearsWar Germany
     @tyw4 Killed War Population
     @tyw5 Ended Westphalia Treaty
-    @chain Implies (And $tyw1 (And $tyw2 (And $tyw3 $tyw4))) $tyw5
     return $chain
 end
 
@@ -1921,7 +1759,6 @@ end
     @l3 Built LouisXIV Versailles
     @l4 Said LouisXIV StateIsMe
     @l5 Exemplified LouisXIV Absolutism
-    @chain Implies (And $l1 (And $l2 (And $l3 $l4))) $l5
     return $chain
 end
 
@@ -1931,7 +1768,6 @@ end
     @ptg3 Built Peter Navy
     @ptg4 Founded Peter StPetersburg
     @ptg5 Modernized Peter Empire
-    @chain Implies (And $ptg1 (And $ptg2 (And $ptg3 $ptg4))) $ptg5
     return $chain
 end
 
@@ -1941,7 +1777,6 @@ end
     @syw3 Fought SevenYearsWar Continents
     @syw4 Won Britain War
     @syw5 Gained Britain Colonies
-    @chain Implies (And $syw1 (And $syw2 (And $syw3 $syw4))) $syw5
     return $chain
 end
 
@@ -1951,7 +1786,6 @@ end
     @ctg3 Expanded Catherine Territory
     @ctg4 Modernized Catherine Russia
     @ctg5 Powerful Catherine Ruler
-    @chain Implies (And $ctg1 (And $ctg2 (And $ctg3 $ctg4))) $ctg5
     return $chain
 end
 
@@ -1961,7 +1795,6 @@ end
     @hr3 Fought Slaves French
     @hr4 Won Slaves Freedom
     @hr5 First Haiti BlackRepublic
-    @chain Implies (And $hr1 (And $hr2 (And $hr3 $hr4))) $hr5
     return $chain
 end
 
@@ -1971,7 +1804,6 @@ end
     @lai3 Fought Colonies Spain
     @lai4 Won Colonies Independence
     @lai5 Created Independence Nations
-    @chain Implies (And $lai1 (And $lai2 (And $lai3 $lai4))) $lai5
     return $chain
 end
 
@@ -1981,7 +1813,6 @@ end
     @md3 Opposed Doctrine Colonization
     @md4 Claimed Doctrine Hemisphere
     @md5 Asserted Doctrine AmericanPower
-    @chain Implies (And $md1 (And $md2 (And $md3 $md4))) $md5
     return $chain
 end
 
@@ -1995,7 +1826,6 @@ end
     @qv3 Expanded Victoria Empire
     @qv4 Industrialized Victoria Britain
     @qv5 Defined Victoria Era
-    @chain Implies (And $qv1 (And $qv2 (And $qv3 $qv4))) $qv5
     return $chain
 end
 
@@ -2005,7 +1835,6 @@ end
     @mr3 Modernized Meiji Japan
     @mr4 Industrialized Meiji Rapidly
     @mr5 Became Japan Power
-    @chain Implies (And $mr1 (And $mr2 (And $mr3 $mr4))) $mr5
     return $chain
 end
 
@@ -2015,7 +1844,6 @@ end
     @sc3 Shortened SuezCanal Route
     @sc4 Controlled Britain SuezCanal
     @sc5 Strategic SuezCanal Importance
-    @chain Implies (And $sc1 (And $sc2 (And $sc3 $sc4))) $sc5
     return $chain
 end
 
@@ -2025,7 +1853,6 @@ end
     @br3 Besieged Boxers Legations
     @br4 Suppressed Powers Rebellion
     @br5 Weakened Rebellion Qing
-    @chain Implies (And $br1 (And $br2 (And $br3 $br4))) $br5
     return $chain
 end
 
@@ -2035,7 +1862,6 @@ end
     @rjw3 Shocked Victory World
     @rjw4 Demonstrated Japan Modernization
     @rjw5 Became Japan Power
-    @chain Implies (And $rjw1 (And $rjw2 (And $rjw3 $rjw4))) $rjw5
     return $chain
 end
 
@@ -2045,7 +1871,6 @@ end
     @sm3 Protested Suffragettes Peacefully
     @sm4 Fought Suffragettes Militantly
     @sm5 Gained Women Vote
-    @chain Implies (And $sm1 (And $sm2 (And $sm3 $sm4))) $sm5
     return $chain
 end
 
@@ -2055,7 +1880,6 @@ end
     @lon3 Aimed League Peace
     @lon4 Failed League Prevention
     @lon5 Replaced UN League
-    @chain Implies (And $lon1 (And $lon2 (And $lon3 $lon4))) $lon5
     return $chain
 end
 
@@ -2065,7 +1889,6 @@ end
     @rof3 Rose Mussolini Italy
     @rof4 Rose Hitler Germany
     @rof5 Created Fascism Dictatorships
-    @chain Implies (And $rof1 (And $rof2 (And $rof3 $rof4))) $rof5
     return $chain
 end
 
@@ -2075,7 +1898,6 @@ end
     @mp3 Researched Scientists AtomicBomb
     @mp4 Developed Scientists Bomb
     @mp5 Changed Bomb Warfare
-    @chain Implies (And $mp1 (And $mp2 (And $mp3 $mp4))) $mp5
     return $chain
 end
 
@@ -2085,7 +1907,6 @@ end
     @un3 Replaced UN League
     @un4 Promotes UN Peace
     @un5 Continues UN Today
-    @chain Implies (And $un1 (And $un2 (And $un3 $un4))) $un5
     return $chain
 end
 
@@ -2095,7 +1916,6 @@ end
     @mp3 Rebuilt MarshallPlan Europe
     @mp4 Prevented MarshallPlan Communism
     @mp5 Strengthened MarshallPlan Alliance
-    @chain Implies (And $mp1 (And $mp2 (And $mp3 $mp4))) $mp5
     return $chain
 end
 
@@ -2105,7 +1925,6 @@ end
     @ii3 Pressured Movement Britain
     @ii4 Granted Britain Independence
     @ii5 Created Independence IndiaPakistan
-    @chain Implies (And $ii1 (And $ii2 (And $ii3 $ii4))) $ii5
     return $chain
 end
 
@@ -2115,7 +1934,6 @@ end
     @poi3 Based Partition Religion
     @poi4 Caused Partition Migration
     @poi5 Resulted Partition Violence
-    @chain Implies (And $poi1 (And $poi2 (And $poi3 $poi4))) $poi5
     return $chain
 end
 
@@ -2125,7 +1943,6 @@ end
     @ccr3 Won Communists CivilWar
     @ccr4 Founded Mao PeoplesRepublic
     @ccr5 Fled Nationalists Taiwan
-    @chain Implies (And $ccr1 (And $ccr2 (And $ccr3 $ccr4))) $ccr5
     return $chain
 end
 
@@ -2135,7 +1952,6 @@ end
     @glf3 Collectivized GreatLeapForward Agriculture
     @glf4 Failed Campaign Badly
     @glf5 Caused Failure Famine
-    @chain Implies (And $glf1 (And $glf2 (And $glf3 $glf4))) $glf5
     return $chain
 end
 
@@ -2145,7 +1961,6 @@ end
     @cr3 Mobilized Mao RedGuards
     @cr4 Purged CulturalRevolution Enemies
     @cr5 Caused CulturalRevolution Chaos
-    @chain Implies (And $cr1 (And $cr2 (And $cr3 $cr4))) $cr5
     return $chain
 end
 
@@ -2155,7 +1970,6 @@ end
     @aic3 Fought Israel Arabs
     @aic4 Won Israel Wars
     @aic5 Continues Conflict Today
-    @chain Implies (And $aic1 (And $aic2 (And $aic3 $aic4))) $aic5
     return $chain
 end
 
@@ -2165,7 +1979,6 @@ end
     @sc3 Invaded France Egypt
     @sc4 Opposed USA Invasion
     @sc5 Withdrew BritainFrance Humiliated
-    @chain Implies (And $sc1 (And $sc2 (And $sc3 $sc4))) $sc5
     return $chain
 end
 
@@ -2175,7 +1988,6 @@ end
     @a3 Oppressed Apartheid Blacks
     @a4 Fought Mandela Apartheid
     @a5 Ended Apartheid 1994
-    @chain Implies (And $a1 (And $a2 (And $a3 $a4))) $a5
     return $chain
 end
 
@@ -2185,7 +1997,6 @@ end
     @nm3 Released Mandela 1990
     @nm4 Negotiated Mandela Transition
     @nm5 Elected Mandela President
-    @chain Implies (And $nm1 (And $nm2 (And $nm3 $nm4))) $nm5
     return $chain
 end
 
@@ -2195,17 +2006,15 @@ end
     @w3 Investigated Congress Nixon
     @w4 Faced Nixon Impeachment
     @w5 Resigned Nixon 1974
-    @chain Implies (And $w1 (And $w2 (And $w3 $w4))) $w5
     return $chain
 end
 
-@:Détente graph Tension Easing Relations
+@:Detente graph Tension Easing Relations
     @d1 Period ColdWar Ideological
-    @d2 Pursued Superpowers Détente
-    @d3 Signed Détente Treaties
-    @d4 Eased Détente Tensions
-    @d5 Temporary Détente Period
-    @chain Implies (And $d1 (And $d2 (And $d3 $d4))) $d5
+    @d2 Pursued Superpowers Detente
+    @d3 Signed Detente Treaties
+    @d4 Eased Detente Tensions
+    @d5 Temporary Detente Period
     return $chain
 end
 
@@ -2215,7 +2024,6 @@ end
     @ir3 Overthrew Revolution Shah
     @ir4 Established Khomeini TheocraticRepublic
     @ir5 Changed Revolution MiddleEast
-    @chain Implies (And $ir1 (And $ir2 (And $ir3 $ir4))) $ir5
     return $chain
 end
 
@@ -2225,7 +2033,6 @@ end
     @saw3 Fought Mujahideen Soviets
     @sw4 Withdrew USSR Defeated
     @saw5 Contributed Defeat Collapse
-    @chain Implies (And $saw1 (And $saw2 (And $saw3 $sw4))) $saw5
     return $chain
 end
 
@@ -2235,7 +2042,6 @@ end
     @ts3 Demanded Students Reform
     @ts4 Cracked Government Down
     @ts5 Suppressed Government Protest
-    @chain Implies (And $ts1 (And $ts2 (And $ts3 $ts4))) $ts5
     return $chain
 end
 
@@ -2245,7 +2051,6 @@ end
     @gw3 Launched Coalition Operation
     @gw4 Defeated Coalition Iraq
     @gw5 Liberated Coalition Kuwait
-    @chain Implies (And $gw1 (And $gw2 (And $gw3 $gw4))) $gw5
     return $chain
 end
 
@@ -2255,7 +2060,6 @@ end
     @yw3 Fought Groups Ethnic
     @yw4 Committed Serbs Genocide
     @yw5 Intervened NATO Yugoslavia
-    @chain Implies (And $yw1 (And $yw2 (And $yw3 $yw4))) $yw5
     return $chain
 end
 
@@ -2265,7 +2069,6 @@ end
     @rg3 Failed World Intervene
     @rg4 Ended RPF Genocide
     @rg5 Remains Genocide Tragedy
-    @chain Implies (And $rg1 (And $rg2 (And $rg3 $rg4))) $rg5
     return $chain
 end
 
@@ -2275,7 +2078,6 @@ end
     @s3 Killed Attack Thousands
     @s4 Declared USA WarOnTerror
     @s5 Invaded USA Afghanistan
-    @chain Implies (And $s1 (And $s2 (And $s3 $s4))) $s5
     return $chain
 end
 
@@ -2285,7 +2087,6 @@ end
     @iw3 Overthrew USA Saddam
     @iw4 Occupied USA Iraq
     @iw5 Faced USA Insurgency
-    @chain Implies (And $iw1 (And $iw2 (And $iw3 $iw4))) $iw5
     return $chain
 end
 
@@ -2295,7 +2096,6 @@ end
     @as3 Overthrew Protests Regimes
     @as4 Mixed ArabSpring Results
     @as5 Continues Instability Today
-    @chain Implies (And $as1 (And $as2 (And $as3 $as4))) $as5
     return $chain
 end
 
@@ -2305,7 +2105,6 @@ end
     @fc3 Collapsed Banks Lehman
     @fc4 Triggered Collapse Crisis
     @fc5 Caused Crisis Recession
-    @chain Implies (And $fc1 (And $fc2 (And $fc3 $fc4))) $fc5
     return $chain
 end
 
@@ -2315,7 +2114,6 @@ end
     @eu3 Created EU Euro
     @eu4 Expanded EU Membership
     @eu5 Faces EU Challenges
-    @chain Implies (And $eu1 (And $eu2 (And $eu3 $eu4))) $eu5
     return $chain
 end
 
@@ -2325,7 +2123,6 @@ end
     @b3 Voted UK Leave
     @b4 Left UK EU
     @b5 Continues Brexit Impact
-    @chain Implies (And $b1 (And $b2 (And $b3 $b4))) $b5
     return $chain
 end
 
@@ -2335,7 +2132,6 @@ end
     @roc3 Grew China Rapidly
     @roc4 Became China Superpower
     @roc5 Challenges China USA
-    @chain Implies (And $roc1 (And $roc2 (And $roc3 $roc4))) $roc5
     return $chain
 end
 
@@ -2345,7 +2141,6 @@ end
     @cp3 Caused COVID Pandemic
     @cp4 Killed Pandemic Millions
     @cp5 Changed Pandemic World
-    @chain Implies (And $cp1 (And $cp2 (And $cp3 $cp4))) $cp5
     return $chain
 end
 

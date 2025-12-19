@@ -2,70 +2,70 @@
 # Simple isA definitions only
 
 # Medical Actors
-@Patient isA __Person
-@Clinician isA __Person
-@Surgeon isA Clinician
-@Physician isA Clinician
-@Nurse isA __Person
+Patient isA __Person
+Clinician isA __Person
+Surgeon isA Clinician
+Physician isA Clinician
+Nurse isA __Person
 
 # Pathology Concepts
-@Disease isA __State
-@Disease isA __Abstract
-@Symptom isA __State
-@Sign isA __State
-@Syndrome isA __Category
-@RiskFactor isA __Property
-@Comorbidity isA __Property
+Disease isA __State
+Disease isA __Abstract
+Symptom isA __State
+Sign isA __State
+Syndrome isA __Category
+RiskFactor isA __Property
+Comorbidity isA __Property
 
 # Disease Classification
-@InfectiousDisease isA Disease
-@ChronicDisease isA Disease
-@AutoimmuneDisease isA Disease
-@GeneticDisease isA Disease
-@Cancer isA Disease
+InfectiousDisease isA Disease
+ChronicDisease isA Disease
+AutoimmuneDisease isA Disease
+GeneticDisease isA Disease
+Cancer isA Disease
 
 # Diagnostic Concepts
-@Diagnosis isA __Abstract
-@Test isA __Action
-@TestResult isA __Abstract
-@Biomarker isA __Property
-@Screening isA Test
-@LabTest isA Test
-@ImagingTest isA Test
+Diagnosis isA __Abstract
+Test isA __Action
+TestResult isA __Abstract
+Biomarker isA __Property
+Screening isA Test
+LabTest isA Test
+ImagingTest isA Test
 
 # Treatment Concepts
-@Treatment isA __Action
-@Medication isA Treatment
-@Surgery isA Treatment
-@Therapy isA Treatment
-@Dosage isA __Measure
-@Contraindication isA __Not
-@Contraindication isA __Default
-@AdverseEffect isA __State
-@SideEffect isA __State
+Treatment isA __Action
+Medication isA Treatment
+Surgery isA Treatment
+Therapy isA Treatment
+Dosage isA __Measure
+Contraindication isA __Not
+Contraindication isA __Default
+AdverseEffect isA __State
+SideEffect isA __State
 
 # Pharmacology
-@Drug isA __Category
-@Antibiotic isA Drug
-@Analgesic isA Drug
-@Antiviral isA Drug
-@Vaccine isA __Category
-@Dose isA __Measure
-@Efficacy isA __Property
+Drug isA __Category
+Antibiotic isA Drug
+Analgesic isA Drug
+Antiviral isA Drug
+Vaccine isA __Category
+Dose isA __Measure
+Efficacy isA __Property
 
 # Evidence & Guidelines
-@Guideline isA __Source
-@EvidenceLevel isA __Evidence
-@ClinicalTrial isA __Evidence
-@Prognosis isA __Abstract
-@Outcome isA __State
-@Effectiveness isA __Property
+Guideline isA __Source
+EvidenceLevel isA __Evidence
+ClinicalTrial isA __Evidence
+Prognosis isA __Abstract
+Outcome isA __State
+Effectiveness isA __Property
 
 # Anatomy & Physiology
-@Organ isA __Category
-@Tissue isA __Category
-@Cell isA __Category
-@System isA __Category
-@NervousSystem isA System
-@CardiovascularSystem isA System
-@RespiratorySystem isA System
+Organ isA __Category
+Tissue isA __Category
+Cell isA __Category
+System isA __Category
+NervousSystem isA System
+CardiovascularSystem isA System
+RespiratorySystem isA System

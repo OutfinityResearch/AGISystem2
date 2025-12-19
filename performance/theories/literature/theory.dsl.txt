@@ -10,7 +10,6 @@
     @meter hasMeter $sonnet $Meter
     @rhyme hasRhymeScheme $sonnet $Rhyme
     @constraint hasLineCount $sonnet Fourteen
-    @structure Implies (And $sonnet (And $meter $rhyme)) PoeticStructure
     return $structure
 end
 
@@ -20,7 +19,6 @@ end
     @journey undertakesJourney $Hero $Journey
     @scale hasGrandScale $epic True
     @elevated hasElevatedStyle $epic True
-    @heroic Implies (And $epic (And $hero (And $journey (And $scale $elevated)))) HeroicNarrative
     return $heroic
 end
 
@@ -30,7 +28,6 @@ end
     @emotion expressesEmotion $Speaker $Emotion
     @personal hasPersonalVoice $lyric True
     @musical hasMusicality $lyric True
-    @subjective Implies (And $lyric (And $speaker (And $emotion (And $personal $musical)))) SubjectiveExpression
     return $subjective
 end
 
@@ -40,7 +37,6 @@ end
     @action hasAction $dramatic $Action
     @character hasCharacters $dramatic Multiple
     @verse usesVerse $dramatic True
-    @theatrical Implies (And $dramatic (And $dialogue (And $action (And $character $verse)))) TheatricalPoetry
     return $theatrical
 end
 
@@ -50,7 +46,6 @@ end
     @brevity hasBrevity $haiku True
     @syllables hasSyllablePattern $haiku FiveSevenFive
     @present capturesPresent $haiku True
-    @essence Implies (And $haiku (And $nature (And $brevity (And $syllables $present)))) EssentialMoment
     return $essence
 end
 
@@ -60,7 +55,6 @@ end
     @noRhyme lacksRhyme $free True
     @organic hasOrganicForm $free True
     @innovation allowsInnovation $free $Innovation
-    @freedom Implies (And $free (And $noMeter (And $noRhyme (And $organic $innovation)))) PoeticFreedom
     return $freedom
 end
 
@@ -70,7 +64,6 @@ end
     @repetition usesRepetition $villanelle $Repetition
     @tercets hasStanzaType $villanelle Tercets
     @lines hasLineCount $villanelle Nineteen
-    @intricate Implies (And $villanelle (And $refrain (And $repetition (And $tercets $lines)))) IntricatePattern
     return $intricate
 end
 
@@ -80,7 +73,6 @@ end
     @extended hasExtendedLength $novel True
     @complex hasComplexPlot $novel True
     @developed hasDevelopedCharacters $novel True
-    @fiction Implies (And $novel (And $prose (And $extended (And $complex $developed)))) ExtendedFiction
     return $fiction
 end
 
@@ -90,7 +82,6 @@ end
     @focused hasSingleFocus $story $Focus
     @unified hasUnifiedEffect $story True
     @condensed usesCondensation $story True
-    @compact Implies (And $story (And $brief (And $focused (And $unified $condensed)))) CompactNarrative
     return $compact
 end
 
@@ -100,7 +91,6 @@ end
     @focused hasNarrowScope $novella $Scope
     @depth allowsDepth $novella $Development
     @concentrated hasConcentratedAction $novella True
-    @intermediate Implies (And $novella (And $medium (And $focused (And $depth $concentrated)))) IntermediateForm
     return $intermediate
 end
 
@@ -112,7 +102,6 @@ end
     @catharsis producesCatharsis $downfall $Catharsis
     @pity evokesPity $tragedy True
     @fear evokesFear $tragedy True
-    @tragic Implies (And $tragedy (And $hero (And $flaw (And $downfall (And $catharsis (And $pity $fear)))))) TragicEffect
     return $tragic
 end
 
@@ -123,7 +112,6 @@ end
     @resolution hasHappyResolution $comedy $Resolution
     @social addressesSocialIssues $comedy True
     @joy createsJoy $resolution $Happiness
-    @comic Implies (And $comedy (And $humor (And $conflict (And $resolution (And $social $joy))))) ComicEffect
     return $comic
 end
 
@@ -134,7 +122,6 @@ end
     @irony employsIrony $satire $Irony
     @ridicule usesRidicule $satire True
     @purpose aimsToreform $satire $Reform
-    @satirical Implies (And $satire (And $target (And $criticism (And $irony (And $ridicule $purpose))))) SatiricalIntent
     return $satirical
 end
 
@@ -145,7 +132,6 @@ end
     @quest undertakesQuest $Hero $Quest
     @idealized hasIdealization $romance True
     @adventure involvesAdventure $romance True
-    @romantic Implies (And $romance (And $love (And $hero (And $quest (And $idealized $adventure))))) RomanticNarrative
     return $romantic
 end
 
@@ -156,7 +142,6 @@ end
     @supernatural includesSupernatural $gothic $Supernatural
     @setting hasGothicSetting $gothic Castle
     @terror evokesTerror $gothic $Horror
-    @dark Implies (And $gothic (And $atmosphere (And $mystery (And $supernatural (And $setting $terror))))) DarkRomance
     return $dark
 end
 
@@ -167,7 +152,6 @@ end
     @future projectsFuture $scifi $Future
     @science basedonScience $scifi True
     @whatif asksWhatIf $scifi True
-    @speculative Implies (And $scifi (And $technology (And $speculation (And $future (And $science $whatif))))) SpeculativeFiction
     return $speculative
 end
 
@@ -178,7 +162,6 @@ end
     @imagination usesImagination $fantasy True
     @supernatural hasSupernaturalElements $fantasy True
     @alternate createsAlternateReality $fantasy True
-    @fantastical Implies (And $fantasy (And $magic (And $world (And $imagination (And $supernatural $alternate))))) FantasticalNarrative
     return $fantastical
 end
 
@@ -189,7 +172,6 @@ end
     @investigation conductsinvestigation $Detective $Investigation
     @clues providesClues $mystery $Clues
     @solution revealsolution $investigation $Solution
-    @suspense Implies (And $mystery (And $crime (And $detective (And $investigation (And $clues $solution))))) SuspensefulNarrative
     return $suspense
 end
 
@@ -200,7 +182,6 @@ end
     @contemporary reflectsContemporary $realism $Contemporary
     @detailed usesDetailedDescription $realism True
     @plausible maintainsPlausibility $realism True
-    @realistic Implies (And $realism (And $truthful (And $ordinary (And $contemporary (And $detailed $plausible))))) RealisticRepresentation
     return $realistic
 end
 
@@ -211,7 +192,6 @@ end
     @forces showsSocialForces $naturalism $Forces
     @scientific usesScientificApproach $naturalism True
     @pessimistic hasPessimisticView $naturalism True
-    @deterministic_view Implies (And $naturalism (And $deterministic (And $environment (And $forces (And $scientific $pessimistic))))) DeterministicNarrative
     return $deterministic_view
 end
 
@@ -222,7 +202,6 @@ end
     @stream usesStreamOfConsciousness $modernism $Consciousness
     @traditional rejectsTraditional $modernism True
     @subjective emphasizesSubjective $modernism True
-    @modern Implies (And $modernism (And $experimental (And $fragmented (And $stream (And $traditional $subjective))))) ModernistAesthetic
     return $modern
 end
 
@@ -233,7 +212,6 @@ end
     @meta usesMetafiction $postmodern $Metafiction
     @playful hasPlayfulness $postmodern True
     @skeptical showsSkepticism $postmodern True
-    @postmodern_view Implies (And $postmodern (And $ironic (And $pastiche (And $meta (And $playful $skeptical))))) PostmodernistAesthetic
     return $postmodern_view
 end
 
@@ -244,7 +222,6 @@ end
     @matter_of_fact presentsMagicMatterOfFactly $magical True
     @blend blendsMagicReality $magical $Synthesis
     @seamless hasSeamlessIntegration $magical True
-    @hybrid Implies (And $magical (And $realistic (And $magic (And $matter_of_fact (And $blend $seamless))))) HybridMode
     return $hybrid
 end
 
@@ -258,7 +235,6 @@ end
     @confrontation hasConfrontation $three_act $Confrontation
     @resolution hasResolution $three_act $Resolution
     @turning hasTurningPoints $three_act Two
-    @dramatic Implies (And $three_act (And $setup (And $confrontation (And $resolution $turning)))) DramaticStructure
     return $dramatic
 end
 
@@ -269,7 +245,6 @@ end
     @climax hasClimax $pyramid $Climax
     @falling hasFallingAction $pyramid $Falling
     @denouement hasDenouement $pyramid $Denouement
-    @five_part Implies (And $pyramid (And $exposition (And $rising (And $climax (And $falling $denouement))))) FivePartStructure
     return $five_part
 end
 
@@ -281,7 +256,6 @@ end
     @initiation undergoesInitiation $journey $Initiation
     @return completsReturn $journey $Return
     @transformation achievesTransformation $journey True
-    @monomyth Implies (And $journey (And $ordinary (And $call (And $departure (And $initiation (And $return $transformation)))))) Monomyth
     return $monomyth
 end
 
@@ -292,7 +266,6 @@ end
     @flashback usesFlashback $medias $Flashback
     @context providesContext $flashback $Context
     @nonlinear hasNonlinearNarrative $medias True
-    @immediate Implies (And $medias (And $middle (And $action (And $flashback (And $context $nonlinear))))) ImmediateEngagement
     return $immediate
 end
 
@@ -303,7 +276,6 @@ end
     @nested embedsStory $outer $Nested
     @levels hasMultipleLevels $frame True
     @distance createsDistance $frame True
-    @embedded Implies (And $frame (And $outer (And $inner (And $nested (And $levels $distance))))) EmbeddedNarrative
     return $embedded
 end
 
@@ -314,7 +286,6 @@ end
     @interweave interweavesThreads $parallel True
     @convergence leadsToConvergence $parallel $Convergence
     @complexity increasesComplexity $parallel True
-    @multiplot Implies (And $parallel (And $multiple (And $simultaneous (And $interweave (And $convergence $complexity))))) MultiplotStructure
     return $multiplot
 end
 
@@ -325,7 +296,6 @@ end
     @independent hasIndependentUnits $episodic True
     @recurring hasRecurringElements $episodic True
     @overall achievesOverallUnity $episodic $Unity
-    @serial Implies (And $episodic (And $episodes (And $loosely (And $independent (And $recurring $overall))))) SerialStructure
     return $serial
 end
 
@@ -336,7 +306,6 @@ end
     @return returnsTobBeginning $end $Return
     @symmetry hasSymmetry $circular True
     @cyclical createsCyclicalEffect $circular True
-    @closed Implies (And $circular (And $beginning (And $end (And $return (And $symmetry $cyclical))))) ClosedForm
     return $closed
 end
 
@@ -347,7 +316,6 @@ end
     @obstacles facesObstacles $journey $Obstacles
     @achievement reachesAchievement $quest $Achievement
     @transformation undergoesgrowth $quest True
-    @adventure Implies (And $quest (And $goal (And $journey (And $obstacles (And $achievement $transformation))))) AdventurePlot
     return $adventure
 end
 
@@ -358,7 +326,6 @@ end
     @anagnorisis hasAnagnorisis $trag_plot $Anagnorisis
     @catastrophe leadsToCatastrophe $trag_plot $Catastrophe
     @inevitable hasInevitability $trag_plot True
-    @aristotelian Implies (And $trag_plot (And $hamartia (And $peripeteia (And $anagnorisis (And $catastrophe $inevitable))))) AristotelianTragedy
     return $aristotelian
 end
 
@@ -369,7 +336,6 @@ end
     @acquisition gainsWealth $rags $Acquisition
     @success achievesSuccess $rags $Success
     @transformation undergoesSocialRise $rags True
-    @aspirational Implies (And $rags (And $poverty (And $struggle (And $acquisition (And $success $transformation))))) AspirationalNarrative
     return $aspirational
 end
 
@@ -380,7 +346,6 @@ end
     @battle engagesinBattle $hero $Battle
     @victory achievesVictory $battle $Victory
     @triumph createsTriumph $victory True
-    @heroic_quest Implies (And $monster (And $threat (And $hero (And $battle (And $victory $triumph))))) HeroicQuest
     return $heroic_quest
 end
 
@@ -391,7 +356,6 @@ end
     @catalyst encountersCatalyst $rebirth $Catalyst
     @redemption achievesRedemption $rebirth $Redemption
     @renewal experiencesRenewal $redemption $Renewal
-    @transformation Implies (And $rebirth (And $darkness (And $trapped (And $catalyst (And $redemption $renewal))))) TransformationPlot
     return $transformation
 end
 
@@ -406,7 +370,6 @@ end
     @conflict facesMainConflict $protagonist $Conflict
     @change undergoesChange $protagonist True
     @reader engagesReader $protagonist True
-    @main Implies (And $protagonist (And $central (And $drive (And $conflict (And $change $reader))))) MainCharacter
     return $main
 end
 
@@ -417,7 +380,6 @@ end
     @obstacle presentsObstacle $antagonist $Obstacle
     @motivation hasMotivation $antagonist $Motivation
     @force drivesPlot $antagonist True
-    @opposing Implies (And $antagonist (And $opposes (And $conflict (And $obstacle (And $motivation $force))))) OpposingForce
     return $opposing
 end
 
@@ -428,7 +390,6 @@ end
     @multifaceted hasMultipleFacets $round True
     @realistic seemsRealistic $round True
     @develops undergoesDevelopment $round $Development
-    @dimensional Implies (And $round (And $complex (And $depth (And $multifaceted (And $realistic $develops))))) ThreeDimensional
     return $dimensional
 end
 
@@ -439,7 +400,6 @@ end
     @unchanging remainsUnchanging $flat True
     @predictable isPredictable $flat True
     @functional servesFunctionalRole $flat True
-    @onedimensional Implies (And $flat (And $simple (And $single (And $unchanging (And $predictable $functional))))) OneDimensional
     return $onedimensional
 end
 
@@ -450,7 +410,6 @@ end
     @arc hasCharacterArc $dynamic $Arc
     @evolves evolvesOverTime $dynamic True
     @transformed becomesTransformed $dynamic True
-    @developing Implies (And $dynamic (And $changes (And $growth (And $arc (And $evolves $transformed))))) DevelopingCharacter
     return $developing
 end
 
@@ -461,7 +420,6 @@ end
     @unchanged staysUnchanged $static True
     @constant providesConstant $static True
     @anchor servesAsAnchor $static True
-    @unchanging Implies (And $static (And $stable (And $consistent (And $unchanged (And $constant $anchor))))) UnchangingCharacter
     return $unchanging
 end
 
@@ -472,7 +430,6 @@ end
     @highlights highlightsQualities $foil $Highlight
     @comparison createsComparison $foil True
     @difference emphasizesDifference $foil $Difference
-    @contrasting Implies (And $foil (And $contrasts (And $opposite (And $highlights (And $comparison $difference))))) ContrastingCharacter
     return $contrasting
 end
 
@@ -483,7 +440,6 @@ end
     @recognizable isRecognizable $stock $Recognizable
     @familiar seemsFamiliar $stock True
     @shorthand providesShorthand $stock True
-    @archetypal Implies (And $stock (And $stereotypical (And $conventional (And $recognizable (And $familiar $shorthand))))) ArchetypalCharacter
     return $archetypal
 end
 
@@ -494,7 +450,6 @@ end
     @moral hasMoralAmbiguity $antihero $Moral
     @sympathy evokessympathy $antihero $Sympathy
     @relatable seemsRelatable $antihero True
-    @complex Implies (And $antihero (And $flawed (And $unconventional (And $moral (And $sympathy $relatable))))) ComplexProtagonist
     return $complex
 end
 
@@ -505,7 +460,6 @@ end
     @downfall suffersDownfall $tragic_hero $Downfall
     @recognition achievesRecognition $tragic_hero True
     @catharsis evokesCatharsis $tragic_hero $Catharsis
-    @aristotelian_hero Implies (And $tragic_hero (And $noble (And $flaw (And $downfall (And $recognition $catharsis))))) AristotelianHero
     return $aristotelian_hero
 end
 
@@ -516,7 +470,6 @@ end
     @reliability hasReliability $narrator $Reliability
     @distance createsNarrativeDistance $narrator $Distance
     @mediates mediatesStory $narrator True
-    @narrative_function Implies (And $narrator (And $voice (And $perspective (And $reliability (And $distance $mediates))))) NarrativeFunction
     return $narrative_function
 end
 
@@ -531,7 +484,6 @@ end
     @tenor hasTenor $metaphor $Tenor
     @vehicle hasVehicle $metaphor $Vehicle
     @meaning createsMeaning $metaphor $Meaning
-    @figurative Implies (And $metaphor (And $comparison (And $implicit (And $tenor (And $vehicle $meaning))))) FigurativeLanguage
     return $figurative
 end
 
@@ -542,7 +494,6 @@ end
     @like usesLike $simile $Like_As
     @as usesAs $simile $Like_As
     @clear makesClearComparison $simile True
-    @figurative_sim Implies (And $simile (And $comparison (And $explicit (And $like (And $as $clear))))) FigurativeComparison
     return $figurative_sim
 end
 
@@ -553,7 +504,6 @@ end
     @qualities givesHumanQualities $personification $Attribution
     @vivid createsVividImagery $personification True
     @animate animatesInanimate $personification True
-    @anthropomorphic Implies (And $personification (And $human (And $nonhuman (And $qualities (And $vivid $animate))))) AnthropomorphicDevice
     return $anthropomorphic
 end
 
@@ -564,7 +514,6 @@ end
     @deeper hasDeererSignificance $symbolism True
     @representation createsRepresentation $symbolism $Representation
     @interpretive requiresInterpretation $symbolism True
-    @symbolic Implies (And $symbolism (And $object (And $meaning (And $deeper (And $representation $interpretive))))) SymbolicMeaning
     return $symbolic
 end
 
@@ -575,7 +524,6 @@ end
     @deeper hasDeeperMeaning $allegory $Deeper
     @moral conveysMoral $allegory $Moral
     @systematic hasSystematicCorrespondence $allegory True
-    @allegorical Implies (And $allegory (And $extended (And $narrative (And $deeper (And $moral $systematic))))) AllegoricalMeaning
     return $allegorical
 end
 
@@ -586,7 +534,6 @@ end
     @reality revealsReality $irony $Reality
     @opposite showsOpposite $irony True
     @effect createsIronicEffect $irony True
-    @ironic Implies (And $irony (And $contrast (And $expectation (And $reality (And $opposite $effect))))) IronicMeaning
     return $ironic
 end
 
@@ -597,7 +544,6 @@ end
     @anticipation createsAnticipation $foreshadow $Anticipation
     @suspense buildsSuspense $foreshadow True
     @prepare preparesReader $foreshadow True
-    @anticipatory Implies (And $foreshadow (And $hint (And $future (And $anticipation (And $suspense $prepare))))) AnticipatoryDevice
     return $anticipatory
 end
 
@@ -608,7 +554,6 @@ end
     @context providesContext $flashback $Context
     @memory revealsMemory $flashback True
     @backstory givesBackstory $flashback True
-    @retrospective Implies (And $flashback (And $interrupts (And $past (And $context (And $memory $backstory))))) RetrospectiveDevice
     return $retrospective
 end
 
@@ -619,7 +564,6 @@ end
     @vivid hasVividDescription $imagery True
     @experience createsExperience $imagery $Experience
     @concrete usesConcreteDetails $imagery True
-    @descriptive Implies (And $imagery (And $sensory (And $visual (And $vivid (And $experience $concrete))))) DescriptiveLanguage
     return $descriptive
 end
 
@@ -630,7 +574,6 @@ end
     @consonant usesConsonantSound $alliteration $Sound
     @musical createsMusicality $alliteration True
     @emphasis createsEmphasis $alliteration True
-    @sonic Implies (And $alliteration (And $repetition (And $initial (And $consonant (And $musical $emphasis))))) SonicDevice
     return $sonic
 end
 
@@ -641,7 +584,6 @@ end
     @musical createsMusicality $assonance True
     @rhyme createsInternalRhyme $assonance True
     @melodic producedMelodicEffect $assonance True
-    @vocalic Implies (And $assonance (And $vowel (And $internal (And $musical (And $rhyme $melodic))))) VocalicDevice
     return $vocalic
 end
 
@@ -652,7 +594,6 @@ end
     @imitation createsImitation $onomatopoeia $Imitation
     @vivid createsVividEffect $onomatopoeia True
     @direct hasDirectRepresentation $onomatopoeia True
-    @imitative Implies (And $onomatopoeia (And $sound (And $word (And $imitation (And $vivid $direct))))) ImitativeDevice
     return $imitative
 end
 
@@ -663,7 +604,6 @@ end
     @effect createsEffect $hyperbole $Effect
     @emphasis createsEmphasis $hyperbole $Emphasis
     @not_literal isNotLiteral $hyperbole True
-    @exaggerated Implies (And $hyperbole (And $exaggeration (And $extreme (And $effect (And $emphasis $not_literal))))) ExaggeratedLanguage
     return $exaggerated
 end
 
@@ -674,7 +614,6 @@ end
     @ironic hasIronicEffect $understatement $Effect
     @deliberate isDeliberate $understatement True
     @restrained usesRestraint $understatement True
-    @understated Implies (And $understatement (And $minimizes (And $downplays (And $ironic (And $deliberate $restrained))))) UnderstatedLanguage
     return $understated
 end
 
@@ -685,7 +624,6 @@ end
     @truth revealsTruth $paradox $Truth
     @insight providesInsight $paradox $Insight
     @thoughtprovoking isThoughtProvoking $paradox True
-    @paradoxical Implies (And $paradox (And $contradiction (And $apparent (And $truth (And $insight $thoughtprovoking))))) ParadoxicalMeaning
     return $paradoxical
 end
 
@@ -696,7 +634,6 @@ end
     @tension createsTension $oxymoron $Tension
     @compact hasCompactForm $oxymoron True
     @striking createsStrikingEffect $oxymoron True
-    @contradictory_phrase Implies (And $oxymoron (And $contradictory (And $adjacent (And $tension (And $compact $striking))))) ContradictoryPhrase
     return $contradictory_phrase
 end
 
@@ -707,7 +644,6 @@ end
     @knowledge requiresKnowledge $allusion $Knowledge
     @context addsContext $allusion $Context
     @enriches enrichesMeaning $allusion True
-    @intertextual Implies (And $allusion (And $reference (And $external (And $knowledge (And $context $enriches))))) IntertextualReference
     return $intertextual
 end
 
@@ -718,7 +654,6 @@ end
     @pattern createsPattern $motif $Pattern
     @meaning contributesToMeaning $motif $Meaning
     @thematic hasThematicSignificance $motif True
-    @recurrent Implies (And $motif (And $recurring (And $element (And $pattern (And $meaning $thematic))))) RecurrentElement
     return $recurrent
 end
 
@@ -729,7 +664,6 @@ end
     @unfiltered isUnfiltered $stream True
     @associative usesAssociativeLogic $stream True
     @realistic mimicsRealisticThought $stream True
-    @psychological Implies (And $stream (And $interior (And $flow (And $unfiltered (And $associative $realistic))))) PsychologicalRealism
     return $psychological
 end
 
@@ -740,7 +674,6 @@ end
     @blend blendsPerspectives $free_indirect $Blend
     @intimate createsIntimacy $free_indirect True
     @flexible allowsFlexibility $free_indirect True
-    @narrative_mode Implies (And $free_indirect (And $third_person (And $interior (And $blend (And $intimate $flexible))))) NarrativeMode
     return $narrative_mode
 end
 
@@ -751,7 +684,6 @@ end
     @limited hasLimitedPerspective $unreliable True
     @biased isBiased $unreliable True
     @reader engagesReader $unreliable $Reader
-    @perspective_play Implies (And $unreliable (And $narrator (And $distortion (And $limited (And $biased $reader))))) PerspectivePlay
     return $perspective_play
 end
 
@@ -766,7 +698,6 @@ end
     @relationship examinseRelationship $love $Relationship
     @emotional hasEmotionalDepth $love True
     @universal isUniversal $love True
-    @romantic Implies (And $love (And $romance (And $passion (And $relationship (And $emotional $universal))))) RomanticTheme
     return $romantic
 end
 
@@ -777,7 +708,6 @@ end
     @grief exploresGrief $death $Grief
     @inevitable addressesInevitability $death True
     @profound hasProfoundImpact $death True
-    @mortal Implies (And $death (And $mortality (And $loss (And $grief (And $inevitable $profound))))) MortalityTheme
     return $mortal
 end
 
@@ -788,7 +718,6 @@ end
     @question questionsIdentity $identity True
     @transformation involvesTransformation $identity $Transformation
     @development showsDevelopment $identity True
-    @existential Implies (And $identity (And $self (And $discovery (And $question (And $transformation $development))))) ExistentialTheme
     return $existential
 end
 
@@ -799,7 +728,6 @@ end
     @corruption showsCorruption $power $Corruption
     @struggle showsPowerStruggle $power True
     @political hasPoliticalDimension $power True
-    @political_theme Implies (And $power (And $authority (And $control (And $corruption (And $struggle $political))))) PoliticalTheme
     return $political_theme
 end
 
@@ -810,7 +738,6 @@ end
     @struggle showsStruggle $freedom $Struggle
     @individual emphasizesIndividual $freedom True
     @collective addressesCollective $freedom True
-    @liberation Implies (And $freedom (And $liberty (And $oppression (And $struggle (And $individual $collective))))) LiberationTheme
     return $liberation
 end
 
@@ -821,7 +748,6 @@ end
     @fairness seeksFairness $justice $Fairness
     @moral hasMoralDimension $justice True
     @social hasSocialDimension $justice True
-    @ethical Implies (And $justice (And $right (And $wrong (And $fairness (And $moral $social))))) EthicalTheme
     return $ethical
 end
 
@@ -832,7 +758,6 @@ end
     @conflict showsConflict $nature $Conflict
     @human addressesHumanRelation $nature True
     @pastoral hasPastoralElements $nature True
-    @ecological Implies (And $nature (And $environment (And $harmony (And $conflict (And $human $pastoral))))) EcologicalTheme
     return $ecological
 end
 
@@ -843,7 +768,6 @@ end
     @society examinesSociety $alienation $Society
     @modern reflectsModernCondition $alienation True
     @existential hasExistentialDimension $alienation True
-    @modern_condition Implies (And $alienation (And $isolation (And $disconnection (And $society (And $modern $existential))))) ModernCondition
     return $modern_condition
 end
 
@@ -854,7 +778,6 @@ end
     @initiation involvesInitiation $coming_of_age $Initiation
     @loss involvesLossOfInnocence $coming_of_age True
     @growth showsGrowth $coming_of_age True
-    @bildungsroman Implies (And $coming_of_age (And $youth (And $maturity (And $initiation (And $loss $growth))))) Bildungsroman
     return $bildungsroman
 end
 
@@ -865,7 +788,6 @@ end
     @choice involvesChoice $good_evil $Choice
     @absolute hasAbsoluteValues $good_evil True
     @ambiguous hasAmbiguity $good_evil True
-    @moral_conflict Implies (And $good_evil (And $morality (And $conflict (And $choice (And $absolute $ambiguous))))) MoralConflict
     return $moral_conflict
 end
 
@@ -880,7 +802,6 @@ end
     @context providesHistoricalContext $time $Context
     @influences influencesAction $time True
     @atmosphere createsAtmosphere $time True
-    @temporal Implies (And $time (And $period (And $era (And $context (And $influences $atmosphere))))) TemporalContext
     return $temporal
 end
 
@@ -891,7 +812,6 @@ end
     @culture reflectsCulture $place $Culture
     @atmosphere createsAtmosphere $place True
     @symbolic hasSymbolicValue $place True
-    @spatial Implies (And $place (And $location (And $geography (And $culture (And $atmosphere $symbolic))))) SpatialContext
     return $spatial
 end
 
@@ -902,7 +822,6 @@ end
     @values reflectsValues $social $Values
     @hierarchy showsHierarchy $social True
     @norms revealsNorms $social True
-    @societal Implies (And $social (And $class (And $society (And $values (And $hierarchy $norms))))) SocietalContext
     return $societal
 end
 
@@ -913,7 +832,6 @@ end
     @feeling evokesFeeling $atmosphere $Feeling
     @sensory usesSensoryDetails $atmosphere True
     @emotional hasEmotionalImpact $atmosphere True
-    @affective Implies (And $atmosphere (And $mood (And $tone (And $feeling (And $sensory $emotional))))) AffectiveContext
     return $affective
 end
 
@@ -928,7 +846,6 @@ end
     @limited hasLimitedKnowledge $first_person $Limited
     @intimate createsIntimacy $first_person True
     @biased mayBeBiased $first_person True
-    @personal Implies (And $first_person (And $I (And $subjective (And $limited (And $intimate $biased))))) PersonalNarrative
     return $personal
 end
 
@@ -939,7 +856,6 @@ end
     @focused hasFocusedPerspective $third_limited $Focused
     @interior accessesInterior $third_limited True
     @limited hasLimitedScope $third_limited True
-    @focused_external Implies (And $third_limited (And $external (And $single (And $focused (And $interior $limited))))) FocusedExternal
     return $focused_external
 end
 
@@ -950,7 +866,6 @@ end
     @objective canBeObjective $omniscient True
     @unlimited hasUnlimitedKnowledge $omniscient True
     @godlike hasGodlikePerspective $omniscient True
-    @comprehensive Implies (And $omniscient (And $all_knowing (And $multiple (And $objective (And $unlimited $godlike))))) ComprehensivePerspective
     return $comprehensive
 end
 
@@ -961,7 +876,6 @@ end
     @direct hasDirectAddress $second_person $Direct
     @unusual isUnusual $second_person True
     @immersive createsImmersion $second_person True
-    @direct_address Implies (And $second_person (And $you (And $reader (And $direct (And $unusual $immersive))))) DirectAddress
     return $direct_address
 end
 
@@ -977,7 +891,6 @@ end
     @epic hasEpicTradition $classical $Epic
     @foundational isFoundational $classical True
     @western establishesWesternTradition $classical True
-    @classical_lit Implies (And $classical (And $ancient (And $greece (And $rome (And $epic (And $foundational $western)))))) ClassicalLiterature
     return $classical_lit
 end
 
@@ -988,7 +901,6 @@ end
     @allegory usesAllegory $medieval $Allegory
     @chivalric hasChivalricRomance $medieval True
     @oral hasOralTradition $medieval True
-    @medieval_lit Implies (And $medieval (And $middle_ages (And $religious (And $allegory (And $chivalric $oral))))) MedievalLiterature
     return $medieval_lit
 end
 
@@ -999,7 +911,6 @@ end
     @classical_revival revivesClassical $renaissance $Classical_Revival
     @individual focusesOnIndividual $renaissance True
     @innovation showsInnovation $renaissance True
-    @renaissance_lit Implies (And $renaissance (And $rebirth (And $humanism (And $classical_revival (And $individual $innovation))))) RenaissanceLiterature
     return $renaissance_lit
 end
 
@@ -1010,7 +921,6 @@ end
     @individual valuesIndividual $romantic $Individual
     @imagination prizesImagination $romantic True
     @reaction reactsAgainstEnlightenment $romantic True
-    @romantic_lit Implies (And $romantic (And $emotion (And $nature (And $individual (And $imagination $reaction))))) RomanticLiterature
     return $romantic_lit
 end
 
@@ -1021,7 +931,6 @@ end
     @moral hasMoralConcern $victorian $Moral
     @realism usesRealism $victorian True
     @novel dominatesNovel $victorian True
-    @victorian_lit Implies (And $victorian (And $industrial (And $social (And $moral (And $realism $novel))))) VictorianLiterature
     return $victorian_lit
 end
 
@@ -1032,7 +941,6 @@ end
     @alienation depictsAlienation $modernist $Alienation
     @subjective emphasizesSubjective $modernist True
     @tradition breaksWithTradition $modernist True
-    @modernist_lit Implies (And $modernist (And $experimentation (And $fragmentation (And $alienation (And $subjective $tradition))))) ModernistLiterature
     return $modernist_lit
 end
 
@@ -1043,7 +951,6 @@ end
     @pastiche usesPastiche $postmodern $Pastiche
     @playful isPlayful $postmodern True
     @skeptical showsSkepticism $postmodern True
-    @postmodern_lit Implies (And $postmodern (And $irony (And $metafiction (And $pastiche (And $playful $skeptical))))) PostmodernLiterature
     return $postmodern_lit
 end
 
@@ -1054,7 +961,6 @@ end
     @progress believesInProgress $enlightenment $Progress
     @rational hasRationalApproach $enlightenment True
     @satire usesSatire $enlightenment True
-    @enlightenment_lit Implies (And $enlightenment (And $reason (And $science (And $progress (And $rational $satire))))) EnlightenmentLiterature
     return $enlightenment_lit
 end
 
@@ -1065,7 +971,6 @@ end
     @contemporary focusesOnContemporary $realist $Contemporary
     @detailed usesDetail $realist True
     @social addressesSocialReality $realist True
-    @realist_lit Implies (And $realist (And $verisimilitude (And $ordinary (And $contemporary (And $detailed $social))))) RealistLiterature
     return $realist_lit
 end
 
@@ -1080,7 +985,6 @@ end
     @close_reading usesCloseReading $formalist $Close_Reading
     @form analyzesForm $formalist True
     @autonomous viewsAsAutonomous $formalist True
-    @formal Implies (And $formalist (And $text (And $intrinsic (And $close_reading (And $form $autonomous))))) FormalAnalysis
     return $formal
 end
 
@@ -1091,7 +995,6 @@ end
     @convention studiesConvention $structuralist $Convention
     @language focusesOnLanguage $structuralist True
     @underlying seeksUnderlyingStructures $structuralist True
-    @structural Implies (And $structuralist (And $system (And $sign (And $convention (And $language $underlying))))) StructuralAnalysis
     return $structural
 end
 
@@ -1102,7 +1005,6 @@ end
     @representation studiesRepresentation $feminist $Representation
     @patriarchy critiquesPatriarchy $feminist True
     @women focusesOnWomen $feminist True
-    @gender_analysis Implies (And $feminist (And $gender (And $power (And $representation (And $patriarchy $women))))) GenderAnalysis
     return $gender_analysis
 end
 
@@ -1113,7 +1015,6 @@ end
     @ideology studiesIdeology $marxist $Ideology
     @power examinesPowerRelations $marxist True
     @material usesMaterialistApproach $marxist True
-    @class_analysis Implies (And $marxist (And $class (And $economics (And $ideology (And $power $material))))) ClassAnalysis
     return $class_analysis
 end
 
@@ -1124,7 +1025,6 @@ end
     @symbol interpretsSymbol $psychoanalytic $Symbol
     @dream studiesDreams $psychoanalytic True
     @repression examinesRepression $psychoanalytic True
-    @psychological_analysis Implies (And $psychoanalytic (And $unconscious (And $desire (And $symbol (And $dream $repression))))) PsychologicalAnalysis
     return $psychological_analysis
 end
 
@@ -1135,7 +1035,6 @@ end
     @identity studiesIdentity $postcolonial $Identity
     @power examinesColonialPower $postcolonial True
     @resistance studiesResistance $postcolonial True
-    @colonial_analysis Implies (And $postcolonial (And $empire (And $otherness (And $identity (And $power $resistance))))) ColonialAnalysis
     return $colonial_analysis
 end
 
@@ -1146,7 +1045,6 @@ end
     @power studiesPower $new_historicist $Power
     @history embedsInHistory $new_historicist True
     @interdisciplinary usesInterdisciplinary $new_historicist True
-    @historical_analysis Implies (And $new_historicist (And $context (And $culture (And $power (And $history $interdisciplinary))))) HistoricalAnalysis
     return $historical_analysis
 end
 
@@ -1157,7 +1055,6 @@ end
     @meaning questionsMeaning $deconstruction $Meaning
     @language focusesOnLanguage $deconstruction True
     @undecidability showsUndecidability $deconstruction True
-    @deconstructive Implies (And $deconstruction (And $binary (And $instability (And $meaning (And $language $undecidability))))) DeconstructiveAnalysis
     return $deconstructive
 end
 
@@ -1168,7 +1065,6 @@ end
     @experience analyzesExperience $reader_response $Experience
     @active viewsReaderAsActive $reader_response True
     @subjective allowsSubjectivity $reader_response True
-    @reception_analysis Implies (And $reader_response (And $reader (And $interpretation (And $experience (And $active $subjective))))) ReceptionAnalysis
     return $reception_analysis
 end
 
@@ -1179,7 +1075,6 @@ end
     @sustainability addressesSustainability $ecocriticism $Sustainability
     @ecological usesEcologicalPerspective $ecocriticism True
     @human_nature studiesHumanNatureRelation $ecocriticism True
-    @ecological_analysis Implies (And $ecocriticism (And $nature (And $environment (And $sustainability (And $ecological $human_nature))))) EcologicalAnalysis
     return $ecological_analysis
 end
 
@@ -1194,7 +1089,6 @@ end
     @revelation createsRevelation $dialogue $Revelation
     @realistic soundsRealistic $dialogue True
     @advances advancesPlot $dialogue True
-    @conversational Implies (And $dialogue (And $speech (And $character (And $revelation (And $realistic $advances))))) ConversationalTechnique
     return $conversational
 end
 
@@ -1205,7 +1099,6 @@ end
     @unspoken isUnspoken $interior $Unspoken
     @stream mayUseStream $interior True
     @consciousness revealsConsciousness $interior True
-    @internal Implies (And $interior (And $thought (And $direct (And $unspoken (And $stream $consciousness))))) InternalTechnique
     return $internal
 end
 
@@ -1216,7 +1109,6 @@ end
     @revelation createsRevelation $epiphany $Revelation
     @character affectsCharacter $epiphany True
     @illumination providesIllumination $epiphany True
-    @revelatory Implies (And $epiphany (And $insight (And $sudden (And $revelation (And $character $illumination))))) RevelatoryMoment
     return $revelatory
 end
 
@@ -1227,7 +1119,6 @@ end
     @effect createsEffect $juxtaposition $Effect
     @highlights highlightsDifferences $juxtaposition True
     @emphasizes emphasizesQualities $juxtaposition True
-    @contrastive Implies (And $juxtaposition (And $contrast (And $comparison (And $effect (And $highlights $emphasizes))))) ContrastiveTechnique
     return $contrastive
 end
 
@@ -1238,7 +1129,6 @@ end
     @continuation demandsContinuation $cliffhanger $Continuation
     @tension buildsTension $cliffhanger True
     @engagement maintainsEngagement $cliffhanger True
-    @suspenseful Implies (And $cliffhanger (And $suspense (And $unresolved (And $continuation (And $tension $engagement))))) SuspensefulTechnique
     return $suspenseful
 end
 
@@ -1249,7 +1139,6 @@ end
     @resolution resolvesPlot $deus $Resolution
     @external usesExternalForce $deus True
     @contrived seemsContrived $deus True
-    @artificial Implies (And $deus (And $sudden (And $implausible (And $resolution (And $external $contrived))))) ArtificialResolution
     return $artificial
 end
 
@@ -1260,7 +1149,6 @@ end
     @false_clue providesFalseClue $red_herring $False_Clue
     @misleading isMisleading $red_herring True
     @suspense maintainsSuspense $red_herring True
-    @deceptive Implies (And $red_herring (And $misdirection (And $distraction (And $false_clue (And $misleading $suspense))))) DeceptiveTechnique
     return $deceptive
 end
 
@@ -1271,7 +1159,6 @@ end
     @necessity followsNecessity $chekovs_gun True
     @relevant isRelevant $chekovs_gun True
     @economy showsEconomy $chekovs_gun True
-    @economical Implies (And $chekovs_gun (And $setup (And $payoff (And $necessity (And $relevant $economy))))) EconomicalTechnique
     return $economical
 end
 
@@ -1286,7 +1173,6 @@ end
     @melancholy createsMelancholy $somber $Melancholy
     @grave hasGravity $somber True
     @subdued isSubdued $somber True
-    @dark_tone Implies (And $somber (And $dark (And $serious (And $melancholy (And $grave $subdued))))) DarkTone
     return $dark_tone
 end
 
@@ -1297,7 +1183,6 @@ end
     @comic hasComicElements $humorous $Comic
     @playful isPlayful $humorous True
     @amusing isAmusing $humorous True
-    @comic_tone Implies (And $humorous (And $funny (And $lighthearted (And $comic (And $playful $amusing))))) ComicTone
     return $comic_tone
 end
 
@@ -1308,7 +1193,6 @@ end
     @memory triggersMemory $nostalgic $Memory
     @bittersweet isBittersweet $nostalgic True
     @wistful isWistful $nostalgic True
-    @wistful_mood Implies (And $nostalgic (And $past (And $longing (And $memory (And $bittersweet $wistful))))) WistfulMood
     return $wistful_mood
 end
 
@@ -1319,7 +1203,6 @@ end
     @uncertainty createsUncertainty $suspenseful $Uncertainty
     @anxious makesAnxious $suspenseful True
     @gripping isGripping $suspenseful True
-    @tense_mood Implies (And $suspenseful (And $tension (And $anticipation (And $uncertainty (And $anxious $gripping))))) TenseMood
     return $tense_mood
 end
 
@@ -1334,7 +1217,6 @@ end
     @elevated hasElevatedStyle $blank $Elevated
     @flexible allowsFlexibility $blank True
     @natural soundsNatural $blank True
-    @dramatic_verse Implies (And $blank (And $unrhymed (And $iambic (And $elevated (And $flexible $natural))))) DramaticVerse
     return $dramatic_verse
 end
 
@@ -1345,7 +1227,6 @@ end
     @closed hasClosedForm $heroic $Closed
     @couplet usesCouplets $heroic True
     @epigrammatic isEpigrammatic $heroic True
-    @couplet_form Implies (And $heroic (And $rhymed (And $iambic (And $closed (And $couplet $epigrammatic))))) CoupletForm
     return $couplet_form
 end
 
@@ -1356,7 +1237,6 @@ end
     @dante associatedWithDante $terza $Dante
     @tercets usesTercets $terza True
     @continuous hasConteinuousFlow $terza True
-    @interlocking_form Implies (And $terza (And $interlocking (And $rhyme (And $dante (And $tercets $continuous))))) InterlockingForm
     return $interlocking_form
 end
 
@@ -1367,7 +1247,6 @@ end
     @rhyme hasABABABCCRhyme $ottava True
     @narrative usedForNarrative $ottava $Narrative
     @italian hasItalianOrigin $ottava True
-    @stanza_form Implies (And $ottava (And $eight_line (And $stanza (And $rhyme (And $narrative $italian))))) StanzaForm
     return $stanza_form
 end
 
@@ -1382,7 +1261,6 @@ end
     @thoughts revealsThoughts $soliloquy $Thoughts
     @audience addressesAudience $soliloquy True
     @interior revealsInterior $soliloquy True
-    @solo_speech Implies (And $soliloquy (And $alone (And $speech (And $thoughts (And $audience $interior))))) SoloSpeech
     return $solo_speech
 end
 
@@ -1393,7 +1271,6 @@ end
     @secret hiddenFromOthers $aside $Secret
     @commentary providesCommentary $aside True
     @direct hasDirectAddress $aside True
-    @brief_comment Implies (And $aside (And $brief (And $audience (And $secret (And $commentary $direct))))) BriefComment
     return $brief_comment
 end
 
@@ -1404,7 +1281,6 @@ end
     @perspective offerspPerspective $chorus $Perspective
     @greek hasGreekOrigin $chorus True
     @collective hasCollectiveVoice $chorus True
-    @collective_voice Implies (And $chorus (And $group (And $commentary (And $perspective (And $greek $collective))))) CollectiveVoice
     return $collective_voice
 end
 
@@ -1415,7 +1291,6 @@ end
     @tension createsTension $dramatic_irony True
     @gap createsKnowledgeGap $dramatic_irony True
     @suspense buildsSuspense $dramatic_irony True
-    @ironic_tension Implies (And $dramatic_irony (And $audience (And $characters (And $tension (And $gap $suspense))))) IronicTension
     return $ironic_tension
 end
 
@@ -1431,7 +1306,6 @@ end
     @distance createsNarrativeDistance $voice $Distance
     @tone establishesTone $voice $Tone
     @mediation mediatesStory $narrator True
-    @narrative_construction Implies (And $voice (And $narrator (And $reliability (And $perspective (And $distance (And $tone $mediation)))))) NarrativeConstruction
     return $narrative_construction
 end
 
@@ -1443,7 +1317,6 @@ end
     @pattern createsPattern $development True
     @meaning buildsToMeaning $development $Meaning
     @reinforcement usesReinforcement $development True
-    @thematic_unity Implies (And $development (And $theme (And $symbol (And $motif (And $pattern (And $meaning $reinforcement)))))) ThematicUnity
     return $thematic_unity
 end
 
@@ -1455,7 +1328,6 @@ end
     @development undergoespDevelopment $complexity $Development
     @arc hasCharacterArc $complexity $Arc
     @psychological haspsychologicalDepth $complexity True
-    @multidimensional Implies (And $complexity (And $trait (And $motivation (And $conflict (And $development (And $arc $psychological)))))) MultidimensionalCharacter
     return $multidimensional
 end
 
@@ -1467,7 +1339,6 @@ end
     @dialogue createsDialogue $intertextual True
     @context enrichesContext $intertextual $Context
     @layer addsLayers $intertextual True
-    @textual_network Implies (And $intertextual (And $text (And $reference (And $allusion (And $dialogue (And $context $layer)))))) TextualNetwork
     return $textual_network
 end
 
@@ -1480,7 +1351,6 @@ end
     @sublime createsSublime $gothic_atmos $Sublime
     @decay depictsDecay $gothic_atmos True
     @darkness emphasizesDarkness $gothic_atmos True
-    @gothic_effect Implies (And $gothic_atmos (And $setting (And $mystery (And $supernatural (And $terror (And $sublime (And $decay $darkness))))))) GothicEffect
     return $gothic_effect
 end
 
@@ -1493,7 +1363,6 @@ end
     @fragmentation usesFragmentation $experiment $Fragmentation
     @subjective emphasizesSubjective $experiment True
     @difficulty embracesDifficulty $experiment True
-    @modernist_aesthetic Implies (And $experiment (And $form (And $tradition (And $innovation (And $consciousness (And $fragmentation (And $subjective $difficulty))))))) ModernistAesthetic
     return $modernist_aesthetic
 end
 
@@ -1507,7 +1376,6 @@ end
     @catharsis achievesCatharsis $tragic_struct $Catharsis
     @pity evokesPity $tragic_struct True
     @fear evokesFear $tragic_struct True
-    @tragic_effect Implies (And $tragic_struct (And $hero (And $flaw (And $recognition (And $reversal (And $suffering (And $catharsis (And $pity $fear)))))))) TragicEffect
     return $tragic_effect
 end
 
@@ -1520,7 +1388,6 @@ end
     @recurring usesRecurrence $network True
     @layered hasLayeredMeaning $network True
     @interpretation requiresInterpretation $network True
-    @symbolic_system Implies (And $network (And $symbol (And $pattern (And $meaning (And $theme (And $recurring (And $layered $interpretation))))))) SymbolicSystem
     return $symbolic_system
 end
 
@@ -1533,7 +1400,6 @@ end
     @fiction emphasizesFictionality $playful $Fiction
     @self_aware isSelfAware $playful True
     @skeptical showsSkepticism $playful True
-    @postmodern_technique Implies (And $playful (And $irony (And $metafiction (And $pastiche (And $reality (And $fiction (And $self_aware $skeptical))))))) PostmodernTechnique
     return $postmodern_technique
 end
 
@@ -1546,7 +1412,6 @@ end
     @power questionsPower $feminist_rep $Power
     @patriarchy critiquesPatriarchy $feminist_rep True
     @subversion subvertsNorms $feminist_rep True
-    @feminist_perspective Implies (And $feminist_rep (And $gender (And $character (And $voice (And $agency (And $power (And $patriarchy $subversion))))))) FeministPerspective
     return $feminist_perspective
 end
 
@@ -1559,7 +1424,6 @@ end
     @memory incorporatesMemory $stream_full $Memory
     @unfiltered isUnfiltered $stream_full True
     @psychological achievesPsychologicalRealism $stream_full True
-    @consciousness_technique Implies (And $stream_full (And $interior (And $flow (And $association (And $time (And $memory (And $unfiltered $psychological))))))) ConsciousnessTechnique
     return $consciousness_technique
 end
 
@@ -1573,7 +1437,6 @@ end
     @style usesEpicStyle $epic_conv $Style
     @invocation beginsWithInvocation $epic_conv True
     @catalogues usesCatalogues $epic_conv True
-    @epic_form Implies (And $epic_conv (And $hero (And $journey (And $scale (And $supernatural (And $elevation (And $style (And $invocation $catalogues)))))))) EpicForm
     return $epic_form
 end
 
@@ -1586,7 +1449,6 @@ end
     @transcendence seekstranscendence $romantic_ideal $Transcendence
     @sublime pursuesSublime $romantic_ideal True
     @spontaneity valuesSpontaneity $romantic_ideal True
-    @romantic_vision Implies (And $romantic_ideal (And $nature (And $emotion (And $imagination (And $individual (And $transcendence (And $sublime $spontaneity))))))) RomanticVision
     return $romantic_vision
 end
 
@@ -1599,7 +1461,6 @@ end
     @social addressesSocialIssues $realist_tech $Social
     @objective striivesForObjectivity $realist_tech True
     @verisimilitude achievesVerisimilitude $realist_tech True
-    @realist_method Implies (And $realist_tech (And $detail (And $ordinary (And $plausibility (And $contemporary (And $social (And $objective $verisimilitude))))))) RealistMethod
     return $realist_method
 end
 
@@ -1612,7 +1473,6 @@ end
     @reform aimsAtReform $satire_full $Reform
     @wit displaysWit $satire_full $Wit
     @critical isCritical $satire_full True
-    @satirical_method Implies (And $satire_full (And $target (And $irony (And $exaggeration (And $ridicule (And $reform (And $wit $critical))))))) SatiricalMethod
     return $satirical_method
 end
 
@@ -1625,6 +1485,5 @@ end
     @identity formsIdentity $bildungsroman $Identity
     @society integratesIntoSociety $bildungsroman $Society
     @growth showsGrowth $bildungsroman True
-    @coming_of_age_novel Implies (And $bildungsroman (And $youth (And $education (And $experience (And $maturity (And $identity (And $society $growth))))))) ComingOfAgeNovel
     return $coming_of_age_novel
 end

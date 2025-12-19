@@ -1,35 +1,30 @@
 @:Modus_Ponens graph P Q
     @p1 isTrue $P
     @p2 Implies $P $Q
-    @conclusion Implies (And $p1 $p2) $Q
     return $conclusion
 end
 
 @:Modus_Tollens graph P Q
     @not_q Not $Q
     @implies Implies $P $Q
-    @conclusion Implies (And $not_q $implies) (Not $P)
     return $conclusion
 end
 
 @:Hypothetical_Syllogism graph P Q R
     @pq Implies $P $Q
     @qr Implies $Q $R
-    @conclusion Implies (And $pq $qr) (Implies $P $R)
     return $conclusion
 end
 
 @:Disjunctive_Syllogism graph P Q
     @or_pq Or $P $Q
     @not_p Not $P
-    @conclusion Implies (And $or_pq $not_p) $Q
     return $conclusion
 end
 
 @:Conjunction_Introduction graph P Q
     @p isTrue $P
     @q isTrue $Q
-    @conclusion Implies (And $p $q) (And $P $Q)
     return $conclusion
 end
 
@@ -61,7 +56,6 @@ end
     @pq Implies $P $Q
     @rs Implies $R $S
     @or_pr Or $P $R
-    @conclusion Implies (And (And $pq $rs) $or_pr) (Or $Q $S)
     return $conclusion
 end
 
@@ -69,7 +63,6 @@ end
     @pq Implies $P $Q
     @rs Implies $R $S
     @not_q_or_not_s Or (Not $Q) (Not $S)
-    @conclusion Implies (And (And $pq $rs) $not_q_or_not_s) (Or (Not $P) (Not $R))
     return $conclusion
 end
 
@@ -135,7 +128,6 @@ end
 @:Biconditional_Introduction graph P Q
     @pq Implies $P $Q
     @qp Implies $Q $P
-    @conclusion Implies (And $pq $qp) (Iff $P $Q)
     return $conclusion
 end
 
@@ -143,14 +135,12 @@ end
     @rab Relation $R $a $b
     @rbc Relation $R $b $c
     @trans isTransitive $R
-    @conclusion Implies (And (And $rab $rbc) $trans) (Relation $R $a $c)
     return $conclusion
 end
 
 @:Symmetric_Property graph R a b
     @rab Relation $R $a $b
     @sym isSymmetric $R
-    @conclusion Implies (And $rab $sym) (Relation $R $b $a)
     return $conclusion
 end
 
@@ -164,7 +154,6 @@ end
     @refl isReflexive $R
     @sym isSymmetric $R
     @trans isTransitive $R
-    @conclusion Implies (And (And $refl $sym) $trans) (isEquivalenceRelation $R)
     return $conclusion
 end
 
@@ -177,7 +166,6 @@ end
 @:Leibniz_Law graph a b P
     @equals Equals $a $b
     @prop_a hasProperty $a $P
-    @conclusion Implies (And $equals $prop_a) (hasProperty $b $P)
     return $conclusion
 end
 
@@ -190,7 +178,6 @@ end
 @:Universal_Generalization graph P x
     @arbitrary isArbitrary $x
     @prop hasProperty $x $P
-    @conclusion Implies (And $arbitrary $prop) (ForAll y (hasProperty $y $P))
     return $conclusion
 end
 
@@ -246,7 +233,6 @@ end
     @attacks attacksPerson $Argument $Person
     @not_content Not (addressesContent $Argument)
     @fallacy isFallacy $Argument
-    @conclusion Implies (And $attacks $not_content) $fallacy
     return $conclusion
 end
 
@@ -254,7 +240,6 @@ end
     @distorts distortsArgument $Argument $Original $Distorted
     @attacks attacks $Argument $Distorted
     @fallacy isFallacy $Argument
-    @conclusion Implies (And $distorts $attacks) $fallacy
     return $conclusion
 end
 
@@ -262,7 +247,6 @@ end
     @appeals appealsToAuthority $Argument $Authority
     @not_expert Not (isExpert $Authority $Topic)
     @fallacy isFallacy $Argument
-    @conclusion Implies (And $appeals $not_expert) $fallacy
     return $conclusion
 end
 
@@ -270,7 +254,6 @@ end
     @presents presentsOptions $Argument $Options
     @more_exist moreOptionsThanPresented $Options
     @fallacy isFallacy $Argument
-    @conclusion Implies (And $presents $more_exist) $fallacy
     return $conclusion
 end
 
@@ -278,7 +261,6 @@ end
     @claims claimsChain $Argument $A $Z
     @not_necessary Not (necessarilyLeadsTo $A $Z)
     @fallacy isFallacy $Argument
-    @conclusion Implies (And $claims $not_necessary) $fallacy
     return $conclusion
 end
 
@@ -286,7 +268,6 @@ end
     @circular circularReasoning $Argument
     @same Equals $Premise $Conclusion
     @fallacy isFallacy $Argument
-    @conclusion Implies (And $circular $same) $fallacy
     return $conclusion
 end
 
@@ -295,7 +276,6 @@ end
     @assumes assumesCausation $A $B
     @not_caused Not (caused $A $B)
     @fallacy isFallacy (inferCausation $A $B)
-    @conclusion Implies (And (And $before $assumes) $not_caused) $fallacy
     return $conclusion
 end
 
@@ -303,7 +283,6 @@ end
     @popular isPopular $Belief
     @infers infersFromPopularity $Belief
     @fallacy isFallacy (believeBecausePopular $Belief)
-    @conclusion Implies (And $popular $infers) $fallacy
     return $conclusion
 end
 
@@ -311,7 +290,6 @@ end
     @appeals appealsToEmotion $Argument $Emotion
     @no_logic Not (hasLogicalBasis $Argument)
     @fallacy isFallacy $Argument
-    @conclusion Implies (And $appeals $no_logic) $fallacy
     return $conclusion
 end
 
@@ -319,7 +297,6 @@ end
     @small isSmallSample $Sample
     @generalizes generalizesFrom $Sample $Conclusion
     @fallacy isFallacy (generalize $Sample $Conclusion)
-    @conclusion Implies (And $small $generalizes) $fallacy
     return $conclusion
 end
 
@@ -334,7 +311,6 @@ end
     @treats treatsAsEnd $Action $Person
     @not_means Not (treatsAsMeans $Action $Person)
     @moral isMoral $Action
-    @conclusion Implies (And $treats $not_means) $moral
     return $conclusion
 end
 
@@ -342,7 +318,6 @@ end
     @respects respectsAutonomy $Action
     @universal universallyAcceptable $Action
     @moral isMoral $Action
-    @conclusion Implies (And $respects $universal) $moral
     return $conclusion
 end
 
@@ -350,7 +325,6 @@ end
     @maximizes maximizesHappiness $Action
     @minimizes minimizesSuffering $Action
     @moral isMoral $Action
-    @conclusion Implies (And $maximizes $minimizes) $moral
     return $conclusion
 end
 
@@ -388,7 +362,6 @@ end
     @not_intends Not (intends $Action $Evil)
     @proportionate isProportionate $Good $Evil
     @permissible isPermissible $Action
-    @conclusion Implies (And (And (And $intends $foresees) $not_intends) $proportionate) $permissible
     return $conclusion
 end
 
@@ -403,7 +376,6 @@ end
     @agreed agreedUpon $Rule $Society
     @rational rationallyAccepted $Rule
     @legitimate isLegitimate $Rule
-    @conclusion Implies (And $agreed $rational) $legitimate
     return $conclusion
 end
 
@@ -425,7 +397,6 @@ end
     @maintains maintainsRelationship $Action $Relationship
     @responds respondsToNeeds $Action
     @moral isMoral $Action
-    @conclusion Implies (And $maintains $responds) $moral
     return $conclusion
 end
 
@@ -477,7 +448,6 @@ end
     @jtb satisfiesJTB $Subject $Proposition
     @luck basedOnLuck $Subject $Proposition
     @not_knowledge Not (knows $Subject $Proposition)
-    @conclusion Implies (And $jtb $luck) $not_knowledge
     return $conclusion
 end
 
@@ -485,7 +455,6 @@ end
     @based basedOn $Belief $BasicBelief
     @self_evident isSelfEvident $BasicBelief
     @justified isJustified $Belief
-    @conclusion Implies (And $based $self_evident) $justified
     return $conclusion
 end
 
@@ -500,7 +469,6 @@ end
     @produced producedBy $Belief $Process
     @reliable isReliable $Process
     @justified isJustified $Belief
-    @conclusion Implies (And $produced $reliable) $justified
     return $conclusion
 end
 
@@ -634,7 +602,6 @@ end
     @human isHuman $Person
     @exists exists $Person
     @creates createsEssence $Person
-    @conclusion Implies (And $human $exists) $creates
     return $conclusion
 end
 
@@ -665,7 +632,6 @@ end
     @efficient_cause hasEfficientCause $Thing $Efficient
     @final_cause hasFinalCause $Thing $Final
     @explained isExplained $Thing
-    @conclusion Implies (And (And (And $material_cause $formal_cause) $efficient_cause) $final_cause) $explained
     return $conclusion
 end
 
@@ -680,7 +646,6 @@ end
     @constant constantConjunction $Event1 $Event2
     @habit formHabit $Event1 $Event2
     @causation perceiveCausation $Event1 $Event2
-    @conclusion Implies (And $constant $habit) $causation
     return $conclusion
 end
 
@@ -730,7 +695,6 @@ end
     @appear appearCaused $Event1 $Event2
     @real_cause causes $God $Event2
     @occasion isOccasion $Event1 $Event2
-    @conclusion Implies (And $appear $real_cause) $occasion
     return $conclusion
 end
 
@@ -738,7 +702,6 @@ end
     @tensed isTensed $Event
     @real reallyPastPresentFuture $Event
     @a_theory isATheory
-    @conclusion Implies (And $tensed $real) $a_theory
     return $conclusion
 end
 
@@ -746,7 +709,6 @@ end
     @tenseless isTenseless $Event
     @relations hasTemporalRelations $Event $Time
     @b_theory isBTheory
-    @conclusion Implies (And $tenseless $relations) $b_theory
     return $conclusion
 end
 
@@ -767,7 +729,6 @@ end
 @:Growing_Block_Universe graph Time
     @past_present pastAndPresentExist $Time
     @grows grows $Time
-    @conclusion Implies (And $past_present $grows) (isGrowingBlock $Time)
     return $conclusion
 end
 
@@ -782,7 +743,6 @@ end
     @memories hasMemories $Person $T1 $T2
     @character sameCharacter $Person $T1 $T2
     @same samePerson $Person $T1 $T2
-    @conclusion Implies (And $memories $character) $same
     return $conclusion
 end
 
@@ -804,7 +764,6 @@ end
     @distinct areDistinct $Mind $Body
     @substances twoSubstances $Mind $Body
     @dualism isDualism
-    @conclusion Implies (And $distinct $substances) $dualism
     return $conclusion
 end
 
@@ -819,7 +778,6 @@ end
     @supervenes supervenesOn $Mental $Physical
     @nothing_over nothingOverAndAbove $Mental $Physical
     @physicalism isPhysicalism
-    @conclusion Implies (And $supervenes $nothing_over) $physicalism
     return $conclusion
 end
 
@@ -827,7 +785,6 @@ end
     @properties distinctProperties $Mental $Physical
     @same_substance sameSubstance $Mental $Physical
     @prop_dualism isPropertyDualism
-    @conclusion Implies (And $properties $same_substance) $prop_dualism
     return $conclusion
 end
 
@@ -856,7 +813,6 @@ end
     @all_physical knowsAllPhysical $Mary $Knowledge
     @learns_quale learnsNewQuale $Mary
     @not_all Not (isEverything $Knowledge)
-    @conclusion Implies (And $all_physical $learns_quale) $not_all
     return $conclusion
 end
 
@@ -864,7 +820,6 @@ end
     @same samePhysical $Zombie $Physical
     @no_consciousness lacksConsciousness $Zombie
     @not_physical Not (isPhysical $Consciousness)
-    @conclusion Implies (And $same $no_consciousness) $not_physical
     return $conclusion
 end
 
@@ -872,7 +827,6 @@ end
     @explains explainsStructure $Physical
     @not_explains Not (explainsQualia $Physical $Subjective)
     @hard_problem isHardProblem
-    @conclusion Implies (And $explains $not_explains) $hard_problem
     return $conclusion
 end
 
@@ -880,7 +834,6 @@ end
     @manipulates manipulatesSyntax $System $Syntax
     @lacks lacksSemantics $System $Semantics
     @not_understanding Not (hasUnderstanding $System)
-    @conclusion Implies (And $manipulates $lacks) $not_understanding
     return $conclusion
 end
 
@@ -903,7 +856,6 @@ end
     @similar similarBehavior $Self $Other
     @has_mind hasMind $Self
     @infer_mind hasMind $Other
-    @conclusion Implies (And $similar $has_mind) $infer_mind
     return $conclusion
 end
 
@@ -941,7 +893,6 @@ end
     @true_at trueAt $Proposition $World
     @possible isPossibleWorld $World
     @meaning hasMeaning $Proposition
-    @conclusion Implies (And $true_at $possible) $meaning
     return $conclusion
 end
 
@@ -958,7 +909,6 @@ end
     @exists_mind existsInMind $God
     @greater greaterIfExists $God
     @must_exist exists $God
-    @conclusion Implies (And (And $conceived $exists_mind) $greater) $must_exist
     return $conclusion
 end
 
@@ -967,7 +917,6 @@ end
     @needs needsCause $Universe
     @first_cause isFirstCause $Cause
     @god isGod $Cause
-    @conclusion Implies (And (And $exists $needs) $first_cause) $god
     return $conclusion
 end
 
@@ -976,7 +925,6 @@ end
     @complexity hasComplexity $Universe
     @implies impliesDesign (And $order $complexity) $Design
     @designer exists $Designer
-    @conclusion Implies (And $implies $designer) (isGod $Designer)
     return $conclusion
 end
 
@@ -993,7 +941,6 @@ end
     @valuable isValuable $FreeWill
     @permits permits $FreeWill $Evil
     @justified isJustified (allows $God $Evil)
-    @conclusion Implies (And (And $allows $valuable) $permits) $justified
     return $conclusion
 end
 
@@ -1002,7 +949,6 @@ end
     @enables enablesSoulMaking $Evil $Growth
     @valuable isValuable $Growth
     @justified isJustified (permits $God $Evil)
-    @conclusion Implies (And (And $permits $enables) $valuable) $justified
     return $conclusion
 end
 
@@ -1058,7 +1004,6 @@ end
     @believe believeReal $Prisoners $Shadows
     @actual isActual $Reality
     @illusion isIllusion $Shadows
-    @conclusion Implies (And (And $see $believe) $actual) $illusion
     return $conclusion
 end
 
@@ -1066,7 +1011,6 @@ end
     @intelligible isIntelligible $Knowledge
     @visible isVisible $Opinion
     @higher higherLevel $Knowledge $Opinion
-    @conclusion Implies (And $intelligible $visible) $higher
     return $conclusion
 end
 
@@ -1081,7 +1025,6 @@ end
     @eternal eternalMotion $Motion
     @requires requiresFirstMover $Motion
     @unmoved isUnmovedMover $Mover
-    @conclusion Implies (And $eternal $requires) $unmoved
     return $conclusion
 end
 
@@ -1147,7 +1090,6 @@ end
     @no_criterion noCriterion $Knowledge
     @suspend suspendJudgment $Knowledge
     @tranquility achieveTranquility $suspend
-    @conclusion Implies (And $no_criterion $suspend) $tranquility
     return $conclusion
 end
 
@@ -1172,7 +1114,6 @@ end
     @simpler isSimpler $Explanation1 $Explanation2
     @equal equallyGood $Explanation1 $Explanation2
     @prefer shouldPrefer $Explanation1
-    @conclusion Implies (And $simpler $equal) $prefer
     return $conclusion
 end
 
@@ -1180,7 +1121,6 @@ end
     @thinking isThinkingThing $Mind
     @extended isExtendedThing $Body
     @distinct areDistinct $Mind $Body
-    @conclusion Implies (And $thinking $extended) $distinct
     return $conclusion
 end
 
@@ -1195,7 +1135,6 @@ end
     @clear isClear $Idea
     @distinct isDistinct $Idea
     @true isTrue $Idea
-    @conclusion Implies (And $clear $distinct) $true
     return $conclusion
 end
 
@@ -1203,7 +1142,6 @@ end
     @infinite isInfinite $Substance
     @attributes hasInfiniteAttributes $Substance
     @god_or_nature isGodOrNature $Substance
-    @conclusion Implies (And $infinite $attributes) $god_or_nature
     return $conclusion
 end
 
@@ -1225,7 +1163,6 @@ end
     @harmonize harmonize $Monad1 $Monad2
     @no_interaction noDirectInteraction $Monad1 $Monad2
     @god_ordained ordainedByGod $harmonize
-    @conclusion Implies (And $harmonize $no_interaction) $god_ordained
     return $conclusion
 end
 
@@ -1248,7 +1185,6 @@ end
     @has_secondary hasSecondaryQualities $Object $Secondary
     @objective isObjective $Primary
     @subjective isSubjective $Secondary
-    @conclusion Implies (And $has_primary $has_secondary) (And $objective $subjective)
     return $conclusion
 end
 
@@ -1300,7 +1236,6 @@ end
     @appearance isAppearance $Phenomena
     @know canKnow $Phenomena
     @not_know Not (canKnow $Noumena)
-    @conclusion Implies (And (And $thing_itself $appearance) $know) $not_know
     return $conclusion
 end
 
@@ -1315,7 +1250,6 @@ end
     @opposed opposedTo $Thesis $Antithesis
     @resolves resolves $Synthesis $Thesis $Antithesis
     @progress isProgress $Synthesis
-    @conclusion Implies (And $opposed $resolves) $progress
     return $conclusion
 end
 
@@ -1359,7 +1293,6 @@ end
     @creates createsOwnValues $Person $Values
     @overcomes overcomesNihilism $Person
     @ubermensch isUbermensch $Person
-    @conclusion Implies (And $creates $overcomes) $ubermensch
     return $conclusion
 end
 
@@ -1374,7 +1307,6 @@ end
     @affirming isAffirming $Master
     @reactive isReactive $Slave
     @different areDifferent $Master $Slave
-    @conclusion Implies (And $affirming $reactive) $different
     return $conclusion
 end
 
@@ -1417,7 +1349,6 @@ end
     @seeks seeks $Human $Meaning
     @silent isSilent $Universe
     @absurd isAbsurd (confrontation $Human $Universe)
-    @conclusion Implies (And $seeks $silent) $absurd
     return $conclusion
 end
 
@@ -1425,7 +1356,6 @@ end
     @faces faces $Sisyphus $Absurd
     @revolts revolts $Sisyphus
     @happy isHappy $Sisyphus
-    @conclusion Implies (And $faces $revolts) $happy
     return $conclusion
 end
 
@@ -1491,7 +1421,6 @@ end
     @web isWebOfBelief $Beliefs
     @holism isHolism $web
     @adjust adjustToExperience $web $Experience
-    @conclusion Implies (And $web $holism) $adjust
     return $conclusion
 end
 
@@ -1506,7 +1435,6 @@ end
     @crisis hasCrisis $Paradigm1
     @revolution scientificRevolution $Paradigm1 $Paradigm2
     @shift paradigmShift $Science
-    @conclusion Implies (And $crisis $revolution) $shift
     return $conclusion
 end
 
@@ -1563,7 +1491,6 @@ end
 @:MacIntyre_Virtue_Ethics graph Virtues Tradition Practice
     @embedded embeddedInTradition $Virtues $Tradition
     @realized realizedInPractice $Virtues $Practice
-    @conclusion Implies (And $embedded $realized) (hasVirtueEthics $Tradition)
     return $conclusion
 end
 
@@ -1593,7 +1520,6 @@ end
     @conceivable isConceivable $Zombie
     @possible isPossible $Zombie
     @not_physical Not (isPhysical $Consciousness)
-    @conclusion Implies (And $conceivable $possible) $not_physical
     return $conclusion
 end
 
@@ -1631,7 +1557,6 @@ end
     @basic isBasic $Belief
     @rational isRational $Belief
     @no_evidence noEvidenceNeeded $Belief
-    @conclusion Implies (And $basic (Equals $Belief (belief $God))) (And $rational $no_evidence)
     return $conclusion
 end
 
@@ -1646,7 +1571,6 @@ end
     @objective claimsObjectivity $MoralClaim
     @false isFalse $MoralClaim
     @error isError $MoralClaim
-    @conclusion Implies (And $objective $false) $error
     return $conclusion
 end
 
@@ -1654,7 +1578,6 @@ end
     @has_function hasFunction $Being $Function
     @fulfills fulfillsFunction $Being
     @good isGood $Being
-    @conclusion Implies (And $has_function $fulfills) $good
     return $conclusion
 end
 
@@ -1669,7 +1592,6 @@ end
     @analogy isAnalogousTo $Abortion Violinist
     @right hasRight disconnect
     @permissible isPermissible $Abortion
-    @conclusion Implies (And $analogy $right) $permissible
     return $conclusion
 end
 
@@ -1677,7 +1599,6 @@ end
     @responsible isMorallyResponsible $Agent $Action
     @no_alternative hasNoAlternative $Agent $Action
     @compatible areCompatible $responsible $no_alternative
-    @conclusion Implies (And $responsible $no_alternative) $compatible
     return $conclusion
 end
 
@@ -1687,7 +1608,6 @@ end
     @believes believes $Subject $Proposition
     @luck basedOnLuck $Subject $Proposition
     @not_knowledge Not (knows $Subject $Proposition)
-    @conclusion Implies (And (And (And $justified $true) $believes) $luck) $not_knowledge
     return $conclusion
 end
 
@@ -1695,7 +1615,6 @@ end
     @caused causedBy $Belief $Fact
     @appropriate appropriateCausalConnection $Fact $Belief
     @knows knows $Subject $Fact
-    @conclusion Implies (And $caused $appropriate) $knows
     return $conclusion
 end
 
@@ -1704,7 +1623,6 @@ end
     @believes believes $Subject $Proposition
     @tracking tracksReality $Belief $Proposition
     @knows knows $Subject $Proposition
-    @conclusion Implies (And (And $true $believes) $tracking) $knows
     return $conclusion
 end
 
@@ -1712,7 +1630,6 @@ end
     @coherent isCoherent $System
     @member memberOf $Beliefs $System
     @justified isJustified $Beliefs
-    @conclusion Implies (And $coherent $member) $justified
     return $conclusion
 end
 
@@ -1785,7 +1702,6 @@ end
     @prima_facie isPrimaFacieDuty $Duty
     @actual mayNotBeActualDuty $Duty
     @conflict possibleConflict $Duty
-    @conclusion Implies (And $prima_facie $conflict) $actual
     return $conclusion
 end
 
@@ -1837,7 +1753,6 @@ end
     @prescriptive isPrescriptive $MoralJudgment
     @universal isUniversal $MoralJudgment
     @action guidesAction $MoralJudgment
-    @conclusion Implies (And $prescriptive $universal) $action
     return $conclusion
 end
 
@@ -1852,7 +1767,6 @@ end
     @projectivist isProjectivist $MoralDiscourse
     @realistic seemsRealistic $MoralDiscourse
     @quasi isQuasiRealism $MoralDiscourse
-    @conclusion Implies (And $projectivist $realistic) $quasi
     return $conclusion
 end
 
@@ -1896,7 +1810,6 @@ end
     @doing doingHarm $Harm1
     @allowing allowingHarm $Harm2
     @worse isWorse $Harm1 $Harm2
-    @conclusion Implies (And $doing $allowing) $worse
     return $conclusion
 end
 
