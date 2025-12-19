@@ -1,0 +1,1694 @@
+// Legal Systems and Structures
+
+@:Common_Law_System graph JudicialPrecedent CaseBasedReasoning BindingAuthority
+    @prec establishes Court $JudicialPrecedent
+    @bind requires LowerCourt $JudicialPrecedent
+    @case applies Judge $CaseBasedReasoning
+    @auth creates $prec $BindingAuthority
+    @doctrine Implies (And $prec $case) StarDecisis
+    return $doctrine
+end
+
+@:Civil_Law_System graph CodeBased StatutoryInterpretation LegislativeSupremacy
+    @code enacts Legislature $CodeBased
+    @interp applies Judge $StatutoryInterpretation
+    @supreme establishes Constitution $LegislativeSupremacy
+    @limit restricts $supreme JudicialReview
+    @system Implies (And $code $interp) CivilLawJurisdiction
+    return $system
+end
+
+@:Religious_Law_System graph ReligiousText InterpretativeAuthority DivineSource
+    @text derives $ReligiousText $DivineSource
+    @auth interprets ScholarCouncil $ReligiousText
+    @binding creates $auth $InterpretativeAuthority
+    @apply enforces ReligiousCourt $binding
+    @system Implies (And $text $auth) ReligiousLegalSystem
+    return $system
+end
+
+@:Mixed_Legal_System graph CommonLawElement CivilLawElement CustomaryLaw
+    @common incorporates System $CommonLawElement
+    @civil incorporates System $CivilLawElement
+    @custom recognizes System $CustomaryLaw
+    @blend combines (And $common $civil) MixedJurisdiction
+    @pluralism Implies (And $blend $custom) LegalPluralism
+    return $pluralism
+end
+
+@:Constitutional_Supremacy graph Constitution StatuteInvalidity JudicialReview
+    @supreme establishes $Constitution SupremeLaw
+    @conflict contradicts Statute $Constitution
+    @review exercises Court $JudicialReview
+    @invalid declares $review $StatuteInvalidity
+    @hierarchy Implies (And $supreme $conflict) $invalid
+    return $hierarchy
+end
+
+// Contract Law - Formation
+
+@:Contract_Formation graph Offer Acceptance Consideration
+    @off makes Party1 $Offer
+    @acc accepts Party2 $Offer
+    @cons provides Party1 $Consideration
+    @valid validContract (And $off (And $acc $cons))
+    @binding Implies $valid LegallyBinding
+    return $binding
+end
+
+@:Valid_Offer graph DefiniteTerms IntentionToBind CommunicatedToOfferee
+    @terms specifies Offeror $DefiniteTerms
+    @intent demonstrates Offeror $IntentionToBind
+    @comm transmits Offeror $CommunicatedToOfferee
+    @valid validOffer (And $terms (And $intent $comm))
+    @capable Implies $valid CapableOfAcceptance
+    return $capable
+end
+
+@:Mirror_Image_Rule graph Acceptance OfferTerms ExactMatch
+    @acc expresses Offeree $Acceptance
+    @terms contains Offer $OfferTerms
+    @match mirrors $acc $terms
+    @exact requires CommonLaw $ExactMatch
+    @valid Implies (And $acc $match) ValidAcceptance
+    return $valid
+end
+
+@:Mailbox_Rule graph Acceptance Dispatch EffectiveDate
+    @acc sends Offeree $Acceptance
+    @disp mails Offeree $Dispatch
+    @effect determines $disp $EffectiveDate
+    @binding becomes Contract $effect
+    @rule Implies (And $acc $disp) AcceptanceOnDispatch
+    return $rule
+end
+
+@:Consideration_Requirement graph BargainedForExchange LegalValue Mutuality
+    @exch negotiates Parties $BargainedForExchange
+    @value provides Promisee $LegalValue
+    @mutual requires Contract $Mutuality
+    @valid validConsideration (And $exch (And $value $mutual))
+    @enforceable Implies $valid EnforceableContract
+    return $enforceable
+end
+
+@:Past_Consideration graph PastAct NoConsideration Unenforceable
+    @past occurred Action BeforePromise
+    @promise makes Promisor AfterAction
+    @invalid lacks $past $NoConsideration
+    @unenf determines Court $Unenforceable
+    @rule Implies (And $past $promise) $unenf
+    return $rule
+end
+
+@:Promissory_Estoppel graph Promise ReasonableReliance Injustice
+    @prom makes Promisor $Promise
+    @rely acts Promisee $ReasonableReliance
+    @change detrimentally $rely ChangePosition
+    @inj prevents Court $Injustice
+    @enforce Implies (And $prom (And $rely $inj)) EnforceableWithoutConsideration
+    return $enforce
+end
+
+@:Illusory_Promise graph AppearanceOfCommitment NoRealObligation InvalidConsideration
+    @appear seems Promise $AppearanceOfCommitment
+    @escape retains Promisor UnlimitedDiscretion
+    @invalid lacks $escape $NoRealObligation
+    @fails constitutes $invalid $InvalidConsideration
+    @unenf Implies (And $appear $escape) UnenforcedContract
+    return $unenf
+end
+
+@:Option_Contract graph Promise KeepOfferOpen Consideration TimeLimit
+    @prom agrees Offeror $KeepOfferOpen
+    @cons pays Offeree $Consideration
+    @time specifies Agreement $TimeLimit
+    @irrev creates (And $prom $cons) IrrevocableOffer
+    @binding Implies (And $irrev $time) BindingOption
+    return $binding
+end
+
+@:Firm_Offer_UCC graph MerchantOffer WrittenAssurance NoConsideration
+    @merch makes Merchant $MerchantOffer
+    @writ signs Merchant $WrittenAssurance
+    @open promises $writ KeepOpenOffer
+    @ucc governs UCC2_205 GoodsSale
+    @irrev Implies (And $merch (And $writ $ucc)) IrrevocableWithoutConsideration
+    return $irrev
+end
+
+// Contract Law - Validity and Defenses
+
+@:Mutual_Mistake graph SharedMisconception MaterialFact ContractVoidable
+    @mistake believes BothParties $SharedMisconception
+    @material concerns $mistake $MaterialFact
+    @basis forms $material ContractBasis
+    @void allows Court $ContractVoidable
+    @remedy Implies (And $mistake $material) Rescission
+    return $remedy
+end
+
+@:Unilateral_Mistake graph OneSideMistake OtherPartyKnows Unconscionable
+    @mistake makes Party1 $OneSideMistake
+    @knows aware Party2 $mistake
+    @unfair constitutes $knows $Unconscionable
+    @void allows Court VoidableByMistaken
+    @remedy Implies (And $mistake (And $knows $unfair)) RescissionAvailable
+    return $remedy
+end
+
+@:Fraudulent_Misrepresentation graph FalseStatement MaterialFact IntentToDeceive ReasonableReliance
+    @false makes Party1 $FalseStatement
+    @material concerns $false $MaterialFact
+    @intent has Party1 $IntentToDeceive
+    @rely acts Party2 $ReasonableReliance
+    @fraud constitutes (And $false (And $material $intent)) Fraud
+    @void Implies (And $fraud $rely) VoidableContract
+    return $void
+end
+
+@:Innocent_Misrepresentation graph FalseStatement NoFraud MaterialFact Reliance
+    @false makes Party $FalseStatement
+    @innocent lacks Party FraudulentIntent
+    @material concerns $false $MaterialFact
+    @rely acts OtherParty $Reliance
+    @misrep constitutes (And $false $material) InnocentMisrepresentation
+    @remedy Implies (And $misrep $rely) RescissionOnly
+    return $remedy
+end
+
+@:Duress graph ImproperThreat NoReasonableAlternative InvoluntaryConsent
+    @threat makes Party1 $ImproperThreat
+    @corner leaves Party2 $NoReasonableAlternative
+    @consent gives Party2 $InvoluntaryConsent
+    @duress constitutes (And $threat $corner) Duress
+    @void Implies (And $duress $consent) VoidableContract
+    return $void
+end
+
+@:Undue_Influence graph DominantPosition Susceptibility UnfairPersuasion
+    @power holds Party1 $DominantPosition
+    @weak has Party2 $Susceptibility
+    @persuade exercises Party1 $UnfairPersuasion
+    @influence constitutes (And $power (And $weak $persuade)) UndueInfluence
+    @void Implies $influence VoidableByWeaker
+    return $void
+end
+
+@:Unconscionability graph ProceduralDefect SubstantiveUnfairness GrossInequality
+    @proc lacks Contract $ProceduralDefect
+    @subst contains Contract $SubstantiveUnfairness
+    @gross creates (And $proc $subst) $GrossInequality
+    @unconscion determines Court Unconscionability
+    @remedy Implies $unconscion RefusalToEnforce
+    return $remedy
+end
+
+@:Capacity_Minor graph UnderAge ContractFormation Voidable
+    @minor is Party $UnderAge
+    @contract enters $minor $ContractFormation
+    @protect establishes Law MinorProtection
+    @void allows $minor DisaffirmContract
+    @exception Implies $contract NecessariesEnforceable
+    return $void
+end
+
+@:Capacity_Mental_Incompetence graph LacksMentalCapacity UnderstandsNature VoidOrVoidable
+    @incomp has Party $LacksMentalCapacity
+    @contract enters $incomp Agreement
+    @understand cannot $incomp $UnderstandsNature
+    @adjud determines Court AdjudicatedIncompetent
+    @void Implies (And $incomp $adjud) VoidContract
+    return $void
+end
+
+@:Capacity_Intoxication graph VoluntaryIntoxication UnderstandsTransaction Voidability
+    @intox is Party $VoluntaryIntoxication
+    @contract enters $intox Agreement
+    @understand cannot $intox $UnderstandsTransaction
+    @know aware OtherParty $intox
+    @void Implies (And $intox (And $understand $know)) VoidableContract
+    return $void
+end
+
+// Contract Law - Statute of Frauds
+
+@:Statute_Of_Frauds graph WritingRequired SignedByParty EnforceableContract
+    @type involves Contract CoveredTransaction
+    @writ requires SOF $WritingRequired
+    @sign must Party $SignedByParty
+    @comply satisfies Contract (And $writ $sign)
+    @enforce Implies $comply $EnforceableContract
+    return $enforce
+end
+
+@:SOF_Land_Sale graph RealProperty SaleContract WritingRequired
+    @land involves Contract $RealProperty
+    @sale transfers $land Ownership
+    @writing requires SOF $WritingRequired
+    @essential contains $writing EssentialTerms
+    @enforce Implies (And $land (And $sale $writing)) EnforceableIfWritten
+    return $enforce
+end
+
+@:SOF_One_Year graph PerformanceImpossible WithinOneYear WritingRequired
+    @perf is Contract LongTerm
+    @impossible is $perf $PerformanceImpossible
+    @year exceeds $impossible $WithinOneYear
+    @writing requires SOF $WritingRequired
+    @enforce Implies (And $perf $year) MustBeWritten
+    return $enforce
+end
+
+@:SOF_Sale_Of_Goods graph GoodsOver500 UCC WritingRequired
+    @goods involves Contract SaleOfGoods
+    @price exceeds $goods $GoodsOver500
+    @ucc governs UCC2_201 $goods
+    @writing requires $ucc $WritingRequired
+    @enforce Implies (And $goods $price) MustBeWritten
+    return $enforce
+end
+
+@:SOF_Merchants_Confirmation graph BothMerchants WrittenConfirmation NoObjection
+    @merch are Parties $BothMerchants
+    @confirm sends Party1 $WrittenConfirmation
+    @receive gets Party2 $confirm
+    @object fails Party2 WithinTenDays
+    @satisfy Implies (And $merch (And $confirm $object)) SatisfiesSOF
+    return $satisfy
+end
+
+@:Part_Performance_Exception graph PartialPerformance LandSale SOFException
+    @land involves Contract $LandSale
+    @perf completes Buyer $PartialPerformance
+    @possess takes Buyer Possession
+    @improve makes Buyer Improvements
+    @except creates (And $perf (And $possess $improve)) $SOFException
+    @enforce Implies (And $land $except) EnforceableWithoutWriting
+    return $enforce
+end
+
+// Contract Interpretation
+
+@:Plain_Meaning_Rule graph UnambiguousLanguage OrdinaryMeaning NoExtrinsicEvidence
+    @lang contains Contract $UnambiguousLanguage
+    @plain applies Court $OrdinaryMeaning
+    @exclude bars Court $NoExtrinsicEvidence
+    @interp uses $plain TextualInterpretation
+    @rule Implies (And $lang $plain) StrictTextualReading
+    return $rule
+end
+
+@:Ambiguity_Construction graph AmbiguousTerms ExtrinsicEvidence PartyIntent
+    @ambig contains Contract $AmbiguousTerms
+    @allow admits Court $ExtrinsicEvidence
+    @intent seeks Court $PartyIntent
+    @construe interprets Court AgainstDrafter
+    @resolve Implies (And $ambig $allow) ContextualInterpretation
+    return $resolve
+end
+
+@:Parol_Evidence_Rule graph IntegratedContract PriorNegotiations Excluded
+    @integ is Contract $IntegratedContract
+    @prior exists $PriorNegotiations
+    @merge contains $integ MergerClause
+    @exclude bars Court $prior
+    @rule Implies (And $integ $merge) NoExtrinsicTerms
+    return $rule
+end
+
+@:Parol_Evidence_Exception graph FraudOrMistake ExtrinsicEvidence Admissible
+    @fraud alleges Party $FraudOrMistake
+    @evidence offers Party $ExtrinsicEvidence
+    @except allows Court DefenseEvidence
+    @admit determines Court $Admissible
+    @rule Implies (And $fraud $evidence) PEREException
+    return $rule
+end
+
+@:Course_Of_Performance graph RepeatedOccasions ContractInterpretation AcceptedWithoutObjection
+    @repeat occur $RepeatedOccasions ContractRelation
+    @perform acts Party SpecificWay
+    @accept tolerates OtherParty $AcceptedWithoutObjection
+    @interp informs $accept $ContractInterpretation
+    @rule Implies (And $repeat (And $perform $accept)) EstablishedMeaning
+    return $rule
+end
+
+@:Course_Of_Dealing graph PriorTransactions SameParties InterpretationAid
+    @prior engaged Parties $PriorTransactions
+    @same are $prior $SameParties
+    @pattern establishes $prior TradePractice
+    @aid uses Court $pattern
+    @rule Implies (And $prior $same) InformsCurrentContract
+    return $rule
+end
+
+@:Trade_Usage graph IndustryCustom ReasonableExpectation ImpliedTerm
+    @custom exists Industry $IndustryCustom
+    @expect have Parties $ReasonableExpectation
+    @imply incorporates Contract $ImpliedTerm
+    @usage informs $custom ContractMeaning
+    @rule Implies (And $custom $expect) ImpliedByUsage
+    return $rule
+end
+
+// Contract Performance and Breach
+
+@:Material_Breach graph SignificantFailure GoesToEssence DischargesOtherParty
+    @fail breaches Party $SignificantFailure
+    @essence concerns $fail $GoesToEssence
+    @substantial is $fail MaterialBreach
+    @discharge releases OtherParty PerformanceObligation
+    @remedy Implies (And $fail $essence) ImmediateSuit
+    return $remedy
+end
+
+@:Minor_Breach graph InsubstantialFailure PerformanceRequired DamagesOnly
+    @fail breaches Party $InsubstantialFailure
+    @minor is $fail MinorBreach
+    @continue must NonBreaching PerformOwn
+    @damages entitled NonBreaching $DamagesOnly
+    @rule Implies (And $fail $minor) NoDischarge
+    return $rule
+end
+
+@:Anticipatory_Repudiation graph UnequivocalRefusal BeforePerformance ImmediateRemedy
+    @refuse announces Party $UnequivocalRefusal
+    @before occurs $refuse $BeforePerformance
+    @repud constitutes $refuse AnticBreach
+    @immediate allows OtherParty $ImmediateRemedy
+    @suspend may OtherParty SuspendPerformance
+    @rule Implies (And $refuse $before) ImmediateCauseOfAction
+    return $rule
+end
+
+@:Adequate_Assurance graph ReasonableConcern RequestAssurance FailureToProvide
+    @concern has Party $ReasonableConcern
+    @request demands Party $RequestAssurance
+    @fail refuses OtherParty Assurance
+    @ucc governs UCC2_609 Transaction
+    @treat Implies (And $concern (And $request $fail)) AnticRepudiation
+    return $treat
+end
+
+@:Substantial_Performance graph MinorDeviations EssentiallyCompleted RecoverLessDamages
+    @perf completes Party ContractTerms
+    @minor has $perf $MinorDeviations
+    @essential is $perf $EssentiallyCompleted
+    @recover entitled Performer PaymentMinusDamages
+    @rule Implies (And $perf (And $minor $essential)) SubstantialPerformanceDoctrine
+    return $rule
+end
+
+@:Perfect_Tender_Rule graph GoodsSale ExactConformity RejectionRight
+    @goods involves Contract $GoodsSale
+    @conform requires UCC $ExactConformity
+    @deviate fails Seller PerfectTender
+    @reject may Buyer $RejectionRight
+    @rule Implies (And $goods $deviate) BuyerMayReject
+    return $rule
+end
+
+@:Cure_Right graph NonconformingGoods TimeRemaining OpportunityToCure
+    @nonconf delivers Seller $NonconformingGoods
+    @reject does Buyer Rejection
+    @time has Contract $TimeRemaining
+    @notice gives Seller PromptNotice
+    @cure may Seller $OpportunityToCure
+    @rule Implies (And $nonconf (And $reject $time)) SellerCanCure
+    return $rule
+end
+
+@:Installment_Contract graph MultipleDeliveries SubstantialImpairment RejectionLimited
+    @install is Contract $MultipleDeliveries
+    @impair has Delivery $SubstantialImpairment
+    @whole affects $impair WholeContract
+    @limit restricts UCC $RejectionLimited
+    @rule Implies (And $install $impair) LimitedRejectionRight
+    return $rule
+end
+
+// Contract Conditions
+
+@:Condition_Precedent graph EventMustOccur BeforePerformanceDue NoOccurrenceNoObligation
+    @event specifies Contract $EventMustOccur
+    @before requires $event $BeforePerformanceDue
+    @trigger creates $event PerformanceObligation
+    @fail means NonOccurrence $NoOccurrenceNoObligation
+    @rule Implies (And $event $before) ConditionalDuty
+    return $rule
+end
+
+@:Condition_Subsequent graph EventOccurs DischargesObligation PerformanceExcused
+    @event occurs $EventOccurs AfterDutyArises
+    @discharge terminates $event $DischargesObligation
+    @excuse releases Party $PerformanceExcused
+    @cease ends DutyToPerform $event
+    @rule Implies (And $event $discharge) ObligationEnds
+    return $rule
+end
+
+@:Express_Condition graph ExplicitLanguage StrictCompliance NoSubstantialPerformance
+    @express states Contract $ExplicitLanguage
+    @strict requires Law $StrictCompliance
+    @no bars Court $NoSubstantialPerformance
+    @literal demands $express ExactFulfillment
+    @rule Implies (And $express $strict) MustBeLiterallyFulfilled
+    return $rule
+end
+
+@:Constructive_Condition graph ImpliedByLaw OrderOfPerformance Fairness
+    @imply creates Court $ImpliedByLaw
+    @order determines $imply $OrderOfPerformance
+    @fair ensures $order $Fairness
+    @sequence establishes $fair ProperSequence
+    @rule Implies (And $imply $order) JudiciallyImposed
+    return $rule
+end
+
+@:Concurrent_Conditions graph SimultaneousPerformance MutualExchange TenderRequired
+    @simul requires Contract $SimultaneousPerformance
+    @mutual involves $simul $MutualExchange
+    @tender must Party $TenderRequired
+    @ready must BothParties ReadyToPerform
+    @rule Implies (And $simul $mutual) BothMustTender
+    return $rule
+end
+
+@:Satisfaction_Clause graph PersonalSatisfaction HonestDissatisfaction Subjective
+    @satis requires Contract $PersonalSatisfaction
+    @honest must Party $HonestDissatisfaction
+    @subjective allows $satis $Subjective
+    @good requires Law GoodFaith
+    @rule Implies (And $satis $honest) SubjectiveStandard
+    return $rule
+end
+
+@:Excuse_Of_Condition graph ConditionExcused Waiver Hindrance Forfeiture
+    @cond exists Contract Condition
+    @waive gives Party $Waiver
+    @hinder prevents Party ConditionOccurrence
+    @forfeit would NonOccurrence DisproportionateLoss
+    @excuse allows Court $ConditionExcused
+    @rule Implies (Or $waive (Or $hinder $forfeit)) ConditionNotRequired
+    return $rule
+end
+
+// Contract Remedies - Damages
+
+@:Expectation_Damages graph BenefitOfBargain AsIfPerformed PutInPosition
+    @breach causes Party Breach
+    @expect entitled NonBreaching $BenefitOfBargain
+    @position restores Damages $PutInPosition
+    @if calculates Court $AsIfPerformed
+    @rule Implies (And $breach $expect) ExpectancyMeasure
+    return $rule
+end
+
+@:Compensatory_Damages graph ActualLoss ForeseeableDamages ReasonablyCertain
+    @loss suffers Party $ActualLoss
+    @foresee were Damages $ForeseeableDamages
+    @certain proves Party $ReasonablyCertain
+    @compensate awards Court MoneyDamages
+    @rule Implies (And $loss (And $foresee $certain)) CompensatoryAward
+    return $rule
+end
+
+@:Consequential_Damages graph IndirectLoss SpecialDamages Foreseeability
+    @indirect suffers Party $IndirectLoss
+    @special are $indirect $SpecialDamages
+    @foresee knew Breacher AtContractTime
+    @consequential awards Court $special
+    @rule Implies (And $indirect (And $special $foresee)) ConsequentialAward
+    return $rule
+end
+
+@:Hadley_Rule graph ForeseeableDamages NaturalConsequence SpecialCircumstances
+    @natural flow Damages $NaturalConsequence
+    @special arise Damages $SpecialCircumstances
+    @foresee limit Recovery $ForeseeableDamages
+    @know must Breacher AtFormation
+    @rule Implies (Or $natural (And $special $know)) RecoverableDamages
+    return $rule
+end
+
+@:Mitigation_Duty graph DutyToMinimize ReasonableEfforts AvoidableLosses
+    @duty has NonBreaching $DutyToMinimize
+    @efforts makes NonBreaching $ReasonableEfforts
+    @avoid must NonBreaching $AvoidableLosses
+    @reduce decreases AvoidedLosses RecoverableDamages
+    @rule Implies (And $duty $efforts) MitigationRequired
+    return $rule
+end
+
+@:Reliance_Damages graph RelianceExpenses RestorePosition BeforeBreach
+    @rely incurs Party $RelianceExpenses
+    @restore puts Damages $RestorePosition
+    @before returns Party PreContractState
+    @alternative is $rely AlternativeMeasure
+    @rule Implies (And $rely $restore) RelianceRecovery
+    return $rule
+end
+
+@:Restitution_Damages graph UnjustEnrichment ValueConferred ReturnBenefit
+    @enrich receives Party $UnjustEnrichment
+    @confer provides OtherParty $ValueConferred
+    @return awards Court $ReturnBenefit
+    @quasi creates Law QuasiContract
+    @rule Implies (And $enrich $confer) RestitutionaryRecovery
+    return $rule
+end
+
+@:Liquidated_Damages graph PreEstimatedDamages ReasonableAtFormation NotPenalty
+    @pre agrees Parties $PreEstimatedDamages
+    @reason is $pre $ReasonableAtFormation
+    @difficult are ActualDamages HardToProve
+    @not verifies Court $NotPenalty
+    @enforce Implies (And $pre (And $reason $not)) EnforceLiquidated
+    return $enforce
+end
+
+@:Penalty_Clause graph ExcessiveDamages PunishPurpose Unenforceable
+    @excess are Stipulated $ExcessiveDamages
+    @punish has Clause $PunishPurpose
+    @penalty determines Court PenaltyClause
+    @void strikes Court $Unenforceable
+    @rule Implies (And $excess $punish) PenaltyNotEnforced
+    return $rule
+end
+
+@:Nominal_Damages graph TechnicalBreach NoActualLoss TokenAmount
+    @breach commits Party $TechnicalBreach
+    @no suffers Plaintiff $NoActualLoss
+    @token awards Court $TokenAmount
+    @vindicate recognizes Court LegalRight
+    @rule Implies (And $breach $no) NominalAward
+    return $rule
+end
+
+@:Punitive_Damages graph OutrageousConduct PunishDeter RareInContract
+    @outrage involves Breach $OutrageousConduct
+    @punish seeks Court $PunishDeter
+    @rare are $punish $RareInContract
+    @tort requires Usually TortiousConduct
+    @rule Implies (And $outrage $tort) PunitivePossible
+    return $rule
+end
+
+// Contract Remedies - Equitable
+
+@:Specific_Performance graph UniqueGoods InadequateLegalRemedy CourtOrders
+    @unique involves Contract $UniqueGoods
+    @inadequate are MoneyDamages $InadequateLegalRemedy
+    @land is $unique RealProperty
+    @order grants Court $CourtOrders
+    @equit Implies (And $unique $inadequate) SpecificPerformance
+    return $equit
+end
+
+@:Injunction graph NegativeCovenant ProhibitedAct CourtProhibits
+    @negative contains Contract $NegativeCovenant
+    @prohibit forbids $negative $ProhibitedAct
+    @breach violates Party $negative
+    @enjoin orders Court $CourtProhibits
+    @rule Implies (And $negative $breach) InjunctiveRelief
+    return $rule
+end
+
+@:Rescission graph VoidableContract RestoreStatus StatusQuoAnte
+    @void is Contract $VoidableContract
+    @restore seeks Party $RestoreStatus
+    @return requires BothParties $StatusQuoAnte
+    @cancel grants Court Cancellation
+    @rule Implies (And $void $restore) RescissionGranted
+    return $rule
+end
+
+@:Reformation graph ScrivenerError TrueAgreement RewriteContract
+    @error contains Writing $ScrivenerError
+    @true proves Party $TrueAgreement
+    @differ differs Writing OralAgreement
+    @rewrite orders Court $RewriteContract
+    @rule Implies (And $error $true) ReformationGranted
+    return $rule
+end
+
+@:Declaratory_Judgment graph UncertainRights JudicialDetermination NoMoneyDamages
+    @uncertain are ContractRights $UncertainRights
+    @determine seeks Party $JudicialDetermination
+    @no requests Party $NoMoneyDamages
+    @declare issues Court Declaration
+    @rule Implies (And $uncertain $determine) DeclaratoryRelief
+    return $rule
+end
+
+// Third Party Rights
+
+@:Third_Party_Beneficiary graph IntendedBeneficiary ContractRights CanSue
+    @intend create Parties $IntendedBeneficiary
+    @benefit flows Performance ThirdParty
+    @rights has ThirdParty $ContractRights
+    @sue may ThirdParty $CanSue
+    @rule Implies (And $intend $benefit) ThirdPartyRights
+    return $rule
+end
+
+@:Creditor_Beneficiary graph PreExistingDebt PromiseToPayDebt Enforce
+    @debt owes Promisee $PreExistingDebt
+    @promise makes Promisor $PromiseToPayDebt
+    @creditor is ThirdParty Creditor
+    @enforce may $creditor $Enforce
+    @rule Implies (And $debt $promise) CreditorBeneficiary
+    return $rule
+end
+
+@:Donee_Beneficiary graph GiftIntent IntendedDonee CanEnforce
+    @gift has Promisee $GiftIntent
+    @intend names Promisee $IntendedDonee
+    @benefit confers Promise GiftValue
+    @enforce may Donee Contract
+    @rule Implies (And $gift $intend) DoneeBeneficiary
+    return $rule
+end
+
+@:Incidental_Beneficiary graph UnintendedBenefit NoContractRights CannotSue
+    @unintend are Benefits $UnintendedBenefit
+    @no has ThirdParty $NoContractRights
+    @cannot lacks ThirdParty StandingToSue
+    @incidental is ThirdParty IncidentalOnly
+    @rule Implies (And $unintend $no) NoEnforcementRight
+    return $rule
+end
+
+@:Assignment graph TransferRights AssignorToAssignee ObligorNotification
+    @transfer conveys Assignor $TransferRights
+    @assignee receives $transfer ContractRights
+    @notify informs Assignee $ObligorNotification
+    @obligor must ObligorPayee PerformToAssignee
+    @rule Implies (And $transfer $notify) ValidAssignment
+    return $rule
+end
+
+@:Delegation graph TransferDuties DelegatorToDelegatee RemainLiable
+    @transfer shifts Delegator $TransferDuties
+    @delegatee assumes $transfer PerformanceObligation
+    @remain stays Delegator $RemainLiable
+    @consent requires PersonalService ObligeeConsent
+    @rule Implies (And $transfer $delegatee) ValidDelegation
+    return $rule
+end
+
+@:Anti_Assignment_Clause graph ProhibitsAssignment BreachNotVoid ValidTransfer
+    @prohibit contains Contract $ProhibitsAssignment
+    @assign transfers Party Rights
+    @breach violates $assign Clause
+    @valid is $assign $ValidTransfer
+    @remedy limited Obligor DamagesOnly
+    @rule Implies (And $prohibit $assign) $BreachNotVoid
+    return $rule
+end
+
+// Discharge and Excuse
+
+@:Impossibility graph ObjectiveImpossibility UnforeseenEvent PerformanceExcused
+    @impossible becomes Performance $ObjectiveImpossibility
+    @unforeseen occurs $UnforeseenEvent AfterFormation
+    @no exists NoPartyFault
+    @excuse discharges Court $PerformanceExcused
+    @rule Implies (And $impossible (And $unforeseen $no)) DischargeByImpossibility
+    return $rule
+end
+
+@:Impracticability graph ExtremeUnreasonableness UnforeseenCircumstance ExcusePerformance
+    @extreme becomes Cost $ExtremeUnreasonableness
+    @unforeseen arises $UnforeseenCircumstance
+    @basic contradicts Event BasicAssumption
+    @excuse may Court $ExcusePerformance
+    @rule Implies (And $extreme (And $unforeseen $basic)) UCCImpracticability
+    return $rule
+end
+
+@:Frustration_Of_Purpose graph PrincipalPurpose UnforeseenEvent ValueDestroyed
+    @purpose has Contract $PrincipalPurpose
+    @unforeseen occurs $UnforeseenEvent
+    @destroy frustrates $unforeseen $purpose
+    @value eliminates $destroy ContractValue
+    @excuse discharges Court Performance
+    @rule Implies (And $purpose (And $unforeseen $destroy)) FrustrationDoctrine
+    return $rule
+end
+
+@:Mutual_Rescission graph AgreementToCancel BothPartiesConsent DischargesObligations
+    @agree decide Parties $AgreementToCancel
+    @consent give BothParties $BothPartiesConsent
+    @discharge releases Agreement $DischargesObligations
+    @new constitutes $agree NewContract
+    @rule Implies (And $agree $consent) MutualRescission
+    return $rule
+end
+
+@:Accord_And_Satisfaction graph DisputedClaim AgreementToSettle PerformanceOfAccord
+    @dispute exists $DisputedClaim Parties
+    @accord reach Parties $AgreementToSettle
+    @perform completes Debtor $PerformanceOfAccord
+    @satisfy discharges $perform OriginalClaim
+    @rule Implies (And $dispute (And $accord $perform)) AccordSatisfaction
+    return $rule
+end
+
+@:Novation graph NewParty SubstitutePerformance DischargeOriginal
+    @new introduces Parties $NewParty
+    @substitute agrees $new $SubstitutePerformance
+    @discharge releases Agreement OriginalParty
+    @intent require AllParties IntentToDischarge
+    @rule Implies (And $new (And $substitute $intent)) NovationOccurs
+    return $rule
+end
+
+@:Modification graph ChangeTerms MutualConsent ConsiderationRequired
+    @change agree Parties $ChangeTerms
+    @mutual have Parties $MutualConsent
+    @cons requires CommonLaw $ConsiderationRequired
+    @no requires UCC NoConsideration
+    @valid Implies (And $change (Or $cons $no)) ValidModification
+    return $valid
+end
+
+@:Waiver graph VoluntaryRelinquishment KnownRight IntentionalAbandon
+    @relinquish gives Party $VoluntaryRelinquishment
+    @known has Party $KnownRight
+    @intend demonstrates Party $IntentionalAbandon
+    @waive constitutes (And $relinquish (And $known $intend)) Waiver
+    @no requires Waiver NoConsideration
+    @rule Implies $waive RightGivenUp
+    return $rule
+end
+
+// Court Systems and Jurisdiction
+
+@:Court_Hierarchy graph SupremeCourt AppellateCourt TrialCourt
+    @supreme sits $SupremeCourt TopLevel
+    @appeal sits $AppellateCourt MiddleLevel
+    @trial sits $TrialCourt FirstLevel
+    @bind establishes $supreme PrecedentForAll
+    @review hears $appeal AppealsFrom
+    @hier Implies (And $supreme (And $appeal $trial)) JudicialHierarchy
+    return $hier
+end
+
+@:Subject_Matter_Jurisdiction graph CourtPower CaseType ConstitutionalGrant
+    @power has Court $CourtPower
+    @type involves Case $CaseType
+    @grant authorizes Constitution $ConstitutionalGrant
+    @match determines $power $type
+    @jurisdiction Implies (And $grant $match) SubjectMatterJurisdiction
+    return $jurisdiction
+end
+
+@:Personal_Jurisdiction graph MinimumContacts ForumState FairPlay
+    @contact has Defendant $MinimumContacts
+    @forum with $contact $ForumState
+    @fair satisfies $contact $FairPlay
+    @due meets Exercise DueProcess
+    @jurisdiction Implies (And $contact (And $forum $fair)) PersonalJurisdiction
+    return $jurisdiction
+end
+
+@:Diversity_Jurisdiction graph DifferentStates AmountInControversy FederalCourt
+    @diverse are Parties $DifferentStates
+    @amount exceeds Claim $AmountInControversy
+    @threshold is $amount Over75000
+    @federal has $FederalCourt Jurisdiction
+    @rule Implies (And $diverse $threshold) DiversityJurisdiction
+    return $rule
+end
+
+@:Federal_Question graph ArisesFederalLaw WellPlead FederalJurisdiction
+    @arise claims Complaint $ArisesFederalLaw
+    @plead appears $arise $WellPlead
+    @complaint states $plead Complaint
+    @federal has Court $FederalJurisdiction
+    @rule Implies (And $arise $plead) FedQuestionJurisdiction
+    return $rule
+end
+
+@:Venue graph ProperLocation GeographicalConvenience JudicialDistrict
+    @proper determines Statute $ProperLocation
+    @geog considers Court $GeographicalConvenience
+    @district is $proper $JudicialDistrict
+    @residence includes $district DefendantResidence
+    @venue Implies (Or $residence ClaimArose) ProperVenue
+    return $venue
+end
+
+@:Standing graph InjuryInFact Causation Redressability
+    @injury suffers Plaintiff $InjuryInFact
+    @cause links Defendant $injury
+    @redress can Court $Redressability
+    @standing has Plaintiff ConstitutionalStanding
+    @rule Implies (And $injury (And $cause $redress)) ProperStanding
+    return $rule
+end
+
+@:Justiciability graph ActualControversy Ripeness Mootness
+    @actual exists $ActualControversy Parties
+    @ripe is Case $Ripeness
+    @not is Case $Mootness
+    @just determines Court $Justiciability
+    @rule Implies (And $actual (And $ripe (Not $not))) JusticiableCase
+    return $rule
+end
+
+@:Appellate_Review graph FinalJudgment TrialCourt AppealRight
+    @final issues $TrialCourt $FinalJudgment
+    @appeal has Party $AppealRight
+    @review conducts AppellateCourt DeNovoLaw
+    @defer shows AppellateCourt ClearErrorFact
+    @standard Implies (And $final $appeal) AppellateJurisdiction
+    return $standard
+end
+
+@:Writ_Of_Certiorari graph DiscretionaryReview SupremeCourt RuleOfFour
+    @petition files Party $DiscretionaryReview
+    @supreme receives $SupremeCourt Petition
+    @four vote Justices $RuleOfFour
+    @grant issues Court CertGranted
+    @discretion Implies (And $petition $four) CertiorariJurisdiction
+    return $discretion
+end
+
+// Civil Procedure
+
+@:Burden_Of_Proof graph PlaintiffBurden PreponderanceEvidence ProveElements
+    @burden carries Plaintiff $PlaintiffBurden
+    @standard requires Civil $PreponderanceEvidence
+    @prove must Plaintiff $ProveElements
+    @more shows Evidence MoreLikelyThanNot
+    @satisfy Implies (And $burden (And $standard $more)) MeetsBurden
+    return $satisfy
+end
+
+@:Summary_Judgment graph NoGenuineIssue MaterialFact JudgmentAsLawMatter
+    @no exists $NoGenuineIssue Discovery
+    @material concerns $MaterialFact Case
+    @judgment grants Court $JudgmentAsLawMatter
+    @evidence views Court LightFavorableNonmovant
+    @rule Implies (And $no $material) SummaryJudgmentGranted
+    return $rule
+end
+
+@:Motion_To_Dismiss graph FailureToState LegalClaim Rule12b6
+    @fail alleges Complaint $FailureToState
+    @claim lacks Complaint $LegalClaim
+    @accept assumes Court AllegationsTrue
+    @dismiss grants Court $Rule12b6
+    @rule Implies (And $fail $claim) DismissalGranted
+    return $rule
+end
+
+@:Discovery graph RelevantInformation NotPrivileged BroadScope
+    @relevant seeks Party $RelevantInformation
+    @not is Information $NotPrivileged
+    @broad allows FRCP $BroadScope
+    @proportional limits Discovery ProportionalityRequirement
+    @compel Implies (And $relevant $not) DiscoveryPermitted
+    return $compel
+end
+
+@:Attorney_Client_Privilege graph LegalAdvice ConfidentialCommunication Protected
+    @advice seeks Client $LegalAdvice
+    @confid maintains Client $ConfidentialCommunication
+    @attorney provides Attorney CounselCommunication
+    @protect shields Privilege $confid
+    @rule Implies (And $advice (And $confid $attorney)) PrivilegeApplies
+    return $rule
+end
+
+@:Work_Product_Doctrine graph LitigationPreparation MentalImpressions QualifiedProtection
+    @prep creates Attorney $LitigationPreparation
+    @mental contains $prep $MentalImpressions
+    @qualified provides Doctrine $QualifiedProtection
+    @substantial requires Override SubstantialNeed
+    @rule Implies (And $prep $mental) WorkProductProtection
+    return $rule
+end
+
+@:Class_Action graph Numerosity Commonality Typicality AdequateRepresentation
+    @numerous are ClassMembers $Numerosity
+    @common share ClassMembers $Commonality
+    @typical has Representative $Typicality
+    @adequate provides Representative $AdequateRepresentation
+    @certify grants Court ClassCertification
+    @rule Implies (And $numerous (And $common (And $typical $adequate))) Rule23Satisfied
+    return $rule
+end
+
+@:Res_Judicata graph FinalJudgment SameParties SameClaim PrecludesRelitigation
+    @final rendered Court $FinalJudgment
+    @same involves $FinalJudgment $SameParties
+    @claim arises Suit $SameClaim
+    @precludes bars Doctrine $PrecludesRelitigation
+    @rule Implies (And $final (And $same $claim)) ClaimPreclusion
+    return $rule
+end
+
+@:Collateral_Estoppel graph IssueActuallyLitigated NecessaryToDetermination IssuePreclusion
+    @issue was Element $IssueActuallyLitigated
+    @necessary was $issue $NecessaryToDetermination
+    @final resulted Litigation FinalJudgment
+    @precludes bars Doctrine Relitigation
+    @rule Implies (And $issue (And $necessary $final)) $IssuePreclusion
+    return $rule
+end
+
+@:Default_Judgment graph FailureToRespond ProperService EntryOfDefault
+    @fail does Defendant $FailureToRespond
+    @service effects Plaintiff $ProperService
+    @entry obtains Plaintiff $EntryOfDefault
+    @judgment grants Court DefaultJudgment
+    @rule Implies (And $fail (And $service $entry)) JudgmentByDefault
+    return $rule
+end
+
+// Criminal Law - Elements
+
+@:Criminal_Actus_Reus graph VoluntaryAct Omission Causation
+    @act commits Defendant $VoluntaryAct
+    @omit fails Defendant LegalDuty
+    @cause produces (Or $act $omit) $Causation
+    @harm results $cause ProhibitedHarm
+    @element Implies (Or $act (And $omit $cause)) ActusReusElement
+    return $element
+end
+
+@:Criminal_Mens_Rea graph CulpableMentalState Purposely Knowingly Recklessly
+    @mental has Defendant $CulpableMentalState
+    @purpose intends Defendant Result
+    @know aware Defendant Circumstances
+    @reckless disregards Defendant SubstantialRisk
+    @element Implies (Or $purpose (Or $know $reckless)) MensReaElement
+    return $element
+end
+
+@:Strict_Liability_Crime graph NoMensRea PublicWelfare StatutoryOffense
+    @no requires Statute $NoMensRea
+    @public protects Law $PublicWelfare
+    @statutory creates Legislature $StatutoryOffense
+    @liable is Defendant LiableWithoutIntent
+    @rule Implies (And $no (And $public $statutory)) StrictLiabilityCrime
+    return $rule
+end
+
+@:Causation_But_For graph ActualCause ButForTest FactualCausation
+    @actual establishes Prosecution $ActualCause
+    @but applies Test $ButForTest
+    @not occurs HarmNotWithout DefendantAct
+    @factual proves $but $FactualCausation
+    @rule Implies (And $actual $but) ButForCausation
+    return $rule
+end
+
+@:Proximate_Cause graph LegalCause Foreseeability InterveningCause
+    @legal requires Law $LegalCause
+    @foresee was Result $Foreseeability
+    @intervene breaks $InterveningCause ChainCausation
+    @proximate Implies (And $legal (And $foresee (Not $intervene))) ProximateCausation
+    return $proximate
+end
+
+// Criminal Law - Specific Crimes
+
+@:Murder graph UnlawfulKilling Malice Aforethought Human
+    @kill causes Defendant $UnlawfulKilling
+    @malice has Defendant $Malice
+    @afore demonstrates $malice $Aforethought
+    @human is Victim $Human
+    @murder Implies (And $kill (And $malice $human)) MurderOffense
+    return $murder
+end
+
+@:Felony_Murder graph DeathDuring DangerousFelony NoMaliceRequired
+    @death occurs $DeathDuring CommissionFelony
+    @dangerous is Felony $DangerousFelony
+    @no requires FMR $NoMaliceRequired
+    @liable is Defendant FelonyMurderer
+    @rule Implies (And $death $dangerous) FelonyMurderRule
+    return $rule
+end
+
+@:Manslaughter graph UnlawfulKilling NoMalice HeatOfPassion
+    @kill causes Defendant $UnlawfulKilling
+    @no lacks Defendant $NoMalice
+    @heat acts Defendant $HeatOfPassion
+    @adequate has Provocation AdequateProvocation
+    @voluntary Implies (And $kill (And $no $heat)) VoluntaryManslaughter
+    return $voluntary
+end
+
+@:Larceny graph TakingAndCarrying PersonalProperty IntentToDeprive
+    @take removes Defendant $TakingAndCarrying
+    @property is Object $PersonalProperty
+    @intent has Defendant $IntentToDeprive
+    @another owns VictimOwner Property
+    @larceny Implies (And $take (And $property $intent)) LarcenyOffense
+    return $larceny
+end
+
+@:Robbery graph Larceny Force Intimidation FromPerson
+    @larceny commits Defendant LarcenyElements
+    @force uses Defendant $Force
+    @intim uses Defendant $Intimidation
+    @from takes Defendant $FromPerson
+    @robbery Implies (And $larceny (Or $force $intim)) RobberyOffense
+    return $robbery
+end
+
+@:Burglary graph BreakingAndEntering Dwelling Nighttime IntentToCommitFelony
+    @break enters Defendant $BreakingAndEntering
+    @dwell is Structure $Dwelling
+    @night occurs $break $Nighttime
+    @intent has Defendant $IntentToCommitFelony
+    @burglary Implies (And $break (And $dwell (And $night $intent))) CommonLawBurglary
+    return $burglary
+end
+
+@:Assault graph AttemptBattery ApparentAbility IntentToHarm
+    @attempt tries Defendant $AttemptBattery
+    @able has Defendant $ApparentAbility
+    @intent has Defendant $IntentToHarm
+    @fear creates Victim ReasonableApprehension
+    @assault Implies (Or (And $attempt $able) $fear) AssaultOffense
+    return $assault
+end
+
+@:Battery graph UnlawfulApplication Force ToPerson
+    @apply uses Defendant $UnlawfulApplication
+    @force is $apply $Force
+    @person receives Victim $ToPerson
+    @harmful is Contact HarmfulOrOffensive
+    @battery Implies (And $apply (And $force $person)) BatteryOffense
+    return $battery
+end
+
+@:Rape graph SexualIntercourse WithoutConsent ForceOrThreat
+    @intercourse engages Defendant $SexualIntercourse
+    @no lacks Victim $WithoutConsent
+    @force uses Defendant $ForceOrThreat
+    @capacity lacks Victim CapacityToConsent
+    @rape Implies (And $intercourse (Or $no (Or $force $capacity))) RapeOffense
+    return $rape
+end
+
+@:Kidnapping graph UnlawfulConfinement Movement Asportation
+    @confine restrains Defendant Victim
+    @unlawful is $confine $UnlawfulConfinement
+    @move transports Defendant $Movement
+    @asport demonstrates $move $Asportation
+    @kidnap Implies (And $confine (And $unlawful $move)) KidnappingOffense
+    return $kidnap
+end
+
+@:Arson graph MaliciousBurning Dwelling OfAnother
+    @burn destroys Defendant Structure
+    @malice has Defendant $MaliciousBurning
+    @dwell is Structure $Dwelling
+    @another owns VictimOwner $dwell
+    @arson Implies (And $burn (And $malice (And $dwell $another))) ArsonOffense
+    return $arson
+end
+
+// Criminal Law - Defenses
+
+@:Self_Defense graph UnlawfulAttack ReasonableBelief ProportionalForce
+    @attack faces Defendant $UnlawfulAttack
+    @belief has Defendant $ReasonableBelief
+    @force uses Defendant $ProportionalForce
+    @imminent is Threat ImminentHarm
+    @justify Implies (And $attack (And $belief (And $force $imminent))) SelfDefenseJustification
+    return $justify
+end
+
+@:Defense_Of_Others graph ThirdPartyAttack ReasonableBelief NecessaryForce
+    @attack observes Defendant $ThirdPartyAttack
+    @belief has Defendant $ReasonableBelief
+    @necessary uses Defendant $NecessaryForce
+    @protect defends Defendant ThirdParty
+    @justify Implies (And $attack (And $belief $necessary)) DefenseOfOthersJustified
+    return $justify
+end
+
+@:Insanity_Defense graph MentalDisease LackCapacity KnowWrong MNaghten
+    @disease has Defendant $MentalDisease
+    @lack demonstrates $disease $LackCapacity
+    @know cannot Defendant $KnowWrong
+    @test applies Jurisdiction $MNaghten
+    @insane Implies (And $disease (And $lack $know)) InsanityDefense
+    return $insane
+end
+
+@:Diminished_Capacity graph MentalCondition NegateMensRea PartialDefense
+    @condition has Defendant $MentalCondition
+    @negate affects $condition $NegateMensRea
+    @partial provides Law $PartialDefense
+    @reduce lowers $partial ChargeLevel
+    @rule Implies (And $condition $negate) DiminishedCapacityDefense
+    return $rule
+end
+
+@:Intoxication_Defense graph VoluntaryIntoxication SpecificIntent NegateMensRea
+    @intox becomes Defendant $VoluntaryIntoxication
+    @specific requires Crime $SpecificIntent
+    @negate prevents $intox $NegateMensRea
+    @defense allows Law IntoxicationDefense
+    @rule Implies (And $intox (And $specific $negate)) IntoxDefenseAvailable
+    return $rule
+end
+
+@:Duress graph ThreatOfDeath ImminentHarm NoReasonableAlternative
+    @threat receives Defendant $ThreatOfDeath
+    @imminent is Harm $ImminentHarm
+    @no has Defendant $NoReasonableAlternative
+    @coerce forces ThirdParty DefendantAct
+    @excuse Implies (And $threat (And $imminent $no)) DuressDefense
+    return $excuse
+end
+
+@:Necessity graph LesserEvil AvoidGreaterHarm NoLegalAlternative
+    @lesser chooses Defendant $LesserEvil
+    @avoid prevents Act $AvoidGreaterHarm
+    @no has Defendant $NoLegalAlternative
+    @imminent is Harm ImminentThreat
+    @justify Implies (And $lesser (And $avoid $no)) NecessityDefense
+    return $justify
+end
+
+@:Entrapment graph GovernmentInducement PredispositionLack OriginatesWithPolice
+    @induce causes Government $GovernmentInducement
+    @lack has Defendant $PredispositionLack
+    @origin starts $induce $OriginatesWithPolice
+    @test applies Jurisdiction SubjectiveTest
+    @entrap Implies (And $induce (And $lack $origin)) EntrapmentDefense
+    return $entrap
+end
+
+@:Mistake_Of_Fact graph HonestMistake ReasonableBelief NegateMensRea
+    @mistake has Defendant $HonestMistake
+    @reason is $mistake $ReasonableBelief
+    @negate affects $mistake $NegateMensRea
+    @specific requires Crime SpecificIntent
+    @defense Implies (And $mistake (And $reason $negate)) MistakeOfFactDefense
+    return $defense
+end
+
+@:Mistake_Of_Law graph IgnoranceOfLaw NotExcuse RareExceptions
+    @ignore has Defendant $IgnoranceOfLaw
+    @not is $ignore $NotExcuse
+    @rare allows Exceptions $RareExceptions
+    @rely depends $rare OfficialMisstatement
+    @rule Implies (And $ignore (Not $rare)) NoDefense
+    return $rule
+end
+
+// Criminal Procedure - Constitutional Rights
+
+@:Fourth_Amendment graph UnreasonableSearch Seizure WarrantRequirement
+    @search conducts Police $UnreasonableSearch
+    @seize takes Police Evidence
+    @warrant requires Constitution $WarrantRequirement
+    @probable needs Warrant $ProbableCause
+    @protect Implies (And $search (Not $warrant)) FourthAmendmentViolation
+    return $protect
+end
+
+@:Exclusionary_Rule graph IllegalSearch SuppressEvidence FruitPoisonousTree
+    @illegal conducts Police $IllegalSearch
+    @suppress orders Court $SuppressEvidence
+    @fruit extends Doctrine $FruitPoisonousTree
+    @deter purposes Rule $deter
+    @remedy Implies (And $illegal $suppress) ExclusionaryRuleApplies
+    return $remedy
+end
+
+@:Miranda_Rights graph CustodialInterrogation WarningRequired SelfIncrimination
+    @custody holds Police Suspect
+    @interrog questions Police $CustodialInterrogation
+    @warn must Police $WarningRequired
+    @self protects FifthAmendment $SelfIncrimination
+    @suppress Implies (And $custody (And $interrog (Not $warn))) StatementsExcluded
+    return $suppress
+end
+
+@:Right_To_Counsel graph CriticalStage AttorneyPresent SixthAmendment
+    @critical reaches Proceeding $CriticalStage
+    @attorney has Defendant $AttorneyPresent
+    @sixth protects $SixthAmendment RightToCounsel
+    @appoint must Court IndigentDefendant
+    @rule Implies (And $critical (Not $attorney)) ConstitutionalViolation
+    return $rule
+end
+
+@:Probable_Cause graph ReasonableBelief CrimeCommitted SuspectInvolved
+    @reason has Officer $ReasonableBelief
+    @crime occurred $CrimeCommitted
+    @suspect links $suspect $SuspectInvolved
+    @facts support TotCircumstances $reason
+    @sufficient Implies (And $reason (And $crime $suspect)) ProbableCauseExists
+    return $sufficient
+end
+
+@:Reasonable_Suspicion graph ArticulableFacts CriminalActivity StopAndFrisk
+    @facts observes Officer $ArticulableFacts
+    @criminal suspects Officer $CriminalActivity
+    @stop allows Terry $StopAndFrisk
+    @brief permits Law BriefDetention
+    @rule Implies (And $facts $criminal) ReasonableSuspicionExists
+    return $rule
+end
+
+@:Warrant_Exceptions graph ExigentCircumstances PlainView SearchIncident ConsentSearch
+    @exigent exist $ExigentCircumstances
+    @plain observes Officer $PlainView
+    @incident follows Search LawfulArrest
+    @consent gives Person $ConsentSearch
+    @except allows Law (Or $exigent (Or $plain (Or $incident $consent)))
+    @valid Implies $except WarrantlessSearchValid
+    return $valid
+end
+
+@:Double_Jeopardy graph SameOffense MultipleProsecutions ProhibitedRetrials
+    @same is Charge $SameOffense
+    @multiple attempts State $MultipleProsecutions
+    @prohibit bars FifthAmendment $ProhibitedRetrials
+    @jeopardy attaches Trial JurySworn
+    @protect Implies (And $same (And $multiple $jeopardy)) DoubleJeopardyViolation
+    return $protect
+end
+
+@:Speedy_Trial graph UnreasonableDelay PrejudiceToDefendant BalancingTest
+    @delay experiences Defendant $UnreasonableDelay
+    @prejudice suffers Defendant $PrejudiceToDefendant
+    @balance applies Court $BalancingTest
+    @factors weighs Court BarkerFactors
+    @violate Implies (And $delay $prejudice) SpeedyTrialViolation
+    return $violate
+end
+
+@:Confrontation_Clause graph RightToCrosses AdverseWitness TestimonyUnderOath
+    @right has Defendant $RightToCrosses
+    @witness presents Prosecution $AdverseWitness
+    @testimony gives $witness $TestimonyUnderOath
+    @confront requires SixthAmendment OpportunityToCross
+    @violate Implies (And $witness (Not $right)) ConfrontationViolation
+    return $violate
+end
+
+// Evidence Law
+
+@:Relevance graph TendencyToProve MaterialFact Admissible
+    @tend has Evidence $TendencyToProve
+    @material is Fact $MaterialFact
+    @probative increases $tend FactProbability
+    @admiss Implies (And $tend $material) RelevantEvidence
+    @rule requires FRE401 $admiss
+    return $rule
+end
+
+@:Prejudice_Exclusion graph UnfairPrejudice OutweighsValue Excluded
+    @prejudice creates Evidence $UnfairPrejudice
+    @value has Evidence ProbativeValue
+    @outweigh exceeds $prejudice $value
+    @exclude bars FRE403 Evidence
+    @rule Implies (And $prejudice $outweigh) ExcludeEvidence
+    return $rule
+end
+
+@:Hearsay graph OutOfCourtStatement TruthOfMatter Inadmissible
+    @out made Statement $OutOfCourtStatement
+    @truth offered $out $TruthOfMatter
+    @hearsay is (And $out $truth) HearsayStatement
+    @inadmiss bars FRE802 $hearsay
+    @except allows Law HearsayExceptions
+    @rule Implies (And $hearsay (Not $except)) Inadmissible
+    return $rule
+end
+
+@:Present_Sense_Impression graph DescribeEvent WhilePerceiving ImmediateThereafter
+    @describe makes Declarant $DescribeEvent
+    @perceive observes Declarant EventOccurrence
+    @immediate gives $describe $ImmediateThereafter
+    @except allows FRE803_1 $describe
+    @admiss Implies (And $describe (And $perceive $immediate)) HearsayException
+    return $admiss
+end
+
+@:Excited_Utterance graph StartlingEvent StressOfExcitement RelatingToEvent
+    @startling occurs $StartlingEvent
+    @stress under Declarant $StressOfExcitement
+    @relate concerns Statement $RelatingToEvent
+    @except allows FRE803_2 Statement
+    @admiss Implies (And $startling (And $stress $relate)) HearsayException
+    return $admiss
+end
+
+@:State_Of_Mind_Exception graph DeclarantMentalState EmotionalCondition ThenExisting
+    @mental expresses Statement $DeclarantMentalState
+    @emotion reveals Statement $EmotionalCondition
+    @then is State $ThenExisting
+    @except allows FRE803_3 Statement
+    @admiss Implies (And $mental (And $emotion $then)) HearsayException
+    return $admiss
+end
+
+@:Business_Records graph RoutineRecord RegularBusiness TrustworthySource
+    @routine made Record $RoutineRecord
+    @regular is Record $RegularBusiness
+    @trust has Record $TrustworthySource
+    @kept maintains Business RegularCourse
+    @except allows FRE803_6 Record
+    @admiss Implies (And $routine (And $regular $trust)) HearsayException
+    return $admiss
+end
+
+@:Ancient_Documents graph AgeOver20 AuthenticCondition NoSuspicion
+    @age has Document $AgeOver20
+    @authentic is Document $AuthenticCondition
+    @no raises Document $NoSuspicion
+    @except allows FRE803_16 Document
+    @admiss Implies (And $age (And $authentic $no)) HearsayException
+    return $admiss
+end
+
+@:Former_Testimony graph PriorProceeding UnderOath OpportunityToCross
+    @prior gave Witness $PriorProceeding
+    @oath testified Witness $UnderOath
+    @opp had Party $OpportunityToCross
+    @unavail is Witness Unavailable
+    @except allows FRE804_b1 Testimony
+    @admiss Implies (And $prior (And $oath (And $opp $unavail))) HearsayException
+    return $admiss
+end
+
+@:Dying_Declaration graph BeliefOfDeath HomicideCase CauseOfDeath
+    @belief has Declarant $BeliefOfDeath
+    @homicide is Case $HomicideCase
+    @cause concerns Statement $CauseOfDeath
+    @imminent is Death ImminentDeath
+    @except allows FRE804_b2 Statement
+    @admiss Implies (And $belief (And $homicide $cause)) HearsayException
+    return $admiss
+end
+
+@:Statement_Against_Interest graph ContraryToInterest ReasonablePersonWouldNot Trustworthy
+    @contrary is Statement $ContraryToInterest
+    @reason would $ReasonablePersonWouldNot MakeStatement
+    @trust has Statement $Trustworthy
+    @unavail is Declarant Unavailable
+    @except allows FRE804_b3 Statement
+    @admiss Implies (And $contrary (And $reason (And $trust $unavail))) HearsayException
+    return $admiss
+end
+
+@:Character_Evidence graph PersonalityTrait ProveConduct GenerallyInadmissible
+    @trait concerns Evidence $PersonalityTrait
+    @prove offered $trait $ProveConduct
+    @general bars FRE404 CharacterEvidence
+    @except allows Law LimitedExceptions
+    @rule Implies (And $trait (And $prove (Not $except))) Inadmissible
+    return $rule
+end
+
+@:Habit_Evidence graph RegularResponse SpecificSituation Admissible
+    @regular demonstrates Evidence $RegularResponse
+    @specific involves $regular $SpecificSituation
+    @routine shows Pattern SemiAutomatic
+    @habit constitutes $regular HabitEvidence
+    @admiss allows FRE406 $habit
+    @rule Implies (And $regular $specific) AdmissibleHabit
+    return $rule
+end
+
+@:Subsequent_Remedial_Measures graph PostAccidentRepair ProveNegligence Inadmissible
+    @repair makes Defendant $PostAccidentRepair
+    @prove offers Plaintiff $ProveNegligence
+    @inadmiss bars FRE407 $repair
+    @policy protects Law SafetyImprovements
+    @except allows Other ImpeachmentOrOwnership
+    @rule Implies (And $repair (And $prove (Not $except))) Excluded
+    return $rule
+end
+
+@:Settlement_Negotiations graph DisputedClaim OfferToCompromise Inadmissible
+    @dispute exists $DisputedClaim Parties
+    @offer makes Party $OfferToCompromise
+    @inadmiss bars FRE408 $offer
+    @policy encourages Law Settlement
+    @except allows Other ProveWitnessbiasDelay
+    @rule Implies (And $dispute (And $offer (Not $except))) Excluded
+    return $rule
+end
+
+@:Expert_Testimony graph SpecializedKnowledge ReliableMethod HelpfulToTrier
+    @special has Expert $SpecializedKnowledge
+    @reliable uses Expert $ReliableMethod
+    @helpful is Testimony $HelpfulToTrier
+    @qualify determines Court ExpertQualification
+    @admiss Implies (And $special (And $reliable $helpful)) ExpertTestimonyAdmitted
+    return $admiss
+end
+
+@:Daubert_Standard graph ScientificMethod TestedAndPeerReviewed KnownErrorRate
+    @scientific applies Expert $ScientificMethod
+    @tested is Method $TestedAndPeerReviewed
+    @error has Method $KnownErrorRate
+    @accept has Method GeneralAcceptance
+    @gatekeep applies Court DaubertGatekeeping
+    @admiss Implies (And $scientific (And $tested $error)) ReliableExpertise
+    return $admiss
+end
+
+@:Judicial_Notice graph AdjudicativeFact GenerallyKnown AccurateSource
+    @fact is Item $AdjudicativeFact
+    @known is $fact $GenerallyKnown
+    @accurate verifiable $fact $AccurateSource
+    @notice takes Court $JudicialNotice
+    @rule Implies (And $fact (Or $known $accurate)) NoProofRequired
+    return $rule
+end
+
+@:Best_Evidence_Rule graph DocumentContents OriginalRequired ProveTerms
+    @doc has Writing ImportantTerms
+    @original requires FRE1002 $OriginalRequired
+    @prove seeks Party $ProveTerms
+    @content concerns $prove $DocumentContents
+    @except allows Law DuplicateOrExcuse
+    @rule Implies (And $doc (And $prove (Not $except))) OriginalMandatory
+    return $rule
+end
+
+@:Lay_Opinion_Testimony graph PersonalPerception HelpfulToUnderstand NotExpertise
+    @perceive has Witness $PersonalPerception
+    @helpful is Opinion $HelpfulToUnderstand
+    @not requires Opinion $NotExpertise
+    @rational based Opinion RationallyBased
+    @admiss allows FRE701 LayOpinion
+    @rule Implies (And $perceive (And $helpful $not)) LayOpinionAdmissible
+    return $rule
+end
+
+// Property Law - Real Property
+
+@:Fee_Simple_Absolute graph UnlimitedDuration FullOwnership NoConditions
+    @unlimited has Estate $UnlimitedDuration
+    @full exercises Owner $FullOwnership
+    @no contains Estate $NoConditions
+    @alienable is Estate TransferableDeviseableInheritable
+    @absolute Implies (And $unlimited (And $full $no)) FeeSimpleAbsolute
+    return $absolute
+end
+
+@:Life_Estate graph DurationOfLife PresentPossessory RemainderOrReversion
+    @duration measured Estate $DurationOfLife
+    @present has LifeTenant $PresentPossessory
+    @future creates Estate $RemainderOrReversion
+    @waste prohibits Law CommittingWaste
+    @rule Implies (And $duration (And $present $future)) LifeEstate
+    return $rule
+end
+
+@:Fee_Tail graph LinealDescendants Abolished ModernLaw
+    @lineal limits Estate $LinealDescendants
+    @abolished has $ModernLaw FeeTail
+    @historical was Estate CommonLawEstate
+    @convert transforms ModernCourts FeeSimple
+    @rule Implies (And $lineal $abolished) NoLongerRecognized
+    return $rule
+end
+
+@:Remainder graph FuturePossessory FollowsLifeEstate VestedOrContingent
+    @future is Interest $FuturePossessory
+    @follow comes Interest $FollowsLifeEstate
+    @vested is Remainder VestedRemainder
+    @contingent is Remainder ContingentRemainder
+    @rule Implies (And $future (And $follow (Or $vested $contingent))) RemainderInterest
+    return $rule
+end
+
+@:Reversion graph ReturnToGrantor AfterLesserEstate AutomaticallyCreated
+    @return goes Possession $ReturnToGrantor
+    @after follows $return $AfterLesserEstate
+    @automatic creates Law $AutomaticallyCreated
+    @retain keeps Grantor FutureInterest
+    @rule Implies (And $return (And $after $automatic)) ReversionaryInterest
+    return $rule
+end
+
+@:Easement graph RightToUse AnotherLand NonPossessory
+    @right has Holder $RightToUse
+    @another concerns Right $AnotherLand
+    @non is Interest $NonPossessory
+    @dominant benefits DominantTenement
+    @servient burdens ServientTenement
+    @easement Implies (And $right (And $another $non)) EasementInterest
+    return $easement
+end
+
+@:Easement_Appurtenant graph BenefitsDominant BurdensServient RunsWithLand
+    @benefit helps Easement $BenefitsDominant
+    @burden restricts Easement $BurdensServient
+    @runs transfers Easement $RunsWithLand
+    @permanent is Easement PermanentAttachment
+    @rule Implies (And $benefit (And $burden $runs)) AppurtenantEasement
+    return $rule
+end
+
+@:Easement_In_Gross graph PersonalBenefit NoRequiredDominant CommercialOrPersonal
+    @personal benefits Holder $PersonalBenefit
+    @no requires Easement $NoRequiredDominant
+    @commercial is Type CommercialEasement
+    @transfer allows $commercial Assignability
+    @rule Implies (And $personal $no) EasementInGross
+    return $rule
+end
+
+@:Adverse_Possession graph ContinuousPossession OpenAndNotorious ExclusiveHostile
+    @continuous maintains Possessor $ContinuousPossession
+    @open is Possession $OpenAndNotorious
+    @exclusive holds Possessor $ExclusiveHostile
+    @statutory exceeds Duration StatutoryPeriod
+    @title acquires Possessor TitleByPossession
+    @rule Implies (And $continuous (And $open (And $exclusive $statutory))) AdversePossessionTitle
+    return $rule
+end
+
+@:Covenant_Running_With_Land graph TouchAndConcern IntentToRun NoticeToSubsequent Privity
+    @touch affects Covenant $TouchAndConcern
+    @intent demonstrate Parties $IntentToRun
+    @notice has Purchaser $NoticeToSubsequent
+    @privity exists $Privity OriginalParties
+    @run binds Covenant SuccessorOwners
+    @rule Implies (And $touch (And $intent (And $notice $privity))) RunningCovenant
+    return $rule
+end
+
+@:Equitable_Servitude graph RestrictiveCovenant NoticeToSuccessors EquitableEnforcement
+    @restrict contains Agreement $RestrictiveCovenant
+    @notice has Purchaser $NoticeToSuccessors
+    @equitable enforces Court $EquitableEnforcement
+    @injunction grants Court InjunctiveRelief
+    @rule Implies (And $restrict (And $notice $equitable)) EquitableServitude
+    return $rule
+end
+
+@:Landlord_Tenant_Lease graph PossessionToTenant ReversToLandlord TermOfYears
+    @possess transfers Landlord $PossessionToTenant
+    @revers retains Landlord $ReversToLandlord
+    @term creates Lease $TermOfYears
+    @rent pays Tenant RentalPayment
+    @rule Implies (And $possess (And $revers $term)) LeaseRelationship
+    return $rule
+end
+
+@:Implied_Warranty_Habitability graph ResidentialLease FitForHabitation CannotWaive
+    @residential is Lease $ResidentialLease
+    @fit warrants Landlord $FitForHabitation
+    @cannot bars Law $CannotWaive
+    @breach violates Landlord SubstandardConditions
+    @remedy allows Tenant RepairOrLeave
+    @rule Implies (And $residential (And $fit $breach)) WarrantyBreach
+    return $rule
+end
+
+@:Constructive_Eviction graph SubstantialInterference LandlordBreach TenantLeaves
+    @interfere causes Landlord $SubstantialInterference
+    @breach violates Landlord LeaseCovenant
+    @leave must Tenant $TenantLeaves
+    @excuse relieves $leave RentObligation
+    @rule Implies (And $interfere (And $breach $leave)) ConstructiveEviction
+    return $rule
+end
+
+@:Fixture graph PersonalToReal PermanentAttachment IntentionToPermanent
+    @personal becomes Property $PersonalToReal
+    @permanent has Attachment $PermanentAttachment
+    @intent demonstrates Annexor $IntentionToPermanent
+    @fixture determines Law RealProperty
+    @rule Implies (And $personal (And $permanent $intent)) FixtureStatus
+    return $rule
+end
+
+@:Mortgage graph SecurityInterest RealProperty DebtObligation
+    @security grants Borrower $SecurityInterest
+    @real encumbers Mortgage $RealProperty
+    @debt secures Mortgage $DebtObligation
+    @foreclose may Lender ForeclosureRight
+    @rule Implies (And $security (And $real $debt)) MortgageInterest
+    return $rule
+end
+
+@:Recording_Act graph ProtectsBFP RecordTitle NoticeToSubsequent
+    @protect favors Statute $ProtectsBFP
+    @record requires Law $RecordTitle
+    @notice provides Recording $NoticeToSubsequent
+    @subsequent loses UnrecordedInterest Priority
+    @rule Implies (And $protect (And $record $notice)) RecordingActProtection
+    return $rule
+end
+
+@:Bona_Fide_Purchaser graph ValuePaid GoodFaith NoNotice
+    @value pays Purchaser $ValuePaid
+    @good has Purchaser $GoodFaith
+    @no has Purchaser $NoNotice
+    @protect favors Law BFPStatus
+    @prevail defeats BFP PriorUnrecorded
+    @rule Implies (And $value (And $good $no)) BonafidePurchaser
+    return $rule
+end
+
+@:Zoning_Law graph LandUseRestriction MunicipalRegulation PublicWelfare
+    @restrict regulates Government $LandUseRestriction
+    @municipal enacts Authority $MunicipalRegulation
+    @public serves Zoning $PublicWelfare
+    @variance may Owner SeekException
+    @rule Implies (And $restrict (And $municipal $public)) ZoningPower
+    return $rule
+end
+
+@:Eminent_Domain graph TakingProperty PublicUse JustCompensation
+    @taking exercises Government $TakingProperty
+    @public serves Taking $PublicUse
+    @just requires Constitution $JustCompensation
+    @condemn may Government CondemnProperty
+    @rule Implies (And $taking (And $public $just)) EmergentDomainPower
+    return $rule
+end
+
+@:Nuisance graph UnreasonableInterference UseAndEnjoyment SubstantialHarm
+    @unreason causes Activity $UnreasonableInterference
+    @use affects $unreason $UseAndEnjoyment
+    @substantial creates $unreason $SubstantialHarm
+    @balance weighs Court UtilityVsHarm
+    @remedy may Court Abatement
+    @rule Implies (And $unreason (And $use $substantial)) PrivateNuisance
+    return $rule
+end

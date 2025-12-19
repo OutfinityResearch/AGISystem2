@@ -1,0 +1,1630 @@
+// Literature Theory - Comprehensive DSL
+// Covers genres, elements, devices, periods, and critical approaches
+
+// ====================
+// GENRE DEFINITIONS
+// ====================
+
+@:Poetry_Forms graph Form Meter Rhyme
+    @sonnet hasSonnetForm Work Sonnet
+    @meter hasMeter $sonnet $Meter
+    @rhyme hasRhymeScheme $sonnet $Rhyme
+    @constraint hasLineCount $sonnet Fourteen
+    @structure Implies (And $sonnet (And $meter $rhyme)) PoeticStructure
+    return $structure
+end
+
+@:Epic_Poetry graph Narrative Hero Journey
+    @epic isEpic Work $Narrative
+    @hero hasProtagonist $epic $Hero
+    @journey undertakesJourney $Hero $Journey
+    @scale hasGrandScale $epic True
+    @elevated hasElevatedStyle $epic True
+    @heroic Implies (And $epic (And $hero (And $journey (And $scale $elevated)))) HeroicNarrative
+    return $heroic
+end
+
+@:Lyric_Poetry graph Emotion Speaker Expression
+    @lyric isLyric Work $Expression
+    @speaker hasSpeaker $lyric $Speaker
+    @emotion expressesEmotion $Speaker $Emotion
+    @personal hasPersonalVoice $lyric True
+    @musical hasMusicality $lyric True
+    @subjective Implies (And $lyric (And $speaker (And $emotion (And $personal $musical)))) SubjectiveExpression
+    return $subjective
+end
+
+@:Dramatic_Poetry graph Drama Dialogue Action
+    @dramatic isDramaticPoetry Work $Drama
+    @dialogue hasDialogue $dramatic $Dialogue
+    @action hasAction $dramatic $Action
+    @character hasCharacters $dramatic Multiple
+    @verse usesVerse $dramatic True
+    @theatrical Implies (And $dramatic (And $dialogue (And $action (And $character $verse)))) TheatricalPoetry
+    return $theatrical
+end
+
+@:Haiku_Form graph Nature Moment Brevity
+    @haiku isHaiku Work $Moment
+    @nature evokesNature $haiku $Nature
+    @brevity hasBrevity $haiku True
+    @syllables hasSyllablePattern $haiku FiveSevenFive
+    @present capturesPresent $haiku True
+    @essence Implies (And $haiku (And $nature (And $brevity (And $syllables $present)))) EssentialMoment
+    return $essence
+end
+
+@:Free_Verse graph Liberty Expression Innovation
+    @free isFreeVerse Work $Expression
+    @noMeter lacksMeter $free True
+    @noRhyme lacksRhyme $free True
+    @organic hasOrganicForm $free True
+    @innovation allowsInnovation $free $Innovation
+    @freedom Implies (And $free (And $noMeter (And $noRhyme (And $organic $innovation)))) PoeticFreedom
+    return $freedom
+end
+
+@:Villanelle_Pattern graph Repetition Refrain Complexity
+    @villanelle isVillanelle Work $Complexity
+    @refrain hasRefrain $villanelle $Refrain
+    @repetition usesRepetition $villanelle $Repetition
+    @tercets hasStanzaType $villanelle Tercets
+    @lines hasLineCount $villanelle Nineteen
+    @intricate Implies (And $villanelle (And $refrain (And $repetition (And $tercets $lines)))) IntricatePattern
+    return $intricate
+end
+
+@:Novel_Form graph Prose Narrative Length
+    @novel isNovel Work $Narrative
+    @prose usesProse $novel True
+    @extended hasExtendedLength $novel True
+    @complex hasComplexPlot $novel True
+    @developed hasDevelopedCharacters $novel True
+    @fiction Implies (And $novel (And $prose (And $extended (And $complex $developed)))) ExtendedFiction
+    return $fiction
+end
+
+@:Short_Story graph Brevity Focus Unity
+    @story isShortStory Work $Unity
+    @brief hasBriefLength $story True
+    @focused hasSingleFocus $story $Focus
+    @unified hasUnifiedEffect $story True
+    @condensed usesCondensation $story True
+    @compact Implies (And $story (And $brief (And $focused (And $unified $condensed)))) CompactNarrative
+    return $compact
+end
+
+@:Novella_Length graph Medium Scope Development
+    @novella isNovella Work $Development
+    @medium hasMediumLength $novella True
+    @focused hasNarrowScope $novella $Scope
+    @depth allowsDepth $novella $Development
+    @concentrated hasConcentratedAction $novella True
+    @intermediate Implies (And $novella (And $medium (And $focused (And $depth $concentrated)))) IntermediateForm
+    return $intermediate
+end
+
+@:Tragedy_Genre graph Conflict Downfall Catharsis
+    @tragedy isTragedy Work $Catharsis
+    @hero hastragicHero $tragedy $Hero
+    @flaw hasTrafficFlaw $Hero $Flaw
+    @downfall leadsToDownfall $flaw $Downfall
+    @catharsis producesCatharsis $downfall $Catharsis
+    @pity evokesPity $tragedy True
+    @fear evokesFear $tragedy True
+    @tragic Implies (And $tragedy (And $hero (And $flaw (And $downfall (And $catharsis (And $pity $fear)))))) TragicEffect
+    return $tragic
+end
+
+@:Comedy_Genre graph Humor Resolution Happiness
+    @comedy isComedy Work $Happiness
+    @humor usesHumor $comedy True
+    @conflict hasConflict $comedy $Conflict
+    @resolution hasHappyResolution $comedy $Resolution
+    @social addressesSocialIssues $comedy True
+    @joy createsJoy $resolution $Happiness
+    @comic Implies (And $comedy (And $humor (And $conflict (And $resolution (And $social $joy))))) ComicEffect
+    return $comic
+end
+
+@:Satire_Mode graph Criticism Irony Reform
+    @satire isSatire Work $Reform
+    @target hasTarget $satire $Target
+    @criticism usesCriticism $satire $Criticism
+    @irony employsIrony $satire $Irony
+    @ridicule usesRidicule $satire True
+    @purpose aimsToreform $satire $Reform
+    @satirical Implies (And $satire (And $target (And $criticism (And $irony (And $ridicule $purpose))))) SatiricalIntent
+    return $satirical
+end
+
+@:Romance_Genre graph Love Quest Idealization
+    @romance isRomance Work $Quest
+    @love focusesOnLove $romance True
+    @hero hasRomanticHero $romance $Hero
+    @quest undertakesQuest $Hero $Quest
+    @idealized hasIdealization $romance True
+    @adventure involvesAdventure $romance True
+    @romantic Implies (And $romance (And $love (And $hero (And $quest (And $idealized $adventure))))) RomanticNarrative
+    return $romantic
+end
+
+@:Gothic_Fiction graph Mystery Horror Supernatural
+    @gothic isGothic Work $Horror
+    @atmosphere hasDarkAtmosphere $gothic True
+    @mystery containsMystery $gothic $Mystery
+    @supernatural includesSupernatural $gothic $Supernatural
+    @setting hasGothicSetting $gothic Castle
+    @terror evokesTerror $gothic $Horror
+    @dark Implies (And $gothic (And $atmosphere (And $mystery (And $supernatural (And $setting $terror))))) DarkRomance
+    return $dark
+end
+
+@:Science_Fiction graph Speculation Technology Future
+    @scifi isScienceFiction Work $Future
+    @technology exploresTechnology $scifi $Technology
+    @speculation usesSpeculation $scifi True
+    @future projectsFuture $scifi $Future
+    @science basedonScience $scifi True
+    @whatif asksWhatIf $scifi True
+    @speculative Implies (And $scifi (And $technology (And $speculation (And $future (And $science $whatif))))) SpeculativeFiction
+    return $speculative
+end
+
+@:Fantasy_Genre graph Magic WorldBuilding Imagination
+    @fantasy isFantasy Work $WorldBuilding
+    @magic includesMagic $fantasy True
+    @world createsWorld $fantasy $WorldBuilding
+    @imagination usesImagination $fantasy True
+    @supernatural hasSupernaturalElements $fantasy True
+    @alternate createsAlternateReality $fantasy True
+    @fantastical Implies (And $fantasy (And $magic (And $world (And $imagination (And $supernatural $alternate))))) FantasticalNarrative
+    return $fantastical
+end
+
+@:Mystery_Genre graph Crime Investigation Solution
+    @mystery isMystery Work $Solution
+    @crime presentsCrime $mystery $Crime
+    @detective hasDetective $mystery $Detective
+    @investigation conductsinvestigation $Detective $Investigation
+    @clues providesClues $mystery $Clues
+    @solution revealsolution $investigation $Solution
+    @suspense Implies (And $mystery (And $crime (And $detective (And $investigation (And $clues $solution))))) SuspensefulNarrative
+    return $suspense
+end
+
+@:Realism_Mode graph Verisimilitude Ordinary Contemporary
+    @realism isRealism Work $Contemporary
+    @truthful seeksTruthfulness $realism True
+    @ordinary depictsOrdinary $realism $Ordinary
+    @contemporary reflectsContemporary $realism $Contemporary
+    @detailed usesDetailedDescription $realism True
+    @plausible maintainsPlausibility $realism True
+    @realistic Implies (And $realism (And $truthful (And $ordinary (And $contemporary (And $detailed $plausible))))) RealisticRepresentation
+    return $realistic
+end
+
+@:Naturalism_Mode graph Determinism Environment Forces
+    @naturalism isNaturalism Work $Forces
+    @deterministic embracesDeterminism $naturalism True
+    @environment emphasizesEnvironment $naturalism $Environment
+    @forces showsSocialForces $naturalism $Forces
+    @scientific usesScientificApproach $naturalism True
+    @pessimistic hasPessimisticView $naturalism True
+    @deterministic_view Implies (And $naturalism (And $deterministic (And $environment (And $forces (And $scientific $pessimistic))))) DeterministicNarrative
+    return $deterministic_view
+end
+
+@:Modernism_Movement graph Experimentation Fragmentation Consciousness
+    @modernism isModernism Work $Consciousness
+    @experimental usesExperimentation $modernism True
+    @fragmented hasFragmentation $modernism $Fragmentation
+    @stream usesStreamOfConsciousness $modernism $Consciousness
+    @traditional rejectsTraditional $modernism True
+    @subjective emphasizesSubjective $modernism True
+    @modern Implies (And $modernism (And $experimental (And $fragmented (And $stream (And $traditional $subjective))))) ModernistAesthetic
+    return $modern
+end
+
+@:Postmodernism_Movement graph Irony Pastiche Metafiction
+    @postmodern isPostmodernism Work $Metafiction
+    @ironic usesIrony $postmodern True
+    @pastiche employsPastiche $postmodern $Pastiche
+    @meta usesMetafiction $postmodern $Metafiction
+    @playful hasPlayfulness $postmodern True
+    @skeptical showsSkepticism $postmodern True
+    @postmodern_view Implies (And $postmodern (And $ironic (And $pastiche (And $meta (And $playful $skeptical))))) PostmodernistAesthetic
+    return $postmodern_view
+end
+
+@:Magical_Realism graph Reality Magic Synthesis
+    @magical isMagicalRealism Work $Synthesis
+    @realistic hasRealisticSetting $magical True
+    @magic includesMagicalElements $magical $Magic
+    @matter_of_fact presentsMagicMatterOfFactly $magical True
+    @blend blendsMagicReality $magical $Synthesis
+    @seamless hasSeamlessIntegration $magical True
+    @hybrid Implies (And $magical (And $realistic (And $magic (And $matter_of_fact (And $blend $seamless))))) HybridMode
+    return $hybrid
+end
+
+// ====================
+// PLOT STRUCTURES
+// ====================
+
+@:Three_Act_Structure graph Setup Confrontation Resolution
+    @three_act hasThreeActStructure Work $Resolution
+    @setup hasSetup $three_act $Setup
+    @confrontation hasConfrontation $three_act $Confrontation
+    @resolution hasResolution $three_act $Resolution
+    @turning hasTurningPoints $three_act Two
+    @dramatic Implies (And $three_act (And $setup (And $confrontation (And $resolution $turning)))) DramaticStructure
+    return $dramatic
+end
+
+@:Freytag_Pyramid graph Exposition Rising Climax Falling Denouement
+    @pyramid hasFreytagStructure Work $Denouement
+    @exposition hasExposition $pyramid $Exposition
+    @rising hasRisingAction $pyramid $Rising
+    @climax hasClimax $pyramid $Climax
+    @falling hasFallingAction $pyramid $Falling
+    @denouement hasDenouement $pyramid $Denouement
+    @five_part Implies (And $pyramid (And $exposition (And $rising (And $climax (And $falling $denouement))))) FivePartStructure
+    return $five_part
+end
+
+@:Heros_Journey graph Departure Initiation Return
+    @journey hasHerosJourney Work $Return
+    @ordinary startsInOrdinaryWorld $journey True
+    @call receivesCall $journey $Call
+    @departure leavesonDeparture $journey $Departure
+    @initiation undergoesInitiation $journey $Initiation
+    @return completsReturn $journey $Return
+    @transformation achievesTransformation $journey True
+    @monomyth Implies (And $journey (And $ordinary (And $call (And $departure (And $initiation (And $return $transformation)))))) Monomyth
+    return $monomyth
+end
+
+@:In_Medias_Res graph Middle Flashback Context
+    @medias beginsInMediasRes Work $Context
+    @middle startsInMiddle $medias True
+    @action beginsWithAction $medias True
+    @flashback usesFlashback $medias $Flashback
+    @context providesContext $flashback $Context
+    @nonlinear hasNonlinearNarrative $medias True
+    @immediate Implies (And $medias (And $middle (And $action (And $flashback (And $context $nonlinear))))) ImmediateEngagement
+    return $immediate
+end
+
+@:Frame_Narrative graph Outer Inner Nested
+    @frame hasFrameNarrative Work $Nested
+    @outer hasOuterStory $frame $Outer
+    @inner hasInnerStory $frame $Inner
+    @nested embedsStory $outer $Nested
+    @levels hasMultipleLevels $frame True
+    @distance createsDistance $frame True
+    @embedded Implies (And $frame (And $outer (And $inner (And $nested (And $levels $distance))))) EmbeddedNarrative
+    return $embedded
+end
+
+@:Parallel_Plot graph Multiple Threads Convergence
+    @parallel hasParallelPlots Work $Convergence
+    @multiple hasMultipleThreads $parallel $Multiple
+    @simultaneous occursSimultaneously $multiple True
+    @interweave interweavesThreads $parallel True
+    @convergence leadsToConvergence $parallel $Convergence
+    @complexity increasesComplexity $parallel True
+    @multiplot Implies (And $parallel (And $multiple (And $simultaneous (And $interweave (And $convergence $complexity))))) MultiplotStructure
+    return $multiplot
+end
+
+@:Episodic_Structure graph Episodes Connection Unity
+    @episodic hasEpisodicStructure Work $Unity
+    @episodes consistsOfEpisodes $episodic $Episodes
+    @loosely hasLooseConnection $episodes True
+    @independent hasIndependentUnits $episodic True
+    @recurring hasRecurringElements $episodic True
+    @overall achievesOverallUnity $episodic $Unity
+    @serial Implies (And $episodic (And $episodes (And $loosely (And $independent (And $recurring $overall))))) SerialStructure
+    return $serial
+end
+
+@:Circular_Structure graph Beginning End Return
+    @circular hasCircularStructure Work $Return
+    @beginning startsAt $circular $Beginning
+    @end endsAt $circular $End
+    @return returnsTobBeginning $end $Return
+    @symmetry hasSymmetry $circular True
+    @cyclical createsCyclicalEffect $circular True
+    @closed Implies (And $circular (And $beginning (And $end (And $return (And $symmetry $cyclical))))) ClosedForm
+    return $closed
+end
+
+@:Quest_Plot graph Goal Journey Obstacles Achievement
+    @quest hasQuestPlot Work $Achievement
+    @goal hasGoal $quest $Goal
+    @journey undertakesJourney $quest $Journey
+    @obstacles facesObstacles $journey $Obstacles
+    @achievement reachesAchievement $quest $Achievement
+    @transformation undergoesgrowth $quest True
+    @adventure Implies (And $quest (And $goal (And $journey (And $obstacles (And $achievement $transformation))))) AdventurePlot
+    return $adventure
+end
+
+@:Tragedy_Plot graph Hamartia Peripeteia Anagnorisis Catastrophe
+    @trag_plot hasTragicPlot Work $Catastrophe
+    @hamartia hasHamartia $trag_plot $Hamartia
+    @peripeteia hasPeripeteia $trag_plot $Peripeteia
+    @anagnorisis hasAnagnorisis $trag_plot $Anagnorisis
+    @catastrophe leadsToCatastrophe $trag_plot $Catastrophe
+    @inevitable hasInevitability $trag_plot True
+    @aristotelian Implies (And $trag_plot (And $hamartia (And $peripeteia (And $anagnorisis (And $catastrophe $inevitable))))) AristotelianTragedy
+    return $aristotelian
+end
+
+@:Rags_To_Riches graph Poverty Acquisition Success
+    @rags hasRagsToRichesPlot Work $Success
+    @poverty startsInPoverty $rags True
+    @struggle facesStruggle $rags $Struggle
+    @acquisition gainsWealth $rags $Acquisition
+    @success achievesSuccess $rags $Success
+    @transformation undergoesSocialRise $rags True
+    @aspirational Implies (And $rags (And $poverty (And $struggle (And $acquisition (And $success $transformation))))) AspirationalNarrative
+    return $aspirational
+end
+
+@:Overcoming_Monster graph Monster Hero Battle Victory
+    @monster hasOvercomingMonsterPlot Work $Victory
+    @threat facesMonster $monster $Monster
+    @hero hasHero $monster $Hero
+    @battle engagesinBattle $hero $Battle
+    @victory achievesVictory $battle $Victory
+    @triumph createsTriumph $victory True
+    @heroic_quest Implies (And $monster (And $threat (And $hero (And $battle (And $victory $triumph))))) HeroicQuest
+    return $heroic_quest
+end
+
+@:Rebirth_Plot graph Darkness Redemption Renewal
+    @rebirth hasRebirthPlot Work $Renewal
+    @darkness fallsIntoDarkness $rebirth $Darkness
+    @trapped becomesTrapped $rebirth True
+    @catalyst encountersCatalyst $rebirth $Catalyst
+    @redemption achievesRedemption $rebirth $Redemption
+    @renewal experiencesRenewal $redemption $Renewal
+    @transformation Implies (And $rebirth (And $darkness (And $trapped (And $catalyst (And $redemption $renewal))))) TransformationPlot
+    return $transformation
+end
+
+// ====================
+// CHARACTER TYPES
+// ====================
+
+@:Protagonist_Role graph Main Drive Conflict
+    @protagonist isProtagonist Character $Drive
+    @central hasCentralRole $protagonist True
+    @drive hasDrive $protagonist $Drive
+    @conflict facesMainConflict $protagonist $Conflict
+    @change undergoesChange $protagonist True
+    @reader engagesReader $protagonist True
+    @main Implies (And $protagonist (And $central (And $drive (And $conflict (And $change $reader))))) MainCharacter
+    return $main
+end
+
+@:Antagonist_Role graph Opposition Conflict Obstacle
+    @antagonist isAntagonist Character $Obstacle
+    @opposes opposesProtagonist $antagonist True
+    @conflict createsConflict $antagonist $Conflict
+    @obstacle presentsObstacle $antagonist $Obstacle
+    @motivation hasMotivation $antagonist $Motivation
+    @force drivesPlot $antagonist True
+    @opposing Implies (And $antagonist (And $opposes (And $conflict (And $obstacle (And $motivation $force))))) OpposingForce
+    return $opposing
+end
+
+@:Round_Character graph Complex Depth Development
+    @round isRoundCharacter Character $Development
+    @complex hasComplexity $round True
+    @depth hasDepth $round $Depth
+    @multifaceted hasMultipleFacets $round True
+    @realistic seemsRealistic $round True
+    @develops undergoesDevelopment $round $Development
+    @dimensional Implies (And $round (And $complex (And $depth (And $multifaceted (And $realistic $develops))))) ThreeDimensional
+    return $dimensional
+end
+
+@:Flat_Character graph Simple Single Unchanging
+    @flat isFlatCharacter Character $Single
+    @simple hasSimplicity $flat True
+    @single hasSingleTrait $flat $Single
+    @unchanging remainsUnchanging $flat True
+    @predictable isPredictable $flat True
+    @functional servesFunctionalRole $flat True
+    @onedimensional Implies (And $flat (And $simple (And $single (And $unchanging (And $predictable $functional))))) OneDimensional
+    return $onedimensional
+end
+
+@:Dynamic_Character graph Change Growth Arc
+    @dynamic isDynamicCharacter Character $Arc
+    @changes undergoesChange $dynamic True
+    @growth experiencesGrowth $dynamic $Growth
+    @arc hasCharacterArc $dynamic $Arc
+    @evolves evolvesOverTime $dynamic True
+    @transformed becomesTransformed $dynamic True
+    @developing Implies (And $dynamic (And $changes (And $growth (And $arc (And $evolves $transformed))))) DevelopingCharacter
+    return $developing
+end
+
+@:Static_Character graph Stable Consistent Unchanged
+    @static isStaticCharacter Character $Consistent
+    @stable remainsStable $static True
+    @consistent maintainsConsistency $static $Consistent
+    @unchanged staysUnchanged $static True
+    @constant providesConstant $static True
+    @anchor servesAsAnchor $static True
+    @unchanging Implies (And $static (And $stable (And $consistent (And $unchanged (And $constant $anchor))))) UnchangingCharacter
+    return $unchanging
+end
+
+@:Foil_Character graph Contrast Highlight Difference
+    @foil isFoilCharacter Character $Difference
+    @contrasts contrastsWithProtagonist $foil True
+    @opposite hasOppositeTraits $foil $Opposite
+    @highlights highlightsQualities $foil $Highlight
+    @comparison createsComparison $foil True
+    @difference emphasizesDifference $foil $Difference
+    @contrasting Implies (And $foil (And $contrasts (And $opposite (And $highlights (And $comparison $difference))))) ContrastingCharacter
+    return $contrasting
+end
+
+@:Stock_Character graph Stereotype Conventional Recognizable
+    @stock isStockCharacter Character $Recognizable
+    @stereotypical isStereotypical $stock True
+    @conventional followsConvention $stock $Conventional
+    @recognizable isRecognizable $stock $Recognizable
+    @familiar seemsFamiliar $stock True
+    @shorthand providesShorthand $stock True
+    @archetypal Implies (And $stock (And $stereotypical (And $conventional (And $recognizable (And $familiar $shorthand))))) ArchetypalCharacter
+    return $archetypal
+end
+
+@:Antihero_Character graph Flawed Unconventional Sympathy
+    @antihero isAntihero Character $Sympathy
+    @flawed hasSignificantFlaws $antihero True
+    @unconventional lacksHeroicTraits $antihero True
+    @moral hasMoralAmbiguity $antihero $Moral
+    @sympathy evokessympathy $antihero $Sympathy
+    @relatable seemsRelatable $antihero True
+    @complex Implies (And $antihero (And $flawed (And $unconventional (And $moral (And $sympathy $relatable))))) ComplexProtagonist
+    return $complex
+end
+
+@:Tragic_Hero graph Noble Flaw Downfall Catharsis
+    @tragic_hero isTragicHero Character $Catharsis
+    @noble hasNobleQualities $tragic_hero True
+    @flaw hasTragifllaw $tragic_hero $Flaw
+    @downfall suffersDownfall $tragic_hero $Downfall
+    @recognition achievesRecognition $tragic_hero True
+    @catharsis evokesCatharsis $tragic_hero $Catharsis
+    @aristotelian_hero Implies (And $tragic_hero (And $noble (And $flaw (And $downfall (And $recognition $catharsis))))) AristotelianHero
+    return $aristotelian_hero
+end
+
+@:Narrator_Perspective graph Voice Reliability Point_Of_View
+    @narrator isNarrator Character $Point_Of_View
+    @voice hasNarrativeVoice $narrator $Voice
+    @perspective hasPerpsective $narrator $Point_Of_View
+    @reliability hasReliability $narrator $Reliability
+    @distance createsNarrativeDistance $narrator $Distance
+    @mediates mediatesStory $narrator True
+    @narrative_function Implies (And $narrator (And $voice (And $perspective (And $reliability (And $distance $mediates))))) NarrativeFunction
+    return $narrative_function
+end
+
+// ====================
+// LITERARY DEVICES
+// ====================
+
+@:Metaphor_Device graph Comparison Implicit Meaning
+    @metaphor isMetaphor Device $Meaning
+    @comparison makesComparison $metaphor True
+    @implicit isImplicit $metaphor True
+    @tenor hasTenor $metaphor $Tenor
+    @vehicle hasVehicle $metaphor $Vehicle
+    @meaning createsMeaning $metaphor $Meaning
+    @figurative Implies (And $metaphor (And $comparison (And $implicit (And $tenor (And $vehicle $meaning))))) FigurativeLanguage
+    return $figurative
+end
+
+@:Simile_Device graph Comparison Explicit Like_As
+    @simile isSimile Device $Like_As
+    @comparison makesComparison $simile True
+    @explicit isExplicit $simile True
+    @like usesLike $simile $Like_As
+    @as usesAs $simile $Like_As
+    @clear makesClearComparison $simile True
+    @figurative_sim Implies (And $simile (And $comparison (And $explicit (And $like (And $as $clear))))) FigurativeComparison
+    return $figurative_sim
+end
+
+@:Personification_Device graph Human NonHuman Attribution
+    @personification isPersonification Device $Attribution
+    @human attributesHumanTraits $personification True
+    @nonhuman appliestoNonHuman $personification $NonHuman
+    @qualities givesHumanQualities $personification $Attribution
+    @vivid createsVividImagery $personification True
+    @animate animatesInanimate $personification True
+    @anthropomorphic Implies (And $personification (And $human (And $nonhuman (And $qualities (And $vivid $animate))))) AnthropomorphicDevice
+    return $anthropomorphic
+end
+
+@:Symbolism_Device graph Object Meaning Representation
+    @symbolism isSymbolism Device $Representation
+    @object hasSymbolicObject $symbolism $Object
+    @meaning representsAbstractMeaning $object $Meaning
+    @deeper hasDeererSignificance $symbolism True
+    @representation createsRepresentation $symbolism $Representation
+    @interpretive requiresInterpretation $symbolism True
+    @symbolic Implies (And $symbolism (And $object (And $meaning (And $deeper (And $representation $interpretive))))) SymbolicMeaning
+    return $symbolic
+end
+
+@:Allegory_Device graph Extended Metaphor Moral
+    @allegory isAllegory Device $Moral
+    @extended isExtendedMetaphor $allegory True
+    @narrative hasNarrativeSurface $allegory $Surface
+    @deeper hasDeeperMeaning $allegory $Deeper
+    @moral conveysMoral $allegory $Moral
+    @systematic hasSystematicCorrespondence $allegory True
+    @allegorical Implies (And $allegory (And $extended (And $narrative (And $deeper (And $moral $systematic))))) AllegoricalMeaning
+    return $allegorical
+end
+
+@:Irony_Device graph Contrast Expectation Reality
+    @irony isIrony Device $Reality
+    @contrast createsContrast $irony True
+    @expectation setsExpectation $irony $Expectation
+    @reality revealsReality $irony $Reality
+    @opposite showsOpposite $irony True
+    @effect createsIronicEffect $irony True
+    @ironic Implies (And $irony (And $contrast (And $expectation (And $reality (And $opposite $effect))))) IronicMeaning
+    return $ironic
+end
+
+@:Foreshadowing_Device graph Hint Future Anticipation
+    @foreshadow isForeshadowing Device $Anticipation
+    @hint providesHint $foreshadow $Hint
+    @future pointsToFuture $foreshadow $Future
+    @anticipation createsAnticipation $foreshadow $Anticipation
+    @suspense buildsSuspense $foreshadow True
+    @prepare preparesReader $foreshadow True
+    @anticipatory Implies (And $foreshadow (And $hint (And $future (And $anticipation (And $suspense $prepare))))) AnticipatoryDevice
+    return $anticipatory
+end
+
+@:Flashback_Device graph Past Interruption Context
+    @flashback isFlashback Device $Context
+    @interrupts interruptsChronology $flashback True
+    @past returnsTopast $flashback $Past
+    @context providesContext $flashback $Context
+    @memory revealsMemory $flashback True
+    @backstory givesBackstory $flashback True
+    @retrospective Implies (And $flashback (And $interrupts (And $past (And $context (And $memory $backstory))))) RetrospectiveDevice
+    return $retrospective
+end
+
+@:Imagery_Device graph Sensory Vivid Experience
+    @imagery isImagery Device $Experience
+    @sensory usesSensoryDetails $imagery True
+    @visual createsVisualImage $imagery $Visual
+    @vivid hasVividDescription $imagery True
+    @experience createsExperience $imagery $Experience
+    @concrete usesConcreteDetails $imagery True
+    @descriptive Implies (And $imagery (And $sensory (And $visual (And $vivid (And $experience $concrete))))) DescriptiveLanguage
+    return $descriptive
+end
+
+@:Alliteration_Device graph Repetition Sound Beginning
+    @alliteration isAlliteration Device $Sound
+    @repetition repeatsSound $alliteration True
+    @initial atBeginning $alliteration True
+    @consonant usesConsonantSound $alliteration $Sound
+    @musical createsMusicality $alliteration True
+    @emphasis createsEmphasis $alliteration True
+    @sonic Implies (And $alliteration (And $repetition (And $initial (And $consonant (And $musical $emphasis))))) SonicDevice
+    return $sonic
+end
+
+@:Assonance_Device graph Vowel Repetition Sound
+    @assonance isAssonance Device $Sound
+    @vowel repeatsVowelSound $assonance $Sound
+    @internal occursInternally $assonance True
+    @musical createsMusicality $assonance True
+    @rhyme createsInternalRhyme $assonance True
+    @melodic producedMelodicEffect $assonance True
+    @vocalic Implies (And $assonance (And $vowel (And $internal (And $musical (And $rhyme $melodic))))) VocalicDevice
+    return $vocalic
+end
+
+@:Onomatopoeia_Device graph Sound Word Imitation
+    @onomatopoeia isOnomatopoeia Device $Imitation
+    @sound imitatesSound $onomatopoeia True
+    @word hasWordForm $onomatopoeia $Word
+    @imitation createsImitation $onomatopoeia $Imitation
+    @vivid createsVividEffect $onomatopoeia True
+    @direct hasDirectRepresentation $onomatopoeia True
+    @imitative Implies (And $onomatopoeia (And $sound (And $word (And $imitation (And $vivid $direct))))) ImitativeDevice
+    return $imitative
+end
+
+@:Hyperbole_Device graph Exaggeration Effect Emphasis
+    @hyperbole isHyperbole Device $Emphasis
+    @exaggeration usesExaggeration $hyperbole True
+    @extreme hasExtremeStatement $hyperbole $Extreme
+    @effect createsEffect $hyperbole $Effect
+    @emphasis createsEmphasis $hyperbole $Emphasis
+    @not_literal isNotLiteral $hyperbole True
+    @exaggerated Implies (And $hyperbole (And $exaggeration (And $extreme (And $effect (And $emphasis $not_literal))))) ExaggeratedLanguage
+    return $exaggerated
+end
+
+@:Understatement_Device graph Minimization Ironic Effect
+    @understatement isUnderstatement Device $Effect
+    @minimizes minimizesImportance $understatement True
+    @downplays downplaysSeriousness $understatement True
+    @ironic hasIronicEffect $understatement $Effect
+    @deliberate isDeliberate $understatement True
+    @restrained usesRestraint $understatement True
+    @understated Implies (And $understatement (And $minimizes (And $downplays (And $ironic (And $deliberate $restrained))))) UnderstatedLanguage
+    return $understated
+end
+
+@:Paradox_Device graph Contradiction Truth Insight
+    @paradox isParadox Device $Insight
+    @contradiction hasContradiction $paradox True
+    @apparent isApparentlyAbsurd $paradox True
+    @truth revealsTruth $paradox $Truth
+    @insight providesInsight $paradox $Insight
+    @thoughtprovoking isThoughtProvoking $paradox True
+    @paradoxical Implies (And $paradox (And $contradiction (And $apparent (And $truth (And $insight $thoughtprovoking))))) ParadoxicalMeaning
+    return $paradoxical
+end
+
+@:Oxymoron_Device graph Contradictory Adjacent Tension
+    @oxymoron isOxymoron Device $Tension
+    @contradictory hasContradictoryTerms $oxymoron True
+    @adjacent placesAdjacent $oxymoron True
+    @tension createsTension $oxymoron $Tension
+    @compact hasCompactForm $oxymoron True
+    @striking createsStrikingEffect $oxymoron True
+    @contradictory_phrase Implies (And $oxymoron (And $contradictory (And $adjacent (And $tension (And $compact $striking))))) ContradictoryPhrase
+    return $contradictory_phrase
+end
+
+@:Allusion_Device graph Reference Knowledge Context
+    @allusion isAllusion Device $Context
+    @reference makesReference $allusion $Reference
+    @external refersToExternal $allusion True
+    @knowledge requiresKnowledge $allusion $Knowledge
+    @context addsContext $allusion $Context
+    @enriches enrichesMeaning $allusion True
+    @intertextual Implies (And $allusion (And $reference (And $external (And $knowledge (And $context $enriches))))) IntertextualReference
+    return $intertextual
+end
+
+@:Motif_Device graph Recurring Pattern Meaning
+    @motif isMotif Device $Meaning
+    @recurring isRecurring $motif True
+    @element hasRecurringElement $motif $Element
+    @pattern createsPattern $motif $Pattern
+    @meaning contributesToMeaning $motif $Meaning
+    @thematic hasThematicSignificance $motif True
+    @recurrent Implies (And $motif (And $recurring (And $element (And $pattern (And $meaning $thematic))))) RecurrentElement
+    return $recurrent
+end
+
+@:Stream_Of_Consciousness graph Interior Flow Unfiltered
+    @stream isStreamOfConsciousness Device $Flow
+    @interior revealsInteriorThoughts $stream True
+    @flow hasUninterruptedFlow $stream $Flow
+    @unfiltered isUnfiltered $stream True
+    @associative usesAssociativeLogic $stream True
+    @realistic mimicsRealisticThought $stream True
+    @psychological Implies (And $stream (And $interior (And $flow (And $unfiltered (And $associative $realistic))))) PsychologicalRealism
+    return $psychological
+end
+
+@:Free_Indirect_Discourse graph Third_Person Interior Blend
+    @free_indirect isFreeIndirectDiscourse Device $Blend
+    @third_person usesThirdPerson $free_indirect True
+    @interior accessesInterior $free_indirect $Interior
+    @blend blendsPerspectives $free_indirect $Blend
+    @intimate createsIntimacy $free_indirect True
+    @flexible allowsFlexibility $free_indirect True
+    @narrative_mode Implies (And $free_indirect (And $third_person (And $interior (And $blend (And $intimate $flexible))))) NarrativeMode
+    return $narrative_mode
+end
+
+@:Unreliable_Narrator graph Narrator Distortion Reader
+    @unreliable isUnreliableNarrator Device $Reader
+    @narrator hasNarrator $unreliable $Narrator
+    @distortion createsDistortion $unreliable $Distortion
+    @limited hasLimitedPerspective $unreliable True
+    @biased isBiased $unreliable True
+    @reader engagesReader $unreliable $Reader
+    @perspective_play Implies (And $unreliable (And $narrator (And $distortion (And $limited (And $biased $reader))))) PerspectivePlay
+    return $perspective_play
+end
+
+// ====================
+// THEMES
+// ====================
+
+@:Love_Theme graph Romance Passion Relationship
+    @love isLoveTheme Theme $Relationship
+    @romance exploresRomance $love True
+    @passion depictsPassion $love $Passion
+    @relationship examinseRelationship $love $Relationship
+    @emotional hasEmotionalDepth $love True
+    @universal isUniversal $love True
+    @romantic Implies (And $love (And $romance (And $passion (And $relationship (And $emotional $universal))))) RomanticTheme
+    return $romantic
+end
+
+@:Death_Theme graph Mortality Loss Grief
+    @death isDeathTheme Theme $Grief
+    @mortality confrontsMortality $death True
+    @loss depictsLoss $death $Loss
+    @grief exploresGrief $death $Grief
+    @inevitable addressesInevitability $death True
+    @profound hasProfoundImpact $death True
+    @mortal Implies (And $death (And $mortality (And $loss (And $grief (And $inevitable $profound))))) MortalityTheme
+    return $mortal
+end
+
+@:Identity_Theme graph Self Discovery Transformation
+    @identity isIdentityTheme Theme $Transformation
+    @self exploresSelf $identity True
+    @discovery involvesSelfDiscovery $identity $Discovery
+    @question questionsIdentity $identity True
+    @transformation involvesTransformation $identity $Transformation
+    @development showsDevelopment $identity True
+    @existential Implies (And $identity (And $self (And $discovery (And $question (And $transformation $development))))) ExistentialTheme
+    return $existential
+end
+
+@:Power_Theme graph Authority Control Corruption
+    @power isPowerTheme Theme $Corruption
+    @authority examinespAuthorrity $power True
+    @control depictsControl $power $Control
+    @corruption showsCorruption $power $Corruption
+    @struggle showsPowerStruggle $power True
+    @political hasPoliticalDimension $power True
+    @political_theme Implies (And $power (And $authority (And $control (And $corruption (And $struggle $political))))) PoliticalTheme
+    return $political_theme
+end
+
+@:Freedom_Theme graph Liberty Oppression Struggle
+    @freedom isFreedomTheme Theme $Struggle
+    @liberty valuesLiberty $freedom True
+    @oppression depictsOppression $freedom $Oppression
+    @struggle showsStruggle $freedom $Struggle
+    @individual emphasizesIndividual $freedom True
+    @collective addressesCollective $freedom True
+    @liberation Implies (And $freedom (And $liberty (And $oppression (And $struggle (And $individual $collective))))) LiberationTheme
+    return $liberation
+end
+
+@:Justice_Theme graph Right Wrong Fairness
+    @justice isJusticeTheme Theme $Fairness
+    @right examinesRight $justice True
+    @wrong confrontsWrong $justice $Wrong
+    @fairness seeksFairness $justice $Fairness
+    @moral hasMoralDimension $justice True
+    @social hasSocialDimension $justice True
+    @ethical Implies (And $justice (And $right (And $wrong (And $fairness (And $moral $social))))) EthicalTheme
+    return $ethical
+end
+
+@:Nature_Theme graph Environment Harmony Conflict
+    @nature isNatureTheme Theme $Conflict
+    @environment depictsNature $nature $Environment
+    @harmony showsHarmony $nature $Harmony
+    @conflict showsConflict $nature $Conflict
+    @human addressesHumanRelation $nature True
+    @pastoral hasPastoralElements $nature True
+    @ecological Implies (And $nature (And $environment (And $harmony (And $conflict (And $human $pastoral))))) EcologicalTheme
+    return $ecological
+end
+
+@:Alienation_Theme graph Isolation Disconnection Society
+    @alienation isAlienationTheme Theme $Society
+    @isolation depictsIsolation $alienation True
+    @disconnection showsDisconnection $alienation $Disconnection
+    @society examinesSociety $alienation $Society
+    @modern reflectsModernCondition $alienation True
+    @existential hasExistentialDimension $alienation True
+    @modern_condition Implies (And $alienation (And $isolation (And $disconnection (And $society (And $modern $existential))))) ModernCondition
+    return $modern_condition
+end
+
+@:Coming_Of_Age graph Youth Maturity Initiation
+    @coming_of_age isComingOfAgeTheme Theme $Initiation
+    @youth depictsYouth $coming_of_age True
+    @maturity movesTowardMaturity $coming_of_age $Maturity
+    @initiation involvesInitiation $coming_of_age $Initiation
+    @loss involvesLossOfInnocence $coming_of_age True
+    @growth showsGrowth $coming_of_age True
+    @bildungsroman Implies (And $coming_of_age (And $youth (And $maturity (And $initiation (And $loss $growth))))) Bildungsroman
+    return $bildungsroman
+end
+
+@:Good_Vs_Evil graph Morality Conflict Choice
+    @good_evil isGoodVsEvilTheme Theme $Choice
+    @morality examinesMorality $good_evil True
+    @conflict depictsConflict $good_evil $Conflict
+    @choice involvesChoice $good_evil $Choice
+    @absolute hasAbsoluteValues $good_evil True
+    @ambiguous hasAmbiguity $good_evil True
+    @moral_conflict Implies (And $good_evil (And $morality (And $conflict (And $choice (And $absolute $ambiguous))))) MoralConflict
+    return $moral_conflict
+end
+
+// ====================
+// SETTING ELEMENTS
+// ====================
+
+@:Time_Setting graph Period Era Context
+    @time isTimeSetting Setting $Context
+    @period hasTimePeriod $time $Period
+    @era reflectsEra $time $Era
+    @context providesHistoricalContext $time $Context
+    @influences influencesAction $time True
+    @atmosphere createsAtmosphere $time True
+    @temporal Implies (And $time (And $period (And $era (And $context (And $influences $atmosphere))))) TemporalContext
+    return $temporal
+end
+
+@:Place_Setting graph Location Geography Culture
+    @place isPlaceSetting Setting $Culture
+    @location hasLocation $place $Location
+    @geography hasGeography $place $Geography
+    @culture reflectsCulture $place $Culture
+    @atmosphere createsAtmosphere $place True
+    @symbolic hasSymbolicValue $place True
+    @spatial Implies (And $place (And $location (And $geography (And $culture (And $atmosphere $symbolic))))) SpatialContext
+    return $spatial
+end
+
+@:Social_Setting graph Class Society Values
+    @social isSocialSetting Setting $Values
+    @class depictsClass $social $Class
+    @society portraitsSociety $social $Society
+    @values reflectsValues $social $Values
+    @hierarchy showsHierarchy $social True
+    @norms revealsNorms $social True
+    @societal Implies (And $social (And $class (And $society (And $values (And $hierarchy $norms))))) SocietalContext
+    return $societal
+end
+
+@:Atmosphere_Setting graph Mood Tone Feeling
+    @atmosphere isAtmosphereSetting Setting $Feeling
+    @mood createsMood $atmosphere $Mood
+    @tone setsTone $atmosphere $Tone
+    @feeling evokesFeeling $atmosphere $Feeling
+    @sensory usesSensoryDetails $atmosphere True
+    @emotional hasEmotionalImpact $atmosphere True
+    @affective Implies (And $atmosphere (And $mood (And $tone (And $feeling (And $sensory $emotional))))) AffectiveContext
+    return $affective
+end
+
+// ====================
+// POINT OF VIEW
+// ====================
+
+@:First_Person_POV graph I Subjective Limited
+    @first_person isFirstPersonPOV Perspective $Limited
+    @I usesI $first_person True
+    @subjective isSubjective $first_person True
+    @limited hasLimitedKnowledge $first_person $Limited
+    @intimate createsIntimacy $first_person True
+    @biased mayBeBiased $first_person True
+    @personal Implies (And $first_person (And $I (And $subjective (And $limited (And $intimate $biased))))) PersonalNarrative
+    return $personal
+end
+
+@:Third_Person_Limited_POV graph External Single Focused
+    @third_limited isThirdPersonLimited Perspective $Focused
+    @external isExternal $third_limited True
+    @single focusesOnSingle $third_limited $Single
+    @focused hasFocusedPerspective $third_limited $Focused
+    @interior accessesInterior $third_limited True
+    @limited hasLimitedScope $third_limited True
+    @focused_external Implies (And $third_limited (And $external (And $single (And $focused (And $interior $limited))))) FocusedExternal
+    return $focused_external
+end
+
+@:Third_Person_Omniscient_POV graph All_Knowing Multiple Objective
+    @omniscient isThirdPersonOmniscient Perspective $Multiple
+    @all_knowing isAllKnowing $omniscient True
+    @multiple accessesMultiple $omniscient $Multiple
+    @objective canBeObjective $omniscient True
+    @unlimited hasUnlimitedKnowledge $omniscient True
+    @godlike hasGodlikePerspective $omniscient True
+    @comprehensive Implies (And $omniscient (And $all_knowing (And $multiple (And $objective (And $unlimited $godlike))))) ComprehensivePerspective
+    return $comprehensive
+end
+
+@:Second_Person_POV graph You Reader Direct
+    @second_person isSecondPersonPOV Perspective $Direct
+    @you usesYou $second_person True
+    @reader addressesReader $second_person $Reader
+    @direct hasDirectAddress $second_person $Direct
+    @unusual isUnusual $second_person True
+    @immersive createsImmersion $second_person True
+    @direct_address Implies (And $second_person (And $you (And $reader (And $direct (And $unusual $immersive))))) DirectAddress
+    return $direct_address
+end
+
+// ====================
+// LITERARY PERIODS
+// ====================
+
+@:Classical_Period graph Ancient Greece Rome Epic
+    @classical isClassicalPeriod Period $Epic
+    @ancient isAncient $classical True
+    @greece includesGreece $classical True
+    @rome includesRome $classical True
+    @epic hasEpicTradition $classical $Epic
+    @foundational isFoundational $classical True
+    @western establishesWesternTradition $classical True
+    @classical_lit Implies (And $classical (And $ancient (And $greece (And $rome (And $epic (And $foundational $western)))))) ClassicalLiterature
+    return $classical_lit
+end
+
+@:Medieval_Period graph Middle_Ages Religious Allegory
+    @medieval isMedievalPeriod Period $Allegory
+    @middle_ages inMiddleAges $medieval True
+    @religious hasReligiousFocus $medieval True
+    @allegory usesAllegory $medieval $Allegory
+    @chivalric hasChivalricRomance $medieval True
+    @oral hasOralTradition $medieval True
+    @medieval_lit Implies (And $medieval (And $middle_ages (And $religious (And $allegory (And $chivalric $oral))))) MedievalLiterature
+    return $medieval_lit
+end
+
+@:Renaissance_Period graph Rebirth Humanism Classical_Revival
+    @renaissance isRenaissancePeriod Period $Classical_Revival
+    @rebirth isRebirth $renaissance True
+    @humanism emphasizesHumanism $renaissance $Humanism
+    @classical_revival revivesClassical $renaissance $Classical_Revival
+    @individual focusesOnIndividual $renaissance True
+    @innovation showsInnovation $renaissance True
+    @renaissance_lit Implies (And $renaissance (And $rebirth (And $humanism (And $classical_revival (And $individual $innovation))))) RenaissanceLiterature
+    return $renaissance_lit
+end
+
+@:Romantic_Period graph Emotion Nature Individual
+    @romantic isRomanticPeriod Period $Individual
+    @emotion emphasizesEmotion $romantic True
+    @nature celebratesNature $romantic $Nature
+    @individual valuesIndividual $romantic $Individual
+    @imagination prizesImagination $romantic True
+    @reaction reactsAgainstEnlightenment $romantic True
+    @romantic_lit Implies (And $romantic (And $emotion (And $nature (And $individual (And $imagination $reaction))))) RomanticLiterature
+    return $romantic_lit
+end
+
+@:Victorian_Period graph Industrial Social Moral
+    @victorian isVictorianPeriod Period $Moral
+    @industrial reflectsIndustrial $victorian True
+    @social addressesSocialIssues $victorian $Social
+    @moral hasMoralConcern $victorian $Moral
+    @realism usesRealism $victorian True
+    @novel dominatesNovel $victorian True
+    @victorian_lit Implies (And $victorian (And $industrial (And $social (And $moral (And $realism $novel))))) VictorianLiterature
+    return $victorian_lit
+end
+
+@:Modernist_Period graph Experimentation Fragmentation Alienation
+    @modernist isModernistPeriod Period $Alienation
+    @experimentation usesExperimentation $modernist True
+    @fragmentation showsFragmentation $modernist $Fragmentation
+    @alienation depictsAlienation $modernist $Alienation
+    @subjective emphasizesSubjective $modernist True
+    @tradition breaksWithTradition $modernist True
+    @modernist_lit Implies (And $modernist (And $experimentation (And $fragmentation (And $alienation (And $subjective $tradition))))) ModernistLiterature
+    return $modernist_lit
+end
+
+@:Postmodern_Period graph Irony Metafiction Pastiche
+    @postmodern isPostmodernPeriod Period $Pastiche
+    @irony usesIrony $postmodern True
+    @metafiction employsMmetafiction $postmodern $Metafiction
+    @pastiche usesPastiche $postmodern $Pastiche
+    @playful isPlayful $postmodern True
+    @skeptical showsSkepticism $postmodern True
+    @postmodern_lit Implies (And $postmodern (And $irony (And $metafiction (And $pastiche (And $playful $skeptical))))) PostmodernLiterature
+    return $postmodern_lit
+end
+
+@:Enlightenment_Period graph Reason Science Progress
+    @enlightenment isEnlightenmentPeriod Period $Progress
+    @reason emphasizesReason $enlightenment True
+    @science valuesScience $enlightenment $Science
+    @progress believesInProgress $enlightenment $Progress
+    @rational hasRationalApproach $enlightenment True
+    @satire usesSatire $enlightenment True
+    @enlightenment_lit Implies (And $enlightenment (And $reason (And $science (And $progress (And $rational $satire))))) EnlightenmentLiterature
+    return $enlightenment_lit
+end
+
+@:Realist_Period graph Verisimilitude Ordinary Contemporary
+    @realist isRealistPeriod Period $Contemporary
+    @verisimilitude seeksvVerisimilitude $realist True
+    @ordinary depictsOrdinary $realist $Ordinary
+    @contemporary focusesOnContemporary $realist $Contemporary
+    @detailed usesDetail $realist True
+    @social addressesSocialReality $realist True
+    @realist_lit Implies (And $realist (And $verisimilitude (And $ordinary (And $contemporary (And $detailed $social))))) RealistLiterature
+    return $realist_lit
+end
+
+// ====================
+// CRITICAL APPROACHES
+// ====================
+
+@:Formalist_Criticism graph Text Intrinsic Close_Reading
+    @formalist isFormalistCriticism Approach $Close_Reading
+    @text focusesOnText $formalist True
+    @intrinsic examinesIntrinsic $formalist $Intrinsic
+    @close_reading usesCloseReading $formalist $Close_Reading
+    @form analyzesForm $formalist True
+    @autonomous viewsAsAutonomous $formalist True
+    @formal Implies (And $formalist (And $text (And $intrinsic (And $close_reading (And $form $autonomous))))) FormalAnalysis
+    return $formal
+end
+
+@:Structuralist_Criticism graph System Sign Convention
+    @structuralist isStructuralistCriticism Approach $Convention
+    @system analyzesSystems $structuralist True
+    @sign examinesSigns $structuralist $Sign
+    @convention studiesConvention $structuralist $Convention
+    @language focusesOnLanguage $structuralist True
+    @underlying seeksUnderlyingStructures $structuralist True
+    @structural Implies (And $structuralist (And $system (And $sign (And $convention (And $language $underlying))))) StructuralAnalysis
+    return $structural
+end
+
+@:Feminist_Criticism graph Gender Power Representation
+    @feminist isFeministCriticism Approach $Representation
+    @gender examinesGender $feminist True
+    @power analyzesPower $feminist $Power
+    @representation studiesRepresentation $feminist $Representation
+    @patriarchy critiquesPatriarchy $feminist True
+    @women focusesOnWomen $feminist True
+    @gender_analysis Implies (And $feminist (And $gender (And $power (And $representation (And $patriarchy $women))))) GenderAnalysis
+    return $gender_analysis
+end
+
+@:Marxist_Criticism graph Class Economics Ideology
+    @marxist isMarxistCriticism Approach $Ideology
+    @class examinesClass $marxist True
+    @economics analyzesEconomics $marxist $Economics
+    @ideology studiesIdeology $marxist $Ideology
+    @power examinesPowerRelations $marxist True
+    @material usesMaterialistApproach $marxist True
+    @class_analysis Implies (And $marxist (And $class (And $economics (And $ideology (And $power $material))))) ClassAnalysis
+    return $class_analysis
+end
+
+@:Psychoanalytic_Criticism graph Unconscious Desire Symbol
+    @psychoanalytic isPsychoanalyticCriticism Approach $Symbol
+    @unconscious examinesUnconscious $psychoanalytic True
+    @desire analyzesDesire $psychoanalytic $Desire
+    @symbol interpretsSymbol $psychoanalytic $Symbol
+    @dream studiesDreams $psychoanalytic True
+    @repression examinesRepression $psychoanalytic True
+    @psychological_analysis Implies (And $psychoanalytic (And $unconscious (And $desire (And $symbol (And $dream $repression))))) PsychologicalAnalysis
+    return $psychological_analysis
+end
+
+@:Postcolonial_Criticism graph Empire Otherness Identity
+    @postcolonial isPostcolonialCriticism Approach $Identity
+    @empire examinesEmpire $postcolonial True
+    @otherness analyzesOtherness $postcolonial $Otherness
+    @identity studiesIdentity $postcolonial $Identity
+    @power examinesColonialPower $postcolonial True
+    @resistance studiesResistance $postcolonial True
+    @colonial_analysis Implies (And $postcolonial (And $empire (And $otherness (And $identity (And $power $resistance))))) ColonialAnalysis
+    return $colonial_analysis
+end
+
+@:New_Historicist_Criticism graph Context Culture Power
+    @new_historicist isNewHistoricistCriticism Approach $Power
+    @context examinesContext $new_historicist True
+    @culture analyzesCulture $new_historicist $Culture
+    @power studiesPower $new_historicist $Power
+    @history embedsInHistory $new_historicist True
+    @interdisciplinary usesInterdisciplinary $new_historicist True
+    @historical_analysis Implies (And $new_historicist (And $context (And $culture (And $power (And $history $interdisciplinary))))) HistoricalAnalysis
+    return $historical_analysis
+end
+
+@:Deconstructionist_Criticism graph Binary Instability Meaning
+    @deconstruction isDeconstructionCriticism Approach $Meaning
+    @binary examinesBinaries $deconstruction True
+    @instability revealsInstability $deconstruction $Instability
+    @meaning questionsMeaning $deconstruction $Meaning
+    @language focusesOnLanguage $deconstruction True
+    @undecidability showsUndecidability $deconstruction True
+    @deconstructive Implies (And $deconstruction (And $binary (And $instability (And $meaning (And $language $undecidability))))) DeconstructiveAnalysis
+    return $deconstructive
+end
+
+@:Reader_Response_Criticism graph Reader Interpretation Experience
+    @reader_response isReaderResponseCriticism Approach $Experience
+    @reader focusesOnReader $reader_response True
+    @interpretation examinesInterpretation $reader_response $Interpretation
+    @experience analyzesExperience $reader_response $Experience
+    @active viewsReaderAsActive $reader_response True
+    @subjective allowsSubjectivity $reader_response True
+    @reception_analysis Implies (And $reader_response (And $reader (And $interpretation (And $experience (And $active $subjective))))) ReceptionAnalysis
+    return $reception_analysis
+end
+
+@:Ecocriticism_Approach graph Nature Environment Sustainability
+    @ecocriticism isEcocriticism Approach $Sustainability
+    @nature examinesNature $ecocriticism True
+    @environment analyzesEnvironment $ecocriticism $Environment
+    @sustainability addressesSustainability $ecocriticism $Sustainability
+    @ecological usesEcologicalPerspective $ecocriticism True
+    @human_nature studiesHumanNatureRelation $ecocriticism True
+    @ecological_analysis Implies (And $ecocriticism (And $nature (And $environment (And $sustainability (And $ecological $human_nature))))) EcologicalAnalysis
+    return $ecological_analysis
+end
+
+// ====================
+// NARRATIVE TECHNIQUES
+// ====================
+
+@:Dialogue_Technique graph Speech Character Revelation
+    @dialogue isDialogue Technique $Revelation
+    @speech hasDirectSpeech $dialogue True
+    @character revealsCharacter $dialogue $Character
+    @revelation createsRevelation $dialogue $Revelation
+    @realistic soundsRealistic $dialogue True
+    @advances advancesPlot $dialogue True
+    @conversational Implies (And $dialogue (And $speech (And $character (And $revelation (And $realistic $advances))))) ConversationalTechnique
+    return $conversational
+end
+
+@:Interior_Monologue graph Thought Direct Unspoken
+    @interior isInteriorMonologue Technique $Unspoken
+    @thought revealsThoughts $interior True
+    @direct isDirectPresentation $interior True
+    @unspoken isUnspoken $interior $Unspoken
+    @stream mayUseStream $interior True
+    @consciousness revealsConsciousness $interior True
+    @internal Implies (And $interior (And $thought (And $direct (And $unspoken (And $stream $consciousness))))) InternalTechnique
+    return $internal
+end
+
+@:Epiphany_Technique graph Insight Sudden Revelation
+    @epiphany isEpiphany Technique $Revelation
+    @insight hasSuddenInsight $epiphany True
+    @sudden issuddnRevelation $epiphany True
+    @revelation createsRevelation $epiphany $Revelation
+    @character affectsCharacter $epiphany True
+    @illumination providesIllumination $epiphany True
+    @revelatory Implies (And $epiphany (And $insight (And $sudden (And $revelation (And $character $illumination))))) RevelatoryMoment
+    return $revelatory
+end
+
+@:Juxtaposition_Technique graph Contrast Comparison Effect
+    @juxtaposition isJuxtaposition Technique $Effect
+    @contrast placesInContrast $juxtaposition True
+    @comparison createsComparison $juxtaposition $Comparison
+    @effect createsEffect $juxtaposition $Effect
+    @highlights highlightsDifferences $juxtaposition True
+    @emphasizes emphasizesQualities $juxtaposition True
+    @contrastive Implies (And $juxtaposition (And $contrast (And $comparison (And $effect (And $highlights $emphasizes))))) ContrastiveTechnique
+    return $contrastive
+end
+
+@:Cliffhanger_Technique graph Suspense Unresolved Continuation
+    @cliffhanger isCliffhanger Technique $Continuation
+    @suspense createsSuspense $cliffhanger True
+    @unresolved leavesUnresolved $cliffhanger $Unresolved
+    @continuation demandsContinuation $cliffhanger $Continuation
+    @tension buildsTension $cliffhanger True
+    @engagement maintainsEngagement $cliffhanger True
+    @suspenseful Implies (And $cliffhanger (And $suspense (And $unresolved (And $continuation (And $tension $engagement))))) SuspensefulTechnique
+    return $suspenseful
+end
+
+@:Deus_Ex_Machina graph Sudden Implausible Resolution
+    @deus isDeusExMachina Technique $Resolution
+    @sudden isSuddenIntervention $deus True
+    @implausible isImplausible $deus True
+    @resolution resolvesPlot $deus $Resolution
+    @external usesExternalForce $deus True
+    @contrived seemsContrived $deus True
+    @artificial Implies (And $deus (And $sudden (And $implausible (And $resolution (And $external $contrived))))) ArtificialResolution
+    return $artificial
+end
+
+@:Red_Herring graph Misdirection Distraction False_Clue
+    @red_herring isRedHerring Technique $False_Clue
+    @misdirection createsMisdirection $red_herring True
+    @distraction distractsReader $red_herring $Distraction
+    @false_clue providesFalseClue $red_herring $False_Clue
+    @misleading isMisleading $red_herring True
+    @suspense maintainsSuspense $red_herring True
+    @deceptive Implies (And $red_herring (And $misdirection (And $distraction (And $false_clue (And $misleading $suspense))))) DeceptiveTechnique
+    return $deceptive
+end
+
+@:Chekovs_Gun graph Setup Payoff Necessity
+    @chekovs_gun isChekovsGun Technique $Payoff
+    @setup hasEarlySetup $chekovs_gun $Setup
+    @payoff hasLaterPayoff $chekovs_gun $Payoff
+    @necessity followsNecessity $chekovs_gun True
+    @relevant isRelevant $chekovs_gun True
+    @economy showsEconomy $chekovs_gun True
+    @economical Implies (And $chekovs_gun (And $setup (And $payoff (And $necessity (And $relevant $economy))))) EconomicalTechnique
+    return $economical
+end
+
+// ====================
+// TONE AND MOOD
+// ====================
+
+@:Somber_Tone graph Dark Serious Melancholy
+    @somber hasSomberTone Work $Melancholy
+    @dark hasDarkQuality $somber True
+    @serious isSerious $somber True
+    @melancholy createsMelancholy $somber $Melancholy
+    @grave hasGravity $somber True
+    @subdued isSubdued $somber True
+    @dark_tone Implies (And $somber (And $dark (And $serious (And $melancholy (And $grave $subdued))))) DarkTone
+    return $dark_tone
+end
+
+@:Humorous_Tone graph Funny Lighthearted Comic
+    @humorous hasHumorousTone Work $Comic
+    @funny isFunny $humorous True
+    @lighthearted isLighthearted $humorous True
+    @comic hasComicElements $humorous $Comic
+    @playful isPlayful $humorous True
+    @amusing isAmusing $humorous True
+    @comic_tone Implies (And $humorous (And $funny (And $lighthearted (And $comic (And $playful $amusing))))) ComicTone
+    return $comic_tone
+end
+
+@:Nostalgic_Mood graph Past Longing Memory
+    @nostalgic hasNostalgicMood Work $Memory
+    @past evokespPast $nostalgic True
+    @longing createsLonging $nostalgic $Longing
+    @memory triggersMemory $nostalgic $Memory
+    @bittersweet isBittersweet $nostalgic True
+    @wistful isWistful $nostalgic True
+    @wistful_mood Implies (And $nostalgic (And $past (And $longing (And $memory (And $bittersweet $wistful))))) WistfulMood
+    return $wistful_mood
+end
+
+@:Suspenseful_Mood graph Tension Anticipation Uncertainty
+    @suspenseful hasSuspensefulMood Work $Uncertainty
+    @tension createsTension $suspenseful True
+    @anticipation buildsAnticipation $suspenseful $Anticipation
+    @uncertainty createsUncertainty $suspenseful $Uncertainty
+    @anxious makesAnxious $suspenseful True
+    @gripping isGripping $suspenseful True
+    @tense_mood Implies (And $suspenseful (And $tension (And $anticipation (And $uncertainty (And $anxious $gripping))))) TenseMood
+    return $tense_mood
+end
+
+// ====================
+// VERSE FORMS
+// ====================
+
+@:Blank_Verse graph Unrhymed Iambic_Pentameter Elevated
+    @blank isBlankVerse Verse $Elevated
+    @unrhymed isUnrhymed $blank True
+    @iambic usesIambicPentameter $blank $Iambic_Pentameter
+    @elevated hasElevatedStyle $blank $Elevated
+    @flexible allowsFlexibility $blank True
+    @natural soundsNatural $blank True
+    @dramatic_verse Implies (And $blank (And $unrhymed (And $iambic (And $elevated (And $flexible $natural))))) DramaticVerse
+    return $dramatic_verse
+end
+
+@:Heroic_Couplet graph Rhymed Iambic Closed
+    @heroic isHeroicCouplet Verse $Closed
+    @rhymed isRhymed $heroic True
+    @iambic usesIambicPentameter $heroic True
+    @closed hasClosedForm $heroic $Closed
+    @couplet usesCouplets $heroic True
+    @epigrammatic isEpigrammatic $heroic True
+    @couplet_form Implies (And $heroic (And $rhymed (And $iambic (And $closed (And $couplet $epigrammatic))))) CoupletForm
+    return $couplet_form
+end
+
+@:Terza_Rima graph Interlocking Rhyme Dante
+    @terza isTerzaRima Verse $Dante
+    @interlocking hasInterlockingRhyme $terza True
+    @rhyme usesABABCBCPattern $terza $Rhyme
+    @dante associatedWithDante $terza $Dante
+    @tercets usesTercets $terza True
+    @continuous hasConteinuousFlow $terza True
+    @interlocking_form Implies (And $terza (And $interlocking (And $rhyme (And $dante (And $tercets $continuous))))) InterlockingForm
+    return $interlocking_form
+end
+
+@:Ottava_Rima graph Eight_Line Stanza Narrative
+    @ottava isOttavaRima Verse $Narrative
+    @eight_line hasEightLines $ottava True
+    @stanza usesStanzaForm $ottava $Stanza
+    @rhyme hasABABABCCRhyme $ottava True
+    @narrative usedForNarrative $ottava $Narrative
+    @italian hasItalianOrigin $ottava True
+    @stanza_form Implies (And $ottava (And $eight_line (And $stanza (And $rhyme (And $narrative $italian))))) StanzaForm
+    return $stanza_form
+end
+
+// ====================
+// DRAMATIC ELEMENTS
+// ====================
+
+@:Soliloquy_Device graph Alone Speech Thoughts
+    @soliloquy isSoliloquy Dramatic $Thoughts
+    @alone characterAlone $soliloquy True
+    @speech speaksAloud $soliloquy $Speech
+    @thoughts revealsThoughts $soliloquy $Thoughts
+    @audience addressesAudience $soliloquy True
+    @interior revealsInterior $soliloquy True
+    @solo_speech Implies (And $soliloquy (And $alone (And $speech (And $thoughts (And $audience $interior))))) SoloSpeech
+    return $solo_speech
+end
+
+@:Aside_Device graph Brief Audience Secret
+    @aside isAside Dramatic $Secret
+    @brief isBrief $aside True
+    @audience speaksToAudience $aside $Audience
+    @secret hiddenFromOthers $aside $Secret
+    @commentary providesCommentary $aside True
+    @direct hasDirectAddress $aside True
+    @brief_comment Implies (And $aside (And $brief (And $audience (And $secret (And $commentary $direct))))) BriefComment
+    return $brief_comment
+end
+
+@:Chorus_Device graph Group Commentary Perspective
+    @chorus isChorus Dramatic $Perspective
+    @group isGroup $chorus True
+    @commentary providesCommentary $chorus $Commentary
+    @perspective offerspPerspective $chorus $Perspective
+    @greek hasGreekOrigin $chorus True
+    @collective hasCollectiveVoice $chorus True
+    @collective_voice Implies (And $chorus (And $group (And $commentary (And $perspective (And $greek $collective))))) CollectiveVoice
+    return $collective_voice
+end
+
+@:Dramatic_Irony graph Audience Knowledge Characters
+    @dramatic_irony isDramaticIrony Dramatic $Knowledge
+    @audience audienceKnows $dramatic_irony $Knowledge
+    @characters charactersIgnorant $dramatic_irony True
+    @tension createsTension $dramatic_irony True
+    @gap createsKnowledgeGap $dramatic_irony True
+    @suspense buildsSuspense $dramatic_irony True
+    @ironic_tension Implies (And $dramatic_irony (And $audience (And $characters (And $tension (And $gap $suspense))))) IronicTension
+    return $ironic_tension
+end
+
+// ====================
+// ADDITIONAL COMPLEX THEOREMS
+// ====================
+
+@:Narrative_Voice_Construction graph Narrator Reliability Perspective Distance
+    @voice constructsNarrativeVoice Work $Distance
+    @narrator establishesNarrator $voice $Narrator
+    @reliability determinesReliability $narrator $Reliability
+    @perspective setsPerpsective $narrator $Perspective
+    @distance createsNarrativeDistance $voice $Distance
+    @tone establishesTone $voice $Tone
+    @mediation mediatesStory $narrator True
+    @narrative_construction Implies (And $voice (And $narrator (And $reliability (And $perspective (And $distance (And $tone $mediation)))))) NarrativeConstruction
+    return $narrative_construction
+end
+
+@:Thematic_Development graph Theme Symbol Motif Meaning
+    @development developsTheme Work $Meaning
+    @theme introducesTheme $development $Theme
+    @symbol usesSymbol $development $Symbol
+    @motif employsMotif $development $Motif
+    @pattern createsPattern $development True
+    @meaning buildsToMeaning $development $Meaning
+    @reinforcement usesReinforcement $development True
+    @thematic_unity Implies (And $development (And $theme (And $symbol (And $motif (And $pattern (And $meaning $reinforcement)))))) ThematicUnity
+    return $thematic_unity
+end
+
+@:Character_Complexity graph Trait Motivation Conflict Development Arc
+    @complexity createsComplexCharacter Character $Arc
+    @trait hasMultipleTraits $complexity $Trait
+    @motivation hasComplexMotivation $complexity $Motivation
+    @conflict facesInternalConflict $complexity $Conflict
+    @development undergoespDevelopment $complexity $Development
+    @arc hasCharacterArc $complexity $Arc
+    @psychological haspsychologicalDepth $complexity True
+    @multidimensional Implies (And $complexity (And $trait (And $motivation (And $conflict (And $development (And $arc $psychological)))))) MultidimensionalCharacter
+    return $multidimensional
+end
+
+@:Intertextual_Relations graph Text Reference Allusion Context
+    @intertextual hasIntertextuality Work $Context
+    @text referencesOtherTexts $intertextual $Text
+    @reference makesExplicitReference $intertextual $Reference
+    @allusion containsAllusion $intertextual $Allusion
+    @dialogue createsDialogue $intertextual True
+    @context enrichesContext $intertextual $Context
+    @layer addsLayers $intertextual True
+    @textual_network Implies (And $intertextual (And $text (And $reference (And $allusion (And $dialogue (And $context $layer)))))) TextualNetwork
+    return $textual_network
+end
+
+@:Gothic_Atmosphere_Creation graph Setting Mystery Supernatural Terror Sublime
+    @gothic_atmos createsGothicAtmosphere Work $Sublime
+    @setting usesDarkSetting $gothic_atmos $Setting
+    @mystery incorporatesMystery $gothic_atmos $Mystery
+    @supernatural includesSupernatural $gothic_atmos $Supernatural
+    @terror evokesTerror $gothic_atmos $Terror
+    @sublime createsSublime $gothic_atmos $Sublime
+    @decay depictsDecay $gothic_atmos True
+    @darkness emphasizesDarkness $gothic_atmos True
+    @gothic_effect Implies (And $gothic_atmos (And $setting (And $mystery (And $supernatural (And $terror (And $sublime (And $decay $darkness))))))) GothicEffect
+    return $gothic_effect
+end
+
+@:Modernist_Experimentation graph Form Tradition Innovation Consciousness Fragmentation
+    @experiment performsModernistExperiment Work $Fragmentation
+    @form experimentsWithForm $experiment $Form
+    @tradition breaksFromTradition $experiment True
+    @innovation pursuesInnovation $experiment $Innovation
+    @consciousness exploresConsciousness $experiment $Consciousness
+    @fragmentation usesFragmentation $experiment $Fragmentation
+    @subjective emphasizesSubjective $experiment True
+    @difficulty embracesDifficulty $experiment True
+    @modernist_aesthetic Implies (And $experiment (And $form (And $tradition (And $innovation (And $consciousness (And $fragmentation (And $subjective $difficulty))))))) ModernistAesthetic
+    return $modernist_aesthetic
+end
+
+@:Tragic_Structure_Complete graph Hero Flaw Recognition Reversal Suffering Catharsis
+    @tragic_struct createsTragicStructure Work $Catharsis
+    @hero establishesTragicHero $tragic_struct $Hero
+    @flaw revealsHamartia $hero $Flaw
+    @recognition includesAnagnorisis $tragic_struct $Recognition
+    @reversal includesPeripeteia $tragic_struct $Reversal
+    @suffering depictsSuffering $tragic_struct $Suffering
+    @catharsis achievesCatharsis $tragic_struct $Catharsis
+    @pity evokesPity $tragic_struct True
+    @fear evokesFear $tragic_struct True
+    @tragic_effect Implies (And $tragic_struct (And $hero (And $flaw (And $recognition (And $reversal (And $suffering (And $catharsis (And $pity $fear)))))))) TragicEffect
+    return $tragic_effect
+end
+
+@:Symbolic_Network graph Symbol Pattern Meaning Theme
+    @network createsSymbolicNetwork Work $Theme
+    @symbol introducesSymbol $network $Symbol
+    @pattern createsSymbolicPattern $network $Pattern
+    @meaning generatesSymbolicMeaning $network $Meaning
+    @theme connectsToTheme $network $Theme
+    @recurring usesRecurrence $network True
+    @layered hasLayeredMeaning $network True
+    @interpretation requiresInterpretation $network True
+    @symbolic_system Implies (And $network (And $symbol (And $pattern (And $meaning (And $theme (And $recurring (And $layered $interpretation))))))) SymbolicSystem
+    return $symbolic_system
+end
+
+@:Postmodern_Playfulness graph Irony Metafiction Pastiche Reality Fiction
+    @playful demonstratesPostmodernPlay Work $Fiction
+    @irony employsIrony $playful $Irony
+    @metafiction usesMetafiction $playful $Metafiction
+    @pastiche createsPastiche $playful $Pastiche
+    @reality blursReality $playful $Reality
+    @fiction emphasizesFictionality $playful $Fiction
+    @self_aware isSelfAware $playful True
+    @skeptical showsSkepticism $playful True
+    @postmodern_technique Implies (And $playful (And $irony (And $metafiction (And $pastiche (And $reality (And $fiction (And $self_aware $skeptical))))))) PostmodernTechnique
+    return $postmodern_technique
+end
+
+@:Feminist_Representation graph Gender Character Voice Agency Power
+    @feminist_rep createsFeministRepresentation Work $Power
+    @gender examinesGender $feminist_rep $Gender
+    @character developsFemalCharacters $feminist_rep $Character
+    @voice givesVoice $feminist_rep $Voice
+    @agency showsAgency $feminist_rep $Agency
+    @power questionsPower $feminist_rep $Power
+    @patriarchy critiquesPatriarchy $feminist_rep True
+    @subversion subvertsNorms $feminist_rep True
+    @feminist_perspective Implies (And $feminist_rep (And $gender (And $character (And $voice (And $agency (And $power (And $patriarchy $subversion))))))) FeministPerspective
+    return $feminist_perspective
+end
+
+@:Stream_Consciousness_Full graph Interior Flow Association Time Memory
+    @stream_full employsStreamOfConsciousness Work $Memory
+    @interior capturesInterior $stream_full $Interior
+    @flow createsUnbrokenFlow $stream_full $Flow
+    @association usesAssociation $stream_full $Association
+    @time disruptsTime $stream_full $Time
+    @memory incorporatesMemory $stream_full $Memory
+    @unfiltered isUnfiltered $stream_full True
+    @psychological achievesPsychologicalRealism $stream_full True
+    @consciousness_technique Implies (And $stream_full (And $interior (And $flow (And $association (And $time (And $memory (And $unfiltered $psychological))))))) ConsciousnessTechnique
+    return $consciousness_technique
+end
+
+@:Epic_Conventions graph Hero Journey Scale Supernatural Elevation Style
+    @epic_conv followsEpicConventions Work $Style
+    @hero hasEpicHero $epic_conv $Hero
+    @journey undertakesEpicJourney $epic_conv $Journey
+    @scale hasGrandScale $epic_conv $Scale
+    @supernatural includesSupernatural $epic_conv $Supernatural
+    @elevation hasElevatedDiction $epic_conv $Elevation
+    @style usesEpicStyle $epic_conv $Style
+    @invocation beginsWithInvocation $epic_conv True
+    @catalogues usesCatalogues $epic_conv True
+    @epic_form Implies (And $epic_conv (And $hero (And $journey (And $scale (And $supernatural (And $elevation (And $style (And $invocation $catalogues)))))))) EpicForm
+    return $epic_form
+end
+
+@:Romantic_Idealization graph Nature Emotion Imagination Individual Transcendence
+    @romantic_ideal demonstratesRomanticIdeals Work $Transcendence
+    @nature celebratesNature $romantic_ideal $Nature
+    @emotion emphasizesEmotion $romantic_ideal $Emotion
+    @imagination valuesImagination $romantic_ideal $Imagination
+    @individual exaltsIndividual $romantic_ideal $Individual
+    @transcendence seekstranscendence $romantic_ideal $Transcendence
+    @sublime pursuesSublime $romantic_ideal True
+    @spontaneity valuesSpontaneity $romantic_ideal True
+    @romantic_vision Implies (And $romantic_ideal (And $nature (And $emotion (And $imagination (And $individual (And $transcendence (And $sublime $spontaneity))))))) RomanticVision
+    return $romantic_vision
+end
+
+@:Realist_Technique_Full graph Detail Ordinary Plausibility Contemporary Social
+    @realist_tech employsRealistTechnique Work $Social
+    @detail usesMinuteDetail $realist_tech $Detail
+    @ordinary focusesOnOrdinary $realist_tech $Ordinary
+    @plausibility maintainsPlausibility $realist_tech $Plausibility
+    @contemporary depictsContemporary $realist_tech $Contemporary
+    @social addressesSocialIssues $realist_tech $Social
+    @objective striivesForObjectivity $realist_tech True
+    @verisimilitude achievesVerisimilitude $realist_tech True
+    @realist_method Implies (And $realist_tech (And $detail (And $ordinary (And $plausibility (And $contemporary (And $social (And $objective $verisimilitude))))))) RealistMethod
+    return $realist_method
+end
+
+@:Satire_Full_Technique graph Target Irony Exaggeration Ridicule Reform Wit
+    @satire_full employsSatireTechnique Work $Wit
+    @target identifiesTarget $satire_full $Target
+    @irony usesIrony $satire_full $Irony
+    @exaggeration employsExaggeration $satire_full $Exaggeration
+    @ridicule usesRidicule $satire_full $Ridicule
+    @reform aimsAtReform $satire_full $Reform
+    @wit displaysWit $satire_full $Wit
+    @critical isCritical $satire_full True
+    @satirical_method Implies (And $satire_full (And $target (And $irony (And $exaggeration (And $ridicule (And $reform (And $wit $critical))))))) SatiricalMethod
+    return $satirical_method
+end
+
+@:Bildungsroman_Complete graph Youth Education Experience Maturity Identity Society
+    @bildungsroman isBildungsroman Work $Society
+    @youth beginsWithYouth $bildungsroman $Youth
+    @education involvesEducation $bildungsroman $Education
+    @experience includesExperiences $bildungsroman $Experience
+    @maturity achievesMaturity $bildungsroman $Maturity
+    @identity formsIdentity $bildungsroman $Identity
+    @society integratesIntoSociety $bildungsroman $Society
+    @growth showsGrowth $bildungsroman True
+    @coming_of_age_novel Implies (And $bildungsroman (And $youth (And $education (And $experience (And $maturity (And $identity (And $society $growth))))))) ComingOfAgeNovel
+    return $coming_of_age_novel
+end

@@ -1,0 +1,1534 @@
+; Physics Theory - Comprehensive DSL Representation
+; Covers SI Units, Classical Mechanics, Thermodynamics, Electromagnetism, Optics, and Modern Physics
+
+; ===== SI BASE UNITS =====
+@:SI_Meter_Unit graph Unit Length Measurement
+    @u isA $Unit Meter
+    @l isA $Length Length
+    @m isA $Measurement Distance
+    @def defines $Meter (baseUnit Length SI)
+    @rel represents $Length (spatialExtent OneDimension)
+    return And $u (And $l (And $m (And $def $rel)))
+end
+
+@:SI_Kilogram_Unit graph Unit Mass Measurement
+    @u isA $Unit Kilogram
+    @m isA $Mass Mass
+    @measure isA $Measurement MassQuantity
+    @def defines $Kilogram (baseUnit Mass SI)
+    @prop property $Mass (resistance Acceleration)
+    return And $u (And $m (And $measure (And $def $prop)))
+end
+
+@:SI_Second_Unit graph Unit Time Measurement
+    @u isA $Unit Second
+    @t isA $Time Time
+    @m isA $Measurement Duration
+    @def defines $Second (baseUnit Time SI)
+    @basis basedOn $Second (cesiumAtom Frequency)
+    return And $u (And $t (And $m (And $def $basis)))
+end
+
+@:SI_Ampere_Unit graph Unit Current Electricity
+    @u isA $Unit Ampere
+    @i isA $Current ElectricCurrent
+    @e isA $Electricity ChargeFlow
+    @def defines $Ampere (baseUnit Current SI)
+    @rel relates $Current (chargePerTime Coulomb)
+    return And $u (And $i (And $e (And $def $rel)))
+end
+
+@:SI_Kelvin_Unit graph Unit Temperature Thermodynamics
+    @u isA $Unit Kelvin
+    @t isA $Temperature AbsoluteTemperature
+    @th isA $Thermodynamics HeatMeasure
+    @def defines $Kelvin (baseUnit Temperature SI)
+    @zero hasZero $Kelvin (absoluteZero Energy)
+    return And $u (And $t (And $th (And $def $zero)))
+end
+
+@:SI_Mole_Unit graph Unit Substance Chemistry
+    @u isA $Unit Mole
+    @s isA $Substance AmountOfSubstance
+    @c isA $Chemistry ParticleCount
+    @def defines $Mole (baseUnit Substance SI)
+    @num contains $Mole (avogadroNumber Particles)
+    return And $u (And $s (And $c (And $def $num)))
+end
+
+@:SI_Candela_Unit graph Unit Intensity Light
+    @u isA $Unit Candela
+    @i isA $Intensity LuminousIntensity
+    @l isA $Light Illumination
+    @def defines $Candela (baseUnit Intensity SI)
+    @spec specifies $Intensity (luminousFlux SolidAngle)
+    return And $u (And $i (And $l (And $def $spec)))
+end
+
+; ===== SI DERIVED UNITS =====
+@:SI_Newton_Derived graph Force Mass Acceleration
+    @f isA $Force Newton
+    @m isA $Mass Kilogram
+    @a isA $Acceleration MeterPerSecondSquared
+    @eq equals $Newton (times Kilogram MeterPerSecondSquared)
+    @dim dimensionalAnalysis $Newton (MLT_minus2)
+    return And $f (And $m (And $a (And $eq $dim)))
+end
+
+@:SI_Joule_Derived graph Energy Force Distance
+    @e isA $Energy Joule
+    @f isA $Force Newton
+    @d isA $Distance Meter
+    @eq equals $Joule (times Newton Meter)
+    @alt alternatively $Joule (times Kilogram MeterSquaredPerSecondSquared)
+    return And $e (And $f (And $d (And $eq $alt)))
+end
+
+@:SI_Watt_Derived graph Power Energy Time
+    @p isA $Power Watt
+    @e isA $Energy Joule
+    @t isA $Time Second
+    @eq equals $Watt (divide Joule Second)
+    @rate represents $Power (energyRate Transfer)
+    return And $p (And $e (And $t (And $eq $rate)))
+end
+
+@:SI_Pascal_Derived graph Pressure Force Area
+    @p isA $Pressure Pascal
+    @f isA $Force Newton
+    @a isA $Area MeterSquared
+    @eq equals $Pascal (divide Newton MeterSquared)
+    @app applies $Pressure (perpendicularForce Surface)
+    return And $p (And $f (And $a (And $eq $app)))
+end
+
+@:SI_Coulomb_Derived graph Charge Current Time
+    @q isA $Charge Coulomb
+    @i isA $Current Ampere
+    @t isA $Time Second
+    @eq equals $Coulomb (times Ampere Second)
+    @prop property $Charge (fundamental Electricity)
+    return And $q (And $i (And $t (And $eq $prop)))
+end
+
+@:SI_Volt_Derived graph Voltage Energy Charge
+    @v isA $Voltage Volt
+    @e isA $Energy Joule
+    @q isA $Charge Coulomb
+    @eq equals $Volt (divide Joule Coulomb)
+    @pot represents $Voltage (electricPotential Difference)
+    return And $v (And $e (And $q (And $eq $pot)))
+end
+
+@:SI_Ohm_Derived graph Resistance Voltage Current
+    @r isA $Resistance Ohm
+    @v isA $Voltage Volt
+    @i isA $Current Ampere
+    @eq equals $Ohm (divide Volt Ampere)
+    @law satisfies $Resistance (ohmsLaw Relationship)
+    return And $r (And $v (And $i (And $eq $law)))
+end
+
+@:SI_Tesla_Derived graph MagneticField Flux Area
+    @b isA $MagneticField Tesla
+    @phi isA $Flux Weber
+    @a isA $Area MeterSquared
+    @eq equals $Tesla (divide Weber MeterSquared)
+    @alt alternatively $Tesla (divide Newton (times Ampere Meter))
+    return And $b (And $phi (And $a (And $eq $alt)))
+end
+
+@:SI_Hertz_Derived graph Frequency Time Period
+    @f isA $Frequency Hertz
+    @t isA $Time Second
+    @p isA $Period Oscillation
+    @eq equals $Hertz (inverse Second)
+    @meas measures $Frequency (cyclesPerSecond Wave)
+    return And $f (And $t (And $p (And $eq $meas)))
+end
+
+; ===== SI PREFIXES =====
+@:SI_Prefix_Kilo graph Prefix Scale Magnitude
+    @p isA $Prefix Kilo
+    @s isA $Scale Thousand
+    @m isA $Magnitude 1000
+    @mult multiplies $Kilo (factor 1000)
+    @sym symbol $Kilo k
+    return And $p (And $s (And $m (And $mult $sym)))
+end
+
+@:SI_Prefix_Mega graph Prefix Scale Magnitude
+    @p isA $Prefix Mega
+    @s isA $Scale Million
+    @m isA $Magnitude 1000000
+    @mult multiplies $Mega (factor 1000000)
+    @sym symbol $Mega M
+    return And $p (And $s (And $m (And $mult $sym)))
+end
+
+@:SI_Prefix_Milli graph Prefix Scale Magnitude
+    @p isA $Prefix Milli
+    @s isA $Scale Thousandth
+    @m isA $Magnitude 0.001
+    @mult multiplies $Milli (factor 0.001)
+    @sym symbol $Milli m
+    return And $p (And $s (And $m (And $mult $sym)))
+end
+
+@:SI_Prefix_Micro graph Prefix Scale Magnitude
+    @p isA $Prefix Micro
+    @s isA $Scale Millionth
+    @m isA $Magnitude 0.000001
+    @mult multiplies $Micro (factor 0.000001)
+    @sym symbol $Micro mu
+    return And $p (And $s (And $m (And $mult $sym)))
+end
+
+; ===== CLASSICAL MECHANICS - KINEMATICS =====
+@:Newton_First_Law graph Inertia Force Motion
+    @i isA $Inertia Property
+    @f isA $Force NetForce
+    @m isA $Motion State
+    @cond condition $Motion (zeroNetForce implies ConstantVelocity)
+    @rest states $Inertia (objectAtRest remainsAtRest)
+    @motion states $Inertia (objectInMotion remainsInMotion)
+    return And $i (And $f (And $m (And $cond (And $rest $motion))))
+end
+
+@:Newton_Second_Law graph Force Mass Acceleration
+    @f isA $Force Force
+    @m isA $Mass Mass
+    @a isA $Acceleration Acceleration
+    @eq equals $Force (times $Mass $Acceleration)
+    @vec vectorForm $eq (F_equals_m_times_a)
+    @fund fundamental $eq (dynamicsEquation Classical)
+    return And $f (And $m (And $a (And $eq (And $vec $fund))))
+end
+
+@:Newton_Third_Law graph Action Reaction Force
+    @a isA $Action Force
+    @r isA $Reaction Force
+    @pair isA $ForcePair Interaction
+    @eq equals $Action (negative $Reaction)
+    @simul simultaneous $pair (actionAndReaction Always)
+    @bodies acts $pair (differentBodies Mutual)
+    return And $a (And $r (And $pair (And $eq (And $simul $bodies))))
+end
+
+@:Velocity_Definition graph Velocity Displacement Time
+    @v isA $Velocity Velocity
+    @d isA $Displacement Distance
+    @t isA $Time Duration
+    @eq equals $Velocity (divide $Displacement $Time)
+    @vec vectorQuantity $Velocity (directedMagnitude)
+    @unit hasUnit $Velocity (meterPerSecond SI)
+    return And $v (And $d (And $t (And $eq (And $vec $unit))))
+end
+
+@:Acceleration_Definition graph Acceleration Velocity Time
+    @a isA $Acceleration Acceleration
+    @v isA $Velocity VelocityChange
+    @t isA $Time TimeInterval
+    @eq equals $Acceleration (divide $Velocity $Time)
+    @vec vectorQuantity $Acceleration (rateOfChange Velocity)
+    @unit hasUnit $Acceleration (meterPerSecondSquared SI)
+    return And $a (And $v (And $t (And $eq (And $vec $unit))))
+end
+
+@:Kinematic_Equation_1 graph Displacement Velocity Time Acceleration
+    @d isA $Displacement FinalPosition
+    @v0 isA $Velocity InitialVelocity
+    @t isA $Time Duration
+    @a isA $Acceleration ConstantAcceleration
+    @eq equals $Displacement (plus (times $v0 $t) (times 0.5 (times $a (square $t))))
+    @cond condition $eq (constantAcceleration Required)
+    return And $d (And $v0 (And $t (And $a (And $eq $cond))))
+end
+
+@:Kinematic_Equation_2 graph Velocity Initial Acceleration Time
+    @v isA $Velocity FinalVelocity
+    @v0 isA $Velocity InitialVelocity
+    @a isA $Acceleration Acceleration
+    @t isA $Time Duration
+    @eq equals $v (plus $v0 (times $a $t))
+    @linear linearRelationship $eq (velocityIncrease Time)
+    return And $v (And $v0 (And $a (And $t (And $eq $linear))))
+end
+
+@:Momentum_Definition graph Momentum Mass Velocity
+    @p isA $Momentum Momentum
+    @m isA $Mass Mass
+    @v isA $Velocity Velocity
+    @eq equals $Momentum (times $Mass $Velocity)
+    @vec vectorQuantity $Momentum (conserved Collisions)
+    @unit hasUnit $Momentum (kilogramMeterPerSecond SI)
+    return And $p (And $m (And $v (And $eq (And $vec $unit))))
+end
+
+@:Impulse_Momentum_Theorem graph Impulse Force Time Momentum
+    @j isA $Impulse Impulse
+    @f isA $Force Force
+    @t isA $Time Duration
+    @p isA $Momentum MomentumChange
+    @eq1 equals $Impulse (times $Force $Time)
+    @eq2 equals $Impulse $MomentumChange
+    @rel relates $eq1 (forceTime equals MomentumChange)
+    return And $j (And $f (And $t (And $p (And $eq1 (And $eq2 $rel)))))
+end
+
+; ===== CLASSICAL MECHANICS - DYNAMICS =====
+@:Gravitational_Force graph Gravity Mass Distance
+    @f isA $Force GravitationalForce
+    @m1 isA $Mass Mass1
+    @m2 isA $Mass Mass2
+    @r isA $Distance Separation
+    @g isA $Constant GravitationalConstant
+    @eq equals $Force (times $g (divide (times $m1 $m2) (square $r)))
+    @inv inverseSquare $eq (distanceDependence)
+    return And $f (And $m1 (And $m2 (And $r (And $g (And $eq $inv)))))
+end
+
+@:Weight_Definition graph Weight Mass Gravity
+    @w isA $Weight Weight
+    @m isA $Mass Mass
+    @g isA $Gravity GravitationalAcceleration
+    @eq equals $Weight (times $Mass $Gravity)
+    @earth onEarth $g (approximately 9.8)
+    @force typeOf $Weight (gravitationalForce)
+    return And $w (And $m (And $g (And $eq (And $earth $force))))
+end
+
+@:Friction_Force graph Friction Normal Coefficient
+    @f isA $Friction FrictionForce
+    @n isA $Normal NormalForce
+    @mu isA $Coefficient FrictionCoefficient
+    @eq equals $Friction (times $Coefficient $Normal)
+    @opp opposes $Friction (relativeMotion Surfaces)
+    @types hasForms $Friction (static kinetic rolling)
+    return And $f (And $n (And $mu (And $eq (And $opp $types))))
+end
+
+@:Centripetal_Force graph Force Mass Velocity Radius
+    @f isA $Force CentripetalForce
+    @m isA $Mass Mass
+    @v isA $Velocity TangentialVelocity
+    @r isA $Radius CircularPath
+    @eq equals $Force (divide (times $Mass (square $Velocity)) $Radius)
+    @dir directed $Force (centerOfCircle Inward)
+    @circ required $Force (circularMotion Maintain)
+    return And $f (And $m (And $v (And $r (And $eq (And $dir $circ)))))
+end
+
+@:Centripetal_Acceleration graph Acceleration Velocity Radius
+    @a isA $Acceleration CentripetalAcceleration
+    @v isA $Velocity TangentialVelocity
+    @r isA $Radius CircularPath
+    @eq equals $Acceleration (divide (square $Velocity) $Radius)
+    @alt alternatively $Acceleration (times $Radius (square AngularVelocity))
+    @dir directed $Acceleration (centerOfCircle Inward)
+    return And $a (And $v (And $r (And $eq (And $alt $dir))))
+end
+
+; ===== ENERGY AND WORK =====
+@:Work_Definition graph Work Force Displacement
+    @w isA $Work Work
+    @f isA $Force Force
+    @d isA $Displacement Displacement
+    @theta isA $Angle AngleBetween
+    @eq equals $Work (times $Force (times $Displacement (cos $Angle)))
+    @scalar scalarQuantity $Work (dotProduct Vectors)
+    @unit hasUnit $Work (joule SI)
+    return And $w (And $f (And $d (And $theta (And $eq (And $scalar $unit)))))
+end
+
+@:Kinetic_Energy_Definition graph Energy Mass Velocity
+    @ke isA $Energy KineticEnergy
+    @m isA $Mass Mass
+    @v isA $Velocity Velocity
+    @eq equals $Energy (times 0.5 (times $Mass (square $Velocity)))
+    @motion associatedWith $Energy (objectMotion)
+    @frame frameDependent $Energy (referenceFrame Relative)
+    return And $ke (And $m (And $v (And $eq (And $motion $frame))))
+end
+
+@:Potential_Energy_Gravitational graph Energy Mass Height Gravity
+    @pe isA $Energy PotentialEnergy
+    @m isA $Mass Mass
+    @g isA $Gravity GravitationalAcceleration
+    @h isA $Height HeightAboveReference
+    @eq equals $Energy (times $Mass (times $Gravity $Height))
+    @stored storedEnergy $Energy (positionInField Gravitational)
+    @ref relative $Energy (referencePoint Choice)
+    return And $pe (And $m (And $g (And $h (And $eq (And $stored $ref)))))
+end
+
+@:Work_Energy_Theorem graph Work Energy Change
+    @w isA $Work NetWork
+    @ke isA $Energy KineticEnergyChange
+    @ke1 isA $Energy InitialKineticEnergy
+    @ke2 isA $Energy FinalKineticEnergy
+    @eq equals $Work (minus $ke2 $ke1)
+    @rel relates $Work (changeInKineticEnergy)
+    @fund fundamental $eq (workEnergyPrinciple)
+    return And $w (And $ke (And $ke1 (And $ke2 (And $eq (And $rel $fund)))))
+end
+
+@:Mechanical_Energy_Conservation graph Energy Kinetic Potential
+    @e isA $Energy MechanicalEnergy
+    @ke isA $Energy KineticEnergy
+    @pe isA $Energy PotentialEnergy
+    @sum equals $Energy (plus $KineticEnergy $PotentialEnergy)
+    @cons conserved $Energy (isolatedSystem NoFriction)
+    @trans transformation $Energy (kineticToPotential Reversible)
+    return And $e (And $ke (And $pe (And $sum (And $cons $trans))))
+end
+
+@:Power_Work_Definition graph Power Work Time
+    @p isA $Power Power
+    @w isA $Work Work
+    @t isA $Time TimeInterval
+    @eq equals $Power (divide $Work $Time)
+    @alt alternatively $Power (times Force Velocity)
+    @rate represents $Power (rateOfEnergyTransfer)
+    return And $p (And $w (And $t (And $eq (And $alt $rate))))
+end
+
+@:Elastic_Potential_Energy graph Energy Spring Displacement
+    @pe isA $Energy ElasticPotentialEnergy
+    @k isA $Constant SpringConstant
+    @x isA $Displacement Compression
+    @eq equals $Energy (times 0.5 (times $Constant (square $Displacement)))
+    @hooke followsLaw $Energy (hookesLaw Spring)
+    @stored storedIn $Energy (elasticDeformation)
+    return And $pe (And $k (And $x (And $eq (And $hooke $stored))))
+end
+
+; ===== ROTATIONAL MECHANICS =====
+@:Torque_Definition graph Torque Force Distance
+    @tau isA $Torque Torque
+    @f isA $Force Force
+    @r isA $Distance LeverArm
+    @theta isA $Angle AngleBetween
+    @eq equals $Torque (times $Force (times $Distance (sin $Angle)))
+    @rot causes $Torque (rotationalMotion)
+    @vec vectorQuantity $Torque (crossProduct)
+    return And $tau (And $f (And $r (And $theta (And $eq (And $rot $vec)))))
+end
+
+@:Moment_Of_Inertia graph Inertia Mass Distribution
+    @i isA $Inertia MomentOfInertia
+    @m isA $Mass Mass
+    @r isA $Distance DistanceFromAxis
+    @eq equals $Inertia (sum (times $Mass (square $Distance)))
+    @rot rotationalAnalog $Inertia (mass LinearMotion)
+    @depend depends $Inertia (axisOfRotation massDistribution)
+    return And $i (And $m (And $r (And $eq (And $rot $depend))))
+end
+
+@:Angular_Momentum_Definition graph Momentum Inertia Velocity
+    @l isA $Momentum AngularMomentum
+    @i isA $Inertia MomentOfInertia
+    @omega isA $Velocity AngularVelocity
+    @eq equals $Momentum (times $Inertia $Velocity)
+    @cons conserved $Momentum (closedSystem NoExternalTorque)
+    @vec vectorQuantity $Momentum (rotationalMotion)
+    return And $l (And $i (And $omega (And $eq (And $cons $vec))))
+end
+
+@:Rotational_Kinetic_Energy graph Energy Inertia Velocity
+    @ke isA $Energy RotationalKineticEnergy
+    @i isA $Inertia MomentOfInertia
+    @omega isA $Velocity AngularVelocity
+    @eq equals $Energy (times 0.5 (times $Inertia (square $Velocity)))
+    @analog analogous $Energy (linearKineticEnergy Translation)
+    @total totalEnergy $Energy (plusTranslational Combined)
+    return And $ke (And $i (And $omega (And $eq (And $analog $total))))
+end
+
+@:Angular_Acceleration_Torque graph Torque Inertia Acceleration
+    @tau isA $Torque NetTorque
+    @i isA $Inertia MomentOfInertia
+    @alpha isA $Acceleration AngularAcceleration
+    @eq equals $Torque (times $Inertia $Acceleration)
+    @analog analogous $eq (newtonSecondLaw Rotation)
+    @fund fundamental $eq (rotationalDynamics)
+    return And $tau (And $i (And $alpha (And $eq (And $analog $fund))))
+end
+
+; ===== THERMODYNAMICS =====
+@:Temperature_Kinetic_Theory graph Temperature Energy Particles
+    @t isA $Temperature Temperature
+    @e isA $Energy KineticEnergy
+    @k isA $Constant BoltzmannConstant
+    @avg isA $Energy AverageKineticEnergy
+    @eq equals $avg (times 1.5 (times $k $Temperature))
+    @micro microscopicView $eq (particleMotion)
+    @abs absoluteZero $Temperature (zeroKineticEnergy Particles)
+    return And $t (And $e (And $k (And $avg (And $eq (And $micro $abs)))))
+end
+
+@:Heat_Transfer_Definition graph Heat Energy Temperature
+    @q isA $Heat Heat
+    @e isA $Energy ThermalEnergy
+    @t isA $Temperature TemperatureDifference
+    @flow flows $Heat (hotToCold Spontaneous)
+    @trans transferModes $Heat (conduction convection radiation)
+    @eq equilibrium $Heat (zeroTransfer EqualTemperature)
+    return And $q (And $e (And $t (And $flow (And $trans $eq))))
+end
+
+@:First_Law_Thermodynamics graph Energy Heat Work
+    @de isA $Energy InternalEnergyChange
+    @q isA $Heat HeatAdded
+    @w isA $Work WorkDoneBySystem
+    @eq equals $InternalEnergyChange (minus $HeatAdded $WorkDoneBySystem)
+    @cons conservation $eq (energyConservation)
+    @fund fundamental $eq (thermodynamics First)
+    return And $de (And $q (And $w (And $eq (And $cons $fund))))
+end
+
+@:Second_Law_Thermodynamics graph Entropy Heat Temperature
+    @ds isA $Entropy EntropyChange
+    @q isA $Heat HeatTransfer
+    @t isA $Temperature Temperature
+    @eq greaterEqual $EntropyChange (divide $HeatTransfer $Temperature)
+    @arrow timeArrow $Entropy (increases IsolatedSystem)
+    @irrev irreversibility $Entropy (naturalProcesses Direction)
+    return And $ds (And $q (And $t (And $eq (And $arrow $irrev))))
+end
+
+@:Ideal_Gas_Law graph Pressure Volume Temperature
+    @p isA $Pressure Pressure
+    @v isA $Volume Volume
+    @n isA $Amount MolesOfGas
+    @r isA $Constant UniversalGasConstant
+    @t isA $Temperature Temperature
+    @eq equals (times $Pressure $Volume) (times $Amount (times $r $Temperature))
+    @ideal applies $eq (idealGas Approximation)
+    return And $p (And $v (And $n (And $r (And $t (And $eq $ideal)))))
+end
+
+@:Heat_Capacity_Definition graph Heat Capacity Temperature
+    @c isA $Capacity HeatCapacity
+    @q isA $Heat HeatAdded
+    @dt isA $Temperature TemperatureChange
+    @eq equals $Capacity (divide $HeatAdded $TemperatureChange)
+    @spec specificHeat $Capacity (perUnitMass)
+    @molar molarHeat $Capacity (perMole)
+    return And $c (And $q (And $dt (And $eq (And $spec $molar))))
+end
+
+@:Carnot_Efficiency graph Efficiency Temperature Heat
+    @eff isA $Efficiency CarnotEfficiency
+    @th isA $Temperature HotReservoir
+    @tc isA $Temperature ColdReservoir
+    @eq equals $Efficiency (minus 1 (divide $tc $th))
+    @max maximum $Efficiency (reversibleEngine)
+    @limit fundamental $eq (thermodynamicLimit)
+    return And $eff (And $th (And $tc (And $eq (And $max $limit))))
+end
+
+@:Entropy_Statistical graph Entropy States Probability
+    @s isA $Entropy Entropy
+    @k isA $Constant BoltzmannConstant
+    @w isA $States Microstates
+    @eq equals $Entropy (times $k (ln $Microstates))
+    @disorder measures $Entropy (systemDisorder)
+    @stat statistical $eq (thermodynamicProbability)
+    return And $s (And $k (And $w (And $eq (And $disorder $stat))))
+end
+
+; ===== ELECTROMAGNETISM - ELECTROSTATICS =====
+@:Coulomb_Law graph Force Charge Distance
+    @f isA $Force ElectricForce
+    @q1 isA $Charge Charge1
+    @q2 isA $Charge Charge2
+    @r isA $Distance Separation
+    @k isA $Constant CoulombConstant
+    @eq equals $Force (times $k (divide (times $q1 $q2) (square $r)))
+    @inv inverseSquare $eq (distanceDependence)
+    @sign signDependent $Force (attractRepel)
+    return And $f (And $q1 (And $q2 (And $r (And $k (And $eq (And $inv $sign))))))
+end
+
+@:Electric_Field_Definition graph Field Force Charge
+    @e isA $Field ElectricField
+    @f isA $Force ElectricForce
+    @q isA $Charge TestCharge
+    @eq equals $Field (divide $Force $Charge)
+    @vec vectorField $Field (forcePerUnitCharge)
+    @source created $Field (charges)
+    return And $e (And $f (And $q (And $eq (And $vec $source))))
+end
+
+@:Electric_Potential_Definition graph Potential Energy Charge
+    @v isA $Potential ElectricPotential
+    @u isA $Energy PotentialEnergy
+    @q isA $Charge TestCharge
+    @eq equals $Potential (divide $Energy $Charge)
+    @scalar scalarField $Potential (energyPerUnitCharge)
+    @volt hasUnit $Potential (volt SI)
+    return And $v (And $u (And $q (And $eq (And $scalar $volt))))
+end
+
+@:Gauss_Law graph Flux Charge Field
+    @phi isA $Flux ElectricFlux
+    @q isA $Charge EnclosedCharge
+    @e0 isA $Constant PermittivityOfFreeSpace
+    @eq equals $Flux (divide $Charge $e0)
+    @surf throughSurface $Flux (closedSurface Gaussian)
+    @maxwell maxwellEquation $eq (firstEquation Electrostatics)
+    return And $phi (And $q (And $e0 (And $eq (And $surf $maxwell))))
+end
+
+@:Capacitance_Definition graph Capacitance Charge Voltage
+    @c isA $Capacitance Capacitance
+    @q isA $Charge Charge
+    @v isA $Voltage Voltage
+    @eq equals $Capacitance (divide $Charge $Voltage)
+    @store stores $Capacitance (electricCharge)
+    @geom depends $Capacitance (geometry Material)
+    return And $c (And $q (And $v (And $eq (And $store $geom))))
+end
+
+@:Energy_Stored_Capacitor graph Energy Capacitance Voltage
+    @u isA $Energy StoredEnergy
+    @c isA $Capacitance Capacitance
+    @v isA $Voltage Voltage
+    @eq equals $Energy (times 0.5 (times $Capacitance (square $Voltage)))
+    @alt alternatively $Energy (divide (square $Charge) (times 2 $Capacitance))
+    @field inField $Energy (electricField)
+    return And $u (And $c (And $v (And $eq (And $alt $field))))
+end
+
+; ===== ELECTROMAGNETISM - CIRCUITS =====
+@:Ohms_Law graph Voltage Current Resistance
+    @v isA $Voltage Voltage
+    @i isA $Current Current
+    @r isA $Resistance Resistance
+    @eq equals $Voltage (times $Current $Resistance)
+    @linear linearRelationship $eq (ohmicMaterials)
+    @fund fundamental $eq (circuitAnalysis)
+    return And $v (And $i (And $r (And $eq (And $linear $fund))))
+end
+
+@:Power_Electric_Circuit graph Power Voltage Current
+    @p isA $Power ElectricPower
+    @v isA $Voltage Voltage
+    @i isA $Current Current
+    @eq equals $Power (times $Voltage $Current)
+    @alt1 alternatively $Power (divide (square $Voltage) $Resistance)
+    @alt2 alternatively $Power (times (square $Current) $Resistance)
+    return And $p (And $v (And $i (And $eq (And $alt1 $alt2))))
+end
+
+@:Kirchhoff_Current_Law graph Current Junction Conservation
+    @sum isA $Sum CurrentSum
+    @junction isA $Point Junction
+    @in isA $Current CurrentIn
+    @out isA $Current CurrentOut
+    @eq equals $in $out
+    @cons conservation $eq (chargeConservation)
+    @node applies $eq (circuitNode)
+    return And $sum (And $junction (And $in (And $out (And $eq (And $cons $node)))))
+end
+
+@:Kirchhoff_Voltage_Law graph Voltage Loop Conservation
+    @sum isA $Sum VoltageSum
+    @loop isA $Path ClosedLoop
+    @rise isA $Voltage VoltageRise
+    @drop isA $Voltage VoltageDrop
+    @eq equals $sum zero
+    @cons conservation $eq (energyConservation)
+    @circuit applies $eq (closedLoop)
+    return And $sum (And $loop (And $rise (And $drop (And $eq (And $cons $circuit)))))
+end
+
+@:Resistors_Series graph Resistance Combination Series
+    @rt isA $Resistance TotalResistance
+    @r1 isA $Resistance Resistor1
+    @r2 isA $Resistance Resistor2
+    @eq equals $rt (plus $r1 $r2)
+    @curr sameCurrent $eq (throughAll)
+    @gen generalizes $eq (sumOfResistances)
+    return And $rt (And $r1 (And $r2 (And $eq (And $curr $gen))))
+end
+
+@:Resistors_Parallel graph Resistance Combination Parallel
+    @rt isA $Resistance TotalResistance
+    @r1 isA $Resistance Resistor1
+    @r2 isA $Resistance Resistor2
+    @eq equals (inverse $rt) (plus (inverse $r1) (inverse $r2))
+    @volt sameVoltage $eq (acrossAll)
+    @less lessThan $rt (individualResistances)
+    return And $rt (And $r1 (And $r2 (And $eq (And $volt $less))))
+end
+
+@:Capacitors_Series graph Capacitance Combination Series
+    @ct isA $Capacitance TotalCapacitance
+    @c1 isA $Capacitance Capacitor1
+    @c2 isA $Capacitance Capacitor2
+    @eq equals (inverse $ct) (plus (inverse $c1) (inverse $c2))
+    @charge sameCharge $eq (onAll)
+    @less lessThan $ct (individualCapacitances)
+    return And $ct (And $c1 (And $c2 (And $eq (And $charge $less))))
+end
+
+@:Capacitors_Parallel graph Capacitance Combination Parallel
+    @ct isA $Capacitance TotalCapacitance
+    @c1 isA $Capacitance Capacitor1
+    @c2 isA $Capacitance Capacitor2
+    @eq equals $ct (plus $c1 $c2)
+    @volt sameVoltage $eq (acrossAll)
+    @sum additive $eq (parallelCapacitance)
+    return And $ct (And $c1 (And $c2 (And $eq (And $volt $sum))))
+end
+
+; ===== ELECTROMAGNETISM - MAGNETISM =====
+@:Magnetic_Force_Moving_Charge graph Force Charge Velocity Field
+    @f isA $Force MagneticForce
+    @q isA $Charge Charge
+    @v isA $Velocity Velocity
+    @b isA $Field MagneticField
+    @theta isA $Angle AngleBetween
+    @eq equals $Force (times $Charge (times $Velocity (times $Field (sin $theta))))
+    @perp perpendicular $Force (velocityAndField)
+    @cross vectorCross $eq (crossProduct)
+    return And $f (And $q (And $v (And $b (And $theta (And $eq (And $perp $cross))))))
+end
+
+@:Magnetic_Force_Current graph Force Current Length Field
+    @f isA $Force MagneticForce
+    @i isA $Current Current
+    @l isA $Length WireLength
+    @b isA $Field MagneticField
+    @theta isA $Angle AngleBetween
+    @eq equals $Force (times $Current (times $Length (times $Field (sin $theta))))
+    @wire actingOn $Force (currentCarryingWire)
+    @max maximum $Force (perpendicularField)
+    return And $f (And $i (And $l (And $b (And $theta (And $eq (And $wire $max))))))
+end
+
+@:Biot_Savart_Law graph Field Current Distance
+    @db isA $Field MagneticFieldElement
+    @i isA $Current Current
+    @dl isA $Length CurrentElement
+    @r isA $Distance Distance
+    @mu0 isA $Constant PermeabilityOfFreeSpace
+    @eq proportional $db (divide (times $Current $dl) (square $r))
+    @calc calculates $eq (magneticField CurrentDistribution)
+    @fund fundamental $eq (magnetostatics)
+    return And $db (And $i (And $dl (And $r (And $mu0 (And $eq (And $calc $fund))))))
+end
+
+@:Ampere_Law graph Field Current Path
+    @b isA $Field MagneticField
+    @i isA $Current EnclosedCurrent
+    @mu0 isA $Constant PermeabilityOfFreeSpace
+    @integral isA $Integration LineIntegral
+    @eq equals $integral (times $mu0 $Current)
+    @path closedPath $integral (amperianLoop)
+    @maxwell maxwellEquation $eq (fourthEquation Magnetostatics)
+    return And $b (And $i (And $mu0 (And $integral (And $eq (And $path $maxwell)))))
+end
+
+@:Faraday_Law_Induction graph EMF Flux Time
+    @emf isA $EMF InducedEMF
+    @phi isA $Flux MagneticFlux
+    @t isA $Time Time
+    @eq equals $emf (negative (derivative $Flux $Time))
+    @ind induces $emf (changingMagneticFlux)
+    @lenz lenzLaw $emf (opposeChange)
+    return And $emf (And $phi (And $t (And $eq (And $ind $lenz))))
+end
+
+@:Magnetic_Flux_Definition graph Flux Field Area
+    @phi isA $Flux MagneticFlux
+    @b isA $Field MagneticField
+    @a isA $Area Area
+    @theta isA $Angle AngleBetween
+    @eq equals $Flux (times $Field (times $Area (cos $theta)))
+    @max maximum $Flux (perpendicularField)
+    @unit hasUnit $Flux (weber SI)
+    return And $phi (And $b (And $a (And $theta (And $eq (And $max $unit)))))
+end
+
+@:Inductance_Definition graph Inductance Flux Current
+    @l isA $Inductance Inductance
+    @phi isA $Flux MagneticFlux
+    @i isA $Current Current
+    @eq equals $Inductance (divide $Flux $Current)
+    @self selfInductance $Inductance (ownMagneticField)
+    @opp opposes $Inductance (currentChange)
+    return And $l (And $phi (And $i (And $eq (And $self $opp))))
+end
+
+@:Energy_Stored_Inductor graph Energy Inductance Current
+    @u isA $Energy StoredEnergy
+    @l isA $Inductance Inductance
+    @i isA $Current Current
+    @eq equals $Energy (times 0.5 (times $Inductance (square $Current)))
+    @field inField $Energy (magneticField)
+    @build buildsUp $Energy (currentEstablishment)
+    return And $u (And $l (And $i (And $eq (And $field $build))))
+end
+
+; ===== WAVES AND OPTICS =====
+@:Wave_Velocity_Equation graph Velocity Frequency Wavelength
+    @v isA $Velocity WaveVelocity
+    @f isA $Frequency Frequency
+    @lambda isA $Wavelength Wavelength
+    @eq equals $Velocity (times $Frequency $Wavelength)
+    @univ universal $eq (allWaves)
+    @prop propagation $eq (waveMotion)
+    return And $v (And $f (And $lambda (And $eq (And $univ $prop))))
+end
+
+@:Speed_Of_Light graph Velocity Constant Universal
+    @c isA $Velocity SpeedOfLight
+    @val hasValue $c (approximately 3e8)
+    @unit hasUnit $c (meterPerSecond)
+    @const constant $c (vacuum)
+    @max maximum $c (informationSpeed)
+    @rel relativity $c (fundamentalConstant)
+    return And $c (And $val (And $unit (And $const (And $max $rel))))
+end
+
+@:Electromagnetic_Wave_Speed graph Speed Electric Magnetic
+    @c isA $Speed LightSpeed
+    @e0 isA $Constant ElectricPermittivity
+    @mu0 isA $Constant MagneticPermeability
+    @eq equals $c (inverse (sqrt (times $e0 $mu0)))
+    @maxwell derived $eq (maxwellEquations)
+    @em property $eq (electromagneticWaves)
+    return And $c (And $e0 (And $mu0 (And $eq (And $maxwell $em))))
+end
+
+@:Snell_Law_Refraction graph Refraction Index Angle
+    @n1 isA $Index RefractiveIndex1
+    @n2 isA $Index RefractiveIndex2
+    @theta1 isA $Angle IncidentAngle
+    @theta2 isA $Angle RefractedAngle
+    @eq equals (times $n1 (sin $theta1)) (times $n2 (sin $theta2))
+    @bend bending $eq (lightPath MediaBoundary)
+    @fund fundamental $eq (refraction)
+    return And $n1 (And $n2 (And $theta1 (And $theta2 (And $eq (And $bend $fund)))))
+end
+
+@:Reflection_Law graph Reflection Angle Incident
+    @thetai isA $Angle IncidentAngle
+    @thetar isA $Angle ReflectedAngle
+    @normal isA $Line Normal
+    @eq equals $thetai $thetar
+    @meas measuredFrom $eq (normalToSurface)
+    @spec specular $eq (smoothSurface)
+    return And $thetai (And $thetar (And $normal (And $eq (And $meas $spec))))
+end
+
+@:Lens_Equation graph Lens Distance Focal
+    @f isA $Distance FocalLength
+    @do isA $Distance ObjectDistance
+    @di isA $Distance ImageDistance
+    @eq equals (inverse $f) (plus (inverse $do) (inverse $di))
+    @thin thinLens $eq (approximation)
+    @calc calculates $eq (imagePosition)
+    return And $f (And $do (And $di (And $eq (And $thin $calc))))
+end
+
+@:Magnification_Definition graph Magnification Image Object
+    @m isA $Magnification Magnification
+    @hi isA $Height ImageHeight
+    @ho isA $Height ObjectHeight
+    @di isA $Distance ImageDistance
+    @do isA $Distance ObjectDistance
+    @eq1 equals $Magnification (divide $hi $ho)
+    @eq2 equals $Magnification (negative (divide $di $do))
+    return And $m (And $hi (And $ho (And $di (And $do (And $eq1 $eq2)))))
+end
+
+@:Interference_Constructive graph Interference Path Wave
+    @delta isA $PathDifference PathDifference
+    @lambda isA $Wavelength Wavelength
+    @m isA $Integer OrderNumber
+    @eq equals $delta (times $m $lambda)
+    @max maximumIntensity $eq (constructiveInterference)
+    @phase inPhase $eq (wavesSuperpose)
+    return And $delta (And $lambda (And $m (And $eq (And $max $phase))))
+end
+
+@:Interference_Destructive graph Interference Path Wave
+    @delta isA $PathDifference PathDifference
+    @lambda isA $Wavelength Wavelength
+    @m isA $Integer OrderNumber
+    @eq equals $delta (times (plus $m 0.5) $lambda)
+    @min minimumIntensity $eq (destructiveInterference)
+    @phase outOfPhase $eq (waveCancel)
+    return And $delta (And $lambda (And $m (And $eq (And $min $phase))))
+end
+
+@:Diffraction_Single_Slit graph Diffraction Slit Wavelength
+    @theta isA $Angle DiffractionAngle
+    @a isA $Width SlitWidth
+    @lambda isA $Wavelength Wavelength
+    @m isA $Integer OrderNumber
+    @eq equals (times $a (sin $theta)) (times $m $lambda)
+    @dark darkFringe $eq (minimumCondition)
+    @spread spreading $eq (waveBending)
+    return And $theta (And $a (And $lambda (And $m (And $eq (And $dark $spread)))))
+end
+
+@:Doppler_Effect_Light graph Frequency Velocity Doppler
+    @f isA $Frequency ObservedFrequency
+    @f0 isA $Frequency SourceFrequency
+    @v isA $Velocity RelativeVelocity
+    @c isA $Constant SpeedOfLight
+    @eq proportional $f (times $f0 (sqrt (divide (plus $c $v) (minus $c $v))))
+    @shift redshift $eq (sourceReceding)
+    @blue blueshift $eq (sourceApproaching)
+    return And $f (And $f0 (And $v (And $c (And $eq (And $shift $blue)))))
+end
+
+; ===== MODERN PHYSICS =====
+@:Special_Relativity_Time_Dilation graph Time Velocity Relativity
+    @dt isA $Time ProperTime
+    @dt0 isA $Time RestTime
+    @v isA $Velocity RelativeVelocity
+    @c isA $Constant SpeedOfLight
+    @gamma isA $Factor LorentzFactor
+    @eq equals $dt (divide $dt0 (sqrt (minus 1 (divide (square $v) (square $c)))))
+    @slow slowerTime $eq (movingFrame)
+    return And $dt (And $dt0 (And $v (And $c (And $gamma (And $eq $slow)))))
+end
+
+@:Special_Relativity_Length_Contraction graph Length Velocity Relativity
+    @l isA $Length ContractedLength
+    @l0 isA $Length ProperLength
+    @v isA $Velocity RelativeVelocity
+    @c isA $Constant SpeedOfLight
+    @eq equals $l (times $l0 (sqrt (minus 1 (divide (square $v) (square $c)))))
+    @short shorterLength $eq (movingFrame)
+    @dir directionOf $eq (motion)
+    return And $l (And $l0 (And $v (And $c (And $eq (And $short $dir)))))
+end
+
+@:Mass_Energy_Equivalence graph Energy Mass Speed
+    @e isA $Energy Energy
+    @m isA $Mass Mass
+    @c isA $Constant SpeedOfLight
+    @eq equals $Energy (times $Mass (square $c))
+    @equiv equivalence $eq (massEnergy)
+    @fund fundamental $eq (relativity Einstein)
+    return And $e (And $m (And $c (And $eq (And $equiv $fund))))
+end
+
+@:Relativistic_Momentum graph Momentum Mass Velocity
+    @p isA $Momentum RelativisticMomentum
+    @m isA $Mass RestMass
+    @v isA $Velocity Velocity
+    @c isA $Constant SpeedOfLight
+    @gamma isA $Factor LorentzFactor
+    @eq equals $Momentum (divide (times $Mass $Velocity) (sqrt (minus 1 (divide (square $v) (square $c)))))
+    @high highSpeed $eq (nearLightSpeed)
+    return And $p (And $m (And $v (And $c (And $gamma (And $eq $high)))))
+end
+
+@:Photon_Energy graph Energy Frequency Planck
+    @e isA $Energy PhotonEnergy
+    @h isA $Constant PlanckConstant
+    @f isA $Frequency Frequency
+    @eq equals $Energy (times $h $Frequency)
+    @quant quantized $Energy (lightEnergy)
+    @particle particleNature $eq (electromagnetic Radiation)
+    return And $e (And $h (And $f (And $eq (And $quant $particle))))
+end
+
+@:De_Broglie_Wavelength graph Wavelength Momentum Particle
+    @lambda isA $Wavelength DeBroglieWavelength
+    @h isA $Constant PlanckConstant
+    @p isA $Momentum Momentum
+    @eq equals $lambda (divide $h $Momentum)
+    @wave waveDuality $eq (particle Matter)
+    @quant quantum $eq (mechanics)
+    return And $lambda (And $h (And $p (And $eq (And $wave $quant))))
+end
+
+@:Heisenberg_Uncertainty_Position graph Uncertainty Position Momentum
+    @dx isA $Uncertainty PositionUncertainty
+    @dp isA $Uncertainty MomentumUncertainty
+    @h isA $Constant PlanckConstant
+    @eq greaterEqual (times $dx $dp) (divide $h (times 2 pi))
+    @fund fundamental $eq (quantumMechanics)
+    @limit limits $eq (simultaneousMeasurement)
+    return And $dx (And $dp (And $h (And $eq (And $fund $limit))))
+end
+
+@:Heisenberg_Uncertainty_Energy graph Uncertainty Energy Time
+    @de isA $Uncertainty EnergyUncertainty
+    @dt isA $Uncertainty TimeUncertainty
+    @h isA $Constant PlanckConstant
+    @eq greaterEqual (times $de $dt) (divide $h (times 2 pi))
+    @virtual allowsVirtual $eq (particles ShortTime)
+    @quant quantum $eq (fluctuations)
+    return And $de (And $dt (And $h (And $eq (And $virtual $quant))))
+end
+
+@:Schrodinger_Equation_Time_Independent graph Wavefunction Energy Potential
+    @psi isA $Wavefunction Wavefunction
+    @e isA $Energy Energy
+    @v isA $Potential Potential
+    @h isA $Constant PlanckConstant
+    @m isA $Mass Mass
+    @eq equals (plus (times (negative (divide (square $h) (times 2 $m))) (laplacian $psi)) (times $v $psi)) (times $e $psi)
+    @fund fundamental $eq (quantumMechanics)
+    @det determines $eq (stationaryStates)
+    return And $psi (And $e (And $v (And $h (And $m (And $eq (And $fund $det))))))
+end
+
+@:Quantum_Superposition graph State Wavefunction Measurement
+    @psi isA $Wavefunction Superposition
+    @psi1 isA $State State1
+    @psi2 isA $State State2
+    @c1 isA $Coefficient Amplitude1
+    @c2 isA $Coefficient Amplitude2
+    @eq equals $psi (plus (times $c1 $psi1) (times $c2 $psi2))
+    @coll collapses $psi (uponMeasurement)
+    @prob probability $eq (squaredAmplitudes)
+    return And $psi (And $psi1 (And $psi2 (And $c1 (And $c2 (And $eq (And $coll $prob))))))
+end
+
+; ===== CONSERVATION LAWS =====
+@:Conservation_Of_Energy graph Energy System Closed
+    @e isA $Energy TotalEnergy
+    @sys isA $System IsolatedSystem
+    @t isA $Time Time
+    @cons conserved $Energy (allProcesses)
+    @eq constant $Energy (closedSystem)
+    @fund fundamental $cons (physics Law)
+    return And $e (And $sys (And $t (And $cons (And $eq $fund))))
+end
+
+@:Conservation_Of_Momentum graph Momentum System Force
+    @p isA $Momentum TotalMomentum
+    @sys isA $System IsolatedSystem
+    @f isA $Force ExternalForce
+    @cons conserved $Momentum (zeroExternalForce)
+    @eq constant $Momentum (closedSystem)
+    @coll applies $cons (collisions Explosions)
+    return And $p (And $sys (And $f (And $cons (And $eq $coll))))
+end
+
+@:Conservation_Of_Angular_Momentum graph Momentum Torque System
+    @l isA $Momentum AngularMomentum
+    @tau isA $Torque ExternalTorque
+    @sys isA $System IsolatedSystem
+    @cons conserved $Momentum (zeroExternalTorque)
+    @eq constant $Momentum (closedSystem)
+    @rot applies $cons (rotationalMotion)
+    return And $l (And $tau (And $sys (And $cons (And $eq $rot))))
+end
+
+@:Conservation_Of_Charge graph Charge System Closed
+    @q isA $Charge TotalCharge
+    @sys isA $System IsolatedSystem
+    @cons conserved $Charge (allProcesses)
+    @eq constant $Charge (closedSystem)
+    @fund fundamental $cons (electromagnetism)
+    return And $q (And $sys (And $cons (And $eq $fund)))
+end
+
+@:Noether_Theorem_Energy graph Symmetry Conservation Time
+    @sym isA $Symmetry TimeTranslation
+    @cons isA $Conservation EnergyConservation
+    @law isA $Theorem NoetherTheorem
+    @eq implies $sym $cons
+    @fund fundamental $law (symmetryConservation)
+    @deep deepConnection $eq (physicsLaws)
+    return And $sym (And $cons (And $law (And $eq (And $fund $deep))))
+end
+
+@:Noether_Theorem_Momentum graph Symmetry Conservation Space
+    @sym isA $Symmetry SpaceTranslation
+    @cons isA $Conservation MomentumConservation
+    @law isA $Theorem NoetherTheorem
+    @eq implies $sym $cons
+    @homog homogeneity $sym (space)
+    @fund fundamental $law (symmetryPrinciple)
+    return And $sym (And $cons (And $law (And $eq (And $homog $fund))))
+end
+
+@:Noether_Theorem_Angular_Momentum graph Symmetry Conservation Rotation
+    @sym isA $Symmetry RotationalSymmetry
+    @cons isA $Conservation AngularMomentumConservation
+    @law isA $Theorem NoetherTheorem
+    @eq implies $sym $cons
+    @isotropy isotropy $sym (space)
+    @fund fundamental $law (conservationPrinciple)
+    return And $sym (And $cons (And $law (And $eq (And $isotropy $fund))))
+end
+
+; ===== ADDITIONAL FUNDAMENTAL CONCEPTS =====
+@:Hookes_Law graph Force Spring Displacement
+    @f isA $Force RestoringForce
+    @k isA $Constant SpringConstant
+    @x isA $Displacement Displacement
+    @eq equals $Force (negative (times $k $Displacement))
+    @linear linearRelationship $eq (elasticRegion)
+    @restoring opposes $Force (displacement)
+    return And $f (And $k (And $x (And $eq (And $linear $restoring))))
+end
+
+@:Simple_Harmonic_Motion graph Motion Force Oscillation
+    @x isA $Displacement Displacement
+    @t isA $Time Time
+    @omega isA $Frequency AngularFrequency
+    @a isA $Amplitude Amplitude
+    @eq equals $x (times $a (cos (times $omega $t)))
+    @periodic periodic $eq (sinusoidal)
+    @restoring requires $eq (restoringForce proportionalDisplacement)
+    return And $x (And $t (And $omega (And $a (And $eq (And $periodic $restoring)))))
+end
+
+@:Period_Simple_Harmonic graph Period Mass Spring
+    @t isA $Period Period
+    @m isA $Mass Mass
+    @k isA $Constant SpringConstant
+    @eq equals $Period (times 2 (times pi (sqrt (divide $Mass $k))))
+    @indep independent $Period (amplitude)
+    @osc oscillation $eq (massSpringSystem)
+    return And $t (And $m (And $k (And $eq (And $indep $osc))))
+end
+
+@:Gravitational_Potential_Energy_General graph Energy Mass Distance Gravity
+    @u isA $Energy GravitationalPotentialEnergy
+    @g isA $Constant GravitationalConstant
+    @m1 isA $Mass Mass1
+    @m2 isA $Mass Mass2
+    @r isA $Distance Separation
+    @eq equals $Energy (negative (divide (times $g (times $m1 $m2)) $r))
+    @zero zeroAt $Energy (infiniteSeparation)
+    @binding bindingEnergy $Energy (gravitationalSystem)
+    return And $u (And $g (And $m1 (And $m2 (And $r (And $eq (And $zero $binding))))))
+end
+
+@:Escape_Velocity graph Velocity Mass Radius Gravity
+    @ve isA $Velocity EscapeVelocity
+    @g isA $Constant GravitationalConstant
+    @m isA $Mass PlanetMass
+    @r isA $Radius PlanetRadius
+    @eq equals $ve (sqrt (divide (times 2 (times $g $m)) $r))
+    @min minimumVelocity $ve (escapeGravity)
+    @energy fromEnergy $eq (conservationPrinciple)
+    return And $ve (And $g (And $m (And $r (And $eq (And $min $energy)))))
+end
+
+@:Bernoulli_Equation graph Pressure Velocity Height Fluid
+    @p isA $Pressure Pressure
+    @rho isA $Density Density
+    @v isA $Velocity FluidVelocity
+    @g isA $Gravity Gravity
+    @h isA $Height Height
+    @eq constant (plus $p (plus (times 0.5 (times $rho (square $v))) (times $rho (times $g $h))))
+    @cons conservation $eq (energyInFluid)
+    @ideal applies $eq (idealFluid Streamline)
+    return And $p (And $rho (And $v (And $g (And $h (And $eq (And $cons $ideal))))))
+end
+
+@:Continuity_Equation_Fluid graph Flow Area Velocity Fluid
+    @a1 isA $Area Area1
+    @v1 isA $Velocity Velocity1
+    @a2 isA $Area Area2
+    @v2 isA $Velocity Velocity2
+    @eq equals (times $a1 $v1) (times $a2 $v2)
+    @cons conservation $eq (massFlow)
+    @incomp incompressible $eq (fluidAssumption)
+    return And $a1 (And $v1 (And $a2 (And $v2 (And $eq (And $cons $incomp)))))
+end
+
+@:Stefan_Boltzmann_Law graph Power Temperature Area Radiation
+    @p isA $Power RadiatedPower
+    @sigma isA $Constant StefanBoltzmannConstant
+    @a isA $Area SurfaceArea
+    @t isA $Temperature Temperature
+    @eq equals $Power (times $sigma (times $Area (power $Temperature 4)))
+    @rad thermalRadiation $eq (blackBody)
+    @fourth fourthPower $eq (temperatureDependence)
+    return And $p (And $sigma (And $a (And $t (And $eq (And $rad $fourth)))))
+end
+
+@:Wien_Displacement_Law graph Wavelength Temperature Radiation
+    @lambda_max isA $Wavelength PeakWavelength
+    @t isA $Temperature Temperature
+    @b isA $Constant WienConstant
+    @eq equals (times $lambda_max $Temperature) $b
+    @peak peakEmission $eq (blackBodySpectrum)
+    @inv inversely $lambda_max (proportional Temperature)
+    return And $lambda_max (And $t (And $b (And $eq (And $peak $inv))))
+end
+
+@:Lorentz_Force graph Force Charge Field Electromagnetic
+    @f isA $Force LorentzForce
+    @q isA $Charge Charge
+    @e isA $Field ElectricField
+    @v isA $Velocity Velocity
+    @b isA $Field MagneticField
+    @eq equals $Force (plus (times $Charge $ElectricField) (cross (times $Charge $Velocity) $MagneticField))
+    @total totalForce $eq (electricAndMagnetic)
+    @fund fundamental $eq (electromagnetism)
+    return And $f (And $q (And $e (And $v (And $b (And $eq (And $total $fund))))))
+end
+
+@:Compton_Scattering graph Wavelength Photon Electron
+    @delta_lambda isA $Wavelength WavelengthShift
+    @h isA $Constant PlanckConstant
+    @m isA $Mass ElectronMass
+    @c isA $Constant SpeedOfLight
+    @theta isA $Angle ScatteringAngle
+    @eq equals $delta_lambda (times (divide $h (times $m $c)) (minus 1 (cos $theta)))
+    @photon demonstratesParticle $eq (lightNature)
+    @collision inelastic $eq (photonElectron)
+    return And $delta_lambda (And $h (And $m (And $c (And $theta (And $eq (And $photon $collision))))))
+end
+
+@:Photoelectric_Effect graph Energy Photon Electron Work
+    @ke isA $Energy KineticEnergy
+    @h isA $Constant PlanckConstant
+    @f isA $Frequency PhotonFrequency
+    @phi isA $Energy WorkFunction
+    @eq equals $KineticEnergy (minus (times $h $Frequency) $WorkFunction)
+    @threshold thresholdFrequency $eq (minimumForEmission)
+    @einstein explainedBy $eq (einsteinPhotonTheory)
+    return And $ke (And $h (And $f (And $phi (And $eq (And $threshold $einstein)))))
+end
+
+@:Blackbody_Radiation_Planck graph Energy Frequency Temperature
+    @u isA $Energy EnergyDensity
+    @h isA $Constant PlanckConstant
+    @f isA $Frequency Frequency
+    @k isA $Constant BoltzmannConstant
+    @t isA $Temperature Temperature
+    @eq proportional $u (divide (power $f 3) (minus (exp (divide (times $h $f) (times $k $t))) 1))
+    @quant quantization $eq (energyLevels)
+    @solves resolved $eq (ultravioletCatastrophe)
+    return And $u (And $h (And $f (And $k (And $t (And $eq (And $quant $solves))))))
+end
+
+@:Rydberg_Formula graph Wavelength Hydrogen Transition
+    @lambda isA $Wavelength Wavelength
+    @r isA $Constant RydbergConstant
+    @n1 isA $Integer LowerLevel
+    @n2 isA $Integer UpperLevel
+    @eq equals (inverse $lambda) (times $r (minus (inverse (square $n1)) (inverse (square $n2))))
+    @spec spectralLines $eq (hydrogenAtom)
+    @quant quantized $eq (energyLevels)
+    return And $lambda (And $r (And $n1 (And $n2 (And $eq (And $spec $quant)))))
+end
+
+@:Bohr_Model_Energy graph Energy Level Hydrogen Quantum
+    @e isA $Energy EnergyLevel
+    @n isA $Integer QuantumNumber
+    @e0 isA $Energy GroundStateEnergy
+    @eq equals $Energy (divide $e0 (square $n))
+    @quant quantized $Energy (discreteLevels)
+    @neg negative $Energy (boundStates)
+    return And $e (And $n (And $e0 (And $eq (And $quant $neg))))
+end
+
+@:Nuclear_Binding_Energy graph Energy Mass Nucleons
+    @be isA $Energy BindingEnergy
+    @dm isA $Mass MassDefect
+    @c isA $Constant SpeedOfLight
+    @eq equals $BindingEnergy (times $MassDefect (square $c))
+    @stable stability $BindingEnergy (nucleus)
+    @strong strongForce $BindingEnergy (overcomes ElectricRepulsion)
+    return And $be (And $dm (And $c (And $eq (And $stable $strong))))
+end
+
+@:Radioactive_Decay_Law graph Activity Time Decay
+    @n isA $Number NucleiCount
+    @n0 isA $Number InitialCount
+    @lambda isA $Constant DecayConstant
+    @t isA $Time Time
+    @eq equals $n (times $n0 (exp (negative (times $lambda $t))))
+    @expo exponential $eq (decayProcess)
+    @prob probabilistic $eq (quantumProcess)
+    return And $n (And $n0 (And $lambda (And $t (And $eq (And $expo $prob)))))
+end
+
+@:Half_Life_Relation graph HalfLife Decay Constant
+    @t_half isA $Time HalfLife
+    @lambda isA $Constant DecayConstant
+    @eq equals $t_half (divide (ln 2) $lambda)
+    @reduce reducesBy $t_half (halfInEachPeriod)
+    @char characteristic $t_half (isotope)
+    return And $t_half (And $lambda (And $eq (And $reduce $char)))
+end
+
+@:Maxwell_Velocity_Distribution graph Velocity Temperature Gas
+    @v isA $Velocity MolecularVelocity
+    @m isA $Mass MolecularMass
+    @k isA $Constant BoltzmannConstant
+    @t isA $Temperature Temperature
+    @f isA $Function DistributionFunction
+    @eq proportional $f (times (power $v 2) (exp (negative (divide (times $m (square $v)) (times 2 (times $k $t))))))
+    @stat statistical $eq (kineticTheory)
+    @prob probability $eq (velocityDistribution)
+    return And $v (And $m (And $k (And $t (And $f (And $eq (And $stat $prob))))))
+end
+
+@:Equipartition_Theorem graph Energy Temperature Freedom
+    @e isA $Energy AverageEnergy
+    @k isA $Constant BoltzmannConstant
+    @t isA $Temperature Temperature
+    @f isA $Number DegreesOfFreedom
+    @eq equals $Energy (times 0.5 (times $f (times $k $Temperature)))
+    @each perDegree $eq (halfKT)
+    @class classical $eq (statisticalMechanics)
+    return And $e (And $k (And $t (And $f (And $eq (And $each $class)))))
+end
+
+@:RMS_Velocity_Gas graph Velocity Temperature Gas Kinetic
+    @v_rms isA $Velocity RMSVelocity
+    @k isA $Constant BoltzmannConstant
+    @t isA $Temperature Temperature
+    @m isA $Mass MolecularMass
+    @eq equals $v_rms (sqrt (divide (times 3 (times $k $Temperature)) $m))
+    @measure typicalSpeed $v_rms (gasMolecules)
+    @kinetic kineticTheory $eq (temperatureRelation)
+    return And $v_rms (And $k (And $t (And $m (And $eq (And $measure $kinetic)))))
+end
+
+@:Poisson_Equation_Gravity graph Potential Mass Density
+    @phi isA $Potential GravitationalPotential
+    @rho isA $Density MassDensity
+    @g isA $Constant GravitationalConstant
+    @eq equals (laplacian $phi) (times 4 (times pi (times $g $rho)))
+    @field determines $eq (gravitationalField)
+    @diff differential $eq (fieldEquation)
+    return And $phi (And $rho (And $g (And $eq (And $field $diff))))
+end
+
+@:Poynting_Vector graph Energy Electromagnetic Wave
+    @s isA $Vector PoyntingVector
+    @e isA $Field ElectricField
+    @b isA $Field MagneticField
+    @mu0 isA $Constant PermeabilityOfFreeSpace
+    @eq equals $s (divide (cross $e $b) $mu0)
+    @flow energyFlux $s (electromagneticWave)
+    @dir direction $s (wavePropagation)
+    return And $s (And $e (And $b (And $mu0 (And $eq (And $flow $dir)))))
+end
+
+@:Energy_Density_Electromagnetic graph Energy Field Electric Magnetic
+    @u isA $Energy EnergyDensity
+    @e isA $Field ElectricField
+    @b isA $Field MagneticField
+    @e0 isA $Constant ElectricPermittivity
+    @mu0 isA $Constant MagneticPermeability
+    @eq equals $u (plus (times 0.5 (times $e0 (square $e))) (divide (square $b) (times 2 $mu0)))
+    @stored storedInFields $u (electromagnetic)
+    @equal equalParts $u (electricAndMagnetic EMWave)
+    return And $u (And $e (And $b (And $e0 (And $mu0 (And $eq (And $stored $equal))))))
+end
+
+@:RC_Circuit_Charging graph Voltage Time Capacitor
+    @v isA $Voltage VoltageAcrossCapacitor
+    @v0 isA $Voltage SourceVoltage
+    @r isA $Resistance Resistance
+    @c isA $Capacitance Capacitance
+    @t isA $Time Time
+    @eq equals $v (times $v0 (minus 1 (exp (negative (divide $t (times $r $c))))))
+    @tau timeConstant $eq (RC Product)
+    @expo exponential $eq (approach)
+    return And $v (And $v0 (And $r (And $c (And $t (And $eq (And $tau $expo))))))
+end
+
+@:RL_Circuit_Current graph Current Time Inductor
+    @i isA $Current Current
+    @i0 isA $Current FinalCurrent
+    @r isA $Resistance Resistance
+    @l isA $Inductance Inductance
+    @t isA $Time Time
+    @eq equals $i (times $i0 (minus 1 (exp (negative (divide (times $r $t) $l)))))
+    @tau timeConstant $eq (LOverR)
+    @build buildsUp $i (exponentially)
+    return And $i (And $i0 (And $r (And $l (And $t (And $eq (And $tau $build))))))
+end
+
+@:LC_Circuit_Oscillation graph Frequency Inductance Capacitance
+    @omega isA $Frequency AngularFrequency
+    @l isA $Inductance Inductance
+    @c isA $Capacitance Capacitance
+    @eq equals $omega (inverse (sqrt (times $l $c)))
+    @osc oscillates $eq (energyExchange)
+    @res resonance $eq (LCCircuit)
+    return And $omega (And $l (And $c (And $eq (And $osc $res))))
+end
+
+@:Bragg_Law_Diffraction graph Diffraction Wavelength Crystal
+    @n isA $Integer Order
+    @lambda isA $Wavelength Wavelength
+    @d isA $Distance LatticeSpacing
+    @theta isA $Angle BraggAngle
+    @eq equals (times $n $lambda) (times 2 (times $d (sin $theta)))
+    @construct constructiveInterference $eq (crystalPlanes)
+    @xray xrayDiffraction $eq (crystalStructure)
+    return And $n (And $lambda (And $d (And $theta (And $eq (And $construct $xray)))))
+end
+
+@:Rayleigh_Criterion graph Resolution Wavelength Aperture
+    @theta isA $Angle MinimumAngle
+    @lambda isA $Wavelength Wavelength
+    @d isA $Diameter ApertureDiameter
+    @eq equals $theta (times 1.22 (divide $lambda $d))
+    @limit resolutionLimit $eq (diffraction)
+    @resolve justResolved $eq (twoPointSources)
+    return And $theta (And $lambda (And $d (And $eq (And $limit $resolve))))
+end
+
+@:Malus_Law_Polarization graph Intensity Polarizer Angle
+    @i isA $Intensity TransmittedIntensity
+    @i0 isA $Intensity IncidentIntensity
+    @theta isA $Angle AngleBetweenPolarizers
+    @eq equals $i (times $i0 (square (cos $theta)))
+    @polar polarization $eq (lightWave)
+    @max maximum $i (parallelPolarizers)
+    return And $i (And $i0 (And $theta (And $eq (And $polar $max))))
+end
+
+@:Brewster_Angle graph Angle Polarization Reflection
+    @theta_b isA $Angle BrewsterAngle
+    @n1 isA $Index RefractiveIndex1
+    @n2 isA $Index RefractiveIndex2
+    @eq equals (tan $theta_b) (divide $n2 $n1)
+    @polar completePolarization $eq (reflectedLight)
+    @perp perpendicular $eq (reflectedAndRefracted)
+    return And $theta_b (And $n1 (And $n2 (And $eq (And $polar $perp))))
+end
+
+@:Critical_Angle_Total_Reflection graph Angle Refraction Total
+    @theta_c isA $Angle CriticalAngle
+    @n1 isA $Index DenserMedium
+    @n2 isA $Index RarerMedium
+    @eq equals (sin $theta_c) (divide $n2 $n1)
+    @total totalInternalReflection $eq (beyondCritical)
+    @fiber opticalFiber $eq (application)
+    return And $theta_c (And $n1 (And $n2 (And $eq (And $total $fiber))))
+end
+
+@:Dispersion_Relation graph Wavelength Index Frequency
+    @n isA $Index RefractiveIndex
+    @lambda isA $Wavelength Wavelength
+    @f isA $Frequency Frequency
+    @depend depends $n (wavelength)
+    @spread spreads $depend (whiteLight Spectrum)
+    @prism prismEffect $depend (rainbowFormation)
+    return And $n (And $lambda (And $f (And $depend (And $spread $prism))))
+end
+
+@:Thin_Film_Interference graph Interference Thickness Wavelength
+    @t isA $Thickness FilmThickness
+    @lambda isA $Wavelength Wavelength
+    @m isA $Integer Order
+    @n isA $Index RefractiveIndex
+    @eq equals (times 2 (times $n $t)) (times $m $lambda)
+    @construct constructive $eq (brightFringes)
+    @phase phaseChange $eq (reflection)
+    return And $t (And $lambda (And $m (And $n (And $eq (And $construct $phase)))))
+end
+
+@:Radiation_Pressure graph Pressure Intensity Light
+    @p isA $Pressure RadiationPressure
+    @i isA $Intensity Intensity
+    @c isA $Constant SpeedOfLight
+    @eq equals $p (divide $i $c)
+    @momentum photonMomentum $eq (transfer)
+    @double doublesFor $p (perfectReflection)
+    return And $p (And $i (And $c (And $eq (And $momentum $double))))
+end
+
+@:Cyclotron_Frequency graph Frequency Charge Field
+    @f isA $Frequency CyclotronFrequency
+    @q isA $Charge Charge
+    @b isA $Field MagneticField
+    @m isA $Mass Mass
+    @eq equals $f (divide (times $q $b) (times 2 (times pi $m)))
+    @indep independent $f (velocity Radius)
+    @accel particleAccelerator $eq (cyclotron)
+    return And $f (And $q (And $b (And $m (And $eq (And $indep $accel)))))
+end
+
+@:Hall_Effect graph Voltage Current Field
+    @v_h isA $Voltage HallVoltage
+    @i isA $Current Current
+    @b isA $Field MagneticField
+    @n isA $Density ChargeDensity
+    @t isA $Thickness Thickness
+    @e isA $Charge ElementaryCharge
+    @eq equals $v_h (divide (times $i $b) (times $n (times $e $t)))
+    @trans transverse $v_h (electricField)
+    @measure measures $eq (carrierDensity)
+    return And $v_h (And $i (And $b (And $n (And $t (And $e (And $eq (And $trans $measure)))))))
+end
+
+@:Self_Inductance_Solenoid graph Inductance Turns Area
+    @l isA $Inductance Inductance
+    @mu0 isA $Constant Permeability
+    @n isA $Number TurnsPerLength
+    @a isA $Area CrossSectionalArea
+    @len isA $Length Length
+    @eq equals $l (times $mu0 (times (square $n) (times $a $len)))
+    @geom geometric $eq (solenoidParameters)
+    @flux linkage $eq (magneticFlux)
+    return And $l (And $mu0 (And $n (And $a (And $len (And $eq (And $geom $flux))))))
+end
+
+@:Transformer_Equation graph Voltage Turns Ratio
+    @v1 isA $Voltage PrimaryVoltage
+    @v2 isA $Voltage SecondaryVoltage
+    @n1 isA $Number PrimaryTurns
+    @n2 isA $Number SecondaryTurns
+    @eq equals (divide $v2 $v1) (divide $n2 $n1)
+    @step stepUpDown $eq (voltageTurnsRatio)
+    @ideal idealTransformer $eq (noLosses)
+    return And $v1 (And $v2 (And $n1 (And $n2 (And $eq (And $step $ideal)))))
+end
+
+@:AC_Impedance_Series graph Impedance Resistance Reactance
+    @z isA $Impedance Impedance
+    @r isA $Resistance Resistance
+    @x isA $Reactance Reactance
+    @eq equals (square $z) (plus (square $r) (square $x))
+    @phase phaseAngle $eq (betweenVoltageAndCurrent)
+    @ac alternatingCurrent $eq (circuit)
+    return And $z (And $r (And $x (And $eq (And $phase $ac))))
+end
+
+@:Capacitive_Reactance graph Reactance Frequency Capacitance
+    @xc isA $Reactance CapacitiveReactance
+    @f isA $Frequency Frequency
+    @c isA $Capacitance Capacitance
+    @eq equals $xc (divide 1 (times 2 (times pi (times $f $c))))
+    @inv inversely $xc (proportional Frequency)
+    @oppose opposes $xc (voltageChange)
+    return And $xc (And $f (And $c (And $eq (And $inv $oppose))))
+end
+
+@:Inductive_Reactance graph Reactance Frequency Inductance
+    @xl isA $Reactance InductiveReactance
+    @f isA $Frequency Frequency
+    @l isA $Inductance Inductance
+    @eq equals $xl (times 2 (times pi (times $f $l)))
+    @direct directly $xl (proportional Frequency)
+    @oppose opposes $xl (currentChange)
+    return And $xl (And $f (And $l (And $eq (And $direct $oppose))))
+end
+
+@:Resonance_RLC_Circuit graph Resonance Frequency Circuit
+    @f0 isA $Frequency ResonantFrequency
+    @l isA $Inductance Inductance
+    @c isA $Capacitance Capacitance
+    @eq equals $f0 (divide 1 (times 2 (times pi (sqrt (times $l $c)))))
+    @max maximum $f0 (currentAmplitude)
+    @equal equalReactances $eq (inductiveCapacitive)
+    return And $f0 (And $l (And $c (And $eq (And $max $equal))))
+end

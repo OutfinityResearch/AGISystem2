@@ -23,6 +23,7 @@ import { ComponentKB } from '../reasoning/component-kb.mjs';
 import { debug_trace, isDebugEnabled } from '../utils/debug.js';
 import { DEFAULT_SEMANTIC_INDEX } from './semantic-index.mjs';
 import { canonicalizeMetadata } from './canonicalize.mjs';
+import { computeFeatureToggles, computeReasoningProfile } from './reasoning-profile.mjs';
 import {
   initOperators as initOperatorsImpl,
   trackRules as trackRulesImpl,
@@ -56,6 +57,16 @@ export class Session {
     this.geometry = options.geometry || getDefaultGeometry();
     this.hdcStrategy = options.hdcStrategy || process.env.SYS2_HDC_STRATEGY || 'dense-binary';
     this.reasoningPriority = options.reasoningPriority || getReasoningPriority();
+    this.reasoningProfile = computeReasoningProfile({
+      reasoningPriority: this.reasoningPriority,
+      optionsProfile: options.reasoningProfile
+    });
+    this.features = computeFeatureToggles({ profile: this.reasoningProfile, options });
+    this.canonicalizationEnabled = this.features.canonicalizationEnabled;
+    this.proofValidationEnabled = this.features.proofValidationEnabled;
+    this.useSemanticIndex = this.features.useSemanticIndex;
+    this.useTheoryConstraints = this.features.useTheoryConstraints;
+    this.useTheoryReserved = this.features.useTheoryReserved;
 
     // Ensure the active HDC implementation matches the session's configured strategy.
     // Note: HDC strategy selection is currently process-global via `hdc/facade`.
@@ -74,6 +85,9 @@ export class Session {
     this.kb = null;
     this.kbFacts = [];
     this.nextFactId = 1;
+    this._kbBundleVersion = 0;
+    this._kbBundleCache = null;
+    this._kbBundleCacheVersion = -1;
     this.componentKB = new ComponentKB(this);  // Component-indexed KB for fuzzy matching
     this.theories = new Map();
     this.operators = new Map();
@@ -84,10 +98,6 @@ export class Session {
     this.graphAliases = new Map();  // Aliases for graphs (persistName -> name)
     this.responseTranslator = new ResponseTranslator(this);
     this.semanticIndex = DEFAULT_SEMANTIC_INDEX;
-    this.canonicalizationEnabled =
-      options.canonicalizationEnabled ?? (process.env.SYS2_CANONICAL === '1');
-    this.proofValidationEnabled =
-      options.proofValidationEnabled ?? (process.env.SYS2_PROOF_VALIDATE === '1');
 
     // Reasoning statistics
     this.reasoningStats = {
@@ -112,7 +122,10 @@ export class Session {
 
     this.initOperators();
 
-    dbg('INIT', `Strategy: ${this.hdcStrategy}, Priority: ${this.reasoningPriority}`);
+    dbg(
+      'INIT',
+      `Strategy: ${this.hdcStrategy}, Priority: ${this.reasoningPriority}, Profile: ${this.reasoningProfile}`
+    );
   }
 
   /**
@@ -201,6 +214,7 @@ export class Session {
 
     const fact = { id: this.nextFactId++, vector, name, metadata };
     this.kbFacts.push(fact);
+    this._kbBundleVersion++;
 
     // Index in component KB for fuzzy matching
     this.componentKB.addFact(fact);
@@ -228,6 +242,23 @@ export class Session {
     } else {
       this.kb = bundle([this.kb, vector]);
     }
+  }
+
+  /**
+   * Returns a bundled KB vector suitable for HDC unbind operations.
+   * Uses a small cache keyed by fact additions to avoid re-bundling every query.
+   */
+  getKBBundle() {
+    if (this._kbBundleCache && this._kbBundleCacheVersion === this._kbBundleVersion) {
+      return this._kbBundleCache;
+    }
+
+    const vectors = (this.kbFacts || []).map(f => f.vector).filter(Boolean);
+    if (vectors.length === 0) return null;
+
+    this._kbBundleCache = bundle(vectors);
+    this._kbBundleCacheVersion = this._kbBundleVersion;
+    return this._kbBundleCache;
   }
 
   /**
@@ -453,6 +484,9 @@ export class Session {
   close() {
     this.kb = null;
     this.kbFacts = [];
+    this._kbBundleVersion++;
+    this._kbBundleCache = null;
+    this._kbBundleCacheVersion = -1;
     this.rules = [];
     this.scope.clear();
   }

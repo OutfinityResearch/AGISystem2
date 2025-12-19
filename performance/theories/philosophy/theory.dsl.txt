@@ -1,0 +1,1918 @@
+@:Modus_Ponens graph P Q
+    @p1 isTrue $P
+    @p2 Implies $P $Q
+    @conclusion Implies (And $p1 $p2) $Q
+    return $conclusion
+end
+
+@:Modus_Tollens graph P Q
+    @not_q Not $Q
+    @implies Implies $P $Q
+    @conclusion Implies (And $not_q $implies) (Not $P)
+    return $conclusion
+end
+
+@:Hypothetical_Syllogism graph P Q R
+    @pq Implies $P $Q
+    @qr Implies $Q $R
+    @conclusion Implies (And $pq $qr) (Implies $P $R)
+    return $conclusion
+end
+
+@:Disjunctive_Syllogism graph P Q
+    @or_pq Or $P $Q
+    @not_p Not $P
+    @conclusion Implies (And $or_pq $not_p) $Q
+    return $conclusion
+end
+
+@:Conjunction_Introduction graph P Q
+    @p isTrue $P
+    @q isTrue $Q
+    @conclusion Implies (And $p $q) (And $P $Q)
+    return $conclusion
+end
+
+@:Conjunction_Elimination_Left graph P Q
+    @conj And $P $Q
+    @conclusion Implies $conj $P
+    return $conclusion
+end
+
+@:Conjunction_Elimination_Right graph P Q
+    @conj And $P $Q
+    @conclusion Implies $conj $Q
+    return $conclusion
+end
+
+@:Disjunction_Introduction_Left graph P Q
+    @p isTrue $P
+    @conclusion Implies $p (Or $P $Q)
+    return $conclusion
+end
+
+@:Disjunction_Introduction_Right graph P Q
+    @q isTrue $Q
+    @conclusion Implies $q (Or $P $Q)
+    return $conclusion
+end
+
+@:Constructive_Dilemma graph P Q R S
+    @pq Implies $P $Q
+    @rs Implies $R $S
+    @or_pr Or $P $R
+    @conclusion Implies (And (And $pq $rs) $or_pr) (Or $Q $S)
+    return $conclusion
+end
+
+@:Destructive_Dilemma graph P Q R S
+    @pq Implies $P $Q
+    @rs Implies $R $S
+    @not_q_or_not_s Or (Not $Q) (Not $S)
+    @conclusion Implies (And (And $pq $rs) $not_q_or_not_s) (Or (Not $P) (Not $R))
+    return $conclusion
+end
+
+@:Law_Of_Excluded_Middle graph P
+    @lem Or $P (Not $P)
+    return $lem
+end
+
+@:Law_Of_Non_Contradiction graph P
+    @lnc Not (And $P (Not $P))
+    return $lnc
+end
+
+@:Double_Negation_Elimination graph P
+    @not_not Not (Not $P)
+    @conclusion Implies $not_not $P
+    return $conclusion
+end
+
+@:Double_Negation_Introduction graph P
+    @p isTrue $P
+    @conclusion Implies $p (Not (Not $P))
+    return $conclusion
+end
+
+@:DeMorgan_Law_1 graph P Q
+    @not_and Not (And $P $Q)
+    @conclusion Iff $not_and (Or (Not $P) (Not $Q))
+    return $conclusion
+end
+
+@:DeMorgan_Law_2 graph P Q
+    @not_or Not (Or $P $Q)
+    @conclusion Iff $not_or (And (Not $P) (Not $Q))
+    return $conclusion
+end
+
+@:Material_Implication graph P Q
+    @implies Implies $P $Q
+    @conclusion Iff $implies (Or (Not $P) $Q)
+    return $conclusion
+end
+
+@:Contrapositive graph P Q
+    @implies Implies $P $Q
+    @contrapos Implies (Not $Q) (Not $P)
+    @conclusion Iff $implies $contrapos
+    return $conclusion
+end
+
+@:Biconditional_Elimination_Left graph P Q
+    @iff Iff $P $Q
+    @conclusion Implies $iff (Implies $P $Q)
+    return $conclusion
+end
+
+@:Biconditional_Elimination_Right graph P Q
+    @iff Iff $P $Q
+    @conclusion Implies $iff (Implies $Q $P)
+    return $conclusion
+end
+
+@:Biconditional_Introduction graph P Q
+    @pq Implies $P $Q
+    @qp Implies $Q $P
+    @conclusion Implies (And $pq $qp) (Iff $P $Q)
+    return $conclusion
+end
+
+@:Transitive_Property graph R a b c
+    @rab Relation $R $a $b
+    @rbc Relation $R $b $c
+    @trans isTransitive $R
+    @conclusion Implies (And (And $rab $rbc) $trans) (Relation $R $a $c)
+    return $conclusion
+end
+
+@:Symmetric_Property graph R a b
+    @rab Relation $R $a $b
+    @sym isSymmetric $R
+    @conclusion Implies (And $rab $sym) (Relation $R $b $a)
+    return $conclusion
+end
+
+@:Reflexive_Property graph R a
+    @refl isReflexive $R
+    @conclusion Implies $refl (Relation $R $a $a)
+    return $conclusion
+end
+
+@:Equivalence_Relation graph R
+    @refl isReflexive $R
+    @sym isSymmetric $R
+    @trans isTransitive $R
+    @conclusion Implies (And (And $refl $sym) $trans) (isEquivalenceRelation $R)
+    return $conclusion
+end
+
+@:Identity_Of_Indiscernibles graph a b
+    @same_props ForAll P (Iff (hasProperty $a P) (hasProperty $b P))
+    @conclusion Implies $same_props (Equals $a $b)
+    return $conclusion
+end
+
+@:Leibniz_Law graph a b P
+    @equals Equals $a $b
+    @prop_a hasProperty $a $P
+    @conclusion Implies (And $equals $prop_a) (hasProperty $b $P)
+    return $conclusion
+end
+
+@:Universal_Instantiation graph P x
+    @forall ForAll y (hasProperty $y $P)
+    @conclusion Implies $forall (hasProperty $x $P)
+    return $conclusion
+end
+
+@:Universal_Generalization graph P x
+    @arbitrary isArbitrary $x
+    @prop hasProperty $x $P
+    @conclusion Implies (And $arbitrary $prop) (ForAll y (hasProperty $y $P))
+    return $conclusion
+end
+
+@:Existential_Instantiation graph P
+    @exists Exists x (hasProperty $x $P)
+    @witness isWitness $w $P
+    @conclusion Implies $exists (hasProperty $w $P)
+    return $conclusion
+end
+
+@:Existential_Generalization graph P x
+    @prop hasProperty $x $P
+    @conclusion Implies $prop (Exists y (hasProperty $y $P))
+    return $conclusion
+end
+
+@:Valid_Argument graph Premises Conclusion
+    @valid isValid $Premises $Conclusion
+    @def Iff $valid (Implies (allTrue $Premises) $Conclusion)
+    return $def
+end
+
+@:Sound_Argument graph Premises Conclusion
+    @valid isValid $Premises $Conclusion
+    @true_premises allTrue $Premises
+    @sound isSound $Premises $Conclusion
+    @conclusion Iff $sound (And $valid $true_premises)
+    return $conclusion
+end
+
+@:Deductive_Argument graph Premises Conclusion
+    @deductive isDeductive $Premises $Conclusion
+    @necessary necessarilyImplies $Premises $Conclusion
+    @conclusion Iff $deductive $necessary
+    return $conclusion
+end
+
+@:Inductive_Argument graph Premises Conclusion
+    @inductive isInductive $Premises $Conclusion
+    @probable probablyImplies $Premises $Conclusion
+    @conclusion Iff $inductive $probable
+    return $conclusion
+end
+
+@:Abductive_Argument graph Evidence Hypothesis
+    @abductive isAbductive $Evidence $Hypothesis
+    @best_explanation isBestExplanation $Hypothesis $Evidence
+    @conclusion Iff $abductive $best_explanation
+    return $conclusion
+end
+
+@:Ad_Hominem_Fallacy graph Argument Person
+    @attacks attacksPerson $Argument $Person
+    @not_content Not (addressesContent $Argument)
+    @fallacy isFallacy $Argument
+    @conclusion Implies (And $attacks $not_content) $fallacy
+    return $conclusion
+end
+
+@:Straw_Man_Fallacy graph Argument Original Distorted
+    @distorts distortsArgument $Argument $Original $Distorted
+    @attacks attacks $Argument $Distorted
+    @fallacy isFallacy $Argument
+    @conclusion Implies (And $distorts $attacks) $fallacy
+    return $conclusion
+end
+
+@:Appeal_To_Authority_Fallacy graph Argument Authority Topic
+    @appeals appealsToAuthority $Argument $Authority
+    @not_expert Not (isExpert $Authority $Topic)
+    @fallacy isFallacy $Argument
+    @conclusion Implies (And $appeals $not_expert) $fallacy
+    return $conclusion
+end
+
+@:False_Dilemma_Fallacy graph Argument Options
+    @presents presentsOptions $Argument $Options
+    @more_exist moreOptionsThanPresented $Options
+    @fallacy isFallacy $Argument
+    @conclusion Implies (And $presents $more_exist) $fallacy
+    return $conclusion
+end
+
+@:Slippery_Slope_Fallacy graph Argument A Z
+    @claims claimsChain $Argument $A $Z
+    @not_necessary Not (necessarilyLeadsTo $A $Z)
+    @fallacy isFallacy $Argument
+    @conclusion Implies (And $claims $not_necessary) $fallacy
+    return $conclusion
+end
+
+@:Begging_The_Question graph Argument Premise Conclusion
+    @circular circularReasoning $Argument
+    @same Equals $Premise $Conclusion
+    @fallacy isFallacy $Argument
+    @conclusion Implies (And $circular $same) $fallacy
+    return $conclusion
+end
+
+@:Post_Hoc_Fallacy graph A B
+    @before happenedBefore $A $B
+    @assumes assumesCausation $A $B
+    @not_caused Not (caused $A $B)
+    @fallacy isFallacy (inferCausation $A $B)
+    @conclusion Implies (And (And $before $assumes) $not_caused) $fallacy
+    return $conclusion
+end
+
+@:Bandwagon_Fallacy graph Belief Popularity
+    @popular isPopular $Belief
+    @infers infersFromPopularity $Belief
+    @fallacy isFallacy (believeBecausePopular $Belief)
+    @conclusion Implies (And $popular $infers) $fallacy
+    return $conclusion
+end
+
+@:Appeal_To_Emotion_Fallacy graph Argument Emotion
+    @appeals appealsToEmotion $Argument $Emotion
+    @no_logic Not (hasLogicalBasis $Argument)
+    @fallacy isFallacy $Argument
+    @conclusion Implies (And $appeals $no_logic) $fallacy
+    return $conclusion
+end
+
+@:Hasty_Generalization_Fallacy graph Sample Conclusion
+    @small isSmallSample $Sample
+    @generalizes generalizesFrom $Sample $Conclusion
+    @fallacy isFallacy (generalize $Sample $Conclusion)
+    @conclusion Implies (And $small $generalizes) $fallacy
+    return $conclusion
+end
+
+@:Categorical_Imperative graph Action
+    @universal canBeUniversalLaw $Action
+    @imperative categoricalImperative $Action
+    @conclusion Implies $universal $imperative
+    return $conclusion
+end
+
+@:Kant_Formula_Of_Humanity graph Action Person
+    @treats treatsAsEnd $Action $Person
+    @not_means Not (treatsAsMeans $Action $Person)
+    @moral isMoral $Action
+    @conclusion Implies (And $treats $not_means) $moral
+    return $conclusion
+end
+
+@:Kant_Kingdom_Of_Ends graph Action
+    @respects respectsAutonomy $Action
+    @universal universallyAcceptable $Action
+    @moral isMoral $Action
+    @conclusion Implies (And $respects $universal) $moral
+    return $conclusion
+end
+
+@:Utilitarian_Principle graph Action
+    @maximizes maximizesHappiness $Action
+    @minimizes minimizesSuffering $Action
+    @moral isMoral $Action
+    @conclusion Implies (And $maximizes $minimizes) $moral
+    return $conclusion
+end
+
+@:Act_Utilitarianism graph Action Consequences
+    @best hasBestConsequences $Action $Consequences
+    @moral isMoral $Action
+    @conclusion Implies $best $moral
+    return $conclusion
+end
+
+@:Rule_Utilitarianism graph Rule
+    @maximizes maximizesUtility $Rule
+    @follow shouldFollow $Rule
+    @conclusion Implies $maximizes $follow
+    return $conclusion
+end
+
+@:Virtue_Ethics_Golden_Mean graph Virtue Excess Deficiency
+    @mean isMean $Virtue $Excess $Deficiency
+    @virtue isVirtue $Virtue
+    @conclusion Implies $mean $virtue
+    return $conclusion
+end
+
+@:Aristotle_Eudaimonia graph Person Virtues
+    @practices practicesVirtues $Person $Virtues
+    @flourishes achievesEudaimonia $Person
+    @conclusion Implies $practices $flourishes
+    return $conclusion
+end
+
+@:Doctrine_Of_Double_Effect graph Action Good Evil
+    @intends intendsGood $Action $Good
+    @foresees foresees $Action $Evil
+    @not_intends Not (intends $Action $Evil)
+    @proportionate isProportionate $Good $Evil
+    @permissible isPermissible $Action
+    @conclusion Implies (And (And (And $intends $foresees) $not_intends) $proportionate) $permissible
+    return $conclusion
+end
+
+@:Rights_Based_Ethics graph Action Right
+    @violates violatesRight $Action $Right
+    @immoral isImmoral $Action
+    @conclusion Implies $violates $immoral
+    return $conclusion
+end
+
+@:Social_Contract_Theory graph Rule Society
+    @agreed agreedUpon $Rule $Society
+    @rational rationallyAccepted $Rule
+    @legitimate isLegitimate $Rule
+    @conclusion Implies (And $agreed $rational) $legitimate
+    return $conclusion
+end
+
+@:Rawls_Veil_Of_Ignorance graph Principle
+    @behind_veil chosenBehindVeil $Principle
+    @just isJust $Principle
+    @conclusion Implies $behind_veil $just
+    return $conclusion
+end
+
+@:Rawls_Difference_Principle graph Policy
+    @benefits benefitsLeastAdvantaged $Policy
+    @just isJust $Policy
+    @conclusion Implies $benefits $just
+    return $conclusion
+end
+
+@:Care_Ethics graph Action Relationship
+    @maintains maintainsRelationship $Action $Relationship
+    @responds respondsToNeeds $Action
+    @moral isMoral $Action
+    @conclusion Implies (And $maintains $responds) $moral
+    return $conclusion
+end
+
+@:Divine_Command_Theory graph Action God
+    @commands commands $God $Action
+    @moral isMoral $Action
+    @conclusion Iff $commands $moral
+    return $conclusion
+end
+
+@:Euthyphro_Dilemma graph Action God
+    @good isGood $Action
+    @loves loves $God $Action
+    @disjunction Or (Implies $good $loves) (Implies $loves $good)
+    return $disjunction
+end
+
+@:Natural_Law_Theory graph Action Nature
+    @according accordingToNature $Action $Nature
+    @moral isMoral $Action
+    @conclusion Implies $according $moral
+    return $conclusion
+end
+
+@:Moral_Relativism graph Culture Action
+    @relative relativeToculture $Action $Culture
+    @no_absolute Not (Exists M (isAbsoluteMoral M))
+    @conclusion Implies $relative $no_absolute
+    return $conclusion
+end
+
+@:Moral_Objectivism graph MoralFact
+    @objective isObjective $MoralFact
+    @independent independentOfBeliefs $MoralFact
+    @conclusion Implies $objective $independent
+    return $conclusion
+end
+
+@:Knowledge_JTB graph Subject Proposition
+    @justified isJustified $Subject $Proposition
+    @true isTrue $Proposition
+    @believes believes $Subject $Proposition
+    @knows knows $Subject $Proposition
+    @conclusion Iff $knows (And (And $justified $true) $believes)
+    return $conclusion
+end
+
+@:Gettier_Problem graph Subject Proposition
+    @jtb satisfiesJTB $Subject $Proposition
+    @luck basedOnLuck $Subject $Proposition
+    @not_knowledge Not (knows $Subject $Proposition)
+    @conclusion Implies (And $jtb $luck) $not_knowledge
+    return $conclusion
+end
+
+@:Foundationalism graph Belief BasicBelief
+    @based basedOn $Belief $BasicBelief
+    @self_evident isSelfEvident $BasicBelief
+    @justified isJustified $Belief
+    @conclusion Implies (And $based $self_evident) $justified
+    return $conclusion
+end
+
+@:Coherentism graph BeliefSystem
+    @coherent isCoherent $BeliefSystem
+    @justified isJustified $BeliefSystem
+    @conclusion Implies $coherent $justified
+    return $conclusion
+end
+
+@:Reliabilism graph Belief Process
+    @produced producedBy $Belief $Process
+    @reliable isReliable $Process
+    @justified isJustified $Belief
+    @conclusion Implies (And $produced $reliable) $justified
+    return $conclusion
+end
+
+@:Cartesian_Skepticism graph Belief
+    @possible possibleToDoubt $Belief
+    @not_certain Not (isCertain $Belief)
+    @conclusion Implies $possible $not_certain
+end
+
+@:Cogito_Ergo_Sum graph Subject
+    @thinks thinks $Subject
+    @exists exists $Subject
+    @conclusion Implies $thinks $exists
+    return $conclusion
+end
+
+@:Empiricism graph Knowledge Experience
+    @derived derivedFromExperience $Knowledge $Experience
+    @a_posteriori isAPriori $Knowledge
+    @conclusion Implies $derived (Not $a_posteriori)
+    return $conclusion
+end
+
+@:Rationalism graph Knowledge Reason
+    @derived derivedFromReason $Knowledge $Reason
+    @a_priori isAPriori $Knowledge
+    @conclusion Implies $derived $a_priori
+    return $conclusion
+end
+
+@:Kant_Synthetic_A_Priori graph Proposition
+    @synthetic isSynthetic $Proposition
+    @a_priori isAPriori $Proposition
+    @possible isPossible (And $synthetic $a_priori)
+    return $possible
+end
+
+@:Hume_Problem_Of_Induction graph Future Past
+    @resembles resembles $Future $Past
+    @not_justified Not (isJustified (infer $Future $Past))
+    @conclusion Implies (assumes $resembles) $not_justified
+    return $conclusion
+end
+
+@:Principle_Of_Uniformity graph Nature
+    @uniform isUniform $Nature
+    @induction justifiesInduction $uniform
+    @conclusion Implies $uniform $induction
+    return $conclusion
+end
+
+@:A_Priori_Knowledge graph Proposition
+    @independent independentOfExperience $Proposition
+    @a_priori isAPriori $Proposition
+    @conclusion Iff $independent $a_priori
+    return $conclusion
+end
+
+@:A_Posteriori_Knowledge graph Proposition
+    @depends dependsOnExperience $Proposition
+    @a_posteriori isAPosteriori $Proposition
+    @conclusion Iff $depends $a_posteriori
+    return $conclusion
+end
+
+@:Analytic_Proposition graph Proposition Subject Predicate
+    @analytic isAnalytic $Proposition
+    @contained containedIn $Predicate $Subject
+    @conclusion Iff $analytic $contained
+    return $conclusion
+end
+
+@:Synthetic_Proposition graph Proposition Subject Predicate
+    @synthetic isSynthetic $Proposition
+    @not_contained Not (containedIn $Predicate $Subject)
+    @conclusion Iff $synthetic $not_contained
+    return $conclusion
+end
+
+@:Skepticism_External_World graph Subject World
+    @doubts doubtsExistence $Subject $World
+    @not_certain Not (knows $Subject (exists $World))
+    @skeptic isSkeptic $Subject
+    @conclusion Implies (Or $doubts $not_certain) $skeptic
+    return $conclusion
+end
+
+@:Solipsism graph Subject
+    @only_mind onlyMindExists $Subject
+    @solipsist isSolipsist $Subject
+    @conclusion Iff $only_mind $solipsist
+    return $conclusion
+end
+
+@:Idealism graph Reality Mind
+    @dependent dependentOnMind $Reality $Mind
+    @idealism isIdealism
+    @conclusion Implies $dependent $idealism
+    return $conclusion
+end
+
+@:Berkeley_Esse_Est_Percipi graph Object
+    @exists exists $Object
+    @perceived isPerceived $Object
+    @conclusion Iff $exists $perceived
+    return $conclusion
+end
+
+@:Realism graph Object Mind
+    @independent independentOfMind $Object $Mind
+    @realism isRealism
+    @conclusion Implies $independent $realism
+    return $conclusion
+end
+
+@:Being_And_Existence graph Entity
+    @is is $Entity
+    @exists exists $Entity
+    @conclusion Implies $is $exists
+    return $conclusion
+end
+
+@:Essence_Precedes_Existence graph Object Essence
+    @has hasEssence $Object $Essence
+    @before beforeExistence $Essence $Object
+    @conclusion Implies $has $before
+    return $conclusion
+end
+
+@:Existence_Precedes_Essence graph Person
+    @human isHuman $Person
+    @exists exists $Person
+    @creates createsEssence $Person
+    @conclusion Implies (And $human $exists) $creates
+    return $conclusion
+end
+
+@:Substance graph Thing
+    @independent independentExistence $Thing
+    @substance isSubstance $Thing
+    @conclusion Iff $independent $substance
+    return $conclusion
+end
+
+@:Attribute graph Substance Property
+    @has hasAttribute $Substance $Property
+    @depends dependsOn $Property $Substance
+    @conclusion Implies $has $depends
+    return $conclusion
+end
+
+@:Mode graph Substance Modification
+    @modifies modifies $Modification $Substance
+    @mode isMode $Modification
+    @conclusion Iff $modifies $mode
+    return $conclusion
+end
+
+@:Aristotle_Four_Causes graph Thing Material Formal Efficient Final
+    @material_cause hasMaterialCause $Thing $Material
+    @formal_cause hasFormalCause $Thing $Formal
+    @efficient_cause hasEfficientCause $Thing $Efficient
+    @final_cause hasFinalCause $Thing $Final
+    @explained isExplained $Thing
+    @conclusion Implies (And (And (And $material_cause $formal_cause) $efficient_cause) $final_cause) $explained
+    return $conclusion
+end
+
+@:Causation graph Cause Effect
+    @causes causes $Cause $Effect
+    @necessary necessaryConnection $Cause $Effect
+    @conclusion Implies $causes $necessary
+    return $conclusion
+end
+
+@:Hume_Causation graph Event1 Event2
+    @constant constantConjunction $Event1 $Event2
+    @habit formHabit $Event1 $Event2
+    @causation perceiveCausation $Event1 $Event2
+    @conclusion Implies (And $constant $habit) $causation
+    return $conclusion
+end
+
+@:Determinism graph Event Cause
+    @every ForAll E (Exists C (causes C E))
+    @determined isDetermined $Event
+    @conclusion Implies $every $determined
+    return $conclusion
+end
+
+@:Free_Will graph Agent Action
+    @could couldHaveActedOtherwise $Agent $Action
+    @free hasFreeWill $Agent
+    @conclusion Implies $could $free
+    return $conclusion
+end
+
+@:Compatibilism graph Agent Action
+    @determined isDetermined $Action
+    @free hasFreeWill $Agent
+    @compatible areCompatible $determined $free
+    return $compatible
+end
+
+@:Incompatibilism graph Determinism FreeWill
+    @det isDeterminism $Determinism
+    @free isFreeWill $FreeWill
+    @incompatible Not (And $det $free)
+    return $incompatible
+end
+
+@:Hard_Determinism graph Action
+    @determined isDetermined $Action
+    @no_free_will Not (Exists A (hasFreeWill A))
+    @conclusion Implies $determined $no_free_will
+    return $conclusion
+end
+
+@:Libertarianism graph Agent
+    @free hasFreeWill $Agent
+    @not_determined Not (isDetermined $Agent)
+    @conclusion Implies $free $not_determined
+    return $conclusion
+end
+
+@:Occasionalism graph Event1 Event2 God
+    @appear appearCaused $Event1 $Event2
+    @real_cause causes $God $Event2
+    @occasion isOccasion $Event1 $Event2
+    @conclusion Implies (And $appear $real_cause) $occasion
+    return $conclusion
+end
+
+@:Time_A_Theory graph Event
+    @tensed isTensed $Event
+    @real reallyPastPresentFuture $Event
+    @a_theory isATheory
+    @conclusion Implies (And $tensed $real) $a_theory
+    return $conclusion
+end
+
+@:Time_B_Theory graph Event Time
+    @tenseless isTenseless $Event
+    @relations hasTemporalRelations $Event $Time
+    @b_theory isBTheory
+    @conclusion Implies (And $tenseless $relations) $b_theory
+    return $conclusion
+end
+
+@:Presentism graph Time
+    @only_present onlyPresentExists $Time
+    @presentism isPresentism
+    @conclusion Iff $only_present $presentism
+    return $conclusion
+end
+
+@:Eternalism graph Time
+    @all_times allTimesExist $Time
+    @eternalism isEternalism
+    @conclusion Iff $all_times $eternalism
+    return $conclusion
+end
+
+@:Growing_Block_Universe graph Time
+    @past_present pastAndPresentExist $Time
+    @grows grows $Time
+    @conclusion Implies (And $past_present $grows) (isGrowingBlock $Time)
+    return $conclusion
+end
+
+@:Personal_Identity_Over_Time graph Person T1 T2
+    @same samePerson $Person $T1 $T2
+    @continuous hasContinuity $Person $T1 $T2
+    @conclusion Implies $continuous $same
+    return $conclusion
+end
+
+@:Psychological_Continuity graph Person T1 T2
+    @memories hasMemories $Person $T1 $T2
+    @character sameCharacter $Person $T1 $T2
+    @same samePerson $Person $T1 $T2
+    @conclusion Implies (And $memories $character) $same
+    return $conclusion
+end
+
+@:Physical_Continuity graph Person T1 T2
+    @body sameBody $Person $T1 $T2
+    @same samePerson $Person $T1 $T2
+    @conclusion Implies $body $same
+    return $conclusion
+end
+
+@:Ship_Of_Theseus graph Ship Original Replaced
+    @all_replaced allPartsReplaced $Ship $Original $Replaced
+    @same sameThing $Ship $Original
+    @question questionIdentity $all_replaced $same
+    return $question
+end
+
+@:Mind_Body_Dualism graph Mind Body
+    @distinct areDistinct $Mind $Body
+    @substances twoSubstances $Mind $Body
+    @dualism isDualism
+    @conclusion Implies (And $distinct $substances) $dualism
+    return $conclusion
+end
+
+@:Mind_Body_Monism graph Mind Body
+    @same sameSubstance $Mind $Body
+    @monism isMonism
+    @conclusion Implies $same $monism
+    return $conclusion
+end
+
+@:Physicalism graph Mental Physical
+    @supervenes supervenesOn $Mental $Physical
+    @nothing_over nothingOverAndAbove $Mental $Physical
+    @physicalism isPhysicalism
+    @conclusion Implies (And $supervenes $nothing_over) $physicalism
+    return $conclusion
+end
+
+@:Property_Dualism graph Mental Physical
+    @properties distinctProperties $Mental $Physical
+    @same_substance sameSubstance $Mental $Physical
+    @prop_dualism isPropertyDualism
+    @conclusion Implies (And $properties $same_substance) $prop_dualism
+    return $conclusion
+end
+
+@:Functionalism graph MentalState Function
+    @defined definedByFunction $MentalState $Function
+    @functionalism isFunctionalism
+    @conclusion Implies $defined $functionalism
+    return $conclusion
+end
+
+@:Eliminative_Materialism graph FolkPsychology
+    @false isFalse $FolkPsychology
+    @eliminate shouldEliminate $FolkPsychology
+    @conclusion Implies $false $eliminate
+    return $conclusion
+end
+
+@:Qualia graph Experience Subjective
+    @has hasQualia $Experience $Subjective
+    @ineffable isIneffable $Subjective
+    @conclusion Implies $has $ineffable
+    return $conclusion
+end
+
+@:Mary_The_Color_Scientist graph Mary Knowledge
+    @all_physical knowsAllPhysical $Mary $Knowledge
+    @learns_quale learnsNewQuale $Mary
+    @not_all Not (isEverything $Knowledge)
+    @conclusion Implies (And $all_physical $learns_quale) $not_all
+    return $conclusion
+end
+
+@:Zombie_Argument graph Zombie Physical Consciousness
+    @same samePhysical $Zombie $Physical
+    @no_consciousness lacksConsciousness $Zombie
+    @not_physical Not (isPhysical $Consciousness)
+    @conclusion Implies (And $same $no_consciousness) $not_physical
+    return $conclusion
+end
+
+@:Hard_Problem_Of_Consciousness graph Physical Subjective
+    @explains explainsStructure $Physical
+    @not_explains Not (explainsQualia $Physical $Subjective)
+    @hard_problem isHardProblem
+    @conclusion Implies (And $explains $not_explains) $hard_problem
+    return $conclusion
+end
+
+@:Chinese_Room_Argument graph System Syntax Semantics
+    @manipulates manipulatesSyntax $System $Syntax
+    @lacks lacksSemantics $System $Semantics
+    @not_understanding Not (hasUnderstanding $System)
+    @conclusion Implies (And $manipulates $lacks) $not_understanding
+    return $conclusion
+end
+
+@:Turing_Test graph Machine Human
+    @indistinguishable indistinguishableFrom $Machine $Human
+    @intelligent isIntelligent $Machine
+    @conclusion Implies $indistinguishable $intelligent
+    return $conclusion
+end
+
+@:Problem_Of_Other_Minds graph Subject Other
+    @observes observesBehavior $Subject $Other
+    @infers infersMind $Subject $Other
+    @justified isJustified $infers
+    @problem isProblem (justifying $justified)
+    return $problem
+end
+
+@:Argument_From_Analogy graph Self Other
+    @similar similarBehavior $Self $Other
+    @has_mind hasMind $Self
+    @infer_mind hasMind $Other
+    @conclusion Implies (And $similar $has_mind) $infer_mind
+    return $conclusion
+end
+
+@:Intentionality graph MentalState Object
+    @about isAbout $MentalState $Object
+    @intentional hasIntentionality $MentalState
+    @conclusion Iff $about $intentional
+    return $conclusion
+end
+
+@:Brentano_Thesis graph Mental
+    @intentional hasIntentionality $Mental
+    @mark isMark $intentional
+    @mental_only onlyMental $mark
+    @conclusion Implies $intentional (And $mark $mental_only)
+    return $conclusion
+end
+
+@:Necessary_Truth graph Proposition
+    @necessary isNecessary $Proposition
+    @all_worlds trueInAllPossibleWorlds $Proposition
+    @conclusion Iff $necessary $all_worlds
+    return $conclusion
+end
+
+@:Contingent_Truth graph Proposition
+    @contingent isContingent $Proposition
+    @some_worlds trueInSomePossibleWorlds $Proposition
+    @not_all Not (trueInAllPossibleWorlds $Proposition)
+    @conclusion Iff $contingent (And $some_worlds $not_all)
+    return $conclusion
+end
+
+@:Possible_Worlds_Semantics graph Proposition World
+    @true_at trueAt $Proposition $World
+    @possible isPossibleWorld $World
+    @meaning hasMeaning $Proposition
+    @conclusion Implies (And $true_at $possible) $meaning
+    return $conclusion
+end
+
+@:Modal_Realism graph World
+    @exists existsConcretely $World
+    @actual isActual $World
+    @real isReal $World
+    @conclusion Implies $exists $real
+    return $conclusion
+end
+
+@:Ontological_Argument_Anselm graph God
+    @conceived conceivedThanWhichNothingGreater $God
+    @exists_mind existsInMind $God
+    @greater greaterIfExists $God
+    @must_exist exists $God
+    @conclusion Implies (And (And $conceived $exists_mind) $greater) $must_exist
+    return $conclusion
+end
+
+@:Cosmological_Argument graph Universe Cause
+    @exists exists $Universe
+    @needs needsCause $Universe
+    @first_cause isFirstCause $Cause
+    @god isGod $Cause
+    @conclusion Implies (And (And $exists $needs) $first_cause) $god
+    return $conclusion
+end
+
+@:Teleological_Argument graph Universe Design Designer
+    @order hasOrder $Universe
+    @complexity hasComplexity $Universe
+    @implies impliesDesign (And $order $complexity) $Design
+    @designer exists $Designer
+    @conclusion Implies (And $implies $designer) (isGod $Designer)
+    return $conclusion
+end
+
+@:Problem_Of_Evil graph God Evil
+    @omnipotent isOmnipotent $God
+    @omnibenevolent isOmnibenevolent $God
+    @exists exists $Evil
+    @incompatible Not (And (And $omnipotent $omnibenevolent) $exists)
+    return $incompatible
+end
+
+@:Free_Will_Defense graph God Evil FreeWill
+    @allows allows $God $FreeWill
+    @valuable isValuable $FreeWill
+    @permits permits $FreeWill $Evil
+    @justified isJustified (allows $God $Evil)
+    @conclusion Implies (And (And $allows $valuable) $permits) $justified
+    return $conclusion
+end
+
+@:Soul_Making_Theodicy graph God Evil Growth
+    @permits permits $God $Evil
+    @enables enablesSoulMaking $Evil $Growth
+    @valuable isValuable $Growth
+    @justified isJustified (permits $God $Evil)
+    @conclusion Implies (And (And $permits $enables) $valuable) $justified
+    return $conclusion
+end
+
+@:Atheism graph God
+    @not_exists Not (exists $God)
+    @atheism isAtheism $not_exists
+    return $atheism
+end
+
+@:Agnosticism graph God
+    @unknown isUnknowable (exists $God)
+    @agnosticism isAgnosticism $unknown
+    return $agnosticism
+end
+
+@:Theism graph God
+    @exists exists $God
+    @theism isTheism $exists
+    return $theism
+end
+
+@:Pantheism graph God Universe
+    @identical Equals $God $Universe
+    @pantheism isPantheism $identical
+    return $pantheism
+end
+
+@:Panentheism graph God Universe
+    @contains contains $God $Universe
+    @transcends transcends $God $Universe
+    @panentheism isPanentheism (And $contains $transcends)
+    return $panentheism
+end
+
+@:Pascal_Wager graph Belief God
+    @believes believes Belief $God
+    @infinite infiniteGain $believes
+    @rational isRational $believes
+    @conclusion Implies $infinite $rational
+    return $conclusion
+end
+
+@:Plato_Theory_Of_Forms graph Particular Form
+    @participates participatesIn $Particular $Form
+    @perfect isPerfect $Form
+    @eternal isEternal $Form
+    @conclusion Implies $participates (And $perfect $eternal)
+    return $conclusion
+end
+
+@:Plato_Allegory_Of_Cave graph Prisoners Shadows Reality
+    @see see $Prisoners $Shadows
+    @believe believeReal $Prisoners $Shadows
+    @actual isActual $Reality
+    @illusion isIllusion $Shadows
+    @conclusion Implies (And (And $see $believe) $actual) $illusion
+    return $conclusion
+end
+
+@:Plato_Divided_Line graph Knowledge Opinion
+    @intelligible isIntelligible $Knowledge
+    @visible isVisible $Opinion
+    @higher higherLevel $Knowledge $Opinion
+    @conclusion Implies (And $intelligible $visible) $higher
+    return $conclusion
+end
+
+@:Aristotle_Hylomorphism graph Thing Matter Form
+    @composed composedOf $Thing $Matter $Form
+    @unity isUnity $Thing
+    @conclusion Implies $composed $unity
+    return $conclusion
+end
+
+@:Aristotle_Unmoved_Mover graph Motion Mover
+    @eternal eternalMotion $Motion
+    @requires requiresFirstMover $Motion
+    @unmoved isUnmovedMover $Mover
+    @conclusion Implies (And $eternal $requires) $unmoved
+    return $conclusion
+end
+
+@:Aristotle_Virtue_As_Mean graph Courage Rashness Cowardice
+    @mean isMean $Courage $Rashness $Cowardice
+    @virtue isVirtue $Courage
+    @conclusion Implies $mean $virtue
+    return $conclusion
+end
+
+@:Socratic_Method graph Question Truth
+    @dialectic usesDialectic $Question
+    @reveals revealsTruth $Question $Truth
+    @conclusion Implies $dialectic $reveals
+    return $conclusion
+end
+
+@:Socratic_Paradox graph Person Knowledge
+    @knows_nothing knowsNothing $Person
+    @wiser isWiser $Person
+    @conclusion Implies $knows_nothing $wiser
+    return $conclusion
+end
+
+@:Stoic_Dichotomy_Of_Control graph Thing
+    @control inOurControl $Thing
+    @focus shouldFocus $Thing
+    @not_control Not (inOurControl $Thing)
+    @not_focus Not (shouldFocus $Thing)
+    @conclusion Or (Implies $control $focus) (Implies $not_control $not_focus)
+    return $conclusion
+end
+
+@:Stoic_Apatheia graph Sage Passion
+    @free freeFromPassions $Sage
+    @tranquil hasTranquility $Sage
+    @conclusion Implies $free $tranquil
+    return $conclusion
+end
+
+@:Epicurean_Pleasure graph Pleasure Kinetic Static
+    @types hasTwoTypes $Pleasure $Kinetic $Static
+    @superior isSuperior $Static $Kinetic
+    @conclusion Implies $types $superior
+    return $conclusion
+end
+
+@:Epicurean_Death graph Death Person
+    @no_experience noExperience $Death $Person
+    @not_evil Not (isEvil $Death)
+    @conclusion Implies $no_experience $not_evil
+    return $conclusion
+end
+
+@:Skeptic_Suspension_Of_Judgment graph Belief
+    @equal_arguments equalArguments $Belief
+    @suspend suspendJudgment $Belief
+    @conclusion Implies $equal_arguments $suspend
+    return $conclusion
+end
+
+@:Pyrrhonian_Skepticism graph Knowledge
+    @no_criterion noCriterion $Knowledge
+    @suspend suspendJudgment $Knowledge
+    @tranquility achieveTranquility $suspend
+    @conclusion Implies (And $no_criterion $suspend) $tranquility
+    return $conclusion
+end
+
+@:Aquinas_Five_Ways graph God Proof1 Proof2 Proof3 Proof4 Proof5
+    @motion argumentFromMotion $Proof1
+    @cause argumentFromCause $Proof2
+    @contingency argumentFromContingency $Proof3
+    @degrees argumentFromDegrees $Proof4
+    @design argumentFromDesign $Proof5
+    @proves proves (Or (Or (Or (Or $Proof1 $Proof2) $Proof3) $Proof4) $Proof5) $God
+    return $proves
+end
+
+@:Aquinas_Natural_Law graph Action Nature
+    @follows followsNaturalLaw $Action $Nature
+    @moral isMoral $Action
+    @conclusion Implies $follows $moral
+    return $conclusion
+end
+
+@:Ockham_Razor graph Explanation1 Explanation2
+    @simpler isSimpler $Explanation1 $Explanation2
+    @equal equallyGood $Explanation1 $Explanation2
+    @prefer shouldPrefer $Explanation1
+    @conclusion Implies (And $simpler $equal) $prefer
+    return $conclusion
+end
+
+@:Descartes_Dualism graph Mind Body
+    @thinking isThinkingThing $Mind
+    @extended isExtendedThing $Body
+    @distinct areDistinct $Mind $Body
+    @conclusion Implies (And $thinking $extended) $distinct
+    return $conclusion
+end
+
+@:Descartes_Method_Of_Doubt graph Belief
+    @doubtable isDoubtable $Belief
+    @reject shouldReject $Belief
+    @conclusion Implies $doubtable $reject
+    return $conclusion
+end
+
+@:Descartes_Clear_And_Distinct graph Idea
+    @clear isClear $Idea
+    @distinct isDistinct $Idea
+    @true isTrue $Idea
+    @conclusion Implies (And $clear $distinct) $true
+    return $conclusion
+end
+
+@:Spinoza_Substance_Monism graph Substance
+    @infinite isInfinite $Substance
+    @attributes hasInfiniteAttributes $Substance
+    @god_or_nature isGodOrNature $Substance
+    @conclusion Implies (And $infinite $attributes) $god_or_nature
+    return $conclusion
+end
+
+@:Spinoza_Determinism graph Event
+    @follows followsFromNature $Event
+    @necessary isNecessary $Event
+    @conclusion Implies $follows $necessary
+    return $conclusion
+end
+
+@:Leibniz_Monadology graph Reality Monads
+    @composed composedOfMonads $Reality $Monads
+    @simple isSimple $Monads
+    @conclusion Implies $composed $simple
+    return $conclusion
+end
+
+@:Leibniz_Pre_Established_Harmony graph Monad1 Monad2
+    @harmonize harmonize $Monad1 $Monad2
+    @no_interaction noDirectInteraction $Monad1 $Monad2
+    @god_ordained ordainedByGod $harmonize
+    @conclusion Implies (And $harmonize $no_interaction) $god_ordained
+    return $conclusion
+end
+
+@:Leibniz_Best_Of_All_Possible_Worlds graph World God
+    @best isBestPossibleWorld $World
+    @created created $God $World
+    @conclusion Implies $created $best
+    return $conclusion
+end
+
+@:Locke_Tabula_Rasa graph Mind Birth
+    @blank isBlankSlate $Mind $Birth
+    @experience fillsByExperience $Mind
+    @conclusion Implies $blank $experience
+    return $conclusion
+end
+
+@:Locke_Primary_Secondary_Qualities graph Object Primary Secondary
+    @has_primary hasPrimaryQualities $Object $Primary
+    @has_secondary hasSecondaryQualities $Object $Secondary
+    @objective isObjective $Primary
+    @subjective isSubjective $Secondary
+    @conclusion Implies (And $has_primary $has_secondary) (And $objective $subjective)
+    return $conclusion
+end
+
+@:Berkeley_Idealism graph Object Mind
+    @exists exists $Object
+    @perceived perceivedBy $Object $Mind
+    @conclusion Iff $exists $perceived
+    return $conclusion
+end
+
+@:Hume_Empiricism graph Idea Impression
+    @derived derivedFrom $Idea $Impression
+    @copy isCopy $Idea $Impression
+    @conclusion Implies $derived $copy
+    return $conclusion
+end
+
+@:Hume_Bundle_Theory graph Self Perceptions
+    @collection isCollectionOf $Self $Perceptions
+    @no_substance noUnderlyingSubstance $Self
+    @conclusion Implies $collection $no_substance
+    return $conclusion
+end
+
+@:Hume_Is_Ought_Problem graph Is Ought
+    @derives derivesFrom $Ought $Is
+    @gap hasGap $Is $Ought
+    @not_valid Not (isValid $derives)
+    @conclusion Implies $gap $not_valid
+    return $conclusion
+end
+
+@:Kant_Copernican_Revolution graph Mind Objects
+    @conforms conformsToMind $Objects $Mind
+    @structures structures $Mind $Objects
+    @conclusion Implies $conforms $structures
+    return $conclusion
+end
+
+@:Kant_Categories graph Experience Categories
+    @structured structuredBy $Experience $Categories
+    @necessary isNecessary $Categories
+    @conclusion Implies $structured $necessary
+    return $conclusion
+end
+
+@:Kant_Noumena_Phenomena graph Thing Noumena Phenomena
+    @thing_itself isThingInItself $Noumena
+    @appearance isAppearance $Phenomena
+    @know canKnow $Phenomena
+    @not_know Not (canKnow $Noumena)
+    @conclusion Implies (And (And $thing_itself $appearance) $know) $not_know
+    return $conclusion
+end
+
+@:Kant_Autonomy graph Agent
+    @self_legislating isSelfLegislating $Agent
+    @autonomous isAutonomous $Agent
+    @conclusion Iff $self_legislating $autonomous
+    return $conclusion
+end
+
+@:Hegel_Dialectic graph Thesis Antithesis Synthesis
+    @opposed opposedTo $Thesis $Antithesis
+    @resolves resolves $Synthesis $Thesis $Antithesis
+    @progress isProgress $Synthesis
+    @conclusion Implies (And $opposed $resolves) $progress
+    return $conclusion
+end
+
+@:Hegel_Absolute_Spirit graph Spirit History
+    @realizes realizesItself $Spirit $History
+    @goal isGoal $Spirit
+    @conclusion Implies $realizes $goal
+    return $conclusion
+end
+
+@:Schopenhauer_Will graph Reality Will
+    @underlying isUnderlyingReality $Will
+    @blind isBlind $Will
+    @striving isStriving $Will
+    @conclusion Implies $underlying (And $blind $striving)
+    return $conclusion
+end
+
+@:Schopenhauer_Pessimism graph Life Suffering
+    @dominated dominatedBy $Life $Suffering
+    @pessimism isPessimism
+    @conclusion Implies $dominated $pessimism
+    return $conclusion
+end
+
+@:Nietzsche_Will_To_Power graph Being Drive
+    @fundamental isFundamental $Drive
+    @will_to_power isWillToPower $Drive
+    @conclusion Iff $fundamental $will_to_power
+    return $conclusion
+end
+
+@:Nietzsche_Eternal_Recurrence graph Life
+    @repeats repeatsInfinitely $Life
+    @affirm shouldAffirm $Life
+    @conclusion Implies $repeats $affirm
+    return $conclusion
+end
+
+@:Nietzsche_Ubermensch graph Person Values
+    @creates createsOwnValues $Person $Values
+    @overcomes overcomesNihilism $Person
+    @ubermensch isUbermensch $Person
+    @conclusion Implies (And $creates $overcomes) $ubermensch
+    return $conclusion
+end
+
+@:Nietzsche_Death_Of_God graph God Modernity
+    @dead isDead $God
+    @values valueCrisis $Modernity
+    @conclusion Implies $dead $values
+    return $conclusion
+end
+
+@:Nietzsche_Master_Slave_Morality graph Master Slave
+    @affirming isAffirming $Master
+    @reactive isReactive $Slave
+    @different areDifferent $Master $Slave
+    @conclusion Implies (And $affirming $reactive) $different
+    return $conclusion
+end
+
+@:Kierkegaard_Leap_Of_Faith graph Faith Reason
+    @beyond beyondReason $Faith
+    @leap requiresLeap $Faith
+    @conclusion Implies $beyond $leap
+    return $conclusion
+end
+
+@:Kierkegaard_Three_Stages graph Aesthetic Ethical Religious
+    @progression progressesThrough $Aesthetic $Ethical $Religious
+    @highest isHighest $Religious
+    @conclusion Implies $progression $highest
+    return $conclusion
+end
+
+@:Sartre_Existence_Precedes_Essence graph Human Essence
+    @first existsFirst $Human
+    @creates createsEssence $Human $Essence
+    @conclusion Implies $first $creates
+    return $conclusion
+end
+
+@:Sartre_Bad_Faith graph Person Responsibility
+    @denies deniesFreedom $Person
+    @bad_faith inBadFaith $Person
+    @conclusion Implies $denies $bad_faith
+    return $conclusion
+end
+
+@:Sartre_Condemned_To_Be_Free graph Human Freedom
+    @condemned condemnedToBeFree $Human
+    @responsible totallyResponsible $Human
+    @conclusion Implies $condemned $responsible
+    return $conclusion
+end
+
+@:Camus_Absurdism graph Human Meaning Universe
+    @seeks seeks $Human $Meaning
+    @silent isSilent $Universe
+    @absurd isAbsurd (confrontation $Human $Universe)
+    @conclusion Implies (And $seeks $silent) $absurd
+    return $conclusion
+end
+
+@:Camus_Sisyphus graph Sisyphus Absurd
+    @faces faces $Sisyphus $Absurd
+    @revolts revolts $Sisyphus
+    @happy isHappy $Sisyphus
+    @conclusion Implies (And $faces $revolts) $happy
+    return $conclusion
+end
+
+@:Heidegger_Being_In_The_World graph Dasein World
+    @always alwaysInWorld $Dasein
+    @inseparable inseparableFrom $Dasein $World
+    @conclusion Implies $always $inseparable
+    return $conclusion
+end
+
+@:Heidegger_Being_Toward_Death graph Dasein Death
+    @authentic authenticExistence $Dasein
+    @faces facesOwnDeath $Dasein
+    @conclusion Implies $faces $authentic
+    return $conclusion
+end
+
+@:Wittgenstein_Language_Games graph Language Use
+    @meaning meaningIsUse $Language
+    @games formsOfLife $Language $Use
+    @conclusion Implies $meaning $games
+    return $conclusion
+end
+
+@:Wittgenstein_Private_Language graph Language Private
+    @impossible impossiblePrivateLanguage $Language
+    @public requiresPublic $Language
+    @conclusion Implies $impossible $public
+    return $conclusion
+end
+
+@:Wittgenstein_Family_Resemblance graph Concepts
+    @overlapping hasOverlappingSimilarities $Concepts
+    @no_essence noCommonEssence $Concepts
+    @conclusion Implies $overlapping $no_essence
+    return $conclusion
+end
+
+@:Logical_Positivism graph Statement
+    @meaningful isMeaningful $Statement
+    @verifiable isVerifiable $Statement
+    @conclusion Iff $meaningful $verifiable
+    return $conclusion
+end
+
+@:Verification_Principle graph Proposition
+    @meaningful isMeaningful $Proposition
+    @verifiable empiricallyVerifiable $Proposition
+    @analytic isAnalytic $Proposition
+    @conclusion Iff $meaningful (Or $verifiable $analytic)
+    return $conclusion
+end
+
+@:Quine_Two_Dogmas graph Analytic Synthetic
+    @distinction hasDistinction $Analytic $Synthetic
+    @dogma isDogma $distinction
+    @reject shouldReject $dogma
+    @conclusion Implies $dogma $reject
+    return $conclusion
+end
+
+@:Quine_Web_Of_Belief graph Beliefs Experience
+    @web isWebOfBelief $Beliefs
+    @holism isHolism $web
+    @adjust adjustToExperience $web $Experience
+    @conclusion Implies (And $web $holism) $adjust
+    return $conclusion
+end
+
+@:Popper_Falsificationism graph Theory
+    @scientific isScientific $Theory
+    @falsifiable isFalsifiable $Theory
+    @conclusion Iff $scientific $falsifiable
+    return $conclusion
+end
+
+@:Kuhn_Paradigm_Shift graph Science Paradigm1 Paradigm2
+    @crisis hasCrisis $Paradigm1
+    @revolution scientificRevolution $Paradigm1 $Paradigm2
+    @shift paradigmShift $Science
+    @conclusion Implies (And $crisis $revolution) $shift
+    return $conclusion
+end
+
+@:Feyerabend_Anarchism graph Method Science
+    @no_universal noUniversalMethod $Science
+    @anything_goes anythingGoes $Method
+    @conclusion Implies $no_universal $anything_goes
+    return $conclusion
+end
+
+@:Rawls_Original_Position graph Principles Justice
+    @chosen chosenInOriginalPosition $Principles
+    @just isJust $Principles
+    @conclusion Implies $chosen $just
+    return $conclusion
+end
+
+@:Nozick_Entitlement_Theory graph Holdings Justice
+    @justly_acquired justlyAcquired $Holdings
+    @justly_transferred justlyTransferred $Holdings
+    @just isJust $Holdings
+    @conclusion Implies (Or $justly_acquired $justly_transferred) $just
+    return $conclusion
+end
+
+@:Singer_Animal_Liberation graph Being Sentient
+    @is_sentient isSentient $Being
+    @moral_consideration deservesConsideration $Being
+    @conclusion Implies $is_sentient $moral_consideration
+    return $conclusion
+end
+
+@:Foucault_Power_Knowledge graph Power Knowledge
+    @intertwined areIntertwined $Power $Knowledge
+    @produces produces $Power $Knowledge
+    @conclusion Implies $intertwined $produces
+    return $conclusion
+end
+
+@:Derrida_Deconstruction graph Text Meaning
+    @unstable hasUnstableMeaning $Text
+    @deconstruct shouldDeconstruct $Text
+    @conclusion Implies $unstable $deconstruct
+    return $conclusion
+end
+
+@:Habermas_Communicative_Action graph Discourse Rationality
+    @free isFreeDiscourse $Discourse
+    @rational communicativeRationality $Discourse
+    @conclusion Implies $free $rational
+    return $conclusion
+end
+
+@:MacIntyre_Virtue_Ethics graph Virtues Tradition Practice
+    @embedded embeddedInTradition $Virtues $Tradition
+    @realized realizedInPractice $Virtues $Practice
+    @conclusion Implies (And $embedded $realized) (hasVirtueEthics $Tradition)
+    return $conclusion
+end
+
+@:Putnam_Semantic_Externalism graph Meaning World
+    @determines determinesMeaning $World
+    @not_in_head meaningNotInHead $Meaning
+    @conclusion Implies $determines $not_in_head
+    return $conclusion
+end
+
+@:Kripke_Rigid_Designator graph Name Object
+    @designates designatesInAllWorlds $Name $Object
+    @rigid isRigidDesignator $Name
+    @conclusion Iff $designates $rigid
+    return $conclusion
+end
+
+@:Lewis_Modal_Realism graph PossibleWorld
+    @concrete isConcrete $PossibleWorld
+    @exists exists $PossibleWorld
+    @real isReal $PossibleWorld
+    @conclusion Implies $concrete (And $exists $real)
+    return $conclusion
+end
+
+@:Chalmers_Zombie_Argument graph Zombie Consciousness
+    @conceivable isConceivable $Zombie
+    @possible isPossible $Zombie
+    @not_physical Not (isPhysical $Consciousness)
+    @conclusion Implies (And $conceivable $possible) $not_physical
+    return $conclusion
+end
+
+@:Dennett_Multiple_Drafts graph Consciousness Stream
+    @no_single noSingleStream $Consciousness
+    @multiple hasMultipleDrafts $Consciousness
+    @conclusion Implies $no_single $multiple
+    return $conclusion
+end
+
+@:Nagel_What_Is_It_Like graph Experience Bat
+    @subjective hasSubjectiveCharacter $Experience
+    @what_like whatIsItLikeToBe $Bat
+    @ineffable isIneffable $what_like
+    @conclusion Implies $subjective $ineffable
+    return $conclusion
+end
+
+@:Parfit_Personal_Identity graph Person Continuity
+    @what_matters whatMatters $Person
+    @not_identity Not (Equals $what_matters Identity)
+    @psychological isPsychologicalContinuity $Continuity
+    @conclusion Implies $psychological $not_identity
+    return $conclusion
+end
+
+@:Van_Inwagen_Special_Composition graph Parts Whole
+    @compose compose $Parts $Whole
+    @life hasLife $Whole
+    @conclusion Implies $compose $life
+    return $conclusion
+end
+
+@:Plantinga_Reformed_Epistemology graph Belief God
+    @basic isBasic $Belief
+    @rational isRational $Belief
+    @no_evidence noEvidenceNeeded $Belief
+    @conclusion Implies (And $basic (Equals $Belief (belief $God))) (And $rational $no_evidence)
+    return $conclusion
+end
+
+@:Swinburne_Probability_Theism graph God Evidence
+    @probable isProbable (exists $God)
+    @explains explainsEvidence $God $Evidence
+    @conclusion Implies $explains $probable
+    return $conclusion
+end
+
+@:Mackie_Error_Theory graph MoralClaim
+    @objective claimsObjectivity $MoralClaim
+    @false isFalse $MoralClaim
+    @error isError $MoralClaim
+    @conclusion Implies (And $objective $false) $error
+    return $conclusion
+end
+
+@:Foot_Natural_Goodness graph Being Function Good
+    @has_function hasFunction $Being $Function
+    @fulfills fulfillsFunction $Being
+    @good isGood $Being
+    @conclusion Implies (And $has_function $fulfills) $good
+    return $conclusion
+end
+
+@:Anscombe_Intention graph Action Intention
+    @under underDescription $Action
+    @intentional isIntentional $Action $Intention
+    @conclusion Implies $under $intentional
+    return $conclusion
+end
+
+@:Thomson_Violinist graph Abortion Right
+    @analogy isAnalogousTo $Abortion Violinist
+    @right hasRight disconnect
+    @permissible isPermissible $Abortion
+    @conclusion Implies (And $analogy $right) $permissible
+    return $conclusion
+end
+
+@:Frankfurt_Compatibilism graph Agent Action Alternative
+    @responsible isMorallyResponsible $Agent $Action
+    @no_alternative hasNoAlternative $Agent $Action
+    @compatible areCompatible $responsible $no_alternative
+    @conclusion Implies (And $responsible $no_alternative) $compatible
+    return $conclusion
+end
+
+@:Gettier_Counterexample graph Subject Proposition
+    @justified isJustified $Subject $Proposition
+    @true isTrue $Proposition
+    @believes believes $Subject $Proposition
+    @luck basedOnLuck $Subject $Proposition
+    @not_knowledge Not (knows $Subject $Proposition)
+    @conclusion Implies (And (And (And $justified $true) $believes) $luck) $not_knowledge
+    return $conclusion
+end
+
+@:Goldman_Causal_Theory_Knowledge graph Subject Fact Belief
+    @caused causedBy $Belief $Fact
+    @appropriate appropriateCausalConnection $Fact $Belief
+    @knows knows $Subject $Fact
+    @conclusion Implies (And $caused $appropriate) $knows
+    return $conclusion
+end
+
+@:Nozick_Tracking_Theory graph Subject Proposition
+    @true isTrue $Proposition
+    @believes believes $Subject $Proposition
+    @tracking tracksReality $Belief $Proposition
+    @knows knows $Subject $Proposition
+    @conclusion Implies (And (And $true $believes) $tracking) $knows
+    return $conclusion
+end
+
+@:BonJour_Coherence_Theory graph Beliefs System
+    @coherent isCoherent $System
+    @member memberOf $Beliefs $System
+    @justified isJustified $Beliefs
+    @conclusion Implies (And $coherent $member) $justified
+    return $conclusion
+end
+
+@:Williams_Internal_Reasons graph Agent Reason
+    @internal isInternalReason $Reason $Agent
+    @motivating canMotivate $Reason $Agent
+    @conclusion Iff $internal $motivating
+    return $conclusion
+end
+
+@:Korsgaard_Sources_Of_Normativity graph Agent Obligation
+    @self_constitution selfConstitution $Agent
+    @source isSource $self_constitution $Obligation
+    @conclusion Implies $self_constitution $source
+    return $conclusion
+end
+
+@:Scanlon_Contractualism graph Principle Person
+    @reasonable noReasonableRejection $Principle $Person
+    @right isRight $Principle
+    @conclusion Implies $reasonable $right
+    return $conclusion
+end
+
+@:Dworkin_Rights_As_Trumps graph Right Utility
+    @trumps trumps $Right $Utility
+    @protected isProtected $Right
+    @conclusion Implies $trumps $protected
+    return $conclusion
+end
+
+@:Sen_Capability_Approach graph Person Capabilities
+    @has_capabilities hasCapabilities $Person $Capabilities
+    @freedom hasFreedom $Person
+    @conclusion Implies $has_capabilities $freedom
+    return $conclusion
+end
+
+@:Nussbaum_Central_Capabilities graph Society Capabilities
+    @provides providesCapabilities $Society $Capabilities
+    @just isJust $Society
+    @conclusion Implies $provides $just
+    return $conclusion
+end
+
+@:Mill_Harm_Principle graph Action Other
+    @harms harms $Action $Other
+    @justified justifiedIntervention $Action
+    @no_harm Not (harms $Action $Other)
+    @not_justified Not (justifiedIntervention $Action)
+    @conclusion Or (Implies $harms $justified) (Implies $no_harm $not_justified)
+    return $conclusion
+end
+
+@:Mill_Higher_Pleasures graph Pleasure1 Pleasure2
+    @higher isHigherPleasure $Pleasure1 $Pleasure2
+    @quality hasQualityDifference $Pleasure1 $Pleasure2
+    @conclusion Implies $higher $quality
+    return $conclusion
+end
+
+@:Bentham_Hedonic_Calculus graph Action Pleasure Pain
+    @calculates calculatesUtility $Action $Pleasure $Pain
+    @right isRight $Action
+    @conclusion Implies (maximizesUtility $calculates) $right
+    return $conclusion
+end
+
+@:Ross_Prima_Facie_Duties graph Duty
+    @prima_facie isPrimaFacieDuty $Duty
+    @actual mayNotBeActualDuty $Duty
+    @conflict possibleConflict $Duty
+    @conclusion Implies (And $prima_facie $conflict) $actual
+    return $conclusion
+end
+
+@:Kant_Good_Will graph Will
+    @good isGood $Will
+    @intrinsic intrinsicallyGood $Will
+    @only onlyUnqualifiedGood $Will
+    @conclusion Implies $good (And $intrinsic $only)
+    return $conclusion
+end
+
+@:Aristotle_Practical_Wisdom graph Phronesis Virtue
+    @has hasPhronesis $Phronesis
+    @applies appliesVirtue $Phronesis $Virtue
+    @conclusion Implies $has $applies
+    return $conclusion
+end
+
+@:Hume_Reason_Slave_Of_Passions graph Reason Passion
+    @slave isSlaveOf $Reason $Passion
+    @motivates motivatesAction $Passion
+    @not_motivate Not (motivatesAction $Reason)
+    @conclusion Implies $slave (And $motivates $not_motivate)
+    return $conclusion
+end
+
+@:Smith_Desire_Belief_Model graph Action Desire Belief
+    @caused causedBy $Action (And $Desire $Belief)
+    @explains explainsAction (And $Desire $Belief) $Action
+    @conclusion Implies $caused $explains
+    return $conclusion
+end
+
+@:Ayer_Emotivism graph MoralStatement Emotion
+    @expresses expressesEmotion $MoralStatement $Emotion
+    @not_factual Not (isFactual $MoralStatement)
+    @conclusion Implies $expresses $not_factual
+    return $conclusion
+end
+
+@:Stevenson_Persuasive_Definition graph Definition Attitude
+    @persuades persuadesAttitude $Definition $Attitude
+    @emotive hasEmotiveMeaning $Definition
+    @conclusion Implies $persuades $emotive
+    return $conclusion
+end
+
+@:Hare_Prescriptivism graph MoralJudgment
+    @prescriptive isPrescriptive $MoralJudgment
+    @universal isUniversal $MoralJudgment
+    @action guidesAction $MoralJudgment
+    @conclusion Implies (And $prescriptive $universal) $action
+    return $conclusion
+end
+
+@:Gibbard_Norm_Expressivism graph Statement Norm
+    @expresses expressesNorm $Statement $Norm
+    @plans plansAction $Norm
+    @conclusion Implies $expresses $plans
+    return $conclusion
+end
+
+@:Blackburn_Quasi_Realism graph MoralDiscourse
+    @projectivist isProjectivist $MoralDiscourse
+    @realistic seemsRealistic $MoralDiscourse
+    @quasi isQuasiRealism $MoralDiscourse
+    @conclusion Implies (And $projectivist $realistic) $quasi
+    return $conclusion
+end
+
+@:Moore_Open_Question graph Property Good
+    @identifies identifies $Property $Good
+    @open isOpenQuestion (Equals $Property $Good)
+    @not_identical Not (Equals $Property $Good)
+    @conclusion Implies $open $not_identical
+    return $conclusion
+end
+
+@:Moore_Naturalistic_Fallacy graph Good Natural
+    @defines definesAs $Good $Natural
+    @fallacy isFallacy $defines
+    @conclusion Implies $defines $fallacy
+    return $conclusion
+end
+
+@:Shafer_Landau_Moral_Realism graph MoralFact
+    @mind_independent isMindIndependent $MoralFact
+    @objective isObjective $MoralFact
+    @conclusion Implies $mind_independent $objective
+    return $conclusion
+end
+
+@:Street_Evolutionary_Debunking graph MoralBeliefs Evolution
+    @shaped shapedByEvolution $MoralBeliefs $Evolution
+    @unreliable isUnreliable $MoralBeliefs
+    @conclusion Implies $shaped $unreliable
+    return $conclusion
+end
+
+@:Parfit_Triple_Theory graph Action Kantian Contractualist Consequentialist
+    @converge convergeOn $Kantian $Contractualist $Consequentialist $Action
+    @right isRight $Action
+    @conclusion Implies $converge $right
+    return $conclusion
+end
+
+@:Doctrine_Of_Doing_And_Allowing graph Harm1 Harm2
+    @doing doingHarm $Harm1
+    @allowing allowingHarm $Harm2
+    @worse isWorse $Harm1 $Harm2
+    @conclusion Implies (And $doing $allowing) $worse
+    return $conclusion
+end
+
+@:Trolley_Problem graph Action Kill5 Kill1
+    @divert divertTrolley $Action
+    @saves saves $Action Kill5
+    @kills kills $Action Kill1
+    @permissible isPermissible $Action
+    @question isEthicalDilemma (And (And $divert $saves) $kills)
+    return $question
+end
+
+@:Fat_Man_Variant graph Action Push
+    @pushes pushes $Action FatMan
+    @saves saves $Action Five
+    @impermissible isImpermissible $Action
+    @conclusion Implies $pushes $impermissible
+    return $conclusion
+end

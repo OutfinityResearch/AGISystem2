@@ -107,7 +107,7 @@ describe('Session Features', () => {
 
   describe('Contradiction Detection', () => {
     test('should detect Open/Closed contradiction', () => {
-      const session = new Session({ geometry: 2048 });
+      const session = new Session({ geometry: 2048, reasoningProfile: 'theoryDriven' });
       session.learn('hasState Box Closed');
       const result = session.learn('hasState Box Open');
 
@@ -116,7 +116,7 @@ describe('Session Features', () => {
     });
 
     test('should detect Hot/Cold contradiction', () => {
-      const session = new Session({ geometry: 2048 });
+      const session = new Session({ geometry: 2048, reasoningProfile: 'theoryDriven' });
       session.learn('hasProperty Water Hot');
       const result = session.learn('hasProperty Water Cold');
 
@@ -124,7 +124,7 @@ describe('Session Features', () => {
     });
 
     test('should not warn for non-contradictory facts', () => {
-      const session = new Session({ geometry: 2048 });
+      const session = new Session({ geometry: 2048, reasoningProfile: 'theoryDriven' });
       session.learn('hasProperty Car Red');
       const result = session.learn('hasProperty Car Fast');
 

@@ -1,0 +1,1772 @@
+// Anthropology Theory - DSL Format
+// Comprehensive coverage of cultural anthropology, kinship, religion, evolution, and subsistence
+
+// ===== CULTURAL ELEMENTS =====
+
+@:Material_Culture graph Artifact Function Context
+    @obj hasArtifact Culture $Artifact
+    @use hasFunction $Artifact $Function
+    @ctx usedInContext $Artifact $Context
+    @meaning encodes CulturalMeaning (And $obj (And $use $ctx))
+    return $meaning
+end
+
+@:Symbolic_Culture graph Symbol Meaning Group
+    @sym hasSymbol Culture $Symbol
+    @mean represents $Symbol $Meaning
+    @grp sharedBy $sym $Group
+    @identity creates GroupIdentity (And $sym (And $mean $grp))
+    return $identity
+end
+
+@:Cultural_Practice graph Practice Norms Transmission
+    @prac hasPractice Culture $Practice
+    @norm governedBy $prac $Norms
+    @trans transmittedVia $prac $Transmission
+    @continuity ensures CulturalContinuity (And $prac (And $norm $trans))
+    return $continuity
+end
+
+@:Cultural_Values graph Value Behavior Institution
+    @val holdsValue Culture $Value
+    @beh shapesehavior $val $Behavior
+    @inst embodiedIn $val $Institution
+    @system forms ValueSystem (And $val (And $beh $inst))
+    return $system
+end
+
+@:Enculturation graph Individual Culture Learning
+    @ind isMember $Individual $Culture
+    @learn acquires $ind CulturalKnowledge
+    @proc throughProcess $learn $Learning
+    @result becomes CulturalMember (And $ind (And $learn $proc))
+    return $result
+end
+
+@:Cultural_Relativism graph Practice Culture Context
+    @prac observes Observer $Practice
+    @cult partOf $prac $Culture
+    @ctx understandIn $prac $Context
+    @judgment suspends EthnocentricJudgment (And $prac (And $cult $ctx))
+    return $judgment
+end
+
+@:Ethnocentrism graph Culture OwnCulture OtherCulture
+    @own belongsTo Individual $OwnCulture
+    @other encounters $own $OtherCulture
+    @judge evaluates $own $other
+    @bias applies CulturalBias (And $own (And $other $judge))
+    return $bias
+end
+
+@:Cultural_Diffusion graph Trait SourceCulture TargetCulture
+    @trait exists CulturalTrait $Trait
+    @source originatesIn $trait $SourceCulture
+    @target spreadsTo $trait $TargetCulture
+    @process undergoes DiffusionProcess (And $trait (And $source $target))
+    return $process
+end
+
+@:Acculturation graph Culture1 Culture2 Change
+    @c1 contacts $Culture1 $Culture2
+    @c2 influences $c1 $Change
+    @adapt undergoes $Culture1 $Change
+    @result produces CulturalAdaptation (And $c1 (And $c2 $adapt))
+    return $result
+end
+
+@:Cultural_Integration graph Element1 Element2 Element3
+    @e1 hasElement Culture $Element1
+    @e2 hasElement Culture $Element2
+    @e3 hasElement Culture $Element3
+    @pattern formsPattern IntegratedSystem (And $e1 (And $e2 $e3))
+    return $pattern
+end
+
+// ===== KINSHIP SYSTEMS =====
+
+@:Kinship_System graph Descent Marriage Residence
+    @desc followsDescent Group $Descent
+    @marr practicesMarriage Group $Marriage
+    @res followsResidence Group $Residence
+    @pattern determines KinshipPattern (And $desc (And $marr $res))
+    return $pattern
+end
+
+@:Patrilineal_Descent graph Father Child Lineage
+    @rel isChildOf $Child $Father
+    @male isMale $Father
+    @lin tracesLineage $Child $Lineage
+    @pattern follows PatrilinealPattern (And $rel (And $male $lin))
+    return $pattern
+end
+
+@:Matrilineal_Descent graph Mother Child Lineage
+    @rel isChildOf $Child $Mother
+    @fem isFemale $Mother
+    @lin tracesLineage $Child $Lineage
+    @pattern follows MatrilinealPattern (And $rel (And $fem $lin))
+    return $pattern
+end
+
+@:Bilateral_Descent graph Child Father Mother
+    @f isChildOf $Child $Father
+    @m isChildOf $Child $Mother
+    @both tracesThrough $Child BothLines
+    @pattern follows BilateralPattern (And $f (And $m $both))
+    return $pattern
+end
+
+@:Ambilineal_Descent graph Child Parent Choice
+    @rel isChildOf $Child $Parent
+    @choose selectsLineage $Child $Choice
+    @flex allows FlexibleAffiliation (And $rel (And $choose $flex))
+    @pattern follows AmbilinealPattern $flex
+    return $pattern
+end
+
+@:Double_Descent graph Person PatrilineProperty MatrilineProperty
+    @pp inheritsVia $Person $PatrilineProperty
+    @mp inheritsVia $Person $MatrilineProperty
+    @dual maintains DualSystem (And $pp (And $mp $dual))
+    @pattern follows DoubleDescentPattern $dual
+    return $pattern
+end
+
+@:Clan graph Lineage Ancestor Territory
+    @lin hasMember Clan $Lineage
+    @anc descendsFrom $lin $Ancestor
+    @terr occupies $lin $Territory
+    @unit forms ClanUnit (And $lin (And $anc $terr))
+    return $unit
+end
+
+@:Phratry graph Clan1 Clan2 Alliance
+    @c1 isClan $Clan1
+    @c2 isClan $Clan2
+    @all formsAlliance (Or $c1 $c2) $Alliance
+    @group creates PhratryGroup $all
+    return $group
+end
+
+@:Moiety graph Society Half1 Half2
+    @s divides $Society IntoTwo
+    @h1 comprises $Half1 Clans
+    @h2 comprises $Half2 Clans
+    @dual creates MoietySystem (And $s (And $h1 $h2))
+    return $dual
+end
+
+@:Lineage graph Ancestor Descendants Generation
+    @anc hasAncestor Group $Ancestor
+    @desc traces $Descendants $anc
+    @gen counts $desc $Generation
+    @line forms LineageGroup (And $anc (And $desc $gen))
+    return $line
+end
+
+@:Kindred graph Ego Bilateral Network
+    @e isFocalPerson $Ego
+    @bil tracesBoth $e $Bilateral
+    @net includes $bil $Network
+    @group forms EgoCentricKindred (And $e (And $bil $net))
+    return $group
+end
+
+@:Exogamy graph Group Member OutsideGroup
+    @g belongsTo $Member $Group
+    @rule requires MarryOutside
+    @out marries $Member $OutsideGroup
+    @pattern follows ExogamousPattern (And $g (And $rule $out))
+    return $pattern
+end
+
+@:Endogamy graph Group Member InsideGroup
+    @g belongsTo $Member $Group
+    @rule requires MarryInside
+    @in marries $Member $InsideGroup
+    @pattern follows EndogamousPattern (And $g (And $rule $in))
+    return $pattern
+end
+
+@:Cross_Cousin_Marriage graph Ego CrossCousin Marriage
+    @e hasPerson $Ego
+    @cc isCrossCousinOf $CrossCousin $e
+    @mar canMarry $e $cc
+    @pattern allows CrossCousinPattern (And $e (And $cc $mar))
+    return $pattern
+end
+
+@:Parallel_Cousin_Prohibition graph Ego ParallelCousin Prohibition
+    @e hasPerson $Ego
+    @pc isParallelCousinOf $ParallelCousin $e
+    @pro prohibits MarriageRule $pc
+    @pattern enforces ProhibitionPattern (And $e (And $pc $pro))
+    return $pattern
+end
+
+@:Sororate graph Husband Wife WifeSister
+    @mar isMarriedTo $Husband $Wife
+    @death dies $Wife
+    @sis isSisterOf $WifeSister $Wife
+    @custom requires SororateMarriage (And $mar (And $death $sis))
+    return $custom
+end
+
+@:Levirate graph Wife Husband HusbandBrother
+    @mar isMarriedTo $Wife $Husband
+    @death dies $Husband
+    @bro isBrotherOf $HusbandBrother $Husband
+    @custom requires LevirateMarriage (And $mar (And $death $bro))
+    return $custom
+end
+
+@:Patrilocal_Residence graph Couple HusbandFamily Location
+    @mar marries $Couple
+    @hf hasFamily Husband $HusbandFamily
+    @loc residesNear $Couple $hf
+    @pattern follows PatrilocalPattern (And $mar (And $hf $loc))
+    return $pattern
+end
+
+@:Matrilocal_Residence graph Couple WifeFamily Location
+    @mar marries $Couple
+    @wf hasFamily Wife $WifeFamily
+    @loc residesNear $Couple $wf
+    @pattern follows MatrilocalPattern (And $mar (And $wf $loc))
+    return $pattern
+end
+
+@:Neolocal_Residence graph Couple NewLocation Independence
+    @mar marries $Couple
+    @new establishes $Couple $NewLocation
+    @ind achieves $new $Independence
+    @pattern follows NeolocalPattern (And $mar (And $new $ind))
+    return $pattern
+end
+
+@:Avunculocal_Residence graph Couple MothersBrother Location
+    @mar marries $Couple
+    @mb hasMothersBrother Husband $MothersBrother
+    @loc residesNear $Couple $mb
+    @pattern follows AvunculocalPattern (And $mar (And $mb $loc))
+    return $pattern
+end
+
+@:Bilocal_Residence graph Couple Choice Location
+    @mar marries $Couple
+    @cho chooses $Couple $Choice
+    @loc residesAt $Couple $Location
+    @pattern follows BilocalPattern (And $mar (And $cho $loc))
+    return $pattern
+end
+
+@:Hawaiian_Kinship graph Ego Generation Term
+    @e hasPerson $Ego
+    @gen sameGeneration $e $Generation
+    @term usesSameTerm $gen $Term
+    @sys classifies HawaiianSystem (And $e (And $gen $term))
+    return $sys
+end
+
+@:Eskimo_Kinship graph Ego Nuclear Extended
+    @e hasPerson $Ego
+    @nuc distinguishes $e $Nuclear
+    @ext distinguishes $e $Extended
+    @sys classifies EskimoSystem (And $e (And $nuc $ext))
+    return $sys
+end
+
+@:Iroquois_Kinship graph Ego ParallelCousin CrossCousin
+    @e hasPerson $Ego
+    @par mergesWithSiblings $ParallelCousin
+    @cro distinguishes $CrossCousin
+    @sys classifies IroquoisSystem (And $e (And $par $cro))
+    return $sys
+end
+
+@:Sudanese_Kinship graph Ego Relative DistinctTerm
+    @e hasPerson $Ego
+    @rel hasRelative $e $Relative
+    @dis usesDistinctTerm $rel $DistinctTerm
+    @sys classifies SudaneseSystem (And $e (And $rel $dis))
+    return $sys
+end
+
+@:Crow_Kinship graph Ego MatrilinealBias Pattern
+    @e hasPerson $Ego
+    @mat emphasizes $e $MatrilinealBias
+    @pat showsPattern $mat $Pattern
+    @sys classifies CrowSystem (And $e (And $mat $pat))
+    return $sys
+end
+
+@:Omaha_Kinship graph Ego PatrilinealBias Pattern
+    @e hasPerson $Ego
+    @pat emphasizes $e $PatrilinealBias
+    @patt showsPattern $pat $Pattern
+    @sys classifies OmahaSystem (And $e (And $pat $patt))
+    return $sys
+end
+
+@:Polygyny graph Male MultipleFemales Marriage
+    @m isMale $Male
+    @f hasSpouses $m $MultipleFemales
+    @mar maintains MultipleMarriages
+    @pattern follows PolygynyPattern (And $m (And $f $mar))
+    return $pattern
+end
+
+@:Polyandry graph Female MultipleMales Marriage
+    @f isFemale $Female
+    @m hasSpouses $f $MultipleMales
+    @mar maintains MultipleMarriages
+    @pattern follows PolyandryPattern (And $f (And $m $mar))
+    return $pattern
+end
+
+@:Monogamy graph Person SingleSpouse Exclusivity
+    @p hasPerson $Person
+    @s hasSpouse $p $SingleSpouse
+    @ex maintains Exclusivity
+    @pattern follows MonogamyPattern (And $p (And $s $ex))
+    return $pattern
+end
+
+// ===== RELIGION AND RITUAL =====
+
+@:Animism graph Spirit Being Nature
+    @sp believes Culture $Spirit
+    @be inhabits $sp $Being
+    @nat foundIn $be $Nature
+    @belief forms AnimisticBelief (And $sp (And $be $nat))
+    return $belief
+end
+
+@:Totemism graph Group Totem Relationship
+    @g hasGroup $Group
+    @tot associates $g $Totem
+    @rel maintains SpecialRelationship
+    @sys forms TotemicSystem (And $g (And $tot $rel))
+    return $sys
+end
+
+@:Shamanism graph Shaman SpiritWorld Trance
+    @sh isShaman $Shaman
+    @sw accesses $sh $SpiritWorld
+    @tr entersState $sh $Trance
+    @practice performs ShamanicPractice (And $sh (And $sw $tr))
+    return $practice
+end
+
+@:Polytheism graph Culture MultipleDivinities Pantheon
+    @c believes $Culture Deities
+    @m worships $c $MultipleDivinities
+    @p organizes $m $Pantheon
+    @sys forms PolytheisticSystem (And $c (And $m $p))
+    return $sys
+end
+
+@:Monotheism graph Culture OneDivinity Supreme
+    @c believes $Culture Deity
+    @o worships $c $OneDivinity
+    @s recognizes $o $Supreme
+    @sys forms MonotheisticSystem (And $c (And $o $s))
+    return $sys
+end
+
+@:Ancestor_Worship graph Lineage Ancestors Veneration
+    @l hasLineage $Lineage
+    @a honors $l $Ancestors
+    @v performs $a $Veneration
+    @cult maintains AncestorCult (And $l (And $a $v))
+    return $cult
+end
+
+@:Mana graph Person Power Supernatural
+    @p hasPerson $Person
+    @pow possesses $p $Power
+    @sup isType $pow $Supernatural
+    @force represents ManaForce (And $p (And $pow $sup))
+    return $force
+end
+
+@:Taboo graph Prohibition Supernatural Violation
+    @pro exists $Prohibition
+    @sup sanctionedBy $pro $Supernatural
+    @vio causes Danger
+    @rule enforces TabooRule (And $pro (And $sup $vio))
+    return $rule
+end
+
+@:Ritual graph Action Symbolic Purpose
+    @act performs Community $Action
+    @sym hasCharacter $act $Symbolic
+    @pur serves $act $Purpose
+    @ceremony constitutes RitualCeremony (And $act (And $sym $pur))
+    return $ceremony
+end
+
+@:Rite_of_Passage graph Individual Transition Status
+    @ind undergoes $Individual $Transition
+    @trans changes StatusChange
+    @stat achieves $ind $Status
+    @rite marks PassageRite (And $ind (And $trans $stat))
+    return $rite
+end
+
+@:Separation_Phase graph Initiate OldStatus Removal
+    @init hasPerson $Initiate
+    @old leaves $init $OldStatus
+    @rem undergoes $init $Removal
+    @phase enters SeparationPhase (And $init (And $old $rem))
+    return $phase
+end
+
+@:Liminal_Phase graph Initiate BetwixtState Transformation
+    @init hasPerson $Initiate
+    @bet exists $BetwixtState
+    @trans undergoes $init $Transformation
+    @phase enters LiminalPhase (And $init (And $bet $trans))
+    return $phase
+end
+
+@:Incorporation_Phase graph Initiate NewStatus Integration
+    @init hasPerson $Initiate
+    @new receives $init $NewStatus
+    @int achieves $init $Integration
+    @phase enters IncorporationPhase (And $init (And $new $int))
+    return $phase
+end
+
+@:Communitas graph Liminality EqualStatus Bonding
+    @lim inState Group $Liminality
+    @eq experiences $lim $EqualStatus
+    @bon develops $lim $Bonding
+    @state creates CommunitasState (And $lim (And $eq $bon))
+    return $state
+end
+
+@:Sacred_Profane graph Sacred Profane Separation
+    @sac exists ReligiousDomain $Sacred
+    @pro exists SecularDomain $Profane
+    @sep distinguishes $sac $pro
+    @dual creates DualClassification (And $sac (And $pro $sep))
+    return $dual
+end
+
+@:Magic graph Spell Ritual Effect
+    @sp performs Practitioner $Spell
+    @rit uses $sp $Ritual
+    @eff produces $sp $Effect
+    @practice constitutes MagicalPractice (And $sp (And $rit $eff))
+    return $practice
+end
+
+@:Sympathetic_Magic graph Image Object Connection
+    @img creates $Image
+    @obj represents $img $Object
+    @con assumes MagicalConnection
+    @principle follows SympatheticPrinciple (And $img (And $obj $con))
+    return $principle
+end
+
+@:Contagious_Magic graph Part Whole Contact
+    @par hasPart $Part
+    @who wasPartOf $par $Whole
+    @con maintains Connection
+    @principle follows ContagiousPrinciple (And $par (And $who $con))
+    return $principle
+end
+
+@:Divination graph Practice Signs Future
+    @pra performs $Practice
+    @sig interprets $pra $Signs
+    @fut predicts $pra $Future
+    @method uses DivinationMethod (And $pra (And $sig $fut))
+    return $method
+end
+
+@:Sacrifice graph Offering Divinity Purpose
+    @off makes Community $Offering
+    @div givesTo $off $Divinity
+    @pur achieves $off $Purpose
+    @ritual performs SacrificeRitual (And $off (And $div $pur))
+    return $ritual
+end
+
+@:Myth graph Narrative Sacred Explanation
+    @nar tells Culture $Narrative
+    @sac concerns $nar $Sacred
+    @exp provides $nar $Explanation
+    @story constitutes MythicStory (And $nar (And $sac $exp))
+    return $story
+end
+
+@:Religious_Specialist graph Person Role Authority
+    @per hasPerson $Person
+    @rol fills $per $Role
+    @auth possesses $per $Authority
+    @position occupies ReligiousPosition (And $per (And $rol $auth))
+    return $position
+end
+
+@:Priest graph Person Institution Training
+    @per hasPerson $Person
+    @inst servesIn $per $Institution
+    @tra receives $per $Training
+    @role occupies PriestRole (And $per (And $inst $tra))
+    return $role
+end
+
+@:Prophet graph Person Revelation Message
+    @per hasPerson $Person
+    @rev receives $per $Revelation
+    @mes delivers $per $Message
+    @role occupies ProphetRole (And $per (And $rev $mes))
+    return $role
+end
+
+@:Witchcraft graph Person Power Harm
+    @per hasPerson $Person
+    @pow possesses $per $Power
+    @har causes $per $Harm
+    @accusation implies WitchcraftAccusation (And $per (And $pow $har))
+    return $accusation
+end
+
+@:Sorcery graph Person Technique Manipulation
+    @per hasPerson $Person
+    @tec uses $per $Technique
+    @man performs $per $Manipulation
+    @practice constitutes SorceryPractice (And $per (And $tec $man))
+    return $practice
+end
+
+// ===== HUMAN EVOLUTION =====
+
+@:Hominid_Evolution graph Ancestor Descendant Trait
+    @anc isAncestor $Ancestor
+    @des descendsFrom $Descendant $anc
+    @tra develops $des $Trait
+    @line traces EvolutionaryLine (And $anc (And $des $tra))
+    return $line
+end
+
+@:Ardipithecus graph Species Time Traits
+    @sp isSpecies $Species Ardipithecus
+    @tim existed $sp $Time
+    @tra exhibited $sp $Traits
+    @stage represents EarlyHominid (And $sp (And $tim $tra))
+    return $stage
+end
+
+@:Australopithecus graph Species Bipedalism Brain
+    @sp isSpecies $Species Australopithecus
+    @bip developed $sp $Bipedalism
+    @br hadSize $sp $Brain
+    @stage represents AustralopithecineStage (And $sp (And $bip $br))
+    return $stage
+end
+
+@:Australopithecus_Afarensis graph Species Lucy Bipedal
+    @sp isSpecies $Species AfarensisSpecies
+    @l includes $sp $Lucy
+    @bip walked $sp $Bipedal
+    @fossil represents LucyFossil (And $sp (And $l $bip))
+    return $fossil
+end
+
+@:Australopithecus_Africanus graph Species Brain Tools
+    @sp isSpecies $Species AfricanusSpecies
+    @br hadBrain $sp $Brain
+    @to mayHaveUsed $sp $Tools
+    @stage represents AfricanusStage (And $sp (And $br $to))
+    return $stage
+end
+
+@:Paranthropus graph Species RobustForm Diet
+    @sp isSpecies $Species Paranthropus
+    @rob hadForm $sp $RobustForm
+    @di specialized $sp $Diet
+    @branch represents SideBranch (And $sp (And $rob $di))
+    return $branch
+end
+
+@:Homo_Habilis graph Species ToolMaking BrainIncrease
+    @sp isSpecies $Species HabilisSpecies
+    @tm demonstrated $sp $ToolMaking
+    @bi showed $sp $BrainIncrease
+    @stage represents EarlyHomo (And $sp (And $tm $bi))
+    return $stage
+end
+
+@:Homo_Erectus graph Species Fire Migration
+    @sp isSpecies $Species ErectusSpecies
+    @fi controlled $sp $Fire
+    @mi undertook $sp $Migration
+    @advance represents MajorAdvance (And $sp (And $fi $mi))
+    return $advance
+end
+
+@:Homo_Heidelbergensis graph Species Brain EuropeAfrica
+    @sp isSpecies $Species HeidelbergensisSpecies
+    @br hadLarge $sp $Brain
+    @loc inhabitedBoth $sp $EuropeAfrica
+    @stage represents MiddlePleistocene (And $sp (And $br $loc))
+    return $stage
+end
+
+@:Homo_Neanderthalensis graph Species Culture Extinction
+    @sp isSpecies $Species NeanderthalSpecies
+    @cu developed $sp $Culture
+    @ex underwent $sp $Extinction
+    @lineage represents NeanderthalLineage (And $sp (And $cu $ex))
+    return $lineage
+end
+
+@:Homo_Sapiens graph Species Symbolic ModernBehavior
+    @sp isSpecies $Species SapiensSpecies
+    @sy developed $sp $Symbolic
+    @mo exhibited $sp $ModernBehavior
+    @stage represents ModernHuman (And $sp (And $sy $mo))
+    return $stage
+end
+
+@:Bipedalism graph Posture Locomotion Adaptation
+    @pos adopts Species $Posture
+    @loc enables $pos $Locomotion
+    @ada represents $loc $Adaptation
+    @trait constitutes BipedalTrait (And $pos (And $loc $ada))
+    return $trait
+end
+
+@:Encephalization graph BrainSize Intelligence Evolution
+    @bs increases $BrainSize
+    @int correlates $bs $Intelligence
+    @ev undergoes Species $Evolution
+    @trend shows EncephalizationTrend (And $bs (And $int $ev))
+    return $trend
+end
+
+@:Tool_Use graph Species Tools Complexity
+    @sp uses $Species $Tools
+    @to increases $sp $Complexity
+    @cog indicates CognitiveAbility
+    @behavior demonstrates ToolBehavior (And $sp (And $to $cog))
+    return $behavior
+end
+
+@:Language_Evolution graph Brain Vocal Symbolic
+    @br develops $Brain Structures
+    @vo enables $br $Vocal
+    @sy supports $br $Symbolic
+    @capacity creates LanguageCapacity (And $br (And $vo $sy))
+    return $capacity
+end
+
+@:Fire_Control graph Species Fire Benefits
+    @sp controls $Species $Fire
+    @fi provides $sp $Benefits
+    @be includes Cooking Protection
+    @advance represents CulturalAdvance (And $sp (And $fi $be))
+    return $advance
+end
+
+@:Out_of_Africa graph HomoSapiens Africa Dispersal
+    @hs originated $HomoSapiens $Africa
+    @af leftFrom $hs $af
+    @di spread $hs $Dispersal
+    @migration represents OutOfAfricaMigration (And $hs (And $af $di))
+    return $migration
+end
+
+@:Symbolic_Behavior graph Art Ritual Abstraction
+    @ar creates Species $Art
+    @ri performs Species $Ritual
+    @ab demonstrates $ar $Abstraction
+    @capacity shows SymbolicCapacity (And $ar (And $ri $ab))
+    return $capacity
+end
+
+@:Cave_Art graph Humans Paintings Symbols
+    @hu created $Humans $Paintings
+    @pa depicted $hu Animals
+    @sy encoded $pa $Symbols
+    @expression represents ArtisticExpression (And $hu (And $pa $sy))
+    return $expression
+end
+
+@:Burial_Practices graph Group Dead Ritual
+    @gr buries $Group $Dead
+    @de treated $gr Ceremonially
+    @ri implies $de $Ritual
+    @behavior indicates ReligiousBehavior (And $gr (And $de $ri))
+    return $behavior
+end
+
+@:Sexual_Dimorphism graph Species Male Female
+    @sp hasMembers $Species Individuals
+    @ma differs $Male $Female
+    @fe differs SizeTraits
+    @pattern shows DimorphicPattern (And $sp (And $ma $fe))
+    return $pattern
+end
+
+// ===== SUBSISTENCE PATTERNS =====
+
+@:Foraging graph Group WildResources Mobility
+    @gr subsists $Group Hunting
+    @wi exploits $gr $WildResources
+    @mo maintains $gr $Mobility
+    @strategy follows ForagingStrategy (And $gr (And $wi $mo))
+    return $strategy
+end
+
+@:Hunting_Gathering graph Group Animals Plants
+    @gr hunts $Group $Animals
+    @an gathers $gr $Plants
+    @pl combines Both
+    @subsistence practices HuntingGathering (And $gr (And $an $pl))
+    return $subsistence
+end
+
+@:Band_Society graph Group Small Egalitarian
+    @gr organized $Group Band
+    @sm hasSize $gr $Small
+    @eg characterized $gr $Egalitarian
+    @organization forms BandOrganization (And $gr (And $sm $eg))
+    return $organization
+end
+
+@:Nomadism graph Group Movement Resources
+    @gr moves $Group Seasonally
+    @mo follows $gr $Movement
+    @re tracks $mo $Resources
+    @pattern exhibits NomadicPattern (And $gr (And $mo $re))
+    return $pattern
+end
+
+@:Pastoralism graph Group Herds Domestication
+    @gr herds $Group Animals
+    @he manages $gr $Herds
+    @do practices $gr $Domestication
+    @subsistence follows PastoralSubsistence (And $gr (And $he $do))
+    return $subsistence
+end
+
+@:Transhumance graph Herders Seasonal Movement
+    @he moves $Herders Cyclically
+    @se follows $he $Seasonal
+    @mo between Pastures
+    @pattern exhibits TranshumancePattern (And $he (And $se $mo))
+    return $pattern
+end
+
+@:Horticulture graph Group SmallGardens SimpleTechnology
+    @gr cultivates $Group Plants
+    @sm uses $gr $SmallGardens
+    @si employs $gr $SimpleTechnology
+    @subsistence practices Horticulture (And $gr (And $sm $si))
+    return $subsistence
+end
+
+@:Slash_and_Burn graph Farmers Forest Rotation
+    @fa clears $Farmers $Forest
+    @fo burns Vegetation
+    @ro practices $fa $Rotation
+    @technique uses SlashBurnTechnique (And $fa (And $fo $ro))
+    return $technique
+end
+
+@:Agriculture graph Society Intensive Surplus
+    @so practices $Society Farming
+    @in uses $so $Intensive
+    @su produces $so $Surplus
+    @subsistence follows AgriculturalSubsistence (And $so (And $in $su))
+    return $subsistence
+end
+
+@:Irrigation graph Farmers Water Fields
+    @fa controls $Farmers $Water
+    @wa directs $fa ToFields
+    @fi increases $wa $Fields
+    @technology employs IrrigationTechnology (And $fa (And $wa $fi))
+    return $technology
+end
+
+@:Plow_Agriculture graph Farmers Plow AnimalPower
+    @fa uses $Farmers $Plow
+    @pl powered $fa $AnimalPower
+    @an increases Productivity
+    @technology employs PlowTechnology (And $fa (And $pl $an))
+    return $technology
+end
+
+@:Domestication graph Species Wild Domestic
+    @sp transforms $Species $Wild
+    @wi becomes $sp $Domestic
+    @do through Selection
+    @process undergoes DomesticationProcess (And $sp (And $wi $do))
+    return $process
+end
+
+@:Animal_Domestication graph Animal Traits Selection
+    @an domesticated $Animal
+    @tr selected $an $Traits
+    @se produces Changes
+    @process involves AnimalDomestication (And $an (And $tr $se))
+    return $process
+end
+
+@:Plant_Domestication graph Plant Traits Cultivation
+    @pl domesticated $Plant
+    @tr selected $pl $Traits
+    @cu through $tr $Cultivation
+    @process involves PlantDomestication (And $pl (And $tr $cu))
+    return $process
+end
+
+@:Neolithic_Revolution graph Agriculture Settlement Population
+    @ag adopted Societies $Agriculture
+    @se enabled $ag $Settlement
+    @po increased $se $Population
+    @transformation represents NeolithicTransformation (And $ag (And $se $po))
+    return $transformation
+end
+
+@:Food_Production graph Cultivation Storage Surplus
+    @cu practices Society $Cultivation
+    @st enables $cu $Storage
+    @su creates $st $Surplus
+    @economy develops FoodProducingEconomy (And $cu (And $st $su))
+    return $economy
+end
+
+@:Sedentism graph Group PermanentSettlement YearRound
+    @gr establishes $Group Settlement
+    @pe occupies $gr $PermanentSettlement
+    @ye lives $pe $YearRound
+    @pattern follows SedentaryPattern (And $gr (And $pe $ye))
+    return $pattern
+end
+
+@:Industrial_Subsistence graph Society Machines MassProduction
+    @so uses $Society $Machines
+    @ma enables $so $MassProduction
+    @mp transforms Economy
+    @system creates IndustrialSystem (And $so (And $ma $mp))
+    return $system
+end
+
+@:Market_Economy graph Goods Exchange Money
+    @go traded $Goods
+    @ex through $go $Exchange
+    @mo using $ex $Money
+    @system operates MarketSystem (And $go (And $ex $mo))
+    return $system
+end
+
+@:Reciprocity graph Gift Giver Receiver
+    @gi gives $Giver $Gift
+    @re receives $gi $Receiver
+    @ob creates Obligation
+    @exchange establishes ReciprocalExchange (And $gi (And $re $ob))
+    return $exchange
+end
+
+@:Redistribution graph Chief Collection Distribution
+    @ch collects $Chief Goods
+    @co from Subjects
+    @di redistributes $ch $Distribution
+    @system operates RedistributiveSystem (And $ch (And $co $di))
+    return $system
+end
+
+// ===== SOCIAL ORGANIZATION =====
+
+@:Social_Stratification graph Society Layers Inequality
+    @so divided $Society Strata
+    @la hasMultiple $so $Layers
+    @in exhibits $la $Inequality
+    @structure forms StratifiedStructure (And $so (And $la $in))
+    return $structure
+end
+
+@:Tribe graph Groups Descent Politics
+    @gr organized $Groups Tribes
+    @de based $gr $Descent
+    @po lacks Centralized
+    @organization forms TribalOrganization (And $gr (And $de $po))
+    return $organization
+end
+
+@:Chiefdom graph Society Chief Rank
+    @so led $Society $Chief
+    @ch hasAuthority $so Inherited
+    @ra organized $so $Rank
+    @organization forms ChiefdomOrganization (And $so (And $ch $ra))
+    return $organization
+end
+
+@:State graph Society Government Territory
+    @so hasOrganization $Society $Government
+    @go controls $so $Territory
+    @te monopolizes Force
+    @organization forms StateOrganization (And $so (And $go $te))
+    return $organization
+end
+
+@:Caste_System graph Society Hereditary Endogamy
+    @so divided $Society Castes
+    @he determined $so $Hereditary
+    @en practices $so $Endogamy
+    @system creates CasteSystem (And $so (And $he $en))
+    return $system
+end
+
+@:Class_System graph Society Wealth Mobility
+    @so stratified $Society Classes
+    @we based $so $Wealth
+    @mo allows $so $Mobility
+    @system creates ClassSystem (And $so (And $we $mo))
+    return $system
+end
+
+@:Age_Grade graph Society AgeGroup Status
+    @so organizes $Society $AgeGroup
+    @ag advances Through Grades
+    @st changes $ag $Status
+    @system creates AgeGradeSystem (And $so (And $ag $st))
+    return $system
+end
+
+@:Secret_Society graph Organization Initiation Knowledge
+    @or exists $Organization
+    @in requires $or $Initiation
+    @kn guards $or $Knowledge
+    @group forms SecretSociety (And $or (And $in $kn))
+    return $group
+end
+
+@:Gender_Roles graph Society Male Female
+    @so assigns $Society Roles
+    @ma defines $so $Male
+    @fe defines $so $Female
+    @division creates GenderDivision (And $so (And $ma $fe))
+    return $division
+end
+
+@:Division_of_Labor graph Society Tasks Specialization
+    @so allocates $Society $Tasks
+    @ta by $so Categories
+    @sp develops $ta $Specialization
+    @organization creates LaborDivision (And $so (And $ta $sp))
+    return $organization
+end
+
+// ===== POLITICAL SYSTEMS =====
+
+@:Political_Organization graph Authority Power Legitimacy
+    @au exercises Leader $Authority
+    @po based $au $Power
+    @le derives $po $Legitimacy
+    @system constitutes PoliticalSystem (And $au (And $po $le))
+    return $system
+end
+
+@:Acephalous_Society graph Society Leader Centralized
+    @so organized $Society Without
+    @le lacks $so $Leader
+    @ce lacks $so $Centralized
+    @organization forms AcephalousOrganization (And $so (And $le $ce))
+    return $organization
+end
+
+@:Big_Man graph Leader Influence Achievement
+    @le hasPerson $Leader
+    @in gains $le $Influence
+    @ac through $in $Achievement
+    @status achieves BigManStatus (And $le (And $in $ac))
+    return $status
+end
+
+@:Hereditary_Leadership graph Leader Position Inheritance
+    @le holds $Leader $Position
+    @po acquired $le Through
+    @in via $po $Inheritance
+    @authority derives HereditaryAuthority (And $le (And $po $in))
+    return $authority
+end
+
+@:Council_of_Elders graph Elders Decisions Consensus
+    @el form $Elders Council
+    @de makes $el $Decisions
+    @co through $de $Consensus
+    @governance establishes CouncilGovernance (And $el (And $de $co))
+    return $governance
+end
+
+@:Warfare graph Groups Conflict Violence
+    @gr engages $Groups InConflict
+    @co organized $gr $Conflict
+    @vi uses $co $Violence
+    @activity constitutes WarfareActivity (And $gr (And $co $vi))
+    return $activity
+end
+
+@:Alliance graph Group1 Group2 Cooperation
+    @g1 isGroup $Group1
+    @g2 isGroup $Group2
+    @co establishes (And $g1 $g2) $Cooperation
+    @relationship forms AllianceRelationship $co
+    return $relationship
+end
+
+@:Feud graph Lineage1 Lineage2 Revenge
+    @l1 isLineage $Lineage1
+    @l2 isLineage $Lineage2
+    @re engages (And $l1 $l2) $Revenge
+    @conflict creates FeudConflict $re
+    return $conflict
+end
+
+// ===== ECONOMIC SYSTEMS =====
+
+@:Potlatch graph Chief Gifts Status
+    @ch gives $Chief $Gifts
+    @gi lavishly InCeremony
+    @st gains $ch $Status
+    @ceremony performs PotlatchCeremony (And $ch (And $gi $st))
+    return $ceremony
+end
+
+@:Kula_Ring graph Partners Valuables Prestige
+    @pa exchange $Partners $Valuables
+    @va circulate InRing
+    @pr builds $pa $Prestige
+    @system creates KulaSystem (And $pa (And $va $pr))
+    return $system
+end
+
+@:Bridewealth graph Family Goods Marriage
+    @fa transfers $Family $Goods
+    @go for $fa $Marriage
+    @ma legitimizes Union
+    @transaction constitutes BridewealthTransaction (And $fa (And $go $ma))
+    return $transaction
+end
+
+@:Dowry graph Bride Wealth Husband
+    @br brings $Bride $Wealth
+    @we to $br $Husband
+    @hu at Marriage
+    @transaction constitutes DowryTransaction (And $br (And $we $hu))
+    return $transaction
+end
+
+@:Balanced_Reciprocity graph Partner1 Partner2 Equality
+    @p1 gives $Partner1 ToPartner2
+    @p2 returns Equivalent
+    @eq maintains $p2 $Equality
+    @exchange follows BalancedExchange (And $p1 (And $p2 $eq))
+    return $exchange
+end
+
+@:Generalized_Reciprocity graph Giver Receiver NoExpectation
+    @gi gives $Giver To$Receiver
+    @re receives Without
+    @no has $re $NoExpectation
+    @exchange follows GeneralizedExchange (And $gi (And $re $no))
+    return $exchange
+end
+
+@:Negative_Reciprocity graph Party1 Party2 Advantage
+    @p1 seeks $Party1 $Advantage
+    @p2 over $p1 $Party2
+    @ad tries Maximize
+    @exchange follows NegativeExchange (And $p1 (And $p2 $ad))
+    return $exchange
+end
+
+@:Peasantry graph Farmers Surplus State
+    @fa produces $Farmers $Surplus
+    @su transfers $fa ToState
+    @st supports Urban
+    @class constitutes PeasantClass (And $fa (And $su $st))
+    return $class
+end
+
+@:Corvee_Labor graph State Citizens Work
+    @st requires $State $Citizens
+    @ci provides $st $Work
+    @wo for PublicProjects
+    @system imposes CorveeSystem (And $st (And $ci $wo))
+    return $system
+end
+
+@:Slavery graph Owner Slave Property
+    @ow possesses $Owner $Slave
+    @sl treated $ow AsProperty
+    @pr lacks Rights
+    @institution constitutes SlaveryInstitution (And $ow (And $sl $pr))
+    return $institution
+end
+
+// ===== LANGUAGE AND COMMUNICATION =====
+
+@:Language_Structure graph Phonology Grammar Semantics
+    @ph hasLevel Language $Phonology
+    @gr hasLevel Language $Grammar
+    @se hasLevel Language $Semantics
+    @structure forms LanguageStructure (And $ph (And $gr $se))
+    return $structure
+end
+
+@:Phoneme graph Sound Language Meaning
+    @so isUnit $Sound
+    @la inLanguage $so $Language
+    @me distinguishes $so $Meaning
+    @unit constitutes PhonemeUnit (And $so (And $la $me))
+    return $unit
+end
+
+@:Morpheme graph Unit Meaning Smallest
+    @un isUnit $Unit
+    @me carries $un $Meaning
+    @sm is $un $Smallest
+    @element constitutes MorphemeElement (And $un (And $me $sm))
+    return $element
+end
+
+@:Syntax graph Rules Order Structure
+    @ru governs $Rules WordOrder
+    @or determines $ru $Order
+    @st creates $or $Structure
+    @system constitutes SyntaxSystem (And $ru (And $or $st))
+    return $system
+end
+
+@:Linguistic_Relativity graph Language Thought Worldview
+    @la shapes $Language $Thought
+    @th influences $la $Worldview
+    @wo differs Across
+    @hypothesis proposes RelativityHypothesis (And $la (And $th $wo))
+    return $hypothesis
+end
+
+@:Pidgin graph Language1 Language2 Simplified
+    @l1 combines $Language1 $Language2
+    @l2 creates $l1 NewForm
+    @si has $l2 $Simplified
+    @language develops PidginLanguage (And $l1 (And $l2 $si))
+    return $language
+end
+
+@:Creole graph Pidgin Generation NativeLanguage
+    @pi becomes $Pidgin FullLanguage
+    @ge adopted $pi $Generation
+    @na becomes $ge $NativeLanguage
+    @language develops CreoleLanguage (And $pi (And $ge $na))
+    return $language
+end
+
+@:Code_Switching graph Speaker Language1 Language2
+    @sp alternates $Speaker Between
+    @l1 uses $sp $Language1
+    @l2 uses $sp $Language2
+    @behavior exhibits CodeSwitching (And $sp (And $l1 $l2))
+    return $behavior
+end
+
+@:Linguistic_Anthropology graph Language Culture Society
+    @la studies Field $Language
+    @cu inContext $la $Culture
+    @so inContext $la $Society
+    @discipline constitutes LinguisticAnthropology (And $la (And $cu $so))
+    return $discipline
+end
+
+@:Ethnography_of_Speaking graph Community SpeechEvents Patterns
+    @co studies $Community
+    @sp analyzes $co $SpeechEvents
+    @pa identifies $sp $Patterns
+    @method uses EthnographicMethod (And $co (And $sp $pa))
+    return $method
+end
+
+// ===== APPLIED ANTHROPOLOGY =====
+
+@:Medical_Anthropology graph Health Illness Culture
+    @he studies $Health CrossCulturally
+    @il examines $he $Illness
+    @cu inContext $il $Culture
+    @field constitutes MedicalAnthropology (And $he (And $il $cu))
+    return $field
+end
+
+@:Disease_Causation graph Culture Theory Explanation
+    @cu has $Culture BeliefsAbout
+    @th explains $cu $Theory
+    @ex provides $th $Explanation
+    @model constitutes CausationModel (And $cu (And $th $ex))
+    return $model
+end
+
+@:Personalistic_Causation graph Illness Agent Supernatural
+    @il caused $Illness By$Agent
+    @ag is $il $Supernatural
+    @su punishes OrHarms
+    @belief holds PersonalisticBelief (And $il (And $ag $su))
+    return $belief
+end
+
+@:Naturalistic_Causation graph Illness Imbalance Natural
+    @il caused $Illness By$Imbalance
+    @im inBodySystem $il Natural
+    @na explained Physically
+    @belief holds NaturalisticBelief (And $il (And $im $na))
+    return $belief
+end
+
+@:Emotionalistic_Causation graph Illness Emotion Imbalance
+    @il caused $Illness By$Emotion
+    @em creates $il $Imbalance
+    @im disrupts Health
+    @belief holds EmotionalisticBelief (And $il (And $em $im))
+    return $belief
+end
+
+@:Traditional_Healer graph Healer Knowledge Community
+    @he practices $Healer InCommunity
+    @kn possesses $he $Knowledge
+    @co serves $he $Community
+    @role occupies HealerRole (And $he (And $kn $co))
+    return $role
+end
+
+@:Urban_Anthropology graph Cities Migration Adaptation
+    @ci studies $Cities
+    @mi examines $ci $Migration
+    @ad analyzes $mi $Adaptation
+    @field constitutes UrbanAnthropology (And $ci (And $mi $ad))
+    return $field
+end
+
+@:Development_Anthropology graph Projects Communities Impact
+    @pr studies $Projects Development
+    @co affects $pr $Communities
+    @im evaluates $co $Impact
+    @field constitutes DevelopmentAnthropology (And $pr (And $co $im))
+    return $field
+end
+
+@:Cultural_Preservation graph Heritage Threats Conservation
+    @he identifies $Heritage
+    @th faces $he $Threats
+    @co develops $th $Conservation
+    @effort undertakes PreservationEffort (And $he (And $th $co))
+    return $effort
+end
+
+@:Indigenous_Rights graph People Land Sovereignty
+    @pe are $People Indigenous
+    @la claim $pe $Land
+    @so assert $la $Sovereignty
+    @movement advocates RightsMovement (And $pe (And $la $so))
+    return $movement
+end
+
+// ===== RESEARCH METHODS =====
+
+@:Ethnography graph Researcher Culture Immersion
+    @re conducts $Researcher Fieldwork
+    @cu studies $re $Culture
+    @im through $cu $Immersion
+    @method uses EthnographicMethod (And $re (And $cu $im))
+    return $method
+end
+
+@:Participant_Observation graph Researcher Activities Insider
+    @re joins $Researcher $Activities
+    @ac observes While Participating
+    @in gains $ac $Insider
+    @technique employs ParticipantObservation (And $re (And $ac $in))
+    return $technique
+end
+
+@:Key_Informant graph Researcher Informant Knowledge
+    @re works $Researcher With$Informant
+    @in provides $re $Knowledge
+    @kn has Expertise
+    @relationship establishes InformantRelationship (And $re (And $in $kn))
+    return $relationship
+end
+
+@:Life_History graph Researcher Individual Biography
+    @re collects $Researcher FromIndividual
+    @in provides $re $Biography
+    @bi reveals Culture
+    @method uses LifeHistoryMethod (And $re (And $in $bi))
+    return $method
+end
+
+@:Genealogical_Method graph Researcher Kinship Network
+    @re maps $Researcher $Kinship
+    @ki charts $re Relationships
+    @ne reveals $ki $Network
+    @technique employs GenealogicalTechnique (And $re (And $ki $ne))
+    return $technique
+end
+
+@:Cross_Cultural_Comparison graph Cultures Traits Patterns
+    @cu compares Multiple $Cultures
+    @tr across $cu $Traits
+    @pa identifies $tr $Patterns
+    @method uses ComparativeMethod (And $cu (And $tr $pa))
+    return $method
+end
+
+@:Ethnohistory graph Documents History Culture
+    @do examines $Documents Historical
+    @hi reconstructs $do $History
+    @cu of $hi $Culture
+    @method uses EthnohistoricalMethod (And $do (And $hi $cu))
+    return $method
+end
+
+@:Cultural_Materialism graph Infrastructure Determines Superstructure
+    @in isBase $Infrastructure
+    @de shapes $in Structure
+    @su including $de $Superstructure
+    @theory proposes MaterialistTheory (And $in (And $de $su))
+    return $theory
+end
+
+@:Structural_Functionalism graph Institution Function Society
+    @ins exists $Institution
+    @fu serves $ins $Function
+    @so maintains $fu $Society
+    @theory proposes FunctionalistTheory (And $ins (And $fu $so))
+    return $theory
+end
+
+@:Symbolic_Anthropology graph Symbols Meanings Culture
+    @sy uses Culture $Symbols
+    @me convey $sy $Meanings
+    @cu constructed Through
+    @approach emphasizes SymbolicApproach (And $sy (And $me $cu))
+    return $approach
+end
+
+// ===== GLOBALIZATION =====
+
+@:Globalization graph Local Global Integration
+    @lo connects $Local To$Global
+    @gl increases $lo $Integration
+    @in transforms Cultures
+    @process undergoes GlobalizationProcess (And $lo (And $gl $in))
+    return $process
+end
+
+@:Transnationalism graph Migrants Origins Destinations
+    @mi maintain $Migrants Connections
+    @or between $mi $Origins
+    @de and $or $Destinations
+    @pattern exhibits TransnationalPattern (And $mi (And $or $de))
+    return $pattern
+end
+
+@:Cultural_Imperialism graph Dominant Subordinate Imposition
+    @do imposes $Dominant CultureOn
+    @su affects $do $Subordinate
+    @im through Power
+    @process constitutes ImperialistProcess (And $do (And $su $im))
+    return $process
+end
+
+@:Hybridization graph Culture1 Culture2 NewForm
+    @c1 mixes $Culture1 With$Culture2
+    @c2 creates $c1 $NewForm
+    @ne blends Elements
+    @process undergoes HybridizationProcess (And $c1 (And $c2 $ne))
+    return $process
+end
+
+@:Diaspora graph Population Homeland Dispersal
+    @po originates $Population From$Homeland
+    @ho dispersed $po Globally
+    @di maintains $ho $Dispersal
+    @community forms DiasporicCommunity (And $po (And $ho $di))
+    return $community
+end
+
+@:World_System graph Core Periphery SemiPeriphery
+    @co dominates $Core Economy
+    @pe exploited $co $Periphery
+    @se intermediate $pe $SemiPeriphery
+    @structure forms WorldSystemStructure (And $co (And $pe $se))
+    return $structure
+end
+
+@:Commodification graph Practice Object Market
+    @pr transforms $Practice Into$Object
+    @ob sold $pr InMarket
+    @ma commercializes Culture
+    @process undergoes CommodificationProcess (And $pr (And $ob $ma))
+    return $process
+end
+
+@:Cultural_Rights graph Group Identity Protection
+    @gr claims $Group Rights
+    @id to $gr $Identity
+    @pro seeks $id $Protection
+    @movement advocates CulturalRightsMovement (And $gr (And $id $pro))
+    return $movement
+end
+
+@:Environmental_Anthropology graph Humans Environment Interaction
+    @hu relate $Humans To$Environment
+    @en affects $hu Mutually
+    @in studies $en $Interaction
+    @field constitutes EnvironmentalAnthropology (And $hu (And $en $in))
+    return $field
+end
+
+@:Traditional_Ecological_Knowledge graph Community Environment Practices
+    @co possesses $Community $Knowledge
+    @en about $co $Environment
+    @pr sustainable $en $Practices
+    @system represents TEKSystem (And $co (And $en $pr))
+    return $system
+end
+
+// ===== ADDITIONAL COMPLEX FACTS =====
+
+@:Egalitarian_Society graph Society Resources Status
+    @so hasStructure $Society Equal
+    @re distributes $so $Resources
+    @st lacks Hierarchy
+    @organization exhibits EgalitarianOrganization (And $so (And $re $st))
+    return $organization
+end
+
+@:Rank_Society graph Society Status Inequality
+    @so hasStructure $Society Ranked
+    @st differs $so $Status
+    @in based Prestige
+    @organization exhibits RankedOrganization (And $so (And $st $in))
+    return $organization
+end
+
+@:Stratified_Society graph Society Class Access
+    @so hasStructure $Society Stratified
+    @cl divided $so $Class
+    @ac unequal $cl $Access
+    @organization exhibits StratifiedOrganization (And $so (And $cl $ac))
+    return $organization
+end
+
+@:Multilineal_Evolution graph Societies Paths Development
+    @so follow Different $Paths
+    @pa of $so $Development
+    @de not Unilinear
+    @theory proposes MultilinealTheory (And $so (And $pa $de))
+    return $theory
+end
+
+@:Cultural_Ecology graph Culture Environment Adaptation
+    @cu adapts $Culture To$Environment
+    @en shapes $cu Practices
+    @ad through $en $Adaptation
+    @approach emphasizes EcologicalApproach (And $cu (And $en $ad))
+    return $approach
+end
+
+@:Carrying_Capacity graph Environment Population Limit
+    @en supports $Environment $Population
+    @po up $en ToLimit
+    @li determines Sustainability
+    @concept defines CapacityConcept (And $en (And $po $li))
+    return $concept
+end
+
+@:Intensification graph Production Increase Labor
+    @pr increases $Production Output
+    @in requires More$Labor
+    @la per Unit
+    @process undergoes IntensificationProcess (And $pr (And $in $la))
+    return $process
+end
+
+@:Gender_Inequality graph Society Male Female
+    @so exhibits $Society Inequality
+    @ma advantages $so $Male
+    @fe disadvantages $so $Female
+    @pattern shows InequalityPattern (And $so (And $ma $fe))
+    return $pattern
+end
+
+@:Matriarchy graph Society Women Authority
+    @so controlled $Society By$Women
+    @wo hold $so $Authority
+    @au political Economic
+    @system hypothesizes MatriarchalSystem (And $so (And $wo $au))
+    return $system
+end
+
+@:Patriarchy graph Society Men Authority
+    @so controlled $Society By$Men
+    @me hold $so $Authority
+    @au political Economic
+    @system exhibits PatriarchalSystem (And $so (And $me $au))
+    return $system
+end
+
+@:Incest_Taboo graph Culture Prohibition Marriage
+    @cu prohibits $Culture $Marriage
+    @pr between CloseKin
+    @ma universal Across
+    @rule enforces IncestTaboo (And $cu (And $pr $ma))
+    return $rule
+end
+
+@:Fictive_Kinship graph Relationship NonBiological Kinship
+    @re establishes $Relationship $Kinship
+    @no based $re $NonBiological
+    @ki uses Terms
+    @bond creates FictiveBond (And $re (And $no $ki))
+    return $bond
+end
+
+@:Affinal_Kinship graph Person Spouse Relatives
+    @pe relates $Person To$Spouse
+    @sp relatives $pe Through
+    @re by Marriage
+    @relationship establishes AffinalRelationship (And $pe (And $sp $re))
+    return $relationship
+end
+
+@:Consanguineal_Kinship graph Person Relative Blood
+    @pe relates $Person To$Relative
+    @re by $pe $Blood
+    @bl descent Common
+    @relationship establishes ConsanguinealRelationship (And $pe (And $re $bl))
+    return $relationship
+end
+
+@:Teknonymy graph Parent Child Name
+    @pa named $Parent After$Child
+    @ch instead Own
+    @na using $ch $Name
+    @practice follows TeknonymyPractice (And $pa (And $ch $na))
+    return $practice
+end
+
+@:Avoidance_Relationship graph InLaw1 InLaw2 Taboo
+    @i1 avoids $InLaw1 $InLaw2
+    @i2 through $i1 Rules
+    @ta prohibits Interaction
+    @pattern exhibits AvoidancePattern (And $i1 (And $i2 $ta))
+    return $pattern
+end
+
+@:Joking_Relationship graph Relative1 Relative2 Teasing
+    @r1 jokes $Relative1 With$Relative2
+    @r2 permitted $r1 $Teasing
+    @te ritually Sanctioned
+    @pattern exhibits JokingPattern (And $r1 (And $r2 $te))
+    return $pattern
+end
+
+@:Unilineal_Descent graph Person OneLine Affiliation
+    @pe traces $Person $OneLine
+    @on either Paternal
+    @af or $on Maternal
+    @pattern follows UnilinealPattern (And $pe (And $on $af))
+    return $pattern
+end
+
+@:Cognatic_Descent graph Person BothLines Flexible
+    @pe traces $Person $BothLines
+    @bo includes All
+    @fl allows $bo $Flexible
+    @pattern follows CognaticPattern (And $pe (And $bo $fl))
+    return $pattern
+end
+
+@:Corporate_Group graph Group Property Rights
+    @gr owns $Group $Property
+    @pr collectively Held
+    @ri perpetual Across
+    @organization forms CorporateOrganization (And $gr (And $pr $ri))
+    return $organization
+end
+
+@:Age_Set graph Cohort Age Advancement
+    @co born $Cohort SameTime
+    @ag advances $co Together
+    @ad through Grades
+    @system organizes AgeSetSystem (And $co (And $ag $ad))
+    return $system
+end
+
+@:Initiation_Rite graph Youth Adult Status
+    @yo transforms $Youth To$Adult
+    @ad through $yo Ceremony
+    @st achieves $ad $Status
+    @rite performs InitiationRite (And $yo (And $ad $st))
+    return $rite
+end
+
+@:Vision_Quest graph Individual Isolation SpiritContact
+    @in undergoes $Individual $Isolation
+    @is seeks $in $SpiritContact
+    @sp gains Power
+    @rite performs VisionQuestRite (And $in (And $is $sp))
+    return $rite
+end
+
+@:Cargo_Cult graph Movement Goods Ritual
+    @mo expects $Movement $Goods
+    @go through $mo $Ritual
+    @ri imitates Western
+    @phenomenon exhibits CargoCultPhenomenon (And $mo (And $go $ri))
+    return $phenomenon
+end
+
+@:Revitalization_Movement graph Group Crisis Renewal
+    @gr faces $Group $Crisis
+    @cr seeks $gr $Renewal
+    @re through New
+    @movement initiates RevitalizationMovement (And $gr (And $cr $re))
+    return $movement
+end
+
+@:Nativistic_Movement graph People ColonialPower Tradition
+    @pe resists $People $ColonialPower
+    @co by $pe Reviving
+    @tr emphasizes $co $Tradition
+    @movement represents NativisticMovement (And $pe (And $co $tr))
+    return $movement
+end
+
+@:Syncretism graph Religion1 Religion2 Blend
+    @r1 combines $Religion1 $Religion2
+    @r2 creates $r1 $Blend
+    @bl fuses Elements
+    @process undergoes SyncreticProcess (And $r1 (And $r2 $bl))
+    return $process
+end
+
+@:Millenarianism graph Movement Transformation Apocalyptic
+    @mo expects $Movement $Transformation
+    @tr radical World
+    @ap through $tr $Apocalyptic
+    @belief holds MillenarianBelief (And $mo (And $tr $ap))
+    return $belief
+end
+
+@:Cultural_Universal graph Trait AllCultures Presence
+    @tr found $Trait In$AllCultures
+    @al demonstrates $tr Universal
+    @pr pattern Human
+    @phenomenon represents UniversalPhenomenon (And $tr (And $al $pr))
+    return $phenomenon
+end
+
+@:Cultural_Particular graph Trait OneCulture Unique
+    @tr found $Trait Only$OneCulture
+    @on specific $tr To
+    @un demonstrates $on $Unique
+    @phenomenon represents ParticularPhenomenon (And $tr (And $on $un))
+    return $phenomenon
+end
+
+@:Cultural_Generality graph Trait ManyCultures Common
+    @tr found $Trait In$ManyCultures
+    @ma but Not
+    @co demonstrates $ma $Common
+    @phenomenon represents GeneralPhenomenon (And $tr (And $ma $co))
+    return $phenomenon
+end
+
+@:Emic_Perspective graph Insider Culture Meaning
+    @in represents $Insider View
+    @cu from $in $Culture
+    @me understands Native
+    @approach takes EmicApproach (And $in (And $cu $me))
+    return $approach
+end
+
+@:Etic_Perspective graph Outsider Analysis Comparison
+    @ou represents $Outsider View
+    @an scientific $ou $Analysis
+    @co allows $an $Comparison
+    @approach takes EticApproach (And $ou (And $an $co))
+    return $approach
+end
+
+@:Thick_Description graph Ethnography Context Interpretation
+    @et provides $Ethnography $Description
+    @co rich $et $Context
+    @in deep $co $Interpretation
+    @method employs ThickDescriptionMethod (And $et (And $co $in))
+    return $method
+end
+
+@:Holism graph Culture Parts Whole
+    @cu studies $Culture As$Whole
+    @pa interconnected All $Parts
+    @wh integrated Into
+    @approach emphasizes HolisticApproach (And $cu (And $pa $wh))
+    return $approach
+end
+
+@:Salvage_Ethnography graph Researchers DyingCulture Documentation
+    @re documents $Researchers $DyingCulture
+    @dy before $re Disappears
+    @do preserves Knowledge
+    @effort undertakes SalvageEffort (And $re (And $dy $do))
+    return $effort
+end
+
+@:Applied_Anthropology graph Knowledge Problems Solutions
+    @kn applies $Knowledge Practical
+    @pr to $kn $Problems
+    @so develops $pr $Solutions
+    @field constitutes AppliedAnthropology (And $kn (And $pr $so))
+    return $field
+end
+
+@:Public_Anthropology graph Research Public Engagement
+    @re shares $Research With$Public
+    @pu engages $re Beyond
+    @en academia Broadly
+    @approach emphasizes PublicApproach (And $re (And $pu $en))
+    return $approach
+end
+
+@:Advocacy_Anthropology graph Anthropologist Community Rights
+    @an supports $Anthropologist $Community
+    @co advocates $an For$Rights
+    @ri takes Activist
+    @stance adopts AdvocacyStance (And $an (And $co $ri))
+    return $stance
+end
+
+@:Collaborative_Anthropology graph Researchers Community Partnership
+    @re works $Researchers With$Community
+    @co as $re $Partnership
+    @pa equal Shared
+    @approach emphasizes CollaborativeApproach (And $re (And $co $pa))
+    return $approach
+end
+
+@:Decolonizing_Methodology graph Research Indigenous Control
+    @re conducted $Research By$Indigenous
+    @in for $re Benefit
+    @co community $in $Control
+    @approach emphasizes DecolonizingApproach (And $re (And $in $co))
+    return $approach
+end

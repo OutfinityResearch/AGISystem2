@@ -20,7 +20,7 @@ export function buildSearchTrace(engine, goal, goalStr) {
   const traces = [];
   const op = engine.extractOperatorName(goal);
   const args = (goal.args || []).map(a => engine.extractArgName(a)).filter(Boolean);
-  const semanticIndex = engine.session?.semanticIndex;
+  const semanticIndex = engine.session?.useSemanticIndex ? engine.session?.semanticIndex : null;
 
   if (args.length < 2) {
     return `Searched ${goalStr} in KB. Not found.`;

@@ -1,0 +1,840 @@
+Heart is organ in cardiovascular system.
+Blood is fluid in cardiovascular system.
+Heart pumps blood.
+Blood circulates through body.
+Lung is organ in respiratory system.
+Lung exchanges oxygen and carbon dioxide.
+Lung oxygenates blood.
+Oxygen is necessary for life.
+Brain is organ in central nervous system.
+Spinal cord is structure in central nervous system.
+Nerve is tissue in peripheral nervous system.
+Brain controls body functions.
+Stomach is organ in digestive system.
+Intestine is organ in digestive system.
+Stomach produces enzymes.
+Enzymes digest food into nutrients.
+Kidney is organ in urinary system.
+Bladder is organ in urinary system.
+Kidney produces urine.
+Bladder stores urine.
+Kidney filters blood waste.
+Gland produces hormones.
+Hormones regulate body metabolism.
+Hormones maintain homeostasis.
+Bone provides support to body.
+Muscle enables movement of body.
+Joint connects bones.
+White blood cell is immune system cell.
+Antibody is immune system protein.
+White blood cell attacks pathogens.
+Antibody binds to pathogens.
+Skin is organ in integumentary system.
+Skin protects body from environment.
+Skin regulates temperature.
+Ovary is female reproductive organ.
+Testis is male reproductive organ.
+Ovary produces estrogen.
+Testis produces testosterone.
+Chest pain indicates heart attack.
+Dyspnea is symptom of heart attack.
+Heart attack is severe condition.
+Heart attack is life threatening.
+Heart attack requires aspirin treatment.
+Heart attack requires nitroglycerin treatment.
+Heart attack requires emergency hospital care.
+High blood pressure is chronic condition.
+High blood pressure increases stroke risk.
+High blood pressure increases heart disease risk.
+High blood pressure requires antihypertensive treatment.
+Hypertension requires diet and exercise modification.
+Irregular heartbeat indicates atrial fibrillation.
+Palpitations are symptom of atrial fibrillation.
+Atrial fibrillation increases stroke risk.
+Atrial fibrillation causes blood clots in atrium.
+Atrial fibrillation requires anticoagulant treatment.
+Atrial fibrillation requires INR monitoring.
+Edema indicates heart failure.
+Dyspnea is symptom of heart failure.
+Fatigue is symptom of heart failure.
+Heart failure is caused by weakened heart pump function.
+Heart failure requires diuretic treatment.
+Heart failure requires ACE inhibitor treatment.
+Angina pectoris indicates coronary artery disease.
+Coronary artery narrowing is caused by plaque.
+High cholesterol is risk factor for coronary artery disease.
+Coronary artery disease requires statin treatment.
+Coronary artery disease may require angioplasty procedure.
+Leg swelling indicates deep vein thrombosis.
+Leg pain is symptom of deep vein thrombosis.
+Deep vein thrombosis forms clot in deep leg vein.
+Deep vein thrombosis increases pulmonary embolism risk.
+Deep vein thrombosis requires heparin treatment.
+Deep vein thrombosis requires warfarin treatment.
+Shortness of breath indicates pulmonary embolism.
+Chest pain is symptom of pulmonary embolism.
+Pulmonary embolism is caused by clot in pulmonary artery.
+Pulmonary embolism is severe and life threatening.
+Pulmonary embolism requires thrombolysis treatment.
+Pulmonary embolism requires oxygen support.
+Fever indicates pneumonia.
+Cough is symptom of pneumonia.
+Pneumonia is caused by bacterial lung infection.
+Pneumonia requires antibiotic treatment.
+Pneumonia may require oxygen support.
+Wheezing indicates asthma.
+Dyspnea is symptom of asthma.
+Asthma is caused by airway inflammation and constriction.
+Asthma is triggered by allergens.
+Asthma requires bronchodilator treatment.
+Asthma requires corticosteroid treatment.
+Chronic cough indicates COPD.
+Sputum is symptom of COPD.
+Smoking is risk factor for COPD.
+COPD causes airflow obstruction.
+COPD requires bronchodilator treatment.
+COPD requires oxygen support.
+Persistent cough indicates tuberculosis.
+Night sweats are symptom of tuberculosis.
+Weight loss is symptom of tuberculosis.
+Tuberculosis is caused by mycobacterium lung infection.
+Tuberculosis is contagious through airborne transmission.
+Tuberculosis requires rifampin treatment.
+Tuberculosis requires isoniazid treatment.
+Tuberculosis requires six month treatment duration.
+Hemoptysis indicates lung cancer.
+Smoking is major risk factor for lung cancer.
+Lung cancer is caused by malignant cell mutation.
+Lung cancer may require chemotherapy treatment.
+Lung cancer may require surgery procedure.
+Dry hacking cough indicates pulmonary fibrosis.
+Pulmonary fibrosis causes lung scarring.
+Pulmonary fibrosis is progressive and fatal.
+Pulmonary fibrosis may be slowed by pirfenidone.
+Pulmonary fibrosis requires oxygen support.
+Hemiparesis indicates stroke.
+Facial drooping is symptom of stroke.
+Speech difficulty is symptom of stroke.
+Stroke is caused by brain artery occlusion with clot.
+Stroke is severe and life threatening.
+Stroke requires immediate TPA treatment.
+TPA has three hour time window.
+Memory loss indicates Alzheimer disease.
+Confusion is symptom of Alzheimer disease.
+Personality change is symptom of Alzheimer disease.
+Alzheimer disease is caused by brain neuron degeneration.
+Alzheimer disease is characterized by amyloid beta plaques in brain.
+Alzheimer disease is progressive and irreversible.
+Donepezil may support cognition in Alzheimer disease.
+Resting tremor indicates Parkinson disease.
+Bradykinesia is symptom of Parkinson disease.
+Rigidity is symptom of Parkinson disease.
+Parkinson disease is caused by loss of dopamine neurons in substantia nigra.
+Parkinson disease is progressive and chronic.
+Parkinson disease requires levodopa treatment.
+Parkinson disease requires carbidopa treatment.
+Visual disturbance indicates multiple sclerosis.
+Weakness is symptom of multiple sclerosis.
+Numbness is symptom of multiple sclerosis.
+Multiple sclerosis is caused by nerve axon demyelination.
+Multiple sclerosis is autoimmune immune attack.
+Multiple sclerosis has relapsing remitting pattern.
+Multiple sclerosis requires interferon treatment.
+Seizure indicates epilepsy.
+Loss of consciousness is symptom of epilepsy.
+Epilepsy is caused by abnormal brain electrical activity.
+Epilepsy is recurrent and chronic.
+Epilepsy requires anticonvulsant treatment.
+Epilepsy requires EEG monitoring.
+Severe headache indicates migraine.
+Photophobia is symptom of migraine.
+Nausea is symptom of migraine.
+Migraine is caused by brain vessel vasodilation and inflammation.
+Stress triggers migraine.
+Migraine requires triptan treatment.
+Migraine may require beta blocker prophylaxis.
+Stiff neck indicates meningitis.
+Headache is symptom of meningitis.
+Meningitis is caused by meninges inflammation from infection.
+Meningitis is severe and life threatening.
+Meningitis requires immediate ceftriaxone treatment.
+Meningitis requires lumbar puncture procedure.
+Heartburn indicates GERD.
+Regurgitation is symptom of GERD.
+GERD is caused by stomach acid reflux.
+GERD is due to lower esophageal sphincter weakening.
+GERD requires proton pump inhibitor treatment.
+GERD requires diet and elevation modification.
+Abdominal pain indicates peptic ulcer.
+Bloating is symptom of peptic ulcer.
+Peptic ulcer is caused by H pylori stomach infection.
+Acid exposure causes mucosal erosion.
+Peptic ulcer requires proton pump inhibitor treatment.
+H pylori requires antibiotic treatment.
+Chronic diarrhea indicates inflammatory bowel disease.
+Blood in stool is symptom of inflammatory bowel disease.
+Inflammatory bowel disease is caused by chronic intestine inflammation.
+Inflammatory bowel disease is autoimmune disorder.
+Inflammatory bowel disease requires mesalamine treatment.
+Inflammatory bowel disease may require immunosuppressant treatment.
+Jaundice indicates cirrhosis.
+Ascites is symptom of cirrhosis.
+Confusion is symptom of cirrhosis.
+Cirrhosis is caused by liver scarring and fibrosis.
+Alcohol is risk factor for cirrhosis.
+Cirrhosis leads to liver failure dysfunction.
+Cirrhosis may require liver transplant procedure.
+Jaundice indicates hepatitis.
+Fatigue is symptom of hepatitis.
+Hepatitis is caused by viral liver infection.
+Hepatitis has types A B and C.
+Hepatitis C requires antiviral treatment.
+Hepatitis B has vaccine prevention.
+Severe abdominal pain indicates pancreatitis.
+Nausea is symptom of pancreatitis.
+Vomiting is symptom of pancreatitis.
+Pancreatitis is caused by pancreas inflammation from enzymes.
+Alcohol is risk factor for pancreatitis.
+Pancreatitis requires NPO management.
+Pancreatitis requires IV fluid support.
+Rectal bleeding indicates colorectal cancer.
+Changed bowel habits are symptom of colorectal cancer.
+Colorectal cancer develops from polyp to malignancy.
+Age over 50 requires colonoscopy screening.
+Colorectal cancer requires surgery treatment.
+Colorectal cancer may require chemotherapy treatment.
+Hyperglycemia indicates type 1 diabetes.
+Polyuria is symptom of type 1 diabetes.
+Polydipsia is symptom of type 1 diabetes.
+Type 1 diabetes is caused by pancreatic beta cell destruction.
+Type 1 diabetes is autoimmune immune attack.
+Type 1 diabetes requires insulin treatment.
+Type 1 diabetes requires blood glucose monitoring.
+Hyperglycemia indicates type 2 diabetes.
+Type 2 diabetes is caused by tissue insulin resistance.
+Obesity is risk factor for type 2 diabetes.
+Type 2 diabetes requires metformin treatment.
+Type 2 diabetes requires diet and exercise modification.
+Fatigue indicates hypothyroidism.
+Weight gain is symptom of hypothyroidism.
+Cold intolerance is symptom of hypothyroidism.
+Hypothyroidism is caused by thyroid gland underfunctioning.
+Hypothyroidism leads to metabolism dysfunction.
+Hypothyroidism requires levothyroxine treatment.
+Hypothyroidism requires TSH monitoring.
+Weight loss indicates hyperthyroidism.
+Tachycardia is symptom of hyperthyroidism.
+Tremor is symptom of hyperthyroidism.
+Hyperthyroidism is caused by thyroid gland overfunctioning.
+Graves disease causes hyperthyroidism through antibodies.
+Hyperthyroidism requires methimazole treatment.
+Hyperthyroidism may require radioiodine therapy procedure.
+Moon face indicates Cushing syndrome.
+Buffalo hump is symptom of Cushing syndrome.
+Hypertension is symptom of Cushing syndrome.
+Cushing syndrome is caused by excess cortisol hormone.
+Pituitary gland tumor causes ACTH excess.
+Cushing syndrome requires ketoconazole treatment.
+Cushing syndrome may require surgery procedure.
+Hypotension indicates Addison disease.
+Hyperpigmentation is symptom of Addison disease.
+Addison disease is caused by adrenal gland cortisol insufficiency.
+Addison disease is autoimmune immune destruction.
+Addisonian crisis is life threatening complication.
+Addison disease requires hydrocortisone treatment.
+Proteinuria indicates chronic kidney disease.
+Diabetes is risk factor for chronic kidney disease.
+Chronic kidney disease is caused by kidney nephron damage.
+Chronic kidney disease is progressive to renal failure.
+Chronic kidney disease requires ACE inhibitor treatment.
+Chronic kidney disease may require dialysis procedure.
+Dysuria indicates urinary tract infection.
+Frequency is symptom of urinary tract infection.
+Urgency is symptom of urinary tract infection.
+Urinary tract infection is caused by bacterial infection.
+E coli is most common UTI pathogen.
+Urinary tract infection requires antibiotic treatment.
+Female gender is risk factor for urinary tract infection.
+Oliguria indicates acute kidney injury.
+Sepsis is risk factor for acute kidney injury.
+Acute kidney injury is caused by acute kidney damage.
+Acute kidney injury is severe and life threatening.
+Acute kidney injury may require dialysis treatment.
+Acute kidney injury requires creatinine monitoring.
+Heavy proteinuria indicates nephrotic syndrome.
+Hypoalbuminemia is symptom of nephrotic syndrome.
+Nephrotic syndrome is caused by glomerulus podocyte damage.
+Nephrotic syndrome leads to protein loss dysfunction.
+Nephrotic syndrome requires corticosteroid treatment.
+Nephrotic syndrome requires urine protein monitoring.
+Flank pain indicates kidney stones.
+Hematuria is symptom of kidney stones.
+Kidney stones are caused by calculi formation in kidney.
+Dehydration is risk factor for kidney stones.
+Kidney stones require hydration management.
+Kidney stones require analgesic pain control.
+Kidney stones may require lithotripsy procedure.
+SIRS indicates sepsis.
+Hypotension is symptom of sepsis.
+Tachycardia is symptom of sepsis.
+Sepsis is caused by bacterial blood infection.
+Sepsis is severe and life threatening.
+Septic shock is emergency complication.
+Sepsis requires immediate broad spectrum antibiotic treatment.
+Sepsis requires IV fluid support.
+Immunodeficiency indicates HIV.
+Opportunistic infection is symptom of HIV.
+HIV is caused by virus that destroys CD4 cells.
+HIV progresses to AIDS.
+HIV requires antiretroviral therapy treatment.
+HIV requires CD4 count monitoring.
+Myalgia indicates influenza.
+Influenza is caused by respiratory influenza virus infection.
+Influenza is contagious through airborne transmission.
+Influenza may require oseltamivir treatment.
+Influenza has vaccine prevention with flu shot.
+Cyclic fever indicates malaria.
+Chills are symptom of malaria.
+Sweating is symptom of malaria.
+Malaria is caused by plasmodium blood parasite.
+Mosquito transmits malaria.
+Malaria requires chloroquine treatment.
+Travel to endemic area requires antimalarial prophylaxis.
+Erythema indicates cellulitis.
+Warmth is symptom of cellulitis.
+Swelling is symptom of cellulitis.
+Cellulitis is caused by bacterial skin infection.
+Streptococcus is common cellulitis pathogen.
+Cellulitis requires beta lactam antibiotic treatment.
+Cellulitis requires monitoring of erythema spread.
+Persistent fever indicates endocarditis.
+Heart murmur is symptom of endocarditis.
+Emboli are symptom of endocarditis.
+Endocarditis is caused by bacterial heart valve infection.
+IV drug use is risk factor for endocarditis.
+Endocarditis is severe and life threatening.
+Endocarditis requires vancomycin treatment.
+Endocarditis may require valve replacement procedure.
+Joint pain indicates rheumatoid arthritis.
+Morning stiffness is symptom of rheumatoid arthritis.
+Joint swelling is symptom of rheumatoid arthritis.
+Rheumatoid arthritis is caused by joint synovium inflammation.
+Rheumatoid arthritis is autoimmune immune attack.
+Rheumatoid arthritis causes cartilage destruction.
+Rheumatoid arthritis requires methotrexate treatment.
+Rheumatoid arthritis may require biologic treatment.
+Malar rash indicates systemic lupus erythematosus.
+SLE is caused by autoantibody attack on multiple organs.
+SLE is autoimmune systemic disease.
+SLE affects multiple organ systems.
+SLE requires hydroxychloroquine treatment.
+SLE requires corticosteroid treatment.
+Celiac disease is caused by intestine reaction to gluten protein.
+Celiac disease is autoimmune immune response.
+Celiac disease causes villi damage.
+Celiac disease requires gluten free diet treatment.
+Skin plaques indicate psoriasis.
+Scaling is symptom of psoriasis.
+Itching is symptom of psoriasis.
+Psoriasis is caused by rapid keratinocyte proliferation.
+Psoriasis is autoimmune immune mediated.
+Psoriasis is chronic and relapsing.
+Psoriasis requires topical corticosteroid treatment.
+Psoriasis may require biologic treatment.
+Pallor indicates anemia.
+Anemia is caused by hemoglobin and red blood cell deficiency.
+Iron deficiency is common cause of anemia.
+Iron deficiency anemia requires iron supplement treatment.
+Anemia requires CBC monitoring.
+Blast cells indicate leukemia.
+Easy bruising is symptom of leukemia.
+Leukemia is caused by malignant uncontrolled white blood cell growth.
+Leukemia is severe cancer.
+Leukemia requires chemotherapy treatment.
+Leukemia may require bone marrow transplant procedure.
+Excessive bleeding indicates hemophilia.
+Hemarthrosis is symptom of hemophilia.
+Hemophilia is caused by clotting factor VIII or IX deficiency.
+Hemophilia is inherited as X linked genetic disorder.
+Hemophilia requires factor replacement treatment.
+Severe bleeding in hemophilia requires immediate emergency treatment.
+Pain crisis indicates sickle cell disease.
+Anemia is symptom of sickle cell disease.
+Sickle cell disease is caused by hemoglobin S mutation.
+Sickled cells cause microvasculature occlusion.
+Sickle cell disease is inherited as autosomal recessive genetic disorder.
+Sickle cell disease requires hydroxyurea treatment.
+Pain crisis requires analgesic support.
+Petechiae indicate thrombocytopenia.
+Bruising is symptom of thrombocytopenia.
+Bleeding is symptom of thrombocytopenia.
+Thrombocytopenia is caused by decreased platelet count.
+Medication is risk factor for thrombocytopenia.
+Severe thrombocytopenia can cause hemorrhage.
+Thrombocytopenia may require platelet transfusion treatment.
+Beta blocker is cardiovascular drug class.
+Beta blocker blocks beta adrenergic receptor.
+Beta blocker decreases heart rate.
+Beta blocker decreases blood pressure.
+Beta blocker is indicated for hypertension.
+Beta blocker is indicated for angina.
+ACE inhibitor is cardiovascular drug class.
+ACE inhibitor inhibits ACE enzyme.
+ACE inhibitor prevents angiotensin 1 to angiotensin 2 conversion.
+ACE inhibitor causes vasodilation.
+ACE inhibitor decreases blood pressure.
+ACE inhibitor is indicated for hypertension.
+ACE inhibitor is indicated for heart failure.
+Statin is lipid drug class.
+Statin inhibits HMG CoA reductase enzyme.
+Statin decreases cholesterol synthesis.
+Statin lowers LDL cholesterol.
+Statin is indicated for hyperlipidemia.
+Statin reduces cardiovascular risk.
+Proton pump inhibitor is GI drug class.
+Proton pump inhibitor inhibits H K ATPase enzyme.
+Proton pump inhibitor suppresses gastric acid secretion.
+Proton pump inhibitor heals ulcers.
+Proton pump inhibitor is indicated for GERD.
+Proton pump inhibitor is indicated for peptic ulcer.
+NSAID is analgesic drug class.
+NSAID inhibits COX enzyme.
+NSAID decreases prostaglandin synthesis.
+NSAID has anti inflammatory effect.
+NSAID has analgesic effect.
+NSAID has antipyretic effect.
+NSAID increases GI bleeding risk.
+Opioid is analgesic drug class.
+Opioid binds mu opioid receptor.
+Opioid provides pain relief.
+Opioid causes sedation.
+Opioid causes respiratory depression risk.
+Opioid has dependence risk.
+Benzodiazepine is anxiolytic drug class.
+Benzodiazepine enhances GABA receptor activity.
+Benzodiazepine provides anxiolysis.
+Benzodiazepine provides sedation.
+Benzodiazepine is indicated for anxiety.
+Benzodiazepine causes dependence risk.
+Penicillin is beta lactam drug class.
+Penicillin inhibits peptidoglycan bacterial wall synthesis.
+Penicillin is bactericidal against gram positive bacteria.
+Penicillin is indicated for bacterial infection.
+Beta lactamase has resistance to penicillin.
+Fluoroquinolone is antibiotic drug class.
+Fluoroquinolone inhibits DNA gyrase enzyme.
+Fluoroquinolone is bactericidal with broad spectrum activity.
+Fluoroquinolone is indicated for UTI.
+Fluoroquinolone increases tendon rupture risk.
+Warfarin is oral anticoagulant drug.
+Warfarin inhibits vitamin K epoxide reductase enzyme.
+Warfarin decreases clotting factor synthesis.
+Warfarin is indicated for atrial fibrillation.
+Warfarin requires INR monitoring.
+Warfarin increases bleeding risk.
+Insulin is pancreatic hormone drug.
+Insulin facilitates glucose uptake.
+Insulin decreases blood glucose.
+Insulin is indicated for diabetes mellitus.
+Insulin causes hypoglycemia risk.
+Corticosteroid is anti inflammatory drug class.
+Corticosteroid inhibits phospholipase enzyme.
+Corticosteroid suppresses inflammation.
+Corticosteroid suppresses immune response.
+Corticosteroid is indicated for autoimmune disease.
+Corticosteroid increases infection risk.
+Corticosteroid causes osteoporosis.
+Warfarin is anticoagulant.
+NSAID is analgesic.
+Warfarin and NSAID combination increases GI bleeding risk.
+Warfarin inhibits blood clotting.
+NSAID damages GI tract mucosa.
+Warfarin and NSAID combination is contraindicated.
+Statin is lipid drug.
+Fibrate is lipid drug.
+Statin and fibrate combination increases myopathy risk.
+Severe myopathy can cause rhabdomyolysis.
+Statin and fibrate combination requires CPK monitoring.
+ACE inhibitor is cardiovascular drug.
+Potassium supplement is mineral electrolyte.
+ACE inhibitor and potassium combination increases hyperkalemia risk.
+ACE inhibitor decreases potassium excretion.
+ACE inhibitor and potassium combination requires serum potassium monitoring.
+SSRI is antidepressant drug class.
+MAOI is antidepressant drug class.
+SSRI and MAOI combination causes serotonin syndrome risk.
+Serotonin syndrome is severe and life threatening.
+SSRI and MAOI is absolute contraindication.
+MAOI requires two week washout period.
+Echocardiography is diagnostic cardiac procedure.
+Echocardiography uses ultrasound to image heart.
+Echocardiography evaluates cardiac function.
+Echocardiography visualizes valve abnormality.
+Echocardiography is indicated for heart failure.
+Echocardiography is noninvasive and safe.
+CT scan is diagnostic radiology procedure.
+CT scan uses X ray radiation.
+CT scan creates cross sectional images.
+CT scan identifies pathology.
+CT scan exposes patient to radiation.
+CT scan may require IV contrast.
+MRI is diagnostic radiology procedure.
+MRI uses magnetic field for imaging.
+MRI creates detailed images.
+MRI is excellent for soft tissue imaging.
+MRI has no radiation and is safer.
+MRI is contraindicated with metal implants.
+Colonoscopy is diagnostic GI procedure.
+Colonoscopy uses endoscope to examine colon.
+Colonoscopy visualizes polyps.
+Colonoscopy can remove polyps therapeutically.
+Colonoscopy is indicated for colorectal cancer screening.
+Colonoscopy requires bowel preparation.
+ECG is diagnostic cardiac test.
+ECG records electrical heart activity.
+ECG identifies arrhythmia abnormality.
+ECG is indicated for chest pain.
+ECG is quick and noninvasive.
+Blood culture is diagnostic microbiology test.
+Blood culture grows blood sample.
+Blood culture identifies bacteremia.
+Blood culture is indicated for sepsis.
+Blood culture determines antibiotic choice for treatment.
+Lumbar puncture is diagnostic neurology procedure.
+Lumbar puncture obtains CSF sample.
+Lumbar puncture examines CSF cells.
+Lumbar puncture is indicated for meningitis.
+Lumbar puncture has headache risk.
+Lumbar puncture is contraindicated with increased intracranial pressure.
+CABG is surgical cardiac procedure.
+CABG bypasses coronary artery blockage.
+CABG is indicated for severe coronary artery disease.
+CABG uses vein or artery graft.
+CABG improves blood flow outcome.
+CABG has stroke risk.
+Appendectomy is surgical general surgery procedure.
+Appendectomy removes inflamed appendix.
+Appendectomy is indicated for appendicitis.
+Appendectomy is urgent emergency procedure.
+Appendectomy prevents peritonitis complication.
+Hip replacement is surgical orthopedic procedure.
+Hip replacement replaces hip joint.
+Hip replacement is indicated for osteoarthritis.
+Hip replacement uses prosthesis.
+Hip replacement improves mobility outcome.
+Hip replacement requires physical therapy rehabilitation.
+Thyroidectomy is surgical endocrine procedure.
+Thyroidectomy removes thyroid gland.
+Thyroidectomy is indicated for thyroid cancer.
+Thyroidectomy is indicated for hyperthyroidism.
+Thyroidectomy requires lifelong levothyroxine replacement.
+Thyroidectomy has hypoparathyroidism and recurrent laryngeal nerve damage risk.
+Nephrectomy is surgical urologic procedure.
+Nephrectomy removes kidney.
+Nephrectomy is indicated for renal cell carcinoma.
+Nephrectomy is indicated for non functioning kidney.
+Nephrectomy can be curative for localized cancer outcome.
+Remaining kidney requires adequate function after nephrectomy.
+Cardiologist is cardiology specialist.
+Cardiologist specializes in heart disease.
+Cardiologist performs echocardiography procedure.
+Cardiologist performs cardiac catheterization procedure.
+Cardiologist manages heart failure condition.
+Cardiologist manages arrhythmia condition.
+Pulmonologist is pulmonology specialist.
+Pulmonologist specializes in lung disease.
+Pulmonologist performs bronchoscopy procedure.
+Pulmonologist manages asthma condition.
+Pulmonologist manages COPD condition.
+Pulmonologist manages pulmonary fibrosis condition.
+Neurologist is neurology specialist.
+Neurologist specializes in neurological disorders.
+Neurologist interprets EEG.
+Neurologist manages epilepsy condition.
+Neurologist manages stroke condition.
+Neurologist manages Parkinson disease condition.
+Gastroenterologist is gastroenterology specialist.
+Gastroenterologist specializes in digestive system.
+Gastroenterologist performs colonoscopy procedure.
+Gastroenterologist performs endoscopy procedure.
+Gastroenterologist manages inflammatory bowel disease condition.
+Gastroenterologist manages cirrhosis condition.
+Endocrinologist is endocrinology specialist.
+Endocrinologist specializes in hormone disorders.
+Endocrinologist manages diabetes condition.
+Endocrinologist manages thyroid disease condition.
+Endocrinologist manages adrenal disorders condition.
+Nephrologist is nephrology specialist.
+Nephrologist specializes in kidney disease.
+Nephrologist manages chronic kidney disease condition.
+Nephrologist manages acute kidney injury condition.
+Nephrologist oversees dialysis procedure.
+Hematologist is hematology specialist.
+Hematologist specializes in blood disorders.
+Hematologist manages anemia condition.
+Hematologist manages leukemia condition.
+Hematologist manages hemophilia condition.
+Hematologist interprets bone marrow biopsy.
+Oncologist is oncology specialist.
+Oncologist specializes in cancer.
+Oncologist prescribes chemotherapy.
+Oncologist coordinates radiation therapy.
+Oncologist provides care to cancer patients.
+Infectious disease specialist is ID specialist.
+Infectious disease specialist specializes in infections.
+Infectious disease specialist manages sepsis condition.
+Infectious disease specialist manages HIV condition.
+Infectious disease specialist manages tuberculosis condition.
+Infectious disease specialist provides antimicrobial stewardship advice.
+Emergency medicine physician is EM physician.
+Emergency medicine physician specializes in acute care.
+Emergency medicine physician works in emergency department.
+Emergency medicine physician triages patients.
+Emergency medicine physician stabilizes life threatening conditions.
+Diabetes is chronic metabolic disease.
+Diabetes causes diabetic retinopathy complication.
+Diabetes causes diabetic neuropathy complication.
+Diabetes causes diabetic nephropathy complication.
+Hyperglycemia damages blood vessel microvasculature.
+Glycemic control prevents diabetes complications.
+Diabetes requires regular eye exam screening.
+Metabolic syndrome is cluster of risk factors.
+Metabolic syndrome includes obesity component.
+Metabolic syndrome includes hypertension component.
+Metabolic syndrome includes dyslipidemia component.
+Metabolic syndrome includes insulin resistance component.
+Metabolic syndrome increases type 2 diabetes risk.
+Metabolic syndrome increases cardiovascular disease risk.
+Metabolic syndrome requires lifestyle modification management.
+Acute coronary syndrome is spectrum of cardiac ischemia.
+Acute coronary syndrome includes STEMI type.
+Acute coronary syndrome includes NSTEMI type.
+Acute coronary syndrome includes unstable angina type.
+Atherosclerotic plaque rupture causes acute coronary syndrome.
+Thrombosis causes acute coronary syndrome.
+Acute coronary syndrome requires urgent revascularization.
+Acute coronary syndrome requires antiplatelet treatment.
+Shock is life threatening emergency.
+Shock includes hypovolemic type.
+Shock includes cardiogenic type.
+Shock includes distributive type.
+Shock includes obstructive type.
+Shock causes inadequate tissue perfusion.
+Shock leads to organ failure.
+Shock requires immediate resuscitation.
+Pneumonia is lung parenchyma infection.
+Pneumonia is classified as community acquired.
+Pneumonia is classified as hospital acquired.
+Pneumonia is classified as ventilator associated.
+Community acquired pneumonia commonly caused by streptococcus.
+Hospital acquired pneumonia commonly caused by pseudomonas.
+Pneumonia severity is assessed by CURB 65 score.
+Pneumonia requires empirical antibiotic treatment.
+Renal replacement therapy is life sustaining therapy.
+Renal replacement therapy is indicated for end stage renal disease.
+Renal replacement therapy includes hemodialysis modality.
+Renal replacement therapy includes peritoneal dialysis modality.
+Renal replacement therapy includes kidney transplant modality.
+Renal replacement therapy replaces kidney function.
+Renal replacement therapy eliminates waste and toxins.
+Vaccination is prevention intervention for infectious disease.
+Vaccine stimulates immune response mechanism.
+Vaccine produces protective antibody result.
+Vaccine requires primary and booster timing schedule.
+Vaccine is contraindicated in immunocompromised patients.
+Vaccine prevents disease infection benefit.
+High vaccination rate contributes to herd immunity.
+TNM is cancer staging classification system.
+T component assesses tumor size.
+N component assesses node involvement.
+M component assesses metastasis presence.
+Staging determines prognosis purpose.
+Staging informs treatment decision.
+TNM is used universally in oncology standard.
+Antibiotic resistance is public health problem.
+Antibiotic resistance is caused by antibiotic overuse.
+Bacteria develop resistance through mutation mechanism.
+MRSA is example of antibiotic resistance.
+VRE is example of antibiotic resistance.
+MDR TB is example of antibiotic resistance.
+Antimicrobial stewardship is solution to antibiotic resistance.
+Appropriate antibiotic use prevents antibiotic resistance.
+Palliative care is holistic care approach.
+Palliative care focuses on symptom management.
+Palliative care improves quality of life goal.
+Palliative care addresses pain.
+Palliative care addresses psychological distress.
+Palliative care is appropriate for terminal illness.
+Palliative care involves interdisciplinary team.
+Osteoporosis is metabolic bone disease.
+Osteoporosis is caused by decreased bone density and mineralization.
+Menopause is risk factor for osteoporosis.
+Aging is risk factor for osteoporosis.
+Osteoporosis increases fracture risk complication.
+Osteoporosis is diagnosed by DEXA scan screening.
+Osteoporosis requires bisphosphonate treatment.
+Osteoporosis requires adequate calcium and vitamin D prevention.
+Glaucoma is eye disease affecting optic nerve.
+Glaucoma is caused by increased intraocular pressure.
+Glaucoma leads to optic nerve damage.
+Glaucoma causes progressive vision loss consequence.
+Glaucoma requires tonometry screening.
+Glaucoma requires eye drop treatment.
+Acute glaucoma requires emergency surgery.
+Gout is inflammatory arthritis condition.
+Gout is caused by uric acid crystal deposition in joint.
+Hyperuricemia is risk factor for gout.
+Gout presents as acute painful joint.
+Gout commonly affects great toe location.
+Acute gout is treated with NSAID or colchicine.
+Chronic gout is prevented with long term allopurinol.
+Gout requires diet and alcohol modification lifestyle.
+Schizophrenia is psychiatric psychotic disorder.
+Hallucinations are symptom of schizophrenia.
+Delusions are symptom of schizophrenia.
+Disorganized thought is symptom of schizophrenia.
+Schizophrenia is caused by dopamine pathway dysfunction.
+Schizophrenia is chronic and lifelong.
+Schizophrenia requires antipsychotic treatment.
+Schizophrenia requires psychosocial support.
+Depression is psychiatric mood disorder.
+Depressed mood is symptom of depression.
+Anhedonia is symptom of depression.
+Depression is caused by neurotransmitter imbalance.
+Depression persists for two weeks duration.
+Depression requires SSRI treatment.
+Depression benefits from psychotherapy.
+Bipolar disorder is psychiatric mood disorder.
+Bipolar disorder has manic episode.
+Bipolar disorder has depressive episode.
+Euphoria is symptom in manic bipolar disorder.
+Decreased sleep is symptom in manic bipolar disorder.
+Bipolar disorder is caused by mood regulation dysfunction.
+Bipolar disorder requires mood stabilizer treatment.
+Bipolar disorder requires lithium level monitoring.
+Anaphylaxis is severe hypersensitivity reaction condition.
+Urticaria is symptom of anaphylaxis.
+Angioedema is symptom of anaphylaxis.
+Bronchospasm is symptom of anaphylaxis.
+Anaphylaxis is severe and life threatening.
+Anaphylaxis is caused by rapid histamine release.
+Anaphylaxis requires immediate epinephrine emergency treatment.
+Epinephrine is administered by IM route.
+Myxedema coma is severe form of hypothyroidism condition.
+Hypothermia is symptom of myxedema coma.
+Altered mental status is symptom of myxedema coma.
+Bradycardia is symptom of myxedema coma.
+Myxedema coma is severe and life threatening.
+Myxedema coma requires ICU care with IV levothyroxine emergency.
+Myxedema coma requires warming support.
+Pericarditis is inflammation of pericardium condition.
+Pleuritic chest pain is symptom of pericarditis.
+Chest pain is improved by leaning forward.
+Pericarditis has pericardial friction rub on auscultation finding.
+ECG shows ST elevation in pericarditis test.
+Pericarditis requires NSAID treatment.
+Pericarditis may require colchicine treatment.
+Cirrhosis has portal hypertension complication.
+Portal hypertension is caused by increased portal pressure and resistance.
+Portal hypertension leads to esophageal varices development.
+Portal hypertension leads to ascites development.
+Portal hypertension leads to splenomegaly development.
+Esophageal varices increase bleeding risk.
+Esophageal varices require beta blocker or band ligation treatment.
+Adrenal crisis is emergency life threatening condition.
+Adrenal crisis is caused by acute severe cortisol deficiency.
+Severe hypotension is symptom of adrenal crisis.
+Shock is symptom of adrenal crisis.
+Stress from infection or surgery triggers adrenal crisis.
+Adrenal crisis requires immediate IV hydrocortisone emergency treatment.
+Adrenal crisis requires IV fluids and electrolytes support.
+Diabetic ketoacidosis is emergency life threatening condition.
+Diabetic ketoacidosis is caused by absolute insulin deficiency and ketosis.
+Diabetic ketoacidosis shows elevated blood glucose lab.
+Diabetic ketoacidosis shows elevated ketones lab.
+Diabetic ketoacidosis shows metabolic acidosis lab.
+Kussmaul respiration is symptom of diabetic ketoacidosis.
+Diabetic ketoacidosis requires immediate IV insulin treatment.
+Diabetic ketoacidosis requires IV fluids and electrolytes support.
+ARDS is critical life threatening condition.
+ARDS is caused by alveolar capillary membrane inflammation.
+ARDS leads to gas exchange dysfunction.
+Severe hypoxemia is symptom of ARDS.
+Bilateral infiltrates are symptom of ARDS.
+Sepsis or pneumonia triggers ARDS cause.
+ARDS requires mechanical ventilation treatment.
+ARDS uses low tidal volume strategy.
+Myasthenia gravis is autoimmune neuromuscular junction condition.
+Myasthenia gravis is caused by antibodies blocking and destroying acetylcholine receptor.
+Fluctuating weakness is symptom of myasthenia gravis.
+Ptosis is symptom of myasthenia gravis.
+Diplopia is symptom of myasthenia gravis.
+Weakness worsens with activity and fatigue.
+Myasthenia gravis is diagnosed by tensilon test.
+Myasthenia gravis requires pyridostigmine treatment.
+Myasthenic crisis is emergency complication of myasthenia gravis.
+Guillain Barre syndrome is autoimmune peripheral nerve condition.
+Guillain Barre syndrome is caused by peripheral nerve demyelination by antibodies.
+Ascending paralysis is symptom of Guillain Barre syndrome.
+Diminished reflexes are symptom of Guillain Barre syndrome.
+Viral infection often precedes Guillain Barre syndrome.
+Guillain Barre syndrome can cause respiratory failure.
+Guillain Barre syndrome requires IVIG treatment.
+Guillain Barre syndrome requires plasmapheresis treatment.
+Guillain Barre syndrome requires respiratory function monitoring.
+Diverticulitis is inflammation of diverticula condition.
+Diverticulitis is caused by diverticulum bacterial infection.
+Left lower quadrant pain is symptom of diverticulitis.
+Diverticulitis can cause perforation and peritonitis complication.
+Diverticulitis is diagnosed by CT scan imaging.
+Diverticulitis requires antibiotic and bowel rest treatment.
+Complicated diverticulitis may require surgery resection.
+Aortic dissection is emergency life threatening condition.
+Aortic dissection is caused by aortic intima tear and blood dissection.
+Hypertension is risk factor for aortic dissection.
+Tearing chest pain is symptom of aortic dissection.
+Back pain is symptom of aortic dissection.
+Aortic dissection has blood pressure asymmetry in arms finding.
+Aortic dissection is diagnosed by CT angiography imaging.
+Aortic dissection requires immediate beta blocker and blood pressure control treatment.
+Type A dissection may require emergency surgery.
+Acute pancreatitis is inflammation of pancreas condition.
+Gallstone obstruction of biliary tree causes acute pancreatitis.
+Acute pancreatitis shows elevated lipase lab.
+Acute pancreatitis shows elevated amylase lab.
+Epigastric pain is symptom of acute pancreatitis.
+CT abdomen shows pancreas inflammation imaging.
+Acute pancreatitis requires NPO and IV fluids management.
+Gallstone pancreatitis may require ERCP procedure.
+Pulmonary hypertension is cardiac vascular condition.
+Pulmonary hypertension is caused by increased pulmonary artery pressure and resistance.
+Pulmonary hypertension leads to right heart failure dysfunction.
+Pulmonary hypertension is diagnosed by echocardiography imaging.
+Pulmonary hypertension is confirmed by right heart catheterization.
+Pulmonary hypertension requires sildenafil treatment.
+Pulmonary hypertension may require prostacyclin treatment.
+Alcohol withdrawal is withdrawal syndrome from alcohol condition.
+Alcohol withdrawal is caused by sudden cessation of chronic alcohol use.
+Tremor is symptom of alcohol withdrawal.
+Agitation is symptom of alcohol withdrawal.
+Diaphoresis is symptom of alcohol withdrawal.
+Alcohol withdrawal can progress to delirium tremens.
+Delirium tremens is severe and life threatening.
+Alcohol withdrawal requires benzodiazepine treatment.
+Alcohol withdrawal requires CIWA score monitoring.
+Preeclampsia is pregnancy hypertensive complication condition.
+Preeclampsia is caused by placenta vascular development dysfunction.
+Preeclampsia presents after twenty weeks gestation.
+Proteinuria is symptom of preeclampsia in pregnancy.
+Hypertension is symptom of preeclampsia in pregnancy.
+Preeclampsia can progress to eclampsia.
+Preeclampsia requires magnesium sulfate treatment.
+Delivery cures preeclampsia definitively.
+Sickle cell crisis is acute complication of sickle cell disease condition.
+Sickle cell crisis is caused by microvasculature occlusion by sickled red blood cells.
+Dehydration or infection triggers sickle cell crisis.
+Severe body pain is symptom of sickle cell crisis.
+Sickle cell crisis can cause organ damage.
+Sickle cell crisis requires aggressive hydration management.
+Sickle cell crisis requires opioid pain control treatment.
+Severe vaso occlusive crisis may require exchange transfusion procedure.

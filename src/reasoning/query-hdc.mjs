@@ -41,6 +41,7 @@ const RESERVED_CACHE = new WeakMap();
 
 function getReserved(session) {
   if (!session || typeof session !== 'object') return RESERVED;
+  if (!session.useTheoryReserved) return RESERVED;
   const cached = RESERVED_CACHE.get(session);
   if (cached) return cached;
 
@@ -52,11 +53,13 @@ function getReserved(session) {
   }
 
   // Theory-derived relation/property tokens (mostly lower-case; still useful for safety).
-  const idx = session.semanticIndex;
-  for (const op of idx?.transitiveRelations || []) set.add(op);
-  for (const op of idx?.symmetricRelations || []) set.add(op);
-  for (const op of idx?.reflexiveRelations || []) set.add(op);
-  for (const op of idx?.inheritableProperties || []) set.add(op);
+  if (session.useSemanticIndex) {
+    const idx = session.semanticIndex;
+    for (const op of idx?.transitiveRelations || []) set.add(op);
+    for (const op of idx?.symmetricRelations || []) set.add(op);
+    for (const op of idx?.reflexiveRelations || []) set.add(op);
+    for (const op of idx?.inheritableProperties || []) set.add(op);
+  }
 
   RESERVED_CACHE.set(session, set);
   return set;
@@ -115,8 +118,9 @@ export function verifyHDCCandidate(session, operatorName, knowns, candidate, hol
 
   // For inheritable operators, ensure candidate is a "typed" entity (has isA facts).
   const isInheritable =
-    session?.semanticIndex?.isInheritableProperty?.(operatorName) ??
-    (operatorName === 'can' || operatorName === 'must');
+    session?.useSemanticIndex && session?.semanticIndex?.isInheritableProperty
+      ? session.semanticIndex.isInheritableProperty(operatorName)
+      : (operatorName === 'can' || operatorName === 'must');
 
   if (isInheritable) {
     // Candidate should be something that has isA relations (a named entity)

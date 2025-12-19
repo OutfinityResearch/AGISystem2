@@ -4,7 +4,7 @@ import { Session } from '../../../src/runtime/session.mjs';
 
 describe('Contradictions (theory-driven via SemanticIndex)', () => {
   test('warns on mutuallyExclusive pairs defined in config/Core/14-constraints.sys2', () => {
-    const session = new Session({ geometry: 2048 });
+    const session = new Session({ geometry: 2048, reasoningProfile: 'theoryDriven' });
 
     const r1 = session.learn('hasState Door Open');
     assert.equal(r1.success, true);
@@ -16,7 +16,7 @@ describe('Contradictions (theory-driven via SemanticIndex)', () => {
   });
 
   test('warns on contradictsSameArgs pairs defined in config/Core/14-constraints.sys2', () => {
-    const session = new Session({ geometry: 2048 });
+    const session = new Session({ geometry: 2048, reasoningProfile: 'theoryDriven' });
 
     const r1 = session.learn('before A B');
     assert.equal(r1.success, true);

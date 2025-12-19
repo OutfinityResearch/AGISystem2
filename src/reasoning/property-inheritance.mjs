@@ -14,14 +14,31 @@
 
 import { getThresholds } from '../core/constants.mjs';
 import { TRANSITIVE_RELATIONS, RESERVED_WORDS } from './transitive.mjs';
-import { DEFAULT_SEMANTIC_INDEX } from '../runtime/semantic-index.mjs';
 
 /**
  * Relations that propagate DOWN the isA hierarchy
  * When `isA Child Parent`, properties of Parent apply to Child
- * Loaded from config/Core/00-relations.sys2
+ * Legacy (hardcoded) list, used when the session is not theory-driven.
  */
-export const INHERITABLE_PROPERTIES = DEFAULT_SEMANTIC_INDEX.inheritableProperties;
+export const INHERITABLE_PROPERTIES = new Set([
+  'can',
+  'has',
+  'likes',
+  'knows',
+  'owns',
+  'uses',
+  'hasProperty',
+  'hasAbility',
+  'hasTrait',
+  'exhibits',
+  'causes',
+  'prevents',
+  'enables',
+  'requires',
+  'must',
+  'should',
+  'may'
+]);
 
 /**
  * Property Inheritance Reasoner
@@ -54,8 +71,9 @@ export class PropertyInheritanceReasoner {
 
     // Only handle inheritable properties
     const isInheritable =
-      (this.session?.semanticIndex?.isInheritableProperty?.(operatorName)) ??
-      (operatorName ? INHERITABLE_PROPERTIES.has(operatorName) : false);
+      this.session?.useSemanticIndex && this.session?.semanticIndex?.isInheritableProperty
+        ? this.session.semanticIndex.isInheritableProperty(operatorName)
+        : (operatorName ? INHERITABLE_PROPERTIES.has(operatorName) : false);
 
     if (!operatorName || !isInheritable) {
       return { valid: false };

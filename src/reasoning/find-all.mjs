@@ -94,8 +94,9 @@ export function findAll(session, pattern, options = {}) {
 
   // Add transitive results for transitive relations
   const isTransitive =
-    (session?.semanticIndex?.isTransitive?.(operatorName)) ??
-    isTransitiveRelationFallback(operatorName);
+    session?.useSemanticIndex && session?.semanticIndex?.isTransitive
+      ? session.semanticIndex.isTransitive(operatorName)
+      : isTransitiveRelationFallback(operatorName);
 
   if (includeTransitive && isTransitive) {
     const transitiveResults = findTransitiveResults(session, operatorName, holes, knowns, maxResults - results.length);

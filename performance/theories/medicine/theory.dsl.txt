@@ -1,0 +1,1674 @@
+// Medicine Theory - Comprehensive Medical Knowledge Base
+// Over 1000 facts with 70%+ complex multi-line graphs
+
+// ============================================================================
+// ANATOMY - Organ Systems and Structures
+// ============================================================================
+
+@:Cardiovascular_System graph Heart Blood Circulation
+    @organ isOrgan Heart Cardiovascular
+    @fluid isFluid Blood Cardiovascular
+    @process pumpsBlood Heart Blood
+    @process circulatesThrough Blood Body
+    @chain Implies (And @organ @fluid) (And @process @process)
+    return @chain
+end
+
+@:Respiratory_System graph Lung Oxygen CO2
+    @organ isOrgan Lung Respiratory
+    @gas exchangesGas Lung Oxygen CO2
+    @process oxygenatesBlood Lung Blood
+    @vital necessaryForLife Oxygen Metabolism
+    @chain Implies (And @organ @gas) (And @process @vital)
+    return @chain
+end
+
+@:Nervous_System graph Brain SpinalCord Nerve
+    @organ isOrgan Brain CNS
+    @structure isStructure SpinalCord CNS
+    @tissue isNerve Nerve PNS
+    @process controlsBody Brain AllFunctions
+    @chain Implies (And @organ @structure @tissue) @process
+    return @chain
+end
+
+@:Digestive_System graph Stomach Intestine Enzyme
+    @organ isOrgan Stomach Digestive
+    @organ2 isOrgan Intestine Digestive
+    @chemical producesEnzyme Stomach Enzyme
+    @process digestsFood Enzyme Nutrients
+    @chain Implies (And @organ @organ2 @chemical) @process
+    return @chain
+end
+
+@:Urinary_System graph Kidney Bladder Urine
+    @organ isOrgan Kidney Urinary
+    @organ2 isOrgan Bladder Urinary
+    @fluid producesUrine Kidney Urine
+    @process storesFluid Bladder Urine
+    @function filtersBlood Kidney Waste
+    @chain Implies (And @organ @organ2 @fluid) (And @process @function)
+    return @chain
+end
+
+@:Endocrine_System graph Hormone Gland Regulation
+    @structure isGland Gland Endocrine
+    @chemical producesHormone Gland Hormone
+    @process regulatesBody Hormone Metabolism
+    @feedback maintainsHomeostasis Hormone Balance
+    @chain Implies (And @structure @chemical) (And @process @feedback)
+    return @chain
+end
+
+@:Musculoskeletal_System graph Bone Muscle Joint
+    @tissue isBone Bone Skeletal
+    @tissue2 isMuscle Muscle Muscular
+    @structure isJoint Joint Skeletal
+    @function providesSupport Bone Body
+    @function2 enablesMovement Muscle Body
+    @chain Implies (And @tissue @tissue2 @structure) (And @function @function2)
+    return @chain
+end
+
+@:Immune_System graph WhiteBloodCell Antibody Pathogen
+    @cell isCell WhiteBloodCell Immune
+    @protein isProtein Antibody Immune
+    @invader isPathogen Pathogen External
+    @process attacksPathogen WhiteBloodCell Pathogen
+    @process2 bindsToAntigen Antibody Pathogen
+    @chain Implies (And @cell @protein @invader) (And @process @process2)
+    return @chain
+end
+
+@:Integumentary_System graph Skin Hair Nail
+    @organ isOrgan Skin Integumentary
+    @structure isHair Hair Integumentary
+    @structure2 isNail Nail Integumentary
+    @function protectsBody Skin Environment
+    @function2 regulatesTemperature Skin Heat
+    @chain Implies (And @organ @structure @structure2) (And @function @function2)
+    return @chain
+end
+
+@:Reproductive_System graph Ovary Testis Hormone
+    @organ isFemaleOrgan Ovary Reproductive
+    @organ2 isMaleOrgan Testis Reproductive
+    @chemical producesHormone Ovary Estrogen
+    @chemical2 producesHormone Testis Testosterone
+    @function enablesReproduction Reproductive Offspring
+    @chain Implies (Or (And @organ @chemical) (And @organ2 @chemical2)) @function
+    return @chain
+end
+
+// ============================================================================
+// CARDIOVASCULAR DISEASES
+// ============================================================================
+
+@:Myocardial_Infarction graph ChestPain HeartAttack Aspirin
+    @sym presentsSymptom Patient ChestPain
+    @sym2 presentsSymptom Patient Dyspnea
+    @cond indicatesCondition ChestPain HeartAttack
+    @severe isSevere HeartAttack LifeThreatening
+    @treat requiresTreatment HeartAttack Aspirin
+    @treat2 requiresTreatment HeartAttack Nitroglycerin
+    @emergency requiresEmergency HeartAttack Hospital
+    @chain Implies (And @sym @sym2 @cond) (And @treat @treat2 @emergency)
+    return @chain
+end
+
+@:Hypertension graph HighBP Stroke Antihypertensive
+    @sym presentsSymptom Patient HighBloodPressure
+    @chronic isChronicCondition HighBloodPressure Years
+    @risk increasesRisk HighBloodPressure Stroke
+    @risk2 increasesRisk HighBloodPressure HeartDisease
+    @treat requiresTreatment HighBloodPressure Antihypertensive
+    @lifestyle requiresModification Diet Exercise
+    @chain Implies (And @sym @chronic @risk) (And @treat @lifestyle)
+    return @chain
+end
+
+@:Atrial_Fibrillation graph IrregularHeartbeat AFib Anticoagulant
+    @sym presentsSymptom Patient IrregularHeartbeat
+    @sym2 presentsSymptom Patient Palpitations
+    @cond indicatesCondition IrregularHeartbeat AtrialFibrillation
+    @risk increasesRisk AtrialFibrillation Stroke
+    @mech causesBloodClot AtrialFibrillation Atrium
+    @treat requiresTreatment AtrialFibrillation Anticoagulant
+    @monitor requiresMonitoring AtrialFibrillation INR
+    @chain Implies (And @sym @cond @risk @mech) (And @treat @monitor)
+    return @chain
+end
+
+@:Heart_Failure graph Edema HeartFailure Diuretic
+    @sym presentsSymptom Patient Edema
+    @sym2 presentsSymptom Patient Dyspnea
+    @sym3 presentsSymptom Patient Fatigue
+    @cond indicatesCondition Edema HeartFailure
+    @path causedByWeakening Heart PumpFunction
+    @treat requiresTreatment HeartFailure Diuretic
+    @treat2 requiresTreatment HeartFailure ACEInhibitor
+    @chain Implies (And @sym @sym2 @sym3 @cond @path) (And @treat @treat2)
+    return @chain
+end
+
+@:Coronary_Artery_Disease graph AnginaPectoris CAD Statin
+    @sym presentsSymptom Patient AnginaPectoris
+    @path causedByNarrowing CoronaryArtery Plaque
+    @cond indicatesCondition AnginaPectoris CAD
+    @risk riskFactor HighCholesterol CAD
+    @treat requiresTreatment CAD Statin
+    @proc mayRequireProcedure CAD Angioplasty
+    @chain Implies (And @sym @path @cond @risk) (And @treat @proc)
+    return @chain
+end
+
+@:Deep_Vein_Thrombosis graph LegSwelling DVT Heparin
+    @sym presentsSymptom Patient LegSwelling
+    @sym2 presentsSymptom Patient LegPain
+    @cond indicatesCondition LegSwelling DVT
+    @path formsClot DeepVein Leg
+    @risk increasesRisk DVT PulmonaryEmbolism
+    @treat requiresTreatment DVT Heparin
+    @treat2 requiresTreatment DVT Warfarin
+    @chain Implies (And @sym @sym2 @cond @path @risk) (And @treat @treat2)
+    return @chain
+end
+
+@:Pulmonary_Embolism graph ShortnessOfBreath PE Thrombolysis
+    @sym presentsSymptom Patient ShortnessOfBreath
+    @sym2 presentsSymptom Patient ChestPain
+    @cond indicatesCondition ShortnessOfBreath PulmonaryEmbolism
+    @path causedByClot PulmonaryArtery Embolus
+    @severe isSevere PulmonaryEmbolism LifeThreatening
+    @treat requiresTreatment PulmonaryEmbolism Thrombolysis
+    @support requiresSupport PulmonaryEmbolism Oxygen
+    @chain Implies (And @sym @sym2 @cond @path @severe) (And @treat @support)
+    return @chain
+end
+
+// ============================================================================
+// RESPIRATORY DISEASES
+// ============================================================================
+
+@:Pneumonia graph Fever Pneumonia Antibiotic
+    @sym presentsSymptom Patient Fever
+    @sym2 presentsSymptom Patient Cough
+    @sym3 presentsSymptom Patient ChestPain
+    @cond indicatesCondition Fever Pneumonia
+    @path causedByInfection Lung Bacteria
+    @treat requiresTreatment Pneumonia Antibiotic
+    @support mayRequireSupport Pneumonia Oxygen
+    @chain Implies (And @sym @sym2 @sym3 @cond @path) (And @treat @support)
+    return @chain
+end
+
+@:Asthma graph Wheezing Asthma Bronchodilator
+    @sym presentsSymptom Patient Wheezing
+    @sym2 presentsSymptom Patient Dyspnea
+    @cond indicatesCondition Wheezing Asthma
+    @path causedByInflammation Airway Constriction
+    @trigger triggeredBy Asthma Allergen
+    @treat requiresTreatment Asthma Bronchodilator
+    @treat2 requiresTreatment Asthma Corticosteroid
+    @chain Implies (And @sym @sym2 @cond @path) (And @treat @treat2)
+    return @chain
+end
+
+@:COPD graph ChronicCough COPD Bronchodilator
+    @sym presentsSymptom Patient ChronicCough
+    @sym2 presentsSymptom Patient Dyspnea
+    @sym3 presentsSymptom Patient Sputum
+    @cond indicatesCondition ChronicCough COPD
+    @risk riskFactor Smoking COPD
+    @path causesObstruction COPD Airflow
+    @treat requiresTreatment COPD Bronchodilator
+    @support requiresSupport COPD Oxygen
+    @chain Implies (And @sym @sym2 @sym3 @cond @risk @path) (And @treat @support)
+    return @chain
+end
+
+@:Tuberculosis graph PersistentCough TB Rifampin
+    @sym presentsSymptom Patient PersistentCough
+    @sym2 presentsSymptom Patient NightSweats
+    @sym3 presentsSymptom Patient WeightLoss
+    @cond indicatesCondition PersistentCough Tuberculosis
+    @path causedByInfection Lung Mycobacterium
+    @contagious isContagious Tuberculosis Airborne
+    @treat requiresTreatment Tuberculosis Rifampin
+    @treat2 requiresTreatment Tuberculosis Isoniazid
+    @duration requiresLongTreatment Tuberculosis SixMonths
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @contagious) (And @treat @treat2 @duration)
+    return @chain
+end
+
+@:Lung_Cancer graph HemoptysisSymptom LungCancer Chemotherapy
+    @sym presentsSymptom Patient Hemoptysis
+    @sym2 presentsSymptom Patient ChronicCough
+    @sym3 presentsSymptom Patient WeightLoss
+    @cond indicatesCondition Hemoptysis LungCancer
+    @risk majorRiskFactor Smoking LungCancer
+    @path causedByMutation LungCell Malignant
+    @treat mayRequireTreatment LungCancer Chemotherapy
+    @proc mayRequireProcedure LungCancer Surgery
+    @chain Implies (And @sym @sym2 @sym3 @cond @risk @path) (And @treat @proc)
+    return @chain
+end
+
+@:Pulmonary_Fibrosis graph DryHackingCough PulmonaryFibrosis Pirfenidone
+    @sym presentsSymptom Patient DryHackingCough
+    @sym2 presentsSymptom Patient Dyspnea
+    @cond indicatesCondition DryHackingCough PulmonaryFibrosis
+    @path causesScarring Lung Fibrosis
+    @progressive isProgressive PulmonaryFibrosis Fatal
+    @treat maySlowProgression PulmonaryFibrosis Pirfenidone
+    @support requiresSupport PulmonaryFibrosis Oxygen
+    @chain Implies (And @sym @sym2 @cond @path @progressive) (And @treat @support)
+    return @chain
+end
+
+// ============================================================================
+// NEUROLOGICAL DISEASES
+// ============================================================================
+
+@:Stroke graph Hemiparesis Stroke TPA
+    @sym presentsSymptom Patient Hemiparesis
+    @sym2 presentsSymptom Patient FacialDrooping
+    @sym3 presentsSymptom Patient SpeechDifficulty
+    @cond indicatesCondition Hemiparesis Stroke
+    @path causedByOcclusion BrainArtery Clot
+    @severe isSevere Stroke LifeThreatening
+    @treat requiresImmediateTreatment Stroke TPA
+    @window hasTimeWindow TPA ThreeHours
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @severe) (And @treat @window)
+    return @chain
+end
+
+@:Alzheimers_Disease graph MemoryLoss Alzheimers Donepezil
+    @sym presentsSymptom Patient MemoryLoss
+    @sym2 presentsSymptom Patient Confusion
+    @sym3 presentsSymptom Patient PersonalityChange
+    @cond indicatesCondition MemoryLoss Alzheimers
+    @path causedByDegeneration Brain Neurons
+    @path2 characterizedByPlaques Brain AmyloidBeta
+    @progressive isProgressive Alzheimers Irreversible
+    @treat maySupportCognition Alzheimers Donepezil
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @path2 @progressive) @treat
+    return @chain
+end
+
+@:Parkinsons_Disease graph Tremor Parkinsons Levodopa
+    @sym presentsSymptom Patient RestingTremor
+    @sym2 presentsSymptom Patient Bradykinesia
+    @sym3 presentsSymptom Patient Rigidity
+    @cond indicatesCondition RestingTremor Parkinsons
+    @path causedByLoss SubstantiaNigra DopamineNeurons
+    @progressive isProgressive Parkinsons Chronic
+    @treat requiresTreatment Parkinsons Levodopa
+    @treat2 requiresTreatment Parkinsons Carbidopa
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @progressive) (And @treat @treat2)
+    return @chain
+end
+
+@:Multiple_Sclerosis graph VisualDisturbance MS Interferon
+    @sym presentsSymptom Patient VisualDisturbance
+    @sym2 presentsSymptom Patient Weakness
+    @sym3 presentsSymptom Patient Numbness
+    @cond indicatesCondition VisualDisturbance MultipleSclerosis
+    @path causedByDemyelination Nerve Axon
+    @autoimmune isAutoimmune MultipleSclerosis ImmuneAttack
+    @relapsing hasPattern MultipleSclerosis RelapsingRemitting
+    @treat requiresTreatment MultipleSclerosis Interferon
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune @relapsing) @treat
+    return @chain
+end
+
+@:Epilepsy graph Seizure Epilepsy Anticonvulsant
+    @sym presentsSymptom Patient Seizure
+    @sym2 presentsSymptom Patient LossOfConsciousness
+    @cond indicatesCondition Seizure Epilepsy
+    @path causedByAbnormal Brain ElectricalActivity
+    @recurrent isRecurrent Epilepsy Chronic
+    @treat requiresTreatment Epilepsy Anticonvulsant
+    @monitor requiresMonitoring Epilepsy EEG
+    @chain Implies (And @sym @sym2 @cond @path @recurrent) (And @treat @monitor)
+    return @chain
+end
+
+@:Migraine graph SevereHeadache Migraine Triptan
+    @sym presentsSymptom Patient SevereHeadache
+    @sym2 presentsSymptom Patient Photophobia
+    @sym3 presentsSymptom Patient Nausea
+    @cond indicatesCondition SevereHeadache Migraine
+    @path causedByVasodilation BrainVessels Inflammation
+    @trigger triggeredBy Migraine Stress
+    @treat requiresTreatment Migraine Triptan
+    @prophylaxis mayRequireProphylaxis Migraine BetaBlocker
+    @chain Implies (And @sym @sym2 @sym3 @cond @path) (And @treat @prophylaxis)
+    return @chain
+end
+
+@:Meningitis graph StiffNeck Meningitis Ceftriaxone
+    @sym presentsSymptom Patient StiffNeck
+    @sym2 presentsSymptom Patient Fever
+    @sym3 presentsSymptom Patient Headache
+    @cond indicatesCondition StiffNeck Meningitis
+    @path causedByInflammation Meninges Infection
+    @severe isSevere Meningitis LifeThreatening
+    @treat requiresImmediateTreatment Meningitis Ceftriaxone
+    @proc requiresProcedure Meningitis LumbarPuncture
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @severe) (And @treat @proc)
+    return @chain
+end
+
+// ============================================================================
+// GASTROINTESTINAL DISEASES
+// ============================================================================
+
+@:GERD graph Heartburn GERD PPI
+    @sym presentsSymptom Patient Heartburn
+    @sym2 presentsSymptom Patient Regurgitation
+    @cond indicatesCondition Heartburn GERD
+    @path causedByReflux Stomach AcidContent
+    @mech dueToWeakening LowerEsophagealSphincter Function
+    @treat requiresTreatment GERD ProtonPumpInhibitor
+    @lifestyle requiresModification Diet Elevation
+    @chain Implies (And @sym @sym2 @cond @path @mech) (And @treat @lifestyle)
+    return @chain
+end
+
+@:Peptic_Ulcer graph AbdominalPain PepticUlcer PPI
+    @sym presentsSymptom Patient AbdominalPain
+    @sym2 presentsSymptom Patient Bloating
+    @cond indicatesCondition AbdominalPain PepticUlcer
+    @path causedByInfection Stomach HPylori
+    @mech causesErosion AcidExposure Mucosa
+    @treat requiresTreatment PepticUlcer ProtonPumpInhibitor
+    @treat2 requiresTreatment HPylori Antibiotic
+    @chain Implies (And @sym @sym2 @cond @path @mech) (And @treat @treat2)
+    return @chain
+end
+
+@:Inflammatory_Bowel_Disease graph DiarrheaChronic IBD Mesalamine
+    @sym presentsSymptom Patient ChronicDiarrhea
+    @sym2 presentsSymptom Patient AbdominalPain
+    @sym3 presentsSymptom Patient BloodInStool
+    @cond indicatesCondition ChronicDiarrhea IBD
+    @path causedByInflammation Intestine Chronic
+    @autoimmune isAutoimmune IBD ImmuneDisorder
+    @treat requiresTreatment IBD Mesalamine
+    @treat2 mayRequireTreatment IBD Immunosuppressant
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune) (And @treat @treat2)
+    return @chain
+end
+
+@:Cirrhosis graph Jaundice Cirrhosis Transplant
+    @sym presentsSymptom Patient Jaundice
+    @sym2 presentsSymptom Patient Ascites
+    @sym3 presentsSymptom Patient Confusion
+    @cond indicatesCondition Jaundice Cirrhosis
+    @path causedByScarring Liver Fibrosis
+    @risk riskFactor Alcohol Cirrhosis
+    @complication leadsToDysfunction Cirrhosis LiverFailure
+    @treat mayRequireProcedure Cirrhosis LiverTransplant
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @complication) @treat
+    return @chain
+end
+
+@:Hepatitis graph Jaundice_Symptom Hepatitis Antiviral
+    @sym presentsSymptom Patient Jaundice
+    @sym2 presentsSymptom Patient Fatigue
+    @sym3 presentsSymptom Patient AbdominalPain
+    @cond indicatesCondition Jaundice Hepatitis
+    @path causedByInfection Liver Virus
+    @viral hasTypes Hepatitis TypeABC
+    @treat requiresTreatment HepatitisC Antiviral
+    @prevent hasVaccine HepatitisB Vaccine
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @viral) (Or @treat @prevent)
+    return @chain
+end
+
+@:Pancreatitis graph SevereAbdominalPain Pancreatitis NPO
+    @sym presentsSymptom Patient SevereAbdominalPain
+    @sym2 presentsSymptom Patient Nausea
+    @sym3 presentsSymptom Patient Vomiting
+    @cond indicatesCondition SevereAbdominalPain Pancreatitis
+    @path causedByInflammation Pancreas Enzymes
+    @risk riskFactor Alcohol Pancreatitis
+    @manage requiresManagement Pancreatitis NPO
+    @support requiresSupport Pancreatitis IVFluids
+    @chain Implies (And @sym @sym2 @sym3 @cond @path) (And @manage @support)
+    return @chain
+end
+
+@:Colorectal_Cancer graph RectalBleeding ColorectalCancer Chemotherapy
+    @sym presentsSymptom Patient RectalBleeding
+    @sym2 presentsSymptom Patient WeightLoss
+    @sym3 presentsSymptom Patient ChangedBowelHabits
+    @cond indicatesCondition RectalBleeding ColorectalCancer
+    @path developedFrom Polyp Malignancy
+    @screen requiresScreening AgeOver50 Colonoscopy
+    @treat requiresTreatment ColorectalCancer Surgery
+    @treat2 mayRequireTreatment ColorectalCancer Chemotherapy
+    @chain Implies (And @sym @sym2 @sym3 @cond @path) (And @treat @treat2)
+    return @chain
+end
+
+// ============================================================================
+// ENDOCRINE DISEASES
+// ============================================================================
+
+@:Diabetes_Type1 graph Hyperglycemia Type1Diabetes Insulin
+    @sym presentsSymptom Patient Hyperglycemia
+    @sym2 presentsSymptom Patient Polyuria
+    @sym3 presentsSymptom Patient Polydipsia
+    @cond indicatesCondition Hyperglycemia DiabetesType1
+    @path causedByDestruction Pancreas BetaCells
+    @autoimmune isAutoimmune DiabetesType1 ImmuneAttack
+    @treat requiresTreatment DiabetesType1 Insulin
+    @monitor requiresMonitoring DiabetesType1 BloodGlucose
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune) (And @treat @monitor)
+    return @chain
+end
+
+@:Diabetes_Type2 graph Hyperglycemia_Type2 Type2Diabetes Metformin
+    @sym presentsSymptom Patient Hyperglycemia
+    @sym2 presentsSymptom Patient Fatigue
+    @cond indicatesCondition Hyperglycemia DiabetesType2
+    @path causedByResistance Tissue InsulinResistance
+    @risk riskFactor Obesity DiabetesType2
+    @treat requiresTreatment DiabetesType2 Metformin
+    @lifestyle requiresModification Diet Exercise
+    @chain Implies (And @sym @sym2 @cond @path @risk) (And @treat @lifestyle)
+    return @chain
+end
+
+@:Hypothyroidism graph Fatigue_Thyroid Hypothyroidism Levothyroxine
+    @sym presentsSymptom Patient Fatigue
+    @sym2 presentsSymptom Patient WeightGain
+    @sym3 presentsSymptom Patient ColdIntolerance
+    @cond indicatesCondition Fatigue Hypothyroidism
+    @path causedByUnderfunctioning ThyroidGland Hormone
+    @mech leadsToDysfunction Hypothyroidism Metabolism
+    @treat requiresTreatment Hypothyroidism Levothyroxine
+    @monitor requiresMonitoring Hypothyroidism TSH
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @mech) (And @treat @monitor)
+    return @chain
+end
+
+@:Hyperthyroidism graph WeightLoss Hyperthyroidism Methimazole
+    @sym presentsSymptom Patient WeightLoss
+    @sym2 presentsSymptom Patient Tachycardia
+    @sym3 presentsSymptom Patient Tremor
+    @cond indicatesCondition WeightLoss Hyperthyroidism
+    @path causedByOverfunctioning ThyroidGland Hormone
+    @autoimmune causedByDisorder GravesDisease Antibodies
+    @treat requiresTreatment Hyperthyroidism Methimazole
+    @proc mayRequireProcedure Hyperthyroidism RadioiodineTherapy
+    @chain Implies (And @sym @sym2 @sym3 @cond @path) (And @treat @proc)
+    return @chain
+end
+
+@:Cushings_Syndrome graph MoonFace Cushings Ketoconazole
+    @sym presentsSymptom Patient MoonFace
+    @sym2 presentsSymptom Patient BuffaloHump
+    @sym3 presentsSymptom Patient Hypertension
+    @cond indicatesCondition MoonFace CushingsSyndrome
+    @path causedByExcess Cortisol Hormone
+    @cause dueToTumor PituitaryGland ACTH
+    @treat requiresTreatment CushingsSyndrome Ketoconazole
+    @proc mayRequireProcedure CushingsSyndrome Surgery
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @cause) (And @treat @proc)
+    return @chain
+end
+
+@:Addisons_Disease graph Hypotension_Addisons Addisons Hydrocortisone
+    @sym presentsSymptom Patient Hypotension
+    @sym2 presentsSymptom Patient Hyperpigmentation
+    @sym3 presentsSymptom Patient Fatigue
+    @cond indicatesCondition Hypotension AddisonsDisease
+    @path causedByInsufficiency AdrenalGland Cortisol
+    @autoimmune isAutoimmune AddisonsDisease ImmuneDestruction
+    @severe canCauseAddisonianCrisis AddisonsDisease LifeThreatening
+    @treat requiresTreatment AddisonsDisease Hydrocortisone
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune) @treat
+    return @chain
+end
+
+// ============================================================================
+// RENAL AND UROLOGICAL DISEASES
+// ============================================================================
+
+@:Chronic_Kidney_Disease graph Proteinuria CKD ACEInhibitor
+    @sym presentsSymptom Patient Proteinuria
+    @sym2 presentsSymptom Patient Edema
+    @sym3 presentsSymptom Patient Fatigue
+    @cond indicatesCondition Proteinuria ChronicKidneyDisease
+    @path causedByDamage Kidney Nephrons
+    @risk riskFactor Diabetes ChronicKidneyDisease
+    @progressive isProgressive CKD RenalFailure
+    @treat requiresTreatment CKD ACEInhibitor
+    @proc mayRequireProcedure CKD Dialysis
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @progressive) (And @treat @proc)
+    return @chain
+end
+
+@:Urinary_Tract_Infection graph Dysuria UTI Antibiotic
+    @sym presentsSymptom Patient Dysuria
+    @sym2 presentsSymptom Patient Frequency
+    @sym3 presentsSymptom Patient Urgency
+    @cond indicatesCondition Dysuria UTI
+    @path causedByInfection UrinaryTract Bacteria
+    @common mostCommonPathogen EColi UTI
+    @treat requiresTreatment UTI Antibiotic
+    @risk riskFactor Female UTI
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @common) @treat
+    return @chain
+end
+
+@:Acute_Kidney_Injury graph Oliguria AKI Dialysis
+    @sym presentsSymptom Patient Oliguria
+    @sym2 presentsSymptom Patient Edema
+    @cond indicatesCondition Oliguria AcuteKidneyInjury
+    @path causedByDamage Kidney AcuteInjury
+    @risk riskFactor Sepsis AKI
+    @severe isSevere AKI LifeThreatening
+    @treat mayRequireTreatment AKI Dialysis
+    @monitor requiresMonitoring AKI Creatinine
+    @chain Implies (And @sym @sym2 @cond @path @severe) (And @treat @monitor)
+    return @chain
+end
+
+@:Nephrotic_Syndrome graph Proteinuria_Heavy Nephrotic Steroid
+    @sym presentsSymptom Patient HeavyProteinuria
+    @sym2 presentsSymptom Patient Edema
+    @sym3 presentsSymptom Patient Hypoalbuminemia
+    @cond indicatesCondition HeavyProteinuria NephroticSyndrome
+    @path causedByDamage Glomerulus Podocytes
+    @mech leadsToDysfunction NephroticSyndrome ProteinLoss
+    @treat requiresTreatment NephroticSyndrome Corticosteroid
+    @monitor requiresMonitoring NephroticSyndrome UrineProtein
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @mech) (And @treat @monitor)
+    return @chain
+end
+
+@:Kidney_Stones graph FlankPain KidneyStones Hydration
+    @sym presentsSymptom Patient FlankPain
+    @sym2 presentsSymptom Patient Hematuria
+    @sym3 presentsSymptom Patient Nausea
+    @cond indicatesCondition FlankPain Nephrolithiasis
+    @path causedByFormation Kidney Calculi
+    @risk riskFactor Dehydration KidneyStones
+    @manage requiresManagement KidneyStones Hydration
+    @treat requiresPainControl KidneyStones Analgesic
+    @proc mayRequireProcedure KidneyStones Lithotripsy
+    @chain Implies (And @sym @sym2 @sym3 @cond @path) (And @manage @treat @proc)
+    return @chain
+end
+
+// ============================================================================
+// INFECTIOUS DISEASES
+// ============================================================================
+
+@:Sepsis graph SIRS Sepsis BroadSpectrumAntibiotic
+    @sym presentsSymptom Patient SIRS
+    @sym2 presentsSymptom Patient Hypotension
+    @sym3 presentsSymptom Patient Tachycardia
+    @cond indicatesCondition SIRS Sepsis
+    @path causedByInfection Blood Bacteria
+    @severe isSevere Sepsis LifeThreatening
+    @emergency isEmergency Sepsis SepticShock
+    @treat requiresImmediateTreatment Sepsis BroadSpectrumAntibiotic
+    @support requiresSupport Sepsis IVFluids
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @severe @emergency) (And @treat @support)
+    return @chain
+end
+
+@:HIV_AIDS graph ImmunodeficiencySymptom HIV ART
+    @sym presentsSymptom Patient Immunodeficiency
+    @sym2 presentsSymptom Patient OpportunisticInfection
+    @cond indicatesCondition Immunodeficiency HIV
+    @path causedByVirus HIV CD4Destruction
+    @progressive progressesTo HIV AIDS
+    @treat requiresTreatment HIV AntiretroviralTherapy
+    @monitor requiresMonitoring HIV CD4Count
+    @chain Implies (And @sym @sym2 @cond @path @progressive) (And @treat @monitor)
+    return @chain
+end
+
+@:Influenza graph Myalgia Influenza Oseltamivir
+    @sym presentsSymptom Patient Myalgia
+    @sym2 presentsSymptom Patient Fever
+    @sym3 presentsSymptom Patient Cough
+    @cond indicatesCondition Myalgia Influenza
+    @path causedByInfection Respiratory InfluenzaVirus
+    @contagious isContagious Influenza Airborne
+    @treat mayRequireTreatment Influenza Oseltamivir
+    @prevent hasVaccine Influenza FluShot
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @contagious) (Or @treat @prevent)
+    return @chain
+end
+
+@:Malaria graph CyclicFever Malaria Chloroquine
+    @sym presentsSymptom Patient CyclicFever
+    @sym2 presentsSymptom Patient Chills
+    @sym3 presentsSymptom Patient Sweating
+    @cond indicatesCondition CyclicFever Malaria
+    @path causedByParasite Blood Plasmodium
+    @vector transmittedBy Mosquito Malaria
+    @treat requiresTreatment Malaria Chloroquine
+    @prevent requiresProphylaxis TravelToEndemic Antimalarial
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @vector) (And @treat @prevent)
+    return @chain
+end
+
+@:Cellulitis graph Erythema Cellulitis BetaLactam
+    @sym presentsSymptom Patient Erythema
+    @sym2 presentsSymptom Patient Warmth
+    @sym3 presentsSymptom Patient Swelling
+    @cond indicatesCondition Erythema Cellulitis
+    @path causedByInfection Skin Bacteria
+    @common commonPathogen Streptococcus Cellulitis
+    @treat requiresTreatment Cellulitis BetaLactamAntibiotic
+    @monitor requiresMonitoring Cellulitis SpreadOfErythema
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @common) (And @treat @monitor)
+    return @chain
+end
+
+@:Endocarditis graph FeverPersistent Endocarditis Vancomycin
+    @sym presentsSymptom Patient PersistentFever
+    @sym2 presentsSymptom Patient HeartMurmur
+    @sym3 presentsSymptom Patient Emboli
+    @cond indicatesCondition PersistentFever Endocarditis
+    @path causedByInfection HeartValve Bacteria
+    @risk riskFactor IVDrugUse Endocarditis
+    @severe isSevere Endocarditis LifeThreatening
+    @treat requiresTreatment Endocarditis Vancomycin
+    @proc mayRequireProcedure Endocarditis ValveReplacement
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @severe) (And @treat @proc)
+    return @chain
+end
+
+// ============================================================================
+// AUTOIMMUNE DISEASES
+// ============================================================================
+
+@:Rheumatoid_Arthritis graph JointPain RA Methotrexate
+    @sym presentsSymptom Patient JointPain
+    @sym2 presentsSymptom Patient MorningStiffness
+    @sym3 presentsSymptom Patient JointSwelling
+    @cond indicatesCondition JointPain RheumatoidArthritis
+    @path causedByInflammation Joint Synovium
+    @autoimmune isAutoimmune RA ImmuneAttack
+    @progressive causesDestruction RA Cartilage
+    @treat requiresTreatment RA Methotrexate
+    @treat2 mayRequireTreatment RA Biologic
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune @progressive) (And @treat @treat2)
+    return @chain
+end
+
+@:Systemic_Lupus_Erythematosus graph MalarRash SLE Hydroxychloroquine
+    @sym presentsSymptom Patient MalarRash
+    @sym2 presentsSymptom Patient JointPain
+    @sym3 presentsSymptom Patient Fatigue
+    @cond indicatesCondition MalarRash SLE
+    @path causedByAttack AutoAntibodies MultipleOrgans
+    @autoimmune isAutoimmune SLE SystemicDisease
+    @multi affectsMultipleSystems SLE Organs
+    @treat requiresTreatment SLE Hydroxychloroquine
+    @treat2 requiresTreatment SLE Corticosteroid
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune @multi) (And @treat @treat2)
+    return @chain
+end
+
+@:Celiac_Disease graph Diarrhea_Celiac Celiac GlutenFree
+    @sym presentsSymptom Patient ChronicDiarrhea
+    @sym2 presentsSymptom Patient Bloating
+    @sym3 presentsSymptom Patient WeightLoss
+    @cond indicatesCondition ChronicDiarrhea CeliacDisease
+    @path causedByReaction Intestine GlutenProtein
+    @autoimmune isAutoimmune CeliacDisease ImmuneResponse
+    @damage causesDamage CeliacDisease Villi
+    @treat requiresTreatment CeliacDisease GlutenFreeDiet
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune @damage) @treat
+    return @chain
+end
+
+@:Psoriasis graph PlaquesSkin Psoriasis Topical
+    @sym presentsSymptom Patient SkinPlaques
+    @sym2 presentsSymptom Patient Scaling
+    @sym3 presentsSymptom Patient Itching
+    @cond indicatesCondition SkinPlaques Psoriasis
+    @path causedByRapid Keratinocyte Proliferation
+    @autoimmune isAutoimmune Psoriasis ImmuneMediated
+    @chronic isChronic Psoriasis Relapsing
+    @treat requiresTreatment Psoriasis TopicalCorticosteroid
+    @treat2 mayRequireTreatment Psoriasis Biologic
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @autoimmune @chronic) (And @treat @treat2)
+    return @chain
+end
+
+@:Type1_Diabetes_Autoimmune graph AutoimmuneDiabetes T1D Insulin_Therapy
+    @path causedByDestruction IsletCells AutoimmuneProcess
+    @result leadsToDeficiency Insulin Absolute
+    @cond indicatesCondition InsulinDeficiency Type1Diabetes
+    @treat requiresLifelong Type1Diabetes InsulinTherapy
+    @monitor requiresMonitoring Type1Diabetes HbA1c
+    @chain Implies (And @path @result @cond) (And @treat @monitor)
+    return @chain
+end
+
+// ============================================================================
+// HEMATOLOGICAL DISEASES
+// ============================================================================
+
+@:Anemia graph Pallor Anemia IronSupplement
+    @sym presentsSymptom Patient Pallor
+    @sym2 presentsSymptom Patient Fatigue
+    @sym3 presentsSymptom Patient Dyspnea
+    @cond indicatesCondition Pallor Anemia
+    @path causedByDeficiency Hemoglobin RedBloodCells
+    @common commonCause IronDeficiency Anemia
+    @treat requiresTreatment IronDeficiencyAnemia IronSupplement
+    @monitor requiresMonitoring Anemia CBC
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @common) (And @treat @monitor)
+    return @chain
+end
+
+@:Leukemia graph BlastCells Leukemia Chemotherapy
+    @sym presentsSymptom Patient BlastCells
+    @sym2 presentsSymptom Patient Fatigue
+    @sym3 presentsSymptom Patient BruisingEasy
+    @cond indicatesCondition BlastCells Leukemia
+    @path causedByMalignancy WhiteBloodCells Uncontrolled
+    @severe isSevere Leukemia Cancer
+    @treat requiresTreatment Leukemia Chemotherapy
+    @proc mayRequireProcedure Leukemia BoneMarrowTransplant
+    @chain Implies (And @sym @sym2 @sym3 @cond @path @severe) (And @treat @proc)
+    return @chain
+end
+
+@:Hemophilia graph Bleeding Hemophilia FactorReplacement
+    @sym presentsSymptom Patient ExcessiveBleeding
+    @sym2 presentsSymptom Patient Hemarthrosis
+    @cond indicatesCondition ExcessiveBleeding Hemophilia
+    @path causedByDeficiency ClottingFactor VIII_or_IX
+    @genetic isInherited Hemophilia XLinked
+    @treat requiresTreatment Hemophilia FactorReplacement
+    @emergency requiresEmergency SevereBleed ImmediateTreatment
+    @chain Implies (And @sym @sym2 @cond @path @genetic) (And @treat @emergency)
+    return @chain
+end
+
+@:Sickle_Cell_Disease graph PainCrisis SickleCell Hydroxyurea
+    @sym presentsSymptom Patient PainCrisis
+    @sym2 presentsSymptom Patient Anemia
+    @cond indicatesCondition PainCrisis SickleCellDisease
+    @path causedByMutation Hemoglobin HbS
+    @mech causesOcclusion SickledCells Microvasculature
+    @genetic isInherited SickleCellDisease AutosomalRecessive
+    @treat requiresTreatment SickleCellDisease Hydroxyurea
+    @support requiresSupport PainCrisis Analgesic
+    @chain Implies (And @sym @sym2 @cond @path @mech @genetic) (And @treat @support)
+    return @chain
+end
+
+@:Thrombocytopenia graph Petechiae Thrombocytopenia Platelet
+    @sym presentsSymptom Patient Petechiae
+    @sym2 presentsSymptom Patient Bruising
+    @sym3 presentsSymptom Patient Bleeding
+    @cond indicatesCondition Petechiae Thrombocytopenia
+    @path causedByDecreased Platelet Count
+    @risk riskFactor Medication Thrombocytopenia
+    @severe canCause SevereThrombocytopenia Hemorrhage
+    @treat mayRequireTreatment Thrombocytopenia PlateletTransfusion
+    @chain Implies (And @sym @sym2 @sym3 @cond @path) @treat
+    return @chain
+end
+
+// ============================================================================
+// PHARMACOLOGY - Drug Classes and Mechanisms
+// ============================================================================
+
+@:Beta_Blockers graph BetaBlocker Heart RateReduction
+    @drug isDrugClass BetaBlocker Cardiovascular
+    @mech blocksReceptor BetaBlocker BetaAdrenergic
+    @effect decreases BetaBlocker HeartRate
+    @effect2 decreases BetaBlocker BloodPressure
+    @indication indicatedFor BetaBlocker Hypertension
+    @indication2 indicatedFor BetaBlocker Angina
+    @chain Implies (And @drug @mech) (And @effect @effect2 @indication @indication2)
+    return @chain
+end
+
+@:ACE_Inhibitors graph ACEInhibitor Angiotensin VasodilationEffect
+    @drug isDrugClass ACEInhibitor Cardiovascular
+    @mech inhibitsEnzyme ACEInhibitor ACE
+    @result preventsConversion Angiotensin1 Angiotensin2
+    @effect causes ACEInhibitor Vasodilation
+    @benefit decreases ACEInhibitor BloodPressure
+    @indication indicatedFor ACEInhibitor Hypertension
+    @indication2 indicatedFor ACEInhibitor HeartFailure
+    @chain Implies (And @drug @mech @result @effect) (And @benefit @indication @indication2)
+    return @chain
+end
+
+@:Statins graph Statin Cholesterol LDLReduction
+    @drug isDrugClass Statin Lipid
+    @mech inhibitsEnzyme Statin HMGCoAReductase
+    @effect decreases Statin CholesterolSynthesis
+    @benefit lowers Statin LDL
+    @indication indicatedFor Statin Hyperlipidemia
+    @prevention reduces Statin CardiovascularRisk
+    @chain Implies (And @drug @mech @effect @benefit) (And @indication @prevention)
+    return @chain
+end
+
+@:Proton_Pump_Inhibitors graph PPI GastricAcid Suppression
+    @drug isDrugClass ProtonPumpInhibitor GI
+    @mech inhibitsEnzyme PPI HKATPase
+    @effect suppresses PPI GastricAcidSecretion
+    @benefit heals PPI Ulcer
+    @indication indicatedFor PPI GERD
+    @indication2 indicatedFor PPI PepticUlcer
+    @chain Implies (And @drug @mech @effect @benefit) (And @indication @indication2)
+    return @chain
+end
+
+@:NSAIDs graph NSAID Prostaglandin AntiInflammatory
+    @drug isDrugClass NSAID Analgesic
+    @mech inhibitsEnzyme NSAID COX
+    @result decreases NSAID ProstaglandinSynthesis
+    @effect1 hasEffect NSAID AntiInflammatory
+    @effect2 hasEffect NSAID Analgesic
+    @effect3 hasEffect NSAID Antipyretic
+    @risk increasesRisk NSAID GIBleeding
+    @chain Implies (And @drug @mech @result) (And @effect1 @effect2 @effect3 @risk)
+    return @chain
+end
+
+@:Opioids graph Opioid MuReceptor PainRelief
+    @drug isDrugClass Opioid Analgesic
+    @mech bindsReceptor Opioid MuOpioidReceptor
+    @effect provides Opioid PainRelief
+    @effect2 causes Opioid Sedation
+    @risk causesRisk Opioid RespiratoryDepression
+    @addiction hasRisk Opioid Dependence
+    @chain Implies (And @drug @mech) (And @effect @effect2 @risk @addiction)
+    return @chain
+end
+
+@:Benzodiazepines graph Benzodiazepine GABA Anxiolysis
+    @drug isDrugClass Benzodiazepine Anxiolytic
+    @mech enhancesActivity Benzodiazepine GABAReceptor
+    @effect provides Benzodiazepine Anxiolysis
+    @effect2 provides Benzodiazepine Sedation
+    @indication indicatedFor Benzodiazepine Anxiety
+    @risk causesRisk Benzodiazepine Dependence
+    @chain Implies (And @drug @mech) (And @effect @effect2 @indication @risk)
+    return @chain
+end
+
+@:Antibiotics_Penicillin graph Penicillin BacterialWall Bactericidal
+    @drug isDrugClass Penicillin BetaLactam
+    @mech inhibitsSynthesis Penicillin PeptidoglycanWall
+    @effect isBactericidal Penicillin GramPositive
+    @indication indicatedFor Penicillin BacterialInfection
+    @resistance hasResistance BetaLactamase Penicillin
+    @chain Implies (And @drug @mech @effect) @indication
+    return @chain
+end
+
+@:Fluoroquinolones graph Fluoroquinolone DNAGyrase BroadSpectrum
+    @drug isDrugClass Fluoroquinolone Antibiotic
+    @mech inhibitsEnzyme Fluoroquinolone DNAGyrase
+    @effect isBactericidal Fluoroquinolone BroadSpectrum
+    @indication indicatedFor Fluoroquinolone UTI
+    @risk increasesRisk Fluoroquinolone TendonRupture
+    @chain Implies (And @drug @mech @effect) (And @indication @risk)
+    return @chain
+end
+
+@:Anticoagulants_Warfarin graph Warfarin VitaminK INR
+    @drug isAnticoagulant Warfarin Oral
+    @mech inhibits Warfarin VitaminKEpoxideReductase
+    @effect decreases Warfarin ClottingFactorSynthesis
+    @indication indicatedFor Warfarin AtrialFibrillation
+    @monitor requiresMonitoring Warfarin INR
+    @risk increasesRisk Warfarin Bleeding
+    @chain Implies (And @drug @mech @effect) (And @indication @monitor @risk)
+    return @chain
+end
+
+@:Insulin_Therapy graph Insulin_Mechanism Glucose CellUptake
+    @drug isHormone Insulin Pancreatic
+    @mech facilitates Insulin GlucoseUptake
+    @effect decreases Insulin BloodGlucose
+    @indication indicatedFor Insulin DiabetesMellitus
+    @risk causesRisk Insulin Hypoglycemia
+    @chain Implies (And @drug @mech @effect) (And @indication @risk)
+    return @chain
+end
+
+@:Corticosteroids graph Corticosteroid Inflammation ImmuneSuppress
+    @drug isDrugClass Corticosteroid AntiInflammatory
+    @mech inhibits Corticosteroid Phospholipase
+    @effect suppresses Corticosteroid Inflammation
+    @effect2 suppresses Corticosteroid ImmuneResponse
+    @indication indicatedFor Corticosteroid AutoimmuneDisease
+    @risk increasesRisk Corticosteroid Infection
+    @risk2 causes Corticosteroid Osteoporosis
+    @chain Implies (And @drug @mech) (And @effect @effect2 @indication @risk @risk2)
+    return @chain
+end
+
+// ============================================================================
+// DRUG INTERACTIONS
+// ============================================================================
+
+@:Warfarin_NSAID_Interaction graph Warfarin NSAID BleedingRisk
+    @drug1 isAnticoagulant Warfarin Oral
+    @drug2 isDrugClass NSAID Analgesic
+    @interaction increasesRisk CombinedUse GIBleeding
+    @mech1 inhibitsClotting Warfarin Blood
+    @mech2 damageMucosa NSAID GITract
+    @warning contraindicatedCombination Warfarin NSAID
+    @chain Implies (And @drug1 @drug2 @mech1 @mech2) (And @interaction @warning)
+    return @chain
+end
+
+@:Statin_Fibrate_Interaction graph Statin Fibrate MyopathyRisk
+    @drug1 isDrugClass Statin Lipid
+    @drug2 isDrugClass Fibrate Lipid
+    @interaction increasesRisk CombinedUse Myopathy
+    @severe canCause MyopathySevere Rhabdomyolysis
+    @monitor requiresMonitoring StatinFibrate CPK
+    @chain Implies (And @drug1 @drug2 @interaction) (And @severe @monitor)
+    return @chain
+end
+
+@:ACEInhibitor_Potassium_Interaction graph ACE Potassium Hyperkalemia
+    @drug isDrugClass ACEInhibitor Cardiovascular
+    @supplement isElectrolyte PotassiumSupplement Mineral
+    @interaction increasesRisk CombinedUse Hyperkalemia
+    @mech decreasesExcretion ACEInhibitor Potassium
+    @monitor requiresMonitoring ACE_Potassium SerumPotassium
+    @chain Implies (And @drug @supplement @mech) (And @interaction @monitor)
+    return @chain
+end
+
+@:SSRI_MAOI_Interaction graph SSRI MAOI SerotoninSyndrome
+    @drug1 isDrugClass SSRI Antidepressant
+    @drug2 isDrugClass MAOI Antidepressant
+    @interaction causesRisk CombinedUse SerotoninSyndrome
+    @severe isSevere SerotoninSyndrome LifeThreatening
+    @contraindication absoluteContraindication SSRI MAOI
+    @washout requiresWashoutPeriod MAOI TwoWeeks
+    @chain Implies (And @drug1 @drug2) (And @interaction @severe @contraindication @washout)
+    return @chain
+end
+
+// ============================================================================
+// DIAGNOSTIC PROCEDURES
+// ============================================================================
+
+@:Echocardiography graph Echo Heart ValveFunction
+    @proc isDiagnosticProcedure Echocardiography Cardiac
+    @method usesUltrasound Echocardiography Heart
+    @assesses evaluates Echo CardiacFunction
+    @detects visualizes Echo ValveAbnormality
+    @indication indicatedFor Echo HeartFailure
+    @noninvasive isNoninvasive Echocardiography Safe
+    @chain Implies (And @proc @method) (And @assesses @detects @indication @noninvasive)
+    return @chain
+end
+
+@:CT_Scan graph CT_Procedure Imaging CrossSectional
+    @proc isDiagnosticProcedure CTScan Radiology
+    @method usesRadiation CTScan XRay
+    @produces creates CTScan CrossSectionalImages
+    @detects identifies CTScan Pathology
+    @risk exposesTo CTScan Radiation
+    @contrast mayRequireContrast CTScan IVContrast
+    @chain Implies (And @proc @method @produces) (And @detects @risk @contrast)
+    return @chain
+end
+
+@:MRI_Scan graph MRI_Procedure Magnetic SoftTissue
+    @proc isDiagnosticProcedure MRI Radiology
+    @method usesMagneticField MRI Imaging
+    @produces creates MRI DetailedImages
+    @best excellentFor MRI SoftTissue
+    @safe noRadiation MRI Safer
+    @contraindication contraindicatedWith MRI MetalImplants
+    @chain Implies (And @proc @method @produces) (And @best @safe @contraindication)
+    return @chain
+end
+
+@:Colonoscopy graph Colonoscopy_Proc Colon PolypsDetection
+    @proc isDiagnosticProcedure Colonoscopy GI
+    @method usesEndoscope Colonoscopy Colon
+    @detects visualizes Colonoscopy Polyps
+    @therapeutic canRemove Colonoscopy Polyps
+    @screening indicatedForScreening Colonoscopy ColorectalCancer
+    @prep requiresPreparation Colonoscopy BowelPrep
+    @chain Implies (And @proc @method) (And @detects @therapeutic @screening @prep)
+    return @chain
+end
+
+@:Electrocardiogram graph ECG_Test Heart ElectricalActivity
+    @proc isDiagnosticTest ECG Cardiac
+    @method recordsElectrical ECG HeartActivity
+    @detects identifies ECG ArrhythmiaAbnormality
+    @indication indicatedFor ECG ChestPain
+    @quick isQuick ECG Noninvasive
+    @chain Implies (And @proc @method) (And @detects @indication @quick)
+    return @chain
+end
+
+@:Blood_Culture graph BloodCulture_Test Sepsis PathogenIdentification
+    @proc isDiagnosticTest BloodCulture Microbiology
+    @method cultures BloodCulture Blood
+    @detects identifies BloodCulture Bacteremia
+    @indication indicatedFor BloodCulture Sepsis
+    @guides determinesTreatment BloodCulture AntibioticChoice
+    @chain Implies (And @proc @method @detects) (And @indication @guides)
+    return @chain
+end
+
+@:Lumbar_Puncture graph LP_Procedure CSF Meningitis
+    @proc isDiagnosticProcedure LumbarPuncture Neurology
+    @method obtainsSample LumbarPuncture CSF
+    @analyzes examines CSF Cells
+    @indication indicatedFor LumbarPuncture Meningitis
+    @risk hasRisk LumbarPuncture Headache
+    @contraindication contraindicatedWith LumbarPuncture IncreasedICP
+    @chain Implies (And @proc @method @analyzes) (And @indication @risk @contraindication)
+    return @chain
+end
+
+// ============================================================================
+// SURGICAL PROCEDURES
+// ============================================================================
+
+@:Coronary_Artery_Bypass graph CABG Coronary Revascularization
+    @proc isSurgicalProcedure CABG Cardiac
+    @purpose bypassesBlockage CABG CoronaryArtery
+    @indication indicatedFor CABG SevereCAD
+    @method usesGraft CABG VeinArtery
+    @outcome improves CABG BloodFlow
+    @risk hasRisk CABG Stroke
+    @chain Implies (And @proc @purpose @method) (And @indication @outcome @risk)
+    return @chain
+end
+
+@:Appendectomy graph Appendectomy_Surgery Appendix Peritonitis
+    @proc isSurgicalProcedure Appendectomy General
+    @purpose removes Appendectomy InflamedAppendix
+    @indication indicatedFor Appendectomy Appendicitis
+    @urgent isUrgent Appendectomy Emergency
+    @risk preventsComplication Appendectomy Peritonitis
+    @chain Implies (And @proc @purpose @indication @urgent) @risk
+    return @chain
+end
+
+@:Hip_Replacement graph HipReplacement_Surgery Joint Prosthesis
+    @proc isSurgicalProcedure HipReplacement Orthopedic
+    @purpose replaces HipReplacement HipJoint
+    @indication indicatedFor HipReplacement Osteoarthritis
+    @method uses HipReplacement Prosthesis
+    @outcome improves HipReplacement Mobility
+    @recovery requiresRehabilitation HipReplacement PhysicalTherapy
+    @chain Implies (And @proc @purpose @method) (And @indication @outcome @recovery)
+    return @chain
+end
+
+@:Thyroidectomy graph Thyroidectomy_Surgery ThyroidGland Hormone
+    @proc isSurgicalProcedure Thyroidectomy Endocrine
+    @purpose removes Thyroidectomy ThyroidGland
+    @indication indicatedFor Thyroidectomy ThyroidCancer
+    @indication2 indicatedFor Thyroidectomy Hyperthyroidism
+    @consequence requiresLifelong Thyroidectomy LevothyroxineReplacement
+    @risk hasRisk Thyroidectomy HypoparathyroidismRecurrentLaryngealNerve
+    @chain Implies (And @proc @purpose) (And @indication @indication2 @consequence @risk)
+    return @chain
+end
+
+@:Nephrectomy graph Nephrectomy_Surgery Kidney Tumor
+    @proc isSurgicalProcedure Nephrectomy Urologic
+    @purpose removes Nephrectomy Kidney
+    @indication indicatedFor Nephrectomy RenalCellCarcinoma
+    @indication2 indicatedFor Nephrectomy NonFunctioningKidney
+    @outcome canBeCurative Nephrectomy LocalizedCancer
+    @note remainingKidney Nephrectomy AdequateFunction
+    @chain Implies (And @proc @purpose) (And @indication @indication2 @outcome @note)
+    return @chain
+end
+
+// ============================================================================
+// HEALTHCARE ROLES AND SPECIALTIES
+// ============================================================================
+
+@:Cardiologist graph Cardiologist Heart Specialist
+    @role isSpecialist Cardiologist Cardiology
+    @expertise specializesIn Cardiologist HeartDisease
+    @procedures performs Cardiologist Echocardiography
+    @procedures2 performs Cardiologist CardiacCatheterization
+    @treats managesCondition Cardiologist HeartFailure
+    @treats2 managesCondition Cardiologist Arrhythmia
+    @chain Implies (And @role @expertise) (And @procedures @procedures2 @treats @treats2)
+    return @chain
+end
+
+@:Pulmonologist graph Pulmonologist Lung Respiratory
+    @role isSpecialist Pulmonologist Pulmonology
+    @expertise specializesIn Pulmonologist LungDisease
+    @procedures performs Pulmonologist Bronchoscopy
+    @treats managesCondition Pulmonologist Asthma
+    @treats2 managesCondition Pulmonologist COPD
+    @treats3 managesCondition Pulmonologist PulmonaryFibrosis
+    @chain Implies (And @role @expertise) (And @procedures @treats @treats2 @treats3)
+    return @chain
+end
+
+@:Neurologist graph Neurologist Brain NervousSystem
+    @role isSpecialist Neurologist Neurology
+    @expertise specializesIn Neurologist NeurologicalDisorders
+    @procedures interprets Neurologist EEG
+    @treats managesCondition Neurologist Epilepsy
+    @treats2 managesCondition Neurologist Stroke
+    @treats3 managesCondition Neurologist Parkinsons
+    @chain Implies (And @role @expertise) (And @procedures @treats @treats2 @treats3)
+    return @chain
+end
+
+@:Gastroenterologist graph Gastroenterologist Digestive GI
+    @role isSpecialist Gastroenterologist Gastroenterology
+    @expertise specializesIn Gastroenterologist DigestiveSystem
+    @procedures performs Gastroenterologist Colonoscopy
+    @procedures2 performs Gastroenterologist Endoscopy
+    @treats managesCondition Gastroenterologist IBD
+    @treats2 managesCondition Gastroenterologist Cirrhosis
+    @chain Implies (And @role @expertise) (And @procedures @procedures2 @treats @treats2)
+    return @chain
+end
+
+@:Endocrinologist graph Endocrinologist Hormone Gland
+    @role isSpecialist Endocrinologist Endocrinology
+    @expertise specializesIn Endocrinologist HormoneDisorders
+    @treats managesCondition Endocrinologist Diabetes
+    @treats2 managesCondition Endocrinologist ThyroidDisease
+    @treats3 managesCondition Endocrinologist AdrenalDisorders
+    @chain Implies (And @role @expertise) (And @treats @treats2 @treats3)
+    return @chain
+end
+
+@:Nephrologist graph Nephrologist Kidney Renal
+    @role isSpecialist Nephrologist Nephrology
+    @expertise specializesIn Nephrologist KidneyDisease
+    @treats managesCondition Nephrologist CKD
+    @treats2 managesCondition Nephrologist AKI
+    @procedures oversees Nephrologist Dialysis
+    @chain Implies (And @role @expertise) (And @treats @treats2 @procedures)
+    return @chain
+end
+
+@:Hematologist graph Hematologist Blood Hematology
+    @role isSpecialist Hematologist Hematology
+    @expertise specializesIn Hematologist BloodDisorders
+    @treats managesCondition Hematologist Anemia
+    @treats2 managesCondition Hematologist Leukemia
+    @treats3 managesCondition Hematologist Hemophilia
+    @procedures interprets Hematologist BoneMarrowBiopsy
+    @chain Implies (And @role @expertise) (And @treats @treats2 @treats3 @procedures)
+    return @chain
+end
+
+@:Oncologist graph Oncologist Cancer Malignancy
+    @role isSpecialist Oncologist Oncology
+    @expertise specializesIn Oncologist Cancer
+    @treats prescribes Oncologist Chemotherapy
+    @treats2 coordinates Oncologist RadiationTherapy
+    @manages providesCareTo Oncologist CancerPatients
+    @chain Implies (And @role @expertise) (And @treats @treats2 @manages)
+    return @chain
+end
+
+@:Infectious_Disease_Specialist graph ID_Specialist Infection Antimicrobial
+    @role isSpecialist InfectiousDiseaseSpecialist ID
+    @expertise specializesIn InfectiousDiseaseSpecialist Infections
+    @treats managesCondition InfectiousDiseaseSpecialist Sepsis
+    @treats2 managesCondition InfectiousDiseaseSpecialist HIV
+    @treats3 managesCondition InfectiousDiseaseSpecialist Tuberculosis
+    @advises provides InfectiousDiseaseSpecialist AntimicrobialStewardship
+    @chain Implies (And @role @expertise) (And @treats @treats2 @treats3 @advises)
+    return @chain
+end
+
+@:Emergency_Medicine_Physician graph EM_Physician Emergency Acute
+    @role isPhysician EmergencyMedicinePhysician EM
+    @expertise specializesIn EmergencyMedicinePhysician AcuteCare
+    @setting worksIn EmergencyMedicinePhysician EmergencyDepartment
+    @manages triages EmergencyMedicinePhysician Patients
+    @treats stabilizes EmergencyMedicinePhysician LifeThreateningConditions
+    @chain Implies (And @role @expertise @setting) (And @manages @treats)
+    return @chain
+end
+
+// ============================================================================
+// ADDITIONAL COMPLEX MEDICAL RELATIONSHIPS
+// ============================================================================
+
+@:Diabetes_Complications graph Diabetes_Longterm Retinopathy Neuropathy
+    @condition isChronicDisease Diabetes Metabolic
+    @compl1 causesComplication Diabetes DiabeticRetinopathy
+    @compl2 causesComplication Diabetes DiabeticNeuropathy
+    @compl3 causesComplication Diabetes DiabeticNephropathy
+    @path damagesBloodVessels Hyperglycemia Microvasculature
+    @prevention preventedBy GlycemicControl Complications
+    @screen requiresScreening Diabetes RegularEyeExam
+    @chain Implies (And @condition @path) (And @compl1 @compl2 @compl3 @prevention @screen)
+    return @chain
+end
+
+@:Metabolic_Syndrome graph MetSyn Insulin CVD
+    @syndrome isCluster MetabolicSyndrome RiskFactors
+    @component includes MetabolicSyndrome Obesity
+    @component2 includes MetabolicSyndrome Hypertension
+    @component3 includes MetabolicSyndrome Dyslipidemia
+    @component4 includes MetabolicSyndrome InsulinResistance
+    @risk increasesRisk MetabolicSyndrome Type2Diabetes
+    @risk2 increasesRisk MetabolicSyndrome CardiovascularDisease
+    @manage requiresManagement MetabolicSyndrome LifestyleModification
+    @chain Implies (And @syndrome @component @component2 @component3 @component4) (And @risk @risk2 @manage)
+    return @chain
+end
+
+@:Acute_Coronary_Syndrome graph ACS STEMI NSTEMI
+    @syndrome isSpectrum AcuteCoronarySyndrome CardiacIschemia
+    @type1 includes ACS STEMI
+    @type2 includes ACS NSTEMI
+    @type3 includes ACS UnstableAngina
+    @path causedByRupture AtheroscleroticPlaque Thrombosis
+    @urgent requiresUrgent ACS Revascularization
+    @treat requiresTreatment ACS Antiplatelet
+    @chain Implies (And @syndrome @type1 @type2 @type3 @path) (And @urgent @treat)
+    return @chain
+end
+
+@:Shock_States graph Shock_Types Hypoperfusion Organ
+    @condition isEmergency Shock LifeThreatening
+    @type1 includesType Shock Hypovolemic
+    @type2 includesType Shock Cardiogenic
+    @type3 includesType Shock Distributive
+    @type4 includesType Shock Obstructive
+    @path causesInadequate Shock TissuePerfusion
+    @result leadsTo Shock OrganFailure
+    @treat requiresImmediate Shock Resuscitation
+    @chain Implies (And @condition @type1 @type2 @type3 @type4 @path) (And @result @treat)
+    return @chain
+end
+
+@:Pneumonia_Types graph Pneumonia_Classification CAP HAP
+    @infection isInfection Pneumonia LungParenchyma
+    @type1 classifiedAs Pneumonia CommunityAcquired
+    @type2 classifiedAs Pneumonia HospitalAcquired
+    @type3 classifiedAs Pneumonia VentilatorAssociated
+    @pathogen1 commonlyBy CAP Streptococcus
+    @pathogen2 commonlyBy HAP Pseudomonas
+    @severity assessedBy Pneumonia CURB65
+    @treat requiresTreatment Pneumonia EmpiricalAntibiotic
+    @chain Implies (And @infection @type1 @type2 @type3) (And @pathogen1 @pathogen2 @severity @treat)
+    return @chain
+end
+
+@:Renal_Replacement_Therapy graph RRT Dialysis ESRD
+    @therapy isTherapy RenalReplacementTherapy LifeSustaining
+    @indication indicatedFor RRT EndStageRenalDisease
+    @modality1 includesModality RRT Hemodialysis
+    @modality2 includesModality RRT PeritonealDialysis
+    @modality3 includesModality RRT KidneyTransplant
+    @function replacesFunction RRT KidneyFunction
+    @removes eliminatesWaste RRT Toxins
+    @chain Implies (And @therapy @indication @modality1 @modality2 @modality3) (And @function @removes)
+    return @chain
+end
+
+@:Immunization_Schedule graph Vaccine Prevention Immunity
+    @intervention isPrevention Vaccination InfectiousDisease
+    @mech stimulates Vaccine ImmuneResponse
+    @result producesProtection Vaccine Antibody
+    @schedule requiresTiming Vaccine PrimaryBooster
+    @contraindication contraindicatedIn Vaccine Immunocompromised
+    @benefit preventsDisease Vaccine Infection
+    @herd contributesTo HighVaccinationRate HerdImmunity
+    @chain Implies (And @intervention @mech @result) (And @schedule @benefit @herd)
+    return @chain
+end
+
+@:Cancer_Staging graph Staging TNM Prognosis
+    @system isClassification TNM CancerStaging
+    @component1 assesses T TumorSize
+    @component2 assesses N NodeInvolvement
+    @component3 assesses M MetastasisPresence
+    @purpose determines Staging Prognosis
+    @guides informs Staging TreatmentDecision
+    @standard usedUniversally TNM Oncology
+    @chain Implies (And @system @component1 @component2 @component3) (And @purpose @guides @standard)
+    return @chain
+end
+
+@:Antibiotic_Resistance graph Resistance Overuse MRSA
+    @problem isPublicHealth AntibioticResistance GlobalThreat
+    @cause causedBy Resistance AntibioticOveruse
+    @mech developsThrough Bacteria Mutation
+    @example includes Resistance MRSA
+    @example2 includes Resistance VRE
+    @example3 includes Resistance MDR_TB
+    @solution requires Resistance AntimicrobialStewardship
+    @prevention reducedBy Resistance AppropriateUse
+    @chain Implies (And @problem @cause @mech @example @example2 @example3) (And @solution @prevention)
+    return @chain
+end
+
+@:Palliative_Care graph Palliative Terminal QualityOfLife
+    @approach isCare PalliativeCare Holistic
+    @focus focusesOn PalliativeCare SymptomManagement
+    @goal improves PalliativeCare QualityOfLife
+    @provides addresses PalliativeCare Pain
+    @provides2 addresses PalliativeCare PsychologicalDistress
+    @appropriate indicatedFor PalliativeCare TerminalIllness
+    @team involvesInterdisciplinary PalliativeCare Team
+    @chain Implies (And @approach @focus @appropriate) (And @goal @provides @provides2 @team)
+    return @chain
+end
+
+// ============================================================================
+// ADDITIONAL DISEASES AND CONDITIONS
+// ============================================================================
+
+@:Osteoporosis graph BoneDensityLoss Osteoporosis Bisphosphonate
+    @condition isMetabolicBoneDisease Osteoporosis Skeletal
+    @path causedByDecreased BoneDensity Mineralization
+    @risk riskFactor Menopause Osteoporosis
+    @risk2 riskFactor Aging Osteoporosis
+    @complication increasesRisk Osteoporosis Fracture
+    @screen diagnosedBy Osteoporosis DEXAScan
+    @treat requiresTreatment Osteoporosis Bisphosphonate
+    @prevent requiresAdequate Osteoporosis CalciumVitaminD
+    @chain Implies (And @condition @path @risk @complication) (And @screen @treat @prevent)
+    return @chain
+end
+
+@:Glaucoma graph IntraocularPressure Glaucoma VisionLoss
+    @condition isEyeDisease Glaucoma OpticNerve
+    @path causedByIncreased IntraocularPressure Damage
+    @result leadsToDamage Glaucoma OpticNerve
+    @consequence causesProgressive Glaucoma VisionLoss
+    @screen requiresScreening Glaucoma Tonometry
+    @treat requiresTreatment Glaucoma EyeDrops
+    @urgent requiresEmergency AcuteGlaucoma Surgery
+    @chain Implies (And @condition @path @result @consequence) (And @screen @treat @urgent)
+    return @chain
+end
+
+@:Gout graph Hyperuricemia Gout Allopurinol
+    @condition isInflammatory Gout Arthritis
+    @path causedByDeposition UricAcidCrystals Joint
+    @risk riskFactor Hyperuricemia Gout
+    @sym presentsAsAcute Gout PainfulJoint
+    @location commonlyAffects Gout GreatToe
+    @acute treatAcuteWith Gout NSAIDColchicine
+    @chronic preventWithLongterm Gout Allopurinol
+    @lifestyle requiresModification Gout DietAlcohol
+    @chain Implies (And @condition @path @risk @sym) (And @acute @chronic @lifestyle)
+    return @chain
+end
+
+@:Schizophrenia graph Psychosis Schizophrenia Antipsychotic
+    @condition isPsychiatricDisorder Schizophrenia Psychotic
+    @sym presentsSymptom Patient Hallucinations
+    @sym2 presentsSymptom Patient Delusions
+    @sym3 presentsSymptom Patient DisorganizedThought
+    @path causedByDysfunction Schizophrenia DopaminePathway
+    @chronic isChronic Schizophrenia Lifelong
+    @treat requiresTreatment Schizophrenia Antipsychotic
+    @support requiresSupport Schizophrenia Psychosocial
+    @chain Implies (And @condition @sym @sym2 @sym3 @path @chronic) (And @treat @support)
+    return @chain
+end
+
+@:Depression graph MajorDepression Anhedonia SSRI
+    @condition isPsychiatricDisorder Depression Mood
+    @sym presentsSymptom Patient DepressedMood
+    @sym2 presentsSymptom Patient Anhedonia
+    @sym3 presentsSymptom Patient FatigueSymptom
+    @path causedByImbalance Depression Neurotransmitters
+    @duration persistsForWeeks Depression TwoWeeks
+    @treat requiresTreatment Depression SSRI
+    @therapy benefitsFrom Depression Psychotherapy
+    @chain Implies (And @condition @sym @sym2 @sym3 @path @duration) (And @treat @therapy)
+    return @chain
+end
+
+@:Bipolar_Disorder graph Mania Bipolar MoodStabilizer
+    @condition isPsychiatricDisorder BipolarDisorder Mood
+    @episode1 hasEpisodes BipolarDisorder ManicEpisode
+    @episode2 hasEpisodes BipolarDisorder DepressiveEpisode
+    @sym presentsInManic BipolarDisorder Euphoria
+    @sym2 presentsInManic BipolarDisorder DecreasedSleep
+    @path causedByDysfunction BipolarDisorder MoodRegulation
+    @treat requiresTreatment BipolarDisorder MoodStabilizer
+    @monitor requiresMonitoring BipolarDisorder LithiumLevel
+    @chain Implies (And @condition @episode1 @episode2 @sym @sym2) (And @treat @monitor)
+    return @chain
+end
+
+@:Anaphylaxis graph SevereAllergy Anaphylaxis Epinephrine
+    @condition isSevereReaction Anaphylaxis Hypersensitivity
+    @sym presentsSymptom Patient Urticaria
+    @sym2 presentsSymptom Patient Angioedema
+    @sym3 presentsSymptom Patient Bronchospasm
+    @severe isSevere Anaphylaxis LifeThreatening
+    @path causedByRapid Anaphylaxis HistamineRelease
+    @emergency requiresImmediate Anaphylaxis Epinephrine
+    @route administeredBy Epinephrine IM
+    @chain Implies (And @condition @sym @sym2 @sym3 @severe @path) (And @emergency @route)
+    return @chain
+end
+
+@:Hypothyroidism_Severe graph MyxedemaGoma Hypothyroidism_Critical ICU
+    @condition isSevereForm MyxedemaComa Hypothyroidism
+    @sym presentsSymptom Patient Hypothermia
+    @sym2 presentsSymptom Patient AlteredMentalStatus
+    @sym3 presentsSymptom Patient Bradycardia
+    @severe isSevere MyxedemaComa LifeThreatening
+    @emergency requiresICU MyxedemaComa IVLevothyroxine
+    @support requiresSupport MyxedemaComa Warming
+    @chain Implies (And @condition @sym @sym2 @sym3 @severe) (And @emergency @support)
+    return @chain
+end
+
+@:Pericarditis graph ChestPain_Pleuritic Pericarditis NSAID_Treatment
+    @condition isInflammation Pericarditis Pericardium
+    @sym presentsSymptom Patient PleuriticChestPain
+    @sym2 improvedBy ChestPain LeaningForward
+    @finding hasAuscultation Pericarditis PericardialFrictionRub
+    @test showsChanges ECG STElevation
+    @treat requiresTreatment Pericarditis NSAID
+    @treat2 mayRequireTreatment Pericarditis Colchicine
+    @chain Implies (And @condition @sym @sym2 @finding @test) (And @treat @treat2)
+    return @chain
+end
+
+@:Chronic_Liver_Disease graph Portal_Hypertension Cirrhosis Varices
+    @condition hasComplication Cirrhosis PortalHypertension
+    @path causedByIncreased PortalPressure Resistance
+    @compl1 leadsToDevelopment PortalHypertension EsophagealVarices
+    @compl2 leadsToDevelopment PortalHypertension Ascites
+    @compl3 leadsToDevelopment PortalHypertension Splenomegaly
+    @risk increasesRisk EsophagealVarices Bleeding
+    @treat requiresTreatment EsophagealVarices BetaBlockerBandLigation
+    @chain Implies (And @condition @path @compl1 @compl2 @compl3 @risk) @treat
+    return @chain
+end
+
+@:Adrenal_Crisis graph Acute_Adrenal Cortisol_Deficiency Hydrocortisone_IV
+    @condition isEmergency AdrenalCrisis LifeThreatening
+    @path causedByAcute Cortisol DeficiencySevere
+    @sym presentsSymptom Patient SevereHypotension
+    @sym2 presentsSymptom Patient Shock
+    @sym3 presentsSymptom Patient AlteredMentalStatus
+    @trigger triggeredBy Stress InfectionSurgery
+    @emergency requiresImmediate AdrenalCrisis IVHydrocortisone
+    @support requiresSupport AdrenalCrisis IVFluidsElectrolytes
+    @chain Implies (And @condition @path @sym @sym2 @sym3 @trigger) (And @emergency @support)
+    return @chain
+end
+
+@:Diabetic_Ketoacidosis graph DKA_Acidosis Insulin_Deficiency IV_Insulin
+    @condition isEmergency DiabeticKetoacidosis LifeThreatening
+    @path causedByAbsolute InsulinDeficiency Ketosis
+    @lab showsElevated DKA BloodGlucose
+    @lab2 showsElevated DKA Ketones
+    @lab3 shows DKA MetabolicAcidosis
+    @sym presentsSymptom Patient KussmaulsRespiration
+    @treat requiresImmediateTreatment DKA IVInsulin
+    @support requiresSupport DKA IVFluidsElectrolytes
+    @chain Implies (And @condition @path @lab @lab2 @lab3 @sym) (And @treat @support)
+    return @chain
+end
+
+@:Acute_Respiratory_Distress_Syndrome graph ARDS Hypoxemia MechanicalVentilation
+    @condition isCriticalCondition ARDS LifeThreatening
+    @path causedByInflammation AlveolarCapillary Membrane
+    @result leadsToDysfunction ARDS GasExchange
+    @sym presentsSymptom Patient SevereHypoxemia
+    @sym2 presentsSymptom Patient BilateralInfiltrates
+    @cause triggeredBy Sepsis Pneumonia
+    @treat requiresTreatment ARDS MechanicalVentilation
+    @strategy uses ARDS LowTidalVolume
+    @chain Implies (And @condition @path @result @sym @sym2 @cause) (And @treat @strategy)
+    return @chain
+end
+
+@:Myasthenia_Gravis graph Muscle_Weakness_Fluctuating MG Pyridostigmine
+    @condition isAutoimmune MyastheniaGravis NeuromuscularJunction
+    @path causedByAntibodies AChReceptor BlockingDestruction
+    @sym presentsSymptom Patient FluctuatingWeakness
+    @sym2 presentsSymptom Patient Ptosis
+    @sym3 presentsSymptom Patient Diplopia
+    @worse worsensWithActivity Weakness Fatigue
+    @test diagnosedBy MyastheniaGravis TensilonTest
+    @treat requiresTreatment MyastheniaGravis Pyridostigmine
+    @crisis hasEmergency MyastheniaGravis MyasthenicCrisis
+    @chain Implies (And @condition @path @sym @sym2 @sym3 @worse @test) (And @treat @crisis)
+    return @chain
+end
+
+@:Guillain_Barre_Syndrome graph Ascending_Paralysis GBS IVIG
+    @condition isAutoimmune GuillainBarreSyndrome PeripheralNerves
+    @path causedByDemyelination PeripheralNerves Antibodies
+    @sym presentsSymptom Patient AscendingParalysis
+    @sym2 presentsSymptom Patient AreflexiaDimished
+    @preceded oftenprecededBy GBS ViralInfection
+    @severe canCauseRespiratory GBS Failure
+    @treat requiresTreatment GBS IVIG
+    @treat2 requiresTreatment GBS Plasmapheresis
+    @monitor requiresMonitoring GBS RespiratoryFunction
+    @chain Implies (And @condition @path @sym @sym2 @preceded @severe) (And @treat @treat2 @monitor)
+    return @chain
+end
+
+@:Diverticulitis graph Abdominal_Pain_LLQ Diverticulitis Antibiotic_Bowel
+    @condition isInflammation Diverticulitis Diverticula
+    @path causedByInfection Diverticulum Bacteria
+    @sym presentsSymptom Patient LLQPain
+    @sym2 presentsSymptom Patient Fever
+    @complication canCausePerforation Diverticulitis Peritonitis
+    @imaging diagnosedBy Diverticulitis CTScan
+    @treat requiresTreatment Diverticulitis AntibioticBowelRest
+    @severe mayRequireSurgery ComplicatedDiverticulitis Resection
+    @chain Implies (And @condition @path @sym @sym2 @imaging) (And @treat @severe)
+    return @chain
+end
+
+@:Aortic_Dissection graph Tearing_Chest_Pain Dissection Emergency_Surgery
+    @condition isEmergency AorticDissection LifeThreatening
+    @path causedByTear AorticIntima BloodDissection
+    @risk riskFactor Hypertension AorticDissection
+    @sym presentsSymptom Patient TearingChestPain
+    @sym2 presentsSymptom Patient BackPain
+    @finding hasAsymmetry BloodPressure Arms
+    @imaging diagnosedBy AorticDissection CTAngiography
+    @treat requiresImmediate AorticDissection BetaBlockerBPControl
+    @surgery mayRequireEmergency TypeADissection Surgery
+    @chain Implies (And @condition @path @risk @sym @sym2 @finding @imaging) (And @treat @surgery)
+    return @chain
+end
+
+@:Acute_Pancreatitis_Gallstone graph Gallstone_Pancreatitis Lipase_Elevated ERCP
+    @condition isInflammation AcutePancreatitis Pancreas
+    @cause causedByObstruction Gallstone BiliaryTree
+    @lab showsElevated AcutePancreatitis Lipase
+    @lab2 showsElevated AcutePancreatitis Amylase
+    @sym presentsSymptom Patient EpigastricPain
+    @imaging showsInflammation CTAbdomen Pancreas
+    @manage requiresManagement AcutePancreatitis NPO_IVFluids
+    @proc mayRequireProcedure GallstonePancreatitis ERCP
+    @chain Implies (And @condition @cause @lab @lab2 @sym @imaging) (And @manage @proc)
+    return @chain
+end
+
+@:Pulmonary_Hypertension graph Elevated_PAP Pulmonary_HTN Sildenafil
+    @condition isCardiac PulmonaryHypertension Vascular
+    @path causedByIncreased PulmonaryArteryPressure Resistance
+    @sym presentsSymptom Patient Dyspnea
+    @sym2 presentsSymptom Patient Fatigue
+    @severe leadsToDysfunction PulmonaryHypertension RightHeartFailure
+    @imaging diagnosedBy PulmonaryHypertension Echocardiography
+    @confirm confirmedBy PulmonaryHypertension RightHeartCatheterization
+    @treat requiresTreatment PulmonaryHypertension Sildenafil
+    @treat2 mayRequireTreatment PulmonaryHypertension Prostacyclin
+    @chain Implies (And @condition @path @sym @sym2 @severe @imaging @confirm) (And @treat @treat2)
+    return @chain
+end
+
+@:Alcohol_Withdrawal graph Tremor_Agitation Withdrawal Benzodiazepine
+    @condition isWithdrawalSyndrome AlcoholWithdrawal Alcohol
+    @path causedByCessation ChronicAlcoholUse Sudden
+    @sym presentsSymptom Patient Tremor
+    @sym2 presentsSymptom Patient Agitation
+    @sym3 presentsSymptom Patient Diaphoresis
+    @severe canProgressTo AlcoholWithdrawal DeliriumTremens
+    @lifeThreat isSevere DeliriumTremens LifeThreatening
+    @treat requiresTreatment AlcoholWithdrawal Benzodiazepine
+    @monitor requiresMonitoring AlcoholWithdrawal CIWA_Score
+    @chain Implies (And @condition @path @sym @sym2 @sym3 @severe @lifeThreat) (And @treat @monitor)
+    return @chain
+end
+
+@:Preeclampsia graph Hypertension_Pregnancy Preeclampsia Magnesium_Sulfate
+    @condition isPregnancyComplication Preeclampsia Hypertensive
+    @path causedByDysfunction Placenta VascularDevelopment
+    @sym presentsAfter Preeclampsia TwentyWeeksGestation
+    @sym2 presentsSymptom Patient ProteinuriaPregnancy
+    @sym3 presentsSymptom Patient HypertensionPregnancy
+    @severe canProgressTo Preeclampsia Eclampsia
+    @treat requiresTreatment Preeclampsia MagnesiumSulfate
+    @definitive isCuredBy Preeclampsia Delivery
+    @chain Implies (And @condition @path @sym @sym2 @sym3 @severe) (And @treat @definitive)
+    return @chain
+end
+
+@:Sickle_Cell_Crisis graph Vaso_Occlusive_Pain SCD Hydration_Analgesic
+    @condition isAcuteComplication SickleCellCrisis SickleCellDisease
+    @path causedByOcclusion Microvasculature SickledRBCs
+    @trigger triggeredBy Dehydration Infection
+    @sym presentsSymptom Patient SevereBodyPain
+    @organ canCauseDamage SickleCellCrisis Organs
+    @manage requiresManagement SickleCellCrisis AggressiveHydration
+    @treat requiresPainControl SickleCellCrisis Opioids
+    @exchange mayRequireProcedure SevereVasoOcclusiveCrisis ExchangeTransfusion
+    @chain Implies (And @condition @path @trigger @sym @organ) (And @manage @treat @exchange)
+    return @chain
+end

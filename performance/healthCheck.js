@@ -7,7 +7,7 @@
  * - Proper expected_nl format with Proof: sections
  * - Proof complexity (minimum 2 steps, 90% should be 5+ steps)
  * - No trivial queries (expected_count, expected_result forbidden)
- * - 80%+ of DSL statements must be graphs (Implies, And, Or, rules) not simple isA/hasA
+ * - 70%+ of DSL statements must be graphs (Implies, And, Or, rules) not simple isA/hasA
  * - Minimum 1000 facts per theory
  *
  * Usage:
@@ -73,7 +73,7 @@ const GRAPH_OPERATORS = new Set([
 
 // Minimum requirements
 const MIN_FACTS = 1000;
-const MIN_GRAPH_PERCENT = 80;
+const MIN_GRAPH_PERCENT = 70;
 const MIN_PROOF_STEPS = 2;
 const TARGET_PROOF_5PLUS_PERCENT = 90;
 

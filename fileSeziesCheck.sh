@@ -143,15 +143,61 @@ if [[ ${#md_files[@]} -gt 0 ]]; then
   render_category "Markdown Files" md_rows
 fi
 
-# JS section last (cele mai importante)
+# JS section last (cele mai importante) - grupate pe folder din rădăcină
 if [[ ${#js_files[@]} -gt 0 ]]; then
+  # Extrage toate folder-urile unice din rădăcină
+  declare -A root_folders
+  for file in "${js_files[@]}"; do
+    # Extrage primul folder după ./
+    root_folder=$(echo "$file" | sed 's|^\./||' | cut -d'/' -f1)
+    # Dacă e fișier direct în rădăcină, folosește "(root)"
+    if [[ "$root_folder" == *.js || "$root_folder" == *.mjs ]]; then
+      root_folder="(root)"
+    fi
+    root_folders["$root_folder"]=1
+  done
+
+  # Sortează folder-urile, dar pune src la final
+  sorted_folders=()
+  for folder in "${!root_folders[@]}"; do
+    if [[ "$folder" != "src" ]]; then
+      sorted_folders+=("$folder")
+    fi
+  done
+  # Sortează alfabetic
+  IFS=$'\n' sorted_folders=($(sort <<<"${sorted_folders[*]}")); unset IFS
+  # Adaugă src la final dacă există
+  if [[ -v root_folders["src"] ]]; then
+    sorted_folders+=("src")
+  fi
+
+  # Pentru fiecare folder, afișează fișierele grupate
+  for folder in "${sorted_folders[@]}"; do
+    folder_files=()
+    for file in "${js_files[@]}"; do
+      file_root=$(echo "$file" | sed 's|^\./||' | cut -d'/' -f1)
+      if [[ "$file_root" == *.js || "$file_root" == *.mjs ]]; then
+        file_root="(root)"
+      fi
+      if [[ "$file_root" == "$folder" ]]; then
+        folder_files+=("$file")
+      fi
+    done
+
+    if [[ ${#folder_files[@]} -gt 0 ]]; then
+      folder_js_output=$(printf '%s\0' "${folder_files[@]}" | xargs -0 wc -l | sort -n)
+      folder_total=$(echo "$folder_js_output" | tail -n 1 | awk '{print $1}')
+      mapfile -t folder_rows < <(echo "$folder_js_output" | sed '$d')
+      render_category "JS Files [$folder] (total: $folder_total lines)" folder_rows
+    fi
+  done
+
+  # Calculează totalul JS
   js_lines_output=$(printf '%s\0' "${js_files[@]}" | xargs -0 wc -l | sort -n)
   total_js_lines_raw=$(echo "$js_lines_output" | tail -n 1 | awk '{print $1}')
   if [[ -n "$total_js_lines_raw" ]]; then
     total_js_lines=$total_js_lines_raw
   fi
-  mapfile -t js_rows < <(echo "$js_lines_output" | sed '$d')
-  render_category "JS Files" js_rows
 fi
 
 echo "--- Summary ---"

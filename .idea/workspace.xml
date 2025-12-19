@@ -5,74 +5,63 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="working to refactor the resonign engine for deeper semantic unification to make use of HDC properties better. wip">
-      <change afterPath="$PROJECT_DIR$/config/Core/13-canonicalization.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Core/14-constraints.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS19-Semantic-Unification.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/semantic_unification_implementation_plan.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/healthCheck.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/lib/loader.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/lib/reporter.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/lib/runner.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/run.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/biology/eval.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/biology/theory.dsl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/biology/theory.nl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/biology/theory.simple.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/math/eval.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/math/theory.dsl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/math/theory.nl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/math/theory.simple.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/proof-validator.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/canonicalize.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/execution-error.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/executor-graphs.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/executor-io.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/executor-metadata.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/executor-resolve.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/executor-rules.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/semantic-index.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/session-contradictions.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/session-core-load.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/session-inspection.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/session-learn.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/session-prove.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/session-query.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/session-rules.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/session-stats.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/holographic-proof.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/proof-validator.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/rule-proof-validator.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/canonicalize.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/contradictions-from-theory.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/load-core.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/semantic-index.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-canonicalization.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-dual-engine-consistency.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-proof-schema.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/anthropology/eval.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/anthropology/theory.dsl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/anthropology/theory.nl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/anthropology/theory.simple.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/geography/eval.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/geography/theory.dsl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/geography/theory.nl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/geography/theory.simple.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/history/eval.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/history/theory.dsl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/history/theory.nl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/history/theory.simple.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/law/eval.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/law/theory.dsl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/law/theory.nl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/law/theory.simple.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/literature/eval.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/literature/theory.dsl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/literature/theory.nl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/literature/theory.simple.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/medicine/eval.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/medicine/theory.dsl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/medicine/theory.nl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/medicine/theory.simple.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/philosophy/eval.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/philosophy/theory.dsl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/philosophy/theory.nl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/philosophy/theory.simple.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/physics/eval.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/physics/theory.dsl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/physics/theory.nl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/physics/theory.simple.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/sociology/eval.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/sociology/theory.dsl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/sociology/theory.nl.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/performance/theories/sociology/theory.simple.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/runtime/reasoning-profile.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/env.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/regression/hdc-strategies-smoke.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/regression/reasoning-matrix.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/holographic-rule-proof.test.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS02-DSL-Syntax.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS02-DSL-Syntax.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/performance/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/performance/benchmarks.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/performance/results/2025-12-16T08-40-24-760Z/dense-binary.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/performance/results/2025-12-16T08-40-24-760Z/fractal-semantic.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/performance/stress-limits.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/performance/theories/medical.fsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/ast.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/ast.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/lexer.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/lexer.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/component-kb.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/component-kb.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS03-Architecture.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS03-Architecture.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fileSeziesCheck.sh" beforeDir="false" afterPath="$PROJECT_DIR$/fileSeziesCheck.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/performance/healthCheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/performance/healthCheck.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/performance/theories/biology/theory.dsl.txt" beforeDir="false" afterPath="$PROJECT_DIR$/performance/theories/biology/theory.dsl.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/find-all.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/find-all.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/prove-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/prove-hdc-first.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/property-inheritance.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/property-inheritance.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/prove-search-trace.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove-search-trace.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/prove.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/transitive.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/transitive.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/executor.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session-contradictions.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-contradictions.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/component-kb.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/component-kb.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/prover.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/prover.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/contradictions-from-theory.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/contradictions-from-theory.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/session-features.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/session-features.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -525,7 +514,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766075366547</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="working to refactor the resonign engine for deeper semantic unification to make use of HDC properties better. wip">
+      <option name="closed" value="true" />
+      <created>1766151588074</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1766151588074</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

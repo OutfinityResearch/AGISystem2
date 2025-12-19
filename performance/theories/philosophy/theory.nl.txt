@@ -1,0 +1,188 @@
+Philosophy: The Study of Fundamental Questions
+
+Philosophy is the systematic study of fundamental questions about reality, knowledge, values, reason, mind, and language. It uses rigorous argumentation and critical analysis to examine the foundations of human thought and existence.
+
+LOGIC AND REASONING
+
+Logic is the study of valid inference and correct reasoning. Key principles include:
+
+- Modus Ponens: If P implies Q, and P is true, then Q must be true.
+- Modus Tollens: If P implies Q, and Q is false, then P must be false.
+- Hypothetical Syllogism: If P implies Q, and Q implies R, then P implies R.
+- Disjunctive Syllogism: If P or Q is true, and P is false, then Q must be true.
+
+The Law of Excluded Middle states that every proposition is either true or false. The Law of Non-Contradiction states that no proposition can be both true and false simultaneously.
+
+DeMorgan's Laws relate negations of conjunctions and disjunctions. The Contrapositive shows that "if P then Q" is equivalent to "if not Q then not P."
+
+A valid argument is one where the conclusion necessarily follows from the premises. A sound argument is both valid and has true premises.
+
+Logical fallacies are errors in reasoning that undermine arguments. Common fallacies include ad hominem attacks, straw man arguments, appeals to unqualified authority, false dilemmas, slippery slopes, begging the question, post hoc reasoning, bandwagon appeals, appeals to emotion, and hasty generalizations.
+
+ETHICS AND MORAL PHILOSOPHY
+
+Ethics examines questions of right and wrong, good and bad, virtue and vice.
+
+Deontological ethics, exemplified by Kant, judges actions based on adherence to moral rules and duties. Kant's Categorical Imperative states that one should act only according to maxims that could become universal laws. His Formula of Humanity requires treating people as ends in themselves, never merely as means.
+
+Utilitarian ethics, developed by Bentham and Mill, judges actions by their consequences. The principle of utility holds that actions are right insofar as they maximize happiness and minimize suffering. Act utilitarianism evaluates individual actions, while rule utilitarianism evaluates rules based on their overall utility.
+
+Virtue ethics, rooted in Aristotle, focuses on character and virtues rather than rules or consequences. Aristotle's doctrine of the mean holds that virtue lies between excess and deficiency. Eudaimonia, or human flourishing, is achieved through practicing virtues.
+
+Rights-based ethics holds that certain rights are fundamental and cannot be violated. Social contract theory grounds political legitimacy in agreements among rational people. Rawls' veil of ignorance is a thought experiment for determining just principles.
+
+Care ethics emphasizes relationships, empathy, and responding to others' needs. Divine command theory ties morality to God's commands, though the Euthyphro dilemma questions whether things are good because God commands them or God commands them because they are good.
+
+Natural law theory holds that morality derives from human nature. Moral relativism denies universal moral truths, while moral objectivism affirms them.
+
+EPISTEMOLOGY
+
+Epistemology studies the nature, sources, and limits of knowledge.
+
+The traditional analysis defines knowledge as justified true belief (JTB). However, Gettier problems show cases where someone has justified true belief without knowledge, typically due to luck.
+
+Foundationalism holds that knowledge rests on basic beliefs that are self-evident or indubitable. Coherentism instead requires that beliefs form a coherent system. Reliabilism defines justified belief as belief produced by reliable cognitive processes.
+
+Cartesian skepticism, following Descartes, questions whether we can know anything with certainty. Descartes' cogito ergo sum ("I think, therefore I am") provides a foundation resistant to skepticism.
+
+Empiricism holds that knowledge derives from sensory experience. Rationalism instead emphasizes reason and innate ideas. Kant's synthetic a priori knowledge bridges these positions.
+
+Hume's problem of induction questions whether past regularities justify expectations about the future. The principle of uniformity of nature assumes nature's laws remain constant.
+
+A priori knowledge is independent of experience, while a posteriori knowledge depends on experience. Analytic propositions are true by definition, while synthetic propositions make substantive claims about the world.
+
+METAPHYSICS
+
+Metaphysics studies the fundamental nature of reality.
+
+Questions about being and existence probe what it means for something to exist. Essence-existence debates ask whether essence precedes existence or vice versa. Sartre famously claimed that for humans, existence precedes essence.
+
+Substance is that which exists independently. Attributes and modes depend on substances. Aristotle's four causes (material, formal, efficient, final) explain why things exist and are as they are.
+
+Causation examines how one thing brings about another. Hume analyzed causation in terms of constant conjunction and habit. Determinism holds that all events are caused by prior events. Free will is the ability to choose otherwise than one actually does.
+
+Compatibilism tries to reconcile free will with determinism. Incompatibilism denies they can both be true. Hard determinism accepts determinism and rejects free will. Libertarianism affirms free will and denies universal determinism.
+
+Time's nature is debated between A-theory (tensed, with real past/present/future distinctions) and B-theory (tenseless temporal relations). Presentism holds only the present exists. Eternalism holds all times exist equally. The growing block view holds the past and present exist but not the future.
+
+Personal identity over time asks what makes someone the same person at different times. Psychological continuity emphasizes memory and character. Physical continuity emphasizes bodily continuity. The Ship of Theseus illustrates puzzles about identity through change.
+
+The mind-body problem asks how mental and physical relate. Dualism holds they are distinct substances. Monism holds there is only one kind of substance. Physicalism reduces mental to physical. Property dualism accepts physical substance but distinct mental properties.
+
+Functionalism defines mental states by their functional roles. Eliminative materialism denies folk psychology's validity. Qualia are subjective experiential qualities. The hard problem of consciousness asks why there is subjective experience at all.
+
+PHILOSOPHY OF MIND
+
+The Chinese Room argument challenges whether computers can truly understand. The Turing Test proposes behavioral criteria for intelligence. The problem of other minds asks how we know others are conscious.
+
+Intentionality is the mind's directedness toward objects. Brentano's thesis holds intentionality marks the mental. Modal concepts include necessary truths (true in all possible worlds) and contingent truths (true in some but not all possible worlds).
+
+PHILOSOPHY OF RELIGION
+
+Arguments for God's existence include the ontological argument (from the concept of God), cosmological argument (from causation), and teleological argument (from design).
+
+The problem of evil challenges how an omnipotent, omnibenevolent God can permit evil. Responses include the free will defense and soul-making theodicy.
+
+Atheism denies God's existence. Agnosticism holds God's existence is unknown or unknowable. Theism affirms God. Pantheism identifies God with the universe. Panentheism holds the universe is in God but God transcends it.
+
+Pascal's wager argues belief in God is rational given potential infinite gain.
+
+ANCIENT PHILOSOPHY
+
+Plato's theory of Forms holds that perfect, eternal Forms exist beyond the physical world, which physical things imperfectly instantiate. The Allegory of the Cave illustrates how most people mistake appearances for reality.
+
+Aristotle's hylomorphism holds that things are composites of matter and form. His unmoved mover is the first cause of all motion. Virtue as a mean between extremes guides ethical life.
+
+The Socratic method uses dialogue and questioning to pursue truth. The Socratic paradox is that knowing one knows nothing makes one wiser.
+
+Stoicism teaches focusing only on what is in our control. Apatheia (freedom from passions) brings tranquility.
+
+Epicureanism pursues pleasure, especially static pleasures of tranquility. Death is nothing to fear since we don't experience it.
+
+Skepticism suspends judgment when arguments are equally balanced, achieving tranquility through epoché.
+
+MEDIEVAL PHILOSOPHY
+
+Aquinas' Five Ways argue for God from motion, causation, contingency, degrees of perfection, and teleology. Natural law theory derives ethics from human nature.
+
+Ockham's Razor prefers simpler explanations when equally adequate.
+
+EARLY MODERN PHILOSOPHY
+
+Descartes' dualism distinguishes thinking mind from extended body. His method of doubt rejects anything doubtable. Clear and distinct ideas are guaranteed true.
+
+Spinoza's substance monism holds only one infinite substance (God or Nature) exists. Everything follows necessarily from this substance's nature.
+
+Leibniz's monadology holds reality consists of simple, non-interacting monads with pre-established harmony. This is the best of all possible worlds.
+
+Locke's empiricism holds the mind begins as a blank slate filled by experience. Primary qualities (solidity, extension) are objective; secondary qualities (color, taste) are subjective.
+
+Berkeley's idealism holds that to be is to be perceived (esse est percipi). Only minds and ideas exist.
+
+Hume's empiricism derives all ideas from impressions. The self is just a bundle of perceptions. The is-ought problem notes one cannot validly derive ought from is.
+
+Kant's Copernican revolution holds that objects conform to our minds rather than vice versa. Categories structure all experience. We can know phenomena (appearances) but not noumena (things-in-themselves).
+
+NINETEENTH CENTURY PHILOSOPHY
+
+Hegel's dialectic progresses through thesis, antithesis, and synthesis. Absolute Spirit realizes itself through history.
+
+Schopenhauer sees reality as blind, striving Will, leading to pessimism about life's suffering.
+
+Nietzsche proclaims the will to power as fundamental. Eternal recurrence tests whether one can affirm life's infinite repetition. The Übermensch creates new values after God's death. Master morality affirms; slave morality reacts.
+
+Kierkegaard emphasizes subjective truth and the leap of faith. Life progresses through aesthetic, ethical, and religious stages.
+
+Mill's harm principle limits interference to preventing harm. Higher pleasures differ qualitatively from lower ones.
+
+EXISTENTIALISM AND PHENOMENOLOGY
+
+Sartre holds that existence precedes essence for humans. Bad faith denies one's freedom and responsibility. We are condemned to be free.
+
+Camus' absurdism sees absurdity in the confrontation between human need for meaning and the universe's silence. Like Sisyphus, we can revolt and find happiness despite absurdity.
+
+Heidegger analyzes Dasein (being-there) as always being-in-the-world. Authentic existence faces being-toward-death.
+
+TWENTIETH CENTURY ANALYTIC PHILOSOPHY
+
+Wittgenstein's later philosophy holds meaning is use in language games embedded in forms of life. Private language is impossible. Concepts show family resemblances without common essences.
+
+Logical positivism's verification principle holds meaningful statements must be empirically verifiable or analytically true.
+
+Quine attacks the analytic-synthetic distinction as a dogma. Beliefs form a web adjusted holistically to experience.
+
+Popper's falsificationism holds scientific theories must be falsifiable. Kuhn describes paradigm shifts in science. Feyerabend advocates epistemological anarchism.
+
+CONTEMPORARY ETHICS AND POLITICAL PHILOSOPHY
+
+Rawls' original position uses the veil of ignorance to derive principles of justice, including the difference principle benefiting the least advantaged.
+
+Nozick's entitlement theory holds justice requires just acquisition and transfer of holdings.
+
+Singer argues sentience grounds moral consideration, extending to animals.
+
+CONTEMPORARY METAPHYSICS AND EPISTEMOLOGY
+
+Putnam's semantic externalism holds meaning ain't in the head. Kripke analyzes rigid designators. Lewis defends modal realism about possible worlds.
+
+Chalmers uses zombie arguments against physicalism. Dennett proposes multiple drafts model of consciousness. Nagel asks what it's like to be a bat, emphasizing subjective character.
+
+Parfit argues personal identity is not what matters for survival and moral responsibility.
+
+Goldman and Nozick develop causal and tracking theories of knowledge. BonJour defends coherence theory.
+
+CONTEMPORARY VALUE THEORY
+
+Williams distinguishes internal and external reasons. Korsgaard grounds normativity in self-constitution. Scanlon's contractualism bases morality on principles no one could reasonably reject.
+
+Sen and Nussbaum develop the capability approach to justice and human development.
+
+Meta-ethical views include Mackie's error theory, Moore's non-naturalism and open question argument, Ayer and Stevenson's emotivism, Hare's prescriptivism, and Blackburn's quasi-realism.
+
+APPLIED ETHICS
+
+The Trolley Problem and its variants probe intuitions about doing versus allowing harm and the doctrine of double effect.
+
+Thomson's violinist analogy addresses abortion rights. The doctrine of double effect distinguishes intended from foreseen but unintended consequences.
+
+Philosophy continues to examine fundamental questions about reality, knowledge, value, and human existence through rigorous critical analysis and argumentation.

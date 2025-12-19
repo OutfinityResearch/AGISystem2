@@ -20,6 +20,21 @@ export function checkContradiction(session, metadata) {
     }
   }
 
+  // Legacy temporal contradictions (hardcoded): before(A,B) conflicts with after(A,B).
+  if (!session?.useTheoryConstraints) {
+    if ((operator === 'before' || operator === 'after') && args.length >= 2) {
+      const oppositeOp = operator === 'before' ? 'after' : 'before';
+      for (const fact of session.kbFacts) {
+        if (fact.metadata?.operator === oppositeOp &&
+            fact.metadata.args[0] === args[0] &&
+            fact.metadata.args[1] === args[1]) {
+          return 'Warning: temporal contradiction';
+        }
+      }
+    }
+    return null;
+  }
+
   // Contradictions on same-args operator pairs (theory-driven).
   // Example: `contradictsSameArgs before after` means `before A B` conflicts with `after A B`.
   const contradictsWith = session.semanticIndex?.contradictsSameArgsWith?.(operator);

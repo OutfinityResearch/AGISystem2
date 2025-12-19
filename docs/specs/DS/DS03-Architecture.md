@@ -113,6 +113,10 @@ src/hdc/
 | `SYS2_HDC_STRATEGY` | `dense-binary` | Active HDC implementation |
 | `SYS2_GEOMETRY` | `32768` | Default vector geometry (divisible by 32) |
 | `SYS2_DEBUG` | `false` | Enable debug logging |
+| `REASONING_PRIORITY` | `symbolicPriority` | Reasoning mode: `symbolicPriority` or `holographicPriority` |
+| `SYS2_PROFILE` | derived | Reasoning profile: `legacy` (stable baseline) or `theoryDriven` (SemanticIndex/canonicalization/proof strict); defaults to `legacy` for `symbolicPriority` and `theoryDriven` for `holographicPriority` |
+| `SYS2_CANONICAL` | derived | Enable canonicalization (`1`/`true`/etc.); defaults to ON in `theoryDriven` |
+| `SYS2_PROOF_VALIDATE` | derived | Enable proof validation (`1`/`true`/etc.); defaults to ON in `theoryDriven` |
 
 ---
 

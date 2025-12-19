@@ -1879,3 +1879,1737 @@ end
     @rule Implies $premise $conclusion
     return $rule
 end
+
+# ============================================================================
+# PART X: BIOCHEMICAL PATHWAYS
+# ============================================================================
+
+@:Glycolysis_Pathway graph
+    @path isA Glycolysis MetabolicPathway
+    @input inputMolecule Glycolysis Glucose
+    @output outputMolecule Glycolysis Pyruvate
+    @atp netATP Glycolysis 2
+    @nadh producesNADH Glycolysis 2
+    @location occursIn Glycolysis Cytoplasm
+    @steps hasSteps Glycolysis 10
+    @result And $input (And $output (And $atp (And $nadh (And $location $steps))))
+    return $result
+end
+
+@:Krebs_Cycle graph
+    @cycle isA KrebsCycle MetabolicPathway
+    @altname alternativeName KrebsCycle "Citric_Acid_Cycle"
+    @input inputMolecule KrebsCycle AcetylCoA
+    @location occursIn KrebsCycle MitochondrialMatrix
+    @nadh producesNADH KrebsCycle 3
+    @fadh2 producesFADH2 KrebsCycle 1
+    @atp producesATP KrebsCycle 1
+    @co2 releasesCO2 KrebsCycle 2
+    @result And $altname (And $input (And $location (And $nadh (And $fadh2 (And $atp $co2)))))
+    return $result
+end
+
+@:Electron_Transport_Chain graph
+    @etc isA ElectronTransportChain MetabolicPathway
+    @location occursIn ElectronTransportChain InnerMitochondrialMembrane
+    @accepts acceptsElectrons ElectronTransportChain [NADH FADH2]
+    @final finalAcceptor ElectronTransportChain Oxygen
+    @water producesWater ElectronTransportChain true
+    @gradient createsProtonGradient ElectronTransportChain true
+    @complexes hasComplexes ElectronTransportChain [ComplexI ComplexII ComplexIII ComplexIV]
+    @result And $location (And $accepts (And $final (And $water (And $gradient $complexes))))
+    return $result
+end
+
+@:ATP_Synthase graph
+    @enzyme isA ATPSynthase Enzyme
+    @function function ATPSynthase "synthesize_ATP"
+    @mechanism mechanism ATPSynthase "chemiosmosis"
+    @gradient usesGradient ATPSynthase "proton_motive_force"
+    @rotation hasRotation ATPSynthase "rotary_mechanism"
+    @subunits hasSubunits ATPSynthase [F0 F1]
+    @result And $function (And $mechanism (And $gradient (And $rotation $subunits)))
+    return $result
+end
+
+@:Beta_Oxidation graph
+    @path isA BetaOxidation MetabolicPathway
+    @substrate substrate BetaOxidation "fatty_acids"
+    @product producesProduct BetaOxidation AcetylCoA
+    @location occursIn BetaOxidation Mitochondria
+    @nadh producesNADH BetaOxidation true
+    @fadh2 producesFADH2 BetaOxidation true
+    @result And $substrate (And $product (And $location (And $nadh $fadh2)))
+    return $result
+end
+
+@:Gluconeogenesis graph
+    @path isA Gluconeogenesis MetabolicPathway
+    @function function Gluconeogenesis "synthesize_glucose"
+    @substrates substrates Gluconeogenesis [Pyruvate Lactate Glycerol AminoAcids]
+    @location locations Gluconeogenesis [Liver Kidney]
+    @energy requiresEnergy Gluconeogenesis 6_ATP
+    @bypasses bypassesIrreversible Gluconeogenesis true
+    @result And $function (And $substrates (And $location (And $energy $bypasses)))
+    return $result
+end
+
+@:Pentose_Phosphate_Pathway graph
+    @path isA PentosePhosphatePath MetabolicPathway
+    @produces producesNADPH PentosePhosphatePath true
+    @ribose producesRibose5P PentosePhosphatePath true
+    @phases hasPhases PentosePhosphatePath [Oxidative NonOxidative]
+    @location occursIn PentosePhosphatePath Cytoplasm
+    @result And $produces (And $ribose (And $phases $location))
+    return $result
+end
+
+@:Urea_Cycle graph
+    @cycle isA UreaCycle MetabolicPathway
+    @function function UreaCycle "nitrogen_excretion"
+    @product producesProduct UreaCycle Urea
+    @location locations UreaCycle [Mitochondria Cytoplasm]
+    @starts startsWith UreaCycle Ammonia
+    @atp requiresATP UreaCycle 3
+    @result And $function (And $product (And $location (And $starts $atp)))
+    return $result
+end
+
+# ============================================================================
+# PART XI: SIGNAL TRANSDUCTION
+# ============================================================================
+
+@:G_Protein_Signaling graph
+    @path isA GProteinSignaling SignalTransduction
+    @receptor hasReceptor GProteinSignaling GPCR
+    @gprotein usesGProtein GProteinSignaling true
+    @effector activatesEffector GProteinSignaling [AdenylylCyclase PhospholipaseC]
+    @secondMessenger producesSecondMessenger GProteinSignaling [cAMP IP3 DAG]
+    @amplification signalAmplification GProteinSignaling true
+    @result And $receptor (And $gprotein (And $effector (And $secondMessenger $amplification)))
+    return $result
+end
+
+@:Receptor_Tyrosine_Kinase graph
+    @path isA RTKSignaling SignalTransduction
+    @receptor hasReceptor RTKSignaling "receptor_tyrosine_kinase"
+    @dimerization requiresDimerization RTKSignaling true
+    @phosphorylation autophosphorylation RTKSignaling true
+    @cascade activatesCascade RTKSignaling [Ras MAPK]
+    @targets ultimateTargets RTKSignaling [TranscriptionFactors]
+    @result And $receptor (And $dimerization (And $phosphorylation (And $cascade $targets)))
+    return $result
+end
+
+@:cAMP_Pathway graph
+    @path isA cAMPPathway SignalTransduction
+    @enzyme producedBy cAMPPathway AdenylylCyclase
+    @activates activatesKinase cAMPPathway PKA
+    @targets phosphorylatesTargets PKA true
+    @regulation regulatedBy cAMPPathway Phosphodiesterase
+    @degradation degradesTo cAMPPathway AMP
+    @result And $enzyme (And $activates (And $targets (And $regulation $degradation)))
+    return $result
+end
+
+@:Calcium_Signaling graph
+    @path isA CalciumSignaling SignalTransduction
+    @ion signalingIon CalciumSignaling Calcium
+    @sources calciumSources CalciumSignaling [ER Extracellular]
+    @channels calciumChannels CalciumSignaling [IP3R RyR VoltageGated]
+    @effectors calciumEffectors CalciumSignaling [Calmodulin PKC]
+    @removal calciumRemoval CalciumSignaling [SERCA PMCA]
+    @result And $ion (And $sources (And $channels (And $effectors $removal)))
+    return $result
+end
+
+@:JAK_STAT_Pathway graph
+    @path isA JAKSTATPathway SignalTransduction
+    @receptor activatedBy JAKSTATPathway CytokineReceptors
+    @jak associatedKinase JAKSTATPathway JAK
+    @stat transcriptionFactor JAKSTATPathway STAT
+    @dimerization statDimerization JAKSTATPathway true
+    @nuclear nuclearTranslocation JAKSTATPathway true
+    @result And $receptor (And $jak (And $stat (And $dimerization $nuclear)))
+    return $result
+end
+
+@:Wnt_Signaling graph
+    @path isA WntSignaling SignalTransduction
+    @ligand ligand WntSignaling "Wnt_proteins"
+    @receptor receptor WntSignaling Frizzled
+    @coreceptor coreceptor WntSignaling LRP
+    @effector keyEffector WntSignaling BetaCatenin
+    @target transcriptionalTarget WntSignaling TCF_LEF
+    @role developmentalRole WntSignaling "cell_fate_determination"
+    @result And $ligand (And $receptor (And $coreceptor (And $effector (And $target $role))))
+    return $result
+end
+
+@:Notch_Signaling graph
+    @path isA NotchSignaling SignalTransduction
+    @receptor receptor NotchSignaling Notch
+    @ligand ligands NotchSignaling [Delta Jagged]
+    @mechanism mechanism NotchSignaling "proteolytic_cleavage"
+    @nicd releaseFragment NotchSignaling NICD
+    @nuclear translocatesTo NotchSignaling Nucleus
+    @target activates NotchSignaling "Hes_Hey_genes"
+    @result And $receptor (And $ligand (And $mechanism (And $nicd (And $nuclear $target))))
+    return $result
+end
+
+@:Hedgehog_Signaling graph
+    @path isA HedgehogSignaling SignalTransduction
+    @ligand ligand HedgehogSignaling [Sonic Indian Desert]
+    @receptor receptor HedgehogSignaling Patched
+    @coreceptor coreceptor HedgehogSignaling Smoothened
+    @effector transcriptionFactor HedgehogSignaling Gli
+    @role developmentalRole HedgehogSignaling "patterning"
+    @result And $ligand (And $receptor (And $coreceptor (And $effector $role)))
+    return $result
+end
+
+# ============================================================================
+# PART XII: DEVELOPMENTAL BIOLOGY
+# ============================================================================
+
+@:Embryonic_Development_Stages graph
+    @dev isA EmbryonicDevelopment DevelopmentalProcess
+    @stage1 hasStage EmbryonicDevelopment Fertilization
+    @stage2 hasStage EmbryonicDevelopment Cleavage
+    @stage3 hasStage EmbryonicDevelopment Gastrulation
+    @stage4 hasStage EmbryonicDevelopment Neurulation
+    @stage5 hasStage EmbryonicDevelopment Organogenesis
+    @sequence follows Cleavage Fertilization
+    @result And $stage1 (And $stage2 (And $stage3 (And $stage4 (And $stage5 $sequence))))
+    return $result
+end
+
+@:Gastrulation graph
+    @process isA Gastrulation DevelopmentalProcess
+    @forms formsGermLayers Gastrulation [Ectoderm Mesoderm Endoderm]
+    @movement cellMovements Gastrulation [Invagination Involution Ingression]
+    @organizer hasOrganizer Gastrulation "Spemann_organizer"
+    @induces inducesNeuralTube Gastrulation true
+    @result And $forms (And $movement (And $organizer $induces))
+    return $result
+end
+
+@:Ectoderm_Derivatives graph
+    @layer isA Ectoderm GermLayer
+    @nerv derivesNervousSystem Ectoderm true
+    @skin derivesEpidermis Ectoderm true
+    @hair derivesHairNails Ectoderm true
+    @sensory derivesSensoryOrgans Ectoderm true
+    @neural derivesNeuralCrest Ectoderm true
+    @result And $nerv (And $skin (And $hair (And $sensory $neural)))
+    return $result
+end
+
+@:Mesoderm_Derivatives graph
+    @layer isA Mesoderm GermLayer
+    @muscle derivesMuscle Mesoderm true
+    @bone derivesBoneCartilage Mesoderm true
+    @blood derivesBloodVessels Mesoderm true
+    @kidney derivesKidney Mesoderm true
+    @heart derivesHeart Mesoderm true
+    @result And $muscle (And $bone (And $blood (And $kidney $heart)))
+    return $result
+end
+
+@:Endoderm_Derivatives graph
+    @layer isA Endoderm GermLayer
+    @gi derivesGILining Endoderm true
+    @liver derivesLiver Endoderm true
+    @pancreas derivesPancreas Endoderm true
+    @thyroid derivesThyroid Endoderm true
+    @lung derivesLungLining Endoderm true
+    @result And $gi (And $liver (And $pancreas (And $thyroid $lung)))
+    return $result
+end
+
+@:Hox_Genes graph
+    @genes isA HoxGenes DevelopmentalGenes
+    @function function HoxGenes "body_plan_specification"
+    @colinearity showsColinearity HoxGenes true
+    @clusters hasClusters HoxGenes [HoxA HoxB HoxC HoxD]
+    @conserved evolutionarilyConserved HoxGenes "highly"
+    @anteriorPosterior specifiesAP HoxGenes true
+    @result And $function (And $colinearity (And $clusters (And $conserved $anteriorPosterior)))
+    return $result
+end
+
+@:Morphogen_Gradient graph
+    @concept isA MorphogenGradient DevelopmentalMechanism
+    @signal signalMolecule MorphogenGradient [BMP Shh Wnt]
+    @gradient formsGradient MorphogenGradient "concentration_dependent"
+    @threshold thresholdDependent MorphogenGradient true
+    @position providesPositionalInfo MorphogenGradient true
+    @fates specifies MorphogenGradient "different_cell_fates"
+    @result And $signal (And $gradient (And $threshold (And $position $fates)))
+    return $result
+end
+
+@:Apoptosis_Development graph
+    @process isA DevelopmentalApoptosis CellProcess
+    @removes removesUnwantedCells DevelopmentalApoptosis true
+    @digits digitSeparation DevelopmentalApoptosis "finger_formation"
+    @neural neuralPruning DevelopmentalApoptosis true
+    @immune immuneSelection DevelopmentalApoptosis "remove_autoreactive"
+    @controlled isProgrammed DevelopmentalApoptosis true
+    @result And $removes (And $digits (And $neural (And $immune $controlled)))
+    return $result
+end
+
+# ============================================================================
+# PART XIII: IMMUNOLOGY DETAILS
+# ============================================================================
+
+@:T_Cell_Development graph
+    @dev isA TCellDevelopment ImmuneDevelopment
+    @origin originatesIn TCellDevelopment BoneMarrow
+    @matures maturesIn TCellDevelopment Thymus
+    @positive positiveSelection TCellDevelopment "MHC_recognition"
+    @negative negativeSelection TCellDevelopment "remove_self_reactive"
+    @types producesTypes TCellDevelopment [CD4 CD8]
+    @result And $origin (And $matures (And $positive (And $negative $types)))
+    return $result
+end
+
+@:B_Cell_Development graph
+    @dev isA BCellDevelopment ImmuneDevelopment
+    @origin originatesIn BCellDevelopment BoneMarrow
+    @matures maturesIn BCellDevelopment BoneMarrow
+    @rearrangement vdjRearrangement BCellDevelopment true
+    @selection negativeSelection BCellDevelopment "remove_self_reactive"
+    @produces producesWhenActivated BCellDevelopment [PlasmaCells MemoryBCells]
+    @result And $origin (And $matures (And $rearrangement (And $selection $produces)))
+    return $result
+end
+
+@:Antigen_Presentation graph
+    @process isA AntigenPresentation ImmuneProcess
+    @mhc1 MHCClassI AntigenPresentation "endogenous_antigens"
+    @mhc2 MHCClassII AntigenPresentation "exogenous_antigens"
+    @cd8 CD8Recognition AntigenPresentation MHCClassI
+    @cd4 CD4Recognition AntigenPresentation MHCClassII
+    @apc professionalAPCs AntigenPresentation [DendriticCells Macrophages BCells]
+    @result And $mhc1 (And $mhc2 (And $cd8 (And $cd4 $apc)))
+    return $result
+end
+
+@:Clonal_Selection graph
+    @theory isA ClonalSelection ImmuneTheory
+    @concept mainConcept ClonalSelection "one_lymphocyte_one_receptor"
+    @activation antigenActivates ClonalSelection "specific_clone"
+    @expansion clonalExpansion ClonalSelection true
+    @differentiation differentiateTo ClonalSelection [EffectorCells MemoryCells]
+    @proposed proposedBy ClonalSelection "Burnet"
+    @result And $concept (And $activation (And $expansion (And $differentiation $proposed)))
+    return $result
+end
+
+@:Complement_System graph
+    @sys isA ComplementSystem InnateImmune
+    @pathways activationPathways ComplementSystem [Classical Alternative Lectin]
+    @cascade cascadeProteins ComplementSystem [C1 C2 C3 C4 C5 C6 C7 C8 C9]
+    @mac membraneAttackComplex ComplementSystem "C5b-C9"
+    @opsonization enhancesPhagocytosis ComplementSystem "C3b"
+    @inflammation promotesInflammation ComplementSystem "C3a_C5a"
+    @result And $pathways (And $cascade (And $mac (And $opsonization $inflammation)))
+    return $result
+end
+
+@:Cytokine_Types graph
+    @type isA Cytokines ImmuneSignaling
+    @interleukins hasInterleukins Cytokines [IL1 IL2 IL4 IL6 IL10 IL12]
+    @interferons hasInterferons Cytokines [IFNalpha IFNbeta IFNgamma]
+    @tnf hasTNF Cytokines TNFalpha
+    @chemokines hasChemokines Cytokines "attract_leukocytes"
+    @csf hasCSF Cytokines [GCSF MCSF GMCSF]
+    @result And $interleukins (And $interferons (And $tnf (And $chemokines $csf)))
+    return $result
+end
+
+@:Th1_Th2_Response graph
+    @response isA THelperResponse AdaptiveImmune
+    @th1 Th1Cytokines THelperResponse [IFNgamma IL2 TNF]
+    @th2 Th2Cytokines THelperResponse [IL4 IL5 IL10 IL13]
+    @th1_role Th1Role THelperResponse "cell_mediated_immunity"
+    @th2_role Th2Role THelperResponse "humoral_immunity"
+    @balance th1th2Balance THelperResponse "determines_immune_outcome"
+    @result And $th1 (And $th2 (And $th1_role (And $th2_role $balance)))
+    return $result
+end
+
+@:Inflammatory_Response graph
+    @response isA InflammatoryResponse InnateImmune
+    @signs cardinalSigns InflammatoryResponse [Redness Heat Swelling Pain]
+    @vasodilation causesVasodilation InflammatoryResponse true
+    @permeability increasesPermeability InflammatoryResponse true
+    @recruitment recruitsCells InflammatoryResponse [Neutrophils Macrophages]
+    @mediators inflammatoryMediators InflammatoryResponse [Histamine Prostaglandins Leukotrienes]
+    @result And $signs (And $vasodilation (And $permeability (And $recruitment $mediators)))
+    return $result
+end
+
+# ============================================================================
+# PART XIV: NEUROSCIENCE
+# ============================================================================
+
+@:Neuron_Structure graph
+    @cell isA Neuron CellType
+    @soma hasSoma Neuron "cell_body"
+    @dendrites hasDendrites Neuron "receive_signals"
+    @axon hasAxon Neuron "transmit_signals"
+    @terminal hasAxonTerminal Neuron "releases_neurotransmitters"
+    @myelin hasMyelinSheath Neuron "speeds_conduction"
+    @result And $soma (And $dendrites (And $axon (And $terminal $myelin)))
+    return $result
+end
+
+@:Synapse_Structure graph
+    @structure isA Synapse NeuralStructure
+    @presynaptic hasPresynapticTerminal Synapse true
+    @cleft hasSynapticCleft Synapse "20nm_gap"
+    @postsynaptic hasPostsynapticMembrane Synapse true
+    @vesicles containsVesicles Synapse "neurotransmitter_filled"
+    @receptors containsReceptors Synapse "postsynaptic"
+    @result And $presynaptic (And $cleft (And $postsynaptic (And $vesicles $receptors)))
+    return $result
+end
+
+@:Resting_Potential graph
+    @concept isA RestingPotential NeuralConcept
+    @voltage voltage RestingPotential "-70mV"
+    @sodium sodiumOutside RestingPotential "high"
+    @potassium potassiumInside RestingPotential "high"
+    @pump NaKATPase RestingPotential "maintains_gradient"
+    @channels leakChannels RestingPotential "potassium_selective"
+    @result And $voltage (And $sodium (And $potassium (And $pump $channels)))
+    return $result
+end
+
+@:Action_Potential_Phases graph
+    @ap isA ActionPotential NeuralSignal
+    @depol depolarizationPhase ActionPotential "Na_influx"
+    @repol repolarizationPhase ActionPotential "K_efflux"
+    @hyper hyperpolarizationPhase ActionPotential "undershoot"
+    @refractory refractoryPeriod ActionPotential [Absolute Relative]
+    @propagation saltatoryConducton ActionPotential "myelinated_axons"
+    @result And $depol (And $repol (And $hyper (And $refractory $propagation)))
+    return $result
+end
+
+@:Neurotransmitter_Types graph
+    @nt isA Neurotransmitters NeuralSignaling
+    @excitatory excitatoryNT Neurotransmitters [Glutamate Acetylcholine]
+    @inhibitory inhibitoryNT Neurotransmitters [GABA Glycine]
+    @monoamines monoamineNT Neurotransmitters [Dopamine Serotonin Norepinephrine]
+    @peptides peptideNT Neurotransmitters [Endorphins Substance_P]
+    @gaseous gaseousNT Neurotransmitters [NitricOxide]
+    @result And $excitatory (And $inhibitory (And $monoamines (And $peptides $gaseous)))
+    return $result
+end
+
+@:Long_Term_Potentiation graph
+    @ltp isA LTP NeuralPlasticity
+    @mechanism mechanism LTP "synaptic_strengthening"
+    @receptor keyReceptor LTP NMDA
+    @calcium calciumInflux LTP "triggers_potentiation"
+    @ampar AMPARInsertion LTP "increases_sensitivity"
+    @learning roleInLearning LTP "memory_formation"
+    @result And $mechanism (And $receptor (And $calcium (And $ampar $learning)))
+    return $result
+end
+
+@:Brain_Regions graph
+    @brain isA Brain Organ
+    @cerebrum hasCerebrum Brain "higher_functions"
+    @cerebellum hasCerebellum Brain "motor_coordination"
+    @brainstem hasBrainstem Brain "vital_functions"
+    @limbic hasLimbicSystem Brain "emotion_memory"
+    @basal hasBasalGanglia Brain "movement_initiation"
+    @result And $cerebrum (And $cerebellum (And $brainstem (And $limbic $basal)))
+    return $result
+end
+
+@:Visual_Processing graph
+    @path isA VisualPathway NeuralPathway
+    @retina startsAt VisualPathway Retina
+    @opticNerve travelsVia VisualPathway OpticNerve
+    @chiasm crossesAt VisualPathway OpticChiasm
+    @lgn relaysIn VisualPathway LateralGeniculateNucleus
+    @cortex endsIn VisualPathway PrimaryVisualCortex
+    @processing furtherProcessing VisualPathway [VentralStream DorsalStream]
+    @result And $retina (And $opticNerve (And $chiasm (And $lgn (And $cortex $processing))))
+    return $result
+end
+
+# ============================================================================
+# PART XV: PLANT BIOLOGY
+# ============================================================================
+
+@:Photosynthesis_Light_Reactions graph
+    @phase isA LightReactions PhotosynthesisPhase
+    @location occursIn LightReactions ThylakoidMembrane
+    @ps2 photosystemII LightReactions "water_splitting"
+    @ps1 photosystemI LightReactions "NADP_reduction"
+    @etc electronTransport LightReactions "between_PS2_PS1"
+    @atp producesATP LightReactions "photophosphorylation"
+    @nadph producesNADPH LightReactions true
+    @result And $location (And $ps2 (And $ps1 (And $etc (And $atp $nadph))))
+    return $result
+end
+
+@:Calvin_Cycle graph
+    @cycle isA CalvinCycle PhotosynthesisPhase
+    @location occursIn CalvinCycle Stroma
+    @fixation carbonFixation CalvinCycle RuBisCO
+    @reduction reductionPhase CalvinCycle "uses_ATP_NADPH"
+    @regeneration rubpRegeneration CalvinCycle true
+    @product mainProduct CalvinCycle G3P
+    @glucose glucoseSynthesis CalvinCycle "from_2_G3P"
+    @result And $location (And $fixation (And $reduction (And $regeneration (And $product $glucose))))
+    return $result
+end
+
+@:Plant_Hormones graph
+    @hormones isA PlantHormones PlantSignaling
+    @auxin hasAuxin PlantHormones "cell_elongation"
+    @cytokinin hasCytokinin PlantHormones "cell_division"
+    @gibberellin hasGibberellin PlantHormones "stem_growth"
+    @abscisic hasABA PlantHormones "stress_response"
+    @ethylene hasEthylene PlantHormones "fruit_ripening"
+    @result And $auxin (And $cytokinin (And $gibberellin (And $abscisic $ethylene)))
+    return $result
+end
+
+@:Plant_Tissue_Types graph
+    @tissues isA PlantTissues PlantAnatomy
+    @dermal dermalTissue PlantTissues "epidermis_protection"
+    @vascular vascularTissue PlantTissues [Xylem Phloem]
+    @ground groundTissue PlantTissues [Parenchyma Collenchyma Sclerenchyma]
+    @meristematic meristem PlantTissues "growth_regions"
+    @result And $dermal (And $vascular (And $ground $meristematic))
+    return $result
+end
+
+@:Xylem_Function graph
+    @tissue isA Xylem VascularTissue
+    @transports transportsXylem Xylem "water_minerals"
+    @direction direction Xylem "roots_to_leaves"
+    @cells cellTypes Xylem [Tracheids VesselElements]
+    @mechanism mechanism Xylem "transpiration_pull"
+    @dead cellStatus Xylem "dead_at_maturity"
+    @result And $transports (And $direction (And $cells (And $mechanism $dead)))
+    return $result
+end
+
+@:Phloem_Function graph
+    @tissue isA Phloem VascularTissue
+    @transports transportsPhloem Phloem "sugars_organic"
+    @direction direction Phloem "source_to_sink"
+    @cells cellTypes Phloem [SieveTubeElements CompanionCells]
+    @mechanism mechanism Phloem "pressure_flow"
+    @living cellStatus Phloem "living_at_maturity"
+    @result And $transports (And $direction (And $cells (And $mechanism $living)))
+    return $result
+end
+
+@:Transpiration graph
+    @process isA Transpiration PlantProcess
+    @water waterLoss Transpiration "through_stomata"
+    @stomata stomataControl Transpiration "guard_cells"
+    @pull createsTranspirationPull Transpiration true
+    @cooling providesCooling Transpiration true
+    @factors affectedBy Transpiration [Light Humidity Temperature Wind]
+    @result And $water (And $stomata (And $pull (And $cooling $factors)))
+    return $result
+end
+
+@:Nitrogen_Fixation_Symbiosis graph
+    @symbiosis isA NitrogenFixingSymbiosis PlantMicrobeInteraction
+    @plant plantHost NitrogenFixingSymbiosis Legumes
+    @bacteria bacterialSymbiont NitrogenFixingSymbiosis Rhizobium
+    @structure structure NitrogenFixingSymbiosis "root_nodules"
+    @enzyme nitrogenaseEnzyme NitrogenFixingSymbiosis "N2_to_NH3"
+    @benefit mutualBenefit NitrogenFixingSymbiosis [Nitrogen Carbon]
+    @result And $plant (And $bacteria (And $structure (And $enzyme $benefit)))
+    return $result
+end
+
+# ============================================================================
+# PART XVI: DISEASE MECHANISMS
+# ============================================================================
+
+@:Cancer_Hallmarks graph
+    @disease isA Cancer DiseaseCategory
+    @growth sustainedGrowth Cancer "proliferative_signaling"
+    @suppressor evadesSuppressors Cancer "tumor_suppressors"
+    @death resistsDeath Cancer "apoptosis_evasion"
+    @immortal enablesReplication Cancer "telomerase_activation"
+    @angiogen inducesAngiogenesis Cancer true
+    @metastasis activatesMetastasis Cancer true
+    @result And $growth (And $suppressor (And $death (And $immortal (And $angiogen $metastasis))))
+    return $result
+end
+
+@:Oncogene_Activation graph
+    @gene isA Oncogene CancerGene
+    @origin originatesFrom Oncogene ProtoOncogene
+    @mechanisms activationMechanisms Oncogene [Mutation Amplification Translocation]
+    @effect cellularEffect Oncogene "increased_proliferation"
+    @examples examples Oncogene [RAS MYC HER2]
+    @dominant dominantMutation Oncogene true
+    @result And $origin (And $mechanisms (And $effect (And $examples $dominant)))
+    return $result
+end
+
+@:Tumor_Suppressor_Inactivation graph
+    @gene isA TumorSuppressor CancerGene
+    @function normalFunction TumorSuppressor "inhibit_proliferation"
+    @twoHit requiresTwoHits TumorSuppressor "Knudson_hypothesis"
+    @examples examples TumorSuppressor [p53 RB1 BRCA1 BRCA2]
+    @lossOfFunction lossOfFunction TumorSuppressor true
+    @recessive recessiveMutation TumorSuppressor true
+    @result And $function (And $twoHit (And $examples (And $lossOfFunction $recessive)))
+    return $result
+end
+
+@:Viral_Disease_Mechanism graph
+    @path isA ViralPathogenesis DiseaseMechanism
+    @attachment viralAttachment ViralPathogenesis "receptor_binding"
+    @entry viralEntry ViralPathogenesis [Endocytosis Fusion]
+    @replication viralReplication ViralPathogenesis "host_machinery"
+    @assembly viralAssembly ViralPathogenesis "new_virions"
+    @release viralRelease ViralPathogenesis [Budding Lysis]
+    @result And $attachment (And $entry (And $replication (And $assembly $release)))
+    return $result
+end
+
+@:Bacterial_Pathogenesis graph
+    @path isA BacterialPathogenesis DiseaseMechanism
+    @adhesion bacterialAdhesion BacterialPathogenesis "colonization"
+    @invasion tissueInvasion BacterialPathogenesis true
+    @toxins producesToxins BacterialPathogenesis [Exotoxins Endotoxins]
+    @evasion immuneEvasion BacterialPathogenesis [Capsule AntigenicVariation]
+    @damage tissueDamage BacterialPathogenesis true
+    @result And $adhesion (And $invasion (And $toxins (And $evasion $damage)))
+    return $result
+end
+
+@:Autoimmune_Disease graph
+    @disease isA AutoimmuneDisease ImmuneDisorder
+    @mechanism mechanism AutoimmuneDisease "self_tolerance_breakdown"
+    @targets targetsAutoantigen AutoimmuneDisease true
+    @genetics geneticPredisposition AutoimmuneDisease "HLA_associations"
+    @examples examples AutoimmuneDisease [Type1Diabetes MS Lupus RheumatoidArthritis]
+    @treatment treatmentApproach AutoimmuneDisease "immunosuppression"
+    @result And $mechanism (And $targets (And $genetics (And $examples $treatment)))
+    return $result
+end
+
+@:Prion_Disease graph
+    @disease isA PrionDisease Neurodegeneration
+    @agent causativeAgent PrionDisease "misfolded_protein"
+    @protein normalProtein PrionDisease "PrP"
+    @conversion proteinConversion PrionDisease "PrPC_to_PrPSc"
+    @transmissible isTransmissible PrionDisease true
+    @examples examples PrionDisease [CJD Kuru BSE Scrapie]
+    @result And $agent (And $protein (And $conversion (And $transmissible $examples)))
+    return $result
+end
+
+@:Diabetes_Type1_Mechanism graph
+    @disease isA Type1Diabetes MetabolicDisease
+    @autoimmune isAutoimmune Type1Diabetes true
+    @target targetCells Type1Diabetes "pancreatic_beta_cells"
+    @antibodies hasAutoantibodies Type1Diabetes [GAD65 IA2 Insulin]
+    @result resultingDeficiency Type1Diabetes "absolute_insulin_deficiency"
+    @treatment requiresTreatment Type1Diabetes "insulin_replacement"
+    @result And $autoimmune (And $target (And $antibodies (And $result $treatment)))
+    return $result
+end
+
+# ============================================================================
+# PART XVII: ADDITIONAL INFERENCE RULES
+# ============================================================================
+
+@:Enzyme_Substrate_Inference graph Enzyme Substrate Product
+    @e isA $Enzyme Enzyme
+    @binds binds $Enzyme $Substrate
+    @catalyzes catalyzes $Enzyme Reaction
+    @produces producesProduct Reaction $Product
+    @premise And $binds $catalyzes
+    @conclusion converts $Enzyme $Substrate $Product
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Pathway_Connection_Inference graph Pathway1 Pathway2 SharedMetabolite
+    @p1 producesProduct $Pathway1 $SharedMetabolite
+    @p2 usesSubstrate $Pathway2 $SharedMetabolite
+    @premise And $p1 $p2
+    @conclusion areConnected $Pathway1 $Pathway2
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Gene_Expression_Inference graph Gene TF Active
+    @tf binds $TF promoterOf $Gene
+    @active isActive $TF true
+    @premise And $tf $active
+    @conclusion isExpressed $Gene true
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Signal_Transduction_Inference graph Ligand Receptor Response
+    @binds binds $Ligand $Receptor
+    @activates activates $Receptor SignalCascade
+    @leads leadsTo SignalCascade $Response
+    @premise And $binds (And $activates $leads)
+    @conclusion causes $Ligand $Response
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Ecological_Energy_Inference graph Producer Consumer TrophicLevel
+    @p isA $Producer Producer
+    @c feedsOn $Consumer $Producer
+    @premise And $p $c
+    @c_level trophicLevel $Consumer PrimaryConsumer
+    @rule Implies $premise $c_level
+    return $rule
+end
+
+@:Disease_Symptom_Inference graph Pathogen Mechanism Symptom
+    @causes causes $Pathogen $Mechanism
+    @leads leadTo $Mechanism $Symptom
+    @premise And $causes $leads
+    @conclusion presentsSymptom $Pathogen $Symptom
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Drug_Target_Inference graph Drug Target Effect
+    @binds binds $Drug $Target
+    @modulates modulates $Drug $Target
+    @premise And $binds $modulates
+    @conclusion produces $Drug $Effect
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Inheritance_Pattern_Inference graph Trait Dominant Recessive
+    @p1 carriesAllele Parent1 $Dominant
+    @p2 carriesAllele Parent2 $Recessive
+    @premise And $p1 $p2
+    @offspring expressesTrait Offspring $Dominant
+    @rule Implies $premise $offspring
+    return $rule
+end
+
+# ============================================================================
+# PART XII: DETAILED BIOCHEMISTRY - Amino Acids & Proteins
+# ============================================================================
+
+@:Amino_Acid_Alanine graph
+    @aa isA Alanine AminoAcid
+    @essential hasProperty Alanine NonEssential
+    @polar hasProperty Alanine Nonpolar
+    @codon1 encodedBy Alanine GCU
+    @codon2 encodedBy Alanine GCC
+    @codon3 encodedBy Alanine GCA
+    @codon4 encodedBy Alanine GCG
+    return And $aa (And $essential (And $polar (And $codon1 (And $codon2 (And $codon3 $codon4)))))
+end
+
+@:Amino_Acid_Arginine graph
+    @aa isA Arginine AminoAcid
+    @essential hasProperty Arginine SemiEssential
+    @polar hasProperty Arginine Polar
+    @charge hasProperty Arginine PositiveCharge
+    @codon1 encodedBy Arginine CGU
+    @codon2 encodedBy Arginine CGC
+    @codon3 encodedBy Arginine CGA
+    @codon4 encodedBy Arginine CGG
+    @codon5 encodedBy Arginine AGA
+    @codon6 encodedBy Arginine AGG
+    return And $aa (And $essential (And $polar (And $charge $codon1)))
+end
+
+@:Amino_Acid_Asparagine graph
+    @aa isA Asparagine AminoAcid
+    @essential hasProperty Asparagine NonEssential
+    @polar hasProperty Asparagine Polar
+    @codon1 encodedBy Asparagine AAU
+    @codon2 encodedBy Asparagine AAC
+    return And $aa (And $essential (And $polar (And $codon1 $codon2)))
+end
+
+@:Amino_Acid_Aspartate graph
+    @aa isA Aspartate AminoAcid
+    @essential hasProperty Aspartate NonEssential
+    @polar hasProperty Aspartate Polar
+    @charge hasProperty Aspartate NegativeCharge
+    @codon1 encodedBy Aspartate GAU
+    @codon2 encodedBy Aspartate GAC
+    return And $aa (And $essential (And $polar (And $charge (And $codon1 $codon2))))
+end
+
+@:Amino_Acid_Cysteine graph
+    @aa isA Cysteine AminoAcid
+    @essential hasProperty Cysteine SemiEssential
+    @polar hasProperty Cysteine Polar
+    @special hasProperty Cysteine DisulfideBondForming
+    @codon1 encodedBy Cysteine UGU
+    @codon2 encodedBy Cysteine UGC
+    return And $aa (And $essential (And $polar (And $special (And $codon1 $codon2))))
+end
+
+@:Amino_Acid_Glutamate graph
+    @aa isA Glutamate AminoAcid
+    @essential hasProperty Glutamate NonEssential
+    @polar hasProperty Glutamate Polar
+    @charge hasProperty Glutamate NegativeCharge
+    @neuro hasProperty Glutamate ExcitatoryNeurotransmitter
+    @codon1 encodedBy Glutamate GAA
+    @codon2 encodedBy Glutamate GAG
+    return And $aa (And $essential (And $polar (And $charge (And $neuro (And $codon1 $codon2)))))
+end
+
+@:Amino_Acid_Glutamine graph
+    @aa isA Glutamine AminoAcid
+    @essential hasProperty Glutamine NonEssential
+    @polar hasProperty Glutamine Polar
+    @codon1 encodedBy Glutamine CAA
+    @codon2 encodedBy Glutamine CAG
+    return And $aa (And $essential (And $polar (And $codon1 $codon2)))
+end
+
+@:Amino_Acid_Glycine graph
+    @aa isA Glycine AminoAcid
+    @essential hasProperty Glycine NonEssential
+    @polar hasProperty Glycine Nonpolar
+    @special hasProperty Glycine SmallestAminoAcid
+    @codon1 encodedBy Glycine GGU
+    @codon2 encodedBy Glycine GGC
+    @codon3 encodedBy Glycine GGA
+    @codon4 encodedBy Glycine GGG
+    return And $aa (And $essential (And $polar (And $special $codon1)))
+end
+
+@:Amino_Acid_Histidine graph
+    @aa isA Histidine AminoAcid
+    @essential hasProperty Histidine Essential
+    @polar hasProperty Histidine Polar
+    @charge hasProperty Histidine PositiveCharge
+    @codon1 encodedBy Histidine CAU
+    @codon2 encodedBy Histidine CAC
+    return And $aa (And $essential (And $polar (And $charge (And $codon1 $codon2))))
+end
+
+@:Amino_Acid_Isoleucine graph
+    @aa isA Isoleucine AminoAcid
+    @essential hasProperty Isoleucine Essential
+    @polar hasProperty Isoleucine Nonpolar
+    @hydrophobic hasProperty Isoleucine Hydrophobic
+    @codon1 encodedBy Isoleucine AUU
+    @codon2 encodedBy Isoleucine AUC
+    @codon3 encodedBy Isoleucine AUA
+    return And $aa (And $essential (And $polar (And $hydrophobic (And $codon1 (And $codon2 $codon3)))))
+end
+
+@:Amino_Acid_Leucine graph
+    @aa isA Leucine AminoAcid
+    @essential hasProperty Leucine Essential
+    @polar hasProperty Leucine Nonpolar
+    @hydrophobic hasProperty Leucine Hydrophobic
+    @codon1 encodedBy Leucine UUA
+    @codon2 encodedBy Leucine UUG
+    @codon3 encodedBy Leucine CUU
+    @codon4 encodedBy Leucine CUC
+    @codon5 encodedBy Leucine CUA
+    @codon6 encodedBy Leucine CUG
+    return And $aa (And $essential (And $polar (And $hydrophobic $codon1)))
+end
+
+@:Amino_Acid_Lysine graph
+    @aa isA Lysine AminoAcid
+    @essential hasProperty Lysine Essential
+    @polar hasProperty Lysine Polar
+    @charge hasProperty Lysine PositiveCharge
+    @codon1 encodedBy Lysine AAA
+    @codon2 encodedBy Lysine AAG
+    return And $aa (And $essential (And $polar (And $charge (And $codon1 $codon2))))
+end
+
+@:Amino_Acid_Methionine graph
+    @aa isA Methionine AminoAcid
+    @essential hasProperty Methionine Essential
+    @polar hasProperty Methionine Nonpolar
+    @special hasProperty Methionine StartCodon
+    @codon encodedBy Methionine AUG
+    return And $aa (And $essential (And $polar (And $special $codon)))
+end
+
+@:Amino_Acid_Phenylalanine graph
+    @aa isA Phenylalanine AminoAcid
+    @essential hasProperty Phenylalanine Essential
+    @polar hasProperty Phenylalanine Nonpolar
+    @aromatic hasProperty Phenylalanine Aromatic
+    @codon1 encodedBy Phenylalanine UUU
+    @codon2 encodedBy Phenylalanine UUC
+    return And $aa (And $essential (And $polar (And $aromatic (And $codon1 $codon2))))
+end
+
+@:Amino_Acid_Proline graph
+    @aa isA Proline AminoAcid
+    @essential hasProperty Proline NonEssential
+    @polar hasProperty Proline Nonpolar
+    @special hasProperty Proline HelixBreaker
+    @codon1 encodedBy Proline CCU
+    @codon2 encodedBy Proline CCC
+    @codon3 encodedBy Proline CCA
+    @codon4 encodedBy Proline CCG
+    return And $aa (And $essential (And $polar (And $special $codon1)))
+end
+
+@:Amino_Acid_Serine graph
+    @aa isA Serine AminoAcid
+    @essential hasProperty Serine NonEssential
+    @polar hasProperty Serine Polar
+    @phospho hasProperty Serine PhosphorylationSite
+    @codon1 encodedBy Serine UCU
+    @codon2 encodedBy Serine UCC
+    @codon3 encodedBy Serine UCA
+    @codon4 encodedBy Serine UCG
+    @codon5 encodedBy Serine AGU
+    @codon6 encodedBy Serine AGC
+    return And $aa (And $essential (And $polar (And $phospho $codon1)))
+end
+
+@:Amino_Acid_Threonine graph
+    @aa isA Threonine AminoAcid
+    @essential hasProperty Threonine Essential
+    @polar hasProperty Threonine Polar
+    @phospho hasProperty Threonine PhosphorylationSite
+    @codon1 encodedBy Threonine ACU
+    @codon2 encodedBy Threonine ACC
+    @codon3 encodedBy Threonine ACA
+    @codon4 encodedBy Threonine ACG
+    return And $aa (And $essential (And $polar (And $phospho $codon1)))
+end
+
+@:Amino_Acid_Tryptophan graph
+    @aa isA Tryptophan AminoAcid
+    @essential hasProperty Tryptophan Essential
+    @polar hasProperty Tryptophan Nonpolar
+    @aromatic hasProperty Tryptophan Aromatic
+    @special hasProperty Tryptophan LargestAminoAcid
+    @codon encodedBy Tryptophan UGG
+    return And $aa (And $essential (And $polar (And $aromatic (And $special $codon))))
+end
+
+@:Amino_Acid_Tyrosine graph
+    @aa isA Tyrosine AminoAcid
+    @essential hasProperty Tyrosine SemiEssential
+    @polar hasProperty Tyrosine Polar
+    @aromatic hasProperty Tyrosine Aromatic
+    @phospho hasProperty Tyrosine PhosphorylationSite
+    @codon1 encodedBy Tyrosine UAU
+    @codon2 encodedBy Tyrosine UAC
+    return And $aa (And $essential (And $polar (And $aromatic (And $phospho (And $codon1 $codon2)))))
+end
+
+@:Amino_Acid_Valine graph
+    @aa isA Valine AminoAcid
+    @essential hasProperty Valine Essential
+    @polar hasProperty Valine Nonpolar
+    @hydrophobic hasProperty Valine Hydrophobic
+    @codon1 encodedBy Valine GUU
+    @codon2 encodedBy Valine GUC
+    @codon3 encodedBy Valine GUA
+    @codon4 encodedBy Valine GUG
+    return And $aa (And $essential (And $polar (And $hydrophobic $codon1)))
+end
+
+# ============================================================================
+# PROTEIN STRUCTURE LEVELS
+# ============================================================================
+
+@:Protein_Primary_Structure graph Protein Sequence
+    @level hasStructureLevel $Protein Primary
+    @def definedBy Primary AminoAcidSequence
+    @bond stabilizedBy Primary PeptideBonds
+    @direction hasProperty Primary NtoCterminus
+    return And $level (And $def (And $bond $direction))
+end
+
+@:Protein_Secondary_Structure graph Protein Motif
+    @level hasStructureLevel $Protein Secondary
+    @alpha isA AlphaHelix SecondaryStructure
+    @beta isA BetaSheet SecondaryStructure
+    @turn isA BetaTurn SecondaryStructure
+    @hbond stabilizedBy Secondary HydrogenBonds
+    return And $level (And $alpha (And $beta (And $turn $hbond)))
+end
+
+@:Protein_Tertiary_Structure graph Protein FoldedShape
+    @level hasStructureLevel $Protein Tertiary
+    @def definedBy Tertiary ThreeDimensionalFold
+    @hydro stabilizedBy Tertiary HydrophobicInteractions
+    @disulf stabilizedBy Tertiary DisulfideBonds
+    @ionic stabilizedBy Tertiary IonicBonds
+    @vdw stabilizedBy Tertiary VanDerWaals
+    return And $level (And $def (And $hydro (And $disulf (And $ionic $vdw))))
+end
+
+@:Protein_Quaternary_Structure graph Complex Subunits
+    @level hasStructureLevel $Complex Quaternary
+    @def definedBy Quaternary MultipleSubunits
+    @example1 hasStructure Hemoglobin Quaternary
+    @example2 hasStructure DNAPolymerase Quaternary
+    @inter stabilizedBy Quaternary SubunitInteractions
+    return And $level (And $def (And $example1 (And $example2 $inter)))
+end
+
+# ============================================================================
+# ENZYME KINETICS
+# ============================================================================
+
+@:Michaelis_Menten_Kinetics graph Enzyme Substrate Product
+    @enzyme isA $Enzyme Enzyme
+    @substrate binds $Enzyme $Substrate
+    @complex forms $Enzyme ES_Complex
+    @km hasProperty $Enzyme MichaelisConstant
+    @vmax hasProperty $Enzyme MaximalVelocity
+    @rate rateEquation $Enzyme Vmax_S_div_Km_plus_S
+    return And $enzyme (And $substrate (And $complex (And $km (And $vmax $rate))))
+end
+
+@:Competitive_Inhibition graph Enzyme Inhibitor Substrate
+    @enzyme isA $Enzyme Enzyme
+    @inhib binds $Inhibitor ActiveSite
+    @competes competesWith $Inhibitor $Substrate
+    @km_app increases $Inhibitor ApparentKm
+    @vmax_unchanged unchanged $Inhibitor Vmax
+    @overcome canBeOvercome $Inhibitor HighSubstrate
+    return And $enzyme (And $inhib (And $competes (And $km_app (And $vmax_unchanged $overcome))))
+end
+
+@:Noncompetitive_Inhibition graph Enzyme Inhibitor AllostericSite
+    @enzyme isA $Enzyme Enzyme
+    @inhib binds $Inhibitor $AllostericSite
+    @different differentFrom $AllostericSite ActiveSite
+    @km_unchanged unchanged $Inhibitor Km
+    @vmax_decreases decreases $Inhibitor Vmax
+    @not_overcome cannotBeOvercome $Inhibitor HighSubstrate
+    return And $enzyme (And $inhib (And $different (And $km_unchanged (And $vmax_decreases $not_overcome))))
+end
+
+@:Uncompetitive_Inhibition graph Enzyme Inhibitor ES_Complex
+    @enzyme isA $Enzyme Enzyme
+    @inhib binds $Inhibitor $ES_Complex
+    @requires requiresFor $Inhibitor SubstrateBinding
+    @km_app decreases $Inhibitor ApparentKm
+    @vmax_decreases decreases $Inhibitor Vmax
+    @ratio maintainsRatio $Inhibitor Vmax_to_Km
+    return And $enzyme (And $inhib (And $requires (And $km_app (And $vmax_decreases $ratio))))
+end
+
+@:Allosteric_Regulation graph Enzyme Effector Conformation
+    @enzyme isA $Enzyme AllostericEnzyme
+    @effector binds $Effector AllostericSite
+    @r_state hasConformation $Enzyme R_State
+    @t_state hasConformation $Enzyme T_State
+    @activator shifts Activator TowardR
+    @inhibitor shifts Inhibitor TowardT
+    @cooperative hasProperty $Enzyme Cooperativity
+    return And $enzyme (And $effector (And $r_state (And $t_state (And $activator (And $inhibitor $cooperative)))))
+end
+
+# ============================================================================
+# DNA REPLICATION DETAILS
+# ============================================================================
+
+@:Replication_Origin graph Origin Initiation
+    @origin isA OriC ReplicationOrigin
+    @atrich hasProperty OriC ATRich
+    @dnaA binds DnaA OriC
+    @unwinding initiates DnaA Unwinding
+    @dnab loads DnaB OriC
+    @helicase activates DnaB HelicaseActivity
+    return And $origin (And $atrich (And $dnaA (And $unwinding (And $dnab $helicase))))
+end
+
+@:Leading_Strand_Synthesis graph Polymerase Template Product
+    @template isA LeadingStrandTemplate Template
+    @direction synthesisDirection LeadingStrand FiveToThree
+    @continuous hasProperty LeadingStrand ContinuousSynthesis
+    @primase requires LeadingStrand SinglePrimer
+    @polIII catalyzes DNAPolIII LeadingStrandSynthesis
+    @processivity hasProperty DNAPolIII HighProcessivity
+    return And $template (And $direction (And $continuous (And $primase (And $polIII $processivity))))
+end
+
+@:Lagging_Strand_Synthesis graph Polymerase Template OkazakiFragments
+    @template isA LaggingStrandTemplate Template
+    @direction synthesisDirection LaggingStrand FiveToThree
+    @discontinuous hasProperty LaggingStrand DiscontinuousSynthesis
+    @okazaki produces LaggingStrand OkazakiFragments
+    @primase requires LaggingStrand MultiplePrimers
+    @polI removes DNAPolI RNAPrimers
+    @ligase joins DNALigase OkazakiFragments
+    return And $template (And $direction (And $discontinuous (And $okazaki (And $primase (And $polI $ligase)))))
+end
+
+@:Telomere_Replication graph Telomere Telomerase Extension
+    @end isA Telomere ChromosomeEnd
+    @repeat hasSequence Telomere TTAGGG
+    @problem hasProperty Telomere EndReplicationProblem
+    @shortening hasProperty SomaticCells TelomereShortening
+    @telomerase reverseTranscribes Telomerase Telomere
+    @template hasProperty Telomerase RNATemplate
+    @immortal expressedIn Telomerase StemCells
+    @cancer overexpressedIn Telomerase CancerCells
+    return And $end (And $repeat (And $problem (And $shortening (And $telomerase (And $template (And $immortal $cancer))))))
+end
+
+# ============================================================================
+# TRANSCRIPTION DETAILS
+# ============================================================================
+
+@:Promoter_Recognition graph Promoter TFIID TranscriptionStart
+    @promoter isA $Promoter Promoter
+    @tata hasElement $Promoter TATABox
+    @tata_seq hasSequence TATABox TATAAA
+    @position locatedAt TATABox Minus25
+    @tbp binds TBP TATABox
+    @tfiid contains TFIID TBP
+    @tafs contains TFIID TAFs
+    return And $promoter (And $tata (And $tata_seq (And $position (And $tbp (And $tfiid $tafs)))))
+end
+
+@:Transcription_Initiation graph RNAP Promoter PIC
+    @pic forms PIC Promoter
+    @tfiid binds TFIID TATABox
+    @tfiib binds TFIIB BRE
+    @tfiif recruits TFIIF RNAPolII
+    @tfiie binds TFIIE Promoter
+    @tfiih binds TFIIH Promoter
+    @helicase hasActivity TFIIH Helicase
+    @kinase hasActivity TFIIH Kinase
+    @ctd phosphorylates TFIIH CTD
+    return And $pic (And $tfiid (And $tfiib (And $tfiif (And $tfiie (And $tfiih (And $helicase (And $kinase $ctd)))))))
+end
+
+@:Transcription_Elongation graph RNAP Template mRNA
+    @polii isA RNAPolII RNAPolymerase
+    @elongation phase $polii Elongation
+    @rate elongationRate $polii NucleotidesPerSecond
+    @ctd_phos phosphorylated CTD Ser2
+    @ptef recruits CTD_pSer2 PTEF
+    @spt4 associates SPT4_SPT5 $polii
+    @proofreading hasProperty $polii Proofreading
+    return And $polii (And $elongation (And $rate (And $ctd_phos (And $ptef (And $spt4 $proofreading)))))
+end
+
+@:Transcription_Termination graph RNAP TerminationSignal Release
+    @polii isA RNAPolII RNAPolymerase
+    @poly_a recognizes $polii PolyASignal
+    @aauaaa hasSequence PolyASignal AAUAAA
+    @cpsf binds CPSF PolyASignal
+    @cstf binds CstF DSE
+    @cleavage cleaves CPSF_CstF mRNA
+    @release releasesFrom $polii Template
+    return And $polii (And $poly_a (And $aauaaa (And $cpsf (And $cstf (And $cleavage $release)))))
+end
+
+# ============================================================================
+# RNA PROCESSING
+# ============================================================================
+
+@:Five_Prime_Capping graph mRNA Cap CapBindingComplex
+    @capping isProcess FivePrimeCapping
+    @gtpase adds GTpase Guanine
+    @methylase methylates Methyltransferase Cap
+    @cap7 forms mRNA SevenMethylGuanosine
+    @cbc binds CBC Cap
+    @cbc20 contains CBC CBC20
+    @cbc80 contains CBC CBC80
+    @protect protectsFrom Cap Degradation
+    @export requiredFor Cap NuclearExport
+    return And $capping (And $gtpase (And $methylase (And $cap7 (And $cbc (And $cbc20 (And $cbc80 (And $protect $export)))))))
+end
+
+@:Splicing_Mechanism graph preRNA Spliceosome mRNA
+    @splicing isProcess Splicing
+    @intron removes Splicing Introns
+    @exon joins Splicing Exons
+    @donor hasSequence DonorSite GU
+    @acceptor hasSequence AcceptorSite AG
+    @branch hasBranchpoint Intron Adenine
+    @u1 recognizes U1snRNP DonorSite
+    @u2 recognizes U2snRNP BranchPoint
+    @tri forms U4_U5_U6 TrisnRNP
+    @lariat forms Intron Lariat
+    return And $splicing (And $intron (And $exon (And $donor (And $acceptor (And $branch (And $u1 (And $u2 (And $tri $lariat))))))))
+end
+
+@:Alternative_Splicing graph preRNA IsoformA IsoformB
+    @altsplice isProcess AlternativeSplicing
+    @exonskip typeOf ExonSkipping $altsplice
+    @mutexc typeOf MutuallyExclusiveExons $altsplice
+    @altdonor typeOf AlternativeDonor $altsplice
+    @altaccept typeOf AlternativeAcceptor $altsplice
+    @intronret typeOf IntronRetention $altsplice
+    @diversity increases $altsplice ProteomeDiversity
+    @tissue regulatedBy $altsplice TissueSpecificFactors
+    return And $altsplice (And $exonskip (And $mutexc (And $altdonor (And $altaccept (And $intronret (And $diversity $tissue))))))
+end
+
+@:Polyadenylation graph mRNA PolyATail Stability
+    @polya isProcess Polyadenylation
+    @signal recognizes CPSF AAUAAA
+    @cleavage cleaves mRNA Downstream
+    @pap adds PAP Adenines
+    @length hasLength PolyATail 200_Nucleotides
+    @pabp binds PABP PolyATail
+    @stability enhances PolyATail mRNAStability
+    @export facilitates PolyATail NuclearExport
+    return And $polya (And $signal (And $cleavage (And $pap (And $length (And $pabp (And $stability $export))))))
+end
+
+# ============================================================================
+# TRANSLATION DETAILS
+# ============================================================================
+
+@:Translation_Initiation_Eukaryotic graph mRNA Ribosome StartCodon
+    @init isProcess TranslationInitiation
+    @eif4e binds eIF4E FivePrimeCap
+    @eif4g scaffolds eIF4G InitiationFactors
+    @eif4a unwinds eIF4A mRNAStructure
+    @eif2 delivers eIF2 Met_tRNA
+    @fortythrees assembles 43S PreinitComplex
+    @scanning scans 43S UTR
+    @kozak recognizes 43S KozakSequence
+    @start locates 43S AUG
+    @sixtyj joins 60S 43S
+    @eighty forms 80S Ribosome
+    return And $init (And $eif4e (And $eif4g (And $eif4a (And $eif2 (And $fortythrees (And $scanning (And $kozak (And $start $sixtyj))))))))
+end
+
+@:Translation_Elongation_Cycle graph Ribosome tRNA Peptide
+    @elong isProcess TranslationElongation
+    @asite isA ASite RibosomalSite
+    @psite isA PSite RibosomalSite
+    @esite isA ESite RibosomalSite
+    @ef1a delivers EF1A AminoacylTRNA
+    @gtp hydrolyzes EF1A GTP
+    @peptidyl catalyzes PeptidylTransferase PeptideBond
+    @ef2 catalyzes EF2 Translocation
+    @shift moves Ribosome ThreeNucleotides
+    return And $elong (And $asite (And $psite (And $esite (And $ef1a (And $gtp (And $peptidyl (And $ef2 $shift)))))))
+end
+
+@:Translation_Termination graph Ribosome StopCodon ReleasedProtein
+    @term isProcess TranslationTermination
+    @stop1 isA UAA StopCodon
+    @stop2 isA UAG StopCodon
+    @stop3 isA UGA StopCodon
+    @erf1 recognizes eRF1 StopCodon
+    @erf3 binds eRF3 eRF1
+    @gtp hydrolyzes eRF3 GTP
+    @release releases eRF1 Polypeptide
+    @disassemble dissociates Ribosome Subunits
+    return And $term (And $stop1 (And $stop2 (And $stop3 (And $erf1 (And $erf3 (And $gtp (And $release $disassemble)))))))
+end
+
+# ============================================================================
+# CELL CYCLE REGULATION
+# ============================================================================
+
+@:G1_S_Checkpoint graph Cell CyclinD CDK4
+    @checkpoint isA G1_S_Checkpoint CellCycleCheckpoint
+    @cyclind expression CyclinD GrowthFactorDependent
+    @cdk4 forms CyclinD_CDK4 Complex
+    @cdk6 forms CyclinD_CDK6 Complex
+    @rb phosphorylates CyclinD_CDK4 Rb
+    @e2f releases pRb E2F
+    @activate activates E2F SPhaseGenes
+    @cycline induces E2F CyclinE
+    @cdk2 forms CyclinE_CDK2 Complex
+    return And $checkpoint (And $cyclind (And $cdk4 (And $cdk6 (And $rb (And $e2f (And $activate (And $cycline $cdk2)))))))
+end
+
+@:S_Phase_Regulation graph Cell CyclinA CDK2
+    @sphase isPhase S CellCycle
+    @cyclina expression CyclinA EarlyS
+    @complex forms CyclinA_CDK2 Complex
+    @origins fires $complex ReplicationOrigins
+    @orc binds ORC Origins
+    @mcm loads MCM Origins
+    @cdt1 required Cdt1 MCMLoading
+    @geminin inhibits Geminin Cdt1
+    @rereplication prevents Geminin Rereplication
+    return And $sphase (And $cyclina (And $complex (And $origins (And $orc (And $mcm (And $cdt1 (And $geminin $rereplication)))))))
+end
+
+@:G2_M_Checkpoint graph Cell CyclinB CDK1
+    @checkpoint isA G2_M_Checkpoint CellCycleCheckpoint
+    @cyclinb expression CyclinB LateG2
+    @cdk1 forms CyclinB_CDK1 MPF
+    @wee1 phosphorylates Wee1 CDK1_Tyr15
+    @myt1 phosphorylates Myt1 CDK1_Thr14
+    @inactive maintains Wee1_Myt1 InactiveMPF
+    @cdc25 dephosphorylates Cdc25 CDK1
+    @activate activates Cdc25 MPF
+    @nuclear accumulates CyclinB Nucleus
+    @mitosis triggers MPF MitosisEntry
+    return And $checkpoint (And $cyclinb (And $cdk1 (And $wee1 (And $myt1 (And $inactive (And $cdc25 (And $activate (And $nuclear $mitosis))))))))
+end
+
+@:Spindle_Assembly_Checkpoint graph Cell Kinetochore APC_C
+    @sac isA SAC SpindleAssemblyCheckpoint
+    @unattached detects SAC UnattachedKinetochores
+    @mad1 binds Mad1 Kinetochore
+    @mad2 converts Mad1 Mad2_Active
+    @mcc forms MCC BubR1_Bub3_Mad2
+    @apcc inhibits MCC APC_C
+    @cdc20 sequesters MCC Cdc20
+    @attached allKinetochores Attached
+    @release releases Attached MCC
+    @active activates Cdc20 APC_C
+    @securin degrades APC_C Securin
+    @separase releases Securin Separase
+    return And $sac (And $unattached (And $mad1 (And $mad2 (And $mcc (And $apcc (And $cdc20 (And $attached (And $release (And $active (And $securin $separase))))))))))
+end
+
+# ============================================================================
+# APOPTOSIS PATHWAYS
+# ============================================================================
+
+@:Intrinsic_Apoptosis graph Cell Mitochondria Caspase9
+    @intrinsic isA IntrinsicPathway ApoptosisPathway
+    @stress triggers CellularStress IntrinsicPathway
+    @bax activates Stress Bax
+    @bak activates Stress Bak
+    @oligomer forms Bax_Bak Oligomer
+    @momp causes Oligomer MOMP
+    @cytc releases Mitochondria CytochromeC
+    @apaf binds CytochromeC Apaf1
+    @apoptosome forms Apaf1 Apoptosome
+    @casp9 activates Apoptosome Caspase9
+    @casp3 activates Caspase9 Caspase3
+    return And $intrinsic (And $stress (And $bax (And $bak (And $oligomer (And $momp (And $cytc (And $apaf (And $apoptosome (And $casp9 $casp3)))))))))
+end
+
+@:Extrinsic_Apoptosis graph Cell DeathReceptor Caspase8
+    @extrinsic isA ExtrinsicPathway ApoptosisPathway
+    @fasl binds FasL FasReceptor
+    @trail binds TRAIL DR4_DR5
+    @tnfa binds TNFAlpha TNFR1
+    @disc forms DeathReceptor DISC
+    @fadd recruits DISC FADD
+    @procasp8 recruits FADD ProCaspase8
+    @casp8 activates DISC Caspase8
+    @bid cleaves Caspase8 Bid
+    @tbid forms Bid tBid
+    @crosstalk activates tBid IntrinsicPathway
+    return And $extrinsic (And $fasl (And $trail (And $tnfa (And $disc (And $fadd (And $procasp8 (And $casp8 (And $bid (And $tbid $crosstalk)))))))))
+end
+
+@:Caspase_Cascade graph InitiatorCaspase EffectorCaspase Substrates
+    @cascade isA CaspaseCascade ApoptoticMechanism
+    @initiator isA Caspase8_9 InitiatorCaspase
+    @effector isA Caspase3_6_7 EffectorCaspase
+    @activate activates $InitiatorCaspase $EffectorCaspase
+    @parp cleaves Caspase3 PARP
+    @icad cleaves Caspase3 ICAD
+    @cad activates ICAD_Cleavage CAD
+    @dna fragments CAD DNA
+    @lamins cleaves Caspase6 Lamins
+    @nuclear causes LaminCleavage NuclearCollapse
+    return And $cascade (And $initiator (And $effector (And $activate (And $parp (And $icad (And $cad (And $dna (And $lamins $nuclear))))))))
+end
+
+@:Bcl2_Family_Regulation graph ProApoptotic AntiApoptotic BH3Only
+    @bcl2fam isA Bcl2Family ApoptosisRegulators
+    @antiapop isA Bcl2_BclXL_Mcl1 AntiApoptotic
+    @proapop isA Bax_Bak ProApoptotic
+    @bh3 isA Bid_Bim_Bad_Puma_Noxa BH3Only
+    @sequester sequesters $AntiApoptotic $ProApoptotic
+    @inhibit inhibits $AntiApoptotic MOMP
+    @activate activates $BH3Only $ProApoptotic
+    @displace displaces $BH3Only AntiApoptotic
+    @balance determines ProAntiBalance CellFate
+    return And $bcl2fam (And $antiapop (And $proapop (And $bh3 (And $sequester (And $inhibit (And $activate (And $displace $balance)))))))
+end
+
+# ============================================================================
+# IMMUNE CELL DEVELOPMENT
+# ============================================================================
+
+@:Hematopoiesis graph HSC BloodCells BoneMarrow
+    @hema isProcess Hematopoiesis
+    @hsc isA HSC HematopoieticStemCell
+    @self hasProperty HSC SelfRenewal
+    @multi hasProperty HSC Multipotency
+    @mpp differentiates HSC MPP
+    @clp forms MPP CLP
+    @cmp forms MPP CMP
+    @lymphoid produces CLP LymphoidCells
+    @myeloid produces CMP MyeloidCells
+    @niche supports BoneMarrowNiche HSC
+    return And $hema (And $hsc (And $self (And $multi (And $mpp (And $clp (And $cmp (And $lymphoid (And $myeloid $niche))))))))
+end
+
+@:T_Cell_Development graph Thymocyte TCR MatureT
+    @tdev isProcess TCellDevelopment
+    @prog enters Progenitor Thymus
+    @dn isStage DoubleNegative Early
+    @rearrange rearranges DN TCRBeta
+    @betasel undergoes DN BetaSelection
+    @dp becomes DN DoublePositive
+    @bothrec expresses DP CD4_CD8
+    @alpharearr rearranges DP TCRAlpha
+    @pos undergoes DP PositiveSelection
+    @neg undergoes DP NegativeSelection
+    @sp becomes DP SinglePositive
+    return And $tdev (And $prog (And $dn (And $rearrange (And $betasel (And $dp (And $bothrec (And $alpharearr (And $pos (And $neg $sp)))))))))
+end
+
+@:B_Cell_Development graph ProB PreB MatureB
+    @bdev isProcess BCellDevelopment
+    @prob isStage ProB Early
+    @heavyrearr rearranges ProB HeavyChain
+    @preb isStage PreB Intermediate
+    @prebcr expresses PreB PreBCR
+    @lightrearr rearranges PreB LightChain
+    @immature isStage ImmatureB Late
+    @igm expresses ImmatureB IgM
+    @central undergoes ImmatureB CentralTolerance
+    @transit migrates ImmatureB Periphery
+    @mature expresses MatureB IgM_IgD
+    return And $bdev (And $prob (And $heavyrearr (And $preb (And $prebcr (And $lightrearr (And $immature (And $igm (And $central (And $transit $mature)))))))))
+end
+
+@:VDJ_Recombination graph IgGene RAG Diversity
+    @vdj isProcess VDJRecombination
+    @v isSegment V VariableSegment
+    @d isSegment D DiversitySegment
+    @j isSegment J JoiningSegment
+    @rag catalyzes RAG1_RAG2 Recombination
+    @rss recognizes RAG RSS
+    @hairpin creates RAG DNAHairpin
+    @artemis opens Artemis Hairpin
+    @tdt adds TdT NTemplateNucleotides
+    @junctional creates TdT JunctionalDiversity
+    @unique generates VDJ UniqueReceptor
+    return And $vdj (And $v (And $d (And $j (And $rag (And $rss (And $hairpin (And $artemis (And $tdt (And $junctional $unique)))))))))
+end
+
+# ============================================================================
+# NEURONAL SIGNALING DETAILS
+# ============================================================================
+
+@:Action_Potential_Initiation graph Neuron Threshold Depolarization
+    @ap isProcess ActionPotential
+    @rest hasProperty Neuron RestingPotential
+    @rest_v equals RestingPotential Minus70mV
+    @stimulus receives Neuron Stimulus
+    @graded creates Stimulus GradedPotential
+    @threshold reaches GradedPotential Threshold
+    @thresh_v equals Threshold Minus55mV
+    @nav opens Threshold VoltageGatedNaChannels
+    @influx causes NAV NaInflux
+    @depol causes NaInflux Depolarization
+    return And $ap (And $rest (And $rest_v (And $stimulus (And $graded (And $threshold (And $thresh_v (And $nav (And $influx $depol))))))))
+end
+
+@:Action_Potential_Propagation graph AxonHillock Axon TerminalBouton
+    @prop isProcess APPropagation
+    @init initiatesAt ActionPotential AxonHillock
+    @local creates Depolarization LocalCircuits
+    @adjacent depolarizes LocalCircuits AdjacentMembrane
+    @unidirect hasProperty Propagation Unidirectional
+    @refract causes Inactivation RefractoryPeriod
+    @absolute isType AbsoluteRefractory FirstPhase
+    @relative isType RelativeRefractory SecondPhase
+    @saltatory hasType Myelinated SaltatoryConduction
+    @nodes occurs Saltatory NodesOfRanvier
+    return And $prop (And $init (And $local (And $adjacent (And $unidirect (And $refract (And $absolute (And $relative (And $saltatory $nodes))))))))
+end
+
+@:Synaptic_Vesicle_Cycle graph Terminal Vesicle Neurotransmitter
+    @cycle isProcess SynapticVesicleCycle
+    @fill fills VGlut_VAChT Vesicle
+    @dock docks Vesicle ActiveZone
+    @snare assembles SNARE_Complex Docking
+    @vamp contains SNARE VAMP
+    @syntax contains SNARE Syntaxin
+    @snap25 contains SNARE SNAP25
+    @ca enters Calcium Terminal
+    @syt binds Synaptotagmin Calcium
+    @fuse triggers Synaptotagmin Fusion
+    @release releases Fusion Neurotransmitter
+    @recycle undergoes Vesicle Endocytosis
+    return And $cycle (And $fill (And $dock (And $snare (And $vamp (And $syntax (And $snap25 (And $ca (And $syt (And $fuse (And $release $recycle))))))))))
+end
+
+@:Neurotransmitter_Systems graph Neurotransmitter Receptor Effect
+    @glu isA Glutamate ExcitatoryNT
+    @gaba isA GABA InhibitoryNT
+    @dopa isA Dopamine ModulatoryNT
+    @sero isA Serotonin ModulatoryNT
+    @ach isA Acetylcholine BothTypes
+    @ne isA Norepinephrine ModulatoryNT
+    @ampa binds Glutamate AMPAReceptor
+    @nmda binds Glutamate NMDAReceptor
+    @gabaa binds GABA GABAA_Receptor
+    @d1d2 binds Dopamine D1_D2_Receptors
+    return And $glu (And $gaba (And $dopa (And $sero (And $ach (And $ne (And $ampa (And $nmda (And $gabaa $d1d2))))))))
+end
+
+# ============================================================================
+# ECOLOGICAL INTERACTIONS DETAILED
+# ============================================================================
+
+@:Predator_Prey_Dynamics graph Predator Prey Population
+    @dynamics isModel PredatorPreyDynamics
+    @lotka describesBy LotkaVolterra Dynamics
+    @prey_growth hasParameter Prey IntrinsicGrowthRate
+    @pred_mort hasParameter Predator MortalityRate
+    @attack hasParameter Interaction AttackRate
+    @convert hasParameter Predator ConversionEfficiency
+    @oscillate exhibits Populations Oscillations
+    @lag lagsBehing Predator PreyOscillation
+    @stable reaches System StableEquilibrium
+    return And $dynamics (And $lotka (And $prey_growth (And $pred_mort (And $attack (And $convert (And $oscillate (And $lag $stable)))))))
+end
+
+@:Keystone_Species graph Species Ecosystem Disproportionate
+    @keystone isA KeystoneSpecies EcologicalRole
+    @disprop hasEffect Keystone DisproportionateImpact
+    @low hasProperty Keystone LowAbundance
+    @remove causes Removal EcosystemChange
+    @cascade triggers Removal TrophicCascade
+    @example1 isA SeaOtter KeystoneSpecies
+    @urchin controls SeaOtter SeaUrchin
+    @kelp protects UrchinControl KelpForest
+    @example2 isA Wolf KeystoneSpecies
+    @elk controls Wolf Elk
+    @riparian protects ElkControl RiparianVegetation
+    return And $keystone (And $disprop (And $low (And $remove (And $cascade (And $example1 (And $urchin (And $kelp (And $example2 (And $elk $riparian)))))))))
+end
+
+@:Nitrogen_Fixation_Symbiosis graph Legume Rhizobium Nitrogen
+    @symb isA LegumeRhizobium Mutualism
+    @root secretes Legume Flavonoids
+    @nod induces Flavonoids NodGenes
+    @nodfac produces Rhizobium NodFactors
+    @curl causes NodFactors RootHairCurling
+    @thread forms Rhizobium InfectionThread
+    @nodule forms Legume RootNodule
+    @bacteroid becomes Rhizobium Bacteroid
+    @nitrogenase expresses Bacteroid Nitrogenase
+    @fix converts Nitrogenase N2_to_NH3
+    @carbon provides Legume Carbon
+    @nitrogen provides Rhizobium FixedNitrogen
+    return And $symb (And $root (And $nod (And $nodfac (And $curl (And $thread (And $nodule (And $bacteroid (And $nitrogenase (And $fix (And $carbon $nitrogen))))))))))
+end
+
+@:Ecological_Succession_Stages graph Pioneer Intermediate Climax
+    @succ isProcess EcologicalSuccession
+    @pioneer isStage Pioneer Early
+    @lichen isA Lichens Pioneer
+    @moss isA Mosses Pioneer
+    @soil creates Pioneer SoilFormation
+    @inter isStage Intermediate Middle
+    @shrub dominates Shrubs Intermediate
+    @tree_early dominates EarlyTrees Intermediate
+    @shade increases Canopy ShadeLevel
+    @climax isStage Climax Late
+    @stable hasProperty Climax StableCommunity
+    @dominant dominates CliMaxSpecies Climax
+    @equilib reaches Climax DynamicEquilibrium
+    return And $succ (And $pioneer (And $lichen (And $moss (And $soil (And $inter (And $shrub (And $tree_early (And $shade (And $climax (And $stable (And $dominant $equilib)))))))))))
+end
+
+# ============================================================================
+# EVOLUTIONARY MECHANISMS
+# ============================================================================
+
+@:Hardy_Weinberg_Equilibrium graph Population Alleles Frequencies
+    @hwe isA HardyWeinberg EvolutionaryModel
+    @nosel requires HWE NoSelection
+    @nomut requires HWE NoMutation
+    @nomig requires HWE NoMigration
+    @random requires HWE RandomMating
+    @large requires HWE LargePopulation
+    @p hasFrequency DominantAllele p
+    @q hasFrequency RecessiveAllele q
+    @sum equals p_plus_q One
+    @geno hasFrequencies Genotypes p2_2pq_q2
+    @stable remains Frequencies Constant
+    return And $hwe (And $nosel (And $nomut (And $nomig (And $random (And $large (And $p (And $q (And $sum (And $geno $stable)))))))))
+end
+
+@:Genetic_Drift_Mechanisms graph Population AlleleFrequency Stochastic
+    @drift isA GeneticDrift EvolutionaryForce
+    @random hasProperty Drift RandomChange
+    @small affects Drift SmallPopulations
+    @bottleneck isType Bottleneck DriftEvent
+    @disaster causes Disaster Bottleneck
+    @reduce reduces Bottleneck GeneticVariation
+    @founder isType FounderEffect DriftEvent
+    @colonize causes Colonization FounderEffect
+    @sample represents Founders PopulationSample
+    @fixation leads Drift AlleleFIxation
+    @loss leads Drift AlleleLoss
+    return And $drift (And $random (And $small (And $bottleneck (And $disaster (And $reduce (And $founder (And $colonize (And $sample (And $fixation $loss)))))))))
+end
+
+@:Natural_Selection_Types graph Selection Phenotype Fitness
+    @ns isA NaturalSelection EvolutionaryForce
+    @direct isType Directional Selection
+    @oneextreme favors Directional OneExtreme
+    @shift shifts Directional MeanPhenotype
+    @stabil isType Stabilizing Selection
+    @average favors Stabilizing AveragePhenotype
+    @reduce reduces Stabilizing Variance
+    @disrupt isType Disruptive Selection
+    @bothext favors Disruptive BothExtremes
+    @increase increases Disruptive Variance
+    @bimodal creates Disruptive BimodalDistribution
+    return And $ns (And $direct (And $oneextreme (And $shift (And $stabil (And $average (And $reduce (And $disrupt (And $bothext (And $increase $bimodal)))))))))
+end
+
+@:Speciation_Mechanisms graph Population ReproductiveIsolation NewSpecies
+    @spec isProcess Speciation
+    @allo isType Allopatric Speciation
+    @geo requires Allopatric GeographicBarrier
+    @diverge causes Isolation GeneticDivergence
+    @symp isType Sympatric Speciation
+    @nogeo occursWithout Sympatric GeographicBarrier
+    @poly causes Polyploidy SympatricSpeciation
+    @parap isType Parapatric Speciation
+    @partial hasBarrier Parapatric PartialBarrier
+    @prezyg isType Prezygotic ReproductiveBarrier
+    @postzyg isType Postzygotic ReproductiveBarrier
+    @behav isExample BehavioralIsolation Prezygotic
+    @hybrid isExample HybridInviability Postzygotic
+    return And $spec (And $allo (And $geo (And $diverge (And $symp (And $nogeo (And $poly (And $parap (And $partial (And $prezyg (And $postzyg (And $behav $hybrid)))))))))))
+end
+
+# ============================================================================
+# ADDITIONAL COMPLEX INFERENCE RULES
+# ============================================================================
+
+@:Taxonomy_Transitivity_Extended graph Taxon1 Taxon2 Taxon3 Taxon4
+    @r1 belongsTo $Taxon1 $Taxon2
+    @r2 belongsTo $Taxon2 $Taxon3
+    @r3 belongsTo $Taxon3 $Taxon4
+    @premise And $r1 (And $r2 $r3)
+    @conclusion belongsTo $Taxon1 $Taxon4
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Protein_Function_Inference graph Gene Protein Function
+    @encodes encodes $Gene $Protein
+    @structure determinesFunction Structure $Protein
+    @fold hasFold $Protein FoldedStructure
+    @active hasProperty $Protein ActiveSite
+    @premise And $encodes (And $structure (And $fold $active))
+    @conclusion performs $Protein $Function
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Disease_Pathway_Inference graph Mutation Protein Pathway Disease
+    @mut affects $Mutation $Protein
+    @prot participatesIn $Protein $Pathway
+    @path dysregulates $Pathway CellularProcess
+    @premise And $mut (And $prot $path)
+    @conclusion causesRiskFor $Mutation $Disease
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Ecosystem_Cascade_Inference graph Species1 Species2 Species3 Ecosystem
+    @pred preyOn $Species1 $Species2
+    @pred2 preyOn $Species2 $Species3
+    @decline declines $Species1 Population
+    @premise And $pred (And $pred2 $decline)
+    @cascade causesCascade $decline $Ecosystem
+    @rule Implies $premise $cascade
+    return $rule
+end
+
+@:Evolutionary_Adaptation_Inference graph Environment Trait Species Fitness
+    @pressure selectsFor $Environment $Trait
+    @possess hasTrait $Species $Trait
+    @advantage confers $Trait SelectiveAdvantage
+    @premise And $pressure (And $possess $advantage)
+    @conclusion increases $Species $Fitness
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Hormone_Cascade_Inference graph Stimulus Gland Hormone Target Response
+    @stim triggers $Stimulus $Gland
+    @release releases $Gland $Hormone
+    @bind binds $Hormone $Target
+    @premise And $stim (And $release $bind)
+    @conclusion elicits $Hormone $Response
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Immune_Response_Inference graph Pathogen APC TCell Antibody
+    @infect infects $Pathogen Host
+    @present presents $APC Antigen
+    @activate activates Antigen $TCell
+    @help provides THelper BCell
+    @premise And $infect (And $present (And $activate $help))
+    @conclusion produces BCell $Antibody
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Neuronal_Plasticity_Inference graph Synapse Activity Receptor Strength
+    @repeat hasProperty $Synapse RepeatedActivation
+    @ltp undergoes $Synapse LTP
+    @ampa increases LTP AMPAReceptors
+    @spine enlarges LTP DendriticSpine
+    @premise And $repeat (And $ltp (And $ampa $spine))
+    @conclusion strengthens $Synapse Connection
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Metabolic_Regulation_Inference graph Substrate Enzyme Product Pathway
+    @level hasLevel $Substrate HighConcentration
+    @induce induces HighConcentration $Enzyme
+    @catalyze catalyzes $Enzyme Reaction
+    @produce produces Reaction $Product
+    @premise And $level (And $induce (And $catalyze $produce))
+    @conclusion activates $Substrate $Pathway
+    @rule Implies $premise $conclusion
+    return $rule
+end
+
+@:Gene_Network_Inference graph TF1 Gene1 TF2 Gene2 Phenotype
+    @activate1 activates $TF1 $Gene1
+    @encode1 encodes $Gene1 $TF2
+    @activate2 activates $TF2 $Gene2
+    @express produces $Gene2 ProteinProduct
+    @premise And $activate1 (And $encode1 (And $activate2 $express))
+    @conclusion determines GeneNetwork $Phenotype
+    @rule Implies $premise $conclusion
+    return $rule
+end

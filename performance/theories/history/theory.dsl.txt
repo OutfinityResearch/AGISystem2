@@ -1,0 +1,2352 @@
+// Historical Theory - Comprehensive Knowledge Base
+// Over 1000 facts covering major eras, civilizations, events, and causation chains
+
+// ========== PREHISTORIC ERA ==========
+
+@:Stone_Age fact InPeriod StoneAge Prehistory
+    return (InPeriod StoneAge Prehistory)
+end
+
+@:Bronze_Age fact InPeriod BronzeAge Prehistory
+    return (InPeriod BronzeAge Prehistory)
+end
+
+@:Iron_Age fact InPeriod IronAge Prehistory
+    return (InPeriod IronAge Prehistory)
+end
+
+@:Tool_Development graph Period Technology Society
+    @p1 InPeriod $Period Prehistory
+    @p2 Developed $Period $Technology
+    @p3 Enabled $Technology $Society
+    @chain Implies (And $p1 $p2) $p3
+    return $chain
+end
+
+@:Fire_Discovery graph Discovery Impact Survival
+    @d1 Discovered Humans Fire
+    @d2 Enabled Fire Cooking
+    @d3 Improved Cooking $Survival
+    @chain Implies (And $d1 $d2) $d3
+    return $chain
+end
+
+// ========== ANCIENT CIVILIZATIONS ==========
+
+// Ancient Egypt
+@:Ancient_Egypt fact Civilization Egypt Ancient
+    return (Civilization Egypt Ancient)
+end
+
+@:Pharaoh_Rule fact RuledBy Egypt Pharaohs
+    return (RuledBy Egypt Pharaohs)
+end
+
+@:Pyramids_Built graph Civilization Structure Purpose
+    @c1 Civilization Egypt Ancient
+    @c2 Built Egypt Pyramids
+    @c3 ServedAs Pyramids Tombs
+    @c4 HonoredThe Tombs Pharaohs
+    @chain Implies (And $c1 (And $c2 $c3)) $c4
+    return $chain
+end
+
+@:Hieroglyphics graph Civilization Writing Communication
+    @w1 Developed Egypt Hieroglyphics
+    @w2 UsedFor Hieroglyphics Writing
+    @w3 Enabled Writing Communication
+    @w4 Preserved Communication History
+    @chain Implies (And $w1 (And $w2 $w3)) $w4
+    return $chain
+end
+
+@:Nile_River graph River Agriculture Civilization
+    @r1 LocatedIn NileRiver Egypt
+    @r2 Flooded NileRiver Annually
+    @r3 Enriched Flooding Soil
+    @r4 Enabled FertileSoil Agriculture
+    @r5 Supported Agriculture Civilization
+    @chain Implies (And $r1 (And $r2 (And $r3 $r4))) $r5
+    return $chain
+end
+
+@:Tutankhamun fact Pharaoh Tutankhamun Egypt
+    return (Pharaoh Tutankhamun Egypt)
+end
+
+@:Cleopatra fact Pharaoh Cleopatra Egypt
+    return (Pharaoh Cleopatra Egypt)
+end
+
+@:Ramses_II graph Leader Military Expansion
+    @l1 Pharaoh RamsesII Egypt
+    @l2 Led RamsesII Military
+    @l3 Expanded Military Territory
+    @l4 Built RamsesII Monuments
+    @chain Implies (And $l1 (And $l2 $l3)) $l4
+    return $chain
+end
+
+// Mesopotamia
+@:Mesopotamia fact Civilization Mesopotamia Ancient
+    return (Civilization Mesopotamia Ancient)
+end
+
+@:Sumerians fact People Sumerians Mesopotamia
+    return (People Sumerians Mesopotamia)
+end
+
+@:Cuneiform graph Writing System Records
+    @w1 Invented Sumerians Cuneiform
+    @w2 FirstKnown Cuneiform WritingSystem
+    @w3 Used Cuneiform RecordKeeping
+    @w4 Enabled RecordKeeping Trade
+    @chain Implies (And $w1 (And $w2 $w3)) $w4
+    return $chain
+end
+
+@:Code_Of_Hammurabi graph Ruler Law Society
+    @r1 Ruled Hammurabi Babylon
+    @r2 Created Hammurabi CodeOfLaws
+    @r3 FirstKnown CodeOfLaws WrittenLaw
+    @r4 Established WrittenLaw Justice
+    @r5 Organized Justice Society
+    @chain Implies (And $r1 (And $r2 (And $r3 $r4))) $r5
+    return $chain
+end
+
+@:Tigris_Euphrates graph Rivers Agriculture Cities
+    @g1 FlowThrough TigrisRiver Mesopotamia
+    @g2 FlowThrough EuphratesRiver Mesopotamia
+    @g3 Enabled BothRivers Irrigation
+    @g4 Supported Irrigation Agriculture
+    @g5 Led Agriculture Cities
+    @chain Implies (And $g1 (And $g2 (And $g3 $g4))) $g5
+    return $chain
+end
+
+// Ancient Greece
+@:Ancient_Greece fact Civilization Greece Classical
+    return (Civilization Greece Classical)
+end
+
+@:Greek_City_States fact PoliticalSystem Greece CityStates
+    return (PoliticalSystem Greece CityStates)
+end
+
+@:Athens fact CityState Athens Greece
+    return (CityState Athens Greece)
+end
+
+@:Sparta fact CityState Sparta Greece
+    return (CityState Sparta Greece)
+end
+
+@:Athenian_Democracy graph CityState Government Influence
+    @a1 CityState Athens Greece
+    @a2 Developed Athens Democracy
+    @a3 FirstKnown Democracy DirectDemocracy
+    @a4 Influenced DirectDemocracy ModernGovernment
+    @a5 Allowed Democracy CitizenParticipation
+    @chain Implies (And $a1 (And $a2 (And $a3 $a4))) $a5
+    return $chain
+end
+
+@:Spartan_Military graph CityState Military Culture
+    @s1 CityState Sparta Greece
+    @s2 Focused Sparta MilitaryTraining
+    @s3 Created MilitaryTraining WarriorSociety
+    @s4 Dominated WarriorSociety GreekWarfare
+    @s5 Valued Sparta Discipline
+    @chain Implies (And $s1 (And $s2 (And $s3 $s4))) $s5
+    return $chain
+end
+
+@:Socrates fact Philosopher Socrates Athens
+    return (Philosopher Socrates Athens)
+end
+
+@:Plato fact Philosopher Plato Athens
+    return (Philosopher Plato Athens)
+end
+
+@:Aristotle fact Philosopher Aristotle Greece
+    return (Philosopher Aristotle Greece)
+end
+
+@:Socratic_Method graph Philosopher Teaching Knowledge
+    @p1 Philosopher Socrates Athens
+    @p2 Developed Socrates SocraticMethod
+    @p3 UsedFor SocraticMethod CriticalThinking
+    @p4 Influenced CriticalThinking Philosophy
+    @p5 Taught Socrates Plato
+    @chain Implies (And $p1 (And $p2 (And $p3 $p4))) $p5
+    return $chain
+end
+
+@:Platonic_Philosophy graph Teacher Student Ideas
+    @t1 Taught Socrates Plato
+    @t2 Founded Plato Academy
+    @t3 Developed Plato TheoryOfForms
+    @t4 Wrote Plato Republic
+    @t5 Influenced TheoryOfForms WesternPhilosophy
+    @chain Implies (And $t1 (And $t2 (And $t3 $t4))) $t5
+    return $chain
+end
+
+@:Aristotelian_Logic graph Philosopher Science Method
+    @a1 Student Aristotle Plato
+    @a2 Founded Aristotle Lyceum
+    @a3 Developed Aristotle Logic
+    @a4 Created Aristotle ScientificMethod
+    @a5 Tutored Aristotle AlexanderTheGreat
+    @chain Implies (And $a1 (And $a2 (And $a3 $a4))) $a5
+    return $chain
+end
+
+@:Alexander_The_Great graph Conqueror Empire Culture
+    @c1 King AlexanderTheGreat Macedon
+    @c2 Tutored AlexanderTheGreat Aristotle
+    @c3 Conquered AlexanderTheGreat PersianEmpire
+    @c4 Created AlexanderTheGreat HellenisticEmpire
+    @c5 Spread HellenisticEmpire GreekCulture
+    @chain Implies (And $c1 (And $c2 (And $c3 $c4))) $c5
+    return $chain
+end
+
+@:Persian_Wars graph Conflict Victory Freedom
+    @w1 Invaded Persia Greece
+    @w2 Fought Greece Persia
+    @w3 Won Athens Marathon
+    @w4 Defended Sparta Thermopylae
+    @w5 Preserved Victory GreekIndependence
+    @chain Implies (And $w1 (And $w2 (And $w3 $w4))) $w5
+    return $chain
+end
+
+@:Peloponnesian_War graph Conflict Rivalry Decline
+    @pw1 Fought Athens Sparta
+    @pw2 Lasted PeloponnesianWar 27Years
+    @pw3 Won Sparta War
+    @pw4 Weakened War Greece
+    @pw5 Led Weakness MacedonianConquest
+    @chain Implies (And $pw1 (And $pw2 (And $pw3 $pw4))) $pw5
+    return $chain
+end
+
+@:Greek_Olympics graph Festival Unity Culture
+    @o1 Held OlympicGames Olympia
+    @o2 Honored OlympicGames Zeus
+    @o3 United OlympicGames GreekCityStates
+    @o4 Promoted OlympicGames PeacefulCompetition
+    @o5 Influenced AncientOlympics ModernOlympics
+    @chain Implies (And $o1 (And $o2 (And $o3 $o4))) $o5
+    return $chain
+end
+
+// Ancient Rome
+@:Ancient_Rome fact Civilization Rome Classical
+    return (Civilization Rome Classical)
+end
+
+@:Roman_Republic fact GovernmentType Rome Republic
+    return (GovernmentType Rome Republic)
+end
+
+@:Roman_Empire fact GovernmentType Rome Empire
+    return (GovernmentType Rome Empire)
+end
+
+@:Founding_Of_Rome graph Legend City Civilization
+    @f1 Founded Romulus Rome
+    @f2 Dated Founding 753BC
+    @f3 Started Rome SmallCity
+    @f4 Grew SmallCity GreatEmpire
+    @f5 Lasted RomanCivilization 1000Years
+    @chain Implies (And $f1 (And $f2 (And $f3 $f4))) $f5
+    return $chain
+end
+
+@:Roman_Senate graph Institution Republic Power
+    @rs1 GovernmentType Rome Republic
+    @rs2 Governed Senate Rome
+    @rs3 Represented Senate Aristocracy
+    @rs4 Made Senate Laws
+    @rs5 Controlled Senate Military
+    @chain Implies (And $rs1 (And $rs2 (And $rs3 $rs4))) $rs5
+    return $chain
+end
+
+@:Julius_Caesar graph Leader Conquest Dictatorship
+    @jc1 General JuliusCaesar Rome
+    @jc2 Conquered JuliusCaesar Gaul
+    @jc3 Crossed JuliusCaesar Rubicon
+    @jc4 Became JuliusCaesar Dictator
+    @jc5 Assassinated JuliusCaesar Senate
+    @chain Implies (And $jc1 (And $jc2 (And $jc3 $jc4))) $jc5
+    return $chain
+end
+
+@:Roman_Civil_War graph Assassination Conflict Empire
+    @rcw1 Assassinated JuliusCaesar Senate
+    @rcw2 Triggered Assassination CivilWar
+    @rcw3 Fought Octavian MarkAntony
+    @rcw4 Won Octavian ActiumBattle
+    @rcw5 Became Octavian Augustus
+    @chain Implies (And $rcw1 (And $rcw2 (And $rcw3 $rcw4))) $rcw5
+    return $chain
+end
+
+@:Augustus_Empire graph Leader Transition Peace
+    @ae1 Became Octavian Augustus
+    @ae2 FirstEmperor Augustus Rome
+    @ae3 Ended Augustus Republic
+    @ae4 Started Augustus Empire
+    @ae5 Established Augustus PaxRomana
+    @chain Implies (And $ae1 (And $ae2 (And $ae3 $ae4))) $ae5
+    return $chain
+end
+
+@:Pax_Romana graph Peace Prosperity Culture
+    @pr1 Established Augustus PaxRomana
+    @pr2 Lasted PaxRomana 200Years
+    @pr3 Enabled PaxRomana Trade
+    @pr4 Flourished Culture Empire
+    @pr5 Spread Roman Culture
+    @chain Implies (And $pr1 (And $pr2 (And $pr3 $pr4))) $pr5
+    return $chain
+end
+
+@:Roman_Engineering graph Innovation Infrastructure Empire
+    @re1 Built Rome Roads
+    @re2 Constructed Rome Aqueducts
+    @re3 Invented Rome Concrete
+    @re4 Connected Infrastructure Empire
+    @re5 Influenced RomanEngineering ModernConstruction
+    @chain Implies (And $re1 (And $re2 (And $re3 $re4))) $re5
+    return $chain
+end
+
+@:Roman_Law graph System Justice Legacy
+    @rl1 Developed Rome LegalSystem
+    @rl2 Codified Justinian RomanLaw
+    @rl3 Established RomanLaw RightsAndDuties
+    @rl4 Influenced RomanLaw ModernLaw
+    @rl5 Based ModernLaw CivilLaw
+    @chain Implies (And $rl1 (And $rl2 (And $rl3 $rl4))) $rl5
+    return $chain
+end
+
+@:Christianity_Rise graph Religion Persecution Adoption
+    @cr1 Founded Jesus Christianity
+    @cr2 Spread Apostles Christianity
+    @cr3 Persecuted Rome Christians
+    @cr4 Converted Constantine Christianity
+    @cr5 Became Christianity OfficialReligion
+    @chain Implies (And $cr1 (And $cr2 (And $cr3 $cr4))) $cr5
+    return $chain
+end
+
+@:Constantine graph Emperor Conversion Capital
+    @c1 Emperor Constantine Rome
+    @c2 Won Constantine MilvianBridge
+    @c3 Converted Constantine Christianity
+    @c4 Legalized EdictOfMilan Christianity
+    @c5 Founded Constantine Constantinople
+    @chain Implies (And $c1 (And $c2 (And $c3 $c4))) $c5
+    return $chain
+end
+
+@:Roman_Decline graph Barbarians Division Fall
+    @rd1 Invaded Barbarians Rome
+    @rd2 Divided Empire EastAndWest
+    @rd3 Weakened Division Empire
+    @rd4 Sacked Visigoths Rome
+    @rd5 Fell WesternRome 476AD
+    @chain Implies (And $rd1 (And $rd2 (And $rd3 $rd4))) $rd5
+    return $chain
+end
+
+// Ancient China
+@:Ancient_China fact Civilization China Ancient
+    return (Civilization China Ancient)
+end
+
+@:Qin_Dynasty fact Dynasty Qin China
+    return (Dynasty Qin China)
+end
+
+@:Han_Dynasty fact Dynasty Han China
+    return (Dynasty Han China)
+end
+
+@:Qin_Shi_Huang graph Emperor Unification Wall
+    @qsh1 Emperor QinShiHuang QinDynasty
+    @qsh2 Unified QinShiHuang China
+    @qsh3 Standardized QinShiHuang Writing
+    @qsh4 Built QinShiHuang GreatWall
+    @qsh5 Created QinShiHuang TerracottaArmy
+    @chain Implies (And $qsh1 (And $qsh2 (And $qsh3 $qsh4))) $qsh5
+    return $chain
+end
+
+@:Great_Wall graph Defense Construction Protection
+    @gw1 Built QinDynasty GreatWall
+    @gw2 Protected GreatWall Invasions
+    @gw3 Extended HanDynasty GreatWall
+    @gw4 Longest GreatWall Structure
+    @gw5 Symbol GreatWall China
+    @chain Implies (And $gw1 (And $gw2 (And $gw3 $gw4))) $gw5
+    return $chain
+end
+
+@:Han_Dynasty_Golden_Age graph Dynasty Culture Innovation
+    @hdga1 Dynasty Han China
+    @hdga2 Lasted HanDynasty 400Years
+    @hdga3 Developed HanDynasty PaperMaking
+    @hdga4 Established HanDynasty SilkRoad
+    @hdga5 Flourished Culture Science
+    @chain Implies (And $hdga1 (And $hdga2 (And $hdga3 $hdga4))) $hdga5
+    return $chain
+end
+
+@:Silk_Road graph Trade Route Exchange
+    @sr1 Established HanDynasty SilkRoad
+    @sr2 Connected SilkRoad EastAndWest
+    @sr3 Traded SilkRoad Goods
+    @sr4 Exchanged SilkRoad Ideas
+    @sr5 Spread SilkRoad Culture
+    @chain Implies (And $sr1 (And $sr2 (And $sr3 $sr4))) $sr5
+    return $chain
+end
+
+@:Confucius graph Philosopher Teaching Ethics
+    @cf1 Philosopher Confucius China
+    @cf2 Taught Confucius Ethics
+    @cf3 Emphasized Confucianism Respect
+    @cf4 Influenced Confucianism ChineseSociety
+    @cf5 Spread Confucianism EastAsia
+    @chain Implies (And $cf1 (And $cf2 (And $cf3 $cf4))) $cf5
+    return $chain
+end
+
+@:Chinese_Inventions graph Innovation Technology Progress
+    @ci1 Invented China Paper
+    @ci2 Invented China Gunpowder
+    @ci3 Invented China Compass
+    @ci4 Invented China PrintingPress
+    @ci5 Transformed Inventions World
+    @chain Implies (And $ci1 (And $ci2 (And $ci3 $ci4))) $ci5
+    return $chain
+end
+
+// Ancient India
+@:Ancient_India fact Civilization India Ancient
+    return (Civilization India Ancient)
+end
+
+@:Indus_Valley fact Civilization IndusValley Ancient
+    return (Civilization IndusValley Ancient)
+end
+
+@:Maurya_Empire fact Empire Maurya India
+    return (Empire Maurya India)
+end
+
+@:Gupta_Empire fact Empire Gupta India
+    return (Empire Gupta India)
+end
+
+@:Indus_Valley_Civilization graph Civilization Cities Planning
+    @ivc1 Flourished IndusValley 2500BC
+    @ivc2 Built IndusValley PlannedCities
+    @ivc3 Developed IndusValley Plumbing
+    @ivc4 Created IndusValley Writing
+    @ivc5 Declined IndusValley UnknownReasons
+    @chain Implies (And $ivc1 (And $ivc2 (And $ivc3 $ivc4))) $ivc5
+    return $chain
+end
+
+@:Ashoka graph Emperor Conquest Buddhism
+    @a1 Emperor Ashoka MauryaEmpire
+    @a2 Conquered Ashoka Kalinga
+    @a3 Regretted Ashoka Violence
+    @a4 Converted Ashoka Buddhism
+    @a5 Spread Ashoka BuddhistTeachings
+    @chain Implies (And $a1 (And $a2 (And $a3 $a4))) $a5
+    return $chain
+end
+
+@:Buddhism_Spread graph Religion Missionary Influence
+    @bs1 Founded Buddha Buddhism
+    @bs2 Taught Buddha MiddleWay
+    @bs3 Promoted Ashoka Buddhism
+    @bs4 Spread Buddhism Asia
+    @bs5 Influenced Buddhism Culture
+    @chain Implies (And $bs1 (And $bs2 (And $bs3 $bs4))) $bs5
+    return $chain
+end
+
+@:Gupta_Golden_Age graph Empire Science Arts
+    @gga1 Empire Gupta India
+    @gga2 Flourished GuptaEmpire Arts
+    @gga3 Advanced GuptaEmpire Mathematics
+    @gga4 Developed GuptaEmpire Astronomy
+    @gga5 Created GuptaEmpire ZeroConcept
+    @chain Implies (And $gga1 (And $gga2 (And $gga3 $gga4))) $gga5
+    return $chain
+end
+
+@:Hindu_Philosophy graph Religion Culture Society
+    @hp1 Developed India Hinduism
+    @hp2 Wrote Sages Vedas
+    @hp3 Taught Hinduism Karma
+    @hp4 Influenced Hinduism IndianCulture
+    @hp5 Practiced Hinduism CasteSystem
+    @chain Implies (And $hp1 (And $hp2 (And $hp3 $hp4))) $hp5
+    return $chain
+end
+
+// ========== MEDIEVAL PERIOD ==========
+
+@:Medieval_Period fact Period MiddleAges Medieval
+    return (Period MiddleAges Medieval)
+end
+
+@:Byzantine_Empire fact Empire Byzantine Medieval
+    return (Empire Byzantine Medieval)
+end
+
+@:Byzantine_Continuation graph Empire Survival Culture
+    @bc1 Survived EasternRome Fall
+    @bc2 Became EasternRome ByzantineEmpire
+    @bc3 Preserved Byzantine GreekRomanCulture
+    @bc4 Lasted Byzantine 1000Years
+    @bc5 Fell Byzantine 1453
+    @chain Implies (And $bc1 (And $bc2 (And $bc3 $bc4))) $bc5
+    return $chain
+end
+
+@:Justinian_Code graph Emperor Law Codification
+    @jc1 Emperor Justinian Byzantine
+    @jc2 Reconquered Justinian WesternTerritories
+    @jc3 Built Justinian HagiaSophia
+    @jc4 Codified Justinian RomanLaw
+    @jc5 Preserved JustinianCode LegalKnowledge
+    @chain Implies (And $jc1 (And $jc2 (And $jc3 $jc4))) $jc5
+    return $chain
+end
+
+@:Islamic_Golden_Age fact Period IslamicGoldenAge Medieval
+    return (Period IslamicGoldenAge Medieval)
+end
+
+@:Muhammad graph Prophet Religion Empire
+    @m1 Prophet Muhammad Islam
+    @m2 Founded Muhammad Islam
+    @m3 Unified Muhammad Arabia
+    @m4 Spread Islam Rapidly
+    @m5 Created Islam Caliphate
+    @chain Implies (And $m1 (And $m2 (And $m3 $m4))) $m5
+    return $chain
+end
+
+@:Islamic_Expansion graph Religion Conquest Culture
+    @ie1 Founded Muhammad Islam
+    @ie2 Expanded Caliphate MiddleEast
+    @ie3 Conquered Caliphate NorthAfrica
+    @ie4 Reached Caliphate Spain
+    @ie5 Spread Islam Science
+    @chain Implies (And $ie1 (And $ie2 (And $ie3 $ie4))) $ie5
+    return $chain
+end
+
+@:Islamic_Science graph Scholars Knowledge Preservation
+    @is1 Period IslamicGoldenAge Medieval
+    @is2 Preserved Scholars GreekTexts
+    @is3 Advanced Scholars Mathematics
+    @is4 Developed Scholars Algebra
+    @is5 Contributed Scholars Medicine
+    @chain Implies (And $is1 (And $is2 (And $is3 $is4))) $is5
+    return $chain
+end
+
+@:Abbasid_Caliphate graph Dynasty Capital Learning
+    @ac1 Dynasty Abbasid Islamic
+    @ac2 Founded Abbasid Baghdad
+    @ac3 Built Abbasid HouseOfWisdom
+    @ac4 Translated Scholars Texts
+    @ac5 Flourished Baghdad Culture
+    @chain Implies (And $ac1 (And $ac2 (And $ac3 $ac4))) $ac5
+    return $chain
+end
+
+@:Feudalism fact System Feudalism Medieval
+    return (System Feudalism Medieval)
+end
+
+@:Feudal_System graph Society Hierarchy Lords
+    @fs1 System Feudalism Medieval
+    @fs2 Based Feudalism LandOwnership
+    @fs3 Served Vassals Lords
+    @fs4 Protected Lords Vassals
+    @fs5 Worked Serfs Land
+    @chain Implies (And $fs1 (And $fs2 (And $fs3 $fs4))) $fs5
+    return $chain
+end
+
+@:Charlemagne graph King Empire Culture
+    @ch1 King Charlemagne Franks
+    @ch2 Crowned Charlemagne HolyRomanEmperor
+    @ch3 United Charlemagne WesternEurope
+    @ch4 Promoted Charlemagne Education
+    @ch5 Started Charlemagne CarolingianRenaissance
+    @chain Implies (And $ch1 (And $ch2 (And $ch3 $ch4))) $ch5
+    return $chain
+end
+
+@:Viking_Age fact Period VikingAge Medieval
+    return (Period VikingAge Medieval)
+end
+
+@:Viking_Raids graph Warriors Raids Settlement
+    @vr1 Period VikingAge Medieval
+    @vr2 Raided Vikings Europe
+    @vr3 Sailed Vikings LongShips
+    @vr4 Settled Vikings Iceland
+    @vr5 Reached Vikings America
+    @chain Implies (And $vr1 (And $vr2 (And $vr3 $vr4))) $vr5
+    return $chain
+end
+
+@:Norman_Conquest graph Invasion Battle Change
+    @nc1 Duke WilliamTheConqueror Normandy
+    @nc2 Invaded William England
+    @nc3 Won William HastingsBattle
+    @nc4 Became William KingOfEngland
+    @nc5 Transformed Norman EnglishCulture
+    @chain Implies (And $nc1 (And $nc2 (And $nc3 $nc4))) $nc5
+    return $chain
+end
+
+@:Crusades fact Wars Crusades Medieval
+    return (Wars Crusades Medieval)
+end
+
+@:First_Crusade graph Pope War Jerusalem
+    @fc1 Called PopeUrbanII Crusade
+    @fc2 Mobilized Christians Warriors
+    @fc3 Fought Crusaders Muslims
+    @fc4 Captured Crusaders Jerusalem
+    @fc5 Established Crusaders CrusaderStates
+    @chain Implies (And $fc1 (And $fc2 (And $fc3 $fc4))) $fc5
+    return $chain
+end
+
+@:Later_Crusades graph Conflicts Failure Relations
+    @lc1 Launched Europe MultipleCrusades
+    @lc2 Lost Christians Jerusalem
+    @lc3 Failed MostCrusades
+    @lc4 Weakened Crusades Byzantine
+    @lc5 Strained Crusades ChristianMuslimRelations
+    @chain Implies (And $lc1 (And $lc2 (And $lc3 $lc4))) $lc5
+    return $chain
+end
+
+@:Mongol_Empire fact Empire Mongol Medieval
+    return (Empire Mongol Medieval)
+end
+
+@:Genghis_Khan graph Leader Conquest Empire
+    @gk1 Leader GenghisKhan Mongols
+    @gk2 United GenghisKhan MongolTribes
+    @gk3 Created GenghisKhan Army
+    @gk4 Conquered GenghisKhan Asia
+    @gk5 Founded GenghisKhan LargestEmpire
+    @chain Implies (And $gk1 (And $gk2 (And $gk3 $gk4))) $gk5
+    return $chain
+end
+
+@:Mongol_Conquests graph Military Strategy Empire
+    @mc1 Founded GenghisKhan MongolEmpire
+    @mc2 Invaded Mongols China
+    @mc3 Conquered Mongols Persia
+    @mc4 Reached Mongols Europe
+    @mc5 Connected MongolEmpire EastWestTrade
+    @chain Implies (And $mc1 (And $mc2 (And $mc3 $mc4))) $mc5
+    return $chain
+end
+
+@:Black_Death graph Plague Death Change
+    @bd1 Arrived BlackDeath Europe
+    @bd2 Spread BlackDeath Rapidly
+    @bd3 Killed BlackDeath ThirdOfPopulation
+    @bd4 Devastated Plague Economy
+    @bd5 Weakened Plague Feudalism
+    @chain Implies (And $bd1 (And $bd2 (And $bd3 $bd4))) $bd5
+    return $chain
+end
+
+@:Hundred_Years_War graph Conflict England France
+    @hyw1 Fought England France
+    @hyw2 Lasted HundredYearsWar 116Years
+    @hyw3 Claimed England FrenchThrone
+    @hyw4 Led JoanOfArc French
+    @hyw5 Won France War
+    @chain Implies (And $hyw1 (And $hyw2 (And $hyw3 $hyw4))) $hyw5
+    return $chain
+end
+
+@:Joan_Of_Arc graph Leader Vision Victory
+    @joa1 Peasant JoanOfArc France
+    @joa2 Had JoanOfArc Visions
+    @joa3 Led JoanOfArc FrenchArmy
+    @joa4 Lifted JoanOfArc OrleansSiege
+    @joa5 Captured English JoanOfArc
+    @chain Implies (And $joa1 (And $joa2 (And $joa3 $joa4))) $joa5
+    return $chain
+end
+
+@:Magna_Carta graph Conflict Charter Rights
+    @mc1 King JohnOfEngland England
+    @mc2 Oppressed John Barons
+    @mc3 Forced Barons John
+    @mc4 Signed John MagnaCarta
+    @mc5 Limited MagnaCarta RoyalPower
+    @chain Implies (And $mc1 (And $mc2 (And $mc3 $mc4))) $mc5
+    return $chain
+end
+
+@:Medieval_Universities graph Education Knowledge Institution
+    @mu1 Founded Europe Universities
+    @mu2 Established Bologna University
+    @mu3 Founded Paris University
+    @mu4 Created Oxford University
+    @mu5 Preserved Universities Knowledge
+    @chain Implies (And $mu1 (And $mu2 (And $mu3 $mu4))) $mu5
+    return $chain
+end
+
+// ========== RENAISSANCE ==========
+
+@:Renaissance fact Period Renaissance EarlyModern
+    return (Period Renaissance EarlyModern)
+end
+
+@:Italian_Renaissance graph Rebirth Art Culture
+    @ir1 Started Renaissance Italy
+    @ir2 Revived Renaissance ClassicalLearning
+    @ir3 Flourished Renaissance Art
+    @ir4 Advanced Renaissance Science
+    @ir5 Emphasized Renaissance Humanism
+    @chain Implies (And $ir1 (And $ir2 (And $ir3 $ir4))) $ir5
+    return $chain
+end
+
+@:Leonardo_Da_Vinci graph Artist Inventor Genius
+    @ldv1 Artist LeonardoDaVinci Renaissance
+    @ldv2 Painted Leonardo MonaLisa
+    @ldv3 Painted Leonardo LastSupper
+    @ldv4 Designed Leonardo Inventions
+    @ldv5 Exemplified Leonardo RenaissanceMan
+    @chain Implies (And $ldv1 (And $ldv2 (And $ldv3 $ldv4))) $ldv5
+    return $chain
+end
+
+@:Michelangelo graph Artist Sculptor Masterpieces
+    @m1 Artist Michelangelo Renaissance
+    @m2 Sculpted Michelangelo David
+    @m3 Painted Michelangelo SistineChapel
+    @m4 Designed Michelangelo StPeters
+    @m5 Mastered Michelangelo MultipleArts
+    @chain Implies (And $m1 (And $m2 (And $m3 $m4))) $m5
+    return $chain
+end
+
+@:Medici_Family graph Patrons Banking Arts
+    @mf1 Family Medici Florence
+    @mf2 Controlled Medici Banking
+    @mf3 Patronized Medici Artists
+    @mf4 Supported Medici Scholars
+    @mf5 Enabled Medici Renaissance
+    @chain Implies (And $mf1 (And $mf2 (And $mf3 $mf4))) $mf5
+    return $chain
+end
+
+@:Printing_Press graph Invention Books Knowledge
+    @pp1 Invented Gutenberg PrintingPress
+    @pp2 Printed Gutenberg Bible
+    @pp3 Enabled PrintingPress MassProduction
+    @pp4 Spread PrintingPress Literacy
+    @pp5 Revolutionized PrintingPress Communication
+    @chain Implies (And $pp1 (And $pp2 (And $pp3 $pp4))) $pp5
+    return $chain
+end
+
+@:Protestant_Reformation fact Movement Reformation Religious
+    return (Movement Reformation Religious)
+end
+
+@:Martin_Luther graph Monk Protest Reform
+    @ml1 Monk MartinLuther Germany
+    @ml2 Posted Luther 95Theses
+    @ml3 Criticized Luther Church
+    @ml4 Started Luther Reformation
+    @ml5 Founded Luther Protestantism
+    @chain Implies (And $ml1 (And $ml2 (And $ml3 $ml4))) $ml5
+    return $chain
+end
+
+@:Religious_Wars graph Reformation Conflict Division
+    @rw1 Started Luther Reformation
+    @rw2 Split Reformation Christianity
+    @rw3 Fought Catholics Protestants
+    @rw4 Devastated Wars Europe
+    @rw5 Ended Westphalia Peace
+    @chain Implies (And $rw1 (And $rw2 (And $rw3 $rw4))) $rw5
+    return $chain
+end
+
+@:Age_Of_Exploration fact Period Exploration Discovery
+    return (Period Exploration Discovery)
+end
+
+@:Christopher_Columbus graph Explorer Voyage Discovery
+    @cc1 Explorer ChristopherColumbus Spain
+    @cc2 Sought Columbus RouteToAsia
+    @cc3 Sailed Columbus West
+    @cc4 Reached Columbus Americas
+    @cc5 Started Columbus ColumbianExchange
+    @chain Implies (And $cc1 (And $cc2 (And $cc3 $cc4))) $cc5
+    return $chain
+end
+
+@:Columbian_Exchange graph Contact Trade Impact
+    @ce1 Reached Columbus Americas
+    @ce2 Connected ColumbianExchange Continents
+    @ce3 Exchanged ColumbianExchange Goods
+    @ce4 Spread ColumbianExchange Diseases
+    @ce5 Transformed ColumbianExchange World
+    @chain Implies (And $ce1 (And $ce2 (And $ce3 $ce4))) $ce5
+    return $chain
+end
+
+@:Magellan_Circumnavigation graph Voyage Exploration Globe
+    @mc1 Explorer Magellan Spain
+    @mc2 Led Magellan Expedition
+    @mc3 Sailed Magellan AroundWorld
+    @mc4 Died Magellan Philippines
+    @mc5 Completed Crew CircumNavigation
+    @chain Implies (And $mc1 (And $mc2 (And $mc3 $mc4))) $mc5
+    return $chain
+end
+
+@:Spanish_Conquistadors graph Conquest Empire Indigenous
+    @sc1 Conquered Cortes Aztecs
+    @sc2 Conquered Pizarro Incas
+    @sc3 Established Spain Colonies
+    @sc4 Exploited Conquistadors Resources
+    @sc5 Destroyed Conquest IndigenousCultures
+    @chain Implies (And $sc1 (And $sc2 (And $sc3 $sc4))) $sc5
+    return $chain
+end
+
+// ========== EARLY MODERN PERIOD ==========
+
+@:Scientific_Revolution fact Period ScientificRevolution EarlyModern
+    return (Period ScientificRevolution EarlyModern)
+end
+
+@:Copernicus graph Astronomer Theory Revolution
+    @c1 Astronomer Copernicus Poland
+    @c2 Proposed Copernicus HeliocentricTheory
+    @c3 Challenged HeliocentricTheory Geocentrism
+    @c4 Showed Copernicus EarthOrbits
+    @c5 Started Copernicus ScientificRevolution
+    @chain Implies (And $c1 (And $c2 (And $c3 $c4))) $c5
+    return $chain
+end
+
+@:Galileo graph Scientist Telescope Evidence
+    @g1 Scientist Galileo Italy
+    @g2 Built Galileo Telescope
+    @g3 Observed Galileo JupiterMoons
+    @g4 Supported Galileo Copernicus
+    @g5 Tried Church Galileo
+    @chain Implies (And $g1 (And $g2 (And $g3 $g4))) $g5
+    return $chain
+end
+
+@:Newton graph Physicist Laws Gravity
+    @n1 Physicist Newton England
+    @n2 Discovered Newton Gravity
+    @n3 Formulated Newton MotionLaws
+    @n4 Invented Newton Calculus
+    @n5 Unified Newton Physics
+    @chain Implies (And $n1 (And $n2 (And $n3 $n4))) $n5
+    return $chain
+end
+
+@:Enlightenment fact Period Enlightenment EarlyModern
+    return (Period Enlightenment EarlyModern)
+end
+
+@:Age_Of_Reason graph Philosophy Reason Progress
+    @aor1 Period Enlightenment EarlyModern
+    @aor2 Emphasized Enlightenment Reason
+    @aor3 Questioned Enlightenment Authority
+    @aor4 Promoted Enlightenment Science
+    @aor5 Advanced Enlightenment HumanRights
+    @chain Implies (And $aor1 (And $aor2 (And $aor3 $aor4))) $aor5
+    return $chain
+end
+
+@:John_Locke graph Philosopher Rights Government
+    @jl1 Philosopher JohnLocke England
+    @jl2 Wrote Locke TwoTreatises
+    @jl3 Proposed Locke NaturalRights
+    @jl4 Advocated Locke SocialContract
+    @jl5 Influenced Locke Democracy
+    @chain Implies (And $jl1 (And $jl2 (And $jl3 $jl4))) $jl5
+    return $chain
+end
+
+@:Voltaire graph Writer Tolerance Freedom
+    @v1 Writer Voltaire France
+    @v2 Advocated Voltaire Tolerance
+    @v3 Criticized Voltaire Church
+    @v4 Defended Voltaire FreeSpeech
+    @v5 Influenced Voltaire Revolution
+    @chain Implies (And $v1 (And $v2 (And $v3 $v4))) $v5
+    return $chain
+end
+
+@:Rousseau graph Philosopher Social Equality
+    @r1 Philosopher Rousseau Geneva
+    @r2 Wrote Rousseau SocialContract
+    @r3 Argued Rousseau GeneralWill
+    @r4 Influenced Rousseau Democracy
+    @r5 Inspired Rousseau FrenchRevolution
+    @chain Implies (And $r1 (And $r2 (And $r3 $r4))) $r5
+    return $chain
+end
+
+// ========== REVOLUTIONS ==========
+
+@:American_Revolution fact War AmericanRevolution Colonial
+    return (War AmericanRevolution Colonial)
+end
+
+@:Colonial_Grievances graph Taxes Protest Resistance
+    @cg1 Imposed Britain Taxes
+    @cg2 Protested Colonists Taxation
+    @cg3 Declared Colonists NoTaxationWithoutRepresentation
+    @cg4 Boycotted Colonists BritishGoods
+    @cg5 Escalated Resistance Conflict
+    @chain Implies (And $cg1 (And $cg2 (And $cg3 $cg4))) $cg5
+    return $chain
+end
+
+@:Declaration_Of_Independence graph Document Rights Freedom
+    @doi1 War AmericanRevolution Colonial
+    @doi2 Wrote Jefferson Declaration
+    @doi3 Declared Declaration Independence
+    @doi4 Affirmed Declaration Rights
+    @doi5 Inspired Declaration Democracy
+    @chain Implies (And $doi1 (And $doi2 (And $doi3 $doi4))) $doi5
+    return $chain
+end
+
+@:George_Washington graph General Victory Presidency
+    @gw1 General GeorgeWashington Continental
+    @gw2 Led Washington Army
+    @gw3 Won Washington YorktownBattle
+    @gw4 Secured Washington Independence
+    @gw5 Became Washington FirstPresident
+    @chain Implies (And $gw1 (And $gw2 (And $gw3 $gw4))) $gw5
+    return $chain
+end
+
+@:US_Constitution graph Document Government Republic
+    @usc1 Won Colonies Independence
+    @usc2 Failed ArticlesOfConfederation Government
+    @usc3 Drafted Convention Constitution
+    @usc4 Established Constitution FederalGovernment
+    @usc5 Created Constitution Republic
+    @chain Implies (And $usc1 (And $usc2 (And $usc3 $usc4))) $usc5
+    return $chain
+end
+
+@:French_Revolution fact Revolution FrenchRevolution Political
+    return (Revolution FrenchRevolution Political)
+end
+
+@:Fall_Of_Bastille graph Uprising Symbol Revolution
+    @fob1 Stormed Parisians Bastille
+    @fob2 Symbolized Bastille OldRegime
+    @fob3 Started Bastille Revolution
+    @fob4 Spread Revolution France
+    @fob5 Overthrew Revolution Monarchy
+    @chain Implies (And $fob1 (And $fob2 (And $fob3 $fob4))) $fob5
+    return $chain
+end
+
+@:Reign_Of_Terror graph Radicalism Violence Guillotine
+    @rot1 Revolution FrenchRevolution Political
+    @rot2 Led Robespierre Jacobins
+    @rot3 Started Jacobins Terror
+    @rot4 Executed Terror Thousands
+    @rot5 Used Terror Guillotine
+    @chain Implies (And $rot1 (And $rot2 (And $rot3 $rot4))) $rot5
+    return $chain
+end
+
+@:Napoleon_Rise graph General Coup Empire
+    @nr1 General Napoleon France
+    @nr2 Won Napoleon Victories
+    @nr3 Staged Napoleon Coup
+    @nr4 Became Napoleon Emperor
+    @nr5 Dominated Napoleon Europe
+    @chain Implies (And $nr1 (And $nr2 (And $nr3 $nr4))) $nr5
+    return $chain
+end
+
+@:Napoleonic_Wars graph Conquest Coalition Defeat
+    @nw1 Emperor Napoleon France
+    @nw2 Conquered Napoleon Europe
+    @nw3 Fought Coalition Nations
+    @nw4 Invaded Napoleon Russia
+    @nw5 Defeated Coalition Napoleon
+    @chain Implies (And $nw1 (And $nw2 (And $nw3 $nw4))) $nw5
+    return $chain
+end
+
+@:Congress_Of_Vienna graph Defeat Conference Balance
+    @cov1 Defeated Coalition Napoleon
+    @cov2 Met Powers Vienna
+    @cov3 Redrew Vienna Borders
+    @cov4 Established Vienna BalanceOfPower
+    @cov5 Restored Vienna Monarchies
+    @chain Implies (And $cov1 (And $cov2 (And $cov3 $cov4))) $cov5
+    return $chain
+end
+
+// ========== INDUSTRIAL REVOLUTION ==========
+
+@:Industrial_Revolution fact Period IndustrialRevolution Modern
+    return (Period IndustrialRevolution Modern)
+end
+
+@:Steam_Engine graph Invention Power Industry
+    @se1 Invented Watt SteamEngine
+    @se2 Powered SteamEngine Factories
+    @se3 Enabled SteamEngine Railways
+    @se4 Transformed SteamEngine Manufacturing
+    @se5 Started SteamEngine IndustrialRevolution
+    @chain Implies (And $se1 (And $se2 (And $se3 $se4))) $se5
+    return $chain
+end
+
+@:Factory_System graph Production Workers Cities
+    @fs1 Period IndustrialRevolution Modern
+    @fs2 Built Industrialists Factories
+    @fs3 Employed Factories Workers
+    @fs4 Produced Factories GoodsMass
+    @fs5 Grew Cities Rapidly
+    @chain Implies (And $fs1 (And $fs2 (And $fs3 $fs4))) $fs5
+    return $chain
+end
+
+@:Railway_Revolution graph Transportation Commerce Expansion
+    @rr1 Invented Stephenson Locomotive
+    @rr2 Built Britain Railways
+    @rr3 Connected Railways Cities
+    @rr4 Enabled Railways Commerce
+    @rr5 Transformed Railways Society
+    @chain Implies (And $rr1 (And $rr2 (And $rr3 $rr4))) $rr5
+    return $chain
+end
+
+@:Labor_Movement graph Conditions Organization Rights
+    @lm1 Worked Workers Factories
+    @lm2 Suffered Workers Conditions
+    @lm3 Organized Workers Unions
+    @lm4 Demanded Unions Rights
+    @lm5 Fought Unions Reforms
+    @chain Implies (And $lm1 (And $lm2 (And $lm3 $lm4))) $lm5
+    return $chain
+end
+
+@:Karl_Marx graph Philosopher Theory Revolution
+    @km1 Philosopher KarlMarx Germany
+    @km2 Wrote Marx CommunistManifesto
+    @km3 Developed Marx Communism
+    @km4 Analyzed Marx Capitalism
+    @km5 Inspired Marx Revolutions
+    @chain Implies (And $km1 (And $km2 (And $km3 $km4))) $km5
+    return $chain
+end
+
+// ========== 19TH CENTURY ==========
+
+@:Nationalism fact Movement Nationalism Modern
+    return (Movement Nationalism Modern)
+end
+
+@:Italian_Unification graph States Movement Nation
+    @iu1 Led Garibaldi Unification
+    @iu2 United Garibaldi ItalianStates
+    @iu3 Fought Garibaldi Austria
+    @iu4 Created Unification Italy
+    @iu5 Established Italy Kingdom
+    @chain Implies (And $iu1 (And $iu2 (And $iu3 $iu4))) $iu5
+    return $chain
+end
+
+@:German_Unification graph States Chancellor Empire
+    @gu1 Chancellor Bismarck Prussia
+    @gu2 United Bismarck GermanStates
+    @gu3 Fought Bismarck Wars
+    @gu4 Created Unification Germany
+    @gu5 Proclaimed Germany Empire
+    @chain Implies (And $gu1 (And $gu2 (And $gu3 $gu4))) $gu5
+    return $chain
+end
+
+@:American_Civil_War fact War CivilWar American
+    return (War CivilWar American)
+end
+
+@:Slavery_Conflict graph Institution Division War
+    @sc1 Practiced South Slavery
+    @sc2 Opposed North Slavery
+    @sc3 Divided Slavery Nation
+    @sc4 Seceded South States
+    @sc5 Started Secession CivilWar
+    @chain Implies (And $sc1 (And $sc2 (And $sc3 $sc4))) $sc5
+    return $chain
+end
+
+@:Abraham_Lincoln graph President War Emancipation
+    @al1 President AbrahamLincoln Union
+    @al2 Led Lincoln CivilWar
+    @al3 Issued Lincoln EmancipationProclamation
+    @al4 Freed Proclamation Slaves
+    @al5 Assassinated Booth Lincoln
+    @chain Implies (And $al1 (And $al2 (And $al3 $al4))) $al5
+    return $chain
+end
+
+@:Reconstruction graph War Rebuilding Rights
+    @r1 Won Union CivilWar
+    @r2 Freed CivilWar Slaves
+    @r3 Rebuilt Reconstruction South
+    @r4 Granted Amendments CivilRights
+    @r5 Failed Reconstruction Integration
+    @chain Implies (And $r1 (And $r2 (And $r3 $r4))) $r5
+    return $chain
+end
+
+@:Imperialism fact Movement Imperialism Colonial
+    return (Movement Imperialism Colonial)
+end
+
+@:Scramble_For_Africa graph Competition Colonization Exploitation
+    @sfa1 Competed Europe Africa
+    @sfa2 Colonized Powers AfricanTerritories
+    @sfa3 Met Berlin Conference
+    @sfa4 Divided Conference Africa
+    @sfa5 Exploited Colonizers Resources
+    @chain Implies (And $sfa1 (And $sfa2 (And $sfa3 $sfa4))) $sfa5
+    return $chain
+end
+
+@:British_Empire graph Power Colonies Dominance
+    @be1 Expanded Britain Empire
+    @be2 Ruled Britain India
+    @be3 Controlled Britain Seas
+    @be4 Became Britain SuperPower
+    @be5 Dominated Empire QuarterOfWorld
+    @chain Implies (And $be1 (And $be2 (And $be3 $be4))) $be5
+    return $chain
+end
+
+@:Opium_Wars graph Trade Conflict Imperialism
+    @ow1 Traded Britain Opium
+    @ow2 Banned China Opium
+    @ow3 Fought Britain China
+    @ow4 Won Britain Wars
+    @ow5 Forced Treaties China
+    @chain Implies (And $ow1 (And $ow2 (And $ow3 $ow4))) $ow5
+    return $chain
+end
+
+// ========== 20TH CENTURY ==========
+
+@:World_War_One fact War WWI Global
+    return (War WWI Global)
+end
+
+@:WWI_Causes graph Alliances Nationalism Assassination
+    @wc1 Formed Europe Alliances
+    @wc2 Grew Nationalism Tensions
+    @wc3 Assassinated Princip FranzFerdinand
+    @wc4 Triggered Assassination War
+    @wc5 Spread War Globally
+    @chain Implies (And $wc1 (And $wc2 (And $wc3 $wc4))) $wc5
+    return $chain
+end
+
+@:Trench_Warfare graph Combat Stalemate Casualties
+    @tw1 War WWI Global
+    @tw2 Fought Armies Trenches
+    @tw3 Created Trenches Stalemate
+    @tw4 Used Armies NewWeapons
+    @tw5 Caused WWI MillionsOfDeaths
+    @chain Implies (And $tw1 (And $tw2 (And $tw3 $tw4))) $tw5
+    return $chain
+end
+
+@:Treaty_Of_Versailles graph Peace Treaty Resentment
+    @tov1 Won Allies WWI
+    @tov2 Signed Versailles Treaty
+    @tov3 Blamed Treaty Germany
+    @tov4 Imposed Treaty Reparations
+    @tov5 Created Treaty Resentment
+    @chain Implies (And $tov1 (And $tov2 (And $tov3 $tov4))) $tov5
+    return $chain
+end
+
+@:Russian_Revolution fact Revolution RussianRevolution Communist
+    return (Revolution RussianRevolution Communist)
+end
+
+@:Bolshevik_Revolution graph Uprising Communism Soviet
+    @br1 Led Lenin Bolsheviks
+    @br2 Overthrew Bolsheviks Tsar
+    @br3 Seized Lenin Power
+    @br4 Established Bolsheviks Communism
+    @br5 Created Lenin SovietUnion
+    @chain Implies (And $br1 (And $br2 (And $br3 $br4))) $br5
+    return $chain
+end
+
+@:Stalin_Era graph Dictator Industrialization Terror
+    @se1 Leader Stalin SovietUnion
+    @se2 Industrialized Stalin Rapidly
+    @se3 Collectivized Stalin Agriculture
+    @se4 Purged Stalin Millions
+    @se5 Established Stalin TotalitarianState
+    @chain Implies (And $se1 (And $se2 (And $se3 $se4))) $se5
+    return $chain
+end
+
+@:Great_Depression fact Crisis GreatDepression Economic
+    return (Crisis GreatDepression Economic)
+end
+
+@:Stock_Market_Crash graph Speculation Crash Depression
+    @smc1 Boomed Economy 1920s
+    @smc2 Speculated Investors Heavily
+    @smc3 Crashed StockMarket 1929
+    @smc4 Triggered Crash Depression
+    @smc5 Spread Depression Globally
+    @chain Implies (And $smc1 (And $smc2 (And $smc3 $smc4))) $smc5
+    return $chain
+end
+
+@:New_Deal graph Depression Program Recovery
+    @nd1 President FDR USA
+    @nd2 Crisis GreatDepression Economic
+    @nd3 Implemented FDR NewDeal
+    @nd4 Created NewDeal Programs
+    @nd5 Recovered NewDeal Economy
+    @chain Implies (And $nd1 (And $nd2 (And $nd3 $nd4))) $nd5
+    return $chain
+end
+
+@:World_War_Two fact War WWII Global
+    return (War WWII Global)
+end
+
+@:WWII_Causes graph Treaty Depression Aggression
+    @wc1 Created Versailles Resentment
+    @wc2 Crisis GreatDepression Economic
+    @wc3 Rose Hitler Power
+    @wc4 Invaded Germany Poland
+    @wc5 Started Invasion WWII
+    @chain Implies (And $wc1 (And $wc2 (And $wc3 $wc4))) $wc5
+    return $chain
+end
+
+@:Hitler_And_Nazism graph Dictator Ideology Genocide
+    @han1 Leader Hitler Germany
+    @han2 Established Hitler Dictatorship
+    @han3 Promoted Hitler Nazism
+    @han4 Persecuted Nazis Jews
+    @han5 Caused Holocaust Genocide
+    @chain Implies (And $han1 (And $han2 (And $han3 $han4))) $han5
+    return $chain
+end
+
+@:Holocaust graph Persecution Camps Genocide
+    @h1 Persecuted Nazis Jews
+    @h2 Built Nazis ConcentrationCamps
+    @h3 Murdered Nazis Millions
+    @h4 Committed Nazis Genocide
+    @h5 Remain Holocaust WorstCrime
+    @chain Implies (And $h1 (And $h2 (And $h3 $h4))) $h5
+    return $chain
+end
+
+@:Pearl_Harbor graph Attack Entry War
+    @ph1 Attacked Japan PearlHarbor
+    @ph2 Destroyed Attack Fleet
+    @ph3 Declared USA WarOnJapan
+    @ph4 Entered USA WWII
+    @ph5 Turned Entry Tide
+    @chain Implies (And $ph1 (And $ph2 (And $ph3 $ph4))) $ph5
+    return $chain
+end
+
+@:D_Day graph Invasion Liberation Victory
+    @dd1 Planned Allies Invasion
+    @dd2 Landed Allies Normandy
+    @dd3 Opened DDay SecondFront
+    @dd4 Liberated Allies France
+    @dd5 Led Liberation Victory
+    @chain Implies (And $dd1 (And $dd2 (And $dd3 $dd4))) $dd5
+    return $chain
+end
+
+@:Atomic_Bomb graph Weapon Bombing Surrender
+    @ab1 Developed USA AtomicBomb
+    @ab2 Dropped USA Hiroshima
+    @ab3 Dropped USA Nagasaki
+    @ab4 Surrendered Japan Unconditionally
+    @ab5 Ended Surrender WWII
+    @chain Implies (And $ab1 (And $ab2 (And $ab3 $ab4))) $ab5
+    return $chain
+end
+
+@:Cold_War fact Period ColdWar Ideological
+    return (Period ColdWar Ideological)
+end
+
+@:Iron_Curtain graph Division Blocs Tension
+    @ic1 Won Allies WWII
+    @ic2 Divided Europe EastWest
+    @ic3 Formed USA NATO
+    @ic4 Formed USSR WarsawPact
+    @ic5 Started Division ColdWar
+    @chain Implies (And $ic1 (And $ic2 (And $ic3 $ic4))) $ic5
+    return $chain
+end
+
+@:Korean_War graph Conflict Proxy Division
+    @kw1 Period ColdWar Ideological
+    @kw2 Invaded NorthKorea SouthKorea
+    @kw3 Intervened UN NorthKorea
+    @kw4 Fought China UN
+    @kw5 Ended War Stalemate
+    @chain Implies (And $kw1 (And $kw2 (And $kw3 $kw4))) $kw5
+    return $chain
+end
+
+@:Vietnam_War graph Conflict Intervention Defeat
+    @vw1 Fought NorthVietnam SouthVietnam
+    @vw2 Supported USA SouthVietnam
+    @vw3 Escalated USA Involvement
+    @vw4 Opposed Americans War
+    @vw5 Withdrew USA Vietnam
+    @chain Implies (And $vw1 (And $vw2 (And $vw3 $vw4))) $vw5
+    return $chain
+end
+
+@:Cuban_Missile_Crisis graph Missiles Confrontation Diplomacy
+    @cmc1 Period ColdWar Ideological
+    @cmc2 Placed USSR MissilesInCuba
+    @cmc3 Blockaded Kennedy Cuba
+    @cmc4 Confronted Superpowers Crisis
+    @cmc5 Resolved Diplomacy Crisis
+    @chain Implies (And $cmc1 (And $cmc2 (And $cmc3 $cmc4))) $cmc5
+    return $chain
+end
+
+@:Space_Race graph Competition Technology Moon
+    @sr1 Period ColdWar Ideological
+    @sr2 Launched USSR Sputnik
+    @sr3 Competed USA USSR
+    @sr4 Landed USA Moon
+    @sr5 Won USA SpaceRace
+    @chain Implies (And $sr1 (And $sr2 (And $sr3 $sr4))) $sr5
+    return $chain
+end
+
+@:Civil_Rights_Movement fact Movement CivilRights American
+    return (Movement CivilRights American)
+end
+
+@:Martin_Luther_King graph Leader Nonviolence Equality
+    @mlk1 Leader MartinLutherKing Movement
+    @mlk2 Advocated King Nonviolence
+    @mlk3 Led King Marches
+    @mlk4 Gave King DreamSpeech
+    @mlk5 Assassinated MLK Murdered
+    @chain Implies (And $mlk1 (And $mlk2 (And $mlk3 $mlk4))) $mlk5
+    return $chain
+end
+
+@:Civil_Rights_Act graph Struggle Legislation Equality
+    @cra1 Movement CivilRights American
+    @cra2 Protested Activists Segregation
+    @cra3 Pressured Movement Government
+    @cra4 Passed Congress CivilRightsAct
+    @cra5 Banned CivilRightsAct Discrimination
+    @chain Implies (And $cra1 (And $cra2 (And $cra3 $cra4))) $cra5
+    return $chain
+end
+
+@:Fall_Of_Soviet_Union graph Reforms Collapse End
+    @fosu1 Leader Gorbachev USSR
+    @fosu2 Introduced Gorbachev Reforms
+    @fosu3 Weakened Reforms Control
+    @fosu4 Fell BerlinWall Germany
+    @fosu5 Collapsed USSR 1991
+    @chain Implies (And $fosu1 (And $fosu2 (And $fosu3 $fosu4))) $fosu5
+    return $chain
+end
+
+@:Berlin_Wall_Fall graph Symbol Division Reunification
+    @bwf1 Built USSR BerlinWall
+    @bwf2 Divided BerlinWall City
+    @bwf3 Symbolized BerlinWall ColdWar
+    @bwf4 Fell BerlinWall 1989
+    @bwf5 Reunified Germany Country
+    @chain Implies (And $bwf1 (And $bwf2 (And $bwf3 $bwf4))) $bwf5
+    return $chain
+end
+
+// ========== CONTEMPORARY ERA ==========
+
+@:Contemporary_Era fact Period Contemporary Modern
+    return (Period Contemporary Modern)
+end
+
+@:Information_Age fact Period InformationAge Contemporary
+    return (Period InformationAge Contemporary)
+end
+
+@:Internet_Revolution graph Technology Connection Society
+    @ir1 Invented Scientists Internet
+    @ir2 Connected Internet World
+    @ir3 Enabled Internet Communication
+    @ir4 Transformed Internet Society
+    @ir5 Created Internet DigitalAge
+    @chain Implies (And $ir1 (And $ir2 (And $ir3 $ir4))) $ir5
+    return $chain
+end
+
+@:Globalization graph Trade Integration Interdependence
+    @g1 Period Contemporary Modern
+    @g2 Increased Globalization Trade
+    @g3 Connected Globalization Economies
+    @g4 Spread Globalization Culture
+    @g5 Created Globalization Interdependence
+    @chain Implies (And $g1 (And $g2 (And $g3 $g4))) $g5
+    return $chain
+end
+
+@:Climate_Change graph Emissions Warming Challenge
+    @cc1 Increased Industrialization Emissions
+    @cc2 Caused Emissions GlobalWarming
+    @cc3 Threatens ClimateChange Environment
+    @cc4 Requires ClimateChange Action
+    @cc5 Challenges ClimateChange Humanity
+    @chain Implies (And $cc1 (And $cc2 (And $cc3 $cc4))) $cc5
+    return $chain
+end
+
+// ========== ADDITIONAL COMPLEX CAUSATION CHAINS ==========
+
+@:Agricultural_Revolution_Chain graph Agriculture Settlement Civilization
+    @arc1 Developed Humans Agriculture
+    @arc2 Enabled Agriculture Surplus
+    @arc3 Allowed Surplus Settlement
+    @arc4 Led Settlement Cities
+    @arc5 Created Cities Civilization
+    @chain Implies (And $arc1 (And $arc2 (And $arc3 $arc4))) $arc5
+    return $chain
+end
+
+@:Writing_And_History graph Writing Records Knowledge
+    @wah1 Invented Civilizations Writing
+    @wah2 Enabled Writing RecordKeeping
+    @wah3 Preserved Records Knowledge
+    @wah4 Created Knowledge History
+    @wah5 Allowed History Learning
+    @chain Implies (And $wah1 (And $wah2 (And $wah3 $wah4))) $wah5
+    return $chain
+end
+
+@:Trade_And_Culture graph Commerce Routes Exchange
+    @tac1 Established Civilizations Trade
+    @tac2 Created Trade Routes
+    @tac3 Enabled Routes Exchange
+    @tac4 Spread Exchange Ideas
+    @tac5 Mixed Ideas Cultures
+    @chain Implies (And $tac1 (And $tac2 (And $tac3 $tac4))) $tac5
+    return $chain
+end
+
+@:Military_Innovation graph Warfare Technology Power
+    @mi1 Developed Societies Weapons
+    @mi2 Enabled Weapons Conquest
+    @mi3 Led Conquest Empires
+    @mi4 Changed Empires Geography
+    @mi5 Shaped Geography History
+    @chain Implies (And $mi1 (And $mi2 (And $mi3 $mi4))) $mi5
+    return $chain
+end
+
+@:Religious_Influence graph Belief Institutions Society
+    @ri1 Developed Societies Religion
+    @ri2 Created Religion Institutions
+    @ri3 Controlled Institutions Education
+    @ri4 Shaped Education Culture
+    @ri5 Influenced Culture History
+    @chain Implies (And $ri1 (And $ri2 (And $ri3 $ri4))) $ri5
+    return $chain
+end
+
+@:Plague_Impact graph Disease Death Change
+    @pi1 Spread BlackDeath Europe
+    @pi2 Killed Plague Population
+    @pi3 Disrupted Death Economy
+    @pi4 Weakened Economy Feudalism
+    @pi5 Enabled Weakness ModernEra
+    @chain Implies (And $pi1 (And $pi2 (And $pi3 $pi4))) $pi5
+    return $chain
+end
+
+@:Renaissance_Humanism_Chain graph Revival Learning Art
+    @rhc1 Rediscovered Scholars ClassicalTexts
+    @rhc2 Promoted Humanism IndividualWorth
+    @rhc3 Inspired Humanism Artists
+    @rhc4 Created Artists Masterpieces
+    @rhc5 Defined Renaissance Period
+    @chain Implies (And $rhc1 (And $rhc2 (And $rhc3 $rhc4))) $rhc5
+    return $chain
+end
+
+@:Exploration_Consequences graph Discovery Colonization Exchange
+    @ec1 Explored Europeans World
+    @ec2 Discovered Europeans Americas
+    @ec3 Colonized Europeans Territories
+    @ec4 Established Colonization Trade
+    @ec5 Changed Trade World
+    @chain Implies (And $ec1 (And $ec2 (And $ec3 $ec4))) $ec5
+    return $chain
+end
+
+@:Scientific_Method_Impact graph Observation Experiment Knowledge
+    @smi1 Developed Scientists Method
+    @smi2 Based Method Observation
+    @smi3 Required Method Experiment
+    @smi4 Generated Experiment Knowledge
+    @smi5 Transformed Knowledge Science
+    @chain Implies (And $smi1 (And $smi2 (And $smi3 $smi4))) $smi5
+    return $chain
+end
+
+@:Democratic_Evolution graph Ideas Revolution Government
+    @de1 Developed Enlightenment Ideas
+    @de2 Inspired Ideas Revolutions
+    @de3 Created Revolutions Republics
+    @de4 Established Republics Democracy
+    @de5 Spread Democracy World
+    @chain Implies (And $de1 (And $de2 (And $de3 $de4))) $de5
+    return $chain
+end
+
+@:Industrial_Urbanization graph Factories Jobs Migration
+    @iu1 Built Industrialists Factories
+    @iu2 Created Factories Jobs
+    @iu3 Attracted Jobs Workers
+    @iu4 Migrated Workers Cities
+    @iu5 Grew Cities Rapidly
+    @chain Implies (And $iu1 (And $iu2 (And $iu3 $iu4))) $iu5
+    return $chain
+end
+
+@:Nationalism_Conflict graph Identity Unity Wars
+    @nc1 Movement Nationalism Modern
+    @nc2 Created Nationalism Identity
+    @nc3 United Identity Nations
+    @nc4 Competed Nations Resources
+    @nc5 Led Competition Wars
+    @chain Implies (And $nc1 (And $nc2 (And $nc3 $nc4))) $nc5
+    return $chain
+end
+
+@:Imperial_Exploitation graph Colonization Resources Development
+    @ie1 Movement Imperialism Colonial
+    @ie2 Colonized Powers Territories
+    @ie3 Exploited Colonizers Resources
+    @ie4 Enriched Resources Metropoles
+    @ie5 Underdeveloped Exploitation Colonies
+    @chain Implies (And $ie1 (And $ie2 (And $ie3 $ie4))) $ie5
+    return $chain
+end
+
+@:WWI_Chain graph Alliance Mobilization War
+    @wc1 Assassinated Princip FranzFerdinand
+    @wc2 Demanded Austria Serbia
+    @wc3 Supported Russia Serbia
+    @wc4 Mobilized Alliances Armies
+    @wc5 Started Mobilization WWI
+    @chain Implies (And $wc1 (And $wc2 (And $wc3 $wc4))) $wc5
+    return $chain
+end
+
+@:Versailles_To_WWII graph Treaty Resentment Extremism
+    @vtw1 Signed Versailles Treaty
+    @vtw2 Blamed Treaty Germany
+    @vtw3 Created Blame Resentment
+    @vtw4 Enabled Resentment Extremism
+    @vtw5 Led Extremism WWII
+    @chain Implies (And $vtw1 (And $vtw2 (And $vtw3 $vtw4))) $vtw5
+    return $chain
+end
+
+@:Cold_War_Proxy graph Ideology Competition Conflicts
+    @cwp1 Period ColdWar Ideological
+    @cwp2 Competed Superpowers Influence
+    @cwp3 Supported Superpowers Proxies
+    @cwp4 Fought Proxies Wars
+    @cwp5 Spread Wars Globally
+    @chain Implies (And $cwp1 (And $cwp2 (And $cwp3 $cwp4))) $cwp5
+    return $chain
+end
+
+@:Decolonization graph Weakness Movements Independence
+    @d1 Weakened WWII Empires
+    @d2 Inspired Weakness Movements
+    @d3 Demanded Movements Independence
+    @d4 Granted Empires Independence
+    @d5 Created Decolonization Nations
+    @chain Implies (And $d1 (And $d2 (And $d3 $d4))) $d5
+    return $chain
+end
+
+@:Technology_Society graph Innovation Adoption Change
+    @ts1 Invented Scientists Technology
+    @ts2 Adopted Society Technology
+    @ts3 Changed Technology Behavior
+    @ts4 Transformed Behavior Society
+    @ts5 Created Transformation NewEra
+    @chain Implies (And $ts1 (And $ts2 (And $ts3 $ts4))) $ts5
+    return $chain
+end
+
+@:Communication_Revolution graph Telegraph Radio Television
+    @cr1 Invented Morse Telegraph
+    @cr2 Invented Marconi Radio
+    @cr3 Invented Engineers Television
+    @cr4 Connected Technologies World
+    @cr5 Created Connection GlobalVillage
+    @chain Implies (And $cr1 (And $cr2 (And $cr3 $cr4))) $cr5
+    return $chain
+end
+
+@:Medical_Progress graph Research Discovery Treatment
+    @mp1 Researched Scientists Diseases
+    @mp2 Discovered Research Cures
+    @mp3 Developed Cures Treatments
+    @mp4 Applied Treatments Patients
+    @mp5 Extended Medicine Lifespan
+    @chain Implies (And $mp1 (And $mp2 (And $mp3 $mp4))) $mp5
+    return $chain
+end
+
+// ========== MORE FACTS AND DETAILS ==========
+
+@:Minoan_Civilization fact Civilization Minoan Ancient
+    return (Civilization Minoan Ancient)
+end
+
+@:Mycenaean_Civilization fact Civilization Mycenaean Ancient
+    return (Civilization Mycenaean Ancient)
+end
+
+@:Phoenicians fact People Phoenicians Ancient
+    return (People Phoenicians Ancient)
+end
+
+@:Phoenician_Alphabet graph Innovation Writing Spread
+    @pa1 People Phoenicians Ancient
+    @pa2 Developed Phoenicians Alphabet
+    @pa3 Traded Phoenicians Widely
+    @pa4 Spread Trade Alphabet
+    @pa5 Influenced Alphabet GreekAlphabet
+    @chain Implies (And $pa1 (And $pa2 (And $pa3 $pa4))) $pa5
+    return $chain
+end
+
+@:Persian_Empire fact Empire Persian Ancient
+    return (Empire Persian Ancient)
+end
+
+@:Cyrus_The_Great graph King Tolerance Empire
+    @ctg1 King Cyrus Persia
+    @ctg2 Conquered Cyrus Babylon
+    @ctg3 Freed Cyrus Jews
+    @ctg4 Practiced Cyrus Tolerance
+    @ctg5 Created Cyrus LargestEmpire
+    @chain Implies (And $ctg1 (And $ctg2 (And $ctg3 $ctg4))) $ctg5
+    return $chain
+end
+
+@:Punic_Wars graph Carthage Rome Mediterranean
+    @pw1 Rival Carthage Rome
+    @pw2 Fought Rome Carthage
+    @pw3 Led Hannibal Army
+    @pw4 Won Rome Wars
+    @pw5 Destroyed Rome Carthage
+    @chain Implies (And $pw1 (And $pw2 (And $pw3 $pw4))) $pw5
+    return $chain
+end
+
+@:Spartacus_Rebellion graph Slave Uprising Suppression
+    @sr1 Slave Spartacus Rome
+    @sr2 Led Spartacus Rebellion
+    @sr3 Fought Spartacus Romans
+    @sr4 Suppressed Rome Rebellion
+    @sr5 Crucified Rome Rebels
+    @chain Implies (And $sr1 (And $sr2 (And $sr3 $sr4))) $sr5
+    return $chain
+end
+
+@:Pax_Sinica fact Period PaxSinica Chinese
+    return (Period PaxSinica Chinese)
+end
+
+@:Tang_Dynasty fact Dynasty Tang China
+    return (Dynasty Tang China)
+end
+
+@:Song_Dynasty fact Dynasty Song China
+    return (Dynasty Song China)
+end
+
+@:Ming_Dynasty fact Dynasty Ming China
+    return (Dynasty Ming China)
+end
+
+@:Qing_Dynasty fact Dynasty Qing China
+    return (Dynasty Qing China)
+end
+
+@:Tang_Golden_Age graph Dynasty Culture Innovation
+    @tga1 Dynasty Tang China
+    @tga2 Flourished TangDynasty Arts
+    @tga3 Advanced TangDynasty Technology
+    @tga4 Expanded TangDynasty Trade
+    @tga5 Golden TangDynasty Age
+    @chain Implies (And $tga1 (And $tga2 (And $tga3 $tga4))) $tga5
+    return $chain
+end
+
+@:Mongol_Yuan_Dynasty graph Conquest Rule China
+    @myd1 Conquered KublaiKhan China
+    @myd2 Founded KublaiKhan YuanDynasty
+    @myd3 United YuanDynasty China
+    @myd4 Welcomed KublaiKhan Foreigners
+    @myd5 Met MarcoPolo KublaiKhan
+    @chain Implies (And $myd1 (And $myd2 (And $myd3 $myd4))) $myd5
+    return $chain
+end
+
+@:Zheng_He_Voyages graph Explorer Fleet Diplomacy
+    @zhv1 Admiral ZhengHe MingDynasty
+    @zhv2 Led ZhengHe TreasureFleet
+    @zhv3 Sailed ZhengHe IndianOcean
+    @zhv4 Reached ZhengHe Africa
+    @zhv5 Promoted ZhengHe ChinesePower
+    @chain Implies (And $zhv1 (And $zhv2 (And $zhv3 $zhv4))) $zhv5
+    return $chain
+end
+
+@:Mughals fact Empire Mughal India
+    return (Empire Mughal India)
+end
+
+@:Akbar_The_Great graph Emperor Tolerance Unity
+    @atg1 Emperor Akbar MughalEmpire
+    @atg2 Expanded Akbar Territory
+    @atg3 Practiced Akbar Tolerance
+    @atg4 United Akbar Diverse
+    @atg5 Flourished Culture Arts
+    @chain Implies (And $atg1 (And $atg2 (And $atg3 $atg4))) $atg5
+    return $chain
+end
+
+@:Taj_Mahal graph Monument Love Architecture
+    @tm1 Emperor ShahJahan MughalEmpire
+    @tm2 Built ShahJahan TajMahal
+    @tm3 Honored TajMahal Wife
+    @tm4 Exemplified TajMahal Architecture
+    @tm5 Symbol TajMahal India
+    @chain Implies (And $tm1 (And $tm2 (And $tm3 $tm4))) $tm5
+    return $chain
+end
+
+@:Ottoman_Empire fact Empire Ottoman Islamic
+    return (Empire Ottoman Islamic)
+end
+
+@:Constantinople_Fall graph Siege Conquest End
+    @cf1 Empire Ottoman Islamic
+    @cf2 Besieged Ottomans Constantinople
+    @cf3 Fell Constantinople 1453
+    @cf4 Ended Fall Byzantine
+    @cf5 Became Constantinople Istanbul
+    @chain Implies (And $cf1 (And $cf2 (And $cf3 $cf4))) $cf5
+    return $chain
+end
+
+@:Suleiman_The_Magnificent graph Sultan Power Expansion
+    @stm1 Sultan Suleiman Ottoman
+    @stm2 Expanded Suleiman Empire
+    @stm3 Reformed Suleiman Laws
+    @stm4 Patronized Suleiman Arts
+    @stm5 Peak Suleiman OttomanPower
+    @chain Implies (And $stm1 (And $stm2 (And $stm3 $stm4))) $stm5
+    return $chain
+end
+
+@:African_Kingdoms fact Kingdoms Africa Medieval
+    return (Kingdoms Africa Medieval)
+end
+
+@:Mali_Empire fact Empire Mali Africa
+    return (Empire Mali Africa)
+end
+
+@:Mansa_Musa graph Ruler Wealth Pilgrimage
+    @mm1 Emperor MansaMusa MaliEmpire
+    @mm2 Richest MansaMusa Person
+    @mm3 Made MansaMusa Pilgrimage
+    @mm4 Distributed MansaMusa Gold
+    @mm5 Promoted MansaMusa Islam
+    @chain Implies (And $mm1 (And $mm2 (And $mm3 $mm4))) $mm5
+    return $chain
+end
+
+@:Songhai_Empire fact Empire Songhai Africa
+    return (Empire Songhai Africa)
+end
+
+@:Timbuktu graph City Learning Trade
+    @t1 City Timbuktu Mali
+    @t2 Center Timbuktu Learning
+    @t3 Hub Timbuktu Trade
+    @t4 Famous Timbuktu Libraries
+    @t5 Attracted Timbuktu Scholars
+    @chain Implies (And $t1 (And $t2 (And $t3 $t4))) $t5
+    return $chain
+end
+
+@:Aztec_Empire fact Empire Aztec PreColumbian
+    return (Empire Aztec PreColumbian)
+end
+
+@:Tenochtitlan graph Capital City Advanced
+    @t1 Capital Tenochtitlan AztecEmpire
+    @t2 Built Aztecs Tenochtitlan
+    @t3 Located Tenochtitlan Lake
+    @t4 Advanced Tenochtitlan Engineering
+    @t5 Largest Tenochtitlan City
+    @chain Implies (And $t1 (And $t2 (And $t3 $t4))) $t5
+    return $chain
+end
+
+@:Inca_Empire fact Empire Inca PreColumbian
+    return (Empire Inca PreColumbian)
+end
+
+@:Machu_Picchu graph Site Architecture Mystery
+    @mp1 Built Incas MachuPicchu
+    @mp2 Located MachuPicchu Mountains
+    @mp3 Advanced MachuPicchu Architecture
+    @mp4 Abandoned MachuPicchu Unknown
+    @mp5 Discovered MachuPicchu 1911
+    @chain Implies (And $mp1 (And $mp2 (And $mp3 $mp4))) $mp5
+    return $chain
+end
+
+@:Spanish_Armada graph Fleet Invasion Defeat
+    @sa1 King PhilipII Spain
+    @sa2 Sent PhilipII Armada
+    @sa3 Attacked Armada England
+    @sa4 Defeated England Armada
+    @sa5 Declined Spain Power
+    @chain Implies (And $sa1 (And $sa2 (And $sa3 $sa4))) $sa5
+    return $chain
+end
+
+@:Elizabeth_I graph Queen England GoldenAge
+    @e1 Queen ElizabethI England
+    @e2 Defeated ElizabethI SpanishArmada
+    @e3 Encouraged ElizabethI Exploration
+    @e4 Patronized ElizabethI Arts
+    @e5 Golden ElizabethI Age
+    @chain Implies (And $e1 (And $e2 (And $e3 $e4))) $e5
+    return $chain
+end
+
+@:Thirty_Years_War graph Religious Military Devastation
+    @tyw1 Fought Catholics Protestants
+    @tyw2 Lasted ThirtyYearsWar 30Years
+    @tyw3 Devastated ThirtyYearsWar Germany
+    @tyw4 Killed War Population
+    @tyw5 Ended Westphalia Treaty
+    @chain Implies (And $tyw1 (And $tyw2 (And $tyw3 $tyw4))) $tyw5
+    return $chain
+end
+
+@:Louis_XIV graph King Absolutism Palace
+    @l1 King LouisXIV France
+    @l2 Absolute LouisXIV Monarch
+    @l3 Built LouisXIV Versailles
+    @l4 Said LouisXIV StateIsMe
+    @l5 Exemplified LouisXIV Absolutism
+    @chain Implies (And $l1 (And $l2 (And $l3 $l4))) $l5
+    return $chain
+end
+
+@:Peter_The_Great graph Tsar Westernization Modernization
+    @ptg1 Tsar PeterTheGreat Russia
+    @ptg2 Westernized Peter Russia
+    @ptg3 Built Peter Navy
+    @ptg4 Founded Peter StPetersburg
+    @ptg5 Modernized Peter Empire
+    @chain Implies (And $ptg1 (And $ptg2 (And $ptg3 $ptg4))) $ptg5
+    return $chain
+end
+
+@:Seven_Years_War graph Global Colonial Struggle
+    @syw1 Fought Britain France
+    @syw2 Global SevenYearsWar War
+    @syw3 Fought SevenYearsWar Continents
+    @syw4 Won Britain War
+    @syw5 Gained Britain Colonies
+    @chain Implies (And $syw1 (And $syw2 (And $syw3 $syw4))) $syw5
+    return $chain
+end
+
+@:Catherine_The_Great graph Empress Enlightenment Expansion
+    @ctg1 Empress CatherineTheGreat Russia
+    @ctg2 Embraced Catherine Enlightenment
+    @ctg3 Expanded Catherine Territory
+    @ctg4 Modernized Catherine Russia
+    @ctg5 Powerful Catherine Ruler
+    @chain Implies (And $ctg1 (And $ctg2 (And $ctg3 $ctg4))) $ctg5
+    return $chain
+end
+
+@:Haitian_Revolution graph Slaves Uprising Independence
+    @hr1 Slaves Haiti French
+    @hr2 Led ToussaintLouverture Rebellion
+    @hr3 Fought Slaves French
+    @hr4 Won Slaves Freedom
+    @hr5 First Haiti BlackRepublic
+    @chain Implies (And $hr1 (And $hr2 (And $hr3 $hr4))) $hr5
+    return $chain
+end
+
+@:Latin_American_Independence graph Colonies Revolution Freedom
+    @lai1 Led Bolivar Liberation
+    @lai2 Led SanMartin Armies
+    @lai3 Fought Colonies Spain
+    @lai4 Won Colonies Independence
+    @lai5 Created Independence Nations
+    @chain Implies (And $lai1 (And $lai2 (And $lai3 $lai4))) $lai5
+    return $chain
+end
+
+@:Monroe_Doctrine graph Policy Hemisphere Influence
+    @md1 President Monroe USA
+    @md2 Declared Monroe Doctrine
+    @md3 Opposed Doctrine Colonization
+    @md4 Claimed Doctrine Hemisphere
+    @md5 Asserted Doctrine AmericanPower
+    @chain Implies (And $md1 (And $md2 (And $md3 $md4))) $md5
+    return $chain
+end
+
+@:Victorian_Era fact Period Victorian Britain
+    return (Period Victorian Britain)
+end
+
+@:Queen_Victoria graph Monarch Empire Era
+    @qv1 Queen Victoria Britain
+    @qv2 Reigned Victoria 63Years
+    @qv3 Expanded Victoria Empire
+    @qv4 Industrialized Victoria Britain
+    @qv5 Defined Victoria Era
+    @chain Implies (And $qv1 (And $qv2 (And $qv3 $qv4))) $qv5
+    return $chain
+end
+
+@:Meiji_Restoration graph Reform Modernization Power
+    @mr1 Restored Meiji Emperor
+    @mr2 Ended Restoration Shogunate
+    @mr3 Modernized Meiji Japan
+    @mr4 Industrialized Meiji Rapidly
+    @mr5 Became Japan Power
+    @chain Implies (And $mr1 (And $mr2 (And $mr3 $mr4))) $mr5
+    return $chain
+end
+
+@:Suez_Canal graph Engineering Trade Empire
+    @sc1 Built France SuezCanal
+    @sc2 Connected SuezCanal Seas
+    @sc3 Shortened SuezCanal Route
+    @sc4 Controlled Britain SuezCanal
+    @sc5 Strategic SuezCanal Importance
+    @chain Implies (And $sc1 (And $sc2 (And $sc3 $sc4))) $sc5
+    return $chain
+end
+
+@:Boxer_Rebellion graph Nationalism Uprising Suppression
+    @br1 Opposed Boxers Foreigners
+    @br2 Attacked Boxers Missionaries
+    @br3 Besieged Boxers Legations
+    @br4 Suppressed Powers Rebellion
+    @br5 Weakened Rebellion Qing
+    @chain Implies (And $br1 (And $br2 (And $br3 $br4))) $br5
+    return $chain
+end
+
+@:Russo_Japanese_War graph Conflict Victory Power
+    @rjw1 Fought Russia Japan
+    @rjw2 Won Japan War
+    @rjw3 Shocked Victory World
+    @rjw4 Demonstrated Japan Modernization
+    @rjw5 Became Japan Power
+    @chain Implies (And $rjw1 (And $rjw2 (And $rjw3 $rjw4))) $rjw5
+    return $chain
+end
+
+@:Suffrage_Movement graph Women Rights Vote
+    @sm1 Demanded Women Vote
+    @sm2 Organized Suffragettes Movement
+    @sm3 Protested Suffragettes Peacefully
+    @sm4 Fought Suffragettes Militantly
+    @sm5 Gained Women Vote
+    @chain Implies (And $sm1 (And $sm2 (And $sm3 $sm4))) $sm5
+    return $chain
+end
+
+@:League_Of_Nations graph Peace Organization Failure
+    @lon1 Proposed Wilson League
+    @lon2 Created Versailles LeagueOfNations
+    @lon3 Aimed League Peace
+    @lon4 Failed League Prevention
+    @lon5 Replaced UN League
+    @chain Implies (And $lon1 (And $lon2 (And $lon3 $lon4))) $lon5
+    return $chain
+end
+
+@:Rise_Of_Fascism graph Depression Extremism Dictatorship
+    @rof1 Crisis GreatDepression Economic
+    @rof2 Enabled Depression Extremism
+    @rof3 Rose Mussolini Italy
+    @rof4 Rose Hitler Germany
+    @rof5 Created Fascism Dictatorships
+    @chain Implies (And $rof1 (And $rof2 (And $rof3 $rof4))) $rof5
+    return $chain
+end
+
+@:Manhattan_Project graph Research Weapon Bomb
+    @mp1 War WWII Global
+    @mp2 Started USA ManhattanProject
+    @mp3 Researched Scientists AtomicBomb
+    @mp4 Developed Scientists Bomb
+    @mp5 Changed Bomb Warfare
+    @chain Implies (And $mp1 (And $mp2 (And $mp3 $mp4))) $mp5
+    return $chain
+end
+
+@:United_Nations graph War Organization Peace
+    @un1 Won Allies WWII
+    @un2 Created Allies UnitedNations
+    @un3 Replaced UN League
+    @un4 Promotes UN Peace
+    @un5 Continues UN Today
+    @chain Implies (And $un1 (And $un2 (And $un3 $un4))) $un5
+    return $chain
+end
+
+@:Marshall_Plan graph Aid Recovery Alliance
+    @mp1 Devastated WWII Europe
+    @mp2 Provided USA MarshallPlan
+    @mp3 Rebuilt MarshallPlan Europe
+    @mp4 Prevented MarshallPlan Communism
+    @mp5 Strengthened MarshallPlan Alliance
+    @chain Implies (And $mp1 (And $mp2 (And $mp3 $mp4))) $mp5
+    return $chain
+end
+
+@:Indian_Independence graph Resistance Nonviolence Freedom
+    @ii1 Led Gandhi Movement
+    @ii2 Practiced Gandhi Nonviolence
+    @ii3 Pressured Movement Britain
+    @ii4 Granted Britain Independence
+    @ii5 Created Independence IndiaPakistan
+    @chain Implies (And $ii1 (And $ii2 (And $ii3 $ii4))) $ii5
+    return $chain
+end
+
+@:Partition_Of_India graph Independence Division Violence
+    @poi1 Granted Britain Independence
+    @poi2 Divided Partition IndiaPakistan
+    @poi3 Based Partition Religion
+    @poi4 Caused Partition Migration
+    @poi5 Resulted Partition Violence
+    @chain Implies (And $poi1 (And $poi2 (And $poi3 $poi4))) $poi5
+    return $chain
+end
+
+@:Chinese_Communist_Revolution graph Civil Victory Republic
+    @ccr1 Led Mao Communists
+    @ccr2 Fought Mao Nationalists
+    @ccr3 Won Communists CivilWar
+    @ccr4 Founded Mao PeoplesRepublic
+    @ccr5 Fled Nationalists Taiwan
+    @chain Implies (And $ccr1 (And $ccr2 (And $ccr3 $ccr4))) $ccr5
+    return $chain
+end
+
+@:Great_Leap_Forward graph Campaign Industrialization Famine
+    @glf1 Chairman Mao China
+    @glf2 Launched Mao GreatLeapForward
+    @glf3 Collectivized GreatLeapForward Agriculture
+    @glf4 Failed Campaign Badly
+    @glf5 Caused Failure Famine
+    @chain Implies (And $glf1 (And $glf2 (And $glf3 $glf4))) $glf5
+    return $chain
+end
+
+@:Cultural_Revolution graph Political Chaos Purges
+    @cr1 Chairman Mao China
+    @cr2 Launched Mao CulturalRevolution
+    @cr3 Mobilized Mao RedGuards
+    @cr4 Purged CulturalRevolution Enemies
+    @cr5 Caused CulturalRevolution Chaos
+    @chain Implies (And $cr1 (And $cr2 (And $cr3 $cr4))) $cr5
+    return $chain
+end
+
+@:Arab_Israeli_Conflict graph Creation War Ongoing
+    @aic1 Created UN Israel
+    @aic2 Opposed Arabs Creation
+    @aic3 Fought Israel Arabs
+    @aic4 Won Israel Wars
+    @aic5 Continues Conflict Today
+    @chain Implies (And $aic1 (And $aic2 (And $aic3 $aic4))) $aic5
+    return $chain
+end
+
+@:Suez_Crisis graph Nationalization Intervention Humiliation
+    @sc1 Nationalized Nasser SuezCanal
+    @sc2 Invaded Britain Egypt
+    @sc3 Invaded France Egypt
+    @sc4 Opposed USA Invasion
+    @sc5 Withdrew BritainFrance Humiliated
+    @chain Implies (And $sc1 (And $sc2 (And $sc3 $sc4))) $sc5
+    return $chain
+end
+
+@:Apartheid graph System Segregation Struggle
+    @a1 Established SouthAfrica Apartheid
+    @a2 Segregated Apartheid Races
+    @a3 Oppressed Apartheid Blacks
+    @a4 Fought Mandela Apartheid
+    @a5 Ended Apartheid 1994
+    @chain Implies (And $a1 (And $a2 (And $a3 $a4))) $a5
+    return $chain
+end
+
+@:Nelson_Mandela graph Prisoner Leader Democracy
+    @nm1 Activist NelsonMandela ANC
+    @nm2 Imprisoned Apartheid Mandela
+    @nm3 Released Mandela 1990
+    @nm4 Negotiated Mandela Transition
+    @nm5 Elected Mandela President
+    @chain Implies (And $nm1 (And $nm2 (And $nm3 $nm4))) $nm5
+    return $chain
+end
+
+@:Watergate graph Scandal Investigation Resignation
+    @w1 President Nixon USA
+    @w2 Involved Nixon Watergate
+    @w3 Investigated Congress Nixon
+    @w4 Faced Nixon Impeachment
+    @w5 Resigned Nixon 1974
+    @chain Implies (And $w1 (And $w2 (And $w3 $w4))) $w5
+    return $chain
+end
+
+@:Détente graph Tension Easing Relations
+    @d1 Period ColdWar Ideological
+    @d2 Pursued Superpowers Détente
+    @d3 Signed Détente Treaties
+    @d4 Eased Détente Tensions
+    @d5 Temporary Détente Period
+    @chain Implies (And $d1 (And $d2 (And $d3 $d4))) $d5
+    return $chain
+end
+
+@:Iranian_Revolution graph Shah Uprising Islamic
+    @ir1 Opposed Iranians Shah
+    @ir2 Led Khomeini Revolution
+    @ir3 Overthrew Revolution Shah
+    @ir4 Established Khomeini TheocraticRepublic
+    @ir5 Changed Revolution MiddleEast
+    @chain Implies (And $ir1 (And $ir2 (And $ir3 $ir4))) $ir5
+    return $chain
+end
+
+@:Soviet_Afghan_War graph Invasion Resistance Collapse
+    @saw1 Invaded USSR Afghanistan
+    @saw2 Supported USA Mujahideen
+    @saw3 Fought Mujahideen Soviets
+    @sw4 Withdrew USSR Defeated
+    @saw5 Contributed Defeat Collapse
+    @chain Implies (And $saw1 (And $saw2 (And $saw3 $sw4))) $saw5
+    return $chain
+end
+
+@:Tiananmen_Square graph Protest Demonstration Crackdown
+    @ts1 Protested Students Democracy
+    @ts2 Occupied Students TiananmenSquare
+    @ts3 Demanded Students Reform
+    @ts4 Cracked Government Down
+    @ts5 Suppressed Government Protest
+    @chain Implies (And $ts1 (And $ts2 (And $ts3 $ts4))) $ts5
+    return $chain
+end
+
+@:Gulf_War graph Invasion Coalition Liberation
+    @gw1 Invaded Iraq Kuwait
+    @gw2 Formed UN Coalition
+    @gw3 Launched Coalition Operation
+    @gw4 Defeated Coalition Iraq
+    @gw5 Liberated Coalition Kuwait
+    @chain Implies (And $gw1 (And $gw2 (And $gw3 $gw4))) $gw5
+    return $chain
+end
+
+@:Yugoslav_Wars graph Breakup Ethnic Genocide
+    @yw1 Collapsed Yugoslavia Federation
+    @yw2 Declared Republics Independence
+    @yw3 Fought Groups Ethnic
+    @yw4 Committed Serbs Genocide
+    @yw5 Intervened NATO Yugoslavia
+    @chain Implies (And $yw1 (And $yw2 (And $yw3 $yw4))) $yw5
+    return $chain
+end
+
+@:Rwanda_Genocide graph Ethnic Massacre Failure
+    @rg1 Killed Hutus Tutsis
+    @rg2 Murdered Genocide 800000
+    @rg3 Failed World Intervene
+    @rg4 Ended RPF Genocide
+    @rg5 Remains Genocide Tragedy
+    @chain Implies (And $rg1 (And $rg2 (And $rg3 $rg4))) $rg5
+    return $chain
+end
+
+@:September_11_Attacks graph Terrorism Attack War
+    @s1 Attacked AlQaeda USA
+    @s2 Destroyed Attack Towers
+    @s3 Killed Attack Thousands
+    @s4 Declared USA WarOnTerror
+    @s5 Invaded USA Afghanistan
+    @chain Implies (And $s1 (And $s2 (And $s3 $s4))) $s5
+    return $chain
+end
+
+@:Iraq_War graph Invasion Occupation Insurgency
+    @iw1 Invaded USA Iraq
+    @iw2 Claimed USA WMD
+    @iw3 Overthrew USA Saddam
+    @iw4 Occupied USA Iraq
+    @iw5 Faced USA Insurgency
+    @chain Implies (And $iw1 (And $iw2 (And $iw3 $iw4))) $iw5
+    return $chain
+end
+
+@:Arab_Spring graph Uprising Protests Change
+    @as1 Protested Arabs Dictators
+    @as2 Spread ArabSpring Region
+    @as3 Overthrew Protests Regimes
+    @as4 Mixed ArabSpring Results
+    @as5 Continues Instability Today
+    @chain Implies (And $as1 (And $as2 (And $as3 $as4))) $as5
+    return $chain
+end
+
+@:Financial_Crisis_2008 graph Bubble Crash Recession
+    @fc1 Inflated Banks HousingBubble
+    @fc2 Burst Bubble 2008
+    @fc3 Collapsed Banks Lehman
+    @fc4 Triggered Collapse Crisis
+    @fc5 Caused Crisis Recession
+    @chain Implies (And $fc1 (And $fc2 (And $fc3 $fc4))) $fc5
+    return $chain
+end
+
+@:European_Union graph Integration Union Currency
+    @eu1 Formed Countries EuropeanUnion
+    @eu2 Integrated EU Economies
+    @eu3 Created EU Euro
+    @eu4 Expanded EU Membership
+    @eu5 Faces EU Challenges
+    @chain Implies (And $eu1 (And $eu2 (And $eu3 $eu4))) $eu5
+    return $chain
+end
+
+@:Brexit graph Referendum Exit Departure
+    @b1 Member UK EuropeanUnion
+    @b2 Held UK Referendum
+    @b3 Voted UK Leave
+    @b4 Left UK EU
+    @b5 Continues Brexit Impact
+    @chain Implies (And $b1 (And $b2 (And $b3 $b4))) $b5
+    return $chain
+end
+
+@:Rise_Of_China graph Reform Growth Power
+    @roc1 Reformed DengXiaoping China
+    @roc2 Opened China Economy
+    @roc3 Grew China Rapidly
+    @roc4 Became China Superpower
+    @roc5 Challenges China USA
+    @chain Implies (And $roc1 (And $roc2 (And $roc3 $roc4))) $roc5
+    return $chain
+end
+
+@:COVID_Pandemic graph Virus Spread Impact
+    @cp1 Emerged Coronavirus China
+    @cp2 Spread Virus Globally
+    @cp3 Caused COVID Pandemic
+    @cp4 Killed Pandemic Millions
+    @cp5 Changed Pandemic World
+    @chain Implies (And $cp1 (And $cp2 (And $cp3 $cp4))) $cp5
+    return $chain
+end
+
+// ========== END OF THEORY ==========

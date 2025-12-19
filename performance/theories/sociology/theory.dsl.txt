@@ -1,0 +1,1645 @@
+// Sociology Theory - DSL Format
+// Comprehensive coverage of sociological concepts, structures, and processes
+
+// ============================================================================
+// SOCIAL STRUCTURES AND GROUPS
+// ============================================================================
+
+@:Social_Group graph GroupFormation Membership Boundaries
+    @formation isA $Group SocialGroup
+    @members hasMember $Group $Individual
+    @boundaries definesBoundary $Group $Criteria
+    @identity createsIdentity $Group $GroupIdentity
+    @chain Implies (And $formation $members) $identity
+    return $chain
+end
+
+@:Primary_Group graph Intimacy Duration FaceToFace
+    @type isA $Group PrimaryGroup
+    @intimacy hasCharacteristic $Group EmotionalIntimacy
+    @duration hasCharacteristic $Group LongDuration
+    @interaction hasInteractionType $Group FaceToFace
+    @examples includes $type Family
+    @chain Implies (And $type $intimacy $duration) $interaction
+    return $chain
+end
+
+@:Secondary_Group graph Formal Purpose Impersonal
+    @type isA $Group SecondaryGroup
+    @formal hasCharacteristic $Group FormalStructure
+    @purpose hasPurpose $Group SpecificGoal
+    @impersonal hasCharacteristic $Group ImpersonalRelations
+    @examples includes $type WorkOrganization
+    @chain Implies (And $type $formal) $impersonal
+    return $chain
+end
+
+@:In_Group graph Identity Loyalty Solidarity
+    @ingroup isA $Group InGroup
+    @identity developsIdentity $Individual $ingroup
+    @loyalty showsLoyalty $Individual $ingroup
+    @solidarity experiences $ingroup GroupSolidarity
+    @boundaries creates $ingroup WeFeeling
+    @chain Implies (And $ingroup $identity) $loyalty
+    return $chain
+end
+
+@:Out_Group graph Differentiation Boundaries Competition
+    @outgroup isA $Group OutGroup
+    @differentiation perceivesDifference $InGroup $outgroup
+    @boundaries maintainsBoundary $InGroup $outgroup
+    @competition mayCompeteWith $InGroup $outgroup
+    @stereotypes developsStereotypes $InGroup $outgroup
+    @chain Implies (And $outgroup $differentiation) $boundaries
+    return $chain
+end
+
+@:Reference_Group graph Standards Evaluation Aspiration
+    @refgroup isA $Group ReferenceGroup
+    @standards providesStandards $refgroup $Individual
+    @evaluation evaluatesSelf $Individual $refgroup
+    @aspiration aspiresToJoin $Individual $refgroup
+    @influence influences $refgroup Behavior
+    @chain Implies (And $refgroup $standards) $evaluation
+    return $chain
+end
+
+@:Social_Network graph Nodes Ties Structure
+    @network isA $Structure SocialNetwork
+    @nodes consistsOf $network Individuals
+    @ties connectsVia $network SocialTies
+    @density hasDensity $network $Density
+    @centrality hasCentrality $Individual $Centrality
+    @chain Implies (And $network $nodes $ties) $structure
+    return $chain
+end
+
+@:Network_Ties graph Strong Weak Bridging
+    @strongties isA $Tie StrongTie
+    @weakties isA $Tie WeakTie
+    @strongchar hasCharacteristic $strongties Frequent
+    @weakchar hasCharacteristic $weakties Infrequent
+    @bridging enables $weakties Bridging
+    @strength determines $Tie NetworkStrength
+    @chain Implies (And $weakties $bridging) NetworkExpansion
+    return $chain
+end
+
+@:Social_Capital graph Networks Resources Access
+    @capital isA $Resource SocialCapital
+    @networks derivedFrom $capital SocialNetworks
+    @resources provides $capital OpportunityAccess
+    @trust requiresTrust $capital SocialTrust
+    @reciprocity based_on $capital Reciprocity
+    @chain Implies (And $capital $networks) $resources
+    return $chain
+end
+
+@:Community graph Territory Interaction Identity
+    @community isA $Structure Community
+    @territory hasBoundary $community GeographicTerritory
+    @interaction hasPattern $community RegularInteraction
+    @identity shares $community CommunityIdentity
+    @belonging creates $community SenseOfBelonging
+    @chain Implies (And $community $territory $interaction) $identity
+    return $chain
+end
+
+// ============================================================================
+// SOCIAL STRATIFICATION
+// ============================================================================
+
+@:Social_Stratification graph Hierarchy Inequality Distribution
+    @stratification isA $System StratificationSystem
+    @hierarchy creates $stratification SocialHierarchy
+    @inequality produces $stratification SocialInequality
+    @distribution affects $stratification ResourceDistribution
+    @dimensions hasDimension $stratification Class
+    @chain Implies (And $stratification $hierarchy) $inequality
+    return $chain
+end
+
+@:Social_Class graph Economic Position Power
+    @class isA $Class SocialClass
+    @economic determinedBy $class EconomicPosition
+    @position determinedBy $class OccupationalStatus
+    @power conferspower $class PoliticalPower
+    @mobility enables $class ClassMobility
+    @chain Implies (And $class $economic) $position
+    return $chain
+end
+
+@:Class_System graph Open Achievement Mobility
+    @system isA $System ClassSystem
+    @open hasCharacteristic $system OpenSystem
+    @achievement basedOn $system Achievement
+    @mobility allows $system SocialMobility
+    @meritocracy idealizes $system Meritocracy
+    @chain Implies (And $system $open) $mobility
+    return $chain
+end
+
+@:Caste_System graph Closed Ascription Rigid
+    @system isA $System CasteSystem
+    @closed hasCharacteristic $system ClosedSystem
+    @ascription basedOn $system AscribedStatus
+    @rigid hasCharacteristic $system RigidBoundaries
+    @endogamy requires $system Endogamy
+    @chain Implies (And $system $closed $ascription) $rigid
+    return $chain
+end
+
+@:Status graph Prestige Honor Recognition
+    @status isA $Dimension SocialStatus
+    @prestige confers $status Prestige
+    @honor receives $status SocialHonor
+    @recognition gains $status PublicRecognition
+    @symbols displays $status StatusSymbols
+    @chain Implies (And $status $prestige) $honor
+    return $chain
+end
+
+@:Power graph Authority Influence Control
+    @power isA $Dimension SocialPower
+    @authority hasType $power LegitimateAuthority
+    @influence exerts $power SocialInfluence
+    @control enables $power ResourceControl
+    @domination creates $power Domination
+    @chain Implies (And $power $authority) $influence
+    return $chain
+end
+
+@:Weber_Stratification graph Class Status Party
+    @weberian isA $Theory WeberianStratification
+    @class hasDimension $weberian EconomicClass
+    @status hasDimension $weberian SocialStatus
+    @party hasDimension $weberian PoliticalParty
+    @multidimensional isA $weberian MultidimensionalModel
+    @chain Implies (And $weberian $class $status) $party
+    return $chain
+end
+
+@:Marx_Class graph Bourgeoisie Proletariat Conflict
+    @marxian isA $Theory MarxianClass
+    @bourgeoisie isA $Class OwningClass
+    @proletariat isA $Class WorkingClass
+    @conflict exists $bourgeoisie $proletariat
+    @exploitation exploits $bourgeoisie $proletariat
+    @consciousness develops $proletariat ClassConsciousness
+    @chain Implies (And $marxian $exploitation) $conflict
+    return $chain
+end
+
+@:Social_Mobility graph Vertical Horizontal Intergenerational
+    @mobility isA $Process SocialMobility
+    @vertical isA $mobility VerticalMobility
+    @horizontal isA $mobility HorizontalMobility
+    @intergenerational isA $mobility IntergenerationalMobility
+    @intragenerational isA $mobility IntragenerationalMobility
+    @chain Implies (And $mobility $vertical) StatusChange
+    return $chain
+end
+
+@:Upward_Mobility graph Achievement Education Opportunity
+    @upward isA $Mobility UpwardMobility
+    @achievement requires $upward PersonalAchievement
+    @education facilitates $upward EducationalAttainment
+    @opportunity depends_on $upward OpportunityStructure
+    @merit basedOn $upward MeritocraticPrinciples
+    @chain Implies (And $upward $achievement $education) $opportunity
+    return $chain
+end
+
+@:Downward_Mobility graph Loss Demotion Poverty
+    @downward isA $Mobility DownwardMobility
+    @loss involves $downward StatusLoss
+    @demotion includes $downward OccupationalDemotion
+    @poverty risksOf $downward Poverty
+    @factors causedBy $downward EconomicFactors
+    @chain Implies (And $downward $loss) $demotion
+    return $chain
+end
+
+@:Inequality graph Economic Social Political
+    @inequality isA $Condition SocialInequality
+    @economic isA $inequality EconomicInequality
+    @social isA $inequality SocialInequality
+    @political isA $inequality PoliticalInequality
+    @consequences produces $inequality SocialProblems
+    @chain Implies (And $inequality $economic) $social
+    return $chain
+end
+
+@:Poverty graph Absolute Relative Deprivation
+    @poverty isA $Condition Poverty
+    @absolute isA $poverty AbsolutePoverty
+    @relative isA $poverty RelativePoverty
+    @deprivation experiences $poverty MaterialDeprivation
+    @cycle creates $poverty PovertyyCycle
+    @chain Implies (And $poverty $absolute) $deprivation
+    return $chain
+end
+
+@:Wealth_Concentration graph Elite Accumulation Inequality
+    @concentration isA $Pattern WealthConcentration
+    @elite accumulates $concentration WealthyElite
+    @accumulation increases $concentration WealthAccumulation
+    @inequality intensifies $concentration EconomicInequality
+    @power confers $concentration PoliticalPower
+    @chain Implies (And $concentration $elite $accumulation) $inequality
+    return $chain
+end
+
+// ============================================================================
+// SOCIAL INSTITUTIONS
+// ============================================================================
+
+@:Social_Institution graph Structure Function Norms
+    @institution isA $Structure SocialInstitution
+    @structure has $institution OrganizedStructure
+    @function performs $institution SocialFunction
+    @norms establishes $institution SocialNorms
+    @persistence shows $institution Persistence
+    @chain Implies (And $institution $structure $function) $norms
+    return $chain
+end
+
+@:Family_Institution graph Kinship Reproduction Socialization
+    @family isA $Institution Family
+    @kinship basedOn $family KinshipTies
+    @reproduction performs $family BiologicalReproduction
+    @socialization performs $family PrimarySocialization
+    @support provides $family EmotionalSupport
+    @chain Implies (And $family $kinship $reproduction) $socialization
+    return $chain
+end
+
+@:Nuclear_Family graph Parents Children Household
+    @nuclear isA $Family NuclearFamily
+    @parents includes $nuclear TwoParents
+    @children includes $nuclear DependentChildren
+    @household forms $nuclear SingleHousehold
+    @modern prevalent_in $nuclear ModernSociety
+    @chain Implies (And $nuclear $parents $children) $household
+    return $chain
+end
+
+@:Extended_Family graph Multigenerational Kinship Support
+    @extended isA $Family ExtendedFamily
+    @multigenerational includes $extended MultipleGenerations
+    @kinship includes $extended ExtendedKin
+    @support provides $extended MutualSupport
+    @traditional prevalent_in $extended TraditionalSociety
+    @chain Implies (And $extended $multigenerational $kinship) $support
+    return $chain
+end
+
+@:Marriage graph Union Institution Norms
+    @marriage isA $Institution MarriageInstitution
+    @union creates $marriage LegalUnion
+    @norms governed_by $marriage MarriageNorms
+    @legitimacy confers $marriage Legitimacy
+    @variations has $marriage CulturalVariations
+    @chain Implies (And $marriage $union) $norms
+    return $chain
+end
+
+@:Education_Institution graph Knowledge Skills Socialization
+    @education isA $Institution EducationInstitution
+    @knowledge transmits $education Knowledge
+    @skills develops $education Skills
+    @socialization performs $education SecondarySocialization
+    @stratification affects $education SocialStratification
+    @chain Implies (And $education $knowledge $skills) $socialization
+    return $chain
+end
+
+@:Formal_Education graph School Curriculum Credentials
+    @formal isA $Education FormalEducation
+    @school organized_in $formal Schools
+    @curriculum follows $formal StandardizedCurriculum
+    @credentials awards $formal EducationalCredentials
+    @selection performs $formal SocialSelection
+    @chain Implies (And $formal $school $curriculum) $credentials
+    return $chain
+end
+
+@:Hidden_Curriculum graph Implicit Values Norms
+    @hidden isA $Curriculum HiddenCurriculum
+    @implicit teaches $hidden ImplicitLessons
+    @values transmits $hidden SocialValues
+    @norms reinforces $hidden BehaviorNorms
+    @conformity promotes $hidden Conformity
+    @chain Implies (And $hidden $implicit $values) $norms
+    return $chain
+end
+
+@:Credentialism graph Credentials Status Jobs
+    @credentialism isA $System Credentialism
+    @credentials emphasizes $credentialism EducationalCredentials
+    @status determines $credentialism SocialStatus
+    @jobs requires $credentialism JobCredentials
+    @inflation leads_to $credentialism CredentialInflation
+    @chain Implies (And $credentialism $credentials) $status
+    return $chain
+end
+
+@:Economic_Institution graph Production Distribution Exchange
+    @economy isA $Institution EconomicInstitution
+    @production organizes $economy Production
+    @distribution manages $economy Distribution
+    @exchange facilitates $economy Exchange
+    @systems has $economy EconomicSystems
+    @chain Implies (And $economy $production $distribution) $exchange
+    return $chain
+end
+
+@:Capitalism graph Private Market Profit
+    @capitalism isA $System CapitalistSystem
+    @private basedOn $capitalism PrivateOwnership
+    @market operates_through $capitalism FreeMarket
+    @profit motivated_by $capitalism ProfitMotive
+    @competition features $capitalism Competition
+    @chain Implies (And $capitalism $private $market) $profit
+    return $chain
+end
+
+@:Socialism graph Collective Planning Equality
+    @socialism isA $System SocialistSystem
+    @collective basedOn $socialism CollectiveOwnership
+    @planning uses $socialism CentralPlanning
+    @equality aims_for $socialism EconomicEquality
+    @welfare provides $socialism SocialWelfare
+    @chain Implies (And $socialism $collective $planning) $equality
+    return $chain
+end
+
+@:Political_Institution graph Power Authority Governance
+    @political isA $Institution PoliticalInstitution
+    @power organizes $political PoliticalPower
+    @authority establishes $political Authority
+    @governance performs $political Governance
+    @legitimacy requires $political Legitimacy
+    @chain Implies (And $political $power $authority) $governance
+    return $chain
+end
+
+@:State graph Sovereignty Territory Monopoly
+    @state isA $Political StateInstitution
+    @sovereignty claims $state Sovereignty
+    @territory controls $state Territory
+    @monopoly holds $state MonopolyOfForce
+    @legitimacy requires $state LegitimateAuthority
+    @chain Implies (And $state $sovereignty $territory) $monopoly
+    return $chain
+end
+
+@:Democracy graph Elections Participation Rights
+    @democracy isA $System DemocraticSystem
+    @elections uses $democracy Elections
+    @participation allows $democracy PoliticalParticipation
+    @rights protects $democracy CivilRights
+    @representation provides $democracy Representation
+    @chain Implies (And $democracy $elections $participation) $rights
+    return $chain
+end
+
+@:Authoritarianism graph Concentrated Limited Control
+    @authoritarianism isA $System AuthoritarianSystem
+    @concentrated features $authoritarianism ConcentratedPower
+    @limited has $authoritarianism LimitedFreedom
+    @control exercises $authoritarianism SocialControl
+    @opposition suppresses $authoritarianism PoliticalOpposition
+    @chain Implies (And $authoritarianism $concentrated) $control
+    return $chain
+end
+
+@:Religion_Institution graph Sacred Beliefs Rituals
+    @religion isA $Institution ReligiousInstitution
+    @sacred distinguishes $religion SacredProfane
+    @beliefs provides $religion ReligiousBeliefs
+    @rituals performs $religion Rituals
+    @community creates $religion ReligiousCommunity
+    @chain Implies (And $religion $sacred $beliefs) $rituals
+    return $chain
+end
+
+@:Religious_Functions graph Meaning Solidarity Control
+    @functions performs $religion ReligiousFunctions
+    @meaning provides $religion LifeMeaning
+    @solidarity creates $religion SocialSolidarity
+    @control exercises $religion SocialControl
+    @comfort offers $religion EmotionalComfort
+    @chain Implies (And $functions $meaning $solidarity) $control
+    return $chain
+end
+
+@:Secularization graph Decline Rationalization Differentiation
+    @secularization isA $Process Secularization
+    @decline involves $secularization ReligiousDecline
+    @rationalization driven_by $secularization Rationalization
+    @differentiation involves $secularization InstitutionalDifferentiation
+    @modern characterizes $secularization ModernSociety
+    @chain Implies (And $secularization $rationalization) $differentiation
+    return $chain
+end
+
+// ============================================================================
+// SOCIALIZATION
+// ============================================================================
+
+@:Socialization graph Learning Internalization Development
+    @socialization isA $Process Socialization
+    @learning involves $socialization SocialLearning
+    @internalization achieves $socialization NormInternalization
+    @development produces $socialization SelfDevelopment
+    @lifelong isA $socialization LifelongProcess
+    @chain Implies (And $socialization $learning) $internalization
+    return $chain
+end
+
+@:Primary_Socialization graph Family Early Fundamental
+    @primary isA $Socialization PrimarySocialization
+    @family occurs_in $primary Family
+    @early occurs_during $primary Childhood
+    @fundamental teaches $primary FundamentalSkills
+    @identity forms $primary BasicIdentity
+    @chain Implies (And $primary $family $early) $fundamental
+    return $chain
+end
+
+@:Secondary_Socialization graph Institutions Later Specific
+    @secondary isA $Socialization SecondarySocialization
+    @institutions occurs_in $secondary SocialInstitutions
+    @later occurs_during $secondary LaterLife
+    @specific teaches $secondary SpecificRoles
+    @skills develops $secondary SpecializedSkills
+    @chain Implies (And $secondary $institutions $later) $specific
+    return $chain
+end
+
+@:Agents_Socialization graph Family Peers School Media
+    @agents are $Socialization SocializationAgents
+    @family isA $agents FamilyAgent
+    @peers isA $agents PeerGroup
+    @school isA $agents School
+    @media isA $agents MassMedia
+    @chain Implies (And $agents $family $peers) $school
+    return $chain
+end
+
+@:Peer_Socialization graph Equals Independence Values
+    @peers isA $Agent PeerGroup
+    @equals characterized_by $peers StatusEquality
+    @independence promotes $peers Independence
+    @values transmits $peers PeerValues
+    @pressure exerts $peers PeerPressure
+    @chain Implies (And $peers $equals) $independence
+    return $chain
+end
+
+@:Media_Socialization graph Mass Messages Influence
+    @media isA $Agent MassMedia
+    @mass reaches $media MassAudience
+    @messages transmits $media SocialMessages
+    @influence exerts $media CulturalInfluence
+    @reality shapes $media PerceivedReality
+    @chain Implies (And $media $mass $messages) $influence
+    return $chain
+end
+
+@:Self_Development graph Identity Reflexivity Agency
+    @self isA $Concept SelfConcept
+    @identity develops $self Identity
+    @reflexivity requires $self SelfReflexivity
+    @agency enables $self HumanAgency
+    @social shaped_by $self SocialInteraction
+    @chain Implies (And $self $identity $reflexivity) $agency
+    return $chain
+end
+
+@:Looking_Glass_Self graph Imagination Interpretation Response
+    @lookinglass isA $Theory LookingGlassSelf
+    @imagination involves $lookinglass ImaginingAppearance
+    @interpretation involves $lookinglass InterpretingJudgment
+    @response develops $lookinglass SelfFeeling
+    @cooley developed_by $lookinglass Cooley
+    @chain Implies (And $lookinglass $imagination $interpretation) $response
+    return $chain
+end
+
+@:Role_Taking graph Perspective Empathy Understanding
+    @roletaking isA $Process RoleTaking
+    @perspective takes $roletaking OthersPerspective
+    @empathy develops $roletaking Empathy
+    @understanding achieves $roletaking SocialUnderstanding
+    @mead theorized_by $roletaking Mead
+    @chain Implies (And $roletaking $perspective) $empathy
+    return $chain
+end
+
+@:Generalized_Other graph Society Norms Internalization
+    @generalized isA $Concept GeneralizedOther
+    @society represents $generalized SocietalPerspective
+    @norms internalize $generalized SocialNorms
+    @self regulates $generalized SelfRegulation
+    @stage final_stage $generalized SelfDevelopment
+    @chain Implies (And $generalized $society $norms) $self
+    return $chain
+end
+
+@:Resocialization graph Change Unlearning Relearning
+    @resocialization isA $Process Resocialization
+    @change involves $resocialization IdentityChange
+    @unlearning requires $resocialization UnlearningOldNorms
+    @relearning requires $resocialization LearningNewNorms
+    @total occurs_in $resocialization TotalInstitution
+    @chain Implies (And $resocialization $unlearning) $relearning
+    return $chain
+end
+
+@:Total_Institution graph Controlled Isolated Resocialization
+    @total isA $Institution TotalInstitution
+    @controlled features $total ControlledEnvironment
+    @isolated features $total IsolationFromSociety
+    @resocialization performs $total Resocialization
+    @examples includes $total Prison
+    @chain Implies (And $total $controlled $isolated) $resocialization
+    return $chain
+end
+
+// ============================================================================
+// CULTURE
+// ============================================================================
+
+@:Culture graph Shared Learned Symbolic
+    @culture isA $Concept Culture
+    @shared characterized_by $culture SharedMeanings
+    @learned acquired_through $culture Learning
+    @symbolic uses $culture Symbols
+    @adaptive isA $culture AdaptiveMechanism
+    @chain Implies (And $culture $shared $learned) $symbolic
+    return $chain
+end
+
+@:Material_Culture graph Objects Technology Artifacts
+    @material isA $Culture MaterialCulture
+    @objects includes $material PhysicalObjects
+    @technology includes $material Technology
+    @artifacts produces $material CulturalArtifacts
+    @tangible characterized_by $material Tangibility
+    @chain Implies (And $material $objects) $technology
+    return $chain
+end
+
+@:Nonmaterial_Culture graph Values Beliefs Norms
+    @nonmaterial isA $Culture NonmaterialCulture
+    @values includes $nonmaterial Values
+    @beliefs includes $nonmaterial Beliefs
+    @norms includes $nonmaterial Norms
+    @intangible characterized_by $nonmaterial Intangibility
+    @chain Implies (And $nonmaterial $values $beliefs) $norms
+    return $chain
+end
+
+@:Cultural_Values graph Desirable Standards Guiding
+    @values isA $Culture CulturalValues
+    @desirable defines $values DesirableGoals
+    @standards provides $values Standards
+    @guiding guides $values Behavior
+    @shared widely_shared $values SocietyMembers
+    @chain Implies (And $values $desirable) $standards
+    return $chain
+end
+
+@:Social_Norms graph Rules Expectations Sanctions
+    @norms isA $Culture SocialNorms
+    @rules are $norms BehaviorRules
+    @expectations define $norms SocialExpectations
+    @sanctions enforced_by $norms Sanctions
+    @types has $norms FolkwaysMores
+    @chain Implies (And $norms $rules $expectations) $sanctions
+    return $chain
+end
+
+@:Folkways graph Conventions Informal Mild
+    @folkways isA $Norms Folkways
+    @conventions are $folkways SocialConventions
+    @informal characterized_by $folkways InformalNorms
+    @mild enforced_with $folkways MildSanctions
+    @everyday govern $folkways EverydayBehavior
+    @chain Implies (And $folkways $conventions) $informal
+    return $chain
+end
+
+@:Mores graph Moral Serious Strong
+    @mores isA $Norms Mores
+    @moral based_on $mores MoralBeliefs
+    @serious regarded_as $mores SeriousMatters
+    @strong enforced_with $mores StrongSanctions
+    @essential considered $mores EssentialNorms
+    @chain Implies (And $mores $moral $serious) $strong
+    return $chain
+end
+
+@:Taboos graph Forbidden Sacred Severe
+    @taboos isA $Norms Taboos
+    @forbidden strongly_forbidden $taboos Behaviors
+    @sacred often_related $taboos SacredBeliefs
+    @severe punished_with $taboos SevereSanctions
+    @universal often_considered $taboos Universal
+    @chain Implies (And $taboos $forbidden $sacred) $severe
+    return $chain
+end
+
+@:Cultural_Symbols graph Meaning Representation Communication
+    @symbols isA $Culture CulturalSymbols
+    @meaning carries $symbols SharedMeaning
+    @representation represents $symbols Ideas
+    @communication enables $symbols Communication
+    @arbitrary often_characterized $symbols ArbitraryRelation
+    @chain Implies (And $symbols $meaning) $representation
+    return $chain
+end
+
+@:Language graph Symbols Grammar Communication
+    @language isA $Culture Language
+    @symbols uses $language Symbols
+    @grammar has $language Grammar
+    @communication enables $language Communication
+    @sapirwhorf theory $language LinguisticRelativity
+    @chain Implies (And $language $symbols $grammar) $communication
+    return $chain
+end
+
+@:Subculture graph Distinct Shared Larger
+    @subculture isA $Culture Subculture
+    @distinct has $subculture DistinctiveCulture
+    @shared shares $subculture LargerCulture
+    @group associated_with $subculture SocialGroup
+    @variation represents $subculture CulturalVariation
+    @chain Implies (And $subculture $distinct) $shared
+    return $chain
+end
+
+@:Counterculture graph Opposition Rejection Alternative
+    @counterculture isA $Culture Counterculture
+    @opposition opposes $counterculture DominantCulture
+    @rejection rejects $counterculture MainstreamValues
+    @alternative promotes $counterculture AlternativeValues
+    @conflict creates $counterculture CulturalConflict
+    @chain Implies (And $counterculture $opposition) $rejection
+    return $chain
+end
+
+@:Cultural_Diversity graph Variation Pluralism Difference
+    @diversity isA $Concept CulturalDiversity
+    @variation features $diversity CulturalVariation
+    @pluralism represents $diversity CulturalPluralism
+    @difference recognizes $diversity Differences
+    @multiculturalism promotes $diversity Multiculturalism
+    @chain Implies (And $diversity $variation) $pluralism
+    return $chain
+end
+
+@:Ethnocentrism graph Own Superior Judgment
+    @ethnocentrism isA $Attitude Ethnocentrism
+    @own uses $ethnocentrism OwnCulture
+    @superior judges_as $ethnocentrism Superior
+    @judgment basis_for $ethnocentrism JudgingOthers
+    @bias creates $ethnocentrism CulturalBias
+    @chain Implies (And $ethnocentrism $own $superior) $judgment
+    return $chain
+end
+
+@:Cultural_Relativism graph Context Understanding Judgment
+    @relativism isA $Perspective CulturalRelativism
+    @context understands_in $relativism CulturalContext
+    @understanding promotes $relativism Understanding
+    @judgment suspends $relativism EthnocentricJudgment
+    @respect encourages $relativism CulturalRespect
+    @chain Implies (And $relativism $context) $understanding
+    return $chain
+end
+
+@:Cultural_Change graph Innovation Diffusion Globalization
+    @change isA $Process CulturalChange
+    @innovation driven_by $change Innovation
+    @diffusion occurs_through $change CulturalDiffusion
+    @globalization accelerated_by $change Globalization
+    @resistance faces $change CulturalResistance
+    @chain Implies (And $change $innovation $diffusion) $globalization
+    return $chain
+end
+
+@:Cultural_Lag graph Technology Culture Gap
+    @lag isA $Concept CulturalLag
+    @technology changes_faster $lag Technology
+    @culture changes_slower $lag Culture
+    @gap creates $lag AdaptationGap
+    @problems causes $lag SocialProblems
+    @chain Implies (And $lag $technology $culture) $gap
+    return $chain
+end
+
+// ============================================================================
+// DEVIANCE AND SOCIAL CONTROL
+// ============================================================================
+
+@:Deviance graph Violation Norms Relative
+    @deviance isA $Concept Deviance
+    @violation involves $deviance NormViolation
+    @norms violates $deviance SocialNorms
+    @relative isA $deviance RelativeConcept
+    @labeled socially_defined $deviance Labeling
+    @chain Implies (And $deviance $violation) $norms
+    return $chain
+end
+
+@:Positive_Deviance graph Overconformity Ideals Exceptional
+    @positive isA $Deviance PositiveDeviance
+    @overconformity involves $positive Overconformity
+    @ideals exceeds $positive SocialIdeals
+    @exceptional considered $positive ExceptionalBehavior
+    @admiration receives $positive SocialAdmiration
+    @chain Implies (And $positive $overconformity) $ideals
+    return $chain
+end
+
+@:Negative_Deviance graph Underconformity Violation Sanctions
+    @negative isA $Deviance NegativeDeviance
+    @underconformity involves $negative Underconformity
+    @violation involves $negative NormViolation
+    @sanctions receives $negative NegativeSanctions
+    @stigma faces $negative Stigma
+    @chain Implies (And $negative $underconformity $violation) $sanctions
+    return $chain
+end
+
+@:Crime graph Legal Violation Law
+    @crime isA $Deviance Crime
+    @legal involves $crime LegalViolation
+    @violation violates $crime Law
+    @punishment subject_to $crime FormalPunishment
+    @types has $crime CrimeTypes
+    @chain Implies (And $crime $legal) $violation
+    return $chain
+end
+
+@:White_Collar_Crime graph Occupation Status Powerful
+    @whitecollar isA $Crime WhiteCollarCrime
+    @occupation committed_in $whitecollar Occupation
+    @status committed_by $whitecollar HighStatus
+    @powerful involves $whitecollar PowerfulIndividuals
+    @underreported often_characterized $whitecollar Underreported
+    @chain Implies (And $whitecollar $occupation $status) $powerful
+    return $chain
+end
+
+@:Social_Control graph Regulation Conformity Mechanisms
+    @control isA $Process SocialControl
+    @regulation achieves $control BehaviorRegulation
+    @conformity promotes $control Conformity
+    @mechanisms uses $control ControlMechanisms
+    @types has $control FormalInformal
+    @chain Implies (And $control $regulation) $conformity
+    return $chain
+end
+
+@:Formal_Control graph Official Legal Institutions
+    @formal isA $Control FormalControl
+    @official exercised_by $formal OfficialAgencies
+    @legal based_on $formal LegalRules
+    @institutions involves $formal ControlInstitutions
+    @sanctions imposes $formal FormalSanctions
+    @chain Implies (And $formal $official $legal) $institutions
+    return $chain
+end
+
+@:Informal_Control graph Unofficial Social Everyday
+    @informal isA $Control InformalControl
+    @unofficial exercised_through $informal UnofficialMeans
+    @social based_on $informal SocialPressure
+    @everyday occurs_in $informal EverydayInteraction
+    @sanctions uses $informal InformalSanctions
+    @chain Implies (And $informal $unofficial) $social
+    return $chain
+end
+
+@:Labeling_Theory graph Definition Reaction Stigma
+    @labeling isA $Theory LabelingTheory
+    @definition focuses_on $labeling SocialDefinition
+    @reaction emphasizes $labeling SocialReaction
+    @stigma creates $labeling Stigma
+    @identity affects $labeling DeviantIdentity
+    @chain Implies (And $labeling $definition $reaction) $stigma
+    return $chain
+end
+
+@:Primary_Deviance graph Initial Temporary Limited
+    @primary isA $Deviance PrimaryDeviance
+    @initial characterized_by $primary InitialViolation
+    @temporary often_characterized $primary Temporary
+    @limited has $limited LimitedConsequences
+    @identity not_yet_affects $primary SelfIdentity
+    @chain Implies (And $primary $initial) $temporary
+    return $chain
+end
+
+@:Secondary_Deviance graph Labeled Identity Career
+    @secondary isA $Deviance SecondaryDeviance
+    @labeled results_from $secondary Labeling
+    @identity adopts $secondary DeviantIdentity
+    @career develops $secondary DeviantCareer
+    @stigma experiences $secondary MasterStatus
+    @chain Implies (And $secondary $labeled $identity) $career
+    return $chain
+end
+
+@:Strain_Theory graph Goals Means Gap
+    @strain isA $Theory StrainTheory
+    @goals emphasizes $strain CulturalGoals
+    @means emphasizes $strain LegitMeans
+    @gap exists_between $strain GoalsMeansGap
+    @merton developed_by $strain Merton
+    @chain Implies (And $strain $goals $means) $gap
+    return $chain
+end
+
+@:Anomie graph Normlessness Breakdown Confusion
+    @anomie isA $Concept Anomie
+    @normlessness characterized_by $anomie Normlessness
+    @breakdown results_from $anomie NormBreakdown
+    @confusion creates $anomie MoralConfusion
+    @durkheim theorized_by $anomie Durkheim
+    @chain Implies (And $anomie $breakdown) $normlessness
+    return $chain
+end
+
+@:Differential_Association graph Learning Interaction Techniques
+    @differential isA $Theory DifferentialAssociation
+    @learning emphasizes $differential LearningDeviance
+    @interaction occurs_through $differential SocialInteraction
+    @techniques learns $differential CriminalTechniques
+    @sutherland developed_by $differential Sutherland
+    @chain Implies (And $differential $learning $interaction) $techniques
+    return $chain
+end
+
+@:Control_Theory graph Bonds Attachment Commitment
+    @controltheory isA $Theory ControlTheory
+    @bonds emphasizes $controltheory SocialBonds
+    @attachment includes $controltheory Attachment
+    @commitment includes $controltheory Commitment
+    @belief includes $controltheory Belief
+    @chain Implies (And $controltheory $bonds $attachment) $commitment
+    return $chain
+end
+
+// ============================================================================
+// SOCIAL CHANGE
+// ============================================================================
+
+@:Social_Change graph Transformation Patterns Systems
+    @change isA $Process SocialChange
+    @transformation involves $change Transformation
+    @patterns affects $change SocialPatterns
+    @systems affects $change SocialSystems
+    @types has $change ChangeTypes
+    @chain Implies (And $change $transformation) $patterns
+    return $chain
+end
+
+@:Evolutionary_Change graph Gradual Progressive Stages
+    @evolutionary isA $Change EvolutionaryChange
+    @gradual characterized_by $evolutionary GradualChange
+    @progressive often_viewed $evolutionary Progressive
+    @stages occurs_in $evolutionary Stages
+    @functionalist associated_with $evolutionary Functionalism
+    @chain Implies (And $evolutionary $gradual) $progressive
+    return $chain
+end
+
+@:Revolutionary_Change graph Rapid Fundamental Dramatic
+    @revolutionary isA $Change RevolutionaryChange
+    @rapid characterized_by $revolutionary RapidChange
+    @fundamental involves $revolutionary FundamentalChange
+    @dramatic produces $revolutionary DramaticTransformation
+    @conflict often_involves $revolutionary Conflict
+    @chain Implies (And $revolutionary $rapid $fundamental) $dramatic
+    return $chain
+end
+
+@:Modernization graph Traditional Modern Development
+    @modernization isA $Process Modernization
+    @traditional transforms_from $modernization TraditionalSociety
+    @modern transforms_to $modernization ModernSociety
+    @development involves $modernization SocioeconomicDevelopment
+    @rationalization characterized_by $modernization Rationalization
+    @chain Implies (And $modernization $traditional $modern) $development
+    return $chain
+end
+
+@:Globalization graph Integration Interconnection Worldwide
+    @globalization isA $Process Globalization
+    @integration increases $globalization GlobalIntegration
+    @interconnection creates $globalization Interconnection
+    @worldwide operates $globalization WorldwideScale
+    @culture affects $globalization CulturalHomogenization
+    @chain Implies (And $globalization $integration $interconnection) $worldwide
+    return $chain
+end
+
+@:Urbanization graph Cities Migration Concentration
+    @urbanization isA $Process Urbanization
+    @cities involves $urbanization CityGrowth
+    @migration driven_by $urbanization RuralUrbanMigration
+    @concentration creates $urbanization PopulationConcentration
+    @modern characteristic_of $urbanization ModernSociety
+    @chain Implies (And $urbanization $cities $migration) $concentration
+    return $chain
+end
+
+@:Industrialization graph Manufacturing Technology Economy
+    @industrialization isA $Process Industrialization
+    @manufacturing shifts_to $industrialization Manufacturing
+    @technology uses $industrialization MechanizedTechnology
+    @economy transforms $industrialization Economy
+    @social produces $industrialization SocialChanges
+    @chain Implies (And $industrialization $manufacturing $technology) $economy
+    return $chain
+end
+
+@:Social_Movement graph Collective Organized Change
+    @movement isA $Collective SocialMovement
+    @collective involves $movement CollectiveAction
+    @organized characterized_by $movement Organization
+    @change aims_for $movement SocialChange
+    @types has $movement MovementTypes
+    @chain Implies (And $movement $collective $organized) $change
+    return $chain
+end
+
+@:Reform_Movement graph Limited Specific Gradual
+    @reform isA $Movement ReformMovement
+    @limited seeks $reform LimitedChange
+    @specific targets $reform SpecificIssue
+    @gradual promotes $reform GradualChange
+    @system works_within $reform ExistingSystem
+    @chain Implies (And $reform $limited) $specific
+    return $chain
+end
+
+@:Revolutionary_Movement graph Fundamental Radical Total
+    @revmovement isA $Movement RevolutionaryMovement
+    @fundamental seeks $revmovement FundamentalChange
+    @radical advocates $revmovement RadicalTransformation
+    @total aims_for $revmovement TotalSystemChange
+    @overthrow seeks_to $revmovement OverthrowSystem
+    @chain Implies (And $revmovement $fundamental $radical) $total
+    return $chain
+end
+
+@:Resource_Mobilization graph Resources Organization Leadership
+    @resource isA $Theory ResourceMobilization
+    @resources emphasizes $resource ResourceAcquisition
+    @organization focuses_on $resource Organization
+    @leadership requires $resource Leadership
+    @rational views_as $resource RationalAction
+    @chain Implies (And $resource $resources $organization) $leadership
+    return $chain
+end
+
+@:Collective_Behavior graph Spontaneous Emergent Unconventional
+    @collective isA $Behavior CollectiveBehavior
+    @spontaneous characterized_by $collective Spontaneity
+    @emergent features $collective EmergentNorms
+    @unconventional often_characterized $collective Unconventional
+    @types includes $collective CrowdsBehavior
+    @chain Implies (And $collective $spontaneous) $emergent
+    return $chain
+end
+
+@:Technology_Impact graph Innovation Transformation Society
+    @technology isA $Factor TechnologyImpact
+    @innovation drives $technology TechnologicalInnovation
+    @transformation produces $technology SocialTransformation
+    @society affects $technology SocietyStructure
+    @determinism theory $technology TechnologicalDeterminism
+    @chain Implies (And $technology $innovation $transformation) $society
+    return $chain
+end
+
+// ============================================================================
+// SOCIOLOGICAL THEORIES
+// ============================================================================
+
+@:Functionalism graph System Equilibrium Functions
+    @functionalism isA $Theory Functionalism
+    @system views_as $functionalism SocialSystem
+    @equilibrium emphasizes $functionalism Equilibrium
+    @functions analyzes $functionalism SocialFunctions
+    @integration focuses_on $functionalism SocialIntegration
+    @chain Implies (And $functionalism $system $equilibrium) $functions
+    return $chain
+end
+
+@:Manifest_Function graph Intended Recognized Explicit
+    @manifest isA $Function ManifestFunction
+    @intended characterized_by $manifest IntendedConsequence
+    @recognized are $manifest RecognizedConsequences
+    @explicit are $manifest ExplicitPurposes
+    @obvious usually_characterized $manifest Obvious
+    @chain Implies (And $manifest $intended) $recognized
+    return $manifest
+end
+
+@:Latent_Function graph Unintended Unrecognized Implicit
+    @latent isA $Function LatentFunction
+    @unintended characterized_by $latent UnintendedConsequence
+    @unrecognized are $latent UnrecognizedConsequences
+    @implicit are $latent ImplicitEffects
+    @hidden often_characterized $latent Hidden
+    @chain Implies (And $latent $unintended) $unrecognized
+    return $chain
+end
+
+@:Dysfunction graph Disruptive Negative Instability
+    @dysfunction isA $Function Dysfunction
+    @disruptive are $dysfunction DisruptiveConsequences
+    @negative characterized_by $dysfunction NegativeEffects
+    @instability creates $dysfunction SocialInstability
+    @equilibrium threatens $dysfunction SystemEquilibrium
+    @chain Implies (And $dysfunction $disruptive) $negative
+    return $chain
+end
+
+@:Conflict_Theory graph Inequality Power Competition
+    @conflict isA $Theory ConflictTheory
+    @inequality emphasizes $conflict SocialInequality
+    @power focuses_on $conflict PowerRelations
+    @competition sees $conflict ResourceCompetition
+    @change views_as $change EngineOfChange
+    @chain Implies (And $conflict $inequality $power) $competition
+    return $chain
+end
+
+@:Class_Conflict graph Bourgeoisie Proletariat Struggle
+    @classconflict isA $Conflict ClassConflict
+    @bourgeoisie between $classconflict CapitalistClass
+    @proletariat between $classconflict WorkingClass
+    @struggle characterized_by $classconflict ClassStruggle
+    @marx theorized_by $classconflict Marx
+    @chain Implies (And $classconflict $bourgeoisie $proletariat) $struggle
+    return $chain
+end
+
+@:Gender_Conflict graph Patriarchy Domination Feminism
+    @genderconflict isA $Conflict GenderConflict
+    @patriarchy analyzes $genderconflict Patriarchy
+    @domination examines $genderconflict MaleDomination
+    @feminism associated_with $genderconflict FeministTheory
+    @inequality addresses $genderconflict GenderInequality
+    @chain Implies (And $genderconflict $patriarchy) $domination
+    return $chain
+end
+
+@:Symbolic_Interactionism graph Symbols Interaction Meaning
+    @symbolic isA $Theory SymbolicInteractionism
+    @symbols focuses_on $symbolic Symbols
+    @interaction emphasizes $symbolic SocialInteraction
+    @meaning analyzes $symbolic MeaningConstruction
+    @micro isA $symbolic MicroLevel
+    @chain Implies (And $symbolic $symbols $interaction) $meaning
+    return $chain
+end
+
+@:Definition_Situation graph Perception Interpretation Reality
+    @definition isA $Concept DefinitionOfSituation
+    @perception involves $definition Perception
+    @interpretation involves $definition Interpretation
+    @reality constructs $definition SocialReality
+    @thomas theorem $definition ThomasTheorem
+    @chain Implies (And $definition $perception $interpretation) $reality
+    return $chain
+end
+
+@:Dramaturgy graph Performance FrontStage BackStage
+    @dramaturgy isA $Theory Dramaturgy
+    @performance views_as $dramaturgy Performance
+    @frontstage includes $dramaturgy FrontStage
+    @backstage includes $dramaturgy BackStage
+    @goffman developed_by $dramaturgy Goffman
+    @chain Implies (And $dramaturgy $performance $frontstage) $backstage
+    return $chain
+end
+
+@:Impression_Management graph Control Presentation Self
+    @impression isA $Process ImpressionManagement
+    @control involves $impression ControllingPerceptions
+    @presentation manages $impression SelfPresentation
+    @self constructs $impression PublicSelf
+    @strategic characterized_by $impression StrategicBehavior
+    @chain Implies (And $impression $control) $presentation
+    return $chain
+end
+
+@:Exchange_Theory graph Rewards Costs Rational
+    @exchange isA $Theory ExchangeTheory
+    @rewards analyzes $exchange Rewards
+    @costs analyzes $exchange Costs
+    @rational assumes $exchange RationalActors
+    @maximization predicts $exchange RewardMaximization
+    @chain Implies (And $exchange $rewards $costs) $rational
+    return $chain
+end
+
+@:Feminist_Theory graph Gender Patriarchy Equality
+    @feminist isA $Theory FeministTheory
+    @gender focuses_on $feminist GenderRelations
+    @patriarchy critiques $feminist Patriarchy
+    @equality advocates $feminist GenderEquality
+    @intersectionality recognizes $feminist Intersectionality
+    @chain Implies (And $feminist $gender $patriarchy) $equality
+    return $chain
+end
+
+@:Critical_Race_Theory graph Race Racism Power
+    @crt isA $Theory CriticalRaceTheory
+    @race analyzes $crt RaceRelations
+    @racism examines $crt StructuralRacism
+    @power focuses_on $crt PowerInequality
+    @justice advocates $crt RacialJustice
+    @chain Implies (And $crt $race $racism) $power
+    return $chain
+end
+
+@:Postmodern_Theory graph Fragmentation Plurality Deconstruction
+    @postmodern isA $Theory PostmodernTheory
+    @fragmentation emphasizes $postmodern Fragmentation
+    @plurality recognizes $postmodern Plurality
+    @deconstruction uses $postmodern Deconstruction
+    @metanarratives rejects $postmodern GrandNarratives
+    @chain Implies (And $postmodern $fragmentation) $plurality
+    return $chain
+end
+
+// ============================================================================
+// RACE AND ETHNICITY
+// ============================================================================
+
+@:Race graph Social Constructed Physical
+    @race isA $Concept RacialCategory
+    @social characterized_by $race SocialConstruction
+    @constructed socially_constructed $race RacialCategories
+    @physical based_on $race PhysicalCharacteristics
+    @arbitrary isA $race ArbitraryClassification
+    @chain Implies (And $race $social) $constructed
+    return $chain
+end
+
+@:Ethnicity graph Cultural Shared Heritage
+    @ethnicity isA $Concept EthnicIdentity
+    @cultural based_on $ethnicity CulturalCharacteristics
+    @shared shares $ethnicity CommonAncestry
+    @heritage maintains $ethnicity CulturalHeritage
+    @identity creates $ethnicity EthnicIdentity
+    @chain Implies (And $ethnicity $cultural $shared) $heritage
+    return $chain
+end
+
+@:Racism graph Prejudice Discrimination Power
+    @racism isA $System Racism
+    @prejudice involves $racism RacialPrejudice
+    @discrimination practices $racism Discrimination
+    @power combined_with $racism Power
+    @structural can_be $racism StructuralRacism
+    @chain Implies (And $racism $prejudice $discrimination) $power
+    return $chain
+end
+
+@:Individual_Racism graph Personal Attitudes Behaviors
+    @individual isA $Racism IndividualRacism
+    @personal level $individual PersonalLevel
+    @attitudes involves $individual PrejudicedAttitudes
+    @behaviors involves $individual DiscriminatoryBehaviors
+    @interpersonal occurs_in $individual InterpersonalInteraction
+    @chain Implies (And $individual $personal $attitudes) $behaviors
+    return $chain
+end
+
+@:Institutional_Racism graph Systemic Policies Embedded
+    @institutional isA $Racism InstitutionalRacism
+    @systemic characterized_by $institutional SystemicDiscrimination
+    @policies embedded_in $institutional Policies
+    @embedded embedded_in $institutional Institutions
+    @subtle often_characterized $institutional Subtle
+    @chain Implies (And $institutional $systemic $policies) $embedded
+    return $chain
+end
+
+@:Prejudice graph Attitude Judgment Stereotypes
+    @prejudice isA $Attitude Prejudice
+    @attitude isA $prejudice Attitude
+    @judgment involves $prejudice Prejudgment
+    @stereotypes based_on $prejudice Stereotypes
+    @negative often_characterized $prejudice Negative
+    @chain Implies (And $prejudice $attitude $judgment) $stereotypes
+    return $chain
+end
+
+@:Discrimination graph Action Treatment Unequal
+    @discrimination isA $Behavior Discrimination
+    @action involves $discrimination Action
+    @treatment involves $discrimination UnequalTreatment
+    @unequal results_in $discrimination UnequalOutcomes
+    @intentional can_be $discrimination IntentionalOrUnintentional
+    @chain Implies (And $discrimination $action) $treatment
+    return $chain
+end
+
+@:Segregation graph Separation Physical Social
+    @segregation isA $Pattern Segregation
+    @separation involves $segregation RacialSeparation
+    @physical can_be $segregation PhysicalSeparation
+    @social can_be $social SocialSeparation
+    @dejure types $segregation DeJureDeFacto
+    @chain Implies (And $segregation $separation) $physical
+    return $chain
+end
+
+@:Assimilation graph Adoption Absorption Mainstream
+    @assimilation isA $Process Assimilation
+    @adoption involves $assimilation CulturalAdoption
+    @absorption leads_to $assimilation Absorption
+    @mainstream into $assimilation MainstreamCulture
+    @identity affects $assimilation MinorityIdentity
+    @chain Implies (And $assimilation $adoption $absorption) $mainstream
+    return $chain
+end
+
+@:Pluralism graph Diversity Coexistence Equality
+    @pluralism isA $Model CulturalPluralism
+    @diversity maintains $pluralism CulturalDiversity
+    @coexistence promotes $pluralism PeacefulCoexistence
+    @equality emphasizes $pluralism Equality
+    @multiculturalism form_of $pluralism Multiculturalism
+    @chain Implies (And $pluralism $diversity $coexistence) $equality
+    return $chain
+end
+
+@:Minority_Group graph Subordinate Power Discrimination
+    @minority isA $Group MinorityGroup
+    @subordinate has_position $minority SubordinatePosition
+    @power lacks $minority SocialPower
+    @discrimination experiences $minority Discrimination
+    @distinctive has $minority DistinctiveCharacteristics
+    @chain Implies (And $minority $subordinate) $discrimination
+    return $chain
+end
+
+// ============================================================================
+// GENDER AND SEXUALITY
+// ============================================================================
+
+@:Gender graph Social Constructed Roles
+    @gender isA $Concept Gender
+    @social characterized_by $gender SocialConstruction
+    @constructed socially_constructed $gender GenderRoles
+    @roles includes $gender GenderExpectations
+    @binary often_viewed $gender BinaryConstruction
+    @chain Implies (And $gender $social) $constructed
+    return $chain
+end
+
+@:Sex graph Biological Physical Chromosomal
+    @sex isA $Concept BiologicalSex
+    @biological based_on $sex BiologicalCharacteristics
+    @physical includes $sex PhysicalCharacteristics
+    @chromosomal determined_by $sex ChromosomalPatterns
+    @distinct distinct_from $sex Gender
+    @chain Implies (And $sex $biological) $physical
+    return $chain
+end
+
+@:Gender_Roles graph Expectations Behaviors Norms
+    @roles isA $Concept GenderRoles
+    @expectations defines $roles BehaviorExpectations
+    @behaviors prescribes $roles AppropriateBehaviors
+    @norms based_on $roles GenderNorms
+    @learned acquired_through $roles Socialization
+    @chain Implies (And $roles $expectations) $behaviors
+    return $chain
+end
+
+@:Gender_Stratification graph Hierarchy Inequality Power
+    @genderstrat isA $System GenderStratification
+    @hierarchy creates $genderstrat GenderHierarchy
+    @inequality produces $genderstrat GenderInequality
+    @power unequal_distribution $genderstrat Power
+    @patriarchy form_of $genderstrat Patriarchy
+    @chain Implies (And $genderstrat $hierarchy) $inequality
+    return $chain
+end
+
+@:Patriarchy graph Male Dominance Control
+    @patriarchy isA $System Patriarchy
+    @male features $patriarchy MaleDominance
+    @dominance characterized_by $patriarchy MaleAuthority
+    @control exercises $patriarchy ControlOverWomen
+    @institutional embedded_in $patriarchy Institutions
+    @chain Implies (And $patriarchy $male) $dominance
+    return $chain
+end
+
+@:Sexism graph Prejudice Discrimination Gender
+    @sexism isA $System Sexism
+    @prejudice involves $sexism GenderPrejudice
+    @discrimination practices $sexism GenderDiscrimination
+    @gender based_on $gender Gender
+    @institutional can_be $sexism InstitutionalSexism
+    @chain Implies (And $sexism $prejudice) $discrimination
+    return $chain
+end
+
+@:Feminism graph Equality Movement Empowerment
+    @feminism isA $Movement Feminism
+    @equality advocates $feminism GenderEquality
+    @movement isA $feminism SocialMovement
+    @empowerment seeks $feminism WomenEmpowerment
+    @waves has $feminism FeministWaves
+    @chain Implies (And $feminism $equality) $empowerment
+    return $chain
+end
+
+@:Sexual_Orientation graph Attraction Identity Expression
+    @orientation isA $Concept SexualOrientation
+    @attraction based_on $orientation SexualAttraction
+    @identity forms $orientation SexualIdentity
+    @expression manifests_in $orientation SexualExpression
+    @spectrum exists_on $orientation Spectrum
+    @chain Implies (And $orientation $attraction) $identity
+    return $chain
+end
+
+@:Heteronormativity graph Heterosexual Normal Privileged
+    @heteronormativity isA $System Heteronormativity
+    @heterosexual assumes $heteronormativity HeterosexualNorm
+    @normal treats_as $heteronormativity Normal
+    @privileged privileges $heteronormativity Heterosexuality
+    @marginalizes marginalizes $heteronormativity OtherOrientations
+    @chain Implies (And $heteronormativity $heterosexual) $privileged
+    return $chain
+end
+
+@:Gender_Identity graph Self Identification Expression
+    @identity isA $Concept GenderIdentity
+    @self based_on $identity SelfPerception
+    @identification involves $identity GenderIdentification
+    @expression manifests_in $identity GenderExpression
+    @cisgender types $identity CisgenderTransgender
+    @chain Implies (And $identity $self) $identification
+    return $chain
+end
+
+// ============================================================================
+// WORK AND ECONOMY
+// ============================================================================
+
+@:Division_Labor graph Specialization Efficiency Interdependence
+    @division isA $Process DivisionOfLabor
+    @specialization creates $division Specialization
+    @efficiency increases $division Efficiency
+    @interdependence produces $interdependence SocialInterdependence
+    @durkheim theorized_by $division Durkheim
+    @chain Implies (And $division $specialization $efficiency) $interdependence
+    return $chain
+end
+
+@:Alienation graph Separation Powerlessness Estrangement
+    @alienation isA $Condition Alienation
+    @separation involves $alienation SeparationFromWork
+    @powerlessness experiences $alienation Powerlessness
+    @estrangement feels $alienation Estrangement
+    @marx theorized_by $alienation Marx
+    @chain Implies (And $alienation $separation) $powerlessness
+    return $chain
+end
+
+@:Bureaucracy graph Formal Rational Hierarchy
+    @bureaucracy isA $Organization Bureaucracy
+    @formal characterized_by $bureaucracy FormalRules
+    @rational basedOn $bureaucracy RationalPrinciples
+    @hierarchy has $bureaucracy Hierarchy
+    @weber theorized_by $bureaucracy Weber
+    @chain Implies (And $bureaucracy $formal $rational) $hierarchy
+    return $chain
+end
+
+@:Rationalization graph Efficiency Calculation Impersonal
+    @rationalization isA $Process Rationalization
+    @efficiency emphasizes $rationalization Efficiency
+    @calculation basedOn $rationalization Calculation
+    @impersonal characterized_by $rationalization Impersonality
+    @modern characterizes $rationalization ModernSociety
+    @chain Implies (And $rationalization $efficiency) $calculation
+    return $chain
+end
+
+@:McDonaldization graph Efficiency Calculability Predictability
+    @mcdonaldization isA $Process McDonaldization
+    @efficiency emphasizes $mcdonaldization Efficiency
+    @calculability emphasizes $mcdonaldization Calculability
+    @predictability emphasizes $predictability Predictability
+    @control emphasizes $mcdonaldization Control
+    @chain Implies (And $mcdonaldization $efficiency $calculability) $predictability
+    return $chain
+end
+
+@:Occupational_Prestige graph Status Ranking Evaluation
+    @prestige isA $Concept OccupationalPrestige
+    @status confers $prestige SocialStatus
+    @ranking involves $prestige OccupationRanking
+    @evaluation based_on $evaluation SocialEvaluation
+    @stratification relates_to $prestige SocialStratification
+    @chain Implies (And $prestige $status) $ranking
+    return $chain
+end
+
+@:Labor_Market graph Supply Demand Employment
+    @labormarket isA $Institution LaborMarket
+    @supply includes $labormarket LaborSupply
+    @demand includes $labormarket LaborDemand
+    @employment determines $labormarket Employment
+    @segmentation features $labormarket Segmentation
+    @chain Implies (And $labormarket $supply $demand) $employment
+    return $chain
+end
+
+@:Unemployment graph Joblessness Economic Social
+    @unemployment isA $Condition Unemployment
+    @joblessness involves $unemployment Joblessness
+    @economic has $economic EconomicConsequences
+    @social has $social SocialConsequences
+    @types has $unemployment UnemploymentTypes
+    @chain Implies (And $unemployment $joblessness) $economic
+    return $chain
+end
+
+@:Globalized_Economy graph Integration Trade Corporations
+    @globalized isA $Economy GlobalizedEconomy
+    @integration features $globalized GlobalIntegration
+    @trade increases $globalized InternationalTrade
+    @corporations dominated_by $globalized Multinationals
+    @inequality affects $inequality GlobalInequality
+    @chain Implies (And $globalized $integration $trade) $corporations
+    return $chain
+end
+
+// ============================================================================
+// DEMOGRAPHY AND POPULATION
+// ============================================================================
+
+@:Population graph Size Composition Distribution
+    @population isA $Concept Population
+    @size has $population PopulationSize
+    @composition has $composition DemographicComposition
+    @distribution has $distribution GeographicDistribution
+    @change undergoes $population PopulationChange
+    @chain Implies (And $population $size $composition) $distribution
+    return $chain
+end
+
+@:Demographic_Transition graph Stages Mortality Fertility
+    @transition isA $Model DemographicTransition
+    @stages has $transition Stages
+    @mortality changes $mortality MortalityRates
+    @fertility changes $fertility FertilityRates
+    @growth affects $growth PopulationGrowth
+    @chain Implies (And $transition $stages $mortality) $fertility
+    return $chain
+end
+
+@:Fertility_Rate graph Births Women Reproduction
+    @fertility isA $Measure FertilityRate
+    @births measures $fertility Births
+    @women per $women Women
+    @reproduction indicates $reproduction ReproductionLevel
+    @factors influenced_by $factors SocialFactors
+    @chain Implies (And $fertility $births) $women
+    return $chain
+end
+
+@:Mortality_Rate graph Deaths Population Health
+    @mortality isA $Measure MortalityRate
+    @deaths measures $mortality Deaths
+    @population per $population Population
+    @health indicates $health HealthConditions
+    @life affects $life LifeExpectancy
+    @chain Implies (And $mortality $deaths) $population
+    return $chain
+end
+
+@:Migration graph Movement Population Geographic
+    @migration isA $Process Migration
+    @movement involves $migration PopulationMovement
+    @population of $population Population
+    @geographic across $geographic GeographicBoundaries
+    @types has $types MigrationTypes
+    @chain Implies (And $migration $movement) $geographic
+    return $chain
+end
+
+@:Immigration graph Entry Destination Integration
+    @immigration isA $Migration Immigration
+    @entry involves $immigration Entry
+    @destination into $destination DestinationCountry
+    @integration requires $integration SocialIntegration
+    @policy governed_by $policy ImmigrationPolicy
+    @chain Implies (And $immigration $entry $destination) $integration
+    return $chain
+end
+
+@:Emigration graph Departure Origin Push
+    @emigration isA $Migration Emigration
+    @departure involves $emigration Departure
+    @origin from $origin OriginCountry
+    @push driven_by $push PushFactors
+    @pull driven_by $pull PullFactors
+    @chain Implies (And $emigration $departure) $origin
+    return $chain
+end
+
+@:Population_Growth graph Increase Birth Death
+    @growth isA $Process PopulationGrowth
+    @increase involves $increase PopulationIncrease
+    @birth affected_by $birth BirthRates
+    @death affected_by $death DeathRates
+    @exponential can_be $exponential ExponentialGrowth
+    @chain Implies (And $growth $birth $death) $increase
+    return $chain
+end
+
+@:Overpopulation graph Excess Resources Sustainability
+    @overpopulation isA $Condition Overpopulation
+    @excess characterized_by $excess ExcessPopulation
+    @resources strains $resources Resources
+    @sustainability threatens $sustainability EnvironmentalSustainability
+    @malthus theorized_by $malthus Malthus
+    @chain Implies (And $overpopulation $excess $resources) $sustainability
+    return $chain
+end
+
+// ============================================================================
+// ENVIRONMENT AND SOCIETY
+// ============================================================================
+
+@:Environmental_Sociology graph Society Environment Interaction
+    @environmental isA $Field EnvironmentalSociology
+    @society studies $society Society
+    @environment studies $environment Environment
+    @interaction analyzes $interaction SocietyEnvironmentInteraction
+    @sustainability concerns $sustainability Sustainability
+    @chain Implies (And $environmental $society $environment) $interaction
+    return $chain
+end
+
+@:Ecological_Footprint graph Consumption Resources Impact
+    @footprint isA $Measure EcologicalFootprint
+    @consumption measures $consumption ResourceConsumption
+    @resources depletes $resources NaturalResources
+    @impact indicates $impact EnvironmentalImpact
+    @unsustainable often_characterized $unsustainable Unsustainable
+    @chain Implies (And $footprint $consumption) $resources
+    return $chain
+end
+
+@:Environmental_Racism graph Minorities Pollution Inequality
+    @envracism isA $Concept EnvironmentalRacism
+    @minorities affects $minorities RacialMinorities
+    @pollution exposes_to $pollution EnvironmentalPollution
+    @inequality form_of $inequality EnvironmentalInequality
+    @justice concerns $justice EnvironmentalJustice
+    @chain Implies (And $envracism $minorities $pollution) $inequality
+    return $chain
+end
+
+@:Sustainable_Development graph Economic Social Environmental
+    @sustainable isA $Model SustainableDevelopment
+    @economic balances $economic EconomicDevelopment
+    @social balances $social SocialEquity
+    @environmental balances $environmental EnvironmentalProtection
+    @future considers $future FutureGenerations
+    @chain Implies (And $sustainable $economic $social) $environmental
+    return $chain
+end
+
+@:Climate_Change graph Global Warming Social
+    @climate isA $Issue ClimateChange
+    @global involves $global GlobalWarming
+    @warming causes $warming EnvironmentalChanges
+    @social has $social SocialConsequences
+    @inequality exacerbates $inequality GlobalInequality
+    @chain Implies (And $climate $global $warming) $social
+    return $chain
+end

@@ -15,6 +15,8 @@ import { withPosition, getPositionVector } from '../../core/position.mjs';
 import { MAX_HOLES, getHolographicThresholds, getThresholds } from '../../core/constants.mjs';
 import { QueryEngine } from '../query.mjs';
 import { ProofEngine } from '../prove.mjs';
+import { buildProofObject } from '../proof-schema.mjs';
+import { validateProof } from '../proof-validator.mjs';
 import { debug_trace } from '../../utils/debug.js';
 
 function dbg(category, ...args) {
@@ -32,6 +34,7 @@ export class HolographicQueryEngine {
   constructor(session) {
     this.session = session;
     this.symbolicEngine = new QueryEngine(session);
+    this.validatorEngine = new ProofEngine(session, { timeout: 500, maxDepth: 8 });
 
     // Get strategy-dependent thresholds
     const strategy = session?.hdcStrategy || 'dense-binary';
@@ -210,21 +213,12 @@ export class HolographicQueryEngine {
       // This extracts what's at the hole position
       const unboundVec = unbind(unbind(kbBundle, queryPartial), posVec);
 
-      // Find top-K similar in vocabulary
+      // Find top-K similar in vocabulary (strategy-level topKSimilar)
       const vocabulary = this.getVocabulary();
-      const topK = [];
-
-      for (const [name, vec] of vocabulary) {
-        this.session.reasoningStats.similarityChecks++;
-        const sim = similarity(unboundVec, vec);
-        if (sim >= this.config.UNBIND_MIN_SIMILARITY) {
-          topK.push({ name, similarity: sim });
-        }
-      }
-
-      // Sort by similarity and take top candidates
-      topK.sort((a, b) => b.similarity - a.similarity);
-      const candidates = topK.slice(0, this.config.UNBIND_MAX_CANDIDATES);
+      const rawTop = topKSimilar(unboundVec, vocabulary, this.config.UNBIND_MAX_CANDIDATES * 3);
+      const candidates = rawTop
+        .filter(c => c.similarity >= this.config.UNBIND_MIN_SIMILARITY)
+        .slice(0, this.config.UNBIND_MAX_CANDIDATES);
 
       holeCandidates.set(hole.name, candidates);
       dbg('UNBIND', `Hole ?${hole.name}: ${candidates.length} candidates`);
@@ -239,12 +233,7 @@ export class HolographicQueryEngine {
    * @private
    */
   bundleKBFacts() {
-    // Use session's pre-bundled KB if available
-    if (this.session.kb) {
-      return this.session.kb;
-    }
-
-    // Fallback: bundle KB facts manually
+    // Fallback: bundle KB facts manually (exact)
     if (this.session.kbFacts && this.session.kbFacts.length > 0) {
       const vectors = this.session.kbFacts
         .filter(f => f.vector)
@@ -376,11 +365,18 @@ export class HolographicQueryEngine {
 
     try {
       // Use symbolic prove to validate
-      const proofEngine = new ProofEngine(this.session);
       const statement = this.parseStatement(operatorName, args);
-      const result = proofEngine.prove(statement);
+      const result = this.validatorEngine.prove(statement);
 
-      return result.valid;
+      if (!result.valid) return false;
+
+      // In theory-driven mode, require the proof to be machine-checkable.
+      if (this.session?.proofValidationEnabled) {
+        const proofObject = buildProofObject({ session: this.session, goalStatement: statement, result });
+        return validateProof(proofObject, this.session);
+      }
+
+      return true;
     } catch (e) {
       dbg('VALIDATE', `Error: ${e.message}`);
       return false;
