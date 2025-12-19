@@ -50,7 +50,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Rex a LivingThing? (Rex→Dog→Canine→Mammal→Vertebrate→Animal→LivingThing)',
     input_dsl: '@goal isA Rex LivingThing',
-    expected_nl: 'True: Rex is a livingthing. Proof: Rex isA Dog. Dog isA Canine. Canine isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing.'
+    expected_nl: 'True: Rex is a livingthing.',
+    proof_nl: 'Rex isA Dog. Dog isA Canine. Canine isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing.'
   },
 
   // === PROVE: 5-step Rex→Animal ===
@@ -58,7 +59,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Rex an Animal? (Rex→Dog→Canine→Mammal→Vertebrate→Animal)',
     input_dsl: '@goal isA Rex Animal',
-    expected_nl: 'True: Rex is an animal. Proof: Rex isA Dog. Dog isA Canine. Canine isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal.'
+    expected_nl: 'True: Rex is an animal.',
+    proof_nl: 'Rex isA Dog. Dog isA Canine. Canine isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal.'
   },
 
   // === PROVE: 6-step Carbon→Organ ===
@@ -66,7 +68,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Carbon an Organ? (Carbon→Atom→Molecule→Cell→Tissue→Organ)',
     input_dsl: '@goal isA Carbon Organ',
-    expected_nl: 'True: Carbon is an organ. Proof: Carbon isA Atom. Atom isA Molecule. Molecule isA Cell. Cell isA Tissue. Tissue isA Organ.'
+    expected_nl: 'True: Carbon is an organ.',
+    proof_nl: 'Carbon isA Atom. Atom isA Molecule. Molecule isA Cell. Cell isA Tissue. Tissue isA Organ.'
   },
 
   // === NEGATIVE: Negation blocks with search trace ===
@@ -74,7 +77,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Opus fly? (Opus→Penguin→FlightlessBird→Bird but negation blocks)',
     input_dsl: '@goal can Opus Fly',
-    expected_nl: 'Cannot prove: Opus can Fly. Search: Opus isA Penguin. Penguin isA FlightlessBird. FlightlessBird isA Bird. Bird isA FlyingAnimal. FlyingAnimal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing. Found explicit negation: Not(can Opus Fly). Negation blocks inference.'
+    expected_nl: 'Cannot prove: Opus can Fly.',
+    proof_nl: 'Search: Opus isA Penguin. Penguin isA FlightlessBird. FlightlessBird isA Bird. Bird isA FlyingAnimal. FlyingAnimal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing. Found explicit negation: Not(can Opus Fly). Negation blocks inference.'
   },
 
   // === PROVE: 7-step Carbon→Organism ===
@@ -82,7 +86,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Carbon an Organism? (Carbon→Atom→Molecule→Cell→Tissue→Organ→Organism)',
     input_dsl: '@goal isA Carbon Organism',
-    expected_nl: 'True: Carbon is an organism. Proof: Carbon isA Atom. Atom isA Molecule. Molecule isA Cell. Cell isA Tissue. Tissue isA Organ. Organ isA Organism.'
+    expected_nl: 'True: Carbon is an organism.',
+    proof_nl: 'Carbon isA Atom. Atom isA Molecule. Molecule isA Cell. Cell isA Tissue. Tissue isA Organ. Organ isA Organism.'
   },
 
   // === QUERY: Multiple bird results ===
@@ -90,7 +95,22 @@ export const steps = [
     action: 'query',
     input_nl: 'What is a Bird?',
     input_dsl: '@q isA ?x Bird',
-    expected_nl: 'Songbird is a bird. Proof: Songbird is a bird.. FlightlessBird is a bird. Proof: FlightlessBird is a bird.. Sparrow is a bird. Proof: isA Sparrow Songbird. isA Songbird Bird. Penguin is a bird. Proof: isA Penguin FlightlessBird. isA FlightlessBird Bird. Tweety is a bird. Proof: isA Tweety Sparrow. isA Sparrow Songbird. isA Songbird Bird. Opus is a bird. Proof: isA Opus Penguin. isA Penguin FlightlessBird. isA FlightlessBird Bird.'
+    expected_nl: [
+      'Songbird is a bird.',
+      'FlightlessBird is a bird.',
+      'Sparrow is a bird.',
+      'Penguin is a bird.',
+      'Tweety is a bird.',
+      'Opus is a bird.'
+    ],
+    proof_nl: [
+      'isA Songbird Bird',
+      'isA FlightlessBird Bird',
+      'isA Sparrow Songbird. isA Songbird Bird',
+      'isA Penguin FlightlessBird. isA FlightlessBird Bird',
+      'isA Tweety Sparrow. isA Sparrow Songbird. isA Songbird Bird',
+      'isA Opus Penguin. isA Penguin FlightlessBird. isA FlightlessBird Bird'
+    ]
   },
 
   // === PROVE: 6-step Tweety→LivingThing ===
@@ -98,7 +118,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Tweety a LivingThing? (Tweety→Sparrow→Songbird→Bird→FlyingAnimal→Vertebrate→Animal→LivingThing)',
     input_dsl: '@goal isA Tweety LivingThing',
-    expected_nl: 'True: Tweety is a livingthing. Proof: Tweety isA Sparrow. Sparrow isA Songbird. Songbird isA Bird. Bird isA FlyingAnimal. FlyingAnimal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing.'
+    expected_nl: 'True: Tweety is a livingthing.',
+    proof_nl: 'Tweety isA Sparrow. Sparrow isA Songbird. Songbird isA Bird. Bird isA FlyingAnimal. FlyingAnimal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing.'
   },
 
   // === NEGATIVE: Unknown entity with search trace ===
@@ -106,7 +127,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Charlie a Dog? (Charlie not in KB)',
     input_dsl: '@goal isA Charlie Dog',
-    expected_nl: 'Cannot prove: Charlie is a dog. Search: Searched isA Charlie ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
+    expected_nl: 'Cannot prove: Charlie is a dog.',
+    proof_nl: 'Search: Searched isA Charlie ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
   },
 
   // === PROVE: 8-step Carbon→Ecosystem ===
@@ -114,7 +136,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Carbon an Ecosystem? (Carbon→Atom→Molecule→Cell→Tissue→Organ→Organism→Species→Ecosystem)',
     input_dsl: '@goal isA Carbon Ecosystem',
-    expected_nl: 'True: Carbon is an ecosystem. Proof: Carbon isA Atom. Atom isA Molecule. Molecule isA Cell. Cell isA Tissue. Tissue isA Organ. Organ isA Organism. Organism isA Species. Species isA Ecosystem.'
+    expected_nl: 'True: Carbon is an ecosystem.',
+    proof_nl: 'Carbon isA Atom. Atom isA Molecule. Molecule isA Cell. Cell isA Tissue. Tissue isA Organ. Organ isA Organism. Organism isA Species. Species isA Ecosystem.'
   }
 ];
 

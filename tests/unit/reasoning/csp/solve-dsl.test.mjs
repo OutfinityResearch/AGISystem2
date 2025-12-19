@@ -88,10 +88,10 @@ describe('CSP Solve DSL', () => {
       
       if (solveResult.solveResult.solutions.length > 0) {
         const firstSolution = solveResult.solveResult.solutions[0];
-        assert.ok(firstSolution.length > 0, 'Solution should have facts');
+        assert.ok(firstSolution.facts?.length > 0, 'Solution should have facts');
         
         // Check that each fact has proper structure
-        firstSolution.forEach(fact => {
+        firstSolution.facts.forEach(fact => {
           assert.ok(fact.dsl || fact.predicate, 'Fact should have dsl or predicate');
         });
       }

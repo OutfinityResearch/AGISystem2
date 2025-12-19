@@ -92,10 +92,10 @@ export function buildSearchTrace(engine, goal, goalStr) {
       traces.push('Path exists in opposite direction only');
       const inverse = semanticIndex?.getInverseRelation?.(op);
       const dirLabel =
-        op === 'causes'
-          ? 'Causal direction violated'
-          : inverse
-            ? `${op} direction violated (inverse=${inverse})`
+        (op === 'before' || op === 'after')
+          ? 'Temporal order violated'
+          : op === 'causes'
+            ? 'Causal direction violated'
             : `${op} direction violated`;
       traces.push(dirLabel);
     } else {
@@ -246,8 +246,26 @@ export function describeRuleCheck(engine, op, entity) {
   });
   if (matching.length === 0) return null;
 
-  // Inspect first matching rule (deterministic)
-  const rule = matching[0];
+  const goalArgs = (engine.extractArgs?.(entity) ? [] : []) || [];
+  const target = engine?.extractArgName ? null : null;
+  const rule = selectBestRule(matching, entity, op, engine);
+  const condParts = rule.conditionParts;
+
+  if (condParts) {
+    const analysis = evaluateConditionParts(condParts, entity, engine);
+    if (!analysis) {
+      return `Checked rule: ${rule.name || rule.source}. Conditions could not be analyzed.`;
+    }
+
+    const found = dedupe(analysis.found || []);
+    const missing = dedupe(analysis.missing || []);
+
+    let summary = `Checked rule: ${rule.name || rule.source}.`;
+    if (found.length > 0) summary += ` Found: ${found.join(', ')}.`;
+    if (missing.length > 0) summary += ` Missing: ${missing.join(', ')}.`;
+    return summary;
+  }
+
   const leaves = extractLeafConditions(rule.conditionParts);
   if (leaves.length === 0) {
     return `Checked rule: ${rule.name || rule.source}. Conditions could not be analyzed.`;
@@ -267,7 +285,8 @@ export function describeRuleCheck(engine, op, entity) {
       }
     }
     const factStr = `${leaf.op} ${args.join(' ')}`.trim();
-    const exists = engine.factExists(leaf.op, args[0], args[1]);
+    const arg1 = args[1] && args[1].startsWith('?') ? null : args[1];
+    const exists = engine.factExists(leaf.op, args[0], arg1);
     if (exists) found.push(factStr);
     else missing.push(factStr);
   }
@@ -289,7 +308,7 @@ export function extractLeafConditions(condParts) {
     const op = condParts.ast.operator?.name || condParts.ast.operator?.value;
     const args = (condParts.ast.args || []).map(a => ({
       name: a.name || a.value || '',
-      isVariable: a.type === 'Hole'
+      isVariable: a.type === 'Hole' || a.type === 'Variable'
     }));
     return [{ op, args }];
   }

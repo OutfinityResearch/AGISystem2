@@ -4,64 +4,42 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="working to refactor the resonign engine for deeper semantic unification to make use of HDC properties better. wip">
-      <change afterPath="$PROJECT_DIR$/performance/theories/anthropology/eval.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/anthropology/theory.dsl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/anthropology/theory.nl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/anthropology/theory.simple.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/geography/eval.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/geography/theory.dsl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/geography/theory.nl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/geography/theory.simple.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/history/eval.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/history/theory.dsl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/history/theory.nl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/history/theory.simple.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/law/eval.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/law/theory.dsl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/law/theory.nl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/law/theory.simple.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/literature/eval.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/literature/theory.dsl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/literature/theory.nl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/literature/theory.simple.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/medicine/eval.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/medicine/theory.dsl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/medicine/theory.nl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/medicine/theory.simple.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/philosophy/eval.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/philosophy/theory.dsl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/philosophy/theory.nl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/philosophy/theory.simple.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/physics/eval.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/physics/theory.dsl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/physics/theory.nl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/physics/theory.simple.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/sociology/eval.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/sociology/theory.dsl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/sociology/theory.nl.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/performance/theories/sociology/theory.simple.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/reasoning-profile.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/env.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/regression/hdc-strategies-smoke.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/regression/reasoning-matrix.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/holographic-rule-proof.test.mjs" afterDir="false" />
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="working to refactor the reasoning engine for deeper semantic unification to make use of HDC properties better. wip">
+      <change afterPath="$PROJECT_DIR$/scripts/migrate-proof-nl.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS03-Architecture.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS03-Architecture.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fileSeziesCheck.sh" beforeDir="false" afterPath="$PROJECT_DIR$/fileSeziesCheck.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/performance/healthCheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/performance/healthCheck.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/performance/theories/biology/theory.dsl.txt" beforeDir="false" afterPath="$PROJECT_DIR$/performance/theories/biology/theory.dsl.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/find-all.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/find-all.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/prove-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/prove-hdc-first.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/property-inheritance.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/property-inheritance.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS14-EvalSuite.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS14-EvalSuite.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS17-Holographic-Priority-Mode.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS17-Holographic-Priority-Mode.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/healthCheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/healthCheck.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite01_foundations/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite01_foundations/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite02_hierarchies/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite02_hierarchies/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite03_rules/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite03_rules/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite04_deep_chains/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite04_deep_chains/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite05_negation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite05_negation/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite06_compound_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite06_compound_logic/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite07_temporal/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite07_temporal/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite08_modal/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite08_modal/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite09_composition/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite09_composition/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite10_integration/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite10_integration/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite11_wedding_seating/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite11_wedding_seating/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite12_fuzzy_matching/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite12_fuzzy_matching/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite13_property_inheritance/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite13_property_inheritance/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite14_meta_queries/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite14_meta_queries/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite15_reasoning_macros/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite15_reasoning_macros/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite16_macro_aggregation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite16_macro_aggregation/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite17_macro_composition/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite17_macro_composition/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite18_set_theory/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite18_set_theory/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite19_biology/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite19_biology/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite20_predicate_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite20_predicate_logic/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite21_goat_cabbage_plus/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite21_goat_cabbage_plus/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evalSuite/suite22_deduction/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite22_deduction/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/response-translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/prove-search-trace.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove-search-trace.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/transitive.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/transitive.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session-contradictions.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-contradictions.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/contradictions-from-theory.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/contradictions-from-theory.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/session-features.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/session-features.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query-rules.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-rules.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/vocabulary.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/vocabulary.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/csp/solve-dsl.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/csp/solve-dsl.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -522,7 +500,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766151588074</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="working to refactor the reasoning engine for deeper semantic unification to make use of HDC properties better. wip">
+      <option name="closed" value="true" />
+      <created>1766153476128</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1766153476128</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -553,6 +539,7 @@
     <MESSAGE value="prearing to add new reasoning methods" />
     <MESSAGE value="slowly trying to get back the evaluation suite do pass after introducing new reasonign capabilities" />
     <MESSAGE value="working to refactor the resonign engine for deeper semantic unification to make use of HDC properties better. wip" />
-    <option name="LAST_COMMIT_MESSAGE" value="working to refactor the resonign engine for deeper semantic unification to make use of HDC properties better. wip" />
+    <MESSAGE value="working to refactor the reasoning engine for deeper semantic unification to make use of HDC properties better. wip" />
+    <option name="LAST_COMMIT_MESSAGE" value="working to refactor the reasoning engine for deeper semantic unification to make use of HDC properties better. wip" />
   </component>
 </project>

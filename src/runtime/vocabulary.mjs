@@ -7,6 +7,7 @@
  */
 
 import { createFromName, serialize, deserialize, getStrategyId } from '../hdc/facade.mjs';
+import { createHash } from 'node:crypto';
 
 export class Vocabulary {
   /**
@@ -99,23 +100,34 @@ export class Vocabulary {
    * @returns {string}
    */
   hashVector(vec) {
-    // Strategy-agnostic hashing
-    // For dense-binary: use first few words
-    if (vec.data && vec.words) {
-      const parts = [];
-      for (let i = 0; i < Math.min(4, vec.words); i++) {
-        parts.push(vec.data[i].toString(16));
-      }
-      return parts.join(':');
+    // Reverse-lookup hashing MUST be collision-resistant because it is used to resolve
+    // $refs back into stable atom names during metadata extraction.
+    //
+    // Previous implementation used only a prefix of the vector, which can collide and
+    // corrupt Reference resolution inside graphs/macros (e.g., `$effect` resolving to
+    // the wrong atom). We instead hash the full vector payload.
+
+    const strategy = getStrategyId?.() || 'unknown';
+
+    // Dense-binary: hash all words.
+    if (vec?.data && Number.isInteger(vec?.words)) {
+      const words = vec.words;
+      const u32 = vec.data instanceof Uint32Array ? vec.data : Uint32Array.from(vec.data);
+      const bytes = Buffer.from(u32.buffer, u32.byteOffset, Math.min(u32.byteLength, words * 4));
+      return `${strategy}:${createHash('sha256').update(bytes).digest('hex')}`;
     }
-    // For SPHDC: use first few exponents
-    if (vec.exponents) {
-      const exps = Array.from(vec.exponents).slice(0, 4);
-      return exps.map(e => e.toString(16)).join(':');
+
+    // SPHDC: hash sorted exponents.
+    if (vec?.exponents) {
+      const exps = Array.from(vec.exponents).map(Number).sort((a, b) => a - b);
+      const payload = `${strategy}:${exps.join(',')}`;
+      return `${strategy}:${createHash('sha256').update(payload).digest('hex')}`;
     }
-    // Fallback: use serialization
+
+    // Fallback: use serialization (stable) and hash it.
     const serialized = serialize(vec);
-    return JSON.stringify(serialized.data || serialized).substring(0, 64);
+    const payload = JSON.stringify(serialized?.data || serialized);
+    return `${strategy}:${createHash('sha256').update(payload).digest('hex')}`;
   }
 
   /**

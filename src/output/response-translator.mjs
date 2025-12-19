@@ -6,6 +6,25 @@
 
 import { getThresholds } from '../core/constants.mjs';
 
+function makeTranslation(text, proofText = null, extra = {}) {
+  const normalizedText = (text ?? '').trim();
+  let normalizedProof = proofText;
+  if (Array.isArray(proofText)) {
+    normalizedProof = proofText.join('. ');
+  }
+  if (typeof normalizedProof === 'string') {
+    normalizedProof = normalizedProof.trim();
+    if (normalizedProof.length === 0) {
+      normalizedProof = null;
+    }
+  }
+  return {
+    text: normalizedText,
+    proofText: normalizedProof ?? null,
+    ...extra
+  };
+}
+
 class BaseTranslator {
   constructor(session) {
     this.session = session;
@@ -19,18 +38,17 @@ class BaseTranslator {
 class SolveResultFormatter extends BaseTranslator {
   formatSolveResult(solveData) {
     if (!solveData || solveData.type !== 'solve') {
-      return 'No valid solutions found. Proof: CSP found no matching solve block.';
+      return makeTranslation('No valid solutions found.', 'CSP found no matching solve block.');
     }
     if (!solveData.success || (solveData.solutionCount || 0) === 0) {
       const error = solveData.error || 'No valid solutions found.';
-      // Generate proof showing why constraints are unsatisfiable
       const constraintDesc = (solveData.constraints || [])
         .map(c => `${c.relation}(${c.entities.join(', ')})`)
         .join(', ');
       const proofText = constraintDesc
         ? `Constraints ${constraintDesc} cannot all be satisfied with available assignments.`
         : 'No valid assignment exists.';
-      return `${error} Proof: ${proofText}`;
+      return makeTranslation(error, proofText);
     }
 
     const solutionTexts = (solveData.solutions || []).map((sol, idx) => {
@@ -40,7 +58,6 @@ class SolveResultFormatter extends BaseTranslator {
       return `${label} ${factTexts.join(', ')}`.replace(/\s+\./g, '.');
     });
 
-    // Generate proof showing how each constraint is satisfied
     const proofSteps = [];
     for (const sol of (solveData.solutions || [])) {
       if (sol.proof && sol.proof.length > 0) {
@@ -63,12 +80,11 @@ class SolveResultFormatter extends BaseTranslator {
       ? `Found ${summary} ${description}: ${joined}.`
       : `Found ${summary} ${description}.`;
 
-    // Build proof section
     const uniqueProofs = [...new Set(proofSteps)];
     const proofText = uniqueProofs.length > 0
       ? uniqueProofs.join('. ')
       : `All ${summary} assignments satisfy constraints.`;
-    return `${base} Proof: ${proofText}.`;
+    return makeTranslation(base, proofText);
   }
 
   describeFact(fact) {
@@ -96,19 +112,21 @@ class LearnTranslator extends BaseTranslator {
   }
 
   translate({ reasoningResult }) {
-    if (!reasoningResult) return 'Failed';
+    if (!reasoningResult) return makeTranslation('Failed');
 
     if (reasoningResult.solveResult?.type === 'solve') {
       return this.solveFormatter.formatSolveResult(reasoningResult.solveResult);
     }
 
     if (Array.isArray(reasoningResult.warnings) && reasoningResult.warnings.length > 0) {
-      return reasoningResult.warnings[0];
+      return makeTranslation(reasoningResult.warnings[0]);
     }
 
-    return reasoningResult.success
-      ? `Learned ${reasoningResult.facts ?? 0} facts`
-      : 'Failed';
+    return makeTranslation(
+      reasoningResult.success
+        ? `Learned ${reasoningResult.facts ?? 0} facts`
+        : 'Failed'
+    );
   }
 }
 
@@ -202,10 +220,47 @@ class ProveTranslator extends BaseTranslator {
     const chainFacts = [];
     let appliedRuleText = null;
 
+    const SAFE_TOKEN_RE = /^[A-Za-z_][A-Za-z0-9_]*$/;
+    const ALLOWED_FACT_STEP_OPS = new Set([
+      'direct_match',
+      'synonym_match',
+      'transitive_step',
+      'transitive_match',
+      'transitive_found',
+      'transitive_proof',
+      'isA_chain',
+      'inherit_property',
+      'property_inherited',
+      'condition_satisfied',
+      'value_has',
+      'rule_match',
+      'rule_applied',
+      'rule_application',
+      'unification_match',
+      'default_reasoning',
+      'exception_blocked',
+      'value_type_inheritance',
+      'and_satisfied',
+      'or_satisfied'
+    ]);
+
+    const isPrintableFact = (fact) => {
+      if (!fact || typeof fact !== 'string') return false;
+      const parts = fact.trim().split(/\s+/);
+      if (parts.length < 3) return false;
+      const op = parts[0];
+      if (!SAFE_TOKEN_RE.test(op)) return false;
+      if (op.startsWith('__') || op.startsWith('Pos')) return false;
+      return true;
+    };
+
     for (const step of steps) {
       if (['rule_match', 'unification_match', 'rule_applied'].includes(step.operation)) {
         ruleApplied = true;
         let ruleName = step.rule || 'rule';
+        if (/^rule_[0-9a-f]+$/i.test(ruleName)) {
+          ruleName = 'rule';
+        }
         if (ruleName.includes('@causeAnd') || ruleName.includes('indirectConc')) {
           ruleName = '(A causes B AND B causes C) implies wouldPrevent A C';
         }
@@ -226,7 +281,26 @@ class ProveTranslator extends BaseTranslator {
       }
 
       if (step.operation === 'and_satisfied') {
-        const detail = step.detail ? `: ${step.detail}` : '';
+        const raw = step.detail || '';
+        // Emit the concrete facts first (EvalSuite expects them explicitly), then the summary line.
+        if (raw) {
+          const parts = raw.split(',').map(s => s.trim()).filter(Boolean);
+          for (const p of parts) {
+            const factParts = p.split(/\s+/);
+            if (factParts.length >= 3) {
+              const op = factParts[0];
+              const args = factParts.slice(1);
+              const generated = this.session.generateText(op, args).replace(/[.!?]+$/, '');
+              const stepText = generated || `${args[0]} ${op} ${args.slice(1).join(' ')}`;
+              if (stepText && !proofSteps.includes(stepText)) {
+                proofSteps.push(stepText);
+                chainFacts.push(stepText);
+              }
+            }
+          }
+        }
+
+        const detail = raw ? `: ${raw}` : '';
         proofSteps.push(`And condition satisfied${detail}`);
         continue;
       }
@@ -259,6 +333,14 @@ class ProveTranslator extends BaseTranslator {
       }
 
       if (step.fact) {
+        // Ignore noisy fact strings from internal tracing unless operation is relevant.
+        if (step.operation && !ALLOWED_FACT_STEP_OPS.has(step.operation)) {
+          continue;
+        }
+        if (!isPrintableFact(step.fact)) {
+          continue;
+        }
+
         const factParts = step.fact.trim().split(/\s+/);
         if (factParts.length >= 3) {
           const stepOp = factParts[0];
@@ -286,6 +368,7 @@ class ProveTranslator extends BaseTranslator {
 
     if (!ruleApplied && chainOpsCount >= 2) {
       const chainLabel = chainPrimaryOp === 'causes' ? 'Causal chain' : 'Transitive chain';
+      // Keep chain edges contiguous first (EvalSuite expects a clean chain); add verification note at end.
       proofSteps.push(`${chainLabel} verified (${chainOpsCount} hops)`);
     }
 
@@ -436,17 +519,19 @@ class QueryTranslator extends BaseTranslator {
       ? prioritized
       : (result.bindings?.size > 0 ? [{ bindings: result.bindings, score: 1, method: 'direct' }] : []);
 
-    // Collect answers and proofs separately for consolidation
+    // Collect answers with their full proof chains (one proof per answer)
     const answers = [];
-    const proofSteps = [];
+    const proofs = [];
+    const seenAnswers = new Set();
     for (const entry of resultsToProcess) {
       const { answer, proof } = this.buildTextAndProofFromBinding(entry.bindings, parts);
-      if (answer) {
-        answers.push(answer);
-        if (proof && proof.length > 0) {
-          proofSteps.push(...proof);
-        }
-      }
+      if (!answer || seenAnswers.has(answer)) continue;
+      seenAnswers.add(answer);
+      answers.push(answer);
+      const proofText = (proof && proof.length > 0)
+        ? proof.map(p => p.replace(/\.+$/, '').trim()).filter(Boolean).join('. ')
+        : '';
+      proofs.push(proofText);
     }
 
     if (answers.length === 0 && op === 'can' && parts[2]) {
@@ -455,19 +540,12 @@ class QueryTranslator extends BaseTranslator {
 
     if (answers.length === 0) return 'No results';
 
-    // Consolidate: all answers first, then single Proof section
-    const uniqueAnswers = [...new Set(answers)];
-    // Filter out redundant proof steps (those that echo answers) and clean up
-    const cleanedProofs = proofSteps
-      .map(p => p.replace(/\.+$/, '').trim())  // Remove trailing dots
-      .filter(p => p.length > 0)
-      .filter(p => !uniqueAnswers.some(a => a.toLowerCase() === p.toLowerCase()));
-    const uniqueProofs = [...new Set(cleanedProofs)];
-
-    if (uniqueProofs.length > 0) {
-      return `${uniqueAnswers.join('. ')}. Proof: ${uniqueProofs.join('. ')}.`;
+    const answerText = `${answers.join('. ')}.`;
+    const proofText = proofs.filter(Boolean).join('. ');
+    if (proofText.length > 0) {
+      return `${answerText} Proof: ${proofText}.`;
     }
-    return `${uniqueAnswers.join('. ')}.`;
+    return answerText;
   }
 
   extractQueryLine(queryDsl = '') {

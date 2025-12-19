@@ -63,7 +63,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is COVID a Problem? (6-step medical chain)',
     input_dsl: '@goal isA COVID Problem',
-    expected_nl: 'True: COVID is a problem. Proof: COVID isA ViralDisease. ViralDisease isA Infectious. Infectious isA Disease. Disease isA MedicalCondition. MedicalCondition isA HealthIssue. HealthIssue isA Problem.'
+    expected_nl: 'True: COVID is a problem.',
+    proof_nl: 'COVID isA ViralDisease. ViralDisease isA Infectious. Infectious isA Disease. Disease isA MedicalCondition. MedicalCondition isA HealthIssue. HealthIssue isA Problem.'
   },
 
   // === PROVE: 5-step medical (COVID->HealthIssue) ===
@@ -71,7 +72,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is COVID a HealthIssue? (5-step medical chain)',
     input_dsl: '@goal isA COVID HealthIssue',
-    expected_nl: 'True: COVID is a healthissue. Proof: COVID isA ViralDisease. ViralDisease isA Infectious. Infectious isA Disease. Disease isA MedicalCondition. MedicalCondition isA HealthIssue.'
+    expected_nl: 'True: COVID is a healthissue.',
+    proof_nl: 'COVID isA ViralDisease. ViralDisease isA Infectious. Infectious isA Disease. Disease isA MedicalCondition. MedicalCondition isA HealthIssue.'
   },
 
   // === PROVE: 6-step court (DistrictCourt->Organization) ===
@@ -79,7 +81,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is DistrictCourt an Organization? (6-step legal chain)',
     input_dsl: '@goal isA DistrictCourt Organization',
-    expected_nl: 'True: DistrictCourt is an organization. Proof: DistrictCourt isA TrialCourt. TrialCourt isA LowerCourt. LowerCourt isA Court. Court isA LegalBody. LegalBody isA Institution. Institution isA Organization.'
+    expected_nl: 'True: DistrictCourt is an organization.',
+    proof_nl: 'DistrictCourt isA TrialCourt. TrialCourt isA LowerCourt. LowerCourt isA Court. Court isA LegalBody. LegalBody isA Institution. Institution isA Organization.'
   },
 
   // === PROVE: 5-step court (DistrictCourt->Institution) ===
@@ -87,7 +90,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is DistrictCourt an Institution? (5-step legal chain)',
     input_dsl: '@goal isA DistrictCourt Institution',
-    expected_nl: 'True: DistrictCourt is an institution. Proof: DistrictCourt isA TrialCourt. TrialCourt isA LowerCourt. LowerCourt isA Court. Court isA LegalBody. LegalBody isA Institution.'
+    expected_nl: 'True: DistrictCourt is an institution.',
+    proof_nl: 'DistrictCourt isA TrialCourt. TrialCourt isA LowerCourt. LowerCourt isA Court. Court isA LegalBody. LegalBody isA Institution.'
   },
 
   // === PROVE: 6-step temporal (Complaint->Sentencing) ===
@@ -95,7 +99,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Complaint before Sentencing? (6-step temporal chain)',
     input_dsl: '@goal before Complaint Sentencing',
-    expected_nl: 'True: Complaint is before Sentencing. Proof: Complaint is before Filing. Filing is before Investigation. Investigation is before Arrest. Arrest is before Trial. Trial is before Verdict. Verdict is before Sentencing.'
+    expected_nl: 'True: Complaint is before Sentencing.',
+    proof_nl: 'Complaint is before Filing. Filing is before Investigation. Investigation is before Arrest. Arrest is before Trial. Trial is before Verdict. Verdict is before Sentencing.'
   },
 
   // === PROVE: 5-step temporal (Filing->Verdict) ===
@@ -103,7 +108,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Filing before Verdict? (5-step temporal chain)',
     input_dsl: '@goal before Filing Verdict',
-    expected_nl: 'True: Filing is before Verdict. Proof: Filing is before Investigation. Investigation is before Arrest. Arrest is before Trial. Trial is before Verdict. Transitive chain verified (4 hops). Therefore Filing is before Verdict.'
+    expected_nl: 'True: Filing is before Verdict.',
+    proof_nl: 'Filing is before Investigation. Investigation is before Arrest. Arrest is before Trial. Trial is before Verdict. Transitive chain verified (4 hops). Therefore Filing is before Verdict.'
   },
 
   // === PROVE: 5-step causal (Crime->Trial) ===
@@ -111,7 +117,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does Crime cause Trial? (5-step causal chain)',
     input_dsl: '@goal causes Crime Trial',
-    expected_nl: 'True: Crime causes Trial. Proof: Crime causes Investigation. Investigation causes Evidence. Evidence causes Arrest. Arrest causes Prosecution. Prosecution causes Trial.'
+    expected_nl: 'True: Crime causes Trial.',
+    proof_nl: 'Crime causes Investigation. Investigation causes Evidence. Evidence causes Arrest. Arrest causes Prosecution. Prosecution causes Trial.'
   },
 
   // === PROVE: Appeal transitive with search trace ===
@@ -119,7 +126,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does DistrictCourt appeal to SupremeCourt? (2-step appeal chain)',
     input_dsl: '@goal appealsTo DistrictCourt SupremeCourt',
-    expected_nl: 'True: DistrictCourt appeals to SupremeCourt. Proof: DistrictCourt appeals to AppealsCourt. AppealsCourt appeals to SupremeCourt. Therefore DistrictCourt appeals to SupremeCourt.'
+    expected_nl: 'True: DistrictCourt appeals to SupremeCourt.',
+    proof_nl: 'DistrictCourt appeals to AppealsCourt. AppealsCourt appeals to SupremeCourt. Therefore DistrictCourt appeals to SupremeCourt.'
   },
 
   // === PROVE: 7-step biological (Hemoglobin->Matter) ===
@@ -127,7 +135,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Hemoglobin Matter? (7-step biological chain)',
     input_dsl: '@goal isA Hemoglobin Matter',
-    expected_nl: 'True: Hemoglobin is matter. Proof: Hemoglobin isA Protein. Protein isA Macromolecule. Macromolecule isA Biomolecule. Biomolecule isA OrganicCompound. OrganicCompound isA Chemical. Chemical isA Substance. Substance isA Matter.'
+    expected_nl: 'True: Hemoglobin is matter.',
+    proof_nl: 'Hemoglobin isA Protein. Protein isA Macromolecule. Macromolecule isA Biomolecule. Biomolecule isA OrganicCompound. OrganicCompound isA Chemical. Chemical isA Substance. Substance isA Matter.'
   },
 
   // === PROVE: 5-step biological (Hemoglobin->Chemical) ===
@@ -135,7 +144,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Hemoglobin a Chemical? (5-step biological chain)',
     input_dsl: '@goal isA Hemoglobin Chemical',
-    expected_nl: 'True: Hemoglobin is a chemical. Proof: Hemoglobin isA Protein. Protein isA Macromolecule. Macromolecule isA Biomolecule. Biomolecule isA OrganicCompound. OrganicCompound isA Chemical.'
+    expected_nl: 'True: Hemoglobin is a chemical.',
+    proof_nl: 'Hemoglobin isA Protein. Protein isA Macromolecule. Macromolecule isA Biomolecule. Biomolecule isA OrganicCompound. OrganicCompound isA Chemical.'
   },
 
   // === NEGATIVE: Cross-domain medical vs legal with search trace ===
@@ -143,7 +153,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is COVID a Court? (cross-domain - should fail)',
     input_dsl: '@goal isA COVID Court',
-    expected_nl: 'Cannot prove: COVID is a court. Search: COVID isA ViralDisease. ViralDisease isA Infectious. Infectious isA Disease. Disease isA MedicalCondition. MedicalCondition isA HealthIssue. HealthIssue isA Problem. No path exists from COVID to Court.'
+    expected_nl: 'Cannot prove: COVID is a court.',
+    proof_nl: 'Search: COVID isA ViralDisease. ViralDisease isA Infectious. Infectious isA Disease. Disease isA MedicalCondition. MedicalCondition isA HealthIssue. HealthIssue isA Problem. No path exists from COVID to Court.'
   },
 
   // === NEGATIVE: Reverse causation with search trace ===
@@ -151,7 +162,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does Trial cause Crime? (reverse causation - should fail)',
     input_dsl: '@goal causes Trial Crime',
-    expected_nl: 'Cannot prove: Trial causes Crime. Search: Searched causes Trial ?next in KB. Not found. Trial has no outgoing causes relations. Reverse path: Crime -> Investigation -> Evidence -> Arrest -> Prosecution -> Trial. Path exists in opposite direction only. Causal direction violated.'
+    expected_nl: 'Cannot prove: Trial causes Crime.',
+    proof_nl: 'Search: Searched causes Trial ?next in KB. Not found. Trial has no outgoing causes relations. Reverse path: Crime -> Investigation -> Evidence -> Arrest -> Prosecution -> Trial. Path exists in opposite direction only. Causal direction violated.'
   },
 
   // === NEGATIVE: Reverse temporal with search trace ===
@@ -159,7 +171,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Sentencing before Complaint? (reverse temporal - should fail)',
     input_dsl: '@goal before Sentencing Complaint',
-    expected_nl: 'Cannot prove: Sentencing is before Complaint. Search: Searched before Sentencing ?next in KB. Not found. Sentencing has no outgoing before relations. Reverse path: Complaint -> Filing -> Investigation -> Arrest -> Trial -> Verdict -> Sentencing. Path exists in opposite direction only. Temporal order violated.'
+    expected_nl: 'Cannot prove: Sentencing is before Complaint.',
+    proof_nl: 'Search: Searched before Sentencing ?next in KB. Not found. Sentencing has no outgoing before relations. Reverse path: Complaint -> Filing -> Investigation -> Arrest -> Trial -> Verdict -> Sentencing. Path exists in opposite direction only. Temporal order violated.'
   },
 
   // === QUERY: Patient symptoms ===
@@ -167,7 +180,16 @@ export const steps = [
     action: 'query',
     input_nl: 'What symptoms does Patient1 have?',
     input_dsl: '@q hasSymptom Patient1 ?symptom',
-    expected_nl: 'Patient1 has fatigue. Patient1 has fever. Patient1 has cough. Proof: hasSymptom Patient1 Fatigue. hasSymptom Patient1 Fever. hasSymptom Patient1 Cough.'
+    expected_nl: [
+      'Patient1 has fatigue.',
+      'Patient1 has fever.',
+      'Patient1 has cough.'
+    ],
+    proof_nl: [
+      'hasSymptom Patient1 Fatigue',
+      'hasSymptom Patient1 Fever',
+      'hasSymptom Patient1 Cough'
+    ]
   },
 
   // === QUERY: What can DrSmith do ===
@@ -175,7 +197,14 @@ export const steps = [
     action: 'query',
     input_nl: 'What can DrSmith do?',
     input_dsl: '@q can DrSmith ?ability',
-    expected_nl: 'DrSmith can Prescribe. DrSmith can Diagnose. Proof: can DrSmith Prescribe. can DrSmith Diagnose.'
+    expected_nl: [
+      'DrSmith can Prescribe.',
+      'DrSmith can Diagnose.'
+    ],
+    proof_nl: [
+      'can DrSmith Prescribe',
+      'can DrSmith Diagnose'
+    ]
   }
 ];
 

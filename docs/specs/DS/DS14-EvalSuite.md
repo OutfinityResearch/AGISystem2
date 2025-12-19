@@ -173,7 +173,8 @@ export const steps = [
     action: 'query',
     input_nl: 'What is Rex?',
     input_dsl: '@q isA Rex ?what',
-    expected_nl: 'Rex is a dog'
+    expected_nl: ['Rex is a dog.'],
+    proof_nl: ['isA Rex Dog']
   },
 
   // Prove - is Rex a mammal?
@@ -181,7 +182,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Rex a mammal?',
     input_dsl: '@goal isA Rex Mammal',
-    expected_nl: 'Yes. Rex is a dog. Dogs are mammals. Therefore Rex is a mammal.'
+    expected_nl: 'True: Rex is a mammal.',
+    proof_nl: 'Rex isA Dog. Dog isA Mammal.'
   },
 
   // Learn a rule
@@ -201,7 +203,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Rex warm-blooded?',
     input_dsl: '@goal hasProperty Rex WarmBlooded',
-    expected_nl: 'Yes. Rex is a dog. Dogs are mammals. Mammals are warm-blooded. Therefore Rex is warm-blooded.'
+    expected_nl: 'True: Rex has WarmBlooded.',
+    proof_nl: 'Rex isA Dog. Dog isA Mammal. Mammal hasProperty WarmBlooded. Applied rule: Implies $cond $conc.'
   }
 ];
 
@@ -215,11 +218,19 @@ export default { name, description, theories, steps };
 | `action` | string | Yes | `learn`, `query`, `prove`, `explain` |
 | `input_nl` | string | Yes | Natural language input (fact to learn, question to ask) |
 | `input_dsl` | string | Yes | Equivalent DSL (reference for all actions) |
-| `expected_nl` | string | Yes | Expected natural language response |
+| `expected_nl` | string (learn/prove), string[] (query) | Yes | Expected natural language response |
+| `proof_nl` | string (prove), string[] (query) | Conditional | Required for `query` and `prove`; omit for `learn` |
 
 **Note**: Step ordering is determined by array index - no explicit `step` field needed.
 
-**Important**: Only `expected_nl` is used for validation - all expectations are expressed as human-readable responses.
+**Proof Requirements**:
+- `expected_nl` MUST contain only the answer text (no "Proof:" or "Search:" sections).
+- For `prove`, `proof_nl` MUST describe the full reasoning chain or failure trace.
+- For `query`, `proof_nl` MUST be an array with one entry per answer, each entry containing the full reasoning chain that yields that answer (including all transitive links and rule applications).
+- For `query`, the number of answers in `expected_nl` MUST match the length of `proof_nl`.
+- For `query`, `expected_nl` MUST be an array with one answer per entry.
+
+**Validation**: Both `expected_nl` and `proof_nl` are checked. `expected_nl` validates answers; `proof_nl` validates reasoning chains.
 
 ### 14.4.3 Action Types
 
@@ -488,7 +499,8 @@ export const steps = [
     action: 'query',
     input_nl: 'What is Rex?',
     input_dsl: '@q isA Rex ?what',
-    expected_nl: 'Rex is a dog'
+    expected_nl: ['Rex is a dog.'],
+    proof_nl: ['isA Rex Dog']
   },
 
   // Another query
@@ -496,7 +508,8 @@ export const steps = [
     action: 'query',
     input_nl: 'What is Whiskers?',
     input_dsl: '@q isA Whiskers ?what',
-    expected_nl: 'Whiskers is a cat'
+    expected_nl: ['Whiskers is a cat.'],
+    proof_nl: ['isA Whiskers Cat']
   },
 
   // Prove direct fact
@@ -504,7 +517,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Rex a dog?',
     input_dsl: '@goal isA Rex Dog',
-    expected_nl: 'Yes, Rex is a dog'
+    expected_nl: 'True: Rex is a dog.',
+    proof_nl: 'isA Rex Dog'
   },
 
   // Prove derived fact (1 step)
@@ -512,7 +526,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Rex a mammal?',
     input_dsl: '@goal isA Rex Mammal',
-    expected_nl: 'Yes. Rex is a dog and dogs are mammals, therefore Rex is a mammal.'
+    expected_nl: 'True: Rex is a mammal.',
+    proof_nl: 'isA Rex Dog. isA Dog Mammal.'
   },
 
   // Prove derived fact (2 steps)
@@ -520,7 +535,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Rex an animal?',
     input_dsl: '@goal isA Rex Animal',
-    expected_nl: 'Yes. Rex is a dog. Dogs are mammals. Mammals are animals. Therefore Rex is an animal.'
+    expected_nl: 'True: Rex is an animal.',
+    proof_nl: 'isA Rex Dog. isA Dog Mammal. isA Mammal Animal.'
   },
 
   // Learn properties
@@ -540,7 +556,8 @@ export const steps = [
     action: 'query',
     input_nl: 'What property does Rex have?',
     input_dsl: '@q hasProperty Rex ?prop',
-    expected_nl: 'Rex is friendly'
+    expected_nl: ['Rex is friendly.', 'Rex is brown.'],
+    proof_nl: ['hasProperty Rex friendly', 'hasProperty Rex brown']
   },
 
   // Explain reasoning
@@ -620,7 +637,7 @@ Time: 3.2s
 
 ### 14.9.3 NL Output Phase
 
-Fuzzy comparison between actual output and `expected_nl`:
+Fuzzy comparison between actual output and `expected_nl` (plus proof checks when `proof_nl` is present):
 - Ignore case
 - Ignore punctuation variations
 - Allow partial matches for long explanations
@@ -677,17 +694,19 @@ The evaluation suite runner should only:
 
 ### 14.12.2 Proof and Demonstration Requirements
 
-**All `query` and `prove` actions MUST include demonstrations alongside the answer:**
+**All `query` and `prove` actions MUST include demonstrations via `proof_nl`:**
 
 ```javascript
-// WRONG - answer only
-expected_nl: 'Rex is a dog'
+// WRONG - answer only (query)
+expected_nl: ['Rex is a dog.']
 
-// CORRECT - answer with proof
-expected_nl: 'Rex is a dog. Proof: isA Rex Dog (direct KB match).'
+// CORRECT - query with proof_nl
+expected_nl: ['Rex is a dog.']
+proof_nl: ['isA Rex Dog (direct KB match)']
 
-// CORRECT - derived answer with full chain
-expected_nl: 'True: Rex is a mammal. Proof: Rex isA Dog. Dog isA Mammal.'
+// CORRECT - prove with full chain
+expected_nl: 'True: Rex is a mammal.'
+proof_nl: 'Rex isA Dog. Dog isA Mammal.'
 ```
 
 Demonstrations must be:
@@ -745,12 +764,13 @@ Graphs represent real-world complex concepts that LLMs will translate to DSL.
 { action: 'prove', input_dsl: '@goal isA Cat Animal' }
 
 // REALISTIC - preferred
-{
+  {
   action: 'prove',
   input_nl: 'Is Rex a LivingThing? (Rex→Dog→Canine→Mammal→Vertebrate→Animal→LivingThing)',
   input_dsl: '@goal isA Rex LivingThing',
-  expected_nl: 'True: Rex is a livingthing. Proof: Rex isA Dog. Dog isA Canine. Canine isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing.'
-}
+  expected_nl: 'True: Rex is a livingthing.',
+  proof_nl: 'Rex isA Dog. Dog isA Canine. Canine isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing.'
+  }
 ```
 
 ### 14.12.6 Planning in Solve

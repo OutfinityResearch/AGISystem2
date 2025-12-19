@@ -68,7 +68,14 @@ export const cases = [
   {
     action: 'query',
     input_dsl: `seating Alice ?table`,
-    expected_nl: 'Alice is at T1. Alice is at T2. Proof: conflictsWith(Alice, Bob) satisfied: Alice at T1, Bob at T2, T1 ≠ T2. seating Alice T1. conflictsWith(Alice, Bob) satisfied: Alice at T2, Bob at T1, T2 ≠ T1. seating Alice T2.'
+    expected_nl: [
+      'Alice is at T1.',
+      'Alice is at T2.'
+    ],
+    proof_nl: [
+      'conflictsWith(Alice, Bob) satisfied: Alice at T1, Bob at T2, T1 != T2. seating Alice T1',
+      'conflictsWith(Alice, Bob) satisfied: Alice at T2, Bob at T1, T2 != T1. seating Alice T2'
+    ]
   },
 
   // ========================================

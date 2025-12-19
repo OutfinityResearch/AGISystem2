@@ -88,13 +88,36 @@ function validateDSLSyntax(dsl) {
 }
 
 /**
- * Validate expected_nl for formatting issues
+ * Validate expected_nl/proof_nl for formatting issues
  * Returns array of issues found
  */
-function validateExpectedNl(expectedNl, action, inputDsl) {
+function validateExpectedNl(testCase) {
   const issues = [];
+  const expectedNl = testCase?.expected_nl;
+  const proofNl = testCase?.proof_nl;
+  const action = testCase?.action;
+  const inputDsl = testCase?.input_dsl;
+  const requiresProof = action === 'query' || action === 'prove';
+  const expectedText = Array.isArray(expectedNl) ? expectedNl.join(' ') : expectedNl;
+  const proofMissing = proofNl === undefined ||
+    proofNl === null ||
+    (typeof proofNl === 'string' && proofNl.trim().length === 0) ||
+    (Array.isArray(proofNl) && proofNl.filter(p => typeof p === 'string' && p.trim().length > 0).length === 0);
+
+  function countQueryAnswers(text) {
+    if (Array.isArray(text)) return text.length;
+    if (!text || typeof text !== 'string') return 0;
+    const trimmed = text.trim();
+    if (/^No results\b/i.test(trimmed) || /^No valid\b/i.test(trimmed)) return 1;
+    return trimmed
+      .split(/[.!?]+/)
+      .map(s => s.trim())
+      .filter(Boolean)
+      .length;
+  }
+
   if (!expectedNl) {
-    if (action === 'query' || action === 'prove') {
+    if (requiresProof) {
       issues.push({
         type: 'error',
         msg: `Missing expected_nl for ${action} action`
@@ -103,10 +126,81 @@ function validateExpectedNl(expectedNl, action, inputDsl) {
     return issues;
   }
 
+  if (requiresProof && proofMissing) {
+    issues.push({
+      type: 'error',
+      msg: `Missing proof_nl for ${action} action`
+    });
+  }
+
+  if (action === 'query') {
+    if (!Array.isArray(expectedNl)) {
+      issues.push({
+        type: 'error',
+        msg: 'expected_nl must be an array for query actions (one answer per entry)'
+      });
+    } else if (expectedNl.some(entry => typeof entry !== 'string' || entry.trim().length === 0)) {
+      issues.push({
+        type: 'error',
+        msg: 'expected_nl entries must be non-empty strings for query actions'
+      });
+    }
+  }
+
+  if (action === 'query' && proofNl !== undefined && proofNl !== null && !Array.isArray(proofNl)) {
+    issues.push({
+      type: 'error',
+      msg: 'proof_nl must be an array for query actions (one proof per answer)'
+    });
+  } else if (action === 'query' && Array.isArray(proofNl)) {
+    const answerCount = countQueryAnswers(expectedNl);
+    if (answerCount > 0 && proofNl.length !== answerCount) {
+      issues.push({
+        type: 'error',
+        msg: `proof_nl length (${proofNl.length}) does not match number of answers (${answerCount})`
+      });
+    }
+  }
+
+  if (requiresProof) {
+    const expectedChecks = Array.isArray(expectedNl) ? expectedNl : [expectedNl];
+    if (expectedChecks.some(entry => /\b(Proof|Search):/i.test(String(entry)))) {
+      issues.push({
+        type: 'error',
+        msg: 'expected_nl should contain only the answer; move proof/search details to proof_nl'
+      });
+    }
+  }
+
+  // Validate proof_nl shape (string or string[])
+  if (proofNl !== undefined && proofNl !== null) {
+    const okShape = typeof proofNl === 'string' || (Array.isArray(proofNl) && proofNl.every(p => typeof p === 'string'));
+    if (!okShape) {
+      issues.push({
+        type: 'error',
+        msg: 'Invalid proof_nl type - must be a string or array of strings'
+      });
+    } else {
+      const proofText = Array.isArray(proofNl) ? proofNl.join(' ') : proofNl;
+      if (typeof proofText === 'string' && proofText.trim().length < 10) {
+        issues.push({
+          type: 'warning',
+          msg: 'proof_nl is present but very short - consider adding more proof detail'
+        });
+      }
+      if (/\bProof:/i.test(proofText)) {
+        issues.push({
+          type: 'warning',
+          msg: 'proof_nl should not include the "Proof:" label (runner adds/locates it in output); keep only proof content'
+        });
+      }
+    }
+  }
+
   // Check for multiple "Proof:" occurrences
   // For query actions, multiple Proof: is OK (one per result)
   // For prove actions, should have single proof
-  const proofCount = (expectedNl.match(/\bProof:/gi) || []).length;
+  const proofCount = (typeof expectedText === 'string' ? (expectedText.match(/\bProof:/gi) || []).length : 0);
   if (proofCount > 1 && action !== 'query') {
     issues.push({
       type: 'error',
@@ -116,41 +210,14 @@ function validateExpectedNl(expectedNl, action, inputDsl) {
 
   // Check for repeated pattern like "X can Y. Proof: ... X can Y. Proof: ..."
   const repeatedProofPattern = /(\w+\s+can\s+\w+)\.\s*Proof:.*?\1\.\s*Proof:/i;
-  if (repeatedProofPattern.test(expectedNl)) {
+  if (typeof expectedText === 'string' && repeatedProofPattern.test(expectedText)) {
     issues.push({
       type: 'error',
       msg: 'Repeated answer+proof pattern detected - consolidate into single response'
     });
   }
 
-  // Check for missing Proof: in prove actions (unless it's a negative result)
-  if (action === 'prove') {
-    const hasProof = /\bProof:/i.test(expectedNl);
-    const isNegative = /^(False|No|Cannot|Not found|Unknown)/i.test(expectedNl.trim());
-    const isSearchTrace = /\bSearch:/i.test(expectedNl);
-
-    if (!hasProof && !isNegative && !isSearchTrace) {
-      issues.push({
-        type: 'warning',
-        msg: 'Missing "Proof:" in prove action - should include reasoning chain'
-      });
-    }
-  }
-
-  // Check for missing Proof: in query actions that require reasoning
-  if (action === 'query') {
-    const hasProof = /\bProof:/i.test(expectedNl);
-    // Queries that need transitive reasoning should have proofs
-    const needsTransitive = inputDsl && /isA\s+\??\w+\s+\w+/.test(inputDsl);
-    const hasMultipleResults = (expectedNl.match(/\.\s+[A-Z]/g) || []).length >= 2;
-
-    if (!hasProof && needsTransitive && hasMultipleResults) {
-      issues.push({
-        type: 'warning',
-        msg: 'Query with transitive reasoning should include "Proof:" for derived results'
-      });
-    }
-  }
+  void inputDsl;
 
   return issues;
 }
@@ -400,11 +467,19 @@ function analyzeProofComplexity(testCase, learnedFacts) {
 }
 
 /**
- * Count steps from expected_nl
+ * Count steps from expected_nl + proof_nl (best-effort heuristic)
  */
-function countStepsFromExpected(expectedNl) {
-  if (!expectedNl) return 0;
-  const cleaned = expectedNl.replace(/\b(Proof|Search|Answer):/gi, ' ').trim();
+function countStepsFromExpected(expected) {
+  if (!expected) return 0;
+  const expectedNl = typeof expected === 'string' ? expected : expected.expected_nl;
+  const proofNl = typeof expected === 'string' ? undefined : expected.proof_nl;
+
+  const combined = [
+    expectedNl || '',
+    Array.isArray(proofNl) ? proofNl.join(' ') : (proofNl || '')
+  ].join(' ');
+
+  const cleaned = combined.replace(/\b(Proof|Search|Answer):/gi, ' ').trim();
   if (!cleaned) return 0;
 
   return cleaned.split(/[.?!;]+/).map(s => s.trim()).filter(s => s.length > 3).length;
@@ -446,8 +521,8 @@ async function analyzeSuite(suite) {
       }
     }
 
-    // Validate expected_nl format
-    for (const issue of validateExpectedNl(testCase.expected_nl, testCase.action, testCase.input_dsl)) {
+    // Validate expected_nl/proof_nl format
+    for (const issue of validateExpectedNl(testCase)) {
       analysis.formatErrors.push({ case: caseNum, caseInfo, ...issue });
     }
 
@@ -465,7 +540,7 @@ async function analyzeSuite(suite) {
     const complexity = analyzeProofComplexity(testCase, allLearnedFacts);
     complexity.caseNum = caseNum;
     analysis.complexityMetrics.push(complexity);
-    analysis.expectedNls.push(testCase.expected_nl || '');
+    analysis.expectedNls.push({ expected_nl: testCase.expected_nl || '', proof_nl: testCase.proof_nl });
 
     if (complexity.isTrivialLookup) {
       analysis.trivialCases.push({ case: caseNum, caseInfo });
@@ -503,10 +578,10 @@ function printSuiteReport(analysis, verbose) {
     }
   }
 
-  // Print format errors (multiple Proof:, etc.)
+  // Print format errors (expected_nl/proof_nl, Proof: occurrences, etc.)
   if (analysis.formatErrors.length > 0) {
     console.log();
-    console.log(`${C.red}${C.bold}Format Errors (expected_nl):${C.reset}`);
+    console.log(`${C.red}${C.bold}Format Errors (expected_nl/proof_nl):${C.reset}`);
     for (const err of analysis.formatErrors) {
       console.log(`  ${C.red}✗${C.reset} Case ${err.case}: ${err.msg}`);
       if (verbose) console.log(`    ${C.dim}${err.caseInfo}${C.reset}`);
@@ -669,18 +744,26 @@ function printGlobalSummary(allAnalyses) {
         console.log(`  Issue: ${typeColor}${err.msg}${C.reset}`);
 
         if (testCase?.expected_nl) {
-          const truncated = testCase.expected_nl.length > 120
-            ? testCase.expected_nl.substring(0, 120) + '...'
-            : testCase.expected_nl;
+          const expectedText = Array.isArray(testCase.expected_nl)
+            ? testCase.expected_nl.join(' ')
+            : String(testCase.expected_nl);
+          const truncated = expectedText.length > 120
+            ? expectedText.substring(0, 120) + '...'
+            : expectedText;
           console.log(`  Current expected_nl: "${C.dim}${truncated}${C.reset}"`);
+        }
+        if (testCase?.proof_nl !== undefined && testCase?.proof_nl !== null) {
+          const proofText = Array.isArray(testCase.proof_nl) ? testCase.proof_nl.join(' ') : String(testCase.proof_nl);
+          const truncatedProof = proofText.length > 120 ? proofText.substring(0, 120) + '...' : proofText;
+          console.log(`  Current proof_nl:    "${C.dim}${truncatedProof}${C.reset}"`);
         }
 
         // Provide specific action based on error type
         let action = '';
         if (err.msg.includes('Multiple "Proof:"')) {
           action = 'Consolidate multiple "Proof:" sections into a single proof';
-        } else if (err.msg.includes('Missing "Proof:"')) {
-          action = 'Add "Proof:" section with reasoning chain to expected_nl';
+        } else if (err.msg.includes('Missing proof expectation') || err.msg.includes('Missing "Proof:"')) {
+          action = 'Add proof expectations via proof_nl (preferred) or a "Proof:" section inside expected_nl';
         } else if (err.msg.includes('Missing expected_nl')) {
           action = 'Add expected_nl with expected response';
         } else if (err.msg.includes('Fact count mismatch')) {
@@ -689,6 +772,10 @@ function printGlobalSummary(allAnalyses) {
           action = 'Add expected_nl confirming what facts were learned';
         } else if (err.msg.includes('Repeated answer+proof')) {
           action = 'Consolidate repeated answer+proof patterns into single response';
+        } else if (err.msg.includes('Both expected_nl and proof_nl')) {
+          action = 'Move proof expectations to proof_nl and keep expected_nl as the main answer only';
+        } else if (err.msg.includes('Invalid proof_nl type')) {
+          action = 'Set proof_nl to a string or an array of strings';
         } else {
           action = 'Review and fix the issue';
         }

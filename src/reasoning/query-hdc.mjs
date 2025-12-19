@@ -10,6 +10,8 @@ import { bind, unbind, bundle, topKSimilar } from '../core/operations.mjs';
 import { getPositionVector } from '../core/position.mjs';
 import { getThresholds } from '../core/constants.mjs';
 import { debug_trace } from '../utils/debug.js';
+import { ProofEngine } from './prove.mjs';
+import { Statement, Identifier } from '../parser/ast.mjs';
 
 function dbg(category, ...args) {
   debug_trace(`[QueryHDC:${category}]`, ...args);
@@ -86,16 +88,42 @@ export function isValidEntity(name, session) {
  * @param {number} holeIndex - Hole position (1-based)
  * @returns {boolean} True if verifiable
  */
-export function verifyHDCCandidate(session, operatorName, knowns, candidate, holeIndex) {
+function canonicalizeToken(session, name) {
+  if (!session?.canonicalizationEnabled) return name;
+  const kb = session.componentKB;
+  if (!kb || typeof kb.canonicalizeName !== 'function') return name;
+  return kb.canonicalizeName(name);
+}
+
+function buildGoalStatement(operatorName, args) {
+  const operator = new Identifier(operatorName, 1, 1);
+  const exprs = args.map(arg => new Identifier(arg, 1, 1));
+  return new Statement(null, operator, exprs, 1, 1);
+}
+
+export function verifyHDCCandidate(session, operatorName, knowns, candidate, holeIndex, options = {}) {
+  const cache = options.cache;
+  const cacheKey = cache
+    ? `${operatorName}|${holeIndex}|${candidate}|${knowns.map(k => `${k.index}:${k.name}`).join(',')}`
+    : null;
+  if (cacheKey && cache.has(cacheKey)) return cache.get(cacheKey);
+
+  const normalizedOperator = canonicalizeToken(session, operatorName);
+  const normalizedCandidate = canonicalizeToken(session, candidate);
+  const normalizedKnowns = knowns.map(known => ({
+    ...known,
+    name: canonicalizeToken(session, known.name)
+  }));
+
   // Build args array with candidate in hole position
   const args = [];
-  const totalArgs = Math.max(holeIndex, ...knowns.map(k => k.index));
+  const totalArgs = Math.max(holeIndex, ...normalizedKnowns.map(k => k.index));
 
   for (let i = 1; i <= totalArgs; i++) {
     if (i === holeIndex) {
-      args.push(candidate);
+      args.push(normalizedCandidate);
     } else {
-      const known = knowns.find(k => k.index === i);
+      const known = normalizedKnowns.find(k => k.index === i);
       args.push(known?.name || null);
     }
   }
@@ -103,7 +131,7 @@ export function verifyHDCCandidate(session, operatorName, knowns, candidate, hol
   // Check if this exact fact exists in KB
   for (const fact of session.kbFacts) {
     const meta = fact.metadata;
-    if (!meta || meta.operator !== operatorName) continue;
+    if (!meta || meta.operator !== normalizedOperator) continue;
     if (!meta.args || meta.args.length !== args.length) continue;
 
     let match = true;
@@ -113,26 +141,23 @@ export function verifyHDCCandidate(session, operatorName, knowns, candidate, hol
         break;
       }
     }
-    if (match) return true;
-  }
-
-  // For inheritable operators, ensure candidate is a "typed" entity (has isA facts).
-  const isInheritable =
-    session?.useSemanticIndex && session?.semanticIndex?.isInheritableProperty
-      ? session.semanticIndex.isInheritableProperty(operatorName)
-      : (operatorName === 'can' || operatorName === 'must');
-
-  if (isInheritable) {
-    // Candidate should be something that has isA relations (a named entity)
-    for (const fact of session.kbFacts) {
-      const meta = fact.metadata;
-      if (meta?.operator === 'isA' && meta.args?.[0] === candidate) {
-        return true;
-      }
+    if (match) {
+      if (cacheKey) cache.set(cacheKey, true);
+      return true;
     }
   }
 
-  return false;
+  if (args.some(arg => arg === null)) {
+    if (cacheKey) cache.set(cacheKey, false);
+    return false;
+  }
+
+  const engine = options.validator || new ProofEngine(session);
+  const goalStatement = buildGoalStatement(normalizedOperator, args);
+  const proofResult = engine.prove(goalStatement);
+  const ok = !!proofResult?.valid;
+  if (cacheKey) cache.set(cacheKey, ok);
+  return ok;
 }
 
 /**
@@ -176,11 +201,17 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec) {
     // Find top K matches in vocabulary
       const matches = topKSimilar(candidate, session.vocabulary.atoms, 15);
 
+    const validator = new ProofEngine(session);
+    const validationCache = new Map();
+
     for (const match of matches) {
       // Use strategy-dependent threshold, filter invalid entities, and verify candidate
       if (match.similarity > thresholds.HDC_MATCH && isValidEntity(match.name, session)) {
         // Verify the candidate actually makes sense
-        if (!verifyHDCCandidate(session, operatorName, knowns, match.name, hole.index)) {
+        if (!verifyHDCCandidate(session, operatorName, knowns, match.name, hole.index, {
+          validator,
+          cache: validationCache
+        })) {
           dbg('HDC', `Rejecting unverifiable candidate: ${match.name}`);
           continue;
         }

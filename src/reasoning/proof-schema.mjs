@@ -74,9 +74,27 @@ function legacyStepToDs19(step) {
   const operation = step.operation || step.kind || null;
   const factMeta = parseFactString(step.fact);
 
+  // HDC candidate traces are NOT evidence steps.
+  // They may contain non-fact labels (e.g., vector names) and should not be validated as KB facts.
+  if (operation === 'hdc_candidate') {
+    return {
+      kind: 'trace',
+      detail: { ...step }
+    };
+  }
+
   if (operation === 'validation') {
     return {
       kind: 'validation',
+      detail: { ...step }
+    };
+  }
+
+  // Value-type inheritance is a derived step: it usually produces a new "has" fact that may not exist in KB.
+  if (operation === 'value_type_inheritance') {
+    return {
+      kind: 'derived',
+      producesFact: factMeta || null,
       detail: { ...step }
     };
   }

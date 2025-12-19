@@ -46,7 +46,12 @@ export const steps = [
       @filter causes ?X ?Y
       @q deduce Inflation $filter ?result 4 5
     `,
-    expected_nl: 'From Inflation, deduce causes HigherPrices ReducedSpending. Proof: Inflation via causes via ReducedSpending'
+    expected_nl: [
+      'From Inflation, deduce causes HigherPrices ReducedSpending.'
+    ],
+    proof_nl: [
+      'Inflation via causes via ReducedSpending'
+    ]
   },
 
   // === SETUP: Climate Impact Theory ===
@@ -84,7 +89,12 @@ export const steps = [
       @filter causes ?X ?Y
       @q deduce CO2Emission $filter ?result 5 5
     `,
-    expected_nl: 'From CO2Emission, deduce causes GlobalWarming IceMelt. Proof: CO2Emission via causes via IceMelt'
+    expected_nl: [
+      'From CO2Emission, deduce causes GlobalWarming IceMelt.'
+    ],
+    proof_nl: [
+      'CO2Emission via causes via IceMelt'
+    ]
   },
 
   // === SETUP: Biological Classification Theory ===
@@ -121,7 +131,12 @@ export const steps = [
       @filter isA ?X ?Y
       @q deduce Dog $filter ?result 4 5
     `,
-    expected_nl: 'From Dog, deduce isA Dog Vertebrate. Proof: Dog via isA via Vertebrate'
+    expected_nl: [
+      'From Dog, deduce isA Dog Vertebrate.'
+    ],
+    proof_nl: [
+      'Dog via isA via Vertebrate'
+    ]
   },
 
   // === SETUP: Disease Transmission Theory ===
@@ -159,7 +174,12 @@ export const steps = [
       @filter causes ?X ?Y
       @q deduce Virus $filter ?result 5 5
     `,
-    expected_nl: 'From Virus, deduce causes Infection Inflammation. Proof: Virus via causes via Infection via causes via Inflammation'
+    expected_nl: [
+      'From Virus, deduce causes Infection Inflammation.'
+    ],
+    proof_nl: [
+      'Virus via causes via Infection via causes via Inflammation'
+    ]
   },
 
   // === SETUP: Supply Chain Theory ===
@@ -191,7 +211,12 @@ export const steps = [
       @filter causes ?X ?Y
       @q deduce RawMaterial $filter ?result 2 3
     `,
-    expected_nl: 'From RawMaterial, deduce causes Production Assembly. Proof: RawMaterial via causes via Production via causes via Assembly'
+    expected_nl: [
+      'From RawMaterial, deduce causes Production Assembly.'
+    ],
+    proof_nl: [
+      'RawMaterial via causes via Production via causes via Assembly'
+    ]
   }
 ];
 

@@ -65,7 +65,8 @@ export function searchViaRules(session, operatorName, knowns, holes) {
     // Try proving the rule's condition with various substitutions
     const conditionMatches = findConditionMatches(session, rule, bindings);
 
-    for (const cm of conditionMatches) {
+    for (const match of conditionMatches) {
+      const cm = match.bindings;
       const factBindings = new Map();
       let valid = true;
 
@@ -99,13 +100,10 @@ export function searchViaRules(session, operatorName, knowns, holes) {
           continue;
         }
 
-        // Build proof steps showing how rule was applied
+        // Build proof steps showing how rule was applied, with evidence facts first.
         const proofSteps = [];
-        // Show which condition facts matched
-        for (const [varName, value] of cm) {
-          if (!bindings.has(varName)) {
-            proofSteps.push(`${varName}=${value}`);
-          }
+        for (const s of match.steps || []) {
+          if (typeof s === 'string' && s.trim()) proofSteps.push(s.trim());
         }
         proofSteps.push(`Applied rule: ${rule.name || rule.source?.substring(0, 40) || 'rule'}`);
 
@@ -157,12 +155,12 @@ export function findConditionMatches(session, rule, initialBindings) {
  * @returns {Array<Map>} Array of binding maps
  */
 export function findCompoundMatches(session, condPart, initialBindings) {
-  const addedBindings = new Set();
-  const addMatch = (matches, binding) => {
-    const key = [...binding.entries()].sort().map(([k, v]) => `${k}=${v}`).join(',');
-    if (!addedBindings.has(key)) {
-      addedBindings.add(key);
-      matches.push(binding);
+  const added = new Set();
+  const addMatch = (matches, match) => {
+    const key = [...match.bindings.entries()].sort().map(([k, v]) => `${k}=${v}`).join(',');
+    if (!added.has(key)) {
+      added.add(key);
+      matches.push(match);
     }
   };
 
@@ -176,8 +174,8 @@ export function findCompoundMatches(session, condPart, initialBindings) {
     const matches = [];
     for (const part of condPart.parts) {
       const branchMatches = findCompoundMatches(session, part, initialBindings);
-      for (const binding of branchMatches) {
-        addMatch(matches, binding);
+      for (const match of branchMatches) {
+        addMatch(matches, match);
       }
     }
     return matches;
@@ -185,22 +183,28 @@ export function findCompoundMatches(session, condPart, initialBindings) {
 
   // And node - intersection of all branches (recursive)
   if (condPart.type === 'And' && condPart.parts) {
-    let candidateBindings = null;
+    let candidates = [{ bindings: new Map(initialBindings), steps: [] }];
 
     for (const part of condPart.parts) {
       const branchMatches = findCompoundMatches(session, part, initialBindings);
+      const next = [];
 
-      if (candidateBindings === null) {
-        candidateBindings = branchMatches;
-      } else {
-        // Intersect: keep only bindings compatible with branch
-        candidateBindings = candidateBindings.filter(cb => {
-          return branchMatches.some(bm => bindingsCompatible(cb, bm));
-        });
+      for (const c of candidates) {
+        for (const b of branchMatches) {
+          if (!bindingsCompatible(c.bindings, b.bindings)) continue;
+          const merged = new Map(c.bindings);
+          for (const [k, v] of b.bindings) merged.set(k, v);
+          next.push({ bindings: merged, steps: [...(c.steps || []), ...(b.steps || [])] });
+        }
       }
+
+      candidates = next;
+      if (candidates.length === 0) break;
     }
 
-    return candidateBindings || [];
+    const out = [];
+    for (const m of candidates) addMatch(out, m);
+    return out;
   }
 
   return [];
@@ -228,6 +232,32 @@ export function bindingsCompatible(bindings1, bindings2) {
  * @param {Map} initialBindings - Initial variable bindings
  * @returns {Array<Map>} Array of binding maps
  */
+function findIsAPath(session, from, to, maxDepth = 10) {
+  if (from === to) return [];
+  const queue = [{ node: from, path: [] }];
+  const visited = new Set([from]);
+
+  while (queue.length > 0) {
+    const { node, path } = queue.shift();
+    if (path.length >= maxDepth) continue;
+
+    for (const fact of session.kbFacts) {
+      const meta = fact.metadata;
+      if (meta?.operator !== 'isA') continue;
+      if (meta.args?.[0] !== node) continue;
+      const parent = meta.args?.[1];
+      if (!parent || visited.has(parent)) continue;
+
+      const nextPath = [...path, `isA ${node} ${parent}`];
+      if (parent === to) return nextPath;
+      visited.add(parent);
+      queue.push({ node: parent, path: nextPath });
+    }
+  }
+
+  return [];
+}
+
 export function findLeafConditionMatches(session, condAST, initialBindings) {
   const matches = [];
   const addedBindings = new Set();
@@ -243,7 +273,11 @@ export function findLeafConditionMatches(session, condAST, initialBindings) {
 
     const newBindings = new Map(initialBindings);
     let matchOk = true;
+    const steps = [];
+    // Always include the matched fact as evidence.
+    steps.push(`${meta.operator} ${meta.args.join(' ')}`.trim());
 
+    let usedTypeMatch = false;
     for (let i = 0; i < condArgs.length; i++) {
       const condArg = condArgs[i];
       const factArg = meta.args[i];
@@ -262,14 +296,26 @@ export function findLeafConditionMatches(session, condAST, initialBindings) {
           matchOk = false;
           break;
         }
+        usedTypeMatch = true;
+        // Add an isA chain as evidence for the type match (best-effort).
+        const chain = findIsAPath(session, factArg, expected);
+        for (const s of chain) steps.push(s);
       }
     }
 
     if (matchOk) {
+      if (usedTypeMatch && condOp === 'has') {
+        const inferredArgs = condArgs.map(arg =>
+          arg?.isVariable ? newBindings.get(arg.name) : arg?.name
+        );
+        if (inferredArgs.every(Boolean)) {
+          steps.push(`Inherited via value type: ${condOp} ${inferredArgs.join(' ')}`);
+        }
+      }
       const key = [...newBindings.entries()].sort().map(([k, v]) => `${k}=${v}`).join(',');
       if (!addedBindings.has(key)) {
         addedBindings.add(key);
-        matches.push(newBindings);
+        matches.push({ bindings: newBindings, steps });
       }
     }
   }
@@ -296,7 +342,7 @@ export function findLeafConditionMatches(session, condAST, initialBindings) {
             const key = [...newBindings.entries()].sort().map(([k, v]) => `${k}=${v}`).join(',');
             if (!addedBindings.has(key)) {
               addedBindings.add(key);
-              matches.push(newBindings);
+              matches.push({ bindings: newBindings, steps: [] });
             }
           }
         }

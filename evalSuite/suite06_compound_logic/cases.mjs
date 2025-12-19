@@ -50,7 +50,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is John guilty? (has Motive AND Opportunity AND Means)',
     input_dsl: '@goal isGuilty John',
-    expected_nl: 'True: John is guilty. Proof: Applied rule: Implies @guiltAnd2 @guiltConc. John has a motive. John has an opportunity. And condition satisfied: has John Motive, has John Opportunity. John has a means. And condition satisfied: has John Means. Therefore John is guilty.'
+    expected_nl: 'True: John is guilty.',
+    proof_nl: 'Applied rule: Implies @guiltAnd2 @guiltConc. John has a motive. John has an opportunity. And condition satisfied: has John Motive, has John Opportunity. John has a means. And condition satisfied: has John Means. Therefore John is guilty.'
   },
 
   // === NEGATIVE: Mary missing Means ===
@@ -58,7 +59,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Mary guilty? (missing Means)',
     input_dsl: '@goal isGuilty Mary',
-    expected_nl: 'Cannot prove: Mary is guilty. Searched @goal isGuilty Mary in KB. Not found.'
+    expected_nl: 'Cannot prove: Mary is guilty.',
+    proof_nl: 'Search: has Mary Motive. has Mary Opportunity. Missing: has Mary Means. And condition not satisfied.'
   },
 
   // === NEGATIVE: Charlie missing two conditions ===
@@ -66,7 +68,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Charlie guilty? (only has Motive)',
     input_dsl: '@goal isGuilty Charlie',
-    expected_nl: 'Cannot prove: Charlie is guilty. Searched @goal isGuilty Charlie in KB. Not found.'
+    expected_nl: 'Cannot prove: Charlie is guilty.',
+    proof_nl: 'Search: has Charlie Motive. Missing: has Charlie Opportunity, has Charlie Means. And condition not satisfied.'
   },
 
   // === SETUP: Deep payment hierarchy + 3-way Or rule ===
@@ -109,7 +112,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Alice pay? (has Cash)',
     input_dsl: '@goal can Alice Pay',
-    expected_nl: 'True: Alice can Pay. Proof: Applied rule: Implies @payOr2 @payConc. Alice has a cash. Or condition satisfied via has Alice Cash. Or condition satisfied. Therefore Alice can Pay.'
+    expected_nl: 'True: Alice can Pay.',
+    proof_nl: 'Applied rule: Implies @payOr2 @payConc. Alice has a cash. Or condition satisfied via has Alice Cash. Or condition satisfied. Therefore Alice can Pay.'
   },
 
   // === PROVE: Bob can pay via Card (Or branch 2) ===
@@ -117,7 +121,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Bob pay? (has Card)',
     input_dsl: '@goal can Bob Pay',
-    expected_nl: 'True: Bob can Pay. Proof: Applied rule: Implies @payOr2 @payConc. Bob has a card. Or condition satisfied via has Bob Card. Or condition satisfied. Therefore Bob can Pay.'
+    expected_nl: 'True: Bob can Pay.',
+    proof_nl: 'Applied rule: Implies @payOr2 @payConc. Bob has a card. Or condition satisfied via has Bob Card. Or condition satisfied. Therefore Bob can Pay.'
   },
 
   // === PROVE: Eve can pay via Crypto (Or branch 3) ===
@@ -125,7 +130,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Eve pay? (has Crypto)',
     input_dsl: '@goal can Eve Pay',
-    expected_nl: 'True: Eve can Pay. Proof: Applied rule: Implies @payOr2 @payConc. Eve has a crypto. Or condition satisfied via has Eve Crypto. Therefore Eve can Pay.'
+    expected_nl: 'True: Eve can Pay.',
+    proof_nl: 'Applied rule: Implies @payOr2 @payConc. Eve has a crypto. Or condition satisfied via has Eve Crypto. Therefore Eve can Pay.'
   },
 
   // === NEGATIVE: Dan has Nothing (Or not satisfied) ===
@@ -133,7 +139,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Dan pay? (has Nothing)',
     input_dsl: '@goal can Dan Pay',
-    expected_nl: 'Cannot prove: Dan can Pay. Search: Dan isA Guest. Guest isA Visitor. Visitor isA Participant. Participant isA Actor. Actor isA Entity. Checked rule: Implies @payOr2 @payConc. Missing: has Dan Cash, has Dan Card, has Dan Crypto.. No can Pay facts found in KB.'
+    expected_nl: 'Cannot prove: Dan can Pay.',
+    proof_nl: 'Search: Dan isA Guest. Guest isA Visitor. Visitor isA Participant. Participant isA Actor. Actor isA Entity. Checked rule: Implies @payOr2 @payConc. Missing: has Dan Cash, has Dan Card, has Dan Crypto. No can Pay facts found in KB.'
   },
 
   // === SETUP: Deep voting hierarchy + mixed And+Or ===
@@ -173,7 +180,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Voter vote? (Citizen AND Adult AND (ID OR Passport))',
     input_dsl: '@goal can Voter Vote',
-    expected_nl: 'True: Voter can Vote. Proof: Applied rule: Implies @vAnd2 @vConc. Voter has Citizen. Voter has Adult. And condition satisfied: hasProperty Voter Citizen, hasProperty Voter Adult. Voter has an id. Or condition satisfied via has Voter ID. And condition satisfied. Therefore Voter can Vote.'
+    expected_nl: 'True: Voter can Vote.',
+    proof_nl: 'Applied rule: Implies @vAnd2 @vConc. Voter has Citizen. Voter has Adult. And condition satisfied: hasProperty Voter Citizen, hasProperty Voter Adult. Voter has an id. Or condition satisfied via has Voter ID. And condition satisfied. Therefore Voter can Vote.'
   },
 
   // === NEGATIVE: Minor cannot vote (not Adult) ===
@@ -181,7 +189,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Minor vote? (Citizen but not Adult)',
     input_dsl: '@goal can Minor Vote',
-    expected_nl: 'Cannot prove: Minor can Vote. Search: Minor isA Child. Child isA Dependent. Dependent isA Person. Person isA Human. Human isA Entity. Checked rule: Implies @payOr2 @payConc. Missing: has Minor Cash, has Minor Card, has Minor Crypto.. No can Vote facts found in KB.'
+    expected_nl: 'Cannot prove: Minor can Vote.',
+    proof_nl: 'Search: Minor isA Child. Child isA Dependent. Dependent isA Person. Person isA Human. Human isA Entity. Checked rule: Implies @vAnd2 @vConc. Missing: hasProperty Minor Adult. And condition not satisfied.'
   },
 
   // === QUERY: Who can pay ===
@@ -189,7 +198,16 @@ export const steps = [
     action: 'query',
     input_nl: 'Who can pay?',
     input_dsl: '@q can ?who Pay',
-    expected_nl: 'Alice can Pay. Eve can Pay. Bob can Pay. Proof: x=Alice. Applied rule: Implies @payOr2 @payConc. x=Eve. Applied rule: Implies @payOr2 @payConc. x=Bob. Applied rule: Implies @payOr2 @payConc.'
+    expected_nl: [
+      'Alice can Pay.',
+      'Bob can Pay.',
+      'Eve can Pay.'
+    ],
+    proof_nl: [
+      'has Alice Cash. Or condition satisfied via has Alice Cash. Applied rule: Implies @payOr2 @payConc',
+      'has Bob Card. Or condition satisfied via has Bob Card. Applied rule: Implies @payOr2 @payConc',
+      'has Eve Crypto. Or condition satisfied via has Eve Crypto. Applied rule: Implies @payOr2 @payConc'
+    ]
   },
 
   // === SETUP: Deep corporate hierarchy + promotion rule ===
@@ -225,7 +243,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Dave at LeadershipLvl? (9-step chain)',
     input_dsl: '@goal isA Dave LeadershipLvl',
-    expected_nl: 'True: Dave is a leadershiplvl. Proof: Dave isA Junior. Junior isA AssociateLvl. AssociateLvl isA SeniorLvl. SeniorLvl isA LeadLvl. LeadLvl isA ManagerLvl. ManagerLvl isA DirectorLvl. DirectorLvl isA VPLvl. VPLvl isA CTOLvl. CTOLvl isA ExecutiveLvl. ExecutiveLvl isA LeadershipLvl.'
+    expected_nl: 'True: Dave is a leadershiplvl.',
+    proof_nl: 'Dave isA Junior. Junior isA AssociateLvl. AssociateLvl isA SeniorLvl. SeniorLvl isA LeadLvl. LeadLvl isA ManagerLvl. ManagerLvl isA DirectorLvl. DirectorLvl isA VPLvl. VPLvl isA CTOLvl. CTOLvl isA ExecutiveLvl. ExecutiveLvl isA LeadershipLvl.'
   },
 
   // === PROVE: 5-step Sally→LeadershipLvl ===
@@ -233,7 +252,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Sally at LeadershipLvl? (5-step chain)',
     input_dsl: '@goal isA Sally LeadershipLvl',
-    expected_nl: 'True: Sally is a leadershiplvl. Proof: Sally isA LeadLvl. LeadLvl isA ManagerLvl. ManagerLvl isA DirectorLvl. DirectorLvl isA VPLvl. VPLvl isA CTOLvl. CTOLvl isA ExecutiveLvl. ExecutiveLvl isA LeadershipLvl.'
+    expected_nl: 'True: Sally is a leadershiplvl.',
+    proof_nl: 'Sally isA LeadLvl. LeadLvl isA ManagerLvl. ManagerLvl isA DirectorLvl. DirectorLvl isA VPLvl. VPLvl isA CTOLvl. CTOLvl isA ExecutiveLvl. ExecutiveLvl isA LeadershipLvl.'
   },
 
   // === PROVE: Dave can get promoted (And rule satisfied) ===
@@ -241,7 +261,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Dave get promoted? (Performance AND Tenure)',
     input_dsl: '@goal can Dave GetPromoted',
-    expected_nl: 'True: Dave can GetPromoted. Proof: Applied rule: Implies @promAnd @promConc. Dave has a performance. Dave has a tenure. And condition satisfied: has Dave Performance, has Dave Tenure. Therefore Dave can GetPromoted.'
+    expected_nl: 'True: Dave can GetPromoted.',
+    proof_nl: 'Applied rule: Implies @promAnd @promConc. Dave has a performance. Dave has a tenure. And condition satisfied: has Dave Performance, has Dave Tenure. Therefore Dave can GetPromoted.'
   },
 
   // === NEGATIVE: Sally cannot get promoted (missing Tenure) ===
@@ -249,7 +270,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Sally get promoted? (missing Tenure)',
     input_dsl: '@goal can Sally GetPromoted',
-    expected_nl: 'Cannot prove: Sally can GetPromoted. Search: Sally isA LeadLvl. LeadLvl isA ManagerLvl. ManagerLvl isA DirectorLvl. DirectorLvl isA VPLvl. VPLvl isA CTOLvl. CTOLvl isA ExecutiveLvl. ExecutiveLvl isA LeadershipLvl. Checked rule: Implies @payOr2 @payConc. Missing: has Sally Cash, has Sally Card, has Sally Crypto.. No can GetPromoted facts found in KB.'
+    expected_nl: 'Cannot prove: Sally can GetPromoted.',
+    proof_nl: 'Search: Sally isA LeadLvl. LeadLvl isA ManagerLvl. ManagerLvl isA DirectorLvl. DirectorLvl isA VPLvl. VPLvl isA CTOLvl. CTOLvl isA ExecutiveLvl. ExecutiveLvl isA LeadershipLvl. Checked rule: Implies @promAnd @promConc. Missing: has Sally Tenure. And condition not satisfied.'
   }
 ];
 

@@ -571,7 +571,8 @@ export const steps = [
     action: 'query',
     input_nl: 'What is Fido?',
     input_dsl: '@q isA Fido ?type',
-    expected_nl: 'Fido is a dog'
+    expected_nl: ['Fido is a dog.'],
+    proof_nl: ['isA Fido Dog']
     // HDC unbind should find Dog, validation confirms
   },
 
@@ -588,7 +589,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Fido a Cat?',
     input_dsl: '@goal isA Fido Cat',
-    expected_nl: 'Cannot prove: Fido is a cat'
+    expected_nl: 'Cannot prove: Fido is a cat.',
+    proof_nl: 'Not isA Fido Cat (direct negation fact)'
     // HDC might suggest Cat (similar), but validation rejects
   },
 
@@ -608,7 +610,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Poodle an Entity?',
     input_dsl: '@goal isA Poodle Entity',
-    expected_nl: 'True: Poodle is an entity'
+    expected_nl: 'True: Poodle is an entity.',
+    proof_nl: 'isA Poodle Dog. isA Dog Mammal. isA Mammal Animal. isA Animal LivingThing. isA LivingThing Entity.'
     // HDC similarity should detect, symbolic validates chain
   },
 
@@ -633,7 +636,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Complex rule that HDC cannot shortcut',
     input_dsl: `@goal hasStatus ComplexEntity DerivedProperty`,
-    expected_nl: 'Cannot prove'
+    expected_nl: 'Cannot prove: hasStatus ComplexEntity DerivedProperty.',
+    proof_nl: 'No hasStatus ComplexEntity DerivedProperty fact; no rule derives hasStatus ?x DerivedProperty for ComplexEntity.'
     // HDC won't find match, fallback to symbolic proves inability
   }
 ];

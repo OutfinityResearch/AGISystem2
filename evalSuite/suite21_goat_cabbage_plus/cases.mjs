@@ -69,7 +69,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does Wolf conflict with Goat?',
     input_dsl: '@goal conflicts Wolf Goat',
-    expected_nl: 'True: Wolf conflicts Goat. Proof: Wolf conflicts Goat. Therefore Wolf conflicts Goat.'
+    expected_nl: 'True: Wolf conflicts Goat.',
+    proof_nl: 'Wolf conflicts Goat. Therefore Wolf conflicts Goat.'
   },
 
   // === PROVE: Initial unsafe state (all on Left without move) ===
@@ -77,7 +78,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Left bank currently safe?',
     input_dsl: '@goal safe Left',
-    expected_nl: 'True: Left is safe. Proof: Applied rule: implies @pres1 @pres2. Farmer is at Left. Therefore Left is safe.'
+    expected_nl: 'True: Left is safe.',
+    proof_nl: 'Applied rule: implies @pres1 @pres2. Farmer is at Left. Therefore Left is safe.'
   },
 
   // === QUERY: What is on the Left bank? ===
@@ -85,7 +87,18 @@ export const steps = [
     action: 'query',
     input_nl: 'What is on the Left bank?',
     input_dsl: '@q location ?x Left',
-    expected_nl: 'Farmer is at Left. Wolf is at Left. Goat is at Left. Cabbage is at Left.'
+    expected_nl: [
+      'Farmer is at Left.',
+      'Wolf is at Left.',
+      'Goat is at Left.',
+      'Cabbage is at Left.'
+    ],
+    proof_nl: [
+      'location Farmer Left',
+      'location Wolf Left',
+      'location Goat Left',
+      'location Cabbage Left'
+    ]
   },
 
   // === QUERY: What conflict pairs exist? ===
@@ -93,7 +106,14 @@ export const steps = [
     action: 'query',
     input_nl: 'What conflict pairs exist?',
     input_dsl: '@q conflicts ?x ?y',
-    expected_nl: 'Wolf conflicts Goat. Goat conflicts Cabbage.'
+    expected_nl: [
+      'Wolf conflicts Goat.',
+      'Goat conflicts Cabbage.'
+    ],
+    proof_nl: [
+      'conflicts Wolf Goat',
+      'conflicts Goat Cabbage'
+    ]
   },
 
   // === PROVE: Goat conflicts with Cabbage ===
@@ -101,7 +121,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Does Goat conflict with Cabbage?',
     input_dsl: '@goal conflicts Goat Cabbage',
-    expected_nl: 'True: Goat conflicts Cabbage. Proof: Goat conflicts Cabbage. Therefore Goat conflicts Cabbage.'
+    expected_nl: 'True: Goat conflicts Cabbage.',
+    proof_nl: 'Goat conflicts Cabbage. Therefore Goat conflicts Cabbage.'
   },
 
   // === PROVE: Boat capacity ===
@@ -109,7 +130,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'What is the boat capacity?',
     input_dsl: '@goal boatCapacity Boat Two',
-    expected_nl: 'True: Boat boatCapacity Two. Proof: Boat boatCapacity Two. Therefore Boat boatCapacity Two.'
+    expected_nl: 'True: Boat boatCapacity Two.',
+    proof_nl: 'Boat boatCapacity Two. Therefore Boat boatCapacity Two.'
   },
 
   // === QUERY: What animals are there? ===
@@ -117,7 +139,14 @@ export const steps = [
     action: 'query',
     input_nl: 'What animals are in the puzzle?',
     input_dsl: '@q isA ?x Animal',
-    expected_nl: 'Wolf is an animal. Goat is an animal.'
+    expected_nl: [
+      'Wolf is an animal.',
+      'Goat is an animal.'
+    ],
+    proof_nl: [
+      'isA Wolf Animal',
+      'isA Goat Animal'
+    ]
   },
 
   // === PROVE: Farmer must be in boat ===
@@ -125,7 +154,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Must Farmer be in the boat to cross?',
     input_dsl: '@goal mustBe Farmer InBoat',
-    expected_nl: 'True: Farmer mustBe InBoat. Proof: Farmer mustBe InBoat. Therefore Farmer mustBe InBoat.'
+    expected_nl: 'True: Farmer mustBe InBoat.',
+    proof_nl: 'Farmer mustBe InBoat. Therefore Farmer mustBe InBoat.'
   },
 
   // === DEMONSTRATE: Solve check (like suite 11) ===
@@ -133,7 +163,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Demonstrate the solution logic: Is the initial state safe?',
     input_dsl: '@goal safe Left',
-    expected_nl: 'True: Left is safe. Proof: Applied rule: implies @pres1 @pres2. Farmer is at Left. Therefore Left is safe.'
+    expected_nl: 'True: Left is safe.',
+    proof_nl: 'Applied rule: implies @pres1 @pres2. Farmer is at Left. Therefore Left is safe.'
   }
 ];
 

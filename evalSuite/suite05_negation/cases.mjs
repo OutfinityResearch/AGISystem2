@@ -48,7 +48,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Opus a LivingThing? (Opus→Penguin→Flightless→Antarctic→Seabird→Bird→Vertebrate→Animal→LivingThing)',
     input_dsl: '@goal isA Opus LivingThing',
-    expected_nl: 'True: Opus is a livingthing. Proof: Opus isA Penguin. Penguin isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Bird isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing.'
+    expected_nl: 'True: Opus is a livingthing.',
+    proof_nl: 'Opus isA Penguin. Penguin isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Bird isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing.'
   },
 
   // === PROVE: 5-step Tweety→Vertebrate ===
@@ -56,7 +57,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Tweety a Vertebrate? (Tweety→Sparrow→Songbird→Passerine→Bird→Vertebrate)',
     input_dsl: '@goal isA Tweety Vertebrate',
-    expected_nl: 'True: Tweety is a vertebrate. Proof: Tweety isA Sparrow. Sparrow isA Songbird. Songbird isA Passerine. Passerine isA Bird. Bird isA Vertebrate.'
+    expected_nl: 'True: Tweety is a vertebrate.',
+    proof_nl: 'Tweety isA Sparrow. Sparrow isA Songbird. Songbird isA Passerine. Passerine isA Bird. Bird isA Vertebrate.'
   },
 
   // === NEGATIVE: Opus cannot fly (negation blocks with search trace) ===
@@ -64,7 +66,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Opus fly? (negation blocks despite being a Bird)',
     input_dsl: '@goal can Opus Fly',
-    expected_nl: 'Cannot prove: Opus can Fly. Search: Opus isA Penguin. Penguin isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Bird isA Vertebrate. Rule: isA Bird implies can Fly would apply. Found explicit negation: Not(can Opus Fly). Negation blocks inference.'
+    expected_nl: 'Cannot prove: Opus can Fly.',
+    proof_nl: 'Search: Opus isA Penguin. Penguin isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Bird isA Vertebrate. Rule: isA Bird implies can Fly would apply. Found explicit negation: Not(can Opus Fly). Negation blocks inference.'
   },
 
   // === NEGATIVE: Oscar cannot fly (negation blocks) ===
@@ -72,7 +75,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Oscar fly? (negation blocks)',
     input_dsl: '@goal can Oscar Fly',
-    expected_nl: 'Cannot prove: Oscar can Fly. Search: Oscar isA Ostrich. Ostrich isA Ratite. Ratite isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Bird isA Vertebrate. Rule: isA Bird implies can Fly would apply. Found explicit negation: Not(can Oscar Fly). Negation blocks inference.'
+    expected_nl: 'Cannot prove: Oscar can Fly.',
+    proof_nl: 'Search: Oscar isA Ostrich. Ostrich isA Ratite. Ratite isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Bird isA Vertebrate. Rule: isA Bird implies can Fly would apply. Found explicit negation: Not(can Oscar Fly). Negation blocks inference.'
   },
 
   // === PROVE: 6-step Oscar→Animal ===
@@ -80,7 +84,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Oscar an Animal? (Oscar→Ostrich→Ratite→Flightless→Antarctic→Seabird→Bird→Vertebrate→Animal)',
     input_dsl: '@goal isA Oscar Animal',
-    expected_nl: 'True: Oscar is an animal. Proof: Oscar isA Ostrich. Ostrich isA Ratite. Ratite isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Bird isA Vertebrate. Vertebrate isA Animal.'
+    expected_nl: 'True: Oscar is an animal.',
+    proof_nl: 'Oscar isA Ostrich. Ostrich isA Ratite. Ratite isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Bird isA Vertebrate. Vertebrate isA Animal.'
   },
 
   // === SETUP: Driver license with deep role hierarchy ===
@@ -115,7 +120,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Alice a Human? (Alice→Professional→Worker→Adult→Person→Human)',
     input_dsl: '@goal isA Alice Human',
-    expected_nl: 'True: Alice is a human. Proof: Alice isA Professional. Professional isA Worker. Worker isA Adult. Adult isA Person. Person isA Human.'
+    expected_nl: 'True: Alice is a human.',
+    proof_nl: 'Alice isA Professional. Professional isA Worker. Worker isA Adult. Adult isA Person. Person isA Human.'
   },
 
   // === NEGATIVE: Bob not good driver (has violations) ===
@@ -123,7 +129,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Bob a good driver? (has violations, And condition fails)',
     input_dsl: '@goal hasStatus Bob GoodDriver',
-    expected_nl: 'Cannot prove: Bob is gooddriver. Search: Bob isA Professional. Professional isA Worker. Worker isA Adult. Adult isA Person. Person isA Human. Human isA Entity.'
+    expected_nl: 'Cannot prove: Bob is gooddriver.',
+    proof_nl: 'Search: Bob isA Professional. Professional isA Worker. Worker isA Adult. Adult isA Person. Person isA Human. Human isA Entity.'
   },
 
   // === PROVE: Tweety can fly (via rule: Bird implies can Fly) ===
@@ -131,7 +138,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can Tweety fly? (Tweety→Sparrow→Songbird→Passerine→Bird + rule)',
     input_dsl: '@goal can Tweety Fly',
-    expected_nl: 'True: Tweety can Fly. Proof: Applied rule: Implies @birdCond @birdFly. Tweety is a bird. Tweety is a sparrow. Sparrow is a songbird. Songbird is a passerine. Passerine is a bird. Therefore Tweety can Fly.'
+    expected_nl: 'True: Tweety can Fly.',
+    proof_nl: 'Applied rule: Implies @birdCond @birdFly. Tweety is a bird. Tweety is a sparrow. Sparrow is a songbird. Songbird is a passerine. Passerine is a bird. Therefore Tweety can Fly.'
   },
 
   // === NEGATIVE: Rock cannot fly (no type assertions) ===
@@ -139,7 +147,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Can a Rock fly? (not in KB)',
     input_dsl: '@goal can Rock Fly',
-    expected_nl: 'Cannot prove: Rock can Fly. Search: Searched isA Rock ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
+    expected_nl: 'Cannot prove: Rock can Fly.',
+    proof_nl: 'Search: Searched isA Rock ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
   },
 
   // === PROVE: 6-step Tweety→Animal ===
@@ -147,7 +156,8 @@ export const steps = [
     action: 'prove',
     input_nl: 'Is Tweety an Animal? (Tweety→Sparrow→Songbird→Passerine→Bird→Vertebrate→Animal)',
     input_dsl: '@goal isA Tweety Animal',
-    expected_nl: 'True: Tweety is an animal. Proof: Tweety isA Sparrow. Sparrow isA Songbird. Songbird isA Passerine. Passerine isA Bird. Bird isA Vertebrate. Vertebrate isA Animal.'
+    expected_nl: 'True: Tweety is an animal.',
+    proof_nl: 'Tweety isA Sparrow. Sparrow isA Songbird. Songbird isA Passerine. Passerine isA Bird. Bird isA Vertebrate. Vertebrate isA Animal.'
   }
 ];
 
