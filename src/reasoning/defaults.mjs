@@ -12,10 +12,10 @@
  * - Exception can Penguin Fly  → Penguins are exception to flying
  */
 
-// Debug logging
-const DEBUG = process.env.SYS2_DEBUG === 'true';
+import { debug_trace } from '../utils/debug.js';
+
 function dbg(category, ...args) {
-  if (DEBUG) console.log(`[Defaults:${category}]`, ...args);
+  debug_trace(`[Defaults:${category}]`, ...args);
 }
 
 /**

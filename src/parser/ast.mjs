@@ -193,16 +193,18 @@ export class RuleDeclaration extends ASTNode {
 }
 
 /**
- * Macro declaration
- * @name:persistName macro param1 param2 ...
+ * Graph declaration (formerly Macro)
+ * Creates a graph of HDC point relationships
+ *
+ * @name:persistName graph param1 param2 ...
  *   body statements
  *   return $result
  * end
  */
-export class MacroDeclaration extends ASTNode {
+export class GraphDeclaration extends ASTNode {
   constructor(name, persistName, params, body, returnExpr, line, column) {
-    super('MacroDeclaration', line, column);
-    this.name = name;           // Macro name (from @name)
+    super('GraphDeclaration', line, column);
+    this.name = name;           // Graph name (from @name)
     this.persistName = persistName; // Persist name (from @name:persist)
     this.params = params;       // Parameter names (string[])
     this.body = body;           // Body statements (Statement[])
@@ -214,9 +216,12 @@ export class MacroDeclaration extends ASTNode {
       ? `@${this.name}:${this.persistName}`
       : `@${this.name}`;
     const params = this.params.join(' ');
-    return `${dest} macro ${params} ... end`;
+    return `${dest} graph ${params} ... end`;
   }
 }
+
+// Alias for backward compatibility (deprecated)
+export const MacroDeclaration = GraphDeclaration;
 
 /**
  * Solve block for CSP problems
@@ -267,7 +272,8 @@ export default {
   TheoryDeclaration,
   ImportStatement,
   RuleDeclaration,
-  MacroDeclaration,
+  GraphDeclaration,
+  MacroDeclaration, // deprecated alias
   SolveBlock,
   SolveDeclaration
 };

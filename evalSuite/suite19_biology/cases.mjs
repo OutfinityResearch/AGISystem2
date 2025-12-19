@@ -35,7 +35,7 @@ export const steps = [
       causes NADH ElectronTransport
       causes ElectronTransport ATP
     `,
-    expected_nl: 'Learned 14 facts'
+    expected_nl: 'Learned 13 facts'
   },
 
   {

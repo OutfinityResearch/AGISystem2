@@ -326,8 +326,8 @@ describe('Executor', () => {
       const result = executor.executeProgram(program);
 
       assert.ok(result.success, 'macro definition should not cause errors');
-      assert.ok(session.macros, 'session should have macros map');
-      assert.ok(session.macros.has('TestMacro'), 'macro should be stored');
+      assert.ok(session.graphs, 'session should have macros map');
+      assert.ok(session.graphs.has('TestMacro'), 'macro should be stored');
     });
 
     test('should store macro parameters', () => {
@@ -339,7 +339,7 @@ describe('Executor', () => {
       `);
       executor.executeProgram(program);
 
-      const macro = session.macros.get('MyMacro');
+      const macro = session.graphs.get('MyMacro');
       assert.ok(macro, 'macro should exist');
       assert.deepEqual(macro.params, ['arg1', 'arg2', 'arg3']);
     });
@@ -355,7 +355,7 @@ describe('Executor', () => {
       `);
       executor.executeProgram(program);
 
-      const macro = session.macros.get('BodyTest');
+      const macro = session.graphs.get('BodyTest');
       assert.ok(macro, 'macro should exist');
       // Body has 2 statements (@a and @b), return is stored separately in returnExpr
       assert.equal(macro.body.length, 2, 'body should have 2 statements');
@@ -375,9 +375,12 @@ describe('Executor', () => {
       const result = executor.executeProgram(program);
 
       assert.ok(result.success);
-      assert.equal(session.macros.size, 2);
-      assert.ok(session.macros.has('Macro1'));
-      assert.ok(session.macros.has('Macro2'));
+      // Now stores under both invocation name and export name
+      assert.equal(session.graphs.size, 4);
+      assert.ok(session.graphs.has('m1'), 'should have invocation name m1');
+      assert.ok(session.graphs.has('m2'), 'should have invocation name m2');
+      assert.ok(session.graphs.has('Macro1'), 'should have export name Macro1');
+      assert.ok(session.graphs.has('Macro2'), 'should have export name Macro2');
     });
 
     test('should not execute statements inside macro body', () => {
@@ -410,7 +413,7 @@ describe('Executor', () => {
       assert.ok(result.success);
       assert.ok(session.scope.has('fact1'), 'fact1 should be in scope');
       assert.ok(session.scope.has('fact2'), 'fact2 should be in scope');
-      assert.ok(session.macros.has('TestMacro'), 'macro should be stored');
+      assert.ok(session.graphs.has('TestMacro'), 'macro should be stored');
     });
 
     test('should handle macro without explicit end', () => {
@@ -425,7 +428,7 @@ describe('Executor', () => {
       // This is a known limitation - macro is still created
       assert.ok(result.success, 'parser accepts implicit end at EOF');
       // Macro should still be stored
-      const macro = session.macros.get('Unclosed');
+      const macro = session.graphs.get('Unclosed');
       assert.ok(macro, 'macro should exist even without explicit end');
     });
   });

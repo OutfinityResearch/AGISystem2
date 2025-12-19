@@ -164,11 +164,12 @@ export const KEYWORDS = [
   'theory',
   'import',
   'rule',
-  'macro',
+  'graph',   // HDC point relationship graph
+  'macro',   // deprecated synonym for 'graph'
   'begin',
   'end',
   'return',
   'solve'
   // Note: 'from', 'noConflict', 'allDifferent' are handled contextually in parseSolveBlock
-  // to avoid conflicts with identifier parsing (e.g., macro parameter names)
+  // to avoid conflicts with identifier parsing (e.g., graph parameter names)
 ];

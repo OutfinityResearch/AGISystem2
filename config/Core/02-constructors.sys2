@@ -98,7 +98,7 @@ end
 
 # ===== Quantity Types =====
 
-@__Number:__Number macro value
+@__Number:__Number graph value
     @v ___NewVector
     @t ___Bind $v NumberType
     @typed ___Bind $t $value
@@ -111,7 +111,7 @@ end
     return $typed
 end
 
-@__Measure:__Measure macro value unit
+@__Measure:__Measure graph value unit
     @v ___NewVector
     @t ___Bind $v MeasureType
     @withVal ___Bind $t $value

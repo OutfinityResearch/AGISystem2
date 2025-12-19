@@ -25,6 +25,7 @@ import { searchKBDirect, isTypeClass, isFactNegated, sameBindings, filterTypeCla
 import { searchTransitive, isTransitiveRelation } from './query-transitive.mjs';
 import { searchViaRules } from './query-rules.mjs';
 import { searchCompoundSolutions } from './query-compound.mjs';
+import { debug_trace } from '../utils/debug.js';
 
 // Import meta-operators (DS17)
 import {
@@ -43,10 +44,8 @@ import {
 // Import abduction engine
 import { AbductionEngine } from './abduction.mjs';
 
-// Debug logging
-const DEBUG = process.env.SYS2_DEBUG === 'true';
 function dbg(category, ...args) {
-  if (DEBUG) console.log(`[Query:${category}]`, ...args);
+  debug_trace(`[Query:${category}]`, ...args);
 }
 
 // Re-export for backwards compatibility
@@ -198,12 +197,18 @@ export class QueryEngine {
     }
 
     // Source 4: Rule-derived results
+    // Replace HDC duplicates with rule_derived (rule_derived is more reliable)
     const ruleMatches = searchViaRules(this.session, operatorName, knowns, holes);
     for (const rm of ruleMatches) {
-      const exists = allResults.some(r =>
-        r.bindings.get(holes[0]?.name)?.answer === rm.bindings.get(holes[0]?.name)?.answer
+      const existingIdx = allResults.findIndex(r =>
+        sameBindings(r.bindings, rm.bindings, holes)
       );
-      if (!exists) {
+      if (existingIdx >= 0) {
+        // Replace HDC with rule_derived
+        if (allResults[existingIdx].method === 'hdc') {
+          allResults[existingIdx] = rm;
+        }
+      } else {
         allResults.push(rm);
       }
     }
@@ -280,7 +285,8 @@ export class QueryEngine {
           answer: binding.answer,
           similarity: binding.similarity,
           alternatives,
-          method: binding.method || 'direct'
+          method: binding.method || 'direct',
+          steps: binding.steps
         });
       }
     }

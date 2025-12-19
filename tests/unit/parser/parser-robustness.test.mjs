@@ -58,11 +58,11 @@ describe('Parser Robustness', () => {
       assert.ok(elapsed < 100, `Parser took too long: ${elapsed}ms`);
     });
 
-    test('should terminate on unclosed parentheses', () => {
-      const start = Date.now();
-      const ast = parse('test (A B');
-      const elapsed = Date.now() - start;
-      assert.ok(elapsed < 100, `Parser took too long: ${elapsed}ms`);
+    test('should throw on unclosed parentheses', () => {
+      // Parser now throws on unclosed parentheses
+      assert.throws(() => {
+        parse('test (A B');
+      }, ParseError);
     });
 
     test('should terminate on mixed invalid tokens', () => {
@@ -105,11 +105,13 @@ describe('Parser Robustness', () => {
   });
 
   describe('Parentheses handling', () => {
-    test('should throw on unbalanced parentheses', () => {
-      // Parser now throws on unexpected tokens including unmatched parens
-      assert.throws(() => {
-        parse('test (A (B C))');
-      }, ParseError);
+    test('should parse nested parentheses as Compound', () => {
+      // Parser now supports nested parentheses as Compound expressions
+      const ast = parse('test (A (B C))');
+      assert.equal(ast.statements.length, 1);
+      const stmt = ast.statements[0];
+      assert.equal(stmt.args.length, 1);
+      assert.equal(stmt.args[0].type, 'Compound');
     });
 
     test('should handle empty list', () => {

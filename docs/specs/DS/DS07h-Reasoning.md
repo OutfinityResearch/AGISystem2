@@ -15,7 +15,7 @@
 This document specifies the **Reasoning Verbs** - meta-level operations for higher-order inference. These include:
 
 1. **Reasoning Type Atoms**: Abduction, Induction, Deduction, Analogy
-2. **Reasoning Macros**: abduce, induce, deduce, whatif, analogy, similar, explain
+2. **Reasoning Graphs**: abduce, induce, deduce, whatif, analogy, similar, explain
 3. **Meta-Query Operators**: Operations with dual-layer architecture (see DS17)
 
 ---
@@ -33,7 +33,7 @@ Defined in `config/Core/12-reasoning.sys2`:
 
 ---
 
-## 7h.3 Reasoning Macros
+## 7h.3 Reasoning Graphs
 
 ### 7h.3.1 abduce - Abductive Reasoning
 
@@ -41,7 +41,7 @@ Find the best explanation for an observation.
 
 ```sys2
 # Types: observation:Event|State -> explanation:Event
-@AbduceMacro:abduce macro observation
+@AbduceGraph:abduce graph observation
     @eid __Event
     @r1 __Role Action Abduction
     @r2 __Role Theme $observation
@@ -66,7 +66,7 @@ Learn a rule from examples.
 
 ```sys2
 # Types: examples:Bundle -> rule:Implies
-@InduceMacro:induce macro examples
+@InduceGraph:induce graph examples
     @eid __Event
     @r1 __Role Action Induction
     @r2 __Role Theme $examples
@@ -93,7 +93,7 @@ Derive a conclusion from premises.
 
 ```sys2
 # Types: premises:Bundle -> conclusion:Abstract
-@DeduceMacro:deduce macro premises
+@DeduceGraph:deduce graph premises
     @eid __Event
     @r1 __Role Action Deduction
     @r2 __Role Theme $premises
@@ -119,7 +119,7 @@ Explore alternative scenarios.
 
 ```sys2
 # Types: world:Bundle, fact:Event -> alternativeWorld:Bundle
-@WhatIfMacro:whatif macro world fact
+@WhatIfGraph:whatif graph world fact
     @eid __Event
     @r1 __Role Theme $world
     @r2 __Role Content $fact
@@ -142,7 +142,7 @@ A is to B as C is to D.
 
 ```sys2
 # Types: a:Entity, b:Entity, c:Entity -> d:Entity
-@AnalogyMacro:analogy macro a b c
+@AnalogyGraph:analogy graph a b c
     @rel ___Bind $a $b
     @result ___Bind $c $rel
     return $result
@@ -162,7 +162,7 @@ Find similar concepts.
 
 ```sys2
 # Types: query:Any, vocabulary:Bundle -> matches:Bundle
-@SimilarMacro:similar macro query vocabulary
+@SimilarGraph:similar graph query vocabulary
     @result ___MostSimilar $query $vocabulary
     return $result
 end
@@ -181,7 +181,7 @@ Generate explanation for a conclusion.
 
 ```sys2
 # Types: conclusion:Abstract -> explanation:Bundle
-@ExplainMacro:explain macro conclusion
+@ExplainGraph:explain graph conclusion
     @eid __Event
     @r1 __Role Theme $conclusion
     @r2 __Role Action Deduction
@@ -200,7 +200,7 @@ Meta-query operators like `similar`, `induce`, and `bundle` have a **dual-layer 
 
 ```sys2
 # In 12-reasoning.sys2
-@SimilarMacro:similar macro query vocabulary
+@SimilarGraph:similar graph query vocabulary
     @result ___MostSimilar $query $vocabulary
     return $result
 end
@@ -230,7 +230,7 @@ This:
 1. **Vocabulary Integration**: Operators are first-class atoms
 2. **Synonym Support**: Can define `alike` as synonym of `similar`
 3. **Composability**: Pattern `similar (bundle [A,B]) ?X` works
-4. **Efficient Execution**: Code implementation avoids macro overhead
+4. **Efficient Execution**: Code implementation avoids graph overhead
 
 ---
 
@@ -252,13 +252,13 @@ For detailed specifications of meta-query operators, see [DS17 Meta-Query Operat
 
 | Verb | Type | Purpose | Implemented |
 |------|------|---------|-------------|
-| `abduce` | Macro | Find explanation | Partial |
+| `abduce` | Graph | Find explanation | Partial |
 | `induce` | Meta-Op | Pattern extraction | Yes |
-| `deduce` | Macro | Derive conclusion | Via proof engine |
-| `whatif` | Macro | Counterfactual | Partial |
+| `deduce` | Graph | Derive conclusion | Via proof engine |
+| `whatif` | Graph | Counterfactual | Partial |
 | `analogy` | Meta-Op | Proportional reasoning | Partial |
 | `similar` | Meta-Op | Similarity search | Yes |
-| `explain` | Macro | Generate explanation | Partial |
+| `explain` | Graph | Generate explanation | Partial |
 | `bundle` | Meta-Op | Create superposition | Yes |
 | `difference` | Meta-Op | Find differences | Planned |
 
@@ -268,7 +268,7 @@ For detailed specifications of meta-query operators, see [DS17 Meta-Query Operat
 
 | File | Purpose |
 |------|---------|
-| `config/Core/12-reasoning.sys2` | Atom and macro definitions |
+| `config/Core/12-reasoning.sys2` | Atom and graph definitions |
 | `src/reasoning/query.mjs` | `similar` operator |
 | `src/runtime/executor.mjs` | `induce`, `bundle` operators |
 | `src/reasoning/prove.mjs` | Deduction/proof engine |

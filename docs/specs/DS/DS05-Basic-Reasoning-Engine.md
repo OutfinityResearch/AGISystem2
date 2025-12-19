@@ -547,26 +547,137 @@ Where `decay` is typically 0.95-0.98.
 
 ---
 
-## 5.16 Summary
+## 5.16 Dual Reasoning Modes
+
+The reasoning engine operates in two distinct modes based on the active HDC strategy (see DS01 Section 1.10).
+
+### 5.16.1 HDC-Priority Mode (dense-binary)
+
+When using `dense-binary` strategy, the reasoning engine uses the **Master Equation** as its primary mechanism:
+
+```
+Query Resolution:
+┌─────────────────────────────────────────────────────────────┐
+│ 1. Build partial vector (exclude holes)                     │
+│ 2. candidate = KB ⊕ partial                                 │
+│ 3. Unbind position vector: answer = candidate ⊕ PosN        │
+│ 4. Similarity search in vocabulary                          │
+│ 5. Return best match with confidence                        │
+└─────────────────────────────────────────────────────────────┘
+
+Proof Resolution:
+┌─────────────────────────────────────────────────────────────┐
+│ 1. Search KB directly (similarity > 0.6)                    │
+│ 2. If not found, search rules by consequent similarity      │
+│ 3. Extract antecedent, recurse for subgoals                 │
+│ 4. Combine confidences with decay                           │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Characteristics:**
+- Graceful degradation under noise
+- Works with bundled KB (facts superimposed)
+- Supports analogical reasoning
+- Limited by bundle capacity (~100-200 facts)
+
+### 5.16.2 Symbolic-Priority Mode (sparse-polynomial, metric-affine)
+
+When using `sparse-polynomial` or `metric-affine` strategies, HDC is **just a structural representation**. Reasoning is purely symbolic:
+
+```
+Query Resolution (Symbolic KB):
+┌─────────────────────────────────────────────────────────────┐
+│ 1. Parse query to extract operator, args, holes             │
+│ 2. Scan kbFacts array for exact operator match              │
+│ 3. Match known args against fact metadata                   │
+│ 4. Extract answer from matching fact's metadata             │
+│ 5. NO unbinding, NO similarity search                       │
+└─────────────────────────────────────────────────────────────┘
+
+Proof Resolution (Symbolic Chains):
+┌─────────────────────────────────────────────────────────────┐
+│ 1. Direct KB lookup (exact match on operator + args)        │
+│ 2. Transitive reasoning (isA chains, inheritable props)     │
+│ 3. Rule matching (structural unification)                   │
+│ 4. CSP backtracking (for complex constraints)               │
+│ 5. Property inheritance (isA Child Parent → prop propagation)│
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Why Master Equation fails:**
+- Sparse-polynomial: Jaccard similarity after XOR doesn't isolate components
+- Metric-affine: L₁ distance baseline (0.67) makes unbinding unreliable
+- Both achieve 100% accuracy via symbolic paths anyway
+
+**Characteristics:**
+- Unlimited KB capacity (no bundle saturation)
+- Perfect accuracy on symbolic queries
+- No noise accumulation
+- Faster for logical inference
+
+### 5.16.3 Fallback Behavior
+
+The engine automatically uses the appropriate mode:
+
+```javascript
+// In ProofEngine.prove()
+if (strategy === 'dense-binary') {
+  // Try HDC similarity matching first
+  const hdcResult = this.tryHDCLookup(goal);
+  if (hdcResult.valid) return hdcResult;
+}
+
+// Always try symbolic paths (works for all strategies)
+const symbolicResult = this.trySymbolicChain(goal);
+if (symbolicResult.valid) return symbolicResult;
+
+// For symbolic-priority strategies, try CSP if needed
+if (strategy !== 'dense-binary') {
+  return this.tryCSPBacktracking(goal);
+}
+```
+
+### 5.16.4 Mode Comparison
+
+| Aspect | HDC-Priority | Symbolic-Priority |
+|--------|-------------|-------------------|
+| Master Equation | ✓ Primary mechanism | ✗ Not used |
+| KB Scanning | Via similarity | Via metadata match |
+| Transitive Chains | Similarity-guided | Graph traversal |
+| Property Inheritance | Both | Both |
+| Rule Application | Similarity-based | Unification-based |
+| CSP Backtracking | Minimal | Full support |
+| KB Capacity | ~200 facts | Unlimited |
+| Accuracy | Graceful degradation | 100% or fail |
+
+---
+
+## 5.17 Summary
 
 | Concept | Description |
 |---------|-------------|
-| Master equation | `Answer = KB ⊕ Query⁻¹` |
+| Master equation | `Answer = KB ⊕ Query⁻¹` (HDC-Priority only) |
 | Rules | Ordinary facts: `@r Implies Antecedent Consequent` |
 | Compound conditions | Build with And, Or, Not as intermediate variables |
 | Forward chaining | Facts + rules → derive new facts (deduction) |
 | Backward chaining | Goal → find supporting rules → prove subgoals |
 | Proof | Recorded chain of reasoning steps with confidence |
-| Analogy | Relation transfer via binding |
+| Analogy | Relation transfer via binding (HDC-Priority only) |
 | Confidence | Propagates through chain, decreases with depth |
+| **Dual modes** | HDC-Priority (dense) vs Symbolic-Priority (sparse) |
 
 **Key insight:** Rules are not special. `Implies`, `And`, `Or`, `Not` are just vectors in Core. The engine recognizes patterns and chains them.
 
-**Limitations:**
+**Limitations (HDC-Priority):**
 - KB capacity ~100-200 facts before saturation
 - Deep chains (>5 steps) accumulate significant noise
 - Multiple holes degrade accuracy
 - **Argument Order Loss:** Due to XOR commutativity (see 5.1), the vector structure does not inherently encode argument sequence. Position vectors act as tags, not sequence markers. Decoding relies on similarity matching and semantic context. The Phrasing Engine (DS11) is responsible for re-imposing logical order at presentation time using role-annotated templates.
+
+**Limitations (Symbolic-Priority):**
+- No analogical reasoning capability
+- No fuzzy matching (exact match only)
+- Requires explicit rules (no implicit similarity)
 
 ---
 

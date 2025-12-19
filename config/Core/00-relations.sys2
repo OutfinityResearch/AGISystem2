@@ -42,9 +42,30 @@
 @hates:hates __Relation
 @owns:owns __Relation
 
+# ===== Inheritable Properties =====
+# Properties that propagate DOWN the isA hierarchy
+# When isA Child Parent, properties of Parent apply to Child
+
+@can:can __InheritableProperty
+@has:has __InheritableProperty
+@likes:likes __InheritableProperty
+@knows:knows __InheritableProperty
+@owns:owns __InheritableProperty
+@uses:uses __InheritableProperty
+@hasProperty:hasProperty __InheritableProperty
+@hasAbility:hasAbility __InheritableProperty
+@hasTrait:hasTrait __InheritableProperty
+@exhibits:exhibits __InheritableProperty
+@causes:causes __InheritableProperty
+@prevents:prevents __InheritableProperty
+@enables:enables __InheritableProperty
+@requires:requires __InheritableProperty
+@must:must __InheritableProperty
+@should:should __InheritableProperty
+@may:may __InheritableProperty
+
 # ===== Misc Relations =====
 # Used in tests and examples
 
-@likes:likes __Relation
 @trusts:trusts __Relation
 @conflictsWith:conflictsWith __SymmetricRelation

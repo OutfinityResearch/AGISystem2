@@ -6,11 +6,10 @@
  */
 
 import { TRANSITIVE_RELATIONS } from './transitive.mjs';
+import { debug_trace } from '../utils/debug.js';
 
-// Debug logging
-const DEBUG = process.env.SYS2_DEBUG === 'true';
 function dbg(category, ...args) {
-  if (DEBUG) console.log(`[QueryTrans:${category}]`, ...args);
+  debug_trace(`[QueryTrans:${category}]`, ...args);
 }
 
 /**

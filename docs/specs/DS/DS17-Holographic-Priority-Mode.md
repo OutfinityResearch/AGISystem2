@@ -3,7 +3,9 @@
 # Chapter 17: Holographic Priority Mode
 
 **Document Version:** 1.0
-**Status:** Draft Specification
+**Status:** Experimental
+
+> **Note:** Holographic Priority Mode is an experimental feature for research and large-scale optimization scenarios. The default `symbolicPriority` mode provides 100% accuracy and is recommended for production use. See DS01 Section 1.10 for the dual reasoning architecture.
 
 ---
 

@@ -7,11 +7,10 @@
 
 import { similarity } from '../core/operations.mjs';
 import { getThresholds } from '../core/constants.mjs';
+import { debug_trace } from '../utils/debug.js';
 
-// Debug logging
-const DEBUG = process.env.SYS2_DEBUG === 'true';
 function dbg(category, ...args) {
-  if (DEBUG) console.log(`[Cond:${category}]`, ...args);
+  debug_trace(`[Cond:${category}]`, ...args);
 }
 
 /**

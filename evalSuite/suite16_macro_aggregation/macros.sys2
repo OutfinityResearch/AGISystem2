@@ -1,5 +1,5 @@
 # Macro definitions for suite16
-@Earthquake:earthquakeEvent macro epicenter magnitude effect
+@Earthquake:earthquakeEvent graph epicenter magnitude effect
     @shock causes $epicenter SeismicShock
     @mag magnitude $epicenter $magnitude
     isA $effect Hazard
@@ -7,7 +7,7 @@
     return $effect
 end
 
-@Outbreak:outbreak macro pathogen r0 location
+@Outbreak:outbreak graph pathogen r0 location
     isA $pathogen Virus
     @r reproductionNumber $pathogen $r0
     @loc affects $pathogen $location
@@ -15,7 +15,7 @@ end
     return $pathogen
 end
 
-@Disaster:disasterResponse macro hazard location
+@Disaster:disasterResponse graph hazard location
     isA $hazard Hazard
     locatedIn $hazard $location
     causes $hazard InfrastructureDamage
@@ -28,7 +28,7 @@ end
     return $hazard
 end
 
-@Supply:supplyRoute macro supplier hub destination
+@Supply:supplyRoute graph supplier hub destination
     isA $supplier Supplier
     isA $hub LogisticsHub
     isA $destination Market

@@ -73,13 +73,15 @@ export function executeSolveBlock(executor, stmt) {
     solver.addVariable(v, domain);
   }
 
-  // Add constraints
+  // Add constraints and collect constraint info for proof generation
+  const constraintInfo = [];
   for (const c of constraints) {
     if (c.type === 'noConflict') {
       // Find all conflict pairs from KB
       const conflicts = findConflictPairs(executor, c.relation);
       for (const [p1, p2] of conflicts) {
         if (variables.includes(p1) && variables.includes(p2)) {
+          constraintInfo.push({ type: 'noConflict', relation: c.relation, entities: [p1, p2] });
           solver.addPredicate([p1, p2], (assignment) => {
             const t1 = assignment.get(p1);
             const t2 = assignment.get(p2);
@@ -126,6 +128,39 @@ export function executeSolveBlock(executor, stmt) {
     }
   }
 
+  // Generate proof info for each solution FIRST - show how constraints are satisfied
+  const solutionsWithProof = result.solutions.map((sol, idx) => {
+    const assignments = Object.entries(sol).map(([entity, value]) => ({
+      predicate: solutionRelation,
+      subject: entity,
+      object: value,
+      dsl: `${solutionRelation} ${entity} ${value}`
+    }));
+
+    // Generate constraint satisfaction proof
+    const proofSteps = [];
+    for (const constraint of constraintInfo) {
+      if (constraint.type === 'noConflict') {
+        const [e1, e2] = constraint.entities;
+        const t1 = sol[e1];
+        const t2 = sol[e2];
+        if (t1 && t2 && t1 !== t2) {
+          proofSteps.push({
+            constraint: `${constraint.relation}(${e1}, ${e2})`,
+            satisfied: true,
+            reason: `${e1} at ${t1}, ${e2} at ${t2}, ${t1} ≠ ${t2}`
+          });
+        }
+      }
+    }
+
+    return {
+      index: idx + 1,
+      facts: assignments,
+      proof: proofSteps
+    };
+  });
+
   // Store compound solution vectors in KB (not individual facts)
   let storedSolutions = 0;
   if (result.success && solutionVectors.length > 0) {
@@ -133,25 +168,41 @@ export function executeSolveBlock(executor, stmt) {
       const { vector, assignments } = solutionVectors[i];
       const solutionName = `${stmt.destination}_sol${i + 1}`;
 
+      // Get proof for this solution
+      const solutionProof = solutionsWithProof[i]?.proof || [];
+      const proofText = solutionProof
+        .filter(p => p.satisfied)
+        .map(p => `${p.constraint} satisfied: ${p.reason}`)
+        .join('. ');
+
       // Store compound vector in KB with metadata about its components
       executor.session.kbFacts.push({
         name: solutionName,
         vector: vector,
         metadata: {
           operator: 'cspSolution',
-          solutionRelation: solutionRelation,  // The relation name to query
+          solutionRelation: solutionRelation,
           problemType: stmt.problemType,
           solutionIndex: i + 1,
           assignments: assignments,
-          // Facts use the destination as the relation: "seating Alice T1"
-          facts: assignments.map(a => `${solutionRelation} ${a.entity} ${a.value}`)
+          facts: assignments.map(a => `${solutionRelation} ${a.entity} ${a.value}`),
+          proof: proofText
         }
       });
 
-      // Also store individual facts with the destination as operator
-      // This makes "seating ?guest ?table" directly queryable via standard KB search
+      // Store individual facts with constraint satisfaction proof
       for (const { entity, value } of assignments) {
-        executor.session.learn(`${solutionRelation} ${entity} ${value}`);
+        const factVec = bindAll(relationVec,
+          withPosition(1, executor.session.vocabulary.getOrCreate(entity)),
+          withPosition(2, executor.session.vocabulary.getOrCreate(value)));
+
+        executor.session.addToKB(factVec, `${solutionRelation}_${entity}_${value}`, {
+          operator: solutionRelation,
+          args: [entity, value],
+          source: 'csp',
+          solutionIndex: i + 1,
+          proof: proofText
+        });
       }
 
       storedSolutions++;
@@ -166,6 +217,8 @@ export function executeSolveBlock(executor, stmt) {
     success: result.success,
     solutionCount: result.solutionCount,
     storedSolutions,
+    // Constraint info for proof generation
+    constraints: constraintInfo,
     // The relation to use in queries (the destination name)
     queryRelation: solutionRelation,
     // Include compound vectors for HDC queries
@@ -174,17 +227,8 @@ export function executeSolveBlock(executor, stmt) {
       vector: sv.vector,
       assignments: sv.assignments
     })),
-    // Structured facts for NL generation
-    solutions: result.solutions.map(sol => {
-      return Object.entries(sol).map(([entity, value]) => {
-        return {
-          predicate: solutionRelation,
-          subject: entity,
-          object: value,
-          dsl: `${solutionRelation} ${entity} ${value}`
-        };
-      });
-    }),
+    // Structured facts with proof for NL generation
+    solutions: solutionsWithProof,
     stats: result.stats
   };
 }

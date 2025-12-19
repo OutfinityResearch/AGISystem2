@@ -13,7 +13,7 @@
 
 # abduce: find best explanation for observation
 # Types: observation:Event|State -> explanation:Event
-@AbduceMacro:abduce macro observation
+@AbduceMacro:abduce graph observation
     # Implementation finds rules with consequent similar to observation
     # Returns best antecedent as explanation
     @eid __Event
@@ -25,7 +25,7 @@ end
 
 # induce: learn rule from examples
 # Types: examples:Bundle -> rule:Implies
-@InduceMacro:induce macro examples
+@InduceMacro:induce graph examples
     # Implementation finds pattern across examples
     # Returns generalized rule
     @eid __Event
@@ -37,7 +37,7 @@ end
 
 # deduce: derive conclusion from premises
 # Types: premises:Bundle -> conclusion:Abstract
-@DeduceMacro:deduce macro premises
+@DeduceMacro:deduce graph premises
     @eid __Event
     @r1 __Role Action Deduction
     @r2 __Role Theme $premises
@@ -47,7 +47,7 @@ end
 
 # whatif: counterfactual reasoning
 # Types: world:Bundle, fact:Event -> alternativeWorld:Bundle
-@WhatIfMacro:whatif macro world fact
+@WhatIfMacro:whatif graph world fact
     # Implementation removes fact and dependents
     # Returns modified world
     @eid __Event
@@ -59,7 +59,7 @@ end
 
 # analogy: A is to B as C is to ?
 # Types: a:Entity, b:Entity, c:Entity -> d:Entity
-@AnalogyMacro:analogy macro a b c
+@AnalogyMacro:analogy graph a b c
     @rel ___Bind $a $b
     @result ___Bind $c $rel
     return $result
@@ -67,14 +67,14 @@ end
 
 # similar: find similar items
 # Types: query:Any, vocabulary:Bundle -> matches:Bundle
-@SimilarMacro:similar macro query vocabulary
+@SimilarMacro:similar graph query vocabulary
     @result ___MostSimilar $query $vocabulary
     return $result
 end
 
 # explain: generate explanation for conclusion
 # Types: conclusion:Abstract -> explanation:Bundle
-@ExplainMacro:explain macro conclusion
+@ExplainMacro:explain graph conclusion
     @eid __Event
     @r1 __Role Theme $conclusion
     @r2 __Role Action Deduction

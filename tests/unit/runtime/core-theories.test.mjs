@@ -54,7 +54,7 @@ describe('Core Theories Loading', () => {
       const session = new Session({ geometry: 2048 });
       loadCoreTheories(session);
 
-      assert.ok(session.macros?.size > 0, 'should have loaded macros');
+      assert.ok(session.graphs?.size > 0, 'should have loaded macros');
     });
 
     test('should complete loading in reasonable time', { timeout: 10000 }, () => {
@@ -105,7 +105,7 @@ describe('Core Theories Loading', () => {
       const result = session.learn(content);
 
       assert.equal(result.success, true);
-      assert.ok(session.macros?.size > 0, 'should have macros from reasoning theory');
+      assert.ok(session.graphs?.size > 0, 'should have macros from reasoning theory');
     });
   });
 });

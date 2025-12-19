@@ -197,10 +197,13 @@ Algorithm:  For each bit position, output 1 if majority of inputs are 1
 Properties:
 ├── Similar to inputs:  sim(Bundle([A,B,C]), A) > 0.5
 ├── NOT reversible:     Cannot extract A from Bundle([A,B,C])
-├── Capacity limited:   ~100-200 items before saturation
+├── Capacity limited:   ~100-200 items before saturation (dense-binary only*)
 └── Order independent:  Bundle([A,B]) = Bundle([B,A])
 
-Capacity degradation:
+* Applies to HDC-Priority mode. Symbolic-Priority mode uses metadata
+  storage with unlimited capacity. See DS01 Section 1.10.
+
+Capacity degradation (dense-binary):
 ├── n=10:   sim ≈ 0.66  (clear signal)
 ├── n=50:   sim ≈ 0.57  (usable)
 ├── n=100:  sim ≈ 0.55  (marginal)
@@ -405,18 +408,22 @@ Each fact is a bound vector:
 KB = Bundle([fact1, fact2, ...])
 ```
 
-### 9A.7.2 Capacity Limits
+### 9A.7.2 Capacity Limits (HDC-Priority Mode)
+
+**Note:** These limits apply to dense-binary strategy only. Symbolic-Priority
+mode (sparse-polynomial, metric-affine) uses metadata storage with unlimited capacity.
 
 ```
-CRITICAL THRESHOLDS:
+CRITICAL THRESHOLDS (dense-binary):
 ├── KB_WARNING = 100 facts
 ├── KB_CRITICAL = 200 facts
 └── KB_MAXIMUM ≈ 500 facts (unusable accuracy)
 
-When approaching limits:
+When approaching limits (dense-binary only):
 ├── Issue warning to user
 ├── Suggest partitioning into multiple KBs
-└── Or increase geometry (64K, 128K)
+├── Or increase geometry (64K, 128K)
+└── Or switch to sparse-polynomial strategy
 ```
 
 ### 9A.7.3 Query Noise Analysis

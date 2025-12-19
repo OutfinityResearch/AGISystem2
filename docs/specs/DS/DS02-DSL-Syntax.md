@@ -88,15 +88,25 @@ This ensures `prove love John Alice` returns **false** - the positive fact never
 
 **The `@_` convention:** For operations where we don't need the result (like Load), use `@_` as destination.
 
-> ### ⚠️ IMPORTANT: No Parenthesized Compound Expressions
+> ### Parenthesized Compound Expressions
 >
-> Sys2DSL does **NOT** support parenthesized compound expressions inline:
+> Sys2DSL supports parenthesized expressions for nested graph calls:
 > ```
-> # NOT SUPPORTED:
-> @rule Implies (And $c1 $c2) $conclusion
+> # Inline nested graph call:
+> @causal __Role Causes (__Pair $cause $effect)
 > ```
 >
-> **Correct approach - define parts as separate statements:**
+> **Syntax:** `(operator arg1 arg2 ...)`
+>
+> This creates a **Compound** expression that:
+> 1. Evaluates the nested graph call first
+> 2. Passes the result as an argument to the outer expression
+>
+> **Use cases:**
+> - Nested graph invocations in Core theories
+> - Building complex structures inline
+>
+> **Alternative - reference-based composition** (still recommended for complex logic):
 > ```
 > @c1 hasState Door Open
 > @c2 isA Door Entrance
@@ -105,7 +115,7 @@ This ensures `prove love John Alice` returns **false** - the positive fact never
 > @rule Implies $cond $concl
 > ```
 >
-> This reference-based composition ensures each sub-expression has a name in scope and can be inspected/debugged independently.
+> The reference-based approach is preferred when sub-expressions need names for inspection, debugging, or when the logic is complex. Inline parentheses are best for simple structural patterns in Core theories.
 
 ---
 
@@ -145,16 +155,16 @@ This ensures `prove love John Alice` returns **false** - the positive fact never
 
 ## 2.5 Statement Execution
 
-**Case 1: Operator has no macro** → Direct binding
+**Case 1: Operator has no graph** → Direct binding
 ```
 @fact Tall John
 # fact = Tall ⊕ (Pos1 ⊕ John)
 ```
 
-**Case 2: Operator has macro** → Execute then bind
+**Case 2: Operator has graph** → Execute then bind
 ```
 @tx sell Alice Bob Car 100
-# 1. Execute sell macro → result
+# 1. Execute sell graph → result
 # 2. tx = sell ⊕ result
 ```
 
@@ -169,21 +179,21 @@ This ensures `prove love John Alice` returns **false** - the positive fact never
 
 ---
 
-## 2.6 Macro Definition
+## 2.6 Graph Definition
 
 ```
-@MacroName:export macro param1 param2
+@GraphName:export graph param1 param2
     @step1 Operation $param1
     @step2 Operation $step1 $param2
     return $step2
 end
 ```
 
-**`return`** specifies output. Without it, macro produces nothing.
+**`return`** specifies output. Without it, graph produces nothing.
 
-**Holes in macros** enable pattern matching:
+**Holes in graphs** enable pattern matching:
 ```
-@FindKiller macro victim
+@FindKiller graph victim
     @result kill ?murderer $victim
     return $result
 end
@@ -195,7 +205,7 @@ end
 
 A theory creates **two things**:
 1. A **vector** (semantic identity of the theory)
-2. A **namespace** (atoms and macros)
+2. A **namespace** (atoms and graphs)
 
 **Primary Syntax:** `@Name theory <geometry> <init> ... end`
 
@@ -204,7 +214,7 @@ A theory creates **two things**:
     @Money __Atom
     @Bank __Atom
 
-    @SellMacro:sell macro seller buyer item price
+    @SellGraph:sell graph seller buyer item price
         @t1 _atrans $seller $item $seller $buyer
         @t2 _atrans $buyer $price $buyer $seller
         @both __Bundle $t1 $t2
@@ -280,9 +290,9 @@ Since Load, Unload, Export, Import are vectors in Core, they follow standard syn
 @bankVec Import $Finance Bank
 ```
 
-**Dynamic loading in macro:**
+**Dynamic loading in graph:**
 ```
-@ReasonAboutMoney macro topic
+@ReasonAboutMoney graph topic
     @_ Load $Economics      # Load relevant theory
     @result Query $topic
     @_ Unload $Economics    # Cleanup
@@ -306,7 +316,7 @@ Since theories are vectors:
 
 **Find relevant theory dynamically:**
 ```
-@FindTheory macro topic
+@FindTheory graph topic
     @theories __Bundle $Economics $Physics $Law $Medicine
     @best ___MostSimilar $topic $theories
     return $best
@@ -328,14 +338,14 @@ end
     @Price __Atom
     @Goods __Atom
     
-    @SellMacro:sell macro seller buyer item price
+    @SellGraph:sell graph seller buyer item price
         @t1 _atrans $seller $item $seller $buyer
         @t2 _atrans $buyer $price $buyer $seller
         @both __Bundle $t1 $t2
         return $both
     end
     
-    @BuyMacro:buy macro buyer item seller price
+    @BuyGraph:buy graph buyer item seller price
         @t1 _atrans $buyer $item $seller $buyer
         @t2 _atrans $buyer $price $buyer $seller
         @both __Bundle $t1 $t2
@@ -365,33 +375,36 @@ end
 ## 2.11 Grammar (EBNF)
 
 ```ebnf
-program      = { statement | macro_def | theory_block } ;
+program      = { statement | graph_def | theory_block } ;
 
 statement    = "@" , ( "_" | ident [ ":" , ident ] ) , operation , { argument } , [ "#" , text ] , NL ;
 operation    = ident | "$" , ident ;
-argument     = "$" , ident | "?" , ident | ident | number ;
+argument     = "$" , ident | "?" , ident | ident | number | list | compound ;
 
-macro_def    = "@" , ident , [ ":" , ident ] , "macro" , { ident } , NL ,
+list         = "[" , { argument } , "]" ;
+compound     = "(" , ident , { argument } , ")" ;   (* nested graph call *)
+
+graph_def    = "@" , ident , [ ":" , ident ] , "graph" , { ident } , NL ,
                { statement } ,
                "return" , "$" , ident , NL ,
                "end" , NL ;
 
 (* Primary theory syntax - explicit geometry and init type *)
 theory_primary = "@" , ident , "theory" , number , init_type , NL ,
-                 { statement | macro_def } ,
+                 { statement | graph_def } ,
                  "end" , NL ;
 
 (* Alternative theory syntaxes - use session default geometry *)
 theory_brace   = "theory" , ident , "{" , NL ,
-                 { statement | macro_def } ,
+                 { statement | graph_def } ,
                  "}" , NL ;
 
 theory_begin   = "theory" , ident , "begin" , NL ,
-                 { statement | macro_def } ,
+                 { statement | graph_def } ,
                  "end" , NL ;
 
 theory_bracket = "theory" , ident , "[" , NL ,        (* deprecated *)
-                 { statement | macro_def } ,
+                 { statement | graph_def } ,
                  "]" , NL ;
 
 theory_block   = theory_primary | theory_brace | theory_begin | theory_bracket ;
@@ -429,18 +442,18 @@ This section clarifies the exact binding process for implementers.
 1. Resolve `give`, `Alice`, `Book`, `Bob` → vectors
 2. Compute: `rel = give ⊕ (Pos1 ⊕ Alice) ⊕ (Pos2 ⊕ Book) ⊕ (Pos3 ⊕ Bob)`
 
-### 2.12.3 Statement with Macro
+### 2.12.3 Statement with Graph
 
 ```
 @tx sell Alice Bob Car 100
 ```
 
 **Execution:**
-1. Resolve `sell` → has macro `SellMacro`
-2. Execute macro with args (Alice, Bob, Car, 100) → `macroResult`
-3. Compute: `tx = sell ⊕ macroResult`
+1. Resolve `sell` → has graph `SellGraph`
+2. Execute graph with args (Alice, Bob, Car, 100) → `graphResult`
+3. Compute: `tx = sell ⊕ graphResult`
 
-Note: The macro internally uses position vectors for its own structure.
+Note: The graph internally uses position vectors for its own structure.
 
 ### 2.12.4 Query with Holes
 
@@ -556,7 +569,7 @@ end
 | Load/Unload/Export/Import | Normal verbs defined in Core |
 | Underscore convention | `___`=L0, `__`=L1, `_`=L2, none=L3+ |
 | Core | Auto-loaded, defines all infrastructure including Pos1..Pos20 |
-| Macros | Define argument processing, can contain holes |
+| Graphs | Define argument processing, can contain holes |
 
 **Uniform syntax:** There are no special commands. Everything follows `@dest Op args`.
 

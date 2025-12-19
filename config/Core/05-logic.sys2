@@ -16,41 +16,41 @@
 # ===== Logic Macros =====
 
 # Implication: antecedent -> consequent
-@ImpliesMacro:implies macro antecedent consequent
+@ImpliesMacro:implies graph antecedent consequent
     @pair __Pair $antecedent $consequent
     @result __Role Implies $pair
     return $result
 end
 
 # Conjunction: a AND b
-@AndMacro:and macro a b
+@AndMacro:and graph a b
     @pair __Pair $a $b
     @result __Role And $pair
     return $result
 end
 
 # Disjunction: a OR b
-@OrMacro:or macro a b
+@OrMacro:or graph a b
     @pair __Pair $a $b
     @result __Role Or $pair
     return $result
 end
 
 # Negation: NOT proposition
-@NotMacro:not macro proposition
+@NotMacro:not graph proposition
     @result __Role Not $proposition
     return $result
 end
 
 # Biconditional: a IFF b
-@IffMacro:iff macro a b
+@IffMacro:iff graph a b
     @pair __Pair $a $b
     @result __Role Iff $pair
     return $result
 end
 
 # Exclusive or: a XOR b
-@XorMacro:xor macro a b
+@XorMacro:xor graph a b
     @pair __Pair $a $b
     @result __Role Xor $pair
     return $result
@@ -59,7 +59,7 @@ end
 # ===== Quantifiers =====
 
 # Universal: for all X, predicate holds
-@ForAllMacro:forall macro variable predicate
+@ForAllMacro:forall graph variable predicate
     @quant __Role ForAll $variable
     @scope __Role Scope $predicate
     @result __Bundle $quant $scope
@@ -67,7 +67,7 @@ end
 end
 
 # Existential: there exists X such that predicate
-@ExistsMacro:exists macro variable predicate
+@ExistsMacro:exists graph variable predicate
     @quant __Role Exists $variable
     @scope __Role Scope $predicate
     @result __Bundle $quant $scope

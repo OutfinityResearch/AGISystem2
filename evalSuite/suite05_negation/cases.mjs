@@ -126,13 +126,12 @@ export const steps = [
     expected_nl: 'Cannot prove: Bob is gooddriver. Search: Bob isA Professional. Professional isA Worker. Worker isA Adult. Adult isA Person. Person isA Human. Human isA Entity.'
   },
 
-  // === QUERY: Who can fly ===
+  // === PROVE: Tweety can fly (via rule: Bird implies can Fly) ===
   {
-    action: 'query',
-    input_nl: 'Who can fly?',
-    input_dsl: '@q can ?who Fly',
-    expected_nl: 'Tweety can Fly.',
-    
+    action: 'prove',
+    input_nl: 'Can Tweety fly? (Tweety→Sparrow→Songbird→Passerine→Bird + rule)',
+    input_dsl: '@goal can Tweety Fly',
+    expected_nl: 'True: Tweety can Fly. Proof: Applied rule: Implies @birdCond @birdFly. Tweety is a bird. Tweety is a sparrow. Sparrow is a songbird. Songbird is a passerine. Passerine is a bird. Therefore Tweety can Fly.'
   },
 
   // === NEGATIVE: Rock cannot fly (no type assertions) ===

@@ -6,18 +6,18 @@
  */
 
 export const name = 'Macro Composition';
-export const description = 'Sys2DSL macro execution with hidden internals and explicit proofs over outputs';
+export const description = 'Sys2DSL graph execution with hidden internals and explicit proofs over outputs';
 
 export const theories = ['05-logic.sys2'];
 
 export const steps = [
-  // === SETUP: Define missionPlan macro and invoke ===
+  // === SETUP: Define missionPlan graph and invoke ===
   {
     action: 'learn',
-    input_nl: 'Define missionPlan macro with team obligations and temporal structure.',
+    input_nl: 'Define missionPlan graph with team obligations and temporal structure.',
     input_dsl: `
       # Macro: missionPlan sets up team with obligations and timeline
-      @MP:missionPlan macro team objective location
+      @MP:missionPlan graph team objective location
           isA $team ResponseTeam
           locatedIn $team HQ
           can $team Mobilize
@@ -46,13 +46,13 @@ export const steps = [
     expected_nl: 'Learned 16 facts'
   },
 
-  // === SETUP: Define manufacturingBatch macro ===
+  // === SETUP: Define manufacturingBatch graph ===
   {
     action: 'learn',
-    input_nl: 'Define manufacturingBatch macro with supply chain causation.',
+    input_nl: 'Define manufacturingBatch graph with supply chain causation.',
     input_dsl: `
       # Macro: manufacturingBatch creates supply chain facts
-      @MFG:manufacturingBatch macro supplier material product plant
+      @MFG:manufacturingBatch graph supplier material product plant
           isA $supplier Supplier
           isA $plant Factory
           has $supplier $material
@@ -147,7 +147,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What products are in the supply chain?',
     input_dsl: '@q partOf ?x SupplyChain',
-    expected_nl: 'Beam is partOf SupplyChain. Battery is partOf SupplyChain. Proof: manufacturingBatch macro exposed partOf facts.'
+    expected_nl: 'Beam is partOf SupplyChain. Battery is partOf SupplyChain. Proof: manufacturingBatch graph exposed partOf facts.'
   },
 
   // === PROVE: SupplierB also causes ProductReady (same chain) ===

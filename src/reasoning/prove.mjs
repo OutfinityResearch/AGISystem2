@@ -18,6 +18,7 @@
  */
 
 import { MAX_PROOF_DEPTH, PROOF_TIMEOUT_MS, MAX_REASONING_STEPS, getThresholds } from '../core/constants.mjs';
+import { Statement, Identifier } from '../parser/ast.mjs';
 import { TransitiveReasoner } from './transitive.mjs';
 import { PropertyInheritanceReasoner } from './property-inheritance.mjs';
 import { UnificationEngine } from './unification.mjs';
@@ -494,8 +495,38 @@ export class ProofEngine {
       if (!meta) continue;
 
       if (meta.operator === 'Not') {
+        // New expanded format: innerOperator and innerArgs contain the negated fact
+        if (meta.innerOperator && meta.innerArgs) {
+          // Build the inner fact text for display
+          const innerFactText = `${meta.innerOperator} ${meta.innerArgs.join(' ')}`;
+
+          // Compare using the fact vector directly
+          // The fact.vector is the vector of Not(innerFact)
+          // We need to check if goal matches the inner fact
+          // Build the inner fact vector using imported Statement and Identifier classes
+          const innerStmt = new Statement(
+            null,  // no destination
+            new Identifier(meta.innerOperator),
+            meta.innerArgs.map(arg => new Identifier(arg))
+          );
+          const innerVec = this.session.executor.buildStatementVector(innerStmt);
+
+          this.session.reasoningStats.similarityChecks++;
+          const sim = this.session.similarity(goalVec, innerVec);
+          if (sim > this.thresholds.RULE_MATCH) {
+            return {
+              negated: true,
+              negationRef: innerFactText,
+              negationType: 'explicit',
+              innerOperator: meta.innerOperator,
+              innerArgs: meta.innerArgs
+            };
+          }
+        }
+
+        // Legacy format: args[0] is a reference name
         const negatedRef = meta.args?.[0];
-        if (!negatedRef) continue;
+        if (!negatedRef || typeof negatedRef !== 'string') continue;
 
         const refName = negatedRef.replace('$', '');
         const negatedVec = this.session.scope.get(refName);
@@ -535,36 +566,9 @@ export class ProofEngine {
    * @returns {boolean} True if goal is negated
    */
   isGoalNegated(goal) {
-    const goalVec = this.session.executor.buildStatementVector(goal);
-    if (!goalVec) return false;
-
-    // Look for Not statements in KB
-    for (const fact of this.session.kbFacts) {
-      const meta = fact.metadata;
-      if (!meta) continue;
-
-      // Check if this is a Not statement
-      if (meta.operator === 'Not') {
-        // Get the referenced name
-        const negatedRef = meta.args?.[0];
-        if (!negatedRef) continue;
-
-        // Look up the vector in scope
-        const refName = negatedRef.replace('$', '');
-        const negatedVec = this.session.scope.get(refName);
-
-        if (negatedVec) {
-          // Compare vectors using similarity
-          this.session.reasoningStats.similarityChecks++;
-          const sim = this.session.similarity(goalVec, negatedVec);
-          if (sim > this.thresholds.RULE_MATCH) {
-            return true;
-          }
-        }
-      }
-    }
-
-    return false;
+    // Use checkGoalNegation which handles both expanded and legacy formats
+    const result = this.checkGoalNegation(goal);
+    return result.negated;
   }
 
   /**

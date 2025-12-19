@@ -19,11 +19,10 @@ export {
 } from './query-inheritance.mjs';
 
 import { similarity as hdcSimilarity } from '../core/operations.mjs';
+import { debug_trace } from '../utils/debug.js';
 
-// Debug logging
-const DEBUG = process.env.SYS2_DEBUG === 'true';
 function dbg(category, ...args) {
-  if (DEBUG) console.log(`[MetaOps:${category}]`, ...args);
+  debug_trace(`[MetaOps:${category}]`, ...args);
 }
 
 /**

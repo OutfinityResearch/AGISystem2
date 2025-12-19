@@ -37,7 +37,7 @@ This document specifies **meta-query operators** - special DSL operators that pe
 @Induction:Induction __Action
 @Analogy:Analogy __Action
 
-@SimilarMacro:similar macro query vocabulary
+@SimilarGraph:similar graph query vocabulary
     @result ___MostSimilar $query $vocabulary
     return $result
 end
@@ -56,7 +56,7 @@ if (operatorName === 'similar') {
 1. **Vocabulary Integration**: Declaring in theory gives operators vocabulary atoms
 2. **Synonym Support**: Can define `alike` as synonym of `similar`
 3. **Composability**: Pattern `similar (bundle [A,B]) ?X` works
-4. **Efficient Execution**: Code implementation avoids macro overhead
+4. **Efficient Execution**: Code implementation avoids graph overhead
 
 ---
 
@@ -258,13 +258,13 @@ Meta-operator results should decode to natural language:
 @Deduction:Deduction __Action
 @Analogy:Analogy __Action
 
-# Meta-operator macros (semantic declaration)
-@SimilarMacro:similar macro query vocabulary
+# Meta-operator graphs (semantic declaration)
+@SimilarGraph:similar graph query vocabulary
     @result ___MostSimilar $query $vocabulary
     return $result
 end
 
-@InduceMacro:induce macro examples
+@InduceGraph:induce graph examples
     @eid __Event
     @r1 __Role Action Induction
     @r2 __Role Theme $examples
@@ -275,7 +275,7 @@ end
 
 ### 17.6.2 Primitive Placeholders
 
-The macros use primitive placeholders (`___MostSimilar`, etc.) that are implemented by the Query Engine. This separates:
+The graphs use primitive placeholders (`___MostSimilar`, etc.) that are implemented by the Query Engine. This separates:
 - **Declaration**: What the operator means (in theory)
 - **Implementation**: How to compute it (in code)
 

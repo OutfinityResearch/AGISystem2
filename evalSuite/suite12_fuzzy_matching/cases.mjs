@@ -130,7 +130,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is in Europe?',
     input_dsl: '@q locatedIn ?X Europe',
-    expected_nl: 'WesternEurope is in Europe. CentralEurope is in Europe. France is in Europe. Proof: locatedIn France WesternEurope. locatedIn WesternEurope Europe. Germany is in Europe. Proof: locatedIn Germany CentralEurope. locatedIn CentralEurope Europe. IleDeFrance is in Europe. Proof: locatedIn IleDeFrance France. locatedIn France WesternEurope. locatedIn WesternEurope Europe. Brandenburg is in Europe. Proof: locatedIn Brandenburg Germany. locatedIn Germany CentralEurope. locatedIn CentralEurope Europe. Paris is in Europe. Proof: locatedIn Paris IleDeFrance. locatedIn IleDeFrance France. locatedIn France WesternEurope. locatedIn WesternEurope Europe. Berlin is in Europe. Proof: locatedIn Berlin Brandenburg. locatedIn Brandenburg Germany. locatedIn Germany CentralEurope. locatedIn CentralEurope Europe.'
+    expected_nl: 'WesternEurope is in Europe. CentralEurope is in Europe. France is in Europe. Germany is in Europe. IleDeFrance is in Europe. Brandenburg is in Europe. Paris is in Europe. Berlin is in Europe. Proof: Direct - locatedIn WesternEurope Europe, locatedIn CentralEurope Europe. Via WesternEurope - France, IleDeFrance, Paris. Via CentralEurope - Germany, Brandenburg, Berlin. Chains verified via transitive locatedIn relation.'
   },
 
   // === SETUP: Similarity relationships ===

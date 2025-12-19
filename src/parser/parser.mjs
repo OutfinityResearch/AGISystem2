@@ -15,10 +15,11 @@ import {
   Reference,
   Literal,
   List,
+  Compound,
   TheoryDeclaration,
   ImportStatement,
   RuleDeclaration,
-  MacroDeclaration,
+  GraphDeclaration,
   SolveBlock,
   SolveDeclaration
 } from './ast.mjs';
@@ -271,11 +272,13 @@ export class Parser {
    * @dest = temporary variable (scope only)
    * @dest:persistName = persistent fact (added to KB)
    *
-   * Also handles macro definitions:
-   * @name:persistName macro param1 param2 ...
+   * Also handles graph definitions (HDC point relationship graphs):
+   * @name:persistName graph param1 param2 ...
    *   body statements
    *   return $result
    * end
+   *
+   * Note: 'macro' is still accepted as a deprecated synonym for 'graph'
    */
   parseStatement() {
     let destination = null;
@@ -299,9 +302,10 @@ export class Parser {
       }
     }
 
-    // Check if this is a macro definition
-    if (this.check(TOKEN_TYPES.KEYWORD) && this.peek().value === 'macro') {
-      return this.parseMacro(destination, persistName, startLine, startColumn);
+    // Check if this is a graph definition (or macro - deprecated synonym)
+    if (this.check(TOKEN_TYPES.KEYWORD) &&
+        (this.peek().value === 'graph' || this.peek().value === 'macro')) {
+      return this.parseGraph(destination, persistName, startLine, startColumn);
     }
 
     // Operator
@@ -329,15 +333,21 @@ export class Parser {
   }
 
   /**
-   * Parse macro definition
-   * @name:persistName macro param1 param2 ...
+   * Parse graph definition (HDC point relationship graph)
+   * @name:persistName graph param1 param2 ...
    *   body statements
    *   return $result
    * end
+   *
+   * Note: 'macro' keyword is still accepted as a deprecated synonym
    */
-  parseMacro(destination, persistName, line, column) {
-    // Consume 'macro' keyword
-    this.expect(TOKEN_TYPES.KEYWORD, 'macro');
+  parseGraph(destination, persistName, line, column) {
+    // Consume 'graph' or 'macro' keyword (both accepted)
+    const keyword = this.peek().value;
+    if (keyword !== 'graph' && keyword !== 'macro') {
+      throw new ParseError(`Expected 'graph' or 'macro', got '${keyword}'`, this.peek());
+    }
+    this.advance();
 
     // Parse parameter names (identifiers until newline/end of line)
     const params = [];
@@ -349,7 +359,7 @@ export class Parser {
       }
     }
 
-    // Skip newline after macro header
+    // Skip newline after graph header
     this.skipNewlines();
 
     // Parse body statements until 'end' keyword
@@ -371,7 +381,7 @@ export class Parser {
         continue;
       }
 
-      // Parse normal statement as part of macro body
+      // Parse normal statement as part of graph body
       const stmt = this.parseStatement();
       if (stmt) {
         body.push(stmt);
@@ -379,7 +389,7 @@ export class Parser {
       this.skipNewlines();
     }
 
-    return new MacroDeclaration(
+    return new GraphDeclaration(
       destination,
       persistName,
       params,
@@ -418,15 +428,9 @@ export class Parser {
         return this.parseList();
 
       case TOKEN_TYPES.LPAREN:
-        // Parentheses not supported - skip to closing paren
-        this.advance(); // consume (
-        while (!this.check(TOKEN_TYPES.RPAREN) && !this.isEof()) {
-          this.advance();
-        }
-        if (this.check(TOKEN_TYPES.RPAREN)) {
-          this.advance(); // consume )
-        }
-        return null;
+        // Parenthesized expression: (operator arg1 arg2 ...)
+        // Used for nested graph calls in Core theories
+        return this.parseCompound();
 
       default:
         return null;
@@ -493,6 +497,39 @@ export class Parser {
 
     this.expect(TOKEN_TYPES.RBRACKET);
     return new List(items, startToken.line, startToken.column);
+  }
+
+  /**
+   * Parse compound expression (nested graph call)
+   * (operator arg1 arg2 ...)
+   * Used for nested graph calls like (__Pair $cause $effect)
+   */
+  parseCompound() {
+    const startToken = this.expect(TOKEN_TYPES.LPAREN);
+
+    // First element is the operator
+    const operator = this.parseExpression();
+    if (!operator) {
+      // Empty parens - skip to closing
+      while (!this.check(TOKEN_TYPES.RPAREN) && !this.isEof()) {
+        this.advance();
+      }
+      if (this.check(TOKEN_TYPES.RPAREN)) {
+        this.advance();
+      }
+      return null;
+    }
+
+    // Parse remaining arguments
+    const args = [];
+    while (!this.check(TOKEN_TYPES.RPAREN) && !this.isEof()) {
+      const arg = this.parseExpression();
+      if (!arg) break;
+      args.push(arg);
+    }
+
+    this.expect(TOKEN_TYPES.RPAREN);
+    return new Compound(operator, args, startToken.line, startToken.column);
   }
 
   /**

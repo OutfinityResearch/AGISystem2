@@ -19,20 +19,38 @@ class BaseTranslator {
 class SolveResultFormatter extends BaseTranslator {
   formatSolveResult(solveData) {
     if (!solveData || solveData.type !== 'solve') {
-      return 'No valid solutions found.';
+      return 'No valid solutions found. Proof: CSP found no matching solve block.';
     }
     if (!solveData.success || (solveData.solutionCount || 0) === 0) {
-      return solveData.error || 'No valid solutions found.';
+      const error = solveData.error || 'No valid solutions found.';
+      // Generate proof showing why constraints are unsatisfiable
+      const constraintDesc = (solveData.constraints || [])
+        .map(c => `${c.relation}(${c.entities.join(', ')})`)
+        .join(', ');
+      const proofText = constraintDesc
+        ? `Constraints ${constraintDesc} cannot all be satisfied with available assignments.`
+        : 'No valid assignment exists.';
+      return `${error} Proof: ${proofText}`;
     }
 
     const solutionTexts = (solveData.solutions || []).map((sol, idx) => {
-      const facts = Array.isArray(sol)
-        ? sol
-        : sol.facts || [];
+      const facts = Array.isArray(sol) ? sol : (sol.facts || []);
       const factTexts = facts.map(fact => this.describeFact(fact));
-      const label = sol.index ? `Solution ${sol.index}` : `${idx + 1}.`;
+      const label = sol.index ? `${sol.index}.` : `${idx + 1}.`;
       return `${label} ${factTexts.join(', ')}`.replace(/\s+\./g, '.');
     });
+
+    // Generate proof showing how each constraint is satisfied
+    const proofSteps = [];
+    for (const sol of (solveData.solutions || [])) {
+      if (sol.proof && sol.proof.length > 0) {
+        for (const step of sol.proof) {
+          if (step.satisfied) {
+            proofSteps.push(`${step.constraint} satisfied: ${step.reason}`);
+          }
+        }
+      }
+    }
 
     const summary = solveData.solutionCount || solutionTexts.length;
     const description = solveData.description ||
@@ -41,9 +59,16 @@ class SolveResultFormatter extends BaseTranslator {
                         solveData.type ||
                         'solutions';
     const joined = solutionTexts.join('. ');
-    return joined
+    const base = joined
       ? `Found ${summary} ${description}: ${joined}.`
       : `Found ${summary} ${description}.`;
+
+    // Build proof section
+    const uniqueProofs = [...new Set(proofSteps)];
+    const proofText = uniqueProofs.length > 0
+      ? uniqueProofs.join('. ')
+      : `All ${summary} assignments satisfy constraints.`;
+    return `${base} Proof: ${proofText}.`;
   }
 
   describeFact(fact) {
@@ -411,17 +436,38 @@ class QueryTranslator extends BaseTranslator {
       ? prioritized
       : (result.bindings?.size > 0 ? [{ bindings: result.bindings, score: 1, method: 'direct' }] : []);
 
-    const texts = [];
+    // Collect answers and proofs separately for consolidation
+    const answers = [];
+    const proofSteps = [];
     for (const entry of resultsToProcess) {
-      const generated = this.buildTextFromBinding(entry.bindings, parts);
-      if (generated) texts.push(generated);
+      const { answer, proof } = this.buildTextAndProofFromBinding(entry.bindings, parts);
+      if (answer) {
+        answers.push(answer);
+        if (proof && proof.length > 0) {
+          proofSteps.push(...proof);
+        }
+      }
     }
 
-    if (texts.length === 0 && op === 'can' && parts[2]) {
+    if (answers.length === 0 && op === 'can' && parts[2]) {
       return this.deriveModalCapability(parts);
     }
 
-    return texts.length > 0 ? [...new Set(texts)].join('. ') + '.' : 'No results';
+    if (answers.length === 0) return 'No results';
+
+    // Consolidate: all answers first, then single Proof section
+    const uniqueAnswers = [...new Set(answers)];
+    // Filter out redundant proof steps (those that echo answers) and clean up
+    const cleanedProofs = proofSteps
+      .map(p => p.replace(/\.+$/, '').trim())  // Remove trailing dots
+      .filter(p => p.length > 0)
+      .filter(p => !uniqueAnswers.some(a => a.toLowerCase() === p.toLowerCase()));
+    const uniqueProofs = [...new Set(cleanedProofs)];
+
+    if (uniqueProofs.length > 0) {
+      return `${uniqueAnswers.join('. ')}. Proof: ${uniqueProofs.join('. ')}.`;
+    }
+    return `${uniqueAnswers.join('. ')}.`;
   }
 
   extractQueryLine(queryDsl = '') {
@@ -490,6 +536,15 @@ class QueryTranslator extends BaseTranslator {
   }
 
   buildTextFromBinding(bindings, parts) {
+    const { answer, proof } = this.buildTextAndProofFromBinding(bindings, parts);
+    if (!answer) return null;
+    if (proof && proof.length > 0) {
+      return `${answer}. Proof: ${proof.join('. ')}`;
+    }
+    return answer;
+  }
+
+  buildTextAndProofFromBinding(bindings, parts) {
     const op = parts[0];
     const args = parts.slice(1).map(arg => {
       if (!arg.startsWith('?')) return arg;
@@ -500,20 +555,27 @@ class QueryTranslator extends BaseTranslator {
       return bindings?.[holeName]?.answer || arg;
     });
 
-    if (args.some(a => typeof a === 'string' && a.startsWith('?'))) return null;
+    if (args.some(a => typeof a === 'string' && a.startsWith('?'))) {
+      return { answer: null, proof: [] };
+    }
+
     const generatedText = this.session.generateText(op, args).replace(/[.!?]+$/, '');
     const holeName = parts.find(p => p.startsWith('?'))?.substring(1);
     const bindingData = bindings instanceof Map ? bindings.get(holeName) : bindings?.[holeName];
     const proofSteps = bindingData?.steps;
+
     if (proofSteps && proofSteps.length > 0) {
-      const proofText = proofSteps.join('. ');
-      return `${generatedText}. Proof: ${proofText}`;
+      return { answer: generatedText, proof: proofSteps };
     }
+
     const proveProof = this.generateProofFromProve(op, args);
     if (proveProof) {
-      return `${generatedText}. Proof: ${proveProof}`;
+      // Parse proof string back to array
+      const proofArray = proveProof.split('. ').filter(s => s.length > 0);
+      return { answer: generatedText, proof: proofArray };
     }
-    return generatedText;
+
+    return { answer: generatedText, proof: [] };
   }
 
   generateProofFromProve(op, args) {

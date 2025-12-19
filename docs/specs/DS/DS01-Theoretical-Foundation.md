@@ -74,9 +74,11 @@ C[i] = 1 if majority of inputs have 1 at position i
 
 **Properties:**
 - **Preserves similarity**: C is similar to all inputs
-- **Capacity limited**: ~100-200 items before saturation
+- **Capacity limited**: ~100-200 items before saturation (HDC-Priority mode only)*
 - **Non-reversible**: Cannot extract individual items
 - **Preserves extension**: Works with cloned vectors ✓
+
+*\*In Symbolic-Priority mode, facts are stored with metadata rather than bundled, removing this capacity limit. See Section 1.10.*
 
 **Use:** Superposition, memory, sets
 
@@ -423,14 +425,14 @@ Becomes:
 dest = Op ⊕ (Pos1 ⊕ Arg1) ⊕ (Pos2 ⊕ Arg2) ⊕ ... ⊕ (PosN ⊕ ArgN)
 ```
 
-### 1.8.2 With Macro
+### 1.8.2 With Graph
 
-When Op has an associated macro:
+When Op has an associated graph:
 ```
-dest = Op ⊕ macro_result
+dest = Op ⊕ graph_result
 ```
 
-The macro internally uses position vectors for its own structure.
+The graph internally uses position vectors for its own structure.
 
 ### 1.8.3 Query Execution
 
@@ -472,7 +474,86 @@ final_vector = Bundle(ascii_vector, llm_vector)
 
 ---
 
-## 1.10 Summary
+## 1.10 Hybrid Reasoning Architecture
+
+AGISystem2 implements a **hybrid architecture** with two distinct reasoning modes, selected based on the HDC strategy in use.
+
+### 1.10.1 The Two Motors
+
+| Aspect | Motor 1: HDC-Priority | Motor 2: Symbolic-Priority |
+|--------|----------------------|---------------------------|
+| **Strategies** | `dense-binary` | `sparse-polynomial`, `metric-affine` |
+| **HDC Role** | Primary reasoning engine | Candidate filter only |
+| **Validation** | Similarity-based matching | Pure symbolic (CSP, backtracking) |
+| **Master Equation** | Full unbinding: `Answer = KB ⊕ Query⁻¹` | Not used (0% success rate) |
+| **Best For** | Analogical reasoning, fuzzy matching | Logical inference, transitive chains |
+
+### 1.10.2 Motor 1: HDC-Priority (Dense-Binary)
+
+In HDC-Priority mode, the system uses hyperdimensional vectors as the **primary reasoning mechanism**:
+
+```
+Query Processing:
+1. Build partial vector (exclude holes)
+2. Unbind from KB: candidate = KB ⊕ partial
+3. Similarity search in vocabulary
+4. Return best match with confidence
+```
+
+**Characteristics:**
+- Bundle capacity: ~100-200 facts at 32K geometry
+- Supports the Master Equation for retrieval
+- Graceful degradation under noise
+- Analogical reasoning (A:B :: C:?)
+
+### 1.10.3 Motor 2: Symbolic-Priority (Sparse/Metric-Affine)
+
+In Symbolic-Priority mode, HDC provides **structural representation only**. Actual reasoning is purely symbolic:
+
+```
+Query Processing:
+1. Build query structure (HDC vectors)
+2. HDC similarity filters candidates (fast pre-filter)
+3. Symbolic KB matching (exact operator + argument lookup)
+4. Transitive chain reasoning (graph traversal)
+5. Rule derivation (pattern matching with unification)
+6. CSP solver for constraint satisfaction (if needed)
+```
+
+**Why HDC is just a filter:**
+- Sparse-polynomial Jaccard similarity doesn't support unbinding
+- Metric-affine L₁ distance has different baseline (0.67 vs 0.5)
+- Neither strategy implements the Master Equation effectively
+- 100% accuracy achieved via symbolic reasoning alone
+
+**Characteristics:**
+- Memory efficient (32 bytes vs 4KB per vector)
+- Faster for pure logical queries
+- Unlimited effective KB capacity (no bundle saturation)
+- Perfect for symbolic AI workloads
+
+### 1.10.4 Strategy Selection Guide
+
+| Use Case | Recommended Strategy | Motor |
+|----------|---------------------|-------|
+| General purpose, balanced | `dense-binary` | HDC-Priority |
+| Analogical reasoning | `dense-binary` | HDC-Priority |
+| Large knowledge bases | `sparse-polynomial` | Symbolic-Priority |
+| Embedded/memory-constrained | `metric-affine` | Symbolic-Priority |
+| Pure logical inference | `sparse-polynomial` | Symbolic-Priority |
+| Fuzzy/graded similarity | `metric-affine` | Symbolic-Priority |
+
+### 1.10.5 Architecture Implications
+
+The hybrid design means:
+1. **Same DSL, different engines:** User code works identically regardless of strategy
+2. **Strategy-specific optimizations:** Each motor optimizes for its strengths
+3. **Fallback behavior:** Symbolic-Priority can use CSP backtracking when HDC fails
+4. **Transparent switching:** `SYS2_HDC_STRATEGY` environment variable selects mode
+
+---
+
+## 1.11 Summary
 
 | Concept | Description |
 |---------|-------------|
@@ -483,12 +564,14 @@ final_vector = Bundle(ascii_vector, llm_vector)
 | **ASCII stamping** | Name → ASCII bits → repeated stamp + PRNG variation |
 | **Binding formula** | result = Op ⊕ (Pos1⊕A1) ⊕ (Pos2⊕A2) ⊕ ... |
 | **Query** | Unbind known parts, search vocabulary |
+| **Hybrid architecture** | HDC-Priority vs Symbolic-Priority based on strategy |
 
 **Key design decisions:**
 1. XOR + Bundle only → extension works
 2. Position via role vectors → no permutation needed
 3. ASCII stamping → deterministic, recognizable, extensible
 4. Theory-scoped names → same name can exist in multiple theories
+5. Dual motors → optimal reasoning for each HDC strategy
 
 ---
 

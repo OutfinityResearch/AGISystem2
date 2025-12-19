@@ -22,13 +22,10 @@ import { format as resultFormatterFormat } from '../output/result-formatter.mjs'
 import { ResponseTranslator } from '../output/response-translator.mjs';
 import { findAll } from '../reasoning/find-all.mjs';
 import { ComponentKB } from '../reasoning/component-kb.mjs';
+import { debug_trace, isDebugEnabled } from '../utils/debug.js';
 
-
-
-// Debug logging
-const DEBUG = process.env.SYS2_DEBUG === 'true';
 function dbg(category, ...args) {
-  if (DEBUG) console.log(`[Session:${category}]`, ...args);
+  debug_trace(`[Session:${category}]`, ...args);
 }
 
 // Mutually exclusive property/state pairs for contradiction detection
@@ -60,8 +57,9 @@ export class Session {
     this.operators = new Map();
     this.warnings = [];
     this.referenceTexts = new Map(); // Maps reference names to fact strings
-    this.macros = new Map();
-    this.macroAliases = new Map();
+    this.referenceMetadata = new Map(); // Maps reference names to structured metadata {operator, args}
+    this.graphs = new Map();       // HDC point relationship graphs
+    this.graphAliases = new Map();  // Aliases for graphs (persistName -> name)
     this.responseTranslator = new ResponseTranslator(this);
 
     // Reasoning statistics
@@ -293,8 +291,14 @@ export class Session {
 
   /**
    * Add vector to knowledge base
-   */
+  */
   addToKB(vector, name = null, metadata = null) {
+    if (isDebugEnabled()) {
+      const op = metadata?.operator || '?';
+      const args = (metadata?.args || []).join(' ');
+      debug_trace(`[Session:addToKB]`, `Adding fact: ${op} ${args} | name=${name || '(anon)'}`);
+    }
+
     const contradiction = this.checkContradiction(metadata);
     if (contradiction) {
       this.warnings.push(contradiction);

@@ -56,7 +56,7 @@ export const cases = [
         noConflict conflictsWith
       end
     `,
-    expected_nl: 'Learned'
+    expected_nl: 'Found 2 seating: 1. Alice is at T1, Bob is at T2. 2. Alice is at T2, Bob is at T1.'
   },
   // List all solutions - Alice și Bob sunt mereu la mese diferite
   {
@@ -68,8 +68,7 @@ export const cases = [
   {
     action: 'query',
     input_dsl: `seating Alice ?table`,
-    expected_nl: 'Alice is at T1. Alice is at T2.',
-      // CSP query - no proof generated
+    expected_nl: 'Alice is at T1. Alice is at T2. Proof: conflictsWith(Alice, Bob) satisfied: Alice at T1, Bob at T2, T1 ≠ T2. seating Alice T1. conflictsWith(Alice, Bob) satisfied: Alice at T2, Bob at T1, T2 ≠ T1. seating Alice T2.'
   },
 
   // ========================================
@@ -97,7 +96,7 @@ export const cases = [
         noConflict conflictsWith
       end
     `,
-    expected_nl: 'Learned'
+    expected_nl: 'Found 18 arrangement: 1. Carol is at RoomX, Dave is at RoomY, Eve is at RoomX. 2. Carol is at RoomX, Dave is at RoomY, Eve is at RoomY. 3. Carol is at RoomX, Dave is at RoomY, Eve is at RoomZ. 4. Carol is at RoomX, Dave is at RoomZ, Eve is at RoomX. 5. Carol is at RoomX, Dave is at RoomZ, Eve is at RoomY. 6. Carol is at RoomX, Dave is at RoomZ, Eve is at RoomZ. 7. Carol is at RoomY, Dave is at RoomX, Eve is at RoomX. 8. Carol is at RoomY, Dave is at RoomX, Eve is at RoomY. 9. Carol is at RoomY, Dave is at RoomX, Eve is at RoomZ. 10. Carol is at RoomY, Dave is at RoomZ, Eve is at RoomX. 11. Carol is at RoomY, Dave is at RoomZ, Eve is at RoomY. 12. Carol is at RoomY, Dave is at RoomZ, Eve is at RoomZ. 13. Carol is at RoomZ, Dave is at RoomX, Eve is at RoomX. 14. Carol is at RoomZ, Dave is at RoomX, Eve is at RoomY. 15. Carol is at RoomZ, Dave is at RoomX, Eve is at RoomZ. 16. Carol is at RoomZ, Dave is at RoomY, Eve is at RoomX. 17. Carol is at RoomZ, Dave is at RoomY, Eve is at RoomY. 18. Carol is at RoomZ, Dave is at RoomY, Eve is at RoomZ.'
   },
   // List all 18 solutions - Carol și Dave sunt MEREU în camere diferite
   {
@@ -133,13 +132,13 @@ export const cases = [
         noConflict conflictsWith
       end
     `,
-    expected_nl: 'No valid solutions'
+    expected_nl: 'No valid solutions found.'
   },
   // Query the seating - should return no results because problem has no solution
   {
     action: 'listSolutions',
     input_dsl: 'plasare',
-    expected_nl: 'No valid solutions'
+    expected_nl: 'No valid solutions found.'
   }
 ];
 

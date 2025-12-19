@@ -20,11 +20,10 @@ import { bind, bundle, similarity, unbind } from '../../core/operations.mjs';
 import { withPosition } from '../../core/position.mjs';
 import { getThresholds, getHolographicThresholds } from '../../core/constants.mjs';
 import { CSPSolver, solveWeddingSeating as symbolicSolveWedding } from '../csp/solver.mjs';
+import { debug_trace } from '../../utils/debug.js';
 
-// Debug logging
-const DEBUG = process.env.SYS2_DEBUG === 'true';
 function dbg(category, ...args) {
-  if (DEBUG) console.log(`[HoloCSP:${category}]`, ...args);
+  debug_trace(`[HoloCSP:${category}]`, ...args);
 }
 
 /**

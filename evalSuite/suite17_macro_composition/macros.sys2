@@ -1,6 +1,6 @@
 # Macro definitions for suite17 (composition across roles/temporal/causal/obligation)
 
-@MissionPlan:missionPlan macro team objective location
+@MissionPlan:missionPlan graph team objective location
     isA $team ResponseTeam
     locatedIn $team HQ
     can $team Mobilize
@@ -12,7 +12,7 @@
     return $objective
 end
 
-@Manufacture:manufacturingBatch macro supplier material product plant
+@Manufacture:manufacturingBatch graph supplier material product plant
     isA $supplier Supplier
     isA $plant Factory
     has $supplier $material
@@ -25,7 +25,7 @@ end
     return $product
 end
 
-@Contract:serviceContract macro provider client service sla
+@Contract:serviceContract graph provider client service sla
     can $provider $service
     must $provider Deliver
     must $client Pay

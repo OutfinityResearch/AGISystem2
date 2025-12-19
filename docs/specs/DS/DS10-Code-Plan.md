@@ -77,14 +77,14 @@ LITERALS:
 └── NUMBER           # 42, 3.14, -7
 
 KEYWORDS:
-├── MACRO            # Macro definition start
+├── MACRO            # Graph definition start
 ├── END              # Block termination
-├── RETURN           # Macro return
+├── RETURN           # Graph return
 └── THEORY           # Theory definition
 
 STRUCTURE:
 ├── NEWLINE          # Statement separator
-├── INDENT           # Block start (for macros)
+├── INDENT           # Block start (for graphs)
 ├── DEDENT           # Block end
 └── EOF              # End of input
 ```
@@ -97,7 +97,7 @@ PROGRAM
 
 STATEMENT (one of):
 ├── Assignment { dest, exportName?, operator, args[] }
-├── MacroDef { name, exportName, params[], body[] }
+├── GraphDef { name, exportName, params[], body[] }
 ├── TheoryDef { name, geometry, initMode, body[] }
 └── Return { value }
 
@@ -119,7 +119,7 @@ ERROR TYPES:
 
 RECOVERY STRATEGY:
 ├── Single statement error → Skip to next NEWLINE
-├── Macro error → Skip to END keyword
+├── Graph error → Skip to END keyword
 ├── Theory error → Skip to theory END
 └── Always report line/column for debugging
 ```
@@ -234,8 +234,8 @@ EXECUTE(statement):
       operator = resolve(statement.operator)
       args = statement.args.map(resolve)
       
-      IF operator is macro:
-        result = executeMacro(operator, args)
+      IF operator is graph:
+        result = executeGraph(operator, args)
       ELSE:
         result = executeBinding(operator, args)
       
@@ -245,8 +245,8 @@ EXECUTE(statement):
       IF isFact(result):
         KB = bundle([KB, result])
     
-    CASE MacroDef:
-      registry.registerMacro(statement)
+    CASE GraphDef:
+      registry.registerGraph(statement)
     
     CASE Return:
       RETURN resolve(statement.value)
@@ -298,22 +298,22 @@ EXECUTE_BINDING(operator, args):
   RETURN result
 ```
 
-### 9B.4.4 Macro Execution
+### 9B.4.4 Graph Execution
 
 ```
-EXECUTE_MACRO(macro, args):
-  # Create child scope for macro
-  macroScope = scope.createChild()
+EXECUTE_MACRO(graph, args):
+  # Create child scope for graph
+  graphScope = scope.createChild()
   
   # Bind parameters to arguments
-  FOR i = 0 TO macro.params.length - 1:
-    macroScope.set(macro.params[i], args[i])
+  FOR i = 0 TO graph.params.length - 1:
+    graphScope.set(graph.params[i], args[i])
   
-  # Execute macro body
+  # Execute graph body
   savedScope = scope
-  scope = macroScope
+  scope = graphScope
   
-  FOR statement IN macro.body:
+  FOR statement IN graph.body:
     IF statement.type == Return:
       result = resolve(statement.value)
       scope = savedScope
@@ -334,15 +334,15 @@ EXECUTE_MACRO(macro, args):
 ```
 THEORY REGISTRY:
 ├── theories: Map<string, Theory>
-├── macros: Map<string, Macro>
+├── graphs: Map<string, Graph>
 └── exportedAtoms: Map<string, Vector>
 
 OPERATIONS:
 ├── register(theory)     # Add new theory
 ├── get(name)           # Retrieve theory
-├── getMacro(name)      # Find macro by name
+├── getGraph(name)      # Find graph by name
 ├── listAtoms(theory?)  # List all/filtered atoms
-└── listMacros(theory?) # List all/filtered macros
+└── listGraphs(theory?) # List all/filtered graphs
 ```
 
 ### 9B.5.2 Theory Loading
@@ -644,11 +644,11 @@ SCOPE STRUCTURE:
 │         Session Scope               │
 │  (User-defined variables)           │
 ├─────────────────────────────────────┤
-│          Macro Scope                │
+│          Graph Scope                │
 │  (Parameters + locals)              │
 └─────────────────────────────────────┘
 
-LOOKUP ORDER: Macro → Session → Theory → Global
+LOOKUP ORDER: Graph → Session → Theory → Global
 ```
 
 ### 9B.8.2 Scope Operations

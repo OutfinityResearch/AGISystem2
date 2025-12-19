@@ -21,11 +21,10 @@
 
 import { bind, bindAll, similarity } from '../core/operations.mjs';
 import { withPosition } from '../core/position.mjs';
+import { debug_trace } from '../utils/debug.js';
 
-// Debug logging
-const DEBUG = process.env.SYS2_DEBUG === 'true';
 function dbg(...args) {
-  if (DEBUG) console.log('[Query:COMPOUND]', ...args);
+  debug_trace('[Query:COMPOUND]', ...args);
 }
 
 // Minimum similarity for compound solution match (must be very low for sparse strategies)

@@ -41,7 +41,7 @@ Speaker communicates information to listener.
 
 ```sys2
 # Types: speaker:Person, info:Abstract, listener:Person
-@TellMacro:tell macro speaker info listener
+@TellGraph:tell graph speaker info listener
     @result _mtrans $speaker $info $speaker $listener
     return $result
 end
@@ -55,7 +55,7 @@ Asker requests information from askee.
 
 ```sys2
 # Types: asker:Person, question:Abstract, askee:Person
-@AskMacro:ask macro asker question askee
+@AskGraph:ask graph asker question askee
     @req __Role Request $question
     @result _mtrans $asker $req $asker $askee
     return $result
@@ -70,7 +70,7 @@ Speaker produces utterance.
 
 ```sys2
 # Types: speaker:Person, utterance:Abstract
-@SayMacro:say macro speaker utterance
+@SayGraph:say graph speaker utterance
     @result _speak $speaker $utterance
     return $result
 end
@@ -88,7 +88,7 @@ Giver transfers object to receiver.
 
 ```sys2
 # Types: giver:Person, object:Entity, receiver:Person
-@GiveMacro:give macro giver object receiver
+@GiveGraph:give graph giver object receiver
     @result _atrans $giver $object $giver $receiver
     return $result
 end
@@ -102,7 +102,7 @@ Taker acquires object from source.
 
 ```sys2
 # Types: taker:Person, object:Entity, source:Person|Place
-@TakeMacro:take macro taker object source
+@TakeGraph:take graph taker object source
     @result _atrans $taker $object $source $taker
     return $result
 end
@@ -120,7 +120,7 @@ Buyer acquires item in exchange for price.
 
 ```sys2
 # Types: buyer:Person, item:Entity, seller:Person, price:Quantity
-@BuyMacro:buy macro buyer item seller price
+@BuyGraph:buy graph buyer item seller price
     @t1 _atrans $buyer $item $seller $buyer
     @t2 _atrans $buyer $price $buyer $seller
     @result __Bundle $t1 $t2
@@ -136,7 +136,7 @@ Seller transfers item in exchange for price.
 
 ```sys2
 # Types: seller:Person, item:Entity, buyer:Person, price:Quantity
-@SellMacro:sell macro seller item buyer price
+@SellGraph:sell graph seller item buyer price
     @result buy $buyer $item $seller $price
     return $result
 end
@@ -154,7 +154,7 @@ Agent moves themselves from source to destination.
 
 ```sys2
 # Types: agent:Person, from:Place, to:Place
-@GoMacro:go macro agent from to
+@GoGraph:go graph agent from to
     @result _ptrans $agent $agent $from $to
     return $result
 end
@@ -168,7 +168,7 @@ Agent moves object from source to destination.
 
 ```sys2
 # Types: agent:Person, object:Entity, from:Place, to:Place
-@MoveMacro:move macro agent object from to
+@MoveGraph:move graph agent object from to
     @result _ptrans $agent $object $from $to
     return $result
 end
@@ -186,7 +186,7 @@ Experiencer perceives object visually.
 
 ```sys2
 # Types: experiencer:Person, object:Entity
-@SeeMacro:see macro experiencer object
+@SeeGraph:see graph experiencer object
     @eyes __Object
     @result _attend $experiencer $eyes $object
     return $result
@@ -201,7 +201,7 @@ Experiencer perceives sound auditorily.
 
 ```sys2
 # Types: experiencer:Person, sound:Entity|Abstract
-@HearMacro:hear macro experiencer sound
+@HearGraph:hear graph experiencer sound
     @ears __Object
     @result _attend $experiencer $ears $sound
     return $result
@@ -223,7 +223,7 @@ Experiencer desires something.
 @Wanting:Wanting __State
 
 # Types: experiencer:Person, desired:Entity|Abstract|Event
-@WantMacro:want macro experiencer desired
+@WantGraph:want graph experiencer desired
     @eid __Event
     @r1 __Role Experiencer $experiencer
     @r2 __Role Theme $desired
@@ -244,7 +244,7 @@ Experiencer has positive attitude toward something.
 @Liking:Liking __State
 
 # Types: experiencer:Person, liked:Entity|Abstract
-@LikeMacro:like macro experiencer liked
+@LikeGraph:like graph experiencer liked
     @eid __Event
     @r1 __Role Experiencer $experiencer
     @r2 __Role Theme $liked
@@ -265,7 +265,7 @@ Experiencer has negative attitude toward something.
 @Fearing:Fearing __State
 
 # Types: experiencer:Person, feared:Entity|Abstract
-@FearMacro:fear macro experiencer feared
+@FearGraph:fear graph experiencer feared
     @eid __Event
     @r1 __Role Experiencer $experiencer
     @r2 __Role Theme $feared
@@ -283,7 +283,7 @@ Thinker conceptualizes something.
 
 ```sys2
 # Types: thinker:Person, concept:Abstract
-@ThinkMacro:think macro thinker concept
+@ThinkGraph:think graph thinker concept
     @result _conc $thinker $concept
     return $result
 end
@@ -301,7 +301,7 @@ Eater ingests food.
 
 ```sys2
 # Types: eater:Person, food:Substance|Object
-@EatMacro:eat macro eater food
+@EatGraph:eat graph eater food
     @result _ingest $eater $food
     return $result
 end
@@ -315,7 +315,7 @@ Drinker ingests liquid.
 
 ```sys2
 # Types: drinker:Person, liquid:Substance
-@DrinkMacro:drink macro drinker liquid
+@DrinkGraph:drink graph drinker liquid
     @result _ingest $drinker $liquid
     return $result
 end

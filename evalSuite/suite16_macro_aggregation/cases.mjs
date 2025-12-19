@@ -6,7 +6,7 @@
  * macro-generated concepts and their exposed conclusions.
  *
  * Syntax follows DS02-DSL-Syntax.md:
- * - Macros defined with @Name:export macro params ... end
+ * - Macros defined with @Name:export graph params ... end
  * - No parenthesized expressions in implies; use @var references
  * - Anonymous facts (no @) go directly to KB
  */
@@ -20,10 +20,10 @@ export const steps = [
   // === SETUP: Define macros inline and invoke them ===
   {
     action: 'learn',
-    input_nl: 'Define earthquakeEvent macro that creates hazard facts and causal chains.',
+    input_nl: 'Define earthquakeEvent graph that creates hazard facts and causal chains.',
     input_dsl: `
       # Macro: earthquakeEvent creates hazard with causal/temporal structure
-      @EQ:earthquakeEvent macro epicenter magnitude effect
+      @EQ:earthquakeEvent graph epicenter magnitude effect
           isA $effect Hazard
           isA $epicenter Epicenter
           @shock causes $epicenter SeismicShock
@@ -35,7 +35,7 @@ export const steps = [
           return $effect
       end
 
-      # Invoke macro to create earthquake events
+      # Invoke graph to create earthquake events
       @eq1 earthquakeEvent CityA 7.5 CityPowerDown
       @eq2 earthquakeEvent CityB 6.8 PortDamage
     `,
@@ -44,10 +44,10 @@ export const steps = [
 
   {
     action: 'learn',
-    input_nl: 'Define outbreak macro for virus with infection chains.',
+    input_nl: 'Define outbreak graph for virus with infection chains.',
     input_dsl: `
       # Macro: outbreak creates virus with infection causation
-      @OB:outbreak macro pathogen r0 location
+      @OB:outbreak graph pathogen r0 location
           isA $pathogen Virus
           isA $pathogen Pathogen
           @r reproductionNumber $pathogen $r0
@@ -67,10 +67,10 @@ export const steps = [
 
   {
     action: 'learn',
-    input_nl: 'Define disasterResponse macro with obligations and temporal ordering.',
+    input_nl: 'Define disasterResponse graph with obligations and temporal ordering.',
     input_dsl: `
       # Macro: disasterResponse with responder obligations
-      @DR:disasterResponse macro hazard responderTeam
+      @DR:disasterResponse graph hazard responderTeam
           isA $responderTeam Responder
           assigned $responderTeam $hazard
           must $responderTeam Assist
@@ -112,7 +112,7 @@ export const steps = [
     expected_nl: 'Learned 10 facts'
   },
 
-  // === PROVE: Hazard chain from earthquake macro output ===
+  // === PROVE: Hazard chain from earthquake graph output ===
   {
     action: 'prove',
     input_nl: 'Does CityPowerDown cause supply chain disruption?',
@@ -128,12 +128,12 @@ export const steps = [
     expected_nl: 'True: CityPowerDown is before ReliefDeployment. Proof: before CityPowerDown EvacuationStart. before EvacuationStart ReliefDeployment. Transitive chain (2 hops).'
   },
 
-  // === PROVE: Responder obligation from macro ===
+  // === PROVE: Responder obligation from graph ===
   {
     action: 'prove',
     input_nl: 'Must TeamAlpha assist?',
     input_dsl: '@goal must TeamAlpha Assist',
-    expected_nl: 'True: TeamAlpha must Assist. Proof: disasterResponse macro set must TeamAlpha Assist via assigned TeamAlpha CityPowerDown.'
+    expected_nl: 'True: TeamAlpha must Assist. Proof: disasterResponse graph set must TeamAlpha Assist via assigned TeamAlpha CityPowerDown.'
   },
 
   // === NEGATIVE: Blocked by explicit negation ===
@@ -149,7 +149,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What entities are hazards?',
     input_dsl: '@q isA ?x Hazard',
-    expected_nl: 'CityPowerDown is a hazard. PortDamage is a hazard. Proof: earthquakeEvent macro exposed isA CityPowerDown Hazard and isA PortDamage Hazard.'
+    expected_nl: 'CityPowerDown is a hazard. PortDamage is a hazard. Proof: earthquakeEvent graph exposed isA CityPowerDown Hazard and isA PortDamage Hazard.'
   },
 
   // === PROVE: Virus outbreak leads to hospitalization ===

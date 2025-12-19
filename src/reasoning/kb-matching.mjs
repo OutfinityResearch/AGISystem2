@@ -148,11 +148,18 @@ export class KBMatcher {
       }
 
       if (matchOk) {
+        // Include proof from fact metadata (e.g., CSP constraint satisfaction)
+        const proofSteps = [];
+        if (meta.proof) {
+          proofSteps.push({ operation: 'constraint_proof', fact: meta.proof });
+        }
+        proofSteps.push({ operation: 'pattern_match', fact: `${op} ${meta.args.join(' ')}`, bindings: Object.fromEntries(newBindings) });
+
         matches.push({
           valid: true,
           confidence: this.thresholds.CONDITION_CONFIDENCE,
           newBindings,
-          steps: [{ operation: 'pattern_match', fact: `${op} ${meta.args.join(' ')}`, bindings: Object.fromEntries(newBindings) }]
+          steps: proofSteps
         });
       }
     }

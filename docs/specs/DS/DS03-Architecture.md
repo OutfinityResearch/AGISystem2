@@ -2,8 +2,10 @@
 
 # Chapter 4: Architecture and API
 
-**Document Version:** 2.0  
-**Status:** Draft Specification
+**Document Version:** 2.0
+**Status:** Implemented
+
+> **Note:** This document describes the architecture and API. The actual implementation supports dual reasoning modes (HDC-Priority and Symbolic-Priority) based on HDC strategy. See DS01 Section 1.10 for details.
 
 ---
 
@@ -31,7 +33,7 @@ AGISystem2Engine
             │   ├── inspect(name: string) → VectorInfo
             │   ├── listTheories() → TheoryInfo[]
             │   ├── listAtoms(theory?: string) → AtomInfo[]
-            │   ├── listMacros(theory?: string) → MacroInfo[]
+            │   ├── listGraphs(theory?: string) → GraphInfo[]
             │   ├── listFacts() → FactInfo[]
             │   ├── similarity(a, b) → number
             │   └── decode(vector) → DecodedStructure
@@ -48,7 +50,7 @@ AGISystem2Engine
 
 | Method | Input | Output | Purpose |
 |--------|-------|--------|---------|
-| `learn` | DSL statements | — | Add facts, define macros |
+| `learn` | DSL statements | — | Add facts, define graphs |
 | `query` | DSL with holes | Result | Find answers |
 | `prove` | DSL with holes | Proof | Answer + derivation |
 | `summarize` | Vector | string | Concise decode |
@@ -58,7 +60,7 @@ AGISystem2Engine
 | **`inspect`** | name | VectorInfo | Detailed vector info |
 | **`listTheories`** | — | TheoryInfo[] | Loaded theories |
 | **`listAtoms`** | theory? | AtomInfo[] | All atoms |
-| **`listMacros`** | theory? | MacroInfo[] | All macros |
+| **`listGraphs`** | theory? | GraphInfo[] | All graphs |
 | **`listFacts`** | — | FactInfo[] | All facts in KB |
 | **`similarity`** | a, b | number | Compare two vectors |
 | **`decode`** | vector | DecodedStructure | Extract structure |
@@ -245,7 +247,7 @@ interface ProofStep {
 
 | Step | Operation | Detail |
 |------|-----------|--------|
-| 1 | lookup | Found 'buy' macro in Commerce theory |
+| 1 | lookup | Found 'buy' graph in Commerce theory |
 | 2 | resolve | Resolved Charlie → vector |
 | 3 | resolve | Resolved Book → vector |
 | 4 | bind | Built query: buy ⊕ (Pos1⊕Charlie) ⊕ (Pos2⊕Book) ⊕ ... |
@@ -305,7 +307,7 @@ interface SessionState {
         name: string;
         geometry: number;
         atomCount: number;
-        macroCount: number;
+        graphCount: number;
         isCore: boolean;
     }[];
     
@@ -315,7 +317,7 @@ interface SessionState {
     // Working memory
     workingMemory: {
         name: string;
-        type: string;           // "atom", "fact", "macro", "theory"
+        type: string;           // "atom", "fact", "graph", "theory"
         theory: string;         // Which theory it's from
         exported: boolean;      // Is it exported?
         geometry: number;
@@ -351,8 +353,8 @@ console.log(JSON.stringify(state, null, 2));
 ```json
 {
   "theories": [
-    {"name": "Core", "geometry": 32768, "atomCount": 140, "macroCount": 45, "isCore": true},
-    {"name": "Commerce", "geometry": 32768, "atomCount": 25, "macroCount": 8, "isCore": false}
+    {"name": "Core", "geometry": 32768, "atomCount": 140, "graphCount": 45, "isCore": true},
+    {"name": "Commerce", "geometry": 32768, "atomCount": 25, "graphCount": 8, "isCore": false}
   ],
   "theoryStack": ["Commerce", "Core"],
   "workingMemory": [
@@ -382,7 +384,7 @@ Deep inspection of a specific vector.
 ```typescript
 interface VectorInfo {
     name: string;
-    type: string;                    // "atom", "fact", "macro", "theory"
+    type: string;                    // "atom", "fact", "graph", "theory"
     sourceTheory: string;
     geometry: number;
     exported: boolean;
@@ -401,7 +403,7 @@ interface VectorInfo {
         }[];
     };
     
-    // For macros: signature
+    // For graphs: signature
     signature?: {
         parameters: string[];
         returnType: string;
@@ -459,7 +461,7 @@ interface TheoryInfo {
     isCore: boolean;
     loadOrder: number;              // Position in stack
     atoms: string[];                // Exported atom names
-    macros: string[];               // Exported macro names
+    graphs: string[];               // Exported graph names
 }
 ```
 
@@ -467,10 +469,10 @@ interface TheoryInfo {
 ```javascript
 const theories = session.listTheories();
 theories.forEach(t => {
-    console.log(`${t.name}: ${t.atoms.length} atoms, ${t.macros.length} macros`);
+    console.log(`${t.name}: ${t.atoms.length} atoms, ${t.graphs.length} graphs`);
 });
-// Core: 140 atoms, 45 macros
-// Commerce: 25 atoms, 8 macros
+// Core: 140 atoms, 45 graphs
+// Commerce: 25 atoms, 8 graphs
 ```
 
 ### 4.8.4 listAtoms(theory?) → AtomInfo[]
@@ -501,12 +503,12 @@ commerceAtoms.forEach(a => console.log(`${a.name}: ${a.type}`));
 // Book: Object
 ```
 
-### 4.8.5 listMacros(theory?) → MacroInfo[]
+### 4.8.5 listGraphs(theory?) → GraphInfo[]
 
-List all macros with signatures.
+List all graphs with signatures.
 
 ```typescript
-interface MacroInfo {
+interface GraphInfo {
     name: string;
     exportedAs: string;             // The exported name
     theory: string;
@@ -520,8 +522,8 @@ interface MacroInfo {
 
 **Example:**
 ```javascript
-const macros = session.listMacros("Core");
-macros.forEach(m => {
+const graphs = session.listGraphs("Core");
+graphs.forEach(m => {
     const params = m.parameters.map(p => p.name).join(", ");
     console.log(`${m.exportedAs}(${params})`);
 });
@@ -741,7 +743,7 @@ session.listAtoms("Commerce").forEach(a => {
 });
 
 console.log("\n=== AVAILABLE MACROS ===");
-session.listMacros("Commerce").slice(0, 5).forEach(m => {
+session.listGraphs("Commerce").slice(0, 5).forEach(m => {
     console.log(`  ${m.exportedAs}(${m.parameters.map(p=>p.name).join(", ")})`);
 });
 
@@ -827,7 +829,7 @@ tx1: sell(Alice, Bob, Car, 5000)
 | `elaborate()` | Vector → detailed text |
 | **`dump()`** | Full session state snapshot |
 | **`inspect()`** | Deep vector analysis |
-| **`listTheories/Atoms/Macros/Facts`** | Enumerate loaded content |
+| **`listTheories/Atoms/Graphs/Facts`** | Enumerate loaded content |
 | **`similarity()`** | Compare vectors |
 | **`decode()`** | Extract structure from vector |
 

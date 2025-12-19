@@ -83,7 +83,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is similar to a Hammer?',
     input_dsl: '@q similar Hammer ?entity',
-    expected_nl: 'Mallet is similar to Hammer. Proof: shared Tool, Handle, Head, and Pound Screwdriver is similar to Hammer. Proof: shared Tool and Handle'
+    expected_nl: 'Mallet is similar to Hammer. Screwdriver is similar to Hammer. Proof: shared Tool, Handle, Head, and Pound. shared Tool and Handle.'
   },
 
   // === SIMILAR: Car with ranked neighbors ===
@@ -91,7 +91,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is similar to a Car?',
     input_dsl: '@q similar Car ?entity',
-    expected_nl: 'Truck is similar to Car. Proof: shared Vehicle, Wheels, Engine, and Transport Bicycle is similar to Car. Proof: shared Vehicle, Wheels, and Transport'
+    expected_nl: 'Truck is similar to Car. Bicycle is similar to Car. Proof: shared Vehicle, Wheels, Engine, and Transport. shared Vehicle, Wheels, and Transport.'
   },
 
   // === SIMILAR: Sparrow vs Hawk (shared bird props) ===
@@ -179,7 +179,7 @@ export const steps = [
     action: 'query',
     input_nl: 'Car is to Engine as Bicycle is to what?',
     input_dsl: '@q analogy Car Engine Bicycle ?part',
-    expected_nl: 'Car is to Engine as Bicycle is to Wheels. Proof: Car has Engine maps to Bicycle has Wheels Car is to Engine as Bicycle is to Pedals. Proof: Car has Engine maps to Bicycle has Pedals'
+    expected_nl: 'Car is to Engine as Bicycle is to Wheels. Car is to Engine as Bicycle is to Pedals. Proof: Car has Engine maps to Bicycle has Wheels. Car has Engine maps to Bicycle has Pedals.'
   },
 
   // === BUNDLE DEEP: Bundle vehicles Car, Truck, Bicycle then look for shared ===

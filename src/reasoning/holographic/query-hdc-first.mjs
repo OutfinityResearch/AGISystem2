@@ -15,11 +15,10 @@ import { withPosition, getPositionVector } from '../../core/position.mjs';
 import { MAX_HOLES, getHolographicThresholds, getThresholds } from '../../core/constants.mjs';
 import { QueryEngine } from '../query.mjs';
 import { ProofEngine } from '../prove.mjs';
+import { debug_trace } from '../../utils/debug.js';
 
-// Debug logging
-const DEBUG = process.env.SYS2_DEBUG === 'true';
 function dbg(category, ...args) {
-  if (DEBUG) console.log(`[HoloQuery:${category}]`, ...args);
+  debug_trace(`[HoloQuery:${category}]`, ...args);
 }
 
 /**

@@ -7,11 +7,10 @@
 
 import { similarity } from '../core/operations.mjs';
 import { getThresholds } from '../core/constants.mjs';
+import { debug_trace } from '../utils/debug.js';
 
-// Debug logging
-const DEBUG = process.env.SYS2_DEBUG === 'true';
 function dbg(category, ...args) {
-  if (DEBUG) console.log(`[QueryKB:${category}]`, ...args);
+  debug_trace(`[QueryKB:${category}]`, ...args);
 }
 
 /**
@@ -42,6 +41,13 @@ export function searchKBDirect(session, operatorName, knowns, holes) {
     }
 
     if (matches) {
+      // Build proof steps from fact metadata (e.g., CSP constraint satisfaction)
+      const steps = [];
+      if (meta.proof) {
+        steps.push(meta.proof);
+      }
+      steps.push(`${operatorName} ${meta.args.join(' ')}`);
+
       const factBindings = new Map();
       for (const hole of holes) {
         const argIndex = hole.index - 1;
@@ -49,7 +55,8 @@ export function searchKBDirect(session, operatorName, knowns, holes) {
           factBindings.set(hole.name, {
             answer: meta.args[argIndex],
             similarity: 0.95,
-            method: 'direct'
+            method: 'direct',
+            steps  // Include proof steps in each binding
           });
         }
       }
@@ -59,7 +66,8 @@ export function searchKBDirect(session, operatorName, knowns, holes) {
           bindings: factBindings,
           score: 0.95,
           factName: fact.name,
-          method: 'direct'
+          method: 'direct',
+          steps
         });
       }
     }

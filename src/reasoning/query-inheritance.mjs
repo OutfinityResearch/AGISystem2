@@ -9,10 +9,10 @@
  * - entityIsA: Check if entity is a type
  */
 
-// Debug logging
-const DEBUG = process.env.SYS2_DEBUG === 'true';
+import { debug_trace } from '../utils/debug.js';
+
 function dbg(category, ...args) {
-  if (DEBUG) console.log(`[Inheritance:${category}]`, ...args);
+  debug_trace(`[Inheritance:${category}]`, ...args);
 }
 
 /**

@@ -23,19 +23,19 @@
 # ===== Modal Macros =====
 
 # Possibility
-@PossibleMacro:possible macro proposition
+@PossibleMacro:possible graph proposition
     @result __Role Possible $proposition
     return $result
 end
 
 # Necessity
-@NecessaryMacro:necessary macro proposition
+@NecessaryMacro:necessary graph proposition
     @result __Role Necessary $proposition
     return $result
 end
 
 # Impossibility
-@ImpossibleMacro:impossible macro proposition
+@ImpossibleMacro:impossible graph proposition
     @result __Role Impossible $proposition
     return $result
 end
@@ -44,7 +44,7 @@ end
 
 # Knowledge: agent knows proposition
 # Types: agent:Person, proposition:Abstract
-@KnowsMacro:knows macro agent proposition
+@KnowsMacro:knows graph agent proposition
     @knower __Role Experiencer $agent
     @content __Role Content $proposition
     @state __Role Known (__Bundle $knower $content)
@@ -52,7 +52,7 @@ end
 end
 
 # Belief: agent believes proposition
-@BelievesMacro:believes macro agent proposition
+@BelievesMacro:believes graph agent proposition
     @believer __Role Experiencer $agent
     @content __Role Content $proposition
     @state __Role Believed (__Bundle $believer $content)
@@ -63,7 +63,7 @@ end
 
 # Obligation: agent must do action
 # Types: agent:Person, action:Action|Event
-@MustMacro:must macro agent action
+@MustMacro:must graph agent action
     @obliged __Role Agent $agent
     @act __Role Action $action
     @result __Role Obligatory (__Bundle $obliged $act)
@@ -71,7 +71,7 @@ end
 end
 
 # Permission: agent may do action
-@MayMacro:may macro agent action
+@MayMacro:may graph agent action
     @permitted __Role Agent $agent
     @act __Role Action $action
     @result __Role Permitted (__Bundle $permitted $act)
@@ -79,7 +79,7 @@ end
 end
 
 # Prohibition: agent must not do action
-@MustNotMacro:mustNot macro agent action
+@MustNotMacro:mustNot graph agent action
     @forbidden __Role Agent $agent
     @act __Role Action $action
     @result __Role Forbidden (__Bundle $forbidden $act)

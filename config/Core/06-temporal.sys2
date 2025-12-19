@@ -22,48 +22,48 @@
 
 # Before: event1 happened before event2
 # Types: event1:Event, event2:Event
-@BeforeMacro:before macro event1 event2
+@BeforeMacro:before graph event1 event2
     @pair __Pair $event1 $event2
     @result __Role Before $pair
     return $result
 end
 
 # After: event1 happened after event2
-@AfterMacro:after macro event1 event2
+@AfterMacro:after graph event1 event2
     @result before $event2 $event1
     return $result
 end
 
 # During: event1 happened during event2
-@DuringMacro:during macro event1 event2
+@DuringMacro:during graph event1 event2
     @pair __Pair $event1 $event2
     @result __Role During $pair
     return $result
 end
 
 # Starts: event1 starts when event2 starts
-@StartsMacro:starts macro event1 event2
+@StartsMacro:starts graph event1 event2
     @pair __Pair $event1 $event2
     @result __Role Starts $pair
     return $result
 end
 
 # Ends: event1 ends when event2 ends
-@EndsMacro:ends macro event1 event2
+@EndsMacro:ends graph event1 event2
     @pair __Pair $event1 $event2
     @result __Role Ends $pair
     return $result
 end
 
 # Overlaps: event1 overlaps with event2
-@OverlapsMacro:overlaps macro event1 event2
+@OverlapsMacro:overlaps graph event1 event2
     @pair __Pair $event1 $event2
     @result __Role Overlaps $pair
     return $result
 end
 
 # Meets: event1 ends exactly when event2 starts
-@MeetsMacro:meets macro event1 event2
+@MeetsMacro:meets graph event1 event2
     @pair __Pair $event1 $event2
     @result __Role Meets $pair
     return $result
@@ -73,7 +73,7 @@ end
 
 # Causes: cause led to effect
 # Types: cause:Event, effect:Event|State
-@CausesMacro:causes macro cause effect
+@CausesMacro:causes graph cause effect
     @temporal before $cause $effect
     @causal __Role Causes (__Pair $cause $effect)
     @result __Bundle $temporal $causal
@@ -81,14 +81,14 @@ end
 end
 
 # Enables: enabler made possible enabled
-@EnablesMacro:enables macro enabler enabled
+@EnablesMacro:enables graph enabler enabled
     @pair __Pair $enabler $enabled
     @result __Role Enables $pair
     return $result
 end
 
 # Prevents: preventer stopped prevented
-@PreventsMacro:prevents macro preventer prevented
+@PreventsMacro:prevents graph preventer prevented
     @pair __Pair $preventer $prevented
     @result __Role Prevents $pair
     return $result

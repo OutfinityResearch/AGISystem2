@@ -63,6 +63,12 @@ interface SessionOptions {
   preloadTheories?: string[]; // Theories to load
   logLevel?: string;          // Logging level
 }
+
+// HDC Strategy (set via SYS2_HDC_STRATEGY environment variable)
+// - 'dense-binary' (default): HDC-Priority mode, ~200 facts capacity
+// - 'sparse-polynomial': Symbolic-Priority mode, unlimited capacity
+// - 'metric-affine': Symbolic-Priority mode, unlimited capacity
+// See DS01 Section 1.10 for dual reasoning architecture details
 ```
 
 ---
@@ -145,10 +151,12 @@ learn(dsl) {
       }
     }
 
-    // Check capacity warnings
-    if (this.facts.length > 100) {
+    // Check capacity warnings (dense-binary HDC-Priority mode only)
+    // In Symbolic-Priority modes (sparse-polynomial, metric-affine),
+    // KB capacity is unlimited. See DS01 Section 1.10.
+    if (this.hdcStrategy === 'dense-binary' && this.facts.length > 100) {
       result.warnings.push(`Knowledge base has ${this.facts.length} facts. ` +
-        `Accuracy may degrade above 200 facts.`);
+        `In dense-binary mode, accuracy may degrade above 200 facts.`);
     }
 
   } catch (e) {
@@ -282,7 +290,8 @@ close() {
 | SES-07 | Inspect vector | Structure decoded |
 | SES-08 | Close session | Resources released |
 | SES-09 | Session isolation | Sessions don't share state |
-| SES-10 | Capacity warning | Warning at 100+ facts |
+| SES-10 | Capacity warning (dense-binary) | Warning at 100+ facts |
+| SES-11 | No capacity warning (sparse/metric) | No warning regardless of fact count |
 
 ---
 

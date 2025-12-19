@@ -189,8 +189,7 @@ export const steps = [
     action: 'query',
     input_nl: 'Who can pay?',
     input_dsl: '@q can ?who Pay',
-    expected_nl: 'Alice can Pay. Eve can Pay. Bob can Pay.',
-    
+    expected_nl: 'Alice can Pay. Eve can Pay. Bob can Pay. Proof: x=Alice. Applied rule: Implies @payOr2 @payConc. x=Eve. Applied rule: Implies @payOr2 @payConc. x=Bob. Applied rule: Implies @payOr2 @payConc.'
   },
 
   // === SETUP: Deep corporate hierarchy + promotion rule ===

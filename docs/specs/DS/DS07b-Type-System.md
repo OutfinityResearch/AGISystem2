@@ -114,41 +114,41 @@ Defined in `config/Core/02-constructors.sys2`:
 ### 7b.5.1 Entity Constructors
 
 ```sys2
-@__Entity:__Entity macro
+@__Entity:__Entity graph
     @v ___NewVector
     @typed ___Bind $v EntityType
     return $typed
 end
 
-@__Person:__Person macro
+@__Person:__Person graph
     @v ___NewVector
     @t1 ___Bind $v EntityType
     @typed ___Bind $t1 PersonType
     return $typed
 end
 
-@__Object:__Object macro
+@__Object:__Object graph
     @v ___NewVector
     @t1 ___Bind $v EntityType
     @typed ___Bind $t1 ObjectType
     return $typed
 end
 
-@__Place:__Place macro
+@__Place:__Place graph
     @v ___NewVector
     @t1 ___Bind $v EntityType
     @typed ___Bind $t1 PlaceType
     return $typed
 end
 
-@__Organization:__Organization macro
+@__Organization:__Organization graph
     @v ___NewVector
     @t1 ___Bind $v EntityType
     @typed ___Bind $t1 OrganizationType
     return $typed
 end
 
-@__Substance:__Substance macro
+@__Substance:__Substance graph
     @v ___NewVector
     @t1 ___Bind $v EntityType
     @typed ___Bind $t1 SubstanceType
@@ -159,35 +159,35 @@ end
 ### 7b.5.2 Abstract Constructors
 
 ```sys2
-@__Property:__Property macro
+@__Property:__Property graph
     @v ___NewVector
     @t1 ___Bind $v AbstractType
     @typed ___Bind $t1 PropertyType
     return $typed
 end
 
-@__State:__State macro
+@__State:__State graph
     @v ___NewVector
     @t1 ___Bind $v AbstractType
     @typed ___Bind $t1 StateType
     return $typed
 end
 
-@__Category:__Category macro
+@__Category:__Category graph
     @v ___NewVector
     @t1 ___Bind $v AbstractType
     @typed ___Bind $t1 CategoryType
     return $typed
 end
 
-@__Relation:__Relation macro
+@__Relation:__Relation graph
     @v ___NewVector
     @t1 ___Bind $v AbstractType
     @typed ___Bind $t1 RelationType
     return $typed
 end
 
-@__Action:__Action macro
+@__Action:__Action graph
     @v ___NewVector
     @t1 ___Bind $v AbstractType
     @typed ___Bind $t1 ActionType
@@ -198,13 +198,13 @@ end
 ### 7b.5.3 Temporal Constructors
 
 ```sys2
-@__TimePoint:__TimePoint macro
+@__TimePoint:__TimePoint graph
     @v ___NewVector
     @typed ___Bind $v TimePointType
     return $typed
 end
 
-@__TimePeriod:__TimePeriod macro
+@__TimePeriod:__TimePeriod graph
     @v ___NewVector
     @typed ___Bind $v TimePeriodType
     return $typed
@@ -214,20 +214,20 @@ end
 ### 7b.5.4 Quantity Constructors
 
 ```sys2
-@__Number:__Number macro value
+@__Number:__Number graph value
     @v ___NewVector
     @t ___Bind $v NumberType
     @typed ___Bind $t $value
     return $typed
 end
 
-@__Amount:__Amount macro
+@__Amount:__Amount graph
     @v ___NewVector
     @typed ___Bind $v AmountType
     return $typed
 end
 
-@__Measure:__Measure macro value unit
+@__Measure:__Measure graph value unit
     @v ___NewVector
     @t ___Bind $v MeasureType
     @withVal ___Bind $t $value
@@ -239,7 +239,7 @@ end
 ### 7b.5.5 Event Constructor
 
 ```sys2
-@__Event:__Event macro
+@__Event:__Event graph
     @v ___NewVector
     @typed ___Bind $v EventType
     return $typed
@@ -255,7 +255,7 @@ Defined in `config/Core/03-structural.sys2`:
 ### 7b.6.1 Role Binding
 
 ```sys2
-@__Role:__Role macro roleName filler
+@__Role:__Role graph roleName filler
     @r ___Bind $roleName $filler
     @typed ___Bind $r RoleType
     return $typed
@@ -265,14 +265,14 @@ end
 ### 7b.6.2 Pair and Triple
 
 ```sys2
-@__Pair:__Pair macro first second
+@__Pair:__Pair graph first second
     @p1 ___Bind $first Pos1
     @p2 ___Bind $second Pos2
     @result ___Bind $p1 $p2
     return $result
 end
 
-@__Triple:__Triple macro a b c
+@__Triple:__Triple graph a b c
     @p1 ___Bind $a Pos1
     @p2 ___Bind $b Pos2
     @p3 ___Bind $c Pos3
@@ -285,12 +285,12 @@ end
 ### 7b.6.3 Bundle and Sequence
 
 ```sys2
-@__Bundle:__Bundle macro items
+@__Bundle:__Bundle graph items
     @result ___Bundle $items
     return $result
 end
 
-@__Sequence:__Sequence macro items
+@__Sequence:__Sequence graph items
     # Each item bound with position, then bundled
     @result ___BundlePositioned $items
     return $result
@@ -300,7 +300,7 @@ end
 ### 7b.6.4 Type Checking
 
 ```sys2
-@IsTypeMacro:isType macro instance typeMarker
+@IsTypeGraph:isType graph instance typeMarker
     @extracted ___GetType $instance
     @sim ___Similarity $extracted $typeMarker
     @result GreaterThan $sim 0.8
@@ -406,12 +406,12 @@ end
 | Config File | Purpose |
 |-------------|---------|
 | `config/Core/00-types.sys2` | Type marker definitions |
-| `config/Core/02-constructors.sys2` | Typed constructor macros |
+| `config/Core/02-constructors.sys2` | Typed constructor graphs |
 | `config/Core/03-structural.sys2` | Structural operations |
 
 | Source File | Purpose |
 |-------------|---------|
-| `src/runtime/executor.mjs` | Macro expansion |
+| `src/runtime/executor.mjs` | Graph expansion |
 | `src/core/operations.mjs` | Bind, bundle primitives |
 
 ---

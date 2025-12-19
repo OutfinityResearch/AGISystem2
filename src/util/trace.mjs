@@ -1,46 +1,16 @@
+import { debug_trace, isDebugEnabled, setDebugEnabled as setDebugOverride } from '../utils/debug.js';
+
 /**
  * AGISystem2 - Trace/Debug Utility
  * @module util/trace
- *
- * Provides conditional logging based on SYS2_DEBUG environment variable.
- * When SYS2_DEBUG is set to 'true' or '1', trace messages are logged to console.
  */
 
-/**
- * Check if debug mode is enabled
- * @returns {boolean}
- */
-function isDebugEnabled() {
-  if (typeof process !== 'undefined' && process.env) {
-    const debug = process.env.SYS2_DEBUG;
-    return debug === 'true' || debug === '1';
-  }
-  // Browser environment - check global
-  if (typeof globalThis !== 'undefined' && globalThis.SYS2_DEBUG) {
-    return globalThis.SYS2_DEBUG === true || globalThis.SYS2_DEBUG === 'true';
-  }
-  return false;
-}
-
-/**
- * Cached debug state (can be updated via setDebug)
- */
-let debugEnabled = isDebugEnabled();
-
-/**
- * Manually enable or disable debug mode
- * @param {boolean} enabled
- */
 export function setDebug(enabled) {
-  debugEnabled = enabled;
+  setDebugOverride(enabled);
 }
 
-/**
- * Get current debug state
- * @returns {boolean}
- */
 export function getDebug() {
-  return debugEnabled;
+  return isDebugEnabled();
 }
 
 /**
@@ -49,107 +19,58 @@ export function getDebug() {
  * @param {...any} args - Arguments to log
  */
 export function sys2trace(module, ...args) {
-  if (debugEnabled) {
-    const timestamp = new Date().toISOString();
-    console.log(`[SYS2:${module}] ${timestamp}`, ...args);
-  }
+  if (!isDebugEnabled()) return;
+  const timestamp = new Date().toISOString();
+  debug_trace(`[SYS2:${module}] ${timestamp}`, ...args);
 }
 
-/**
- * Create a scoped tracer for a specific module
- * @param {string} module - Module name
- * @returns {function} Trace function for this module
- */
 export function createTracer(module) {
   return (...args) => sys2trace(module, ...args);
 }
 
-/**
- * Log with different levels
- */
 export const trace = {
-  /**
-   * General trace message
-   */
   log: (module, ...args) => sys2trace(module, ...args),
 
-  /**
-   * Warning - always logged if debug is on
-   */
   warn: (module, ...args) => {
-    if (debugEnabled) {
+    if (isDebugEnabled()) {
       console.warn(`[SYS2:${module}:WARN]`, ...args);
     }
   },
 
-  /**
-   * Error - always logged regardless of debug flag
-   */
   error: (module, ...args) => {
     console.error(`[SYS2:${module}:ERROR]`, ...args);
   },
 
-  /**
-   * Entry into a function
-   */
   enter: (module, fnName, ...args) => {
-    if (debugEnabled) {
-      console.log(`[SYS2:${module}] ENTER ${fnName}`, args.length > 0 ? args : '');
-    }
+    if (!isDebugEnabled()) return;
+    debug_trace(`[SYS2:${module}] ENTER ${fnName}`, args.length > 0 ? args : '');
   },
 
-  /**
-   * Exit from a function
-   */
   exit: (module, fnName, result) => {
-    if (debugEnabled) {
-      const summary = result !== undefined ? summarizeResult(result) : '';
-      console.log(`[SYS2:${module}] EXIT ${fnName}`, summary);
-    }
+    if (!isDebugEnabled()) return;
+    const summary = result !== undefined ? summarizeResult(result) : '';
+    debug_trace(`[SYS2:${module}] EXIT ${fnName}`, summary);
   },
 
-  /**
-   * Time a block of code
-   * @param {string} module
-   * @param {string} label
-   * @param {function} fn
-   * @returns {*} Result of fn
-   */
   time: (module, label, fn) => {
-    if (debugEnabled) {
-      const start = performance.now();
-      const result = fn();
-      const elapsed = (performance.now() - start).toFixed(2);
-      console.log(`[SYS2:${module}] ${label} took ${elapsed}ms`);
-      return result;
-    }
-    return fn();
+    if (!isDebugEnabled()) return fn();
+    const start = performance.now();
+    const result = fn();
+    const elapsed = (performance.now() - start).toFixed(2);
+    debug_trace(`[SYS2:${module}] ${label} took ${elapsed}ms`);
+    return result;
   },
 
-  /**
-   * Async time a block of code
-   * @param {string} module
-   * @param {string} label
-   * @param {function} fn - async function
-   * @returns {Promise<*>} Result of fn
-   */
   timeAsync: async (module, label, fn) => {
-    if (debugEnabled) {
-      const start = performance.now();
-      const result = await fn();
-      const elapsed = (performance.now() - start).toFixed(2);
-      console.log(`[SYS2:${module}] ${label} took ${elapsed}ms`);
-      return result;
-    }
-    return fn();
+    if (!isDebugEnabled()) return fn();
+    const start = performance.now();
+    const result = await fn();
+    const elapsed = (performance.now() - start).toFixed(2);
+    debug_trace(`[SYS2:${module}] ${label} took ${elapsed}ms`);
+    return result;
   }
 };
 
-/**
- * Summarize a result for trace output
- * @param {*} result
- * @returns {string}
- */
 function summarizeResult(result) {
   if (result === null || result === undefined) {
     return String(result);

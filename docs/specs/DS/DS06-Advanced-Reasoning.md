@@ -86,9 +86,9 @@ Chapter 5 covered basic reasoning: deduction, backward chaining, and analogy. Th
 5. Return: Rain (confidence: 0.85)
 ```
 
-**Implementation as macro:**
+**Implementation as graph:**
 ```
-@AbduceMacro:abduce macro observation
+@AbduceGraph:abduce graph observation
     @rules FindRulesWithConsequent $observation
     @candidates ExtractAntecedents $rules
     @scored ScoreByExplanatoryPower $candidates
@@ -146,7 +146,7 @@ score(candidate) = count(observations explained by candidate)
 
 **Implementation:**
 ```
-@InduceMacro:induce macro property1 property2 examples
+@InduceGraph:induce graph property1 property2 examples
     @cooccur CountCooccurrence $property1 $property2 $examples
     @total CountTotal $examples
     @ratio Divide $cooccur $total
@@ -207,7 +207,7 @@ end
      → adds HasProperty ?surface ?color
 
 3. Generate verb definition:
-   @PaintDef:paint macro agent surface color
+   @PaintDef:paint graph agent surface color
        @eid __Event
        @r1 __Role Agent $agent
        @r2 __Role Target $surface
@@ -219,12 +219,12 @@ end
 
 **Implementation:**
 ```
-@DiscoverVerbMacro:discoverVerb macro before after actionInstance
+@DiscoverVerbGraph:discoverVerb graph before after actionInstance
     @added Difference $after $before
     @removed Difference $before $after
     @args ExtractArguments $actionInstance
     @mapping CorrelateArgsWithDelta $args $added $removed
-    @template GeneralizeMacro $mapping
+    @template GeneralizeGraph $mapping
     return $template
 end
 
@@ -271,7 +271,7 @@ end
 
 **Implementation:**
 ```
-@CounterfactualMacro:whatif macro world fact negated
+@CounterfactualGraph:whatif graph world fact negated
     @dependencies FindDependents $world $fact
     @affected FilterByDependency $world $dependencies
     @altWorld Remove $world $affected
@@ -343,7 +343,7 @@ Penguin is more specific than Bird
 
 **Implementation:**
 ```
-@DefaultReasonMacro:defaultQuery macro subject property
+@DefaultReasonGraph:defaultQuery graph subject property
     @defaults FindDefaults $property
     @applicable FilterByType $defaults $subject
     @exceptions FindExceptions $property
@@ -410,14 +410,14 @@ end
 
 **Implementation:**
 ```
-@TemporalQueryMacro:whenBefore macro event kb
+@TemporalQueryGraph:whenBefore graph event kb
     @direct FindDirect Before $event $kb
     @indirect TransitiveClosure Before $direct $kb
     @all __Bundle $direct $indirect
     return $all
 end
 
-@TemporalChainMacro:causalChain macro effect kb
+@TemporalChainGraph:causalChain graph effect kb
     @cause FindDirect Causes $effect $kb
     @prior causalChain $cause $kb      # recursive
     @chain __Bundle $cause $prior
@@ -456,7 +456,7 @@ end
 @colors __Bundle Red Blue Green Yellow
 @objects __Bundle Apple Car House Ball
 
-@AllCombinationsMacro:combine macro set1 set2
+@AllCombinationsGraph:combine graph set1 set2
     @result Empty
     # For each in set1 × set2, create Pair
     # (Implementation iterates or uses outer product)
@@ -483,7 +483,7 @@ end
 **Conceptual blending:**
 ```
 # Blend two concepts
-@BlendMacro:blend macro concept1 concept2
+@BlendGraph:blend graph concept1 concept2
     @shared ___Similarity $concept1 $concept2
     @unique1 Difference $concept1 $concept2
     @unique2 Difference $concept2 $concept1
@@ -537,45 +537,45 @@ Core defines these as verbs for advanced reasoning:
 
 ```
 # Abduction
-@AbduceMacro:abduce macro observation
+@AbduceGraph:abduce graph observation
     ...
 end
 
 # Induction  
-@InduceMacro:induce macro prop1 prop2 examples
+@InduceGraph:induce graph prop1 prop2 examples
     ...
 end
 
 # Structural discovery
-@DiscoverVerbMacro:discoverVerb macro before after action
+@DiscoverVerbGraph:discoverVerb graph before after action
     ...
 end
 
 # Counterfactual
-@CounterfactualMacro:whatif macro world fact negated
+@CounterfactualGraph:whatif graph world fact negated
     ...
 end
 
 # Default query
-@DefaultQueryMacro:normally macro subject property
+@DefaultQueryGraph:normally graph subject property
     ...
 end
 
 # Temporal
-@TemporalQueryMacro:before macro event
+@TemporalQueryGraph:before graph event
     ...
 end
 
-@CausalChainMacro:whyCaused macro effect
+@CausalChainGraph:whyCaused graph effect
     ...
 end
 
 # Composition
-@ComposeMacro:compose macro concept1 concept2
+@ComposeGraph:compose graph concept1 concept2
     ...
 end
 
-@BlendMacro:blend macro concept1 concept2
+@BlendGraph:blend graph concept1 concept2
     ...
 end
 ```

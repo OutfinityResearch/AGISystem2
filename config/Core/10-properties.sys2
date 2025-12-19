@@ -6,7 +6,7 @@
 
 # hasProperty: entity has permanent property
 # Types: entity:Entity, property:Property
-@HasPropertyMacro:hasProperty macro entity property
+@HasPropertyMacro:hasProperty graph entity property
     @r1 __Role Theme $entity
     @r2 __Role Attribute $property
     @result __Bundle $r1 $r2
@@ -15,7 +15,7 @@ end
 
 # inState: entity is in temporary state
 # Types: entity:Entity, state:State
-@InStateMacro:inState macro entity state
+@InStateMacro:inState graph entity state
     @r1 __Role Theme $entity
     @r2 __Role State $state
     @result __Bundle $r1 $r2
@@ -26,7 +26,7 @@ end
 
 # isA: entity is member of category
 # Types: entity:Entity, category:Category
-@IsAMacro:isA macro entity category
+@IsAMacro:isA graph entity category
     @r1 __Role Instance $entity
     @r2 __Role Category $category
     @result __Bundle $r1 $r2
@@ -35,7 +35,7 @@ end
 
 # subclass: category1 is subclass of category2
 # Types: category1:Category, category2:Category
-@SubclassMacro:subclass macro subcategory supercategory
+@SubclassMacro:subclass graph subcategory supercategory
     @r1 __Role Subclass $subcategory
     @r2 __Role Superclass $supercategory
     @result __Bundle $r1 $r2
@@ -49,21 +49,21 @@ end
 @MadeOf:MadeOf __Relation
 
 # partOf: part is part of whole
-@PartOfMacro:partOf macro part whole
+@PartOfMacro:partOf graph part whole
     @pair __Pair $part $whole
     @result __Role PartOf $pair
     return $result
 end
 
 # hasPart: whole has part
-@HasPartMacro:hasPart macro whole part
+@HasPartMacro:hasPart graph whole part
     @pair __Pair $whole $part
     @result __Role HasPart $pair
     return $result
 end
 
 # madeOf: object is made of substance
-@MadeOfMacro:madeOf macro object substance
+@MadeOfMacro:madeOf graph object substance
     @pair __Pair $object $substance
     @result __Role MadeOf $pair
     return $result
@@ -77,7 +77,7 @@ end
 @Near:Near __Relation
 
 # at: entity is at location
-@AtMacro:at macro entity location
+@AtMacro:at graph entity location
     @r1 __Role Theme $entity
     @r2 __Role Location $location
     @result __Bundle $r1 $r2
@@ -85,7 +85,7 @@ end
 end
 
 # in: entity is in container
-@InMacro:in macro entity container
+@InMacro:in graph entity container
     @r1 __Role Theme $entity
     @r2 __Role Location $container
     @r3 __Role Relation In
@@ -94,7 +94,7 @@ end
 end
 
 # on: entity is on surface
-@OnMacro:on macro entity surface
+@OnMacro:on graph entity surface
     @r1 __Role Theme $entity
     @r2 __Role Location $surface
     @r3 __Role Relation On
@@ -103,7 +103,7 @@ end
 end
 
 # near: entity is near landmark
-@NearMacro:near macro entity landmark
+@NearMacro:near graph entity landmark
     @r1 __Role Theme $entity
     @r2 __Role Location $landmark
     @r3 __Role Relation Near
@@ -118,7 +118,7 @@ end
 # Types: entity:Entity, ability:Action|Abstract
 @Can:Can __Relation
 
-@CanMacro:can macro entity ability
+@CanMacro:can graph entity ability
     @r1 __Role Theme $entity
     @r2 __Role Attribute $ability
     @result __Bundle $r1 $r2
@@ -131,7 +131,7 @@ end
 # Types: entity:Entity, possession:Entity|Property
 @Has:Has __Relation
 
-@HasMacro:has macro entity possession
+@HasMacro:has graph entity possession
     @r1 __Role Theme $entity
     @r2 __Role Attribute $possession
     @result __Bundle $r1 $r2
@@ -144,7 +144,7 @@ end
 # synonym: term1 is synonym of term2 (symmetric)
 @Synonym:Synonym __SymmetricRelation
 
-@SynonymMacro:synonym macro term1 term2
+@SynonymMacro:synonym graph term1 term2
     @pair __Pair $term1 $term2
     @result __Role Synonym $pair
     return $result

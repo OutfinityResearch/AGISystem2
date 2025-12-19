@@ -92,14 +92,14 @@ fact2 = loves ⊕ (Pos1 ⊕ Mary) ⊕ (Pos2 ⊕ John)
 similarity(fact, fact2) ≈ 0.5  # Different facts!
 ```
 
-### 7a.4.3 With Macro
+### 7a.4.3 With Graph
 
-When Op has an associated macro:
+When Op has an associated graph:
 ```
-dest = Op ⊕ macro_result
+dest = Op ⊕ graph_result
 ```
 
-The macro's return value is bound with the operator.
+The graph's return value is bound with the operator.
 
 ### 7a.4.4 Query (Unbinding)
 

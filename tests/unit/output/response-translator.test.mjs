@@ -1,6 +1,7 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert';
 import { ResponseTranslator } from '../../../src/output/response-translator.mjs';
+import { Session } from '../../../src/runtime/session.mjs';
 
 class FakeSession {
   constructor() {

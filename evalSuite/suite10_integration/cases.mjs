@@ -167,8 +167,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What symptoms does Patient1 have?',
     input_dsl: '@q hasSymptom Patient1 ?symptom',
-    expected_nl: 'Patient1 has fatigue. Patient1 has fever. Patient1 has cough.',
-      // Direct fact query - no proof generated
+    expected_nl: 'Patient1 has fatigue. Patient1 has fever. Patient1 has cough. Proof: hasSymptom Patient1 Fatigue. hasSymptom Patient1 Fever. hasSymptom Patient1 Cough.'
   },
 
   // === QUERY: What can DrSmith do ===
@@ -176,8 +175,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What can DrSmith do?',
     input_dsl: '@q can DrSmith ?ability',
-    expected_nl: 'DrSmith can Prescribe. DrSmith can Diagnose.',
-      // Direct fact query - no proof generated
+    expected_nl: 'DrSmith can Prescribe. DrSmith can Diagnose. Proof: can DrSmith Prescribe. can DrSmith Diagnose.'
   }
 ];
 

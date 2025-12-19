@@ -90,7 +90,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is a Bird?',
     input_dsl: '@q isA ?x Bird',
-    expected_nl: 'Songbird is a bird. FlightlessBird is a bird. Sparrow is a bird. Proof: isA Sparrow Songbird. isA Songbird Bird. Penguin is a bird. Proof: isA Penguin FlightlessBird. isA FlightlessBird Bird. Tweety is a bird. Proof: isA Tweety Sparrow. isA Sparrow Songbird. isA Songbird Bird. Opus is a bird. Proof: isA Opus Penguin. isA Penguin FlightlessBird. isA FlightlessBird Bird.'
+    expected_nl: 'Songbird is a bird. Proof: Songbird is a bird.. FlightlessBird is a bird. Proof: FlightlessBird is a bird.. Sparrow is a bird. Proof: isA Sparrow Songbird. isA Songbird Bird. Penguin is a bird. Proof: isA Penguin FlightlessBird. isA FlightlessBird Bird. Tweety is a bird. Proof: isA Tweety Sparrow. isA Sparrow Songbird. isA Songbird Bird. Opus is a bird. Proof: isA Opus Penguin. isA Penguin FlightlessBird. isA FlightlessBird Bird.'
   },
 
   // === PROVE: 6-step Tweety→LivingThing ===

@@ -11,12 +11,12 @@
 
 A **Theory** creates two things:
 1. A **vector** — semantic identity of the theory
-2. A **namespace** — atoms and macros it contains
+2. A **namespace** — atoms and graphs it contains
 
 | Component | Description |
 |-----------|-------------|
 | Vector | Can be compared, bundled, used as argument |
-| Namespace | Atoms and macros, activated via Load |
+| Namespace | Atoms and graphs, activated via Load |
 | Geometry | Vector dimensionality (16384 / 32768 / 65536) |
 | Init | How new atoms get vectors |
 
@@ -48,7 +48,7 @@ Since theories are vectors, all HDC operations apply:
 
 **Dynamic theory selection:**
 ```
-@FindBestTheory macro topic
+@FindBestTheory graph topic
     @candidates __Bundle $Economics $Physics $Law
     @best ___MostSimilar $topic $candidates
     return $best
@@ -100,9 +100,9 @@ Defined in Core, used like any other verb:
 @_ Unload $Economics         # Deactivate
 ```
 
-**Inside macros:**
+**Inside graphs:**
 ```
-@AnalyzeTrade macro item
+@AnalyzeTrade graph item
     @_ Load $Economics
     @result Query $item
     @_ Unload $Economics
@@ -143,11 +143,13 @@ Multiple theories can be loaded, forming a stack. Resolution: most recent first.
 
 Each theory declares dimensionality:
 
-| Tier | Bits | Bytes | Capacity | Use Case |
-|------|------|-------|----------|----------|
+| Tier | Bits | Bytes | Bundle Capacity* | Use Case |
+|------|------|-------|-----------------|----------|
 | Small | 16,384 | 2 KB | ~50-100 items | Simple domains |
 | Standard | 32,768 | 4 KB | ~100-200 items | General |
 | Large | 65,536 | 8 KB | ~200-400 items | Complex |
+
+*\*Bundle capacity applies to **HDC-Priority mode** (dense-binary strategy) only. In **Symbolic-Priority mode** (sparse-polynomial, metric-affine), KB capacity is effectively unlimited since facts are stored with metadata and not bundled. See DS01 Section 1.10 for details on dual reasoning modes.*
 
 **Cross-theory operations:** Vectors auto-extend to largest geometry.
 
@@ -190,7 +192,7 @@ Theory {
     name: string
     geometry: number
     atoms: Map<string, Uint64Array>
-    macros: Map<string, MacroDefinition>
+    graphs: Map<string, GraphDefinition>
 }
 
 Session {
@@ -217,7 +219,7 @@ theory_economics/
 ├── manifest.json      # {name, geometry, init, vector}
 ├── atoms.bin          # Roaring-compressed
 ├── atoms_index.json   # {name → offset}
-└── macros.json        # Macro definitions
+└── graphs.json        # Graph definitions
 ```
 
 **Note:** The theory's own vector is stored in manifest.
@@ -287,7 +289,7 @@ Properties: deterministic, preserves similarity.
 | Geometry | 16K/32K/64K bits, auto-extend across theories |
 | Hot/Cold | Dense RAM for speed, sparse disk for storage |
 
-**Key insight:** Theories are first-class vectors. You can compare them, bundle them, query about them, and pass them to macros dynamically.
+**Key insight:** Theories are first-class vectors. You can compare them, bundle them, query about them, and pass them to graphs dynamically.
 
 ---
 

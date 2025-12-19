@@ -15,7 +15,8 @@ import {
   Reference,
   Literal,
   List,
-  MacroDeclaration,
+  Compound,
+  GraphDeclaration,
   SolveBlock,
   SolveDeclaration
 } from '../parser/ast.mjs';
@@ -26,6 +27,11 @@ import { resolve, dirname } from 'node:path';
 // Import extracted modules
 import { executeSolveBlock as executeSolveBlockImpl, findConflictPairs as findConflictPairsImpl } from './executor-solve.mjs';
 import { executeInduce as executeInduceImpl, executeBundle as executeBundleImpl } from './executor-meta-ops.mjs';
+import { debug_trace, isDebugEnabled } from '../utils/debug.js';
+
+function dbg(category, ...args) {
+  debug_trace(`[Executor:${category}]`, ...args);
+}
 
 export class ExecutionError extends Error {
   constructor(message, node) {
@@ -60,9 +66,9 @@ export class Executor {
 
     for (const stmt of program.statements) {
       try {
-        // Handle macro declarations (now parsed as AST nodes)
-        if (stmt instanceof MacroDeclaration) {
-          const result = this.executeMacroDeclaration(stmt);
+        // Handle graph declarations (HDC point relationship graphs)
+        if (stmt instanceof GraphDeclaration) {
+          const result = this.executeGraphDeclaration(stmt);
           results.push(result);
           continue;
         }
@@ -83,78 +89,91 @@ export class Executor {
   }
 
   /**
-   * Execute macro declaration - store macro for later invocation
-   * @param {MacroDeclaration} macro - Macro AST node
+   * Execute graph declaration - store graph for later invocation
+   * @param {GraphDeclaration} graph - Graph AST node
    * @returns {Object} Result
    */
-  executeMacroDeclaration(macro) {
-    if (!this.session.macros) this.session.macros = new Map();
-    if (!this.session.macroAliases) this.session.macroAliases = new Map();
+  executeGraphDeclaration(graph) {
+    if (!this.session.graphs) this.session.graphs = new Map();
+    if (!this.session.graphAliases) this.session.graphAliases = new Map();
 
-    // Store the macro definition
-    const macroDef = {
-      name: macro.name,
-      persistName: macro.persistName,
-      params: macro.params,
-      body: macro.body,
-      returnExpr: macro.returnExpr,
-      line: macro.line
+    // Store the graph definition
+    const graphDef = {
+      name: graph.name,
+      persistName: graph.persistName,
+      params: graph.params,
+      body: graph.body,
+      returnExpr: graph.returnExpr,
+      line: graph.line
     };
 
-    this.session.macros.set(macro.name, macroDef);
-    if (macro.persistName && macro.persistName !== macro.name) {
-      if (!this.session.macroAliases.has(macro.persistName)) {
-        this.session.macroAliases.set(macro.persistName, macro.name);
-      }
+    // Use persistName as the primary key if available (for invocation)
+    // This allows redefining graphs with the same invocation name
+    const invocationName = graph.persistName || graph.name;
+    this.session.graphs.set(invocationName, graphDef);
+
+    // Also store under the export name for reference lookup
+    if (graph.name && graph.name !== invocationName) {
+      this.session.graphs.set(graph.name, graphDef);
     }
 
     return {
-      type: 'macro_definition',
-      name: macro.name,
-      persistName: macro.persistName,
-      params: macro.params
+      type: 'graph_definition',
+      name: graph.name,
+      persistName: graph.persistName,
+      params: graph.params
     };
   }
 
   /**
-   * Expand and execute a macro invocation
-   * @param {string} macroName - Name of the macro to invoke
+   * Expand and execute a graph invocation (HDC point relationship graph)
+   * @param {string} graphName - Name of the graph to invoke
    * @param {Array} args - Argument expressions
-   * @returns {Vector} Result vector from macro expansion
+   * @returns {Vector} Result vector from graph expansion
    */
-  expandMacro(macroName, args) {
-    let macro = this.session.macros?.get(macroName);
-    if (!macro && this.session.macroAliases?.has(macroName)) {
-      const canonical = this.session.macroAliases.get(macroName);
-      macro = this.session.macros?.get(canonical);
+  expandGraph(graphName, args) {
+    let graph = this.session.graphs?.get(graphName);
+    if (!graph && this.session.graphAliases?.has(graphName)) {
+      const canonical = this.session.graphAliases.get(graphName);
+      graph = this.session.graphs?.get(canonical);
     }
-    if (!macro) {
-      throw new ExecutionError(`Unknown macro: ${macroName}`);
+    if (!graph) {
+      throw new ExecutionError(`Unknown graph: ${graphName}`);
     }
 
-    // Create a child scope for macro execution
+    if (isDebugEnabled()) {
+      dbg('GRAPH_EXPAND', `Expanding graph: ${graphName} with ${args.length} args`);
+    }
+
+    // Create a child scope for graph execution
     const parentScope = this.session.scope;
-    const macroScope = parentScope.child();
-    this.session.scope = macroScope;
+    const graphScope = parentScope.child();
+    this.session.scope = graphScope;
 
     try {
-      // Bind arguments to parameters in macro scope
-      for (let i = 0; i < macro.params.length; i++) {
-        const paramName = macro.params[i];
+      // Bind arguments to parameters in graph scope
+      for (let i = 0; i < graph.params.length; i++) {
+        const paramName = graph.params[i];
         const argVec = i < args.length ? this.resolveExpression(args[i]) : null;
         if (argVec) {
-          macroScope.set(paramName, argVec);
+          graphScope.set(paramName, argVec);
         }
       }
 
       // Execute body statements
-      for (const stmt of macro.body) {
-        this.executeStatement(stmt);
+      if (isDebugEnabled()) {
+        dbg('GRAPH_EXPAND', `Executing ${graph.body.length} body statements`);
+      }
+      for (const stmt of graph.body) {
+        const result = this.executeStatement(stmt);
+        if (isDebugEnabled()) {
+          dbg('GRAPH_BODY', `Statement: ${stmt.toString()} | Destination: ${stmt.destination || '(none)'} | Persistent: ${result.persistent}`);
+        }
       }
 
       // Return the result expression if specified
-      if (macro.returnExpr) {
-        return this.resolveExpression(macro.returnExpr);
+      if (graph.returnExpr) {
+        return this.resolveExpression(graph.returnExpr);
       }
 
       // Return null if no return expression
@@ -200,17 +219,20 @@ export class Executor {
       return this.executeBundle(stmt);
     }
 
-    // Check if operator is a macro - if so, expand it
+    // Check if operator is a graph - if so, expand it
+    // Check both direct graph names and aliases (persistName)
     let vector;
-    if (this.session.macros?.has(operatorName)) {
-      // Macro invocation: execute macro then bind with operator
-      const macroResult = this.expandMacro(operatorName, stmt.args);
-      if (macroResult) {
-        // Bind operator with macro result (per spec DS02 section 2.5)
+    const isGraph = this.session.graphs?.has(operatorName) ||
+                    this.session.graphAliases?.has(operatorName);
+    if (isGraph) {
+      // Graph invocation: execute graph then bind with operator
+      const graphResult = this.expandGraph(operatorName, stmt.args);
+      if (graphResult) {
+        // Bind operator with graph result (per spec DS02 section 2.5)
         const operatorVec = this.resolveExpression(stmt.operator);
-        vector = bind(operatorVec, macroResult);
+        vector = bind(operatorVec, graphResult);
       } else {
-        // Macro returned nothing - just use operator
+        // Graph returned nothing - just use operator
         vector = this.resolveExpression(stmt.operator);
       }
     } else {
@@ -221,11 +243,14 @@ export class Executor {
     // If there's a destination, store it in scope
     if (stmt.destination) {
       this.session.scope.set(stmt.destination, vector);
-      // Also save the fact text for later proof chain generation
+      // Save both text and structured metadata for the reference
       const factText = this.statementToFactString(stmt);
       if (factText && operatorName !== 'Implies') {
         this.session.referenceTexts.set(stmt.destination, factText);
       }
+      // Store structured metadata for Not expansion
+      const refMetadata = this.extractMetadata(stmt);
+      this.session.referenceMetadata.set(stmt.destination, refMetadata);
     }
 
     // Add to knowledge base only if:
@@ -233,9 +258,14 @@ export class Executor {
     // 2. Has persistName (@var:name syntax) - explicitly persistent
     const shouldPersist = !stmt.destination || stmt.isPersistent;
 
+    if (isDebugEnabled()) {
+      dbg('executeStatement', `Statement: ${stmt.toString()} | destination=${stmt.destination || 'none'} | isPersistent=${stmt.isPersistent} | shouldPersist=${shouldPersist}`);
+    }
+
     if (shouldPersist) {
       // Extract metadata for structured storage
-      const metadata = this.extractMetadata(stmt);
+      // For Not operator with reference arg, expand to full metadata
+      const metadata = this.extractMetadataWithNotExpansion(stmt, operatorName);
       this.session.addToKB(vector, stmt.persistName, metadata);
     }
 
@@ -426,12 +456,13 @@ export class Executor {
 
   /**
    * Extract structured metadata from statement for reliable lookup
+   * Resolves Reference nodes through scope and vocabulary reverse lookup
    * @param {Statement} stmt - Statement node
    * @returns {Object} Metadata with operator and args
    */
   extractMetadata(stmt) {
-    const operatorName = this.extractName(stmt.operator);
-    const args = stmt.args.map(arg => this.extractName(arg));
+    const operatorName = this.resolveNameFromNode(stmt.operator);
+    const args = stmt.args.map(arg => this.resolveNameFromNode(arg));
 
     return {
       operator: operatorName,
@@ -440,18 +471,82 @@ export class Executor {
   }
 
   /**
+   * Extract metadata with special handling for Not operator
+   * When Not has a Reference argument, expands to the full inner structure
+   * e.g., Not $ref where ref = "can Opus Fly" → {operator: 'Not', args: ['can', 'Opus', 'Fly']}
+   * This ensures proofs work correctly without storing false positives in KB
+   * @param {Statement} stmt - Statement node
+   * @param {string} operatorName - Already extracted operator name
+   * @returns {Object} Metadata with operator and args (possibly expanded)
+   */
+  extractMetadataWithNotExpansion(stmt, operatorName) {
+    // For Not operator with a single Reference argument, expand the inner fact
+    if (operatorName === 'Not' && stmt.args.length === 1 && stmt.args[0] instanceof Reference) {
+      const refName = stmt.args[0].name;
+      const innerMeta = this.session.referenceMetadata.get(refName);
+
+      if (innerMeta) {
+        if (isDebugEnabled()) {
+          dbg('extractMetadataWithNotExpansion', `Expanding Not $${refName} → Not(${innerMeta.operator} ${innerMeta.args.join(' ')})`);
+        }
+        // Return expanded form: Not(innerOp innerArg1 innerArg2 ...)
+        return {
+          operator: 'Not',
+          args: [innerMeta.operator, ...innerMeta.args],
+          innerOperator: innerMeta.operator,
+          innerArgs: innerMeta.args
+        };
+      }
+    }
+
+    // Default: use standard extraction
+    return this.extractMetadata(stmt);
+  }
+
+  /**
    * Convert statement to fact string "operator arg1 arg2"
    * @param {Statement} stmt - Statement node
    * @returns {string} Fact string
    */
   statementToFactString(stmt) {
-    const operatorName = this.extractName(stmt.operator);
-    const args = stmt.args.map(arg => this.extractName(arg)).filter(Boolean);
+    const operatorName = this.resolveNameFromNode(stmt.operator);
+    const args = stmt.args.map(arg => this.resolveNameFromNode(arg)).filter(Boolean);
     return `${operatorName} ${args.join(' ')}`;
   }
 
   /**
-   * Extract name from AST node
+   * Resolve name from AST node, following scope references
+   * For Reference nodes ($var), looks up the vector in scope and uses
+   * vocabulary reverse lookup to get the original atom name
+   * @param {ASTNode} node - AST node
+   * @returns {string|null} Resolved name
+   */
+  resolveNameFromNode(node) {
+    if (!node) return null;
+
+    // For Reference ($var), resolve through scope
+    if (node instanceof Reference) {
+      const vec = this.session.scope.get(node.name);
+      if (vec) {
+        // Try reverse lookup to get original atom name
+        const name = this.session.vocabulary.reverseLookup(vec);
+        if (name) return name;
+      }
+      // Fallback to reference name if not resolved
+      return node.name;
+    }
+
+    // Direct extraction for other node types
+    if (node instanceof Identifier) return node.name;
+    if (node instanceof Literal) return String(node.value);
+    if (node.name) return node.name;
+    if (node.value) return String(node.value);
+    return null;
+  }
+
+  /**
+   * Extract name from AST node (without resolving references)
+   * Used when we need the raw AST name, not the resolved value
    */
   extractName(node) {
     if (!node) return null;
@@ -515,6 +610,10 @@ export class Executor {
       return this.resolveList(expr);
     }
 
+    if (expr instanceof Compound || expr.type === 'Compound') {
+      return this.resolveCompound(expr);
+    }
+
     throw new ExecutionError(`Unknown expression type: ${expr.type}`, expr);
   }
 
@@ -571,6 +670,39 @@ export class Executor {
 
     const itemVectors = expr.items.map(item => this.resolveExpression(item));
     return bundle(itemVectors);
+  }
+
+  /**
+   * Resolve compound expression (nested graph call)
+   * (operator arg1 arg2 ...) → execute as graph invocation
+   */
+  resolveCompound(expr) {
+    const operatorName = this.extractName(expr.operator);
+
+    // Check if operator is a graph
+    const isGraph = this.session.graphs?.has(operatorName) ||
+                    this.session.graphAliases?.has(operatorName);
+
+    if (isGraph) {
+      // Execute as graph invocation and return result
+      const result = this.expandGraph(operatorName, expr.args);
+      if (result) {
+        return result;
+      }
+      // If graph returned nothing, fall through to build vector
+    }
+
+    // Not a graph or graph returned nothing - build as a statement-like vector
+    // Create a temporary statement to build the vector
+    const tempStmt = new Statement(
+      null,  // no destination
+      expr.operator,
+      expr.args,
+      null,  // no persistName
+      expr.line,
+      expr.column
+    );
+    return this.buildStatementVector(tempStmt);
   }
 
   /**

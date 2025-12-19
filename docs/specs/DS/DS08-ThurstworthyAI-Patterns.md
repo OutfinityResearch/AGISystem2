@@ -2,8 +2,10 @@
 
 # Chapter 8: Trustworthy AI Patterns
 
-**Document Version:** 1.0  
-**Status:** Draft Specification
+**Document Version:** 1.0
+**Status:** Planned/Experimental
+
+> **Note:** The patterns in this document describe design approaches and best practices that are partially implemented or planned for future development. They serve as architectural guidance and may require additional implementation work.
 
 ---
 
@@ -67,7 +69,7 @@ Current approaches (LLM-based planning) are unreliable—they generate plausible
     # ============ TOOL DEFINITION MACRO ============
     
     # A tool has: name, preconditions, effects, cost
-    @ToolDefMacro:defineTool macro name preconditions effects cost
+    @ToolDefGraph:defineTool graph name preconditions effects cost
         @t1 __Role Name $name
         @t2 __Role Requires $preconditions
         @t3 __Role Produces $effects
@@ -78,7 +80,7 @@ Current approaches (LLM-based planning) are unreliable—they generate plausible
     end
     
     # State predicates
-    @HasStateMacro:has macro agent state resource
+    @HasStateGraph:has graph agent state resource
         @r1 __Role Agent $agent
         @r2 __Role State $state
         @r3 __Role Resource $resource
@@ -89,7 +91,7 @@ Current approaches (LLM-based planning) are unreliable—they generate plausible
     # ============ PLANNING PRIMITIVES ============
     
     # A plan step
-    @PlanStepMacro:planStep macro tool args expectedPre expectedPost
+    @PlanStepGraph:planStep graph tool args expectedPre expectedPost
         @r1 __Role Tool $tool
         @r2 __Role Arguments $args
         @r3 __Role Preconditions $expectedPre
@@ -99,7 +101,7 @@ Current approaches (LLM-based planning) are unreliable—they generate plausible
     end
     
     # A complete plan
-    @PlanMacro:plan macro goal steps
+    @PlanGraph:plan graph goal steps
         @r1 __Role Goal $goal
         @r2 __Role Steps $steps
         @result __Bundle $r1 $r2
@@ -328,7 +330,7 @@ AI-assisted creative writing needs:
     @Relationship:Relationship __Relation
     
     # Character definition
-    @CharacterMacro:defineCharacter macro name traits beliefs knowledge abilities
+    @CharacterGraph:defineCharacter graph name traits beliefs knowledge abilities
         @c1 isA $name Character
         @c2 hasTraits $name $traits
         @c3 hasBelief $name $beliefs
@@ -358,7 +360,7 @@ AI-assisted creative writing needs:
     
     @WorldRule:WorldRule __Category
     
-    @WorldRuleMacro:worldRule macro name condition consequence
+    @WorldRuleGraph:worldRule graph name condition consequence
         @r1 __Role Name $name
         @r2 implies $condition $consequence
         @result __Bundle $r1 $r2
@@ -372,7 +374,7 @@ AI-assisted creative writing needs:
     @Required:Required __Property
     @Discouraged:Discouraged __Property
     
-    @EditorialMacro:editorial macro name ruleType condition
+    @EditorialGraph:editorial graph name ruleType condition
         @r1 __Role Name $name
         @r2 __Role RuleType $ruleType
         @r3 __Role Condition $condition
@@ -384,7 +386,7 @@ AI-assisted creative writing needs:
     
     @BiasPattern:BiasPattern __Category
     
-    @BiasPatternMacro:biasPattern macro name description detection
+    @BiasPatternGraph:biasPattern graph name description detection
         @r1 __Role Name $name
         @r2 __Role Description $description
         @r3 __Role Detection $detection
@@ -396,7 +398,7 @@ AI-assisted creative writing needs:
     
     @Scene:Scene __Category
     
-    @SceneMacro:scene macro id characters location actions dialogue
+    @SceneGraph:scene graph id characters location actions dialogue
         @s1 __Role SceneId $id
         @s2 __Role Characters $characters
         @s3 __Role Location $location
@@ -407,7 +409,7 @@ AI-assisted creative writing needs:
     end
     
     # Action in scene
-    @ActionMacro:action macro character verb target
+    @ActionGraph:action graph character verb target
         @a1 __Role Agent $character
         @a2 __Role Action $verb
         @a3 __Role Target $target
@@ -754,7 +756,7 @@ Violations are expensive (fines, breaches, lawsuits). Current approaches rely on
     # ============ RULE TYPES ============
     
     # Obligation: MUST do X
-    @ObligationMacro:obligates macro regulation actor action condition
+    @ObligationGraph:obligates graph regulation actor action condition
         @r1 __Role Regulation $regulation
         @r2 must $actor $action
         @r3 when $condition
@@ -763,7 +765,7 @@ Violations are expensive (fines, breaches, lawsuits). Current approaches rely on
     end
     
     # Prohibition: MUST NOT do X
-    @ProhibitionMacro:prohibits macro regulation actor action condition
+    @ProhibitionGraph:prohibits graph regulation actor action condition
         @r1 __Role Regulation $regulation
         @r2 forbidden $actor $action
         @r3 when $condition
@@ -772,7 +774,7 @@ Violations are expensive (fines, breaches, lawsuits). Current approaches rely on
     end
     
     # Permission: MAY do X (if conditions met)
-    @PermissionMacro:permits macro regulation actor action condition
+    @PermissionGraph:permits graph regulation actor action condition
         @r1 __Role Regulation $regulation
         @r2 may $actor $action
         @r3 when $condition
@@ -781,7 +783,7 @@ Violations are expensive (fines, breaches, lawsuits). Current approaches rely on
     end
     
     # Conditional: IF X then Y
-    @ConditionalMacro:requires macro regulation condition obligation
+    @ConditionalGraph:requires graph regulation condition obligation
         @r1 __Role Regulation $regulation
         @r2 implies $condition $obligation
         @result __Bundle $r1 $r2
@@ -801,7 +803,7 @@ Violations are expensive (fines, breaches, lawsuits). Current approaches rely on
     # ============ TIME CONSTRAINTS ============
     
     @Deadline:Deadline __Property
-    @WithinMacro:within macro duration
+    @WithinGraph:within graph duration
         @result __Role Deadline $duration
         return $result
     end
@@ -1221,7 +1223,7 @@ Scientific knowledge needs:
     
     # ============ LAW DEFINITION ============
     
-    @LawMacro:law macro name domain statement conditions
+    @LawGraph:law graph name domain statement conditions
         @l1 isA $name Law
         @l2 __Role Domain $domain
         @l3 __Role Statement $statement
@@ -1232,7 +1234,7 @@ Scientific knowledge needs:
     
     # ============ THEOREM DEFINITION ============
     
-    @TheoremMacro:theorem macro name derivedFrom statement
+    @TheoremGraph:theorem graph name derivedFrom statement
         @t1 isA $name Theorem
         @t2 __Role DerivedFrom $derivedFrom
         @t3 __Role Statement $statement
@@ -1248,7 +1250,7 @@ Scientific knowledge needs:
     @Proportional:Proportional __Relation
     @InverselyProportional:InverselyProportional __Relation
     
-    @EqualsMacro:equals macro left right
+    @EqualsGraph:equals graph left right
         @r1 __Role Left $left
         @r2 __Role Right $right
         @result __Role Equals (__Pair $r1 $r2)
@@ -1511,7 +1513,7 @@ CONNECTION 1: Thermodynamics ↔ Statistical Mechanics
     k_B = Boltzmann constant
     W = number of microstates
     
-  Significance: Links macroscopic property to microscopic counting
+  Significance: Links graphscopic property to microscopic counting
 
 ═══════════════════════════════════════════════════════
 

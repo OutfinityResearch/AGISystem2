@@ -1,5 +1,5 @@
 # Core Theory - Index (Simplified)
-# Only load theories without macro definitions
+# Only load theories without graph definitions
 
 @_ Load "./00-types.sys2"
 @_ Load "./01-positions.sys2"

@@ -35,7 +35,7 @@ export const steps = [
     action: 'query',
     input_nl: 'Why is the grass wet and the sidewalk wet?',
     input_dsl: '@q abduce WetGrass ?cause',
-    expected_nl: 'WetGrass is explained by Rain. Proof: Causal chain: Rain → WetGrass WetGrass is explained by Sprinkler. Proof: Causal chain: Sprinkler → WetGrass'
+    expected_nl: 'WetGrass is explained by Rain. WetGrass is explained by Sprinkler. Proof: Causal chain: Rain → WetGrass. Causal chain: Sprinkler → WetGrass.'
   },
 
   // === COUNTERFACTUAL: remove Rain, keep Sprinkler evidence ===

@@ -8,11 +8,10 @@
 import { TRANSITIVE_RELATIONS } from './transitive.mjs';
 import { reachesTransitively } from './query-transitive.mjs';
 import { isFactNegated } from './query-kb.mjs';
+import { debug_trace } from '../utils/debug.js';
 
-// Debug logging
-const DEBUG = process.env.SYS2_DEBUG === 'true';
 function dbg(category, ...args) {
-  if (DEBUG) console.log(`[QueryRules:${category}]`, ...args);
+  debug_trace(`[QueryRules:${category}]`, ...args);
 }
 
 /**
@@ -100,11 +99,27 @@ export function searchViaRules(session, operatorName, knowns, holes) {
           continue;
         }
 
+        // Build proof steps showing how rule was applied
+        const proofSteps = [];
+        // Show which condition facts matched
+        for (const [varName, value] of cm) {
+          if (!bindings.has(varName)) {
+            proofSteps.push(`${varName}=${value}`);
+          }
+        }
+        proofSteps.push(`Applied rule: ${rule.name || rule.source?.substring(0, 40) || 'rule'}`);
+
+        // Add steps to each binding entry
+        for (const [holeName, bindingData] of factBindings) {
+          bindingData.steps = proofSteps;
+        }
+
         results.push({
           bindings: factBindings,
           score: 0.85,
           method: 'rule_derived',
-          rule: rule.name
+          rule: rule.name,
+          steps: proofSteps
         });
       }
     }

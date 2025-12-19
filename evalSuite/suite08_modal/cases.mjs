@@ -196,8 +196,7 @@ export const steps = [
     action: 'query',
     input_nl: 'Who can think?',
     input_dsl: '@q can ?x Think',
-    expected_nl: 'Socrates can Think.',
-    
+    expected_nl: 'Socrates can Think. Proof: x=Socrates. Applied rule: Implies @humanThink @humanThinkC.'
   }
 ];
 

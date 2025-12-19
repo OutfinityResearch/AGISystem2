@@ -36,13 +36,13 @@ Defined in `config/Core/05-logic.sys2`:
 
 ---
 
-## 7d.3 Logic Macros
+## 7d.3 Logic Graphs
 
 ### 7d.3.1 Implication
 
 ```sys2
 # Implication: antecedent -> consequent
-@ImpliesMacro:implies macro antecedent consequent
+@ImpliesGraph:implies graph antecedent consequent
     @pair __Pair $antecedent $consequent
     @result __Role Implies $pair
     return $result
@@ -59,7 +59,7 @@ end
 
 ```sys2
 # Conjunction: a AND b
-@AndMacro:and macro a b
+@AndGraph:and graph a b
     @pair __Pair $a $b
     @result __Role And $pair
     return $result
@@ -76,7 +76,7 @@ end
 
 ```sys2
 # Disjunction: a OR b
-@OrMacro:or macro a b
+@OrGraph:or graph a b
     @pair __Pair $a $b
     @result __Role Or $pair
     return $result
@@ -93,7 +93,7 @@ end
 
 ```sys2
 # Negation: NOT proposition
-@NotMacro:not macro proposition
+@NotGraph:not graph proposition
     @result __Role Not $proposition
     return $result
 end
@@ -109,7 +109,7 @@ end
 
 ```sys2
 # Biconditional: a IFF b
-@IffMacro:iff macro a b
+@IffGraph:iff graph a b
     @pair __Pair $a $b
     @result __Role Iff $pair
     return $result
@@ -126,7 +126,7 @@ end
 
 ```sys2
 # Exclusive or: a XOR b
-@XorMacro:xor macro a b
+@XorGraph:xor graph a b
     @pair __Pair $a $b
     @result __Role Xor $pair
     return $result
@@ -147,7 +147,7 @@ end
 
 ```sys2
 # Universal: for all X, predicate holds
-@ForAllMacro:forall macro variable predicate
+@ForAllGraph:forall graph variable predicate
     @quant __Role ForAll $variable
     @scope __Role Scope $predicate
     @result __Bundle $quant $scope
@@ -165,7 +165,7 @@ end
 
 ```sys2
 # Existential: there exists X such that predicate
-@ExistsMacro:exists macro variable predicate
+@ExistsGraph:exists graph variable predicate
     @quant __Role Exists $variable
     @scope __Role Scope $predicate
     @result __Bundle $quant $scope
@@ -272,7 +272,7 @@ Compound conditions (And, Or) support backtracking:
 | Element | Count | Purpose |
 |---------|-------|---------|
 | Logic Atoms | 8 | Implies, And, Or, Not, Iff, Xor, ForAll, Exists |
-| Logic Macros | 8 | Corresponding macro implementations |
+| Logic Graphs | 8 | Corresponding graph implementations |
 
 ---
 

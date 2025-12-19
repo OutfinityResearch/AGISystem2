@@ -131,7 +131,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is Paris?',
     input_dsl: '@q isA Paris ?what',
-    expected_nl: 'Paris is a city. Paris is a settlement. Proof: isA Paris City. isA City Settlement. Paris is a place. Proof: isA Paris City. isA City Settlement. isA Settlement Place. Paris is a location. Proof: isA Paris City. isA City Settlement. isA Settlement Place. isA Place Location.'
+    expected_nl: 'Paris is a city. Paris is a settlement. Paris is a place. Paris is a location. Proof: isA Paris City. isA City Settlement. isA Settlement Place. isA Place Location.'
   },
 
   // === QUERY: Where is Paris located? (containment query - returns all transitive locations) ===
@@ -139,7 +139,7 @@ export const steps = [
     action: 'query',
     input_nl: 'Where is Paris located?',
     input_dsl: '@q locatedIn Paris ?where',
-    expected_nl: 'Paris is in France. Paris is in Europe. Proof: locatedIn Paris France. locatedIn France Europe. Paris is in Earth. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. Paris is in SolarSystem. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. Paris is in MilkyWayArm. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. Paris is in MilkyWay. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. locatedIn MilkyWayArm MilkyWay. Paris is in LocalCluster. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. locatedIn MilkyWayArm MilkyWay. locatedIn MilkyWay LocalCluster. Paris is in Supercluster. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. locatedIn MilkyWayArm MilkyWay. locatedIn MilkyWay LocalCluster. locatedIn LocalCluster Supercluster. Paris is in Universe. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. locatedIn MilkyWayArm MilkyWay. locatedIn MilkyWay LocalCluster. locatedIn LocalCluster Supercluster. locatedIn Supercluster Universe.'
+    expected_nl: 'Paris is in France. Paris is in Europe. Paris is in Earth. Paris is in SolarSystem. Paris is in MilkyWayArm. Paris is in MilkyWay. Paris is in LocalCluster. Paris is in Supercluster. Paris is in Universe. Proof: locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. locatedIn MilkyWayArm MilkyWay. locatedIn MilkyWay LocalCluster. locatedIn LocalCluster Supercluster. locatedIn Supercluster Universe.'
   },
 
   // === QUERY: What causes Conflict? (causal query - returns all transitive causes) ===
@@ -147,7 +147,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What causes Conflict?',
     input_dsl: '@q causes ?what Conflict',
-    expected_nl: 'Migration causes Conflict. Famine causes Conflict. Proof: causes Famine Migration. causes Migration Conflict. CropFailure causes Conflict. Proof: causes CropFailure Famine. causes Famine Migration. causes Migration Conflict. Drought causes Conflict. Proof: causes Drought CropFailure. causes CropFailure Famine. causes Famine Migration. causes Migration Conflict. ClimateChange causes Conflict. Proof: causes ClimateChange Drought. causes Drought CropFailure. causes CropFailure Famine. causes Famine Migration. causes Migration Conflict. Pollution causes Conflict. Proof: causes Pollution ClimateChange. causes ClimateChange Drought. causes Drought CropFailure. causes CropFailure Famine. causes Famine Migration. causes Migration Conflict.'
+    expected_nl: 'Migration causes Conflict. Famine causes Conflict. CropFailure causes Conflict. Drought causes Conflict. ClimateChange causes Conflict. Pollution causes Conflict. Proof: causes Famine Migration. causes Migration Conflict. causes CropFailure Famine. causes Drought CropFailure. causes ClimateChange Drought. causes Pollution ClimateChange.'
   },
 
   // === NEGATIVE: Reverse temporal order ===

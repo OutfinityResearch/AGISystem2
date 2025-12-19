@@ -36,7 +36,7 @@ This chapter has been refactored into the following documents:
 | [DS07a-HDC-Primitives](DS07a-HDC-Primitives.md) | L0 primitives, binding formula, position vectors | `01-positions.sys2` |
 | [DS07b-Type-System](DS07b-Type-System.md) | Type hierarchy, markers, constructors, structural ops | `00-types.sys2`, `02-constructors.sys2`, `03-structural.sys2` |
 | [DS07c-Semantic-Primitives](DS07c-Semantic-Primitives.md) | L2 CD primitives (_ptrans, _atrans, _mtrans, etc.) | `04-semantic-primitives.sys2` |
-| [DS07d-Logic](DS07d-Logic.md) | Logic atoms, macros, negation | `05-logic.sys2` |
+| [DS07d-Logic](DS07d-Logic.md) | Logic atoms, graphs, negation | `05-logic.sys2` |
 | [DS07e-Temporal-Modal](DS07e-Temporal-Modal.md) | Temporal, modal, and default primitives | `06-temporal.sys2`, `07-modal.sys2`, `08-defaults.sys2` |
 | [DS07f-Roles-Properties](DS07f-Roles-Properties.md) | Semantic roles, property relations, relation types | `09-roles.sys2`, `10-properties.sys2`, `00-relations.sys2` |
 | [DS07g-Bootstrap-Verbs](DS07g-Bootstrap-Verbs.md) | L3 verbs built from L2 | `11-bootstrap-verbs.sys2` |
@@ -55,12 +55,12 @@ This chapter has been refactored into the following documents:
 | `02-constructors.sys2` | DS07b | Typed constructors |
 | `03-structural.sys2` | DS07b | __Role, __Pair, __Bundle |
 | `04-semantic-primitives.sys2` | DS07c | L2 CD primitives |
-| `05-logic.sys2` | DS07d | Logic atoms/macros |
+| `05-logic.sys2` | DS07d | Logic atoms/graphs |
 | `06-temporal.sys2` | DS07e | Temporal relations |
 | `07-modal.sys2` | DS07e | Modal operators |
 | `08-defaults.sys2` | DS07e | Default reasoning |
 | `09-roles.sys2` | DS07f | Semantic roles |
-| `10-properties.sys2` | DS07f | Property macros |
+| `10-properties.sys2` | DS07f | Property graphs |
 | `11-bootstrap-verbs.sys2` | DS07g | L3 verbs |
 | `12-reasoning.sys2` | DS07h | Reasoning verbs |
 | `index.sys2` | N/A | Load order |
@@ -99,15 +99,15 @@ Cross-cutting concerns:
 | Structural Operations | 5 | DS07b |
 | L2 Primitives | 11 | DS07c |
 | Logic Atoms | 8 | DS07d |
-| Logic Macros | 8 | DS07d |
+| Logic Graphs | 8 | DS07d |
 | Temporal Atoms | 10 | DS07e |
-| Temporal Macros | 10 | DS07e |
+| Temporal Graphs | 10 | DS07e |
 | Modal Atoms | 9 | DS07e |
-| Modal Macros | 6 | DS07e |
+| Modal Graphs | 6 | DS07e |
 | Default Atoms | 5 | DS07e |
-| Default Macros | 4 | DS07e |
+| Default Graphs | 4 | DS07e |
 | Semantic Roles | 26 | DS07f |
-| Property Macros | 11 | DS07f |
+| Property Graphs | 11 | DS07f |
 | Relation Types | 19 | DS07f |
 | L3 Bootstrap Verbs | 17 | DS07g |
 | Reasoning Verbs | 7 | DS07h |
@@ -125,9 +125,9 @@ The following relations were identified as "hardcoded" in the [hardcoded_theory_
 
 | Relation | Type | Purpose |
 |----------|------|---------|
-| `can` | Macro + Atom | Capability relation |
-| `has` | Macro + Atom | Possession relation |
-| `synonym` | Macro + Atom | Synonym for fuzzy matching |
+| `can` | Graph + Atom | Capability relation |
+| `has` | Graph + Atom | Possession relation |
+| `synonym` | Graph + Atom | Synonym for fuzzy matching |
 
 ### Added to `00-relations.sys2`
 
@@ -141,7 +141,7 @@ The following relations were identified as "hardcoded" in the [hardcoded_theory_
 
 ### Remaining Action Items
 
-1. [x] Add `can` and `has` macros to `10-properties.sys2` ✓
+1. [x] Add `can` and `has` graphs to `10-properties.sys2` ✓
 2. [x] Add `parent`, `child` relations to `00-relations.sys2` ✓
 3. [ ] Update phrasing.mjs to derive templates from theory
 4. [ ] Add validation for undefined relations
@@ -165,9 +165,9 @@ See DS07f Section 7f.5 for details.
 
 **By Use Case:**
 - "How do I create a person?" → DS07b (Type System)
-- "How do I express 'John gave Mary a book'?" → DS07g (give macro)
+- "How do I express 'John gave Mary a book'?" → DS07g (give graph)
 - "How do I express 'before' and 'after'?" → DS07e (Temporal)
-- "How do I define a rule?" → DS07d (implies macro)
+- "How do I define a rule?" → DS07d (implies graph)
 - "How do I find similar concepts?" → DS17 (similar operator)
 
 ---

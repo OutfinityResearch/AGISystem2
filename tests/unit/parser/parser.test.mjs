@@ -165,12 +165,15 @@ describe('Parser', () => {
       assert.equal(ast.statements.length, 0);
     });
 
-    test('should ignore parentheses (not supported)', () => {
-      // Parentheses are not supported - they stop parsing
-      const ast = parse('@f test (something)');
+    test('should parse parenthesized expressions as Compound', () => {
+      // Parentheses create Compound expressions (nested graph calls)
+      const ast = parse('@f test (something A B)');
       const stmt = ast.statements[0];
-      // Parser stops at '(' - no args parsed after test
-      assert.equal(stmt.args.length, 0);
+      // Parser should parse the compound expression as an argument
+      assert.equal(stmt.args.length, 1);
+      assert.equal(stmt.args[0].type, 'Compound');
+      assert.equal(stmt.args[0].operator.name, 'something');
+      assert.equal(stmt.args[0].args.length, 2);
     });
   });
 });

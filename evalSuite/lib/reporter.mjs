@@ -554,8 +554,22 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       kbScans: 0,
       simChecks: 0,
       totalSteps: 0,
-      totalMs: 0
+      totalMs: 0,
+      // Failure breakdown by phase
+      failedReasoning: 0,    // reasoning phase failed
+      failedNlTranslation: 0, // reasoning passed but dslToNl failed
+      failedNlParsing: 0      // nlToDsl failed (parser issues)
     };
+  }
+
+  // Build map of suite results for phase failure analysis
+  const suiteResultsMap = {};
+  for (const strategyId of strategies) {
+    for (const suiteResult of resultsByStrategy[strategyId]) {
+      const suiteKey = suiteResult.suiteName;
+      if (!suiteResultsMap[suiteKey]) suiteResultsMap[suiteKey] = {};
+      suiteResultsMap[suiteKey][strategyId] = suiteResult.results || [];
+    }
   }
 
   // Print each suite row
@@ -593,6 +607,24 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       strategyTotals[strategyId].kbScans += scans;
       strategyTotals[strategyId].simChecks += stats.similarityChecks || 0;
       strategyTotals[strategyId].totalMs += durationMs;
+
+      // Count failures by phase for this suite/config
+      const results = suiteResultsMap[suiteKey]?.[strategyId] || [];
+      for (const res of results) {
+        if (res.passed) continue;
+        const phases = res.phases || {};
+        // Check where it failed
+        if (!phases.nlToDsl?.passed && !phases.nlToDsl?.skipped) {
+          // NL parsing/transformation failed
+          strategyTotals[strategyId].failedNlParsing++;
+        } else if (!phases.reasoning?.passed && !phases.reasoning?.skipped) {
+          // Reasoning failed
+          strategyTotals[strategyId].failedReasoning++;
+        } else if (!phases.dslToNl?.passed && !phases.dslToNl?.skipped) {
+          // NL output/translation verification failed
+          strategyTotals[strategyId].failedNlTranslation++;
+        }
+      }
 
       const statusColor = pct === 100 ? colors.green : pct >= 50 ? colors.yellow : colors.red;
       const hdcColor = hdcPct >= 50 ? colors.cyan : colors.dim;
@@ -673,6 +705,51 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
     timeRow += ` ${colors.gray}│${colors.reset} ${colors.cyan}${cellContent}${colors.reset}`;
   }
   console.log(timeRow);
+
+  // Check if there are any failures to show breakdown
+  const hasAnyFailures = strategies.some(s => {
+    const t = strategyTotals[s];
+    return t.failedReasoning > 0 || t.failedNlTranslation > 0 || t.failedNlParsing > 0;
+  });
+
+  if (hasAnyFailures) {
+    // Separator before failure breakdown
+    console.log(`${colors.dim}${'─'.repeat(12 + (colW + 3) * strategies.length)}${colors.reset}`);
+    console.log(`${colors.dim}Failure breakdown (% of total tests):${colors.reset}`);
+
+    // Fail Reasoning row (% of total)
+    let failReasonRow = `${'Fail Reason'.padEnd(12)}`;
+    for (const strategyId of strategies) {
+      const totals = strategyTotals[strategyId];
+      const pct = totals.total > 0 ? Math.round((totals.failedReasoning / totals.total) * 100) : 0;
+      const cellContent = (pct > 0 ? `${pct}%` : '-').padEnd(colW);
+      const cellColor = pct > 0 ? colors.red : colors.dim;
+      failReasonRow += ` ${colors.gray}│${colors.reset} ${cellColor}${cellContent}${colors.reset}`;
+    }
+    console.log(failReasonRow);
+
+    // Fail NL Output row (% of total)
+    let failNlOutRow = `${'Fail NL Out'.padEnd(12)}`;
+    for (const strategyId of strategies) {
+      const totals = strategyTotals[strategyId];
+      const pct = totals.total > 0 ? Math.round((totals.failedNlTranslation / totals.total) * 100) : 0;
+      const cellContent = (pct > 0 ? `${pct}%` : '-').padEnd(colW);
+      const cellColor = pct > 0 ? colors.yellow : colors.dim;
+      failNlOutRow += ` ${colors.gray}│${colors.reset} ${cellColor}${cellContent}${colors.reset}`;
+    }
+    console.log(failNlOutRow);
+
+    // Fail NL Parse row (% of total)
+    let failNlParseRow = `${'Fail Parse'.padEnd(12)}`;
+    for (const strategyId of strategies) {
+      const totals = strategyTotals[strategyId];
+      const pct = totals.total > 0 ? Math.round((totals.failedNlParsing / totals.total) * 100) : 0;
+      const cellContent = (pct > 0 ? `${pct}%` : '-').padEnd(colW);
+      const cellColor = pct > 0 ? colors.magenta : colors.dim;
+      failNlParseRow += ` ${colors.gray}│${colors.reset} ${cellColor}${cellContent}${colors.reset}`;
+    }
+    console.log(failNlParseRow);
+  }
 
   console.log(`${colors.dim}${'─'.repeat(12 + (colW + 3) * strategies.length)}${colors.reset}`);
 

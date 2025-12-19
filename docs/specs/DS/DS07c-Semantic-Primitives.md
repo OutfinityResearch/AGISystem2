@@ -37,7 +37,7 @@ Transfer of physical location.
 
 ```sys2
 # Types: agent:Entity, object:Entity, from:Place, to:Place
-@_ptrans:_ptrans macro agent object from to
+@_ptrans:_ptrans graph agent object from to
     @eid __Event
     @r1 __Role Agent $agent
     @r2 __Role Theme $object
@@ -58,7 +58,7 @@ Application of physical force to an object.
 
 ```sys2
 # Types: agent:Entity, object:Object, direction:Property
-@_propel:_propel macro agent object direction
+@_propel:_propel graph agent object direction
     @eid __Event
     @r1 __Role Agent $agent
     @r2 __Role Theme $object
@@ -78,7 +78,7 @@ Taking physical control of an object.
 
 ```sys2
 # Types: agent:Entity, object:Object
-@_grasp:_grasp macro agent object
+@_grasp:_grasp graph agent object
     @eid __Event
     @r1 __Role Agent $agent
     @r2 __Role Theme $object
@@ -97,7 +97,7 @@ Taking something into the body (eating, drinking, breathing).
 
 ```sys2
 # Types: agent:Person, object:Substance|Object
-@_ingest:_ingest macro agent object
+@_ingest:_ingest graph agent object
     @eid __Event
     @r1 __Role Agent $agent
     @r2 __Role Theme $object
@@ -117,7 +117,7 @@ Expelling something from the body.
 
 ```sys2
 # Types: agent:Person, object:Substance|Object
-@_expel:_expel macro agent object
+@_expel:_expel graph agent object
     @eid __Event
     @r1 __Role Agent $agent
     @r2 __Role Theme $object
@@ -140,7 +140,7 @@ Transfer of ownership, control, or abstract possession.
 
 ```sys2
 # Types: agent:Entity, object:Entity|Abstract, from:Entity, to:Entity
-@_atrans:_atrans macro agent object from to
+@_atrans:_atrans graph agent object from to
     @eid __Event
     @r1 __Role Agent $agent
     @r2 __Role Theme $object
@@ -166,7 +166,7 @@ Transfer of information between minds.
 
 ```sys2
 # Types: agent:Person, info:Abstract, from:Person|Place, to:Person
-@_mtrans:_mtrans macro agent info from to
+@_mtrans:_mtrans graph agent info from to
     @eid __Event
     @r1 __Role Agent $agent
     @r2 __Role Content $info
@@ -188,7 +188,7 @@ Creating a mental structure (idea, plan, decision).
 
 ```sys2
 # Types: agent:Person, idea:Abstract
-@_mbuild:_mbuild macro agent idea
+@_mbuild:_mbuild graph agent idea
     @eid __Event
     @r1 __Role Agent $agent
     @r2 __Role Content $idea
@@ -208,7 +208,7 @@ Directing sensory attention.
 
 ```sys2
 # Types: agent:Person, sense:Object, target:Entity
-@_attend:_attend macro agent sense target
+@_attend:_attend graph agent sense target
     @eid __Event
     @r1 __Role Agent $agent
     @r2 __Role Instrument $sense
@@ -229,7 +229,7 @@ Producing speech or sounds.
 
 ```sys2
 # Types: agent:Person, utterance:Abstract
-@_speak:_speak macro agent utterance
+@_speak:_speak graph agent utterance
     @eid __Event
     @r1 __Role Agent $agent
     @r2 __Role Content $utterance
@@ -248,7 +248,7 @@ Thinking about or conceptualizing something.
 
 ```sys2
 # Types: agent:Person, concept:Abstract
-@_conc:_conc macro agent concept
+@_conc:_conc graph agent concept
     @eid __Event
     @r1 __Role Agent $agent
     @r2 __Role Content $concept

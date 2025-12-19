@@ -115,11 +115,11 @@ Defined in `config/Core/09-roles.sys2`.
 
 Defined in `config/Core/10-properties.sys2`.
 
-### 7f.3.1 Property/State Macros
+### 7f.3.1 Property/State Graphs
 
 ```sys2
 # hasProperty: entity has permanent property
-@HasPropertyMacro:hasProperty macro entity property
+@HasPropertyGraph:hasProperty graph entity property
     @r1 __Role Theme $entity
     @r2 __Role Attribute $property
     @result __Bundle $r1 $r2
@@ -127,7 +127,7 @@ Defined in `config/Core/10-properties.sys2`.
 end
 
 # inState: entity is in temporary state
-@InStateMacro:inState macro entity state
+@InStateGraph:inState graph entity state
     @r1 __Role Theme $entity
     @r2 __Role State $state
     @result __Bundle $r1 $r2
@@ -135,11 +135,11 @@ end
 end
 ```
 
-### 7f.3.2 Category Macros
+### 7f.3.2 Category Graphs
 
 ```sys2
 # isA: entity is member of category
-@IsAMacro:isA macro entity category
+@IsAGraph:isA graph entity category
     @r1 __Role Instance $entity
     @r2 __Role Category $category
     @result __Bundle $r1 $r2
@@ -147,7 +147,7 @@ end
 end
 
 # subclass: category1 is subclass of category2
-@SubclassMacro:subclass macro subcategory supercategory
+@SubclassGraph:subclass graph subcategory supercategory
     @r1 __Role Subclass $subcategory
     @r2 __Role Superclass $supercategory
     @result __Bundle $r1 $r2
@@ -162,19 +162,19 @@ end
 @HasPart:HasPart __Relation
 @MadeOf:MadeOf __Relation
 
-@PartOfMacro:partOf macro part whole
+@PartOfGraph:partOf graph part whole
     @pair __Pair $part $whole
     @result __Role PartOf $pair
     return $result
 end
 
-@HasPartMacro:hasPart macro whole part
+@HasPartGraph:hasPart graph whole part
     @pair __Pair $whole $part
     @result __Role HasPart $pair
     return $result
 end
 
-@MadeOfMacro:madeOf macro object substance
+@MadeOfGraph:madeOf graph object substance
     @pair __Pair $object $substance
     @result __Role MadeOf $pair
     return $result
@@ -189,14 +189,14 @@ end
 @On:On __Relation
 @Near:Near __Relation
 
-@AtMacro:at macro entity location
+@AtGraph:at graph entity location
     @r1 __Role Theme $entity
     @r2 __Role Location $location
     @result __Bundle $r1 $r2
     return $result
 end
 
-@InMacro:in macro entity container
+@InGraph:in graph entity container
     @r1 __Role Theme $entity
     @r2 __Role Location $container
     @r3 __Role Relation In
@@ -204,7 +204,7 @@ end
     return $result
 end
 
-@OnMacro:on macro entity surface
+@OnGraph:on graph entity surface
     @r1 __Role Theme $entity
     @r2 __Role Location $surface
     @r3 __Role Relation On
@@ -212,7 +212,7 @@ end
     return $result
 end
 
-@NearMacro:near macro entity landmark
+@NearGraph:near graph entity landmark
     @r1 __Role Theme $entity
     @r2 __Role Location $landmark
     @r3 __Role Relation Near
@@ -278,7 +278,7 @@ The following relations were identified as "hardcoded" and have now been formall
 ```sys2
 # Capability relation
 @Can:Can __Relation
-@CanMacro:can macro entity ability
+@CanGraph:can graph entity ability
     @r1 __Role Theme $entity
     @r2 __Role Attribute $ability
     @result __Bundle $r1 $r2
@@ -287,7 +287,7 @@ end
 
 # Possession relation
 @Has:Has __Relation
-@HasMacro:has macro entity possession
+@HasGraph:has graph entity possession
     @r1 __Role Theme $entity
     @r2 __Role Attribute $possession
     @result __Bundle $r1 $r2
@@ -296,7 +296,7 @@ end
 
 # Synonym relation (for fuzzy matching)
 @Synonym:Synonym __SymmetricRelation
-@SynonymMacro:synonym macro term1 term2
+@SynonymGraph:synonym graph term1 term2
     @pair __Pair $term1 $term2
     @result __Role Synonym $pair
     return $result
@@ -328,7 +328,7 @@ These additions resolve the gaps identified in the hardcoded theory analysis.
 | Category | Count | Examples |
 |----------|-------|----------|
 | Semantic Roles | 26 | Agent, Theme, Goal, Location |
-| Property Macros | 4 | hasProperty, inState, isA, subclass |
+| Property Graphs | 4 | hasProperty, inState, isA, subclass |
 | Part-Whole | 3 | PartOf, HasPart, MadeOf |
 | Location | 4 | At, In, On, Near |
 | Transitive | 13 | isA, locatedIn, partOf, before |

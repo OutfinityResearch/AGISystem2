@@ -38,10 +38,12 @@ This Non-Functional Specification (NFS) defines the quality attributes, constrai
 
 ### 2.3 Capacity
 
+**Note:** Capacity limits apply to **HDC-Priority mode** (dense-binary strategy) only. In **Symbolic-Priority mode** (sparse-polynomial, metric-affine), KB capacity is effectively unlimited. See DS01 Section 1.10.
+
 | ID | Requirement | Target | Measurement | Traces To |
 |----|-------------|--------|-------------|-----------|
-| **NFS-12** | Maximum facts per knowledge base with good accuracy | 200 facts | Similarity > 0.55 | URS-22 |
-| **NFS-13** | Maximum facts per knowledge base with usable accuracy | 500 facts | Similarity > 0.52 | URS-22 |
+| **NFS-12** | Maximum facts per KB with good accuracy (dense-binary) | 200 facts | Similarity > 0.55 | URS-22 |
+| **NFS-13** | Maximum facts per KB with usable accuracy (dense-binary) | 500 facts | Similarity > 0.52 | URS-22 |
 | **NFS-14** | Maximum vocabulary size | 10,000 atoms | Memory bounded | URS-22 |
 | **NFS-15** | Maximum concurrent sessions | 100 sessions | Memory bounded | URS-22 |
 | **NFS-16** | Maximum theory nesting depth | 10 levels | Design limit | URS-07 |
@@ -312,11 +314,13 @@ src/
 | Technology | Module System | ES Modules (.mjs) |
 | License | Type | GNU AGPL v3 |
 | Architecture | HDC Strategy | Pluggable (default: dense-binary) |
+| Architecture | Reasoning Modes | HDC-Priority, Symbolic-Priority |
 | Architecture | Operations | Bind (XOR), Bundle (Majority) |
 | Architecture | Default Geometry | 32,768 bits |
 | Architecture | Position Vectors | 20 (Pos1-Pos20) |
-| Capacity | KB Optimal Limit | 200 facts |
-| Capacity | KB Hard Limit | ~500 facts |
+| Capacity | KB Optimal Limit (dense-binary) | 200 facts |
+| Capacity | KB Hard Limit (dense-binary) | ~500 facts |
+| Capacity | KB Limit (sparse/metric-affine) | Unlimited* |
 | Performance | Query Target | < 100ms |
 | Memory | Per Vector (32K) | 4 KB |
 | Configuration | Strategy Env Var | `SYS2_HDC_STRATEGY` |
@@ -381,10 +385,17 @@ src/
 
 ### 15.2 Critical DSL Syntax Rules (from DS02)
 
-**NO PARENTHESES IN DSL!** The syntax is:
+**Core syntax:**
 ```
 @destination Operator arg1 arg2 arg3 ...
 ```
+
+**Parenthesized compound expressions** are supported for inline nested graph calls:
+```
+@causal __Role Causes (__Pair $cause $effect)
+```
+
+This creates a **Compound** expression that evaluates the nested graph call first, then passes the result as an argument to the outer expression. See DS02 Section 2.2 for details.
 
 **Persistence Rules:**
 | Form | In Scope | In KB | Use Case |

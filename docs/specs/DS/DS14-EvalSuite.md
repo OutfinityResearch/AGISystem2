@@ -653,4 +653,134 @@ Fuzzy comparison between actual output and `expected_nl`:
 
 ---
 
+## 14.12 Permanent Guidelines for Suite Development
+
+These guidelines are **permanent** and must be followed when working with the evaluation suite.
+
+### 14.12.1 Code Separation Principle
+
+**CRITICAL**: All NL translation code must be in the `session` module, NOT in the evaluation suite runner.
+
+```
+CORRECT:
+  evalSuite/lib/runner.mjs → calls session.generateNL(result)
+  src/runtime/session.mjs   → implements NL translation from internal representations
+
+WRONG:
+  evalSuite/lib/runner.mjs → contains NL translation logic directly
+```
+
+The evaluation suite runner should only:
+1. Execute test cases using session methods
+2. Compare actual NL output with expected NL
+3. Report pass/fail status
+
+### 14.12.2 Proof and Demonstration Requirements
+
+**All `query` and `prove` actions MUST include demonstrations alongside the answer:**
+
+```javascript
+// WRONG - answer only
+expected_nl: 'Rex is a dog'
+
+// CORRECT - answer with proof
+expected_nl: 'Rex is a dog. Proof: isA Rex Dog (direct KB match).'
+
+// CORRECT - derived answer with full chain
+expected_nl: 'True: Rex is a mammal. Proof: Rex isA Dog. Dog isA Mammal.'
+```
+
+Demonstrations must be:
+- **Convincing**: Show the actual reasoning chain
+- **Real**: Based on actual KB facts and inference steps
+- **NL-friendly**: Human-readable, not internal format dumps
+
+### 14.12.3 DSL Syntax Compliance
+
+**ONLY use syntax defined in DS02-DSL-Syntax.md:**
+
+| Allowed | Description |
+|---------|-------------|
+| `operator arg1 arg2` | Anonymous fact → KB |
+| `@var operator arg1 arg2` | Named fact → scope only |
+| `@var:name operator arg1 arg2` | Named + exported → scope + KB |
+| `$var` | Variable reference |
+| `?hole` | Query hole |
+| `@Name graph p1 p2 ... end` | Graph definition |
+
+**Do NOT invent new syntax** - all DSL must parse correctly with the existing parser.
+
+### 14.12.4 Graph Usage Preference
+
+**Favor graph syntax for realistic complexity:**
+
+```javascript
+// TRIVIAL - avoid
+input_dsl: 'isA Dog Animal'
+
+// REALISTIC - preferred
+input_dsl: `
+  @BuyTx:buy graph buyer item seller price
+    @t1 _atrans $buyer $item $seller $buyer
+    @t2 _atrans $buyer $price $buyer $seller
+    @both __Bundle $t1 $t2
+    return $both
+  end
+  @tx1 buy Alice Book Bob Fifty
+`
+```
+
+Graphs represent real-world complex concepts that LLMs will translate to DSL.
+
+### 14.12.5 Case Complexity Guidelines
+
+**Do NOT simplify test cases.** Real-world instructions involve:
+- Complex multi-step reasoning
+- Deep transitive chains (5+ steps)
+- Compound logical conditions
+- Temporal and causal relationships
+
+```javascript
+// TOO SIMPLE - avoid
+{ action: 'prove', input_dsl: '@goal isA Cat Animal' }
+
+// REALISTIC - preferred
+{
+  action: 'prove',
+  input_nl: 'Is Rex a LivingThing? (Rex→Dog→Canine→Mammal→Vertebrate→Animal→LivingThing)',
+  input_dsl: '@goal isA Rex LivingThing',
+  expected_nl: 'True: Rex is a livingthing. Proof: Rex isA Dog. Dog isA Canine. Canine isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing.'
+}
+```
+
+### 14.12.6 Planning in Solve
+
+When test cases require **planning** (e.g., goal-directed problem solving, CSP with ordering), consult before implementation to establish:
+
+1. Whether planning algorithm needs to be added to reasoning engine
+2. Which reasoning mode(s) should support planning (symbolic/holographic)
+3. How planning results should be represented in NL
+
+Planning use cases include:
+- Multi-step goal achievement
+- Constraint satisfaction with dependencies
+- Action sequencing (e.g., river crossing puzzles)
+
+### 14.12.7 Configuration Awareness
+
+The suite runs against multiple configurations:
+- **HDC Strategies**: dense-binary, sparse-polynomial, metric-affine
+- **Reasoning Modes**: symbolicPriority, holographicPriority
+
+Test cases should pass on ALL configurations. If a case fails on specific configurations, document why and whether it's expected.
+
+### 14.12.8 Contradiction Handling
+
+When spec vs code vs behavior disagree:
+1. Document the contradiction in comments
+2. Report to maintainer before making changes
+3. Do NOT silently "fix" by changing expected values
+
+---
+
 *End of Chapter 14 - Evaluation Suite Framework*

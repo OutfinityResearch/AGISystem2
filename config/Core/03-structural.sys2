@@ -4,7 +4,7 @@
 
 # ===== Role Binding =====
 
-@__Role:__Role macro roleName filler
+@__Role:__Role graph roleName filler
     @r ___Bind $roleName $filler
     @typed ___Bind $r RoleType
     return $typed
@@ -12,14 +12,14 @@ end
 
 # ===== Pair and Triple =====
 
-@__Pair:__Pair macro first second
+@__Pair:__Pair graph first second
     @p1 ___Bind $first Pos1
     @p2 ___Bind $second Pos2
     @result ___Bind $p1 $p2
     return $result
 end
 
-@__Triple:__Triple macro a b c
+@__Triple:__Triple graph a b c
     @p1 ___Bind $a Pos1
     @p2 ___Bind $b Pos2
     @p3 ___Bind $c Pos3
@@ -30,14 +30,14 @@ end
 
 # ===== Bundle =====
 
-@__Bundle:__Bundle macro items
+@__Bundle:__Bundle graph items
     @result ___Bundle $items
     return $result
 end
 
 # ===== Sequence =====
 
-@__Sequence:__Sequence macro items
+@__Sequence:__Sequence graph items
     # Each item bound with position, then bundled
     @result ___BundlePositioned $items
     return $result
@@ -45,7 +45,7 @@ end
 
 # ===== Type Checking =====
 
-@IsTypeMacro:isType macro instance typeMarker
+@IsTypeMacro:isType graph instance typeMarker
     @extracted ___GetType $instance
     @sim ___Similarity $extracted $typeMarker
     @result GreaterThan $sim 0.8

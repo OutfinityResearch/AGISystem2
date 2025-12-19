@@ -19,7 +19,7 @@ This monolithic document (previously 1590 lines) has been split into smaller, fo
 | [DS07a-HDC-Primitives](DS07a-HDC-Primitives.md) | L0 primitives, binding formula |
 | [DS07b-Type-System](DS07b-Type-System.md) | Types, constructors, structural ops |
 | [DS07c-Semantic-Primitives](DS07c-Semantic-Primitives.md) | L2 CD primitives |
-| [DS07d-Logic](DS07d-Logic.md) | Logic atoms and macros |
+| [DS07d-Logic](DS07d-Logic.md) | Logic atoms and graphs |
 | [DS07e-Temporal-Modal](DS07e-Temporal-Modal.md) | Temporal, modal, defaults |
 | [DS07f-Roles-Properties](DS07f-Roles-Properties.md) | Roles, properties, relations |
 | [DS07g-Bootstrap-Verbs](DS07g-Bootstrap-Verbs.md) | L3 verbs |
