@@ -1,33 +1,31 @@
-# Module: src/output/text-generator.mjs
+# Module: src/decoding/text-generator.mjs
 
-**Purpose:** Generate human-readable text from operators/args and proof results.
+**Purpose:** Generate human-readable summaries by decoding vectors into DSL structures and phrasing them; also provides helpers for proof/query explanations.
 
 ## Exports
 
 ```javascript
 export class TextGenerator {
-  constructor()
-  generate(operator: string, args: Array<string | { value: string }>): string
-  elaborate(proof: ProveResult): ElaborationResult
-}
-
-interface ElaborationResult {
-  text: string;
-  proofChain?: string[];
-  fullProof?: string;
+  constructor(session: Session)
+  summarize(vector: Vector): { success: boolean, text: string, structure?: object, confidence?: number, reason?: string }
+  elaborate(proof: ProveResult): { success: boolean, text: string }
+  explainQuery(result: QueryResult, originalQuery: string): { success: boolean, text: string }
+  registerTemplate(operator: string, pattern: string): void
 }
 ```
 
 ## Dependencies
 
-- (none)
+- `src/decoding/structural-decoder.mjs`
+- `src/decoding/phrasing.mjs`
 
 ## Notes
 
-- Implementation lives at `src/output/text-generator.mjs`.
-- There is no `explainQuery` method; query/proof NL is handled by `ResponseTranslator`.
+- Runtime NL responses are produced by `session.describeResult(...)` via `src/output/response-translator.mjs` and `src/output/text-generator.mjs`.
+- This module is still useful for vector-centric inspection (`summarize`) and standalone explainers (`explainQuery`).
 
 ## Test Cases
 
-- Generate produces readable text
-- Elaborate describes proof steps
+- Summarize returns readable text for decodable vectors
+- Elaborate formats proof result (valid/invalid)
+- explainQuery formats bindings and confidence

@@ -110,23 +110,16 @@ evalSuite/
 │   ├── reporter.mjs                 # Terminal reporter with colors
 │   └── loader.mjs                   # Suite/case loader
 │
-├── suite01_basic_facts/
-│   └── cases.mjs                    # Conversation steps
-│
-├── suite02_family_relations/
+├── suite01_foundations/
 │   └── cases.mjs
-│
-├── suite03_rule_reasoning/
+├── suite05_negation/
 │   └── cases.mjs
-│
-├── suite04_taxonomies/
+├── suite21_goat_cabbage_plus/
 │   └── cases.mjs
-│
-├── suite05_negation_logic/
+├── suite23_tool_planning/
 │   └── cases.mjs
-│
-└── suite06_contradictions/
-    └── cases.mjs                    # Contradiction detection tests
+└── suite24_contradictions/
+    └── cases.mjs
 ```
 
 ---
@@ -253,31 +246,37 @@ export default { name, description, theories, steps };
 
 ## 14.5 Contradiction Detection and Rejection
 
-The system maintains logical consistency by detecting and rejecting contradictory facts.
+The system can maintain **theory-driven** consistency by detecting and rejecting *hard contradictions* during `learn`.
+
+Key points:
+- Contradictions are defined by **constraints loaded from theories** (Core/domain) and surfaced via `SemanticIndex`.
+- `learn` is **transactional**: if any statement is rejected, the session state remains unchanged.
+- `Not(...)` is a first-class fact used for **blocking inference / exceptions**; it is **not** a rejection trigger by itself.
 
 ### 14.5.1 How Contradictions Work
 
 When a `learn` action encounters a fact that contradicts existing knowledge, it **REJECTS** the new fact and returns an explanation:
 
 ```javascript
-// Previously learned: "whale is NOT a fish"
+// Previously learned: Door is Open
 {
   action: 'learn',
-  input_nl: 'A whale is a mammal. A whale is not a fish.',
-  input_dsl: `
-    @w1 isA Whale Mammal
-    @negw isA Whale Fish
-    @w2 Not $negw
-  `,
-  expected_nl: 'Learned 1 positive and 1 negative classification fact'
+  input_nl: 'Setup: Door is Open.',
+  input_dsl: 'hasState Door Open',
+  expected_nl: 'Learned 1 facts'
 },
 
-// Now trying to learn: "whale is a fish" → REJECTION
+// Now trying to learn: Door is Closed → REJECTION (mutuallyExclusive constraint from Core)
 {
   action: 'learn',
-  input_nl: 'A whale is a fish.',
-  input_dsl: '@contra isA Whale Fish',
-  expected_nl: 'REJECTED: Cannot learn "whale is a fish" because it contradicts existing knowledge that "whale is NOT a fish"'
+  input_nl: 'Door is Closed.',
+  input_dsl: `
+    locatedIn Door Kitchen
+    hasState Door Closed
+  `,
+  expect_success: false,
+  assert_state_unchanged: true,
+  expected_nl: 'Warning: contradiction - Door is both Closed and Open'
 }
 ```
 
@@ -285,9 +284,10 @@ When a `learn` action encounters a fact that contradicts existing knowledge, it 
 
 | Type | Description | Example |
 |------|-------------|---------|
-| **Direct negation** | Fact directly contradicts explicit Not | `Not (isA Whale Fish)` + trying to learn `isA Whale Fish` |
-| **Category exclusion** | Entity is X and X≠Y | Cat is not Dog + Fluffy is Cat → cannot be Dog |
-| **Property conflict** | Mutually exclusive states | Door is closed + Door is NOT open → cannot be open |
+| **mutuallyExclusive** | Same subject cannot have two exclusive values | `hasState Door Open` + learn `hasState Door Closed` |
+| **contradictsSameArgs** | Two operators cannot both hold for the same args | `before A B` + learn `after A B` |
+| **Derived (transitive)** | Contradiction against a relation derivable from a transitive chain | `before Start Middle` + `before Middle End` ⇒ derived `before Start End`, then learn `after Start End` |
+| **Derived (inherited)** | Contradiction against a property inherited through an `isA` chain | `isA Tea Beverage`, `isA Beverage Liquid`, `hasProperty Liquid Cold`, then learn `hasProperty Tea Hot` |
 
 ### 14.5.3 Rejection Response Format
 
@@ -303,12 +303,13 @@ Current runtime surfaces contradictions via `errors`/`warnings`. NL output is ge
 
 ### 14.5.4 Example Suite: Contradiction Detection
 
-See `suite06_contradictions/cases.mjs` for comprehensive examples including:
-- Direct negation contradictions
-- State contradictions (alive/dead, open/closed)
-- Location contradictions
-- Relationship contradictions
-- Category exclusion (cats are not dogs)
+See `evalSuite/suite24_contradictions/cases.mjs` for comprehensive examples including:
+- `mutuallyExclusive` and `contradictsSameArgs` rejections
+- Indirect contradictions (transitive chaining, inherited properties)
+- Canonicalization effects (`alias`, `synonym`) on contradiction detection
+- Transactional rollback (`assert_state_unchanged: true`)
+
+Negation semantics (`Not` as exception/blocker) are tested separately in `evalSuite/suite05_negation/cases.mjs`.
 
 ---
 
@@ -428,7 +429,7 @@ async function executeLearning(step, session) {
 Complete example of a conversation about animal classification:
 
 ```javascript
-// suite01_animal_taxonomy/cases.mjs
+// Example: cases.mjs
 
 export const name = 'Animal Taxonomy';
 export const description = 'Learn and reason about animal classifications';

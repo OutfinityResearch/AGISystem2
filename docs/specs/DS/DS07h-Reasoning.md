@@ -179,6 +179,8 @@ end
 
 Generate explanation for a conclusion.
 
+**Note:** `explain` is reserved for future use. The current runtime does not expose `session.explain()` and the eval runner does not execute `action: "explain"` yet (see DS14).
+
 ```sys2
 # Types: conclusion:Abstract -> explanation:Bundle
 @ExplainGraph:explain graph conclusion

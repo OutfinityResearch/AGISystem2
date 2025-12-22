@@ -253,8 +253,8 @@ Properties: deterministic, preserves similarity.
 
 ```
 1. Session starts
-   → Core auto-loaded
    → Empty variable space
+   → Core not auto-loaded (call `session.loadCore()`)
 
 2. Load theories
    @_ Load $Economics
@@ -283,7 +283,7 @@ Properties: deterministic, preserves similarity.
 |---------|-------------|
 | Theory = Vector + Namespace | Identity that can be manipulated + content that can be loaded |
 | Load/Unload/Export/Import | Normal verbs in Core, follow standard syntax |
-| Core | Always loaded, L0/L1/L2 + meta verbs |
+| Core | Not auto-loaded by default; load via `session.loadCore()` |
 | Stacking | Multiple theories, most-recent-first resolution |
 | `@_` | Discard destination for Load/Export |
 | Geometry | 16K/32K/64K bits, auto-extend across theories |

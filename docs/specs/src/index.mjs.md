@@ -8,7 +8,7 @@
 // Core
 export { Vector } from './core/vector.mjs';
 export { bind, bindAll, bundle, similarity, distance, topKSimilar, isOrthogonal, unbind } from './core/operations.mjs';
-export { getPositionVector, initPositionVectors, withPosition, removePosition } from './core/position.mjs';
+export { getPositionVector, initPositionVectors, withPosition, removePosition, extractAtPosition } from './core/position.mjs';
 export * from './core/constants.mjs';
 
 // Util
