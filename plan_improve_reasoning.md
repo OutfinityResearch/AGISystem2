@@ -1,83 +1,166 @@
-# Plan de lucru (rămas): optimizări reasoning + convergență semantică + planning
+# Plan (următoarele 5–7 zile): operatori de reasoning + unificare semantică între teorii
 
-Acest plan continuă direcțiile din `hardcoded_theory_analysis.md` și reflectă **starea actuală** din implementare. Este intenționat **scurt**: include doar pașii rămași și, pentru fiecare etapă, unde modificăm codul.
+Țintă: să putem rula reasoning robust (în special `analogy`, `induce`, `abduce`, `deduce`) chiar când teoriile folosesc **nume diferite** pentru același concept / aceeași relație, iar sistemul să poată:
+- detecta automat candidate de echivalență (cu “evidence”),
+- aplica unificarea **controlat** (numai prin `canonical`/`alias`/`synonym`, fără auto‑merge),
+- păstra compatibilitatea între `symbolicPriority` și `holographicPriority`.
 
-## Status actual (implementat deja)
-- Validare strictă DSL înainte de execuție: `Session.checkDSL()` (`src/runtime/session-check-dsl.mjs`) verifică sintaxa + operatori/grafuri + `$refs` + “holes” (în `prove` nu sunt permise) și returnează AST (reutilizat ulterior).
-- `learn()` este atomic: rollback complet la orice eroare (`src/runtime/session.mjs`, `src/runtime/session-transaction.mjs`) și returnează numărul de fapte învățate în `result.facts`.
-- Contradicții la `learn/addToKB`: reject doar pe constrângeri definite în teorii (ex. `mutuallyExclusive`, `contradictsSameArgs`) + contradicții derivate (lanțuri tranzitive / moștenire), cu `proof_nl` pentru motivare (`src/runtime/session-contradictions.mjs`, `src/runtime/fact-index.mjs`).
-- EvalSuite poate testa explicit “learning trebuie să pice” (și că starea nu se schimbă) + avem suită de regresie pentru contradicții (`evalSuite/lib/runner.mjs`, `evalSuite/suite24_contradictions/*`, `tests/unit/runtime/*`).
-
-## Invariante (nu negociem)
-- Fără “legacy modes”: dacă DSL-ul e invalid sau cere operatori inexistenți, pica devreme.
-- Fără “half-load”: orice load/learn e all-or-nothing (prin tranzacție).
-- `Not` nu e motiv de respingere la load; contradicția “hard” vine din constrângeri declarate în teorii.
-- Nu inventăm teorii superficiale pentru eval; folosim definiții reale din `config/` (și, dacă lipsește ceva, îl definim corect în Core, nu ad-hoc în evalSuite).
+## Out of scope (doar sub observație)
+- Profilare/perf: folosim `scripts/profileSessionLoad.js` și `evals/runQueryEval.mjs` când apare regresie; nu dezvoltăm tooling nou aici.
+- Solve/planning: nu extindem solver-ul acum; doar adăugăm evaluări dacă operatorii noi au nevoie de coverage.
 
 ---
 
-## E) Profilare + optimizare `holographicPriority` / HDC (prioritate 1)
-Țintă: explicăm și reducem diferențele mari de timp între strategii (în special `sparse-polynomial` și `metric-affine`) fără a schimba semantica rezultatului.
+## Ziua 1 — Unificare semantică: semnături de definiții (grafuri/ruli)
 
-**Schimbări (unde):**
-- Script de profiling dedicat (nu `evals/runStressCheck.js`): `scripts/profile-reasoning.mjs`
-  - rulează matrici de scenarii (load Core, câteva query/prove reprezentative) și raportează “hotspots” per operație.
-- Instrumentare “off by default” (controlată prin env flag):
-  - `src/hdc/facade.mjs` (timers/counters per `createFromName`, `bundle/bind/unbind`, `similarity`, `serialize/deserialize`)
-  - `src/reasoning/holographic/*` (candidate generation, top‑K pruning, backtracking counts)
-  - opțional: `src/runtime/vocabulary.mjs` (hash/reverseLookup cost).
-- Optimizări țintite după profilare (doar “safe”):
-  - caching (hash / vectori poziționali / operator vectors) în `src/runtime/vocabulary.mjs` și/sau `src/hdc/*`
-  - scurtcircuitare: dacă există match simbolic (metadata), nu mai facem fallback HDC inutil (`src/reasoning/*`).
+### 1.1 Semnături pentru grafuri (alpha‑equivalence) + raport de duplicate
+**Scop:** detectăm “aceeași definiție, alt nume” (în special între teorii diferite).
 
-**Teste (unde):**
-- Regresie “nu schimbăm rezultate”: cazuri fixe în `tests/unit/reasoning/*` (aceleași bindings și aceeași validitate prove, indiferent de optimizări).
+**Cod (unde):**
+- Fișier nou: `src/runtime/unification/signatures.mjs`
+  - `signatureGraph(graphDeclAst): string`
+  - `signatureRule(ruleDeclAst): string`
+  - normalizează (alpha‑rename) parametrii (`p1`, `p2`…) și temporarele (`v1`, `v2`…), apoi produce un hash stabil.
+- Integrare colectare în timpul `learn`:
+  - `src/runtime/session-learn.mjs` (la `GraphDeclaration` / `RuleDeclaration`)
+  - index: `session.definitionIndex` (Map signature → array `{ kind, name, source, line }`).
+- API:
+  - `src/runtime/session.mjs`: `session.reportEquivalentDefinitions({ minDuplicates = 2 })`.
 
----
-
-## D) `solve` ca planning (prioritate 2)
-Țintă: pentru probleme tip planning, `solve` produce un plan ca facts, iar planul e interogabil prin query cu holes (pași/parametri).
-
-**Schimbări (unde):**
-- Solver planning MVP: `src/reasoning/planning/*`
-  - BFS/IDA* cu limită; state ca set de facts (pe metadata keys), precond/effect ca fapte.
-- Integrare în executor: `src/runtime/executor-solve.mjs`
-  - suport `problemType=planning` + output canonic în KB: `planStep`, `planAction`.
-- EvalSuite (fără “deep mode”):
-  - extindere `evalSuite/suite21_goat_cabbage_plus/cases.mjs` cu interogări “următorul pas” pentru stări intermediare.
-  - suită nouă “tool usage planning”: `evalSuite/suite25_tool_planning/*` (capabilități tool-uri descrise ca grafuri; motorul scoate un plan de pași pentru un goal).
-
-**Teste (unde):**
-- `tests/unit/reasoning/planning.test.mjs` (plan minim, no‑plan, și garanții de non‑poluare la eșec).
+**Tests (unde):**
+- `tests/unit/runtime/unification-signatures.test.mjs`
+  - 2 grafuri identice cu nume/variabile diferite ⇒ aceeași semnătură
+  - 2 reguli alpha‑equivalente ⇒ aceeași semnătură
 
 ---
 
-## C) Convergență semantică + “Operatorul de Activare” (prioritate 3)
-Țintă: două căi DSL pentru același concept (ex. “noun→verb action”, macro vs compoziție) să convergă în runtime și între motoare, fără artificii superficiale.
+## Ziua 2 — Unificare semantică: “Amprenta Contextuală” (Distributional Similarity)
 
-**Schimbări (unde):**
-- Păstrarea structurii în metadata pentru expresii compuse (ca să putem recunoaște pattern-uri): `src/runtime/executor-metadata.mjs`
-  - evităm degradarea la “doar numele `$ref`” când nu putem face reverse lookup complet.
-- Canonicalizare structurală (pattern-uri macro + rolul `Action`/`__Action`): `src/runtime/canonicalize.mjs`
-  - reguli clare (de preferat declarative) care normalizează forme echivalente înainte de indexare/prove/query.
-- Clarificarea arității grafurilor:
-  - fie ajustăm executorul să nu ignore argumente extra (`src/runtime/executor-graphs.mjs`),
-  - fie schimbăm grafurile Core care se bazează pe “varargs” (de evitat dacă se poate).
-- Builtins `___*` (DS19) doar pentru ce folosim efectiv:
-  - modul nou sau extindere în executor (ex. `src/runtime/executor-builtins.mjs`) + wiring în `src/runtime/executor.mjs`.
+### 2.1 Index de contexte pentru operatori și entități
+**Scop:** găsim echivalențe între concepte (operatori/entități) chiar dacă nu sunt textual similare.
 
-**Teste (unde):**
-- Convergență “macro vs manual”: `tests/unit/runtime/canonicalization-convergence.test.mjs` (aceleași rezultate query/prove).
+**Cod (unde):**
+- Fișier nou: `src/runtime/unification/context-fingerprint.mjs`
+  - extrage “features” din `session.kbFacts` (pe metadata canonicalizată):
+    - pentru entități: `(operator, position, otherArg)` (ex. `hasState@1:Door → Open`)
+    - pentru operatori: distribuții de tip `(arg0Type, arg1Type)` (din `isA`) + parteneri frecvenți
+  - metrici:
+    - Jaccard pe seturi de feature‑uri (rapid, robust)
+    - Cosine pe feature counts (când avem suficiente date)
+- API:
+  - `src/runtime/session.mjs`: `session.suggestEquivalences({ kind: 'operator'|'entity', topK, minScore })`
+  - fiecare sugestie include `evidence` (top features shared) + scor.
+
+**Tests (unde):**
+- `tests/unit/runtime/context-fingerprint.test.mjs` (determinism + sugerează perechi așteptate într-un KB mic)
 
 ---
 
-## B) Extinderi pentru demonstrații / reducere la absurd (prioritate 4)
-Țintă: explicații mai utile pentru eșecuri și contradicții indirecte, fără a transforma `Not` în motiv de respingere la load.
+## Ziua 3 — Unificare aplicabilă: generare DSL + canonicalizare “Activation Operator”
 
-**Schimbări (unde):**
-- Goal explicit “contradicție” în prove (opțional, fără impact pe path-ul standard): `src/reasoning/prove.mjs`
-- “What‑if assume” prin tranzacții nested (pentru explain/analysis): `src/runtime/session.mjs`, `src/runtime/session-transaction.mjs`
+### 3.1 Aplicare controlată: generăm DSL de `canonical`/`synonym` (nu aplicăm automat)
+**Scop:** din sugestii → un snippet `.sys2` pe care îl putem accepta/revizui manual.
 
-**Teste (unde):**
-- `tests/unit/runtime/assume-rollback.test.mjs` (izolare totală, zero poluare a sesiunii).
+**Cod (unde):**
+- Fișier nou: `src/runtime/unification/suggestions-to-dsl.mjs`
+  - transformă sugestiile în linii DSL (`canonical A B`, `synonym A B`)
+  - filtrează token-uri rezervate / builtins / non‑tokens.
+- Script nou: `scripts/unificationSuggestions.mjs`
+  - încarcă Core + teorii țintă, rulează `suggestEquivalences`, scrie un raport Markdown + snippet `.sys2` (propuneri).
 
+**Tests (unde):**
+- `tests/unit/runtime/unification-suggestions-to-dsl.test.mjs` (nu generează linii pentru token-uri rezervate, scorul determină ordinea)
+
+### 3.2 Canonicalizare pentru “Operatorul de Activare” (noun→verb)
+**Scop:** formele compuse din Core (ex. pattern-uri cu `Action`/`__Action` și roluri) să convergă la aceeași formă canonică în metadata, astfel încât operatorii de reasoning să “vadă” aceeași semantică.
+
+**Cod (unde):**
+- `src/runtime/executor-metadata.mjs`
+  - păstrează metadata structurală pentru expresii compuse (mai ales când apar `$refs` către vectori compuși).
+- `src/runtime/canonicalize.mjs`
+  - reguli de rewrite pentru pattern-uri canonice (declarate în Core) astfel încât:
+    - macro vs manual composition → aceeași semnătură metadata
+    - `Action`/`__Action` rolurile să fie normalizate consistent.
+
+**Tests (unde):**
+- `tests/unit/runtime/activation-canonicalization.test.mjs`
+  - două forme DSL echivalente ⇒ metadata canonicalizată identică (operator + args)
+
+---
+
+## Ziua 4 — Operator upgrade (REASONING_OPERATORS): `analogy` + `induce`
+
+### 4.1 `analogy`: cross-operator (bazat pe unificare)
+**Scop:** analogii care funcționează și când relația are alt nume (după `synonym/canonical` sau după “aproape echivalent” din fingerprint).
+
+**Cod (unde):**
+- `src/reasoning/query-meta-ops.mjs` (`searchAnalogy`)
+  - candidat relație R:
+    - exact facts între A și B
+    - sinonime/canonice ale operatorului (via `componentKB`)
+    - operatori “aproape echivalenți” (din `session.suggestEquivalences(kind:'operator')`, cache-uit)
+  - găsește D din facts `R(C, D)`
+  - scoring: `score = opSimilarity * directnessBonus * support`
+  - `proof` include: `chosenRelation`, `opSimilarity`, `supportFacts`.
+
+**Tests + eval (unde):**
+- `tests/unit/reasoning/analogy.test.mjs` (2 relații diferite, unify prin `synonym` ⇒ răspuns corect)
+- `evalSuite/suite14_meta_queries/cases.mjs` (2–3 cazuri noi pentru `analogy`)
+
+### 4.2 `induce`: filtrare statistică a pattern-urilor spurious
+**Scop:** `induce` să nu returneze “corelații întâmplătoare” ca reguli “certe”.
+
+**Cod (unde):**
+- Fișier nou: `src/reasoning/statistics.mjs`
+  - Fisher exact / chi‑square (pentru features binare de tip “are property”)
+  - helper pentru counts din ComponentKB.
+- `src/reasoning/query-meta-ops.mjs` (`searchInduce`)
+  - pentru fiecare property candidat: calculează `support`, `pValue`, `confidence`
+  - filtrează după praguri (constante noi în `src/core/constants.mjs`)
+
+**Tests + eval (unde):**
+- `tests/unit/reasoning/induce-statistics.test.mjs` (KB noisy → filtrează pattern fals)
+- `evalSuite/suite14_meta_queries/cases.mjs` (1 caz nou cu noisy data controlată)
+
+---
+
+## Ziua 5 — Operator upgrade (REASONING_OPERATORS): `abduce` + `explain`
+
+### 5.1 `abduce`: scoring Bayesian (fără “method modes”)
+**Scop:** ranking corect când există mai multe explicații (base rates / priors).
+
+**Cod (unde):**
+- Fișier nou: `src/reasoning/bayesian-abduce.mjs`
+  - priors din `frequency X p` (dacă există) sau estimate din KB
+  - likelihoods din `causes` (și/sau rules simple)
+  - calculează posterior + include în `proof`.
+- `src/reasoning/abduction.mjs`
+  - integrează Bayesian scoring când sunt 2+ candidați.
+
+**Tests + eval (unde):**
+- `tests/unit/reasoning/abduce-bayesian.test.mjs` (două cauze cu priors diferite → ranking stabil)
+- suită nouă: `evalSuite/suite25_abduce_probabilistic/cases.mjs` (1–2 cazuri)
+
+### 5.2 `explain`: contrastiv + “why fail”
+**Scop:** explicații utile pentru utilizator: “de ce A și nu B?” / “de ce nu pot demonstra X?”.
+
+**Cod (unde):**
+- Fișier nou: `src/reasoning/explanation.mjs`
+  - `summarizeProof(proveResult)` (minimal chain + highlights)
+  - `explainWhyNot(goalDsl, foilDsl?)` (prima premisă lipsă / conflict relevant)
+- Integrare API (decizie):
+  - fie adăugăm `Session.explain(...)` în `src/runtime/session.mjs`,
+  - fie extindem `session.prove()` să includă câmp explicit de explain (în payload) și îl randăm via `ResponseTranslator`.
+- Dacă introducem `action: "explain"` în EvalSuite:
+  - update `evalSuite/lib/runner.mjs`
+  - update specs: `docs/specs/DS/DS14-EvalSuite.md`, `docs/specs/DS/DS07h-Reasoning.md`
+
+**Tests (unde):**
+- `tests/unit/reasoning/explain-contrastive.test.mjs`
+
+---
+
+## Criterii de acceptanță (practic)
+- `evals/runQueryEval.mjs` arată îmbunătățiri măsurabile pentru query-urile de `analogy`/`induce`/`abduce` (pe minim `dense-binary` și `metric-affine`).
+- `npm run tests` și `npm run eval` rămân verzi.
+- Unificarea semantică rămâne controlată: sistemul doar **sugerează**; unificarea efectivă se face numai prin facts (`canonical`/`synonym`/`alias`) acceptate explicit.

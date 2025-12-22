@@ -68,7 +68,7 @@ Running `evals/runQueryEval.mjs` with 12 advanced semantic queries shows:
 | **HDC algebra?** | ⚠️ Partial | ✅ Full relational operations |
 | **Proof quality?** | ⚠️ Basic | ✅ Rich with confidence |
 | **Scalability?** | ⚠️ Symbolic only | ✅ HDC + symbolic hybrid |
-
+ 
 ---
 
 ## Current Implementation Status
