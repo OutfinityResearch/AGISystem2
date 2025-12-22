@@ -1,34 +1,2068 @@
-# Logic - Missing Concepts
-# Auto-generated concept definitions
-
-@belief:belief graph
-    # Concept: Belief
-    @entity __Entity Belief
-    return $entity
-end
-
-@w:w graph
-    # Concept: w
-    @entity __Entity w
-    return $entity
-end
-
-@x:x graph
-    # Concept: x
-    @entity __Entity x
-    return $entity
-end
-
-@y:y graph
-    # Concept: y
-    @entity __Entity y
-    return $entity
-end
-
 # ============================================================================
 # Logic Stress Test - Domain-Specific Vocabulary
 # AUTO-GENERATED: Definitions for operators used in this test
 # ============================================================================
+
+# ============================================================================
+# Generated Logic/Philosophy Operator Definitions
+# Auto-generated semantic definitions for missing operators
+# ============================================================================
+
+@Relation:Relation graph entity1 entity2
+    # General relation between entities
+    @ent1 __Role Entity $entity1
+    @ent2 __Role Entity $entity2
+    @rel __Role Relation Relation
+    @result __Bundle $ent1 $ent2 $rel
+    return $result
+end
+
+@accordingToNature:accordingToNature graph action
+    # Action follows natural law
+    @act __Role Action $action
+    @law __Role Principle NaturalLaw
+    @result __Pair $act $law
+    return $result
+end
+
+@addressesContent:addressesContent graph argument
+    # Argument addresses actual content
+    @arg __Role Argument $argument
+    @content __Role Property AddressesContent
+    @result __Pair $arg $content
+    return $result
+end
+
+@appealsToEmotion:appealsToEmotion graph argument emotion
+    # Argument appeals to emotion
+    @arg __Role Argument $argument
+    @emot __Role Emotion $emotion
+    @fallacy __Role Fallacy EmotionalAppeal
+    @result __Bundle $arg $emot $fallacy
+    return $result
+end
+
+@appearCaused:appearCaused graph effect cause
+    # Effect appears caused by something
+    @eff __Role Effect $effect
+    @cau __Role ApparentCause $cause
+    @result __Pair $eff $cau
+    return $result
+end
+
+@appropriateCausalConnection:appropriateCausalConnection graph cause effect
+    # Appropriate causal connection exists
+    @cau __Role Cause $cause
+    @eff __Role Effect $effect
+    @validity __Role Property AppropriateConnection
+    @result __Bundle $cau $eff $validity
+    return $result
+end
+
+@argumentFromContingency:argumentFromContingency graph argument
+    # Cosmological argument from contingency
+    @arg __Role Argument $argument
+    @type __Role ReasoningType FromContingency
+    @result __Pair $arg $type
+    return $result
+end
+
+@argumentFromDegrees:argumentFromDegrees graph argument
+    # Argument from degrees of perfection
+    @arg __Role Argument $argument
+    @type __Role ReasoningType FromDegrees
+    @result __Pair $arg $type
+    return $result
+end
+
+@argumentFromDesign:argumentFromDesign graph argument
+    # Teleological argument from design
+    @arg __Role Argument $argument
+    @type __Role ReasoningType FromDesign
+    @result __Pair $arg $type
+    return $result
+end
+
+@argumentFromMotion:argumentFromMotion graph argument
+    # Cosmological argument from motion
+    @arg __Role Argument $argument
+    @type __Role ReasoningType FromMotion
+    @result __Pair $arg $type
+    return $result
+end
+
+@assumesCausation:assumesCausation graph event1 event2
+    # Assumes causal link without proof
+    @ev1 __Role Event $event1
+    @ev2 __Role Event $event2
+    @assumption __Role Fallacy AssumedCausation
+    @result __Bundle $ev1 $ev2 $assumption
+    return $result
+end
+
+@attacks:attacks graph argument target
+    # Argument attacks position
+    @arg __Role Argument $argument
+    @targ __Role Target $target
+    @relation __Role Relation Attacks
+    @result __Bundle $arg $targ $relation
+    return $result
+end
+
+@attacksPerson:attacksPerson graph argument person
+    # Argument attacks person not content
+    @arg __Role Argument $argument
+    @pers __Role Person $person
+    @fallacy __Role Fallacy AdHominem
+    @result __Bundle $arg $pers $fallacy
+    return $result
+end
+
+@authenticExistence:authenticExistence graph entity
+    # Entity has authentic existence
+    @ent __Role Entity $entity
+    @mode __Role Modality Authentic
+    @result __Pair $ent $mode
+    return $result
+end
+
+@canKnow:canKnow graph knower proposition
+    # Agent can know proposition
+    @know __Role Knower $knower
+    @prop __Role Proposition $proposition
+    @modality __Role Modality Possible
+    @result __Bundle $know $prop $modality
+    return $result
+end
+
+@canMotivate:canMotivate graph motivator action
+    # Motivator can motivate action
+    @motiv __Role Motivator $motivator
+    @act __Role Action $action
+    @result __Pair $motiv $act
+    return $result
+end
+
+@categoricalImperative:categoricalImperative graph maxim
+    # Maxim follows categorical imperative
+    @max __Role Maxim $maxim
+    @imper __Role Imperative Categorical
+    @moral __Role Domain Ethics
+    @result __Bundle $max $imper $moral
+    return $result
+end
+
+@chosenBehindVeil:chosenBehindVeil graph principle
+    # Principle chosen behind veil of ignorance
+    @princ __Role Principle $principle
+    @veil __Role Modality VeilOfIgnorance
+    @justice __Role Domain Justice
+    @result __Bundle $princ $veil $justice
+    return $result
+end
+
+@claimsChain:claimsChain graph reasoning claims
+    # Reasoning has chain of claims
+    @reas __Role Reasoning $reasoning
+    @clm __Role Claims $claims
+    @result __Pair $reas $clm
+    return $result
+end
+
+@claimsObjectivity:claimsObjectivity graph proposition
+    # Proposition claims objectivity
+    @prop __Role Proposition $proposition
+    @object __Role Property Objectivity
+    @result __Pair $prop $object
+    return $result
+end
+
+@commands:commands graph authority action
+    # Authority commands action
+    @auth __Role Authority $authority
+    @act __Role Action $action
+    @result __Pair $auth $act
+    return $result
+end
+
+@communicativeRationality:communicativeRationality graph discourse
+    # Discourse exhibits communicative rationality
+    @disc __Role Discourse $discourse
+    @rational __Role Property CommunicativeRationality
+    @result __Pair $disc $rational
+    return $result
+end
+
+@createsOwnValues:createsOwnValues graph agent values
+    # Agent creates own values
+    @agen __Role Agent $agent
+    @val __Role Values $values
+    @result __Pair $agen $val
+    return $result
+end
+
+@definedByFunction:definedByFunction graph entity function
+    # Entity defined by function
+    @ent __Role Entity $entity
+    @func __Role Function $function
+    @result __Pair $ent $func
+    return $result
+end
+
+@deniesFreedom:deniesFreedom graph theorymodel agent
+    # Theory denies freedom to agent
+    @theo __Role Theory $theorymodel
+    @agen __Role Agent $agent
+    @denial __Role Property FreedomDenial
+    @result __Bundle $theo $agen $denial
+    return $result
+end
+
+@distinctProperties:distinctProperties graph entity1 entity2
+    # Entities have distinct properties
+    @ent1 __Role Entity $entity1
+    @ent2 __Role Entity $entity2
+    @result __Pair $ent1 $ent2
+    return $result
+end
+
+@distortsArgument:distortsArgument graph fallacy argument
+    # Fallacy distorts argument
+    @fall __Role Fallacy $fallacy
+    @arg __Role Argument $argument
+    @result __Pair $fall $arg
+    return $result
+end
+
+@embeddedInTradition:embeddedInTradition graph practice tradition
+    # Practice embedded in tradition
+    @prac __Role Practice $practice
+    @trad __Role Tradition $tradition
+    @result __Pair $prac $trad
+    return $result
+end
+
+@followsNaturalLaw:followsNaturalLaw graph principle
+    # Principle follows natural law
+    @princ __Role Principle $principle
+    @law __Role Law Natural
+    @moral __Role Domain Ethics
+    @result __Bundle $princ $law $moral
+    return $result
+end
+
+@foresees:foresees graph agent consequence
+    # Agent foresees consequence
+    @agen __Role Agent $agent
+    @consq __Role Consequence $consequence
+    @result __Pair $agen $consq
+    return $result
+end
+
+@hasBestConsequences:hasBestConsequences graph action
+    # Action has best consequences
+    @act __Role Action $action
+    @eval __Role Evaluation BestConsequences
+    @result __Pair $act $eval
+    return $result
+end
+
+@hasCapabilities:hasCapabilities graph entity capabilities
+    # Entity possesses capabilities
+    @ent __Role Entity $entity
+    @cap __Role Capabilities $capabilities
+    @result __Pair $ent $cap
+    return $result
+end
+
+@hasContinuity:hasContinuity graph entity
+    # Entity has continuity over time
+    @ent __Role Entity $entity
+    @prop __Role Property Continuity
+    @result __Pair $ent $prop
+    return $result
+end
+
+@hasCrisis:hasCrisis graph situation
+    # Situation contains crisis
+    @sit __Role Situation $situation
+    @state __Role State Crisis
+    @result __Pair $sit $state
+    return $result
+end
+
+@hasDistinction:hasDistinction graph entity distinction
+    # Entity has distinguishing feature
+    @ent __Role Entity $entity
+    @dist __Role Distinction $distinction
+    @result __Pair $ent $dist
+    return $result
+end
+
+@hasEfficientCause:hasEfficientCause graph effect cause
+    # Effect has efficient cause
+    @eff __Role Effect $effect
+    @cau __Role EfficientCause $cause
+    @result __Pair $eff $cau
+    return $result
+end
+
+@hasEmotiveMeaning:hasEmotiveMeaning graph expression
+    # Expression has emotive meaning
+    @expr __Role Expression $expression
+    @mean __Role Meaning Emotive
+    @result __Pair $expr $mean
+    return $result
+end
+
+@hasFinalCause:hasFinalCause graph effect purpose
+    # Effect has final cause or purpose
+    @eff __Role Effect $effect
+    @cau __Role FinalCause $purpose
+    @result __Pair $eff $cau
+    return $result
+end
+
+@hasFormalCause:hasFormalCause graph entity form
+    # Entity has formal cause
+    @ent __Role Entity $entity
+    @cau __Role FormalCause $form
+    @result __Pair $ent $cau
+    return $result
+end
+
+@hasFreeWill:hasFreeWill graph agent
+    # Agent has free will
+    @agen __Role Agent $agent
+    @prop __Role Property FreeWill
+    @result __Pair $agen $prop
+    return $result
+end
+
+@hasFreedom:hasFreedom graph agent
+    # Agent has freedom
+    @agen __Role Agent $agent
+    @prop __Role Property Freedom
+    @result __Pair $agen $prop
+    return $result
+end
+
+@hasGap:hasGap graph argument
+    # Argument has logical gap
+    @arg __Role Argument $argument
+    @flaw __Role Flaw LogicalGap
+    @result __Pair $arg $flaw
+    return $result
+end
+
+@hasInfiniteAttributes:hasInfiniteAttributes graph entity
+    # Entity has infinite attributes
+    @ent __Role Entity $entity
+    @attr __Role Attributes Infinite
+    @result __Pair $ent $attr
+    return $result
+end
+
+@hasIntentionality:hasIntentionality graph mental_state
+    # Mental state has intentionality
+    @ment __Role MentalState $mental_state
+    @prop __Role Property Intentionality
+    @result __Pair $ment $prop
+    return $result
+end
+
+@hasLife:hasLife graph entity
+    # Entity has life
+    @ent __Role Entity $entity
+    @prop __Role Property Life
+    @result __Pair $ent $prop
+    return $result
+end
+
+@hasLogicalBasis:hasLogicalBasis graph argument basis
+    # Argument grounded in logical foundation
+    @arg __Role Argument $argument
+    @foundation __Role Basis $basis
+    @result __Pair $arg $foundation
+    return $result
+end
+
+@hasMaterialCause:hasMaterialCause graph effect cause
+    # Effect produced by material cause
+    @eff __Role Effect $effect
+    @mat __Role MaterialCause $cause
+    @result __Pair $eff $mat
+    return $result
+end
+
+@hasMeaning:hasMeaning graph symbol meaning
+    # Symbol carries meaning
+    @sym __Role Symbol $symbol
+    @sem __Role Meaning $meaning
+    @result __Pair $sym $sem
+    return $result
+end
+
+@hasMemories:hasMemories graph agent memories
+    # Agent possesses memories
+    @agt __Role Agent $agent
+    @mem __Role Memories $memories
+    @result __Pair $agt $mem
+    return $result
+end
+
+@hasMind:hasMind graph entity
+    # Entity has mind
+    @ent __Role Entity $entity
+    @prop __Role Property Mind
+    @result __Pair $ent $prop
+    return $result
+end
+
+@hasMultipleDrafts:hasMultipleDrafts graph process drafts
+    # Cognitive process involves multiple drafts
+    @proc __Role Process $process
+    @drft __Role Drafts $drafts
+    @result __Pair $proc $drft
+    return $result
+end
+
+@hasNoAlternative:hasNoAlternative graph situation
+    # Situation permits no alternative
+    @sit __Role Situation $situation
+    @constraint __Role Constraint Necessity
+    @result __Pair $sit $constraint
+    return $result
+end
+
+@hasOrder:hasOrder graph system ordering
+    # System exhibits ordering
+    @sys __Role System $system
+    @ord __Role Ordering $ordering
+    @result __Pair $sys $ord
+    return $result
+end
+
+@hasOverlappingSimilarities:hasOverlappingSimilarities graph entity1 entity2 similarities
+    # Entities share overlapping similarities
+    @ent1 __Role Entity $entity1
+    @ent2 __Role Entity $entity2
+    @sim __Role Similarities $similarities
+    @result __Bundle $ent1 $ent2 $sim
+    return $result
+end
+
+@hasPhronesis:hasPhronesis graph agent
+    # Agent possesses practical wisdom
+    @agt __Role Agent $agent
+    @wisdom __Role Attribute Phronesis
+    @result __Pair $agt $wisdom
+    return $result
+end
+
+@hasPrimaryQualities:hasPrimaryQualities graph object qualities
+    # Object possesses primary qualities
+    @obj __Role Object $object
+    @qual __Role PrimaryQualities $qualities
+    @result __Pair $obj $qual
+    return $result
+end
+
+@hasQualityDifference:hasQualityDifference graph entity1 entity2 difference
+    # Entities differ in quality
+    @ent1 __Role Entity $entity1
+    @ent2 __Role Entity $entity2
+    @diff __Role QualityDifference $difference
+    @result __Bundle $ent1 $ent2 $diff
+    return $result
+end
+
+@hasSecondaryQualities:hasSecondaryQualities graph object qualities
+    # Object possesses secondary qualities
+    @obj __Role Object $object
+    @qual __Role SecondaryQualities $qualities
+    @result __Pair $obj $qual
+    return $result
+end
+
+@hasSubjectiveCharacter:hasSubjectiveCharacter graph experience character
+    # Experience has subjective character
+    @exp __Role Experience $experience
+    @char __Role SubjectiveCharacter $character
+    @result __Pair $exp $char
+    return $result
+end
+
+@hasTemporalRelations:hasTemporalRelations graph entity1 entity2 relation
+    # Entities related temporally
+    @ent1 __Role Entity $entity1
+    @ent2 __Role Entity $entity2
+    @temp __Role TemporalRelation $relation
+    @result __Bundle $ent1 $ent2 $temp
+    return $result
+end
+
+@hasTranquility:hasTranquility graph entity
+    # Entity has tranquility property
+    @e __Role Entity $entity
+    @prop __Role Property Tranquility
+    @result __Pair $e $prop
+    return $result
+end
+
+@hasTwoTypes:hasTwoTypes graph entity type1 type2
+    # Entity has two types
+    @e __Role Entity $entity
+    @t1 __Role Type $type1
+    @t2 __Role Type $type2
+    @result __Bundle $e $t1 $t2
+    return $result
+end
+
+@hasUnderstanding:hasUnderstanding graph agent concept
+    # Agent has understanding of concept
+    @ag __Role Agent $agent
+    @con __Role Concept $concept
+    @result __Pair $ag $con
+    return $result
+end
+
+@hasUnstableMeaning:hasUnstableMeaning graph proposition
+    # Proposition has unstable meaning
+    @prop __Role Proposition $proposition
+    @type __Role Property UnstableMeaning
+    @result __Pair $prop $type
+    return $result
+end
+
+@higherLevel:higherLevel graph concept base
+    # Concept is at higher level than base
+    @con __Role Concept $concept
+    @bas __Role Base $base
+    @result __Pair $con $bas
+    return $result
+end
+
+@impossiblePrivateLanguage:impossiblePrivateLanguage graph proposition
+    # Private language is impossible
+    @prop __Role Proposition $proposition
+    @type __Role Property ImpossiblePrivateLanguage
+    @result __Pair $prop $type
+    return $result
+end
+
+@inBadFaith:inBadFaith graph agent action
+    # Agent acts in bad faith
+    @ag __Role Agent $agent
+    @act __Role Action $action
+    @result __Pair $ag $act
+    return $result
+end
+
+@isAPosteriori:isAPosteriori graph proposition
+    # A posteriori knowledge
+    @prop __Role Proposition $proposition
+    @type __Role KnowledgeType APosteriori
+    @result __Pair $prop $type
+    return $result
+end
+
+@isAPriori:isAPriori graph proposition
+    # A priori knowledge
+    @prop __Role Proposition $proposition
+    @type __Role KnowledgeType APriori
+    @result __Pair $prop $type
+    return $result
+end
+
+@isATheory:isATheory graph proposition
+    # Proposition is a theory
+    @prop __Role Proposition $proposition
+    @type __Role Type Theory
+    @result __Pair $prop $type
+    return $result
+end
+
+@isAbductive:isAbductive graph argument
+    # Abductive reasoning
+    @arg __Role Argument $argument
+    @type __Role ReasoningType Abductive
+    @result __Pair $arg $type
+    return $result
+end
+
+@isAbout:isAbout graph proposition topic
+    # Proposition is about topic
+    @prop __Role Proposition $proposition
+    @top __Role Topic $topic
+    @result __Pair $prop $top
+    return $result
+end
+
+@isAbsoluteMoral:isAbsoluteMoral graph principle
+    # Moral principle is absolute
+    @prin __Role Principle $principle
+    @type __Role MoralType Absolute
+    @result __Pair $prin $type
+    return $result
+end
+
+@isAbsurd:isAbsurd graph proposition
+    # Proposition is absurd
+    @prop __Role Proposition $proposition
+    @type __Role Type Absurd
+    @result __Pair $prop $type
+    return $result
+end
+
+@isActual:isActual graph entity
+    # Entity is actual (not merely possible)
+    @e __Role Entity $entity
+    @type __Role Modality Actual
+    @result __Pair $e $type
+    return $result
+end
+
+@isAffirming:isAffirming graph proposition
+    # Affirmative proposition
+    @prop __Role Proposition $proposition
+    @stance __Role Stance Affirmative
+    @result __Pair $prop $stance
+    return $result
+end
+
+@isAgnosticism:isAgnosticism graph belief
+    # Agnostic position on belief
+    @belief __Role Belief $belief
+    @stance __Role Stance Agnostic
+    @result __Pair $belief $stance
+    return $result
+end
+
+@isAnalogousTo:isAnalogousTo graph source target
+    # Analogical relation
+    @source __Role Source $source
+    @target __Role Target $target
+    @result __Pair $source $target
+    return $result
+end
+
+@isAnalytic:isAnalytic graph proposition
+    # Analytic truth
+    @prop __Role Proposition $proposition
+    @type __Role Type Analytic
+    @result __Pair $prop $type
+    return $result
+end
+
+@isAppearance:isAppearance graph phenomenon
+    # Phenomenal appearance
+    @phenomenon __Role Phenomenon $phenomenon
+    @status __Role Status Appearance
+    @result __Pair $phenomenon $status
+    return $result
+end
+
+@isArbitrary:isArbitrary graph entity
+    # Arbitrary designation
+    @entity __Role Entity $entity
+    @property __Role Property Arbitrary
+    @result __Pair $entity $property
+    return $result
+end
+
+@isAtheism:isAtheism graph belief
+    # Atheistic position
+    @belief __Role Belief $belief
+    @stance __Role Stance Atheist
+    @result __Pair $belief $stance
+    return $result
+end
+
+@isAutonomous:isAutonomous graph agent
+    # Autonomous agent
+    @agent __Role Agent $agent
+    @property __Role Property Autonomous
+    @result __Pair $agent $property
+    return $result
+end
+
+@isBTheory:isBTheory graph theorymodel
+    # B-theory of time
+    @thy __Role Theory $theorymodel
+    @type __Role Type BTheory
+    @result __Pair $thy $type
+    return $result
+end
+
+@isBasic:isBasic graph concept
+    # Basic or fundamental concept
+    @concept __Role Concept $concept
+    @property __Role Property Basic
+    @result __Pair $concept $property
+    return $result
+end
+
+@isBestExplanation:isBestExplanation graph explanation phenomenon
+    # Inference to best explanation
+    @explanation __Role Explanation $explanation
+    @phenomenon __Role Phenomenon $phenomenon
+    @status __Role Status BestExplanation
+    @result __Bundle $explanation $phenomenon $status
+    return $result
+end
+
+@isBestPossibleWorld:isBestPossibleWorld graph world
+    # Best possible world
+    @world __Role World $world
+    @property __Role Property BestPossible
+    @result __Pair $world $property
+    return $result
+end
+
+@isBlankSlate:isBlankSlate graph mind
+    # Tabula rasa mind
+    @mind __Role Mind $mind
+    @state __Role State BlankSlate
+    @result __Pair $mind $state
+    return $result
+end
+
+@isBlind:isBlind graph process
+    # Blind process without foresight
+    @process __Role Process $process
+    @property __Role Property Blind
+    @result __Pair $process $property
+    return $result
+end
+
+@isCertain:isCertain graph proposition
+    # Epistemically certain proposition
+    @prop __Role Proposition $proposition
+    @certainty __Role Certainty Certain
+    @result __Pair $prop $certainty
+    return $result
+end
+
+@isClear:isClear graph proposition
+    # Proposition is clear/unambiguous
+    @prop __Role Proposition $proposition
+    @clarity __Role Property Clear
+    @semantic __Role Domain Semantics
+    @result __Bundle $prop $clarity $semantic
+    return $result
+end
+
+@isCoherent:isCoherent graph argument
+    # Argument is internally coherent
+    @arg __Role Argument $argument
+    @coherence __Role Property Coherent
+    @logical __Role Domain Logic
+    @result __Bundle $arg $coherence $logical
+    return $result
+end
+
+@isCollectionOf:isCollectionOf graph collection elementType
+    # Collection contains elements of type
+    @coll __Role Collection $collection
+    @elem __Role ElementType $elementType
+    @structure __Role Relation Membership
+    @result __Bundle $coll $elem $structure
+    return $result
+end
+
+@isConceivable:isConceivable graph proposition mind
+    # Proposition is conceivable by mind
+    @prop __Role Proposition $proposition
+    @mnd __Role Mind $mind
+    @conceivability __Role Property Conceivable
+    @result __Bundle $prop $mnd $conceivability
+    return $result
+end
+
+@isConcrete:isConcrete graph entity
+    # Entity is concrete/physical
+    @ent __Role Entity $entity
+    @concreteness __Role Property Concrete
+    @ontological __Role Domain Ontology
+    @result __Bundle $ent $concreteness $ontological
+    return $result
+end
+
+@isContingent:isContingent graph proposition world
+    # Contingent truth in modal logic
+    @prop __Role Proposition $proposition
+    @modal __Role Modality Contingent
+    @world __Role World $world
+    @result __Bundle $prop $modal $world
+    return $result
+end
+
+@isCopy:isCopy graph entity original
+    # Entity is copy of original
+    @copy __Role Copy $entity
+    @orig __Role Original $original
+    @relation __Role Relation Duplication
+    @result __Bundle $copy $orig $relation
+    return $result
+end
+
+@isDead:isDead graph entity
+    # Entity is dead/lifeless
+    @ent __Role Entity $entity
+    @state __Role State Dead
+    @biological __Role Domain Biology
+    @result __Bundle $ent $state $biological
+    return $result
+end
+
+@isDeductive:isDeductive graph argument
+    # Deductive reasoning
+    @arg __Role Argument $argument
+    @type __Role ReasoningType Deductive
+    @result __Bundle $arg $type
+    return $result
+end
+
+@isDetermined:isDetermined graph event cause
+    # Event is causally determined
+    @evt __Role Event $event
+    @cau __Role Cause $cause
+    @determinism __Role Relation Determination
+    @result __Bundle $evt $cau $determinism
+    return $result
+end
+
+@isDeterminism:isDeterminism graph theorymodel
+    # Theory is deterministic
+    @thy __Role Theory $theorymodel
+    @property __Role Property Deterministic
+    @metaphysics __Role Domain Metaphysics
+    @result __Bundle $thy $property $metaphysics
+    return $result
+end
+
+@isDistinct:isDistinct graph entity1 entity2
+    # Entities are distinct/non-identical
+    @ent1 __Role Entity $entity1
+    @ent2 __Role Entity $entity2
+    @distinction __Role Relation Distinct
+    @result __Bundle $ent1 $ent2 $distinction
+    return $result
+end
+
+@isDogma:isDogma graph belief
+    # Belief is dogmatic/unquestioned
+    @bel __Role Belief $belief
+    @status __Role Property Dogmatic
+    @epistemic __Role Domain Epistemology
+    @result __Bundle $bel $status $epistemic
+    return $result
+end
+
+@isDoubtable:isDoubtable graph proposition
+    # Proposition can be doubted
+    @prop __Role Proposition $proposition
+    @doubtability __Role Property Doubtable
+    @epistemic __Role Domain Epistemology
+    @result __Bundle $prop $doubtability $epistemic
+    return $result
+end
+
+@isDualism:isDualism graph theorymodel
+    # Theory is dualistic
+    @thy __Role Theory $theorymodel
+    @property __Role Property Dualistic
+    @metaphysics __Role Domain Metaphysics
+    @result __Bundle $thy $property $metaphysics
+    return $result
+end
+
+@isError:isError graph statement
+    # Statement contains an error
+    @stmt __Role Statement $statement
+    @type __Role Type Error
+    @result __Pair $stmt $type
+    return $result
+end
+
+@isEternal:isEternal graph entity
+    # Entity is eternal
+    @ent __Role Entity $entity
+    @prop __Role Property Eternal
+    @result __Pair $ent $prop
+    return $result
+end
+
+@isEternalism:isEternalism graph doctrine
+    # Doctrine is eternalism
+    @doc __Role Doctrine $doctrine
+    @type __Role Type Eternalism
+    @result __Pair $doc $type
+    return $result
+end
+
+@isEthicalDilemma:isEthicalDilemma graph situation
+    # Situation is an ethical dilemma
+    @sit __Role Situation $situation
+    @type __Role Type EthicalDilemma
+    @result __Pair $sit $type
+    return $result
+end
+
+@isEverything:isEverything graph entity
+    # Entity represents everything
+    @ent __Role Entity $entity
+    @scope __Role Scope Universal
+    @result __Pair $ent $scope
+    return $result
+end
+
+@isEvil:isEvil graph entity
+    # Entity is evil
+    @ent __Role Entity $entity
+    @prop __Role Property Evil
+    @result __Pair $ent $prop
+    return $result
+end
+
+@isExpert:isExpert graph agent domain
+    # Agent is expert in domain
+    @agt __Role Agent $agent
+    @dom __Role Domain $domain
+    @status __Role Status Expert
+    @result __Bundle $agt $dom $status
+    return $result
+end
+
+@isExplained:isExplained graph phenomenon
+    # Phenomenon is explained
+    @phen __Role Phenomenon $phenomenon
+    @status __Role Status Explained
+    @result __Pair $phen $status
+    return $result
+end
+
+@isExtendedThing:isExtendedThing graph entity
+    # Entity is an extended thing
+    @ent __Role Entity $entity
+    @type __Role Type ExtendedThing
+    @result __Pair $ent $type
+    return $result
+end
+
+@isFactual:isFactual graph proposition
+    # Proposition is factual
+    @prop __Role Proposition $proposition
+    @truth __Role Truth Factual
+    @result __Pair $prop $truth
+    return $result
+end
+
+@isFallacy:isFallacy graph argument
+    # Argument is a fallacy
+    @arg __Role Argument $argument
+    @type __Role Type Fallacy
+    @result __Pair $arg $type
+    return $result
+end
+
+@isFalse:isFalse graph proposition
+    # Proposition is false
+    @prop __Role Proposition $proposition
+    @truth __Role Truth False
+    @result __Pair $prop $truth
+    return $result
+end
+
+@isFalsifiable:isFalsifiable graph hypothesis
+    # Hypothesis is falsifiable
+    @hyp __Role Hypothesis $hypothesis
+    @prop __Role Property Falsifiable
+    @result __Pair $hyp $prop
+    return $result
+end
+
+@isFirstCause:isFirstCause graph entity
+    # Entity is the first cause
+    @ent __Role Entity $entity
+    @type __Role Type FirstCause
+    @result __Pair $ent $type
+    return $result
+end
+
+@isFreeDiscourse:isFreeDiscourse graph communication
+    # Communication is free discourse
+    @comm __Role Communication $communication
+    @type __Role Type FreeDiscourse
+    @result __Pair $comm $type
+    return $result
+end
+
+@isFreeWill:isFreeWill graph entity
+    # Entity has free will
+    @ent __Role Entity $entity
+    @prop __Role Property FreeWill
+    @result __Pair $ent $prop
+    return $result
+end
+
+@isFunctionalism:isFunctionalism graph entity
+    # Entity exhibits functionalism
+    @ent __Role Entity $entity
+    @theory __Role Theory Functionalism
+    @result __Pair $ent $theory
+    return $result
+end
+
+@isFundamental:isFundamental graph entity
+    # Entity is fundamental
+    @ent __Role Entity $entity
+    @prop __Role Property Fundamental
+    @result __Pair $ent $prop
+    return $result
+end
+
+@isGoal:isGoal graph entity
+    # Entity is a goal
+    @ent __Role Entity $entity
+    @type __Role Type Goal
+    @result __Pair $ent $type
+    return $result
+end
+
+@isGod:isGod graph entity
+    # Entity is God
+    @ent __Role Entity $entity
+    @type __Role Type Divine
+    @result __Pair $ent $type
+    return $result
+end
+
+@isGodOrNature:isGodOrNature graph entity
+    # Entity is God or Nature (Spinozist identity)
+    @ent __Role Entity $entity
+    @type __Role Type DivinateNature
+    @result __Pair $ent $type
+    return $result
+end
+
+@isHappy:isHappy graph entity
+    # Entity is happy
+    @ent __Role Entity $entity
+    @state __Role State Happiness
+    @result __Pair $ent $state
+    return $result
+end
+
+@isHardProblem:isHardProblem graph entity
+    # Entity is a hard problem
+    @ent __Role Entity $entity
+    @type __Role Type HardProblem
+    @result __Pair $ent $type
+    return $result
+end
+
+@isHigherPleasure:isHigherPleasure graph entity
+    # Entity is a higher pleasure
+    @ent __Role Entity $entity
+    @type __Role Type HigherPleasure
+    @result __Pair $ent $type
+    return $result
+end
+
+@isHighest:isHighest graph entity
+    # Entity is the highest
+    @ent __Role Entity $entity
+    @prop __Role Property Highest
+    @result __Pair $ent $prop
+    return $result
+end
+
+@isHolism:isHolism graph entity
+    # Entity exhibits holism
+    @ent __Role Entity $entity
+    @theory __Role Theory Holism
+    @result __Pair $ent $theory
+    return $result
+end
+
+@isHuman:isHuman graph entity
+    # Entity is human
+    @ent __Role Entity $entity
+    @type __Role Type Human
+    @result __Pair $ent $type
+    return $result
+end
+
+@isIdealism:isIdealism graph entity
+    # Entity exhibits idealism
+    @ent __Role Entity $entity
+    @theory __Role Theory Idealism
+    @result __Pair $ent $theory
+    return $result
+end
+
+@isIllusion:isIllusion graph entity
+    # Entity is an illusion
+    @ent __Role Entity $entity
+    @type __Role Type Illusion
+    @result __Pair $ent $type
+    return $result
+end
+
+@isImmoral:isImmoral graph entity
+    # Entity is immoral
+    @ent __Role Entity $entity
+    @prop __Role Property Immoral
+    @result __Pair $ent $prop
+    return $result
+end
+
+@isImpermissible:isImpermissible graph action
+    # Morally impermissible action
+    @act __Role Action $action
+    @prop __Role Property Impermissible
+    @result __Pair $act $prop
+    return $result
+end
+
+@isInductive:isInductive graph argument
+    # Inductive reasoning
+    @arg __Role Argument $argument
+    @type __Role ReasoningType Inductive
+    @result __Bundle $arg $type
+    return $result
+end
+
+@isIneffable:isIneffable graph concept
+    # Beyond expression or description
+    @con __Role Concept $concept
+    @prop __Role Property Ineffable
+    @result __Pair $con $prop
+    return $result
+end
+
+@isIntelligent:isIntelligent graph agent
+    # Possesses intelligence
+    @agt __Role Agent $agent
+    @prop __Role Property Intelligent
+    @result __Pair $agt $prop
+    return $result
+end
+
+@isIntelligible:isIntelligible graph proposition
+    # Capable of being understood
+    @prop __Role Proposition $proposition
+    @attr __Role Property Intelligible
+    @result __Pair $prop $attr
+    return $result
+end
+
+@isIntentional:isIntentional graph state
+    # Directed toward an object or content
+    @st __Role State $state
+    @prop __Role Property Intentional
+    @result __Pair $st $prop
+    return $result
+end
+
+@isInternalReason:isInternalReason graph reason
+    # Reason internal to agent's motivations
+    @rea __Role Reason $reason
+    @type __Role ReasonType Internal
+    @result __Bundle $rea $type
+    return $result
+end
+
+@isJust:isJust graph action
+    # Morally just action
+    @act __Role Action $action
+    @prop __Role Property Just
+    @result __Pair $act $prop
+    return $result
+end
+
+@isJustified:isJustified graph belief
+    # Justified belief
+    @bel __Role Belief $belief
+    @prop __Role Property Justified
+    @result __Pair $bel $prop
+    return $result
+end
+
+@isLegitimate:isLegitimate graph authority
+    # Legitimate authority or claim
+    @auth __Role Authority $authority
+    @prop __Role Property Legitimate
+    @result __Pair $auth $prop
+    return $result
+end
+
+@isMark:isMark graph indicator
+    # Serves as indicator or sign
+    @ind __Role Indicator $indicator
+    @type __Role Type Mark
+    @result __Bundle $ind $type
+    return $result
+end
+
+@isMean:isMean graph expression
+    # Has semantic content
+    @exp __Role Expression $expression
+    @prop __Role Property Mean
+    @result __Pair $exp $prop
+    return $result
+end
+
+@isMeaningful:isMeaningful graph utterance
+    # Carries meaning or significance
+    @utt __Role Utterance $utterance
+    @prop __Role Property Meaningful
+    @result __Pair $utt $prop
+    return $result
+end
+
+@isMindIndependent:isMindIndependent graph entity
+    # Exists independently of minds
+    @ent __Role Entity $entity
+    @prop __Role Property MindIndependent
+    @result __Pair $ent $prop
+    return $result
+end
+
+@isMode:isMode graph property
+    # Property as mode of substance
+    @prop __Role Property $property
+    @type __Role Type Mode
+    @result __Bundle $prop $type
+    return $result
+end
+
+@isMonism:isMonism graph view
+    # Monistic metaphysical view
+    @v __Role View $view
+    @doctrine __Role Doctrine Monism
+    @unity __Role Property Unity
+    @result __Bundle $v $doctrine $unity
+    return $result
+end
+
+@isMoral:isMoral graph action
+    # Morally good action
+    @act __Role Action $action
+    @prop __Role Property Moral
+    @result __Pair $act $prop
+    return $result
+end
+
+@isMorallyResponsible:isMorallyResponsible graph agent action
+    # Agent morally responsible for action
+    @ag __Role Agent $agent
+    @act __Role Action $action
+    @responsibility __Role Relation MoralResponsibility
+    @result __Bundle $ag $act $responsibility
+    return $result
+end
+
+@isNecessary:isNecessary graph proposition world
+    # Necessary truth in modal logic
+    @prop __Role Proposition $proposition
+    @modal __Role Modality Necessary
+    @world __Role World $world
+    @result __Bundle $prop $modal $world
+    return $result
+end
+
+@isObjective:isObjective graph truth
+    # Objective truth or fact
+    @tr __Role Truth $truth
+    @property __Role Property Objective
+    @independence __Role Nature MindIndependent
+    @result __Bundle $tr $property $independence
+    return $result
+end
+
+@isOccasion:isOccasion graph event cause
+    # Occasionalist causal relation
+    @ev __Role Event $event
+    @cau __Role Cause $cause
+    @theory __Role Theory Occasionalism
+    @result __Bundle $ev $cau $theory
+    return $result
+end
+
+@isOmnibenevolent:isOmnibenevolent graph being
+    # Perfectly good being
+    @b __Role Being $being
+    @benevolence __Role Property Omnibenevolent
+    @perfection __Role Attribute PerfectGoodness
+    @result __Bundle $b $benevolence $perfection
+    return $result
+end
+
+@isOmnipotent:isOmnipotent graph being
+    # All-powerful being
+    @b __Role Being $being
+    @power __Role Property Omnipotent
+    @capacity __Role Attribute UnlimitedPower
+    @result __Bundle $b $power $capacity
+    return $result
+end
+
+@isOpenQuestion:isOpenQuestion graph problem proposition
+    # Open question in metaethics
+    @prob __Role Problem $problem
+    @prop __Role Proposition $proposition
+    @argument __Role Method OpenQuestionArgument
+    @result __Bundle $prob $prop $argument
+    return $result
+end
+
+@isPanentheism:isPanentheism graph view
+    # Panentheistic theological view
+    @v __Role View $view
+    @doctrine __Role Doctrine Panentheism
+    @relation __Role Relation GodTranscendsContainsWorld
+    @result __Bundle $v $doctrine $relation
+    return $result
+end
+
+@isPantheism:isPantheism graph view
+    # Pantheistic view
+    @v __Role View $view
+    @doctrine __Role Doctrine Pantheism
+    @identity __Role Relation GodEqualsNature
+    @result __Bundle $v $doctrine $identity
+    return $result
+end
+
+@isPerceived:isPerceived graph object perceiver
+    # Object perceived by perceiver
+    @obj __Role Object $object
+    @perc __Role Perceiver $perceiver
+    @perception __Role Relation Perception
+    @result __Bundle $obj $perc $perception
+    return $result
+end
+
+@isPerfect:isPerfect graph being
+    # Perfect being or entity
+    @b __Role Being $being
+    @property __Role Property Perfect
+    @excellence __Role Attribute MaximalExcellence
+    @result __Bundle $b $property $excellence
+    return $result
+end
+
+@isPermissible:isPermissible graph action
+    # Morally permissible action
+    @act __Role Action $action
+    @deontic __Role Modality Permissible
+    @morality __Role Domain Ethics
+    @result __Bundle $act $deontic $morality
+    return $result
+end
+
+@isPessimism:isPessimism graph view
+    # Pessimistic philosophical view
+    @v __Role View $view
+    @doctrine __Role Doctrine Pessimism
+    @evaluation __Role Attitude NegativeValueJudgment
+    @result __Bundle $v $doctrine $evaluation
+    return $result
+end
+
+@isPhysical:isPhysical graph entity
+    # Entity is physical
+    @ent __Role Entity $entity
+    @prop __Role Property Physical
+    @result __Pair $ent $prop
+    return $result
+end
+
+@isPhysicalism:isPhysicalism graph theorymodel
+    # Theory holds physicalism
+    @thy __Role Theory $theorymodel
+    @doctrine __Role Doctrine Physicalism
+    @result __Pair $thy $doctrine
+    return $result
+end
+
+@isPopular:isPopular graph belief
+    # Belief is widely held
+    @bel __Role Belief $belief
+    @prop __Role Property Popular
+    @result __Pair $bel $prop
+    return $result
+end
+
+@isPossible:isPossible graph proposition world
+    # Possible in modal logic
+    @prop __Role Proposition $proposition
+    @modal __Role Modality Possible
+    @world __Role World $world
+    @result __Bundle $prop $modal $world
+    return $result
+end
+
+@isPossibleWorld:isPossibleWorld graph world
+    # World is a possible world
+    @wld __Role World $world
+    @type __Role Type PossibleWorld
+    @result __Pair $wld $type
+    return $result
+end
+
+@isPrescriptive:isPrescriptive graph statement
+    # Statement is prescriptive
+    @stmt __Role Statement $statement
+    @prop __Role Property Prescriptive
+    @result __Pair $stmt $prop
+    return $result
+end
+
+@isPresentism:isPresentism graph theorymodel
+    # Theory holds presentism
+    @thy __Role Theory $theorymodel
+    @doctrine __Role Doctrine Presentism
+    @result __Pair $thy $doctrine
+    return $result
+end
+
+@isPrimaFacieDuty:isPrimaFacieDuty graph obligation
+    # Obligation is prima facie duty
+    @obl __Role Obligation $obligation
+    @type __Role Type PrimaFacieDuty
+    @result __Pair $obl $type
+    return $result
+end
+
+@isProbable:isProbable graph proposition evidence
+    # Proposition is probable given evidence
+    @prop __Role Proposition $proposition
+    @modal __Role Modality Probable
+    @evid __Role Evidence $evidence
+    @result __Bundle $prop $modal $evid
+    return $result
+end
+
+@isProblem:isProblem graph situation
+    # Situation is a problem
+    @sit __Role Situation $situation
+    @type __Role Type Problem
+    @result __Pair $sit $type
+    return $result
+end
+
+@isProgress:isProgress graph change
+    # Change constitutes progress
+    @chg __Role Change $change
+    @type __Role Type Progress
+    @result __Pair $chg $type
+    return $result
+end
+
+@isProjectivist:isProjectivist graph theorymodel
+    # Theory holds projectivism
+    @thy __Role Theory $theorymodel
+    @doctrine __Role Doctrine Projectivism
+    @result __Pair $thy $doctrine
+    return $result
+end
+
+@isPropertyDualism:isPropertyDualism graph theorymodel
+    # Theory holds property dualism
+    @thy __Role Theory $theorymodel
+    @doctrine __Role Doctrine PropertyDualism
+    @result __Pair $thy $doctrine
+    return $result
+end
+
+@isProportionate:isProportionate graph response stimulus
+    # Response is proportionate to stimulus
+    @resp __Role Response $response
+    @prop __Role Property Proportionate
+    @stim __Role Stimulus $stimulus
+    @result __Bundle $resp $prop $stim
+    return $result
+end
+
+@isProtected:isProtected graph right entity
+    # Right is protected for entity
+    @rgt __Role Right $right
+    @prop __Role Property Protected
+    @ent __Role Entity $entity
+    @result __Bundle $rgt $prop $ent
+    return $result
+end
+
+@isPsychologicalContinuity:isPsychologicalContinuity graph entity
+    # Entity has psychological continuity
+    @ent __Role Entity $entity
+    @prop __Role Property PsychologicalContinuity
+    @result __Pair $ent $prop
+    return $result
+end
+
+@isQuasiRealism:isQuasiRealism graph proposition
+    # Proposition follows quasi-realist interpretation
+    @prop __Role Proposition $proposition
+    @stance __Role Property QuasiRealist
+    @result __Pair $prop $stance
+    return $result
+end
+
+@isRational:isRational graph agent
+    # Agent is rational
+    @agt __Role Agent $agent
+    @prop __Role Property Rational
+    @result __Pair $agt $prop
+    return $result
+end
+
+@isReactive:isReactive graph entity
+    # Entity is reactive
+    @ent __Role Entity $entity
+    @prop __Role Property Reactive
+    @result __Pair $ent $prop
+    return $result
+end
+
+@isReal:isReal graph entity
+    # Entity has real existence
+    @ent __Role Entity $entity
+    @prop __Role Property Real
+    @result __Pair $ent $prop
+    return $result
+end
+
+@isReflexive:isReflexive graph relation
+    # Reflexive relation property
+    @rel __Role Relation $relation
+    @prop __Role Property Reflexive
+    @result __Pair $rel $prop
+    return $result
+end
+
+@isReliable:isReliable graph process
+    # Process is reliable
+    @proc __Role Process $process
+    @prop __Role Property Reliable
+    @result __Pair $proc $prop
+    return $result
+end
+
+@isRigidDesignator:isRigidDesignator graph term
+    # Term is a rigid designator
+    @trm __Role Term $term
+    @prop __Role Property RigidDesignator
+    @result __Pair $trm $prop
+    return $result
+end
+
+@isScientific:isScientific graph method
+    # Method is scientific
+    @meth __Role Method $method
+    @prop __Role Property Scientific
+    @result __Pair $meth $prop
+    return $result
+end
+
+@isSelfEvident:isSelfEvident graph proposition
+    # Proposition is self-evident
+    @prop __Role Proposition $proposition
+    @status __Role Property SelfEvident
+    @result __Pair $prop $status
+    return $result
+end
+
+@isSelfLegislating:isSelfLegislating graph agent
+    # Agent is self-legislating
+    @agt __Role Agent $agent
+    @prop __Role Property SelfLegislating
+    @result __Pair $agt $prop
+    return $result
+end
+
+@isSentient:isSentient graph entity
+    # Entity is sentient
+    @ent __Role Entity $entity
+    @prop __Role Property Sentient
+    @result __Pair $ent $prop
+    return $result
+end
+
+@isSilent:isSilent graph entity
+    # Entity is silent
+    @ent __Role Entity $entity
+    @prop __Role Property Silent
+    @result __Pair $ent $prop
+    return $result
+end
+
+@isSimple:isSimple graph entity
+    # Entity is simple
+    @ent __Role Entity $entity
+    @prop __Role Property Simple
+    @result __Pair $ent $prop
+    return $result
+end
+
+@isSimpler:isSimpler graph entity1 entity2
+    # Entity1 is simpler than Entity2
+    @ent1 __Role Entity $entity1
+    @ent2 __Role Comparand $entity2
+    @rel __Role Relation Simpler
+    @result __Bundle $ent1 $rel $ent2
+    return $result
+end
+
+@isSkeptic:isSkeptic graph agent
+    # Agent adopts skeptical position
+    @agt __Role Agent $agent
+    @prop __Role Property Skeptical
+    @epistemic __Role Domain Epistemology
+    @result __Bundle $agt $prop $epistemic
+    return $result
+end
+
+@isSlaveOf:isSlaveOf graph slave master
+    # Slave subordinate to master
+    @slv __Role Slave $slave
+    @mst __Role Master $master
+    @relation __Role Relation Servitude
+    @result __Bundle $slv $mst $relation
+    return $result
+end
+
+@isSmallSample:isSmallSample graph sample
+    # Sample is statistically small
+    @smp __Role Sample $sample
+    @prop __Role Property SmallSize
+    @statistical __Role Domain Statistics
+    @result __Bundle $smp $prop $statistical
+    return $result
+end
+
+@isSolipsist:isSolipsist graph agent
+    # Agent holds solipsist view
+    @agt __Role Agent $agent
+    @prop __Role Property Solipsist
+    @metaphysical __Role Domain Metaphysics
+    @result __Bundle $agt $prop $metaphysical
+    return $result
+end
+
+@isSound:isSound graph argument
+    # Sound argument (valid + true premises)
+    @arg __Role Argument $argument
+    @prop __Role Property Sound
+    @formal __Role Domain Logic
+    @result __Bundle $arg $prop $formal
+    return $result
+end
+
+@isSource:isSource graph entity
+    # Entity is causal source
+    @ent __Role Entity $entity
+    @prop __Role Property Source
+    @causal __Role Domain Causation
+    @result __Bundle $ent $prop $causal
+    return $result
+end
+
+@isStriving:isStriving graph agent goal
+    # Agent striving toward goal
+    @agt __Role Agent $agent
+    @gol __Role Goal $goal
+    @teleological __Role Relation Striving
+    @result __Bundle $agt $gol $teleological
+    return $result
+end
+
+@isSubstance:isSubstance graph entity
+    # Entity is metaphysical substance
+    @ent __Role Entity $entity
+    @prop __Role Property Substance
+    @ontological __Role Domain Ontology
+    @result __Bundle $ent $prop $ontological
+    return $result
+end
+
+@isSuperior:isSuperior graph entity1 entity2
+    # Entity1 superior to entity2
+    @ent1 __Role Superior $entity1
+    @ent2 __Role Inferior $entity2
+    @relation __Role Relation Superiority
+    @result __Bundle $ent1 $ent2 $relation
+    return $result
+end
+
+@isSymmetric:isSymmetric graph relation
+    # Symmetric relation property
+    @rel __Role Relation $relation
+    @prop __Role Property Symmetric
+    @formal __Role Domain Logic
+    @result __Bundle $rel $prop $formal
+    return $result
+end
+
+@isSynthetic:isSynthetic graph proposition
+    # Proposition is synthetic (not analytic)
+    @prop __Role Proposition $proposition
+    @nature __Role Property Synthetic
+    @epistemic __Role Domain Epistemology
+    @result __Bundle $prop $nature $epistemic
+    return $result
+end
+
+@isTensed:isTensed graph proposition
+    # Proposition has temporal indexing
+    @prop __Role Proposition $proposition
+    @temporal __Role Property Tensed
+    @time __Role Domain Temporality
+    @result __Bundle $prop $temporal $time
+    return $result
+end
+
+@isTenseless:isTenseless graph proposition
+    # Proposition lacks temporal indexing
+    @prop __Role Proposition $proposition
+    @temporal __Role Property Tenseless
+    @time __Role Domain Temporality
+    @result __Bundle $prop $temporal $time
+    return $result
+end
+
+@isTheism:isTheism graph position
+    # Position affirms deity existence
+    @pos __Role Position $position
+    @prop __Role Property Theistic
+    @theological __Role Domain Theology
+    @result __Bundle $pos $prop $theological
+    return $result
+end
+
+@isThingInItself:isThingInItself graph entity
+    # Entity as thing-in-itself (noumenon)
+    @ent __Role Entity $entity
+    @prop __Role Property ThingInItself
+    @kantian __Role Domain Metaphysics
+    @result __Bundle $ent $prop $kantian
+    return $result
+end
+
+@isThinkingThing:isThinkingThing graph entity
+    # Entity is a thinking substance
+    @ent __Role Entity $entity
+    @thought __Role Property Thinking
+    @substance __Role Type Substance
+    @result __Bundle $ent $thought $substance
+    return $result
+end
+
+@isTransitive:isTransitive graph relation
+    # Transitive relation property
+    @rel __Role Relation $relation
+    @prop __Role Property Transitive
+    @result __Pair $rel $prop
+    return $result
+end
+
+@isUbermensch:isUbermensch graph person
+    # Person transcends ordinary humanity
+    @pers __Role Person $person
+    @transcendence __Role Property Transcendent
+    @ideal __Role Type Ubermensch
+    @result __Bundle $pers $transcendence $ideal
+    return $result
+end
+
+@isUnderlyingReality:isUnderlyingReality graph entity
+    # Entity is fundamental reality
+    @ent __Role Entity $entity
+    @fundamental __Role Property Fundamental
+    @reality __Role Domain Ontology
+    @result __Bundle $ent $fundamental $reality
+    return $result
+end
+
+@isUniform:isUniform graph entity
+    # Entity has uniform nature
+    @ent __Role Entity $entity
+    @uniformity __Role Property Uniform
+    @result __Pair $ent $uniformity
+    return $result
+end
+
+@isUnity:isUnity graph entity
+    # Entity is unified whole
+    @ent __Role Entity $entity
+    @oneness __Role Property Unity
+    @metaphysical __Role Domain Metaphysics
+    @result __Bundle $ent $oneness $metaphysical
+    return $result
+end
+
+@isUnknowable:isUnknowable graph entity
+    # Entity cannot be known
+    @ent __Role Entity $entity
+    @unknowability __Role Property Unknowable
+    @epistemic __Role Domain Epistemology
+    @result __Bundle $ent $unknowability $epistemic
+    return $result
+end
+
+@isUnmovedMover:isUnmovedMover graph entity
+    # Entity causes without being caused
+    @ent __Role Entity $entity
+    @uncaused __Role Property Uncaused
+    @prime __Role Type FirstCause
+    @result __Bundle $ent $uncaused $prime
+    return $result
+end
+
+@isUnreliable:isUnreliable graph source
+    # Source is epistemically unreliable
+    @src __Role Source $source
+    @unreliability __Role Property Unreliable
+    @epistemic __Role Domain Epistemology
+    @result __Bundle $src $unreliability $epistemic
+    return $result
+end
+
+@isValuable:isValuable graph thing
+    # Thing has value
+    @th __Role Entity $thing
+    @value __Role Property Valuable
+    @axiological __Role Domain Axiology
+    @result __Bundle $th $value $axiological
+    return $result
+end
+
+@isVerifiable:isVerifiable graph proposition
+    # Proposition can be verified
+    @prop __Role Proposition $proposition
+    @verifiability __Role Property Verifiable
+    @epistemic __Role Domain Epistemology
+    @result __Bundle $prop $verifiability $epistemic
+    return $result
+end
+
+@isVirtue:isVirtue graph trait
+    # Trait is a virtue
+    @trait __Role Trait $trait
+    @type __Role Type Virtue
+    @result __Pair $trait $type
+    return $result
+end
+
+@isVisible:isVisible graph entity
+    # Entity is perceptible by sight
+    @ent __Role Entity $entity
+    @visibility __Role Property Visible
+    @perceptual __Role Domain Perception
+    @result __Bundle $ent $visibility $perceptual
+    return $result
+end
+
+@isWebOfBelief:isWebOfBelief graph system
+    # System is holistic belief network
+    @sys __Role System $system
+    @holistic __Role Property Holistic
+    @network __Role Type BeliefNetwork
+    @result __Bundle $sys $holistic $network
+    return $result
+end
+
+@isWillToPower:isWillToPower graph drive
+    # Drive is fundamental will to power
+    @drv __Role Drive $drive
+    @power __Role Property Power
+    @fundamental __Role Type WillToPower
+    @result __Bundle $drv $power $fundamental
+    return $result
+end
+
+@isWiser:isWiser graph agent
+    # Agent is wiser through knowing limitations
+    @agt __Role Agent $agent
+    @status __Role Status Wisdom
+    @result __Pair $agt $status
+    return $result
+end
+
+@isWitness:isWitness graph agent property
+    # Agent witnesses property instance
+    @agt __Role Agent $agent
+    @prop __Role Property $property
+    @result __Pair $agt $prop
+    return $result
+end
+
+@isWorse:isWorse graph action1 action2
+    # Action1 is morally worse than action2
+    @act1 __Role Action $action1
+    @act2 __Role Action $action2
+    @result __Pair $act1 $act2
+    return $result
+end
+
+@justifiedIntervention:justifiedIntervention graph action
+    # Action constitutes justified intervention
+    @act __Role Action $action
+    @status __Role Status Justified
+    @result __Pair $act $status
+    return $result
+end
+
+@justifiesInduction:justifiesInduction graph principle
+    # Principle justifies inductive reasoning
+    @prin __Role Principle $principle
+    @method __Role Method Induction
+    @result __Pair $prin $method
+    return $result
+end
+
+@justifying:justifying graph claim
+    # Process of justifying claim
+    @clm __Role Claim $claim
+    @process __Role Process Justification
+    @result __Pair $clm $process
+    return $result
+end
+
+@justlyAcquired:justlyAcquired graph property
+    # Property was justly acquired
+    @prop __Role Property $property
+    @status __Role Status JustAcquisition
+    @result __Pair $prop $status
+    return $result
+end
+
+@justlyTransferred:justlyTransferred graph property
+    # Property was justly transferred
+    @prop __Role Property $property
+    @status __Role Status JustTransfer
+    @result __Pair $prop $status
+    return $result
+end
+
+@kills:kills graph action entity
+    # Action kills entity
+    @act __Role Action $action
+    @ent __Role Entity $entity
+    @result __Pair $act $ent
+    return $result
+end
+
+@knowsNothing:knowsNothing graph agent
+    # Agent knows nothing (Socratic ignorance)
+    @agt __Role Agent $agent
+    @status __Role Status Ignorance
+    @result __Pair $agt $status
+    return $result
+end
+
+@lacksConsciousness:lacksConsciousness graph entity
+    # Entity lacks consciousness
+    @ent __Role Entity $entity
+    @status __Role Status NoConsciousness
+    @result __Pair $ent $status
+    return $result
+end
+
+@needsCause:needsCause graph entity
+    # Entity needs causal explanation
+    @ent __Role Entity $entity
+    @requirement __Role Requirement Causation
+    @result __Pair $ent $requirement
+    return $result
+end
+
+@possibleToDoubt:possibleToDoubt graph belief
+    # Belief is possible to doubt
+    @blf __Role Belief $belief
+    @status __Role Status Doubtable
+    @result __Pair $blf $status
+    return $result
+end
+
+@practicesVirtues:practicesVirtues graph agent virtues
+    # Agent practices virtues
+    @agt __Role Agent $agent
+    @virt __Role Virtues $virtues
+    @result __Pair $agt $virt
+    return $result
+end
+
+@shouldDeconstruct:shouldDeconstruct graph text
+    # Text should be deconstructed
+    @txt __Role Text $text
+    @method __Role Method Deconstruction
+    @result __Pair $txt $method
+    return $result
+end
+
+@shouldEliminate:shouldEliminate graph agent action
+    # Agent should eliminate action or entity
+    @agt __Role Agent $agent
+    @target __Role Target $action
+    @obligation __Role Modality Obligation
+    @negation __Role Modality Negation
+    @result __Bundle $agt $target $obligation $negation
+    return $result
+end
+
+@shouldFocus:shouldFocus graph agent target
+    # Agent should focus attention on target
+    @agt __Role Agent $agent
+    @tgt __Role Target $target
+    @obligation __Role Modality Obligation
+    @attention __Role Relation Focus
+    @result __Bundle $agt $tgt $obligation $attention
+    return $result
+end
+
+@shouldFollow:shouldFollow graph agent principle
+    # Agent should follow principle
+    @agt __Role Agent $agent
+    @prin __Role Principle $principle
+    @obligation __Role Modality Obligation
+    @result __Bundle $agt $prin $obligation
+    return $result
+end
+
+@shouldPrefer:shouldPrefer graph agent option1 option2
+    # Agent should prefer option1 over option2
+    @agt __Role Agent $agent
+    @preferred __Role Option $option1
+    @alternative __Role Option $option2
+    @obligation __Role Modality Obligation
+    @preference __Role Relation Preference
+    @result __Bundle $agt $preferred $alternative $obligation $preference
+    return $result
+end
+
+@shouldReject:shouldReject graph agent proposition
+    # Agent should reject proposition
+    @agt __Role Agent $agent
+    @prop __Role Proposition $proposition
+    @obligation __Role Modality Obligation
+    @rejection __Role Modality Rejection
+    @result __Bundle $agt $prop $obligation $rejection
+    return $result
+end
+
+@similarBehavior:similarBehavior graph entity1 entity2
+    # Entities exhibit similar behavior
+    @ent1 __Role Entity $entity1
+    @ent2 __Role Entity $entity2
+    @similarity __Role Relation SimilarBehavior
+    @result __Bundle $ent1 $ent2 $similarity
+    return $result
+end
 
 @relation:relation graph a b
     # Relation between entities

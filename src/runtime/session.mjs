@@ -8,7 +8,6 @@
 
 import { bundle, getDefaultGeometry, similarity } from '../core/operations.mjs';
 import { getProperties, initHDC, getStrategyId } from '../hdc/facade.mjs';
-import { parse } from '../parser/parser.mjs';
 import { Scope } from './scope.mjs';
 import { Vocabulary } from './vocabulary.mjs';
 import { Executor } from './executor.mjs';
@@ -150,10 +149,10 @@ export class Session {
    * @returns {Object} Learning result
    */
   learn(dsl) {
-    this.checkDSL(dsl, { mode: 'learn', allowHoles: true, allowNewOperators: false });
+    const ast = this.checkDSL(dsl, { mode: 'learn', allowHoles: true, allowNewOperators: false });
     const snapshot = beginTransaction(this);
     try {
-      const result = learnImpl(this, dsl);
+      const result = learnImpl(this, ast);
       if (!result.success) {
         rollbackTransaction(this, snapshot);
         result.facts = 0;
@@ -315,8 +314,8 @@ export class Session {
    */
   query(dsl, options = {}) {
     dbg('QUERY', 'Starting:', dsl?.substring(0, 60));
-    this.checkDSL(dsl, { mode: 'query', allowHoles: true });
-    return queryImpl(this, dsl, options);
+    const ast = this.checkDSL(dsl, { mode: 'query', allowHoles: true });
+    return queryImpl(this, ast, options);
   }
 
   /**
@@ -334,8 +333,8 @@ export class Session {
    */
   prove(dsl, options = {}) {
     dbg('PROVE', 'Starting:', dsl?.substring(0, 60));
-    this.checkDSL(dsl, { mode: 'prove', allowHoles: false });
-    return proveImpl(this, dsl, options);
+    const ast = this.checkDSL(dsl, { mode: 'prove', allowHoles: false });
+    return proveImpl(this, ast, options);
   }
 
   /**
@@ -346,9 +345,8 @@ export class Session {
    */
   abduce(dsl, options = {}) {
     dbg('ABDUCE', 'Starting:', dsl?.substring(0, 60));
-    this.checkDSL(dsl, { mode: 'abduce', allowHoles: false });
+    const ast = this.checkDSL(dsl, { mode: 'abduce', allowHoles: false });
     try {
-      const ast = parse(dsl);
       if (ast.statements.length === 0) {
         return { success: false, reason: 'Empty observation' };
       }
@@ -518,8 +516,8 @@ export class Session {
    */
   findAll(pattern, options = {}) {
     dbg('FINDALL', 'Pattern:', pattern?.substring?.(0, 60) || pattern);
-    this.checkDSL(pattern, { mode: 'query', allowHoles: true });
-    return findAll(this, pattern, options);
+    const ast = this.checkDSL(pattern, { mode: 'query', allowHoles: true });
+    return findAll(this, ast.statements?.[0] || pattern, options);
   }
 
 

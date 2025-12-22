@@ -30,6 +30,29 @@ const DEFAULT_TIMEOUTS = {
 // Reasoning Step Budget (for infinite loop prevention in sync code inside Session)
 const DEFAULT_STEP_BUDGET = 1000;
 
+function snapshotSessionState(session) {
+  return {
+    kbFacts: session?.kbFacts?.length || 0,
+    nextFactId: session?.nextFactId || 0,
+    rules: session?.rules?.length || 0,
+    graphs: session?.graphs?.size || 0,
+    operators: session?.operators?.size || 0,
+    declaredOperators: session?.declaredOperators?.size || 0,
+    vocabAtoms: session?.vocabulary?.atoms?.size || 0,
+    vocabReverse: session?.vocabulary?.reverse?.size || 0,
+    referenceTexts: session?.referenceTexts?.size || 0,
+    referenceMetadata: session?.referenceMetadata?.size || 0
+  };
+}
+
+function statesEqual(a, b) {
+  if (!a || !b) return false;
+  for (const key of Object.keys(a)) {
+    if (a[key] !== b[key]) return false;
+  }
+  return true;
+}
+
 /**
  * Load Core Theories
  * Core theories are essential for proper reasoning and always loaded.
@@ -251,8 +274,12 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
       session.learn(testCase.setup_dsl);
     }
 
+    const beforeState = testCase.assert_state_unchanged ? snapshotSessionState(session) : null;
+
     if (testCase.action === 'learn') {
-      return session.learn(dslToExecute);
+      const result = session.learn(dslToExecute);
+      const afterState = testCase.assert_state_unchanged ? snapshotSessionState(session) : null;
+      return { result, beforeState, afterState };
     }
     else if (testCase.action === 'listSolutions') {
       // List all CSP solutions for a given solve destination (solutionRelation)
@@ -261,7 +288,7 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
         f.metadata?.operator === 'cspSolution' &&
         f.metadata?.solutionRelation === destination
       );
-      return {
+      const result = {
         success: solutions.length > 0,
         destination,
         solutionCount: solutions.length,
@@ -271,6 +298,7 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
           assignments: sol.metadata?.assignments || []
         }))
       };
+      return { result, beforeState: null, afterState: null };
     }
     else {
       // For query/prove, use the DSL
@@ -279,14 +307,17 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
       const sessionOptions = { timeout: timeoutMs };
 
       if (testCase.action === 'prove' || testCase.action === 'elaborate') {
-        return session.prove(queryDsl, sessionOptions);
+        const result = session.prove(queryDsl, sessionOptions);
+        return { result, beforeState: null, afterState: null };
       } else {
         // Solve blocks are executed via learn(), not query()
         // Detect solve block: starts with @dest solve ProblemType
         if (queryDsl.trim().match(/^@\w+\s+solve\s+/)) {
-          return session.learn(queryDsl);
+          const result = session.learn(queryDsl);
+          return { result, beforeState: null, afterState: null };
         }
-        return session.query(queryDsl, sessionOptions);
+        const result = session.query(queryDsl, sessionOptions);
+        return { result, beforeState: null, afterState: null };
       }
     }
   })(), timeoutMs);
@@ -300,11 +331,49 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
     };
   }
 
-  const result = execution.result;
+  const payload = execution.result || {};
+  const result = payload.result;
+  const beforeState = payload.beforeState || null;
+  const afterState = payload.afterState || null;
   
   // Logical Validation
   let passed = false;
-  if (testCase.action === 'learn') passed = result.success;
+  if (testCase.action === 'learn') {
+    const expectedSuccess = typeof testCase.expect_success === 'boolean' ? testCase.expect_success : true;
+    passed = result.success === expectedSuccess;
+
+    if (passed && expectedSuccess === false && testCase.expect_error_includes) {
+      const errors = Array.isArray(result.errors) ? result.errors.map(String) : [];
+      const pieces = Array.isArray(testCase.expect_error_includes)
+        ? testCase.expect_error_includes
+        : [testCase.expect_error_includes];
+      const ok = pieces.filter(Boolean).every(piece =>
+        errors.some(e => String(e).includes(String(piece)))
+      );
+      if (!ok) {
+        return {
+          passed: false,
+          error: `Expected error to include: ${JSON.stringify(testCase.expect_error_includes)}`,
+          actual: result,
+          usedFallback,
+          durationMs: execution.duration
+        };
+      }
+    }
+
+    if (passed && expectedSuccess === false && testCase.assert_state_unchanged) {
+      if (!statesEqual(beforeState, afterState)) {
+        return {
+          passed: false,
+          error: `Expected session state unchanged for rejected learn`,
+          expected: beforeState,
+          actual: afterState,
+          usedFallback,
+          durationMs: execution.duration
+        };
+      }
+    }
+  }
   else if (testCase.action === 'prove' || testCase.action === 'elaborate') {
       // Prove passes if it returns a valid structure (true or false),
       // correctness is checked in DSL->NL or expected_result
@@ -547,11 +616,36 @@ function caseExpectsProof(testCase) {
 }
 
 function validateProofLength(testCase, actualText) {
-  if (testCase.action !== 'query' && testCase.action !== 'prove') return null;
+  if (testCase.action !== 'query' && testCase.action !== 'prove' && testCase.action !== 'learn') return null;
   const expectedNl = testCase.expected_nl || '';
   const proofNl = testCase.proof_nl;
   const expectedEntries = normalizeExpectedEntries(expectedNl).map(entry => String(entry || ''));
   const expectedText = expectedEntries.join(' ');
+
+  if (testCase.action === 'learn') {
+    const proofRequired = proofNl !== undefined && proofNl !== null;
+    if (!proofRequired) return null;
+    if (!actualText || !actualText.includes('Proof:')) {
+      return {
+        passed: false,
+        error: 'VALIDATION ERROR: Missing "Proof:" in actual output',
+        actual: actualText,
+        expected: testCase.expected_nl
+      };
+    }
+    const proofMatch = actualText.match(/Proof:\s*(.+)/);
+    if (!proofMatch) return null;
+    const proofContent = proofMatch[1].trim();
+    if (proofContent.length < 10) {
+      return {
+        passed: false,
+        error: `VALIDATION ERROR: Proof content too short (${proofContent.length} chars, min 10). Got: "${proofContent}"`,
+        actual: actualText,
+        expected: testCase.expected_nl
+      };
+    }
+    return null;
+  }
 
   const isExempt = isExemptExpected(expectedNl);
   const proofRequired = !isExempt && (!!proofNl || /\bProof:/i.test(expectedText));
@@ -619,6 +713,10 @@ function compareOutputs(testCase, actualText) {
   // For learn actions, just verify facts were learned (relaxed validation)
   // Exact fact counts are validated in healthCheck.js
   if (testCase.action === 'learn') {
+    if (proofNl !== undefined && proofNl !== null) {
+      const proofOk = proofIncludes(proofNl, actualText) || proofIncludes(altProofNl, actualText);
+      if (!proofOk) return false;
+    }
     // Check that output indicates learning happened
     if (actualText.startsWith('Learned') && /\d+/.test(actualText)) {
       return true; // Any "Learned N facts" is acceptable

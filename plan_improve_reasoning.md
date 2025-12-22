@@ -302,6 +302,11 @@ Necesare schimbări mici în `evalSuite/lib/runner.mjs`:
 - Suport pentru `expect_error_includes: string | string[]` ca să verificăm motivul (ex. “DSL validation failed: Unknown operator …”, “Contradiction rejected: …”).
 - (Opțional) `assert_state_unchanged: true` pentru o etapă `learn` respinsă: runner-ul face snapshot înainte, apoi compară `session.dump()`/`kbFacts.length`/`scopeBindings` după.
 
+Status (implementat în MVP):
+- `evalSuite/lib/runner.mjs` suportă `expect_success`, `expect_error_includes`, `assert_state_unchanged` pentru `action: 'learn'`.
+- Suite demonstrativă: `evalSuite/suite24_contradictions/cases.mjs` (rulează în `npm run eval`).
+- Test de blocare: `tests/unit/evalSuite/runner-learn-expected-failure.test.mjs`.
+
 Pentru a păstra rapiditatea:
 - Adăugăm un mod separat, ex. `node evalSuite/run.js --deep` sau `npm run eval:deep`, care rulează și suitele din `evalSuite/deep/`.
 - `npm run eval` rămâne pe suitele existente (rapide).

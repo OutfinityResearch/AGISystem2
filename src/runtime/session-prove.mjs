@@ -9,7 +9,7 @@ import { validateProof } from '../reasoning/proof-validator.mjs';
  */
 export function prove(session, dsl, options = {}) {
   try {
-    const ast = parse(dsl);
+    const ast = typeof dsl === 'string' ? parse(dsl) : dsl;
     if (ast.statements.length === 0) {
       return { valid: false, reason: 'Empty goal' };
     }
@@ -64,4 +64,3 @@ export function prove(session, dsl, options = {}) {
     return { valid: false, reason: e.message };
   }
 }
-

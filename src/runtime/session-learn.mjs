@@ -8,7 +8,7 @@ export function learn(session, dsl) {
   session.warnings = [];
 
   try {
-    const ast = parse(dsl);
+    const ast = typeof dsl === 'string' ? parse(dsl) : dsl;
     const result = session.executor.executeProgram(ast);
 
     // Track rules (Implies statements)
@@ -57,6 +57,9 @@ export function learn(session, dsl) {
 
     if (contradictionError?.contradiction?.proof_nl) {
       response.proof_nl = contradictionError.contradiction.proof_nl;
+    }
+    if (contradictionError?.contradiction?.proofObject) {
+      response.proofObject = contradictionError.contradiction.proofObject;
     }
 
     if (solveResult) {

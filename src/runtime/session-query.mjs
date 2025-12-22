@@ -6,7 +6,7 @@ import { canonicalizeStatement } from './canonicalize.mjs';
  */
 export function query(session, dsl, options = {}) {
   try {
-    const ast = parse(dsl);
+    const ast = typeof dsl === 'string' ? parse(dsl) : dsl;
     if (ast.statements.length === 0) {
       return { success: false, reason: 'Empty query' };
     }

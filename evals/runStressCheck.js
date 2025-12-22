@@ -549,16 +549,17 @@ function buildCombos() {
     }
   }
 
-  const fullRun = ARGV.includes('--full');
+  const fastRun = ARGV.includes('--fast');
   const strategies = parseList(getArgValue('--strategy') || getArgValue('--strategies'));
   const priorities = parseList(getArgValue('--priority') || getArgValue('--priorities'));
 
-  if (!strategies && !priorities && !fullRun) {
+  // Default is now --full (all combos), use --fast for single combo
+  if (fastRun && !strategies && !priorities) {
     return [{ strategyId: 'dense-binary', reasoningPriority: 'holographicPriority' }];
   }
 
-  const strategyList = strategies || (fullRun ? HDC_STRATEGIES : ['dense-binary']);
-  const priorityList = priorities || (fullRun ? REASONING_PRIORITIES : ['holographicPriority']);
+  const strategyList = strategies || (fastRun ? ['dense-binary'] : HDC_STRATEGIES);
+  const priorityList = priorities || (fastRun ? ['holographicPriority'] : REASONING_PRIORITIES);
 
   const combos = [];
   for (const strategyId of strategyList) {
