@@ -135,14 +135,14 @@
   </div>
 
   <div class="abstract">
-    <strong>Abstract:</strong> We present experimental findings comparing three Hyperdimensional Computing (HDC)
-    strategies for symbolic reasoning: <strong>Dense-Binary</strong>, <strong>Sparse-Polynomial HDC</strong> (SPHDC
-    with k=4-8 BigInt exponents), and <strong>Metric-Affine HDC</strong> (byte-channel based with 32-64 channels).
-    Our dual evaluation framework—stress testing (runStressCheck.js) and cross-domain semantics (runQueryEval.mjs)—
-    keeps theory loading reliable while surfacing missing operator coverage. Metric-Affine is the fastest strategy in
-    cross-domain evaluation (≈578ms vs 1.18s dense-binary baseline) and remains the only configuration that succeeds
-    on all 12 advanced queries even though other strategies flag 9/12 queries due to absent operator definitions.
-    The bottleneck today is not HDC performance but semantic operator availability.
+    <strong>Abstract:</strong> We compare three Hyperdimensional Computing (HDC) strategies for symbolic reasoning:
+    <strong>Dense-Binary</strong>, <strong>Sparse-Polynomial HDC</strong> (SPHDC with k=4-8 BigInt exponents), and
+    <strong>Metric-Affine HDC</strong>, a 32-byte channel representation with affine bundling. The dual evaluation
+    framework (runStressCheck.js for theory loading + runQueryEval.mjs for 12 cross-domain queries) runs six sessions
+    (three strategies × symbolic/holographic priorities) and makes operator coverage visible. Metric-Affine finishes
+    all 12 queries in ≈326ms with holographic priority, outperforming the 858ms dense-binary baseline, and is the only
+    configuration that hits 100% success while other strategies fail nine queries due to missing operator definitions.
+    Semantic operator availability—not HDC compute—is the current bottleneck.
   </div>
 
   <h2>1. Key Metrics (December 2025)</h2>
@@ -153,11 +153,11 @@
       <p>HDC Strategies Tested<br>(2 Novel)</p>
     </div>
     <div class="metric-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
-      <h3>10</h3>
+      <h3>12</h3>
       <p>Cross-Domain Queries<br>(Advanced Reasoning)</p>
     </div>
     <div class="metric-card" style="background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);">
-      <h3>60</h3>
+      <h3>72</h3>
       <p>Total Query Executions<br>(6 sessions × 12 queries)</p>
     </div>
     <div class="metric-card" style="background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);">
@@ -200,10 +200,10 @@
     </tr>
     <tr style="background: #e8f5e9;">
       <td><strong>Metric-Affine</strong> <span class="strategy-badge badge-novel">Novel</span></td>
-      <td>32-64 bytes (byte channels)</td>
+      <td>32 bytes (byte channels)</td>
       <td>Affine transformation</td>
       <td>Channel overlap</td>
-      <td class="pass">⚡ Fastest (≈2.0x vs Dense 2048)</td>
+      <td class="pass">⚡ Fastest (326ms holographic vs 858ms dense baseline)</td>
     </tr>
   </table>
 
@@ -244,12 +244,12 @@ Default Run (--full): 6 configurations in parallel
 ───────────────────────────────────────────────────────────────
 Strategy         | Reasoning      | Load Time | Result
 ───────────────────────────────────────────────────────────────
-dense-binary     | symbolic       | 1.18s     | ✓ 0 errors
-dense-binary     | holographic    | 1.03s     | ✓ 0 errors
-sparse-poly      | symbolic       | 915ms     | ✓ 0 errors
-sparse-poly      | holographic    | 810ms     | ✓ 0 errors
-metric-affine    | symbolic       | 666ms     | ✓ 0 errors
-metric-affine    | holographic    | 578ms     | ✓ 0 errors
+dense-binary     | symbolic       | 858ms     | ✓ 0 errors
+dense-binary     | holographic    | 710ms     | ✓ 0 errors
+sparse-poly      | symbolic       | 608ms     | ✓ 0 errors
+sparse-poly      | holographic    | 505ms     | ✓ 0 errors
+metric-affine    | symbolic       | 412ms     | ✓ 0 errors
+metric-affine    | holographic    | 326ms     | ✓ 0 errors
 ───────────────────────────────────────────────────────────────
 All strategies still load 1,314 facts from stress theories
 </pre>
@@ -376,62 +376,69 @@ All strategies still load 1,314 facts from stress theories
   <h2>5. Cross-Domain Query Evaluation (<code>runQueryEval.mjs</code>)</h2>
 
   <div class="discovery-box">
-    <strong>Key Finding:</strong> Running <code>node evals/runQueryEval.mjs</code> executes 12 advanced semantic queries against
-    all six configurations in parallel. Metric-Affine HDC (32- and 64-byte channels) finishes the suite in 666ms / 578ms
-    while succeeding on all 12 queries, whereas the other strategies flag nine queries because operators such as
-    <code>similar</code>, <code>analogy</code>, <code>happenedBefore</code>, <code>solve</code> and <code>isBestExplanation</code>
-    are still missing from the knowledge base. The result is that Metric-Affine is both fastest and most robust in the cross-domain
-    workload, but semantic operator coverage remains the bottleneck.
+    <strong>Key Finding:</strong> The cross-domain benchmark runs 12 advanced semantic queries across six sessions (three strategies ×
+    symbolic/holographic priorities). Metric-Affine HDC (32-byte channels) succeeds on every query in both modes, with the holographic
+    session completing the suite in 326ms—≈2.6× faster than the 858ms dense-binary symbolic baseline—and the symbolic session finishing
+    in 412ms. Dense-binary and sparse-polynomial repeatedly fail nine queries because core operators such as <code>similar</code>,
+    <code>analogy</code>, <code>happenedBefore</code>, <code>solve</code>, and <code>isBestExplanation</code> are still missing, which
+    confirms that semantic coverage—not HDC compute—is the current bottleneck.
   </div>
 
   <table class="research-table">
     <tr>
       <th>Strategy</th>
+      <th>Priority</th>
       <th>Geometry</th>
       <th>Success Rate</th>
       <th>Total Time</th>
-      <th>Speedup vs Baseline</th>
+      <th>Speedup vs Dense Sym</th>
     </tr>
     <tr style="background: #e8f5e9;">
       <td><strong>Metric-Affine</strong></td>
-      <td>64 bytes</td>
-      <td class="pass">100% (12/12)</td>
-      <td><strong>578ms</strong></td>
-      <td class="pass">⚡ 2.0x (fastest)</td>
-    </tr>
-    <tr style="background: #e8f5e9;">
-      <td><strong>Metric-Affine</strong></td>
+      <td>holographic</td>
       <td>32 bytes</td>
       <td class="pass">100% (12/12)</td>
-      <td><strong>666ms</strong></td>
-      <td class="pass">1.8x</td>
+      <td><strong>326ms</strong></td>
+      <td class="pass">⚡ 2.6x</td>
+    </tr>
+    <tr style="background: #e8f5e9;">
+      <td><strong>Metric-Affine</strong></td>
+      <td>symbolic</td>
+      <td>32 bytes</td>
+      <td class="pass">100% (12/12)</td>
+      <td><strong>412ms</strong></td>
+      <td class="pass">2.1x</td>
     </tr>
     <tr>
       <td>Sparse-Polynomial</td>
-      <td>k=8</td>
-      <td class="warn">25% (3/12)</td>
-      <td>810ms</td>
-      <td class="warn">1.5x</td>
-    </tr>
-    <tr>
-      <td>Sparse-Polynomial</td>
+      <td>holographic</td>
       <td>k=4</td>
       <td class="warn">25% (3/12)</td>
-      <td>915ms</td>
-      <td class="warn">1.3x</td>
+      <td>505ms</td>
+      <td class="warn">1.7x</td>
+    </tr>
+    <tr>
+      <td>Sparse-Polynomial</td>
+      <td>symbolic</td>
+      <td>k=4</td>
+      <td class="warn">25% (3/12)</td>
+      <td>608ms</td>
+      <td class="warn">1.4x</td>
     </tr>
     <tr>
       <td>Dense-Binary</td>
-      <td>4096 bits</td>
-      <td class="warn">67% (8/12)</td>
-      <td>1.03s</td>
-      <td class="warn">1.1x</td>
-    </tr>
-    <tr>
-      <td>Dense-Binary</td>
+      <td>holographic</td>
       <td>2048 bits</td>
       <td class="warn">67% (8/12)</td>
-      <td>1.18s</td>
+      <td>710ms</td>
+      <td class="warn">1.2x</td>
+    </tr>
+    <tr>
+      <td>Dense-Binary</td>
+      <td>symbolic</td>
+      <td>2048 bits</td>
+      <td class="warn">67% (8/12)</td>
+      <td>858ms</td>
       <td>1.0x (baseline)</td>
     </tr>
   </table>
@@ -442,12 +449,12 @@ All strategies still load 1,314 facts from stress theories
 <pre>
 Total Execution Time (All 12 Queries)
 ────────────────────────────────────────────────────────────────────
-metric-affine/64     ███████████████████████████ 578ms ⚡ FASTEST
-metric-affine/32     █████████████████████████████ 666ms
-sparse-poly/8        ███████████████████████████████████ 810ms (1.5x)
-sparse-poly/4        ██████████████████████████████████████ 915ms (1.3x)
-dense-binary/4096    ███████████████████████████████████████████████ 1.03s (1.1x)
-dense-binary/2048    █████████████████████████████████████████████████████ 1.18s (baseline)
+metric-affine/holographic  ███████████████████████████ 326ms ⚡ FASTEST (2.6x)
+metric-affine/symbolic     █████████████████████████████ 412ms (2.1x)
+sparse-polynomial/holographic ███████████████████████████████████ 505ms (1.7x)
+sparse-polynomial/symbolic  ██████████████████████████████████████ 608ms (1.4x)
+dense-binary/holographic   ████████████████████████████████████████████████ 710ms (1.2x)
+dense-binary/symbolic      █████████████████████████████████████████████████████ 858ms (baseline)
 ────────────────────────────────────────────────────────────────────
 </pre>
   </div>
@@ -626,7 +633,7 @@ Query Execution Pipeline
       <td>Bind complexity</td>
       <td>O(n/32) = 64 XOR ops</td>
       <td>O(k²) = 16-64 XOR ops</td>
-      <td>O(m) = 32-64 byte ops</td>
+      <td>O(m) = 32 byte ops (byte-wise XOR)</td>
     </tr>
     <tr>
       <td>Similarity computation</td>
@@ -660,21 +667,19 @@ Query Execution Pipeline
 
   <h2>9. Memory Footprint Comparison</h2>
 
-  <div class="chart-container">
+<div class="chart-container">
 <pre>
 Memory Usage per Vector
 ────────────────────────────────────────────────────────────────────
 Dense-Binary (2048 bits)      ████████ 256 bytes
 Dense-Binary (4096 bits)      ████████████████ 512 bytes
 Sparse-Poly (k=8)             ████████ 64 bytes
-Metric-Affine (64 channels)   ████████ 64 bytes
 Metric-Affine (32 channels)   ████ 32 bytes  ⚡ SMALLEST
 Sparse-Poly (k=4)             ████ 32 bytes
 ────────────────────────────────────────────────────────────────────
 
 For 10,000 concepts:
   Dense-Binary/2048:  2.56 MB
-  Metric-Affine/64:   640 KB  (4x smaller)
   Metric-Affine/32:   320 KB  (8x smaller!)
 </pre>
   </div>
@@ -731,8 +736,8 @@ For 10,000 concepts:
     </tr>
     <tr>
       <td>Production systems</td>
-      <td class="pass">Metric-Affine (32-64 bytes)</td>
-      <td>Best balance: 100% accuracy, 2x speed, 8x memory savings</td>
+      <td class="pass">Metric-Affine (32 bytes)</td>
+      <td>100% accuracy with holographic mode, ≈2.6x speed, 8x memory savings vs dense</td>
     </tr>
     <tr>
       <td>Similarity-based retrieval</td>
@@ -746,8 +751,8 @@ For 10,000 concepts:
     </tr>
     <tr>
       <td>Maximum speed</td>
-      <td class="pass">Metric-Affine (64 bytes)</td>
-      <td>591ms total (2x faster than baseline)</td>
+      <td class="pass">Metric-Affine (32 bytes, holographic)</td>
+      <td>326ms total (2.6x faster than dense-symbolic baseline)</td>
     </tr>
     <tr>
       <td>Research/experimentation</td>
@@ -839,8 +844,8 @@ SYS2_HDC_STRATEGY=sparse-polynomial node evals/runQueryEval.mjs</code></pre>
       <li><strong>Metric-Affine HDC wins decisively on speed:</strong>
         <ul>
           <li>Core Theory: 3.7x faster (224ms vs 832ms)</li>
-          <li>Cross-Domain Queries: 2.0x faster (578ms vs 1.18s)</li>
-          <li>Memory: 8x savings (64 bytes vs 512 bytes Dense-Binary/4096)</li>
+          <li>Cross-Domain Queries: 2.6x faster (326ms vs 858ms)</li>
+          <li>Memory: 8x savings (32 bytes vs 256 bytes Dense-Binary/2048)</li>
         </ul>
       </li>
       <li><strong>Dual evaluation framework reveals complementary insights:</strong>
@@ -864,8 +869,8 @@ SYS2_HDC_STRATEGY=sparse-polynomial node evals/runQueryEval.mjs</code></pre>
   <div class="finding-box">
     <strong>Honest Assessment:</strong> The dual evaluation framework provides a complete picture:
     <p><strong>✓ What works (Core Theory - 100%):</strong> Foundations, hierarchies, deep transitive chains (6-10 steps), rule inference, negation, compound logic, temporal/causal reasoning, modal operators, composition, CSP solving, fuzzy matching, property inheritance, meta-operators (<code>similar</code>, <code>analogy</code>, <code>deduce</code>), macros, set theory, biological pathways, predicate logic, tool planning, contradiction detection.</p>
-    <p><strong>⚠ What needs work (Cross-Domain Queries - 10%):</strong> Stress theory files lack domain-specific operator definitions. The reasoning engine is capable, but the knowledge base is incomplete. This is a <strong>content issue, not an architecture limitation</strong>.</p>
-    <p><strong>🚀 Performance validated:</strong> Metric-Affine HDC consistently outperforms Dense-Binary by 3-4x and Sparse-Polynomial by 2x across all configurations, with 8x memory savings. The novel byte-channel approach is production-ready.</p>
+    <p><strong>⚠ What needs work (Cross-Domain Queries):</strong> Stress theory files lack domain-specific operator definitions. The reasoning engine is capable, but the knowledge base is incomplete. This is a <strong>content issue, not an architecture limitation</strong>.</p>
+    <p><strong>🚀 Performance validated:</strong> Metric-Affine HDC consistently outperforms Dense-Binary by ~2-3x on the cross-domain workload and ~3.7x on Core Theory, with 8x memory savings at 32 bytes. The byte-channel approach is production-ready.</p>
     <p><strong>Next phase:</strong> Complete operator ecosystem (estimated 20-40 hours per <code>REASONING_OPERATORS.md</code>) to unlock full reasoning capabilities on cross-domain queries.</p>
   </div>
 

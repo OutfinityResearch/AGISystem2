@@ -8,6 +8,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Session } from '../src/runtime/session.mjs';
 import { initHDC } from '../src/hdc/facade.mjs';
+import { REASONING_PRIORITY } from '../src/core/constants.mjs';
 import fs from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -138,13 +139,13 @@ async function executeQuery(session, step, index, total, sessionId) {
 /**
  * Run a single session with all queries
  */
-async function runSession(sessionId, cases, hdcStrategy = 'dense-binary', geometry = 2048, verbose = false) {
+async function runSession(sessionId, cases, hdcStrategy = 'dense-binary', geometry = 2048, reasoningPriority = REASONING_PRIORITY.SYMBOLIC, verbose = false) {
   const startTime = performance.now();
   const sessionLabel = `Session${sessionId}`;
 
   // Initialize HDC and session
   initHDC(hdcStrategy);
-  const session = new Session({ geometry, hdcStrategy });
+  const session = new Session({ geometry, hdcStrategy, reasoningPriority });
 
   // Load theories
   const coreCount = loadCoreTheories(session);
@@ -181,6 +182,7 @@ async function runSession(sessionId, cases, hdcStrategy = 'dense-binary', geomet
     sessionId,
     hdcStrategy,
     geometry,
+    reasoningPriority: session.reasoningPriority,
     results,
     successful,
     failed,
@@ -199,7 +201,14 @@ async function runParallelSessions(cases, configurations, verbose = false) {
   console.log(`\nRunning ${COLORS.cyan}${configurations.length}${COLORS.reset} sessions in parallel with ${COLORS.cyan}${cases.length}${COLORS.reset} queries each\n`);
 
   const promises = configurations.map((config, idx) =>
-    runSession(idx + 1, cases, config.hdcStrategy, config.geometry, verbose)
+    runSession(
+      idx + 1,
+      cases,
+      config.hdcStrategy,
+      config.geometry,
+      config.reasoningPriority,
+      verbose
+    )
   );
 
   const sessionResults = await Promise.all(promises);
@@ -218,8 +227,9 @@ async function runParallelSessions(cases, configurations, verbose = false) {
     const isFastest = session.sessionId === fastest.sessionId;
     const speedMark = isFastest ? `${COLORS.green}⚡ FASTEST${COLORS.reset}` : '';
     const successRate = ((session.successful / cases.length) * 100).toFixed(0);
+    const priorityLabel = session.reasoningPriority.replace('Priority', '');
 
-    console.log(`${COLORS.cyan}Session ${session.sessionId}${COLORS.reset} (${COLORS.dim}${session.hdcStrategy}/${session.geometry}${COLORS.reset}): ${COLORS.green}${session.successful}✓${COLORS.reset} ${COLORS.red}${session.failed}✗${COLORS.reset} ${COLORS.dim}[${formatDuration(session.totalDuration)}] ${successRate}% success${COLORS.reset} ${speedMark}`);
+    console.log(`${COLORS.cyan}Session ${session.sessionId}${COLORS.reset} (${COLORS.dim}${session.hdcStrategy}/${session.geometry}@${priorityLabel}${COLORS.reset}): ${COLORS.green}${session.successful}✓${COLORS.reset} ${COLORS.red}${session.failed}✗${COLORS.reset} ${COLORS.dim}[${formatDuration(session.totalDuration)}] ${successRate}% success${COLORS.reset} ${speedMark}`);
   }
 
   // ========================================================================
@@ -230,7 +240,8 @@ async function runParallelSessions(cases, configurations, verbose = false) {
   for (const session of sorted) {
     const speedup = (fastest.totalDuration / session.totalDuration * 100).toFixed(0);
     const bar = '█'.repeat(Math.max(1, Math.floor(session.totalDuration / fastest.totalDuration * 20)));
-    console.log(`  ${session.hdcStrategy.padEnd(20)} ${COLORS.dim}${session.geometry}${COLORS.reset} ${COLORS.cyan}${bar}${COLORS.reset} ${formatDuration(session.totalDuration)} ${COLORS.dim}(${speedup}%)${COLORS.reset}`);
+    const priorityLabel = session.reasoningPriority.replace('Priority', '');
+    console.log(`  ${session.hdcStrategy.padEnd(20)} ${priorityLabel.padEnd(12)} ${COLORS.dim}${session.geometry}${COLORS.reset} ${COLORS.cyan}${bar}${COLORS.reset} ${formatDuration(session.totalDuration)} ${COLORS.dim}(${speedup}%)${COLORS.reset}`);
   }
 
   // ========================================================================
@@ -333,14 +344,14 @@ async function main() {
       process.exit(1);
     }
 
-    // Define 6 parallel configurations (different HDC strategies and geometries)
+    // Define 6 parallel configurations (3 strategies × 2 reasoning priorities)
     const configurations = [
-      { hdcStrategy: 'dense-binary', geometry: 2048 },
-      { hdcStrategy: 'dense-binary', geometry: 4096 },
-      { hdcStrategy: 'sparse-polynomial', geometry: 4 },
-      { hdcStrategy: 'sparse-polynomial', geometry: 8 },
-      { hdcStrategy: 'metric-affine', geometry: 32 },
-      { hdcStrategy: 'metric-affine', geometry: 64 }
+      { hdcStrategy: 'dense-binary', geometry: 2048, reasoningPriority: REASONING_PRIORITY.SYMBOLIC },
+      { hdcStrategy: 'dense-binary', geometry: 2048, reasoningPriority: REASONING_PRIORITY.HOLOGRAPHIC },
+      { hdcStrategy: 'sparse-polynomial', geometry: 4, reasoningPriority: REASONING_PRIORITY.SYMBOLIC },
+      { hdcStrategy: 'sparse-polynomial', geometry: 4, reasoningPriority: REASONING_PRIORITY.HOLOGRAPHIC },
+      { hdcStrategy: 'metric-affine', geometry: 32, reasoningPriority: REASONING_PRIORITY.SYMBOLIC },
+      { hdcStrategy: 'metric-affine', geometry: 32, reasoningPriority: REASONING_PRIORITY.HOLOGRAPHIC }
     ];
 
     await runParallelSessions(cases, configurations, verbose);

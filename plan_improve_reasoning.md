@@ -11,7 +11,7 @@
 
 ---
 
-## Ziua 1 — Unificare semantică: semnături de definiții (grafuri/ruli)
+## Step  1 — Unificare semantică: semnături de definiții (grafuri/ruli)
 
 ### 1.1 Semnături pentru grafuri (alpha‑equivalence) + raport de duplicate
 **Scop:** detectăm “aceeași definiție, alt nume” (în special între teorii diferite).
@@ -34,7 +34,7 @@
 
 ---
 
-## Ziua 2 — Unificare semantică: “Amprenta Contextuală” (Distributional Similarity)
+## Step  2 — Unificare semantică: “Amprenta Contextuală” (Distributional Similarity)
 
 ### 2.1 Index de contexte pentru operatori și entități
 **Scop:** găsim echivalențe între concepte (operatori/entități) chiar dacă nu sunt textual similare.
@@ -56,7 +56,7 @@
 
 ---
 
-## Ziua 3 — Unificare aplicabilă: generare DSL + canonicalizare “Activation Operator”
+## Step  3 — Unificare aplicabilă: generare DSL + canonicalizare “Activation Operator”
 
 ### 3.1 Aplicare controlată: generăm DSL de `canonical`/`synonym` (nu aplicăm automat)
 **Scop:** din sugestii → un snippet `.sys2` pe care îl putem accepta/revizui manual.
@@ -88,7 +88,7 @@
 
 ---
 
-## Ziua 4 — Operator upgrade (REASONING_OPERATORS): `analogy` + `induce`
+## Step  4 — Operator upgrade (REASONING_OPERATORS): `analogy` + `induce`
 
 ### 4.1 `analogy`: cross-operator (bazat pe unificare)
 **Scop:** analogii care funcționează și când relația are alt nume (după `synonym/canonical` sau după “aproape echivalent” din fingerprint).
@@ -124,7 +124,7 @@
 
 ---
 
-## Ziua 5 — Operator upgrade (REASONING_OPERATORS): `abduce` + `explain`
+## Step  5 — Operator upgrade (REASONING_OPERATORS): `abduce` + `explain`
 
 ### 5.1 `abduce`: scoring Bayesian (fără “method modes”)
 **Scop:** ranking corect când există mai multe explicații (base rates / priors).

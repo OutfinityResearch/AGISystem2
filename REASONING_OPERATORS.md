@@ -48,7 +48,7 @@ AGISystem2 has a **sophisticated multi-layered reasoning architecture** with **a
 ### Impact on Query Evaluation
 
 Running `evals/runQueryEval.mjs` with 12 advanced semantic queries shows:
-- **metric-affine/64**: 100% success (12/12 queries)
+- **metric-affine/32**: 100% success (12/12 queries)
 - **dense-binary/2048**: 67% success (8/12 queries)
 - **sparse-polynomial/4**: 25% success (3/12 queries)
 
@@ -1967,7 +1967,7 @@ export class CausalInference {
 **Expected improvements:**
 | HDC Strategy | Before | After |
 |--------------|--------|-------|
-| metric-affine/64 | 100% (12/12) | 100% (12/12) |
+| metric-affine/32 | 100% (12/12) | 100% (12/12) |
 | dense-binary/2048 | 67% (8/12) | 100% (12/12) |
 | sparse-polynomial/4 | 25% (3/12) | 75% (9/12) |
 
