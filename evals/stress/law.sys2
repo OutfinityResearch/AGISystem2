@@ -42,60 +42,76 @@ end
 # AUTO-GENERATED: Definitions for operators used in this test
 # ============================================================================
 
-@accepts:accepts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@accepts:accepts graph court filing
+    # Court accepts filing for processing
+    @cou __Role Court $court
+    @fil __Role Filing $filing
+    @relation __Role Relation Accepts
+    @result __Bundle $cou $fil $relation
+    return $result
 end
 
-@acquires:acquires graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@acquires:acquires graph party right
+    # Party acquires legal right
+    @par __Role Party $party
+    @rig __Role Right $right
+    @relation __Role Relation Acquires
+    @result __Bundle $par $rig $relation
+    return $result
 end
 
-@acts:acts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@acts:acts graph agent behalf
+    # Agent acts on behalf of principal
+    @age __Role Agent $agent
+    @beh __Role Principal $behalf
+    @relation __Role Relation Acts
+    @result __Bundle $age $beh $relation
+    return $result
 end
 
-@admits:admits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@admits:admits graph court evidence
+    # Court admits evidence into record
+    @cou __Role Court $court
+    @evi __Role Evidence $evidence
+    @relation __Role Relation Admits
+    @result __Bundle $cou $evi $relation
+    return $result
 end
 
-@affects:affects graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@affects:affects graph statute right
+    # Statute affects legal right
+    @sta __Role Statute $statute
+    @rig __Role Right $right
+    @relation __Role Relation Affects
+    @result __Bundle $sta $rig $relation
+    return $result
 end
 
-@agree:agree graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@agree:agree graph party1 party2
+    # Parties reach agreement
+    @par __Role Party $party1
+    @part __Role Party $party2
+    @relation __Role Relation Agree
+    @result __Bundle $par $part $relation
+    return $result
 end
 
-@agrees:agrees graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@agrees:agrees graph party1 party2
+    # Parties agree to terms
+    @par __Role Party $party1
+    @part __Role Party $party2
+    @relation __Role Relation Agrees
+    @result __Bundle $par $part $relation
+    return $result
 end
 
-@alleges:alleges graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@alleges:alleges graph plaintiff claim
+    # Plaintiff alleges claim in complaint
+    @pla __Role Plaintiff $plaintiff
+    @cla __Role Claim $claim
+    @relation __Role Relation Alleges
+    @result __Bundle $pla $cla $relation
+    return $result
 end
 
 @allows:allows graph law action
@@ -105,18 +121,22 @@ end
     return $regulation
 end
 
-@announces:announces graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@announces:announces graph court decision
+    # Court announces decision
+    @cou __Role Court $court
+    @dec __Role Decision $decision
+    @relation __Role Relation Announces
+    @result __Bundle $cou $dec $relation
+    return $result
 end
 
-@appears:appears graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@appears:appears graph party court
+    # Party appears before court
+    @par __Role Party $party
+    @cou __Role Court $court
+    @relation __Role Relation Appears
+    @result __Bundle $par $cou $relation
+    return $result
 end
 
 @applies:applies graph authority law
@@ -126,46 +146,58 @@ end
     return $interpretation
 end
 
-@are:are graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@are:are graph entity status
+    # Entity has legal status
+    @ent __Role Entity $entity
+    @sta __Role Status $status
+    @relation __Role Relation Are
+    @result __Bundle $ent $sta $relation
+    return $result
 end
 
-@arise:arise graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@arise:arise graph right situation
+    # Right arises from situation
+    @rig __Role Right $right
+    @sit __Role Situation $situation
+    @relation __Role Relation Arise
+    @result __Bundle $rig $sit $relation
+    return $result
 end
 
-@arises:arises graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@arises:arises graph claim circumstance
+    # Claim arises from circumstance
+    @cla __Role Claim $claim
+    @cir __Role Circumstance $circumstance
+    @relation __Role Relation Arises
+    @result __Bundle $cla $cir $relation
+    return $result
 end
 
-@assumes:assumes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@assumes:assumes graph party liability
+    # Party assumes legal liability
+    @par __Role Party $party
+    @lia __Role Liability $liability
+    @relation __Role Relation Assumes
+    @result __Bundle $par $lia $relation
+    return $result
 end
 
-@attaches:attaches graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@attaches:attaches graph lien property
+    # Lien attaches to property
+    @lie __Role Lien $lien
+    @pro __Role Property $property
+    @relation __Role Relation Attaches
+    @result __Bundle $lie $pro $relation
+    return $result
 end
 
-@attempts:attempts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@attempts:attempts graph party action
+    # Party attempts legal action
+    @par __Role Party $party
+    @act __Role Action $action
+    @relation __Role Relation Attempts
+    @result __Bundle $par $act $relation
+    return $result
 end
 
 @authorizes:authorizes graph law action
@@ -175,53 +207,67 @@ end
     return $regulation
 end
 
-@awards:awards graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@awards:awards graph court remedy
+    # Court awards remedy to party
+    @cou __Role Court $court
+    @rem __Role Remedy $remedy
+    @relation __Role Relation Awards
+    @result __Bundle $cou $rem $relation
+    return $result
 end
 
-@aware:aware graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@aware:aware graph party fact
+    # Party is aware of material fact
+    @par __Role Party $party
+    @fac __Role Fact $fact
+    @relation __Role Relation Aware
+    @result __Bundle $par $fac $relation
+    return $result
 end
 
-@bars:bars graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@bars:bars graph statute claim
+    # Statute bars claim from proceeding
+    @sta __Role Statute $statute
+    @cla __Role Claim $claim
+    @relation __Role Relation Bars
+    @result __Bundle $sta $cla $relation
+    return $result
 end
 
-@based:based graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@based:based graph judgment finding
+    # Judgment based on factual finding
+    @jud __Role Judgment $judgment
+    @fin __Role Finding $finding
+    @relation __Role Relation Based
+    @result __Bundle $jud $fin $relation
+    return $result
 end
 
-@becomes:becomes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@becomes:becomes graph entity status
+    # Entity becomes legal status
+    @ent __Role Entity $entity
+    @sta __Role Status $status
+    @relation __Role Relation Becomes
+    @result __Bundle $ent $sta $relation
+    return $result
 end
 
-@benefits:benefits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@benefits:benefits graph beneficiary right
+    # Beneficiary benefits from right
+    @ben __Role Beneficiary $beneficiary
+    @rig __Role Right $right
+    @relation __Role Relation Benefits
+    @result __Bundle $ben $rig $relation
+    return $result
 end
 
-@binds:binds graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@binds:binds graph contract party
+    # Contract binds party to obligations
+    @con __Role Contract $contract
+    @par __Role Party $party
+    @relation __Role Relation Binds
+    @result __Bundle $con $par $relation
+    return $result
 end
 
 @breaches:breaches graph action law
@@ -238,165 +284,211 @@ end
     return $violation
 end
 
-@burdens:burdens graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@burdens:burdens graph duty obligor
+    # Duty burdens obligor with obligation
+    @dut __Role Duty $duty
+    @obl __Role Obligor $obligor
+    @relation __Role Relation Burdens
+    @result __Bundle $dut $obl $relation
+    return $result
 end
 
-@calculates:calculates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@calculates:calculates graph court damages
+    # Court calculates damages amount
+    @cou __Role Court $court
+    @dam __Role Damages $damages
+    @relation __Role Relation Calculates
+    @result __Bundle $cou $dam $relation
+    return $result
 end
 
-@cannot:cannot graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@cannot:cannot graph party action
+    # Party cannot perform action legally
+    @par __Role Party $party
+    @act __Role Action $action
+    @relation __Role Relation Cannot
+    @result __Bundle $par $act $relation
+    return $result
 end
 
-@carries:carries graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@carries:carries graph offense penalty
+    # Offense carries criminal penalty
+    @off __Role Offense $offense
+    @pen __Role Penalty $penalty
+    @relation __Role Relation Carries
+    @result __Bundle $off $pen $relation
+    return $result
 end
 
-@chooses:chooses graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@chooses:chooses graph party option
+    # Party chooses legal option
+    @par __Role Party $party
+    @opt __Role Option $option
+    @relation __Role Relation Chooses
+    @result __Bundle $par $opt $relation
+    return $result
 end
 
-@claims:claims graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@claims:claims graph claimant right
+    # Claimant claims legal right
+    @cla __Role Claimant $claimant
+    @rig __Role Right $right
+    @relation __Role Relation Claims
+    @result __Bundle $cla $rig $relation
+    return $result
 end
 
-@combines:combines graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@combines:combines graph statute1 statute2
+    # Statutes combine in application
+    @sta __Role Statute $statute1
+    @stat __Role Statute $statute2
+    @relation __Role Relation Combines
+    @result __Bundle $sta $stat $relation
+    return $result
 end
 
-@comes:comes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@comes:comes graph jurisdiction authority
+    # Jurisdiction comes from authority
+    @jur __Role Jurisdiction $jurisdiction
+    @aut __Role Authority $authority
+    @relation __Role Relation Comes
+    @result __Bundle $jur $aut $relation
+    return $result
 end
 
-@commits:commits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@commits:commits graph perpetrator crime
+    # Perpetrator commits criminal act
+    @per __Role Perpetrator $perpetrator
+    @cri __Role Crime $crime
+    @relation __Role Relation Commits
+    @result __Bundle $per $cri $relation
+    return $result
 end
 
-@completes:completes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@completes:completes graph party performance
+    # Party completes contractual performance
+    @par __Role Party $party
+    @per __Role Performance $performance
+    @relation __Role Relation Completes
+    @result __Bundle $par $per $relation
+    return $result
 end
 
-@concerns:concerns graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@concerns:concerns graph statute matter
+    # Statute concerns legal matter
+    @sta __Role Statute $statute
+    @mat __Role Matter $matter
+    @relation __Role Relation Concerns
+    @result __Bundle $sta $mat $relation
+    return $result
 end
 
-@conducts:conducts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@conducts:conducts graph attorney examination
+    # Attorney conducts witness examination
+    @att __Role Attorney $attorney
+    @exa __Role Examination $examination
+    @relation __Role Relation Conducts
+    @result __Bundle $att $exa $relation
+    return $result
 end
 
-@confers:confers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@confers:confers graph statute right
+    # Statute confers legal right
+    @sta __Role Statute $statute
+    @rig __Role Right $right
+    @relation __Role Relation Confers
+    @result __Bundle $sta $rig $relation
+    return $result
 end
 
-@considers:considers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@considers:considers graph court argument
+    # Court considers legal argument
+    @cou __Role Court $court
+    @arg __Role Argument $argument
+    @relation __Role Relation Considers
+    @result __Bundle $cou $arg $relation
+    return $result
 end
 
-@constitutes:constitutes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@constitutes:constitutes graph act offense
+    # Act constitutes criminal offense
+    @ac __Role Act $act
+    @off __Role Offense $offense
+    @relation __Role Relation Constitutes
+    @result __Bundle $ac $off $relation
+    return $result
 end
 
-@contains:contains graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@contains:contains graph document provision
+    # Document contains legal provision
+    @doc __Role Document $document
+    @pro __Role Provision $provision
+    @relation __Role Relation Contains
+    @result __Bundle $doc $pro $relation
+    return $result
 end
 
-@conveys:conveys graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@conveys:conveys graph grantor grantee
+    # Grantor conveys property to grantee
+    @gra __Role Grantor $grantor
+    @gran __Role Grantee $grantee
+    @relation __Role Relation Conveys
+    @result __Bundle $gra $gran $relation
+    return $result
 end
 
-@create:create graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@create:create graph party obligation
+    # Party creates legal obligation
+    @par __Role Party $party
+    @obl __Role Obligation $obligation
+    @relation __Role Relation Create
+    @result __Bundle $par $obl $relation
+    return $result
 end
 
-@creates:creates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@creates:creates graph statute duty
+    # Statute creates legal duty
+    @sta __Role Statute $statute
+    @dut __Role Duty $duty
+    @relation __Role Relation Creates
+    @result __Bundle $sta $dut $relation
+    return $result
 end
 
-@decide:decide graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@decide:decide graph court issue
+    # Court decides legal issue
+    @cou __Role Court $court
+    @iss __Role Issue $issue
+    @relation __Role Relation Decide
+    @result __Bundle $cou $iss $relation
+    return $result
 end
 
-@declares:declares graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@declares:declares graph court ruling
+    # Court declares legal ruling
+    @cou __Role Court $court
+    @rul __Role Ruling $ruling
+    @relation __Role Relation Declares
+    @result __Bundle $cou $rul $relation
+    return $result
 end
 
-@decreases:decreases graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@decreases:decreases graph factor liability
+    # Factor decreases legal liability
+    @fac __Role Factor $factor
+    @lia __Role Liability $liability
+    @relation __Role Relation Decreases
+    @result __Bundle $fac $lia $relation
+    return $result
 end
 
-@defeats:defeats graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@defeats:defeats graph defense claim
+    # Defense defeats plaintiff's claim
+    @def __Role Defense $defense
+    @cla __Role Claim $claim
+    @relation __Role Relation Defeats
+    @result __Bundle $def $cla $relation
+    return $result
 end
 
 @defends:defends graph party1 party2
@@ -406,25 +498,31 @@ end
     return $legal
 end
 
-@delivers:delivers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@delivers:delivers graph party recipient
+    # Party delivers legal notice
+    @par __Role Party $party
+    @rec __Role Recipient $recipient
+    @relation __Role Relation Delivers
+    @result __Bundle $par $rec $relation
+    return $result
 end
 
-@demands:demands graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@demands:demands graph creditor debtor
+    # Creditor demands payment from debtor
+    @cre __Role Creditor $creditor
+    @deb __Role Debtor $debtor
+    @relation __Role Relation Demands
+    @result __Bundle $cre $deb $relation
+    return $result
 end
 
-@demonstrate:demonstrate graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@demonstrate:demonstrate graph party proof
+    # Party demonstrates proof to court
+    @par __Role Party $party
+    @pro __Role Proof $proof
+    @relation __Role Relation Demonstrate
+    @result __Bundle $par $pro $relation
+    return $result
 end
 
 @demonstrates:demonstrates graph entity finding
@@ -434,25 +532,31 @@ end
     return $determination
 end
 
-@depends:depends graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@depends:depends graph right condition
+    # Right depends on legal condition
+    @rig __Role Right $right
+    @con __Role Condition $condition
+    @relation __Role Relation Depends
+    @result __Bundle $rig $con $relation
+    return $result
 end
 
-@derives:derives graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@derives:derives graph authority source
+    # Authority derives from legal source
+    @aut __Role Authority $authority
+    @sou __Role Source $source
+    @relation __Role Relation Derives
+    @result __Bundle $aut $sou $relation
+    return $result
 end
 
-@destroys:destroys graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@destroys:destroys graph act right
+    # Act destroys legal right
+    @ac __Role Act $act
+    @rig __Role Right $right
+    @relation __Role Relation Destroys
+    @result __Bundle $ac $rig $relation
+    return $result
 end
 
 @determines:determines graph entity finding
@@ -462,74 +566,94 @@ end
     return $determination
 end
 
-@detrimentally:detrimentally graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@detrimentally:detrimentally graph action interest
+    # Action detrimentally affects interest
+    @act __Role Action $action
+    @int __Role Interest $interest
+    @relation __Role Relation Detrimentally
+    @result __Bundle $act $int $relation
+    return $result
 end
 
-@differs:differs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@differs:differs graph case1 case2
+    # Cases differ in material facts
+    @cas __Role Case $case1
+    @case __Role Case $case2
+    @relation __Role Relation Differs
+    @result __Bundle $cas $case $relation
+    return $result
 end
 
-@discharges:discharges graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@discharges:discharges graph court obligation
+    # Court discharges legal obligation
+    @cou __Role Court $court
+    @obl __Role Obligation $obligation
+    @relation __Role Relation Discharges
+    @result __Bundle $cou $obl $relation
+    return $result
 end
 
-@disregards:disregards graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@disregards:disregards graph court argument
+    # Court disregards frivolous argument
+    @cou __Role Court $court
+    @arg __Role Argument $argument
+    @relation __Role Relation Disregards
+    @result __Bundle $cou $arg $relation
+    return $result
 end
 
-@does:does graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@does:does graph actor act
+    # Actor performs legal act
+    @act __Role Actor $actor
+    @ac __Role Act $act
+    @relation __Role Relation Does
+    @result __Bundle $act $ac $relation
+    return $result
 end
 
-@effects:effects graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@effects:effects graph statute change
+    # Statute effects legal change
+    @sta __Role Statute $statute
+    @cha __Role Change $change
+    @relation __Role Relation Effects
+    @result __Bundle $sta $cha $relation
+    return $result
 end
 
-@eliminates:eliminates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@eliminates:eliminates graph statute requirement
+    # Statute eliminates legal requirement
+    @sta __Role Statute $statute
+    @req __Role Requirement $requirement
+    @relation __Role Relation Eliminates
+    @result __Bundle $sta $req $relation
+    return $result
 end
 
-@enacts:enacts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@enacts:enacts graph legislature statute
+    # Legislature enacts statutory law
+    @leg __Role Legislature $legislature
+    @sta __Role Statute $statute
+    @relation __Role Relation Enacts
+    @result __Bundle $leg $sta $relation
+    return $result
 end
 
-@encourages:encourages graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@encourages:encourages graph policy behavior
+    # Policy encourages lawful behavior
+    @pol __Role Policy $policy
+    @beh __Role Behavior $behavior
+    @relation __Role Relation Encourages
+    @result __Bundle $pol $beh $relation
+    return $result
 end
 
-@encumbers:encumbers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@encumbers:encumbers graph lien property
+    # Lien encumbers property interest
+    @lie __Role Lien $lien
+    @pro __Role Property $property
+    @relation __Role Relation Encumbers
+    @result __Bundle $lie $pro $relation
+    return $result
 end
 
 @enforces:enforces graph authority law
@@ -539,39 +663,49 @@ end
     return $interpretation
 end
 
-@engaged:engaged graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@engaged:engaged graph party conduct
+    # Party engaged in legal conduct
+    @par __Role Party $party
+    @con __Role Conduct $conduct
+    @relation __Role Relation Engaged
+    @result __Bundle $par $con $relation
+    return $result
 end
 
-@engages:engages graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@engages:engages graph party activity
+    # Party engages in legal activity
+    @par __Role Party $party
+    @act __Role Activity $activity
+    @relation __Role Relation Engages
+    @result __Bundle $par $act $relation
+    return $result
 end
 
-@ensures:ensures graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@ensures:ensures graph statute protection
+    # Statute ensures legal protection
+    @sta __Role Statute $statute
+    @pro __Role Protection $protection
+    @relation __Role Relation Ensures
+    @result __Bundle $sta $pro $relation
+    return $result
 end
 
-@enters:enters graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@enters:enters graph party contract
+    # Party enters into contract
+    @par __Role Party $party
+    @con __Role Contract $contract
+    @relation __Role Relation Enters
+    @result __Bundle $par $con $relation
+    return $result
 end
 
-@entitled:entitled graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@entitled:entitled graph holder remedy
+    # Holder entitled to legal remedy
+    @hol __Role Holder $holder
+    @rem __Role Remedy $remedy
+    @relation __Role Relation Entitled
+    @result __Bundle $hol $rem $relation
+    return $result
 end
 
 @establishes:establishes graph entity finding
@@ -581,60 +715,76 @@ end
     return $determination
 end
 
-@exceeds:exceeds graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@exceeds:exceeds graph damages limit
+    # Damages exceed statutory limit
+    @dam __Role Damages $damages
+    @lim __Role Limit $limit
+    @relation __Role Relation Exceeds
+    @result __Bundle $dam $lim $relation
+    return $result
 end
 
-@exercises:exercises graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@exercises:exercises graph authority power
+    # Authority exercises legal power
+    @aut __Role Authority $authority
+    @pow __Role Power $power
+    @relation __Role Relation Exercises
+    @result __Bundle $aut $pow $relation
+    return $result
 end
 
-@exist:exist graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@exist:exist graph right jurisdiction
+    # Right exists under jurisdiction
+    @rig __Role Right $right
+    @jur __Role Jurisdiction $jurisdiction
+    @relation __Role Relation Exist
+    @result __Bundle $rig $jur $relation
+    return $result
 end
 
-@experiences:experiences graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@experiences:experiences graph party harm
+    # Party experiences legal harm
+    @par __Role Party $party
+    @har __Role Harm $harm
+    @relation __Role Relation Experiences
+    @result __Bundle $par $har $relation
+    return $result
 end
 
-@extends:extends graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@extends:extends graph statute coverage
+    # Statute extends legal coverage
+    @sta __Role Statute $statute
+    @cov __Role Coverage $coverage
+    @relation __Role Relation Extends
+    @result __Bundle $sta $cov $relation
+    return $result
 end
 
-@faces:faces graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@faces:faces graph defendant charge
+    # Defendant faces criminal charge
+    @def __Role Defendant $defendant
+    @cha __Role Charge $charge
+    @relation __Role Relation Faces
+    @result __Bundle $def $cha $relation
+    return $result
 end
 
-@fails:fails graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@fails:fails graph plaintiff burden
+    # Plaintiff fails burden of proof
+    @pla __Role Plaintiff $plaintiff
+    @bur __Role Burden $burden
+    @relation __Role Relation Fails
+    @result __Bundle $pla $bur $relation
+    return $result
 end
 
-@favors:favors graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@favors:favors graph precedent outcome
+    # Precedent favors legal outcome
+    @pre __Role Precedent $precedent
+    @out __Role Outcome $outcome
+    @relation __Role Relation Favors
+    @result __Bundle $pre $out $relation
+    return $result
 end
 
 @files:files graph party document
@@ -644,25 +794,31 @@ end
     return $procedure
 end
 
-@flow:flow graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@flow:flow graph right beneficiary
+    # Rights flow to beneficiary
+    @rig __Role Right $right
+    @ben __Role Beneficiary $beneficiary
+    @relation __Role Relation Flow
+    @result __Bundle $rig $ben $relation
+    return $result
 end
 
-@flows:flows graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@flows:flows graph authority source
+    # Authority flows from source
+    @aut __Role Authority $authority
+    @sou __Role Source $source
+    @relation __Role Relation Flows
+    @result __Bundle $aut $sou $relation
+    return $result
 end
 
-@follows:follows graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@follows:follows graph court precedent
+    # Court follows binding precedent
+    @cou __Role Court $court
+    @pre __Role Precedent $precedent
+    @relation __Role Relation Follows
+    @result __Bundle $cou $pre $relation
+    return $result
 end
 
 @forbids:forbids graph law action
@@ -672,53 +828,67 @@ end
     return $regulation
 end
 
-@forces:forces graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@forces:forces graph judgment compliance
+    # Judgment forces party compliance
+    @jud __Role Judgment $judgment
+    @com __Role Compliance $compliance
+    @relation __Role Relation Forces
+    @result __Bundle $jud $com $relation
+    return $result
 end
 
-@forms:forms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@forms:forms graph entity organization
+    # Entity forms legal organization
+    @ent __Role Entity $entity
+    @org __Role Organization $organization
+    @relation __Role Relation Forms
+    @result __Bundle $ent $org $relation
+    return $result
 end
 
-@frustrates:frustrates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@frustrates:frustrates graph action purpose
+    # Action frustrates contractual purpose
+    @act __Role Action $action
+    @pur __Role Purpose $purpose
+    @relation __Role Relation Frustrates
+    @result __Bundle $act $pur $relation
+    return $result
 end
 
-@gave:gave graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@gave:gave graph grantor grantee
+    # Grantor gave property to grantee
+    @gra __Role Grantor $grantor
+    @gran __Role Grantee $grantee
+    @relation __Role Relation Gave
+    @result __Bundle $gra $gran $relation
+    return $result
 end
 
-@gets:gets graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@gets:gets graph recipient benefit
+    # Recipient gets legal benefit
+    @rec __Role Recipient $recipient
+    @ben __Role Benefit $benefit
+    @relation __Role Relation Gets
+    @result __Bundle $rec $ben $relation
+    return $result
 end
 
-@gives:gives graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@gives:gives graph grantor grantee
+    # Grantor gives right to grantee
+    @gra __Role Grantor $grantor
+    @gran __Role Grantee $grantee
+    @relation __Role Relation Gives
+    @result __Bundle $gra $gran $relation
+    return $result
 end
 
-@goes:goes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@goes:goes graph appeal court
+    # Appeal goes to higher court
+    @app __Role Appeal $appeal
+    @cou __Role Court $court
+    @relation __Role Relation Goes
+    @result __Bundle $app $cou $relation
+    return $result
 end
 
 @governs:governs graph law subject
@@ -735,32 +905,40 @@ end
     return $regulation
 end
 
-@had:had graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@had:had graph party knowledge
+    # Party had actual knowledge
+    @par __Role Party $party
+    @kno __Role Knowledge $knowledge
+    @relation __Role Relation Had
+    @result __Bundle $par $kno $relation
+    return $result
 end
 
-@have:have graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@have:have graph party standing
+    # Party has legal standing
+    @par __Role Party $party
+    @sta __Role Standing $standing
+    @relation __Role Relation Have
+    @result __Bundle $par $sta $relation
+    return $result
 end
 
-@hears:hears graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@hears:hears graph judge testimony
+    # Judge hears witness testimony
+    @jud __Role Judge $judge
+    @tes __Role Testimony $testimony
+    @relation __Role Relation Hears
+    @result __Bundle $jud $tes $relation
+    return $result
 end
 
-@helps:helps graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@helps:helps graph counsel client
+    # Counsel helps client navigate law
+    @cou __Role Counsel $counsel
+    @cli __Role Client $client
+    @relation __Role Relation Helps
+    @result __Bundle $cou $cli $relation
+    return $result
 end
 
 @holds:holds graph party right
@@ -770,46 +948,58 @@ end
     return $entitlement
 end
 
-@includes:includes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@includes:includes graph statute provision
+    # Statute includes specific provision
+    @sta __Role Statute $statute
+    @pro __Role Provision $provision
+    @relation __Role Relation Includes
+    @result __Bundle $sta $pro $relation
+    return $result
 end
 
-@incorporates:incorporates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@incorporates:incorporates graph contract term
+    # Contract incorporates legal term
+    @con __Role Contract $contract
+    @ter __Role Term $term
+    @relation __Role Relation Incorporates
+    @result __Bundle $con $ter $relation
+    return $result
 end
 
-@increases:increases graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@increases:increases graph factor damages
+    # Factor increases damage award
+    @fac __Role Factor $factor
+    @dam __Role Damages $damages
+    @relation __Role Relation Increases
+    @result __Bundle $fac $dam $relation
+    return $result
 end
 
-@incurs:incurs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@incurs:incurs graph tortfeasor liability
+    # Tortfeasor incurs legal liability
+    @tor __Role Tortfeasor $tortfeasor
+    @lia __Role Liability $liability
+    @relation __Role Relation Incurs
+    @result __Bundle $tor $lia $relation
+    return $result
 end
 
-@informs:informs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@informs:informs graph disclosure party
+    # Disclosure informs party of facts
+    @dis __Role Disclosure $disclosure
+    @par __Role Party $party
+    @relation __Role Relation Informs
+    @result __Bundle $dis $par $relation
+    return $result
 end
 
-@intends:intends graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@intends:intends graph party consequence
+    # Party intends legal consequence
+    @par __Role Party $party
+    @con __Role Consequence $consequence
+    @relation __Role Relation Intends
+    @result __Bundle $par $con $relation
+    return $result
 end
 
 @interprets:interprets graph authority law
@@ -819,18 +1009,22 @@ end
     return $interpretation
 end
 
-@introduces:introduces graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@introduces:introduces graph party evidence
+    # Party introduces evidence at trial
+    @par __Role Party $party
+    @evi __Role Evidence $evidence
+    @relation __Role Relation Introduces
+    @result __Bundle $par $evi $relation
+    return $result
 end
 
-@involves:involves graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@involves:involves graph dispute parties
+    # Dispute involves multiple parties
+    @dis __Role Dispute $dispute
+    @par __Role Parties $parties
+    @relation __Role Relation Involves
+    @result __Bundle $dis $par $relation
+    return $result
 end
 
 @is:is graph entity property
@@ -847,130 +1041,166 @@ end
     return $attribute
 end
 
-@keeps:keeps graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@keeps:keeps graph party record
+    # Party keeps legal record
+    @par __Role Party $party
+    @rec __Role Record $record
+    @relation __Role Relation Keeps
+    @result __Bundle $par $rec $relation
+    return $result
 end
 
-@knew:knew graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@knew:knew graph party fact
+    # Party knew material fact
+    @par __Role Party $party
+    @fac __Role Fact $fact
+    @relation __Role Relation Knew
+    @result __Bundle $par $fac $relation
+    return $result
 end
 
-@lacks:lacks graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@lacks:lacks graph party capacity
+    # Party lacks legal capacity
+    @par __Role Party $party
+    @cap __Role Capacity $capacity
+    @relation __Role Relation Lacks
+    @result __Bundle $par $cap $relation
+    return $result
 end
 
-@leaves:leaves graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@leaves:leaves graph testator heir
+    # Testator leaves estate to heir
+    @tes __Role Testator $testator
+    @hei __Role Heir $heir
+    @relation __Role Relation Leaves
+    @result __Bundle $tes $hei $relation
+    return $result
 end
 
-@limit:limit graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@limit:limit graph statute liability
+    # Statute limits legal liability
+    @sta __Role Statute $statute
+    @lia __Role Liability $liability
+    @relation __Role Relation Limit
+    @result __Bundle $sta $lia $relation
+    return $result
 end
 
-@limited:limited graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@limited:limited graph scope application
+    # Scope limited to application
+    @sco __Role Scope $scope
+    @app __Role Application $application
+    @relation __Role Relation Limited
+    @result __Bundle $sco $app $relation
+    return $result
 end
 
-@limits:limits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@limits:limits graph provision scope
+    # Provision limits statutory scope
+    @pro __Role Provision $provision
+    @sco __Role Scope $scope
+    @relation __Role Relation Limits
+    @result __Bundle $pro $sco $relation
+    return $result
 end
 
-@links:links graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@links:links graph evidence conclusion
+    # Evidence links to conclusion
+    @evi __Role Evidence $evidence
+    @con __Role Conclusion $conclusion
+    @relation __Role Relation Links
+    @result __Bundle $evi $con $relation
+    return $result
 end
 
-@loses:loses graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@loses:loses graph party right
+    # Party loses legal right
+    @par __Role Party $party
+    @rig __Role Right $right
+    @relation __Role Relation Loses
+    @result __Bundle $par $rig $relation
+    return $result
 end
 
-@lowers:lowers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@lowers:lowers graph factor damages
+    # Factor lowers damage award
+    @fac __Role Factor $factor
+    @dam __Role Damages $damages
+    @relation __Role Relation Lowers
+    @result __Bundle $fac $dam $relation
+    return $result
 end
 
-@made:made graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@made:made graph party representation
+    # Party made legal representation
+    @par __Role Party $party
+    @rep __Role Representation $representation
+    @relation __Role Relation Made
+    @result __Bundle $par $rep $relation
+    return $result
 end
 
-@mails:mails graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@mails:mails graph sender notice
+    # Sender mails legal notice
+    @sen __Role Sender $sender
+    @not __Role Recipient $notice
+    @relation __Role Relation Mails
+    @result __Bundle $sen $not $relation
+    return $result
 end
 
-@maintains:maintains graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@maintains:maintains graph party position
+    # Party maintains legal position
+    @par __Role Party $party
+    @pos __Role Position $position
+    @relation __Role Relation Maintains
+    @result __Bundle $par $pos $relation
+    return $result
 end
 
-@makes:makes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@makes:makes graph party claim
+    # Party makes legal claim
+    @par __Role Party $party
+    @cla __Role Claim $claim
+    @relation __Role Relation Makes
+    @result __Bundle $par $cla $relation
+    return $result
 end
 
-@means:means graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@means:means graph term definition
+    # Term means legal definition
+    @ter __Role Term $term
+    @def __Role Definition $definition
+    @relation __Role Relation Means
+    @result __Bundle $ter $def $relation
+    return $result
 end
 
-@measured:measured graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@measured:measured graph damages standard
+    # Damages measured by standard
+    @dam __Role Damages $damages
+    @sta __Role Standard $standard
+    @relation __Role Relation Measured
+    @result __Bundle $dam $sta $relation
+    return $result
 end
 
-@mirrors:mirrors graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@mirrors:mirrors graph statute provision
+    # Statute mirrors model provision
+    @sta __Role Statute $statute
+    @pro __Role Provision $provision
+    @relation __Role Relation Mirrors
+    @result __Bundle $sta $pro $relation
+    return $result
 end
 
-@names:names graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@names:names graph document party
+    # Document names party to action
+    @doc __Role Document $document
+    @par __Role Party $party
+    @relation __Role Relation Names
+    @result __Bundle $doc $par $relation
+    return $result
 end
 
 @needs:needs graph entity property
@@ -980,67 +1210,85 @@ end
     return $attribute
 end
 
-@negotiates:negotiates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@negotiates:negotiates graph party settlement
+    # Party negotiates settlement agreement
+    @par __Role Party $party
+    @set __Role Settlement $settlement
+    @relation __Role Relation Negotiates
+    @result __Bundle $par $set $relation
+    return $result
 end
 
-@observes:observes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@observes:observes graph court procedure
+    # Court observes legal procedure
+    @cou __Role Court $court
+    @pro __Role Procedure $procedure
+    @relation __Role Relation Observes
+    @result __Bundle $cou $pro $relation
+    return $result
 end
 
-@obtains:obtains graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@obtains:obtains graph claimant relief
+    # Claimant obtains equitable relief
+    @cla __Role Claimant $claimant
+    @rel __Role Relief $relief
+    @relation __Role Relation Obtains
+    @result __Bundle $cla $rel $relation
+    return $result
 end
 
-@occur:occur graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@occur:occur graph event jurisdiction
+    # Event occurs within jurisdiction
+    @eve __Role Event $event
+    @jur __Role Jurisdiction $jurisdiction
+    @relation __Role Relation Occur
+    @result __Bundle $eve $jur $relation
+    return $result
 end
 
-@occurred:occurred graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@occurred:occurred graph violation timeframe
+    # Violation occurred during timeframe
+    @vio __Role Violation $violation
+    @tim __Role Timeframe $timeframe
+    @relation __Role Relation Occurred
+    @result __Bundle $vio $tim $relation
+    return $result
 end
 
-@occurs:occurs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@occurs:occurs graph incident location
+    # Incident occurs at location
+    @inc __Role Incident $incident
+    @loc __Role Location $location
+    @relation __Role Relation Occurs
+    @result __Bundle $inc $loc $relation
+    return $result
 end
 
-@offered:offered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@offered:offered graph offeror offeree
+    # Offeror offered terms to offeree
+    @off __Role Offeror $offeror
+    @offe __Role Offeree $offeree
+    @relation __Role Relation Offered
+    @result __Bundle $off $offe $relation
+    return $result
 end
 
-@offers:offers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@offers:offers graph defendant settlement
+    # Defendant offers settlement proposal
+    @def __Role Defendant $defendant
+    @set __Role Settlement $settlement
+    @relation __Role Relation Offers
+    @result __Bundle $def $set $relation
+    return $result
 end
 
-@orders:orders graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@orders:orders graph court remedy
+    # Court orders specific remedy
+    @cou __Role Court $court
+    @rem __Role Remedy $remedy
+    @relation __Role Relation Orders
+    @result __Bundle $cou $rem $relation
+    return $result
 end
 
 @owes:owes graph party right
@@ -1050,11 +1298,13 @@ end
     return $entitlement
 end
 
-@pays:pays graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@pays:pays graph debtor creditor
+    # Debtor pays obligation to creditor
+    @deb __Role Debtor $debtor
+    @cre __Role Creditor $creditor
+    @relation __Role Relation Pays
+    @result __Bundle $deb $cre $relation
+    return $result
 end
 
 @permits:permits graph law action
@@ -1064,11 +1314,13 @@ end
     return $regulation
 end
 
-@presents:presents graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@presents:presents graph party evidence
+    # Party presents evidence to court
+    @par __Role Party $party
+    @evi __Role Evidence $evidence
+    @relation __Role Relation Presents
+    @result __Bundle $par $evi $relation
+    return $result
 end
 
 @produces:produces graph action outcome
@@ -1085,88 +1337,112 @@ end
     return $regulation
 end
 
-@promises:promises graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@promises:promises graph promisor promisee
+    # Promisor promises performance to promisee
+    @pro __Role Promisor $promisor
+    @prom __Role Promisee $promisee
+    @relation __Role Relation Promises
+    @result __Bundle $pro $prom $relation
+    return $result
 end
 
-@protects:protects graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@protects:protects graph statute right
+    # Statute protects fundamental right
+    @sta __Role Statute $statute
+    @rig __Role Right $right
+    @relation __Role Relation Protects
+    @result __Bundle $sta $rig $relation
+    return $result
 end
 
-@provides:provides graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@provides:provides graph statute remedy
+    # Statute provides legal remedy
+    @sta __Role Statute $statute
+    @rem __Role Remedy $remedy
+    @relation __Role Relation Provides
+    @result __Bundle $sta $rem $relation
+    return $result
 end
 
-@purposes:purposes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@purposes:purposes graph statute objective
+    # Statute serves legislative objective
+    @sta __Role Statute $statute
+    @obj __Role Objective $objective
+    @relation __Role Relation Purposes
+    @result __Bundle $sta $obj $relation
+    return $result
 end
 
-@puts:puts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@puts:puts graph party position
+    # Party puts matter in position
+    @par __Role Party $party
+    @pos __Role Position $position
+    @relation __Role Relation Puts
+    @result __Bundle $par $pos $relation
+    return $result
 end
 
-@questions:questions graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@questions:questions graph attorney witness
+    # Attorney questions witness under oath
+    @att __Role Attorney $attorney
+    @wit __Role Witness $witness
+    @relation __Role Relation Questions
+    @result __Bundle $att $wit $relation
+    return $result
 end
 
-@raises:raises graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@raises:raises graph party defense
+    # Party raises affirmative defense
+    @par __Role Party $party
+    @def __Role Defense $defense
+    @relation __Role Relation Raises
+    @result __Bundle $par $def $relation
+    return $result
 end
 
-@reach:reach graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@reach:reach graph parties agreement
+    # Parties reach settlement agreement
+    @par __Role Parties $parties
+    @agr __Role Agreement $agreement
+    @relation __Role Relation Reach
+    @result __Bundle $par $agr $relation
+    return $result
 end
 
-@reaches:reaches graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@reaches:reaches graph court decision
+    # Court reaches final decision
+    @cou __Role Court $court
+    @dec __Role Decision $decision
+    @relation __Role Relation Reaches
+    @result __Bundle $cou $dec $relation
+    return $result
 end
 
-@receives:receives graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@receives:receives graph recipient notice
+    # Recipient receives legal notice
+    @rec __Role Recipient $recipient
+    @not __Role Notice $notice
+    @relation __Role Relation Receives
+    @result __Bundle $rec $not $relation
+    return $result
 end
 
-@recognizes:recognizes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@recognizes:recognizes graph court right
+    # Court recognizes legal right
+    @cou __Role Court $court
+    @rig __Role Right $right
+    @relation __Role Relation Recognizes
+    @result __Bundle $cou $rig $relation
+    return $result
 end
 
-@refuses:refuses graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@refuses:refuses graph party performance
+    # Party refuses contractual performance
+    @par __Role Party $party
+    @per __Role Performance $performance
+    @relation __Role Relation Refuses
+    @result __Bundle $par $per $relation
+    return $result
 end
 
 @regulates:regulates graph law subject
@@ -1176,32 +1452,40 @@ end
     return $governance
 end
 
-@releases:releases graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@releases:releases graph party claim
+    # Party releases legal claim
+    @par __Role Party $party
+    @cla __Role Claim $claim
+    @relation __Role Relation Releases
+    @result __Bundle $par $cla $relation
+    return $result
 end
 
-@relieves:relieves graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@relieves:relieves graph provision party
+    # Provision relieves party of obligation
+    @pro __Role Provision $provision
+    @par __Role Party $party
+    @relation __Role Relation Relieves
+    @result __Bundle $pro $par $relation
+    return $result
 end
 
-@removes:removes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@removes:removes graph court case
+    # Court removes case to federal court
+    @cou __Role Court $court
+    @cas __Role Case $case
+    @relation __Role Relation Removes
+    @result __Bundle $cou $cas $relation
+    return $result
 end
 
-@rendered:rendered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@rendered:rendered graph court judgment
+    # Court rendered final judgment
+    @cou __Role Court $court
+    @jud __Role Judgment $judgment
+    @relation __Role Relation Rendered
+    @result __Bundle $cou $jud $relation
+    return $result
 end
 
 @requests:requests graph party document
@@ -1211,25 +1495,31 @@ end
     return $procedure
 end
 
-@require:require graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@require:require graph statute compliance
+    # Statute requires legal compliance
+    @sta __Role Statute $statute
+    @com __Role Compliance $compliance
+    @relation __Role Relation Require
+    @result __Bundle $sta $com $relation
+    return $result
 end
 
-@restores:restores graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@restores:restores graph remedy party
+    # Remedy restores party to position
+    @rem __Role Remedy $remedy
+    @par __Role Party $party
+    @relation __Role Relation Restores
+    @result __Bundle $rem $par $relation
+    return $result
 end
 
-@restrains:restrains graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@restrains:restrains graph injunction party
+    # Injunction restrains party from action
+    @inj __Role Injunction $injunction
+    @par __Role Party $party
+    @relation __Role Relation Restrains
+    @result __Bundle $inj $par $relation
+    return $result
 end
 
 @restricts:restricts graph law action
@@ -1239,11 +1529,13 @@ end
     return $regulation
 end
 
-@resulted:resulted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@resulted:resulted graph action consequence
+    # Action resulted in legal consequence
+    @act __Role Action $action
+    @con __Role Consequence $consequence
+    @relation __Role Relation Resulted
+    @result __Bundle $act $con $relation
+    return $result
 end
 
 @results:results graph action outcome
@@ -1253,88 +1545,112 @@ end
     return $consequence
 end
 
-@retains:retains graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@retains:retains graph party right
+    # Party retains legal right
+    @par __Role Party $party
+    @rig __Role Right $right
+    @relation __Role Relation Retains
+    @result __Bundle $par $rig $relation
+    return $result
 end
 
-@returns:returns graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@returns:returns graph court verdict
+    # Court returns verdict in case
+    @cou __Role Court $court
+    @ver __Role Verdict $verdict
+    @relation __Role Relation Returns
+    @result __Bundle $cou $ver $relation
+    return $result
 end
 
-@reveals:reveals graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@reveals:reveals graph evidence fact
+    # Evidence reveals material fact
+    @evi __Role Evidence $evidence
+    @fac __Role Fact $fact
+    @relation __Role Relation Reveals
+    @result __Bundle $evi $fac $relation
+    return $result
 end
 
-@satisfies:satisfies graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@satisfies:satisfies graph performance obligation
+    # Performance satisfies contractual obligation
+    @per __Role Performance $performance
+    @obl __Role Obligation $obligation
+    @relation __Role Relation Satisfies
+    @result __Bundle $per $obl $relation
+    return $result
 end
 
-@secures:secures graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@secures:secures graph creditor debt
+    # Creditor secures debt with collateral
+    @cre __Role Creditor $creditor
+    @deb __Role Debt $debt
+    @relation __Role Relation Secures
+    @result __Bundle $cre $deb $relation
+    return $result
 end
 
-@seeks:seeks graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@seeks:seeks graph party relief
+    # Party seeks judicial relief
+    @par __Role Party $party
+    @rel __Role Relief $relief
+    @relation __Role Relation Seeks
+    @result __Bundle $par $rel $relation
+    return $result
 end
 
-@seems:seems graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@seems:seems graph evidence conclusion
+    # Evidence seems to support conclusion
+    @evi __Role Evidence $evidence
+    @con __Role Conclusion $conclusion
+    @relation __Role Relation Seems
+    @result __Bundle $evi $con $relation
+    return $result
 end
 
-@sends:sends graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@sends:sends graph sender recipient
+    # Sender sends legal notice
+    @sen __Role Sender $sender
+    @rec __Role Recipient $recipient
+    @relation __Role Relation Sends
+    @result __Bundle $sen $rec $relation
+    return $result
 end
 
-@serves:serves graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@serves:serves graph party process
+    # Party serves legal process
+    @par __Role Party $party
+    @pro __Role Process $process
+    @relation __Role Relation Serves
+    @result __Bundle $par $pro $relation
+    return $result
 end
 
-@share:share graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@share:share graph parties liability
+    # Parties share joint liability
+    @par __Role Parties $parties
+    @lia __Role Liability $liability
+    @relation __Role Relation Share
+    @result __Bundle $par $lia $relation
+    return $result
 end
 
-@shields:shields graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@shields:shields graph immunity defendant
+    # Immunity shields defendant from liability
+    @imm __Role Immunity $immunity
+    @def __Role Defendant $defendant
+    @relation __Role Relation Shields
+    @result __Bundle $imm $def $relation
+    return $result
 end
 
-@shifts:shifts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@shifts:shifts graph doctrine burden
+    # Doctrine shifts burden of proof
+    @doc __Role Doctrine $doctrine
+    @bur __Role Burden $burden
+    @relation __Role Relation Shifts
+    @result __Bundle $doc $bur $relation
+    return $result
 end
 
 @shows:shows graph entity finding
@@ -1344,172 +1660,220 @@ end
     return $determination
 end
 
-@signs:signs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@signs:signs graph party document
+    # Party signs legal document
+    @par __Role Party $party
+    @doc __Role Document $document
+    @relation __Role Relation Signs
+    @result __Bundle $par $doc $relation
+    return $result
 end
 
-@sits:sits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@sits:sits graph judge bench
+    # Judge sits on judicial bench
+    @jud __Role Judge $judge
+    @ben __Role Bench $bench
+    @relation __Role Relation Sits
+    @result __Bundle $jud $ben $relation
+    return $result
 end
 
-@specifies:specifies graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@specifies:specifies graph statute requirement
+    # Statute specifies legal requirement
+    @sta __Role Statute $statute
+    @req __Role Requirement $requirement
+    @relation __Role Relation Specifies
+    @result __Bundle $sta $req $relation
+    return $result
 end
 
-@states:states graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@states:states graph statute provision
+    # Statute states legal provision
+    @sta __Role Statute $statute
+    @pro __Role Provision $provision
+    @relation __Role Relation States
+    @result __Bundle $sta $pro $relation
+    return $result
 end
 
-@stays:stays graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@stays:stays graph court proceeding
+    # Court stays legal proceeding
+    @cou __Role Court $court
+    @pro __Role Proceeding $proceeding
+    @relation __Role Relation Stays
+    @result __Bundle $cou $pro $relation
+    return $result
 end
 
-@strikes:strikes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@strikes:strikes graph court pleading
+    # Court strikes improper pleading
+    @cou __Role Court $court
+    @ple __Role Pleading $pleading
+    @relation __Role Relation Strikes
+    @result __Bundle $cou $ple $relation
+    return $result
 end
 
-@suffers:suffers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@suffers:suffers graph party harm
+    # Party suffers legal harm
+    @par __Role Party $party
+    @har __Role Harm $harm
+    @relation __Role Relation Suffers
+    @result __Bundle $par $har $relation
+    return $result
 end
 
-@support:support graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@support:support graph evidence claim
+    # Evidence supports party's claim
+    @evi __Role Evidence $evidence
+    @cla __Role Claim $claim
+    @relation __Role Relation Support
+    @result __Bundle $evi $cla $relation
+    return $result
 end
 
-@suspects:suspects graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@suspects:suspects graph investigator wrongdoing
+    # Investigator suspects criminal wrongdoing
+    @inv __Role Investigator $investigator
+    @wro __Role Wrongdoing $wrongdoing
+    @relation __Role Relation Suspects
+    @result __Bundle $inv $wro $relation
+    return $result
 end
 
-@takes:takes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@takes:takes graph party action
+    # Party takes legal action
+    @par __Role Party $party
+    @act __Role Action $action
+    @relation __Role Relation Takes
+    @result __Bundle $par $act $relation
+    return $result
 end
 
-@terminates:terminates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@terminates:terminates graph party contract
+    # Party terminates contract agreement
+    @par __Role Party $party
+    @con __Role Contract $contract
+    @relation __Role Relation Terminates
+    @result __Bundle $par $con $relation
+    return $result
 end
 
-@testified:testified graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@testified:testified graph witness court
+    # Witness testified before court
+    @wit __Role Witness $witness
+    @cou __Role Court $court
+    @relation __Role Relation Testified
+    @result __Bundle $wit $cou $relation
+    return $result
 end
 
-@tolerates:tolerates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@tolerates:tolerates graph statute variation
+    # Statute tolerates minor variation
+    @sta __Role Statute $statute
+    @var __Role Variation $variation
+    @relation __Role Relation Tolerates
+    @result __Bundle $sta $var $relation
+    return $result
 end
 
-@transfers:transfers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@transfers:transfers graph transferor transferee
+    # Transferor transfers property to transferee
+    @tra __Role Transferor $transferor
+    @tran __Role Transferee $transferee
+    @relation __Role Relation Transfers
+    @result __Bundle $tra $tran $relation
+    return $result
 end
 
-@transforms:transforms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@transforms:transforms graph statute relationship
+    # Statute transforms legal relationship
+    @sta __Role Statute $statute
+    @rel __Role Relationship $relationship
+    @relation __Role Relation Transforms
+    @result __Bundle $sta $rel $relation
+    return $result
 end
 
-@transmits:transmits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@transmits:transmits graph sender recipient
+    # Sender transmits legal document
+    @sen __Role Sender $sender
+    @rec __Role Recipient $recipient
+    @relation __Role Relation Transmits
+    @result __Bundle $sen $rec $relation
+    return $result
 end
 
-@tries:tries graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@tries:tries graph court case
+    # Court tries case to jury
+    @cou __Role Court $court
+    @cas __Role Case $case
+    @relation __Role Relation Tries
+    @result __Bundle $cou $cas $relation
+    return $result
 end
 
-@under:under graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@under:under graph party statute
+    # Party acts under statutory authority
+    @par __Role Party $party
+    @sta __Role Statute $statute
+    @relation __Role Relation Under
+    @result __Bundle $par $sta $relation
+    return $result
 end
 
-@validConsideration:validConsideration graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@validConsideration:validConsideration graph contract consideration
+    # Contract has valid consideration
+    @con __Role Contract $contract
+    @cons __Role Consideration $consideration
+    @relation __Role Relation Validconsideration
+    @result __Bundle $con $cons $relation
+    return $result
 end
 
-@validContract:validContract graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@validContract:validContract graph parties agreement
+    # Parties formed valid contract
+    @par __Role Parties $parties
+    @agr __Role Agreement $agreement
+    @relation __Role Relation Validcontract
+    @result __Bundle $par $agr $relation
+    return $result
 end
 
-@validOffer:validOffer graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@validOffer:validOffer graph offeror offeree
+    # Offeror made valid offer
+    @off __Role Offeror $offeror
+    @offe __Role Offeree $offeree
+    @relation __Role Relation Validoffer
+    @result __Bundle $off $offe $relation
+    return $result
 end
 
-@verifiable:verifiable graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@verifiable:verifiable graph fact evidence
+    # Fact is verifiable by evidence
+    @fac __Role Fact $fact
+    @evi __Role Evidence $evidence
+    @relation __Role Relation Verifiable
+    @result __Bundle $fac $evi $relation
+    return $result
 end
 
-@verifies:verifies graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@verifies:verifies graph party fact
+    # Party verifies factual assertion
+    @par __Role Party $party
+    @fac __Role Fact $fact
+    @relation __Role Relation Verifies
+    @result __Bundle $par $fac $relation
+    return $result
 end
 
-@views:views graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@views:views graph court matter
+    # Court views matter in context
+    @cou __Role Court $court
+    @mat __Role Matter $matter
+    @relation __Role Relation Views
+    @result __Bundle $cou $mat $relation
+    return $result
 end
 
 @violates:violates graph action law
@@ -1519,53 +1883,67 @@ end
     return $violation
 end
 
-@vote:vote graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@vote:vote graph legislator measure
+    # Legislator votes on legislative measure
+    @leg __Role Legislator $legislator
+    @mea __Role Measure $measure
+    @relation __Role Relation Vote
+    @result __Bundle $leg $mea $relation
+    return $result
 end
 
-@warrants:warrants graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@warrants:warrants graph evidence inference
+    # Evidence warrants factual inference
+    @evi __Role Evidence $evidence
+    @inf __Role Inference $inference
+    @relation __Role Relation Warrants
+    @result __Bundle $evi $inf $relation
+    return $result
 end
 
-@was:was graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@was:was graph entity status
+    # Entity was in legal status
+    @ent __Role Entity $entity
+    @sta __Role Status $status
+    @relation __Role Relation Was
+    @result __Bundle $ent $sta $relation
+    return $result
 end
 
-@weighs:weighs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@weighs:weighs graph court factors
+    # Court weighs competing factors
+    @cou __Role Court $court
+    @fac __Role Factors $factors
+    @relation __Role Relation Weighs
+    @result __Bundle $cou $fac $relation
+    return $result
 end
 
-@were:were graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@were:were graph entities status
+    # Entities were in legal status
+    @ent __Role Entities $entities
+    @sta __Role Status $status
+    @relation __Role Relation Were
+    @result __Bundle $ent $sta $relation
+    return $result
 end
 
-@with:with graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@with:with graph party interest
+    # Party acts with legal interest
+    @par __Role Party $party
+    @int __Role Interest $interest
+    @relation __Role Relation With
+    @result __Bundle $par $int $relation
+    return $result
 end
 
-@would:would graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@would:would graph action result
+    # Action would produce legal result
+    @act __Role Action $action
+    @res __Role Result $result
+    @relation __Role Relation Would
+    @result __Bundle $act $res $relation
+    return $result
 end
 
 // Legal Systems and Structures

@@ -4,151 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="new approach for val suite, wip">
-      <change afterPath="$PROJECT_DIR$/config/Anthropology/00-types.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Biology/00-types.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Constraints/01-relations.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Core/04a-numeric.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Geography/00-types.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/History/00-types.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Law/00-types.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Literature/00-types.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Math/00-types.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Medicine/00-types.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Philosophy/00-types.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Physics/00-types.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Psychology/00-types.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/Sociology/00-types.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/stress/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plan_improve_reasoning.md" afterDir="false" />
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="new approach for val suite, trying to improve teh deft theories, doing various experiemnts to improve and generalise the reasoning engines">
+      <change afterPath="$PROJECT_DIR$/evals/stress/geography.sys2.backup" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/scripts/improveStressTests.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/operator-catalog.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/operator-declarations.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/session-check-dsl.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/reasoning/planning/solver.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/planning/solve-planning.test.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Anthropology/00-concepts.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Anthropology/00-concepts.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Anthropology/00-concepts.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Anthropology/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Anthropology/01-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Anthropology/01-relations.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Biology/00-concepts.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Biology/00-concepts.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Biology/00-concepts.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Biology/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Biology/01-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Biology/01-relations.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/00-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/00-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/03-structural.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/04-semantic-primitives.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/05-logic.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/05-logic.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/05-logic.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/06-temporal.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/06-temporal.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/06-temporal.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/07-modal.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/08-defaults.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/10-properties.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/10-properties.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/10-properties.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/11-bootstrap-verbs.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/11-bootstrap-verbs.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/11-bootstrap-verbs.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/12-reasoning.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/12-reasoning.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/12-reasoning.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/13-canonicalization.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/index.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/index.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Geography/00-concepts.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Geography/00-concepts.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Geography/00-concepts.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Geography/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Geography/01-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Geography/01-relations.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/History/00-concepts.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/History/00-concepts.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/History/00-concepts.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/History/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/History/01-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/History/01-relations.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Law/00-concepts.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Law/00-concepts.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Law/00-concepts.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Law/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Law/01-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Law/01-relations.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Literature/00-concepts.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Literature/00-concepts.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Literature/00-concepts.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Literature/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Literature/01-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Literature/01-relations.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Math/00-concepts.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Math/00-concepts.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Math/00-concepts.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Math/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Math/01-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Math/01-relations.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Medicine/00-concepts.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Medicine/00-concepts.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Medicine/00-concepts.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Medicine/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Medicine/01-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Medicine/01-relations.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Philosophy/00-concepts.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Philosophy/00-concepts.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Philosophy/00-concepts.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Philosophy/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Philosophy/01-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Philosophy/01-relations.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Physics/00-concepts.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Physics/00-concepts.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Physics/00-concepts.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Physics/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Physics/01-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Physics/01-relations.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Psychology/00-concepts.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Psychology/00-concepts.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Psychology/00-concepts.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Psychology/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Psychology/01-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Psychology/01-relations.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Sociology/00-concepts.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Sociology/00-concepts.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Sociology/00-concepts.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Sociology/01-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Sociology/01-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Sociology/01-relations.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS03-Architecture.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS03-Architecture.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS14-EvalSuite.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS14-EvalSuite.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/src/decoding/text-generator.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/decoding/text-generator.mjs.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/src/runtime/session.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/runtime/session.mjs.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/lib/runner.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite03_rules/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite03_rules/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite05_negation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite05_negation/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite06_compound_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite06_compound_logic/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite14_meta_queries/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite14_meta_queries/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite15_reasoning_macros/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite15_reasoning_macros/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite16_macro_aggregation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite16_macro_aggregation/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite18_set_theory/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite18_set_theory/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite20_predicate_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite20_predicate_logic/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Anthropology/00-types.sys2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Biology/00-types.sys2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Geography/00-types.sys2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/History/00-types.sys2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Law/00-types.sys2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Literature/00-types.sys2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Math/00-types.sys2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Medicine/00-types.sys2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Philosophy/00-types.sys2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Physics/00-types.sys2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Psychology/00-types.sys2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Sociology/00-types.sys2" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/evalSuite/suite21_goat_cabbage_plus/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite21_goat_cabbage_plus/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evalSuite/suite22_deduction/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evalSuite/suite22_deduction/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runStressCheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runStressCheck.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evals/stress/anthropology.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/stress/anthropology.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/anthropology.sys2.errors" beforeDir="false" afterPath="$PROJECT_DIR$/evals/stress/anthropology.sys2.errors" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/stress/anthropology.sys2.errors" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/evals/stress/biology.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/stress/biology.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/biology.sys2.errors" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/evals/stress/geography.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/stress/geography.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/geography.sys2.errors" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/evals/stress/history.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/stress/history.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/history.sys2.errors" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/evals/stress/law.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/stress/law.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/law.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/literature.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/stress/literature.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/literature.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/logic.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/stress/logic.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/logic.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/math.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/stress/math.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/math.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/medicine.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/stress/medicine.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/medicine.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/psychics.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/stress/psychics.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/psychics.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/psychology.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/stress/psychology.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/psychology.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/sociology.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/stress/sociology.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress/sociology.sys2.errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/executor-io.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-io.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/executor.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/reasoning-profile.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/reasoning-profile.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plan_improve_reasoning.md" beforeDir="false" afterPath="$PROJECT_DIR$/plan_improve_reasoning.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/text-generator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/text-generator.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/parser.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/parser.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/session-check-dsl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-check-dsl.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session-contradictions.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-contradictions.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/integration/deep-reasoning.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/integration/deep-reasoning.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/integration/e2e-pipeline.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/integration/e2e-pipeline.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/regression/hdc-strategies-smoke.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/regression/hdc-strategies-smoke.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/regression/reasoning-matrix.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/regression/reasoning-matrix.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/decoding/structural-decoder.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/decoding/structural-decoder.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/decoding/text-generator.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/decoding/text-generator.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/negation-exceptions.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/negation-exceptions.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/prover.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/prover.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/query.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/query.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/contradictions-from-theory.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/contradictions-from-theory.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/session-features.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/session-features.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/runtime/session.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/runtime/session.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -257,14 +143,6 @@
       <workItem from="1766043755552" duration="9387000" />
       <workItem from="1766130107490" duration="10280000" />
       <workItem from="1766389595090" duration="9185000" />
-    </task>
-    <task id="LOCAL-00003" summary="Better Documentation and WIP for code">
-      <option name="closed" value="true" />
-      <created>1763992562720</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1763992562721</updated>
     </task>
     <task id="LOCAL-00004" summary="Better Documentation and WIP for code">
       <option name="closed" value="true" />
@@ -650,7 +528,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766397524341</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="new approach for val suite, trying to improve teh deft theories, doing various experiemnts to improve and generalise the reasoning engines">
+      <option name="closed" value="true" />
+      <created>1766407883874</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1766407883874</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -684,6 +570,7 @@
     <MESSAGE value="working to refactor the reasoning engine for deeper semantic unification to make use of HDC properties better. wip" />
     <MESSAGE value="added git ignore" />
     <MESSAGE value="new approach for val suite, wip" />
-    <option name="LAST_COMMIT_MESSAGE" value="new approach for val suite, wip" />
+    <MESSAGE value="new approach for val suite, trying to improve teh deft theories, doing various experiemnts to improve and generalise the reasoning engines" />
+    <option name="LAST_COMMIT_MESSAGE" value="new approach for val suite, trying to improve teh deft theories, doing various experiemnts to improve and generalise the reasoning engines" />
   </component>
 </project>

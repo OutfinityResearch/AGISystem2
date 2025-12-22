@@ -78,115 +78,131 @@ end
 
 @Th2Role:Th2Role graph cell role
 
-@aMPARInsertion:aMPARInsertion graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@aMPARInsertion:aMPARInsertion graph synapse receptors
+    # AMPAR insertion at synapse
+    @ent1 __Role Synapse $synapse
+    @ent2 __Role AMPARReceptors $receptors
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@cD4Recognition:cD4Recognition graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@cD4Recognition:cD4Recognition graph tcell antigen
+    # CD4 T cell recognition
+    @ent1 __Role CD4_TCell $tcell
+    @ent2 __Role Antigen $antigen
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@cD8Recognition:cD8Recognition graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@cD8Recognition:cD8Recognition graph tcell antigen
+    # CD8 T cell recognition
+    @ent1 __Role CD8_TCell $tcell
+    @ent2 __Role Antigen $antigen
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@mHCClassI:mHCClassI graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@mHCClassI:mHCClassI graph cell peptide
+    # MHC Class I presentation
+    @ent1 __Role Cell $cell
+    @ent2 __Role Peptide $peptide
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@mHCClassII:mHCClassII graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@mHCClassII:mHCClassII graph apc peptide
+    # MHC Class II presentation
+    @ent1 __Role APC $apc
+    @ent2 __Role Peptide $peptide
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@naKATPase:naKATPase graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@naKATPase:naKATPase graph pump ions
+    # Na+/K+ ATPase pump
+    @ent1 __Role Pump $pump
+    @ent2 __Role Ions $ions
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@th1Cytokines:th1Cytokines graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@th1Cytokines:th1Cytokines graph cell cytokines
+    # Th1 cytokine production
+    @ent1 __Role Th1Cell $cell
+    @ent2 __Role Cytokines $cytokines
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@th1Role:th1Role graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@th1Role:th1Role graph cell function
+    # Th1 functional role
+    @ent1 __Role Th1Cell $cell
+    @ent2 __Role ImmuneFunction $function
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@th2Cytokines:th2Cytokines graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@th2Cytokines:th2Cytokines graph cell cytokines
+    # Th2 cytokine production
+    @ent1 __Role Th2Cell $cell
+    @ent2 __Role Cytokines $cytokines
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@th2Role:th2Role graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@th2Role:th2Role graph cell function
+    # Th2 functional role
+    @ent1 __Role Th2Cell $cell
+    @ent2 __Role ImmuneFunction $function
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@acceptsElectrons:acceptsElectrons graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@acceptsElectrons:acceptsElectrons graph acceptor donor
+    # Electron transfer in cellular respiration
+    @ent1 __Role ElectronAcceptor $acceptor
+    @ent2 __Role ElectronDonor $donor
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@accessoryOrgans:accessoryOrgans graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@accessoryOrgans:accessoryOrgans graph system organs
+    # Accessory organs of system
+    @ent1 __Role System $system
+    @ent2 __Role AccessoryOrgans $organs
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@accumulates:accumulates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@accumulates:accumulates graph compartment substance
+    # Substance accumulation
+    @ent1 __Role Compartment $compartment
+    @ent2 __Role Substance $substance
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@acrossGradient:acrossGradient graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@acrossGradient:acrossGradient graph molecule gradient
+    # Transport across gradient
+    @ent1 __Role Molecule $molecule
+    @ent2 __Role Gradient $gradient
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@acrossMembrane:acrossMembrane graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@acrossMembrane:acrossMembrane graph molecule membrane
+    # Transmembrane transport
+    @ent1 __Role Molecule $molecule
+    @ent2 __Role Membrane $membrane
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@activatedBy:activatedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@activatedBy:activatedBy graph target activator
+    # Activation relationship
+    @ent1 __Role Target $target
+    @ent2 __Role Activator $activator
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -218,31 +234,35 @@ end
     return $process
 end
 
-@activationMechanisms:activationMechanisms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@activationMechanisms:activationMechanisms graph process mechanisms
+    # Activation mechanisms
+    @ent1 __Role Process $process
+    @ent2 __Role Mechanisms $mechanisms
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@activationPathways:activationPathways graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@activationPathways:activationPathways graph signal pathways
+    # Signaling pathways
+    @ent1 __Role Signal $signal
+    @ent2 __Role Pathways $pathways
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@actsOn:actsOn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@actsOn:actsOn graph enzyme substrate
+    # Enzymatic action on substrate
+    @ent1 __Role Enzyme $enzyme
+    @ent2 __Role Substrate $substrate
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@adds:adds graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@adds:adds graph enzyme chemical_group
+    # Enzyme adds chemical group
+    @ent1 __Role Enzyme $enzyme
+    @ent2 __Role ChemicalGroup $chemical_group
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -267,24 +287,27 @@ end
     return $regulation
 end
 
-@allAre:allAre graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@allAre:allAre graph group type
+    # All members are type
+    @ent1 __Role Group $group
+    @ent2 __Role Type $type
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@allKinetochores:allKinetochores graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@allKinetochores:allKinetochores graph chromosome kinetochores
+    # Kinetochore attachments
+    @ent1 __Role Chromosome $chromosome
+    @ent2 __Role Kinetochores $kinetochores
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@allowsCrossover:allowsCrossover graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@allowsCrossover:allowsCrossover graph structure site
+    # Crossover permissive site
+    @ent1 __Role Chromosome $structure
+    @ent2 __Role CrossoverSite $site
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -302,255 +325,291 @@ end
     return $naming
 end
 
-@amplifies:amplifies graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@amplifies:amplifies graph signal response
+    # Signal amplification
+    @ent1 __Role Signal $signal
+    @ent2 __Role AmplifiedResponse $response
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@analogousStructures:analogousStructures graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@analogousStructures:analogousStructures graph structure1 structure2
+    # Analogous structures
+    @ent1 __Role Structure $structure1
+    @ent2 __Role AnalogousStructure $structure2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@animalExamples:animalExamples graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@animalExamples:animalExamples graph group examples
+    # Animal examples
+    @ent1 __Role TaxonomicGroup $group
+    @ent2 __Role Examples $examples
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@antibodyClasses:antibodyClasses graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@antibodyClasses:antibodyClasses graph immune_system classes
+    # Antibody isotypes
+    @ent1 __Role ImmuneSystem $immune_system
+    @ent2 __Role AntibodyClasses $classes
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@antigenActivates:antigenActivates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@antigenActivates:antigenActivates graph antigen cell
+    # Antigen activates cell
+    @ent1 __Role Antigen $antigen
+    @ent2 __Role Cell $cell
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@antigenBindingSite:antigenBindingSite graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@antigenBindingSite:antigenBindingSite graph antibody epitope
+    # Antibody binding site
+    @ent1 __Role Antibody $antibody
+    @ent2 __Role Epitope $epitope
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@applications:applications graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@applications:applications graph technology applications
+    # Biotechnology applications
+    @ent1 __Role Technology $technology
+    @ent2 __Role Applications $applications
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@areConnected:areConnected graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@areConnected:areConnected graph structure1 structure2
+    # Anatomical connection
+    @ent1 __Role Structure $structure1
+    @ent2 __Role ConnectedStructure $structure2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@areHomologous:areHomologous graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@areHomologous:areHomologous graph structure1 structure2
+    # Homologous structures
+    @ent1 __Role Structure $structure1
+    @ent2 __Role HomologousStructure $structure2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@assembles:assembles graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@assembles:assembles graph components complex
+    # Molecular assembly
+    @ent1 __Role Components $components
+    @ent2 __Role Complex $complex
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@assimilation:assimilation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@assimilation:assimilation graph organism nutrient
+    # Nutrient assimilation
+    @ent1 __Role Organism $organism
+    @ent2 __Role Nutrient $nutrient
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@associatedKinase:associatedKinase graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@associatedKinase:associatedKinase graph receptor kinase
+    # Receptor-associated kinase
+    @ent1 __Role Receptor $receptor
+    @ent2 __Role Kinase $kinase
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@associates:associates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@associates:associates graph molecule1 molecule2
+    # Molecular association
+    @ent1 __Role Molecule $molecule1
+    @ent2 __Role AssociatedMolecule $molecule2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@autophosphorylation:autophosphorylation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@autophosphorylation:autophosphorylation graph kinase site
+    # Kinase autophosphorylation
+    @ent1 __Role Kinase $kinase
+    @ent2 __Role PhosphorylationSite $site
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@bacterialAdhesion:bacterialAdhesion graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@bacterialAdhesion:bacterialAdhesion graph bacterium surface
+    # Bacterial adhesion
+    @ent1 __Role Bacterium $bacterium
+    @ent2 __Role HostSurface $surface
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@bacterialSymbiont:bacterialSymbiont graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@bacterialSymbiont:bacterialSymbiont graph host symbiont
+    # Bacterial symbiosis
+    @ent1 __Role Host $host
+    @ent2 __Role Symbiont $symbiont
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@basePairingRule:basePairingRule graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@basePairingRule:basePairingRule graph base1 base2
+    # DNA base pairing
+    @ent1 __Role Base $base1
+    @ent2 __Role ComplementaryBase $base2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@becomes:becomes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@becomes:becomes graph precursor product
+    # Transformation
+    @ent1 __Role Precursor $precursor
+    @ent2 __Role Product $product
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@binds:binds graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@binds:binds graph binder bindee
+    # Molecular binding interaction
+    @ent1 __Role Binder $binder
+    @ent2 __Role Bindee $bindee
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@bloodVesselTypes:bloodVesselTypes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@bloodVesselTypes:bloodVesselTypes graph system types
+    # Blood vessel types
+    @ent1 __Role CirculatorySystem $system
+    @ent2 __Role VesselTypes $types
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@branchRepresents:branchRepresents graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@branchRepresents:branchRepresents graph tree lineage
+    # Branch represents lineage
+    @ent1 __Role PhylogeneticTree $tree
+    @ent2 __Role Lineage $lineage
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@breakDownsOrganicMatter:breakDownsOrganicMatter graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@breakDownsOrganicMatter:breakDownsOrganicMatter graph decomposer matter
+    # Decomposition
+    @ent1 __Role Decomposer $decomposer
+    @ent2 __Role OrganicMatter $matter
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@bypassesIrreversible:bypassesIrreversible graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@bypassesIrreversible:bypassesIrreversible graph pathway step
+    # Gluconeogenic bypass
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role IrreversibleStep $step
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@calciumChannels:calciumChannels graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@calciumChannels:calciumChannels graph membrane channels
+    # Calcium channels
+    @ent1 __Role Membrane $membrane
+    @ent2 __Role CalciumChannels $channels
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@calciumEffectors:calciumEffectors graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@calciumEffectors:calciumEffectors graph calcium effectors
+    # Calcium-activated effectors
+    @ent1 __Role Calcium $calcium
+    @ent2 __Role Effectors $effectors
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@calciumInflux:calciumInflux graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@calciumInflux:calciumInflux graph source compartment
+    # Calcium influx
+    @ent1 __Role Source $source
+    @ent2 __Role Compartment $compartment
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@calciumRemoval:calciumRemoval graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@calciumRemoval:calciumRemoval graph compartment mechanism
+    # Calcium removal
+    @ent1 __Role Compartment $compartment
+    @ent2 __Role RemovalMechanism $mechanism
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@calciumSources:calciumSources graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@calciumSources:calciumSources graph cell sources
+    # Cellular calcium sources
+    @ent1 __Role Cell $cell
+    @ent2 __Role CalciumSources $sources
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@canBeOvercome:canBeOvercome graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@canBeOvercome:canBeOvercome graph limitation mechanism
+    # Can be overcome
+    @ent1 __Role Limitation $limitation
+    @ent2 __Role Mechanism $mechanism
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@cannotBeOvercome:cannotBeOvercome graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@cannotBeOvercome:cannotBeOvercome graph limitation constraint
+    # Cannot be overcome
+    @ent1 __Role Limitation $limitation
+    @ent2 __Role Constraint $constraint
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@carbonFixation:carbonFixation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@carbonFixation:carbonFixation graph enzyme co2
+    # Carbon fixation reaction
+    @ent1 __Role Enzyme $enzyme
+    @ent2 __Role CO2 $co2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@cardinalSigns:cardinalSigns graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@cardinalSigns:cardinalSigns graph inflammation signs
+    # Cardinal signs of inflammation
+    @ent1 __Role Inflammation $inflammation
+    @ent2 __Role Signs $signs
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@carriesAllele:carriesAllele graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@carriesAllele:carriesAllele graph individual allele
+    # Allele carried by individual
+    @ent1 __Role Individual $individual
+    @ent2 __Role Allele $allele
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@carryingCapacity:carryingCapacity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@carryingCapacity:carryingCapacity graph environment capacity
+    # Environmental carrying capacity
+    @ent1 __Role Environment $environment
+    @ent2 __Role Capacity $capacity
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@cascadeProteins:cascadeProteins graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@cascadeProteins:cascadeProteins graph pathway proteins
+    # Cascade proteins
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role Proteins $proteins
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@causativeAgent:causativeAgent graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@causativeAgent:causativeAgent graph disease pathogen
+    # Causative agent
+    @ent1 __Role Disease $disease
+    @ent2 __Role Pathogen $pathogen
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -582,101 +641,115 @@ end
     return $process
 end
 
-@cellMovements:cellMovements graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@cellMovements:cellMovements graph process movements
+    # Cell movement types
+    @ent1 __Role Process $process
+    @ent2 __Role CellMovements $movements
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@cellStatus:cellStatus graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@cellStatus:cellStatus graph cell status
+    # Cell cycle or activation status
+    @ent1 __Role Cell $cell
+    @ent2 __Role Status $status
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@cellTypes:cellTypes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@cellTypes:cellTypes graph system types
+    # Cell types in system
+    @ent1 __Role System $system
+    @ent2 __Role CellTypes $types
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@cells:cells graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@cells:cells graph tissue cell_types
+    # Cells comprising tissue
+    @ent1 __Role Tissue $tissue
+    @ent2 __Role CellTypes $cell_types
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@cellularEffect:cellularEffect graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@cellularEffect:cellularEffect graph mutation effect
+    # Cellular effect of mutation
+    @ent1 __Role Mutation $mutation
+    @ent2 __Role CellularEffect $effect
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@cellularImmunity:cellularImmunity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@cellularImmunity:cellularImmunity graph response cells
+    # Cellular immunity
+    @ent1 __Role ImmuneResponse $response
+    @ent2 __Role Cells $cells
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@centralDogma:centralDogma graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@centralDogma:centralDogma graph concept flow
+    # Central dogma of molecular biology
+    @ent1 __Role Concept $concept
+    @ent2 __Role InformationFlow $flow
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@chromosomeNumber:chromosomeNumber graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@chromosomeNumber:chromosomeNumber graph species number
+    # Chromosome count
+    @ent1 __Role Species $species
+    @ent2 __Role ChromosomeNumber $number
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@claims:claims graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@claims:claims graph theorymodel claim
+    # Theoretical claim
+    @ent1 __Role Theory $theorymodel
+    @ent2 __Role Claim $claim
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@cleaves:cleaves graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@cleaves:cleaves graph enzyme substrate
+    # Enzymatic cleavage
+    @ent1 __Role Enzyme $enzyme
+    @ent2 __Role Substrate $substrate
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@clonalExpansion:clonalExpansion graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@clonalExpansion:clonalExpansion graph cell clones
+    # Clonal expansion
+    @ent1 __Role Cell $cell
+    @ent2 __Role Clones $clones
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@coevolve:coevolve graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@coevolve:coevolve graph species1 species2
+    # Coevolutionary relationship
+    @ent1 __Role Species $species1
+    @ent2 __Role CoevolvingSpecies $species2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@coexist:coexist graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@coexist:coexist graph species1 species2
+    # Coexistence
+    @ent1 __Role Species $species1
+    @ent2 __Role CoexistingSpecies $species2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@commonAncestry:commonAncestry graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@commonAncestry:commonAncestry graph species1 species2
+    # Common ancestor relationship
+    @ent1 __Role Species $species1
+    @ent2 __Role RelatedSpecies $species2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -687,59 +760,67 @@ end
     return $naming
 end
 
-@competesWith:competesWith graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@competesWith:competesWith graph species1 species2
+    # Interspecific competition
+    @ent1 __Role Competitor $species1
+    @ent2 __Role Competitor $species2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@competitiveExclusion:competitiveExclusion graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@competitiveExclusion:competitiveExclusion graph dominant excluded
+    # Competitive exclusion
+    @ent1 __Role DominantSpecies $dominant
+    @ent2 __Role ExcludedSpecies $excluded
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@completesNutrientCycle:completesNutrientCycle graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@completesNutrientCycle:completesNutrientCycle graph organism cycle
+    # Role in nutrient cycling
+    @ent1 __Role Organism $organism
+    @ent2 __Role Cycle $cycle
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@concerns:concerns graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@concerns:concerns graph theorymodel topic
+    # Theory concerns topic
+    @ent1 __Role Theory $theorymodel
+    @ent2 __Role Topic $topic
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@condensation:condensation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@condensation:condensation graph chromatin chromosome
+    # Chromatin condensation
+    @ent1 __Role Chromatin $chromatin
+    @ent2 __Role Chromosome $chromosome
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@condition:condition graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@condition:condition graph disease condition
+    # Disease condition
+    @ent1 __Role Disease $disease
+    @ent2 __Role Condition $condition
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@confers:confers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@confers:confers graph mutation property
+    # Confers property
+    @ent1 __Role Mutation $mutation
+    @ent2 __Role Property $property
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@constructionMethods:constructionMethods graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@constructionMethods:constructionMethods graph product methods
+    # Construction methods
+    @ent1 __Role Product $product
+    @ent2 __Role Methods $methods
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -785,17 +866,19 @@ end
     return $property
 end
 
-@controlCenter:controlCenter graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@controlCenter:controlCenter graph system center
+    # Homeostatic control center
+    @ent1 __Role System $system
+    @ent2 __Role ControlCenter $center
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@controlOrgan:controlOrgan graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@controlOrgan:controlOrgan graph system organ
+    # Control organ for system
+    @ent1 __Role System $system
+    @ent2 __Role ControlOrgan $organ
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -813,24 +896,27 @@ end
     return $regulation
 end
 
-@converts:converts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@converts:converts graph enzyme product
+    # Enzymatic conversion
+    @ent1 __Role Enzyme $enzyme
+    @ent2 __Role Product $product
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@coolingMechanisms:coolingMechanisms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@coolingMechanisms:coolingMechanisms graph organism mechanisms
+    # Thermoregulatory cooling
+    @ent1 __Role Organism $organism
+    @ent2 __Role CoolingMechanisms $mechanisms
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@coreceptor:coreceptor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@coreceptor:coreceptor graph primary_receptor coreceptor_mol
+    # Receptor coreceptor complex
+    @ent1 __Role PrimaryReceptor $primary_receptor
+    @ent2 __Role Coreceptor $coreceptor_mol
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -855,52 +941,59 @@ end
     return $process
 end
 
-@crossesAt:crossesAt graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@crossesAt:crossesAt graph chromatid locus
+    # Crossing over location
+    @ent1 __Role Chromatid $chromatid
+    @ent2 __Role Locus $locus
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@datingMethods:datingMethods graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@datingMethods:datingMethods graph fossil methods
+    # Fossil dating methods
+    @ent1 __Role Fossil $fossil
+    @ent2 __Role DatingMethods $methods
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@declines:declines graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@declines:declines graph population factor
+    # Population decline factor
+    @ent1 __Role Population $population
+    @ent2 __Role Factor $factor
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@decomposition:decomposition graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@decomposition:decomposition graph organism matter
+    # Decomposition process
+    @ent1 __Role Decomposer $organism
+    @ent2 __Role OrganicMatter $matter
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@decreases:decreases graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@decreases:decreases graph factor parameter
+    # Decreases parameter
+    @ent1 __Role Factor $factor
+    @ent2 __Role Parameter $parameter
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@definedBy:definedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@definedBy:definedBy graph taxon criteria
+    # Taxonomic definition
+    @ent1 __Role Taxon $taxon
+    @ent2 __Role Criteria $criteria
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@definesClades:definesClades graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@definesClades:definesClades graph system clades
+    # Cladistic definition
+    @ent1 __Role System $system
+    @ent2 __Role Clades $clades
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -911,654 +1004,747 @@ end
     return $naming
 end
 
-@degrades:degrades graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@degrades:degrades graph enzyme substrate
+    # Enzymatic degradation
+    @ent1 __Role Enzyme $enzyme
+    @ent2 __Role Substrate $substrate
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@degradesTo:degradesTo graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@degradesTo:degradesTo graph substrate products
+    # Degradation products
+    @ent1 __Role Substrate $substrate
+    @ent2 __Role Products $products
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@deletes:deletes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@deletes:deletes graph mutation sequence
+    # Deletion mutation
+    @ent1 __Role Mutation $mutation
+    @ent2 __Role Sequence $sequence
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@delivers:delivers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@delivers:delivers graph carrier cargo
+    # Delivery relationship
+    @ent1 __Role Carrier $carrier
+    @ent2 __Role Cargo $cargo
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@denitrification:denitrification graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@denitrification:denitrification graph bacteria nitrogen
+    # Denitrification process
+    @ent1 __Role Bacteria $bacteria
+    @ent2 __Role Nitrogen $nitrogen
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@dephosphorylates:dephosphorylates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@dephosphorylates:dephosphorylates graph phosphatase target
+    # Dephosphorylation
+    @ent1 __Role Phosphatase $phosphatase
+    @ent2 __Role Target $target
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@depolarizationPhase:depolarizationPhase graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@depolarizationPhase:depolarizationPhase graph neuron phase
+    # Depolarization phase
+    @ent1 __Role Neuron $neuron
+    @ent2 __Role Phase $phase
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@depolarizes:depolarizes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@depolarizes:depolarizes graph ion membrane
+    # Membrane depolarization
+    @ent1 __Role Ion $ion
+    @ent2 __Role Membrane $membrane
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesBloodVessels:derivesBloodVessels graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesBloodVessels:derivesBloodVessels graph layer vessels
+    # Germ layer derives vessels
+    @ent1 __Role GermLayer $layer
+    @ent2 __Role BloodVessels $vessels
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesBoneCartilage:derivesBoneCartilage graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesBoneCartilage:derivesBoneCartilage graph mesoderm skeleton
+    # Skeletal development
+    @ent1 __Role Mesoderm $mesoderm
+    @ent2 __Role Skeleton $skeleton
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesEpidermis:derivesEpidermis graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesEpidermis:derivesEpidermis graph ectoderm epidermis
+    # Ectodermal derivation
+    @ent1 __Role Ectoderm $ectoderm
+    @ent2 __Role Epidermis $epidermis
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesGILining:derivesGILining graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesGILining:derivesGILining graph endoderm lining
+    # GI tract development
+    @ent1 __Role Endoderm $endoderm
+    @ent2 __Role GILining $lining
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesHairNails:derivesHairNails graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesHairNails:derivesHairNails graph ectoderm structures
+    # Epidermal appendages
+    @ent1 __Role Ectoderm $ectoderm
+    @ent2 __Role Structures $structures
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesHeart:derivesHeart graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesHeart:derivesHeart graph mesoderm heart
+    # Cardiac development
+    @ent1 __Role Mesoderm $mesoderm
+    @ent2 __Role Heart $heart
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesKidney:derivesKidney graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesKidney:derivesKidney graph mesoderm kidney
+    # Renal development
+    @ent1 __Role Mesoderm $mesoderm
+    @ent2 __Role Kidney $kidney
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesLiver:derivesLiver graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesLiver:derivesLiver graph endoderm liver
+    # Hepatic development
+    @ent1 __Role Endoderm $endoderm
+    @ent2 __Role Liver $liver
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesLungLining:derivesLungLining graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesLungLining:derivesLungLining graph endoderm lining
+    # Respiratory development
+    @ent1 __Role Endoderm $endoderm
+    @ent2 __Role LungLining $lining
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesMuscle:derivesMuscle graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesMuscle:derivesMuscle graph mesoderm muscle
+    # Muscle development
+    @ent1 __Role Mesoderm $mesoderm
+    @ent2 __Role Muscle $muscle
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesNervousSystem:derivesNervousSystem graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesNervousSystem:derivesNervousSystem graph ectoderm nervous
+    # Neural development
+    @ent1 __Role Ectoderm $ectoderm
+    @ent2 __Role NervousSystem $nervous
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesNeuralCrest:derivesNeuralCrest graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesNeuralCrest:derivesNeuralCrest graph ectoderm neural_crest
+    # Neural crest development
+    @ent1 __Role Ectoderm $ectoderm
+    @ent2 __Role NeuralCrest $neural_crest
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesPancreas:derivesPancreas graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesPancreas:derivesPancreas graph endoderm pancreas
+    # Pancreatic development
+    @ent1 __Role Endoderm $endoderm
+    @ent2 __Role Pancreas $pancreas
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesSensoryOrgans:derivesSensoryOrgans graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesSensoryOrgans:derivesSensoryOrgans graph ectoderm organs
+    # Sensory organ development
+    @ent1 __Role Ectoderm $ectoderm
+    @ent2 __Role SensoryOrgans $organs
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@derivesThyroid:derivesThyroid graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@derivesThyroid:derivesThyroid graph endoderm thyroid
+    # Thyroid development
+    @ent1 __Role Endoderm $endoderm
+    @ent2 __Role Thyroid $thyroid
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@dermalTissue:dermalTissue graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@dermalTissue:dermalTissue graph organ tissue
+    # Plant dermal tissue
+    @ent1 __Role Organ $organ
+    @ent2 __Role DermalTissue $tissue
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@descentWithModification:descentWithModification graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@descentWithModification:descentWithModification graph ancestor descendant
+    # Evolutionary descent
+    @ent1 __Role Ancestor $ancestor
+    @ent2 __Role Descendant $descendant
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@describesBy:describesBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@describesBy:describesBy graph phenomenon theorymodel
+    # Theoretical description
+    @ent1 __Role Phenomenon $phenomenon
+    @ent2 __Role Theory $theorymodel
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@detects:detects graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@detects:detects graph sensor stimulus
+    # Stimulus detection
+    @ent1 __Role Sensor $sensor
+    @ent2 __Role Stimulus $stimulus
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@determines:determines graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@determines:determines graph factor outcome
+    # Determines outcome
+    @ent1 __Role Factor $factor
+    @ent2 __Role Outcome $outcome
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@determinesFunction:determinesFunction graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@determinesFunction:determinesFunction graph structure function
+    # Structure determines function
+    @ent1 __Role Structure $structure
+    @ent2 __Role Function $function
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@developmentalRole:developmentalRole graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@developmentalRole:developmentalRole graph gene role
+    # Role in development
+    @ent1 __Role Gene $gene
+    @ent2 __Role DevelopmentalRole $role
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@deviatesFrom:deviatesFrom graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@deviatesFrom:deviatesFrom graph variant standard
+    # Deviation from standard
+    @ent1 __Role Variant $variant
+    @ent2 __Role Standard $standard
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@differentFrom:differentFrom graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@differentFrom:differentFrom graph entity1 entity2
+    # Differs from
+    @ent1 __Role Entity $entity1
+    @ent2 __Role DifferentEntity $entity2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@differentiateTo:differentiateTo graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@differentiateTo:differentiateTo graph precursor mature
+    # Differentiation pathway
+    @ent1 __Role Precursor $precursor
+    @ent2 __Role MatureCell $mature
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@differentiates:differentiates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@differentiates:differentiates graph cell type
+    # Cell differentiation
+    @ent1 __Role StemCell $cell
+    @ent2 __Role DifferentiatedType $type
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@differs:differs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@differs:differs graph entity1 entity2
+    # Difference relationship
+    @ent1 __Role Entity $entity1
+    @ent2 __Role DifferentEntity $entity2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@digitSeparation:digitSeparation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@digitSeparation:digitSeparation graph process digits
+    # Digit separation
+    @ent1 __Role Process $process
+    @ent2 __Role Digits $digits
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@direction:direction graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@direction:direction graph process direction
+    # Directional flow
+    @ent1 __Role Process $process
+    @ent2 __Role Direction $direction
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@discoveredBy:discoveredBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@discoveredBy:discoveredBy graph phenomenon discoverer
+    # Discovery attribution
+    @ent1 __Role Phenomenon $phenomenon
+    @ent2 __Role Discoverer $discoverer
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@displaces:displaces graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@displaces:displaces graph molecule displaced
+    # Molecular displacement
+    @ent1 __Role Molecule $molecule
+    @ent2 __Role DisplacedMolecule $displaced
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@dissociates:dissociates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@dissociates:dissociates graph complex components
+    # Molecular dissociation
+    @ent1 __Role Complex $complex
+    @ent2 __Role Components $components
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@distanceEffect:distanceEffect graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@distanceEffect:distanceEffect graph location effect
+    # Distance-dependent effect
+    @ent1 __Role Location $location
+    @ent2 __Role Effect $effect
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@dnaSimilarity:dnaSimilarity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@dnaSimilarity:dnaSimilarity graph species1 species2
+    # DNA sequence similarity
+    @ent1 __Role Species $species1
+    @ent2 __Role RelatedSpecies $species2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@dnaSynthesisIn:dnaSynthesisIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@dnaSynthesisIn:dnaSynthesisIn graph phase location
+    # DNA synthesis phase
+    @ent1 __Role Phase $phase
+    @ent2 __Role Location $location
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@docks:docks graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@docks:docks graph ligand receptor
+    # Molecular docking interaction
+    @ent1 __Role Ligand $ligand
+    @ent2 __Role Receptor $receptor
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@doesNotChangeSequence:doesNotChangeSequence graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@doesNotChangeSequence:doesNotChangeSequence graph process dna
+    # Sequence-preserving process
+    @ent1 __Role Process $process
+    @ent2 __Role DNA $dna
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@dominantMutation:dominantMutation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@dominantMutation:dominantMutation graph gene phenotype
+    # Dominant mutation effect
+    @ent1 __Role Gene $gene
+    @ent2 __Role Phenotype $phenotype
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@dysregulates:dysregulates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@dysregulates:dysregulates graph mutation gene
+    # Dysregulation by mutation
+    @ent1 __Role Mutation $mutation
+    @ent2 __Role Gene $gene
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@effect:effect graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@effect:effect graph cause effect
+    # Causal effect
+    @ent1 __Role Cause $cause
+    @ent2 __Role Effect $effect
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@effectOnHost:effectOnHost graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@effectOnHost:effectOnHost graph symbiont effect
+    # Effect on host organism
+    @ent1 __Role Symbiont $symbiont
+    @ent2 __Role EffectOnHost $effect
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@effectOnParasite:effectOnParasite graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@effectOnParasite:effectOnParasite graph relationship effect
+    # Effect on parasite
+    @ent1 __Role Relationship $relationship
+    @ent2 __Role EffectOnParasite $effect
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@effectOnPredator:effectOnPredator graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@effectOnPredator:effectOnPredator graph relationship effect
+    # Effect on predator
+    @ent1 __Role Relationship $relationship
+    @ent2 __Role EffectOnPredator $effect
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@effectOnPrey:effectOnPrey graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@effectOnPrey:effectOnPrey graph relationship effect
+    # Effect on prey
+    @ent1 __Role Relationship $relationship
+    @ent2 __Role EffectOnPrey $effect
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@effectOnSpecies1:effectOnSpecies1 graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@effectOnSpecies1:effectOnSpecies1 graph interaction effect
+    # Effect on first species
+    @ent1 __Role Interaction $interaction
+    @ent2 __Role EffectOnSpecies1 $effect
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@effectOnSpecies2:effectOnSpecies2 graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@effectOnSpecies2:effectOnSpecies2 graph interaction effect
+    # Effect on second species
+    @ent1 __Role Interaction $interaction
+    @ent2 __Role EffectOnSpecies2 $effect
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@electronTransport:electronTransport graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@electronTransport:electronTransport graph carrier electron
+    # Electron transport chain
+    @ent1 __Role Carrier $carrier
+    @ent2 __Role Electron $electron
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@elicits:elicits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@elicits:elicits graph stimulus response
+    # Elicits response
+    @ent1 __Role Stimulus $stimulus
+    @ent2 __Role Response $response
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@elongationRate:elongationRate graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@elongationRate:elongationRate graph polymerase rate
+    # Polymerase elongation rate
+    @ent1 __Role Polymerase $polymerase
+    @ent2 __Role Rate $rate
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@elongation_involves:elongation_involves graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@elongation_involves:elongation_involves graph process factors
+    # Elongation machinery
+    @ent1 __Role Process $process
+    @ent2 __Role ElongationFactors $factors
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@enablesReplication:enablesReplication graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@enablesReplication:enablesReplication graph factor dna
+    # Enables DNA replication
+    @ent1 __Role Factor $factor
+    @ent2 __Role DNA $dna
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@encodedBy:encodedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@encodedBy:encodedBy graph product gene
+    # Genetic encoding relationship
+    @ent1 __Role Product $product
+    @ent2 __Role Gene $gene
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@encodes:encodes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@encodes:encodes graph gene product
+    # Gene encodes product
+    @ent1 __Role Gene $gene
+    @ent2 __Role Product $product
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@encodesProtein:encodesProtein graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@encodesProtein:encodesProtein graph gene protein
+    # Gene encodes specific protein
+    @ent1 __Role Gene $gene
+    @ent2 __Role Protein $protein
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@endsIn:endsIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@endsIn:endsIn graph process outcome
+    # Process outcome
+    @ent1 __Role Process $process
+    @ent2 __Role Outcome $outcome
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@energyLoss:energyLoss graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@energyLoss:energyLoss graph process loss
+    # Energy loss in process
+    @ent1 __Role Process $process
+    @ent2 __Role Loss $loss
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@energyTransfer:energyTransfer graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@energyTransfer:energyTransfer graph donor acceptor
+    # Energy transfer
+    @ent1 __Role Donor $donor
+    @ent2 __Role Acceptor $acceptor
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@enhances:enhances graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@enhances:enhances graph factor process
+    # Enhancement relationship
+    @ent1 __Role Factor $factor
+    @ent2 __Role Process $process
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@enhancesPhagocytosis:enhancesPhagocytosis graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@enhancesPhagocytosis:enhancesPhagocytosis graph antibody phagocyte
+    # Phagocytosis enhancement
+    @ent1 __Role Antibody $antibody
+    @ent2 __Role Phagocyte $phagocyte
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@enlarges:enlarges graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@enlarges:enlarges graph process structure
+    # Structural enlargement
+    @ent1 __Role Process $process
+    @ent2 __Role Structure $structure
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@enters:enters graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@enters:enters graph entity compartment
+    # Entry into compartment
+    @ent1 __Role Entity $entity
+    @ent2 __Role Compartment $compartment
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@enzymesUsed:enzymesUsed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@enzymesUsed:enzymesUsed graph process enzymes
+    # Set of enzymes used
+    @ent1 __Role Process $process
+    @ent2 __Role Enzymes $enzymes
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@equation:equation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@equation:equation graph process equation
+    # Mathematical equation
+    @ent1 __Role Process $process
+    @ent2 __Role Equation $equation
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@evadesSuppressors:evadesSuppressors graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@evadesSuppressors:evadesSuppressors graph mutation suppressors
+    # Tumor suppressor evasion
+    @ent1 __Role Mutation $mutation
+    @ent2 __Role TumorSuppressors $suppressors
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@evaporation:evaporation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@evaporation:evaporation graph water vapor
+    # Evaporation process
+    @ent1 __Role Water $water
+    @ent2 __Role Vapor $vapor
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@evolutionarilyConserved:evolutionarilyConserved graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@evolutionarilyConserved:evolutionarilyConserved graph sequence taxa
+    # Evolutionarily conserved sequence
+    @ent1 __Role Sequence $sequence
+    @ent2 __Role Taxa $taxa
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@example:example graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@example:example graph concept example
+    # Illustrative example
+    @ent1 __Role Concept $concept
+    @ent2 __Role Example $example
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@examples:examples graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@examples:examples graph concept examples
+    # Multiple examples
+    @ent1 __Role Concept $concept
+    @ent2 __Role Examples $examples
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@excitatoryNT:excitatoryNT graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@excitatoryNT:excitatoryNT graph synapse nt
+    # Excitatory neurotransmitter
+    @ent1 __Role Synapse $synapse
+    @ent2 __Role ExcitatoryNT $nt
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@expressedIn:expressedIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@expressedIn:expressedIn graph gene tissue
+    # Gene expression location
+    @ent1 __Role Gene $gene
+    @ent2 __Role Tissue $tissue
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@expressesTrait:expressesTrait graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@expressesTrait:expressesTrait graph genotype phenotype
+    # Trait expression
+    @ent1 __Role Genotype $genotype
+    @ent2 __Role Phenotype $phenotype
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@expression:expression graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@expression:expression graph gene level
+    # Gene expression level
+    @ent1 __Role Gene $gene
+    @ent2 __Role ExpressionLevel $level
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@facilitates:facilitates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@facilitates:facilitates graph factor process
+    # Facilitation relationship
+    @ent1 __Role Factor $factor
+    @ent2 __Role Process $process
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@favors:favors graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@favors:favors graph selection phenotype
+    # Selection favors phenotype
+    @ent1 __Role Selection $selection
+    @ent2 __Role Phenotype $phenotype
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@feedsOn:feedsOn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@feedsOn:feedsOn graph consumer resource
+    # Feeding relationship
+    @ent1 __Role Consumer $consumer
+    @ent2 __Role Resource $resource
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@fills:fills graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@fills:fills graph structure space
+    # Space filling
+    @ent1 __Role Structure $structure
+    @ent2 __Role Space $space
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@finalAcceptor:finalAcceptor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@finalAcceptor:finalAcceptor graph pathway acceptor
+    # Final electron acceptor in respiration
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role FinalAcceptor $acceptor
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@fires:fires graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@fires:fires graph neuron signal
+    # Neuron fires action potential
+    @ent1 __Role Neuron $neuron
+    @ent2 __Role Signal $signal
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@follows:follows graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@follows:follows graph event1 event2
+    # Sequential order
+    @ent1 __Role Event $event1
+    @ent2 __Role SubsequentEvent $event2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@followsAllOrNone:followsAllOrNone graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@followsAllOrNone:followsAllOrNone graph neuron principle
+    # All-or-none principle
+    @ent1 __Role Neuron $neuron
+    @ent2 __Role Principle $principle
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@forms:forms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@forms:forms graph precursor product
+    # Molecular formation
+    @ent1 __Role Precursor $precursor
+    @ent2 __Role Product $product
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@formsGermLayers:formsGermLayers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@formsGermLayers:formsGermLayers graph embryo layers
+    # Germ layer formation
+    @ent1 __Role Embryo $embryo
+    @ent2 __Role GermLayers $layers
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@formsGradient:formsGradient graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@formsGradient:formsGradient graph morphogen tissue
+    # Gradient formation
+    @ent1 __Role Morphogen $morphogen
+    @ent2 __Role Tissue $tissue
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@fossilFuels:fossilFuels graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@fossilFuels:fossilFuels graph carbon fuels
+    # Fossil fuel carbon store
+    @ent1 __Role Carbon $carbon
+    @ent2 __Role FossilFuels $fuels
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@fragments:fragments graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@fragments:fragments graph enzyme dna
+    # DNA fragmentation
+    @ent1 __Role Enzyme $enzyme
+    @ent2 __Role DNA $dna
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -1569,66 +1755,75 @@ end
     return $naming
 end
 
-@function:function graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@function:function graph entity function
+    # Biological function
+    @ent1 __Role Entity $entity
+    @ent2 __Role Function $function
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@functionalUnit:functionalUnit graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@functionalUnit:functionalUnit graph organ unit
+    # Functional unit of organ
+    @ent1 __Role Organ $organ
+    @ent2 __Role FunctionalUnit $unit
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@furtherProcessing:furtherProcessing graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@furtherProcessing:furtherProcessing graph precursor final
+    # Post-translational processing
+    @ent1 __Role Precursor $precursor
+    @ent2 __Role FinalProduct $final
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@gaseousNT:gaseousNT graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@gaseousNT:gaseousNT graph system nt
+    # Gaseous neurotransmitter
+    @ent1 __Role System $system
+    @ent2 __Role GaseousNT $nt
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@generates:generates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@generates:generates graph process product
+    # Process generates product
+    @ent1 __Role Process $process
+    @ent2 __Role Product $product
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@geneticPredisposition:geneticPredisposition graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@geneticPredisposition:geneticPredisposition graph genotype disease
+    # Genetic predisposition
+    @ent1 __Role Genotype $genotype
+    @ent2 __Role Disease $disease
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@glucoseSynthesis:glucoseSynthesis graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@glucoseSynthesis:glucoseSynthesis graph entity collection
+    # Collection of glucoseSynthesi elements
+    @ent1 __Role Entity $entity
+    @ent2 __Role GlucosesynthesiSet $collection
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@greaterEffectIn:greaterEffectIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@greaterEffectIn:greaterEffectIn graph agent context
+    # Context-dependent effect
+    @ent1 __Role Agent $agent
+    @ent2 __Role Context $context
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@groundTissue:groundTissue graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@groundTissue:groundTissue graph organ tissue
+    # Plant ground tissue
+    @ent1 __Role Organ $organ
+    @ent2 __Role GroundTissue $tissue
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -2318,94 +2513,107 @@ end
     return $property
 end
 
-@haveNicheDifferentiation:haveNicheDifferentiation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@haveNicheDifferentiation:haveNicheDifferentiation graph species1 species2
+    # Niche differentiation
+    @ent1 __Role Species $species1
+    @ent2 __Role Species $species2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@heatConservation:heatConservation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@heatConservation:heatConservation graph organism mechanisms
+    # Heat conservation
+    @ent1 __Role Organism $organism
+    @ent2 __Role ConservationMechanisms $mechanisms
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@highGlucoseResponse:highGlucoseResponse graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@highGlucoseResponse:highGlucoseResponse graph cell response
+    # High glucose response
+    @ent1 __Role Cell $cell
+    @ent2 __Role Response $response
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@homologousStructures:homologousStructures graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@homologousStructures:homologousStructures graph taxon structures
+    # Set of homologous structures
+    @ent1 __Role Taxon $taxon
+    @ent2 __Role HomologousStructures $structures
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@homologyExample:homologyExample graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@homologyExample:homologyExample graph structure example
+    # Example of homology
+    @ent1 __Role Structure $structure
+    @ent2 __Role Example $example
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@hosts:hosts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@hosts:hosts graph pathogen hosts
+    # Host range
+    @ent1 __Role Pathogen $pathogen
+    @ent2 __Role Hosts $hosts
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@humoralImmunity:humoralImmunity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@humoralImmunity:humoralImmunity graph response antibodies
+    # Humoral immunity
+    @ent1 __Role ImmuneResponse $response
+    @ent2 __Role Antibodies $antibodies
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@hydrolyzes:hydrolyzes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@hydrolyzes:hydrolyzes graph enzyme bond
+    # Hydrolytic cleavage
+    @ent1 __Role Enzyme $enzyme
+    @ent2 __Role Bond $bond
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@hyperpolarizationPhase:hyperpolarizationPhase graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@hyperpolarizationPhase:hyperpolarizationPhase graph neuron phase
+    # Hyperpolarization phase
+    @ent1 __Role Neuron $neuron
+    @ent2 __Role Phase $phase
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@immuneEvasion:immuneEvasion graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@immuneEvasion:immuneEvasion graph pathogen mechanism
+    # Immune evasion strategy
+    @ent1 __Role Pathogen $pathogen
+    @ent2 __Role EvasionMechanism $mechanism
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@immuneSelection:immuneSelection graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@immuneSelection:immuneSelection graph pathogen population
+    # Immune-mediated selection
+    @ent1 __Role Pathogen $pathogen
+    @ent2 __Role Population $population
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@increases:increases graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@increases:increases graph factor parameter
+    # Increases parameter
+    @ent1 __Role Factor $factor
+    @ent2 __Role Parameter $parameter
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@increasesPermeability:increasesPermeability graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@increasesPermeability:increasesPermeability graph factor membrane
+    # Increased membrane permeability
+    @ent1 __Role Factor $factor
+    @ent2 __Role Membrane $membrane
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -2430,94 +2638,107 @@ end
     return $process
 end
 
-@infects:infects graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@infects:infects graph pathogen host
+    # Infection relationship
+    @ent1 __Role Pathogen $pathogen
+    @ent2 __Role Host $host
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@infiltration:infiltration graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@infiltration:infiltration graph cells tissue
+    # Cellular infiltration
+    @ent1 __Role Cells $cells
+    @ent2 __Role Tissue $tissue
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@inflammatoryMediators:inflammatoryMediators graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@inflammatoryMediators:inflammatoryMediators graph response mediators
+    # Inflammatory mediators
+    @ent1 __Role Response $response
+    @ent2 __Role Mediators $mediators
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@inflammatoryResponse:inflammatoryResponse graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@inflammatoryResponse:inflammatoryResponse graph stimulus response
+    # Inflammatory response
+    @ent1 __Role Stimulus $stimulus
+    @ent2 __Role Response $response
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@informationFlow:informationFlow graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@informationFlow:informationFlow graph source destination
+    # Information flow direction
+    @ent1 __Role Source $source
+    @ent2 __Role Destination $destination
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@inhibitoryNT:inhibitoryNT graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@inhibitoryNT:inhibitoryNT graph synapse nt
+    # Inhibitory neurotransmitter
+    @ent1 __Role Synapse $synapse
+    @ent2 __Role InhibitoryNT $nt
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@initiates:initiates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@initiates:initiates graph trigger process
+    # Process initiation
+    @ent1 __Role Trigger $trigger
+    @ent2 __Role Process $process
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@initiatesAt:initiatesAt graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@initiatesAt:initiatesAt graph process location
+    # Initiation location
+    @ent1 __Role Process $process
+    @ent2 __Role Location $location
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@initiation_involves:initiation_involves graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@initiation_involves:initiation_involves graph process factors
+    # Initiation machinery
+    @ent1 __Role Process $process
+    @ent2 __Role InitiationFactors $factors
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@inputMolecule:inputMolecule graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@inputMolecule:inputMolecule graph pathway molecule
+    # Pathway input molecule
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role Input $molecule
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@interactionType:interactionType graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@interactionType:interactionType graph entity1 entity2
+    # interactionType - biological relationship
+    @ent1 __Role Entity $entity1
+    @ent2 __Role RelatedEntity $entity2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@intrinsicRate:intrinsicRate graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@intrinsicRate:intrinsicRate graph species rate
+    # Intrinsic growth rate
+    @ent1 __Role Species $species
+    @ent2 __Role GrowthRate $rate
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@inventedBy:inventedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@inventedBy:inventedBy graph technology inventor
+    # Invention attribution
+    @ent1 __Role Technology $technology
+    @ent2 __Role Inventor $inventor
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -2731,241 +2952,275 @@ end
     return $property
 end
 
-@joins:joins graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@joins:joins graph molecule complex
+    # Joins complex
+    @ent1 __Role Molecule $molecule
+    @ent2 __Role Complex $complex
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@keyEffector:keyEffector graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@keyEffector:keyEffector graph pathway effector
+    # Key effector molecule
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role Effector $effector
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@keyOrganisms:keyOrganisms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@keyOrganisms:keyOrganisms graph ecosystem key_species
+    # Keystone organisms
+    @ent1 __Role Ecosystem $ecosystem
+    @ent2 __Role KeySpecies $key_species
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@keyReceptor:keyReceptor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@keyReceptor:keyReceptor graph system receptor
+    # Key receptor
+    @ent1 __Role System $system
+    @ent2 __Role Receptor $receptor
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@lagsBehing:lagsBehing graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@lagsBehing:lagsBehing graph process1 process2
+    # Temporal lag
+    @ent1 __Role Process $process1
+    @ent2 __Role LeadingProcess $process2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@law:law graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@law:law graph domain law_statement
+    # Biological law
+    @ent1 __Role Domain $domain
+    @ent2 __Role Law $law_statement
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@leadTo:leadTo graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@leadTo:leadTo graph precursor result
+    # Leads to result
+    @ent1 __Role Precursor $precursor
+    @ent2 __Role Result $result
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@leads:leads graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@leads:leads graph cause effect
+    # Causal relationship
+    @ent1 __Role Cause $cause
+    @ent2 __Role Effect $effect
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@leadsToCommunity:leadsToCommunity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@leadsToCommunity:leadsToCommunity graph succession community
+    # Successional outcome
+    @ent1 __Role Succession $succession
+    @ent2 __Role Community $community
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@leakChannels:leakChannels graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@leakChannels:leakChannels graph membrane ions
+    # Leak channels for ions
+    @ent1 __Role Membrane $membrane
+    @ent2 __Role Ions $ions
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@ligand:ligand graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@ligand:ligand graph receptor ligand_mol
+    # Receptor-ligand binding
+    @ent1 __Role Receptor $receptor
+    @ent2 __Role Ligand $ligand_mol
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@ligands:ligands graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@ligands:ligands graph receptor ligands_set
+    # Receptor ligand set
+    @ent1 __Role Receptor $receptor
+    @ent2 __Role Ligands $ligands_set
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@limitsChainLength:limitsChainLength graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@limitsChainLength:limitsChainLength graph factor process
+    # Chain length limitation
+    @ent1 __Role Factor $factor
+    @ent2 __Role Process $process
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@loads:loads graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@loads:loads graph protein dna
+    # Protein loading onto DNA
+    @ent1 __Role Protein $protein
+    @ent2 __Role DNA $dna
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@locatedAt:locatedAt graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@locatedAt:locatedAt graph structure location
+    # Spatial location
+    @ent1 __Role Structure $structure
+    @ent2 __Role Location $location
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@locates:locates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@locates:locates graph entity location
+    # Location specification
+    @ent1 __Role Entity $entity
+    @ent2 __Role Location $location
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@locations:locations graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@locations:locations graph entity locations
+    # Multiple locations
+    @ent1 __Role Entity $entity
+    @ent2 __Role Locations $locations
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@lossOfFunction:lossOfFunction graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@lossOfFunction:lossOfFunction graph mutation function
+    # Loss of function mutation
+    @ent1 __Role Mutation $mutation
+    @ent2 __Role Function $function
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@lowGlucoseResponse:lowGlucoseResponse graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@lowGlucoseResponse:lowGlucoseResponse graph cell response
+    # Low glucose response
+    @ent1 __Role Cell $cell
+    @ent2 __Role Response $response
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@mainConcept:mainConcept graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@mainConcept:mainConcept graph theorymodel concept
+    # Central concept
+    @ent1 __Role Theory $theorymodel
+    @ent2 __Role MainConcept $concept
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@mainProduct:mainProduct graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@mainProduct:mainProduct graph pathway product
+    # Main product of pathway
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role Product $product
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@maintains:maintains graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@maintains:maintains graph system parameter
+    # Parameter maintenance
+    @ent1 __Role System $system
+    @ent2 __Role Parameter $parameter
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@maintainsHomeostasis:maintainsHomeostasis graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@maintainsHomeostasis:maintainsHomeostasis graph system parameter
+    # Homeostatic regulation
+    @ent1 __Role System $system
+    @ent2 __Role Parameter $parameter
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@maintainsRatio:maintainsRatio graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@maintainsRatio:maintainsRatio graph pump ratio
+    # Ion ratio maintenance
+    @ent1 __Role Pump $pump
+    @ent2 __Role IonicRatio $ratio
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@matrix:matrix graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@matrix:matrix graph structure matrix
+    # Structural matrix
+    @ent1 __Role Structure $structure
+    @ent2 __Role Matrix $matrix
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@maturesIn:maturesIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@maturesIn:maturesIn graph cell organ
+    # Cell maturation site
+    @ent1 __Role Cell $cell
+    @ent2 __Role Organ $organ
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@mayAlterFunction:mayAlterFunction graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@mayAlterFunction:mayAlterFunction graph mutation function
+    # Potential function alteration
+    @ent1 __Role Mutation $mutation
+    @ent2 __Role Function $function
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@mechanism:mechanism graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@mechanism:mechanism graph process mechanism
+    # Underlying mechanism
+    @ent1 __Role Process $process
+    @ent2 __Role Mechanism $mechanism
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@mechanisms:mechanisms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@mechanisms:mechanisms graph process mechanisms
+    # Multiple mechanisms
+    @ent1 __Role Process $process
+    @ent2 __Role Mechanisms $mechanisms
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@memberOfDomain:memberOfDomain graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@memberOfDomain:memberOfDomain graph organism domain
+    # Taxonomic domain
+    @ent1 __Role Organism $organism
+    @ent2 __Role Domain $domain
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@membraneAttackComplex:membraneAttackComplex graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@membraneAttackComplex:membraneAttackComplex graph complement membrane
+    # MAC formation
+    @ent1 __Role Complement $complement
+    @ent2 __Role Membrane $membrane
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@meristem:meristem graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@meristem:meristem graph plant meristem
+    # Meristematic tissue
+    @ent1 __Role Plant $plant
+    @ent2 __Role Meristem $meristem
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@method:method graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@method:method graph process method
+    # Methodological approach
+    @ent1 __Role Process $process
+    @ent2 __Role Method $method
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@methylates:methylates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@methylates:methylates graph enzyme target
+    # Methylation modification
+    @ent1 __Role Methyltransferase $enzyme
+    @ent2 __Role Target $target
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -2977,10 +3232,11 @@ end
     return $movement
 end
 
-@modernSynthesis:modernSynthesis graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@modernSynthesis:modernSynthesis graph concept synthesis
+    # Modern evolutionary synthesis
+    @ent1 __Role Concept $concept
+    @ent2 __Role ModernSynthesis $synthesis
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -2991,17 +3247,19 @@ end
     return $regulation
 end
 
-@molecularClock:molecularClock graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@molecularClock:molecularClock graph gene rate
+    # Molecular clock
+    @ent1 __Role Gene $gene
+    @ent2 __Role MutationRate $rate
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@monoamineNT:monoamineNT graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@monoamineNT:monoamineNT graph system nt
+    # Monoamine neurotransmitter
+    @ent1 __Role System $system
+    @ent2 __Role MonoamineNT $nt
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -3029,423 +3287,483 @@ end
     return $movement
 end
 
-@mutualBenefit:mutualBenefit graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@mutualBenefit:mutualBenefit graph species1 species2
+    # Mutualistic benefit
+    @ent1 __Role Symbiont $species1
+    @ent2 __Role Symbiont $species2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@negativeSelection:negativeSelection graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@negativeSelection:negativeSelection graph cell self_antigen
+    # Negative selection against self
+    @ent1 __Role Cell $cell
+    @ent2 __Role SelfAntigen $self_antigen
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@netATP:netATP graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@netATP:netATP graph pathway atp
+    # Net ATP production
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role NetATP $atp
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@neuralPruning:neuralPruning graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@neuralPruning:neuralPruning graph development process
+    # Neural pruning during development
+    @ent1 __Role Development $development
+    @ent2 __Role Process $process
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@neurotransmitters:neurotransmitters graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@neurotransmitters:neurotransmitters graph synapse nts
+    # Neurotransmitter types
+    @ent1 __Role Synapse $synapse
+    @ent2 __Role Neurotransmitters $nts
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@nitrification:nitrification graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@nitrification:nitrification graph bacteria nitrogen
+    # Nitrification process
+    @ent1 __Role Bacteria $bacteria
+    @ent2 __Role Nitrogen $nitrogen
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@nitrogenFixation:nitrogenFixation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@nitrogenFixation:nitrogenFixation graph organism nitrogen
+    # Nitrogen fixation
+    @ent1 __Role Organism $organism
+    @ent2 __Role Nitrogen $nitrogen
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@nitrogenaseEnzyme:nitrogenaseEnzyme graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@nitrogenaseEnzyme:nitrogenaseEnzyme graph organism enzyme
+    # Nitrogenase enzyme
+    @ent1 __Role Organism $organism
+    @ent2 __Role Nitrogenase $enzyme
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@nodeRepresents:nodeRepresents graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@nodeRepresents:nodeRepresents graph tree ancestor
+    # Node represents ancestor
+    @ent1 __Role PhylogeneticTree $tree
+    @ent2 __Role CommonAncestor $ancestor
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@normalFunction:normalFunction graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@normalFunction:normalFunction graph gene function
+    # Normal gene function
+    @ent1 __Role Gene $gene
+    @ent2 __Role Function $function
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@normalProtein:normalProtein graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@normalProtein:normalProtein graph gene protein
+    # Normal protein product
+    @ent1 __Role Gene $gene
+    @ent2 __Role Protein $protein
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@normalRange:normalRange graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@normalRange:normalRange graph parameter range
+    # Normal physiological range
+    @ent1 __Role Parameter $parameter
+    @ent2 __Role Range $range
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@normalSetpoint:normalSetpoint graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@normalSetpoint:normalSetpoint graph parameter setpoint
+    # Homeostatic setpoint
+    @ent1 __Role Parameter $parameter
+    @ent2 __Role Setpoint $setpoint
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@nuclearTranslocation:nuclearTranslocation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@nuclearTranslocation:nuclearTranslocation graph protein nucleus
+    # Nuclear translocation
+    @ent1 __Role Protein $protein
+    @ent2 __Role Nucleus $nucleus
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@numberOfAminoAcids:numberOfAminoAcids graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@numberOfAminoAcids:numberOfAminoAcids graph protein count
+    # Protein length
+    @ent1 __Role Protein $protein
+    @ent2 __Role AminoAcidCount $count
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@numberOfCodons:numberOfCodons graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@numberOfCodons:numberOfCodons graph amino_acid count
+    # Number of codons
+    @ent1 __Role AminoAcid $amino_acid
+    @ent2 __Role CodonCount $count
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@occupiesNiche:occupiesNiche graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@occupiesNiche:occupiesNiche graph species niche
+    # Niche occupation
+    @ent1 __Role Species $species
+    @ent2 __Role EcologicalNiche $niche
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@occurs:occurs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@occurs:occurs graph event context
+    # Event occurrence
+    @ent1 __Role Event $event
+    @ent2 __Role Context $context
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@occursAt:occursAt graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@occursAt:occursAt graph process location
+    # Process location
+    @ent1 __Role Process $process
+    @ent2 __Role Location $location
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@occursIn:occursIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@occursIn:occursIn graph process context
+    # Occurrence context
+    @ent1 __Role Process $process
+    @ent2 __Role Context $context
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@occursWithout:occursWithout graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@occursWithout:occursWithout graph entity location
+    # Spatial relationship
+    @ent1 __Role Entity $entity
+    @ent2 __Role Location $location
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@oceanAbsorption:oceanAbsorption graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@oceanAbsorption:oceanAbsorption graph ocean co2
+    # Ocean CO2 absorption
+    @ent1 __Role Ocean $ocean
+    @ent2 __Role CO2 $co2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@opens:opens graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@opens:opens graph stimulus channel
+    # Channel opening
+    @ent1 __Role Stimulus $stimulus
+    @ent2 __Role Channel $channel
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@organisms:organisms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@organisms:organisms graph ecosystem organisms_set
+    # Organisms in ecosystem
+    @ent1 __Role Ecosystem $ecosystem
+    @ent2 __Role Organisms $organisms_set
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@originatesFrom:originatesFrom graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@originatesFrom:originatesFrom graph entity origin
+    # Origin location
+    @ent1 __Role Entity $entity
+    @ent2 __Role Origin $origin
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@originatesIn:originatesIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@originatesIn:originatesIn graph process location
+    # Process origin
+    @ent1 __Role Process $process
+    @ent2 __Role Location $location
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@outcome:outcome graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@outcome:outcome graph process outcome
+    # Process outcome
+    @ent1 __Role Process $process
+    @ent2 __Role Outcome $outcome
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@outputMolecule:outputMolecule graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@outputMolecule:outputMolecule graph pathway molecule
+    # Pathway output molecule
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role Output $molecule
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@overexpressedIn:overexpressedIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@overexpressedIn:overexpressedIn graph gene condition
+    # Gene overexpression
+    @ent1 __Role Gene $gene
+    @ent2 __Role Condition $condition
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@participatesIn:participatesIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@participatesIn:participatesIn graph entity process
+    # Participation in process
+    @ent1 __Role Entity $entity
+    @ent2 __Role Process $process
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@peakPotential:peakPotential graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@peakPotential:peakPotential graph neuron voltage
+    # Peak action potential
+    @ent1 __Role Neuron $neuron
+    @ent2 __Role Voltage $voltage
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@peptideNT:peptideNT graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@peptideNT:peptideNT graph system nt
+    # Peptide neurotransmitter
+    @ent1 __Role System $system
+    @ent2 __Role PeptideNT $nt
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@phase:phase graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@phase:phase graph pathway phase_name
+    # Metabolic pathway phase
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role Phase $phase_name
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@phosphorylated:phosphorylated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@phosphorylated:phosphorylated graph protein kinase
+    # Protein phosphorylation state
+    @ent1 __Role Protein $protein
+    @ent2 __Role Kinase $kinase
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@phosphorylates:phosphorylates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@phosphorylates:phosphorylates graph kinase target
+    # Phosphorylation modification
+    @ent1 __Role Kinase $kinase
+    @ent2 __Role Target $target
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@phosphorylatesTargets:phosphorylatesTargets graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@phosphorylatesTargets:phosphorylatesTargets graph kinase targets
+    # Multiple phosphorylation targets
+    @ent1 __Role Kinase $kinase
+    @ent2 __Role Targets $targets
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@photosynthesis:photosynthesis graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@photosynthesis:photosynthesis graph organism process
+    # Photosynthetic process
+    @ent1 __Role Organism $organism
+    @ent2 __Role Process $process
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@photosystemI:photosystemI graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@photosystemI:photosystemI graph chloroplast complex
+    # Photosystem I
+    @ent1 __Role Chloroplast $chloroplast
+    @ent2 __Role Complex $complex
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@photosystemII:photosystemII graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@photosystemII:photosystemII graph chloroplast complex
+    # Photosystem II
+    @ent1 __Role Chloroplast $chloroplast
+    @ent2 __Role Complex $complex
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@physicalBarriers:physicalBarriers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@physicalBarriers:physicalBarriers graph organism barriers
+    # Physical immune barriers
+    @ent1 __Role Organism $organism
+    @ent2 __Role Barriers $barriers
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@plantExamples:plantExamples graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@plantExamples:plantExamples graph group examples
+    # Plant examples
+    @ent1 __Role TaxonomicGroup $group
+    @ent2 __Role Examples $examples
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@plantHost:plantHost graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@plantHost:plantHost graph symbiont plant
+    # Plant host for symbiont
+    @ent1 __Role Symbiont $symbiont
+    @ent2 __Role PlantHost $plant
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@positiveSelection:positiveSelection graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@positiveSelection:positiveSelection graph cell mhc
+    # Positive selection for MHC recognition
+    @ent1 __Role Cell $cell
+    @ent2 __Role MHC $mhc
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@possibleEffects:possibleEffects graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@possibleEffects:possibleEffects graph cause effects
+    # Possible effects
+    @ent1 __Role Cause $cause
+    @ent2 __Role PossibleEffects $effects
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@postsynapticEvents:postsynapticEvents graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@postsynapticEvents:postsynapticEvents graph synapse events
+    # Postsynaptic processes
+    @ent1 __Role Synapse $synapse
+    @ent2 __Role PostsynapticEvents $events
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@potassiumInside:potassiumInside graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@potassiumInside:potassiumInside graph cell concentration
+    # Intracellular potassium
+    @ent1 __Role Cell $cell
+    @ent2 __Role Concentration $concentration
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@precipitation:precipitation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@precipitation:precipitation graph vapor water
+    # Precipitation
+    @ent1 __Role Vapor $vapor
+    @ent2 __Role Water $water
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@precision:precision graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@precision:precision graph process accuracy
+    # Process precision
+    @ent1 __Role Process $process
+    @ent2 __Role Precision $accuracy
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@preferMonophyleticGroups:preferMonophyleticGroups graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@preferMonophyleticGroups:preferMonophyleticGroups graph system clades
+    # Monophyly preference
+    @ent1 __Role System $system
+    @ent2 __Role MonophyleticGroups $clades
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@presents:presents graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@presents:presents graph apc antigen
+    # Antigen presentation
+    @ent1 __Role APC $apc
+    @ent2 __Role Antigen $antigen
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@presentsSymptom:presentsSymptom graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@presentsSymptom:presentsSymptom graph disease symptom
+    # Disease symptom
+    @ent1 __Role Disease $disease
+    @ent2 __Role Symptom $symptom
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@presynapticEvents:presynapticEvents graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@presynapticEvents:presynapticEvents graph synapse events
+    # Presynaptic processes
+    @ent1 __Role Synapse $synapse
+    @ent2 __Role PresynapticEvents $events
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@preyOn:preyOn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@preyOn:preyOn graph predator prey
+    # Predation relationship
+    @ent1 __Role Predator $predator
+    @ent2 __Role Prey $prey
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@preys:preys graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@preys:preys graph predator prey
+    # Predator preys on prey
+    @ent1 __Role Predator $predator
+    @ent2 __Role Prey $prey
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@primaryMechanism:primaryMechanism graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@primaryMechanism:primaryMechanism graph process mechanism
+    # Primary mechanism
+    @ent1 __Role Process $process
+    @ent2 __Role PrimaryMechanism $mechanism
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@principle:principle graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@principle:principle graph theorymodel principle_statement
+    # Theoretical principle
+    @ent1 __Role Theory $theorymodel
+    @ent2 __Role Principle $principle_statement
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@process:process graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@process:process graph system process
+    # System process
+    @ent1 __Role System $system
+    @ent2 __Role Process $process
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@processDNA_to_RNA:processDNA_to_RNA graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@processDNA_to_RNA:processDNA_to_RNA graph dna rna
+    # Transcription process
+    @ent1 __Role DNA $dna
+    @ent2 __Role RNA $rna
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@processRNA_to_Protein:processRNA_to_Protein graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@processRNA_to_Protein:processRNA_to_Protein graph rna protein
+    # Translation process
+    @ent1 __Role RNA $rna
+    @ent2 __Role Protein $protein
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@producedBy:producedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@producedBy:producedBy graph entity1 entity2
+    # producedBy - biological relationship
+    @ent1 __Role Entity $entity1
+    @ent2 __Role RelatedEntity $entity2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -3568,829 +3886,947 @@ end
     return $process
 end
 
-@professionalAPCs:professionalAPCs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@professionalAPCs:professionalAPCs graph system cells
+    # Professional APCs
+    @ent1 __Role ImmuneSystem $system
+    @ent2 __Role APCs $cells
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@promotesInflammation:promotesInflammation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@promotesInflammation:promotesInflammation graph factor inflammation
+    # Pro-inflammatory effect
+    @ent1 __Role Factor $factor
+    @ent2 __Role Inflammation $inflammation
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@proposedBy:proposedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@proposedBy:proposedBy graph theorymodel scientist
+    # Theory proposer
+    @ent1 __Role Theory $theorymodel
+    @ent2 __Role Scientist $scientist
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@protects:protects graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@protects:protects graph vaccine disease
+    # Disease protection
+    @ent1 __Role Vaccine $vaccine
+    @ent2 __Role Disease $disease
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@protectsFrom:protectsFrom graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@protectsFrom:protectsFrom graph immunity pathogen
+    # Protection from pathogen
+    @ent1 __Role Immunity $immunity
+    @ent2 __Role Pathogen $pathogen
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@proteinConversion:proteinConversion graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@proteinConversion:proteinConversion graph precursor mature
+    # Protein maturation
+    @ent1 __Role Precursor $precursor
+    @ent2 __Role MatureProtein $mature
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@proteinSimilarity:proteinSimilarity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@proteinSimilarity:proteinSimilarity graph protein1 protein2
+    # Protein sequence similarity
+    @ent1 __Role Protein $protein1
+    @ent2 __Role HomologousProtein $protein2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@provides:provides graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@provides:provides graph source resource
+    # Resource provision
+    @ent1 __Role Source $source
+    @ent2 __Role Resource $resource
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@providesCooling:providesCooling graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@providesCooling:providesCooling graph mechanism effect
+    # Cooling effect
+    @ent1 __Role Mechanism $mechanism
+    @ent2 __Role Effect $effect
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@providesPositionalInfo:providesPositionalInfo graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@providesPositionalInfo:providesPositionalInfo graph signal tissue
+    # Morphogen gradient
+    @ent1 __Role Signal $signal
+    @ent2 __Role Tissue $tissue
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@rateEquation:rateEquation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@rateEquation:rateEquation graph process equation
+    # Rate equation
+    @ent1 __Role Process $process
+    @ent2 __Role RateEquation $equation
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@ratio:ratio graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@ratio:ratio graph numerator denominator
+    # Ratio relationship
+    @ent1 __Role Numerator $numerator
+    @ent2 __Role Denominator $denominator
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@reaches:reaches graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@reaches:reaches graph signal target
+    # Signal reaches target
+    @ent1 __Role Signal $signal
+    @ent2 __Role Target $target
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@rearranges:rearranges graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@rearranges:rearranges graph enzyme dna
+    # DNA rearrangement
+    @ent1 __Role Enzyme $enzyme
+    @ent2 __Role DNA $dna
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@reason:reason graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@reason:reason graph phenomenon reason
+    # Explanatory reason
+    @ent1 __Role Phenomenon $phenomenon
+    @ent2 __Role Reason $reason
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@receives:receives graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@receives:receives graph recipient resource
+    # Resource reception
+    @ent1 __Role Recipient $recipient
+    @ent2 __Role Resource $resource
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@receptor:receptor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@receptor:receptor graph cell receptor_type
+    # Cell surface receptor
+    @ent1 __Role Cell $cell
+    @ent2 __Role Receptor $receptor_type
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@recessiveMutation:recessiveMutation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@recessiveMutation:recessiveMutation graph gene phenotype
+    # Recessive mutation effect
+    @ent1 __Role Gene $gene
+    @ent2 __Role Phenotype $phenotype
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@recognizes:recognizes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@recognizes:recognizes graph receptor antigen
+    # Antigen recognition
+    @ent1 __Role Receptor $receptor
+    @ent2 __Role Antigen $antigen
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@recruits:recruits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@recruits:recruits graph signal component
+    # Component recruitment
+    @ent1 __Role Signal $signal
+    @ent2 __Role Component $component
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@recruitsCells:recruitsCells graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@recruitsCells:recruitsCells graph signal cells
+    # Cell recruitment
+    @ent1 __Role Signal $signal
+    @ent2 __Role Cells $cells
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@recyclesNutrients:recyclesNutrients graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@recyclesNutrients:recyclesNutrients graph decomposer nutrients
+    # Nutrient recycling
+    @ent1 __Role Decomposer $decomposer
+    @ent2 __Role Nutrients $nutrients
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@reduces:reduces graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@reduces:reduces graph entity collection
+    # Collection of reduce elements
+    @ent1 __Role Entity $entity
+    @ent2 __Role ReduceSet $collection
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@reductionPhase:reductionPhase graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@reductionPhase:reductionPhase graph cycle phase
+    # Reduction phase
+    @ent1 __Role Cycle $cycle
+    @ent2 __Role Phase $phase
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@refractoryPeriod:refractoryPeriod graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@refractoryPeriod:refractoryPeriod graph neuron period
+    # Refractory period
+    @ent1 __Role Neuron $neuron
+    @ent2 __Role Period $period
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@regulatedBy:regulatedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@regulatedBy:regulatedBy graph gene regulator
+    # Gene regulation
+    @ent1 __Role Gene $gene
+    @ent2 __Role Regulator $regulator
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@regulatedVariables:regulatedVariables graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@regulatedVariables:regulatedVariables graph system variables
+    # Regulated physiological variables
+    @ent1 __Role System $system
+    @ent2 __Role Variables $variables
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@relaysIn:relaysIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@relaysIn:relaysIn graph neuron pathway
+    # Signal relay in pathway
+    @ent1 __Role Neuron $neuron
+    @ent2 __Role Pathway $pathway
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@releaseFragment:releaseFragment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@releaseFragment:releaseFragment graph protein fragment
+    # Fragment release
+    @ent1 __Role Protein $protein
+    @ent2 __Role Fragment $fragment
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@releases:releases graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@releases:releases graph neuron neurotransmitter
+    # Neurotransmitter release
+    @ent1 __Role Neuron $neuron
+    @ent2 __Role Neurotransmitter $neurotransmitter
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@releasesCO2:releasesCO2 graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@releasesCO2:releasesCO2 graph process co2
+    # CO2 release
+    @ent1 __Role Process $process
+    @ent2 __Role CO2 $co2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@releasesFrom:releasesFrom graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@releasesFrom:releasesFrom graph neuron terminal
+    # Release from presynaptic terminal
+    @ent1 __Role Neuron $neuron
+    @ent2 __Role Terminal $terminal
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@remains:remains graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@remains:remains graph entity state
+    # Remains in state
+    @ent1 __Role Entity $entity
+    @ent2 __Role State $state
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@removes:removes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@removes:removes graph enzyme chemical_group
+    # Enzyme removes chemical group
+    @ent1 __Role Enzyme $enzyme
+    @ent2 __Role ChemicalGroup $chemical_group
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@removesUnwantedCells:removesUnwantedCells graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@removesUnwantedCells:removesUnwantedCells graph process cells
+    # Programmed cell death
+    @ent1 __Role Process $process
+    @ent2 __Role Cells $cells
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@repolarizationPhase:repolarizationPhase graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@repolarizationPhase:repolarizationPhase graph neuron phase
+    # Repolarization phase
+    @ent1 __Role Neuron $neuron
+    @ent2 __Role Phase $phase
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@represents:represents graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@represents:represents graph symbol concept
+    # Symbolic representation
+    @ent1 __Role Symbol $symbol
+    @ent2 __Role Concept $concept
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@reprogrammingFactors:reprogrammingFactors graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@reprogrammingFactors:reprogrammingFactors graph cell factors
+    # Cellular reprogramming factors
+    @ent1 __Role Cell $cell
+    @ent2 __Role Factors $factors
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@required:required graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@required:required graph process requirement
+    # Process requirement
+    @ent1 __Role Process $process
+    @ent2 __Role Requirement $requirement
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@requiredFor:requiredFor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@requiredFor:requiredFor graph component process
+    # Required for process
+    @ent1 __Role Component $component
+    @ent2 __Role Process $process
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@requiresATP:requiresATP graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@requiresATP:requiresATP graph process atp
+    # ATP requirement
+    @ent1 __Role Process $process
+    @ent2 __Role ATP $atp
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@requiresBarrier:requiresBarrier graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@requiresBarrier:requiresBarrier graph process barrier
+    # Barrier requirement
+    @ent1 __Role Process $process
+    @ent2 __Role Barrier $barrier
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@requiresDimerization:requiresDimerization graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@requiresDimerization:requiresDimerization graph receptor ligand
+    # Dimerization requirement
+    @ent1 __Role Receptor $receptor
+    @ent2 __Role Ligand $ligand
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@requiresEnergy:requiresEnergy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@requiresEnergy:requiresEnergy graph transport atp
+    # Energy-requiring transport
+    @ent1 __Role Transport $transport
+    @ent2 __Role ATP $atp
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@requiresFor:requiresFor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@requiresFor:requiresFor graph process component
+    # Component requirement
+    @ent1 __Role Process $process
+    @ent2 __Role Component $component
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@requiresPromoter:requiresPromoter graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@requiresPromoter:requiresPromoter graph gene promoter
+    # Promoter requirement
+    @ent1 __Role Gene $gene
+    @ent2 __Role Promoter $promoter
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@requiresTranscriptionFactors:requiresTranscriptionFactors graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@requiresTranscriptionFactors:requiresTranscriptionFactors graph process factors
+    # Required transcription factors
+    @ent1 __Role Process $process
+    @ent2 __Role TranscriptionFactors $factors
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@requiresTreatment:requiresTreatment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@requiresTreatment:requiresTreatment graph disease treatment
+    # Treatment requirement
+    @ent1 __Role Disease $disease
+    @ent2 __Role Treatment $treatment
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@requiresTwoHits:requiresTwoHits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@requiresTwoHits:requiresTwoHits graph gene inactivation
+    # Two-hit hypothesis
+    @ent1 __Role Gene $gene
+    @ent2 __Role Inactivation $inactivation
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@requirestRNA:requirestRNA graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@requirestRNA:requirestRNA graph process trna
+    # tRNA requirement
+    @ent1 __Role Process $process
+    @ent2 __Role tRNA $trna
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@resistsDeath:resistsDeath graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@resistsDeath:resistsDeath graph mutation cell
+    # Apoptosis resistance
+    @ent1 __Role Mutation $mutation
+    @ent2 __Role Cell $cell
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@respiration:respiration graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@respiration:respiration graph organism process
+    # Cellular respiration
+    @ent1 __Role Organism $organism
+    @ent2 __Role Process $process
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@responseSpeed:responseSpeed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@responseSpeed:responseSpeed graph pathway speed
+    # Response speed
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role Speed $speed
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@restingPotential:restingPotential graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@restingPotential:restingPotential graph neuron voltage
+    # Resting membrane potential
+    @ent1 __Role Neuron $neuron
+    @ent2 __Role Voltage $voltage
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@restores:restores graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@restores:restores graph effector parameter
+    # Parameter restoration
+    @ent1 __Role Effector $effector
+    @ent2 __Role Parameter $parameter
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@resultIn:resultIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@resultIn:resultIn graph cause result
+    # Results in outcome
+    @ent1 __Role Cause $cause
+    @ent2 __Role Result $result
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@resultingDeficiency:resultingDeficiency graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@resultingDeficiency:resultingDeficiency graph mutation deficiency
+    # Resulting deficiency
+    @ent1 __Role Mutation $mutation
+    @ent2 __Role Deficiency $deficiency
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@reverseTranscribes:reverseTranscribes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@reverseTranscribes:reverseTranscribes graph enzyme rna
+    # Reverse transcription
+    @ent1 __Role ReverseTranscriptase $enzyme
+    @ent2 __Role RNA $rna
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@reverses:reverses graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@reverses:reverses graph response change
+    # Reversal of change
+    @ent1 __Role Response $response
+    @ent2 __Role Change $change
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@revolutionized:revolutionized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@revolutionized:revolutionized graph technology field
+    # Revolutionary impact
+    @ent1 __Role Technology $technology
+    @ent2 __Role Field $field
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@roleInLearning:roleInLearning graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@roleInLearning:roleInLearning graph synapse mechanism
+    # Synaptic learning mechanism
+    @ent1 __Role Synapse $synapse
+    @ent2 __Role LearningMechanism $mechanism
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@rolePredator:rolePredator graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@rolePredator:rolePredator graph species role
+    # Predator role in ecosystem
+    @ent1 __Role Species $species
+    @ent2 __Role Role $role
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@rolePrey:rolePrey graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@rolePrey:rolePrey graph species role
+    # Prey role in ecosystem
+    @ent1 __Role Species $species
+    @ent2 __Role Role $role
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@rubpRegeneration:rubpRegeneration graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@rubpRegeneration:rubpRegeneration graph cycle rubp
+    # RuBP regeneration
+    @ent1 __Role CalvinCycle $cycle
+    @ent2 __Role RuBP $rubp
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@runoff:runoff graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@runoff:runoff graph water destination
+    # Water runoff
+    @ent1 __Role Water $water
+    @ent2 __Role Destination $destination
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@saltatoryConducton:saltatoryConducton graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@saltatoryConducton:saltatoryConducton graph axon nodes
+    # Saltatory conduction
+    @ent1 __Role Axon $axon
+    @ent2 __Role Nodes $nodes
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@scaffolds:scaffolds graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@scaffolds:scaffolds graph protein complex
+    # Scaffold protein organization
+    @ent1 __Role ScaffoldProtein $protein
+    @ent2 __Role Complex $complex
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@scans:scans graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@scans:scans graph protein dna
+    # DNA scanning for motifs
+    @ent1 __Role Protein $protein
+    @ent2 __Role DNA $dna
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@selectsFor:selectsFor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@selectsFor:selectsFor graph environment trait
+    # Selection for trait
+    @ent1 __Role Environment $environment
+    @ent2 __Role Trait $trait
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@sequesters:sequesters graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@sequesters:sequesters graph molecule target
+    # Molecular sequestration
+    @ent1 __Role Molecule $molecule
+    @ent2 __Role Target $target
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@shareCommonAncestor:shareCommonAncestor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@shareCommonAncestor:shareCommonAncestor graph species1 species2
+    # Shared common ancestor
+    @ent1 __Role Species $species1
+    @ent2 __Role RelatedSpecies $species2
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@shifts:shifts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@shifts:shifts graph selection trait
+    # Trait shift under selection
+    @ent1 __Role Selection $selection
+    @ent2 __Role Trait $trait
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@shiftsReadingFrame:shiftsReadingFrame graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@shiftsReadingFrame:shiftsReadingFrame graph mutation gene
+    # Reading frame shift
+    @ent1 __Role Mutation $mutation
+    @ent2 __Role Gene $gene
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@shows:shows graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@shows:shows graph entity property
+    # Exhibits property
+    @ent1 __Role Entity $entity
+    @ent2 __Role Property $property
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@showsColinearity:showsColinearity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@showsColinearity:showsColinearity graph gene protein
+    # Colinearity of gene and protein
+    @ent1 __Role Gene $gene
+    @ent2 __Role Protein $protein
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@signalAmplification:signalAmplification graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@signalAmplification:signalAmplification graph pathway factor
+    # Amplification factor
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role AmplificationFactor $factor
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@signalMolecule:signalMolecule graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@signalMolecule:signalMolecule graph pathway molecule
+    # Signaling molecule
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role SignalMolecule $molecule
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@signalType:signalType graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@signalType:signalType graph neuron type
+    # Type of neural signal
+    @ent1 __Role Neuron $neuron
+    @ent2 __Role SignalType $type
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@signalingIon:signalingIon graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@signalingIon:signalingIon graph pathway ion
+    # Signaling ion species
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role Ion $ion
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@sizeEffect:sizeEffect graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@sizeEffect:sizeEffect graph species effect
+    # Size-dependent effect
+    @ent1 __Role Species $species
+    @ent2 __Role Effect $effect
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@sodiumOutside:sodiumOutside graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@sodiumOutside:sodiumOutside graph cell concentration
+    # Extracellular sodium
+    @ent1 __Role Cell $cell
+    @ent2 __Role Concentration $concentration
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@soilDevelopment:soilDevelopment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@soilDevelopment:soilDevelopment graph weathering soil
+    # Soil formation
+    @ent1 __Role Weathering $weathering
+    @ent2 __Role Soil $soil
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@speciesEquilibrium:speciesEquilibrium graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@speciesEquilibrium:speciesEquilibrium graph island equilibrium
+    # Island biogeography equilibrium
+    @ent1 __Role Island $island
+    @ent2 __Role Equilibrium $equilibrium
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@specifies:specifies graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@specifies:specifies graph gene trait
+    # Genetic specification
+    @ent1 __Role Gene $gene
+    @ent2 __Role Trait $trait
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@specifiesAP:specifiesAP graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@specifiesAP:specifiesAP graph gene axis
+    # Anterior-posterior specification
+    @ent1 __Role Gene $gene
+    @ent2 __Role Axis $axis
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@stabilizedBy:stabilizedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@stabilizedBy:stabilizedBy graph structure factor
+    # Stabilization factor
+    @ent1 __Role Structure $structure
+    @ent2 __Role Factor $factor
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@startCodon:startCodon graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@startCodon:startCodon graph mrna codon
+    # Translation start codon
+    @ent1 __Role mRNA $mrna
+    @ent2 __Role Codon $codon
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@startsAt:startsAt graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@startsAt:startsAt graph process location
+    # Starting location
+    @ent1 __Role Process $process
+    @ent2 __Role Location $location
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@startsOn:startsOn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@startsOn:startsOn graph process structure
+    # Starting structure
+    @ent1 __Role Process $process
+    @ent2 __Role Structure $structure
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@startsWith:startsWith graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@startsWith:startsWith graph pathway step
+    # Initial step
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role FirstStep $step
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@statDimerization:statDimerization graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@statDimerization:statDimerization graph stat dimer
+    # STAT dimerization
+    @ent1 __Role STAT $stat
+    @ent2 __Role Dimer $dimer
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@states:states graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@states:states graph theorymodel statement
+    # Theoretical statement
+    @ent1 __Role Theory $theorymodel
+    @ent2 __Role Statement $statement
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@stomataControl:stomataControl graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@stomataControl:stomataControl graph plant stomata
+    # Stomatal regulation
+    @ent1 __Role Plant $plant
+    @ent2 __Role Stomata $stomata
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@stopCodons:stopCodons graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@stopCodons:stopCodons graph mrna codons
+    # Translation stop codons
+    @ent1 __Role mRNA $mrna
+    @ent2 __Role Codons $codons
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@strengthens:strengthens graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@strengthens:strengthens graph activity synapse
+    # Synaptic strengthening
+    @ent1 __Role Activity $activity
+    @ent2 __Role Synapse $synapse
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@structure:structure graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@structure:structure graph molecule structure_type
+    # Molecular structure
+    @ent1 __Role Molecule $molecule
+    @ent2 __Role Structure $structure_type
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@substrate:substrate graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@substrate:substrate graph enzyme substrate_mol
+    # Enzyme substrate specificity
+    @ent1 __Role Enzyme $enzyme
+    @ent2 __Role Substrate $substrate_mol
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@substrates:substrates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@substrates:substrates graph enzyme substrates_set
+    # Multiple substrates
+    @ent1 __Role Enzyme $enzyme
+    @ent2 __Role Substrates $substrates_set
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@supports:supports graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@supports:supports graph structure function
+    # Structural support
+    @ent1 __Role Structure $structure
+    @ent2 __Role Function $function
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@sustainedGrowth:sustainedGrowth graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@sustainedGrowth:sustainedGrowth graph population conditions
+    # Conditions for sustained growth
+    @ent1 __Role Population $population
+    @ent2 __Role Conditions $conditions
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@synapseTypes:synapseTypes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@synapseTypes:synapseTypes graph neuron types
+    # Types of synapses
+    @ent1 __Role Neuron $neuron
+    @ent2 __Role SynapseTypes $types
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@synthesisDirection:synthesisDirection graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@synthesisDirection:synthesisDirection graph polymerase direction
+    # Synthesis direction
+    @ent1 __Role Polymerase $polymerase
+    @ent2 __Role Direction $direction
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@targetCells:targetCells graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@targetCells:targetCells graph signal cells
+    # Target cell types
+    @ent1 __Role Signal $signal
+    @ent2 __Role Cells $cells
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@targetsAutoantigen:targetsAutoantigen graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@targetsAutoantigen:targetsAutoantigen graph cell antigen
+    # Autoimmune targeting
+    @ent1 __Role Cell $cell
+    @ent2 __Role Autoantigen $antigen
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@tenet:tenet graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@tenet:tenet graph theorymodel principle
+    # Theoretical tenet
+    @ent1 __Role Theory $theorymodel
+    @ent2 __Role Principle $principle
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@termination_involves:termination_involves graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@termination_involves:termination_involves graph process signals
+    # Termination machinery
+    @ent1 __Role Process $process
+    @ent2 __Role TerminationSignals $signals
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@th1th2Balance:th1th2Balance graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@th1th2Balance:th1th2Balance graph response balance
+    # Th1/Th2 balance
+    @ent1 __Role ImmuneResponse $response
+    @ent2 __Role Balance $balance
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@threshold:threshold graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@threshold:threshold graph neuron voltage
+    # Action potential threshold
+    @ent1 __Role Neuron $neuron
+    @ent2 __Role Voltage $voltage
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@thresholdDependent:thresholdDependent graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@thresholdDependent:thresholdDependent graph response threshold
+    # Threshold dependence
+    @ent1 __Role Response $response
+    @ent2 __Role Threshold $threshold
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@timeScale:timeScale graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@timeScale:timeScale graph process scale
+    # Temporal scale
+    @ent1 __Role Process $process
+    @ent2 __Role TimeScale $scale
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@tipRepresents:tipRepresents graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@tipRepresents:tipRepresents graph tree taxon
+    # Tip represents taxon
+    @ent1 __Role PhylogeneticTree $tree
+    @ent2 __Role Taxon $taxon
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@tissueDamage:tissueDamage graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@tissueDamage:tissueDamage graph pathogen tissue
+    # Tissue damage
+    @ent1 __Role Pathogen $pathogen
+    @ent2 __Role Tissue $tissue
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@tissueInvasion:tissueInvasion graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@tissueInvasion:tissueInvasion graph pathogen tissue
+    # Tissue invasion
+    @ent1 __Role Pathogen $pathogen
+    @ent2 __Role Tissue $tissue
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@transcriptionFactor:transcriptionFactor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@transcriptionFactor:transcriptionFactor graph gene factor
+    # Transcription factor binding
+    @ent1 __Role Gene $gene
+    @ent2 __Role TranscriptionFactor $factor
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@transcriptionalTarget:transcriptionalTarget graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@transcriptionalTarget:transcriptionalTarget graph tf gene
+    # TF target gene
+    @ent1 __Role TranscriptionFactor $tf
+    @ent2 __Role TargetGene $gene
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@transitionalForms:transitionalForms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@transitionalForms:transitionalForms graph ancestor descendants
+    # Transitional fossil forms
+    @ent1 __Role Ancestor $ancestor
+    @ent2 __Role TransitionalForms $descendants
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@translocatesTo:translocatesTo graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@translocatesTo:translocatesTo graph protein compartment
+    # Protein translocation
+    @ent1 __Role Protein $protein
+    @ent2 __Role Compartment $compartment
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@transpiration:transpiration graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@transpiration:transpiration graph plant water
+    # Plant transpiration
+    @ent1 __Role Plant $plant
+    @ent2 __Role Water $water
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
@@ -4418,213 +4854,243 @@ end
     return $movement
 end
 
-@treatmentApproach:treatmentApproach graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@treatmentApproach:treatmentApproach graph disease approach
+    # Treatment approach
+    @ent1 __Role Disease $disease
+    @ent2 __Role Approach $approach
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@trophicLevel:trophicLevel graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@trophicLevel:trophicLevel graph organism level
+    # Trophic level position
+    @ent1 __Role Organism $organism
+    @ent2 __Role TrophicLevel $level
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@typeOf:typeOf graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@typeOf:typeOf graph entity type
+    # Type classification
+    @ent1 __Role Entity $entity
+    @ent2 __Role Type $type
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@ultimateTargets:ultimateTargets graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@ultimateTargets:ultimateTargets graph pathway targets
+    # Ultimate pathway targets
+    @ent1 __Role Pathway $pathway
+    @ent2 __Role Targets $targets
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@unchanged:unchanged graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@unchanged:unchanged graph parameter process
+    # Unchanged by process
+    @ent1 __Role Parameter $parameter
+    @ent2 __Role Process $process
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@undergoes:undergoes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@undergoes:undergoes graph entity process
+    # Undergoes process
+    @ent1 __Role Entity $entity
+    @ent2 __Role Process $process
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@universalCode:universalCode graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@universalCode:universalCode graph code organisms
+    # Universal genetic code
+    @ent1 __Role GeneticCode $code
+    @ent2 __Role Organisms $organisms
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@unwinds:unwinds graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@unwinds:unwinds graph helicase dna
+    # DNA unwinding
+    @ent1 __Role Helicase $helicase
+    @ent2 __Role DNA $dna
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@usesCodon:usesCodon graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@usesCodon:usesCodon graph amino_acid codons
+    # Codon usage for amino acid
+    @ent1 __Role AminoAcid $amino_acid
+    @ent2 __Role Codons $codons
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@usesEnzyme:usesEnzyme graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@usesEnzyme:usesEnzyme graph process enzyme
+    # Process uses enzyme
+    @ent1 __Role Process $process
+    @ent2 __Role Enzyme $enzyme
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@usesFeedback:usesFeedback graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@usesFeedback:usesFeedback graph system feedback
+    # Feedback mechanism
+    @ent1 __Role System $system
+    @ent2 __Role Feedback $feedback
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@usesGProtein:usesGProtein graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@usesGProtein:usesGProtein graph receptor gprotein
+    # G-protein coupled receptor
+    @ent1 __Role Receptor $receptor
+    @ent2 __Role GProtein $gprotein
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@usesGradient:usesGradient graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@usesGradient:usesGradient graph transport gradient
+    # Gradient-driven transport
+    @ent1 __Role Transport $transport
+    @ent2 __Role Gradient $gradient
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@usesNegativeFeedback:usesNegativeFeedback graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@usesNegativeFeedback:usesNegativeFeedback graph system feedback
+    # Negative feedback loop
+    @ent1 __Role System $system
+    @ent2 __Role NegativeFeedback $feedback
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@usesSubstrate:usesSubstrate graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@usesSubstrate:usesSubstrate graph process substrate
+    # Process substrate requirement
+    @ent1 __Role Process $process
+    @ent2 __Role Substrate $substrate
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@usesTerms:usesTerms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@usesTerms:usesTerms graph system terminology
+    # Terminology used
+    @ent1 __Role System $system
+    @ent2 __Role Terminology $terminology
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@vascularTissue:vascularTissue graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@vascularTissue:vascularTissue graph organ tissue
+    # Plant vascular tissue
+    @ent1 __Role Organ $organ
+    @ent2 __Role VascularTissue $tissue
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@vdjRearrangement:vdjRearrangement graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@vdjRearrangement:vdjRearrangement graph cell locus
+    # V(D)J recombination
+    @ent1 __Role Cell $cell
+    @ent2 __Role GeneticLocus $locus
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@vectors:vectors graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@vectors:vectors graph disease vectors
+    # Disease vectors
+    @ent1 __Role Disease $disease
+    @ent2 __Role Vectors $vectors
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@vestigialExample:vestigialExample graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@vestigialExample:vestigialExample graph structure function
+    # Vestigial structure example
+    @ent1 __Role VestigialStructure $structure
+    @ent2 __Role LostFunction $function
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@vestigialStructures:vestigialStructures graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@vestigialStructures:vestigialStructures graph organism structures
+    # Vestigial structures
+    @ent1 __Role Organism $organism
+    @ent2 __Role VestigialStructures $structures
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@viralAssembly:viralAssembly graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@viralAssembly:viralAssembly graph virus components
+    # Virion assembly
+    @ent1 __Role Virus $virus
+    @ent2 __Role Components $components
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@viralAttachment:viralAttachment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@viralAttachment:viralAttachment graph virus receptor
+    # Viral attachment
+    @ent1 __Role Virus $virus
+    @ent2 __Role Receptor $receptor
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@viralEntry:viralEntry graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@viralEntry:viralEntry graph virus cell
+    # Viral entry
+    @ent1 __Role Virus $virus
+    @ent2 __Role Cell $cell
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@viralRelease:viralRelease graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@viralRelease:viralRelease graph virus cell
+    # Viral release
+    @ent1 __Role Virus $virus
+    @ent2 __Role Cell $cell
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@viralReplication:viralReplication graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@viralReplication:viralReplication graph virus cell
+    # Viral replication
+    @ent1 __Role Virus $virus
+    @ent2 __Role Cell $cell
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@visualization:visualization graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@visualization:visualization graph technique target
+    # Visualization method
+    @ent1 __Role Technique $technique
+    @ent2 __Role Target $target
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@voltage:voltage graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@voltage:voltage graph channel voltage_range
+    # Voltage-gated channel
+    @ent1 __Role Channel $channel
+    @ent2 __Role VoltageRange $voltage_range
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@warmingMechanisms:warmingMechanisms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@warmingMechanisms:warmingMechanisms graph organism mechanisms
+    # Thermoregulatory warming
+    @ent1 __Role Organism $organism
+    @ent2 __Role WarmingMechanisms $mechanisms
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 
-@waterLoss:waterLoss graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+@waterLoss:waterLoss graph organism water
+    # Water loss
+    @ent1 __Role Organism $organism
+    @ent2 __Role Water $water
+    @relation __Pair $ent1 $ent2
     return $relation
 end
 

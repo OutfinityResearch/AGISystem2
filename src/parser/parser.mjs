@@ -661,7 +661,10 @@ export class Parser {
       }
       kind = kindToken.value;
 
-      const sourceToken = this.expect(TOKEN_TYPES.IDENTIFIER);
+      const sourceToken = this.advance();
+      if (sourceToken.type !== TOKEN_TYPES.IDENTIFIER && sourceToken.type !== TOKEN_TYPES.NUMBER) {
+        throw new ParseError("Expected identifier or number in solve declaration", sourceToken);
+      }
       source = sourceToken.value;
     } else if (isSolveKeywordToken(firstToken)) {
       // Pattern: solve keyword identifier (e.g., "noConflict conflictsWith")

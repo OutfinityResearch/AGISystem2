@@ -1,4599 +1,3062 @@
 # History - Domain-Specific Operators
-# AUTO-GENERATED: Exact case preservation
-
-@Abandoned:Abandoned graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Absolute:Absolute graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Activist:Activist graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Admiral:Admiral graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Adopted:Adopted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Advanced:Advanced graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Advocated:Advocated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Affirmed:Affirmed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Aimed:Aimed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Allowed:Allowed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Analyzed:Analyzed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Applied:Applied graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Argued:Argued graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Arrived:Arrived graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Artist:Artist graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Assassinated:Assassinated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Asserted:Asserted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Astronomer:Astronomer graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Attacked:Attacked graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Attracted:Attracted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Banned:Banned graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Based:Based graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Became:Became graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Besieged:Besieged graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Blamed:Blamed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Blockaded:Blockaded graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Boomed:Boomed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Boycotted:Boycotted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Built:Built graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Burst:Burst graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Called:Called graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Capital:Capital graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Captured:Captured graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Caused:Caused graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Center:Center graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Chairman:Chairman graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Challenged:Challenged graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Challenges:Challenges graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Chancellor:Chancellor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Changed:Changed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@City:City graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@CityState:CityState graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Civilization:Civilization graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Claimed:Claimed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Codified:Codified graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Collapsed:Collapsed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Collectivized:Collectivized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Colonized:Colonized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Committed:Committed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Competed:Competed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Completed:Completed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Confronted:Confronted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Connected:Connected graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Conquered:Conquered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Constructed:Constructed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Continues:Continues graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Contributed:Contributed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Controlled:Controlled graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Converted:Converted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Cracked:Cracked graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Crashed:Crashed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Created:Created graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Crisis:Crisis graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Criticized:Criticized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Crossed:Crossed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Crowned:Crowned graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Crucified:Crucified graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Dated:Dated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Declared:Declared graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Declined:Declined graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Defeated:Defeated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Defended:Defended graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Defined:Defined graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Demanded:Demanded graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Demonstrated:Demonstrated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Designed:Designed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Destroyed:Destroyed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Devastated:Devastated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Developed:Developed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Died:Died graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Discovered:Discovered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Disrupted:Disrupted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Distributed:Distributed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Divided:Divided graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Dominated:Dominated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Drafted:Drafted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Dropped:Dropped graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Duke:Duke graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Dynasty:Dynasty graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Eased:Eased graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Elected:Elected graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Embraced:Embraced graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Emerged:Emerged graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Emperor:Emperor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Emphasized:Emphasized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Empire:Empire graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Employed:Employed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Empress:Empress graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Enabled:Enabled graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Encouraged:Encouraged graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Ended:Ended graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Enriched:Enriched graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Entered:Entered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Escalated:Escalated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Established:Established graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Exchanged:Exchanged graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Executed:Executed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Exemplified:Exemplified graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Expanded:Expanded graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Exploited:Exploited graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Explored:Explored graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Explorer:Explorer graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Extended:Extended graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Faced:Faced graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Faces:Faces graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Failed:Failed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Family:Family graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Famous:Famous graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Fell:Fell graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@First:First graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@FirstEmperor:FirstEmperor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@FirstKnown:FirstKnown graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Fled:Fled graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Flooded:Flooded graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Flourished:Flourished graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@FlowThrough:FlowThrough graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Focused:Focused graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Forced:Forced graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Formed:Formed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Formulated:Formulated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Fought:Fought graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Founded:Founded graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Freed:Freed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Gained:Gained graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Gave:Gave graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@General:General graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Generated:Generated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Global:Global graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Golden:Golden graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Governed:Governed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@GovernmentType:GovernmentType graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Granted:Granted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Grew:Grew graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Had:Had graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Held:Held graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Honored:Honored graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@HonoredThe:HonoredThe graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Hub:Hub graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Implemented:Implemented graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Imposed:Imposed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Imprisoned:Imprisoned graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Improved:Improved graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@InPeriod:InPeriod graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Increased:Increased graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Industrialized:Industrialized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Inflated:Inflated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Influenced:Influenced graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Inspired:Inspired graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Integrated:Integrated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Intervened:Intervened graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Introduced:Introduced graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Invaded:Invaded graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Invented:Invented graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Investigated:Investigated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Involved:Involved graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Issued:Issued graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Killed:Killed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@King:King graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Kingdoms:Kingdoms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Landed:Landed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Largest:Largest graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Lasted:Lasted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Launched:Launched graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Leader:Leader graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Led:Led graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Left:Left graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Legalized:Legalized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Liberated:Liberated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Lifted:Lifted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Limited:Limited graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Located:Located graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@LocatedIn:LocatedIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Longest:Longest graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Lost:Lost graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Made:Made graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Mastered:Mastered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Member:Member graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Met:Met graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Migrated:Migrated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Mixed:Mixed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Mobilized:Mobilized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Modernized:Modernized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Monk:Monk graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Movement:Movement graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Murdered:Murdered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Nationalized:Nationalized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Negotiated:Negotiated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Observed:Observed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Occupied:Occupied graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Opened:Opened graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Opposed:Opposed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Oppressed:Oppressed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Organized:Organized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Overthrew:Overthrew graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Painted:Painted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Passed:Passed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Patronized:Patronized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Peak:Peak graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Peasant:Peasant graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@People:People graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Period:Period graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Persecuted:Persecuted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Pharaoh:Pharaoh graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Philosopher:Philosopher graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Physicist:Physicist graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Placed:Placed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Planned:Planned graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@PoliticalSystem:PoliticalSystem graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Posted:Posted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Powered:Powered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Powerful:Powerful graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Practiced:Practiced graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Preserved:Preserved graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@President:President graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Pressured:Pressured graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Prevented:Prevented graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Printed:Printed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Proclaimed:Proclaimed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Produced:Produced graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Promoted:Promoted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Promotes:Promotes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Prophet:Prophet graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Proposed:Proposed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Protected:Protected graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Protested:Protested graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Provided:Provided graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Purged:Purged graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Pursued:Pursued graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Queen:Queen graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Questioned:Questioned graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Raided:Raided graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Reached:Reached graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Rebuilt:Rebuilt graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Reconquered:Reconquered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Recovered:Recovered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Rediscovered:Rediscovered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Redrew:Redrew graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Reformed:Reformed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Regretted:Regretted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Reigned:Reigned graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Released:Released graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Remain:Remain graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Remains:Remains graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Replaced:Replaced graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Represented:Represented graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Required:Required graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Requires:Requires graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Researched:Researched graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Resigned:Resigned graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Resolved:Resolved graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Restored:Restored graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Resulted:Resulted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Reunified:Reunified graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Revived:Revived graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Revolution:Revolution graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Revolutionized:Revolutionized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Richest:Richest graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Rival:Rival graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Rose:Rose graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Ruled:Ruled graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@RuledBy:RuledBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Sacked:Sacked graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Said:Said graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Sailed:Sailed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Scientist:Scientist graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Sculpted:Sculpted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Seceded:Seceded graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Secured:Secured graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Segregated:Segregated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Seized:Seized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Sent:Sent graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Served:Served graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@ServedAs:ServedAs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Settled:Settled graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Shaped:Shaped graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Shocked:Shocked graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Shortened:Shortened graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Showed:Showed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Signed:Signed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Slave:Slave graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Slaves:Slaves graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Sought:Sought graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Speculated:Speculated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Split:Split graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Spread:Spread graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Staged:Staged graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Standardized:Standardized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Started:Started graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Stormed:Stormed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Strained:Strained graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Strategic:Strategic graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Strengthened:Strengthened graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Student:Student graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Suffered:Suffered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Sultan:Sultan graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Supported:Supported graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Suppressed:Suppressed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Surrendered:Surrendered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Survived:Survived graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Symbol:Symbol graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Symbolized:Symbolized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@System:System graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Taught:Taught graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Temporary:Temporary graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Threatens:Threatens graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Traded:Traded graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Transformed:Transformed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Translated:Translated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Tried:Tried graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Triggered:Triggered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Tsar:Tsar graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Turned:Turned graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Tutored:Tutored graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Underdeveloped:Underdeveloped graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Unified:Unified graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@United:United graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Used:Used graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@UsedFor:UsedFor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Valued:Valued graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Voted:Voted graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@War:War graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Wars:Wars graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Weakened:Weakened graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Welcomed:Welcomed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Westernized:Westernized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Withdrew:Withdrew graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Won:Won graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Worked:Worked graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Writer:Writer graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-@Wrote:Wrote graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
-end
-
-// Historical Theory - Comprehensive Knowledge Base
-// Over 1000 facts covering major eras, civilizations, events, and causation chains
-
-// ========== PREHISTORIC ERA ==========
-
-@:Stone_Age graph
-    @fact InPeriod StoneAge Prehistory
-    return $fact
-end
-
-@:Bronze_Age graph
-    @fact InPeriod BronzeAge Prehistory
-    return $fact
-end
-
-@:Iron_Age graph
-    @fact InPeriod IronAge Prehistory
-    return $fact
-end
-
-@:Tool_Development graph Period Technology Society
-    @p1 InPeriod Period Prehistory
-    @p2 Developed Period Technology
-    @p3 Enabled Technology Society
-    return $p3
-end
-
-@:Fire_Discovery graph Discovery Impact Survival
-    @d1 Discovered Humans Fire
-    @d2 Enabled Fire Cooking
-    @d3 Improved Cooking Survival
-    return $d3
-end
-
-// ========== ANCIENT CIVILIZATIONS ==========
-
-// Ancient Egypt
-@:Ancient_Egypt graph
-    @fact Civilization Egypt Ancient
-    return $fact
-end
-
-@:Pharaoh_Rule graph
-    @fact RuledBy Egypt Pharaohs
-    return $fact
-end
-
-@:Pyramids_Built graph Civilization Structure Purpose
-    @c1 Civilization Egypt Ancient
-    @c2 Built Egypt Pyramids
-    @c3 ServedAs Pyramids Tombs
-    @c4 HonoredThe Tombs Pharaohs
-    return $c4
-end
-
-@:Hieroglyphics graph Civilization Writing Communication
-    @w1 Developed Egypt Hieroglyphics
-    @w2 UsedFor Hieroglyphics Writing
-    @w3 Enabled Writing Communication
-    @w4 Preserved Communication History
-    return $w4
-end
-
-@:Nile_River graph River Agriculture Civilization
-    @r1 LocatedIn NileRiver Egypt
-    @r2 Flooded NileRiver Annually
-    @r3 Enriched Flooding Soil
-    @r4 Enabled FertileSoil Agriculture
-    @r5 Supported Agriculture Civilization
-    return $r5
-end
-
-@:Tutankhamun graph
-    @fact Pharaoh Tutankhamun Egypt
-    return $fact
-end
-
-@:Cleopatra graph
-    @fact Pharaoh Cleopatra Egypt
-    return $fact
-end
-
-@:Ramses_II graph Leader Military Expansion
-    @l1 Pharaoh RamsesII Egypt
-    @l2 Led RamsesII Military
-    @l3 Expanded Military Territory
-    @l4 Built RamsesII Monuments
-    return $l4
-end
-
-// Mesopotamia
-@:Mesopotamia graph
-    @fact Civilization Mesopotamia Ancient
-    return $fact
-end
-
-@:Sumerians graph
-    @fact People Sumerians Mesopotamia
-    return $fact
-end
-
-@:Cuneiform graph Writing System Records
-    @w1 Invented Sumerians Cuneiform
-    @w2 FirstKnown Cuneiform WritingSystem
-    @w3 Used Cuneiform RecordKeeping
-    @w4 Enabled RecordKeeping Trade
-    return $w4
-end
-
-@:Code_Of_Hammurabi graph Ruler Law Society
-    @r1 Ruled Hammurabi Babylon
-    @r2 Created Hammurabi CodeOfLaws
-    @r3 FirstKnown CodeOfLaws WrittenLaw
-    @r4 Established WrittenLaw Justice
-    @r5 Organized Justice Society
-    return $r5
-end
-
-@:Tigris_Euphrates graph Rivers Agriculture Cities
-    @g1 FlowThrough TigrisRiver Mesopotamia
-    @g2 FlowThrough EuphratesRiver Mesopotamia
-    @g3 Enabled BothRivers Irrigation
-    @g4 Supported Irrigation Agriculture
-    @g5 Led Agriculture Cities
-    return $g5
-end
-
-// Ancient Greece
-@:Ancient_Greece graph
-    @fact Civilization Greece Classical
-    return $fact
-end
-
-@:Greek_City_States graph
-    @fact PoliticalSystem Greece CityStates
-    return $fact
-end
-
-@:Athens graph
-    @fact CityState Athens Greece
-    return $fact
-end
-
-@:Sparta graph
-    @fact CityState Sparta Greece
-    return $fact
-end
-
-@:Athenian_Democracy graph CityState Government Influence
-    @a1 CityState Athens Greece
-    @a2 Developed Athens Democracy
-    @a3 FirstKnown Democracy DirectDemocracy
-    @a4 Influenced DirectDemocracy ModernGovernment
-    @a5 Allowed Democracy CitizenParticipation
-    return $a5
-end
-
-@:Spartan_Military graph CityState Military Culture
-    @s1 CityState Sparta Greece
-    @s2 Focused Sparta MilitaryTraining
-    @s3 Created MilitaryTraining WarriorSociety
-    @s4 Dominated WarriorSociety GreekWarfare
-    @s5 Valued Sparta Discipline
-    return $s5
-end
-
-@:Socrates graph
-    @fact Philosopher Socrates Athens
-    return $fact
-end
-
-@:Plato graph
-    @fact Philosopher Plato Athens
-    return $fact
-end
-
-@:Aristotle graph
-    @fact Philosopher Aristotle Greece
-    return $fact
-end
-
-@:Socratic_Method graph Philosopher Teaching Knowledge
-    @p1 Philosopher Socrates Athens
-    @p2 Developed Socrates SocraticMethod
-    @p3 UsedFor SocraticMethod CriticalThinking
-    @p4 Influenced CriticalThinking Philosophy
-    @p5 Taught Socrates Plato
-    return $p5
-end
-
-@:Platonic_Philosophy graph Teacher Student Ideas
-    @t1 Taught Socrates Plato
-    @t2 Founded Plato Academy
-    @t3 Developed Plato TheoryOfForms
-    @t4 Wrote Plato Republic
-    @t5 Influenced TheoryOfForms WesternPhilosophy
-    return $t5
-end
-
-@:Aristotelian_Logic graph Philosopher Science Method
-    @a1 Student Aristotle Plato
-    @a2 Founded Aristotle Lyceum
-    @a3 Developed Aristotle Logic
-    @a4 Created Aristotle ScientificMethod
-    @a5 Tutored Aristotle AlexanderTheGreat
-    return $a5
-end
-
-@:Alexander_The_Great graph Conqueror Empire Culture
-    @c1 King AlexanderTheGreat Macedon
-    @c2 Tutored AlexanderTheGreat Aristotle
-    @c3 Conquered AlexanderTheGreat PersianEmpire
-    @c4 Created AlexanderTheGreat HellenisticEmpire
-    @c5 Spread HellenisticEmpire GreekCulture
-    return $c5
-end
-
-@:Persian_Wars graph Conflict Victory Freedom
-    @w1 Invaded Persia Greece
-    @w2 Fought Greece Persia
-    @w3 Won Athens Marathon
-    @w4 Defended Sparta Thermopylae
-    @w5 Preserved Victory GreekIndependence
-    return $w5
-end
-
-@:Peloponnesian_War graph Conflict Rivalry Decline
-    @pw1 Fought Athens Sparta
-    @pw2 Lasted PeloponnesianWar 27Years
-    @pw3 Won Sparta War
-    @pw4 Weakened War Greece
-    @pw5 Led Weakness MacedonianConquest
-    return $pw5
-end
-
-@:Greek_Olympics graph Festival Unity Culture
-    @o1 Held OlympicGames Olympia
-    @o2 Honored OlympicGames Zeus
-    @o3 United OlympicGames GreekCityStates
-    @o4 Promoted OlympicGames PeacefulCompetition
-    @o5 Influenced AncientOlympics ModernOlympics
-    return $o5
-end
-
-// Ancient Rome
-@:Ancient_Rome graph
-    @fact Civilization Rome Classical
-    return $fact
-end
-
-@:Roman_Republic graph
-    @fact GovernmentType Rome Republic
-    return $fact
-end
-
-@:Roman_Empire graph
-    @fact GovernmentType Rome Empire
-    return $fact
-end
-
-@:Founding_Of_Rome graph Legend City Civilization
-    @f1 Founded Romulus Rome
-    @f2 Dated Founding 753BC
-    @f3 Started Rome SmallCity
-    @f4 Grew SmallCity GreatEmpire
-    @f5 Lasted RomanCivilization 1000Years
-    return $f5
-end
-
-@:Roman_Senate graph Institution Republic Power
-    @rs1 GovernmentType Rome Republic
-    @rs2 Governed Senate Rome
-    @rs3 Represented Senate Aristocracy
-    @rs4 Made Senate Laws
-    @rs5 Controlled Senate Military
-    return $rs5
-end
-
-@:Julius_Caesar graph Leader Conquest Dictatorship
-    @jc1 General JuliusCaesar Rome
-    @jc2 Conquered JuliusCaesar Gaul
-    @jc3 Crossed JuliusCaesar Rubicon
-    @jc4 Became JuliusCaesar Dictator
-    @jc5 Assassinated JuliusCaesar Senate
-    return $jc5
-end
-
-@:Roman_Civil_War graph Assassination Conflict Empire
-    @rcw1 Assassinated JuliusCaesar Senate
-    @rcw2 Triggered Assassination CivilWar
-    @rcw3 Fought Octavian MarkAntony
-    @rcw4 Won Octavian ActiumBattle
-    @rcw5 Became Octavian Augustus
-    return $rcw5
-end
-
-@:Augustus_Empire graph Leader Transition Peace
-    @ae1 Became Octavian Augustus
-    @ae2 FirstEmperor Augustus Rome
-    @ae3 Ended Augustus Republic
-    @ae4 Started Augustus Empire
-    @ae5 Established Augustus PaxRomana
-    return $ae5
-end
-
-@:Pax_Romana graph Peace Prosperity Culture
-    @pr1 Established Augustus PaxRomana
-    @pr2 Lasted PaxRomana 200Years
-    @pr3 Enabled PaxRomana Trade
-    @pr4 Flourished Culture Empire
-    @pr5 Spread Roman Culture
-    return $pr5
-end
-
-@:Roman_Engineering graph Innovation Infrastructure Empire
-    @re1 Built Rome Roads
-    @re2 Constructed Rome Aqueducts
-    @re3 Invented Rome Concrete
-    @re4 Connected Infrastructure Empire
-    @re5 Influenced RomanEngineering ModernConstruction
-    return $re5
-end
-
-@:Roman_Law graph System Justice Legacy
-    @rl1 Developed Rome LegalSystem
-    @rl2 Codified Justinian RomanLaw
-    @rl3 Established RomanLaw RightsAndDuties
-    @rl4 Influenced RomanLaw ModernLaw
-    @rl5 Based ModernLaw CivilLaw
-    return $rl5
-end
-
-@:Christianity_Rise graph Religion Persecution Adoption
-    @cr1 Founded Jesus Christianity
-    @cr2 Spread Apostles Christianity
-    @cr3 Persecuted Rome Christians
-    @cr4 Converted Constantine Christianity
-    @cr5 Became Christianity OfficialReligion
-    return $cr5
-end
-
-@:Constantine graph Emperor Conversion Capital
-    @c1 Emperor Constantine Rome
-    @c2 Won Constantine MilvianBridge
-    @c3 Converted Constantine Christianity
-    @c4 Legalized EdictOfMilan Christianity
-    @c5 Founded Constantine Constantinople
-    return $c5
-end
-
-@:Roman_Decline graph Barbarians Division Fall
-    @rd1 Invaded Barbarians Rome
-    @rd2 Divided Empire EastAndWest
-    @rd3 Weakened Division Empire
-    @rd4 Sacked Visigoths Rome
-    @rd5 Fell WesternRome 476AD
-    return $rd5
-end
-
-// Ancient China
-@:Ancient_China graph
-    @fact Civilization China Ancient
-    return $fact
-end
-
-@:Qin_Dynasty graph
-    @fact Dynasty Qin China
-    return $fact
-end
-
-@:Han_Dynasty graph
-    @fact Dynasty Han China
-    return $fact
-end
-
-@:Qin_Shi_Huang graph Emperor Unification Wall
-    @qsh1 Emperor QinShiHuang QinDynasty
-    @qsh2 Unified QinShiHuang China
-    @qsh3 Standardized QinShiHuang Writing
-    @qsh4 Built QinShiHuang GreatWall
-    @qsh5 Created QinShiHuang TerracottaArmy
-    return $qsh5
-end
-
-@:Great_Wall graph Defense Construction Protection
-    @gw1 Built QinDynasty GreatWall
-    @gw2 Protected GreatWall Invasions
-    @gw3 Extended HanDynasty GreatWall
-    @gw4 Longest GreatWall Structure
-    @gw5 Symbol GreatWall China
-    return $gw5
-end
-
-@:Han_Dynasty_Golden_Age graph Dynasty Culture Innovation
-    @hdga1 Dynasty Han China
-    @hdga2 Lasted HanDynasty 400Years
-    @hdga3 Developed HanDynasty PaperMaking
-    @hdga4 Established HanDynasty SilkRoad
-    @hdga5 Flourished Culture Science
-    return $hdga5
-end
-
-@:Silk_Road graph Trade Route Exchange
-    @sr1 Established HanDynasty SilkRoad
-    @sr2 Connected SilkRoad EastAndWest
-    @sr3 Traded SilkRoad Goods
-    @sr4 Exchanged SilkRoad Ideas
-    @sr5 Spread SilkRoad Culture
-    return $sr5
-end
-
-@:Confucius graph Philosopher Teaching Ethics
-    @cf1 Philosopher Confucius China
-    @cf2 Taught Confucius Ethics
-    @cf3 Emphasized Confucianism Respect
-    @cf4 Influenced Confucianism ChineseSociety
-    @cf5 Spread Confucianism EastAsia
-    return $cf5
-end
-
-@:Chinese_Inventions graph Innovation Technology Progress
-    @ci1 Invented China Paper
-    @ci2 Invented China Gunpowder
-    @ci3 Invented China Compass
-    @ci4 Invented China PrintingPress
-    @ci5 Transformed Inventions World
-    return $ci5
-end
-
-// Ancient India
-@:Ancient_India graph
-    @fact Civilization India Ancient
-    return $fact
-end
-
-@:Indus_Valley graph
-    @fact Civilization IndusValley Ancient
-    return $fact
-end
-
-@:Maurya_Empire graph
-    @fact Empire Maurya India
-    return $fact
-end
-
-@:Gupta_Empire graph
-    @fact Empire Gupta India
-    return $fact
-end
-
-@:Indus_Valley_Civilization graph Civilization Cities Planning
-    @ivc1 Flourished IndusValley 2500BC
-    @ivc2 Built IndusValley PlannedCities
-    @ivc3 Developed IndusValley Plumbing
-    @ivc4 Created IndusValley Writing
-    @ivc5 Declined IndusValley UnknownReasons
-    return $ivc5
-end
-
-@:Ashoka graph Emperor Conquest Buddhism
-    @a1 Emperor Ashoka MauryaEmpire
-    @a2 Conquered Ashoka Kalinga
-    @a3 Regretted Ashoka Violence
-    @a4 Converted Ashoka Buddhism
-    @a5 Spread Ashoka BuddhistTeachings
-    return $a5
-end
-
-@:Buddhism_Spread graph Religion Missionary Influence
-    @bs1 Founded Buddha Buddhism
-    @bs2 Taught Buddha MiddleWay
-    @bs3 Promoted Ashoka Buddhism
-    @bs4 Spread Buddhism Asia
-    @bs5 Influenced Buddhism Culture
-    return $bs5
-end
-
-@:Gupta_Golden_Age graph Empire Science Arts
-    @gga1 Empire Gupta India
-    @gga2 Flourished GuptaEmpire Arts
-    @gga3 Advanced GuptaEmpire Mathematics
-    @gga4 Developed GuptaEmpire Astronomy
-    @gga5 Created GuptaEmpire ZeroConcept
-    return $gga5
-end
-
-@:Hindu_Philosophy graph Religion Culture Society
-    @hp1 Developed India Hinduism
-    @hp2 Wrote Sages Vedas
-    @hp3 Taught Hinduism Karma
-    @hp4 Influenced Hinduism IndianCulture
-    @hp5 Practiced Hinduism CasteSystem
-    return $hp5
-end
-
-// ========== MEDIEVAL PERIOD ==========
-
-@:Medieval_Period graph
-    @fact Period MiddleAges Medieval
-    return $fact
-end
-
-@:Byzantine_Empire graph
-    @fact Empire Byzantine Medieval
-    return $fact
-end
-
-@:Byzantine_Continuation graph Empire Survival Culture
-    @bc1 Survived EasternRome Fall
-    @bc2 Became EasternRome ByzantineEmpire
-    @bc3 Preserved Byzantine GreekRomanCulture
-    @bc4 Lasted Byzantine 1000Years
-    @bc5 Fell Byzantine 1453
-    return $bc5
-end
-
-@:Justinian_Code graph Emperor Law Codification
-    @jc1 Emperor Justinian Byzantine
-    @jc2 Reconquered Justinian WesternTerritories
-    @jc3 Built Justinian HagiaSophia
-    @jc4 Codified Justinian RomanLaw
-    @jc5 Preserved JustinianCode LegalKnowledge
-    return $jc5
-end
-
-@:Islamic_Golden_Age graph
-    @fact Period IslamicGoldenAge Medieval
-    return $fact
-end
-
-@:Muhammad graph Prophet Religion Empire
-    @m1 Prophet Muhammad Islam
-    @m2 Founded Muhammad Islam
-    @m3 Unified Muhammad Arabia
-    @m4 Spread Islam Rapidly
-    @m5 Created Islam Caliphate
-    return $m5
-end
-
-@:Islamic_Expansion graph Religion Conquest Culture
-    @ie1 Founded Muhammad Islam
-    @ie2 Expanded Caliphate MiddleEast
-    @ie3 Conquered Caliphate NorthAfrica
-    @ie4 Reached Caliphate Spain
-    @ie5 Spread Islam Science
-    return $ie5
-end
-
-@:Islamic_Science graph Scholars Knowledge Preservation
-    @is1 Period IslamicGoldenAge Medieval
-    @is2 Preserved Scholars GreekTexts
-    @is3 Advanced Scholars Mathematics
-    @is4 Developed Scholars Algebra
-    @is5 Contributed Scholars Medicine
-    return $is5
-end
-
-@:Abbasid_Caliphate graph Dynasty Capital Learning
-    @ac1 Dynasty Abbasid Islamic
-    @ac2 Founded Abbasid Baghdad
-    @ac3 Built Abbasid HouseOfWisdom
-    @ac4 Translated Scholars Texts
-    @ac5 Flourished Baghdad Culture
-    return $ac5
-end
-
-@:Feudalism graph
-    @fact System Feudalism Medieval
-    return $fact
-end
-
-@:Feudal_System graph Society Hierarchy Lords
-    @fs1 System Feudalism Medieval
-    @fs2 Based Feudalism LandOwnership
-    @fs3 Served Vassals Lords
-    @fs4 Protected Lords Vassals
-    @fs5 Worked Serfs Land
-    return $fs5
-end
-
-@:Charlemagne graph King Empire Culture
-    @ch1 King Charlemagne Franks
-    @ch2 Crowned Charlemagne HolyRomanEmperor
-    @ch3 United Charlemagne WesternEurope
-    @ch4 Promoted Charlemagne Education
-    @ch5 Started Charlemagne CarolingianRenaissance
-    return $ch5
-end
-
-@:Viking_Age graph
-    @fact Period VikingAge Medieval
-    return $fact
-end
-
-@:Viking_Raids graph Warriors Raids Settlement
-    @vr1 Period VikingAge Medieval
-    @vr2 Raided Vikings Europe
-    @vr3 Sailed Vikings LongShips
-    @vr4 Settled Vikings Iceland
-    @vr5 Reached Vikings America
-    return $vr5
-end
-
-@:Norman_Conquest graph Invasion Battle Change
-    @nc1 Duke WilliamTheConqueror Normandy
-    @nc2 Invaded William England
-    @nc3 Won William HastingsBattle
-    @nc4 Became William KingOfEngland
-    @nc5 Transformed Norman EnglishCulture
-    return $nc5
-end
-
-@:Crusades graph
-    @fact Wars Crusades Medieval
-    return $fact
-end
-
-@:First_Crusade graph Pope War Jerusalem
-    @fc1 Called PopeUrbanII Crusade
-    @fc2 Mobilized Christians Warriors
-    @fc3 Fought Crusaders Muslims
-    @fc4 Captured Crusaders Jerusalem
-    @fc5 Established Crusaders CrusaderStates
-    return $fc5
-end
-
-@:Later_Crusades graph Conflicts Failure Relations
-    @lc1 Launched Europe MultipleCrusades
-    @lc2 Lost Christians Jerusalem
-    @lc3 Failed MostCrusades
-    @lc4 Weakened Crusades Byzantine
-    @lc5 Strained Crusades ChristianMuslimRelations
-    return $lc5
-end
-
-@:Mongol_Empire graph
-    @fact Empire Mongol Medieval
-    return $fact
-end
-
-@:Genghis_Khan graph Leader Conquest Empire
-    @gk1 Leader GenghisKhan Mongols
-    @gk2 United GenghisKhan MongolTribes
-    @gk3 Created GenghisKhan Army
-    @gk4 Conquered GenghisKhan Asia
-    @gk5 Founded GenghisKhan LargestEmpire
-    return $gk5
-end
-
-@:Mongol_Conquests graph Military Strategy Empire
-    @mc1 Founded GenghisKhan MongolEmpire
-    @mc2 Invaded Mongols China
-    @mc3 Conquered Mongols Persia
-    @mc4 Reached Mongols Europe
-    @mc5 Connected MongolEmpire EastWestTrade
-    return $mc5
-end
-
-@:Black_Death graph Plague Death Change
-    @bd1 Arrived BlackDeath Europe
-    @bd2 Spread BlackDeath Rapidly
-    @bd3 Killed BlackDeath ThirdOfPopulation
-    @bd4 Devastated Plague Economy
-    @bd5 Weakened Plague Feudalism
-    return $bd5
-end
-
-@:Hundred_Years_War graph Conflict England France
-    @hyw1 Fought England France
-    @hyw2 Lasted HundredYearsWar 116Years
-    @hyw3 Claimed England FrenchThrone
-    @hyw4 Led JoanOfArc French
-    @hyw5 Won France War
-    return $hyw5
-end
-
-@:Joan_Of_Arc graph Leader Vision Victory
-    @joa1 Peasant JoanOfArc France
-    @joa2 Had JoanOfArc Visions
-    @joa3 Led JoanOfArc FrenchArmy
-    @joa4 Lifted JoanOfArc OrleansSiege
-    @joa5 Captured English JoanOfArc
-    return $joa5
-end
-
-@:Magna_Carta graph Conflict Charter Rights
-    @mc1 King JohnOfEngland England
-    @mc2 Oppressed John Barons
-    @mc3 Forced Barons John
-    @mc4 Signed John MagnaCarta
-    @mc5 Limited MagnaCarta RoyalPower
-    return $mc5
-end
-
-@:Medieval_Universities graph Education Knowledge Institution
-    @mu1 Founded Europe Universities
-    @mu2 Established Bologna University
-    @mu3 Founded Paris University
-    @mu4 Created Oxford University
-    @mu5 Preserved Universities Knowledge
-    return $mu5
-end
-
-// ========== RENAISSANCE ==========
-
-@:Renaissance graph
-    @fact Period Renaissance EarlyModern
-    return $fact
-end
-
-@:Italian_Renaissance graph Rebirth Art Culture
-    @ir1 Started Renaissance Italy
-    @ir2 Revived Renaissance ClassicalLearning
-    @ir3 Flourished Renaissance Art
-    @ir4 Advanced Renaissance Science
-    @ir5 Emphasized Renaissance Humanism
-    return $ir5
-end
-
-@:Leonardo_Da_Vinci graph Artist Inventor Genius
-    @ldv1 Artist LeonardoDaVinci Renaissance
-    @ldv2 Painted Leonardo MonaLisa
-    @ldv3 Painted Leonardo LastSupper
-    @ldv4 Designed Leonardo Inventions
-    @ldv5 Exemplified Leonardo RenaissanceMan
-    return $ldv5
-end
-
-@:Michelangelo graph Artist Sculptor Masterpieces
-    @m1 Artist Michelangelo Renaissance
-    @m2 Sculpted Michelangelo David
-    @m3 Painted Michelangelo SistineChapel
-    @m4 Designed Michelangelo StPeters
-    @m5 Mastered Michelangelo MultipleArts
-    return $m5
-end
-
-@:Medici_Family graph Patrons Banking Arts
-    @mf1 Family Medici Florence
-    @mf2 Controlled Medici Banking
-    @mf3 Patronized Medici Artists
-    @mf4 Supported Medici Scholars
-    @mf5 Enabled Medici Renaissance
-    return $mf5
-end
-
-@:Printing_Press graph Invention Books Knowledge
-    @pp1 Invented Gutenberg PrintingPress
-    @pp2 Printed Gutenberg Bible
-    @pp3 Enabled PrintingPress MassProduction
-    @pp4 Spread PrintingPress Literacy
-    @pp5 Revolutionized PrintingPress Communication
-    return $pp5
-end
-
-@:Protestant_Reformation graph
-    @fact Movement Reformation Religious
-    return $fact
-end
-
-@:Martin_Luther graph Monk Protest Reform
-    @ml1 Monk MartinLuther Germany
-    @ml2 Posted Luther 95Theses
-    @ml3 Criticized Luther Church
-    @ml4 Started Luther Reformation
-    @ml5 Founded Luther Protestantism
-    return $ml5
-end
-
-@:Religious_Wars graph Reformation Conflict Division
-    @rw1 Started Luther Reformation
-    @rw2 Split Reformation Christianity
-    @rw3 Fought Catholics Protestants
-    @rw4 Devastated Wars Europe
-    @rw5 Ended Westphalia Peace
-    return $rw5
-end
-
-@:Age_Of_Exploration graph
-    @fact Period Exploration Discovery
-    return $fact
-end
-
-@:Christopher_Columbus graph Explorer Voyage Discovery
-    @cc1 Explorer ChristopherColumbus Spain
-    @cc2 Sought Columbus RouteToAsia
-    @cc3 Sailed Columbus West
-    @cc4 Reached Columbus Americas
-    @cc5 Started Columbus ColumbianExchange
-    return $cc5
-end
-
-@:Columbian_Exchange graph Contact Trade Impact
-    @ce1 Reached Columbus Americas
-    @ce2 Connected ColumbianExchange Continents
-    @ce3 Exchanged ColumbianExchange Goods
-    @ce4 Spread ColumbianExchange Diseases
-    @ce5 Transformed ColumbianExchange World
-    return $ce5
-end
-
-@:Magellan_Circumnavigation graph Voyage Exploration Globe
-    @mc1 Explorer Magellan Spain
-    @mc2 Led Magellan Expedition
-    @mc3 Sailed Magellan AroundWorld
-    @mc4 Died Magellan Philippines
-    @mc5 Completed Crew CircumNavigation
-    return $mc5
-end
-
-@:Spanish_Conquistadors graph Conquest Empire Indigenous
-    @sc1 Conquered Cortes Aztecs
-    @sc2 Conquered Pizarro Incas
-    @sc3 Established Spain Colonies
-    @sc4 Exploited Conquistadors Resources
-    @sc5 Destroyed Conquest IndigenousCultures
-    return $sc5
-end
-
-// ========== EARLY MODERN PERIOD ==========
-
-@:Scientific_Revolution graph
-    @fact Period ScientificRevolution EarlyModern
-    return $fact
-end
-
-@:Copernicus graph Astronomer Theory Revolution
-    @c1 Astronomer Copernicus Poland
-    @c2 Proposed Copernicus HeliocentricTheory
-    @c3 Challenged HeliocentricTheory Geocentrism
-    @c4 Showed Copernicus EarthOrbits
-    @c5 Started Copernicus ScientificRevolution
-    return $c5
-end
-
-@:Galileo graph Scientist Telescope Evidence
-    @g1 Scientist Galileo Italy
-    @g2 Built Galileo Telescope
-    @g3 Observed Galileo JupiterMoons
-    @g4 Supported Galileo Copernicus
-    @g5 Tried Church Galileo
-    return $g5
-end
-
-@:Newton graph Physicist Laws Gravity
-    @n1 Physicist Newton England
-    @n2 Discovered Newton Gravity
-    @n3 Formulated Newton MotionLaws
-    @n4 Invented Newton Calculus
-    @n5 Unified Newton Physics
-    return $n5
-end
-
-@:Enlightenment graph
-    @fact Period Enlightenment EarlyModern
-    return $fact
-end
-
-@:Age_Of_Reason graph Philosophy Reason Progress
-    @aor1 Period Enlightenment EarlyModern
-    @aor2 Emphasized Enlightenment Reason
-    @aor3 Questioned Enlightenment Authority
-    @aor4 Promoted Enlightenment Science
-    @aor5 Advanced Enlightenment HumanRights
-    return $aor5
-end
-
-@:John_Locke graph Philosopher Rights Government
-    @jl1 Philosopher JohnLocke England
-    @jl2 Wrote Locke TwoTreatises
-    @jl3 Proposed Locke NaturalRights
-    @jl4 Advocated Locke SocialContract
-    @jl5 Influenced Locke Democracy
-    return $jl5
-end
-
-@:Voltaire graph Writer Tolerance Freedom
-    @v1 Writer Voltaire France
-    @v2 Advocated Voltaire Tolerance
-    @v3 Criticized Voltaire Church
-    @v4 Defended Voltaire FreeSpeech
-    @v5 Influenced Voltaire Revolution
-    return $v5
-end
-
-@:Rousseau graph Philosopher Social Equality
-    @r1 Philosopher Rousseau Geneva
-    @r2 Wrote Rousseau SocialContract
-    @r3 Argued Rousseau GeneralWill
-    @r4 Influenced Rousseau Democracy
-    @r5 Inspired Rousseau FrenchRevolution
-    return $r5
-end
-
-// ========== REVOLUTIONS ==========
-
-@:American_Revolution graph
-    @fact War AmericanRevolution Colonial
-    return $fact
-end
-
-@:Colonial_Grievances graph Taxes Protest Resistance
-    @cg1 Imposed Britain Taxes
-    @cg2 Protested Colonists Taxation
-    @cg3 Declared Colonists NoTaxationWithoutRepresentation
-    @cg4 Boycotted Colonists BritishGoods
-    @cg5 Escalated Resistance Conflict
-    return $cg5
-end
-
-@:Declaration_Of_Independence graph Document Rights Freedom
-    @doi1 War AmericanRevolution Colonial
-    @doi2 Wrote Jefferson Declaration
-    @doi3 Declared Declaration Independence
-    @doi4 Affirmed Declaration Rights
-    @doi5 Inspired Declaration Democracy
-    return $doi5
-end
-
-@:George_Washington graph General Victory Presidency
-    @gw1 General GeorgeWashington Continental
-    @gw2 Led Washington Army
-    @gw3 Won Washington YorktownBattle
-    @gw4 Secured Washington Independence
-    @gw5 Became Washington FirstPresident
-    return $gw5
-end
-
-@:US_Constitution graph Document Government Republic
-    @usc1 Won Colonies Independence
-    @usc2 Failed ArticlesOfConfederation Government
-    @usc3 Drafted Convention Constitution
-    @usc4 Established Constitution FederalGovernment
-    @usc5 Created Constitution Republic
-    return $usc5
-end
-
-@:French_Revolution graph
-    @fact Revolution FrenchRevolution Political
-    return $fact
-end
-
-@:Fall_Of_Bastille graph Uprising Symbol Revolution
-    @fob1 Stormed Parisians Bastille
-    @fob2 Symbolized Bastille OldRegime
-    @fob3 Started Bastille Revolution
-    @fob4 Spread Revolution France
-    @fob5 Overthrew Revolution Monarchy
-    return $fob5
-end
-
-@:Reign_Of_Terror graph Radicalism Violence Guillotine
-    @rot1 Revolution FrenchRevolution Political
-    @rot2 Led Robespierre Jacobins
-    @rot3 Started Jacobins Terror
-    @rot4 Executed Terror Thousands
-    @rot5 Used Terror Guillotine
-    return $rot5
-end
-
-@:Napoleon_Rise graph General Coup Empire
-    @nr1 General Napoleon France
-    @nr2 Won Napoleon Victories
-    @nr3 Staged Napoleon Coup
-    @nr4 Became Napoleon Emperor
-    @nr5 Dominated Napoleon Europe
-    return $nr5
-end
-
-@:Napoleonic_Wars graph Conquest Coalition Defeat
-    @nw1 Emperor Napoleon France
-    @nw2 Conquered Napoleon Europe
-    @nw3 Fought Coalition Nations
-    @nw4 Invaded Napoleon Russia
-    @nw5 Defeated Coalition Napoleon
-    return $nw5
-end
-
-@:Congress_Of_Vienna graph Defeat Conference Balance
-    @cov1 Defeated Coalition Napoleon
-    @cov2 Met Powers Vienna
-    @cov3 Redrew Vienna Borders
-    @cov4 Established Vienna BalanceOfPower
-    @cov5 Restored Vienna Monarchies
-    return $cov5
-end
-
-// ========== INDUSTRIAL REVOLUTION ==========
-
-@:Industrial_Revolution graph
-    @fact Period IndustrialRevolution Modern
-    return $fact
-end
-
-@:Steam_Engine graph Invention Power Industry
-    @se1 Invented Watt SteamEngine
-    @se2 Powered SteamEngine Factories
-    @se3 Enabled SteamEngine Railways
-    @se4 Transformed SteamEngine Manufacturing
-    @se5 Started SteamEngine IndustrialRevolution
-    return $se5
-end
-
-@:Factory_System graph Production Workers Cities
-    @fs1 Period IndustrialRevolution Modern
-    @fs2 Built Industrialists Factories
-    @fs3 Employed Factories Workers
-    @fs4 Produced Factories GoodsMass
-    @fs5 Grew Cities Rapidly
-    return $fs5
-end
-
-@:Railway_Revolution graph Transportation Commerce Expansion
-    @rr1 Invented Stephenson Locomotive
-    @rr2 Built Britain Railways
-    @rr3 Connected Railways Cities
-    @rr4 Enabled Railways Commerce
-    @rr5 Transformed Railways Society
-    return $rr5
-end
-
-@:Labor_Movement graph Conditions Organization Rights
-    @lm1 Worked Workers Factories
-    @lm2 Suffered Workers Conditions
-    @lm3 Organized Workers Unions
-    @lm4 Demanded Unions Rights
-    @lm5 Fought Unions Reforms
-    return $lm5
-end
-
-@:Karl_Marx graph Philosopher Theory Revolution
-    @km1 Philosopher KarlMarx Germany
-    @km2 Wrote Marx CommunistManifesto
-    @km3 Developed Marx Communism
-    @km4 Analyzed Marx Capitalism
-    @km5 Inspired Marx Revolutions
-    return $km5
-end
-
-// ========== 19TH CENTURY ==========
-
-@:Nationalism graph
-    @fact Movement Nationalism Modern
-    return $fact
-end
-
-@:Italian_Unification graph States Movement Nation
-    @iu1 Led Garibaldi Unification
-    @iu2 United Garibaldi ItalianStates
-    @iu3 Fought Garibaldi Austria
-    @iu4 Created Unification Italy
-    @iu5 Established Italy Kingdom
-    return $iu5
-end
-
-@:German_Unification graph States Chancellor Empire
-    @gu1 Chancellor Bismarck Prussia
-    @gu2 United Bismarck GermanStates
-    @gu3 Fought Bismarck Wars
-    @gu4 Created Unification Germany
-    @gu5 Proclaimed Germany Empire
-    return $gu5
-end
-
-@:American_Civil_War graph
-    @fact War CivilWar American
-    return $fact
-end
-
-@:Slavery_Conflict graph Institution Division War
-    @sc1 Practiced South Slavery
-    @sc2 Opposed North Slavery
-    @sc3 Divided Slavery Nation
-    @sc4 Seceded South States
-    @sc5 Started Secession CivilWar
-    return $sc5
-end
-
-@:Abraham_Lincoln graph President War Emancipation
-    @al1 President AbrahamLincoln Union
-    @al2 Led Lincoln CivilWar
-    @al3 Issued Lincoln EmancipationProclamation
-    @al4 Freed Proclamation Slaves
-    @al5 Assassinated Booth Lincoln
-    return $al5
-end
-
-@:Reconstruction graph War Rebuilding Rights
-    @r1 Won Union CivilWar
-    @r2 Freed CivilWar Slaves
-    @r3 Rebuilt Reconstruction South
-    @r4 Granted Amendments CivilRights
-    @r5 Failed Reconstruction Integration
-    return $r5
-end
-
-@:Imperialism graph
-    @fact Movement Imperialism Colonial
-    return $fact
-end
-
-@:Scramble_For_Africa graph Competition Colonization Exploitation
-    @sfa1 Competed Europe Africa
-    @sfa2 Colonized Powers AfricanTerritories
-    @sfa3 Met Berlin Conference
-    @sfa4 Divided Conference Africa
-    @sfa5 Exploited Colonizers Resources
-    return $sfa5
-end
-
-@:British_Empire graph Power Colonies Dominance
-    @be1 Expanded Britain Empire
-    @be2 Ruled Britain India
-    @be3 Controlled Britain Seas
-    @be4 Became Britain SuperPower
-    @be5 Dominated Empire QuarterOfWorld
-    return $be5
-end
-
-@:Opium_Wars graph Trade Conflict Imperialism
-    @ow1 Traded Britain Opium
-    @ow2 Banned China Opium
-    @ow3 Fought Britain China
-    @ow4 Won Britain Wars
-    @ow5 Forced Treaties China
-    return $ow5
-end
-
-// ========== 20TH CENTURY ==========
-
-@:World_War_One graph
-    @fact War WWI Global
-    return $fact
-end
-
-@:WWI_Causes graph Alliances Nationalism Assassination
-    @wc1 Formed Europe Alliances
-    @wc2 Grew Nationalism Tensions
-    @wc3 Assassinated Princip FranzFerdinand
-    @wc4 Triggered Assassination War
-    @wc5 Spread War Globally
-    return $wc5
-end
-
-@:Trench_Warfare graph Combat Stalemate Casualties
-    @tw1 War WWI Global
-    @tw2 Fought Armies Trenches
-    @tw3 Created Trenches Stalemate
-    @tw4 Used Armies NewWeapons
-    @tw5 Caused WWI MillionsOfDeaths
-    return $tw5
-end
-
-@:Treaty_Of_Versailles graph Peace Treaty Resentment
-    @tov1 Won Allies WWI
-    @tov2 Signed Versailles Treaty
-    @tov3 Blamed Treaty Germany
-    @tov4 Imposed Treaty Reparations
-    @tov5 Created Treaty Resentment
-    return $tov5
-end
-
-@:Russian_Revolution graph
-    @fact Revolution RussianRevolution Communist
-    return $fact
-end
-
-@:Bolshevik_Revolution graph Uprising Communism Soviet
-    @br1 Led Lenin Bolsheviks
-    @br2 Overthrew Bolsheviks Tsar
-    @br3 Seized Lenin Power
-    @br4 Established Bolsheviks Communism
-    @br5 Created Lenin SovietUnion
-    return $br5
-end
-
-@:Stalin_Era graph Dictator Industrialization Terror
-    @se1 Leader Stalin SovietUnion
-    @se2 Industrialized Stalin Rapidly
-    @se3 Collectivized Stalin Agriculture
-    @se4 Purged Stalin Millions
-    @se5 Established Stalin TotalitarianState
-    return $se5
-end
-
-@:Great_Depression graph
-    @fact Crisis GreatDepression Economic
-    return $fact
-end
-
-@:Stock_Market_Crash graph Speculation Crash Depression
-    @smc1 Boomed Economy 1920s
-    @smc2 Speculated Investors Heavily
-    @smc3 Crashed StockMarket 1929
-    @smc4 Triggered Crash Depression
-    @smc5 Spread Depression Globally
-    return $smc5
-end
-
-@:New_Deal graph Depression Program Recovery
-    @nd1 President FDR USA
-    @nd2 Crisis GreatDepression Economic
-    @nd3 Implemented FDR NewDeal
-    @nd4 Created NewDeal Programs
-    @nd5 Recovered NewDeal Economy
-    return $nd5
-end
-
-@:World_War_Two graph
-    @fact War WWII Global
-    return $fact
-end
-
-@:WWII_Causes graph Treaty Depression Aggression
-    @wc1 Created Versailles Resentment
-    @wc2 Crisis GreatDepression Economic
-    @wc3 Rose Hitler Power
-    @wc4 Invaded Germany Poland
-    @wc5 Started Invasion WWII
-    return $wc5
-end
-
-@:Hitler_And_Nazism graph Dictator Ideology Genocide
-    @han1 Leader Hitler Germany
-    @han2 Established Hitler Dictatorship
-    @han3 Promoted Hitler Nazism
-    @han4 Persecuted Nazis Jews
-    @han5 Caused Holocaust Genocide
-    return $han5
-end
-
-@:Holocaust graph Persecution Camps Genocide
-    @h1 Persecuted Nazis Jews
-    @h2 Built Nazis ConcentrationCamps
-    @h3 Murdered Nazis Millions
-    @h4 Committed Nazis Genocide
-    @h5 Remain Holocaust WorstCrime
-    return $h5
-end
-
-@:Pearl_Harbor graph Attack Entry War
-    @ph1 Attacked Japan PearlHarbor
-    @ph2 Destroyed Attack Fleet
-    @ph3 Declared USA WarOnJapan
-    @ph4 Entered USA WWII
-    @ph5 Turned Entry Tide
-    return $ph5
-end
-
-@:D_Day graph Invasion Liberation Victory
-    @dd1 Planned Allies Invasion
-    @dd2 Landed Allies Normandy
-    @dd3 Opened DDay SecondFront
-    @dd4 Liberated Allies France
-    @dd5 Led Liberation Victory
-    return $dd5
-end
-
-@:Atomic_Bomb graph Weapon Bombing Surrender
-    @ab1 Developed USA AtomicBomb
-    @ab2 Dropped USA Hiroshima
-    @ab3 Dropped USA Nagasaki
-    @ab4 Surrendered Japan Unconditionally
-    @ab5 Ended Surrender WWII
-    return $ab5
-end
-
-@:Cold_War graph
-    @fact Period ColdWar Ideological
-    return $fact
-end
-
-@:Iron_Curtain graph Division Blocs Tension
-    @ic1 Won Allies WWII
-    @ic2 Divided Europe EastWest
-    @ic3 Formed USA NATO
-    @ic4 Formed USSR WarsawPact
-    @ic5 Started Division ColdWar
-    return $ic5
-end
-
-@:Korean_War graph Conflict Proxy Division
-    @kw1 Period ColdWar Ideological
-    @kw2 Invaded NorthKorea SouthKorea
-    @kw3 Intervened UN NorthKorea
-    @kw4 Fought China UN
-    @kw5 Ended War Stalemate
-    return $kw5
-end
-
-@:Vietnam_War graph Conflict Intervention Defeat
-    @vw1 Fought NorthVietnam SouthVietnam
-    @vw2 Supported USA SouthVietnam
-    @vw3 Escalated USA Involvement
-    @vw4 Opposed Americans War
-    @vw5 Withdrew USA Vietnam
-    return $vw5
-end
-
-@:Cuban_Missile_Crisis graph Missiles Confrontation Diplomacy
-    @cmc1 Period ColdWar Ideological
-    @cmc2 Placed USSR MissilesInCuba
-    @cmc3 Blockaded Kennedy Cuba
-    @cmc4 Confronted Superpowers Crisis
-    @cmc5 Resolved Diplomacy Crisis
-    return $cmc5
-end
-
-@:Space_Race graph Competition Technology Moon
-    @sr1 Period ColdWar Ideological
-    @sr2 Launched USSR Sputnik
-    @sr3 Competed USA USSR
-    @sr4 Landed USA Moon
-    @sr5 Won USA SpaceRace
-    return $sr5
-end
-
-@:Civil_Rights_Movement graph
-    @fact Movement CivilRights American
-    return $fact
-end
-
-@:Martin_Luther_King graph Leader Nonviolence Equality
-    @mlk1 Leader MartinLutherKing Movement
-    @mlk2 Advocated King Nonviolence
-    @mlk3 Led King Marches
-    @mlk4 Gave King DreamSpeech
-    @mlk5 Assassinated MLK Murdered
-    return $mlk5
-end
-
-@:Civil_Rights_Act graph Struggle Legislation Equality
-    @cra1 Movement CivilRights American
-    @cra2 Protested Activists Segregation
-    @cra3 Pressured Movement Government
-    @cra4 Passed Congress CivilRightsAct
-    @cra5 Banned CivilRightsAct Discrimination
-    return $cra5
-end
-
-@:Fall_Of_Soviet_Union graph Reforms Collapse End
-    @fosu1 Leader Gorbachev USSR
-    @fosu2 Introduced Gorbachev Reforms
-    @fosu3 Weakened Reforms Control
-    @fosu4 Fell BerlinWall Germany
-    @fosu5 Collapsed USSR 1991
-    return $fosu5
-end
-
-@:Berlin_Wall_Fall graph Symbol Division Reunification
-    @bwf1 Built USSR BerlinWall
-    @bwf2 Divided BerlinWall City
-    @bwf3 Symbolized BerlinWall ColdWar
-    @bwf4 Fell BerlinWall 1989
-    @bwf5 Reunified Germany Country
-    return $bwf5
-end
-
-// ========== CONTEMPORARY ERA ==========
-
-@:Contemporary_Era graph
-    @fact Period Contemporary Modern
-    return $fact
-end
-
-@:Information_Age graph
-    @fact Period InformationAge Contemporary
-    return $fact
-end
-
-@:Internet_Revolution graph Technology Connection Society
-    @ir1 Invented Scientists Internet
-    @ir2 Connected Internet World
-    @ir3 Enabled Internet Communication
-    @ir4 Transformed Internet Society
-    @ir5 Created Internet DigitalAge
-    return $ir5
-end
-
-@:Globalization graph Trade Integration Interdependence
-    @g1 Period Contemporary Modern
-    @g2 Increased Globalization Trade
-    @g3 Connected Globalization Economies
-    @g4 Spread Globalization Culture
-    @g5 Created Globalization Interdependence
-    return $g5
-end
-
-@:Climate_Change graph Emissions Warming Challenge
-    @cc1 Increased Industrialization Emissions
-    @cc2 Caused Emissions GlobalWarming
-    @cc3 Threatens ClimateChange Environment
-    @cc4 Requires ClimateChange Action
-    @cc5 Challenges ClimateChange Humanity
-    return $cc5
-end
-
-// ========== ADDITIONAL COMPLEX CAUSATION CHAINS ==========
-
-@:Agricultural_Revolution_Chain graph Agriculture Settlement Civilization
-    @arc1 Developed Humans Agriculture
-    @arc2 Enabled Agriculture Surplus
-    @arc3 Allowed Surplus Settlement
-    @arc4 Led Settlement Cities
-    @arc5 Created Cities Civilization
-    return $arc5
-end
-
-@:Writing_And_History graph Writing Records Knowledge
-    @wah1 Invented Civilizations Writing
-    @wah2 Enabled Writing RecordKeeping
-    @wah3 Preserved Records Knowledge
-    @wah4 Created Knowledge History
-    @wah5 Allowed History Learning
-    return $wah5
-end
-
-@:Trade_And_Culture graph Commerce Routes Exchange
-    @tac1 Established Civilizations Trade
-    @tac2 Created Trade Routes
-    @tac3 Enabled Routes Exchange
-    @tac4 Spread Exchange Ideas
-    @tac5 Mixed Ideas Cultures
-    return $tac5
-end
-
-@:Military_Innovation graph Warfare Technology Power
-    @mi1 Developed Societies Weapons
-    @mi2 Enabled Weapons Conquest
-    @mi3 Led Conquest Empires
-    @mi4 Changed Empires Geography
-    @mi5 Shaped Geography History
-    return $mi5
-end
-
-@:Religious_Influence graph Belief Institutions Society
-    @ri1 Developed Societies Religion
-    @ri2 Created Religion Institutions
-    @ri3 Controlled Institutions Education
-    @ri4 Shaped Education Culture
-    @ri5 Influenced Culture History
-    return $ri5
-end
-
-@:Plague_Impact graph Disease Death Change
-    @pi1 Spread BlackDeath Europe
-    @pi2 Killed Plague Population
-    @pi3 Disrupted Death Economy
-    @pi4 Weakened Economy Feudalism
-    @pi5 Enabled Weakness ModernEra
-    return $pi5
-end
-
-@:Renaissance_Humanism_Chain graph Revival Learning Art
-    @rhc1 Rediscovered Scholars ClassicalTexts
-    @rhc2 Promoted Humanism IndividualWorth
-    @rhc3 Inspired Humanism Artists
-    @rhc4 Created Artists Masterpieces
-    @rhc5 Defined Renaissance Period
-    return $rhc5
-end
-
-@:Exploration_Consequences graph Discovery Colonization Exchange
-    @ec1 Explored Europeans World
-    @ec2 Discovered Europeans Americas
-    @ec3 Colonized Europeans Territories
-    @ec4 Established Colonization Trade
-    @ec5 Changed Trade World
-    return $ec5
-end
-
-@:Scientific_Method_Impact graph Observation Experiment Knowledge
-    @smi1 Developed Scientists Method
-    @smi2 Based Method Observation
-    @smi3 Required Method Experiment
-    @smi4 Generated Experiment Knowledge
-    @smi5 Transformed Knowledge Science
-    return $smi5
-end
-
-@:Democratic_Evolution graph Ideas Revolution Government
-    @de1 Developed Enlightenment Ideas
-    @de2 Inspired Ideas Revolutions
-    @de3 Created Revolutions Republics
-    @de4 Established Republics Democracy
-    @de5 Spread Democracy World
-    return $de5
-end
-
-@:Industrial_Urbanization graph Factories Jobs Migration
-    @iu1 Built Industrialists Factories
-    @iu2 Created Factories Jobs
-    @iu3 Attracted Jobs Workers
-    @iu4 Migrated Workers Cities
-    @iu5 Grew Cities Rapidly
-    return $iu5
-end
-
-@:Nationalism_Conflict graph Identity Unity Wars
-    @nc1 Movement Nationalism Modern
-    @nc2 Created Nationalism Identity
-    @nc3 United Identity Nations
-    @nc4 Competed Nations Resources
-    @nc5 Led Competition Wars
-    return $nc5
-end
-
-@:Imperial_Exploitation graph Colonization Resources Development
-    @ie1 Movement Imperialism Colonial
-    @ie2 Colonized Powers Territories
-    @ie3 Exploited Colonizers Resources
-    @ie4 Enriched Resources Metropoles
-    @ie5 Underdeveloped Exploitation Colonies
-    return $ie5
-end
-
-@:WWI_Chain graph Alliance Mobilization War
-    @wc1 Assassinated Princip FranzFerdinand
-    @wc2 Demanded Austria Serbia
-    @wc3 Supported Russia Serbia
-    @wc4 Mobilized Alliances Armies
-    @wc5 Started Mobilization WWI
-    return $wc5
-end
-
-@:Versailles_To_WWII graph Treaty Resentment Extremism
-    @vtw1 Signed Versailles Treaty
-    @vtw2 Blamed Treaty Germany
-    @vtw3 Created Blame Resentment
-    @vtw4 Enabled Resentment Extremism
-    @vtw5 Led Extremism WWII
-    return $vtw5
-end
-
-@:Cold_War_Proxy graph Ideology Competition Conflicts
-    @cwp1 Period ColdWar Ideological
-    @cwp2 Competed Superpowers Influence
-    @cwp3 Supported Superpowers Proxies
-    @cwp4 Fought Proxies Wars
-    @cwp5 Spread Wars Globally
-    return $cwp5
-end
-
-@:Decolonization graph Weakness Movements Independence
-    @d1 Weakened WWII Empires
-    @d2 Inspired Weakness Movements
-    @d3 Demanded Movements Independence
-    @d4 Granted Empires Independence
-    @d5 Created Decolonization Nations
-    return $d5
-end
-
-@:Technology_Society graph Innovation Adoption Change
-    @ts1 Invented Scientists Technology
-    @ts2 Adopted Society Technology
-    @ts3 Changed Technology Behavior
-    @ts4 Transformed Behavior Society
-    @ts5 Created Transformation NewEra
-    return $ts5
-end
-
-@:Communication_Revolution graph Telegraph Radio Television
-    @cr1 Invented Morse Telegraph
-    @cr2 Invented Marconi Radio
-    @cr3 Invented Engineers Television
-    @cr4 Connected Technologies World
-    @cr5 Created Connection GlobalVillage
-    return $cr5
-end
-
-@:Medical_Progress graph Research Discovery Treatment
-    @mp1 Researched Scientists Diseases
-    @mp2 Discovered Research Cures
-    @mp3 Developed Cures Treatments
-    @mp4 Applied Treatments Patients
-    @mp5 Extended Medicine Lifespan
-    return $mp5
-end
-
-// ========== MORE FACTS AND DETAILS ==========
-
-@:Minoan_Civilization graph
-    @fact Civilization Minoan Ancient
-    return $fact
-end
-
-@:Mycenaean_Civilization graph
-    @fact Civilization Mycenaean Ancient
-    return $fact
-end
-
-@:Phoenicians graph
-    @fact People Phoenicians Ancient
-    return $fact
-end
-
-@:Phoenician_Alphabet graph Innovation Writing Spread
-    @pa1 People Phoenicians Ancient
-    @pa2 Developed Phoenicians Alphabet
-    @pa3 Traded Phoenicians Widely
-    @pa4 Spread Trade Alphabet
-    @pa5 Influenced Alphabet GreekAlphabet
-    return $pa5
-end
-
-@:Persian_Empire graph
-    @fact Empire Persian Ancient
-    return $fact
-end
-
-@:Cyrus_The_Great graph King Tolerance Empire
-    @ctg1 King Cyrus Persia
-    @ctg2 Conquered Cyrus Babylon
-    @ctg3 Freed Cyrus Jews
-    @ctg4 Practiced Cyrus Tolerance
-    @ctg5 Created Cyrus LargestEmpire
-    return $ctg5
-end
-
-@:Punic_Wars graph Carthage Rome Mediterranean
-    @pw1 Rival Carthage Rome
-    @pw2 Fought Rome Carthage
-    @pw3 Led Hannibal Army
-    @pw4 Won Rome Wars
-    @pw5 Destroyed Rome Carthage
-    return $pw5
-end
-
-@:Spartacus_Rebellion graph Slave Uprising Suppression
-    @sr1 Slave Spartacus Rome
-    @sr2 Led Spartacus Rebellion
-    @sr3 Fought Spartacus Romans
-    @sr4 Suppressed Rome Rebellion
-    @sr5 Crucified Rome Rebels
-    return $sr5
-end
-
-@:Pax_Sinica graph
-    @fact Period PaxSinica Chinese
-    return $fact
-end
-
-@:Tang_Dynasty graph
-    @fact Dynasty Tang China
-    return $fact
-end
-
-@:Song_Dynasty graph
-    @fact Dynasty Song China
-    return $fact
-end
-
-@:Ming_Dynasty graph
-    @fact Dynasty Ming China
-    return $fact
-end
-
-@:Qing_Dynasty graph
-    @fact Dynasty Qing China
-    return $fact
-end
-
-@:Tang_Golden_Age graph Dynasty Culture Innovation
-    @tga1 Dynasty Tang China
-    @tga2 Flourished TangDynasty Arts
-    @tga3 Advanced TangDynasty Technology
-    @tga4 Expanded TangDynasty Trade
-    @tga5 Golden TangDynasty Age
-    return $tga5
+# Semantic role definitions for historical relations
+
+@Abandoned:Abandoned graph agent location
+    # Agent abandoned location
+    @age __Role Agent $agent
+    @loc __Role Location $location
+    @abandonment __Role Action Abandonment
+    @result __Bundle $age $loc $abandonment
+    return $result
+end
+
+@Absolute:Absolute graph power system
+    # Power absolute in system
+    @pow __Role Power $power
+    @sys __Role System $system
+    @absolutism __Role Property Absolutism
+    @result __Bundle $pow $sys $absolutism
+    return $result
+end
+
+@Activist:Activist graph person movement
+    # Person engaged in movement
+    @per __Role Person $person
+    @mov __Role Movement $movement
+    @activism __Role Relation Activism
+    @result __Bundle $per $mov $activism
+    return $result
+end
+
+@Admiral:Admiral graph person navy
+    # Person commanded navy
+    @per __Role Person $person
+    @nav __Role Navy $navy
+    @admiralship __Role Role Admiralship
+    @result __Bundle $per $nav $admiralship
+    return $result
+end
+
+@Adopted:Adopted graph adopter practice
+    # Adopter adopted practice or policy
+    @ado __Role Adopter $adopter
+    @pra __Role Practice $practice
+    @adoption __Role Action Adoption
+    @result __Bundle $ado $pra $adoption
+    return $result
+end
+
+@Advanced:Advanced graph entity goal
+    # Entity advanced toward goal
+    @ent __Role Entity $entity
+    @goa __Role Goal $goal
+    @advancement __Role Action Advancement
+    @result __Bundle $ent $goa $advancement
+    return $result
+end
+
+@Advocated:Advocated graph advocate cause
+    # Advocate promoted cause
+    @adv __Role Advocate $advocate
+    @cau __Role Cause $cause
+    @advocacy __Role Action Advocacy
+    @result __Bundle $adv $cau $advocacy
+    return $result
+end
+
+@Affirmed:Affirmed graph affirmer principle
+    # Affirmer confirmed principle
+    @aff __Role Affirmer $affirmer
+    @pri __Role Principle $principle
+    @affirmation __Role Action Affirmation
+    @result __Bundle $aff $pri $affirmation
+    return $result
+end
+
+@Aimed:Aimed graph actor objective
+    # Actor aimed at objective
+    @act __Role Actor $actor
+    @obj __Role Objective $objective
+    @intention __Role Relation Intention
+    @result __Bundle $act $obj $intention
+    return $result
+end
+
+@Allowed:Allowed graph authority activity
+    # Authority permitted activity
+    @aut __Role Authority $authority
+    @act __Role Activity $activity
+    @permission __Role Action Permission
+    @result __Bundle $aut $act $permission
+    return $result
+end
+
+@Analyzed:Analyzed graph analyst subject
+    # Analyst examined subject
+    @ana __Role Analyst $analyst
+    @sub __Role Subject $subject
+    @analysis __Role Action Analysis
+    @result __Bundle $ana $sub $analysis
+    return $result
+end
+
+@Applied:Applied graph applier method
+    # Applier used method
+    @app __Role Applier $applier
+    @met __Role Method $method
+    @application __Role Action Application
+    @result __Bundle $app $met $application
+    return $result
+end
+
+@Argued:Argued graph arguer position
+    # Arguer advocated position
+    @arg __Role Arguer $arguer
+    @pos __Role Position $position
+    @argument __Role Action Argumentation
+    @result __Bundle $arg $pos $argument
+    return $result
+end
+
+@Arrived:Arrived graph arriver destination
+    # Arriver reached destination
+    @arr __Role Arriver $arriver
+    @des __Role Destination $destination
+    @arrival __Role Action Arrival
+    @result __Bundle $arr $des $arrival
+    return $result
+end
+
+@Artist:Artist graph person artform
+    # Person practiced art form
+    @per __Role Person $person
+    @art __Role ArtForm $artform
+    @artistry __Role Role Artistry
+    @result __Bundle $per $art $artistry
+    return $result
+end
+
+@Assassinated:Assassinated graph assassin victim
+    # Assassin killed victim
+    @ass __Role Assassin $assassin
+    @vic __Role Victim $victim
+    @assassination __Role Action Assassination
+    @result __Bundle $ass $vic $assassination
+    return $result
+end
+
+@Asserted:Asserted graph asserter claim
+    # Asserter declared claim
+    @ass __Role Asserter $asserter
+    @cla __Role Claim $claim
+    @assertion __Role Action Assertion
+    @result __Bundle $ass $cla $assertion
+    return $result
+end
+
+@Astronomer:Astronomer graph person field
+    # Person studied astronomy field
+    @per __Role Person $person
+    @fie __Role Field $field
+    @astronomy __Role Role Astronomy
+    @result __Bundle $per $fie $astronomy
+    return $result
+end
+
+@Attacked:Attacked graph attacker target
+    # Attacker assaulted target
+    @att __Role Attacker $attacker
+    @tar __Role Target $target
+    @attack __Role Action Attack
+    @result __Bundle $att $tar $attack
+    return $result
+end
+
+@Attracted:Attracted graph attractor attracted
+    # Attractor drew attracted
+    @attr1 __Role Attractor $attractor
+    @attr2 __Role Attracted $attracted
+    @attraction __Role Relation Attraction
+    @result __Bundle $attr1 $attr2 $attraction
+    return $result
+end
+
+@Banned:Banned graph authority banned
+    # Authority forbade item
+    @aut __Role Authority $authority
+    @ban __Role BannedItem $banned
+    @prohibition __Role Action Prohibition
+    @result __Bundle $aut $ban $prohibition
+    return $result
+end
+
+@Based:Based graph entity foundation
+    # Entity founded on basis
+    @ent __Role Entity $entity
+    @fou __Role Foundation $foundation
+    @basis __Role Relation Basis
+    @result __Bundle $ent $fou $basis
+    return $result
+end
+
+@Became:Became graph subject state
+    # Subject transformed to state
+    @sub __Role Subject $subject
+    @sta __Role State $state
+    @transformation __Role Change Transformation
+    @result __Bundle $sub $sta $transformation
+    return $result
+end
+
+@Besieged:Besieged graph besieger besieged
+    # Besieger surrounded besieged
+    @besi1 __Role Besieger $besieger
+    @besi2 __Role Besieged $besieged
+    @siege __Role Action Siege
+    @result __Bundle $besi1 $besi2 $siege
+    return $result
+end
+
+@Blamed:Blamed graph blamer blamed
+    # Blamer attributed fault to blamed
+    @blam1 __Role Blamer $blamer
+    @blam2 __Role Blamed $blamed
+    @blame __Role Action Blame
+    @result __Bundle $blam1 $blam2 $blame
+    return $result
+end
+
+@Blockaded:Blockaded graph blockader blockaded
+    # Blockader isolated blockaded
+    @bloc1 __Role Blockader $blockader
+    @bloc2 __Role Blockaded $blockaded
+    @blockade __Role Action Blockade
+    @result __Bundle $bloc1 $bloc2 $blockade
+    return $result
+end
+
+@Boomed:Boomed graph economy period
+    # Economy grew rapidly in period
+    @eco __Role Economy $economy
+    @per __Role Period $period
+    @boom __Role Event EconomicBoom
+    @result __Bundle $eco $per $boom
+    return $result
+end
+
+@Boycotted:Boycotted graph boycotter target
+    # Boycotter refused target
+    @boy __Role Boycotter $boycotter
+    @tar __Role Target $target
+    @boycott __Role Action Boycott
+    @result __Bundle $boy $tar $boycott
+    return $result
+end
+
+@Built:Built graph builder structure
+    # Builder constructed structure
+    @bui __Role Builder $builder
+    @str __Role Structure $structure
+    @construction __Role Action Construction
+    @result __Bundle $bui $str $construction
+    return $result
+end
+
+@Burst:Burst graph entity state
+    # Entity burst into state
+    @ent __Role Entity $entity
+    @sta __Role State $state
+    @rupture __Role Event Rupture
+    @result __Bundle $ent $sta $rupture
+    return $result
+end
+
+@Called:Called graph caller designation
+    # Caller named designation
+    @cal __Role Caller $caller
+    @des __Role Designation $designation
+    @naming __Role Action Naming
+    @result __Bundle $cal $des $naming
+    return $result
+end
+
+@Capital:Capital graph city state
+    # City capital of state
+    @cit __Role City $city
+    @sta __Role State $state
+    @capitalhood __Role Relation Capitalhood
+    @result __Bundle $cit $sta $capitalhood
+    return $result
+end
+
+@Captured:Captured graph captor captured
+    # Captor seized captured
+    @capt1 __Role Captor $captor
+    @capt2 __Role Captured $captured
+    @capture __Role Action Capture
+    @result __Bundle $capt1 $capt2 $capture
+    return $result
+end
+
+@Caused:Caused graph cause effect
+    # Cause produced effect
+    @cau __Role Cause $cause
+    @eff __Role Effect $effect
+    @causation __Role Relation Causation
+    @result __Bundle $cau $eff $causation
+    return $result
+end
+
+@Center:Center graph place domain
+    # Place central to domain
+    @pla __Role Place $place
+    @dom __Role Domain $domain
+    @centrality __Role Relation Centrality
+    @result __Bundle $pla $dom $centrality
+    return $result
+end
+
+@Chairman:Chairman graph person organization
+    # Person chaired organization
+    @per __Role Person $person
+    @org __Role Organization $organization
+    @chairmanship __Role Role Chairmanship
+    @result __Bundle $per $org $chairmanship
+    return $result
+end
+
+@Challenged:Challenged graph challenger challenged
+    # Challenger contested challenged
+    @chal1 __Role Challenger $challenger
+    @chal2 __Role Challenged $challenged
+    @challenge __Role Action Challenge
+    @result __Bundle $chal1 $chal2 $challenge
+    return $result
+end
+
+@Challenges:Challenges graph challenge entity
+    # Challenge faces entity
+    @cha __Role Challenge $challenge
+    @ent __Role Entity $entity
+    @confrontation __Role Relation Confrontation
+    @result __Bundle $cha $ent $confrontation
+    return $result
+end
+
+@Chancellor:Chancellor graph person state
+    # Person led state as chancellor
+    @per __Role Person $person
+    @sta __Role State $state
+    @chancellorship __Role Role Chancellorship
+    @result __Bundle $per $sta $chancellorship
+    return $result
+end
+
+@Changed:Changed graph changer changed
+    # Changer modified changed
+    @chan1 __Role Changer $changer
+    @chan2 __Role Changed $changed
+    @change __Role Action Change
+    @result __Bundle $chan1 $chan2 $change
+    return $result
+end
+
+@City:City graph settlement region
+    # Settlement urban in region
+    @set __Role Settlement $settlement
+    @reg __Role Region $region
+    @urban __Role Type Urban
+    @result __Bundle $set $reg $urban
+    return $result
+end
+
+@CityState:CityState graph polity city
+    # Polity city-based state
+    @pol __Role Polity $polity
+    @cit __Role City $city
+    @citystate __Role Type CityState
+    @result __Bundle $pol $cit $citystate
+    return $result
+end
+
+@Civilization:Civilization graph society region
+    # Society civilized in region
+    @soc __Role Society $society
+    @reg __Role Region $region
+    @civilization __Role Type Civilization
+    @result __Bundle $soc $reg $civilization
+    return $result
+end
+
+@Claimed:Claimed graph claimant claim
+    # Claimant asserted claim
+    @clai1 __Role Claimant $claimant
+    @clai2 __Role Claim $claim
+    @claiming __Role Action Claiming
+    @result __Bundle $clai1 $clai2 $claiming
+    return $result
+end
+
+@Codified:Codified graph codifier lawsystem
+    # Codifier formalized law system
+    @cod __Role Codifier $codifier
+    @law __Role LawSystem $lawsystem
+    @codification __Role Action Codification
+    @result __Bundle $cod $law $codification
+    return $result
+end
+
+@Collapsed:Collapsed graph entity cause
+    # Entity fell due to cause
+    @ent __Role Entity $entity
+    @cau __Role Cause $cause
+    @collapse __Role Event Collapse
+    @result __Bundle $ent $cau $collapse
+    return $result
+end
+
+@Collectivized:Collectivized graph collectivizer property
+    # Collectivizer socialized property
+    @col __Role Collectivizer $collectivizer
+    @pro __Role Property $property
+    @collectivization __Role Action Collectivization
+    @result __Bundle $col $pro $collectivization
+    return $result
+end
+
+@Colonized:Colonized graph colonizer territory
+    # Colonizer settled territory
+    @col __Role Colonizer $colonizer
+    @ter __Role Territory $territory
+    @colonization __Role Action Colonization
+    @result __Bundle $col $ter $colonization
+    return $result
+end
+
+@Committed:Committed graph committer act
+    # Committer performed act
+    @com __Role Committer $committer
+    @act __Role Act $act
+    @commission __Role Action Commission
+    @result __Bundle $com $act $commission
+    return $result
+end
+
+@Competed:Competed graph competitor rival
+    # Competitor vied with rival
+    @com __Role Competitor $competitor
+    @riv __Role Rival $rival
+    @competition __Role Relation Competition
+    @result __Bundle $com $riv $competition
+    return $result
+end
+
+@Completed:Completed graph completer task
+    # Completer finished task
+    @com __Role Completer $completer
+    @tas __Role Task $task
+    @completion __Role Action Completion
+    @result __Bundle $com $tas $completion
+    return $result
+end
+
+@Confronted:Confronted graph confronter confronted
+    # Confronter faced confronted
+    @conf1 __Role Confronter $confronter
+    @conf2 __Role Confronted $confronted
+    @confrontation __Role Action Confrontation
+    @result __Bundle $conf1 $conf2 $confrontation
+    return $result
+end
+
+@Connected:Connected graph connector connected
+    # Connector linked connected
+    @conn1 __Role Connector $connector
+    @conn2 __Role Connected $connected
+    @connection __Role Relation Connection
+    @result __Bundle $conn1 $conn2 $connection
+    return $result
+end
+
+@Conquered:Conquered graph conqueror conquered
+    # Conqueror subdued conquered
+    @conq1 __Role Conqueror $conqueror
+    @conq2 __Role Conquered $conquered
+    @conquest __Role Action Conquest
+    @result __Bundle $conq1 $conq2 $conquest
+    return $result
+end
+
+@Constructed:Constructed graph constructor construction
+    # Constructor built construction
+    @cons1 __Role Constructor $constructor
+    @cons2 __Role Construction $construction
+    @building __Role Action Building
+    @result __Bundle $cons1 $cons2 $building
+    return $result
+end
+
+@Continues:Continues graph entity state
+    # Entity persists in state
+    @ent __Role Entity $entity
+    @sta __Role State $state
+    @continuity __Role Relation Continuity
+    @result __Bundle $ent $sta $continuity
+    return $result
+end
+
+@Contributed:Contributed graph contributor contribution
+    # Contributor gave contribution
+    @cont1 __Role Contributor $contributor
+    @cont2 __Role Contribution $contribution
+    @contributing __Role Action Contributing
+    @result __Bundle $cont1 $cont2 $contributing
+    return $result
+end
+
+@Controlled:Controlled graph controller controlled
+    # Controller governed controlled
+    @cont1 __Role Controller $controller
+    @cont2 __Role Controlled $controlled
+    @control __Role Relation Control
+    @result __Bundle $cont1 $cont2 $control
+    return $result
+end
+
+@Converted:Converted graph converter converted
+    # Converter transformed converted
+    @conv1 __Role Converter $converter
+    @conv2 __Role Converted $converted
+    @conversion __Role Action Conversion
+    @result __Bundle $conv1 $conv2 $conversion
+    return $result
+end
+
+@Cracked:Cracked graph cracker cracked
+    # Cracker broke cracked
+    @crac1 __Role Cracker $cracker
+    @crac2 __Role Cracked $cracked
+    @cracking __Role Action Cracking
+    @result __Bundle $crac1 $crac2 $cracking
+    return $result
+end
+
+@Crashed:Crashed graph entity cause
+    # Entity crashed due to cause
+    @ent __Role Entity $entity
+    @cau __Role Cause $cause
+    @crash __Role Event Crash
+    @result __Bundle $ent $cau $crash
+    return $result
+end
+
+@Created:Created graph creator creation
+    # Creator made creation
+    @crea1 __Role Creator $creator
+    @crea2 __Role Creation $creation
+    @creating __Role Action Creating
+    @result __Bundle $crea1 $crea2 $creating
+    return $result
+end
+
+@Crisis:Crisis graph situation domain
+    # Situation critical in domain
+    @sit __Role Situation $situation
+    @dom __Role Domain $domain
+    @crisis __Role Event Crisis
+    @result __Bundle $sit $dom $crisis
+    return $result
+end
+
+@Criticized:Criticized graph critic criticized
+    # Critic condemned criticized
+    @crit1 __Role Critic $critic
+    @crit2 __Role Criticized $criticized
+    @criticism __Role Action Criticism
+    @result __Bundle $crit1 $crit2 $criticism
+    return $result
+end
+
+@Crossed:Crossed graph crosser barrier
+    # Crosser traversed barrier
+    @cro __Role Crosser $crosser
+    @bar __Role Barrier $barrier
+    @crossing __Role Action Crossing
+    @result __Bundle $cro $bar $crossing
+    return $result
+end
+
+@Crowned:Crowned graph authority monarch
+    # Authority crowned monarch
+    @aut __Role Authority $authority
+    @mon __Role Monarch $monarch
+    @coronation __Role Action Coronation
+    @result __Bundle $aut $mon $coronation
+    return $result
+end
+
+@Crucified:Crucified graph crucifier victim
+    # Crucifier executed victim
+    @cru __Role Crucifier $crucifier
+    @vic __Role Victim $victim
+    @crucifixion __Role Action Crucifixion
+    @result __Bundle $cru $vic $crucifixion
+    return $result
+end
+
+@Dated:Dated graph artifact date
+    # Artifact dates to date
+    @art __Role Artifact $artifact
+    @dat __Role Date $date
+    @dating __Role Relation Dating
+    @result __Bundle $art $dat $dating
+    return $result
+end
+
+@Declared:Declared graph declarer declaration
+    # Declarer announced declaration
+    @decl1 __Role Declarer $declarer
+    @decl2 __Role Declaration $declaration
+    @declaring __Role Action Declaring
+    @result __Bundle $decl1 $decl2 $declaring
+    return $result
+end
+
+@Declined:Declined graph entity cause
+    # Entity diminished due to cause
+    @ent __Role Entity $entity
+    @cau __Role Cause $cause
+    @decline __Role Event Decline
+    @result __Bundle $ent $cau $decline
+    return $result
+end
+
+@Defeated:Defeated graph victor defeated
+    # Victor overcame defeated
+    @vic __Role Victor $victor
+    @def __Role Defeated $defeated
+    @defeat __Role Action Defeat
+    @result __Bundle $vic $def $defeat
+    return $result
+end
+
+@Defended:Defended graph defender defended
+    # Defender protected defended
+    @defe1 __Role Defender $defender
+    @defe2 __Role Defended $defended
+    @defense __Role Action Defense
+    @result __Bundle $defe1 $defe2 $defense
+    return $result
+end
+
+@Defined:Defined graph definer defined
+    # Definer characterized defined
+    @defi1 __Role Definer $definer
+    @defi2 __Role Defined $defined
+    @definition __Role Action Definition
+    @result __Bundle $defi1 $defi2 $definition
+    return $result
+end
+
+@Demanded:Demanded graph demander demand
+    # Demander required demand
+    @dema1 __Role Demander $demander
+    @dema2 __Role Demand $demand
+    @demanding __Role Action Demanding
+    @result __Bundle $dema1 $dema2 $demanding
+    return $result
+end
+
+@Demonstrated:Demonstrated graph demonstrator concept
+    # Demonstrator showed concept
+    @dem __Role Demonstrator $demonstrator
+    @con __Role Concept $concept
+    @demonstration __Role Action Demonstration
+    @result __Bundle $dem $con $demonstration
+    return $result
+end
+
+@Designed:Designed graph designer design
+    # Designer created design
+    @desi1 __Role Designer $designer
+    @desi2 __Role Design $design
+    @designing __Role Action Designing
+    @result __Bundle $desi1 $desi2 $designing
+    return $result
+end
+
+@Destroyed:Destroyed graph destroyer destroyed
+    # Destroyer ruined destroyed
+    @dest1 __Role Destroyer $destroyer
+    @dest2 __Role Destroyed $destroyed
+    @destruction __Role Action Destruction
+    @result __Bundle $dest1 $dest2 $destruction
+    return $result
+end
+
+@Devastated:Devastated graph devastator devastated
+    # Devastator ravaged devastated
+    @deva1 __Role Devastator $devastator
+    @deva2 __Role Devastated $devastated
+    @devastation __Role Action Devastation
+    @result __Bundle $deva1 $deva2 $devastation
+    return $result
+end
+
+@Developed:Developed graph developer development
+    # Developer advanced development
+    @deve1 __Role Developer $developer
+    @deve2 __Role Development $development
+    @developing __Role Action Developing
+    @result __Bundle $deve1 $deve2 $developing
+    return $result
+end
+
+@Died:Died graph deceased location
+    # Deceased died at location
+    @dec __Role Deceased $deceased
+    @loc __Role Location $location
+    @death __Role Event Death
+    @result __Bundle $dec $loc $death
+    return $result
+end
+
+@Discovered:Discovered graph discoverer discovery
+    # Discoverer found discovery
+    @disc1 __Role Discoverer $discoverer
+    @disc2 __Role Discovery $discovery
+    @discovering __Role Action Discovering
+    @result __Bundle $disc1 $disc2 $discovering
+    return $result
+end
+
+@Disrupted:Disrupted graph disruptor disrupted
+    # Disruptor interrupted disrupted
+    @disr1 __Role Disruptor $disruptor
+    @disr2 __Role Disrupted $disrupted
+    @disruption __Role Action Disruption
+    @result __Bundle $disr1 $disr2 $disruption
+    return $result
+end
+
+@Distributed:Distributed graph distributor distributed
+    # Distributor spread distributed
+    @dist1 __Role Distributor $distributor
+    @dist2 __Role Distributed $distributed
+    @distribution __Role Action Distribution
+    @result __Bundle $dist1 $dist2 $distribution
+    return $result
+end
+
+@Divided:Divided graph divider divided
+    # Divider split divided
+    @divi1 __Role Divider $divider
+    @divi2 __Role Divided $divided
+    @division __Role Action Division
+    @result __Bundle $divi1 $divi2 $division
+    return $result
+end
+
+@Dominated:Dominated graph dominator dominated
+    # Dominator controlled dominated
+    @domi1 __Role Dominator $dominator
+    @domi2 __Role Dominated $dominated
+    @domination __Role Relation Domination
+    @result __Bundle $domi1 $domi2 $domination
+    return $result
+end
+
+@Drafted:Drafted graph drafter document
+    # Drafter composed document
+    @dra __Role Drafter $drafter
+    @doc __Role Document $document
+    @drafting __Role Action Drafting
+    @result __Bundle $dra $doc $drafting
+    return $result
+end
+
+@Dropped:Dropped graph dropper dropped
+    # Dropper released dropped
+    @drop1 __Role Dropper $dropper
+    @drop2 __Role Dropped $dropped
+    @dropping __Role Action Dropping
+    @result __Bundle $drop1 $drop2 $dropping
+    return $result
+end
+
+@Duke:Duke graph person duchy
+    # Person ruled duchy
+    @per __Role Person $person
+    @duc __Role Duchy $duchy
+    @dukedom __Role Role Dukedom
+    @result __Bundle $per $duc $dukedom
+    return $result
+end
+
+@Dynasty:Dynasty graph lineage realm
+    # Lineage ruled realm
+    @lin __Role Lineage $lineage
+    @rea __Role Realm $realm
+    @dynasty __Role Relation Dynasty
+    @result __Bundle $lin $rea $dynasty
+    return $result
+end
+
+@Eased:Eased graph easer eased
+    # Easer reduced eased
+    @ease1 __Role Easer $easer
+    @ease2 __Role Eased $eased
+    @easing __Role Action Easing
+    @result __Bundle $ease1 $ease2 $easing
+    return $result
+end
+
+@Elected:Elected graph electorate elected
+    # Electorate chose elected
+    @elec1 __Role Electorate $electorate
+    @elec2 __Role Elected $elected
+    @election __Role Action Election
+    @result __Bundle $elec1 $elec2 $election
+    return $result
+end
+
+@Embraced:Embraced graph embracer embraced
+    # Embracer accepted embraced
+    @embr1 __Role Embracer $embracer
+    @embr2 __Role Embraced $embraced
+    @embracing __Role Action Embracing
+    @result __Bundle $embr1 $embr2 $embracing
+    return $result
+end
+
+@Emerged:Emerged graph emergent context
+    # Emergent arose from context
+    @eme __Role Emergent $emergent
+    @con __Role Context $context
+    @emergence __Role Event Emergence
+    @result __Bundle $eme $con $emergence
+    return $result
+end
+
+@Emperor:Emperor graph person empire
+    # Person ruled empire
+    @per __Role Person $person
+    @emp __Role Empire $empire
+    @emperorship __Role Role Emperorship
+    @result __Bundle $per $emp $emperorship
+    return $result
+end
+
+@Emphasized:Emphasized graph emphasizer emphasized
+    # Emphasizer stressed emphasized
+    @emph1 __Role Emphasizer $emphasizer
+    @emph2 __Role Emphasized $emphasized
+    @emphasis __Role Action Emphasis
+    @result __Bundle $emph1 $emph2 $emphasis
+    return $result
+end
+
+@Empire:Empire graph polity territory
+    # Polity imperial over territory
+    @pol __Role Polity $polity
+    @ter __Role Territory $territory
+    @imperial __Role Type Imperial
+    @result __Bundle $pol $ter $imperial
+    return $result
+end
+
+@Employed:Employed graph employer method
+    # Employer used method
+    @emp __Role Employer $employer
+    @met __Role Method $method
+    @employment __Role Action Employment
+    @result __Bundle $emp $met $employment
+    return $result
+end
+
+@Empress:Empress graph person empire
+    # Person ruled empire as empress
+    @per __Role Person $person
+    @emp __Role Empire $empire
+    @empressship __Role Role Empressship
+    @result __Bundle $per $emp $empressship
+    return $result
+end
+
+@Enabled:Enabled graph enabler enabled
+    # Enabler facilitated enabled
+    @enab1 __Role Enabler $enabler
+    @enab2 __Role Enabled $enabled
+    @enabling __Role Action Enabling
+    @result __Bundle $enab1 $enab2 $enabling
+    return $result
+end
+
+@Encouraged:Encouraged graph encourager encouraged
+    # Encourager promoted encouraged
+    @enco1 __Role Encourager $encourager
+    @enco2 __Role Encouraged $encouraged
+    @encouragement __Role Action Encouragement
+    @result __Bundle $enco1 $enco2 $encouragement
+    return $result
+end
+
+@Ended:Ended graph ender ended
+    # Ender terminated ended
+    @ende1 __Role Ender $ender
+    @ende2 __Role Ended $ended
+    @ending __Role Action Ending
+    @result __Bundle $ende1 $ende2 $ending
+    return $result
+end
+
+@Enriched:Enriched graph enricher enriched
+    # Enricher enhanced enriched
+    @enri1 __Role Enricher $enricher
+    @enri2 __Role Enriched $enriched
+    @enrichment __Role Action Enrichment
+    @result __Bundle $enri1 $enri2 $enrichment
+    return $result
+end
+
+@Entered:Entered graph enterer entered
+    # Enterer moved into entered
+    @ente1 __Role Enterer $enterer
+    @ente2 __Role Entered $entered
+    @entry __Role Action Entry
+    @result __Bundle $ente1 $ente2 $entry
+    return $result
+end
+
+@Escalated:Escalated graph escalator escalated
+    # Escalator intensified escalated
+    @esca1 __Role Escalator $escalator
+    @esca2 __Role Escalated $escalated
+    @escalation __Role Action Escalation
+    @result __Bundle $esca1 $esca2 $escalation
+    return $result
+end
+
+@Established:Established graph establisher established
+    # Establisher founded established
+    @esta1 __Role Establisher $establisher
+    @esta2 __Role Established $established
+    @establishment __Role Action Establishment
+    @result __Bundle $esta1 $esta2 $establishment
+    return $result
+end
+
+@Exchanged:Exchanged graph exchanger exchanged
+    # Exchanger traded exchanged
+    @exch1 __Role Exchanger $exchanger
+    @exch2 __Role Exchanged $exchanged
+    @exchange __Role Action Exchange
+    @result __Bundle $exch1 $exch2 $exchange
+    return $result
+end
+
+@Executed:Executed graph executor executed
+    # Executor killed executed
+    @exec1 __Role Executor $executor
+    @exec2 __Role Executed $executed
+    @execution __Role Action Execution
+    @result __Bundle $exec1 $exec2 $execution
+    return $result
+end
+
+@Exemplified:Exemplified graph exemplifier exemplified
+    # Exemplifier embodied exemplified
+    @exem1 __Role Exemplifier $exemplifier
+    @exem2 __Role Exemplified $exemplified
+    @exemplification __Role Relation Exemplification
+    @result __Bundle $exem1 $exem2 $exemplification
+    return $result
+end
+
+@Expanded:Expanded graph expander expanded
+    # Expander grew expanded
+    @expa1 __Role Expander $expander
+    @expa2 __Role Expanded $expanded
+    @expansion __Role Action Expansion
+    @result __Bundle $expa1 $expa2 $expansion
+    return $result
+end
+
+@Exploited:Exploited graph exploiter exploited
+    # Exploiter used exploited
+    @expl1 __Role Exploiter $exploiter
+    @expl2 __Role Exploited $exploited
+    @exploitation __Role Action Exploitation
+    @result __Bundle $expl1 $expl2 $exploitation
+    return $result
+end
+
+@Explored:Explored graph explorer explored
+    # Explorer investigated explored
+    @expl1 __Role Explorer $explorer
+    @expl2 __Role Explored $explored
+    @exploration __Role Action Exploration
+    @result __Bundle $expl1 $expl2 $exploration
+    return $result
+end
+
+@Explorer:Explorer graph person region
+    # Person explored region
+    @per __Role Person $person
+    @reg __Role Region $region
+    @exploration __Role Role Exploration
+    @result __Bundle $per $reg $exploration
+    return $result
+end
+
+@Extended:Extended graph extender extended
+    # Extender lengthened extended
+    @exte1 __Role Extender $extender
+    @exte2 __Role Extended $extended
+    @extension __Role Action Extension
+    @result __Bundle $exte1 $exte2 $extension
+    return $result
+end
+
+@Faced:Faced graph facer faced
+    # Facer confronted faced
+    @face1 __Role Facer $facer
+    @face2 __Role Faced $faced
+    @facing __Role Relation Facing
+    @result __Bundle $face1 $face2 $facing
+    return $result
+end
+
+@Faces:Faces graph facer challenge
+    # Facer encounters challenge
+    @fac __Role Facer $facer
+    @cha __Role Challenge $challenge
+    @confrontation __Role Relation Confrontation
+    @result __Bundle $fac $cha $confrontation
+    return $result
+end
+
+@Failed:Failed graph failer goal
+    # Failer did not achieve goal
+    @fai __Role Failer $failer
+    @goa __Role Goal $goal
+    @failure __Role Event Failure
+    @result __Bundle $fai $goa $failure
+    return $result
+end
+
+@Family:Family graph group member
+    # Group related by kinship
+    @gro __Role Group $group
+    @mem __Role Member $member
+    @kinship __Role Relation Kinship
+    @result __Bundle $gro $mem $kinship
+    return $result
+end
+
+@Famous:Famous graph entity reason
+    # Entity renowned for reason
+    @ent __Role Entity $entity
+    @rea __Role Reason $reason
+    @fame __Role Property Fame
+    @result __Bundle $ent $rea $fame
+    return $result
+end
+
+@Fell:Fell graph faller cause
+    # Faller collapsed due to cause
+    @fal __Role Faller $faller
+    @cau __Role Cause $cause
+    @fall __Role Event Fall
+    @result __Bundle $fal $cau $fall
+    return $result
+end
+
+@First:First graph entity category
+    # Entity first in category
+    @ent __Role Entity $entity
+    @cat __Role Category $category
+    @primacy __Role Property Primacy
+    @result __Bundle $ent $cat $primacy
+    return $result
+end
+
+@FirstEmperor:FirstEmperor graph person empire
+    # Person first emperor of empire
+    @per __Role Person $person
+    @emp __Role Empire $empire
+    @founding __Role Relation Founding
+    @result __Bundle $per $emp $founding
+    return $result
+end
+
+@FirstKnown:FirstKnown graph entity category
+    # Entity earliest known in category
+    @ent __Role Entity $entity
+    @cat __Role Category $category
+    @earliest __Role Property Earliest
+    @result __Bundle $ent $cat $earliest
+    return $result
+end
+
+@Fled:Fled graph fleer location
+    # Fleer escaped from location
+    @fle __Role Fleer $fleer
+    @loc __Role Location $location
+    @flight __Role Action Flight
+    @result __Bundle $fle $loc $flight
+    return $result
+end
+
+@Flooded:Flooded graph flood area
+    # Flood inundated area
+    @flo __Role Flood $flood
+    @are __Role Area $area
+    @flooding __Role Event Flooding
+    @result __Bundle $flo $are $flooding
+    return $result
+end
+
+@Flourished:Flourished graph flourisher period
+    # Flourisher thrived in period
+    @flo __Role Flourisher $flourisher
+    @per __Role Period $period
+    @flourishing __Role Event Flourishing
+    @result __Bundle $flo $per $flourishing
+    return $result
+end
+
+@FlowThrough:FlowThrough graph flow region
+    # Flow passes through region
+    @flo __Role Flow $flow
+    @reg __Role Region $region
+    @flowing __Role Relation Flowing
+    @result __Bundle $flo $reg $flowing
+    return $result
+end
+
+@Focused:Focused graph focuser focus
+    # Focuser concentrated on focus
+    @focu1 __Role Focuser $focuser
+    @focu2 __Role Focus $focus
+    @focusing __Role Action Focusing
+    @result __Bundle $focu1 $focu2 $focusing
+    return $result
+end
+
+@Forced:Forced graph forcer forced
+    # Forcer compelled forced
+    @forc1 __Role Forcer $forcer
+    @forc2 __Role Forced $forced
+    @coercion __Role Action Coercion
+    @result __Bundle $forc1 $forc2 $coercion
+    return $result
+end
+
+@Formed:Formed graph former formation
+    # Former created formation
+    @form1 __Role Former $former
+    @form2 __Role Formation $formation
+    @forming __Role Action Forming
+    @result __Bundle $form1 $form2 $forming
+    return $result
+end
+
+@Formulated:Formulated graph formulator formulation
+    # Formulator devised formulation
+    @form1 __Role Formulator $formulator
+    @form2 __Role Formulation $formulation
+    @formulating __Role Action Formulating
+    @result __Bundle $form1 $form2 $formulating
+    return $result
+end
+
+@Fought:Fought graph fighter opponent
+    # Fighter battled opponent
+    @fig __Role Fighter $fighter
+    @opp __Role Opponent $opponent
+    @combat __Role Action Combat
+    @result __Bundle $fig $opp $combat
+    return $result
+end
+
+@Founded:Founded graph founder founded
+    # Founder established founded
+    @foun1 __Role Founder $founder
+    @foun2 __Role Founded $founded
+    @founding __Role Action Founding
+    @result __Bundle $foun1 $foun2 $founding
+    return $result
+end
+
+@Freed:Freed graph liberator freed
+    # Liberator released freed
+    @lib __Role Liberator $liberator
+    @fre __Role Freed $freed
+    @liberation __Role Action Liberation
+    @result __Bundle $lib $fre $liberation
+    return $result
+end
+
+@Gained:Gained graph gainer gained
+    # Gainer acquired gained
+    @gain1 __Role Gainer $gainer
+    @gain2 __Role Gained $gained
+    @gaining __Role Action Gaining
+    @result __Bundle $gain1 $gain2 $gaining
+    return $result
+end
+
+@Gave:Gave graph giver recipient
+    # Giver provided to recipient
+    @giv __Role Giver $giver
+    @rec __Role Recipient $recipient
+    @giving __Role Action Giving
+    @result __Bundle $giv $rec $giving
+    return $result
+end
+
+@General:General graph person army
+    # Person commanded army
+    @per __Role Person $person
+    @arm __Role Army $army
+    @generalship __Role Role Generalship
+    @result __Bundle $per $arm $generalship
+    return $result
+end
+
+@Generated:Generated graph generator generated
+    # Generator produced generated
+    @gene1 __Role Generator $generator
+    @gene2 __Role Generated $generated
+    @generation __Role Action Generation
+    @result __Bundle $gene1 $gene2 $generation
+    return $result
+end
+
+@Global:Global graph phenomenon scope
+    # Phenomenon worldwide in scope
+    @phe __Role Phenomenon $phenomenon
+    @sco __Role Scope $scope
+    @globality __Role Property Globality
+    @result __Bundle $phe $sco $globality
+    return $result
+end
+
+@Golden:Golden graph period culture
+    # Period prosperous for culture
+    @per __Role Period $period
+    @cul __Role Culture $culture
+    @goldenage __Role Property GoldenAge
+    @result __Bundle $per $cul $goldenage
+    return $result
+end
+
+@Governed:Governed graph governor governed
+    # Governor ruled governed
+    @gove1 __Role Governor $governor
+    @gove2 __Role Governed $governed
+    @governance __Role Relation Governance
+    @result __Bundle $gove1 $gove2 $governance
+    return $result
+end
+
+@GovernmentType:GovernmentType graph system state
+    # System governs state
+    @sys __Role System $system
+    @sta __Role State $state
+    @governance __Role Type Governance
+    @result __Bundle $sys $sta $governance
+    return $result
+end
+
+@Granted:Granted graph granter granted
+    # Granter bestowed granted
+    @gran1 __Role Granter $granter
+    @gran2 __Role Granted $granted
+    @granting __Role Action Granting
+    @result __Bundle $gran1 $gran2 $granting
+    return $result
+end
+
+@Grew:Grew graph grower aspect
+    # Grower increased in aspect
+    @gro __Role Grower $grower
+    @asp __Role Aspect $aspect
+    @growth __Role Event Growth
+    @result __Bundle $gro $asp $growth
+    return $result
+end
+
+@Had:Had graph haver possession
+    # Haver possessed possession
+    @hav __Role Haver $haver
+    @pos __Role Possession $possession
+    @having __Role Relation Having
+    @result __Bundle $hav $pos $having
+    return $result
+end
+
+@Held:Held graph holder held
+    # Holder maintained held
+    @hol __Role Holder $holder
+    @hel __Role Held $held
+    @holding __Role Action Holding
+    @result __Bundle $hol $hel $holding
+    return $result
+end
+
+@Honored:Honored graph honorer honored
+    # Honorer celebrated honored
+    @hono1 __Role Honorer $honorer
+    @hono2 __Role Honored $honored
+    @honoring __Role Action Honoring
+    @result __Bundle $hono1 $hono2 $honoring
+    return $result
+end
+
+@HonoredThe:HonoredThe graph honorer honored
+    # Honorer commemorated honored
+    @hono1 __Role Honorer $honorer
+    @hono2 __Role Honored $honored
+    @honoring __Role Action Honoring
+    @result __Bundle $hono1 $hono2 $honoring
+    return $result
+end
+
+@Hub:Hub graph place activity
+    # Place central for activity
+    @pla __Role Place $place
+    @act __Role Activity $activity
+    @centrality __Role Relation Centrality
+    @result __Bundle $pla $act $centrality
+    return $result
+end
+
+@Implemented:Implemented graph implementer policy
+    # Implementer enacted policy
+    @imp __Role Implementer $implementer
+    @pol __Role Policy $policy
+    @implementation __Role Action Implementation
+    @result __Bundle $imp $pol $implementation
+    return $result
+end
+
+@Imposed:Imposed graph imposer imposed
+    # Imposer enforced imposed
+    @impo1 __Role Imposer $imposer
+    @impo2 __Role Imposed $imposed
+    @imposition __Role Action Imposition
+    @result __Bundle $impo1 $impo2 $imposition
+    return $result
+end
+
+@Imprisoned:Imprisoned graph imprisoner prisoner
+    # Imprisoner detained prisoner
+    @imp __Role Imprisoner $imprisoner
+    @pri __Role Prisoner $prisoner
+    @imprisonment __Role Action Imprisonment
+    @result __Bundle $imp $pri $imprisonment
+    return $result
+end
+
+@Improved:Improved graph improver improved
+    # Improver enhanced improved
+    @impr1 __Role Improver $improver
+    @impr2 __Role Improved $improved
+    @improvement __Role Action Improvement
+    @result __Bundle $impr1 $impr2 $improvement
+    return $result
+end
+
+@InPeriod:InPeriod graph event period
+    # Event occurred in period
+    @eve __Role Event $event
+    @per __Role Period $period
+    @temporal __Role Relation TemporalLocation
+    @result __Bundle $eve $per $temporal
+    return $result
+end
+
+@Increased:Increased graph increaser increased
+    # Increaser raised increased
+    @incr1 __Role Increaser $increaser
+    @incr2 __Role Increased $increased
+    @increase __Role Action Increase
+    @result __Bundle $incr1 $incr2 $increase
+    return $result
+end
+
+@Industrialized:Industrialized graph industrializer economy
+    # Industrializer modernized economy
+    @ind __Role Industrializer $industrializer
+    @eco __Role Economy $economy
+    @industrialization __Role Action Industrialization
+    @result __Bundle $ind $eco $industrialization
+    return $result
+end
+
+@Inflated:Inflated graph inflater inflated
+    # Inflater caused inflation of inflated
+    @infl1 __Role Inflater $inflater
+    @infl2 __Role Inflated $inflated
+    @inflation __Role Event Inflation
+    @result __Bundle $infl1 $infl2 $inflation
+    return $result
+end
+
+@Influenced:Influenced graph influencer influenced
+    # Influencer affected influenced
+    @infl1 __Role Influencer $influencer
+    @infl2 __Role Influenced $influenced
+    @influence __Role Relation Influence
+    @result __Bundle $infl1 $infl2 $influence
+    return $result
+end
+
+@Inspired:Inspired graph inspirer inspired
+    # Inspirer motivated inspired
+    @insp1 __Role Inspirer $inspirer
+    @insp2 __Role Inspired $inspired
+    @inspiration __Role Relation Inspiration
+    @result __Bundle $insp1 $insp2 $inspiration
+    return $result
+end
+
+@Integrated:Integrated graph integrator integrated
+    # Integrator unified integrated
+    @inte1 __Role Integrator $integrator
+    @inte2 __Role Integrated $integrated
+    @integration __Role Action Integration
+    @result __Bundle $inte1 $inte2 $integration
+    return $result
+end
+
+@Intervened:Intervened graph intervener situation
+    # Intervener entered situation
+    @int __Role Intervener $intervener
+    @sit __Role Situation $situation
+    @intervention __Role Action Intervention
+    @result __Bundle $int $sit $intervention
+    return $result
+end
+
+@Introduced:Introduced graph introducer introduced
+    # Introducer brought introduced
+    @intr1 __Role Introducer $introducer
+    @intr2 __Role Introduced $introduced
+    @introduction __Role Action Introduction
+    @result __Bundle $intr1 $intr2 $introduction
+    return $result
+end
+
+@Invaded:Invaded graph invader invaded
+    # Invader attacked invaded
+    @inva1 __Role Invader $invader
+    @inva2 __Role Invaded $invaded
+    @invasion __Role Action Invasion
+    @result __Bundle $inva1 $inva2 $invasion
+    return $result
+end
+
+@Invented:Invented graph inventor invention
+    # Inventor created invention
+    @inve1 __Role Inventor $inventor
+    @inve2 __Role Invention $invention
+    @inventing __Role Action Inventing
+    @result __Bundle $inve1 $inve2 $inventing
+    return $result
+end
+
+@Investigated:Investigated graph investigator investigated
+    # Investigator examined investigated
+    @inve1 __Role Investigator $investigator
+    @inve2 __Role Investigated $investigated
+    @investigation __Role Action Investigation
+    @result __Bundle $inve1 $inve2 $investigation
+    return $result
+end
+
+@Involved:Involved graph involved event
+    # Involved participated in event
+    @inv __Role Involved $involved
+    @eve __Role Event $event
+    @involvement __Role Relation Involvement
+    @result __Bundle $inv $eve $involvement
+    return $result
+end
+
+@Issued:Issued graph issuer issued
+    # Issuer published issued
+    @issu1 __Role Issuer $issuer
+    @issu2 __Role Issued $issued
+    @issuance __Role Action Issuance
+    @result __Bundle $issu1 $issu2 $issuance
+    return $result
+end
+
+@Killed:Killed graph killer victim
+    # Killer slew victim
+    @kil __Role Killer $killer
+    @vic __Role Victim $victim
+    @killing __Role Action Killing
+    @result __Bundle $kil $vic $killing
+    return $result
+end
+
+@King:King graph person kingdom
+    # Person ruled kingdom
+    @per __Role Person $person
+    @kin __Role Kingdom $kingdom
+    @kingship __Role Role Kingship
+    @result __Bundle $per $kin $kingship
+    return $result
+end
+
+@Kingdoms:Kingdoms graph polities region
+    # Polities monarchical in region
+    @pol __Role Polities $polities
+    @reg __Role Region $region
+    @monarchy __Role Type Monarchy
+    @result __Bundle $pol $reg $monarchy
+    return $result
+end
+
+@Landed:Landed graph lander location
+    # Lander arrived at location
+    @lan __Role Lander $lander
+    @loc __Role Location $location
+    @landing __Role Action Landing
+    @result __Bundle $lan $loc $landing
+    return $result
+end
+
+@Largest:Largest graph entity category
+    # Entity largest in category
+    @ent __Role Entity $entity
+    @cat __Role Category $category
+    @size __Role Property Size
+    @result __Bundle $ent $cat $size
+    return $result
+end
+
+@Lasted:Lasted graph entity duration
+    # Entity persisted for duration
+    @ent __Role Entity $entity
+    @dur __Role Duration $duration
+    @lasting __Role Relation Duration
+    @result __Bundle $ent $dur $lasting
+    return $result
+end
+
+@Launched:Launched graph launcher launched
+    # Launcher initiated launched
+    @laun1 __Role Launcher $launcher
+    @laun2 __Role Launched $launched
+    @launching __Role Action Launching
+    @result __Bundle $laun1 $laun2 $launching
+    return $result
+end
+
+@Leader:Leader graph person group
+    # Person led group
+    @per __Role Person $person
+    @gro __Role Group $group
+    @leadership __Role Role Leadership
+    @result __Bundle $per $gro $leadership
+    return $result
+end
+
+@Led:Led graph leader led
+    # Leader commanded led
+    @lea __Role Leader $leader
+    @led __Role Led $led
+    @leadership __Role Relation Leadership
+    @result __Bundle $lea $led $leadership
+    return $result
+end
+
+@Left:Left graph leaver leftlocation
+    # Leaver departed from location
+    @lea __Role Leaver $leaver
+    @lef __Role LeftLocation $leftlocation
+    @departure __Role Action Departure
+    @result __Bundle $lea $lef $departure
+    return $result
+end
+
+@Legalized:Legalized graph legalizer legalized
+    # Legalizer permitted legalized
+    @lega1 __Role Legalizer $legalizer
+    @lega2 __Role Legalized $legalized
+    @legalization __Role Action Legalization
+    @result __Bundle $lega1 $lega2 $legalization
+    return $result
+end
+
+@Liberated:Liberated graph liberator liberated
+    # Liberator freed liberated
+    @libe1 __Role Liberator $liberator
+    @libe2 __Role Liberated $liberated
+    @liberation __Role Action Liberation
+    @result __Bundle $libe1 $libe2 $liberation
+    return $result
+end
+
+@Lifted:Lifted graph lifter lifted
+    # Lifter removed lifted
+    @lift1 __Role Lifter $lifter
+    @lift2 __Role Lifted $lifted
+    @lifting __Role Action Lifting
+    @result __Bundle $lift1 $lift2 $lifting
+    return $result
+end
+
+@Limited:Limited graph limiter limited
+    # Limiter restricted limited
+    @limi1 __Role Limiter $limiter
+    @limi2 __Role Limited $limited
+    @limitation __Role Action Limitation
+    @result __Bundle $limi1 $limi2 $limitation
+    return $result
+end
+
+@Located:Located graph entity location
+    # Entity positioned at location
+    @ent __Role Entity $entity
+    @loc __Role Location $location
+    @location __Role Relation Location
+    @result __Bundle $ent $loc $location
+    return $result
+end
+
+@LocatedIn:LocatedIn graph entity location
+    # Entity situated in location
+    @ent __Role Entity $entity
+    @loc __Role Location $location
+    @location __Role Relation Location
+    @result __Bundle $ent $loc $location
+    return $result
+end
+
+@Longest:Longest graph entity category
+    # Entity longest in category
+    @ent __Role Entity $entity
+    @cat __Role Category $category
+    @duration __Role Property Duration
+    @result __Bundle $ent $cat $duration
+    return $result
+end
+
+@Lost:Lost graph loser lost
+    # Loser forfeited lost
+    @lose __Role Loser $loser
+    @lost __Role Lost $lost
+    @loss __Role Event Loss
+    @result __Bundle $lose $lost $loss
+    return $result
+end
+
+@Made:Made graph maker made
+    # Maker created made
+    @mak __Role Maker $maker
+    @mad __Role Made $made
+    @making __Role Action Making
+    @result __Bundle $mak $mad $making
+    return $result
+end
+
+@Mastered:Mastered graph master mastered
+    # Master perfected mastered
+    @mast1 __Role Master $master
+    @mast2 __Role Mastered $mastered
+    @mastery __Role Action Mastery
+    @result __Bundle $mast1 $mast2 $mastery
+    return $result
+end
+
+@Member:Member graph entity group
+    # Entity belongs to group
+    @ent __Role Entity $entity
+    @gro __Role Group $group
+    @membership __Role Relation Membership
+    @result __Bundle $ent $gro $membership
+    return $result
+end
+
+@Met:Met graph meeter met
+    # Meeter encountered met
+    @mee __Role Meeter $meeter
+    @met __Role Met $met
+    @meeting __Role Event Meeting
+    @result __Bundle $mee $met $meeting
+    return $result
+end
+
+@Migrated:Migrated graph migrant destination
+    # Migrant moved to destination
+    @mig __Role Migrant $migrant
+    @des __Role Destination $destination
+    @migration __Role Action Migration
+    @result __Bundle $mig $des $migration
+    return $result
+end
+
+@Mixed:Mixed graph mixer mixed
+    # Mixer combined mixed
+    @mixe1 __Role Mixer $mixer
+    @mixe2 __Role Mixed $mixed
+    @mixing __Role Action Mixing
+    @result __Bundle $mixe1 $mixe2 $mixing
+    return $result
+end
+
+@Mobilized:Mobilized graph mobilizer mobilized
+    # Mobilizer assembled mobilized
+    @mobi1 __Role Mobilizer $mobilizer
+    @mobi2 __Role Mobilized $mobilized
+    @mobilization __Role Action Mobilization
+    @result __Bundle $mobi1 $mobi2 $mobilization
+    return $result
+end
+
+@Modernized:Modernized graph modernizer modernized
+    # Modernizer updated modernized
+    @mode1 __Role Modernizer $modernizer
+    @mode2 __Role Modernized $modernized
+    @modernization __Role Action Modernization
+    @result __Bundle $mode1 $mode2 $modernization
+    return $result
+end
+
+@Monk:Monk graph person monastery
+    # Person lived in monastery
+    @per __Role Person $person
+    @mon __Role Monastery $monastery
+    @monasticism __Role Role Monasticism
+    @result __Bundle $per $mon $monasticism
+    return $result
+end
+
+@Movement:Movement graph phenomenon period
+    # Phenomenon movement in period
+    @phe __Role Phenomenon $phenomenon
+    @per __Role Period $period
+    @movement __Role Type Movement
+    @result __Bundle $phe $per $movement
+    return $result
+end
+
+@Murdered:Murdered graph murderer victim
+    # Murderer killed victim
+    @mur __Role Murderer $murderer
+    @vic __Role Victim $victim
+    @murder __Role Action Murder
+    @result __Bundle $mur $vic $murder
+    return $result
+end
+
+@Nationalized:Nationalized graph nationalizer industry
+    # Nationalizer took control of industry
+    @nat __Role Nationalizer $nationalizer
+    @ind __Role Industry $industry
+    @nationalization __Role Action Nationalization
+    @result __Bundle $nat $ind $nationalization
+    return $result
+end
+
+@Negotiated:Negotiated graph negotiator negotiated
+    # Negotiator arranged negotiated
+    @nego1 __Role Negotiator $negotiator
+    @nego2 __Role Negotiated $negotiated
+    @negotiation __Role Action Negotiation
+    @result __Bundle $nego1 $nego2 $negotiation
+    return $result
+end
+
+@Observed:Observed graph observer observed
+    # Observer witnessed observed
+    @obse1 __Role Observer $observer
+    @obse2 __Role Observed $observed
+    @observation __Role Action Observation
+    @result __Bundle $obse1 $obse2 $observation
+    return $result
+end
+
+@Occupied:Occupied graph occupier occupied
+    # Occupier seized occupied
+    @occu1 __Role Occupier $occupier
+    @occu2 __Role Occupied $occupied
+    @occupation __Role Action Occupation
+    @result __Bundle $occu1 $occu2 $occupation
+    return $result
+end
+
+@Opened:Opened graph opener opened
+    # Opener initiated opened
+    @open1 __Role Opener $opener
+    @open2 __Role Opened $opened
+    @opening __Role Action Opening
+    @result __Bundle $open1 $open2 $opening
+    return $result
+end
+
+@Opposed:Opposed graph opposer opposed
+    # Opposer resisted opposed
+    @oppo1 __Role Opposer $opposer
+    @oppo2 __Role Opposed $opposed
+    @opposition __Role Relation Opposition
+    @result __Bundle $oppo1 $oppo2 $opposition
+    return $result
+end
+
+@Oppressed:Oppressed graph oppressor oppressed
+    # Oppressor subjugated oppressed
+    @oppr1 __Role Oppressor $oppressor
+    @oppr2 __Role Oppressed $oppressed
+    @oppression __Role Action Oppression
+    @result __Bundle $oppr1 $oppr2 $oppression
+    return $result
+end
+
+@Organized:Organized graph organizer organized
+    # Organizer arranged organized
+    @orga1 __Role Organizer $organizer
+    @orga2 __Role Organized $organized
+    @organization __Role Action Organization
+    @result __Bundle $orga1 $orga2 $organization
+    return $result
+end
+
+@Overthrew:Overthrew graph overthrower overthrown
+    # Overthrower toppled overthrown
+    @over1 __Role Overthrower $overthrower
+    @over2 __Role Overthrown $overthrown
+    @overthrow __Role Action Overthrow
+    @result __Bundle $over1 $over2 $overthrow
+    return $result
+end
+
+@Painted:Painted graph painter painting
+    # Painter created painting
+    @pain1 __Role Painter $painter
+    @pain2 __Role Painting $painting
+    @painting __Role Action Painting
+    @result __Bundle $pain1 $pain2 $painting
+    return $result
+end
+
+@Passed:Passed graph passer passed
+    # Passer enacted passed
+    @pass1 __Role Passer $passer
+    @pass2 __Role Passed $passed
+    @passing __Role Action Passing
+    @result __Bundle $pass1 $pass2 $passing
+    return $result
+end
+
+@Patronized:Patronized graph patron patronized
+    # Patron supported patronized
+    @patr1 __Role Patron $patron
+    @patr2 __Role Patronized $patronized
+    @patronage __Role Action Patronage
+    @result __Bundle $patr1 $patr2 $patronage
+    return $result
+end
+
+@Peak:Peak graph state entity
+    # State maximum for entity
+    @sta __Role State $state
+    @ent __Role Entity $entity
+    @zenith __Role Property Zenith
+    @result __Bundle $sta $ent $zenith
+    return $result
+end
+
+@Peasant:Peasant graph person land
+    # Person worked land
+    @per __Role Person $person
+    @lan __Role Land $land
+    @peasantry __Role Role Peasantry
+    @result __Bundle $per $lan $peasantry
+    return $result
+end
+
+@People:People graph group region
+    # Group inhabits region
+    @gro __Role Group $group
+    @reg __Role Region $region
+    @population __Role Type Population
+    @result __Bundle $gro $reg $population
+    return $result
+end
+
+@Period:Period graph timespan history
+    # Timespan period in history
+    @tim __Role Timespan $timespan
+    @his __Role History $history
+    @temporal __Role Type Temporal
+    @result __Bundle $tim $his $temporal
+    return $result
+end
+
+@Persecuted:Persecuted graph persecutor persecuted
+    # Persecutor oppressed persecuted
+    @pers1 __Role Persecutor $persecutor
+    @pers2 __Role Persecuted $persecuted
+    @persecution __Role Action Persecution
+    @result __Bundle $pers1 $pers2 $persecution
+    return $result
+end
+
+@Pharaoh:Pharaoh graph person egypt
+    # Person ruled Egypt
+    @per __Role Person $person
+    @egy __Role Egypt $egypt
+    @pharaohship __Role Role Pharaohship
+    @result __Bundle $per $egy $pharaohship
+    return $result
+end
+
+@Philosopher:Philosopher graph person philosophyfield
+    # Person practiced philosophy
+    @per __Role Person $person
+    @phi __Role PhilosophyField $philosophyfield
+    @philosophy __Role Role Philosophy
+    @result __Bundle $per $phi $philosophy
+    return $result
+end
+
+@Physicist:Physicist graph person physicsfield
+    # Person studied physics
+    @per __Role Person $person
+    @phy __Role PhysicsField $physicsfield
+    @physics __Role Role Physics
+    @result __Bundle $per $phy $physics
+    return $result
+end
+
+@Placed:Placed graph placer placed
+    # Placer positioned placed
+    @plac1 __Role Placer $placer
+    @plac2 __Role Placed $placed
+    @placement __Role Action Placement
+    @result __Bundle $plac1 $plac2 $placement
+    return $result
+end
+
+@Planned:Planned graph planner plan
+    # Planner designed plan
+    @plan1 __Role Planner $planner
+    @plan2 __Role Plan $plan
+    @planning __Role Action Planning
+    @result __Bundle $plan1 $plan2 $planning
+    return $result
+end
+
+@PoliticalSystem:PoliticalSystem graph system state
+    # System political for state
+    @sys __Role System $system
+    @sta __Role State $state
+    @governance __Role Type Governance
+    @result __Bundle $sys $sta $governance
+    return $result
+end
+
+@Posted:Posted graph poster posted
+    # Poster displayed posted
+    @post1 __Role Poster $poster
+    @post2 __Role Posted $posted
+    @posting __Role Action Posting
+    @result __Bundle $post1 $post2 $posting
+    return $result
+end
+
+@Powered:Powered graph power powered
+    # Power energized powered
+    @powe1 __Role Power $power
+    @powe2 __Role Powered $powered
+    @powering __Role Relation Powering
+    @result __Bundle $powe1 $powe2 $powering
+    return $result
+end
+
+@Powerful:Powerful graph entity domain
+    # Entity powerful in domain
+    @ent __Role Entity $entity
+    @dom __Role Domain $domain
+    @power __Role Property Power
+    @result __Bundle $ent $dom $power
+    return $result
+end
+
+@Practiced:Practiced graph practitioner practice
+    # Practitioner exercised practice
+    @prac1 __Role Practitioner $practitioner
+    @prac2 __Role Practice $practice
+    @practicing __Role Action Practicing
+    @result __Bundle $prac1 $prac2 $practicing
+    return $result
+end
+
+@Preserved:Preserved graph preserver preserved
+    # Preserver maintained preserved
+    @pres1 __Role Preserver $preserver
+    @pres2 __Role Preserved $preserved
+    @preservation __Role Action Preservation
+    @result __Bundle $pres1 $pres2 $preservation
+    return $result
+end
+
+@President:President graph person nation
+    # Person led nation
+    @per __Role Person $person
+    @nat __Role Nation $nation
+    @presidency __Role Role Presidency
+    @result __Bundle $per $nat $presidency
+    return $result
+end
+
+@Pressured:Pressured graph pressurer pressured
+    # Pressurer coerced pressured
+    @pres1 __Role Pressurer $pressurer
+    @pres2 __Role Pressured $pressured
+    @pressure __Role Action Pressure
+    @result __Bundle $pres1 $pres2 $pressure
+    return $result
+end
+
+@Prevented:Prevented graph preventer prevented
+    # Preventer stopped prevented
+    @prev1 __Role Preventer $preventer
+    @prev2 __Role Prevented $prevented
+    @prevention __Role Action Prevention
+    @result __Bundle $prev1 $prev2 $prevention
+    return $result
+end
+
+@Printed:Printed graph printer printed
+    # Printer produced printed
+    @prin1 __Role Printer $printer
+    @prin2 __Role Printed $printed
+    @printing __Role Action Printing
+    @result __Bundle $prin1 $prin2 $printing
+    return $result
+end
+
+@Proclaimed:Proclaimed graph proclaimer proclamation
+    # Proclaimer declared proclamation
+    @proc1 __Role Proclaimer $proclaimer
+    @proc2 __Role Proclamation $proclamation
+    @proclaiming __Role Action Proclaiming
+    @result __Bundle $proc1 $proc2 $proclaiming
+    return $result
+end
+
+@Produced:Produced graph producer product
+    # Producer made product
+    @prod1 __Role Producer $producer
+    @prod2 __Role Product $product
+    @production __Role Action Production
+    @result __Bundle $prod1 $prod2 $production
+    return $result
+end
+
+@Promoted:Promoted graph promoter promoted
+    # Promoter advanced promoted
+    @prom1 __Role Promoter $promoter
+    @prom2 __Role Promoted $promoted
+    @promotion __Role Action Promotion
+    @result __Bundle $prom1 $prom2 $promotion
+    return $result
+end
+
+@Promotes:Promotes graph promoter promoted
+    # Promoter encourages promoted
+    @prom1 __Role Promoter $promoter
+    @prom2 __Role Promoted $promoted
+    @promotion __Role Relation Promotion
+    @result __Bundle $prom1 $prom2 $promotion
+    return $result
+end
+
+@Prophet:Prophet graph person religion
+    # Person prophesied for religion
+    @per __Role Person $person
+    @rel __Role Religion $religion
+    @prophethood __Role Role Prophethood
+    @result __Bundle $per $rel $prophethood
+    return $result
+end
+
+@Proposed:Proposed graph proposer proposal
+    # Proposer suggested proposal
+    @prop1 __Role Proposer $proposer
+    @prop2 __Role Proposal $proposal
+    @proposing __Role Action Proposing
+    @result __Bundle $prop1 $prop2 $proposing
+    return $result
+end
+
+@Protected:Protected graph protector protected
+    # Protector shielded protected
+    @prot1 __Role Protector $protector
+    @prot2 __Role Protected $protected
+    @protection __Role Action Protection
+    @result __Bundle $prot1 $prot2 $protection
+    return $result
+end
+
+@Protested:Protested graph protester protested
+    # Protester opposed protested
+    @prot1 __Role Protester $protester
+    @prot2 __Role Protested $protested
+    @protest __Role Action Protest
+    @result __Bundle $prot1 $prot2 $protest
+    return $result
+end
+
+@Provided:Provided graph provider provided
+    # Provider supplied provided
+    @prov1 __Role Provider $provider
+    @prov2 __Role Provided $provided
+    @provision __Role Action Provision
+    @result __Bundle $prov1 $prov2 $provision
+    return $result
+end
+
+@Purged:Purged graph purger purged
+    # Purger eliminated purged
+    @purg1 __Role Purger $purger
+    @purg2 __Role Purged $purged
+    @purge __Role Action Purge
+    @result __Bundle $purg1 $purg2 $purge
+    return $result
+end
+
+@Pursued:Pursued graph pursuer pursued
+    # Pursuer chased pursued
+    @purs1 __Role Pursuer $pursuer
+    @purs2 __Role Pursued $pursued
+    @pursuit __Role Action Pursuit
+    @result __Bundle $purs1 $purs2 $pursuit
+    return $result
+end
+
+@Queen:Queen graph person kingdom
+    # Person ruled kingdom
+    @per __Role Person $person
+    @kin __Role Kingdom $kingdom
+    @queenship __Role Role Queenship
+    @result __Bundle $per $kin $queenship
+    return $result
+end
+
+@Questioned:Questioned graph questioner questioned
+    # Questioner challenged questioned
+    @ques1 __Role Questioner $questioner
+    @ques2 __Role Questioned $questioned
+    @questioning __Role Action Questioning
+    @result __Bundle $ques1 $ques2 $questioning
+    return $result
+end
+
+@Raided:Raided graph raider raided
+    # Raider attacked raided
+    @raid1 __Role Raider $raider
+    @raid2 __Role Raided $raided
+    @raid __Role Action Raid
+    @result __Bundle $raid1 $raid2 $raid
+    return $result
+end
+
+@Reached:Reached graph reacher destination
+    # Reacher arrived at destination
+    @rea __Role Reacher $reacher
+    @des __Role Destination $destination
+    @reaching __Role Action Reaching
+    @result __Bundle $rea $des $reaching
+    return $result
+end
+
+@Rebuilt:Rebuilt graph rebuilder rebuilt
+    # Rebuilder reconstructed rebuilt
+    @rebu1 __Role Rebuilder $rebuilder
+    @rebu2 __Role Rebuilt $rebuilt
+    @rebuilding __Role Action Rebuilding
+    @result __Bundle $rebu1 $rebu2 $rebuilding
+    return $result
+end
+
+@Reconquered:Reconquered graph reconqueror reconquered
+    # Reconqueror retook reconquered
+    @reco1 __Role Reconqueror $reconqueror
+    @reco2 __Role Reconquered $reconquered
+    @reconquest __Role Action Reconquest
+    @result __Bundle $reco1 $reco2 $reconquest
+    return $result
+end
+
+@Recovered:Recovered graph recoverer recovered
+    # Recoverer regained recovered
+    @reco1 __Role Recoverer $recoverer
+    @reco2 __Role Recovered $recovered
+    @recovery __Role Action Recovery
+    @result __Bundle $reco1 $reco2 $recovery
+    return $result
+end
+
+@Rediscovered:Rediscovered graph rediscoverer rediscovered
+    # Rediscoverer found rediscovered
+    @redi1 __Role Rediscoverer $rediscoverer
+    @redi2 __Role Rediscovered $rediscovered
+    @rediscovery __Role Action Rediscovery
+    @result __Bundle $redi1 $redi2 $rediscovery
+    return $result
+end
+
+@Redrew:Redrew graph redrawer redrawn
+    # Redrawer modified redrawn
+    @redr1 __Role Redrawer $redrawer
+    @redr2 __Role Redrawn $redrawn
+    @redrawing __Role Action Redrawing
+    @result __Bundle $redr1 $redr2 $redrawing
+    return $result
+end
+
+@Reformed:Reformed graph reformer reformed
+    # Reformer changed reformed
+    @refo1 __Role Reformer $reformer
+    @refo2 __Role Reformed $reformed
+    @reform __Role Action Reform
+    @result __Bundle $refo1 $refo2 $reform
+    return $result
+end
+
+@Regretted:Regretted graph regretter regretted
+    # Regretter lamented regretted
+    @regr1 __Role Regretter $regretter
+    @regr2 __Role Regretted $regretted
+    @regret __Role Relation Regret
+    @result __Bundle $regr1 $regr2 $regret
+    return $result
+end
+
+@Reigned:Reigned graph monarch realm
+    # Monarch ruled realm
+    @mon __Role Monarch $monarch
+    @rea __Role Realm $realm
+    @reign __Role Relation Reign
+    @result __Bundle $mon $rea $reign
+    return $result
+end
+
+@Released:Released graph releaser released
+    # Releaser freed released
+    @rele1 __Role Releaser $releaser
+    @rele2 __Role Released $released
+    @release __Role Action Release
+    @result __Bundle $rele1 $rele2 $release
+    return $result
+end
+
+@Remain:Remain graph remainder state
+    # Remainder persists in state
+    @rem __Role Remainder $remainder
+    @sta __Role State $state
+    @remaining __Role Relation Remaining
+    @result __Bundle $rem $sta $remaining
+    return $result
+end
+
+@Remains:Remains graph remainder state
+    # Remainder continues in state
+    @rem __Role Remainder $remainder
+    @sta __Role State $state
+    @remaining __Role Relation Remaining
+    @result __Bundle $rem $sta $remaining
+    return $result
+end
+
+@Replaced:Replaced graph replacer replaced
+    # Replacer substituted replaced
+    @repl1 __Role Replacer $replacer
+    @repl2 __Role Replaced $replaced
+    @replacement __Role Action Replacement
+    @result __Bundle $repl1 $repl2 $replacement
+    return $result
+end
+
+@Represented:Represented graph representer represented
+    # Representer stood for represented
+    @repr1 __Role Representer $representer
+    @repr2 __Role Represented $represented
+    @representation __Role Relation Representation
+    @result __Bundle $repr1 $repr2 $representation
+    return $result
+end
+
+@Required:Required graph requirer required
+    # Requirer needed required
+    @requ1 __Role Requirer $requirer
+    @requ2 __Role Required $required
+    @requirement __Role Relation Requirement
+    @result __Bundle $requ1 $requ2 $requirement
+    return $result
+end
+
+@Requires:Requires graph requirer required
+    # Requirer needs required
+    @requ1 __Role Requirer $requirer
+    @requ2 __Role Required $required
+    @requirement __Role Relation Requirement
+    @result __Bundle $requ1 $requ2 $requirement
+    return $result
+end
+
+@Researched:Researched graph researcher researched
+    # Researcher studied researched
+    @rese1 __Role Researcher $researcher
+    @rese2 __Role Researched $researched
+    @research __Role Action Research
+    @result __Bundle $rese1 $rese2 $research
+    return $result
+end
+
+@Resigned:Resigned graph resigner position
+    # Resigner left position
+    @res __Role Resigner $resigner
+    @pos __Role Position $position
+    @resignation __Role Action Resignation
+    @result __Bundle $res $pos $resignation
+    return $result
+end
+
+@Resolved:Resolved graph resolver resolved
+    # Resolver settled resolved
+    @reso1 __Role Resolver $resolver
+    @reso2 __Role Resolved $resolved
+    @resolution __Role Action Resolution
+    @result __Bundle $reso1 $reso2 $resolution
+    return $result
+end
+
+@Restored:Restored graph restorer restored
+    # Restorer renewed restored
+    @rest1 __Role Restorer $restorer
+    @rest2 __Role Restored $restored
+    @restoration __Role Action Restoration
+    @result __Bundle $rest1 $rest2 $restoration
+    return $result
+end
+
+@Resulted:Resulted graph cause result
+    # Cause led to result
+    @cau __Role Cause $cause
+    @res __Role Result $result
+    @causation __Role Relation Causation
+    @result __Bundle $cau $res $causation
+    return $result
+end
+
+@Reunified:Reunified graph reunifier reunified
+    # Reunifier rejoined reunified
+    @reun1 __Role Reunifier $reunifier
+    @reun2 __Role Reunified $reunified
+    @reunification __Role Action Reunification
+    @result __Bundle $reun1 $reun2 $reunification
+    return $result
+end
+
+@Revived:Revived graph reviver revived
+    # Reviver renewed revived
+    @revi1 __Role Reviver $reviver
+    @revi2 __Role Revived $revived
+    @revival __Role Action Revival
+    @result __Bundle $revi1 $revi2 $revival
+    return $result
+end
+
+@Revolution:Revolution graph change society
+    # Change revolutionary in society
+    @cha __Role Change $change
+    @soc __Role Society $society
+    @revolution __Role Event Revolution
+    @result __Bundle $cha $soc $revolution
+    return $result
+end
+
+@Revolutionized:Revolutionized graph revolutionizer revolutionized
+    # Revolutionizer transformed revolutionized
+    @revo1 __Role Revolutionizer $revolutionizer
+    @revo2 __Role Revolutionized $revolutionized
+    @revolutionizing __Role Action Revolutionizing
+    @result __Bundle $revo1 $revo2 $revolutionizing
+    return $result
+end
+
+@Richest:Richest graph entity category
+    # Entity wealthiest in category
+    @ent __Role Entity $entity
+    @cat __Role Category $category
+    @wealth __Role Property Wealth
+    @result __Bundle $ent $cat $wealth
+    return $result
+end
+
+@Rival:Rival graph entity opponent
+    # Entity rivals opponent
+    @ent __Role Entity $entity
+    @opp __Role Opponent $opponent
+    @rivalry __Role Relation Rivalry
+    @result __Bundle $ent $opp $rivalry
+    return $result
+end
+
+@Rose:Rose graph riser state
+    # Riser ascended to state
+    @ris __Role Riser $riser
+    @sta __Role State $state
+    @rise __Role Event Rise
+    @result __Bundle $ris $sta $rise
+    return $result
+end
+
+@Ruled:Ruled graph ruler realm
+    # Ruler governed realm
+    @rul __Role Ruler $ruler
+    @rea __Role Realm $realm
+    @governance __Role Relation Governance
+    @result __Bundle $rul $rea $governance
+    return $result
+end
+
+@RuledBy:RuledBy graph territory ruler
+    # Territory governed by ruler
+    @ter __Role Territory $territory
+    @rul __Role Ruler $ruler
+    @governance __Role Relation Governance
+    @result __Bundle $ter $rul $governance
+    return $result
+end
+
+@Sacked:Sacked graph sacker sacked
+    # Sacker plundered sacked
+    @sack1 __Role Sacker $sacker
+    @sack2 __Role Sacked $sacked
+    @sacking __Role Action Sacking
+    @result __Bundle $sack1 $sack2 $sacking
+    return $result
+end
+
+@Said:Said graph speaker statement
+    # Speaker uttered statement
+    @spe __Role Speaker $speaker
+    @sta __Role Statement $statement
+    @speaking __Role Action Speaking
+    @result __Bundle $spe $sta $speaking
+    return $result
+end
+
+@Sailed:Sailed graph sailor destination
+    # Sailor voyaged to destination
+    @sai __Role Sailor $sailor
+    @des __Role Destination $destination
+    @sailing __Role Action Sailing
+    @result __Bundle $sai $des $sailing
+    return $result
+end
+
+@Scientist:Scientist graph person sciencefield
+    # Person researched field
+    @per __Role Person $person
+    @sci __Role ScienceField $sciencefield
+    @science __Role Role Science
+    @result __Bundle $per $sci $science
+    return $result
+end
+
+@Sculpted:Sculpted graph sculptor sculpture
+    # Sculptor created sculpture
+    @scul1 __Role Sculptor $sculptor
+    @scul2 __Role Sculpture $sculpture
+    @sculpting __Role Action Sculpting
+    @result __Bundle $scul1 $scul2 $sculpting
+    return $result
+end
+
+@Seceded:Seceded graph seceder union
+    # Seceder withdrew from union
+    @sec __Role Seceder $seceder
+    @uni __Role Union $union
+    @secession __Role Action Secession
+    @result __Bundle $sec $uni $secession
+    return $result
+end
+
+@Secured:Secured graph securer secured
+    # Securer obtained secured
+    @secu1 __Role Securer $securer
+    @secu2 __Role Secured $secured
+    @securing __Role Action Securing
+    @result __Bundle $secu1 $secu2 $securing
+    return $result
+end
+
+@Segregated:Segregated graph segregator segregated
+    # Segregator separated segregated
+    @segr1 __Role Segregator $segregator
+    @segr2 __Role Segregated $segregated
+    @segregation __Role Action Segregation
+    @result __Bundle $segr1 $segr2 $segregation
+    return $result
+end
+
+@Seized:Seized graph seizer seized
+    # Seizer took seized
+    @seiz1 __Role Seizer $seizer
+    @seiz2 __Role Seized $seized
+    @seizure __Role Action Seizure
+    @result __Bundle $seiz1 $seiz2 $seizure
+    return $result
+end
+
+@Sent:Sent graph sender sent
+    # Sender dispatched sent
+    @send __Role Sender $sender
+    @sent __Role Sent $sent
+    @sending __Role Action Sending
+    @result __Bundle $send $sent $sending
+    return $result
+end
+
+@Served:Served graph server positionrole
+    # Server performed role
+    @ser __Role Server $server
+    @pos __Role PositionRole $positionrole
+    @service __Role Relation Service
+    @result __Bundle $ser $pos $service
+    return $result
+end
+
+@ServedAs:ServedAs graph server positionrole
+    # Server held position role
+    @ser __Role Server $server
+    @pos __Role PositionRole $positionrole
+    @service __Role Relation Service
+    @result __Bundle $ser $pos $service
+    return $result
+end
+
+@Settled:Settled graph settler region
+    # Settler colonized region
+    @set __Role Settler $settler
+    @reg __Role Region $region
+    @settlement __Role Action Settlement
+    @result __Bundle $set $reg $settlement
+    return $result
+end
+
+@Shaped:Shaped graph shaper shaped
+    # Shaper formed shaped
+    @shap1 __Role Shaper $shaper
+    @shap2 __Role Shaped $shaped
+    @shaping __Role Action Shaping
+    @result __Bundle $shap1 $shap2 $shaping
+    return $result
+end
+
+@Shocked:Shocked graph shock shocked
+    # Shock surprised shocked
+    @shoc1 __Role Shock $shock
+    @shoc2 __Role Shocked $shocked
+    @shocking __Role Event Shocking
+    @result __Bundle $shoc1 $shoc2 $shocking
+    return $result
+end
+
+@Shortened:Shortened graph shortener shortened
+    # Shortener reduced shortened
+    @shor1 __Role Shortener $shortener
+    @shor2 __Role Shortened $shortened
+    @shortening __Role Action Shortening
+    @result __Bundle $shor1 $shor2 $shortening
+    return $result
+end
+
+@Showed:Showed graph shower shown
+    # Shower demonstrated shown
+    @show1 __Role Shower $shower
+    @show2 __Role Shown $shown
+    @showing __Role Action Showing
+    @result __Bundle $show1 $show2 $showing
+    return $result
+end
+
+@Signed:Signed graph signer document
+    # Signer executed document
+    @sig __Role Signer $signer
+    @doc __Role Document $document
+    @signing __Role Action Signing
+    @result __Bundle $sig $doc $signing
+    return $result
+end
+
+@Slave:Slave graph person owner
+    # Person enslaved by owner
+    @per __Role Person $person
+    @own __Role Owner $owner
+    @slavery __Role Relation Slavery
+    @result __Bundle $per $own $slavery
+    return $result
+end
+
+@Slaves:Slaves graph group owner
+    # Group enslaved by owner
+    @gro __Role Group $group
+    @own __Role Owner $owner
+    @slavery __Role Relation Slavery
+    @result __Bundle $gro $own $slavery
+    return $result
+end
+
+@Sought:Sought graph seeker sought
+    # Seeker pursued sought
+    @see __Role Seeker $seeker
+    @sou __Role Sought $sought
+    @seeking __Role Action Seeking
+    @result __Bundle $see $sou $seeking
+    return $result
+end
+
+@Speculated:Speculated graph speculator speculation
+    # Speculator theorized speculation
+    @spec1 __Role Speculator $speculator
+    @spec2 __Role Speculation $speculation
+    @speculating __Role Action Speculating
+    @result __Bundle $spec1 $spec2 $speculating
+    return $result
+end
+
+@Split:Split graph splitter splititem
+    # Splitter divided split item
+    @spli1 __Role Splitter $splitter
+    @spli2 __Role SplitItem $splititem
+    @splitting __Role Action Splitting
+    @result __Bundle $spli1 $spli2 $splitting
+    return $result
+end
+
+@Spread:Spread graph spreader spreaditem
+    # Spreader disseminated spread item
+    @spre1 __Role Spreader $spreader
+    @spre2 __Role SpreadItem $spreaditem
+    @spreading __Role Action Spreading
+    @result __Bundle $spre1 $spre2 $spreading
+    return $result
+end
+
+@Staged:Staged graph stager staged
+    # Stager organized staged
+    @stag1 __Role Stager $stager
+    @stag2 __Role Staged $staged
+    @staging __Role Action Staging
+    @result __Bundle $stag1 $stag2 $staging
+    return $result
+end
+
+@Standardized:Standardized graph standardizer standardized
+    # Standardizer unified standardized
+    @stan1 __Role Standardizer $standardizer
+    @stan2 __Role Standardized $standardized
+    @standardization __Role Action Standardization
+    @result __Bundle $stan1 $stan2 $standardization
+    return $result
+end
+
+@Started:Started graph starter started
+    # Starter began started
+    @star1 __Role Starter $starter
+    @star2 __Role Started $started
+    @starting __Role Action Starting
+    @result __Bundle $star1 $star2 $starting
+    return $result
+end
+
+@Stormed:Stormed graph stormer stormed
+    # Stormer assaulted stormed
+    @stor1 __Role Stormer $stormer
+    @stor2 __Role Stormed $stormed
+    @storming __Role Action Storming
+    @result __Bundle $stor1 $stor2 $storming
+    return $result
+end
+
+@Strained:Strained graph strainer strained
+    # Strainer stressed strained
+    @stra1 __Role Strainer $strainer
+    @stra2 __Role Strained $strained
+    @strain __Role Relation Strain
+    @result __Bundle $stra1 $stra2 $strain
+    return $result
+end
+
+@Strategic:Strategic graph location context
+    # Location strategic in context
+    @loc __Role Location $location
+    @con __Role Context $context
+    @strategic __Role Property Strategic
+    @result __Bundle $loc $con $strategic
+    return $result
+end
+
+@Strengthened:Strengthened graph strengthener strengthened
+    # Strengthener reinforced strengthened
+    @stre1 __Role Strengthener $strengthener
+    @stre2 __Role Strengthened $strengthened
+    @strengthening __Role Action Strengthening
+    @result __Bundle $stre1 $stre2 $strengthening
+    return $result
+end
+
+@Student:Student graph person subject
+    # Person studied subject
+    @per __Role Person $person
+    @sub __Role Subject $subject
+    @studying __Role Role Studying
+    @result __Bundle $per $sub $studying
+    return $result
+end
+
+@Suffered:Suffered graph sufferer suffering
+    # Sufferer endured suffering
+    @suff1 __Role Sufferer $sufferer
+    @suff2 __Role Suffering $suffering
+    @suffering __Role Event Suffering
+    @result __Bundle $suff1 $suff2 $suffering
+    return $result
+end
+
+@Sultan:Sultan graph person sultanate
+    # Person ruled sultanate
+    @per __Role Person $person
+    @sul __Role Sultanate $sultanate
+    @sultanship __Role Role Sultanship
+    @result __Bundle $per $sul $sultanship
+    return $result
+end
+
+@Supported:Supported graph supporter supported
+    # Supporter aided supported
+    @supp1 __Role Supporter $supporter
+    @supp2 __Role Supported $supported
+    @support __Role Action Support
+    @result __Bundle $supp1 $supp2 $support
+    return $result
+end
+
+@Suppressed:Suppressed graph suppressor suppressed
+    # Suppressor repressed suppressed
+    @supp1 __Role Suppressor $suppressor
+    @supp2 __Role Suppressed $suppressed
+    @suppression __Role Action Suppression
+    @result __Bundle $supp1 $supp2 $suppression
+    return $result
+end
+
+@Surrendered:Surrendered graph surrenderer victor
+    # Surrenderer yielded to victor
+    @sur __Role Surrenderer $surrenderer
+    @vic __Role Victor $victor
+    @surrender __Role Action Surrender
+    @result __Bundle $sur $vic $surrender
+    return $result
+end
+
+@Survived:Survived graph survivor event
+    # Survivor endured event
+    @sur __Role Survivor $survivor
+    @eve __Role Event $event
+    @survival __Role Event Survival
+    @result __Bundle $sur $eve $survival
+    return $result
+end
+
+@Symbol:Symbol graph entity symbolized
+    # Entity symbolizes symbolized
+    @ent __Role Entity $entity
+    @sym __Role Symbolized $symbolized
+    @symbolism __Role Relation Symbolism
+    @result __Bundle $ent $sym $symbolism
+    return $result
+end
+
+@Symbolized:Symbolized graph symbolizer symbolized
+    # Symbolizer represented symbolized
+    @symb1 __Role Symbolizer $symbolizer
+    @symb2 __Role Symbolized $symbolized
+    @symbolism __Role Relation Symbolism
+    @result __Bundle $symb1 $symb2 $symbolism
+    return $result
+end
+
+@System:System graph structure domain
+    # Structure systematic in domain
+    @str __Role Structure $structure
+    @dom __Role Domain $domain
+    @systematic __Role Type Systematic
+    @result __Bundle $str $dom $systematic
+    return $result
+end
+
+@Taught:Taught graph teacher student
+    # Teacher instructed student
+    @tea __Role Teacher $teacher
+    @stu __Role Student $student
+    @teaching __Role Action Teaching
+    @result __Bundle $tea $stu $teaching
+    return $result
+end
+
+@Temporary:Temporary graph state context
+    # State temporary in context
+    @sta __Role State $state
+    @con __Role Context $context
+    @temporariness __Role Property Temporariness
+    @result __Bundle $sta $con $temporariness
+    return $result
+end
+
+@Threatens:Threatens graph threat threatened
+    # Threat endangers threatened
+    @thre1 __Role Threat $threat
+    @thre2 __Role Threatened $threatened
+    @threatening __Role Relation Threatening
+    @result __Bundle $thre1 $thre2 $threatening
+    return $result
+end
+
+@Traded:Traded graph trader tradeditem
+    # Trader exchanged traded item
+    @trad1 __Role Trader $trader
+    @trad2 __Role TradedItem $tradeditem
+    @trade __Role Action Trade
+    @result __Bundle $trad1 $trad2 $trade
+    return $result
+end
+
+@Transformed:Transformed graph transformer transformed
+    # Transformer changed transformed
+    @tran1 __Role Transformer $transformer
+    @tran2 __Role Transformed $transformed
+    @transformation __Role Action Transformation
+    @result __Bundle $tran1 $tran2 $transformation
+    return $result
+end
+
+@Translated:Translated graph translator translated
+    # Translator rendered translated
+    @tran1 __Role Translator $translator
+    @tran2 __Role Translated $translated
+    @translation __Role Action Translation
+    @result __Bundle $tran1 $tran2 $translation
+    return $result
+end
+
+@Tried:Tried graph trier attempt
+    # Trier attempted attempt
+    @tri __Role Trier $trier
+    @att __Role Attempt $attempt
+    @trying __Role Action Trying
+    @result __Bundle $tri $att $trying
+    return $result
+end
+
+@Triggered:Triggered graph trigger triggered
+    # Trigger caused triggered
+    @trig1 __Role Trigger $trigger
+    @trig2 __Role Triggered $triggered
+    @triggering __Role Relation Triggering
+    @result __Bundle $trig1 $trig2 $triggering
+    return $result
+end
+
+@Tsar:Tsar graph person russia
+    # Person ruled Russia
+    @per __Role Person $person
+    @rus __Role Russia $russia
+    @tsardom __Role Role Tsardom
+    @result __Bundle $per $rus $tsardom
+    return $result
+end
+
+@Turned:Turned graph turner state
+    # Turner changed to state
+    @tur __Role Turner $turner
+    @sta __Role State $state
+    @turning __Role Action Turning
+    @result __Bundle $tur $sta $turning
+    return $result
+end
+
+@Tutored:Tutored graph tutor student
+    # Tutor taught student
+    @tut __Role Tutor $tutor
+    @stu __Role Student $student
+    @tutoring __Role Action Tutoring
+    @result __Bundle $tut $stu $tutoring
+    return $result
+end
+
+@Underdeveloped:Underdeveloped graph region period
+    # Region underdeveloped in period
+    @reg __Role Region $region
+    @per __Role Period $period
+    @underdevelopment __Role Property Underdevelopment
+    @result __Bundle $reg $per $underdevelopment
+    return $result
+end
+
+@Unified:Unified graph unifier unified
+    # Unifier joined unified
+    @unif1 __Role Unifier $unifier
+    @unif2 __Role Unified $unified
+    @unification __Role Action Unification
+    @result __Bundle $unif1 $unif2 $unification
+    return $result
+end
+
+@United:United graph uniter united
+    # Uniter joined united
+    @unit1 __Role Uniter $uniter
+    @unit2 __Role United $united
+    @uniting __Role Action Uniting
+    @result __Bundle $unit1 $unit2 $uniting
+    return $result
+end
+
+@Used:Used graph user used
+    # User employed used
+    @user __Role User $user
+    @used __Role Used $used
+    @usage __Role Action Usage
+    @result __Bundle $user $used $usage
+    return $result
+end
+
+@UsedFor:UsedFor graph tool purpose
+    # Tool employed for purpose
+    @too __Role Tool $tool
+    @pur __Role Purpose $purpose
+    @usage __Role Relation Usage
+    @result __Bundle $too $pur $usage
+    return $result
+end
+
+@Valued:Valued graph valuer valued
+    # Valuer esteemed valued
+    @valu1 __Role Valuer $valuer
+    @valu2 __Role Valued $valued
+    @valuing __Role Relation Valuing
+    @result __Bundle $valu1 $valu2 $valuing
+    return $result
+end
+
+@Voted:Voted graph voter decision
+    # Voter chose decision
+    @vot __Role Voter $voter
+    @dec __Role Decision $decision
+    @voting __Role Action Voting
+    @result __Bundle $vot $dec $voting
+    return $result
+end
+
+@War:War graph conflict participants
+    # Conflict war between participants
+    @con __Role Conflict $conflict
+    @par __Role Participants $participants
+    @warfare __Role Event Warfare
+    @result __Bundle $con $par $warfare
+    return $result
+end
+
+@Wars:Wars graph conflicts period
+    # Conflicts wars in period
+    @con __Role Conflicts $conflicts
+    @per __Role Period $period
+    @warfare __Role Event Warfare
+    @result __Bundle $con $per $warfare
+    return $result
+end
+
+@Weakened:Weakened graph weakener weakened
+    # Weakener undermined weakened
+    @weak1 __Role Weakener $weakener
+    @weak2 __Role Weakened $weakened
+    @weakening __Role Action Weakening
+    @result __Bundle $weak1 $weak2 $weakening
+    return $result
+end
+
+@Welcomed:Welcomed graph welcomer welcomed
+    # Welcomer received welcomed
+    @welc1 __Role Welcomer $welcomer
+    @welc2 __Role Welcomed $welcomed
+    @welcoming __Role Action Welcoming
+    @result __Bundle $welc1 $welc2 $welcoming
+    return $result
+end
+
+@Westernized:Westernized graph westernizer westernized
+    # Westernizer modernized westernized
+    @west1 __Role Westernizer $westernizer
+    @west2 __Role Westernized $westernized
+    @westernization __Role Action Westernization
+    @result __Bundle $west1 $west2 $westernization
+    return $result
+end
+
+@Withdrew:Withdrew graph withdrawer source
+    # Withdrawer retreated from source
+    @wit __Role Withdrawer $withdrawer
+    @sou __Role Source $source
+    @withdrawal __Role Action Withdrawal
+    @result __Bundle $wit $sou $withdrawal
+    return $result
+end
+
+@Won:Won graph winner won
+    # Winner achieved won
+    @win __Role Winner $winner
+    @won __Role Won $won
+    @victory __Role Action Victory
+    @result __Bundle $win $won $victory
+    return $result
+end
+
+@Worked:Worked graph worker work
+    # Worker performed work
+    @work1 __Role Worker $worker
+    @work2 __Role Work $work
+    @working __Role Action Working
+    @result __Bundle $work1 $work2 $working
+    return $result
+end
+
+@Writer:Writer graph person genre
+    # Person wrote in genre
+    @per __Role Person $person
+    @gen __Role Genre $genre
+    @writing __Role Role Writing
+    @result __Bundle $per $gen $writing
+    return $result
+end
+
+@Wrote:Wrote graph writer written
+    # Writer composed written
+    @writ1 __Role Writer $writer
+    @writ2 __Role Written $written
+    @writing __Role Action Writing
+    @result __Bundle $writ1 $writ2 $writing
+    return $result
 end
-
-@:Mongol_Yuan_Dynasty graph Conquest Rule China
-    @myd1 Conquered KublaiKhan China
-    @myd2 Founded KublaiKhan YuanDynasty
-    @myd3 United YuanDynasty China
-    @myd4 Welcomed KublaiKhan Foreigners
-    @myd5 Met MarcoPolo KublaiKhan
-    return $myd5
-end
-
-@:Zheng_He_Voyages graph Explorer Fleet Diplomacy
-    @zhv1 Admiral ZhengHe MingDynasty
-    @zhv2 Led ZhengHe TreasureFleet
-    @zhv3 Sailed ZhengHe IndianOcean
-    @zhv4 Reached ZhengHe Africa
-    @zhv5 Promoted ZhengHe ChinesePower
-    return $zhv5
-end
-
-@:Mughals graph
-    @fact Empire Mughal India
-    return $fact
-end
-
-@:Akbar_The_Great graph Emperor Tolerance Unity
-    @atg1 Emperor Akbar MughalEmpire
-    @atg2 Expanded Akbar Territory
-    @atg3 Practiced Akbar Tolerance
-    @atg4 United Akbar Diverse
-    @atg5 Flourished Culture Arts
-    return $atg5
-end
-
-@:Taj_Mahal graph Monument Love Architecture
-    @tm1 Emperor ShahJahan MughalEmpire
-    @tm2 Built ShahJahan TajMahal
-    @tm3 Honored TajMahal Wife
-    @tm4 Exemplified TajMahal Architecture
-    @tm5 Symbol TajMahal India
-    return $tm5
-end
-
-@:Ottoman_Empire graph
-    @fact Empire Ottoman Islamic
-    return $fact
-end
-
-@:Constantinople_Fall graph Siege Conquest End
-    @cf1 Empire Ottoman Islamic
-    @cf2 Besieged Ottomans Constantinople
-    @cf3 Fell Constantinople 1453
-    @cf4 Ended Fall Byzantine
-    @cf5 Became Constantinople Istanbul
-    return $cf5
-end
-
-@:Suleiman_The_Magnificent graph Sultan Power Expansion
-    @stm1 Sultan Suleiman Ottoman
-    @stm2 Expanded Suleiman Empire
-    @stm3 Reformed Suleiman Laws
-    @stm4 Patronized Suleiman Arts
-    @stm5 Peak Suleiman OttomanPower
-    return $stm5
-end
-
-@:African_Kingdoms graph
-    @fact Kingdoms Africa Medieval
-    return $fact
-end
-
-@:Mali_Empire graph
-    @fact Empire Mali Africa
-    return $fact
-end
-
-@:Mansa_Musa graph Ruler Wealth Pilgrimage
-    @mm1 Emperor MansaMusa MaliEmpire
-    @mm2 Richest MansaMusa Person
-    @mm3 Made MansaMusa Pilgrimage
-    @mm4 Distributed MansaMusa Gold
-    @mm5 Promoted MansaMusa Islam
-    return $mm5
-end
-
-@:Songhai_Empire graph
-    @fact Empire Songhai Africa
-    return $fact
-end
-
-@:Timbuktu graph City Learning Trade
-    @t1 City Timbuktu Mali
-    @t2 Center Timbuktu Learning
-    @t3 Hub Timbuktu Trade
-    @t4 Famous Timbuktu Libraries
-    @t5 Attracted Timbuktu Scholars
-    return $t5
-end
-
-@:Aztec_Empire graph
-    @fact Empire Aztec PreColumbian
-    return $fact
-end
-
-@:Tenochtitlan graph Capital City Advanced
-    @t1 Capital Tenochtitlan AztecEmpire
-    @t2 Built Aztecs Tenochtitlan
-    @t3 Located Tenochtitlan Lake
-    @t4 Advanced Tenochtitlan Engineering
-    @t5 Largest Tenochtitlan City
-    return $t5
-end
-
-@:Inca_Empire graph
-    @fact Empire Inca PreColumbian
-    return $fact
-end
-
-@:Machu_Picchu graph Site Architecture Mystery
-    @mp1 Built Incas MachuPicchu
-    @mp2 Located MachuPicchu Mountains
-    @mp3 Advanced MachuPicchu Architecture
-    @mp4 Abandoned MachuPicchu Unknown
-    @mp5 Discovered MachuPicchu 1911
-    return $mp5
-end
-
-@:Spanish_Armada graph Fleet Invasion Defeat
-    @sa1 King PhilipII Spain
-    @sa2 Sent PhilipII Armada
-    @sa3 Attacked Armada England
-    @sa4 Defeated England Armada
-    @sa5 Declined Spain Power
-    return $sa5
-end
-
-@:Elizabeth_I graph Queen England GoldenAge
-    @e1 Queen ElizabethI England
-    @e2 Defeated ElizabethI SpanishArmada
-    @e3 Encouraged ElizabethI Exploration
-    @e4 Patronized ElizabethI Arts
-    @e5 Golden ElizabethI Age
-    return $e5
-end
-
-@:Thirty_Years_War graph Religious Military Devastation
-    @tyw1 Fought Catholics Protestants
-    @tyw2 Lasted ThirtyYearsWar 30Years
-    @tyw3 Devastated ThirtyYearsWar Germany
-    @tyw4 Killed War Population
-    @tyw5 Ended Westphalia Treaty
-    return $tyw5
-end
-
-@:Louis_XIV graph King Absolutism Palace
-    @l1 King LouisXIV France
-    @l2 Absolute LouisXIV Monarch
-    @l3 Built LouisXIV Versailles
-    @l4 Said LouisXIV StateIsMe
-    @l5 Exemplified LouisXIV Absolutism
-    return $l5
-end
-
-@:Peter_The_Great graph Tsar Westernization Modernization
-    @ptg1 Tsar PeterTheGreat Russia
-    @ptg2 Westernized Peter Russia
-    @ptg3 Built Peter Navy
-    @ptg4 Founded Peter StPetersburg
-    @ptg5 Modernized Peter Empire
-    return $ptg5
-end
-
-@:Seven_Years_War graph Global Colonial Struggle
-    @syw1 Fought Britain France
-    @syw2 Global SevenYearsWar War
-    @syw3 Fought SevenYearsWar Continents
-    @syw4 Won Britain War
-    @syw5 Gained Britain Colonies
-    return $syw5
-end
-
-@:Catherine_The_Great graph Empress Enlightenment Expansion
-    @ctg1 Empress CatherineTheGreat Russia
-    @ctg2 Embraced Catherine Enlightenment
-    @ctg3 Expanded Catherine Territory
-    @ctg4 Modernized Catherine Russia
-    @ctg5 Powerful Catherine Ruler
-    return $ctg5
-end
-
-@:Haitian_Revolution graph Slaves Uprising Independence
-    @hr1 Slaves Haiti French
-    @hr2 Led ToussaintLouverture Rebellion
-    @hr3 Fought Slaves French
-    @hr4 Won Slaves Freedom
-    @hr5 First Haiti BlackRepublic
-    return $hr5
-end
-
-@:Latin_American_Independence graph Colonies Revolution Freedom
-    @lai1 Led Bolivar Liberation
-    @lai2 Led SanMartin Armies
-    @lai3 Fought Colonies Spain
-    @lai4 Won Colonies Independence
-    @lai5 Created Independence Nations
-    return $lai5
-end
-
-@:Monroe_Doctrine graph Policy Hemisphere Influence
-    @md1 President Monroe USA
-    @md2 Declared Monroe Doctrine
-    @md3 Opposed Doctrine Colonization
-    @md4 Claimed Doctrine Hemisphere
-    @md5 Asserted Doctrine AmericanPower
-    return $md5
-end
-
-@:Victorian_Era graph
-    @fact Period Victorian Britain
-    return $fact
-end
-
-@:Queen_Victoria graph Monarch Empire Era
-    @qv1 Queen Victoria Britain
-    @qv2 Reigned Victoria 63Years
-    @qv3 Expanded Victoria Empire
-    @qv4 Industrialized Victoria Britain
-    @qv5 Defined Victoria Era
-    return $qv5
-end
-
-@:Meiji_Restoration graph Reform Modernization Power
-    @mr1 Restored Meiji Emperor
-    @mr2 Ended Restoration Shogunate
-    @mr3 Modernized Meiji Japan
-    @mr4 Industrialized Meiji Rapidly
-    @mr5 Became Japan Power
-    return $mr5
-end
-
-@:Suez_Canal graph Engineering Trade Empire
-    @sc1 Built France SuezCanal
-    @sc2 Connected SuezCanal Seas
-    @sc3 Shortened SuezCanal Route
-    @sc4 Controlled Britain SuezCanal
-    @sc5 Strategic SuezCanal Importance
-    return $sc5
-end
-
-@:Boxer_Rebellion graph Nationalism Uprising Suppression
-    @br1 Opposed Boxers Foreigners
-    @br2 Attacked Boxers Missionaries
-    @br3 Besieged Boxers Legations
-    @br4 Suppressed Powers Rebellion
-    @br5 Weakened Rebellion Qing
-    return $br5
-end
-
-@:Russo_Japanese_War graph Conflict Victory Power
-    @rjw1 Fought Russia Japan
-    @rjw2 Won Japan War
-    @rjw3 Shocked Victory World
-    @rjw4 Demonstrated Japan Modernization
-    @rjw5 Became Japan Power
-    return $rjw5
-end
-
-@:Suffrage_Movement graph Women Rights Vote
-    @sm1 Demanded Women Vote
-    @sm2 Organized Suffragettes Movement
-    @sm3 Protested Suffragettes Peacefully
-    @sm4 Fought Suffragettes Militantly
-    @sm5 Gained Women Vote
-    return $sm5
-end
-
-@:League_Of_Nations graph Peace Organization Failure
-    @lon1 Proposed Wilson League
-    @lon2 Created Versailles LeagueOfNations
-    @lon3 Aimed League Peace
-    @lon4 Failed League Prevention
-    @lon5 Replaced UN League
-    return $lon5
-end
-
-@:Rise_Of_Fascism graph Depression Extremism Dictatorship
-    @rof1 Crisis GreatDepression Economic
-    @rof2 Enabled Depression Extremism
-    @rof3 Rose Mussolini Italy
-    @rof4 Rose Hitler Germany
-    @rof5 Created Fascism Dictatorships
-    return $rof5
-end
-
-@:Manhattan_Project graph Research Weapon Bomb
-    @mp1 War WWII Global
-    @mp2 Started USA ManhattanProject
-    @mp3 Researched Scientists AtomicBomb
-    @mp4 Developed Scientists Bomb
-    @mp5 Changed Bomb Warfare
-    return $mp5
-end
-
-@:United_Nations graph War Organization Peace
-    @un1 Won Allies WWII
-    @un2 Created Allies UnitedNations
-    @un3 Replaced UN League
-    @un4 Promotes UN Peace
-    @un5 Continues UN Today
-    return $un5
-end
-
-@:Marshall_Plan graph Aid Recovery Alliance
-    @mp1 Devastated WWII Europe
-    @mp2 Provided USA MarshallPlan
-    @mp3 Rebuilt MarshallPlan Europe
-    @mp4 Prevented MarshallPlan Communism
-    @mp5 Strengthened MarshallPlan Alliance
-    return $mp5
-end
-
-@:Indian_Independence graph Resistance Nonviolence Freedom
-    @ii1 Led Gandhi Movement
-    @ii2 Practiced Gandhi Nonviolence
-    @ii3 Pressured Movement Britain
-    @ii4 Granted Britain Independence
-    @ii5 Created Independence IndiaPakistan
-    return $ii5
-end
-
-@:Partition_Of_India graph Independence Division Violence
-    @poi1 Granted Britain Independence
-    @poi2 Divided Partition IndiaPakistan
-    @poi3 Based Partition Religion
-    @poi4 Caused Partition Migration
-    @poi5 Resulted Partition Violence
-    return $poi5
-end
-
-@:Chinese_Communist_Revolution graph Civil Victory Republic
-    @ccr1 Led Mao Communists
-    @ccr2 Fought Mao Nationalists
-    @ccr3 Won Communists CivilWar
-    @ccr4 Founded Mao PeoplesRepublic
-    @ccr5 Fled Nationalists Taiwan
-    return $ccr5
-end
-
-@:Great_Leap_Forward graph Campaign Industrialization Famine
-    @glf1 Chairman Mao China
-    @glf2 Launched Mao GreatLeapForward
-    @glf3 Collectivized GreatLeapForward Agriculture
-    @glf4 Failed Campaign Badly
-    @glf5 Caused Failure Famine
-    return $glf5
-end
-
-@:Cultural_Revolution graph Political Chaos Purges
-    @cr1 Chairman Mao China
-    @cr2 Launched Mao CulturalRevolution
-    @cr3 Mobilized Mao RedGuards
-    @cr4 Purged CulturalRevolution Enemies
-    @cr5 Caused CulturalRevolution Chaos
-    return $cr5
-end
-
-@:Arab_Israeli_Conflict graph Creation War Ongoing
-    @aic1 Created UN Israel
-    @aic2 Opposed Arabs Creation
-    @aic3 Fought Israel Arabs
-    @aic4 Won Israel Wars
-    @aic5 Continues Conflict Today
-    return $aic5
-end
-
-@:Suez_Crisis graph Nationalization Intervention Humiliation
-    @sc1 Nationalized Nasser SuezCanal
-    @sc2 Invaded Britain Egypt
-    @sc3 Invaded France Egypt
-    @sc4 Opposed USA Invasion
-    @sc5 Withdrew BritainFrance Humiliated
-    return $sc5
-end
-
-@:Apartheid graph System Segregation Struggle
-    @a1 Established SouthAfrica Apartheid
-    @a2 Segregated Apartheid Races
-    @a3 Oppressed Apartheid Blacks
-    @a4 Fought Mandela Apartheid
-    @a5 Ended Apartheid 1994
-    return $a5
-end
-
-@:Nelson_Mandela graph Prisoner Leader Democracy
-    @nm1 Activist NelsonMandela ANC
-    @nm2 Imprisoned Apartheid Mandela
-    @nm3 Released Mandela 1990
-    @nm4 Negotiated Mandela Transition
-    @nm5 Elected Mandela President
-    return $nm5
-end
-
-@:Watergate graph Scandal Investigation Resignation
-    @w1 President Nixon USA
-    @w2 Involved Nixon Watergate
-    @w3 Investigated Congress Nixon
-    @w4 Faced Nixon Impeachment
-    @w5 Resigned Nixon 1974
-    return $w5
-end
-
-@:Detente graph Tension Easing Relations
-    @d1 Period ColdWar Ideological
-    @d2 Pursued Superpowers Detente
-    @d3 Signed Detente Treaties
-    @d4 Eased Detente Tensions
-    @d5 Temporary Detente Period
-    return $d5
-end
-
-@:Iranian_Revolution graph Shah Uprising Islamic
-    @ir1 Opposed Iranians Shah
-    @ir2 Led Khomeini Revolution
-    @ir3 Overthrew Revolution Shah
-    @ir4 Established Khomeini TheocraticRepublic
-    @ir5 Changed Revolution MiddleEast
-    return $ir5
-end
-
-@:Soviet_Afghan_War graph Invasion Resistance Collapse
-    @saw1 Invaded USSR Afghanistan
-    @saw2 Supported USA Mujahideen
-    @saw3 Fought Mujahideen Soviets
-    @sw4 Withdrew USSR Defeated
-    @saw5 Contributed Defeat Collapse
-    return $saw5
-end
-
-@:Tiananmen_Square graph Protest Demonstration Crackdown
-    @ts1 Protested Students Democracy
-    @ts2 Occupied Students TiananmenSquare
-    @ts3 Demanded Students Reform
-    @ts4 Cracked Government Down
-    @ts5 Suppressed Government Protest
-    return $ts5
-end
-
-@:Gulf_War graph Invasion Coalition Liberation
-    @gw1 Invaded Iraq Kuwait
-    @gw2 Formed UN Coalition
-    @gw3 Launched Coalition Operation
-    @gw4 Defeated Coalition Iraq
-    @gw5 Liberated Coalition Kuwait
-    return $gw5
-end
-
-@:Yugoslav_Wars graph Breakup Ethnic Genocide
-    @yw1 Collapsed Yugoslavia Federation
-    @yw2 Declared Republics Independence
-    @yw3 Fought Groups Ethnic
-    @yw4 Committed Serbs Genocide
-    @yw5 Intervened NATO Yugoslavia
-    return $yw5
-end
-
-@:Rwanda_Genocide graph Ethnic Massacre Failure
-    @rg1 Killed Hutus Tutsis
-    @rg2 Murdered Genocide 800000
-    @rg3 Failed World Intervene
-    @rg4 Ended RPF Genocide
-    @rg5 Remains Genocide Tragedy
-    return $rg5
-end
-
-@:September_11_Attacks graph Terrorism Attack War
-    @s1 Attacked AlQaeda USA
-    @s2 Destroyed Attack Towers
-    @s3 Killed Attack Thousands
-    @s4 Declared USA WarOnTerror
-    @s5 Invaded USA Afghanistan
-    return $s5
-end
-
-@:Iraq_War graph Invasion Occupation Insurgency
-    @iw1 Invaded USA Iraq
-    @iw2 Claimed USA WMD
-    @iw3 Overthrew USA Saddam
-    @iw4 Occupied USA Iraq
-    @iw5 Faced USA Insurgency
-    return $iw5
-end
-
-@:Arab_Spring graph Uprising Protests Change
-    @as1 Protested Arabs Dictators
-    @as2 Spread ArabSpring Region
-    @as3 Overthrew Protests Regimes
-    @as4 Mixed ArabSpring Results
-    @as5 Continues Instability Today
-    return $as5
-end
-
-@:Financial_Crisis_2008 graph Bubble Crash Recession
-    @fc1 Inflated Banks HousingBubble
-    @fc2 Burst Bubble 2008
-    @fc3 Collapsed Banks Lehman
-    @fc4 Triggered Collapse Crisis
-    @fc5 Caused Crisis Recession
-    return $fc5
-end
-
-@:European_Union graph Integration Union Currency
-    @eu1 Formed Countries EuropeanUnion
-    @eu2 Integrated EU Economies
-    @eu3 Created EU Euro
-    @eu4 Expanded EU Membership
-    @eu5 Faces EU Challenges
-    return $eu5
-end
-
-@:Brexit graph Referendum Exit Departure
-    @b1 Member UK EuropeanUnion
-    @b2 Held UK Referendum
-    @b3 Voted UK Leave
-    @b4 Left UK EU
-    @b5 Continues Brexit Impact
-    return $b5
-end
-
-@:Rise_Of_China graph Reform Growth Power
-    @roc1 Reformed DengXiaoping China
-    @roc2 Opened China Economy
-    @roc3 Grew China Rapidly
-    @roc4 Became China Superpower
-    @roc5 Challenges China USA
-    return $roc5
-end
-
-@:COVID_Pandemic graph Virus Spread Impact
-    @cp1 Emerged Coronavirus China
-    @cp2 Spread Virus Globally
-    @cp3 Caused COVID Pandemic
-    @cp4 Killed Pandemic Millions
-    @cp5 Changed Pandemic World
-    return $cp5
-end
-
-// ========== END OF THEORY ==========

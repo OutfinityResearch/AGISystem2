@@ -78,9 +78,17 @@ export class QueryEngine {
       if (arg.type === 'Hole') {
         holes.push({ index: i + 1, name: arg.name });
       } else {
+        const name =
+          typeof arg.name === 'string'
+            ? arg.name
+            : (arg.value !== undefined && arg.value !== null)
+              ? String(arg.value)
+              : typeof arg.toString === 'function'
+                ? arg.toString()
+                : null;
         knowns.push({
           index: i + 1,
-          name: arg.name || arg.value,
+          name,
           vector: this.session.resolve(arg)
         });
       }

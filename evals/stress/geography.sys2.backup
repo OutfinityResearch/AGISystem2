@@ -19,13 +19,11 @@ end
     return $spatial
 end
 
-@administeredBy:administeredBy graph territory administrator
-    # Territory administered by governing body
-    @terr __Role Territory $territory
-    @admin __Role Administrator $administrator
-    @rel __Role Relation AdministrativeControl
-    @result __Bundle $terr $admin $rel
-    return $result
+@administeredBy:administeredBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @affectsOcean:affectsOcean graph factor result
@@ -63,13 +61,11 @@ end
     return $influence
 end
 
-@aidsNavigation:aidsNavigation graph system navigation
-    # System aids navigation
-    @sys __Role System $system
-    @nav __Role Navigation $navigation
-    @rel __Role Relation NavigationalAid
-    @result __Bundle $sys $nav $rel
-    return $result
+@aidsNavigation:aidsNavigation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @allowsMovement:allowsMovement graph entity function
@@ -79,58 +75,46 @@ end
     return $purpose
 end
 
-@associatedWith:associatedWith graph entity association
-    # Entity associated with concept
-    @ent __Role Entity $entity
-    @assoc __Role Association $association
-    @rel __Role Relation Association
-    @result __Bundle $ent $assoc $rel
-    return $result
+@associatedWith:associatedWith graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@atLatitude:atLatitude graph location latitude
-    # Location at latitude
-    @loc __Role Location $location
-    @lat __Role Latitude $latitude
-    @rel __Role Relation LatitudinalPosition
-    @result __Bundle $loc $lat $rel
-    return $result
+@atLatitude:atLatitude graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@atLongitude:atLongitude graph location longitude
-    # Location at longitude
-    @loc __Role Location $location
-    @lon __Role Longitude $longitude
-    @rel __Role Relation LongitudinalPosition
-    @result __Bundle $loc $lon $rel
-    return $result
+@atLongitude:atLongitude graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@atPlateBoundary:atPlateBoundary graph feature boundary
-    # Feature at plate boundary
-    @feat __Role Feature $feature
-    @bound __Role Boundary $boundary
-    @rel __Role Relation TectonicLocation
-    @result __Bundle $feat $bound $rel
-    return $result
+@atPlateBoundary:atPlateBoundary graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@belongsToPeople:belongsToPeople graph territory people
-    # Territory belongs to people
-    @terr __Role Territory $territory
-    @ppl __Role People $people
-    @rel __Role Relation CulturalBelonging
-    @result __Bundle $terr $ppl $rel
-    return $result
+@belongsToPeople:belongsToPeople graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@benefitsSpecies:benefitsSpecies graph factor species
-    # Factor benefits species
-    @fact __Role Factor $factor
-    @spec __Role Species $species
-    @rel __Role Relation EcologicalBenefit
-    @result __Bundle $fact $spec $rel
-    return $result
+@benefitsSpecies:benefitsSpecies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @betweenCountries:betweenCountries graph entity reference
@@ -147,76 +131,60 @@ end
     return $spatial
 end
 
-@blocksRiver:blocksRiver graph dam river
-    # Dam blocks river
-    @dam __Role Dam $dam
-    @riv __Role River $river
-    @rel __Role Relation HydrologicalObstruction
-    @result __Bundle $dam $riv $rel
-    return $result
+@blocksRiver:blocksRiver graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@borderedBy:borderedBy graph region border
-    # Region bordered by feature
-    @reg __Role Region $region
-    @bord __Role Border $border
-    @rel __Role Relation BoundaryDefinition
-    @result __Bundle $reg $bord $rel
-    return $result
+@borderedBy:borderedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@borderingCountries:borderingCountries graph country neighbor
-    # Countries share border
-    @ctry __Role Country $country
-    @neigh __Role Neighbor $neighbor
-    @rel __Role Relation InternationalBorder
-    @result __Bundle $ctry $neigh $rel
-    return $result
+@borderingCountries:borderingCountries graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@borderingOcean:borderingOcean graph land ocean
-    # Land bordering ocean
-    @land __Role Land $land
-    @ocn __Role Ocean $ocean
-    @rel __Role Relation Coastline
-    @result __Bundle $land $ocn $rel
-    return $result
+@borderingOcean:borderingOcean graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@capitalOf:capitalOf graph city country
-    # City is capital of country
-    @cty __Role City $city
-    @ctry __Role Country $country
-    @rel __Role Relation CapitalStatus
-    @result __Bundle $cty $ctry $rel
-    return $result
+@capitalOf:capitalOf graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@carriesWater:carriesWater graph river watervolume
-    # River carries water
-    @riv __Role River $river
-    @wat __Role WaterVolume $watervolume
-    @rel __Role Relation HydrologicalTransport
-    @result __Bundle $riv $wat $rel
-    return $result
+@carriesWater:carriesWater graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@carvedBy:carvedBy graph valley agent
-    # Valley carved by erosive agent
-    @val __Role Valley $valley
-    @agt __Role ErosiveAgent $agent
-    @rel __Role Relation Erosion
-    @result __Bundle $val $agt $rel
-    return $result
+@carvedBy:carvedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@causedByTemperature:causedByTemperature graph phenomenon temperature
-    # Phenomenon caused by temperature
-    @phen __Role Phenomenon $phenomenon
-    @temp __Role Temperature $temperature
-    @rel __Role Relation ThermalCausation
-    @result __Bundle $phen $temp $rel
-    return $result
+@causedByTemperature:causedByTemperature graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @causesVolcanism:causesVolcanism graph cause effect
@@ -226,103 +194,81 @@ end
     return $causation
 end
 
-@centeredOn:centeredOn graph feature center
-    # Feature centered on point
-    @feat __Role Feature $feature
-    @cent __Role Center $center
-    @rel __Role Relation CentralPosition
-    @result __Bundle $feat $cent $rel
-    return $result
+@centeredOn:centeredOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@checksHealth:checksHealth graph monitor system
-    # Monitor checks health
-    @mon __Role Monitor $monitor
-    @sys __Role System $system
-    @rel __Role Relation HealthMonitoring
-    @result __Bundle $mon $sys $rel
-    return $result
+@checksHealth:checksHealth graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@claimedBy:claimedBy graph territory claimant
-    # Territory claimed by nation
-    @terr __Role Territory $territory
-    @claim __Role Claimant $claimant
-    @rel __Role Relation TerritorialClaim
-    @result __Bundle $terr $claim $rel
-    return $result
+@claimedBy:claimedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@collectsData:collectsData graph system data
-    # System collects data
-    @sys __Role System $system
-    @dat __Role Data $data
-    @rel __Role Relation DataCollection
-    @result __Bundle $sys $dat $rel
-    return $result
+@collectsData:collectsData graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@commemorates:commemorates graph monument event
-    # Monument commemorates event
-    @mon __Role Monument $monument
-    @evt __Role Event $event
-    @rel __Role Relation Commemoration
-    @result __Bundle $mon $evt $rel
-    return $result
+@commemorates:commemorates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@conductsResearch:conductsResearch graph institution research
-    # Institution conducts research
-    @inst __Role Institution $institution
-    @res __Role Research $research
-    @rel __Role Relation ResearchActivity
-    @result __Bundle $inst $res $rel
-    return $result
+@conductsResearch:conductsResearch graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@connects:connects graph connector endpoints
-    # Connector connects endpoints
-    @conn __Role Connector $connector
-    @endp __Role Endpoints $endpoints
-    @rel __Role Relation Connection
-    @result __Bundle $conn $endp $rel
-    return $result
+@connects:connects graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@connectsCountries:connectsCountries graph route countries
-    # Route connects countries
-    @rte __Role Route $route
-    @ctrs __Role Countries $countries
-    @rel __Role Relation InternationalConnection
-    @result __Bundle $rte $ctrs $rel
-    return $result
+@connectsCountries:connectsCountries graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@connectsPlate:connectsPlate graph boundary plate
-    # Boundary connects plates
-    @bound __Role Boundary $boundary
-    @plt __Role Plate $plate
-    @rel __Role Relation TectonicConnection
-    @result __Bundle $bound $plt $rel
-    return $result
+@connectsPlate:connectsPlate graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@connectsRegions:connectsRegions graph route regions
-    # Route connects regions
-    @rte __Role Route $route
-    @regs __Role Regions $regions
-    @rel __Role Relation RegionalConnection
-    @result __Bundle $rte $regs $rel
-    return $result
+@connectsRegions:connectsRegions graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@connectsTrees:connectsTrees graph network trees
-    # Network connects trees
-    @net __Role Network $network
-    @tr __Role Trees $trees
-    @rel __Role Relation ForestConnection
-    @result __Bundle $net $tr $rel
-    return $result
+@connectsTrees:connectsTrees graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @containsHydrocarbons:containsHydrocarbons graph entity property
@@ -339,193 +285,151 @@ end
     return $attribute
 end
 
-@coversContinent:coversContinent graph feature continent
-    # Feature covers continent
-    @feat __Role Feature $feature
-    @cont __Role Continent $continent
-    @rel __Role Relation ContinentalCoverage
-    @result __Bundle $feat $cont $rel
-    return $result
+@coversContinent:coversContinent graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@coversRegion:coversRegion graph feature region
-    # Feature covers region
-    @feat __Role Feature $feature
-    @reg __Role Region $region
-    @rel __Role Relation RegionalCoverage
-    @result __Bundle $feat $reg $rel
-    return $result
+@coversRegion:coversRegion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@createdBy:createdBy graph feature process
-    # Feature created by process
-    @feat __Role Feature $feature
-    @proc __Role Process $process
-    @rel __Role Relation GeologicalCreation
-    @result __Bundle $feat $proc $rel
-    return $result
+@createdBy:createdBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@crossesOcean:crossesOcean graph route ocean
-    # Route crosses ocean
-    @rte __Role Route $route
-    @ocn __Role Ocean $ocean
-    @rel __Role Relation OceanicCrossing
-    @result __Bundle $rte $ocn $rel
-    return $result
+@crossesOcean:crossesOcean graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@crossesRiver:crossesRiver graph structure river
-    # Structure crosses river
-    @struct __Role Structure $structure
-    @riv __Role River $river
-    @rel __Role Relation RiverCrossing
-    @result __Bundle $struct $riv $rel
-    return $result
+@crossesRiver:crossesRiver graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@definesClimate:definesClimate graph factor climatezone
-    # Factor defines climate
-    @fact __Role Factor $factor
-    @clim __Role ClimateZone $climatezone
-    @rel __Role Relation ClimaticInfluence
-    @result __Bundle $fact $clim $rel
-    return $result
+@definesClimate:definesClimate graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@definesRegion:definesRegion graph boundary region
-    # Boundary defines region
-    @bound __Role Boundary $boundary
-    @reg __Role Region $region
-    @rel __Role Relation RegionalDefinition
-    @result __Bundle $bound $reg $rel
-    return $result
+@definesRegion:definesRegion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@depositedBy:depositedBy graph sediment agent
-    # Sediment deposited by agent
-    @sed __Role Sediment $sediment
-    @agt __Role Agent $agent
-    @rel __Role Relation Deposition
-    @result __Bundle $sed $agt $rel
-    return $result
+@depositedBy:depositedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@depositedIn:depositedIn graph material location
-    # Material deposited in location
-    @mat __Role Material $material
-    @loc __Role Location $location
-    @rel __Role Relation SedimentaryDeposition
-    @result __Bundle $mat $loc $rel
-    return $result
+@depositedIn:depositedIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@dividedBy:dividedBy graph region divider
-    # Region divided by divider
-    @reg __Role Region $region
-    @div __Role Divider $divider
-    @rel __Role Relation GeographicDivision
-    @result __Bundle $reg $div $rel
-    return $result
+@dividedBy:dividedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@drainedBy:drainedBy graph region drainagesystem
-    # Region drained by system
-    @reg __Role Region $region
-    @drain __Role DrainageSystem $drainagesystem
-    @rel __Role Relation HydrologicalDrainage
-    @result __Bundle $reg $drain $rel
-    return $result
+@drainedBy:drainedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@duringHurricaneSeason:duringHurricaneSeason graph event season
-    # Event during hurricane season
-    @evt __Role Event $event
-    @seas __Role Season $season
-    @rel __Role Relation SeasonalTiming
-    @result __Bundle $evt $seas $rel
-    return $result
+@duringHurricaneSeason:duringHurricaneSeason graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@duringSeason:duringSeason graph event season
-    # Event during season
-    @evt __Role Event $event
-    @seas __Role Season $season
-    @rel __Role Relation TemporalOccurrence
-    @result __Bundle $evt $seas $rel
-    return $result
+@duringSeason:duringSeason graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@emitsGas:emitsGas graph source gas
-    # Source emits gas
-    @src __Role Source $source
-    @gas __Role Gas $gas
-    @rel __Role Relation Emission
-    @result __Bundle $src $gas $rel
-    return $result
+@emitsGas:emitsGas graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@emitsMethane:emitsMethane graph source methane
-    # Source emits methane
-    @src __Role Source $source
-    @meth __Role Methane $methane
-    @rel __Role Relation MethaneEmission
-    @result __Bundle $src $meth $rel
-    return $result
+@emitsMethane:emitsMethane graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@extendsDistance:extendsDistance graph feature distance
-    # Feature extends distance
-    @feat __Role Feature $feature
-    @dist __Role Distance $distance
-    @rel __Role Relation SpatialExtent
-    @result __Bundle $feat $dist $rel
-    return $result
+@extendsDistance:extendsDistance graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@extendsInto:extendsInto graph feature region
-    # Feature extends into region
-    @feat __Role Feature $feature
-    @reg __Role Region $region
-    @rel __Role Relation SpatialExtension
-    @result __Bundle $feat $reg $rel
-    return $result
+@extendsInto:extendsInto graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@facingOcean:facingOcean graph coast ocean
-    # Coast facing ocean
-    @coast __Role Coast $coast
-    @ocn __Role Ocean $ocean
-    @rel __Role Relation CoastalOrientation
-    @result __Bundle $coast $ocn $rel
-    return $result
+@facingOcean:facingOcean graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@fedBy:fedBy graph waterbody tributary
-    # Waterbody fed by tributaries
-    @water __Role Waterbody $waterbody
-    @trib __Role Tributary $tributary
-    @rel __Role Relation HydrologicalSupply
-    @result __Bundle $water $trib $rel
-    return $result
+@fedBy:fedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@floatsOn:floatsOn graph ice water
-    # Ice floats on water
-    @ice __Role Ice $ice
-    @wat __Role Water $water
-    @rel __Role Relation Flotation
-    @result __Bundle $ice $wat $rel
-    return $result
+@floatsOn:floatsOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@flowedFrom:flowedFrom graph water source
-    # Water flowed from source
-    @wat __Role Water $water
-    @src __Role Source $source
-    @rel __Role Relation HydrologicalOrigin
-    @result __Bundle $wat $src $rel
-    return $result
+@flowedFrom:flowedFrom graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @flowsIn:flowsIn graph entity from to
@@ -552,58 +456,46 @@ end
     return $movement
 end
 
-@followsDisturbance:followsDisturbance graph response disturbance
-    # Response follows disturbance
-    @resp __Role Response $response
-    @dist __Role Disturbance $disturbance
-    @rel __Role Relation DisturbanceResponse
-    @result __Bundle $resp $dist $rel
-    return $result
+@followsDisturbance:followsDisturbance graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@followsRoute:followsRoute graph path route
-    # Path follows route
-    @path __Role Path $path
-    @rte __Role Route $route
-    @rel __Role Relation RouteFollowing
-    @result __Bundle $path $rte $rel
-    return $result
+@followsRoute:followsRoute graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@formedBy:formedBy graph landform process
-    # Landform formed by process
-    @land __Role Landform $landform
-    @proc __Role GeologicalProcess $process
-    @rel __Role Relation GeologicalFormation
-    @result __Bundle $land $proc $rel
-    return $result
+@formedBy:formedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@formedByGlacier:formedByGlacier graph landform glacier
-    # Landform formed by glacier
-    @land __Role Landform $landform
-    @glac __Role Glacier $glacier
-    @rel __Role Relation GlacialFormation
-    @result __Bundle $land $glac $rel
-    return $result
+@formedByGlacier:formedByGlacier graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@formedByPlate:formedByPlate graph feature plate
-    # Feature formed by tectonic plate
-    @feat __Role Feature $feature
-    @plt __Role TectonicPlate $plate
-    @rel __Role Relation TectonicFormation
-    @result __Bundle $feat $plt $rel
-    return $result
+@formedByPlate:formedByPlate graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@formedFrom:formedFrom graph rock material
-    # Rock formed from material
-    @rock __Role Rock $rock
-    @mat __Role Material $material
-    @rel __Role Relation GeologicalComposition
-    @result __Bundle $rock $mat $rel
-    return $result
+@formedFrom:formedFrom graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @formsAt:formsAt graph agent target
@@ -613,31 +505,25 @@ end
     return $process
 end
 
-@foundOn:foundOn graph species location
-    # Species found on location
-    @spec __Role Species $species
-    @loc __Role Location $location
-    @rel __Role Relation Distribution
-    @result __Bundle $spec $loc $rel
-    return $result
+@foundOn:foundOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@foundOnIsland:foundOnIsland graph species island
-    # Species found on island
-    @spec __Role Species $species
-    @isl __Role Island $island
-    @rel __Role Relation IslandDistribution
-    @result __Bundle $spec $isl $rel
-    return $result
+@foundOnIsland:foundOnIsland graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@fromPeriod:fromPeriod graph artifact timeperiod
-    # Artifact from period
-    @art __Role Artifact $artifact
-    @time __Role TimePeriod $timeperiod
-    @rel __Role Relation TemporalOrigin
-    @result __Bundle $art $time $rel
-    return $result
+@fromPeriod:fromPeriod graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @hasAbundance:hasAbundance graph entity property
@@ -1641,112 +1527,88 @@ end
     return $attribute
 end
 
-@headquarteredIn:headquarteredIn graph organization location
-    # Organization headquartered in location
-    @org __Role Organization $organization
-    @loc __Role Location $location
-    @rel __Role Relation Headquarters
-    @result __Bundle $org $loc $rel
-    return $result
+@headquarteredIn:headquarteredIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@hostsEvents:hostsEvents graph venue events
-    # Venue hosts events
-    @ven __Role Venue $venue
-    @evts __Role Events $events
-    @rel __Role Relation EventHosting
-    @result __Bundle $ven $evts $rel
-    return $result
+@hostsEvents:hostsEvents graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@inKarstArea:inKarstArea graph feature karstregion
-    # Feature in karst area
-    @feat __Role Feature $feature
-    @karst __Role KarstRegion $karstregion
-    @rel __Role Relation KarstLocation
-    @result __Bundle $feat $karst $rel
-    return $result
+@inKarstArea:inKarstArea graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@includesCities:includesCities graph region city
-    # Region includes cities
-    @reg __Role Region $region
-    @cty __Role City $city
-    @rel __Role Relation UrbanInclusion
-    @result __Bundle $reg $cty $rel
-    return $result
+@includesCities:includesCities graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@includesCountries:includesCountries graph region country
-    # Region includes countries
-    @reg __Role Region $region
-    @ctry __Role Country $country
-    @rel __Role Relation PoliticalInclusion
-    @result __Bundle $reg $ctry $rel
-    return $result
+@includesCountries:includesCountries graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@indicatesHealth:indicatesHealth graph indicator ecosystemhealth
-    # Indicator indicates health
-    @ind __Role Indicator $indicator
-    @health __Role EcosystemHealth $ecosystemhealth
-    @rel __Role Relation HealthAssessment
-    @result __Bundle $ind $health $rel
-    return $result
+@indicatesHealth:indicatesHealth graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@inhabits:inhabits graph species habitat
-    # Species inhabits habitat
-    @spec __Role Species $species
-    @hab __Role Habitat $habitat
-    @rel __Role Relation Habitation
-    @result __Bundle $spec $hab $rel
-    return $result
+@inhabits:inhabits graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@inhabitsForest:inhabitsForest graph species forest
-    # Species inhabits forest
-    @spec __Role Species $species
-    @for __Role Forest $forest
-    @rel __Role Relation ForestHabitation
-    @result __Bundle $spec $for $rel
-    return $result
+@inhabitsForest:inhabitsForest graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@inhabitsOcean:inhabitsOcean graph species ocean
-    # Species inhabits ocean
-    @spec __Role Species $species
-    @ocn __Role Ocean $ocean
-    @rel __Role Relation MarineHabitation
-    @result __Bundle $spec $ocn $rel
-    return $result
+@inhabitsOcean:inhabitsOcean graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@introducedTo:introducedTo graph species region
-    # Species introduced to region
-    @spec __Role Species $species
-    @reg __Role Region $region
-    @rel __Role Relation SpeciesIntroduction
-    @result __Bundle $spec $reg $rel
-    return $result
+@introducedTo:introducedTo graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@involvesPlate:involvesPlate graph process plate
-    # Process involves tectonic plate
-    @proc __Role Process $process
-    @plt __Role TectonicPlate $plate
-    @rel __Role Relation TectonicActivity
-    @result __Bundle $proc $plt $rel
-    return $result
+@involvesPlate:involvesPlate graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@involvesSpecies:involvesSpecies graph process species
-    # Process involves species
-    @proc __Role Process $process
-    @spec __Role Species $species
-    @rel __Role Relation SpeciesInvolvement
-    @result __Bundle $proc $spec $rel
-    return $result
+@involvesSpecies:involvesSpecies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @isVolcanic:isVolcanic graph entity property
@@ -1763,49 +1625,39 @@ end
     return $causation
 end
 
-@livesIn:livesIn graph organism environment
-    # Organism lives in environment
-    @org __Role Organism $organism
-    @env __Role Environment $environment
-    @rel __Role Relation EcologicalHabitation
-    @result __Bundle $org $env $rel
-    return $result
+@livesIn:livesIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@locatedAt:locatedAt graph feature location
-    # Feature located at position
-    @feat __Role Feature $feature
-    @loc __Role Location $location
-    @rel __Role Relation SpatialPosition
-    @result __Bundle $feat $loc $rel
-    return $result
+@locatedAt:locatedAt graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@locatedOff:locatedOff graph feature reference
-    # Feature located off reference
-    @feat __Role Feature $feature
-    @ref __Role Reference $reference
-    @rel __Role Relation OffshorePosition
-    @result __Bundle $feat $ref $rel
-    return $result
+@locatedOff:locatedOff graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@locatedOn:locatedOn graph feature surface
-    # Feature located on surface
-    @feat __Role Feature $feature
-    @surf __Role Surface $surface
-    @rel __Role Relation SurfacePosition
-    @result __Bundle $feat $surf $rel
-    return $result
+@locatedOn:locatedOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@locatedUnder:locatedUnder graph feature surface
-    # Feature located under surface
-    @feat __Role Feature $feature
-    @surf __Role Surface $surface
-    @rel __Role Relation SubsurfacePosition
-    @result __Bundle $feat $surf $rel
-    return $result
+@locatedUnder:locatedUnder graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @measuresTides:measuresTides graph entity value
@@ -1815,40 +1667,32 @@ end
     return $measurement
 end
 
-@meetsOcean:meetsOcean graph river ocean
-    # River meets ocean
-    @riv __Role River $river
-    @ocn __Role Ocean $ocean
-    @rel __Role Relation Confluence
-    @result __Bundle $riv $ocn $rel
-    return $result
+@meetsOcean:meetsOcean graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@mergesCities:mergesCities graph feature cities
-    # Feature merges cities
-    @feat __Role Feature $feature
-    @cties __Role Cities $cities
-    @rel __Role Relation UrbanMerger
-    @result __Bundle $feat $cties $rel
-    return $result
+@mergesCities:mergesCities graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@monitorsActivity:monitorsActivity graph system activity
-    # System monitors activity
-    @sys __Role System $system
-    @act __Role Activity $activity
-    @rel __Role Relation ActivityMonitoring
-    @result __Bundle $sys $act $rel
-    return $result
+@monitorsActivity:monitorsActivity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@monitorsQuality:monitorsQuality graph system quality
-    # System monitors quality
-    @sys __Role System $system
-    @qual __Role Quality $quality
-    @rel __Role Relation QualityMonitoring
-    @result __Bundle $sys $qual $rel
-    return $result
+@monitorsQuality:monitorsQuality graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @nearCoast:nearCoast graph entity reference
@@ -1858,13 +1702,11 @@ end
     return $spatial
 end
 
-@observedIn:observedIn graph phenomenon location
-    # Phenomenon observed in location
-    @phen __Role Phenomenon $phenomenon
-    @loc __Role Location $location
-    @rel __Role Relation SpatialObservation
-    @result __Bundle $phen $loc $rel
-    return $result
+@observedIn:observedIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @occursIn:occursIn graph entity location
@@ -1874,112 +1716,88 @@ end
     return $position
 end
 
-@occursOn:occursOn graph event location
-    # Event occurs on location
-    @evt __Role Event $event
-    @loc __Role Location $location
-    @rel __Role Relation EventOccurrence
-    @result __Bundle $evt $loc $rel
-    return $result
+@occursOn:occursOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@parallelsCoast:parallelsCoast graph feature coast
-    # Feature parallels coast
-    @feat __Role Feature $feature
-    @coast __Role Coast $coast
-    @rel __Role Relation CoastalParallelism
-    @result __Bundle $feat $coast $rel
-    return $result
+@parallelsCoast:parallelsCoast graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@participatesIn:participatesIn graph entity activity
-    # Entity participates in activity
-    @ent __Role Entity $entity
-    @act __Role Activity $activity
-    @rel __Role Relation Participation
-    @result __Bundle $ent $act $rel
-    return $result
+@participatesIn:participatesIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@passesThrough:passesThrough graph route region
-    # Route passes through region
-    @rte __Role Route $route
-    @reg __Role Region $region
-    @rel __Role Relation Transit
-    @result __Bundle $rte $reg $rel
-    return $result
+@passesThrough:passesThrough graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@performedBy:performedBy graph activity agent
-    # Activity performed by agent
-    @act __Role Activity $activity
-    @agt __Role Agent $agent
-    @rel __Role Relation AgentPerformance
-    @result __Bundle $act $agt $rel
-    return $result
+@performedBy:performedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@performsAstronomy:performsAstronomy graph facility astronomy
-    # Facility performs astronomy
-    @fac __Role Facility $facility
-    @astro __Role Astronomy $astronomy
-    @rel __Role Relation AstronomicalResearch
-    @result __Bundle $fac $astro $rel
-    return $result
+@performsAstronomy:performsAstronomy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@performsLaunches:performsLaunches graph facility launches
-    # Facility performs launches
-    @fac __Role Facility $facility
-    @launch __Role Launches $launches
-    @rel __Role Relation SpaceLaunch
-    @result __Bundle $fac $launch $rel
-    return $result
+@performsLaunches:performsLaunches graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@plantsTreeCount:plantsTreeCount graph project treecount
-    # Project plants tree count
-    @proj __Role Project $project
-    @trees __Role TreeCount $treecount
-    @rel __Role Relation Reforestation
-    @result __Bundle $proj $trees $rel
-    return $result
+@plantsTreeCount:plantsTreeCount graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@practicedIn:practicedIn graph activity region
-    # Activity practiced in region
-    @act __Role Activity $activity
-    @reg __Role Region $region
-    @rel __Role Relation CulturalPractice
-    @result __Bundle $act $reg $rel
-    return $result
+@practicedIn:practicedIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@processesClearance:processesClearance graph facility clearance
-    # Facility processes clearance
-    @fac __Role Facility $facility
-    @clear __Role Clearance $clearance
-    @rel __Role Relation ClearanceProcessing
-    @result __Bundle $fac $clear $rel
-    return $result
+@processesClearance:processesClearance graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@processesImmigration:processesImmigration graph facility immigration
-    # Facility processes immigration
-    @fac __Role Facility $facility
-    @immig __Role Immigration $immigration
-    @rel __Role Relation ImmigrationProcessing
-    @result __Bundle $fac $immig $rel
-    return $result
+@processesImmigration:processesImmigration graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@processesMaterials:processesMaterials graph facility materials
-    # Facility processes materials
-    @fac __Role Facility $facility
-    @mat __Role Materials $materials
-    @rel __Role Relation MaterialProcessing
-    @result __Bundle $fac $mat $rel
-    return $result
+@processesMaterials:processesMaterials graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @producesAgricultural:producesAgricultural graph cause effect
@@ -2003,49 +1821,39 @@ end
     return $causation
 end
 
-@protectsCoast:protectsCoast graph measure coast
-    # Measure protects coast
-    @meas __Role Measure $measure
-    @coast __Role Coast $coast
-    @rel __Role Relation CoastalProtection
-    @result __Bundle $meas $coast $rel
-    return $result
+@protectsCoast:protectsCoast graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@protectsDesert:protectsDesert graph measure desert
-    # Measure protects desert
-    @meas __Role Measure $measure
-    @desert __Role Desert $desert
-    @rel __Role Relation DesertConservation
-    @result __Bundle $meas $desert $rel
-    return $result
+@protectsDesert:protectsDesert graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@protectsForest:protectsForest graph measure forest
-    # Measure protects forest
-    @meas __Role Measure $measure
-    @forest __Role Forest $forest
-    @rel __Role Relation ForestConservation
-    @result __Bundle $meas $forest $rel
-    return $result
+@protectsForest:protectsForest graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@protectsMountain:protectsMountain graph measure mountain
-    # Measure protects mountain
-    @meas __Role Measure $measure
-    @mtn __Role Mountain $mountain
-    @rel __Role Relation MountainConservation
-    @result __Bundle $meas $mtn $rel
-    return $result
+@protectsMountain:protectsMountain graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@protectsSpecies:protectsSpecies graph area species
-    # Area protects species
-    @area __Role Area $area
-    @spec __Role Species $species
-    @rel __Role Relation Conservation
-    @result __Bundle $area $spec $rel
-    return $result
+@protectsSpecies:protectsSpecies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @providesProtection:providesProtection graph entity function
@@ -2062,139 +1870,109 @@ end
     return $purpose
 end
 
-@releasesNutrients:releasesNutrients graph source nutrients
-    # Source releases nutrients
-    @src __Role Source $source
-    @nutr __Role Nutrients $nutrients
-    @rel __Role Relation NutrientRelease
-    @result __Bundle $src $nutr $rel
-    return $result
+@releasesNutrients:releasesNutrients graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@representsCountry:representsCountry graph entity nation
-    # Entity represents country
-    @ent __Role Entity $entity
-    @nat __Role Nation $nation
-    @rel __Role Relation NationalRepresentation
-    @result __Bundle $ent $nat $rel
-    return $result
+@representsCountry:representsCountry graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@representsEcosystem:representsEcosystem graph indicator ecosystem
-    # Indicator represents ecosystem
-    @ind __Role Indicator $indicator
-    @eco __Role Ecosystem $ecosystem
-    @rel __Role Relation EcologicalRepresentation
-    @result __Bundle $ind $eco $rel
-    return $result
+@representsEcosystem:representsEcosystem graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@sacredTo:sacredTo graph site religion
-    # Site sacred to religion
-    @site __Role Site $site
-    @rel __Role Religion $religion
-    @sacred __Role Relation SacredSignificance
-    @result __Bundle $site $rel $sacred
-    return $result
+@sacredTo:sacredTo graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@separatedFrom:separatedFrom graph region neighbor
-    # Region separated from neighbor
-    @reg __Role Region $region
-    @neigh __Role Neighbor $neighbor
-    @sep __Role Relation GeographicSeparation
-    @result __Bundle $reg $neigh $sep
-    return $result
+@separatedFrom:separatedFrom graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@separatesRivers:separatesRivers graph landform watershed
-    # Landform separates rivers
-    @land __Role Landform $landform
-    @water __Role Watershed $watershed
-    @sep __Role Relation HydrologicalDivide
-    @result __Bundle $land $water $sep
-    return $result
+@separatesRivers:separatesRivers graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@servesCity:servesCity graph service city
-    # Service serves city
-    @serv __Role Service $service
-    @cty __Role City $city
-    @rel __Role Relation UrbanService
-    @result __Bundle $serv $cty $rel
-    return $result
+@servesCity:servesCity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@servesCountry:servesCountry graph service nation
-    # Service serves country
-    @serv __Role Service $service
-    @nat __Role Nation $nation
-    @rel __Role Relation NationalService
-    @result __Bundle $serv $nat $rel
-    return $result
+@servesCountry:servesCountry graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@servesRegion:servesRegion graph service region
-    # Service serves region
-    @serv __Role Service $service
-    @reg __Role Region $region
-    @rel __Role Relation RegionalService
-    @result __Bundle $serv $reg $rel
-    return $result
+@servesRegion:servesRegion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@shapedByWind:shapedByWind graph landform aeolianprocess
-    # Landform shaped by wind
-    @land __Role Landform $landform
-    @wind __Role AeolianProcess $aeolianprocess
-    @rel __Role Relation WindErosion
-    @result __Bundle $land $wind $rel
-    return $result
+@shapedByWind:shapedByWind graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@sharesBorder:sharesBorder graph region neighbor
-    # Regions share common border
-    @reg __Role Region $region
-    @neigh __Role Neighbor $neighbor
-    @border __Role Relation CommonBoundary
-    @result __Bundle $reg $neigh $border
-    return $result
+@sharesBorder:sharesBorder graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@sharesMaritimeBorder:sharesMaritimeBorder graph country neighbor
-    # Countries share maritime boundary
-    @ctry __Role Country $country
-    @neigh __Role Neighbor $neighbor
-    @border __Role Relation MaritimeBoundary
-    @result __Bundle $ctry $neigh $border
-    return $result
+@sharesMaritimeBorder:sharesMaritimeBorder graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@siteOfEvent:siteOfEvent graph location event
-    # Location is site of event
-    @loc __Role Location $location
-    @evt __Role Event $event
-    @site __Role Relation HistoricalSite
-    @result __Bundle $loc $evt $site
-    return $result
+@siteOfEvent:siteOfEvent graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@spokenIn:spokenIn graph language region
-    # Language spoken in region
-    @lang __Role Language $language
-    @reg __Role Region $region
-    @ling __Role Relation LinguisticDistribution
-    @result __Bundle $lang $reg $ling
-    return $result
+@spokenIn:spokenIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@suppliesCity:suppliesCity graph source city
-    # Source supplies city
-    @src __Role Source $source
-    @cty __Role City $city
-    @supply __Role Relation UrbanSupply
-    @result __Bundle $src $cty $supply
-    return $result
+@suppliesCity:suppliesCity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @supportsCrop:supportsCrop graph entity function
@@ -2204,40 +1982,32 @@ end
     return $purpose
 end
 
-@surroundedBy:surroundedBy graph feature boundary
-    # Feature surrounded by boundary
-    @feat __Role Feature $feature
-    @bound __Role Boundary $boundary
-    @encl __Role Relation Enclosure
-    @result __Bundle $feat $bound $encl
-    return $result
+@surroundedBy:surroundedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@surroundsCity:surroundsCity graph feature city
-    # Feature surrounds city
-    @feat __Role Feature $feature
-    @cty __Role City $city
-    @encl __Role Relation UrbanEnclosure
-    @result __Bundle $feat $cty $encl
-    return $result
+@surroundsCity:surroundsCity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@surroundsIsland:surroundsIsland graph feature island
-    # Feature surrounds island
-    @feat __Role Feature $feature
-    @isl __Role Island $island
-    @encl __Role Relation IslandEnclosure
-    @result __Bundle $feat $isl $encl
-    return $result
+@surroundsIsland:surroundsIsland graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@targetingRegion:targetingRegion graph activity region
-    # Activity targeting region
-    @act __Role Activity $activity
-    @reg __Role Region $region
-    @target __Role Relation RegionalTargeting
-    @result __Bundle $act $reg $target
-    return $result
+@targetingRegion:targetingRegion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @throughMountain:throughMountain graph entity reference
@@ -2247,13 +2017,11 @@ end
     return $spatial
 end
 
-@transportsResource:transportsResource graph system resource
-    # System transports resource
-    @sys __Role System $system
-    @res __Role Resource $resource
-    @trans __Role Relation ResourceTransport
-    @result __Bundle $sys $res $trans
-    return $result
+@transportsResource:transportsResource graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @travelsDistance:travelsDistance graph entity from to
@@ -2264,76 +2032,60 @@ end
     return $movement
 end
 
-@traversesCountry:traversesCountry graph route country
-    # Route traverses country
-    @rte __Role Route $route
-    @ctry __Role Country $country
-    @trav __Role Relation CountryTransit
-    @result __Bundle $rte $ctry $trav
-    return $result
+@traversesCountry:traversesCountry graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@unaffectedSpecies:unaffectedSpecies graph impact species
-    # Impact unaffected species
-    @imp __Role Impact $impact
-    @spec __Role Species $species
-    @resil __Role Relation EcologicalResilience
-    @result __Bundle $imp $spec $resil
-    return $result
+@unaffectedSpecies:unaffectedSpecies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@underPlate:underPlate graph feature plate
-    # Feature under tectonic plate
-    @feat __Role Feature $feature
-    @plt __Role Plate $plate
-    @sub __Role Relation SubductionZone
-    @result __Bundle $feat $plt $sub
-    return $result
+@underPlate:underPlate graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@underVolcano:underVolcano graph feature volcano
-    # Feature under volcano
-    @feat __Role Feature $feature
-    @volc __Role Volcano $volcano
-    @sub __Role Relation VolcanicSubsurface
-    @result __Bundle $feat $volc $sub
-    return $result
+@underVolcano:underVolcano graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@underlies:underlies graph layer surface
-    # Layer underlies surface
-    @lay __Role Layer $layer
-    @surf __Role Surface $surface
-    @sub __Role Relation Subsurface
-    @result __Bundle $lay $surf $sub
-    return $result
+@underlies:underlies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@usedByCivilization:usedByCivilization graph resource civilization
-    # Resource used by civilization
-    @res __Role Resource $resource
-    @civ __Role Civilization $civilization
-    @use __Role Relation CulturalUse
-    @result __Bundle $res $civ $use
-    return $result
+@usedByCivilization:usedByCivilization graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@usedByReligion:usedByReligion graph site religion
-    # Site used by religion
-    @site __Role Site $site
-    @rel __Role Religion $religion
-    @use __Role Relation ReligiousSignificance
-    @result __Bundle $site $rel $use
-    return $result
+@usedByReligion:usedByReligion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
-@usesCurrency:usesCurrency graph country currency
-    # Country uses currency
-    @ctry __Role Country $country
-    @curr __Role Currency $currency
-    @monet __Role Relation MonetarySystem
-    @result __Bundle $ctry $curr $monet
-    return $result
+@usesCurrency:usesCurrency graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @:Continental_Hierarchy graph Continent Region Country

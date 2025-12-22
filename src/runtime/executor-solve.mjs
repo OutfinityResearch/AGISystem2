@@ -11,6 +11,7 @@ import { bindAll, bundle } from '../core/operations.mjs';
 import { withPosition } from '../core/position.mjs';
 import { CSPSolver } from '../reasoning/csp/solver.mjs';
 import { findAllOfType } from '../reasoning/find-all.mjs';
+import { solvePlanning, resolveGoalRefs } from '../reasoning/planning/solver.mjs';
 
 /**
  * Execute solve block - runs CSP solver
@@ -19,6 +20,11 @@ import { findAllOfType } from '../reasoning/find-all.mjs';
  * @returns {Object} Solve result
  */
 export function executeSolveBlock(executor, stmt) {
+  const problemType = String(stmt.problemType || '').trim();
+  if (problemType.toLowerCase() === 'planning' || problemType.toLowerCase() === 'plan') {
+    return executePlanningSolveBlock(executor, stmt);
+  }
+
   const solver = new CSPSolver(executor.session, { timeout: 5000 });
 
   // Process declarations to configure solver
@@ -230,6 +236,142 @@ export function executeSolveBlock(executor, stmt) {
     // Structured facts with proof for NL generation
     solutions: solutionsWithProof,
     stats: result.stats
+  };
+}
+
+function parsePositiveInt(value, fallback) {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const n = Math.floor(value);
+    return n > 0 ? n : fallback;
+  }
+  const s = String(value ?? '').trim();
+  if (!s) return fallback;
+  const n = Number.parseInt(s, 10);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
+function buildPlanFactVector(session, operator, args) {
+  const opVec = session.vocabulary.getOrCreate(operator);
+  const positioned = args.map((a, i) => withPosition(i + 1, session.vocabulary.getOrCreate(String(a))));
+  return bindAll(opVec, ...positioned);
+}
+
+function executePlanningSolveBlock(executor, stmt) {
+  const session = executor.session;
+  const planName = stmt.destination || 'plan';
+
+  let maxDepth = 6;
+  const goalRefs = [];
+  const startRefs = [];
+  let guard = null;
+  const conflictOperators = [];
+  const locationOperators = [];
+
+  for (const decl of stmt.declarations || []) {
+    if (!decl || decl.kind !== 'from') continue;
+
+    const key = String(decl.varName || '').trim();
+    if (!key) continue;
+
+    if (key === 'goal' || key === 'goals') {
+      goalRefs.push(String(decl.source));
+      continue;
+    }
+    if (key === 'start' || key === 'starts') {
+      startRefs.push(String(decl.source));
+      continue;
+    }
+    if (key === 'maxDepth' || key === 'depth') {
+      maxDepth = parsePositiveInt(decl.source, maxDepth);
+      continue;
+    }
+    if (key === 'guard' || key === 'supervisor' || key === 'watcher') {
+      guard = String(decl.source ?? '').trim() || null;
+      continue;
+    }
+    if (key === 'conflictOp' || key === 'conflictsOp' || key === 'conflictRelation' || key === 'conflictsRelation') {
+      conflictOperators.push(String(decl.source ?? '').trim());
+      continue;
+    }
+    if (key === 'locationOp' || key === 'locationsOp' || key === 'locationRelation' || key === 'locationsRelation') {
+      locationOperators.push(String(decl.source ?? '').trim());
+    }
+  }
+
+  const goals = resolveGoalRefs(session, goalRefs);
+  const startFacts = resolveGoalRefs(session, startRefs);
+
+  if (goals.length === 0) {
+    return {
+      type: 'solve',
+      destination: planName,
+      description: 'plan',
+      problemType: stmt.problemType,
+      success: false,
+      error: 'Planning solve requires at least one "goal from <ref>" declaration',
+      solutionCount: 0,
+      solutions: []
+    };
+  }
+
+  const planning = solvePlanning(session, {
+    goals,
+    startFacts,
+    maxDepth,
+    guard,
+    conflictOperators,
+    locationOperators
+  });
+  if (!planning.success) {
+    return {
+      type: 'solve',
+      destination: planName,
+      description: 'plan',
+      problemType: stmt.problemType,
+      success: false,
+      error: planning.error || 'No plan found',
+      solutionCount: 0,
+      solutions: [],
+      stats: planning.stats
+    };
+  }
+
+  // Store a plan summary fact: plan <planName> <length>
+  const lengthStr = String(planning.plan.length);
+  const planVec = buildPlanFactVector(session, 'plan', [planName, lengthStr]);
+  session.addToKB(planVec, `${planName}_plan`, { operator: 'plan', args: [planName, lengthStr], source: 'planning' });
+
+  const stepFacts = [];
+  for (let i = 0; i < planning.plan.length; i++) {
+    const stepIndex = String(i + 1);
+    const actionName = planning.plan[i];
+
+    const vec = buildPlanFactVector(session, 'planStep', [planName, stepIndex, actionName]);
+    session.addToKB(vec, `${planName}_step${stepIndex}`, {
+      operator: 'planStep',
+      args: [planName, stepIndex, actionName],
+      source: 'planning'
+    });
+
+    stepFacts.push({ dsl: `planStep ${planName} ${stepIndex} ${actionName}` });
+  }
+
+  return {
+    type: 'solve',
+    destination: planName,
+    description: 'plan',
+    problemType: stmt.problemType,
+    success: true,
+    solutionCount: 1,
+    storedSolutions: 1,
+    solutions: [
+      {
+        index: 1,
+        facts: stepFacts
+      }
+    ],
+    stats: planning.stats,
+    plan: planning.plan
   };
 }
 

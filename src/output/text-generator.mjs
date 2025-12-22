@@ -128,6 +128,10 @@ export class TextGenerator {
       // Alternatives
       alternative: (a) => a.length >= 2 ? `${a[0]} is an alternative to ${a[1]}.` : `alternative(${a.join(', ')})`,
 
+      // Planning
+      plan: (a) => a.length >= 2 ? `Plan ${a[0]} has ${a[1]} steps.` : `plan(${a.join(', ')})`,
+      planStep: (a) => a.length >= 3 ? `Step ${a[1]} of plan ${a[0]} is ${a[2]}.` : `planStep(${a.join(', ')})`,
+
       // Event seating / Constraint satisfaction
       seatedAt: (a) => a.length >= 2 ? `${a[0]} is seated at ${a[1]}.` : `seatedAt(${a.join(', ')})`,
       conflictsWith: (a) => a.length >= 2 ? `${a[0]} conflicts with ${a[1]}.` : `conflictsWith(${a.join(', ')})`,

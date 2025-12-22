@@ -279,6 +279,7 @@ Adăugăm instrumentare minimă (fără a polua output normal):
 4) Workstream B (contradiction goal + assume-and-check).
 5) Workstream D (planning MVP în `solve` + query extraction).
 6) Workstream C.4 (distributional similarity) — după ce avem canonical forms stabile.
+7) Workstream F (review + consolidare teorii `config/`) — pentru a elimina “teorii superficiale” și incoerențe generate automat.
 
 ---
 
@@ -349,3 +350,60 @@ Pentru comportamente care sunt greu de exprimat în EvalSuite (vector/metadata/i
 - `tests/regression/learn-atomicity.test.mjs`: învață un script care ar trebui să pice la jumătate și verifică explicit că `kbFacts`, `scope`, `graphs`, `operators` nu s-au modificat.
 - `tests/regression/contradiction-proof.test.mjs`: când respingem o contradicție hard, verificăm că payload-ul include pași suficienți pentru `proof_nl` (după implementarea din Workstream A).
 - `tests/regression/canonicalization-convergence.test.mjs`: aceleași query/prove rezultate pe forme DSL diferite (și, când e disponibil, similaritate HDC peste un prag).
+
+---
+
+## 10) Workstream F — Review complet pentru teoriile de bază din `config/` (coerență + “realness”)
+
+Scop: să validăm că teoriile din `config/` sunt:
+- coerente intern (nu se contrazic prin constraints),
+- coerente între ele (nu definesc semantici incompatibile pentru aceleași predicate),
+- “reale” (nu doar liste de cuvinte / roluri arbitrare), adică au operatori/graph-uri care se leagă prin Core și sunt folosite de reasoning fără hacks.
+
+### 10.1 Criterii de acceptanță (“ce înseamnă real/coerent”)
+1) **Syntactic + strict DSL**: fiecare fișier `.sys2` parsează și trece `Session.checkDSL()` în mod strict (fără operatori inexistenți).
+2) **Dependințe explicite**: orice operator folosit de domeniu e:
+   - declarat în același domeniu (graph/Relation), sau
+   - definit în Core, sau
+   - încărcat explicit ca dependință (nu “merge din noroc”).
+3) **Fără definiții “decorative”**: evităm graph-uri care doar “bundles random roles” fără legătură cu kernel-ul (ex. folosirea excesivă de tokens de tip `Domain X` fără sens operațional).
+4) **Consistență de semnătură**: pentru operatorii comuni (ex. `locatedIn`, `hasStatus`, `equal/equals`, `at/locatedAt`) stabilim o semnătură canonică și aliasuri direcționale (nu duplicări divergente).
+5) **Constraints explicite**: dacă există `mutuallyExclusive`/`contradictsSameArgs`/`inverseRelation`, ele trebuie:
+   - să fie localizabile (sursă + linie),
+   - să fie compatibile cu grafurile/operatorii pe care se aplică,
+   - să nu facă sistemul inutilizabil (ex. constraints care blochează majoritatea învățării).
+
+### 10.2 Metodă de audit (semi-automată + manuală)
+Deliverables:
+- `config/REVIEW.md` (status + decizii + “canonical operator registry” pe care îl respectăm).
+- Raport per domeniu (ex. `config/Biology/REVIEW.md`) cu:
+  - operatori exportați + semnături,
+  - dependențe (core + alte domenii),
+  - probleme detectate (superficial, inconsistent, missing deps, constraint misuse),
+  - acțiuni de remediere (rename/alias/merge/delete).
+
+Automatizare (folosind ce avem deja):
+- rulează `evals/runStressCheck.js` (sau un script dedicat) pe `config/Core` + `config/*`:
+  - syntax errors,
+  - unknown operator errors,
+  - dependințe lipsă (concepte/operatoare neîncărcate),
+  - contradicții hard (când Workstream A e complet).
+
+Manual review (sampling ghidat, nu “citit tot la întâmplare”):
+- `config/Core`: verificăm prioritar fișierele care definesc semantici folosite de runtime (`00-relations`, `05-logic`, `10-properties`, `12-reasoning`, `14-constraints`).
+- Domenii: începem cu cele folosite în eval (`Law`, `History`, `Biology`, `Physics`, `Math`, `Geography`, `Constraints`) apoi restul.
+
+### 10.3 Strategii de remediere (fără a distruge eval)
+1) **Alias înainte de rename**: când schimbăm nume/semnătură, introducem `alias/canonical` astfel încât query/prove să rămână stabile.
+2) **Consolidare către Core**: operatori care apar în mai multe domenii (ex. `equal/equals`) se mută în Core sau se standardizează.
+3) **Eliminare superficială**: graph-uri fără semantică clară se:
+   - înlocuiesc cu operatori core + roluri consistente, sau
+   - se elimină dacă nu sunt folosite.
+4) **Teste de regresie**: orice modificare de domeniu care atinge suitele din eval trebuie să aibă:
+   - un test unit/integration relevant, sau
+   - un caz în deep eval suites (secțiunea 9).
+
+### 10.4 Output final așteptat
+- “Registry” de operatori canonici (per domeniu + cross-domain).
+- `config/` încărcabil strict, fără surprize.
+- Teorii cu definiții “reale”: relații exprimate prin graph-uri care compun roluri/structuri canonice, nu doar etichete.

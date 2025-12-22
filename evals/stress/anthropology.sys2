@@ -1,3 +1,2936 @@
+# ============================================================================
+# Anthropology Operator Definitions - Semantic Roles
+# AUTO-GENERATED: Replacing superficial Left/Right definitions with semantic ones
+# ============================================================================
+
+# ===== CULTURAL OPERATORS =====
+
+@hasArtifact:hasArtifact graph culture artifact
+    # Culture possesses artifact as material culture element
+    @cult __Role Culture $culture
+    @art __Role Artifact $artifact
+    @material __Role Domain MaterialCulture
+    @relation __Bundle $cult $art $material
+    return $relation
+end
+
+@hasSymbol:hasSymbol graph culture symbol
+    # Culture uses symbol for meaning
+    @cult __Role Culture $culture
+    @sym __Role Symbol $symbol
+    @symbolic __Role Domain SymbolicSystem
+    @relation __Bundle $cult $sym $symbolic
+    return $relation
+end
+
+@hasPractice:hasPractice graph culture practice
+    # Culture engages in cultural practice
+    @cult __Role Practitioner $culture
+    @prac __Role Practice $practice
+    @cultural __Role Domain CulturalDomain
+    @relation __Bundle $cult $prac $cultural
+    return $relation
+end
+
+@holdsValue:holdsValue graph culture value
+    # Culture maintains core value
+    @cult __Role Holder $culture
+    @val __Role Value $value
+    @axiological __Role Domain ValueSystem
+    @relation __Bundle $cult $val $axiological
+    return $relation
+end
+
+@shapesehavior:shapesehavior graph value behavior
+    # Value shapes behavior patterns (typo in original: shapesBehavior)
+    @val __Role Value $value
+    @beh __Role Behavior $behavior
+    @influence __Role Process BehavioralShaping
+    @relation __Bundle $val $beh $influence
+    return $relation
+end
+
+# ===== KINSHIP OPERATORS =====
+
+@isChildOf:isChildOf graph child parent
+    # Genealogical parent-child relationship
+    @ch __Role Child $child
+    @par __Role Parent $parent
+    @genealogy __Role Relation Descent
+    @relation __Bundle $ch $par $genealogy
+    return $relation
+end
+
+@isMale:isMale graph person
+    # Gender classification: male
+    @pers __Role Individual $person
+    @gender __Role Gender Male
+    @relation __Pair $pers $gender
+    return $relation
+end
+
+@isFemale:isFemale graph person
+    # Gender classification: female
+    @pers __Role Individual $person
+    @gender __Role Gender Female
+    @relation __Pair $pers $gender
+    return $relation
+end
+
+@isMarriedTo:isMarriedTo graph spouse1 spouse2
+    # Marriage alliance between spouses
+    @sp1 __Role Spouse $spouse1
+    @sp2 __Role Spouse $spouse2
+    @alliance __Role Relation MaritalBond
+    @relation __Bundle $sp1 $sp2 $alliance
+    return $relation
+end
+
+@isSisterOf:isSisterOf graph sister sibling
+    # Sibling relationship: sister
+    @sis __Role Sister $sister
+    @sib __Role Sibling $sibling
+    @kinship __Role Relation SiblingBond
+    @relation __Bundle $sis $sib $kinship
+    return $relation
+end
+
+@isBrotherOf:isBrotherOf graph brother sibling
+    # Sibling relationship: brother
+    @bro __Role Brother $brother
+    @sib __Role Sibling $sibling
+    @kinship __Role Relation SiblingBond
+    @relation __Bundle $bro $sib $kinship
+    return $relation
+end
+
+@isCrossCousinOf:isCrossCousinOf graph ego cousin
+    # Cross-cousin kinship relation (marriage eligible)
+    @ego __Role Ego $ego
+    @cousin __Role CrossCousin $cousin
+    @kinship __Role Type CrossCousinship
+    @relation __Bundle $ego $cousin $kinship
+    return $relation
+end
+
+@isParallelCousinOf:isParallelCousinOf graph ego cousin
+    # Parallel cousin kinship relation (marriage prohibited)
+    @ego __Role Ego $ego
+    @cousin __Role ParallelCousin $cousin
+    @kinship __Role Type ParallelCousinship
+    @relation __Bundle $ego $cousin $kinship
+    return $relation
+end
+
+@hasFamily:hasFamily graph person family
+    # Person has family unit
+    @pers __Role Individual $person
+    @fam __Role Family $family
+    @kinship __Role Relation FamilialTies
+    @relation __Bundle $pers $fam $kinship
+    return $relation
+end
+
+@hasMothersBrother:hasMothersBrother graph person uncle
+    # Person has maternal uncle (important in matrilineal societies)
+    @pers __Role Ego $person
+    @uncle __Role MothersBrother $uncle
+    @avuncular __Role Relation AvuncularTie
+    @relation __Bundle $pers $uncle $avuncular
+    return $relation
+end
+
+@hasSpouse:hasSpouse graph person spouse
+    # Person has single spouse
+    @pers __Role Individual $person
+    @sp __Role Spouse $spouse
+    @marital __Role Relation Marriage
+    @relation __Bundle $pers $sp $marital
+    return $relation
+end
+
+@hasSpouses:hasSpouses graph person spouses
+    # Person has multiple spouses (polygamy)
+    @pers __Role Individual $person
+    @sps __Role Spouses $spouses
+    @marital __Role Type PolygamousMarriage
+    @relation __Bundle $pers $sps $marital
+    return $relation
+end
+
+@hasRelative:hasRelative graph person relative
+    # Person has kinship relative
+    @pers __Role Ego $person
+    @rel __Role Relative $relative
+    @kinship __Role Relation KinTie
+    @relation __Bundle $pers $rel $kinship
+    return $relation
+end
+
+@isFocalPerson:isFocalPerson graph person
+    # Person is focal point (ego) in kinship analysis
+    @pers __Role Ego $person
+    @perspective __Role Property FocalPoint
+    @relation __Pair $pers $perspective
+    return $relation
+end
+
+# ===== GROUP & LINEAGE OPERATORS =====
+
+@hasMember:hasMember graph group member
+    # Group contains member
+    @grp __Role Group $group
+    @mem __Role Member $member
+    @membership __Role Relation Contains
+    @relation __Bundle $grp $mem $membership
+    return $relation
+end
+
+@hasMembers:hasMembers graph group members
+    # Group has multiple members
+    @grp __Role Group $group
+    @mems __Role Members $members
+    @collective __Role Property Plurality
+    @relation __Bundle $grp $mems $collective
+    return $relation
+end
+
+@hasLineage:hasLineage graph group lineage
+    # Group traces lineage descent
+    @grp __Role Group $group
+    @lin __Role Lineage $lineage
+    @descent __Role Relation DescentLine
+    @relation __Bundle $grp $lin $descent
+    return $relation
+end
+
+@hasAncestor:hasAncestor graph group ancestor
+    # Group traces to common ancestor
+    @grp __Role Descendants $group
+    @anc __Role Ancestor $ancestor
+    @genealogy __Role Relation DescentFrom
+    @relation __Bundle $grp $anc $genealogy
+    return $relation
+end
+
+@isAncestor:isAncestor graph ancestor
+    # Individual is ancestral figure
+    @anc __Role Ancestor $ancestor
+    @status __Role Status Ancestral
+    @relation __Pair $anc $status
+    return $relation
+end
+
+@isClan:isClan graph group
+    # Group classified as clan
+    @grp __Role Group $group
+    @type __Role Type Clan
+    @relation __Pair $grp $type
+    return $relation
+end
+
+@isLineage:isLineage graph group
+    # Group classified as lineage
+    @grp __Role Group $group
+    @type __Role Type Lineage
+    @relation __Pair $grp $type
+    return $relation
+end
+
+@isGroup:isGroup graph entity
+    # Entity is social group
+    @ent __Role Entity $entity
+    @type __Role Type SocialGroup
+    @relation __Pair $ent $type
+    return $relation
+end
+
+@isMember:isMember graph individual group
+    # Group membership relation
+    @ind __Role Member $individual
+    @grp __Role Group $group
+    @membership __Role Relation BelongsTo
+    @relation __Bundle $ind $grp $membership
+    return $relation
+end
+
+@hasGroup:hasGroup graph group
+    # Context has social group
+    @grp __Role Group $group
+    @presence __Role Property SocialEntity
+    @relation __Pair $grp $presence
+    return $relation
+end
+
+# ===== RELIGIOUS/SPIRITUAL OPERATORS =====
+
+@isShaman:isShaman graph person
+    # Person occupies shaman role
+    @pers __Role Practitioner $person
+    @role __Role Role Shaman
+    @spiritual __Role Domain SpiritualSpecialist
+    @relation __Bundle $pers $role $spiritual
+    return $relation
+end
+
+# ===== ACTION & PROCESS OPERATORS =====
+
+@creates:creates graph agent outcome
+    # Agent creates/produces outcome
+    @ag __Role Creator $agent
+    @out __Role Created $outcome
+    @process __Role Process Creation
+    @relation __Bundle $ag $out $process
+    return $relation
+end
+
+@develops:develops graph entity characteristic
+    # Entity develops characteristic/capacity
+    @ent __Role Developer $entity
+    @char __Role Developed $characteristic
+    @process __Role Process Development
+    @relation __Bundle $ent $char $process
+    return $relation
+end
+
+@maintains:maintains graph agent maintained
+    # Agent maintains practice/state
+    @ag __Role Maintainer $agent
+    @main __Role Maintained $maintained
+    @process __Role Process Maintenance
+    @relation __Bundle $ag $main $process
+    return $relation
+end
+
+@adopts:adopts graph agent adopted
+    # Agent adopts practice/trait
+    @ag __Role Adopter $agent
+    @ad __Role Adopted $adopted
+    @process __Role Process Adoption
+    @relation __Bundle $ag $ad $process
+    return $relation
+end
+
+@provides:provides graph source provided
+    # Source provides resource/benefit
+    @src __Role Provider $source
+    @prov __Role Provided $provided
+    @process __Role Process Provision
+    @relation __Bundle $src $prov $process
+    return $relation
+end
+
+@serves:serves graph agent function
+    # Agent serves function/purpose
+    @ag __Role Server $agent
+    @func __Role Function $function
+    @relation __Role Relation Serves
+    @relation __Bundle $ag $func $relation
+    return $relation
+end
+
+@servesIn:servesIn graph person institution
+    # Person serves in institution/role
+    @pers __Role Servant $person
+    @inst __Role Institution $institution
+    @service __Role Relation Serves
+    @relation __Bundle $pers $inst $service
+    return $relation
+end
+
+@shapes:shapes graph influence outcome
+    # Influence shapes outcome
+    @inf __Role Shaper $influence
+    @out __Role Shaped $outcome
+    @process __Role Process Shaping
+    @relation __Bundle $inf $out $process
+    return $relation
+end
+
+@determines:determines graph factor outcome
+    # Factor determines outcome
+    @fac __Role Determinant $factor
+    @out __Role Determined $outcome
+    @causation __Role Relation Determines
+    @relation __Bundle $fac $out $causation
+    return $relation
+end
+
+@derives:derives graph outcome source
+    # Outcome derives from source
+    @out __Role Derived $outcome
+    @src __Role Source $source
+    @relation __Role Relation Derivation
+    @relation __Bundle $out $src $relation
+    return $relation
+end
+
+@inheritsVia:inheritsVia graph person property
+    # Person inherits through descent line
+    @pers __Role Heir $person
+    @prop __Role Inherited $property
+    @transmission __Role Process Inheritance
+    @relation __Bundle $pers $prop $transmission
+    return $relation
+end
+
+@practicesMarriage:practicesMarriage graph group pattern
+    # Group practices marriage pattern
+    @grp __Role Group $group
+    @pat __Role Pattern $pattern
+    @institution __Role Domain Marriage
+    @relation __Bundle $grp $pat $institution
+    return $relation
+end
+
+@originates:originates graph entity source
+    # Entity originates from source
+    @ent __Role Entity $entity
+    @src __Role Origin $source
+    @relation __Role Relation OriginatesFrom
+    @relation __Bundle $ent $src $relation
+    return $relation
+end
+
+@originatesIn:originatesIn graph trait culture
+    # Trait originates in cultural context
+    @tr __Role Trait $trait
+    @cult __Role Origin $culture
+    @relation __Role Relation OriginContext
+    @relation __Bundle $tr $cult $relation
+    return $relation
+end
+
+# ===== COLLECTION & CONTAINMENT OPERATORS =====
+
+@includes:includes graph container element
+    # Container includes element
+    @cont __Role Container $container
+    @elem __Role Element $element
+    @relation __Role Relation Inclusion
+    @relation __Bundle $cont $elem $relation
+    return $relation
+end
+
+@hasElement:hasElement graph system element
+    # System has component element
+    @sys __Role System $system
+    @elem __Role Element $element
+    @composition __Role Relation HasPart
+    @relation __Bundle $sys $elem $composition
+    return $relation
+end
+
+# ===== PROPERTY & ATTRIBUTE OPERATORS =====
+
+@hasSize:hasSize graph entity size
+    # Entity has size characteristic
+    @ent __Role Entity $entity
+    @sz __Role Size $size
+    @attribute __Role Property Magnitude
+    @relation __Bundle $ent $sz $attribute
+    return $relation
+end
+
+@hasAuthority:hasAuthority graph leader authority
+    # Leader has authority type
+    @lead __Role Leader $leader
+    @auth __Role Authority $authority
+    @power __Role Domain PoliticalPower
+    @relation __Bundle $lead $auth $power
+    return $relation
+end
+
+@hasOrganization:hasOrganization graph society organization
+    # Society has organizational structure
+    @soc __Role Society $society
+    @org __Role Organization $organization
+    @structure __Role Property SocialStructure
+    @relation __Bundle $soc $org $structure
+    return $relation
+end
+
+@hasStructure:hasStructure graph entity structure
+    # Entity has structural organization
+    @ent __Role Entity $entity
+    @struct __Role Structure $structure
+    @property __Role Property Organization
+    @relation __Bundle $ent $struct $property
+    return $relation
+end
+
+@hasMultiple:hasMultiple graph entity multiple
+    # Entity has multiple instances
+    @ent __Role Container $entity
+    @mult __Role Multiple $multiple
+    @plurality __Role Property Multiplicity
+    @relation __Bundle $ent $mult $plurality
+    return $relation
+end
+
+@hasCharacter:hasCharacter graph entity character
+    # Entity has characteristic nature
+    @ent __Role Entity $entity
+    @char __Role Character $character
+    @property __Role Property Nature
+    @relation __Bundle $ent $char $property
+    return $relation
+end
+
+@hasLevel:hasLevel graph system level
+    # System has organizational level
+    @sys __Role System $system
+    @lev __Role Level $level
+    @structure __Role Property Hierarchy
+    @relation __Bundle $sys $lev $structure
+    return $relation
+end
+
+@hasPerson:hasPerson graph person
+    # Context contains person/individual
+    @pers __Role Person $person
+    @presence __Role Property Individual
+    @relation __Pair $pers $presence
+    return $relation
+end
+
+# ===== CLASSIFICATION OPERATORS =====
+
+@isSpecies:isSpecies graph entity species
+    # Entity is biological species
+    @ent __Role Entity $entity
+    @sp __Role Species $species
+    @taxonomy __Role Classification Biological
+    @relation __Bundle $ent $sp $taxonomy
+    return $relation
+end
+
+@isUnit:isUnit graph entity
+    # Entity is linguistic/analytical unit
+    @ent __Role Entity $entity
+    @unit __Role Type Unit
+    @relation __Pair $ent $unit
+    return $relation
+end
+
+@is:is graph entity property
+    # Entity has property/classification
+    @ent __Role Entity $entity
+    @prop __Role Property $property
+    @classification __Role Relation Is
+    @relation __Bundle $ent $prop $classification
+    return $relation
+end
+
+@isBase:isBase graph element
+    # Element is foundational base
+    @elem __Role Element $element
+    @status __Role Property Foundational
+    @relation __Pair $elem $status
+    return $relation
+end
+
+# ===== RELATIONAL OPERATORS =====
+
+@relates:relates graph entity1 entity2
+    # Entity relates to another
+    @ent1 __Role Relatum $entity1
+    @ent2 __Role Relatum $entity2
+    @connection __Role Relation RelatesTo
+    @relation __Bundle $ent1 $ent2 $connection
+    return $relation
+end
+
+# ===== MISSING OPERATORS - ALPHABETICALLY ORGANIZED =====
+
+@about:about graph subject topic
+    # Subject concerns or is about topic
+    @subj __Role Subject $subject
+    @top __Role Topic $topic
+    @relation __Role Relation Concerns
+    @result __Bundle $subj $top $relation
+    return $result
+end
+
+@academia:academia graph context domain
+    # Context is academic or scholarly domain
+    @ctx __Role Context $context
+    @dom __Role Domain $domain
+    @academic __Role Property Academic
+    @result __Bundle $ctx $dom $academic
+    return $result
+end
+
+@accesses:accesses graph agent resource
+    # Agent accesses or reaches resource
+    @ag __Role Accessor $agent
+    @res __Role Resource $resource
+    @process __Role Process Access
+    @result __Bundle $ag $res $process
+    return $result
+end
+
+@achieves:achieves graph agent outcome
+    # Agent achieves or attains outcome
+    @ag __Role Achiever $agent
+    @out __Role Achievement $outcome
+    @process __Role Process Attainment
+    @result __Bundle $ag $out $process
+    return $result
+end
+
+@acquired:acquired graph agent object
+    # Agent acquired object
+    @ag __Role Acquirer $agent
+    @obj __Role Acquired $object
+    @process __Role Process Acquisition
+    @result __Bundle $ag $obj $process
+    return $result
+end
+
+@across:across graph entity boundary
+    # Entity extends across boundary
+    @ent __Role Entity $entity
+    @bound __Role Boundary $boundary
+    @relation __Role Relation Crossing
+    @result __Bundle $ent $bound $relation
+    return $result
+end
+
+@adapts:adapts graph entity condition
+    # Entity adapts to condition
+    @ent __Role Adapter $entity
+    @cond __Role Condition $condition
+    @process __Role Process Adaptation
+    @result __Bundle $ent $cond $process
+    return $result
+end
+
+@adopted:adopted graph agent trait
+    # Agent adopted trait or practice
+    @ag __Role Adopter $agent
+    @tr __Role Adopted $trait
+    @process __Role Process Adoption
+    @result __Bundle $ag $tr $process
+    return $result
+end
+
+@advances:advances graph entity progression
+    # Entity advances through progression
+    @ent __Role Advancer $entity
+    @prog __Role Progression $progression
+    @process __Role Process Advancement
+    @result __Bundle $ent $prog $process
+    return $result
+end
+
+@advantages:advantages graph entity benefit
+    # Entity has advantages or benefits
+    @ent __Role Beneficiary $entity
+    @ben __Role Benefit $benefit
+    @relation __Role Relation Advantage
+    @result __Bundle $ent $ben $relation
+    return $result
+end
+
+@advocates:advocates graph agent cause
+    # Agent advocates for cause
+    @ag __Role Advocate $agent
+    @cause __Role Cause $cause
+    @process __Role Process Advocacy
+    @result __Bundle $ag $cause $process
+    return $result
+end
+
+@allocates:allocates graph agent resource
+    # Agent allocates or distributes resource
+    @ag __Role Allocator $agent
+    @res __Role Resource $resource
+    @process __Role Process Allocation
+    @result __Bundle $ag $res $process
+    return $result
+end
+
+@allows:allows graph condition outcome
+    # Condition allows or permits outcome
+    @cond __Role Condition $condition
+    @out __Role Outcome $outcome
+    @relation __Role Relation Permission
+    @result __Bundle $cond $out $relation
+    return $result
+end
+
+@alternates:alternates graph entity states
+    # Entity alternates between states
+    @ent __Role Alternator $entity
+    @st __Role States $states
+    @process __Role Process Alternation
+    @result __Bundle $ent $st $process
+    return $result
+end
+
+@analyzes:analyzes graph agent subject
+    # Agent analyzes subject
+    @ag __Role Analyst $agent
+    @subj __Role Subject $subject
+    @process __Role Process Analysis
+    @result __Bundle $ag $subj $process
+    return $result
+end
+
+@applies:applies graph agent method
+    # Agent applies method or technique
+    @ag __Role Applicator $agent
+    @meth __Role Method $method
+    @process __Role Process Application
+    @result __Bundle $ag $meth $process
+    return $result
+end
+
+@are:are graph entity property
+    # Entity has property (copula)
+    @ent __Role Entity $entity
+    @prop __Role Property $property
+    @relation __Role Relation Identity
+    @result __Bundle $ent $prop $relation
+    return $result
+end
+
+@as:as graph entity role
+    # Entity functions as role
+    @ent __Role Entity $entity
+    @rol __Role Role $role
+    @relation __Role Relation Function
+    @result __Bundle $ent $rol $relation
+    return $result
+end
+
+@assert:assert graph agent claim
+    # Agent asserts claim
+    @ag __Role Asserter $agent
+    @claim __Role Claim $claim
+    @process __Role Process Assertion
+    @result __Bundle $ag $claim $process
+    return $result
+end
+
+@assigns:assigns graph agent assignment
+    # Agent assigns task or role
+    @ag __Role Assigner $agent
+    @asgn __Role Assignment $assignment
+    @process __Role Process Assignment
+    @result __Bundle $ag $asgn $process
+    return $result
+end
+
+@associates:associates graph entity association
+    # Entity associates with something
+    @ent __Role Entity $entity
+    @assoc __Role Associate $association
+    @relation __Role Relation Association
+    @result __Bundle $ent $assoc $relation
+    return $result
+end
+
+@assumes:assumes graph agent assumption
+    # Agent assumes belief or position
+    @ag __Role Assumer $agent
+    @assum __Role Assumption $assumption
+    @process __Role Process Assumption
+    @result __Bundle $ag $assum $process
+    return $result
+end
+
+@avoids:avoids graph entity avoided
+    # Entity avoids something
+    @ent __Role Avoider $entity
+    @avoid __Role Avoided $avoided
+    @relation __Role Relation Avoidance
+    @result __Bundle $ent $avoid $relation
+    return $result
+end
+
+@based:based graph entity basis
+    # Entity is based on basis
+    @ent __Role Entity $entity
+    @basis __Role Basis $basis
+    @relation __Role Relation Foundation
+    @result __Bundle $ent $basis $relation
+    return $result
+end
+
+@becomes:becomes graph entity state
+    # Entity becomes or transforms into state
+    @ent __Role Entity $entity
+    @st __Role State $state
+    @process __Role Process Transformation
+    @result __Bundle $ent $st $process
+    return $result
+end
+
+@between:between graph entity1 entity2
+    # Relation between two entities
+    @ent1 __Role Entity $entity1
+    @ent2 __Role Entity $entity2
+    @relation __Role Relation Between
+    @result __Bundle $ent1 $ent2 $relation
+    return $result
+end
+
+@blends:blends graph entity elements
+    # Entity blends elements together
+    @ent __Role Blender $entity
+    @elem __Role Elements $elements
+    @process __Role Process Blending
+    @result __Bundle $ent $elem $process
+    return $result
+end
+
+@born:born graph individual time
+    # Individual is born at time
+    @ind __Role Individual $individual
+    @tm __Role Time $time
+    @event __Role Event Birth
+    @result __Bundle $ind $tm $event
+    return $result
+end
+
+@brings:brings graph agent object
+    # Agent brings object
+    @ag __Role Bringer $agent
+    @obj __Role Object $object
+    @process __Role Process Bringing
+    @result __Bundle $ag $obj $process
+    return $result
+end
+
+@builds:builds graph agent construction
+    # Agent builds or constructs something
+    @ag __Role Builder $agent
+    @cons __Role Construction $construction
+    @process __Role Process Building
+    @result __Bundle $ag $cons $process
+    return $result
+end
+
+@buries:buries graph agent deceased
+    # Agent buries deceased
+    @ag __Role Burier $agent
+    @dec __Role Deceased $deceased
+    @ritual __Role Ritual Burial
+    @result __Bundle $ag $dec $ritual
+    return $result
+end
+
+@burns:burns graph agent object
+    # Agent burns object
+    @ag __Role Burner $agent
+    @obj __Role Object $object
+    @process __Role Process Burning
+    @result __Bundle $ag $obj $process
+    return $result
+end
+
+@but:but graph entity exception
+    # Entity has exception or contrast
+    @ent __Role Entity $entity
+    @exc __Role Exception $exception
+    @relation __Role Relation Contrast
+    @result __Bundle $ent $exc $relation
+    return $result
+end
+
+@by:by graph action agent
+    # Action performed by agent
+    @act __Role Action $action
+    @ag __Role Agent $agent
+    @relation __Role Relation Agency
+    @result __Bundle $act $ag $relation
+    return $result
+end
+
+@canMarry:canMarry graph person1 person2
+    # Person can marry another (marriage eligibility)
+    @p1 __Role Person $person1
+    @p2 __Role Person $person2
+    @eligibility __Role Property MarriageEligible
+    @result __Bundle $p1 $p2 $eligibility
+    return $result
+end
+
+@carries:carries graph entity cargo
+    # Entity carries cargo or meaning
+    @ent __Role Carrier $entity
+    @cargo __Role Cargo $cargo
+    @relation __Role Relation Carrying
+    @result __Bundle $ent $cargo $relation
+    return $result
+end
+
+@caused:caused graph effect cause
+    # Effect is caused by cause
+    @eff __Role Effect $effect
+    @cause __Role Cause $cause
+    @relation __Role Relation Causation
+    @result __Bundle $eff $cause $relation
+    return $result
+end
+
+@changes:changes graph entity change
+    # Entity undergoes change
+    @ent __Role Changer $entity
+    @chg __Role Change $change
+    @process __Role Process Transformation
+    @result __Bundle $ent $chg $process
+    return $result
+end
+
+@characterized:characterized graph entity characteristic
+    # Entity is characterized by characteristic
+    @ent __Role Entity $entity
+    @char __Role Characteristic $characteristic
+    @relation __Role Relation Characterization
+    @result __Bundle $ent $char $relation
+    return $result
+end
+
+@charts:charts graph agent map
+    # Agent charts or maps something
+    @ag __Role Charter $agent
+    @map __Role Map $map
+    @process __Role Process Charting
+    @result __Bundle $ag $map $process
+    return $result
+end
+
+@chooses:chooses graph agent choice
+    # Agent chooses option
+    @ag __Role Chooser $agent
+    @choice __Role Choice $choice
+    @process __Role Process Selection
+    @result __Bundle $ag $choice $process
+    return $result
+end
+
+@circulate:circulate graph entity path
+    # Entity circulates through path
+    @ent __Role Entity $entity
+    @path __Role Path $path
+    @process __Role Process Circulation
+    @result __Bundle $ent $path $process
+    return $result
+end
+
+@claim:claim graph agent claim
+    # Agent makes claim
+    @ag __Role Claimant $agent
+    @clm __Role Claim $claim
+    @process __Role Process Claiming
+    @result __Bundle $ag $clm $process
+    return $result
+end
+
+@claims:claims graph agent claim
+    # Agent claims something
+    @ag __Role Claimant $agent
+    @clm __Role Claim $claim
+    @process __Role Process Claiming
+    @result __Bundle $ag $clm $process
+    return $result
+end
+
+@classifies:classifies graph system entity
+    # System classifies entity
+    @sys __Role System $system
+    @ent __Role Entity $entity
+    @process __Role Process Classification
+    @result __Bundle $sys $ent $process
+    return $result
+end
+
+@clears:clears graph agent area
+    # Agent clears area
+    @ag __Role Clearer $agent
+    @area __Role Area $area
+    @process __Role Process Clearing
+    @result __Bundle $ag $area $process
+    return $result
+end
+
+@collectively:collectively graph group action
+    # Group performs action collectively
+    @grp __Role Group $group
+    @act __Role Action $action
+    @manner __Role Manner Collective
+    @result __Bundle $grp $act $manner
+    return $result
+end
+
+@collects:collects graph agent items
+    # Agent collects items
+    @ag __Role Collector $agent
+    @items __Role Items $items
+    @process __Role Process Collection
+    @result __Bundle $ag $items $process
+    return $result
+end
+
+@combines:combines graph entity elements
+    # Entity combines elements
+    @ent __Role Combiner $entity
+    @elem __Role Elements $elements
+    @process __Role Process Combination
+    @result __Bundle $ent $elem $process
+    return $result
+end
+
+@commercializes:commercializes graph agent object
+    # Agent commercializes object
+    @ag __Role Commercializer $agent
+    @obj __Role Object $object
+    @process __Role Process Commercialization
+    @result __Bundle $ag $obj $process
+    return $result
+end
+
+@community:community graph entity community
+    # Entity relates to community
+    @ent __Role Entity $entity
+    @comm __Role Community $community
+    @relation __Role Relation CommunityTie
+    @result __Bundle $ent $comm $relation
+    return $result
+end
+
+@compares:compares graph agent entities
+    # Agent compares entities
+    @ag __Role Comparer $agent
+    @ents __Role Entities $entities
+    @process __Role Process Comparison
+    @result __Bundle $ag $ents $process
+    return $result
+end
+
+@comprises:comprises graph whole parts
+    # Whole comprises parts
+    @whole __Role Whole $whole
+    @parts __Role Parts $parts
+    @relation __Role Relation Composition
+    @result __Bundle $whole $parts $relation
+    return $result
+end
+
+@concerns:concerns graph subject matter
+    # Subject concerns matter
+    @subj __Role Subject $subject
+    @mat __Role Matter $matter
+    @relation __Role Relation Concerns
+    @result __Bundle $subj $mat $relation
+    return $result
+end
+
+@conducted:conducted graph research agent
+    # Research conducted by agent
+    @res __Role Research $research
+    @ag __Role Agent $agent
+    @process __Role Process Conducting
+    @result __Bundle $res $ag $process
+    return $result
+end
+
+@conducts:conducts graph agent activity
+    # Agent conducts activity
+    @ag __Role Conductor $agent
+    @act __Role Activity $activity
+    @process __Role Process Conducting
+    @result __Bundle $ag $act $process
+    return $result
+end
+
+@connects:connects graph entity1 entity2
+    # Entity connects to another
+    @ent1 __Role Connector $entity1
+    @ent2 __Role Connected $entity2
+    @relation __Role Relation Connection
+    @result __Bundle $ent1 $ent2 $relation
+    return $result
+end
+
+@constitutes:constitutes graph parts whole
+    # Parts constitute whole
+    @parts __Role Parts $parts
+    @whole __Role Whole $whole
+    @relation __Role Relation Constitution
+    @result __Bundle $parts $whole $relation
+    return $result
+end
+
+@constructed:constructed graph object builder
+    # Object constructed by builder
+    @obj __Role Object $object
+    @build __Role Builder $builder
+    @process __Role Process Construction
+    @result __Bundle $obj $build $process
+    return $result
+end
+
+@contacts:contacts graph entity1 entity2
+    # Entity makes contact with another
+    @ent1 __Role Contactor $entity1
+    @ent2 __Role Contacted $entity2
+    @relation __Role Relation Contact
+    @result __Bundle $ent1 $ent2 $relation
+    return $result
+end
+
+@controlled:controlled graph entity controller
+    # Entity controlled by controller
+    @ent __Role Controlled $entity
+    @ctrl __Role Controller $controller
+    @relation __Role Relation Control
+    @result __Bundle $ent $ctrl $relation
+    return $result
+end
+
+@controls:controls graph agent controlled
+    # Agent controls entity
+    @ag __Role Controller $agent
+    @ctrl __Role Controlled $controlled
+    @relation __Role Relation Control
+    @result __Bundle $ag $ctrl $relation
+    return $result
+end
+
+@convey:convey graph medium message
+    # Medium conveys message
+    @med __Role Medium $medium
+    @msg __Role Message $message
+    @process __Role Process Communication
+    @result __Bundle $med $msg $process
+    return $result
+end
+
+@correlates:correlates graph variable1 variable2
+    # Variable correlates with another
+    @var1 __Role Variable $variable1
+    @var2 __Role Variable $variable2
+    @relation __Role Relation Correlation
+    @result __Bundle $var1 $var2 $relation
+    return $result
+end
+
+@counts:counts graph agent items
+    # Agent counts items
+    @ag __Role Counter $agent
+    @items __Role Items $items
+    @process __Role Process Counting
+    @result __Bundle $ag $items $process
+    return $result
+end
+
+@created:created graph object creator
+    # Object created by creator
+    @obj __Role Created $object
+    @cr __Role Creator $creator
+    @process __Role Process Creation
+    @result __Bundle $obj $cr $process
+    return $result
+end
+
+@cultivates:cultivates graph agent crops
+    # Agent cultivates crops
+    @ag __Role Cultivator $agent
+    @crops __Role Crops $crops
+    @process __Role Process Cultivation
+    @result __Bundle $ag $crops $process
+    return $result
+end
+
+@deep:deep graph entity depth
+    # Entity has deep quality
+    @ent __Role Entity $entity
+    @depth __Role Depth $depth
+    @property __Role Property Depth
+    @result __Bundle $ent $depth $property
+    return $result
+end
+
+@defines:defines graph agent definition
+    # Agent defines something
+    @ag __Role Definer $agent
+    @def __Role Definition $definition
+    @process __Role Process Definition
+    @result __Bundle $ag $def $process
+    return $result
+end
+
+@delivers:delivers graph agent delivery
+    # Agent delivers something
+    @ag __Role Deliverer $agent
+    @deliv __Role Delivery $delivery
+    @process __Role Process Delivery
+    @result __Bundle $ag $deliv $process
+    return $result
+end
+
+@demonstrated:demonstrated graph entity trait
+    # Entity demonstrated trait
+    @ent __Role Entity $entity
+    @trait __Role Trait $trait
+    @process __Role Process Demonstration
+    @result __Bundle $ent $trait $process
+    return $result
+end
+
+@depicted:depicted graph art subject
+    # Art depicted subject
+    @art __Role Art $art
+    @subj __Role Subject $subject
+    @process __Role Process Depiction
+    @result __Bundle $art $subj $process
+    return $result
+end
+
+@descent:descent graph entity lineage
+    # Entity follows descent lineage
+    @ent __Role Entity $entity
+    @lin __Role Lineage $lineage
+    @relation __Role Relation Descent
+    @result __Bundle $ent $lin $relation
+    return $result
+end
+
+@determined:determined graph outcome determinant
+    # Outcome determined by determinant
+    @out __Role Outcome $outcome
+    @det __Role Determinant $determinant
+    @relation __Role Relation Determination
+    @result __Bundle $out $det $relation
+    return $result
+end
+
+@developed:developed graph entity trait
+    # Entity developed trait
+    @ent __Role Developer $entity
+    @trait __Role Trait $trait
+    @process __Role Process Development
+    @result __Bundle $ent $trait $process
+    return $result
+end
+
+@dies:dies graph individual
+    # Individual dies
+    @ind __Role Individual $individual
+    @event __Role Event Death
+    @result __Pair $ind $event
+    return $result
+end
+
+@differs:differs graph entity1 entity2
+    # Entity differs from another
+    @ent1 __Role Entity $entity1
+    @ent2 __Role Entity $entity2
+    @relation __Role Relation Difference
+    @result __Bundle $ent1 $ent2 $relation
+    return $result
+end
+
+@directs:directs graph agent directed
+    # Agent directs something
+    @ag __Role Director $agent
+    @dir __Role Directed $directed
+    @process __Role Process Direction
+    @result __Bundle $ag $dir $process
+    return $result
+end
+
+@disadvantages:disadvantages graph entity detriment
+    # Entity has disadvantages
+    @ent __Role Entity $entity
+    @detr __Role Detriment $detriment
+    @relation __Role Relation Disadvantage
+    @result __Bundle $ent $detr $relation
+    return $result
+end
+
+@dispersed:dispersed graph entity area
+    # Entity is dispersed across area
+    @ent __Role Entity $entity
+    @area __Role Area $area
+    @relation __Role Relation Dispersal
+    @result __Bundle $ent $area $relation
+    return $result
+end
+
+@disrupts:disrupts graph agent disrupted
+    # Agent disrupts something
+    @ag __Role Disruptor $agent
+    @disr __Role Disrupted $disrupted
+    @process __Role Process Disruption
+    @result __Bundle $ag $disr $process
+    return $result
+end
+
+@distinguishes:distinguishes graph system entities
+    # System distinguishes between entities
+    @sys __Role System $system
+    @ents __Role Entities $entities
+    @process __Role Process Differentiation
+    @result __Bundle $sys $ents $process
+    return $result
+end
+
+@distributes:distributes graph agent resources
+    # Agent distributes resources
+    @ag __Role Distributor $agent
+    @res __Role Resources $resources
+    @process __Role Process Distribution
+    @result __Bundle $ag $res $process
+    return $result
+end
+
+@divided:divided graph whole parts
+    # Whole is divided into parts
+    @whole __Role Whole $whole
+    @parts __Role Parts $parts
+    @relation __Role Relation Division
+    @result __Bundle $whole $parts $relation
+    return $result
+end
+
+@documents:documents graph agent subject
+    # Agent documents subject
+    @ag __Role Documenter $agent
+    @subj __Role Subject $subject
+    @process __Role Process Documentation
+    @result __Bundle $ag $subj $process
+    return $result
+end
+
+@domesticated:domesticated graph species agent
+    # Species domesticated by agent
+    @sp __Role Species $species
+    @ag __Role Agent $agent
+    @process __Role Process Domestication
+    @result __Bundle $sp $ag $process
+    return $result
+end
+
+@either:either graph option1 option2
+    # Choice between options
+    @opt1 __Role Option $option1
+    @opt2 __Role Option $option2
+    @relation __Role Relation Choice
+    @result __Bundle $opt1 $opt2 $relation
+    return $result
+end
+
+@embodiedIn:embodiedIn graph concept embodiment
+    # Concept is embodied in manifestation
+    @conc __Role Concept $concept
+    @emb __Role Embodiment $embodiment
+    @relation __Role Relation Embodiment
+    @result __Bundle $conc $emb $relation
+    return $result
+end
+
+@emphasizes:emphasizes graph agent emphasis
+    # Agent emphasizes something
+    @ag __Role Emphasizer $agent
+    @emph __Role Emphasis $emphasis
+    @process __Role Process Emphasis
+    @result __Bundle $ag $emph $process
+    return $result
+end
+
+@employs:employs graph agent method
+    # Agent employs method
+    @ag __Role Employer $agent
+    @meth __Role Method $method
+    @process __Role Process Employment
+    @result __Bundle $ag $meth $process
+    return $result
+end
+
+@enabled:enabled graph enabler enabled
+    # Enabler enabled something
+    @enabl __Role Enabler $enabler
+    @enabd __Role Enabled $enabled
+    @relation __Role Relation Enablement
+    @result __Bundle $enabl $enabd $relation
+    return $result
+end
+
+@encoded:encoded graph medium information
+    # Medium encoded information
+    @med __Role Medium $medium
+    @info __Role Information $information
+    @process __Role Process Encoding
+    @result __Bundle $med $info $process
+    return $result
+end
+
+@encodes:encodes graph medium meaning
+    # Medium encodes meaning
+    @med __Role Medium $medium
+    @mean __Role Meaning $meaning
+    @process __Role Process Encoding
+    @result __Bundle $med $mean $process
+    return $result
+end
+
+@encounters:encounters graph entity1 entity2
+    # Entity encounters another
+    @ent1 __Role Encounter $entity1
+    @ent2 __Role Encountered $entity2
+    @relation __Role Relation Encounter
+    @result __Bundle $ent1 $ent2 $relation
+    return $result
+end
+
+@enforces:enforces graph authority socialrule
+    # Authority enforces social rule
+    @auth __Role Authority $authority
+    @rul __Role Rule $socialrule
+    @process __Role Process Enforcement
+    @result __Bundle $auth $rul $process
+    return $result
+end
+
+@engages:engages graph agent activity
+    # Agent engages in activity
+    @ag __Role Engager $agent
+    @act __Role Activity $activity
+    @process __Role Process Engagement
+    @result __Bundle $ag $act $process
+    return $result
+end
+
+@ensures:ensures graph condition outcome
+    # Condition ensures outcome
+    @cond __Role Condition $condition
+    @out __Role Outcome $outcome
+    @relation __Role Relation Guarantee
+    @result __Bundle $cond $out $relation
+    return $result
+end
+
+@enters:enters graph entity state
+    # Entity enters state
+    @ent __Role Entity $entity
+    @st __Role State $state
+    @process __Role Process Entry
+    @result __Bundle $ent $st $process
+    return $result
+end
+
+@entersState:entersState graph entity state
+    # Entity enters specific state
+    @ent __Role Entity $entity
+    @st __Role State $state
+    @process __Role Process StateEntry
+    @result __Bundle $ent $st $process
+    return $result
+end
+
+@establishes:establishes graph agent establishment
+    # Agent establishes something
+    @ag __Role Establisher $agent
+    @estab __Role Establishment $establishment
+    @process __Role Process Establishment
+    @result __Bundle $ag $estab $process
+    return $result
+end
+
+@evaluates:evaluates graph agent subject
+    # Agent evaluates subject
+    @ag __Role Evaluator $agent
+    @subj __Role Subject $subject
+    @process __Role Process Evaluation
+    @result __Bundle $ag $subj $process
+    return $result
+end
+
+@examines:examines graph agent subject
+    # Agent examines subject
+    @ag __Role Examiner $agent
+    @subj __Role Subject $subject
+    @process __Role Process Examination
+    @result __Bundle $ag $subj $process
+    return $result
+end
+
+@exchange:exchange graph entity1 entity2
+    # Entities exchange with each other
+    @ent1 __Role Exchanger $entity1
+    @ent2 __Role Exchanger $entity2
+    @relation __Role Relation Exchange
+    @result __Bundle $ent1 $ent2 $relation
+    return $result
+end
+
+@exercises:exercises graph agent power
+    # Agent exercises power
+    @ag __Role Exerciser $agent
+    @pow __Role Power $power
+    @process __Role Process Exercise
+    @result __Bundle $ag $pow $process
+    return $result
+end
+
+@exhibited:exhibited graph entity trait
+    # Entity exhibited trait
+    @ent __Role Entity $entity
+    @trait __Role Trait $trait
+    @process __Role Process Exhibition
+    @result __Bundle $ent $trait $process
+    return $result
+end
+
+@existed:existed graph entity time
+    # Entity existed at time
+    @ent __Role Entity $entity
+    @tm __Role Time $time
+    @relation __Role Relation Existence
+    @result __Bundle $ent $tm $relation
+    return $result
+end
+
+@expects:expects graph agent expectation
+    # Agent expects something
+    @ag __Role Expecter $agent
+    @exp __Role Expectation $expectation
+    @process __Role Process Expectation
+    @result __Bundle $ag $exp $process
+    return $result
+end
+
+@experiences:experiences graph agent experience
+    # Agent experiences something
+    @ag __Role Experiencer $agent
+    @exp __Role Experience $experience
+    @process __Role Process Experience
+    @result __Bundle $ag $exp $process
+    return $result
+end
+
+@explained:explained graph phenomenon explanation
+    # Phenomenon explained by explanation
+    @phen __Role Phenomenon $phenomenon
+    @expl __Role Explanation $explanation
+    @relation __Role Relation Explanation
+    @result __Bundle $phen $expl $relation
+    return $result
+end
+
+@explains:explains graph theorymodel phenomenon
+    # Theory explains phenomenon
+    @theo __Role Theory $theorymodel
+    @phen __Role Phenomenon $phenomenon
+    @relation __Role Relation Explanation
+    @result __Bundle $theo $phen $relation
+    return $result
+end
+
+@exploited:exploited graph agent resource
+    # Agent exploited resource
+    @ag __Role Exploiter $agent
+    @res __Role Resource $resource
+    @process __Role Process Exploitation
+    @result __Bundle $ag $res $process
+    return $result
+end
+
+@exploits:exploits graph agent resource
+    # Agent exploits resource
+    @ag __Role Exploiter $agent
+    @res __Role Resource $resource
+    @process __Role Process Exploitation
+    @result __Bundle $ag $res $process
+    return $result
+end
+
+@faces:faces graph agent challenge
+    # Agent faces challenge
+    @ag __Role Facer $agent
+    @chal __Role Challenge $challenge
+    @relation __Role Relation Facing
+    @result __Bundle $ag $chal $relation
+    return $result
+end
+
+@fills:fills graph agent role
+    # Agent fills role
+    @ag __Role Filler $agent
+    @role __Role Role $role
+    @process __Role Process Filling
+    @result __Bundle $ag $role $process
+    return $result
+end
+
+@follow:follow graph entity pattern
+    # Entity follows pattern
+    @ent __Role Follower $entity
+    @pat __Role Pattern $pattern
+    @relation __Role Relation Following
+    @result __Bundle $ent $pat $relation
+    return $result
+end
+
+@follows:follows graph entity pattern
+    # Entity follows pattern or rule
+    @ent __Role Follower $entity
+    @pat __Role Pattern $pattern
+    @relation __Role Relation Following
+    @result __Bundle $ent $pat $relation
+    return $result
+end
+
+@followsDescent:followsDescent graph group pattern
+    # Group follows descent pattern
+    @grp __Role Group $group
+    @pat __Role Pattern $pattern
+    @descent __Role Domain Descent
+    @result __Bundle $grp $pat $descent
+    return $result
+end
+
+@followsResidence:followsResidence graph group pattern
+    # Group follows residence pattern
+    @grp __Role Group $group
+    @pat __Role Pattern $pattern
+    @residence __Role Domain Residence
+    @result __Bundle $grp $pat $residence
+    return $result
+end
+
+@for:for graph action purpose
+    # Action is for purpose
+    @act __Role Action $action
+    @purp __Role Purpose $purpose
+    @relation __Role Relation Purpose
+    @result __Bundle $act $purp $relation
+    return $result
+end
+
+@form:form graph entities formation
+    # Entities form something
+    @ents __Role Entities $entities
+    @form __Role Formation $formation
+    @process __Role Process Formation
+    @result __Bundle $ents $form $process
+    return $result
+end
+
+@forms:forms graph entity formation
+    # Entity forms structure
+    @ent __Role Former $entity
+    @form __Role Formation $formation
+    @process __Role Process Formation
+    @result __Bundle $ent $form $process
+    return $result
+end
+
+@formsAlliance:formsAlliance graph entity1 entity2
+    # Entities form alliance
+    @ent1 __Role Ally $entity1
+    @ent2 __Role Ally $entity2
+    @alliance __Role Relation Alliance
+    @result __Bundle $ent1 $ent2 $alliance
+    return $result
+end
+
+@formsPattern:formsPattern graph elements pattern
+    # Elements form pattern
+    @elem __Role Elements $elements
+    @pat __Role Pattern $pattern
+    @process __Role Process PatternFormation
+    @result __Bundle $elem $pat $process
+    return $result
+end
+
+@found:found graph entity location
+    # Entity is found at location
+    @ent __Role Entity $entity
+    @loc __Role Location $location
+    @relation __Role Relation Found
+    @result __Bundle $ent $loc $relation
+    return $result
+end
+
+@from:from graph entity source
+    # Entity comes from source
+    @ent __Role Entity $entity
+    @src __Role Source $source
+    @relation __Role Relation Origin
+    @result __Bundle $ent $src $relation
+    return $result
+end
+
+@fuses:fuses graph entity elements
+    # Entity fuses elements
+    @ent __Role Fuser $entity
+    @elem __Role Elements $elements
+    @process __Role Process Fusion
+    @result __Bundle $ent $elem $process
+    return $result
+end
+
+@gains:gains graph agent gain
+    # Agent gains something
+    @ag __Role Gainer $agent
+    @gain __Role Gain $gain
+    @process __Role Process Gaining
+    @result __Bundle $ag $gain $process
+    return $result
+end
+
+@gathers:gathers graph agent items
+    # Agent gathers items
+    @ag __Role Gatherer $agent
+    @items __Role Items $items
+    @process __Role Process Gathering
+    @result __Bundle $ag $items $process
+    return $result
+end
+
+@gives:gives graph giver gift
+    # Giver gives gift
+    @giv __Role Giver $giver
+    @gift __Role Gift $gift
+    @process __Role Process Giving
+    @result __Bundle $giv $gift $process
+    return $result
+end
+
+@givesTo:givesTo graph giver recipient
+    # Giver gives to recipient
+    @giv __Role Giver $giver
+    @rec __Role Recipient $recipient
+    @exchange __Role Process Exchange
+    @result __Bundle $giv $rec $exchange
+    return $result
+end
+
+@governedBy:governedBy graph entity governor
+    # Entity is governed by governor
+    @ent __Role Governed $entity
+    @gov __Role Governor $governor
+    @relation __Role Relation Governance
+    @result __Bundle $ent $gov $relation
+    return $result
+end
+
+@governs:governs graph governor governed
+    # Governor governs entity
+    @gov __Role Governor $governor
+    @govd __Role Governed $governed
+    @relation __Role Relation Governance
+    @result __Bundle $gov $govd $relation
+    return $result
+end
+
+@guards:guards graph guardian guarded
+    # Guardian guards something
+    @guard __Role Guardian $guardian
+    @guardd __Role Guarded $guarded
+    @process __Role Process Protection
+    @result __Bundle $guard $guardd $process
+    return $result
+end
+
+@hadBrain:hadBrain graph species brain
+    # Species had brain type
+    @sp __Role Species $species
+    @br __Role Brain $brain
+    @property __Role Property BrainType
+    @result __Bundle $sp $br $property
+    return $result
+end
+
+@hadForm:hadForm graph entity form
+    # Entity had physical form
+    @ent __Role Entity $entity
+    @form __Role Form $form
+    @property __Role Property PhysicalForm
+    @result __Bundle $ent $form $property
+    return $result
+end
+
+@hadLarge:hadLarge graph entity attribute
+    # Entity had large attribute
+    @ent __Role Entity $entity
+    @attr __Role Attribute $attribute
+    @property __Role Property Large
+    @result __Bundle $ent $attr $property
+    return $result
+end
+
+@hadSize:hadSize graph entity size
+    # Entity had particular size
+    @ent __Role Entity $entity
+    @sz __Role Size $size
+    @property __Role Property Size
+    @result __Bundle $ent $sz $property
+    return $result
+end
+
+@herds:herds graph agent animals
+    # Agent herds animals
+    @ag __Role Herder $agent
+    @anim __Role Animals $animals
+    @process __Role Process Herding
+    @result __Bundle $ag $anim $process
+    return $result
+end
+
+@hold:hold graph agent possession
+    # Agent holds possession
+    @ag __Role Holder $agent
+    @poss __Role Possession $possession
+    @relation __Role Relation Holding
+    @result __Bundle $ag $poss $relation
+    return $result
+end
+
+@honors:honors graph agent honored
+    # Agent honors something
+    @ag __Role Honorer $agent
+    @hon __Role Honored $honored
+    @process __Role Process Honoring
+    @result __Bundle $ag $hon $process
+    return $result
+end
+
+@hunts:hunts graph agent prey
+    # Agent hunts prey
+    @ag __Role Hunter $agent
+    @prey __Role Prey $prey
+    @process __Role Process Hunting
+    @result __Bundle $ag $prey $process
+    return $result
+end
+
+@hypothesizes:hypothesizes graph theorymodel hypothesis
+    # Theory proposes hypothesis
+    @theo __Role Theory $theorymodel
+    @hyp __Role Hypothesis $hypothesis
+    @process __Role Process Hypothesizing
+    @result __Bundle $theo $hyp $process
+    return $result
+end
+
+@identifies:identifies graph agent identified
+    # Agent identifies something
+    @ag __Role Identifier $agent
+    @ident __Role Identified $identified
+    @process __Role Process Identification
+    @result __Bundle $ag $ident $process
+    return $result
+end
+
+@imitates:imitates graph imitator model
+    # Imitator imitates model
+    @imit __Role Imitator $imitator
+    @model __Role Model $model
+    @process __Role Process Imitation
+    @result __Bundle $imit $model $process
+    return $result
+end
+
+@imposes:imposes graph authority imposition
+    # Authority imposes something
+    @auth __Role Authority $authority
+    @imp __Role Imposition $imposition
+    @process __Role Process Imposition
+    @result __Bundle $auth $imp $process
+    return $result
+end
+
+@inBodySystem:inBodySystem graph condition system
+    # Condition is in body system
+    @cond __Role Condition $condition
+    @sys __Role System $system
+    @relation __Role Relation Location
+    @result __Bundle $cond $sys $relation
+    return $result
+end
+
+@including:including graph whole part
+    # Whole includes part
+    @whole __Role Whole $whole
+    @part __Role Part $part
+    @relation __Role Relation Inclusion
+    @result __Bundle $whole $part $relation
+    return $result
+end
+
+@inContext:inContext graph entity context
+    # Entity in context
+    @ent __Role Entity $entity
+    @ctx __Role Context $context
+    @relation __Role Relation Contextualization
+    @result __Bundle $ent $ctx $relation
+    return $result
+end
+
+@increased:increased graph entity amount
+    # Entity increased in amount
+    @ent __Role Entity $entity
+    @amt __Role Amount $amount
+    @process __Role Process Increase
+    @result __Bundle $ent $amt $process
+    return $result
+end
+
+@increases:increases graph entity measure
+    # Entity increases measure
+    @ent __Role Increaser $entity
+    @meas __Role Measure $measure
+    @process __Role Process Increase
+    @result __Bundle $ent $meas $process
+    return $result
+end
+
+@inhabitedBoth:inhabitedBoth graph species regions
+    # Species inhabited both regions
+    @sp __Role Species $species
+    @reg __Role Regions $regions
+    @relation __Role Relation Habitation
+    @result __Bundle $sp $reg $relation
+    return $result
+end
+
+@inhabits:inhabits graph entity habitat
+    # Entity inhabits habitat
+    @ent __Role Inhabitant $entity
+    @hab __Role Habitat $habitat
+    @relation __Role Relation Inhabitation
+    @result __Bundle $ent $hab $relation
+    return $result
+end
+
+@initiates:initiates graph agent process
+    # Agent initiates process
+    @ag __Role Initiator $agent
+    @proc __Role Process $process
+    @initiation __Role Process Initiation
+    @result __Bundle $ag $proc $initiation
+    return $result
+end
+
+@inLanguage:inLanguage graph element language
+    # Element is in language
+    @elem __Role Element $element
+    @lang __Role Language $language
+    @relation __Role Relation Linguistic
+    @result __Bundle $elem $lang $relation
+    return $result
+end
+
+@instead:instead graph entity alternative
+    # Entity instead of alternative
+    @ent __Role Entity $entity
+    @alt __Role Alternative $alternative
+    @relation __Role Relation Substitution
+    @result __Bundle $ent $alt $relation
+    return $result
+end
+
+@integrated:integrated graph parts whole
+    # Parts are integrated into whole
+    @parts __Role Parts $parts
+    @whole __Role Whole $whole
+    @relation __Role Relation Integration
+    @result __Bundle $parts $whole $relation
+    return $result
+end
+
+@interconnected:interconnected graph entities
+    # Entities are interconnected
+    @ents __Role Entities $entities
+    @connection __Role Relation Interconnection
+    @result __Pair $ents $connection
+    return $result
+end
+
+@intermediate:intermediate graph entity position
+    # Entity has intermediate position
+    @ent __Role Entity $entity
+    @pos __Role Position $position
+    @property __Role Property Intermediate
+    @result __Bundle $ent $pos $property
+    return $result
+end
+
+@involves:involves graph process elements
+    # Process involves elements
+    @proc __Role Process $process
+    @elem __Role Elements $elements
+    @relation __Role Relation Involvement
+    @result __Bundle $proc $elem $relation
+    return $result
+end
+
+@joins:joins graph entity group
+    # Entity joins group
+    @ent __Role Joiner $entity
+    @grp __Role Group $group
+    @process __Role Process Joining
+    @result __Bundle $ent $grp $process
+    return $result
+end
+
+@jokes:jokes graph person1 person2
+    # Person jokes with another
+    @p1 __Role Joker $person1
+    @p2 __Role JokedWith $person2
+    @relation __Role Relation JokingRelationship
+    @result __Bundle $p1 $p2 $relation
+    return $result
+end
+
+@lacks:lacks graph entity absence
+    # Entity lacks something
+    @ent __Role Entity $entity
+    @abs __Role Absence $absence
+    @relation __Role Relation Lacking
+    @result __Bundle $ent $abs $relation
+    return $result
+end
+
+@lavishly:lavishly graph action manner
+    # Action performed lavishly
+    @act __Role Action $action
+    @man __Role Manner $manner
+    @property __Role Property Lavish
+    @result __Bundle $act $man $property
+    return $result
+end
+
+@leaves:leaves graph entity state
+    # Entity leaves state
+    @ent __Role Leaver $entity
+    @st __Role State $state
+    @process __Role Process Departure
+    @result __Bundle $ent $st $process
+    return $result
+end
+
+@leftFrom:leftFrom graph entity origin
+    # Entity left from origin
+    @ent __Role Entity $entity
+    @orig __Role Origin $origin
+    @process __Role Process Departure
+    @result __Bundle $ent $orig $process
+    return $result
+end
+
+@legitimizes:legitimizes graph authority action
+    # Authority legitimizes action
+    @auth __Role Authority $authority
+    @act __Role Action $action
+    @process __Role Process Legitimation
+    @result __Bundle $auth $act $process
+    return $result
+end
+
+@lives:lives graph entity location
+    # Entity lives at location
+    @ent __Role Entity $entity
+    @loc __Role Location $location
+    @relation __Role Relation Residence
+    @result __Bundle $ent $loc $relation
+    return $result
+end
+
+@maintain:maintain graph agent maintained
+    # Agent maintains something
+    @ag __Role Maintainer $agent
+    @maint __Role Maintained $maintained
+    @process __Role Process Maintenance
+    @result __Bundle $ag $maint $process
+    return $result
+end
+
+@makes:makes graph agent product
+    # Agent makes product
+    @ag __Role Maker $agent
+    @prod __Role Product $product
+    @process __Role Process Making
+    @result __Bundle $ag $prod $process
+    return $result
+end
+
+@manages:manages graph agent managed
+    # Agent manages entity
+    @ag __Role Manager $agent
+    @mng __Role Managed $managed
+    @process __Role Process Management
+    @result __Bundle $ag $mng $process
+    return $result
+end
+
+@maps:maps graph agent territory
+    # Agent maps territory
+    @ag __Role Mapper $agent
+    @terr __Role Territory $territory
+    @process __Role Process Mapping
+    @result __Bundle $ag $terr $process
+    return $result
+end
+
+@marks:marks graph event marker
+    # Event marks transition
+    @event __Role Event $event
+    @mark __Role Marker $marker
+    @relation __Role Relation Marking
+    @result __Bundle $event $mark $relation
+    return $result
+end
+
+@marries:marries graph person1 person2
+    # Person marries another
+    @p1 __Role Spouse $person1
+    @p2 __Role Spouse $person2
+    @marriage __Role Relation Marriage
+    @result __Bundle $p1 $p2 $marriage
+    return $result
+end
+
+@mayHaveUsed:mayHaveUsed graph entity tool
+    # Entity may have used tool
+    @ent __Role Entity $entity
+    @tool __Role Tool $tool
+    @possibility __Role Modality Possible
+    @result __Bundle $ent $tool $possibility
+    return $result
+end
+
+@mergesWithSiblings:mergesWithSiblings graph entity siblings
+    # Entity merges with siblings (kinship terminology)
+    @ent __Role Entity $entity
+    @sibs __Role Siblings $siblings
+    @relation __Role Relation Merging
+    @result __Bundle $ent $sibs $relation
+    return $result
+end
+
+@mixes:mixes graph agent elements
+    # Agent mixes elements
+    @ag __Role Mixer $agent
+    @elem __Role Elements $elements
+    @process __Role Process Mixing
+    @result __Bundle $ag $elem $process
+    return $result
+end
+
+@monopolizes:monopolizes graph agent resource
+    # Agent monopolizes resource
+    @ag __Role Monopolizer $agent
+    @res __Role Resource $resource
+    @relation __Role Relation Monopoly
+    @result __Bundle $ag $res $relation
+    return $result
+end
+
+@moves:moves graph entity path
+    # Entity moves along path
+    @ent __Role Mover $entity
+    @path __Role Path $path
+    @process __Role Process Movement
+    @result __Bundle $ent $path $process
+    return $result
+end
+
+@named:named graph entity name
+    # Entity is named with name
+    @ent __Role Entity $entity
+    @name __Role Name $name
+    @relation __Role Relation Naming
+    @result __Bundle $ent $name $relation
+    return $result
+end
+
+@occupies:occupies graph entity position
+    # Entity occupies position
+    @ent __Role Occupier $entity
+    @pos __Role Position $position
+    @relation __Role Relation Occupation
+    @result __Bundle $ent $pos $relation
+    return $result
+end
+
+@of:of graph whole part
+    # Part of whole
+    @whole __Role Whole $whole
+    @part __Role Part $part
+    @relation __Role Relation PartOf
+    @result __Bundle $whole $part $relation
+    return $result
+end
+
+@operates:operates graph system mode
+    # System operates in mode
+    @sys __Role System $system
+    @mode __Role Mode $mode
+    @process __Role Process Operation
+    @result __Bundle $sys $mode $process
+    return $result
+end
+
+@organized:organized graph entity structure
+    # Entity is organized with structure
+    @ent __Role Entity $entity
+    @struct __Role Structure $structure
+    @relation __Role Relation Organization
+    @result __Bundle $ent $struct $relation
+    return $result
+end
+
+@organizes:organizes graph agent organization
+    # Agent organizes something
+    @ag __Role Organizer $agent
+    @org __Role Organization $organization
+    @process __Role Process Organization
+    @result __Bundle $ag $org $process
+    return $result
+end
+
+@originated:originated graph entity origin
+    # Entity originated from origin
+    @ent __Role Entity $entity
+    @orig __Role Origin $origin
+    @process __Role Process Origination
+    @result __Bundle $ent $orig $process
+    return $result
+end
+
+@over:over graph entity span
+    # Entity is over span
+    @ent __Role Entity $entity
+    @span __Role Span $span
+    @relation __Role Relation Over
+    @result __Bundle $ent $span $relation
+    return $result
+end
+
+@pattern:pattern graph elements pattern
+    # Elements form pattern
+    @elem __Role Elements $elements
+    @pat __Role Pattern $pattern
+    @relation __Role Relation Pattern
+    @result __Bundle $elem $pat $relation
+    return $result
+end
+
+@per:per graph rate unit
+    # Rate per unit
+    @rate __Role Rate $rate
+    @unit __Role Unit $unit
+    @relation __Role Relation Per
+    @result __Bundle $rate $unit $relation
+    return $result
+end
+
+@permitted:permitted graph action authority
+    # Action permitted by authority
+    @act __Role Action $action
+    @auth __Role Authority $authority
+    @relation __Role Relation Permission
+    @result __Bundle $act $auth $relation
+    return $result
+end
+
+@perpetual:perpetual graph entity duration
+    # Entity has perpetual duration
+    @ent __Role Entity $entity
+    @dur __Role Duration $duration
+    @property __Role Property Perpetual
+    @result __Bundle $ent $dur $property
+    return $result
+end
+
+@political:political graph entity domain
+    # Entity is political in domain
+    @ent __Role Entity $entity
+    @dom __Role Domain $domain
+    @property __Role Property Political
+    @result __Bundle $ent $dom $property
+    return $result
+end
+
+@possesses:possesses graph agent possession
+    # Agent possesses something
+    @ag __Role Possessor $agent
+    @poss __Role Possession $possession
+    @relation __Role Relation Possession
+    @result __Bundle $ag $poss $relation
+    return $result
+end
+
+@powered:powered graph device power
+    # Device powered by power source
+    @dev __Role Device $device
+    @pow __Role Power $power
+    @relation __Role Relation PoweredBy
+    @result __Bundle $dev $pow $relation
+    return $result
+end
+
+@predicts:predicts graph agent prediction
+    # Agent predicts something
+    @ag __Role Predictor $agent
+    @pred __Role Prediction $prediction
+    @process __Role Process Prediction
+    @result __Bundle $ag $pred $process
+    return $result
+end
+
+@preserves:preserves graph agent preserved
+    # Agent preserves something
+    @ag __Role Preserver $agent
+    @pres __Role Preserved $preserved
+    @process __Role Process Preservation
+    @result __Bundle $ag $pres $process
+    return $result
+end
+
+@prohibits:prohibits graph authority prohibited
+    # Authority prohibits something
+    @auth __Role Authority $authority
+    @proh __Role Prohibited $prohibited
+    @relation __Role Relation Prohibition
+    @result __Bundle $auth $proh $relation
+    return $result
+end
+
+@proposes:proposes graph agent proposal
+    # Agent proposes something
+    @ag __Role Proposer $agent
+    @prop __Role Proposal $proposal
+    @process __Role Process Proposal
+    @result __Bundle $ag $prop $process
+    return $result
+end
+
+@punishes:punishes graph authority offender
+    # Authority punishes offender
+    @auth __Role Authority $authority
+    @off __Role Offender $offender
+    @process __Role Process Punishment
+    @result __Bundle $auth $off $process
+    return $result
+end
+
+@radical:radical graph change degree
+    # Change has radical degree
+    @chg __Role Change $change
+    @deg __Role Degree $degree
+    @property __Role Property Radical
+    @result __Bundle $chg $deg $property
+    return $result
+end
+
+@receives:receives graph recipient gift
+    # Recipient receives gift
+    @rec __Role Recipient $recipient
+    @gift __Role Gift $gift
+    @process __Role Process Reception
+    @result __Bundle $rec $gift $process
+    return $result
+end
+
+@recognizes:recognizes graph agent recognized
+    # Agent recognizes something
+    @ag __Role Recognizer $agent
+    @recog __Role Recognized $recognized
+    @process __Role Process Recognition
+    @result __Bundle $ag $recog $process
+    return $result
+end
+
+@reconstructs:reconstructs graph agent reconstruction
+    # Agent reconstructs something
+    @ag __Role Reconstructor $agent
+    @recon __Role Reconstruction $reconstruction
+    @process __Role Process Reconstruction
+    @result __Bundle $ag $recon $process
+    return $result
+end
+
+@redistributes:redistributes graph agent resources
+    # Agent redistributes resources
+    @ag __Role Redistributor $agent
+    @res __Role Resources $resources
+    @process __Role Process Redistribution
+    @result __Bundle $ag $res $process
+    return $result
+end
+
+@relate:relate graph entity1 entity2
+    # Entities relate to each other
+    @ent1 __Role Entity $entity1
+    @ent2 __Role Entity $entity2
+    @relation __Role Relation Relation
+    @result __Bundle $ent1 $ent2 $relation
+    return $result
+end
+
+@relatives:relatives graph person relatives
+    # Person has relatives
+    @pers __Role Person $person
+    @rels __Role Relatives $relatives
+    @kinship __Role Relation Kinship
+    @result __Bundle $pers $rels $kinship
+    return $result
+end
+
+@represents:represents graph symbol meaning
+    # Symbol represents meaning
+    @sym __Role Symbol $symbol
+    @mean __Role Meaning $meaning
+    @relation __Role Relation Representation
+    @result __Bundle $sym $mean $relation
+    return $result
+end
+
+@residesAt:residesAt graph entity location
+    # Entity resides at location
+    @ent __Role Resident $entity
+    @loc __Role Location $location
+    @relation __Role Relation Residence
+    @result __Bundle $ent $loc $relation
+    return $result
+end
+
+@residesNear:residesNear graph entity location
+    # Entity resides near location
+    @ent __Role Resident $entity
+    @loc __Role Location $location
+    @relation __Role Relation Proximity
+    @result __Bundle $ent $loc $relation
+    return $result
+end
+
+@resists:resists graph agent resisted
+    # Agent resists something
+    @ag __Role Resister $agent
+    @resist __Role Resisted $resisted
+    @process __Role Process Resistance
+    @result __Bundle $ag $resist $process
+    return $result
+end
+
+@returns:returns graph entity destination
+    # Entity returns to destination
+    @ent __Role Returner $entity
+    @dest __Role Destination $destination
+    @process __Role Process Return
+    @result __Bundle $ent $dest $process
+    return $result
+end
+
+@reveals:reveals graph process revealed
+    # Process reveals something
+    @proc __Role Process $process
+    @rev __Role Revealed $revealed
+    @relation __Role Relation Revelation
+    @result __Bundle $proc $rev $relation
+    return $result
+end
+
+@rich:rich graph entity quality
+    # Entity is rich in quality
+    @ent __Role Entity $entity
+    @qual __Role Quality $quality
+    @property __Role Property Rich
+    @result __Bundle $ent $qual $property
+    return $result
+end
+
+@ritually:ritually graph action manner
+    # Action performed ritually
+    @act __Role Action $action
+    @man __Role Manner $manner
+    @property __Role Property Ritual
+    @result __Bundle $act $man $property
+    return $result
+end
+
+@sameGeneration:sameGeneration graph person1 person2
+    # Persons are in same generation
+    @p1 __Role Person $person1
+    @p2 __Role Person $person2
+    @generation __Role Property SameGeneration
+    @result __Bundle $p1 $p2 $generation
+    return $result
+end
+
+@sanctionedBy:sanctionedBy graph practice authority
+    # Practice is sanctioned by authority
+    @prac __Role Practice $practice
+    @auth __Role Authority $authority
+    @relation __Role Relation Sanction
+    @result __Bundle $prac $auth $relation
+    return $result
+end
+
+@scientific:scientific graph method type
+    # Method is scientific type
+    @meth __Role Method $method
+    @typ __Role Type $type
+    @property __Role Property Scientific
+    @result __Bundle $meth $typ $property
+    return $result
+end
+
+@seeks:seeks graph agent goal
+    # Agent seeks goal
+    @ag __Role Seeker $agent
+    @goal __Role Goal $goal
+    @process __Role Process Seeking
+    @result __Bundle $ag $goal $process
+    return $result
+end
+
+@selected:selected graph entity selector
+    # Entity selected by selector
+    @ent __Role Selected $entity
+    @sel __Role Selector $selector
+    @process __Role Process Selection
+    @result __Bundle $ent $sel $process
+    return $result
+end
+
+@selectsLineage:selectsLineage graph entity lineage
+    # Entity selects lineage affiliation
+    @ent __Role Selector $entity
+    @lin __Role Lineage $lineage
+    @process __Role Process LineageSelection
+    @result __Bundle $ent $lin $process
+    return $result
+end
+
+@sharedBy:sharedBy graph element sharers
+    # Element is shared by sharers
+    @elem __Role Element $element
+    @shar __Role Sharers $sharers
+    @relation __Role Relation Sharing
+    @result __Bundle $elem $shar $relation
+    return $result
+end
+
+@shares:shares graph agent shared
+    # Agent shares something
+    @ag __Role Sharer $agent
+    @shar __Role Shared $shared
+    @process __Role Process Sharing
+    @result __Bundle $ag $shar $process
+    return $result
+end
+
+@showed:showed graph entity trait
+    # Entity showed trait
+    @ent __Role Entity $entity
+    @trait __Role Trait $trait
+    @process __Role Process Showing
+    @result __Bundle $ent $trait $process
+    return $result
+end
+
+@shows:shows graph entity evidence
+    # Entity shows evidence
+    @ent __Role Shower $entity
+    @evid __Role Evidence $evidence
+    @relation __Role Relation Showing
+    @result __Bundle $ent $evid $relation
+    return $result
+end
+
+@showsPattern:showsPattern graph entity pattern
+    # Entity shows pattern
+    @ent __Role Entity $entity
+    @pat __Role Pattern $pattern
+    @relation __Role Relation Display
+    @result __Bundle $ent $pat $relation
+    return $result
+end
+
+@sold:sold graph item seller
+    # Item sold by seller
+    @item __Role Item $item
+    @sell __Role Seller $seller
+    @process __Role Process Sale
+    @result __Bundle $item $sell $process
+    return $result
+end
+
+@specialized:specialized graph entity specialization
+    # Entity specialized in something
+    @ent __Role Entity $entity
+    @spec __Role Specialization $specialization
+    @process __Role Process Specialization
+    @result __Bundle $ent $spec $process
+    return $result
+end
+
+@specific:specific graph entity specificity
+    # Entity has specific quality
+    @ent __Role Entity $entity
+    @spec __Role Specificity $specificity
+    @property __Role Property Specific
+    @result __Bundle $ent $spec $property
+    return $result
+end
+
+@spreadsTo:spreadsTo graph element destination
+    # Element spreads to destination
+    @elem __Role Element $element
+    @dest __Role Destination $destination
+    @process __Role Process Diffusion
+    @result __Bundle $elem $dest $process
+    return $result
+end
+
+@stratified:stratified graph society layers
+    # Society is stratified into layers
+    @soc __Role Society $society
+    @lay __Role Layers $layers
+    @relation __Role Relation Stratification
+    @result __Bundle $soc $lay $relation
+    return $result
+end
+
+@studies:studies graph agent subject
+    # Agent studies subject
+    @ag __Role Researcher $agent
+    @subj __Role Subject $subject
+    @process __Role Process Research
+    @result __Bundle $ag $subj $process
+    return $result
+end
+
+@subsists:subsists graph group subsistence
+    # Group subsists through means
+    @grp __Role Group $group
+    @subs __Role Subsistence $subsistence
+    @process __Role Process Subsistence
+    @result __Bundle $grp $subs $process
+    return $result
+end
+
+@suspends:suspends graph agent suspended
+    # Agent suspends something
+    @ag __Role Suspender $agent
+    @susp __Role Suspended $suspended
+    @process __Role Process Suspension
+    @result __Bundle $ag $susp $process
+    return $result
+end
+
+@sustainable:sustainable graph practice sustainability
+    # Practice has sustainability
+    @prac __Role Practice $practice
+    @sust __Role Sustainability $sustainability
+    @property __Role Property Sustainable
+    @result __Bundle $prac $sust $property
+    return $result
+end
+
+@takes:takes graph agent approach
+    # Agent takes approach
+    @ag __Role Taker $agent
+    @appr __Role Approach $approach
+    @process __Role Process Taking
+    @result __Bundle $ag $appr $process
+    return $result
+end
+
+@tells:tells graph narrator story
+    # Narrator tells story
+    @narr __Role Narrator $narrator
+    @story __Role Story $story
+    @process __Role Process Narration
+    @result __Bundle $narr $story $process
+    return $result
+end
+
+@through:through graph process means
+    # Process occurs through means
+    @proc __Role Process $process
+    @means __Role Means $means
+    @relation __Role Relation Instrumentality
+    @result __Bundle $proc $means $relation
+    return $result
+end
+
+@throughProcess:throughProcess graph outcome process
+    # Outcome occurs through process
+    @out __Role Outcome $outcome
+    @proc __Role Process $process
+    @relation __Role Relation ProcessMeans
+    @result __Bundle $out $proc $relation
+    return $result
+end
+
+@to:to graph action recipient
+    # Action directed to recipient
+    @act __Role Action $action
+    @rec __Role Recipient $recipient
+    @relation __Role Relation Direction
+    @result __Bundle $act $rec $relation
+    return $result
+end
+
+@traces:traces graph entity lineage
+    # Entity traces lineage
+    @ent __Role Tracer $entity
+    @lin __Role Lineage $lineage
+    @process __Role Process Tracing
+    @result __Bundle $ent $lin $process
+    return $result
+end
+
+@tracesBoth:tracesBoth graph entity lineages
+    # Entity traces both lineages
+    @ent __Role Tracer $entity
+    @lins __Role Lineages $lineages
+    @process __Role Process BilateralTracing
+    @result __Bundle $ent $lins $process
+    return $result
+end
+
+@tracesLineage:tracesLineage graph entity lineage
+    # Entity traces specific lineage
+    @ent __Role Tracer $entity
+    @lin __Role Lineage $lineage
+    @process __Role Process LineageTracing
+    @result __Bundle $ent $lin $process
+    return $result
+end
+
+@tracesThrough:tracesThrough graph entity path
+    # Entity traces through path
+    @ent __Role Tracer $entity
+    @path __Role Path $path
+    @process __Role Process Tracing
+    @result __Bundle $ent $path $process
+    return $result
+end
+
+@tracks:tracks graph agent tracked
+    # Agent tracks something
+    @ag __Role Tracker $agent
+    @track __Role Tracked $tracked
+    @process __Role Process Tracking
+    @result __Bundle $ag $track $process
+    return $result
+end
+
+@traded:traded graph goods traders
+    # Goods traded by traders
+    @goods __Role Goods $goods
+    @trad __Role Traders $traders
+    @process __Role Process Trade
+    @result __Bundle $goods $trad $process
+    return $result
+end
+
+@transfers:transfers graph agent transferred
+    # Agent transfers something
+    @ag __Role Transferrer $agent
+    @trans __Role Transferred $transferred
+    @process __Role Process Transfer
+    @result __Bundle $ag $trans $process
+    return $result
+end
+
+@transmittedVia:transmittedVia graph knowledge medium
+    # Knowledge transmitted via medium
+    @know __Role Knowledge $knowledge
+    @med __Role Medium $medium
+    @process __Role Process Transmission
+    @result __Bundle $know $med $process
+    return $result
+end
+
+@treated:treated graph entity treatment
+    # Entity is treated in manner
+    @ent __Role Entity $entity
+    @treat __Role Treatment $treatment
+    @relation __Role Relation Treatment
+    @result __Bundle $ent $treat $relation
+    return $result
+end
+
+@tries:tries graph agent attempt
+    # Agent tries something
+    @ag __Role Attempter $agent
+    @att __Role Attempt $attempt
+    @process __Role Process Attempting
+    @result __Bundle $ag $att $process
+    return $result
+end
+
+@undergoes:undergoes graph entity process
+    # Entity undergoes process
+    @ent __Role Undergoer $entity
+    @proc __Role Process $process
+    @relation __Role Relation Undergoing
+    @result __Bundle $ent $proc $relation
+    return $result
+end
+
+@understandIn:understandIn graph entity context
+    # Entity understood in context
+    @ent __Role Entity $entity
+    @ctx __Role Context $context
+    @relation __Role Relation Understanding
+    @result __Bundle $ent $ctx $relation
+    return $result
+end
+
+@understands:understands graph agent understanding
+    # Agent understands something
+    @ag __Role Understander $agent
+    @under __Role Understanding $understanding
+    @process __Role Process Understanding
+    @result __Bundle $ag $under $process
+    return $result
+end
+
+@undertakes:undertakes graph agent undertaking
+    # Agent undertakes action
+    @ag __Role Undertaker $agent
+    @under __Role Undertaking $undertaking
+    @process __Role Process Undertaking
+    @result __Bundle $ag $under $process
+    return $result
+end
+
+@undertook:undertook graph entity action
+    # Entity undertook action (past)
+    @ent __Role Entity $entity
+    @act __Role Action $action
+    @process __Role Process Undertaking
+    @result __Bundle $ent $act $process
+    return $result
+end
+
+@underwent:underwent graph entity process
+    # Entity underwent process (past)
+    @ent __Role Undergoer $entity
+    @proc __Role Process $process
+    @relation __Role Relation Undergoing
+    @result __Bundle $ent $proc $relation
+    return $result
+end
+
+@unequal:unequal graph entity1 entity2
+    # Entities are unequal
+    @ent1 __Role Entity $entity1
+    @ent2 __Role Entity $entity2
+    @inequality __Role Relation Inequality
+    @result __Bundle $ent1 $ent2 $inequality
+    return $result
+end
+
+@universal:universal graph trait scope
+    # Trait has universal scope
+    @trait __Role Trait $trait
+    @scope __Role Scope $scope
+    @property __Role Property Universal
+    @result __Bundle $trait $scope $property
+    return $result
+end
+
+@up:up graph entity direction
+    # Entity moves up in direction
+    @ent __Role Entity $entity
+    @dir __Role Direction $direction
+    @relation __Role Relation Upward
+    @result __Bundle $ent $dir $relation
+    return $result
+end
+
+@usedInContext:usedInContext graph artifact context
+    # Artifact used in context
+    @art __Role Artifact $artifact
+    @ctx __Role Context $context
+    @relation __Role Relation Usage
+    @result __Bundle $art $ctx $relation
+    return $result
+end
+
+@usesDistinctTerm:usesDistinctTerm graph system term
+    # System uses distinct term
+    @sys __Role System $system
+    @term __Role Term $term
+    @relation __Role Relation Terminology
+    @result __Bundle $sys $term $relation
+    return $result
+end
+
+@usesSameTerm:usesSameTerm graph system term
+    # System uses same term
+    @sys __Role System $system
+    @term __Role Term $term
+    @relation __Role Relation Terminology
+    @result __Bundle $sys $term $relation
+    return $result
+end
+
+@using:using graph action instrument
+    # Action using instrument
+    @act __Role Action $action
+    @inst __Role Instrument $instrument
+    @relation __Role Relation Instrumentality
+    @result __Bundle $act $inst $relation
+    return $result
+end
+
+@via:via graph process medium
+    # Process occurs via medium
+    @proc __Role Process $process
+    @med __Role Medium $medium
+    @relation __Role Relation Via
+    @result __Bundle $proc $med $relation
+    return $result
+end
+
+@walked:walked graph entity manner
+    # Entity walked (locomotion)
+    @ent __Role Entity $entity
+    @man __Role Manner $manner
+    @process __Role Process Walking
+    @result __Bundle $ent $man $process
+    return $result
+end
+
+@wasPartOf:wasPartOf graph part whole
+    # Part was part of whole
+    @part __Role Part $part
+    @whole __Role Whole $whole
+    @relation __Role Relation PartOf
+    @result __Bundle $part $whole $relation
+    return $result
+end
+
+@works:works graph agent activity
+    # Agent works on activity
+    @ag __Role Worker $agent
+    @act __Role Activity $activity
+    @process __Role Process Working
+    @result __Bundle $ag $act $process
+    return $result
+end
+
+
+# ============================================================================
+# End of Operator Definitions
+# ============================================================================
+
 
 
 # ============================================================================

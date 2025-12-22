@@ -22,6 +22,10 @@ const BUILTIN_OPERATORS = new Set([
   'Exception',
   'mutuallyExclusive'
 ]);
+// Planning (solve-as-planning output facts)
+BUILTIN_OPERATORS.add('planStep');
+BUILTIN_OPERATORS.add('planAction');
+BUILTIN_OPERATORS.add('plan');
 for (const op of BOOTSTRAP_OPERATORS) {
   BUILTIN_OPERATORS.add(op);
 }
