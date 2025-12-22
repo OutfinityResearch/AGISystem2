@@ -82,6 +82,12 @@ const HDC_STRATEGIES = [
   'metric-affine'
 ];
 
+const GEOMETRY_VARIANTS = {
+  'dense-binary': [2048, 4096],
+  'sparse-polynomial': [4, 8],
+  'metric-affine': [32, 64]
+};
+
 const REASONING_PRIORITIES = [
   'symbolicPriority',
   'holographicPriority'
@@ -500,11 +506,12 @@ function createReport() {
   };
 }
 
-async function runCombination(strategyId, reasoningPriority, basePlan, stressPlan, fileReports) {
-  const label = `${strategyId}/${reasoningPriority}`;
+async function runCombination(strategyId, reasoningPriority, geometry, basePlan, stressPlan, fileReports) {
+  const label = `${strategyId}/${geometry}/${reasoningPriority}`;
 
   const session = new Session({
     hdcStrategy: strategyId,
+    geometry,
     reasoningPriority,
     reasoningProfile: 'theoryDriven',
     rejectContradictions: true
@@ -543,9 +550,17 @@ async function runCombination(strategyId, reasoningPriority, basePlan, stressPla
 function buildCombos() {
   const comboArg = getArgValue('--combo');
   if (comboArg) {
-    const [strategyId, reasoningPriority] = comboArg.split('/');
+    const parts = comboArg.split('/');
+    const strategyId = parts[0];
+    const geometry = parts.length === 3 ? parseInt(parts[1], 10) : null;
+    const reasoningPriority = parts.length === 3 ? parts[2] : parts[1];
     if (strategyId && reasoningPriority) {
-      return [{ strategyId, reasoningPriority }];
+      const fallbackGeometry = GEOMETRY_VARIANTS[strategyId]?.[0] ?? null;
+      return [{
+        strategyId,
+        reasoningPriority,
+        geometry: Number.isFinite(geometry) ? geometry : fallbackGeometry
+      }];
     }
   }
 
@@ -555,7 +570,7 @@ function buildCombos() {
 
   // Default is now --full (all combos), use --fast for single combo
   if (fastRun && !strategies && !priorities) {
-    return [{ strategyId: 'dense-binary', reasoningPriority: 'holographicPriority' }];
+    return [{ strategyId: 'dense-binary', reasoningPriority: 'holographicPriority', geometry: 2048 }];
   }
 
   const strategyList = strategies || (fastRun ? ['dense-binary'] : HDC_STRATEGIES);
@@ -563,8 +578,11 @@ function buildCombos() {
 
   const combos = [];
   for (const strategyId of strategyList) {
+    const geometries = GEOMETRY_VARIANTS[strategyId] || [];
     for (const reasoningPriority of priorityList) {
-      combos.push({ strategyId, reasoningPriority });
+      for (const geometry of geometries) {
+        combos.push({ strategyId, reasoningPriority, geometry });
+      }
     }
   }
   return combos;
@@ -612,11 +630,11 @@ async function runWorker() {
     process.exitCode = 1;
     return;
   }
-  const { strategyId, reasoningPriority } = combos[0];
+  const { strategyId, reasoningPriority, geometry } = combos[0];
   const basePlan = await buildConfigPlan();
   const stressPlan = await buildStressPlan();
   const fileReports = new Map();
-  const result = await runCombination(strategyId, reasoningPriority, basePlan, stressPlan, fileReports);
+  const result = await runCombination(strategyId, reasoningPriority, geometry, basePlan, stressPlan, fileReports);
   const fileReportObj = REPORT_FILES ? Object.fromEntries([...fileReports.entries()]) : null;
   const serializeReport = (report) => ({
     loadedCount: report.loadedCount,
@@ -645,7 +663,7 @@ async function runParallel(combos) {
   // Create label to index mapping
   const labelToIdx = new Map();
   for (let i = 0; i < numWorkers; i++) {
-    const label = `${combos[i].strategyId}/${combos[i].reasoningPriority}`;
+    const label = `${combos[i].strategyId}/${combos[i].geometry}/${combos[i].reasoningPriority}`;
     labelToIdx.set(label, i);
   }
 
@@ -656,7 +674,7 @@ async function runParallel(combos) {
   if (useInPlace) {
     console.log(`${COLORS.bold}${COLORS.bgBlue} Parallel Execution (${numWorkers} workers) ${COLORS.reset}\n`);
     for (let i = 0; i < numWorkers; i++) {
-      const label = `${combos[i].strategyId}/${combos[i].reasoningPriority}`;
+      const label = `${combos[i].strategyId}/${combos[i].geometry}/${combos[i].reasoningPriority}`;
       workerLines[i] = `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset} ${COLORS.dim}starting...${COLORS.reset}`;
       console.log(workerLines[i]);
     }
@@ -700,10 +718,8 @@ async function runParallel(combos) {
       const args = [
         scriptPath,
         '--worker',
-        '--strategy',
-        combo.strategyId,
-        '--priority',
-        combo.reasoningPriority
+        '--combo',
+        `${combo.strategyId}/${combo.geometry}/${combo.reasoningPriority}`
       ];
       if (i === 0) args.push('--report-files');
       const child = spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'] });
@@ -713,14 +729,14 @@ async function runParallel(combos) {
       child.on('error', reject);
       child.on('close', code => {
         if (code !== 0) {
-          const label = `${combo.strategyId}/${combo.reasoningPriority}`;
+          const label = `${combo.strategyId}/${combo.geometry}/${combo.reasoningPriority}`;
           updateLine(i, `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset} ${COLORS.red}${COLORS.bold}✗ failed${COLORS.reset}`);
-          reject(new Error(`Worker failed: ${combo.strategyId}/${combo.reasoningPriority}`));
+          reject(new Error(`Worker failed: ${combo.strategyId}/${combo.geometry}/${combo.reasoningPriority}`));
           return;
         }
         try {
           const parsed = JSON.parse(stdout.trim());
-          const label = `${combo.strategyId}/${combo.reasoningPriority}`;
+          const label = `${combo.strategyId}/${combo.geometry}/${combo.reasoningPriority}`;
           updateLine(i, `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset} ${COLORS.green}${COLORS.bold}✓ done${COLORS.reset} ${COLORS.dim}(${formatDuration(parsed.totalMs)})${COLORS.reset}`);
           resolve(parsed);
         } catch (err) {
@@ -833,28 +849,34 @@ async function main() {
 
   const fileOps = await writeErrorFiles(fileReports, basePlan, stressPlan);
 
-  const speedRows = summaries.map(entry => ([
-    entry.label,
-    formatDuration(entry.totalMs)
-  ]));
+  const speedRows = [...summaries]
+    .sort((a, b) => a.totalMs - b.totalMs)
+    .map(entry => ([
+      entry.label,
+      formatDuration(entry.totalMs)
+    ]));
   console.log('\n=== Speed Summary ===');
   console.log(formatSummaryTable(speedRows, ['run', 'duration']));
 
-  const baseRows = summaries.map(entry => ([
-    entry.label,
-    `${entry.baseLoaded}/${entry.baseTotal}`
-  ]));
+  const baseRows = [...summaries]
+    .sort((a, b) => a.totalMs - b.totalMs)
+    .map(entry => ([
+      entry.label,
+      `${entry.baseLoaded}/${entry.baseTotal}`
+    ]));
   console.log('\n=== Base Theory Load Summary ===');
   console.log(formatSummaryTable(baseRows, ['run', 'loaded']));
 
-  const stressRows = summaries.map(entry => ([
-    entry.label,
-    String(entry.stressIssues.syntax),
-    String(entry.stressMissingDeps),
-    String(entry.stressIssues.contradiction),
-    String(entry.stressIssues.load),
-    String(entry.stressIssues.unknown)
-  ]));
+  const stressRows = [...summaries]
+    .sort((a, b) => a.totalMs - b.totalMs)
+    .map(entry => ([
+      entry.label,
+      String(entry.stressIssues.syntax),
+      String(entry.stressMissingDeps),
+      String(entry.stressIssues.contradiction),
+      String(entry.stressIssues.load),
+      String(entry.stressIssues.unknown)
+    ]));
   console.log('\n=== Stress Theory Issues Summary ===');
   console.log(formatSummaryTable(
     stressRows,

@@ -35,6 +35,23 @@ function formatDuration(ms) {
   return `${(ms / 1000).toFixed(2)}s`;
 }
 
+function formatSummaryTable(rows, headers) {
+  const widths = headers.map(h => h.length);
+  for (const row of rows) {
+    row.forEach((cell, idx) => {
+      if (cell.length > widths[idx]) widths[idx] = cell.length;
+    });
+  }
+  const pad = (text, width) => text.padEnd(width);
+  const lines = [];
+  lines.push(headers.map((h, i) => pad(h, widths[i])).join(' | '));
+  lines.push(headers.map((_, i) => '-'.repeat(widths[i])).join('-|-'));
+  for (const row of rows) {
+    lines.push(row.map((cell, i) => pad(cell, widths[i])).join(' | '));
+  }
+  return lines.join('\n');
+}
+
 /**
  * Load Core theories from config/Core
  */
@@ -232,6 +249,21 @@ async function runParallelSessions(cases, configurations, verbose = false) {
     console.log(`${COLORS.cyan}Session ${session.sessionId}${COLORS.reset} (${COLORS.dim}${session.hdcStrategy}/${session.geometry}@${priorityLabel}${COLORS.reset}): ${COLORS.green}${session.successful}✓${COLORS.reset} ${COLORS.red}${session.failed}✗${COLORS.reset} ${COLORS.dim}[${formatDuration(session.totalDuration)}] ${successRate}% success${COLORS.reset} ${speedMark}`);
   }
 
+  const summaryRows = [...sessionResults]
+    .sort((a, b) => a.totalDuration - b.totalDuration)
+    .map((session) => {
+      const priorityLabel = session.reasoningPriority.replace('Priority', '');
+      const label = `${session.hdcStrategy}/${session.geometry}/${priorityLabel}`;
+      const successRate = ((session.successful / cases.length) * 100).toFixed(0);
+      return [
+        label,
+        `${session.successful}/${cases.length} (${successRate}%)`,
+        formatDuration(session.totalDuration)
+      ];
+    });
+  console.log(`\n${COLORS.bright}Session Summary:${COLORS.reset}`);
+  console.log(formatSummaryTable(summaryRows, ['run', 'success', 'duration']));
+
   // ========================================================================
   // SPEED COMPARISON
   // ========================================================================
@@ -344,15 +376,23 @@ async function main() {
       process.exit(1);
     }
 
-    // Define 6 parallel configurations (3 strategies × 2 reasoning priorities)
-    const configurations = [
-      { hdcStrategy: 'dense-binary', geometry: 2048, reasoningPriority: REASONING_PRIORITY.SYMBOLIC },
-      { hdcStrategy: 'dense-binary', geometry: 2048, reasoningPriority: REASONING_PRIORITY.HOLOGRAPHIC },
-      { hdcStrategy: 'sparse-polynomial', geometry: 4, reasoningPriority: REASONING_PRIORITY.SYMBOLIC },
-      { hdcStrategy: 'sparse-polynomial', geometry: 4, reasoningPriority: REASONING_PRIORITY.HOLOGRAPHIC },
-      { hdcStrategy: 'metric-affine', geometry: 32, reasoningPriority: REASONING_PRIORITY.SYMBOLIC },
-      { hdcStrategy: 'metric-affine', geometry: 32, reasoningPriority: REASONING_PRIORITY.HOLOGRAPHIC }
-    ];
+    // Define 12 parallel configurations (3 strategies × 2 priorities × 2 geometries)
+    const geometryVariants = {
+      'dense-binary': [2048, 4096],
+      'sparse-polynomial': [4, 8],
+      'metric-affine': [32, 64]
+    };
+    const priorities = [REASONING_PRIORITY.SYMBOLIC, REASONING_PRIORITY.HOLOGRAPHIC];
+    const strategies = Object.keys(geometryVariants);
+    const configurations = [];
+
+    for (const hdcStrategy of strategies) {
+      for (const reasoningPriority of priorities) {
+        for (const geometry of geometryVariants[hdcStrategy]) {
+          configurations.push({ hdcStrategy, geometry, reasoningPriority });
+        }
+      }
+    }
 
     await runParallelSessions(cases, configurations, verbose);
 
