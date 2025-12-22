@@ -11,6 +11,7 @@
  *   node evalSuite/run.js --strategy=dense-binary   # Run with specific strategy only
  *   node evalSuite/run.js --compare                 # Run with both strategies and compare (default)
  *   node evalSuite/run.js --all-modes               # Run with all 4 configurations (2 strategies × 2 reasoning priorities)
+ *   node evalSuite/run.js --full                    # Run with 12 configurations (3 strategies × 2 priorities × 2 geometries)
  *   node evalSuite/run.js --priority=holographicPriority  # Run with specific reasoning priority
  *   node evalSuite/run.js --dense-dim=1024          # Set dense-binary vector dimension (default: 2048)
  *   node evalSuite/run.js --sparse-k=6              # Set sparse-polynomial exponent count (default: 4)
@@ -22,6 +23,7 @@
  * Configurations:
  *   HDC Strategies: dense-binary, sparse-polynomial, metric-affine
  *   Reasoning Priorities: symbolicPriority (default), holographicPriority
+ *   Full Mode Geometry: dense 2048/4096, sparse k=4/8, metric 32/64 (or 2x of provided values)
  */
 
 import { discoverSuites, loadSuite } from './lib/loader.mjs';
@@ -42,6 +44,7 @@ import { REASONING_PRIORITY } from '../src/core/constants.mjs';
 const args = process.argv.slice(2);
 const verbose = args.includes('--verbose') || args.includes('-v');
 const allModes = args.includes('--all-modes') || args.includes('--4way');
+const fullModes = args.includes('--full');
 const compareMode = args.includes('--compare') || !args.some(a => a.startsWith('--strategy='));
 
 // Extract specific strategy if provided
@@ -146,36 +149,53 @@ async function main() {
     for (const strategy of strategiesToRun) {
       for (const priority of prioritiesToRun) {
         // Use appropriate geometry for each strategy
-        let geometry;
+        const geometries = [];
         if (strategy === 'sparse-polynomial') {
-          geometry = sparseK;
+          geometries.push(sparseK);
+          if (fullModes) geometries.push(sparseK * 2);
         } else if (strategy === 'metric-affine') {
-          geometry = metricDim;
+          geometries.push(metricDim);
+          if (fullModes) geometries.push(metricDim * 2);
         } else {
-          geometry = denseDim;
+          geometries.push(denseDim);
+          if (fullModes) geometries.push(denseDim * 2);
         }
-        configurations.push({ strategy, priority, geometry });
+        for (const geometry of geometries) {
+          configurations.push({ strategy, priority, geometry });
+        }
       }
     }
 
-    const configNames = configurations.map(c => `${c.strategy}/${c.priority.replace('Priority', '')}`);
+    const strategyOrder = ['dense-binary', 'sparse-polynomial', 'metric-affine'];
+    const priorityOrder = [REASONING_PRIORITY.SYMBOLIC, REASONING_PRIORITY.HOLOGRAPHIC];
+    configurations.sort((a, b) => {
+      const strategyDiff = strategyOrder.indexOf(a.strategy) - strategyOrder.indexOf(b.strategy);
+      if (strategyDiff !== 0) return strategyDiff;
+      const geometryDiff = a.geometry - b.geometry;
+      if (geometryDiff !== 0) return geometryDiff;
+      return priorityOrder.indexOf(a.priority) - priorityOrder.indexOf(b.priority);
+    });
+
+    const configNames = configurations.map(c => `${c.strategy}(${c.geometry})/${c.priority.replace('Priority', '')}`);
     console.log(`Running with ${configurations.length} configuration(s): ${configNames.join(', ')}`);
-    if (denseDimArg || sparseKArg || metricDimArg) {
+    if (fullModes) {
+      console.log(`Geometry: dense-dim=${denseDim}/${denseDim * 2}, sparse-k=${sparseK}/${sparseK * 2}, metric-dim=${metricDim}/${metricDim * 2}`);
+    } else {
       console.log(`Geometry: dense-dim=${denseDim}, sparse-k=${sparseK}, metric-dim=${metricDim}`);
     }
 
-    // Results by configuration (key = "strategy/priority")
+    // Results by configuration (key = "strategy/geometry/priority")
     const resultsByConfig = {};
 
     // Run all suites for each configuration
     for (const config of configurations) {
       if (interrupted) break;
 
-      const configKey = `${config.strategy}/${config.priority}`;
+      const configKey = `${config.strategy}/${config.geometry}/${config.priority}`;
 
       console.log();
       console.log(`\x1b[1m\x1b[35m${'━'.repeat(80)}\x1b[0m`);
-      console.log(`\x1b[1m\x1b[35mConfiguration: ${config.strategy} + ${config.priority}\x1b[0m`);
+      console.log(`\x1b[1m\x1b[35mConfiguration: ${config.strategy} (${config.geometry}) + ${config.priority}\x1b[0m`);
       console.log(`\x1b[35m${'━'.repeat(80)}\x1b[0m`);
 
       resultsByConfig[configKey] = [];
@@ -222,7 +242,8 @@ async function main() {
             summary,
             cases: suite.cases,
             strategyId: config.strategy,
-            reasoningPriority: config.priority
+            reasoningPriority: config.priority,
+            geometry: config.geometry
           });
 
         } catch (err) {

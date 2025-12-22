@@ -517,31 +517,22 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
     }
   }
 
-  // Comparison table header
-  console.log(`${colors.bold}${colors.cyan}Per-Configuration Comparison:${colors.reset}`);
-  console.log();
-  console.log(`${colors.dim}Format: Pass%/HDC%  KB / Sim  Time${colors.reset}`);
-
   // Shorten strategy names for display (use + instead of / to avoid confusion with value separators)
   const shortStrategyName = (id) => {
-    return id
+    const parts = id.split('/');
+    const strategyId = parts[0] || id;
+    const geometry = parts.length === 3 ? parts[1] : null;
+    const priorityId = parts.length === 3 ? parts[2] : parts[1];
+    const strategyLabel = strategyId
       .replace('dense-binary', 'dense')
       .replace('sparse-polynomial', 'sparse')
+      .replace('metric-affine', 'metric');
+    const priorityLabel = (priorityId || '')
       .replace('symbolicPriority', 'symbolic')
-      .replace('holographicPriority', 'holographic')
-      .replace('/', '+');
+      .replace('holographicPriority', 'holographic');
+    const geometryLabel = geometry ? `(${geometry})` : '';
+    return `${strategyLabel}${geometryLabel}+${priorityLabel}`;
   };
-
-  // Build header row - each cell width to match data
-  // Data format: "100%/100%  12K / 5K    23ms" = 29 chars
-  const dataColW = 29;
-  let headerRow = `${'Suite'.padEnd(18)}`;
-  for (const strategyId of strategies) {
-    const shortName = shortStrategyName(strategyId);
-    headerRow += ` ${colors.gray}│${colors.reset} ${shortName.padEnd(dataColW)}`;
-  }
-  console.log(`${colors.bold}${headerRow}${colors.reset}`);
-  console.log(`${colors.dim}${'─'.repeat(18 + (dataColW + 3) * strategies.length)}${colors.reset}`);
 
   // Aggregated stats per strategy for final comparison
   const strategyTotals = {};
@@ -572,6 +563,58 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
     }
   }
 
+  for (const [suiteKey] of Object.entries(suiteComparison)) {
+    for (const strategyId of strategies) {
+      const summary = suiteSummaries[suiteKey][strategyId];
+      if (!summary) continue;
+
+      const stats = summary.reasoningStats || {};
+      const durationMs = summary.durationMs || 0;
+      const hdcSucc = (stats.hdcSuccesses || 0) + (stats.hdcUnbindSuccesses || 0) + (stats.hdcProofSuccesses || 0);
+      const hdcTot = (stats.hdcQueries || 0) + (stats.holographicQueries || 0) + (stats.holographicProofs || 0);
+      const scans = stats.kbScans || 0;
+
+      strategyTotals[strategyId].passed += summary.passed;
+      strategyTotals[strategyId].total += summary.total;
+      strategyTotals[strategyId].hdcSuccesses += hdcSucc;
+      strategyTotals[strategyId].hdcTotal += hdcTot;
+      strategyTotals[strategyId].kbScans += scans;
+      strategyTotals[strategyId].simChecks += stats.similarityChecks || 0;
+      strategyTotals[strategyId].totalMs += durationMs;
+
+      const results = suiteResultsMap[suiteKey]?.[strategyId] || [];
+      for (const res of results) {
+        if (res.passed) continue;
+        const phases = res.phases || {};
+        if (!phases.nlToDsl?.passed && !phases.nlToDsl?.skipped) {
+          strategyTotals[strategyId].failedNlParsing++;
+        } else if (!phases.reasoning?.passed && !phases.reasoning?.skipped) {
+          strategyTotals[strategyId].failedReasoning++;
+        } else if (!phases.dslToNl?.passed && !phases.dslToNl?.skipped) {
+          strategyTotals[strategyId].failedNlTranslation++;
+        }
+      }
+    }
+  }
+
+  const orderedStrategies = [...strategies].sort((a, b) => strategyTotals[a].totalMs - strategyTotals[b].totalMs);
+
+  // Comparison table header
+  console.log(`${colors.bold}${colors.cyan}Per-Configuration Comparison:${colors.reset}`);
+  console.log();
+  console.log(`${colors.dim}Format: Pass%/HDC%  KB / Sim  Time${colors.reset}`);
+
+  // Build header row - each cell width to match data
+  // Data format: "100%/100%  12K / 5K    23ms" = 29 chars
+  const dataColW = 29;
+  let headerRow = `${'Suite'.padEnd(18)}`;
+  for (const strategyId of orderedStrategies) {
+    const shortName = shortStrategyName(strategyId);
+    headerRow += ` ${colors.gray}│${colors.reset} ${shortName.padEnd(dataColW)}`;
+  }
+  console.log(`${colors.bold}${headerRow}${colors.reset}`);
+  console.log(`${colors.dim}${'─'.repeat(18 + (dataColW + 3) * orderedStrategies.length)}${colors.reset}`);
+
   // Print each suite row
   for (const [suiteKey, comp] of Object.entries(suiteComparison)) {
     const suiteNum = suiteKey.match(/^suite(\d+)/)?.[1] || '';
@@ -581,7 +624,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
 
     let row = `${displayName.padEnd(18)}`;
 
-    for (const strategyId of strategies) {
+    for (const strategyId of orderedStrategies) {
       const summary = suiteSummaries[suiteKey][strategyId];
       if (!summary) {
         row += ` ${colors.gray}│${colors.reset} ${'N/A'.padEnd(dataColW)}`;
@@ -599,33 +642,6 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       // kbScans is the real measure of reasoning work (fact iterations)
       const scans = stats.kbScans || 0;
 
-      // Aggregate totals
-      strategyTotals[strategyId].passed += summary.passed;
-      strategyTotals[strategyId].total += summary.total;
-      strategyTotals[strategyId].hdcSuccesses += hdcSucc;
-      strategyTotals[strategyId].hdcTotal += hdcTot;
-      strategyTotals[strategyId].kbScans += scans;
-      strategyTotals[strategyId].simChecks += stats.similarityChecks || 0;
-      strategyTotals[strategyId].totalMs += durationMs;
-
-      // Count failures by phase for this suite/config
-      const results = suiteResultsMap[suiteKey]?.[strategyId] || [];
-      for (const res of results) {
-        if (res.passed) continue;
-        const phases = res.phases || {};
-        // Check where it failed
-        if (!phases.nlToDsl?.passed && !phases.nlToDsl?.skipped) {
-          // NL parsing/transformation failed
-          strategyTotals[strategyId].failedNlParsing++;
-        } else if (!phases.reasoning?.passed && !phases.reasoning?.skipped) {
-          // Reasoning failed
-          strategyTotals[strategyId].failedReasoning++;
-        } else if (!phases.dslToNl?.passed && !phases.dslToNl?.skipped) {
-          // NL output/translation verification failed
-          strategyTotals[strategyId].failedNlTranslation++;
-        }
-      }
-
       const statusColor = pct === 100 ? colors.green : pct >= 50 ? colors.yellow : colors.red;
       const hdcColor = hdcPct >= 50 ? colors.cyan : colors.dim;
       // Format: "100%/100%  12K / 5K   23ms"
@@ -639,7 +655,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
     console.log(row);
   }
 
-  console.log(`${colors.dim}${'─'.repeat(18 + (dataColW + 3) * strategies.length)}${colors.reset}`);
+  console.log(`${colors.dim}${'─'.repeat(18 + (dataColW + 3) * orderedStrategies.length)}${colors.reset}`);
   console.log();
 
   // Overall conclusions as compact table
@@ -651,15 +667,15 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
 
   // Header row
   let conclusionHeader = `${'Metric'.padEnd(12)}`;
-  for (const strategyId of strategies) {
+  for (const strategyId of orderedStrategies) {
     conclusionHeader += ` ${colors.gray}│${colors.reset} ${shortStrategyName(strategyId).padEnd(colW)}`;
   }
   console.log(`${colors.bold}${conclusionHeader}${colors.reset}`);
-  console.log(`${colors.dim}${'─'.repeat(12 + (colW + 3) * strategies.length)}${colors.reset}`);
+  console.log(`${colors.dim}${'─'.repeat(12 + (colW + 3) * orderedStrategies.length)}${colors.reset}`);
 
   // Pass Rate row
   let passRow = `${'Pass Rate'.padEnd(12)}`;
-  for (const strategyId of strategies) {
+  for (const strategyId of orderedStrategies) {
     const totals = strategyTotals[strategyId];
     const pct = totals.total > 0 ? Math.floor((totals.passed / totals.total) * 100) : 0;
     const statusColor = pct === 100 ? colors.green : pct >= 50 ? colors.yellow : colors.red;
@@ -670,7 +686,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
 
   // HDC% row
   let hdcRow = `${'HDC%'.padEnd(12)}`;
-  for (const strategyId of strategies) {
+  for (const strategyId of orderedStrategies) {
     const totals = strategyTotals[strategyId];
     const hdcPct = totals.hdcTotal > 0 ? Math.floor((totals.hdcSuccesses / totals.hdcTotal) * 100) : 0;
     const hdcColor = hdcPct >= 50 ? colors.cyan : colors.dim;
@@ -681,7 +697,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
 
   // KB Scans row
   let scansRow = `${'KB Scans'.padEnd(12)}`;
-  for (const strategyId of strategies) {
+  for (const strategyId of orderedStrategies) {
     const totals = strategyTotals[strategyId];
     const cellContent = formatNum(totals.kbScans).padEnd(colW);
     scansRow += ` ${colors.gray}│${colors.reset} ${cellContent}`;
@@ -690,7 +706,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
 
   // Sim Checks row
   let simRow = `${'Sim Checks'.padEnd(12)}`;
-  for (const strategyId of strategies) {
+  for (const strategyId of orderedStrategies) {
     const totals = strategyTotals[strategyId];
     const cellContent = formatNum(totals.simChecks).padEnd(colW);
     simRow += ` ${colors.gray}│${colors.reset} ${cellContent}`;
@@ -699,7 +715,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
 
   // Time row
   let timeRow = `${'Time'.padEnd(12)}`;
-  for (const strategyId of strategies) {
+  for (const strategyId of orderedStrategies) {
     const totals = strategyTotals[strategyId];
     const cellContent = (totals.totalMs + 'ms').padEnd(colW);
     timeRow += ` ${colors.gray}│${colors.reset} ${colors.cyan}${cellContent}${colors.reset}`;
@@ -707,19 +723,19 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
   console.log(timeRow);
 
   // Check if there are any failures to show breakdown
-  const hasAnyFailures = strategies.some(s => {
+  const hasAnyFailures = orderedStrategies.some(s => {
     const t = strategyTotals[s];
     return t.failedReasoning > 0 || t.failedNlTranslation > 0 || t.failedNlParsing > 0;
   });
 
   if (hasAnyFailures) {
     // Separator before failure breakdown
-    console.log(`${colors.dim}${'─'.repeat(12 + (colW + 3) * strategies.length)}${colors.reset}`);
+    console.log(`${colors.dim}${'─'.repeat(12 + (colW + 3) * orderedStrategies.length)}${colors.reset}`);
     console.log(`${colors.dim}Failure breakdown (% of total tests):${colors.reset}`);
 
     // Fail Reasoning row (% of total)
     let failReasonRow = `${'Fail Reason'.padEnd(12)}`;
-    for (const strategyId of strategies) {
+    for (const strategyId of orderedStrategies) {
       const totals = strategyTotals[strategyId];
       const pct = totals.total > 0 ? Math.round((totals.failedReasoning / totals.total) * 100) : 0;
       const cellContent = (pct > 0 ? `${pct}%` : '-').padEnd(colW);
@@ -730,7 +746,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
 
     // Fail NL Output row (% of total)
     let failNlOutRow = `${'Fail NL Out'.padEnd(12)}`;
-    for (const strategyId of strategies) {
+    for (const strategyId of orderedStrategies) {
       const totals = strategyTotals[strategyId];
       const pct = totals.total > 0 ? Math.round((totals.failedNlTranslation / totals.total) * 100) : 0;
       const cellContent = (pct > 0 ? `${pct}%` : '-').padEnd(colW);
@@ -741,7 +757,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
 
     // Fail NL Parse row (% of total)
     let failNlParseRow = `${'Fail Parse'.padEnd(12)}`;
-    for (const strategyId of strategies) {
+    for (const strategyId of orderedStrategies) {
       const totals = strategyTotals[strategyId];
       const pct = totals.total > 0 ? Math.round((totals.failedNlParsing / totals.total) * 100) : 0;
       const cellContent = (pct > 0 ? `${pct}%` : '-').padEnd(colW);
@@ -751,10 +767,10 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
     console.log(failNlParseRow);
   }
 
-  console.log(`${colors.dim}${'─'.repeat(12 + (colW + 3) * strategies.length)}${colors.reset}`);
+  console.log(`${colors.dim}${'─'.repeat(12 + (colW + 3) * orderedStrategies.length)}${colors.reset}`);
 
   // Speed comparison
-  const times = strategies.map(s => ({ id: s, ms: strategyTotals[s].totalMs }));
+  const times = orderedStrategies.map(s => ({ id: s, ms: strategyTotals[s].totalMs }));
   times.sort((a, b) => a.ms - b.ms);
   const fastest = times[0];
   const slowest = times[times.length - 1];
