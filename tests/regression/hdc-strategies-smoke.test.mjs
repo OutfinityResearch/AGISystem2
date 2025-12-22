@@ -11,7 +11,7 @@ test('HDC strategies smoke: sessions can learn/prove with each strategy', async 
         geometry: 2048,
         hdcStrategy: strategy,
         reasoningPriority: 'symbolicPriority',
-        reasoningProfile: 'legacy'
+        reasoningProfile: 'theoryDriven'
       });
 
       session.learn('isA Socrates Human');
@@ -20,4 +20,3 @@ test('HDC strategies smoke: sessions can learn/prove with each strategy', async 
     });
   }
 });
-

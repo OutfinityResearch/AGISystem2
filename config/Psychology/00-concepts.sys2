@@ -1,133 +1,256 @@
-# Psychology - Fundamental Concepts
+# Psychology - Domain Concepts
+# Foundational psychological concepts with proper graph semantics
 
-# Emotional States
-Emotion isA __State
-Fear isA Emotion
-Anger isA Emotion
-Joy isA Emotion
-Sadness isA Emotion
-Disgust isA Emotion
-Surprise isA Emotion
-Anxiety isA Emotion
-Guilt isA Emotion
-Shame isA Emotion
-Pride isA Emotion
+# ===== Cognitive Processes =====
 
-# Mood States
-Mood isA __State
-PositiveMood isA Mood
-NegativeMood isA Mood
-DepressedMood isA NegativeMood
-ElevatedMood isA PositiveMood
+@Cognition:Cognition graph process
+    # Mental process of acquiring knowledge
+    @proc __Role Process $process
+    @type __Role Type Cognition
+    @mental __Role Nature MentalProcess
+    @information __Role Content InformationProcessing
+    @concept __Bundle $proc $type $mental $information
+    return $concept
+end
 
-# Cognitive Concepts
-Cognition isA __Category
-Thinking isA Cognition
-Reasoning isA Cognition
-ProblemSolving isA Cognition
-DecisionMaking isA Cognition
-Judgment isA __Category
+@Perception:Perception graph process
+    # Interpretation of sensory information
+    @proc __Role Process $process
+    @type __Role Type Perception
+    @sensory __Role Input SensoryStimuli
+    @interpretation __Role Operation InterpretsSensations
+    @concept __Bundle $proc $type $sensory $interpretation
+    return $concept
+end
 
-# Memory Systems
-Memory isA __Category
-WorkingMemory isA Memory
-LongTermMemory isA Memory
-ShortTermMemory isA Memory
-EpisodicMemory isA LongTermMemory
-SemanticMemory isA LongTermMemory
-ProceduralMemory isA LongTermMemory
+@Attention:Attention graph process
+    # Selective focus of consciousness
+    @proc __Role Process $process
+    @type __Role Type Attention
+    @selective __Role Property FocusedAwareness
+    @limited __Role Constraint LimitedCapacity
+    @concept __Bundle $proc $type $selective $limited
+    return $concept
+end
 
-# Attention Types
-Attention isA __Category
-SelectiveAttention isA Attention
-DividedAttention isA Attention
-SustainedAttention isA Attention
-FocusedAttention isA SelectiveAttention
+@Memory:Memory graph system
+    # System for encoding, storing, retrieving information
+    @sys __Role System $system
+    @type __Role Type Memory
+    @encoding __Role Function Encode
+    @storage __Role Function Store
+    @retrieval __Role Function Retrieve
+    @concept __Bundle $sys $type $encoding $storage
+    return $concept
+end
 
-# Perception
-Perception isA __Category
-VisualPerception isA Perception
-AuditoryPerception isA Perception
-TactilePerception isA Perception
-Proprioception isA Perception
-SensoryProcessing isA __Category
+@Learning:Learning graph process
+    # Acquisition of knowledge or skills
+    @proc __Role Process $process
+    @type __Role Type Learning
+    @acquisition __Role Nature AcquiresKnowledge
+    @experience __Role Cause ExperienceBased
+    @concept __Bundle $proc $type $acquisition $experience
+    return $concept
+end
 
-# Motivation
-Motivation isA __State
-IntrinsicMotivation isA Motivation
-ExtrinsicMotivation isA Motivation
-Drive isA __Category
-Goal isA __Category
-Incentive isA __Category
+@Thinking:Thinking graph process
+    # Mental manipulation of information
+    @proc __Role Process $process
+    @type __Role Type Thinking
+    @mental __Role Nature MentalManipulation
+    @symbolic __Role Content Symbols
+    @concept __Bundle $proc $type $mental $symbolic
+    return $concept
+end
 
-# Personality
-Trait isA __Property
-Personality isA __Category
-Temperament isA __Category
-Character isA __Category
-BigFiveTrait isA Trait
+# ===== Emotion & Motivation =====
 
-# Learning & Conditioning
-Reinforcement isA __Category
-PositiveReinforcement isA Reinforcement
-NegativeReinforcement isA Reinforcement
-Punishment isA __Category
-Conditioning isA __Category
-ClassicalConditioning isA Conditioning
-OperantConditioning isA Conditioning
+@Emotion:Emotion graph state
+    # Affective psychological state
+    @st __Role State $state
+    @type __Role Type Emotion
+    @affective __Role Nature Affective
+    @physiological __Role Component BodyResponse
+    @subjective __Role Component SubjectiveExperience
+    @concept __Bundle $st $type $affective $physiological
+    return $concept
+end
 
-# Behavioral Concepts
-Behavior isA __Action
-AdaptiveBehavior isA Behavior
-MaladaptiveBehavior isA Behavior
-HabitualBehavior isA Behavior
-Response isA Behavior
+@Motivation:Motivation graph process
+    # Drive toward goal-directed behavior
+    @proc __Role Process $process
+    @type __Role Type Motivation
+    @drive __Role Nature Energizing
+    @goalDirected __Role Property PurposefulBehavior
+    @concept __Bundle $proc $type $drive $goalDirected
+    return $concept
+end
 
-# Clinical Psychology
-Therapy isA __Action
-CognitiveBehavioralTherapy isA Therapy
-PsychodynamicTherapy isA Therapy
-HumanisticTherapy isA Therapy
-BehaviorTherapy isA Therapy
-Psychotherapy isA Therapy
+@Mood:Mood graph state
+    # Prolonged emotional state
+    @st __Role State $state
+    @type __Role Type Mood
+    @prolonged __Role Property LongLasting
+    @diffuse __Role Property NonSpecific
+    @concept __Bundle $st $type $prolonged $diffuse
+    return $concept
+end
 
-# Psychological Disorders
-Disorder isA __State
-AnxietyDisorder isA Disorder
-MoodDisorder isA Disorder
-Depression isA MoodDisorder
-BipolarDisorder isA MoodDisorder
-SchizophreniaSpectrum isA Disorder
-PersonalityDisorder isA Disorder
-PTSD isA AnxietyDisorder
-OCD isA AnxietyDisorder
+@Affect:Affect graph experience
+    # Experience of feeling or emotion
+    @exp __Role Experience $experience
+    @type __Role Type Affect
+    @feeling __Role Nature EmotionalTone
+    @conscious __Role Property Conscious
+    @concept __Bundle $exp $type $feeling $conscious
+    return $concept
+end
 
-# Stress & Coping
-Stressor isA __Category
-Stress isA __State
-Coping isA __Action
-ProblemFocusedCoping isA Coping
-EmotionFocusedCoping isA Coping
-Resilience isA __Property
+# ===== Personality & Individual Differences =====
 
-# Self Concepts
-SelfConcept isA __Category
-SelfEsteem isA __Property
-SelfEfficacy isA __Property
-SelfAwareness isA __Property
-Identity isA __Category
+@Personality:Personality graph pattern
+    # Characteristic pattern of thoughts, feelings, behaviors
+    @pat __Role Pattern $pattern
+    @type __Role Type Personality
+    @stable __Role Property Stable
+    @individual __Role Scope IndividualDifferences
+    @concept __Bundle $pat $type $stable $individual
+    return $concept
+end
 
-# Cognitive Biases
-Bias isA __Property
-ConfirmationBias isA Bias
-AvailabilityBias isA Bias
-AnchoringBias isA Bias
-HindsightBias isA Bias
-CognitiveDistortion isA Bias
+@Trait:Trait graph characteristic
+    # Enduring personal characteristic
+    @char __Role Characteristic $characteristic
+    @type __Role Type PersonalityTrait
+    @stable __Role Property Enduring
+    @behavioral __Role Manifestation BehavioralPattern
+    @concept __Bundle $char $type $stable $behavioral
+    return $concept
+end
 
-# Social Psychology
-Attitude isA __Category
-Belief isA __Believed
-Attribution isA __Category
-Conformity isA __Category
-Persuasion isA __Category
+@Intelligence:Intelligence graph capacity
+    # Capacity for reasoning and problem-solving
+    @cap __Role Capacity $capacity
+    @type __Role Type Intelligence
+    @cognitive __Role Domain Cognition
+    @adaptive __Role Property AdaptiveProblemSolving
+    @concept __Bundle $cap $type $cognitive $adaptive
+    return $concept
+end
+
+@Attitude:Attitude graph disposition
+    # Evaluative disposition toward object
+    @disp __Role Disposition $disposition
+    @type __Role Type Attitude
+    @evaluative __Role Nature Evaluative
+    @learned __Role Origin Acquired
+    @concept __Bundle $disp $type $evaluative $learned
+    return $concept
+end
+
+# ===== Social Psychology =====
+
+@Behavior:Behavior graph action
+    # Observable action or response
+    @act __Role Action $action
+    @type __Role Type Behavior
+    @observable __Role Property Observable
+    @motivated __Role Cause Motivation
+    @concept __Bundle $act $type $observable $motivated
+    return $concept
+end
+
+@SocialInfluence:SocialInfluence graph process
+    # Change in behavior due to social factors
+    @proc __Role Process $process
+    @type __Role Type SocialInfluence
+    @social __Role Cause SocialFactors
+    @behavioral __Role Effect BehaviorChange
+    @concept __Bundle $proc $type $social $behavioral
+    return $concept
+end
+
+@Group:Group graph collective
+    # Collection of interacting individuals
+    @coll __Role Collective $collective
+    @type __Role Type SocialGroup
+    @interactive __Role Property Interdependent
+    @shared __Role Aspect SharedIdentity
+    @concept __Bundle $coll $type $interactive $shared
+    return $concept
+end
+
+@Norm:Norm graph standard
+    # Shared behavioral expectation
+    @std __Role Standard $standard
+    @type __Role Type SocialNorm
+    @shared __Role Property GroupShared
+    @prescriptive __Role Function BehaviorGuidance
+    @concept __Bundle $std $type $shared $prescriptive
+    return $concept
+end
+
+# ===== Development =====
+
+@Development:Development graph process
+    # Psychological change over lifespan
+    @proc __Role Process $process
+    @type __Role Type PsychologicalDevelopment
+    @lifespan __Role TimeScale Lifespan
+    @progressive __Role Pattern Changes
+    @concept __Bundle $proc $type $lifespan $progressive
+    return $concept
+end
+
+@Stage:Stage graph phase
+    # Developmental phase
+    @ph __Role Phase $phase
+    @type __Role Type DevelopmentalStage
+    @characteristic __Role Property StageSpecificFeatures
+    @sequential __Role Order Sequential
+    @concept __Bundle $ph $type $characteristic $sequential
+    return $concept
+end
+
+# ===== Mental Health =====
+
+@Disorder:Disorder graph condition
+    # Psychological disorder
+    @cond __Role Condition $condition
+    @type __Role Type PsychologicalDisorder
+    @dysfunctional __Role Property Maladaptive
+    @distress __Role Symptom CausesDistress
+    @concept __Bundle $cond $type $dysfunctional $distress
+    return $concept
+end
+
+@Therapy:Therapy graph intervention
+    # Psychological treatment
+    @interv __Role Intervention $intervention
+    @type __Role Type Psychotherapy
+    @therapeutic __Role Purpose TreatmentOfDisorder
+    @systematic __Role Property Structured
+    @concept __Bundle $interv $type $therapeutic $systematic
+    return $concept
+end
+
+@Stress:Stress graph state
+    # Psychological tension from demands
+    @st __Role State $state
+    @type __Role Type Stress
+    @tension __Role Nature PsychologicalTension
+    @demands __Role Cause ExternalDemands
+    @concept __Bundle $st $type $tension $demands
+    return $concept
+end
+
+@Coping:Coping graph process
+    # Managing stress
+    @proc __Role Process $process
+    @type __Role Type Coping
+    @adaptive __Role Purpose ManageStress
+    @behavioral __Role Method BehavioralStrategies
+    @concept __Bundle $proc $type $adaptive $behavioral
+    return $concept
+end

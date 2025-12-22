@@ -8,7 +8,7 @@
 export const name = 'Axiomatic Set Theory';
 export const description = 'Subset transitivity and element propagation with multi-step proofs';
 
-export const theories = ['05-logic.sys2'];
+export const theories = ['05-logic.sys2', 'Math/01-relations.sys2'];
 
 export const steps = [
   // === SETUP: Axioms as rules + concrete sets ===

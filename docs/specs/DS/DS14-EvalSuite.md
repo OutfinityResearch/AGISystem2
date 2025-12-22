@@ -215,7 +215,7 @@ export default { name, description, theories, steps };
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `action` | string | Yes | `learn`, `query`, `prove` (`explain` is reserved; not executed by the runner) |
+| `action` | string | Yes | `learn`, `query`, `prove` (`explain` is reserved; not executed by the runner; no `session.explain()` yet) |
 | `input_nl` | string | Yes | Natural language input (fact to learn, question to ask) |
 | `input_dsl` | string | Yes | Equivalent DSL (reference for all actions) |
 | `expected_nl` | string (learn/prove), string[] (query) | Yes | Expected natural language response |
@@ -243,7 +243,7 @@ export default { name, description, theories, steps };
 | `query` | Query KB with holes | `session.query()` | `input_nl`, `input_dsl` | bindings, confidence |
 | `prove` | Prove a goal (no holes!) | `session.prove()` | `input_nl`, `input_dsl` | valid, proof steps |
  
-**Note:** `explain` is reserved for future use; the current runner does not execute it.
+**Note:** `explain` is reserved for future use; the current runner does not execute it and the Session API does not expose `explain`.
 
 **Note on prove vs query:**
 - `query` uses hole patterns (e.g., `@q isA Rex ?what`) to extract unknown values
@@ -294,16 +294,12 @@ When a `learn` action encounters a fact that contradicts existing knowledge, it 
 ```javascript
 {
   success: false,
-  rejected: true,
-  contradiction: {
-    attempted: 'isA Whale Fish',
-    existing: 'Not (isA Whale Fish)',
-    reason: 'Direct negation'
-  }
+  errors: ['Contradiction rejected: ...'],
+  warnings: ['contradiction: ...']
 }
 ```
 
-NL output is generated separately via `session.describeResult(...)`.
+Current runtime surfaces contradictions via `errors`/`warnings`. NL output is generated via `session.describeResult(...)`.
 
 ### 14.5.4 Example Suite: Contradiction Detection
 
@@ -319,9 +315,7 @@ See `suite06_contradictions/cases.mjs` for comprehensive examples including:
 ## 14.6 Expected Output Format
 
 DSL→NL output is produced by `session.describeResult(...)` (via `ResponseTranslator`).
-The translator returns either:
-- a string, or
-- an object `{ text, proofText }`, which the runner coerces into `text` or `text + " Proof: " + proofText`.
+The translator returns a **string**. Proof text, when present, is appended as `" Proof: ..."`.
 
 ### 14.6.1 Learn Output
 

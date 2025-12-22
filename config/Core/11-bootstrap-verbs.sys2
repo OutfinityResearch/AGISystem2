@@ -60,6 +60,13 @@ end
     return $result
 end
 
+# sells: seller sells item to buyer (no price)
+# Types: seller:Person, item:Entity, buyer:Person
+@SellsMacro:sells graph seller item buyer
+    @result _atrans $seller $item $seller $buyer
+    return $result
+end
+
 # ===== Motion Verbs =====
 
 # go: agent goes from source to destination

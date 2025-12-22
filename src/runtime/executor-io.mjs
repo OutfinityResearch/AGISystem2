@@ -38,7 +38,9 @@ export function executeLoad(executor, stmt) {
     const previousBasePath = executor.basePath;
     executor.basePath = dirname(absolutePath);
 
-    const program = parse(content);
+    const program = executor.session?.checkDSL
+      ? executor.session.checkDSL(content, { mode: 'learn', allowHoles: true, allowNewOperators: false })
+      : parse(content);
     const result = executor.executeProgram(program);
 
     executor.trackRulesFromProgram(program);
@@ -90,4 +92,3 @@ export function executeUnload(executor, stmt) {
     statement: stmt.toString()
   };
 }
-

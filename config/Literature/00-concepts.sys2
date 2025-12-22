@@ -1,118 +1,184 @@
-# Literature - Fundamental Concepts
+# Literature - Domain Concepts
+# Foundational literary concepts with proper graph semantics
 
-# Literary Works
-Work isA __Category
-LiteraryWork isA Work
-Novel isA LiteraryWork
-Poetry isA LiteraryWork
-Drama isA LiteraryWork
-ShortStory isA LiteraryWork
-Essay isA LiteraryWork
+# ===== Literary Forms =====
 
-# Literary Actors
-Author isA __Category
-Poet isA Author
-Novelist isA Author
-Playwright isA Author
-Critic isA __Category
-Reader isA __Category
+@Literature:Literature graph art
+    # Written artistic work
+    @a __Role Art $art
+    @type __Role Type Literature
+    @written __Role Medium Written
+    @aesthetic __Role Purpose Aesthetic
+    @concept __Bundle $a $type $written $aesthetic
+    return $concept
+end
 
-# Genre Classification
-Genre isA __Category
-Fiction isA Genre
-NonFiction isA Genre
-Romance isA Fiction
-Mystery isA Fiction
-ScienceFiction isA Fiction
-Fantasy isA Fiction
-Biography isA NonFiction
+@Novel:Novel graph work
+    # Novel as literary form
+    @w __Role Work $work
+    @type __Role Type Novel
+    @prose __Role Form Prose
+    @extended __Role Length Long
+    @narrative __Role Structure Narrative
+    @concept __Bundle $w $type $prose $extended
+    return $concept
+end
 
-# Literary Elements
-Theme isA __Category
-Motif isA __Category
-Symbol isA __Category
-Imagery isA __Category
-Tone isA __Category
-Mood isA __Category
+@Poetry:Poetry graph work
+    # Poetic work
+    @w __Role Work $work
+    @type __Role Type Poetry
+    @verse __Role Form Verse
+    @rhythmic __Role Property Rhythmic
+    @figurative __Role Language Figurative
+    @concept __Bundle $w $type $verse $rhythmic
+    return $concept
+end
 
-# Narrative Structure
-Plot isA __Category
-Exposition isA Plot
-RisingAction isA Plot
-Climax isA Plot
-FallingAction isA Plot
-Resolution isA Plot
-Structure isA __Category
+@Drama:Drama graph work
+    # Dramatic work
+    @w __Role Work $work
+    @type __Role Type Drama
+    @dialogue __Role Form Dialogue
+    @performance __Role Medium Performance
+    @concept __Bundle $w $type $dialogue $performance
+    return $concept
+end
 
-# Character Concepts
-Character isA __Category
-Protagonist isA Character
-Antagonist isA Character
-FlatCharacter isA Character
-RoundCharacter isA Character
-DynamicCharacter isA Character
-StaticCharacter isA Character
+# ===== Narrative Elements =====
 
-# Setting Concepts
-Setting isA __Category
-TemporalSetting isA Setting
-SpatialSetting isA Setting
-HistoricalSetting isA TemporalSetting
-ContemporarySetting isA TemporalSetting
+@Plot:Plot graph structure
+    # Sequence of events in narrative
+    @struct __Role Structure $structure
+    @type __Role Type Plot
+    @sequential __Role Nature EventSequence
+    @causal __Role Property CausallyLinked
+    @concept __Bundle $struct $type $sequential $causal
+    return $concept
+end
 
-# Conflict Types
-Conflict isA __Category
-InternalConflict isA Conflict
-ExternalConflict isA Conflict
-PersonVsPerson isA ExternalConflict
-PersonVsSociety isA ExternalConflict
-PersonVsNature isA ExternalConflict
-PersonVsSelf isA InternalConflict
+@Character:Character graph entity
+    # Literary character
+    @ent __Role Entity $entity
+    @type __Role Type Character
+    @fictional __Role Nature Fictional
+    @agent __Role Function NarrativeAgent
+    @concept __Bundle $ent $type $fictional $agent
+    return $concept
+end
 
-# Narrative Techniques
-Narrator isA __Category
-FirstPerson isA Narrator
-ThirdPerson isA Narrator
-Omniscient isA ThirdPerson
-Limited isA ThirdPerson
-PointOfView isA __Category
+@Setting:Setting graph context
+    # Time and place of narrative
+    @ctx __Role Context $context
+    @type __Role Type Setting
+    @spatiotemporal __Role Nature TimeAndPlace
+    @contextual __Role Function Background
+    @concept __Bundle $ctx $type $spatiotemporal $contextual
+    return $concept
+end
 
-# Stylistic Devices
-Irony isA __Category
-DramaticIrony isA Irony
-VerbalIrony isA Irony
-SituationalIrony isA Irony
-Metaphor isA __Category
-Simile isA __Category
-Allegory isA __Category
+@Narrator:Narrator graph voice
+    # Narrative voice
+    @v __Role Voice $voice
+    @type __Role Type Narrator
+    @storytelling __Role Function TellsStory
+    @perspective __Role Property PointOfView
+    @concept __Bundle $v $type $storytelling $perspective
+    return $concept
+end
 
-# Intertextuality
-Intertext isA __Category
-Allusion isA Intertext
-Parody isA Intertext
-Pastiche isA Intertext
-Reference isA Intertext
+@Theme:Theme graph idea
+    # Central idea or message
+    @i __Role Idea $idea
+    @type __Role Type Theme
+    @abstract __Role Nature Abstract
+    @central __Role Property CoreIdea
+    @concept __Bundle $i $type $abstract $central
+    return $concept
+end
 
-# Critical Concepts
-Interpretation isA __Category
-Analysis isA __Category
-Claim isA __Category
-CounterClaim isA __Category
-Thesis isA Claim
-Argument isA __Category
+# ===== Literary Devices =====
 
-# Literary Movements
-LiteraryMovement isA __Category
-Romanticism isA LiteraryMovement
-Realism isA LiteraryMovement
-Modernism isA LiteraryMovement
-Postmodernism isA LiteraryMovement
-Naturalism isA LiteraryMovement
+@Metaphor:Metaphor graph device
+    # Metaphorical expression
+    @dev __Role Device $device
+    @type __Role Type Metaphor
+    @figurative __Role Nature Figurative
+    @comparative __Role Function ImplicitComparison
+    @concept __Bundle $dev $type $figurative $comparative
+    return $concept
+end
 
-# Critical Frameworks
-Framework isA __Category
-FeministCriticism isA Framework
-MarxistCriticism isA Framework
-PostcolonialCriticism isA Framework
-PsychoanalyticCriticism isA Framework
-NewCriticism isA Framework
+@Symbol:Symbol graph device
+    # Literary symbol
+    @dev __Role Device $device
+    @type __Role Type Symbol
+    @representative __Role Nature RepresentsAbstract
+    @layered __Role Property MultipleMeanings
+    @concept __Bundle $dev $type $representative $layered
+    return $concept
+end
+
+@Irony:Irony graph device
+    # Ironic expression
+    @dev __Role Device $device
+    @type __Role Type Irony
+    @contrast __Role Nature ContrastAppearanceReality
+    @rhetorical __Role Function Rhetorical
+    @concept __Bundle $dev $type $contrast $rhetorical
+    return $concept
+end
+
+# ===== Literary Concepts =====
+
+@Genre:Genre graph category
+    # Literary genre
+    @cat __Role Category $category
+    @type __Role Type Genre
+    @conventional __Role Nature Convention
+    @classificatory __Role Function ClassifiesWorks
+    @concept __Bundle $cat $type $conventional $classificatory
+    return $concept
+end
+
+@Style:Style graph manner
+    # Writing style
+    @man __Role Manner $manner
+    @type __Role Type Style
+    @distinctive __Role Property Distinctive
+    @linguistic __Role Domain Language
+    @concept __Bundle $man $type $distinctive $linguistic
+    return $concept
+end
+
+@Tone:Tone graph quality
+    # Narrative tone
+    @qual __Role Quality $quality
+    @type __Role Type Tone
+    @attitude __Role Nature Attitude
+    @expressive __Role Function ConveysAttitude
+    @concept __Bundle $qual $type $attitude $expressive
+    return $concept
+end
+
+# ===== Author & Audience =====
+
+@Author:Author graph creator
+    # Literary author
+    @creat __Role Creator $creator
+    @type __Role Type Author
+    @writer __Role Function WritesLiterature
+    @creative __Role Property Creative
+    @concept __Bundle $creat $type $writer $creative
+    return $concept
+end
+
+@Reader:Reader graph audience
+    # Literary reader
+    @aud __Role Audience $audience
+    @type __Role Type Reader
+    @interpretive __Role Activity Interpretation
+    @receptive __Role Function Receives
+    @concept __Bundle $aud $type $interpretive $receptive
+    return $concept
+end

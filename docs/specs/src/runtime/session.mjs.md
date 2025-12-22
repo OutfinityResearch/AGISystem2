@@ -1,30 +1,17 @@
-# Module Plan: src/runtime/session.js
+# Module Plan: src/runtime/session.mjs
 
-**Document Version:** 1.0
-**Status:** Specification
-**Traces To:** FS-25 to FS-33, NFS-15, NFS-49
+**Document Version:** 1.1  
+**Status:** Implemented
 
 ---
 
 ## 1. Purpose
 
-Provides the main API surface for AGISystem2. Sessions are isolated reasoning contexts that manage scope, knowledge base, vocabulary, and provide high-level methods for learning, querying, and proving.
+Provides the main API surface for AGISystem2. Sessions are isolated reasoning contexts that manage scope, knowledge base, vocabulary, and high-level methods for learning, querying, and proving.
 
 ---
 
-## 2. Responsibilities
-
-- Create isolated reasoning contexts
-- Manage session state (scope, KB, vocabulary)
-- Provide learn(), query(), prove() API
-- Provide summarize(), elaborate() API
-- Coordinate parser, executor, and engines
-- Track session statistics
-- Support cleanup and resource release
-
----
-
-## 3. Public API
+## 2. Public API (Implemented)
 
 ```javascript
 class Session {
@@ -32,274 +19,77 @@ class Session {
 
   // Core API
   learn(dsl: string): LearnResult
-  query(dsl: string): QueryResult
-  prove(goal: string): ProveResult
+  query(dsl: string, options?: QueryOptions): QueryResult
+  prove(dsl: string, options?: ProveOptions): ProveResult
+  abduce(dsl: string, options?: AbductionOptions): AbductionResult
+  findAll(dsl: string, options?: FindAllOptions): FindAllResult
 
   // Output
-  summarize(result: Vector | QueryResult): SummarizeResult
-  elaborate(result: Vector | QueryResult, options?: ElaborateOptions): ElaborateResult
+  summarize(vector: Vector): SummarizeResult
+  elaborate(proof: ProveResult): string
+  generateText(operator: string, args: string[]): string
+  formatResult(result: QueryResult | ProveResult, type?: 'query' | 'prove'): string
+  describeResult(payload: { action: string, reasoningResult: object, queryDsl?: string }): string
 
   // Inspection
   dump(): SessionState
-  inspect(name: string): InspectResult
-  listTheories(): string[]
-  listAtoms(theory?: string): AtomInfo[]
-  listMacros(theory?: string): MacroInfo[]
-  listFacts(): FactInfo[]
-  similarity(a: string | Vector, b: string | Vector): number
+  similarity(a: Vector, b: Vector): number
   decode(vector: Vector): DecodedStructure
+
+  // Validation and loading
+  checkDSL(dsl: string, options?: CheckOptions): AST
+  loadCore(options?: { corePath?: string, includeIndex?: boolean }): LoadResult
 
   // Lifecycle
   close(): void
-
-  // Properties
-  get geometry(): number
-  get stats(): SessionStats
 }
 
 interface SessionOptions {
   geometry?: number;                 // Default: 32768
   hdcStrategy?: string;              // Default: env SYS2_HDC_STRATEGY or 'dense-binary'
-  reasoningPriority?: string;        // Default: getReasoningPriority()
-  reasoningProfile?: string;         // Default: derived from priority/env
+  reasoningPriority?: string;        // Default: env REASONING_PRIORITY or 'symbolicPriority'
+  reasoningProfile?: string;         // Default: 'theoryDriven'
   canonicalizationEnabled?: boolean; // Override profile-derived toggle
   proofValidationEnabled?: boolean;  // Override profile-derived toggle
-}
-
-// HDC Strategy (set via SYS2_HDC_STRATEGY environment variable)
-// - 'dense-binary' (default): HDC-Priority mode, ~200 facts capacity
-// - 'sparse-polynomial': Symbolic-Priority mode, unlimited capacity
-// - 'metric-affine': Symbolic-Priority mode, unlimited capacity
-// See DS01 Section 1.10 for dual reasoning architecture details
-```
-
----
-
-## 4. Internal Design
-
-### 4.1 Session State
-
-```javascript
-class Session {
-  constructor(options = {}) {
-    this.geometry = options.geometry || 32768;
-    this.hdcStrategy = options.hdcStrategy || 'dense-binary';
-
-    // Core state
-    this.scope = new Scope();
-    this.kb = null;
-    this.vocabulary = new Vocabulary(this.geometry);
-    this.kbFacts = [];
-
-    // Components
-    this.executor = new Executor(this);
-    this.queryEngine = createQueryEngine(this);
-    this.abductionEngine = new AbductionEngine(this);
-    this.inductionEngine = new InductionEngine(this);
-
-    // Statistics
-    this.stats = {
-      learnCalls: 0,
-      queryCalls: 0,
-      proveCalls: 0,
-      startTime: new Date().toISOString()
-    };
-  }
-}
-```
-
-**Note:** Core theories are not auto-loaded. Call `session.loadCore()` explicitly when needed.
-
-### 4.2 Learn Implementation
-
-```javascript
-learn(dsl) {
-  this.stats.learnCalls++;
-
-  const result = {
-    success: true,
-    statements: 0,
-    warnings: [],
-    errors: []
-  };
-
-  try {
-    const parser = new Parser(dsl);
-    const program = parser.parse();
-
-    if (parser.getErrors().length > 0) {
-      result.errors = parser.getErrors();
-      result.success = result.errors.length === 0;
-      return result;
-    }
-
-    for (const statement of program.statements) {
-      try {
-        this.executor.execute(statement);
-        result.statements++;
-      } catch (e) {
-        result.errors.push({
-          message: e.message,
-          line: statement.line,
-          column: statement.column
-        });
-      }
-    }
-
-    // Check capacity warnings (dense-binary HDC-Priority mode only)
-    // In Symbolic-Priority modes (sparse-polynomial, metric-affine),
-    // KB capacity is unlimited. See DS01 Section 1.10.
-    if (this.hdcStrategy === 'dense-binary' && this.facts.length > 100) {
-      result.warnings.push(`Knowledge base has ${this.facts.length} facts. ` +
-        `In dense-binary mode, accuracy may degrade above 200 facts.`);
-    }
-
-  } catch (e) {
-    result.success = false;
-    result.errors.push({ message: e.message, line: 0, column: 0 });
-  }
-
-  return result;
-}
-```
-
-### 4.3 Query Implementation
-
-```javascript
-query(dsl) {
-  this.stats.queryCalls++;
-
-  try {
-    const parser = new Parser(dsl);
-    const program = parser.parse();
-
-    if (program.statements.length !== 1) {
-      throw new Error("Query must be a single statement");
-    }
-
-    return this.queryEngine.execute(program.statements[0]);
-
-  } catch (e) {
-    return {
-      success: false,
-      bindings: null,
-      confidence: 0,
-      ambiguous: false,
-      reason: e.message
-    };
-  }
-}
-```
-
-### 4.4 Prove Implementation
-
-```javascript
-prove(goal) {
-  this.stats.proveCalls++;
-
-  try {
-    const parser = new Parser(goal);
-    const program = parser.parse();
-
-    if (program.statements.length !== 1) {
-      throw new Error("Goal must be a single statement");
-    }
-
-    return this.proofEngine.prove(program.statements[0]);
-
-  } catch (e) {
-    return {
-      valid: false,
-      proof: null,
-      steps: [],
-      confidence: 0,
-      reason: e.message
-    };
-  }
-}
-```
-
-### 4.5 Dump Implementation
-
-```javascript
-dump() {
-  return {
-    scope: Object.fromEntries(
-      [...this.scope.variables].map(([k, v]) => [k, { popcount: v.popcount() }])
-    ),
-    facts: this.facts.map(f => ({
-      name: f.name,
-      dsl: f.dsl,
-      timestamp: f.timestamp
-    })),
-    vocabulary: {
-      count: this.vocabulary.size,
-      theories: this.registry.list()
-    },
-    theories: this.registry.list(),
-    stats: { ...this.stats }
-  };
-}
-```
-
-### 4.6 Close Implementation
-
-```javascript
-close() {
-  // Clear all state
-  this.scope.clear();
-  this.kb = null;
-  this.vocabulary.clear();
-  this.facts = [];
-
-  // Log session end
-  console.debug(`Session ${this.name} closed after ${this.stats.learnCalls} learns, ` +
-    `${this.stats.queryCalls} queries, ${this.stats.proveCalls} proves`);
+  rejectContradictions?: boolean;    // Default: true
 }
 ```
 
 ---
 
-## 5. Dependencies
+## 3. Behavior Notes
 
-- `./scope.js` - Scope management
-- `./executor.js` - Statement execution
-- `./theory/registry.js` - Theory management
-- `../parser/parser.js` - DSL parsing
-- `../reasoning/query.js` - Query engine
-- `../reasoning/prove.js` - Proof engine
-- `../decoding/structural-decoder.js` - Vector decoding
+- Core theories are **not** auto-loaded. Call `session.loadCore()` explicitly.
+- `learn`, `query`, `prove`, `abduce`, and `findAll` validate DSL with `checkDSL` first; invalid DSL throws.
+- `learn` is transactional. On any error (syntax, dependency, load error, contradiction), the session rolls back.
+- Contradictions are rejected by default (`rejectContradictions: true`) and reported in `errors`/`warnings`.
+- NL output is produced via `session.describeResult(...)`.
 
 ---
 
-## 6. Test Cases
+## 4. Dependencies
+
+- `src/runtime/scope.mjs`
+- `src/runtime/executor.mjs`
+- `src/runtime/session-check-dsl.mjs`
+- `src/runtime/session-learn.mjs`
+- `src/runtime/session-core-load.mjs`
+- `src/reasoning/*`
+- `src/output/response-translator.mjs`
+
+---
+
+## 5. Test Cases
 
 | Test ID | Description | Expected Result |
 |---------|-------------|-----------------|
-| SES-01 | Create session | Non-null, Core loaded |
-| SES-02 | Learn single fact | Success, statements=1 |
-| SES-03 | Learn multiple facts | All added to KB |
-| SES-04 | Query with hole | Binding returned |
-| SES-05 | Prove valid goal | valid=true, proof tree |
-| SES-06 | Dump state | Complete state object |
-| SES-07 | Inspect vector | Structure decoded |
-| SES-08 | Close session | Resources released |
-| SES-09 | Session isolation | Sessions don't share state |
-| SES-10 | Capacity warning (dense-binary) | Warning at 100+ facts |
-| SES-11 | No capacity warning (sparse/metric) | No warning regardless of fact count |
-
----
-
-## 7. Performance Requirements
-
-| Operation | Target | Measurement |
-|-----------|--------|-------------|
-| Session creation | < 100ms | Benchmark |
-| learn(10 statements) | < 50ms | Benchmark |
-| query(1 hole) | < 100ms | Benchmark |
-| prove(depth 5) | < 500ms | Benchmark |
-| dump() | < 10ms | Benchmark |
-| close() | < 5ms | Benchmark |
+| SES-01 | Create session | Non-null, empty KB |
+| SES-02 | Learn single fact | `success=true`, `facts=1` |
+| SES-03 | Reject invalid DSL | Throws |
+| SES-04 | Reject contradiction | `success=false`, no KB changes |
+| SES-05 | Query with hole | Binding returned |
+| SES-06 | Prove valid goal | `valid=true` |
+| SES-07 | loadCore | Core loaded without errors |
 
 ---
 

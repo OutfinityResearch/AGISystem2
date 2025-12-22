@@ -1,84 +1,258 @@
-# Biology - Fundamental Relations
-# Simple relation definitions without graph blocks
+# Biology - Domain Relations
+# REAL graph definitions for biological relationships
 
-# ===== Taxonomic Relations =====
-taxonOf isA __Relation
-belongsTo isA __TransitiveRelation
-descendsFrom isA __Relation
-ancestorOf isA __Relation
-classifiedAs isA __Relation
+# ===== Metabolic Relations (REAL definitions) =====
 
-# ===== Structural Relations =====
-partOf isA __TransitiveRelation
-contains isA __Relation
-composedOf isA __Relation
-formedFrom isA __Relation
+@metabolizes:metabolizes graph organism substance
+    # Organism breaks down substance for energy/building blocks
+    @org __Role Organism $organism
+    @sub __Role Substance $substance
+    @process __Role Process Metabolism
+    @result __Bundle $org $sub $process
+    return $result
+end
 
-# ===== Genetic Relations =====
-expresses isA __Relation
-mutatesTo isA __Relation
-encodedBy isA __Relation
-transcribesTo isA __Relation
-translatesTo isA __Relation
-inheritsFrom isA __Relation
-regulatesExpression isA __Relation
+@synthesizes:synthesizes graph organism product precursors
+    # Organism builds complex molecule from simpler ones
+    @org __Role Organism $organism
+    @prod __Role Product $product
+    @prec __Role Precursors $precursors
+    @anabolic __Role ProcessType Anabolism
+    @result __Bundle $org $prod $prec $anabolic
+    return $result
+end
 
-# ===== Ecological Relations =====
-predatorOf isA __Relation
-preyOf isA __Relation
-symbiosisWith isA __SymmetricRelation
-locatedIn isA __TransitiveRelation
-competesFor isA __SymmetricRelation
-dependsOn isA __Relation
-parasitizes isA __Relation
-pollinates isA __Relation
+@breaksDown:breaksDown graph organism complex simpler
+    # Catabolic process: complex → simpler molecules
+    @org __Role Organism $organism
+    @input __Role Input $complex
+    @output __Role Output $simpler
+    @catabolic __Role ProcessType Catabolism
+    @result __Bundle $org $input $output $catabolic
+    return $result
+end
 
-# ===== Physiological Relations =====
-performs isA __Relation
-regulatedBy isA __Relation
-controls isA __Relation
-transports isA __Relation
-produces isA __Relation
-consumes isA __Relation
-secretes isA __Relation
+@catalyzes:catalyzes graph enzyme reaction
+    # Enzyme speeds up biochemical reaction
+    @enz __Role Enzyme $enzyme
+    @rxn __Role Reaction $reaction
+    @catalysis __Pair $enz $rxn
+    return $catalysis
+end
 
-# ===== Evolutionary Relations =====
-evolvesFrom isA __Relation
-sharesAncestorWith isA __SymmetricRelation
-divergesFrom isA __Relation
-adaptsTo isA __Relation
-selectedFor isA __Relation
-homologousTo isA __SymmetricRelation
-analogousTo isA __SymmetricRelation
+# ===== Genetic Relations (REAL definitions) =====
 
-# ===== Reproductive Relations =====
-reproducesBy isA __Relation
-parentOf isA __Relation
-offspringOf isA __Relation
-matesWith isA __SymmetricRelation
-fertilizes isA __Relation
-gestates isA __Relation
+@expresses:expresses graph gene protein
+    # Gene codes for protein through transcription/translation
+    @g __Role Gene $gene
+    @p __Role Protein $protein
+    @transcription __Role Process Transcription
+    @translation __Role Process Translation
+    @result __Bundle $g $p $transcription $translation
+    return $result
+end
 
-# ===== Metabolic Relations =====
-metabolizes isA __Relation
-synthesizes isA __Relation
-breaks_down isA __Relation
-converts isA __Relation
-requires isA __Relation
-yields isA __Relation
-catalyzes isA __Relation
+@mutatesTo:mutatesTo graph geneOriginal geneVariant
+    # Genetic mutation creates variant
+    @orig __Role Original $geneOriginal
+    @var __Role Variant $geneVariant
+    @mutation __Role Event Mutation
+    @result __Bundle $orig $var $mutation
+    return $result
+end
 
-# ===== Causal Relations =====
-causes isA __Relation
-triggers isA __Relation
-inhibits isA __Relation
-activates isA __Relation
-responds_to isA __Relation
-influences isA __Relation
+@regulatesExpression:regulatesExpression graph regulator targetGene
+    # Regulatory element controls gene expression
+    @reg __Role Regulator $regulator
+    @target __Role Target $targetGene
+    @control __Pair $reg $target
+    return $control
+end
 
-# ===== Property Relations =====
-hasTrait isA __Relation
-exhibits isA __Relation
-characterized_by isA __Relation
-displays isA __Relation
-manifests isA __Relation
+# ===== Ecological Relations (REAL definitions) =====
+
+@predatorOf:predatorOf graph predator prey
+    # Predator hunts and consumes prey
+    @pred __Role Predator $predator
+    @prey __Role Prey $prey
+    @hunts __Role Behavior Hunting
+    @consumes __Role Behavior Consumption
+    @result __Bundle $pred $prey $hunts $consumes
+    return $result
+end
+
+@symbiosisWith:symbiosisWith graph organismA organismB benefit
+    # Mutual or commensal relationship
+    @a __Role Organism $organismA
+    @b __Role Organism $organismB
+    @benefit __Role BenefitType $benefit
+    @symbiosis __Bundle $a $b $benefit
+    return $symbiosis
+end
+
+@competesFor:competesFor graph organismA organismB resource
+    # Competition for limited resource
+    @a __Role Competitor $organismA
+    @b __Role Competitor $organismB
+    @res __Role Resource $resource
+    @competition __Bundle $a $b $res
+    return $competition
+end
+
+@parasitizes:parasitizes graph parasite host
+    # Parasite lives on/in host and harms it
+    @par __Role Parasite $parasite
+    @hos __Role Host $host
+    @harm __Role Effect Harm
+    @dependency __Role Relation Dependency
+    @result __Bundle $par $hos $harm $dependency
+    return $result
+end
+
+# ===== Taxonomic Relations (REAL definitions) =====
+
+@taxonOf:taxonOf graph organism taxon
+    # Organism belongs to taxonomic group
+    @org __Role Organism $organism
+    @tax __Role Taxon $taxon
+    @classification __Pair $org $tax
+    return $classification
+end
+
+@descendsFrom:descendsFrom graph descendant ancestor
+    # Evolutionary descent relationship
+    @desc __Role Descendant $descendant
+    @anc __Role Ancestor $ancestor
+    @evolution __Role Process Evolution
+    @lineage __Bundle $desc $anc $evolution
+    return $lineage
+end
+
+# ===== Structural Relations (REAL definitions) =====
+
+@composedOf:composedOf graph whole parts
+    # Biological structure made of component parts
+    @structure __Role Whole $whole
+    @components __Role Parts $parts
+    @composition __Pair $structure $components
+    return $composition
+end
+
+# ===== Physiological Relations (REAL definitions) =====
+
+@performs:performs graph organism function
+    # Organism carries out biological function
+    @org __Role Organism $organism
+    @func __Role Function $function
+    @capability __Pair $org $func
+    return $capability
+end
+
+@transports:transports graph system substance fromLocation toLocation
+    # Biological transport (circulatory, etc.)
+    @sys __Role System $system
+    @sub __Role Substance $substance
+    @from __Role Source $fromLocation
+    @to __Role Destination $toLocation
+    @transport __Bundle $sys $sub $from $to
+    return $transport
+end
+
+@secretes:secretes graph organ substance
+    # Organ/gland secretes substance
+    @org __Role Organ $organ
+    @sub __Role Secretion $substance
+    @secretion __Pair $org $sub
+    return $secretion
+end
+
+# ===== Reproductive Relations (REAL definitions) =====
+
+@reproducesBy:reproducesBy graph organism method
+    # Reproduction method (sexual, asexual, etc.)
+    @org __Role Organism $organism
+    @method __Role Method $method
+    @reproduction __Pair $org $method
+    return $reproduction
+end
+
+@offspringOf:offspringOf graph child parent
+    # Parent-child relationship
+    @c __Role Offspring $child
+    @p __Role Parent $parent
+    @parenthood __Pair $c $p
+    return $parenthood
+end
+
+# ===== Causal Relations (REAL definitions) =====
+
+@triggers:triggers graph stimulus response
+    # Biological stimulus triggers response
+    @stim __Role Stimulus $stimulus
+    @resp __Role Response $response
+    @trigger __Pair $stim $resp
+    return $trigger
+end
+
+# ===== Epidemiology Relations (REAL definitions) =====
+
+@affects:affects graph agent target
+    # Agent affects target (e.g., pathogen affects population/location)
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @impact __Pair $a $t
+    return $impact
+end
+
+@reproductionNumber:reproductionNumber graph pathogen r0
+    # Pathogen reproduction number (R0)
+    @path __Role Pathogen $pathogen
+    @value __Role R0 $r0
+    @metric __Pair $path $value
+    return $metric
+end
+
+@inhibits:inhibits graph inhibitor process
+    # Inhibitor reduces/stops process
+    @inh __Role Inhibitor $inhibitor
+    @proc __Role Process $process
+    @inhibition __Pair $inh $proc
+    return $inhibition
+end
+
+@activates:activates graph activator process
+    # Activator initiates/enhances process
+    @act __Role Activator $activator
+    @proc __Role Process $process
+    @activation __Pair $act $proc
+    return $activation
+end
+
+# ===== FUNDAMENTAL Taxonomy Relations (CORE for Biology) =====
+
+@belongsTo:belongsTo graph entity category
+    # Entity belongs to taxonomic/organizational category
+    # This is FUNDAMENTAL - used across all taxonomy
+    @ent __Role Entity $entity
+    @cat __Role Category $category
+    @membership __Pair $ent $cat
+    return $membership
+end
+
+@foundIn:foundIn graph organism location
+    # Organism/structure found in location/context
+    # This is FUNDAMENTAL - used across ecology, anatomy
+    @org __Role Organism $organism
+    @loc __Role Location $location
+    @presence __Pair $org $loc
+    return $presence
+end
+
+@hasFunction:hasFunction graph entity function
+    # Entity has biological function/role
+    # This is FUNDAMENTAL - used across all biological systems
+    @ent __Role Entity $entity
+    @func __Role Function $function
+    @capability __Pair $ent $func
+    return $capability
+end

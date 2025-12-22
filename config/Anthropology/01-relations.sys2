@@ -1,95 +1,188 @@
-# Anthropology - Fundamental Relations
+# Anthropology - Domain Relations
+# REAL graph definitions for anthropological relationships
 
-# Cultural Practice Relations
-practices isA __Relation
-performs isA __Relation
-observes isA __Relation
-participatesIn isA __Relation
+# ===== Cultural Relations =====
 
-# Belief Relations
-believesMyth isA __Relation
-believes isA __Relation
-values isA __Relation
-holds isA __Relation
+@practices:practices graph group culture
+    # Group practices cultural tradition
+    @grp __Role Agent $group
+    @cult __Role Practice $culture
+    @transmission __Role Process CulturalTransmission
+    @result __Bundle $grp $cult $transmission
+    return $result
+end
 
-# Tradition Relations
-hasTradition isA __Relation
-maintains isA __Relation
-transmits isA __Relation
-preserves isA __Relation
-passes isA __Relation
+@symbolizes:symbolizes graph symbol meaning
+    # Symbol represents cultural meaning
+    @sym __Role Symbol $symbol
+    @mean __Role Meaning $meaning
+    @cultural __Role Context CulturalContext
+    @result __Bundle $sym $mean $cultural
+    return $result
+end
 
-# Taboo Relations
-tabooAgainst isA __Relation
-forbids isA __Relation
-prohibits isA __Relation
-violates isA __Relation
+@performs:performs graph group ritual
+    # Group performs ritual
+    @grp __Role Agent $group
+    @rit __Role Ritual $ritual
+    @ceremonial __Role Context Ceremonial
+    @result __Bundle $grp $rit $ceremonial
+    return $result
+end
 
-# Kinship Relations
-kinship isA __SymmetricRelation
-descentFrom isA __Relation
-relatedTo isA __SymmetricRelation
-ancestorOf isA __TransitiveRelation
-descendantOf isA __TransitiveRelation
+@inheritsFrom:inheritsFrom graph descendant ancestor
+    # Cultural inheritance
+    @desc __Role Descendant $descendant
+    @anc __Role Ancestor $ancestor
+    @cultural __Role Domain CulturalTransmission
+    @result __Bundle $desc $anc $cultural
+    return $result
+end
 
-# Marriage Relations
-marriedTo isA __SymmetricRelation
-marries isA __Relation
-forms isA __Relation
-joinsWith isA __Relation
+# ===== Kinship Relations =====
 
-# Economic Relations
-exchanges isA __Relation
-gives isA __Relation
-receives isA __Relation
-trades isA __SymmetricRelation
-reciprocates isA __Relation
+@descendsFrom:descendsFrom graph child parent
+    # Genealogical descent
+    @ch __Role Descendant $child
+    @par __Role Ancestor $parent
+    @genealogical __Role Type Genealogical
+    @result __Bundle $ch $par $genealogical
+    return $result
+end
 
-# Artifact Relations
-usesArtifact isA __Relation
-creates isA __Relation
-crafts isA __Relation
-produces isA __Relation
+@marriedTo:marriedTo graph person1 person2
+    # Marriage alliance
+    @p1 __Role Spouse $person1
+    @p2 __Role Spouse $person2
+    @alliance __Role Relation MarriageAlliance
+    @result __Bundle $p1 $p2 $alliance
+    return $result
+end
 
-# Spatial Relations
-settledIn isA __Relation
-inhabits isA __Relation
-occupies isA __Relation
-resides isA __Relation
+@belongsToLineage:belongsToLineage graph person lineage
+    # Lineage membership
+    @pers __Role Person $person
+    @lin __Role Lineage $lineage
+    @membership __Role Relation Member
+    @result __Bundle $pers $lin $membership
+    return $result
+end
 
-# Migration Relations
-migrates isA __Relation
-movesTo isA __Relation
-relocates isA __Relation
-disperses isA __Relation
+@belongsToClan:belongsToClan graph person clan
+    # Clan membership
+    @pers __Role Person $person
+    @cl __Role Clan $clan
+    @membership __Role Relation Member
+    @totem __Role Symbol TotemicIdentity
+    @result __Bundle $pers $cl $membership $totem
+    return $result
+end
 
-# Cultural Change Relations
-acculturatesWith isA __Relation
-assimilates isA __Relation
-adopts isA __Relation
-borrows isA __Relation
-diffuses isA __Relation
+# ===== Economic Relations =====
 
-# Identity Relations
-hasIdentity isA __Relation
-identifies isA __Relation
-belongsTo isA __Relation
-memberOf isA __Relation
+@exchanges:exchanges graph giver receiver goods
+    # Reciprocal exchange
+    @giv __Role Giver $giver
+    @rec __Role Receiver $receiver
+    @good __Role Object $goods
+    @reciprocal __Role Nature Reciprocity
+    @result __Bundle $giv $rec $good $reciprocal
+    return $result
+end
 
-# Language Relations
-speaks isA __Relation
-communicates isA __Relation
-understands isA __Relation
-translates isA __Relation
+@subsistsBy:subsistsBy graph group mode
+    # Subsistence mode
+    @grp __Role Group $group
+    @mode __Role Mode $mode
+    @economic __Role Domain Subsistence
+    @result __Bundle $grp $mode $economic
+    return $result
+end
 
-# Ritual Relations
-performsRitual isA __Relation
-initiates isA __Relation
-sanctifies isA __Relation
-commemorates isA __Relation
+@produces:produces graph group artifact
+    # Material production
+    @grp __Role Producer $group
+    @art __Role Artifact $artifact
+    @technology __Role Method Technology
+    @result __Bundle $grp $art $technology
+    return $result
+end
 
-# Symbolic Relations
-symbolizes isA __Relation
-represents isA __Relation
-signifies isA __Relation
-embodies isA __Relation
+# ===== Belief System Relations =====
+
+@believes:believes graph group worldview
+    # Belief in worldview
+    @grp __Role Believer $group
+    @view __Role Worldview $worldview
+    @commitment __Role Relation Commitment
+    @result __Bundle $grp $view $commitment
+    return $result
+end
+
+@worships:worships graph group deity
+    # Religious worship
+    @grp __Role Worshipper $group
+    @deity __Role Deity $deity
+    @religious __Role Context Religion
+    @result __Bundle $grp $deity $religious
+    return $result
+end
+
+@narratesMyth:narratesMyth graph culture myth
+    # Cultural myth narration
+    @cult __Role Culture $culture
+    @myth __Role Myth $myth
+    @transmission __Role Process OralTradition
+    @result __Bundle $cult $myth $transmission
+    return $result
+end
+
+# ===== Social Organization =====
+
+@observes:observes graph group norm
+    # Norm observance
+    @grp __Role Observer $group
+    @norm __Role Norm $norm
+    @conformity __Role Relation Conformity
+    @result __Bundle $grp $norm $conformity
+    return $result
+end
+
+@transmits:transmits graph elder youth tradition
+    # Intergenerational transmission
+    @eld __Role Transmitter $elder
+    @you __Role Receiver $youth
+    @trad __Role Content $tradition
+    @generational __Role Process Socialization
+    @result __Bundle $eld $you $trad $generational
+    return $result
+end
+
+@adaptsTo:adaptsTo graph culture environment
+    # Cultural adaptation to environment
+    @cult __Role Culture $culture
+    @env __Role Environment $environment
+    @adaptation __Role Process Adaptation
+    @result __Bundle $cult $env $adaptation
+    return $result
+end
+
+# ===== Research Relations =====
+
+@observedBy:observedBy graph culture ethnographer
+    # Ethnographic observation
+    @cult __Role Observed $culture
+    @eth __Role Observer $ethnographer
+    @method __Role Method ParticipantObservation
+    @result __Bundle $cult $eth $method
+    return $result
+end
+
+@informs:informs graph informant ethnographer
+    # Cultural informant relationship
+    @inf __Role Informant $informant
+    @eth __Role Researcher $ethnographer
+    @knowledge __Role Content CulturalKnowledge
+    @result __Bundle $inf $eth $knowledge
+    return $result
+end

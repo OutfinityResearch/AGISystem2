@@ -111,8 +111,10 @@ describe('Session Features', () => {
       session.learn('hasState Box Closed');
       const result = session.learn('hasState Box Open');
 
+      assert.equal(result.success, false);
       assert.ok(result.warnings.length > 0);
       assert.ok(result.warnings[0].includes('contradiction'));
+      assert.equal(session.kbFacts.length, 1);
     });
 
     test('should detect Hot/Cold contradiction', () => {
@@ -120,7 +122,9 @@ describe('Session Features', () => {
       session.learn('hasProperty Water Hot');
       const result = session.learn('hasProperty Water Cold');
 
+      assert.equal(result.success, false);
       assert.ok(result.warnings.length > 0);
+      assert.equal(session.kbFacts.length, 1);
     });
 
     test('should not warn for non-contradictory facts', () => {

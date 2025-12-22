@@ -1,99 +1,217 @@
-# Psychology - Fundamental Relations
+# Psychology - Domain Relations
+# REAL graph definitions for psychological relationships
 
-# Emotional Relations
-experiences isA __Relation
-feels isA __Relation
-elicits isA __Relation
-expressesEmotion isA __Relation
+# ===== Cognitive Relations =====
 
-# Personality Relations
-hasTrait isA __Relation
-characterizedBy isA __Relation
-displays isA __Relation
-predisposedTo isA __Relation
+@perceives:perceives graph person stimulus
+    # Person perceives sensory stimulus
+    @pers __Role Perceiver $person
+    @stim __Role Stimulus $stimulus
+    @perception __Role Process Perception
+    @result __Bundle $pers $stim $perception
+    return $result
+end
 
-# Belief & Knowledge
-believes isA __Relation
-knows isA __Relation
-doubts isA __Relation
-accepts isA __Relation
-rejects isA __Relation
+@attendsTo:attendsTo graph person object
+    # Person directs attention to object
+    @pers __Role Agent $person
+    @obj __Role Object $object
+    @attention __Role Process SelectiveAttention
+    @result __Bundle $pers $obj $attention
+    return $result
+end
 
-# Motivational Relations
-motivatedBy isA __Relation
-drivesToward isA __Relation
-pursuesGoal isA __Relation
-incentivizedBy isA __Relation
+@remembers:remembers graph person information
+    # Person recalls information from memory
+    @pers __Role Agent $person
+    @info __Role Content $information
+    @retrieval __Role Process MemoryRetrieval
+    @result __Bundle $pers $info $retrieval
+    return $result
+end
 
-# Behavioral Relations
-does isA __Relation
-performs isA __Relation
-exhibits isA __Relation
-engagesIn isA __Relation
-responds isA __Relation
+@learns:learns graph person skill
+    # Person acquires skill or knowledge
+    @pers __Role Learner $person
+    @sk __Role Content $skill
+    @acquisition __Role Process Learning
+    @result __Bundle $pers $sk $acquisition
+    return $result
+end
 
-# Learning Relations
-reinforcedBy isA __Relation
-conditionedTo isA __Relation
-learns isA __Relation
-acquires isA __Relation
-generalizes isA __Relation
+@thinks:thinks graph person thought
+    # Person engages in thought
+    @pers __Role Thinker $person
+    @thou __Role Content $thought
+    @cognition __Role Process Thinking
+    @result __Bundle $pers $thou $cognition
+    return $result
+end
 
-# Coping Relations
-copingWith isA __Relation
-manages isA __Relation
-adaptsTo isA __Relation
-regulatesEmotion isA __Relation
+@reasonsAbout:reasonsAbout graph person problem
+    # Person reasons about problem
+    @pers __Role Agent $person
+    @prob __Role Object $problem
+    @reasoning __Role Process Reasoning
+    @result __Bundle $pers $prob $reasoning
+    return $result
+end
 
-# Clinical Relations
-treatedBy isA __Relation
-diagnosedWith isA __Relation
-respondsTo isA __Relation
-symptomatic isA __Relation
-recoversFrom isA __Relation
+# ===== Emotional Relations =====
 
-# Risk Relations
-riskOf isA __Relation
-triggeredBy isA __Relation
-vulnerableTo isA __Relation
-protectedBy isA __Relation
+@feels:feels graph person emotion
+    # Person experiences emotion
+    @pers __Role Experiencer $person
+    @emot __Role Emotion $emotion
+    @affective __Role Process EmotionalExperience
+    @result __Bundle $pers $emot $affective
+    return $result
+end
 
-# Causal Relations
-causes isA __Relation
-leadingTo isA __Relation
-resultingIn isA __Relation
-contributes isA __Relation
+@motivatedBy:motivatedBy graph person motive
+    # Person motivated by motive
+    @pers __Role Agent $person
+    @mot __Role Motive $motive
+    @motivation __Role Process Motivation
+    @result __Bundle $pers $mot $motivation
+    return $result
+end
 
-# Bias & Decision
-biasInfluences isA __Relation
-influences isA __Relation
-affects isA __Relation
-distorts isA __Relation
-impairs isA __Relation
+@hasAttitude:hasAttitude graph person object attitude
+    # Person has attitude toward object
+    @pers __Role Holder $person
+    @obj __Role Target $object
+    @att __Role Attitude $attitude
+    @evaluative __Role Nature Evaluative
+    @result __Bundle $pers $obj $att $evaluative
+    return $result
+end
 
-# Cognitive Relations
-processes isA __Relation
-attends isA __Relation
-perceives isA __Relation
-remembers isA __Relation
-retrieves isA __Relation
+# ===== Personality Relations =====
 
-# Memory Relations
-stores isA __Relation
-encodes isA __Relation
-consolidates isA __Relation
-recalls isA __Relation
-forgets isA __Relation
+@exhibits:exhibits graph person trait
+    # Person exhibits personality trait
+    @pers __Role Person $person
+    @tr __Role Trait $trait
+    @behavioral __Role Manifestation Behavior
+    @result __Bundle $pers $tr $behavioral
+    return $result
+end
 
-# Social Influence
-persuades isA __Relation
-conformsTo isA __Relation
-obeys isA __Relation
-identifies isA __Relation
+@hasIntelligence:hasIntelligence graph person level
+    # Person has intelligence level
+    @pers __Role Person $person
+    @lev __Role Level $level
+    @cognitive __Role Domain Cognition
+    @result __Bundle $pers $lev $cognitive
+    return $result
+end
 
-# Attribution Relations
-attributesTo isA __Relation
-blames isA __Relation
-credits isA __Relation
-internalizes isA __Relation
-externalizes isA __Relation
+# ===== Behavioral Relations =====
+
+@behaves:behaves graph person behavior
+    # Person performs behavior
+    @pers __Role Agent $person
+    @beh __Role Behavior $behavior
+    @action __Role Nature Action
+    @result __Bundle $pers $beh $action
+    return $result
+end
+
+@respondsTo:respondsTo graph person stimulus response
+    # Person responds to stimulus
+    @pers __Role Agent $person
+    @stim __Role Stimulus $stimulus
+    @resp __Role Response $response
+    @behavioral __Role Process BehavioralResponse
+    @result __Bundle $pers $stim $resp $behavioral
+    return $result
+end
+
+# ===== Social Psychological Relations =====
+
+@influencedBy:influencedBy graph person influencer
+    # Person influenced by social influence
+    @pers __Role Target $person
+    @inf __Role Agent $influencer
+    @influence __Role Process SocialInfluence
+    @result __Bundle $pers $inf $influence
+    return $result
+end
+
+@conformsTo:conformsTo graph person norm
+    # Person conforms to social norm
+    @pers __Role Agent $person
+    @norm __Role Norm $norm
+    @conformity __Role Process Conformity
+    @result __Bundle $pers $norm $conformity
+    return $result
+end
+
+@belongsToGroup:belongsToGroup graph person group
+    # Person belongs to social group
+    @pers __Role Member $person
+    @grp __Role Group $group
+    @membership __Role Relation Membership
+    @identity __Role Aspect SocialIdentity
+    @result __Bundle $pers $grp $membership $identity
+    return $result
+end
+
+# ===== Developmental Relations =====
+
+@developsThrough:developsThrough graph person stage
+    # Person develops through stage
+    @pers __Role Individual $person
+    @st __Role Stage $stage
+    @development __Role Process Development
+    @result __Bundle $pers $st $development
+    return $result
+end
+
+@acquires:acquires graph child ability
+    # Child acquires developmental ability
+    @ch __Role Child $child
+    @abil __Role Ability $ability
+    @development __Role Process Development
+    @result __Bundle $ch $abil $development
+    return $result
+end
+
+# ===== Clinical Relations =====
+
+@suffers:suffers graph person disorder
+    # Person suffers from psychological disorder
+    @pers __Role Patient $person
+    @dis __Role Disorder $disorder
+    @clinical __Role Domain ClinicalPsychology
+    @result __Bundle $pers $dis $clinical
+    return $result
+end
+
+@treatedWith:treatedWith graph person therapy
+    # Person treated with therapy
+    @pers __Role Patient $person
+    @ther __Role Therapy $therapy
+    @treatment __Role Process Psychotherapy
+    @result __Bundle $pers $ther $treatment
+    return $result
+end
+
+@copesBy:copesBy graph person strategy
+    # Person copes using strategy
+    @pers __Role Agent $person
+    @strat __Role Strategy $strategy
+    @coping __Role Process Coping
+    @result __Bundle $pers $strat $coping
+    return $result
+end
+
+@experiencesStress:experiencesStress graph person stressor
+    # Person experiences stress from stressor
+    @pers __Role Experiencer $person
+    @stress __Role Stressor $stressor
+    @psychological __Role Response StressResponse
+    @result __Bundle $pers $stress $psychological
+    return $result
+end

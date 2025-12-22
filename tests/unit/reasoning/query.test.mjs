@@ -96,7 +96,7 @@ describe('QueryEngine', () => {
 
       test('should fail gracefully with too many holes', () => {
         setup();
-        learn('test A B');
+        learn('loves A B');
 
         const query = parse('@q ?a ?b ?c ?d ?e').statements[0];
         const result = queryEngine.execute(query);
@@ -201,7 +201,7 @@ describe('QueryEngine', () => {
   describe('confidence calculation', () => {
     test('should penalize multiple holes', () => {
       setup();
-      learn('relation A B');
+      learn('loves A B');
 
       const oneHole = parse('@q relation A ?x').statements[0];
       const twoHoles = parse('@q relation ?x ?y').statements[0];

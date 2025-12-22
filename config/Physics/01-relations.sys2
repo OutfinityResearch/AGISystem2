@@ -1,64 +1,294 @@
-# Physics - Fundamental Relations
-# Based on hardcoded_theory_analysis.md Section 8.13
-# Simple isA definitions only
+# Physics - Domain Relations
+# REAL graph definitions for physical relationships
 
-# ===== Measurement Relations =====
-hasQuantity isA __Relation
-measuredBy isA __Relation
-hasUnit isA __Relation
-hasValue isA __Relation
-hasUncertainty isA __Relation
-measuredAt isA __Relation
-calibratedWith isA __Relation
+# ===== Measurement Relations (REAL definitions) =====
 
-# ===== Physical Relations =====
-conserves isA __Relation
-causedBy isA __Relation
-transformsTo isA __Relation
-relativeTo isA __Relation
-invariantUnder isA __Relation
-transferredBetween isA __Relation
-conservedIn isA __Relation
+@hasQuantity:hasQuantity graph system quantity measure
+    # System has measurable physical quantity
+    @sys __Role System $system
+    @quant __Role Quantity $quantity
+    @meas __Role Measure $measure
+    @measurement __Bundle $sys $quant $meas
+    return $measurement
+end
 
-# ===== Evidence Relations =====
-supportsLaw isA __Relation
-violatesLaw isA __Relation
-supportsHypothesis isA __Relation
-refutesHypothesis isA __Relation
-reproducibleBy isA __Relation
+@measuredBy:measuredBy graph quantity instrument
+    # Quantity measured by instrument
+    @q __Role Quantity $quantity
+    @i __Role Instrument $instrument
+    @measurement __Pair $q $i
+    return $measurement
+end
 
-# ===== System Relations =====
-partOfSystem isA __Relation
-partOfSystem isA __TransitiveRelation
-interactsWith isA __Relation
-interactsWith isA __SymmetricRelation
-constrainedBy isA __Relation
-satisfiesBoundary isA __Relation
+@hasUnit:hasUnit graph quantity unit
+    # Quantity expressed in unit
+    @q __Role Quantity $quantity
+    @u __Role Unit $unit
+    @unitization __Pair $q $u
+    return $unitization
+end
 
-# ===== Field Relations =====
-hasField isA __Relation
-fieldStrengthAt isA __Relation
-exertsForceOn isA __Relation
-inFrame isA __Relation
+@hasValue:hasValue graph measurement value
+    # Measurement has numeric value
+    @m __Role Measurement $measurement
+    @v __Role Value $value
+    @quantification __Pair $m $v
+    return $quantification
+end
 
-# ===== Temporal Relations =====
-before isA __Relation
-after isA __Relation
-simultaneous isA __Relation
-simultaneous isA __SymmetricRelation
+@hasUncertainty:hasUncertainty graph measurement uncertainty
+    # Measurement has error bounds
+    @m __Role Measurement $measurement
+    @u __Role Uncertainty $uncertainty
+    @errorBounds __Pair $m $u
+    return $errorBounds
+end
 
-# ===== Causal Relations =====
-derivedFrom isA __Relation
-dependsOn isA __Relation
-proportionalTo isA __Relation
-proportionalTo isA __SymmetricRelation
-inverselyProportionalTo isA __Relation
-inverselyProportionalTo isA __SymmetricRelation
+# ===== Physical Relations (REAL definitions) =====
 
-# ===== Approximation Relations =====
-approxEquals isA __Relation
-approxEquals isA __SymmetricRelation
-approximates isA __Relation
-negligibleComparedTo isA __Relation
-dominates isA __Relation
-unitOf isA __Relation
+@conserves:conserves graph system quantity
+    # System conserves physical quantity
+    @sys __Role System $system
+    @quant __Role ConservedQuantity $quantity
+    @conservation __Pair $sys $quant
+    return $conservation
+end
+
+@causedBy:causedBy graph effect cause
+    # Physical effect caused by mechanism
+    @eff __Role Effect $effect
+    @caus __Role Cause $cause
+    @causation __Pair $eff $caus
+    return $causation
+end
+
+@transformsTo:transformsTo graph initialState finalState
+    # Physical transformation
+    @init __Role Initial $initialState
+    @final __Role Final $finalState
+    @process __Role Process Transformation
+    @transformation __Bundle $init $final $process
+    return $transformation
+end
+
+@relativeTo:relativeTo graph observation frame
+    # Observation relative to reference frame
+    @obs __Role Observation $observation
+    @ref __Role ReferenceFrame $frame
+    @relativity __Pair $obs $ref
+    return $relativity
+end
+
+@invariantUnder:invariantUnder graph quantity transformation
+    # Quantity unchanged under transformation
+    @q __Role Quantity $quantity
+    @t __Role Transformation $transformation
+    @symmetry __Pair $q $t
+    return $symmetry
+end
+
+@transferredBetween:transferredBetween graph quantity systemA systemB
+    # Energy/momentum transferred between systems
+    @q __Role Quantity $quantity
+    @a __Role Source $systemA
+    @b __Role Target $systemB
+    @transfer __Bundle $q $a $b
+    return $transfer
+end
+
+# ===== Evidence Relations (REAL definitions) =====
+
+@supportsLaw:supportsLaw graph evidence law
+    # Experimental evidence supports physical law
+    @evid __Role Evidence $evidence
+    @l __Role Law $law
+    @confirmation __Pair $evid $l
+    return $confirmation
+end
+
+@violatesLaw:violatesLaw graph observation law
+    # Observation contradicts law
+    @obs __Role Observation $observation
+    @l __Role Law $law
+    @violation Not (supportsLaw $obs $l)
+    @result __Bundle $obs $l $violation
+    return $result
+end
+
+@reproducibleBy:reproducibleBy graph experiment method
+    # Experiment can be reproduced
+    @exp __Role Experiment $experiment
+    @meth __Role Method $method
+    @reproducibility __Pair $exp $meth
+    return $reproducibility
+end
+
+# ===== System Relations (REAL definitions) =====
+
+@partOfSystem:partOfSystem graph component system
+    # Component is part of physical system
+    @comp __Role Component $component
+    @sys __Role System $system
+    @composition partOf $comp $sys
+    return $composition
+end
+
+@interactsWith:interactsWith graph systemA systemB interaction
+    # Systems interact via force/field
+    @a __Role System $systemA
+    @b __Role System $systemB
+    @int __Role Interaction $interaction
+    @coupling __Bundle $a $b $int
+    return $coupling
+end
+
+@constrainedBy:constrainedBy graph system constraint
+    # System subject to constraint
+    @sys __Role System $system
+    @cons __Role Constraint $constraint
+    @limitation __Pair $sys $cons
+    return $limitation
+end
+
+@satisfiesBoundary:satisfiesBoundary graph solution boundary
+    # Solution satisfies boundary conditions
+    @sol __Role Solution $solution
+    @bc __Role BoundaryCondition $boundary
+    @satisfaction __Pair $sol $bc
+    return $satisfaction
+end
+
+# ===== Field Relations (REAL definitions) =====
+
+@hasField:hasField graph region field
+    # Region has associated field
+    @r __Role Region $region
+    @f __Role Field $field
+    @fieldPresence __Pair $r $f
+    return $fieldPresence
+end
+
+@fieldStrengthAt:fieldStrengthAt graph field point strength
+    # Field strength at spatial point
+    @f __Role Field $field
+    @p __Role Point $point
+    @s __Role Strength $strength
+    @fieldValue __Bundle $f $p $s
+    return $fieldValue
+end
+
+@exertsForceOn:exertsForceOn graph source target force
+    # Source exerts force on target
+    @src __Role Source $source
+    @tgt __Role Target $target
+    @f __Role Force $force
+    @interaction __Bundle $src $tgt $f
+    return $interaction
+end
+
+@inFrame:inFrame graph observation frame
+    # Observation in reference frame
+    @obs __Role Observation $observation
+    @fr __Role Frame $frame
+    @context __Pair $obs $fr
+    return $context
+end
+
+# ===== Temporal Relations (REAL definitions) =====
+
+@simultaneous:simultaneous graph eventA eventB
+    # Events occur at same time (frame-dependent)
+    @a __Role Event $eventA
+    @b __Role Event $eventB
+    @simultaneity __Pair $a $b
+    return $simultaneity
+end
+
+# ===== Causal Relations (REAL definitions) =====
+
+@derivedFrom:derivedFrom graph equation principle
+    # Equation derived from fundamental principle
+    @eq __Role Equation $equation
+    @prin __Role Principle $principle
+    @derivation __Pair $eq $prin
+    return $derivation
+end
+
+@dependsOn:dependsOn graph quantity parameter
+    # Quantity depends on parameter
+    @q __Role Quantity $quantity
+    @p __Role Parameter $parameter
+    @dependency __Pair $q $p
+    return $dependency
+end
+
+@proportionalTo:proportionalTo graph quantityA quantityB
+    # Linear proportionality relationship
+    @a __Role Quantity $quantityA
+    @b __Role Quantity $quantityB
+    @proportionality __Pair $a $b
+    return $proportionality
+end
+
+@inverselyProportionalTo:inverselyProportionalTo graph quantityA quantityB
+    # Inverse proportionality
+    @a __Role Quantity $quantityA
+    @b __Role Quantity $quantityB
+    @antiproportionality __Pair $a $b
+    return $antiproportionality
+end
+
+# ===== Approximation Relations (REAL definitions) =====
+
+@approximates:approximates graph model reality conditions
+    # Model approximates reality under conditions
+    @m __Role Model $model
+    @r __Role Reality $reality
+    @c __Role Conditions $conditions
+    @approximation __Bundle $m $r $c
+    return $approximation
+end
+
+@negligibleComparedTo:negligibleComparedTo graph small large
+    # Quantity negligible compared to another
+    @s __Role Small $small
+    @l __Role Large $large
+    @negligibility __Pair $s $l
+    return $negligibility
+end
+
+@dominates:dominates graph dominant subdominant
+    # Term dominates in limit/regime
+    @dom __Role Dominant $dominant
+    @sub __Role Subdominant $subdominant
+    @dominance __Pair $dom $sub
+    return $dominance
+end
+
+@unitOf:unitOf graph unit quantity
+    # Unit measures quantity type
+    @u __Role Unit $unit
+    @q __Role QuantityType $quantity
+    @unitType __Pair $u $q
+    return $unitType
+end
+
+# ===== Orbital Relations (REAL definitions) =====
+
+@orbits:orbits graph body center
+    # Orbital relation (body orbits center)
+    @b __Role Orbiter $body
+    @c __Role Center $center
+    @orbit __Pair $b $c
+    return $orbit
+end
+
+# ===== Magnitude Relations (REAL definitions) =====
+
+@magnitude:magnitude graph subject value
+    # Subject has a magnitude value
+    @s __Role Subject $subject
+    @v __Role Magnitude $value
+    @measurement __Pair $s $v
+    return $measurement
+end

@@ -151,7 +151,9 @@ describe('End-to-End Pipeline', () => {
     test('should handle empty KB gracefully', () => {
       const session = new TestSession({ geometry: 2048 });
 
-      assert.throws(() => session.query('@q loves ?who Mary'));
+      const result = session.query('@q loves ?who Mary');
+      assert.equal(result.success, false);
+      assert.equal(result.bindings.size, 0);
 
       session.close();
     });

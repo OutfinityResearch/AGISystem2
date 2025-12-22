@@ -114,9 +114,9 @@ src/hdc/
 | `SYS2_GEOMETRY` | `32768` | Default vector geometry (divisible by 32) |
 | `SYS2_DEBUG` | `false` | Enable debug logging |
 | `REASONING_PRIORITY` | `symbolicPriority` | Reasoning mode: `symbolicPriority` or `holographicPriority` |
-| `SYS2_PROFILE` | derived | Reasoning profile: `legacy` (stable baseline) or `theoryDriven` (SemanticIndex/canonicalization/proof strict); defaults to `legacy` for `symbolicPriority` and `theoryDriven` for `holographicPriority` |
-| `SYS2_CANONICAL` | derived | Enable canonicalization (`1`/`true`/etc.); defaults to ON in `theoryDriven` |
-| `SYS2_PROOF_VALIDATE` | derived | Enable proof validation (`1`/`true`/etc.); defaults to ON in `theoryDriven` |
+| `SYS2_PROFILE` | `theoryDriven` | Reasoning profile (only `theoryDriven` is supported) |
+| `SYS2_CANONICAL` | `true` | Enable canonicalization (`1`/`true`/etc.) |
+| `SYS2_PROOF_VALIDATE` | `true` | Enable proof validation (`1`/`true`/etc.) |
 
 ---
 
@@ -126,12 +126,14 @@ src/hdc/
 const engine = new AGISystem2Engine();
 const session = engine.getSession();
 
-// Core is auto-loaded with:
+// Core is not auto-loaded. Call session.loadCore() to load:
 // - Position vectors: Pos1..Pos20
 // - Type constructors: __Person, __Object, __Place, etc.
 // - L2 primitives: _ptrans, _atrans, _mtrans, etc.
 // - Logic: Implies, And, Or, Not
 // - Roles: Agent, Theme, Source, Goal, etc.
+
+session.loadCore();
 
 session.learn(`
     @_ Load $Commerce
@@ -176,18 +178,15 @@ interface LearnResult {
     facts: number;
     errors: string[];
     warnings: string[];
-    // Present when learning is rejected due to contradictions.
-    contradiction?: {
-        reason: string;
-        proof?: string | string[];
-    };
+    // Present for solve blocks (CSP).
+    solveResult?: object;
 }
 ```
 
 **Contradiction handling:**
-- If new facts contradict existing knowledge, the learn step MUST be rejected.
-- No new facts are stored in the KB.
-- The contradiction proof MUST be surfaced (e.g., via `proof_nl` in eval suites).
+- Contradictions are rejected by default (configurable via `rejectContradictions`).
+- Rejected learns are transactional: no new facts are stored in the KB.
+- The NL proof is surfaced via `session.describeResult(...)` (e.g., `proof_nl` in eval suites).
 
 **What learn() does:**
 1. Parse DSL statements
@@ -846,7 +845,7 @@ tx1: sell(Alice, Bob, Car, 5000)
 |-----------|---------|
 | `Engine` | Entry point, creates sessions |
 | `Session` | Working memory, theory stack, KB |
-| `learn()` | Add facts (no holes) |
+| `learn()` | Add facts/graphs (holes allowed for rules/graphs) |
 | `query()` | Find answers (with holes) |
 | `prove()` | Answer + derivation chain |
 | `summarize()` | Vector → concise text |

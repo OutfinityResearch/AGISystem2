@@ -1,71 +1,288 @@
-# Medicine - Fundamental Concepts
-# Simple isA definitions only
+# Medicine - Domain Concepts
+# Foundational medical concepts with proper graph semantics
 
-# Medical Actors
-Patient isA __Person
-Clinician isA __Person
-Surgeon isA Clinician
-Physician isA Clinician
-Nurse isA __Person
+# ===== Clinical Entities =====
 
-# Pathology Concepts
-Disease isA __State
-Disease isA __Abstract
-Symptom isA __State
-Sign isA __State
-Syndrome isA __Category
-RiskFactor isA __Property
-Comorbidity isA __Property
+@Patient:Patient graph person
+    # Person receiving medical care
+    @p __Role Person $person
+    @type __Role Type Patient
+    @status __Role Status UnderCare
+    @concept __Bundle $p $type $status
+    return $concept
+end
 
-# Disease Classification
-InfectiousDisease isA Disease
-ChronicDisease isA Disease
-AutoimmuneDisease isA Disease
-GeneticDisease isA Disease
-Cancer isA Disease
+@Clinician:Clinician graph person
+    # Healthcare professional providing care
+    @p __Role Person $person
+    @type __Role Type HealthcareProfessional
+    @role __Role Role CareProvider
+    @concept __Bundle $p $type $role
+    return $concept
+end
 
-# Diagnostic Concepts
-Diagnosis isA __Abstract
-Test isA __Action
-TestResult isA __Abstract
-Biomarker isA __Property
-Screening isA Test
-LabTest isA Test
-ImagingTest isA Test
+@Physician:Physician graph clinician
+    # Medical doctor
+    @c __Role Clinician $clinician
+    @type __Role Type Physician
+    @training __Role Qualification MedicalDegree
+    @concept __Bundle $c $type $training
+    return $concept
+end
 
-# Treatment Concepts
-Treatment isA __Action
-Medication isA Treatment
-Surgery isA Treatment
-Therapy isA Treatment
-Dosage isA __Measure
-Contraindication isA __Not
-Contraindication isA __Default
-AdverseEffect isA __State
-SideEffect isA __State
+# ===== Pathology =====
 
-# Pharmacology
-Drug isA __Category
-Antibiotic isA Drug
-Analgesic isA Drug
-Antiviral isA Drug
-Vaccine isA __Category
-Dose isA __Measure
-Efficacy isA __Property
+@Disease:Disease graph condition
+    # Pathological condition affecting health
+    @cond __Role Condition $condition
+    @type __Role Type Disease
+    @pathological __Role Property Abnormal
+    @concept __Bundle $cond $type $pathological
+    return $concept
+end
 
-# Evidence & Guidelines
-Guideline isA __Source
-EvidenceLevel isA __Evidence
-ClinicalTrial isA __Evidence
-Prognosis isA __Abstract
-Outcome isA __State
-Effectiveness isA __Property
+@Syndrome:Syndrome graph pattern
+    # Cluster of symptoms occurring together
+    @pat __Role Pattern $pattern
+    @type __Role Type Syndrome
+    @cluster __Role Property MultipleSymptoms
+    @concept __Bundle $pat $type $cluster
+    return $concept
+end
 
-# Anatomy & Physiology
-Organ isA __Category
-Tissue isA __Category
-Cell isA __Category
-System isA __Category
-NervousSystem isA System
-CardiovascularSystem isA System
-RespiratorySystem isA System
+@Infection:Infection graph disease
+    # Disease caused by pathogen
+    @dis __Role Disease $disease
+    @type __Role Type Infection
+    @cause __Role Cause Pathogen
+    @concept __Bundle $dis $type $cause
+    return $concept
+end
+
+@Trauma:Trauma graph injury
+    # Physical injury
+    @inj __Role Injury $injury
+    @type __Role Type Trauma
+    @cause __Role Cause PhysicalForce
+    @concept __Bundle $inj $type $cause
+    return $concept
+end
+
+@Disorder:Disorder graph condition
+    # Functional or structural abnormality
+    @cond __Role Condition $condition
+    @type __Role Type Disorder
+    @abnormality __Role Property Dysfunction
+    @concept __Bundle $cond $type $abnormality
+    return $concept
+end
+
+# ===== Symptomatology =====
+
+@Symptom:Symptom graph manifestation
+    # Subjective evidence of disease (patient-reported)
+    @manif __Role Manifestation $manifestation
+    @type __Role Type Symptom
+    @subjective __Role Property PatientReported
+    @concept __Bundle $manif $type $subjective
+    return $concept
+end
+
+@Sign:Sign graph manifestation
+    # Objective evidence of disease (clinician-observed)
+    @manif __Role Manifestation $manifestation
+    @type __Role Type Sign
+    @objective __Role Property ClinicianObserved
+    @concept __Bundle $manif $type $objective
+    return $concept
+end
+
+@Manifestation:Manifestation graph evidence
+    # Observable evidence of disease
+    @evid __Role Evidence $evidence
+    @type __Role Type ClinicalManifestation
+    @observable __Role Property Observable
+    @concept __Bundle $evid $type $observable
+    return $concept
+end
+
+# ===== Diagnosis =====
+
+@Diagnosis:Diagnosis graph conclusion
+    # Clinical determination of disease
+    @concl __Role Conclusion $conclusion
+    @type __Role Type MedicalDiagnosis
+    @process __Role Process ClinicalReasoning
+    @concept __Bundle $concl $type $process
+    return $concept
+end
+
+@Test:Test graph procedure
+    # Diagnostic procedure
+    @proc __Role Procedure $procedure
+    @type __Role Type DiagnosticTest
+    @purpose __Role Purpose Investigation
+    @concept __Bundle $proc $type $purpose
+    return $concept
+end
+
+@Finding:Finding graph observation
+    # Result from clinical examination or test
+    @obs __Role Observation $observation
+    @type __Role Type ClinicalFinding
+    @source __Role Source ExaminationOrTest
+    @concept __Bundle $obs $type $source
+    return $concept
+end
+
+@Biomarker:Biomarker graph indicator
+    # Measurable biological indicator
+    @ind __Role Indicator $indicator
+    @type __Role Type Biomarker
+    @measurable __Role Property Quantifiable
+    @concept __Bundle $ind $type $measurable
+    return $concept
+end
+
+# ===== Treatment =====
+
+@Treatment:Treatment graph intervention
+    # Medical intervention to cure or alleviate disease
+    @interv __Role Intervention $intervention
+    @type __Role Type Treatment
+    @purpose __Role Purpose Therapeutic
+    @concept __Bundle $interv $type $purpose
+    return $concept
+end
+
+@Medication:Medication graph drug
+    # Pharmaceutical substance
+    @d __Role Drug $drug
+    @type __Role Type Medication
+    @pharmaceutical __Role Property TherapeuticAgent
+    @concept __Bundle $d $type $pharmaceutical
+    return $concept
+end
+
+@Therapy:Therapy graph treatment
+    # Systematic treatment approach
+    @treat __Role Treatment $treatment
+    @type __Role Type Therapy
+    @systematic __Role Property Structured
+    @concept __Bundle $treat $type $systematic
+    return $concept
+end
+
+@Surgery:Surgery graph procedure
+    # Operative intervention
+    @proc __Role Procedure $procedure
+    @type __Role Type Surgery
+    @invasive __Role Property Operative
+    @concept __Bundle $proc $type $invasive
+    return $concept
+end
+
+@Dose:Dose graph amount
+    # Medication quantity
+    @amt __Role Amount $amount
+    @type __Role Type Dose
+    @measurement __Role Property MedicationQuantity
+    @concept __Bundle $amt $type $measurement
+    return $concept
+end
+
+# ===== Pharmacology =====
+
+@Drug:Drug graph substance
+    # Pharmacological substance
+    @sub __Role Substance $substance
+    @type __Role Type Drug
+    @active __Role Property PharmacologicallyActive
+    @concept __Bundle $sub $type $active
+    return $concept
+end
+
+@SideEffect:SideEffect graph effect
+    # Unintended drug effect
+    @eff __Role Effect $effect
+    @type __Role Type SideEffect
+    @unintended __Role Property Adverse
+    @concept __Bundle $eff $type $unintended
+    return $concept
+end
+
+@Contraindication:Contraindication graph condition
+    # Condition making treatment inadvisable
+    @cond __Role Condition $condition
+    @type __Role Type Contraindication
+    @warning __Role Property Inadvisable
+    @concept __Bundle $cond $type $warning
+    return $concept
+end
+
+# ===== Anatomy & Physiology =====
+
+@Organ:Organ graph structure
+    # Anatomical organ
+    @struct __Role Structure $structure
+    @type __Role Type Organ
+    @anatomical __Role Property AnatomicalStructure
+    @concept __Bundle $struct $type $anatomical
+    return $concept
+end
+
+@Tissue:Tissue graph material
+    # Biological tissue
+    @mat __Role Material $material
+    @type __Role Type Tissue
+    @cellular __Role Property CellularOrganization
+    @concept __Bundle $mat $type $cellular
+    return $concept
+end
+
+@Cell:Cell graph unit
+    # Basic biological unit
+    @u __Role Unit $unit
+    @type __Role Type Cell
+    @living __Role Property LivingUnit
+    @concept __Bundle $u $type $living
+    return $concept
+end
+
+@Pathogen:Pathogen graph organism
+    # Disease-causing organism
+    @org __Role Organism $organism
+    @type __Role Type Pathogen
+    @infectious __Role Property DiseaseCausing
+    @concept __Bundle $org $type $infectious
+    return $concept
+end
+
+# ===== Clinical Process =====
+
+@Prognosis:Prognosis graph prediction
+    # Predicted disease outcome
+    @pred __Role Prediction $prediction
+    @type __Role Type Prognosis
+    @outcome __Role Context DiseaseOutcome
+    @concept __Bundle $pred $type $outcome
+    return $concept
+end
+
+@Protocol:Protocol graph guideline
+    # Clinical treatment guideline
+    @guide __Role Guideline $guideline
+    @type __Role Type ClinicalProtocol
+    @standardized __Role Property EvidenceBased
+    @concept __Bundle $guide $type $standardized
+    return $concept
+end
+
+@Complication:Complication graph consequence
+    # Adverse consequence of disease or treatment
+    @cons __Role Consequence $consequence
+    @type __Role Type Complication
+    @adverse __Role Property Unfavorable
+    @concept __Bundle $cons $type $adverse
+    return $concept
+end

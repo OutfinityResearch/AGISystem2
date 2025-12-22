@@ -84,6 +84,12 @@ end
     return $result
 end
 
+# locatedAt: alias of at (location relation)
+@LocatedAtMacro:locatedAt graph entity location
+    @result at $entity $location
+    return $result
+end
+
 # in: entity is in container
 @InMacro:in graph entity container
     @r1 __Role Theme $entity
@@ -125,6 +131,12 @@ end
     return $result
 end
 
+# isCapable: unary capability marker
+@IsCapableMacro:isCapable graph entity
+    @result hasProperty $entity Capable
+    return $result
+end
+
 # ===== Possession Relations =====
 
 # has: entity has/possesses something
@@ -136,6 +148,14 @@ end
     @r2 __Role Attribute $possession
     @result __Bundle $r1 $r2
     return $result
+end
+
+# assigned: agent assigned to task/objective
+@Assigned:assigned graph agent objective
+    @a __Role Agent $agent
+    @o __Role Objective $objective
+    @assignment __Pair $a $o
+    return $assignment
 end
 
 # ===== Synonym Relation =====

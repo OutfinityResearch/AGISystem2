@@ -1,65 +1,209 @@
-# Geography - Fundamental Relations
+# Geography - Domain Relations
+# REAL graph definitions for geographic relationships
 
-# Spatial Relations
-locatedIn isA __TransitiveRelation
-borders isA __SymmetricRelation
-contains isA __TransitiveRelation
-adjacentTo isA __SymmetricRelation
-surrounds isA __Relation
+# ===== Spatial Relations =====
 
-# Political Relations
-capitalOf isA __Relation
-governedBy isA __Relation
-territoryOf isA __Relation
-annexedBy isA __Relation
+@locatedIn:locatedIn graph feature region
+    # Geographic feature located in region
+    @feat __Role Feature $feature
+    @reg __Role Container $region
+    @location __Role Relation SpatialContainment
+    @result __Bundle $feat $reg $location
+    return $result
+end
 
-# Natural Feature Relations
-flowsThrough isA __Relation
-flowsInto isA __Relation
-originatesAt isA __Relation
-mountsTo isA __Relation
-drains isA __Relation
+@bordersOn:bordersOn graph region1 region2
+    # Regions share a border
+    @r1 __Role BorderEntity $region1
+    @r2 __Role BorderEntity $region2
+    @border __Role Relation SharedBoundary
+    @result __Bundle $r1 $r2 $border
+    return $result
+end
 
-# Climate Relations
-hasClimate isA __Relation
-influencedBy isA __Relation
-temperatureRange isA __Relation
-precipitation isA __Relation
+@adjacentTo:adjacentTo graph place1 place2
+    # Places are spatially adjacent
+    @p1 __Role Neighbor $place1
+    @p2 __Role Neighbor $place2
+    @adjacency __Role Relation SpatialProximity
+    @result __Bundle $p1 $p2 $adjacency
+    return $result
+end
 
-# Resource Relations
-hasResource isA __Relation
-produces isA __Relation
-exports isA __Relation
-imports isA __Relation
-depletes isA __Relation
+@contains:contains graph region feature
+    # Region contains geographic feature
+    @reg __Role Container $region
+    @feat __Role Contained $feature
+    @containment __Role Relation SpatialInclusion
+    @result __Bundle $reg $feat $containment
+    return $result
+end
 
-# Demographic Relations
-population isA __Relation
-density isA __Relation
-growth isA __Relation
-distribution isA __Relation
+@distanceFrom:distanceFrom graph place1 place2 distance
+    # Distance between places
+    @p1 __Role Origin $place1
+    @p2 __Role Destination $place2
+    @dist __Role Measure $distance
+    @metric __Role Property Distance
+    @result __Bundle $p1 $p2 $dist $metric
+    return $result
+end
 
-# Movement Relations
-migration isA __Relation
-migratesFrom isA __Relation
-migratesTo isA __Relation
-routeBetween isA __Relation
-connects isA __SymmetricRelation
+# ===== Hydrological Relations =====
 
-# Hazard Relations
-hazardRisk isA __Relation
-vulnerableTo isA __Relation
-affectedBy isA __Relation
-mitigates isA __Relation
+@flowsThrough:flowsThrough graph river region
+    # River flows through region
+    @riv __Role Waterway $river
+    @reg __Role Region $region
+    @flow __Role Process HydrologicalFlow
+    @result __Bundle $riv $reg $flow
+    return $result
+end
 
-# Trade & Transport
-tradeWith isA __SymmetricRelation
-accessibleBy isA __Relation
-connectedBy isA __Relation
-distanceFrom isA __SymmetricRelation
+@flowsInto:flowsInto graph river body
+    # River flows into water body
+    @riv __Role Tributary $river
+    @bod __Role Recipient $body
+    @confluence __Role Process Confluence
+    @result __Bundle $riv $bod $confluence
+    return $result
+end
 
-# Elevation Relations
-elevation isA __Relation
-higherThan isA __Relation
-lowerThan isA __Relation
-seaLevel isA __Relation
+@drainsInto:drainsInto graph area basin
+    # Area drains into drainage basin
+    @ar __Role DrainageArea $area
+    @bas __Role Basin $basin
+    @drainage __Role Process Drainage
+    @result __Bundle $ar $bas $drainage
+    return $result
+end
+
+# ===== Political & Administrative Relations =====
+
+@isCapitalOf:isCapitalOf graph city country
+    # City is capital of country
+    @c __Role Capital $city
+    @ctry __Role Country $country
+    @administrative __Role Relation CapitalStatus
+    @result __Bundle $c $ctry $administrative
+    return $result
+end
+
+@partOfCountry:partOfCountry graph region country
+    # Region is part of country
+    @reg __Role AdministrativeUnit $region
+    @ctry __Role Nation $country
+    @political __Role Relation PoliticalSubdivision
+    @result __Bundle $reg $ctry $political
+    return $result
+end
+
+@hasTerritory:hasTerritory graph country territory
+    # Country has territory
+    @ctry __Role Sovereign $country
+    @terr __Role Territory $territory
+    @sovereignty __Role Relation TerritorialClaim
+    @result __Bundle $ctry $terr $sovereignty
+    return $result
+end
+
+# ===== Demographic Relations =====
+
+@hasPopulation:hasPopulation graph place population
+    # Place has population
+    @pl __Role Settlement $place
+    @pop __Role Population $population
+    @demographic __Role Property PopulationSize
+    @result __Bundle $pl $pop $demographic
+    return $result
+end
+
+@isUrbanArea:isUrbanArea graph city
+    # City is urban area
+    @cty __Role Settlement $city
+    @urban __Role Property Urban
+    @classification __Role Domain Demography
+    @result __Bundle $cty $urban $classification
+    return $result
+end
+
+@isRuralArea:isRuralArea graph area
+    # Area is rural
+    @ar __Role Settlement $area
+    @rural __Role Property Rural
+    @classification __Role Domain Demography
+    @result __Bundle $ar $rural $classification
+    return $result
+end
+
+# ===== Economic Relations =====
+
+@producesResource:producesResource graph region resource
+    # Region produces natural resource
+    @reg __Role Producer $region
+    @res __Role Resource $resource
+    @production __Role Process ResourceExtraction
+    @result __Bundle $reg $res $production
+    return $result
+end
+
+@exportsTo:exportsTo graph country1 country2 goods
+    # Country exports goods to another
+    @c1 __Role Exporter $country1
+    @c2 __Role Importer $country2
+    @gds __Role Goods $goods
+    @trade __Role Process Export
+    @result __Bundle $c1 $c2 $gds $trade
+    return $result
+end
+
+# ===== Climatic Relations =====
+
+@hasClimate:hasClimate graph region climate
+    # Region has climate type
+    @reg __Role Region $region
+    @clim __Role Climate $climate
+    @climatic __Role Property ClimaticZone
+    @result __Bundle $reg $clim $climatic
+    return $result
+end
+
+@experiencesWeather:experiencesWeather graph location weather
+    # Location experiences weather pattern
+    @loc __Role Location $location
+    @weath __Role Weather $weather
+    @meteorological __Role Process WeatherEvent
+    @result __Bundle $loc $weath $meteorological
+    return $result
+end
+
+# ===== Topographic Relations =====
+
+@hasElevation:hasElevation graph landform elevation
+    # Landform has elevation
+    @land __Role Landform $landform
+    @elev __Role Elevation $elevation
+    @topographic __Role Property Height
+    @result __Bundle $land $elev $topographic
+    return $result
+end
+
+@isPartOfMountainRange:isPartOfMountainRange graph mountain range
+    # Mountain is part of range
+    @mtn __Role Peak $mountain
+    @rng __Role MountainRange $range
+    @orographic __Role Relation PartOfRange
+    @result __Bundle $mtn $rng $orographic
+    return $result
+end
+
+# ===== Ecosystem Relations =====
+
+@hasEcosystem:hasEcosystem graph region ecosystem
+    # Region has ecosystem type
+    @reg __Role Region $region
+    @eco __Role Ecosystem $ecosystem
+    @ecological __Role Property BiomeType
+    @result __Bundle $reg $eco $ecological
+    return $result
+end

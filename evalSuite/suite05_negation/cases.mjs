@@ -8,7 +8,7 @@
 export const name = 'Negation & Exceptions';
 export const description = 'Negation blocking with deep chains and complete proofs';
 
-export const theories = ['05-logic.sys2'];
+export const theories = ['05-logic.sys2', 'Law/01-relations.sys2'];
 
 export const steps = [
   // === SETUP: Deep bird hierarchy (6 levels) with negation exceptions ===

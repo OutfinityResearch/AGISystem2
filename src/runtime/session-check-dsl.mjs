@@ -1,4 +1,6 @@
 import { parse } from '../parser/parser.mjs';
+import { BOOTSTRAP_OPERATORS, DECLARATION_OPERATORS } from './operator-declarations.mjs';
+import { CORE_OPERATOR_CATALOG } from './operator-catalog.mjs';
 
 const BUILTIN_OPERATORS = new Set([
   'Load',
@@ -20,6 +22,9 @@ const BUILTIN_OPERATORS = new Set([
   'Exception',
   'mutuallyExclusive'
 ]);
+for (const op of BOOTSTRAP_OPERATORS) {
+  BUILTIN_OPERATORS.add(op);
+}
 
 function collectSemanticOperators(index) {
   if (!index) return new Set();
@@ -50,6 +55,9 @@ function collectSemanticOperators(index) {
 
 function collectKnownOperators(session) {
   const names = new Set(BUILTIN_OPERATORS);
+  for (const op of CORE_OPERATOR_CATALOG) {
+    names.add(op);
+  }
   for (const op of session?.operators?.keys?.() || []) {
     names.add(op);
   }
@@ -153,6 +161,11 @@ function validateStatement(stmt, context) {
   if (stmt.destination) {
     context.bindings.add(stmt.destination);
   }
+  const operatorName = stmt.operator?.name;
+  if (operatorName && DECLARATION_OPERATORS.has(operatorName)) {
+    if (stmt.destination) context.knownOperators.add(stmt.destination);
+    if (stmt.persistName) context.knownOperators.add(stmt.persistName);
+  }
 }
 
 function validateRule(rule, context) {
@@ -166,6 +179,9 @@ function validateSolveBlock(block, context) {
     if (decl.kind === 'noConflict' || decl.kind === 'allDifferent') {
       ensureKnownOperator(decl.source, decl, context);
     }
+  }
+  if (block.destination) {
+    context.knownOperators.add(block.destination);
   }
 }
 
@@ -212,6 +228,8 @@ function validateNode(node, context) {
       validateRule(node, context);
       return;
     case 'GraphDeclaration':
+      if (node.name) context.localGraphs.add(node.name);
+      if (node.persistName) context.localGraphs.add(node.persistName);
       validateGraph(node, context);
       return;
     case 'SolveBlock':

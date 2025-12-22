@@ -3,6 +3,4632 @@
 # Coverage: Taxonomy, Cell Biology, Genetics, Ecology, Physiology
 
 # ============================================================================
+# Biology Stress Test - Domain-Specific Vocabulary
+# AUTO-GENERATED: Definitions for operators used in this test
+# ============================================================================
+@AMPARInsertion:AMPARInsertion graph process target
+    @p __Role Process $process
+    @t __Role Target $target
+    @action __Pair $p $t
+    return $action
+end
+
+@CD4Recognition:CD4Recognition graph cell antigen
+    @c __Role Cell $cell
+    @a __Role Antigen $antigen
+    @recognition __Pair $c $a
+    return $recognition
+end
+
+@CD8Recognition:CD8Recognition graph cell antigen
+    @c __Role Cell $cell
+    @a __Role Antigen $antigen
+    @recognition __Pair $c $a
+    return $recognition
+end
+
+@hasExecutors:hasExecutors graph entity executors
+    @e __Role Entity $entity
+    @ex __Role Executors $executors
+    @property __Pair $e $ex
+    return $property
+end
+
+@MHCClassI:MHCClassI graph cell molecule
+    @c __Role Cell $cell
+    @m __Role Molecule $molecule
+    @presentation __Pair $c $m
+    return $presentation
+end
+
+@MHCClassII:MHCClassII graph cell molecule
+    @c __Role Cell $cell
+    @m __Role Molecule $molecule
+    @presentation __Pair $c $m
+    return $presentation
+end
+
+@NaKATPase:NaKATPase graph pump function
+    @p __Role Pump $pump
+    @f __Role Function $function
+    @enzyme __Pair $p $f
+    return $enzyme
+end
+
+@Th1Cytokines:Th1Cytokines graph cell cytokines
+    @c __Role Cell $cell
+    @cy __Role Cytokines $cytokines
+    @production __Pair $c $cy
+    return $production
+end
+
+@Th1Role:Th1Role graph cell role
+    @c __Role Cell $cell
+    @r __Role Role $role
+    @function __Pair $c $r
+    return $function
+end
+
+@Th2Cytokines:Th2Cytokines graph cell cytokines
+    @c __Role Cell $cell
+    @cy __Role Cytokines $cytokines
+    @production __Pair $c $cy
+    return $production
+end
+
+@Th2Role:Th2Role graph cell role
+
+@aMPARInsertion:aMPARInsertion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@cD4Recognition:cD4Recognition graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@cD8Recognition:cD8Recognition graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@mHCClassI:mHCClassI graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@mHCClassII:mHCClassII graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@naKATPase:naKATPase graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@th1Cytokines:th1Cytokines graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@th1Role:th1Role graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@th2Cytokines:th2Cytokines graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@th2Role:th2Role graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@acceptsElectrons:acceptsElectrons graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@accessoryOrgans:accessoryOrgans graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@accumulates:accumulates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@acrossGradient:acrossGradient graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@acrossMembrane:acrossMembrane graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@activatedBy:activatedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@activatesCascade:activatesCascade graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@activatesEffector:activatesEffector graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@activatesKinase:activatesKinase graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@activatesMetastasis:activatesMetastasis graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@activationMechanisms:activationMechanisms graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@activationPathways:activationPathways graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@actsOn:actsOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@adds:adds graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@affects:affects graph controller controlled
+    @ctrl __Role Controller $controller
+    @ctld __Role Controlled $controlled
+    @regulation __Pair $ctrl $ctld
+    return $regulation
+end
+
+@affectsBases:affectsBases graph controller controlled
+    @ctrl __Role Controller $controller
+    @ctld __Role Controlled $controlled
+    @regulation __Pair $ctrl $ctld
+    return $regulation
+end
+
+@affectsGene:affectsGene graph controller controlled
+    @ctrl __Role Controller $controller
+    @ctld __Role Controlled $controlled
+    @regulation __Pair $ctrl $ctld
+    return $regulation
+end
+
+@allAre:allAre graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@allKinetochores:allKinetochores graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@allowsCrossover:allowsCrossover graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@alternativeName:alternativeName graph entity name
+    @e __Role Entity $entity
+    @n __Role Name $name
+    @naming __Pair $e $n
+    return $naming
+end
+
+@alternativeOutcome:alternativeOutcome graph entity name
+    @e __Role Entity $entity
+    @n __Role Name $name
+    @naming __Pair $e $n
+    return $naming
+end
+
+@amplifies:amplifies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@analogousStructures:analogousStructures graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@animalExamples:animalExamples graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@antibodyClasses:antibodyClasses graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@antigenActivates:antigenActivates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@antigenBindingSite:antigenBindingSite graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@applications:applications graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@areConnected:areConnected graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@areHomologous:areHomologous graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@assembles:assembles graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@assimilation:assimilation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@associatedKinase:associatedKinase graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@associates:associates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@autophosphorylation:autophosphorylation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@bacterialAdhesion:bacterialAdhesion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@bacterialSymbiont:bacterialSymbiont graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@basePairingRule:basePairingRule graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@becomes:becomes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@binds:binds graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@bloodVesselTypes:bloodVesselTypes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@branchRepresents:branchRepresents graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@breakDownsOrganicMatter:breakDownsOrganicMatter graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@bypassesIrreversible:bypassesIrreversible graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@calciumChannels:calciumChannels graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@calciumEffectors:calciumEffectors graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@calciumInflux:calciumInflux graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@calciumRemoval:calciumRemoval graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@calciumSources:calciumSources graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@canBeOvercome:canBeOvercome graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@cannotBeOvercome:cannotBeOvercome graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@carbonFixation:carbonFixation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@cardinalSigns:cardinalSigns graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@carriesAllele:carriesAllele graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@carryingCapacity:carryingCapacity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@cascadeProteins:cascadeProteins graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@causativeAgent:causativeAgent graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@causesCascade:causesCascade graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@causesEffect:causesEffect graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@causesRiskFor:causesRiskFor graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@causesVasodilation:causesVasodilation graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@cellMovements:cellMovements graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@cellStatus:cellStatus graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@cellTypes:cellTypes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@cells:cells graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@cellularEffect:cellularEffect graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@cellularImmunity:cellularImmunity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@centralDogma:centralDogma graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@chromosomeNumber:chromosomeNumber graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@claims:claims graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@cleaves:cleaves graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@clonalExpansion:clonalExpansion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@coevolve:coevolve graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@coexist:coexist graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@commonAncestry:commonAncestry graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@commonName:commonName graph entity name
+    @e __Role Entity $entity
+    @n __Role Name $name
+    @naming __Pair $e $n
+    return $naming
+end
+
+@competesWith:competesWith graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@competitiveExclusion:competitiveExclusion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@completesNutrientCycle:completesNutrientCycle graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@concerns:concerns graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@condensation:condensation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@condition:condition graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@confers:confers graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@constructionMethods:constructionMethods graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@contains:contains graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@containsDNA:containsDNA graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@containsEnzymes:containsEnzymes graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@containsRNA:containsRNA graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@containsReceptors:containsReceptors graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@containsVesicles:containsVesicles graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@controlCenter:controlCenter graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@controlOrgan:controlOrgan graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@controls:controls graph controller controlled
+    @ctrl __Role Controller $controller
+    @ctld __Role Controlled $controlled
+    @regulation __Pair $ctrl $ctld
+    return $regulation
+end
+
+@controlsOtherGlands:controlsOtherGlands graph controller controlled
+    @ctrl __Role Controller $controller
+    @ctld __Role Controlled $controlled
+    @regulation __Pair $ctrl $ctld
+    return $regulation
+end
+
+@converts:converts graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@coolingMechanisms:coolingMechanisms graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@coreceptor:coreceptor graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@creates:creates graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@createsProtonGradient:createsProtonGradient graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@createsTranspirationPull:createsTranspirationPull graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@crossesAt:crossesAt graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@datingMethods:datingMethods graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@declines:declines graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@decomposition:decomposition graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@decreases:decreases graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@definedBy:definedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@definesClades:definesClades graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@definition:definition graph entity name
+    @e __Role Entity $entity
+    @n __Role Name $name
+    @naming __Pair $e $n
+    return $naming
+end
+
+@degrades:degrades graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@degradesTo:degradesTo graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@deletes:deletes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@delivers:delivers graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@denitrification:denitrification graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@dephosphorylates:dephosphorylates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@depolarizationPhase:depolarizationPhase graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@depolarizes:depolarizes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesBloodVessels:derivesBloodVessels graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesBoneCartilage:derivesBoneCartilage graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesEpidermis:derivesEpidermis graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesGILining:derivesGILining graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesHairNails:derivesHairNails graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesHeart:derivesHeart graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesKidney:derivesKidney graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesLiver:derivesLiver graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesLungLining:derivesLungLining graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesMuscle:derivesMuscle graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesNervousSystem:derivesNervousSystem graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesNeuralCrest:derivesNeuralCrest graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesPancreas:derivesPancreas graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesSensoryOrgans:derivesSensoryOrgans graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivesThyroid:derivesThyroid graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@dermalTissue:dermalTissue graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@descentWithModification:descentWithModification graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@describesBy:describesBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@detects:detects graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@determines:determines graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@determinesFunction:determinesFunction graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@developmentalRole:developmentalRole graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@deviatesFrom:deviatesFrom graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@differentFrom:differentFrom graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@differentiateTo:differentiateTo graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@differentiates:differentiates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@differs:differs graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@digitSeparation:digitSeparation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@direction:direction graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@discoveredBy:discoveredBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@displaces:displaces graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@dissociates:dissociates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@distanceEffect:distanceEffect graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@dnaSimilarity:dnaSimilarity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@dnaSynthesisIn:dnaSynthesisIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@docks:docks graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@doesNotChangeSequence:doesNotChangeSequence graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@dominantMutation:dominantMutation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@dysregulates:dysregulates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@effect:effect graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@effectOnHost:effectOnHost graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@effectOnParasite:effectOnParasite graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@effectOnPredator:effectOnPredator graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@effectOnPrey:effectOnPrey graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@effectOnSpecies1:effectOnSpecies1 graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@effectOnSpecies2:effectOnSpecies2 graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@electronTransport:electronTransport graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@elicits:elicits graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@elongationRate:elongationRate graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@elongation_involves:elongation_involves graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@enablesReplication:enablesReplication graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@encodedBy:encodedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@encodes:encodes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@encodesProtein:encodesProtein graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@endsIn:endsIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@energyLoss:energyLoss graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@energyTransfer:energyTransfer graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@enhances:enhances graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@enhancesPhagocytosis:enhancesPhagocytosis graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@enlarges:enlarges graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@enters:enters graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@enzymesUsed:enzymesUsed graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@equation:equation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@evadesSuppressors:evadesSuppressors graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@evaporation:evaporation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@evolutionarilyConserved:evolutionarilyConserved graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@example:example graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@examples:examples graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@excitatoryNT:excitatoryNT graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@expressedIn:expressedIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@expressesTrait:expressesTrait graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@expression:expression graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@facilitates:facilitates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@favors:favors graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@feedsOn:feedsOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@fills:fills graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@finalAcceptor:finalAcceptor graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@fires:fires graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@follows:follows graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@followsAllOrNone:followsAllOrNone graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@forms:forms graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@formsGermLayers:formsGermLayers graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@formsGradient:formsGradient graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@fossilFuels:fossilFuels graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@fragments:fragments graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@fullName:fullName graph entity name
+    @e __Role Entity $entity
+    @n __Role Name $name
+    @naming __Pair $e $n
+    return $naming
+end
+
+@function:function graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@functionalUnit:functionalUnit graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@furtherProcessing:furtherProcessing graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@gaseousNT:gaseousNT graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@generates:generates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@geneticPredisposition:geneticPredisposition graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@glucoseSynthesis:glucoseSynthesis graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@greaterEffectIn:greaterEffectIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@groundTissue:groundTissue graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@hasABA:hasABA graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasActivity:hasActivity graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasAdaptation:hasAdaptation graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasAdaptations:hasAdaptations graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasAutoantibodies:hasAutoantibodies graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasAuxin:hasAuxin graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasAxon:hasAxon graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasAxonTerminal:hasAxonTerminal graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasBackbone:hasBackbone graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasBarrier:hasBarrier graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasBasalGanglia:hasBasalGanglia graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasBases:hasBases graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasBiodiversity:hasBiodiversity graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasBrainstem:hasBrainstem graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasBranchpoint:hasBranchpoint graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasCSF:hasCSF graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasCells:hasCells graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasCerebellum:hasCerebellum graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasCerebrum:hasCerebrum graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasChains:hasChains graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasChemokines:hasChemokines graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasCircuits:hasCircuits graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasClimate:hasClimate graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasClusters:hasClusters graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasComplexes:hasComplexes graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasConformation:hasConformation graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasCytokinin:hasCytokinin graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasDarkReactions:hasDarkReactions graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasDendrites:hasDendrites graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasDirectionality:hasDirectionality graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasDivisions:hasDivisions graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasDoubleMembrane:hasDoubleMembrane graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasEffect:hasEffect graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasElement:hasElement graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasEnhancers:hasEnhancers graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasEthylene:hasEthylene graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasFold:hasFold graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasFrequencies:hasFrequencies graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasFrequency:hasFrequency graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasFullTaxonomy:hasFullTaxonomy graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasGenotype:hasGenotype graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasGibberellin:hasGibberellin graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasGlands:hasGlands graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasGrowingSeason:hasGrowingSeason graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasHydrogenBonds:hasHydrogenBonds graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasInput:hasInput graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasInterferons:hasInterferons graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasInterleukins:hasInterleukins graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasLayers:hasLayers graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasLength:hasLength graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasLevel:hasLevel graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasLevels:hasLevels graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasLightReactions:hasLightReactions graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasLimbicSystem:hasLimbicSystem graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasMechanism:hasMechanism graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasMemory:hasMemory graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasMyelinSheath:hasMyelinSheath graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasOperon:hasOperon graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasOptimalPH:hasOptimalPH graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasOrganizer:hasOrganizer graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasOrgans:hasOrgans graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasOrigin:hasOrigin graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasParameter:hasParameter graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasPattern:hasPattern graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasPermafrost:hasPermafrost graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasPhases:hasPhases graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasPioneerSpecies:hasPioneerSpecies graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasPostsynapticMembrane:hasPostsynapticMembrane graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasPostulates:hasPostulates graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasPresynapticTerminal:hasPresynapticTerminal graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasProcesses:hasProcesses graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasRainfall:hasRainfall graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasRatio:hasRatio graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasReceptor:hasReceptor graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasRefractoryPeriod:hasRefractoryPeriod graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasRegions:hasRegions graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasRotation:hasRotation graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasSeedBank:hasSeedBank graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasSequence:hasSequence graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasSilencers:hasSilencers graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasSoil:hasSoil graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasSoma:hasSoma graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasStage:hasStage graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasStages:hasStages graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasSteps:hasSteps graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasStructure:hasStructure graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasStructureLevel:hasStructureLevel graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasSubtypes:hasSubtypes graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasSubunit:hasSubunit graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasSubunits:hasSubunits graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasSynapticCleft:hasSynapticCleft graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasTNF:hasTNF graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasTemperature:hasTemperature graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasTemplate:hasTemplate graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasTriggerers:hasTriggerers graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasType:hasType graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasTypes:hasTypes graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@hasVegetation:hasVegetation graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@haveNicheDifferentiation:haveNicheDifferentiation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@heatConservation:heatConservation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@highGlucoseResponse:highGlucoseResponse graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@homologousStructures:homologousStructures graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@homologyExample:homologyExample graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@hosts:hosts graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@humoralImmunity:humoralImmunity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@hydrolyzes:hydrolyzes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@hyperpolarizationPhase:hyperpolarizationPhase graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@immuneEvasion:immuneEvasion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@immuneSelection:immuneSelection graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@increases:increases graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@increasesPermeability:increasesPermeability graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@induces:induces graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@inducesAngiogenesis:inducesAngiogenesis graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@inducesNeuralTube:inducesNeuralTube graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@infects:infects graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@infiltration:infiltration graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@inflammatoryMediators:inflammatoryMediators graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@inflammatoryResponse:inflammatoryResponse graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@informationFlow:informationFlow graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@inhibitoryNT:inhibitoryNT graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@initiates:initiates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@initiatesAt:initiatesAt graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@initiation_involves:initiation_involves graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@inputMolecule:inputMolecule graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@interactionType:interactionType graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@intrinsicRate:intrinsicRate graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@inventedBy:inventedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@isActive:isActive graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isAutoimmune:isAutoimmune graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isControlled:isControlled graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isDegenerateCode:isDegenerateCode graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isDensityDependent:isDensityDependent graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isDensityIndependent:isDensityIndependent graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isDivisionType:isDivisionType graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isExample:isExample graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isExpressed:isExpressed graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isFasterThan:isFasterThan graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isHeritable:isHeritable graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isInducible:isInducible graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isLessCommon:isLessCommon graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isModel:isModel graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isMostCommon:isMostCommon graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isPhase:isPhase graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isProcess:isProcess graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isProgrammed:isProgrammed graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isRepressible:isRepressible graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isSegment:isSegment graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isSevere:isSevere graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isSpecific:isSpecific graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isStage:isStage graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isSubphaseOf:isSubphaseOf graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isSubtypeOf:isSubtypeOf graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isTransmissible:isTransmissible graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isTypeOf:isTypeOf graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isUniversal:isUniversal graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isletCells:isletCells graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@isolationType:isolationType graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @property __Pair $e $v
+    return $property
+end
+
+@joins:joins graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@keyEffector:keyEffector graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@keyOrganisms:keyOrganisms graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@keyReceptor:keyReceptor graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@lagsBehing:lagsBehing graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@law:law graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@leadTo:leadTo graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@leads:leads graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@leadsToCommunity:leadsToCommunity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@leakChannels:leakChannels graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@ligand:ligand graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@ligands:ligands graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@limitsChainLength:limitsChainLength graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@loads:loads graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@locatedAt:locatedAt graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@locates:locates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@locations:locations graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@lossOfFunction:lossOfFunction graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@lowGlucoseResponse:lowGlucoseResponse graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@mainConcept:mainConcept graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@mainProduct:mainProduct graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@maintains:maintains graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@maintainsHomeostasis:maintainsHomeostasis graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@maintainsRatio:maintainsRatio graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@matrix:matrix graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@maturesIn:maturesIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@mayAlterFunction:mayAlterFunction graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@mechanism:mechanism graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@mechanisms:mechanisms graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@memberOfDomain:memberOfDomain graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@membraneAttackComplex:membraneAttackComplex graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@meristem:meristem graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@method:method graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@methylates:methylates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@migrates:migrates graph entity from to
+    @e __Role Entity $entity
+    @f __Role From $from
+    @t __Role To $to
+    @movement __Bundle $e $f $t
+    return $movement
+end
+
+@modernSynthesis:modernSynthesis graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@modulates:modulates graph controller controlled
+    @ctrl __Role Controller $controller
+    @ctld __Role Controlled $controlled
+    @regulation __Pair $ctrl $ctld
+    return $regulation
+end
+
+@molecularClock:molecularClock graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@monoamineNT:monoamineNT graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@moves:moves graph entity from to
+    @e __Role Entity $entity
+    @f __Role From $from
+    @t __Role To $to
+    @movement __Bundle $e $f $t
+    return $movement
+end
+
+@movesAgainstGradient:movesAgainstGradient graph entity from to
+    @e __Role Entity $entity
+    @f __Role From $from
+    @t __Role To $to
+    @movement __Bundle $e $f $t
+    return $movement
+end
+
+@movesWithGradient:movesWithGradient graph entity from to
+    @e __Role Entity $entity
+    @f __Role From $from
+    @t __Role To $to
+    @movement __Bundle $e $f $t
+    return $movement
+end
+
+@mutualBenefit:mutualBenefit graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@negativeSelection:negativeSelection graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@netATP:netATP graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@neuralPruning:neuralPruning graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@neurotransmitters:neurotransmitters graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@nitrification:nitrification graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@nitrogenFixation:nitrogenFixation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@nitrogenaseEnzyme:nitrogenaseEnzyme graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@nodeRepresents:nodeRepresents graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@normalFunction:normalFunction graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@normalProtein:normalProtein graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@normalRange:normalRange graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@normalSetpoint:normalSetpoint graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@nuclearTranslocation:nuclearTranslocation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@numberOfAminoAcids:numberOfAminoAcids graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@numberOfCodons:numberOfCodons graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@occupiesNiche:occupiesNiche graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@occurs:occurs graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@occursAt:occursAt graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@occursIn:occursIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@occursWithout:occursWithout graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@oceanAbsorption:oceanAbsorption graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@opens:opens graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@organisms:organisms graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@originatesFrom:originatesFrom graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@originatesIn:originatesIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@outcome:outcome graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@outputMolecule:outputMolecule graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@overexpressedIn:overexpressedIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@participatesIn:participatesIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@peakPotential:peakPotential graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@peptideNT:peptideNT graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@phase:phase graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@phosphorylated:phosphorylated graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@phosphorylates:phosphorylates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@phosphorylatesTargets:phosphorylatesTargets graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@photosynthesis:photosynthesis graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@photosystemI:photosystemI graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@photosystemII:photosystemII graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@physicalBarriers:physicalBarriers graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@plantExamples:plantExamples graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@plantHost:plantHost graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@positiveSelection:positiveSelection graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@possibleEffects:possibleEffects graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@postsynapticEvents:postsynapticEvents graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@potassiumInside:potassiumInside graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@precipitation:precipitation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@precision:precision graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@preferMonophyleticGroups:preferMonophyleticGroups graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@presents:presents graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@presentsSymptom:presentsSymptom graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@presynapticEvents:presynapticEvents graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@preyOn:preyOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@preys:preys graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@primaryMechanism:primaryMechanism graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@principle:principle graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@process:process graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@processDNA_to_RNA:processDNA_to_RNA graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@processRNA_to_Protein:processRNA_to_Protein graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@producedBy:producedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@produces:produces graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesATP:producesATP graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesEnergyPyramid:producesEnergyPyramid graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesFADH2:producesFADH2 graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesJCurve:producesJCurve graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesNADH:producesNADH graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesNADPH:producesNADPH graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesOutput:producesOutput graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesProduct:producesProduct graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesResult:producesResult graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesRibose5P:producesRibose5P graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesSCurve:producesSCurve graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesSecondMessenger:producesSecondMessenger graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesToxins:producesToxins graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesTypes:producesTypes graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesWater:producesWater graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@producesWhenActivated:producesWhenActivated graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@professionalAPCs:professionalAPCs graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@promotesInflammation:promotesInflammation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@proposedBy:proposedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@protects:protects graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@protectsFrom:protectsFrom graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@proteinConversion:proteinConversion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@proteinSimilarity:proteinSimilarity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@provides:provides graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@providesCooling:providesCooling graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@providesPositionalInfo:providesPositionalInfo graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@rateEquation:rateEquation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@ratio:ratio graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@reaches:reaches graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@rearranges:rearranges graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@reason:reason graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@receives:receives graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@receptor:receptor graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@recessiveMutation:recessiveMutation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@recognizes:recognizes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@recruits:recruits graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@recruitsCells:recruitsCells graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@recyclesNutrients:recyclesNutrients graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@reduces:reduces graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@reductionPhase:reductionPhase graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@refractoryPeriod:refractoryPeriod graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@regulatedBy:regulatedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@regulatedVariables:regulatedVariables graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@relaysIn:relaysIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@releaseFragment:releaseFragment graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@releases:releases graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@releasesCO2:releasesCO2 graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@releasesFrom:releasesFrom graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@remains:remains graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@removes:removes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@removesUnwantedCells:removesUnwantedCells graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@repolarizationPhase:repolarizationPhase graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@represents:represents graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@reprogrammingFactors:reprogrammingFactors graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@required:required graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@requiredFor:requiredFor graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@requiresATP:requiresATP graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@requiresBarrier:requiresBarrier graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@requiresDimerization:requiresDimerization graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@requiresEnergy:requiresEnergy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@requiresFor:requiresFor graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@requiresPromoter:requiresPromoter graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@requiresTranscriptionFactors:requiresTranscriptionFactors graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@requiresTreatment:requiresTreatment graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@requiresTwoHits:requiresTwoHits graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@requirestRNA:requirestRNA graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@resistsDeath:resistsDeath graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@respiration:respiration graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@responseSpeed:responseSpeed graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@restingPotential:restingPotential graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@restores:restores graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@resultIn:resultIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@resultingDeficiency:resultingDeficiency graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@reverseTranscribes:reverseTranscribes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@reverses:reverses graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@revolutionized:revolutionized graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@roleInLearning:roleInLearning graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@rolePredator:rolePredator graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@rolePrey:rolePrey graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@rubpRegeneration:rubpRegeneration graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@runoff:runoff graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@saltatoryConducton:saltatoryConducton graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@scaffolds:scaffolds graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@scans:scans graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@selectsFor:selectsFor graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@sequesters:sequesters graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@shareCommonAncestor:shareCommonAncestor graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@shifts:shifts graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@shiftsReadingFrame:shiftsReadingFrame graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@shows:shows graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@showsColinearity:showsColinearity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@signalAmplification:signalAmplification graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@signalMolecule:signalMolecule graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@signalType:signalType graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@signalingIon:signalingIon graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@sizeEffect:sizeEffect graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@sodiumOutside:sodiumOutside graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@soilDevelopment:soilDevelopment graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@speciesEquilibrium:speciesEquilibrium graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@specifies:specifies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@specifiesAP:specifiesAP graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@stabilizedBy:stabilizedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@startCodon:startCodon graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@startsAt:startsAt graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@startsOn:startsOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@startsWith:startsWith graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@statDimerization:statDimerization graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@states:states graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@stomataControl:stomataControl graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@stopCodons:stopCodons graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@strengthens:strengthens graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@structure:structure graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@substrate:substrate graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@substrates:substrates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@supports:supports graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@sustainedGrowth:sustainedGrowth graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@synapseTypes:synapseTypes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@synthesisDirection:synthesisDirection graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@targetCells:targetCells graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@targetsAutoantigen:targetsAutoantigen graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@tenet:tenet graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@termination_involves:termination_involves graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@th1th2Balance:th1th2Balance graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@threshold:threshold graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@thresholdDependent:thresholdDependent graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@timeScale:timeScale graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@tipRepresents:tipRepresents graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@tissueDamage:tissueDamage graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@tissueInvasion:tissueInvasion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@transcriptionFactor:transcriptionFactor graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@transcriptionalTarget:transcriptionalTarget graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@transitionalForms:transitionalForms graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@translocatesTo:translocatesTo graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@transpiration:transpiration graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@transportsPhloem:transportsPhloem graph entity from to
+    @e __Role Entity $entity
+    @f __Role From $from
+    @t __Role To $to
+    @movement __Bundle $e $f $t
+    return $movement
+end
+
+@transportsXylem:transportsXylem graph entity from to
+    @e __Role Entity $entity
+    @f __Role From $from
+    @t __Role To $to
+    @movement __Bundle $e $f $t
+    return $movement
+end
+
+@travelsVia:travelsVia graph entity from to
+    @e __Role Entity $entity
+    @f __Role From $from
+    @t __Role To $to
+    @movement __Bundle $e $f $t
+    return $movement
+end
+
+@treatmentApproach:treatmentApproach graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@trophicLevel:trophicLevel graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@typeOf:typeOf graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@ultimateTargets:ultimateTargets graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@unchanged:unchanged graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@undergoes:undergoes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@universalCode:universalCode graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@unwinds:unwinds graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@usesCodon:usesCodon graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@usesEnzyme:usesEnzyme graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@usesFeedback:usesFeedback graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@usesGProtein:usesGProtein graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@usesGradient:usesGradient graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@usesNegativeFeedback:usesNegativeFeedback graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@usesSubstrate:usesSubstrate graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@usesTerms:usesTerms graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@vascularTissue:vascularTissue graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@vdjRearrangement:vdjRearrangement graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@vectors:vectors graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@vestigialExample:vestigialExample graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@vestigialStructures:vestigialStructures graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@viralAssembly:viralAssembly graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@viralAttachment:viralAttachment graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@viralEntry:viralEntry graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@viralRelease:viralRelease graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@viralReplication:viralReplication graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@visualization:visualization graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@voltage:voltage graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@warmingMechanisms:warmingMechanisms graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@waterLoss:waterLoss graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+# ============================================================================
 # PART I: TAXONOMY - Complete Hierarchy (Domains → Species)
 # ============================================================================
 
@@ -1769,7 +6395,7 @@ end
     @premise1 belongsTo $A $B
     @premise2 belongsTo $B $C
     @conclusion belongsTo $A $C
-    return $rule
+    return $conclusion
 end
 
 @:Kingdom_To_Domain_Inference graph K D

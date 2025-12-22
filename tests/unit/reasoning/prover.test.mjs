@@ -57,6 +57,7 @@ test('ProofEngine: tryDirectMatch operations', () => {
   const prover = new ProofEngine(session);
 
   // With fact - use anonymous fact for KB persistence
+  session.learn('@exact:exact __Relation');
   session.learn('exact Match');
   const goal1 = parse('@g exact Match').statements[0];
   const goalVector1 = session.executor.buildStatementVector(goal1);

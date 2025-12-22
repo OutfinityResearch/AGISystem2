@@ -42,6 +42,12 @@ end
     return $result
 end
 
+# Holds: proposition is asserted/true
+@HoldsMacro:holds graph proposition
+    @result __Role Holds $proposition
+    return $result
+end
+
 # Biconditional: a IFF b
 @IffMacro:iff graph a b
     @pair __Pair $a $b

@@ -8,7 +8,7 @@
 export const name = 'Wolf-Goat-Cabbage Plus';
 export const description = 'River crossing puzzle with conflict rules and state reasoning';
 
-export const theories = ['05-logic.sys2'];
+export const theories = ['05-logic.sys2', 'Constraints/01-relations.sys2'];
 
 export const steps = [
   // === SETUP: Entities and conflict rules ===

@@ -1,67 +1,189 @@
-# History - Fundamental Relations
+# History - Domain Relations
+# REAL graph definitions for historical relationships
 
-# Temporal Relations
-happenedDuring isA __Relation
-before isA __TransitiveRelation
-after isA __TransitiveRelation
-contemporary isA __SymmetricRelation
-precedes isA __Relation
-follows isA __Relation
+# ===== Temporal Relations =====
 
-# Causal Relations
-causes isA __TransitiveRelation
-consequenceOf isA __Relation
-leadsTo isA __Relation
-resultingIn isA __Relation
-triggeredBy isA __Relation
+@occurredIn:occurredIn graph event period
+    # Event occurred in historical period
+    @evt __Role Event $event
+    @per __Role Period $period
+    @temporal __Role Relation TemporalLocation
+    @result __Bundle $evt $per $temporal
+    return $result
+end
 
-# Actor Relations
-actorIn isA __Relation
-alliedWith isA __SymmetricRelation
-opposedTo isA __SymmetricRelation
-leadBy isA __Relation
-influencedBy isA __Relation
+@precedes:precedes graph event1 event2
+    # Event precedes another chronologically
+    @e1 __Role Earlier $event1
+    @e2 __Role Later $event2
+    @chronological __Role Relation Precedence
+    @result __Bundle $e1 $e2 $chronological
+    return $result
+end
 
-# Treaty Relations
-treatyBetween isA __Relation
-signedBy isA __Relation
-ratifiedBy isA __Relation
-violatedBy isA __Relation
+@contemporaneousWith:contemporaneousWith graph event1 event2
+    # Events occurred at same time
+    @e1 __Role Event $event1
+    @e2 __Role Event $event2
+    @simultaneous __Role Relation Contemporaneous
+    @result __Bundle $e1 $e2 $simultaneous
+    return $result
+end
 
-# Source Relations
-sourceFor isA __Relation
-biasOf isA __Relation
-interpretationOf isA __Relation
-corroboratedBy isA __Relation
-contradictedBy isA __Relation
+# ===== Actor Relations =====
 
-# Evidence Relations
-confidence isA __Relation
-evidenceFor isA __Relation
-supports isA __Relation
-refutes isA __Relation
+@ruled:ruled graph leader territory period
+    # Leader ruled territory during period
+    @lead __Role Ruler $leader
+    @terr __Role Territory $territory
+    @per __Role Period $period
+    @governance __Role Relation Rule
+    @result __Bundle $lead $terr $per $governance
+    return $result
+end
 
-# Analytical Relations
-continuity isA __Relation
-rupture isA __Relation
-transformation isA __Relation
-persistence isA __Relation
+@founded:founded graph founder entity
+    # Founder established entity
+    @found __Role Founder $founder
+    @ent __Role Entity $entity
+    @creation __Role Action Founding
+    @result __Bundle $found $ent $creation
+    return $result
+end
 
-# Territorial Relations
-conqueredBy isA __Relation
-colonizedBy isA __Relation
-liberatedBy isA __Relation
-cededTo isA __Relation
-annexed isA __Relation
+@led:led graph leader group
+    # Leader led group/army/movement
+    @lead __Role Leader $leader
+    @grp __Role Group $group
+    @leadership __Role Relation Leadership
+    @result __Bundle $lead $grp $leadership
+    return $result
+end
 
-# Succession Relations
-succeededBy isA __Relation
-precededBy isA __Relation
-dynasticLine isA __Relation
-inheritedBy isA __Relation
+@conqueredBy:conqueredBy graph territory conqueror
+    # Territory conquered by conqueror
+    @terr __Role Territory $territory
+    @conq __Role Conqueror $conqueror
+    @conquest __Role Action Conquest
+    @result __Bundle $terr $conq $conquest
+    return $result
+end
 
-# Influence Relations
-influences isA __Relation
-inspiredBy isA __Relation
-borrowedFrom isA __Relation
-transmitted isA __Relation
+# ===== Political Relations =====
+
+@succeededBy:succeededBy graph ruler successor
+    # Ruler succeeded by another
+    @rul __Role Predecessor $ruler
+    @succ __Role Successor $successor
+    @succession __Role Relation Succession
+    @result __Bundle $rul $succ $succession
+    return $result
+end
+
+@alliedWith:alliedWith graph state1 state2
+    # States formed alliance
+    @s1 __Role Ally $state1
+    @s2 __Role Ally $state2
+    @alliance __Role Relation Alliance
+    @result __Bundle $s1 $s2 $alliance
+    return $result
+end
+
+@wagedWar:wagedWar graph state1 state2
+    # States waged war
+    @s1 __Role Belligerent $state1
+    @s2 __Role Belligerent $state2
+    @war __Role Conflict War
+    @result __Bundle $s1 $s2 $war
+    return $result
+end
+
+@signedTreaty:signedTreaty graph state1 state2 treaty
+    # States signed treaty
+    @s1 __Role Signatory $state1
+    @s2 __Role Signatory $state2
+    @treat __Role Treaty $treaty
+    @agreement __Role Action Signing
+    @result __Bundle $s1 $s2 $treat $agreement
+    return $result
+end
+
+# ===== Social Change Relations =====
+
+@triggered:triggered graph cause revolution
+    # Cause triggered revolution
+    @cau __Role Cause $cause
+    @rev __Role Revolution $revolution
+    @causation __Role Relation Causation
+    @result __Bundle $cau $rev $causation
+    return $result
+end
+
+@reformed:reformed graph reformer institution
+    # Reformer reformed institution
+    @ref __Role Reformer $reformer
+    @inst __Role Institution $institution
+    @reform __Role Action Reform
+    @result __Bundle $ref $inst $reform
+    return $result
+end
+
+@spread:spread graph culture region
+    # Culture spread to region
+    @cult __Role Culture $culture
+    @reg __Role Region $region
+    @diffusion __Role Process CulturalDiffusion
+    @result __Bundle $cult $reg $diffusion
+    return $result
+end
+
+# ===== Cultural & Intellectual Relations =====
+
+@emergedIn:emergedIn graph movement period
+    # Movement emerged in period
+    @mov __Role Movement $movement
+    @per __Role Period $period
+    @emergence __Role Relation Emergence
+    @result __Bundle $mov $per $emergence
+    return $result
+end
+
+@influenced:influenced graph ideology movement
+    # Ideology influenced movement
+    @ideo __Role Ideology $ideology
+    @mov __Role Movement $movement
+    @influence __Role Relation Influence
+    @result __Bundle $ideo $mov $influence
+    return $result
+end
+
+# ===== Evidence Relations =====
+
+@documentedIn:documentedIn graph event document
+    # Event documented in historical source
+    @evt __Role Event $event
+    @doc __Role Document $document
+    @evidence __Role Relation Evidence
+    @result __Bundle $evt $doc $evidence
+    return $result
+end
+
+@attestTo:attestTo graph source event
+    # Source attests to event
+    @src __Role Source $source
+    @evt __Role Event $event
+    @attestation __Role Relation Attestation
+    @result __Bundle $src $evt $attestation
+    return $result
+end
+
+# ===== Mortality & Burial =====
+
+@Buried:Buried graph person
+    # Person is buried (post-mortem status)
+    @pers __Role Person $person
+    @state __Role State Buried
+    @domain __Role Domain History
+    @result __Bundle $pers $state $domain
+    return $result
+end

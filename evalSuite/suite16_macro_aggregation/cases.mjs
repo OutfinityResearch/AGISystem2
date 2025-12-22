@@ -14,7 +14,11 @@
 export const name = 'Macro Aggregation';
 export const description = 'Macros that build complex concepts from anonymous facts, then query/prove over outputs.';
 
-export const theories = ['05-logic.sys2'];
+export const theories = [
+  '05-logic.sys2',
+  'Biology/01-relations.sys2',
+  'Physics/01-relations.sys2'
+];
 
 export const steps = [
   // === SETUP: Define macros inline and invoke them ===

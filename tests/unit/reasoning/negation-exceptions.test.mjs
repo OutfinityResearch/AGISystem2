@@ -187,6 +187,7 @@ describe('Negation & Exceptions', () => {
         has Bob License
         has Bob Violation
 
+        @goodDriver:goodDriver __Relation
         @hasLic has ?x License
         @hasVio has ?x Violation
         @notVio Not $hasVio

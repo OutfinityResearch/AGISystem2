@@ -333,7 +333,10 @@ describe('TextGenerator', () => {
       generator.registerTemplate('customOp', '{Pos1} customizes {Pos2}.');
 
       // Now summarize should use the template
-      learn('@f customOp A B');
+      learn(`
+        @customOp:customOp __Relation
+        @f customOp A B
+      `);
       const vec = session.scope.get('f');
       const result = generator.summarize(vec);
 

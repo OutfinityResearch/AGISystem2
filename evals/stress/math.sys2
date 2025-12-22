@@ -1,7 +1,1575 @@
+# Math - Missing Concepts
+# Auto-generated concept definitions
+
+@a:a graph
+    # Concept: a
+    @entity __Entity a
+    return $entity
+end
+
+@b:b graph
+    # Concept: b
+    @entity __Entity b
+    return $entity
+end
+
+@g:g graph
+    # Concept: g
+    @entity __Entity g
+    return $entity
+end
+
 # =============================================================================
 # MATHEMATICS DOMAIN THEORY - WITH PROPER MULTI-LINE GRAPH SYNTAX
 # =============================================================================
 # 1000+ statements using @:Name graph ... end for theorems/axioms
+# ============================================================================
+# Math Stress Test - Domain-Specific Vocabulary
+# AUTO-GENERATED: Definitions for operators used in this test
+# ============================================================================
+
+@E:E graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@P:P graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@Var:Var graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@abs:abs graph input output
+    @inp __Role Input $input
+    @out __Role Output $output
+    @operation __Pair $inp $out
+    return $operation
+end
+
+@actsOn:actsOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@additiveGroup:additiveGroup graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@allZero:allZero graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@alternateInterior:alternateInterior graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@angle:angle graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@angle1:angle1 graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@angle2:angle2 graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@angle3:angle3 graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@apply:apply graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@areIID:areIID graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@area:area graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@attainsMaximum:attainsMaximum graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@attainsMinimum:attainsMinimum graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@averageFixedPoints:averageFixedPoints graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@base:base graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@binomial:binomial graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@binomialSum:binomialSum graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@canExtend:canExtend graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@cardinality:cardinality graph set result
+    @s __Role Set $set
+    @r __Role Result $result
+    @operation __Pair $s $r
+    return $operation
+end
+
+@characteristicPolynomial:characteristicPolynomial graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@circleWith:circleWith graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@circumference:circumference graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@closedInterval:closedInterval graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@coInterior:coInterior graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@complement:complement graph input output
+    @inp __Role Input $input
+    @out __Role Output $output
+    @operation __Pair $inp $out
+    return $operation
+end
+
+@compose:compose graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@conditionalP:conditionalP graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@congruent:congruent graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@containsConstants:containsConstants graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@continuousFunctions:continuousFunctions graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@convergesInDistribution:convergesInDistribution graph function point value
+    @f __Role Function $function
+    @p __Role Point $point
+    @v __Role Value $value
+    @analysis __Bundle $f $p $v
+    return $analysis
+end
+
+@convergesInProbability:convergesInProbability graph function point value
+    @f __Role Function $function
+    @p __Role Point $point
+    @v __Role Value $value
+    @analysis __Bundle $f $p $v
+    return $analysis
+end
+
+@convergesPointwise:convergesPointwise graph function point value
+    @f __Role Function $function
+    @p __Role Point $point
+    @v __Role Value $value
+    @analysis __Bundle $f $p $v
+    return $analysis
+end
+
+@coprime:coprime graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@corresponding:corresponding graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@definiteIntegral:definiteIntegral graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@degrees:degrees graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derivative:derivative graph function point value
+    @f __Role Function $function
+    @p __Role Point $point
+    @v __Role Value $value
+    @analysis __Bundle $f $p $v
+    return $analysis
+end
+
+@derivativeAt:derivativeAt graph function point value
+    @f __Role Function $function
+    @p __Role Point $point
+    @v __Role Value $value
+    @analysis __Bundle $f $p $v
+    return $analysis
+end
+
+@derives:derives graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@dimension:dimension graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@disjoint:disjoint graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@distance:distance graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@divide:divide graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@divides:divides graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@dominatedBy:dominatedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@doubleIntegral:doubleIntegral graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@endpoint1:endpoint1 graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@endpoint2:endpoint2 graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@eulerPhi:eulerPhi graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@evaluateAt:evaluateAt graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@existsBijection:existsBijection graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@existsInjection:existsInjection graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@existsUnique:existsUnique graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@factorial:factorial graph input output
+    @inp __Role Input $input
+    @out __Role Output $output
+    @operation __Pair $inp $out
+    return $operation
+end
+
+@functionProduct:functionProduct graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@functionSum:functionSum graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@gcd:gcd graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@generatedBy:generatedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@geq:geq graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@hasBoundAbove:hasBoundAbove graph entity
+    @e __Role Entity $entity
+    @property __Role Property hasBoundAbove
+    @check __Pair $e $property
+    return $check
+end
+
+@hasCodomain:hasCodomain graph entity
+    @e __Role Entity $entity
+    @property __Role Property hasCodomain
+    @check __Pair $e $property
+    return $check
+end
+
+@hasConvergentSubsequence:hasConvergentSubsequence graph entity
+    @e __Role Entity $entity
+    @property __Role Property hasConvergentSubsequence
+    @check __Pair $e $property
+    return $check
+end
+
+@hasDerivativeOfOrder:hasDerivativeOfOrder graph entity
+    @e __Role Entity $entity
+    @property __Role Property hasDerivativeOfOrder
+    @check __Pair $e $property
+    return $check
+end
+
+@hasDomain:hasDomain graph entity
+    @e __Role Entity $entity
+    @property __Role Property hasDomain
+    @check __Pair $e $property
+    return $check
+end
+
+@hasFiniteExpectation:hasFiniteExpectation graph entity
+    @e __Role Entity $entity
+    @property __Role Property hasFiniteExpectation
+    @check __Pair $e $property
+    return $check
+end
+
+@hasFiniteMean:hasFiniteMean graph entity
+    @e __Role Entity $entity
+    @property __Role Property hasFiniteMean
+    @check __Pair $e $property
+    return $check
+end
+
+@hasFiniteVariance:hasFiniteVariance graph entity
+    @e __Role Entity $entity
+    @property __Role Property hasFiniteVariance
+    @check __Pair $e $property
+    return $check
+end
+
+@hasOrthonormalEigenbasis:hasOrthonormalEigenbasis graph entity
+    @e __Role Entity $entity
+    @property __Role Property hasOrthonormalEigenbasis
+    @check __Pair $e $property
+    return $check
+end
+
+@hasRealEigenvalues:hasRealEigenvalues graph entity
+    @e __Role Entity $entity
+    @property __Role Property hasRealEigenvalues
+    @check __Pair $e $property
+    return $check
+end
+
+@height:height graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@holds:holds graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@hypotenuse:hypotenuse graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@identity:identity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@image:image graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@inDomain:inDomain graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@inSigmaAlgebra:inSigmaAlgebra graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@independent:independent graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@innerProduct:innerProduct graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@integral:integral graph function point value
+    @f __Role Function $function
+    @p __Role Point $point
+    @v __Role Value $value
+    @analysis __Bundle $f $p $v
+    return $analysis
+end
+
+@integralFrom:integralFrom graph function point value
+    @f __Role Function $function
+    @p __Role Point $point
+    @v __Role Value $value
+    @analysis __Bundle $f $p $v
+    return $analysis
+end
+
+@intersection:intersection graph set result
+    @s __Role Set $set
+    @r __Role Result $result
+    @operation __Pair $s $r
+    return $operation
+end
+
+@inverse:inverse graph input output
+    @inp __Role Input $input
+    @out __Role Output $output
+    @operation __Pair $inp $out
+    return $operation
+end
+
+@isAbelianGroup:isAbelianGroup graph entity
+    @e __Role Entity $entity
+    @property __Role Property isAbelianGroup
+    @check __Pair $e $property
+    return $check
+end
+
+@isAntiderivative:isAntiderivative graph entity
+    @e __Role Entity $entity
+    @property __Role Property isAntiderivative
+    @check __Pair $e $property
+    return $check
+end
+
+@isArbitrary:isArbitrary graph entity
+    @e __Role Entity $entity
+    @property __Role Property isArbitrary
+    @check __Pair $e $property
+    return $check
+end
+
+@isAssumption:isAssumption graph entity
+    @e __Role Entity $entity
+    @property __Role Property isAssumption
+    @check __Pair $e $property
+    return $check
+end
+
+@isBasis:isBasis graph entity
+    @e __Role Entity $entity
+    @property __Role Property isBasis
+    @check __Pair $e $property
+    return $check
+end
+
+@isBetween:isBetween graph entity
+    @e __Role Entity $entity
+    @property __Role Property isBetween
+    @check __Pair $e $property
+    return $check
+end
+
+@isBounded:isBounded graph entity
+    @e __Role Entity $entity
+    @property __Role Property isBounded
+    @check __Pair $e $property
+    return $check
+end
+
+@isBoundedSequence:isBoundedSequence graph entity
+    @e __Role Entity $entity
+    @property __Role Property isBoundedSequence
+    @check __Pair $e $property
+    return $check
+end
+
+@isCauchySequence:isCauchySequence graph entity
+    @e __Role Entity $entity
+    @property __Role Property isCauchySequence
+    @check __Pair $e $property
+    return $check
+end
+
+@isCentralAngle:isCentralAngle graph entity
+    @e __Role Entity $entity
+    @property __Role Property isCentralAngle
+    @check __Pair $e $property
+    return $check
+end
+
+@isCircle:isCircle graph entity
+    @e __Role Entity $entity
+    @property __Role Property isCircle
+    @check __Pair $e $property
+    return $check
+end
+
+@isClosed:isClosed graph entity
+    @e __Role Entity $entity
+    @property __Role Property isClosed
+    @check __Pair $e $property
+    return $check
+end
+
+@isCompact:isCompact graph entity
+    @e __Role Entity $entity
+    @property __Role Property isCompact
+    @check __Pair $e $property
+    return $check
+end
+
+@isConstant:isConstant graph entity
+    @e __Role Entity $entity
+    @property __Role Property isConstant
+    @check __Pair $e $property
+    return $check
+end
+
+@isContinuousAt:isContinuousAt graph entity
+    @e __Role Entity $entity
+    @property __Role Property isContinuousAt
+    @check __Pair $e $property
+    return $check
+end
+
+@isContinuousOn:isContinuousOn graph entity
+    @e __Role Entity $entity
+    @property __Role Property isContinuousOn
+    @check __Pair $e $property
+    return $check
+end
+
+@isConvergent:isConvergent graph entity
+    @e __Role Entity $entity
+    @property __Role Property isConvergent
+    @check __Pair $e $property
+    return $check
+end
+
+@isCyclicGroup:isCyclicGroup graph entity
+    @e __Role Entity $entity
+    @property __Role Property isCyclicGroup
+    @check __Pair $e $property
+    return $check
+end
+
+@isDiameter:isDiameter graph entity
+    @e __Role Entity $entity
+    @property __Role Property isDiameter
+    @check __Pair $e $property
+    return $check
+end
+
+@isDifferentiableAt:isDifferentiableAt graph entity
+    @e __Role Entity $entity
+    @property __Role Property isDifferentiableAt
+    @check __Pair $e $property
+    return $check
+end
+
+@isDifferentiableOn:isDifferentiableOn graph entity
+    @e __Role Entity $entity
+    @property __Role Property isDifferentiableOn
+    @check __Pair $e $property
+    return $check
+end
+
+@isField:isField graph entity
+    @e __Role Entity $entity
+    @property __Role Property isField
+    @check __Pair $e $property
+    return $check
+end
+
+@isFiniteDimensional:isFiniteDimensional graph entity
+    @e __Role Entity $entity
+    @property __Role Property isFiniteDimensional
+    @check __Pair $e $property
+    return $check
+end
+
+@isFiniteGroup:isFiniteGroup graph entity
+    @e __Role Entity $entity
+    @property __Role Property isFiniteGroup
+    @check __Pair $e $property
+    return $check
+end
+
+@isFunction:isFunction graph entity
+    @e __Role Entity $entity
+    @property __Role Property isFunction
+    @check __Pair $e $property
+    return $check
+end
+
+@isGroup:isGroup graph entity
+    @e __Role Entity $entity
+    @property __Role Property isGroup
+    @check __Pair $e $property
+    return $check
+end
+
+@isHomomorphism:isHomomorphism graph entity
+    @e __Role Entity $entity
+    @property __Role Property isHomomorphism
+    @check __Pair $e $property
+    return $check
+end
+
+@isInjective:isInjective graph entity
+    @e __Role Entity $entity
+    @property __Role Property isInjective
+    @check __Pair $e $property
+    return $check
+end
+
+@isInnerProductSpace:isInnerProductSpace graph entity
+    @e __Role Entity $entity
+    @property __Role Property isInnerProductSpace
+    @check __Pair $e $property
+    return $check
+end
+
+@isInscribedAngle:isInscribedAngle graph entity
+    @e __Role Entity $entity
+    @property __Role Property isInscribedAngle
+    @check __Pair $e $property
+    return $check
+end
+
+@isIntegrable:isIntegrable graph entity
+    @e __Role Entity $entity
+    @property __Role Property isIntegrable
+    @check __Pair $e $property
+    return $check
+end
+
+@isIsomorphic:isIsomorphic graph entity
+    @e __Role Entity $entity
+    @property __Role Property isIsomorphic
+    @check __Pair $e $property
+    return $check
+end
+
+@isLength:isLength graph entity
+    @e __Role Entity $entity
+    @property __Role Property isLength
+    @check __Pair $e $property
+    return $check
+end
+
+@isLine:isLine graph entity
+    @e __Role Entity $entity
+    @property __Role Property isLine
+    @check __Pair $e $property
+    return $check
+end
+
+@isLineSegment:isLineSegment graph entity
+    @e __Role Entity $entity
+    @property __Role Property isLineSegment
+    @check __Pair $e $property
+    return $check
+end
+
+@isLinearMap:isLinearMap graph entity
+    @e __Role Entity $entity
+    @property __Role Property isLinearMap
+    @check __Pair $e $property
+    return $check
+end
+
+@isMidpoint:isMidpoint graph entity
+    @e __Role Entity $entity
+    @property __Role Property isMidpoint
+    @check __Pair $e $property
+    return $check
+end
+
+@isMonotone:isMonotone graph entity
+    @e __Role Entity $entity
+    @property __Role Property isMonotone
+    @check __Pair $e $property
+    return $check
+end
+
+@isNormalSubgroup:isNormalSubgroup graph entity
+    @e __Role Entity $entity
+    @property __Role Property isNormalSubgroup
+    @check __Pair $e $property
+    return $check
+end
+
+@isNormedSpace:isNormedSpace graph entity
+    @e __Role Entity $entity
+    @property __Role Property isNormedSpace
+    @check __Pair $e $property
+    return $check
+end
+
+@isPartition:isPartition graph entity
+    @e __Role Entity $entity
+    @property __Role Property isPartition
+    @check __Pair $e $property
+    return $check
+end
+
+@isPoint:isPoint graph entity
+    @e __Role Entity $entity
+    @property __Role Property isPoint
+    @check __Pair $e $property
+    return $check
+end
+
+@isPolynomial:isPolynomial graph entity
+    @e __Role Entity $entity
+    @property __Role Property isPolynomial
+    @check __Pair $e $property
+    return $check
+end
+
+@isPrime:isPrime graph entity
+    @e __Role Entity $entity
+    @property __Role Property isPrime
+    @check __Pair $e $property
+    return $check
+end
+
+@isProbabilitySpace:isProbabilitySpace graph entity
+    @e __Role Entity $entity
+    @property __Role Property isProbabilitySpace
+    @check __Pair $e $property
+    return $check
+end
+
+@isRandomVariable:isRandomVariable graph entity
+    @e __Role Entity $entity
+    @property __Role Property isRandomVariable
+    @check __Pair $e $property
+    return $check
+end
+
+@isRational:isRational graph entity
+    @e __Role Entity $entity
+    @property __Role Property isRational
+    @check __Pair $e $property
+    return $check
+end
+
+@isReal:isReal graph entity
+    @e __Role Entity $entity
+    @property __Role Property isReal
+    @check __Pair $e $property
+    return $check
+end
+
+@isRightAngle:isRightAngle graph entity
+    @e __Role Entity $entity
+    @property __Role Property isRightAngle
+    @check __Pair $e $property
+    return $check
+end
+
+@isRightTriangle:isRightTriangle graph entity
+    @e __Role Entity $entity
+    @property __Role Property isRightTriangle
+    @check __Pair $e $property
+    return $check
+end
+
+@isRing:isRing graph entity
+    @e __Role Entity $entity
+    @property __Role Property isRing
+    @check __Pair $e $property
+    return $check
+end
+
+@isSequence:isSequence graph entity
+    @e __Role Entity $entity
+    @property __Role Property isSequence
+    @check __Pair $e $property
+    return $check
+end
+
+@isSet:isSet graph entity
+    @e __Role Entity $entity
+    @property __Role Property isSet
+    @check __Pair $e $property
+    return $check
+end
+
+@isSetOfVectors:isSetOfVectors graph entity
+    @e __Role Entity $entity
+    @property __Role Property isSetOfVectors
+    @check __Pair $e $property
+    return $check
+end
+
+@isSquareMatrix:isSquareMatrix graph entity
+    @e __Role Entity $entity
+    @property __Role Property isSquareMatrix
+    @check __Pair $e $property
+    return $check
+end
+
+@isSubalgebra:isSubalgebra graph entity
+    @e __Role Entity $entity
+    @property __Role Property isSubalgebra
+    @check __Pair $e $property
+    return $check
+end
+
+@isSubgroup:isSubgroup graph entity
+    @e __Role Entity $entity
+    @property __Role Property isSubgroup
+    @check __Pair $e $property
+    return $check
+end
+
+@isSymmetricMatrix:isSymmetricMatrix graph entity
+    @e __Role Entity $entity
+    @property __Role Property isSymmetricMatrix
+    @check __Pair $e $property
+    return $check
+end
+
+@isTriangle:isTriangle graph entity
+    @e __Role Entity $entity
+    @property __Role Property isTriangle
+    @check __Pair $e $property
+    return $check
+end
+
+@isTrue:isTrue graph entity
+    @e __Role Entity $entity
+    @property __Role Property isTrue
+    @check __Pair $e $property
+    return $check
+end
+
+@isVectorSpace:isVectorSpace graph entity
+    @e __Role Entity $entity
+    @property __Role Property isVectorSpace
+    @check __Pair $e $property
+    return $check
+end
+
+@isWitness:isWitness graph entity
+    @e __Role Entity $entity
+    @property __Role Property isWitness
+    @check __Pair $e $property
+    return $check
+end
+
+@iteratedIntegral:iteratedIntegral graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@kernel:kernel graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@leftCoset:leftCoset graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@leg1:leg1 graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@leg2:leg2 graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@legendreSymbol:legendreSymbol graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@length:length graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@leq:leq graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@limitAt:limitAt graph function point value
+    @f __Role Function $function
+    @p __Role Point $point
+    @v __Role Value $value
+    @analysis __Bundle $f $p $v
+    return $analysis
+end
+
+@limitOf:limitOf graph function point value
+    @f __Role Function $function
+    @p __Role Point $point
+    @v __Role Value $value
+    @analysis __Bundle $f $p $v
+    return $analysis
+end
+
+@lineThrough:lineThrough graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@linearComb:linearComb graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@linearlyIndependent:linearlyIndependent graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@minimum:minimum graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@modulo:modulo graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@multiplicativeInverse:multiplicativeInverse graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@negate:negate graph input output
+    @inp __Role Input $input
+    @out __Role Output $output
+    @operation __Pair $inp $out
+    return $operation
+end
+
+@norm:norm graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@nullity:nullity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@numberOfOrbits:numberOfOrbits graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@onCircle:onCircle graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@onLine:onLine graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@op:op graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@openInterval:openInterval graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@order:order graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@orderedPair:orderedPair graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@pairSet:pairSet graph set result
+    @s __Role Set $set
+    @r __Role Result $result
+    @operation __Pair $s $r
+    return $operation
+end
+
+@parallel:parallel graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@parallelThrough:parallelThrough graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@power:power graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@product:product graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@productSpace:productSpace graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@quotient:quotient graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@quotientGroup:quotientGroup graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@radius:radius graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@rank:rank graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@ratio:ratio graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@remainder:remainder graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@rightCoset:rightCoset graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@sameArc:sameArc graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@sampleMean:sampleMean graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@scalarMult:scalarMult graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@segment:segment graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@separatesPoints:separatesPoints graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@setOfSize:setOfSize graph set result
+    @s __Role Set $set
+    @r __Role Result $result
+    @operation __Pair $s $r
+    return $operation
+end
+
+@side:side graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@side1:side1 graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@side2:side2 graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@sideA:sideA graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@sideB:sideB graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@sideC:sideC graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@spans:spans graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@sqrt:sqrt graph input output
+    @inp __Role Input $input
+    @out __Role Output $output
+    @operation __Pair $inp $out
+    return $operation
+end
+
+@square:square graph input output
+    @inp __Role Input $input
+    @out __Role Output $output
+    @operation __Pair $inp $out
+    return $operation
+end
+
+@standardizedSum:standardizedSum graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@subtract:subtract graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@sum:sum graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@supplementary:supplementary graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@supremum:supremum graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@symmetricDiff:symmetricDiff graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@taylorPolynomial:taylorPolynomial graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@transversal:transversal graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@triangle:triangle graph figure component
+    @fig __Role Figure $figure
+    @comp __Role Component $component
+    @geometry __Pair $fig $comp
+    return $geometry
+end
+
+@uniformClosure:uniformClosure graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@union:union graph set result
+    @s __Role Set $set
+    @r __Role Result $result
+    @operation __Pair $s $r
+    return $operation
+end
+
+@uniquePrimeFactorization:uniquePrimeFactorization graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@vandermondSum:vandermondSum graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@vectorAdd:vectorAdd graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@zero:zero graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@zeroVector:zeroVector graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
 # Classical names for easy proof understanding
 # =============================================================================
 
@@ -12,11 +1580,11 @@
 # Extensionality Axiom: Sets with same elements are equal
 @:Extensionality_Axiom graph A B
     @all forall ?x
-    @inA elementOf ?x $A
-    @inB elementOf ?x $B
+    @inA elementOf ?x A
+    @inB elementOf ?x B
     @iff Iff $inA $inB
     @premise And $all $iff
-    @conclusion equals $A $B
+    @conclusion equals A B
     @axiom Implies $premise $conclusion
     return $axiom
 end
@@ -41,77 +1609,77 @@ end
 
 # Union Axiom: Union of sets exists
 @:Union_Axiom graph x A F
-    @inA elementOf $x $A
-    @aInF elementOf $A $F
+    @inA elementOf $x A
+    @aInF elementOf A F
     @premise And $inA $aInF
-    @conclusion elementOf $x (unionOf $F)
+    @conclusion elementOf $x (unionOf F)
     @axiom Implies $premise $conclusion
     return $axiom
 end
 
 # Power Set Axiom: Power set exists
 @:Power_Set_Axiom graph A B
-    @premise subsetOf $A $B
-    @conclusion elementOf $A (powerSetOf $B)
+    @premise subsetOf A B
+    @conclusion elementOf A (powerSetOf B)
     @axiom Implies $premise $conclusion
     return $axiom
 end
 
 # Subset Transitivity
 @:Subset_Transitivity graph A B C
-    @p1 subsetOf $A $B
-    @p2 subsetOf $B $C
+    @p1 subsetOf A B
+    @p2 subsetOf B C
     @premise And $p1 $p2
-    @conclusion subsetOf $A $C
+    @conclusion subsetOf A C
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Element through Subset
 @:Element_Through_Subset graph x A B
-    @inA elementOf $x $A
-    @sub subsetOf $A $B
+    @inA elementOf $x A
+    @sub subsetOf A B
     @premise And $inA $sub
-    @conclusion elementOf $x $B
+    @conclusion elementOf $x B
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Intersection Definition
 @:Intersection_Definition graph x A B
-    @inA elementOf $x $A
-    @inB elementOf $x $B
+    @inA elementOf $x A
+    @inB elementOf $x B
     @premise And $inA $inB
-    @conclusion elementOf $x (intersectionOf $A $B)
+    @conclusion elementOf $x (intersectionOf A B)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Complement Definition
 @:Complement_Definition graph x A U
-    @inU elementOf $x $U
-    @notInA Not (elementOf $x $A)
+    @inU elementOf $x U
+    @notInA Not (elementOf $x A)
     @premise And $inU $notInA
-    @conclusion elementOf $x (complementOf $A $U)
+    @conclusion elementOf $x (complementOf A U)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Set Difference
 @:Set_Difference graph x A B
-    @inA elementOf $x $A
-    @notInB Not (elementOf $x $B)
+    @inA elementOf $x A
+    @notInB Not (elementOf $x B)
     @premise And $inA $notInB
-    @conclusion elementOf $x (differenceOf $A $B)
+    @conclusion elementOf $x (differenceOf A B)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # De Morgan's Law 1 for Sets
 @:De_Morgan_Sets_1 graph x A B U
-    @premise elementOf $x (complementOf (unionOf $A $B) $U)
-    @compA complementOf $A $U
-    @compB complementOf $B $U
+    @premise elementOf $x (complementOf (unionOf A B) U)
+    @compA complementOf A U
+    @compB complementOf B U
     @conclusion elementOf $x (intersectionOf $compA $compB)
     @theorem Implies $premise $conclusion
     return $theorem
@@ -119,9 +1687,9 @@ end
 
 # De Morgan's Law 2 for Sets
 @:De_Morgan_Sets_2 graph x A B U
-    @premise elementOf $x (complementOf (intersectionOf $A $B) $U)
-    @compA complementOf $A $U
-    @compB complementOf $B $U
+    @premise elementOf $x (complementOf (intersectionOf A B) U)
+    @compA complementOf A U
+    @compB complementOf B U
     @conclusion elementOf $x (unionOf $compA $compB)
     @theorem Implies $premise $conclusion
     return $theorem
@@ -129,9 +1697,9 @@ end
 
 # Distributive Law: Union over Intersection
 @:Distributive_Union_Intersection graph x A B C
-    @premise elementOf $x (unionOf $A (intersectionOf $B $C))
-    @left unionOf $A $B
-    @right unionOf $A $C
+    @premise elementOf $x (unionOf A (intersectionOf B C))
+    @left unionOf A B
+    @right unionOf A C
     @conclusion elementOf $x (intersectionOf $left $right)
     @theorem Implies $premise $conclusion
     return $theorem
@@ -139,9 +1707,9 @@ end
 
 # Distributive Law: Intersection over Union
 @:Distributive_Intersection_Union graph x A B C
-    @premise elementOf $x (intersectionOf $A (unionOf $B $C))
-    @left intersectionOf $A $B
-    @right intersectionOf $A $C
+    @premise elementOf $x (intersectionOf A (unionOf B C))
+    @left intersectionOf A B
+    @right intersectionOf A C
     @conclusion elementOf $x (unionOf $left $right)
     @theorem Implies $premise $conclusion
     return $theorem
@@ -149,21 +1717,21 @@ end
 
 # Cartesian Product
 @:Cartesian_Product_Definition graph a b A B
-    @inA elementOf $a $A
-    @inB elementOf $b $B
+    @inA elementOf $a A
+    @inB elementOf $b B
     @premise And $inA $inB
     @pair orderedPair $a $b
-    @conclusion elementOf $pair (cartesianProduct $A $B)
+    @conclusion elementOf $pair (cartesianProduct A B)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Symmetric Difference
 @:Symmetric_Difference graph x A B
-    @inAnotB And (elementOf $x $A) (Not (elementOf $x $B))
-    @inBnotA And (elementOf $x $B) (Not (elementOf $x $A))
+    @inAnotB And (elementOf $x A) (Not (elementOf $x B))
+    @inBnotA And (elementOf $x B) (Not (elementOf $x A))
     @def Or $inAnotB $inBnotA
-    @premise elementOf $x (symmetricDiff $A $B)
+    @premise elementOf $x (symmetricDiff A B)
     @theorem Iff $premise $def
     return $theorem
 end
@@ -204,14 +1772,14 @@ end
 
 # Peano Axiom 5: Mathematical Induction
 @:Peano_Induction graph P n
-    @base holds $P Zero
+    @base holds P Zero
     @step isNatural $n
-    @stepHolds holds $P $n
+    @stepHolds holds P $n
     @stepAnd And $step $stepHolds
-    @stepConc holds $P (successor $n)
+    @stepConc holds P (successor $n)
     @stepRule Implies $stepAnd $stepConc
     @premise And $base $stepRule
-    @conclusion forall $n (Implies (isNatural $n) (holds $P $n))
+    @conclusion forall $n (Implies (isNatural $n) (holds P $n))
     @axiom Implies $premise $conclusion
     return $axiom
 end
@@ -437,11 +2005,11 @@ end
 
 # Euclid's Postulate 1: Line through two points
 @:Euclid_Postulate_1 graph A B
-    @p1 isPoint $A
-    @p2 isPoint $B
-    @p3 Not (equals $A $B)
+    @p1 isPoint A
+    @p2 isPoint B
+    @p3 Not (equals A B)
     @premise And $p1 (And $p2 $p3)
-    @conclusion existsUnique (lineThrough $A $B)
+    @conclusion existsUnique (lineThrough A B)
     @postulate Implies $premise $conclusion
     return $postulate
 end
@@ -456,10 +2024,10 @@ end
 
 # Euclid's Postulate 3: Circle with center and radius
 @:Euclid_Postulate_3 graph C r
-    @p1 isPoint $C
+    @p1 isPoint C
     @p2 isLength $r
     @premise And $p1 $p2
-    @conclusion exists (circleWith $C $r)
+    @conclusion exists (circleWith C $r)
     @postulate Implies $premise $conclusion
     return $postulate
 end
@@ -477,51 +2045,51 @@ end
 # Euclid's Postulate 5: Parallel Postulate
 @:Euclid_Postulate_5 graph l P
     @p1 isLine $l
-    @p2 isPoint $P
-    @p3 Not (onLine $P $l)
+    @p2 isPoint P
+    @p3 Not (onLine P $l)
     @premise And $p1 (And $p2 $p3)
-    @conclusion existsUnique (parallelThrough $P $l)
+    @conclusion existsUnique (parallelThrough P $l)
     @postulate Implies $premise $conclusion
     return $postulate
 end
 
 # SSS Congruence
 @:SSS_Congruence graph A B C D E F
-    @s1 congruent (side $A $B) (side $D $E)
-    @s2 congruent (side $B $C) (side $E $F)
-    @s3 congruent (side $C $A) (side $F $D)
+    @s1 congruent (side A B) (side D E)
+    @s2 congruent (side B C) (side E F)
+    @s3 congruent (side C A) (side F D)
     @premise And $s1 (And $s2 $s3)
-    @conclusion congruent (triangle $A $B $C) (triangle $D $E $F)
+    @conclusion congruent (triangle A B C) (triangle D E F)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # SAS Congruence
 @:SAS_Congruence graph A B C D E F
-    @s1 congruent (side $A $B) (side $D $E)
-    @a1 congruent (angle $A $B $C) (angle $D $E $F)
-    @s2 congruent (side $B $C) (side $E $F)
+    @s1 congruent (side A B) (side D E)
+    @a1 congruent (angle A B C) (angle D E F)
+    @s2 congruent (side B C) (side E F)
     @premise And $s1 (And $a1 $s2)
-    @conclusion congruent (triangle $A $B $C) (triangle $D $E $F)
+    @conclusion congruent (triangle A B C) (triangle D E F)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # ASA Congruence
 @:ASA_Congruence graph A B C D E F
-    @a1 congruent (angle $C $A $B) (angle $F $D $E)
-    @s1 congruent (side $A $B) (side $D $E)
-    @a2 congruent (angle $A $B $C) (angle $D $E $F)
+    @a1 congruent (angle C A B) (angle F D E)
+    @s1 congruent (side A B) (side D E)
+    @a2 congruent (angle A B C) (angle D E F)
     @premise And $a1 (And $s1 $a2)
-    @conclusion congruent (triangle $A $B $C) (triangle $D $E $F)
+    @conclusion congruent (triangle A B C) (triangle D E F)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Triangle Angle Sum
 @:Triangle_Angle_Sum graph T
-    @premise isTriangle $T
-    @sum sum (angle1 $T) (angle2 $T) (angle3 $T)
+    @premise isTriangle T
+    @sum sum (angle1 T) (angle2 T) (angle3 T)
     @conclusion equals $sum (degrees 180)
     @theorem Implies $premise $conclusion
     return $theorem
@@ -529,10 +2097,10 @@ end
 
 # Pythagorean Theorem
 @:Pythagorean_Theorem graph T
-    @premise isRightTriangle $T
-    @a leg1 $T
-    @b leg2 $T
-    @c hypotenuse $T
+    @premise isRightTriangle T
+    @a leg1 T
+    @b leg2 T
+    @c hypotenuse T
     @sqA square $a
     @sqB square $b
     @sqC square $c
@@ -544,35 +2112,35 @@ end
 
 # Converse of Pythagorean Theorem
 @:Converse_Pythagorean graph T
-    @p1 isTriangle $T
-    @sqA square (sideA $T)
-    @sqB square (sideB $T)
-    @sqC square (sideC $T)
+    @p1 isTriangle T
+    @sqA square (sideA T)
+    @sqB square (sideB T)
+    @sqC square (sideC T)
     @p2 equals $sqC (add $sqA $sqB)
     @premise And $p1 $p2
-    @conclusion isRightTriangle $T
+    @conclusion isRightTriangle T
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Thales' Theorem
 @:Thales_Theorem graph C AB P
-    @p1 isCircle $C
-    @p2 isDiameter $AB $C
-    @p3 onCircle $P $C
-    @p4 Not (equals $P (endpoint1 $AB))
-    @p5 Not (equals $P (endpoint2 $AB))
+    @p1 isCircle C
+    @p2 isDiameter AB C
+    @p3 onCircle P C
+    @p4 Not (equals P (endpoint1 AB))
+    @p5 Not (equals P (endpoint2 AB))
     @premise And $p1 (And $p2 (And $p3 (And $p4 $p5)))
-    @conclusion isRightAngle (angle (endpoint1 $AB) $P (endpoint2 $AB))
+    @conclusion isRightAngle (angle (endpoint1 AB) P (endpoint2 AB))
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Inscribed Angle Theorem
 @:Inscribed_Angle_Theorem graph C alpha beta
-    @p1 isCircle $C
-    @p2 isCentralAngle $alpha $C
-    @p3 isInscribedAngle $beta $C
+    @p1 isCircle C
+    @p2 isCentralAngle $alpha C
+    @p3 isInscribedAngle $beta C
     @p4 sameArc $alpha $beta
     @premise And $p1 (And $p2 (And $p3 $p4))
     @conclusion equals $alpha (mult Two $beta)
@@ -595,10 +2163,10 @@ end
 
 # Triangle Inequality
 @:Triangle_Inequality graph A B C
-    @premise isTriangle $A $B $C
-    @ineq1 lessThan (distance $A $B) (add (distance $A $C) (distance $C $B))
-    @ineq2 lessThan (distance $A $C) (add (distance $A $B) (distance $B $C))
-    @ineq3 lessThan (distance $B $C) (add (distance $A $B) (distance $A $C))
+    @premise isTriangle A B C
+    @ineq1 lessThan (distance A B) (add (distance A C) (distance C B))
+    @ineq2 lessThan (distance A C) (add (distance A B) (distance B C))
+    @ineq3 lessThan (distance B C) (add (distance A B) (distance A C))
     @conclusion And $ineq1 (And $ineq2 $ineq3)
     @theorem Implies $premise $conclusion
     return $theorem
@@ -606,11 +2174,11 @@ end
 
 # Midpoint Theorem
 @:Midpoint_Theorem graph A B C M N
-    @p1 isMidpoint $M $A $B
-    @p2 isMidpoint $N $A $C
+    @p1 isMidpoint M A B
+    @p2 isMidpoint N A C
     @premise And $p1 $p2
-    @segMN segment $M $N
-    @segBC segment $B $C
+    @segMN segment M N
+    @segBC segment B C
     @par parallel $segMN $segBC
     @half equals (length $segMN) (divide (length $segBC) Two)
     @conclusion And $par $half
@@ -620,30 +2188,30 @@ end
 
 # Triangle Area Formula
 @:Triangle_Area graph T
-    @premise isTriangle $T
-    @bh mult (base $T) (height $T)
-    @conclusion equals (area $T) (divide $bh Two)
+    @premise isTriangle T
+    @bh mult (base T) (height T)
+    @conclusion equals (area T) (divide $bh Two)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # AA Similarity Criterion
 @:AA_Similarity graph T1 T2
-    @p1 isTriangle $T1
-    @p2 isTriangle $T2
-    @p3 congruent (angle1 $T1) (angle1 $T2)
-    @p4 congruent (angle2 $T1) (angle2 $T2)
+    @p1 isTriangle T1
+    @p2 isTriangle T2
+    @p3 congruent (angle1 T1) (angle1 T2)
+    @p4 congruent (angle2 T1) (angle2 T2)
     @premise And $p1 (And $p2 (And $p3 $p4))
-    @conclusion similar $T1 $T2
+    @conclusion similar T1 T2
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Similar Triangles Have Proportional Sides
 @:Similar_Proportional_Sides graph T1 T2
-    @premise similar $T1 $T2
-    @r1 ratio (side1 $T1) (side1 $T2)
-    @r2 ratio (side2 $T1) (side2 $T2)
+    @premise similar T1 T2
+    @r1 ratio (side1 T1) (side1 T2)
+    @r2 ratio (side2 T1) (side2 T2)
     @conclusion equals $r1 $r2
     @theorem Implies $premise $conclusion
     return $theorem
@@ -651,18 +2219,18 @@ end
 
 # Circle Area
 @:Circle_Area graph C
-    @premise isCircle $C
-    @r radius $C
-    @conclusion equals (area $C) (mult Pi (square $r))
+    @premise isCircle C
+    @r radius C
+    @conclusion equals (area C) (mult Pi (square $r))
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Circle Circumference
 @:Circle_Circumference graph C
-    @premise isCircle $C
-    @r radius $C
-    @conclusion equals (circumference $C) (mult (mult Two Pi) $r)
+    @premise isCircle C
+    @r radius C
+    @conclusion equals (circumference C) (mult (mult Two Pi) $r)
     @theorem Implies $premise $conclusion
     return $theorem
 end
@@ -673,24 +2241,24 @@ end
 
 # Group Closure Axiom
 @:Group_Closure graph G a b
-    @p1 isGroup $G
-    @p2 elementOf $a $G
-    @p3 elementOf $b $G
+    @p1 isGroup G
+    @p2 elementOf $a G
+    @p3 elementOf $b G
     @premise And $p1 (And $p2 $p3)
-    @conclusion elementOf (op $G $a $b) $G
+    @conclusion elementOf (op G $a $b) G
     @axiom Implies $premise $conclusion
     return $axiom
 end
 
 # Group Associativity Axiom
 @:Group_Associativity graph G a b c
-    @p1 isGroup $G
-    @p2 elementOf $a $G
-    @p3 elementOf $b $G
-    @p4 elementOf $c $G
+    @p1 isGroup G
+    @p2 elementOf $a G
+    @p3 elementOf $b G
+    @p4 elementOf $c G
     @premise And $p1 (And $p2 (And $p3 $p4))
-    @left op $G (op $G $a $b) $c
-    @right op $G $a (op $G $b $c)
+    @left op G (op G $a $b) $c
+    @right op G $a (op G $b $c)
     @conclusion equals $left $right
     @axiom Implies $premise $conclusion
     return $axiom
@@ -698,12 +2266,12 @@ end
 
 # Group Identity Axiom
 @:Group_Identity graph G a
-    @p1 isGroup $G
-    @p2 elementOf $a $G
+    @p1 isGroup G
+    @p2 elementOf $a G
     @premise And $p1 $p2
-    @e identity $G
-    @left equals (op $G $e $a) $a
-    @right equals (op $G $a $e) $a
+    @e identity G
+    @left equals (op G $e $a) $a
+    @right equals (op G $a $e) $a
     @conclusion And $left $right
     @axiom Implies $premise $conclusion
     return $axiom
@@ -711,13 +2279,13 @@ end
 
 # Group Inverse Axiom
 @:Group_Inverse graph G a
-    @p1 isGroup $G
-    @p2 elementOf $a $G
+    @p1 isGroup G
+    @p2 elementOf $a G
     @premise And $p1 $p2
-    @e identity $G
-    @inv inverse $G $a
-    @left equals (op $G $a $inv) $e
-    @right equals (op $G $inv $a) $e
+    @e identity G
+    @inv inverse G $a
+    @left equals (op G $a $inv) $e
+    @right equals (op G $inv $a) $e
     @conclusion And $left $right
     @axiom Implies $premise $conclusion
     return $axiom
@@ -725,66 +2293,66 @@ end
 
 # Abelian Group Property
 @:Abelian_Property graph G a b
-    @p1 isAbelianGroup $G
-    @p2 elementOf $a $G
-    @p3 elementOf $b $G
+    @p1 isAbelianGroup G
+    @p2 elementOf $a G
+    @p3 elementOf $b G
     @premise And $p1 (And $p2 $p3)
-    @conclusion equals (op $G $a $b) (op $G $b $a)
+    @conclusion equals (op G $a $b) (op G $b $a)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Subgroup Criterion
-@:Subgroup_Criterion graph G H
-    @p1 isGroup $G
-    @p2 subsetOf $H $G
-    @p3 Not (equals $H EmptySet)
-    @closure elementOf $a $H
-    @closureB elementOf $b $H
+@:Subgroup_Criterion graph G H a b
+    @p1 isGroup G
+    @p2 subsetOf H G
+    @p3 Not (equals H EmptySet)
+    @closure elementOf $a H
+    @closureB elementOf $b H
     @closurePrem And $closure $closureB
-    @closureConc elementOf (op $G $a (inverse $G $b)) $H
+    @closureConc elementOf (op G $a (inverse G $b)) H
     @p4 forall $a $b (Implies $closurePrem $closureConc)
     @premise And $p1 (And $p2 (And $p3 $p4))
-    @conclusion isSubgroup $H $G
+    @conclusion isSubgroup H G
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Lagrange's Theorem
 @:Lagrange_Theorem graph G H
-    @p1 isFiniteGroup $G
-    @p2 isSubgroup $H $G
+    @p1 isFiniteGroup G
+    @p2 isSubgroup H G
     @premise And $p1 $p2
-    @conclusion divides (order $H) (order $G)
+    @conclusion divides (order H) (order G)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Coset Cardinality
 @:Coset_Cardinality graph G H a
-    @p1 isGroup $G
-    @p2 isSubgroup $H $G
-    @p3 elementOf $a $G
+    @p1 isGroup G
+    @p2 isSubgroup H G
+    @p3 elementOf $a G
     @premise And $p1 (And $p2 $p3)
-    @conclusion equals (cardinality (leftCoset $a $H)) (cardinality $H)
+    @conclusion equals (cardinality (leftCoset $a H)) (cardinality H)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Normal Subgroup Definition
-@:Normal_Subgroup graph G N
-    @p1 isSubgroup $N $G
-    @cosetEq forall $g (Implies (elementOf $g $G) (equals (leftCoset $g $N) (rightCoset $g $N)))
+@:Normal_Subgroup graph G N g
+    @p1 isSubgroup N G
+    @cosetEq forall $g (Implies (elementOf $g G) (equals (leftCoset $g N) (rightCoset $g N)))
     @premise And $p1 $cosetEq
-    @conclusion isNormalSubgroup $N $G
+    @conclusion isNormalSubgroup N G
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # First Isomorphism Theorem
 @:First_Isomorphism_Theorem graph G H phi
-    @premise isHomomorphism $phi $G $H
-    @quotient quotientGroup $G (kernel $phi)
+    @premise isHomomorphism $phi G H
+    @quotient quotientGroup G (kernel $phi)
     @img image $phi
     @conclusion isIsomorphic $quotient $img
     @theorem Implies $premise $conclusion
@@ -792,38 +2360,38 @@ end
 end
 
 # Cyclic Group Has Generator
-@:Cyclic_Generator graph G
-    @premise isCyclicGroup $G
-    @conclusion exists $g (equals $G (generatedBy $g))
+@:Cyclic_Generator graph G g
+    @premise isCyclicGroup G
+    @conclusion exists $g (equals G (generatedBy $g))
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Cyclic Groups Are Abelian
 @:Cyclic_Is_Abelian graph G
-    @premise isCyclicGroup $G
-    @conclusion isAbelianGroup $G
+    @premise isCyclicGroup G
+    @conclusion isAbelianGroup G
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Ring Additive Structure
 @:Ring_Additive graph R
-    @premise isRing $R
-    @conclusion isAbelianGroup (additiveGroup $R)
+    @premise isRing R
+    @conclusion isAbelianGroup (additiveGroup R)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Ring Distributivity
 @:Ring_Distributivity graph R a b c
-    @p1 isRing $R
-    @p2 elementOf $a $R
-    @p3 elementOf $b $R
-    @p4 elementOf $c $R
+    @p1 isRing R
+    @p2 elementOf $a R
+    @p3 elementOf $b R
+    @p4 elementOf $c R
     @premise And $p1 (And $p2 (And $p3 $p4))
-    @leftDist equals (mult $R $a (add $R $b $c)) (add $R (mult $R $a $b) (mult $R $a $c))
-    @rightDist equals (mult $R (add $R $a $b) $c) (add $R (mult $R $a $c) (mult $R $b $c))
+    @leftDist equals (mult R $a (add R $b $c)) (add R (mult R $a $b) (mult R $a $c))
+    @rightDist equals (mult R (add R $a $b) $c) (add R (mult R $a $c) (mult R $b $c))
     @conclusion And $leftDist $rightDist
     @theorem Implies $premise $conclusion
     return $theorem
@@ -831,66 +2399,66 @@ end
 
 # Field Has Multiplicative Inverses
 @:Field_Inverse graph F a
-    @p1 isField $F
-    @p2 elementOf $a $F
-    @p3 Not (equals $a (zero $F))
+    @p1 isField F
+    @p2 elementOf $a F
+    @p3 Not (equals $a (zero F))
     @premise And $p1 (And $p2 $p3)
-    @conclusion exists (multiplicativeInverse $F $a)
+    @conclusion exists (multiplicativeInverse F $a)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Vector Space Closure
 @:Vector_Space_Closure graph V F u v
-    @p1 isVectorSpace $V $F
-    @p2 elementOf $u $V
-    @p3 elementOf $v $V
+    @p1 isVectorSpace V F
+    @p2 elementOf $u V
+    @p3 elementOf $v V
     @premise And $p1 (And $p2 $p3)
-    @conclusion elementOf (vectorAdd $V $u $v) $V
+    @conclusion elementOf (vectorAdd V $u $v) V
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Scalar Multiplication Closure
 @:Scalar_Mult_Closure graph V F c v
-    @p1 isVectorSpace $V $F
-    @p2 elementOf $c $F
-    @p3 elementOf $v $V
+    @p1 isVectorSpace V F
+    @p2 elementOf $c F
+    @p3 elementOf $v V
     @premise And $p1 (And $p2 $p3)
-    @conclusion elementOf (scalarMult $V $c $v) $V
+    @conclusion elementOf (scalarMult V $c $v) V
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Linear Independence Definition
 @:Linear_Independence graph V F S
-    @p1 isVectorSpace $V $F
-    @p2 isSetOfVectors $S $V
-    @trivialCond And (equals (linearComb ?coeffs $S) (zeroVector $V)) (Not (allZero ?coeffs))
+    @p1 isVectorSpace V F
+    @p2 isSetOfVectors S V
+    @trivialCond And (equals (linearComb ?coeffs S) (zeroVector V)) (Not (allZero ?coeffs))
     @p3 forall ?coeffs (Implies $trivialCond False)
     @premise And $p1 (And $p2 $p3)
-    @conclusion linearlyIndependent $S
+    @conclusion linearlyIndependent S
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Basis Definition
 @:Basis_Definition graph V B
-    @p1 linearlyIndependent $B
-    @p2 spans $B $V
+    @p1 linearlyIndependent B
+    @p2 spans B V
     @premise And $p1 $p2
-    @conclusion isBasis $B $V
+    @conclusion isBasis B V
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Dimension Theorem
 @:Dimension_Theorem graph V B1 B2
-    @p1 isFiniteDimensional $V
-    @p2 isBasis $B1 $V
-    @p3 isBasis $B2 $V
+    @p1 isFiniteDimensional V
+    @p2 isBasis B1 V
+    @p3 isBasis B2 V
     @premise And $p1 (And $p2 $p3)
-    @conclusion equals (cardinality $B1) (cardinality $B2)
+    @conclusion equals (cardinality B1) (cardinality B2)
     @theorem Implies $premise $conclusion
     return $theorem
 end
@@ -901,118 +2469,118 @@ end
 
 # Modus Ponens
 @:Modus_Ponens graph P Q
-    @p1 isTrue $P
-    @p2 isTrue (implies $P $Q)
+    @p1 isTrue P
+    @p2 isTrue (implies P Q)
     @premise And $p1 $p2
-    @conclusion isTrue $Q
+    @conclusion isTrue Q
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # Modus Tollens
 @:Modus_Tollens graph P Q
-    @p1 isTrue (not $Q)
-    @p2 isTrue (implies $P $Q)
+    @p1 isTrue (not Q)
+    @p2 isTrue (implies P Q)
     @premise And $p1 $p2
-    @conclusion isTrue (not $P)
+    @conclusion isTrue (not P)
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # Hypothetical Syllogism
 @:Hypothetical_Syllogism graph P Q R
-    @p1 isTrue (implies $P $Q)
-    @p2 isTrue (implies $Q $R)
+    @p1 isTrue (implies P Q)
+    @p2 isTrue (implies Q R)
     @premise And $p1 $p2
-    @conclusion isTrue (implies $P $R)
+    @conclusion isTrue (implies P R)
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # Disjunctive Syllogism
 @:Disjunctive_Syllogism graph P Q
-    @p1 isTrue (or $P $Q)
-    @p2 isTrue (not $P)
+    @p1 isTrue (or P Q)
+    @p2 isTrue (not P)
     @premise And $p1 $p2
-    @conclusion isTrue $Q
+    @conclusion isTrue Q
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # Constructive Dilemma
 @:Constructive_Dilemma graph P Q R S
-    @p1 isTrue (or $P $Q)
-    @p2 isTrue (implies $P $R)
-    @p3 isTrue (implies $Q $S)
+    @p1 isTrue (or P Q)
+    @p2 isTrue (implies P R)
+    @p3 isTrue (implies Q S)
     @premise And $p1 (And $p2 $p3)
-    @conclusion isTrue (or $R $S)
+    @conclusion isTrue (or R S)
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # Double Negation Elimination
 @:Double_Negation_Elimination graph P
-    @premise isTrue (not (not $P))
-    @conclusion isTrue $P
+    @premise isTrue (not (not P))
+    @conclusion isTrue P
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # Double Negation Introduction
 @:Double_Negation_Introduction graph P
-    @premise isTrue $P
-    @conclusion isTrue (not (not $P))
+    @premise isTrue P
+    @conclusion isTrue (not (not P))
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # De Morgan's Law 1 (Logic)
 @:De_Morgan_Logic_1 graph P Q
-    @premise isTrue (not (and $P $Q))
-    @conclusion isTrue (or (not $P) (not $Q))
+    @premise isTrue (not (and P Q))
+    @conclusion isTrue (or (not P) (not Q))
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # De Morgan's Law 2 (Logic)
 @:De_Morgan_Logic_2 graph P Q
-    @premise isTrue (not (or $P $Q))
-    @conclusion isTrue (and (not $P) (not $Q))
+    @premise isTrue (not (or P Q))
+    @conclusion isTrue (and (not P) (not Q))
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # Contraposition
 @:Contraposition graph P Q
-    @premise isTrue (implies $P $Q)
-    @conclusion isTrue (implies (not $Q) (not $P))
+    @premise isTrue (implies P Q)
+    @conclusion isTrue (implies (not Q) (not P))
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # Law of Excluded Middle
 @:Excluded_Middle graph P
-    @forall forall $P
-    @conclusion isTrue (or $P (not $P))
+    @forall forall P
+    @conclusion isTrue (or P (not P))
     @law Implies $forall $conclusion
     return $law
 end
 
 # Conjunction Introduction
 @:Conjunction_Introduction graph P Q
-    @p1 isTrue $P
-    @p2 isTrue $Q
+    @p1 isTrue P
+    @p2 isTrue Q
     @premise And $p1 $p2
-    @conclusion isTrue (and $P $Q)
+    @conclusion isTrue (and P Q)
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # Conjunction Elimination
 @:Conjunction_Elimination graph P Q
-    @premise isTrue (and $P $Q)
-    @c1 isTrue $P
-    @c2 isTrue $Q
+    @premise isTrue (and P Q)
+    @c1 isTrue P
+    @c2 isTrue Q
     @conclusion And $c1 $c2
     @rule Implies $premise $conclusion
     return $rule
@@ -1020,35 +2588,35 @@ end
 
 # Disjunction Introduction
 @:Disjunction_Introduction graph P Q
-    @premise isTrue $P
-    @conclusion isTrue (or $P $Q)
+    @premise isTrue P
+    @conclusion isTrue (or P Q)
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # Universal Instantiation
 @:Universal_Instantiation graph P x a
-    @premise isTrue (forall $x (holds $P $x))
-    @conclusion isTrue (holds $P $a)
+    @premise isTrue (forall $x (holds P $x))
+    @conclusion isTrue (holds P $a)
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # Universal Generalization
 @:Universal_Generalization graph P a x
-    @p1 isTrue (holds $P $a)
+    @p1 isTrue (holds P $a)
     @p2 isArbitrary $a
     @premise And $p1 $p2
-    @conclusion isTrue (forall $x (holds $P $x))
+    @conclusion isTrue (forall $x (holds P $x))
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # Existential Instantiation
 @:Existential_Instantiation graph P x c
-    @premise isTrue (exists $x (holds $P $x))
+    @premise isTrue (exists $x (holds P $x))
     @witness isWitness $c
-    @holds isTrue (holds $P $c)
+    @holds isTrue (holds P $c)
     @conclusion exists $c (And $witness $holds)
     @rule Implies $premise $conclusion
     return $rule
@@ -1056,18 +2624,18 @@ end
 
 # Existential Generalization
 @:Existential_Generalization graph P a x
-    @premise isTrue (holds $P $a)
-    @conclusion isTrue (exists $x (holds $P $x))
+    @premise isTrue (holds P $a)
+    @conclusion isTrue (exists $x (holds P $x))
     @rule Implies $premise $conclusion
     return $rule
 end
 
 # Reductio ad Absurdum
 @:Reductio_Ad_Absurdum graph P
-    @p1 isAssumption $P
-    @p2 derives $P Contradiction
+    @p1 isAssumption P
+    @p2 derives P Contradiction
     @premise And $p1 $p2
-    @conclusion isTrue (not $P)
+    @conclusion isTrue (not P)
     @rule Implies $premise $conclusion
     return $rule
 end
@@ -1081,11 +2649,11 @@ end
     @p1 isFunction $f
     @p2 inDomain $a $f
     @deltaCond And (lessThan Zero (abs (subtract ?x $a))) (lessThan (abs (subtract ?x $a)) ?delta)
-    @epsCond lessThan (abs (subtract (apply $f ?x) $L)) ?epsilon
+    @epsCond lessThan (abs (subtract (apply $f ?x) L)) ?epsilon
     @deltaExists exists ?delta (And (greaterThan ?delta Zero) (forall ?x (Implies $deltaCond $epsCond)))
     @p3 forall ?epsilon (Implies (greaterThan ?epsilon Zero) $deltaExists)
     @premise And $p1 (And $p2 $p3)
-    @conclusion equals (limitAt $f $a) $L
+    @conclusion equals (limitAt $f $a) L
     @definition Implies $premise $conclusion
     return $definition
 end
@@ -1225,7 +2793,7 @@ end
     @p1 isContinuousOn $f (closedInterval $a ?b)
     @F integralFrom $a $f
     @premise $p1
-    @conclusion isDifferentiableOn $F (openInterval $a ?b)
+    @conclusion isDifferentiableOn F (openInterval $a ?b)
     @theorem Implies $premise $conclusion
     return $theorem
 end
@@ -1235,7 +2803,7 @@ end
     @p1 isContinuousOn $f (closedInterval $a ?b)
     @F integralFrom $a $f
     @premise $p1
-    @conclusion equals (derivative $F) $f
+    @conclusion equals (derivative F) $f
     @theorem Implies $premise $conclusion
     return $theorem
 end
@@ -1243,9 +2811,9 @@ end
 # Fundamental Theorem of Calculus (Part 2)
 @:FTC_Part_2 graph f a b F
     @p1 isContinuousOn $f (closedInterval $a $b)
-    @p2 isAntiderivative $F $f
+    @p2 isAntiderivative F $f
     @premise And $p1 $p2
-    @conclusion equals (definiteIntegral $f $a $b) (subtract (apply $F $b) (apply $F $a))
+    @conclusion equals (definiteIntegral $f $a $b) (subtract (apply F $b) (apply F $a))
     @theorem Implies $premise $conclusion
     return $theorem
 end
@@ -1256,9 +2824,9 @@ end
 
 # Probability Axiom 1: Non-negativity and bounds
 @:Probability_Axiom_1 graph Omega Sigma P A
-    @premise isProbabilitySpace $Omega $Sigma $P
-    @geqZero geq (P $A) Zero
-    @leqOne leq (P $A) One
+    @premise isProbabilitySpace Omega Sigma P
+    @geqZero geq (P A) Zero
+    @leqOne leq (P A) One
     @conclusion And $geqZero $leqOne
     @axiom Implies $premise $conclusion
     return $axiom
@@ -1266,134 +2834,134 @@ end
 
 # Probability Axiom 2: Sample space has probability 1
 @:Probability_Axiom_2 graph Omega Sigma P
-    @premise isProbabilitySpace $Omega $Sigma $P
-    @conclusion equals (P $Omega) One
+    @premise isProbabilitySpace Omega Sigma P
+    @conclusion equals (P Omega) One
     @axiom Implies $premise $conclusion
     return $axiom
 end
 
 # Probability Axiom 3: Countable additivity
 @:Probability_Axiom_3 graph Omega Sigma P A B
-    @p1 isProbabilitySpace $Omega $Sigma $P
-    @p2 disjoint $A $B
+    @p1 isProbabilitySpace Omega Sigma P
+    @p2 disjoint A B
     @premise And $p1 $p2
-    @conclusion equals (P (union $A $B)) (add (P $A) (P $B))
+    @conclusion equals (P (union A B)) (add (P A) (P B))
     @axiom Implies $premise $conclusion
     return $axiom
 end
 
 # Complement Rule
 @:Complement_Rule graph Omega Sigma P A
-    @p1 isProbabilitySpace $Omega $Sigma $P
-    @p2 inSigmaAlgebra $A $Sigma
+    @p1 isProbabilitySpace Omega Sigma P
+    @p2 inSigmaAlgebra A Sigma
     @premise And $p1 $p2
-    @conclusion equals (P (complement $A)) (subtract One (P $A))
+    @conclusion equals (P (complement A)) (subtract One (P A))
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Addition Rule (General)
 @:Addition_Rule graph P A B
-    @sum add (P $A) (P $B)
-    @inter P (intersection $A $B)
-    @conclusion equals (P (union $A $B)) (subtract $sum $inter)
+    @sum add (P A) (P B)
+    @inter P (intersection A B)
+    @conclusion equals (P (union A B)) (subtract $sum $inter)
     return $conclusion
 end
 
 # Conditional Probability Definition
 @:Conditional_Probability graph P A B
-    @premise greaterThan (P $B) Zero
-    @num P (intersection $A $B)
-    @den P $B
-    @conclusion equals (conditionalP $A $B) (divide $num $den)
+    @premise greaterThan (P B) Zero
+    @num P (intersection A B)
+    @den P B
+    @conclusion equals (conditionalP A B) (divide $num $den)
     @definition Implies $premise $conclusion
     return $definition
 end
 
 # Multiplication Rule
 @:Multiplication_Rule graph P A B
-    @premise greaterThan (P $B) Zero
-    @conclusion equals (P (intersection $A $B)) (mult (P $B) (conditionalP $A $B))
+    @premise greaterThan (P B) Zero
+    @conclusion equals (P (intersection A B)) (mult (P B) (conditionalP A B))
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Independence Definition
 @:Independence_Definition graph P A B
-    @premise equals (P (intersection $A $B)) (mult (P $A) (P $B))
-    @conclusion independent $A $B
+    @premise equals (P (intersection A B)) (mult (P A) (P B))
+    @conclusion independent A B
     @definition Implies $premise $conclusion
     return $definition
 end
 
 # Bayes' Theorem
 @:Bayes_Theorem graph P A B
-    @p1 greaterThan (P $B) Zero
-    @p2 greaterThan (P $A) Zero
+    @p1 greaterThan (P B) Zero
+    @p2 greaterThan (P A) Zero
     @premise And $p1 $p2
-    @num mult (conditionalP $B $A) (P $A)
-    @den P $B
-    @conclusion equals (conditionalP $A $B) (divide $num $den)
+    @num mult (conditionalP B A) (P A)
+    @den P B
+    @conclusion equals (conditionalP A B) (divide $num $den)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Law of Total Probability
 @:Total_Probability graph P A B1 Bn Omega
-    @premise isPartition $B1 $Bn $Omega
-    @term mult (conditionalP $A ?Bi) (P ?Bi)
-    @conclusion equals (P $A) (sum $term)
+    @premise isPartition B1 Bn Omega
+    @term mult (conditionalP A ?Bi) (P ?Bi)
+    @conclusion equals (P A) (sum $term)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Expected Value Linearity
 @:Expected_Value_Linearity graph X Y
-    @p1 isRandomVariable $X
-    @p2 isRandomVariable $Y
+    @p1 isRandomVariable X
+    @p2 isRandomVariable Y
     @premise And $p1 $p2
-    @conclusion equals (E (add $X $Y)) (add (E $X) (E $Y))
+    @conclusion equals (E (add X Y)) (add (E X) (E Y))
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Expected Value Scaling
 @:Expected_Value_Scaling graph X c
-    @p1 isRandomVariable $X
+    @p1 isRandomVariable X
     @p2 isConstant $c
     @premise And $p1 $p2
-    @conclusion equals (E (mult $c $X)) (mult $c (E $X))
+    @conclusion equals (E (mult $c X)) (mult $c (E X))
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Variance Definition
 @:Variance_Definition graph X
-    @premise isRandomVariable $X
-    @sq E (square $X)
-    @mu E $X
-    @conclusion equals (Var $X) (subtract $sq (square $mu))
+    @premise isRandomVariable X
+    @sq E (square X)
+    @mu E X
+    @conclusion equals (Var X) (subtract $sq (square $mu))
     @definition Implies $premise $conclusion
     return $definition
 end
 
 # Variance Scaling
 @:Variance_Scaling graph X c
-    @p1 isRandomVariable $X
+    @p1 isRandomVariable X
     @p2 isConstant $c
     @premise And $p1 $p2
-    @conclusion equals (Var (mult $c $X)) (mult (square $c) (Var $X))
+    @conclusion equals (Var (mult $c X)) (mult (square $c) (Var X))
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Chebyshev's Inequality
 @:Chebyshev_Inequality graph X k
-    @p1 isRandomVariable $X
+    @p1 isRandomVariable X
     @p2 greaterThan $k Zero
     @premise And $p1 $p2
-    @dev abs (subtract $X (E $X))
-    @threshold mult $k (sqrt (Var $X))
+    @dev abs (subtract X (E X))
+    @threshold mult $k (sqrt (Var X))
     @prob P (geq $dev $threshold)
     @bound divide One (square $k)
     @conclusion leq $prob $bound
@@ -1403,11 +2971,11 @@ end
 
 # Law of Large Numbers (Weak)
 @:Law_Large_Numbers graph X1 Xn
-    @p1 areIID $X1 $Xn
-    @p2 hasFiniteExpectation $X1
+    @p1 areIID X1 Xn
+    @p2 hasFiniteExpectation X1
     @premise And $p1 $p2
-    @mean sampleMean $X1 $Xn
-    @mu E $X1
+    @mean sampleMean X1 Xn
+    @mu E X1
     @conclusion convergesInProbability $mean $mu
     @theorem Implies $premise $conclusion
     return $theorem
@@ -1415,11 +2983,11 @@ end
 
 # Central Limit Theorem
 @:Central_Limit_Theorem graph X1 Xn
-    @p1 areIID $X1 $Xn
-    @p2 hasFiniteMean $X1
-    @p3 hasFiniteVariance $X1
+    @p1 areIID X1 Xn
+    @p2 hasFiniteMean X1
+    @p3 hasFiniteVariance X1
     @premise And $p1 (And $p2 $p3)
-    @stdSum standardizedSum $X1 $Xn
+    @stdSum standardizedSum X1 Xn
     @conclusion convergesInDistribution $stdSum StandardNormal
     @theorem Implies $premise $conclusion
     return $theorem
@@ -1431,10 +2999,10 @@ end
 
 # Well-Ordering Principle
 @:Well_Ordering_Principle graph S
-    @p1 subsetOf $S NaturalNumbers
-    @p2 Not (equals $S EmptySet)
+    @p1 subsetOf S NaturalNumbers
+    @p2 Not (equals S EmptySet)
     @premise And $p1 $p2
-    @conclusion exists (minimum $S)
+    @conclusion exists (minimum S)
     @principle Implies $premise $conclusion
     return $principle
 end
@@ -1463,11 +3031,11 @@ end
 
 # Completeness of Reals (Least Upper Bound)
 @:Completeness_Reals graph S
-    @p1 subsetOf $S RealNumbers
-    @p2 Not (equals $S EmptySet)
-    @p3 hasBoundAbove $S
+    @p1 subsetOf S RealNumbers
+    @p2 Not (equals S EmptySet)
+    @p3 hasBoundAbove S
     @premise And $p1 (And $p2 $p3)
-    @conclusion exists (supremum $S)
+    @conclusion exists (supremum S)
     @axiom Implies $premise $conclusion
     return $axiom
 end
@@ -1570,9 +3138,9 @@ end
 
 # Cauchy-Schwarz Inequality
 @:Cauchy_Schwarz graph u v V
-    @p1 isInnerProductSpace $V
-    @p2 elementOf $u $V
-    @p3 elementOf $v $V
+    @p1 isInnerProductSpace V
+    @p2 elementOf $u V
+    @p3 elementOf $v V
     @premise And $p1 (And $p2 $p3)
     @lhs abs (innerProduct $u $v)
     @rhs mult (norm $u) (norm $v)
@@ -1583,9 +3151,9 @@ end
 
 # Triangle Inequality for Norms
 @:Norm_Triangle_Inequality graph u v V
-    @p1 isNormedSpace $V
-    @p2 elementOf $u $V
-    @p3 elementOf $v $V
+    @p1 isNormedSpace V
+    @p2 elementOf $u V
+    @p3 elementOf $v V
     @premise And $p1 (And $p2 $p3)
     @conclusion leq (norm (add $u $v)) (add (norm $u) (norm $v))
     @theorem Implies $premise $conclusion
@@ -1594,12 +3162,12 @@ end
 
 # Rank-Nullity Theorem
 @:Rank_Nullity_Theorem graph T V W
-    @p1 isLinearMap $T $V $W
-    @p2 isFiniteDimensional $V
+    @p1 isLinearMap T V W
+    @p2 isFiniteDimensional V
     @premise And $p1 $p2
-    @r rank $T
-    @n nullity $T
-    @d dimension $V
+    @r rank T
+    @n nullity T
+    @d dimension V
     @conclusion equals (add $r $n) $d
     @theorem Implies $premise $conclusion
     return $theorem
@@ -1607,18 +3175,18 @@ end
 
 # Cayley-Hamilton Theorem
 @:Cayley_Hamilton graph A
-    @premise isSquareMatrix $A
-    @charPoly characteristicPolynomial $A
-    @conclusion equals (evaluateAt $charPoly $A) ZeroMatrix
+    @premise isSquareMatrix A
+    @charPoly characteristicPolynomial A
+    @conclusion equals (evaluateAt $charPoly A) ZeroMatrix
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Spectral Theorem (for symmetric matrices)
 @:Spectral_Theorem graph A
-    @premise isSymmetricMatrix $A
-    @orthonormal hasOrthonormalEigenbasis $A
-    @real hasRealEigenvalues $A
+    @premise isSymmetricMatrix A
+    @orthonormal hasOrthonormalEigenbasis A
+    @real hasRealEigenvalues A
     @conclusion And $orthonormal $real
     @theorem Implies $premise $conclusion
     return $theorem
@@ -1630,30 +3198,30 @@ end
 
 # Heine-Borel Theorem
 @:Heine_Borel graph S
-    @p1 subsetOf $S RealNumbers
-    @p2 isClosed $S
-    @p3 isBounded $S
+    @p1 subsetOf S RealNumbers
+    @p2 isClosed S
+    @p3 isBounded S
     @premise And $p1 (And $p2 $p3)
-    @conclusion isCompact $S
+    @conclusion isCompact S
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Cantor's Theorem (cardinality)
 @:Cantor_Theorem graph A
-    @premise isSet $A
-    @powerset powerSetOf $A
-    @conclusion Not (existsBijection $A $powerset)
+    @premise isSet A
+    @powerset powerSetOf A
+    @conclusion Not (existsBijection A $powerset)
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Schroeder-Bernstein Theorem
 @:Schroeder_Bernstein graph A B
-    @p1 existsInjection $A $B
-    @p2 existsInjection $B $A
+    @p1 existsInjection A B
+    @p2 existsInjection B A
     @premise And $p1 $p2
-    @conclusion existsBijection $A $B
+    @conclusion existsBijection A B
     @theorem Implies $premise $conclusion
     return $theorem
 end
@@ -1709,10 +3277,10 @@ end
 @:Squeeze_Theorem graph f g h a L
     @p1 leq (apply $f ?x) (apply $g ?x)
     @p2 leq (apply $g ?x) (apply $h ?x)
-    @p3 equals (limitAt $f $a) $L
-    @p4 equals (limitAt $h $a) $L
+    @p3 equals (limitAt $f $a) L
+    @p4 equals (limitAt $h $a) L
     @premise And $p1 (And $p2 (And $p3 $p4))
-    @conclusion equals (limitAt $g $a) $L
+    @conclusion equals (limitAt $g $a) L
     @theorem Implies $premise $conclusion
     return $theorem
 end
@@ -1732,13 +3300,13 @@ end
 
 # Stone-Weierstrass Theorem (simplified)
 @:Stone_Weierstrass graph X A
-    @p1 isCompact $X
-    @p2 isSubalgebra $A (continuousFunctions $X)
-    @p3 separatesPoints $A
-    @p4 containsConstants $A
+    @p1 isCompact X
+    @p2 isSubalgebra A (continuousFunctions X)
+    @p3 separatesPoints A
+    @p4 containsConstants A
     @premise And $p1 (And $p2 (And $p3 $p4))
-    @closure uniformClosure $A
-    @conclusion equals $closure (continuousFunctions $X)
+    @closure uniformClosure A
+    @conclusion equals $closure (continuousFunctions X)
     @theorem Implies $premise $conclusion
     return $theorem
 end
@@ -1756,10 +3324,10 @@ end
 
 # Fubini's Theorem
 @:Fubini_Theorem graph f X Y
-    @p1 isIntegrable $f (productSpace $X $Y)
+    @p1 isIntegrable $f (productSpace X Y)
     @premise $p1
-    @double doubleIntegral $f $X $Y
-    @iterated iteratedIntegral $f $X $Y
+    @double doubleIntegral $f X Y
+    @iterated iteratedIntegral $f X Y
     @conclusion equals $double $iterated
     @theorem Implies $premise $conclusion
     return $theorem
@@ -1767,22 +3335,22 @@ end
 
 # Sylow's First Theorem
 @:Sylow_First_Theorem graph G p
-    @p1 isFiniteGroup $G
+    @p1 isFiniteGroup G
     @p2 isPrime $p
-    @p3 divides (power $p ?k) (order $G)
+    @p3 divides (power $p ?k) (order G)
     @premise And $p1 (And $p2 $p3)
-    @conclusion exists ?H (And (isSubgroup ?H $G) (equals (order ?H) (power $p ?k)))
+    @conclusion exists ?H (And (isSubgroup ?H G) (equals (order ?H) (power $p ?k)))
     @theorem Implies $premise $conclusion
     return $theorem
 end
 
 # Burnside's Lemma
 @:Burnside_Lemma graph G X
-    @p1 isFiniteGroup $G
-    @p2 actsOn $G $X
+    @p1 isFiniteGroup G
+    @p2 actsOn G X
     @premise And $p1 $p2
-    @orbits numberOfOrbits $G $X
-    @avg averageFixedPoints $G $X
+    @orbits numberOfOrbits G X
+    @avg averageFixedPoints G X
     @conclusion equals $orbits $avg
     @theorem Implies $premise $conclusion
     return $theorem

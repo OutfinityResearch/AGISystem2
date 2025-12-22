@@ -93,3 +93,19 @@ end
     @result __Role Prevents $pair
     return $result
 end
+
+# wouldPrevent: counterfactual prevention relation
+@WouldPreventMacro:wouldPrevent graph preventer prevented
+    @pair __Pair $preventer $prevented
+    @result __Role Prevents $pair
+    return $result
+end
+
+# threatens: threat leads to harm for target
+@Threatens:threatens graph threat target
+    @t __Role Threat $threat
+    @target __Role Target $target
+    @pair __Pair $t $target
+    @result __Role Threatens $pair
+    return $result
+end

@@ -18,6 +18,7 @@ import { debug_trace, isDebugEnabled } from '../utils/debug.js';
 import { canonicalizeMetadata } from './canonicalize.mjs';
 import { ExecutionError } from './execution-error.mjs';
 export { ExecutionError } from './execution-error.mjs';
+import { DECLARATION_OPERATORS } from './operator-declarations.mjs';
 
 import {
   executeGraphDeclaration as executeGraphDeclarationImpl,
@@ -144,6 +145,14 @@ export class Executor {
     const operatorName = this.extractName(stmt.operator);
     if (operatorName) {
       this.session.declaredOperators?.add(operatorName);
+      if (DECLARATION_OPERATORS.has(operatorName)) {
+        if (stmt.destination) {
+          this.session.declaredOperators?.add(stmt.destination);
+        }
+        if (stmt.persistName) {
+          this.session.declaredOperators?.add(stmt.persistName);
+        }
+      }
     }
     if (operatorName === 'Load') {
       return this.executeLoad(stmt);

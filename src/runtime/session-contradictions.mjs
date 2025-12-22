@@ -8,17 +8,9 @@ export function checkContradiction(session, metadata) {
   if (!metadata?.operator || !metadata?.args) return null;
   const { operator, args } = metadata;
 
-  // Check Not(P) when P exists (legacy behavior)
-  if (operator === 'Not' && args.length >= 1) {
-    const refVec = session.scope.get(args[0]);
-    if (refVec) {
-      for (const fact of session.kbFacts) {
-        if (fact.vector && similarity(fact.vector, refVec) > 0.9) {
-          return 'Warning: direct contradiction detected';
-        }
-      }
-    }
-  }
+  // Explicit negation is a first-class fact (used for blocking inference),
+  // not a contradiction that should reject learning.
+  if (operator === 'Not') return null;
 
   // Legacy temporal contradictions (hardcoded): before(A,B) conflicts with after(A,B).
   if (!session?.useTheoryConstraints) {

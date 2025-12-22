@@ -9,6 +9,7 @@
 @locatedIn:locatedIn __TransitiveRelation
 @partOf:partOf __TransitiveRelation
 @subclassOf:subclassOf __TransitiveRelation
+@subsetOf:subsetOf __TransitiveRelation
 @containedIn:containedIn __TransitiveRelation
 @before:before __TransitiveRelation
 @after:after __TransitiveRelation
@@ -63,6 +64,191 @@
 @must:must __InheritableProperty
 @should:should __InheritableProperty
 @may:may __InheritableProperty
+
+# ===== Core Math Relations (with REAL graph definitions) =====
+
+@elementOf:elementOf graph x S
+    @membership __Role Member $x
+    @container __Role Container $S
+    @result __Pair $membership $container
+    return $result
+end
+
+@properSubsetOf:properSubsetOf graph A B
+    @subset subsetOf $A $B
+    @notEqual Not (equals $A $B)
+    @result And $subset $notEqual
+    return $result
+end
+
+@disjointFrom:disjointFrom graph A B
+    @setA __Role Set $A
+    @setB __Role Set $B
+    @disjoint __Pair $setA $setB
+    # TODO: Add formal definition with forall when logic is loaded earlier
+    return $disjoint
+end
+
+# Function relations
+@definedOn:definedOn graph f Domain
+    @func __Role Function $f
+    @dom __Role Domain $Domain
+    @result __Pair $func $dom
+    return $result
+end
+
+@mapsTo:mapsTo graph f Codomain
+    @func __Role Function $f
+    @codom __Role Codomain $Codomain
+    @result __Pair $func $codom
+    return $result
+end
+
+@appliesTo:appliesTo graph f x y
+    @func __Role Function $f
+    @input __Role Input $x
+    @output __Role Output $y
+    @result __Bundle $func $input $output
+    return $result
+end
+
+# Proof relations
+@proves:proves graph proof theorem
+    @prf __Role Proof $proof
+    @thm __Role Theorem $theorem
+    @result __Pair $prf $thm
+    return $result
+end
+
+@usesLemma:usesLemma graph proof lemma
+    @prf __Role Proof $proof
+    @lem __Role Lemma $lemma
+    @dependency __Pair $prf $lem
+    return $dependency
+end
+
+@followsFrom:followsFrom graph conclusion premise
+    @concl __Role Conclusion $conclusion
+    @prem __Role Premise $premise
+    @implication Implies $prem $concl
+    return $implication
+end
+
+@contradicts:contradicts graph A B
+    @left __Role Statement $A
+    @right __Role Statement $B
+    @contr And $A (Not $B)
+    @result __Bundle $left $right $contr
+    return $result
+end
+
+@counterExample:counterExample graph claim witness
+    @clm __Role Claim $claim
+    @wit __Role Witness $witness
+    @refutes Not $clm
+    @result __Bundle $clm $wit $refutes
+    return $result
+end
+
+# ===== Biology Relations (with REAL graph definitions) =====
+
+@taxonOf:taxonOf graph organism taxon
+    @org __Role Organism $organism
+    @tax __Role Taxon $taxon
+    @classification __Pair $org $tax
+    return $classification
+end
+
+@expresses:expresses graph gene protein
+    @g __Role Gene $gene
+    @p __Role Protein $protein
+    @expression __Pair $g $p
+    return $expression
+end
+
+@predatorOf:predatorOf graph predator prey
+    @pred __Role Predator $predator
+    @prey __Role Prey $prey
+    @relation __Pair $pred $prey
+    return $relation
+end
+
+@symbiosisWith:symbiosisWith graph orgA orgB
+    @a __Role Organism $orgA
+    @b __Role Organism $orgB
+    @symbiosis __Bundle $a $b
+    return $symbiosis
+end
+
+# ===== Physics Relations (with REAL graph definitions) =====
+
+@hasQuantity:hasQuantity graph system quantity measure
+    @sys __Role System $system
+    @quant __Role Quantity $quantity
+    @meas __Role Measure $measure
+    @result __Bundle $sys $quant $meas
+    return $result
+end
+
+@conserves:conserves graph system quantity
+    @sys __Role System $system
+    @quant __Role ConservedQuantity $quantity
+    @conservation __Pair $sys $quant
+    return $conservation
+end
+
+@supportsLaw:supportsLaw graph evidence law
+    @evid __Role Evidence $evidence
+    @l __Role Law $law
+    @support __Pair $evid $l
+    return $support
+end
+
+@inFrame:inFrame graph observation frame
+    @obs __Role Observation $observation
+    @fr __Role Frame $frame
+    @relative __Pair $obs $fr
+    return $relative
+end
+
+# ===== Medicine Relations (with REAL graph definitions) =====
+
+@hasSymptom:hasSymptom graph patient symptom
+    @p __Role Patient $patient
+    @s __Role Symptom $symptom
+    @presents __Pair $p $s
+    return $presents
+end
+
+@diagnoses:diagnoses graph clinician patient disease
+    @c __Role Clinician $clinician
+    @p __Role Patient $patient
+    @d __Role Disease $disease
+    @diagnosis __Bundle $c $p $d
+    return $diagnosis
+end
+
+@treats:treats graph treatment disease
+    @t __Role Treatment $treatment
+    @d __Role Disease $disease
+    @therapeutic __Pair $t $d
+    return $therapeutic
+end
+
+@prescribes:prescribes graph clinician patient treatment
+    @c __Role Clinician $clinician
+    @p __Role Patient $patient
+    @t __Role Treatment $treatment
+    @prescription __Bundle $c $p $t
+    return $prescription
+end
+
+@riskFactorFor:riskFactorFor graph factor disease
+    @f __Role Factor $factor
+    @d __Role Disease $disease
+    @risk __Pair $f $d
+    return $risk
+end
 
 # ===== Misc Relations =====
 # Used in tests and examples

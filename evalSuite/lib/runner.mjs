@@ -36,6 +36,7 @@ const DEFAULT_STEP_BUDGET = 1000;
  */
 function loadCoreTheories(session) {
   console.log('[Runner] Loading Core Theories...');
+  const loaded = new Set();
   const corePath = path.join(PROJECT_ROOT, 'config', 'Core');
   if (!fs.existsSync(corePath)) return;
 
@@ -56,11 +57,43 @@ function loadCoreTheories(session) {
       } else {
         dbg('CORE', `Loaded ${file} in ${elapsed}ms, facts: ${res.facts}`);
       }
+      loaded.add(path.join(corePath, file));
     } catch (e) {
       console.error(`[Runner] Exception loading ${file}:`, e.message);
     }
   }
   console.log('[Runner] Core Theories loaded.');
+  return loaded;
+}
+
+function resolveConfigTheoryPath(entry) {
+  if (entry.includes('/')) {
+    return path.join(PROJECT_ROOT, 'config', entry);
+  }
+  return path.join(PROJECT_ROOT, 'config', 'Core', entry);
+}
+
+function loadDeclaredTheories(session, theories = [], loaded = new Set()) {
+  if (!Array.isArray(theories) || theories.length === 0) return;
+  console.log(`[Runner] Loading ${theories.length} declared theories...`);
+  for (const entry of theories) {
+    const fullPath = resolveConfigTheoryPath(entry);
+    if (!fs.existsSync(fullPath)) {
+      console.error(`[Runner] Missing declared theory: ${entry}`);
+      continue;
+    }
+    if (loaded.has(fullPath)) continue;
+    try {
+      const content = fs.readFileSync(fullPath, 'utf8');
+      const res = session.learn(content);
+      if (!res.success) {
+        console.error(`[Runner] Failed to load declared theory ${entry}:`, res.errors);
+      }
+      loaded.add(fullPath);
+    } catch (e) {
+      console.error(`[Runner] Exception loading declared theory ${entry}:`, e.message);
+    }
+  }
 }
 
 /**
@@ -701,9 +734,12 @@ export async function runSuite(suite, options = {}) {
   dbg('CONFIG', `Strategy: ${strategyId}, Geometry: ${geometry}, Priority: ${reasoningPriority}`);
 
   // 1. Load Core Theories
-  loadCoreTheories(session);
+  const loadedTheories = loadCoreTheories(session) || new Set();
 
-  // 2. Load Suite-Specific Theories
+  // 2. Load suite-declared config theories (relative to config/)
+  loadDeclaredTheories(session, suite.declaredTheories, loadedTheories);
+
+  // 3. Load Suite-Specific Theories
   if (suite.suiteTheories && suite.suiteTheories.length > 0) {
     console.log(`[Runner] Loading ${suite.suiteTheories.length} suite-specific theories...`);
     for (const theoryContent of suite.suiteTheories) {

@@ -11,9 +11,9 @@ function makeSession({ profile, priority, strategy = 'dense-binary' }) {
   });
 }
 
-test('regression matrix: legacy(symbolic) vs theoryDriven(holographic)', async (t) => {
+test('regression matrix: symbolic vs holographic (theoryDriven)', async (t) => {
   const configs = [
-    { name: 'legacy-symbolic', profile: 'legacy', priority: 'symbolicPriority' },
+    { name: 'theoryDriven-symbolic', profile: 'theoryDriven', priority: 'symbolicPriority' },
     { name: 'theoryDriven-holographic', profile: 'theoryDriven', priority: 'holographicPriority' }
   ];
 
@@ -69,19 +69,14 @@ test('regression matrix: legacy(symbolic) vs theoryDriven(holographic)', async (
       }
     },
     {
-      name: 'alias/canonicalization difference (expected)',
-      run(session, config) {
+      name: 'alias/canonicalization',
+      run(session) {
         session.learn(`
           alias Automobile Car
           isA Car Vehicle
         `);
         const result = session.prove('@g isA Automobile Vehicle');
-        if (config.profile === 'theoryDriven') {
-          assert.equal(result.valid, true);
-        } else {
-          // Legacy baseline is allowed to fail without theory-driven canonicalization.
-          assert.equal(result.valid, false);
-        }
+        assert.equal(result.valid, true);
       }
     }
   ];

@@ -10,7 +10,7 @@ import { similarity } from '../../src/core/operations.mjs';
 describe('Deep Reasoning', () => {
   test('basic test', () => {
     const session = new Session({ geometry: 2048 });
-    session.learn('@f test A B');
+    session.learn('@f loves A B');
     assert.ok(session.scope.has('f'));
     session.close();
   });

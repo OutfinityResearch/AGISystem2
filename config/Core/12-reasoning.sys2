@@ -72,6 +72,19 @@ end
     return $result
 end
 
+# observed: mark observation for abduction inputs
+@Observed:observed graph observation
+    @result __Role Observation $observation
+    return $result
+end
+
+# Difference: explicit contrast between two entities
+@Difference:Difference graph a b
+    @pair __Pair $a $b
+    @result __Role Difference $pair
+    return $result
+end
+
 # explain: generate explanation for conclusion
 # Types: conclusion:Abstract -> explanation:Bundle
 @ExplainMacro:explain graph conclusion

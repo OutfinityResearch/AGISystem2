@@ -1,62 +1,324 @@
-# Mathematics - Fundamental Concepts
+# Math - Domain Concepts
+# Foundational mathematical concepts with proper graph semantics
 
-# ===== Number System Hierarchy =====
-Number isA __Entity
-NaturalNumber isA Number
-Integer isA Number
-NaturalNumber subsetOf Integer
-Rational isA Number
-Integer subsetOf Rational
-Real isA Number
-Rational subsetOf Real
-Complex isA Number
-Real subsetOf Complex
+# ===== Number Systems =====
+
+@Number:Number graph entity
+    # Number as abstract mathematical entity
+    @ent __Role Entity $entity
+    @type __Role Type MathematicalNumber
+    @concept __Pair $ent $type
+    return $concept
+end
+
+@Natural:Natural graph n
+    # Natural number (ℕ: 0, 1, 2, 3, ...)
+    @num __Role Number $n
+    @type __Role Type NaturalNumber
+    @property __Role Property NonNegativeInteger
+    @concept __Bundle $num $type $property
+    return $concept
+end
+
+@Integer:Integer graph n
+    # Integer (ℤ: ..., -2, -1, 0, 1, 2, ...)
+    @num __Role Number $n
+    @type __Role Type Integer
+    @property __Role Property WholeNumber
+    @concept __Bundle $num $type $property
+    return $concept
+end
+
+@Rational:Rational graph q
+    # Rational number (ℚ: p/q where p,q ∈ ℤ, q ≠ 0)
+    @num __Role Number $q
+    @type __Role Type RationalNumber
+    @property __Role Property Fraction
+    @concept __Bundle $num $type $property
+    return $concept
+end
+
+@Real:Real graph r
+    # Real number (ℝ: rationals + irrationals)
+    @num __Role Number $r
+    @type __Role Type RealNumber
+    @property __Role Property ContinuumElement
+    @concept __Bundle $num $type $property
+    return $concept
+end
+
+@Complex:Complex graph z
+    # Complex number (ℂ: a + bi)
+    @num __Role Number $z
+    @type __Role Type ComplexNumber
+    @form __Role Representation AlgebraicForm
+    @concept __Bundle $num $type $form
+    return $concept
+end
 
 # ===== Set Theory =====
-Set isA __Entity
-EmptySet isA Set
-FiniteSet isA Set
-InfiniteSet isA Set
-CountableSet isA InfiniteSet
-UncountableSet isA InfiniteSet
-PowerSet isA Set
+
+@Set:Set graph collection
+    # Set as collection of distinct elements
+    @coll __Role Collection $collection
+    @type __Role Type MathematicalSet
+    @property __Role Property WellDefined
+    @concept __Bundle $coll $type $property
+    return $concept
+end
+
+@EmptySet:EmptySet graph set
+    # Empty set (∅)
+    @s __Role Set $set
+    @property __Role Property NoElements
+    @cardinality __Role Cardinality Zero
+    @concept __Bundle $s $property $cardinality
+    return $concept
+end
+
+@Universe:Universe graph set
+    # Universal set containing all elements under consideration
+    @s __Role Set $set
+    @property __Role Property AllElements
+    @scope __Role Context Domain
+    @concept __Bundle $s $property $scope
+    return $concept
+end
 
 # ===== Algebraic Structures =====
-AlgebraicStructure isA __Entity
-Group isA AlgebraicStructure
-AbelianGroup isA Group
-Ring isA AlgebraicStructure
-Field isA Ring
-VectorSpace isA AlgebraicStructure
-Module isA AlgebraicStructure
+
+@Group:Group graph structure
+    # Group: set with associative binary operation, identity, inverses
+    @struct __Role Structure $structure
+    @type __Role Type AlgebraicStructure
+    @operation __Role Property BinaryOperation
+    @identity __Role Property IdentityElement
+    @inverse __Role Property InverseElements
+    @associative __Role Property Associativity
+    @concept __Bundle $struct $type $operation $identity
+    return $concept
+end
+
+@Ring:Ring graph structure
+    # Ring: abelian group + distributive multiplication
+    @struct __Role Structure $structure
+    @type __Role Type AlgebraicStructure
+    @addition __Role Operation Addition
+    @multiplication __Role Operation Multiplication
+    @distributive __Role Property Distributivity
+    @concept __Bundle $struct $type $addition $multiplication
+    return $concept
+end
+
+@Field:Field graph structure
+    # Field: ring where every non-zero element has multiplicative inverse
+    @struct __Role Structure $structure
+    @type __Role Type AlgebraicStructure
+    @isRing __Role Property RingStructure
+    @multiplicativeInverse __Role Property InverseExists
+    @concept __Bundle $struct $type $isRing $multiplicativeInverse
+    return $concept
+end
+
+@VectorSpace:VectorSpace graph space
+    # Vector space over a field
+    @sp __Role Space $space
+    @type __Role Type AlgebraicStructure
+    @field __Role Context ScalarField
+    @addition __Role Operation VectorAddition
+    @scalarMult __Role Operation ScalarMultiplication
+    @concept __Bundle $sp $type $field $addition
+    return $concept
+end
+
+@Vector:Vector graph element
+    # Vector as element of vector space
+    @vec __Role Element $element
+    @type __Role Type VectorSpaceElement
+    @space __Role Context VectorSpace
+    @concept __Bundle $vec $type $space
+    return $concept
+end
+
+@Matrix:Matrix graph array
+    # Matrix as rectangular array of numbers
+    @mat __Role Array $array
+    @type __Role Type Matrix
+    @rows __Role Dimension Rows
+    @cols __Role Dimension Columns
+    @concept __Bundle $mat $type $rows $cols
+    return $concept
+end
 
 # ===== Functions =====
-Function isA __Entity
-Injection isA Function
-Surjection isA Function
-Bijection isA Function
-Bijection isA Injection
-Bijection isA Surjection
+
+@Function:Function graph mapping
+    # Function as mapping between sets
+    @map __Role Mapping $mapping
+    @type __Role Type Function
+    @domain __Role Source Domain
+    @codomain __Role Target Codomain
+    @concept __Bundle $map $type $domain $codomain
+    return $concept
+end
+
+@Bijection:Bijection graph function
+    # Bijective function (one-to-one and onto)
+    @func __Role Function $function
+    @type __Role Type BijectiveFunction
+    @injective __Role Property OneToOne
+    @surjective __Role Property Onto
+    @concept __Bundle $func $type $injective $surjective
+    return $concept
+end
+
+@Injection:Injection graph function
+    # Injective function (one-to-one)
+    @func __Role Function $function
+    @type __Role Type InjectiveFunction
+    @property __Role Property OneToOne
+    @concept __Bundle $func $type $property
+    return $concept
+end
+
+@Surjection:Surjection graph function
+    # Surjective function (onto)
+    @func __Role Function $function
+    @type __Role Type SurjectiveFunction
+    @property __Role Property Onto
+    @concept __Bundle $func $type $property
+    return $concept
+end
 
 # ===== Geometry =====
-GeometricObject isA __Entity
-Point isA GeometricObject
-Line isA GeometricObject
-Plane isA GeometricObject
-Triangle isA GeometricObject
-Circle isA GeometricObject
-Polygon isA GeometricObject
+
+@Point:Point graph location
+    # Point as location in space
+    @pt __Role Location $location
+    @type __Role Type GeometricPoint
+    @dimension __Role Context DimensionalSpace
+    @concept __Bundle $pt $type $dimension
+    return $concept
+end
+
+@Line:Line graph object
+    # Line as one-dimensional geometric object
+    @ln __Role Object $object
+    @type __Role Type GeometricLine
+    @dimension __Role Property OneDimensional
+    @infinite __Role Property Infinite
+    @concept __Bundle $ln $type $dimension $infinite
+    return $concept
+end
+
+@Plane:Plane graph surface
+    # Plane as two-dimensional flat surface
+    @pl __Role Surface $surface
+    @type __Role Type GeometricPlane
+    @dimension __Role Property TwoDimensional
+    @flat __Role Property Flat
+    @concept __Bundle $pl $type $dimension $flat
+    return $concept
+end
+
+@Angle:Angle graph measure
+    # Angle as measure of rotation
+    @ang __Role Measure $measure
+    @type __Role Type GeometricAngle
+    @vertex __Role Component Vertex
+    @rays __Role Component TwoRays
+    @concept __Bundle $ang $type $vertex $rays
+    return $concept
+end
+
+@Figure:Figure graph shape
+    # Geometric figure or shape
+    @fig __Role Shape $shape
+    @type __Role Type GeometricFigure
+    @dimension __Role Context DimensionalSpace
+    @concept __Bundle $fig $type $dimension
+    return $concept
+end
 
 # ===== Calculus =====
-Limit isA __Entity
-Derivative isA __Entity
-Integral isA __Entity
-Sequence isA __Entity
-Series isA __Entity
 
-# ===== Proof Theory =====
-Theorem isA __Entity
-Lemma isA Theorem
-Corollary isA Theorem
-Axiom isA __Entity
-Proof isA __Entity
+@Sequence:Sequence graph ordered
+    # Sequence as ordered list of elements
+    @seq __Role OrderedList $ordered
+    @type __Role Type Sequence
+    @indexing __Role Property Indexed
+    @domain __Role Domain NaturalNumbers
+    @concept __Bundle $seq $type $indexing $domain
+    return $concept
+end
+
+@Limit:Limit graph value
+    # Limit value of sequence or function
+    @lim __Role Value $value
+    @type __Role Type LimitValue
+    @convergence __Role Property Approached
+    @concept __Bundle $lim $type $convergence
+    return $concept
+end
+
+@Derivative:Derivative graph rate
+    # Derivative as rate of change
+    @deriv __Role RateOfChange $rate
+    @type __Role Type Derivative
+    @function __Role Context DifferentiableFunction
+    @instantaneous __Role Property InstantaneousRate
+    @concept __Bundle $deriv $type $function $instantaneous
+    return $concept
+end
+
+@Integral:Integral graph accumulation
+    # Integral as accumulation or area
+    @integ __Role Accumulation $accumulation
+    @type __Role Type Integral
+    @function __Role Context IntegrableFunction
+    @area __Role Interpretation Area
+    @concept __Bundle $integ $type $function $area
+    return $concept
+end
+
+# ===== Logic & Proof =====
+
+@Proof:Proof graph argument
+    # Mathematical proof
+    @prf __Role Argument $argument
+    @type __Role Type MathematicalProof
+    @logical __Role Property LogicalReasoning
+    @rigorous __Role Property Rigorous
+    @concept __Bundle $prf $type $logical $rigorous
+    return $concept
+end
+
+@Theorem:Theorem graph statement
+    # Proven mathematical statement
+    @thm __Role Statement $statement
+    @type __Role Type ProvenStatement
+    @proof __Role Support ProofExists
+    @significance __Role Property Significant
+    @concept __Bundle $thm $type $proof $significance
+    return $concept
+end
+
+@Lemma:Lemma graph statement
+    # Auxiliary proven statement
+    @lem __Role Statement $statement
+    @type __Role Type ProvenStatement
+    @auxiliary __Role Property Auxiliary
+    @support __Role Purpose SupportsTheorem
+    @concept __Bundle $lem $type $auxiliary $support
+    return $concept
+end
+
+@Axiom:Axiom graph statement
+    # Self-evident truth or assumption
+    @ax __Role Statement $statement
+    @type __Role Type FoundationalStatement
+    @selfEvident __Role Property SelfEvident
+    @unprovable __Role Property AssumedTrue
+    @concept __Bundle $ax $type $selfEvident $unprovable
+    return $concept
+end

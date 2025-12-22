@@ -1,0 +1,121 @@
+# Core Theory - Numeric Layer
+# Basic numeric operations and comparisons
+# Enables reasoning with quantities and thresholds
+
+# ===== Numeric Type =====
+@NumericType:NumericType ___NewVector "NumericType" "Core"
+
+# ===== Comparison Operators =====
+
+@GreaterThan:GreaterThan graph a b
+    # Compares two numeric values
+    # Returns true if a > b
+    @left __Role Left $a
+    @right __Role Right $b
+    @comparison ___Bind $left $right
+    @typed ___Bind $comparison NumericType
+    return $typed
+end
+
+@LessThan:LessThan graph a b
+    # Compares two numeric values
+    # Returns true if a < b
+    @left __Role Left $a
+    @right __Role Right $b
+    @comparison ___Bind $left $right
+    @typed ___Bind $comparison NumericType
+    return $typed
+end
+
+@Equals:Equals graph a b
+    # Compares two numeric values for equality
+    # Returns true if a == b
+    @left __Role Left $a
+    @right __Role Right $b
+    @comparison ___Bind $left $right
+    @typed ___Bind $comparison NumericType
+    return $typed
+end
+
+@GreaterThanOrEqual:GreaterThanOrEqual graph a b
+    # Returns true if a >= b
+    @gt GreaterThan $a $b
+    @eq Equals $a $b
+    @result Or $gt $eq
+    return $result
+end
+
+@LessThanOrEqual:LessThanOrEqual graph a b
+    # Returns true if a <= b
+    @lt LessThan $a $b
+    @eq Equals $a $b
+    @result Or $lt $eq
+    return $result
+end
+
+# ===== Arithmetic Operators =====
+
+@Add:Add graph a b
+    # Addition: a + b
+    @left __Role Left $a
+    @right __Role Right $b
+    @operation ___Bind $left $right
+    @typed ___Bind $operation NumericType
+    return $typed
+end
+
+@Subtract:Subtract graph a b
+    # Subtraction: a - b
+    @left __Role Left $a
+    @right __Role Right $b
+    @operation ___Bind $left $right
+    @typed ___Bind $operation NumericType
+    return $typed
+end
+
+@Multiply:Multiply graph a b
+    # Multiplication: a * b
+    @left __Role Left $a
+    @right __Role Right $b
+    @operation ___Bind $left $right
+    @typed ___Bind $operation NumericType
+    return $typed
+end
+
+@Divide:Divide graph a b
+    # Division: a / b
+    @left __Role Left $a
+    @right __Role Right $b
+    @operation ___Bind $left $right
+    @typed ___Bind $operation NumericType
+    return $typed
+end
+
+# ===== Threshold Checking =====
+
+@Threshold:Threshold graph value threshold operator
+    # Generic threshold checking
+    # operator can be: GreaterThan, LessThan, Equals, etc.
+    @val __Role Value $value
+    @thresh __Role Threshold $threshold
+    @op __Role Operator $operator
+    @result __Bundle $val $thresh $op
+    return $result
+end
+
+# ===== Range Checking =====
+
+@InRange:InRange graph value min max
+    # Check if value is in range [min, max]
+    @ge GreaterThanOrEqual $value $min
+    @le LessThanOrEqual $value $max
+    @result And $ge $le
+    return $result
+end
+
+@OutOfRange:OutOfRange graph value min max
+    # Check if value is outside range [min, max]
+    @inRange InRange $value $min $max
+    @result Not $inRange
+    return $result
+end

@@ -8,7 +8,7 @@
 export const name = 'Compound Logic';
 export const description = 'Complex And/Or/Not with deep chains and complete proofs';
 
-export const theories = ['05-logic.sys2'];
+export const theories = ['05-logic.sys2', 'Law/01-relations.sys2'];
 
 export const steps = [
   // === SETUP: Deep hierarchy + 3-way And rule ===

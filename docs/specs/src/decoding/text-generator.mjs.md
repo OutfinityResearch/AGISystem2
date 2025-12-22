@@ -1,6 +1,6 @@
 # Module: src/output/text-generator.mjs
 
-**Purpose:** Generate human-readable text from vectors and proof results.
+**Purpose:** Generate human-readable text from operators/args and proof results.
 
 ## Exports
 
@@ -21,6 +21,11 @@ interface ElaborationResult {
 ## Dependencies
 
 - (none)
+
+## Notes
+
+- Implementation lives at `src/output/text-generator.mjs`.
+- There is no `explainQuery` method; query/proof NL is handled by `ResponseTranslator`.
 
 ## Test Cases
 

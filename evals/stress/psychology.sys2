@@ -1,3 +1,1417 @@
+# ============================================================================
+# Psychology Stress Test - Domain-Specific Vocabulary
+# AUTO-GENERATED: Definitions for operators used in this test
+# ============================================================================
+
+
+# Psychology - OCEAN (Big Five personality traits)
+@OCEAN:OCEAN graph person traits
+    @p __Role Person $person
+    @t __Role Traits $traits
+    @assessment __Pair $p $t
+    return $assessment
+end
+
+@about:about graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@above:above graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@accesses:accesses graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@accounts:accounts graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@achieves:achieves graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@adds:adds graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@affected:affected graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@affects:affects graph factor outcome
+    @f __Role Factor $factor
+    @o __Role Outcome $outcome
+    @influence __Pair $f $o
+    return $influence
+end
+
+@allows:allows graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@applies:applies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@are:are graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@argues:argues graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@asserts:asserts graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@assessed:assessed graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@assessedBy:assessedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@associated:associated graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@associatedWith:associatedWith graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@attributes:attributes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@base:base graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@based:based graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@becomes:becomes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@begins:begins graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@benefits:benefits graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@between:between graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@boosts:boosts graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@called:called graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@canBe:canBe graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@canBecome:canBecome graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@canCause:canCause graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@canLeadTo:canLeadTo graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@can_be:can_be graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@can_undermine:can_undermine graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@cause:cause graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@causesResponse:causesResponse graph cause effect
+    @c __Role Cause $cause
+    @e __Role Effect $effect
+    @causation __Pair $c $e
+    return $causation
+end
+
+@challenging:challenging graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@cluster:cluster graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@combines:combines graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@common:common graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@concurrent:concurrent graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@contrasts:contrasts graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@converts:converts graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@core:core graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@correlates:correlates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@created:created graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@creates:creates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@deals:deals graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@declines:declines graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@decreases:decreases graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@demonstrated:demonstrated graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@demonstrates:demonstrates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@depends:depends graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@derives:derives graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@described:described graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@describes:describes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@developed:developed graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@develops:develops graph entity stage
+    @e __Role Entity $entity
+    @s __Role Stage $stage
+    @development __Pair $e $s
+    return $development
+end
+
+@differs:differs graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@difficult:difficult graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@discovered:discovered graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@dismisses:dismisses graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@distinct:distinct graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@divides:divides graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@drives:drives graph motive action
+    @m __Role Motive $motive
+    @a __Role Action $action
+    @motivation __Pair $m $a
+    return $motivation
+end
+
+@early:early graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@effective:effective graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@emerges:emerges graph entity stage
+    @e __Role Entity $entity
+    @s __Role Stage $stage
+    @development __Pair $e $s
+    return $development
+end
+
+@emphasizes:emphasizes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@enhances:enhances graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@environmental:environmental graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@evaluates:evaluates graph instrument target
+    @i __Role Instrument $instrument
+    @t __Role Target $target
+    @assessment __Pair $i $t
+    return $assessment
+end
+
+@evolves:evolves graph entity stage
+    @e __Role Entity $entity
+    @s __Role Stage $stage
+    @development __Pair $e $s
+    return $development
+end
+
+@excessive:excessive graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@expanded:expanded graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@experiences:experiences graph subject emotion
+    @s __Role Subject $subject
+    @e __Role Emotion $emotion
+    @affective __Pair $s $e
+    return $affective
+end
+
+@explains:explains graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@explores:explores graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@extends:extends graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@faces:faces graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@favors:favors graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@fears:fears graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@flows:flows graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@focused:focused graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@focuses:focuses graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@follows:follows graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@found:found graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@goldstandard:goldstandard graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@grows:grows graph entity stage
+    @e __Role Entity $entity
+    @s __Role Stage $stage
+    @development __Pair $e $s
+    return $development
+end
+
+@guided:guided graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@had:had graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@handles:handles graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@hasCapacity:hasCapacity graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasComponent:hasComponent graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasExpression:hasExpression graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasRoots:hasRoots graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@helps:helps graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@highly:highly graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@highly_effective:highly_effective graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@holds:holds graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@ignores:ignores graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@illustrates:illustrates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@impacts:impacts graph factor outcome
+    @f __Role Factor $factor
+    @o __Role Outcome $outcome
+    @influence __Pair $f $o
+    return $influence
+end
+
+@impaired:impaired graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@impairs:impairs graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@includes:includes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@increases:increases graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@independent:independent graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@independently:independently graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@influences:influences graph factor outcome
+    @f __Role Factor $factor
+    @o __Role Outcome $outcome
+    @influence __Pair $f $o
+    return $influence
+end
+
+@informs:informs graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@insight:insight graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@insufficient:insufficient graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@involves:involves graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@known:known graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@lack_of:lack_of graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@lasts:lasts graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@leads:leads graph cause effect
+    @c __Role Cause $cause
+    @e __Role Effect $effect
+    @causation __Pair $c $e
+    return $causation
+end
+
+@leadsto:leadsto graph cause effect
+    @c __Role Cause $cause
+    @e __Role Effect $effect
+    @causation __Pair $c $e
+    return $causation
+end
+
+@learns:learns graph subject object
+    @s __Role Subject $subject
+    @o __Role Object $object
+    @cognition __Pair $s $o
+    return $cognition
+end
+
+@less_severe:less_severe graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@limited:limited graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@limits:limits graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@maintains:maintains graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@measured:measured graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@miller_called:miller_called graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@modifies:modifies graph factor outcome
+    @f __Role Factor $factor
+    @o __Role Outcome $outcome
+    @influence __Pair $f $o
+    return $influence
+end
+
+@more_prominent:more_prominent graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@motivates:motivates graph motive action
+    @m __Role Motive $motive
+    @a __Role Action $action
+    @motivation __Pair $m $a
+    return $motivation
+end
+
+@needs:needs graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@needsCognition:needsCognition graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@not_all:not_all graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@not_cause:not_cause graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@occurs:occurs graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@offers:offers graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@often:often graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@operates:operates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@optimal:optimal graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@organized:organized graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@oriented:oriented graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@overcomes:overcomes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@overestimates:overestimates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@overly:overly graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@pairs:pairs graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@perceives:perceives graph subject object
+    @s __Role Subject $subject
+    @o __Role Object $object
+    @cognition __Pair $s $o
+    return $cognition
+end
+
+@persists:persists graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@pioneered:pioneered graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@primarily:primarily graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@produces:produces graph cause effect
+    @c __Role Cause $cause
+    @e __Role Effect $effect
+    @causation __Pair $c $e
+    return $causation
+end
+
+@promotes:promotes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@proposed:proposed graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@proposes:proposes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@provides:provides graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@raised:raised graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@ranges:ranges graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@rapid:rapid graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@rated:rated graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@reached:reached graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@reduce:reduce graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@rejects:rejects graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@relationship:relationship graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@releases:releases graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@relies:relies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@removes:removes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@renamed:renamed graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@replaced:replaced graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@represents:represents graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@responds:responds graph subject emotion
+    @s __Role Subject $subject
+    @e __Role Emotion $emotion
+    @affective __Pair $s $e
+    return $affective
+end
+
+@results:results graph cause effect
+    @c __Role Cause $cause
+    @e __Role Effect $effect
+    @causation __Pair $c $e
+    return $causation
+end
+
+@risk:risk graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@risks:risks graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@serves:serves graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@sets:sets graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@shaped:shaped graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@showed:showed graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@shows:shows graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@significantly:significantly graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@stabilizes:stabilizes graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@states:states graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@status:status graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@stores:stores graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@strong:strong graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@structured:structured graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@struggles:struggles graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@studied:studied graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@studies:studies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@subject:subject graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@suggests:suggests graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@superior:superior graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@supports:supports graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@susceptible:susceptible graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@symptom:symptom graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@targets:targets graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@tends:tends graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@threatens:threatens graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@top:top graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@typically:typically graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@typicallyLasts:typicallyLasts graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@underlying:underlying graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@understands:understands graph subject object
+    @s __Role Subject $subject
+    @o __Role Object $object
+    @cognition __Pair $s $o
+    return $cognition
+end
+
+@useful:useful graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@varies:varies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
 # Psychology Theory - DSL Expressions
 # Comprehensive psychological knowledge with multi-line graphs
 # Coverage: Emotions, Cognition, Disorders, Development, Theories

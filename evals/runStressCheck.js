@@ -43,6 +43,7 @@ const STRESS_ORDER = [
 ];
 
 const BOOTSTRAP_OPERATORS = [
+  // L0 HDC Primitives
   '___NewVector',
   '___Bind',
   '___Bundle',
@@ -50,12 +51,27 @@ const BOOTSTRAP_OPERATORS = [
   '___GetType',
   '___Similarity',
   '___MostSimilar',
+  '___Extend',
+  // L1 Type Markers
+  '__Entity',
+  '__Abstract',
+  '__Event',
+  '__Action',
+  '__State',
+  '__Property',
   '__Relation',
-  '__Role',
   '__TransitiveRelation',
   '__SymmetricRelation',
   '__ReflexiveRelation',
   '__InheritableProperty',
+  '__Category',
+  // L1 Structural Operators
+  '__Role',
+  '__Pair',
+  '__Triple',
+  '__Bundle',
+  '__Sequence',
+  // L1 Special
   'inverseRelation',
   'contradictsSameArgs'
 ];
@@ -89,7 +105,31 @@ const ERROR_LABELS = {
 
 const ARGV = process.argv.slice(2);
 const IS_WORKER = ARGV.includes('--worker');
+const REPORT_FILES = ARGV.includes('--report-files');
+// Workers have piped stdio, but parent displays to TTY - enable colors for workers
+const IS_TTY = IS_WORKER || process.stdout.isTTY || process.stderr.isTTY;
 let logLine = (...args) => console.log(...args);
+
+// ANSI color codes for TTY output
+const COLORS = {
+  reset: '\x1b[0m',
+  bold: '\x1b[1m',
+  dim: '\x1b[2m',
+  green: '\x1b[32m',
+  red: '\x1b[31m',
+  yellow: '\x1b[33m',
+  blue: '\x1b[34m',
+  cyan: '\x1b[36m',
+  magenta: '\x1b[35m',
+  bgBlue: '\x1b[44m',
+  bgGreen: '\x1b[42m',
+  bgRed: '\x1b[41m'
+};
+
+function colorize(text, ...codes) {
+  if (!IS_TTY) return text;
+  return codes.join('') + text + COLORS.reset;
+}
 
 function getArgValue(name) {
   const idx = ARGV.indexOf(name);
@@ -167,6 +207,15 @@ function classifyError(error) {
   return 'unknown';
 }
 
+function extractMissingDepToken(message) {
+  if (!message) return null;
+  const unknownOp = message.match(/Unknown operator '([^']+)'/);
+  if (unknownOp) return unknownOp[1];
+  const undefRef = message.match(/Undefined reference '\$([^']+)'/);
+  if (undefRef) return `$${undefRef[1]}`;
+  return null;
+}
+
 function ensureReport(fileReports, filePath) {
   if (!fileReports.has(filePath)) {
     const entry = {};
@@ -180,6 +229,23 @@ function recordIssue(fileReports, filePath, type, label, message) {
   const entry = ensureReport(fileReports, filePath);
   const safeType = ERROR_TYPES.includes(type) ? type : 'unknown';
   entry[safeType].push({ label, message: sanitizeMessage(message) });
+}
+
+function logProgressStart(label, progress, relPath, prevInfo) {
+  if (!progress) return;
+  const { phase, index, total } = progress;
+  const prefix = phase ? `${phase} ` : '';
+  let prevText = '';
+  if (prevInfo && prevInfo.file) {
+    const statusColor = prevInfo.issues > 0 ? COLORS.red : COLORS.green;
+    const status = prevInfo.issues > 0 ? `ISSUES ${prevInfo.issues}` : 'OK';
+    prevText = ` ${COLORS.dim}|${COLORS.reset} prev: ${COLORS.dim}${prevInfo.file}${COLORS.reset} ${statusColor}${status}${COLORS.reset} ${COLORS.cyan}${formatDuration(prevInfo.durationMs)}${COLORS.reset}`;
+  }
+  const labelColored = `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset}`;
+  const progressColored = `${COLORS.magenta}${prefix}${index}/${total}${COLORS.reset}`;
+  const fileColored = `${COLORS.yellow}${COLORS.bold}→ ${relPath}${COLORS.reset}`;
+  const line = `${labelColored} ${progressColored} ${fileColored}${prevText}`;
+  logLine(line);
 }
 
 function logProgress(label, progress, relPath, durationMs, localCounts) {
@@ -205,8 +271,12 @@ function logProgress(label, progress, relPath, durationMs, localCounts) {
   );
 }
 
-async function checkAndLoad(session, filePath, report, label, fileReports, progress) {
+async function checkAndLoad(session, filePath, report, label, fileReports, progress, prevInfo) {
   const relPath = formatRelPath(filePath);
+
+  // Log start of processing
+  logProgressStart(label, progress, relPath, prevInfo);
+
   const localCounts = {
     syntax: 0,
     dependency: 0,
@@ -214,12 +284,26 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
     load: 0,
     unknown: 0
   };
+  const localMissingDeps = new Set();
 
   const addIssue = (kind, message) => {
     recordIssue(fileReports, filePath, kind, label, message);
     const safeKind = ERROR_TYPES.includes(kind) ? kind : 'unknown';
-    localCounts[safeKind] += 1;
+    if (safeKind === 'dependency') {
+      const token = extractMissingDepToken(message);
+      if (token) {
+        localMissingDeps.add(token);
+      } else {
+        localMissingDeps.add(message);
+      }
+    } else {
+      localCounts[safeKind] += 1;
+    }
     report.errorCounts[safeKind] = (report.errorCounts[safeKind] || 0) + 1;
+    if (safeKind === 'dependency') {
+      if (!report.uniqueMissingDeps) report.uniqueMissingDeps = new Set();
+      for (const dep of localMissingDeps) report.uniqueMissingDeps.add(dep);
+    }
   };
 
   const start = performance.now();
@@ -240,8 +324,10 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
     }
     report.totalIssueCount += 1;
     report.totalMs += duration;
-    logProgress(label, progress, relPath, duration, localCounts);
-    return;
+    localCounts.dependency = localMissingDeps.size;
+    const issueTotal = ERROR_TYPES.reduce((sum, type) => sum + (localCounts[type] || 0), 0);
+    if (!IS_WORKER) logProgress(label, progress, relPath, duration, localCounts);
+    return { file: relPath, durationMs: duration, issues: issueTotal };
   }
 
   try {
@@ -260,12 +346,16 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
       }
       report.totalIssueCount += 1;
       report.totalMs += duration;
-      logProgress(label, progress, relPath, duration, localCounts);
-      return;
+      localCounts.dependency = localMissingDeps.size;
+      const issueTotal = ERROR_TYPES.reduce((sum, type) => sum + (localCounts[type] || 0), 0);
+      if (!IS_WORKER) logProgress(label, progress, relPath, duration, localCounts);
+      return { file: relPath, durationMs: duration, issues: issueTotal };
     }
     report.loadedCount += 1;
     report.totalMs += duration;
-    logProgress(label, progress, relPath, duration, localCounts);
+    localCounts.dependency = localMissingDeps.size;
+    if (!IS_WORKER) logProgress(label, progress, relPath, duration, localCounts);
+    return { file: relPath, durationMs: duration, issues: 0 };
   } catch (error) {
     const duration = performance.now() - start;
     const msg = sanitizeMessage(error.message || String(error));
@@ -273,7 +363,10 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
     addIssue(kind, msg);
     report.totalIssueCount += 1;
     report.totalMs += duration;
-    logProgress(label, progress, relPath, duration, localCounts);
+    localCounts.dependency = localMissingDeps.size;
+    const issueTotal = ERROR_TYPES.reduce((sum, type) => sum + (localCounts[type] || 0), 0);
+    if (!IS_WORKER) logProgress(label, progress, relPath, duration, localCounts);
+    return { file: relPath, durationMs: duration, issues: issueTotal };
   }
 }
 
@@ -312,6 +405,7 @@ function createReport() {
     loadedCount: 0,
     totalMs: 0,
     totalIssueCount: 0,
+    uniqueMissingDeps: new Set(),
     errorCounts: {
       syntax: 0,
       dependency: 0,
@@ -340,22 +434,23 @@ async function runCombination(strategyId, reasoningPriority, basePlan, stressPla
   const stressReport = createReport();
   const start = performance.now();
   const baseTotal = basePlan.length;
+  let prevInfo = null;
   for (let i = 0; i < basePlan.length; i++) {
     const filePath = basePlan[i];
-    await checkAndLoad(session, filePath, baseReport, label, fileReports, {
+    prevInfo = await checkAndLoad(session, filePath, baseReport, label, fileReports, {
       phase: 'base',
       index: i + 1,
       total: baseTotal
-    });
+    }, prevInfo);
   }
   const stressTotal = stressPlan.length;
   for (let i = 0; i < stressPlan.length; i++) {
     const filePath = stressPlan[i];
-    await checkAndLoad(session, filePath, stressReport, label, fileReports, {
+    prevInfo = await checkAndLoad(session, filePath, stressReport, label, fileReports, {
       phase: 'stress',
       index: i + 1,
       total: stressTotal
-    });
+    }, prevInfo);
   }
   const totalMs = performance.now() - start;
   return { label, baseReport, stressReport, totalMs };
@@ -370,14 +465,20 @@ function buildCombos() {
     }
   }
 
-  const strategies =
-    parseList(getArgValue('--strategy') || getArgValue('--strategies')) || HDC_STRATEGIES;
-  const priorities =
-    parseList(getArgValue('--priority') || getArgValue('--priorities')) || REASONING_PRIORITIES;
+  const fullRun = ARGV.includes('--full');
+  const strategies = parseList(getArgValue('--strategy') || getArgValue('--strategies'));
+  const priorities = parseList(getArgValue('--priority') || getArgValue('--priorities'));
+
+  if (!strategies && !priorities && !fullRun) {
+    return [{ strategyId: 'dense-binary', reasoningPriority: 'holographicPriority' }];
+  }
+
+  const strategyList = strategies || (fullRun ? HDC_STRATEGIES : ['dense-binary']);
+  const priorityList = priorities || (fullRun ? REASONING_PRIORITIES : ['holographicPriority']);
 
   const combos = [];
-  for (const strategyId of strategies) {
-    for (const reasoningPriority of priorities) {
+  for (const strategyId of strategyList) {
+    for (const reasoningPriority of priorityList) {
       combos.push({ strategyId, reasoningPriority });
     }
   }
@@ -431,12 +532,19 @@ async function runWorker() {
   const stressPlan = await buildStressPlan();
   const fileReports = new Map();
   const result = await runCombination(strategyId, reasoningPriority, basePlan, stressPlan, fileReports);
-  const fileReportObj = Object.fromEntries([...fileReports.entries()]);
+  const fileReportObj = REPORT_FILES ? Object.fromEntries([...fileReports.entries()]) : null;
+  const serializeReport = (report) => ({
+    loadedCount: report.loadedCount,
+    totalMs: report.totalMs,
+    totalIssueCount: report.totalIssueCount,
+    errorCounts: report.errorCounts,
+    uniqueMissingDepsCount: report.uniqueMissingDeps ? report.uniqueMissingDeps.size : 0
+  });
   const payload = {
     label: result.label,
     totalMs: result.totalMs,
-    baseReport: result.baseReport,
-    stressReport: result.stressReport,
+    baseReport: serializeReport(result.baseReport),
+    stressReport: serializeReport(result.stressReport),
     fileReports: fileReportObj,
     baseTotal: basePlan.length,
     stressTotal: stressPlan.length
@@ -446,8 +554,63 @@ async function runWorker() {
 
 async function runParallel(combos) {
   const scriptPath = fileURLToPath(import.meta.url);
+  const numWorkers = combos.length;
+  const useInPlace = IS_TTY && numWorkers > 1;
+
+  // Create label to index mapping
+  const labelToIdx = new Map();
+  for (let i = 0; i < numWorkers; i++) {
+    const label = `${combos[i].strategyId}/${combos[i].reasoningPriority}`;
+    labelToIdx.set(label, i);
+  }
+
+  // Track last line content for each worker to avoid rewriting identical content
+  const workerLines = new Array(numWorkers).fill('');
+
+  // Initialize display lines
+  if (useInPlace) {
+    console.log(`${COLORS.bold}${COLORS.bgBlue} Parallel Execution (${numWorkers} workers) ${COLORS.reset}\n`);
+    for (let i = 0; i < numWorkers; i++) {
+      const label = `${combos[i].strategyId}/${combos[i].reasoningPriority}`;
+      workerLines[i] = `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset} ${COLORS.dim}starting...${COLORS.reset}`;
+      console.log(workerLines[i]);
+    }
+  }
+
+  function updateLine(workerIdx, text) {
+    if (!useInPlace) {
+      // Fallback: just print new lines
+      console.log(text);
+      return;
+    }
+    // Skip if content is the same
+    if (workerLines[workerIdx] === text) return;
+    workerLines[workerIdx] = text;
+
+    // Move cursor up, clear line, write, move back down
+    const linesUp = numWorkers - workerIdx;
+    process.stdout.write(`\x1b[${linesUp}A\x1b[2K${text}\x1b[${linesUp}B\x1b[G`);
+  }
+
+  function handleStderr(chunk) {
+    const lines = chunk.toString().split('\n').filter(Boolean);
+    for (const line of lines) {
+      // Parse label from line: [label] ... (skip ANSI codes at start)
+      // ANSI codes look like \x1b[...m
+      const match = line.match(/(?:\x1b\[[0-9;]*m)*\[([^\]]+)\]/);
+      if (match) {
+        const label = match[1];
+        const idx = labelToIdx.get(label);
+        if (idx !== undefined) {
+          updateLine(idx, line);
+        }
+      }
+    }
+  }
+
   const results = [];
-  for (const combo of combos) {
+  for (let i = 0; i < numWorkers; i++) {
+    const combo = combos[i];
     results.push(new Promise((resolve, reject) => {
       const args = [
         scriptPath,
@@ -457,18 +620,23 @@ async function runParallel(combos) {
         '--priority',
         combo.reasoningPriority
       ];
+      if (i === 0) args.push('--report-files');
       const child = spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'] });
       let stdout = '';
       child.stdout.on('data', chunk => { stdout += chunk.toString(); });
-      child.stderr.on('data', chunk => { process.stdout.write(chunk); });
+      child.stderr.on('data', handleStderr);
       child.on('error', reject);
       child.on('close', code => {
         if (code !== 0) {
+          const label = `${combo.strategyId}/${combo.reasoningPriority}`;
+          updateLine(i, `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset} ${COLORS.red}${COLORS.bold}✗ failed${COLORS.reset}`);
           reject(new Error(`Worker failed: ${combo.strategyId}/${combo.reasoningPriority}`));
           return;
         }
         try {
           const parsed = JSON.parse(stdout.trim());
+          const label = `${combo.strategyId}/${combo.reasoningPriority}`;
+          updateLine(i, `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset} ${COLORS.green}${COLORS.bold}✓ done${COLORS.reset} ${COLORS.dim}(${formatDuration(parsed.totalMs)})${COLORS.reset}`);
           resolve(parsed);
         } catch (err) {
           reject(err);
@@ -476,13 +644,22 @@ async function runParallel(combos) {
       });
     }));
   }
-  return Promise.all(results);
+  const allResults = await Promise.all(results);
+  // Move to a new line after the parallel display
+  if (useInPlace) {
+    console.log('');
+  }
+  return allResults;
 }
 
 function formatErrorSection(title, items) {
   if (!items || items.length === 0) return '';
   const lines = [`## ${title}`, ''];
+  const seen = new Set();
   for (const item of items) {
+    const key = `${item.label}::${item.message}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
     lines.push(`- [${item.label}] ${item.message}`);
   }
   lines.push('');
@@ -559,20 +736,22 @@ async function main() {
       baseLoaded: res.baseReport.loadedCount,
       baseTotal: res.baseTotal,
       stressIssues: res.stressReport.errorCounts,
+      stressMissingDeps: res.stressReport.uniqueMissingDepsCount || 0,
       contradictionCount
     });
-    mergeFileReports(fileReports, res.fileReports);
+    if (res.fileReports && summaries.length === 1) {
+      mergeFileReports(fileReports, res.fileReports);
+    }
   }
 
   const fileOps = await writeErrorFiles(fileReports, basePlan, stressPlan);
 
   const speedRows = summaries.map(entry => ([
     entry.label,
-    formatDuration(entry.totalMs),
-    String(entry.contradictionCount)
+    formatDuration(entry.totalMs)
   ]));
-  console.log('\n=== Speed + Contradictions Summary ===');
-  console.log(formatSummaryTable(speedRows, ['run', 'duration', 'contradictions']));
+  console.log('\n=== Speed Summary ===');
+  console.log(formatSummaryTable(speedRows, ['run', 'duration']));
 
   const baseRows = summaries.map(entry => ([
     entry.label,
@@ -584,7 +763,7 @@ async function main() {
   const stressRows = summaries.map(entry => ([
     entry.label,
     String(entry.stressIssues.syntax),
-    String(entry.stressIssues.dependency),
+    String(entry.stressMissingDeps),
     String(entry.stressIssues.contradiction),
     String(entry.stressIssues.load),
     String(entry.stressIssues.unknown)
@@ -594,23 +773,23 @@ async function main() {
     stressRows,
     ['run', ERROR_LABELS.syntax, ERROR_LABELS.dependency, ERROR_LABELS.contradiction, ERROR_LABELS.load, ERROR_LABELS.unknown]
   ));
-  console.log('\nNote: missing-deps counts are occurrence counts of undefined operators/refs, not unique symbols.');
+  console.log('\nNote: missing-deps counts are unique undefined operators/refs.');
 
   console.log('\n=== .errors Files ===');
-  if (fileOps.created.length > 0) {
-    console.log(`created: ${fileOps.created.join(', ')}`);
+  if (fileOps.created.length === 0 &&
+      fileOps.overwritten.length === 0 &&
+      fileOps.deleted.length === 0) {
+    console.log('no changes');
   } else {
-    console.log('created: none');
-  }
-  if (fileOps.overwritten.length > 0) {
-    console.log(`overwritten: ${fileOps.overwritten.join(', ')}`);
-  } else {
-    console.log('overwritten: none');
-  }
-  if (fileOps.deleted.length > 0) {
-    console.log(`deleted: ${fileOps.deleted.join(', ')}`);
-  } else {
-    console.log('deleted: none');
+    for (const file of fileOps.created) {
+      console.log(`created: ${file}`);
+    }
+    for (const file of fileOps.overwritten) {
+      console.log(`updated: ${file}`);
+    }
+    for (const file of fileOps.deleted) {
+      console.log(`deleted: ${file}`);
+    }
   }
 }
 

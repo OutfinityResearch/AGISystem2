@@ -1,111 +1,214 @@
-# Law - Fundamental Concepts
+# Law - Domain Concepts
+# Foundational legal concepts with proper graph semantics
 
-# Legal Entities
-LegalPerson isA __Category
-NaturalPerson isA LegalPerson
-JuridicalPerson isA LegalPerson
-Corporation isA JuridicalPerson
-Partnership isA JuridicalPerson
-LegalEntity isA __Category
+# ===== Legal Entities =====
 
-# Contract Concepts
-Contract isA __Category
-Agreement isA Contract
-Offer isA __Category
-Acceptance isA __Category
-Consideration isA __Category
-Covenant isA Contract
+@Law:Law graph legalrule
+    # Legal rule or statute
+    @r __Role Rule $legalrule
+    @type __Role Type Law
+    @authoritative __Role Property Binding
+    @codified __Role Form Written
+    @concept __Bundle $r $type $authoritative $codified
+    return $concept
+end
 
-# Contractual Breach
-Obligation isA __Category
-Breach isA __Category
-MaterialBreach isA Breach
-MinorBreach isA Breach
-Performance isA __Category
-NonPerformance isA __Category
+@Statute:Statute graph law
+    # Legislative statute
+    @l __Role Law $law
+    @type __Role Type Statute
+    @enacted __Role Origin Legislature
+    @written __Role Form Codified
+    @concept __Bundle $l $type $enacted $written
+    return $concept
+end
 
-# Remedies & Damages
-Remedy isA __Category
-Damages isA Remedy
-CompensatoryDamages isA Damages
-PunitiveDamages isA Damages
-SpecificPerformance isA Remedy
-Injunction isA Remedy
+@Precedent:Precedent graph decision
+    # Legal precedent from case law
+    @dec __Role Decision $decision
+    @type __Role Type Precedent
+    @judicial __Role Origin Court
+    @binding __Role Effect StareDecisis
+    @concept __Bundle $dec $type $judicial $binding
+    return $concept
+end
 
-# Rights & Duties
-Right isA __Category
-LegalRight isA Right
-PropertyRight isA LegalRight
-PersonalRight isA LegalRight
-Duty isA __Category
-LegalDuty isA Duty
+@Right:Right graph entitlement
+    # Legal right
+    @ent __Role Entitlement $entitlement
+    @type __Role Type LegalRight
+    @protected __Role Property LegallyProtected
+    @enforceable __Role Nature Enforceable
+    @concept __Bundle $ent $type $protected $enforceable
+    return $concept
+end
 
-# Prohibitions & Liability
-Prohibition isA __Category
-Liability isA __Category
-CriminalLiability isA Liability
-CivilLiability isA Liability
-StrictLiability isA Liability
-Negligence isA __Category
+@Duty:Duty graph obligation
+    # Legal duty or obligation
+    @obl __Role Obligation $obligation
+    @type __Role Type LegalDuty
+    @binding __Role Property Mandatory
+    @enforceable __Role Nature Enforceable
+    @concept __Bundle $obl $type $binding $enforceable
+    return $concept
+end
 
-# Legal Sources
-Statute isA __Category
-Regulation isA __Category
-CaseLaw isA __Category
-Precedent isA __Category
-Constitution isA Statute
-Legislation isA Statute
+# ===== Legal Actors =====
 
-# Legal Process
-Jurisdiction isA __Category
-Court isA __Category
-TrialCourt isA Court
-AppellateCourt isA Court
-SupremeCourt isA Court
-Tribunal isA __Category
+@Court:Court graph institution
+    # Judicial court
+    @inst __Role Institution $institution
+    @type __Role Type Court
+    @judicial __Role Function Adjudication
+    @authoritative __Role Property JudicialPower
+    @concept __Bundle $inst $type $judicial $authoritative
+    return $concept
+end
 
-# Judicial Concepts
-Ruling isA __Category
-Judgment isA Ruling
-Verdict isA Ruling
-Order isA Ruling
-Decision isA Ruling
-Decree isA Ruling
+@Judge:Judge graph person
+    # Judicial officer
+    @pers __Role Person $person
+    @type __Role Type Judge
+    @judicial __Role Function Adjudication
+    @authority __Role Power JudicialAuthority
+    @concept __Bundle $pers $type $judicial $authority
+    return $concept
+end
 
-# Evidence Concepts
-Evidence isA __Category
-Testimony isA Evidence
-Documentary isA Evidence
-Physical isA Evidence
-Circumstantial isA Evidence
-Admissible isA __Category
+@Lawyer:Lawyer graph person
+    # Legal practitioner
+    @pers __Role Person $person
+    @type __Role Type Lawyer
+    @advocate __Role Function LegalAdvocacy
+    @licensed __Role Status LicensedPractitioner
+    @concept __Bundle $pers $type $advocate $licensed
+    return $concept
+end
 
-# Proof Standards
-BurdenOfProof isA __Category
-StandardOfProof isA __Category
-BeyondReasonableDoubt isA StandardOfProof
-PreponderanceOfEvidence isA StandardOfProof
-ClearAndConvincing isA StandardOfProof
+@Party:Party graph actor
+    # Party to legal action
+    @act __Role Actor $actor
+    @type __Role Type LegalParty
+    @participant __Role Role LitigationParticipant
+    @interested __Role Property LegalInterest
+    @concept __Bundle $act $type $participant $interested
+    return $concept
+end
 
-# Validity Concepts
-Validity isA __Category
-LegalValidity isA Validity
-Enforceability isA __Category
-Void isA __Category
-Voidable isA __Category
+# ===== Legal Processes =====
 
-# Criminal Law
-Crime isA __Category
-Felony isA Crime
-Misdemeanor isA Crime
-Offense isA __Category
-MensRea isA __Category
-ActusReus isA __Category
+@Trial:Trial graph proceeding
+    # Legal trial
+    @proc __Role Proceeding $proceeding
+    @type __Role Type Trial
+    @adversarial __Role Nature Adversarial
+    @evidence __Role Process EvidencePresentation
+    @concept __Bundle $proc $type $adversarial $evidence
+    return $concept
+end
 
-# Property Law
-Property isA __Category
-RealProperty isA Property
-PersonalProperty isA Property
-IntangibleProperty isA Property
-Ownership isA __Category
-Possession isA __Category
+@Contract:Contract graph agreement
+    # Legal contract
+    @agr __Role Agreement $agreement
+    @type __Role Type Contract
+    @binding __Role Property LegallyEnforceable
+    @voluntary __Role Nature Consensual
+    @concept __Bundle $agr $type $binding $voluntary
+    return $concept
+end
+
+@Crime:Crime graph act
+    # Criminal act
+    @a __Role Act $act
+    @type __Role Type Crime
+    @prohibited __Role Nature ProhibitedByLaw
+    @punishable __Role Consequence Punishable
+    @concept __Bundle $a $type $prohibited $punishable
+    return $concept
+end
+
+@Tort:Tort graph wrong
+    # Civil wrong
+    @w __Role Wrong $wrong
+    @type __Role Type Tort
+    @civil __Role Domain CivilLaw
+    @compensable __Role Remedy Damages
+    @concept __Bundle $w $type $civil $compensable
+    return $concept
+end
+
+# ===== Legal Outcomes =====
+
+@Judgment:Judgment graph decision
+    # Court judgment
+    @dec __Role Decision $decision
+    @type __Role Type Judgment
+    @authoritative __Role Property Binding
+    @final __Role Effect ResolveDispute
+    @concept __Bundle $dec $type $authoritative $final
+    return $concept
+end
+
+@Penalty:Penalty graph sanction
+    # Legal penalty
+    @sanc __Role Sanction $sanction
+    @type __Role Type Penalty
+    @punitive __Role Nature Punishment
+    @imposed __Role Process CourtImposed
+    @concept __Bundle $sanc $type $punitive $imposed
+    return $concept
+end
+
+@Liability:Liability graph responsibility
+    # Legal liability
+    @resp __Role Responsibility $responsibility
+    @type __Role Type Liability
+    @legal __Role Nature LegalResponsibility
+    @obligatory __Role Effect RequiresRemediation
+    @concept __Bundle $resp $type $legal $obligatory
+    return $concept
+end
+
+# ===== Constitutional Law =====
+
+@Constitution:Constitution graph document
+    # Constitutional document
+    @doc __Role Document $document
+    @type __Role Type Constitution
+    @supreme __Role Status SupremeLaw
+    @foundational __Role Nature Foundational
+    @concept __Bundle $doc $type $supreme $foundational
+    return $concept
+end
+
+@Amendment:Amendment graph change
+    # Constitutional amendment
+    @ch __Role Change $change
+    @type __Role Type Amendment
+    @formal __Role Process FormalModification
+    @constitutional __Role Target Constitution
+    @concept __Bundle $ch $type $formal $constitutional
+    return $concept
+end
+
+# ===== Evidence & Procedure =====
+
+@Evidence:Evidence graph information
+    # Legal evidence
+    @info __Role Information $information
+    @type __Role Type Evidence
+    @probative __Role Property ProbativeValue
+    @admissible __Role Status Admissible
+    @concept __Bundle $info $type $probative $admissible
+    return $concept
+end
+
+@Procedure:Procedure graph process
+    # Legal procedure
+    @proc __Role Process $process
+    @type __Role Type LegalProcedure
+    @formal __Role Nature Formalized
+    @regulated __Role Property RuleGoverned
+    @concept __Bundle $proc $type $formal $regulated
+    return $concept
+end

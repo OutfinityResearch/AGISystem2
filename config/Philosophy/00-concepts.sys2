@@ -1,117 +1,245 @@
-# Philosophy - Fundamental Concepts
+# Philosophy - Domain Concepts
+# Foundational philosophical concepts with proper graph semantics
 
-# ===== Ethical Concepts =====
-MoralAgent isA __Category
-Value isA __Category
-MoralValue isA Value
-Good isA MoralValue
-Evil isA MoralValue
-Right isA __Category
-Wrong isA __Category
+# ===== Metaphysics =====
 
-# ===== Virtue Ethics =====
-Virtue isA __Category
-Vice isA __Category
-Courage isA Virtue
-Wisdom isA Virtue
-Justice isA Virtue
-Temperance isA Virtue
-Character isA __Category
+@Being:Being graph entity
+    # Existence or being
+    @ent __Role Entity $entity
+    @type __Role Type Being
+    @existent __Role Property Exists
+    @ontological __Role Domain Ontology
+    @concept __Bundle $ent $type $existent $ontological
+    return $concept
+end
 
-# ===== Deontological Concepts =====
-Duty isA __Category
-Obligation isA Duty
-Prohibition isA __Category
-Imperative isA __Category
-CategoricalImperative isA Imperative
-MaximM isA __Category
+@Essence:Essence graph property
+    # Essential nature
+    @prop __Role Property $property
+    @type __Role Type Essence
+    @necessary __Role Nature Necessary
+    @defining __Role Function DefinesNature
+    @concept __Bundle $prop $type $necessary $defining
+    return $concept
+end
 
-# ===== Consequentialist Concepts =====
-Consequence isA __Category
-Outcome isA Consequence
-Utility isA __Category
-Harm isA Consequence
-Benefit isA Consequence
-Happiness isA Benefit
-Suffering isA Harm
+@Substance:Substance graph entity
+    # Substance (metaphysical)
+    @ent __Role Entity $entity
+    @type __Role Type Substance
+    @independent __Role Property SelfSubsistent
+    @fundamental __Role Nature Fundamental
+    @concept __Bundle $ent $type $independent $fundamental
+    return $concept
+end
 
-# ===== Justice & Rights =====
-Justice isA __Category
-DistributiveJustice isA Justice
-RetributiveJustice isA Justice
-ProceduralJustice isA Justice
-Fairness isA __Category
-Equality isA __Category
-Equity isA __Category
+@Causation:Causation graph relation
+    # Causal relation
+    @rel __Role Relation $relation
+    @type __Role Type Causation
+    @productive __Role Nature Productive
+    @necessary __Role Property NecessaryConnection
+    @concept __Bundle $rel $type $productive $necessary
+    return $concept
+end
 
-# ===== Autonomy & Freedom =====
-Autonomy isA __Category
-Freedom isA __Category
-Liberty isA Freedom
-FreeWill isA __Category
-Agency isA __Category
-SelfDetermination isA Autonomy
+# ===== Epistemology =====
 
-# ===== Epistemological Concepts =====
-Knowledge isA __Category
-Belief isA __Category
-TrueBelie isA Belief
-Justified isA __Category
-Justification isA __Category
-Evidence isA __Category
-Certainty isA __Category
+@Knowledge:Knowledge graph state
+    # State of knowing
+    @st __Role State $state
+    @type __Role Type Knowledge
+    @justified __Role Property JustifiedTrueBelief
+    @epistemic __Role Domain Epistemology
+    @concept __Bundle $st $type $justified $epistemic
+    return $concept
+end
 
-# ===== Logical Concepts =====
-Argument isA __Category
-Premise isA __Category
-Conclusion isA __Category
-Validity isA __Property
-Soundness isA __Property
-Inference isA __Category
+@Belief:Belief graph attitude
+    # Propositional belief
+    @att __Role Attitude $attitude
+    @type __Role Type Belief
+    @propositional __Role Content Proposition
+    @mental __Role Nature MentalState
+    @concept __Bundle $att $type $propositional $mental
+    return $concept
+end
 
-# ===== Fallacies =====
-Fallacy isA __Category
-FormalFallacy isA Fallacy
-InformalFallacy isA Fallacy
-AdHominem isA InformalFallacy
-StrawMan isA InformalFallacy
-FalseD isA InformalFallacy
+@Truth:Truth graph property
+    # Truth property
+    @prop __Role Property $property
+    @type __Role Type Truth
+    @correspondence __Role Theory Correspondence
+    @semantic __Role Domain Semantics
+    @concept __Bundle $prop $type $correspondence $semantic
+    return $concept
+end
 
-# ===== Metaphysical Concepts =====
-Being isA __Category
-Existence isA __Category
-Essence isA __Category
-Substance isA __Category
-Property isA __Category
-Universals isA __Category
-Particulars isA __Category
+@Justification:Justification graph relation
+    # Epistemic justification
+    @rel __Role Relation $relation
+    @type __Role Type Justification
+    @evidential __Role Nature EvidentialSupport
+    @normative __Role Property Normative
+    @concept __Bundle $rel $type $evidential $normative
+    return $concept
+end
+
+@Skepticism:Skepticism graph position
+    # Skeptical position
+    @pos __Role Position $position
+    @type __Role Type Skepticism
+    @doubting __Role Nature Doubting
+    @critical __Role Method CriticalInquiry
+    @concept __Bundle $pos $type $doubting $critical
+    return $concept
+end
+
+# ===== Ethics =====
+
+@Good:Good graph value
+    # Moral good
+    @val __Role Value $value
+    @type __Role Type Good
+    @normative __Role Nature Normative
+    @valuable __Role Property Valuable
+    @concept __Bundle $val $type $normative $valuable
+    return $concept
+end
+
+@Right:Right graph property
+    # Moral rightness
+    @prop __Role Property $property
+    @type __Role Type Right
+    @moral __Role Domain Morality
+    @obligatory __Role Nature Obligatory
+    @concept __Bundle $prop $type $moral $obligatory
+    return $concept
+end
+
+@Duty:Duty graph obligation
+    # Moral duty
+    @obl __Role Obligation $obligation
+    @type __Role Type Duty
+    @moral __Role Domain Morality
+    @binding __Role Property Binding
+    @concept __Bundle $obl $type $moral $binding
+    return $concept
+end
+
+@Virtue:Virtue graph trait
+    # Moral virtue
+    @tr __Role Trait $trait
+    @type __Role Type Virtue
+    @excellent __Role Property Excellence
+    @character __Role Domain Character
+    @concept __Bundle $tr $type $excellent $character
+    return $concept
+end
+
+@Justice:Justice graph principle
+    # Justice principle
+    @prin __Role Principle $principle
+    @type __Role Type Justice
+    @fairness __Role Nature Fairness
+    @distributive __Role Domain Distribution
+    @concept __Bundle $prin $type $fairness $distributive
+    return $concept
+end
+
+# ===== Logic =====
+
+@Argument:Argument graph structure
+    # Logical argument
+    @struct __Role Structure $structure
+    @type __Role Type Argument
+    @inferential __Role Nature Inference
+    @premises __Role Component Premises
+    @conclusion __Role Component Conclusion
+    @concept __Bundle $struct $type $inferential $premises
+    return $concept
+end
+
+@Proposition:Proposition graph content
+    # Proposition (logical)
+    @cont __Role Content $content
+    @type __Role Type Proposition
+    @truthBearer __Role Property TruthBearer
+    @meaningful __Role Property Meaningful
+    @concept __Bundle $cont $type $truthBearer $meaningful
+    return $concept
+end
+
+@Validity:Validity graph property
+    # Logical validity
+    @prop __Role Property $property
+    @type __Role Type Validity
+    @formal __Role Nature Formal
+    @preserves __Role Function PreservesTruth
+    @concept __Bundle $prop $type $formal $preserves
+    return $concept
+end
 
 # ===== Philosophy of Mind =====
-Mind isA __Category
-Consciousness isA __Category
-Qualia isA __Category
-Intentionality isA __Category
-MentalState isA __State
-Thought isA MentalState
 
-# ===== Ethics Frameworks =====
-EthicsFramework isA __Category
-Utilitarianism isA EthicsFramework
-Deontology isA EthicsFramework
-VirtueEthics isA EthicsFramework
-CareEthics isA EthicsFramework
-Consequentialism isA EthicsFramework
+@Consciousness:Consciousness graph phenomenon
+    # Conscious experience
+    @phen __Role Phenomenon $phenomenon
+    @type __Role Type Consciousness
+    @subjective __Role Property Subjective
+    @qualitative __Role Nature Qualitative
+    @concept __Bundle $phen $type $subjective $qualitative
+    return $concept
+end
 
-# ===== Intention & Action =====
-Intention isA __Category
-Action isA __Action
-Volition isA __Category
-Responsibility isA __Category
-Accountability isA __Category
+@Mind:Mind graph entity
+    # Mind or mental
+    @ent __Role Entity $entity
+    @type __Role Type Mind
+    @mental __Role Nature Mental
+    @intentional __Role Property Intentionality
+    @concept __Bundle $ent $type $mental $intentional
+    return $concept
+end
 
-# ===== Worldview Concepts =====
-Worldview isA __Category
-Paradigm isA __Category
-Framework isA __Category
-Perspective isA __Category
-Interpretation isA __Category
+@Qualia:Qualia graph property
+    # Phenomenal qualities
+    @prop __Role Property $property
+    @type __Role Type Qualia
+    @phenomenal __Role Nature Phenomenal
+    @subjective __Role Property SubjectiveExperience
+    @concept __Bundle $prop $type $phenomenal $subjective
+    return $concept
+end
+
+# ===== Political Philosophy =====
+
+@Freedom:Freedom graph value
+    # Liberty or freedom
+    @val __Role Value $value
+    @type __Role Type Freedom
+    @political __Role Domain Political
+    @negative __Role Form Noninterference
+    @concept __Bundle $val $type $political $negative
+    return $concept
+end
+
+@State:State graph institution
+    # Political state
+    @inst __Role Institution $institution
+    @type __Role Type State
+    @sovereign __Role Property Sovereign
+    @political __Role Domain Political
+    @concept __Bundle $inst $type $sovereign $political
+    return $concept
+end
+
+@Authority:Authority graph relation
+    # Political authority
+    @rel __Role Relation $relation
+    @type __Role Type Authority
+    @legitimate __Role Property Legitimate
+    @power __Role Basis Power
+    @concept __Bundle $rel $type $legitimate $power
+    return $concept
+end

@@ -8,7 +8,7 @@
 export const name = 'Rule Inference';
 export const description = 'Implies rules with deep hierarchies and complete proof traces';
 
-export const theories = ['05-logic.sys2'];
+export const theories = ['05-logic.sys2', 'Law/01-relations.sys2'];
 
 export const steps = [
   // === SETUP: Deep hierarchy for flying (6 levels) ===

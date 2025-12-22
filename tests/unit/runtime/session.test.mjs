@@ -69,7 +69,9 @@ describe('Session', () => {
 
     test('should return empty result from empty KB', () => {
       const session = new Session({ geometry: 1024 });
-      assert.throws(() => session.query('@q loves ?who Mary'));
+      const result = session.query('@q loves ?who Mary');
+      assert.equal(result.success, false);
+      assert.equal(result.bindings.size, 0);
     });
 
     test('should fail with too many holes', () => {
@@ -96,7 +98,8 @@ describe('Session', () => {
       const session = new Session({ geometry: 1024 });
       session.learn('@f loves John Mary');
 
-      assert.throws(() => session.prove('@g hates John Mary'));
+      const result = session.prove('@g hates John Mary');
+      assert.equal(result.valid, false);
     });
   });
 

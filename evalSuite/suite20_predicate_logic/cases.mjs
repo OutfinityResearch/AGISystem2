@@ -8,7 +8,7 @@
 export const name = 'Predicate Logic';
 export const description = 'Logical implication chains and conjunction rules with proofs';
 
-export const theories = ['05-logic.sys2'];
+export const theories = ['05-logic.sys2', 'History/01-relations.sys2'];
 
 export const steps = [
   // === SETUP: Logical facts and rules ===

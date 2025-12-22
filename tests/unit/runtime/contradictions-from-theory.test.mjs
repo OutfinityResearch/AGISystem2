@@ -11,8 +11,9 @@ describe('Contradictions (theory-driven via SemanticIndex)', () => {
     assert.equal(r1.warnings.length, 0);
 
     const r2 = session.learn('hasState Door Closed');
-    assert.equal(r2.success, true);
+    assert.equal(r2.success, false);
     assert.ok(r2.warnings.some(w => w.includes('contradiction')), JSON.stringify(r2.warnings));
+    assert.equal(session.kbFacts.length, 1);
   });
 
   test('warns on contradictsSameArgs pairs defined in config/Core/14-constraints.sys2', () => {
@@ -23,7 +24,27 @@ describe('Contradictions (theory-driven via SemanticIndex)', () => {
     assert.equal(r1.warnings.length, 0);
 
     const r2 = session.learn('after A B');
-    assert.equal(r2.success, true);
+    assert.equal(r2.success, false);
     assert.ok(r2.warnings.some(w => w.includes('before') && w.includes('after')), JSON.stringify(r2.warnings));
+    assert.equal(session.kbFacts.length, 1);
+  });
+
+  test('explicit negation does not reject learning', () => {
+    const session = new Session({
+      geometry: 2048,
+      reasoningProfile: 'theoryDriven',
+      rejectContradictions: true
+    });
+
+    const result = session.learn(`
+      can Opus Fly
+      @neg can Opus Fly
+      Not $neg
+    `);
+
+    assert.equal(result.success, true);
+    assert.equal(result.errors.length, 0);
+    assert.equal(result.warnings.length, 0);
+    assert.equal(session.kbFacts.length, 2);
   });
 });

@@ -1,104 +1,175 @@
-# Literature - Fundamental Relations
+# Literature - Domain Relations
+# REAL graph definitions for literary relationships
 
-# Authorship Relations
-writtenBy isA __Relation
-authored isA __Relation
-composed isA __Relation
-creates isA __Relation
+# ===== Authorship Relations =====
 
-# Genre Relations
-hasGenre isA __Relation
-belongsTo isA __Relation
-classifiedAs isA __Relation
-exemplifies isA __Relation
+@writes:writes graph author work
+    # Author writes literary work
+    @auth __Role Author $author
+    @wk __Role Work $work
+    @creation __Role Process Writing
+    @result __Bundle $auth $wk $creation
+    return $result
+end
 
-# Thematic Relations
-hasTheme isA __Relation
-explores isA __Relation
-addresses isA __Relation
-examines isA __Relation
+@reads:reads graph reader work
+    # Reader reads literary work
+    @read __Role Reader $reader
+    @wk __Role Work $work
+    @reception __Role Process Reading
+    @result __Bundle $read $wk $reception
+    return $result
+end
 
-# Symbolic Relations
-hasMotif isA __Relation
-usesSymbol isA __Relation
-symbolizes isA __Relation
-represents isA __Relation
+@interprets:interprets graph reader work meaning
+    # Reader interprets work's meaning
+    @read __Role Interpreter $reader
+    @wk __Role Work $work
+    @mean __Role Meaning $meaning
+    @interpretation __Role Process Interpretation
+    @result __Bundle $read $wk $mean $interpretation
+    return $result
+end
 
-# Character Relations
-featuresCharacter isA __Relation
-develops isA __Relation
-portrays isA __Relation
-depicts isA __Relation
+# ===== Narrative Relations =====
 
-# Setting Relations
-setIn isA __Relation
-takesPlace isA __Relation
-locates isA __Relation
-situates isA __Relation
+@hasPlot:hasPlot graph work plot
+    # Work has plot structure
+    @wk __Role Work $work
+    @pl __Role Plot $plot
+    @structural __Role Relation StructuralElement
+    @result __Bundle $wk $pl $structural
+    return $result
+end
 
-# Structural Relations
-hasStructure isA __Relation
-organizes isA __Relation
-arranges isA __Relation
-constructs isA __Relation
+@features:features graph work character
+    # Work features character
+    @wk __Role Work $work
+    @char __Role Character $character
+    @inclusion __Role Relation Contains
+    @result __Bundle $wk $char $inclusion
+    return $result
+end
 
-# Conflict Relations
-hasConflict isA __Relation
-drives isA __Relation
-propels isA __Relation
-motivates isA __Relation
+@setIn:setIn graph work setting
+    # Work set in particular setting
+    @wk __Role Work $work
+    @set __Role Setting $setting
+    @spatiotemporal __Role Relation ContextualLocation
+    @result __Bundle $wk $set $spatiotemporal
+    return $result
+end
 
-# Intertextual Relations
-intertextWith isA __SymmetricRelation
-references isA __Relation
-alludes isA __Relation
-echoes isA __Relation
-parodies isA __Relation
+@narrates:narrates graph narrator story
+    # Narrator narrates story
+    @narr __Role Narrator $narrator
+    @story __Role Story $story
+    @narration __Role Process Narration
+    @result __Bundle $narr $story $narration
+    return $result
+end
 
-# Narrative Relations
-narrates isA __Relation
-tells isA __Relation
-recounts isA __Relation
-relates isA __Relation
+@hasTheme:hasTheme graph work theme
+    # Work has central theme
+    @wk __Role Work $work
+    @th __Role Theme $theme
+    @thematic __Role Relation ThematicContent
+    @result __Bundle $wk $th $thematic
+    return $result
+end
 
-# Critical Interpretation
-claims isA __Relation
-argues isA __Relation
-asserts isA __Relation
-maintains isA __Relation
+# ===== Literary Device Relations =====
 
-# Textual Support
-supportedByText isA __Relation
-evidencedBy isA __Relation
-illustrated isA __Relation
-demonstrated isA __Relation
+@uses:uses graph author device
+    # Author uses literary device
+    @auth __Role Author $author
+    @dev __Role Device $device
+    @stylistic __Role Purpose StylisticEffect
+    @result __Bundle $auth $dev $stylistic
+    return $result
+end
 
-# Counter Claims
-counterClaim isA __Relation
-contradicts isA __SymmetricRelation
-disputes isA __Relation
-challenges isA __Relation
+@employsMetaphor:employsMetaphor graph work metaphor
+    # Work employs metaphor
+    @wk __Role Work $work
+    @met __Role Metaphor $metaphor
+    @figurative __Role Technique FigurativeLanguage
+    @result __Bundle $wk $met $figurative
+    return $result
+end
 
-# Interpretive Relations
-interpretsAs isA __Relation
-reads isA __Relation
-understands isA __Relation
-construes isA __Relation
+@symbolizes:symbolizes graph symbol meaning
+    # Literary symbol represents meaning
+    @sym __Role Symbol $symbol
+    @mean __Role Meaning $meaning
+    @symbolic __Role Relation Symbolism
+    @result __Bundle $sym $mean $symbolic
+    return $result
+end
 
-# Stylistic Relations
-uses isA __Relation
-employs isA __Relation
-deploys isA __Relation
-utilizes isA __Relation
+@demonstrates:demonstrates graph work irony
+    # Work demonstrates irony
+    @wk __Role Work $work
+    @iron __Role Irony $irony
+    @rhetorical __Role Technique RhetoricalDevice
+    @result __Bundle $wk $iron $rhetorical
+    return $result
+end
 
-# Influence Relations
-influences isA __Relation
-inspires isA __Relation
-shapes isA __Relation
-affects isA __Relation
+# ===== Genre & Form Relations =====
 
-# Reception Relations
-receivedBy isA __Relation
-appreciated isA __Relation
-critiqued isA __Relation
-evaluated isA __Relation
+@belongsToGenre:belongsToGenre graph work genre
+    # Work belongs to literary genre
+    @wk __Role Work $work
+    @gen __Role Genre $genre
+    @classification __Role Relation GenreClassification
+    @result __Bundle $wk $gen $classification
+    return $result
+end
+
+@writtenIn:writtenIn graph work style
+    # Work written in particular style
+    @wk __Role Work $work
+    @st __Role Style $style
+    @stylistic __Role Relation Stylistic
+    @result __Bundle $wk $st $stylistic
+    return $result
+end
+
+@conveys:conveys graph work tone
+    # Work conveys particular tone
+    @wk __Role Work $work
+    @tn __Role Tone $tone
+    @expressive __Role Relation Expression
+    @result __Bundle $wk $tn $expressive
+    return $result
+end
+
+# ===== Influence Relations =====
+
+@influences:influences graph work1 work2
+    # Earlier work influences later work
+    @w1 __Role Predecessor $work1
+    @w2 __Role Successor $work2
+    @influence __Role Process LiteraryInfluence
+    @result __Bundle $w1 $w2 $influence
+    return $result
+end
+
+@alludesTo:alludesTo graph work reference
+    # Work alludes to another work/text
+    @wk __Role Work $work
+    @ref __Role Reference $reference
+    @intertextual __Role Relation Intertextuality
+    @result __Bundle $wk $ref $intertextual
+    return $result
+end
+
+@respondsTo:respondsTo graph work predecessor
+    # Work responds to earlier work
+    @wk __Role Work $work
+    @pred __Role Predecessor $predecessor
+    @dialogue __Role Relation LiteraryDialogue
+    @result __Bundle $wk $pred $dialogue
+    return $result
+end

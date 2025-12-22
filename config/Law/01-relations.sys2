@@ -1,94 +1,314 @@
-# Law - Fundamental Relations
+# Law - Domain Relations
+# REAL graph definitions for legal relationships
 
-# Contractual Relations
-partyTo isA __Relation
-enters isA __Relation
-offers isA __Relation
-accepts isA __Relation
-forms isA __Relation
+# ===== Judicial Relations =====
 
-# Obligation Relations
-obligates isA __Relation
-requires isA __Relation
-imposes isA __Relation
-binds isA __Relation
+@trialsIn:trialsIn graph court case
+    # Court conducts trial of case
+    @crt __Role Forum $court
+    @cas __Role Case $case
+    @proceeding __Role Process Trial
+    @result __Bundle $crt $cas $proceeding
+    return $result
+end
 
-# Breach Relations
-breachOf isA __Relation
-violates isA __Relation
-fails isA __Relation
-nonPerformance isA __Relation
+@decidesCase:decidesCase graph judge case judgment
+    # Judge decides case with judgment
+    @jdg __Role Adjudicator $judge
+    @cas __Role Case $case
+    @judg __Role Decision $judgment
+    @adjudication __Role Process Adjudication
+    @result __Bundle $jdg $cas $judg $adjudication
+    return $result
+end
 
-# Liability Relations
-liableFor isA __Relation
-responsibleFor isA __Relation
-accountableFor isA __Relation
-answerable isA __Relation
+@representsClient:representsClient graph lawyer client
+    # Lawyer represents client
+    @law __Role Counsel $lawyer
+    @cli __Role Client $client
+    @representation __Role Relation LegalRepresentation
+    @result __Bundle $law $cli $representation
+    return $result
+end
 
-# Normative Relations
-permits isA __Relation
-forbids isA __Relation
-prohibits isA __Relation
-authorizes isA __Relation
+@presides:presides graph judge court
+    # Judge presides over court
+    @jdg __Role Judge $judge
+    @crt __Role Court $court
+    @authority __Role Relation JudicialAuthority
+    @result __Bundle $jdg $crt $authority
+    return $result
+end
 
-# Governance Relations
-governedBy isA __Relation
-subjectedTo isA __Relation
-regulatedBy isA __Relation
-controlledBy isA __Relation
+# ===== Contractual Relations =====
 
-# Precedent Relations
-precedentFor isA __Relation
-guides isA __Relation
-overrules isA __Relation
+@entersContract:entersContract graph party1 party2 contract
+    # Parties enter into contract
+    @p1 __Role Contractor $party1
+    @p2 __Role Contractor $party2
+    @cont __Role Contract $contract
+    @agreement __Role Process ContractFormation
+    @result __Bundle $p1 $p2 $cont $agreement
+    return $result
+end
 
-# Evidentiary Relations
-evidenceFor isA __Relation
-proves isA __Relation
-supports isA __Relation
-corroborates isA __Relation
-rebuts isA __Relation
+@breachesContract:breachesContract graph party contract
+    # Party breaches contract
+    @par __Role Breacher $party
+    @cont __Role Contract $contract
+    @breach __Role Action Breach
+    @result __Bundle $par $cont $breach
+    return $result
+end
 
-# Proof Burden Relations
-standardOfProof isA __Relation
-burdenOn isA __Relation
-meets isA __Relation
-satisfies isA __Relation
+@enforcesContract:enforcesContract graph court contract
+    # Court enforces contract
+    @crt __Role Enforcer $court
+    @cont __Role Contract $contract
+    @enforcement __Role Process Enforcement
+    @result __Bundle $crt $cont $enforcement
+    return $result
+end
 
-# Validity Relations
-valid isA __Relation
-enforceable isA __Relation
-binding isA __Relation
-void isA __Relation
+@owesPerformance:owesPerformance graph party obligation
+    # Party owes contractual performance
+    @par __Role Obligor $party
+    @obl __Role Obligation $obligation
+    @duty __Role Relation ContractualDuty
+    @result __Bundle $par $obl $duty
+    return $result
+end
 
-# Judicial Relations
-decides isA __Relation
-rules isA __Relation
-adjudicates isA __Relation
-issues isA __Relation
-renders isA __Relation
+# ===== Criminal Relations =====
 
-# Rights Relations
-hasRight isA __Relation
-entitledTo isA __Relation
-claims isA __Relation
-exercises isA __Relation
+@commits:commits graph accused crime
+    # Accused commits crime
+    @acc __Role Perpetrator $accused
+    @crm __Role Crime $crime
+    @criminal __Role Action CriminalAct
+    @result __Bundle $acc $crm $criminal
+    return $result
+end
 
-# Duty Relations
-hasDuty isA __Relation
-owes isA __Relation
-mustPerform isA __Relation
-obliged isA __Relation
+@prosecutes:prosecutes graph prosecutor defendant crime
+    # Prosecutor prosecutes defendant for crime
+    @pros __Role Prosecutor $prosecutor
+    @def __Role Defendant $defendant
+    @crm __Role Crime $crime
+    @prosecution __Role Process Prosecution
+    @result __Bundle $pros $def $crm $prosecution
+    return $result
+end
 
-# Property Relations
-owns isA __Relation
-possesses isA __Relation
-transfers isA __Relation
-conveys isA __Relation
+@convicts:convicts graph court defendant crime
+    # Court convicts defendant of crime
+    @crt __Role Court $court
+    @def __Role Defendant $defendant
+    @crm __Role Crime $crime
+    @conviction __Role Action Conviction
+    @result __Bundle $crt $def $crm $conviction
+    return $result
+end
 
-# Criminal Justice Relations
-accuses isA __Relation
-prosecutes isA __Relation
-convicts isA __Relation
-acquits isA __Relation
-sentences isA __Relation
+@sentences:sentences graph court defendant penalty
+    # Court sentences defendant to penalty
+    @crt __Role Sentencer $court
+    @def __Role Convicted $defendant
+    @pen __Role Penalty $penalty
+    @sentencing __Role Process Sentencing
+    @result __Bundle $crt $def $pen $sentencing
+    return $result
+end
+
+@acquits:acquits graph court defendant
+    # Court acquits defendant
+    @crt __Role Court $court
+    @def __Role Defendant $defendant
+    @acquittal __Role Action Acquittal
+    @result __Bundle $crt $def $acquittal
+    return $result
+end
+
+# ===== Civil Relations =====
+
+@sues:sues graph plaintiff defendant claim
+    # Plaintiff sues defendant with claim
+    @plf __Role Plaintiff $plaintiff
+    @def __Role Defendant $defendant
+    @clm __Role Claim $claim
+    @litigation __Role Process CivilLitigation
+    @result __Bundle $plf $def $clm $litigation
+    return $result
+end
+
+@injures:injures graph tortfeasor victim
+    # Tortfeasor injures victim (tort)
+    @tort __Role Tortfeasor $tortfeasor
+    @vict __Role Victim $victim
+    @injury __Role Action TortiousHarm
+    @result __Bundle $tort $vict $injury
+    return $result
+end
+
+@owesLiability:owesLiability graph party liability
+    # Party owes legal liability
+    @par __Role Liable $party
+    @liab __Role Liability $liability
+    @obligation __Role Relation LegalLiability
+    @result __Bundle $par $liab $obligation
+    return $result
+end
+
+@compensates:compensates graph defendant plaintiff damages
+    # Defendant compensates plaintiff with damages
+    @def __Role Compensator $defendant
+    @plf __Role Compensee $plaintiff
+    @dam __Role Damages $damages
+    @compensation __Role Process Compensation
+    @result __Bundle $def $plf $dam $compensation
+    return $result
+end
+
+# ===== Procedural Relations =====
+
+@filesIn:filesIn graph party court case
+    # Party files case in court
+    @par __Role Filer $party
+    @crt __Role Court $court
+    @cas __Role Case $case
+    @filing __Role Process Filing
+    @result __Bundle $par $crt $cas $filing
+    return $result
+end
+
+@appealsTo:appealsTo graph party higherCourt judgment
+    # Party appeals judgment to higher court
+    @par __Role Appellant $party
+    @crt __Role AppellateCourt $higherCourt
+    @judg __Role Judgment $judgment
+    @appeal __Role Process Appeal
+    @result __Bundle $par $crt $judg $appeal
+    return $result
+end
+
+@testifies:testifies graph witness court case
+    # Witness testifies in court for case
+    @wit __Role Witness $witness
+    @crt __Role Court $court
+    @cas __Role Case $case
+    @testimony __Role Process Testimony
+    @result __Bundle $wit $crt $cas $testimony
+    return $result
+end
+
+# ===== Rights & Duties Relations =====
+
+@hasRight:hasRight graph person right
+    # Person has legal right
+    @pers __Role RightHolder $person
+    @rgt __Role Right $right
+    @entitlement __Role Relation LegalRight
+    @result __Bundle $pers $rgt $entitlement
+    return $result
+end
+
+@hasDuty:hasDuty graph person duty
+    # Person has legal duty
+    @pers __Role DutyBearer $person
+    @dut __Role Duty $duty
+    @obligation __Role Relation LegalDuty
+    @result __Bundle $pers $dut $obligation
+    return $result
+end
+
+@violatesRight:violatesRight graph violator victim right
+    # Violator violates victim's right
+    @viol __Role Violator $violator
+    @vict __Role Victim $victim
+    @rgt __Role Right $right
+    @violation __Role Action RightViolation
+    @result __Bundle $viol $vict $rgt $violation
+    return $result
+end
+
+# ===== Constitutional Relations =====
+
+@guarantees:guarantees graph constitution right
+    # Constitution guarantees right
+    @const __Role Constitution $constitution
+    @rgt __Role Right $right
+    @protection __Role Relation ConstitutionalProtection
+    @result __Bundle $const $rgt $protection
+    return $result
+end
+
+@restrictsAction:restrictsAction graph statute action
+    # Statute restricts action
+    @stat __Role Statute $statute
+    @act __Role Action $action
+    @restriction __Role Relation LegalRestriction
+    @result __Bundle $stat $act $restriction
+    return $result
+end
+
+@interprets:interprets graph court statute interpretation
+    # Court interprets statute
+    @crt __Role Court $court
+    @stat __Role Statute $statute
+    @interp __Role Interpretation $interpretation
+    @construction __Role Process JudicialInterpretation
+    @result __Bundle $crt $stat $interp $construction
+    return $result
+end
+
+# ===== Evidence Relations =====
+
+@presents:presents graph party evidence
+    # Party presents evidence
+    @par __Role Presenter $party
+    @evid __Role Evidence $evidence
+    @presentation __Role Process Presentation
+    @result __Bundle $par $evid $presentation
+    return $result
+end
+
+@admitsEvidence:admitsEvidence graph court evidence
+    # Court admits evidence
+    @crt __Role Court $court
+    @evid __Role Evidence $evidence
+    @admission __Role Action Admission
+    @result __Bundle $crt $evid $admission
+    return $result
+end
+
+@excludesEvidence:excludesEvidence graph court evidence
+    # Court excludes evidence
+    @crt __Role Court $court
+    @evid __Role Evidence $evidence
+    @exclusion __Role Action Exclusion
+    @result __Bundle $crt $evid $exclusion
+    return $result
+end
+
+# ===== Status Relations =====
+
+@hasStatus:hasStatus graph entity status
+    # Entity has legal status
+    @ent __Role Entity $entity
+    @st __Role Status $status
+    @legal __Role Domain Law
+    @result __Bundle $ent $st $legal
+    return $result
+end
+
+@isSuspect:isSuspect graph person
+    # Person is a suspect (status wrapper)
+    @st hasStatus $person Suspect
+    return $st
+end
+
+@isGuilty:isGuilty graph person
+    # Person is guilty (status wrapper)
+    @st hasStatus $person Guilty
+    return $st
+end

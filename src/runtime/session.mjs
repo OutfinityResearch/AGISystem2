@@ -101,7 +101,7 @@ export class Session {
     this.graphAliases = new Map();  // Aliases for graphs (persistName -> name)
     this.responseTranslator = new ResponseTranslator(this);
     this.semanticIndex = DEFAULT_SEMANTIC_INDEX;
-    this.rejectContradictions = options.rejectContradictions ?? false;
+    this.rejectContradictions = options.rejectContradictions ?? true;
 
     // Reasoning statistics
     this.reasoningStats = {
@@ -145,12 +145,13 @@ export class Session {
    * @returns {Object} Learning result
    */
   learn(dsl) {
-    this.checkDSL(dsl, { mode: 'learn', allowHoles: true });
+    this.checkDSL(dsl, { mode: 'learn', allowHoles: true, allowNewOperators: false });
     const snapshot = beginTransaction(this);
     try {
       const result = learnImpl(this, dsl);
       if (!result.success) {
         rollbackTransaction(this, snapshot);
+        result.facts = 0;
       }
       return result;
     } catch (error) {
@@ -506,6 +507,7 @@ export class Session {
    */
   findAll(pattern, options = {}) {
     dbg('FINDALL', 'Pattern:', pattern?.substring?.(0, 60) || pattern);
+    this.checkDSL(pattern, { mode: 'query', allowHoles: true });
     return findAll(this, pattern, options);
   }
 

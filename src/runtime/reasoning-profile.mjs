@@ -1,8 +1,6 @@
-import { REASONING_PRIORITY } from '../core/constants.mjs';
 import { readEnvBoolean } from '../utils/env.js';
 
 export const REASONING_PROFILE = {
-  LEGACY: 'legacy',
   THEORY_DRIVEN: 'theoryDriven'
 };
 
@@ -11,7 +9,6 @@ function normalizeProfile(value) {
   const v = String(value).trim();
   if (!v) return null;
   const low = v.toLowerCase();
-  if (low === 'legacy') return REASONING_PROFILE.LEGACY;
   if (low === 'theorydriven' || low === 'theory-driven' || low === 'theory') {
     return REASONING_PROFILE.THEORY_DRIVEN;
   }
@@ -24,10 +21,7 @@ export function computeReasoningProfile({ reasoningPriority, optionsProfile } = 
   if (optProfile) return optProfile;
   if (envProfile) return envProfile;
 
-  if (reasoningPriority === REASONING_PRIORITY.HOLOGRAPHIC) {
-    return REASONING_PROFILE.THEORY_DRIVEN;
-  }
-  return REASONING_PROFILE.LEGACY;
+  return REASONING_PROFILE.THEORY_DRIVEN;
 }
 
 export function computeFeatureToggles({ profile, options = {} } = {}) {
@@ -54,4 +48,3 @@ export function computeFeatureToggles({ profile, options = {} } = {}) {
     useTheoryReserved: isTheoryDriven
   };
 }
-

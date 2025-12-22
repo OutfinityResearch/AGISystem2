@@ -85,7 +85,7 @@ describe('StructuralDecoder', () => {
 
     test('should include argument positions', () => {
       setup();
-      learn('@f relation A B C');
+      learn('@f give A B C');
 
       const vec = session.scope.get('f');
       const result = decoder.decode(vec);
@@ -100,7 +100,7 @@ describe('StructuralDecoder', () => {
 
     test('should report confidence', () => {
       setup();
-      learn('@f test X Y');
+      learn('@f loves X Y');
 
       const vec = session.scope.get('f');
       const result = decoder.decode(vec);
@@ -137,7 +137,7 @@ describe('StructuralDecoder', () => {
 
     test('should identify rule type for Implies', () => {
       setup();
-      learn('@rule Implies (condition X) (conclusion Y)');
+      learn('@rule Implies (isA X Human) (isA X Mortal)');
 
       const vec = session.scope.get('rule');
       const result = decoder.decode(vec);
@@ -197,7 +197,7 @@ describe('StructuralDecoder', () => {
   describe('nested decoding', () => {
     test('should handle compound expressions', () => {
       setup();
-      learn('@f outer (inner A B)');
+      learn('@f loves (likes A B) C');
 
       const vec = session.scope.get('f');
       const result = decoder.decode(vec);
@@ -211,7 +211,7 @@ describe('StructuralDecoder', () => {
   describe('raw vector preservation', () => {
     test('should include raw vector in result', () => {
       setup();
-      learn('@f test X');
+      learn('@f Not X');
 
       const vec = session.scope.get('f');
       const result = decoder.decode(vec);

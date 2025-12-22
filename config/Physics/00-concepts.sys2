@@ -1,99 +1,252 @@
-# Physics - Fundamental Concepts
-# Based on hardcoded_theory_analysis.md Section 8.2
-# Simple isA definitions only
+# Physics - Domain Concepts
+# Foundational physics concepts with proper graph semantics
 
-# ===== Quantity System =====
-Quantity isA __Category
-Mass isA __Property
-Mass isA Quantity
-Length isA __Property
-Length isA Quantity
-Time isA __Property
-Time isA Quantity
-Velocity isA __Property
-Velocity isA Quantity
-Acceleration isA __Property
-Acceleration isA Quantity
-Force isA __Property
-Force isA Quantity
-Energy isA __Property
-Energy isA Quantity
-Power isA __Property
-Power isA Quantity
-Charge isA __Property
-Charge isA Quantity
+# ===== Fundamental Entities =====
 
-# ===== Energy Hierarchy =====
-KineticEnergy isA Energy
-PotentialEnergy isA Energy
-ThermalEnergy isA Energy
-ElectromagneticEnergy isA Energy
+@Particle:Particle graph entity
+    # Elementary or composite particle
+    @ent __Role Entity $entity
+    @type __Role Type Particle
+    @material __Role Property HasMass
+    @concept __Bundle $ent $type $material
+    return $concept
+end
 
-# ===== Unit System =====
-Unit isA __Category
-LengthUnit isA Unit
-Meter isA LengthUnit
-Kilometer isA LengthUnit
-Centimeter isA LengthUnit
-Millimeter isA LengthUnit
-TimeUnit isA Unit
-Second isA TimeUnit
-Minute isA TimeUnit
-Hour isA TimeUnit
-MassUnit isA Unit
-Kilogram isA MassUnit
-Gram isA MassUnit
-VelocityUnit isA Unit
-MeterPerSecond isA VelocityUnit
-KilometerPerHour isA VelocityUnit
-AccelerationUnit isA Unit
-MeterPerSecondSquared isA AccelerationUnit
-ForceUnit isA Unit
-Newton isA ForceUnit
-EnergyUnit isA Unit
-Joule isA EnergyUnit
-Calorie isA EnergyUnit
-PowerUnit isA Unit
-Watt isA PowerUnit
-ChargeUnit isA Unit
-Coulomb isA ChargeUnit
+@Field:Field graph entity
+    # Physical field (electromagnetic, gravitational, etc.)
+    @ent __Role Entity $entity
+    @type __Role Type Field
+    @distributed __Role Property Continuous
+    @concept __Bundle $ent $type $distributed
+    return $concept
+end
 
-# ===== Field Types =====
-Field isA __Category
-ElectricField isA Field
-MagneticField isA Field
-GravitationalField isA Field
+@Wave:Wave graph phenomenon
+    # Wave propagation
+    @phen __Role Phenomenon $phenomenon
+    @type __Role Type Wave
+    @oscillatory __Role Property Periodic
+    @propagating __Role Property Propagates
+    @concept __Bundle $phen $type $oscillatory $propagating
+    return $concept
+end
 
-# ===== Conservation Laws =====
-ConservationLaw isA __Category
-EnergyConservation isA ConservationLaw
-MomentumConservation isA ConservationLaw
-ChargeConservation isA ConservationLaw
-AngularMomentumConservation isA ConservationLaw
+# ===== Mechanical Quantities =====
 
-# ===== System Types =====
-System isA __Category
-IsolatedSystem isA System
-OpenSystem isA System
-ClosedSystem isA System
+@Mass:Mass graph property
+    # Measure of inertia
+    @prop __Role Property $property
+    @type __Role Type Mass
+    @inertial __Role Aspect Inertia
+    @conserved __Role Nature Conserved
+    @concept __Bundle $prop $type $inertial $conserved
+    return $concept
+end
 
-# ===== Interaction Types =====
-Interaction isA __Category
-GravitationalInteraction isA Interaction
-ElectromagneticInteraction isA Interaction
-WeakInteraction isA Interaction
-StrongInteraction isA Interaction
+@Force:Force graph interaction
+    # Interaction causing acceleration
+    @inter __Role Interaction $interaction
+    @type __Role Type Force
+    @vector __Role Nature Vector
+    @accelerating __Role Effect CausesAcceleration
+    @concept __Bundle $inter $type $vector $accelerating
+    return $concept
+end
 
-# ===== Boundary Conditions =====
-BoundaryCondition isA __Category
-DirichletBoundary isA BoundaryCondition
-NeumannBoundary isA BoundaryCondition
-PeriodicBoundary isA BoundaryCondition
+@Momentum:Momentum graph quantity
+    # Mass times velocity
+    @q __Role Quantity $quantity
+    @type __Role Type Momentum
+    @vector __Role Nature Vector
+    @conserved __Role Property Conserved
+    @concept __Bundle $q $type $vector $conserved
+    return $concept
+end
 
-# ===== Measurement and Experiments =====
-Measurement isA __Category
-DirectMeasurement isA Measurement
-IndirectMeasurement isA Measurement
-Experiment isA __Category
-ControlledExperiment isA Experiment
-ObservationalExperiment isA Experiment
+@Energy:Energy graph quantity
+    # Capacity to do work
+    @q __Role Quantity $quantity
+    @type __Role Type Energy
+    @scalar __Role Nature Scalar
+    @conserved __Role Property Conserved
+    @concept __Bundle $q $type $scalar $conserved
+    return $concept
+end
+
+@Work:Work graph transfer
+    # Energy transferred by force
+    @trans __Role Transfer $transfer
+    @type __Role Type Work
+    @energyTransfer __Role Nature EnergyTransfer
+    @forceDotDisplacement __Role Definition ForceDotProduct
+    @concept __Bundle $trans $type $energyTransfer $forceDotDisplacement
+    return $concept
+end
+
+@Power:Power graph rate
+    # Rate of energy transfer
+    @r __Role Rate $rate
+    @type __Role Type Power
+    @energyRate __Role Definition EnergyPerTime
+    @scalar __Role Nature Scalar
+    @concept __Bundle $r $type $energyRate $scalar
+    return $concept
+end
+
+# ===== Motion & Space-Time =====
+
+@Position:Position graph property
+    # Location in space
+    @prop __Role Property $property
+    @type __Role Type Position
+    @vector __Role Nature Vector
+    @spatial __Role Domain Space
+    @concept __Bundle $prop $type $vector $spatial
+    return $concept
+end
+
+@Velocity:Velocity graph quantity
+    # Rate of position change
+    @q __Role Quantity $quantity
+    @type __Role Type Velocity
+    @vector __Role Nature Vector
+    @timeDerivative __Role Definition PositionDerivative
+    @concept __Bundle $q $type $vector $timeDerivative
+    return $concept
+end
+
+@Acceleration:Acceleration graph quantity
+    # Rate of velocity change
+    @q __Role Quantity $quantity
+    @type __Role Type Acceleration
+    @vector __Role Nature Vector
+    @secondDerivative __Role Definition VelocityDerivative
+    @concept __Bundle $q $type $vector $secondDerivative
+    return $concept
+end
+
+@Time:Time graph dimension
+    # Temporal dimension
+    @dim __Role Dimension $dimension
+    @type __Role Type Time
+    @oneWay __Role Property Irreversible
+    @continuous __Role Nature Continuous
+    @concept __Bundle $dim $type $oneWay $continuous
+    return $concept
+end
+
+@Space:Space graph dimension
+    # Spatial dimensions
+    @dim __Role Dimension $dimension
+    @type __Role Type Space
+    @threeDimensional __Role Property Spatial3D
+    @continuous __Role Nature Continuous
+    @concept __Bundle $dim $type $threeDimensional $continuous
+    return $concept
+end
+
+# ===== Thermodynamics =====
+
+@Temperature:Temperature graph property
+    # Measure of thermal energy
+    @prop __Role Property $property
+    @type __Role Type Temperature
+    @thermal __Role Aspect ThermalEnergy
+    @scalar __Role Nature Scalar
+    @concept __Bundle $prop $type $thermal $scalar
+    return $concept
+end
+
+@Entropy:Entropy graph quantity
+    # Measure of disorder
+    @q __Role Quantity $quantity
+    @type __Role Type Entropy
+    @disorder __Role Interpretation Disorder
+    @increasing __Role Law SecondLaw
+    @concept __Bundle $q $type $disorder $increasing
+    return $concept
+end
+
+@Heat:Heat graph transfer
+    # Thermal energy transfer
+    @trans __Role Transfer $transfer
+    @type __Role Type Heat
+    @thermal __Role Nature ThermalEnergy
+    @temperature __Role Cause TemperatureDifference
+    @concept __Bundle $trans $type $thermal $temperature
+    return $concept
+end
+
+# ===== Electromagnetism =====
+
+@Charge:Charge graph property
+    # Electric charge
+    @prop __Role Property $property
+    @type __Role Type ElectricCharge
+    @quantized __Role Nature Quantized
+    @conserved __Role Property Conserved
+    @concept __Bundle $prop $type $quantized $conserved
+    return $concept
+end
+
+@ElectricField:ElectricField graph field
+    # Electric force field
+    @f __Role Field $field
+    @type __Role Type ElectricField
+    @vector __Role Nature VectorField
+    @chargeSource __Role Source ElectricCharge
+    @concept __Bundle $f $type $vector $chargeSource
+    return $concept
+end
+
+@MagneticField:MagneticField graph field
+    # Magnetic force field
+    @f __Role Field $field
+    @type __Role Type MagneticField
+    @vector __Role Nature VectorField
+    @currentSource __Role Source MovingCharge
+    @concept __Bundle $f $type $vector $currentSource
+    return $concept
+end
+
+@Current:Current graph flow
+    # Flow of electric charge
+    @fl __Role Flow $flow
+    @type __Role Type ElectricCurrent
+    @chargeFlow __Role Definition ChargePerTime
+    @scalar __Role Nature Scalar
+    @concept __Bundle $fl $type $chargeFlow $scalar
+    return $concept
+end
+
+# ===== Quantum Mechanics =====
+
+@QuantumState:QuantumState graph state
+    # Quantum mechanical state
+    @st __Role State $state
+    @type __Role Type QuantumState
+    @wavefunction __Role Representation Wavefunction
+    @superposition __Role Property CanSuperpose
+    @concept __Bundle $st $type $wavefunction $superposition
+    return $concept
+end
+
+@Photon:Photon graph particle
+    # Quantum of light
+    @part __Role Particle $particle
+    @type __Role Type Photon
+    @massless __Role Property Massless
+    @lightSpeed __Role Property SpeedC
+    @concept __Bundle $part $type $massless $lightSpeed
+    return $concept
+end
+
+@Atom:Atom graph system
+    # Basic unit of matter
+    @sys __Role System $system
+    @type __Role Type Atom
+    @nucleus __Role Component Nucleus
+    @electrons __Role Component Electrons
+    @concept __Bundle $sys $type $nucleus $electrons
+    return $concept
+end

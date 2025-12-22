@@ -1,2631 +1,4721 @@
+# Geography - Missing Concepts
+# Auto-generated concept definitions
+
+@result:result graph
+    # Concept: result
+    @entity __Entity result
+    return $entity
+end
+
+# ============================================================================
+# Geography Stress Test - Domain-Specific Vocabulary
+# AUTO-GENERATED: Definitions for operators used in this test
+# ============================================================================
+
+@adjacentTo:adjacentTo graph entity reference
+    @e __Role Entity $entity
+    @r __Role Reference $reference
+    @spatial __Pair $e $r
+    return $spatial
+end
+
+@administeredBy:administeredBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@affectsOcean:affectsOcean graph factor result
+    @f __Role Factor $factor
+    @r __Role Result $result
+    @influence __Pair $f $r
+    return $influence
+end
+
+@affectsPlate:affectsPlate graph factor result
+    @f __Role Factor $factor
+    @r __Role Result $result
+    @influence __Pair $f $r
+    return $influence
+end
+
+@affectsReef:affectsReef graph factor result
+    @f __Role Factor $factor
+    @r __Role Result $result
+    @influence __Pair $f $r
+    return $influence
+end
+
+@affectsRegion:affectsRegion graph factor result
+    @f __Role Factor $factor
+    @r __Role Result $result
+    @influence __Pair $f $r
+    return $influence
+end
+
+@affectsRock:affectsRock graph factor result
+    @f __Role Factor $factor
+    @r __Role Result $result
+    @influence __Pair $f $r
+    return $influence
+end
+
+@aidsNavigation:aidsNavigation graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@allowsMovement:allowsMovement graph entity function
+    @e __Role Entity $entity
+    @f __Role Function $function
+    @purpose __Pair $e $f
+    return $purpose
+end
+
+@associatedWith:associatedWith graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@atLatitude:atLatitude graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@atLongitude:atLongitude graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@atPlateBoundary:atPlateBoundary graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@belongsToPeople:belongsToPeople graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@benefitsSpecies:benefitsSpecies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@betweenCountries:betweenCountries graph entity reference
+    @e __Role Entity $entity
+    @r __Role Reference $reference
+    @spatial __Pair $e $r
+    return $spatial
+end
+
+@betweenPlate:betweenPlate graph entity reference
+    @e __Role Entity $entity
+    @r __Role Reference $reference
+    @spatial __Pair $e $r
+    return $spatial
+end
+
+@blocksRiver:blocksRiver graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@borderedBy:borderedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@borderingCountries:borderingCountries graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@borderingOcean:borderingOcean graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@capitalOf:capitalOf graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@carriesWater:carriesWater graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@carvedBy:carvedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@causedByTemperature:causedByTemperature graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@causesVolcanism:causesVolcanism graph cause effect
+    @c __Role Cause $cause
+    @e __Role Effect $effect
+    @causation __Pair $c $e
+    return $causation
+end
+
+@centeredOn:centeredOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@checksHealth:checksHealth graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@claimedBy:claimedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@collectsData:collectsData graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@commemorates:commemorates graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@conductsResearch:conductsResearch graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@connects:connects graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@connectsCountries:connectsCountries graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@connectsPlate:connectsPlate graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@connectsRegions:connectsRegions graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@connectsTrees:connectsTrees graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@containsHydrocarbons:containsHydrocarbons graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@containsMineral:containsMineral graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@coversContinent:coversContinent graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@coversRegion:coversRegion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@createdBy:createdBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@crossesOcean:crossesOcean graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@crossesRiver:crossesRiver graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@definesClimate:definesClimate graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@definesRegion:definesRegion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@depositedBy:depositedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@depositedIn:depositedIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@dividedBy:dividedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@drainedBy:drainedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@duringHurricaneSeason:duringHurricaneSeason graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@duringSeason:duringSeason graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@emitsGas:emitsGas graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@emitsMethane:emitsMethane graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@extendsDistance:extendsDistance graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@extendsInto:extendsInto graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@facingOcean:facingOcean graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@fedBy:fedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@floatsOn:floatsOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@flowedFrom:flowedFrom graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@flowsIn:flowsIn graph entity from to
+    @e __Role Entity $entity
+    @f __Role From $from
+    @t __Role To $to
+    @movement __Bundle $e $f $t
+    return $movement
+end
+
+@flowsInto:flowsInto graph entity from to
+    @e __Role Entity $entity
+    @f __Role From $from
+    @t __Role To $to
+    @movement __Bundle $e $f $t
+    return $movement
+end
+
+@flowsThrough:flowsThrough graph entity from to
+    @e __Role Entity $entity
+    @f __Role From $from
+    @t __Role To $to
+    @movement __Bundle $e $f $t
+    return $movement
+end
+
+@followsDisturbance:followsDisturbance graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@followsRoute:followsRoute graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@formedBy:formedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@formedByGlacier:formedByGlacier graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@formedByPlate:formedByPlate graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@formedFrom:formedFrom graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@formsAt:formsAt graph agent target
+    @a __Role Agent $agent
+    @t __Role Target $target
+    @process __Pair $a $t
+    return $process
+end
+
+@foundOn:foundOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@foundOnIsland:foundOnIsland graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@fromPeriod:fromPeriod graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@hasAbundance:hasAbundance graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasAdaptation:hasAdaptation graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasAge:hasAge graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasAnimals:hasAnimals graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasAnnualRainfall:hasAnnualRainfall graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasArea:hasArea graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasAttractions:hasAttractions graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasAutonomy:hasAutonomy graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasBamboo:hasBamboo graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasBandwidth:hasBandwidth graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasBanks:hasBanks graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasBerths:hasBerths graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasBiodiversity:hasBiodiversity graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasBiome:hasBiome graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasBoats:hasBoats graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasBoundary:hasBoundary graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasCapacity:hasCapacity graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasCapital:hasCapital graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasCatch:hasCatch graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasCause:hasCause graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasCaves:hasCaves graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasCharacter:hasCharacter graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasClimate:hasClimate graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasCollection:hasCollection graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasColor:hasColor graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasCompanies:hasCompanies graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasComplexity:hasComplexity graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasComposition:hasComposition graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasConcentration:hasConcentration graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasConnectivity:hasConnectivity graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasConservation:hasConservation graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasContent:hasContent graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasCoverage:hasCoverage graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasDecomposition:hasDecomposition graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasDensity:hasDensity graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasDepletion:hasDepletion graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasDepth:hasDepth graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasDestination:hasDestination graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasDevelopment:hasDevelopment graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasDiameter:hasDiameter graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasDirection:hasDirection graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasDistance:hasDistance graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasDistribution:hasDistribution graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasDiversity:hasDiversity graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasDrainageArea:hasDrainageArea graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasEarthquakeFrequency:hasEarthquakeFrequency graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasEcosystem:hasEcosystem graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasElevation:hasElevation graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasEnergySource:hasEnergySource graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasEruption:hasEruption graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasEruptionFrequency:hasEruptionFrequency graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasEucalyptus:hasEucalyptus graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasFeature:hasFeature graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasFlowRate:hasFlowRate graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasForest:hasForest graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasFormation:hasFormation graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasGovernment:hasGovernment graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasGradient:hasGradient graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasHabitat:hasHabitat graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasHeight:hasHeight graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasHeritage:hasHeritage graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasHistoricBuildings:hasHistoricBuildings graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasHoldings:hasHoldings graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasHousing:hasHousing graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasIceCover:hasIceCover graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasImpact:hasImpact graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasImportance:hasImportance graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasIndustry:hasIndustry graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasIslands:hasIslands graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasLagoon:hasLagoon graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasLegalStatus:hasLegalStatus graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasLength:hasLength graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasMembers:hasMembers graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasMineral:hasMineral graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasMovement:hasMovement graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasNeighbors:hasNeighbors graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasNutrients:hasNutrients graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasOffices:hasOffices graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasOffset:hasOffset graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasOxygen:hasOxygen graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasPH:hasPH graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasPassengers:hasPassengers graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasPercentage:hasPercentage graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasPeriod:hasPeriod graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasPioneerSpecies:hasPioneerSpecies graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasPopulation:hasPopulation graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasPrecipitation:hasPrecipitation graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasProcess:hasProcess graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasProducers:hasProducers graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasProduction:hasProduction graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasProtection:hasProtection graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasPurity:hasPurity graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasPurpose:hasPurpose graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasQuality:hasQuality graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasRainfall:hasRainfall graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasRange:hasRange graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasRate:hasRate graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasRechargeRate:hasRechargeRate graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasRecovery:hasRecovery graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasRelationship:hasRelationship graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasResearch:hasResearch graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasReserves:hasReserves graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasResource:hasResource graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasRestrictions:hasRestrictions graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasRights:hasRights graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasRole:hasRole graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasRotation:hasRotation graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasRoute:hasRoute graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasRoutes:hasRoutes graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasSalinity:hasSalinity graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasSeason:hasSeason graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasSediment:hasSediment graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasSignificance:hasSignificance graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasSize:hasSize graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasSource:hasSource graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasSpeakers:hasSpeakers graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasSpecies:hasSpecies graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasSpreading:hasSpreading graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasStability:hasStability graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasStages:hasStages graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasStalactites:hasStalactites graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasStatus:hasStatus graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasStudents:hasStudents graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasSuccess:hasSuccess graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasTemperature:hasTemperature graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasTerms:hasTerms graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasTerritory:hasTerritory graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasThickness:hasThickness graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasTigers:hasTigers graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasTrade:hasTrade graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasTradeVolume:hasTradeVolume graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasTraffic:hasTraffic graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasTrees:hasTrees graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasTrophicLevels:hasTrophicLevels graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasTsunamiVulnerability:hasTsunamiVulnerability graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasType:hasType graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasUniqueness:hasUniqueness graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasUses:hasUses graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasVegetation:hasVegetation graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasVenues:hasVenues graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasVisitors:hasVisitors graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasVolcanicActivity:hasVolcanicActivity graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@hasWaterSource:hasWaterSource graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@headquarteredIn:headquarteredIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@hostsEvents:hostsEvents graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@inKarstArea:inKarstArea graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@includesCities:includesCities graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@includesCountries:includesCountries graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@indicatesHealth:indicatesHealth graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@inhabits:inhabits graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@inhabitsForest:inhabitsForest graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@inhabitsOcean:inhabitsOcean graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@introducedTo:introducedTo graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@involvesPlate:involvesPlate graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@involvesSpecies:involvesSpecies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@isVolcanic:isVolcanic graph entity property
+    @e __Role Entity $entity
+    @p __Role Property $property
+    @attribute __Pair $e $p
+    return $attribute
+end
+
+@leadsToDestination:leadsToDestination graph cause effect
+    @c __Role Cause $cause
+    @e __Role Effect $effect
+    @causation __Pair $c $e
+    return $causation
+end
+
+@livesIn:livesIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@locatedAt:locatedAt graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@locatedOff:locatedOff graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@locatedOn:locatedOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@locatedUnder:locatedUnder graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@measuresTides:measuresTides graph entity value
+    @e __Role Entity $entity
+    @v __Role Value $value
+    @measurement __Pair $e $v
+    return $measurement
+end
+
+@meetsOcean:meetsOcean graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@mergesCities:mergesCities graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@monitorsActivity:monitorsActivity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@monitorsQuality:monitorsQuality graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@nearCoast:nearCoast graph entity reference
+    @e __Role Entity $entity
+    @r __Role Reference $reference
+    @spatial __Pair $e $r
+    return $spatial
+end
+
+@observedIn:observedIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@occursIn:occursIn graph entity location
+    @e __Role Entity $entity
+    @l __Role Location $location
+    @position __Pair $e $l
+    return $position
+end
+
+@occursOn:occursOn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@parallelsCoast:parallelsCoast graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@participatesIn:participatesIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@passesThrough:passesThrough graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@performedBy:performedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@performsAstronomy:performsAstronomy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@performsLaunches:performsLaunches graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@plantsTreeCount:plantsTreeCount graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@practicedIn:practicedIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@processesClearance:processesClearance graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@processesImmigration:processesImmigration graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@processesMaterials:processesMaterials graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@producesAgricultural:producesAgricultural graph cause effect
+    @c __Role Cause $cause
+    @e __Role Effect $effect
+    @causation __Pair $c $e
+    return $causation
+end
+
+@producesCO2:producesCO2 graph cause effect
+    @c __Role Cause $cause
+    @e __Role Effect $effect
+    @causation __Pair $c $e
+    return $causation
+end
+
+@producesOxygen:producesOxygen graph cause effect
+    @c __Role Cause $cause
+    @e __Role Effect $effect
+    @causation __Pair $c $e
+    return $causation
+end
+
+@protectsCoast:protectsCoast graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@protectsDesert:protectsDesert graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@protectsForest:protectsForest graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@protectsMountain:protectsMountain graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@protectsSpecies:protectsSpecies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@providesProtection:providesProtection graph entity function
+    @e __Role Entity $entity
+    @f __Role Function $function
+    @purpose __Pair $e $f
+    return $purpose
+end
+
+@providesService:providesService graph entity function
+    @e __Role Entity $entity
+    @f __Role Function $function
+    @purpose __Pair $e $f
+    return $purpose
+end
+
+@releasesNutrients:releasesNutrients graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@representsCountry:representsCountry graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@representsEcosystem:representsEcosystem graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@sacredTo:sacredTo graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@separatedFrom:separatedFrom graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@separatesRivers:separatesRivers graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@servesCity:servesCity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@servesCountry:servesCountry graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@servesRegion:servesRegion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@shapedByWind:shapedByWind graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@sharesBorder:sharesBorder graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@sharesMaritimeBorder:sharesMaritimeBorder graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@siteOfEvent:siteOfEvent graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@spokenIn:spokenIn graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@suppliesCity:suppliesCity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@supportsCrop:supportsCrop graph entity function
+    @e __Role Entity $entity
+    @f __Role Function $function
+    @purpose __Pair $e $f
+    return $purpose
+end
+
+@surroundedBy:surroundedBy graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@surroundsCity:surroundsCity graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@surroundsIsland:surroundsIsland graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@targetingRegion:targetingRegion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@throughMountain:throughMountain graph entity reference
+    @e __Role Entity $entity
+    @r __Role Reference $reference
+    @spatial __Pair $e $r
+    return $spatial
+end
+
+@transportsResource:transportsResource graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@travelsDistance:travelsDistance graph entity from to
+    @e __Role Entity $entity
+    @f __Role From $from
+    @t __Role To $to
+    @movement __Bundle $e $f $t
+    return $movement
+end
+
+@traversesCountry:traversesCountry graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@unaffectedSpecies:unaffectedSpecies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@underPlate:underPlate graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@underVolcano:underVolcano graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@underlies:underlies graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@usedByCivilization:usedByCivilization graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@usedByReligion:usedByReligion graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
+@usesCurrency:usesCurrency graph a b
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
+end
+
 @:Continental_Hierarchy graph Continent Region Country
-    @cont isA $Continent Continent
-    @reg belongsTo $Region $Continent
-    @coun belongsTo $Country $Region
-    return $chain
+    @cont isA Continent Continent
+    @reg belongsTo Region Continent
+    @coun belongsTo Country Region
+    return $coun
 end
 
 @:Ocean_System graph Ocean Sea Bay
-    @oc isA $Ocean Ocean
-    @sea partOf $Sea $Ocean
-    @bay partOf $Bay $Sea
-    return $chain
+    @oc isA Ocean Ocean
+    @sea partOf Sea Ocean
+    @bay partOf Bay Sea
+    return $bay
 end
 
 @:Mountain_Range graph Range Peak Valley
-    @rng isA $Range MountainRange
-    @peak partOf $Peak $Range
-    @val adjacentTo $Valley $Range
-    return $chain
+    @rng isA Range MountainRange
+    @peak partOf Peak Range
+    @val adjacentTo Valley Range
+    return $val
 end
 
 @:River_System graph River Tributary Delta
-    @riv isA $River River
-    @trib flowsInto $Tributary $River
-    @delt formsAt $Delta $River
-    return $chain
+    @riv isA River River
+    @trib flowsInto Tributary River
+    @delt formsAt Delta River
+    return $delt
 end
 
 @:Lake_Classification graph Lake Region Climate
-    @lk isA $Lake Lake
-    @reg locatedIn $Lake $Region
-    @clim hasClimate $Region $Climate
-    return $chain
+    @lk isA Lake Lake
+    @reg locatedIn Lake Region
+    @clim hasClimate Region Climate
+    return $clim
 end
 
 @:Border_Adjacency graph Country1 Country2 Border
-    @c1 isA $Country1 Country
-    @c2 isA $Country2 Country
-    @bord sharesBorder $Country1 $Country2
-    return $chain
+    @c1 isA Country1 Country
+    @c2 isA Country2 Country
+    @bord sharesBorder Country1 Country2
+    return $bord
 end
 
 @:Capital_Relation graph Country Capital City
-    @coun isA $Country Country
-    @cap capitalOf $Capital $Country
-    @city isA $Capital City
-    return $chain
+    @coun isA Country Country
+    @cap capitalOf Capital Country
+    @city isA Capital City
+    return $city
 end
 
 @:Climate_Zone graph Region Climate Vegetation
-    @reg isA $Region Region
-    @clim hasClimate $Region $Climate
-    @veg hasVegetation $Region $Vegetation
-    return $chain
+    @reg isA Region Region
+    @clim hasClimate Region Climate
+    @veg hasVegetation Region Vegetation
+    return $veg
 end
 
 @:Resource_Distribution graph Country Resource Abundance
-    @coun isA $Country Country
-    @res hasResource $Country $Resource
-    @abund hasAbundance $Resource $Abundance
-    return $chain
+    @coun isA Country Country
+    @res hasResource Country Resource
+    @abund hasAbundance Resource Abundance
+    return $abund
 end
 
 @:Population_Density graph Country Population Area
-    @coun isA $Country Country
-    @pop hasPopulation $Country $Population
-    @area hasArea $Country $Area
-    return $chain
+    @coun isA Country Country
+    @pop hasPopulation Country Population
+    @area hasArea Country Area
+    return $area
 end
 
 @:Language_Distribution graph Country Language Speakers
-    @coun isA $Country Country
-    @lang spokenIn $Language $Country
-    @speak hasSpeakers $Language $Speakers
-    return $chain
+    @coun isA Country Country
+    @lang spokenIn Language Country
+    @speak hasSpeakers Language Speakers
+    return $speak
 end
 
 @:Religion_Demographics graph Country Religion Percentage
-    @coun isA $Country Country
-    @rel practicedIn $Religion $Country
-    @perc hasPercentage $Religion $Percentage
-    return $chain
+    @coun isA Country Country
+    @rel practicedIn Religion Country
+    @perc hasPercentage Religion Percentage
+    return $perc
 end
 
 @:Elevation_Hierarchy graph Terrain Elevation BiomeType
-    @terr isA $Terrain Terrain
-    @elev hasElevation $Terrain $Elevation
-    @biome hasBiome $Terrain $BiomeType
-    return $chain
+    @terr isA Terrain Terrain
+    @elev hasElevation Terrain Elevation
+    @biome hasBiome Terrain BiomeType
+    return $biome
 end
 
 @:Island_Classification graph Island Ocean Size
-    @isl isA $Island Island
-    @oc locatedIn $Island $Ocean
-    @sz hasSize $Island $Size
-    return $chain
+    @isl isA Island Island
+    @oc locatedIn Island Ocean
+    @sz hasSize Island Size
+    return $sz
 end
 
 @:Peninsula_Geography graph Peninsula Continent Sea
-    @pen isA $Peninsula Peninsula
-    @cont partOf $Peninsula $Continent
-    @sea borderedBy $Peninsula $Sea
-    return $chain
+    @pen isA Peninsula Peninsula
+    @cont partOf Peninsula Continent
+    @sea borderedBy Peninsula Sea
+    return $sea
 end
 
 @:Desert_Classification graph Desert Continent Climate
-    @des isA $Desert Desert
-    @cont locatedIn $Desert $Continent
-    @clim hasClimate $Desert $Climate
-    return $chain
+    @des isA Desert Desert
+    @cont locatedIn Desert Continent
+    @clim hasClimate Desert Climate
+    return $clim
 end
 
 @:Forest_Distribution graph Forest Region Type
-    @for isA $Forest Forest
-    @reg locatedIn $Forest $Region
-    @typ hasType $Forest $Type
-    return $chain
+    @for isA Forest Forest
+    @reg locatedIn Forest Region
+    @typ hasType Forest Type
+    return $typ
 end
 
 @:Coastal_Features graph Coast Ocean Feature
-    @cst isA $Coast Coast
-    @oc borderingOcean $Coast $Ocean
-    @feat hasFeature $Coast $Feature
-    return $chain
+    @cst isA Coast Coast
+    @oc borderingOcean Coast Ocean
+    @feat hasFeature Coast Feature
+    return $feat
 end
 
 @:Strait_Connection graph Strait Sea1 Sea2
-    @str isA $Strait Strait
-    @s1 connects $Strait $Sea1
-    @s2 connects $Strait $Sea2
-    return $chain
+    @str isA Strait Strait
+    @s1 connects Strait Sea1
+    @s2 connects Strait Sea2
+    return $s2
 end
 
 @:Waterfall_System graph Waterfall River Height
-    @wf isA $Waterfall Waterfall
-    @riv partOf $Waterfall $River
-    @ht hasHeight $Waterfall $Height
-    return $chain
+    @wf isA Waterfall Waterfall
+    @riv partOf Waterfall River
+    @ht hasHeight Waterfall Height
+    return $ht
 end
 
 @:Glacier_Distribution graph Glacier Region Climate
-    @glac isA $Glacier Glacier
-    @reg locatedIn $Glacier $Region
-    @clim hasClimate $Region $Climate
-    return $chain
+    @glac isA Glacier Glacier
+    @reg locatedIn Glacier Region
+    @clim hasClimate Region Climate
+    return $clim
 end
 
 @:Volcano_Classification graph Volcano Range Status
-    @volc isA $Volcano Volcano
-    @rng partOf $Volcano $Range
-    @stat hasStatus $Volcano $Status
-    return $chain
+    @volc isA Volcano Volcano
+    @rng partOf Volcano Range
+    @stat hasStatus Volcano Status
+    return $stat
 end
 
 @:Tectonic_Plate graph Plate Continent Boundary
-    @plt isA $Plate TectonicPlate
-    @cont underlies $Plate $Continent
-    @bnd hasBoundary $Plate $Boundary
-    return $chain
+    @plt isA Plate TectonicPlate
+    @cont underlies Plate Continent
+    @bnd hasBoundary Plate Boundary
+    return $bnd
 end
 
 @:Canyon_Formation graph Canyon River Region
-    @can isA $Canyon Canyon
-    @riv carvedBy $Canyon $River
-    @reg locatedIn $Canyon $Region
-    return $chain
+    @can isA Canyon Canyon
+    @riv carvedBy Canyon River
+    @reg locatedIn Canyon Region
+    return $reg
 end
 
 @:Agricultural_Zone graph Region Crop Climate
-    @reg isA $Region Region
-    @crop producesAgricultural $Region $Crop
-    @clim hasClimate $Region $Climate
-    return $chain
+    @reg isA Region Region
+    @crop producesAgricultural Region Crop
+    @clim hasClimate Region Climate
+    return $clim
 end
 
 @:Mining_Region graph Region Mineral Reserves
-    @reg isA $Region Region
-    @min hasMineral $Region $Mineral
-    @res hasReserves $Mineral $Reserves
-    return $chain
+    @reg isA Region Region
+    @min hasMineral Region Mineral
+    @res hasReserves Mineral Reserves
+    return $res
 end
 
 @:Energy_Resources graph Country Source Capacity
-    @coun isA $Country Country
-    @src hasEnergySource $Country $Source
-    @cap hasCapacity $Source $Capacity
-    return $chain
+    @coun isA Country Country
+    @src hasEnergySource Country Source
+    @cap hasCapacity Source Capacity
+    return $cap
 end
 
 @:Trade_Route graph Route Country1 Country2
-    @rte isA $Route TradeRoute
-    @c1 connects $Route $Country1
-    @c2 connects $Route $Country2
-    return $chain
+    @rte isA Route TradeRoute
+    @c1 connects Route Country1
+    @c2 connects Route Country2
+    return $c2
 end
 
 @:Urban_Hierarchy graph City Region Population
-    @city isA $City City
-    @reg locatedIn $City $Region
-    @pop hasPopulation $City $Population
-    return $chain
+    @city isA City City
+    @reg locatedIn City Region
+    @pop hasPopulation City Population
+    return $pop
 end
 
 @:Port_System graph Port Coast Trade
-    @prt isA $Port Port
-    @cst locatedOn $Port $Coast
-    @trd hasTradeVolume $Port $Trade
-    return $chain
+    @prt isA Port Port
+    @cst locatedOn Port Coast
+    @trd hasTradeVolume Port Trade
+    return $trd
 end
 
 @:Airport_Hub graph Airport City Connectivity
-    @air isA $Airport Airport
-    @city servesCity $Airport $City
-    @conn hasConnectivity $Airport $Connectivity
-    return $chain
+    @air isA Airport Airport
+    @city servesCity Airport City
+    @conn hasConnectivity Airport Connectivity
+    return $conn
 end
 
 @:Monsoon_Pattern graph Region Season Rainfall
-    @reg isA $Region Region
-    @seas hasSeason $Region $Season
-    @rain hasRainfall $Region $Rainfall
-    return $chain
+    @reg isA Region Region
+    @seas hasSeason Region Season
+    @rain hasRainfall Region Rainfall
+    return $rain
 end
 
 @:Hurricane_Zone graph Ocean Region Season
-    @oc isA $Ocean Ocean
-    @reg affectsRegion $Ocean $Region
-    @seas duringHurricaneSeason $Ocean $Season
-    return $chain
+    @oc isA Ocean Ocean
+    @reg affectsRegion Ocean Region
+    @seas duringHurricaneSeason Ocean Season
+    return $seas
 end
 
 @:Earthquake_Zone graph Region Plate Frequency
-    @reg isA $Region Region
-    @plt atPlateBoundary $Region $Plate
-    @freq hasEarthquakeFrequency $Region $Frequency
-    return $chain
+    @reg isA Region Region
+    @plt atPlateBoundary Region Plate
+    @freq hasEarthquakeFrequency Region Frequency
+    return $freq
 end
 
 @:Tsunami_Risk graph Coast Ocean Vulnerability
-    @cst isA $Coast Coast
-    @oc facingOcean $Coast $Ocean
-    @vuln hasTsunamiVulnerability $Coast $Vulnerability
-    return $chain
+    @cst isA Coast Coast
+    @oc facingOcean Coast Ocean
+    @vuln hasTsunamiVulnerability Coast Vulnerability
+    return $vuln
 end
 
 @:Reef_System graph Reef Ocean Biodiversity
-    @reef isA $Reef CoralReef
-    @oc locatedIn $Reef $Ocean
-    @bio hasBiodiversity $Reef $Biodiversity
-    return $chain
+    @reef isA Reef CoralReef
+    @oc locatedIn Reef Ocean
+    @bio hasBiodiversity Reef Biodiversity
+    return $bio
 end
 
 @:Delta_Formation graph Delta River Sediment
-    @delt isA $Delta Delta
-    @riv formedBy $Delta $River
-    @sed hasSediment $Delta $Sediment
-    return $chain
+    @delt isA Delta Delta
+    @riv formedBy Delta River
+    @sed hasSediment Delta Sediment
+    return $sed
 end
 
 @:Wetland_Ecosystem graph Wetland Region Species
-    @wet isA $Wetland Wetland
-    @reg locatedIn $Wetland $Region
-    @spec hasSpecies $Wetland $Species
-    return $chain
+    @wet isA Wetland Wetland
+    @reg locatedIn Wetland Region
+    @spec hasSpecies Wetland Species
+    return $spec
 end
 
 @:Savanna_Distribution graph Savanna Continent Climate
-    @sav isA $Savanna Savanna
-    @cont locatedIn $Savanna $Continent
-    @clim hasClimate $Savanna $Climate
-    return $chain
+    @sav isA Savanna Savanna
+    @cont locatedIn Savanna Continent
+    @clim hasClimate Savanna Climate
+    return $clim
 end
 
 @:Tundra_Region graph Tundra Latitude Climate
-    @tun isA $Tundra Tundra
-    @lat atLatitude $Tundra $Latitude
-    @clim hasClimate $Tundra $Climate
-    return $chain
+    @tun isA Tundra Tundra
+    @lat atLatitude Tundra Latitude
+    @clim hasClimate Tundra Climate
+    return $clim
 end
 
 @:Steppe_Grassland graph Steppe Region Precipitation
-    @step isA $Steppe Steppe
-    @reg locatedIn $Steppe $Region
-    @prec hasPrecipitation $Steppe $Precipitation
-    return $chain
+    @step isA Steppe Steppe
+    @reg locatedIn Steppe Region
+    @prec hasPrecipitation Steppe Precipitation
+    return $prec
 end
 
 @:Rainforest_Biome graph Rainforest Region Rainfall
-    @rain isA $Rainforest Rainforest
-    @reg locatedIn $Rainforest $Region
-    @rf hasAnnualRainfall $Rainforest $Rainfall
-    return $chain
+    @rain isA Rainforest Rainforest
+    @reg locatedIn Rainforest Region
+    @rf hasAnnualRainfall Rainforest Rainfall
+    return $rf
 end
 
 @:Taiga_Forest graph Taiga Continent Temperature
-    @tai isA $Taiga Taiga
-    @cont locatedIn $Taiga $Continent
-    @temp hasTemperature $Taiga $Temperature
-    return $chain
+    @tai isA Taiga Taiga
+    @cont locatedIn Taiga Continent
+    @temp hasTemperature Taiga Temperature
+    return $temp
 end
 
 @:Mediterranean_Climate graph Region Season Temperature
-    @reg isA $Region Region
-    @seas hasSeason $Region $Season
-    @temp hasTemperature $Region $Temperature
-    return $chain
+    @reg isA Region Region
+    @seas hasSeason Region Season
+    @temp hasTemperature Region Temperature
+    return $temp
 end
 
 @:Polar_Region graph Region Latitude IceCover
-    @reg isA $Region PolarRegion
-    @lat atLatitude $Region $Latitude
-    @ice hasIceCover $Region $IceCover
-    return $chain
+    @reg isA Region PolarRegion
+    @lat atLatitude Region Latitude
+    @ice hasIceCover Region IceCover
+    return $ice
 end
 
 @:Equatorial_Zone graph Region Climate Biodiversity
-    @reg isA $Region EquatorialZone
-    @clim hasClimate $Region $Climate
-    @bio hasBiodiversity $Region $Biodiversity
-    return $chain
+    @reg isA Region EquatorialZone
+    @clim hasClimate Region Climate
+    @bio hasBiodiversity Region Biodiversity
+    return $bio
 end
 
 @:Archipelago_System graph Archipelago Ocean Islands
-    @arch isA $Archipelago Archipelago
-    @oc locatedIn $Archipelago $Ocean
-    @isl hasIslands $Archipelago $Islands
-    return $chain
+    @arch isA Archipelago Archipelago
+    @oc locatedIn Archipelago Ocean
+    @isl hasIslands Archipelago Islands
+    return $isl
 end
 
 @:Fjord_Geography graph Fjord Coast Glacier
-    @fj isA $Fjord Fjord
-    @cst partOf $Fjord $Coast
-    @glac formedByGlacier $Fjord $Glacier
-    return $chain
+    @fj isA Fjord Fjord
+    @cst partOf Fjord Coast
+    @glac formedByGlacier Fjord Glacier
+    return $glac
 end
 
 @:Atoll_Formation graph Atoll Ocean Lagoon
-    @atl isA $Atoll Atoll
-    @oc locatedIn $Atoll $Ocean
-    @lag hasLagoon $Atoll $Lagoon
-    return $chain
+    @atl isA Atoll Atoll
+    @oc locatedIn Atoll Ocean
+    @lag hasLagoon Atoll Lagoon
+    return $lag
 end
 
 @:Plateau_Region graph Plateau Continent Elevation
-    @plat isA $Plateau Plateau
-    @cont locatedIn $Plateau $Continent
-    @elev hasElevation $Plateau $Elevation
-    return $chain
+    @plat isA Plateau Plateau
+    @cont locatedIn Plateau Continent
+    @elev hasElevation Plateau Elevation
+    return $elev
 end
 
 @:Basin_Geography graph Basin River Drainage
-    @bas isA $Basin Basin
-    @riv drainedBy $Basin $River
-    @drain hasDrainageArea $Basin $Drainage
-    return $chain
+    @bas isA Basin Basin
+    @riv drainedBy Basin River
+    @drain hasDrainageArea Basin Drainage
+    return $drain
 end
 
 @:Continental_Shelf graph Shelf Ocean Depth
-    @shelf isA $Shelf ContinentalShelf
-    @oc borderingOcean $Shelf $Ocean
-    @depth hasDepth $Shelf $Depth
-    return $chain
+    @shelf isA Shelf ContinentalShelf
+    @oc borderingOcean Shelf Ocean
+    @depth hasDepth Shelf Depth
+    return $depth
 end
 
 @:Trench_System graph Trench Ocean Depth
-    @tren isA $Trench OceanicTrench
-    @oc locatedIn $Trench $Ocean
-    @depth hasDepth $Trench $Depth
-    return $chain
+    @tren isA Trench OceanicTrench
+    @oc locatedIn Trench Ocean
+    @depth hasDepth Trench Depth
+    return $depth
 end
 
 @:Mid_Ocean_Ridge graph Ridge Ocean Activity
-    @ridge isA $Ridge MidOceanRidge
-    @oc locatedIn $Ridge $Ocean
-    @act hasVolcanicActivity $Ridge $Activity
-    return $chain
+    @ridge isA Ridge MidOceanRidge
+    @oc locatedIn Ridge Ocean
+    @act hasVolcanicActivity Ridge Activity
+    return $act
 end
 
 @:Seamount_Chain graph Seamount Ocean Volcanic
-    @sea isA $Seamount Seamount
-    @oc locatedIn $Seamount $Ocean
-    @volc isVolcanic $Seamount $Volcanic
-    return $chain
+    @sea isA Seamount Seamount
+    @oc locatedIn Seamount Ocean
+    @volc isVolcanic Seamount Volcanic
+    return $volc
 end
 
 @:Continental_Divide graph Divide Continent Rivers
-    @div isA $Divide ContinentalDivide
-    @cont locatedIn $Divide $Continent
-    @riv separatesRivers $Divide $Rivers
-    return $chain
+    @div isA Divide ContinentalDivide
+    @cont locatedIn Divide Continent
+    @riv separatesRivers Divide Rivers
+    return $riv
 end
 
 @:Watershed_System graph Watershed River Area
-    @wat isA $Watershed Watershed
-    @riv drainedBy $Watershed $River
-    @area hasArea $Watershed $Area
-    return $chain
+    @wat isA Watershed Watershed
+    @riv drainedBy Watershed River
+    @area hasArea Watershed Area
+    return $area
 end
 
 @:Karst_Topography graph Karst Region Caves
-    @kar isA $Karst Karst
-    @reg locatedIn $Karst $Region
-    @cave hasCaves $Karst $Caves
-    return $chain
+    @kar isA Karst Karst
+    @reg locatedIn Karst Region
+    @cave hasCaves Karst Caves
+    return $cave
 end
 
 @:Sand_Dune graph Dune Desert Wind
-    @dune isA $Dune SandDune
-    @des locatedIn $Dune $Desert
-    @wind shapedByWind $Dune $Wind
-    return $chain
+    @dune isA Dune SandDune
+    @des locatedIn Dune Desert
+    @wind shapedByWind Dune Wind
+    return $wind
 end
 
 @:Oasis_System graph Oasis Desert Water
-    @oas isA $Oasis Oasis
-    @des locatedIn $Oasis $Desert
-    @wat hasWaterSource $Oasis $Water
-    return $chain
+    @oas isA Oasis Oasis
+    @des locatedIn Oasis Desert
+    @wat hasWaterSource Oasis Water
+    return $wat
 end
 
 @:Salt_Lake graph Lake Region Salinity
-    @lake isA $Lake SaltLake
-    @reg locatedIn $Lake $Region
-    @sal hasSalinity $Lake $Salinity
-    return $chain
+    @lake isA Lake SaltLake
+    @reg locatedIn Lake Region
+    @sal hasSalinity Lake Salinity
+    return $sal
 end
 
 @:Hot_Spring graph Spring Region Temperature
-    @spr isA $Spring HotSpring
-    @reg locatedIn $Spring $Region
-    @temp hasTemperature $Spring $Temperature
-    return $chain
+    @spr isA Spring HotSpring
+    @reg locatedIn Spring Region
+    @temp hasTemperature Spring Temperature
+    return $temp
 end
 
 @:Geyser_Field graph Geyser Region Frequency
-    @gey isA $Geyser Geyser
-    @reg locatedIn $Geyser $Region
-    @freq hasEruptionFrequency $Geyser $Frequency
-    return $chain
+    @gey isA Geyser Geyser
+    @reg locatedIn Geyser Region
+    @freq hasEruptionFrequency Geyser Frequency
+    return $freq
 end
 
 @:Ice_Sheet graph IceSheet Continent Area
-    @ice isA $IceSheet IceSheet
-    @cont coversContinent $IceSheet $Continent
-    @area hasArea $IceSheet $Area
-    return $chain
+    @ice isA IceSheet IceSheet
+    @cont coversContinent IceSheet Continent
+    @area hasArea IceSheet Area
+    return $area
 end
 
 @:Ice_Shelf graph IceShelf Ocean Thickness
-    @shelf isA $IceShelf IceShelf
-    @oc floatsOn $IceShelf $Ocean
-    @thick hasThickness $IceShelf $Thickness
-    return $chain
+    @shelf isA IceShelf IceShelf
+    @oc floatsOn IceShelf Ocean
+    @thick hasThickness IceShelf Thickness
+    return $thick
 end
 
 @:Permafrost_Zone graph Zone Region Depth
-    @zone isA $Zone PermafrostZone
-    @reg locatedIn $Zone $Region
-    @depth hasDepth $Zone $Depth
-    return $chain
+    @zone isA Zone PermafrostZone
+    @reg locatedIn Zone Region
+    @depth hasDepth Zone Depth
+    return $depth
 end
 
 @:Alpine_Region graph Alpine Mountain Vegetation
-    @alp isA $Alpine AlpineRegion
-    @mtn locatedIn $Alpine $Mountain
-    @veg hasVegetation $Alpine $Vegetation
-    return $chain
+    @alp isA Alpine AlpineRegion
+    @mtn locatedIn Alpine Mountain
+    @veg hasVegetation Alpine Vegetation
+    return $veg
 end
 
 @:Subalpine_Zone graph Subalpine Mountain Forest
-    @sub isA $Subalpine SubalpineZone
-    @mtn locatedIn $Subalpine $Mountain
-    @for hasForest $Subalpine $Forest
-    return $chain
+    @sub isA Subalpine SubalpineZone
+    @mtn locatedIn Subalpine Mountain
+    @for hasForest Subalpine Forest
+    return $for
 end
 
 @:Montane_Forest graph Montane Mountain Biodiversity
-    @mon isA $Montane MontaneForest
-    @mtn locatedIn $Montane $Mountain
-    @bio hasBiodiversity $Montane $Biodiversity
-    return $chain
+    @mon isA Montane MontaneForest
+    @mtn locatedIn Montane Mountain
+    @bio hasBiodiversity Montane Biodiversity
+    return $bio
 end
 
 @:Estuary_System graph Estuary River Ocean
-    @est isA $Estuary Estuary
-    @riv formedBy $Estuary $River
-    @oc meetsOcean $Estuary $Ocean
-    return $chain
+    @est isA Estuary Estuary
+    @riv formedBy Estuary River
+    @oc meetsOcean Estuary Ocean
+    return $oc
 end
 
 @:Mangrove_Forest graph Mangrove Coast Ecosystem
-    @mang isA $Mangrove MangroveForest
-    @cst locatedOn $Mangrove $Coast
-    @eco hasEcosystem $Mangrove $Ecosystem
-    return $chain
+    @mang isA Mangrove MangroveForest
+    @cst locatedOn Mangrove Coast
+    @eco hasEcosystem Mangrove Ecosystem
+    return $eco
 end
 
 @:Barrier_Island graph Island Coast Formation
-    @isl isA $Island BarrierIsland
-    @cst parallelsCoast $Island $Coast
-    @form hasFormation $Island $Formation
-    return $chain
+    @isl isA Island BarrierIsland
+    @cst parallelsCoast Island Coast
+    @form hasFormation Island Formation
+    return $form
 end
 
 @:Lagoon_System graph Lagoon Coast Salinity
-    @lag isA $Lagoon Lagoon
-    @cst locatedOn $Lagoon $Coast
-    @sal hasSalinity $Lagoon $Salinity
-    return $chain
+    @lag isA Lagoon Lagoon
+    @cst locatedOn Lagoon Coast
+    @sal hasSalinity Lagoon Salinity
+    return $sal
 end
 
 @:Bay_Classification graph Bay Ocean Size
-    @bay isA $Bay Bay
-    @oc partOf $Bay $Ocean
-    @sz hasSize $Bay $Size
-    return $chain
+    @bay isA Bay Bay
+    @oc partOf Bay Ocean
+    @sz hasSize Bay Size
+    return $sz
 end
 
 @:Gulf_System graph Gulf Ocean Countries
-    @gulf isA $Gulf Gulf
-    @oc partOf $Gulf $Ocean
-    @coun borderingCountries $Gulf $Countries
-    return $chain
+    @gulf isA Gulf Gulf
+    @oc partOf Gulf Ocean
+    @coun borderingCountries Gulf Countries
+    return $coun
 end
 
 @:Sound_Geography graph Sound Sea Islands
-    @sound isA $Sound Sound
-    @sea partOf $Sound $Sea
-    @isl hasIslands $Sound $Islands
-    return $chain
+    @sound isA Sound Sound
+    @sea partOf Sound Sea
+    @isl hasIslands Sound Islands
+    return $isl
 end
 
 @:Channel_Waterway graph Channel Sea1 Sea2
-    @chan isA $Channel Channel
-    @s1 connects $Channel $Sea1
-    @s2 connects $Channel $Sea2
-    return $chain
+    @chan isA Channel Channel
+    @s1 connects Channel Sea1
+    @s2 connects Channel Sea2
+    return $s2
 end
 
 @:Canal_System graph Canal Country1 Country2
-    @can isA $Canal Canal
-    @c1 locatedIn $Canal $Country1
-    @c2 connects $Canal $Country2
-    return $chain
+    @can isA Canal Canal
+    @c1 locatedIn Canal Country1
+    @c2 connects Canal Country2
+    return $c2
 end
 
 @:Dam_Infrastructure graph Dam River Purpose
-    @dam isA $Dam Dam
-    @riv blocksRiver $Dam $River
-    @purp hasPurpose $Dam $Purpose
-    return $chain
+    @dam isA Dam Dam
+    @riv blocksRiver Dam River
+    @purp hasPurpose Dam Purpose
+    return $purp
 end
 
 @:Reservoir_System graph Reservoir Dam Capacity
-    @res isA $Reservoir Reservoir
-    @dam createdBy $Reservoir $Dam
-    @cap hasCapacity $Reservoir $Capacity
-    return $chain
+    @res isA Reservoir Reservoir
+    @dam createdBy Reservoir Dam
+    @cap hasCapacity Reservoir Capacity
+    return $cap
 end
 
 @:Aqueduct_Network graph Aqueduct City Water
-    @aq isA $Aqueduct Aqueduct
-    @city suppliesCity $Aqueduct $City
-    @wat carriesWater $Aqueduct $Water
-    return $chain
+    @aq isA Aqueduct Aqueduct
+    @city suppliesCity Aqueduct City
+    @wat carriesWater Aqueduct Water
+    return $wat
 end
 
 @:Irrigation_System graph Irrigation Region Crop
-    @irr isA $Irrigation IrrigationSystem
-    @reg servesRegion $Irrigation $Region
-    @crop supportsCrop $Irrigation $Crop
-    return $chain
+    @irr isA Irrigation IrrigationSystem
+    @reg servesRegion Irrigation Region
+    @crop supportsCrop Irrigation Crop
+    return $crop
 end
 
 @:Drainage_Basin graph Basin Country Area
-    @bas isA $Basin DrainageBasin
-    @coun locatedIn $Basin $Country
-    @area hasArea $Basin $Area
-    return $chain
+    @bas isA Basin DrainageBasin
+    @coun locatedIn Basin Country
+    @area hasArea Basin Area
+    return $area
 end
 
 @:Aquifer_System graph Aquifer Region Recharge
-    @aq isA $Aquifer Aquifer
-    @reg locatedUnder $Aquifer $Region
-    @rech hasRechargeRate $Aquifer $Recharge
-    return $chain
+    @aq isA Aquifer Aquifer
+    @reg locatedUnder Aquifer Region
+    @rech hasRechargeRate Aquifer Recharge
+    return $rech
 end
 
 @:Spring_Source graph Spring Aquifer Flow
-    @spr isA $Spring Spring
-    @aq fedBy $Spring $Aquifer
-    @flow hasFlowRate $Spring $Flow
-    return $chain
+    @spr isA Spring Spring
+    @aq fedBy Spring Aquifer
+    @flow hasFlowRate Spring Flow
+    return $flow
 end
 
 @:Underground_River graph River Cave Length
-    @riv isA $River UndergroundRiver
-    @cave flowsThrough $River $Cave
-    @len hasLength $River $Length
-    return $chain
+    @riv isA River UndergroundRiver
+    @cave flowsThrough River Cave
+    @len hasLength River Length
+    return $len
 end
 
 @:Sinkhole_Formation graph Sinkhole Region Karst
-    @sink isA $Sinkhole Sinkhole
-    @reg locatedIn $Sinkhole $Region
-    @kar inKarstArea $Sinkhole $Karst
-    return $chain
+    @sink isA Sinkhole Sinkhole
+    @reg locatedIn Sinkhole Region
+    @kar inKarstArea Sinkhole Karst
+    return $kar
 end
 
 @:Cave_System graph Cave Region Length
-    @cave isA $Cave Cave
-    @reg locatedIn $Cave $Region
-    @len hasLength $Cave $Length
-    return $chain
+    @cave isA Cave Cave
+    @reg locatedIn Cave Region
+    @len hasLength Cave Length
+    return $len
 end
 
 @:Stalactite_Formation graph Stalactite Cave Mineral
-    @stal isA $Stalactite Stalactite
-    @cave foundIn $Stalactite $Cave
-    @min composedOf $Stalactite $Mineral
-    return $chain
+    @stal isA Stalactite Stalactite
+    @cave foundIn Stalactite Cave
+    @min composedOf Stalactite Mineral
+    return $min
 end
 
 @:Island_Nation graph Nation Ocean Population
-    @nat isA $Nation IslandNation
-    @oc surroundedBy $Nation $Ocean
-    @pop hasPopulation $Nation $Population
-    return $chain
+    @nat isA Nation IslandNation
+    @oc surroundedBy Nation Ocean
+    @pop hasPopulation Nation Population
+    return $pop
 end
 
 @:Landlocked_Country graph Country Continent Neighbors
-    @coun isA $Country LandlockedCountry
-    @cont locatedIn $Country $Continent
-    @neigh hasNeighbors $Country $Neighbors
-    return $chain
+    @coun isA Country LandlockedCountry
+    @cont locatedIn Country Continent
+    @neigh hasNeighbors Country Neighbors
+    return $neigh
 end
 
 @:Maritime_Border graph Country1 Country2 Sea
-    @c1 isA $Country1 Country
-    @c2 isA $Country2 Country
-    @sea sharesMaritimeBorder $Country1 $Country2
-    return $chain
+    @c1 isA Country1 Country
+    @c2 isA Country2 Country
+    @sea sharesMaritimeBorder Country1 Country2
+    return $sea
 end
 
 @:Exclusive_Economic_Zone graph Zone Country Ocean
-    @zone isA $Zone EEZ
-    @coun belongsTo $Zone $Country
-    @oc extendsInto $Zone $Ocean
-    return $chain
+    @zone isA Zone EEZ
+    @coun belongsTo Zone Country
+    @oc extendsInto Zone Ocean
+    return $oc
 end
 
 @:Territorial_Waters graph Waters Country Distance
-    @wat isA $Waters TerritorialWaters
-    @coun belongsTo $Waters $Country
-    @dist extendsDistance $Waters $Distance
-    return $chain
+    @wat isA Waters TerritorialWaters
+    @coun belongsTo Waters Country
+    @dist extendsDistance Waters Distance
+    return $dist
 end
 
 @:International_Waters graph Waters Ocean Status
-    @wat isA $Waters InternationalWaters
-    @oc locatedIn $Waters $Ocean
-    @stat hasLegalStatus $Waters $Status
-    return $chain
+    @wat isA Waters InternationalWaters
+    @oc locatedIn Waters Ocean
+    @stat hasLegalStatus Waters Status
+    return $stat
 end
 
 @:Disputed_Territory graph Territory Country1 Country2
-    @terr isA $Territory DisputedTerritory
-    @c1 claimedBy $Territory $Country1
-    @c2 claimedBy $Territory $Country2
-    return $chain
+    @terr isA Territory DisputedTerritory
+    @c1 claimedBy Territory Country1
+    @c2 claimedBy Territory Country2
+    return $c2
 end
 
 @:Autonomous_Region graph Region Country Autonomy
-    @reg isA $Region AutonomousRegion
-    @coun partOf $Region $Country
-    @auto hasAutonomy $Region $Autonomy
-    return $chain
+    @reg isA Region AutonomousRegion
+    @coun partOf Region Country
+    @auto hasAutonomy Region Autonomy
+    return $auto
 end
 
 @:Province_System graph Province Country Capital
-    @prov isA $Province Province
-    @coun partOf $Province $Country
-    @cap hasCapital $Province $Capital
-    return $chain
+    @prov isA Province Province
+    @coun partOf Province Country
+    @cap hasCapital Province Capital
+    return $cap
 end
 
 @:State_Federal graph State Country Government
-    @state isA $State State
-    @coun partOf $State $Country
-    @gov hasGovernment $State $Government
-    return $chain
+    @state isA State State
+    @coun partOf State Country
+    @gov hasGovernment State Government
+    return $gov
 end
 
 @:Territory_Colonial graph Territory Country Status
-    @terr isA $Territory Territory
-    @coun administeredBy $Territory $Country
-    @stat hasStatus $Territory $Status
-    return $chain
+    @terr isA Territory Territory
+    @coun administeredBy Territory Country
+    @stat hasStatus Territory Status
+    return $stat
 end
 
 @:Dependency_Relation graph Dependency Country Relationship
-    @dep isA $Dependency Dependency
-    @coun dependsOn $Dependency $Country
-    @rel hasRelationship $Dependency $Relationship
-    return $chain
+    @dep isA Dependency Dependency
+    @coun dependsOn Dependency Country
+    @rel hasRelationship Dependency Relationship
+    return $rel
 end
 
 @:Enclave_Geography graph Enclave Country1 Country2
-    @enc isA $Enclave Enclave
-    @c1 belongsTo $Enclave $Country1
-    @c2 surroundedBy $Enclave $Country2
-    return $chain
+    @enc isA Enclave Enclave
+    @c1 belongsTo Enclave Country1
+    @c2 surroundedBy Enclave Country2
+    return $c2
 end
 
 @:Exclave_Territory graph Exclave Country MainTerritory
-    @exc isA $Exclave Exclave
-    @coun belongsTo $Exclave $Country
-    @main separatedFrom $Exclave $MainTerritory
-    return $chain
+    @exc isA Exclave Exclave
+    @coun belongsTo Exclave Country
+    @main separatedFrom Exclave MainTerritory
+    return $main
 end
 
 @:Metropolitan_Area graph Metro City Population
-    @metro isA $Metro MetropolitanArea
-    @city centeredOn $Metro $City
-    @pop hasPopulation $Metro $Population
-    return $chain
+    @metro isA Metro MetropolitanArea
+    @city centeredOn Metro City
+    @pop hasPopulation Metro Population
+    return $pop
 end
 
 @:Megalopolis_Region graph Megalopolis Cities Population
-    @mega isA $Megalopolis Megalopolis
-    @cities includesCities $Megalopolis $Cities
-    @pop hasPopulation $Megalopolis $Population
-    return $chain
+    @mega isA Megalopolis Megalopolis
+    @cities includesCities Megalopolis Cities
+    @pop hasPopulation Megalopolis Population
+    return $pop
 end
 
 @:Conurbation_Urban graph Conurbation Cities Area
-    @con isA $Conurbation Conurbation
-    @cities mergesCities $Conurbation $Cities
-    @area hasArea $Conurbation $Area
-    return $chain
+    @con isA Conurbation Conurbation
+    @cities mergesCities Conurbation Cities
+    @area hasArea Conurbation Area
+    return $area
 end
 
 @:Rural_Region graph Rural Country Population
-    @rur isA $Rural RuralRegion
-    @coun locatedIn $Rural $Country
-    @pop hasPopulation $Rural $Population
-    return $chain
+    @rur isA Rural RuralRegion
+    @coun locatedIn Rural Country
+    @pop hasPopulation Rural Population
+    return $pop
 end
 
 @:Suburb_Development graph Suburb City Character
-    @sub isA $Suburb Suburb
-    @city surroundsCity $Suburb $City
-    @char hasCharacter $Suburb $Character
-    return $chain
+    @sub isA Suburb Suburb
+    @city surroundsCity Suburb City
+    @char hasCharacter Suburb Character
+    return $char
 end
 
 @:Industrial_Zone graph Zone City Industry
-    @zone isA $Zone IndustrialZone
-    @city locatedIn $Zone $City
-    @ind hasIndustry $Zone $Industry
-    return $chain
+    @zone isA Zone IndustrialZone
+    @city locatedIn Zone City
+    @ind hasIndustry Zone Industry
+    return $ind
 end
 
 @:Free_Trade_Zone graph Zone Country Trade
-    @zone isA $Zone FreeTradeZone
-    @coun locatedIn $Zone $Country
-    @trad hasTrade $Zone $Trade
-    return $chain
+    @zone isA Zone FreeTradeZone
+    @coun locatedIn Zone Country
+    @trad hasTrade Zone Trade
+    return $trad
 end
 
 @:Economic_Corridor graph Corridor Countries Development
-    @corr isA $Corridor EconomicCorridor
-    @coun connectsCountries $Corridor $Countries
-    @dev hasDevelopment $Corridor $Development
-    return $chain
+    @corr isA Corridor EconomicCorridor
+    @coun connectsCountries Corridor Countries
+    @dev hasDevelopment Corridor Development
+    return $dev
 end
 
 @:Transportation_Hub graph Hub City Connectivity
-    @hub isA $Hub TransportationHub
-    @city locatedIn $Hub $City
-    @conn hasConnectivity $Hub $Connectivity
-    return $chain
+    @hub isA Hub TransportationHub
+    @city locatedIn Hub City
+    @conn hasConnectivity Hub Connectivity
+    return $conn
 end
 
 @:Railway_Network graph Railway Country Length
-    @rail isA $Railway RailwayNetwork
-    @coun servesCountry $Railway $Country
-    @len hasLength $Railway $Length
-    return $chain
+    @rail isA Railway RailwayNetwork
+    @coun servesCountry Railway Country
+    @len hasLength Railway Length
+    return $len
 end
 
 @:Highway_System graph Highway Country Type
-    @hwy isA $Highway Highway
-    @coun locatedIn $Highway $Country
-    @typ hasType $Highway $Type
-    return $chain
+    @hwy isA Highway Highway
+    @coun locatedIn Highway Country
+    @typ hasType Highway Type
+    return $typ
 end
 
 @:Bridge_Infrastructure graph Bridge River Length
-    @brdg isA $Bridge Bridge
-    @riv crossesRiver $Bridge $River
-    @len hasLength $Bridge $Length
-    return $chain
+    @brdg isA Bridge Bridge
+    @riv crossesRiver Bridge River
+    @len hasLength Bridge Length
+    return $len
 end
 
 @:Tunnel_System graph Tunnel Mountain Length
-    @tun isA $Tunnel Tunnel
-    @mtn throughMountain $Tunnel $Mountain
-    @len hasLength $Tunnel $Length
-    return $chain
+    @tun isA Tunnel Tunnel
+    @mtn throughMountain Tunnel Mountain
+    @len hasLength Tunnel Length
+    return $len
 end
 
 @:Shipping_Lane graph Lane Ocean Traffic
-    @lane isA $Lane ShippingLane
-    @oc locatedIn $Lane $Ocean
-    @traf hasTraffic $Lane $Traffic
-    return $chain
+    @lane isA Lane ShippingLane
+    @oc locatedIn Lane Ocean
+    @traf hasTraffic Lane Traffic
+    return $traf
 end
 
 @:Air_Route graph Route Airport1 Airport2
-    @rte isA $Route AirRoute
-    @a1 connects $Route $Airport1
-    @a2 connects $Route $Airport2
-    return $chain
+    @rte isA Route AirRoute
+    @a1 connects Route Airport1
+    @a2 connects Route Airport2
+    return $a2
 end
 
 @:Pipeline_Network graph Pipeline Country Resource
-    @pipe isA $Pipeline Pipeline
-    @coun traversesCountry $Pipeline $Country
-    @res transportsResource $Pipeline $Resource
-    return $chain
+    @pipe isA Pipeline Pipeline
+    @coun traversesCountry Pipeline Country
+    @res transportsResource Pipeline Resource
+    return $res
 end
 
 @:Power_Grid graph Grid Country Capacity
-    @grid isA $Grid PowerGrid
-    @coun servesCountry $Grid $Country
-    @cap hasCapacity $Grid $Capacity
-    return $chain
+    @grid isA Grid PowerGrid
+    @coun servesCountry Grid Country
+    @cap hasCapacity Grid Capacity
+    return $cap
 end
 
 @:Telecommunication_Network graph Network Country Coverage
-    @net isA $Network TelecomNetwork
-    @coun servesCountry $Network $Country
-    @cov hasCoverage $Network $Coverage
-    return $chain
+    @net isA Network TelecomNetwork
+    @coun servesCountry Network Country
+    @cov hasCoverage Network Coverage
+    return $cov
 end
 
 @:Internet_Infrastructure graph Infrastructure Country Bandwidth
-    @infra isA $Infrastructure InternetInfra
-    @coun servesCountry $Infrastructure $Country
-    @band hasBandwidth $Infrastructure $Bandwidth
-    return $chain
+    @infra isA Infrastructure InternetInfra
+    @coun servesCountry Infrastructure Country
+    @band hasBandwidth Infrastructure Bandwidth
+    return $band
 end
 
 @:Satellite_Coverage graph Satellite Region Service
-    @sat isA $Satellite Satellite
-    @reg coversRegion $Satellite $Region
-    @serv providesService $Satellite $Service
-    return $chain
+    @sat isA Satellite Satellite
+    @reg coversRegion Satellite Region
+    @serv providesService Satellite Service
+    return $serv
 end
 
 @:Weather_Station graph Station Region Data
-    @stat isA $Station WeatherStation
-    @reg locatedIn $Station $Region
-    @data collectsData $Station $Data
-    return $chain
+    @stat isA Station WeatherStation
+    @reg locatedIn Station Region
+    @data collectsData Station Data
+    return $data
 end
 
 @:Seismic_Station graph Station Region Monitoring
-    @stat isA $Station SeismicStation
-    @reg locatedIn $Station $Region
-    @mon monitorsActivity $Station $Monitoring
-    return $chain
+    @stat isA Station SeismicStation
+    @reg locatedIn Station Region
+    @mon monitorsActivity Station Monitoring
+    return $mon
 end
 
 @:Tide_Gauge graph Gauge Coast Measurement
-    @gauge isA $Gauge TideGauge
-    @cst locatedOn $Gauge $Coast
-    @meas measuresTides $Gauge $Measurement
-    return $chain
+    @gauge isA Gauge TideGauge
+    @cst locatedOn Gauge Coast
+    @meas measuresTides Gauge Measurement
+    return $meas
 end
 
 @:Lighthouse_System graph Lighthouse Coast Navigation
-    @light isA $Lighthouse Lighthouse
-    @cst locatedOn $Lighthouse $Coast
-    @nav aidsNavigation $Lighthouse $Navigation
-    return $chain
+    @light isA Lighthouse Lighthouse
+    @cst locatedOn Lighthouse Coast
+    @nav aidsNavigation Lighthouse Navigation
+    return $nav
 end
 
 @:National_Park graph Park Country Area
-    @park isA $Park NationalPark
-    @coun locatedIn $Park $Country
-    @area hasArea $Park $Area
-    return $chain
+    @park isA Park NationalPark
+    @coun locatedIn Park Country
+    @area hasArea Park Area
+    return $area
 end
 
 @:World_Heritage_Site graph Site Country Significance
-    @site isA $Site WorldHeritageSite
-    @coun locatedIn $Site $Country
-    @sig hasSignificance $Site $Significance
-    return $chain
+    @site isA Site WorldHeritageSite
+    @coun locatedIn Site Country
+    @sig hasSignificance Site Significance
+    return $sig
 end
 
 @:Biosphere_Reserve graph Reserve Region Conservation
-    @res isA $Reserve BiosphereReserve
-    @reg locatedIn $Reserve $Region
-    @cons hasConservation $Reserve $Conservation
-    return $chain
+    @res isA Reserve BiosphereReserve
+    @reg locatedIn Reserve Region
+    @cons hasConservation Reserve Conservation
+    return $cons
 end
 
 @:Wildlife_Sanctuary graph Sanctuary Country Species
-    @sanc isA $Sanctuary WildlifeSanctuary
-    @coun locatedIn $Sanctuary $Country
-    @spec protectsSpecies $Sanctuary $Species
-    return $chain
+    @sanc isA Sanctuary WildlifeSanctuary
+    @coun locatedIn Sanctuary Country
+    @spec protectsSpecies Sanctuary Species
+    return $spec
 end
 
 @:Marine_Protected_Area graph Area Ocean Conservation
-    @area isA $Area MarineProtectedArea
-    @oc locatedIn $Area $Ocean
-    @cons hasConservation $Area $Conservation
-    return $chain
+    @area isA Area MarineProtectedArea
+    @oc locatedIn Area Ocean
+    @cons hasConservation Area Conservation
+    return $cons
 end
 
 @:Ramsar_Wetland graph Wetland Country Importance
-    @wet isA $Wetland RamsarWetland
-    @coun locatedIn $Wetland $Country
-    @imp hasImportance $Wetland $Importance
-    return $chain
+    @wet isA Wetland RamsarWetland
+    @coun locatedIn Wetland Country
+    @imp hasImportance Wetland Importance
+    return $imp
 end
 
 @:Forest_Reserve graph Reserve Country Forest
-    @res isA $Reserve ForestReserve
-    @coun locatedIn $Reserve $Country
-    @for protectsForest $Reserve $Forest
-    return $chain
+    @res isA Reserve ForestReserve
+    @coun locatedIn Reserve Country
+    @for protectsForest Reserve Forest
+    return $for
 end
 
 @:Desert_Reserve graph Reserve Desert Conservation
-    @res isA $Reserve DesertReserve
-    @des protectsDesert $Reserve $Desert
-    @cons hasConservation $Reserve $Conservation
-    return $chain
+    @res isA Reserve DesertReserve
+    @des protectsDesert Reserve Desert
+    @cons hasConservation Reserve Conservation
+    return $cons
 end
 
 @:Mountain_Reserve graph Reserve Mountain Biodiversity
-    @res isA $Reserve MountainReserve
-    @mtn protectsMountain $Reserve $Mountain
-    @bio hasBiodiversity $Reserve $Biodiversity
-    return $chain
+    @res isA Reserve MountainReserve
+    @mtn protectsMountain Reserve Mountain
+    @bio hasBiodiversity Reserve Biodiversity
+    return $bio
 end
 
 @:Coastal_Reserve graph Reserve Coast Ecosystem
-    @res isA $Reserve CoastalReserve
-    @cst protectsCoast $Reserve $Coast
-    @eco hasEcosystem $Reserve $Ecosystem
-    return $chain
+    @res isA Reserve CoastalReserve
+    @cst protectsCoast Reserve Coast
+    @eco hasEcosystem Reserve Ecosystem
+    return $eco
 end
 
 @:Indigenous_Territory graph Territory People Rights
-    @terr isA $Territory IndigenousTerritory
-    @ppl belongsToPeople $Territory $People
-    @right hasRights $Territory $Rights
-    return $chain
+    @terr isA Territory IndigenousTerritory
+    @ppl belongsToPeople Territory People
+    @right hasRights Territory Rights
+    return $right
 end
 
 @:Cultural_Landscape graph Landscape Country Heritage
-    @land isA $Landscape CulturalLandscape
-    @coun locatedIn $Landscape $Country
-    @her hasHeritage $Landscape $Heritage
-    return $chain
+    @land isA Landscape CulturalLandscape
+    @coun locatedIn Landscape Country
+    @her hasHeritage Landscape Heritage
+    return $her
 end
 
 @:Sacred_Site graph Site Religion Importance
-    @site isA $Site SacredSite
-    @rel sacredTo $Site $Religion
-    @imp hasImportance $Site $Importance
-    return $chain
+    @site isA Site SacredSite
+    @rel sacredTo Site Religion
+    @imp hasImportance Site Importance
+    return $imp
 end
 
 @:Archaeological_Site graph Site Country Period
-    @site isA $Site ArchaeologicalSite
-    @coun locatedIn $Site $Country
-    @per fromPeriod $Site $Period
-    return $chain
+    @site isA Site ArchaeologicalSite
+    @coun locatedIn Site Country
+    @per fromPeriod Site Period
+    return $per
 end
 
 @:Historic_City graph City Country Age
-    @city isA $City HistoricCity
-    @coun locatedIn $City $Country
-    @age hasAge $City $Age
-    return $chain
+    @city isA City HistoricCity
+    @coun locatedIn City Country
+    @age hasAge City Age
+    return $age
 end
 
 @:Ancient_Route graph Route Civilization Purpose
-    @rte isA $Route AncientRoute
-    @civ usedByCivilization $Route $Civilization
-    @purp hasPurpose $Route $Purpose
-    return $chain
+    @rte isA Route AncientRoute
+    @civ usedByCivilization Route Civilization
+    @purp hasPurpose Route Purpose
+    return $purp
 end
 
 @:Pilgrimage_Route graph Route Religion Destination
-    @rte isA $Route PilgrimageRoute
-    @rel usedByReligion $Route $Religion
-    @dest leadsToDestination $Route $Destination
-    return $chain
+    @rte isA Route PilgrimageRoute
+    @rel usedByReligion Route Religion
+    @dest leadsToDestination Route Destination
+    return $dest
 end
 
 @:Historic_Battlefield graph Battlefield Country Event
-    @bat isA $Battlefield HistoricBattlefield
-    @coun locatedIn $Battlefield $Country
-    @ev siteOfEvent $Battlefield $Event
-    return $chain
+    @bat isA Battlefield HistoricBattlefield
+    @coun locatedIn Battlefield Country
+    @ev siteOfEvent Battlefield Event
+    return $ev
 end
 
 @:Monument_Site graph Monument City Commemoration
-    @mon isA $Monument Monument
-    @city locatedIn $Monument $City
-    @comm commemorates $Monument $Commemoration
-    return $chain
+    @mon isA Monument Monument
+    @city locatedIn Monument City
+    @comm commemorates Monument Commemoration
+    return $comm
 end
 
 @:Museum_Complex graph Museum City Collection
-    @mus isA $Museum Museum
-    @city locatedIn $Museum $City
-    @coll hasCollection $Museum $Collection
-    return $chain
+    @mus isA Museum Museum
+    @city locatedIn Museum City
+    @coll hasCollection Museum Collection
+    return $coll
 end
 
 @:Library_Archive graph Library City Holdings
-    @lib isA $Library Library
-    @city locatedIn $Library $City
-    @hold hasHoldings $Library $Holdings
-    return $chain
+    @lib isA Library Library
+    @city locatedIn Library City
+    @hold hasHoldings Library Holdings
+    return $hold
 end
 
 @:University_Campus graph University City Students
-    @uni isA $University University
-    @city locatedIn $University $City
-    @stud hasStudents $University $Students
-    return $chain
+    @uni isA University University
+    @city locatedIn University City
+    @stud hasStudents University Students
+    return $stud
 end
 
 @:Research_Station graph Station Region Research
-    @stat isA $Station ResearchStation
-    @reg locatedIn $Station $Region
-    @res conductsResearch $Station $Research
-    return $chain
+    @stat isA Station ResearchStation
+    @reg locatedIn Station Region
+    @res conductsResearch Station Research
+    return $res
 end
 
 @:Observatory_Facility graph Observatory Location Astronomy
-    @obs isA $Observatory Observatory
-    @loc locatedAt $Observatory $Location
-    @ast performsAstronomy $Observatory $Astronomy
-    return $chain
+    @obs isA Observatory Observatory
+    @loc locatedAt Observatory Location
+    @ast performsAstronomy Observatory Astronomy
+    return $ast
 end
 
 @:Space_Center graph Center Country Launches
-    @cen isA $Center SpaceCenter
-    @coun locatedIn $Center $Country
-    @laun performsLaunches $Center $Launches
-    return $chain
+    @cen isA Center SpaceCenter
+    @coun locatedIn Center Country
+    @laun performsLaunches Center Launches
+    return $laun
 end
 
 @:Nuclear_Facility graph Facility Country Purpose
-    @fac isA $Facility NuclearFacility
-    @coun locatedIn $Facility $Country
-    @purp hasPurpose $Facility $Purpose
-    return $chain
+    @fac isA Facility NuclearFacility
+    @coun locatedIn Facility Country
+    @purp hasPurpose Facility Purpose
+    return $purp
 end
 
 @:Hydroelectric_Plant graph Plant River Capacity
-    @plt isA $Plant HydroelectricPlant
-    @riv locatedOn $Plant $River
-    @cap hasCapacity $Plant $Capacity
-    return $chain
+    @plt isA Plant HydroelectricPlant
+    @riv locatedOn Plant River
+    @cap hasCapacity Plant Capacity
+    return $cap
 end
 
 @:Wind_Farm graph Farm Region Capacity
-    @farm isA $Farm WindFarm
-    @reg locatedIn $Farm $Region
-    @cap hasCapacity $Farm $Capacity
-    return $chain
+    @farm isA Farm WindFarm
+    @reg locatedIn Farm Region
+    @cap hasCapacity Farm Capacity
+    return $cap
 end
 
 @:Solar_Farm graph Farm Region Capacity
-    @farm isA $Farm SolarFarm
-    @reg locatedIn $Farm $Region
-    @cap hasCapacity $Farm $Capacity
-    return $chain
+    @farm isA Farm SolarFarm
+    @reg locatedIn Farm Region
+    @cap hasCapacity Farm Capacity
+    return $cap
 end
 
 @:Geothermal_Plant graph Plant Region Capacity
-    @plt isA $Plant GeothermalPlant
-    @reg locatedIn $Plant $Region
-    @cap hasCapacity $Plant $Capacity
-    return $chain
+    @plt isA Plant GeothermalPlant
+    @reg locatedIn Plant Region
+    @cap hasCapacity Plant Capacity
+    return $cap
 end
 
 @:Desalination_Plant graph Plant Coast Capacity
-    @plt isA $Plant DesalinationPlant
-    @cst locatedOn $Plant $Coast
-    @cap hasCapacity $Plant $Capacity
-    return $chain
+    @plt isA Plant DesalinationPlant
+    @cst locatedOn Plant Coast
+    @cap hasCapacity Plant Capacity
+    return $cap
 end
 
 @:Water_Treatment graph Treatment City Capacity
-    @treat isA $Treatment WaterTreatment
-    @city servesCity $Treatment $City
-    @cap hasCapacity $Treatment $Capacity
-    return $chain
+    @treat isA Treatment WaterTreatment
+    @city servesCity Treatment City
+    @cap hasCapacity Treatment Capacity
+    return $cap
 end
 
 @:Waste_Management graph Waste City Type
-    @wst isA $Waste WasteManagement
-    @city servesCity $Waste $City
-    @typ hasType $Waste $Type
-    return $chain
+    @wst isA Waste WasteManagement
+    @city servesCity Waste City
+    @typ hasType Waste Type
+    return $typ
 end
 
 @:Landfill_Site graph Landfill City Capacity
-    @land isA $Landfill Landfill
-    @city servesCity $Landfill $City
-    @cap hasCapacity $Landfill $Capacity
-    return $chain
+    @land isA Landfill Landfill
+    @city servesCity Landfill City
+    @cap hasCapacity Landfill Capacity
+    return $cap
 end
 
 @:Recycling_Center graph Center City Materials
-    @cen isA $Center RecyclingCenter
-    @city servesCity $Center $City
-    @mat processesMaterials $Center $Materials
-    return $chain
+    @cen isA Center RecyclingCenter
+    @city servesCity Center City
+    @mat processesMaterials Center Materials
+    return $mat
 end
 
 @:Incinerator_Facility graph Incinerator City Capacity
-    @inc isA $Incinerator Incinerator
-    @city servesCity $Incinerator $City
-    @cap hasCapacity $Incinerator $Capacity
-    return $chain
+    @inc isA Incinerator Incinerator
+    @city servesCity Incinerator City
+    @cap hasCapacity Incinerator Capacity
+    return $cap
 end
 
 @:Air_Quality_Station graph Station City Monitoring
-    @stat isA $Station AirQualityStation
-    @city locatedIn $Station $City
-    @mon monitorsQuality $Station $Monitoring
-    return $chain
+    @stat isA Station AirQualityStation
+    @city locatedIn Station City
+    @mon monitorsQuality Station Monitoring
+    return $mon
 end
 
 @:Environmental_Zone graph Zone City Restrictions
-    @zone isA $Zone EnvironmentalZone
-    @city locatedIn $Zone $City
-    @rest hasRestrictions $Zone $Restrictions
-    return $chain
+    @zone isA Zone EnvironmentalZone
+    @city locatedIn Zone City
+    @rest hasRestrictions Zone Restrictions
+    return $rest
 end
 
 @:Green_Belt graph Belt City Protection
-    @belt isA $Belt GreenBelt
-    @city surroundsCity $Belt $City
-    @prot providesProtection $Belt $Protection
-    return $chain
+    @belt isA Belt GreenBelt
+    @city surroundsCity Belt City
+    @prot providesProtection Belt Protection
+    return $prot
 end
 
 @:Urban_Forest graph Forest City Area
-    @for isA $Forest UrbanForest
-    @city locatedIn $Forest $City
-    @area hasArea $Forest $Area
-    return $chain
+    @for isA Forest UrbanForest
+    @city locatedIn Forest City
+    @area hasArea Forest Area
+    return $area
 end
 
 @:City_Park graph Park City Visitors
-    @park isA $Park CityPark
-    @city locatedIn $Park $City
-    @vis hasVisitors $Park $Visitors
-    return $chain
+    @park isA Park CityPark
+    @city locatedIn Park City
+    @vis hasVisitors Park Visitors
+    return $vis
 end
 
 @:Botanical_Garden graph Garden City Species
-    @gard isA $Garden BotanicalGarden
-    @city locatedIn $Garden $City
-    @spec hasSpecies $Garden $Species
-    return $chain
+    @gard isA Garden BotanicalGarden
+    @city locatedIn Garden City
+    @spec hasSpecies Garden Species
+    return $spec
 end
 
 @:Zoo_Facility graph Zoo City Animals
-    @zoo isA $Zoo Zoo
-    @city locatedIn $Zoo $City
-    @anim hasAnimals $Zoo $Animals
-    return $chain
+    @zoo isA Zoo Zoo
+    @city locatedIn Zoo City
+    @anim hasAnimals Zoo Animals
+    return $anim
 end
 
 @:Aquarium_Complex graph Aquarium City Species
-    @aq isA $Aquarium Aquarium
-    @city locatedIn $Aquarium $City
-    @spec hasSpecies $Aquarium $Species
-    return $chain
+    @aq isA Aquarium Aquarium
+    @city locatedIn Aquarium City
+    @spec hasSpecies Aquarium Species
+    return $spec
 end
 
 @:Convention_Center graph Center City Events
-    @cen isA $Center ConventionCenter
-    @city locatedIn $Center $City
-    @ev hostsEvents $Center $Events
-    return $chain
+    @cen isA Center ConventionCenter
+    @city locatedIn Center City
+    @ev hostsEvents Center Events
+    return $ev
 end
 
 @:Stadium_Arena graph Stadium City Capacity
-    @stad isA $Stadium Stadium
-    @city locatedIn $Stadium $City
-    @cap hasCapacity $Stadium $Capacity
-    return $chain
+    @stad isA Stadium Stadium
+    @city locatedIn Stadium City
+    @cap hasCapacity Stadium Capacity
+    return $cap
 end
 
 @:Theme_Park graph Park City Attractions
-    @park isA $Park ThemePark
-    @city locatedIn $Park $City
-    @attr hasAttractions $Park $Attractions
-    return $chain
+    @park isA Park ThemePark
+    @city locatedIn Park City
+    @attr hasAttractions Park Attractions
+    return $attr
 end
 
 @:Shopping_District graph District City Character
-    @dist isA $District ShoppingDistrict
-    @city locatedIn $District $City
-    @char hasCharacter $District $Character
-    return $chain
+    @dist isA District ShoppingDistrict
+    @city locatedIn District City
+    @char hasCharacter District Character
+    return $char
 end
 
 @:Financial_District graph District City Banks
-    @dist isA $District FinancialDistrict
-    @city locatedIn $District $City
-    @bank hasBanks $District $Banks
-    return $chain
+    @dist isA District FinancialDistrict
+    @city locatedIn District City
+    @bank hasBanks District Banks
+    return $bank
 end
 
 @:Technology_Park graph Park City Companies
-    @park isA $Park TechnologyPark
-    @city locatedIn $Park $City
-    @comp hasCompanies $Park $Companies
-    return $chain
+    @park isA Park TechnologyPark
+    @city locatedIn Park City
+    @comp hasCompanies Park Companies
+    return $comp
 end
 
 @:Science_Park graph Park City Research
-    @park isA $Park SciencePark
-    @city locatedIn $Park $City
-    @res hasResearch $Park $Research
-    return $chain
+    @park isA Park SciencePark
+    @city locatedIn Park City
+    @res hasResearch Park Research
+    return $res
 end
 
 @:Business_District graph District City Offices
-    @dist isA $District BusinessDistrict
-    @city locatedIn $District $City
-    @off hasOffices $District $Offices
-    return $chain
+    @dist isA District BusinessDistrict
+    @city locatedIn District City
+    @off hasOffices District Offices
+    return $off
 end
 
 @:Historic_District graph District City Buildings
-    @dist isA $District HistoricDistrict
-    @city locatedIn $District $City
-    @bld hasHistoricBuildings $District $Buildings
-    return $chain
+    @dist isA District HistoricDistrict
+    @city locatedIn District City
+    @bld hasHistoricBuildings District Buildings
+    return $bld
 end
 
 @:Residential_District graph District City Housing
-    @dist isA $District ResidentialDistrict
-    @city locatedIn $District $City
-    @hous hasHousing $District $Housing
-    return $chain
+    @dist isA District ResidentialDistrict
+    @city locatedIn District City
+    @hous hasHousing District Housing
+    return $hous
 end
 
 @:Entertainment_District graph District City Venues
-    @dist isA $District EntertainmentDistrict
-    @city locatedIn $District $City
-    @ven hasVenues $District $Venues
-    return $chain
+    @dist isA District EntertainmentDistrict
+    @city locatedIn District City
+    @ven hasVenues District Venues
+    return $ven
 end
 
 @:Waterfront_District graph District City Development
-    @dist isA $District WaterfrontDistrict
-    @city locatedIn $District $City
-    @dev hasDevelopment $District $Development
-    return $chain
+    @dist isA District WaterfrontDistrict
+    @city locatedIn District City
+    @dev hasDevelopment District Development
+    return $dev
 end
 
 @:Harbor_Facility graph Harbor City Berths
-    @harb isA $Harbor Harbor
-    @city servesCity $Harbor $City
-    @berth hasBerths $Harbor $Berths
-    return $chain
+    @harb isA Harbor Harbor
+    @city servesCity Harbor City
+    @berth hasBerths Harbor Berths
+    return $berth
 end
 
 @:Marina_Complex graph Marina Coast Boats
-    @mar isA $Marina Marina
-    @cst locatedOn $Marina $Coast
-    @boat hasBoats $Marina $Boats
-    return $chain
+    @mar isA Marina Marina
+    @cst locatedOn Marina Coast
+    @boat hasBoats Marina Boats
+    return $boat
 end
 
 @:Shipyard_Facility graph Shipyard Coast Production
-    @ship isA $Shipyard Shipyard
-    @cst locatedOn $Shipyard $Coast
-    @prod hasProduction $Shipyard $Production
-    return $chain
+    @ship isA Shipyard Shipyard
+    @cst locatedOn Shipyard Coast
+    @prod hasProduction Shipyard Production
+    return $prod
 end
 
 @:Fishing_Port graph Port Coast Catch
-    @port isA $Port FishingPort
-    @cst locatedOn $Port $Coast
-    @catch hasCatch $Port $Catch
-    return $chain
+    @port isA Port FishingPort
+    @cst locatedOn Port Coast
+    @catch hasCatch Port Catch
+    return $catch
 end
 
 @:Container_Terminal graph Terminal Port Capacity
-    @term isA $Terminal ContainerTerminal
-    @port locatedIn $Terminal $Port
-    @cap hasCapacity $Terminal $Capacity
-    return $chain
+    @term isA Terminal ContainerTerminal
+    @port locatedIn Terminal Port
+    @cap hasCapacity Terminal Capacity
+    return $cap
 end
 
 @:Cruise_Terminal graph Terminal City Passengers
-    @term isA $Terminal CruiseTerminal
-    @city servesCity $Terminal $City
-    @pass hasPassengers $Terminal $Passengers
-    return $chain
+    @term isA Terminal CruiseTerminal
+    @city servesCity Terminal City
+    @pass hasPassengers Terminal Passengers
+    return $pass
 end
 
 @:Ferry_Terminal graph Terminal City Routes
-    @term isA $Terminal FerryTerminal
-    @city servesCity $Terminal $City
-    @rte hasRoutes $Terminal $Routes
-    return $chain
+    @term isA Terminal FerryTerminal
+    @city servesCity Terminal City
+    @rte hasRoutes Terminal Routes
+    return $rte
 end
 
 @:Border_Crossing graph Crossing Country1 Country2
-    @cross isA $Crossing BorderCrossing
-    @c1 connects $Crossing $Country1
-    @c2 connects $Crossing $Country2
-    return $chain
+    @cross isA Crossing BorderCrossing
+    @c1 connects Crossing Country1
+    @c2 connects Crossing Country2
+    return $c2
 end
 
 @:Checkpoint_Station graph Checkpoint Border Traffic
-    @check isA $Checkpoint Checkpoint
-    @bord locatedAt $Checkpoint $Border
-    @traf hasTraffic $Checkpoint $Traffic
-    return $chain
+    @check isA Checkpoint Checkpoint
+    @bord locatedAt Checkpoint Border
+    @traf hasTraffic Checkpoint Traffic
+    return $traf
 end
 
 @:Customs_Facility graph Customs Border Clearance
-    @cust isA $Customs CustomsFacility
-    @bord locatedAt $Customs $Border
-    @clear processesClearance $Customs $Clearance
-    return $chain
+    @cust isA Customs CustomsFacility
+    @bord locatedAt Customs Border
+    @clear processesClearance Customs Clearance
+    return $clear
 end
 
 @:Immigration_Office graph Office Border Processing
-    @off isA $Office ImmigrationOffice
-    @bord locatedAt $Office $Border
-    @proc processesImmigration $Office $Processing
-    return $chain
+    @off isA Office ImmigrationOffice
+    @bord locatedAt Office Border
+    @proc processesImmigration Office Processing
+    return $proc
 end
 
 @:Quarantine_Station graph Station Border Health
-    @stat isA $Station QuarantineStation
-    @bord locatedAt $Station $Border
-    @heal checksHealth $Station $Health
-    return $chain
+    @stat isA Station QuarantineStation
+    @bord locatedAt Station Border
+    @heal checksHealth Station Health
+    return $heal
 end
 
 @:Embassy_Complex graph Embassy City Country
-    @emb isA $Embassy Embassy
-    @city locatedIn $Embassy $City
-    @coun representsCountry $Embassy $Country
-    return $chain
+    @emb isA Embassy Embassy
+    @city locatedIn Embassy City
+    @coun representsCountry Embassy Country
+    return $coun
 end
 
 @:Consulate_Office graph Consulate City Country
-    @cons isA $Consulate Consulate
-    @city locatedIn $Consulate $City
-    @coun representsCountry $Consulate $Country
-    return $chain
+    @cons isA Consulate Consulate
+    @city locatedIn Consulate City
+    @coun representsCountry Consulate Country
+    return $coun
 end
 
 @:International_Organization graph Organization City Members
-    @org isA $Organization InternationalOrg
-    @city headquarteredIn $Organization $City
-    @mem hasMembers $Organization $Members
-    return $chain
+    @org isA Organization InternationalOrg
+    @city headquarteredIn Organization City
+    @mem hasMembers Organization Members
+    return $mem
 end
 
 @:Regional_Organization graph Organization Region Members
-    @org isA $Organization RegionalOrg
-    @reg servesRegion $Organization $Region
-    @mem hasMembers $Organization $Members
-    return $chain
+    @org isA Organization RegionalOrg
+    @reg servesRegion Organization Region
+    @mem hasMembers Organization Members
+    return $mem
 end
 
 @:Trade_Agreement graph Agreement Countries Terms
-    @agree isA $Agreement TradeAgreement
-    @coun betweenCountries $Agreement $Countries
-    @term hasTerms $Agreement $Terms
-    return $chain
+    @agree isA Agreement TradeAgreement
+    @coun betweenCountries Agreement Countries
+    @term hasTerms Agreement Terms
+    return $term
 end
 
 @:Currency_Zone graph Zone Countries Currency
-    @zone isA $Zone CurrencyZone
-    @coun includesCountries $Zone $Countries
-    @curr usesCurrency $Zone $Currency
-    return $chain
+    @zone isA Zone CurrencyZone
+    @coun includesCountries Zone Countries
+    @curr usesCurrency Zone Currency
+    return $curr
 end
 
 @:Time_Zone graph Zone Region Offset
-    @zone isA $Zone TimeZone
-    @reg coversRegion $Zone $Region
-    @off hasOffset $Zone $Offset
-    return $chain
+    @zone isA Zone TimeZone
+    @reg coversRegion Zone Region
+    @off hasOffset Zone Offset
+    return $off
 end
 
 @:Daylight_Saving graph DST Region Period
-    @dst isA $DST DaylightSaving
-    @reg observedIn $DST $Region
-    @per hasPeriod $DST $Period
-    return $chain
+    @dst isA DST DaylightSaving
+    @reg observedIn DST Region
+    @per hasPeriod DST Period
+    return $per
 end
 
 @:International_Date_Line graph Line Ocean Longitude
-    @line isA $Line DateLine
-    @oc crossesOcean $Line $Ocean
-    @lon atLongitude $Line $Longitude
-    return $chain
+    @line isA Line DateLine
+    @oc crossesOcean Line Ocean
+    @lon atLongitude Line Longitude
+    return $lon
 end
 
 @:Prime_Meridian graph Meridian Location Longitude
-    @mer isA $Meridian PrimeMeridian
-    @loc passesThrough $Meridian $Location
-    @lon atLongitude $Meridian $Longitude
-    return $chain
+    @mer isA Meridian PrimeMeridian
+    @loc passesThrough Meridian Location
+    @lon atLongitude Meridian Longitude
+    return $lon
 end
 
 @:Equator_Line graph Equator Countries Latitude
-    @eq isA $Equator Equator
-    @coun passesThrough $Equator $Countries
-    @lat atLatitude $Equator $Latitude
-    return $chain
+    @eq isA Equator Equator
+    @coun passesThrough Equator Countries
+    @lat atLatitude Equator Latitude
+    return $lat
 end
 
 @:Tropic_Line graph Tropic Latitude Climate
-    @trop isA $Tropic Tropic
-    @lat atLatitude $Tropic $Latitude
-    @clim definesClimate $Tropic $Climate
-    return $chain
+    @trop isA Tropic Tropic
+    @lat atLatitude Tropic Latitude
+    @clim definesClimate Tropic Climate
+    return $clim
 end
 
 @:Arctic_Circle graph Circle Latitude Region
-    @circ isA $Circle ArcticCircle
-    @lat atLatitude $Circle $Latitude
-    @reg definesRegion $Circle $Region
-    return $chain
+    @circ isA Circle ArcticCircle
+    @lat atLatitude Circle Latitude
+    @reg definesRegion Circle Region
+    return $reg
 end
 
 @:Antarctic_Circle graph Circle Latitude Region
-    @circ isA $Circle AntarcticCircle
-    @lat atLatitude $Circle $Latitude
-    @reg definesRegion $Circle $Region
-    return $chain
+    @circ isA Circle AntarcticCircle
+    @lat atLatitude Circle Latitude
+    @reg definesRegion Circle Region
+    return $reg
 end
 
 @:Hemisphere_Division graph Hemisphere Equator Countries
-    @hem isA $Hemisphere Hemisphere
-    @eq dividedBy $Hemisphere $Equator
-    @coun includesCountries $Hemisphere $Countries
-    return $chain
+    @hem isA Hemisphere Hemisphere
+    @eq dividedBy Hemisphere Equator
+    @coun includesCountries Hemisphere Countries
+    return $coun
 end
 
 @:Continental_Drift graph Drift Plate Movement
-    @drift isA $Drift ContinentalDrift
-    @plt affectsPlate $Drift $Plate
-    @mov hasMovement $Drift $Movement
-    return $chain
+    @drift isA Drift ContinentalDrift
+    @plt affectsPlate Drift Plate
+    @mov hasMovement Drift Movement
+    return $mov
 end
 
 @:Subduction_Zone graph Zone Plate1 Plate2
-    @zone isA $Zone SubductionZone
-    @p1 involvesPlate $Zone $Plate1
-    @p2 involvesPlate $Zone $Plate2
-    return $chain
+    @zone isA Zone SubductionZone
+    @p1 involvesPlate Zone Plate1
+    @p2 involvesPlate Zone Plate2
+    return $p2
 end
 
 @:Rift_Valley graph Valley Plate Spreading
-    @val isA $Valley RiftValley
-    @plt formedByPlate $Valley $Plate
-    @spread hasSpreading $Valley $Spreading
-    return $chain
+    @val isA Valley RiftValley
+    @plt formedByPlate Valley Plate
+    @spread hasSpreading Valley Spreading
+    return $spread
 end
 
 @:Transform_Fault graph Fault Plate1 Plate2
-    @fault isA $Fault TransformFault
-    @p1 connectsPlate $Fault $Plate1
-    @p2 connectsPlate $Fault $Plate2
-    return $chain
+    @fault isA Fault TransformFault
+    @p1 connectsPlate Fault Plate1
+    @p2 connectsPlate Fault Plate2
+    return $p2
 end
 
 @:Convergent_Boundary graph Boundary Plate1 Plate2
-    @bnd isA $Boundary ConvergentBoundary
-    @p1 betweenPlate $Boundary $Plate1
-    @p2 betweenPlate $Boundary $Plate2
-    return $chain
+    @bnd isA Boundary ConvergentBoundary
+    @p1 betweenPlate Boundary Plate1
+    @p2 betweenPlate Boundary Plate2
+    return $p2
 end
 
 @:Divergent_Boundary graph Boundary Plate1 Plate2
-    @bnd isA $Boundary DivergentBoundary
-    @p1 betweenPlate $Boundary $Plate1
-    @p2 betweenPlate $Boundary $Plate2
-    return $chain
+    @bnd isA Boundary DivergentBoundary
+    @p1 betweenPlate Boundary Plate1
+    @p2 betweenPlate Boundary Plate2
+    return $p2
 end
 
 @:Hot_Spot graph HotSpot Plate Volcanism
-    @hot isA $HotSpot HotSpot
-    @plt underPlate $HotSpot $Plate
-    @volc causesVolcanism $HotSpot $Volcanism
-    return $chain
+    @hot isA HotSpot HotSpot
+    @plt underPlate HotSpot Plate
+    @volc causesVolcanism HotSpot Volcanism
+    return $volc
 end
 
 @:Magma_Chamber graph Chamber Volcano Depth
-    @cham isA $Chamber MagmaChamber
-    @volc underVolcano $Chamber $Volcano
-    @depth hasDepth $Chamber $Depth
-    return $chain
+    @cham isA Chamber MagmaChamber
+    @volc underVolcano Chamber Volcano
+    @depth hasDepth Chamber Depth
+    return $depth
 end
 
 @:Caldera_Formation graph Caldera Volcano Diameter
-    @cal isA $Caldera Caldera
-    @volc formedFrom $Caldera $Volcano
-    @diam hasDiameter $Caldera $Diameter
-    return $chain
+    @cal isA Caldera Caldera
+    @volc formedFrom Caldera Volcano
+    @diam hasDiameter Caldera Diameter
+    return $diam
 end
 
 @:Lava_Field graph Field Volcano Area
-    @field isA $Field LavaField
-    @volc flowedFrom $Field $Volcano
-    @area hasArea $Field $Area
-    return $chain
+    @field isA Field LavaField
+    @volc flowedFrom Field Volcano
+    @area hasArea Field Area
+    return $area
 end
 
 @:Geothermal_Field graph Field Region Temperature
-    @field isA $Field GeothermalField
-    @reg locatedIn $Field $Region
-    @temp hasTemperature $Field $Temperature
-    return $chain
+    @field isA Field GeothermalField
+    @reg locatedIn Field Region
+    @temp hasTemperature Field Temperature
+    return $temp
 end
 
 @:Fumarole_Activity graph Fumarole Volcano Gas
-    @fum isA $Fumarole Fumarole
-    @volc associatedWith $Fumarole $Volcano
-    @gas emitsGas $Fumarole $Gas
-    return $chain
+    @fum isA Fumarole Fumarole
+    @volc associatedWith Fumarole Volcano
+    @gas emitsGas Fumarole Gas
+    return $gas
 end
 
 @:Mud_Volcano graph Volcano Region Eruption
-    @mud isA $Volcano MudVolcano
-    @reg locatedIn $Volcano $Region
-    @erup hasEruption $Volcano $Eruption
-    return $chain
+    @mud isA Volcano MudVolcano
+    @reg locatedIn Volcano Region
+    @erup hasEruption Volcano Eruption
+    return $erup
 end
 
 @:Cryovolcano graph Volcano Moon Composition
-    @cryo isA $Volcano Cryovolcano
-    @moon foundOn $Volcano $Moon
-    @comp hasComposition $Volcano $Composition
-    return $chain
+    @cryo isA Volcano Cryovolcano
+    @moon foundOn Volcano Moon
+    @comp hasComposition Volcano Composition
+    return $comp
 end
 
 @:Impact_Crater graph Crater Region Diameter
-    @crat isA $Crater ImpactCrater
-    @reg locatedIn $Crater $Region
-    @diam hasDiameter $Crater $Diameter
-    return $chain
+    @crat isA Crater ImpactCrater
+    @reg locatedIn Crater Region
+    @diam hasDiameter Crater Diameter
+    return $diam
 end
 
 @:Meteor_Crater graph Crater Desert Age
-    @crat isA $Crater MeteorCrater
-    @des locatedIn $Crater $Desert
-    @age hasAge $Crater $Age
-    return $chain
+    @crat isA Crater MeteorCrater
+    @des locatedIn Crater Desert
+    @age hasAge Crater Age
+    return $age
 end
 
 @:Erosion_Pattern graph Erosion Region Type
-    @ero isA $Erosion Erosion
-    @reg affectsRegion $Erosion $Region
-    @typ hasType $Erosion $Type
-    return $chain
+    @ero isA Erosion Erosion
+    @reg affectsRegion Erosion Region
+    @typ hasType Erosion Type
+    return $typ
 end
 
 @:Weathering_Process graph Weathering Rock Type
-    @wea isA $Weathering Weathering
-    @rock affectsRock $Weathering $Rock
-    @typ hasType $Weathering $Type
-    return $chain
+    @wea isA Weathering Weathering
+    @rock affectsRock Weathering Rock
+    @typ hasType Weathering Type
+    return $typ
 end
 
 @:Sedimentation_Layer graph Layer Basin Composition
-    @lay isA $Layer SedimentLayer
-    @bas depositedIn $Layer $Basin
-    @comp hasComposition $Layer $Composition
-    return $chain
+    @lay isA Layer SedimentLayer
+    @bas depositedIn Layer Basin
+    @comp hasComposition Layer Composition
+    return $comp
 end
 
 @:Fossil_Bed graph Bed Region Period
-    @bed isA $Bed FossilBed
-    @reg locatedIn $Bed $Region
-    @per fromPeriod $Bed $Period
-    return $chain
+    @bed isA Bed FossilBed
+    @reg locatedIn Bed Region
+    @per fromPeriod Bed Period
+    return $per
 end
 
 @:Geological_Formation graph Formation Region Age
-    @form isA $Formation GeologicalFormation
-    @reg locatedIn $Formation $Region
-    @age hasAge $Formation $Age
-    return $chain
+    @form isA Formation GeologicalFormation
+    @reg locatedIn Formation Region
+    @age hasAge Formation Age
+    return $age
 end
 
 @:Rock_Layer graph Layer Region Composition
-    @lay isA $Layer RockLayer
-    @reg locatedIn $Layer $Region
-    @comp hasComposition $Layer $Composition
-    return $chain
+    @lay isA Layer RockLayer
+    @reg locatedIn Layer Region
+    @comp hasComposition Layer Composition
+    return $comp
 end
 
 @:Mineral_Deposit graph Deposit Region Mineral
-    @dep isA $Deposit MineralDeposit
-    @reg locatedIn $Deposit $Region
-    @min containsMineral $Deposit $Mineral
-    return $chain
+    @dep isA Deposit MineralDeposit
+    @reg locatedIn Deposit Region
+    @min containsMineral Deposit Mineral
+    return $min
 end
 
 @:Ore_Body graph Ore Mine Concentration
-    @ore isA $Ore OreBody
-    @mine locatedIn $Ore $Mine
-    @conc hasConcentration $Ore $Concentration
-    return $chain
+    @ore isA Ore OreBody
+    @mine locatedIn Ore Mine
+    @conc hasConcentration Ore Concentration
+    return $conc
 end
 
 @:Gemstone_Deposit graph Gem Region Type
-    @gem isA $Gem GemstoneDeposit
-    @reg locatedIn $Gem $Region
-    @typ hasType $Gem $Type
-    return $chain
+    @gem isA Gem GemstoneDeposit
+    @reg locatedIn Gem Region
+    @typ hasType Gem Type
+    return $typ
 end
 
 @:Coal_Seam graph Seam Basin Thickness
-    @seam isA $Seam CoalSeam
-    @bas locatedIn $Seam $Basin
-    @thick hasThickness $Seam $Thickness
-    return $chain
+    @seam isA Seam CoalSeam
+    @bas locatedIn Seam Basin
+    @thick hasThickness Seam Thickness
+    return $thick
 end
 
 @:Oil_Field graph Field Basin Reserves
-    @field isA $Field OilField
-    @bas locatedIn $Field $Basin
-    @res hasReserves $Field $Reserves
-    return $chain
+    @field isA Field OilField
+    @bas locatedIn Field Basin
+    @res hasReserves Field Reserves
+    return $res
 end
 
 @:Gas_Field graph Field Region Reserves
-    @field isA $Field GasField
-    @reg locatedIn $Field $Region
-    @res hasReserves $Field $Reserves
-    return $chain
+    @field isA Field GasField
+    @reg locatedIn Field Region
+    @res hasReserves Field Reserves
+    return $res
 end
 
 @:Shale_Formation graph Shale Basin Hydrocarbons
-    @shale isA $Shale ShaleFormation
-    @bas locatedIn $Shale $Basin
-    @hydro containsHydrocarbons $Shale $Hydrocarbons
-    return $chain
+    @shale isA Shale ShaleFormation
+    @bas locatedIn Shale Basin
+    @hydro containsHydrocarbons Shale Hydrocarbons
+    return $hydro
 end
 
 @:Tar_Sands graph Sands Region Reserves
-    @tar isA $Sands TarSands
-    @reg locatedIn $Sands $Region
-    @res hasReserves $Sands $Reserves
-    return $chain
+    @tar isA Sands TarSands
+    @reg locatedIn Sands Region
+    @res hasReserves Sands Reserves
+    return $res
 end
 
 @:Methane_Hydrate graph Hydrate Ocean Reserves
-    @meth isA $Hydrate MethaneHydrate
-    @oc locatedIn $Hydrate $Ocean
-    @res hasReserves $Hydrate $Reserves
-    return $chain
+    @meth isA Hydrate MethaneHydrate
+    @oc locatedIn Hydrate Ocean
+    @res hasReserves Hydrate Reserves
+    return $res
 end
 
 @:Salt_Dome graph Dome Basin Formation
-    @dome isA $Dome SaltDome
-    @bas locatedIn $Dome $Basin
-    @form hasFormation $Dome $Formation
-    return $chain
+    @dome isA Dome SaltDome
+    @bas locatedIn Dome Basin
+    @form hasFormation Dome Formation
+    return $form
 end
 
 @:Limestone_Cave graph Cave Region Stalactites
-    @cave isA $Cave LimestoneCave
-    @reg locatedIn $Cave $Region
-    @stal hasStalactites $Cave $Stalactites
-    return $chain
+    @cave isA Cave LimestoneCave
+    @reg locatedIn Cave Region
+    @stal hasStalactites Cave Stalactites
+    return $stal
 end
 
 @:Sandstone_Formation graph Sandstone Region Color
-    @sand isA $Sandstone SandstoneFormation
-    @reg locatedIn $Sandstone $Region
-    @col hasColor $Sandstone $Color
-    return $chain
+    @sand isA Sandstone SandstoneFormation
+    @reg locatedIn Sandstone Region
+    @col hasColor Sandstone Color
+    return $col
 end
 
 @:Granite_Outcrop graph Granite Mountain Age
-    @gran isA $Granite GraniteOutcrop
-    @mtn locatedIn $Granite $Mountain
-    @age hasAge $Granite $Age
-    return $chain
+    @gran isA Granite GraniteOutcrop
+    @mtn locatedIn Granite Mountain
+    @age hasAge Granite Age
+    return $age
 end
 
 @:Basalt_Column graph Basalt Region Formation
-    @bas isA $Basalt BasaltColumn
-    @reg locatedIn $Basalt $Region
-    @form hasFormation $Basalt $Formation
-    return $chain
+    @bas isA Basalt BasaltColumn
+    @reg locatedIn Basalt Region
+    @form hasFormation Basalt Formation
+    return $form
 end
 
 @:Marble_Quarry graph Quarry Region Quality
-    @marb isA $Quarry MarbleQuarry
-    @reg locatedIn $Quarry $Region
-    @qual hasQuality $Quarry $Quality
-    return $chain
+    @marb isA Quarry MarbleQuarry
+    @reg locatedIn Quarry Region
+    @qual hasQuality Quarry Quality
+    return $qual
 end
 
 @:Slate_Deposit graph Slate Region Uses
-    @slate isA $Slate SlateDeposit
-    @reg locatedIn $Slate $Region
-    @use hasUses $Slate $Uses
-    return $chain
+    @slate isA Slate SlateDeposit
+    @reg locatedIn Slate Region
+    @use hasUses Slate Uses
+    return $use
 end
 
 @:Quartz_Vein graph Quartz Rock Purity
-    @qtz isA $Quartz QuartzVein
-    @rock foundIn $Quartz $Rock
-    @pur hasPurity $Quartz $Purity
-    return $chain
+    @qtz isA Quartz QuartzVein
+    @rock foundIn Quartz Rock
+    @pur hasPurity Quartz Purity
+    return $pur
 end
 
 @:Clay_Deposit graph Clay Region Type
-    @clay isA $Clay ClayDeposit
-    @reg locatedIn $Clay $Region
-    @typ hasType $Clay $Type
-    return $chain
+    @clay isA Clay ClayDeposit
+    @reg locatedIn Clay Region
+    @typ hasType Clay Type
+    return $typ
 end
 
 @:Gravel_Bed graph Gravel River Composition
-    @grav isA $Gravel GravelBed
-    @riv depositedBy $Gravel $River
-    @comp hasComposition $Gravel $Composition
-    return $chain
+    @grav isA Gravel GravelBed
+    @riv depositedBy Gravel River
+    @comp hasComposition Gravel Composition
+    return $comp
 end
 
 @:Sand_Beach graph Beach Coast Type
-    @beach isA $Beach SandBeach
-    @cst locatedOn $Beach $Coast
-    @typ hasType $Beach $Type
-    return $chain
+    @beach isA Beach SandBeach
+    @cst locatedOn Beach Coast
+    @typ hasType Beach Type
+    return $typ
 end
 
 @:Pebble_Beach graph Beach Coast Composition
-    @beach isA $Beach PebbleBeach
-    @cst locatedOn $Beach $Coast
-    @comp hasComposition $Beach $Composition
-    return $chain
+    @beach isA Beach PebbleBeach
+    @cst locatedOn Beach Coast
+    @comp hasComposition Beach Composition
+    return $comp
 end
 
 @:Rocky_Shore graph Shore Coast Ecosystem
-    @shore isA $Shore RockyShore
-    @cst locatedOn $Shore $Coast
-    @eco hasEcosystem $Shore $Ecosystem
-    return $chain
+    @shore isA Shore RockyShore
+    @cst locatedOn Shore Coast
+    @eco hasEcosystem Shore Ecosystem
+    return $eco
 end
 
 @:Cliff_Face graph Cliff Coast Height
-    @cliff isA $Cliff CliffFace
-    @cst locatedOn $Cliff $Coast
-    @ht hasHeight $Cliff $Height
-    return $chain
+    @cliff isA Cliff CliffFace
+    @cst locatedOn Cliff Coast
+    @ht hasHeight Cliff Height
+    return $ht
 end
 
 @:Sea_Stack graph Stack Coast Formation
-    @stack isA $Stack SeaStack
-    @cst nearCoast $Stack $Coast
-    @form hasFormation $Stack $Formation
-    return $chain
+    @stack isA Stack SeaStack
+    @cst nearCoast Stack Coast
+    @form hasFormation Stack Formation
+    return $form
 end
 
 @:Sea_Arch graph Arch Coast Formation
-    @arch isA $Arch SeaArch
-    @cst locatedOn $Arch $Coast
-    @form hasFormation $Arch $Formation
-    return $chain
+    @arch isA Arch SeaArch
+    @cst locatedOn Arch Coast
+    @form hasFormation Arch Formation
+    return $form
 end
 
 @:Sea_Cave graph Cave Coast Depth
-    @cave isA $Cave SeaCave
-    @cst locatedOn $Cave $Coast
-    @depth hasDepth $Cave $Depth
-    return $chain
+    @cave isA Cave SeaCave
+    @cst locatedOn Cave Coast
+    @depth hasDepth Cave Depth
+    return $depth
 end
 
 @:Tidal_Pool graph Pool Coast Species
-    @pool isA $Pool TidalPool
-    @cst locatedOn $Pool $Coast
-    @spec hasSpecies $Pool $Species
-    return $chain
+    @pool isA Pool TidalPool
+    @cst locatedOn Pool Coast
+    @spec hasSpecies Pool Species
+    return $spec
 end
 
 @:Salt_Marsh graph Marsh Coast Vegetation
-    @marsh isA $Marsh SaltMarsh
-    @cst locatedOn $Marsh $Coast
-    @veg hasVegetation $Marsh $Vegetation
-    return $chain
+    @marsh isA Marsh SaltMarsh
+    @cst locatedOn Marsh Coast
+    @veg hasVegetation Marsh Vegetation
+    return $veg
 end
 
 @:Mudflat_Ecosystem graph Mudflat Coast Species
-    @mud isA $Mudflat Mudflat
-    @cst locatedOn $Mudflat $Coast
-    @spec hasSpecies $Mudflat $Species
-    return $chain
+    @mud isA Mudflat Mudflat
+    @cst locatedOn Mudflat Coast
+    @spec hasSpecies Mudflat Species
+    return $spec
 end
 
 @:Coastal_Dune graph Dune Coast Vegetation
-    @dune isA $Dune CoastalDune
-    @cst locatedOn $Dune $Coast
-    @veg hasVegetation $Dune $Vegetation
-    return $chain
+    @dune isA Dune CoastalDune
+    @cst locatedOn Dune Coast
+    @veg hasVegetation Dune Vegetation
+    return $veg
 end
 
 @:Barrier_Reef graph Reef Coast Protection
-    @reef isA $Reef BarrierReef
-    @cst protectsCoast $Reef $Coast
-    @prot providesProtection $Reef $Protection
-    return $chain
+    @reef isA Reef BarrierReef
+    @cst protectsCoast Reef Coast
+    @prot providesProtection Reef Protection
+    return $prot
 end
 
 @:Fringing_Reef graph Reef Island Biodiversity
-    @reef isA $Reef FringingReef
-    @isl surroundsIsland $Reef $Island
-    @bio hasBiodiversity $Reef $Biodiversity
-    return $chain
+    @reef isA Reef FringingReef
+    @isl surroundsIsland Reef Island
+    @bio hasBiodiversity Reef Biodiversity
+    return $bio
 end
 
 @:Patch_Reef graph Reef Lagoon Species
-    @reef isA $Reef PatchReef
-    @lag locatedIn $Reef $Lagoon
-    @spec hasSpecies $Reef $Species
-    return $chain
+    @reef isA Reef PatchReef
+    @lag locatedIn Reef Lagoon
+    @spec hasSpecies Reef Species
+    return $spec
 end
 
 @:Kelp_Forest graph Kelp Coast Ecosystem
-    @kelp isA $Kelp KelpForest
-    @cst locatedOff $Kelp $Coast
-    @eco hasEcosystem $Kelp $Ecosystem
-    return $chain
+    @kelp isA Kelp KelpForest
+    @cst locatedOff Kelp Coast
+    @eco hasEcosystem Kelp Ecosystem
+    return $eco
 end
 
 @:Seagrass_Meadow graph Seagrass Coast Species
-    @sea isA $Seagrass SeagrassMeadow
-    @cst locatedOff $Seagrass $Coast
-    @spec hasSpecies $Seagrass $Species
-    return $chain
+    @sea isA Seagrass SeagrassMeadow
+    @cst locatedOff Seagrass Coast
+    @spec hasSpecies Seagrass Species
+    return $spec
 end
 
 @:Abyssal_Plain graph Plain Ocean Depth
-    @plain isA $Plain AbyssalPlain
-    @oc locatedIn $Plain $Ocean
-    @depth hasDepth $Plain $Depth
-    return $chain
+    @plain isA Plain AbyssalPlain
+    @oc locatedIn Plain Ocean
+    @depth hasDepth Plain Depth
+    return $depth
 end
 
 @:Hydrothermal_Vent graph Vent Ocean Species
-    @vent isA $Vent HydrothermalVent
-    @oc locatedIn $Vent $Ocean
-    @spec hasSpecies $Vent $Species
-    return $chain
+    @vent isA Vent HydrothermalVent
+    @oc locatedIn Vent Ocean
+    @spec hasSpecies Vent Species
+    return $spec
 end
 
 @:Cold_Seep graph Seep Ocean Methane
-    @seep isA $Seep ColdSeep
-    @oc locatedIn $Seep $Ocean
-    @meth emitsMethane $Seep $Methane
-    return $chain
+    @seep isA Seep ColdSeep
+    @oc locatedIn Seep Ocean
+    @meth emitsMethane Seep Methane
+    return $meth
 end
 
 @:Brine_Pool graph Pool Ocean Salinity
-    @pool isA $Pool BrinePool
-    @oc locatedIn $Pool $Ocean
-    @sal hasSalinity $Pool $Salinity
-    return $chain
+    @pool isA Pool BrinePool
+    @oc locatedIn Pool Ocean
+    @sal hasSalinity Pool Salinity
+    return $sal
 end
 
 @:Submarine_Canyon graph Canyon Ocean Depth
-    @can isA $Canyon SubmarineCanyon
-    @oc locatedIn $Canyon $Ocean
-    @depth hasDepth $Canyon $Depth
-    return $chain
+    @can isA Canyon SubmarineCanyon
+    @oc locatedIn Canyon Ocean
+    @depth hasDepth Canyon Depth
+    return $depth
 end
 
 @:Guyot_Seamount graph Guyot Ocean Formation
-    @guy isA $Guyot Guyot
-    @oc locatedIn $Guyot $Ocean
-    @form hasFormation $Guyot $Formation
-    return $chain
+    @guy isA Guyot Guyot
+    @oc locatedIn Guyot Ocean
+    @form hasFormation Guyot Formation
+    return $form
 end
 
 @:Ocean_Plateau graph Plateau Ocean Area
-    @plat isA $Plateau OceanPlateau
-    @oc locatedIn $Plateau $Ocean
-    @area hasArea $Plateau $Area
-    return $chain
+    @plat isA Plateau OceanPlateau
+    @oc locatedIn Plateau Ocean
+    @area hasArea Plateau Area
+    return $area
 end
 
 @:Continental_Rise graph Rise Ocean Gradient
-    @rise isA $Rise ContinentalRise
-    @oc locatedIn $Rise $Ocean
-    @grad hasGradient $Rise $Gradient
-    return $chain
+    @rise isA Rise ContinentalRise
+    @oc locatedIn Rise Ocean
+    @grad hasGradient Rise Gradient
+    return $grad
 end
 
 @:Continental_Slope graph Slope Ocean Depth
-    @slope isA $Slope ContinentalSlope
-    @oc locatedIn $Slope $Ocean
-    @depth hasDepth $Slope $Depth
-    return $chain
+    @slope isA Slope ContinentalSlope
+    @oc locatedIn Slope Ocean
+    @depth hasDepth Slope Depth
+    return $depth
 end
 
 @:Ocean_Current graph Current Ocean Direction
-    @curr isA $Current OceanCurrent
-    @oc flowsIn $Current $Ocean
-    @dir hasDirection $Current $Direction
-    return $chain
+    @curr isA Current OceanCurrent
+    @oc flowsIn Current Ocean
+    @dir hasDirection Current Direction
+    return $dir
 end
 
 @:Warm_Current graph Current Ocean Temperature
-    @curr isA $Current WarmCurrent
-    @oc flowsIn $Current $Ocean
-    @temp hasTemperature $Current $Temperature
-    return $chain
+    @curr isA Current WarmCurrent
+    @oc flowsIn Current Ocean
+    @temp hasTemperature Current Temperature
+    return $temp
 end
 
 @:Cold_Current graph Current Ocean Temperature
-    @curr isA $Current ColdCurrent
-    @oc flowsIn $Current $Ocean
-    @temp hasTemperature $Current $Temperature
-    return $chain
+    @curr isA Current ColdCurrent
+    @oc flowsIn Current Ocean
+    @temp hasTemperature Current Temperature
+    return $temp
 end
 
 @:Upwelling_Zone graph Zone Ocean Nutrients
-    @zone isA $Zone UpwellingZone
-    @oc locatedIn $Zone $Ocean
-    @nutr hasNutrients $Zone $Nutrients
-    return $chain
+    @zone isA Zone UpwellingZone
+    @oc locatedIn Zone Ocean
+    @nutr hasNutrients Zone Nutrients
+    return $nutr
 end
 
 @:Downwelling_Zone graph Zone Ocean Process
-    @zone isA $Zone DownwellingZone
-    @oc locatedIn $Zone $Ocean
-    @proc hasProcess $Zone $Process
-    return $chain
+    @zone isA Zone DownwellingZone
+    @oc locatedIn Zone Ocean
+    @proc hasProcess Zone Process
+    return $proc
 end
 
 @:Thermocline_Layer graph Layer Ocean Temperature
-    @lay isA $Layer ThermoclineLayer
-    @oc locatedIn $Layer $Ocean
-    @temp hasTemperature $Layer $Temperature
-    return $chain
+    @lay isA Layer ThermoclineLayer
+    @oc locatedIn Layer Ocean
+    @temp hasTemperature Layer Temperature
+    return $temp
 end
 
 @:Halocline_Layer graph Layer Ocean Salinity
-    @lay isA $Layer HaloclineLayer
-    @oc locatedIn $Layer $Ocean
-    @sal hasSalinity $Layer $Salinity
-    return $chain
+    @lay isA Layer HaloclineLayer
+    @oc locatedIn Layer Ocean
+    @sal hasSalinity Layer Salinity
+    return $sal
 end
 
 @:Pycnocline_Layer graph Layer Ocean Density
-    @lay isA $Layer PycnoclineLayer
-    @oc locatedIn $Layer $Ocean
-    @dens hasDensity $Layer $Density
-    return $chain
+    @lay isA Layer PycnoclineLayer
+    @oc locatedIn Layer Ocean
+    @dens hasDensity Layer Density
+    return $dens
 end
 
 @:Mixed_Layer graph Layer Ocean Depth
-    @lay isA $Layer MixedLayer
-    @oc locatedIn $Layer $Ocean
-    @depth hasDepth $Layer $Depth
-    return $chain
+    @lay isA Layer MixedLayer
+    @oc locatedIn Layer Ocean
+    @depth hasDepth Layer Depth
+    return $depth
 end
 
 @:Deep_Ocean graph Deep Ocean Temperature
-    @deep isA $Deep DeepOcean
-    @oc partOf $Deep $Ocean
-    @temp hasTemperature $Deep $Temperature
-    return $chain
+    @deep isA Deep DeepOcean
+    @oc partOf Deep Ocean
+    @temp hasTemperature Deep Temperature
+    return $temp
 end
 
 @:Ocean_Gyre graph Gyre Ocean Rotation
-    @gyre isA $Gyre OceanGyre
-    @oc locatedIn $Gyre $Ocean
-    @rot hasRotation $Gyre $Rotation
-    return $chain
+    @gyre isA Gyre OceanGyre
+    @oc locatedIn Gyre Ocean
+    @rot hasRotation Gyre Rotation
+    return $rot
 end
 
 @:El_Nino_Event graph Event Ocean Impact
-    @ev isA $Event ElNino
-    @oc occursIn $Event $Ocean
-    @imp hasImpact $Event $Impact
-    return $chain
+    @ev isA Event ElNino
+    @oc occursIn Event Ocean
+    @imp hasImpact Event Impact
+    return $imp
 end
 
 @:La_Nina_Event graph Event Ocean Impact
-    @ev isA $Event LaNina
-    @oc occursIn $Event $Ocean
-    @imp hasImpact $Event $Impact
-    return $chain
+    @ev isA Event LaNina
+    @oc occursIn Event Ocean
+    @imp hasImpact Event Impact
+    return $imp
 end
 
 @:Ocean_Acidification graph Acidification Ocean pH
-    @acid isA $Acidification OceanAcidification
-    @oc affectsOcean $Acidification $Ocean
-    @ph hasPH $Acidification $pH
-    return $chain
+    @acid isA Acidification OceanAcidification
+    @oc affectsOcean Acidification Ocean
+    @ph hasPH Acidification $pH
+    return $ph
 end
 
 @:Coral_Bleaching graph Bleaching Reef Temperature
-    @bleach isA $Bleaching CoralBleaching
-    @reef affectsReef $Bleaching $Reef
-    @temp causedByTemperature $Bleaching $Temperature
-    return $chain
+    @bleach isA Bleaching CoralBleaching
+    @reef affectsReef Bleaching Reef
+    @temp causedByTemperature Bleaching Temperature
+    return $temp
 end
 
 @:Sea_Level_Rise graph Rise Ocean Rate
-    @rise isA $Rise SeaLevelRise
-    @oc affectsOcean $Rise $Ocean
-    @rate hasRate $Rise $Rate
-    return $chain
+    @rise isA Rise SeaLevelRise
+    @oc affectsOcean Rise Ocean
+    @rate hasRate Rise Rate
+    return $rate
 end
 
 @:Ocean_Pollution graph Pollution Ocean Source
-    @poll isA $Pollution OceanPollution
-    @oc affectsOcean $Pollution $Ocean
-    @src hasSource $Pollution $Source
-    return $chain
+    @poll isA Pollution OceanPollution
+    @oc affectsOcean Pollution Ocean
+    @src hasSource Pollution Source
+    return $src
 end
 
 @:Plastic_Gyre graph Gyre Ocean Concentration
-    @gyre isA $Gyre PlasticGyre
-    @oc locatedIn $Gyre $Ocean
-    @conc hasConcentration $Gyre $Concentration
-    return $chain
+    @gyre isA Gyre PlasticGyre
+    @oc locatedIn Gyre Ocean
+    @conc hasConcentration Gyre Concentration
+    return $conc
 end
 
 @:Dead_Zone graph Zone Ocean Oxygen
-    @zone isA $Zone DeadZone
-    @oc locatedIn $Zone $Ocean
-    @oxy hasOxygen $Zone $Oxygen
-    return $chain
+    @zone isA Zone DeadZone
+    @oc locatedIn Zone Ocean
+    @oxy hasOxygen Zone Oxygen
+    return $oxy
 end
 
 @:Overfishing_Area graph Area Ocean Depletion
-    @area isA $Area OverfishingArea
-    @oc locatedIn $Area $Ocean
-    @depl hasDepletion $Area $Depletion
-    return $chain
+    @area isA Area OverfishingArea
+    @oc locatedIn Area Ocean
+    @depl hasDepletion Area Depletion
+    return $depl
 end
 
 @:Marine_Sanctuary graph Sanctuary Ocean Protection
-    @sanc isA $Sanctuary MarineSanctuary
-    @oc locatedIn $Sanctuary $Ocean
-    @prot hasProtection $Sanctuary $Protection
-    return $chain
+    @sanc isA Sanctuary MarineSanctuary
+    @oc locatedIn Sanctuary Ocean
+    @prot hasProtection Sanctuary Protection
+    return $prot
 end
 
 @:Fishing_Ground graph Ground Ocean Species
-    @ground isA $Ground FishingGround
-    @oc locatedIn $Ground $Ocean
-    @spec hasSpecies $Ground $Species
-    return $chain
+    @ground isA Ground FishingGround
+    @oc locatedIn Ground Ocean
+    @spec hasSpecies Ground Species
+    return $spec
 end
 
 @:Whale_Migration graph Migration Ocean Route
-    @mig isA $Migration WhaleMigration
-    @oc occursIn $Migration $Ocean
-    @rte hasRoute $Migration $Route
-    return $chain
+    @mig isA Migration WhaleMigration
+    @oc occursIn Migration Ocean
+    @rte hasRoute Migration Route
+    return $rte
 end
 
 @:Bird_Migration graph Migration Route Destination
-    @mig isA $Migration BirdMigration
-    @rte followsRoute $Migration $Route
-    @dest hasDestination $Migration $Destination
-    return $chain
+    @mig isA Migration BirdMigration
+    @rte followsRoute Migration Route
+    @dest hasDestination Migration Destination
+    return $dest
 end
 
 @:Butterfly_Migration graph Migration Species Distance
-    @mig isA $Migration ButterflyMigration
-    @spec involvesSpecies $Migration $Species
-    @dist hasDistance $Migration $Distance
-    return $chain
+    @mig isA Migration ButterflyMigration
+    @spec involvesSpecies Migration Species
+    @dist hasDistance Migration Distance
+    return $dist
 end
 
 @:Caribou_Migration graph Migration Region Season
-    @mig isA $Migration CaribouMigration
-    @reg occursIn $Migration $Region
-    @seas duringSeason $Migration $Season
-    return $chain
+    @mig isA Migration CaribouMigration
+    @reg occursIn Migration Region
+    @seas duringSeason Migration Season
+    return $seas
 end
 
 @:Wildebeest_Migration graph Migration Savanna River
-    @mig isA $Migration WildebeestMigration
-    @sav occursIn $Migration $Savanna
-    @riv crossesRiver $Migration $River
-    return $chain
+    @mig isA Migration WildebeestMigration
+    @sav occursIn Migration Savanna
+    @riv crossesRiver Migration River
+    return $riv
 end
 
 @:Salmon_Run graph Run River Season
-    @run isA $Run SalmonRun
-    @riv occursIn $Run $River
-    @seas duringSeason $Run $Season
-    return $chain
+    @run isA Run SalmonRun
+    @riv occursIn Run River
+    @seas duringSeason Run Season
+    return $seas
 end
 
 @:Turtle_Nesting graph Nesting Beach Season
-    @nest isA $Nesting TurtleNesting
-    @beach occursOn $Nesting $Beach
-    @seas duringSeason $Nesting $Season
-    return $chain
+    @nest isA Nesting TurtleNesting
+    @beach occursOn Nesting Beach
+    @seas duringSeason Nesting Season
+    return $seas
 end
 
 @:Penguin_Colony graph Colony Island Population
-    @col isA $Colony PenguinColony
-    @isl locatedOn $Colony $Island
-    @pop hasPopulation $Colony $Population
-    return $chain
+    @col isA Colony PenguinColony
+    @isl locatedOn Colony Island
+    @pop hasPopulation Colony Population
+    return $pop
 end
 
 @:Seal_Rookery graph Rookery Coast Population
-    @rook isA $Rookery SealRookery
-    @cst locatedOn $Rookery $Coast
-    @pop hasPopulation $Rookery $Population
-    return $chain
+    @rook isA Rookery SealRookery
+    @cst locatedOn Rookery Coast
+    @pop hasPopulation Rookery Population
+    return $pop
 end
 
 @:Elephant_Herd graph Herd Savanna Size
-    @herd isA $Herd ElephantHerd
-    @sav inhabits $Herd $Savanna
-    @sz hasSize $Herd $Size
-    return $chain
+    @herd isA Herd ElephantHerd
+    @sav inhabits Herd Savanna
+    @sz hasSize Herd Size
+    return $sz
 end
 
 @:Gorilla_Habitat graph Habitat Forest Population
-    @hab isA $Habitat GorillaHabitat
-    @for locatedIn $Habitat $Forest
-    @pop hasPopulation $Habitat $Population
-    return $chain
+    @hab isA Habitat GorillaHabitat
+    @for locatedIn Habitat Forest
+    @pop hasPopulation Habitat Population
+    return $pop
 end
 
 @:Tiger_Reserve graph Reserve Forest Tigers
-    @res isA $Reserve TigerReserve
-    @for protectsForest $Reserve $Forest
-    @tig hasTigers $Reserve $Tigers
-    return $chain
+    @res isA Reserve TigerReserve
+    @for protectsForest Reserve Forest
+    @tig hasTigers Reserve Tigers
+    return $tig
 end
 
 @:Panda_Habitat graph Habitat Mountain Bamboo
-    @hab isA $Habitat PandaHabitat
-    @mtn locatedIn $Habitat $Mountain
-    @bam hasBamboo $Habitat $Bamboo
-    return $chain
+    @hab isA Habitat PandaHabitat
+    @mtn locatedIn Habitat Mountain
+    @bam hasBamboo Habitat Bamboo
+    return $bam
 end
 
 @:Koala_Habitat graph Habitat Forest Eucalyptus
-    @hab isA $Habitat KoalaHabitat
-    @for locatedIn $Habitat $Forest
-    @euc hasEucalyptus $Habitat $Eucalyptus
-    return $chain
+    @hab isA Habitat KoalaHabitat
+    @for locatedIn Habitat Forest
+    @euc hasEucalyptus Habitat Eucalyptus
+    return $euc
 end
 
 @:Polar_Bear_Habitat graph Habitat Arctic IceCover
-    @hab isA $Habitat PolarBearHabitat
-    @arc locatedIn $Habitat $Arctic
-    @ice hasIceCover $Habitat $IceCover
-    return $chain
+    @hab isA Habitat PolarBearHabitat
+    @arc locatedIn Habitat Arctic
+    @ice hasIceCover Habitat IceCover
+    return $ice
 end
 
 @:Orangutan_Habitat graph Habitat Rainforest Trees
-    @hab isA $Habitat OrangutanHabitat
-    @rain locatedIn $Habitat $Rainforest
-    @tree hasTrees $Habitat $Trees
-    return $chain
+    @hab isA Habitat OrangutanHabitat
+    @rain locatedIn Habitat Rainforest
+    @tree hasTrees Habitat Trees
+    return $tree
 end
 
 @:Rhino_Sanctuary graph Sanctuary Savanna Population
-    @sanc isA $Sanctuary RhinoSanctuary
-    @sav locatedIn $Sanctuary $Savanna
-    @pop hasPopulation $Sanctuary $Population
-    return $chain
+    @sanc isA Sanctuary RhinoSanctuary
+    @sav locatedIn Sanctuary Savanna
+    @pop hasPopulation Sanctuary Population
+    return $pop
 end
 
 @:Leopard_Territory graph Territory Mountain Range
-    @terr isA $Territory LeopardTerritory
-    @mtn locatedIn $Territory $Mountain
-    @rng hasRange $Territory $Range
-    return $chain
+    @terr isA Territory LeopardTerritory
+    @mtn locatedIn Territory Mountain
+    @rng hasRange Territory Range
+    return $rng
 end
 
 @:Wolf_Pack graph Pack Forest Territory
-    @pack isA $Pack WolfPack
-    @for inhabitsForest $Pack $Forest
-    @terr hasTerritory $Pack $Territory
-    return $chain
+    @pack isA Pack WolfPack
+    @for inhabitsForest Pack Forest
+    @terr hasTerritory Pack Territory
+    return $terr
 end
 
 @:Dolphin_Pod graph Pod Ocean Size
-    @pod isA $Pod DolphinPod
-    @oc inhabitsOcean $Pod $Ocean
-    @sz hasSize $Pod $Size
-    return $chain
+    @pod isA Pod DolphinPod
+    @oc inhabitsOcean Pod Ocean
+    @sz hasSize Pod Size
+    return $sz
 end
 
 @:Shark_Population graph Population Ocean Species
-    @pop isA $Population SharkPopulation
-    @oc locatedIn $Population $Ocean
-    @spec hasSpecies $Population $Species
-    return $chain
+    @pop isA Population SharkPopulation
+    @oc locatedIn Population Ocean
+    @spec hasSpecies Population Species
+    return $spec
 end
 
 @:Whale_Population graph Population Ocean Conservation
-    @pop isA $Population WhalePopulation
-    @oc locatedIn $Population $Ocean
-    @cons hasConservation $Population $Conservation
-    return $chain
+    @pop isA Population WhalePopulation
+    @oc locatedIn Population Ocean
+    @cons hasConservation Population Conservation
+    return $cons
 end
 
 @:Coral_Species graph Species Reef Diversity
-    @spec isA $Species CoralSpecies
-    @reef foundOn $Species $Reef
-    @div hasDiversity $Species $Diversity
-    return $chain
+    @spec isA Species CoralSpecies
+    @reef foundOn Species Reef
+    @div hasDiversity Species Diversity
+    return $div
 end
 
 @:Fish_Species graph Species Ocean Habitat
-    @spec isA $Species FishSpecies
-    @oc inhabitsOcean $Species $Ocean
-    @hab hasHabitat $Species $Habitat
-    return $chain
+    @spec isA Species FishSpecies
+    @oc inhabitsOcean Species Ocean
+    @hab hasHabitat Species Habitat
+    return $hab
 end
 
 @:Amphibian_Habitat graph Habitat Wetland Species
-    @hab isA $Habitat AmphibianHabitat
-    @wet locatedIn $Habitat $Wetland
-    @spec hasSpecies $Habitat $Species
-    return $chain
+    @hab isA Habitat AmphibianHabitat
+    @wet locatedIn Habitat Wetland
+    @spec hasSpecies Habitat Species
+    return $spec
 end
 
 @:Reptile_Habitat graph Habitat Desert Species
-    @hab isA $Habitat ReptileHabitat
-    @des locatedIn $Habitat $Desert
-    @spec hasSpecies $Habitat $Species
-    return $chain
+    @hab isA Habitat ReptileHabitat
+    @des locatedIn Habitat Desert
+    @spec hasSpecies Habitat Species
+    return $spec
 end
 
 @:Insect_Population graph Population Rainforest Diversity
-    @pop isA $Population InsectPopulation
-    @rain locatedIn $Population $Rainforest
-    @div hasDiversity $Population $Diversity
-    return $chain
+    @pop isA Population InsectPopulation
+    @rain locatedIn Population Rainforest
+    @div hasDiversity Population Diversity
+    return $div
 end
 
 @:Pollinator_Corridor graph Corridor Region Species
-    @corr isA $Corridor PollinatorCorridor
-    @reg locatedIn $Corridor $Region
-    @spec hasSpecies $Corridor $Species
-    return $chain
+    @corr isA Corridor PollinatorCorridor
+    @reg locatedIn Corridor Region
+    @spec hasSpecies Corridor Species
+    return $spec
 end
 
 @:Endemic_Species graph Species Island Uniqueness
-    @spec isA $Species EndemicSpecies
-    @isl foundOnIsland $Species $Island
-    @uniq hasUniqueness $Species $Uniqueness
-    return $chain
+    @spec isA Species EndemicSpecies
+    @isl foundOnIsland Species Island
+    @uniq hasUniqueness Species Uniqueness
+    return $uniq
 end
 
 @:Endangered_Species graph Species Habitat Status
-    @spec isA $Species EndangeredSpecies
-    @hab livesIn $Species $Habitat
-    @stat hasStatus $Species $Status
-    return $chain
+    @spec isA Species EndangeredSpecies
+    @hab livesIn Species Habitat
+    @stat hasStatus Species Status
+    return $stat
 end
 
 @:Invasive_Species graph Species Region Impact
-    @spec isA $Species InvasiveSpecies
-    @reg introducedTo $Species $Region
-    @imp hasImpact $Species $Impact
-    return $chain
+    @spec isA Species InvasiveSpecies
+    @reg introducedTo Species Region
+    @imp hasImpact Species Impact
+    return $imp
 end
 
 @:Keystone_Species graph Species Ecosystem Role
-    @spec isA $Species KeystoneSpecies
-    @eco livesIn $Species $Ecosystem
-    @role hasRole $Species $Role
-    return $chain
+    @spec isA Species KeystoneSpecies
+    @eco livesIn Species Ecosystem
+    @role hasRole Species Role
+    return $role
 end
 
 @:Indicator_Species graph Species Ecosystem Health
-    @spec isA $Species IndicatorSpecies
-    @eco livesIn $Species $Ecosystem
-    @heal indicatesHealth $Species $Health
-    return $chain
+    @spec isA Species IndicatorSpecies
+    @eco livesIn Species Ecosystem
+    @heal indicatesHealth Species Health
+    return $heal
 end
 
 @:Migratory_Species graph Species Route Distance
-    @spec isA $Species MigratorySpecies
-    @rte followsRoute $Species $Route
-    @dist travelsDistance $Species $Distance
-    return $chain
+    @spec isA Species MigratorySpecies
+    @rte followsRoute Species Route
+    @dist travelsDistance Species Distance
+    return $dist
 end
 
 @:Nocturnal_Species graph Species Habitat Adaptation
-    @spec isA $Species NocturnalSpecies
-    @hab livesIn $Species $Habitat
-    @adapt hasAdaptation $Species $Adaptation
-    return $chain
+    @spec isA Species NocturnalSpecies
+    @hab livesIn Species Habitat
+    @adapt hasAdaptation Species Adaptation
+    return $adapt
 end
 
 @:Aquatic_Species graph Species Water Adaptation
-    @spec isA $Species AquaticSpecies
-    @wat livesIn $Species $Water
-    @adapt hasAdaptation $Species $Adaptation
-    return $chain
+    @spec isA Species AquaticSpecies
+    @wat livesIn Species Water
+    @adapt hasAdaptation Species Adaptation
+    return $adapt
 end
 
 @:Alpine_Species graph Species Mountain Adaptation
-    @spec isA $Species AlpineSpecies
-    @mtn livesIn $Species $Mountain
-    @adapt hasAdaptation $Species $Adaptation
-    return $chain
+    @spec isA Species AlpineSpecies
+    @mtn livesIn Species Mountain
+    @adapt hasAdaptation Species Adaptation
+    return $adapt
 end
 
 @:Desert_Species graph Species Desert Adaptation
-    @spec isA $Species DesertSpecies
-    @des livesIn $Species $Desert
-    @adapt hasAdaptation $Species $Adaptation
-    return $chain
+    @spec isA Species DesertSpecies
+    @des livesIn Species Desert
+    @adapt hasAdaptation Species Adaptation
+    return $adapt
 end
 
 @:Polar_Species graph Species Polar Adaptation
-    @spec isA $Species PolarSpecies
-    @pol livesIn $Species $Polar
-    @adapt hasAdaptation $Species $Adaptation
-    return $chain
+    @spec isA Species PolarSpecies
+    @pol livesIn Species Polar
+    @adapt hasAdaptation Species Adaptation
+    return $adapt
 end
 
 @:Rainforest_Canopy graph Canopy Rainforest Height
-    @can isA $Canopy RainforestCanopy
-    @rain partOf $Canopy $Rainforest
-    @ht hasHeight $Canopy $Height
-    return $chain
+    @can isA Canopy RainforestCanopy
+    @rain partOf Canopy Rainforest
+    @ht hasHeight Canopy Height
+    return $ht
 end
 
 @:Understory_Layer graph Layer Forest Species
-    @lay isA $Layer UnderstoryLayer
-    @for partOf $Layer $Forest
-    @spec hasSpecies $Layer $Species
-    return $chain
+    @lay isA Layer UnderstoryLayer
+    @for partOf Layer Forest
+    @spec hasSpecies Layer Species
+    return $spec
 end
 
 @:Forest_Floor graph Floor Forest Decomposition
-    @floor isA $Floor ForestFloor
-    @for partOf $Floor $Forest
-    @decomp hasDecomposition $Floor $Decomposition
-    return $chain
+    @floor isA Floor ForestFloor
+    @for partOf Floor Forest
+    @decomp hasDecomposition Floor Decomposition
+    return $decomp
 end
 
 @:Soil_Type graph Soil Region Composition
-    @soil isA $Soil SoilType
-    @reg foundIn $Soil $Region
-    @comp hasComposition $Soil $Composition
-    return $chain
+    @soil isA Soil SoilType
+    @reg foundIn Soil Region
+    @comp hasComposition Soil Composition
+    return $comp
 end
 
 @:Soil_Erosion graph Erosion Region Rate
-    @ero isA $Erosion SoilErosion
-    @reg occursIn $Erosion $Region
-    @rate hasRate $Erosion $Rate
-    return $chain
+    @ero isA Erosion SoilErosion
+    @reg occursIn Erosion Region
+    @rate hasRate Erosion Rate
+    return $rate
 end
 
 @:Soil_Fertility graph Fertility Region Nutrients
-    @fert isA $Fertility SoilFertility
-    @reg foundIn $Fertility $Region
-    @nutr hasNutrients $Fertility $Nutrients
-    return $chain
+    @fert isA Fertility SoilFertility
+    @reg foundIn Fertility Region
+    @nutr hasNutrients Fertility Nutrients
+    return $nutr
 end
 
 @:Soil_pH graph pH Region Value
     @ph isA $pH SoilPH
-    @reg foundIn $pH $Region
-    @val hasValue $pH $Value
-    return $chain
+    @reg foundIn $pH Region
+    @val hasValue $pH Value
+    return $val
 end
 
 @:Soil_Moisture graph Moisture Region Content
-    @moist isA $Moisture SoilMoisture
-    @reg foundIn $Moisture $Region
-    @cont hasContent $Moisture $Content
-    return $chain
+    @moist isA Moisture SoilMoisture
+    @reg foundIn Moisture Region
+    @cont hasContent Moisture Content
+    return $cont
 end
 
 @:Soil_Microbiome graph Microbiome Soil Diversity
-    @mic isA $Microbiome SoilMicrobiome
-    @soil foundIn $Microbiome $Soil
-    @div hasDiversity $Microbiome $Diversity
-    return $chain
+    @mic isA Microbiome SoilMicrobiome
+    @soil foundIn Microbiome Soil
+    @div hasDiversity Microbiome Diversity
+    return $div
 end
 
 @:Mycorrhizal_Network graph Network Forest Trees
-    @net isA $Network MycorrhizalNetwork
-    @for foundIn $Network $Forest
-    @tree connectsTrees $Network $Trees
-    return $chain
+    @net isA Network MycorrhizalNetwork
+    @for foundIn Network Forest
+    @tree connectsTrees Network Trees
+    return $tree
 end
 
 @:Root_System graph Roots Tree Depth
-    @root isA $Roots RootSystem
-    @tree belongsTo $Roots $Tree
-    @depth hasDepth $Roots $Depth
-    return $chain
+    @root isA Roots RootSystem
+    @tree belongsTo Roots Tree
+    @depth hasDepth Roots Depth
+    return $depth
 end
 
 @:Nitrogen_Cycle graph Cycle Ecosystem Process
-    @cyc isA $Cycle NitrogenCycle
-    @eco occursIn $Cycle $Ecosystem
-    @proc hasProcess $Cycle $Process
-    return $chain
+    @cyc isA Cycle NitrogenCycle
+    @eco occursIn Cycle Ecosystem
+    @proc hasProcess Cycle Process
+    return $proc
 end
 
 @:Carbon_Cycle graph Cycle Ecosystem Process
-    @cyc isA $Cycle CarbonCycle
-    @eco occursIn $Cycle $Ecosystem
-    @proc hasProcess $Cycle $Process
-    return $chain
+    @cyc isA Cycle CarbonCycle
+    @eco occursIn Cycle Ecosystem
+    @proc hasProcess Cycle Process
+    return $proc
 end
 
 @:Water_Cycle graph Cycle Region Process
-    @cyc isA $Cycle WaterCycle
-    @reg occursIn $Cycle $Region
-    @proc hasProcess $Cycle $Process
-    return $chain
+    @cyc isA Cycle WaterCycle
+    @reg occursIn Cycle Region
+    @proc hasProcess Cycle Process
+    return $proc
 end
 
 @:Phosphorus_Cycle graph Cycle Ecosystem Process
-    @cyc isA $Cycle PhosphorusCycle
-    @eco occursIn $Cycle $Ecosystem
-    @proc hasProcess $Cycle $Process
-    return $chain
+    @cyc isA Cycle PhosphorusCycle
+    @eco occursIn Cycle Ecosystem
+    @proc hasProcess Cycle Process
+    return $proc
 end
 
 @:Oxygen_Cycle graph Cycle Atmosphere Process
-    @cyc isA $Cycle OxygenCycle
-    @atm occursIn $Cycle $Atmosphere
-    @proc hasProcess $Cycle $Process
-    return $chain
+    @cyc isA Cycle OxygenCycle
+    @atm occursIn Cycle Atmosphere
+    @proc hasProcess Cycle Process
+    return $proc
 end
 
 @:Photosynthesis_Process graph Process Plant Oxygen
-    @proc isA $Process Photosynthesis
-    @plt performedBy $Process $Plant
-    @oxy producesOxygen $Process $Oxygen
-    return $chain
+    @proc isA Process Photosynthesis
+    @plt performedBy Process Plant
+    @oxy producesOxygen Process Oxygen
+    return $oxy
 end
 
 @:Respiration_Process graph Process Organism CO2
-    @proc isA $Process Respiration
-    @org performedBy $Process $Organism
-    @co2 producesCO2 $Process $CO2
-    return $chain
+    @proc isA Process Respiration
+    @org performedBy Process Organism
+    @co2 producesCO2 Process CO2
+    return $co2
 end
 
 @:Decomposition_Process graph Process Organism Nutrients
-    @proc isA $Process Decomposition
-    @org performedBy $Process $Organism
-    @nutr releasesNutrients $Process $Nutrients
-    return $chain
+    @proc isA Process Decomposition
+    @org performedBy Process Organism
+    @nutr releasesNutrients Process Nutrients
+    return $nutr
 end
 
 @:Predation_Relationship graph Predation Predator Prey
-    @pred isA $Predation Predation
-    @predator involvesSpecies $Predation $Predator
-    @prey involvesSpecies $Predation $Prey
-    return $chain
+    @pred isA Predation Predation
+    @predator involvesSpecies Predation Predator
+    @prey involvesSpecies Predation Prey
+    return $prey
 end
 
 @:Symbiosis_Relationship graph Symbiosis Species1 Species2
-    @sym isA $Symbiosis Symbiosis
-    @s1 involvesSpecies $Symbiosis $Species1
-    @s2 involvesSpecies $Symbiosis $Species2
-    return $chain
+    @sym isA Symbiosis Symbiosis
+    @s1 involvesSpecies Symbiosis Species1
+    @s2 involvesSpecies Symbiosis Species2
+    return $s2
 end
 
 @:Mutualism_Relationship graph Mutualism Species1 Species2
-    @mut isA $Mutualism Mutualism
-    @s1 benefitsSpecies $Mutualism $Species1
-    @s2 benefitsSpecies $Mutualism $Species2
-    return $chain
+    @mut isA Mutualism Mutualism
+    @s1 benefitsSpecies Mutualism Species1
+    @s2 benefitsSpecies Mutualism Species2
+    return $s2
 end
 
 @:Parasitism_Relationship graph Parasitism Parasite Host
-    @par isA $Parasitism Parasitism
-    @parasite involvesSpecies $Parasitism $Parasite
-    @host involvesSpecies $Parasitism $Host
-    return $chain
+    @par isA Parasitism Parasitism
+    @parasite involvesSpecies Parasitism Parasite
+    @host involvesSpecies Parasitism Host
+    return $host
 end
 
 @:Commensalism_Relationship graph Commensalism Species1 Species2
-    @comm isA $Commensalism Commensalism
-    @s1 benefitsSpecies $Commensalism $Species1
-    @s2 unaffectedSpecies $Commensalism $Species2
-    return $chain
+    @comm isA Commensalism Commensalism
+    @s1 benefitsSpecies Commensalism Species1
+    @s2 unaffectedSpecies Commensalism Species2
+    return $s2
 end
 
 @:Competition_Relationship graph Competition Species1 Species2
-    @comp isA $Competition Competition
-    @s1 involvesSpecies $Competition $Species1
-    @s2 involvesSpecies $Competition $Species2
-    return $chain
+    @comp isA Competition Competition
+    @s1 involvesSpecies Competition Species1
+    @s2 involvesSpecies Competition Species2
+    return $s2
 end
 
-@:Food_Chain graph Chain Ecosystem Levels
-    @chain isA $Chain FoodChain
-    @eco occursIn $Chain $Ecosystem
-    @lev hasTrophicLevels $Chain $Levels
+@:Food_Chain graph Chain Ecosystem Levels result
+    @chain isA Chain FoodChain
+    @eco occursIn Chain Ecosystem
+    @lev hasTrophicLevels Chain Levels
     return $result
 end
 
 @:Food_Web graph Web Ecosystem Complexity
-    @web isA $Web FoodWeb
-    @eco occursIn $Web $Ecosystem
-    @comp hasComplexity $Web $Complexity
-    return $chain
+    @web isA Web FoodWeb
+    @eco occursIn Web Ecosystem
+    @comp hasComplexity Web Complexity
+    return $comp
 end
 
 @:Energy_Pyramid graph Pyramid Ecosystem Producers
-    @pyr isA $Pyramid EnergyPyramid
-    @eco representsEcosystem $Pyramid $Ecosystem
-    @prod hasProducers $Pyramid $Producers
-    return $chain
+    @pyr isA Pyramid EnergyPyramid
+    @eco representsEcosystem Pyramid Ecosystem
+    @prod hasProducers Pyramid Producers
+    return $prod
 end
 
 @:Biomass_Pyramid graph Pyramid Ecosystem Distribution
-    @pyr isA $Pyramid BiomassPyramid
-    @eco representsEcosystem $Pyramid $Ecosystem
-    @dist hasDistribution $Pyramid $Distribution
-    return $chain
+    @pyr isA Pyramid BiomassPyramid
+    @eco representsEcosystem Pyramid Ecosystem
+    @dist hasDistribution Pyramid Distribution
+    return $dist
 end
 
 @:Ecological_Succession graph Succession Ecosystem Stages
-    @succ isA $Succession EcologicalSuccession
-    @eco occursIn $Succession $Ecosystem
-    @stag hasStages $Succession $Stages
-    return $chain
+    @succ isA Succession EcologicalSuccession
+    @eco occursIn Succession Ecosystem
+    @stag hasStages Succession Stages
+    return $stag
 end
 
 @:Primary_Succession graph Succession Substrate Pioneer
-    @succ isA $Succession PrimarySuccession
-    @sub occursOn $Succession $Substrate
-    @pio hasPioneerSpecies $Succession $Pioneer
-    return $chain
+    @succ isA Succession PrimarySuccession
+    @sub occursOn Succession Substrate
+    @pio hasPioneerSpecies Succession Pioneer
+    return $pio
 end
 
 @:Secondary_Succession graph Succession Disturbance Recovery
-    @succ isA $Succession SecondarySuccession
-    @dist followsDisturbance $Succession $Disturbance
-    @rec hasRecovery $Succession $Recovery
-    return $chain
+    @succ isA Succession SecondarySuccession
+    @dist followsDisturbance Succession Disturbance
+    @rec hasRecovery Succession Recovery
+    return $rec
 end
 
 @:Climax_Community graph Community Ecosystem Stability
-    @comm isA $Community ClimaxCommunity
-    @eco representsEcosystem $Community $Ecosystem
-    @stab hasStability $Community $Stability
-    return $chain
+    @comm isA Community ClimaxCommunity
+    @eco representsEcosystem Community Ecosystem
+    @stab hasStability Community Stability
+    return $stab
 end
 
 @:Pioneer_Species graph Species Succession Adaptation
-    @spec isA $Species PioneerSpecies
-    @succ participatesIn $Species $Succession
-    @adapt hasAdaptation $Species $Adaptation
-    return $chain
+    @spec isA Species PioneerSpecies
+    @succ participatesIn Species Succession
+    @adapt hasAdaptation Species Adaptation
+    return $adapt
 end
 
 @:Biodiversity_Hotspot graph Hotspot Region Species
-    @hot isA $Hotspot BiodiversityHotspot
-    @reg locatedIn $Hotspot $Region
-    @spec hasSpecies $Hotspot $Species
-    return $chain
+    @hot isA Hotspot BiodiversityHotspot
+    @reg locatedIn Hotspot Region
+    @spec hasSpecies Hotspot Species
+    return $spec
 end
 
 @:Extinction_Event graph Event Region Cause
-    @ev isA $Event ExtinctionEvent
-    @reg occursIn $Event $Region
-    @cause hasCause $Event $Cause
-    return $chain
+    @ev isA Event ExtinctionEvent
+    @reg occursIn Event Region
+    @cause hasCause Event Cause
+    return $cause
 end
 
 @:Conservation_Effort graph Effort Region Success
-    @eff isA $Effort ConservationEffort
-    @reg targetingRegion $Effort $Region
-    @succ hasSuccess $Effort $Success
-    return $chain
+    @eff isA Effort ConservationEffort
+    @reg targetingRegion Effort Region
+    @succ hasSuccess Effort Success
+    return $succ
 end
 
 @:Reforestation_Project graph Project Region Trees
-    @proj isA $Project ReforestationProject
-    @reg locatedIn $Project $Region
-    @tree plantsTreeCount $Project $Trees
-    return $chain
+    @proj isA Project ReforestationProject
+    @reg locatedIn Project Region
+    @tree plantsTreeCount Project Trees
+    return $tree
 end
 
 @:Wildlife_Corridor graph Corridor Region Species
-    @corr isA $Corridor WildlifeCorridor
-    @reg connectsRegions $Corridor $Region
-    @spec allowsMovement $Corridor $Species
-    return $chain
+    @corr isA Corridor WildlifeCorridor
+    @reg connectsRegions Corridor Region
+    @spec allowsMovement Corridor Species
+    return $spec
 end
