@@ -32,11 +32,48 @@ export function checkContradiction(session, metadata) {
   const contradictsWith = session.semanticIndex?.contradictsSameArgsWith?.(operator);
   if (contradictsWith && contradictsWith.size > 0 && args.length >= 2) {
     for (const otherOp of contradictsWith) {
+      const indexed = session.factIndex?.getBinary?.(otherOp, args[0], args[1]);
+      if (indexed) {
+        const src = session.semanticIndex?.getContradictsSameArgsSource?.(operator, otherOp);
+        const constraint = src
+          ? `${src.text} (${src.file}:${src.line})`
+          : `contradictsSameArgs ${operator} ${otherOp}`;
+        return {
+          kind: 'contradictsSameArgs',
+          severity: 'reject',
+          message: `Warning: contradiction - ${operator} and ${otherOp} with same args`,
+          newFact: { operator, args: [args[0], args[1]] },
+          conflictingFact: {
+            operator: otherOp,
+            args: [args[0], args[1]],
+            factId: indexed?.id ?? null
+          },
+          constraint: src ? { ...src } : null,
+          proof_nl: `${otherOp} ${args[0]} ${args[1]}. ${constraint}. Therefore reject ${operator} ${args[0]} ${args[1]}.`
+        };
+      }
+      // Fallback for sessions without index (or for facts injected without addToKB).
       for (const fact of session.kbFacts) {
-        if (fact.metadata?.operator === otherOp &&
-            fact.metadata.args?.[0] === args[0] &&
-            fact.metadata.args?.[1] === args[1]) {
-          return `Warning: contradiction - ${operator} and ${otherOp} with same args`;
+        if (fact?.metadata?.operator === otherOp &&
+            fact?.metadata?.args?.[0] === args[0] &&
+            fact?.metadata?.args?.[1] === args[1]) {
+          const src = session.semanticIndex?.getContradictsSameArgsSource?.(operator, otherOp);
+          const constraint = src
+            ? `${src.text} (${src.file}:${src.line})`
+            : `contradictsSameArgs ${operator} ${otherOp}`;
+          return {
+            kind: 'contradictsSameArgs',
+            severity: 'reject',
+            message: `Warning: contradiction - ${operator} and ${otherOp} with same args`,
+            newFact: { operator, args: [args[0], args[1]] },
+            conflictingFact: {
+              operator: otherOp,
+              args: [args[0], args[1]],
+              factId: fact?.id ?? null
+            },
+            constraint: src ? { ...src } : null,
+            proof_nl: `${otherOp} ${args[0]} ${args[1]}. ${constraint}. Therefore reject ${operator} ${args[0]} ${args[1]}.`
+          };
         }
       }
     }
@@ -56,11 +93,48 @@ export function checkContradiction(session, metadata) {
   }
   if (!exclusiveValue) return null;
 
+  const indexed = session.factIndex?.getBinary?.(operator, subject, exclusiveValue);
+  if (indexed) {
+    const src = session.semanticIndex?.getMutuallyExclusiveSource?.(operator, value, exclusiveValue);
+    const constraint = src
+      ? `${src.text} (${src.file}:${src.line})`
+      : `mutuallyExclusive ${operator} ${value} ${exclusiveValue}`;
+    return {
+      kind: 'mutuallyExclusive',
+      severity: 'reject',
+      message: `Warning: contradiction - ${subject} is both ${value} and ${exclusiveValue}`,
+      newFact: { operator, args: [subject, value] },
+      conflictingFact: {
+        operator,
+        args: [subject, exclusiveValue],
+        factId: indexed?.id ?? null
+      },
+      constraint: src ? { ...src } : null,
+      proof_nl: `${operator} ${subject} ${exclusiveValue}. ${constraint}. Therefore reject ${operator} ${subject} ${value}.`
+    };
+  }
+  // Fallback for sessions without index (or for facts injected without addToKB).
   for (const fact of session.kbFacts) {
-    if (fact.metadata?.operator === operator &&
-        fact.metadata.args[0] === subject &&
-        fact.metadata.args[1] === exclusiveValue) {
-      return `Warning: contradiction - ${subject} is both ${value} and ${exclusiveValue}`;
+    if (fact?.metadata?.operator === operator &&
+        fact?.metadata?.args?.[0] === subject &&
+        fact?.metadata?.args?.[1] === exclusiveValue) {
+      const src = session.semanticIndex?.getMutuallyExclusiveSource?.(operator, value, exclusiveValue);
+      const constraint = src
+        ? `${src.text} (${src.file}:${src.line})`
+        : `mutuallyExclusive ${operator} ${value} ${exclusiveValue}`;
+      return {
+        kind: 'mutuallyExclusive',
+        severity: 'reject',
+        message: `Warning: contradiction - ${subject} is both ${value} and ${exclusiveValue}`,
+        newFact: { operator, args: [subject, value] },
+        conflictingFact: {
+          operator,
+          args: [subject, exclusiveValue],
+          factId: fact?.id ?? null
+        },
+        constraint: src ? { ...src } : null,
+        proof_nl: `${operator} ${subject} ${exclusiveValue}. ${constraint}. Therefore reject ${operator} ${subject} ${value}.`
+      };
     }
   }
 

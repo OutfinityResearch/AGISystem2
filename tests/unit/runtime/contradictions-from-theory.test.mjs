@@ -13,6 +13,9 @@ describe('Contradictions (theory-driven via SemanticIndex)', () => {
     const r2 = session.learn('hasState Door Closed');
     assert.equal(r2.success, false);
     assert.ok(r2.warnings.some(w => w.includes('contradiction')), JSON.stringify(r2.warnings));
+    assert.ok(typeof r2.proof_nl === 'string' && r2.proof_nl.length > 0);
+    assert.ok(r2.proof_nl.includes('mutuallyExclusive hasState Open Closed'), r2.proof_nl);
+    assert.ok(r2.proof_nl.includes('config/Core/14-constraints.sys2'), r2.proof_nl);
     assert.equal(session.kbFacts.length, 1);
   });
 
@@ -26,6 +29,9 @@ describe('Contradictions (theory-driven via SemanticIndex)', () => {
     const r2 = session.learn('after A B');
     assert.equal(r2.success, false);
     assert.ok(r2.warnings.some(w => w.includes('before') && w.includes('after')), JSON.stringify(r2.warnings));
+    assert.ok(typeof r2.proof_nl === 'string' && r2.proof_nl.length > 0);
+    assert.ok(r2.proof_nl.includes('contradictsSameArgs before after'), r2.proof_nl);
+    assert.ok(r2.proof_nl.includes('config/Core/14-constraints.sys2'), r2.proof_nl);
     assert.equal(session.kbFacts.length, 1);
   });
 

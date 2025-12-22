@@ -77,6 +77,13 @@ end
 end
 
 @Th2Role:Th2Role graph cell role
+    # T helper 2 cell role in immune response
+    @c __Role Cell $cell
+    @r __Role Role $role
+    @immune __Role Domain Immunology
+    @result __Bundle $c $r $immune
+    return $result
+end
 
 @aMPARInsertion:aMPARInsertion graph synapse receptors
     # AMPAR insertion at synapse

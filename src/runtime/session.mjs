@@ -23,6 +23,8 @@ import { ComponentKB } from '../reasoning/component-kb.mjs';
 import { debug_trace, isDebugEnabled } from '../utils/debug.js';
 import { DEFAULT_SEMANTIC_INDEX } from './semantic-index.mjs';
 import { canonicalizeMetadata } from './canonicalize.mjs';
+import { FactIndex } from './fact-index.mjs';
+import { ContradictionError } from './contradiction-error.mjs';
 import { computeFeatureToggles, computeReasoningProfile } from './reasoning-profile.mjs';
 import {
   initOperators as initOperatorsImpl,
@@ -93,6 +95,7 @@ export class Session {
     this._kbBundleCache = null;
     this._kbBundleCacheVersion = -1;
     this.componentKB = new ComponentKB(this);  // Component-indexed KB for fuzzy matching
+    this.factIndex = new FactIndex();          // Exact-match fact index for hot paths
     this.theories = new Map();
     this.operators = new Map();
     this.declaredOperators = new Set();
@@ -227,15 +230,21 @@ export class Session {
 
     const contradiction = this.checkContradiction(metadata);
     if (contradiction) {
-      this.warnings.push(contradiction);
+      const warningText = typeof contradiction === 'string'
+        ? contradiction
+        : (contradiction.message || String(contradiction));
+      this.warnings.push(warningText);
       if (this.rejectContradictions) {
-        throw new Error(`Contradiction rejected: ${contradiction}`);
+        throw new ContradictionError(warningText, typeof contradiction === 'string' ? null : contradiction);
       }
     }
 
     const fact = { id: this.nextFactId++, vector, name, metadata };
     this.kbFacts.push(fact);
     this._kbBundleVersion++;
+
+    // Exact-match index for fast contradiction checks / direct lookups
+    this.factIndex?.addFact?.(fact);
 
     // Index in component KB for fuzzy matching
     this.componentKB.addFact(fact);

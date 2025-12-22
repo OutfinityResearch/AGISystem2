@@ -1,4 +1,5 @@
 import { ComponentKB } from '../reasoning/component-kb.mjs';
+import { FactIndex } from './fact-index.mjs';
 
 function cloneReasoningStats(stats) {
   if (!stats) return {};
@@ -26,6 +27,14 @@ function rebuildComponentKB(session, facts) {
     }
   }
   session.componentKB = componentKB;
+}
+
+function rebuildFactIndex(session, facts) {
+  const index = new FactIndex();
+  for (const fact of facts || []) {
+    index.addFact(fact);
+  }
+  session.factIndex = index;
 }
 
 export function beginTransaction(session) {
@@ -91,6 +100,7 @@ export function rollbackTransaction(session, snapshot) {
   session.reasoningStats = cloneReasoningStats(snapshot.reasoningStats);
 
   rebuildComponentKB(session, session.kbFacts);
+  rebuildFactIndex(session, session.kbFacts);
 }
 
 export default {

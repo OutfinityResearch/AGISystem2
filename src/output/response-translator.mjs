@@ -119,7 +119,10 @@ class LearnTranslator extends BaseTranslator {
     }
 
     if (Array.isArray(reasoningResult.warnings) && reasoningResult.warnings.length > 0) {
-      return makeTranslation(reasoningResult.warnings[0]);
+      const proofText = typeof reasoningResult.proof_nl === 'string'
+        ? reasoningResult.proof_nl
+        : null;
+      return makeTranslation(reasoningResult.warnings[0], proofText);
     }
 
     return makeTranslation(

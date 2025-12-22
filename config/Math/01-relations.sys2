@@ -91,18 +91,20 @@ end
 
 @lessThan:lessThan graph a b
     # Strict ordering: a < b
-    @left __Role Left $a
-    @right __Role Right $b
-    @order LessThan $a $b  # Uses numeric layer
-    return $order
+    @numA __Role Number $a
+    @numB __Role Number $b
+    @comparisonType __Role Comparison LessThan
+    @result __Bundle $numA $numB $comparisonType
+    return $result
 end
 
 @greaterThan:greaterThan graph a b
     # Strict ordering: a > b
-    @left __Role Left $a
-    @right __Role Right $b
-    @order GreaterThan $a $b  # Uses numeric layer
-    return $order
+    @numA __Role Number $a
+    @numB __Role Number $b
+    @comparisonType __Role Comparison GreaterThan
+    @result __Bundle $numA $numB $comparisonType
+    return $result
 end
 
 # ===== Proof Relations (REAL definitions) =====
@@ -616,18 +618,22 @@ end
 
 @leq:leq graph a b
     # Less than or equal: a ≤ b (a < b or a = b)
-    @left __Role Left $a
-    @right __Role Right $b
+    @numA __Role Number $a
+    @numB __Role Number $b
+    @comparisonType __Role Comparison LessThanOrEqual
     @lessOrEqual Or (lessThan $a $b) (equal $a $b)
-    return $lessOrEqual
+    @result __Bundle $numA $numB $comparisonType $lessOrEqual
+    return $result
 end
 
 @geq:geq graph a b
     # Greater than or equal: a ≥ b (a > b or a = b)
-    @left __Role Left $a
-    @right __Role Right $b
+    @numA __Role Number $a
+    @numB __Role Number $b
+    @comparisonType __Role Comparison GreaterThanOrEqual
     @greaterOrEqual Or (greaterThan $a $b) (equal $a $b)
-    return $greaterOrEqual
+    @result __Bundle $numA $numB $comparisonType $greaterOrEqual
+    return $result
 end
 
 @minimum:minimum graph set element

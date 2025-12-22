@@ -1,4 +1,5 @@
 import { parse } from '../parser/parser.mjs';
+import { ContradictionError } from './contradiction-error.mjs';
 
 /**
  * Learn DSL statements into the session.
@@ -40,6 +41,10 @@ export function learn(session, dsl) {
       }
     }
 
+    const contradictionError = (result.errors || []).find(
+      e => e instanceof ContradictionError || e?.name === 'ContradictionError'
+    );
+
     const errors = result.errors.map(e => e.message).concat(loadErrors);
     const success = result.success && loadErrors.length === 0;
 
@@ -49,6 +54,10 @@ export function learn(session, dsl) {
       errors,
       warnings: session.warnings.slice()
     };
+
+    if (contradictionError?.contradiction?.proof_nl) {
+      response.proof_nl = contradictionError.contradiction.proof_nl;
+    }
 
     if (solveResult) {
       response.solveResult = solveResult;

@@ -93,6 +93,7 @@ const ERROR_TYPES = [
   'contradiction',
   'load',
   'superficial',
+  'incomplete',
   'unknown'
 ];
 
@@ -102,6 +103,7 @@ const ERROR_LABELS = {
   contradiction: 'contradiction',
   load: 'load',
   superficial: 'superficial',
+  incomplete: 'incomplete',
   unknown: 'other'
 };
 
@@ -137,6 +139,40 @@ function detectSuperficialDefinitions(content) {
   }
 
   return superficial;
+}
+
+// Detect incomplete definitions (missing 'end')
+function detectIncompleteDefinitions(content) {
+  const incomplete = [];
+  const lines = content.split('\n');
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    // Match operator definitions: @name:name graph ...
+    const opMatch = line.match(/^@(\w+):(\w+)\s+graph/);
+    if (opMatch) {
+      const opName = opMatch[1];
+      let hasEnd = false;
+
+      // Check next 50 lines for 'end'
+      for (let j = i + 1; j < Math.min(i + 50, lines.length); j++) {
+        if (lines[j].match(/^end\s*$/)) {
+          hasEnd = true;
+          break;
+        }
+        // If we hit another operator, this one is incomplete
+        if (lines[j].match(/^@\w+:\w+\s+graph/)) {
+          break;
+        }
+      }
+
+      if (!hasEnd) {
+        incomplete.push(`Operator '${opName}' at line ${i + 1}: missing 'end'`);
+      }
+    }
+  }
+
+  return incomplete;
 }
 // Workers have piped stdio, but parent displays to TTY - enable colors for workers
 const IS_TTY = IS_WORKER || process.stdout.isTTY || process.stderr.isTTY;
@@ -269,9 +305,7 @@ function logProgressStart(label, progress, relPath, prevInfo) {
   const prefix = phase ? `${phase} ` : '';
   let prevText = '';
   if (prevInfo && prevInfo.file) {
-    const statusColor = prevInfo.issues > 0 ? COLORS.red : COLORS.green;
-    const status = prevInfo.issues > 0 ? `ISSUES ${prevInfo.issues}` : 'OK';
-    prevText = ` ${COLORS.dim}|${COLORS.reset} prev: ${COLORS.dim}${prevInfo.file}${COLORS.reset} ${statusColor}${status}${COLORS.reset} ${COLORS.cyan}${formatDuration(prevInfo.durationMs)}${COLORS.reset}`;
+    prevText = ` ${COLORS.dim}|${COLORS.reset} prev: ${COLORS.dim}${prevInfo.file}${COLORS.reset} ${COLORS.cyan}${formatDuration(prevInfo.durationMs)}${COLORS.reset}`;
   }
   const labelColored = `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset}`;
   const progressColored = `${COLORS.magenta}${prefix}${index}/${total}${COLORS.reset}`;
@@ -335,6 +369,11 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
     if (safeKind === 'dependency') {
       if (!report.uniqueMissingDeps) report.uniqueMissingDeps = new Set();
       for (const dep of localMissingDeps) report.uniqueMissingDeps.add(dep);
+
+      // Also update the file-level report in fileReports Map
+      const fileEntry = ensureReport(fileReports, filePath);
+      if (!fileEntry.uniqueMissingDeps) fileEntry.uniqueMissingDeps = new Set();
+      for (const dep of localMissingDeps) fileEntry.uniqueMissingDeps.add(dep);
     }
   };
 
@@ -345,6 +384,12 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
   const superficialDefs = detectSuperficialDefinitions(content);
   for (const msg of superficialDefs) {
     addIssue('superficial', msg);
+  }
+
+  // Detect incomplete definitions
+  const incompleteDefs = detectIncompleteDefinitions(content);
+  for (const msg of incompleteDefs) {
+    addIssue('incomplete', msg);
   }
 
   try {
@@ -725,6 +770,7 @@ async function writeErrorFiles(fileReports, basePlan, stressPlan) {
       sections.push(formatErrorSection('Contradiction Errors', report.contradiction));
       sections.push(formatErrorSection('Load Errors', report.load));
       sections.push(formatErrorSection('Superficial Definitions', report.superficial));
+      sections.push(formatErrorSection('Incomplete Definitions', report.incomplete));
       sections.push(formatErrorSection('Other Errors', report.unknown));
     }
     const content = sections.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
@@ -829,6 +875,128 @@ async function main() {
     }
     for (const file of fileOps.deleted) {
       console.log(`deleted: ${file}`);
+    }
+  }
+
+  // Summary by reading actual .errors files
+  console.log('\n=== FILES WITH PROBLEMS (from .errors files) ===');
+  const errorFiles = [];
+
+  // Scan for all .errors files
+  const allSys2Files = [...basePlan, ...stressPlan];
+  for (const filePath of allSys2Files) {
+    const errorFilePath = `${filePath}.errors`;
+    if (existsSync(errorFilePath)) {
+      errorFiles.push({ sys2File: filePath, errorFile: errorFilePath });
+    }
+  }
+
+  if (errorFiles.length === 0) {
+    console.log('✓ No .errors files found!');
+  } else {
+    console.log(`Found ${errorFiles.length} file(s) with problems:\n`);
+
+    for (const { sys2File, errorFile } of errorFiles) {
+      const relPath = formatRelPath(sys2File);
+      const errorContent = await readFile(errorFile, 'utf-8');
+
+      // Parse .errors file to extract problem types and operators
+      const problems = {
+        syntax: [],
+        missingDeps: [],
+        superficial: [],
+        incomplete: [],
+        other: []
+      };
+
+      const lines = errorContent.split('\n');
+      let currentSection = null;
+
+      for (const line of lines) {
+        if (line.startsWith('## Syntax Errors')) currentSection = 'syntax';
+        else if (line.startsWith('## Missing Dependencies')) currentSection = 'missingDeps';
+        else if (line.startsWith('## Superficial Definitions')) currentSection = 'superficial';
+        else if (line.startsWith('## Incomplete Definitions')) currentSection = 'incomplete';
+        else if (line.startsWith('## ')) currentSection = 'other';
+        else if (currentSection && line.trim().startsWith('-')) {
+          const item = line.trim().substring(1).trim();
+          problems[currentSection].push(item);
+        }
+      }
+
+      const counts = {
+        syntax: problems.syntax.length,
+        missingDeps: problems.missingDeps.length,
+        superficial: problems.superficial.length,
+        incomplete: problems.incomplete.length,
+        other: problems.other.length
+      };
+      const totalProblems = counts.syntax + counts.missingDeps + counts.superficial + counts.incomplete + counts.other;
+
+      const parts = [];
+      if (counts.syntax > 0) parts.push(`${counts.syntax} syntax`);
+      if (counts.missingDeps > 0) parts.push(`${counts.missingDeps} missing-deps`);
+      if (counts.superficial > 0) parts.push(`${counts.superficial} superficial`);
+      if (counts.incomplete > 0) parts.push(`${counts.incomplete} incomplete`);
+      if (counts.other > 0) parts.push(`${counts.other} other`);
+
+      console.log(`\n${relPath}: ${parts.join(', ')} (${totalProblems} total)`);
+
+      // List missing dependencies (operators to be defined)
+      if (problems.missingDeps.length > 0) {
+        console.log('  Missing operators (need definitions):');
+        // Extract unique operator names from "Unknown operator 'X'" messages
+        const operators = new Set();
+        for (const item of problems.missingDeps) {
+          const match = item.match(/Unknown operator '([^']+)'/);
+          if (match) operators.add(match[1]);
+        }
+        const opList = Array.from(operators).sort();
+        console.log(`    Total unique operators: ${opList.length}`);
+        console.log(`    ${opList.join(', ')}`);
+      }
+
+      // List superficial operators (need semantic roles)
+      if (problems.superficial.length > 0) {
+        console.log('  Superficial operators (need semantic roles):');
+        const operators = [];
+        for (const item of problems.superficial) {
+          const match = item.match(/Operator '(\w+)'/);
+          if (match) operators.push(match[1]);
+        }
+        const showCount = Math.min(20, operators.length);
+        console.log(`    ${operators.slice(0, showCount).join(', ')}`);
+        if (operators.length > showCount) {
+          console.log(`    ... and ${operators.length - showCount} more`);
+        }
+      }
+
+      // List incomplete operators (missing 'end')
+      if (problems.incomplete.length > 0) {
+        console.log('  Incomplete operators (missing end):');
+        const operators = [];
+        for (const item of problems.incomplete) {
+          const match = item.match(/Operator '(\w+)'/);
+          if (match) operators.push(match[1]);
+        }
+        const showCount = Math.min(20, operators.length);
+        console.log(`    ${operators.slice(0, showCount).join(', ')}`);
+        if (operators.length > showCount) {
+          console.log(`    ... and ${operators.length - showCount} more`);
+        }
+      }
+
+      // List syntax errors
+      if (problems.syntax.length > 0) {
+        console.log('  Syntax errors:');
+        const showCount = Math.min(5, problems.syntax.length);
+        for (const err of problems.syntax.slice(0, showCount)) {
+          console.log(`    - ${err}`);
+        }
+        if (problems.syntax.length > showCount) {
+          console.log(`    ... and ${problems.syntax.length - showCount} more`);
+        }
+      }
     }
   }
 }

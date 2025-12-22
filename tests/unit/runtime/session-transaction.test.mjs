@@ -26,6 +26,11 @@ describe('Session Transactions', () => {
     assert.equal(session.kbFacts.length, 0);
     assert.equal(session.vocabulary.has('hasState'), false);
     assert.equal(session.declaredOperators.has('hasState'), false);
+
+    // After rollback, the session must not retain stale contradiction state.
+    const ok = session.learn('hasState Box Closed');
+    assert.equal(ok.success, true);
+    assert.equal(session.kbFacts.length, 1);
   });
 
   test('rolls back learn when Load fails inside program', () => {

@@ -10,31 +10,31 @@
 @GreaterThan:GreaterThan graph a b
     # Compares two numeric values
     # Returns true if a > b
-    @left __Role Left $a
-    @right __Role Right $b
-    @comparison ___Bind $left $right
-    @typed ___Bind $comparison NumericType
-    return $typed
+    @numA __Role Number $a
+    @numB __Role Number $b
+    @comparisonType __Role Comparison GreaterThan
+    @result __Bundle $numA $numB $comparisonType
+    return $result
 end
 
 @LessThan:LessThan graph a b
     # Compares two numeric values
     # Returns true if a < b
-    @left __Role Left $a
-    @right __Role Right $b
-    @comparison ___Bind $left $right
-    @typed ___Bind $comparison NumericType
-    return $typed
+    @numA __Role Number $a
+    @numB __Role Number $b
+    @comparisonType __Role Comparison LessThan
+    @result __Bundle $numA $numB $comparisonType
+    return $result
 end
 
 @Equals:Equals graph a b
     # Compares two numeric values for equality
     # Returns true if a == b
-    @left __Role Left $a
-    @right __Role Right $b
-    @comparison ___Bind $left $right
-    @typed ___Bind $comparison NumericType
-    return $typed
+    @numA __Role Number $a
+    @numB __Role Number $b
+    @comparisonType __Role Comparison Equals
+    @result __Bundle $numA $numB $comparisonType
+    return $result
 end
 
 @GreaterThanOrEqual:GreaterThanOrEqual graph a b
@@ -57,38 +57,38 @@ end
 
 @Add:Add graph a b
     # Addition: a + b
-    @left __Role Left $a
-    @right __Role Right $b
-    @operation ___Bind $left $right
-    @typed ___Bind $operation NumericType
-    return $typed
+    @operandA __Role Operand $a
+    @operandB __Role Operand $b
+    @operationType __Role Operation Addition
+    @result __Bundle $operandA $operandB $operationType
+    return $result
 end
 
 @Subtract:Subtract graph a b
     # Subtraction: a - b
-    @left __Role Left $a
-    @right __Role Right $b
-    @operation ___Bind $left $right
-    @typed ___Bind $operation NumericType
-    return $typed
+    @operandA __Role Operand $a
+    @operandB __Role Operand $b
+    @operationType __Role Operation Subtraction
+    @result __Bundle $operandA $operandB $operationType
+    return $result
 end
 
 @Multiply:Multiply graph a b
     # Multiplication: a * b
-    @left __Role Left $a
-    @right __Role Right $b
-    @operation ___Bind $left $right
-    @typed ___Bind $operation NumericType
-    return $typed
+    @operandA __Role Operand $a
+    @operandB __Role Operand $b
+    @operationType __Role Operation Multiplication
+    @result __Bundle $operandA $operandB $operationType
+    return $result
 end
 
 @Divide:Divide graph a b
     # Division: a / b
-    @left __Role Left $a
-    @right __Role Right $b
-    @operation ___Bind $left $right
-    @typed ___Bind $operation NumericType
-    return $typed
+    @operandA __Role Operand $a
+    @operandB __Role Operand $b
+    @operationType __Role Operation Division
+    @result __Bundle $operandA $operandB $operationType
+    return $result
 end
 
 # ===== Threshold Checking =====

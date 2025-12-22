@@ -36,52 +36,71 @@ function parseMutuallyExclusive(content) {
   // Lines like:
   //   mutuallyExclusive hasState Open Closed
   const map = new Map(); // operator -> Array<[a,b]>
-  for (const line of content.split('\n')) {
-    const trimmed = line.trim();
+  const sources = new Map(); // operator -> Map<"a\u001fb", {file,line,text}>
+  const lines = content.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const raw = lines[i];
+    const trimmed = raw.trim();
     if (!trimmed || trimmed.startsWith('#')) continue;
     const m = trimmed.match(/^mutuallyExclusive\s+(\w+)\s+(\w+)\s+(\w+)\s*$/);
     if (!m) continue;
     const [, operator, a, b] = m;
     if (!map.has(operator)) map.set(operator, []);
     map.get(operator).push([a, b]);
+
+    if (!sources.has(operator)) sources.set(operator, new Map());
+    const entry = sources.get(operator);
+    const src = { line: i + 1, text: trimmed };
+    entry.set(`${a}\u001f${b}`, src);
+    entry.set(`${b}\u001f${a}`, src);
   }
-  return map;
+  return { map, sources };
 }
 
 function parseInverseRelations(content) {
   // Lines like:
   //   inverseRelation before after
   const map = new Map(); // op -> inverseOp
-  for (const line of content.split('\n')) {
-    const trimmed = line.trim();
+  const sources = new Map(); // op -> {line,text}
+  const lines = content.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const raw = lines[i];
+    const trimmed = raw.trim();
     if (!trimmed || trimmed.startsWith('#')) continue;
     const m = trimmed.match(/^inverseRelation\s+(\w+)\s+(\w+)\s*$/);
     if (!m) continue;
     const [, op, inv] = m;
     map.set(op, inv);
+    sources.set(op, { line: i + 1, text: trimmed });
   }
-  return map;
+  return { map, sources };
 }
 
 function parseContradictsSameArgs(content) {
   // Lines like:
   //   contradictsSameArgs before after
   const map = new Map(); // op -> Set<otherOp>
+  const sources = new Map(); // op -> Map<otherOp, {line,text}>
   function add(a, b) {
     if (!map.has(a)) map.set(a, new Set());
     map.get(a).add(b);
+    if (!sources.has(a)) sources.set(a, new Map());
+    return sources.get(a);
   }
-  for (const line of content.split('\n')) {
-    const trimmed = line.trim();
+  const lines = content.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const raw = lines[i];
+    const trimmed = raw.trim();
     if (!trimmed || trimmed.startsWith('#')) continue;
     const m = trimmed.match(/^contradictsSameArgs\s+(\w+)\s+(\w+)\s*$/);
     if (!m) continue;
     const [, a, b] = m;
     // Treat as symmetric by default: A contradicts B and B contradicts A.
-    add(a, b);
-    add(b, a);
+    const src = { line: i + 1, text: trimmed };
+    add(a, b).set(b, src);
+    add(b, a).set(a, src);
   }
-  return map;
+  return { map, sources };
 }
 
 export class SemanticIndex {
@@ -92,7 +111,10 @@ export class SemanticIndex {
     inheritableProperties = new Set(),
     mutuallyExclusive = new Map(),
     inverseRelations = new Map(),
-    contradictsSameArgs = new Map()
+    contradictsSameArgs = new Map(),
+    mutuallyExclusiveSources = new Map(),
+    inverseRelationsSources = new Map(),
+    contradictsSameArgsSources = new Map()
   } = {}) {
     this.transitiveRelations = transitiveRelations;
     this.symmetricRelations = symmetricRelations;
@@ -101,6 +123,9 @@ export class SemanticIndex {
     this.mutuallyExclusive = mutuallyExclusive;
     this.inverseRelations = inverseRelations;
     this.contradictsSameArgs = contradictsSameArgs;
+    this.mutuallyExclusiveSources = mutuallyExclusiveSources;
+    this.inverseRelationsSources = inverseRelationsSources;
+    this.contradictsSameArgsSources = contradictsSameArgsSources;
   }
 
   isTransitive(name) {
@@ -134,6 +159,22 @@ export class SemanticIndex {
 
   contradictsSameArgsWith(operator) {
     return this.contradictsSameArgs.get(operator) || new Set();
+  }
+
+  getMutuallyExclusiveSource(operator, a, b) {
+    const byOp = this.mutuallyExclusiveSources.get(operator);
+    if (!byOp) return null;
+    return byOp.get(`${a}\u001f${b}`) || null;
+  }
+
+  getInverseRelationSource(operator) {
+    return this.inverseRelationsSources.get(operator) || null;
+  }
+
+  getContradictsSameArgsSource(operator, otherOp) {
+    const byOp = this.contradictsSameArgsSources.get(operator);
+    if (!byOp) return null;
+    return byOp.get(otherOp) || null;
   }
 
   static fromCoreRelationsFile({ allowFallbackDefaults = true } = {}) {
@@ -174,7 +215,10 @@ export class SemanticIndex {
       ]),
       mutuallyExclusive: new Map(),
       inverseRelations: new Map(),
-      contradictsSameArgs: new Map()
+      contradictsSameArgs: new Map(),
+      mutuallyExclusiveSources: new Map(),
+      inverseRelationsSources: new Map(),
+      contradictsSameArgsSources: new Map()
     });
 
     const configPath = coreConfigPath('00-relations.sys2');
@@ -195,7 +239,10 @@ export class SemanticIndex {
       inheritableProperties,
       mutuallyExclusive: new Map(),
       inverseRelations: new Map(),
-      contradictsSameArgs: new Map()
+      contradictsSameArgs: new Map(),
+      mutuallyExclusiveSources: new Map(),
+      inverseRelationsSources: new Map(),
+      contradictsSameArgsSources: new Map()
     });
 
     if (!allowFallbackDefaults) return idx;
@@ -216,6 +263,7 @@ export class SemanticIndex {
     }
 
     const content = readFileSync(configPath, 'utf-8');
+    const file = 'config/Core/14-constraints.sys2';
     const mutuallyExclusive = parseMutuallyExclusive(content);
     const inverseRelations = parseInverseRelations(content);
     const contradictsSameArgs = parseContradictsSameArgs(content);
@@ -228,22 +276,44 @@ export class SemanticIndex {
       inheritableProperties: new Set(baseIndex.inheritableProperties),
       mutuallyExclusive: new Map(baseIndex.mutuallyExclusive),
       inverseRelations: new Map(baseIndex.inverseRelations),
-      contradictsSameArgs: new Map(baseIndex.contradictsSameArgs)
+      contradictsSameArgs: new Map(baseIndex.contradictsSameArgs),
+      mutuallyExclusiveSources: new Map(baseIndex.mutuallyExclusiveSources || []),
+      inverseRelationsSources: new Map(baseIndex.inverseRelationsSources || []),
+      contradictsSameArgsSources: new Map(baseIndex.contradictsSameArgsSources || [])
     });
 
-    for (const [op, pairs] of mutuallyExclusive.entries()) {
+    for (const [op, pairs] of mutuallyExclusive.map.entries()) {
       const existing = merged.mutuallyExclusive.get(op) || [];
       merged.mutuallyExclusive.set(op, [...existing, ...pairs]);
+      const existingSrc = merged.mutuallyExclusiveSources.get(op) || new Map();
+      const src = mutuallyExclusive.sources.get(op);
+      if (src) {
+        for (const [k, v] of src.entries()) {
+          existingSrc.set(k, { ...v, file });
+        }
+      }
+      merged.mutuallyExclusiveSources.set(op, existingSrc);
     }
 
-    for (const [op, inv] of inverseRelations.entries()) {
+    for (const [op, inv] of inverseRelations.map.entries()) {
       merged.inverseRelations.set(op, inv);
+      const src = inverseRelations.sources.get(op);
+      if (src) merged.inverseRelationsSources.set(op, { ...src, file });
     }
 
-    for (const [op, others] of contradictsSameArgs.entries()) {
+    for (const [op, others] of contradictsSameArgs.map.entries()) {
       const existing = merged.contradictsSameArgs.get(op) || new Set();
       for (const other of others) existing.add(other);
       merged.contradictsSameArgs.set(op, existing);
+
+      const existingSrc = merged.contradictsSameArgsSources.get(op) || new Map();
+      const src = contradictsSameArgs.sources.get(op);
+      if (src) {
+        for (const [other, meta] of src.entries()) {
+          existingSrc.set(other, { ...meta, file });
+        }
+      }
+      merged.contradictsSameArgsSources.set(op, existingSrc);
     }
 
     if (!allowFallbackDefaults) return merged;
