@@ -7,7 +7,7 @@
  */
 
 import { bundle, getDefaultGeometry, similarity } from '../core/operations.mjs';
-import { initHDC, getStrategyId } from '../hdc/facade.mjs';
+import { getProperties, initHDC, getStrategyId } from '../hdc/facade.mjs';
 import { parse } from '../parser/parser.mjs';
 import { Scope } from './scope.mjs';
 import { Vocabulary } from './vocabulary.mjs';
@@ -56,7 +56,6 @@ function dbg(category, ...args) {
 
 export class Session {
   constructor(options = {}) {
-    this.geometry = options.geometry || getDefaultGeometry();
     this.hdcStrategy = options.hdcStrategy || process.env.SYS2_HDC_STRATEGY || 'dense-binary';
     this.reasoningPriority = options.reasoningPriority || getReasoningPriority();
     this.reasoningProfile = computeReasoningProfile({
@@ -74,6 +73,9 @@ export class Session {
     // Note: HDC strategy selection is currently process-global via `hdc/facade`.
     initHDC(this.hdcStrategy);
     this.hdcStrategy = getStrategyId();
+    const strategyDefaultGeometry = getProperties()?.defaultGeometry;
+    const hasEnvGeometry = typeof process.env.SYS2_GEOMETRY === 'string' && process.env.SYS2_GEOMETRY.trim() !== '';
+    this.geometry = options.geometry || (hasEnvGeometry ? getDefaultGeometry() : (strategyDefaultGeometry || getDefaultGeometry()));
 
     this.scope = new Scope();
     this.vocabulary = new Vocabulary(this.geometry);

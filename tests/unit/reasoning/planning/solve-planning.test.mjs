@@ -96,6 +96,38 @@ describe('Planning Solve DSL', () => {
     assert.equal(q.bindings.get('len')?.answer, '0');
   });
 
+  test('should emit planAction facts when actionSig is available (tool + parameters)', () => {
+    const session = new Session({ geometry: 2048 });
+
+    const result = session.learn(`
+      @actionSig:actionSig __Relation
+      actionSig MoveToPark Walk Alice Park
+
+      at Alice Home
+
+      requires MoveToPark at Alice Home
+      causes MoveToPark at Alice Park
+      prevents MoveToPark at Alice Home
+
+      @goal at Alice Park
+      @plan solve planning
+        goal from goal
+        maxDepth from 3
+      end
+    `);
+
+    assert.ok(result.success);
+    assert.ok(result.solveResult);
+    assert.equal(result.solveResult.success, true);
+    assert.deepEqual(result.solveResult.plan, ['MoveToPark']);
+
+    const q = session.query('@q planAction plan 1 ?tool ?p1 ?p2');
+    assert.ok(q.success);
+    assert.equal(q.bindings.get('tool')?.answer, 'Walk');
+    assert.equal(q.bindings.get('p1')?.answer, 'Alice');
+    assert.equal(q.bindings.get('p2')?.answer, 'Park');
+  });
+
   test('should find a safe 7-step plan for wolf-goat-cabbage with a conflict guard constraint', () => {
     const session = new Session({ geometry: 2048 });
 

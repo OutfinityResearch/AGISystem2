@@ -29,27 +29,23 @@ end
 # ============================================================================
 
 @E:E graph a b
-    # Expected value
-    @variable __Role Variable $a
-    @distribution __Role Distribution $b
-    @relation __Pair $variable $distribution
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @P:P graph a b
-    # Probability of event
-    @event __Role Event $a
-    @space __Role Space $b
-    @probability __Role Context ProbabilitySpace
-    @result __Bundle $event $space $probability
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @Var:Var graph a b
-    # Variance of random variable
-    @variable __Role Variable $a
-    @distribution __Role Distribution $b
-    @relation __Pair $variable $distribution
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
@@ -61,36 +57,31 @@ end
 end
 
 @actsOn:actsOn graph a b
-    # Group action on set
-    @group __Role Group $a
-    @set __Role Set $b
-    @relation __Pair $group $set
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @additiveGroup:additiveGroup graph a b
-    # Additive group structure
-    @structure __Role Structure $a
-    @operation __Role Operation $b
-    @relation __Pair $structure $operation
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @allZero:allZero graph a b
-    # All elements are zero
-    @sequence __Role Sequence $a
-    @range __Role Range $b
-    @relation __Pair $sequence $range
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @alternateInterior:alternateInterior graph a b
-    # Alternate interior angles
-    @angle1 __Role Angle1 $a
-    @angle2 __Role Angle2 $b
-    @geometry __Role Context GeometricRelation
-    @result __Bundle $angle1 $angle2 $geometry
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @angle:angle graph figure component
@@ -122,85 +113,72 @@ end
 end
 
 @apply:apply graph a b
-    # Function application
-    @function __Role Function $a
-    @argument __Role Argument $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function $argument $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @areIID:areIID graph a b
-    # Independent identically distributed
-    @variables __Role Variables $a
-    @distribution __Role Distribution $b
-    @relation __Pair $variables $distribution
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @area:area graph a b
-    # Area of geometric figure
-    @figure __Role Figure $a
-    @measure __Role Measure $b
-    @relation __Pair $figure $measure
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @attainsMaximum:attainsMaximum graph a b
-    # Function attains maximum
-    @function __Role Function $a
-    @point __Role Point $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function $point $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @attainsMinimum:attainsMinimum graph a b
-    # Function attains minimum
-    @function __Role Function $a
-    @point __Role Point $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function $point $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @averageFixedPoints:averageFixedPoints graph a b
-    # Average number of fixed points
-    @permutations __Role Permutations $a
-    @set __Role Set $b
-    @relation __Pair $permutations $set
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @base:base graph a b
-    # Base of geometric figure
-    @figure __Role Figure $a
-    @segment __Role Segment $b
-    @relation __Pair $figure $segment
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @binomial:binomial graph a b
-    # Binomial coefficient C(n,k)
-    @n __Role N $a
-    @k __Role K $b
-    @relation __Pair $n $k
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @binomialSum:binomialSum graph a b
-    # Sum of binomial terms
-    @terms __Role Terms $a
-    @power __Role Power $b
-    @relation __Pair $terms $power
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @canExtend:canExtend graph a b
-    # Structure can be extended
-    @structure __Role Structure $a
-    @extension __Role Extension $b
-    @relation __Pair $structure $extension
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
@@ -212,44 +190,38 @@ end
 end
 
 @characteristicPolynomial:characteristicPolynomial graph a b
-    # Characteristic polynomial
-    @matrix __Role Matrix $a
-    @variable __Role Variable $b
-    @relation __Pair $matrix $variable
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @circleWith:circleWith graph a b
-    # Circle with center and radius
-    @center __Role Center $a
-    @radius __Role Radius $b
-    @relation __Pair $center $radius
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @circumference:circumference graph a b
-    # Circumference of circle
-    @circle __Role Circle $a
-    @measure __Role Measure $b
-    @relation __Pair $circle $measure
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @closedInterval:closedInterval graph a b
-    # Closed interval [a, b]
-    @lower __Role Lower $a
-    @upper __Role Upper $b
-    @relation __Pair $lower $upper
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @coInterior:coInterior graph a b
-    # Co-interior angles
-    @angle1 __Role Angle1 $a
-    @angle2 __Role Angle2 $b
-    @geometry __Role Context GeometricRelation
-    @result __Bundle $angle1 $angle2 $geometry
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @complement:complement graph input output
@@ -260,46 +232,38 @@ end
 end
 
 @compose:compose graph a b
-    # Function composition
-    @outer __Role Outer $a
-    @inner __Role Inner $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $outer $inner $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @conditionalP:conditionalP graph a b
-    # Conditional probability P(A|B)
-    @eventA __Role Eventa $a
-    @eventB __Role Eventb $b
-    @probability __Role Context ProbabilitySpace
-    @result __Bundle $eventA $eventB $probability
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @congruent:congruent graph a b
-    # Congruent figures
-    @figure1 __Role Figure1 $a
-    @figure2 __Role Figure2 $b
-    @relation __Pair $figure1 $figure2
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @containsConstants:containsConstants graph a b
-    # Expression contains constants
-    @expression __Role Expression $a
-    @constants __Role Constants $b
-    @relation __Pair $expression $constants
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @continuousFunctions:continuousFunctions graph a b
-    # Space of continuous functions
-    @domain __Role Domain $a
-    @codomain __Role Codomain $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $domain $codomain $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @convergesInDistribution:convergesInDistribution graph function point value
@@ -327,37 +291,31 @@ end
 end
 
 @coprime:coprime graph a b
-    # Coprime numbers (gcd = 1)
-    @number1 __Role Number1 $a
-    @number2 __Role Number2 $b
-    @relation __Pair $number1 $number2
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @corresponding:corresponding graph a b
-    # Corresponding angles
-    @angle1 __Role Angle1 $a
-    @angle2 __Role Angle2 $b
-    @geometry __Role Context GeometricRelation
-    @result __Bundle $angle1 $angle2 $geometry
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @definiteIntegral:definiteIntegral graph a b
-    # Definite integral over interval
-    @function __Role Function $a
-    @interval __Role Interval $b
-    @relation __Pair $function $interval
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @degrees:degrees graph a b
-    # Angle in degrees
-    @angle __Role Angle $a
-    @measure __Role Measure $b
-    @geometry __Role Context GeometricRelation
-    @result __Bundle $angle $measure $geometry
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @derivative:derivative graph function point value
@@ -377,129 +335,107 @@ end
 end
 
 @derives:derives graph a b
-    # Logical derivation
-    @premise __Role Premise $a
-    @conclusion __Role Conclusion $b
-    @relation __Pair $premise $conclusion
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @dimension:dimension graph a b
-    # Dimension of vector space
-    @space __Role Space $a
-    @field __Role Field $b
-    @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $space $field $linearAlgebra
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @disjoint:disjoint graph a b
-    # Disjoint sets with no common elements
-    @setA __Role Seta $a
-    @setB __Role Setb $b
-    @membership __Role Relation SetMembership
-    @result __Bundle $setA $setB $membership
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @distance:distance graph a b
-    # Distance between points
-    @point1 __Role Point1 $a
-    @point2 __Role Point2 $b
-    @relation __Pair $point1 $point2
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @divide:divide graph a b
-    # Division of dividend by divisor
-    @dividend __Role Dividend $a
-    @divisor __Role Divisor $b
-    @division __Role Relation Divisibility
-    @result __Bundle $dividend $divisor $division
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @divides:divides graph a b
-    # Divisor divides dividend evenly
-    @divisor __Role Divisor $a
-    @dividend __Role Dividend $b
-    @division __Role Relation Divisibility
-    @result __Bundle $divisor $dividend $division
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @dominatedBy:dominatedBy graph a b
-    # Function dominated by bound
-    @function __Role Function $a
-    @bound __Role Bound $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function $bound $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @doubleIntegral:doubleIntegral graph a b
-    # Double integral over region
-    @function __Role Function $a
-    @region __Role Region $b
-    @relation __Pair $function $region
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @endpoint1:endpoint1 graph a b
-    # First endpoint of segment
-    @segment __Role Segment $a
-    @point __Role Point $b
-    @relation __Pair $segment $point
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @endpoint2:endpoint2 graph a b
-    # Second endpoint of segment
-    @segment __Role Segment $a
-    @point __Role Point $b
-    @relation __Pair $segment $point
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @eulerPhi:eulerPhi graph a b
-    # Euler totient function
-    @number __Role Number $a
-    @totient __Role Totient $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $number $totient $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @evaluateAt:evaluateAt graph a b
-    # Function evaluation at point
-    @function __Role Function $a
-    @point __Role Point $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function $point $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @existsBijection:existsBijection graph a b
-    # Bijection exists between sets
-    @setA __Role Seta $a
-    @setB __Role Setb $b
-    @relation __Pair $setA $setB
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @existsInjection:existsInjection graph a b
-    # Injection exists from A to B
-    @setA __Role Seta $a
-    @setB __Role Setb $b
-    @relation __Pair $setA $setB
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @existsUnique:existsUnique graph a b
-    # Unique element satisfying property
-    @property __Role Property $a
-    @element __Role Element $b
-    @relation __Pair $property $element
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
@@ -511,44 +447,37 @@ end
 end
 
 @functionProduct:functionProduct graph a b
-    # Pointwise product of functions
-    @function1 __Role Function1 $a
-    @function2 __Role Function2 $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function1 $function2 $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @functionSum:functionSum graph a b
-    # Pointwise sum of functions
-    @function1 __Role Function1 $a
-    @function2 __Role Function2 $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function1 $function2 $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @gcd:gcd graph a b
-    # Greatest common divisor
-    @number1 __Role Number1 $a
-    @number2 __Role Number2 $b
-    @relation __Pair $number1 $number2
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @generatedBy:generatedBy graph a b
-    # Structure generated by elements
-    @structure __Role Structure $a
-    @generators __Role Generators $b
-    @relation __Pair $structure $generators
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @geq:geq graph a b
-    # Greater than or equal relation
-    @number __Role Number $a
-    @bound __Role Bound $b
-    @relation __Pair $number $bound
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
@@ -623,79 +552,66 @@ end
 end
 
 @height:height graph a b
-    # Height of figure
-    @figure __Role Figure $a
-    @measure __Role Measure $b
-    @relation __Pair $figure $measure
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @holds:holds graph a b
-    # Property holds for object
-    @property __Role Property $a
-    @object __Role Object $b
-    @relation __Pair $property $object
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @hypotenuse:hypotenuse graph a b
-    # Hypotenuse of right triangle
-    @triangle __Role Triangle $a
-    @side __Role Side $b
-    @geometry __Role Context GeometricRelation
-    @result __Bundle $triangle $side $geometry
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @identity:identity graph a b
-    # Identity element of structure
-    @structure __Role Structure $a
-    @element __Role Element $b
-    @relation __Pair $structure $element
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @image:image graph a b
-    # Image of function
-    @function __Role Function $a
-    @domain __Role Domain $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function $domain $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @inDomain:inDomain graph a b
-    # Element in function domain
-    @element __Role Element $a
-    @domain __Role Domain $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $element $domain $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @inSigmaAlgebra:inSigmaAlgebra graph a b
-    # Set in sigma-algebra
-    @set __Role Set $a
-    @sigmaAlgebra __Role Sigmaalgebra $b
-    @relation __Pair $set $sigmaAlgebra
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @independent:independent graph a b
-    # Independent events
-    @eventA __Role Eventa $a
-    @eventB __Role Eventb $b
-    @relation __Pair $eventA $eventB
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @innerProduct:innerProduct graph a b
-    # Inner product of vectors
-    @vector1 __Role Vector1 $a
-    @vector2 __Role Vector2 $b
-    @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $vector1 $vector2 $linearAlgebra
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @integral:integral graph function point value
@@ -1163,26 +1079,23 @@ end
 end
 
 @iteratedIntegral:iteratedIntegral graph a b
-    # Iterated integral
-    @function __Role Function $a
-    @bounds __Role Bounds $b
-    @relation __Pair $function $bounds
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @kernel:kernel graph a b
-    # Kernel of homomorphism
-    @morphism __Role Morphism $a
-    @structure __Role Structure $b
-    @relation __Pair $morphism $structure
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @leftCoset:leftCoset graph a b
-    # Left coset of subgroup
-    @element __Role Element $a
-    @subgroup __Role Subgroup $b
-    @relation __Pair $element $subgroup
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
@@ -1208,18 +1121,16 @@ end
 end
 
 @length:length graph a b
-    # Length of segment
-    @segment __Role Segment $a
-    @measure __Role Measure $b
-    @relation __Pair $segment $measure
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @leq:leq graph a b
-    # Less than or equal relation
-    @number __Role Number $a
-    @bound __Role Bound $b
-    @relation __Pair $number $bound
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
@@ -1240,52 +1151,44 @@ end
 end
 
 @lineThrough:lineThrough graph a b
-    # Line through two points
-    @point1 __Role Point1 $a
-    @point2 __Role Point2 $b
-    @relation __Pair $point1 $point2
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @linearComb:linearComb graph a b
-    # Linear combination
-    @coefficients __Role Coefficients $a
-    @vectors __Role Vectors $b
-    @relation __Pair $coefficients $vectors
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @linearlyIndependent:linearlyIndependent graph a b
-    # Linearly independent vectors
-    @vectors __Role Vectors $a
-    @space __Role Space $b
-    @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $vectors $space $linearAlgebra
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @minimum:minimum graph a b
-    # Minimum element of set
-    @set __Role Set $a
-    @element __Role Element $b
-    @membership __Role Relation SetMembership
-    @result __Bundle $set $element $membership
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @modulo:modulo graph a b
-    # Modulo operation
-    @number __Role Number $a
-    @modulus __Role Modulus $b
-    @relation __Pair $number $modulus
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @multiplicativeInverse:multiplicativeInverse graph a b
-    # Multiplicative inverse
-    @element __Role Element $a
-    @structure __Role Structure $b
-    @relation __Pair $element $structure
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
@@ -1297,77 +1200,65 @@ end
 end
 
 @norm:norm graph a b
-    # Norm of vector
-    @vector __Role Vector $a
-    @space __Role Space $b
-    @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $vector $space $linearAlgebra
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @nullity:nullity graph a b
-    # Nullity of matrix
-    @matrix __Role Matrix $a
-    @space __Role Space $b
-    @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $matrix $space $linearAlgebra
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @numberOfOrbits:numberOfOrbits graph a b
-    # Number of orbits under action
-    @action __Role Action $a
-    @set __Role Set $b
-    @relation __Pair $action $set
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @onCircle:onCircle graph a b
-    # Point on circle
-    @point __Role Point $a
-    @circle __Role Circle $b
-    @relation __Pair $point $circle
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @onLine:onLine graph a b
-    # Point on line
-    @point __Role Point $a
-    @line __Role Line $b
-    @relation __Pair $point $line
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @op:op graph a b
-    # Operator application
-    @operator __Role Operator $a
-    @operand __Role Operand $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $operator $operand $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @openInterval:openInterval graph a b
-    # Open interval (a, b)
-    @lower __Role Lower $a
-    @upper __Role Upper $b
-    @relation __Pair $lower $upper
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @order:order graph a b
-    # Order of group element
-    @element __Role Element $a
-    @group __Role Group $b
-    @relation __Pair $element $group
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @orderedPair:orderedPair graph a b
-    # Ordered pair (a, b)
-    @first __Role First $a
-    @second __Role Second $b
-    @relation __Pair $first $second
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
@@ -1379,126 +1270,107 @@ end
 end
 
 @parallel:parallel graph a b
-    # Parallel lines
-    @line1 __Role Line1 $a
-    @line2 __Role Line2 $b
-    @relation __Pair $line1 $line2
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @parallelThrough:parallelThrough graph a b
-    # Parallel line through point
-    @point __Role Point $a
-    @line __Role Line $b
-    @relation __Pair $point $line
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @power:power graph a b
-    # Exponentiation: base to exponent
-    @base __Role Base $a
-    @exponent __Role Exponent $b
-    @relation __Pair $base $exponent
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @product:product graph a b
-    # Product of two factors
-    @factor1 __Role Factor1 $a
-    @factor2 __Role Factor2 $b
-    @relation __Pair $factor1 $factor2
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @productSpace:productSpace graph a b
-    # Product of topological spaces
-    @space1 __Role Space1 $a
-    @space2 __Role Space2 $b
-    @relation __Pair $space1 $space2
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @quotient:quotient graph a b
-    # Quotient of division
-    @dividend __Role Dividend $a
-    @divisor __Role Divisor $b
-    @division __Role Relation Divisibility
-    @result __Bundle $dividend $divisor $division
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @quotientGroup:quotientGroup graph a b
-    # Quotient group
-    @group __Role Group $a
-    @normalSubgroup __Role Normalsubgroup $b
-    @relation __Pair $group $normalSubgroup
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @radius:radius graph a b
-    # Radius of circle
-    @circle __Role Circle $a
-    @length __Role Length $b
-    @relation __Pair $circle $length
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @rank:rank graph a b
-    # Rank of matrix
-    @matrix __Role Matrix $a
-    @field __Role Field $b
-    @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $matrix $field $linearAlgebra
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @ratio:ratio graph a b
-    # Ratio of two quantities
-    @numerator __Role Numerator $a
-    @denominator __Role Denominator $b
-    @relation __Pair $numerator $denominator
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @remainder:remainder graph a b
-    # Remainder after division
-    @dividend __Role Dividend $a
-    @divisor __Role Divisor $b
-    @division __Role Relation Divisibility
-    @result __Bundle $dividend $divisor $division
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @rightCoset:rightCoset graph a b
-    # Right coset of subgroup
-    @subgroup __Role Subgroup $a
-    @element __Role Element $b
-    @relation __Pair $subgroup $element
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @sameArc:sameArc graph a b
-    # Angles subtending same arc
-    @angle1 __Role Angle1 $a
-    @angle2 __Role Angle2 $b
-    @geometry __Role Context GeometricRelation
-    @result __Bundle $angle1 $angle2 $geometry
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @sampleMean:sampleMean graph a b
-    # Sample mean
-    @sample __Role Sample $a
-    @size __Role Size $b
-    @relation __Pair $sample $size
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @scalarMult:scalarMult graph a b
-    # Scalar multiplication
-    @scalar __Role Scalar $a
-    @vector __Role Vector $b
-    @relation __Pair $scalar $vector
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
@@ -1510,12 +1382,10 @@ end
 end
 
 @separatesPoints:separatesPoints graph a b
-    # Function family separates points
-    @family __Role Family $a
-    @space __Role Space $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $family $space $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @setOfSize:setOfSize graph set result
@@ -1568,12 +1438,10 @@ end
 end
 
 @spans:spans graph a b
-    # Vectors span space
-    @vectors __Role Vectors $a
-    @space __Role Space $b
-    @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $vectors $space $linearAlgebra
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @sqrt:sqrt graph input output
@@ -1591,67 +1459,58 @@ end
 end
 
 @standardizedSum:standardizedSum graph a b
-    # Standardized sum
-    @variables __Role Variables $a
-    @count __Role Count $b
-    @relation __Pair $variables $count
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @subtract:subtract graph a b
-    # Subtraction: minuend - subtrahend
-    @minuend __Role Minuend $a
-    @subtrahend __Role Subtrahend $b
-    @relation __Pair $minuend $subtrahend
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @sum:sum graph a b
-    # Sum of two addends
-    @addend1 __Role Addend1 $a
-    @addend2 __Role Addend2 $b
-    @relation __Pair $addend1 $addend2
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @supplementary:supplementary graph a b
-    # Supplementary angles
-    @angle1 __Role Angle1 $a
-    @angle2 __Role Angle2 $b
-    @geometry __Role Context GeometricRelation
-    @result __Bundle $angle1 $angle2 $geometry
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @supremum:supremum graph a b
-    # Supremum (least upper bound)
-    @set __Role Set $a
-    @bound __Role Bound $b
-    @relation __Pair $set $bound
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @symmetricDiff:symmetricDiff graph a b
-    # Symmetric difference of sets
-    @setA __Role Seta $a
-    @setB __Role Setb $b
-    @relation __Pair $setA $setB
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @taylorPolynomial:taylorPolynomial graph a b
-    # Taylor polynomial at point
-    @function __Role Function $a
-    @point __Role Point $b
-    @relation __Pair $function $point
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @transversal:transversal graph a b
-    # Transversal intersecting lines
-    @line __Role Line $a
-    @lines __Role Lines $b
-    @relation __Pair $line $lines
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
@@ -1663,12 +1522,10 @@ end
 end
 
 @uniformClosure:uniformClosure graph a b
-    # Uniform closure of functions
-    @functions __Role Functions $a
-    @space __Role Space $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $functions $space $application
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @union:union graph set result
@@ -1679,45 +1536,38 @@ end
 end
 
 @uniquePrimeFactorization:uniquePrimeFactorization graph a b
-    # Unique prime factorization
-    @number __Role Number $a
-    @factorization __Role Factorization $b
-    @relation __Pair $number $factorization
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @vandermondSum:vandermondSum graph a b
-    # Vandermonde convolution
-    @upper __Role Upper $a
-    @lower __Role Lower $b
-    @relation __Pair $upper $lower
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @vectorAdd:vectorAdd graph a b
-    # Vector addition
-    @vector1 __Role Vector1 $a
-    @vector2 __Role Vector2 $b
-    @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $vector1 $vector2 $linearAlgebra
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 @zero:zero graph a b
-    # Zero element of structure
-    @structure __Role Structure $a
-    @element __Role Element $b
-    @relation __Pair $structure $element
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
     return $relation
 end
 
 @zeroVector:zeroVector graph a b
-    # Zero vector of space
-    @space __Role Space $a
-    @identity __Role Identity $b
-    @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $space $identity $linearAlgebra
-    return $result
+    @left __Role Left $a
+    @right __Role Right $b
+    @relation __Pair $left $right
+    return $relation
 end
 
 # Classical names for easy proof understanding

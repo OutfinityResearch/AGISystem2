@@ -144,18 +144,22 @@ end
 # AUTO-GENERATED: Definitions for operators used in this test
 # ============================================================================
 
-@accessesInterior:accessesInterior graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@accessesInterior:accessesInterior graph reader character
+    # Reader accesses character interior thoughts
+    @r1 __Role Reader $reader
+    @c1 __Role Character $character
+    @rel __Role Relation Accessesinterior
+    @result __Bundle $r1 $c1 $rel
+    return $result
 end
 
-@accessesMultiple:accessesMultiple graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@accessesMultiple:accessesMultiple graph reader perspectives
+    # Reader accesses multiple perspectives
+    @r1 __Role Reader $reader
+    @p1 __Role Perspectives $perspectives
+    @rel __Role Relation Accessesmultiple
+    @result __Bundle $r1 $p1 $rel
+    return $result
 end
 
 @achievesCatharsis:achievesCatharsis graph entity outcome
@@ -417,11 +421,13 @@ end
     return $analysis
 end
 
-@animatesInanimate:animatesInanimate graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@animatesInanimate:animatesInanimate graph narrator object
+    # Narrator animates inanimate object
+    @n1 __Role Narrator $narrator
+    @o1 __Role Object $object
+    @rel __Role Relation Animatesinanimate
+    @result __Bundle $n1 $o1 $rel
+    return $result
 end
 
 @appliestoNonHuman:appliestoNonHuman graph work technique
@@ -431,11 +437,13 @@ end
     return $usage
 end
 
-@asksWhatIf:asksWhatIf graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@asksWhatIf:asksWhatIf graph work scenario
+    # Work asks what-if scenario
+    @w1 __Role Work $work
+    @s1 __Role Scenario $scenario
+    @rel __Role Relation Askswhatif
+    @result __Bundle $w1 $s1 $rel
+    return $result
 end
 
 @associatedWithDante:associatedWithDante graph entity1 entity2
@@ -445,32 +453,40 @@ end
     return $relationship
 end
 
-@atBeginning:atBeginning graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@atBeginning:atBeginning graph event narrative
+    # Event at beginning of narrative
+    @e1 __Role Event $event
+    @n1 __Role Narrative $narrative
+    @rel __Role Relation Atbeginning
+    @result __Bundle $e1 $n1 $rel
+    return $result
 end
 
-@attributesHumanTraits:attributesHumanTraits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@attributesHumanTraits:attributesHumanTraits graph author entity
+    # Author attributes human traits to entity
+    @a1 __Role Author $author
+    @e1 __Role Entity $entity
+    @rel __Role Relation Attributeshumantraits
+    @result __Bundle $a1 $e1 $rel
+    return $result
 end
 
 @audienceKnows:audienceKnows graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # audienceKnows relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Audienceknows
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
-@basedonScience:basedonScience graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@basedonScience:basedonScience graph work science
+    # Work based on science
+    @w1 __Role Work $work
+    @s1 __Role Science $science
+    @rel __Role Relation Basedonscience
+    @result __Bundle $w1 $s1 $rel
+    return $result
 end
 
 @becomesTransformed:becomesTransformed graph initial final
@@ -515,165 +531,211 @@ end
     return $narrative
 end
 
-@believesInProgress:believesInProgress graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@believesInProgress:believesInProgress graph work progress
+    # Work believes in progress
+    @w1 __Role Work $work
+    @p1 __Role ProgressIdea $progress
+    @rel __Role Relation Believesinprogress
+    @result __Bundle $w1 $p1 $rel
+    return $result
 end
 
-@blendsMagicReality:blendsMagicReality graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@blendsMagicReality:blendsMagicReality graph work elements
+    # Work blends magic and reality
+    @w1 __Role Work $work
+    @e1 __Role Elements $elements
+    @rel __Role Relation Blendsmagicreality
+    @result __Bundle $w1 $e1 $rel
+    return $result
 end
 
-@blendsPerspectives:blendsPerspectives graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@blendsPerspectives:blendsPerspectives graph narrator perspectives
+    # Narrator blends perspectives
+    @n1 __Role Narrator $narrator
+    @p1 __Role Perspectives $perspectives
+    @rel __Role Relation Blendsperspectives
+    @result __Bundle $n1 $p1 $rel
+    return $result
 end
 
-@blursReality:blursReality graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@blursReality:blursReality graph work reality
+    # Work blurs reality and fiction
+    @w1 __Role Work $work
+    @r1 __Role Reality $reality
+    @rel __Role Relation Blursreality
+    @result __Bundle $w1 $r1 $rel
+    return $result
 end
 
-@breaksFromTradition:breaksFromTradition graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@breaksFromTradition:breaksFromTradition graph work tradition
+    # Work breaks from tradition
+    @w1 __Role Work $work
+    @t1 __Role Tradition $tradition
+    @rel __Role Relation Breaksfromtradition
+    @result __Bundle $w1 $t1 $rel
+    return $result
 end
 
-@breaksWithTradition:breaksWithTradition graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@breaksWithTradition:breaksWithTradition graph author tradition
+    # Author breaks with tradition
+    @a1 __Role Author $author
+    @t1 __Role Tradition $tradition
+    @rel __Role Relation Breakswithtradition
+    @result __Bundle $a1 $t1 $rel
+    return $result
 end
 
-@buildsAnticipation:buildsAnticipation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@buildsAnticipation:buildsAnticipation graph plot anticipation
+    # Plot builds anticipation
+    @p1 __Role Plot $plot
+    @a1 __Role Anticipation $anticipation
+    @rel __Role Relation Buildsanticipation
+    @result __Bundle $p1 $a1 $rel
+    return $result
 end
 
-@buildsSuspense:buildsSuspense graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@buildsSuspense:buildsSuspense graph plot suspense
+    # Plot builds suspense
+    @p1 __Role Plot $plot
+    @s1 __Role Suspense $suspense
+    @rel __Role Relation Buildssuspense
+    @result __Bundle $p1 $s1 $rel
+    return $result
 end
 
-@buildsTension:buildsTension graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@buildsTension:buildsTension graph plot tension
+    # Plot builds tension
+    @p1 __Role Plot $plot
+    @t1 __Role Tension $tension
+    @rel __Role Relation Buildstension
+    @result __Bundle $p1 $t1 $rel
+    return $result
 end
 
-@buildsToMeaning:buildsToMeaning graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@buildsToMeaning:buildsToMeaning graph symbol meaning
+    # Symbol builds to meaning
+    @s1 __Role Symbol $symbol
+    @m1 __Role Meaning $meaning
+    @rel __Role Relation Buildstomeaning
+    @result __Bundle $s1 $m1 $rel
+    return $result
 end
 
-@canBeObjective:canBeObjective graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@canBeObjective:canBeObjective graph narrator perspective
+    # Narrator can be objective
+    @n1 __Role Narrator $narrator
+    @p1 __Role Perspective $perspective
+    @rel __Role Relation Canbeobjective
+    @result __Bundle $n1 $p1 $rel
+    return $result
 end
 
-@capturesInterior:capturesInterior graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@capturesInterior:capturesInterior graph narrator consciousness
+    # Narrator captures interior consciousness
+    @n1 __Role Narrator $narrator
+    @c1 __Role Consciousness $consciousness
+    @rel __Role Relation Capturesinterior
+    @result __Bundle $n1 $c1 $rel
+    return $result
 end
 
 @capturesPresent:capturesPresent graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # capturesPresent relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Capturespresent
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @celebratesNature:celebratesNature graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # celebratesNature relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Celebratesnature
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @characterAlone:characterAlone graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # characterAlone relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Characteralone
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @charactersIgnorant:charactersIgnorant graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # charactersIgnorant relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Charactersignorant
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @completsReturn:completsReturn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # completsReturn relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Completsreturn
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @conductsinvestigation:conductsinvestigation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # conductsinvestigation relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Conductsinvestigation
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @confrontsMortality:confrontsMortality graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # confrontsMortality relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Confrontsmortality
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @confrontsWrong:confrontsWrong graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # confrontsWrong relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Confrontswrong
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @connectsToTheme:connectsToTheme graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # connectsToTheme relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Connectstotheme
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @consistsOfEpisodes:consistsOfEpisodes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # consistsOfEpisodes relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Consistsofepisodes
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @constructsNarrativeVoice:constructsNarrativeVoice graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # constructsNarrativeVoice relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Constructsnarrativevoice
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @containsAllusion:containsAllusion graph entity property
@@ -698,17 +760,21 @@ end
 end
 
 @contributesToMeaning:contributesToMeaning graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # contributesToMeaning relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Contributestomeaning
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @conveysMoral:conveysMoral graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # conveysMoral relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Conveysmoral
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @createsAlternateReality:createsAlternateReality graph agent target
@@ -1055,24 +1121,30 @@ end
 end
 
 @demandsContinuation:demandsContinuation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # demandsContinuation relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Demandscontinuation
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @demonstratesPostmodernPlay:demonstratesPostmodernPlay graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # demonstratesPostmodernPlay relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Demonstratespostmodernplay
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @demonstratesRomanticIdeals:demonstratesRomanticIdeals graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # demonstratesRomanticIdeals relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Demonstratesromanticideals
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @depictsAlienation:depictsAlienation graph symbol meaning
@@ -1174,10 +1246,12 @@ end
 end
 
 @determinesReliability:determinesReliability graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # determinesReliability relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Determinesreliability
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @developsFemalCharacters:developsFemalCharacters graph agent target
@@ -1202,136 +1276,174 @@ end
 end
 
 @disruptsTime:disruptsTime graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # disruptsTime relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Disruptstime
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @distractsReader:distractsReader graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # distractsReader relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Distractsreader
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @dominatesNovel:dominatesNovel graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # dominatesNovel relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Dominatesnovel
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @downplaysSeriousness:downplaysSeriousness graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # downplaysSeriousness relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Downplaysseriousness
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @drivesPlot:drivesPlot graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # drivesPlot relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Drivesplot
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @embedsInHistory:embedsInHistory graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # embedsInHistory relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Embedsinhistory
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @embedsStory:embedsStory graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # embedsStory relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Embedsstory
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @embracesDeterminism:embracesDeterminism graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # embracesDeterminism relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Embracesdeterminism
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @embracesDifficulty:embracesDifficulty graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # embracesDifficulty relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Embracesdifficulty
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @emphasizesDarkness:emphasizesDarkness graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # emphasizesDarkness relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Emphasizesdarkness
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @emphasizesDifference:emphasizesDifference graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # emphasizesDifference relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Emphasizesdifference
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
-@emphasizesEmotion:emphasizesEmotion graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@emphasizesEmotion:emphasizesEmotion graph work emotion
+    # Work emphasizes emotion
+    @w1 __Role Work $work
+    @e1 __Role Emotion $emotion
+    @rel __Role Relation Emphasizesemotion
+    @result __Bundle $w1 $e1 $rel
+    return $result
 end
 
 @emphasizesEnvironment:emphasizesEnvironment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # emphasizesEnvironment relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Emphasizesenvironment
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @emphasizesFictionality:emphasizesFictionality graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # emphasizesFictionality relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Emphasizesfictionality
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @emphasizesHumanism:emphasizesHumanism graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # emphasizesHumanism relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Emphasizeshumanism
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
-@emphasizesIndividual:emphasizesIndividual graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@emphasizesIndividual:emphasizesIndividual graph work individual
+    # Work emphasizes individual
+    @w1 __Role Work $work
+    @i1 __Role Individual $individual
+    @rel __Role Relation Emphasizesindividual
+    @result __Bundle $w1 $i1 $rel
+    return $result
 end
 
 @emphasizesQualities:emphasizesQualities graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # emphasizesQualities relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Emphasizesqualities
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @emphasizesReason:emphasizesReason graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # emphasizesReason relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Emphasizesreason
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
-@emphasizesSubjective:emphasizesSubjective graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@emphasizesSubjective:emphasizesSubjective graph work subjective
+    # Work emphasizes subjective
+    @w1 __Role Work $work
+    @s1 __Role Subjective $subjective
+    @rel __Role Relation Emphasizessubjective
+    @result __Bundle $w1 $s1 $rel
+    return $result
 end
 
 @employsExaggeration:employsExaggeration graph work technique
@@ -1391,10 +1503,12 @@ end
 end
 
 @encountersCatalyst:encountersCatalyst graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # encountersCatalyst relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Encounterscatalyst
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @endsAt:endsAt graph event context
@@ -1405,31 +1519,39 @@ end
 end
 
 @engagesReader:engagesReader graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # engagesReader relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Engagesreader
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @engagesinBattle:engagesinBattle graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # engagesinBattle relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Engagesinbattle
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @enrichesContext:enrichesContext graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # enrichesContext relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Enrichescontext
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @enrichesMeaning:enrichesMeaning graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # enrichesMeaning relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Enrichesmeaning
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @establishesNarrator:establishesNarrator graph agent target
@@ -1461,59 +1583,75 @@ end
 end
 
 @evokesCatharsis:evokesCatharsis graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # evokesCatharsis relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Evokescatharsis
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @evokesFear:evokesFear graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # evokesFear relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Evokesfear
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @evokesFeeling:evokesFeeling graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # evokesFeeling relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Evokesfeeling
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @evokesNature:evokesNature graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # evokesNature relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Evokesnature
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @evokesPity:evokesPity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # evokesPity relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Evokespity
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @evokesTerror:evokesTerror graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # evokesTerror relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Evokesterror
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @evokespPast:evokespPast graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # evokespPast relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Evokesppast
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @evokessympathy:evokessympathy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # evokessympathy relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Evokessympathy
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @evolvesOverTime:evolvesOverTime graph initial final
@@ -1524,10 +1662,12 @@ end
 end
 
 @exaltsIndividual:exaltsIndividual graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # exaltsIndividual relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Exaltsindividual
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @examinesBinaries:examinesBinaries graph work subject
@@ -1650,31 +1790,39 @@ end
 end
 
 @examinseRelationship:examinseRelationship graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # examinseRelationship relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Examinserelationship
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @experiencesGrowth:experiencesGrowth graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # experiencesGrowth relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Experiencesgrowth
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @experiencesRenewal:experiencesRenewal graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # experiencesRenewal relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Experiencesrenewal
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @experimentsWithForm:experimentsWithForm graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # experimentsWithForm relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Experimentswithform
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @exploresConsciousness:exploresConsciousness graph work subject
@@ -1713,143 +1861,183 @@ end
 end
 
 @expressesEmotion:expressesEmotion graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # expressesEmotion relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Expressesemotion
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @facesInternalConflict:facesInternalConflict graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # facesInternalConflict relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Facesinternalconflict
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @facesMainConflict:facesMainConflict graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # facesMainConflict relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Facesmainconflict
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @facesMonster:facesMonster graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # facesMonster relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Facesmonster
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @facesObstacles:facesObstacles graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # facesObstacles relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Facesobstacles
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @facesStruggle:facesStruggle graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # facesStruggle relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Facesstruggle
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @fallsIntoDarkness:fallsIntoDarkness graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # fallsIntoDarkness relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Fallsintodarkness
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @focusesOnContemporary:focusesOnContemporary graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # focusesOnContemporary relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Focusesoncontemporary
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @focusesOnIndividual:focusesOnIndividual graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # focusesOnIndividual relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Focusesonindividual
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @focusesOnLanguage:focusesOnLanguage graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # focusesOnLanguage relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Focusesonlanguage
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @focusesOnLove:focusesOnLove graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # focusesOnLove relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Focusesonlove
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @focusesOnOrdinary:focusesOnOrdinary graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # focusesOnOrdinary relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Focusesonordinary
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @focusesOnReader:focusesOnReader graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # focusesOnReader relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Focusesonreader
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @focusesOnSingle:focusesOnSingle graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # focusesOnSingle relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Focusesonsingle
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @focusesOnText:focusesOnText graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # focusesOnText relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Focusesontext
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @focusesOnWomen:focusesOnWomen graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # focusesOnWomen relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Focusesonwomen
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @followsConvention:followsConvention graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # followsConvention relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Followsconvention
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @followsEpicConventions:followsEpicConventions graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # followsEpicConventions relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Followsepicconventions
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @followsNecessity:followsNecessity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # followsNecessity relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Followsnecessity
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @formsIdentity:formsIdentity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # formsIdentity relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Formsidentity
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @gainsWealth:gainsWealth graph entity outcome
@@ -1860,31 +2048,39 @@ end
 end
 
 @generatesSymbolicMeaning:generatesSymbolicMeaning graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # generatesSymbolicMeaning relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Generatessymbolicmeaning
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @givesBackstory:givesBackstory graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # givesBackstory relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Givesbackstory
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @givesHumanQualities:givesHumanQualities graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # givesHumanQualities relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Giveshumanqualities
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @givesVoice:givesVoice graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # givesVoice relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Givesvoice
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @hasABABABCCRhyme:hasABABABCCRhyme graph entity property
@@ -3064,101 +3260,129 @@ end
 end
 
 @hiddenFromOthers:hiddenFromOthers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # hiddenFromOthers relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Hiddenfromothers
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @highlightsDifferences:highlightsDifferences graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # highlightsDifferences relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Highlightsdifferences
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @highlightsQualities:highlightsQualities graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # highlightsQualities relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Highlightsqualities
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @identifiesTarget:identifiesTarget graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # identifiesTarget relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Identifiestarget
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @imitatesSound:imitatesSound graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # imitatesSound relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Imitatessound
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @inMiddleAges:inMiddleAges graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # inMiddleAges relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Inmiddleages
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @includesAnagnorisis:includesAnagnorisis graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # includesAnagnorisis relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Includesanagnorisis
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @includesExperiences:includesExperiences graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # includesExperiences relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Includesexperiences
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @includesGreece:includesGreece graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # includesGreece relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Includesgreece
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @includesMagic:includesMagic graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # includesMagic relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Includesmagic
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @includesMagicalElements:includesMagicalElements graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # includesMagicalElements relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Includesmagicalelements
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @includesPeripeteia:includesPeripeteia graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # includesPeripeteia relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Includesperipeteia
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @includesRome:includesRome graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # includesRome relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Includesrome
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @includesSupernatural:includesSupernatural graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # includesSupernatural relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Includessupernatural
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @incorporatesMemory:incorporatesMemory graph work technique
@@ -3176,108 +3400,138 @@ end
 end
 
 @increasesComplexity:increasesComplexity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # increasesComplexity relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Increasescomplexity
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @influencesAction:influencesAction graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # influencesAction relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Influencesaction
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @integratesIntoSociety:integratesIntoSociety graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # integratesIntoSociety relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Integratesintosociety
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @interpretsSymbol:interpretsSymbol graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # interpretsSymbol relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Interpretssymbol
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @interruptsChronology:interruptsChronology graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # interruptsChronology relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Interruptschronology
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @interweavesThreads:interweavesThreads graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # interweavesThreads relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Interweavesthreads
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @introducesSymbol:introducesSymbol graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # introducesSymbol relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Introducessymbol
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @introducesTheme:introducesTheme graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # introducesTheme relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Introducestheme
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @involvesAdventure:involvesAdventure graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # involvesAdventure relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Involvesadventure
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @involvesChoice:involvesChoice graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # involvesChoice relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Involveschoice
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @involvesEducation:involvesEducation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # involvesEducation relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Involveseducation
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @involvesInitiation:involvesInitiation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # involvesInitiation relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Involvesinitiation
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @involvesLossOfInnocence:involvesLossOfInnocence graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # involvesLossOfInnocence relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Involveslossofinnocence
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @involvesSelfDiscovery:involvesSelfDiscovery graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # involvesSelfDiscovery relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Involvesselfdiscovery
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @involvesTransformation:involvesTransformation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # involvesTransformation relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Involvestransformation
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @isAlienationTheme:isAlienationTheme graph entity property
@@ -4345,164 +4599,210 @@ end
 end
 
 @lacksHeroicTraits:lacksHeroicTraits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # lacksHeroicTraits relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Lacksheroictraits
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @lacksMeter:lacksMeter graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # lacksMeter relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Lacksmeter
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @lacksRhyme:lacksRhyme graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # lacksRhyme relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Lacksrhyme
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @leadsToCatastrophe:leadsToCatastrophe graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # leadsToCatastrophe relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Leadstocatastrophe
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @leadsToConvergence:leadsToConvergence graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # leadsToConvergence relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Leadstoconvergence
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @leadsToDownfall:leadsToDownfall graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # leadsToDownfall relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Leadstodownfall
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @leavesUnresolved:leavesUnresolved graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # leavesUnresolved relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Leavesunresolved
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @leavesonDeparture:leavesonDeparture graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # leavesonDeparture relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Leavesondeparture
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @maintainsConsistency:maintainsConsistency graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # maintainsConsistency relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Maintainsconsistency
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @maintainsEngagement:maintainsEngagement graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # maintainsEngagement relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Maintainsengagement
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @maintainsPlausibility:maintainsPlausibility graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # maintainsPlausibility relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Maintainsplausibility
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @maintainsSuspense:maintainsSuspense graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # maintainsSuspense relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Maintainssuspense
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @makesAnxious:makesAnxious graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # makesAnxious relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Makesanxious
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @makesClearComparison:makesClearComparison graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # makesClearComparison relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Makesclearcomparison
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @makesComparison:makesComparison graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # makesComparison relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Makescomparison
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @makesExplicitReference:makesExplicitReference graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # makesExplicitReference relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Makesexplicitreference
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @makesReference:makesReference graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # makesReference relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Makesreference
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @mayBeBiased:mayBeBiased graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # mayBeBiased relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Maybebiased
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @mayUseStream:mayUseStream graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # mayUseStream relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Mayusestream
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @mediatesStory:mediatesStory graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # mediatesStory relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Mediatesstory
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @mimicsRealisticThought:mimicsRealisticThought graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # mimicsRealisticThought relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Mimicsrealisticthought
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @minimizesImportance:minimizesImportance graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # minimizesImportance relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Minimizesimportance
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @movesTowardMaturity:movesTowardMaturity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # movesTowardMaturity relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Movestowardmaturity
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @occursInternally:occursInternally graph event context
@@ -4520,10 +4820,12 @@ end
 end
 
 @offerspPerspective:offerspPerspective graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # offerspPerspective relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Offerspperspective
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @opposesProtagonist:opposesProtagonist graph element1 element2
@@ -4534,45 +4836,57 @@ end
 end
 
 @performsModernistExperiment:performsModernistExperiment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # performsModernistExperiment relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Performsmodernistexperiment
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @placesAdjacent:placesAdjacent graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # placesAdjacent relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Placesadjacent
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @placesInContrast:placesInContrast graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # placesInContrast relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Placesincontrast
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @pointsToFuture:pointsToFuture graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # pointsToFuture relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Pointstofuture
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @portraitsSociety:portraitsSociety graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # portraitsSociety relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Portraitssociety
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @preparesReader:preparesReader graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # preparesReader relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Preparesreader
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @presentsCrime:presentsCrime graph agent target
@@ -4597,115 +4911,147 @@ end
 end
 
 @prizesImagination:prizesImagination graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # prizesImagination relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Prizesimagination
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @producedMelodicEffect:producedMelodicEffect graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # producedMelodicEffect relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Producedmelodiceffect
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @producesCatharsis:producesCatharsis graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # producesCatharsis relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Producescatharsis
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @projectsFuture:projectsFuture graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # projectsFuture relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Projectsfuture
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @providesClues:providesClues graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # providesClues relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Providesclues
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @providesCommentary:providesCommentary graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # providesCommentary relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Providescommentary
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @providesConstant:providesConstant graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # providesConstant relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Providesconstant
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
-@providesContext:providesContext graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@providesContext:providesContext graph setting context
+    # Setting provides context
+    @s1 __Role Setting $setting
+    @c1 __Role Context $context
+    @rel __Role Relation Providescontext
+    @result __Bundle $s1 $c1 $rel
+    return $result
 end
 
 @providesFalseClue:providesFalseClue graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # providesFalseClue relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Providesfalseclue
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @providesHint:providesHint graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # providesHint relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Provideshint
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @providesHistoricalContext:providesHistoricalContext graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # providesHistoricalContext relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Provideshistoricalcontext
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @providesIllumination:providesIllumination graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # providesIllumination relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Providesillumination
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
-@providesInsight:providesInsight graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@providesInsight:providesInsight graph narrator insight
+    # Narrator provides insight
+    @n1 __Role Narrator $narrator
+    @i1 __Role Insight $insight
+    @rel __Role Relation Providesinsight
+    @result __Bundle $n1 $i1 $rel
+    return $result
 end
 
 @providesShorthand:providesShorthand graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # providesShorthand relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Providesshorthand
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @pursuesInnovation:pursuesInnovation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # pursuesInnovation relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Pursuesinnovation
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @pursuesSublime:pursuesSublime graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # pursuesSublime relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Pursuessublime
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @questionsIdentity:questionsIdentity graph work subject
@@ -4737,108 +5083,138 @@ end
 end
 
 @reactsAgainstEnlightenment:reactsAgainstEnlightenment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # reactsAgainstEnlightenment relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Reactsagainstenlightenment
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @receivesCall:receivesCall graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # receivesCall relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Receivescall
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @referencesOtherTexts:referencesOtherTexts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # referencesOtherTexts relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Referencesothertexts
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @refersToExternal:refersToExternal graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # refersToExternal relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Referstoexternal
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @reflectsContemporary:reflectsContemporary graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # reflectsContemporary relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Reflectscontemporary
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @reflectsCulture:reflectsCulture graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # reflectsCulture relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Reflectsculture
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @reflectsEra:reflectsEra graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # reflectsEra relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Reflectsera
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @reflectsIndustrial:reflectsIndustrial graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # reflectsIndustrial relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Reflectsindustrial
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @reflectsModernCondition:reflectsModernCondition graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # reflectsModernCondition relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Reflectsmoderncondition
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @reflectsValues:reflectsValues graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # reflectsValues relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Reflectsvalues
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @rejectsTraditional:rejectsTraditional graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # rejectsTraditional relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Rejectstraditional
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @remainsStable:remainsStable graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # remainsStable relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Remainsstable
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @remainsUnchanging:remainsUnchanging graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # remainsUnchanging relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Remainsunchanging
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @repeatsSound:repeatsSound graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # repeatsSound relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Repeatssound
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @repeatsVowelSound:repeatsVowelSound graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # repeatsVowelSound relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Repeatsvowelsound
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @representsAbstractMeaning:representsAbstractMeaning graph symbol meaning
@@ -4849,38 +5225,48 @@ end
 end
 
 @requiresInterpretation:requiresInterpretation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # requiresInterpretation relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Requiresinterpretation
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @requiresKnowledge:requiresKnowledge graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # requiresKnowledge relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Requiresknowledge
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @resolvesPlot:resolvesPlot graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # resolvesPlot relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Resolvesplot
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @returnsTobBeginning:returnsTobBeginning graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # returnsTobBeginning relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Returnstobbeginning
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @returnsTopast:returnsTopast graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # returnsTopast relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Returnstopast
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @revealsCharacter:revealsCharacter graph agent target
@@ -4968,10 +5354,12 @@ end
 end
 
 @revivesClassical:revivesClassical graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # revivesClassical relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Revivesclassical
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @seeksFairness:seeksFairness graph agent goal
@@ -5010,66 +5398,84 @@ end
 end
 
 @seemsContrived:seemsContrived graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # seemsContrived relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Seemscontrived
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @seemsFamiliar:seemsFamiliar graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # seemsFamiliar relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Seemsfamiliar
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @seemsRealistic:seemsRealistic graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # seemsRealistic relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Seemsrealistic
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @seemsRelatable:seemsRelatable graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # seemsRelatable relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Seemsrelatable
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @servesAsAnchor:servesAsAnchor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # servesAsAnchor relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Servesasanchor
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @servesFunctionalRole:servesFunctionalRole graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # servesFunctionalRole relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Servesfunctionalrole
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @setsExpectation:setsExpectation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # setsExpectation relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Setsexpectation
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @setsPerpsective:setsPerpsective graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # setsPerpsective relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Setsperpsective
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @setsTone:setsTone graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # setsTone relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Setstone
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @showsAgency:showsAgency graph agent target
@@ -5192,31 +5598,39 @@ end
 end
 
 @soundsNatural:soundsNatural graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # soundsNatural relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Soundsnatural
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @soundsRealistic:soundsRealistic graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # soundsRealistic relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Soundsrealistic
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @speaksAloud:speaksAloud graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # speaksAloud relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Speaksaloud
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @speaksToAudience:speaksToAudience graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # speaksToAudience relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Speakstoaudience
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @startsAt:startsAt graph event context
@@ -5248,164 +5662,210 @@ end
 end
 
 @staysUnchanged:staysUnchanged graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # staysUnchanged relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Staysunchanged
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @striivesForObjectivity:striivesForObjectivity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # striivesForObjectivity relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Striivesforobjectivity
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @studiesConvention:studiesConvention graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # studiesConvention relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Studiesconvention
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @studiesDreams:studiesDreams graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # studiesDreams relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Studiesdreams
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @studiesHumanNatureRelation:studiesHumanNatureRelation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # studiesHumanNatureRelation relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Studieshumannaturerelation
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @studiesIdentity:studiesIdentity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # studiesIdentity relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Studiesidentity
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @studiesIdeology:studiesIdeology graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # studiesIdeology relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Studiesideology
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @studiesPower:studiesPower graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # studiesPower relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Studiespower
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @studiesRepresentation:studiesRepresentation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # studiesRepresentation relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Studiesrepresentation
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @studiesResistance:studiesResistance graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # studiesResistance relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Studiesresistance
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @subvertsNorms:subvertsNorms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # subvertsNorms relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Subvertsnorms
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @suffersDownfall:suffersDownfall graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # suffersDownfall relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Suffersdownfall
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @triggersMemory:triggersMemory graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # triggersMemory relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Triggersmemory
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
-@undergoesChange:undergoesChange graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+@undergoesChange:undergoesChange graph character change
+    # Character undergoes change
+    @c1 __Role Character $character
+    @c1 __Role Change $change
+    @rel __Role Relation Undergoeschange
+    @result __Bundle $c1 $c1 $rel
+    return $result
 end
 
 @undergoesDevelopment:undergoesDevelopment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # undergoesDevelopment relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Undergoesdevelopment
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @undergoesInitiation:undergoesInitiation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # undergoesInitiation relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Undergoesinitiation
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @undergoesSocialRise:undergoesSocialRise graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # undergoesSocialRise relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Undergoessocialrise
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @undergoesgrowth:undergoesgrowth graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # undergoesgrowth relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Undergoesgrowth
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @undergoespDevelopment:undergoespDevelopment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # undergoespDevelopment relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Undergoespdevelopment
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @undertakesEpicJourney:undertakesEpicJourney graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # undertakesEpicJourney relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Undertakesepicjourney
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @undertakesJourney:undertakesJourney graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # undertakesJourney relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Undertakesjourney
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @undertakesQuest:undertakesQuest graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # undertakesQuest relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Undertakesquest
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @usedForNarrative:usedForNarrative graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # usedForNarrative relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Usedfornarrative
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @usesABABCBCPattern:usesABABCBCPattern graph work technique
@@ -5766,52 +6226,66 @@ end
 end
 
 @valuesImagination:valuesImagination graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # valuesImagination relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Valuesimagination
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @valuesIndividual:valuesIndividual graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # valuesIndividual relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Valuesindividual
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @valuesLiberty:valuesLiberty graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # valuesLiberty relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Valuesliberty
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @valuesScience:valuesScience graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # valuesScience relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Valuesscience
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @valuesSpontaneity:valuesSpontaneity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # valuesSpontaneity relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Valuesspontaneity
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @viewsAsAutonomous:viewsAsAutonomous graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # viewsAsAutonomous relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Viewsasautonomous
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 @viewsReaderAsActive:viewsReaderAsActive graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
-    return $relation
+    # viewsReaderAsActive relationship
+    @a1 __Role A $a
+    @b1 __Role B $b
+    @rel __Role Relation Viewsreaderasactive
+    @result __Bundle $a1 $b1 $rel
+    return $result
 end
 
 // Literature Theory - Comprehensive DSL

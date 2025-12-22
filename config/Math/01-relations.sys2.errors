@@ -1,0 +1,8 @@
+# Errors for config/Math/01-relations.sys2
+
+## Superficial Definitions
+
+- [dense-binary/holographicPriority] Operator 'lessThan' at line 92: uses superficial Left/Right roles
+- [dense-binary/holographicPriority] Operator 'greaterThan' at line 100: uses superficial Left/Right roles
+- [dense-binary/holographicPriority] Operator 'leq' at line 617: uses superficial Left/Right roles
+- [dense-binary/holographicPriority] Operator 'geq' at line 625: uses superficial Left/Right roles

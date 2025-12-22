@@ -1,0 +1,11 @@
+# Errors for config/Core/04a-numeric.sys2
+
+## Superficial Definitions
+
+- [dense-binary/holographicPriority] Operator 'GreaterThan' at line 10: uses superficial Left/Right roles
+- [dense-binary/holographicPriority] Operator 'LessThan' at line 20: uses superficial Left/Right roles
+- [dense-binary/holographicPriority] Operator 'Equals' at line 30: uses superficial Left/Right roles
+- [dense-binary/holographicPriority] Operator 'Add' at line 58: uses superficial Left/Right roles
+- [dense-binary/holographicPriority] Operator 'Subtract' at line 67: uses superficial Left/Right roles
+- [dense-binary/holographicPriority] Operator 'Multiply' at line 76: uses superficial Left/Right roles
+- [dense-binary/holographicPriority] Operator 'Divide' at line 85: uses superficial Left/Right roles

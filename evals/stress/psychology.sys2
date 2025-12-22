@@ -13,51 +13,51 @@
 end
 
 @about:about graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @subject __Role Subject $a
+    @topic __Role Topic $b
+    @relation __Bundle $subject $topic
     return $relation
 end
 
 @above:above graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @entity __Role Entity $a
+    @level __Role Level $b
+    @relation __Bundle $entity $level
     return $relation
 end
 
 @accesses:accesses graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @agent __Role Agent $a
+    @resource __Role Resource $b
+    @relation __Bundle $agent $resource
     return $relation
 end
 
 @accounts:accounts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @phenomenon __Role Phenomenon $b
+    @relation __Bundle $theory $phenomenon
     return $relation
 end
 
 @achieves:achieves graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @agent __Role Agent $a
+    @goal __Role Goal $b
+    @relation __Bundle $agent $goal
     return $relation
 end
 
 @adds:adds graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @element __Role Element $b
+    @relation __Bundle $process $element
     return $relation
 end
 
 @affected:affected graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @target __Role Target $a
+    @factor __Role Factor $b
+    @relation __Bundle $target $factor
     return $relation
 end
 
@@ -69,177 +69,177 @@ end
 end
 
 @allows:allows graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @mechanism __Role Mechanism $a
+    @possibility __Role Possibility $b
+    @relation __Bundle $mechanism $possibility
     return $relation
 end
 
 @applies:applies graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @intervention __Role Intervention $a
+    @context __Role Context $b
+    @relation __Bundle $intervention $context
     return $relation
 end
 
 @are:are graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @entity __Role Entity $a
+    @category __Role Category $b
+    @relation __Bundle $entity $category
     return $relation
 end
 
 @argues:argues graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theorist __Role Theorist $a
+    @position __Role Position $b
+    @relation __Bundle $theorist $position
     return $relation
 end
 
 @asserts:asserts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @claim __Role Claim $b
+    @relation __Bundle $theory $claim
     return $relation
 end
 
 @assessed:assessed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @test __Role Test $a
+    @construct __Role Construct $b
+    @relation __Bundle $test $construct
     return $relation
 end
 
 @assessedBy:assessedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @construct __Role Construct $a
+    @instrument __Role Instrument $b
+    @relation __Bundle $construct $instrument
     return $relation
 end
 
 @associated:associated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @correlate __Role Correlate $b
+    @relation __Bundle $factor $correlate
     return $relation
 end
 
 @associatedWith:associatedWith graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @correlate __Role Correlate $b
+    @relation __Bundle $factor $correlate
     return $relation
 end
 
 @attributes:attributes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @cause __Role Cause $b
+    @relation __Bundle $theory $cause
     return $relation
 end
 
 @base:base graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @concept __Role Concept $a
+    @foundation __Role Foundation $b
+    @relation __Bundle $concept $foundation
     return $relation
 end
 
 @based:based graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @concept __Role Concept $a
+    @foundation __Role Foundation $b
+    @relation __Bundle $concept $foundation
     return $relation
 end
 
 @becomes:becomes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @entity __Role Entity $a
+    @state __Role State $b
+    @relation __Bundle $entity $state
     return $relation
 end
 
 @begins:begins graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @phase __Role Phase $b
+    @relation __Bundle $process $phase
     return $relation
 end
 
 @benefits:benefits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @intervention __Role Intervention $a
+    @outcome __Role Outcome $b
+    @relation __Bundle $intervention $outcome
     return $relation
 end
 
 @between:between graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @element __Role Element $a
+    @element __Role Element $b
+    @relation __Bundle $element $element
     return $relation
 end
 
 @boosts:boosts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @variable __Role Variable $b
+    @relation __Bundle $factor $variable
     return $relation
 end
 
 @called:called graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @concept __Role Concept $a
+    @name __Role Name $b
+    @relation __Bundle $concept $name
     return $relation
 end
 
 @canBe:canBe graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @entity __Role Entity $a
+    @state __Role State $b
+    @relation __Bundle $entity $state
     return $relation
 end
 
 @canBecome:canBecome graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @entity __Role Entity $a
+    @state __Role State $b
+    @relation __Bundle $entity $state
     return $relation
 end
 
 @canCause:canCause graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @outcome __Role Outcome $b
+    @relation __Bundle $factor $outcome
     return $relation
 end
 
 @canLeadTo:canLeadTo graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @outcome __Role Outcome $b
+    @relation __Bundle $factor $outcome
     return $relation
 end
 
 @can_be:can_be graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @entity __Role Entity $a
+    @state __Role State $b
+    @relation __Bundle $entity $state
     return $relation
 end
 
 @can_undermine:can_undermine graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @outcome __Role Outcome $b
+    @relation __Bundle $factor $outcome
     return $relation
 end
 
 @cause:cause graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @effect __Role Effect $b
+    @relation __Bundle $factor $effect
     return $relation
 end
 
@@ -251,149 +251,149 @@ end
 end
 
 @challenging:challenging graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @task __Role Task $a
+    @difficulty __Role Difficulty $b
+    @relation __Bundle $task $difficulty
     return $relation
 end
 
 @cluster:cluster graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @element __Role Element $b
+    @relation __Bundle $group $element
     return $relation
 end
 
 @combines:combines graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @composite __Role Composite $a
+    @element __Role Element $b
+    @relation __Bundle $composite $element
     return $relation
 end
 
 @common:common graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @pattern __Role Pattern $a
+    @domain __Role Domain $b
+    @relation __Bundle $pattern $domain
     return $relation
 end
 
 @concurrent:concurrent graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @event __Role Event $a
+    @event __Role Event $b
+    @relation __Bundle $event $event
     return $relation
 end
 
 @contrasts:contrasts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @concept __Role Concept $a
+    @concept __Role Concept $b
+    @relation __Bundle $concept $concept
     return $relation
 end
 
 @converts:converts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @output __Role Output $b
+    @relation __Bundle $process $output
     return $relation
 end
 
 @core:core graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @construct __Role Construct $a
+    @aspect __Role Aspect $b
+    @relation __Bundle $construct $aspect
     return $relation
 end
 
 @correlates:correlates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @variable __Role Variable $a
+    @variable __Role Variable $b
+    @relation __Bundle $variable $variable
     return $relation
 end
 
 @created:created graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @creator __Role Creator $a
+    @product __Role Product $b
+    @relation __Bundle $creator $product
     return $relation
 end
 
 @creates:creates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @product __Role Product $b
+    @relation __Bundle $process $product
     return $relation
 end
 
 @deals:deals graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @topic __Role Topic $b
+    @relation __Bundle $theory $topic
     return $relation
 end
 
 @declines:declines graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @variable __Role Variable $a
+    @context __Role Context $b
+    @relation __Bundle $variable $context
     return $relation
 end
 
 @decreases:decreases graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @variable __Role Variable $b
+    @relation __Bundle $factor $variable
     return $relation
 end
 
 @demonstrated:demonstrated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @study __Role Study $a
+    @finding __Role Finding $b
+    @relation __Bundle $study $finding
     return $relation
 end
 
 @demonstrates:demonstrates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @study __Role Study $a
+    @finding __Role Finding $b
+    @relation __Bundle $study $finding
     return $relation
 end
 
 @depends:depends graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @dependent __Role Dependent $a
+    @independent __Role Independent $b
+    @relation __Bundle $dependent $independent
     return $relation
 end
 
 @derives:derives graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @derivative __Role Derivative $a
+    @source __Role Source $b
+    @relation __Bundle $derivative $source
     return $relation
 end
 
 @described:described graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @phenomenon __Role Phenomenon $a
+    @theorist __Role Theorist $b
+    @relation __Bundle $phenomenon $theorist
     return $relation
 end
 
 @describes:describes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @phenomenon __Role Phenomenon $b
+    @relation __Bundle $theory $phenomenon
     return $relation
 end
 
 @developed:developed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @developer __Role Developer $a
+    @product __Role Product $b
+    @relation __Bundle $developer $product
     return $relation
 end
 
@@ -405,44 +405,44 @@ end
 end
 
 @differs:differs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @entity __Role Entity $a
+    @entity __Role Entity $b
+    @relation __Bundle $entity $entity
     return $relation
 end
 
 @difficult:difficult graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @task __Role Task $a
+    @context __Role Context $b
+    @relation __Bundle $task $context
     return $relation
 end
 
 @discovered:discovered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @discoverer __Role Discoverer $a
+    @finding __Role Finding $b
+    @relation __Bundle $discoverer $finding
     return $relation
 end
 
 @dismisses:dismisses graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @claim __Role Claim $b
+    @relation __Bundle $theory $claim
     return $relation
 end
 
 @distinct:distinct graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @entity __Role Entity $a
+    @entity __Role Entity $b
+    @relation __Bundle $entity $entity
     return $relation
 end
 
 @divides:divides graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @whole __Role Whole $a
+    @part __Role Part $b
+    @relation __Bundle $whole $part
     return $relation
 end
 
@@ -454,16 +454,16 @@ end
 end
 
 @early:early graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @stage __Role Stage $a
+    @period __Role Period $b
+    @relation __Bundle $stage $period
     return $relation
 end
 
 @effective:effective graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @intervention __Role Intervention $a
+    @context __Role Context $b
+    @relation __Bundle $intervention $context
     return $relation
 end
 
@@ -475,23 +475,23 @@ end
 end
 
 @emphasizes:emphasizes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @aspect __Role Aspect $b
+    @relation __Bundle $theory $aspect
     return $relation
 end
 
 @enhances:enhances graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @outcome __Role Outcome $b
+    @relation __Bundle $factor $outcome
     return $relation
 end
 
 @environmental:environmental graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @domain __Role Domain $b
+    @relation __Bundle $factor $domain
     return $relation
 end
 
@@ -510,16 +510,16 @@ end
 end
 
 @excessive:excessive graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @variable __Role Variable $a
+    @level __Role Level $b
+    @relation __Bundle $variable $level
     return $relation
 end
 
 @expanded:expanded graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @developer __Role Developer $a
+    @theory __Role Theory $b
+    @relation __Bundle $developer $theory
     return $relation
 end
 
@@ -531,86 +531,86 @@ end
 end
 
 @explains:explains graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @phenomenon __Role Phenomenon $b
+    @relation __Bundle $theory $phenomenon
     return $relation
 end
 
 @explores:explores graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @research __Role Research $a
+    @domain __Role Domain $b
+    @relation __Bundle $research $domain
     return $relation
 end
 
 @extends:extends graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @domain __Role Domain $b
+    @relation __Bundle $theory $domain
     return $relation
 end
 
 @faces:faces graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @agent __Role Agent $a
+    @challenge __Role Challenge $b
+    @relation __Bundle $agent $challenge
     return $relation
 end
 
 @favors:favors graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @approach __Role Approach $b
+    @relation __Bundle $theory $approach
     return $relation
 end
 
 @fears:fears graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @person __Role Person $a
+    @threat __Role Threat $b
+    @relation __Bundle $person $threat
     return $relation
 end
 
 @flows:flows graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @direction __Role Direction $b
+    @relation __Bundle $process $direction
     return $relation
 end
 
 @focused:focused graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @target __Role Target $b
+    @relation __Bundle $process $target
     return $relation
 end
 
 @focuses:focuses graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @aspect __Role Aspect $b
+    @relation __Bundle $theory $aspect
     return $relation
 end
 
 @follows:follows graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @sequence __Role Sequence $a
+    @predecessor __Role Predecessor $b
+    @relation __Bundle $sequence $predecessor
     return $relation
 end
 
 @found:found graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @study __Role Study $a
+    @finding __Role Finding $b
+    @relation __Bundle $study $finding
     return $relation
 end
 
 @goldstandard:goldstandard graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @method __Role Method $a
+    @domain __Role Domain $b
+    @relation __Bundle $method $domain
     return $relation
 end
 
@@ -622,23 +622,23 @@ end
 end
 
 @guided:guided graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @principle __Role Principle $b
+    @relation __Bundle $process $principle
     return $relation
 end
 
 @had:had graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @entity __Role Entity $a
+    @property __Role Property $b
+    @relation __Bundle $entity $property
     return $relation
 end
 
 @handles:handles graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @system __Role System $a
+    @input __Role Input $b
+    @relation __Bundle $system $input
     return $relation
 end
 
@@ -671,44 +671,44 @@ end
 end
 
 @helps:helps graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @outcome __Role Outcome $b
+    @relation __Bundle $factor $outcome
     return $relation
 end
 
 @highly:highly graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @entity __Role Entity $a
+    @property __Role Property $b
+    @relation __Bundle $entity $property
     return $relation
 end
 
 @highly_effective:highly_effective graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @intervention __Role Intervention $a
+    @context __Role Context $b
+    @relation __Bundle $intervention $context
     return $relation
 end
 
 @holds:holds graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @position __Role Position $b
+    @relation __Bundle $theory $position
     return $relation
 end
 
 @ignores:ignores graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @factor __Role Factor $b
+    @relation __Bundle $theory $factor
     return $relation
 end
 
 @illustrates:illustrates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @example __Role Example $a
+    @principle __Role Principle $b
+    @relation __Bundle $example $principle
     return $relation
 end
 
@@ -720,44 +720,44 @@ end
 end
 
 @impaired:impaired graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @function __Role Function $a
+    @condition __Role Condition $b
+    @relation __Bundle $function $condition
     return $relation
 end
 
 @impairs:impairs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @function __Role Function $b
+    @relation __Bundle $factor $function
     return $relation
 end
 
 @includes:includes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @whole __Role Whole $a
+    @part __Role Part $b
+    @relation __Bundle $whole $part
     return $relation
 end
 
 @increases:increases graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @variable __Role Variable $b
+    @relation __Bundle $factor $variable
     return $relation
 end
 
 @independent:independent graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @variable __Role Variable $a
+    @variable __Role Variable $b
+    @relation __Bundle $variable $variable
     return $relation
 end
 
 @independently:independently graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @context __Role Context $b
+    @relation __Bundle $process $context
     return $relation
 end
 
@@ -769,51 +769,51 @@ end
 end
 
 @informs:informs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @evidence __Role Evidence $a
+    @theory __Role Theory $b
+    @relation __Bundle $evidence $theory
     return $relation
 end
 
 @insight:insight graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @understanding __Role Understanding $a
+    @phenomenon __Role Phenomenon $b
+    @relation __Bundle $understanding $phenomenon
     return $relation
 end
 
 @insufficient:insufficient graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @resource __Role Resource $a
+    @requirement __Role Requirement $b
+    @relation __Bundle $resource $requirement
     return $relation
 end
 
 @involves:involves graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @component __Role Component $b
+    @relation __Bundle $process $component
     return $relation
 end
 
 @known:known graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @concept __Role Concept $a
+    @attribute __Role Attribute $b
+    @relation __Bundle $concept $attribute
     return $relation
 end
 
 @lack_of:lack_of graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @absence __Role Absence $a
+    @element __Role Element $b
+    @relation __Bundle $absence $element
     return $relation
 end
 
 @lasts:lasts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @state __Role State $a
+    @duration __Role Duration $b
+    @relation __Bundle $state $duration
     return $relation
 end
 
@@ -839,44 +839,44 @@ end
 end
 
 @less_severe:less_severe graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @condition __Role Condition $a
+    @comparison __Role Comparison $b
+    @relation __Bundle $condition $comparison
     return $relation
 end
 
 @limited:limited graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @capacity __Role Capacity $a
+    @constraint __Role Constraint $b
+    @relation __Bundle $capacity $constraint
     return $relation
 end
 
 @limits:limits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @constraint __Role Constraint $a
+    @capacity __Role Capacity $b
+    @relation __Bundle $constraint $capacity
     return $relation
 end
 
 @maintains:maintains graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @mechanism __Role Mechanism $a
+    @state __Role State $b
+    @relation __Bundle $mechanism $state
     return $relation
 end
 
 @measured:measured graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @instrument __Role Instrument $a
+    @variable __Role Variable $b
+    @relation __Bundle $instrument $variable
     return $relation
 end
 
 @miller_called:miller_called graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @researcher __Role Researcher $a
+    @concept __Role Concept $b
+    @relation __Bundle $researcher $concept
     return $relation
 end
 
@@ -888,9 +888,9 @@ end
 end
 
 @more_prominent:more_prominent graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @feature __Role Feature $a
+    @context __Role Context $b
+    @relation __Bundle $feature $context
     return $relation
 end
 
@@ -902,107 +902,107 @@ end
 end
 
 @needs:needs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @system __Role System $a
+    @requirement __Role Requirement $b
+    @relation __Bundle $system $requirement
     return $relation
 end
 
 @needsCognition:needsCognition graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @requirement __Role Requirement $b
+    @relation __Bundle $process $requirement
     return $relation
 end
 
 @not_all:not_all graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @set __Role Set $a
+    @property __Role Property $b
+    @relation __Bundle $set $property
     return $relation
 end
 
 @not_cause:not_cause graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @effect __Role Effect $b
+    @relation __Bundle $factor $effect
     return $relation
 end
 
 @occurs:occurs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @event __Role Event $a
+    @context __Role Context $b
+    @relation __Bundle $event $context
     return $relation
 end
 
 @offers:offers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @source __Role Source $a
+    @option __Role Option $b
+    @relation __Bundle $source $option
     return $relation
 end
 
 @often:often graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @pattern __Role Pattern $a
+    @context __Role Context $b
+    @relation __Bundle $pattern $context
     return $relation
 end
 
 @operates:operates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @system __Role System $a
+    @mode __Role Mode $b
+    @relation __Bundle $system $mode
     return $relation
 end
 
 @optimal:optimal graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @state __Role State $a
+    @context __Role Context $b
+    @relation __Bundle $state $context
     return $relation
 end
 
 @organized:organized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @system __Role System $a
+    @structure __Role Structure $b
+    @relation __Bundle $system $structure
     return $relation
 end
 
 @oriented:oriented graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @approach __Role Approach $a
+    @direction __Role Direction $b
+    @relation __Bundle $approach $direction
     return $relation
 end
 
 @overcomes:overcomes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @obstacle __Role Obstacle $b
+    @relation __Bundle $process $obstacle
     return $relation
 end
 
 @overestimates:overestimates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @variable __Role Variable $b
+    @relation __Bundle $process $variable
     return $relation
 end
 
 @overly:overly graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @state __Role State $a
+    @property __Role Property $b
+    @relation __Bundle $state $property
     return $relation
 end
 
 @pairs:pairs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @element __Role Element $b
+    @relation __Bundle $process $element
     return $relation
 end
 
@@ -1014,23 +1014,23 @@ end
 end
 
 @persists:persists graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @state __Role State $a
+    @condition __Role Condition $b
+    @relation __Bundle $state $condition
     return $relation
 end
 
 @pioneered:pioneered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @pioneer __Role Pioneer $a
+    @field __Role Field $b
+    @relation __Bundle $pioneer $field
     return $relation
 end
 
 @primarily:primarily graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @focus __Role Focus $a
+    @aspect __Role Aspect $b
+    @relation __Bundle $focus $aspect
     return $relation
 end
 
@@ -1042,128 +1042,128 @@ end
 end
 
 @promotes:promotes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @outcome __Role Outcome $b
+    @relation __Bundle $factor $outcome
     return $relation
 end
 
 @proposed:proposed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theorist __Role Theorist $a
+    @theory __Role Theory $b
+    @relation __Bundle $theorist $theory
     return $relation
 end
 
 @proposes:proposes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @concept __Role Concept $b
+    @relation __Bundle $theory $concept
     return $relation
 end
 
 @provides:provides graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @source __Role Source $a
+    @resource __Role Resource $b
+    @relation __Bundle $source $resource
     return $relation
 end
 
 @raised:raised graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @agent __Role Agent $a
+    @issue __Role Issue $b
+    @relation __Bundle $agent $issue
     return $relation
 end
 
 @ranges:ranges graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @variable __Role Variable $a
+    @scope __Role Scope $b
+    @relation __Bundle $variable $scope
     return $relation
 end
 
 @rapid:rapid graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @rate __Role Rate $b
+    @relation __Bundle $process $rate
     return $relation
 end
 
 @rated:rated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @rater __Role Rater $a
+    @target __Role Target $b
+    @relation __Bundle $rater $target
     return $relation
 end
 
 @reached:reached graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @milestone __Role Milestone $b
+    @relation __Bundle $process $milestone
     return $relation
 end
 
 @reduce:reduce graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @intervention __Role Intervention $a
+    @variable __Role Variable $b
+    @relation __Bundle $intervention $variable
     return $relation
 end
 
 @rejects:rejects graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @claim __Role Claim $b
+    @relation __Bundle $theory $claim
     return $relation
 end
 
 @relationship:relationship graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @factor __Role Factor $b
+    @relation __Bundle $factor $factor
     return $relation
 end
 
 @releases:releases graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @system __Role System $a
+    @substance __Role Substance $b
+    @relation __Bundle $system $substance
     return $relation
 end
 
 @relies:relies graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @mechanism __Role Mechanism $b
+    @relation __Bundle $process $mechanism
     return $relation
 end
 
 @removes:removes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @element __Role Element $b
+    @relation __Bundle $process $element
     return $relation
 end
 
 @renamed:renamed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @agent __Role Agent $a
+    @concept __Role Concept $b
+    @relation __Bundle $agent $concept
     return $relation
 end
 
 @replaced:replaced graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @new __Role New $a
+    @old __Role Old $b
+    @relation __Bundle $new $old
     return $relation
 end
 
 @represents:represents graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @symbol __Role Symbol $a
+    @concept __Role Concept $b
+    @relation __Bundle $symbol $concept
     return $relation
 end
 
@@ -1182,44 +1182,44 @@ end
 end
 
 @risk:risk graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @outcome __Role Outcome $b
+    @relation __Bundle $factor $outcome
     return $relation
 end
 
 @risks:risks graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @outcome __Role Outcome $b
+    @relation __Bundle $factor $outcome
     return $relation
 end
 
 @serves:serves graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @element __Role Element $a
+    @function __Role Function $b
+    @relation __Bundle $element $function
     return $relation
 end
 
 @sets:sets graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @parameter __Role Parameter $b
+    @relation __Bundle $process $parameter
     return $relation
 end
 
 @shaped:shaped graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @influence __Role Influence $a
+    @development __Role Development $b
+    @relation __Bundle $influence $development
     return $relation
 end
 
 @showed:showed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @study __Role Study $a
+    @result __Role Result $b
+    @relation __Bundle $study $result
     return $relation
 end
 
@@ -1231,163 +1231,163 @@ end
 end
 
 @significantly:significantly graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @effect __Role Effect $a
+    @context __Role Context $b
+    @relation __Bundle $effect $context
     return $relation
 end
 
 @stabilizes:stabilizes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @mechanism __Role Mechanism $a
+    @state __Role State $b
+    @relation __Bundle $mechanism $state
     return $relation
 end
 
 @states:states graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @theory __Role Theory $a
+    @proposition __Role Proposition $b
+    @relation __Bundle $theory $proposition
     return $relation
 end
 
 @status:status graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @entity __Role Entity $a
+    @state __Role State $b
+    @relation __Bundle $entity $state
     return $relation
 end
 
 @stores:stores graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @system __Role System $a
+    @information __Role Information $b
+    @relation __Bundle $system $information
     return $relation
 end
 
 @strong:strong graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @relationship __Role Relationship $a
+    @context __Role Context $b
+    @relation __Bundle $relationship $context
     return $relation
 end
 
 @structured:structured graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @system __Role System $a
+    @organization __Role Organization $b
+    @relation __Bundle $system $organization
     return $relation
 end
 
 @struggles:struggles graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @agent __Role Agent $a
+    @challenge __Role Challenge $b
+    @relation __Bundle $agent $challenge
     return $relation
 end
 
 @studied:studied graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @researcher __Role Researcher $a
+    @phenomenon __Role Phenomenon $b
+    @relation __Bundle $researcher $phenomenon
     return $relation
 end
 
 @studies:studies graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @field __Role Field $a
+    @topic __Role Topic $b
+    @relation __Bundle $field $topic
     return $relation
 end
 
 @subject:subject graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @study __Role Study $a
+    @topic __Role Topic $b
+    @relation __Bundle $study $topic
     return $relation
 end
 
 @suggests:suggests graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @evidence __Role Evidence $a
+    @conclusion __Role Conclusion $b
+    @relation __Bundle $evidence $conclusion
     return $relation
 end
 
 @superior:superior graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @option __Role Option $a
+    @comparison __Role Comparison $b
+    @relation __Bundle $option $comparison
     return $relation
 end
 
 @supports:supports graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @evidence __Role Evidence $a
+    @claim __Role Claim $b
+    @relation __Bundle $evidence $claim
     return $relation
 end
 
 @susceptible:susceptible graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @entity __Role Entity $a
+    @risk __Role Risk $b
+    @relation __Bundle $entity $risk
     return $relation
 end
 
 @symptom:symptom graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @disorder __Role Disorder $a
+    @sign __Role Sign $b
+    @relation __Bundle $disorder $sign
     return $relation
 end
 
 @targets:targets graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @intervention __Role Intervention $a
+    @symptom __Role Symptom $b
+    @relation __Bundle $intervention $symptom
     return $relation
 end
 
 @tends:tends graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @entity __Role Entity $a
+    @pattern __Role Pattern $b
+    @relation __Bundle $entity $pattern
     return $relation
 end
 
 @threatens:threatens graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @factor __Role Factor $a
+    @target __Role Target $b
+    @relation __Bundle $factor $target
     return $relation
 end
 
 @top:top graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @hierarchy __Role Hierarchy $a
+    @level __Role Level $b
+    @relation __Bundle $hierarchy $level
     return $relation
 end
 
 @typically:typically graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @pattern __Role Pattern $a
+    @context __Role Context $b
+    @relation __Bundle $pattern $context
     return $relation
 end
 
 @typicallyLasts:typicallyLasts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @state __Role State $a
+    @duration __Role Duration $b
+    @relation __Bundle $state $duration
     return $relation
 end
 
 @underlying:underlying graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @basis __Role Basis $a
+    @surface __Role Surface $b
+    @relation __Bundle $basis $surface
     return $relation
 end
 
@@ -1399,16 +1399,16 @@ end
 end
 
 @useful:useful graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @tool __Role Tool $a
+    @context __Role Context $b
+    @relation __Bundle $tool $context
     return $relation
 end
 
 @varies:varies graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @variable __Role Variable $a
+    @context __Role Context $b
+    @relation __Bundle $variable $context
     return $relation
 end
 

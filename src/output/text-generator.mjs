@@ -131,6 +131,12 @@ export class TextGenerator {
       // Planning
       plan: (a) => a.length >= 2 ? `Plan ${a[0]} has ${a[1]} steps.` : `plan(${a.join(', ')})`,
       planStep: (a) => a.length >= 3 ? `Step ${a[1]} of plan ${a[0]} is ${a[2]}.` : `planStep(${a.join(', ')})`,
+      planAction: (a) => {
+        if (a.length >= 5) return `Step ${a[1]} of plan ${a[0]} uses ${a[2]} with ${a[3]} and ${a[4]}.`;
+        if (a.length >= 4) return `Step ${a[1]} of plan ${a[0]} uses ${a[2]} with ${a[3]}.`;
+        if (a.length >= 3) return `Step ${a[1]} of plan ${a[0]} uses ${a[2]}.`;
+        return `planAction(${a.join(', ')})`;
+      },
 
       // Event seating / Constraint satisfaction
       seatedAt: (a) => a.length >= 2 ? `${a[0]} is seated at ${a[1]}.` : `seatedAt(${a.join(', ')})`,

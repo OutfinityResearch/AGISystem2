@@ -42,6 +42,11 @@ export class HolographicQueryEngine {
     this.config = getHolographicThresholds(strategy);
     this.thresholds = getThresholds(strategy);
 
+    // Cache: vocabulary view for topKSimilar
+    // Avoid rebuilding / rescanning KB for every query in holographicPriority mode.
+    this._vocabCache = null;
+    this._vocabCacheAtomCount = -1;
+
     dbg('INIT', `Strategy: ${strategy}, MinSim: ${this.config.UNBIND_MIN_SIMILARITY}`);
   }
 
@@ -257,35 +262,23 @@ export class HolographicQueryEngine {
    * @private
    */
   getVocabulary() {
+    const atomCount = this.session.vocabulary?.atoms?.size ?? 0;
+    if (this._vocabCache && this._vocabCacheAtomCount === atomCount) {
+      return this._vocabCache;
+    }
+
     const vocab = new Map();
-
-    // From session vocabulary atoms
-    if (this.session.vocabulary?.atoms) {
-      for (const [name, vec] of this.session.vocabulary.atoms) {
+    const atoms = this.session.vocabulary?.atoms;
+    if (atoms) {
+      for (const [name, vec] of atoms) {
         if (typeof name !== 'string') continue;
-        if (!name.startsWith('__') && !name.startsWith('Pos')) {
-          vocab.set(name, vec);
-        }
+        if (name.startsWith('__') || name.startsWith('Pos')) continue;
+        vocab.set(name, vec);
       }
     }
 
-    // From KB fact metadata (add any entities not in vocabulary)
-    if (this.session.kbFacts) {
-      for (const fact of this.session.kbFacts) {
-        this.session.reasoningStats.kbScans++;
-        if (fact.metadata?.args) {
-          for (const arg of fact.metadata.args) {
-            if (typeof arg === 'string' && !vocab.has(arg)) {
-              const vec = this.session.resolve({ name: arg, type: 'Identifier' });
-              if (vec) {
-                vocab.set(arg, vec);
-              }
-            }
-          }
-        }
-      }
-    }
-
+    this._vocabCache = vocab;
+    this._vocabCacheAtomCount = atomCount;
     return vocab;
   }
 
@@ -371,6 +364,11 @@ export class HolographicQueryEngine {
     dbg('VALIDATE', `Checking: ${statementStr}`);
 
     try {
+      // Fast path: exact fact exists in KB (no need for full proof search)
+      if (this.hasDirectFact(operatorName, args)) {
+        return { valid: true, steps: [statementStr] };
+      }
+
       // Use symbolic prove to validate
       const statement = this.parseStatement(operatorName, args);
       const result = this.validatorEngine.prove(statement);
@@ -389,6 +387,26 @@ export class HolographicQueryEngine {
       dbg('VALIDATE', `Error: ${e.message}`);
       return { valid: false };
     }
+  }
+
+  hasDirectFact(operatorName, args) {
+    if (!operatorName || !Array.isArray(args) || args.length === 0) return false;
+    const componentKB = this.session?.componentKB;
+    if (!componentKB?.findByOperatorAndArg0) return false;
+    const candidates = componentKB.findByOperatorAndArg0(operatorName, args[0]);
+    for (const fact of candidates || []) {
+      if (!fact || fact.operator !== operatorName) continue;
+      if (!Array.isArray(fact.args) || fact.args.length !== args.length) continue;
+      let ok = true;
+      for (let i = 0; i < args.length; i++) {
+        if (fact.args[i] !== args[i]) {
+          ok = false;
+          break;
+        }
+      }
+      if (ok) return true;
+    }
+    return false;
   }
 
   /**

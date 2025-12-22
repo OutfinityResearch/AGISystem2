@@ -341,6 +341,20 @@ function executePlanningSolveBlock(executor, stmt) {
   const planVec = buildPlanFactVector(session, 'plan', [planName, lengthStr]);
   session.addToKB(planVec, `${planName}_plan`, { operator: 'plan', args: [planName, lengthStr], source: 'planning' });
 
+  // Optional: action signatures for nicer planAction facts.
+  // Convention: actionSig <ActionName> <Tool> <Param1> <Param2>
+  const actionSig = new Map();
+  for (const fact of session.kbFacts || []) {
+    const meta = fact?.metadata;
+    if (!meta || meta.operator !== 'actionSig') continue;
+    if (!Array.isArray(meta.args) || meta.args.length < 4) continue;
+    const [actionName, tool, param1, param2] = meta.args;
+    if (!actionName || !tool) continue;
+    if (!actionSig.has(actionName)) {
+      actionSig.set(actionName, { tool, param1, param2 });
+    }
+  }
+
   const stepFacts = [];
   for (let i = 0; i < planning.plan.length; i++) {
     const stepIndex = String(i + 1);
@@ -354,6 +368,22 @@ function executePlanningSolveBlock(executor, stmt) {
     });
 
     stepFacts.push({ dsl: `planStep ${planName} ${stepIndex} ${actionName}` });
+
+    const sig = actionSig.get(actionName);
+    if (sig) {
+      const actionArgs = [planName, stepIndex, sig.tool];
+      if (sig.param1) actionArgs.push(sig.param1);
+      if (sig.param2) actionArgs.push(sig.param2);
+
+      const actionVec = buildPlanFactVector(session, 'planAction', actionArgs);
+      session.addToKB(actionVec, `${planName}_action${stepIndex}`, {
+        operator: 'planAction',
+        args: actionArgs,
+        source: 'planning'
+      });
+
+      stepFacts.push({ dsl: `planAction ${actionArgs.join(' ')}` });
+    }
   }
 
   return {

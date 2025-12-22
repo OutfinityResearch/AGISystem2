@@ -580,1220 +580,1220 @@ end
 # Sociology - Additional Missing Operators
 
 @accelerated_by:accelerated_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @process __Role Process $b
+    @relation __Bundle $actor $process
     return $relation
 end
 
 @accumulates:accumulates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @resource __Role Action $b
+    @relation __Bundle $actor $resource
     return $relation
 end
 
 @acquired_through:acquired_through graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @process __Role Process $b
+    @relation __Bundle $individual $process
     return $relation
 end
 
 @across:across graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @context __Role Institution $b
+    @relation __Bundle $actor $context
     return $relation
 end
 
 @adopts:adopts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @advocates:advocates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @affected_by:affected_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @action __Role Action $b
+    @relation __Bundle $individual $action
     return $relation
 end
 
 @aims_for:aims_for graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @analyzes:analyzes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @aspiresToJoin:aspiresToJoin graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @group __Role Group $b
+    @relation __Bundle $individual $group
     return $relation
 end
 
 @associated_with:associated_with graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @context __Role Institution $b
+    @relation __Bundle $actor $context
     return $relation
 end
 
 @assumes:assumes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @role __Role Role $b
+    @relation __Bundle $actor $role
     return $relation
 end
 
 @awards:awards graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @authority __Role Authority $a
+    @individual __Role Person $b
+    @relation __Bundle $authority $individual
     return $relation
 end
 
 @balances:balances graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @based_on:based_on graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @basis_for:basis_for graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @carries:carries graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @changes:changes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @agent __Role Agent $a
+    @process __Role Process $b
+    @relation __Bundle $agent $process
     return $relation
 end
 
 @changes_faster:changes_faster graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @changes_slower:changes_slower graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @characteristic_of:characteristic_of graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @institution __Role Institution $b
+    @relation __Bundle $actor $institution
     return $relation
 end
 
 @characterized_by:characterized_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @characterizes:characterizes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @claims:claims graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @combined_with:combined_with graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @committed_by:committed_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @action __Role Action $a
+    @actor __Role Actor $b
+    @relation __Bundle $action $actor
     return $relation
 end
 
 @committed_in:committed_in graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @action __Role Action $a
+    @context __Role Institution $b
+    @relation __Bundle $action $context
     return $relation
 end
 
 @concerns:concerns graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @confers:confers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @authority __Role Authority $a
+    @individual __Role Person $b
+    @relation __Bundle $authority $individual
     return $relation
 end
 
 @conferspower:conferspower graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @status __Role Status $a
+    @authority __Role Authority $b
+    @relation __Bundle $status $authority
     return $relation
 end
 
 @connectsVia:connectsVia graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @considered:considered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @status __Role Status $b
+    @relation __Bundle $actor $status
     return $relation
 end
 
 @considers:considers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @consistsOf:consistsOf graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @member __Role Member $b
+    @relation __Bundle $group $member
     return $relation
 end
 
 @constructs:constructs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @society __Role Society $a
+    @action __Role Action $b
+    @relation __Bundle $society $action
     return $relation
 end
 
 @controls:controls graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @authority __Role Authority $a
+    @subordinate __Role Subordinate $b
+    @relation __Bundle $authority $subordinate
     return $relation
 end
 
 @createsIdentity:createsIdentity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @individual __Role Person $b
+    @relation __Bundle $group $individual
     return $relation
 end
 
 @critiques:critiques graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @define:define graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @defines:defines graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @definesBoundary:definesBoundary graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @action __Role Action $b
+    @relation __Bundle $group $action
     return $relation
 end
 
 @depends_on:depends_on graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @depletes:depletes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @determinedBy:determinedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @action __Role Action $b
+    @relation __Bundle $individual $action
     return $relation
 end
 
 @determined_by:determined_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @action __Role Action $b
+    @relation __Bundle $individual $action
     return $relation
 end
 
 @developed_by:developed_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @action __Role Action $a
+    @actor __Role Agent $b
+    @relation __Bundle $action $actor
     return $relation
 end
 
 @developsIdentity:developsIdentity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @group __Role Group $b
+    @relation __Bundle $individual $group
     return $relation
 end
 
 @developsStereotypes:developsStereotypes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @action __Role Action $b
+    @relation __Bundle $group $action
     return $relation
 end
 
 @displays:displays graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @distinct_from:distinct_from graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @distinguishes:distinguishes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @dominated_by:dominated_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @subordinate __Role Subordinate $a
+    @authority __Role Authority $b
+    @relation __Bundle $subordinate $authority
     return $relation
 end
 
 @driven_by:driven_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @process __Role Process $a
+    @agent __Role Agent $b
+    @relation __Bundle $process $agent
     return $relation
 end
 
 @embedded_in:embedded_in graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @institution __Role Institution $b
+    @relation __Bundle $actor $institution
     return $relation
 end
 
 @encourages:encourages graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @enforced_by:enforced_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @action __Role Action $a
+    @authority __Role Authority $b
+    @relation __Bundle $action $authority
     return $relation
 end
 
 @enforced_with:enforced_with graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @action __Role Action $a
+    @process __Role Process $b
+    @relation __Bundle $action $process
     return $relation
 end
 
 @establishes:establishes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @evaluatesSelf:evaluatesSelf graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @action __Role Action $b
+    @relation __Bundle $individual $action
     return $relation
 end
 
 @exacerbates:exacerbates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @exceeds:exceeds graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @exercised_by:exercised_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @action __Role Action $a
+    @authority __Role Authority $b
+    @relation __Bundle $action $authority
     return $relation
 end
 
 @exercised_through:exercised_through graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @action __Role Action $a
+    @process __Role Process $b
+    @relation __Bundle $action $process
     return $relation
 end
 
 @exercises:exercises graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @authority __Role Authority $a
+    @action __Role Action $b
+    @relation __Bundle $authority $action
     return $relation
 end
 
 @exerts:exerts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @exists_between:exists_between graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @exists_on:exists_on graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @exploits:exploits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @authority __Role Authority $a
+    @subordinate __Role Subordinate $b
+    @relation __Bundle $authority $subordinate
     return $relation
 end
 
 @exposes_to:exposes_to graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @features:features graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @feels:feels graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @action __Role Action $b
+    @relation __Bundle $individual $action
     return $relation
 end
 
 @final_stage:final_stage graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @process __Role Process $b
+    @relation __Bundle $actor $process
     return $relation
 end
 
 @focuses_on:focuses_on graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @form_of:form_of graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @forms:forms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @from:from graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @gains:gains graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @action __Role Action $b
+    @relation __Bundle $individual $action
     return $relation
 end
 
 @govern:govern graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @authority __Role Authority $a
+    @subordinate __Role Subordinate $b
+    @relation __Bundle $authority $subordinate
     return $relation
 end
 
 @governed_by:governed_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @subordinate __Role Subordinate $a
+    @authority __Role Authority $b
+    @relation __Bundle $subordinate $authority
     return $relation
 end
 
 @guides:guides graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @hasBoundary:hasBoundary graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @action __Role Action $b
+    @relation __Bundle $group $action
     return $relation
 end
 
 @hasCentrality:hasCentrality graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @status __Role Status $b
+    @relation __Bundle $individual $status
     return $relation
 end
 
 @hasCharacteristic:hasCharacteristic graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @hasDensity:hasDensity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @action __Role Action $b
+    @relation __Bundle $group $action
     return $relation
 end
 
 @hasDimension:hasDimension graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @hasInteractionType:hasInteractionType graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @action __Role Action $b
+    @relation __Bundle $group $action
     return $relation
 end
 
 @hasMember:hasMember graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @member __Role Member $b
+    @relation __Bundle $group $member
     return $relation
 end
 
 @hasPurpose:hasPurpose graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @action __Role Action $b
+    @relation __Bundle $group $action
     return $relation
 end
 
 @hasType:hasType graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @has_position:has_position graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @status __Role Status $b
+    @relation __Bundle $individual $status
     return $relation
 end
 
 @idealizes:idealizes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @imposes:imposes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @authority __Role Authority $a
+    @subordinate __Role Subordinate $b
+    @relation __Bundle $authority $subordinate
     return $relation
 end
 
 @influenced_by:influenced_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @agent __Role Agent $b
+    @relation __Bundle $individual $agent
     return $relation
 end
 
 @intensifies:intensifies graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @internalize:internalize graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @action __Role Action $b
+    @relation __Bundle $individual $action
     return $relation
 end
 
 @into:into graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @judges_as:judges_as graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @lacks:lacks graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @leads_to:leads_to graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @level:level graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @maintainsBoundary:maintainsBoundary graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @action __Role Action $b
+    @relation __Bundle $group $action
     return $relation
 end
 
 @manages:manages graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @authority __Role Authority $a
+    @action __Role Action $b
+    @relation __Bundle $authority $action
     return $relation
 end
 
 @manifests_in:manifests_in graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @institution __Role Institution $b
+    @relation __Bundle $actor $institution
     return $relation
 end
 
 @marginalizes:marginalizes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @authority __Role Authority $a
+    @subordinate __Role Subordinate $b
+    @relation __Bundle $authority $subordinate
     return $relation
 end
 
 @mayCompeteWith:mayCompeteWith graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @action __Role Action $b
+    @relation __Bundle $group $action
     return $relation
 end
 
 @measures:measures graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @motivated_by:motivated_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @not_yet_affects:not_yet_affects graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @occurs_during:occurs_during graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @action __Role Action $a
+    @process __Role Process $b
+    @relation __Bundle $action $process
     return $relation
 end
 
 @occurs_in:occurs_in graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @action __Role Action $a
+    @institution __Role Institution $b
+    @relation __Bundle $action $institution
     return $relation
 end
 
 @occurs_through:occurs_through graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @action __Role Action $a
+    @process __Role Process $b
+    @relation __Bundle $action $process
     return $relation
 end
 
 @of:of graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @often_characterized:often_characterized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @often_considered:often_considered graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @often_involves:often_involves graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @often_related:often_related graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @often_viewed:often_viewed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @operates_through:operates_through graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @process __Role Process $b
+    @relation __Bundle $actor $process
     return $relation
 end
 
 @opposes:opposes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @organized_in:organized_in graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @institution __Role Institution $b
+    @relation __Bundle $actor $institution
     return $relation
 end
 
 @organizes:organizes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @per:per graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @perceivesDifference:perceivesDifference graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @action __Role Action $b
+    @relation __Bundle $group $action
     return $relation
 end
 
 @practices:practices graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @predicts:predicts graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @prevalent_in:prevalent_in graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @society __Role Society $b
+    @relation __Bundle $actor $society
     return $relation
 end
 
 @privileges:privileges graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @authority __Role Authority $a
+    @action __Role Action $b
+    @relation __Bundle $authority $action
     return $relation
 end
 
 @protects:protects graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @authority __Role Authority $a
+    @action __Role Action $b
+    @relation __Bundle $authority $action
     return $relation
 end
 
 @providesStandards:providesStandards graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @individual __Role Person $b
+    @relation __Bundle $group $individual
     return $relation
 end
 
 @punished_with:punished_with graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @action __Role Action $a
+    @process __Role Process $b
+    @relation __Bundle $action $process
     return $relation
 end
 
 @reaches:reaches graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @receives:receives graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @action __Role Action $b
+    @relation __Bundle $individual $action
     return $relation
 end
 
 @recognizes:recognizes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @regarded_as:regarded_as graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @status __Role Status $b
+    @relation __Bundle $actor $status
     return $relation
 end
 
 @regulates:regulates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @authority __Role Authority $a
+    @action __Role Action $b
+    @relation __Bundle $authority $action
     return $relation
 end
 
 @reinforces:reinforces graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @relatesTo:relatesTo graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @relates_to:relates_to graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @requiresTrust:requiresTrust graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @results_from:results_from graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @action __Role Action $a
+    @process __Role Process $b
+    @relation __Bundle $action $process
     return $relation
 end
 
 @results_in:results_in graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @risksOf:risksOf graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @seeks:seeks graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @seeks_to:seeks_to graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @sees:sees graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @shaped_by:shaped_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @agent __Role Agent $b
+    @relation __Bundle $individual $agent
     return $relation
 end
 
 @shapes:shapes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @agent __Role Agent $a
+    @individual __Role Person $b
+    @relation __Bundle $agent $individual
     return $relation
 end
 
 @shares:shares graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @group __Role Group $a
+    @action __Role Action $b
+    @relation __Bundle $group $action
     return $relation
 end
 
 @shifts_to:shifts_to graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @showsLoyalty:showsLoyalty graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @individual __Role Person $a
+    @group __Role Group $b
+    @relation __Bundle $individual $group
     return $relation
 end
 
 @socially_constructed:socially_constructed graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @society __Role Society $b
+    @relation __Bundle $actor $society
     return $relation
 end
 
 @socially_defined:socially_defined graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @society __Role Society $b
+    @relation __Bundle $actor $society
     return $relation
 end
 
 @strains:strains graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @strongly_forbidden:strongly_forbidden graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @action __Role Action $a
+    @society __Role Society $b
+    @relation __Bundle $action $society
     return $relation
 end
 
 @subject_to:subject_to graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @subordinate __Role Subordinate $a
+    @authority __Role Authority $b
+    @relation __Bundle $subordinate $authority
     return $relation
 end
 
 @suspends:suspends graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @authority __Role Authority $a
+    @action __Role Action $b
+    @relation __Bundle $authority $action
     return $relation
 end
 
 @takes:takes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @teaches:teaches graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @individual __Role Person $b
+    @relation __Bundle $actor $individual
     return $relation
 end
 
 @theorem:theorem graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @theorized_by:theorized_by graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @action __Role Action $a
+    @actor __Role Agent $b
+    @relation __Bundle $action $actor
     return $relation
 end
 
 @transforms:transforms graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @agent __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $agent $action
     return $relation
 end
 
 @transforms_from:transforms_from graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @transforms_to:transforms_to graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @transmits:transmits graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @treats_as:treats_as graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @types:types graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @undergoes:undergoes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @process __Role Process $b
+    @relation __Bundle $actor $process
     return $relation
 end
 
 @understands_in:understands_in graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @unequal_distribution:unequal_distribution graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @usually_characterized:usually_characterized graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @views_as:views_as graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Agent $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @violates:violates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @action __Role Action $b
+    @relation __Bundle $actor $action
     return $relation
 end
 
 @widely_shared:widely_shared graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @society __Role Society $b
+    @relation __Bundle $actor $society
     return $relation
 end
 
 @works_within:works_within graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @actor __Role Actor $a
+    @institution __Role Institution $b
+    @relation __Bundle $actor $institution
     return $relation
 end
 

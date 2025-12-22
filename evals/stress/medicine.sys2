@@ -8,16 +8,16 @@
 # ============================================================================
 
 @absoluteContraindication:absoluteContraindication graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Condition $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @addresses:addresses graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Symptom $b
+    @relation __Bundle $left $right
     return $relation
 end
 
@@ -37,16 +37,16 @@ end
 end
 
 @assessedBy:assessedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Patient $a
+    @right __Role Clinician $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @assesses:assesses graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Clinician $a
+    @right __Role Patient $b
+    @relation __Bundle $left $right
     return $relation
 end
 
@@ -58,9 +58,9 @@ end
 end
 
 @benefitsFrom:benefitsFrom graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Patient $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
@@ -86,16 +86,16 @@ end
 end
 
 @bypassesBlockage:bypassesBlockage graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Procedure $a
+    @right __Role Condition $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @canBeCurative:canBeCurative graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Disease $b
+    @relation __Bundle $left $right
     return $relation
 end
 
@@ -135,16 +135,16 @@ end
 end
 
 @canProgressTo:canProgressTo graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Disease $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @canRemove:canRemove graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Procedure $a
+    @right __Role Pathology $b
+    @relation __Bundle $left $right
     return $relation
 end
 
@@ -520,23 +520,23 @@ end
 end
 
 @characterizedByPlaques:characterizedByPlaques graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Pathology $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @circulatesThrough:circulatesThrough graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Substance $a
+    @right __Role System $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @classifiedAs:classifiedAs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Entity $a
+    @right __Role Category $b
+    @relation __Bundle $left $right
     return $relation
 end
 
@@ -548,457 +548,457 @@ end
 end
 
 @commonlyAffects:commonlyAffects graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Organ $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @commonlyBy:commonlyBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Pathogen $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @commonPathogen:commonPathogen graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Pathogen $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @confirmedBy:confirmedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Test $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @contraindicatedCombination:contraindicatedCombination graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Drug $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @contraindicatedIn:contraindicatedIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Condition $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @contraindicatedWith:contraindicatedWith graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Condition $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @contributesTo:contributesTo graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Factor $a
+    @right __Role Disease $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @controlsBody:controlsBody graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @coordinates:coordinates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @creates:creates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Procedure $a
+    @right __Role Result $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @cultures:cultures graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Test $a
+    @right __Role Pathogen $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @damageMucosa:damageMucosa graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Tissue $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @damagesBloodVessels:damagesBloodVessels graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Tissue $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @decreases:decreases graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Substance $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @decreasesExcretion:decreasesExcretion graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Process $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @determines:determines graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Finding $a
+    @right __Role Decision $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @determinesTreatment:determinesTreatment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Finding $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @developedFrom:developedFrom graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Research $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @developsThrough:developsThrough graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Mechanism $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @diagnosedBy:diagnosedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Test $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @digestsFood:digestsFood graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @dueToTumor:dueToTumor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Cause $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @dueToWeakening:dueToWeakening graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Mechanism $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @eliminatesWaste:eliminatesWaste graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @enablesMovement:enablesMovement graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @enablesReproduction:enablesReproduction graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @enhancesActivity:enhancesActivity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Process $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @evaluates:evaluates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Clinician $a
+    @right __Role Patient $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @examines:examines graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Clinician $a
+    @right __Role Patient $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @excellentFor:excellentFor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Condition $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @exchangesGas:exchangesGas graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @exposesTo:exposesTo graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Action $a
+    @right __Role Risk $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @facilitates:facilitates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Intervention $a
+    @right __Role Process $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @filtersBlood:filtersBlood graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @focusesOn:focusesOn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Specialty $a
+    @right __Role Organ $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @formsClot:formsClot graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Process $a
+    @right __Role Result $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @hasAsymmetry:hasAsymmetry graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Lesion $a
+    @right __Role Feature $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @hasAuscultation:hasAuscultation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Finding $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @hasComplication:hasComplication graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Complication $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @hasEffect:hasEffect graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Effect $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @hasEmergency:hasEmergency graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Emergency $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @hasEpisodes:hasEpisodes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Pattern $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @hasPattern:hasPattern graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Pattern $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @hasResistance:hasResistance graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Pathogen $a
+    @right __Role Drug $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @hasRisk:hasRisk graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Complication $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @hasTimeWindow:hasTimeWindow graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role TimeFrame $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @hasTypes:hasTypes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Subtype $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @hasVaccine:hasVaccine graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Vaccine $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @heals:heals graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Injury $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @identifies:identifies graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Test $a
+    @right __Role Disease $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @improvedBy:improvedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @includes:includes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Category $a
+    @right __Role Member $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @includesModality:includesModality graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Modality $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @includesType:includesType graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Category $a
+    @right __Role Type $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @increasesRisk:increasesRisk graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Factor $a
+    @right __Role Disease $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @indicatedFor:indicatedFor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Condition $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @indicatedForScreening:indicatedForScreening graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Test $a
+    @right __Role Disease $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @indicatesCondition:indicatesCondition graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Finding $a
+    @right __Role Disease $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @informs:informs graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Finding $a
+    @right __Role Decision $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @inhibitsClotting:inhibitsClotting graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Process $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @inhibitsEnzyme:inhibitsEnzyme graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Enzyme $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @inhibitsSynthesis:inhibitsSynthesis graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Process $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @interprets:interprets graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Clinician $a
+    @right __Role Finding $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @involvesInterdisciplinary:involvesInterdisciplinary graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Team $b
+    @relation __Bundle $left $right
     return $relation
 end
 
@@ -1416,681 +1416,681 @@ end
 end
 
 @leadsToDamage:leadsToDamage graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Pathology $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @leadsToDeficiency:leadsToDeficiency graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Deficiency $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @leadsToDevelopment:leadsToDevelopment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Complication $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @leadsToDysfunction:leadsToDysfunction graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Dysfunction $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @lowers:lowers graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Substance $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @maintainsHomeostasis:maintainsHomeostasis graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @majorRiskFactor:majorRiskFactor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Factor $a
+    @right __Role Disease $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @managesCondition:managesCondition graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Disease $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @mayRequireContrast:mayRequireContrast graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Imaging $a
+    @right __Role Agent $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @mayRequireEmergency:mayRequireEmergency graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Intervention $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @mayRequireProcedure:mayRequireProcedure graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Procedure $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @mayRequireProphylaxis:mayRequireProphylaxis graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @mayRequireSupport:mayRequireSupport graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Support $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @mayRequireSurgery:mayRequireSurgery graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Surgery $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @mayRequireTreatment:mayRequireTreatment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @maySlowProgression:maySlowProgression graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Disease $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @maySupportCognition:maySupportCognition graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @mostCommonPathogen:mostCommonPathogen graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Pathogen $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @necessaryForLife:necessaryForLife graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @noRadiation:noRadiation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Imaging $a
+    @right __Role Property $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @obtainsSample:obtainsSample graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Procedure $a
+    @right __Role Sample $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @oftenprecededBy:oftenprecededBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Event $a
+    @right __Role Precursor $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @oversees:oversees graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Clinician $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @oxygenatesBlood:oxygenatesBlood graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @persistsForWeeks:persistsForWeeks graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Symptom $a
+    @right __Role Duration $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @presentsAfter:presentsAfter graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Symptom $a
+    @right __Role Event $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @presentsAsAcute:presentsAsAcute graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Presentation $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @presentsInManic:presentsInManic graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Phase $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @presentsSymptom:presentsSymptom graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Symptom $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @preventedBy:preventedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Intervention $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @preventsComplication:preventsComplication graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Complication $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @preventsConversion:preventsConversion graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Progression $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @preventsDisease:preventsDisease graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Intervention $a
+    @right __Role Disease $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @preventWithLongterm:preventWithLongterm graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @producesEnzyme:producesEnzyme graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Enzyme $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @producesHormone:producesHormone graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Hormone $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @producesProtection:producesProtection graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @producesUrine:producesUrine graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Product $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @progressesTo:progressesTo graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Complication $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @protectsBody:protectsBody graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @provides:provides graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Entity $a
+    @right __Role Benefit $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @providesCareTo:providesCareTo graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Clinician $a
+    @right __Role Patient $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @providesSupport:providesSupport graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Intervention $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @pumpsBlood:pumpsBlood graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @recordsElectrical:recordsElectrical graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Test $a
+    @right __Role Signal $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @reducedBy:reducedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Symptom $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @reduces:reduces graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Substance $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @regulatesBody:regulatesBody graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @regulatesTemperature:regulatesTemperature graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @remainingKidney:remainingKidney graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Function $a
+    @right __Role Organ $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @removes:removes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Procedure $a
+    @right __Role Pathology $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @replaces:replaces graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Procedure $a
+    @right __Role Organ $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @replacesFunction:replacesFunction graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Device $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresAdequate:requiresAdequate graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Procedure $a
+    @right __Role Condition $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresEmergency:requiresEmergency graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Intervention $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresICU:requiresICU graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Care $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresImmediate:requiresImmediate graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Intervention $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresImmediateTreatment:requiresImmediateTreatment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresLifelong:requiresLifelong graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresLongTreatment:requiresLongTreatment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresManagement:requiresManagement graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresModification:requiresModification graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Intervention $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresMonitoring:requiresMonitoring graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Surveillance $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresPainControl:requiresPainControl graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresPreparation:requiresPreparation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Procedure $a
+    @right __Role Preparation $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresProcedure:requiresProcedure graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Procedure $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresProphylaxis:requiresProphylaxis graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresRehabilitation:requiresRehabilitation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Therapy $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresScreening:requiresScreening graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Population $a
+    @right __Role Test $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresSupport:requiresSupport graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Support $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresTiming:requiresTiming graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Treatment $a
+    @right __Role Schedule $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresTreatment:requiresTreatment graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresUrgent:requiresUrgent graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Condition $a
+    @right __Role Intervention $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @requiresWashoutPeriod:requiresWashoutPeriod graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role TimeFrame $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @riskFactor:riskFactor graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Factor $a
+    @right __Role Disease $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @shows:shows graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Test $a
+    @right __Role Finding $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @showsChanges:showsChanges graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Test $a
+    @right __Role Abnormality $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @showsElevated:showsElevated graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Test $a
+    @right __Role Biomarker $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @showsInflammation:showsInflammation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Test $a
+    @right __Role Finding $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @specializesIn:specializesIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Clinician $a
+    @right __Role Specialty $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @stabilizes:stabilizes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Condition $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @stimulates:stimulates graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Process $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @storesFluid:storesFluid graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Organ $a
+    @right __Role Function $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @suppresses:suppresses graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Drug $a
+    @right __Role Process $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @transmittedBy:transmittedBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Vector $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @treatAcuteWith:treatAcuteWith graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Disease $a
+    @right __Role Treatment $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @triages:triages graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Clinician $a
+    @right __Role Patient $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @triggeredBy:triggeredBy graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Symptom $a
+    @right __Role Trigger $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @usedUniversally:usedUniversally graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Protocol $a
+    @right __Role Application $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @usesEndoscope:usesEndoscope graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Procedure $a
+    @right __Role Instrument $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @usesGraft:usesGraft graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Procedure $a
+    @right __Role Material $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @usesMagneticField:usesMagneticField graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Imaging $a
+    @right __Role Modality $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @usesRadiation:usesRadiation graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Imaging $a
+    @right __Role Modality $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @usesUltrasound:usesUltrasound graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Imaging $a
+    @right __Role Modality $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @visualizes:visualizes graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Imaging $a
+    @right __Role Anatomy $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @worksIn:worksIn graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Clinician $a
+    @right __Role Setting $b
+    @relation __Bundle $left $right
     return $relation
 end
 
 @worsensWithActivity:worsensWithActivity graph a b
-    @left __Role Left $a
-    @right __Role Right $b
-    @relation __Pair $left $right
+    @left __Role Symptom $a
+    @right __Role Trigger $b
+    @relation __Bundle $left $right
     return $relation
 end
 

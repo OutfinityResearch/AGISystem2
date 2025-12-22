@@ -92,6 +92,7 @@ const ERROR_TYPES = [
   'dependency',
   'contradiction',
   'load',
+  'superficial',
   'unknown'
 ];
 
@@ -100,12 +101,43 @@ const ERROR_LABELS = {
   dependency: 'missing-deps',
   contradiction: 'contradiction',
   load: 'load',
+  superficial: 'superficial',
   unknown: 'other'
 };
 
 const ARGV = process.argv.slice(2);
 const IS_WORKER = ARGV.includes('--worker');
 const REPORT_FILES = ARGV.includes('--report-files');
+
+// Detect superficial Left/Right definitions
+function detectSuperficialDefinitions(content) {
+  const superficial = [];
+  const lines = content.split('\n');
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    // Match operator definitions: @name:name graph ...
+    const opMatch = line.match(/^@(\w+):(\w+)\s+graph/);
+    if (opMatch) {
+      const opName = opMatch[1];
+      // Check next ~10 lines for Left/Right pattern
+      let hasLeftRole = false;
+      let hasRightRole = false;
+
+      for (let j = i + 1; j < Math.min(i + 15, lines.length); j++) {
+        if (lines[j].includes('@left __Role Left')) hasLeftRole = true;
+        if (lines[j].includes('@right __Role Right')) hasRightRole = true;
+        if (lines[j].match(/^end\s*$/)) break;
+      }
+
+      if (hasLeftRole && hasRightRole) {
+        superficial.push(`Operator '${opName}' at line ${i + 1}: uses superficial Left/Right roles`);
+      }
+    }
+  }
+
+  return superficial;
+}
 // Workers have piped stdio, but parent displays to TTY - enable colors for workers
 const IS_TTY = IS_WORKER || process.stdout.isTTY || process.stderr.isTTY;
 let logLine = (...args) => console.log(...args);
@@ -308,6 +340,13 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
 
   const start = performance.now();
   const content = await readFile(filePath, 'utf8');
+
+  // Detect superficial definitions
+  const superficialDefs = detectSuperficialDefinitions(content);
+  for (const msg of superficialDefs) {
+    addIssue('superficial', msg);
+  }
+
   try {
     session.checkDSL(content, { mode: 'learn', allowHoles: true, allowNewOperators: false });
   } catch (error) {
@@ -685,6 +724,7 @@ async function writeErrorFiles(fileReports, basePlan, stressPlan) {
       sections.push(formatErrorSection('Missing Dependencies', report.dependency));
       sections.push(formatErrorSection('Contradiction Errors', report.contradiction));
       sections.push(formatErrorSection('Load Errors', report.load));
+      sections.push(formatErrorSection('Superficial Definitions', report.superficial));
       sections.push(formatErrorSection('Other Errors', report.unknown));
     }
     const content = sections.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
