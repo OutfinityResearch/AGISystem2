@@ -1,4 +1,4 @@
-# Module: src/decoding/text-generator.mjs
+# Module: src/output/text-generator.mjs
 
 **Purpose:** Generate human-readable text from vectors and proof results.
 
@@ -6,28 +6,23 @@
 
 ```javascript
 export class TextGenerator {
-  constructor(session: Session)
-  summarize(vector: Vector): SummaryResult
+  constructor()
+  generate(operator: string, args: Array<string | { value: string }>): string
   elaborate(proof: ProveResult): ElaborationResult
-  explainQuery(result: QueryResult, query: string): ExplanationResult
-  registerTemplate(operator: string, pattern: string): void
 }
 
-interface SummaryResult {
-  success: boolean;
+interface ElaborationResult {
   text: string;
-  structure?: DecodedStructure;
-  confidence?: number;
+  proofChain?: string[];
+  fullProof?: string;
 }
 ```
 
 ## Dependencies
 
-- `./structural-decoder.mjs`
-- `./phrasing.mjs`
+- (none)
 
 ## Test Cases
 
-- Summarize produces readable text
+- Generate produces readable text
 - Elaborate describes proof steps
-- Query explanation shows bindings

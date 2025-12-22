@@ -1,0 +1,46 @@
+# Errors for config/Core/05-logic.sys2
+
+## Dependency Errors
+
+- [dense-binary/symbolicPriority] Unknown operator '__Pair' at 20:11
+- [dense-binary/symbolicPriority] Unknown operator '__Pair' at 27:11
+- [dense-binary/symbolicPriority] Unknown operator '__Pair' at 34:11
+- [dense-binary/symbolicPriority] Unknown operator '__Pair' at 47:11
+- [dense-binary/symbolicPriority] Unknown operator '__Pair' at 54:11
+- [dense-binary/symbolicPriority] Unknown operator '__Bundle' at 65:13
+- [dense-binary/symbolicPriority] Unknown operator '__Bundle' at 73:13
+- [dense-binary/holographicPriority] Unknown operator '__Pair' at 20:11
+- [dense-binary/holographicPriority] Unknown operator '__Pair' at 27:11
+- [dense-binary/holographicPriority] Unknown operator '__Pair' at 34:11
+- [dense-binary/holographicPriority] Unknown operator '__Pair' at 47:11
+- [dense-binary/holographicPriority] Unknown operator '__Pair' at 54:11
+- [dense-binary/holographicPriority] Unknown operator '__Bundle' at 65:13
+- [dense-binary/holographicPriority] Unknown operator '__Bundle' at 73:13
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Pair' at 20:11
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Pair' at 27:11
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Pair' at 34:11
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Pair' at 47:11
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Pair' at 54:11
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Bundle' at 65:13
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Bundle' at 73:13
+- [sparse-polynomial/holographicPriority] Unknown operator '__Pair' at 20:11
+- [sparse-polynomial/holographicPriority] Unknown operator '__Pair' at 27:11
+- [sparse-polynomial/holographicPriority] Unknown operator '__Pair' at 34:11
+- [sparse-polynomial/holographicPriority] Unknown operator '__Pair' at 47:11
+- [sparse-polynomial/holographicPriority] Unknown operator '__Pair' at 54:11
+- [sparse-polynomial/holographicPriority] Unknown operator '__Bundle' at 65:13
+- [sparse-polynomial/holographicPriority] Unknown operator '__Bundle' at 73:13
+- [metric-affine/symbolicPriority] Unknown operator '__Pair' at 20:11
+- [metric-affine/symbolicPriority] Unknown operator '__Pair' at 27:11
+- [metric-affine/symbolicPriority] Unknown operator '__Pair' at 34:11
+- [metric-affine/symbolicPriority] Unknown operator '__Pair' at 47:11
+- [metric-affine/symbolicPriority] Unknown operator '__Pair' at 54:11
+- [metric-affine/symbolicPriority] Unknown operator '__Bundle' at 65:13
+- [metric-affine/symbolicPriority] Unknown operator '__Bundle' at 73:13
+- [metric-affine/holographicPriority] Unknown operator '__Pair' at 20:11
+- [metric-affine/holographicPriority] Unknown operator '__Pair' at 27:11
+- [metric-affine/holographicPriority] Unknown operator '__Pair' at 34:11
+- [metric-affine/holographicPriority] Unknown operator '__Pair' at 47:11
+- [metric-affine/holographicPriority] Unknown operator '__Pair' at 54:11
+- [metric-affine/holographicPriority] Unknown operator '__Bundle' at 65:13
+- [metric-affine/holographicPriority] Unknown operator '__Bundle' at 73:13

@@ -1,0 +1,10 @@
+# Errors for evals/stress/history.sys2
+
+## Syntax Errors
+
+- [dense-binary/symbolicPriority] Parse error at 7:5: Unexpected token 'return'
+- [dense-binary/holographicPriority] Parse error at 7:5: Unexpected token 'return'
+- [sparse-polynomial/symbolicPriority] Parse error at 7:5: Unexpected token 'return'
+- [sparse-polynomial/holographicPriority] Parse error at 7:5: Unexpected token 'return'
+- [metric-affine/symbolicPriority] Parse error at 7:5: Unexpected token 'return'
+- [metric-affine/holographicPriority] Parse error at 7:5: Unexpected token 'return'

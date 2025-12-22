@@ -47,6 +47,8 @@ import { loadCore as loadCoreImpl } from './session-core-load.mjs';
 import { learn as learnImpl } from './session-learn.mjs';
 import { query as queryImpl } from './session-query.mjs';
 import { prove as proveImpl } from './session-prove.mjs';
+import { checkDSL as checkDSLImpl } from './session-check-dsl.mjs';
+import { beginTransaction, rollbackTransaction } from './session-transaction.mjs';
 
 function dbg(category, ...args) {
   debug_trace(`[Session:${category}]`, ...args);
@@ -91,6 +93,7 @@ export class Session {
     this.componentKB = new ComponentKB(this);  // Component-indexed KB for fuzzy matching
     this.theories = new Map();
     this.operators = new Map();
+    this.declaredOperators = new Set();
     this.warnings = [];
     this.referenceTexts = new Map(); // Maps reference names to fact strings
     this.referenceMetadata = new Map(); // Maps reference names to structured metadata {operator, args}
@@ -98,6 +101,7 @@ export class Session {
     this.graphAliases = new Map();  // Aliases for graphs (persistName -> name)
     this.responseTranslator = new ResponseTranslator(this);
     this.semanticIndex = DEFAULT_SEMANTIC_INDEX;
+    this.rejectContradictions = options.rejectContradictions ?? false;
 
     // Reasoning statistics
     this.reasoningStats = {
@@ -141,7 +145,18 @@ export class Session {
    * @returns {Object} Learning result
    */
   learn(dsl) {
-    return learnImpl(this, dsl);
+    this.checkDSL(dsl, { mode: 'learn', allowHoles: true });
+    const snapshot = beginTransaction(this);
+    try {
+      const result = learnImpl(this, dsl);
+      if (!result.success) {
+        rollbackTransaction(this, snapshot);
+      }
+      return result;
+    } catch (error) {
+      rollbackTransaction(this, snapshot);
+      throw error;
+    }
   }
 
   /**
@@ -210,6 +225,9 @@ export class Session {
     const contradiction = this.checkContradiction(metadata);
     if (contradiction) {
       this.warnings.push(contradiction);
+      if (this.rejectContradictions) {
+        throw new Error(`Contradiction rejected: ${contradiction}`);
+      }
     }
 
     const fact = { id: this.nextFactId++, vector, name, metadata };
@@ -285,6 +303,7 @@ export class Session {
    */
   query(dsl, options = {}) {
     dbg('QUERY', 'Starting:', dsl?.substring(0, 60));
+    this.checkDSL(dsl, { mode: 'query', allowHoles: true });
     return queryImpl(this, dsl, options);
   }
 
@@ -303,6 +322,7 @@ export class Session {
    */
   prove(dsl, options = {}) {
     dbg('PROVE', 'Starting:', dsl?.substring(0, 60));
+    this.checkDSL(dsl, { mode: 'prove', allowHoles: false });
     return proveImpl(this, dsl, options);
   }
 
@@ -314,6 +334,7 @@ export class Session {
    */
   abduce(dsl, options = {}) {
     dbg('ABDUCE', 'Starting:', dsl?.substring(0, 60));
+    this.checkDSL(dsl, { mode: 'abduce', allowHoles: false });
     try {
       const ast = parse(dsl);
       if (ast.statements.length === 0) {
@@ -326,6 +347,16 @@ export class Session {
     } catch (e) {
       return { success: false, reason: e.message };
     }
+  }
+
+  /**
+   * Validate DSL syntax and dependencies before execution.
+   * @param {string} dsl - DSL source code
+   * @param {Object} options - Validation options
+   * @returns {Object} Parsed AST
+   */
+  checkDSL(dsl, options = {}) {
+    return checkDSLImpl(this, dsl, options);
   }
 
   /**

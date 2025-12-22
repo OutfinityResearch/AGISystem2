@@ -770,7 +770,15 @@ export class ResponseTranslator {
 
   translate({ action = 'query', reasoningResult, queryDsl }) {
     const translator = this.translators.get(action) || this.defaultTranslator;
-    return translator.translate({ action, reasoningResult, queryDsl });
+    const result = translator.translate({ action, reasoningResult, queryDsl });
+    if (typeof result === 'string') return result;
+    if (result && typeof result === 'object') {
+      const text = typeof result.text === 'string' ? result.text.trim() : '';
+      const proofText = typeof result.proofText === 'string' ? result.proofText.trim() : '';
+      if (text && proofText) return `${text} Proof: ${proofText}`;
+      if (text) return text;
+    }
+    return String(result ?? '');
   }
 }
 

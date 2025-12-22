@@ -1,0 +1,40 @@
+# Errors for config/Core/08-defaults.sys2
+
+## Dependency Errors
+
+- [dense-binary/symbolicPriority] Unknown operator '__Pair' at 16:27
+- [dense-binary/symbolicPriority] Unknown operator '__Pair' at 23:29
+- [dense-binary/symbolicPriority] Unknown operator 'not' at 29:14
+- [dense-binary/symbolicPriority] Unknown operator 'implies' at 30:13
+- [dense-binary/symbolicPriority] Unknown operator '__Bundle' at 43:13
+- [dense-binary/symbolicPriority] Unknown operator '__Bundle' at 51:13
+- [dense-binary/holographicPriority] Unknown operator '__Pair' at 16:27
+- [dense-binary/holographicPriority] Unknown operator '__Pair' at 23:29
+- [dense-binary/holographicPriority] Unknown operator 'not' at 29:14
+- [dense-binary/holographicPriority] Unknown operator 'implies' at 30:13
+- [dense-binary/holographicPriority] Unknown operator '__Bundle' at 43:13
+- [dense-binary/holographicPriority] Unknown operator '__Bundle' at 51:13
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Pair' at 16:27
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Pair' at 23:29
+- [sparse-polynomial/symbolicPriority] Unknown operator 'not' at 29:14
+- [sparse-polynomial/symbolicPriority] Unknown operator 'implies' at 30:13
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Bundle' at 43:13
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Bundle' at 51:13
+- [sparse-polynomial/holographicPriority] Unknown operator '__Pair' at 16:27
+- [sparse-polynomial/holographicPriority] Unknown operator '__Pair' at 23:29
+- [sparse-polynomial/holographicPriority] Unknown operator 'not' at 29:14
+- [sparse-polynomial/holographicPriority] Unknown operator 'implies' at 30:13
+- [sparse-polynomial/holographicPriority] Unknown operator '__Bundle' at 43:13
+- [sparse-polynomial/holographicPriority] Unknown operator '__Bundle' at 51:13
+- [metric-affine/symbolicPriority] Unknown operator '__Pair' at 16:27
+- [metric-affine/symbolicPriority] Unknown operator '__Pair' at 23:29
+- [metric-affine/symbolicPriority] Unknown operator 'not' at 29:14
+- [metric-affine/symbolicPriority] Unknown operator 'implies' at 30:13
+- [metric-affine/symbolicPriority] Unknown operator '__Bundle' at 43:13
+- [metric-affine/symbolicPriority] Unknown operator '__Bundle' at 51:13
+- [metric-affine/holographicPriority] Unknown operator '__Pair' at 16:27
+- [metric-affine/holographicPriority] Unknown operator '__Pair' at 23:29
+- [metric-affine/holographicPriority] Unknown operator 'not' at 29:14
+- [metric-affine/holographicPriority] Unknown operator 'implies' at 30:13
+- [metric-affine/holographicPriority] Unknown operator '__Bundle' at 43:13
+- [metric-affine/holographicPriority] Unknown operator '__Bundle' at 51:13

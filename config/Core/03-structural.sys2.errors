@@ -1,0 +1,10 @@
+# Errors for config/Core/03-structural.sys2
+
+## Dependency Errors
+
+- [dense-binary/symbolicPriority] Unknown operator 'GreaterThan' at 51:13
+- [dense-binary/holographicPriority] Unknown operator 'GreaterThan' at 51:13
+- [sparse-polynomial/symbolicPriority] Unknown operator 'GreaterThan' at 51:13
+- [sparse-polynomial/holographicPriority] Unknown operator 'GreaterThan' at 51:13
+- [metric-affine/symbolicPriority] Unknown operator 'GreaterThan' at 51:13
+- [metric-affine/holographicPriority] Unknown operator 'GreaterThan' at 51:13

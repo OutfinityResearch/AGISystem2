@@ -382,9 +382,17 @@ export class Parser {
       }
 
       // Parse normal statement as part of graph body
+      const startPos = this.pos;
       const stmt = this.parseStatement();
       if (stmt) {
         body.push(stmt);
+      }
+      if (this.pos === startPos && !this.isEof()) {
+        const badToken = this.peek();
+        throw new ParseError(
+          `Unexpected token '${badToken.value || badToken.type}' in graph body`,
+          badToken
+        );
       }
       this.skipNewlines();
     }

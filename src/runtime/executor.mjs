@@ -130,6 +130,9 @@ export class Executor {
   executeStatement(stmt) {
     // Handle solve blocks
     if (stmt instanceof SolveBlock) {
+      if (stmt.destination) {
+        this.session.declaredOperators?.add(stmt.destination);
+      }
       return this.executeSolveBlock(stmt);
     }
 
@@ -139,6 +142,9 @@ export class Executor {
 
     // Check for special operators (Load, Unload, induce, bundle)
     const operatorName = this.extractName(stmt.operator);
+    if (operatorName) {
+      this.session.declaredOperators?.add(operatorName);
+    }
     if (operatorName === 'Load') {
       return this.executeLoad(stmt);
     }
@@ -166,22 +172,6 @@ export class Executor {
       vector = this.buildStatementVector(stmt);
     }
 
-    // If there's a destination, store it in scope
-    if (stmt.destination) {
-      this.session.scope.set(stmt.destination, vector);
-      // Save both text and structured metadata for the reference
-      const factText = this.statementToFactString(stmt);
-      if (factText && operatorName !== 'Implies') {
-        this.session.referenceTexts.set(stmt.destination, factText);
-      }
-      // Store structured metadata for Not expansion
-      let refMetadata = this.extractMetadataWithNotExpansion(stmt, operatorName);
-      if (this.session?.canonicalizationEnabled) {
-        refMetadata = canonicalizeMetadata(this.session, refMetadata);
-      }
-      this.session.referenceMetadata.set(stmt.destination, refMetadata);
-    }
-
     // Add to knowledge base only if:
     // 1. No destination (anonymous fact) - always persistent
     // 2. Has persistName (@var:name syntax) - explicitly persistent
@@ -199,6 +189,23 @@ export class Executor {
         metadata = canonicalizeMetadata(this.session, metadata);
       }
       this.session.addToKB(vector, stmt.persistName, metadata);
+    }
+
+    // If there's a destination, store it in scope after successful persistence
+    // (avoid keeping references for rejected/failed persistent statements)
+    if (stmt.destination) {
+      this.session.scope.set(stmt.destination, vector);
+      // Save both text and structured metadata for the reference
+      const factText = this.statementToFactString(stmt);
+      if (factText && operatorName !== 'Implies') {
+        this.session.referenceTexts.set(stmt.destination, factText);
+      }
+      // Store structured metadata for Not expansion
+      let refMetadata = this.extractMetadataWithNotExpansion(stmt, operatorName);
+      if (this.session?.canonicalizationEnabled) {
+        refMetadata = canonicalizeMetadata(this.session, refMetadata);
+      }
+      this.session.referenceMetadata.set(stmt.destination, refMetadata);
     }
 
     return {

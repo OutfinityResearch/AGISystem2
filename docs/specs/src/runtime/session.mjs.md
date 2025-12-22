@@ -58,10 +58,12 @@ class Session {
 }
 
 interface SessionOptions {
-  geometry?: number;          // Default: 32768
-  name?: string;              // Session name
-  preloadTheories?: string[]; // Theories to load
-  logLevel?: string;          // Logging level
+  geometry?: number;                 // Default: 32768
+  hdcStrategy?: string;              // Default: env SYS2_HDC_STRATEGY or 'dense-binary'
+  reasoningPriority?: string;        // Default: getReasoningPriority()
+  reasoningProfile?: string;         // Default: derived from priority/env
+  canonicalizationEnabled?: boolean; // Override profile-derived toggle
+  proofValidationEnabled?: boolean;  // Override profile-derived toggle
 }
 
 // HDC Strategy (set via SYS2_HDC_STRATEGY environment variable)
@@ -81,20 +83,19 @@ interface SessionOptions {
 class Session {
   constructor(options = {}) {
     this.geometry = options.geometry || 32768;
-    this.name = options.name || `session_${Date.now()}`;
+    this.hdcStrategy = options.hdcStrategy || 'dense-binary';
 
     // Core state
     this.scope = new Scope();
-    this.kb = Vector.zero(this.geometry);
-    this.vocabulary = new Map();
-    this.facts = [];
+    this.kb = null;
+    this.vocabulary = new Vocabulary(this.geometry);
+    this.kbFacts = [];
 
     // Components
-    this.registry = new TheoryRegistry(this.geometry);
     this.executor = new Executor(this);
-    this.queryEngine = new QueryEngine(this);
-    this.proofEngine = new ProofEngine(this);
-    this.decoder = new Decoder(this);
+    this.queryEngine = createQueryEngine(this);
+    this.abductionEngine = new AbductionEngine(this);
+    this.inductionEngine = new InductionEngine(this);
 
     // Statistics
     this.stats = {
@@ -103,17 +104,11 @@ class Session {
       proveCalls: 0,
       startTime: new Date().toISOString()
     };
-
-    // Always load Core theory
-    this.loadCoreTheory();
-
-    // Preload requested theories
-    for (const theory of options.preloadTheories || []) {
-      this.learn(`@_ Load $${theory}`);
-    }
   }
 }
 ```
+
+**Note:** Core theories are not auto-loaded. Call `session.loadCore()` explicitly when needed.
 
 ### 4.2 Learn Implementation
 

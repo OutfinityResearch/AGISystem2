@@ -18,7 +18,7 @@ AGISystem2Engine
     └── getSession() → Session
             │
             ├── LEARNING
-            │   └── learn(dsl: string) → void
+            │   └── learn(dsl: string) → LearnResult
             │
             ├── QUERYING
             │   ├── query(dsl: string) → Result
@@ -50,9 +50,9 @@ AGISystem2Engine
 
 | Method | Input | Output | Purpose |
 |--------|-------|--------|---------|
-| `learn` | DSL statements | — | Add facts, define graphs |
+| `learn` | DSL statements | LearnResult | Add facts, define graphs |
 | `query` | DSL with holes | Result | Find answers |
-| `prove` | DSL with holes | Proof | Answer + derivation |
+| `prove` | DSL without holes | Proof | Answer + derivation |
 | `summarize` | Vector | string | Concise decode |
 | `elaborate` | Vector | string | Detailed decode |
 | `generateText` | operator, args | string | DSL → natural language |
@@ -153,7 +153,7 @@ session.close();
 
 ## 4.4 The learn() Method
 
-`learn()` executes DSL statements that build knowledge. No holes allowed.
+`learn()` executes DSL statements that build knowledge. Holes are supported for rule/graph variables; avoid holes in plain fact learning.
 
 **Valid learn() input:**
 ```
@@ -164,10 +164,30 @@ session.close();
 @fact2 likes $Mary Pizza
 ```
 
-**Invalid learn() input:**
+**Note on holes in learn():**
 ```
-@answer sell ?who $Mary Car 1000    # ERROR: holes not allowed
+@rule sell ?who $Mary Car 1000    # Variable-style learn used for rules/graphs
 ```
+
+**Output:** `LearnResult`
+```typescript
+interface LearnResult {
+    success: boolean;
+    facts: number;
+    errors: string[];
+    warnings: string[];
+    // Present when learning is rejected due to contradictions.
+    contradiction?: {
+        reason: string;
+        proof?: string | string[];
+    };
+}
+```
+
+**Contradiction handling:**
+- If new facts contradict existing knowledge, the learn step MUST be rejected.
+- No new facts are stored in the KB.
+- The contradiction proof MUST be surfaced (e.g., via `proof_nl` in eval suites).
 
 **What learn() does:**
 1. Parse DSL statements
@@ -228,7 +248,7 @@ const result = session.query(`@answer buy ?who Book ?seller ?price`);
 
 ## 4.6 The prove() Method
 
-`prove()` returns the answer AND the **derivation chain**.
+`prove()` returns the answer AND the **derivation chain**. The goal must be a complete fact (no holes).
 
 **Output:** `Proof` structure
 ```typescript

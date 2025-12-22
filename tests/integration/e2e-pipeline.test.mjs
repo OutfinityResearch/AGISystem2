@@ -151,8 +151,7 @@ describe('End-to-End Pipeline', () => {
     test('should handle empty KB gracefully', () => {
       const session = new TestSession({ geometry: 2048 });
 
-      const result = session.query('@q loves ?who Mary');
-      assert.ok(!result.success);
+      assert.throws(() => session.query('@q loves ?who Mary'));
 
       session.close();
     });
@@ -160,9 +159,7 @@ describe('End-to-End Pipeline', () => {
     test('should handle malformed DSL', () => {
       const session = new TestSession({ geometry: 2048 });
 
-      const result = session.learn('@f loves John "unterminated');
-      assert.ok(!result.success);
-      assert.ok(result.errors.length > 0);
+      assert.throws(() => session.learn('@f loves John "unterminated'));
 
       session.close();
     });

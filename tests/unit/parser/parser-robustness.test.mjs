@@ -75,6 +75,15 @@ describe('Parser Robustness', () => {
       const elapsed = Date.now() - start;
       assert.ok(elapsed < 100, `Parser took too long: ${elapsed}ms`);
     });
+
+    test('should throw on unexpected keyword in graph body', () => {
+      const start = Date.now();
+      assert.throws(() => {
+        parse(`@:_graph graph Param\n  @x isA $Param Thing\n  @bad theory $Param Bad\nend`);
+      }, ParseError);
+      const elapsed = Date.now() - start;
+      assert.ok(elapsed < 100, `Parser took too long: ${elapsed}ms`);
+    });
   });
 
   describe('Valid edge cases', () => {

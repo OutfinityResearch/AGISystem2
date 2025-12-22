@@ -215,7 +215,7 @@ export default { name, description, theories, steps };
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `action` | string | Yes | `learn`, `query`, `prove`, `explain` |
+| `action` | string | Yes | `learn`, `query`, `prove` (`explain` is reserved; not executed by the runner) |
 | `input_nl` | string | Yes | Natural language input (fact to learn, question to ask) |
 | `input_dsl` | string | Yes | Equivalent DSL (reference for all actions) |
 | `expected_nl` | string (learn/prove), string[] (query) | Yes | Expected natural language response |
@@ -242,7 +242,8 @@ export default { name, description, theories, steps };
 | `learn` | Add facts/rules to KB | `session.learn()` | `input_nl`, `input_dsl` | facts count, warnings, or REJECTION |
 | `query` | Query KB with holes | `session.query()` | `input_nl`, `input_dsl` | bindings, confidence |
 | `prove` | Prove a goal (no holes!) | `session.prove()` | `input_nl`, `input_dsl` | valid, proof steps |
-| `explain` | Explain a result | `session.explain()` | `input_nl`, `input_dsl` | detailed explanation |
+ 
+**Note:** `explain` is reserved for future use; the current runner does not execute it.
 
 **Note on prove vs query:**
 - `query` uses hole patterns (e.g., `@q isA Rex ?what`) to extract unknown values
@@ -298,10 +299,11 @@ When a `learn` action encounters a fact that contradicts existing knowledge, it 
     attempted: 'isA Whale Fish',
     existing: 'Not (isA Whale Fish)',
     reason: 'Direct negation'
-  },
-  nl_response: 'REJECTED: Cannot learn "whale is a fish" because it contradicts existing knowledge that "whale is NOT a fish"'
+  }
 }
 ```
+
+NL output is generated separately via `session.describeResult(...)`.
 
 ### 14.5.4 Example Suite: Contradiction Detection
 
@@ -316,63 +318,40 @@ See `suite06_contradictions/cases.mjs` for comprehensive examples including:
 
 ## 14.6 Expected Output Format
 
-### 14.5.1 Learn Response
+DSL→NL output is produced by `session.describeResult(...)` (via `ResponseTranslator`).
+The translator returns either:
+- a string, or
+- an object `{ text, proofText }`, which the runner coerces into `text` or `text + " Proof: " + proofText`.
 
+### 14.6.1 Learn Output
+
+Reasoning result (from `session.learn`):
 ```javascript
 {
   success: true,
   facts: 3,
-  rules: 1,
-  warnings: [],
-  nl_response: 'Learned 3 facts and 1 rule'
+  errors: [],
+  warnings: []
 }
 ```
 
-### 14.5.2 Query Response
-
-```javascript
-{
-  success: true,
-  bindings: {
-    what: { answer: 'Dog', confidence: 0.87, alternatives: ['Mammal'] }
-  },
-  nl_response: 'Rex is a dog'
-}
+NL output (string):
+```
+Learned 3 facts
 ```
 
-### 14.5.3 Prove Response
+### 14.6.2 Query Output
 
-```javascript
-{
-  valid: true,
-  confidence: 0.92,
-  proof_steps: [
-    { fact: 'isA Rex Dog', source: 'KB' },
-    { fact: 'isA Dog Mammal', source: 'KB' },
-    { rule: 'Implies (isA ?x Dog) (isA ?x Mammal)', applied: true },
-    { conclusion: 'isA Rex Mammal', derived: true }
-  ],
-  nl_response: 'Yes. Rex is a dog. Dogs are mammals. Therefore Rex is a mammal.'
-}
+Reasoning result (from `session.query`) includes bindings; NL output is a string:
+```
+Rex is a dog. Proof: isA Rex Dog.
 ```
 
-### 14.5.4 Explain Response
+### 14.6.3 Prove Output
 
-```javascript
-{
-  success: true,
-  explanation: {
-    goal: 'isA Rex Mammal',
-    reasoning: [
-      'Starting from the goal: Rex is a Mammal',
-      'Found fact: Rex is a Dog (direct KB match)',
-      'Found fact: Dog is a Mammal (direct KB match)',
-      'Applied transitivity: if Rex is Dog and Dog is Mammal, then Rex is Mammal',
-      'Conclusion: Rex is indeed a Mammal with confidence 0.92'
-    ]
-  },
-  nl_response: 'Rex is a mammal because Rex is a dog, and dogs are mammals.'
-}
+Reasoning result (from `session.prove`) includes proof steps; NL output is a string:
+```
+True: Rex is a mammal. Proof: isA Rex Dog. isA Dog Mammal.
 ```
 
 ---
@@ -413,8 +392,8 @@ async function executeStep(step, session) {
       return await executeQuery(step, session);
     case 'prove':
       return await executeProve(step, session);
-    case 'explain':
-      return await executeExplain(step, session);
+    default:
+      throw new Error(`Unsupported action: ${step.action}`);
   }
 }
 ```
@@ -438,16 +417,12 @@ async function executeLearning(step, session) {
   // Learn the DSL
   const learnResult = session.learn(dsl);
 
-  // Generate NL response
-  const nl_response = generateLearnResponse(learnResult);
-
   return {
     step: step.step,
     action: 'learn',
     nl_transform: nl_transform_success ? 'PASS' : 'SKIP',
     reasoning: learnResult.success ? 'PASS' : 'FAIL',
-    nl_output: matchesExpected(nl_response, step.expected_nl) ? 'PASS' : 'FAIL',
-    actual_nl: nl_response
+    actual: learnResult
   };
 }
 ```
@@ -563,13 +538,6 @@ export const steps = [
     proof_nl: ['hasProperty Rex friendly', 'hasProperty Rex brown']
   },
 
-  // Explain reasoning
-  {
-    action: 'explain',
-    input_nl: 'Explain why Rex is an animal',
-    input_dsl: '@goal isA Rex Animal',
-    expected_nl: 'Rex is an animal because: Rex is a dog (direct fact), dogs are mammals (taxonomy), and mammals are animals (taxonomy). This forms a chain: Rex → Dog → Mammal → Animal.'
-  }
 ];
 
 export default { name, description, theories, steps };
@@ -584,7 +552,7 @@ export default { name, description, theories, steps };
                     AGISystem2 Evaluation Suite
 ═══════════════════════════════════════════════════════════════════
 
-▶ Animal Taxonomy (10 steps)
+▶ Animal Taxonomy (9 steps)
   Core Theories: 00-types.sys2, 05-logic.sys2
 
   Step  Action   NL→DSL    Reasoning  NL Output  Description
@@ -598,12 +566,10 @@ export default { name, description, theories, steps };
     7   prove    ○ SKIP    ✓ PASS     ✗ FAIL     Is Rex an animal?
     8   learn    ✓ PASS    ✓ PASS     ✓ PASS     Learn properties
     9   query    ○ SKIP    ✓ PASS     ✓ PASS     Query Rex property
-   10   explain  ○ SKIP    ✓ PASS     ✗ FAIL     Explain Rex is animal
-
-  Summary: 7/10 passed (70%)
+  Summary: 7/9 passed (78%)
   ├── NL→DSL:    3/3  (100%)
-  ├── Reasoning: 10/10 (100%)
-  └── NL Output: 7/10 (70%)
+  ├── Reasoning: 9/9 (100%)
+  └── NL Output: 7/9 (78%)
 
 ═══════════════════════════════════════════════════════════════════
                          FINAL SUMMARY
@@ -611,7 +577,7 @@ export default { name, description, theories, steps };
 
 Suite                         NL→DSL   Reason   Output   Overall
 ─────────────────────────────────────────────────────────────────
-Animal Taxonomy               100%     100%     70%      ████████░░ 80%
+Animal Taxonomy               100%     100%     78%      ████████░░ 78%
 Family Relations              90%      80%      60%      ██████░░░░ 60%
 Rule Reasoning                80%      70%      50%      ██████░░░░ 55%
 ...
@@ -636,7 +602,6 @@ Time: 3.2s
 - **learn**: `success === true`
 - **query**: `success === true` AND bindings match `expected_bindings`
 - **prove**: `valid === expected_valid`
-- **explain**: `success === true`
 
 ### 14.9.3 NL Output Phase
 
@@ -669,7 +634,7 @@ Fuzzy comparison between actual output and `expected_nl` (plus proof checks when
 | **URS-11** | DSL representation | input_dsl validation |
 | **URS-14** | NL output | expected_nl matching |
 | **URS-17** | Summarize | NL response generation |
-| **URS-18** | Elaborate/Explain | explain action |
+| **URS-18** | Elaborate/Explain | Reserved (runner does not execute explain yet) |
 
 ---
 
@@ -683,7 +648,7 @@ These guidelines are **permanent** and must be followed when working with the ev
 
 ```
 CORRECT:
-  evalSuite/lib/runner.mjs → calls session.generateNL(result)
+  evalSuite/lib/runner.mjs → calls session.describeResult(result)
   src/runtime/session.mjs   → implements NL translation from internal representations
 
 WRONG:

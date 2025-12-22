@@ -148,45 +148,89 @@ fi
 
 # SYS2 config files section - afișare compactă pe folder
 if [[ ${#sys2_files[@]} -gt 0 ]]; then
-  # Extrage toate folder-urile unice din config
-  declare -A sys2_folders
+  # Separă fișierele din config/ și evals/
+  config_sys2_files=()
+  evals_sys2_files=()
   for file in "${sys2_files[@]}"; do
-    # Extrage folder-ul din config/ (ex: config/Core -> Core)
-    folder=$(echo "$file" | sed 's|^./config/||' | cut -d'/' -f1)
-    sys2_folders["$folder"]=1
-  done
-
-  # Sortează folder-urile, dar pune Core la început
-  sorted_sys2_folders=()
-  if [[ -v sys2_folders["Core"] ]]; then
-    sorted_sys2_folders+=("Core")
-  fi
-  for folder in "${!sys2_folders[@]}"; do
-    if [[ "$folder" != "Core" ]]; then
-      sorted_sys2_folders+=("$folder")
+    if [[ "$file" == ./config/* ]]; then
+      config_sys2_files+=("$file")
+    elif [[ "$file" == ./evals/* ]]; then
+      evals_sys2_files+=("$file")
     fi
   done
 
-  # Construiește array cu "lines folder" pentru afișare compactă
-  config_summary=()
-  for folder in "${sorted_sys2_folders[@]}"; do
-    folder_files=()
-    for file in "${sys2_files[@]}"; do
-      file_folder=$(echo "$file" | sed 's|^./config/||' | cut -d'/' -f1)
-      if [[ "$file_folder" == "$folder" ]]; then
-        folder_files+=("$file")
+  # Procesează fișierele din config/
+  if [[ ${#config_sys2_files[@]} -gt 0 ]]; then
+    declare -A sys2_folders
+    for file in "${config_sys2_files[@]}"; do
+      folder=$(echo "$file" | sed 's|^./config/||' | cut -d'/' -f1)
+      sys2_folders["$folder"]=1
+    done
+
+    sorted_sys2_folders=()
+    if [[ -v sys2_folders["Core"] ]]; then
+      sorted_sys2_folders+=("Core")
+    fi
+    for folder in "${!sys2_folders[@]}"; do
+      if [[ "$folder" != "Core" ]]; then
+        sorted_sys2_folders+=("$folder")
       fi
     done
 
-    if [[ ${#folder_files[@]} -gt 0 ]]; then
-      folder_sys2_output=$(printf '%s\0' "${folder_files[@]}" | xargs -0 wc -l | sort -n)
-      folder_total=$(echo "$folder_sys2_output" | tail -n 1 | awk '{print $1}')
-      config_summary+=("$folder_total $folder")
-    fi
-  done
+    config_summary=()
+    for folder in "${sorted_sys2_folders[@]}"; do
+      folder_files=()
+      for file in "${config_sys2_files[@]}"; do
+        file_folder=$(echo "$file" | sed 's|^./config/||' | cut -d'/' -f1)
+        if [[ "$file_folder" == "$folder" ]]; then
+          folder_files+=("$file")
+        fi
+      done
 
-  # Afișează sumar compact folosind render_category
-  render_category "Config Files (config/*.sys2)" config_summary
+      if [[ ${#folder_files[@]} -gt 0 ]]; then
+        folder_sys2_output=$(printf '%s\0' "${folder_files[@]}" | xargs -0 wc -l | sort -n)
+        folder_total=$(echo "$folder_sys2_output" | tail -n 1 | awk '{print $1}')
+        config_summary+=("$folder_total $folder")
+      fi
+    done
+
+    render_category "Config Files (config/*.sys2)" config_summary
+  fi
+
+  # Procesează fișierele din evals/ - grupate pe subfolder
+  if [[ ${#evals_sys2_files[@]} -gt 0 ]]; then
+    declare -A evals_folders
+    for file in "${evals_sys2_files[@]}"; do
+      # Extrage subfolderul din evals/ (ex: evals/stress -> stress)
+      subfolder=$(echo "$file" | sed 's|^./evals/||' | cut -d'/' -f1)
+      evals_folders["$subfolder"]=1
+    done
+
+    # Sortează subfolderele alfabetic
+    sorted_evals_folders=()
+    for folder in "${!evals_folders[@]}"; do
+      sorted_evals_folders+=("$folder")
+    done
+    IFS=$'\n' sorted_evals_folders=($(sort <<<"${sorted_evals_folders[*]}")); unset IFS
+
+    # Pentru fiecare subfolder, afișează fișierele
+    for folder in "${sorted_evals_folders[@]}"; do
+      folder_files=()
+      for file in "${evals_sys2_files[@]}"; do
+        file_folder=$(echo "$file" | sed 's|^./evals/||' | cut -d'/' -f1)
+        if [[ "$file_folder" == "$folder" ]]; then
+          folder_files+=("$file")
+        fi
+      done
+
+      if [[ ${#folder_files[@]} -gt 0 ]]; then
+        folder_sys2_output=$(printf '%s\0' "${folder_files[@]}" | xargs -0 wc -l | sort -n)
+        folder_total=$(echo "$folder_sys2_output" | tail -n 1 | awk '{print $1}')
+        mapfile -t folder_rows < <(echo "$folder_sys2_output" | sed '$d')
+        render_category "Eval Files [evals/$folder] (total: $folder_total lines)" folder_rows
+      fi
+    done
+  fi
 
   # Calculează totalul SYS2
   sys2_lines_output=$(printf '%s\0' "${sys2_files[@]}" | xargs -0 wc -l | sort -n)
@@ -256,7 +300,7 @@ fi
 echo "--- Summary ---"
 echo "Total HTML lines:   ${total_html_lines:-0}"
 echo "Total MD lines:     ${total_md_lines:-0}"
-echo "Total Config lines: ${total_sys2_lines:-0}"
+echo "Total Sys2 lines:   ${total_sys2_lines:-0}"
 echo "Total JS lines:     ${total_js_lines:-0}"
 grand_total=$((total_js_lines + total_html_lines + total_md_lines + total_sys2_lines))
 echo "Grand Total lines:  $grand_total"

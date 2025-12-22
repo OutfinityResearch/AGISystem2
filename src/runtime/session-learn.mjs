@@ -13,6 +13,18 @@ export function learn(session, dsl) {
     // Track rules (Implies statements)
     session.trackRules(ast);
 
+    const loadErrors = [];
+    for (const r of result.results || []) {
+      if (!r) continue;
+      if (r.loaded === false && Array.isArray(r.errors) && r.errors.length > 0) {
+        const label = r.path || r.statement || 'Load';
+        for (const err of r.errors) {
+          const msg = err?.message || String(err);
+          loadErrors.push(`Load failed for ${label}: ${msg}`);
+        }
+      }
+    }
+
     // Count actual facts: for Load statements, use factsLoaded; otherwise count results
     let factCount = 0;
     let solveResult = null;
@@ -28,10 +40,13 @@ export function learn(session, dsl) {
       }
     }
 
+    const errors = result.errors.map(e => e.message).concat(loadErrors);
+    const success = result.success && loadErrors.length === 0;
+
     const response = {
-      success: result.success,
+      success,
       facts: factCount,
-      errors: result.errors.map(e => e.message),
+      errors,
       warnings: session.warnings.slice()
     };
 
@@ -49,4 +64,3 @@ export function learn(session, dsl) {
     };
   }
 }
-

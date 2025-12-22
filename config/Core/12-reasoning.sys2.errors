@@ -1,0 +1,34 @@
+# Errors for config/Core/12-reasoning.sys2
+
+## Dependency Errors
+
+- [dense-binary/symbolicPriority] Unknown operator '__Bundle' at 22:13
+- [dense-binary/symbolicPriority] Unknown operator '__Bundle' at 34:13
+- [dense-binary/symbolicPriority] Unknown operator '__Bundle' at 44:13
+- [dense-binary/symbolicPriority] Unknown operator '__Bundle' at 56:13
+- [dense-binary/symbolicPriority] Unknown operator '__Bundle' at 81:13
+- [dense-binary/holographicPriority] Unknown operator '__Bundle' at 22:13
+- [dense-binary/holographicPriority] Unknown operator '__Bundle' at 34:13
+- [dense-binary/holographicPriority] Unknown operator '__Bundle' at 44:13
+- [dense-binary/holographicPriority] Unknown operator '__Bundle' at 56:13
+- [dense-binary/holographicPriority] Unknown operator '__Bundle' at 81:13
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Bundle' at 22:13
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Bundle' at 34:13
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Bundle' at 44:13
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Bundle' at 56:13
+- [sparse-polynomial/symbolicPriority] Unknown operator '__Bundle' at 81:13
+- [sparse-polynomial/holographicPriority] Unknown operator '__Bundle' at 22:13
+- [sparse-polynomial/holographicPriority] Unknown operator '__Bundle' at 34:13
+- [sparse-polynomial/holographicPriority] Unknown operator '__Bundle' at 44:13
+- [sparse-polynomial/holographicPriority] Unknown operator '__Bundle' at 56:13
+- [sparse-polynomial/holographicPriority] Unknown operator '__Bundle' at 81:13
+- [metric-affine/symbolicPriority] Unknown operator '__Bundle' at 22:13
+- [metric-affine/symbolicPriority] Unknown operator '__Bundle' at 34:13
+- [metric-affine/symbolicPriority] Unknown operator '__Bundle' at 44:13
+- [metric-affine/symbolicPriority] Unknown operator '__Bundle' at 56:13
+- [metric-affine/symbolicPriority] Unknown operator '__Bundle' at 81:13
+- [metric-affine/holographicPriority] Unknown operator '__Bundle' at 22:13
+- [metric-affine/holographicPriority] Unknown operator '__Bundle' at 34:13
+- [metric-affine/holographicPriority] Unknown operator '__Bundle' at 44:13
+- [metric-affine/holographicPriority] Unknown operator '__Bundle' at 56:13
+- [metric-affine/holographicPriority] Unknown operator '__Bundle' at 81:13
