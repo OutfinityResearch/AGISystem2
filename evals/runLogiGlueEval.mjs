@@ -144,14 +144,18 @@ function parseArgs() {
 
     // Mode flags
     fast: args.includes('--fast'),
+    full: args.includes('--full'),  // Run all configurations (default: single config)
     verbose: args.includes('--verbose') || args.includes('-v'),
     listSources: args.includes('--list-sources'),
     cacheStatus: args.includes('--cache-status'),
     help: args.includes('--help') || args.includes('-h'),
 
-    // Parallel execution - default 10 workers
+    // Parallel execution - default ON with 10 workers
     workers: getIntArg('--workers', 10),
-    parallel: args.includes('--parallel') || args.includes('-p')
+    parallel: !args.includes('--sequential'),  // Parallel is default, use --sequential to disable
+
+    // Failure report
+    report: !args.includes('--no-report')  // Generate failure report by default
   };
 }
 
@@ -165,7 +169,14 @@ function buildConfigurations(args) {
     ? [args.priority.includes('holo') ? REASONING_PRIORITY.HOLOGRAPHIC : REASONING_PRIORITY.SYMBOLIC]
     : [REASONING_PRIORITY.SYMBOLIC, REASONING_PRIORITY.HOLOGRAPHIC];
 
-  if (args.fast && !args.strategy) {
+  // Default: single configuration for fast iteration
+  if (!args.full && !args.strategy) {
+    configurations.push({
+      strategy: 'dense-binary',
+      priority: REASONING_PRIORITY.HOLOGRAPHIC,
+      geometry: 256
+    });
+  } else if (args.fast && !args.strategy) {
     configurations.push({
       strategy: 'dense-binary',
       priority: REASONING_PRIORITY.HOLOGRAPHIC,
@@ -580,6 +591,7 @@ async function main() {
         let correctCount = 0;
         const startTime = performance.now();
         const suiteStats = {}; // Per-suite statistics
+        const failures = []; // Collect failures for report
 
         for (let i = 0; i < workerExamples.length; i++) {
           const example = workerExamples[i];
@@ -596,6 +608,19 @@ async function main() {
             suiteStats[src].pass++;
           } else {
             suiteStats[src].fail++;
+            // Collect failure details for report
+            failures.push({
+              source: src,
+              context: example.context,
+              question: example.question,
+              label: example.label,
+              contextDsl: result.translated?.contextDsl,
+              questionDsl: result.translated?.questionDsl,
+              expectProved: result.expectProved,
+              actualProved: result.proved,
+              error: result.error,
+              translationErrors: result.translated?.contextErrors
+            });
           }
 
           // Update worker state
@@ -617,7 +642,7 @@ async function main() {
         workerState[w].accuracy = accuracy;
         updateWorkerLine(w);
 
-        return { worker: w + 1, correctCount, total: workerExamples.length, accuracy, totalDuration, suiteStats };
+        return { worker: w + 1, correctCount, total: workerExamples.length, accuracy, totalDuration, suiteStats, failures };
       })());
     }
 
@@ -668,6 +693,75 @@ async function main() {
       console.log(`  ${C.cyan}${suite.padEnd(15)}${C.reset} ${String(stats.pass).padStart(6)} ${String(stats.fail).padStart(6)} ${String(total).padStart(6)} ${color}${acc.toFixed(1).padStart(9)}%${C.reset}  ${color}${bar}${C.reset}`);
     }
     console.log(`${'─'.repeat(70)}`);
+
+    // Generate failure report
+    if (args.report) {
+      const allFailures = workerResults.flatMap(wr => wr.failures || []);
+      if (allFailures.length > 0) {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+        const reportPath = join(__dirname, 'ruletaker', `run_${timestamp}_failures.md`);
+
+        // Ensure directory exists
+        const reportDir = join(__dirname, 'ruletaker');
+        if (!fs.existsSync(reportDir)) {
+          fs.mkdirSync(reportDir, { recursive: true });
+        }
+
+        let reportContent = `# Failure Report - ${new Date().toISOString()}\n\n`;
+        reportContent += `Total tests: ${examples.length * args.workers}\n`;
+        reportContent += `Total failures: ${allFailures.length}\n`;
+        reportContent += `Average accuracy: ${avgAccuracy.toFixed(1)}%\n\n`;
+
+        // Group failures by source
+        const failuresBySource = {};
+        for (const f of allFailures) {
+          if (!failuresBySource[f.source]) failuresBySource[f.source] = [];
+          failuresBySource[f.source].push(f);
+        }
+
+        for (const [source, failures] of Object.entries(failuresBySource).sort((a, b) => b[1].length - a[1].length)) {
+          reportContent += `## ${source} (${failures.length} failures)\n\n`;
+
+          // Deduplicate by question (since workers process same examples with different seeds)
+          const seenQuestions = new Set();
+          for (const f of failures) {
+            const key = f.question;
+            if (seenQuestions.has(key)) continue;
+            seenQuestions.add(key);
+
+            reportContent += `### ${f.question?.slice(0, 60)}...\n\n`;
+            reportContent += `**Context (NL):**\n\`\`\`\n${f.context || 'N/A'}\n\`\`\`\n\n`;
+            reportContent += `**Question:** ${f.question}\n\n`;
+            reportContent += `**Expected:** ${f.expectProved ? 'PROVE' : 'NOT PROVE'} | **Got:** ${f.actualProved ? 'PROVED' : 'NOT PROVED'}\n\n`;
+
+            if (f.error) {
+              reportContent += `**Error:** \`${f.error}\`\n\n`;
+            }
+
+            if (f.contextDsl) {
+              reportContent += `**Context DSL:**\n\`\`\`\n${f.contextDsl}\n\`\`\`\n\n`;
+            }
+
+            if (f.questionDsl) {
+              reportContent += `**Question DSL:**\n\`\`\`\n${f.questionDsl}\n\`\`\`\n\n`;
+            }
+
+            if (f.translationErrors?.length > 0) {
+              reportContent += `**Translation Errors:**\n`;
+              for (const te of f.translationErrors) {
+                reportContent += `- ${te.sentence}: ${te.error}\n`;
+              }
+              reportContent += '\n';
+            }
+
+            reportContent += '---\n\n';
+          }
+        }
+
+        fs.writeFileSync(reportPath, reportContent);
+        console.log(`\n${C.cyan}Failure report written to: ${reportPath}${C.reset}`);
+      }
+    }
 
   } else {
     // Sequential mode

@@ -1,29 +1,7 @@
-# Anthropology - Lexicon (Value Vocabulary)
-# Domain value tokens used inside Anthropology graph bodies under strict DSL validation.
+# Anthropology - Lexicon (Categories)
+# Domain category tokens used inside Anthropology graph bodies.
 #
-# This file intentionally avoids defining ad-hoc schema role labels for `__Role`:
-# domain theories should use Core semantic roles from `config/Core/09-roles.sys2`.
-#
-# Note: Graph operators (e.g., Culture, Ritual, Symbol, ...) are declared in 00-concepts.sys2.
-
-# ===== Property Values =====
-
-@Learned:Learned __Property
-@Collective:Collective __Property
-@Symbolic:Symbolic __Property
-@Formalized:Formalized __Property
-@Repetitive:Repetitive __Property
-@CarriesMeaning:CarriesMeaning __Property
-@Arbitrary:Arbitrary __Property
-@Enduring:Enduring __Property
-@Sacred:Sacred __Property
-@Holistic:Holistic __Property
-@Responsive:Responsive __Property
-@Cumulative:Cumulative __Property
-@RuleGoverned:RuleGoverned __Property
-@HumanMade:HumanMade __Property
-
-# ===== Category Values =====
+# Note: Domain theories should use Core semantic roles from `config/Core/09-roles.sys2`.
 
 @KinshipSystem:KinshipSystem __Category
 @Descent:Descent __Category

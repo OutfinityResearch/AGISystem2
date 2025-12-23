@@ -1,0 +1,19 @@
+# Anthropology - Lexicon (Properties)
+# Domain property tokens used inside Anthropology graph bodies.
+#
+# Note: Domain theories should use Core semantic roles from `config/Core/09-roles.sys2`.
+
+@Learned:Learned __Property
+@Collective:Collective __Property
+@Symbolic:Symbolic __Property
+@Formalized:Formalized __Property
+@Repetitive:Repetitive __Property
+@CarriesMeaning:CarriesMeaning __Property
+@Arbitrary:Arbitrary __Property
+@Enduring:Enduring __Property
+@Sacred:Sacred __Property
+@Holistic:Holistic __Property
+@Responsive:Responsive __Property
+@Cumulative:Cumulative __Property
+@RuleGoverned:RuleGoverned __Property
+@HumanMade:HumanMade __Property

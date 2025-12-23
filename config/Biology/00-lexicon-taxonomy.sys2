@@ -1,0 +1,12 @@
+# Biology - Lexicon (Taxonomy)
+# Domain tokens used in Biology taxonomy and population concepts.
+#
+# Note: Domain theories should use Core semantic roles from `config/Core/09-roles.sys2`.
+
+@ReproductiveIsolation:ReproductiveIsolation __Property
+@SpeciesHomogeneous:SpeciesHomogeneous __Property
+@SingleEntity:SingleEntity __Property
+@Localized:Localized __Property
+
+@LivingUnit:LivingUnit __Property
+@BiologicalSystem:BiologicalSystem __Category

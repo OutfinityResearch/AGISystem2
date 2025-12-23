@@ -150,9 +150,9 @@ const ATOMIC_DECL_POLICY = {
   //
   // Important: lexicon files should NOT introduce ad-hoc schema roles for `__Role` — domain theories
   // must still use Core semantic roles from `config/Core/09-roles.sys2`.
-  allowedLexiconSuffixes: [
-    '/00-lexicon.sys2'
-  ],
+  // Any `00-lexicon*.sys2` file under config/ is treated as a value-vocabulary module.
+  // (We keep these modular to avoid huge single lexicon files.)
+  isLexiconFile: (relPath) => /\/00-lexicon[^/]*\.sys2$/.test(relPath),
 
   // Explicit list of "fundamental" declaration heads permitted in Core.
   allowedHeads: new Set([
@@ -373,7 +373,7 @@ function detectNonGraphDeclarations(content, relPath) {
     const head = rest.split(/\s+/)[0];
     if (head.startsWith('__') || head.startsWith('___')) {
       const inAllowedPrefix = ATOMIC_DECL_POLICY.allowedPrefixes.some(p => relPath.startsWith(p));
-      const inAllowedLexicon = ATOMIC_DECL_POLICY.allowedLexiconSuffixes.some(s => relPath.endsWith(s));
+      const inAllowedLexicon = Boolean(ATOMIC_DECL_POLICY.isLexiconFile?.(relPath));
       const allowedCore = inAllowedPrefix && ATOMIC_DECL_POLICY.allowedHeads.has(head);
       const allowedLexicon = inAllowedLexicon && ATOMIC_DECL_POLICY.allowedLexiconHeads.has(head);
       const allowed = allowedCore || allowedLexicon;
