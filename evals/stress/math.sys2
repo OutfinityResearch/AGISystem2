@@ -30,32 +30,35 @@ end
 
 @E:E graph a b
     # Expected value
-    @variable __Role Variable $a
-    @distribution __Role Distribution $b
+    @variable __Role Attribute $a
+    @distribution __Role Attribute $b
     @relation __Pair $variable $distribution
     return $relation
 end
 
 @P:P graph a b
     # Probability of event
-    @event __Role Event $a
-    @space __Role Space $b
+    @eid __Event
+    @act __Role Action P
+    @ctx __Role Context StressCompat
+    @event __Role Action $a
+    @space __Role Attribute $b
     @probability __Role Context ProbabilitySpace
-    @result __Bundle $event $space $probability
+    @result __Bundle $eid $act $event $space $probability $ctx
     return $result
 end
 
 @Var:Var graph a b
     # Variance of random variable
-    @variable __Role Variable $a
-    @distribution __Role Distribution $b
+    @variable __Role Attribute $a
+    @distribution __Role Attribute $b
     @relation __Pair $variable $distribution
     return $relation
 end
 
 @abs:abs graph input output
-    @inp __Role Input $input
-    @out __Role Output $output
+    @inp __Role Attribute $input
+    @out __Role Attribute $output
     @operation __Pair $inp $out
     return $operation
 end
@@ -63,7 +66,7 @@ end
 @actsOn:actsOn graph a b
     # Group action on set
     @group __Role Group $a
-    @set __Role Set $b
+    @set __Role Attribute $b
     @relation __Pair $group $set
     return $relation
 end
@@ -71,51 +74,54 @@ end
 @additiveGroup:additiveGroup graph a b
     # Additive group structure
     @structure __Role Structure $a
-    @operation __Role Operation $b
+    @operation __Role Attribute $b
     @relation __Pair $structure $operation
     return $relation
 end
 
 @allZero:allZero graph a b
     # All elements are zero
-    @sequence __Role Sequence $a
-    @range __Role Range $b
+    @sequence __Role Attribute $a
+    @range __Role Attribute $b
     @relation __Pair $sequence $range
     return $relation
 end
 
 @alternateInterior:alternateInterior graph a b
     # Alternate interior angles
-    @angle1 __Role Angle1 $a
-    @angle2 __Role Angle2 $b
+    @eid __Event
+    @act __Role Action alternateInterior
+    @ctx __Role Context StressCompat
+    @angle1 __Role Attribute $a
+    @angle2 __Role Attribute $b
     @geometry __Role Context GeometricRelation
-    @result __Bundle $angle1 $angle2 $geometry
+    @result __Bundle $eid $act $angle1 $angle2 $geometry $ctx
     return $result
 end
 
 @angle:angle graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
 end
 
 @angle1:angle1 graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
 end
 
 @angle2:angle2 graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
 end
 
 @angle3:angle3 graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
@@ -123,75 +129,84 @@ end
 
 @apply:apply graph a b
     # Function application
+    @eid __Event
+    @act __Role Action apply
+    @ctx __Role Context StressCompat
     @function __Role Function $a
-    @argument __Role Argument $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function $argument $application
+    @argument __Role Content $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $function $argument $application $ctx
     return $result
 end
 
 @areIID:areIID graph a b
     # Independent identically distributed
-    @variables __Role Variables $a
-    @distribution __Role Distribution $b
+    @variables __Role Attribute $a
+    @distribution __Role Attribute $b
     @relation __Pair $variables $distribution
     return $relation
 end
 
 @area:area graph a b
     # Area of geometric figure
-    @figure __Role Figure $a
-    @measure __Role Measure $b
+    @figure __Role Attribute $a
+    @measure __Role Attribute $b
     @relation __Pair $figure $measure
     return $relation
 end
 
 @attainsMaximum:attainsMaximum graph a b
     # Function attains maximum
+    @eid __Event
+    @act __Role Action attainsMaximum
+    @ctx __Role Context StressCompat
     @function __Role Function $a
-    @point __Role Point $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function $point $application
+    @point __Role Attribute $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $function $point $application $ctx
     return $result
 end
 
 @attainsMinimum:attainsMinimum graph a b
     # Function attains minimum
+    @eid __Event
+    @act __Role Action attainsMinimum
+    @ctx __Role Context StressCompat
     @function __Role Function $a
-    @point __Role Point $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function $point $application
+    @point __Role Attribute $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $function $point $application $ctx
     return $result
 end
 
 @averageFixedPoints:averageFixedPoints graph a b
     # Average number of fixed points
-    @permutations __Role Permutations $a
-    @set __Role Set $b
+    @permutations __Role Attribute $a
+    @set __Role Attribute $b
     @relation __Pair $permutations $set
     return $relation
 end
 
 @base:base graph a b
     # Base of geometric figure
-    @figure __Role Figure $a
-    @segment __Role Segment $b
+    @figure __Role Attribute $a
+    @segment __Role Attribute $b
     @relation __Pair $figure $segment
     return $relation
 end
 
 @binomial:binomial graph a b
     # Binomial coefficient C(n,k)
-    @n __Role N $a
-    @k __Role K $b
+    @n __Role Attribute $a
+    @k __Role Attribute $b
     @relation __Pair $n $k
     return $relation
 end
 
 @binomialSum:binomialSum graph a b
     # Sum of binomial terms
-    @terms __Role Terms $a
-    @power __Role Power $b
+    @terms __Role Attribute $a
+    @power __Role Attribute $b
     @relation __Pair $terms $power
     return $relation
 end
@@ -199,13 +214,13 @@ end
 @canExtend:canExtend graph a b
     # Structure can be extended
     @structure __Role Structure $a
-    @extension __Role Extension $b
+    @extension __Role Attribute $b
     @relation __Pair $structure $extension
     return $relation
 end
 
 @cardinality:cardinality graph set result
-    @s __Role Set $set
+    @s __Role Attribute $set
     @r __Role Result $result
     @operation __Pair $s $r
     return $operation
@@ -213,284 +228,338 @@ end
 
 @characteristicPolynomial:characteristicPolynomial graph a b
     # Characteristic polynomial
-    @matrix __Role Matrix $a
-    @variable __Role Variable $b
+    @matrix __Role Attribute $a
+    @variable __Role Attribute $b
     @relation __Pair $matrix $variable
     return $relation
 end
 
 @circleWith:circleWith graph a b
     # Circle with center and radius
-    @center __Role Center $a
-    @radius __Role Radius $b
+    @center __Role Attribute $a
+    @radius __Role Attribute $b
     @relation __Pair $center $radius
     return $relation
 end
 
 @circumference:circumference graph a b
     # Circumference of circle
-    @circle __Role Circle $a
-    @measure __Role Measure $b
+    @circle __Role Attribute $a
+    @measure __Role Attribute $b
     @relation __Pair $circle $measure
     return $relation
 end
 
 @closedInterval:closedInterval graph a b
     # Closed interval [a, b]
-    @lower __Role Lower $a
-    @upper __Role Upper $b
+    @lower __Role Attribute $a
+    @upper __Role Attribute $b
     @relation __Pair $lower $upper
     return $relation
 end
 
 @coInterior:coInterior graph a b
     # Co-interior angles
-    @angle1 __Role Angle1 $a
-    @angle2 __Role Angle2 $b
+    @eid __Event
+    @act __Role Action coInterior
+    @ctx __Role Context StressCompat
+    @angle1 __Role Attribute $a
+    @angle2 __Role Attribute $b
     @geometry __Role Context GeometricRelation
-    @result __Bundle $angle1 $angle2 $geometry
+    @result __Bundle $eid $act $angle1 $angle2 $geometry $ctx
     return $result
 end
 
 @complement:complement graph input output
-    @inp __Role Input $input
-    @out __Role Output $output
+    @inp __Role Attribute $input
+    @out __Role Attribute $output
     @operation __Pair $inp $out
     return $operation
 end
 
 @compose:compose graph a b
     # Function composition
-    @outer __Role Outer $a
-    @inner __Role Inner $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $outer $inner $application
+    @eid __Event
+    @act __Role Action compose
+    @ctx __Role Context StressCompat
+    @outer __Role Attribute $a
+    @inner __Role Attribute $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $outer $inner $application $ctx
     return $result
 end
 
 @conditionalP:conditionalP graph a b
     # Conditional probability P(A|B)
-    @eventA __Role Eventa $a
-    @eventB __Role Eventb $b
+    @eid __Event
+    @act __Role Action conditionalP
+    @ctx __Role Context StressCompat
+    @eventA __Role Attribute $a
+    @eventB __Role Attribute $b
     @probability __Role Context ProbabilitySpace
-    @result __Bundle $eventA $eventB $probability
+    @result __Bundle $eid $act $eventA $eventB $probability $ctx
     return $result
 end
 
 @congruent:congruent graph a b
     # Congruent figures
-    @figure1 __Role Figure1 $a
-    @figure2 __Role Figure2 $b
+    @figure1 __Role Attribute $a
+    @figure2 __Role Attribute $b
     @relation __Pair $figure1 $figure2
     return $relation
 end
 
 @containsConstants:containsConstants graph a b
     # Expression contains constants
-    @expression __Role Expression $a
-    @constants __Role Constants $b
+    @expression __Role Content $a
+    @constants __Role Attribute $b
     @relation __Pair $expression $constants
     return $relation
 end
 
 @continuousFunctions:continuousFunctions graph a b
     # Space of continuous functions
-    @domain __Role Domain $a
-    @codomain __Role Codomain $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $domain $codomain $application
+    @eid __Event
+    @act __Role Action continuousFunctions
+    @ctx __Role Context StressCompat
+    @domain __Role Context $a
+    @codomain __Role Attribute $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $domain $codomain $application $ctx
     return $result
 end
 
 @convergesInDistribution:convergesInDistribution graph function point value
+    @eid __Event
+    @act __Role Action convergesInDistribution
+    @ctx __Role Context StressCompat
     @f __Role Function $function
-    @p __Role Point $point
+    @p __Role Attribute $point
     @v __Role Value $value
-    @analysis __Bundle $f $p $v
+    @analysis __Bundle $eid $act $f $p $v $ctx
     return $analysis
 end
 
 @convergesInProbability:convergesInProbability graph function point value
+    @eid __Event
+    @act __Role Action convergesInProbability
+    @ctx __Role Context StressCompat
     @f __Role Function $function
-    @p __Role Point $point
+    @p __Role Attribute $point
     @v __Role Value $value
-    @analysis __Bundle $f $p $v
+    @analysis __Bundle $eid $act $f $p $v $ctx
     return $analysis
 end
 
 @convergesPointwise:convergesPointwise graph function point value
+    @eid __Event
+    @act __Role Action convergesPointwise
+    @ctx __Role Context StressCompat
     @f __Role Function $function
-    @p __Role Point $point
+    @p __Role Attribute $point
     @v __Role Value $value
-    @analysis __Bundle $f $p $v
+    @analysis __Bundle $eid $act $f $p $v $ctx
     return $analysis
 end
 
 @coprime:coprime graph a b
     # Coprime numbers (gcd = 1)
-    @number1 __Role Number1 $a
-    @number2 __Role Number2 $b
+    @number1 __Role Attribute $a
+    @number2 __Role Attribute $b
     @relation __Pair $number1 $number2
     return $relation
 end
 
 @corresponding:corresponding graph a b
     # Corresponding angles
-    @angle1 __Role Angle1 $a
-    @angle2 __Role Angle2 $b
+    @eid __Event
+    @act __Role Action corresponding
+    @ctx __Role Context StressCompat
+    @angle1 __Role Attribute $a
+    @angle2 __Role Attribute $b
     @geometry __Role Context GeometricRelation
-    @result __Bundle $angle1 $angle2 $geometry
+    @result __Bundle $eid $act $angle1 $angle2 $geometry $ctx
     return $result
 end
 
 @definiteIntegral:definiteIntegral graph a b
     # Definite integral over interval
     @function __Role Function $a
-    @interval __Role Interval $b
+    @interval __Role Attribute $b
     @relation __Pair $function $interval
     return $relation
 end
 
 @degrees:degrees graph a b
     # Angle in degrees
-    @angle __Role Angle $a
-    @measure __Role Measure $b
+    @eid __Event
+    @act __Role Action degrees
+    @ctx __Role Context StressCompat
+    @angle __Role Attribute $a
+    @measure __Role Attribute $b
     @geometry __Role Context GeometricRelation
-    @result __Bundle $angle $measure $geometry
+    @result __Bundle $eid $act $angle $measure $geometry $ctx
     return $result
 end
 
 @derivative:derivative graph function point value
+    @eid __Event
+    @act __Role Action derivative
+    @ctx __Role Context StressCompat
     @f __Role Function $function
-    @p __Role Point $point
+    @p __Role Attribute $point
     @v __Role Value $value
-    @analysis __Bundle $f $p $v
+    @analysis __Bundle $eid $act $f $p $v $ctx
     return $analysis
 end
 
 @derivativeAt:derivativeAt graph function point value
+    @eid __Event
+    @act __Role Action derivativeAt
+    @ctx __Role Context StressCompat
     @f __Role Function $function
-    @p __Role Point $point
+    @p __Role Attribute $point
     @v __Role Value $value
-    @analysis __Bundle $f $p $v
+    @analysis __Bundle $eid $act $f $p $v $ctx
     return $analysis
 end
 
 @derives:derives graph a b
     # Logical derivation
-    @premise __Role Premise $a
-    @conclusion __Role Conclusion $b
+    @premise __Role Attribute $a
+    @conclusion __Role Attribute $b
     @relation __Pair $premise $conclusion
     return $relation
 end
 
 @dimension:dimension graph a b
     # Dimension of vector space
-    @space __Role Space $a
-    @field __Role Field $b
+    @eid __Event
+    @act __Role Action dimension
+    @ctx __Role Context StressCompat
+    @space __Role Attribute $a
+    @field __Role Attribute $b
     @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $space $field $linearAlgebra
+    @result __Bundle $eid $act $space $field $linearAlgebra $ctx
     return $result
 end
 
 @disjoint:disjoint graph a b
     # Disjoint sets with no common elements
-    @setA __Role Seta $a
-    @setB __Role Setb $b
-    @membership __Role Relation SetMembership
-    @result __Bundle $setA $setB $membership
+    @eid __Event
+    @act __Role Action disjoint
+    @ctx __Role Context StressCompat
+    @setA __Role Attribute $a
+    @setB __Role Attribute $b
+    @membership __Role Action SetMembership
+    @result __Bundle $eid $act $setA $setB $membership $ctx
     return $result
 end
 
 @distance:distance graph a b
     # Distance between points
-    @point1 __Role Point1 $a
-    @point2 __Role Point2 $b
+    @point1 __Role Attribute $a
+    @point2 __Role Attribute $b
     @relation __Pair $point1 $point2
     return $relation
 end
 
 @divide:divide graph a b
     # Division of dividend by divisor
-    @dividend __Role Dividend $a
-    @divisor __Role Divisor $b
-    @division __Role Relation Divisibility
-    @result __Bundle $dividend $divisor $division
+    @eid __Event
+    @act __Role Action divide
+    @ctx __Role Context StressCompat
+    @dividend __Role Attribute $a
+    @divisor __Role Attribute $b
+    @division __Role Action Divisibility
+    @result __Bundle $eid $act $dividend $divisor $division $ctx
     return $result
 end
 
 @divides:divides graph a b
     # Divisor divides dividend evenly
-    @divisor __Role Divisor $a
-    @dividend __Role Dividend $b
-    @division __Role Relation Divisibility
-    @result __Bundle $divisor $dividend $division
+    @eid __Event
+    @act __Role Action divides
+    @ctx __Role Context StressCompat
+    @divisor __Role Attribute $a
+    @dividend __Role Attribute $b
+    @division __Role Action Divisibility
+    @result __Bundle $eid $act $divisor $dividend $division $ctx
     return $result
 end
 
 @dominatedBy:dominatedBy graph a b
     # Function dominated by bound
+    @eid __Event
+    @act __Role Action dominatedBy
+    @ctx __Role Context StressCompat
     @function __Role Function $a
-    @bound __Role Bound $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function $bound $application
+    @bound __Role Attribute $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $function $bound $application $ctx
     return $result
 end
 
 @doubleIntegral:doubleIntegral graph a b
     # Double integral over region
     @function __Role Function $a
-    @region __Role Region $b
+    @region __Role Attribute $b
     @relation __Pair $function $region
     return $relation
 end
 
 @endpoint1:endpoint1 graph a b
     # First endpoint of segment
-    @segment __Role Segment $a
-    @point __Role Point $b
+    @segment __Role Attribute $a
+    @point __Role Attribute $b
     @relation __Pair $segment $point
     return $relation
 end
 
 @endpoint2:endpoint2 graph a b
     # Second endpoint of segment
-    @segment __Role Segment $a
-    @point __Role Point $b
+    @segment __Role Attribute $a
+    @point __Role Attribute $b
     @relation __Pair $segment $point
     return $relation
 end
 
 @eulerPhi:eulerPhi graph a b
     # Euler totient function
-    @number __Role Number $a
-    @totient __Role Totient $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $number $totient $application
+    @eid __Event
+    @act __Role Action eulerPhi
+    @ctx __Role Context StressCompat
+    @number __Role Attribute $a
+    @totient __Role Attribute $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $number $totient $application $ctx
     return $result
 end
 
 @evaluateAt:evaluateAt graph a b
     # Function evaluation at point
+    @eid __Event
+    @act __Role Action evaluateAt
+    @ctx __Role Context StressCompat
     @function __Role Function $a
-    @point __Role Point $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function $point $application
+    @point __Role Attribute $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $function $point $application $ctx
     return $result
 end
 
 @existsBijection:existsBijection graph a b
     # Bijection exists between sets
-    @setA __Role Seta $a
-    @setB __Role Setb $b
+    @setA __Role Attribute $a
+    @setB __Role Attribute $b
     @relation __Pair $setA $setB
     return $relation
 end
 
 @existsInjection:existsInjection graph a b
     # Injection exists from A to B
-    @setA __Role Seta $a
-    @setB __Role Setb $b
+    @setA __Role Attribute $a
+    @setB __Role Attribute $b
     @relation __Pair $setA $setB
     return $relation
 end
@@ -498,40 +567,46 @@ end
 @existsUnique:existsUnique graph a b
     # Unique element satisfying property
     @property __Role Property $a
-    @element __Role Element $b
+    @element __Role Attribute $b
     @relation __Pair $property $element
     return $relation
 end
 
 @factorial:factorial graph input output
-    @inp __Role Input $input
-    @out __Role Output $output
+    @inp __Role Attribute $input
+    @out __Role Attribute $output
     @operation __Pair $inp $out
     return $operation
 end
 
 @functionProduct:functionProduct graph a b
     # Pointwise product of functions
-    @function1 __Role Function1 $a
-    @function2 __Role Function2 $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function1 $function2 $application
+    @eid __Event
+    @act __Role Action functionProduct
+    @ctx __Role Context StressCompat
+    @function1 __Role Attribute $a
+    @function2 __Role Attribute $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $function1 $function2 $application $ctx
     return $result
 end
 
 @functionSum:functionSum graph a b
     # Pointwise sum of functions
-    @function1 __Role Function1 $a
-    @function2 __Role Function2 $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function1 $function2 $application
+    @eid __Event
+    @act __Role Action functionSum
+    @ctx __Role Context StressCompat
+    @function1 __Role Attribute $a
+    @function2 __Role Attribute $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $function1 $function2 $application $ctx
     return $result
 end
 
 @gcd:gcd graph a b
     # Greatest common divisor
-    @number1 __Role Number1 $a
-    @number2 __Role Number2 $b
+    @number1 __Role Attribute $a
+    @number2 __Role Attribute $b
     @relation __Pair $number1 $number2
     return $relation
 end
@@ -539,15 +614,15 @@ end
 @generatedBy:generatedBy graph a b
     # Structure generated by elements
     @structure __Role Structure $a
-    @generators __Role Generators $b
+    @generators __Role Attribute $b
     @relation __Pair $structure $generators
     return $relation
 end
 
 @geq:geq graph a b
     # Greater than or equal relation
-    @number __Role Number $a
-    @bound __Role Bound $b
+    @number __Role Attribute $a
+    @bound __Role Attribute $b
     @relation __Pair $number $bound
     return $relation
 end
@@ -624,8 +699,8 @@ end
 
 @height:height graph a b
     # Height of figure
-    @figure __Role Figure $a
-    @measure __Role Measure $b
+    @figure __Role Attribute $a
+    @measure __Role Attribute $b
     @relation __Pair $figure $measure
     return $relation
 end
@@ -633,97 +708,115 @@ end
 @holds:holds graph a b
     # Property holds for object
     @property __Role Property $a
-    @object __Role Object $b
+    @object __Role Theme $b
     @relation __Pair $property $object
     return $relation
 end
 
 @hypotenuse:hypotenuse graph a b
     # Hypotenuse of right triangle
-    @triangle __Role Triangle $a
-    @side __Role Side $b
+    @eid __Event
+    @act __Role Action hypotenuse
+    @ctx __Role Context StressCompat
+    @triangle __Role Attribute $a
+    @side __Role Attribute $b
     @geometry __Role Context GeometricRelation
-    @result __Bundle $triangle $side $geometry
+    @result __Bundle $eid $act $triangle $side $geometry $ctx
     return $result
 end
 
 @identity:identity graph a b
     # Identity element of structure
     @structure __Role Structure $a
-    @element __Role Element $b
+    @element __Role Attribute $b
     @relation __Pair $structure $element
     return $relation
 end
 
 @image:image graph a b
     # Image of function
+    @eid __Event
+    @act __Role Action image
+    @ctx __Role Context StressCompat
     @function __Role Function $a
-    @domain __Role Domain $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $function $domain $application
+    @domain __Role Context $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $function $domain $application $ctx
     return $result
 end
 
 @inDomain:inDomain graph a b
     # Element in function domain
-    @element __Role Element $a
-    @domain __Role Domain $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $element $domain $application
+    @eid __Event
+    @act __Role Action inDomain
+    @ctx __Role Context StressCompat
+    @element __Role Attribute $a
+    @domain __Role Context $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $element $domain $application $ctx
     return $result
 end
 
 @inSigmaAlgebra:inSigmaAlgebra graph a b
     # Set in sigma-algebra
-    @set __Role Set $a
-    @sigmaAlgebra __Role Sigmaalgebra $b
+    @set __Role Attribute $a
+    @sigmaAlgebra __Role Attribute $b
     @relation __Pair $set $sigmaAlgebra
     return $relation
 end
 
 @independent:independent graph a b
     # Independent events
-    @eventA __Role Eventa $a
-    @eventB __Role Eventb $b
+    @eventA __Role Attribute $a
+    @eventB __Role Attribute $b
     @relation __Pair $eventA $eventB
     return $relation
 end
 
 @innerProduct:innerProduct graph a b
     # Inner product of vectors
-    @vector1 __Role Vector1 $a
-    @vector2 __Role Vector2 $b
+    @eid __Event
+    @act __Role Action innerProduct
+    @ctx __Role Context StressCompat
+    @vector1 __Role Attribute $a
+    @vector2 __Role Attribute $b
     @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $vector1 $vector2 $linearAlgebra
+    @result __Bundle $eid $act $vector1 $vector2 $linearAlgebra $ctx
     return $result
 end
 
 @integral:integral graph function point value
+    @eid __Event
+    @act __Role Action integral
+    @ctx __Role Context StressCompat
     @f __Role Function $function
-    @p __Role Point $point
+    @p __Role Attribute $point
     @v __Role Value $value
-    @analysis __Bundle $f $p $v
+    @analysis __Bundle $eid $act $f $p $v $ctx
     return $analysis
 end
 
 @integralFrom:integralFrom graph function point value
+    @eid __Event
+    @act __Role Action integralFrom
+    @ctx __Role Context StressCompat
     @f __Role Function $function
-    @p __Role Point $point
+    @p __Role Attribute $point
     @v __Role Value $value
-    @analysis __Bundle $f $p $v
+    @analysis __Bundle $eid $act $f $p $v $ctx
     return $analysis
 end
 
 @intersection:intersection graph set result
-    @s __Role Set $set
+    @s __Role Attribute $set
     @r __Role Result $result
     @operation __Pair $s $r
     return $operation
 end
 
 @inverse:inverse graph input output
-    @inp __Role Input $input
-    @out __Role Output $output
+    @inp __Role Attribute $input
+    @out __Role Attribute $output
     @operation __Pair $inp $out
     return $operation
 end
@@ -1165,14 +1258,14 @@ end
 @iteratedIntegral:iteratedIntegral graph a b
     # Iterated integral
     @function __Role Function $a
-    @bounds __Role Bounds $b
+    @bounds __Role Attribute $b
     @relation __Pair $function $bounds
     return $relation
 end
 
 @kernel:kernel graph a b
     # Kernel of homomorphism
-    @morphism __Role Morphism $a
+    @morphism __Role Attribute $a
     @structure __Role Structure $b
     @relation __Pair $morphism $structure
     return $relation
@@ -1180,28 +1273,28 @@ end
 
 @leftCoset:leftCoset graph a b
     # Left coset of subgroup
-    @element __Role Element $a
-    @subgroup __Role Subgroup $b
+    @element __Role Attribute $a
+    @subgroup __Role Attribute $b
     @relation __Pair $element $subgroup
     return $relation
 end
 
 @leg1:leg1 graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
 end
 
 @leg2:leg2 graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
 end
 
 @legendreSymbol:legendreSymbol graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
@@ -1209,155 +1302,176 @@ end
 
 @length:length graph a b
     # Length of segment
-    @segment __Role Segment $a
-    @measure __Role Measure $b
+    @segment __Role Attribute $a
+    @measure __Role Attribute $b
     @relation __Pair $segment $measure
     return $relation
 end
 
 @leq:leq graph a b
     # Less than or equal relation
-    @number __Role Number $a
-    @bound __Role Bound $b
+    @number __Role Attribute $a
+    @bound __Role Attribute $b
     @relation __Pair $number $bound
     return $relation
 end
 
 @limitAt:limitAt graph function point value
+    @eid __Event
+    @act __Role Action limitAt
+    @ctx __Role Context StressCompat
     @f __Role Function $function
-    @p __Role Point $point
+    @p __Role Attribute $point
     @v __Role Value $value
-    @analysis __Bundle $f $p $v
+    @analysis __Bundle $eid $act $f $p $v $ctx
     return $analysis
 end
 
 @limitOf:limitOf graph function point value
+    @eid __Event
+    @act __Role Action limitOf
+    @ctx __Role Context StressCompat
     @f __Role Function $function
-    @p __Role Point $point
+    @p __Role Attribute $point
     @v __Role Value $value
-    @analysis __Bundle $f $p $v
+    @analysis __Bundle $eid $act $f $p $v $ctx
     return $analysis
 end
 
 @lineThrough:lineThrough graph a b
     # Line through two points
-    @point1 __Role Point1 $a
-    @point2 __Role Point2 $b
+    @point1 __Role Attribute $a
+    @point2 __Role Attribute $b
     @relation __Pair $point1 $point2
     return $relation
 end
 
 @linearComb:linearComb graph a b
     # Linear combination
-    @coefficients __Role Coefficients $a
-    @vectors __Role Vectors $b
+    @coefficients __Role Attribute $a
+    @vectors __Role Attribute $b
     @relation __Pair $coefficients $vectors
     return $relation
 end
 
 @linearlyIndependent:linearlyIndependent graph a b
     # Linearly independent vectors
-    @vectors __Role Vectors $a
-    @space __Role Space $b
+    @eid __Event
+    @act __Role Action linearlyIndependent
+    @ctx __Role Context StressCompat
+    @vectors __Role Attribute $a
+    @space __Role Attribute $b
     @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $vectors $space $linearAlgebra
+    @result __Bundle $eid $act $vectors $space $linearAlgebra $ctx
     return $result
 end
 
 @minimum:minimum graph a b
     # Minimum element of set
-    @set __Role Set $a
-    @element __Role Element $b
-    @membership __Role Relation SetMembership
-    @result __Bundle $set $element $membership
+    @eid __Event
+    @act __Role Action minimum
+    @ctx __Role Context StressCompat
+    @set __Role Attribute $a
+    @element __Role Attribute $b
+    @membership __Role Action SetMembership
+    @result __Bundle $eid $act $set $element $membership $ctx
     return $result
 end
 
 @modulo:modulo graph a b
     # Modulo operation
-    @number __Role Number $a
-    @modulus __Role Modulus $b
+    @number __Role Attribute $a
+    @modulus __Role Attribute $b
     @relation __Pair $number $modulus
     return $relation
 end
 
 @multiplicativeInverse:multiplicativeInverse graph a b
     # Multiplicative inverse
-    @element __Role Element $a
+    @element __Role Attribute $a
     @structure __Role Structure $b
     @relation __Pair $element $structure
     return $relation
 end
 
 @negate:negate graph input output
-    @inp __Role Input $input
-    @out __Role Output $output
+    @inp __Role Attribute $input
+    @out __Role Attribute $output
     @operation __Pair $inp $out
     return $operation
 end
 
 @norm:norm graph a b
     # Norm of vector
-    @vector __Role Vector $a
-    @space __Role Space $b
+    @eid __Event
+    @act __Role Action norm
+    @ctx __Role Context StressCompat
+    @vector __Role Attribute $a
+    @space __Role Attribute $b
     @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $vector $space $linearAlgebra
+    @result __Bundle $eid $act $vector $space $linearAlgebra $ctx
     return $result
 end
 
 @nullity:nullity graph a b
     # Nullity of matrix
-    @matrix __Role Matrix $a
-    @space __Role Space $b
+    @eid __Event
+    @act __Role Action nullity
+    @ctx __Role Context StressCompat
+    @matrix __Role Attribute $a
+    @space __Role Attribute $b
     @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $matrix $space $linearAlgebra
+    @result __Bundle $eid $act $matrix $space $linearAlgebra $ctx
     return $result
 end
 
 @numberOfOrbits:numberOfOrbits graph a b
     # Number of orbits under action
     @action __Role Action $a
-    @set __Role Set $b
+    @set __Role Attribute $b
     @relation __Pair $action $set
     return $relation
 end
 
 @onCircle:onCircle graph a b
     # Point on circle
-    @point __Role Point $a
-    @circle __Role Circle $b
+    @point __Role Attribute $a
+    @circle __Role Attribute $b
     @relation __Pair $point $circle
     return $relation
 end
 
 @onLine:onLine graph a b
     # Point on line
-    @point __Role Point $a
-    @line __Role Line $b
+    @point __Role Attribute $a
+    @line __Role Attribute $b
     @relation __Pair $point $line
     return $relation
 end
 
 @op:op graph a b
     # Operator application
-    @operator __Role Operator $a
-    @operand __Role Operand $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $operator $operand $application
+    @eid __Event
+    @act __Role Action op
+    @ctx __Role Context StressCompat
+    @operator __Role Attribute $a
+    @operand __Role Attribute $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $operator $operand $application $ctx
     return $result
 end
 
 @openInterval:openInterval graph a b
     # Open interval (a, b)
-    @lower __Role Lower $a
-    @upper __Role Upper $b
+    @lower __Role Attribute $a
+    @upper __Role Attribute $b
     @relation __Pair $lower $upper
     return $relation
 end
 
 @order:order graph a b
     # Order of group element
-    @element __Role Element $a
+    @element __Role Attribute $a
     @group __Role Group $b
     @relation __Pair $element $group
     return $relation
@@ -1365,14 +1479,14 @@ end
 
 @orderedPair:orderedPair graph a b
     # Ordered pair (a, b)
-    @first __Role First $a
-    @second __Role Second $b
+    @first __Role Attribute $a
+    @second __Role Attribute $b
     @relation __Pair $first $second
     return $relation
 end
 
 @pairSet:pairSet graph set result
-    @s __Role Set $set
+    @s __Role Attribute $set
     @r __Role Result $result
     @operation __Pair $s $r
     return $operation
@@ -1380,130 +1494,142 @@ end
 
 @parallel:parallel graph a b
     # Parallel lines
-    @line1 __Role Line1 $a
-    @line2 __Role Line2 $b
+    @line1 __Role Attribute $a
+    @line2 __Role Attribute $b
     @relation __Pair $line1 $line2
     return $relation
 end
 
 @parallelThrough:parallelThrough graph a b
     # Parallel line through point
-    @point __Role Point $a
-    @line __Role Line $b
+    @point __Role Attribute $a
+    @line __Role Attribute $b
     @relation __Pair $point $line
     return $relation
 end
 
 @power:power graph a b
     # Exponentiation: base to exponent
-    @base __Role Base $a
-    @exponent __Role Exponent $b
+    @base __Role Attribute $a
+    @exponent __Role Attribute $b
     @relation __Pair $base $exponent
     return $relation
 end
 
 @product:product graph a b
     # Product of two factors
-    @factor1 __Role Factor1 $a
-    @factor2 __Role Factor2 $b
+    @factor1 __Role Attribute $a
+    @factor2 __Role Attribute $b
     @relation __Pair $factor1 $factor2
     return $relation
 end
 
 @productSpace:productSpace graph a b
     # Product of topological spaces
-    @space1 __Role Space1 $a
-    @space2 __Role Space2 $b
+    @space1 __Role Attribute $a
+    @space2 __Role Attribute $b
     @relation __Pair $space1 $space2
     return $relation
 end
 
 @quotient:quotient graph a b
     # Quotient of division
-    @dividend __Role Dividend $a
-    @divisor __Role Divisor $b
-    @division __Role Relation Divisibility
-    @result __Bundle $dividend $divisor $division
+    @eid __Event
+    @act __Role Action quotient
+    @ctx __Role Context StressCompat
+    @dividend __Role Attribute $a
+    @divisor __Role Attribute $b
+    @division __Role Action Divisibility
+    @result __Bundle $eid $act $dividend $divisor $division $ctx
     return $result
 end
 
 @quotientGroup:quotientGroup graph a b
     # Quotient group
     @group __Role Group $a
-    @normalSubgroup __Role Normalsubgroup $b
+    @normalSubgroup __Role Attribute $b
     @relation __Pair $group $normalSubgroup
     return $relation
 end
 
 @radius:radius graph a b
     # Radius of circle
-    @circle __Role Circle $a
-    @length __Role Length $b
+    @circle __Role Attribute $a
+    @length __Role Attribute $b
     @relation __Pair $circle $length
     return $relation
 end
 
 @rank:rank graph a b
     # Rank of matrix
-    @matrix __Role Matrix $a
-    @field __Role Field $b
+    @eid __Event
+    @act __Role Action rank
+    @ctx __Role Context StressCompat
+    @matrix __Role Attribute $a
+    @field __Role Attribute $b
     @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $matrix $field $linearAlgebra
+    @result __Bundle $eid $act $matrix $field $linearAlgebra $ctx
     return $result
 end
 
 @ratio:ratio graph a b
     # Ratio of two quantities
-    @numerator __Role Numerator $a
-    @denominator __Role Denominator $b
+    @numerator __Role Attribute $a
+    @denominator __Role Attribute $b
     @relation __Pair $numerator $denominator
     return $relation
 end
 
 @remainder:remainder graph a b
     # Remainder after division
-    @dividend __Role Dividend $a
-    @divisor __Role Divisor $b
-    @division __Role Relation Divisibility
-    @result __Bundle $dividend $divisor $division
+    @eid __Event
+    @act __Role Action remainder
+    @ctx __Role Context StressCompat
+    @dividend __Role Attribute $a
+    @divisor __Role Attribute $b
+    @division __Role Action Divisibility
+    @result __Bundle $eid $act $dividend $divisor $division $ctx
     return $result
 end
 
 @rightCoset:rightCoset graph a b
     # Right coset of subgroup
-    @subgroup __Role Subgroup $a
-    @element __Role Element $b
+    @subgroup __Role Attribute $a
+    @element __Role Attribute $b
     @relation __Pair $subgroup $element
     return $relation
 end
 
 @sameArc:sameArc graph a b
     # Angles subtending same arc
-    @angle1 __Role Angle1 $a
-    @angle2 __Role Angle2 $b
+    @eid __Event
+    @act __Role Action sameArc
+    @ctx __Role Context StressCompat
+    @angle1 __Role Attribute $a
+    @angle2 __Role Attribute $b
     @geometry __Role Context GeometricRelation
-    @result __Bundle $angle1 $angle2 $geometry
+    @result __Bundle $eid $act $angle1 $angle2 $geometry $ctx
     return $result
 end
 
 @sampleMean:sampleMean graph a b
     # Sample mean
-    @sample __Role Sample $a
-    @size __Role Size $b
+    @sample __Role Attribute $a
+    @size __Role Attribute $b
     @relation __Pair $sample $size
     return $relation
 end
 
 @scalarMult:scalarMult graph a b
     # Scalar multiplication
-    @scalar __Role Scalar $a
-    @vector __Role Vector $b
+    @scalar __Role Attribute $a
+    @vector __Role Attribute $b
     @relation __Pair $scalar $vector
     return $relation
 end
 
 @segment:segment graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
@@ -1511,57 +1637,60 @@ end
 
 @separatesPoints:separatesPoints graph a b
     # Function family separates points
-    @family __Role Family $a
-    @space __Role Space $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $family $space $application
+    @eid __Event
+    @act __Role Action separatesPoints
+    @ctx __Role Context StressCompat
+    @family __Role Attribute $a
+    @space __Role Attribute $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $family $space $application $ctx
     return $result
 end
 
 @setOfSize:setOfSize graph set result
-    @s __Role Set $set
+    @s __Role Attribute $set
     @r __Role Result $result
     @operation __Pair $s $r
     return $operation
 end
 
 @side:side graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
 end
 
 @side1:side1 graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
 end
 
 @side2:side2 graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
 end
 
 @sideA:sideA graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
 end
 
 @sideB:sideB graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
 end
 
 @sideC:sideC graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
@@ -1569,72 +1698,78 @@ end
 
 @spans:spans graph a b
     # Vectors span space
-    @vectors __Role Vectors $a
-    @space __Role Space $b
+    @eid __Event
+    @act __Role Action spans
+    @ctx __Role Context StressCompat
+    @vectors __Role Attribute $a
+    @space __Role Attribute $b
     @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $vectors $space $linearAlgebra
+    @result __Bundle $eid $act $vectors $space $linearAlgebra $ctx
     return $result
 end
 
 @sqrt:sqrt graph input output
-    @inp __Role Input $input
-    @out __Role Output $output
+    @inp __Role Attribute $input
+    @out __Role Attribute $output
     @operation __Pair $inp $out
     return $operation
 end
 
 @square:square graph input output
-    @inp __Role Input $input
-    @out __Role Output $output
+    @inp __Role Attribute $input
+    @out __Role Attribute $output
     @operation __Pair $inp $out
     return $operation
 end
 
 @standardizedSum:standardizedSum graph a b
     # Standardized sum
-    @variables __Role Variables $a
-    @count __Role Count $b
+    @variables __Role Attribute $a
+    @count __Role Attribute $b
     @relation __Pair $variables $count
     return $relation
 end
 
 @subtract:subtract graph a b
     # Subtraction: minuend - subtrahend
-    @minuend __Role Minuend $a
-    @subtrahend __Role Subtrahend $b
+    @minuend __Role Attribute $a
+    @subtrahend __Role Attribute $b
     @relation __Pair $minuend $subtrahend
     return $relation
 end
 
 @sum:sum graph a b
     # Sum of two addends
-    @addend1 __Role Addend1 $a
-    @addend2 __Role Addend2 $b
+    @addend1 __Role Attribute $a
+    @addend2 __Role Attribute $b
     @relation __Pair $addend1 $addend2
     return $relation
 end
 
 @supplementary:supplementary graph a b
     # Supplementary angles
-    @angle1 __Role Angle1 $a
-    @angle2 __Role Angle2 $b
+    @eid __Event
+    @act __Role Action supplementary
+    @ctx __Role Context StressCompat
+    @angle1 __Role Attribute $a
+    @angle2 __Role Attribute $b
     @geometry __Role Context GeometricRelation
-    @result __Bundle $angle1 $angle2 $geometry
+    @result __Bundle $eid $act $angle1 $angle2 $geometry $ctx
     return $result
 end
 
 @supremum:supremum graph a b
     # Supremum (least upper bound)
-    @set __Role Set $a
-    @bound __Role Bound $b
+    @set __Role Attribute $a
+    @bound __Role Attribute $b
     @relation __Pair $set $bound
     return $relation
 end
 
 @symmetricDiff:symmetricDiff graph a b
     # Symmetric difference of sets
-    @setA __Role Seta $a
-    @setB __Role Setb $b
+    @setA __Role Attribute $a
+    @setB __Role Attribute $b
     @relation __Pair $setA $setB
     return $relation
 end
@@ -1642,21 +1777,21 @@ end
 @taylorPolynomial:taylorPolynomial graph a b
     # Taylor polynomial at point
     @function __Role Function $a
-    @point __Role Point $b
+    @point __Role Attribute $b
     @relation __Pair $function $point
     return $relation
 end
 
 @transversal:transversal graph a b
     # Transversal intersecting lines
-    @line __Role Line $a
-    @lines __Role Lines $b
+    @line __Role Attribute $a
+    @lines __Role Attribute $b
     @relation __Pair $line $lines
     return $relation
 end
 
 @triangle:triangle graph figure component
-    @fig __Role Figure $figure
+    @fig __Role Attribute $figure
     @comp __Role Component $component
     @geometry __Pair $fig $comp
     return $geometry
@@ -1664,15 +1799,18 @@ end
 
 @uniformClosure:uniformClosure graph a b
     # Uniform closure of functions
-    @functions __Role Functions $a
-    @space __Role Space $b
-    @application __Role Operation FunctionApplication
-    @result __Bundle $functions $space $application
+    @eid __Event
+    @act __Role Action uniformClosure
+    @ctx __Role Context StressCompat
+    @functions __Role Attribute $a
+    @space __Role Attribute $b
+    @application __Role Attribute FunctionApplication
+    @result __Bundle $eid $act $functions $space $application $ctx
     return $result
 end
 
 @union:union graph set result
-    @s __Role Set $set
+    @s __Role Attribute $set
     @r __Role Result $result
     @operation __Pair $s $r
     return $operation
@@ -1680,43 +1818,49 @@ end
 
 @uniquePrimeFactorization:uniquePrimeFactorization graph a b
     # Unique prime factorization
-    @number __Role Number $a
-    @factorization __Role Factorization $b
+    @number __Role Attribute $a
+    @factorization __Role Attribute $b
     @relation __Pair $number $factorization
     return $relation
 end
 
 @vandermondSum:vandermondSum graph a b
     # Vandermonde convolution
-    @upper __Role Upper $a
-    @lower __Role Lower $b
+    @upper __Role Attribute $a
+    @lower __Role Attribute $b
     @relation __Pair $upper $lower
     return $relation
 end
 
 @vectorAdd:vectorAdd graph a b
     # Vector addition
-    @vector1 __Role Vector1 $a
-    @vector2 __Role Vector2 $b
+    @eid __Event
+    @act __Role Action vectorAdd
+    @ctx __Role Context StressCompat
+    @vector1 __Role Attribute $a
+    @vector2 __Role Attribute $b
     @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $vector1 $vector2 $linearAlgebra
+    @result __Bundle $eid $act $vector1 $vector2 $linearAlgebra $ctx
     return $result
 end
 
 @zero:zero graph a b
     # Zero element of structure
     @structure __Role Structure $a
-    @element __Role Element $b
+    @element __Role Attribute $b
     @relation __Pair $structure $element
     return $relation
 end
 
 @zeroVector:zeroVector graph a b
     # Zero vector of space
-    @space __Role Space $a
-    @identity __Role Identity $b
+    @eid __Event
+    @act __Role Action zeroVector
+    @ctx __Role Context StressCompat
+    @space __Role Attribute $a
+    @identity __Role Attribute $b
     @linearAlgebra __Role Context VectorSpace
-    @result __Bundle $space $identity $linearAlgebra
+    @result __Bundle $eid $act $space $identity $linearAlgebra $ctx
     return $result
 end
 

@@ -9,6 +9,7 @@
 import { similarity } from '../core/operations.mjs';
 import { TRANSITIVE_RELATIONS } from './transitive.mjs';
 import { getThresholds } from '../core/constants.mjs';
+import { canonicalizeTokenName } from '../runtime/canonicalize.mjs';
 
 /**
  * KB matching engine
@@ -278,11 +279,35 @@ export class KBMatcher {
       return { valid: false };
     }
 
-    const goalVec = this.session.executor.buildStatementVector(goal);
-    this.session.reasoningStats.similarityChecks++;
-    const conclusionSim = similarity(goalVec, rule.conclusion);
+    // For ground-term rules (no variables), prefer AST/metadata equality over vector similarity.
+    // This avoids false negatives for graph/macro operators where stored fact vectors are
+    // `bind(op, graphResult)` but buildStatementVector(goal) is `bindAll(op, PosN⊕argN, ...)`.
+    const goalOp = this.engine.unification.extractOperatorFromAST(goal);
+    const goalArgs = this.engine.unification.extractArgsFromAST(goal);
+    const concOp = this.engine.unification.extractOperatorFromAST(rule.conclusionAST);
+    const concArgs = this.engine.unification.extractArgsFromAST(rule.conclusionAST);
 
-    if (conclusionSim > this.thresholds.CONCLUSION_MATCH && !rule.hasVariables) {
+    const canon = (name) => {
+      if (!this.session?.canonicalizationEnabled) return name;
+      return canonicalizeTokenName(this.session, name);
+    };
+
+    const goalMatchesConclusion =
+      !rule.hasVariables &&
+      goalOp &&
+      concOp &&
+      canon(goalOp) === canon(concOp) &&
+      goalArgs.length === concArgs.length &&
+      goalArgs.every((arg, i) => !arg.isVariable && !concArgs[i]?.isVariable && canon(arg.name) === canon(concArgs[i]?.name));
+
+    let conclusionSim = 0;
+    if (!goalMatchesConclusion) {
+      const goalVec = this.session.executor.buildStatementVector(goal);
+      this.session.reasoningStats.similarityChecks++;
+      conclusionSim = similarity(goalVec, rule.conclusion);
+    }
+
+    if ((goalMatchesConclusion || conclusionSim > this.thresholds.CONCLUSION_MATCH) && !rule.hasVariables) {
       const conditionResult = this.engine.conditions.proveCondition(rule, depth + 1);
 
       if (conditionResult.valid) {
@@ -297,7 +322,7 @@ export class KBMatcher {
           valid: true,
           method: 'backward_chain',
           rule: rule.name,
-          confidence: Math.min(conclusionSim, conditionResult.confidence) * this.thresholds.CONFIDENCE_DECAY,
+          confidence: (goalMatchesConclusion ? 1.0 : Math.min(conclusionSim, conditionResult.confidence)) * this.thresholds.CONFIDENCE_DECAY,
           goal: goal.toString(),
           steps: [
             { operation: 'rule_match', rule: rule.label || rule.name || rule.source, ruleId: rule.id || null, fact: conclusionFact },

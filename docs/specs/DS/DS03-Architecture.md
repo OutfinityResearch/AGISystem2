@@ -11,37 +11,35 @@
 
 ## 4.1 System Overview
 
-AGISystem2 exposes a simple API through `AGISystem2Engine`:
+AGISystem2 exposes a simple API through `Session`:
 
 ```
-AGISystem2Engine
-    └── getSession() → Session
-            │
-            ├── LEARNING
-            │   └── learn(dsl: string) → LearnResult
-            │
-            ├── QUERYING
-            │   ├── query(dsl: string) → Result
-            │   └── prove(dsl: string) → Proof
-            │
-            ├── TEXT GENERATION
-            │   ├── summarize(vector, options?) → string
-            │   └── elaborate(vector, options?) → string
-            │
-            ├── DEBUG / INSPECTION
-            │   ├── dump() → SessionState
-            │   ├── inspect(name: string) → VectorInfo
-            │   ├── listTheories() → TheoryInfo[]
-            │   ├── listAtoms(theory?: string) → AtomInfo[]
-            │   ├── listGraphs(theory?: string) → GraphInfo[]
-            │   ├── listFacts() → FactInfo[]
-            │   ├── similarity(a, b) → number
-            │   └── decode(vector) → DecodedStructure
-            │
-            └── LIFECYCLE
-                ├── get(name: string) → Vector
-                ├── set(name: string, vector: Vector) → void
-                └── close() → void
+Session
+  ├── LEARNING
+  │   ├── learn(dsl: string) → LearnResult
+  │   └── loadCore(options?) → LoadResult
+  │
+  ├── QUERYING
+  │   ├── query(dsl: string) → QueryResult
+  │   └── prove(dsl: string) → ProveResult
+  │
+  ├── REASONING (advanced)
+  │   ├── abduce(dsl: string) → AbductionResult
+  │   └── findAll(dsl: string) → FindAllResult
+  │
+  ├── OUTPUT
+  │   ├── generateText(operator, args) → string
+  │   ├── elaborate(proof) → { text: string, ... }
+  │   └── describeResult(payload) → string
+  │
+  ├── INSPECTION
+  │   ├── dump() → object
+  │   ├── similarity(a, b) → number
+  │   ├── decode(vector) → object
+  │   └── summarize(vector) → { success, text, structure? }
+  │
+  └── LIFECYCLE
+      └── close() → void
 ```
 
 ---
@@ -51,17 +49,13 @@ AGISystem2Engine
 | Method | Input | Output | Purpose |
 |--------|-------|--------|---------|
 | `learn` | DSL statements | LearnResult | Add facts, define graphs |
-| `query` | DSL with holes | Result | Find answers |
-| `prove` | DSL without holes | Proof | Answer + derivation |
-| `summarize` | Vector | string | Concise decode |
-| `elaborate` | Vector | string | Detailed decode |
+| `query` | DSL with holes | QueryResult | Find answers |
+| `prove` | DSL without holes | ProveResult | Verify truth + proof steps |
+| `summarize` | Vector | `{success,text,...}` | Concise decode (best-effort) |
+| `elaborate` | ProveResult | `{text,...}` | Proof narration (best-effort) |
 | `generateText` | operator, args | string | DSL → natural language |
-| **`dump`** | — | SessionState | Full session state |
-| **`inspect`** | name | VectorInfo | Detailed vector info |
-| **`listTheories`** | — | TheoryInfo[] | Loaded theories |
-| **`listAtoms`** | theory? | AtomInfo[] | All atoms |
-| **`listGraphs`** | theory? | GraphInfo[] | All graphs |
-| **`listFacts`** | — | FactInfo[] | All facts in KB |
+| `describeResult` | payload | string | Reasoning result → NL |
+| **`dump`** | — | object | Session state snapshot |
 | **`similarity`** | a, b | number | Compare two vectors |
 | **`decode`** | vector | DecodedStructure | Extract structure |
 
@@ -93,7 +87,9 @@ src/hdc/
 ├── contract.mjs         # Interface definitions (JSDoc), validation
 └── strategies/
     ├── index.mjs        # Strategy registry
-    └── dense-binary.mjs # Default: Uint32Array + XOR
+    ├── dense-binary.mjs      # Default: Uint32Array + XOR
+    ├── sparse-polynomial.mjs # Sparse binding/bundling
+    └── metric-affine.mjs     # Metric (L1) strategy
 ```
 
 ### Key HDC Operations (via Facade)
@@ -110,21 +106,28 @@ src/hdc/
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SYS2_HDC_STRATEGY` | `dense-binary` | Active HDC implementation |
-| `SYS2_GEOMETRY` | `32768` | Default vector geometry (divisible by 32) |
+| `SYS2_HDC_STRATEGY` | `dense-binary` | Default HDC strategy for new `Session`s (session-local override via constructor) |
+| `SYS2_GEOMETRY` | `32768` | Default geometry for new `Session`s (session-local override via constructor) |
 | `SYS2_DEBUG` | `false` | Enable debug logging |
-| `REASONING_PRIORITY` | `symbolicPriority` | Reasoning mode: `symbolicPriority` or `holographicPriority` |
+| `REASONING_PRIORITY` | `symbolicPriority` | Default reasoning priority for new `Session`s (session-local override via constructor) |
 | `SYS2_PROFILE` | `theoryDriven` | Reasoning profile (only `theoryDriven` is supported) |
 | `SYS2_CANONICAL` | `true` | Enable canonicalization (`1`/`true`/etc.) |
 | `SYS2_PROOF_VALIDATE` | `true` | Enable proof validation (`1`/`true`/etc.) |
+
+**Session isolation note:** HDC strategy and reasoning priority are session-local. Vectors carry a strategy identifier, and HDC operations reject mixed-strategy inputs.
 
 ---
 
 ## 4.3 Session Lifecycle
 
 ```javascript
-const engine = new AGISystem2Engine();
-const session = engine.getSession();
+import { Session } from 'agisystem2';
+
+const session = new Session({
+  hdcStrategy: 'dense-binary',
+  geometry: 32768,
+  reasoningPriority: 'symbolicPriority'
+});
 
 // Core is not auto-loaded. Call session.loadCore() to load:
 // - Position vectors: Pos1..Pos20
@@ -279,373 +282,44 @@ interface ProofStep {
 
 ---
 
-## 4.7 Text Generation Methods
+## 4.7 Output Methods
 
-### summarize(vector, options?)
+### describeResult(payload) → string
 
-Decodes vector to concise natural language.
+Primary NL output path (used by Eval runners). It translates a reasoning payload into a string via `ResponseTranslator`.
 
-```javascript
-const text = session.summarize(session.get("tx"));
-// "Alice sold Car to Bob for 1000"
-```
+### summarize(vector) → { success, text, structure? }
 
-### elaborate(vector, options?)
+Best-effort decoding helper used for vector inspection.
 
-Decodes vector to detailed explanation.
+### elaborate(proof) → { text, ... }
 
-```javascript
-const text = session.elaborate(session.get("tx"));
-// "A commercial transaction occurred where Alice (the seller) 
-//  transferred ownership of Car to Bob (the buyer). 
-//  In exchange, Bob transferred 1000 units of currency to Alice."
-```
-
-### Decode Levels
-
-```javascript
-session.summarize(vector, { level: "atomic" });
-session.summarize(vector, { level: "conceptual" });
-session.summarize(vector, { level: "natural" });  // default
-```
-
-| Level | Example Output |
-|-------|----------------|
-| `atomic` | `sell ⊕ (Pos1⊕Alice) ⊕ (Pos2⊕Bob) ⊕ (Pos3⊕Car) ⊕ (Pos4⊕1000)` |
-| `conceptual` | `sell(Agent=Alice, Recipient=Bob, Theme=Car, Price=1000)` |
-| `natural` | "Alice sold Car to Bob for 1000" |
+Best-effort proof narration helper for `prove()` results.
 
 ---
 
-## 4.8 Debug / Inspection API
+## 4.8 Debug / Inspection API (current)
 
-### 4.8.1 dump() → SessionState
+The current runtime provides a small set of inspection helpers focused on debugging sessions and decoding vectors.
 
-Returns complete session state for debugging.
+### dump() → object
 
-```typescript
-interface SessionState {
-    // Loaded theories
-    theories: {
-        name: string;
-        geometry: number;
-        atomCount: number;
-        graphCount: number;
-        isCore: boolean;
-    }[];
-    
-    // Theory stack (resolution order)
-    theoryStack: string[];
-    
-    // Working memory
-    workingMemory: {
-        name: string;
-        type: string;           // "atom", "fact", "graph", "theory"
-        theory: string;         // Which theory it's from
-        exported: boolean;      // Is it exported?
-        geometry: number;
-    }[];
-    
-    // Knowledge base stats
-    knowledgeBase: {
-        factCount: number;
-        bundleCapacity: number;  // Estimated remaining capacity
-        saturation: number;      // 0-1, how full the KB is
-    };
-    
-    // Position vectors
-    positionVectors: string[];   // ["Pos1", "Pos2", ...]
-    
-    // Session stats
-    stats: {
-        learnCalls: number;
-        queryCalls: number;
-        proveCalls: number;
-        uptime: number;          // milliseconds
-    };
-}
-```
+Returns a lightweight snapshot of session state:
+- `geometry`, `factCount`, `ruleCount`
+- `vocabularySize`
+- `scopeBindings`
 
-**Example usage:**
-```javascript
-const state = session.dump();
-console.log(JSON.stringify(state, null, 2));
-```
+### similarity(a, b) → number
 
-**Example output:**
-```json
-{
-  "theories": [
-    {"name": "Core", "geometry": 32768, "atomCount": 140, "graphCount": 45, "isCore": true},
-    {"name": "Commerce", "geometry": 32768, "atomCount": 25, "graphCount": 8, "isCore": false}
-  ],
-  "theoryStack": ["Commerce", "Core"],
-  "workingMemory": [
-    {"name": "tx1", "type": "fact", "theory": "session", "exported": false, "geometry": 32768},
-    {"name": "tx2", "type": "fact", "theory": "session", "exported": false, "geometry": 32768},
-    {"name": "Alice", "type": "atom", "theory": "Commerce", "exported": true, "geometry": 32768}
-  ],
-  "knowledgeBase": {
-    "factCount": 2,
-    "bundleCapacity": 198,
-    "saturation": 0.01
-  },
-  "positionVectors": ["Pos1", "Pos2", "Pos3", "Pos4", "Pos5", "..."],
-  "stats": {
-    "learnCalls": 1,
-    "queryCalls": 0,
-    "proveCalls": 0,
-    "uptime": 1523
-  }
-}
-```
+Compares two vectors directly (or literals resolved to vectors).
 
-### 4.8.2 inspect(name) → VectorInfo
+### decode(vector) → object
 
-Deep inspection of a specific vector.
+Decodes a vector to a best-effort structural form (operator + positional args).
 
-```typescript
-interface VectorInfo {
-    name: string;
-    type: string;                    // "atom", "fact", "graph", "theory"
-    sourceTheory: string;
-    geometry: number;
-    exported: boolean;
-    
-    // Vector analysis
-    onesCount: number;               // Popcount
-    onesDensity: number;             // onesCount / geometry
-    
-    // For facts: decoded structure
-    structure?: {
-        operator: string;
-        arguments: {
-            position: number;        // 1, 2, 3...
-            name: string;
-            similarity: number;
-        }[];
-    };
-    
-    // For graphs: signature
-    signature?: {
-        parameters: string[];
-        returnType: string;
-    };
-    
-    // Similarity to other vectors
-    nearestNeighbors?: {
-        name: string;
-        similarity: number;
-    }[];
-}
-```
+### summarize(vector) → { success, text, structure? }
 
-**Example:**
-```javascript
-const info = session.inspect("tx1");
-console.log(info);
-```
-
-**Output:**
-```json
-{
-  "name": "tx1",
-  "type": "fact",
-  "sourceTheory": "session",
-  "geometry": 32768,
-  "exported": false,
-  "onesCount": 16412,
-  "onesDensity": 0.501,
-  "structure": {
-    "operator": "sell",
-    "arguments": [
-      {"position": 1, "name": "Alice", "similarity": 0.98},
-      {"position": 2, "name": "Bob", "similarity": 0.97},
-      {"position": 3, "name": "Car", "similarity": 0.96},
-      {"position": 4, "name": "1000", "similarity": 0.95}
-    ]
-  },
-  "nearestNeighbors": [
-    {"name": "tx2", "similarity": 0.62},
-    {"name": "sell", "similarity": 0.58}
-  ]
-}
-```
-
-### 4.8.3 listTheories() → TheoryInfo[]
-
-List all loaded theories.
-
-```typescript
-interface TheoryInfo {
-    name: string;
-    geometry: number;
-    initMode: "deterministic" | "random";
-    isCore: boolean;
-    loadOrder: number;              // Position in stack
-    atoms: string[];                // Exported atom names
-    graphs: string[];               // Exported graph names
-}
-```
-
-**Example:**
-```javascript
-const theories = session.listTheories();
-theories.forEach(t => {
-    console.log(`${t.name}: ${t.atoms.length} atoms, ${t.graphs.length} graphs`);
-});
-// Core: 140 atoms, 45 graphs
-// Commerce: 25 atoms, 8 graphs
-```
-
-### 4.8.4 listAtoms(theory?) → AtomInfo[]
-
-List all atoms, optionally filtered by theory.
-
-```typescript
-interface AtomInfo {
-    name: string;
-    theory: string;
-    type: string;           // From type system: "Person", "Object", "Property", etc.
-    exported: boolean;
-    geometry: number;
-}
-```
-
-**Example:**
-```javascript
-// All atoms
-const allAtoms = session.listAtoms();
-
-// Just Commerce atoms
-const commerceAtoms = session.listAtoms("Commerce");
-commerceAtoms.forEach(a => console.log(`${a.name}: ${a.type}`));
-// Alice: Person
-// Bob: Person
-// Car: Object
-// Book: Object
-```
-
-### 4.8.5 listGraphs(theory?) → GraphInfo[]
-
-List all graphs with signatures.
-
-```typescript
-interface GraphInfo {
-    name: string;
-    exportedAs: string;             // The exported name
-    theory: string;
-    parameters: {
-        name: string;
-        expectedType?: string;      // From type signature comments
-    }[];
-    description?: string;           // If documented
-}
-```
-
-**Example:**
-```javascript
-const graphs = session.listGraphs("Core");
-graphs.forEach(m => {
-    const params = m.parameters.map(p => p.name).join(", ");
-    console.log(`${m.exportedAs}(${params})`);
-});
-// sell(seller, item, buyer, price)
-// buy(buyer, item, seller, price)
-// give(giver, object, receiver)
-// _ptrans(agent, object, from, to)
-// ...
-```
-
-### 4.8.6 listFacts() → FactInfo[]
-
-List all facts in the knowledge base.
-
-```typescript
-interface FactInfo {
-    name: string;
-    operator: string;
-    arguments: string[];
-    confidence: number;             // How well it matches the reconstructed form
-    addedAt: number;                // Timestamp
-}
-```
-
-**Example:**
-```javascript
-const facts = session.listFacts();
-facts.forEach(f => {
-    console.log(`${f.name}: ${f.operator}(${f.arguments.join(", ")})`);
-});
-// tx1: sell(Alice, Bob, Car, 1000)
-// tx2: buy(Charlie, Book, David, 50)
-```
-
-### 4.8.7 similarity(a, b) → number
-
-Compare two vectors directly.
-
-```javascript
-// By name
-const sim1 = session.similarity("Alice", "Bob");
-console.log(sim1);  // 0.498 (unrelated)
-
-// By vector
-const sim2 = session.similarity(session.get("tx1"), session.get("tx2"));
-console.log(sim2);  // 0.612 (both are transactions)
-
-// Mixed
-const sim3 = session.similarity("sell", session.get("tx1"));
-console.log(sim3);  // 0.58 (sell is in tx1)
-```
-
-### 4.8.8 decode(vector) → DecodedStructure
-
-Extract structure from any vector.
-
-```typescript
-interface DecodedStructure {
-    type: "atom" | "fact" | "bundle" | "unknown";
-    
-    // For facts
-    operator?: {
-        name: string;
-        similarity: number;
-    };
-    arguments?: {
-        position: number;
-        name: string;
-        similarity: number;
-    }[];
-    
-    // For bundles
-    components?: {
-        name: string;
-        similarity: number;
-    }[];
-    
-    // Raw info
-    geometry: number;
-    density: number;
-}
-```
-
-**Example:**
-```javascript
-const structure = session.decode(session.get("tx1"));
-console.log(structure);
-// {
-//   type: "fact",
-//   operator: {name: "sell", similarity: 0.95},
-//   arguments: [
-//     {position: 1, name: "Alice", similarity: 0.98},
-//     {position: 2, name: "Bob", similarity: 0.97},
-//     ...
-//   ],
-//   geometry: 32768,
-//   density: 0.501
-// }
-```
+Formats `decode(vector)` into a short natural-language string (best-effort).
 
 ---
 
@@ -653,12 +327,12 @@ console.log(structure);
 
 ```
 Session
-├── workingMemory: Map<string, Vector>
-├── theoryStack: Theory[]
-├── knowledgeBase: Vector (bundled facts)
-├── vocabulary: Map<string, Vector>    # All known literals
-├── proofTrace: ProofStep[]
-├── stats: SessionStats
+├── scope: Scope                     # @vars (non-persistent bindings)
+├── kbFacts: Fact[]                  # persistent facts (vector + metadata)
+├── vocabulary: Vocabulary           # atom ↔ vector mapping
+├── graphs: Map<string, GraphDef>    # declared graphs/macros
+├── rules: Rule[]                    # derived from Implies
+├── reasoning engines                # query/prove/abduce/etc.
 │
 ├── learn(dsl)
 │   ├── parse(dsl) → AST
@@ -685,13 +359,7 @@ Session
 │   └── return Proof
 │
 ├── dump()
-│   └── collect all state into SessionState
-│
-├── inspect(name)
-│   ├── get vector
-│   ├── analyze structure
-│   ├── find nearest neighbors
-│   └── return VectorInfo
+│   └── return lightweight state snapshot
 │
 └── decode(vector)
     ├── try unbind each known operator
@@ -718,73 +386,42 @@ knowledgeBase = Bundle(fact1, fact2, fact3, ...)
 | query | candidate = KB ⊕ partial |
 | forget | KB = KB - fact (approximate via negative bundle) |
 
-**Capacity monitoring:**
-```javascript
-const state = session.dump();
-console.log(`KB saturation: ${state.knowledgeBase.saturation * 100}%`);
-console.log(`Remaining capacity: ~${state.knowledgeBase.bundleCapacity} facts`);
-```
+**Capacity monitoring (current):** use `session.dump()` fields like `factCount` and `vocabularySize`.
 
 ---
 
-## 4.11 Complete Debug Example
+## 4.11 Debug Example (current)
 
 ```javascript
-const engine = new AGISystem2Engine();
-const session = engine.getSession();
+import { Session } from 'agisystem2';
+
+const session = new Session({
+  hdcStrategy: 'dense-binary',
+  geometry: 2048,
+  reasoningPriority: 'symbolicPriority'
+});
+session.loadCore();
 
 // Build knowledge
 session.learn(`
-    @_ Load $Commerce
-    @Alice:Alice __Person
-    @Bob:Bob __Person
-    @Car:Car __Object
-    @tx1 sell $Alice $Bob $Car 5000
+  @f isA Rex Dog
 `);
 
 // === DEBUGGING ===
 
-// 1. Full state dump
-console.log("=== SESSION DUMP ===");
-const state = session.dump();
-console.log(`Theories loaded: ${state.theories.map(t => t.name).join(", ")}`);
-console.log(`Facts in KB: ${state.knowledgeBase.factCount}`);
-console.log(`KB saturation: ${(state.knowledgeBase.saturation * 100).toFixed(1)}%`);
+console.log('=== SESSION DUMP ===');
+console.log(session.dump());
 
-// 2. Inspect specific vector
-console.log("\n=== INSPECT tx1 ===");
-const txInfo = session.inspect("tx1");
-console.log(`Operator: ${txInfo.structure.operator}`);
-txInfo.structure.arguments.forEach(arg => {
-    console.log(`  Pos${arg.position}: ${arg.name} (${arg.similarity.toFixed(2)})`);
-});
+console.log('=== DECODE FACT VECTOR ===');
+const factVec = session.scope.get('f');
+console.log(session.decode(factVec));
 
-// 3. List what's available
-console.log("\n=== AVAILABLE ATOMS ===");
-session.listAtoms("Commerce").forEach(a => {
-    console.log(`  ${a.name}: ${a.type}`);
-});
+console.log('=== SUMMARIZE ===');
+console.log(session.summarize(factVec));
 
-console.log("\n=== AVAILABLE MACROS ===");
-session.listGraphs("Commerce").slice(0, 5).forEach(m => {
-    console.log(`  ${m.exportedAs}(${m.parameters.map(p=>p.name).join(", ")})`);
-});
-
-// 4. Check similarities
-console.log("\n=== SIMILARITIES ===");
-console.log(`Alice ~ Bob: ${session.similarity("Alice", "Bob").toFixed(3)}`);
-console.log(`tx1 ~ sell: ${session.similarity("tx1", "sell").toFixed(3)}`);
-
-// 5. Decode arbitrary vector
-console.log("\n=== DECODE ===");
-const decoded = session.decode(session.get("tx1"));
-console.log(JSON.stringify(decoded, null, 2));
-
-// 6. List all facts
-console.log("\n=== ALL FACTS ===");
-session.listFacts().forEach(f => {
-    console.log(`${f.name}: ${f.operator}(${f.arguments.join(", ")})`);
-});
+console.log('=== PROVE + ELABORATE ===');
+const proof = session.prove('@goal isA Rex Dog');
+console.log(session.elaborate(proof));
 
 session.close();
 ```
@@ -792,49 +429,33 @@ session.close();
 **Output:**
 ```
 === SESSION DUMP ===
-Theories loaded: Core, Commerce
-Facts in KB: 1
-KB saturation: 0.5%
-
-=== INSPECT tx1 ===
-Operator: sell
-  Pos1: Alice (0.98)
-  Pos2: Bob (0.97)
-  Pos3: Car (0.96)
-  Pos4: 5000 (0.95)
-
-=== AVAILABLE ATOMS ===
-  Alice: Person
-  Bob: Person
-  Car: Object
-
-=== AVAILABLE MACROS ===
-  sell(seller, item, buyer, price)
-  buy(buyer, item, seller, price)
-  give(giver, object, receiver)
-  take(taker, object, source)
-  go(agent, from, to)
-
-=== SIMILARITIES ===
-Alice ~ Bob: 0.498
-tx1 ~ sell: 0.583
-
-=== DECODE ===
 {
-  "type": "fact",
-  "operator": {"name": "sell", "similarity": 0.95},
-  "arguments": [
-    {"position": 1, "name": "Alice", "similarity": 0.98},
-    {"position": 2, "name": "Bob", "similarity": 0.97},
-    {"position": 3, "name": "Car", "similarity": 0.96},
-    {"position": 4, "name": "5000", "similarity": 0.95}
-  ],
-  "geometry": 32768,
-  "density": 0.501
+  geometry: 2048,
+  factCount: 1,
+  ruleCount: 0,
+  vocabularySize: 123,
+  scopeBindings: ['f']
 }
 
-=== ALL FACTS ===
-tx1: sell(Alice, Bob, Car, 5000)
+=== DECODE FACT VECTOR ===
+{
+  success: true,
+  structure: {
+    operator: 'isA',
+    operatorConfidence: 0.9,
+    arguments: [
+      { position: 1, value: 'Rex', confidence: 0.9, alternatives: [] },
+      { position: 2, value: 'Dog', confidence: 0.9, alternatives: [] }
+    ],
+    confidence: 0.9
+  }
+}
+
+=== SUMMARIZE ===
+{ success: true, text: 'Rex is a dog.', structure: { ... } }
+
+=== PROVE + ELABORATE ===
+{ text: 'True: Rex is a dog', proofChain: [ 'Rex is a dog' ], fullProof: '...' }
 ```
 
 ---
@@ -843,16 +464,13 @@ tx1: sell(Alice, Bob, Car, 5000)
 
 | Component | Purpose |
 |-----------|---------|
-| `Engine` | Entry point, creates sessions |
-| `Session` | Working memory, theory stack, KB |
+| `Session` | Main API surface |
 | `learn()` | Add facts/graphs (holes allowed for rules/graphs) |
 | `query()` | Find answers (with holes) |
 | `prove()` | Answer + derivation chain |
-| `summarize()` | Vector → concise text |
-| `elaborate()` | Vector → detailed text |
+| `summarize()` | Vector → best-effort text |
+| `elaborate()` | ProveResult → best-effort narration |
 | **`dump()`** | Full session state snapshot |
-| **`inspect()`** | Deep vector analysis |
-| **`listTheories/Atoms/Graphs/Facts`** | Enumerate loaded content |
 | **`similarity()`** | Compare vectors |
 | **`decode()`** | Extract structure from vector |
 

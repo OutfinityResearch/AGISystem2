@@ -5,38 +5,46 @@
 
 @trialsIn:trialsIn graph court case
     # Court conducts trial of case
-    @crt __Role Forum $court
-    @cas __Role Case $case
-    @proceeding __Role Process Trial
-    @result __Bundle $crt $cas $proceeding
+    @eid __Event
+    @act __Role Action trialsIn
+    @ctx __Role Context Law
+    @crt __Role Theme $court
+    @cas __Role Theme $case
+    @result __Bundle $eid $act $ctx $crt $cas
     return $result
 end
 
 @decidesCase:decidesCase graph judge case judgment
     # Judge decides case with judgment
-    @jdg __Role Adjudicator $judge
-    @cas __Role Case $case
-    @judg __Role Decision $judgment
-    @adjudication __Role Process Adjudication
-    @result __Bundle $jdg $cas $judg $adjudication
+    @eid __Event
+    @act __Role Action decidesCase
+    @ctx __Role Context Law
+    @jdg __Role Agent $judge
+    @cas __Role Theme $case
+    @judg __Role Theme $judgment
+    @result __Bundle $eid $act $ctx $jdg $cas $judg
     return $result
 end
 
 @representsClient:representsClient graph lawyer client
     # Lawyer represents client
-    @law __Role Counsel $lawyer
-    @cli __Role Client $client
-    @representation __Role Relation LegalRepresentation
-    @result __Bundle $law $cli $representation
+    @eid __Event
+    @act __Role Action representsClient
+    @ctx __Role Context Law
+    @law __Role Agent $lawyer
+    @cli __Role Theme $client
+    @result __Bundle $eid $act $ctx $law $cli
     return $result
 end
 
 @presides:presides graph judge court
     # Judge presides over court
-    @jdg __Role Judge $judge
-    @crt __Role Court $court
-    @authority __Role Relation JudicialAuthority
-    @result __Bundle $jdg $crt $authority
+    @eid __Event
+    @act __Role Action presides
+    @ctx __Role Context Law
+    @jdg __Role Agent $judge
+    @crt __Role Theme $court
+    @result __Bundle $eid $act $ctx $jdg $crt
     return $result
 end
 
@@ -44,38 +52,46 @@ end
 
 @entersContract:entersContract graph party1 party2 contract
     # Parties enter into contract
-    @p1 __Role Contractor $party1
-    @p2 __Role Contractor $party2
-    @cont __Role Contract $contract
-    @agreement __Role Process ContractFormation
-    @result __Bundle $p1 $p2 $cont $agreement
+    @eid __Event
+    @act __Role Action entersContract
+    @ctx __Role Context Law
+    @p1 __Role Theme $party1
+    @p2 __Role Theme $party2
+    @cont __Role Theme $contract
+    @result __Bundle $eid $act $ctx $p1 $p2 $cont
     return $result
 end
 
 @breachesContract:breachesContract graph party contract
     # Party breaches contract
-    @par __Role Breacher $party
-    @cont __Role Contract $contract
-    @breach __Role Action Breach
-    @result __Bundle $par $cont $breach
+    @eid __Event
+    @act __Role Action breachesContract
+    @ctx __Role Context Law
+    @par __Role Theme $party
+    @cont __Role Theme $contract
+    @result __Bundle $eid $act $ctx $par $cont
     return $result
 end
 
 @enforcesContract:enforcesContract graph court contract
     # Court enforces contract
-    @crt __Role Enforcer $court
-    @cont __Role Contract $contract
-    @enforcement __Role Process Enforcement
-    @result __Bundle $crt $cont $enforcement
+    @eid __Event
+    @act __Role Action enforcesContract
+    @ctx __Role Context Law
+    @crt __Role Agent $court
+    @cont __Role Theme $contract
+    @result __Bundle $eid $act $ctx $crt $cont
     return $result
 end
 
 @owesPerformance:owesPerformance graph party obligation
     # Party owes contractual performance
-    @par __Role Obligor $party
-    @obl __Role Obligation $obligation
-    @duty __Role Relation ContractualDuty
-    @result __Bundle $par $obl $duty
+    @eid __Event
+    @act __Role Action owesPerformance
+    @ctx __Role Context Law
+    @par __Role Theme $party
+    @obl __Role Theme $obligation
+    @result __Bundle $eid $act $ctx $par $obl
     return $result
 end
 
@@ -83,49 +99,59 @@ end
 
 @commits:commits graph accused crime
     # Accused commits crime
-    @acc __Role Perpetrator $accused
-    @crm __Role Crime $crime
-    @criminal __Role Action CriminalAct
-    @result __Bundle $acc $crm $criminal
+    @eid __Event
+    @act __Role Action commits
+    @ctx __Role Context Law
+    @acc __Role Agent $accused
+    @crm __Role Theme $crime
+    @result __Bundle $eid $act $ctx $acc $crm
     return $result
 end
 
 @prosecutes:prosecutes graph prosecutor defendant crime
     # Prosecutor prosecutes defendant for crime
-    @pros __Role Prosecutor $prosecutor
-    @def __Role Defendant $defendant
-    @crm __Role Crime $crime
-    @prosecution __Role Process Prosecution
-    @result __Bundle $pros $def $crm $prosecution
+    @eid __Event
+    @act __Role Action prosecutes
+    @ctx __Role Context Law
+    @pros __Role Agent $prosecutor
+    @def __Role Theme $defendant
+    @crm __Role Theme $crime
+    @result __Bundle $eid $act $ctx $pros $def $crm
     return $result
 end
 
 @convicts:convicts graph court defendant crime
     # Court convicts defendant of crime
-    @crt __Role Court $court
-    @def __Role Defendant $defendant
-    @crm __Role Crime $crime
-    @conviction __Role Action Conviction
-    @result __Bundle $crt $def $crm $conviction
+    @eid __Event
+    @act __Role Action convicts
+    @ctx __Role Context Law
+    @crt __Role Agent $court
+    @def __Role Theme $defendant
+    @crm __Role Theme $crime
+    @result __Bundle $eid $act $ctx $crt $def $crm
     return $result
 end
 
 @sentences:sentences graph court defendant penalty
     # Court sentences defendant to penalty
-    @crt __Role Sentencer $court
-    @def __Role Convicted $defendant
-    @pen __Role Penalty $penalty
-    @sentencing __Role Process Sentencing
-    @result __Bundle $crt $def $pen $sentencing
+    @eid __Event
+    @act __Role Action sentences
+    @ctx __Role Context Law
+    @crt __Role Agent $court
+    @def __Role Theme $defendant
+    @pen __Role Theme $penalty
+    @result __Bundle $eid $act $ctx $crt $def $pen
     return $result
 end
 
 @acquits:acquits graph court defendant
     # Court acquits defendant
-    @crt __Role Court $court
-    @def __Role Defendant $defendant
-    @acquittal __Role Action Acquittal
-    @result __Bundle $crt $def $acquittal
+    @eid __Event
+    @act __Role Action acquits
+    @ctx __Role Context Law
+    @crt __Role Agent $court
+    @def __Role Theme $defendant
+    @result __Bundle $eid $act $ctx $crt $def
     return $result
 end
 
@@ -133,39 +159,47 @@ end
 
 @sues:sues graph plaintiff defendant claim
     # Plaintiff sues defendant with claim
-    @plf __Role Plaintiff $plaintiff
-    @def __Role Defendant $defendant
-    @clm __Role Claim $claim
-    @litigation __Role Process CivilLitigation
-    @result __Bundle $plf $def $clm $litigation
+    @eid __Event
+    @act __Role Action sues
+    @ctx __Role Context Law
+    @plf __Role Agent $plaintiff
+    @def __Role Theme $defendant
+    @clm __Role Theme $claim
+    @result __Bundle $eid $act $ctx $plf $def $clm
     return $result
 end
 
 @injures:injures graph tortfeasor victim
     # Tortfeasor injures victim (tort)
-    @tort __Role Tortfeasor $tortfeasor
-    @vict __Role Victim $victim
-    @injury __Role Action TortiousHarm
-    @result __Bundle $tort $vict $injury
+    @eid __Event
+    @act __Role Action injures
+    @ctx __Role Context Law
+    @tort __Role Agent $tortfeasor
+    @vict __Role Theme $victim
+    @result __Bundle $eid $act $ctx $tort $vict
     return $result
 end
 
 @owesLiability:owesLiability graph party liability
     # Party owes legal liability
-    @par __Role Liable $party
-    @liab __Role Liability $liability
-    @obligation __Role Relation LegalLiability
-    @result __Bundle $par $liab $obligation
+    @eid __Event
+    @act __Role Action owesLiability
+    @ctx __Role Context Law
+    @par __Role Theme $party
+    @liab __Role Theme $liability
+    @result __Bundle $eid $act $ctx $par $liab
     return $result
 end
 
 @compensates:compensates graph defendant plaintiff damages
     # Defendant compensates plaintiff with damages
-    @def __Role Compensator $defendant
-    @plf __Role Compensee $plaintiff
-    @dam __Role Damages $damages
-    @compensation __Role Process Compensation
-    @result __Bundle $def $plf $dam $compensation
+    @eid __Event
+    @act __Role Action compensates
+    @ctx __Role Context Law
+    @def __Role Agent $defendant
+    @plf __Role Theme $plaintiff
+    @dam __Role Theme $damages
+    @result __Bundle $eid $act $ctx $def $plf $dam
     return $result
 end
 
@@ -173,31 +207,37 @@ end
 
 @filesIn:filesIn graph party court case
     # Party files case in court
-    @par __Role Filer $party
-    @crt __Role Court $court
-    @cas __Role Case $case
-    @filing __Role Process Filing
-    @result __Bundle $par $crt $cas $filing
+    @eid __Event
+    @act __Role Action filesIn
+    @ctx __Role Context Law
+    @par __Role Agent $party
+    @crt __Role Theme $court
+    @cas __Role Theme $case
+    @result __Bundle $eid $act $ctx $par $crt $cas
     return $result
 end
 
 @appealsTo:appealsTo graph party higherCourt judgment
     # Party appeals judgment to higher court
-    @par __Role Appellant $party
-    @crt __Role AppellateCourt $higherCourt
-    @judg __Role Judgment $judgment
-    @appeal __Role Process Appeal
-    @result __Bundle $par $crt $judg $appeal
+    @eid __Event
+    @act __Role Action appealsTo
+    @ctx __Role Context Law
+    @par __Role Agent $party
+    @crt __Role Theme $higherCourt
+    @judg __Role Theme $judgment
+    @result __Bundle $eid $act $ctx $par $crt $judg
     return $result
 end
 
 @testifies:testifies graph witness court case
     # Witness testifies in court for case
-    @wit __Role Witness $witness
-    @crt __Role Court $court
-    @cas __Role Case $case
-    @testimony __Role Process Testimony
-    @result __Bundle $wit $crt $cas $testimony
+    @eid __Event
+    @act __Role Action testifies
+    @ctx __Role Context Law
+    @wit __Role Agent $witness
+    @crt __Role Theme $court
+    @cas __Role Theme $case
+    @result __Bundle $eid $act $ctx $wit $crt $cas
     return $result
 end
 
@@ -205,29 +245,35 @@ end
 
 @hasRight:hasRight graph person right
     # Person has legal right
-    @pers __Role RightHolder $person
-    @rgt __Role Right $right
-    @entitlement __Role Relation LegalRight
-    @result __Bundle $pers $rgt $entitlement
+    @eid __Event
+    @act __Role Action hasRight
+    @ctx __Role Context Law
+    @pers __Role Entity $person
+    @rgt __Role Theme $right
+    @result __Bundle $eid $act $ctx $pers $rgt
     return $result
 end
 
 @hasDuty:hasDuty graph person duty
     # Person has legal duty
-    @pers __Role DutyBearer $person
-    @dut __Role Duty $duty
-    @obligation __Role Relation LegalDuty
-    @result __Bundle $pers $dut $obligation
+    @eid __Event
+    @act __Role Action hasDuty
+    @ctx __Role Context Law
+    @pers __Role Entity $person
+    @dut __Role Theme $duty
+    @result __Bundle $eid $act $ctx $pers $dut
     return $result
 end
 
 @violatesRight:violatesRight graph violator victim right
     # Violator violates victim's right
-    @viol __Role Violator $violator
-    @vict __Role Victim $victim
-    @rgt __Role Right $right
-    @violation __Role Action RightViolation
-    @result __Bundle $viol $vict $rgt $violation
+    @eid __Event
+    @act __Role Action violatesRight
+    @ctx __Role Context Law
+    @viol __Role Agent $violator
+    @vict __Role Theme $victim
+    @rgt __Role Theme $right
+    @result __Bundle $eid $act $ctx $viol $vict $rgt
     return $result
 end
 
@@ -235,29 +281,35 @@ end
 
 @guarantees:guarantees graph constitution right
     # Constitution guarantees right
-    @const __Role Constitution $constitution
-    @rgt __Role Right $right
-    @protection __Role Relation ConstitutionalProtection
-    @result __Bundle $const $rgt $protection
+    @eid __Event
+    @act __Role Action guarantees
+    @ctx __Role Context Law
+    @const __Role Theme $constitution
+    @rgt __Role Theme $right
+    @result __Bundle $eid $act $ctx $const $rgt
     return $result
 end
 
 @restrictsAction:restrictsAction graph statute action
     # Statute restricts action
-    @stat __Role Statute $statute
-    @act __Role Action $action
-    @restriction __Role Relation LegalRestriction
-    @result __Bundle $stat $act $restriction
+    @eid __Event
+    @label __Role Action restrictsAction
+    @ctx __Role Context Law
+    @stat __Role Theme $statute
+    @action __Role Theme $action
+    @result __Bundle $eid $label $ctx $stat $action
     return $result
 end
 
 @interprets:interprets graph court statute interpretation
     # Court interprets statute
-    @crt __Role Court $court
-    @stat __Role Statute $statute
-    @interp __Role Interpretation $interpretation
-    @construction __Role Process JudicialInterpretation
-    @result __Bundle $crt $stat $interp $construction
+    @eid __Event
+    @act __Role Action interprets
+    @ctx __Role Context Law
+    @crt __Role Agent $court
+    @stat __Role Theme $statute
+    @interp __Role Theme $interpretation
+    @result __Bundle $eid $act $ctx $crt $stat $interp
     return $result
 end
 
@@ -265,28 +317,34 @@ end
 
 @presents:presents graph party evidence
     # Party presents evidence
-    @par __Role Presenter $party
-    @evid __Role Evidence $evidence
-    @presentation __Role Process Presentation
-    @result __Bundle $par $evid $presentation
+    @eid __Event
+    @act __Role Action presents
+    @ctx __Role Context Law
+    @par __Role Agent $party
+    @evid __Role Theme $evidence
+    @result __Bundle $eid $act $ctx $par $evid
     return $result
 end
 
 @admitsEvidence:admitsEvidence graph court evidence
     # Court admits evidence
-    @crt __Role Court $court
-    @evid __Role Evidence $evidence
-    @admission __Role Action Admission
-    @result __Bundle $crt $evid $admission
+    @eid __Event
+    @act __Role Action admitsEvidence
+    @ctx __Role Context Law
+    @crt __Role Agent $court
+    @evid __Role Theme $evidence
+    @result __Bundle $eid $act $ctx $crt $evid
     return $result
 end
 
 @excludesEvidence:excludesEvidence graph court evidence
     # Court excludes evidence
-    @crt __Role Court $court
-    @evid __Role Evidence $evidence
-    @exclusion __Role Action Exclusion
-    @result __Bundle $crt $evid $exclusion
+    @eid __Event
+    @act __Role Action excludesEvidence
+    @ctx __Role Context Law
+    @crt __Role Agent $court
+    @evid __Role Theme $evidence
+    @result __Bundle $eid $act $ctx $crt $evid
     return $result
 end
 
@@ -294,21 +352,11 @@ end
 
 @hasStatus:hasStatus graph entity status
     # Entity has legal status
+    @eid __Event
+    @act __Role Action hasStatus
+    @ctx __Role Context Law
     @ent __Role Entity $entity
-    @st __Role Status $status
-    @legal __Role Domain Law
-    @result __Bundle $ent $st $legal
+    @st __Role State $status
+    @result __Bundle $eid $act $ctx $ent $st
     return $result
-end
-
-@isSuspect:isSuspect graph person
-    # Person is a suspect (status wrapper)
-    @st hasStatus $person Suspect
-    return $st
-end
-
-@isGuilty:isGuilty graph person
-    # Person is guilty (status wrapper)
-    @st hasStatus $person Guilty
-    return $st
 end

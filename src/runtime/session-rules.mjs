@@ -83,6 +83,46 @@ export function extractVariables(ast, vars = []) {
   return vars;
 }
 
+function extractVariablesDeep(ast, stmtMap, vars = [], visited = new Set()) {
+  if (!ast) return vars;
+
+  if (ast.type === 'Hole') {
+    if (!vars.includes(ast.name)) vars.push(ast.name);
+    return vars;
+  }
+
+  if (ast.type === 'Reference') {
+    const key = ast.name;
+    if (visited.has(key)) return vars;
+    visited.add(key);
+    const stmt = stmtMap.get(key);
+    if (stmt) extractVariablesDeep(stmt, stmtMap, vars, visited);
+    return vars;
+  }
+
+  if (ast.type === 'Statement') {
+    if (ast.operator) extractVariablesDeep(ast.operator, stmtMap, vars, visited);
+    if (ast.args) {
+      for (const arg of ast.args) extractVariablesDeep(arg, stmtMap, vars, visited);
+    }
+    return vars;
+  }
+
+  if (ast.type === 'Compound') {
+    if (ast.operator) extractVariablesDeep(ast.operator, stmtMap, vars, visited);
+    if (ast.args) {
+      for (const arg of ast.args) extractVariablesDeep(arg, stmtMap, vars, visited);
+    }
+    return vars;
+  }
+
+  if (ast.args) {
+    for (const arg of ast.args) extractVariablesDeep(arg, stmtMap, vars, visited);
+  }
+
+  return vars;
+}
+
 /**
  * Recursively extract compound condition (And/Or/Not) and preserve AST for unification.
  */
@@ -143,8 +183,8 @@ export function trackRules(session, ast) {
     const conditionAST = resolveReferenceToAST(stmt.args[0], stmtMap);
     const conclusionAST = resolveReferenceToAST(stmt.args[1], stmtMap);
 
-    const conditionVars = extractVariables(conditionAST);
-    const conclusionVars = extractVariables(conclusionAST);
+    const conditionVars = extractVariablesDeep(conditionAST, stmtMap);
+    const conclusionVars = extractVariablesDeep(conclusionAST, stmtMap);
     const hasVariables = conditionVars.length > 0 || conclusionVars.length > 0;
 
     const signature = `Implies ${exprSignature(conditionAST)} => ${exprSignature(conclusionAST)}`;

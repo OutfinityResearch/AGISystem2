@@ -1,251 +1,106 @@
 # Medicine - Domain Relations
-# REAL graph definitions for medical relationships
+# Core-compatible graph macros for common clinical relations.
 
-# ===== Symptomatology Relations (REAL definitions) =====
+@_:MedicineRelations isA MedicineRelations AbstractType
 
 @hasSymptom:hasSymptom graph patient symptom
-    # Patient exhibits symptom
-    @p __Role Patient $patient
-    @s __Role Symptom $symptom
-    @presentation __Pair $p $s
-    return $presentation
+    @eid __Event
+    @act __Role Action hasSymptom
+    @p __Role Theme $patient
+    @s __Role Attribute $symptom
+    @ctx __Role Context Medicine
+    @result __Bundle $eid $act $p $s $ctx
+    return $result
 end
 
 @hasSign:hasSign graph patient sign
-    # Objective clinical sign
-    @p __Role Patient $patient
-    @s __Role Sign $sign
-    @observation __Pair $p $s
-    return $observation
-end
-
-@manifestsAs:manifestsAs graph condition manifestation
-    # Disease manifests as symptoms/signs
-    @cond __Role Condition $condition
-    @manif __Role Manifestation $manifestation
-    @presentation __Pair $cond $manif
-    return $presentation
-end
-
-# ===== Diagnostic Relations (REAL definitions) =====
-
-@diagnoses:diagnoses graph clinician patient disease
-    # Clinician diagnoses patient with disease
-    @c __Role Clinician $clinician
-    @p __Role Patient $patient
-    @d __Role Disease $disease
-    @diagnosis __Bundle $c $p $d
-    return $diagnosis
-end
-
-@ordersTest:ordersTest graph clinician patient test
-    # Clinician orders diagnostic test
-    @c __Role Clinician $clinician
-    @p __Role Patient $patient
-    @t __Role Test $test
-    @order __Bundle $c $p $t
-    return $order
-end
-
-@testResult:testResult graph patient test result
-    # Test produces result
-    @p __Role Patient $patient
-    @t __Role Test $test
-    @r __Role Result $result
-    @outcome __Bundle $p $t $r
-    return $outcome
-end
-
-@indicates:indicates graph finding disease
-    # Finding indicates possible disease
-    @f __Role Finding $finding
-    @d __Role Disease $disease
-    @indication __Pair $f $d
-    return $indication
-end
-
-@rulesOut:rulesOut graph finding disease
-    # Finding excludes disease
-    @f __Role Finding $finding
-    @d __Role Disease $disease
-    @exclusion Not (indicates $finding $disease)
-    @result __Bundle $f $d $exclusion
+    @eid __Event
+    @act __Role Action hasSign
+    @p __Role Theme $patient
+    @s __Role Attribute $sign
+    @ctx __Role Context Medicine
+    @result __Bundle $eid $act $p $s $ctx
     return $result
 end
 
-# ===== Treatment Relations (REAL definitions) =====
-
-@treats:treats graph treatment disease
-    # Treatment addresses disease
-    @t __Role Treatment $treatment
-    @d __Role Disease $disease
-    @therapeutic __Pair $t $d
-    return $therapeutic
-end
-
-@prescribes:prescribes graph clinician patient treatment
-    # Clinician prescribes treatment for patient
-    @c __Role Clinician $clinician
-    @p __Role Patient $patient
-    @t __Role Treatment $treatment
-    @prescription __Bundle $c $p $t
-    return $prescription
-end
-
-@administers:administers graph clinician patient medication dose
-    # Administer medication at specific dose
-    @c __Role Clinician $clinician
-    @p __Role Patient $patient
-    @m __Role Medication $medication
-    @d __Role Dose $dose
-    @administration __Bundle $c $p $m $d
-    return $administration
-end
-
-@improves:improves graph treatment outcome
-    # Treatment improves health outcome
-    @t __Role Treatment $treatment
-    @o __Role Outcome $outcome
-    @improvement __Pair $t $o
-    return $improvement
-end
-
-@alleviates:alleviates graph treatment symptom
-    # Treatment reduces symptom severity
-    @t __Role Treatment $treatment
-    @s __Role Symptom $symptom
-    @relief __Pair $t $s
-    return $relief
-end
-
-# ===== Adverse Relations (REAL definitions) =====
-
-@contraindicatedFor:contraindicatedFor graph treatment condition
-    # Treatment should not be used for condition
-    @t __Role Treatment $treatment
-    @c __Role Condition $condition
-    @prohibition Not (treats $treatment $condition)
-    @result __Bundle $t $c $prohibition
+@diagnosedWith:diagnosedWith graph patient disease
+    @eid __Event
+    @act __Role Action diagnosedWith
+    @p __Role Theme $patient
+    @d __Role Result $disease
+    @ctx __Role Context Medicine
+    @result __Bundle $eid $act $p $d $ctx
     return $result
 end
 
-@adverseEffect:adverseEffect graph treatment effect
-    # Treatment causes adverse effect
-    @t __Role Treatment $treatment
-    @e __Role AdverseEffect $effect
-    @causation causes $t $e
-    @result __Bundle $t $e $causation
+@performedTest:performedTest graph clinician patient test
+    @eid __Event
+    @act __Role Action performedTest
+    @c __Role Agent $clinician
+    @p __Role Theme $patient
+    @t __Role Instrument $test
+    @ctx __Role Context Medicine
+    @result __Bundle $eid $act $c $p $t $ctx
     return $result
 end
 
-@interactsWith:interactsWith graph drugA drugB
-    # Drug-drug interaction
-    @a __Role Drug $drugA
-    @b __Role Drug $drugB
-    @interaction __Pair $a $b
-    return $interaction
-end
-
-# ===== Risk & Causation Relations (REAL definitions) =====
-
-@riskFactorFor:riskFactorFor graph factor disease
-    # Factor increases disease risk
-    @f __Role Factor $factor
-    @d __Role Disease $disease
-    @risk __Pair $f $d
-    return $risk
-end
-
-@causedBy:causedBy graph disease cause
-    # Disease caused by specific cause
-    @d __Role Disease $disease
-    @c __Role Cause $cause
-    @etiology __Pair $d $c
-    return $etiology
-end
-
-@predisposesTo:predisposesTo graph condition disease
-    # Condition increases disease susceptibility
-    @c __Role Condition $condition
-    @d __Role Disease $disease
-    @predisposition __Pair $c $d
-    return $predisposition
-end
-
-@complicatedBy:complicatedBy graph disease complication
-    # Disease leads to complication
-    @d __Role Disease $disease
-    @c __Role Complication $complication
-    @progression __Pair $d $c
-    return $progression
-end
-
-# ===== Evidence Relations (REAL definitions) =====
-
-@evidenceLevel:evidenceLevel graph guideline level
-    # Evidence quality level (A, B, C)
-    @g __Role Guideline $guideline
-    @l __Role Level $level
-    @quality __Pair $g $l
-    return $quality
-end
-
-@supportedBy:supportedBy graph recommendation evidence
-    # Recommendation backed by evidence
-    @r __Role Recommendation $recommendation
-    @e __Role Evidence $evidence
-    @support __Pair $r $e
-    return $support
-end
-
-@basedOn:basedOn graph decision guideline
-    # Clinical decision based on guideline
-    @d __Role Decision $decision
-    @g __Role Guideline $guideline
-    @basis __Pair $d $g
-    return $basis
-end
-
-# ===== Outcome Relations (REAL definitions) =====
-
-@leadsTo:leadsTo graph treatment outcome
-    # Treatment leads to outcome
-    @t __Role Treatment $treatment
-    @o __Role Outcome $outcome
-    @result __Pair $t $o
+@testFinding:testFinding graph test finding
+    @eid __Event
+    @act __Role Action testFinding
+    @t __Role Instrument $test
+    @f __Role Result $finding
+    @ctx __Role Context Medicine
+    @result __Bundle $eid $act $t $f $ctx
     return $result
 end
 
-@prognosisOf:prognosisOf graph disease prognosis
-    # Expected disease course
-    @d __Role Disease $disease
-    @p __Role Prognosis $prognosis
-    @expectation __Pair $d $p
-    return $expectation
+@treats:treats graph clinician patient treatment
+    @eid __Event
+    @act __Role Action treats
+    @c __Role Agent $clinician
+    @p __Role Theme $patient
+    @tr __Role Instrument $treatment
+    @ctx __Role Context Medicine
+    @result __Bundle $eid $act $c $p $tr $ctx
+    return $result
 end
 
-@recoversFrom:recoversFrom graph patient disease
-    # Patient recovers from disease
-    @p __Role Patient $patient
-    @d __Role Disease $disease
-    @recovery __Pair $p $d
-    return $recovery
+@usesMedication:usesMedication graph treatment medication
+    @eid __Event
+    @act __Role Action usesMedication
+    @tr __Role Theme $treatment
+    @m __Role Instrument $medication
+    @ctx __Role Context Medicine
+    @result __Bundle $eid $act $tr $m $ctx
+    return $result
 end
 
-# ===== Anatomical Relations (REAL definitions) =====
-
-@affectedBy:affectedBy graph organ disease
-    # Organ affected by disease
-    @o __Role Organ $organ
-    @d __Role Disease $disease
-    @pathology __Pair $o $d
-    return $pathology
+@DoseMacro:dose graph medication amount
+    @eid __Event
+    @act __Role Action dose
+    @m __Role Theme $medication
+    @a __Role Value $amount
+    @ctx __Role Context Medicine
+    @result __Bundle $eid $act $m $a $ctx
+    return $result
 end
 
-@innervates:innervates graph nerve organ
-    # Nerve provides innervation to organ
-    @n __Role Nerve $nerve
-    @o __Role Organ $organ
-    @innervation __Pair $n $o
-    return $innervation
+@causesSideEffect:causesSideEffect graph medication sideEffect
+    @eid __Event
+    @act __Role Action causesSideEffect
+    @m __Role Cause $medication
+    @e __Role Result $sideEffect
+    @ctx __Role Context Medicine
+    @result __Bundle $eid $act $m $e $ctx
+    return $result
+end
+
+@contraindicatedFor:contraindicatedFor graph medication condition
+    @eid __Event
+    @act __Role Action contraindicatedFor
+    @m __Role Theme $medication
+    @cond __Role Attribute $condition
+    @ctx __Role Context Medicine
+    @result __Bundle $eid $act $m $cond $ctx
+    return $result
 end

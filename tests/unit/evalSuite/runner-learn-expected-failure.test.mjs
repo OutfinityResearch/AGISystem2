@@ -2,7 +2,7 @@ import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { Session } from '../../../src/runtime/session.mjs';
-import { runCase } from '../../../evalSuite/lib/runner.mjs';
+import { runCase } from '../../../evals/fastEval/lib/runner.mjs';
 
 describe('EvalSuite runner: expected learn failures', () => {
   test('learn contradiction can be marked as expected failure and remains atomic', async () => {

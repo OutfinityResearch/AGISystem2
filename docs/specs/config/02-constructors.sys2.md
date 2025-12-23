@@ -15,7 +15,7 @@ Defines macros like `@__Person` and `@__Number` that manufacture typed vectors. 
 ## Tests & Coverage
 - `tests/unit/runtime/core-theories.test.mjs` ensures macros load without errors.
 - `tests/unit/runtime/executor.test.mjs` drives macro execution through `Executor.executeProgram`, validating registration and binding behavior.
-- Integration suites (`evalSuite/suite01_foundations`, `suite02_hierarchies`) rely on these macros to instantiate persons, categories, and numbers.
+- Integration suites (`evals/fastEval/suite01_foundations`, `evals/fastEval/suite02_hierarchies`) rely on these macros to instantiate persons, categories, and numbers.
 
 ## Design Rationale
 Encapsulating `___Bind` sequences avoids duplicated JS helpers and keeps DSL programs concise.  Graph-based constructors (e.g., `__Number graph value`) allow typed literal encoding while preserving referential transparency.

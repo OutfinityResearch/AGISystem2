@@ -154,7 +154,7 @@
 - Dacă introducem `action: "explain"` în EvalSuite:
   - update `evalSuite/lib/runner.mjs`
   - update specs: `docs/specs/DS/DS14-EvalSuite.md`, `docs/specs/DS/DS07h-Reasoning.md`
-
+[ore_ont_457.owl](../../Downloads/ore2015_sample/pool_sample/files/ore_ont_457.owl)
 **Tests (unde):**
 - `tests/unit/reasoning/explain-contrastive.test.mjs`
 

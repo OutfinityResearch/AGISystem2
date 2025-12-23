@@ -5,29 +5,32 @@
 
 @writes:writes graph author work
     # Author writes literary work
-    @auth __Role Author $author
-    @wk __Role Work $work
-    @creation __Role Process Writing
-    @result __Bundle $auth $wk $creation
+    @eid __Event
+    @act __Role Action writes
+    @auth __Role Agent $author
+    @wk __Role Theme $work
+    @result __Bundle $eid $act $auth $wk
     return $result
 end
 
 @reads:reads graph reader work
     # Reader reads literary work
-    @read __Role Reader $reader
-    @wk __Role Work $work
-    @reception __Role Process Reading
-    @result __Bundle $read $wk $reception
+    @eid __Event
+    @act __Role Action reads
+    @read __Role Experiencer $reader
+    @wk __Role Theme $work
+    @result __Bundle $eid $act $read $wk
     return $result
 end
 
 @interprets:interprets graph reader work meaning
     # Reader interprets work's meaning
-    @read __Role Interpreter $reader
-    @wk __Role Work $work
-    @mean __Role Meaning $meaning
-    @interpretation __Role Process Interpretation
-    @result __Bundle $read $wk $mean $interpretation
+    @eid __Event
+    @act __Role Action interprets
+    @read __Role Experiencer $reader
+    @wk __Role Theme $work
+    @mean __Role Content $meaning
+    @result __Bundle $eid $act $read $wk $mean
     return $result
 end
 
@@ -35,46 +38,51 @@ end
 
 @hasPlot:hasPlot graph work plot
     # Work has plot structure
-    @wk __Role Work $work
-    @pl __Role Plot $plot
-    @structural __Role Relation StructuralElement
-    @result __Bundle $wk $pl $structural
+    @eid __Event
+    @act __Role Action hasPlot
+    @wk __Role Theme $work
+    @pl __Role Structure $plot
+    @result __Bundle $eid $act $wk $pl
     return $result
 end
 
 @features:features graph work character
     # Work features character
-    @wk __Role Work $work
-    @char __Role Character $character
-    @inclusion __Role Relation Contains
-    @result __Bundle $wk $char $inclusion
+    @eid __Event
+    @act __Role Action features
+    @wk __Role Theme $work
+    @char __Role Target $character
+    @result __Bundle $eid $act $wk $char
     return $result
 end
 
 @setIn:setIn graph work setting
     # Work set in particular setting
-    @wk __Role Work $work
-    @set __Role Setting $setting
-    @spatiotemporal __Role Relation ContextualLocation
-    @result __Bundle $wk $set $spatiotemporal
+    @eid __Event
+    @act __Role Action setIn
+    @wk __Role Theme $work
+    @set __Role Location $setting
+    @result __Bundle $eid $act $wk $set
     return $result
 end
 
 @narrates:narrates graph narrator story
     # Narrator narrates story
-    @narr __Role Narrator $narrator
-    @story __Role Story $story
-    @narration __Role Process Narration
-    @result __Bundle $narr $story $narration
+    @eid __Event
+    @act __Role Action narrates
+    @narr __Role Agent $narrator
+    @story __Role Content $story
+    @result __Bundle $eid $act $narr $story
     return $result
 end
 
 @hasTheme:hasTheme graph work theme
     # Work has central theme
-    @wk __Role Work $work
-    @th __Role Theme $theme
-    @thematic __Role Relation ThematicContent
-    @result __Bundle $wk $th $thematic
+    @eid __Event
+    @act __Role Action hasTheme
+    @wk __Role Theme $work
+    @th __Role Content $theme
+    @result __Bundle $eid $act $wk $th
     return $result
 end
 
@@ -82,37 +90,41 @@ end
 
 @uses:uses graph author device
     # Author uses literary device
-    @auth __Role Author $author
-    @dev __Role Device $device
-    @stylistic __Role Purpose StylisticEffect
-    @result __Bundle $auth $dev $stylistic
+    @eid __Event
+    @act __Role Action uses
+    @auth __Role Agent $author
+    @dev __Role Instrument $device
+    @result __Bundle $eid $act $auth $dev
     return $result
 end
 
 @employsMetaphor:employsMetaphor graph work metaphor
     # Work employs metaphor
-    @wk __Role Work $work
-    @met __Role Metaphor $metaphor
-    @figurative __Role Technique FigurativeLanguage
-    @result __Bundle $wk $met $figurative
+    @eid __Event
+    @act __Role Action employsMetaphor
+    @wk __Role Theme $work
+    @met __Role Instrument $metaphor
+    @result __Bundle $eid $act $wk $met
     return $result
 end
 
 @symbolizes:symbolizes graph symbol meaning
     # Literary symbol represents meaning
-    @sym __Role Symbol $symbol
-    @mean __Role Meaning $meaning
-    @symbolic __Role Relation Symbolism
-    @result __Bundle $sym $mean $symbolic
+    @eid __Event
+    @act __Role Action symbolizes
+    @sym __Role Theme $symbol
+    @mean __Role Content $meaning
+    @result __Bundle $eid $act $sym $mean
     return $result
 end
 
 @demonstrates:demonstrates graph work irony
     # Work demonstrates irony
-    @wk __Role Work $work
-    @iron __Role Irony $irony
-    @rhetorical __Role Technique RhetoricalDevice
-    @result __Bundle $wk $iron $rhetorical
+    @eid __Event
+    @act __Role Action demonstrates
+    @wk __Role Theme $work
+    @iron __Role Theme $irony
+    @result __Bundle $eid $act $wk $iron
     return $result
 end
 
@@ -120,28 +132,31 @@ end
 
 @belongsToGenre:belongsToGenre graph work genre
     # Work belongs to literary genre
-    @wk __Role Work $work
-    @gen __Role Genre $genre
-    @classification __Role Relation GenreClassification
-    @result __Bundle $wk $gen $classification
+    @eid __Event
+    @act __Role Action belongsToGenre
+    @wk __Role Theme $work
+    @gen __Role Category $genre
+    @result __Bundle $eid $act $wk $gen
     return $result
 end
 
 @writtenIn:writtenIn graph work style
     # Work written in particular style
-    @wk __Role Work $work
-    @st __Role Style $style
-    @stylistic __Role Relation Stylistic
-    @result __Bundle $wk $st $stylistic
+    @eid __Event
+    @act __Role Action writtenIn
+    @wk __Role Theme $work
+    @st __Role Manner $style
+    @result __Bundle $eid $act $wk $st
     return $result
 end
 
 @conveys:conveys graph work tone
     # Work conveys particular tone
-    @wk __Role Work $work
-    @tn __Role Tone $tone
-    @expressive __Role Relation Expression
-    @result __Bundle $wk $tn $expressive
+    @eid __Event
+    @act __Role Action conveys
+    @wk __Role Theme $work
+    @tn __Role Attribute $tone
+    @result __Bundle $eid $act $wk $tn
     return $result
 end
 
@@ -149,27 +164,30 @@ end
 
 @influences:influences graph work1 work2
     # Earlier work influences later work
-    @w1 __Role Predecessor $work1
-    @w2 __Role Successor $work2
-    @influence __Role Process LiteraryInfluence
-    @result __Bundle $w1 $w2 $influence
+    @eid __Event
+    @act __Role Action influences
+    @w1 __Role Source $work1
+    @w2 __Role Goal $work2
+    @result __Bundle $eid $act $w1 $w2
     return $result
 end
 
 @alludesTo:alludesTo graph work reference
     # Work alludes to another work/text
-    @wk __Role Work $work
-    @ref __Role Reference $reference
-    @intertextual __Role Relation Intertextuality
-    @result __Bundle $wk $ref $intertextual
+    @eid __Event
+    @act __Role Action alludesTo
+    @wk __Role Theme $work
+    @ref __Role Content $reference
+    @result __Bundle $eid $act $wk $ref
     return $result
 end
 
 @respondsTo:respondsTo graph work predecessor
     # Work responds to earlier work
-    @wk __Role Work $work
-    @pred __Role Predecessor $predecessor
-    @dialogue __Role Relation LiteraryDialogue
-    @result __Bundle $wk $pred $dialogue
+    @eid __Event
+    @act __Role Action respondsTo
+    @wk __Role Theme $work
+    @pred __Role Source $predecessor
+    @result __Bundle $eid $act $wk $pred
     return $result
 end

@@ -179,7 +179,7 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec) {
   // Build partial vector (everything except holes)
   let partial = operatorVec;
   for (const known of knowns) {
-    const posVec = getPositionVector(known.index, session.geometry);
+    const posVec = getPositionVector(known.index, session.geometry, session.hdcStrategy);
     partial = bind(partial, bind(known.vector, posVec));
   }
 
@@ -195,7 +195,7 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec) {
   // For single hole - extract directly
   if (holes.length === 1) {
     const hole = holes[0];
-    const posVec = getPositionVector(hole.index, session.geometry);
+    const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy);
     const candidate = unbind(answer, posVec);
 
     // Find top K matches in vocabulary
@@ -237,7 +237,7 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec) {
     // For each combination of top candidates per hole
     const holeCandidates = [];
     for (const hole of holes) {
-      const posVec = getPositionVector(hole.index, session.geometry);
+      const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy);
       const candidate = unbind(answer, posVec);
       const matches = topKSimilar(candidate, session.vocabulary.atoms, 5);
       holeCandidates.push({

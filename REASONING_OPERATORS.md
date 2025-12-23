@@ -1541,8 +1541,8 @@ function hdcAnalogyStrategy(a, b, c, session) {
 ```
 
 **Testing:**
-- Query 3 from `evals/stress_queries/cases.mjs`: Cell:Tissue analogy
-- Expected: Should find Individual:Society mapping
+- Analogy case in `evals/fastEval/suite15_reasoning_macros/cases.mjs`
+- Expected: Should find the orbital mapping
 - Success metric: >0.7 similarity score
 
 **Time estimate:** 4-6 hours
@@ -2222,23 +2222,21 @@ describe('Statistical Induce', () => {
 
 ```javascript
 describe('Query Evaluation Suite', () => {
-  test('all 12 queries in cases.mjs pass', async () => {
-    const cases = await import('../evals/stress_queries/cases.mjs')
-    const session = new Session({ geometry: 2048 })
+  test('suite regressions pass', async () => {
+    const suite1 = await import('../evals/stress_queries/suite1.mjs')
+    const suite2 = await import('../evals/stress_queries/suite2.mjs')
+    const session = new Session({ geometry: 2048, ...(suite1.sessionOptions || {}) })
 
-    // Load all theories
-    for (const theory of cases.theories) {
-      session.learn(readFileSync(theory, 'utf8'))
+    const steps = [...suite1.steps, ...suite2.steps]
+    for (const step of steps) {
+      if (step.action === 'learn') session.learn(step.input_dsl)
+      if (step.action === 'prove') {
+        const out = session.prove(step.input_dsl)
+        const expectsCannot = String(step.expected_nl || '').toLowerCase().includes('cannot prove')
+        if (expectsCannot) expect(out.valid).toBe(false)
+        else expect(out.valid).toBe(true)
+      }
     }
-
-    // Run all queries
-    let passed = 0
-    for (const step of cases.steps) {
-      const result = session.query(step.input_dsl)
-      if (result.success) passed++
-    }
-
-    expect(passed).toBe(12)  // All should pass
   })
 })
 ```

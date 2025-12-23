@@ -26,7 +26,7 @@ class Session {
 
   // Output
   summarize(vector: Vector): SummarizeResult
-  elaborate(proof: ProveResult): string
+  elaborate(proof: ProveResult): { text: string, proofChain?: string[], fullProof?: string }
   generateText(operator: string, args: string[]): string
   formatResult(result: QueryResult | ProveResult, type?: 'query' | 'prove'): string
   describeResult(payload: { action: string, reasoningResult: object, queryDsl?: string }): string
@@ -38,6 +38,7 @@ class Session {
 
   // Validation and loading
   checkDSL(dsl: string, options?: CheckOptions): AST
+  checkDSLStrict(dsl: string, options?: CheckOptions): AST
   loadCore(options?: { corePath?: string, includeIndex?: boolean }): LoadResult
 
   // Lifecycle
@@ -61,6 +62,7 @@ interface SessionOptions {
 
 - Core theories are **not** auto-loaded. Call `session.loadCore()` explicitly.
 - `learn`, `query`, `prove`, `abduce`, and `findAll` validate DSL with `checkDSL` first; invalid DSL throws.
+- `checkDSLStrict(...)` is available for tools/tests that want to reject unknown operators/concepts that are not already loaded or declared/persisted in the same program.
 - `learn` is transactional. On any error (syntax, dependency, load error, contradiction), the session rolls back.
 - Contradictions are rejected by default (`rejectContradictions: true`) and reported in `errors`/`warnings`.
 - NL output is produced via `session.describeResult(...)`.

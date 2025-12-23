@@ -1,0 +1,375 @@
+#!/usr/bin/env node
+/**
+ * Fast Evaluation Suite Runner
+ *
+ * Run evaluation suites to test NL->DSL transformation and reasoning.
+ *
+ * Usage:
+ *   node evals/runFastEval.mjs                           # Run all suites with 6 configs (default)
+ *   node evals/runFastEval.mjs suite01                   # Run specific suite
+ *   node evals/runFastEval.mjs --verbose                 # Show failure details
+ *   node evals/runFastEval.mjs --full                    # Run with 12 configurations (3 strategies × 2 priorities × 2 geometries)
+ *   node evals/runFastEval.mjs --priority=holographicPriority  # Run with specific reasoning priority
+ *
+ * Strategy Mode (runs single strategy with multiple geometries):
+ *   node evals/runFastEval.mjs --strategy=dense          # Dense: 128, 256, 512, 1024, 2048, 4096 bits
+ *   node evals/runFastEval.mjs --strategy=sparse         # Sparse: k=1, 2, 3, 5, 8, 13
+ *   node evals/runFastEval.mjs --strategy=metric         # Metric: 8, 16, 32, 64, 128, 256 bytes
+ *
+ * Geometry Parameters (for default mode):
+ *   --dense-dim=N   Dense binary vector dimension (default: 256)
+ *   --sparse-k=N    Sparse polynomial exponent count (default: 2)
+ *   --metric-dim=N  Metric affine byte channels (default: 16)
+ *
+ * Configurations:
+ *   HDC Strategies: dense-binary, sparse-polynomial, metric-affine
+ *   Reasoning Priorities: symbolicPriority, holographicPriority
+ */
+
+import { discoverSuites, loadSuite } from './fastEval/lib/loader.mjs';
+import { runSuite } from './fastEval/lib/runner.mjs';
+import {
+  reportSuiteHeader,
+  reportCaseResults,
+  reportSuiteSummary,
+  reportFailureDetails,
+  reportFailureComparisons,
+  reportGlobalSummary,
+  reportMultiStrategyComparison
+} from './fastEval/lib/reporter.mjs';
+import { listStrategies } from '../src/hdc/facade.mjs';
+import { REASONING_PRIORITY } from '../src/core/constants.mjs';
+
+// Strategy geometry configurations
+const STRATEGY_GEOMETRIES = {
+  'dense': [128, 256, 512, 1024, 2048, 4096],       // bits
+  'sparse': [1, 2, 3, 4, 5, 6],                      // k exponents
+  'metric': [8, 16, 32, 64, 128, 256]                // bytes
+};
+
+const STRATEGY_FULL_NAMES = {
+  'dense': 'dense-binary',
+  'sparse': 'sparse-polynomial',
+  'metric': 'metric-affine'
+};
+
+// Short display names for compact output
+function shortStrategy(s) {
+  return s.replace('-binary', '').replace('-polynomial', '').replace('-affine', '');
+}
+
+function shortPriority(p) {
+  if (!p) return '';
+  return p.replace('symbolicPriority', 'symb').replace('holographicPriority', 'holo').replace('Priority', '');
+}
+
+function configLabel(strategy, geometry, priority) {
+  return `${shortStrategy(strategy)}(${geometry})+${shortPriority(priority)}`;
+}
+
+// Parse command line arguments
+const args = process.argv.slice(2);
+
+// Help
+if (args.includes('--help') || args.includes('-h')) {
+  console.log(`
+Fast Evaluation Suite Runner
+
+Usage:
+  node evals/runFastEval.mjs [suite] [options]
+
+Options:
+  --help, -h              Show this help message
+  --verbose, -v           Show failure details
+  --fast                  Quick run with single config
+  --full                  Run with 12 configurations (3 strategies × 2 priorities × 2 geometries)
+  --strategy=NAME         Run single strategy with multiple geometries
+                          NAME: dense, sparse, metric
+  --priority=NAME         Run with specific reasoning priority
+                          NAME: symbolicPriority, holographicPriority
+
+Geometry Parameters:
+  --dense-dim=N           Dense binary vector dimension (default: 256)
+  --sparse-k=N            Sparse polynomial exponent count (default: 2)
+  --metric-dim=N          Metric affine byte channels (default: 16)
+
+Examples:
+  node evals/runFastEval.mjs                     # Run all suites with 6 configs
+  node evals/runFastEval.mjs suite01             # Run specific suite
+  node evals/runFastEval.mjs --strategy=dense    # Dense: 128, 256, 512, 1024, 2048, 4096 bits
+  node evals/runFastEval.mjs --verbose           # Show failure details
+`);
+  process.exit(0);
+}
+
+const verbose = args.includes('--verbose') || args.includes('-v');
+const fullModes = args.includes('--full');
+const fastMode = args.includes('--fast');
+
+// Extract specific strategy if provided (for geometry sweep mode)
+const strategyArg = args.find(a => a.startsWith('--strategy='));
+const singleStrategy = strategyArg ? strategyArg.split('=')[1] : null;
+
+// Extract specific reasoning priority if provided
+const priorityArg = args.find(a => a.startsWith('--priority='));
+const singlePriority = priorityArg ? priorityArg.split('=')[1] : null;
+
+// Extract geometry parameters (for default mode)
+const denseDimArg = args.find(a => a.startsWith('--dense-dim='));
+const denseDim = denseDimArg ? parseInt(denseDimArg.split('=')[1], 10) : 256;
+
+const sparseKArg = args.find(a => a.startsWith('--sparse-k='));
+const sparseK = sparseKArg ? parseInt(sparseKArg.split('=')[1], 10) : 2;
+
+const metricDimArg = args.find(a => a.startsWith('--metric-dim='));
+const metricDim = metricDimArg ? parseInt(metricDimArg.split('=')[1], 10) : 16;
+
+const specificSuites = args.filter(a => !a.startsWith('-') && !a.startsWith('--'));
+
+// Track results globally for interrupt handler
+let collectedResults = [];
+let interrupted = false;
+
+// Handle Ctrl+C - show summary before exit
+process.on('SIGINT', () => {
+  interrupted = true;
+  console.log('\n\n\x1b[33m⚠ Interrupted by user (Ctrl+C)\x1b[0m\n');
+
+  if (collectedResults.length > 0) {
+    reportGlobalSummary(collectedResults);
+  } else {
+    console.log('\x1b[2mNo results collected yet.\x1b[0m');
+  }
+
+  process.exit(130); // Standard exit code for SIGINT
+});
+
+async function main() {
+  const startTime = performance.now();
+
+  console.log();
+  console.log('\x1b[1m\x1b[34mAGISystem2 - Fast Evaluation Suite\x1b[0m');
+  console.log('\x1b[2mTesting NL\u2192DSL transformation with Core Theory stack\x1b[0m');
+  console.log();
+
+  try {
+    // Discover available suites
+    let suites = await discoverSuites();
+
+    if (suites.length === 0) {
+      console.error('\x1b[31mNo evaluation suites found!\x1b[0m');
+      process.exit(1);
+    }
+
+    // Filter to specific suites if requested
+    if (specificSuites.length > 0) {
+      suites = suites.filter(s =>
+        specificSuites.some(arg => s.includes(arg))
+      );
+
+      if (suites.length === 0) {
+        console.error(`\x1b[31mNo matching suites found for: ${specificSuites.join(', ')}\x1b[0m`);
+        process.exit(1);
+      }
+    }
+
+    console.log(`Found ${suites.length} suite(s): ${suites.join(', ')}`);
+
+    // Build configurations based on mode
+    const configurations = [];
+
+    // --fast alone: single quick test
+    if (fastMode && !singleStrategy) {
+      configurations.push({
+        strategy: 'dense-binary',
+        priority: REASONING_PRIORITY.HOLOGRAPHIC,
+        geometry: 256
+      });
+      console.log('Fast mode: single config (dense/256/holo)');
+    } else if (singleStrategy) {
+      // --strategy=X: single strategy with ALL geometries (sweep mode)
+      const shortName = singleStrategy.toLowerCase();
+      const fullName = STRATEGY_FULL_NAMES[shortName] || singleStrategy;
+      const allGeometries = STRATEGY_GEOMETRIES[shortName];
+
+      if (!allGeometries) {
+        console.error(`\x1b[31mUnknown strategy: ${singleStrategy}. Available: dense, sparse, metric\x1b[0m`);
+        process.exit(1);
+      }
+
+      // --strategy=X --fast: single geometry for quick test of that strategy
+      if (fastMode) {
+        const defaultGeometry = allGeometries[Math.floor(allGeometries.length / 2)]; // middle geometry
+        configurations.push({
+          strategy: fullName,
+          priority: REASONING_PRIORITY.HOLOGRAPHIC,
+          geometry: defaultGeometry
+        });
+        console.log(`Fast mode: single config (${fullName}/${defaultGeometry}/holographic)`);
+      } else {
+        // --strategy=X: all geometries for that strategy
+        const priorities = singlePriority
+          ? [singlePriority]
+          : [REASONING_PRIORITY.SYMBOLIC, REASONING_PRIORITY.HOLOGRAPHIC];
+
+        for (const geometry of allGeometries) {
+          for (const priority of priorities) {
+            configurations.push({ strategy: fullName, priority, geometry });
+          }
+        }
+        console.log(`Strategy sweep mode: ${fullName} with geometries ${allGeometries.join(', ')}`);
+      }
+    } else {
+      // Default mode: all strategies with configured geometries
+      const availableStrategies = listStrategies();
+      const priorities = singlePriority
+        ? [singlePriority]
+        : [REASONING_PRIORITY.SYMBOLIC, REASONING_PRIORITY.HOLOGRAPHIC];
+
+      for (const strategy of availableStrategies) {
+        for (const priority of priorities) {
+          const geometries = [];
+          if (strategy === 'sparse-polynomial') {
+            geometries.push(sparseK);
+            if (fullModes) geometries.push(sparseK * 2);
+          } else if (strategy === 'metric-affine') {
+            geometries.push(metricDim);
+            if (fullModes) geometries.push(metricDim * 2);
+          } else {
+            geometries.push(denseDim);
+            if (fullModes) geometries.push(denseDim * 2);
+          }
+          for (const geometry of geometries) {
+            configurations.push({ strategy, priority, geometry });
+          }
+        }
+      }
+    }
+
+    // Sort configurations
+    const strategyOrder = ['dense-binary', 'sparse-polynomial', 'metric-affine'];
+    const priorityOrder = [REASONING_PRIORITY.SYMBOLIC, REASONING_PRIORITY.HOLOGRAPHIC];
+    configurations.sort((a, b) => {
+      const strategyDiff = strategyOrder.indexOf(a.strategy) - strategyOrder.indexOf(b.strategy);
+      if (strategyDiff !== 0) return strategyDiff;
+      const geometryDiff = a.geometry - b.geometry;
+      if (geometryDiff !== 0) return geometryDiff;
+      return priorityOrder.indexOf(a.priority) - priorityOrder.indexOf(b.priority);
+    });
+
+    const configNames = configurations.map(c => configLabel(c.strategy, c.geometry, c.priority));
+    console.log(`Running ${configurations.length} config(s): ${configNames.join(', ')}`);
+
+    // Results by configuration (key = "strategy/geometry/priority")
+    const resultsByConfig = {};
+
+    // Run all suites for each configuration
+    for (const config of configurations) {
+      if (interrupted) break;
+
+      const configKey = `${config.strategy}/${config.geometry}/${config.priority}`;
+
+      console.log();
+      console.log(`\x1b[1m\x1b[35m${'━'.repeat(80)}\x1b[0m`);
+      console.log(`\x1b[1m\x1b[35mConfiguration: ${configLabel(config.strategy, config.geometry, config.priority)}\x1b[0m`);
+      console.log(`\x1b[35m${'━'.repeat(80)}\x1b[0m`);
+
+      resultsByConfig[configKey] = [];
+
+      for (const suiteName of suites) {
+        if (interrupted) break;
+
+        try {
+          // Load suite data
+          const suite = await loadSuite(suiteName);
+
+          // Report header (shows Core theory stack)
+          reportSuiteHeader(suite);
+
+          // Run tests with specific configuration (strategy + priority + geometry)
+          const { results, summary } = await runSuite(suite, {
+            strategy: config.strategy,
+            reasoningPriority: config.priority,
+            geometry: config.geometry
+          });
+
+          // Report results
+          reportCaseResults(suite.cases, results);
+          reportSuiteSummary(summary, suite.cases);
+          if (summary.failed > 0) {
+            reportFailureComparisons(suite.cases, results, {
+              suiteName,
+              strategyId: config.strategy,
+              reasoningPriority: config.priority
+            });
+          }
+
+          // Show failure details if verbose
+          if (verbose) {
+            for (let i = 0; i < results.length; i++) {
+              reportFailureDetails(i, results[i]);
+            }
+          }
+
+          resultsByConfig[configKey].push({
+            name: suite.name,
+            suiteName,
+            results,
+            summary,
+            cases: suite.cases,
+            strategyId: config.strategy,
+            reasoningPriority: config.priority,
+            geometry: config.geometry
+          });
+
+        } catch (err) {
+          console.error(`\x1b[31mError running suite ${suiteName}: ${err.message}\x1b[0m`);
+          if (verbose) {
+            console.error(err.stack);
+          }
+        }
+      }
+
+      // Show summary for this configuration
+      if (!interrupted && resultsByConfig[configKey].length > 0) {
+        console.log();
+        console.log(`\x1b[1m\x1b[35m${configLabel(config.strategy, config.geometry, config.priority)} - Summary\x1b[0m`);
+        reportGlobalSummary(resultsByConfig[configKey]);
+      }
+    }
+
+    // Multi-config comparison (if running multiple configs)
+    if (!interrupted && configurations.length > 1) {
+      reportMultiStrategyComparison(resultsByConfig);
+    }
+
+    // Performance summary
+    const totalDuration = performance.now() - startTime;
+    console.log();
+    console.log(`\x1b[1m\x1b[36mTotal execution time: ${(totalDuration / 1000).toFixed(2)}s\x1b[0m`);
+
+    // Exit code based on results
+    const allPassed = Object.values(resultsByConfig).every(configResults =>
+      configResults.every(s => s.summary.failed === 0)
+    );
+
+    return { success: allPassed, resultsByConfig, durationMs: totalDuration };
+
+  } catch (err) {
+    console.error(`\x1b[31mFatal error: ${err.message}\x1b[0m`);
+    if (verbose) {
+      console.error(err.stack);
+    }
+    process.exit(1);
+  }
+}
+
+// Export for use by runAllEvals.mjs
+export { main as runFastEval };
+
+// Run if executed directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().then(result => {
+    process.exit(result.success ? 0 : 1);
+  });
+}

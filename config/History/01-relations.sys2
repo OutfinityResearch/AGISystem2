@@ -5,28 +5,34 @@
 
 @occurredIn:occurredIn graph event period
     # Event occurred in historical period
-    @evt __Role Event $event
-    @per __Role Period $period
-    @temporal __Role Relation TemporalLocation
-    @result __Bundle $evt $per $temporal
+    @eid __Event
+    @act __Role Action occurredIn
+    @ctx __Role Context History
+    @evt __Role Theme $event
+    @per __Role Time $period
+    @result __Bundle $eid $act $ctx $evt $per
     return $result
 end
 
 @precedes:precedes graph event1 event2
     # Event precedes another chronologically
-    @e1 __Role Earlier $event1
-    @e2 __Role Later $event2
-    @chronological __Role Relation Precedence
-    @result __Bundle $e1 $e2 $chronological
+    @eid __Event
+    @act __Role Action precedes
+    @ctx __Role Context History
+    @e1 __Role Theme $event1
+    @e2 __Role Theme $event2
+    @result __Bundle $eid $act $ctx $e1 $e2
     return $result
 end
 
 @contemporaneousWith:contemporaneousWith graph event1 event2
     # Events occurred at same time
-    @e1 __Role Event $event1
-    @e2 __Role Event $event2
-    @simultaneous __Role Relation Contemporaneous
-    @result __Bundle $e1 $e2 $simultaneous
+    @eid __Event
+    @act __Role Action contemporaneousWith
+    @ctx __Role Context History
+    @e1 __Role Theme $event1
+    @e2 __Role Theme $event2
+    @result __Bundle $eid $act $ctx $e1 $e2
     return $result
 end
 
@@ -34,38 +40,46 @@ end
 
 @ruled:ruled graph leader territory period
     # Leader ruled territory during period
-    @lead __Role Ruler $leader
-    @terr __Role Territory $territory
-    @per __Role Period $period
-    @governance __Role Relation Rule
-    @result __Bundle $lead $terr $per $governance
+    @eid __Event
+    @act __Role Action ruled
+    @ctx __Role Context History
+    @lead __Role Agent $leader
+    @terr __Role Location $territory
+    @per __Role Time $period
+    @result __Bundle $eid $act $ctx $lead $terr $per
     return $result
 end
 
 @founded:founded graph founder entity
     # Founder established entity
-    @found __Role Founder $founder
-    @ent __Role Entity $entity
-    @creation __Role Action Founding
-    @result __Bundle $found $ent $creation
+    @eid __Event
+    @act __Role Action founded
+    @ctx __Role Context History
+    @found __Role Agent $founder
+    @ent __Role Theme $entity
+    @result __Bundle $eid $act $ctx $found $ent
     return $result
 end
 
 @led:led graph leader group
     # Leader led group/army/movement
-    @lead __Role Leader $leader
+    @eid __Event
+    @act __Role Action led
+    @ctx __Role Context History
+    @lead __Role Agent $leader
     @grp __Role Group $group
-    @leadership __Role Relation Leadership
-    @result __Bundle $lead $grp $leadership
+    @result __Bundle $eid $act $ctx $lead $grp
     return $result
 end
 
 @conqueredBy:conqueredBy graph territory conqueror
     # Territory conquered by conqueror
-    @terr __Role Territory $territory
-    @conq __Role Conqueror $conqueror
-    @conquest __Role Action Conquest
-    @result __Bundle $terr $conq $conquest
+    @eid __Event
+    @act __Role Action conqueredBy
+    @ctx __Role Context History
+    @terr __Role Location $territory
+    @conq __Role Agent $conqueror
+    @result __Bundle $eid $act $ctx $terr $conq
     return $result
 end
 
@@ -73,38 +87,46 @@ end
 
 @succeededBy:succeededBy graph ruler successor
     # Ruler succeeded by another
-    @rul __Role Predecessor $ruler
-    @succ __Role Successor $successor
-    @succession __Role Relation Succession
-    @result __Bundle $rul $succ $succession
+    @eid __Event
+    @act __Role Action succeededBy
+    @ctx __Role Context History
+    @rul __Role Theme $ruler
+    @succ __Role Theme $successor
+    @result __Bundle $eid $act $ctx $rul $succ
     return $result
 end
 
 @alliedWith:alliedWith graph state1 state2
     # States formed alliance
-    @s1 __Role Ally $state1
-    @s2 __Role Ally $state2
-    @alliance __Role Relation Alliance
-    @result __Bundle $s1 $s2 $alliance
+    @eid __Event
+    @act __Role Action alliedWith
+    @ctx __Role Context History
+    @s1 __Role Theme $state1
+    @s2 __Role Theme $state2
+    @result __Bundle $eid $act $ctx $s1 $s2
     return $result
 end
 
 @wagedWar:wagedWar graph state1 state2
     # States waged war
-    @s1 __Role Belligerent $state1
-    @s2 __Role Belligerent $state2
-    @war __Role Conflict War
-    @result __Bundle $s1 $s2 $war
+    @eid __Event
+    @act __Role Action wagedWar
+    @ctx __Role Context History
+    @s1 __Role Theme $state1
+    @s2 __Role Theme $state2
+    @result __Bundle $eid $act $ctx $s1 $s2
     return $result
 end
 
 @signedTreaty:signedTreaty graph state1 state2 treaty
     # States signed treaty
-    @s1 __Role Signatory $state1
-    @s2 __Role Signatory $state2
-    @treat __Role Treaty $treaty
-    @agreement __Role Action Signing
-    @result __Bundle $s1 $s2 $treat $agreement
+    @eid __Event
+    @act __Role Action signedTreaty
+    @ctx __Role Context History
+    @s1 __Role Theme $state1
+    @s2 __Role Theme $state2
+    @treat __Role Theme $treaty
+    @result __Bundle $eid $act $ctx $s1 $s2 $treat
     return $result
 end
 
@@ -112,28 +134,34 @@ end
 
 @triggered:triggered graph cause revolution
     # Cause triggered revolution
+    @eid __Event
+    @act __Role Action triggered
+    @ctx __Role Context History
     @cau __Role Cause $cause
-    @rev __Role Revolution $revolution
-    @causation __Role Relation Causation
-    @result __Bundle $cau $rev $causation
+    @rev __Role Theme $revolution
+    @result __Bundle $eid $act $ctx $cau $rev
     return $result
 end
 
 @reformed:reformed graph reformer institution
     # Reformer reformed institution
-    @ref __Role Reformer $reformer
-    @inst __Role Institution $institution
-    @reform __Role Action Reform
-    @result __Bundle $ref $inst $reform
+    @eid __Event
+    @act __Role Action reformed
+    @ctx __Role Context History
+    @ref __Role Agent $reformer
+    @inst __Role Theme $institution
+    @result __Bundle $eid $act $ctx $ref $inst
     return $result
 end
 
 @spread:spread graph culture region
     # Culture spread to region
-    @cult __Role Culture $culture
-    @reg __Role Region $region
-    @diffusion __Role Process CulturalDiffusion
-    @result __Bundle $cult $reg $diffusion
+    @eid __Event
+    @act __Role Action spread
+    @ctx __Role Context History
+    @cult __Role Theme $culture
+    @reg __Role Location $region
+    @result __Bundle $eid $act $ctx $cult $reg
     return $result
 end
 
@@ -141,19 +169,23 @@ end
 
 @emergedIn:emergedIn graph movement period
     # Movement emerged in period
-    @mov __Role Movement $movement
-    @per __Role Period $period
-    @emergence __Role Relation Emergence
-    @result __Bundle $mov $per $emergence
+    @eid __Event
+    @act __Role Action emergedIn
+    @ctx __Role Context History
+    @mov __Role Theme $movement
+    @per __Role Time $period
+    @result __Bundle $eid $act $ctx $mov $per
     return $result
 end
 
 @influenced:influenced graph ideology movement
     # Ideology influenced movement
-    @ideo __Role Ideology $ideology
-    @mov __Role Movement $movement
-    @influence __Role Relation Influence
-    @result __Bundle $ideo $mov $influence
+    @eid __Event
+    @act __Role Action influenced
+    @ctx __Role Context History
+    @ideo __Role Theme $ideology
+    @mov __Role Theme $movement
+    @result __Bundle $eid $act $ctx $ideo $mov
     return $result
 end
 
@@ -161,19 +193,23 @@ end
 
 @documentedIn:documentedIn graph event document
     # Event documented in historical source
-    @evt __Role Event $event
-    @doc __Role Document $document
-    @evidence __Role Relation Evidence
-    @result __Bundle $evt $doc $evidence
+    @eid __Event
+    @act __Role Action documentedIn
+    @ctx __Role Context History
+    @evt __Role Theme $event
+    @doc __Role Theme $document
+    @result __Bundle $eid $act $ctx $evt $doc
     return $result
 end
 
 @attestTo:attestTo graph source event
     # Source attests to event
-    @src __Role Source $source
-    @evt __Role Event $event
-    @attestation __Role Relation Attestation
-    @result __Bundle $src $evt $attestation
+    @eid __Event
+    @act __Role Action attestTo
+    @ctx __Role Context History
+    @src __Role Theme $source
+    @evt __Role Theme $event
+    @result __Bundle $eid $act $ctx $src $evt
     return $result
 end
 
@@ -181,9 +217,11 @@ end
 
 @Buried:Buried graph person
     # Person is buried (post-mortem status)
-    @pers __Role Person $person
+    @eid __Event
+    @act __Role Action Buried
+    @ctx __Role Context History
+    @pers __Role Entity $person
     @state __Role State Buried
-    @domain __Role Domain History
-    @result __Bundle $pers $state $domain
+    @result __Bundle $eid $act $ctx $pers $state
     return $result
 end

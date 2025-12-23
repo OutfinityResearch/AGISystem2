@@ -5,37 +5,45 @@
 
 @practices:practices graph group culture
     # Group practices cultural tradition
+    @eid __Event
+    @act __Role Action practices
     @grp __Role Agent $group
-    @cult __Role Practice $culture
+    @cult __Role Theme $culture
     @transmission __Role Process CulturalTransmission
-    @result __Bundle $grp $cult $transmission
+    @result __Bundle $eid $act $grp $cult $transmission
     return $result
 end
 
 @symbolizes:symbolizes graph symbol meaning
     # Symbol represents cultural meaning
-    @sym __Role Symbol $symbol
-    @mean __Role Meaning $meaning
+    @eid __Event
+    @act __Role Action symbolizes
+    @sym __Role Theme $symbol
+    @mean __Role Content $meaning
     @cultural __Role Context CulturalContext
-    @result __Bundle $sym $mean $cultural
+    @result __Bundle $eid $act $sym $mean $cultural
     return $result
 end
 
 @performs:performs graph group ritual
     # Group performs ritual
+    @eid __Event
+    @act __Role Action performs
     @grp __Role Agent $group
-    @rit __Role Ritual $ritual
+    @rit __Role Theme $ritual
     @ceremonial __Role Context Ceremonial
-    @result __Bundle $grp $rit $ceremonial
+    @result __Bundle $eid $act $grp $rit $ceremonial
     return $result
 end
 
 @inheritsFrom:inheritsFrom graph descendant ancestor
     # Cultural inheritance
-    @desc __Role Descendant $descendant
-    @anc __Role Ancestor $ancestor
-    @cultural __Role Domain CulturalTransmission
-    @result __Bundle $desc $anc $cultural
+    @eid __Event
+    @act __Role Action inheritsFrom
+    @desc __Role Theme $descendant
+    @anc __Role Source $ancestor
+    @cultural __Role Context CulturalTransmission
+    @result __Bundle $eid $act $desc $anc $cultural
     return $result
 end
 
@@ -43,38 +51,46 @@ end
 
 @descendsFrom:descendsFrom graph child parent
     # Genealogical descent
-    @ch __Role Descendant $child
-    @par __Role Ancestor $parent
-    @genealogical __Role Type Genealogical
-    @result __Bundle $ch $par $genealogical
+    @eid __Event
+    @act __Role Action descendsFrom
+    @ch __Role Theme $child
+    @par __Role Source $parent
+    @genealogical __Role Context Genealogical
+    @result __Bundle $eid $act $ch $par $genealogical
     return $result
 end
 
 @marriedTo:marriedTo graph person1 person2
     # Marriage alliance
-    @p1 __Role Spouse $person1
-    @p2 __Role Spouse $person2
-    @alliance __Role Relation MarriageAlliance
-    @result __Bundle $p1 $p2 $alliance
+    @eid __Event
+    @act __Role Action marriedTo
+    @p1 __Role Theme $person1
+    @p2 __Role Theme $person2
+    @alliance __Role Context MarriageAlliance
+    @result __Bundle $eid $act $p1 $p2 $alliance
     return $result
 end
 
 @belongsToLineage:belongsToLineage graph person lineage
     # Lineage membership
-    @pers __Role Person $person
-    @lin __Role Lineage $lineage
-    @membership __Role Relation Member
-    @result __Bundle $pers $lin $membership
+    @eid __Event
+    @act __Role Action belongsToLineage
+    @pers __Role Theme $person
+    @lin __Role Group $lineage
+    @membership __Role Type Member
+    @result __Bundle $eid $act $pers $lin $membership
     return $result
 end
 
 @belongsToClan:belongsToClan graph person clan
     # Clan membership
-    @pers __Role Person $person
-    @cl __Role Clan $clan
-    @membership __Role Relation Member
-    @totem __Role Symbol TotemicIdentity
-    @result __Bundle $pers $cl $membership $totem
+    @eid __Event
+    @act __Role Action belongsToClan
+    @pers __Role Theme $person
+    @cl __Role Group $clan
+    @membership __Role Type Member
+    @totem __Role Attribute TotemicIdentity
+    @result __Bundle $eid $act $pers $cl $membership $totem
     return $result
 end
 
@@ -82,29 +98,35 @@ end
 
 @exchanges:exchanges graph giver receiver goods
     # Reciprocal exchange
-    @giv __Role Giver $giver
-    @rec __Role Receiver $receiver
-    @good __Role Object $goods
-    @reciprocal __Role Nature Reciprocity
-    @result __Bundle $giv $rec $good $reciprocal
+    @eid __Event
+    @act __Role Action exchanges
+    @giv __Role Agent $giver
+    @rec __Role Recipient $receiver
+    @good __Role Theme $goods
+    @reciprocal __Role Context Reciprocity
+    @result __Bundle $eid $act $giv $rec $good $reciprocal
     return $result
 end
 
 @subsistsBy:subsistsBy graph group mode
     # Subsistence mode
-    @grp __Role Group $group
-    @mode __Role Mode $mode
-    @economic __Role Domain Subsistence
-    @result __Bundle $grp $mode $economic
+    @eid __Event
+    @act __Role Action subsistsBy
+    @grp __Role Agent $group
+    @mode __Role Manner $mode
+    @economic __Role Context SubsistenceMode
+    @result __Bundle $eid $act $grp $mode $economic
     return $result
 end
 
 @produces:produces graph group artifact
     # Material production
-    @grp __Role Producer $group
-    @art __Role Artifact $artifact
-    @technology __Role Method Technology
-    @result __Bundle $grp $art $technology
+    @eid __Event
+    @act __Role Action produces
+    @grp __Role Agent $group
+    @art __Role Result $artifact
+    @technology __Role Context Technology
+    @result __Bundle $eid $act $grp $art $technology
     return $result
 end
 
@@ -112,28 +134,34 @@ end
 
 @believes:believes graph group worldview
     # Belief in worldview
-    @grp __Role Believer $group
-    @view __Role Worldview $worldview
-    @commitment __Role Relation Commitment
-    @result __Bundle $grp $view $commitment
+    @eid __Event
+    @act __Role Action believes
+    @grp __Role Experiencer $group
+    @view __Role Content $worldview
+    @commitment __Role Context Commitment
+    @result __Bundle $eid $act $grp $view $commitment
     return $result
 end
 
 @worships:worships graph group deity
     # Religious worship
-    @grp __Role Worshipper $group
-    @deity __Role Deity $deity
+    @eid __Event
+    @act __Role Action worships
+    @grp __Role Experiencer $group
+    @deity __Role Theme $deity
     @religious __Role Context Religion
-    @result __Bundle $grp $deity $religious
+    @result __Bundle $eid $act $grp $deity $religious
     return $result
 end
 
 @narratesMyth:narratesMyth graph culture myth
     # Cultural myth narration
-    @cult __Role Culture $culture
-    @myth __Role Myth $myth
+    @eid __Event
+    @act __Role Action narratesMyth
+    @cult __Role Agent $culture
+    @myth __Role Content $myth
     @transmission __Role Process OralTradition
-    @result __Bundle $cult $myth $transmission
+    @result __Bundle $eid $act $cult $myth $transmission
     return $result
 end
 
@@ -141,29 +169,35 @@ end
 
 @observes:observes graph group norm
     # Norm observance
-    @grp __Role Observer $group
-    @norm __Role Norm $norm
-    @conformity __Role Relation Conformity
-    @result __Bundle $grp $norm $conformity
+    @eid __Event
+    @act __Role Action observes
+    @grp __Role Agent $group
+    @norm __Role Theme $norm
+    @conformity __Role Context Conformity
+    @result __Bundle $eid $act $grp $norm $conformity
     return $result
 end
 
 @transmits:transmits graph elder youth tradition
     # Intergenerational transmission
-    @eld __Role Transmitter $elder
-    @you __Role Receiver $youth
+    @eid __Event
+    @act __Role Action transmits
+    @eld __Role Agent $elder
+    @you __Role Recipient $youth
     @trad __Role Content $tradition
     @generational __Role Process Socialization
-    @result __Bundle $eld $you $trad $generational
+    @result __Bundle $eid $act $eld $you $trad $generational
     return $result
 end
 
 @adaptsTo:adaptsTo graph culture environment
     # Cultural adaptation to environment
-    @cult __Role Culture $culture
+    @eid __Event
+    @act __Role Action adaptsTo
+    @cult __Role Theme $culture
     @env __Role Environment $environment
     @adaptation __Role Process Adaptation
-    @result __Bundle $cult $env $adaptation
+    @result __Bundle $eid $act $cult $env $adaptation
     return $result
 end
 
@@ -171,18 +205,22 @@ end
 
 @observedBy:observedBy graph culture ethnographer
     # Ethnographic observation
-    @cult __Role Observed $culture
-    @eth __Role Observer $ethnographer
-    @method __Role Method ParticipantObservation
-    @result __Bundle $cult $eth $method
+    @eid __Event
+    @act __Role Action observedBy
+    @cult __Role Theme $culture
+    @eth __Role Agent $ethnographer
+    @method __Role Context ParticipantObservation
+    @result __Bundle $eid $act $cult $eth $method
     return $result
 end
 
 @informs:informs graph informant ethnographer
     # Cultural informant relationship
-    @inf __Role Informant $informant
-    @eth __Role Researcher $ethnographer
+    @eid __Event
+    @act __Role Action informs
+    @inf __Role Agent $informant
+    @eth __Role Recipient $ethnographer
     @knowledge __Role Content CulturalKnowledge
-    @result __Bundle $inf $eth $knowledge
+    @result __Bundle $eid $act $inf $eth $knowledge
     return $result
 end

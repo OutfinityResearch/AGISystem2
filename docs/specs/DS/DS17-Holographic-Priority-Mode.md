@@ -494,7 +494,7 @@ const cspHeuristicUsage = stats.cspHeuristicOrderings;
 ### 17.8.1 Four-Configuration Runner
 
 ```javascript
-// evalSuite/run.js
+// evals/runFastEval.mjs
 
 const CONFIGURATIONS = [
   { strategy: 'dense-binary', priority: 'symbolicPriority' },
@@ -550,7 +550,7 @@ Holographic Stats (dense-binary):
 ### 17.9.1 Suite Definition
 
 ```javascript
-// evalSuite/suite12_holographic/cases.mjs
+// evals/fastEval (suites live here)
 
 export const name = 'Holographic Priority';
 export const description = 'Tests for HDC-first reasoning with validation';
@@ -656,9 +656,9 @@ export const steps = [
 | 5 | `src/reasoning/holographic/csp-hdc-heuristic.mjs` | Constraint satisfaction vectors |
 | 6 | `src/reasoning/index.mjs` | Add dispatcher |
 | 7 | `src/runtime/session.mjs` | Use dispatcher, track stats |
-| 8 | `evalSuite/run.js` | Run 4 configurations |
-| 9 | `evalSuite/lib/reporter.mjs` | 4-column output |
-| 10 | `evalSuite/suite12_holographic/cases.mjs` | New test suite |
+| 8 | `evals/runFastEval.mjs` | Run fast eval configurations |
+| 9 | `evals/fastEval/lib/reporter.mjs` | Multi-column output |
+| 10 | `evals/fastEval/*/cases.mjs` | Suites (per topic) |
 
 ---
 

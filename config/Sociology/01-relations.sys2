@@ -1,233 +1,104 @@
 # Sociology - Domain Relations
-# REAL graph definitions for sociological relationships
+# Core-compatible graph macros for common sociological relations.
 
-# ===== Social Structure Relations =====
+@_:SociologyRelations isA SociologyRelations AbstractType
 
-@memberOf:memberOf graph individual society
-    # Individual is member of society
-    @ind __Role Member $individual
-    @soc __Role Society $society
-    @membership __Role Relation Membership
-    @result __Bundle $ind $soc $membership
+@memberOf:memberOf graph agent group
+    @eid __Event
+    @act __Role Action memberOf
+    @a __Role Theme $agent
+    @g __Role Group $group
+    @ctx __Role Context Sociology
+    @result __Bundle $eid $act $a $g $ctx
     return $result
 end
 
-@partOf:partOf graph institution society
-    # Institution is part of society
-    @inst __Role Institution $institution
-    @soc __Role Society $society
-    @structural __Role Relation PartOf
-    @result __Bundle $inst $soc $structural
+@hasRole:hasRole graph agent role
+    @eid __Event
+    @act __Role Action hasRole
+    @a __Role Theme $agent
+    @r __Role Role $role
+    @ctx __Role Context Sociology
+    @result __Bundle $eid $act $a $r $ctx
     return $result
 end
 
-@hasStatus:hasStatus graph individual status
-    # Individual has social status
-    @ind __Role Person $individual
-    @stat __Role Status $status
-    @position __Role Relation SocialPosition
-    @result __Bundle $ind $stat $position
+@followsNorm:followsNorm graph agent norm
+    @eid __Event
+    @act __Role Action followsNorm
+    @a __Role Theme $agent
+    @n __Role Attribute $norm
+    @ctx __Role Context Sociology
+    @result __Bundle $eid $act $a $n $ctx
     return $result
 end
 
-@occupiesRole:occupiesRole graph individual role
-    # Individual occupies social role
-    @ind __Role Person $individual
-    @rol __Role Role $role
-    @position __Role Relation RoleOccupancy
-    @result __Bundle $ind $rol $position
+@partOfSociety:partOfSociety graph group society
+    @eid __Event
+    @act __Role Action partOfSociety
+    @g __Role Theme $group
+    @s __Role Goal $society
+    @ctx __Role Context Sociology
+    @result __Bundle $eid $act $g $s $ctx
     return $result
 end
 
-@belongsToClass:belongsToClass graph individual class
-    # Individual belongs to social class
-    @ind __Role Person $individual
-    @cls __Role Class $class
-    @stratification __Role Context Stratification
-    @result __Bundle $ind $cls $stratification
+@interactsWith:interactsWith graph a b
+    @eid __Event
+    @act __Role Action interactsWith
+    @x __Role Theme $a
+    @y __Role Theme $b
+    @ctx __Role Context Sociology
+    @result __Bundle $eid $act $x $y $ctx
     return $result
 end
 
-# ===== Social Process Relations =====
-
-@interactsWith:interactsWith graph person1 person2
-    # Social interaction between persons
-    @p1 __Role Actor $person1
-    @p2 __Role Actor $person2
-    @interaction __Role Process SocialInteraction
-    @result __Bundle $p1 $p2 $interaction
+@connectedTo:connectedTo graph a b
+    @eid __Event
+    @act __Role Action connectedTo
+    @x __Role Theme $a
+    @y __Role Theme $b
+    @ctx __Role Context Sociology
+    @result __Bundle $eid $act $x $y $ctx
     return $result
 end
 
-@socializes:socializes graph agent target
-    # Agent socializes target
-    @ag __Role Socializer $agent
-    @targ __Role Learner $target
-    @socialization __Role Process Socialization
-    @result __Bundle $ag $targ $socialization
+@hasStatus:hasStatus graph agent status
+    @eid __Event
+    @act __Role Action hasStatus
+    @a __Role Theme $agent
+    @s __Role Attribute $status
+    @ctx __Role Context Sociology
+    @result __Bundle $eid $act $a $s $ctx
     return $result
 end
 
-@influencesSocially:influencesSocially graph influencer influenced
-    # Social influence relation
-    @inf __Role Influencer $influencer
-    @target __Role Influenced $influenced
-    @influence __Role Process SocialInfluence
-    @result __Bundle $inf $target $influence
+@classOf:classOf graph agent socialClass
+    @eid __Event
+    @act __Role Action classOf
+    @a __Role Theme $agent
+    @c __Role Category $socialClass
+    @ctx __Role Context Sociology
+    @result __Bundle $eid $act $a $c $ctx
     return $result
 end
 
-@conflictsWith:conflictsWith graph group1 group2
-    # Social conflict between groups
-    @g1 __Role Actor $group1
-    @g2 __Role Actor $group2
-    @conflict __Role Process SocialConflict
-    @result __Bundle $g1 $g2 $conflict
+@exercisesPowerOver:exercisesPowerOver graph agent target
+    @eid __Event
+    @act __Role Action exercisesPowerOver
+    @a __Role Agent $agent
+    @t __Role Theme $target
+    @ctx __Role Context Sociology
+    @result __Bundle $eid $act $a $t $ctx
     return $result
 end
 
-@cooperatesWith:cooperatesWith graph group1 group2
-    # Cooperation between groups
-    @g1 __Role Partner $group1
-    @g2 __Role Partner $group2
-    @cooperation __Role Process Cooperation
-    @result __Bundle $g1 $g2 $cooperation
-    return $result
-end
-
-# ===== Group & Organization Relations =====
-
-@leadsGroup:leadsGroup graph leader group
-    # Leader leads social group
-    @lead __Role Leader $leader
-    @grp __Role Group $group
-    @leadership __Role Relation Leadership
-    @result __Bundle $lead $grp $leadership
-    return $result
-end
-
-@formalizedAs:formalizedAs graph group organization
-    # Group formalized as organization
-    @grp __Role InformalGroup $group
-    @org __Role Organization $organization
-    @formalization __Role Process Formalization
-    @result __Bundle $grp $org $formalization
-    return $result
-end
-
-@networkedWith:networkedWith graph actor1 actor2
-    # Social network connection
-    @a1 __Role Node $actor1
-    @a2 __Role Node $actor2
-    @connection __Role Relation NetworkTie
-    @result __Bundle $a1 $a2 $connection
-    return $result
-end
-
-# ===== Culture & Norms Relations =====
-
-@internalized:internalized graph individual culture
-    # Individual internalized culture
-    @ind __Role Person $individual
-    @cult __Role Culture $culture
-    @internalization __Role Process Internalization
-    @result __Bundle $ind $cult $internalization
-    return $result
-end
-
-@followsNorm:followsNorm graph individual norm
-    # Individual follows social norm
-    @ind __Role Actor $individual
-    @norm __Role Norm $norm
-    @conformity __Role Relation Conformity
-    @result __Bundle $ind $norm $conformity
-    return $result
-end
-
-@violatesNorm:violatesNorm graph individual norm
-    # Individual violates social norm
-    @ind __Role Deviant $individual
-    @norm __Role Norm $norm
-    @deviance __Role Relation Violation
-    @result __Bundle $ind $norm $deviance
-    return $result
-end
-
-@valuesHighly:valuesHighly graph group value
-    # Group values something highly
-    @grp __Role Group $group
-    @val __Role Value $value
-    @commitment __Role Relation ValueCommitment
-    @result __Bundle $grp $val $commitment
-    return $result
-end
-
-# ===== Inequality Relations =====
-
-@dominates:dominates graph dominant subordinate
-    # Domination relation
-    @dom __Role Dominant $dominant
-    @sub __Role Subordinate $subordinate
-    @power __Role Relation PowerRelation
-    @result __Bundle $dom $sub $power
-    return $result
-end
-
-@discriminatesAgainst:discriminatesAgainst graph actor target
-    # Discrimination relation
-    @act __Role Discriminator $actor
-    @targ __Role Victim $target
-    @discrimination __Role Process Discrimination
-    @result __Bundle $act $targ $discrimination
-    return $result
-end
-
-@mobilizes:mobilizes graph individual fromClass toClass
-    # Social mobility
-    @ind __Role Person $individual
-    @from __Role OriginClass $fromClass
-    @to __Role DestinationClass $toClass
-    @mobility __Role Process SocialMobility
-    @result __Bundle $ind $from $to $mobility
-    return $result
-end
-
-# ===== Control Relations =====
-
-@sanctions:sanctions graph authority deviant
-    # Authority sanctions deviant
-    @auth __Role Authority $authority
-    @dev __Role Deviant $deviant
-    @control __Role Process SocialControl
-    @result __Bundle $auth $dev $control
-    return $result
-end
-
-@regulates:regulates graph institution behavior
-    # Institution regulates behavior
-    @inst __Role Institution $institution
-    @beh __Role Behavior $behavior
-    @regulation __Role Process Regulation
-    @result __Bundle $inst $beh $regulation
-    return $result
-end
-
-# ===== Change Relations =====
-
-@transforms:transforms graph agent society
-    # Social change agent transforms society
-    @ag __Role Agent $agent
-    @soc __Role Society $society
-    @change __Role Process SocialChange
-    @result __Bundle $ag $soc $change
-    return $result
-end
-
-@revolutionizes:revolutionizes graph movement society
-    # Revolutionary social change
-    @mov __Role Movement $movement
-    @soc __Role Society $society
-    @revolution __Role Process Revolution
-    @result __Bundle $mov $soc $revolution
+@causesChange:causesChange graph factor change
+    @eid __Event
+    @act __Role Action causesChange
+    @f __Role Cause $factor
+    @c __Role Result $change
+    @ctx __Role Context Sociology
+    @result __Bundle $eid $act $f $c $ctx
     return $result
 end

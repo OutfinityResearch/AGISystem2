@@ -9,7 +9,7 @@ Captures modal, deontic, and epistemic operators (Possible, Necessary, Must, Kno
 
 ## Runtime Integration
 - Query/Proof engines treat modal results as facts with structured roles; `tests/unit/reasoning/query.test.mjs` hits `knows` and `believes` scenarios in ambiguity cases.
-- `evalSuite/suite08_modal` ensures the macros generate expected vectors across long sessions.
+- `evals/fastEval/suite08_modal` ensures the macros generate expected vectors across long sessions.
 
 ## Tests & Coverage
 - `tests/unit/runtime/core-theories.test.mjs` validates loading.

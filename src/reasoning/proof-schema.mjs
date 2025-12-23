@@ -90,6 +90,23 @@ function legacyStepToDs19(step) {
     };
   }
 
+  if (operation === 'cwa_negation') {
+    return {
+      kind: 'negation',
+      // Closed-world negation is an assumption, not a KB-backed fact.
+      producesFact: factMeta || null,
+      detail: { ...step }
+    };
+  }
+
+  if (operation === 'not_fact') {
+    return {
+      kind: 'fact',
+      usesFacts: factMeta ? [{ id: null, ...factMeta }] : undefined,
+      detail: { ...step }
+    };
+  }
+
   // Value-type inheritance is a derived step: it usually produces a new "has" fact that may not exist in KB.
   if (operation === 'value_type_inheritance') {
     return {

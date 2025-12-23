@@ -5,6 +5,19 @@
 # ===== Numeric Type =====
 @NumericType:NumericType ___NewVector "NumericType" "Core"
 
+# ===== Role Labels / Tokens =====
+# (Defined here so the graphs below don't depend on implicit literal stamping.)
+@Number:Number __Relation
+@Comparison:Comparison __Relation
+@Operand:Operand __Relation
+@Operation:Operation __Relation
+@Operator:Operator __Relation
+
+@Addition:Addition ___NewVector
+@Subtraction:Subtraction ___NewVector
+@Multiplication:Multiplication ___NewVector
+@Division:Division ___NewVector
+
 # ===== Comparison Operators =====
 
 @GreaterThan:GreaterThan graph a b

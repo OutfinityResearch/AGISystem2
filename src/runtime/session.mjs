@@ -7,7 +7,7 @@
  */
 
 import { bundle, getDefaultGeometry, similarity } from '../core/operations.mjs';
-import { getProperties, initHDC, getStrategyId } from '../hdc/facade.mjs';
+import { getProperties, getStrategy } from '../hdc/facade.mjs';
 import { Scope } from './scope.mjs';
 import { Vocabulary } from './vocabulary.mjs';
 import { Executor } from './executor.mjs';
@@ -66,20 +66,19 @@ export class Session {
     this.features = computeFeatureToggles({ profile: this.reasoningProfile, options });
     this.canonicalizationEnabled = this.features.canonicalizationEnabled;
     this.proofValidationEnabled = this.features.proofValidationEnabled;
+    this.closedWorldAssumption = this.features.closedWorldAssumption;
     this.useSemanticIndex = this.features.useSemanticIndex;
     this.useTheoryConstraints = this.features.useTheoryConstraints;
     this.useTheoryReserved = this.features.useTheoryReserved;
 
-    // Ensure the active HDC implementation matches the session's configured strategy.
-    // Note: HDC strategy selection is currently process-global via `hdc/facade`.
-    initHDC(this.hdcStrategy);
-    this.hdcStrategy = getStrategyId();
-    const strategyDefaultGeometry = getProperties()?.defaultGeometry;
+    // Validate HDC strategy (must exist); strategy selection is session-local.
+    getStrategy(this.hdcStrategy);
+    const strategyDefaultGeometry = getProperties(this.hdcStrategy)?.defaultGeometry;
     const hasEnvGeometry = typeof process.env.SYS2_GEOMETRY === 'string' && process.env.SYS2_GEOMETRY.trim() !== '';
     this.geometry = options.geometry || (hasEnvGeometry ? getDefaultGeometry() : (strategyDefaultGeometry || getDefaultGeometry()));
 
     this.scope = new Scope();
-    this.vocabulary = new Vocabulary(this.geometry);
+    this.vocabulary = new Vocabulary(this.geometry, this.hdcStrategy);
     this.executor = new Executor(this);
 
     // Use dispatcher to create engines based on reasoning priority
@@ -367,6 +366,14 @@ export class Session {
    */
   checkDSL(dsl, options = {}) {
     return checkDSLImpl(this, dsl, options);
+  }
+
+  /**
+   * Strict DSL validation: validates syntax AND rejects unknown operators/concepts that are not
+   * already loaded or declared/persisted in the same program.
+   */
+  checkDSLStrict(dsl, options = {}) {
+    return checkDSLImpl(this, dsl, { ...options, requireKnownAtoms: true });
   }
 
   /**

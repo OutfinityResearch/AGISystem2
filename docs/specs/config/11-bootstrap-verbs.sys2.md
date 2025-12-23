@@ -16,7 +16,7 @@ Defines L3 verbs (tell, ask, give, go, see, want, etc.) composed from L2 semanti
 - Reasoning/tracing uses the resulting bundles to explain actions (e.g., `ResponseTranslator` uses role labels to craft NL output).
 
 ## Tests & Coverage
-- `evalSuite/suite04_deep_chains` and `suite09_composition` rely on these macros extensively, providing integration coverage.
+- `evals/fastEval/suite04_deep_chains` and `evals/fastEval/suite09_composition` rely on these macros extensively, providing integration coverage.
 - `tests/integration/deep-reasoning.test.mjs` uses `tell`, `give`, and `want` macros when verifying pipeline behavior.
 
 ## Design Rationale

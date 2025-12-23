@@ -179,7 +179,7 @@ Exit:
 |---|---|---|
 | Feature flag `SYS2_CANONICAL=1` + `SYS2_PROOF_VALIDATE=1` | Faze 2/4 | modificări runtime |
 | Migrare incrementală a theory files către noile convenții | Faza 2/3 | `config/Core/*.sys2` |
-| Scenarii EvalSuite pentru canonical/proof invariants | Faze 2/4 | `evalSuite/*` |
+| Scenarii FastEval pentru canonical/proof invariants | Faze 2/4 | `evals/fastEval/*` |
 
 Exit:
 - canonical/proof validate ON by default în CI.

@@ -56,3 +56,24 @@
 @State:State __Relation          # State marker
 @Action:Action __Relation        # Action marker
 @Magnitude:Magnitude __Relation  # Magnitude of force
+
+# ===== Structural / Typing Roles =====
+# Used across domain theories when building concept graphs.
+@Entity:Entity __Relation
+@Type:Type __Relation
+@Property:Property __Relation
+@Group:Group __Relation
+@Unit:Unit __Relation
+@Structure:Structure __Relation
+@Composition:Composition __Relation
+@Component:Component __Relation
+@Context:Context __Relation
+@Class:Class __Relation
+@Function:Function __Relation
+@Process:Process __Relation
+@Nature:Nature __Relation
+@Form:Form __Relation
+@Role:Role __Relation
+@Aspect:Aspect __Relation
+@Resource:Resource __Relation
+@Environment:Environment __Relation

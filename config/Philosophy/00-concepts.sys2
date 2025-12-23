@@ -1,245 +1,188 @@
 # Philosophy - Domain Concepts
-# Foundational philosophical concepts with proper graph semantics
+# Core-compatible concept graphs for philosophical vocabulary.
+
+@_:Philosophy isA Philosophy AbstractType
 
 # ===== Metaphysics =====
 
 @Being:Being graph entity
-    # Existence or being
-    @ent __Role Entity $entity
-    @type __Role Type Being
-    @existent __Role Property Exists
-    @ontological __Role Domain Ontology
-    @concept __Bundle $ent $type $existent $ontological
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Being
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Essence:Essence graph property
-    # Essential nature
-    @prop __Role Property $property
-    @type __Role Type Essence
-    @necessary __Role Nature Necessary
-    @defining __Role Function DefinesNature
-    @concept __Bundle $prop $type $necessary $defining
+@Essence:Essence graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Essence
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Substance:Substance graph entity
-    # Substance (metaphysical)
-    @ent __Role Entity $entity
-    @type __Role Type Substance
-    @independent __Role Property SelfSubsistent
-    @fundamental __Role Nature Fundamental
-    @concept __Bundle $ent $type $independent $fundamental
-    return $concept
-end
-
-@Causation:Causation graph relation
-    # Causal relation
-    @rel __Role Relation $relation
-    @type __Role Type Causation
-    @productive __Role Nature Productive
-    @necessary __Role Property NecessaryConnection
-    @concept __Bundle $rel $type $productive $necessary
+@Causation:Causation graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Causation
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
 # ===== Epistemology =====
 
-@Knowledge:Knowledge graph state
-    # State of knowing
-    @st __Role State $state
-    @type __Role Type Knowledge
-    @justified __Role Property JustifiedTrueBelief
-    @epistemic __Role Domain Epistemology
-    @concept __Bundle $st $type $justified $epistemic
+@Knowledge:Knowledge graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Knowledge
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Belief:Belief graph attitude
-    # Propositional belief
-    @att __Role Attitude $attitude
-    @type __Role Type Belief
-    @propositional __Role Content Proposition
-    @mental __Role Nature MentalState
-    @concept __Bundle $att $type $propositional $mental
+@Belief:Belief graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Belief
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Truth:Truth graph property
-    # Truth property
-    @prop __Role Property $property
-    @type __Role Type Truth
-    @correspondence __Role Theory Correspondence
-    @semantic __Role Domain Semantics
-    @concept __Bundle $prop $type $correspondence $semantic
+@Truth:Truth graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Truth
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Justification:Justification graph relation
-    # Epistemic justification
-    @rel __Role Relation $relation
-    @type __Role Type Justification
-    @evidential __Role Nature EvidentialSupport
-    @normative __Role Property Normative
-    @concept __Bundle $rel $type $evidential $normative
+@Justification:Justification graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Justification
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Skepticism:Skepticism graph position
-    # Skeptical position
-    @pos __Role Position $position
-    @type __Role Type Skepticism
-    @doubting __Role Nature Doubting
-    @critical __Role Method CriticalInquiry
-    @concept __Bundle $pos $type $doubting $critical
+@Skepticism:Skepticism graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Skepticism
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
 # ===== Ethics =====
 
-@Good:Good graph value
-    # Moral good
-    @val __Role Value $value
-    @type __Role Type Good
-    @normative __Role Nature Normative
-    @valuable __Role Property Valuable
-    @concept __Bundle $val $type $normative $valuable
+@Good:Good graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Good
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Right:Right graph property
-    # Moral rightness
-    @prop __Role Property $property
-    @type __Role Type Right
-    @moral __Role Domain Morality
-    @obligatory __Role Nature Obligatory
-    @concept __Bundle $prop $type $moral $obligatory
+@Obligation:Obligation graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Obligation
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Duty:Duty graph obligation
-    # Moral duty
-    @obl __Role Obligation $obligation
-    @type __Role Type Duty
-    @moral __Role Domain Morality
-    @binding __Role Property Binding
-    @concept __Bundle $obl $type $moral $binding
+@Virtue:Virtue graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Virtue
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Virtue:Virtue graph trait
-    # Moral virtue
-    @tr __Role Trait $trait
-    @type __Role Type Virtue
-    @excellent __Role Property Excellence
-    @character __Role Domain Character
-    @concept __Bundle $tr $type $excellent $character
-    return $concept
-end
-
-@Justice:Justice graph principle
-    # Justice principle
-    @prin __Role Principle $principle
-    @type __Role Type Justice
-    @fairness __Role Nature Fairness
-    @distributive __Role Domain Distribution
-    @concept __Bundle $prin $type $fairness $distributive
+@Justice:Justice graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Justice
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
 # ===== Logic =====
 
-@Argument:Argument graph structure
-    # Logical argument
-    @struct __Role Structure $structure
-    @type __Role Type Argument
-    @inferential __Role Nature Inference
-    @premises __Role Component Premises
-    @conclusion __Role Component Conclusion
-    @concept __Bundle $struct $type $inferential $premises
+@Argument:Argument graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Argument
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Proposition:Proposition graph content
-    # Proposition (logical)
-    @cont __Role Content $content
-    @type __Role Type Proposition
-    @truthBearer __Role Property TruthBearer
-    @meaningful __Role Property Meaningful
-    @concept __Bundle $cont $type $truthBearer $meaningful
-    return $concept
-end
-
-@Validity:Validity graph property
-    # Logical validity
-    @prop __Role Property $property
-    @type __Role Type Validity
-    @formal __Role Nature Formal
-    @preserves __Role Function PreservesTruth
-    @concept __Bundle $prop $type $formal $preserves
+@Proposition:Proposition graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Proposition
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
 # ===== Philosophy of Mind =====
 
-@Consciousness:Consciousness graph phenomenon
-    # Conscious experience
-    @phen __Role Phenomenon $phenomenon
-    @type __Role Type Consciousness
-    @subjective __Role Property Subjective
-    @qualitative __Role Nature Qualitative
-    @concept __Bundle $phen $type $subjective $qualitative
+@Consciousness:Consciousness graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Consciousness
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
 @Mind:Mind graph entity
-    # Mind or mental
-    @ent __Role Entity $entity
-    @type __Role Type Mind
-    @mental __Role Nature Mental
-    @intentional __Role Property Intentionality
-    @concept __Bundle $ent $type $mental $intentional
-    return $concept
-end
-
-@Qualia:Qualia graph property
-    # Phenomenal qualities
-    @prop __Role Property $property
-    @type __Role Type Qualia
-    @phenomenal __Role Nature Phenomenal
-    @subjective __Role Property SubjectiveExperience
-    @concept __Bundle $prop $type $phenomenal $subjective
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Mind
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
 # ===== Political Philosophy =====
+# Avoid redefining Core role token `State`; use PoliticalState.
 
-@Freedom:Freedom graph value
-    # Liberty or freedom
-    @val __Role Value $value
-    @type __Role Type Freedom
-    @political __Role Domain Political
-    @negative __Role Form Noninterference
-    @concept __Bundle $val $type $political $negative
+@Freedom:Freedom graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Freedom
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@State:State graph institution
-    # Political state
-    @inst __Role Institution $institution
-    @type __Role Type State
-    @sovereign __Role Property Sovereign
-    @political __Role Domain Political
-    @concept __Bundle $inst $type $sovereign $political
+@PoliticalState:PoliticalState graph entity
+    @e __Role Entity $entity
+    @type __Role Type OrganizationType
+    @ctx __Role Context Philosophy
+    @role __Role Role PoliticalState
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Authority:Authority graph relation
-    # Political authority
-    @rel __Role Relation $relation
-    @type __Role Type Authority
-    @legitimate __Role Property Legitimate
-    @power __Role Basis Power
-    @concept __Bundle $rel $type $legitimate $power
+@Authority:Authority graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Philosophy
+    @role __Role Role Authority
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end

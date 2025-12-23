@@ -1,6 +1,8 @@
 # Module: src/decoding/text-generator.mjs
 
-**Purpose:** Generate human-readable summaries by decoding vectors into DSL structures and phrasing them; also provides helpers for proof/query explanations.
+**Purpose:** Generate human-readable summaries by decoding vectors into DSL structures and phrasing them.
+
+**Status/usage:** This module exists mainly for vector-centric inspection and debugging. Runtime responses (including Eval output) use `src/output/response-translator.mjs` + `src/output/text-generator.mjs`.
 
 ## Exports
 
@@ -22,7 +24,7 @@ export class TextGenerator {
 ## Notes
 
 - Runtime NL responses are produced by `session.describeResult(...)` via `src/output/response-translator.mjs` and `src/output/text-generator.mjs`.
-- This module is still useful for vector-centric inspection (`summarize`) and standalone explainers (`explainQuery`).
+- `explainQuery(...)` is a helper for formatting query results; it is not the `explain` action/operator (which is reserved and not executed by current eval runners).
 
 ## Test Cases
 

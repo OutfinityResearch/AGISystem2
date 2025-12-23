@@ -1,729 +1,187 @@
 # Mathematics - Domain Relations
-# REAL graph definitions for mathematical relationships
+# Graph macros for mathematical relations, expressed with Core roles/constructors.
 
-# ===== Set Relations (REAL definitions) =====
+@_:MathRelations isA MathRelations AbstractType
 
-@elementOf:elementOf graph x S
-    # Element membership in set
-    @member __Role Member $x
-    @container __Role Set $S
-    @membership __Pair $member $container
-    return $membership
-end
+# ===== Set / Collection =====
 
-@subsetOf:subsetOf graph A B
-    # Every element of A is in B
-    @setA __Role Subset $A
-    @setB __Role Superset $B
-    @inclusion forall ?x (Implies (elementOf ?x $A) (elementOf ?x $B))
-    @result __Bundle $setA $setB $inclusion
+@ElementOfMacro:elementOf graph x S
+    @eid __Event
+    @act __Role Action elementOf
+    @elem __Role Theme $x
+    @set __Role Location $S
+    @result __Bundle $eid $act $elem $set
     return $result
 end
 
-@equal:equal graph A B
-    # Set equality: A = B
-    @result equals $A $B
+@SubsetOfMacro:subsetOf graph A B
+    @eid __Event
+    @act __Role Action subsetOf
+    @sub __Role Theme $A
+    @sup __Role Location $B
+    @constraint forall ?x (Implies (elementOf ?x $A) (elementOf ?x $B))
+    @result __Bundle $eid $act $sub $sup $constraint
     return $result
 end
 
-@properSubsetOf:properSubsetOf graph A B
-    # A ⊂ B and A ≠ B
+@ProperSubsetOfMacro:properSubsetOf graph A B
     @subset subsetOf $A $B
     @notEqual Not (equals $A $B)
     @proper And $subset $notEqual
     return $proper
 end
 
-@disjointFrom:disjointFrom graph A B
-    # No common elements
-    @setA __Role Set $A
-    @setB __Role Set $B
-    @noOverlap __Pair $setA $setB
-    # TODO: Add forall constraint when available
-    return $noOverlap
-end
-
-# ===== Function Relations (REAL definitions) =====
-
-@definedOn:definedOn graph f Domain
-    # Function domain specification
-    @func __Role Function $f
-    @dom __Role Domain $Domain
-    @definition __Pair $func $dom
-    return $definition
-end
-
-@mapsTo:mapsTo graph f Codomain
-    # Function codomain specification
-    @func __Role Function $f
-    @codom __Role Codomain $Codomain
-    @mapping __Pair $func $codom
-    return $mapping
-end
-
-@appliesTo:appliesTo graph f x y
-    # Function application: y = f(x)
-    @func __Role Function $f
-    @input __Role Input $x
-    @output __Role Output $y
-    @application __Bundle $func $input $output
-    return $application
-end
-
-@composedWith:composedWith graph f g
-    # Function composition: (f ∘ g)
-    @outer __Role Outer $f
-    @inner __Role Inner $g
-    @composition __Pair $outer $inner
-    return $composition
-end
-
-@inverseOf:inverseOf graph f fInv
-    # Inverse function relationship
-    @func __Role Function $f
-    @inv __Role Inverse $fInv
-    @property forall ?x (appliesTo (composedWith $f $fInv) ?x ?x)
-    @result __Bundle $func $inv $property
+@DisjointFromMacro:disjointFrom graph A B
+    @eid __Event
+    @act __Role Action disjointFrom
+    @a __Role Theme $A
+    @b __Role Location $B
+    @result __Bundle $eid $act $a $b
     return $result
 end
 
-# ===== Order Relations (REAL definitions) =====
+# ===== Functions =====
+
+@DefinedOnMacro:definedOn graph f domain
+    @eid __Event
+    @act __Role Action definedOn
+    @func __Role Function $f
+    @dom __Role Source $domain
+    @result __Bundle $eid $act $func $dom
+    return $result
+end
+
+@MapsToMacro:mapsTo graph f codomain
+    @eid __Event
+    @act __Role Action mapsTo
+    @func __Role Function $f
+    @cod __Role Goal $codomain
+    @result __Bundle $eid $act $func $cod
+    return $result
+end
+
+@AppliesToMacro:appliesTo graph f x y
+    @eid __Event
+    @act __Role Action appliesTo
+    @func __Role Function $f
+    @input __Role Theme $x
+    @output __Role Result $y
+    @result __Bundle $eid $act $func $input $output
+    return $result
+end
+
+@ComposedWithMacro:composedWith graph f g
+    @eid __Event
+    @act __Role Action composedWith
+    @outer __Role Theme $f
+    @inner __Role Component $g
+    @result __Bundle $eid $act $outer $inner
+    return $result
+end
+
+@InverseOfMacro:inverseOf graph f fInv
+    @eid __Event
+    @act __Role Action inverseOf
+    @func __Role Theme $f
+    @inv __Role Component $fInv
+    @result __Bundle $eid $act $func $inv
+    return $result
+end
+
+# ===== Ordering / Arithmetic =====
+# Delegate numeric reasoning to Core numeric operators.
 
 @lessThan:lessThan graph a b
-    # Strict ordering: a < b
-    @numA __Role Number $a
-    @numB __Role Number $b
-    @comparisonType __Role Comparison LessThan
-    @result __Bundle $numA $numB $comparisonType
+    @result LessThan $a $b
     return $result
 end
 
 @greaterThan:greaterThan graph a b
-    # Strict ordering: a > b
-    @numA __Role Number $a
-    @numB __Role Number $b
-    @comparisonType __Role Comparison GreaterThan
-    @result __Bundle $numA $numB $comparisonType
+    @result GreaterThan $a $b
     return $result
 end
 
-# ===== Proof Relations (REAL definitions) =====
-
-@proves:proves graph proof theorem
-    # Proof establishes theorem
-    @prf __Role Proof $proof
-    @thm __Role Theorem $theorem
-    @establishes __Pair $prf $thm
-    return $establishes
+@equalsNumber:equalsNumber graph a b
+    @result Equals $a $b
+    return $result
 end
 
-@usesLemma:usesLemma graph proof lemma
-    # Proof depends on lemma
-    @prf __Role Proof $proof
-    @lem __Role Lemma $lemma
-    @dependency __Pair $prf $lem
-    return $dependency
+@add:add graph a b
+    @result Add $a $b
+    return $result
 end
 
-@followsFrom:followsFrom graph conclusion premises
-    # Logical consequence
-    @concl __Role Conclusion $conclusion
-    @prem __Role Premises $premises
+@subtract:subtract graph a b
+    @result Subtract $a $b
+    return $result
+end
+
+@multiply:multiply graph a b
+    @result Multiply $a $b
+    return $result
+end
+
+@divide:divide graph a b
+    @result Divide $a $b
+    return $result
+end
+
+# ===== Proof / Meta-Reasoning =====
+
+@ProvesMacro:proves graph proof theorem
+    @eid __Event
+    @act __Role Action proves
+    @prf __Role Theme $proof
+    @thm __Role Result $theorem
+    @result __Bundle $eid $act $prf $thm
+    return $result
+end
+
+@UsesLemmaMacro:usesLemma graph proof lemma
+    @eid __Event
+    @act __Role Action usesLemma
+    @prf __Role Theme $proof
+    @lem __Role Component $lemma
+    @result __Bundle $eid $act $prf $lem
+    return $result
+end
+
+@FollowsFromMacro:followsFrom graph conclusion premises
+    @prem __Role Theme $premises
+    @concl __Role Result $conclusion
     @inference Implies $prem $concl
     return $inference
 end
 
-@contradicts:contradicts graph statementA statementB
-    # Logical contradiction
-    @a __Role Statement $statementA
-    @b __Role Statement $statementB
+@ContradictsMacro:contradicts graph statementA statementB
+    @eid __Event
+    @act __Role Action contradicts
+    @a __Role Theme $statementA
+    @b __Role Theme $statementB
+    @ctx __Role Context Math
     @contradiction And $statementA (Not $statementB)
-    @result __Bundle $a $b $contradiction
+    @result __Bundle $eid $act $a $b $ctx $contradiction
     return $result
 end
 
-@counterExample:counterExample graph claim witness
-    # Counterexample refutes universal claim
-    @clm __Role Claim $claim
-    @wit __Role Witness $witness
+@CounterExampleMacro:counterExample graph claim witness
+    @eid __Event
+    @act __Role Action counterExample
+    @clm __Role Theme $claim
+    @wit __Role Theme $witness
+    @ctx __Role Context Math
     @refutation Not $claim
-    @result __Bundle $clm $wit $refutation
+    @result __Bundle $eid $act $clm $wit $ctx $refutation
     return $result
 end
 
-# ===== Algebraic Relations (REAL definitions) =====
+# ===== Structural =====
 
-@isomorphicTo:isomorphicTo graph structureA structureB
-    # Structural equivalence
+@IsomorphicToMacro:isomorphicTo graph structureA structureB
+    @eid __Event
+    @act __Role Action isomorphicTo
     @a __Role Structure $structureA
     @b __Role Structure $structureB
-    @bijection __Role Mapping Bijection
-    @preserves __Role Property StructurePreserving
-    @iso __Bundle $a $b $bijection $preserves
-    return $iso
-end
-
-@homomorphicTo:homomorphicTo graph structureA structureB
-    # Structure-preserving map
-    @a __Role Source $structureA
-    @b __Role Target $structureB
-    @map __Role Mapping Homomorphism
-    @preserves __Role Property OperationPreserving
-    @homo __Bundle $a $b $map $preserves
-    return $homo
-end
-
-@subgroupOf:subgroupOf graph H G
-    # Subgroup relationship
-    @subgrp __Role Subgroup $H
-    @grp __Role Group $G
-    @subset subsetOf $H $G
-    @closed __Role Property GroupClosed
-    @result __Bundle $subgrp $grp $subset $closed
-    return $result
-end
-
-# ===== Geometric Relations (REAL definitions) =====
-
-@intersects:intersects graph objectA objectB
-    # Geometric intersection
-    @a __Role Object $objectA
-    @b __Role Object $objectB
-    @hasCommonPoints __Pair $a $b
-    return $hasCommonPoints
-end
-
-@parallelTo:parallelTo graph lineA lineB
-    # Parallel lines
-    @a __Role Line $lineA
-    @b __Role Line $lineB
-    @noIntersection Not (intersects $lineA $lineB)
-    @result __Bundle $a $b $noIntersection
-    return $result
-end
-
-@perpendicularTo:perpendicularTo graph lineA lineB
-    # Perpendicular lines (90°)
-    @a __Role Line $lineA
-    @b __Role Line $lineB
-    @angle __Role Angle RightAngle
-    @result __Bundle $a $b $angle
-    return $result
-end
-
-@congruentTo:congruentTo graph figureA figureB
-    # Geometric congruence
-    @a __Role Figure $figureA
-    @b __Role Figure $figureB
-    @sameShape __Role Property Shape
-    @sameSize __Role Property Size
-    @result __Bundle $a $b $sameShape $sameSize
-    return $result
-end
-
-@similarTo:similarTo graph figureA figureB
-    # Geometric similarity
-    @a __Role Figure $figureA
-    @b __Role Figure $figureB
-    @sameShape __Role Property Shape
-    @proportional __Role Property ProportionalSides
-    @result __Bundle $a $b $sameShape $proportional
-    return $result
-end
-
-# ===== Calculus Relations (REAL definitions) =====
-
-@convergesTo:convergesTo graph sequence limit
-    # Sequence convergence
-    @seq __Role Sequence $sequence
-    @lim __Role Limit $limit
-    @convergence __Pair $seq $lim
-    return $convergence
-end
-
-@continuousAt:continuousAt graph function point
-    # Continuity at a point
-    @func __Role Function $function
-    @pt __Role Point $point
-    @limitExists __Role Property LimitExists
-    @limitEquals __Role Property LimitEqualsValue
-    @result __Bundle $func $pt $limitExists $limitEquals
-    return $result
-end
-
-@differentiableAt:differentiableAt graph function point
-    # Differentiability
-    @func __Role Function $function
-    @pt __Role Point $point
-    @derivativeExists __Role Property DerivativeExists
-    @result __Bundle $func $pt $derivativeExists
-    return $result
-end
-
-# ===== FUNDAMENTAL Set Operations (CORE for Math) =====
-
-@unionOf:unionOf graph setA setB
-    # Set union: A ∪ B
-    @a __Role Set $setA
-    @b __Role Set $setB
-    @union __Pair $a $b
-    return $union
-end
-
-@intersectionOf:intersectionOf graph setA setB
-    # Set intersection: A ∩ B
-    @a __Role Set $setA
-    @b __Role Set $setB
-    @intersection __Pair $a $b
-    return $intersection
-end
-
-@complementOf:complementOf graph set universe
-    # Set complement: U \ A
-    @s __Role Set $set
-    @u __Role Universe $universe
-    @complement __Pair $s $u
-    return $complement
-end
-
-@differenceOf:differenceOf graph setA setB
-    # Set difference: A \ B
-    @a __Role Set $setA
-    @b __Role Set $setB
-    @difference __Pair $a $b
-    return $difference
-end
-
-@powerSetOf:powerSetOf graph set
-    # Power set: P(A) = all subsets of A
-    @s __Role Set $set
-    @power __Role Operation PowerSet
-    @result __Pair $s $power
-    return $result
-end
-
-@cartesianProduct:cartesianProduct graph setA setB
-    # Cartesian product: A × B
-    @a __Role Set $setA
-    @b __Role Set $setB
-    @product __Pair $a $b
-    return $product
-end
-
-# ===== FUNDAMENTAL Arithmetic (CORE for Math) =====
-
-@add:add graph a b result
-    # Addition: a + b = result
-    @left __Role Addend $a
-    @right __Role Addend $b
-    @sum __Role Sum $result
-    @operation __Bundle $left $right $sum
-    return $operation
-end
-
-@mult:mult graph a b result
-    # Multiplication: a * b = result
-    @left __Role Factor $a
-    @right __Role Factor $b
-    @product __Role Product $result
-    @operation __Bundle $left $right $product
-    return $operation
-end
-
-# ===== FUNDAMENTAL Peano Axioms (CORE for Math) =====
-
-@isNatural:isNatural graph n
-    # n is a natural number
-    @num __Role Natural $n
-    @type __Role Type NaturalNumber
-    @typing __Pair $num $type
-    return $typing
-end
-
-@successor:successor graph n s
-    # s is successor of n (s = n + 1)
-    @num __Role Number $n
-    @succ __Role Successor $s
-    @next __Pair $num $succ
-    return $next
-end
-
-# ===== Number Theory Relations =====
-
-@divides:divides graph a b
-    # a divides b (b = k·a for some integer k)
-    @divisor __Role Divisor $a
-    @dividend __Role Dividend $b
-    @division __Pair $divisor $dividend
-    return $division
-end
-
-@coprime:coprime graph a b
-    # a and b are coprime (gcd(a,b) = 1)
-    @num1 __Role Number $a
-    @num2 __Role Number $b
-    @gcdOne __Role Property GreatestCommonDivisorOne
-    @result __Bundle $num1 $num2 $gcdOne
-    return $result
-end
-
-@gcd:gcd graph a b result
-    # Greatest common divisor of a and b
-    @num1 __Role Number $a
-    @num2 __Role Number $b
-    @divisor __Role Result $result
-    @property __Role Property GreatestCommonDivisor
-    @operation __Bundle $num1 $num2 $divisor
-    return $operation
-end
-
-@lcm:lcm graph a b result
-    # Least common multiple of a and b
-    @num1 __Role Number $a
-    @num2 __Role Number $b
-    @multiple __Role Result $result
-    @property __Role Property LeastCommonMultiple
-    @operation __Bundle $num1 $num2 $multiple
-    return $operation
-end
-
-@modulo:modulo graph a n remainder
-    # a mod n = remainder (0 ≤ remainder < n)
-    @dividend __Role Dividend $a
-    @divisor __Role Modulus $n
-    @rem __Role Remainder $remainder
-    @operation __Bundle $dividend $divisor $rem
-    return $operation
-end
-
-@isPrime:isPrime graph n
-    # n is prime (divisible only by 1 and n)
-    @num __Role Number $n
-    @property __Role Property Prime
-    @divisors __Role Constraint OnlyOneSelf
-    @result __Bundle $num $property $divisors
-    return $result
-end
-
-@isComposite:isComposite graph n
-    # n is composite (has divisors other than 1 and n)
-    @num __Role Number $n
-    @property __Role Property Composite
-    @divisors __Role Constraint HasProperDivisors
-    @result __Bundle $num $property $divisors
-    return $result
-end
-
-# ===== Extended Arithmetic Operations =====
-
-@subtract:subtract graph a b result
-    # Subtraction: a - b = result
-    @minuend __Role Minuend $a
-    @subtrahend __Role Subtrahend $b
-    @difference __Role Difference $result
-    @operation __Bundle $minuend $subtrahend $difference
-    return $operation
-end
-
-@divide:divide graph a b result
-    # Division: a / b = result (b ≠ 0)
-    @dividend __Role Dividend $a
-    @divisor __Role Divisor $b
-    @quotient __Role Quotient $result
-    @operation __Bundle $dividend $divisor $quotient
-    return $operation
-end
-
-@power:power graph base exponent result
-    # Exponentiation: base^exponent = result
-    @base __Role Base $base
-    @exp __Role Exponent $exponent
-    @pow __Role Result $result
-    @operation __Bundle $base $exp $pow
-    return $operation
-end
-
-@sqrt:sqrt graph value result
-    # Square root: √value = result
-    @val __Role Radicand $value
-    @root __Role SquareRoot $result
-    @operation __Pair $val $root
-    return $operation
-end
-
-@absolute:absolute graph value result
-    # Absolute value: |value| = result
-    @val __Role Number $value
-    @abs __Role AbsoluteValue $result
-    @property __Role Property NonNegative
-    @operation __Bundle $val $abs $property
-    return $operation
-end
-
-@factorial:factorial graph n result
-    # Factorial: n! = result
-    @num __Role Number $n
-    @fact __Role Factorial $result
-    @operation __Pair $num $fact
-    return $operation
-end
-
-@negate:negate graph value result
-    # Negation: -value = result
-    @val __Role Number $value
-    @neg __Role Negation $result
-    @operation __Pair $val $neg
-    return $operation
-end
-
-# ===== Geometric Measurement Relations =====
-
-@distance:distance graph pointA pointB dist
-    # Distance between two points
-    @p1 __Role Point $pointA
-    @p2 __Role Point $pointB
-    @d __Role Distance $dist
-    @metric __Role Property MetricSpace
-    @measurement __Bundle $p1 $p2 $d
-    return $measurement
-end
-
-@angleOf:angleOf graph object measure
-    # Angle measurement
-    @obj __Role GeometricObject $object
-    @ang __Role Angle $measure
-    @measurement __Pair $obj $ang
-    return $measurement
-end
-
-@areaOf:areaOf graph figure measure
-    # Area of geometric figure
-    @fig __Role Figure $figure
-    @area __Role Area $measure
-    @measurement __Pair $fig $area
-    return $measurement
-end
-
-@volumeOf:volumeOf graph solid measure
-    # Volume of 3D solid
-    @sol __Role Solid $solid
-    @vol __Role Volume $measure
-    @measurement __Pair $sol $vol
-    return $measurement
-end
-
-@midpointOf:midpointOf graph pointA pointB midpoint
-    # Midpoint of line segment
-    @p1 __Role Point $pointA
-    @p2 __Role Point $pointB
-    @mid __Role Midpoint $midpoint
-    @property __Role Property EquidistantFromEnds
-    @result __Bundle $p1 $p2 $mid
-    return $result
-end
-
-# ===== Set Cardinality Relations =====
-
-@cardinality:cardinality graph set n
-    # Cardinality (size) of set
-    @s __Role Set $set
-    @card __Role Cardinality $n
-    @measurement __Pair $s $card
-    return $measurement
-end
-
-@isFinite:isFinite graph set
-    # Set has finite cardinality
-    @s __Role Set $set
-    @property __Role Property Finite
-    @card __Role Constraint BoundedCardinality
-    @result __Bundle $s $property $card
-    return $result
-end
-
-@isInfinite:isInfinite graph set
-    # Set has infinite cardinality
-    @s __Role Set $set
-    @property __Role Property Infinite
-    @card __Role Constraint UnboundedCardinality
-    @result __Bundle $s $property $card
-    return $result
-end
-
-@partitionOf:partitionOf graph set parts
-    # Partition of set into disjoint subsets
-    @s __Role Set $set
-    @p __Role Partition $parts
-    @disjoint __Role Property PairwiseDisjoint
-    @cover __Role Property UnionCoversSet
-    @result __Bundle $s $p $disjoint $cover
-    return $result
-end
-
-# ===== Function Property Relations =====
-
-@isInjective:isInjective graph function
-    # Function is injective (one-to-one)
-    @func __Role Function $function
-    @property __Role Property Injective
-    @constraint forall ?x ?y (Implies (equal (appliesTo $function ?x) (appliesTo $function ?y)) (equal ?x ?y))
-    @result __Bundle $func $property $constraint
-    return $result
-end
-
-@isSurjective:isSurjective graph function
-    # Function is surjective (onto)
-    @func __Role Function $function
-    @property __Role Property Surjective
-    @constraint forall ?y (Exists ?x (appliesTo $function ?x ?y))
-    @result __Bundle $func $property $constraint
-    return $result
-end
-
-@isBijective:isBijective graph function
-    # Function is bijective (one-to-one and onto)
-    @func __Role Function $function
-    @injective isInjective $function
-    @surjective isSurjective $function
-    @property And $injective $surjective
-    return $property
-end
-
-@domainOf:domainOf graph function set
-    # Domain of function
-    @func __Role Function $function
-    @dom __Role Domain $set
-    @relation __Pair $func $dom
-    return $relation
-end
-
-@codomainOf:codomainOf graph function set
-    # Codomain of function
-    @func __Role Function $function
-    @codom __Role Codomain $set
-    @relation __Pair $func $codom
-    return $relation
-end
-
-@imageOf:imageOf graph function set result
-    # Image of set under function
-    @func __Role Function $function
-    @source __Role Set $set
-    @image __Role Image $result
-    @mapping __Bundle $func $source $image
-    return $mapping
-end
-
-# ===== Extended Order Relations =====
-
-@leq:leq graph a b
-    # Less than or equal: a ≤ b (a < b or a = b)
-    @numA __Role Number $a
-    @numB __Role Number $b
-    @comparisonType __Role Comparison LessThanOrEqual
-    @lessOrEqual Or (lessThan $a $b) (equal $a $b)
-    @result __Bundle $numA $numB $comparisonType $lessOrEqual
-    return $result
-end
-
-@geq:geq graph a b
-    # Greater than or equal: a ≥ b (a > b or a = b)
-    @numA __Role Number $a
-    @numB __Role Number $b
-    @comparisonType __Role Comparison GreaterThanOrEqual
-    @greaterOrEqual Or (greaterThan $a $b) (equal $a $b)
-    @result __Bundle $numA $numB $comparisonType $greaterOrEqual
-    return $result
-end
-
-@minimum:minimum graph set element
-    # Minimum element of set
-    @s __Role Set $set
-    @min __Role Minimum $element
-    @property forall ?x (Implies (elementOf ?x $set) (leq $element ?x))
-    @result __Bundle $s $min $property
-    return $result
-end
-
-@maximum:maximum graph set element
-    # Maximum element of set
-    @s __Role Set $set
-    @max __Role Maximum $element
-    @property forall ?x (Implies (elementOf ?x $set) (geq $element ?x))
-    @result __Bundle $s $max $property
-    return $result
-end
-
-@supremum:supremum graph set bound
-    # Supremum (least upper bound) of set
-    @s __Role Set $set
-    @sup __Role Supremum $bound
-    @upperBound __Role Property UpperBound
-    @least __Role Property LeastUpperBound
-    @result __Bundle $s $sup $upperBound $least
-    return $result
-end
-
-@infimum:infimum graph set bound
-    # Infimum (greatest lower bound) of set
-    @s __Role Set $set
-    @inf __Role Infimum $bound
-    @lowerBound __Role Property LowerBound
-    @greatest __Role Property GreatestLowerBound
-    @result __Bundle $s $inf $lowerBound $greatest
-    return $result
-end
-
-@isBounded:isBounded graph set
-    # Set is bounded (has upper and lower bounds)
-    @s __Role Set $set
-    @property __Role Property Bounded
-    @hasUpperBound __Role Constraint UpperBoundExists
-    @hasLowerBound __Role Constraint LowerBoundExists
-    @result __Bundle $s $property $hasUpperBound $hasLowerBound
-    return $result
-end
-
-# ===== Extended Calculus Relations =====
-
-@derivativeOf:derivativeOf graph derivative function
-    # derivative is derivative of function
-    @deriv __Role Derivative $derivative
-    @func __Role Function $function
-    @relation __Pair $deriv $func
-    return $relation
-end
-
-@integralOf:integralOf graph integral function
-    # integral is antiderivative of function
-    @integ __Role Integral $integral
-    @func __Role Function $function
-    @relation __Pair $integ $func
-    return $relation
-end
-
-@limitOf:limitOf graph sequence value
-    # Limit of sequence
-    @seq __Role Sequence $sequence
-    @lim __Role Limit $value
-    @convergence __Pair $seq $lim
-    return $convergence
-end
-
-@isContinuous:isContinuous graph function
-    # Function is continuous
-    @func __Role Function $function
-    @property __Role Property Continuous
-    @constraint forall ?x (continuousAt $function ?x)
-    @result __Bundle $func $property $constraint
-    return $result
-end
-
-@isMonotone:isMonotone graph function
-    # Function is monotone (increasing or decreasing)
-    @func __Role Function $function
-    @property __Role Property Monotone
-    @order __Role Constraint PreservesOrder
-    @result __Bundle $func $property $order
+    @result __Bundle $eid $act $a $b
     return $result
 end

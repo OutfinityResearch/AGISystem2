@@ -5,47 +5,57 @@
 
 @locatedIn:locatedIn graph feature region
     # Geographic feature located in region
-    @feat __Role Feature $feature
-    @reg __Role Container $region
-    @location __Role Relation SpatialContainment
-    @result __Bundle $feat $reg $location
+    @eid __Event
+    @act __Role Action locatedIn
+    @ctx __Role Context Geography
+    @feat __Role Theme $feature
+    @reg __Role Location $region
+    @result __Bundle $eid $act $ctx $feat $reg
     return $result
 end
 
 @bordersOn:bordersOn graph region1 region2
     # Regions share a border
-    @r1 __Role BorderEntity $region1
-    @r2 __Role BorderEntity $region2
-    @border __Role Relation SharedBoundary
-    @result __Bundle $r1 $r2 $border
+    @eid __Event
+    @act __Role Action bordersOn
+    @ctx __Role Context Geography
+    @r1 __Role Theme $region1
+    @r2 __Role Theme $region2
+    @result __Bundle $eid $act $ctx $r1 $r2
     return $result
 end
 
 @adjacentTo:adjacentTo graph place1 place2
     # Places are spatially adjacent
-    @p1 __Role Neighbor $place1
-    @p2 __Role Neighbor $place2
-    @adjacency __Role Relation SpatialProximity
-    @result __Bundle $p1 $p2 $adjacency
+    @eid __Event
+    @act __Role Action adjacentTo
+    @ctx __Role Context Geography
+    @p1 __Role Location $place1
+    @p2 __Role Location $place2
+    @result __Bundle $eid $act $ctx $p1 $p2
     return $result
 end
 
 @contains:contains graph region feature
     # Region contains geographic feature
-    @reg __Role Container $region
-    @feat __Role Contained $feature
-    @containment __Role Relation SpatialInclusion
-    @result __Bundle $reg $feat $containment
+    @eid __Event
+    @act __Role Action contains
+    @ctx __Role Context Geography
+    @reg __Role Location $region
+    @feat __Role Theme $feature
+    @result __Bundle $eid $act $ctx $reg $feat
     return $result
 end
 
 @distanceFrom:distanceFrom graph place1 place2 distance
     # Distance between places
-    @p1 __Role Origin $place1
-    @p2 __Role Destination $place2
-    @dist __Role Measure $distance
-    @metric __Role Property Distance
-    @result __Bundle $p1 $p2 $dist $metric
+    @eid __Event
+    @act __Role Action distanceFrom
+    @ctx __Role Context Geography
+    @p1 __Role Source $place1
+    @p2 __Role Goal $place2
+    @dist __Role Value $distance
+    @result __Bundle $eid $act $ctx $p1 $p2 $dist
     return $result
 end
 
@@ -53,28 +63,34 @@ end
 
 @flowsThrough:flowsThrough graph river region
     # River flows through region
-    @riv __Role Waterway $river
-    @reg __Role Region $region
-    @flow __Role Process HydrologicalFlow
-    @result __Bundle $riv $reg $flow
+    @eid __Event
+    @act __Role Action flowsThrough
+    @ctx __Role Context Geography
+    @riv __Role Theme $river
+    @reg __Role Location $region
+    @result __Bundle $eid $act $ctx $riv $reg
     return $result
 end
 
 @flowsInto:flowsInto graph river body
     # River flows into water body
-    @riv __Role Tributary $river
-    @bod __Role Recipient $body
-    @confluence __Role Process Confluence
-    @result __Bundle $riv $bod $confluence
+    @eid __Event
+    @act __Role Action flowsInto
+    @ctx __Role Context Geography
+    @riv __Role Theme $river
+    @bod __Role Goal $body
+    @result __Bundle $eid $act $ctx $riv $bod
     return $result
 end
 
 @drainsInto:drainsInto graph area basin
     # Area drains into drainage basin
-    @ar __Role DrainageArea $area
-    @bas __Role Basin $basin
-    @drainage __Role Process Drainage
-    @result __Bundle $ar $bas $drainage
+    @eid __Event
+    @act __Role Action drainsInto
+    @ctx __Role Context Geography
+    @ar __Role Location $area
+    @bas __Role Location $basin
+    @result __Bundle $eid $act $ctx $ar $bas
     return $result
 end
 
@@ -82,28 +98,34 @@ end
 
 @isCapitalOf:isCapitalOf graph city country
     # City is capital of country
-    @c __Role Capital $city
-    @ctry __Role Country $country
-    @administrative __Role Relation CapitalStatus
-    @result __Bundle $c $ctry $administrative
+    @eid __Event
+    @act __Role Action isCapitalOf
+    @ctx __Role Context Geography
+    @c __Role Theme $city
+    @ctry __Role Theme $country
+    @result __Bundle $eid $act $ctx $c $ctry
     return $result
 end
 
 @partOfCountry:partOfCountry graph region country
     # Region is part of country
-    @reg __Role AdministrativeUnit $region
-    @ctry __Role Nation $country
-    @political __Role Relation PoliticalSubdivision
-    @result __Bundle $reg $ctry $political
+    @eid __Event
+    @act __Role Action partOfCountry
+    @ctx __Role Context Geography
+    @reg __Role Theme $region
+    @ctry __Role Theme $country
+    @result __Bundle $eid $act $ctx $reg $ctry
     return $result
 end
 
 @hasTerritory:hasTerritory graph country territory
     # Country has territory
-    @ctry __Role Sovereign $country
-    @terr __Role Territory $territory
-    @sovereignty __Role Relation TerritorialClaim
-    @result __Bundle $ctry $terr $sovereignty
+    @eid __Event
+    @act __Role Action hasTerritory
+    @ctx __Role Context Geography
+    @ctry __Role Theme $country
+    @terr __Role Location $territory
+    @result __Bundle $eid $act $ctx $ctry $terr
     return $result
 end
 
@@ -111,28 +133,32 @@ end
 
 @hasPopulation:hasPopulation graph place population
     # Place has population
-    @pl __Role Settlement $place
-    @pop __Role Population $population
-    @demographic __Role Property PopulationSize
-    @result __Bundle $pl $pop $demographic
+    @eid __Event
+    @act __Role Action hasPopulation
+    @ctx __Role Context Geography
+    @pl __Role Location $place
+    @pop __Role Theme $population
+    @result __Bundle $eid $act $ctx $pl $pop
     return $result
 end
 
 @isUrbanArea:isUrbanArea graph city
     # City is urban area
-    @cty __Role Settlement $city
-    @urban __Role Property Urban
-    @classification __Role Domain Demography
-    @result __Bundle $cty $urban $classification
+    @eid __Event
+    @act __Role Action isUrbanArea
+    @ctx __Role Context Geography
+    @cty __Role Location $city
+    @result __Bundle $eid $act $ctx $cty
     return $result
 end
 
 @isRuralArea:isRuralArea graph area
     # Area is rural
-    @ar __Role Settlement $area
-    @rural __Role Property Rural
-    @classification __Role Domain Demography
-    @result __Bundle $ar $rural $classification
+    @eid __Event
+    @act __Role Action isRuralArea
+    @ctx __Role Context Geography
+    @ar __Role Location $area
+    @result __Bundle $eid $act $ctx $ar
     return $result
 end
 
@@ -140,20 +166,24 @@ end
 
 @producesResource:producesResource graph region resource
     # Region produces natural resource
-    @reg __Role Producer $region
-    @res __Role Resource $resource
-    @production __Role Process ResourceExtraction
-    @result __Bundle $reg $res $production
+    @eid __Event
+    @act __Role Action producesResource
+    @ctx __Role Context Geography
+    @reg __Role Location $region
+    @res __Role Theme $resource
+    @result __Bundle $eid $act $ctx $reg $res
     return $result
 end
 
 @exportsTo:exportsTo graph country1 country2 goods
     # Country exports goods to another
-    @c1 __Role Exporter $country1
-    @c2 __Role Importer $country2
-    @gds __Role Goods $goods
-    @trade __Role Process Export
-    @result __Bundle $c1 $c2 $gds $trade
+    @eid __Event
+    @act __Role Action exportsTo
+    @ctx __Role Context Geography
+    @c1 __Role Theme $country1
+    @c2 __Role Theme $country2
+    @gds __Role Theme $goods
+    @result __Bundle $eid $act $ctx $c1 $c2 $gds
     return $result
 end
 
@@ -161,19 +191,23 @@ end
 
 @hasClimate:hasClimate graph region climate
     # Region has climate type
-    @reg __Role Region $region
-    @clim __Role Climate $climate
-    @climatic __Role Property ClimaticZone
-    @result __Bundle $reg $clim $climatic
+    @eid __Event
+    @act __Role Action hasClimate
+    @ctx __Role Context Geography
+    @reg __Role Location $region
+    @clim __Role Theme $climate
+    @result __Bundle $eid $act $ctx $reg $clim
     return $result
 end
 
 @experiencesWeather:experiencesWeather graph location weather
     # Location experiences weather pattern
+    @eid __Event
+    @act __Role Action experiencesWeather
+    @ctx __Role Context Geography
     @loc __Role Location $location
-    @weath __Role Weather $weather
-    @meteorological __Role Process WeatherEvent
-    @result __Bundle $loc $weath $meteorological
+    @weath __Role Theme $weather
+    @result __Bundle $eid $act $ctx $loc $weath
     return $result
 end
 
@@ -181,19 +215,23 @@ end
 
 @hasElevation:hasElevation graph landform elevation
     # Landform has elevation
-    @land __Role Landform $landform
-    @elev __Role Elevation $elevation
-    @topographic __Role Property Height
-    @result __Bundle $land $elev $topographic
+    @eid __Event
+    @act __Role Action hasElevation
+    @ctx __Role Context Geography
+    @land __Role Theme $landform
+    @elev __Role Value $elevation
+    @result __Bundle $eid $act $ctx $land $elev
     return $result
 end
 
 @isPartOfMountainRange:isPartOfMountainRange graph mountain range
     # Mountain is part of range
-    @mtn __Role Peak $mountain
-    @rng __Role MountainRange $range
-    @orographic __Role Relation PartOfRange
-    @result __Bundle $mtn $rng $orographic
+    @eid __Event
+    @act __Role Action isPartOfMountainRange
+    @ctx __Role Context Geography
+    @mtn __Role Theme $mountain
+    @rng __Role Theme $range
+    @result __Bundle $eid $act $ctx $mtn $rng
     return $result
 end
 
@@ -201,9 +239,11 @@ end
 
 @hasEcosystem:hasEcosystem graph region ecosystem
     # Region has ecosystem type
-    @reg __Role Region $region
-    @eco __Role Ecosystem $ecosystem
-    @ecological __Role Property BiomeType
-    @result __Bundle $reg $eco $ecological
+    @eid __Event
+    @act __Role Action hasEcosystem
+    @ctx __Role Context Geography
+    @reg __Role Location $region
+    @eco __Role Theme $ecosystem
+    @result __Bundle $eid $act $ctx $reg $eco
     return $result
 end

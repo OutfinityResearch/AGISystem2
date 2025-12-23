@@ -55,7 +55,7 @@ This Functional Specification (FS) defines the detailed functional requirements 
 | **FS-01** | The system SHALL implement Bind operation as bitwise XOR on vectors | URS-01 | Unit Test |
 | **FS-02** | The system SHALL implement Bundle operation as bitwise majority vote | URS-01 | Unit Test |
 | **FS-03** | The system SHALL implement Similarity as normalized Hamming distance | URS-05 | Unit Test |
-| **FS-04** | The system SHALL support vector geometries of 1024, 8192, 32768, and 65536 bits | URS-22 | Unit Test |
+| **FS-04** | The system SHALL support configurable geometry; for `dense-binary` the geometry is the bit-length and MUST be divisible by 32 | URS-22 | Unit Test |
 | **FS-05** | The system SHALL provide position vectors Pos1 through Pos20 for argument ordering | URS-12 | Unit Test |
 | **FS-06** | The system SHALL initialize vectors deterministically using ASCII stamping | URS-01 | Unit Test |
 | **FS-07** | The system SHALL support vector extension (smaller to larger geometry) via cloning | URS-07 | Unit Test |
@@ -95,7 +95,7 @@ This Functional Specification (FS) defines the detailed functional requirements 
 | **FS-18** | The system SHALL support deterministic and random initialization modes for theories | URS-06 | Unit Test |
 | **FS-19** | The system SHALL maintain a registry of loaded theories | URS-07 | Integration Test |
 | **FS-20** | The system SHALL resolve theory references with `$TheoryName` syntax | URS-07 | Unit Test |
-| **FS-21** | The system SHALL auto-load Core theory with foundational concepts | URS-06 | Integration Test |
+| **FS-21** | Core theory is NOT auto-loaded; callers SHALL invoke `session.loadCore()` (or equivalent) explicitly | URS-06 | Unit Test |
 | **FS-22** | The system SHALL export atoms and macros with specified names | URS-06 | Unit Test |
 | **FS-23** | The system SHALL validate theory geometry and initialization mode | URS-10 | Unit Test |
 | **FS-24** | The system SHALL support loading theories from file paths | URS-09 | Integration Test |
@@ -163,8 +163,8 @@ This Functional Specification (FS) defines the detailed functional requirements 
 | **FS-61** | The phrasing engine SHALL fill slots with decoded values | URS-14 | Unit Test |
 | **FS-62** | The phrasing engine SHALL select question words based on roles | URS-14 | Unit Test |
 | **FS-63** | The system SHALL provide `summarize(vector)` for concise output | URS-17 | Integration Test |
-| **FS-64** | The system SHALL provide `elaborate(vector)` for detailed output | URS-18 | Integration Test |
-| **FS-65** | The elaborate function SHALL optionally use LLM for fluency | URS-25 | Integration Test |
+| **FS-64** | The system SHALL provide `elaborate(proof)` for detailed output | URS-18 | Integration Test |
+| **FS-65** | Reserved: LLM-backed fluency is not implemented in the current runtime | URS-25 | N/A |
 
 ### 3.9 Core Theory Content
 
@@ -182,10 +182,10 @@ This Functional Specification (FS) defines the detailed functional requirements 
 
 | ID | Requirement | Traces To | Verification |
 |----|-------------|-----------|--------------|
-| **FS-73** | The system SHALL return structured error objects with type, message, and location | URS-39 | Unit Test |
-| **FS-74** | Parse errors SHALL include line, column, expected, and found | URS-39 | Unit Test |
-| **FS-75** | Runtime errors SHALL include operation context | URS-39 | Unit Test |
-| **FS-76** | Query errors SHALL include reason: "no match", "ambiguous", "low confidence" | URS-39 | Unit Test |
+| **FS-73** | The system SHALL surface errors either as thrown Exceptions (e.g., parse/validation) or as `{success:false, errors:[...strings]}` results | URS-39 | Unit Test |
+| **FS-74** | Parse errors SHALL include line/column information when available (e.g., `ParseError`) | URS-39 | Unit Test |
+| **FS-75** | Runtime errors SHALL include a human-readable message, and MAY include additional context fields | URS-39 | Unit Test |
+| **FS-76** | Query/prove failures SHALL include a human-readable `reason` string when returning a non-throwing result | URS-39 | Unit Test |
 | **FS-77** | Capacity errors SHALL include current count and maximum limit | URS-24 | Unit Test |
 | **FS-78** | The system SHALL recover from single statement errors | URS-23 | Integration Test |
 
@@ -193,23 +193,23 @@ This Functional Specification (FS) defines the detailed functional requirements 
 
 | ID | Requirement | Traces To | Verification |
 |----|-------------|-----------|--------------|
-| **FS-79** | The system SHALL provide `inspect(name)` to analyze vectors | URS-40 | Unit Test |
-| **FS-80** | The system SHALL provide `listTheories()` to enumerate loaded theories | URS-40 | Unit Test |
-| **FS-81** | The system SHALL provide `listAtoms(theory?)` to enumerate atoms | URS-40 | Unit Test |
-| **FS-82** | The system SHALL provide `listMacros(theory?)` to enumerate macros | URS-40 | Unit Test |
-| **FS-83** | The system SHALL provide `listFacts()` to enumerate KB contents | URS-40 | Unit Test |
-| **FS-84** | The system SHALL provide `similarity(a, b)` for direct vector comparison | URS-40 | Unit Test |
-| **FS-85** | The system SHALL provide `decode(vector)` for structure extraction | URS-40 | Unit Test |
+| **FS-79** | The system SHALL provide `dump()` to snapshot session state (geometry, counts, vocabulary size, scope bindings) | URS-40 | Unit Test |
+| **FS-80** | The system SHALL provide `similarity(a, b)` for direct vector comparison | URS-40 | Unit Test |
+| **FS-81** | The system SHALL provide `decode(vector)` for structure extraction | URS-40 | Unit Test |
+| **FS-82** | The system SHALL provide `summarize(vector)` for best-effort natural-language decoding | URS-40 | Unit Test |
+| **FS-83** | Reserved: theory/fact enumeration APIs are not exposed in the current runtime | URS-40 | N/A |
+| **FS-84** | Reserved: macro/atom listing APIs are not exposed in the current runtime | URS-40 | N/A |
+| **FS-85** | Reserved: `inspect(name)` is not exposed; use `dump/decode/summarize` instead | URS-40 | N/A |
 
 ### 3.12 Audit and Tracing
 
 | ID | Requirement | Traces To | Verification |
 |----|-------------|-----------|--------------|
-| **FS-86** | The system SHALL log all learn() calls with timestamp and DSL | URS-30 | Integration Test |
-| **FS-87** | The system SHALL log all query() calls with timestamp, DSL, and result | URS-30 | Integration Test |
-| **FS-88** | The system SHALL log all prove() calls with timestamp, goal, and validity | URS-30 | Integration Test |
-| **FS-89** | The system SHALL generate replayable DSL from proof traces | URS-16 | Integration Test |
-| **FS-90** | The system SHALL support export of audit log in JSON format | URS-30 | Unit Test |
+| **FS-86** | Reserved: learn/query/prove audit logging is not implemented in the current runtime | URS-30 | N/A |
+| **FS-87** | Reserved: query audit logging is not implemented in the current runtime | URS-30 | N/A |
+| **FS-88** | Reserved: prove audit logging is not implemented in the current runtime | URS-30 | N/A |
+| **FS-89** | Reserved: replayable DSL export from proof traces is not implemented in the current runtime | URS-16 | N/A |
+| **FS-90** | Reserved: audit log export is not implemented in the current runtime | URS-30 | N/A |
 
 ---
 

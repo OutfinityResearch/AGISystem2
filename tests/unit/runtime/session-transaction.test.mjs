@@ -33,6 +33,38 @@ describe('Session Transactions', () => {
     assert.equal(session.kbFacts.length, 1);
   });
 
+  test('rollback does not leak canonicalized tokens into vocabulary when canonical target is scope-bound', () => {
+    const session = new Session({
+      reasoningProfile: 'theoryDriven',
+      rejectContradictions: true
+    });
+
+    // Bind canonical tokens in scope (declarations typically come from theories).
+    const decl = session.learn('@Open:Open ___NewVector\n@Closed:Closed ___NewVector');
+    assert.equal(decl.success, true);
+    assert.equal(session.scope.has('Closed'), true);
+    assert.equal(session.vocabulary.has('Closed'), false);
+
+    // Establish canonicalization mapping: Shut -> Closed.
+    const alias = session.learn('alias Shut Closed');
+    assert.equal(alias.success, true);
+
+    // Learn a non-contradictory baseline fact.
+    const base = session.learn('hasState Door Open');
+    assert.equal(base.success, true);
+
+    // Rejected learn must not leave `Closed` created in vocabulary via canonicalization.
+    const beforeSize = session.vocabulary.size;
+    const beforeHasClosed = session.vocabulary.has('Closed');
+
+    const rejected = session.learn('hasState Door Shut');
+    assert.equal(rejected.success, false);
+    assert.ok(rejected.errors.some(err => err.includes('Contradiction rejected')));
+
+    assert.equal(session.vocabulary.size, beforeSize);
+    assert.equal(session.vocabulary.has('Closed'), beforeHasClosed);
+  });
+
   test('rolls back learn when Load fails inside program', () => {
     const session = new Session();
     const dsl = `loves John Mary\n@_ Load "${FIXTURE_PATH}"\nlikes Bob Pizza`;

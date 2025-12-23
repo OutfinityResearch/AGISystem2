@@ -62,6 +62,14 @@ export function resolveIdentifier(executor, expr) {
     ? canonicalizeTokenName(executor.session, expr.name)
     : expr.name;
 
+  // If canonicalization rewrites the token to a name that is already bound in scope,
+  // prefer that canonical binding (e.g., @Closed:Closed __State) instead of creating
+  // a new vocabulary atom for the same surface form. This keeps learn() rollback
+  // truly atomic and avoids vector duplication for declared tokens.
+  if (name !== expr.name && executor.session.scope.has(name)) {
+    return executor.session.scope.get(name);
+  }
+
   return executor.session.vocabulary.getOrCreate(name);
 }
 
@@ -111,4 +119,3 @@ export function resolveCompound(executor, expr) {
   );
   return buildStatementVector(executor, tempStmt);
 }
-

@@ -8,24 +8,33 @@
 # ============================================================================
 
 @absoluteContraindication:absoluteContraindication graph a b
-    @left __Role Treatment $a
-    @right __Role Condition $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action absoluteContraindication
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @addresses:addresses graph a b
-    @left __Role Treatment $a
-    @right __Role Symptom $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action addresses
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @administeredBy:administeredBy graph agent patient treatment
+    @eid __Event
+    @act __Role Action administeredBy
+    @ctx __Role Context StressCompat
     @a __Role Agent $agent
     @p __Role Patient $patient
-    @t __Role Treatment $treatment
-    @action __Bundle $a $p $t
+    @t __Role Attribute $treatment
+    @action __Bundle $eid $act $a $p $t $ctx
     return $action
 end
 
@@ -37,16 +46,22 @@ end
 end
 
 @assessedBy:assessedBy graph a b
+    @eid __Event
+    @act __Role Action assessedBy
+    @ctx __Role Context StressCompat
     @left __Role Patient $a
-    @right __Role Clinician $b
-    @relation __Bundle $left $right
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @assesses:assesses graph a b
-    @left __Role Clinician $a
+    @eid __Event
+    @act __Role Action assesses
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Patient $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
@@ -58,9 +73,12 @@ end
 end
 
 @benefitsFrom:benefitsFrom graph a b
+    @eid __Event
+    @act __Role Action benefitsFrom
+    @ctx __Role Context StressCompat
     @left __Role Patient $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
@@ -86,919 +104,1135 @@ end
 end
 
 @bypassesBlockage:bypassesBlockage graph a b
-    @left __Role Procedure $a
-    @right __Role Condition $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action bypassesBlockage
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @canBeCurative:canBeCurative graph a b
-    @left __Role Treatment $a
-    @right __Role Disease $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action canBeCurative
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @canCause:canCause graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @canCauseAddisonianCrisis:canCauseAddisonianCrisis graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @canCauseDamage:canCauseDamage graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @canCausePerforation:canCausePerforation graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @canCauseRespiratory:canCauseRespiratory graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @canProgressTo:canProgressTo graph a b
-    @left __Role Disease $a
-    @right __Role Disease $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action canProgressTo
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @canRemove:canRemove graph a b
-    @left __Role Procedure $a
-    @right __Role Pathology $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action canRemove
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @causedByAbnormal:causedByAbnormal graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByAbsolute:causedByAbsolute graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByAcute:causedByAcute graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByAntibodies:causedByAntibodies graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByAttack:causedByAttack graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByCessation:causedByCessation graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByClot:causedByClot graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByDamage:causedByDamage graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByDecreased:causedByDecreased graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByDeficiency:causedByDeficiency graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByDegeneration:causedByDegeneration graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByDemyelination:causedByDemyelination graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByDeposition:causedByDeposition graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByDestruction:causedByDestruction graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByDisorder:causedByDisorder graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByDysfunction:causedByDysfunction graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByExcess:causedByExcess graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByFormation:causedByFormation graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByImbalance:causedByImbalance graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByIncreased:causedByIncreased graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByInfection:causedByInfection graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByInflammation:causedByInflammation graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByInsufficiency:causedByInsufficiency graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByLoss:causedByLoss graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByMalignancy:causedByMalignancy graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByMutation:causedByMutation graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByNarrowing:causedByNarrowing graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByObstruction:causedByObstruction graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByOcclusion:causedByOcclusion graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByOverfunctioning:causedByOverfunctioning graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByParasite:causedByParasite graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByRapid:causedByRapid graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByReaction:causedByReaction graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByReflux:causedByReflux graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByResistance:causedByResistance graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByRupture:causedByRupture graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByScarring:causedByScarring graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByTear:causedByTear graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByUnderfunctioning:causedByUnderfunctioning graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByVasodilation:causedByVasodilation graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByVirus:causedByVirus graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causedByWeakening:causedByWeakening graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causesBloodClot:causesBloodClot graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causesComplication:causesComplication graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causesDamage:causesDamage graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causesDestruction:causesDestruction graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causesErosion:causesErosion graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causesInadequate:causesInadequate graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causesObstruction:causesObstruction graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causesOcclusion:causesOcclusion graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causesProgressive:causesProgressive graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causesRisk:causesRisk graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @causesScarring:causesScarring graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @characterizedByPlaques:characterizedByPlaques graph a b
-    @left __Role Disease $a
-    @right __Role Pathology $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action characterizedByPlaques
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @circulatesThrough:circulatesThrough graph a b
-    @left __Role Substance $a
-    @right __Role System $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action circulatesThrough
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Structure $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @classifiedAs:classifiedAs graph a b
+    @eid __Event
+    @act __Role Action classifiedAs
+    @ctx __Role Context StressCompat
     @left __Role Entity $a
     @right __Role Category $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @commonCause:commonCause graph condition cause
-    @cond __Role Condition $condition
+    @cond __Role Attribute $condition
     @caus __Role Cause $cause
     @causation __Pair $cond $caus
     return $causation
 end
 
 @commonlyAffects:commonlyAffects graph a b
-    @left __Role Disease $a
-    @right __Role Organ $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action commonlyAffects
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @commonlyBy:commonlyBy graph a b
-    @left __Role Disease $a
-    @right __Role Pathogen $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action commonlyBy
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @commonPathogen:commonPathogen graph a b
-    @left __Role Disease $a
-    @right __Role Pathogen $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action commonPathogen
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @confirmedBy:confirmedBy graph a b
-    @left __Role Disease $a
-    @right __Role Test $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action confirmedBy
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @contraindicatedCombination:contraindicatedCombination graph a b
-    @left __Role Drug $a
-    @right __Role Drug $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action contraindicatedCombination
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @contraindicatedIn:contraindicatedIn graph a b
-    @left __Role Treatment $a
-    @right __Role Condition $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action contraindicatedIn
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @contraindicatedWith:contraindicatedWith graph a b
-    @left __Role Drug $a
-    @right __Role Condition $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action contraindicatedWith
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @contributesTo:contributesTo graph a b
-    @left __Role Factor $a
-    @right __Role Disease $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action contributesTo
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @controlsBody:controlsBody graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action controlsBody
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @coordinates:coordinates graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action coordinates
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @creates:creates graph a b
-    @left __Role Procedure $a
+    @eid __Event
+    @act __Role Action creates
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Result $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @cultures:cultures graph a b
-    @left __Role Test $a
-    @right __Role Pathogen $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action cultures
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @damageMucosa:damageMucosa graph a b
-    @left __Role Drug $a
-    @right __Role Tissue $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action damageMucosa
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @damagesBloodVessels:damagesBloodVessels graph a b
-    @left __Role Drug $a
-    @right __Role Tissue $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action damagesBloodVessels
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @decreases:decreases graph a b
-    @left __Role Drug $a
-    @right __Role Substance $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action decreases
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @decreasesExcretion:decreasesExcretion graph a b
-    @left __Role Drug $a
+    @eid __Event
+    @act __Role Action decreasesExcretion
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Process $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @determines:determines graph a b
-    @left __Role Finding $a
-    @right __Role Decision $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action determines
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @determinesTreatment:determinesTreatment graph a b
-    @left __Role Finding $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action determinesTreatment
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @developedFrom:developedFrom graph a b
-    @left __Role Treatment $a
-    @right __Role Research $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action developedFrom
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @developsThrough:developsThrough graph a b
-    @left __Role Disease $a
-    @right __Role Mechanism $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action developsThrough
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @diagnosedBy:diagnosedBy graph a b
-    @left __Role Disease $a
-    @right __Role Test $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action diagnosedBy
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @digestsFood:digestsFood graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action digestsFood
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @dueToTumor:dueToTumor graph a b
-    @left __Role Condition $a
+    @eid __Event
+    @act __Role Action dueToTumor
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Cause $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @dueToWeakening:dueToWeakening graph a b
-    @left __Role Condition $a
-    @right __Role Mechanism $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action dueToWeakening
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @eliminatesWaste:eliminatesWaste graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action eliminatesWaste
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @enablesMovement:enablesMovement graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action enablesMovement
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @enablesReproduction:enablesReproduction graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action enablesReproduction
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @enhancesActivity:enhancesActivity graph a b
-    @left __Role Drug $a
+    @eid __Event
+    @act __Role Action enhancesActivity
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Process $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @evaluates:evaluates graph a b
-    @left __Role Clinician $a
+    @eid __Event
+    @act __Role Action evaluates
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Patient $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @examines:examines graph a b
-    @left __Role Clinician $a
+    @eid __Event
+    @act __Role Action examines
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Patient $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @excellentFor:excellentFor graph a b
-    @left __Role Treatment $a
-    @right __Role Condition $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action excellentFor
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @exchangesGas:exchangesGas graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action exchangesGas
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @exposesTo:exposesTo graph a b
+    @eid __Event
+    @act __Role Action exposesTo
+    @ctx __Role Context StressCompat
     @left __Role Action $a
-    @right __Role Risk $b
-    @relation __Bundle $left $right
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @facilitates:facilitates graph a b
-    @left __Role Intervention $a
+    @eid __Event
+    @act __Role Action facilitates
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Process $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @filtersBlood:filtersBlood graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action filtersBlood
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @focusesOn:focusesOn graph a b
-    @left __Role Specialty $a
-    @right __Role Organ $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action focusesOn
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @formsClot:formsClot graph a b
+    @eid __Event
+    @act __Role Action formsClot
+    @ctx __Role Context StressCompat
     @left __Role Process $a
     @right __Role Result $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @hasAsymmetry:hasAsymmetry graph a b
-    @left __Role Lesion $a
-    @right __Role Feature $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action hasAsymmetry
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @hasAuscultation:hasAuscultation graph a b
-    @left __Role Condition $a
-    @right __Role Finding $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action hasAuscultation
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @hasComplication:hasComplication graph a b
-    @left __Role Disease $a
-    @right __Role Complication $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action hasComplication
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @hasEffect:hasEffect graph a b
-    @left __Role Drug $a
-    @right __Role Effect $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action hasEffect
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Result $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @hasEmergency:hasEmergency graph a b
-    @left __Role Condition $a
-    @right __Role Emergency $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action hasEmergency
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @hasEpisodes:hasEpisodes graph a b
-    @left __Role Disease $a
-    @right __Role Pattern $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action hasEpisodes
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Structure $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @hasPattern:hasPattern graph a b
-    @left __Role Disease $a
-    @right __Role Pattern $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action hasPattern
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Structure $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @hasResistance:hasResistance graph a b
-    @left __Role Pathogen $a
-    @right __Role Drug $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action hasResistance
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @hasRisk:hasRisk graph a b
-    @left __Role Condition $a
-    @right __Role Complication $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action hasRisk
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @hasTimeWindow:hasTimeWindow graph a b
-    @left __Role Treatment $a
-    @right __Role TimeFrame $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action hasTimeWindow
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @hasTypes:hasTypes graph a b
-    @left __Role Disease $a
-    @right __Role Subtype $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action hasTypes
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @hasVaccine:hasVaccine graph a b
-    @left __Role Disease $a
-    @right __Role Vaccine $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action hasVaccine
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @heals:heals graph a b
-    @left __Role Treatment $a
-    @right __Role Injury $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action heals
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @identifies:identifies graph a b
-    @left __Role Test $a
-    @right __Role Disease $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action identifies
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @improvedBy:improvedBy graph a b
-    @left __Role Condition $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action improvedBy
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @includes:includes graph a b
+    @eid __Event
+    @act __Role Action includes
+    @ctx __Role Context StressCompat
     @left __Role Category $a
-    @right __Role Member $b
-    @relation __Bundle $left $right
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @includesModality:includesModality graph a b
-    @left __Role Treatment $a
-    @right __Role Modality $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action includesModality
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @includesType:includesType graph a b
+    @eid __Event
+    @act __Role Action includesType
+    @ctx __Role Context StressCompat
     @left __Role Category $a
     @right __Role Type $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @increasesRisk:increasesRisk graph a b
-    @left __Role Factor $a
-    @right __Role Disease $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action increasesRisk
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @indicatedFor:indicatedFor graph a b
-    @left __Role Treatment $a
-    @right __Role Condition $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action indicatedFor
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @indicatedForScreening:indicatedForScreening graph a b
-    @left __Role Test $a
-    @right __Role Disease $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action indicatedForScreening
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @indicatesCondition:indicatesCondition graph a b
-    @left __Role Finding $a
-    @right __Role Disease $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action indicatesCondition
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @informs:informs graph a b
-    @left __Role Finding $a
-    @right __Role Decision $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action informs
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @inhibitsClotting:inhibitsClotting graph a b
-    @left __Role Drug $a
+    @eid __Event
+    @act __Role Action inhibitsClotting
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Process $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @inhibitsEnzyme:inhibitsEnzyme graph a b
-    @left __Role Drug $a
-    @right __Role Enzyme $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action inhibitsEnzyme
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @inhibitsSynthesis:inhibitsSynthesis graph a b
-    @left __Role Drug $a
+    @eid __Event
+    @act __Role Action inhibitsSynthesis
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Process $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @interprets:interprets graph a b
-    @left __Role Clinician $a
-    @right __Role Finding $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action interprets
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @involvesInterdisciplinary:involvesInterdisciplinary graph a b
-    @left __Role Treatment $a
-    @right __Role Team $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action involvesInterdisciplinary
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
@@ -1416,681 +1650,972 @@ end
 end
 
 @leadsToDamage:leadsToDamage graph a b
-    @left __Role Disease $a
-    @right __Role Pathology $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action leadsToDamage
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @leadsToDeficiency:leadsToDeficiency graph a b
-    @left __Role Disease $a
-    @right __Role Deficiency $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action leadsToDeficiency
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @leadsToDevelopment:leadsToDevelopment graph a b
-    @left __Role Disease $a
-    @right __Role Complication $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action leadsToDevelopment
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @leadsToDysfunction:leadsToDysfunction graph a b
-    @left __Role Disease $a
-    @right __Role Dysfunction $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action leadsToDysfunction
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @lowers:lowers graph a b
-    @left __Role Drug $a
-    @right __Role Substance $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action lowers
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @maintainsHomeostasis:maintainsHomeostasis graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action maintainsHomeostasis
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @majorRiskFactor:majorRiskFactor graph a b
-    @left __Role Factor $a
-    @right __Role Disease $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action majorRiskFactor
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @managesCondition:managesCondition graph a b
-    @left __Role Treatment $a
-    @right __Role Disease $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action managesCondition
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @mayRequireContrast:mayRequireContrast graph a b
-    @left __Role Imaging $a
+    @eid __Event
+    @act __Role Action mayRequireContrast
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Agent $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @mayRequireEmergency:mayRequireEmergency graph a b
-    @left __Role Condition $a
-    @right __Role Intervention $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action mayRequireEmergency
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @mayRequireProcedure:mayRequireProcedure graph a b
-    @left __Role Condition $a
-    @right __Role Procedure $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action mayRequireProcedure
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @mayRequireProphylaxis:mayRequireProphylaxis graph a b
-    @left __Role Condition $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action mayRequireProphylaxis
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @mayRequireSupport:mayRequireSupport graph a b
-    @left __Role Condition $a
-    @right __Role Support $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action mayRequireSupport
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @mayRequireSurgery:mayRequireSurgery graph a b
-    @left __Role Condition $a
-    @right __Role Surgery $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action mayRequireSurgery
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @mayRequireTreatment:mayRequireTreatment graph a b
-    @left __Role Condition $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action mayRequireTreatment
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @maySlowProgression:maySlowProgression graph a b
-    @left __Role Treatment $a
-    @right __Role Disease $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action maySlowProgression
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @maySupportCognition:maySupportCognition graph a b
-    @left __Role Treatment $a
+    @eid __Event
+    @act __Role Action maySupportCognition
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @mostCommonPathogen:mostCommonPathogen graph a b
-    @left __Role Disease $a
-    @right __Role Pathogen $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action mostCommonPathogen
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @necessaryForLife:necessaryForLife graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action necessaryForLife
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @noRadiation:noRadiation graph a b
-    @left __Role Imaging $a
+    @eid __Event
+    @act __Role Action noRadiation
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Property $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @obtainsSample:obtainsSample graph a b
-    @left __Role Procedure $a
-    @right __Role Sample $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action obtainsSample
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @oftenprecededBy:oftenprecededBy graph a b
-    @left __Role Event $a
-    @right __Role Precursor $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action oftenprecededBy
+    @ctx __Role Context StressCompat
+    @left __Role Action $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @oversees:oversees graph a b
-    @left __Role Clinician $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action oversees
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @oxygenatesBlood:oxygenatesBlood graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action oxygenatesBlood
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @persistsForWeeks:persistsForWeeks graph a b
-    @left __Role Symptom $a
+    @eid __Event
+    @act __Role Action persistsForWeeks
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Duration $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @presentsAfter:presentsAfter graph a b
-    @left __Role Symptom $a
-    @right __Role Event $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action presentsAfter
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Action $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @presentsAsAcute:presentsAsAcute graph a b
-    @left __Role Disease $a
-    @right __Role Presentation $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action presentsAsAcute
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @presentsInManic:presentsInManic graph a b
-    @left __Role Disease $a
-    @right __Role Phase $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action presentsInManic
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @presentsSymptom:presentsSymptom graph a b
-    @left __Role Disease $a
-    @right __Role Symptom $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action presentsSymptom
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @preventedBy:preventedBy graph a b
-    @left __Role Disease $a
-    @right __Role Intervention $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action preventedBy
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @preventsComplication:preventsComplication graph a b
-    @left __Role Treatment $a
-    @right __Role Complication $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action preventsComplication
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @preventsConversion:preventsConversion graph a b
-    @left __Role Treatment $a
-    @right __Role Progression $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action preventsConversion
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @preventsDisease:preventsDisease graph a b
-    @left __Role Intervention $a
-    @right __Role Disease $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action preventsDisease
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @preventWithLongterm:preventWithLongterm graph a b
-    @left __Role Disease $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action preventWithLongterm
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @producesEnzyme:producesEnzyme graph a b
-    @left __Role Organ $a
-    @right __Role Enzyme $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action producesEnzyme
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @producesHormone:producesHormone graph a b
-    @left __Role Organ $a
-    @right __Role Hormone $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action producesHormone
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @producesProtection:producesProtection graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action producesProtection
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @producesUrine:producesUrine graph a b
-    @left __Role Organ $a
-    @right __Role Product $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action producesUrine
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @progressesTo:progressesTo graph a b
-    @left __Role Disease $a
-    @right __Role Complication $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action progressesTo
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @protectsBody:protectsBody graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action protectsBody
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @provides:provides graph a b
+    @eid __Event
+    @act __Role Action provides
+    @ctx __Role Context StressCompat
     @left __Role Entity $a
-    @right __Role Benefit $b
-    @relation __Bundle $left $right
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @providesCareTo:providesCareTo graph a b
-    @left __Role Clinician $a
+    @eid __Event
+    @act __Role Action providesCareTo
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Patient $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @providesSupport:providesSupport graph a b
-    @left __Role Intervention $a
+    @eid __Event
+    @act __Role Action providesSupport
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @pumpsBlood:pumpsBlood graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action pumpsBlood
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @recordsElectrical:recordsElectrical graph a b
-    @left __Role Test $a
-    @right __Role Signal $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action recordsElectrical
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @reducedBy:reducedBy graph a b
-    @left __Role Symptom $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action reducedBy
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @reduces:reduces graph a b
-    @left __Role Drug $a
-    @right __Role Substance $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action reduces
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @regulatesBody:regulatesBody graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action regulatesBody
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @regulatesTemperature:regulatesTemperature graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action regulatesTemperature
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @remainingKidney:remainingKidney graph a b
+    @eid __Event
+    @act __Role Action remainingKidney
+    @ctx __Role Context StressCompat
     @left __Role Function $a
-    @right __Role Organ $b
-    @relation __Bundle $left $right
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @removes:removes graph a b
-    @left __Role Procedure $a
-    @right __Role Pathology $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action removes
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @replaces:replaces graph a b
-    @left __Role Procedure $a
-    @right __Role Organ $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action replaces
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @replacesFunction:replacesFunction graph a b
-    @left __Role Device $a
+    @eid __Event
+    @act __Role Action replacesFunction
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresAdequate:requiresAdequate graph a b
-    @left __Role Procedure $a
-    @right __Role Condition $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresAdequate
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresEmergency:requiresEmergency graph a b
-    @left __Role Condition $a
-    @right __Role Intervention $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresEmergency
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresICU:requiresICU graph a b
-    @left __Role Condition $a
-    @right __Role Care $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresICU
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresImmediate:requiresImmediate graph a b
-    @left __Role Condition $a
-    @right __Role Intervention $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresImmediate
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresImmediateTreatment:requiresImmediateTreatment graph a b
-    @left __Role Condition $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresImmediateTreatment
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresLifelong:requiresLifelong graph a b
-    @left __Role Condition $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresLifelong
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresLongTreatment:requiresLongTreatment graph a b
-    @left __Role Disease $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresLongTreatment
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresManagement:requiresManagement graph a b
-    @left __Role Condition $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresManagement
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresModification:requiresModification graph a b
-    @left __Role Condition $a
-    @right __Role Intervention $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresModification
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresMonitoring:requiresMonitoring graph a b
-    @left __Role Condition $a
-    @right __Role Surveillance $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresMonitoring
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresPainControl:requiresPainControl graph a b
-    @left __Role Condition $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresPainControl
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresPreparation:requiresPreparation graph a b
-    @left __Role Procedure $a
-    @right __Role Preparation $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresPreparation
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresProcedure:requiresProcedure graph a b
-    @left __Role Condition $a
-    @right __Role Procedure $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresProcedure
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresProphylaxis:requiresProphylaxis graph a b
-    @left __Role Condition $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresProphylaxis
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresRehabilitation:requiresRehabilitation graph a b
-    @left __Role Condition $a
-    @right __Role Therapy $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresRehabilitation
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresScreening:requiresScreening graph a b
-    @left __Role Population $a
-    @right __Role Test $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresScreening
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresSupport:requiresSupport graph a b
-    @left __Role Condition $a
-    @right __Role Support $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresSupport
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresTiming:requiresTiming graph a b
-    @left __Role Treatment $a
-    @right __Role Schedule $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresTiming
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresTreatment:requiresTreatment graph a b
-    @left __Role Condition $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresTreatment
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresUrgent:requiresUrgent graph a b
-    @left __Role Condition $a
-    @right __Role Intervention $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresUrgent
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @requiresWashoutPeriod:requiresWashoutPeriod graph a b
-    @left __Role Drug $a
-    @right __Role TimeFrame $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action requiresWashoutPeriod
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @riskFactor:riskFactor graph a b
-    @left __Role Factor $a
-    @right __Role Disease $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action riskFactor
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @shows:shows graph a b
-    @left __Role Test $a
-    @right __Role Finding $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action shows
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @showsChanges:showsChanges graph a b
-    @left __Role Test $a
-    @right __Role Abnormality $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action showsChanges
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @showsElevated:showsElevated graph a b
-    @left __Role Test $a
-    @right __Role Biomarker $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action showsElevated
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @showsInflammation:showsInflammation graph a b
-    @left __Role Test $a
-    @right __Role Finding $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action showsInflammation
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @specializesIn:specializesIn graph a b
-    @left __Role Clinician $a
-    @right __Role Specialty $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action specializesIn
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @stabilizes:stabilizes graph a b
-    @left __Role Drug $a
-    @right __Role Condition $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action stabilizes
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @stimulates:stimulates graph a b
-    @left __Role Drug $a
+    @eid __Event
+    @act __Role Action stimulates
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Process $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @storesFluid:storesFluid graph a b
-    @left __Role Organ $a
+    @eid __Event
+    @act __Role Action storesFluid
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Function $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @suppresses:suppresses graph a b
-    @left __Role Drug $a
+    @eid __Event
+    @act __Role Action suppresses
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Process $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @transmittedBy:transmittedBy graph a b
-    @left __Role Disease $a
-    @right __Role Vector $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action transmittedBy
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @treatAcuteWith:treatAcuteWith graph a b
-    @left __Role Disease $a
-    @right __Role Treatment $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action treatAcuteWith
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @triages:triages graph a b
-    @left __Role Clinician $a
+    @eid __Event
+    @act __Role Action triages
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Patient $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @triggeredBy:triggeredBy graph a b
-    @left __Role Symptom $a
-    @right __Role Trigger $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action triggeredBy
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @usedUniversally:usedUniversally graph a b
-    @left __Role Protocol $a
-    @right __Role Application $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action usedUniversally
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @usesEndoscope:usesEndoscope graph a b
-    @left __Role Procedure $a
+    @eid __Event
+    @act __Role Action usesEndoscope
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
     @right __Role Instrument $b
-    @relation __Bundle $left $right
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @usesGraft:usesGraft graph a b
-    @left __Role Procedure $a
-    @right __Role Material $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action usesGraft
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @usesMagneticField:usesMagneticField graph a b
-    @left __Role Imaging $a
-    @right __Role Modality $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action usesMagneticField
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @usesRadiation:usesRadiation graph a b
-    @left __Role Imaging $a
-    @right __Role Modality $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action usesRadiation
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @usesUltrasound:usesUltrasound graph a b
-    @left __Role Imaging $a
-    @right __Role Modality $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action usesUltrasound
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @visualizes:visualizes graph a b
-    @left __Role Imaging $a
-    @right __Role Anatomy $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action visualizes
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @worksIn:worksIn graph a b
-    @left __Role Clinician $a
-    @right __Role Setting $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action worksIn
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 
 @worsensWithActivity:worsensWithActivity graph a b
-    @left __Role Symptom $a
-    @right __Role Trigger $b
-    @relation __Bundle $left $right
+    @eid __Event
+    @act __Role Action worsensWithActivity
+    @ctx __Role Context StressCompat
+    @left __Role Attribute $a
+    @right __Role Attribute $b
+    @relation __Bundle $eid $act $left $right $ctx
     return $relation
 end
 

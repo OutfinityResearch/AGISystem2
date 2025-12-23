@@ -103,8 +103,8 @@ export class ConditionProver {
       innerResult = { valid: false };
     }
 
-    // Not succeeds if inner fails (closed-world assumption)
-    if (!innerResult.valid) {
+    // Not succeeds via negation-as-failure only when CWA is enabled.
+    if (!innerResult.valid && this.session.closedWorldAssumption) {
       return {
         valid: true,
         method: 'not_condition',
@@ -178,16 +178,119 @@ export class ConditionProver {
     const matches = [];
 
     if (part.type === 'And' || part.type === 'Or' || part.type === 'Not') {
-      const result = this.proveInstantiatedCompound(part, bindings, depth);
-      if (result.valid) {
-        matches.push(result);
+      if (part.type === 'Not') {
+        return this.findAllNotMatches(part, bindings, depth);
       }
+      const result = this.proveInstantiatedCompound(part, bindings, depth);
+      if (result.valid) matches.push(result);
       return matches;
     }
 
     if (part.type === 'leaf' && part.ast) {
       const condStr = this.engine.unification.instantiateAST(part.ast, bindings);
       return this.engine.kbMatcher.findAllFactMatches(condStr, bindings);
+    }
+
+    return matches;
+  }
+
+  collectEntityDomain() {
+    const domain = new Set();
+    for (const fact of this.session.kbFacts || []) {
+      const meta = fact?.metadata;
+      if (!meta) continue;
+      for (const a of meta.args || []) {
+        if (typeof a !== 'string') continue;
+        if (!a) continue;
+        if (a.startsWith('__')) continue;
+        domain.add(a);
+      }
+    }
+    return [...domain];
+  }
+
+  findAllNotMatches(part, bindings, depth) {
+    const matches = [];
+    const inner = part.inner;
+
+    // Nested Not/And/Or - treat as boolean (no new bindings).
+    if (inner.type === 'And' || inner.type === 'Or' || inner.type === 'Not') {
+      const result = this.proveInstantiatedNot(inner, bindings, depth);
+      if (result.valid) matches.push(result);
+      return matches;
+    }
+
+    if (!(inner.type === 'leaf' && inner.ast)) return matches;
+
+    const innerStr = this.engine.unification.instantiateAST(inner.ast, bindings);
+    if (!innerStr) return matches;
+
+    const varTokens = innerStr.split(/\s+/).filter(t => t.startsWith('?'));
+    const unboundVars = [...new Set(varTokens.map(v => v.slice(1)).filter(v => v && !bindings.has(v)))];
+
+    // Ground (under current bindings) → boolean Not.
+    if (unboundVars.length === 0) {
+      const result = this.proveInstantiatedNot(inner, bindings, depth);
+      if (result.valid) matches.push(result);
+      return matches;
+    }
+
+    // Open-world mode: do not allow negation-as-failure for unbound vars.
+    if (!this.session.closedWorldAssumption) return matches;
+
+    // Existential witness search (RuleTaker-style "something does not ..."):
+    // find at least one assignment that makes inner unprovable.
+    const domain = this.collectEntityDomain();
+    if (domain.length === 0) return matches;
+
+    const MAX_WITNESSES = 200;
+    const candidates = domain.slice(0, MAX_WITNESSES);
+
+    // Best-effort support for multiple vars without exploding combos.
+    if (unboundVars.length > 1) {
+      for (const candidate of candidates) {
+        const newBindings = new Map(bindings);
+        for (const v of unboundVars) newBindings.set(v, candidate);
+        const instantiated = this.engine.unification.instantiateAST(inner.ast, newBindings);
+        if (!instantiated || instantiated.includes('?')) continue;
+        const parts = instantiated.trim().split(/\s+/);
+        if (parts.length < 2) continue;
+        const op = parts[0];
+        const args = parts.slice(1);
+        const innerStmt = new Statement(null, new Identifier(op), args.map(a => new Identifier(a)));
+        const innerResult = this.engine.proveGoal(innerStmt, depth + 1);
+        if (!innerResult.valid) {
+          matches.push({
+            valid: true,
+            confidence: this.thresholds.CONDITION_CONFIDENCE,
+            newBindings: new Map(unboundVars.map(v => [v, candidate])),
+            steps: [{ operation: 'not_witness', detail: `${unboundVars.map(v => `?${v}=${candidate}`).join(', ')}` }]
+          });
+        }
+      }
+      return matches;
+    }
+
+    const v = unboundVars[0];
+    for (const candidate of candidates) {
+      const newBindings = new Map(bindings);
+      newBindings.set(v, candidate);
+      const instantiated = this.engine.unification.instantiateAST(inner.ast, newBindings);
+      if (!instantiated || instantiated.includes('?')) continue;
+      const parts = instantiated.trim().split(/\s+/);
+      if (parts.length < 2) continue;
+      const op = parts[0];
+      const args = parts.slice(1);
+      const innerStmt = new Statement(null, new Identifier(op), args.map(a => new Identifier(a)));
+      const innerResult = this.engine.proveGoal(innerStmt, depth + 1);
+      if (!innerResult.valid) {
+        matches.push({
+          valid: true,
+          confidence: this.thresholds.CONDITION_CONFIDENCE,
+          newBindings: new Map([[v, candidate]]),
+          steps: [{ operation: 'not_witness', detail: `?${v}=${candidate}` }]
+        });
+      }
     }
 
     return matches;
@@ -257,6 +360,24 @@ export class ConditionProver {
         }
       }
 
+      // Block proving a positive condition if it is explicitly negated in KB.
+      // This must be metadata-based (graph operators have vector mismatch).
+      if (parts.length >= 2) {
+        const goal = new Statement(
+          null,
+          new Identifier(parts[0]),
+          parts.slice(1).map(arg => new Identifier(arg))
+        );
+        const negInfo = this.engine.checkGoalNegation(goal);
+        if (negInfo?.negated) {
+          return {
+            valid: false,
+            reason: 'Condition is negated',
+            steps: [{ operation: 'condition_negated', fact: `${parts[0]} ${parts.slice(1).join(' ')}`.trim() }]
+          };
+        }
+      }
+
       const match = this.engine.kbMatcher.findMatchingFact(condStr);
       if (match.found) {
         return {
@@ -286,6 +407,41 @@ export class ConditionProver {
         const ruleResult = this.engine.kbMatcher.tryRuleChainForCondition(condStr, depth + 1);
         if (ruleResult.valid) {
           return ruleResult;
+        }
+      }
+
+      // As a fallback for ground conditions, allow backward chaining via rules (including ground rules),
+      // but only when the conclusion matches exactly (no similarity-based acceptance here).
+      if (depth < this.options.maxDepth) {
+        const goalStmt = new Statement(
+          null,
+          new Identifier(parts[0]),
+          parts.slice(1).map(arg => new Identifier(arg))
+        );
+
+        const goalOp = parts[0];
+        const goalArgs = parts.slice(1);
+        const canon = (name) => {
+          if (!this.session?.canonicalizationEnabled) return name;
+          return this.session.componentKB?.canonicalizeName?.(name) || name;
+        };
+
+        for (const rule of this.session.rules) {
+          if (!rule.conclusionAST) continue;
+
+          if (!rule.hasVariables) {
+            const concOp = this.engine.unification.extractOperatorFromAST(rule.conclusionAST);
+            const concArgs = this.engine.unification.extractArgsFromAST(rule.conclusionAST);
+            const exact =
+              concOp &&
+              canon(concOp) === canon(goalOp) &&
+              concArgs.length === goalArgs.length &&
+              concArgs.every((a, i) => !a.isVariable && canon(a.name) === canon(goalArgs[i]));
+            if (!exact) continue;
+          }
+
+          const res = this.engine.kbMatcher.tryRuleMatch(goalStmt, rule, depth);
+          if (res.valid) return res;
         }
       }
 
@@ -465,6 +621,12 @@ export class ConditionProver {
 
     if (rule.conditionParts) {
       return this.proveCompoundCondition(rule.conditionParts, depth);
+    }
+
+    // Avoid proving ground conditions via fuzzy vector similarity when we have an AST.
+    // This prevents RuleTaker-style false positives (e.g., proving chase Rabbit Squirrel from chase Squirrel Rabbit).
+    if (rule.conditionAST) {
+      return this.provePart({ type: 'leaf', ast: rule.conditionAST, vector: rule.condition }, depth);
     }
 
     return this.proveSimpleCondition(rule.condition, depth);
@@ -676,6 +838,14 @@ export class ConditionProver {
       return this.proveCompoundCondition(part, depth);
     }
     if (part.type === 'leaf' && part.ast) {
+      const argInfo = this.engine.unification.extractArgsFromAST(part.ast);
+      const hasVars = argInfo.some(a => a.isVariable);
+      if (!hasVars) {
+        const condStr = this.engine.unification.instantiateAST(part.ast, new Map());
+        if (condStr) {
+          return this.proveSingleCondition(condStr, new Map(), depth);
+        }
+      }
       const op = this.engine.extractOperatorName(part.ast);
       if (op === 'holds') {
         const result = this.engine.proveGoal(part.ast, depth + 1);

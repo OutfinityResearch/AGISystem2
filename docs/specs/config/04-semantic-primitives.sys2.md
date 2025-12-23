@@ -14,7 +14,7 @@ Introduces L2 Conceptual Dependency primitives (_ptrans, _atrans, _mtrans, etc.)
 
 ## Tests & Coverage
 - `tests/unit/runtime/core-theories.test.mjs` loads the file.
-- `evalSuite/suite04_deep_chains` and `suite05_negation` use `_atrans`, `_mtrans`, etc., verifying stability in full conversations.
+- `evals/fastEval/suite04_deep_chains` and `evals/fastEval/suite05_negation` use `_atrans`, `_mtrans`, etc., verifying stability in full conversations.
 
 ## Design Rationale
 Encoding primitives as macros keeps the event geometry stable and makes it easier to extend the action set.  Roles are assigned declaratively to support graph-based reasoning (e.g., verifying Agent vs Theme positions).

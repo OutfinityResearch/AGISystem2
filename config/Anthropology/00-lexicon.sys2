@@ -1,0 +1,69 @@
+# Anthropology - Lexicon (Value Vocabulary)
+# Domain value tokens used inside Anthropology graph bodies under strict DSL validation.
+#
+# This file intentionally avoids defining ad-hoc schema role labels for `__Role`:
+# domain theories should use Core semantic roles from `config/Core/09-roles.sys2`.
+#
+# Note: Graph operators (e.g., Culture, Ritual, Symbol, ...) are declared in 00-concepts.sys2.
+
+# ===== Property Values =====
+
+@Learned:Learned __Property
+@Collective:Collective __Property
+@Symbolic:Symbolic __Property
+@Formalized:Formalized __Property
+@Repetitive:Repetitive __Property
+@CarriesMeaning:CarriesMeaning __Property
+@Arbitrary:Arbitrary __Property
+@Enduring:Enduring __Property
+@Sacred:Sacred __Property
+@Holistic:Holistic __Property
+@Responsive:Responsive __Property
+@Cumulative:Cumulative __Property
+@RuleGoverned:RuleGoverned __Property
+@HumanMade:HumanMade __Property
+
+# ===== Category Values =====
+
+@KinshipSystem:KinshipSystem __Category
+@Descent:Descent __Category
+@CommonAncestor:CommonAncestor __Category
+@UnilateralDescent:UnilateralDescent __Category
+@TotemicIdentity:TotemicIdentity __Category
+@Exogamy:Exogamy __Category
+@SocialOrganization:SocialOrganization __Category
+@SocialAlliance:SocialAlliance __Category
+@Origin:Origin __Category
+@PhysicalObject:PhysicalObject __Category
+@ToolsAndTechniques:ToolsAndTechniques __Category
+@ProblemSolving:ProblemSolving __Category
+@SubsistenceMode:SubsistenceMode __Category
+@Economy:Economy __Category
+@Reciprocity:Reciprocity __Category
+@CreatesObligations:CreatesObligations __Category
+@Cosmology:Cosmology __Category
+@Rituals:Rituals __Category
+@Framework:Framework __Category
+@MeaningFramework:MeaningFramework __Category
+@CulturalAdaptation:CulturalAdaptation __Category
+@CulturalEvolution:CulturalEvolution __Category
+@Change:Change __Category
+@ParticipantObservation:ParticipantObservation __Category
+@CulturalDescription:CulturalDescription __Category
+@CulturalKnowledge:CulturalKnowledge __Category
+@CulturalTransmission:CulturalTransmission __Category
+@CulturalContext:CulturalContext __Category
+@Ceremonial:Ceremonial __Category
+@Genealogical:Genealogical __Category
+@MarriageAlliance:MarriageAlliance __Category
+@Member:Member __Category
+@Commitment:Commitment __Category
+@Socialization:Socialization __Category
+@Conformity:Conformity __Category
+@Norm:Norm __Category
+@OralTradition:OralTradition __Category
+@GenerationalTransmission:GenerationalTransmission __Category
+@ExplainsOrigins:ExplainsOrigins __Category
+
+# Category-ish marker used as a value token in `Informant`.
+@DataSource:DataSource __Category

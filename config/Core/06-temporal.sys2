@@ -17,6 +17,7 @@
 @Causes:Causes __Relation
 @Enables:Enables __Relation
 @Prevents:Prevents __Relation
+@Threat:Threat __Relation
 
 # ===== Temporal Macros =====
 

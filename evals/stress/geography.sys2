@@ -14,50 +14,53 @@ end
 
 @adjacentTo:adjacentTo graph entity reference
     @e __Role Entity $entity
-    @r __Role Reference $reference
+    @r __Role Attribute $reference
     @spatial __Pair $e $r
     return $spatial
 end
 
 @administeredBy:administeredBy graph territory administrator
     # Territory administered by governing body
-    @terr __Role Territory $territory
-    @admin __Role Administrator $administrator
-    @rel __Role Relation AdministrativeControl
-    @result __Bundle $terr $admin $rel
+    @eid __Event
+    @act __Role Action administeredBy
+    @ctx __Role Context StressCompat
+    @terr __Role Attribute $territory
+    @admin __Role Attribute $administrator
+    @rel __Role Action AdministrativeControl
+    @result __Bundle $eid $act $terr $admin $rel $ctx
     return $result
 end
 
 @affectsOcean:affectsOcean graph factor result
-    @f __Role Factor $factor
+    @f __Role Attribute $factor
     @r __Role Result $result
     @influence __Pair $f $r
     return $influence
 end
 
 @affectsPlate:affectsPlate graph factor result
-    @f __Role Factor $factor
+    @f __Role Attribute $factor
     @r __Role Result $result
     @influence __Pair $f $r
     return $influence
 end
 
 @affectsReef:affectsReef graph factor result
-    @f __Role Factor $factor
+    @f __Role Attribute $factor
     @r __Role Result $result
     @influence __Pair $f $r
     return $influence
 end
 
 @affectsRegion:affectsRegion graph factor result
-    @f __Role Factor $factor
+    @f __Role Attribute $factor
     @r __Role Result $result
     @influence __Pair $f $r
     return $influence
 end
 
 @affectsRock:affectsRock graph factor result
-    @f __Role Factor $factor
+    @f __Role Attribute $factor
     @r __Role Result $result
     @influence __Pair $f $r
     return $influence
@@ -65,10 +68,13 @@ end
 
 @aidsNavigation:aidsNavigation graph system navigation
     # System aids navigation
-    @sys __Role System $system
-    @nav __Role Navigation $navigation
-    @rel __Role Relation NavigationalAid
-    @result __Bundle $sys $nav $rel
+    @eid __Event
+    @act __Role Action aidsNavigation
+    @ctx __Role Context StressCompat
+    @sys __Role Structure $system
+    @nav __Role Attribute $navigation
+    @rel __Role Action NavigationalAid
+    @result __Bundle $eid $act $sys $nav $rel $ctx
     return $result
 end
 
@@ -81,247 +87,322 @@ end
 
 @associatedWith:associatedWith graph entity association
     # Entity associated with concept
+    @eid __Event
+    @act __Role Action associatedWith
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @assoc __Role Association $association
-    @rel __Role Relation Association
-    @result __Bundle $ent $assoc $rel
+    @assoc __Role Attribute $association
+    @rel __Role Action Association
+    @result __Bundle $eid $act $ent $assoc $rel $ctx
     return $result
 end
 
 @atLatitude:atLatitude graph location latitude
     # Location at latitude
+    @eid __Event
+    @act __Role Action atLatitude
+    @ctx __Role Context StressCompat
     @loc __Role Location $location
-    @lat __Role Latitude $latitude
-    @rel __Role Relation LatitudinalPosition
-    @result __Bundle $loc $lat $rel
+    @lat __Role Attribute $latitude
+    @rel __Role Action LatitudinalPosition
+    @result __Bundle $eid $act $loc $lat $rel $ctx
     return $result
 end
 
 @atLongitude:atLongitude graph location longitude
     # Location at longitude
+    @eid __Event
+    @act __Role Action atLongitude
+    @ctx __Role Context StressCompat
     @loc __Role Location $location
-    @lon __Role Longitude $longitude
-    @rel __Role Relation LongitudinalPosition
-    @result __Bundle $loc $lon $rel
+    @lon __Role Attribute $longitude
+    @rel __Role Action LongitudinalPosition
+    @result __Bundle $eid $act $loc $lon $rel $ctx
     return $result
 end
 
 @atPlateBoundary:atPlateBoundary graph feature boundary
     # Feature at plate boundary
-    @feat __Role Feature $feature
-    @bound __Role Boundary $boundary
-    @rel __Role Relation TectonicLocation
-    @result __Bundle $feat $bound $rel
+    @eid __Event
+    @act __Role Action atPlateBoundary
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @bound __Role Attribute $boundary
+    @rel __Role Action TectonicLocation
+    @result __Bundle $eid $act $feat $bound $rel $ctx
     return $result
 end
 
 @belongsToPeople:belongsToPeople graph territory people
     # Territory belongs to people
-    @terr __Role Territory $territory
-    @ppl __Role People $people
-    @rel __Role Relation CulturalBelonging
-    @result __Bundle $terr $ppl $rel
+    @eid __Event
+    @act __Role Action belongsToPeople
+    @ctx __Role Context StressCompat
+    @terr __Role Attribute $territory
+    @ppl __Role Attribute $people
+    @rel __Role Action CulturalBelonging
+    @result __Bundle $eid $act $terr $ppl $rel $ctx
     return $result
 end
 
 @benefitsSpecies:benefitsSpecies graph factor species
     # Factor benefits species
-    @fact __Role Factor $factor
-    @spec __Role Species $species
-    @rel __Role Relation EcologicalBenefit
-    @result __Bundle $fact $spec $rel
+    @eid __Event
+    @act __Role Action benefitsSpecies
+    @ctx __Role Context StressCompat
+    @fact __Role Attribute $factor
+    @spec __Role Attribute $species
+    @rel __Role Action EcologicalBenefit
+    @result __Bundle $eid $act $fact $spec $rel $ctx
     return $result
 end
 
 @betweenCountries:betweenCountries graph entity reference
     @e __Role Entity $entity
-    @r __Role Reference $reference
+    @r __Role Attribute $reference
     @spatial __Pair $e $r
     return $spatial
 end
 
 @betweenPlate:betweenPlate graph entity reference
     @e __Role Entity $entity
-    @r __Role Reference $reference
+    @r __Role Attribute $reference
     @spatial __Pair $e $r
     return $spatial
 end
 
 @blocksRiver:blocksRiver graph dam river
     # Dam blocks river
-    @dam __Role Dam $dam
-    @riv __Role River $river
-    @rel __Role Relation HydrologicalObstruction
-    @result __Bundle $dam $riv $rel
+    @eid __Event
+    @act __Role Action blocksRiver
+    @ctx __Role Context StressCompat
+    @dam __Role Attribute $dam
+    @riv __Role Attribute $river
+    @rel __Role Action HydrologicalObstruction
+    @result __Bundle $eid $act $dam $riv $rel $ctx
     return $result
 end
 
 @borderedBy:borderedBy graph region border
     # Region bordered by feature
-    @reg __Role Region $region
-    @bord __Role Border $border
-    @rel __Role Relation BoundaryDefinition
-    @result __Bundle $reg $bord $rel
+    @eid __Event
+    @act __Role Action borderedBy
+    @ctx __Role Context StressCompat
+    @reg __Role Attribute $region
+    @bord __Role Attribute $border
+    @rel __Role Action BoundaryDefinition
+    @result __Bundle $eid $act $reg $bord $rel $ctx
     return $result
 end
 
 @borderingCountries:borderingCountries graph country neighbor
     # Countries share border
-    @ctry __Role Country $country
-    @neigh __Role Neighbor $neighbor
-    @rel __Role Relation InternationalBorder
-    @result __Bundle $ctry $neigh $rel
+    @eid __Event
+    @act __Role Action borderingCountries
+    @ctx __Role Context StressCompat
+    @ctry __Role Attribute $country
+    @neigh __Role Attribute $neighbor
+    @rel __Role Action InternationalBorder
+    @result __Bundle $eid $act $ctry $neigh $rel $ctx
     return $result
 end
 
 @borderingOcean:borderingOcean graph land ocean
     # Land bordering ocean
-    @land __Role Land $land
-    @ocn __Role Ocean $ocean
-    @rel __Role Relation Coastline
-    @result __Bundle $land $ocn $rel
+    @eid __Event
+    @act __Role Action borderingOcean
+    @ctx __Role Context StressCompat
+    @land __Role Attribute $land
+    @ocn __Role Attribute $ocean
+    @rel __Role Action Coastline
+    @result __Bundle $eid $act $land $ocn $rel $ctx
     return $result
 end
 
 @capitalOf:capitalOf graph city country
     # City is capital of country
-    @cty __Role City $city
-    @ctry __Role Country $country
-    @rel __Role Relation CapitalStatus
-    @result __Bundle $cty $ctry $rel
+    @eid __Event
+    @act __Role Action capitalOf
+    @ctx __Role Context StressCompat
+    @cty __Role Attribute $city
+    @ctry __Role Attribute $country
+    @rel __Role Action CapitalStatus
+    @result __Bundle $eid $act $cty $ctry $rel $ctx
     return $result
 end
 
 @carriesWater:carriesWater graph river watervolume
     # River carries water
-    @riv __Role River $river
-    @wat __Role WaterVolume $watervolume
-    @rel __Role Relation HydrologicalTransport
-    @result __Bundle $riv $wat $rel
+    @eid __Event
+    @act __Role Action carriesWater
+    @ctx __Role Context StressCompat
+    @riv __Role Attribute $river
+    @wat __Role Attribute $watervolume
+    @rel __Role Action HydrologicalTransport
+    @result __Bundle $eid $act $riv $wat $rel $ctx
     return $result
 end
 
 @carvedBy:carvedBy graph valley agent
     # Valley carved by erosive agent
-    @val __Role Valley $valley
-    @agt __Role ErosiveAgent $agent
-    @rel __Role Relation Erosion
-    @result __Bundle $val $agt $rel
+    @eid __Event
+    @act __Role Action carvedBy
+    @ctx __Role Context StressCompat
+    @val __Role Attribute $valley
+    @agt __Role Attribute $agent
+    @rel __Role Action Erosion
+    @result __Bundle $eid $act $val $agt $rel $ctx
     return $result
 end
 
 @causedByTemperature:causedByTemperature graph phenomenon temperature
     # Phenomenon caused by temperature
-    @phen __Role Phenomenon $phenomenon
-    @temp __Role Temperature $temperature
-    @rel __Role Relation ThermalCausation
-    @result __Bundle $phen $temp $rel
+    @eid __Event
+    @act __Role Action causedByTemperature
+    @ctx __Role Context StressCompat
+    @phen __Role Attribute $phenomenon
+    @temp __Role Attribute $temperature
+    @rel __Role Action ThermalCausation
+    @result __Bundle $eid $act $phen $temp $rel $ctx
     return $result
 end
 
 @causesVolcanism:causesVolcanism graph cause effect
     @c __Role Cause $cause
-    @e __Role Effect $effect
+    @e __Role Result $effect
     @causation __Pair $c $e
     return $causation
 end
 
 @centeredOn:centeredOn graph feature center
     # Feature centered on point
-    @feat __Role Feature $feature
-    @cent __Role Center $center
-    @rel __Role Relation CentralPosition
-    @result __Bundle $feat $cent $rel
+    @eid __Event
+    @act __Role Action centeredOn
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @cent __Role Attribute $center
+    @rel __Role Action CentralPosition
+    @result __Bundle $eid $act $feat $cent $rel $ctx
     return $result
 end
 
 @checksHealth:checksHealth graph monitor system
     # Monitor checks health
-    @mon __Role Monitor $monitor
-    @sys __Role System $system
-    @rel __Role Relation HealthMonitoring
-    @result __Bundle $mon $sys $rel
+    @eid __Event
+    @act __Role Action checksHealth
+    @ctx __Role Context StressCompat
+    @mon __Role Attribute $monitor
+    @sys __Role Structure $system
+    @rel __Role Action HealthMonitoring
+    @result __Bundle $eid $act $mon $sys $rel $ctx
     return $result
 end
 
 @claimedBy:claimedBy graph territory claimant
     # Territory claimed by nation
-    @terr __Role Territory $territory
-    @claim __Role Claimant $claimant
-    @rel __Role Relation TerritorialClaim
-    @result __Bundle $terr $claim $rel
+    @eid __Event
+    @act __Role Action claimedBy
+    @ctx __Role Context StressCompat
+    @terr __Role Attribute $territory
+    @claim __Role Attribute $claimant
+    @rel __Role Action TerritorialClaim
+    @result __Bundle $eid $act $terr $claim $rel $ctx
     return $result
 end
 
 @collectsData:collectsData graph system data
     # System collects data
-    @sys __Role System $system
-    @dat __Role Data $data
-    @rel __Role Relation DataCollection
-    @result __Bundle $sys $dat $rel
+    @eid __Event
+    @act __Role Action collectsData
+    @ctx __Role Context StressCompat
+    @sys __Role Structure $system
+    @dat __Role Attribute $data
+    @rel __Role Action DataCollection
+    @result __Bundle $eid $act $sys $dat $rel $ctx
     return $result
 end
 
 @commemorates:commemorates graph monument event
     # Monument commemorates event
-    @mon __Role Monument $monument
-    @evt __Role Event $event
-    @rel __Role Relation Commemoration
-    @result __Bundle $mon $evt $rel
+    @eid __Event
+    @act __Role Action commemorates
+    @ctx __Role Context StressCompat
+    @mon __Role Attribute $monument
+    @evt __Role Action $event
+    @rel __Role Action Commemoration
+    @result __Bundle $eid $act $mon $evt $rel $ctx
     return $result
 end
 
 @conductsResearch:conductsResearch graph institution research
     # Institution conducts research
-    @inst __Role Institution $institution
-    @res __Role Research $research
-    @rel __Role Relation ResearchActivity
-    @result __Bundle $inst $res $rel
+    @eid __Event
+    @act __Role Action conductsResearch
+    @ctx __Role Context StressCompat
+    @inst __Role Structure $institution
+    @res __Role Attribute $research
+    @rel __Role Action ResearchActivity
+    @result __Bundle $eid $act $inst $res $rel $ctx
     return $result
 end
 
 @connects:connects graph connector endpoints
     # Connector connects endpoints
-    @conn __Role Connector $connector
-    @endp __Role Endpoints $endpoints
-    @rel __Role Relation Connection
-    @result __Bundle $conn $endp $rel
+    @eid __Event
+    @act __Role Action connects
+    @ctx __Role Context StressCompat
+    @conn __Role Attribute $connector
+    @endp __Role Attribute $endpoints
+    @rel __Role Action Connection
+    @result __Bundle $eid $act $conn $endp $rel $ctx
     return $result
 end
 
 @connectsCountries:connectsCountries graph route countries
     # Route connects countries
-    @rte __Role Route $route
-    @ctrs __Role Countries $countries
-    @rel __Role Relation InternationalConnection
-    @result __Bundle $rte $ctrs $rel
+    @eid __Event
+    @act __Role Action connectsCountries
+    @ctx __Role Context StressCompat
+    @rte __Role Attribute $route
+    @ctrs __Role Attribute $countries
+    @rel __Role Action InternationalConnection
+    @result __Bundle $eid $act $rte $ctrs $rel $ctx
     return $result
 end
 
 @connectsPlate:connectsPlate graph boundary plate
     # Boundary connects plates
-    @bound __Role Boundary $boundary
-    @plt __Role Plate $plate
-    @rel __Role Relation TectonicConnection
-    @result __Bundle $bound $plt $rel
+    @eid __Event
+    @act __Role Action connectsPlate
+    @ctx __Role Context StressCompat
+    @bound __Role Attribute $boundary
+    @plt __Role Attribute $plate
+    @rel __Role Action TectonicConnection
+    @result __Bundle $eid $act $bound $plt $rel $ctx
     return $result
 end
 
 @connectsRegions:connectsRegions graph route regions
     # Route connects regions
-    @rte __Role Route $route
-    @regs __Role Regions $regions
-    @rel __Role Relation RegionalConnection
-    @result __Bundle $rte $regs $rel
+    @eid __Event
+    @act __Role Action connectsRegions
+    @ctx __Role Context StressCompat
+    @rte __Role Attribute $route
+    @regs __Role Attribute $regions
+    @rel __Role Action RegionalConnection
+    @result __Bundle $eid $act $rte $regs $rel $ctx
     return $result
 end
 
 @connectsTrees:connectsTrees graph network trees
     # Network connects trees
-    @net __Role Network $network
-    @tr __Role Trees $trees
-    @rel __Role Relation ForestConnection
-    @result __Bundle $net $tr $rel
+    @eid __Event
+    @act __Role Action connectsTrees
+    @ctx __Role Context StressCompat
+    @net __Role Attribute $network
+    @tr __Role Attribute $trees
+    @rel __Role Action ForestConnection
+    @result __Bundle $eid $act $net $tr $rel $ctx
     return $result
 end
 
@@ -341,268 +422,358 @@ end
 
 @coversContinent:coversContinent graph feature continent
     # Feature covers continent
-    @feat __Role Feature $feature
-    @cont __Role Continent $continent
-    @rel __Role Relation ContinentalCoverage
-    @result __Bundle $feat $cont $rel
+    @eid __Event
+    @act __Role Action coversContinent
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @cont __Role Attribute $continent
+    @rel __Role Action ContinentalCoverage
+    @result __Bundle $eid $act $feat $cont $rel $ctx
     return $result
 end
 
 @coversRegion:coversRegion graph feature region
     # Feature covers region
-    @feat __Role Feature $feature
-    @reg __Role Region $region
-    @rel __Role Relation RegionalCoverage
-    @result __Bundle $feat $reg $rel
+    @eid __Event
+    @act __Role Action coversRegion
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @reg __Role Attribute $region
+    @rel __Role Action RegionalCoverage
+    @result __Bundle $eid $act $feat $reg $rel $ctx
     return $result
 end
 
 @createdBy:createdBy graph feature process
     # Feature created by process
-    @feat __Role Feature $feature
+    @eid __Event
+    @act __Role Action createdBy
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
     @proc __Role Process $process
-    @rel __Role Relation GeologicalCreation
-    @result __Bundle $feat $proc $rel
+    @rel __Role Action GeologicalCreation
+    @result __Bundle $eid $act $feat $proc $rel $ctx
     return $result
 end
 
 @crossesOcean:crossesOcean graph route ocean
     # Route crosses ocean
-    @rte __Role Route $route
-    @ocn __Role Ocean $ocean
-    @rel __Role Relation OceanicCrossing
-    @result __Bundle $rte $ocn $rel
+    @eid __Event
+    @act __Role Action crossesOcean
+    @ctx __Role Context StressCompat
+    @rte __Role Attribute $route
+    @ocn __Role Attribute $ocean
+    @rel __Role Action OceanicCrossing
+    @result __Bundle $eid $act $rte $ocn $rel $ctx
     return $result
 end
 
 @crossesRiver:crossesRiver graph structure river
     # Structure crosses river
+    @eid __Event
+    @act __Role Action crossesRiver
+    @ctx __Role Context StressCompat
     @struct __Role Structure $structure
-    @riv __Role River $river
-    @rel __Role Relation RiverCrossing
-    @result __Bundle $struct $riv $rel
+    @riv __Role Attribute $river
+    @rel __Role Action RiverCrossing
+    @result __Bundle $eid $act $struct $riv $rel $ctx
     return $result
 end
 
 @definesClimate:definesClimate graph factor climatezone
     # Factor defines climate
-    @fact __Role Factor $factor
-    @clim __Role ClimateZone $climatezone
-    @rel __Role Relation ClimaticInfluence
-    @result __Bundle $fact $clim $rel
+    @eid __Event
+    @act __Role Action definesClimate
+    @ctx __Role Context StressCompat
+    @fact __Role Attribute $factor
+    @clim __Role Attribute $climatezone
+    @rel __Role Action ClimaticInfluence
+    @result __Bundle $eid $act $fact $clim $rel $ctx
     return $result
 end
 
 @definesRegion:definesRegion graph boundary region
     # Boundary defines region
-    @bound __Role Boundary $boundary
-    @reg __Role Region $region
-    @rel __Role Relation RegionalDefinition
-    @result __Bundle $bound $reg $rel
+    @eid __Event
+    @act __Role Action definesRegion
+    @ctx __Role Context StressCompat
+    @bound __Role Attribute $boundary
+    @reg __Role Attribute $region
+    @rel __Role Action RegionalDefinition
+    @result __Bundle $eid $act $bound $reg $rel $ctx
     return $result
 end
 
 @depositedBy:depositedBy graph sediment agent
     # Sediment deposited by agent
-    @sed __Role Sediment $sediment
+    @eid __Event
+    @act __Role Action depositedBy
+    @ctx __Role Context StressCompat
+    @sed __Role Attribute $sediment
     @agt __Role Agent $agent
-    @rel __Role Relation Deposition
-    @result __Bundle $sed $agt $rel
+    @rel __Role Action Deposition
+    @result __Bundle $eid $act $sed $agt $rel $ctx
     return $result
 end
 
 @depositedIn:depositedIn graph material location
     # Material deposited in location
-    @mat __Role Material $material
+    @eid __Event
+    @act __Role Action depositedIn
+    @ctx __Role Context StressCompat
+    @mat __Role Attribute $material
     @loc __Role Location $location
-    @rel __Role Relation SedimentaryDeposition
-    @result __Bundle $mat $loc $rel
+    @rel __Role Action SedimentaryDeposition
+    @result __Bundle $eid $act $mat $loc $rel $ctx
     return $result
 end
 
 @dividedBy:dividedBy graph region divider
     # Region divided by divider
-    @reg __Role Region $region
-    @div __Role Divider $divider
-    @rel __Role Relation GeographicDivision
-    @result __Bundle $reg $div $rel
+    @eid __Event
+    @act __Role Action dividedBy
+    @ctx __Role Context StressCompat
+    @reg __Role Attribute $region
+    @div __Role Attribute $divider
+    @rel __Role Action GeographicDivision
+    @result __Bundle $eid $act $reg $div $rel $ctx
     return $result
 end
 
 @drainedBy:drainedBy graph region drainagesystem
     # Region drained by system
-    @reg __Role Region $region
-    @drain __Role DrainageSystem $drainagesystem
-    @rel __Role Relation HydrologicalDrainage
-    @result __Bundle $reg $drain $rel
+    @eid __Event
+    @act __Role Action drainedBy
+    @ctx __Role Context StressCompat
+    @reg __Role Attribute $region
+    @drain __Role Attribute $drainagesystem
+    @rel __Role Action HydrologicalDrainage
+    @result __Bundle $eid $act $reg $drain $rel $ctx
     return $result
 end
 
 @duringHurricaneSeason:duringHurricaneSeason graph event season
     # Event during hurricane season
-    @evt __Role Event $event
-    @seas __Role Season $season
-    @rel __Role Relation SeasonalTiming
-    @result __Bundle $evt $seas $rel
+    @eid __Event
+    @act __Role Action duringHurricaneSeason
+    @ctx __Role Context StressCompat
+    @evt __Role Action $event
+    @seas __Role Attribute $season
+    @rel __Role Action SeasonalTiming
+    @result __Bundle $eid $act $evt $seas $rel $ctx
     return $result
 end
 
 @duringSeason:duringSeason graph event season
     # Event during season
-    @evt __Role Event $event
-    @seas __Role Season $season
-    @rel __Role Relation TemporalOccurrence
-    @result __Bundle $evt $seas $rel
+    @eid __Event
+    @act __Role Action duringSeason
+    @ctx __Role Context StressCompat
+    @evt __Role Action $event
+    @seas __Role Attribute $season
+    @rel __Role Action TemporalOccurrence
+    @result __Bundle $eid $act $evt $seas $rel $ctx
     return $result
 end
 
 @emitsGas:emitsGas graph source gas
     # Source emits gas
+    @eid __Event
+    @act __Role Action emitsGas
+    @ctx __Role Context StressCompat
     @src __Role Source $source
-    @gas __Role Gas $gas
-    @rel __Role Relation Emission
-    @result __Bundle $src $gas $rel
+    @gas __Role Attribute $gas
+    @rel __Role Action Emission
+    @result __Bundle $eid $act $src $gas $rel $ctx
     return $result
 end
 
 @emitsMethane:emitsMethane graph source methane
     # Source emits methane
+    @eid __Event
+    @act __Role Action emitsMethane
+    @ctx __Role Context StressCompat
     @src __Role Source $source
-    @meth __Role Methane $methane
-    @rel __Role Relation MethaneEmission
-    @result __Bundle $src $meth $rel
+    @meth __Role Attribute $methane
+    @rel __Role Action MethaneEmission
+    @result __Bundle $eid $act $src $meth $rel $ctx
     return $result
 end
 
 @extendsDistance:extendsDistance graph feature distance
     # Feature extends distance
-    @feat __Role Feature $feature
-    @dist __Role Distance $distance
-    @rel __Role Relation SpatialExtent
-    @result __Bundle $feat $dist $rel
+    @eid __Event
+    @act __Role Action extendsDistance
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @dist __Role Attribute $distance
+    @rel __Role Action SpatialExtent
+    @result __Bundle $eid $act $feat $dist $rel $ctx
     return $result
 end
 
 @extendsInto:extendsInto graph feature region
     # Feature extends into region
-    @feat __Role Feature $feature
-    @reg __Role Region $region
-    @rel __Role Relation SpatialExtension
-    @result __Bundle $feat $reg $rel
+    @eid __Event
+    @act __Role Action extendsInto
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @reg __Role Attribute $region
+    @rel __Role Action SpatialExtension
+    @result __Bundle $eid $act $feat $reg $rel $ctx
     return $result
 end
 
 @facingOcean:facingOcean graph coast ocean
     # Coast facing ocean
-    @coast __Role Coast $coast
-    @ocn __Role Ocean $ocean
-    @rel __Role Relation CoastalOrientation
-    @result __Bundle $coast $ocn $rel
+    @eid __Event
+    @act __Role Action facingOcean
+    @ctx __Role Context StressCompat
+    @coast __Role Attribute $coast
+    @ocn __Role Attribute $ocean
+    @rel __Role Action CoastalOrientation
+    @result __Bundle $eid $act $coast $ocn $rel $ctx
     return $result
 end
 
 @fedBy:fedBy graph waterbody tributary
     # Waterbody fed by tributaries
-    @water __Role Waterbody $waterbody
-    @trib __Role Tributary $tributary
-    @rel __Role Relation HydrologicalSupply
-    @result __Bundle $water $trib $rel
+    @eid __Event
+    @act __Role Action fedBy
+    @ctx __Role Context StressCompat
+    @water __Role Attribute $waterbody
+    @trib __Role Attribute $tributary
+    @rel __Role Action HydrologicalSupply
+    @result __Bundle $eid $act $water $trib $rel $ctx
     return $result
 end
 
 @floatsOn:floatsOn graph ice water
     # Ice floats on water
-    @ice __Role Ice $ice
-    @wat __Role Water $water
-    @rel __Role Relation Flotation
-    @result __Bundle $ice $wat $rel
+    @eid __Event
+    @act __Role Action floatsOn
+    @ctx __Role Context StressCompat
+    @ice __Role Attribute $ice
+    @wat __Role Attribute $water
+    @rel __Role Action Flotation
+    @result __Bundle $eid $act $ice $wat $rel $ctx
     return $result
 end
 
 @flowedFrom:flowedFrom graph water source
     # Water flowed from source
-    @wat __Role Water $water
+    @eid __Event
+    @act __Role Action flowedFrom
+    @ctx __Role Context StressCompat
+    @wat __Role Attribute $water
     @src __Role Source $source
-    @rel __Role Relation HydrologicalOrigin
-    @result __Bundle $wat $src $rel
+    @rel __Role Action HydrologicalOrigin
+    @result __Bundle $eid $act $wat $src $rel $ctx
     return $result
 end
 
 @flowsIn:flowsIn graph entity from to
+    @eid __Event
+    @act __Role Action flowsIn
+    @ctx __Role Context StressCompat
     @e __Role Entity $entity
-    @f __Role From $from
-    @t __Role To $to
-    @movement __Bundle $e $f $t
+    @f __Role Attribute $from
+    @t __Role Attribute $to
+    @movement __Bundle $eid $act $e $f $t $ctx
     return $movement
 end
 
 @flowsInto:flowsInto graph entity from to
+    @eid __Event
+    @act __Role Action flowsInto
+    @ctx __Role Context StressCompat
     @e __Role Entity $entity
-    @f __Role From $from
-    @t __Role To $to
-    @movement __Bundle $e $f $t
+    @f __Role Attribute $from
+    @t __Role Attribute $to
+    @movement __Bundle $eid $act $e $f $t $ctx
     return $movement
 end
 
 @flowsThrough:flowsThrough graph entity from to
+    @eid __Event
+    @act __Role Action flowsThrough
+    @ctx __Role Context StressCompat
     @e __Role Entity $entity
-    @f __Role From $from
-    @t __Role To $to
-    @movement __Bundle $e $f $t
+    @f __Role Attribute $from
+    @t __Role Attribute $to
+    @movement __Bundle $eid $act $e $f $t $ctx
     return $movement
 end
 
 @followsDisturbance:followsDisturbance graph response disturbance
     # Response follows disturbance
-    @resp __Role Response $response
-    @dist __Role Disturbance $disturbance
-    @rel __Role Relation DisturbanceResponse
-    @result __Bundle $resp $dist $rel
+    @eid __Event
+    @act __Role Action followsDisturbance
+    @ctx __Role Context StressCompat
+    @resp __Role Attribute $response
+    @dist __Role Attribute $disturbance
+    @rel __Role Action DisturbanceResponse
+    @result __Bundle $eid $act $resp $dist $rel $ctx
     return $result
 end
 
 @followsRoute:followsRoute graph path route
     # Path follows route
-    @path __Role Path $path
-    @rte __Role Route $route
-    @rel __Role Relation RouteFollowing
-    @result __Bundle $path $rte $rel
+    @eid __Event
+    @act __Role Action followsRoute
+    @ctx __Role Context StressCompat
+    @path __Role Attribute $path
+    @rte __Role Attribute $route
+    @rel __Role Action RouteFollowing
+    @result __Bundle $eid $act $path $rte $rel $ctx
     return $result
 end
 
 @formedBy:formedBy graph landform process
     # Landform formed by process
-    @land __Role Landform $landform
-    @proc __Role GeologicalProcess $process
-    @rel __Role Relation GeologicalFormation
-    @result __Bundle $land $proc $rel
+    @eid __Event
+    @act __Role Action formedBy
+    @ctx __Role Context StressCompat
+    @land __Role Attribute $landform
+    @proc __Role Attribute $process
+    @rel __Role Action GeologicalFormation
+    @result __Bundle $eid $act $land $proc $rel $ctx
     return $result
 end
 
 @formedByGlacier:formedByGlacier graph landform glacier
     # Landform formed by glacier
-    @land __Role Landform $landform
-    @glac __Role Glacier $glacier
-    @rel __Role Relation GlacialFormation
-    @result __Bundle $land $glac $rel
+    @eid __Event
+    @act __Role Action formedByGlacier
+    @ctx __Role Context StressCompat
+    @land __Role Attribute $landform
+    @glac __Role Attribute $glacier
+    @rel __Role Action GlacialFormation
+    @result __Bundle $eid $act $land $glac $rel $ctx
     return $result
 end
 
 @formedByPlate:formedByPlate graph feature plate
     # Feature formed by tectonic plate
-    @feat __Role Feature $feature
-    @plt __Role TectonicPlate $plate
-    @rel __Role Relation TectonicFormation
-    @result __Bundle $feat $plt $rel
+    @eid __Event
+    @act __Role Action formedByPlate
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @plt __Role Attribute $plate
+    @rel __Role Action TectonicFormation
+    @result __Bundle $eid $act $feat $plt $rel $ctx
     return $result
 end
 
 @formedFrom:formedFrom graph rock material
     # Rock formed from material
-    @rock __Role Rock $rock
-    @mat __Role Material $material
-    @rel __Role Relation GeologicalComposition
-    @result __Bundle $rock $mat $rel
+    @eid __Event
+    @act __Role Action formedFrom
+    @ctx __Role Context StressCompat
+    @rock __Role Attribute $rock
+    @mat __Role Attribute $material
+    @rel __Role Action GeologicalComposition
+    @result __Bundle $eid $act $rock $mat $rel $ctx
     return $result
 end
 
@@ -615,28 +786,37 @@ end
 
 @foundOn:foundOn graph species location
     # Species found on location
-    @spec __Role Species $species
+    @eid __Event
+    @act __Role Action foundOn
+    @ctx __Role Context StressCompat
+    @spec __Role Attribute $species
     @loc __Role Location $location
-    @rel __Role Relation Distribution
-    @result __Bundle $spec $loc $rel
+    @rel __Role Action Distribution
+    @result __Bundle $eid $act $spec $loc $rel $ctx
     return $result
 end
 
 @foundOnIsland:foundOnIsland graph species island
     # Species found on island
-    @spec __Role Species $species
-    @isl __Role Island $island
-    @rel __Role Relation IslandDistribution
-    @result __Bundle $spec $isl $rel
+    @eid __Event
+    @act __Role Action foundOnIsland
+    @ctx __Role Context StressCompat
+    @spec __Role Attribute $species
+    @isl __Role Attribute $island
+    @rel __Role Action IslandDistribution
+    @result __Bundle $eid $act $spec $isl $rel $ctx
     return $result
 end
 
 @fromPeriod:fromPeriod graph artifact timeperiod
     # Artifact from period
-    @art __Role Artifact $artifact
-    @time __Role TimePeriod $timeperiod
-    @rel __Role Relation TemporalOrigin
-    @result __Bundle $art $time $rel
+    @eid __Event
+    @act __Role Action fromPeriod
+    @ctx __Role Context StressCompat
+    @art __Role Attribute $artifact
+    @time __Role Attribute $timeperiod
+    @rel __Role Action TemporalOrigin
+    @result __Bundle $eid $act $art $time $rel $ctx
     return $result
 end
 
@@ -1643,109 +1823,145 @@ end
 
 @headquarteredIn:headquarteredIn graph organization location
     # Organization headquartered in location
-    @org __Role Organization $organization
+    @eid __Event
+    @act __Role Action headquarteredIn
+    @ctx __Role Context StressCompat
+    @org __Role Attribute $organization
     @loc __Role Location $location
-    @rel __Role Relation Headquarters
-    @result __Bundle $org $loc $rel
+    @rel __Role Action Headquarters
+    @result __Bundle $eid $act $org $loc $rel $ctx
     return $result
 end
 
 @hostsEvents:hostsEvents graph venue events
     # Venue hosts events
-    @ven __Role Venue $venue
-    @evts __Role Events $events
-    @rel __Role Relation EventHosting
-    @result __Bundle $ven $evts $rel
+    @eid __Event
+    @act __Role Action hostsEvents
+    @ctx __Role Context StressCompat
+    @ven __Role Attribute $venue
+    @evts __Role Attribute $events
+    @rel __Role Action EventHosting
+    @result __Bundle $eid $act $ven $evts $rel $ctx
     return $result
 end
 
 @inKarstArea:inKarstArea graph feature karstregion
     # Feature in karst area
-    @feat __Role Feature $feature
-    @karst __Role KarstRegion $karstregion
-    @rel __Role Relation KarstLocation
-    @result __Bundle $feat $karst $rel
+    @eid __Event
+    @act __Role Action inKarstArea
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @karst __Role Attribute $karstregion
+    @rel __Role Action KarstLocation
+    @result __Bundle $eid $act $feat $karst $rel $ctx
     return $result
 end
 
 @includesCities:includesCities graph region city
     # Region includes cities
-    @reg __Role Region $region
-    @cty __Role City $city
-    @rel __Role Relation UrbanInclusion
-    @result __Bundle $reg $cty $rel
+    @eid __Event
+    @act __Role Action includesCities
+    @ctx __Role Context StressCompat
+    @reg __Role Attribute $region
+    @cty __Role Attribute $city
+    @rel __Role Action UrbanInclusion
+    @result __Bundle $eid $act $reg $cty $rel $ctx
     return $result
 end
 
 @includesCountries:includesCountries graph region country
     # Region includes countries
-    @reg __Role Region $region
-    @ctry __Role Country $country
-    @rel __Role Relation PoliticalInclusion
-    @result __Bundle $reg $ctry $rel
+    @eid __Event
+    @act __Role Action includesCountries
+    @ctx __Role Context StressCompat
+    @reg __Role Attribute $region
+    @ctry __Role Attribute $country
+    @rel __Role Action PoliticalInclusion
+    @result __Bundle $eid $act $reg $ctry $rel $ctx
     return $result
 end
 
 @indicatesHealth:indicatesHealth graph indicator ecosystemhealth
     # Indicator indicates health
-    @ind __Role Indicator $indicator
-    @health __Role EcosystemHealth $ecosystemhealth
-    @rel __Role Relation HealthAssessment
-    @result __Bundle $ind $health $rel
+    @eid __Event
+    @act __Role Action indicatesHealth
+    @ctx __Role Context StressCompat
+    @ind __Role Attribute $indicator
+    @health __Role Attribute $ecosystemhealth
+    @rel __Role Action HealthAssessment
+    @result __Bundle $eid $act $ind $health $rel $ctx
     return $result
 end
 
 @inhabits:inhabits graph species habitat
     # Species inhabits habitat
-    @spec __Role Species $species
-    @hab __Role Habitat $habitat
-    @rel __Role Relation Habitation
-    @result __Bundle $spec $hab $rel
+    @eid __Event
+    @act __Role Action inhabits
+    @ctx __Role Context StressCompat
+    @spec __Role Attribute $species
+    @hab __Role Attribute $habitat
+    @rel __Role Action Habitation
+    @result __Bundle $eid $act $spec $hab $rel $ctx
     return $result
 end
 
 @inhabitsForest:inhabitsForest graph species forest
     # Species inhabits forest
-    @spec __Role Species $species
-    @for __Role Forest $forest
-    @rel __Role Relation ForestHabitation
-    @result __Bundle $spec $for $rel
+    @eid __Event
+    @act __Role Action inhabitsForest
+    @ctx __Role Context StressCompat
+    @spec __Role Attribute $species
+    @for __Role Attribute $forest
+    @rel __Role Action ForestHabitation
+    @result __Bundle $eid $act $spec $for $rel $ctx
     return $result
 end
 
 @inhabitsOcean:inhabitsOcean graph species ocean
     # Species inhabits ocean
-    @spec __Role Species $species
-    @ocn __Role Ocean $ocean
-    @rel __Role Relation MarineHabitation
-    @result __Bundle $spec $ocn $rel
+    @eid __Event
+    @act __Role Action inhabitsOcean
+    @ctx __Role Context StressCompat
+    @spec __Role Attribute $species
+    @ocn __Role Attribute $ocean
+    @rel __Role Action MarineHabitation
+    @result __Bundle $eid $act $spec $ocn $rel $ctx
     return $result
 end
 
 @introducedTo:introducedTo graph species region
     # Species introduced to region
-    @spec __Role Species $species
-    @reg __Role Region $region
-    @rel __Role Relation SpeciesIntroduction
-    @result __Bundle $spec $reg $rel
+    @eid __Event
+    @act __Role Action introducedTo
+    @ctx __Role Context StressCompat
+    @spec __Role Attribute $species
+    @reg __Role Attribute $region
+    @rel __Role Action SpeciesIntroduction
+    @result __Bundle $eid $act $spec $reg $rel $ctx
     return $result
 end
 
 @involvesPlate:involvesPlate graph process plate
     # Process involves tectonic plate
+    @eid __Event
+    @act __Role Action involvesPlate
+    @ctx __Role Context StressCompat
     @proc __Role Process $process
-    @plt __Role TectonicPlate $plate
-    @rel __Role Relation TectonicActivity
-    @result __Bundle $proc $plt $rel
+    @plt __Role Attribute $plate
+    @rel __Role Action TectonicActivity
+    @result __Bundle $eid $act $proc $plt $rel $ctx
     return $result
 end
 
 @involvesSpecies:involvesSpecies graph process species
     # Process involves species
+    @eid __Event
+    @act __Role Action involvesSpecies
+    @ctx __Role Context StressCompat
     @proc __Role Process $process
-    @spec __Role Species $species
-    @rel __Role Relation SpeciesInvolvement
-    @result __Bundle $proc $spec $rel
+    @spec __Role Attribute $species
+    @rel __Role Action SpeciesInvolvement
+    @result __Bundle $eid $act $proc $spec $rel $ctx
     return $result
 end
 
@@ -1758,53 +1974,68 @@ end
 
 @leadsToDestination:leadsToDestination graph cause effect
     @c __Role Cause $cause
-    @e __Role Effect $effect
+    @e __Role Result $effect
     @causation __Pair $c $e
     return $causation
 end
 
 @livesIn:livesIn graph organism environment
     # Organism lives in environment
-    @org __Role Organism $organism
+    @eid __Event
+    @act __Role Action livesIn
+    @ctx __Role Context StressCompat
+    @org __Role Attribute $organism
     @env __Role Environment $environment
-    @rel __Role Relation EcologicalHabitation
-    @result __Bundle $org $env $rel
+    @rel __Role Action EcologicalHabitation
+    @result __Bundle $eid $act $org $env $rel $ctx
     return $result
 end
 
 @locatedAt:locatedAt graph feature location
     # Feature located at position
-    @feat __Role Feature $feature
+    @eid __Event
+    @act __Role Action locatedAt
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
     @loc __Role Location $location
-    @rel __Role Relation SpatialPosition
-    @result __Bundle $feat $loc $rel
+    @rel __Role Action SpatialPosition
+    @result __Bundle $eid $act $feat $loc $rel $ctx
     return $result
 end
 
 @locatedOff:locatedOff graph feature reference
     # Feature located off reference
-    @feat __Role Feature $feature
-    @ref __Role Reference $reference
-    @rel __Role Relation OffshorePosition
-    @result __Bundle $feat $ref $rel
+    @eid __Event
+    @act __Role Action locatedOff
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @ref __Role Attribute $reference
+    @rel __Role Action OffshorePosition
+    @result __Bundle $eid $act $feat $ref $rel $ctx
     return $result
 end
 
 @locatedOn:locatedOn graph feature surface
     # Feature located on surface
-    @feat __Role Feature $feature
-    @surf __Role Surface $surface
-    @rel __Role Relation SurfacePosition
-    @result __Bundle $feat $surf $rel
+    @eid __Event
+    @act __Role Action locatedOn
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @surf __Role Attribute $surface
+    @rel __Role Action SurfacePosition
+    @result __Bundle $eid $act $feat $surf $rel $ctx
     return $result
 end
 
 @locatedUnder:locatedUnder graph feature surface
     # Feature located under surface
-    @feat __Role Feature $feature
-    @surf __Role Surface $surface
-    @rel __Role Relation SubsurfacePosition
-    @result __Bundle $feat $surf $rel
+    @eid __Event
+    @act __Role Action locatedUnder
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @surf __Role Attribute $surface
+    @rel __Role Action SubsurfacePosition
+    @result __Bundle $eid $act $feat $surf $rel $ctx
     return $result
 end
 
@@ -1817,53 +2048,68 @@ end
 
 @meetsOcean:meetsOcean graph river ocean
     # River meets ocean
-    @riv __Role River $river
-    @ocn __Role Ocean $ocean
-    @rel __Role Relation Confluence
-    @result __Bundle $riv $ocn $rel
+    @eid __Event
+    @act __Role Action meetsOcean
+    @ctx __Role Context StressCompat
+    @riv __Role Attribute $river
+    @ocn __Role Attribute $ocean
+    @rel __Role Action Confluence
+    @result __Bundle $eid $act $riv $ocn $rel $ctx
     return $result
 end
 
 @mergesCities:mergesCities graph feature cities
     # Feature merges cities
-    @feat __Role Feature $feature
-    @cties __Role Cities $cities
-    @rel __Role Relation UrbanMerger
-    @result __Bundle $feat $cties $rel
+    @eid __Event
+    @act __Role Action mergesCities
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @cties __Role Attribute $cities
+    @rel __Role Action UrbanMerger
+    @result __Bundle $eid $act $feat $cties $rel $ctx
     return $result
 end
 
 @monitorsActivity:monitorsActivity graph system activity
     # System monitors activity
-    @sys __Role System $system
-    @act __Role Activity $activity
-    @rel __Role Relation ActivityMonitoring
-    @result __Bundle $sys $act $rel
+    @eid __Event
+    @act2 __Role Action monitorsActivity
+    @ctx __Role Context StressCompat
+    @sys __Role Structure $system
+    @act __Role Attribute $activity
+    @rel __Role Action ActivityMonitoring
+    @result __Bundle $eid $act2 $sys $act $rel $ctx
     return $result
 end
 
 @monitorsQuality:monitorsQuality graph system quality
     # System monitors quality
-    @sys __Role System $system
-    @qual __Role Quality $quality
-    @rel __Role Relation QualityMonitoring
-    @result __Bundle $sys $qual $rel
+    @eid __Event
+    @act __Role Action monitorsQuality
+    @ctx __Role Context StressCompat
+    @sys __Role Structure $system
+    @qual __Role Attribute $quality
+    @rel __Role Action QualityMonitoring
+    @result __Bundle $eid $act $sys $qual $rel $ctx
     return $result
 end
 
 @nearCoast:nearCoast graph entity reference
     @e __Role Entity $entity
-    @r __Role Reference $reference
+    @r __Role Attribute $reference
     @spatial __Pair $e $r
     return $spatial
 end
 
 @observedIn:observedIn graph phenomenon location
     # Phenomenon observed in location
-    @phen __Role Phenomenon $phenomenon
+    @eid __Event
+    @act __Role Action observedIn
+    @ctx __Role Context StressCompat
+    @phen __Role Attribute $phenomenon
     @loc __Role Location $location
-    @rel __Role Relation SpatialObservation
-    @result __Bundle $phen $loc $rel
+    @rel __Role Action SpatialObservation
+    @result __Bundle $eid $act $phen $loc $rel $ctx
     return $result
 end
 
@@ -1876,175 +2122,226 @@ end
 
 @occursOn:occursOn graph event location
     # Event occurs on location
-    @evt __Role Event $event
+    @eid __Event
+    @act __Role Action occursOn
+    @ctx __Role Context StressCompat
+    @evt __Role Action $event
     @loc __Role Location $location
-    @rel __Role Relation EventOccurrence
-    @result __Bundle $evt $loc $rel
+    @rel __Role Action EventOccurrence
+    @result __Bundle $eid $act $evt $loc $rel $ctx
     return $result
 end
 
 @parallelsCoast:parallelsCoast graph feature coast
     # Feature parallels coast
-    @feat __Role Feature $feature
-    @coast __Role Coast $coast
-    @rel __Role Relation CoastalParallelism
-    @result __Bundle $feat $coast $rel
+    @eid __Event
+    @act __Role Action parallelsCoast
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @coast __Role Attribute $coast
+    @rel __Role Action CoastalParallelism
+    @result __Bundle $eid $act $feat $coast $rel $ctx
     return $result
 end
 
 @participatesIn:participatesIn graph entity activity
     # Entity participates in activity
+    @eid __Event
+    @act2 __Role Action participatesIn
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @act __Role Activity $activity
-    @rel __Role Relation Participation
-    @result __Bundle $ent $act $rel
+    @act __Role Attribute $activity
+    @rel __Role Action Participation
+    @result __Bundle $eid $act2 $ent $act $rel $ctx
     return $result
 end
 
 @passesThrough:passesThrough graph route region
     # Route passes through region
-    @rte __Role Route $route
-    @reg __Role Region $region
-    @rel __Role Relation Transit
-    @result __Bundle $rte $reg $rel
+    @eid __Event
+    @act __Role Action passesThrough
+    @ctx __Role Context StressCompat
+    @rte __Role Attribute $route
+    @reg __Role Attribute $region
+    @rel __Role Action Transit
+    @result __Bundle $eid $act $rte $reg $rel $ctx
     return $result
 end
 
 @performedBy:performedBy graph activity agent
     # Activity performed by agent
-    @act __Role Activity $activity
+    @eid __Event
+    @act2 __Role Action performedBy
+    @ctx __Role Context StressCompat
+    @act __Role Attribute $activity
     @agt __Role Agent $agent
-    @rel __Role Relation AgentPerformance
-    @result __Bundle $act $agt $rel
+    @rel __Role Action AgentPerformance
+    @result __Bundle $eid $act2 $act $agt $rel $ctx
     return $result
 end
 
 @performsAstronomy:performsAstronomy graph facility astronomy
     # Facility performs astronomy
-    @fac __Role Facility $facility
-    @astro __Role Astronomy $astronomy
-    @rel __Role Relation AstronomicalResearch
-    @result __Bundle $fac $astro $rel
+    @eid __Event
+    @act __Role Action performsAstronomy
+    @ctx __Role Context StressCompat
+    @fac __Role Attribute $facility
+    @astro __Role Attribute $astronomy
+    @rel __Role Action AstronomicalResearch
+    @result __Bundle $eid $act $fac $astro $rel $ctx
     return $result
 end
 
 @performsLaunches:performsLaunches graph facility launches
     # Facility performs launches
-    @fac __Role Facility $facility
-    @launch __Role Launches $launches
-    @rel __Role Relation SpaceLaunch
-    @result __Bundle $fac $launch $rel
+    @eid __Event
+    @act __Role Action performsLaunches
+    @ctx __Role Context StressCompat
+    @fac __Role Attribute $facility
+    @launch __Role Attribute $launches
+    @rel __Role Action SpaceLaunch
+    @result __Bundle $eid $act $fac $launch $rel $ctx
     return $result
 end
 
 @plantsTreeCount:plantsTreeCount graph project treecount
     # Project plants tree count
-    @proj __Role Project $project
-    @trees __Role TreeCount $treecount
-    @rel __Role Relation Reforestation
-    @result __Bundle $proj $trees $rel
+    @eid __Event
+    @act __Role Action plantsTreeCount
+    @ctx __Role Context StressCompat
+    @proj __Role Attribute $project
+    @trees __Role Attribute $treecount
+    @rel __Role Action Reforestation
+    @result __Bundle $eid $act $proj $trees $rel $ctx
     return $result
 end
 
 @practicedIn:practicedIn graph activity region
     # Activity practiced in region
-    @act __Role Activity $activity
-    @reg __Role Region $region
-    @rel __Role Relation CulturalPractice
-    @result __Bundle $act $reg $rel
+    @eid __Event
+    @act2 __Role Action practicedIn
+    @ctx __Role Context StressCompat
+    @act __Role Attribute $activity
+    @reg __Role Attribute $region
+    @rel __Role Action CulturalPractice
+    @result __Bundle $eid $act2 $act $reg $rel $ctx
     return $result
 end
 
 @processesClearance:processesClearance graph facility clearance
     # Facility processes clearance
-    @fac __Role Facility $facility
-    @clear __Role Clearance $clearance
-    @rel __Role Relation ClearanceProcessing
-    @result __Bundle $fac $clear $rel
+    @eid __Event
+    @act __Role Action processesClearance
+    @ctx __Role Context StressCompat
+    @fac __Role Attribute $facility
+    @clear __Role Attribute $clearance
+    @rel __Role Action ClearanceProcessing
+    @result __Bundle $eid $act $fac $clear $rel $ctx
     return $result
 end
 
 @processesImmigration:processesImmigration graph facility immigration
     # Facility processes immigration
-    @fac __Role Facility $facility
-    @immig __Role Immigration $immigration
-    @rel __Role Relation ImmigrationProcessing
-    @result __Bundle $fac $immig $rel
+    @eid __Event
+    @act __Role Action processesImmigration
+    @ctx __Role Context StressCompat
+    @fac __Role Attribute $facility
+    @immig __Role Attribute $immigration
+    @rel __Role Action ImmigrationProcessing
+    @result __Bundle $eid $act $fac $immig $rel $ctx
     return $result
 end
 
 @processesMaterials:processesMaterials graph facility materials
     # Facility processes materials
-    @fac __Role Facility $facility
-    @mat __Role Materials $materials
-    @rel __Role Relation MaterialProcessing
-    @result __Bundle $fac $mat $rel
+    @eid __Event
+    @act __Role Action processesMaterials
+    @ctx __Role Context StressCompat
+    @fac __Role Attribute $facility
+    @mat __Role Attribute $materials
+    @rel __Role Action MaterialProcessing
+    @result __Bundle $eid $act $fac $mat $rel $ctx
     return $result
 end
 
 @producesAgricultural:producesAgricultural graph cause effect
     @c __Role Cause $cause
-    @e __Role Effect $effect
+    @e __Role Result $effect
     @causation __Pair $c $e
     return $causation
 end
 
 @producesCO2:producesCO2 graph cause effect
     @c __Role Cause $cause
-    @e __Role Effect $effect
+    @e __Role Result $effect
     @causation __Pair $c $e
     return $causation
 end
 
 @producesOxygen:producesOxygen graph cause effect
     @c __Role Cause $cause
-    @e __Role Effect $effect
+    @e __Role Result $effect
     @causation __Pair $c $e
     return $causation
 end
 
 @protectsCoast:protectsCoast graph measure coast
     # Measure protects coast
-    @meas __Role Measure $measure
-    @coast __Role Coast $coast
-    @rel __Role Relation CoastalProtection
-    @result __Bundle $meas $coast $rel
+    @eid __Event
+    @act __Role Action protectsCoast
+    @ctx __Role Context StressCompat
+    @meas __Role Attribute $measure
+    @coast __Role Attribute $coast
+    @rel __Role Action CoastalProtection
+    @result __Bundle $eid $act $meas $coast $rel $ctx
     return $result
 end
 
 @protectsDesert:protectsDesert graph measure desert
     # Measure protects desert
-    @meas __Role Measure $measure
-    @desert __Role Desert $desert
-    @rel __Role Relation DesertConservation
-    @result __Bundle $meas $desert $rel
+    @eid __Event
+    @act __Role Action protectsDesert
+    @ctx __Role Context StressCompat
+    @meas __Role Attribute $measure
+    @desert __Role Attribute $desert
+    @rel __Role Action DesertConservation
+    @result __Bundle $eid $act $meas $desert $rel $ctx
     return $result
 end
 
 @protectsForest:protectsForest graph measure forest
     # Measure protects forest
-    @meas __Role Measure $measure
-    @forest __Role Forest $forest
-    @rel __Role Relation ForestConservation
-    @result __Bundle $meas $forest $rel
+    @eid __Event
+    @act __Role Action protectsForest
+    @ctx __Role Context StressCompat
+    @meas __Role Attribute $measure
+    @forest __Role Attribute $forest
+    @rel __Role Action ForestConservation
+    @result __Bundle $eid $act $meas $forest $rel $ctx
     return $result
 end
 
 @protectsMountain:protectsMountain graph measure mountain
     # Measure protects mountain
-    @meas __Role Measure $measure
-    @mtn __Role Mountain $mountain
-    @rel __Role Relation MountainConservation
-    @result __Bundle $meas $mtn $rel
+    @eid __Event
+    @act __Role Action protectsMountain
+    @ctx __Role Context StressCompat
+    @meas __Role Attribute $measure
+    @mtn __Role Attribute $mountain
+    @rel __Role Action MountainConservation
+    @result __Bundle $eid $act $meas $mtn $rel $ctx
     return $result
 end
 
 @protectsSpecies:protectsSpecies graph area species
     # Area protects species
-    @area __Role Area $area
-    @spec __Role Species $species
-    @rel __Role Relation Conservation
-    @result __Bundle $area $spec $rel
+    @eid __Event
+    @act __Role Action protectsSpecies
+    @ctx __Role Context StressCompat
+    @area __Role Attribute $area
+    @spec __Role Attribute $species
+    @rel __Role Action Conservation
+    @result __Bundle $eid $act $area $spec $rel $ctx
     return $result
 end
 
@@ -2064,136 +2361,181 @@ end
 
 @releasesNutrients:releasesNutrients graph source nutrients
     # Source releases nutrients
+    @eid __Event
+    @act __Role Action releasesNutrients
+    @ctx __Role Context StressCompat
     @src __Role Source $source
-    @nutr __Role Nutrients $nutrients
-    @rel __Role Relation NutrientRelease
-    @result __Bundle $src $nutr $rel
+    @nutr __Role Attribute $nutrients
+    @rel __Role Action NutrientRelease
+    @result __Bundle $eid $act $src $nutr $rel $ctx
     return $result
 end
 
 @representsCountry:representsCountry graph entity nation
     # Entity represents country
+    @eid __Event
+    @act __Role Action representsCountry
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @nat __Role Nation $nation
-    @rel __Role Relation NationalRepresentation
-    @result __Bundle $ent $nat $rel
+    @nat __Role Attribute $nation
+    @rel __Role Action NationalRepresentation
+    @result __Bundle $eid $act $ent $nat $rel $ctx
     return $result
 end
 
 @representsEcosystem:representsEcosystem graph indicator ecosystem
     # Indicator represents ecosystem
-    @ind __Role Indicator $indicator
-    @eco __Role Ecosystem $ecosystem
-    @rel __Role Relation EcologicalRepresentation
-    @result __Bundle $ind $eco $rel
+    @eid __Event
+    @act __Role Action representsEcosystem
+    @ctx __Role Context StressCompat
+    @ind __Role Attribute $indicator
+    @eco __Role Attribute $ecosystem
+    @rel __Role Action EcologicalRepresentation
+    @result __Bundle $eid $act $ind $eco $rel $ctx
     return $result
 end
 
 @sacredTo:sacredTo graph site religion
     # Site sacred to religion
-    @site __Role Site $site
-    @rel __Role Religion $religion
-    @sacred __Role Relation SacredSignificance
-    @result __Bundle $site $rel $sacred
+    @eid __Event
+    @act __Role Action sacredTo
+    @ctx __Role Context StressCompat
+    @site __Role Attribute $site
+    @rel __Role Attribute $religion
+    @sacred __Role Action SacredSignificance
+    @result __Bundle $eid $act $site $rel $sacred $ctx
     return $result
 end
 
 @separatedFrom:separatedFrom graph region neighbor
     # Region separated from neighbor
-    @reg __Role Region $region
-    @neigh __Role Neighbor $neighbor
-    @sep __Role Relation GeographicSeparation
-    @result __Bundle $reg $neigh $sep
+    @eid __Event
+    @act __Role Action separatedFrom
+    @ctx __Role Context StressCompat
+    @reg __Role Attribute $region
+    @neigh __Role Attribute $neighbor
+    @sep __Role Action GeographicSeparation
+    @result __Bundle $eid $act $reg $neigh $sep $ctx
     return $result
 end
 
 @separatesRivers:separatesRivers graph landform watershed
     # Landform separates rivers
-    @land __Role Landform $landform
-    @water __Role Watershed $watershed
-    @sep __Role Relation HydrologicalDivide
-    @result __Bundle $land $water $sep
+    @eid __Event
+    @act __Role Action separatesRivers
+    @ctx __Role Context StressCompat
+    @land __Role Attribute $landform
+    @water __Role Attribute $watershed
+    @sep __Role Action HydrologicalDivide
+    @result __Bundle $eid $act $land $water $sep $ctx
     return $result
 end
 
 @servesCity:servesCity graph service city
     # Service serves city
-    @serv __Role Service $service
-    @cty __Role City $city
-    @rel __Role Relation UrbanService
-    @result __Bundle $serv $cty $rel
+    @eid __Event
+    @act __Role Action servesCity
+    @ctx __Role Context StressCompat
+    @serv __Role Attribute $service
+    @cty __Role Attribute $city
+    @rel __Role Action UrbanService
+    @result __Bundle $eid $act $serv $cty $rel $ctx
     return $result
 end
 
 @servesCountry:servesCountry graph service nation
     # Service serves country
-    @serv __Role Service $service
-    @nat __Role Nation $nation
-    @rel __Role Relation NationalService
-    @result __Bundle $serv $nat $rel
+    @eid __Event
+    @act __Role Action servesCountry
+    @ctx __Role Context StressCompat
+    @serv __Role Attribute $service
+    @nat __Role Attribute $nation
+    @rel __Role Action NationalService
+    @result __Bundle $eid $act $serv $nat $rel $ctx
     return $result
 end
 
 @servesRegion:servesRegion graph service region
     # Service serves region
-    @serv __Role Service $service
-    @reg __Role Region $region
-    @rel __Role Relation RegionalService
-    @result __Bundle $serv $reg $rel
+    @eid __Event
+    @act __Role Action servesRegion
+    @ctx __Role Context StressCompat
+    @serv __Role Attribute $service
+    @reg __Role Attribute $region
+    @rel __Role Action RegionalService
+    @result __Bundle $eid $act $serv $reg $rel $ctx
     return $result
 end
 
 @shapedByWind:shapedByWind graph landform aeolianprocess
     # Landform shaped by wind
-    @land __Role Landform $landform
-    @wind __Role AeolianProcess $aeolianprocess
-    @rel __Role Relation WindErosion
-    @result __Bundle $land $wind $rel
+    @eid __Event
+    @act __Role Action shapedByWind
+    @ctx __Role Context StressCompat
+    @land __Role Attribute $landform
+    @wind __Role Attribute $aeolianprocess
+    @rel __Role Action WindErosion
+    @result __Bundle $eid $act $land $wind $rel $ctx
     return $result
 end
 
 @sharesBorder:sharesBorder graph region neighbor
     # Regions share common border
-    @reg __Role Region $region
-    @neigh __Role Neighbor $neighbor
-    @border __Role Relation CommonBoundary
-    @result __Bundle $reg $neigh $border
+    @eid __Event
+    @act __Role Action sharesBorder
+    @ctx __Role Context StressCompat
+    @reg __Role Attribute $region
+    @neigh __Role Attribute $neighbor
+    @border __Role Action CommonBoundary
+    @result __Bundle $eid $act $reg $neigh $border $ctx
     return $result
 end
 
 @sharesMaritimeBorder:sharesMaritimeBorder graph country neighbor
     # Countries share maritime boundary
-    @ctry __Role Country $country
-    @neigh __Role Neighbor $neighbor
-    @border __Role Relation MaritimeBoundary
-    @result __Bundle $ctry $neigh $border
+    @eid __Event
+    @act __Role Action sharesMaritimeBorder
+    @ctx __Role Context StressCompat
+    @ctry __Role Attribute $country
+    @neigh __Role Attribute $neighbor
+    @border __Role Action MaritimeBoundary
+    @result __Bundle $eid $act $ctry $neigh $border $ctx
     return $result
 end
 
 @siteOfEvent:siteOfEvent graph location event
     # Location is site of event
+    @eid __Event
+    @act __Role Action siteOfEvent
+    @ctx __Role Context StressCompat
     @loc __Role Location $location
-    @evt __Role Event $event
-    @site __Role Relation HistoricalSite
-    @result __Bundle $loc $evt $site
+    @evt __Role Action $event
+    @site __Role Action HistoricalSite
+    @result __Bundle $eid $act $loc $evt $site $ctx
     return $result
 end
 
 @spokenIn:spokenIn graph language region
     # Language spoken in region
-    @lang __Role Language $language
-    @reg __Role Region $region
-    @ling __Role Relation LinguisticDistribution
-    @result __Bundle $lang $reg $ling
+    @eid __Event
+    @act __Role Action spokenIn
+    @ctx __Role Context StressCompat
+    @lang __Role Attribute $language
+    @reg __Role Attribute $region
+    @ling __Role Action LinguisticDistribution
+    @result __Bundle $eid $act $lang $reg $ling $ctx
     return $result
 end
 
 @suppliesCity:suppliesCity graph source city
     # Source supplies city
+    @eid __Event
+    @act __Role Action suppliesCity
+    @ctx __Role Context StressCompat
     @src __Role Source $source
-    @cty __Role City $city
-    @supply __Role Relation UrbanSupply
-    @result __Bundle $src $cty $supply
+    @cty __Role Attribute $city
+    @supply __Role Action UrbanSupply
+    @result __Bundle $eid $act $src $cty $supply $ctx
     return $result
 end
 
@@ -2206,133 +2548,175 @@ end
 
 @surroundedBy:surroundedBy graph feature boundary
     # Feature surrounded by boundary
-    @feat __Role Feature $feature
-    @bound __Role Boundary $boundary
-    @encl __Role Relation Enclosure
-    @result __Bundle $feat $bound $encl
+    @eid __Event
+    @act __Role Action surroundedBy
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @bound __Role Attribute $boundary
+    @encl __Role Action Enclosure
+    @result __Bundle $eid $act $feat $bound $encl $ctx
     return $result
 end
 
 @surroundsCity:surroundsCity graph feature city
     # Feature surrounds city
-    @feat __Role Feature $feature
-    @cty __Role City $city
-    @encl __Role Relation UrbanEnclosure
-    @result __Bundle $feat $cty $encl
+    @eid __Event
+    @act __Role Action surroundsCity
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @cty __Role Attribute $city
+    @encl __Role Action UrbanEnclosure
+    @result __Bundle $eid $act $feat $cty $encl $ctx
     return $result
 end
 
 @surroundsIsland:surroundsIsland graph feature island
     # Feature surrounds island
-    @feat __Role Feature $feature
-    @isl __Role Island $island
-    @encl __Role Relation IslandEnclosure
-    @result __Bundle $feat $isl $encl
+    @eid __Event
+    @act __Role Action surroundsIsland
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @isl __Role Attribute $island
+    @encl __Role Action IslandEnclosure
+    @result __Bundle $eid $act $feat $isl $encl $ctx
     return $result
 end
 
 @targetingRegion:targetingRegion graph activity region
     # Activity targeting region
-    @act __Role Activity $activity
-    @reg __Role Region $region
-    @target __Role Relation RegionalTargeting
-    @result __Bundle $act $reg $target
+    @eid __Event
+    @act2 __Role Action targetingRegion
+    @ctx __Role Context StressCompat
+    @act __Role Attribute $activity
+    @reg __Role Attribute $region
+    @target __Role Action RegionalTargeting
+    @result __Bundle $eid $act2 $act $reg $target $ctx
     return $result
 end
 
 @throughMountain:throughMountain graph entity reference
     @e __Role Entity $entity
-    @r __Role Reference $reference
+    @r __Role Attribute $reference
     @spatial __Pair $e $r
     return $spatial
 end
 
 @transportsResource:transportsResource graph system resource
     # System transports resource
-    @sys __Role System $system
+    @eid __Event
+    @act __Role Action transportsResource
+    @ctx __Role Context StressCompat
+    @sys __Role Structure $system
     @res __Role Resource $resource
-    @trans __Role Relation ResourceTransport
-    @result __Bundle $sys $res $trans
+    @trans __Role Action ResourceTransport
+    @result __Bundle $eid $act $sys $res $trans $ctx
     return $result
 end
 
 @travelsDistance:travelsDistance graph entity from to
+    @eid __Event
+    @act __Role Action travelsDistance
+    @ctx __Role Context StressCompat
     @e __Role Entity $entity
-    @f __Role From $from
-    @t __Role To $to
-    @movement __Bundle $e $f $t
+    @f __Role Attribute $from
+    @t __Role Attribute $to
+    @movement __Bundle $eid $act $e $f $t $ctx
     return $movement
 end
 
 @traversesCountry:traversesCountry graph route country
     # Route traverses country
-    @rte __Role Route $route
-    @ctry __Role Country $country
-    @trav __Role Relation CountryTransit
-    @result __Bundle $rte $ctry $trav
+    @eid __Event
+    @act __Role Action traversesCountry
+    @ctx __Role Context StressCompat
+    @rte __Role Attribute $route
+    @ctry __Role Attribute $country
+    @trav __Role Action CountryTransit
+    @result __Bundle $eid $act $rte $ctry $trav $ctx
     return $result
 end
 
 @unaffectedSpecies:unaffectedSpecies graph impact species
     # Impact unaffected species
-    @imp __Role Impact $impact
-    @spec __Role Species $species
-    @resil __Role Relation EcologicalResilience
-    @result __Bundle $imp $spec $resil
+    @eid __Event
+    @act __Role Action unaffectedSpecies
+    @ctx __Role Context StressCompat
+    @imp __Role Attribute $impact
+    @spec __Role Attribute $species
+    @resil __Role Action EcologicalResilience
+    @result __Bundle $eid $act $imp $spec $resil $ctx
     return $result
 end
 
 @underPlate:underPlate graph feature plate
     # Feature under tectonic plate
-    @feat __Role Feature $feature
-    @plt __Role Plate $plate
-    @sub __Role Relation SubductionZone
-    @result __Bundle $feat $plt $sub
+    @eid __Event
+    @act __Role Action underPlate
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @plt __Role Attribute $plate
+    @sub __Role Action SubductionZone
+    @result __Bundle $eid $act $feat $plt $sub $ctx
     return $result
 end
 
 @underVolcano:underVolcano graph feature volcano
     # Feature under volcano
-    @feat __Role Feature $feature
-    @volc __Role Volcano $volcano
-    @sub __Role Relation VolcanicSubsurface
-    @result __Bundle $feat $volc $sub
+    @eid __Event
+    @act __Role Action underVolcano
+    @ctx __Role Context StressCompat
+    @feat __Role Attribute $feature
+    @volc __Role Attribute $volcano
+    @sub __Role Action VolcanicSubsurface
+    @result __Bundle $eid $act $feat $volc $sub $ctx
     return $result
 end
 
 @underlies:underlies graph layer surface
     # Layer underlies surface
-    @lay __Role Layer $layer
-    @surf __Role Surface $surface
-    @sub __Role Relation Subsurface
-    @result __Bundle $lay $surf $sub
+    @eid __Event
+    @act __Role Action underlies
+    @ctx __Role Context StressCompat
+    @lay __Role Attribute $layer
+    @surf __Role Attribute $surface
+    @sub __Role Action Subsurface
+    @result __Bundle $eid $act $lay $surf $sub $ctx
     return $result
 end
 
 @usedByCivilization:usedByCivilization graph resource civilization
     # Resource used by civilization
+    @eid __Event
+    @act __Role Action usedByCivilization
+    @ctx __Role Context StressCompat
     @res __Role Resource $resource
-    @civ __Role Civilization $civilization
-    @use __Role Relation CulturalUse
-    @result __Bundle $res $civ $use
+    @civ __Role Attribute $civilization
+    @use __Role Action CulturalUse
+    @result __Bundle $eid $act $res $civ $use $ctx
     return $result
 end
 
 @usedByReligion:usedByReligion graph site religion
     # Site used by religion
-    @site __Role Site $site
-    @rel __Role Religion $religion
-    @use __Role Relation ReligiousSignificance
-    @result __Bundle $site $rel $use
+    @eid __Event
+    @act __Role Action usedByReligion
+    @ctx __Role Context StressCompat
+    @site __Role Attribute $site
+    @rel __Role Attribute $religion
+    @use __Role Action ReligiousSignificance
+    @result __Bundle $eid $act $site $rel $use $ctx
     return $result
 end
 
 @usesCurrency:usesCurrency graph country currency
     # Country uses currency
-    @ctry __Role Country $country
-    @curr __Role Currency $currency
-    @monet __Role Relation MonetarySystem
-    @result __Bundle $ctry $curr $monet
+    @eid __Event
+    @act __Role Action usesCurrency
+    @ctx __Role Context StressCompat
+    @ctry __Role Attribute $country
+    @curr __Role Attribute $currency
+    @monet __Role Action MonetarySystem
+    @result __Bundle $eid $act $ctry $curr $monet $ctx
     return $result
 end
 

@@ -4,6 +4,10 @@
 
 # ===== Property/State Macros =====
 
+@Relation:Relation __Relation
+@Capable:Capable __Property
+@Objective:Objective __Category
+
 # hasProperty: entity has permanent property
 # Types: entity:Entity, property:Property
 @HasPropertyMacro:hasProperty graph entity property

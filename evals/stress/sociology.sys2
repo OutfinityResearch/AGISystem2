@@ -580,1220 +580,1742 @@ end
 # Sociology - Additional Missing Operators
 
 @accelerated_by:accelerated_by graph a b
+    @eid __Event
+    @act __Role Action accelerated_by
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @process __Role Process $b
-    @relation __Bundle $actor $process
+    @relation __Bundle $eid $act $actor $process $ctx
     return $relation
 end
 
 @accumulates:accumulates graph a b
+    @eid __Event
+    @act __Role Action accumulates
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @resource __Role Action $b
-    @relation __Bundle $actor $resource
+    @relation __Bundle $eid $act $actor $resource $ctx
     return $relation
 end
 
 @acquired_through:acquired_through graph a b
-    @individual __Role Person $a
+    @eid __Event
+    @act __Role Action acquired_through
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
     @process __Role Process $b
-    @relation __Bundle $individual $process
+    @relation __Bundle $eid $act $individual $process $ctx
     return $relation
 end
 
 @across:across graph a b
-    @actor __Role Actor $a
-    @context __Role Institution $b
-    @relation __Bundle $actor $context
+    @eid __Event
+    @act __Role Action across
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
+    @context __Role Structure $b
+    @relation __Bundle $eid $act $actor $context $ctx
     return $relation
 end
 
 @adopts:adopts graph a b
+    @eid __Event
+    @act __Role Action adopts
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @advocates:advocates graph a b
+    @eid __Event
+    @act __Role Action advocates
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @affected_by:affected_by graph a b
-    @individual __Role Person $a
+    @eid __Event
+    @act __Role Action affected_by
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
     @action __Role Action $b
-    @relation __Bundle $individual $action
+    @relation __Bundle $eid $act $individual $action $ctx
     return $relation
 end
 
 @aims_for:aims_for graph a b
+    @eid __Event
+    @act __Role Action aims_for
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @analyzes:analyzes graph a b
+    @eid __Event
+    @act __Role Action analyzes
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @aspiresToJoin:aspiresToJoin graph a b
-    @individual __Role Person $a
+    @eid __Event
+    @act __Role Action aspiresToJoin
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
     @group __Role Group $b
-    @relation __Bundle $individual $group
+    @relation __Bundle $eid $act $individual $group $ctx
     return $relation
 end
 
 @associated_with:associated_with graph a b
-    @actor __Role Actor $a
-    @context __Role Institution $b
-    @relation __Bundle $actor $context
+    @eid __Event
+    @act __Role Action associated_with
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
+    @context __Role Structure $b
+    @relation __Bundle $eid $act $actor $context $ctx
     return $relation
 end
 
 @assumes:assumes graph a b
+    @eid __Event
+    @act __Role Action assumes
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @role __Role Role $b
-    @relation __Bundle $actor $role
+    @relation __Bundle $eid $act $actor $role $ctx
     return $relation
 end
 
 @awards:awards graph a b
-    @authority __Role Authority $a
-    @individual __Role Person $b
-    @relation __Bundle $authority $individual
+    @eid __Event
+    @act __Role Action awards
+    @ctx __Role Context StressCompat
+    @authority __Role Attribute $a
+    @individual __Role Entity $b
+    @relation __Bundle $eid $act $authority $individual $ctx
     return $relation
 end
 
 @balances:balances graph a b
+    @eid __Event
+    @act __Role Action balances
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @based_on:based_on graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action based_on
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @basis_for:basis_for graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action basis_for
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @carries:carries graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action carries
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @changes:changes graph a b
+    @eid __Event
+    @act __Role Action changes
+    @ctx __Role Context StressCompat
     @agent __Role Agent $a
     @process __Role Process $b
-    @relation __Bundle $agent $process
+    @relation __Bundle $eid $act $agent $process $ctx
     return $relation
 end
 
 @changes_faster:changes_faster graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action changes_faster
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @changes_slower:changes_slower graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action changes_slower
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @characteristic_of:characteristic_of graph a b
-    @actor __Role Actor $a
-    @institution __Role Institution $b
-    @relation __Bundle $actor $institution
+    @eid __Event
+    @act __Role Action characteristic_of
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
+    @institution __Role Structure $b
+    @relation __Bundle $eid $act $actor $institution $ctx
     return $relation
 end
 
 @characterized_by:characterized_by graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action characterized_by
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @characterizes:characterizes graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action characterizes
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @claims:claims graph a b
+    @eid __Event
+    @act __Role Action claims
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @combined_with:combined_with graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action combined_with
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @committed_by:committed_by graph a b
+    @eid __Event
+    @act __Role Action committed_by
+    @ctx __Role Context StressCompat
     @action __Role Action $a
-    @actor __Role Actor $b
-    @relation __Bundle $action $actor
+    @actor __Role Attribute $b
+    @relation __Bundle $eid $act $action $actor $ctx
     return $relation
 end
 
 @committed_in:committed_in graph a b
+    @eid __Event
+    @act __Role Action committed_in
+    @ctx __Role Context StressCompat
     @action __Role Action $a
-    @context __Role Institution $b
-    @relation __Bundle $action $context
+    @context __Role Structure $b
+    @relation __Bundle $eid $act $action $context $ctx
     return $relation
 end
 
 @concerns:concerns graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action concerns
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @confers:confers graph a b
-    @authority __Role Authority $a
-    @individual __Role Person $b
-    @relation __Bundle $authority $individual
+    @eid __Event
+    @act __Role Action confers
+    @ctx __Role Context StressCompat
+    @authority __Role Attribute $a
+    @individual __Role Entity $b
+    @relation __Bundle $eid $act $authority $individual $ctx
     return $relation
 end
 
 @conferspower:conferspower graph a b
-    @status __Role Status $a
-    @authority __Role Authority $b
-    @relation __Bundle $status $authority
+    @eid __Event
+    @act __Role Action conferspower
+    @ctx __Role Context StressCompat
+    @status __Role State $a
+    @authority __Role Attribute $b
+    @relation __Bundle $eid $act $status $authority $ctx
     return $relation
 end
 
 @connectsVia:connectsVia graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action connectsVia
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @considered:considered graph a b
-    @actor __Role Actor $a
-    @status __Role Status $b
-    @relation __Bundle $actor $status
+    @eid __Event
+    @act __Role Action considered
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
+    @status __Role State $b
+    @relation __Bundle $eid $act $actor $status $ctx
     return $relation
 end
 
 @considers:considers graph a b
+    @eid __Event
+    @act __Role Action considers
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @consistsOf:consistsOf graph a b
+    @eid __Event
+    @act __Role Action consistsOf
+    @ctx __Role Context StressCompat
     @group __Role Group $a
-    @member __Role Member $b
-    @relation __Bundle $group $member
+    @member __Role Attribute $b
+    @relation __Bundle $eid $act $group $member $ctx
     return $relation
 end
 
 @constructs:constructs graph a b
-    @society __Role Society $a
+    @eid __Event
+    @act __Role Action constructs
+    @ctx __Role Context StressCompat
+    @society __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $society $action
+    @relation __Bundle $eid $act $society $action $ctx
     return $relation
 end
 
 @controls:controls graph a b
-    @authority __Role Authority $a
-    @subordinate __Role Subordinate $b
-    @relation __Bundle $authority $subordinate
+    @eid __Event
+    @act __Role Action controls
+    @ctx __Role Context StressCompat
+    @authority __Role Attribute $a
+    @subordinate __Role Attribute $b
+    @relation __Bundle $eid $act $authority $subordinate $ctx
     return $relation
 end
 
 @createsIdentity:createsIdentity graph a b
+    @eid __Event
+    @act __Role Action createsIdentity
+    @ctx __Role Context StressCompat
     @group __Role Group $a
-    @individual __Role Person $b
-    @relation __Bundle $group $individual
+    @individual __Role Entity $b
+    @relation __Bundle $eid $act $group $individual $ctx
     return $relation
 end
 
 @critiques:critiques graph a b
+    @eid __Event
+    @act __Role Action critiques
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @define:define graph a b
+    @eid __Event
+    @act __Role Action define
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @defines:defines graph a b
+    @eid __Event
+    @act __Role Action defines
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @definesBoundary:definesBoundary graph a b
+    @eid __Event
+    @act __Role Action definesBoundary
+    @ctx __Role Context StressCompat
     @group __Role Group $a
     @action __Role Action $b
-    @relation __Bundle $group $action
+    @relation __Bundle $eid $act $group $action $ctx
     return $relation
 end
 
 @depends_on:depends_on graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action depends_on
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @depletes:depletes graph a b
+    @eid __Event
+    @act __Role Action depletes
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @determinedBy:determinedBy graph a b
-    @individual __Role Person $a
+    @eid __Event
+    @act __Role Action determinedBy
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
     @action __Role Action $b
-    @relation __Bundle $individual $action
+    @relation __Bundle $eid $act $individual $action $ctx
     return $relation
 end
 
 @determined_by:determined_by graph a b
-    @individual __Role Person $a
+    @eid __Event
+    @act __Role Action determined_by
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
     @action __Role Action $b
-    @relation __Bundle $individual $action
+    @relation __Bundle $eid $act $individual $action $ctx
     return $relation
 end
 
 @developed_by:developed_by graph a b
+    @eid __Event
+    @act __Role Action developed_by
+    @ctx __Role Context StressCompat
     @action __Role Action $a
     @actor __Role Agent $b
-    @relation __Bundle $action $actor
+    @relation __Bundle $eid $act $action $actor $ctx
     return $relation
 end
 
 @developsIdentity:developsIdentity graph a b
-    @individual __Role Person $a
+    @eid __Event
+    @act __Role Action developsIdentity
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
     @group __Role Group $b
-    @relation __Bundle $individual $group
+    @relation __Bundle $eid $act $individual $group $ctx
     return $relation
 end
 
 @developsStereotypes:developsStereotypes graph a b
+    @eid __Event
+    @act __Role Action developsStereotypes
+    @ctx __Role Context StressCompat
     @group __Role Group $a
     @action __Role Action $b
-    @relation __Bundle $group $action
+    @relation __Bundle $eid $act $group $action $ctx
     return $relation
 end
 
 @displays:displays graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action displays
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @distinct_from:distinct_from graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action distinct_from
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @distinguishes:distinguishes graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action distinguishes
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @dominated_by:dominated_by graph a b
-    @subordinate __Role Subordinate $a
-    @authority __Role Authority $b
-    @relation __Bundle $subordinate $authority
+    @eid __Event
+    @act __Role Action dominated_by
+    @ctx __Role Context StressCompat
+    @subordinate __Role Attribute $a
+    @authority __Role Attribute $b
+    @relation __Bundle $eid $act $subordinate $authority $ctx
     return $relation
 end
 
 @driven_by:driven_by graph a b
+    @eid __Event
+    @act __Role Action driven_by
+    @ctx __Role Context StressCompat
     @process __Role Process $a
     @agent __Role Agent $b
-    @relation __Bundle $process $agent
+    @relation __Bundle $eid $act $process $agent $ctx
     return $relation
 end
 
 @embedded_in:embedded_in graph a b
-    @actor __Role Actor $a
-    @institution __Role Institution $b
-    @relation __Bundle $actor $institution
+    @eid __Event
+    @act __Role Action embedded_in
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
+    @institution __Role Structure $b
+    @relation __Bundle $eid $act $actor $institution $ctx
     return $relation
 end
 
 @encourages:encourages graph a b
+    @eid __Event
+    @act __Role Action encourages
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @enforced_by:enforced_by graph a b
+    @eid __Event
+    @act __Role Action enforced_by
+    @ctx __Role Context StressCompat
     @action __Role Action $a
-    @authority __Role Authority $b
-    @relation __Bundle $action $authority
+    @authority __Role Attribute $b
+    @relation __Bundle $eid $act $action $authority $ctx
     return $relation
 end
 
 @enforced_with:enforced_with graph a b
+    @eid __Event
+    @act __Role Action enforced_with
+    @ctx __Role Context StressCompat
     @action __Role Action $a
     @process __Role Process $b
-    @relation __Bundle $action $process
+    @relation __Bundle $eid $act $action $process $ctx
     return $relation
 end
 
 @establishes:establishes graph a b
+    @eid __Event
+    @act __Role Action establishes
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @evaluatesSelf:evaluatesSelf graph a b
-    @individual __Role Person $a
+    @eid __Event
+    @act __Role Action evaluatesSelf
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
     @action __Role Action $b
-    @relation __Bundle $individual $action
+    @relation __Bundle $eid $act $individual $action $ctx
     return $relation
 end
 
 @exacerbates:exacerbates graph a b
+    @eid __Event
+    @act __Role Action exacerbates
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @exceeds:exceeds graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action exceeds
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @exercised_by:exercised_by graph a b
+    @eid __Event
+    @act __Role Action exercised_by
+    @ctx __Role Context StressCompat
     @action __Role Action $a
-    @authority __Role Authority $b
-    @relation __Bundle $action $authority
+    @authority __Role Attribute $b
+    @relation __Bundle $eid $act $action $authority $ctx
     return $relation
 end
 
 @exercised_through:exercised_through graph a b
+    @eid __Event
+    @act __Role Action exercised_through
+    @ctx __Role Context StressCompat
     @action __Role Action $a
     @process __Role Process $b
-    @relation __Bundle $action $process
+    @relation __Bundle $eid $act $action $process $ctx
     return $relation
 end
 
 @exercises:exercises graph a b
-    @authority __Role Authority $a
+    @eid __Event
+    @act __Role Action exercises
+    @ctx __Role Context StressCompat
+    @authority __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $authority $action
+    @relation __Bundle $eid $act $authority $action $ctx
     return $relation
 end
 
 @exerts:exerts graph a b
+    @eid __Event
+    @act __Role Action exerts
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @exists_between:exists_between graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action exists_between
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @exists_on:exists_on graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action exists_on
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @exploits:exploits graph a b
-    @authority __Role Authority $a
-    @subordinate __Role Subordinate $b
-    @relation __Bundle $authority $subordinate
+    @eid __Event
+    @act __Role Action exploits
+    @ctx __Role Context StressCompat
+    @authority __Role Attribute $a
+    @subordinate __Role Attribute $b
+    @relation __Bundle $eid $act $authority $subordinate $ctx
     return $relation
 end
 
 @exposes_to:exposes_to graph a b
+    @eid __Event
+    @act __Role Action exposes_to
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @features:features graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action features
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @feels:feels graph a b
-    @individual __Role Person $a
+    @eid __Event
+    @act __Role Action feels
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
     @action __Role Action $b
-    @relation __Bundle $individual $action
+    @relation __Bundle $eid $act $individual $action $ctx
     return $relation
 end
 
 @final_stage:final_stage graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action final_stage
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @process __Role Process $b
-    @relation __Bundle $actor $process
+    @relation __Bundle $eid $act $actor $process $ctx
     return $relation
 end
 
 @focuses_on:focuses_on graph a b
+    @eid __Event
+    @act __Role Action focuses_on
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @form_of:form_of graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action form_of
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @forms:forms graph a b
+    @eid __Event
+    @act __Role Action forms
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @from:from graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action from
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @gains:gains graph a b
-    @individual __Role Person $a
+    @eid __Event
+    @act __Role Action gains
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
     @action __Role Action $b
-    @relation __Bundle $individual $action
+    @relation __Bundle $eid $act $individual $action $ctx
     return $relation
 end
 
 @govern:govern graph a b
-    @authority __Role Authority $a
-    @subordinate __Role Subordinate $b
-    @relation __Bundle $authority $subordinate
+    @eid __Event
+    @act __Role Action govern
+    @ctx __Role Context StressCompat
+    @authority __Role Attribute $a
+    @subordinate __Role Attribute $b
+    @relation __Bundle $eid $act $authority $subordinate $ctx
     return $relation
 end
 
 @governed_by:governed_by graph a b
-    @subordinate __Role Subordinate $a
-    @authority __Role Authority $b
-    @relation __Bundle $subordinate $authority
+    @eid __Event
+    @act __Role Action governed_by
+    @ctx __Role Context StressCompat
+    @subordinate __Role Attribute $a
+    @authority __Role Attribute $b
+    @relation __Bundle $eid $act $subordinate $authority $ctx
     return $relation
 end
 
 @guides:guides graph a b
+    @eid __Event
+    @act __Role Action guides
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @hasBoundary:hasBoundary graph a b
+    @eid __Event
+    @act __Role Action hasBoundary
+    @ctx __Role Context StressCompat
     @group __Role Group $a
     @action __Role Action $b
-    @relation __Bundle $group $action
+    @relation __Bundle $eid $act $group $action $ctx
     return $relation
 end
 
 @hasCentrality:hasCentrality graph a b
-    @individual __Role Person $a
-    @status __Role Status $b
-    @relation __Bundle $individual $status
+    @eid __Event
+    @act __Role Action hasCentrality
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
+    @status __Role State $b
+    @relation __Bundle $eid $act $individual $status $ctx
     return $relation
 end
 
 @hasCharacteristic:hasCharacteristic graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action hasCharacteristic
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @hasDensity:hasDensity graph a b
+    @eid __Event
+    @act __Role Action hasDensity
+    @ctx __Role Context StressCompat
     @group __Role Group $a
     @action __Role Action $b
-    @relation __Bundle $group $action
+    @relation __Bundle $eid $act $group $action $ctx
     return $relation
 end
 
 @hasDimension:hasDimension graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action hasDimension
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @hasInteractionType:hasInteractionType graph a b
+    @eid __Event
+    @act __Role Action hasInteractionType
+    @ctx __Role Context StressCompat
     @group __Role Group $a
     @action __Role Action $b
-    @relation __Bundle $group $action
+    @relation __Bundle $eid $act $group $action $ctx
     return $relation
 end
 
 @hasMember:hasMember graph a b
+    @eid __Event
+    @act __Role Action hasMember
+    @ctx __Role Context StressCompat
     @group __Role Group $a
-    @member __Role Member $b
-    @relation __Bundle $group $member
+    @member __Role Attribute $b
+    @relation __Bundle $eid $act $group $member $ctx
     return $relation
 end
 
 @hasPurpose:hasPurpose graph a b
+    @eid __Event
+    @act __Role Action hasPurpose
+    @ctx __Role Context StressCompat
     @group __Role Group $a
     @action __Role Action $b
-    @relation __Bundle $group $action
+    @relation __Bundle $eid $act $group $action $ctx
     return $relation
 end
 
 @hasType:hasType graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action hasType
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @has_position:has_position graph a b
-    @individual __Role Person $a
-    @status __Role Status $b
-    @relation __Bundle $individual $status
+    @eid __Event
+    @act __Role Action has_position
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
+    @status __Role State $b
+    @relation __Bundle $eid $act $individual $status $ctx
     return $relation
 end
 
 @idealizes:idealizes graph a b
+    @eid __Event
+    @act __Role Action idealizes
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @imposes:imposes graph a b
-    @authority __Role Authority $a
-    @subordinate __Role Subordinate $b
-    @relation __Bundle $authority $subordinate
+    @eid __Event
+    @act __Role Action imposes
+    @ctx __Role Context StressCompat
+    @authority __Role Attribute $a
+    @subordinate __Role Attribute $b
+    @relation __Bundle $eid $act $authority $subordinate $ctx
     return $relation
 end
 
 @influenced_by:influenced_by graph a b
-    @individual __Role Person $a
+    @eid __Event
+    @act __Role Action influenced_by
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
     @agent __Role Agent $b
-    @relation __Bundle $individual $agent
+    @relation __Bundle $eid $act $individual $agent $ctx
     return $relation
 end
 
 @intensifies:intensifies graph a b
+    @eid __Event
+    @act __Role Action intensifies
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @internalize:internalize graph a b
-    @individual __Role Person $a
+    @eid __Event
+    @act __Role Action internalize
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
     @action __Role Action $b
-    @relation __Bundle $individual $action
+    @relation __Bundle $eid $act $individual $action $ctx
     return $relation
 end
 
 @into:into graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action into
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @judges_as:judges_as graph a b
+    @eid __Event
+    @act __Role Action judges_as
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @lacks:lacks graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action lacks
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @leads_to:leads_to graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action leads_to
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @level:level graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action level
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @maintainsBoundary:maintainsBoundary graph a b
+    @eid __Event
+    @act __Role Action maintainsBoundary
+    @ctx __Role Context StressCompat
     @group __Role Group $a
     @action __Role Action $b
-    @relation __Bundle $group $action
+    @relation __Bundle $eid $act $group $action $ctx
     return $relation
 end
 
 @manages:manages graph a b
-    @authority __Role Authority $a
+    @eid __Event
+    @act __Role Action manages
+    @ctx __Role Context StressCompat
+    @authority __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $authority $action
+    @relation __Bundle $eid $act $authority $action $ctx
     return $relation
 end
 
 @manifests_in:manifests_in graph a b
-    @actor __Role Actor $a
-    @institution __Role Institution $b
-    @relation __Bundle $actor $institution
+    @eid __Event
+    @act __Role Action manifests_in
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
+    @institution __Role Structure $b
+    @relation __Bundle $eid $act $actor $institution $ctx
     return $relation
 end
 
 @marginalizes:marginalizes graph a b
-    @authority __Role Authority $a
-    @subordinate __Role Subordinate $b
-    @relation __Bundle $authority $subordinate
+    @eid __Event
+    @act __Role Action marginalizes
+    @ctx __Role Context StressCompat
+    @authority __Role Attribute $a
+    @subordinate __Role Attribute $b
+    @relation __Bundle $eid $act $authority $subordinate $ctx
     return $relation
 end
 
 @mayCompeteWith:mayCompeteWith graph a b
+    @eid __Event
+    @act __Role Action mayCompeteWith
+    @ctx __Role Context StressCompat
     @group __Role Group $a
     @action __Role Action $b
-    @relation __Bundle $group $action
+    @relation __Bundle $eid $act $group $action $ctx
     return $relation
 end
 
 @measures:measures graph a b
+    @eid __Event
+    @act __Role Action measures
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @motivated_by:motivated_by graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action motivated_by
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @not_yet_affects:not_yet_affects graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action not_yet_affects
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @occurs_during:occurs_during graph a b
+    @eid __Event
+    @act __Role Action occurs_during
+    @ctx __Role Context StressCompat
     @action __Role Action $a
     @process __Role Process $b
-    @relation __Bundle $action $process
+    @relation __Bundle $eid $act $action $process $ctx
     return $relation
 end
 
 @occurs_in:occurs_in graph a b
+    @eid __Event
+    @act __Role Action occurs_in
+    @ctx __Role Context StressCompat
     @action __Role Action $a
-    @institution __Role Institution $b
-    @relation __Bundle $action $institution
+    @institution __Role Structure $b
+    @relation __Bundle $eid $act $action $institution $ctx
     return $relation
 end
 
 @occurs_through:occurs_through graph a b
+    @eid __Event
+    @act __Role Action occurs_through
+    @ctx __Role Context StressCompat
     @action __Role Action $a
     @process __Role Process $b
-    @relation __Bundle $action $process
+    @relation __Bundle $eid $act $action $process $ctx
     return $relation
 end
 
 @of:of graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action of
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @often_characterized:often_characterized graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action often_characterized
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @often_considered:often_considered graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action often_considered
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @often_involves:often_involves graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action often_involves
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @often_related:often_related graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action often_related
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @often_viewed:often_viewed graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action often_viewed
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @operates_through:operates_through graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action operates_through
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @process __Role Process $b
-    @relation __Bundle $actor $process
+    @relation __Bundle $eid $act $actor $process $ctx
     return $relation
 end
 
 @opposes:opposes graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action opposes
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @organized_in:organized_in graph a b
-    @actor __Role Actor $a
-    @institution __Role Institution $b
-    @relation __Bundle $actor $institution
+    @eid __Event
+    @act __Role Action organized_in
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
+    @institution __Role Structure $b
+    @relation __Bundle $eid $act $actor $institution $ctx
     return $relation
 end
 
 @organizes:organizes graph a b
+    @eid __Event
+    @act __Role Action organizes
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @per:per graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action per
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @perceivesDifference:perceivesDifference graph a b
+    @eid __Event
+    @act __Role Action perceivesDifference
+    @ctx __Role Context StressCompat
     @group __Role Group $a
     @action __Role Action $b
-    @relation __Bundle $group $action
+    @relation __Bundle $eid $act $group $action $ctx
     return $relation
 end
 
 @practices:practices graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action practices
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @predicts:predicts graph a b
+    @eid __Event
+    @act __Role Action predicts
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @prevalent_in:prevalent_in graph a b
-    @actor __Role Actor $a
-    @society __Role Society $b
-    @relation __Bundle $actor $society
+    @eid __Event
+    @act __Role Action prevalent_in
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
+    @society __Role Attribute $b
+    @relation __Bundle $eid $act $actor $society $ctx
     return $relation
 end
 
 @privileges:privileges graph a b
-    @authority __Role Authority $a
+    @eid __Event
+    @act __Role Action privileges
+    @ctx __Role Context StressCompat
+    @authority __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $authority $action
+    @relation __Bundle $eid $act $authority $action $ctx
     return $relation
 end
 
 @protects:protects graph a b
-    @authority __Role Authority $a
+    @eid __Event
+    @act __Role Action protects
+    @ctx __Role Context StressCompat
+    @authority __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $authority $action
+    @relation __Bundle $eid $act $authority $action $ctx
     return $relation
 end
 
 @providesStandards:providesStandards graph a b
+    @eid __Event
+    @act __Role Action providesStandards
+    @ctx __Role Context StressCompat
     @group __Role Group $a
-    @individual __Role Person $b
-    @relation __Bundle $group $individual
+    @individual __Role Entity $b
+    @relation __Bundle $eid $act $group $individual $ctx
     return $relation
 end
 
 @punished_with:punished_with graph a b
+    @eid __Event
+    @act __Role Action punished_with
+    @ctx __Role Context StressCompat
     @action __Role Action $a
     @process __Role Process $b
-    @relation __Bundle $action $process
+    @relation __Bundle $eid $act $action $process $ctx
     return $relation
 end
 
 @reaches:reaches graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action reaches
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @receives:receives graph a b
-    @individual __Role Person $a
+    @eid __Event
+    @act __Role Action receives
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
     @action __Role Action $b
-    @relation __Bundle $individual $action
+    @relation __Bundle $eid $act $individual $action $ctx
     return $relation
 end
 
 @recognizes:recognizes graph a b
+    @eid __Event
+    @act __Role Action recognizes
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @regarded_as:regarded_as graph a b
-    @actor __Role Actor $a
-    @status __Role Status $b
-    @relation __Bundle $actor $status
+    @eid __Event
+    @act __Role Action regarded_as
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
+    @status __Role State $b
+    @relation __Bundle $eid $act $actor $status $ctx
     return $relation
 end
 
 @regulates:regulates graph a b
-    @authority __Role Authority $a
+    @eid __Event
+    @act __Role Action regulates
+    @ctx __Role Context StressCompat
+    @authority __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $authority $action
+    @relation __Bundle $eid $act $authority $action $ctx
     return $relation
 end
 
 @reinforces:reinforces graph a b
+    @eid __Event
+    @act __Role Action reinforces
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @relatesTo:relatesTo graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action relatesTo
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @relates_to:relates_to graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action relates_to
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @requiresTrust:requiresTrust graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action requiresTrust
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @results_from:results_from graph a b
+    @eid __Event
+    @act __Role Action results_from
+    @ctx __Role Context StressCompat
     @action __Role Action $a
     @process __Role Process $b
-    @relation __Bundle $action $process
+    @relation __Bundle $eid $act $action $process $ctx
     return $relation
 end
 
 @results_in:results_in graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action results_in
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @risksOf:risksOf graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action risksOf
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @seeks:seeks graph a b
+    @eid __Event
+    @act __Role Action seeks
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @seeks_to:seeks_to graph a b
+    @eid __Event
+    @act __Role Action seeks_to
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @sees:sees graph a b
+    @eid __Event
+    @act __Role Action sees
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @shaped_by:shaped_by graph a b
-    @individual __Role Person $a
+    @eid __Event
+    @act __Role Action shaped_by
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
     @agent __Role Agent $b
-    @relation __Bundle $individual $agent
+    @relation __Bundle $eid $act $individual $agent $ctx
     return $relation
 end
 
 @shapes:shapes graph a b
+    @eid __Event
+    @act __Role Action shapes
+    @ctx __Role Context StressCompat
     @agent __Role Agent $a
-    @individual __Role Person $b
-    @relation __Bundle $agent $individual
+    @individual __Role Entity $b
+    @relation __Bundle $eid $act $agent $individual $ctx
     return $relation
 end
 
 @shares:shares graph a b
+    @eid __Event
+    @act __Role Action shares
+    @ctx __Role Context StressCompat
     @group __Role Group $a
     @action __Role Action $b
-    @relation __Bundle $group $action
+    @relation __Bundle $eid $act $group $action $ctx
     return $relation
 end
 
 @shifts_to:shifts_to graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action shifts_to
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @showsLoyalty:showsLoyalty graph a b
-    @individual __Role Person $a
+    @eid __Event
+    @act __Role Action showsLoyalty
+    @ctx __Role Context StressCompat
+    @individual __Role Entity $a
     @group __Role Group $b
-    @relation __Bundle $individual $group
+    @relation __Bundle $eid $act $individual $group $ctx
     return $relation
 end
 
 @socially_constructed:socially_constructed graph a b
-    @actor __Role Actor $a
-    @society __Role Society $b
-    @relation __Bundle $actor $society
+    @eid __Event
+    @act __Role Action socially_constructed
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
+    @society __Role Attribute $b
+    @relation __Bundle $eid $act $actor $society $ctx
     return $relation
 end
 
 @socially_defined:socially_defined graph a b
-    @actor __Role Actor $a
-    @society __Role Society $b
-    @relation __Bundle $actor $society
+    @eid __Event
+    @act __Role Action socially_defined
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
+    @society __Role Attribute $b
+    @relation __Bundle $eid $act $actor $society $ctx
     return $relation
 end
 
 @strains:strains graph a b
+    @eid __Event
+    @act __Role Action strains
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @strongly_forbidden:strongly_forbidden graph a b
+    @eid __Event
+    @act __Role Action strongly_forbidden
+    @ctx __Role Context StressCompat
     @action __Role Action $a
-    @society __Role Society $b
-    @relation __Bundle $action $society
+    @society __Role Attribute $b
+    @relation __Bundle $eid $act $action $society $ctx
     return $relation
 end
 
 @subject_to:subject_to graph a b
-    @subordinate __Role Subordinate $a
-    @authority __Role Authority $b
-    @relation __Bundle $subordinate $authority
+    @eid __Event
+    @act __Role Action subject_to
+    @ctx __Role Context StressCompat
+    @subordinate __Role Attribute $a
+    @authority __Role Attribute $b
+    @relation __Bundle $eid $act $subordinate $authority $ctx
     return $relation
 end
 
 @suspends:suspends graph a b
-    @authority __Role Authority $a
+    @eid __Event
+    @act __Role Action suspends
+    @ctx __Role Context StressCompat
+    @authority __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $authority $action
+    @relation __Bundle $eid $act $authority $action $ctx
     return $relation
 end
 
 @takes:takes graph a b
+    @eid __Event
+    @act __Role Action takes
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @teaches:teaches graph a b
+    @eid __Event
+    @act __Role Action teaches
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
-    @individual __Role Person $b
-    @relation __Bundle $actor $individual
+    @individual __Role Entity $b
+    @relation __Bundle $eid $act $actor $individual $ctx
     return $relation
 end
 
 @theorem:theorem graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action theorem
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @theorized_by:theorized_by graph a b
+    @eid __Event
+    @act __Role Action theorized_by
+    @ctx __Role Context StressCompat
     @action __Role Action $a
     @actor __Role Agent $b
-    @relation __Bundle $action $actor
+    @relation __Bundle $eid $act $action $actor $ctx
     return $relation
 end
 
 @transforms:transforms graph a b
+    @eid __Event
+    @act __Role Action transforms
+    @ctx __Role Context StressCompat
     @agent __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $agent $action
+    @relation __Bundle $eid $act $agent $action $ctx
     return $relation
 end
 
 @transforms_from:transforms_from graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action transforms_from
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @transforms_to:transforms_to graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action transforms_to
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @transmits:transmits graph a b
+    @eid __Event
+    @act __Role Action transmits
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @treats_as:treats_as graph a b
+    @eid __Event
+    @act __Role Action treats_as
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @types:types graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action types
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @undergoes:undergoes graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action undergoes
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @process __Role Process $b
-    @relation __Bundle $actor $process
+    @relation __Bundle $eid $act $actor $process $ctx
     return $relation
 end
 
 @understands_in:understands_in graph a b
+    @eid __Event
+    @act __Role Action understands_in
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @unequal_distribution:unequal_distribution graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action unequal_distribution
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @usually_characterized:usually_characterized graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action usually_characterized
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @views_as:views_as graph a b
+    @eid __Event
+    @act __Role Action views_as
+    @ctx __Role Context StressCompat
     @actor __Role Agent $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @violates:violates graph a b
-    @actor __Role Actor $a
+    @eid __Event
+    @act __Role Action violates
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
     @action __Role Action $b
-    @relation __Bundle $actor $action
+    @relation __Bundle $eid $act $actor $action $ctx
     return $relation
 end
 
 @widely_shared:widely_shared graph a b
-    @actor __Role Actor $a
-    @society __Role Society $b
-    @relation __Bundle $actor $society
+    @eid __Event
+    @act __Role Action widely_shared
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
+    @society __Role Attribute $b
+    @relation __Bundle $eid $act $actor $society $ctx
     return $relation
 end
 
 @works_within:works_within graph a b
-    @actor __Role Actor $a
-    @institution __Role Institution $b
-    @relation __Bundle $actor $institution
+    @eid __Event
+    @act __Role Action works_within
+    @ctx __Role Context StressCompat
+    @actor __Role Attribute $a
+    @institution __Role Structure $b
+    @relation __Bundle $eid $act $actor $institution $ctx
     return $relation
 end
 
@@ -1801,8 +2323,8 @@ end
 
 # Add theory operator
 @theory:theory graph subject concept
-    @s __Role Subject $subject
-    @c __Role Concept $concept
+    @s __Role Attribute $subject
+    @c __Role Attribute $concept
     @theoretical __Pair $s $c
     return $theoretical
 end

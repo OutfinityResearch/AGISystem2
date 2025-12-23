@@ -18,8 +18,7 @@ import { getStrategy, getDefaultStrategy, listStrategies } from './strategies/in
 // ============================================================================
 
 /**
- * Environment variable for HDC strategy selection
- * Set SYS2_HDC_STRATEGY=dense-binary (or future strategies)
+ * Environment variable for HDC strategy selection.
  * Default: 'dense-binary'
  */
 const ENV_STRATEGY = process.env.SYS2_HDC_STRATEGY || 'dense-binary';
@@ -59,47 +58,70 @@ export function setDefaultGeometry(geometry) {
 }
 
 // ============================================================================
-// ACTIVE STRATEGY MANAGEMENT
+// STRATEGY RESOLUTION (No process-global behavior required)
 // ============================================================================
 
-let activeStrategy = null;
+// Backward-compatible default strategy selector (for callers that don't pass strategyId/vectors).
+let defaultStrategyId = ENV_STRATEGY;
 
 /**
- * Initialize HDC with a specific strategy
- * @param {string} strategyId - Strategy identifier (default from env or 'dense-binary')
- * @param {Object} options - Strategy-specific options
- * @returns {Object} Active strategy
+ * Backward-compatible initializer. Historically this selected a process-global active strategy.
+ * New code should avoid relying on process-global state: operations dispatch based on vector.strategyId
+ * or an explicit strategyId parameter.
  */
-export function initHDC(strategyId = ENV_STRATEGY, options = {}) {
-  activeStrategy = getStrategy(strategyId);
-  return activeStrategy;
+export function initHDC(strategyId = ENV_STRATEGY) {
+  defaultStrategyId = strategyId;
+  return getStrategy(strategyId);
 }
 
 /**
- * Get the active strategy (initializes from env if needed)
- * @returns {Object}
+ * Infer strategyId from a vector (preferred), else fall back to env default.
  */
-function getActiveStrategy() {
-  if (!activeStrategy) {
-    activeStrategy = getStrategy(ENV_STRATEGY);
+function inferStrategyId(vector) {
+  if (!vector) return null;
+  if (typeof vector.strategyId === 'string' && vector.strategyId.trim() !== '') return vector.strategyId;
+  // Fallback heuristics (older vectors / test doubles)
+  if (vector.data instanceof Uint32Array) return 'dense-binary';
+  if (vector.data instanceof Uint8Array) return 'metric-affine';
+  if (vector.exponents instanceof Set) return 'sparse-polynomial';
+  return null;
+}
+
+/**
+ * Resolve a strategy object from an explicit id, or from vectors.
+ */
+function resolveStrategy({ strategyId = null, vectors = [] } = {}) {
+  const inferred = [];
+  if (strategyId) inferred.push(strategyId);
+  for (const v of vectors) {
+    const id = inferStrategyId(v);
+    if (id) inferred.push(id);
   }
-  return activeStrategy;
+  const unique = Array.from(new Set(inferred));
+  if (unique.length > 1) {
+    throw new Error(`Mixed HDC strategies in one operation: ${unique.join(', ')}`);
+  }
+  return getStrategy(unique[0] || defaultStrategyId);
 }
 
 /**
- * Get strategy properties
+ * Get strategy properties (for a specific strategy, or inferred from a vector).
+ * @param {string|Object} [strategyOrVector]
  * @returns {Object}
  */
-export function getProperties() {
-  return getActiveStrategy().properties;
+export function getProperties(strategyOrVector = null) {
+  if (typeof strategyOrVector === 'string') return getStrategy(strategyOrVector).properties;
+  const inferred = inferStrategyId(strategyOrVector);
+  return getStrategy(inferred || defaultStrategyId).properties;
 }
 
 /**
- * Get strategy ID
+ * Get strategy ID (inferred from vector if provided, else default env).
+ * @param {Object} [vector]
  * @returns {string}
  */
-export function getStrategyId() {
-  return getActiveStrategy().id;
+export function getStrategyId(vector = null) {
+  return inferStrategyId(vector) || defaultStrategyId;
 }
 
 /**
@@ -108,6 +130,12 @@ export function getStrategyId() {
  */
 export { listStrategies };
 
+/**
+ * Export getStrategy for upper layers that need validation/inspection.
+ * (Upper layers should still avoid importing from strategies/ directly.)
+ */
+export { getStrategy };
+
 // ============================================================================
 // FACTORY FUNCTIONS
 // ============================================================================
@@ -115,20 +143,22 @@ export { listStrategies };
 /**
  * Create zero vector
  * @param {number} [geometry] - Optional geometry (uses default if not specified)
+ * @param {string} [strategyId] - Optional strategy override
  * @returns {Object} SemanticVector
  */
-export function createZero(geometry = defaultGeometry) {
-  return getActiveStrategy().createZero(geometry);
+export function createZero(geometry = defaultGeometry, strategyId = null) {
+  return resolveStrategy({ strategyId }).createZero(geometry);
 }
 
 /**
  * Create random vector with ~50% density
  * @param {number} [geometry] - Optional geometry (uses default if not specified)
  * @param {number} [seed] - Optional seed
+ * @param {string} [strategyId] - Optional strategy override
  * @returns {Object} SemanticVector
  */
-export function createRandom(geometry = defaultGeometry, seed = null) {
-  return getActiveStrategy().createRandom(geometry, seed);
+export function createRandom(geometry = defaultGeometry, seed = null, strategyId = null) {
+  return resolveStrategy({ strategyId }).createRandom(geometry, seed);
 }
 
 /**
@@ -140,11 +170,21 @@ export function createRandom(geometry = defaultGeometry, seed = null) {
  *
  * @param {string} name - Identifier
  * @param {number} [geometry] - Optional geometry (uses default if not specified)
- * @param {string} [theoryId='default'] - Theory scope for namespace isolation
+ * @param {string|{theoryId?: string, strategyId?: string}} [theoryIdOrOptions='default'] - Theory scope for namespace isolation (or options)
+ * @param {string} [strategyId] - Optional strategy override (when using a string theoryId)
  * @returns {Object} SemanticVector
  */
-export function createFromName(name, geometry = defaultGeometry, theoryId = 'default') {
-  return getActiveStrategy().createFromName(name, geometry, theoryId);
+export function createFromName(name, geometry = defaultGeometry, theoryIdOrOptions = 'default', strategyId = null) {
+  let theoryId = 'default';
+  let resolvedStrategyId = strategyId;
+  if (typeof theoryIdOrOptions === 'object' && theoryIdOrOptions) {
+    theoryId = theoryIdOrOptions.theoryId || 'default';
+    resolvedStrategyId = theoryIdOrOptions.strategyId || resolvedStrategyId;
+  } else if (typeof theoryIdOrOptions === 'string') {
+    theoryId = theoryIdOrOptions || 'default';
+  }
+  const strategy = resolveStrategy({ strategyId: resolvedStrategyId });
+  return strategy.createFromName(name, geometry, theoryId);
 }
 
 /**
@@ -175,7 +215,7 @@ export function deserialize(serialized) {
  * @returns {Object} Bound result
  */
 export function bind(a, b) {
-  return getActiveStrategy().bind(a, b);
+  return resolveStrategy({ vectors: [a, b] }).bind(a, b);
 }
 
 /**
@@ -184,7 +224,7 @@ export function bind(a, b) {
  * @returns {Object} Combined result
  */
 export function bindAll(...vectors) {
-  return getActiveStrategy().bindAll(...vectors);
+  return resolveStrategy({ vectors }).bindAll(...vectors);
 }
 
 /**
@@ -195,7 +235,7 @@ export function bindAll(...vectors) {
  * @returns {Object} Bundled result
  */
 export function bundle(vectors, tieBreaker = null) {
-  return getActiveStrategy().bundle(vectors, tieBreaker);
+  return resolveStrategy({ vectors }).bundle(vectors, tieBreaker);
 }
 
 /**
@@ -205,7 +245,7 @@ export function bundle(vectors, tieBreaker = null) {
  * @returns {number} Similarity (0 = different, 1 = identical)
  */
 export function similarity(a, b) {
-  return getActiveStrategy().similarity(a, b);
+  return resolveStrategy({ vectors: [a, b] }).similarity(a, b);
 }
 
 /**
@@ -216,7 +256,7 @@ export function similarity(a, b) {
  * @returns {Object} Remaining component
  */
 export function unbind(composite, component) {
-  return getActiveStrategy().unbind(composite, component);
+  return resolveStrategy({ vectors: [composite, component] }).unbind(composite, component);
 }
 
 // ============================================================================
@@ -229,7 +269,7 @@ export function unbind(composite, component) {
  * @returns {Object}
  */
 export function clone(v) {
-  return getActiveStrategy().clone(v);
+  return resolveStrategy({ vectors: [v] }).clone(v);
 }
 
 /**
@@ -239,7 +279,7 @@ export function clone(v) {
  * @returns {boolean}
  */
 export function equals(a, b) {
-  return getActiveStrategy().equals(a, b);
+  return resolveStrategy({ vectors: [a, b] }).equals(a, b);
 }
 
 /**
@@ -248,7 +288,7 @@ export function equals(a, b) {
  * @returns {Object}
  */
 export function serialize(v) {
-  return getActiveStrategy().serialize(v);
+  return resolveStrategy({ vectors: [v] }).serialize(v);
 }
 
 /**
@@ -259,7 +299,7 @@ export function serialize(v) {
  * @returns {Array<{name: string, similarity: number}>}
  */
 export function topKSimilar(query, vocabulary, k = 5) {
-  return getActiveStrategy().topKSimilar(query, vocabulary, k);
+  return resolveStrategy({ vectors: [query] }).topKSimilar(query, vocabulary, k);
 }
 
 /**
@@ -269,7 +309,7 @@ export function topKSimilar(query, vocabulary, k = 5) {
  * @returns {number}
  */
 export function distance(a, b) {
-  return getActiveStrategy().distance(a, b);
+  return resolveStrategy({ vectors: [a, b] }).distance(a, b);
 }
 
 /**
@@ -280,7 +320,7 @@ export function distance(a, b) {
  * @returns {boolean}
  */
 export function isOrthogonal(a, b, threshold = 0.55) {
-  return getActiveStrategy().isOrthogonal(a, b, threshold);
+  return resolveStrategy({ vectors: [a, b] }).isOrthogonal(a, b, threshold);
 }
 
 // ============================================================================
@@ -295,7 +335,9 @@ export function isOrthogonal(a, b, threshold = 0.55) {
  * @returns {Object} Serialized KB
  */
 export function serializeKB(facts) {
-  return getActiveStrategy().serializeKB(facts);
+  if (!facts || facts.length === 0) return resolveStrategy().serializeKB(facts);
+  const vectors = facts.map(f => f?.vector).filter(Boolean);
+  return resolveStrategy({ vectors }).serializeKB(facts);
 }
 
 /**
@@ -321,7 +363,16 @@ export function deserializeKB(serialized) {
  * @returns {Function} Vector class constructor
  */
 export function getVectorClass() {
-  return getActiveStrategy().Vector;
+  return resolveStrategy().Vector;
+}
+
+/**
+ * Get the Vector class for a specific strategy.
+ * @param {string} [strategyId]
+ * @returns {Function}
+ */
+export function getVectorClassFor(strategyId = null) {
+  return resolveStrategy({ strategyId }).Vector;
 }
 
 /**

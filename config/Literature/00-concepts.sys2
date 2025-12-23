@@ -1,47 +1,44 @@
 # Literature - Domain Concepts
 # Foundational literary concepts with proper graph semantics
 
+# Domain anchor (avoid free-floating atoms)
+@_:Literature isA Literature AbstractType
+
 # ===== Literary Forms =====
 
 @Literature:Literature graph art
     # Written artistic work
-    @a __Role Art $art
+    @a __Role Theme $art
     @type __Role Type Literature
-    @written __Role Medium Written
-    @aesthetic __Role Purpose Aesthetic
-    @concept __Bundle $a $type $written $aesthetic
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $a $type
     return $concept
 end
 
 @Novel:Novel graph work
     # Novel as literary form
-    @w __Role Work $work
+    @w __Role Theme $work
     @type __Role Type Novel
-    @prose __Role Form Prose
-    @extended __Role Length Long
-    @narrative __Role Structure Narrative
-    @concept __Bundle $w $type $prose $extended
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $w $type
     return $concept
 end
 
 @Poetry:Poetry graph work
     # Poetic work
-    @w __Role Work $work
+    @w __Role Theme $work
     @type __Role Type Poetry
-    @verse __Role Form Verse
-    @rhythmic __Role Property Rhythmic
-    @figurative __Role Language Figurative
-    @concept __Bundle $w $type $verse $rhythmic
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $w $type
     return $concept
 end
 
 @Drama:Drama graph work
     # Dramatic work
-    @w __Role Work $work
+    @w __Role Theme $work
     @type __Role Type Drama
-    @dialogue __Role Form Dialogue
-    @performance __Role Medium Performance
-    @concept __Bundle $w $type $dialogue $performance
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $w $type
     return $concept
 end
 
@@ -49,11 +46,10 @@ end
 
 @Plot:Plot graph structure
     # Sequence of events in narrative
-    @struct __Role Structure $structure
+    @struct __Role Theme $structure
     @type __Role Type Plot
-    @sequential __Role Nature EventSequence
-    @causal __Role Property CausallyLinked
-    @concept __Bundle $struct $type $sequential $causal
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $struct $type
     return $concept
 end
 
@@ -61,9 +57,8 @@ end
     # Literary character
     @ent __Role Entity $entity
     @type __Role Type Character
-    @fictional __Role Nature Fictional
-    @agent __Role Function NarrativeAgent
-    @concept __Bundle $ent $type $fictional $agent
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $ent $type
     return $concept
 end
 
@@ -71,29 +66,26 @@ end
     # Time and place of narrative
     @ctx __Role Context $context
     @type __Role Type Setting
-    @spatiotemporal __Role Nature TimeAndPlace
-    @contextual __Role Function Background
-    @concept __Bundle $ctx $type $spatiotemporal $contextual
+    @domain __Role Context Literature
+    @concept __Bundle $domain $ctx $type
     return $concept
 end
 
 @Narrator:Narrator graph voice
     # Narrative voice
-    @v __Role Voice $voice
+    @v __Role Theme $voice
     @type __Role Type Narrator
-    @storytelling __Role Function TellsStory
-    @perspective __Role Property PointOfView
-    @concept __Bundle $v $type $storytelling $perspective
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $v $type
     return $concept
 end
 
 @Theme:Theme graph idea
     # Central idea or message
-    @i __Role Idea $idea
+    @i __Role Content $idea
     @type __Role Type Theme
-    @abstract __Role Nature Abstract
-    @central __Role Property CoreIdea
-    @concept __Bundle $i $type $abstract $central
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $i $type
     return $concept
 end
 
@@ -101,31 +93,28 @@ end
 
 @Metaphor:Metaphor graph device
     # Metaphorical expression
-    @dev __Role Device $device
+    @dev __Role Theme $device
     @type __Role Type Metaphor
-    @figurative __Role Nature Figurative
-    @comparative __Role Function ImplicitComparison
-    @concept __Bundle $dev $type $figurative $comparative
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $dev $type
     return $concept
 end
 
 @Symbol:Symbol graph device
     # Literary symbol
-    @dev __Role Device $device
+    @dev __Role Theme $device
     @type __Role Type Symbol
-    @representative __Role Nature RepresentsAbstract
-    @layered __Role Property MultipleMeanings
-    @concept __Bundle $dev $type $representative $layered
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $dev $type
     return $concept
 end
 
 @Irony:Irony graph device
     # Ironic expression
-    @dev __Role Device $device
+    @dev __Role Theme $device
     @type __Role Type Irony
-    @contrast __Role Nature ContrastAppearanceReality
-    @rhetorical __Role Function Rhetorical
-    @concept __Bundle $dev $type $contrast $rhetorical
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $dev $type
     return $concept
 end
 
@@ -135,9 +124,8 @@ end
     # Literary genre
     @cat __Role Category $category
     @type __Role Type Genre
-    @conventional __Role Nature Convention
-    @classificatory __Role Function ClassifiesWorks
-    @concept __Bundle $cat $type $conventional $classificatory
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $cat $type
     return $concept
 end
 
@@ -145,19 +133,17 @@ end
     # Writing style
     @man __Role Manner $manner
     @type __Role Type Style
-    @distinctive __Role Property Distinctive
-    @linguistic __Role Domain Language
-    @concept __Bundle $man $type $distinctive $linguistic
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $man $type
     return $concept
 end
 
 @Tone:Tone graph quality
     # Narrative tone
-    @qual __Role Quality $quality
+    @qual __Role Theme $quality
     @type __Role Type Tone
-    @attitude __Role Nature Attitude
-    @expressive __Role Function ConveysAttitude
-    @concept __Bundle $qual $type $attitude $expressive
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $qual $type
     return $concept
 end
 
@@ -165,20 +151,18 @@ end
 
 @Author:Author graph creator
     # Literary author
-    @creat __Role Creator $creator
+    @creat __Role Entity $creator
     @type __Role Type Author
-    @writer __Role Function WritesLiterature
-    @creative __Role Property Creative
-    @concept __Bundle $creat $type $writer $creative
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $creat $type
     return $concept
 end
 
 @Reader:Reader graph audience
     # Literary reader
-    @aud __Role Audience $audience
+    @aud __Role Entity $audience
     @type __Role Type Reader
-    @interpretive __Role Activity Interpretation
-    @receptive __Role Function Receives
-    @concept __Bundle $aud $type $interpretive $receptive
+    @ctx __Role Context Literature
+    @concept __Bundle $ctx $aud $type
     return $concept
 end

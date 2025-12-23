@@ -13,9 +13,11 @@ export class Vocabulary {
   /**
    * Create a new vocabulary
    * @param {number} geometry - Vector dimension
+   * @param {string} [strategyId] - HDC strategy identifier for this vocabulary
    */
-  constructor(geometry) {
+  constructor(geometry, strategyId = null) {
     this.geometry = geometry;
+    this.strategyId = strategyId || getStrategyId();
     this.atoms = new Map();      // name -> Vector
     this.reverse = new Map();    // Vector hash -> name (for decoding)
   }
@@ -30,8 +32,8 @@ export class Vocabulary {
       return this.atoms.get(name);
     }
 
-    // Create deterministic vector from name using active strategy
-    const vec = createFromName(name, this.geometry);
+    // Create deterministic vector from name using this vocabulary strategy
+    const vec = createFromName(name, this.geometry, { strategyId: this.strategyId });
     this.atoms.set(name, vec);
 
     // Store reverse mapping for decoding
@@ -107,7 +109,7 @@ export class Vocabulary {
     // corrupt Reference resolution inside graphs/macros (e.g., `$effect` resolving to
     // the wrong atom). We instead hash the full vector payload.
 
-    const strategy = getStrategyId?.() || 'unknown';
+    const strategy = getStrategyId?.(vec) || this.strategyId || 'unknown';
 
     // Dense-binary: hash all words.
     if (vec?.data && Number.isInteger(vec?.words)) {
@@ -140,7 +142,7 @@ export class Vocabulary {
     for (const [name, vec] of this.atoms) {
       atoms[name] = serialize(vec);
     }
-    return { geometry: this.geometry, atoms, strategyId: getStrategyId() };
+    return { geometry: this.geometry, atoms, strategyId: this.strategyId };
   }
 
   /**
@@ -150,7 +152,7 @@ export class Vocabulary {
    * @returns {Vocabulary}
    */
   static deserializeVocab(data) {
-    const vocab = new Vocabulary(data.geometry);
+    const vocab = new Vocabulary(data.geometry, data.strategyId);
     for (const [name, vecData] of Object.entries(data.atoms)) {
       const vec = deserialize(vecData);
       vocab.atoms.set(name, vec);

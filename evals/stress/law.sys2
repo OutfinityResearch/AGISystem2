@@ -44,78 +44,102 @@ end
 
 @accepts:accepts graph court filing
     # Court accepts filing for processing
-    @cou __Role Court $court
-    @fil __Role Filing $filing
-    @relation __Role Relation Accepts
-    @result __Bundle $cou $fil $relation
+    @eid __Event
+    @act __Role Action accepts
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @fil __Role Attribute $filing
+    @relation __Role Action Accepts
+    @result __Bundle $eid $act $cou $fil $relation $ctx
     return $result
 end
 
 @acquires:acquires graph party right
     # Party acquires legal right
-    @par __Role Party $party
-    @rig __Role Right $right
-    @relation __Role Relation Acquires
-    @result __Bundle $par $rig $relation
+    @eid __Event
+    @act __Role Action acquires
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @rig __Role Theme $right
+    @relation __Role Action Acquires
+    @result __Bundle $eid $act $par $rig $relation $ctx
     return $result
 end
 
 @acts:acts graph agent behalf
     # Agent acts on behalf of principal
+    @eid __Event
+    @act __Role Action acts
+    @ctx __Role Context StressCompat
     @age __Role Agent $agent
-    @beh __Role Principal $behalf
-    @relation __Role Relation Acts
-    @result __Bundle $age $beh $relation
+    @beh __Role Attribute $behalf
+    @relation __Role Action Acts
+    @result __Bundle $eid $act $age $beh $relation $ctx
     return $result
 end
 
 @admits:admits graph court evidence
     # Court admits evidence into record
-    @cou __Role Court $court
-    @evi __Role Evidence $evidence
-    @relation __Role Relation Admits
-    @result __Bundle $cou $evi $relation
+    @eid __Event
+    @act __Role Action admits
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @evi __Role Attribute $evidence
+    @relation __Role Action Admits
+    @result __Bundle $eid $act $cou $evi $relation $ctx
     return $result
 end
 
 @affects:affects graph statute right
     # Statute affects legal right
-    @sta __Role Statute $statute
-    @rig __Role Right $right
-    @relation __Role Relation Affects
-    @result __Bundle $sta $rig $relation
+    @eid __Event
+    @act __Role Action affects
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @rig __Role Theme $right
+    @relation __Role Action Affects
+    @result __Bundle $eid $act $sta $rig $relation $ctx
     return $result
 end
 
 @agree:agree graph party1 party2
     # Parties reach agreement
-    @par __Role Party $party1
-    @part __Role Party $party2
-    @relation __Role Relation Agree
-    @result __Bundle $par $part $relation
+    @eid __Event
+    @act __Role Action agree
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party1
+    @part __Role Attribute $party2
+    @relation __Role Action Agree
+    @result __Bundle $eid $act $par $part $relation $ctx
     return $result
 end
 
 @agrees:agrees graph party1 party2
     # Parties agree to terms
-    @par __Role Party $party1
-    @part __Role Party $party2
-    @relation __Role Relation Agrees
-    @result __Bundle $par $part $relation
+    @eid __Event
+    @act __Role Action agrees
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party1
+    @part __Role Attribute $party2
+    @relation __Role Action Agrees
+    @result __Bundle $eid $act $par $part $relation $ctx
     return $result
 end
 
 @alleges:alleges graph plaintiff claim
     # Plaintiff alleges claim in complaint
-    @pla __Role Plaintiff $plaintiff
-    @cla __Role Claim $claim
-    @relation __Role Relation Alleges
-    @result __Bundle $pla $cla $relation
+    @eid __Event
+    @act __Role Action alleges
+    @ctx __Role Context StressCompat
+    @pla __Role Attribute $plaintiff
+    @cla __Role Content $claim
+    @relation __Role Action Alleges
+    @result __Bundle $eid $act $pla $cla $relation $ctx
     return $result
 end
 
 @allows:allows graph law action
-    @l __Role Law $law
+    @l __Role Context $law
     @a __Role Action $action
     @regulation __Pair $l $a
     return $regulation
@@ -123,85 +147,109 @@ end
 
 @announces:announces graph court decision
     # Court announces decision
-    @cou __Role Court $court
-    @dec __Role Decision $decision
-    @relation __Role Relation Announces
-    @result __Bundle $cou $dec $relation
+    @eid __Event
+    @act __Role Action announces
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @dec __Role Attribute $decision
+    @relation __Role Action Announces
+    @result __Bundle $eid $act $cou $dec $relation $ctx
     return $result
 end
 
 @appears:appears graph party court
     # Party appears before court
-    @par __Role Party $party
-    @cou __Role Court $court
-    @relation __Role Relation Appears
-    @result __Bundle $par $cou $relation
+    @eid __Event
+    @act __Role Action appears
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @cou __Role Attribute $court
+    @relation __Role Action Appears
+    @result __Bundle $eid $act $par $cou $relation $ctx
     return $result
 end
 
 @applies:applies graph authority law
-    @a __Role Authority $authority
-    @l __Role Law $law
+    @a __Role Attribute $authority
+    @l __Role Context $law
     @interpretation __Pair $a $l
     return $interpretation
 end
 
 @are:are graph entity status
     # Entity has legal status
+    @eid __Event
+    @act __Role Action are
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @sta __Role Status $status
-    @relation __Role Relation Are
-    @result __Bundle $ent $sta $relation
+    @sta __Role State $status
+    @relation __Role Action Are
+    @result __Bundle $eid $act $ent $sta $relation $ctx
     return $result
 end
 
 @arise:arise graph right situation
     # Right arises from situation
-    @rig __Role Right $right
-    @sit __Role Situation $situation
-    @relation __Role Relation Arise
-    @result __Bundle $rig $sit $relation
+    @eid __Event
+    @act __Role Action arise
+    @ctx __Role Context StressCompat
+    @rig __Role Theme $right
+    @sit __Role Attribute $situation
+    @relation __Role Action Arise
+    @result __Bundle $eid $act $rig $sit $relation $ctx
     return $result
 end
 
 @arises:arises graph claim circumstance
     # Claim arises from circumstance
-    @cla __Role Claim $claim
-    @cir __Role Circumstance $circumstance
-    @relation __Role Relation Arises
-    @result __Bundle $cla $cir $relation
+    @eid __Event
+    @act __Role Action arises
+    @ctx __Role Context StressCompat
+    @cla __Role Content $claim
+    @cir __Role Attribute $circumstance
+    @relation __Role Action Arises
+    @result __Bundle $eid $act $cla $cir $relation $ctx
     return $result
 end
 
 @assumes:assumes graph party liability
     # Party assumes legal liability
-    @par __Role Party $party
-    @lia __Role Liability $liability
-    @relation __Role Relation Assumes
-    @result __Bundle $par $lia $relation
+    @eid __Event
+    @act __Role Action assumes
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @lia __Role Attribute $liability
+    @relation __Role Action Assumes
+    @result __Bundle $eid $act $par $lia $relation $ctx
     return $result
 end
 
 @attaches:attaches graph lien property
     # Lien attaches to property
-    @lie __Role Lien $lien
+    @eid __Event
+    @act __Role Action attaches
+    @ctx __Role Context StressCompat
+    @lie __Role Attribute $lien
     @pro __Role Property $property
-    @relation __Role Relation Attaches
-    @result __Bundle $lie $pro $relation
+    @relation __Role Action Attaches
+    @result __Bundle $eid $act $lie $pro $relation $ctx
     return $result
 end
 
 @attempts:attempts graph party action
     # Party attempts legal action
-    @par __Role Party $party
+    @eid __Event
+    @act2 __Role Action attempts
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
     @act __Role Action $action
-    @relation __Role Relation Attempts
-    @result __Bundle $par $act $relation
+    @relation __Role Action Attempts
+    @result __Bundle $eid $act2 $par $act $relation $ctx
     return $result
 end
 
 @authorizes:authorizes graph law action
-    @l __Role Law $law
+    @l __Role Context $law
     @a __Role Action $action
     @regulation __Pair $l $a
     return $regulation
@@ -209,620 +257,806 @@ end
 
 @awards:awards graph court remedy
     # Court awards remedy to party
-    @cou __Role Court $court
-    @rem __Role Remedy $remedy
-    @relation __Role Relation Awards
-    @result __Bundle $cou $rem $relation
+    @eid __Event
+    @act __Role Action awards
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @rem __Role Attribute $remedy
+    @relation __Role Action Awards
+    @result __Bundle $eid $act $cou $rem $relation $ctx
     return $result
 end
 
 @aware:aware graph party fact
     # Party is aware of material fact
-    @par __Role Party $party
-    @fac __Role Fact $fact
-    @relation __Role Relation Aware
-    @result __Bundle $par $fac $relation
+    @eid __Event
+    @act __Role Action aware
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @fac __Role Attribute $fact
+    @relation __Role Action Aware
+    @result __Bundle $eid $act $par $fac $relation $ctx
     return $result
 end
 
 @bars:bars graph statute claim
     # Statute bars claim from proceeding
-    @sta __Role Statute $statute
-    @cla __Role Claim $claim
-    @relation __Role Relation Bars
-    @result __Bundle $sta $cla $relation
+    @eid __Event
+    @act __Role Action bars
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @cla __Role Content $claim
+    @relation __Role Action Bars
+    @result __Bundle $eid $act $sta $cla $relation $ctx
     return $result
 end
 
 @based:based graph judgment finding
     # Judgment based on factual finding
-    @jud __Role Judgment $judgment
-    @fin __Role Finding $finding
-    @relation __Role Relation Based
-    @result __Bundle $jud $fin $relation
+    @eid __Event
+    @act __Role Action based
+    @ctx __Role Context StressCompat
+    @jud __Role Attribute $judgment
+    @fin __Role Attribute $finding
+    @relation __Role Action Based
+    @result __Bundle $eid $act $jud $fin $relation $ctx
     return $result
 end
 
 @becomes:becomes graph entity status
     # Entity becomes legal status
+    @eid __Event
+    @act __Role Action becomes
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @sta __Role Status $status
-    @relation __Role Relation Becomes
-    @result __Bundle $ent $sta $relation
+    @sta __Role State $status
+    @relation __Role Action Becomes
+    @result __Bundle $eid $act $ent $sta $relation $ctx
     return $result
 end
 
 @benefits:benefits graph beneficiary right
     # Beneficiary benefits from right
+    @eid __Event
+    @act __Role Action benefits
+    @ctx __Role Context StressCompat
     @ben __Role Beneficiary $beneficiary
-    @rig __Role Right $right
-    @relation __Role Relation Benefits
-    @result __Bundle $ben $rig $relation
+    @rig __Role Theme $right
+    @relation __Role Action Benefits
+    @result __Bundle $eid $act $ben $rig $relation $ctx
     return $result
 end
 
 @binds:binds graph contract party
     # Contract binds party to obligations
-    @con __Role Contract $contract
-    @par __Role Party $party
-    @relation __Role Relation Binds
-    @result __Bundle $con $par $relation
+    @eid __Event
+    @act __Role Action binds
+    @ctx __Role Context StressCompat
+    @con __Role Attribute $contract
+    @par __Role Attribute $party
+    @relation __Role Action Binds
+    @result __Bundle $eid $act $con $par $relation $ctx
     return $result
 end
 
 @breaches:breaches graph action law
     @a __Role Action $action
-    @l __Role Law $law
+    @l __Role Context $law
     @violation __Pair $a $l
     return $violation
 end
 
 @breaks:breaks graph action law
     @a __Role Action $action
-    @l __Role Law $law
+    @l __Role Context $law
     @violation __Pair $a $l
     return $violation
 end
 
 @burdens:burdens graph duty obligor
     # Duty burdens obligor with obligation
-    @dut __Role Duty $duty
-    @obl __Role Obligor $obligor
-    @relation __Role Relation Burdens
-    @result __Bundle $dut $obl $relation
+    @eid __Event
+    @act __Role Action burdens
+    @ctx __Role Context StressCompat
+    @dut __Role Attribute $duty
+    @obl __Role Attribute $obligor
+    @relation __Role Action Burdens
+    @result __Bundle $eid $act $dut $obl $relation $ctx
     return $result
 end
 
 @calculates:calculates graph court damages
     # Court calculates damages amount
-    @cou __Role Court $court
-    @dam __Role Damages $damages
-    @relation __Role Relation Calculates
-    @result __Bundle $cou $dam $relation
+    @eid __Event
+    @act __Role Action calculates
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @dam __Role Attribute $damages
+    @relation __Role Action Calculates
+    @result __Bundle $eid $act $cou $dam $relation $ctx
     return $result
 end
 
 @cannot:cannot graph party action
     # Party cannot perform action legally
-    @par __Role Party $party
+    @eid __Event
+    @act2 __Role Action cannot
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
     @act __Role Action $action
-    @relation __Role Relation Cannot
-    @result __Bundle $par $act $relation
+    @relation __Role Action Cannot
+    @result __Bundle $eid $act2 $par $act $relation $ctx
     return $result
 end
 
 @carries:carries graph offense penalty
     # Offense carries criminal penalty
-    @off __Role Offense $offense
-    @pen __Role Penalty $penalty
-    @relation __Role Relation Carries
-    @result __Bundle $off $pen $relation
+    @eid __Event
+    @act __Role Action carries
+    @ctx __Role Context StressCompat
+    @off __Role Attribute $offense
+    @pen __Role Attribute $penalty
+    @relation __Role Action Carries
+    @result __Bundle $eid $act $off $pen $relation $ctx
     return $result
 end
 
 @chooses:chooses graph party option
     # Party chooses legal option
-    @par __Role Party $party
-    @opt __Role Option $option
-    @relation __Role Relation Chooses
-    @result __Bundle $par $opt $relation
+    @eid __Event
+    @act __Role Action chooses
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @opt __Role Attribute $option
+    @relation __Role Action Chooses
+    @result __Bundle $eid $act $par $opt $relation $ctx
     return $result
 end
 
 @claims:claims graph claimant right
     # Claimant claims legal right
-    @cla __Role Claimant $claimant
-    @rig __Role Right $right
-    @relation __Role Relation Claims
-    @result __Bundle $cla $rig $relation
+    @eid __Event
+    @act __Role Action claims
+    @ctx __Role Context StressCompat
+    @cla __Role Attribute $claimant
+    @rig __Role Theme $right
+    @relation __Role Action Claims
+    @result __Bundle $eid $act $cla $rig $relation $ctx
     return $result
 end
 
 @combines:combines graph statute1 statute2
     # Statutes combine in application
-    @sta __Role Statute $statute1
-    @stat __Role Statute $statute2
-    @relation __Role Relation Combines
-    @result __Bundle $sta $stat $relation
+    @eid __Event
+    @act __Role Action combines
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute1
+    @stat __Role Attribute $statute2
+    @relation __Role Action Combines
+    @result __Bundle $eid $act $sta $stat $relation $ctx
     return $result
 end
 
 @comes:comes graph jurisdiction authority
     # Jurisdiction comes from authority
-    @jur __Role Jurisdiction $jurisdiction
-    @aut __Role Authority $authority
-    @relation __Role Relation Comes
-    @result __Bundle $jur $aut $relation
+    @eid __Event
+    @act __Role Action comes
+    @ctx __Role Context StressCompat
+    @jur __Role Attribute $jurisdiction
+    @aut __Role Attribute $authority
+    @relation __Role Action Comes
+    @result __Bundle $eid $act $jur $aut $relation $ctx
     return $result
 end
 
 @commits:commits graph perpetrator crime
     # Perpetrator commits criminal act
-    @per __Role Perpetrator $perpetrator
-    @cri __Role Crime $crime
-    @relation __Role Relation Commits
-    @result __Bundle $per $cri $relation
+    @eid __Event
+    @act __Role Action commits
+    @ctx __Role Context StressCompat
+    @per __Role Attribute $perpetrator
+    @cri __Role Attribute $crime
+    @relation __Role Action Commits
+    @result __Bundle $eid $act $per $cri $relation $ctx
     return $result
 end
 
 @completes:completes graph party performance
     # Party completes contractual performance
-    @par __Role Party $party
-    @per __Role Performance $performance
-    @relation __Role Relation Completes
-    @result __Bundle $par $per $relation
+    @eid __Event
+    @act __Role Action completes
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @per __Role Attribute $performance
+    @relation __Role Action Completes
+    @result __Bundle $eid $act $par $per $relation $ctx
     return $result
 end
 
 @concerns:concerns graph statute matter
     # Statute concerns legal matter
-    @sta __Role Statute $statute
-    @mat __Role Matter $matter
-    @relation __Role Relation Concerns
-    @result __Bundle $sta $mat $relation
+    @eid __Event
+    @act __Role Action concerns
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @mat __Role Attribute $matter
+    @relation __Role Action Concerns
+    @result __Bundle $eid $act $sta $mat $relation $ctx
     return $result
 end
 
 @conducts:conducts graph attorney examination
     # Attorney conducts witness examination
-    @att __Role Attorney $attorney
-    @exa __Role Examination $examination
-    @relation __Role Relation Conducts
-    @result __Bundle $att $exa $relation
+    @eid __Event
+    @act __Role Action conducts
+    @ctx __Role Context StressCompat
+    @att __Role Attribute $attorney
+    @exa __Role Attribute $examination
+    @relation __Role Action Conducts
+    @result __Bundle $eid $act $att $exa $relation $ctx
     return $result
 end
 
 @confers:confers graph statute right
     # Statute confers legal right
-    @sta __Role Statute $statute
-    @rig __Role Right $right
-    @relation __Role Relation Confers
-    @result __Bundle $sta $rig $relation
+    @eid __Event
+    @act __Role Action confers
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @rig __Role Theme $right
+    @relation __Role Action Confers
+    @result __Bundle $eid $act $sta $rig $relation $ctx
     return $result
 end
 
 @considers:considers graph court argument
     # Court considers legal argument
-    @cou __Role Court $court
-    @arg __Role Argument $argument
-    @relation __Role Relation Considers
-    @result __Bundle $cou $arg $relation
+    @eid __Event
+    @act __Role Action considers
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @arg __Role Content $argument
+    @relation __Role Action Considers
+    @result __Bundle $eid $act $cou $arg $relation $ctx
     return $result
 end
 
 @constitutes:constitutes graph act offense
     # Act constitutes criminal offense
-    @ac __Role Act $act
-    @off __Role Offense $offense
-    @relation __Role Relation Constitutes
-    @result __Bundle $ac $off $relation
+    @eid __Event
+    @act __Role Action constitutes
+    @ctx __Role Context StressCompat
+    @ac __Role Attribute $act
+    @off __Role Attribute $offense
+    @relation __Role Action Constitutes
+    @result __Bundle $eid $act $ac $off $relation $ctx
     return $result
 end
 
 @contains:contains graph document provision
     # Document contains legal provision
-    @doc __Role Document $document
-    @pro __Role Provision $provision
-    @relation __Role Relation Contains
-    @result __Bundle $doc $pro $relation
+    @eid __Event
+    @act __Role Action contains
+    @ctx __Role Context StressCompat
+    @doc __Role Attribute $document
+    @pro __Role Attribute $provision
+    @relation __Role Action Contains
+    @result __Bundle $eid $act $doc $pro $relation $ctx
     return $result
 end
 
 @conveys:conveys graph grantor grantee
     # Grantor conveys property to grantee
-    @gra __Role Grantor $grantor
-    @gran __Role Grantee $grantee
-    @relation __Role Relation Conveys
-    @result __Bundle $gra $gran $relation
+    @eid __Event
+    @act __Role Action conveys
+    @ctx __Role Context StressCompat
+    @gra __Role Attribute $grantor
+    @gran __Role Attribute $grantee
+    @relation __Role Action Conveys
+    @result __Bundle $eid $act $gra $gran $relation $ctx
     return $result
 end
 
 @create:create graph party obligation
     # Party creates legal obligation
-    @par __Role Party $party
-    @obl __Role Obligation $obligation
-    @relation __Role Relation Create
-    @result __Bundle $par $obl $relation
+    @eid __Event
+    @act __Role Action create
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @obl __Role Attribute $obligation
+    @relation __Role Action Create
+    @result __Bundle $eid $act $par $obl $relation $ctx
     return $result
 end
 
 @creates:creates graph statute duty
     # Statute creates legal duty
-    @sta __Role Statute $statute
-    @dut __Role Duty $duty
-    @relation __Role Relation Creates
-    @result __Bundle $sta $dut $relation
+    @eid __Event
+    @act __Role Action creates
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @dut __Role Attribute $duty
+    @relation __Role Action Creates
+    @result __Bundle $eid $act $sta $dut $relation $ctx
     return $result
 end
 
 @decide:decide graph court issue
     # Court decides legal issue
-    @cou __Role Court $court
-    @iss __Role Issue $issue
-    @relation __Role Relation Decide
-    @result __Bundle $cou $iss $relation
+    @eid __Event
+    @act __Role Action decide
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @iss __Role Attribute $issue
+    @relation __Role Action Decide
+    @result __Bundle $eid $act $cou $iss $relation $ctx
     return $result
 end
 
 @declares:declares graph court ruling
     # Court declares legal ruling
-    @cou __Role Court $court
-    @rul __Role Ruling $ruling
-    @relation __Role Relation Declares
-    @result __Bundle $cou $rul $relation
+    @eid __Event
+    @act __Role Action declares
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @rul __Role Attribute $ruling
+    @relation __Role Action Declares
+    @result __Bundle $eid $act $cou $rul $relation $ctx
     return $result
 end
 
 @decreases:decreases graph factor liability
     # Factor decreases legal liability
-    @fac __Role Factor $factor
-    @lia __Role Liability $liability
-    @relation __Role Relation Decreases
-    @result __Bundle $fac $lia $relation
+    @eid __Event
+    @act __Role Action decreases
+    @ctx __Role Context StressCompat
+    @fac __Role Attribute $factor
+    @lia __Role Attribute $liability
+    @relation __Role Action Decreases
+    @result __Bundle $eid $act $fac $lia $relation $ctx
     return $result
 end
 
 @defeats:defeats graph defense claim
     # Defense defeats plaintiff's claim
-    @def __Role Defense $defense
-    @cla __Role Claim $claim
-    @relation __Role Relation Defeats
-    @result __Bundle $def $cla $relation
+    @eid __Event
+    @act __Role Action defeats
+    @ctx __Role Context StressCompat
+    @def __Role Attribute $defense
+    @cla __Role Content $claim
+    @relation __Role Action Defeats
+    @result __Bundle $eid $act $def $cla $relation $ctx
     return $result
 end
 
 @defends:defends graph party1 party2
-    @p1 __Role Party1 $party1
-    @p2 __Role Party2 $party2
+    @p1 __Role Attribute $party1
+    @p2 __Role Attribute $party2
     @legal __Pair $p1 $p2
     return $legal
 end
 
 @delivers:delivers graph party recipient
     # Party delivers legal notice
-    @par __Role Party $party
+    @eid __Event
+    @act __Role Action delivers
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
     @rec __Role Recipient $recipient
-    @relation __Role Relation Delivers
-    @result __Bundle $par $rec $relation
+    @relation __Role Action Delivers
+    @result __Bundle $eid $act $par $rec $relation $ctx
     return $result
 end
 
 @demands:demands graph creditor debtor
     # Creditor demands payment from debtor
-    @cre __Role Creditor $creditor
-    @deb __Role Debtor $debtor
-    @relation __Role Relation Demands
-    @result __Bundle $cre $deb $relation
+    @eid __Event
+    @act __Role Action demands
+    @ctx __Role Context StressCompat
+    @cre __Role Attribute $creditor
+    @deb __Role Attribute $debtor
+    @relation __Role Action Demands
+    @result __Bundle $eid $act $cre $deb $relation $ctx
     return $result
 end
 
 @demonstrate:demonstrate graph party proof
     # Party demonstrates proof to court
-    @par __Role Party $party
-    @pro __Role Proof $proof
-    @relation __Role Relation Demonstrate
-    @result __Bundle $par $pro $relation
+    @eid __Event
+    @act __Role Action demonstrate
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @pro __Role Attribute $proof
+    @relation __Role Action Demonstrate
+    @result __Bundle $eid $act $par $pro $relation $ctx
     return $result
 end
 
 @demonstrates:demonstrates graph entity finding
     @e __Role Entity $entity
-    @f __Role Finding $finding
+    @f __Role Attribute $finding
     @determination __Pair $e $f
     return $determination
 end
 
 @depends:depends graph right condition
     # Right depends on legal condition
-    @rig __Role Right $right
-    @con __Role Condition $condition
-    @relation __Role Relation Depends
-    @result __Bundle $rig $con $relation
+    @eid __Event
+    @act __Role Action depends
+    @ctx __Role Context StressCompat
+    @rig __Role Theme $right
+    @con __Role Attribute $condition
+    @relation __Role Action Depends
+    @result __Bundle $eid $act $rig $con $relation $ctx
     return $result
 end
 
 @derives:derives graph authority source
     # Authority derives from legal source
-    @aut __Role Authority $authority
+    @eid __Event
+    @act __Role Action derives
+    @ctx __Role Context StressCompat
+    @aut __Role Attribute $authority
     @sou __Role Source $source
-    @relation __Role Relation Derives
-    @result __Bundle $aut $sou $relation
+    @relation __Role Action Derives
+    @result __Bundle $eid $act $aut $sou $relation $ctx
     return $result
 end
 
 @destroys:destroys graph act right
     # Act destroys legal right
-    @ac __Role Act $act
-    @rig __Role Right $right
-    @relation __Role Relation Destroys
-    @result __Bundle $ac $rig $relation
+    @eid __Event
+    @act __Role Action destroys
+    @ctx __Role Context StressCompat
+    @ac __Role Attribute $act
+    @rig __Role Theme $right
+    @relation __Role Action Destroys
+    @result __Bundle $eid $act $ac $rig $relation $ctx
     return $result
 end
 
 @determines:determines graph entity finding
     @e __Role Entity $entity
-    @f __Role Finding $finding
+    @f __Role Attribute $finding
     @determination __Pair $e $f
     return $determination
 end
 
 @detrimentally:detrimentally graph action interest
     # Action detrimentally affects interest
+    @eid __Event
+    @act2 __Role Action detrimentally
+    @ctx __Role Context StressCompat
     @act __Role Action $action
-    @int __Role Interest $interest
-    @relation __Role Relation Detrimentally
-    @result __Bundle $act $int $relation
+    @int __Role Attribute $interest
+    @relation __Role Action Detrimentally
+    @result __Bundle $eid $act2 $act $int $relation $ctx
     return $result
 end
 
 @differs:differs graph case1 case2
     # Cases differ in material facts
-    @cas __Role Case $case1
-    @case __Role Case $case2
-    @relation __Role Relation Differs
-    @result __Bundle $cas $case $relation
+    @eid __Event
+    @act __Role Action differs
+    @ctx __Role Context StressCompat
+    @cas __Role Attribute $case1
+    @case __Role Attribute $case2
+    @relation __Role Action Differs
+    @result __Bundle $eid $act $cas $case $relation $ctx
     return $result
 end
 
 @discharges:discharges graph court obligation
     # Court discharges legal obligation
-    @cou __Role Court $court
-    @obl __Role Obligation $obligation
-    @relation __Role Relation Discharges
-    @result __Bundle $cou $obl $relation
+    @eid __Event
+    @act __Role Action discharges
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @obl __Role Attribute $obligation
+    @relation __Role Action Discharges
+    @result __Bundle $eid $act $cou $obl $relation $ctx
     return $result
 end
 
 @disregards:disregards graph court argument
     # Court disregards frivolous argument
-    @cou __Role Court $court
-    @arg __Role Argument $argument
-    @relation __Role Relation Disregards
-    @result __Bundle $cou $arg $relation
+    @eid __Event
+    @act __Role Action disregards
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @arg __Role Content $argument
+    @relation __Role Action Disregards
+    @result __Bundle $eid $act $cou $arg $relation $ctx
     return $result
 end
 
 @does:does graph actor act
     # Actor performs legal act
-    @act __Role Actor $actor
-    @ac __Role Act $act
-    @relation __Role Relation Does
-    @result __Bundle $act $ac $relation
+    @eid __Event
+    @act2 __Role Action does
+    @ctx __Role Context StressCompat
+    @act __Role Attribute $actor
+    @ac __Role Attribute $act
+    @relation __Role Action Does
+    @result __Bundle $eid $act2 $act $ac $relation $ctx
     return $result
 end
 
 @effects:effects graph statute change
     # Statute effects legal change
-    @sta __Role Statute $statute
-    @cha __Role Change $change
-    @relation __Role Relation Effects
-    @result __Bundle $sta $cha $relation
+    @eid __Event
+    @act __Role Action effects
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @cha __Role Attribute $change
+    @relation __Role Action Effects
+    @result __Bundle $eid $act $sta $cha $relation $ctx
     return $result
 end
 
 @eliminates:eliminates graph statute requirement
     # Statute eliminates legal requirement
-    @sta __Role Statute $statute
-    @req __Role Requirement $requirement
-    @relation __Role Relation Eliminates
-    @result __Bundle $sta $req $relation
+    @eid __Event
+    @act __Role Action eliminates
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @req __Role Attribute $requirement
+    @relation __Role Action Eliminates
+    @result __Bundle $eid $act $sta $req $relation $ctx
     return $result
 end
 
 @enacts:enacts graph legislature statute
     # Legislature enacts statutory law
-    @leg __Role Legislature $legislature
-    @sta __Role Statute $statute
-    @relation __Role Relation Enacts
-    @result __Bundle $leg $sta $relation
+    @eid __Event
+    @act __Role Action enacts
+    @ctx __Role Context StressCompat
+    @leg __Role Attribute $legislature
+    @sta __Role Attribute $statute
+    @relation __Role Action Enacts
+    @result __Bundle $eid $act $leg $sta $relation $ctx
     return $result
 end
 
 @encourages:encourages graph policy behavior
     # Policy encourages lawful behavior
-    @pol __Role Policy $policy
-    @beh __Role Behavior $behavior
-    @relation __Role Relation Encourages
-    @result __Bundle $pol $beh $relation
+    @eid __Event
+    @act __Role Action encourages
+    @ctx __Role Context StressCompat
+    @pol __Role Attribute $policy
+    @beh __Role Attribute $behavior
+    @relation __Role Action Encourages
+    @result __Bundle $eid $act $pol $beh $relation $ctx
     return $result
 end
 
 @encumbers:encumbers graph lien property
     # Lien encumbers property interest
-    @lie __Role Lien $lien
+    @eid __Event
+    @act __Role Action encumbers
+    @ctx __Role Context StressCompat
+    @lie __Role Attribute $lien
     @pro __Role Property $property
-    @relation __Role Relation Encumbers
-    @result __Bundle $lie $pro $relation
+    @relation __Role Action Encumbers
+    @result __Bundle $eid $act $lie $pro $relation $ctx
     return $result
 end
 
 @enforces:enforces graph authority law
-    @a __Role Authority $authority
-    @l __Role Law $law
+    @a __Role Attribute $authority
+    @l __Role Context $law
     @interpretation __Pair $a $l
     return $interpretation
 end
 
 @engaged:engaged graph party conduct
     # Party engaged in legal conduct
-    @par __Role Party $party
-    @con __Role Conduct $conduct
-    @relation __Role Relation Engaged
-    @result __Bundle $par $con $relation
+    @eid __Event
+    @act __Role Action engaged
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @con __Role Attribute $conduct
+    @relation __Role Action Engaged
+    @result __Bundle $eid $act $par $con $relation $ctx
     return $result
 end
 
 @engages:engages graph party activity
     # Party engages in legal activity
-    @par __Role Party $party
-    @act __Role Activity $activity
-    @relation __Role Relation Engages
-    @result __Bundle $par $act $relation
+    @eid __Event
+    @act2 __Role Action engages
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @act __Role Attribute $activity
+    @relation __Role Action Engages
+    @result __Bundle $eid $act2 $par $act $relation $ctx
     return $result
 end
 
 @ensures:ensures graph statute protection
     # Statute ensures legal protection
-    @sta __Role Statute $statute
-    @pro __Role Protection $protection
-    @relation __Role Relation Ensures
-    @result __Bundle $sta $pro $relation
+    @eid __Event
+    @act __Role Action ensures
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @pro __Role Attribute $protection
+    @relation __Role Action Ensures
+    @result __Bundle $eid $act $sta $pro $relation $ctx
     return $result
 end
 
 @enters:enters graph party contract
     # Party enters into contract
-    @par __Role Party $party
-    @con __Role Contract $contract
-    @relation __Role Relation Enters
-    @result __Bundle $par $con $relation
+    @eid __Event
+    @act __Role Action enters
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @con __Role Attribute $contract
+    @relation __Role Action Enters
+    @result __Bundle $eid $act $par $con $relation $ctx
     return $result
 end
 
 @entitled:entitled graph holder remedy
     # Holder entitled to legal remedy
-    @hol __Role Holder $holder
-    @rem __Role Remedy $remedy
-    @relation __Role Relation Entitled
-    @result __Bundle $hol $rem $relation
+    @eid __Event
+    @act __Role Action entitled
+    @ctx __Role Context StressCompat
+    @hol __Role Attribute $holder
+    @rem __Role Attribute $remedy
+    @relation __Role Action Entitled
+    @result __Bundle $eid $act $hol $rem $relation $ctx
     return $result
 end
 
 @establishes:establishes graph entity finding
     @e __Role Entity $entity
-    @f __Role Finding $finding
+    @f __Role Attribute $finding
     @determination __Pair $e $f
     return $determination
 end
 
 @exceeds:exceeds graph damages limit
     # Damages exceed statutory limit
-    @dam __Role Damages $damages
-    @lim __Role Limit $limit
-    @relation __Role Relation Exceeds
-    @result __Bundle $dam $lim $relation
+    @eid __Event
+    @act __Role Action exceeds
+    @ctx __Role Context StressCompat
+    @dam __Role Attribute $damages
+    @lim __Role Attribute $limit
+    @relation __Role Action Exceeds
+    @result __Bundle $eid $act $dam $lim $relation $ctx
     return $result
 end
 
 @exercises:exercises graph authority power
     # Authority exercises legal power
-    @aut __Role Authority $authority
-    @pow __Role Power $power
-    @relation __Role Relation Exercises
-    @result __Bundle $aut $pow $relation
+    @eid __Event
+    @act __Role Action exercises
+    @ctx __Role Context StressCompat
+    @aut __Role Attribute $authority
+    @pow __Role Attribute $power
+    @relation __Role Action Exercises
+    @result __Bundle $eid $act $aut $pow $relation $ctx
     return $result
 end
 
 @exist:exist graph right jurisdiction
     # Right exists under jurisdiction
-    @rig __Role Right $right
-    @jur __Role Jurisdiction $jurisdiction
-    @relation __Role Relation Exist
-    @result __Bundle $rig $jur $relation
+    @eid __Event
+    @act __Role Action exist
+    @ctx __Role Context StressCompat
+    @rig __Role Theme $right
+    @jur __Role Attribute $jurisdiction
+    @relation __Role Action Exist
+    @result __Bundle $eid $act $rig $jur $relation $ctx
     return $result
 end
 
 @experiences:experiences graph party harm
     # Party experiences legal harm
-    @par __Role Party $party
-    @har __Role Harm $harm
-    @relation __Role Relation Experiences
-    @result __Bundle $par $har $relation
+    @eid __Event
+    @act __Role Action experiences
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @har __Role Attribute $harm
+    @relation __Role Action Experiences
+    @result __Bundle $eid $act $par $har $relation $ctx
     return $result
 end
 
 @extends:extends graph statute coverage
     # Statute extends legal coverage
-    @sta __Role Statute $statute
-    @cov __Role Coverage $coverage
-    @relation __Role Relation Extends
-    @result __Bundle $sta $cov $relation
+    @eid __Event
+    @act __Role Action extends
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @cov __Role Attribute $coverage
+    @relation __Role Action Extends
+    @result __Bundle $eid $act $sta $cov $relation $ctx
     return $result
 end
 
 @faces:faces graph defendant charge
     # Defendant faces criminal charge
-    @def __Role Defendant $defendant
-    @cha __Role Charge $charge
-    @relation __Role Relation Faces
-    @result __Bundle $def $cha $relation
+    @eid __Event
+    @act __Role Action faces
+    @ctx __Role Context StressCompat
+    @def __Role Attribute $defendant
+    @cha __Role Attribute $charge
+    @relation __Role Action Faces
+    @result __Bundle $eid $act $def $cha $relation $ctx
     return $result
 end
 
 @fails:fails graph plaintiff burden
     # Plaintiff fails burden of proof
-    @pla __Role Plaintiff $plaintiff
-    @bur __Role Burden $burden
-    @relation __Role Relation Fails
-    @result __Bundle $pla $bur $relation
+    @eid __Event
+    @act __Role Action fails
+    @ctx __Role Context StressCompat
+    @pla __Role Attribute $plaintiff
+    @bur __Role Attribute $burden
+    @relation __Role Action Fails
+    @result __Bundle $eid $act $pla $bur $relation $ctx
     return $result
 end
 
 @favors:favors graph precedent outcome
     # Precedent favors legal outcome
-    @pre __Role Precedent $precedent
-    @out __Role Outcome $outcome
-    @relation __Role Relation Favors
-    @result __Bundle $pre $out $relation
+    @eid __Event
+    @act __Role Action favors
+    @ctx __Role Context StressCompat
+    @pre __Role Attribute $precedent
+    @out __Role Attribute $outcome
+    @relation __Role Action Favors
+    @result __Bundle $eid $act $pre $out $relation $ctx
     return $result
 end
 
 @files:files graph party document
-    @p __Role Party $party
-    @d __Role Document $document
+    @p __Role Attribute $party
+    @d __Role Attribute $document
     @procedure __Pair $p $d
     return $procedure
 end
 
 @flow:flow graph right beneficiary
     # Rights flow to beneficiary
-    @rig __Role Right $right
+    @eid __Event
+    @act __Role Action flow
+    @ctx __Role Context StressCompat
+    @rig __Role Theme $right
     @ben __Role Beneficiary $beneficiary
-    @relation __Role Relation Flow
-    @result __Bundle $rig $ben $relation
+    @relation __Role Action Flow
+    @result __Bundle $eid $act $rig $ben $relation $ctx
     return $result
 end
 
 @flows:flows graph authority source
     # Authority flows from source
-    @aut __Role Authority $authority
+    @eid __Event
+    @act __Role Action flows
+    @ctx __Role Context StressCompat
+    @aut __Role Attribute $authority
     @sou __Role Source $source
-    @relation __Role Relation Flows
-    @result __Bundle $aut $sou $relation
+    @relation __Role Action Flows
+    @result __Bundle $eid $act $aut $sou $relation $ctx
     return $result
 end
 
 @follows:follows graph court precedent
     # Court follows binding precedent
-    @cou __Role Court $court
-    @pre __Role Precedent $precedent
-    @relation __Role Relation Follows
-    @result __Bundle $cou $pre $relation
+    @eid __Event
+    @act __Role Action follows
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @pre __Role Attribute $precedent
+    @relation __Role Action Follows
+    @result __Bundle $eid $act $cou $pre $relation $ctx
     return $result
 end
 
 @forbids:forbids graph law action
-    @l __Role Law $law
+    @l __Role Context $law
     @a __Role Action $action
     @regulation __Pair $l $a
     return $regulation
@@ -830,76 +1064,97 @@ end
 
 @forces:forces graph judgment compliance
     # Judgment forces party compliance
-    @jud __Role Judgment $judgment
-    @com __Role Compliance $compliance
-    @relation __Role Relation Forces
-    @result __Bundle $jud $com $relation
+    @eid __Event
+    @act __Role Action forces
+    @ctx __Role Context StressCompat
+    @jud __Role Attribute $judgment
+    @com __Role Attribute $compliance
+    @relation __Role Action Forces
+    @result __Bundle $eid $act $jud $com $relation $ctx
     return $result
 end
 
 @forms:forms graph entity organization
     # Entity forms legal organization
+    @eid __Event
+    @act __Role Action forms
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @org __Role Organization $organization
-    @relation __Role Relation Forms
-    @result __Bundle $ent $org $relation
+    @org __Role Attribute $organization
+    @relation __Role Action Forms
+    @result __Bundle $eid $act $ent $org $relation $ctx
     return $result
 end
 
 @frustrates:frustrates graph action purpose
     # Action frustrates contractual purpose
+    @eid __Event
+    @act2 __Role Action frustrates
+    @ctx __Role Context StressCompat
     @act __Role Action $action
     @pur __Role Purpose $purpose
-    @relation __Role Relation Frustrates
-    @result __Bundle $act $pur $relation
+    @relation __Role Action Frustrates
+    @result __Bundle $eid $act2 $act $pur $relation $ctx
     return $result
 end
 
 @gave:gave graph grantor grantee
     # Grantor gave property to grantee
-    @gra __Role Grantor $grantor
-    @gran __Role Grantee $grantee
-    @relation __Role Relation Gave
-    @result __Bundle $gra $gran $relation
+    @eid __Event
+    @act __Role Action gave
+    @ctx __Role Context StressCompat
+    @gra __Role Attribute $grantor
+    @gran __Role Attribute $grantee
+    @relation __Role Action Gave
+    @result __Bundle $eid $act $gra $gran $relation $ctx
     return $result
 end
 
 @gets:gets graph recipient benefit
     # Recipient gets legal benefit
+    @eid __Event
+    @act __Role Action gets
+    @ctx __Role Context StressCompat
     @rec __Role Recipient $recipient
-    @ben __Role Benefit $benefit
-    @relation __Role Relation Gets
-    @result __Bundle $rec $ben $relation
+    @ben __Role Attribute $benefit
+    @relation __Role Action Gets
+    @result __Bundle $eid $act $rec $ben $relation $ctx
     return $result
 end
 
 @gives:gives graph grantor grantee
     # Grantor gives right to grantee
-    @gra __Role Grantor $grantor
-    @gran __Role Grantee $grantee
-    @relation __Role Relation Gives
-    @result __Bundle $gra $gran $relation
+    @eid __Event
+    @act __Role Action gives
+    @ctx __Role Context StressCompat
+    @gra __Role Attribute $grantor
+    @gran __Role Attribute $grantee
+    @relation __Role Action Gives
+    @result __Bundle $eid $act $gra $gran $relation $ctx
     return $result
 end
 
 @goes:goes graph appeal court
     # Appeal goes to higher court
-    @app __Role Appeal $appeal
-    @cou __Role Court $court
-    @relation __Role Relation Goes
-    @result __Bundle $app $cou $relation
+    @eid __Event
+    @act __Role Action goes
+    @ctx __Role Context StressCompat
+    @app __Role Attribute $appeal
+    @cou __Role Attribute $court
+    @relation __Role Action Goes
+    @result __Bundle $eid $act $app $cou $relation $ctx
     return $result
 end
 
 @governs:governs graph law subject
-    @l __Role Law $law
-    @s __Role Subject $subject
+    @l __Role Context $law
+    @s __Role Attribute $subject
     @governance __Pair $l $s
     return $governance
 end
 
 @grants:grants graph law action
-    @l __Role Law $law
+    @l __Role Context $law
     @a __Role Action $action
     @regulation __Pair $l $a
     return $regulation
@@ -907,123 +1162,159 @@ end
 
 @had:had graph party knowledge
     # Party had actual knowledge
-    @par __Role Party $party
-    @kno __Role Knowledge $knowledge
-    @relation __Role Relation Had
-    @result __Bundle $par $kno $relation
+    @eid __Event
+    @act __Role Action had
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @kno __Role Attribute $knowledge
+    @relation __Role Action Had
+    @result __Bundle $eid $act $par $kno $relation $ctx
     return $result
 end
 
 @have:have graph party standing
     # Party has legal standing
-    @par __Role Party $party
-    @sta __Role Standing $standing
-    @relation __Role Relation Have
-    @result __Bundle $par $sta $relation
+    @eid __Event
+    @act __Role Action have
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @sta __Role Attribute $standing
+    @relation __Role Action Have
+    @result __Bundle $eid $act $par $sta $relation $ctx
     return $result
 end
 
 @hears:hears graph judge testimony
     # Judge hears witness testimony
-    @jud __Role Judge $judge
-    @tes __Role Testimony $testimony
-    @relation __Role Relation Hears
-    @result __Bundle $jud $tes $relation
+    @eid __Event
+    @act __Role Action hears
+    @ctx __Role Context StressCompat
+    @jud __Role Attribute $judge
+    @tes __Role Attribute $testimony
+    @relation __Role Action Hears
+    @result __Bundle $eid $act $jud $tes $relation $ctx
     return $result
 end
 
 @helps:helps graph counsel client
     # Counsel helps client navigate law
-    @cou __Role Counsel $counsel
-    @cli __Role Client $client
-    @relation __Role Relation Helps
-    @result __Bundle $cou $cli $relation
+    @eid __Event
+    @act __Role Action helps
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $counsel
+    @cli __Role Attribute $client
+    @relation __Role Action Helps
+    @result __Bundle $eid $act $cou $cli $relation $ctx
     return $result
 end
 
 @holds:holds graph party right
-    @p __Role Party $party
-    @r __Role Right $right
+    @p __Role Attribute $party
+    @r __Role Theme $right
     @entitlement __Pair $p $r
     return $entitlement
 end
 
 @includes:includes graph statute provision
     # Statute includes specific provision
-    @sta __Role Statute $statute
-    @pro __Role Provision $provision
-    @relation __Role Relation Includes
-    @result __Bundle $sta $pro $relation
+    @eid __Event
+    @act __Role Action includes
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @pro __Role Attribute $provision
+    @relation __Role Action Includes
+    @result __Bundle $eid $act $sta $pro $relation $ctx
     return $result
 end
 
 @incorporates:incorporates graph contract term
     # Contract incorporates legal term
-    @con __Role Contract $contract
-    @ter __Role Term $term
-    @relation __Role Relation Incorporates
-    @result __Bundle $con $ter $relation
+    @eid __Event
+    @act __Role Action incorporates
+    @ctx __Role Context StressCompat
+    @con __Role Attribute $contract
+    @ter __Role Attribute $term
+    @relation __Role Action Incorporates
+    @result __Bundle $eid $act $con $ter $relation $ctx
     return $result
 end
 
 @increases:increases graph factor damages
     # Factor increases damage award
-    @fac __Role Factor $factor
-    @dam __Role Damages $damages
-    @relation __Role Relation Increases
-    @result __Bundle $fac $dam $relation
+    @eid __Event
+    @act __Role Action increases
+    @ctx __Role Context StressCompat
+    @fac __Role Attribute $factor
+    @dam __Role Attribute $damages
+    @relation __Role Action Increases
+    @result __Bundle $eid $act $fac $dam $relation $ctx
     return $result
 end
 
 @incurs:incurs graph tortfeasor liability
     # Tortfeasor incurs legal liability
-    @tor __Role Tortfeasor $tortfeasor
-    @lia __Role Liability $liability
-    @relation __Role Relation Incurs
-    @result __Bundle $tor $lia $relation
+    @eid __Event
+    @act __Role Action incurs
+    @ctx __Role Context StressCompat
+    @tor __Role Attribute $tortfeasor
+    @lia __Role Attribute $liability
+    @relation __Role Action Incurs
+    @result __Bundle $eid $act $tor $lia $relation $ctx
     return $result
 end
 
 @informs:informs graph disclosure party
     # Disclosure informs party of facts
-    @dis __Role Disclosure $disclosure
-    @par __Role Party $party
-    @relation __Role Relation Informs
-    @result __Bundle $dis $par $relation
+    @eid __Event
+    @act __Role Action informs
+    @ctx __Role Context StressCompat
+    @dis __Role Attribute $disclosure
+    @par __Role Attribute $party
+    @relation __Role Action Informs
+    @result __Bundle $eid $act $dis $par $relation $ctx
     return $result
 end
 
 @intends:intends graph party consequence
     # Party intends legal consequence
-    @par __Role Party $party
-    @con __Role Consequence $consequence
-    @relation __Role Relation Intends
-    @result __Bundle $par $con $relation
+    @eid __Event
+    @act __Role Action intends
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @con __Role Attribute $consequence
+    @relation __Role Action Intends
+    @result __Bundle $eid $act $par $con $relation $ctx
     return $result
 end
 
 @interprets:interprets graph authority law
-    @a __Role Authority $authority
-    @l __Role Law $law
+    @a __Role Attribute $authority
+    @l __Role Context $law
     @interpretation __Pair $a $l
     return $interpretation
 end
 
 @introduces:introduces graph party evidence
     # Party introduces evidence at trial
-    @par __Role Party $party
-    @evi __Role Evidence $evidence
-    @relation __Role Relation Introduces
-    @result __Bundle $par $evi $relation
+    @eid __Event
+    @act __Role Action introduces
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @evi __Role Attribute $evidence
+    @relation __Role Action Introduces
+    @result __Bundle $eid $act $par $evi $relation $ctx
     return $result
 end
 
 @involves:involves graph dispute parties
     # Dispute involves multiple parties
-    @dis __Role Dispute $dispute
-    @par __Role Parties $parties
-    @relation __Role Relation Involves
-    @result __Bundle $dis $par $relation
+    @eid __Event
+    @act __Role Action involves
+    @ctx __Role Context StressCompat
+    @dis __Role Attribute $dispute
+    @par __Role Attribute $parties
+    @relation __Role Action Involves
+    @result __Bundle $eid $act $dis $par $relation $ctx
     return $result
 end
 
@@ -1043,163 +1334,217 @@ end
 
 @keeps:keeps graph party record
     # Party keeps legal record
-    @par __Role Party $party
-    @rec __Role Record $record
-    @relation __Role Relation Keeps
-    @result __Bundle $par $rec $relation
+    @eid __Event
+    @act __Role Action keeps
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @rec __Role Attribute $record
+    @relation __Role Action Keeps
+    @result __Bundle $eid $act $par $rec $relation $ctx
     return $result
 end
 
 @knew:knew graph party fact
     # Party knew material fact
-    @par __Role Party $party
-    @fac __Role Fact $fact
-    @relation __Role Relation Knew
-    @result __Bundle $par $fac $relation
+    @eid __Event
+    @act __Role Action knew
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @fac __Role Attribute $fact
+    @relation __Role Action Knew
+    @result __Bundle $eid $act $par $fac $relation $ctx
     return $result
 end
 
 @lacks:lacks graph party capacity
     # Party lacks legal capacity
-    @par __Role Party $party
-    @cap __Role Capacity $capacity
-    @relation __Role Relation Lacks
-    @result __Bundle $par $cap $relation
+    @eid __Event
+    @act __Role Action lacks
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @cap __Role Attribute $capacity
+    @relation __Role Action Lacks
+    @result __Bundle $eid $act $par $cap $relation $ctx
     return $result
 end
 
 @leaves:leaves graph testator heir
     # Testator leaves estate to heir
-    @tes __Role Testator $testator
-    @hei __Role Heir $heir
-    @relation __Role Relation Leaves
-    @result __Bundle $tes $hei $relation
+    @eid __Event
+    @act __Role Action leaves
+    @ctx __Role Context StressCompat
+    @tes __Role Attribute $testator
+    @hei __Role Attribute $heir
+    @relation __Role Action Leaves
+    @result __Bundle $eid $act $tes $hei $relation $ctx
     return $result
 end
 
 @limit:limit graph statute liability
     # Statute limits legal liability
-    @sta __Role Statute $statute
-    @lia __Role Liability $liability
-    @relation __Role Relation Limit
-    @result __Bundle $sta $lia $relation
+    @eid __Event
+    @act __Role Action limit
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @lia __Role Attribute $liability
+    @relation __Role Action Limit
+    @result __Bundle $eid $act $sta $lia $relation $ctx
     return $result
 end
 
 @limited:limited graph scope application
     # Scope limited to application
+    @eid __Event
+    @act __Role Action limited
+    @ctx __Role Context StressCompat
     @sco __Role Scope $scope
-    @app __Role Application $application
-    @relation __Role Relation Limited
-    @result __Bundle $sco $app $relation
+    @app __Role Attribute $application
+    @relation __Role Action Limited
+    @result __Bundle $eid $act $sco $app $relation $ctx
     return $result
 end
 
 @limits:limits graph provision scope
     # Provision limits statutory scope
-    @pro __Role Provision $provision
+    @eid __Event
+    @act __Role Action limits
+    @ctx __Role Context StressCompat
+    @pro __Role Attribute $provision
     @sco __Role Scope $scope
-    @relation __Role Relation Limits
-    @result __Bundle $pro $sco $relation
+    @relation __Role Action Limits
+    @result __Bundle $eid $act $pro $sco $relation $ctx
     return $result
 end
 
 @links:links graph evidence conclusion
     # Evidence links to conclusion
-    @evi __Role Evidence $evidence
-    @con __Role Conclusion $conclusion
-    @relation __Role Relation Links
-    @result __Bundle $evi $con $relation
+    @eid __Event
+    @act __Role Action links
+    @ctx __Role Context StressCompat
+    @evi __Role Attribute $evidence
+    @con __Role Attribute $conclusion
+    @relation __Role Action Links
+    @result __Bundle $eid $act $evi $con $relation $ctx
     return $result
 end
 
 @loses:loses graph party right
     # Party loses legal right
-    @par __Role Party $party
-    @rig __Role Right $right
-    @relation __Role Relation Loses
-    @result __Bundle $par $rig $relation
+    @eid __Event
+    @act __Role Action loses
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @rig __Role Theme $right
+    @relation __Role Action Loses
+    @result __Bundle $eid $act $par $rig $relation $ctx
     return $result
 end
 
 @lowers:lowers graph factor damages
     # Factor lowers damage award
-    @fac __Role Factor $factor
-    @dam __Role Damages $damages
-    @relation __Role Relation Lowers
-    @result __Bundle $fac $dam $relation
+    @eid __Event
+    @act __Role Action lowers
+    @ctx __Role Context StressCompat
+    @fac __Role Attribute $factor
+    @dam __Role Attribute $damages
+    @relation __Role Action Lowers
+    @result __Bundle $eid $act $fac $dam $relation $ctx
     return $result
 end
 
 @made:made graph party representation
     # Party made legal representation
-    @par __Role Party $party
-    @rep __Role Representation $representation
-    @relation __Role Relation Made
-    @result __Bundle $par $rep $relation
+    @eid __Event
+    @act __Role Action made
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @rep __Role Content $representation
+    @relation __Role Action Made
+    @result __Bundle $eid $act $par $rep $relation $ctx
     return $result
 end
 
 @mails:mails graph sender notice
     # Sender mails legal notice
-    @sen __Role Sender $sender
+    @eid __Event
+    @act __Role Action mails
+    @ctx __Role Context StressCompat
+    @sen __Role Attribute $sender
     @not __Role Recipient $notice
-    @relation __Role Relation Mails
-    @result __Bundle $sen $not $relation
+    @relation __Role Action Mails
+    @result __Bundle $eid $act $sen $not $relation $ctx
     return $result
 end
 
 @maintains:maintains graph party position
     # Party maintains legal position
-    @par __Role Party $party
-    @pos __Role Position $position
-    @relation __Role Relation Maintains
-    @result __Bundle $par $pos $relation
+    @eid __Event
+    @act __Role Action maintains
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @pos __Role Attribute $position
+    @relation __Role Action Maintains
+    @result __Bundle $eid $act $par $pos $relation $ctx
     return $result
 end
 
 @makes:makes graph party claim
     # Party makes legal claim
-    @par __Role Party $party
-    @cla __Role Claim $claim
-    @relation __Role Relation Makes
-    @result __Bundle $par $cla $relation
+    @eid __Event
+    @act __Role Action makes
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @cla __Role Content $claim
+    @relation __Role Action Makes
+    @result __Bundle $eid $act $par $cla $relation $ctx
     return $result
 end
 
 @means:means graph term definition
     # Term means legal definition
-    @ter __Role Term $term
-    @def __Role Definition $definition
-    @relation __Role Relation Means
-    @result __Bundle $ter $def $relation
+    @eid __Event
+    @act __Role Action means
+    @ctx __Role Context StressCompat
+    @ter __Role Attribute $term
+    @def __Role Attribute $definition
+    @relation __Role Action Means
+    @result __Bundle $eid $act $ter $def $relation $ctx
     return $result
 end
 
 @measured:measured graph damages standard
     # Damages measured by standard
-    @dam __Role Damages $damages
-    @sta __Role Standard $standard
-    @relation __Role Relation Measured
-    @result __Bundle $dam $sta $relation
+    @eid __Event
+    @act __Role Action measured
+    @ctx __Role Context StressCompat
+    @dam __Role Attribute $damages
+    @sta __Role Attribute $standard
+    @relation __Role Action Measured
+    @result __Bundle $eid $act $dam $sta $relation $ctx
     return $result
 end
 
 @mirrors:mirrors graph statute provision
     # Statute mirrors model provision
-    @sta __Role Statute $statute
-    @pro __Role Provision $provision
-    @relation __Role Relation Mirrors
-    @result __Bundle $sta $pro $relation
+    @eid __Event
+    @act __Role Action mirrors
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @pro __Role Attribute $provision
+    @relation __Role Action Mirrors
+    @result __Bundle $eid $act $sta $pro $relation $ctx
     return $result
 end
 
 @names:names graph document party
     # Document names party to action
-    @doc __Role Document $document
-    @par __Role Party $party
-    @relation __Role Relation Names
-    @result __Bundle $doc $par $relation
+    @eid __Event
+    @act __Role Action names
+    @ctx __Role Context StressCompat
+    @doc __Role Attribute $document
+    @par __Role Attribute $party
+    @relation __Role Action Names
+    @result __Bundle $eid $act $doc $par $relation $ctx
     return $result
 end
 
@@ -1212,103 +1557,133 @@ end
 
 @negotiates:negotiates graph party settlement
     # Party negotiates settlement agreement
-    @par __Role Party $party
-    @set __Role Settlement $settlement
-    @relation __Role Relation Negotiates
-    @result __Bundle $par $set $relation
+    @eid __Event
+    @act __Role Action negotiates
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @set __Role Attribute $settlement
+    @relation __Role Action Negotiates
+    @result __Bundle $eid $act $par $set $relation $ctx
     return $result
 end
 
 @observes:observes graph court procedure
     # Court observes legal procedure
-    @cou __Role Court $court
-    @pro __Role Procedure $procedure
-    @relation __Role Relation Observes
-    @result __Bundle $cou $pro $relation
+    @eid __Event
+    @act __Role Action observes
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @pro __Role Attribute $procedure
+    @relation __Role Action Observes
+    @result __Bundle $eid $act $cou $pro $relation $ctx
     return $result
 end
 
 @obtains:obtains graph claimant relief
     # Claimant obtains equitable relief
-    @cla __Role Claimant $claimant
-    @rel __Role Relief $relief
-    @relation __Role Relation Obtains
-    @result __Bundle $cla $rel $relation
+    @eid __Event
+    @act __Role Action obtains
+    @ctx __Role Context StressCompat
+    @cla __Role Attribute $claimant
+    @rel __Role Attribute $relief
+    @relation __Role Action Obtains
+    @result __Bundle $eid $act $cla $rel $relation $ctx
     return $result
 end
 
 @occur:occur graph event jurisdiction
     # Event occurs within jurisdiction
-    @eve __Role Event $event
-    @jur __Role Jurisdiction $jurisdiction
-    @relation __Role Relation Occur
-    @result __Bundle $eve $jur $relation
+    @eid __Event
+    @act __Role Action occur
+    @ctx __Role Context StressCompat
+    @eve __Role Action $event
+    @jur __Role Attribute $jurisdiction
+    @relation __Role Action Occur
+    @result __Bundle $eid $act $eve $jur $relation $ctx
     return $result
 end
 
 @occurred:occurred graph violation timeframe
     # Violation occurred during timeframe
-    @vio __Role Violation $violation
-    @tim __Role Timeframe $timeframe
-    @relation __Role Relation Occurred
-    @result __Bundle $vio $tim $relation
+    @eid __Event
+    @act __Role Action occurred
+    @ctx __Role Context StressCompat
+    @vio __Role Attribute $violation
+    @tim __Role Attribute $timeframe
+    @relation __Role Action Occurred
+    @result __Bundle $eid $act $vio $tim $relation $ctx
     return $result
 end
 
 @occurs:occurs graph incident location
     # Incident occurs at location
-    @inc __Role Incident $incident
+    @eid __Event
+    @act __Role Action occurs
+    @ctx __Role Context StressCompat
+    @inc __Role Attribute $incident
     @loc __Role Location $location
-    @relation __Role Relation Occurs
-    @result __Bundle $inc $loc $relation
+    @relation __Role Action Occurs
+    @result __Bundle $eid $act $inc $loc $relation $ctx
     return $result
 end
 
 @offered:offered graph offeror offeree
     # Offeror offered terms to offeree
-    @off __Role Offeror $offeror
-    @offe __Role Offeree $offeree
-    @relation __Role Relation Offered
-    @result __Bundle $off $offe $relation
+    @eid __Event
+    @act __Role Action offered
+    @ctx __Role Context StressCompat
+    @off __Role Attribute $offeror
+    @offe __Role Attribute $offeree
+    @relation __Role Action Offered
+    @result __Bundle $eid $act $off $offe $relation $ctx
     return $result
 end
 
 @offers:offers graph defendant settlement
     # Defendant offers settlement proposal
-    @def __Role Defendant $defendant
-    @set __Role Settlement $settlement
-    @relation __Role Relation Offers
-    @result __Bundle $def $set $relation
+    @eid __Event
+    @act __Role Action offers
+    @ctx __Role Context StressCompat
+    @def __Role Attribute $defendant
+    @set __Role Attribute $settlement
+    @relation __Role Action Offers
+    @result __Bundle $eid $act $def $set $relation $ctx
     return $result
 end
 
 @orders:orders graph court remedy
     # Court orders specific remedy
-    @cou __Role Court $court
-    @rem __Role Remedy $remedy
-    @relation __Role Relation Orders
-    @result __Bundle $cou $rem $relation
+    @eid __Event
+    @act __Role Action orders
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @rem __Role Attribute $remedy
+    @relation __Role Action Orders
+    @result __Bundle $eid $act $cou $rem $relation $ctx
     return $result
 end
 
 @owes:owes graph party right
-    @p __Role Party $party
-    @r __Role Right $right
+    @p __Role Attribute $party
+    @r __Role Theme $right
     @entitlement __Pair $p $r
     return $entitlement
 end
 
 @pays:pays graph debtor creditor
     # Debtor pays obligation to creditor
-    @deb __Role Debtor $debtor
-    @cre __Role Creditor $creditor
-    @relation __Role Relation Pays
-    @result __Bundle $deb $cre $relation
+    @eid __Event
+    @act __Role Action pays
+    @ctx __Role Context StressCompat
+    @deb __Role Attribute $debtor
+    @cre __Role Attribute $creditor
+    @relation __Role Action Pays
+    @result __Bundle $eid $act $deb $cre $relation $ctx
     return $result
 end
 
 @permits:permits graph law action
-    @l __Role Law $law
+    @l __Role Context $law
     @a __Role Action $action
     @regulation __Pair $l $a
     return $regulation
@@ -1316,22 +1691,25 @@ end
 
 @presents:presents graph party evidence
     # Party presents evidence to court
-    @par __Role Party $party
-    @evi __Role Evidence $evidence
-    @relation __Role Relation Presents
-    @result __Bundle $par $evi $relation
+    @eid __Event
+    @act __Role Action presents
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @evi __Role Attribute $evidence
+    @relation __Role Action Presents
+    @result __Bundle $eid $act $par $evi $relation $ctx
     return $result
 end
 
 @produces:produces graph action outcome
     @a __Role Action $action
-    @o __Role Outcome $outcome
+    @o __Role Attribute $outcome
     @consequence __Pair $a $o
     return $consequence
 end
 
 @prohibits:prohibits graph law action
-    @l __Role Law $law
+    @l __Role Context $law
     @a __Role Action $action
     @regulation __Pair $l $a
     return $regulation
@@ -1339,191 +1717,248 @@ end
 
 @promises:promises graph promisor promisee
     # Promisor promises performance to promisee
-    @pro __Role Promisor $promisor
-    @prom __Role Promisee $promisee
-    @relation __Role Relation Promises
-    @result __Bundle $pro $prom $relation
+    @eid __Event
+    @act __Role Action promises
+    @ctx __Role Context StressCompat
+    @pro __Role Attribute $promisor
+    @prom __Role Attribute $promisee
+    @relation __Role Action Promises
+    @result __Bundle $eid $act $pro $prom $relation $ctx
     return $result
 end
 
 @protects:protects graph statute right
     # Statute protects fundamental right
-    @sta __Role Statute $statute
-    @rig __Role Right $right
-    @relation __Role Relation Protects
-    @result __Bundle $sta $rig $relation
+    @eid __Event
+    @act __Role Action protects
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @rig __Role Theme $right
+    @relation __Role Action Protects
+    @result __Bundle $eid $act $sta $rig $relation $ctx
     return $result
 end
 
 @provides:provides graph statute remedy
     # Statute provides legal remedy
-    @sta __Role Statute $statute
-    @rem __Role Remedy $remedy
-    @relation __Role Relation Provides
-    @result __Bundle $sta $rem $relation
+    @eid __Event
+    @act __Role Action provides
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @rem __Role Attribute $remedy
+    @relation __Role Action Provides
+    @result __Bundle $eid $act $sta $rem $relation $ctx
     return $result
 end
 
 @purposes:purposes graph statute objective
     # Statute serves legislative objective
-    @sta __Role Statute $statute
-    @obj __Role Objective $objective
-    @relation __Role Relation Purposes
-    @result __Bundle $sta $obj $relation
+    @eid __Event
+    @act __Role Action purposes
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @obj __Role Attribute $objective
+    @relation __Role Action Purposes
+    @result __Bundle $eid $act $sta $obj $relation $ctx
     return $result
 end
 
 @puts:puts graph party position
     # Party puts matter in position
-    @par __Role Party $party
-    @pos __Role Position $position
-    @relation __Role Relation Puts
-    @result __Bundle $par $pos $relation
+    @eid __Event
+    @act __Role Action puts
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @pos __Role Attribute $position
+    @relation __Role Action Puts
+    @result __Bundle $eid $act $par $pos $relation $ctx
     return $result
 end
 
 @questions:questions graph attorney witness
     # Attorney questions witness under oath
-    @att __Role Attorney $attorney
-    @wit __Role Witness $witness
-    @relation __Role Relation Questions
-    @result __Bundle $att $wit $relation
+    @eid __Event
+    @act __Role Action questions
+    @ctx __Role Context StressCompat
+    @att __Role Attribute $attorney
+    @wit __Role Attribute $witness
+    @relation __Role Action Questions
+    @result __Bundle $eid $act $att $wit $relation $ctx
     return $result
 end
 
 @raises:raises graph party defense
     # Party raises affirmative defense
-    @par __Role Party $party
-    @def __Role Defense $defense
-    @relation __Role Relation Raises
-    @result __Bundle $par $def $relation
+    @eid __Event
+    @act __Role Action raises
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @def __Role Attribute $defense
+    @relation __Role Action Raises
+    @result __Bundle $eid $act $par $def $relation $ctx
     return $result
 end
 
 @reach:reach graph parties agreement
     # Parties reach settlement agreement
-    @par __Role Parties $parties
-    @agr __Role Agreement $agreement
-    @relation __Role Relation Reach
-    @result __Bundle $par $agr $relation
+    @eid __Event
+    @act __Role Action reach
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $parties
+    @agr __Role Attribute $agreement
+    @relation __Role Action Reach
+    @result __Bundle $eid $act $par $agr $relation $ctx
     return $result
 end
 
 @reaches:reaches graph court decision
     # Court reaches final decision
-    @cou __Role Court $court
-    @dec __Role Decision $decision
-    @relation __Role Relation Reaches
-    @result __Bundle $cou $dec $relation
+    @eid __Event
+    @act __Role Action reaches
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @dec __Role Attribute $decision
+    @relation __Role Action Reaches
+    @result __Bundle $eid $act $cou $dec $relation $ctx
     return $result
 end
 
 @receives:receives graph recipient notice
     # Recipient receives legal notice
+    @eid __Event
+    @act __Role Action receives
+    @ctx __Role Context StressCompat
     @rec __Role Recipient $recipient
-    @not __Role Notice $notice
-    @relation __Role Relation Receives
-    @result __Bundle $rec $not $relation
+    @not __Role Attribute $notice
+    @relation __Role Action Receives
+    @result __Bundle $eid $act $rec $not $relation $ctx
     return $result
 end
 
 @recognizes:recognizes graph court right
     # Court recognizes legal right
-    @cou __Role Court $court
-    @rig __Role Right $right
-    @relation __Role Relation Recognizes
-    @result __Bundle $cou $rig $relation
+    @eid __Event
+    @act __Role Action recognizes
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @rig __Role Theme $right
+    @relation __Role Action Recognizes
+    @result __Bundle $eid $act $cou $rig $relation $ctx
     return $result
 end
 
 @refuses:refuses graph party performance
     # Party refuses contractual performance
-    @par __Role Party $party
-    @per __Role Performance $performance
-    @relation __Role Relation Refuses
-    @result __Bundle $par $per $relation
+    @eid __Event
+    @act __Role Action refuses
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @per __Role Attribute $performance
+    @relation __Role Action Refuses
+    @result __Bundle $eid $act $par $per $relation $ctx
     return $result
 end
 
 @regulates:regulates graph law subject
-    @l __Role Law $law
-    @s __Role Subject $subject
+    @l __Role Context $law
+    @s __Role Attribute $subject
     @governance __Pair $l $s
     return $governance
 end
 
 @releases:releases graph party claim
     # Party releases legal claim
-    @par __Role Party $party
-    @cla __Role Claim $claim
-    @relation __Role Relation Releases
-    @result __Bundle $par $cla $relation
+    @eid __Event
+    @act __Role Action releases
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @cla __Role Content $claim
+    @relation __Role Action Releases
+    @result __Bundle $eid $act $par $cla $relation $ctx
     return $result
 end
 
 @relieves:relieves graph provision party
     # Provision relieves party of obligation
-    @pro __Role Provision $provision
-    @par __Role Party $party
-    @relation __Role Relation Relieves
-    @result __Bundle $pro $par $relation
+    @eid __Event
+    @act __Role Action relieves
+    @ctx __Role Context StressCompat
+    @pro __Role Attribute $provision
+    @par __Role Attribute $party
+    @relation __Role Action Relieves
+    @result __Bundle $eid $act $pro $par $relation $ctx
     return $result
 end
 
 @removes:removes graph court case
     # Court removes case to federal court
-    @cou __Role Court $court
-    @cas __Role Case $case
-    @relation __Role Relation Removes
-    @result __Bundle $cou $cas $relation
+    @eid __Event
+    @act __Role Action removes
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @cas __Role Attribute $case
+    @relation __Role Action Removes
+    @result __Bundle $eid $act $cou $cas $relation $ctx
     return $result
 end
 
 @rendered:rendered graph court judgment
     # Court rendered final judgment
-    @cou __Role Court $court
-    @jud __Role Judgment $judgment
-    @relation __Role Relation Rendered
-    @result __Bundle $cou $jud $relation
+    @eid __Event
+    @act __Role Action rendered
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @jud __Role Attribute $judgment
+    @relation __Role Action Rendered
+    @result __Bundle $eid $act $cou $jud $relation $ctx
     return $result
 end
 
 @requests:requests graph party document
-    @p __Role Party $party
-    @d __Role Document $document
+    @p __Role Attribute $party
+    @d __Role Attribute $document
     @procedure __Pair $p $d
     return $procedure
 end
 
 @require:require graph statute compliance
     # Statute requires legal compliance
-    @sta __Role Statute $statute
-    @com __Role Compliance $compliance
-    @relation __Role Relation Require
-    @result __Bundle $sta $com $relation
+    @eid __Event
+    @act __Role Action require
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @com __Role Attribute $compliance
+    @relation __Role Action Require
+    @result __Bundle $eid $act $sta $com $relation $ctx
     return $result
 end
 
 @restores:restores graph remedy party
     # Remedy restores party to position
-    @rem __Role Remedy $remedy
-    @par __Role Party $party
-    @relation __Role Relation Restores
-    @result __Bundle $rem $par $relation
+    @eid __Event
+    @act __Role Action restores
+    @ctx __Role Context StressCompat
+    @rem __Role Attribute $remedy
+    @par __Role Attribute $party
+    @relation __Role Action Restores
+    @result __Bundle $eid $act $rem $par $relation $ctx
     return $result
 end
 
 @restrains:restrains graph injunction party
     # Injunction restrains party from action
-    @inj __Role Injunction $injunction
-    @par __Role Party $party
-    @relation __Role Relation Restrains
-    @result __Bundle $inj $par $relation
+    @eid __Event
+    @act __Role Action restrains
+    @ctx __Role Context StressCompat
+    @inj __Role Attribute $injunction
+    @par __Role Attribute $party
+    @relation __Role Action Restrains
+    @result __Bundle $eid $act $inj $par $relation $ctx
     return $result
 end
 
 @restricts:restricts graph law action
-    @l __Role Law $law
+    @l __Role Context $law
     @a __Role Action $action
     @regulation __Pair $l $a
     return $regulation
@@ -1531,418 +1966,550 @@ end
 
 @resulted:resulted graph action consequence
     # Action resulted in legal consequence
+    @eid __Event
+    @act2 __Role Action resulted
+    @ctx __Role Context StressCompat
     @act __Role Action $action
-    @con __Role Consequence $consequence
-    @relation __Role Relation Resulted
-    @result __Bundle $act $con $relation
+    @con __Role Attribute $consequence
+    @relation __Role Action Resulted
+    @result __Bundle $eid $act2 $act $con $relation $ctx
     return $result
 end
 
 @results:results graph action outcome
     @a __Role Action $action
-    @o __Role Outcome $outcome
+    @o __Role Attribute $outcome
     @consequence __Pair $a $o
     return $consequence
 end
 
 @retains:retains graph party right
     # Party retains legal right
-    @par __Role Party $party
-    @rig __Role Right $right
-    @relation __Role Relation Retains
-    @result __Bundle $par $rig $relation
+    @eid __Event
+    @act __Role Action retains
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @rig __Role Theme $right
+    @relation __Role Action Retains
+    @result __Bundle $eid $act $par $rig $relation $ctx
     return $result
 end
 
 @returns:returns graph court verdict
     # Court returns verdict in case
-    @cou __Role Court $court
-    @ver __Role Verdict $verdict
-    @relation __Role Relation Returns
-    @result __Bundle $cou $ver $relation
+    @eid __Event
+    @act __Role Action returns
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @ver __Role Attribute $verdict
+    @relation __Role Action Returns
+    @result __Bundle $eid $act $cou $ver $relation $ctx
     return $result
 end
 
 @reveals:reveals graph evidence fact
     # Evidence reveals material fact
-    @evi __Role Evidence $evidence
-    @fac __Role Fact $fact
-    @relation __Role Relation Reveals
-    @result __Bundle $evi $fac $relation
+    @eid __Event
+    @act __Role Action reveals
+    @ctx __Role Context StressCompat
+    @evi __Role Attribute $evidence
+    @fac __Role Attribute $fact
+    @relation __Role Action Reveals
+    @result __Bundle $eid $act $evi $fac $relation $ctx
     return $result
 end
 
 @satisfies:satisfies graph performance obligation
     # Performance satisfies contractual obligation
-    @per __Role Performance $performance
-    @obl __Role Obligation $obligation
-    @relation __Role Relation Satisfies
-    @result __Bundle $per $obl $relation
+    @eid __Event
+    @act __Role Action satisfies
+    @ctx __Role Context StressCompat
+    @per __Role Attribute $performance
+    @obl __Role Attribute $obligation
+    @relation __Role Action Satisfies
+    @result __Bundle $eid $act $per $obl $relation $ctx
     return $result
 end
 
 @secures:secures graph creditor debt
     # Creditor secures debt with collateral
-    @cre __Role Creditor $creditor
-    @deb __Role Debt $debt
-    @relation __Role Relation Secures
-    @result __Bundle $cre $deb $relation
+    @eid __Event
+    @act __Role Action secures
+    @ctx __Role Context StressCompat
+    @cre __Role Attribute $creditor
+    @deb __Role Attribute $debt
+    @relation __Role Action Secures
+    @result __Bundle $eid $act $cre $deb $relation $ctx
     return $result
 end
 
 @seeks:seeks graph party relief
     # Party seeks judicial relief
-    @par __Role Party $party
-    @rel __Role Relief $relief
-    @relation __Role Relation Seeks
-    @result __Bundle $par $rel $relation
+    @eid __Event
+    @act __Role Action seeks
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @rel __Role Attribute $relief
+    @relation __Role Action Seeks
+    @result __Bundle $eid $act $par $rel $relation $ctx
     return $result
 end
 
 @seems:seems graph evidence conclusion
     # Evidence seems to support conclusion
-    @evi __Role Evidence $evidence
-    @con __Role Conclusion $conclusion
-    @relation __Role Relation Seems
-    @result __Bundle $evi $con $relation
+    @eid __Event
+    @act __Role Action seems
+    @ctx __Role Context StressCompat
+    @evi __Role Attribute $evidence
+    @con __Role Attribute $conclusion
+    @relation __Role Action Seems
+    @result __Bundle $eid $act $evi $con $relation $ctx
     return $result
 end
 
 @sends:sends graph sender recipient
     # Sender sends legal notice
-    @sen __Role Sender $sender
+    @eid __Event
+    @act __Role Action sends
+    @ctx __Role Context StressCompat
+    @sen __Role Attribute $sender
     @rec __Role Recipient $recipient
-    @relation __Role Relation Sends
-    @result __Bundle $sen $rec $relation
+    @relation __Role Action Sends
+    @result __Bundle $eid $act $sen $rec $relation $ctx
     return $result
 end
 
 @serves:serves graph party process
     # Party serves legal process
-    @par __Role Party $party
+    @eid __Event
+    @act __Role Action serves
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
     @pro __Role Process $process
-    @relation __Role Relation Serves
-    @result __Bundle $par $pro $relation
+    @relation __Role Action Serves
+    @result __Bundle $eid $act $par $pro $relation $ctx
     return $result
 end
 
 @share:share graph parties liability
     # Parties share joint liability
-    @par __Role Parties $parties
-    @lia __Role Liability $liability
-    @relation __Role Relation Share
-    @result __Bundle $par $lia $relation
+    @eid __Event
+    @act __Role Action share
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $parties
+    @lia __Role Attribute $liability
+    @relation __Role Action Share
+    @result __Bundle $eid $act $par $lia $relation $ctx
     return $result
 end
 
 @shields:shields graph immunity defendant
     # Immunity shields defendant from liability
-    @imm __Role Immunity $immunity
-    @def __Role Defendant $defendant
-    @relation __Role Relation Shields
-    @result __Bundle $imm $def $relation
+    @eid __Event
+    @act __Role Action shields
+    @ctx __Role Context StressCompat
+    @imm __Role Attribute $immunity
+    @def __Role Attribute $defendant
+    @relation __Role Action Shields
+    @result __Bundle $eid $act $imm $def $relation $ctx
     return $result
 end
 
 @shifts:shifts graph doctrine burden
     # Doctrine shifts burden of proof
-    @doc __Role Doctrine $doctrine
-    @bur __Role Burden $burden
-    @relation __Role Relation Shifts
-    @result __Bundle $doc $bur $relation
+    @eid __Event
+    @act __Role Action shifts
+    @ctx __Role Context StressCompat
+    @doc __Role Attribute $doctrine
+    @bur __Role Attribute $burden
+    @relation __Role Action Shifts
+    @result __Bundle $eid $act $doc $bur $relation $ctx
     return $result
 end
 
 @shows:shows graph entity finding
     @e __Role Entity $entity
-    @f __Role Finding $finding
+    @f __Role Attribute $finding
     @determination __Pair $e $f
     return $determination
 end
 
 @signs:signs graph party document
     # Party signs legal document
-    @par __Role Party $party
-    @doc __Role Document $document
-    @relation __Role Relation Signs
-    @result __Bundle $par $doc $relation
+    @eid __Event
+    @act __Role Action signs
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @doc __Role Attribute $document
+    @relation __Role Action Signs
+    @result __Bundle $eid $act $par $doc $relation $ctx
     return $result
 end
 
 @sits:sits graph judge bench
     # Judge sits on judicial bench
-    @jud __Role Judge $judge
-    @ben __Role Bench $bench
-    @relation __Role Relation Sits
-    @result __Bundle $jud $ben $relation
+    @eid __Event
+    @act __Role Action sits
+    @ctx __Role Context StressCompat
+    @jud __Role Attribute $judge
+    @ben __Role Attribute $bench
+    @relation __Role Action Sits
+    @result __Bundle $eid $act $jud $ben $relation $ctx
     return $result
 end
 
 @specifies:specifies graph statute requirement
     # Statute specifies legal requirement
-    @sta __Role Statute $statute
-    @req __Role Requirement $requirement
-    @relation __Role Relation Specifies
-    @result __Bundle $sta $req $relation
+    @eid __Event
+    @act __Role Action specifies
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @req __Role Attribute $requirement
+    @relation __Role Action Specifies
+    @result __Bundle $eid $act $sta $req $relation $ctx
     return $result
 end
 
 @states:states graph statute provision
     # Statute states legal provision
-    @sta __Role Statute $statute
-    @pro __Role Provision $provision
-    @relation __Role Relation States
-    @result __Bundle $sta $pro $relation
+    @eid __Event
+    @act __Role Action states
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @pro __Role Attribute $provision
+    @relation __Role Action States
+    @result __Bundle $eid $act $sta $pro $relation $ctx
     return $result
 end
 
 @stays:stays graph court proceeding
     # Court stays legal proceeding
-    @cou __Role Court $court
-    @pro __Role Proceeding $proceeding
-    @relation __Role Relation Stays
-    @result __Bundle $cou $pro $relation
+    @eid __Event
+    @act __Role Action stays
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @pro __Role Attribute $proceeding
+    @relation __Role Action Stays
+    @result __Bundle $eid $act $cou $pro $relation $ctx
     return $result
 end
 
 @strikes:strikes graph court pleading
     # Court strikes improper pleading
-    @cou __Role Court $court
-    @ple __Role Pleading $pleading
-    @relation __Role Relation Strikes
-    @result __Bundle $cou $ple $relation
+    @eid __Event
+    @act __Role Action strikes
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @ple __Role Attribute $pleading
+    @relation __Role Action Strikes
+    @result __Bundle $eid $act $cou $ple $relation $ctx
     return $result
 end
 
 @suffers:suffers graph party harm
     # Party suffers legal harm
-    @par __Role Party $party
-    @har __Role Harm $harm
-    @relation __Role Relation Suffers
-    @result __Bundle $par $har $relation
+    @eid __Event
+    @act __Role Action suffers
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @har __Role Attribute $harm
+    @relation __Role Action Suffers
+    @result __Bundle $eid $act $par $har $relation $ctx
     return $result
 end
 
 @support:support graph evidence claim
     # Evidence supports party's claim
-    @evi __Role Evidence $evidence
-    @cla __Role Claim $claim
-    @relation __Role Relation Support
-    @result __Bundle $evi $cla $relation
+    @eid __Event
+    @act __Role Action support
+    @ctx __Role Context StressCompat
+    @evi __Role Attribute $evidence
+    @cla __Role Content $claim
+    @relation __Role Action Support
+    @result __Bundle $eid $act $evi $cla $relation $ctx
     return $result
 end
 
 @suspects:suspects graph investigator wrongdoing
     # Investigator suspects criminal wrongdoing
-    @inv __Role Investigator $investigator
-    @wro __Role Wrongdoing $wrongdoing
-    @relation __Role Relation Suspects
-    @result __Bundle $inv $wro $relation
+    @eid __Event
+    @act __Role Action suspects
+    @ctx __Role Context StressCompat
+    @inv __Role Attribute $investigator
+    @wro __Role Attribute $wrongdoing
+    @relation __Role Action Suspects
+    @result __Bundle $eid $act $inv $wro $relation $ctx
     return $result
 end
 
 @takes:takes graph party action
     # Party takes legal action
-    @par __Role Party $party
+    @eid __Event
+    @act2 __Role Action takes
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
     @act __Role Action $action
-    @relation __Role Relation Takes
-    @result __Bundle $par $act $relation
+    @relation __Role Action Takes
+    @result __Bundle $eid $act2 $par $act $relation $ctx
     return $result
 end
 
 @terminates:terminates graph party contract
     # Party terminates contract agreement
-    @par __Role Party $party
-    @con __Role Contract $contract
-    @relation __Role Relation Terminates
-    @result __Bundle $par $con $relation
+    @eid __Event
+    @act __Role Action terminates
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @con __Role Attribute $contract
+    @relation __Role Action Terminates
+    @result __Bundle $eid $act $par $con $relation $ctx
     return $result
 end
 
 @testified:testified graph witness court
     # Witness testified before court
-    @wit __Role Witness $witness
-    @cou __Role Court $court
-    @relation __Role Relation Testified
-    @result __Bundle $wit $cou $relation
+    @eid __Event
+    @act __Role Action testified
+    @ctx __Role Context StressCompat
+    @wit __Role Attribute $witness
+    @cou __Role Attribute $court
+    @relation __Role Action Testified
+    @result __Bundle $eid $act $wit $cou $relation $ctx
     return $result
 end
 
 @tolerates:tolerates graph statute variation
     # Statute tolerates minor variation
-    @sta __Role Statute $statute
-    @var __Role Variation $variation
-    @relation __Role Relation Tolerates
-    @result __Bundle $sta $var $relation
+    @eid __Event
+    @act __Role Action tolerates
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @var __Role Attribute $variation
+    @relation __Role Action Tolerates
+    @result __Bundle $eid $act $sta $var $relation $ctx
     return $result
 end
 
 @transfers:transfers graph transferor transferee
     # Transferor transfers property to transferee
-    @tra __Role Transferor $transferor
-    @tran __Role Transferee $transferee
-    @relation __Role Relation Transfers
-    @result __Bundle $tra $tran $relation
+    @eid __Event
+    @act __Role Action transfers
+    @ctx __Role Context StressCompat
+    @tra __Role Attribute $transferor
+    @tran __Role Attribute $transferee
+    @relation __Role Action Transfers
+    @result __Bundle $eid $act $tra $tran $relation $ctx
     return $result
 end
 
 @transforms:transforms graph statute relationship
     # Statute transforms legal relationship
-    @sta __Role Statute $statute
-    @rel __Role Relationship $relationship
-    @relation __Role Relation Transforms
-    @result __Bundle $sta $rel $relation
+    @eid __Event
+    @act __Role Action transforms
+    @ctx __Role Context StressCompat
+    @sta __Role Attribute $statute
+    @rel __Role Attribute $relationship
+    @relation __Role Action Transforms
+    @result __Bundle $eid $act $sta $rel $relation $ctx
     return $result
 end
 
 @transmits:transmits graph sender recipient
     # Sender transmits legal document
-    @sen __Role Sender $sender
+    @eid __Event
+    @act __Role Action transmits
+    @ctx __Role Context StressCompat
+    @sen __Role Attribute $sender
     @rec __Role Recipient $recipient
-    @relation __Role Relation Transmits
-    @result __Bundle $sen $rec $relation
+    @relation __Role Action Transmits
+    @result __Bundle $eid $act $sen $rec $relation $ctx
     return $result
 end
 
 @tries:tries graph court case
     # Court tries case to jury
-    @cou __Role Court $court
-    @cas __Role Case $case
-    @relation __Role Relation Tries
-    @result __Bundle $cou $cas $relation
+    @eid __Event
+    @act __Role Action tries
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @cas __Role Attribute $case
+    @relation __Role Action Tries
+    @result __Bundle $eid $act $cou $cas $relation $ctx
     return $result
 end
 
 @under:under graph party statute
     # Party acts under statutory authority
-    @par __Role Party $party
-    @sta __Role Statute $statute
-    @relation __Role Relation Under
-    @result __Bundle $par $sta $relation
+    @eid __Event
+    @act __Role Action under
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @sta __Role Attribute $statute
+    @relation __Role Action Under
+    @result __Bundle $eid $act $par $sta $relation $ctx
     return $result
 end
 
 @validConsideration:validConsideration graph contract consideration
     # Contract has valid consideration
-    @con __Role Contract $contract
-    @cons __Role Consideration $consideration
-    @relation __Role Relation Validconsideration
-    @result __Bundle $con $cons $relation
+    @eid __Event
+    @act __Role Action validConsideration
+    @ctx __Role Context StressCompat
+    @con __Role Attribute $contract
+    @cons __Role Attribute $consideration
+    @relation __Role Action Validconsideration
+    @result __Bundle $eid $act $con $cons $relation $ctx
     return $result
 end
 
 @validContract:validContract graph parties agreement
     # Parties formed valid contract
-    @par __Role Parties $parties
-    @agr __Role Agreement $agreement
-    @relation __Role Relation Validcontract
-    @result __Bundle $par $agr $relation
+    @eid __Event
+    @act __Role Action validContract
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $parties
+    @agr __Role Attribute $agreement
+    @relation __Role Action Validcontract
+    @result __Bundle $eid $act $par $agr $relation $ctx
     return $result
 end
 
 @validOffer:validOffer graph offeror offeree
     # Offeror made valid offer
-    @off __Role Offeror $offeror
-    @offe __Role Offeree $offeree
-    @relation __Role Relation Validoffer
-    @result __Bundle $off $offe $relation
+    @eid __Event
+    @act __Role Action validOffer
+    @ctx __Role Context StressCompat
+    @off __Role Attribute $offeror
+    @offe __Role Attribute $offeree
+    @relation __Role Action Validoffer
+    @result __Bundle $eid $act $off $offe $relation $ctx
     return $result
 end
 
 @verifiable:verifiable graph fact evidence
     # Fact is verifiable by evidence
-    @fac __Role Fact $fact
-    @evi __Role Evidence $evidence
-    @relation __Role Relation Verifiable
-    @result __Bundle $fac $evi $relation
+    @eid __Event
+    @act __Role Action verifiable
+    @ctx __Role Context StressCompat
+    @fac __Role Attribute $fact
+    @evi __Role Attribute $evidence
+    @relation __Role Action Verifiable
+    @result __Bundle $eid $act $fac $evi $relation $ctx
     return $result
 end
 
 @verifies:verifies graph party fact
     # Party verifies factual assertion
-    @par __Role Party $party
-    @fac __Role Fact $fact
-    @relation __Role Relation Verifies
-    @result __Bundle $par $fac $relation
+    @eid __Event
+    @act __Role Action verifies
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @fac __Role Attribute $fact
+    @relation __Role Action Verifies
+    @result __Bundle $eid $act $par $fac $relation $ctx
     return $result
 end
 
 @views:views graph court matter
     # Court views matter in context
-    @cou __Role Court $court
-    @mat __Role Matter $matter
-    @relation __Role Relation Views
-    @result __Bundle $cou $mat $relation
+    @eid __Event
+    @act __Role Action views
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @mat __Role Attribute $matter
+    @relation __Role Action Views
+    @result __Bundle $eid $act $cou $mat $relation $ctx
     return $result
 end
 
 @violates:violates graph action law
     @a __Role Action $action
-    @l __Role Law $law
+    @l __Role Context $law
     @violation __Pair $a $l
     return $violation
 end
 
 @vote:vote graph legislator measure
     # Legislator votes on legislative measure
-    @leg __Role Legislator $legislator
-    @mea __Role Measure $measure
-    @relation __Role Relation Vote
-    @result __Bundle $leg $mea $relation
+    @eid __Event
+    @act __Role Action vote
+    @ctx __Role Context StressCompat
+    @leg __Role Attribute $legislator
+    @mea __Role Attribute $measure
+    @relation __Role Action Vote
+    @result __Bundle $eid $act $leg $mea $relation $ctx
     return $result
 end
 
 @warrants:warrants graph evidence inference
     # Evidence warrants factual inference
-    @evi __Role Evidence $evidence
-    @inf __Role Inference $inference
-    @relation __Role Relation Warrants
-    @result __Bundle $evi $inf $relation
+    @eid __Event
+    @act __Role Action warrants
+    @ctx __Role Context StressCompat
+    @evi __Role Attribute $evidence
+    @inf __Role Attribute $inference
+    @relation __Role Action Warrants
+    @result __Bundle $eid $act $evi $inf $relation $ctx
     return $result
 end
 
 @was:was graph entity status
     # Entity was in legal status
+    @eid __Event
+    @act __Role Action was
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @sta __Role Status $status
-    @relation __Role Relation Was
-    @result __Bundle $ent $sta $relation
+    @sta __Role State $status
+    @relation __Role Action Was
+    @result __Bundle $eid $act $ent $sta $relation $ctx
     return $result
 end
 
 @weighs:weighs graph court factors
     # Court weighs competing factors
-    @cou __Role Court $court
-    @fac __Role Factors $factors
-    @relation __Role Relation Weighs
-    @result __Bundle $cou $fac $relation
+    @eid __Event
+    @act __Role Action weighs
+    @ctx __Role Context StressCompat
+    @cou __Role Attribute $court
+    @fac __Role Attribute $factors
+    @relation __Role Action Weighs
+    @result __Bundle $eid $act $cou $fac $relation $ctx
     return $result
 end
 
 @were:were graph entities status
     # Entities were in legal status
-    @ent __Role Entities $entities
-    @sta __Role Status $status
-    @relation __Role Relation Were
-    @result __Bundle $ent $sta $relation
+    @eid __Event
+    @act __Role Action were
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entities
+    @sta __Role State $status
+    @relation __Role Action Were
+    @result __Bundle $eid $act $ent $sta $relation $ctx
     return $result
 end
 
 @with:with graph party interest
     # Party acts with legal interest
-    @par __Role Party $party
-    @int __Role Interest $interest
-    @relation __Role Relation With
-    @result __Bundle $par $int $relation
+    @eid __Event
+    @act __Role Action with
+    @ctx __Role Context StressCompat
+    @par __Role Attribute $party
+    @int __Role Attribute $interest
+    @relation __Role Action With
+    @result __Bundle $eid $act $par $int $relation $ctx
     return $result
 end
 
 @would:would graph action result
     # Action would produce legal result
+    @eid __Event
+    @act2 __Role Action would
+    @ctx __Role Context StressCompat
     @act __Role Action $action
     @res __Role Result $result
-    @relation __Role Relation Would
-    @result __Bundle $act $res $relation
+    @relation __Role Action Would
+    @result __Bundle $eid $act2 $act $res $relation $ctx
     return $result
 end
 

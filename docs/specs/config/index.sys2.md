@@ -1,7 +1,7 @@
 # Spec: config/Core/index.sys2
 
 ## Purpose
-Defines the load order for Core theories when a `Load` statement references the directory.  Currently loads a minimal subset (`00-types`, `01-positions`, `09-roles`), with the rest loaded by runners (`evalSuite/lib/runner.mjs`, tests) that iterate over the directory.
+Defines the load order for Core theories when a `Load` statement references the directory.  Currently loads a minimal subset (`00-types`, `01-positions`, `09-roles`), with the rest loaded by runners (`evals/fastEval/lib/runner.mjs`, tests) that iterate over the directory.
 
 ## Key Constructs
 - `@_ Load "./00-types.sys2"`
@@ -9,7 +9,7 @@ Defines the load order for Core theories when a `Load` statement references the 
 - `@_ Load "./09-roles.sys2"`
 
 ## Runtime Integration
-- `evalSuite/lib/loader.mjs` and `tests/unit/runtime/core-theories.test.mjs` bypass this file and load every `.sys2` except `index.sys2` to avoid nested `Load` statements.
+- `evals/fastEval/lib/loader.mjs` and `tests/unit/runtime/core-theories.test.mjs` bypass this file and load every `.sys2` except `index.sys2` to avoid nested `Load` statements.
 - `config/Core/index.sys2` is kept minimal to avoid recursive load storms when the runtime already enumerates files.
 
 ## Design Rationale

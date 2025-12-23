@@ -5,6 +5,7 @@ import { CORE_OPERATOR_CATALOG } from './operator-catalog.mjs';
 const BUILTIN_OPERATORS = new Set([
   'Load',
   'Unload',
+  'Set',
   'abduce',
   'whatif',
   'similar',
@@ -99,15 +100,23 @@ function formatLocation(node) {
 function buildContext(session, options) {
   const allowNewOperators = options.allowNewOperators ?? options.mode === 'learn';
   const allowHoles = options.allowHoles ?? options.mode === 'query';
+  const requireKnownAtoms = options.requireKnownAtoms ?? false;
+  const scopeAtoms = new Set(session?.scope?.allNames?.() || []);
+  const graphAtoms = collectKnownGraphs(session);
+  const vocabAtoms = new Set(session?.vocabulary?.names?.() || []);
+  const knownAtoms = new Set([...vocabAtoms, ...scopeAtoms, ...graphAtoms]);
   return {
     mode: options.mode || 'generic',
     allowNewOperators,
     allowHoles,
+    requireKnownAtoms,
     errors: [],
     bindings: new Set(session?.scope?.allNames?.() || []),
     knownOperators: collectKnownOperators(session),
     knownGraphs: collectKnownGraphs(session),
-    localGraphs: new Set()
+    localGraphs: new Set(),
+    knownAtoms,
+    localAtoms: new Set()
   };
 }
 
@@ -119,6 +128,13 @@ function ensureKnownOperator(name, node, context) {
   context.errors.push(`Unknown operator '${name}'${formatLocation(node)}`);
 }
 
+function ensureKnownAtom(name, node, context) {
+  if (!context.requireKnownAtoms) return;
+  if (context.knownAtoms.has(name)) return;
+  if (context.localAtoms.has(name)) return;
+  context.errors.push(`Unknown concept '${name}'${formatLocation(node)}`);
+}
+
 function validateExpression(expr, context, role = 'argument') {
   if (!expr) return;
 
@@ -126,6 +142,8 @@ function validateExpression(expr, context, role = 'argument') {
     case 'Identifier':
       if (role === 'operator') {
         ensureKnownOperator(expr.name, expr, context);
+      } else {
+        ensureKnownAtom(expr.name, expr, context);
       }
       return;
     case 'Reference':
@@ -159,13 +177,26 @@ function validateExpression(expr, context, role = 'argument') {
 
 function validateStatement(stmt, context) {
   validateExpression(stmt.operator, context, 'operator');
-  for (const arg of stmt.args || []) {
-    validateExpression(arg, context, 'argument');
+
+  const operatorName = stmt.operator?.name;
+  const args = stmt.args || [];
+
+  // Meta-constraints treat operator names as arguments.
+  if (operatorName === 'mutuallyExclusive' && args.length >= 1) {
+    validateExpression(args[0], context, 'operator');
+    for (let i = 1; i < args.length; i++) validateExpression(args[i], context, 'argument');
+  } else if ((operatorName === 'inverseRelation' || operatorName === 'contradictsSameArgs') && args.length >= 2) {
+    validateExpression(args[0], context, 'operator');
+    validateExpression(args[1], context, 'operator');
+    for (let i = 2; i < args.length; i++) validateExpression(args[i], context, 'argument');
+  } else {
+    for (const arg of args) {
+      validateExpression(arg, context, 'argument');
+    }
   }
   if (stmt.destination) {
     context.bindings.add(stmt.destination);
   }
-  const operatorName = stmt.operator?.name;
   if (operatorName && DECLARATION_OPERATORS.has(operatorName)) {
     if (stmt.destination) context.knownOperators.add(stmt.destination);
     if (stmt.persistName) context.knownOperators.add(stmt.persistName);
@@ -249,9 +280,55 @@ function validateNode(node, context) {
   }
 }
 
+function collectLocalAtomsAndOperators(node, context) {
+  if (!node) return;
+  switch (node.type) {
+    case 'Statement': {
+      const operatorName = node.operator?.name;
+      if (node.destination) {
+        context.localAtoms.add(node.destination);
+      }
+      if (node.persistName) {
+        context.localAtoms.add(node.persistName);
+      }
+      if (operatorName && DECLARATION_OPERATORS.has(operatorName)) {
+        if (node.destination) {
+          context.knownOperators.add(node.destination);
+          context.localAtoms.add(node.destination);
+        }
+        if (node.persistName) {
+          context.knownOperators.add(node.persistName);
+          context.localAtoms.add(node.persistName);
+        }
+      }
+      return;
+    }
+    case 'GraphDeclaration': {
+      if (node.name) context.localGraphs.add(node.name);
+      if (node.persistName) context.localGraphs.add(node.persistName);
+      if (node.name) context.localAtoms.add(node.name);
+      if (node.persistName) context.localAtoms.add(node.persistName);
+      return;
+    }
+    case 'TheoryDeclaration': {
+      if (node.name) context.localAtoms.add(node.name);
+      for (const stmt of node.statements || []) {
+        collectLocalAtomsAndOperators(stmt, context);
+      }
+      return;
+    }
+    default:
+      return;
+  }
+}
+
 export function checkDSL(session, dsl, options = {}) {
   const context = buildContext(session, options);
   const ast = parse(dsl);
+  // Pre-scan to allow forward references to symbols declared/persisted in this program.
+  for (const stmt of ast.statements || []) {
+    collectLocalAtomsAndOperators(stmt, context);
+  }
   for (const stmt of ast.statements || []) {
     validateNode(stmt, context);
   }

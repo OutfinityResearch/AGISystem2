@@ -14,7 +14,7 @@ Provides macros for default reasoning (normally, except, unless, typical/atypica
 ## Tests & Coverage
 - `tests/unit/reasoning/defaults.test.mjs` verifies interplay between defaults and exceptions.
 - `tests/unit/reasoning/negation-exceptions.test.mjs` covers `unless` patterns.
-- `evalSuite/suite06_compound_logic` extends coverage in conversational flows.
+- `evals/fastEval/suite06_compound_logic` extends coverage in conversational flows.
 
 ## Design Rationale
 Encoding defaults declaratively ensures the `Session` can explain results by pointing back to DSL facts rather than opaque code heuristics.  The macros also encapsulate the `@var` scoping rules highlighted in DS14.

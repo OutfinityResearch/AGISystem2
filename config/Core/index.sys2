@@ -35,3 +35,6 @@
 # L3 - Canonicalization & Constraints
 @_ Load "./13-canonicalization.sys2"
 @_ Load "./14-constraints.sys2"
+
+# L3 - Compatibility operators used by stress corpora
+@_ Load "./15-stress-compat.sys2"

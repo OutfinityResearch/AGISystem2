@@ -103,23 +103,25 @@ After this, KB contains:
 ## 14.3 Directory Structure
 
 ```
-evalSuite/
-├── run.js                           # Main runner script
-├── lib/
-│   ├── runner.mjs                   # Suite execution engine
-│   ├── reporter.mjs                 # Terminal reporter with colors
-│   └── loader.mjs                   # Suite/case loader
+evals/
+├── runFastEval.mjs                  # Main runner script (npm run eval)
+└── fastEval/
+    ├── healthCheck.js              # Suite health checker
+    ├── lib/
+    │   ├── runner.mjs              # Suite execution engine
+    │   ├── reporter.mjs            # Terminal reporter with colors
+    │   └── loader.mjs              # Suite/case loader
 │
-├── suite01_foundations/
-│   └── cases.mjs
-├── suite05_negation/
-│   └── cases.mjs
-├── suite21_goat_cabbage_plus/
-│   └── cases.mjs
-├── suite23_tool_planning/
-│   └── cases.mjs
-└── suite24_contradictions/
-    └── cases.mjs
+    ├── suite01_foundations/
+    │   └── cases.mjs
+    ├── suite05_negation/
+    │   └── cases.mjs
+    ├── suite21_goat_cabbage_plus/
+    │   └── cases.mjs
+    ├── suite23_tool_planning/
+    │   └── cases.mjs
+    └── suite24_contradictions/
+        └── cases.mjs
 ```
 
 ---
@@ -303,13 +305,13 @@ Current runtime surfaces contradictions via `errors`/`warnings`. NL output is ge
 
 ### 14.5.4 Example Suite: Contradiction Detection
 
-See `evalSuite/suite24_contradictions/cases.mjs` for comprehensive examples including:
+See `evals/fastEval/suite24_contradictions/cases.mjs` for comprehensive examples including:
 - `mutuallyExclusive` and `contradictsSameArgs` rejections
 - Indirect contradictions (transitive chaining, inherited properties)
 - Canonicalization effects (`alias`, `synonym`) on contradiction detection
 - Transactional rollback (`assert_state_unchanged: true`)
 
-Negation semantics (`Not` as exception/blocker) are tested separately in `evalSuite/suite05_negation/cases.mjs`.
+Negation semantics (`Not` as exception/blocker) are tested separately in `evals/fastEval/suite05_negation/cases.mjs`.
 
 ---
 
@@ -610,7 +612,7 @@ Fuzzy comparison between actual output and `expected_nl` (plus proof checks when
 
 ## 14.10 Adding New Suites
 
-1. Create directory: `evalSuite/suiteNN_name/`
+1. Create directory: `evals/fastEval/suiteNN_name/`
 2. Create `cases.mjs` with `name`, `description`, `theories`, `steps`
 3. Design as a conversation - progressive learning then querying
 4. Include both `input_nl` and `input_dsl` for learn steps
@@ -643,11 +645,11 @@ These guidelines are **permanent** and must be followed when working with the ev
 
 ```
 CORRECT:
-  evalSuite/lib/runner.mjs → calls session.describeResult(result)
+  evals/fastEval/lib/runner.mjs → calls session.describeResult(result)
   src/runtime/session.mjs   → implements NL translation from internal representations
 
 WRONG:
-  evalSuite/lib/runner.mjs → contains NL translation logic directly
+  evals/fastEval/lib/runner.mjs → contains NL translation logic directly
 ```
 
 The evaluation suite runner should only:

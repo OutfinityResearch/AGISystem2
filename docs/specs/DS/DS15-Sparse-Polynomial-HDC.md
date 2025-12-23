@@ -262,7 +262,7 @@ tests/unit/hdc/sparse-polynomial.test.mjs
 
 ```bash
 # Run evaluation suite with SPHDC
-SYS2_HDC_STRATEGY=sparse-polynomial node evalSuite/run.js
+SYS2_HDC_STRATEGY=sparse-polynomial node evals/runFastEval.mjs
 ```
 
 ---

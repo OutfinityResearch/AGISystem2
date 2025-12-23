@@ -160,6 +160,9 @@ export class Executor {
     if (operatorName === 'Unload') {
       return this.executeUnload(stmt);
     }
+    if (operatorName === 'Set') {
+      return this.executeSet(stmt);
+    }
     if (operatorName === 'induce') {
       return this.executeInduce(stmt);
     }
@@ -243,6 +246,45 @@ export class Executor {
    */
   executeUnload(stmt) {
     return executeUnloadImpl(this, stmt);
+  }
+
+  /**
+   * Execute Set command - update session-level flags at runtime.
+   * Syntax:
+   *   @_ Set CWA on|off|true|false
+   *   @_ Set closedWorldAssumption true|false
+   *
+   * Notes:
+   * - This is a side-effect command and does not add KB facts.
+   * - Intended for evaluations where toggles must change within one Session.
+   */
+  executeSet(stmt) {
+    const key = this.resolveNameFromNode(stmt.args?.[0]);
+    const raw = this.resolveNameFromNode(stmt.args?.[1]);
+
+    const parseBool = (v) => {
+      const s = String(v ?? '').trim().toLowerCase();
+      if (['1', 'true', 'on', 'yes', 'y'].includes(s)) return true;
+      if (['0', 'false', 'off', 'no', 'n'].includes(s)) return false;
+      return null;
+    };
+
+    const enabled = parseBool(raw);
+    const keyNorm = String(key ?? '').trim().toLowerCase();
+
+    if (enabled === null || !keyNorm) {
+      this.session.warnings.push(`Warning: Set expects boolean value, got "${raw}"`);
+      return { type: 'config', factsLoaded: 0, success: false, key: key ?? null, value: raw ?? null };
+    }
+
+    if (keyNorm === 'cwa' || keyNorm === 'closedworldassumption' || keyNorm === 'closed_world_assumption') {
+      this.session.closedWorldAssumption = enabled;
+      if (this.session.features) this.session.features.closedWorldAssumption = enabled;
+      return { type: 'config', factsLoaded: 0, success: true, key: 'closedWorldAssumption', value: enabled };
+    }
+
+    this.session.warnings.push(`Warning: Unknown Set key "${key}"`);
+    return { type: 'config', factsLoaded: 0, success: false, key: key ?? null, value: enabled };
   }
 
   /**

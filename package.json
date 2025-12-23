@@ -19,8 +19,16 @@
     "unit": "node --test 'tests/unit/**/*.mjs'",
     "deep": "node --test 'tests/integration/**/*.mjs'",
     "e2e": "node --test tests/integration/e2e-pipeline.test.mjs",
-    "eval": "node evalSuite/run.js",
-    "eval:verbose": "node evalSuite/run.js --verbose"
+    "eval": "node evals/runFastEval.mjs",
+    "eval:verbose": "node evals/runFastEval.mjs --verbose",
+    "eval:full": "node evals/runFastEval.mjs --full",
+    "allEvals": "node evals/runAllEvals.mjs",
+    "allEvals:fast": "node evals/runAllEvals.mjs --fast",
+    "stressCheck": "node evals/runStressCheck.js",
+    "queryEval": "node evals/runQueryEval.mjs",
+    "ruletaker": "node evals/runRuleTakerEval.mjs",
+    "ruletaker:fast": "node evals/runRuleTakerEval.mjs --fast",
+    "ruletaker:devel": "node evals/runRuleTakerEval.mjs --devel --fast"
   },
   "keywords": [
     "hdc",

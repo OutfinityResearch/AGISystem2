@@ -12,6 +12,7 @@
 @Xor:Xor __Relation
 @ForAll:ForAll __Relation
 @Exists:Exists __Relation
+@Holds:Holds __Relation
 
 # ===== Logic Macros =====
 

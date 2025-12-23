@@ -10,7 +10,7 @@ Captures meta-level reasoning verbs (abduce, induce, deduce, whatif, analogy, si
 
 ## Runtime Integration
 - `src/reasoning/abduction.mjs`, `induction.mjs`, `query.mjs`, etc., inspect these macros to know which engines to invoke.
-- `evalSuite/suite14_meta_queries` drives the macros via conversation steps (e.g., `similar` queries).
+- `evals/fastEval/suite14_meta_queries` drives the macros via conversation steps (e.g., `similar` queries).
 
 ## Tests & Coverage
 - `tests/unit/reasoning/abduction.test.mjs`, `induction.test.mjs`, and `whatif.test.mjs` cover the corresponding DSL verbs.

@@ -1,35 +1,35 @@
 # History - Domain Concepts
 # Foundational historical concepts with proper graph semantics
 
+# Domain anchor (avoid free-floating atoms)
+@_:History isA History AbstractType
+
 # ===== Temporal Entities =====
 
 @Event:Event graph occurrence
     # Historical occurrence
-    @occ __Role Occurrence $occurrence
-    @type __Role Type HistoricalEvent
-    @temporal __Role Nature Temporal
-    @significant __Role Property HistoricallySignificant
-    @concept __Bundle $occ $type $temporal $significant
+    @occ __Role Theme $occurrence
+    @type __Role Type Event
+    @ctx __Role Context History
+    @concept __Bundle $ctx $occ $type
     return $concept
 end
 
 @Period:Period graph timespan
     # Historical time period
-    @span __Role Timespan $timespan
-    @type __Role Type HistoricalPeriod
-    @bounded __Role Property DefinedTimespan
-    @characteristic __Role Feature DistinctiveCharacter
-    @concept __Bundle $span $type $bounded $characteristic
+    @span __Role Time $timespan
+    @type __Role Type Period
+    @ctx __Role Context History
+    @concept __Bundle $ctx $span $type
     return $concept
 end
 
 @Era:Era graph timespan
     # Major historical era
-    @span __Role Timespan $timespan
+    @span __Role Time $timespan
     @type __Role Type Era
-    @longDuration __Role Property ExtendedPeriod
-    @transformative __Role Character MajorChanges
-    @concept __Bundle $span $type $longDuration $transformative
+    @ctx __Role Context History
+    @concept __Bundle $ctx $span $type
     return $concept
 end
 
@@ -37,41 +37,37 @@ end
 
 @Person:Person graph individual
     # Historical individual
-    @ind __Role Individual $individual
-    @type __Role Type HistoricalPerson
-    @agent __Role Property HistoricalAgent
-    @documented __Role Evidence HistoricalRecord
-    @concept __Bundle $ind $type $agent $documented
+    @ind __Role Entity $individual
+    @type __Role Type Person
+    @ctx __Role Context History
+    @concept __Bundle $ctx $ind $type
     return $concept
 end
 
 @Leader:Leader graph person
     # Political or social leader
-    @pers __Role Person $person
+    @pers __Role Entity $person
     @type __Role Type Leader
-    @authority __Role Property Leadership
-    @influential __Role Impact Significant
-    @concept __Bundle $pers $type $authority $influential
+    @ctx __Role Context History
+    @concept __Bundle $ctx $pers $type
     return $concept
 end
 
 @Empire:Empire graph polity
     # Imperial political entity
-    @pol __Role Polity $polity
+    @pol __Role Entity $polity
     @type __Role Type Empire
-    @expansive __Role Property TerritorialExpansion
-    @centralized __Role Structure CentralizedPower
-    @concept __Bundle $pol $type $expansive $centralized
+    @ctx __Role Context History
+    @concept __Bundle $ctx $pol $type
     return $concept
 end
 
 @Civilization:Civilization graph society
     # Complex society
-    @soc __Role Society $society
+    @soc __Role Group $society
     @type __Role Type Civilization
-    @complex __Role Property SocialComplexity
-    @cultural __Role Achievement CulturalDevelopment
-    @concept __Bundle $soc $type $complex $cultural
+    @ctx __Role Context History
+    @concept __Bundle $ctx $soc $type
     return $concept
 end
 
@@ -79,41 +75,37 @@ end
 
 @Revolution:Revolution graph change
     # Radical political or social change
-    @ch __Role Change $change
+    @ch __Role Theme $change
     @type __Role Type Revolution
-    @radical __Role Nature Transformative
-    @rapid __Role TimeScale Sudden
-    @concept __Bundle $ch $type $radical $rapid
+    @ctx __Role Context History
+    @concept __Bundle $ctx $ch $type
     return $concept
 end
 
 @War:War graph conflict
     # Armed conflict
-    @conf __Role Conflict $conflict
+    @conf __Role Theme $conflict
     @type __Role Type War
-    @armed __Role Nature MilitaryConflict
-    @destructive __Role Impact Violent
-    @concept __Bundle $conf $type $armed $destructive
+    @ctx __Role Context History
+    @concept __Bundle $ctx $conf $type
     return $concept
 end
 
 @Treaty:Treaty graph agreement
     # Formal agreement between states
-    @agr __Role Agreement $agreement
+    @agr __Role Theme $agreement
     @type __Role Type Treaty
-    @formal __Role Nature Official
-    @binding __Role Legal LegallyBinding
-    @concept __Bundle $agr $type $formal $binding
+    @ctx __Role Context History
+    @concept __Bundle $ctx $agr $type
     return $concept
 end
 
 @Reform:Reform graph change
     # Deliberate improvement or change
-    @ch __Role Change $change
+    @ch __Role Theme $change
     @type __Role Type Reform
-    @deliberate __Role Nature Intentional
-    @improvement __Role Purpose BetterSystem
-    @concept __Bundle $ch $type $deliberate $improvement
+    @ctx __Role Context History
+    @concept __Bundle $ctx $ch $type
     return $concept
 end
 
@@ -121,21 +113,19 @@ end
 
 @Movement:Movement graph phenomenon
     # Cultural or intellectual movement
-    @phen __Role Phenomenon $phenomenon
+    @phen __Role Theme $phenomenon
     @type __Role Type Movement
-    @collective __Role Nature GroupActivity
-    @ideological __Role Basis SharedIdeas
-    @concept __Bundle $phen $type $collective $ideological
+    @ctx __Role Context History
+    @concept __Bundle $ctx $phen $type
     return $concept
 end
 
 @Ideology:Ideology graph system
     # System of ideas and ideals
-    @sys __Role System $system
+    @sys __Role Theme $system
     @type __Role Type Ideology
-    @beliefs __Role Content SystemOfBeliefs
-    @political __Role Domain Political
-    @concept __Bundle $sys $type $beliefs $political
+    @ctx __Role Context History
+    @concept __Bundle $ctx $sys $type
     return $concept
 end
 
@@ -143,20 +133,18 @@ end
 
 @Document:Document graph record
     # Historical document
-    @rec __Role Record $record
-    @type __Role Type HistoricalDocument
-    @written __Role Medium Written
-    @evidence __Role Purpose Evidence
-    @concept __Bundle $rec $type $written $evidence
+    @rec __Role Theme $record
+    @type __Role Type Document
+    @ctx __Role Context History
+    @concept __Bundle $ctx $rec $type
     return $concept
 end
 
 @Source:Source graph evidence
     # Historical source material
-    @evid __Role Evidence $evidence
-    @type __Role Type HistoricalSource
-    @information __Role Content HistoricalInformation
-    @primary __Role Nature DirectEvidence
-    @concept __Bundle $evid $type $information $primary
+    @evid __Role Theme $evidence
+    @type __Role Type Source
+    @ctx __Role Context History
+    @concept __Bundle $ctx $evid $type
     return $concept
 end

@@ -169,6 +169,25 @@ class ProveTranslator extends BaseTranslator {
     return this.describePositiveProof(reasoningResult);
   }
 
+  parseNotGoal(goalString) {
+    if (!goalString || typeof goalString !== 'string') return null;
+    const parts = goalString.trim().split(/\s+/).filter(p => !p.startsWith('@'));
+    if (parts.length < 2) return null;
+    if (parts[0] !== 'Not') return null;
+    const innerParts = parts.slice(1);
+    if (innerParts.length === 0) return null;
+
+    // Accept both: "Not (op a b)" and "Not op a b"
+    innerParts[0] = innerParts[0].replace(/^\(/, '');
+    innerParts[innerParts.length - 1] = innerParts[innerParts.length - 1].replace(/\)$/, '');
+
+    const innerOp = innerParts[0];
+    const innerArgs = innerParts.slice(1);
+    if (!innerOp) return null;
+    if (innerArgs.length === 0) return { innerOp, innerArgs: [] };
+    return { innerOp, innerArgs };
+  }
+
   describeInvalidProof(result) {
     let goalText = result.goal || 'statement';
     if (result.goal) {
@@ -216,6 +235,24 @@ class ProveTranslator extends BaseTranslator {
 
   describePositiveProof(result) {
     const steps = result.steps || [];
+
+    // Not-goals can be proved either by explicit negation or by CWA (negation-as-failure).
+    // In holographicPriority mode, the top-level method is often "hdc_*_validated", so rely
+    // on step operations as the source of truth for messaging.
+    const parsedNot = this.parseNotGoal(result.goal);
+    if (parsedNot) {
+      const innerDsl = `${parsedNot.innerOp} ${parsedNot.innerArgs.join(' ')}`.trim();
+      const notFact = `Not(${innerDsl})`;
+      const hasNotFact = steps.some(s => s?.operation === 'not_fact');
+      const hasCwa = steps.some(s => s?.operation === 'cwa_negation');
+      if (hasNotFact || result.method === 'explicit_negation') {
+        return `True: ${notFact}. Proof: Found explicit negation: ${notFact}.`;
+      }
+      if (hasCwa || result.method === 'closed_world_assumption') {
+        return `True: ${notFact}. Proof: Closed world assumption: cannot prove ${innerDsl}, therefore ${notFact}.`;
+      }
+    }
+
     const proofSteps = [];
     let ruleApplied = false;
     let chainOpsCount = 0;

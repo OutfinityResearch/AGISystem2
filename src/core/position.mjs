@@ -20,20 +20,20 @@ const positionCache = new Map();
  * @param {number} geometry - Vector dimension
  * @returns {Object} Position vector (type depends on active strategy)
  */
-export function getPositionVector(position, geometry = DEFAULT_GEOMETRY) {
+export function getPositionVector(position, geometry = DEFAULT_GEOMETRY, strategyId = null) {
   if (position < 1 || position > MAX_POSITIONS) {
     throw new RangeError(`Position must be 1-${MAX_POSITIONS}, got ${position}`);
   }
 
   // Include strategy in cache key to support multi-strategy execution
-  const strategyId = getStrategyId();
-  const cacheKey = `${strategyId}:${geometry}:${position}`;
+  const resolvedStrategyId = strategyId || getStrategyId();
+  const cacheKey = `${resolvedStrategyId}:${geometry}:${position}`;
   if (positionCache.has(cacheKey)) {
     return positionCache.get(cacheKey);
   }
 
   // Generate deterministic position vector using active strategy
-  const posVec = createFromName(`__POS_${position}__`, geometry);
+  const posVec = createFromName(`__POS_${position}__`, geometry, { strategyId: resolvedStrategyId });
   positionCache.set(cacheKey, posVec);
   return posVec;
 }
@@ -70,7 +70,7 @@ function getVectorGeometry(vector) {
  */
 export function withPosition(position, vector) {
   const geometry = getVectorGeometry(vector);
-  const posVec = getPositionVector(position, geometry);
+  const posVec = getPositionVector(position, geometry, getStrategyId(vector));
   return bind(vector, posVec);
 }
 
@@ -83,7 +83,7 @@ export function withPosition(position, vector) {
  */
 export function removePosition(position, vector) {
   const geometry = getVectorGeometry(vector);
-  const posVec = getPositionVector(position, geometry);
+  const posVec = getPositionVector(position, geometry, getStrategyId(vector));
   return unbind(vector, posVec);
 }
 

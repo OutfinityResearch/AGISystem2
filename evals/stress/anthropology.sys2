@@ -7,46 +7,61 @@
 
 @hasArtifact:hasArtifact graph culture artifact
     # Culture possesses artifact as material culture element
-    @cult __Role Culture $culture
-    @art __Role Artifact $artifact
-    @material __Role Domain MaterialCulture
-    @relation __Bundle $cult $art $material
+    @eid __Event
+    @act __Role Action hasArtifact
+    @ctx __Role Context StressCompat
+    @cult __Role Attribute $culture
+    @art __Role Attribute $artifact
+    @material __Role Context MaterialCulture
+    @relation __Bundle $eid $act $cult $art $material $ctx
     return $relation
 end
 
 @hasSymbol:hasSymbol graph culture symbol
     # Culture uses symbol for meaning
-    @cult __Role Culture $culture
-    @sym __Role Symbol $symbol
-    @symbolic __Role Domain SymbolicSystem
-    @relation __Bundle $cult $sym $symbolic
+    @eid __Event
+    @act __Role Action hasSymbol
+    @ctx __Role Context StressCompat
+    @cult __Role Attribute $culture
+    @sym __Role Attribute $symbol
+    @symbolic __Role Context SymbolicSystem
+    @relation __Bundle $eid $act $cult $sym $symbolic $ctx
     return $relation
 end
 
 @hasPractice:hasPractice graph culture practice
     # Culture engages in cultural practice
-    @cult __Role Practitioner $culture
-    @prac __Role Practice $practice
-    @cultural __Role Domain CulturalDomain
-    @relation __Bundle $cult $prac $cultural
+    @eid __Event
+    @act __Role Action hasPractice
+    @ctx __Role Context StressCompat
+    @cult __Role Attribute $culture
+    @prac __Role Action $practice
+    @cultural __Role Context CulturalDomain
+    @relation __Bundle $eid $act $cult $prac $cultural $ctx
     return $relation
 end
 
 @holdsValue:holdsValue graph culture value
     # Culture maintains core value
-    @cult __Role Holder $culture
+    @eid __Event
+    @act __Role Action holdsValue
+    @ctx __Role Context StressCompat
+    @cult __Role Attribute $culture
     @val __Role Value $value
-    @axiological __Role Domain ValueSystem
-    @relation __Bundle $cult $val $axiological
+    @axiological __Role Context ValueSystem
+    @relation __Bundle $eid $act $cult $val $axiological $ctx
     return $relation
 end
 
 @shapesehavior:shapesehavior graph value behavior
     # Value shapes behavior patterns (typo in original: shapesBehavior)
+    @eid __Event
+    @act __Role Action shapesehavior
+    @ctx __Role Context StressCompat
     @val __Role Value $value
-    @beh __Role Behavior $behavior
+    @beh __Role Attribute $behavior
     @influence __Role Process BehavioralShaping
-    @relation __Bundle $val $beh $influence
+    @relation __Bundle $eid $act $val $beh $influence $ctx
     return $relation
 end
 
@@ -54,122 +69,155 @@ end
 
 @isChildOf:isChildOf graph child parent
     # Genealogical parent-child relationship
-    @ch __Role Child $child
-    @par __Role Parent $parent
-    @genealogy __Role Relation Descent
-    @relation __Bundle $ch $par $genealogy
+    @eid __Event
+    @act __Role Action isChildOf
+    @ctx __Role Context StressCompat
+    @ch __Role Attribute $child
+    @par __Role Attribute $parent
+    @genealogy __Role Action Descent
+    @relation __Bundle $eid $act $ch $par $genealogy $ctx
     return $relation
 end
 
 @isMale:isMale graph person
     # Gender classification: male
-    @pers __Role Individual $person
-    @gender __Role Gender Male
+    @pers __Role Attribute $person
+    @gender __Role Attribute Male
     @relation __Pair $pers $gender
     return $relation
 end
 
 @isFemale:isFemale graph person
     # Gender classification: female
-    @pers __Role Individual $person
-    @gender __Role Gender Female
+    @pers __Role Attribute $person
+    @gender __Role Attribute Female
     @relation __Pair $pers $gender
     return $relation
 end
 
 @isMarriedTo:isMarriedTo graph spouse1 spouse2
     # Marriage alliance between spouses
-    @sp1 __Role Spouse $spouse1
-    @sp2 __Role Spouse $spouse2
-    @alliance __Role Relation MaritalBond
-    @relation __Bundle $sp1 $sp2 $alliance
+    @eid __Event
+    @act __Role Action isMarriedTo
+    @ctx __Role Context StressCompat
+    @sp1 __Role Theme $spouse1
+    @sp2 __Role Theme $spouse2
+    @alliance __Role Action MaritalBond
+    @relation __Bundle $eid $act $sp1 $sp2 $alliance $ctx
     return $relation
 end
 
 @isSisterOf:isSisterOf graph sister sibling
     # Sibling relationship: sister
-    @sis __Role Sister $sister
-    @sib __Role Sibling $sibling
-    @kinship __Role Relation SiblingBond
-    @relation __Bundle $sis $sib $kinship
+    @eid __Event
+    @act __Role Action isSisterOf
+    @ctx __Role Context StressCompat
+    @sis __Role Attribute $sister
+    @sib __Role Attribute $sibling
+    @kinship __Role Action SiblingBond
+    @relation __Bundle $eid $act $sis $sib $kinship $ctx
     return $relation
 end
 
 @isBrotherOf:isBrotherOf graph brother sibling
     # Sibling relationship: brother
-    @bro __Role Brother $brother
-    @sib __Role Sibling $sibling
-    @kinship __Role Relation SiblingBond
-    @relation __Bundle $bro $sib $kinship
+    @eid __Event
+    @act __Role Action isBrotherOf
+    @ctx __Role Context StressCompat
+    @bro __Role Attribute $brother
+    @sib __Role Attribute $sibling
+    @kinship __Role Action SiblingBond
+    @relation __Bundle $eid $act $bro $sib $kinship $ctx
     return $relation
 end
 
 @isCrossCousinOf:isCrossCousinOf graph ego cousin
     # Cross-cousin kinship relation (marriage eligible)
-    @ego __Role Ego $ego
-    @cousin __Role CrossCousin $cousin
+    @eid __Event
+    @act __Role Action isCrossCousinOf
+    @ctx __Role Context StressCompat
+    @ego __Role Attribute $ego
+    @cousin __Role Attribute $cousin
     @kinship __Role Type CrossCousinship
-    @relation __Bundle $ego $cousin $kinship
+    @relation __Bundle $eid $act $ego $cousin $kinship $ctx
     return $relation
 end
 
 @isParallelCousinOf:isParallelCousinOf graph ego cousin
     # Parallel cousin kinship relation (marriage prohibited)
-    @ego __Role Ego $ego
-    @cousin __Role ParallelCousin $cousin
+    @eid __Event
+    @act __Role Action isParallelCousinOf
+    @ctx __Role Context StressCompat
+    @ego __Role Attribute $ego
+    @cousin __Role Attribute $cousin
     @kinship __Role Type ParallelCousinship
-    @relation __Bundle $ego $cousin $kinship
+    @relation __Bundle $eid $act $ego $cousin $kinship $ctx
     return $relation
 end
 
 @hasFamily:hasFamily graph person family
     # Person has family unit
-    @pers __Role Individual $person
-    @fam __Role Family $family
-    @kinship __Role Relation FamilialTies
-    @relation __Bundle $pers $fam $kinship
+    @eid __Event
+    @act __Role Action hasFamily
+    @ctx __Role Context StressCompat
+    @pers __Role Attribute $person
+    @fam __Role Attribute $family
+    @kinship __Role Action FamilialTies
+    @relation __Bundle $eid $act $pers $fam $kinship $ctx
     return $relation
 end
 
 @hasMothersBrother:hasMothersBrother graph person uncle
     # Person has maternal uncle (important in matrilineal societies)
-    @pers __Role Ego $person
-    @uncle __Role MothersBrother $uncle
-    @avuncular __Role Relation AvuncularTie
-    @relation __Bundle $pers $uncle $avuncular
+    @eid __Event
+    @act __Role Action hasMothersBrother
+    @ctx __Role Context StressCompat
+    @pers __Role Attribute $person
+    @uncle __Role Attribute $uncle
+    @avuncular __Role Action AvuncularTie
+    @relation __Bundle $eid $act $pers $uncle $avuncular $ctx
     return $relation
 end
 
 @hasSpouse:hasSpouse graph person spouse
     # Person has single spouse
-    @pers __Role Individual $person
-    @sp __Role Spouse $spouse
-    @marital __Role Relation Marriage
-    @relation __Bundle $pers $sp $marital
+    @eid __Event
+    @act __Role Action hasSpouse
+    @ctx __Role Context StressCompat
+    @pers __Role Attribute $person
+    @sp __Role Theme $spouse
+    @marital __Role Action Marriage
+    @relation __Bundle $eid $act $pers $sp $marital $ctx
     return $relation
 end
 
 @hasSpouses:hasSpouses graph person spouses
     # Person has multiple spouses (polygamy)
-    @pers __Role Individual $person
-    @sps __Role Spouses $spouses
+    @eid __Event
+    @act __Role Action hasSpouses
+    @ctx __Role Context StressCompat
+    @pers __Role Attribute $person
+    @sps __Role Attribute $spouses
     @marital __Role Type PolygamousMarriage
-    @relation __Bundle $pers $sps $marital
+    @relation __Bundle $eid $act $pers $sps $marital $ctx
     return $relation
 end
 
 @hasRelative:hasRelative graph person relative
     # Person has kinship relative
-    @pers __Role Ego $person
-    @rel __Role Relative $relative
-    @kinship __Role Relation KinTie
-    @relation __Bundle $pers $rel $kinship
+    @eid __Event
+    @act __Role Action hasRelative
+    @ctx __Role Context StressCompat
+    @pers __Role Attribute $person
+    @rel __Role Attribute $relative
+    @kinship __Role Action KinTie
+    @relation __Bundle $eid $act $pers $rel $kinship $ctx
     return $relation
 end
 
 @isFocalPerson:isFocalPerson graph person
     # Person is focal point (ego) in kinship analysis
-    @pers __Role Ego $person
+    @pers __Role Attribute $person
     @perspective __Role Property FocalPoint
     @relation __Pair $pers $perspective
     return $relation
@@ -179,44 +227,56 @@ end
 
 @hasMember:hasMember graph group member
     # Group contains member
+    @eid __Event
+    @act __Role Action hasMember
+    @ctx __Role Context StressCompat
     @grp __Role Group $group
-    @mem __Role Member $member
-    @membership __Role Relation Contains
-    @relation __Bundle $grp $mem $membership
+    @mem __Role Attribute $member
+    @membership __Role Action Contains
+    @relation __Bundle $eid $act $grp $mem $membership $ctx
     return $relation
 end
 
 @hasMembers:hasMembers graph group members
     # Group has multiple members
+    @eid __Event
+    @act __Role Action hasMembers
+    @ctx __Role Context StressCompat
     @grp __Role Group $group
-    @mems __Role Members $members
+    @mems __Role Attribute $members
     @collective __Role Property Plurality
-    @relation __Bundle $grp $mems $collective
+    @relation __Bundle $eid $act $grp $mems $collective $ctx
     return $relation
 end
 
 @hasLineage:hasLineage graph group lineage
     # Group traces lineage descent
+    @eid __Event
+    @act __Role Action hasLineage
+    @ctx __Role Context StressCompat
     @grp __Role Group $group
-    @lin __Role Lineage $lineage
-    @descent __Role Relation DescentLine
-    @relation __Bundle $grp $lin $descent
+    @lin __Role Attribute $lineage
+    @descent __Role Action DescentLine
+    @relation __Bundle $eid $act $grp $lin $descent $ctx
     return $relation
 end
 
 @hasAncestor:hasAncestor graph group ancestor
     # Group traces to common ancestor
-    @grp __Role Descendants $group
-    @anc __Role Ancestor $ancestor
-    @genealogy __Role Relation DescentFrom
-    @relation __Bundle $grp $anc $genealogy
+    @eid __Event
+    @act __Role Action hasAncestor
+    @ctx __Role Context StressCompat
+    @grp __Role Attribute $group
+    @anc __Role Theme $ancestor
+    @genealogy __Role Action DescentFrom
+    @relation __Bundle $eid $act $grp $anc $genealogy $ctx
     return $relation
 end
 
 @isAncestor:isAncestor graph ancestor
     # Individual is ancestral figure
-    @anc __Role Ancestor $ancestor
-    @status __Role Status Ancestral
+    @anc __Role Theme $ancestor
+    @status __Role State Ancestral
     @relation __Pair $anc $status
     return $relation
 end
@@ -247,10 +307,13 @@ end
 
 @isMember:isMember graph individual group
     # Group membership relation
-    @ind __Role Member $individual
+    @eid __Event
+    @act __Role Action isMember
+    @ctx __Role Context StressCompat
+    @ind __Role Attribute $individual
     @grp __Role Group $group
-    @membership __Role Relation BelongsTo
-    @relation __Bundle $ind $grp $membership
+    @membership __Role Action BelongsTo
+    @relation __Bundle $eid $act $ind $grp $membership $ctx
     return $relation
 end
 
@@ -266,10 +329,13 @@ end
 
 @isShaman:isShaman graph person
     # Person occupies shaman role
-    @pers __Role Practitioner $person
+    @eid __Event
+    @act __Role Action isShaman
+    @ctx __Role Context StressCompat
+    @pers __Role Attribute $person
     @role __Role Role Shaman
-    @spiritual __Role Domain SpiritualSpecialist
-    @relation __Bundle $pers $role $spiritual
+    @spiritual __Role Context SpiritualSpecialist
+    @relation __Bundle $eid $act $pers $role $spiritual $ctx
     return $relation
 end
 
@@ -277,127 +343,169 @@ end
 
 @creates:creates graph agent outcome
     # Agent creates/produces outcome
-    @ag __Role Creator $agent
-    @out __Role Created $outcome
+    @eid __Event
+    @act __Role Action creates
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @out __Role Attribute $outcome
     @process __Role Process Creation
-    @relation __Bundle $ag $out $process
+    @relation __Bundle $eid $act $ag $out $process $ctx
     return $relation
 end
 
 @develops:develops graph entity characteristic
     # Entity develops characteristic/capacity
-    @ent __Role Developer $entity
-    @char __Role Developed $characteristic
+    @eid __Event
+    @act __Role Action develops
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @char __Role Attribute $characteristic
     @process __Role Process Development
-    @relation __Bundle $ent $char $process
+    @relation __Bundle $eid $act $ent $char $process $ctx
     return $relation
 end
 
 @maintains:maintains graph agent maintained
     # Agent maintains practice/state
-    @ag __Role Maintainer $agent
-    @main __Role Maintained $maintained
+    @eid __Event
+    @act __Role Action maintains
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @main __Role Attribute $maintained
     @process __Role Process Maintenance
-    @relation __Bundle $ag $main $process
+    @relation __Bundle $eid $act $ag $main $process $ctx
     return $relation
 end
 
 @adopts:adopts graph agent adopted
     # Agent adopts practice/trait
-    @ag __Role Adopter $agent
-    @ad __Role Adopted $adopted
+    @eid __Event
+    @act __Role Action adopts
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @ad __Role Attribute $adopted
     @process __Role Process Adoption
-    @relation __Bundle $ag $ad $process
+    @relation __Bundle $eid $act $ag $ad $process $ctx
     return $relation
 end
 
 @provides:provides graph source provided
     # Source provides resource/benefit
-    @src __Role Provider $source
-    @prov __Role Provided $provided
+    @eid __Event
+    @act __Role Action provides
+    @ctx __Role Context StressCompat
+    @src __Role Attribute $source
+    @prov __Role Attribute $provided
     @process __Role Process Provision
-    @relation __Bundle $src $prov $process
+    @relation __Bundle $eid $act $src $prov $process $ctx
     return $relation
 end
 
 @serves:serves graph agent function
     # Agent serves function/purpose
-    @ag __Role Server $agent
+    @eid __Event
+    @act __Role Action serves
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
     @func __Role Function $function
-    @relation __Role Relation Serves
-    @relation __Bundle $ag $func $relation
+    @relation __Role Action Serves
+    @relation __Bundle $eid $act $ag $func $relation $ctx
     return $relation
 end
 
 @servesIn:servesIn graph person institution
     # Person serves in institution/role
-    @pers __Role Servant $person
-    @inst __Role Institution $institution
-    @service __Role Relation Serves
-    @relation __Bundle $pers $inst $service
+    @eid __Event
+    @act __Role Action servesIn
+    @ctx __Role Context StressCompat
+    @pers __Role Attribute $person
+    @inst __Role Structure $institution
+    @service __Role Action Serves
+    @relation __Bundle $eid $act $pers $inst $service $ctx
     return $relation
 end
 
 @shapes:shapes graph influence outcome
     # Influence shapes outcome
-    @inf __Role Shaper $influence
-    @out __Role Shaped $outcome
+    @eid __Event
+    @act __Role Action shapes
+    @ctx __Role Context StressCompat
+    @inf __Role Attribute $influence
+    @out __Role Attribute $outcome
     @process __Role Process Shaping
-    @relation __Bundle $inf $out $process
+    @relation __Bundle $eid $act $inf $out $process $ctx
     return $relation
 end
 
 @determines:determines graph factor outcome
     # Factor determines outcome
-    @fac __Role Determinant $factor
-    @out __Role Determined $outcome
-    @causation __Role Relation Determines
-    @relation __Bundle $fac $out $causation
+    @eid __Event
+    @act __Role Action determines
+    @ctx __Role Context StressCompat
+    @fac __Role Attribute $factor
+    @out __Role Attribute $outcome
+    @causation __Role Action Determines
+    @relation __Bundle $eid $act $fac $out $causation $ctx
     return $relation
 end
 
 @derives:derives graph outcome source
     # Outcome derives from source
-    @out __Role Derived $outcome
+    @eid __Event
+    @act __Role Action derives
+    @ctx __Role Context StressCompat
+    @out __Role Attribute $outcome
     @src __Role Source $source
-    @relation __Role Relation Derivation
-    @relation __Bundle $out $src $relation
+    @relation __Role Action Derivation
+    @relation __Bundle $eid $act $out $src $relation $ctx
     return $relation
 end
 
 @inheritsVia:inheritsVia graph person property
     # Person inherits through descent line
-    @pers __Role Heir $person
-    @prop __Role Inherited $property
+    @eid __Event
+    @act __Role Action inheritsVia
+    @ctx __Role Context StressCompat
+    @pers __Role Attribute $person
+    @prop __Role Attribute $property
     @transmission __Role Process Inheritance
-    @relation __Bundle $pers $prop $transmission
+    @relation __Bundle $eid $act $pers $prop $transmission $ctx
     return $relation
 end
 
 @practicesMarriage:practicesMarriage graph group pattern
     # Group practices marriage pattern
+    @eid __Event
+    @act __Role Action practicesMarriage
+    @ctx __Role Context StressCompat
     @grp __Role Group $group
-    @pat __Role Pattern $pattern
-    @institution __Role Domain Marriage
-    @relation __Bundle $grp $pat $institution
+    @pat __Role Structure $pattern
+    @institution __Role Context Marriage
+    @relation __Bundle $eid $act $grp $pat $institution $ctx
     return $relation
 end
 
 @originates:originates graph entity source
     # Entity originates from source
+    @eid __Event
+    @act __Role Action originates
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @src __Role Origin $source
-    @relation __Role Relation OriginatesFrom
-    @relation __Bundle $ent $src $relation
+    @src __Role Attribute $source
+    @relation __Role Action OriginatesFrom
+    @relation __Bundle $eid $act $ent $src $relation $ctx
     return $relation
 end
 
 @originatesIn:originatesIn graph trait culture
     # Trait originates in cultural context
-    @tr __Role Trait $trait
-    @cult __Role Origin $culture
-    @relation __Role Relation OriginContext
-    @relation __Bundle $tr $cult $relation
+    @eid __Event
+    @act __Role Action originatesIn
+    @ctx __Role Context StressCompat
+    @tr __Role Attribute $trait
+    @cult __Role Attribute $culture
+    @relation __Role Action OriginContext
+    @relation __Bundle $eid $act $tr $cult $relation $ctx
     return $relation
 end
 
@@ -405,19 +513,25 @@ end
 
 @includes:includes graph container element
     # Container includes element
-    @cont __Role Container $container
-    @elem __Role Element $element
-    @relation __Role Relation Inclusion
-    @relation __Bundle $cont $elem $relation
+    @eid __Event
+    @act __Role Action includes
+    @ctx __Role Context StressCompat
+    @cont __Role Attribute $container
+    @elem __Role Attribute $element
+    @relation __Role Action Inclusion
+    @relation __Bundle $eid $act $cont $elem $relation $ctx
     return $relation
 end
 
 @hasElement:hasElement graph system element
     # System has component element
-    @sys __Role System $system
-    @elem __Role Element $element
-    @composition __Role Relation HasPart
-    @relation __Bundle $sys $elem $composition
+    @eid __Event
+    @act __Role Action hasElement
+    @ctx __Role Context StressCompat
+    @sys __Role Structure $system
+    @elem __Role Attribute $element
+    @composition __Role Action HasPart
+    @relation __Bundle $eid $act $sys $elem $composition $ctx
     return $relation
 end
 
@@ -425,70 +539,91 @@ end
 
 @hasSize:hasSize graph entity size
     # Entity has size characteristic
+    @eid __Event
+    @act __Role Action hasSize
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @sz __Role Size $size
+    @sz __Role Attribute $size
     @attribute __Role Property Magnitude
-    @relation __Bundle $ent $sz $attribute
+    @relation __Bundle $eid $act $ent $sz $attribute $ctx
     return $relation
 end
 
 @hasAuthority:hasAuthority graph leader authority
     # Leader has authority type
-    @lead __Role Leader $leader
-    @auth __Role Authority $authority
-    @power __Role Domain PoliticalPower
-    @relation __Bundle $lead $auth $power
+    @eid __Event
+    @act __Role Action hasAuthority
+    @ctx __Role Context StressCompat
+    @lead __Role Attribute $leader
+    @auth __Role Attribute $authority
+    @power __Role Context PoliticalPower
+    @relation __Bundle $eid $act $lead $auth $power $ctx
     return $relation
 end
 
 @hasOrganization:hasOrganization graph society organization
     # Society has organizational structure
-    @soc __Role Society $society
-    @org __Role Organization $organization
+    @eid __Event
+    @act __Role Action hasOrganization
+    @ctx __Role Context StressCompat
+    @soc __Role Attribute $society
+    @org __Role Attribute $organization
     @structure __Role Property SocialStructure
-    @relation __Bundle $soc $org $structure
+    @relation __Bundle $eid $act $soc $org $structure $ctx
     return $relation
 end
 
 @hasStructure:hasStructure graph entity structure
     # Entity has structural organization
+    @eid __Event
+    @act __Role Action hasStructure
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @struct __Role Structure $structure
     @property __Role Property Organization
-    @relation __Bundle $ent $struct $property
+    @relation __Bundle $eid $act $ent $struct $property $ctx
     return $relation
 end
 
 @hasMultiple:hasMultiple graph entity multiple
     # Entity has multiple instances
-    @ent __Role Container $entity
-    @mult __Role Multiple $multiple
+    @eid __Event
+    @act __Role Action hasMultiple
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @mult __Role Attribute $multiple
     @plurality __Role Property Multiplicity
-    @relation __Bundle $ent $mult $plurality
+    @relation __Bundle $eid $act $ent $mult $plurality $ctx
     return $relation
 end
 
 @hasCharacter:hasCharacter graph entity character
     # Entity has characteristic nature
+    @eid __Event
+    @act __Role Action hasCharacter
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @char __Role Character $character
+    @char __Role Attribute $character
     @property __Role Property Nature
-    @relation __Bundle $ent $char $property
+    @relation __Bundle $eid $act $ent $char $property $ctx
     return $relation
 end
 
 @hasLevel:hasLevel graph system level
     # System has organizational level
-    @sys __Role System $system
-    @lev __Role Level $level
+    @eid __Event
+    @act __Role Action hasLevel
+    @ctx __Role Context StressCompat
+    @sys __Role Structure $system
+    @lev __Role Attribute $level
     @structure __Role Property Hierarchy
-    @relation __Bundle $sys $lev $structure
+    @relation __Bundle $eid $act $sys $lev $structure $ctx
     return $relation
 end
 
 @hasPerson:hasPerson graph person
     # Context contains person/individual
-    @pers __Role Person $person
+    @pers __Role Entity $person
     @presence __Role Property Individual
     @relation __Pair $pers $presence
     return $relation
@@ -498,10 +633,13 @@ end
 
 @isSpecies:isSpecies graph entity species
     # Entity is biological species
+    @eid __Event
+    @act __Role Action isSpecies
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @sp __Role Species $species
-    @taxonomy __Role Classification Biological
-    @relation __Bundle $ent $sp $taxonomy
+    @sp __Role Attribute $species
+    @taxonomy __Role Attribute Biological
+    @relation __Bundle $eid $act $ent $sp $taxonomy $ctx
     return $relation
 end
 
@@ -515,16 +653,19 @@ end
 
 @is:is graph entity property
     # Entity has property/classification
+    @eid __Event
+    @act __Role Action is
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @prop __Role Property $property
-    @classification __Role Relation Is
-    @relation __Bundle $ent $prop $classification
+    @classification __Role Action Is
+    @relation __Bundle $eid $act $ent $prop $classification $ctx
     return $relation
 end
 
 @isBase:isBase graph element
     # Element is foundational base
-    @elem __Role Element $element
+    @elem __Role Attribute $element
     @status __Role Property Foundational
     @relation __Pair $elem $status
     return $relation
@@ -534,10 +675,13 @@ end
 
 @relates:relates graph entity1 entity2
     # Entity relates to another
-    @ent1 __Role Relatum $entity1
-    @ent2 __Role Relatum $entity2
-    @connection __Role Relation RelatesTo
-    @relation __Bundle $ent1 $ent2 $connection
+    @eid __Event
+    @act __Role Action relates
+    @ctx __Role Context StressCompat
+    @ent1 __Role Attribute $entity1
+    @ent2 __Role Attribute $entity2
+    @connection __Role Action RelatesTo
+    @relation __Bundle $eid $act $ent1 $ent2 $connection $ctx
     return $relation
 end
 
@@ -545,2384 +689,3173 @@ end
 
 @about:about graph subject topic
     # Subject concerns or is about topic
-    @subj __Role Subject $subject
-    @top __Role Topic $topic
-    @relation __Role Relation Concerns
-    @result __Bundle $subj $top $relation
+    @eid __Event
+    @act __Role Action about
+    @ctx __Role Context StressCompat
+    @subj __Role Attribute $subject
+    @top __Role Attribute $topic
+    @relation __Role Action Concerns
+    @result __Bundle $eid $act $subj $top $relation $ctx
     return $result
 end
 
 @academia:academia graph context domain
     # Context is academic or scholarly domain
+    @eid __Event
+    @act __Role Action academia
+    @ctx2 __Role Context StressCompat
     @ctx __Role Context $context
-    @dom __Role Domain $domain
+    @dom __Role Context $domain
     @academic __Role Property Academic
-    @result __Bundle $ctx $dom $academic
+    @result __Bundle $eid $act $ctx $dom $academic $ctx2
     return $result
 end
 
 @accesses:accesses graph agent resource
     # Agent accesses or reaches resource
-    @ag __Role Accessor $agent
+    @eid __Event
+    @act __Role Action accesses
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
     @res __Role Resource $resource
     @process __Role Process Access
-    @result __Bundle $ag $res $process
+    @result __Bundle $eid $act $ag $res $process $ctx
     return $result
 end
 
 @achieves:achieves graph agent outcome
     # Agent achieves or attains outcome
-    @ag __Role Achiever $agent
-    @out __Role Achievement $outcome
+    @eid __Event
+    @act __Role Action achieves
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @out __Role Attribute $outcome
     @process __Role Process Attainment
-    @result __Bundle $ag $out $process
+    @result __Bundle $eid $act $ag $out $process $ctx
     return $result
 end
 
 @acquired:acquired graph agent object
     # Agent acquired object
-    @ag __Role Acquirer $agent
-    @obj __Role Acquired $object
+    @eid __Event
+    @act __Role Action acquired
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @obj __Role Attribute $object
     @process __Role Process Acquisition
-    @result __Bundle $ag $obj $process
+    @result __Bundle $eid $act $ag $obj $process $ctx
     return $result
 end
 
 @across:across graph entity boundary
     # Entity extends across boundary
+    @eid __Event
+    @act __Role Action across
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @bound __Role Boundary $boundary
-    @relation __Role Relation Crossing
-    @result __Bundle $ent $bound $relation
+    @bound __Role Attribute $boundary
+    @relation __Role Action Crossing
+    @result __Bundle $eid $act $ent $bound $relation $ctx
     return $result
 end
 
 @adapts:adapts graph entity condition
     # Entity adapts to condition
-    @ent __Role Adapter $entity
-    @cond __Role Condition $condition
+    @eid __Event
+    @act __Role Action adapts
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @cond __Role Attribute $condition
     @process __Role Process Adaptation
-    @result __Bundle $ent $cond $process
+    @result __Bundle $eid $act $ent $cond $process $ctx
     return $result
 end
 
 @adopted:adopted graph agent trait
     # Agent adopted trait or practice
-    @ag __Role Adopter $agent
-    @tr __Role Adopted $trait
+    @eid __Event
+    @act __Role Action adopted
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @tr __Role Attribute $trait
     @process __Role Process Adoption
-    @result __Bundle $ag $tr $process
+    @result __Bundle $eid $act $ag $tr $process $ctx
     return $result
 end
 
 @advances:advances graph entity progression
     # Entity advances through progression
-    @ent __Role Advancer $entity
-    @prog __Role Progression $progression
+    @eid __Event
+    @act __Role Action advances
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @prog __Role Attribute $progression
     @process __Role Process Advancement
-    @result __Bundle $ent $prog $process
+    @result __Bundle $eid $act $ent $prog $process $ctx
     return $result
 end
 
 @advantages:advantages graph entity benefit
     # Entity has advantages or benefits
+    @eid __Event
+    @act __Role Action advantages
+    @ctx __Role Context StressCompat
     @ent __Role Beneficiary $entity
-    @ben __Role Benefit $benefit
-    @relation __Role Relation Advantage
-    @result __Bundle $ent $ben $relation
+    @ben __Role Attribute $benefit
+    @relation __Role Action Advantage
+    @result __Bundle $eid $act $ent $ben $relation $ctx
     return $result
 end
 
 @advocates:advocates graph agent cause
     # Agent advocates for cause
-    @ag __Role Advocate $agent
+    @eid __Event
+    @act __Role Action advocates
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
     @cause __Role Cause $cause
     @process __Role Process Advocacy
-    @result __Bundle $ag $cause $process
+    @result __Bundle $eid $act $ag $cause $process $ctx
     return $result
 end
 
 @allocates:allocates graph agent resource
     # Agent allocates or distributes resource
-    @ag __Role Allocator $agent
+    @eid __Event
+    @act __Role Action allocates
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
     @res __Role Resource $resource
     @process __Role Process Allocation
-    @result __Bundle $ag $res $process
+    @result __Bundle $eid $act $ag $res $process $ctx
     return $result
 end
 
 @allows:allows graph condition outcome
     # Condition allows or permits outcome
-    @cond __Role Condition $condition
-    @out __Role Outcome $outcome
-    @relation __Role Relation Permission
-    @result __Bundle $cond $out $relation
+    @eid __Event
+    @act __Role Action allows
+    @ctx __Role Context StressCompat
+    @cond __Role Attribute $condition
+    @out __Role Attribute $outcome
+    @relation __Role Action Permission
+    @result __Bundle $eid $act $cond $out $relation $ctx
     return $result
 end
 
 @alternates:alternates graph entity states
     # Entity alternates between states
-    @ent __Role Alternator $entity
-    @st __Role States $states
+    @eid __Event
+    @act __Role Action alternates
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @st __Role Attribute $states
     @process __Role Process Alternation
-    @result __Bundle $ent $st $process
+    @result __Bundle $eid $act $ent $st $process $ctx
     return $result
 end
 
 @analyzes:analyzes graph agent subject
     # Agent analyzes subject
-    @ag __Role Analyst $agent
-    @subj __Role Subject $subject
+    @eid __Event
+    @act __Role Action analyzes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @subj __Role Attribute $subject
     @process __Role Process Analysis
-    @result __Bundle $ag $subj $process
+    @result __Bundle $eid $act $ag $subj $process $ctx
     return $result
 end
 
 @applies:applies graph agent method
     # Agent applies method or technique
-    @ag __Role Applicator $agent
-    @meth __Role Method $method
+    @eid __Event
+    @act __Role Action applies
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @meth __Role Process $method
     @process __Role Process Application
-    @result __Bundle $ag $meth $process
+    @result __Bundle $eid $act $ag $meth $process $ctx
     return $result
 end
 
 @are:are graph entity property
     # Entity has property (copula)
+    @eid __Event
+    @act __Role Action are
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @prop __Role Property $property
-    @relation __Role Relation Identity
-    @result __Bundle $ent $prop $relation
+    @relation __Role Action Identity
+    @result __Bundle $eid $act $ent $prop $relation $ctx
     return $result
 end
 
 @as:as graph entity role
     # Entity functions as role
+    @eid __Event
+    @act __Role Action as
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @rol __Role Role $role
-    @relation __Role Relation Function
-    @result __Bundle $ent $rol $relation
+    @relation __Role Action Function
+    @result __Bundle $eid $act $ent $rol $relation $ctx
     return $result
 end
 
 @assert:assert graph agent claim
     # Agent asserts claim
-    @ag __Role Asserter $agent
-    @claim __Role Claim $claim
+    @eid __Event
+    @act __Role Action assert
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @claim __Role Content $claim
     @process __Role Process Assertion
-    @result __Bundle $ag $claim $process
+    @result __Bundle $eid $act $ag $claim $process $ctx
     return $result
 end
 
 @assigns:assigns graph agent assignment
     # Agent assigns task or role
-    @ag __Role Assigner $agent
-    @asgn __Role Assignment $assignment
+    @eid __Event
+    @act __Role Action assigns
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @asgn __Role Attribute $assignment
     @process __Role Process Assignment
-    @result __Bundle $ag $asgn $process
+    @result __Bundle $eid $act $ag $asgn $process $ctx
     return $result
 end
 
 @associates:associates graph entity association
     # Entity associates with something
+    @eid __Event
+    @act __Role Action associates
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @assoc __Role Associate $association
-    @relation __Role Relation Association
-    @result __Bundle $ent $assoc $relation
+    @assoc __Role Attribute $association
+    @relation __Role Action Association
+    @result __Bundle $eid $act $ent $assoc $relation $ctx
     return $result
 end
 
 @assumes:assumes graph agent assumption
     # Agent assumes belief or position
-    @ag __Role Assumer $agent
-    @assum __Role Assumption $assumption
+    @eid __Event
+    @act __Role Action assumes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @assum __Role Attribute $assumption
     @process __Role Process Assumption
-    @result __Bundle $ag $assum $process
+    @result __Bundle $eid $act $ag $assum $process $ctx
     return $result
 end
 
 @avoids:avoids graph entity avoided
     # Entity avoids something
-    @ent __Role Avoider $entity
-    @avoid __Role Avoided $avoided
-    @relation __Role Relation Avoidance
-    @result __Bundle $ent $avoid $relation
+    @eid __Event
+    @act __Role Action avoids
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @avoid __Role Attribute $avoided
+    @relation __Role Action Avoidance
+    @result __Bundle $eid $act $ent $avoid $relation $ctx
     return $result
 end
 
 @based:based graph entity basis
     # Entity is based on basis
+    @eid __Event
+    @act __Role Action based
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @basis __Role Basis $basis
-    @relation __Role Relation Foundation
-    @result __Bundle $ent $basis $relation
+    @basis __Role Attribute $basis
+    @relation __Role Action Foundation
+    @result __Bundle $eid $act $ent $basis $relation $ctx
     return $result
 end
 
 @becomes:becomes graph entity state
     # Entity becomes or transforms into state
+    @eid __Event
+    @act __Role Action becomes
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @st __Role State $state
     @process __Role Process Transformation
-    @result __Bundle $ent $st $process
+    @result __Bundle $eid $act $ent $st $process $ctx
     return $result
 end
 
 @between:between graph entity1 entity2
     # Relation between two entities
+    @eid __Event
+    @act __Role Action between
+    @ctx __Role Context StressCompat
     @ent1 __Role Entity $entity1
     @ent2 __Role Entity $entity2
-    @relation __Role Relation Between
-    @result __Bundle $ent1 $ent2 $relation
+    @relation __Role Action Between
+    @result __Bundle $eid $act $ent1 $ent2 $relation $ctx
     return $result
 end
 
 @blends:blends graph entity elements
     # Entity blends elements together
-    @ent __Role Blender $entity
-    @elem __Role Elements $elements
+    @eid __Event
+    @act __Role Action blends
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @elem __Role Attribute $elements
     @process __Role Process Blending
-    @result __Bundle $ent $elem $process
+    @result __Bundle $eid $act $ent $elem $process $ctx
     return $result
 end
 
 @born:born graph individual time
     # Individual is born at time
-    @ind __Role Individual $individual
+    @eid __Event
+    @act __Role Action born
+    @ctx __Role Context StressCompat
+    @ind __Role Attribute $individual
     @tm __Role Time $time
-    @event __Role Event Birth
-    @result __Bundle $ind $tm $event
+    @event __Role Action Birth
+    @result __Bundle $eid $act $ind $tm $event $ctx
     return $result
 end
 
 @brings:brings graph agent object
     # Agent brings object
-    @ag __Role Bringer $agent
-    @obj __Role Object $object
+    @eid __Event
+    @act __Role Action brings
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @obj __Role Theme $object
     @process __Role Process Bringing
-    @result __Bundle $ag $obj $process
+    @result __Bundle $eid $act $ag $obj $process $ctx
     return $result
 end
 
 @builds:builds graph agent construction
     # Agent builds or constructs something
-    @ag __Role Builder $agent
-    @cons __Role Construction $construction
+    @eid __Event
+    @act __Role Action builds
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @cons __Role Attribute $construction
     @process __Role Process Building
-    @result __Bundle $ag $cons $process
+    @result __Bundle $eid $act $ag $cons $process $ctx
     return $result
 end
 
 @buries:buries graph agent deceased
     # Agent buries deceased
-    @ag __Role Burier $agent
-    @dec __Role Deceased $deceased
-    @ritual __Role Ritual Burial
-    @result __Bundle $ag $dec $ritual
+    @eid __Event
+    @act __Role Action buries
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @dec __Role Attribute $deceased
+    @ritual __Role Attribute Burial
+    @result __Bundle $eid $act $ag $dec $ritual $ctx
     return $result
 end
 
 @burns:burns graph agent object
     # Agent burns object
-    @ag __Role Burner $agent
-    @obj __Role Object $object
+    @eid __Event
+    @act __Role Action burns
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @obj __Role Theme $object
     @process __Role Process Burning
-    @result __Bundle $ag $obj $process
+    @result __Bundle $eid $act $ag $obj $process $ctx
     return $result
 end
 
 @but:but graph entity exception
     # Entity has exception or contrast
+    @eid __Event
+    @act __Role Action but
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @exc __Role Exception $exception
-    @relation __Role Relation Contrast
-    @result __Bundle $ent $exc $relation
+    @exc __Role Attribute $exception
+    @relation __Role Action Contrast
+    @result __Bundle $eid $act $ent $exc $relation $ctx
     return $result
 end
 
 @by:by graph action agent
     # Action performed by agent
+    @eid __Event
+    @act2 __Role Action by
+    @ctx __Role Context StressCompat
     @act __Role Action $action
     @ag __Role Agent $agent
-    @relation __Role Relation Agency
-    @result __Bundle $act $ag $relation
+    @relation __Role Action Agency
+    @result __Bundle $eid $act2 $act $ag $relation $ctx
     return $result
 end
 
 @canMarry:canMarry graph person1 person2
     # Person can marry another (marriage eligibility)
-    @p1 __Role Person $person1
-    @p2 __Role Person $person2
+    @eid __Event
+    @act __Role Action canMarry
+    @ctx __Role Context StressCompat
+    @p1 __Role Entity $person1
+    @p2 __Role Entity $person2
     @eligibility __Role Property MarriageEligible
-    @result __Bundle $p1 $p2 $eligibility
+    @result __Bundle $eid $act $p1 $p2 $eligibility $ctx
     return $result
 end
 
 @carries:carries graph entity cargo
     # Entity carries cargo or meaning
-    @ent __Role Carrier $entity
-    @cargo __Role Cargo $cargo
-    @relation __Role Relation Carrying
-    @result __Bundle $ent $cargo $relation
+    @eid __Event
+    @act __Role Action carries
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @cargo __Role Attribute $cargo
+    @relation __Role Action Carrying
+    @result __Bundle $eid $act $ent $cargo $relation $ctx
     return $result
 end
 
 @caused:caused graph effect cause
     # Effect is caused by cause
-    @eff __Role Effect $effect
+    @eid __Event
+    @act __Role Action caused
+    @ctx __Role Context StressCompat
+    @eff __Role Result $effect
     @cause __Role Cause $cause
-    @relation __Role Relation Causation
-    @result __Bundle $eff $cause $relation
+    @relation __Role Action Causation
+    @result __Bundle $eid $act $eff $cause $relation $ctx
     return $result
 end
 
 @changes:changes graph entity change
     # Entity undergoes change
-    @ent __Role Changer $entity
-    @chg __Role Change $change
+    @eid __Event
+    @act __Role Action changes
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @chg __Role Attribute $change
     @process __Role Process Transformation
-    @result __Bundle $ent $chg $process
+    @result __Bundle $eid $act $ent $chg $process $ctx
     return $result
 end
 
 @characterized:characterized graph entity characteristic
     # Entity is characterized by characteristic
+    @eid __Event
+    @act __Role Action characterized
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @char __Role Characteristic $characteristic
-    @relation __Role Relation Characterization
-    @result __Bundle $ent $char $relation
+    @char __Role Attribute $characteristic
+    @relation __Role Action Characterization
+    @result __Bundle $eid $act $ent $char $relation $ctx
     return $result
 end
 
 @charts:charts graph agent map
     # Agent charts or maps something
-    @ag __Role Charter $agent
-    @map __Role Map $map
+    @eid __Event
+    @act __Role Action charts
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @map __Role Attribute $map
     @process __Role Process Charting
-    @result __Bundle $ag $map $process
+    @result __Bundle $eid $act $ag $map $process $ctx
     return $result
 end
 
 @chooses:chooses graph agent choice
     # Agent chooses option
-    @ag __Role Chooser $agent
-    @choice __Role Choice $choice
+    @eid __Event
+    @act __Role Action chooses
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @choice __Role Attribute $choice
     @process __Role Process Selection
-    @result __Bundle $ag $choice $process
+    @result __Bundle $eid $act $ag $choice $process $ctx
     return $result
 end
 
 @circulate:circulate graph entity path
     # Entity circulates through path
+    @eid __Event
+    @act __Role Action circulate
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @path __Role Path $path
+    @path __Role Attribute $path
     @process __Role Process Circulation
-    @result __Bundle $ent $path $process
+    @result __Bundle $eid $act $ent $path $process $ctx
     return $result
 end
 
 @claim:claim graph agent claim
     # Agent makes claim
-    @ag __Role Claimant $agent
-    @clm __Role Claim $claim
+    @eid __Event
+    @act __Role Action claim
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @clm __Role Content $claim
     @process __Role Process Claiming
-    @result __Bundle $ag $clm $process
+    @result __Bundle $eid $act $ag $clm $process $ctx
     return $result
 end
 
 @claims:claims graph agent claim
     # Agent claims something
-    @ag __Role Claimant $agent
-    @clm __Role Claim $claim
+    @eid __Event
+    @act __Role Action claims
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @clm __Role Content $claim
     @process __Role Process Claiming
-    @result __Bundle $ag $clm $process
+    @result __Bundle $eid $act $ag $clm $process $ctx
     return $result
 end
 
 @classifies:classifies graph system entity
     # System classifies entity
-    @sys __Role System $system
+    @eid __Event
+    @act __Role Action classifies
+    @ctx __Role Context StressCompat
+    @sys __Role Structure $system
     @ent __Role Entity $entity
     @process __Role Process Classification
-    @result __Bundle $sys $ent $process
+    @result __Bundle $eid $act $sys $ent $process $ctx
     return $result
 end
 
 @clears:clears graph agent area
     # Agent clears area
-    @ag __Role Clearer $agent
-    @area __Role Area $area
+    @eid __Event
+    @act __Role Action clears
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @area __Role Attribute $area
     @process __Role Process Clearing
-    @result __Bundle $ag $area $process
+    @result __Bundle $eid $act $ag $area $process $ctx
     return $result
 end
 
 @collectively:collectively graph group action
     # Group performs action collectively
+    @eid __Event
+    @act2 __Role Action collectively
+    @ctx __Role Context StressCompat
     @grp __Role Group $group
     @act __Role Action $action
     @manner __Role Manner Collective
-    @result __Bundle $grp $act $manner
+    @result __Bundle $eid $act2 $grp $act $manner $ctx
     return $result
 end
 
 @collects:collects graph agent items
     # Agent collects items
-    @ag __Role Collector $agent
-    @items __Role Items $items
+    @eid __Event
+    @act __Role Action collects
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @items __Role Attribute $items
     @process __Role Process Collection
-    @result __Bundle $ag $items $process
+    @result __Bundle $eid $act $ag $items $process $ctx
     return $result
 end
 
 @combines:combines graph entity elements
     # Entity combines elements
-    @ent __Role Combiner $entity
-    @elem __Role Elements $elements
+    @eid __Event
+    @act __Role Action combines
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @elem __Role Attribute $elements
     @process __Role Process Combination
-    @result __Bundle $ent $elem $process
+    @result __Bundle $eid $act $ent $elem $process $ctx
     return $result
 end
 
 @commercializes:commercializes graph agent object
     # Agent commercializes object
-    @ag __Role Commercializer $agent
-    @obj __Role Object $object
+    @eid __Event
+    @act __Role Action commercializes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @obj __Role Theme $object
     @process __Role Process Commercialization
-    @result __Bundle $ag $obj $process
+    @result __Bundle $eid $act $ag $obj $process $ctx
     return $result
 end
 
 @community:community graph entity community
     # Entity relates to community
+    @eid __Event
+    @act __Role Action community
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @comm __Role Community $community
-    @relation __Role Relation CommunityTie
-    @result __Bundle $ent $comm $relation
+    @comm __Role Attribute $community
+    @relation __Role Action CommunityTie
+    @result __Bundle $eid $act $ent $comm $relation $ctx
     return $result
 end
 
 @compares:compares graph agent entities
     # Agent compares entities
-    @ag __Role Comparer $agent
-    @ents __Role Entities $entities
+    @eid __Event
+    @act __Role Action compares
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @ents __Role Attribute $entities
     @process __Role Process Comparison
-    @result __Bundle $ag $ents $process
+    @result __Bundle $eid $act $ag $ents $process $ctx
     return $result
 end
 
 @comprises:comprises graph whole parts
     # Whole comprises parts
-    @whole __Role Whole $whole
-    @parts __Role Parts $parts
-    @relation __Role Relation Composition
-    @result __Bundle $whole $parts $relation
+    @eid __Event
+    @act __Role Action comprises
+    @ctx __Role Context StressCompat
+    @whole __Role Attribute $whole
+    @parts __Role Attribute $parts
+    @relation __Role Action Composition
+    @result __Bundle $eid $act $whole $parts $relation $ctx
     return $result
 end
 
 @concerns:concerns graph subject matter
     # Subject concerns matter
-    @subj __Role Subject $subject
-    @mat __Role Matter $matter
-    @relation __Role Relation Concerns
-    @result __Bundle $subj $mat $relation
+    @eid __Event
+    @act __Role Action concerns
+    @ctx __Role Context StressCompat
+    @subj __Role Attribute $subject
+    @mat __Role Attribute $matter
+    @relation __Role Action Concerns
+    @result __Bundle $eid $act $subj $mat $relation $ctx
     return $result
 end
 
 @conducted:conducted graph research agent
     # Research conducted by agent
-    @res __Role Research $research
+    @eid __Event
+    @act __Role Action conducted
+    @ctx __Role Context StressCompat
+    @res __Role Attribute $research
     @ag __Role Agent $agent
     @process __Role Process Conducting
-    @result __Bundle $res $ag $process
+    @result __Bundle $eid $act $res $ag $process $ctx
     return $result
 end
 
 @conducts:conducts graph agent activity
     # Agent conducts activity
-    @ag __Role Conductor $agent
-    @act __Role Activity $activity
+    @eid __Event
+    @act2 __Role Action conducts
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @act __Role Attribute $activity
     @process __Role Process Conducting
-    @result __Bundle $ag $act $process
+    @result __Bundle $eid $act2 $ag $act $process $ctx
     return $result
 end
 
 @connects:connects graph entity1 entity2
     # Entity connects to another
-    @ent1 __Role Connector $entity1
-    @ent2 __Role Connected $entity2
-    @relation __Role Relation Connection
-    @result __Bundle $ent1 $ent2 $relation
+    @eid __Event
+    @act __Role Action connects
+    @ctx __Role Context StressCompat
+    @ent1 __Role Attribute $entity1
+    @ent2 __Role Attribute $entity2
+    @relation __Role Action Connection
+    @result __Bundle $eid $act $ent1 $ent2 $relation $ctx
     return $result
 end
 
 @constitutes:constitutes graph parts whole
     # Parts constitute whole
-    @parts __Role Parts $parts
-    @whole __Role Whole $whole
-    @relation __Role Relation Constitution
-    @result __Bundle $parts $whole $relation
+    @eid __Event
+    @act __Role Action constitutes
+    @ctx __Role Context StressCompat
+    @parts __Role Attribute $parts
+    @whole __Role Attribute $whole
+    @relation __Role Action Constitution
+    @result __Bundle $eid $act $parts $whole $relation $ctx
     return $result
 end
 
 @constructed:constructed graph object builder
     # Object constructed by builder
-    @obj __Role Object $object
-    @build __Role Builder $builder
+    @eid __Event
+    @act __Role Action constructed
+    @ctx __Role Context StressCompat
+    @obj __Role Theme $object
+    @build __Role Attribute $builder
     @process __Role Process Construction
-    @result __Bundle $obj $build $process
+    @result __Bundle $eid $act $obj $build $process $ctx
     return $result
 end
 
 @contacts:contacts graph entity1 entity2
     # Entity makes contact with another
-    @ent1 __Role Contactor $entity1
-    @ent2 __Role Contacted $entity2
-    @relation __Role Relation Contact
-    @result __Bundle $ent1 $ent2 $relation
+    @eid __Event
+    @act __Role Action contacts
+    @ctx __Role Context StressCompat
+    @ent1 __Role Attribute $entity1
+    @ent2 __Role Attribute $entity2
+    @relation __Role Action Contact
+    @result __Bundle $eid $act $ent1 $ent2 $relation $ctx
     return $result
 end
 
 @controlled:controlled graph entity controller
     # Entity controlled by controller
-    @ent __Role Controlled $entity
-    @ctrl __Role Controller $controller
-    @relation __Role Relation Control
-    @result __Bundle $ent $ctrl $relation
+    @eid __Event
+    @act __Role Action controlled
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @ctrl __Role Attribute $controller
+    @relation __Role Action Control
+    @result __Bundle $eid $act $ent $ctrl $relation $ctx
     return $result
 end
 
 @controls:controls graph agent controlled
     # Agent controls entity
-    @ag __Role Controller $agent
-    @ctrl __Role Controlled $controlled
-    @relation __Role Relation Control
-    @result __Bundle $ag $ctrl $relation
+    @eid __Event
+    @act __Role Action controls
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @ctrl __Role Attribute $controlled
+    @relation __Role Action Control
+    @result __Bundle $eid $act $ag $ctrl $relation $ctx
     return $result
 end
 
 @convey:convey graph medium message
     # Medium conveys message
-    @med __Role Medium $medium
-    @msg __Role Message $message
+    @eid __Event
+    @act __Role Action convey
+    @ctx __Role Context StressCompat
+    @med __Role Attribute $medium
+    @msg __Role Attribute $message
     @process __Role Process Communication
-    @result __Bundle $med $msg $process
+    @result __Bundle $eid $act $med $msg $process $ctx
     return $result
 end
 
 @correlates:correlates graph variable1 variable2
     # Variable correlates with another
-    @var1 __Role Variable $variable1
-    @var2 __Role Variable $variable2
-    @relation __Role Relation Correlation
-    @result __Bundle $var1 $var2 $relation
+    @eid __Event
+    @act __Role Action correlates
+    @ctx __Role Context StressCompat
+    @var1 __Role Attribute $variable1
+    @var2 __Role Attribute $variable2
+    @relation __Role Action Correlation
+    @result __Bundle $eid $act $var1 $var2 $relation $ctx
     return $result
 end
 
 @counts:counts graph agent items
     # Agent counts items
-    @ag __Role Counter $agent
-    @items __Role Items $items
+    @eid __Event
+    @act __Role Action counts
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @items __Role Attribute $items
     @process __Role Process Counting
-    @result __Bundle $ag $items $process
+    @result __Bundle $eid $act $ag $items $process $ctx
     return $result
 end
 
 @created:created graph object creator
     # Object created by creator
-    @obj __Role Created $object
-    @cr __Role Creator $creator
+    @eid __Event
+    @act __Role Action created
+    @ctx __Role Context StressCompat
+    @obj __Role Attribute $object
+    @cr __Role Attribute $creator
     @process __Role Process Creation
-    @result __Bundle $obj $cr $process
+    @result __Bundle $eid $act $obj $cr $process $ctx
     return $result
 end
 
 @cultivates:cultivates graph agent crops
     # Agent cultivates crops
-    @ag __Role Cultivator $agent
-    @crops __Role Crops $crops
+    @eid __Event
+    @act __Role Action cultivates
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @crops __Role Attribute $crops
     @process __Role Process Cultivation
-    @result __Bundle $ag $crops $process
+    @result __Bundle $eid $act $ag $crops $process $ctx
     return $result
 end
 
 @deep:deep graph entity depth
     # Entity has deep quality
+    @eid __Event
+    @act __Role Action deep
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @depth __Role Depth $depth
+    @depth __Role Attribute $depth
     @property __Role Property Depth
-    @result __Bundle $ent $depth $property
+    @result __Bundle $eid $act $ent $depth $property $ctx
     return $result
 end
 
 @defines:defines graph agent definition
     # Agent defines something
-    @ag __Role Definer $agent
-    @def __Role Definition $definition
+    @eid __Event
+    @act __Role Action defines
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @def __Role Attribute $definition
     @process __Role Process Definition
-    @result __Bundle $ag $def $process
+    @result __Bundle $eid $act $ag $def $process $ctx
     return $result
 end
 
 @delivers:delivers graph agent delivery
     # Agent delivers something
-    @ag __Role Deliverer $agent
-    @deliv __Role Delivery $delivery
+    @eid __Event
+    @act __Role Action delivers
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @deliv __Role Attribute $delivery
     @process __Role Process Delivery
-    @result __Bundle $ag $deliv $process
+    @result __Bundle $eid $act $ag $deliv $process $ctx
     return $result
 end
 
 @demonstrated:demonstrated graph entity trait
     # Entity demonstrated trait
+    @eid __Event
+    @act __Role Action demonstrated
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @trait __Role Trait $trait
+    @trait __Role Attribute $trait
     @process __Role Process Demonstration
-    @result __Bundle $ent $trait $process
+    @result __Bundle $eid $act $ent $trait $process $ctx
     return $result
 end
 
 @depicted:depicted graph art subject
     # Art depicted subject
-    @art __Role Art $art
-    @subj __Role Subject $subject
+    @eid __Event
+    @act __Role Action depicted
+    @ctx __Role Context StressCompat
+    @art __Role Attribute $art
+    @subj __Role Attribute $subject
     @process __Role Process Depiction
-    @result __Bundle $art $subj $process
+    @result __Bundle $eid $act $art $subj $process $ctx
     return $result
 end
 
 @descent:descent graph entity lineage
     # Entity follows descent lineage
+    @eid __Event
+    @act __Role Action descent
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @lin __Role Lineage $lineage
-    @relation __Role Relation Descent
-    @result __Bundle $ent $lin $relation
+    @lin __Role Attribute $lineage
+    @relation __Role Action Descent
+    @result __Bundle $eid $act $ent $lin $relation $ctx
     return $result
 end
 
 @determined:determined graph outcome determinant
     # Outcome determined by determinant
-    @out __Role Outcome $outcome
-    @det __Role Determinant $determinant
-    @relation __Role Relation Determination
-    @result __Bundle $out $det $relation
+    @eid __Event
+    @act __Role Action determined
+    @ctx __Role Context StressCompat
+    @out __Role Attribute $outcome
+    @det __Role Attribute $determinant
+    @relation __Role Action Determination
+    @result __Bundle $eid $act $out $det $relation $ctx
     return $result
 end
 
 @developed:developed graph entity trait
     # Entity developed trait
-    @ent __Role Developer $entity
-    @trait __Role Trait $trait
+    @eid __Event
+    @act __Role Action developed
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @trait __Role Attribute $trait
     @process __Role Process Development
-    @result __Bundle $ent $trait $process
+    @result __Bundle $eid $act $ent $trait $process $ctx
     return $result
 end
 
 @dies:dies graph individual
     # Individual dies
-    @ind __Role Individual $individual
-    @event __Role Event Death
+    @ind __Role Attribute $individual
+    @event __Role Action Death
     @result __Pair $ind $event
     return $result
 end
 
 @differs:differs graph entity1 entity2
     # Entity differs from another
+    @eid __Event
+    @act __Role Action differs
+    @ctx __Role Context StressCompat
     @ent1 __Role Entity $entity1
     @ent2 __Role Entity $entity2
-    @relation __Role Relation Difference
-    @result __Bundle $ent1 $ent2 $relation
+    @relation __Role Action Difference
+    @result __Bundle $eid $act $ent1 $ent2 $relation $ctx
     return $result
 end
 
 @directs:directs graph agent directed
     # Agent directs something
-    @ag __Role Director $agent
-    @dir __Role Directed $directed
+    @eid __Event
+    @act __Role Action directs
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @dir __Role Attribute $directed
     @process __Role Process Direction
-    @result __Bundle $ag $dir $process
+    @result __Bundle $eid $act $ag $dir $process $ctx
     return $result
 end
 
 @disadvantages:disadvantages graph entity detriment
     # Entity has disadvantages
+    @eid __Event
+    @act __Role Action disadvantages
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @detr __Role Detriment $detriment
-    @relation __Role Relation Disadvantage
-    @result __Bundle $ent $detr $relation
+    @detr __Role Attribute $detriment
+    @relation __Role Action Disadvantage
+    @result __Bundle $eid $act $ent $detr $relation $ctx
     return $result
 end
 
 @dispersed:dispersed graph entity area
     # Entity is dispersed across area
+    @eid __Event
+    @act __Role Action dispersed
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @area __Role Area $area
-    @relation __Role Relation Dispersal
-    @result __Bundle $ent $area $relation
+    @area __Role Attribute $area
+    @relation __Role Action Dispersal
+    @result __Bundle $eid $act $ent $area $relation $ctx
     return $result
 end
 
 @disrupts:disrupts graph agent disrupted
     # Agent disrupts something
-    @ag __Role Disruptor $agent
-    @disr __Role Disrupted $disrupted
+    @eid __Event
+    @act __Role Action disrupts
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @disr __Role Attribute $disrupted
     @process __Role Process Disruption
-    @result __Bundle $ag $disr $process
+    @result __Bundle $eid $act $ag $disr $process $ctx
     return $result
 end
 
 @distinguishes:distinguishes graph system entities
     # System distinguishes between entities
-    @sys __Role System $system
-    @ents __Role Entities $entities
+    @eid __Event
+    @act __Role Action distinguishes
+    @ctx __Role Context StressCompat
+    @sys __Role Structure $system
+    @ents __Role Attribute $entities
     @process __Role Process Differentiation
-    @result __Bundle $sys $ents $process
+    @result __Bundle $eid $act $sys $ents $process $ctx
     return $result
 end
 
 @distributes:distributes graph agent resources
     # Agent distributes resources
-    @ag __Role Distributor $agent
-    @res __Role Resources $resources
+    @eid __Event
+    @act __Role Action distributes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @res __Role Attribute $resources
     @process __Role Process Distribution
-    @result __Bundle $ag $res $process
+    @result __Bundle $eid $act $ag $res $process $ctx
     return $result
 end
 
 @divided:divided graph whole parts
     # Whole is divided into parts
-    @whole __Role Whole $whole
-    @parts __Role Parts $parts
-    @relation __Role Relation Division
-    @result __Bundle $whole $parts $relation
+    @eid __Event
+    @act __Role Action divided
+    @ctx __Role Context StressCompat
+    @whole __Role Attribute $whole
+    @parts __Role Attribute $parts
+    @relation __Role Action Division
+    @result __Bundle $eid $act $whole $parts $relation $ctx
     return $result
 end
 
 @documents:documents graph agent subject
     # Agent documents subject
-    @ag __Role Documenter $agent
-    @subj __Role Subject $subject
+    @eid __Event
+    @act __Role Action documents
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @subj __Role Attribute $subject
     @process __Role Process Documentation
-    @result __Bundle $ag $subj $process
+    @result __Bundle $eid $act $ag $subj $process $ctx
     return $result
 end
 
 @domesticated:domesticated graph species agent
     # Species domesticated by agent
-    @sp __Role Species $species
+    @eid __Event
+    @act __Role Action domesticated
+    @ctx __Role Context StressCompat
+    @sp __Role Attribute $species
     @ag __Role Agent $agent
     @process __Role Process Domestication
-    @result __Bundle $sp $ag $process
+    @result __Bundle $eid $act $sp $ag $process $ctx
     return $result
 end
 
 @either:either graph option1 option2
     # Choice between options
-    @opt1 __Role Option $option1
-    @opt2 __Role Option $option2
-    @relation __Role Relation Choice
-    @result __Bundle $opt1 $opt2 $relation
+    @eid __Event
+    @act __Role Action either
+    @ctx __Role Context StressCompat
+    @opt1 __Role Attribute $option1
+    @opt2 __Role Attribute $option2
+    @relation __Role Action Choice
+    @result __Bundle $eid $act $opt1 $opt2 $relation $ctx
     return $result
 end
 
 @embodiedIn:embodiedIn graph concept embodiment
     # Concept is embodied in manifestation
-    @conc __Role Concept $concept
-    @emb __Role Embodiment $embodiment
-    @relation __Role Relation Embodiment
-    @result __Bundle $conc $emb $relation
+    @eid __Event
+    @act __Role Action embodiedIn
+    @ctx __Role Context StressCompat
+    @conc __Role Attribute $concept
+    @emb __Role Attribute $embodiment
+    @relation __Role Action Embodiment
+    @result __Bundle $eid $act $conc $emb $relation $ctx
     return $result
 end
 
 @emphasizes:emphasizes graph agent emphasis
     # Agent emphasizes something
-    @ag __Role Emphasizer $agent
-    @emph __Role Emphasis $emphasis
+    @eid __Event
+    @act __Role Action emphasizes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @emph __Role Attribute $emphasis
     @process __Role Process Emphasis
-    @result __Bundle $ag $emph $process
+    @result __Bundle $eid $act $ag $emph $process $ctx
     return $result
 end
 
 @employs:employs graph agent method
     # Agent employs method
-    @ag __Role Employer $agent
-    @meth __Role Method $method
+    @eid __Event
+    @act __Role Action employs
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @meth __Role Process $method
     @process __Role Process Employment
-    @result __Bundle $ag $meth $process
+    @result __Bundle $eid $act $ag $meth $process $ctx
     return $result
 end
 
 @enabled:enabled graph enabler enabled
     # Enabler enabled something
-    @enabl __Role Enabler $enabler
-    @enabd __Role Enabled $enabled
-    @relation __Role Relation Enablement
-    @result __Bundle $enabl $enabd $relation
+    @eid __Event
+    @act __Role Action enabled
+    @ctx __Role Context StressCompat
+    @enabl __Role Attribute $enabler
+    @enabd __Role Attribute $enabled
+    @relation __Role Action Enablement
+    @result __Bundle $eid $act $enabl $enabd $relation $ctx
     return $result
 end
 
 @encoded:encoded graph medium information
     # Medium encoded information
-    @med __Role Medium $medium
-    @info __Role Information $information
+    @eid __Event
+    @act __Role Action encoded
+    @ctx __Role Context StressCompat
+    @med __Role Attribute $medium
+    @info __Role Attribute $information
     @process __Role Process Encoding
-    @result __Bundle $med $info $process
+    @result __Bundle $eid $act $med $info $process $ctx
     return $result
 end
 
 @encodes:encodes graph medium meaning
     # Medium encodes meaning
-    @med __Role Medium $medium
-    @mean __Role Meaning $meaning
+    @eid __Event
+    @act __Role Action encodes
+    @ctx __Role Context StressCompat
+    @med __Role Attribute $medium
+    @mean __Role Content $meaning
     @process __Role Process Encoding
-    @result __Bundle $med $mean $process
+    @result __Bundle $eid $act $med $mean $process $ctx
     return $result
 end
 
 @encounters:encounters graph entity1 entity2
     # Entity encounters another
-    @ent1 __Role Encounter $entity1
-    @ent2 __Role Encountered $entity2
-    @relation __Role Relation Encounter
-    @result __Bundle $ent1 $ent2 $relation
+    @eid __Event
+    @act __Role Action encounters
+    @ctx __Role Context StressCompat
+    @ent1 __Role Attribute $entity1
+    @ent2 __Role Attribute $entity2
+    @relation __Role Action Encounter
+    @result __Bundle $eid $act $ent1 $ent2 $relation $ctx
     return $result
 end
 
 @enforces:enforces graph authority socialrule
     # Authority enforces social rule
-    @auth __Role Authority $authority
-    @rul __Role Rule $socialrule
+    @eid __Event
+    @act __Role Action enforces
+    @ctx __Role Context StressCompat
+    @auth __Role Attribute $authority
+    @rul __Role Property $socialrule
     @process __Role Process Enforcement
-    @result __Bundle $auth $rul $process
+    @result __Bundle $eid $act $auth $rul $process $ctx
     return $result
 end
 
 @engages:engages graph agent activity
     # Agent engages in activity
-    @ag __Role Engager $agent
-    @act __Role Activity $activity
+    @eid __Event
+    @act2 __Role Action engages
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @act __Role Attribute $activity
     @process __Role Process Engagement
-    @result __Bundle $ag $act $process
+    @result __Bundle $eid $act2 $ag $act $process $ctx
     return $result
 end
 
 @ensures:ensures graph condition outcome
     # Condition ensures outcome
-    @cond __Role Condition $condition
-    @out __Role Outcome $outcome
-    @relation __Role Relation Guarantee
-    @result __Bundle $cond $out $relation
+    @eid __Event
+    @act __Role Action ensures
+    @ctx __Role Context StressCompat
+    @cond __Role Attribute $condition
+    @out __Role Attribute $outcome
+    @relation __Role Action Guarantee
+    @result __Bundle $eid $act $cond $out $relation $ctx
     return $result
 end
 
 @enters:enters graph entity state
     # Entity enters state
+    @eid __Event
+    @act __Role Action enters
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @st __Role State $state
     @process __Role Process Entry
-    @result __Bundle $ent $st $process
+    @result __Bundle $eid $act $ent $st $process $ctx
     return $result
 end
 
 @entersState:entersState graph entity state
     # Entity enters specific state
+    @eid __Event
+    @act __Role Action entersState
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @st __Role State $state
     @process __Role Process StateEntry
-    @result __Bundle $ent $st $process
+    @result __Bundle $eid $act $ent $st $process $ctx
     return $result
 end
 
 @establishes:establishes graph agent establishment
     # Agent establishes something
-    @ag __Role Establisher $agent
-    @estab __Role Establishment $establishment
+    @eid __Event
+    @act __Role Action establishes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @estab __Role Attribute $establishment
     @process __Role Process Establishment
-    @result __Bundle $ag $estab $process
+    @result __Bundle $eid $act $ag $estab $process $ctx
     return $result
 end
 
 @evaluates:evaluates graph agent subject
     # Agent evaluates subject
-    @ag __Role Evaluator $agent
-    @subj __Role Subject $subject
+    @eid __Event
+    @act __Role Action evaluates
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @subj __Role Attribute $subject
     @process __Role Process Evaluation
-    @result __Bundle $ag $subj $process
+    @result __Bundle $eid $act $ag $subj $process $ctx
     return $result
 end
 
 @examines:examines graph agent subject
     # Agent examines subject
-    @ag __Role Examiner $agent
-    @subj __Role Subject $subject
+    @eid __Event
+    @act __Role Action examines
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @subj __Role Attribute $subject
     @process __Role Process Examination
-    @result __Bundle $ag $subj $process
+    @result __Bundle $eid $act $ag $subj $process $ctx
     return $result
 end
 
 @exchange:exchange graph entity1 entity2
     # Entities exchange with each other
-    @ent1 __Role Exchanger $entity1
-    @ent2 __Role Exchanger $entity2
-    @relation __Role Relation Exchange
-    @result __Bundle $ent1 $ent2 $relation
+    @eid __Event
+    @act __Role Action exchange
+    @ctx __Role Context StressCompat
+    @ent1 __Role Attribute $entity1
+    @ent2 __Role Attribute $entity2
+    @relation __Role Action Exchange
+    @result __Bundle $eid $act $ent1 $ent2 $relation $ctx
     return $result
 end
 
 @exercises:exercises graph agent power
     # Agent exercises power
-    @ag __Role Exerciser $agent
-    @pow __Role Power $power
+    @eid __Event
+    @act __Role Action exercises
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @pow __Role Attribute $power
     @process __Role Process Exercise
-    @result __Bundle $ag $pow $process
+    @result __Bundle $eid $act $ag $pow $process $ctx
     return $result
 end
 
 @exhibited:exhibited graph entity trait
     # Entity exhibited trait
+    @eid __Event
+    @act __Role Action exhibited
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @trait __Role Trait $trait
+    @trait __Role Attribute $trait
     @process __Role Process Exhibition
-    @result __Bundle $ent $trait $process
+    @result __Bundle $eid $act $ent $trait $process $ctx
     return $result
 end
 
 @existed:existed graph entity time
     # Entity existed at time
+    @eid __Event
+    @act __Role Action existed
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @tm __Role Time $time
-    @relation __Role Relation Existence
-    @result __Bundle $ent $tm $relation
+    @relation __Role Action Existence
+    @result __Bundle $eid $act $ent $tm $relation $ctx
     return $result
 end
 
 @expects:expects graph agent expectation
     # Agent expects something
-    @ag __Role Expecter $agent
-    @exp __Role Expectation $expectation
+    @eid __Event
+    @act __Role Action expects
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @exp __Role Attribute $expectation
     @process __Role Process Expectation
-    @result __Bundle $ag $exp $process
+    @result __Bundle $eid $act $ag $exp $process $ctx
     return $result
 end
 
 @experiences:experiences graph agent experience
     # Agent experiences something
+    @eid __Event
+    @act __Role Action experiences
+    @ctx __Role Context StressCompat
     @ag __Role Experiencer $agent
-    @exp __Role Experience $experience
+    @exp __Role Attribute $experience
     @process __Role Process Experience
-    @result __Bundle $ag $exp $process
+    @result __Bundle $eid $act $ag $exp $process $ctx
     return $result
 end
 
 @explained:explained graph phenomenon explanation
     # Phenomenon explained by explanation
-    @phen __Role Phenomenon $phenomenon
-    @expl __Role Explanation $explanation
-    @relation __Role Relation Explanation
-    @result __Bundle $phen $expl $relation
+    @eid __Event
+    @act __Role Action explained
+    @ctx __Role Context StressCompat
+    @phen __Role Attribute $phenomenon
+    @expl __Role Attribute $explanation
+    @relation __Role Action Explanation
+    @result __Bundle $eid $act $phen $expl $relation $ctx
     return $result
 end
 
 @explains:explains graph theorymodel phenomenon
     # Theory explains phenomenon
-    @theo __Role Theory $theorymodel
-    @phen __Role Phenomenon $phenomenon
-    @relation __Role Relation Explanation
-    @result __Bundle $theo $phen $relation
+    @eid __Event
+    @act __Role Action explains
+    @ctx __Role Context StressCompat
+    @theo __Role Attribute $theorymodel
+    @phen __Role Attribute $phenomenon
+    @relation __Role Action Explanation
+    @result __Bundle $eid $act $theo $phen $relation $ctx
     return $result
 end
 
 @exploited:exploited graph agent resource
     # Agent exploited resource
-    @ag __Role Exploiter $agent
+    @eid __Event
+    @act __Role Action exploited
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
     @res __Role Resource $resource
     @process __Role Process Exploitation
-    @result __Bundle $ag $res $process
+    @result __Bundle $eid $act $ag $res $process $ctx
     return $result
 end
 
 @exploits:exploits graph agent resource
     # Agent exploits resource
-    @ag __Role Exploiter $agent
+    @eid __Event
+    @act __Role Action exploits
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
     @res __Role Resource $resource
     @process __Role Process Exploitation
-    @result __Bundle $ag $res $process
+    @result __Bundle $eid $act $ag $res $process $ctx
     return $result
 end
 
 @faces:faces graph agent challenge
     # Agent faces challenge
-    @ag __Role Facer $agent
-    @chal __Role Challenge $challenge
-    @relation __Role Relation Facing
-    @result __Bundle $ag $chal $relation
+    @eid __Event
+    @act __Role Action faces
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @chal __Role Attribute $challenge
+    @relation __Role Action Facing
+    @result __Bundle $eid $act $ag $chal $relation $ctx
     return $result
 end
 
 @fills:fills graph agent role
     # Agent fills role
-    @ag __Role Filler $agent
+    @eid __Event
+    @act __Role Action fills
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
     @role __Role Role $role
     @process __Role Process Filling
-    @result __Bundle $ag $role $process
+    @result __Bundle $eid $act $ag $role $process $ctx
     return $result
 end
 
 @follow:follow graph entity pattern
     # Entity follows pattern
-    @ent __Role Follower $entity
-    @pat __Role Pattern $pattern
-    @relation __Role Relation Following
-    @result __Bundle $ent $pat $relation
+    @eid __Event
+    @act __Role Action follow
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @pat __Role Structure $pattern
+    @relation __Role Action Following
+    @result __Bundle $eid $act $ent $pat $relation $ctx
     return $result
 end
 
 @follows:follows graph entity pattern
     # Entity follows pattern or rule
-    @ent __Role Follower $entity
-    @pat __Role Pattern $pattern
-    @relation __Role Relation Following
-    @result __Bundle $ent $pat $relation
+    @eid __Event
+    @act __Role Action follows
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @pat __Role Structure $pattern
+    @relation __Role Action Following
+    @result __Bundle $eid $act $ent $pat $relation $ctx
     return $result
 end
 
 @followsDescent:followsDescent graph group pattern
     # Group follows descent pattern
+    @eid __Event
+    @act __Role Action followsDescent
+    @ctx __Role Context StressCompat
     @grp __Role Group $group
-    @pat __Role Pattern $pattern
-    @descent __Role Domain Descent
-    @result __Bundle $grp $pat $descent
+    @pat __Role Structure $pattern
+    @descent __Role Context Descent
+    @result __Bundle $eid $act $grp $pat $descent $ctx
     return $result
 end
 
 @followsResidence:followsResidence graph group pattern
     # Group follows residence pattern
+    @eid __Event
+    @act __Role Action followsResidence
+    @ctx __Role Context StressCompat
     @grp __Role Group $group
-    @pat __Role Pattern $pattern
-    @residence __Role Domain Residence
-    @result __Bundle $grp $pat $residence
+    @pat __Role Structure $pattern
+    @residence __Role Context Residence
+    @result __Bundle $eid $act $grp $pat $residence $ctx
     return $result
 end
 
 @for:for graph action purpose
     # Action is for purpose
+    @eid __Event
+    @act2 __Role Action for
+    @ctx __Role Context StressCompat
     @act __Role Action $action
     @purp __Role Purpose $purpose
-    @relation __Role Relation Purpose
-    @result __Bundle $act $purp $relation
+    @relation __Role Action Purpose
+    @result __Bundle $eid $act2 $act $purp $relation $ctx
     return $result
 end
 
 @form:form graph entities formation
     # Entities form something
-    @ents __Role Entities $entities
-    @form __Role Formation $formation
+    @eid __Event
+    @act __Role Action form
+    @ctx __Role Context StressCompat
+    @ents __Role Attribute $entities
+    @form __Role Attribute $formation
     @process __Role Process Formation
-    @result __Bundle $ents $form $process
+    @result __Bundle $eid $act $ents $form $process $ctx
     return $result
 end
 
 @forms:forms graph entity formation
     # Entity forms structure
-    @ent __Role Former $entity
-    @form __Role Formation $formation
+    @eid __Event
+    @act __Role Action forms
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @form __Role Attribute $formation
     @process __Role Process Formation
-    @result __Bundle $ent $form $process
+    @result __Bundle $eid $act $ent $form $process $ctx
     return $result
 end
 
 @formsAlliance:formsAlliance graph entity1 entity2
     # Entities form alliance
-    @ent1 __Role Ally $entity1
-    @ent2 __Role Ally $entity2
-    @alliance __Role Relation Alliance
-    @result __Bundle $ent1 $ent2 $alliance
+    @eid __Event
+    @act __Role Action formsAlliance
+    @ctx __Role Context StressCompat
+    @ent1 __Role Attribute $entity1
+    @ent2 __Role Attribute $entity2
+    @alliance __Role Action Alliance
+    @result __Bundle $eid $act $ent1 $ent2 $alliance $ctx
     return $result
 end
 
 @formsPattern:formsPattern graph elements pattern
     # Elements form pattern
-    @elem __Role Elements $elements
-    @pat __Role Pattern $pattern
+    @eid __Event
+    @act __Role Action formsPattern
+    @ctx __Role Context StressCompat
+    @elem __Role Attribute $elements
+    @pat __Role Structure $pattern
     @process __Role Process PatternFormation
-    @result __Bundle $elem $pat $process
+    @result __Bundle $eid $act $elem $pat $process $ctx
     return $result
 end
 
 @found:found graph entity location
     # Entity is found at location
+    @eid __Event
+    @act __Role Action found
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @loc __Role Location $location
-    @relation __Role Relation Found
-    @result __Bundle $ent $loc $relation
+    @relation __Role Action Found
+    @result __Bundle $eid $act $ent $loc $relation $ctx
     return $result
 end
 
 @from:from graph entity source
     # Entity comes from source
+    @eid __Event
+    @act __Role Action from
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @src __Role Source $source
-    @relation __Role Relation Origin
-    @result __Bundle $ent $src $relation
+    @relation __Role Action Origin
+    @result __Bundle $eid $act $ent $src $relation $ctx
     return $result
 end
 
 @fuses:fuses graph entity elements
     # Entity fuses elements
-    @ent __Role Fuser $entity
-    @elem __Role Elements $elements
+    @eid __Event
+    @act __Role Action fuses
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @elem __Role Attribute $elements
     @process __Role Process Fusion
-    @result __Bundle $ent $elem $process
+    @result __Bundle $eid $act $ent $elem $process $ctx
     return $result
 end
 
 @gains:gains graph agent gain
     # Agent gains something
-    @ag __Role Gainer $agent
-    @gain __Role Gain $gain
+    @eid __Event
+    @act __Role Action gains
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @gain __Role Attribute $gain
     @process __Role Process Gaining
-    @result __Bundle $ag $gain $process
+    @result __Bundle $eid $act $ag $gain $process $ctx
     return $result
 end
 
 @gathers:gathers graph agent items
     # Agent gathers items
-    @ag __Role Gatherer $agent
-    @items __Role Items $items
+    @eid __Event
+    @act __Role Action gathers
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @items __Role Attribute $items
     @process __Role Process Gathering
-    @result __Bundle $ag $items $process
+    @result __Bundle $eid $act $ag $items $process $ctx
     return $result
 end
 
 @gives:gives graph giver gift
     # Giver gives gift
-    @giv __Role Giver $giver
-    @gift __Role Gift $gift
+    @eid __Event
+    @act __Role Action gives
+    @ctx __Role Context StressCompat
+    @giv __Role Agent $giver
+    @gift __Role Attribute $gift
     @process __Role Process Giving
-    @result __Bundle $giv $gift $process
+    @result __Bundle $eid $act $giv $gift $process $ctx
     return $result
 end
 
 @givesTo:givesTo graph giver recipient
     # Giver gives to recipient
-    @giv __Role Giver $giver
+    @eid __Event
+    @act __Role Action givesTo
+    @ctx __Role Context StressCompat
+    @giv __Role Agent $giver
     @rec __Role Recipient $recipient
     @exchange __Role Process Exchange
-    @result __Bundle $giv $rec $exchange
+    @result __Bundle $eid $act $giv $rec $exchange $ctx
     return $result
 end
 
 @governedBy:governedBy graph entity governor
     # Entity is governed by governor
-    @ent __Role Governed $entity
-    @gov __Role Governor $governor
-    @relation __Role Relation Governance
-    @result __Bundle $ent $gov $relation
+    @eid __Event
+    @act __Role Action governedBy
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @gov __Role Attribute $governor
+    @relation __Role Action Governance
+    @result __Bundle $eid $act $ent $gov $relation $ctx
     return $result
 end
 
 @governs:governs graph governor governed
     # Governor governs entity
-    @gov __Role Governor $governor
-    @govd __Role Governed $governed
-    @relation __Role Relation Governance
-    @result __Bundle $gov $govd $relation
+    @eid __Event
+    @act __Role Action governs
+    @ctx __Role Context StressCompat
+    @gov __Role Attribute $governor
+    @govd __Role Attribute $governed
+    @relation __Role Action Governance
+    @result __Bundle $eid $act $gov $govd $relation $ctx
     return $result
 end
 
 @guards:guards graph guardian guarded
     # Guardian guards something
-    @guard __Role Guardian $guardian
-    @guardd __Role Guarded $guarded
+    @eid __Event
+    @act __Role Action guards
+    @ctx __Role Context StressCompat
+    @guard __Role Attribute $guardian
+    @guardd __Role Attribute $guarded
     @process __Role Process Protection
-    @result __Bundle $guard $guardd $process
+    @result __Bundle $eid $act $guard $guardd $process $ctx
     return $result
 end
 
 @hadBrain:hadBrain graph species brain
     # Species had brain type
-    @sp __Role Species $species
-    @br __Role Brain $brain
+    @eid __Event
+    @act __Role Action hadBrain
+    @ctx __Role Context StressCompat
+    @sp __Role Attribute $species
+    @br __Role Attribute $brain
     @property __Role Property BrainType
-    @result __Bundle $sp $br $property
+    @result __Bundle $eid $act $sp $br $property $ctx
     return $result
 end
 
 @hadForm:hadForm graph entity form
     # Entity had physical form
+    @eid __Event
+    @act __Role Action hadForm
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @form __Role Form $form
     @property __Role Property PhysicalForm
-    @result __Bundle $ent $form $property
+    @result __Bundle $eid $act $ent $form $property $ctx
     return $result
 end
 
 @hadLarge:hadLarge graph entity attribute
     # Entity had large attribute
+    @eid __Event
+    @act __Role Action hadLarge
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @attr __Role Attribute $attribute
     @property __Role Property Large
-    @result __Bundle $ent $attr $property
+    @result __Bundle $eid $act $ent $attr $property $ctx
     return $result
 end
 
 @hadSize:hadSize graph entity size
     # Entity had particular size
+    @eid __Event
+    @act __Role Action hadSize
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @sz __Role Size $size
+    @sz __Role Attribute $size
     @property __Role Property Size
-    @result __Bundle $ent $sz $property
+    @result __Bundle $eid $act $ent $sz $property $ctx
     return $result
 end
 
 @herds:herds graph agent animals
     # Agent herds animals
-    @ag __Role Herder $agent
-    @anim __Role Animals $animals
+    @eid __Event
+    @act __Role Action herds
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @anim __Role Attribute $animals
     @process __Role Process Herding
-    @result __Bundle $ag $anim $process
+    @result __Bundle $eid $act $ag $anim $process $ctx
     return $result
 end
 
 @hold:hold graph agent possession
     # Agent holds possession
-    @ag __Role Holder $agent
-    @poss __Role Possession $possession
-    @relation __Role Relation Holding
-    @result __Bundle $ag $poss $relation
+    @eid __Event
+    @act __Role Action hold
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @poss __Role Attribute $possession
+    @relation __Role Action Holding
+    @result __Bundle $eid $act $ag $poss $relation $ctx
     return $result
 end
 
 @honors:honors graph agent honored
     # Agent honors something
-    @ag __Role Honorer $agent
-    @hon __Role Honored $honored
+    @eid __Event
+    @act __Role Action honors
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @hon __Role Attribute $honored
     @process __Role Process Honoring
-    @result __Bundle $ag $hon $process
+    @result __Bundle $eid $act $ag $hon $process $ctx
     return $result
 end
 
 @hunts:hunts graph agent prey
     # Agent hunts prey
-    @ag __Role Hunter $agent
-    @prey __Role Prey $prey
+    @eid __Event
+    @act __Role Action hunts
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @prey __Role Attribute $prey
     @process __Role Process Hunting
-    @result __Bundle $ag $prey $process
+    @result __Bundle $eid $act $ag $prey $process $ctx
     return $result
 end
 
 @hypothesizes:hypothesizes graph theorymodel hypothesis
     # Theory proposes hypothesis
-    @theo __Role Theory $theorymodel
-    @hyp __Role Hypothesis $hypothesis
+    @eid __Event
+    @act __Role Action hypothesizes
+    @ctx __Role Context StressCompat
+    @theo __Role Attribute $theorymodel
+    @hyp __Role Attribute $hypothesis
     @process __Role Process Hypothesizing
-    @result __Bundle $theo $hyp $process
+    @result __Bundle $eid $act $theo $hyp $process $ctx
     return $result
 end
 
 @identifies:identifies graph agent identified
     # Agent identifies something
-    @ag __Role Identifier $agent
-    @ident __Role Identified $identified
+    @eid __Event
+    @act __Role Action identifies
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @ident __Role Attribute $identified
     @process __Role Process Identification
-    @result __Bundle $ag $ident $process
+    @result __Bundle $eid $act $ag $ident $process $ctx
     return $result
 end
 
 @imitates:imitates graph imitator model
     # Imitator imitates model
-    @imit __Role Imitator $imitator
-    @model __Role Model $model
+    @eid __Event
+    @act __Role Action imitates
+    @ctx __Role Context StressCompat
+    @imit __Role Attribute $imitator
+    @model __Role Attribute $model
     @process __Role Process Imitation
-    @result __Bundle $imit $model $process
+    @result __Bundle $eid $act $imit $model $process $ctx
     return $result
 end
 
 @imposes:imposes graph authority imposition
     # Authority imposes something
-    @auth __Role Authority $authority
-    @imp __Role Imposition $imposition
+    @eid __Event
+    @act __Role Action imposes
+    @ctx __Role Context StressCompat
+    @auth __Role Attribute $authority
+    @imp __Role Attribute $imposition
     @process __Role Process Imposition
-    @result __Bundle $auth $imp $process
+    @result __Bundle $eid $act $auth $imp $process $ctx
     return $result
 end
 
 @inBodySystem:inBodySystem graph condition system
     # Condition is in body system
-    @cond __Role Condition $condition
-    @sys __Role System $system
-    @relation __Role Relation Location
-    @result __Bundle $cond $sys $relation
+    @eid __Event
+    @act __Role Action inBodySystem
+    @ctx __Role Context StressCompat
+    @cond __Role Attribute $condition
+    @sys __Role Structure $system
+    @relation __Role Action Location
+    @result __Bundle $eid $act $cond $sys $relation $ctx
     return $result
 end
 
 @including:including graph whole part
     # Whole includes part
-    @whole __Role Whole $whole
-    @part __Role Part $part
-    @relation __Role Relation Inclusion
-    @result __Bundle $whole $part $relation
+    @eid __Event
+    @act __Role Action including
+    @ctx __Role Context StressCompat
+    @whole __Role Attribute $whole
+    @part __Role Attribute $part
+    @relation __Role Action Inclusion
+    @result __Bundle $eid $act $whole $part $relation $ctx
     return $result
 end
 
 @inContext:inContext graph entity context
     # Entity in context
+    @eid __Event
+    @act __Role Action inContext
+    @ctx2 __Role Context StressCompat
     @ent __Role Entity $entity
     @ctx __Role Context $context
-    @relation __Role Relation Contextualization
-    @result __Bundle $ent $ctx $relation
+    @relation __Role Action Contextualization
+    @result __Bundle $eid $act $ent $ctx $relation $ctx2
     return $result
 end
 
 @increased:increased graph entity amount
     # Entity increased in amount
+    @eid __Event
+    @act __Role Action increased
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @amt __Role Amount $amount
+    @amt __Role Attribute $amount
     @process __Role Process Increase
-    @result __Bundle $ent $amt $process
+    @result __Bundle $eid $act $ent $amt $process $ctx
     return $result
 end
 
 @increases:increases graph entity measure
     # Entity increases measure
-    @ent __Role Increaser $entity
-    @meas __Role Measure $measure
+    @eid __Event
+    @act __Role Action increases
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @meas __Role Attribute $measure
     @process __Role Process Increase
-    @result __Bundle $ent $meas $process
+    @result __Bundle $eid $act $ent $meas $process $ctx
     return $result
 end
 
 @inhabitedBoth:inhabitedBoth graph species regions
     # Species inhabited both regions
-    @sp __Role Species $species
-    @reg __Role Regions $regions
-    @relation __Role Relation Habitation
-    @result __Bundle $sp $reg $relation
+    @eid __Event
+    @act __Role Action inhabitedBoth
+    @ctx __Role Context StressCompat
+    @sp __Role Attribute $species
+    @reg __Role Attribute $regions
+    @relation __Role Action Habitation
+    @result __Bundle $eid $act $sp $reg $relation $ctx
     return $result
 end
 
 @inhabits:inhabits graph entity habitat
     # Entity inhabits habitat
-    @ent __Role Inhabitant $entity
-    @hab __Role Habitat $habitat
-    @relation __Role Relation Inhabitation
-    @result __Bundle $ent $hab $relation
+    @eid __Event
+    @act __Role Action inhabits
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @hab __Role Attribute $habitat
+    @relation __Role Action Inhabitation
+    @result __Bundle $eid $act $ent $hab $relation $ctx
     return $result
 end
 
 @initiates:initiates graph agent process
     # Agent initiates process
-    @ag __Role Initiator $agent
+    @eid __Event
+    @act __Role Action initiates
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
     @proc __Role Process $process
     @initiation __Role Process Initiation
-    @result __Bundle $ag $proc $initiation
+    @result __Bundle $eid $act $ag $proc $initiation $ctx
     return $result
 end
 
 @inLanguage:inLanguage graph element language
     # Element is in language
-    @elem __Role Element $element
-    @lang __Role Language $language
-    @relation __Role Relation Linguistic
-    @result __Bundle $elem $lang $relation
+    @eid __Event
+    @act __Role Action inLanguage
+    @ctx __Role Context StressCompat
+    @elem __Role Attribute $element
+    @lang __Role Attribute $language
+    @relation __Role Action Linguistic
+    @result __Bundle $eid $act $elem $lang $relation $ctx
     return $result
 end
 
 @instead:instead graph entity alternative
     # Entity instead of alternative
+    @eid __Event
+    @act __Role Action instead
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @alt __Role Alternative $alternative
-    @relation __Role Relation Substitution
-    @result __Bundle $ent $alt $relation
+    @alt __Role Attribute $alternative
+    @relation __Role Action Substitution
+    @result __Bundle $eid $act $ent $alt $relation $ctx
     return $result
 end
 
 @integrated:integrated graph parts whole
     # Parts are integrated into whole
-    @parts __Role Parts $parts
-    @whole __Role Whole $whole
-    @relation __Role Relation Integration
-    @result __Bundle $parts $whole $relation
+    @eid __Event
+    @act __Role Action integrated
+    @ctx __Role Context StressCompat
+    @parts __Role Attribute $parts
+    @whole __Role Attribute $whole
+    @relation __Role Action Integration
+    @result __Bundle $eid $act $parts $whole $relation $ctx
     return $result
 end
 
 @interconnected:interconnected graph entities
     # Entities are interconnected
-    @ents __Role Entities $entities
-    @connection __Role Relation Interconnection
+    @ents __Role Attribute $entities
+    @connection __Role Action Interconnection
     @result __Pair $ents $connection
     return $result
 end
 
 @intermediate:intermediate graph entity position
     # Entity has intermediate position
+    @eid __Event
+    @act __Role Action intermediate
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @pos __Role Position $position
+    @pos __Role Attribute $position
     @property __Role Property Intermediate
-    @result __Bundle $ent $pos $property
+    @result __Bundle $eid $act $ent $pos $property $ctx
     return $result
 end
 
 @involves:involves graph process elements
     # Process involves elements
+    @eid __Event
+    @act __Role Action involves
+    @ctx __Role Context StressCompat
     @proc __Role Process $process
-    @elem __Role Elements $elements
-    @relation __Role Relation Involvement
-    @result __Bundle $proc $elem $relation
+    @elem __Role Attribute $elements
+    @relation __Role Action Involvement
+    @result __Bundle $eid $act $proc $elem $relation $ctx
     return $result
 end
 
 @joins:joins graph entity group
     # Entity joins group
-    @ent __Role Joiner $entity
+    @eid __Event
+    @act __Role Action joins
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
     @grp __Role Group $group
     @process __Role Process Joining
-    @result __Bundle $ent $grp $process
+    @result __Bundle $eid $act $ent $grp $process $ctx
     return $result
 end
 
 @jokes:jokes graph person1 person2
     # Person jokes with another
-    @p1 __Role Joker $person1
-    @p2 __Role JokedWith $person2
-    @relation __Role Relation JokingRelationship
-    @result __Bundle $p1 $p2 $relation
+    @eid __Event
+    @act __Role Action jokes
+    @ctx __Role Context StressCompat
+    @p1 __Role Attribute $person1
+    @p2 __Role Attribute $person2
+    @relation __Role Action JokingRelationship
+    @result __Bundle $eid $act $p1 $p2 $relation $ctx
     return $result
 end
 
 @lacks:lacks graph entity absence
     # Entity lacks something
+    @eid __Event
+    @act __Role Action lacks
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @abs __Role Absence $absence
-    @relation __Role Relation Lacking
-    @result __Bundle $ent $abs $relation
+    @abs __Role Attribute $absence
+    @relation __Role Action Lacking
+    @result __Bundle $eid $act $ent $abs $relation $ctx
     return $result
 end
 
 @lavishly:lavishly graph action manner
     # Action performed lavishly
+    @eid __Event
+    @act2 __Role Action lavishly
+    @ctx __Role Context StressCompat
     @act __Role Action $action
     @man __Role Manner $manner
     @property __Role Property Lavish
-    @result __Bundle $act $man $property
+    @result __Bundle $eid $act2 $act $man $property $ctx
     return $result
 end
 
 @leaves:leaves graph entity state
     # Entity leaves state
-    @ent __Role Leaver $entity
+    @eid __Event
+    @act __Role Action leaves
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
     @st __Role State $state
     @process __Role Process Departure
-    @result __Bundle $ent $st $process
+    @result __Bundle $eid $act $ent $st $process $ctx
     return $result
 end
 
 @leftFrom:leftFrom graph entity origin
     # Entity left from origin
+    @eid __Event
+    @act __Role Action leftFrom
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @orig __Role Origin $origin
+    @orig __Role Attribute $origin
     @process __Role Process Departure
-    @result __Bundle $ent $orig $process
+    @result __Bundle $eid $act $ent $orig $process $ctx
     return $result
 end
 
 @legitimizes:legitimizes graph authority action
     # Authority legitimizes action
-    @auth __Role Authority $authority
+    @eid __Event
+    @act2 __Role Action legitimizes
+    @ctx __Role Context StressCompat
+    @auth __Role Attribute $authority
     @act __Role Action $action
     @process __Role Process Legitimation
-    @result __Bundle $auth $act $process
+    @result __Bundle $eid $act2 $auth $act $process $ctx
     return $result
 end
 
 @lives:lives graph entity location
     # Entity lives at location
+    @eid __Event
+    @act __Role Action lives
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @loc __Role Location $location
-    @relation __Role Relation Residence
-    @result __Bundle $ent $loc $relation
+    @relation __Role Action Residence
+    @result __Bundle $eid $act $ent $loc $relation $ctx
     return $result
 end
 
 @maintain:maintain graph agent maintained
     # Agent maintains something
-    @ag __Role Maintainer $agent
-    @maint __Role Maintained $maintained
+    @eid __Event
+    @act __Role Action maintain
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @maint __Role Attribute $maintained
     @process __Role Process Maintenance
-    @result __Bundle $ag $maint $process
+    @result __Bundle $eid $act $ag $maint $process $ctx
     return $result
 end
 
 @makes:makes graph agent product
     # Agent makes product
-    @ag __Role Maker $agent
-    @prod __Role Product $product
+    @eid __Event
+    @act __Role Action makes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @prod __Role Attribute $product
     @process __Role Process Making
-    @result __Bundle $ag $prod $process
+    @result __Bundle $eid $act $ag $prod $process $ctx
     return $result
 end
 
 @manages:manages graph agent managed
     # Agent manages entity
-    @ag __Role Manager $agent
-    @mng __Role Managed $managed
+    @eid __Event
+    @act __Role Action manages
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @mng __Role Attribute $managed
     @process __Role Process Management
-    @result __Bundle $ag $mng $process
+    @result __Bundle $eid $act $ag $mng $process $ctx
     return $result
 end
 
 @maps:maps graph agent territory
     # Agent maps territory
-    @ag __Role Mapper $agent
-    @terr __Role Territory $territory
+    @eid __Event
+    @act __Role Action maps
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @terr __Role Attribute $territory
     @process __Role Process Mapping
-    @result __Bundle $ag $terr $process
+    @result __Bundle $eid $act $ag $terr $process $ctx
     return $result
 end
 
 @marks:marks graph event marker
     # Event marks transition
-    @event __Role Event $event
-    @mark __Role Marker $marker
-    @relation __Role Relation Marking
-    @result __Bundle $event $mark $relation
+    @eid __Event
+    @act __Role Action marks
+    @ctx __Role Context StressCompat
+    @event __Role Action $event
+    @mark __Role Attribute $marker
+    @relation __Role Action Marking
+    @result __Bundle $eid $act $event $mark $relation $ctx
     return $result
 end
 
 @marries:marries graph person1 person2
     # Person marries another
-    @p1 __Role Spouse $person1
-    @p2 __Role Spouse $person2
-    @marriage __Role Relation Marriage
-    @result __Bundle $p1 $p2 $marriage
+    @eid __Event
+    @act __Role Action marries
+    @ctx __Role Context StressCompat
+    @p1 __Role Theme $person1
+    @p2 __Role Theme $person2
+    @marriage __Role Action Marriage
+    @result __Bundle $eid $act $p1 $p2 $marriage $ctx
     return $result
 end
 
 @mayHaveUsed:mayHaveUsed graph entity tool
     # Entity may have used tool
+    @eid __Event
+    @act __Role Action mayHaveUsed
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @tool __Role Tool $tool
-    @possibility __Role Modality Possible
-    @result __Bundle $ent $tool $possibility
+    @tool __Role Attribute $tool
+    @possibility __Role Attribute Possible
+    @result __Bundle $eid $act $ent $tool $possibility $ctx
     return $result
 end
 
 @mergesWithSiblings:mergesWithSiblings graph entity siblings
     # Entity merges with siblings (kinship terminology)
+    @eid __Event
+    @act __Role Action mergesWithSiblings
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @sibs __Role Siblings $siblings
-    @relation __Role Relation Merging
-    @result __Bundle $ent $sibs $relation
+    @sibs __Role Attribute $siblings
+    @relation __Role Action Merging
+    @result __Bundle $eid $act $ent $sibs $relation $ctx
     return $result
 end
 
 @mixes:mixes graph agent elements
     # Agent mixes elements
-    @ag __Role Mixer $agent
-    @elem __Role Elements $elements
+    @eid __Event
+    @act __Role Action mixes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @elem __Role Attribute $elements
     @process __Role Process Mixing
-    @result __Bundle $ag $elem $process
+    @result __Bundle $eid $act $ag $elem $process $ctx
     return $result
 end
 
 @monopolizes:monopolizes graph agent resource
     # Agent monopolizes resource
-    @ag __Role Monopolizer $agent
+    @eid __Event
+    @act __Role Action monopolizes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
     @res __Role Resource $resource
-    @relation __Role Relation Monopoly
-    @result __Bundle $ag $res $relation
+    @relation __Role Action Monopoly
+    @result __Bundle $eid $act $ag $res $relation $ctx
     return $result
 end
 
 @moves:moves graph entity path
     # Entity moves along path
-    @ent __Role Mover $entity
-    @path __Role Path $path
+    @eid __Event
+    @act __Role Action moves
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @path __Role Attribute $path
     @process __Role Process Movement
-    @result __Bundle $ent $path $process
+    @result __Bundle $eid $act $ent $path $process $ctx
     return $result
 end
 
 @named:named graph entity name
     # Entity is named with name
+    @eid __Event
+    @act __Role Action named
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @name __Role Name $name
-    @relation __Role Relation Naming
-    @result __Bundle $ent $name $relation
+    @name __Role Attribute $name
+    @relation __Role Action Naming
+    @result __Bundle $eid $act $ent $name $relation $ctx
     return $result
 end
 
 @occupies:occupies graph entity position
     # Entity occupies position
-    @ent __Role Occupier $entity
-    @pos __Role Position $position
-    @relation __Role Relation Occupation
-    @result __Bundle $ent $pos $relation
+    @eid __Event
+    @act __Role Action occupies
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @pos __Role Attribute $position
+    @relation __Role Action Occupation
+    @result __Bundle $eid $act $ent $pos $relation $ctx
     return $result
 end
 
 @of:of graph whole part
     # Part of whole
-    @whole __Role Whole $whole
-    @part __Role Part $part
-    @relation __Role Relation PartOf
-    @result __Bundle $whole $part $relation
+    @eid __Event
+    @act __Role Action of
+    @ctx __Role Context StressCompat
+    @whole __Role Attribute $whole
+    @part __Role Attribute $part
+    @relation __Role Action PartOf
+    @result __Bundle $eid $act $whole $part $relation $ctx
     return $result
 end
 
 @operates:operates graph system mode
     # System operates in mode
-    @sys __Role System $system
-    @mode __Role Mode $mode
+    @eid __Event
+    @act __Role Action operates
+    @ctx __Role Context StressCompat
+    @sys __Role Structure $system
+    @mode __Role Manner $mode
     @process __Role Process Operation
-    @result __Bundle $sys $mode $process
+    @result __Bundle $eid $act $sys $mode $process $ctx
     return $result
 end
 
 @organized:organized graph entity structure
     # Entity is organized with structure
+    @eid __Event
+    @act __Role Action organized
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @struct __Role Structure $structure
-    @relation __Role Relation Organization
-    @result __Bundle $ent $struct $relation
+    @relation __Role Action Organization
+    @result __Bundle $eid $act $ent $struct $relation $ctx
     return $result
 end
 
 @organizes:organizes graph agent organization
     # Agent organizes something
-    @ag __Role Organizer $agent
-    @org __Role Organization $organization
+    @eid __Event
+    @act __Role Action organizes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @org __Role Attribute $organization
     @process __Role Process Organization
-    @result __Bundle $ag $org $process
+    @result __Bundle $eid $act $ag $org $process $ctx
     return $result
 end
 
 @originated:originated graph entity origin
     # Entity originated from origin
+    @eid __Event
+    @act __Role Action originated
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @orig __Role Origin $origin
+    @orig __Role Attribute $origin
     @process __Role Process Origination
-    @result __Bundle $ent $orig $process
+    @result __Bundle $eid $act $ent $orig $process $ctx
     return $result
 end
 
 @over:over graph entity span
     # Entity is over span
+    @eid __Event
+    @act __Role Action over
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @span __Role Span $span
-    @relation __Role Relation Over
-    @result __Bundle $ent $span $relation
+    @span __Role Attribute $span
+    @relation __Role Action Over
+    @result __Bundle $eid $act $ent $span $relation $ctx
     return $result
 end
 
 @pattern:pattern graph elements pattern
     # Elements form pattern
-    @elem __Role Elements $elements
-    @pat __Role Pattern $pattern
-    @relation __Role Relation Pattern
-    @result __Bundle $elem $pat $relation
+    @eid __Event
+    @act __Role Action pattern
+    @ctx __Role Context StressCompat
+    @elem __Role Attribute $elements
+    @pat __Role Structure $pattern
+    @relation __Role Action Pattern
+    @result __Bundle $eid $act $elem $pat $relation $ctx
     return $result
 end
 
 @per:per graph rate unit
     # Rate per unit
-    @rate __Role Rate $rate
+    @eid __Event
+    @act __Role Action per
+    @ctx __Role Context StressCompat
+    @rate __Role Attribute $rate
     @unit __Role Unit $unit
-    @relation __Role Relation Per
-    @result __Bundle $rate $unit $relation
+    @relation __Role Action Per
+    @result __Bundle $eid $act $rate $unit $relation $ctx
     return $result
 end
 
 @permitted:permitted graph action authority
     # Action permitted by authority
+    @eid __Event
+    @act2 __Role Action permitted
+    @ctx __Role Context StressCompat
     @act __Role Action $action
-    @auth __Role Authority $authority
-    @relation __Role Relation Permission
-    @result __Bundle $act $auth $relation
+    @auth __Role Attribute $authority
+    @relation __Role Action Permission
+    @result __Bundle $eid $act2 $act $auth $relation $ctx
     return $result
 end
 
 @perpetual:perpetual graph entity duration
     # Entity has perpetual duration
+    @eid __Event
+    @act __Role Action perpetual
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @dur __Role Duration $duration
     @property __Role Property Perpetual
-    @result __Bundle $ent $dur $property
+    @result __Bundle $eid $act $ent $dur $property $ctx
     return $result
 end
 
 @political:political graph entity domain
     # Entity is political in domain
+    @eid __Event
+    @act __Role Action political
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @dom __Role Domain $domain
+    @dom __Role Context $domain
     @property __Role Property Political
-    @result __Bundle $ent $dom $property
+    @result __Bundle $eid $act $ent $dom $property $ctx
     return $result
 end
 
 @possesses:possesses graph agent possession
     # Agent possesses something
-    @ag __Role Possessor $agent
-    @poss __Role Possession $possession
-    @relation __Role Relation Possession
-    @result __Bundle $ag $poss $relation
+    @eid __Event
+    @act __Role Action possesses
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @poss __Role Attribute $possession
+    @relation __Role Action Possession
+    @result __Bundle $eid $act $ag $poss $relation $ctx
     return $result
 end
 
 @powered:powered graph device power
     # Device powered by power source
-    @dev __Role Device $device
-    @pow __Role Power $power
-    @relation __Role Relation PoweredBy
-    @result __Bundle $dev $pow $relation
+    @eid __Event
+    @act __Role Action powered
+    @ctx __Role Context StressCompat
+    @dev __Role Attribute $device
+    @pow __Role Attribute $power
+    @relation __Role Action PoweredBy
+    @result __Bundle $eid $act $dev $pow $relation $ctx
     return $result
 end
 
 @predicts:predicts graph agent prediction
     # Agent predicts something
-    @ag __Role Predictor $agent
-    @pred __Role Prediction $prediction
+    @eid __Event
+    @act __Role Action predicts
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @pred __Role Attribute $prediction
     @process __Role Process Prediction
-    @result __Bundle $ag $pred $process
+    @result __Bundle $eid $act $ag $pred $process $ctx
     return $result
 end
 
 @preserves:preserves graph agent preserved
     # Agent preserves something
-    @ag __Role Preserver $agent
-    @pres __Role Preserved $preserved
+    @eid __Event
+    @act __Role Action preserves
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @pres __Role Attribute $preserved
     @process __Role Process Preservation
-    @result __Bundle $ag $pres $process
+    @result __Bundle $eid $act $ag $pres $process $ctx
     return $result
 end
 
 @prohibits:prohibits graph authority prohibited
     # Authority prohibits something
-    @auth __Role Authority $authority
-    @proh __Role Prohibited $prohibited
-    @relation __Role Relation Prohibition
-    @result __Bundle $auth $proh $relation
+    @eid __Event
+    @act __Role Action prohibits
+    @ctx __Role Context StressCompat
+    @auth __Role Attribute $authority
+    @proh __Role Attribute $prohibited
+    @relation __Role Action Prohibition
+    @result __Bundle $eid $act $auth $proh $relation $ctx
     return $result
 end
 
 @proposes:proposes graph agent proposal
     # Agent proposes something
-    @ag __Role Proposer $agent
-    @prop __Role Proposal $proposal
+    @eid __Event
+    @act __Role Action proposes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @prop __Role Attribute $proposal
     @process __Role Process Proposal
-    @result __Bundle $ag $prop $process
+    @result __Bundle $eid $act $ag $prop $process $ctx
     return $result
 end
 
 @punishes:punishes graph authority offender
     # Authority punishes offender
-    @auth __Role Authority $authority
-    @off __Role Offender $offender
+    @eid __Event
+    @act __Role Action punishes
+    @ctx __Role Context StressCompat
+    @auth __Role Attribute $authority
+    @off __Role Attribute $offender
     @process __Role Process Punishment
-    @result __Bundle $auth $off $process
+    @result __Bundle $eid $act $auth $off $process $ctx
     return $result
 end
 
 @radical:radical graph change degree
     # Change has radical degree
-    @chg __Role Change $change
-    @deg __Role Degree $degree
+    @eid __Event
+    @act __Role Action radical
+    @ctx __Role Context StressCompat
+    @chg __Role Attribute $change
+    @deg __Role Attribute $degree
     @property __Role Property Radical
-    @result __Bundle $chg $deg $property
+    @result __Bundle $eid $act $chg $deg $property $ctx
     return $result
 end
 
 @receives:receives graph recipient gift
     # Recipient receives gift
+    @eid __Event
+    @act __Role Action receives
+    @ctx __Role Context StressCompat
     @rec __Role Recipient $recipient
-    @gift __Role Gift $gift
+    @gift __Role Attribute $gift
     @process __Role Process Reception
-    @result __Bundle $rec $gift $process
+    @result __Bundle $eid $act $rec $gift $process $ctx
     return $result
 end
 
 @recognizes:recognizes graph agent recognized
     # Agent recognizes something
-    @ag __Role Recognizer $agent
-    @recog __Role Recognized $recognized
+    @eid __Event
+    @act __Role Action recognizes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @recog __Role Attribute $recognized
     @process __Role Process Recognition
-    @result __Bundle $ag $recog $process
+    @result __Bundle $eid $act $ag $recog $process $ctx
     return $result
 end
 
 @reconstructs:reconstructs graph agent reconstruction
     # Agent reconstructs something
-    @ag __Role Reconstructor $agent
-    @recon __Role Reconstruction $reconstruction
+    @eid __Event
+    @act __Role Action reconstructs
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @recon __Role Attribute $reconstruction
     @process __Role Process Reconstruction
-    @result __Bundle $ag $recon $process
+    @result __Bundle $eid $act $ag $recon $process $ctx
     return $result
 end
 
 @redistributes:redistributes graph agent resources
     # Agent redistributes resources
-    @ag __Role Redistributor $agent
-    @res __Role Resources $resources
+    @eid __Event
+    @act __Role Action redistributes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @res __Role Attribute $resources
     @process __Role Process Redistribution
-    @result __Bundle $ag $res $process
+    @result __Bundle $eid $act $ag $res $process $ctx
     return $result
 end
 
 @relate:relate graph entity1 entity2
     # Entities relate to each other
+    @eid __Event
+    @act __Role Action relate
+    @ctx __Role Context StressCompat
     @ent1 __Role Entity $entity1
     @ent2 __Role Entity $entity2
-    @relation __Role Relation Relation
-    @result __Bundle $ent1 $ent2 $relation
+    @relation __Role Action Relation
+    @result __Bundle $eid $act $ent1 $ent2 $relation $ctx
     return $result
 end
 
 @relatives:relatives graph person relatives
     # Person has relatives
-    @pers __Role Person $person
-    @rels __Role Relatives $relatives
-    @kinship __Role Relation Kinship
-    @result __Bundle $pers $rels $kinship
+    @eid __Event
+    @act __Role Action relatives
+    @ctx __Role Context StressCompat
+    @pers __Role Entity $person
+    @rels __Role Attribute $relatives
+    @kinship __Role Action Kinship
+    @result __Bundle $eid $act $pers $rels $kinship $ctx
     return $result
 end
 
 @represents:represents graph symbol meaning
     # Symbol represents meaning
-    @sym __Role Symbol $symbol
-    @mean __Role Meaning $meaning
-    @relation __Role Relation Representation
-    @result __Bundle $sym $mean $relation
+    @eid __Event
+    @act __Role Action represents
+    @ctx __Role Context StressCompat
+    @sym __Role Attribute $symbol
+    @mean __Role Content $meaning
+    @relation __Role Action Representation
+    @result __Bundle $eid $act $sym $mean $relation $ctx
     return $result
 end
 
 @residesAt:residesAt graph entity location
     # Entity resides at location
-    @ent __Role Resident $entity
+    @eid __Event
+    @act __Role Action residesAt
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
     @loc __Role Location $location
-    @relation __Role Relation Residence
-    @result __Bundle $ent $loc $relation
+    @relation __Role Action Residence
+    @result __Bundle $eid $act $ent $loc $relation $ctx
     return $result
 end
 
 @residesNear:residesNear graph entity location
     # Entity resides near location
-    @ent __Role Resident $entity
+    @eid __Event
+    @act __Role Action residesNear
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
     @loc __Role Location $location
-    @relation __Role Relation Proximity
-    @result __Bundle $ent $loc $relation
+    @relation __Role Action Proximity
+    @result __Bundle $eid $act $ent $loc $relation $ctx
     return $result
 end
 
 @resists:resists graph agent resisted
     # Agent resists something
-    @ag __Role Resister $agent
-    @resist __Role Resisted $resisted
+    @eid __Event
+    @act __Role Action resists
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @resist __Role Attribute $resisted
     @process __Role Process Resistance
-    @result __Bundle $ag $resist $process
+    @result __Bundle $eid $act $ag $resist $process $ctx
     return $result
 end
 
 @returns:returns graph entity destination
     # Entity returns to destination
-    @ent __Role Returner $entity
-    @dest __Role Destination $destination
+    @eid __Event
+    @act __Role Action returns
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @dest __Role Attribute $destination
     @process __Role Process Return
-    @result __Bundle $ent $dest $process
+    @result __Bundle $eid $act $ent $dest $process $ctx
     return $result
 end
 
 @reveals:reveals graph process revealed
     # Process reveals something
+    @eid __Event
+    @act __Role Action reveals
+    @ctx __Role Context StressCompat
     @proc __Role Process $process
-    @rev __Role Revealed $revealed
-    @relation __Role Relation Revelation
-    @result __Bundle $proc $rev $relation
+    @rev __Role Attribute $revealed
+    @relation __Role Action Revelation
+    @result __Bundle $eid $act $proc $rev $relation $ctx
     return $result
 end
 
 @rich:rich graph entity quality
     # Entity is rich in quality
+    @eid __Event
+    @act __Role Action rich
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @qual __Role Quality $quality
+    @qual __Role Attribute $quality
     @property __Role Property Rich
-    @result __Bundle $ent $qual $property
+    @result __Bundle $eid $act $ent $qual $property $ctx
     return $result
 end
 
 @ritually:ritually graph action manner
     # Action performed ritually
+    @eid __Event
+    @act2 __Role Action ritually
+    @ctx __Role Context StressCompat
     @act __Role Action $action
     @man __Role Manner $manner
     @property __Role Property Ritual
-    @result __Bundle $act $man $property
+    @result __Bundle $eid $act2 $act $man $property $ctx
     return $result
 end
 
 @sameGeneration:sameGeneration graph person1 person2
     # Persons are in same generation
-    @p1 __Role Person $person1
-    @p2 __Role Person $person2
+    @eid __Event
+    @act __Role Action sameGeneration
+    @ctx __Role Context StressCompat
+    @p1 __Role Entity $person1
+    @p2 __Role Entity $person2
     @generation __Role Property SameGeneration
-    @result __Bundle $p1 $p2 $generation
+    @result __Bundle $eid $act $p1 $p2 $generation $ctx
     return $result
 end
 
 @sanctionedBy:sanctionedBy graph practice authority
     # Practice is sanctioned by authority
-    @prac __Role Practice $practice
-    @auth __Role Authority $authority
-    @relation __Role Relation Sanction
-    @result __Bundle $prac $auth $relation
+    @eid __Event
+    @act __Role Action sanctionedBy
+    @ctx __Role Context StressCompat
+    @prac __Role Action $practice
+    @auth __Role Attribute $authority
+    @relation __Role Action Sanction
+    @result __Bundle $eid $act $prac $auth $relation $ctx
     return $result
 end
 
 @scientific:scientific graph method type
     # Method is scientific type
-    @meth __Role Method $method
+    @eid __Event
+    @act __Role Action scientific
+    @ctx __Role Context StressCompat
+    @meth __Role Process $method
     @typ __Role Type $type
     @property __Role Property Scientific
-    @result __Bundle $meth $typ $property
+    @result __Bundle $eid $act $meth $typ $property $ctx
     return $result
 end
 
 @seeks:seeks graph agent goal
     # Agent seeks goal
-    @ag __Role Seeker $agent
+    @eid __Event
+    @act __Role Action seeks
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
     @goal __Role Goal $goal
     @process __Role Process Seeking
-    @result __Bundle $ag $goal $process
+    @result __Bundle $eid $act $ag $goal $process $ctx
     return $result
 end
 
 @selected:selected graph entity selector
     # Entity selected by selector
-    @ent __Role Selected $entity
-    @sel __Role Selector $selector
+    @eid __Event
+    @act __Role Action selected
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @sel __Role Attribute $selector
     @process __Role Process Selection
-    @result __Bundle $ent $sel $process
+    @result __Bundle $eid $act $ent $sel $process $ctx
     return $result
 end
 
 @selectsLineage:selectsLineage graph entity lineage
     # Entity selects lineage affiliation
-    @ent __Role Selector $entity
-    @lin __Role Lineage $lineage
+    @eid __Event
+    @act __Role Action selectsLineage
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @lin __Role Attribute $lineage
     @process __Role Process LineageSelection
-    @result __Bundle $ent $lin $process
+    @result __Bundle $eid $act $ent $lin $process $ctx
     return $result
 end
 
 @sharedBy:sharedBy graph element sharers
     # Element is shared by sharers
-    @elem __Role Element $element
-    @shar __Role Sharers $sharers
-    @relation __Role Relation Sharing
-    @result __Bundle $elem $shar $relation
+    @eid __Event
+    @act __Role Action sharedBy
+    @ctx __Role Context StressCompat
+    @elem __Role Attribute $element
+    @shar __Role Attribute $sharers
+    @relation __Role Action Sharing
+    @result __Bundle $eid $act $elem $shar $relation $ctx
     return $result
 end
 
 @shares:shares graph agent shared
     # Agent shares something
-    @ag __Role Sharer $agent
-    @shar __Role Shared $shared
+    @eid __Event
+    @act __Role Action shares
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @shar __Role Attribute $shared
     @process __Role Process Sharing
-    @result __Bundle $ag $shar $process
+    @result __Bundle $eid $act $ag $shar $process $ctx
     return $result
 end
 
 @showed:showed graph entity trait
     # Entity showed trait
+    @eid __Event
+    @act __Role Action showed
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @trait __Role Trait $trait
+    @trait __Role Attribute $trait
     @process __Role Process Showing
-    @result __Bundle $ent $trait $process
+    @result __Bundle $eid $act $ent $trait $process $ctx
     return $result
 end
 
 @shows:shows graph entity evidence
     # Entity shows evidence
-    @ent __Role Shower $entity
-    @evid __Role Evidence $evidence
-    @relation __Role Relation Showing
-    @result __Bundle $ent $evid $relation
+    @eid __Event
+    @act __Role Action shows
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @evid __Role Attribute $evidence
+    @relation __Role Action Showing
+    @result __Bundle $eid $act $ent $evid $relation $ctx
     return $result
 end
 
 @showsPattern:showsPattern graph entity pattern
     # Entity shows pattern
+    @eid __Event
+    @act __Role Action showsPattern
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @pat __Role Pattern $pattern
-    @relation __Role Relation Display
-    @result __Bundle $ent $pat $relation
+    @pat __Role Structure $pattern
+    @relation __Role Action Display
+    @result __Bundle $eid $act $ent $pat $relation $ctx
     return $result
 end
 
 @sold:sold graph item seller
     # Item sold by seller
-    @item __Role Item $item
-    @sell __Role Seller $seller
+    @eid __Event
+    @act __Role Action sold
+    @ctx __Role Context StressCompat
+    @item __Role Attribute $item
+    @sell __Role Attribute $seller
     @process __Role Process Sale
-    @result __Bundle $item $sell $process
+    @result __Bundle $eid $act $item $sell $process $ctx
     return $result
 end
 
 @specialized:specialized graph entity specialization
     # Entity specialized in something
+    @eid __Event
+    @act __Role Action specialized
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @spec __Role Specialization $specialization
+    @spec __Role Attribute $specialization
     @process __Role Process Specialization
-    @result __Bundle $ent $spec $process
+    @result __Bundle $eid $act $ent $spec $process $ctx
     return $result
 end
 
 @specific:specific graph entity specificity
     # Entity has specific quality
+    @eid __Event
+    @act __Role Action specific
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @spec __Role Specificity $specificity
+    @spec __Role Attribute $specificity
     @property __Role Property Specific
-    @result __Bundle $ent $spec $property
+    @result __Bundle $eid $act $ent $spec $property $ctx
     return $result
 end
 
 @spreadsTo:spreadsTo graph element destination
     # Element spreads to destination
-    @elem __Role Element $element
-    @dest __Role Destination $destination
+    @eid __Event
+    @act __Role Action spreadsTo
+    @ctx __Role Context StressCompat
+    @elem __Role Attribute $element
+    @dest __Role Attribute $destination
     @process __Role Process Diffusion
-    @result __Bundle $elem $dest $process
+    @result __Bundle $eid $act $elem $dest $process $ctx
     return $result
 end
 
 @stratified:stratified graph society layers
     # Society is stratified into layers
-    @soc __Role Society $society
-    @lay __Role Layers $layers
-    @relation __Role Relation Stratification
-    @result __Bundle $soc $lay $relation
+    @eid __Event
+    @act __Role Action stratified
+    @ctx __Role Context StressCompat
+    @soc __Role Attribute $society
+    @lay __Role Attribute $layers
+    @relation __Role Action Stratification
+    @result __Bundle $eid $act $soc $lay $relation $ctx
     return $result
 end
 
 @studies:studies graph agent subject
     # Agent studies subject
-    @ag __Role Researcher $agent
-    @subj __Role Subject $subject
+    @eid __Event
+    @act __Role Action studies
+    @ctx __Role Context StressCompat
+    @ag __Role Agent $agent
+    @subj __Role Attribute $subject
     @process __Role Process Research
-    @result __Bundle $ag $subj $process
+    @result __Bundle $eid $act $ag $subj $process $ctx
     return $result
 end
 
 @subsists:subsists graph group subsistence
     # Group subsists through means
+    @eid __Event
+    @act __Role Action subsists
+    @ctx __Role Context StressCompat
     @grp __Role Group $group
-    @subs __Role Subsistence $subsistence
+    @subs __Role Attribute $subsistence
     @process __Role Process Subsistence
-    @result __Bundle $grp $subs $process
+    @result __Bundle $eid $act $grp $subs $process $ctx
     return $result
 end
 
 @suspends:suspends graph agent suspended
     # Agent suspends something
-    @ag __Role Suspender $agent
-    @susp __Role Suspended $suspended
+    @eid __Event
+    @act __Role Action suspends
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @susp __Role Attribute $suspended
     @process __Role Process Suspension
-    @result __Bundle $ag $susp $process
+    @result __Bundle $eid $act $ag $susp $process $ctx
     return $result
 end
 
 @sustainable:sustainable graph practice sustainability
     # Practice has sustainability
-    @prac __Role Practice $practice
-    @sust __Role Sustainability $sustainability
+    @eid __Event
+    @act __Role Action sustainable
+    @ctx __Role Context StressCompat
+    @prac __Role Action $practice
+    @sust __Role Attribute $sustainability
     @property __Role Property Sustainable
-    @result __Bundle $prac $sust $property
+    @result __Bundle $eid $act $prac $sust $property $ctx
     return $result
 end
 
 @takes:takes graph agent approach
     # Agent takes approach
-    @ag __Role Taker $agent
-    @appr __Role Approach $approach
+    @eid __Event
+    @act __Role Action takes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @appr __Role Attribute $approach
     @process __Role Process Taking
-    @result __Bundle $ag $appr $process
+    @result __Bundle $eid $act $ag $appr $process $ctx
     return $result
 end
 
 @tells:tells graph narrator story
     # Narrator tells story
-    @narr __Role Narrator $narrator
-    @story __Role Story $story
+    @eid __Event
+    @act __Role Action tells
+    @ctx __Role Context StressCompat
+    @narr __Role Attribute $narrator
+    @story __Role Content $story
     @process __Role Process Narration
-    @result __Bundle $narr $story $process
+    @result __Bundle $eid $act $narr $story $process $ctx
     return $result
 end
 
 @through:through graph process means
     # Process occurs through means
+    @eid __Event
+    @act __Role Action through
+    @ctx __Role Context StressCompat
     @proc __Role Process $process
-    @means __Role Means $means
-    @relation __Role Relation Instrumentality
-    @result __Bundle $proc $means $relation
+    @means __Role Attribute $means
+    @relation __Role Action Instrumentality
+    @result __Bundle $eid $act $proc $means $relation $ctx
     return $result
 end
 
 @throughProcess:throughProcess graph outcome process
     # Outcome occurs through process
-    @out __Role Outcome $outcome
+    @eid __Event
+    @act __Role Action throughProcess
+    @ctx __Role Context StressCompat
+    @out __Role Attribute $outcome
     @proc __Role Process $process
-    @relation __Role Relation ProcessMeans
-    @result __Bundle $out $proc $relation
+    @relation __Role Action ProcessMeans
+    @result __Bundle $eid $act $out $proc $relation $ctx
     return $result
 end
 
 @to:to graph action recipient
     # Action directed to recipient
+    @eid __Event
+    @act2 __Role Action to
+    @ctx __Role Context StressCompat
     @act __Role Action $action
     @rec __Role Recipient $recipient
-    @relation __Role Relation Direction
-    @result __Bundle $act $rec $relation
+    @relation __Role Action Direction
+    @result __Bundle $eid $act2 $act $rec $relation $ctx
     return $result
 end
 
 @traces:traces graph entity lineage
     # Entity traces lineage
-    @ent __Role Tracer $entity
-    @lin __Role Lineage $lineage
+    @eid __Event
+    @act __Role Action traces
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @lin __Role Attribute $lineage
     @process __Role Process Tracing
-    @result __Bundle $ent $lin $process
+    @result __Bundle $eid $act $ent $lin $process $ctx
     return $result
 end
 
 @tracesBoth:tracesBoth graph entity lineages
     # Entity traces both lineages
-    @ent __Role Tracer $entity
-    @lins __Role Lineages $lineages
+    @eid __Event
+    @act __Role Action tracesBoth
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @lins __Role Attribute $lineages
     @process __Role Process BilateralTracing
-    @result __Bundle $ent $lins $process
+    @result __Bundle $eid $act $ent $lins $process $ctx
     return $result
 end
 
 @tracesLineage:tracesLineage graph entity lineage
     # Entity traces specific lineage
-    @ent __Role Tracer $entity
-    @lin __Role Lineage $lineage
+    @eid __Event
+    @act __Role Action tracesLineage
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @lin __Role Attribute $lineage
     @process __Role Process LineageTracing
-    @result __Bundle $ent $lin $process
+    @result __Bundle $eid $act $ent $lin $process $ctx
     return $result
 end
 
 @tracesThrough:tracesThrough graph entity path
     # Entity traces through path
-    @ent __Role Tracer $entity
-    @path __Role Path $path
+    @eid __Event
+    @act __Role Action tracesThrough
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
+    @path __Role Attribute $path
     @process __Role Process Tracing
-    @result __Bundle $ent $path $process
+    @result __Bundle $eid $act $ent $path $process $ctx
     return $result
 end
 
 @tracks:tracks graph agent tracked
     # Agent tracks something
-    @ag __Role Tracker $agent
-    @track __Role Tracked $tracked
+    @eid __Event
+    @act __Role Action tracks
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @track __Role Attribute $tracked
     @process __Role Process Tracking
-    @result __Bundle $ag $track $process
+    @result __Bundle $eid $act $ag $track $process $ctx
     return $result
 end
 
 @traded:traded graph goods traders
     # Goods traded by traders
-    @goods __Role Goods $goods
-    @trad __Role Traders $traders
+    @eid __Event
+    @act __Role Action traded
+    @ctx __Role Context StressCompat
+    @goods __Role Attribute $goods
+    @trad __Role Attribute $traders
     @process __Role Process Trade
-    @result __Bundle $goods $trad $process
+    @result __Bundle $eid $act $goods $trad $process $ctx
     return $result
 end
 
 @transfers:transfers graph agent transferred
     # Agent transfers something
-    @ag __Role Transferrer $agent
-    @trans __Role Transferred $transferred
+    @eid __Event
+    @act __Role Action transfers
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @trans __Role Attribute $transferred
     @process __Role Process Transfer
-    @result __Bundle $ag $trans $process
+    @result __Bundle $eid $act $ag $trans $process $ctx
     return $result
 end
 
 @transmittedVia:transmittedVia graph knowledge medium
     # Knowledge transmitted via medium
-    @know __Role Knowledge $knowledge
-    @med __Role Medium $medium
+    @eid __Event
+    @act __Role Action transmittedVia
+    @ctx __Role Context StressCompat
+    @know __Role Attribute $knowledge
+    @med __Role Attribute $medium
     @process __Role Process Transmission
-    @result __Bundle $know $med $process
+    @result __Bundle $eid $act $know $med $process $ctx
     return $result
 end
 
 @treated:treated graph entity treatment
     # Entity is treated in manner
+    @eid __Event
+    @act __Role Action treated
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
-    @treat __Role Treatment $treatment
-    @relation __Role Relation Treatment
-    @result __Bundle $ent $treat $relation
+    @treat __Role Attribute $treatment
+    @relation __Role Action Treatment
+    @result __Bundle $eid $act $ent $treat $relation $ctx
     return $result
 end
 
 @tries:tries graph agent attempt
     # Agent tries something
-    @ag __Role Attempter $agent
-    @att __Role Attempt $attempt
+    @eid __Event
+    @act __Role Action tries
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @att __Role Attribute $attempt
     @process __Role Process Attempting
-    @result __Bundle $ag $att $process
+    @result __Bundle $eid $act $ag $att $process $ctx
     return $result
 end
 
 @undergoes:undergoes graph entity process
     # Entity undergoes process
-    @ent __Role Undergoer $entity
+    @eid __Event
+    @act __Role Action undergoes
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
     @proc __Role Process $process
-    @relation __Role Relation Undergoing
-    @result __Bundle $ent $proc $relation
+    @relation __Role Action Undergoing
+    @result __Bundle $eid $act $ent $proc $relation $ctx
     return $result
 end
 
 @understandIn:understandIn graph entity context
     # Entity understood in context
+    @eid __Event
+    @act __Role Action understandIn
+    @ctx2 __Role Context StressCompat
     @ent __Role Entity $entity
     @ctx __Role Context $context
-    @relation __Role Relation Understanding
-    @result __Bundle $ent $ctx $relation
+    @relation __Role Action Understanding
+    @result __Bundle $eid $act $ent $ctx $relation $ctx2
     return $result
 end
 
 @understands:understands graph agent understanding
     # Agent understands something
-    @ag __Role Understander $agent
-    @under __Role Understanding $understanding
+    @eid __Event
+    @act __Role Action understands
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @under __Role Attribute $understanding
     @process __Role Process Understanding
-    @result __Bundle $ag $under $process
+    @result __Bundle $eid $act $ag $under $process $ctx
     return $result
 end
 
 @undertakes:undertakes graph agent undertaking
     # Agent undertakes action
-    @ag __Role Undertaker $agent
-    @under __Role Undertaking $undertaking
+    @eid __Event
+    @act __Role Action undertakes
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @under __Role Attribute $undertaking
     @process __Role Process Undertaking
-    @result __Bundle $ag $under $process
+    @result __Bundle $eid $act $ag $under $process $ctx
     return $result
 end
 
 @undertook:undertook graph entity action
     # Entity undertook action (past)
+    @eid __Event
+    @act2 __Role Action undertook
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @act __Role Action $action
     @process __Role Process Undertaking
-    @result __Bundle $ent $act $process
+    @result __Bundle $eid $act2 $ent $act $process $ctx
     return $result
 end
 
 @underwent:underwent graph entity process
     # Entity underwent process (past)
-    @ent __Role Undergoer $entity
+    @eid __Event
+    @act __Role Action underwent
+    @ctx __Role Context StressCompat
+    @ent __Role Attribute $entity
     @proc __Role Process $process
-    @relation __Role Relation Undergoing
-    @result __Bundle $ent $proc $relation
+    @relation __Role Action Undergoing
+    @result __Bundle $eid $act $ent $proc $relation $ctx
     return $result
 end
 
 @unequal:unequal graph entity1 entity2
     # Entities are unequal
+    @eid __Event
+    @act __Role Action unequal
+    @ctx __Role Context StressCompat
     @ent1 __Role Entity $entity1
     @ent2 __Role Entity $entity2
-    @inequality __Role Relation Inequality
-    @result __Bundle $ent1 $ent2 $inequality
+    @inequality __Role Action Inequality
+    @result __Bundle $eid $act $ent1 $ent2 $inequality $ctx
     return $result
 end
 
 @universal:universal graph trait scope
     # Trait has universal scope
-    @trait __Role Trait $trait
+    @eid __Event
+    @act __Role Action universal
+    @ctx __Role Context StressCompat
+    @trait __Role Attribute $trait
     @scope __Role Scope $scope
     @property __Role Property Universal
-    @result __Bundle $trait $scope $property
+    @result __Bundle $eid $act $trait $scope $property $ctx
     return $result
 end
 
 @up:up graph entity direction
     # Entity moves up in direction
+    @eid __Event
+    @act __Role Action up
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @dir __Role Direction $direction
-    @relation __Role Relation Upward
-    @result __Bundle $ent $dir $relation
+    @relation __Role Action Upward
+    @result __Bundle $eid $act $ent $dir $relation $ctx
     return $result
 end
 
 @usedInContext:usedInContext graph artifact context
     # Artifact used in context
-    @art __Role Artifact $artifact
+    @eid __Event
+    @act __Role Action usedInContext
+    @ctx2 __Role Context StressCompat
+    @art __Role Attribute $artifact
     @ctx __Role Context $context
-    @relation __Role Relation Usage
-    @result __Bundle $art $ctx $relation
+    @relation __Role Action Usage
+    @result __Bundle $eid $act $art $ctx $relation $ctx2
     return $result
 end
 
 @usesDistinctTerm:usesDistinctTerm graph system term
     # System uses distinct term
-    @sys __Role System $system
-    @term __Role Term $term
-    @relation __Role Relation Terminology
-    @result __Bundle $sys $term $relation
+    @eid __Event
+    @act __Role Action usesDistinctTerm
+    @ctx __Role Context StressCompat
+    @sys __Role Structure $system
+    @term __Role Attribute $term
+    @relation __Role Action Terminology
+    @result __Bundle $eid $act $sys $term $relation $ctx
     return $result
 end
 
 @usesSameTerm:usesSameTerm graph system term
     # System uses same term
-    @sys __Role System $system
-    @term __Role Term $term
-    @relation __Role Relation Terminology
-    @result __Bundle $sys $term $relation
+    @eid __Event
+    @act __Role Action usesSameTerm
+    @ctx __Role Context StressCompat
+    @sys __Role Structure $system
+    @term __Role Attribute $term
+    @relation __Role Action Terminology
+    @result __Bundle $eid $act $sys $term $relation $ctx
     return $result
 end
 
 @using:using graph action instrument
     # Action using instrument
+    @eid __Event
+    @act2 __Role Action using
+    @ctx __Role Context StressCompat
     @act __Role Action $action
     @inst __Role Instrument $instrument
-    @relation __Role Relation Instrumentality
-    @result __Bundle $act $inst $relation
+    @relation __Role Action Instrumentality
+    @result __Bundle $eid $act2 $act $inst $relation $ctx
     return $result
 end
 
 @via:via graph process medium
     # Process occurs via medium
+    @eid __Event
+    @act __Role Action via
+    @ctx __Role Context StressCompat
     @proc __Role Process $process
-    @med __Role Medium $medium
-    @relation __Role Relation Via
-    @result __Bundle $proc $med $relation
+    @med __Role Attribute $medium
+    @relation __Role Action Via
+    @result __Bundle $eid $act $proc $med $relation $ctx
     return $result
 end
 
 @walked:walked graph entity manner
     # Entity walked (locomotion)
+    @eid __Event
+    @act __Role Action walked
+    @ctx __Role Context StressCompat
     @ent __Role Entity $entity
     @man __Role Manner $manner
     @process __Role Process Walking
-    @result __Bundle $ent $man $process
+    @result __Bundle $eid $act $ent $man $process $ctx
     return $result
 end
 
 @wasPartOf:wasPartOf graph part whole
     # Part was part of whole
-    @part __Role Part $part
-    @whole __Role Whole $whole
-    @relation __Role Relation PartOf
-    @result __Bundle $part $whole $relation
+    @eid __Event
+    @act __Role Action wasPartOf
+    @ctx __Role Context StressCompat
+    @part __Role Attribute $part
+    @whole __Role Attribute $whole
+    @relation __Role Action PartOf
+    @result __Bundle $eid $act $part $whole $relation $ctx
     return $result
 end
 
 @works:works graph agent activity
     # Agent works on activity
-    @ag __Role Worker $agent
-    @act __Role Activity $activity
+    @eid __Event
+    @act2 __Role Action works
+    @ctx __Role Context StressCompat
+    @ag __Role Attribute $agent
+    @act __Role Attribute $activity
     @process __Role Process Working
-    @result __Bundle $ag $act $process
+    @result __Bundle $eid $act2 $ag $act $process $ctx
     return $result
 end
 

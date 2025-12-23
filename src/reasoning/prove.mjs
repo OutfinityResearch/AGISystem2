@@ -190,6 +190,73 @@ export class ProofEngine {
       const goalArgs = (goal.args || []).map(a => this.extractArgName(a)).filter(Boolean);
       const goalFactExists = goalOp ? this.factExists(goalOp, goalArgs[0], goalArgs[1]) : false;
 
+      // Goal-level negation: allow proving Not(P) either from explicit Not facts,
+      // or via negation-as-failure (CWA) if enabled and P cannot be proved.
+      if (goalOp === 'Not' && Array.isArray(goal.args) && goal.args.length === 1) {
+        const meta = this.session.executor.extractMetadataWithNotExpansion(goal, 'Not');
+        const innerOp = meta?.innerOperator;
+        const innerArgs = meta?.innerArgs;
+
+        if (innerOp && Array.isArray(innerArgs)) {
+          // 1) Explicit Not(P) in KB.
+          for (const fact of this.session.kbFacts) {
+            const fm = fact.metadata;
+            if (fm?.operator !== 'Not') continue;
+            if (fm.innerOperator !== innerOp) continue;
+            if (!Array.isArray(fm.innerArgs) || fm.innerArgs.length !== innerArgs.length) continue;
+            let ok = true;
+            for (let i = 0; i < innerArgs.length; i++) {
+              if (fm.innerArgs[i] !== innerArgs[i]) { ok = false; break; }
+            }
+            if (ok) {
+              return {
+                valid: true,
+                method: 'explicit_negation',
+                confidence: this.thresholds.STRONG_MATCH,
+                goal: goalStr,
+                steps: [{ operation: 'not_fact', fact: `Not ${innerOp} ${innerArgs.join(' ')}`.trim() }]
+              };
+            }
+          }
+
+          // 2) Try to prove inner.
+          const innerStmt = new Statement(
+            null,
+            new Identifier(innerOp),
+            innerArgs.map(a => new Identifier(a))
+          );
+          const innerResult = this.proveGoal(innerStmt, depth + 1);
+          if (!innerResult.valid && this.session.closedWorldAssumption) {
+            return {
+              valid: true,
+              method: 'closed_world_assumption',
+              confidence: this.thresholds.CONDITION_CONFIDENCE,
+              goal: goalStr,
+              steps: [
+                ...(innerResult.steps || []),
+                { operation: 'cwa_negation', fact: `Not ${innerOp} ${innerArgs.join(' ')}`.trim() }
+              ]
+            };
+          }
+
+          if (!innerResult.valid && !this.session.closedWorldAssumption) {
+            return {
+              valid: false,
+              reason: 'Not goal requires explicit negation (open world)',
+              goal: goalStr,
+              steps: this.steps
+            };
+          }
+
+          return {
+            valid: false,
+            reason: 'Not goal failed - inner is provable',
+            goal: goalStr,
+            steps: this.steps
+          };
+        }
+      }
+
       // Check if goal is explicitly negated (blocks all proofs)
       const negationInfo = this.checkGoalNegation(goal);
       if (negationInfo.negated) {
@@ -511,8 +578,14 @@ export class ProofEngine {
    * @returns {Object} { negated: boolean, negationRef: string, negationType: string }
    */
   checkGoalNegation(goal) {
-    const goalVec = this.session.executor.buildStatementVector(goal);
-    if (!goalVec) return { negated: false };
+    const goalOp = this.extractOperatorName(goal);
+    const goalArgs = (goal.args || []).map(a => this.extractArgName(a)).filter(Boolean);
+    if (!goalOp) return { negated: false };
+
+    const canon = (name) => {
+      if (!this.session?.canonicalizationEnabled) return name;
+      return this.session.componentKB?.canonicalizeName?.(name) || name;
+    };
 
     for (const fact of this.session.kbFacts) {
       const meta = fact.metadata;
@@ -524,20 +597,20 @@ export class ProofEngine {
           // Build the inner fact text for display
           const innerFactText = `${meta.innerOperator} ${meta.innerArgs.join(' ')}`;
 
-          // Compare using the fact vector directly
-          // The fact.vector is the vector of Not(innerFact)
-          // We need to check if goal matches the inner fact
-          // Build the inner fact vector using imported Statement and Identifier classes
-          const innerStmt = new Statement(
-            null,  // no destination
-            new Identifier(meta.innerOperator),
-            meta.innerArgs.map(arg => new Identifier(arg))
-          );
-          const innerVec = this.session.executor.buildStatementVector(innerStmt);
+          // Prefer metadata equality over vector similarity.
+          // This avoids false negatives for graph/macro operators where the stored fact vector
+          // differs structurally from buildStatementVector(goal).
+          const innerOp = canon(meta.innerOperator);
+          const innerArgs = Array.isArray(meta.innerArgs) ? meta.innerArgs.map(canon) : [];
+          const gOp = canon(goalOp);
+          const gArgs = goalArgs.map(canon);
 
-          this.session.reasoningStats.similarityChecks++;
-          const sim = this.session.similarity(goalVec, innerVec);
-          if (sim > this.thresholds.RULE_MATCH) {
+          const match =
+            gOp === innerOp &&
+            gArgs.length === innerArgs.length &&
+            gArgs.every((a, i) => a === innerArgs[i]);
+
+          if (match) {
             return {
               negated: true,
               negationRef: innerFactText,
@@ -552,6 +625,8 @@ export class ProofEngine {
         const negatedRef = meta.args?.[0];
         if (!negatedRef || typeof negatedRef !== 'string') continue;
 
+        const goalVec = this.session.executor.buildStatementVector(goal);
+        if (!goalVec) continue;
         const refName = negatedRef.replace('$', '');
         const negatedVec = this.session.scope.get(refName);
 

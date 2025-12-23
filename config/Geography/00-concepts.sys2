@@ -1,15 +1,17 @@
 # Geography - Domain Concepts
 # Foundational geographic concepts with proper graph semantics
 
+# Domain anchor (avoid free-floating atoms)
+@_:Geography isA Geography AbstractType
+
 # ===== Physical Geography =====
 
 @Landform:Landform graph feature
     # Natural terrain feature
-    @feat __Role Feature $feature
+    @feat __Role Theme $feature
     @type __Role Type Landform
-    @physical __Role Nature TerrainFeature
-    @shaped __Role Origin GeologicalProcesses
-    @concept __Bundle $feat $type $physical $shaped
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $feat $type
     return $concept
 end
 
@@ -17,29 +19,26 @@ end
     # Elevated landform
     @land __Role Landform $landform
     @type __Role Type Mountain
-    @elevated __Role Property HighElevation
-    @steep __Role Property SteepSlopes
-    @concept __Bundle $land $type $elevated $steep
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $land $type
     return $concept
 end
 
 @River:River graph waterbody
     # Flowing water system
-    @water __Role Waterbody $waterbody
+    @water __Role Theme $waterbody
     @type __Role Type River
-    @flowing __Role Property FlowingWater
-    @linear __Role Shape LinearPath
-    @concept __Bundle $water $type $flowing $linear
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $water $type
     return $concept
 end
 
 @Ocean:Ocean graph waterbody
     # Large saltwater body
-    @water __Role Waterbody $waterbody
+    @water __Role Theme $waterbody
     @type __Role Type Ocean
-    @saltwater __Role Composition Saline
-    @vast __Role Scale GlobalScale
-    @concept __Bundle $water $type $saltwater $vast
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $water $type
     return $concept
 end
 
@@ -47,9 +46,8 @@ end
     # Long-term weather pattern
     @pat __Role Pattern $pattern
     @type __Role Type Climate
-    @atmospheric __Role Domain Weather
-    @longTerm __Role TimeScale Decades
-    @concept __Bundle $pat $type $atmospheric $longTerm
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $pat $type
     return $concept
 end
 
@@ -57,51 +55,46 @@ end
 
 @Region:Region graph area
     # Geographic area with common characteristics
-    @ar __Role Area $area
+    @ar __Role Location $area
     @type __Role Type Region
-    @bounded __Role Property DefinedBoundaries
-    @homogeneous __Role Characteristic CommonFeatures
-    @concept __Bundle $ar $type $bounded $homogeneous
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $ar $type
     return $concept
 end
 
 @City:City graph settlement
     # Urban settlement
-    @sett __Role Settlement $settlement
+    @sett __Role Location $settlement
     @type __Role Type City
-    @urban __Role Nature Urban
-    @population __Role Characteristic HighPopulation
-    @concept __Bundle $sett $type $urban $population
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $sett $type
     return $concept
 end
 
 @Country:Country graph territory
     # Sovereign political territory
-    @terr __Role Territory $territory
+    @terr __Role Location $territory
     @type __Role Type Country
-    @sovereign __Role Political Independent
-    @government __Role Structure GovernedTerritory
-    @concept __Bundle $terr $type $sovereign $government
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $terr $type
     return $concept
 end
 
 @Population:Population graph demographic
     # Group of people in area
-    @demo __Role Demographic $demographic
+    @demo __Role Group $demographic
     @type __Role Type Population
-    @spatiallyBounded __Role Property GeographicArea
-    @counted __Role Measurement Quantifiable
-    @concept __Bundle $demo $type $spatiallyBounded $counted
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $demo $type
     return $concept
 end
 
 @Border:Border graph boundary
     # Geographic or political boundary
-    @bound __Role Boundary $boundary
+    @bound __Role Location $boundary
     @type __Role Type Border
-    @dividing __Role Function SeparatesRegions
-    @linear __Role Shape Line
-    @concept __Bundle $bound $type $dividing $linear
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $bound $type
     return $concept
 end
 
@@ -109,31 +102,28 @@ end
 
 @Location:Location graph position
     # Position on Earth
-    @pos __Role Position $position
-    @type __Role Type GeographicLocation
-    @coordinates __Role Representation LatLon
-    @absolute __Role Nature AbsolutePosition
-    @concept __Bundle $pos $type $coordinates $absolute
+    @pos __Role Location $position
+    @type __Role Type Location
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $pos $type
     return $concept
 end
 
 @Distance:Distance graph measurement
     # Spatial separation
-    @meas __Role Measurement $measurement
+    @meas __Role Value $measurement
     @type __Role Type Distance
-    @spatial __Role Domain Space
-    @metric __Role Unit Measurable
-    @concept __Bundle $meas $type $spatial $metric
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $meas $type
     return $concept
 end
 
 @Scale:Scale graph ratio
     # Map scale or spatial extent
-    @rat __Role Ratio $ratio
-    @type __Role Type GeographicScale
-    @proportion __Role Nature MapToReality
-    @representation __Role Purpose Cartographic
-    @concept __Bundle $rat $type $proportion $representation
+    @rat __Role Value $ratio
+    @type __Role Type Scale
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $rat $type
     return $concept
 end
 
@@ -143,29 +133,25 @@ end
     # Environmental system
     @sys __Role System $system
     @type __Role Type Ecosystem
-    @biotic __Role Component Living
-    @abiotic __Role Component NonLiving
-    @interactions __Role Property Interdependent
-    @concept __Bundle $sys $type $biotic $abiotic
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $sys $type
     return $concept
 end
 
 @Resource:Resource graph material
     # Natural or economic resource
-    @mat __Role Material $material
+    @mat __Role Theme $material
     @type __Role Type Resource
-    @valuable __Role Property EconomicValue
-    @geographic __Role Distribution SpatiallyDistributed
-    @concept __Bundle $mat $type $valuable $geographic
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $mat $type
     return $concept
 end
 
 @Landscape:Landscape graph area
     # Visible features of area
-    @ar __Role Area $area
+    @ar __Role Location $area
     @type __Role Type Landscape
-    @visible __Role Property Observable
-    @composite __Role Nature MultipleFeatures
-    @concept __Bundle $ar $type $visible $composite
+    @ctx __Role Context Geography
+    @concept __Bundle $ctx $ar $type
     return $concept
 end

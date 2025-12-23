@@ -183,6 +183,8 @@ describe('Negation & Exceptions', () => {
 
       // Use correct DSL syntax for rule with And/Not
       session.learn(`
+        @_ Set CWA on
+
         has Alice License
         has Bob License
         has Bob Violation

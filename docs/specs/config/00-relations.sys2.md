@@ -16,7 +16,7 @@ Defines relation metadata (transitive, symmetric, reflexive) plus families of do
 - `tests/unit/reasoning/query.test.mjs` uses `loves`, `owns`, `parent`, and other declared relations when checking matching/binding behavior.
 
 ## Design Rationale
-Marking relations declaratively keeps the proof/search layers pure—no special cases in JS.  Adding family/social verbs here lets eval suites (e.g., `evalSuite/suite02_hierarchies`) and fixtures rely on consistent operator vectors without redefining them.
+Marking relations declaratively keeps the proof/search layers pure—no special cases in JS.  Adding family/social verbs here lets eval suites (e.g., `evals/fastEval/suite02_hierarchies`) and fixtures rely on consistent operator vectors without redefining them.
 
 ## Status
 Implementation fully matches the spec; follow-up work is to add validation so unknown relations cannot be referenced (tracked in DS07f open items).

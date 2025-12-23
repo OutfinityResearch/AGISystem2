@@ -11,6 +11,8 @@
 
 # ===== Reasoning Macros =====
 
+@Observation:Observation __Relation
+
 # abduce: find best explanation for observation
 # Types: observation:Event|State -> explanation:Event
 @AbduceMacro:abduce graph observation

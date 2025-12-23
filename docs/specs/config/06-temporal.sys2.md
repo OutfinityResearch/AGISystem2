@@ -10,11 +10,11 @@ Adds temporal and causal relations (`Before`, `During`, `Causes`, etc.) with mac
 
 ## Runtime Integration
 - `src/reasoning/query-transitive.mjs` (imported via `query.mjs`) inspects temporal relations when chaining events.
-- `evalSuite/suite07_temporal` loads DSL cases that rely on these macros, ensuring runtime behavior matches spec.
+- `evals/fastEval/suite07_temporal` loads DSL cases that rely on these macros, ensuring runtime behavior matches spec.
 
 ## Tests & Coverage
 - `tests/unit/runtime/core-theories.test.mjs` ensures this theory loads.
-- `tests/integration/deep-reasoning.test.mjs` and `evalSuite/suite07_temporal` verify end-to-end usage by asserting expected answers for temporal questions.
+- `tests/integration/deep-reasoning.test.mjs` and `evals/fastEval/suite07_temporal` verify end-to-end usage by asserting expected answers for temporal questions.
 
 ## Design Rationale
 Explicit macros avoid copy/paste DSL, keep event bundling uniform, and let session loaders detect missing prerequisites early.  The `CausesMacro` producing both `before` and `Causes` ensures downstream components can apply either structural or semantic cues.

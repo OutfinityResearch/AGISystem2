@@ -29,6 +29,7 @@ export function computeFeatureToggles({ profile, options = {} } = {}) {
 
   const envCanonical = readEnvBoolean('SYS2_CANONICAL');
   const envProofValidate = readEnvBoolean('SYS2_PROOF_VALIDATE');
+  const envCwa = readEnvBoolean('SYS2_CWA');
 
   const canonicalizationEnabled =
     options.canonicalizationEnabled ??
@@ -43,6 +44,7 @@ export function computeFeatureToggles({ profile, options = {} } = {}) {
   return {
     canonicalizationEnabled,
     proofValidationEnabled,
+    closedWorldAssumption: options.closedWorldAssumption ?? envCwa ?? false,
     useSemanticIndex: isTheoryDriven,
     useTheoryConstraints: isTheoryDriven,
     useTheoryReserved: isTheoryDriven

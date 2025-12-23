@@ -1,259 +1,66 @@
 # Philosophy - Domain Relations
-# REAL graph definitions for philosophical relationships
+# Core-compatible graph macros for common philosophical relations.
 
-# ===== Metaphysical Relations =====
+@_:PhilosophyRelations isA PhilosophyRelations AbstractType
 
-@exists:exists graph entity
-    # Entity has being/existence
-    @ent __Role Entity $entity
-    @being __Role Property Exists
-    @ontological __Role Domain Ontology
-    @result __Bundle $ent $being $ontological
+@believes:believes graph subject proposition
+    @eid __Event
+    @act __Role Action believes
+    @s __Role Agent $subject
+    @p __Role Content $proposition
+    @ctx __Role Context Philosophy
+    @result __Bundle $eid $act $s $p $ctx
     return $result
 end
 
-@hasEssence:hasEssence graph entity essence
-    # Entity has essential nature
-    @ent __Role Entity $entity
-    @ess __Role Essence $essence
-    @necessary __Role Relation NecessaryProperty
-    @result __Bundle $ent $ess $necessary
+@knows:knows graph subject proposition
+    @eid __Event
+    @act __Role Action knows
+    @s __Role Agent $subject
+    @p __Role Content $proposition
+    @ctx __Role Context Philosophy
+    @result __Bundle $eid $act $s $p $ctx
     return $result
 end
 
-@causes:causes graph cause effect
-    # Causal relation
-    @cau __Role Cause $cause
-    @eff __Role Effect $effect
-    @causation __Role Relation Causation
-    @result __Bundle $cau $eff $causation
+@justifies:justifies graph evidence claim
+    @eid __Event
+    @act __Role Action justifies
+    @e __Role Cause $evidence
+    @c __Role Result $claim
+    @ctx __Role Context Philosophy
+    @result __Bundle $eid $act $e $c $ctx
     return $result
 end
 
-@inheresIn:inheresIn graph property substance
-    # Property inheres in substance
-    @prop __Role Property $property
-    @sub __Role Substance $substance
-    @inherence __Role Relation Inherence
-    @result __Bundle $prop $sub $inherence
+@entails:entails graph premises conclusion
+    @prem __Role Theme $premises
+    @concl __Role Result $conclusion
+    @result Implies $prem $concl
     return $result
 end
 
-# ===== Epistemological Relations =====
-
-@knows:knows graph knower proposition
-    # Subject knows proposition
-    @know __Role Knower $knower
-    @prop __Role Proposition $proposition
-    @knowledge __Role Relation Knowledge
-    @result __Bundle $know $prop $knowledge
+@contradicts:contradicts graph a b
+    @result And $a (Not $b)
     return $result
 end
 
-@believes:believes graph believer proposition
-    # Subject believes proposition
-    @bel __Role Believer $believer
-    @prop __Role Proposition $proposition
-    @belief __Role Relation Belief
-    @result __Bundle $bel $prop $belief
+@arguesFor:arguesFor graph arg claim
+    @eid __Event
+    @act __Role Action arguesFor
+    @a __Role Theme $arg
+    @c __Role Result $claim
+    @ctx __Role Context Philosophy
+    @result __Bundle $eid $act $a $c $ctx
     return $result
 end
 
-@justifies:justifies graph evidence belief
-    # Evidence justifies belief
-    @evid __Role Evidence $evidence
-    @bel __Role Belief $belief
-    @justification __Role Relation Justification
-    @result __Bundle $evid $bel $justification
-    return $result
-end
-
-@doubts:doubts graph skeptic claim
-    # Skeptic doubts claim
-    @skep __Role Skeptic $skeptic
-    @cl __Role Claim $claim
-    @skepticism __Role Attitude Skepticism
-    @result __Bundle $skep $cl $skepticism
-    return $result
-end
-
-@isTrue:isTrue graph proposition
-    # Proposition is true
-    @prop __Role Proposition $proposition
-    @truth __Role Property Truth
-    @semantic __Role Domain Semantics
-    @result __Bundle $prop $truth $semantic
-    return $result
-end
-
-# ===== Ethical Relations =====
-
-@isGood:isGood graph thing
-    # Thing is morally good
-    @th __Role Entity $thing
-    @goodness __Role Property Good
-    @moral __Role Domain Ethics
-    @result __Bundle $th $goodness $moral
-    return $result
-end
-
-@isRight:isRight graph action
-    # Action is morally right
-    @act __Role Action $action
-    @rightness __Role Property Right
-    @moral __Role Domain Morality
-    @result __Bundle $act $rightness $moral
-    return $result
-end
-
-@hasDuty:hasDuty graph agent duty
-    # Agent has moral duty
-    @ag __Role Agent $agent
-    @dut __Role Duty $duty
-    @obligation __Role Relation MoralObligation
-    @result __Bundle $ag $dut $obligation
-    return $result
-end
-
-@exhibitsVirtue:exhibitsVirtue graph person virtue
-    # Person exhibits virtue
-    @pers __Role Person $person
-    @virt __Role Virtue $virtue
-    @character __Role Domain Character
-    @result __Bundle $pers $virt $character
-    return $result
-end
-
-@distributesJustly:distributesJustly graph institution goods
-    # Institution distributes goods justly
-    @inst __Role Institution $institution
-    @good __Role Goods $goods
-    @justice __Role Principle Justice
-    @result __Bundle $inst $good $justice
-    return $result
-end
-
-# ===== Logical Relations =====
-
-@supports:supports graph premises conclusion
-    # Premises support conclusion
-    @prem __Role Premises $premises
-    @concl __Role Conclusion $conclusion
-    @inference __Role Relation Inference
-    @result __Bundle $prem $concl $inference
-    return $result
-end
-
-@entails:entails graph proposition1 proposition2
-    # Proposition logically entails another
-    @p1 __Role Antecedent $proposition1
-    @p2 __Role Consequent $proposition2
-    @entailment __Role Relation LogicalEntailment
-    @result __Bundle $p1 $p2 $entailment
-    return $result
-end
-
-@contradicts:contradicts graph proposition1 proposition2
-    # Propositions contradict each other
-    @p1 __Role Proposition $proposition1
-    @p2 __Role Proposition $proposition2
-    @contradiction __Role Relation Contradiction
-    @result __Bundle $p1 $p2 $contradiction
-    return $result
-end
-
-@isValid:isValid graph argument
-    # Argument is logically valid
-    @arg __Role Argument $argument
-    @validity __Role Property Valid
-    @formal __Role Domain Logic
-    @result __Bundle $arg $validity $formal
-    return $result
-end
-
-# ===== Philosophy of Mind Relations =====
-
-@isConsciousOf:isConsciousOf graph subject object
-    # Subject is conscious of object
-    @subj __Role Subject $subject
-    @obj __Role Object $object
-    @consciousness __Role Relation Consciousness
-    @result __Bundle $subj $obj $consciousness
-    return $result
-end
-
-@hasQualia:hasQualia graph experience qualia
-    # Experience has phenomenal qualia
-    @exp __Role Experience $experience
-    @qual __Role Qualia $qualia
-    @phenomenal __Role Relation PhenomenalProperty
-    @result __Bundle $exp $qual $phenomenal
-    return $result
-end
-
-@intendsToward:intendsToward graph mind object
-    # Mind has intentionality toward object
-    @mnd __Role Mind $mind
-    @obj __Role Object $object
-    @intentionality __Role Relation Intentionality
-    @result __Bundle $mnd $obj $intentionality
-    return $result
-end
-
-# ===== Political Philosophy Relations =====
-
-@hasAuthorityOver:hasAuthorityOver graph state citizens
-    # State has authority over citizens
-    @st __Role State $state
-    @cit __Role Citizens $citizens
-    @authority __Role Relation PoliticalAuthority
-    @result __Bundle $st $cit $authority
-    return $result
-end
-
-@restrictsFreedom:restrictsFreedom graph state individual
-    # State restricts individual freedom
-    @st __Role State $state
-    @ind __Role Individual $individual
-    @restriction __Role Relation Restriction
-    @result __Bundle $st $ind $restriction
-    return $result
-end
-
-@hasRightTo:hasRightTo graph individual freedom
-    # Individual has right to freedom
-    @ind __Role Individual $individual
-    @free __Role Freedom $freedom
-    @right __Role Relation Right
-    @result __Bundle $ind $free $right
-    return $result
-end
-
-# ===== Argumentation Relations =====
-
-@arguesFor:arguesFor graph philosopher position
-    # Philosopher argues for position
-    @phil __Role Philosopher $philosopher
-    @pos __Role Position $position
-    @argumentation __Role Process Argumentation
-    @result __Bundle $phil $pos $argumentation
-    return $result
-end
-
-@refutes:refutes graph philosopher position
-    # Philosopher refutes position
-    @phil __Role Philosopher $philosopher
-    @pos __Role Position $position
-    @refutation __Role Process Refutation
-    @result __Bundle $phil $pos $refutation
-    return $result
-end
-
-@presupposes:presupposes graph argument assumption
-    # Argument presupposes assumption
-    @arg __Role Argument $argument
-    @ass __Role Assumption $assumption
-    @presupposition __Role Relation Presupposition
-    @result __Bundle $arg $ass $presupposition
+@hasObligation:hasObligation graph agent obligation
+    @eid __Event
+    @act __Role Action hasObligation
+    @a __Role Theme $agent
+    @o __Role Attribute $obligation
+    @ctx __Role Context Philosophy
+    @result __Bundle $eid $act $a $o $ctx
     return $result
 end

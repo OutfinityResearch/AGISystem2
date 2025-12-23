@@ -1,5 +1,5 @@
 import { readFile, readdir, writeFile, unlink } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync, mkdirSync, unlinkSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
@@ -82,10 +82,24 @@ const HDC_STRATEGIES = [
   'metric-affine'
 ];
 
+// Default geometries (for normal runs)
 const GEOMETRY_VARIANTS = {
-  'dense-binary': [2048, 4096],
-  'sparse-polynomial': [4, 8],
-  'metric-affine': [32, 64]
+  'dense-binary': [256, 512],
+  'sparse-polynomial': [2, 4],
+  'metric-affine': [16, 32]
+};
+
+// Extended geometries (for --strategy sweep mode)
+const GEOMETRY_SWEEP = {
+  'dense-binary': [128, 256, 512, 1024, 2048, 4096],       // bits
+  'sparse-polynomial': [1, 2, 3, 4, 5, 6],                  // k exponents
+  'metric-affine': [8, 16, 32, 64, 128, 256]                // bytes
+};
+
+const STRATEGY_ALIASES = {
+  'dense': 'dense-binary',
+  'sparse': 'sparse-polynomial',
+  'metric': 'metric-affine'
 };
 
 const REASONING_PRIORITIES = [
@@ -98,6 +112,7 @@ const ERROR_TYPES = [
   'dependency',
   'contradiction',
   'load',
+  'declaration',
   'superficial',
   'incomplete',
   'unknown'
@@ -108,14 +123,82 @@ const ERROR_LABELS = {
   dependency: 'missing-deps',
   contradiction: 'contradiction',
   load: 'load',
+  declaration: 'atom-soup',
   superficial: 'superficial',
   incomplete: 'incomplete',
   unknown: 'other'
 };
 
+// Atomic (non-graph) declarations policy.
+// We allow these only for Core bootstrap primitives; elsewhere, they are considered "atom soup"
+// and reported as issues so domains are pushed toward graph-based semantics.
+//
+// "Fundamental atoms" should stay short and centralized.
+const ATOMIC_DECL_POLICY = {
+  // Always ignore generated/diagnostic files.
+  ignoreSuffixes: [
+    '.errors'
+  ],
+
+  // Only Core is permitted to use atomic declarations without being flagged as issues.
+  allowedPrefixes: [
+    'config/Core/'
+  ],
+
+  // Explicit list of "fundamental" declaration heads permitted in Core.
+  allowedHeads: new Set([
+    // Bootstrap / binding primitives
+    '___NewVector',
+    '___Bind',
+    '___Bundle',
+    '___BundlePositioned',
+    '___GetType',
+    '___Similarity',
+    '___MostSimilar',
+    '___Extend',
+
+    // Core declaration operators
+    '__Relation',
+    '__TransitiveRelation',
+    '__SymmetricRelation',
+    '__ReflexiveRelation',
+    '__InheritableProperty',
+
+    // Typed constructors used as atomic markers in Core
+    '__Entity',
+    '__Person',
+    '__Object',
+    '__Place',
+    '__Organization',
+    '__Substance',
+    '__Property',
+    '__State',
+    '__Category',
+    '__Action',
+    '__Event',
+    '__TimePoint',
+    '__TimePeriod',
+    '__Amount'
+  ])
+};
+
+// Shorter config label for display
+function configLabel(strategyId, geometry, reasoningPriority) {
+  const strategyShort = (strategyId || '')
+    .replace('dense-binary', 'dense')
+    .replace('sparse-polynomial', 'sparse')
+    .replace('metric-affine', 'metric');
+  const priorityShort = (reasoningPriority || '')
+    .replace('symbolicPriority', 'symb')
+    .replace('holographicPriority', 'holo');
+  return `${strategyShort}(${geometry})+${priorityShort}`;
+}
+
 const ARGV = process.argv.slice(2);
 const IS_WORKER = ARGV.includes('--worker');
 const REPORT_FILES = ARGV.includes('--report-files');
+const SHOW_OK_FILES = ARGV.includes('--show-ok');
+const STRESS_STRICT_ATOMS = ARGV.includes('--stress-strict');
 
 // Detect superficial Left/Right definitions
 function detectSuperficialDefinitions(content) {
@@ -145,6 +228,55 @@ function detectSuperficialDefinitions(content) {
   }
 
   return superficial;
+}
+
+// Detect "thin" graph definitions that are likely placeholders / overly-minimal semantics.
+// Heuristic: graph body uses only __Role + __Bundle + return/end (and maybe __Bind), and binds
+// <= 2 roles (typically just Type + Theme/Entity/etc).
+function detectThinGraphDefinitions(content) {
+  if (!content) return [];
+  const warnings = [];
+  const lines = content.split('\n');
+
+  for (let i = 0; i < lines.length; i++) {
+    const header = lines[i].trim();
+    const opMatch = header.match(/^@(\w+):(\w+)\s+graph\b/);
+    if (!opMatch) continue;
+
+    const opName = opMatch[1];
+    if (opName.startsWith('__')) continue; // skip core structural helpers
+
+    const roles = [];
+    let stmtCount = 0;
+    let hasBundle = false;
+
+    for (let j = i + 1; j < lines.length; j++) {
+      const raw = lines[j];
+      const line = raw.trim();
+      if (line === 'end') break;
+      if (!line || line.startsWith('#')) continue;
+      stmtCount += 1;
+
+      if (line.includes('__Bundle')) hasBundle = true;
+
+      const roleMatch = line.match(/\b__Role\s+([A-Za-z_][A-Za-z0-9_]*)\b/);
+      if (roleMatch) roles.push(roleMatch[1]);
+
+      // Stop early if another graph starts (malformed file)
+      if (line.match(/^@\w+:\w+\s+graph\b/)) break;
+    }
+
+    const roleCount = roles.length;
+    const roleSet = new Set(roles);
+    const thinRoleSet = ['Type', 'Theme', 'Entity', 'Location', 'Value', 'State', 'Action', 'Property', 'Category', 'Time', 'Agent', 'Patient'];
+    const onlyThinRoles = [...roleSet].every(r => thinRoleSet.includes(r));
+
+    if (hasBundle && stmtCount <= 6 && roleCount > 0 && roleCount <= 2 && onlyThinRoles) {
+      warnings.push(`Graph '${opName}' at line ${i + 1}: thin definition (roles: ${[...roleSet].join(', ') || 'none'})`);
+    }
+  }
+
+  return warnings;
 }
 
 // Detect incomplete definitions (missing 'end')
@@ -180,8 +312,64 @@ function detectIncompleteDefinitions(content) {
 
   return incomplete;
 }
-// Workers have piped stdio, but parent displays to TTY - enable colors for workers
+
+function shouldIgnoreNonGraphDecl(relPath) {
+  if (!relPath) return false;
+  if (ATOMIC_DECL_POLICY.ignoreSuffixes.some(s => relPath.endsWith(s))) return true;
+  return false;
+}
+
+// Detect non-graph declarations like: `@Foo:Foo __Relation` / `@Bar:Bar __Category` / `@Baz:Baz ___NewVector`.
+// These should be rare outside bootstrap; prefer defining concepts/relations using `graph`.
+function detectNonGraphDeclarations(content, relPath) {
+  if (!content) return [];
+  if (shouldIgnoreNonGraphDecl(relPath)) return [];
+
+  const out = [];
+  const lines = content.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const raw = lines[i];
+    const line = raw.trim();
+    if (!line || line.startsWith('#')) continue;
+    if (line.startsWith('@_')) continue; // Load/Unload
+
+    // Only look at top-level declarations of the form @Name:Name ...
+    const m = line.match(/^@([A-Za-z_][A-Za-z0-9_]*)\:([A-Za-z_][A-Za-z0-9_]*)\s+(.+)$/);
+    if (!m) continue;
+
+    const dest = m[1];
+    const persist = m[2];
+    const rest = m[3];
+
+    // Graph/macro definitions are OK.
+    if (rest.startsWith('graph ') || rest === 'graph' || rest.startsWith('macro')) continue;
+
+    // Treat typed declarations / vector constructors as "non-graph declarations".
+    // Examples:
+    //   @Foo:Foo __Relation
+    //   @Bar:Bar __Category
+    //   @X:X ___NewVector
+    const head = rest.split(/\s+/)[0];
+    if (head.startsWith('__') || head.startsWith('___')) {
+      const inAllowedPrefix = ATOMIC_DECL_POLICY.allowedPrefixes.some(p => relPath.startsWith(p));
+      const allowed = inAllowedPrefix && ATOMIC_DECL_POLICY.allowedHeads.has(head);
+      out.push({
+        dest,
+        persist,
+        head,
+        line: i + 1,
+        allowed
+      });
+    }
+  }
+
+  return out;
+}
+// Allow disabling via --no-color or NO_COLOR env.
+// Default: use colors even when stdout isn't a TTY (Codex/CI often pipes output).
 const IS_TTY = IS_WORKER || process.stdout.isTTY || process.stderr.isTTY;
+const NO_COLOR = ARGV.includes('--no-color') || Boolean(process.env.NO_COLOR);
+const USE_COLOR = !NO_COLOR;
 let logLine = (...args) => console.log(...args);
 
 // ANSI color codes for TTY output
@@ -189,6 +377,7 @@ const COLORS = {
   reset: '\x1b[0m',
   bold: '\x1b[1m',
   dim: '\x1b[2m',
+  gray: '\x1b[90m',
   green: '\x1b[32m',
   red: '\x1b[31m',
   yellow: '\x1b[33m',
@@ -201,11 +390,17 @@ const COLORS = {
 };
 
 function colorize(text, ...codes) {
-  if (!IS_TTY) return text;
+  if (!USE_COLOR) return text;
   return codes.join('') + text + COLORS.reset;
 }
 
 function getArgValue(name) {
+  // Handle --name=value format
+  const eqArg = ARGV.find(a => a.startsWith(`${name}=`));
+  if (eqArg) {
+    return eqArg.split('=')[1];
+  }
+  // Handle --name value format
   const idx = ARGV.indexOf(name);
   if (idx === -1) return null;
   const value = ARGV[idx + 1];
@@ -229,6 +424,26 @@ function formatDuration(ms) {
   const hours = Math.floor(minutes / 60);
   const remMinutes = minutes - hours * 60;
   return `${hours}h${remMinutes}m`;
+}
+
+function printSummaryLegend() {
+  console.log('=== Legend (Columns) ===');
+  console.log('- file: path to the `.sys2` file');
+  console.log('- status: OK = loaded and no issues; ISSUES = loaded/checked with problems');
+  console.log('- time: wall-clock time spent on check+load for that file');
+  console.log('- syntax: lexer/parser errors');
+  console.log('- missing-deps: number of unique missing symbols (unknown atoms/operators/refs) in that file');
+  console.log('- contradiction: contradictions rejected during learn() (atomic rollback expected)');
+  console.log('- load: runtime load/execution failures (non-syntax)');
+  console.log('- atom-fund: count of allowed Core fundamental atomic declarations encountered');
+  console.log('- atom-soup: count of non-Core atomic declarations (discouraged “atom soup”)');
+  console.log('- superficial: heuristics for thin/placeholder graph semantics');
+  console.log('- incomplete: graph definitions missing `end`');
+  console.log('- other: uncategorized errors');
+  console.log('- colors: green OK; red syntax/load; yellow missing-deps/contradiction/incomplete; gray = non-fatal observations');
+  console.log('- flags: --show-ok prints OK rows for Config/Stress (Core is always shown)');
+  console.log('- flags: --stress-strict forces strict atom deps on Stress (expected to be very noisy)');
+  console.log('');
 }
 
 async function loadIndexOrder(dirPath) {
@@ -261,6 +476,16 @@ function sanitizeMessage(message) {
   return String(message).replace(/\s+/g, ' ').trim();
 }
 
+function splitTrailingLocation(message) {
+  const msg = sanitizeMessage(message);
+  const match = msg.match(/\s+at\s+(\d+:\d+)\s*$/);
+  if (!match) return { message: msg, location: null };
+  return {
+    message: msg.slice(0, match.index).trim(),
+    location: match[1]
+  };
+}
+
 function splitValidationErrors(message) {
   if (!message) return [];
   const prefix = 'DSL validation failed:';
@@ -285,6 +510,8 @@ function extractMissingDepToken(message) {
   if (!message) return null;
   const unknownOp = message.match(/Unknown operator '([^']+)'/);
   if (unknownOp) return unknownOp[1];
+  const unknownConcept = message.match(/Unknown concept '([^']+)'/);
+  if (unknownConcept) return unknownConcept[1];
   const undefRef = message.match(/Undefined reference '\$([^']+)'/);
   if (undefRef) return `$${undefRef[1]}`;
   return null;
@@ -302,7 +529,14 @@ function ensureReport(fileReports, filePath) {
 function recordIssue(fileReports, filePath, type, label, message) {
   const entry = ensureReport(fileReports, filePath);
   const safeType = ERROR_TYPES.includes(type) ? type : 'unknown';
-  entry[safeType].push({ label, message: sanitizeMessage(message) });
+  const split = splitTrailingLocation(message);
+  const token = extractMissingDepToken(split.message);
+  entry[safeType].push({
+    label,
+    message: split.message,
+    location: split.location,
+    token
+  });
 }
 
 function logProgressStart(label, progress, relPath, prevInfo) {
@@ -336,6 +570,7 @@ function logProgress(label, progress, relPath, durationMs, localCounts) {
     `${ERROR_LABELS.dependency} ${localCounts.dependency || 0}`,
     `${ERROR_LABELS.contradiction} ${localCounts.contradiction || 0}`,
     `${ERROR_LABELS.load} ${localCounts.load || 0}`,
+    `${ERROR_LABELS.declaration} ${localCounts.declaration || 0}`,
     `${ERROR_LABELS.unknown} ${localCounts.unknown || 0}`
   ].join(', ');
   logLine(
@@ -349,14 +584,10 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
   // Log start of processing
   logProgressStart(label, progress, relPath, prevInfo);
 
-  const localCounts = {
-    syntax: 0,
-    dependency: 0,
-    contradiction: 0,
-    load: 0,
-    unknown: 0
-  };
+  const localCounts = {};
+  for (const type of ERROR_TYPES) localCounts[type] = 0;
   const localMissingDeps = new Set();
+  let localFundamentalAtoms = 0;
 
   const addIssue = (kind, message) => {
     recordIssue(fileReports, filePath, kind, label, message);
@@ -386,10 +617,30 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
   const start = performance.now();
   const content = await readFile(filePath, 'utf8');
 
+  // Detect atomic (non-graph) declarations.
+  // - In Core: count allowed "fundamental atoms" but don't flag them as issues.
+  // - Outside Core: flag as issues (domains should converge to graph-based semantics).
+  const atomicDecls = detectNonGraphDeclarations(content, relPath);
+  for (const decl of atomicDecls) {
+    if (decl.allowed) {
+      localFundamentalAtoms += 1;
+      continue;
+    }
+    addIssue('declaration', `Atomic declaration '${decl.dest}:${decl.persist} ${decl.head}' at ${decl.line}:1`);
+  }
+
   // Detect superficial definitions
   const superficialDefs = detectSuperficialDefinitions(content);
   for (const msg of superficialDefs) {
     addIssue('superficial', msg);
+  }
+
+  // Only flag "thin" graphs outside Core (Core has many small compositional primitives).
+  if (!relPath.startsWith('config/Core/')) {
+    const thinDefs = detectThinGraphDefinitions(content);
+    for (const msg of thinDefs) {
+      addIssue('superficial', msg);
+    }
   }
 
   // Detect incomplete definitions
@@ -399,7 +650,14 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
   }
 
   try {
-    session.checkDSL(content, { mode: 'learn', allowHoles: true, allowNewOperators: false });
+    const isStressPhase = progress?.phase === 'stress';
+    // Config theories are validated strictly: no undeclared atoms should slip in.
+    // Stress corpora are open-vocabulary by design; by default we validate syntax + operator existence.
+    // If you want to force predeclared atoms (very noisy on stress files), pass --stress-strict.
+    const check = (isStressPhase && !STRESS_STRICT_ATOMS)
+      ? session.checkDSL.bind(session)
+      : session.checkDSLStrict.bind(session);
+    check(content, { mode: 'learn', allowHoles: true, allowNewOperators: false });
   } catch (error) {
     const duration = performance.now() - start;
     const kind = classifyError(error);
@@ -417,7 +675,7 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
     localCounts.dependency = localMissingDeps.size;
     const issueTotal = ERROR_TYPES.reduce((sum, type) => sum + (localCounts[type] || 0), 0);
     if (!IS_WORKER) logProgress(label, progress, relPath, duration, localCounts);
-    return { file: relPath, durationMs: duration, issues: issueTotal };
+    return { file: relPath, durationMs: duration, loaded: false, issues: issueTotal, counts: { ...localCounts, fundamentalAtoms: localFundamentalAtoms } };
   }
 
   try {
@@ -439,13 +697,14 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
       localCounts.dependency = localMissingDeps.size;
       const issueTotal = ERROR_TYPES.reduce((sum, type) => sum + (localCounts[type] || 0), 0);
       if (!IS_WORKER) logProgress(label, progress, relPath, duration, localCounts);
-      return { file: relPath, durationMs: duration, issues: issueTotal };
+      return { file: relPath, durationMs: duration, loaded: false, issues: issueTotal, counts: { ...localCounts, fundamentalAtoms: localFundamentalAtoms } };
     }
     report.loadedCount += 1;
     report.totalMs += duration;
     localCounts.dependency = localMissingDeps.size;
     if (!IS_WORKER) logProgress(label, progress, relPath, duration, localCounts);
-    return { file: relPath, durationMs: duration, issues: 0 };
+    const issueTotal = ERROR_TYPES.reduce((sum, type) => sum + (localCounts[type] || 0), 0);
+    return { file: relPath, durationMs: duration, loaded: true, issues: issueTotal, counts: { ...localCounts, fundamentalAtoms: localFundamentalAtoms } };
   } catch (error) {
     const duration = performance.now() - start;
     const msg = sanitizeMessage(error.message || String(error));
@@ -456,7 +715,7 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
     localCounts.dependency = localMissingDeps.size;
     const issueTotal = ERROR_TYPES.reduce((sum, type) => sum + (localCounts[type] || 0), 0);
     if (!IS_WORKER) logProgress(label, progress, relPath, duration, localCounts);
-    return { file: relPath, durationMs: duration, issues: issueTotal };
+    return { file: relPath, durationMs: duration, loaded: false, issues: issueTotal, counts: { ...localCounts, fundamentalAtoms: localFundamentalAtoms } };
   }
 }
 
@@ -466,9 +725,7 @@ async function buildConfigPlan() {
     const dirPath = join(CONFIG_ROOT, dirName);
     if (!existsSync(dirPath)) continue;
     let files = null;
-    if (dirName !== 'Core') {
-      files = await loadIndexOrder(dirPath);
-    }
+    files = await loadIndexOrder(dirPath);
     if (!files) {
       files = await listSys2Files(dirPath);
     }
@@ -507,7 +764,7 @@ function createReport() {
 }
 
 async function runCombination(strategyId, reasoningPriority, geometry, basePlan, stressPlan, fileReports) {
-  const label = `${strategyId}/${geometry}/${reasoningPriority}`;
+  const label = configLabel(strategyId, geometry, reasoningPriority);
 
   const session = new Session({
     hdcStrategy: strategyId,
@@ -523,16 +780,28 @@ async function runCombination(strategyId, reasoningPriority, geometry, basePlan,
 
   const baseReport = createReport();
   const stressReport = createReport();
+  const baseByGroup = new Map(); // group -> { total, loaded }
+  const baseFileResults = [];
+  const stressFileResults = [];
   const start = performance.now();
   const baseTotal = basePlan.length;
   let prevInfo = null;
   for (let i = 0; i < basePlan.length; i++) {
     const filePath = basePlan[i];
+    const relToConfig = relative(CONFIG_ROOT, filePath);
+    const group = relToConfig.split('/')[0] || 'unknown';
+    if (!baseByGroup.has(group)) baseByGroup.set(group, { total: 0, loaded: 0 });
+    baseByGroup.get(group).total += 1;
+
     prevInfo = await checkAndLoad(session, filePath, baseReport, label, fileReports, {
       phase: 'base',
       index: i + 1,
       total: baseTotal
     }, prevInfo);
+    baseFileResults.push(prevInfo);
+    if (prevInfo?.loaded) {
+      baseByGroup.get(group).loaded += 1;
+    }
   }
   const stressTotal = stressPlan.length;
   for (let i = 0; i < stressPlan.length; i++) {
@@ -542,9 +811,22 @@ async function runCombination(strategyId, reasoningPriority, geometry, basePlan,
       index: i + 1,
       total: stressTotal
     }, prevInfo);
+    stressFileResults.push(prevInfo);
   }
   const totalMs = performance.now() - start;
-  return { label, baseReport, stressReport, totalMs };
+  const coreGroup = baseByGroup.get('Core') || { total: 0, loaded: 0 };
+  return {
+    label,
+    baseReport,
+    stressReport,
+    baseTotal,
+    baseByGroup: Object.fromEntries([...baseByGroup.entries()]),
+    coreLoaded: coreGroup.loaded,
+    coreTotal: coreGroup.total,
+    baseFileResults,
+    stressFileResults,
+    totalMs
+  };
 }
 
 function buildCombos() {
@@ -565,16 +847,42 @@ function buildCombos() {
   }
 
   const fastRun = ARGV.includes('--fast');
-  const strategies = parseList(getArgValue('--strategy') || getArgValue('--strategies'));
+  const strategyArg = getArgValue('--strategy') || getArgValue('--strategies');
   const priorities = parseList(getArgValue('--priority') || getArgValue('--priorities'));
 
-  // Default is now --full (all combos), use --fast for single combo
-  if (fastRun && !strategies && !priorities) {
-    return [{ strategyId: 'dense-binary', reasoningPriority: 'holographicPriority', geometry: 2048 }];
+  // --fast alone: single quick test
+  if (fastRun && !strategyArg) {
+    return [{ strategyId: 'dense-binary', reasoningPriority: 'holographicPriority', geometry: 256 }];
   }
 
-  const strategyList = strategies || (fastRun ? ['dense-binary'] : HDC_STRATEGIES);
-  const priorityList = priorities || (fastRun ? ['holographicPriority'] : REASONING_PRIORITIES);
+  // --strategy=X: single strategy with ALL geometries (sweep mode)
+  if (strategyArg && !strategyArg.includes(',')) {
+    const resolvedStrategy = STRATEGY_ALIASES[strategyArg.toLowerCase()] || strategyArg;
+    if (GEOMETRY_SWEEP[resolvedStrategy]) {
+      // --strategy=X --fast: single geometry for quick test of that strategy
+      if (fastRun) {
+        const defaultGeometry = GEOMETRY_VARIANTS[resolvedStrategy]?.[0] || GEOMETRY_SWEEP[resolvedStrategy][0];
+        return [{ strategyId: resolvedStrategy, reasoningPriority: 'holographicPriority', geometry: defaultGeometry }];
+      }
+      // --strategy=X: all geometries for that strategy
+      const geometries = GEOMETRY_SWEEP[resolvedStrategy];
+      const priorityList = priorities || REASONING_PRIORITIES;
+      const combos = [];
+      for (const geometry of geometries) {
+        for (const reasoningPriority of priorityList) {
+          combos.push({ strategyId: resolvedStrategy, reasoningPriority, geometry });
+        }
+      }
+      return combos;
+    }
+  }
+
+  // Default mode (no --strategy, no --fast): all 3 strategies × 2 geometries × 2 priorities
+  const strategies = strategyArg ? parseList(strategyArg) : null;
+  const strategyList = strategies
+    ? strategies.map(s => STRATEGY_ALIASES[s.toLowerCase()] || s)
+    : HDC_STRATEGIES;
+  const priorityList = priorities || REASONING_PRIORITIES;
 
   const combos = [];
   for (const strategyId of strategyList) {
@@ -606,13 +914,20 @@ function mergeFileReports(target, source) {
 }
 
 function formatSummaryTable(rows, headers) {
-  const widths = headers.map(h => h.length);
+  const ansiRegex = /\x1b\[[0-9;]*m/g;
+  const visibleLen = (text) => String(text).replace(ansiRegex, '').length;
+  const widths = headers.map(h => visibleLen(h));
   for (const row of rows) {
     row.forEach((cell, idx) => {
-      if (cell.length > widths[idx]) widths[idx] = cell.length;
+      const cellWidth = visibleLen(cell);
+      if (cellWidth > widths[idx]) widths[idx] = cellWidth;
     });
   }
-  const pad = (text, width) => text.padEnd(width);
+  const pad = (text, width) => {
+    const raw = String(text);
+    const padCount = Math.max(0, width - visibleLen(raw));
+    return raw + ' '.repeat(padCount);
+  };
   const lines = [];
   lines.push(headers.map((h, i) => pad(h, widths[i])).join(' | '));
   lines.push(headers.map((_, i) => '-'.repeat(widths[i])).join('-|-'));
@@ -624,6 +939,7 @@ function formatSummaryTable(rows, headers) {
 
 async function runWorker() {
   logLine = (...args) => console.error(...args);
+  const outPath = getArgValue('--out');
   const combos = buildCombos();
   if (combos.length !== 1) {
     console.error('Worker expects a single combo');
@@ -649,9 +965,18 @@ async function runWorker() {
     baseReport: serializeReport(result.baseReport),
     stressReport: serializeReport(result.stressReport),
     fileReports: fileReportObj,
+    coreLoaded: result.coreLoaded || 0,
+    coreTotal: result.coreTotal || 0,
+    baseByGroup: result.baseByGroup || null,
+    baseFileResults: result.baseFileResults || null,
+    stressFileResults: result.stressFileResults || null,
     baseTotal: basePlan.length,
     stressTotal: stressPlan.length
   };
+  if (outPath) {
+    await writeFile(outPath, JSON.stringify(payload), 'utf8');
+    return;
+  }
   process.stdout.write(JSON.stringify(payload));
 }
 
@@ -659,11 +984,13 @@ async function runParallel(combos) {
   const scriptPath = fileURLToPath(import.meta.url);
   const numWorkers = combos.length;
   const useInPlace = IS_TTY && numWorkers > 1;
+  const tmpDir = join(ROOT, 'evals', '.tmp-stress-check');
+  mkdirSync(tmpDir, { recursive: true });
 
   // Create label to index mapping
   const labelToIdx = new Map();
   for (let i = 0; i < numWorkers; i++) {
-    const label = `${combos[i].strategyId}/${combos[i].geometry}/${combos[i].reasoningPriority}`;
+    const label = configLabel(combos[i].strategyId, combos[i].geometry, combos[i].reasoningPriority);
     labelToIdx.set(label, i);
   }
 
@@ -674,7 +1001,7 @@ async function runParallel(combos) {
   if (useInPlace) {
     console.log(`${COLORS.bold}${COLORS.bgBlue} Parallel Execution (${numWorkers} workers) ${COLORS.reset}\n`);
     for (let i = 0; i < numWorkers; i++) {
-      const label = `${combos[i].strategyId}/${combos[i].geometry}/${combos[i].reasoningPriority}`;
+      const label = configLabel(combos[i].strategyId, combos[i].geometry, combos[i].reasoningPriority);
       workerLines[i] = `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset} ${COLORS.dim}starting...${COLORS.reset}`;
       console.log(workerLines[i]);
     }
@@ -715,32 +1042,47 @@ async function runParallel(combos) {
   for (let i = 0; i < numWorkers; i++) {
     const combo = combos[i];
     results.push(new Promise((resolve, reject) => {
+      const outPath = join(
+        tmpDir,
+        `result.${Date.now()}.${Math.random().toString(16).slice(2)}.json`
+      );
       const args = [
         scriptPath,
         '--worker',
         '--combo',
-        `${combo.strategyId}/${combo.geometry}/${combo.reasoningPriority}`
+        `${combo.strategyId}/${combo.geometry}/${combo.reasoningPriority}`,
+        `--out=${outPath}`
       ];
       if (i === 0) args.push('--report-files');
-      const child = spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'] });
-      let stdout = '';
-      child.stdout.on('data', chunk => { stdout += chunk.toString(); });
+      const child = spawn(process.execPath, args, { stdio: ['ignore', 'ignore', 'pipe'] });
       child.stderr.on('data', handleStderr);
       child.on('error', reject);
       child.on('close', code => {
-        if (code !== 0) {
-          const label = `${combo.strategyId}/${combo.geometry}/${combo.reasoningPriority}`;
-          updateLine(i, `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset} ${COLORS.red}${COLORS.bold}✗ failed${COLORS.reset}`);
-          reject(new Error(`Worker failed: ${combo.strategyId}/${combo.geometry}/${combo.reasoningPriority}`));
-          return;
-        }
+        const label = configLabel(combo.strategyId, combo.geometry, combo.reasoningPriority);
+        let raw = '';
         try {
-          const parsed = JSON.parse(stdout.trim());
-          const label = `${combo.strategyId}/${combo.geometry}/${combo.reasoningPriority}`;
+          raw = readFileSync(outPath, 'utf8');
+        } catch {}
+        try {
+          unlinkSync(outPath);
+        } catch {}
+        try {
+          const parsed = raw ? JSON.parse(raw) : null;
+          if (!parsed) {
+            updateLine(i, `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset} ${COLORS.red}${COLORS.bold}✗ failed${COLORS.reset}`);
+            reject(new Error(`Worker did not produce a readable result file: ${label}`));
+            return;
+          }
+          if (code !== 0) {
+            updateLine(i, `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset} ${COLORS.red}${COLORS.bold}✗ failed${COLORS.reset}`);
+            reject(new Error(parsed.error || `Worker failed: ${label}`));
+            return;
+          }
           updateLine(i, `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset} ${COLORS.green}${COLORS.bold}✓ done${COLORS.reset} ${COLORS.dim}(${formatDuration(parsed.totalMs)})${COLORS.reset}`);
           resolve(parsed);
-        } catch (err) {
-          reject(err);
+        } catch (error) {
+          updateLine(i, `${COLORS.bold}${COLORS.cyan}[${label}]${COLORS.reset} ${COLORS.red}${COLORS.bold}✗ failed${COLORS.reset}`);
+          reject(error);
         }
       });
     }));
@@ -756,12 +1098,64 @@ async function runParallel(combos) {
 function formatErrorSection(title, items) {
   if (!items || items.length === 0) return '';
   const lines = [`## ${title}`, ''];
-  const seen = new Set();
+  const groups = new Map();
   for (const item of items) {
-    const key = `${item.label}::${item.message}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    lines.push(`- [${item.label}] ${item.message}`);
+    if (!item) continue;
+    const label = item.label || 'unknown';
+    const rawMessage = item.message || '';
+    const split = splitTrailingLocation(rawMessage);
+    const normalizedMessage = split.message;
+    const location = item.location || split.location;
+    const token = item.token || extractMissingDepToken(normalizedMessage);
+
+    // Prefer grouping missing-deps by token (Unknown concept/operator, missing $ref),
+    // otherwise group by normalized message (sans location).
+    const key = token ? `${label}::token::${token}` : `${label}::msg::${normalizedMessage}`;
+    if (!groups.has(key)) {
+      groups.set(key, {
+        label,
+        message: normalizedMessage,
+        token,
+        count: 0,
+        locations: new Set()
+      });
+    }
+    const g = groups.get(key);
+    g.count += 1;
+    if (location) g.locations.add(location);
+  }
+
+  const sorted = [...groups.values()].sort((a, b) => {
+    if (a.label !== b.label) return a.label.localeCompare(b.label);
+    const aKey = a.token || a.message;
+    const bKey = b.token || b.message;
+    return aKey.localeCompare(bKey);
+  });
+
+  const MAX_LINES = 120;
+  let emitted = 0;
+
+  for (const g of sorted) {
+    if (emitted >= MAX_LINES) break;
+    const countSuffix = g.count > 1 ? ` (${g.count}x)` : '';
+    const locations = [...g.locations];
+    let locationSuffix = '';
+    if (locations.length > 0) {
+      locations.sort((a, b) => {
+        const [al, ac] = a.split(':').map(Number);
+        const [bl, bc] = b.split(':').map(Number);
+        if (al !== bl) return al - bl;
+        return ac - bc;
+      });
+      const shown = locations.slice(0, 10);
+      const extra = locations.length - shown.length;
+      locationSuffix = ` at ${shown.join(', ')}${extra > 0 ? ` (+${extra} more)` : ''}`;
+    }
+    lines.push(`- [${g.label}] ${g.message}${countSuffix}${locationSuffix}`);
+    emitted++;
+  }
+  if (sorted.length > MAX_LINES) {
+    lines.push(`- ${sorted.length - MAX_LINES} more...`);
   }
   lines.push('');
   return lines.join('\n');
@@ -786,6 +1180,7 @@ async function writeErrorFiles(fileReports, basePlan, stressPlan) {
       sections.push(formatErrorSection('Missing Dependencies', report.dependency));
       sections.push(formatErrorSection('Contradiction Errors', report.contradiction));
       sections.push(formatErrorSection('Load Errors', report.load));
+      sections.push(formatErrorSection('Non-Graph Declarations', report.declaration));
       sections.push(formatErrorSection('Superficial Definitions', report.superficial));
       sections.push(formatErrorSection('Incomplete Definitions', report.incomplete));
       sections.push(formatErrorSection('Other Errors', report.unknown));
@@ -817,6 +1212,52 @@ async function writeErrorFiles(fileReports, basePlan, stressPlan) {
 }
 
 async function main() {
+  // Help
+  if (ARGV.includes('--help') || ARGV.includes('-h')) {
+    console.log(`
+Stress Check - Theory Loading & Validation
+
+Validates theory files (config/ and evals/stress/) for syntax, dependencies,
+and semantic issues across multiple HDC strategy configurations.
+
+Usage:
+  node evals/runStressCheck.js [options]
+
+Options:
+  --help, -h              Show this help message
+  --fast                  Quick run with single config (dense/256/holo)
+  --strategy=NAME         Run single strategy with all geometries
+                          NAME: dense, sparse, metric
+  --priority=NAME         Run with specific reasoning priority
+                          NAME: symbolicPriority, holographicPriority
+  --combo=S/G/P           Run specific combo (e.g., dense-binary/256/holographicPriority)
+  --show-ok               Show OK files in output (default: only show files with issues)
+  --stress-strict         Force strict atom deps on Stress files (very noisy)
+  --report-files          Include file reports in worker output
+  --no-color              Disable colored output
+
+Strategy Mode (runs single strategy with multiple geometries):
+  --strategy=dense        Dense: 128, 256, 512, 1024, 2048, 4096 bits
+  --strategy=sparse       Sparse: k=1, 2, 3, 4, 5, 6
+  --strategy=metric       Metric: 8, 16, 32, 64, 128, 256 bytes
+
+Default Mode (no --strategy):
+  Runs 3 strategies × 2 geometries × 2 priorities = 12 configurations
+
+Output:
+  - Creates .errors files next to each .sys2 file with issues
+  - Shows per-file issue counts: syntax, missing-deps, contradiction, etc.
+  - Summary tables for speed, Core/Config load, and stress issues
+
+Examples:
+  node evals/runStressCheck.js                   # Run all 12 configs
+  node evals/runStressCheck.js --fast            # Quick single config
+  node evals/runStressCheck.js --strategy=dense  # Dense sweep
+  node evals/runStressCheck.js --show-ok         # Also show OK files
+`);
+    process.exit(0);
+  }
+
   if (IS_WORKER) {
     await runWorker();
     return;
@@ -836,6 +1277,8 @@ async function main() {
     summaries.push({
       label: res.label,
       totalMs: res.totalMs,
+      coreLoaded: res.coreLoaded || 0,
+      coreTotal: res.coreTotal || 0,
       baseLoaded: res.baseReport.loadedCount,
       baseTotal: res.baseTotal,
       stressIssues: res.stressReport.errorCounts,
@@ -849,6 +1292,136 @@ async function main() {
 
   const fileOps = await writeErrorFiles(fileReports, basePlan, stressPlan);
 
+  // Single-run mode (e.g., `--fast`): show which files have problems, not per-engine aggregates.
+  if (summaries.length === 1) {
+    const only = runResults[0];
+    const label = only.label;
+    console.log(`\n=== Run ===\n${label} | ${formatDuration(only.totalMs)}\n`);
+
+    console.log('=== Load Summary ===');
+    console.log(`Core:   ${only.coreLoaded}/${only.coreTotal}`);
+    console.log(`Config: ${only.baseReport.loadedCount}/${only.baseTotal}`);
+    console.log('');
+
+    const rowSeverity = (counts, issues) => {
+      if (!issues) return 'ok';
+      const syntax = Number(counts?.syntax || 0);
+      const load = Number(counts?.load || 0);
+      const missing = Number(counts?.dependency || 0);
+      const contradiction = Number(counts?.contradiction || 0);
+      const incomplete = Number(counts?.incomplete || 0);
+      const other = Number(counts?.unknown || 0);
+      const superficial = Number(counts?.superficial || 0);
+      const atomSoup = Number(counts?.declaration || 0);
+      if (syntax > 0 || load > 0) return 'error';
+      if (missing > 0 || contradiction > 0 || incomplete > 0) return 'warn';
+      if (atomSoup > 0 || superficial > 0 || other > 0) return 'info';
+      return 'warn';
+    };
+
+    const colorStatus = (severity, text) => {
+      if (severity === 'ok') return colorize(text, COLORS.green, COLORS.bold);
+      if (severity === 'error') return colorize(text, COLORS.red, COLORS.bold);
+      if (severity === 'warn') return colorize(text, COLORS.yellow, COLORS.bold);
+      return colorize(text, COLORS.gray);
+    };
+
+    const colorNumber = (value, color) => {
+      const n = Number(value);
+      if (!n) return String(value);
+      return colorize(String(value), color);
+    };
+
+    const formatFileRow = (r) => {
+      const counts = r.counts || {};
+      const sev = rowSeverity(counts, r.issues);
+      const fileCell =
+        sev === 'error' ? colorize(r.file, COLORS.red) :
+        sev === 'warn' ? colorize(r.file, COLORS.yellow) :
+        sev === 'info' ? colorize(r.file, COLORS.gray) :
+        colorize(r.file, COLORS.green);
+
+      const syntax = String(counts.syntax || 0);
+      const missing = String(counts.dependency || 0);
+      const contradiction = String(counts.contradiction || 0);
+      const load = String(counts.load || 0);
+      const atomFund = String(counts.fundamentalAtoms || 0);
+      const atomSoup = String(counts.declaration || 0);
+      const superficial = String(counts.superficial || 0);
+      const incomplete = String(counts.incomplete || 0);
+      const other = String(counts.unknown || 0);
+
+      return ([
+        fileCell,
+        colorStatus(sev, r.issues === 0 ? 'OK' : 'ISSUES'),
+        formatDuration(r.durationMs),
+        colorNumber(syntax, COLORS.red),
+        colorNumber(missing, COLORS.yellow),
+        colorNumber(contradiction, COLORS.yellow),
+        colorNumber(load, COLORS.red),
+        colorNumber(atomFund, COLORS.gray),
+        colorNumber(atomSoup, COLORS.gray),
+        colorNumber(superficial, COLORS.gray),
+        colorNumber(incomplete, COLORS.yellow),
+        colorNumber(other, COLORS.gray)
+      ]);
+    };
+
+    const baseIssueRows = (only.baseFileResults || []).filter(r => (r?.issues || 0) > 0).map(formatFileRow);
+    const stressIssueRows = (only.stressFileResults || []).filter(r => (r?.issues || 0) > 0).map(formatFileRow);
+    const coreRows = (only.baseFileResults || [])
+      .filter(r => String(r?.file || '').startsWith('config/Core/'))
+      .map(formatFileRow);
+    const baseAllRows = (only.baseFileResults || []).map(formatFileRow);
+    const stressAllRows = (only.stressFileResults || []).map(formatFileRow);
+
+    printSummaryLegend();
+
+    console.log('=== Core Files ===');
+    if (coreRows.length === 0) {
+      console.log('none');
+    } else {
+      console.log(formatSummaryTable(
+        coreRows,
+        ['file', 'status', 'time', 'syntax', 'missing-deps', 'contradiction', 'load', 'atom-fund', 'atom-soup', 'superficial', 'incomplete', 'other']
+      ));
+    }
+
+    console.log('=== Config Files With Issues ===');
+    if (baseIssueRows.length === 0 && !SHOW_OK_FILES) {
+      console.log('none');
+    } else {
+      const rows = SHOW_OK_FILES ? baseAllRows : baseIssueRows;
+      console.log(formatSummaryTable(
+        rows,
+        ['file', 'status', 'time', 'syntax', 'missing-deps', 'contradiction', 'load', 'atom-fund', 'atom-soup', 'superficial', 'incomplete', 'other']
+      ));
+    }
+
+    console.log('\n=== Stress Files With Issues ===');
+    if (stressIssueRows.length === 0 && !SHOW_OK_FILES) {
+      console.log('none');
+    } else {
+      const rows = SHOW_OK_FILES ? stressAllRows : stressIssueRows;
+      console.log(formatSummaryTable(
+        rows,
+        ['file', 'status', 'time', 'syntax', 'missing-deps', 'contradiction', 'load', 'atom-fund', 'atom-soup', 'superficial', 'incomplete', 'other']
+      ));
+    }
+
+    console.log('\n=== .errors Files ===');
+    if (fileOps.created.length === 0 &&
+        fileOps.overwritten.length === 0 &&
+        fileOps.deleted.length === 0) {
+      console.log('no changes');
+    } else {
+      for (const file of fileOps.created) console.log(`created: ${file}`);
+      for (const file of fileOps.overwritten) console.log(`updated: ${file}`);
+      for (const file of fileOps.deleted) console.log(`deleted: ${file}`);
+    }
+    return;
+  }
+
   const speedRows = [...summaries]
     .sort((a, b) => a.totalMs - b.totalMs)
     .map(entry => ([
@@ -858,13 +1431,22 @@ async function main() {
   console.log('\n=== Speed Summary ===');
   console.log(formatSummaryTable(speedRows, ['run', 'duration']));
 
+  const coreRows = [...summaries]
+    .sort((a, b) => a.totalMs - b.totalMs)
+    .map(entry => ([
+      entry.label,
+      `${entry.coreLoaded}/${entry.coreTotal}`
+    ]));
+  console.log('\n=== Core Theory Load Summary ===');
+  console.log(formatSummaryTable(coreRows, ['run', 'loaded']));
+
   const baseRows = [...summaries]
     .sort((a, b) => a.totalMs - b.totalMs)
     .map(entry => ([
       entry.label,
       `${entry.baseLoaded}/${entry.baseTotal}`
     ]));
-  console.log('\n=== Base Theory Load Summary ===');
+  console.log('\n=== Config Load Summary (Core + Domains) ===');
   console.log(formatSummaryTable(baseRows, ['run', 'loaded']));
 
   const stressRows = [...summaries]
@@ -882,7 +1464,51 @@ async function main() {
     stressRows,
     ['run', ERROR_LABELS.syntax, ERROR_LABELS.dependency, ERROR_LABELS.contradiction, ERROR_LABELS.load, ERROR_LABELS.unknown]
   ));
-  console.log('\nNote: missing-deps counts are unique undefined operators/refs.');
+  console.log('\nNote: missing-deps counts are unique missing operators/refs/concepts.');
+
+  // Show file-level details (same as --fast mode) using first worker's results
+  const firstResult = runResults[0];
+  if (firstResult) {
+    const formatFileRow = (r) => ([
+      r.file,
+      r.issues === 0 ? 'OK' : 'ISSUES',
+      formatDuration(r.durationMs),
+      String(r.counts?.syntax || 0),
+      String(r.counts?.dependency || 0),
+      String(r.counts?.contradiction || 0),
+      String(r.counts?.load || 0),
+      String(r.counts?.fundamentalAtoms || 0),
+      String(r.counts?.declaration || 0),
+      String(r.counts?.superficial || 0),
+      String(r.counts?.incomplete || 0),
+      String(r.counts?.unknown || 0)
+    ]);
+
+    const baseIssueRows = (firstResult.baseFileResults || []).filter(r => (r?.issues || 0) > 0).map(formatFileRow);
+    const stressIssueRows = (firstResult.stressFileResults || []).filter(r => (r?.issues || 0) > 0).map(formatFileRow);
+
+    printSummaryLegend();
+
+    console.log('=== Config Files With Issues ===');
+    if (baseIssueRows.length === 0) {
+      console.log('none');
+    } else {
+      console.log(formatSummaryTable(
+        baseIssueRows,
+        ['file', 'status', 'time', 'syntax', 'missing-deps', 'contradiction', 'load', 'atom-fund', 'atom-nonfund', 'superficial', 'incomplete', 'other']
+      ));
+    }
+
+    console.log('\n=== Stress Files With Issues ===');
+    if (stressIssueRows.length === 0) {
+      console.log('none');
+    } else {
+      console.log(formatSummaryTable(
+        stressIssueRows,
+        ['file', 'status', 'time', 'syntax', 'missing-deps', 'contradiction', 'load', 'atom-fund', 'atom-nonfund', 'superficial', 'incomplete', 'other']
+      ));
+    }
+  }
 
   console.log('\n=== .errors Files ===');
   if (fileOps.created.length === 0 &&
@@ -898,128 +1524,6 @@ async function main() {
     }
     for (const file of fileOps.deleted) {
       console.log(`deleted: ${file}`);
-    }
-  }
-
-  // Summary by reading actual .errors files
-  console.log('\n=== FILES WITH PROBLEMS (from .errors files) ===');
-  const errorFiles = [];
-
-  // Scan for all .errors files
-  const allSys2Files = [...basePlan, ...stressPlan];
-  for (const filePath of allSys2Files) {
-    const errorFilePath = `${filePath}.errors`;
-    if (existsSync(errorFilePath)) {
-      errorFiles.push({ sys2File: filePath, errorFile: errorFilePath });
-    }
-  }
-
-  if (errorFiles.length === 0) {
-    console.log('✓ No .errors files found!');
-  } else {
-    console.log(`Found ${errorFiles.length} file(s) with problems:\n`);
-
-    for (const { sys2File, errorFile } of errorFiles) {
-      const relPath = formatRelPath(sys2File);
-      const errorContent = await readFile(errorFile, 'utf-8');
-
-      // Parse .errors file to extract problem types and operators
-      const problems = {
-        syntax: [],
-        missingDeps: [],
-        superficial: [],
-        incomplete: [],
-        other: []
-      };
-
-      const lines = errorContent.split('\n');
-      let currentSection = null;
-
-      for (const line of lines) {
-        if (line.startsWith('## Syntax Errors')) currentSection = 'syntax';
-        else if (line.startsWith('## Missing Dependencies')) currentSection = 'missingDeps';
-        else if (line.startsWith('## Superficial Definitions')) currentSection = 'superficial';
-        else if (line.startsWith('## Incomplete Definitions')) currentSection = 'incomplete';
-        else if (line.startsWith('## ')) currentSection = 'other';
-        else if (currentSection && line.trim().startsWith('-')) {
-          const item = line.trim().substring(1).trim();
-          problems[currentSection].push(item);
-        }
-      }
-
-      const counts = {
-        syntax: problems.syntax.length,
-        missingDeps: problems.missingDeps.length,
-        superficial: problems.superficial.length,
-        incomplete: problems.incomplete.length,
-        other: problems.other.length
-      };
-      const totalProblems = counts.syntax + counts.missingDeps + counts.superficial + counts.incomplete + counts.other;
-
-      const parts = [];
-      if (counts.syntax > 0) parts.push(`${counts.syntax} syntax`);
-      if (counts.missingDeps > 0) parts.push(`${counts.missingDeps} missing-deps`);
-      if (counts.superficial > 0) parts.push(`${counts.superficial} superficial`);
-      if (counts.incomplete > 0) parts.push(`${counts.incomplete} incomplete`);
-      if (counts.other > 0) parts.push(`${counts.other} other`);
-
-      console.log(`\n${relPath}: ${parts.join(', ')} (${totalProblems} total)`);
-
-      // List missing dependencies (operators to be defined)
-      if (problems.missingDeps.length > 0) {
-        console.log('  Missing operators (need definitions):');
-        // Extract unique operator names from "Unknown operator 'X'" messages
-        const operators = new Set();
-        for (const item of problems.missingDeps) {
-          const match = item.match(/Unknown operator '([^']+)'/);
-          if (match) operators.add(match[1]);
-        }
-        const opList = Array.from(operators).sort();
-        console.log(`    Total unique operators: ${opList.length}`);
-        console.log(`    ${opList.join(', ')}`);
-      }
-
-      // List superficial operators (need semantic roles)
-      if (problems.superficial.length > 0) {
-        console.log('  Superficial operators (need semantic roles):');
-        const operators = [];
-        for (const item of problems.superficial) {
-          const match = item.match(/Operator '(\w+)'/);
-          if (match) operators.push(match[1]);
-        }
-        const showCount = Math.min(20, operators.length);
-        console.log(`    ${operators.slice(0, showCount).join(', ')}`);
-        if (operators.length > showCount) {
-          console.log(`    ... and ${operators.length - showCount} more`);
-        }
-      }
-
-      // List incomplete operators (missing 'end')
-      if (problems.incomplete.length > 0) {
-        console.log('  Incomplete operators (missing end):');
-        const operators = [];
-        for (const item of problems.incomplete) {
-          const match = item.match(/Operator '(\w+)'/);
-          if (match) operators.push(match[1]);
-        }
-        const showCount = Math.min(20, operators.length);
-        console.log(`    ${operators.slice(0, showCount).join(', ')}`);
-        if (operators.length > showCount) {
-          console.log(`    ... and ${operators.length - showCount} more`);
-        }
-      }
-
-      // List syntax errors
-      if (problems.syntax.length > 0) {
-        console.log('  Syntax errors:');
-        const showCount = Math.min(5, problems.syntax.length);
-        for (const err of problems.syntax.slice(0, showCount)) {
-          console.log(`    - ${err}`);
-        }
-        if (problems.syntax.length > showCount) {
-          console.log(`    ... and ${problems.syntax.length - showCount} more`);
-        }
-      }
     }
   }
 }

@@ -17,7 +17,7 @@ Supplies macros for attribute assignment (`hasProperty`, `inState`), membership 
 ## Tests & Coverage
 - `tests/unit/reasoning/query.test.mjs` queries `isA`, `hasProperty`, `has`, etc.
 - `tests/unit/reasoning/defaults.test.mjs` sets up `isA` hierarchies to validate default overrides.
-- `evalSuite/suite02_hierarchies` heavily exercises the macros.
+- `evals/fastEval/suite02_hierarchies` heavily exercises the macros.
 
 ## Design Rationale
 Bringing capability and possession into Core closes the gap where tests relied on implicit relations.  Synonym relations enable fuzzy matching while staying in DSL form so HDC similarity can reuse them.

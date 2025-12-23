@@ -290,6 +290,7 @@ Since Load, Unload, Export, Import are vectors in Core, they follow standard syn
 | Unload | `@_ Unload $Theory` | Deactivate namespace |
 | Export | `@_ Export $var` | Save to active theory |
 | Import | `@v Import $Theory name` | Load specific atom |
+| Set | `@_ Set CWA on|off` | Toggle session flags |
 
 **Examples:**
 ```
@@ -301,6 +302,9 @@ Since Load, Unload, Export, Import are vectors in Core, they follow standard syn
 
 # Export variable to current theory
 @_ Export $myFact
+
+# Toggle Closed World Assumption (negation-as-failure) at runtime
+@_ Set CWA on
 
 # Import specific atom
 @bankVec Import $Finance Bank

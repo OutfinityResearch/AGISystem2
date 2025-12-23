@@ -15,10 +15,26 @@
 @InverseRelation:inverseRelation __Relation
 @ContradictsSameArgs:contradictsSameArgs __Relation
 
+# ===== Core State / Property Tokens =====
+# These are shared across domains and are used by constraints and theories.
+@Open:Open __State
+@Closed:Closed __State
+@Alive:Alive __State
+@Dead:Dead __State
+@PoweredOn:PoweredOn __State
+@PoweredOff:PoweredOff __State
+@Full:Full __State
+@Empty:Empty __State
+
+@Hot:Hot __Property
+@Cold:Cold __Property
+@Wet:Wet __Property
+@Dry:Dry __Property
+
 # ===== States =====
 mutuallyExclusive hasState Open Closed
 mutuallyExclusive hasState Alive Dead
-mutuallyExclusive hasState On Off
+mutuallyExclusive hasState PoweredOn PoweredOff
 mutuallyExclusive hasState Full Empty
 
 # ===== Properties =====

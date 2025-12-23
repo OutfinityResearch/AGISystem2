@@ -1,288 +1,145 @@
 # Medicine - Domain Concepts
-# Foundational medical concepts with proper graph semantics
+# Core-compatible graph semantics (avoid non-Core atom soup).
 
-# ===== Clinical Entities =====
+@_:Medicine isA Medicine AbstractType
+
+# ===== Clinical Actors =====
 
 @Patient:Patient graph person
-    # Person receiving medical care
-    @p __Role Person $person
-    @type __Role Type Patient
-    @status __Role Status UnderCare
-    @concept __Bundle $p $type $status
+    @p __Role Entity $person
+    @type __Role Type PersonType
+    @ctx __Role Context Medicine
+    @role __Role Role Patient
+    @concept __Bundle $p $type $ctx $role
     return $concept
 end
 
 @Clinician:Clinician graph person
-    # Healthcare professional providing care
-    @p __Role Person $person
-    @type __Role Type HealthcareProfessional
-    @role __Role Role CareProvider
-    @concept __Bundle $p $type $role
+    @p __Role Entity $person
+    @type __Role Type PersonType
+    @ctx __Role Context Medicine
+    @role __Role Role Clinician
+    @concept __Bundle $p $type $ctx $role
     return $concept
 end
 
 @Physician:Physician graph clinician
-    # Medical doctor
-    @c __Role Clinician $clinician
-    @type __Role Type Physician
-    @training __Role Qualification MedicalDegree
-    @concept __Bundle $c $type $training
+    @c Clinician $clinician
+    @type __Role Type PersonType
+    @ctx __Role Context Medicine
+    @role __Role Role Physician
+    @concept __Bundle $c $type $ctx $role
     return $concept
 end
 
-# ===== Pathology =====
+# ===== Conditions / Findings =====
 
-@Disease:Disease graph condition
-    # Pathological condition affecting health
-    @cond __Role Condition $condition
-    @type __Role Type Disease
-    @pathological __Role Property Abnormal
-    @concept __Bundle $cond $type $pathological
+@Condition:Condition graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Medicine
+    @role __Role Role Condition
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Syndrome:Syndrome graph pattern
-    # Cluster of symptoms occurring together
-    @pat __Role Pattern $pattern
-    @type __Role Type Syndrome
-    @cluster __Role Property MultipleSymptoms
-    @concept __Bundle $pat $type $cluster
+@Disease:Disease graph entity
+    @c Condition $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Medicine
+    @role __Role Role Disease
+    @concept __Bundle $c $type $ctx $role
     return $concept
 end
 
-@Infection:Infection graph disease
-    # Disease caused by pathogen
-    @dis __Role Disease $disease
-    @type __Role Type Infection
-    @cause __Role Cause Pathogen
-    @concept __Bundle $dis $type $cause
+@Symptom:Symptom graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Medicine
+    @role __Role Role Symptom
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Trauma:Trauma graph injury
-    # Physical injury
-    @inj __Role Injury $injury
-    @type __Role Type Trauma
-    @cause __Role Cause PhysicalForce
-    @concept __Bundle $inj $type $cause
+@Sign:Sign graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Medicine
+    @role __Role Role Sign
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Disorder:Disorder graph condition
-    # Functional or structural abnormality
-    @cond __Role Condition $condition
-    @type __Role Type Disorder
-    @abnormality __Role Property Dysfunction
-    @concept __Bundle $cond $type $abnormality
+@Finding:Finding graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Medicine
+    @role __Role Role Finding
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-# ===== Symptomatology =====
-
-@Symptom:Symptom graph manifestation
-    # Subjective evidence of disease (patient-reported)
-    @manif __Role Manifestation $manifestation
-    @type __Role Type Symptom
-    @subjective __Role Property PatientReported
-    @concept __Bundle $manif $type $subjective
+@Diagnosis:Diagnosis graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Medicine
+    @role __Role Role Diagnosis
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Sign:Sign graph manifestation
-    # Objective evidence of disease (clinician-observed)
-    @manif __Role Manifestation $manifestation
-    @type __Role Type Sign
-    @objective __Role Property ClinicianObserved
-    @concept __Bundle $manif $type $objective
+@Test:Test graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Medicine
+    @role __Role Role Test
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Manifestation:Manifestation graph evidence
-    # Observable evidence of disease
-    @evid __Role Evidence $evidence
-    @type __Role Type ClinicalManifestation
-    @observable __Role Property Observable
-    @concept __Bundle $evid $type $observable
+# ===== Treatments / Substances =====
+
+@Treatment:Treatment graph entity
+    @e __Role Entity $entity
+    @type __Role Type ActionType
+    @ctx __Role Context Medicine
+    @role __Role Role Treatment
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-# ===== Diagnosis =====
-
-@Diagnosis:Diagnosis graph conclusion
-    # Clinical determination of disease
-    @concl __Role Conclusion $conclusion
-    @type __Role Type MedicalDiagnosis
-    @process __Role Process ClinicalReasoning
-    @concept __Bundle $concl $type $process
+@Medication:Medication graph entity
+    @e __Role Entity $entity
+    @type __Role Type SubstanceType
+    @ctx __Role Context Medicine
+    @role __Role Role Medication
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Test:Test graph procedure
-    # Diagnostic procedure
-    @proc __Role Procedure $procedure
-    @type __Role Type DiagnosticTest
-    @purpose __Role Purpose Investigation
-    @concept __Bundle $proc $type $purpose
+@Dose:Dose graph entity
+    @e __Role Entity $entity
+    @type __Role Type AmountType
+    @ctx __Role Context Medicine
+    @role __Role Role Dose
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Finding:Finding graph observation
-    # Result from clinical examination or test
-    @obs __Role Observation $observation
-    @type __Role Type ClinicalFinding
-    @source __Role Source ExaminationOrTest
-    @concept __Bundle $obs $type $source
+@SideEffect:SideEffect graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Medicine
+    @role __Role Role SideEffect
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Biomarker:Biomarker graph indicator
-    # Measurable biological indicator
-    @ind __Role Indicator $indicator
-    @type __Role Type Biomarker
-    @measurable __Role Property Quantifiable
-    @concept __Bundle $ind $type $measurable
-    return $concept
-end
-
-# ===== Treatment =====
-
-@Treatment:Treatment graph intervention
-    # Medical intervention to cure or alleviate disease
-    @interv __Role Intervention $intervention
-    @type __Role Type Treatment
-    @purpose __Role Purpose Therapeutic
-    @concept __Bundle $interv $type $purpose
-    return $concept
-end
-
-@Medication:Medication graph drug
-    # Pharmaceutical substance
-    @d __Role Drug $drug
-    @type __Role Type Medication
-    @pharmaceutical __Role Property TherapeuticAgent
-    @concept __Bundle $d $type $pharmaceutical
-    return $concept
-end
-
-@Therapy:Therapy graph treatment
-    # Systematic treatment approach
-    @treat __Role Treatment $treatment
-    @type __Role Type Therapy
-    @systematic __Role Property Structured
-    @concept __Bundle $treat $type $systematic
-    return $concept
-end
-
-@Surgery:Surgery graph procedure
-    # Operative intervention
-    @proc __Role Procedure $procedure
-    @type __Role Type Surgery
-    @invasive __Role Property Operative
-    @concept __Bundle $proc $type $invasive
-    return $concept
-end
-
-@Dose:Dose graph amount
-    # Medication quantity
-    @amt __Role Amount $amount
-    @type __Role Type Dose
-    @measurement __Role Property MedicationQuantity
-    @concept __Bundle $amt $type $measurement
-    return $concept
-end
-
-# ===== Pharmacology =====
-
-@Drug:Drug graph substance
-    # Pharmacological substance
-    @sub __Role Substance $substance
-    @type __Role Type Drug
-    @active __Role Property PharmacologicallyActive
-    @concept __Bundle $sub $type $active
-    return $concept
-end
-
-@SideEffect:SideEffect graph effect
-    # Unintended drug effect
-    @eff __Role Effect $effect
-    @type __Role Type SideEffect
-    @unintended __Role Property Adverse
-    @concept __Bundle $eff $type $unintended
-    return $concept
-end
-
-@Contraindication:Contraindication graph condition
-    # Condition making treatment inadvisable
-    @cond __Role Condition $condition
-    @type __Role Type Contraindication
-    @warning __Role Property Inadvisable
-    @concept __Bundle $cond $type $warning
-    return $concept
-end
-
-# ===== Anatomy & Physiology =====
-
-@Organ:Organ graph structure
-    # Anatomical organ
-    @struct __Role Structure $structure
-    @type __Role Type Organ
-    @anatomical __Role Property AnatomicalStructure
-    @concept __Bundle $struct $type $anatomical
-    return $concept
-end
-
-@Tissue:Tissue graph material
-    # Biological tissue
-    @mat __Role Material $material
-    @type __Role Type Tissue
-    @cellular __Role Property CellularOrganization
-    @concept __Bundle $mat $type $cellular
-    return $concept
-end
-
-@Cell:Cell graph unit
-    # Basic biological unit
-    @u __Role Unit $unit
-    @type __Role Type Cell
-    @living __Role Property LivingUnit
-    @concept __Bundle $u $type $living
-    return $concept
-end
-
-@Pathogen:Pathogen graph organism
-    # Disease-causing organism
-    @org __Role Organism $organism
-    @type __Role Type Pathogen
-    @infectious __Role Property DiseaseCausing
-    @concept __Bundle $org $type $infectious
-    return $concept
-end
-
-# ===== Clinical Process =====
-
-@Prognosis:Prognosis graph prediction
-    # Predicted disease outcome
-    @pred __Role Prediction $prediction
-    @type __Role Type Prognosis
-    @outcome __Role Context DiseaseOutcome
-    @concept __Bundle $pred $type $outcome
-    return $concept
-end
-
-@Protocol:Protocol graph guideline
-    # Clinical treatment guideline
-    @guide __Role Guideline $guideline
-    @type __Role Type ClinicalProtocol
-    @standardized __Role Property EvidenceBased
-    @concept __Bundle $guide $type $standardized
-    return $concept
-end
-
-@Complication:Complication graph consequence
-    # Adverse consequence of disease or treatment
-    @cons __Role Consequence $consequence
-    @type __Role Type Complication
-    @adverse __Role Property Unfavorable
-    @concept __Bundle $cons $type $adverse
+@Contraindication:Contraindication graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Medicine
+    @role __Role Role Contraindication
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end

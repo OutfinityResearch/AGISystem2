@@ -1,0 +1,119 @@
+# RuleTaker Benchmark Theory
+# Declares operators and types used by the Allen AI RuleTaker dataset
+# https://github.com/allenai/ruletaker
+#
+# Uses graph syntax for realistic, structured relations
+
+# ===== Action Relations (Theory 2) =====
+# Predator-prey and feeding relationships
+
+@eat:eat graph consumer food
+    @agent __Role Consumer $consumer
+    @patient __Role Food $food
+    @action __Pair $agent $patient
+    return $action
+end
+
+@chase:chase graph pursuer target
+    @agent __Role Pursuer $pursuer
+    @patient __Role Target $target
+    @action __Pair $agent $patient
+    return $action
+end
+
+# Perception relations
+
+@see:see graph observer observed
+    @perceiver __Role Observer $observer
+    @perceived __Role Observed $observed
+    @perception __Pair $perceiver $perceived
+    return $perception
+end
+
+# Movement and location relations
+
+@visit:visit graph visitor location
+    @agent __Role Visitor $visitor
+    @place __Role Location $location
+    @movement __Pair $agent $place
+    return $movement
+end
+
+# Necessity and dependency
+
+@need:need graph needer needed
+    @agent __Role Needer $needer
+    @object __Role Needed $needed
+    @dependency __Pair $agent $object
+    return $dependency
+end
+
+# Note: 'likes' is already declared in Core/00-relations.sys2
+
+# ===== Entity Types =====
+
+# Theory 1 entities (people names)
+isA Anne Person
+isA Bob Person
+isA Charlie Person
+isA Dave Person
+isA Erin Person
+isA Fiona Person
+isA Gary Person
+isA Harry Person
+
+# Person is a type
+isA Person Agent
+isA Agent Entity
+
+# Theory 2 entities (animals)
+isA Cat Animal
+isA Dog Animal
+isA Rabbit Animal
+isA Mouse Animal
+isA Tiger Animal
+isA Lion Animal
+isA Bear Animal
+isA Squirrel Animal
+isA Cow Animal
+isA BaldEagle Animal
+
+# Animal hierarchy
+isA Animal LivingThing
+isA LivingThing Entity
+
+# Generic types used in "All X things/people are Y" patterns
+isA Things Entity
+isA People Agent
+
+# ===== Property Categories =====
+# Properties used in RuleTaker organized by semantic category
+
+# Color properties
+isA Red ColorProperty
+isA Blue ColorProperty
+isA Green ColorProperty
+isA White ColorProperty
+isA ColorProperty Property
+
+# Personality properties
+isA Kind PersonalityProperty
+isA Nice PersonalityProperty
+isA Smart PersonalityProperty
+isA Quiet PersonalityProperty
+isA PersonalityProperty Property
+
+# Physical properties
+isA Big PhysicalProperty
+isA Cold PhysicalProperty
+isA Round PhysicalProperty
+isA Rough PhysicalProperty
+isA Furry PhysicalProperty
+isA PhysicalProperty Property
+
+# Age properties
+isA Young AgeProperty
+isA AgeProperty Property
+
+# Property is base type
+isA Property Attribute

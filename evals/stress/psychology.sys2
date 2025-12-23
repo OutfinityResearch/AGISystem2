@@ -6,492 +6,684 @@
 
 # Psychology - OCEAN (Big Five personality traits)
 @OCEAN:OCEAN graph person traits
-    @p __Role Person $person
-    @t __Role Traits $traits
+    @p __Role Entity $person
+    @t __Role Attribute $traits
     @assessment __Pair $p $t
     return $assessment
 end
 
 @about:about graph a b
-    @subject __Role Subject $a
-    @topic __Role Topic $b
-    @relation __Bundle $subject $topic
+    @eid __Event
+    @act __Role Action about
+    @ctx __Role Context StressCompat
+    @subject __Role Attribute $a
+    @topic __Role Attribute $b
+    @relation __Bundle $eid $act $subject $topic $ctx
     return $relation
 end
 
 @above:above graph a b
+    @eid __Event
+    @act __Role Action above
+    @ctx __Role Context StressCompat
     @entity __Role Entity $a
-    @level __Role Level $b
-    @relation __Bundle $entity $level
+    @level __Role Attribute $b
+    @relation __Bundle $eid $act $entity $level $ctx
     return $relation
 end
 
 @accesses:accesses graph a b
+    @eid __Event
+    @act __Role Action accesses
+    @ctx __Role Context StressCompat
     @agent __Role Agent $a
     @resource __Role Resource $b
-    @relation __Bundle $agent $resource
+    @relation __Bundle $eid $act $agent $resource $ctx
     return $relation
 end
 
 @accounts:accounts graph a b
-    @theory __Role Theory $a
-    @phenomenon __Role Phenomenon $b
-    @relation __Bundle $theory $phenomenon
+    @eid __Event
+    @act __Role Action accounts
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
+    @phenomenon __Role Attribute $b
+    @relation __Bundle $eid $act $theory $phenomenon $ctx
     return $relation
 end
 
 @achieves:achieves graph a b
+    @eid __Event
+    @act __Role Action achieves
+    @ctx __Role Context StressCompat
     @agent __Role Agent $a
     @goal __Role Goal $b
-    @relation __Bundle $agent $goal
+    @relation __Bundle $eid $act $agent $goal $ctx
     return $relation
 end
 
 @adds:adds graph a b
+    @eid __Event
+    @act __Role Action adds
+    @ctx __Role Context StressCompat
     @process __Role Process $a
-    @element __Role Element $b
-    @relation __Bundle $process $element
+    @element __Role Attribute $b
+    @relation __Bundle $eid $act $process $element $ctx
     return $relation
 end
 
 @affected:affected graph a b
+    @eid __Event
+    @act __Role Action affected
+    @ctx __Role Context StressCompat
     @target __Role Target $a
-    @factor __Role Factor $b
-    @relation __Bundle $target $factor
+    @factor __Role Attribute $b
+    @relation __Bundle $eid $act $target $factor $ctx
     return $relation
 end
 
 @affects:affects graph factor outcome
-    @f __Role Factor $factor
-    @o __Role Outcome $outcome
+    @f __Role Attribute $factor
+    @o __Role Attribute $outcome
     @influence __Pair $f $o
     return $influence
 end
 
 @allows:allows graph a b
-    @mechanism __Role Mechanism $a
-    @possibility __Role Possibility $b
-    @relation __Bundle $mechanism $possibility
+    @eid __Event
+    @act __Role Action allows
+    @ctx __Role Context StressCompat
+    @mechanism __Role Attribute $a
+    @possibility __Role Attribute $b
+    @relation __Bundle $eid $act $mechanism $possibility $ctx
     return $relation
 end
 
 @applies:applies graph a b
-    @intervention __Role Intervention $a
+    @eid __Event
+    @act __Role Action applies
+    @ctx __Role Context StressCompat
+    @intervention __Role Attribute $a
     @context __Role Context $b
-    @relation __Bundle $intervention $context
+    @relation __Bundle $eid $act $intervention $context $ctx
     return $relation
 end
 
 @are:are graph a b
+    @eid __Event
+    @act __Role Action are
+    @ctx __Role Context StressCompat
     @entity __Role Entity $a
     @category __Role Category $b
-    @relation __Bundle $entity $category
+    @relation __Bundle $eid $act $entity $category $ctx
     return $relation
 end
 
 @argues:argues graph a b
-    @theorist __Role Theorist $a
-    @position __Role Position $b
-    @relation __Bundle $theorist $position
+    @eid __Event
+    @act __Role Action argues
+    @ctx __Role Context StressCompat
+    @theorist __Role Attribute $a
+    @position __Role Attribute $b
+    @relation __Bundle $eid $act $theorist $position $ctx
     return $relation
 end
 
 @asserts:asserts graph a b
-    @theory __Role Theory $a
-    @claim __Role Claim $b
-    @relation __Bundle $theory $claim
+    @eid __Event
+    @act __Role Action asserts
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
+    @claim __Role Content $b
+    @relation __Bundle $eid $act $theory $claim $ctx
     return $relation
 end
 
 @assessed:assessed graph a b
-    @test __Role Test $a
-    @construct __Role Construct $b
-    @relation __Bundle $test $construct
+    @eid __Event
+    @act __Role Action assessed
+    @ctx __Role Context StressCompat
+    @test __Role Attribute $a
+    @construct __Role Attribute $b
+    @relation __Bundle $eid $act $test $construct $ctx
     return $relation
 end
 
 @assessedBy:assessedBy graph a b
-    @construct __Role Construct $a
+    @eid __Event
+    @act __Role Action assessedBy
+    @ctx __Role Context StressCompat
+    @construct __Role Attribute $a
     @instrument __Role Instrument $b
-    @relation __Bundle $construct $instrument
+    @relation __Bundle $eid $act $construct $instrument $ctx
     return $relation
 end
 
 @associated:associated graph a b
-    @factor __Role Factor $a
-    @correlate __Role Correlate $b
-    @relation __Bundle $factor $correlate
+    @eid __Event
+    @act __Role Action associated
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @correlate __Role Attribute $b
+    @relation __Bundle $eid $act $factor $correlate $ctx
     return $relation
 end
 
 @associatedWith:associatedWith graph a b
-    @factor __Role Factor $a
-    @correlate __Role Correlate $b
-    @relation __Bundle $factor $correlate
+    @eid __Event
+    @act __Role Action associatedWith
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @correlate __Role Attribute $b
+    @relation __Bundle $eid $act $factor $correlate $ctx
     return $relation
 end
 
 @attributes:attributes graph a b
-    @theory __Role Theory $a
+    @eid __Event
+    @act __Role Action attributes
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
     @cause __Role Cause $b
-    @relation __Bundle $theory $cause
+    @relation __Bundle $eid $act $theory $cause $ctx
     return $relation
 end
 
 @base:base graph a b
-    @concept __Role Concept $a
-    @foundation __Role Foundation $b
-    @relation __Bundle $concept $foundation
+    @eid __Event
+    @act __Role Action base
+    @ctx __Role Context StressCompat
+    @concept __Role Attribute $a
+    @foundation __Role Attribute $b
+    @relation __Bundle $eid $act $concept $foundation $ctx
     return $relation
 end
 
 @based:based graph a b
-    @concept __Role Concept $a
-    @foundation __Role Foundation $b
-    @relation __Bundle $concept $foundation
+    @eid __Event
+    @act __Role Action based
+    @ctx __Role Context StressCompat
+    @concept __Role Attribute $a
+    @foundation __Role Attribute $b
+    @relation __Bundle $eid $act $concept $foundation $ctx
     return $relation
 end
 
 @becomes:becomes graph a b
+    @eid __Event
+    @act __Role Action becomes
+    @ctx __Role Context StressCompat
     @entity __Role Entity $a
     @state __Role State $b
-    @relation __Bundle $entity $state
+    @relation __Bundle $eid $act $entity $state $ctx
     return $relation
 end
 
 @begins:begins graph a b
+    @eid __Event
+    @act __Role Action begins
+    @ctx __Role Context StressCompat
     @process __Role Process $a
-    @phase __Role Phase $b
-    @relation __Bundle $process $phase
+    @phase __Role Attribute $b
+    @relation __Bundle $eid $act $process $phase $ctx
     return $relation
 end
 
 @benefits:benefits graph a b
-    @intervention __Role Intervention $a
-    @outcome __Role Outcome $b
-    @relation __Bundle $intervention $outcome
+    @eid __Event
+    @act __Role Action benefits
+    @ctx __Role Context StressCompat
+    @intervention __Role Attribute $a
+    @outcome __Role Attribute $b
+    @relation __Bundle $eid $act $intervention $outcome $ctx
     return $relation
 end
 
 @between:between graph a b
-    @element __Role Element $a
-    @element __Role Element $b
-    @relation __Bundle $element $element
+    @eid __Event
+    @act __Role Action between
+    @ctx __Role Context StressCompat
+    @element __Role Attribute $a
+    @element __Role Attribute $b
+    @relation __Bundle $eid $act $element $element $ctx
     return $relation
 end
 
 @boosts:boosts graph a b
-    @factor __Role Factor $a
-    @variable __Role Variable $b
-    @relation __Bundle $factor $variable
+    @eid __Event
+    @act __Role Action boosts
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @variable __Role Attribute $b
+    @relation __Bundle $eid $act $factor $variable $ctx
     return $relation
 end
 
 @called:called graph a b
-    @concept __Role Concept $a
-    @name __Role Name $b
-    @relation __Bundle $concept $name
+    @eid __Event
+    @act __Role Action called
+    @ctx __Role Context StressCompat
+    @concept __Role Attribute $a
+    @name __Role Attribute $b
+    @relation __Bundle $eid $act $concept $name $ctx
     return $relation
 end
 
 @canBe:canBe graph a b
+    @eid __Event
+    @act __Role Action canBe
+    @ctx __Role Context StressCompat
     @entity __Role Entity $a
     @state __Role State $b
-    @relation __Bundle $entity $state
+    @relation __Bundle $eid $act $entity $state $ctx
     return $relation
 end
 
 @canBecome:canBecome graph a b
+    @eid __Event
+    @act __Role Action canBecome
+    @ctx __Role Context StressCompat
     @entity __Role Entity $a
     @state __Role State $b
-    @relation __Bundle $entity $state
+    @relation __Bundle $eid $act $entity $state $ctx
     return $relation
 end
 
 @canCause:canCause graph a b
-    @factor __Role Factor $a
-    @outcome __Role Outcome $b
-    @relation __Bundle $factor $outcome
+    @eid __Event
+    @act __Role Action canCause
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @outcome __Role Attribute $b
+    @relation __Bundle $eid $act $factor $outcome $ctx
     return $relation
 end
 
 @canLeadTo:canLeadTo graph a b
-    @factor __Role Factor $a
-    @outcome __Role Outcome $b
-    @relation __Bundle $factor $outcome
+    @eid __Event
+    @act __Role Action canLeadTo
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @outcome __Role Attribute $b
+    @relation __Bundle $eid $act $factor $outcome $ctx
     return $relation
 end
 
 @can_be:can_be graph a b
+    @eid __Event
+    @act __Role Action can_be
+    @ctx __Role Context StressCompat
     @entity __Role Entity $a
     @state __Role State $b
-    @relation __Bundle $entity $state
+    @relation __Bundle $eid $act $entity $state $ctx
     return $relation
 end
 
 @can_undermine:can_undermine graph a b
-    @factor __Role Factor $a
-    @outcome __Role Outcome $b
-    @relation __Bundle $factor $outcome
+    @eid __Event
+    @act __Role Action can_undermine
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @outcome __Role Attribute $b
+    @relation __Bundle $eid $act $factor $outcome $ctx
     return $relation
 end
 
 @cause:cause graph a b
-    @factor __Role Factor $a
-    @effect __Role Effect $b
-    @relation __Bundle $factor $effect
+    @eid __Event
+    @act __Role Action cause
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @effect __Role Result $b
+    @relation __Bundle $eid $act $factor $effect $ctx
     return $relation
 end
 
 @causesResponse:causesResponse graph cause effect
     @c __Role Cause $cause
-    @e __Role Effect $effect
+    @e __Role Result $effect
     @causation __Pair $c $e
     return $causation
 end
 
 @challenging:challenging graph a b
-    @task __Role Task $a
-    @difficulty __Role Difficulty $b
-    @relation __Bundle $task $difficulty
+    @eid __Event
+    @act __Role Action challenging
+    @ctx __Role Context StressCompat
+    @task __Role Attribute $a
+    @difficulty __Role Attribute $b
+    @relation __Bundle $eid $act $task $difficulty $ctx
     return $relation
 end
 
 @cluster:cluster graph a b
+    @eid __Event
+    @act __Role Action cluster
+    @ctx __Role Context StressCompat
     @group __Role Group $a
-    @element __Role Element $b
-    @relation __Bundle $group $element
+    @element __Role Attribute $b
+    @relation __Bundle $eid $act $group $element $ctx
     return $relation
 end
 
 @combines:combines graph a b
-    @composite __Role Composite $a
-    @element __Role Element $b
-    @relation __Bundle $composite $element
+    @eid __Event
+    @act __Role Action combines
+    @ctx __Role Context StressCompat
+    @composite __Role Attribute $a
+    @element __Role Attribute $b
+    @relation __Bundle $eid $act $composite $element $ctx
     return $relation
 end
 
 @common:common graph a b
-    @pattern __Role Pattern $a
-    @domain __Role Domain $b
-    @relation __Bundle $pattern $domain
+    @eid __Event
+    @act __Role Action common
+    @ctx __Role Context StressCompat
+    @pattern __Role Structure $a
+    @domain __Role Context $b
+    @relation __Bundle $eid $act $pattern $domain $ctx
     return $relation
 end
 
 @concurrent:concurrent graph a b
-    @event __Role Event $a
-    @event __Role Event $b
-    @relation __Bundle $event $event
+    @eid __Event
+    @act __Role Action concurrent
+    @ctx __Role Context StressCompat
+    @event __Role Action $a
+    @event __Role Action $b
+    @relation __Bundle $eid $act $event $event $ctx
     return $relation
 end
 
 @contrasts:contrasts graph a b
-    @concept __Role Concept $a
-    @concept __Role Concept $b
-    @relation __Bundle $concept $concept
+    @eid __Event
+    @act __Role Action contrasts
+    @ctx __Role Context StressCompat
+    @concept __Role Attribute $a
+    @concept __Role Attribute $b
+    @relation __Bundle $eid $act $concept $concept $ctx
     return $relation
 end
 
 @converts:converts graph a b
+    @eid __Event
+    @act __Role Action converts
+    @ctx __Role Context StressCompat
     @process __Role Process $a
-    @output __Role Output $b
-    @relation __Bundle $process $output
+    @output __Role Attribute $b
+    @relation __Bundle $eid $act $process $output $ctx
     return $relation
 end
 
 @core:core graph a b
-    @construct __Role Construct $a
+    @eid __Event
+    @act __Role Action core
+    @ctx __Role Context StressCompat
+    @construct __Role Attribute $a
     @aspect __Role Aspect $b
-    @relation __Bundle $construct $aspect
+    @relation __Bundle $eid $act $construct $aspect $ctx
     return $relation
 end
 
 @correlates:correlates graph a b
-    @variable __Role Variable $a
-    @variable __Role Variable $b
-    @relation __Bundle $variable $variable
+    @eid __Event
+    @act __Role Action correlates
+    @ctx __Role Context StressCompat
+    @variable __Role Attribute $a
+    @variable __Role Attribute $b
+    @relation __Bundle $eid $act $variable $variable $ctx
     return $relation
 end
 
 @created:created graph a b
-    @creator __Role Creator $a
-    @product __Role Product $b
-    @relation __Bundle $creator $product
+    @eid __Event
+    @act __Role Action created
+    @ctx __Role Context StressCompat
+    @creator __Role Attribute $a
+    @product __Role Attribute $b
+    @relation __Bundle $eid $act $creator $product $ctx
     return $relation
 end
 
 @creates:creates graph a b
+    @eid __Event
+    @act __Role Action creates
+    @ctx __Role Context StressCompat
     @process __Role Process $a
-    @product __Role Product $b
-    @relation __Bundle $process $product
+    @product __Role Attribute $b
+    @relation __Bundle $eid $act $process $product $ctx
     return $relation
 end
 
 @deals:deals graph a b
-    @theory __Role Theory $a
-    @topic __Role Topic $b
-    @relation __Bundle $theory $topic
+    @eid __Event
+    @act __Role Action deals
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
+    @topic __Role Attribute $b
+    @relation __Bundle $eid $act $theory $topic $ctx
     return $relation
 end
 
 @declines:declines graph a b
-    @variable __Role Variable $a
+    @eid __Event
+    @act __Role Action declines
+    @ctx __Role Context StressCompat
+    @variable __Role Attribute $a
     @context __Role Context $b
-    @relation __Bundle $variable $context
+    @relation __Bundle $eid $act $variable $context $ctx
     return $relation
 end
 
 @decreases:decreases graph a b
-    @factor __Role Factor $a
-    @variable __Role Variable $b
-    @relation __Bundle $factor $variable
+    @eid __Event
+    @act __Role Action decreases
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @variable __Role Attribute $b
+    @relation __Bundle $eid $act $factor $variable $ctx
     return $relation
 end
 
 @demonstrated:demonstrated graph a b
-    @study __Role Study $a
-    @finding __Role Finding $b
-    @relation __Bundle $study $finding
+    @eid __Event
+    @act __Role Action demonstrated
+    @ctx __Role Context StressCompat
+    @study __Role Attribute $a
+    @finding __Role Attribute $b
+    @relation __Bundle $eid $act $study $finding $ctx
     return $relation
 end
 
 @demonstrates:demonstrates graph a b
-    @study __Role Study $a
-    @finding __Role Finding $b
-    @relation __Bundle $study $finding
+    @eid __Event
+    @act __Role Action demonstrates
+    @ctx __Role Context StressCompat
+    @study __Role Attribute $a
+    @finding __Role Attribute $b
+    @relation __Bundle $eid $act $study $finding $ctx
     return $relation
 end
 
 @depends:depends graph a b
-    @dependent __Role Dependent $a
-    @independent __Role Independent $b
-    @relation __Bundle $dependent $independent
+    @eid __Event
+    @act __Role Action depends
+    @ctx __Role Context StressCompat
+    @dependent __Role Attribute $a
+    @independent __Role Attribute $b
+    @relation __Bundle $eid $act $dependent $independent $ctx
     return $relation
 end
 
 @derives:derives graph a b
-    @derivative __Role Derivative $a
+    @eid __Event
+    @act __Role Action derives
+    @ctx __Role Context StressCompat
+    @derivative __Role Attribute $a
     @source __Role Source $b
-    @relation __Bundle $derivative $source
+    @relation __Bundle $eid $act $derivative $source $ctx
     return $relation
 end
 
 @described:described graph a b
-    @phenomenon __Role Phenomenon $a
-    @theorist __Role Theorist $b
-    @relation __Bundle $phenomenon $theorist
+    @eid __Event
+    @act __Role Action described
+    @ctx __Role Context StressCompat
+    @phenomenon __Role Attribute $a
+    @theorist __Role Attribute $b
+    @relation __Bundle $eid $act $phenomenon $theorist $ctx
     return $relation
 end
 
 @describes:describes graph a b
-    @theory __Role Theory $a
-    @phenomenon __Role Phenomenon $b
-    @relation __Bundle $theory $phenomenon
+    @eid __Event
+    @act __Role Action describes
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
+    @phenomenon __Role Attribute $b
+    @relation __Bundle $eid $act $theory $phenomenon $ctx
     return $relation
 end
 
 @developed:developed graph a b
-    @developer __Role Developer $a
-    @product __Role Product $b
-    @relation __Bundle $developer $product
+    @eid __Event
+    @act __Role Action developed
+    @ctx __Role Context StressCompat
+    @developer __Role Attribute $a
+    @product __Role Attribute $b
+    @relation __Bundle $eid $act $developer $product $ctx
     return $relation
 end
 
 @develops:develops graph entity stage
     @e __Role Entity $entity
-    @s __Role Stage $stage
+    @s __Role Attribute $stage
     @development __Pair $e $s
     return $development
 end
 
 @differs:differs graph a b
+    @eid __Event
+    @act __Role Action differs
+    @ctx __Role Context StressCompat
     @entity __Role Entity $a
     @entity __Role Entity $b
-    @relation __Bundle $entity $entity
+    @relation __Bundle $eid $act $entity $entity $ctx
     return $relation
 end
 
 @difficult:difficult graph a b
-    @task __Role Task $a
+    @eid __Event
+    @act __Role Action difficult
+    @ctx __Role Context StressCompat
+    @task __Role Attribute $a
     @context __Role Context $b
-    @relation __Bundle $task $context
+    @relation __Bundle $eid $act $task $context $ctx
     return $relation
 end
 
 @discovered:discovered graph a b
-    @discoverer __Role Discoverer $a
-    @finding __Role Finding $b
-    @relation __Bundle $discoverer $finding
+    @eid __Event
+    @act __Role Action discovered
+    @ctx __Role Context StressCompat
+    @discoverer __Role Attribute $a
+    @finding __Role Attribute $b
+    @relation __Bundle $eid $act $discoverer $finding $ctx
     return $relation
 end
 
 @dismisses:dismisses graph a b
-    @theory __Role Theory $a
-    @claim __Role Claim $b
-    @relation __Bundle $theory $claim
+    @eid __Event
+    @act __Role Action dismisses
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
+    @claim __Role Content $b
+    @relation __Bundle $eid $act $theory $claim $ctx
     return $relation
 end
 
 @distinct:distinct graph a b
+    @eid __Event
+    @act __Role Action distinct
+    @ctx __Role Context StressCompat
     @entity __Role Entity $a
     @entity __Role Entity $b
-    @relation __Bundle $entity $entity
+    @relation __Bundle $eid $act $entity $entity $ctx
     return $relation
 end
 
 @divides:divides graph a b
-    @whole __Role Whole $a
-    @part __Role Part $b
-    @relation __Bundle $whole $part
+    @eid __Event
+    @act __Role Action divides
+    @ctx __Role Context StressCompat
+    @whole __Role Attribute $a
+    @part __Role Attribute $b
+    @relation __Bundle $eid $act $whole $part $ctx
     return $relation
 end
 
 @drives:drives graph motive action
-    @m __Role Motive $motive
+    @m __Role Attribute $motive
     @a __Role Action $action
     @motivation __Pair $m $a
     return $motivation
 end
 
 @early:early graph a b
-    @stage __Role Stage $a
-    @period __Role Period $b
-    @relation __Bundle $stage $period
+    @eid __Event
+    @act __Role Action early
+    @ctx __Role Context StressCompat
+    @stage __Role Attribute $a
+    @period __Role Attribute $b
+    @relation __Bundle $eid $act $stage $period $ctx
     return $relation
 end
 
 @effective:effective graph a b
-    @intervention __Role Intervention $a
+    @eid __Event
+    @act __Role Action effective
+    @ctx __Role Context StressCompat
+    @intervention __Role Attribute $a
     @context __Role Context $b
-    @relation __Bundle $intervention $context
+    @relation __Bundle $eid $act $intervention $context $ctx
     return $relation
 end
 
 @emerges:emerges graph entity stage
     @e __Role Entity $entity
-    @s __Role Stage $stage
+    @s __Role Attribute $stage
     @development __Pair $e $s
     return $development
 end
 
 @emphasizes:emphasizes graph a b
-    @theory __Role Theory $a
+    @eid __Event
+    @act __Role Action emphasizes
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
     @aspect __Role Aspect $b
-    @relation __Bundle $theory $aspect
+    @relation __Bundle $eid $act $theory $aspect $ctx
     return $relation
 end
 
 @enhances:enhances graph a b
-    @factor __Role Factor $a
-    @outcome __Role Outcome $b
-    @relation __Bundle $factor $outcome
+    @eid __Event
+    @act __Role Action enhances
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @outcome __Role Attribute $b
+    @relation __Bundle $eid $act $factor $outcome $ctx
     return $relation
 end
 
 @environmental:environmental graph a b
-    @factor __Role Factor $a
-    @domain __Role Domain $b
-    @relation __Bundle $factor $domain
+    @eid __Event
+    @act __Role Action environmental
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @domain __Role Context $b
+    @relation __Bundle $eid $act $factor $domain $ctx
     return $relation
 end
 
@@ -504,141 +696,192 @@ end
 
 @evolves:evolves graph entity stage
     @e __Role Entity $entity
-    @s __Role Stage $stage
+    @s __Role Attribute $stage
     @development __Pair $e $s
     return $development
 end
 
 @excessive:excessive graph a b
-    @variable __Role Variable $a
-    @level __Role Level $b
-    @relation __Bundle $variable $level
+    @eid __Event
+    @act __Role Action excessive
+    @ctx __Role Context StressCompat
+    @variable __Role Attribute $a
+    @level __Role Attribute $b
+    @relation __Bundle $eid $act $variable $level $ctx
     return $relation
 end
 
 @expanded:expanded graph a b
-    @developer __Role Developer $a
-    @theory __Role Theory $b
-    @relation __Bundle $developer $theory
+    @eid __Event
+    @act __Role Action expanded
+    @ctx __Role Context StressCompat
+    @developer __Role Attribute $a
+    @theory __Role Attribute $b
+    @relation __Bundle $eid $act $developer $theory $ctx
     return $relation
 end
 
 @experiences:experiences graph subject emotion
-    @s __Role Subject $subject
-    @e __Role Emotion $emotion
+    @s __Role Attribute $subject
+    @e __Role State $emotion
     @affective __Pair $s $e
     return $affective
 end
 
 @explains:explains graph a b
-    @theory __Role Theory $a
-    @phenomenon __Role Phenomenon $b
-    @relation __Bundle $theory $phenomenon
+    @eid __Event
+    @act __Role Action explains
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
+    @phenomenon __Role Attribute $b
+    @relation __Bundle $eid $act $theory $phenomenon $ctx
     return $relation
 end
 
 @explores:explores graph a b
-    @research __Role Research $a
-    @domain __Role Domain $b
-    @relation __Bundle $research $domain
+    @eid __Event
+    @act __Role Action explores
+    @ctx __Role Context StressCompat
+    @research __Role Attribute $a
+    @domain __Role Context $b
+    @relation __Bundle $eid $act $research $domain $ctx
     return $relation
 end
 
 @extends:extends graph a b
-    @theory __Role Theory $a
-    @domain __Role Domain $b
-    @relation __Bundle $theory $domain
+    @eid __Event
+    @act __Role Action extends
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
+    @domain __Role Context $b
+    @relation __Bundle $eid $act $theory $domain $ctx
     return $relation
 end
 
 @faces:faces graph a b
+    @eid __Event
+    @act __Role Action faces
+    @ctx __Role Context StressCompat
     @agent __Role Agent $a
-    @challenge __Role Challenge $b
-    @relation __Bundle $agent $challenge
+    @challenge __Role Attribute $b
+    @relation __Bundle $eid $act $agent $challenge $ctx
     return $relation
 end
 
 @favors:favors graph a b
-    @theory __Role Theory $a
-    @approach __Role Approach $b
-    @relation __Bundle $theory $approach
+    @eid __Event
+    @act __Role Action favors
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
+    @approach __Role Attribute $b
+    @relation __Bundle $eid $act $theory $approach $ctx
     return $relation
 end
 
 @fears:fears graph a b
-    @person __Role Person $a
-    @threat __Role Threat $b
-    @relation __Bundle $person $threat
+    @eid __Event
+    @act __Role Action fears
+    @ctx __Role Context StressCompat
+    @person __Role Entity $a
+    @threat __Role Attribute $b
+    @relation __Bundle $eid $act $person $threat $ctx
     return $relation
 end
 
 @flows:flows graph a b
+    @eid __Event
+    @act __Role Action flows
+    @ctx __Role Context StressCompat
     @process __Role Process $a
     @direction __Role Direction $b
-    @relation __Bundle $process $direction
+    @relation __Bundle $eid $act $process $direction $ctx
     return $relation
 end
 
 @focused:focused graph a b
+    @eid __Event
+    @act __Role Action focused
+    @ctx __Role Context StressCompat
     @process __Role Process $a
     @target __Role Target $b
-    @relation __Bundle $process $target
+    @relation __Bundle $eid $act $process $target $ctx
     return $relation
 end
 
 @focuses:focuses graph a b
-    @theory __Role Theory $a
+    @eid __Event
+    @act __Role Action focuses
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
     @aspect __Role Aspect $b
-    @relation __Bundle $theory $aspect
+    @relation __Bundle $eid $act $theory $aspect $ctx
     return $relation
 end
 
 @follows:follows graph a b
-    @sequence __Role Sequence $a
-    @predecessor __Role Predecessor $b
-    @relation __Bundle $sequence $predecessor
+    @eid __Event
+    @act __Role Action follows
+    @ctx __Role Context StressCompat
+    @sequence __Role Attribute $a
+    @predecessor __Role Attribute $b
+    @relation __Bundle $eid $act $sequence $predecessor $ctx
     return $relation
 end
 
 @found:found graph a b
-    @study __Role Study $a
-    @finding __Role Finding $b
-    @relation __Bundle $study $finding
+    @eid __Event
+    @act __Role Action found
+    @ctx __Role Context StressCompat
+    @study __Role Attribute $a
+    @finding __Role Attribute $b
+    @relation __Bundle $eid $act $study $finding $ctx
     return $relation
 end
 
 @goldstandard:goldstandard graph a b
-    @method __Role Method $a
-    @domain __Role Domain $b
-    @relation __Bundle $method $domain
+    @eid __Event
+    @act __Role Action goldstandard
+    @ctx __Role Context StressCompat
+    @method __Role Process $a
+    @domain __Role Context $b
+    @relation __Bundle $eid $act $method $domain $ctx
     return $relation
 end
 
 @grows:grows graph entity stage
     @e __Role Entity $entity
-    @s __Role Stage $stage
+    @s __Role Attribute $stage
     @development __Pair $e $s
     return $development
 end
 
 @guided:guided graph a b
+    @eid __Event
+    @act __Role Action guided
+    @ctx __Role Context StressCompat
     @process __Role Process $a
-    @principle __Role Principle $b
-    @relation __Bundle $process $principle
+    @principle __Role Property $b
+    @relation __Bundle $eid $act $process $principle $ctx
     return $relation
 end
 
 @had:had graph a b
+    @eid __Event
+    @act __Role Action had
+    @ctx __Role Context StressCompat
     @entity __Role Entity $a
     @property __Role Property $b
-    @relation __Bundle $entity $property
+    @relation __Bundle $eid $act $entity $property $ctx
     return $relation
 end
 
 @handles:handles graph a b
-    @system __Role System $a
-    @input __Role Input $b
-    @relation __Bundle $system $input
+    @eid __Event
+    @act __Role Action handles
+    @ctx __Role Context StressCompat
+    @system __Role Structure $a
+    @input __Role Attribute $b
+    @relation __Bundle $eid $act $system $input $ctx
     return $relation
 end
 
@@ -671,555 +914,759 @@ end
 end
 
 @helps:helps graph a b
-    @factor __Role Factor $a
-    @outcome __Role Outcome $b
-    @relation __Bundle $factor $outcome
+    @eid __Event
+    @act __Role Action helps
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @outcome __Role Attribute $b
+    @relation __Bundle $eid $act $factor $outcome $ctx
     return $relation
 end
 
 @highly:highly graph a b
+    @eid __Event
+    @act __Role Action highly
+    @ctx __Role Context StressCompat
     @entity __Role Entity $a
     @property __Role Property $b
-    @relation __Bundle $entity $property
+    @relation __Bundle $eid $act $entity $property $ctx
     return $relation
 end
 
 @highly_effective:highly_effective graph a b
-    @intervention __Role Intervention $a
+    @eid __Event
+    @act __Role Action highly_effective
+    @ctx __Role Context StressCompat
+    @intervention __Role Attribute $a
     @context __Role Context $b
-    @relation __Bundle $intervention $context
+    @relation __Bundle $eid $act $intervention $context $ctx
     return $relation
 end
 
 @holds:holds graph a b
-    @theory __Role Theory $a
-    @position __Role Position $b
-    @relation __Bundle $theory $position
+    @eid __Event
+    @act __Role Action holds
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
+    @position __Role Attribute $b
+    @relation __Bundle $eid $act $theory $position $ctx
     return $relation
 end
 
 @ignores:ignores graph a b
-    @theory __Role Theory $a
-    @factor __Role Factor $b
-    @relation __Bundle $theory $factor
+    @eid __Event
+    @act __Role Action ignores
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
+    @factor __Role Attribute $b
+    @relation __Bundle $eid $act $theory $factor $ctx
     return $relation
 end
 
 @illustrates:illustrates graph a b
-    @example __Role Example $a
-    @principle __Role Principle $b
-    @relation __Bundle $example $principle
+    @eid __Event
+    @act __Role Action illustrates
+    @ctx __Role Context StressCompat
+    @example __Role Attribute $a
+    @principle __Role Property $b
+    @relation __Bundle $eid $act $example $principle $ctx
     return $relation
 end
 
 @impacts:impacts graph factor outcome
-    @f __Role Factor $factor
-    @o __Role Outcome $outcome
+    @f __Role Attribute $factor
+    @o __Role Attribute $outcome
     @influence __Pair $f $o
     return $influence
 end
 
 @impaired:impaired graph a b
+    @eid __Event
+    @act __Role Action impaired
+    @ctx __Role Context StressCompat
     @function __Role Function $a
-    @condition __Role Condition $b
-    @relation __Bundle $function $condition
+    @condition __Role Attribute $b
+    @relation __Bundle $eid $act $function $condition $ctx
     return $relation
 end
 
 @impairs:impairs graph a b
-    @factor __Role Factor $a
+    @eid __Event
+    @act __Role Action impairs
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
     @function __Role Function $b
-    @relation __Bundle $factor $function
+    @relation __Bundle $eid $act $factor $function $ctx
     return $relation
 end
 
 @includes:includes graph a b
-    @whole __Role Whole $a
-    @part __Role Part $b
-    @relation __Bundle $whole $part
+    @eid __Event
+    @act __Role Action includes
+    @ctx __Role Context StressCompat
+    @whole __Role Attribute $a
+    @part __Role Attribute $b
+    @relation __Bundle $eid $act $whole $part $ctx
     return $relation
 end
 
 @increases:increases graph a b
-    @factor __Role Factor $a
-    @variable __Role Variable $b
-    @relation __Bundle $factor $variable
+    @eid __Event
+    @act __Role Action increases
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @variable __Role Attribute $b
+    @relation __Bundle $eid $act $factor $variable $ctx
     return $relation
 end
 
 @independent:independent graph a b
-    @variable __Role Variable $a
-    @variable __Role Variable $b
-    @relation __Bundle $variable $variable
+    @eid __Event
+    @act __Role Action independent
+    @ctx __Role Context StressCompat
+    @variable __Role Attribute $a
+    @variable __Role Attribute $b
+    @relation __Bundle $eid $act $variable $variable $ctx
     return $relation
 end
 
 @independently:independently graph a b
+    @eid __Event
+    @act __Role Action independently
+    @ctx __Role Context StressCompat
     @process __Role Process $a
     @context __Role Context $b
-    @relation __Bundle $process $context
+    @relation __Bundle $eid $act $process $context $ctx
     return $relation
 end
 
 @influences:influences graph factor outcome
-    @f __Role Factor $factor
-    @o __Role Outcome $outcome
+    @f __Role Attribute $factor
+    @o __Role Attribute $outcome
     @influence __Pair $f $o
     return $influence
 end
 
 @informs:informs graph a b
-    @evidence __Role Evidence $a
-    @theory __Role Theory $b
-    @relation __Bundle $evidence $theory
+    @eid __Event
+    @act __Role Action informs
+    @ctx __Role Context StressCompat
+    @evidence __Role Attribute $a
+    @theory __Role Attribute $b
+    @relation __Bundle $eid $act $evidence $theory $ctx
     return $relation
 end
 
 @insight:insight graph a b
-    @understanding __Role Understanding $a
-    @phenomenon __Role Phenomenon $b
-    @relation __Bundle $understanding $phenomenon
+    @eid __Event
+    @act __Role Action insight
+    @ctx __Role Context StressCompat
+    @understanding __Role Attribute $a
+    @phenomenon __Role Attribute $b
+    @relation __Bundle $eid $act $understanding $phenomenon $ctx
     return $relation
 end
 
 @insufficient:insufficient graph a b
+    @eid __Event
+    @act __Role Action insufficient
+    @ctx __Role Context StressCompat
     @resource __Role Resource $a
-    @requirement __Role Requirement $b
-    @relation __Bundle $resource $requirement
+    @requirement __Role Attribute $b
+    @relation __Bundle $eid $act $resource $requirement $ctx
     return $relation
 end
 
 @involves:involves graph a b
+    @eid __Event
+    @act __Role Action involves
+    @ctx __Role Context StressCompat
     @process __Role Process $a
     @component __Role Component $b
-    @relation __Bundle $process $component
+    @relation __Bundle $eid $act $process $component $ctx
     return $relation
 end
 
 @known:known graph a b
-    @concept __Role Concept $a
+    @eid __Event
+    @act __Role Action known
+    @ctx __Role Context StressCompat
+    @concept __Role Attribute $a
     @attribute __Role Attribute $b
-    @relation __Bundle $concept $attribute
+    @relation __Bundle $eid $act $concept $attribute $ctx
     return $relation
 end
 
 @lack_of:lack_of graph a b
-    @absence __Role Absence $a
-    @element __Role Element $b
-    @relation __Bundle $absence $element
+    @eid __Event
+    @act __Role Action lack_of
+    @ctx __Role Context StressCompat
+    @absence __Role Attribute $a
+    @element __Role Attribute $b
+    @relation __Bundle $eid $act $absence $element $ctx
     return $relation
 end
 
 @lasts:lasts graph a b
+    @eid __Event
+    @act __Role Action lasts
+    @ctx __Role Context StressCompat
     @state __Role State $a
     @duration __Role Duration $b
-    @relation __Bundle $state $duration
+    @relation __Bundle $eid $act $state $duration $ctx
     return $relation
 end
 
 @leads:leads graph cause effect
     @c __Role Cause $cause
-    @e __Role Effect $effect
+    @e __Role Result $effect
     @causation __Pair $c $e
     return $causation
 end
 
 @leadsto:leadsto graph cause effect
     @c __Role Cause $cause
-    @e __Role Effect $effect
+    @e __Role Result $effect
     @causation __Pair $c $e
     return $causation
 end
 
 @learns:learns graph subject object
-    @s __Role Subject $subject
-    @o __Role Object $object
+    @s __Role Attribute $subject
+    @o __Role Theme $object
     @cognition __Pair $s $o
     return $cognition
 end
 
 @less_severe:less_severe graph a b
-    @condition __Role Condition $a
-    @comparison __Role Comparison $b
-    @relation __Bundle $condition $comparison
+    @eid __Event
+    @act __Role Action less_severe
+    @ctx __Role Context StressCompat
+    @condition __Role Attribute $a
+    @comparison __Role Attribute $b
+    @relation __Bundle $eid $act $condition $comparison $ctx
     return $relation
 end
 
 @limited:limited graph a b
-    @capacity __Role Capacity $a
-    @constraint __Role Constraint $b
-    @relation __Bundle $capacity $constraint
+    @eid __Event
+    @act __Role Action limited
+    @ctx __Role Context StressCompat
+    @capacity __Role Attribute $a
+    @constraint __Role Attribute $b
+    @relation __Bundle $eid $act $capacity $constraint $ctx
     return $relation
 end
 
 @limits:limits graph a b
-    @constraint __Role Constraint $a
-    @capacity __Role Capacity $b
-    @relation __Bundle $constraint $capacity
+    @eid __Event
+    @act __Role Action limits
+    @ctx __Role Context StressCompat
+    @constraint __Role Attribute $a
+    @capacity __Role Attribute $b
+    @relation __Bundle $eid $act $constraint $capacity $ctx
     return $relation
 end
 
 @maintains:maintains graph a b
-    @mechanism __Role Mechanism $a
+    @eid __Event
+    @act __Role Action maintains
+    @ctx __Role Context StressCompat
+    @mechanism __Role Attribute $a
     @state __Role State $b
-    @relation __Bundle $mechanism $state
+    @relation __Bundle $eid $act $mechanism $state $ctx
     return $relation
 end
 
 @measured:measured graph a b
+    @eid __Event
+    @act __Role Action measured
+    @ctx __Role Context StressCompat
     @instrument __Role Instrument $a
-    @variable __Role Variable $b
-    @relation __Bundle $instrument $variable
+    @variable __Role Attribute $b
+    @relation __Bundle $eid $act $instrument $variable $ctx
     return $relation
 end
 
 @miller_called:miller_called graph a b
-    @researcher __Role Researcher $a
-    @concept __Role Concept $b
-    @relation __Bundle $researcher $concept
+    @eid __Event
+    @act __Role Action miller_called
+    @ctx __Role Context StressCompat
+    @researcher __Role Agent $a
+    @concept __Role Attribute $b
+    @relation __Bundle $eid $act $researcher $concept $ctx
     return $relation
 end
 
 @modifies:modifies graph factor outcome
-    @f __Role Factor $factor
-    @o __Role Outcome $outcome
+    @f __Role Attribute $factor
+    @o __Role Attribute $outcome
     @influence __Pair $f $o
     return $influence
 end
 
 @more_prominent:more_prominent graph a b
-    @feature __Role Feature $a
+    @eid __Event
+    @act __Role Action more_prominent
+    @ctx __Role Context StressCompat
+    @feature __Role Attribute $a
     @context __Role Context $b
-    @relation __Bundle $feature $context
+    @relation __Bundle $eid $act $feature $context $ctx
     return $relation
 end
 
 @motivates:motivates graph motive action
-    @m __Role Motive $motive
+    @m __Role Attribute $motive
     @a __Role Action $action
     @motivation __Pair $m $a
     return $motivation
 end
 
 @needs:needs graph a b
-    @system __Role System $a
-    @requirement __Role Requirement $b
-    @relation __Bundle $system $requirement
+    @eid __Event
+    @act __Role Action needs
+    @ctx __Role Context StressCompat
+    @system __Role Structure $a
+    @requirement __Role Attribute $b
+    @relation __Bundle $eid $act $system $requirement $ctx
     return $relation
 end
 
 @needsCognition:needsCognition graph a b
+    @eid __Event
+    @act __Role Action needsCognition
+    @ctx __Role Context StressCompat
     @process __Role Process $a
-    @requirement __Role Requirement $b
-    @relation __Bundle $process $requirement
+    @requirement __Role Attribute $b
+    @relation __Bundle $eid $act $process $requirement $ctx
     return $relation
 end
 
 @not_all:not_all graph a b
-    @set __Role Set $a
+    @eid __Event
+    @act __Role Action not_all
+    @ctx __Role Context StressCompat
+    @set __Role Attribute $a
     @property __Role Property $b
-    @relation __Bundle $set $property
+    @relation __Bundle $eid $act $set $property $ctx
     return $relation
 end
 
 @not_cause:not_cause graph a b
-    @factor __Role Factor $a
-    @effect __Role Effect $b
-    @relation __Bundle $factor $effect
+    @eid __Event
+    @act __Role Action not_cause
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @effect __Role Result $b
+    @relation __Bundle $eid $act $factor $effect $ctx
     return $relation
 end
 
 @occurs:occurs graph a b
-    @event __Role Event $a
+    @eid __Event
+    @act __Role Action occurs
+    @ctx __Role Context StressCompat
+    @event __Role Action $a
     @context __Role Context $b
-    @relation __Bundle $event $context
+    @relation __Bundle $eid $act $event $context $ctx
     return $relation
 end
 
 @offers:offers graph a b
+    @eid __Event
+    @act __Role Action offers
+    @ctx __Role Context StressCompat
     @source __Role Source $a
-    @option __Role Option $b
-    @relation __Bundle $source $option
+    @option __Role Attribute $b
+    @relation __Bundle $eid $act $source $option $ctx
     return $relation
 end
 
 @often:often graph a b
-    @pattern __Role Pattern $a
+    @eid __Event
+    @act __Role Action often
+    @ctx __Role Context StressCompat
+    @pattern __Role Structure $a
     @context __Role Context $b
-    @relation __Bundle $pattern $context
+    @relation __Bundle $eid $act $pattern $context $ctx
     return $relation
 end
 
 @operates:operates graph a b
-    @system __Role System $a
-    @mode __Role Mode $b
-    @relation __Bundle $system $mode
+    @eid __Event
+    @act __Role Action operates
+    @ctx __Role Context StressCompat
+    @system __Role Structure $a
+    @mode __Role Manner $b
+    @relation __Bundle $eid $act $system $mode $ctx
     return $relation
 end
 
 @optimal:optimal graph a b
+    @eid __Event
+    @act __Role Action optimal
+    @ctx __Role Context StressCompat
     @state __Role State $a
     @context __Role Context $b
-    @relation __Bundle $state $context
+    @relation __Bundle $eid $act $state $context $ctx
     return $relation
 end
 
 @organized:organized graph a b
-    @system __Role System $a
+    @eid __Event
+    @act __Role Action organized
+    @ctx __Role Context StressCompat
+    @system __Role Structure $a
     @structure __Role Structure $b
-    @relation __Bundle $system $structure
+    @relation __Bundle $eid $act $system $structure $ctx
     return $relation
 end
 
 @oriented:oriented graph a b
-    @approach __Role Approach $a
+    @eid __Event
+    @act __Role Action oriented
+    @ctx __Role Context StressCompat
+    @approach __Role Attribute $a
     @direction __Role Direction $b
-    @relation __Bundle $approach $direction
+    @relation __Bundle $eid $act $approach $direction $ctx
     return $relation
 end
 
 @overcomes:overcomes graph a b
+    @eid __Event
+    @act __Role Action overcomes
+    @ctx __Role Context StressCompat
     @process __Role Process $a
-    @obstacle __Role Obstacle $b
-    @relation __Bundle $process $obstacle
+    @obstacle __Role Attribute $b
+    @relation __Bundle $eid $act $process $obstacle $ctx
     return $relation
 end
 
 @overestimates:overestimates graph a b
+    @eid __Event
+    @act __Role Action overestimates
+    @ctx __Role Context StressCompat
     @process __Role Process $a
-    @variable __Role Variable $b
-    @relation __Bundle $process $variable
+    @variable __Role Attribute $b
+    @relation __Bundle $eid $act $process $variable $ctx
     return $relation
 end
 
 @overly:overly graph a b
+    @eid __Event
+    @act __Role Action overly
+    @ctx __Role Context StressCompat
     @state __Role State $a
     @property __Role Property $b
-    @relation __Bundle $state $property
+    @relation __Bundle $eid $act $state $property $ctx
     return $relation
 end
 
 @pairs:pairs graph a b
+    @eid __Event
+    @act __Role Action pairs
+    @ctx __Role Context StressCompat
     @process __Role Process $a
-    @element __Role Element $b
-    @relation __Bundle $process $element
+    @element __Role Attribute $b
+    @relation __Bundle $eid $act $process $element $ctx
     return $relation
 end
 
 @perceives:perceives graph subject object
-    @s __Role Subject $subject
-    @o __Role Object $object
+    @s __Role Attribute $subject
+    @o __Role Theme $object
     @cognition __Pair $s $o
     return $cognition
 end
 
 @persists:persists graph a b
+    @eid __Event
+    @act __Role Action persists
+    @ctx __Role Context StressCompat
     @state __Role State $a
-    @condition __Role Condition $b
-    @relation __Bundle $state $condition
+    @condition __Role Attribute $b
+    @relation __Bundle $eid $act $state $condition $ctx
     return $relation
 end
 
 @pioneered:pioneered graph a b
-    @pioneer __Role Pioneer $a
-    @field __Role Field $b
-    @relation __Bundle $pioneer $field
+    @eid __Event
+    @act __Role Action pioneered
+    @ctx __Role Context StressCompat
+    @pioneer __Role Attribute $a
+    @field __Role Attribute $b
+    @relation __Bundle $eid $act $pioneer $field $ctx
     return $relation
 end
 
 @primarily:primarily graph a b
-    @focus __Role Focus $a
+    @eid __Event
+    @act __Role Action primarily
+    @ctx __Role Context StressCompat
+    @focus __Role Attribute $a
     @aspect __Role Aspect $b
-    @relation __Bundle $focus $aspect
+    @relation __Bundle $eid $act $focus $aspect $ctx
     return $relation
 end
 
 @produces:produces graph cause effect
     @c __Role Cause $cause
-    @e __Role Effect $effect
+    @e __Role Result $effect
     @causation __Pair $c $e
     return $causation
 end
 
 @promotes:promotes graph a b
-    @factor __Role Factor $a
-    @outcome __Role Outcome $b
-    @relation __Bundle $factor $outcome
+    @eid __Event
+    @act __Role Action promotes
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @outcome __Role Attribute $b
+    @relation __Bundle $eid $act $factor $outcome $ctx
     return $relation
 end
 
 @proposed:proposed graph a b
-    @theorist __Role Theorist $a
-    @theory __Role Theory $b
-    @relation __Bundle $theorist $theory
+    @eid __Event
+    @act __Role Action proposed
+    @ctx __Role Context StressCompat
+    @theorist __Role Attribute $a
+    @theory __Role Attribute $b
+    @relation __Bundle $eid $act $theorist $theory $ctx
     return $relation
 end
 
 @proposes:proposes graph a b
-    @theory __Role Theory $a
-    @concept __Role Concept $b
-    @relation __Bundle $theory $concept
+    @eid __Event
+    @act __Role Action proposes
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
+    @concept __Role Attribute $b
+    @relation __Bundle $eid $act $theory $concept $ctx
     return $relation
 end
 
 @provides:provides graph a b
+    @eid __Event
+    @act __Role Action provides
+    @ctx __Role Context StressCompat
     @source __Role Source $a
     @resource __Role Resource $b
-    @relation __Bundle $source $resource
+    @relation __Bundle $eid $act $source $resource $ctx
     return $relation
 end
 
 @raised:raised graph a b
+    @eid __Event
+    @act __Role Action raised
+    @ctx __Role Context StressCompat
     @agent __Role Agent $a
-    @issue __Role Issue $b
-    @relation __Bundle $agent $issue
+    @issue __Role Attribute $b
+    @relation __Bundle $eid $act $agent $issue $ctx
     return $relation
 end
 
 @ranges:ranges graph a b
-    @variable __Role Variable $a
+    @eid __Event
+    @act __Role Action ranges
+    @ctx __Role Context StressCompat
+    @variable __Role Attribute $a
     @scope __Role Scope $b
-    @relation __Bundle $variable $scope
+    @relation __Bundle $eid $act $variable $scope $ctx
     return $relation
 end
 
 @rapid:rapid graph a b
+    @eid __Event
+    @act __Role Action rapid
+    @ctx __Role Context StressCompat
     @process __Role Process $a
-    @rate __Role Rate $b
-    @relation __Bundle $process $rate
+    @rate __Role Attribute $b
+    @relation __Bundle $eid $act $process $rate $ctx
     return $relation
 end
 
 @rated:rated graph a b
-    @rater __Role Rater $a
+    @eid __Event
+    @act __Role Action rated
+    @ctx __Role Context StressCompat
+    @rater __Role Attribute $a
     @target __Role Target $b
-    @relation __Bundle $rater $target
+    @relation __Bundle $eid $act $rater $target $ctx
     return $relation
 end
 
 @reached:reached graph a b
+    @eid __Event
+    @act __Role Action reached
+    @ctx __Role Context StressCompat
     @process __Role Process $a
-    @milestone __Role Milestone $b
-    @relation __Bundle $process $milestone
+    @milestone __Role Attribute $b
+    @relation __Bundle $eid $act $process $milestone $ctx
     return $relation
 end
 
 @reduce:reduce graph a b
-    @intervention __Role Intervention $a
-    @variable __Role Variable $b
-    @relation __Bundle $intervention $variable
+    @eid __Event
+    @act __Role Action reduce
+    @ctx __Role Context StressCompat
+    @intervention __Role Attribute $a
+    @variable __Role Attribute $b
+    @relation __Bundle $eid $act $intervention $variable $ctx
     return $relation
 end
 
 @rejects:rejects graph a b
-    @theory __Role Theory $a
-    @claim __Role Claim $b
-    @relation __Bundle $theory $claim
+    @eid __Event
+    @act __Role Action rejects
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
+    @claim __Role Content $b
+    @relation __Bundle $eid $act $theory $claim $ctx
     return $relation
 end
 
 @relationship:relationship graph a b
-    @factor __Role Factor $a
-    @factor __Role Factor $b
-    @relation __Bundle $factor $factor
+    @eid __Event
+    @act __Role Action relationship
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @factor __Role Attribute $b
+    @relation __Bundle $eid $act $factor $factor $ctx
     return $relation
 end
 
 @releases:releases graph a b
-    @system __Role System $a
-    @substance __Role Substance $b
-    @relation __Bundle $system $substance
+    @eid __Event
+    @act __Role Action releases
+    @ctx __Role Context StressCompat
+    @system __Role Structure $a
+    @substance __Role Attribute $b
+    @relation __Bundle $eid $act $system $substance $ctx
     return $relation
 end
 
 @relies:relies graph a b
+    @eid __Event
+    @act __Role Action relies
+    @ctx __Role Context StressCompat
     @process __Role Process $a
-    @mechanism __Role Mechanism $b
-    @relation __Bundle $process $mechanism
+    @mechanism __Role Attribute $b
+    @relation __Bundle $eid $act $process $mechanism $ctx
     return $relation
 end
 
 @removes:removes graph a b
+    @eid __Event
+    @act __Role Action removes
+    @ctx __Role Context StressCompat
     @process __Role Process $a
-    @element __Role Element $b
-    @relation __Bundle $process $element
+    @element __Role Attribute $b
+    @relation __Bundle $eid $act $process $element $ctx
     return $relation
 end
 
 @renamed:renamed graph a b
+    @eid __Event
+    @act __Role Action renamed
+    @ctx __Role Context StressCompat
     @agent __Role Agent $a
-    @concept __Role Concept $b
-    @relation __Bundle $agent $concept
+    @concept __Role Attribute $b
+    @relation __Bundle $eid $act $agent $concept $ctx
     return $relation
 end
 
 @replaced:replaced graph a b
-    @new __Role New $a
-    @old __Role Old $b
-    @relation __Bundle $new $old
+    @eid __Event
+    @act __Role Action replaced
+    @ctx __Role Context StressCompat
+    @new __Role Attribute $a
+    @old __Role Attribute $b
+    @relation __Bundle $eid $act $new $old $ctx
     return $relation
 end
 
 @represents:represents graph a b
-    @symbol __Role Symbol $a
-    @concept __Role Concept $b
-    @relation __Bundle $symbol $concept
+    @eid __Event
+    @act __Role Action represents
+    @ctx __Role Context StressCompat
+    @symbol __Role Attribute $a
+    @concept __Role Attribute $b
+    @relation __Bundle $eid $act $symbol $concept $ctx
     return $relation
 end
 
 @responds:responds graph subject emotion
-    @s __Role Subject $subject
-    @e __Role Emotion $emotion
+    @s __Role Attribute $subject
+    @e __Role State $emotion
     @affective __Pair $s $e
     return $affective
 end
 
 @results:results graph cause effect
     @c __Role Cause $cause
-    @e __Role Effect $effect
+    @e __Role Result $effect
     @causation __Pair $c $e
     return $causation
 end
 
 @risk:risk graph a b
-    @factor __Role Factor $a
-    @outcome __Role Outcome $b
-    @relation __Bundle $factor $outcome
+    @eid __Event
+    @act __Role Action risk
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @outcome __Role Attribute $b
+    @relation __Bundle $eid $act $factor $outcome $ctx
     return $relation
 end
 
 @risks:risks graph a b
-    @factor __Role Factor $a
-    @outcome __Role Outcome $b
-    @relation __Bundle $factor $outcome
+    @eid __Event
+    @act __Role Action risks
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
+    @outcome __Role Attribute $b
+    @relation __Bundle $eid $act $factor $outcome $ctx
     return $relation
 end
 
 @serves:serves graph a b
-    @element __Role Element $a
+    @eid __Event
+    @act __Role Action serves
+    @ctx __Role Context StressCompat
+    @element __Role Attribute $a
     @function __Role Function $b
-    @relation __Bundle $element $function
+    @relation __Bundle $eid $act $element $function $ctx
     return $relation
 end
 
 @sets:sets graph a b
+    @eid __Event
+    @act __Role Action sets
+    @ctx __Role Context StressCompat
     @process __Role Process $a
-    @parameter __Role Parameter $b
-    @relation __Bundle $process $parameter
+    @parameter __Role Attribute $b
+    @relation __Bundle $eid $act $process $parameter $ctx
     return $relation
 end
 
 @shaped:shaped graph a b
-    @influence __Role Influence $a
-    @development __Role Development $b
-    @relation __Bundle $influence $development
+    @eid __Event
+    @act __Role Action shaped
+    @ctx __Role Context StressCompat
+    @influence __Role Attribute $a
+    @development __Role Attribute $b
+    @relation __Bundle $eid $act $influence $development $ctx
     return $relation
 end
 
 @showed:showed graph a b
-    @study __Role Study $a
+    @eid __Event
+    @act __Role Action showed
+    @ctx __Role Context StressCompat
+    @study __Role Attribute $a
     @result __Role Result $b
-    @relation __Bundle $study $result
+    @relation __Bundle $eid $act $study $result $ctx
     return $relation
 end
 
@@ -1231,184 +1678,259 @@ end
 end
 
 @significantly:significantly graph a b
-    @effect __Role Effect $a
+    @eid __Event
+    @act __Role Action significantly
+    @ctx __Role Context StressCompat
+    @effect __Role Result $a
     @context __Role Context $b
-    @relation __Bundle $effect $context
+    @relation __Bundle $eid $act $effect $context $ctx
     return $relation
 end
 
 @stabilizes:stabilizes graph a b
-    @mechanism __Role Mechanism $a
+    @eid __Event
+    @act __Role Action stabilizes
+    @ctx __Role Context StressCompat
+    @mechanism __Role Attribute $a
     @state __Role State $b
-    @relation __Bundle $mechanism $state
+    @relation __Bundle $eid $act $mechanism $state $ctx
     return $relation
 end
 
 @states:states graph a b
-    @theory __Role Theory $a
-    @proposition __Role Proposition $b
-    @relation __Bundle $theory $proposition
+    @eid __Event
+    @act __Role Action states
+    @ctx __Role Context StressCompat
+    @theory __Role Attribute $a
+    @proposition __Role Content $b
+    @relation __Bundle $eid $act $theory $proposition $ctx
     return $relation
 end
 
 @status:status graph a b
+    @eid __Event
+    @act __Role Action status
+    @ctx __Role Context StressCompat
     @entity __Role Entity $a
     @state __Role State $b
-    @relation __Bundle $entity $state
+    @relation __Bundle $eid $act $entity $state $ctx
     return $relation
 end
 
 @stores:stores graph a b
-    @system __Role System $a
-    @information __Role Information $b
-    @relation __Bundle $system $information
+    @eid __Event
+    @act __Role Action stores
+    @ctx __Role Context StressCompat
+    @system __Role Structure $a
+    @information __Role Attribute $b
+    @relation __Bundle $eid $act $system $information $ctx
     return $relation
 end
 
 @strong:strong graph a b
-    @relationship __Role Relationship $a
+    @eid __Event
+    @act __Role Action strong
+    @ctx __Role Context StressCompat
+    @relationship __Role Attribute $a
     @context __Role Context $b
-    @relation __Bundle $relationship $context
+    @relation __Bundle $eid $act $relationship $context $ctx
     return $relation
 end
 
 @structured:structured graph a b
-    @system __Role System $a
-    @organization __Role Organization $b
-    @relation __Bundle $system $organization
+    @eid __Event
+    @act __Role Action structured
+    @ctx __Role Context StressCompat
+    @system __Role Structure $a
+    @organization __Role Attribute $b
+    @relation __Bundle $eid $act $system $organization $ctx
     return $relation
 end
 
 @struggles:struggles graph a b
+    @eid __Event
+    @act __Role Action struggles
+    @ctx __Role Context StressCompat
     @agent __Role Agent $a
-    @challenge __Role Challenge $b
-    @relation __Bundle $agent $challenge
+    @challenge __Role Attribute $b
+    @relation __Bundle $eid $act $agent $challenge $ctx
     return $relation
 end
 
 @studied:studied graph a b
-    @researcher __Role Researcher $a
-    @phenomenon __Role Phenomenon $b
-    @relation __Bundle $researcher $phenomenon
+    @eid __Event
+    @act __Role Action studied
+    @ctx __Role Context StressCompat
+    @researcher __Role Agent $a
+    @phenomenon __Role Attribute $b
+    @relation __Bundle $eid $act $researcher $phenomenon $ctx
     return $relation
 end
 
 @studies:studies graph a b
-    @field __Role Field $a
-    @topic __Role Topic $b
-    @relation __Bundle $field $topic
+    @eid __Event
+    @act __Role Action studies
+    @ctx __Role Context StressCompat
+    @field __Role Attribute $a
+    @topic __Role Attribute $b
+    @relation __Bundle $eid $act $field $topic $ctx
     return $relation
 end
 
 @subject:subject graph a b
-    @study __Role Study $a
-    @topic __Role Topic $b
-    @relation __Bundle $study $topic
+    @eid __Event
+    @act __Role Action subject
+    @ctx __Role Context StressCompat
+    @study __Role Attribute $a
+    @topic __Role Attribute $b
+    @relation __Bundle $eid $act $study $topic $ctx
     return $relation
 end
 
 @suggests:suggests graph a b
-    @evidence __Role Evidence $a
-    @conclusion __Role Conclusion $b
-    @relation __Bundle $evidence $conclusion
+    @eid __Event
+    @act __Role Action suggests
+    @ctx __Role Context StressCompat
+    @evidence __Role Attribute $a
+    @conclusion __Role Attribute $b
+    @relation __Bundle $eid $act $evidence $conclusion $ctx
     return $relation
 end
 
 @superior:superior graph a b
-    @option __Role Option $a
-    @comparison __Role Comparison $b
-    @relation __Bundle $option $comparison
+    @eid __Event
+    @act __Role Action superior
+    @ctx __Role Context StressCompat
+    @option __Role Attribute $a
+    @comparison __Role Attribute $b
+    @relation __Bundle $eid $act $option $comparison $ctx
     return $relation
 end
 
 @supports:supports graph a b
-    @evidence __Role Evidence $a
-    @claim __Role Claim $b
-    @relation __Bundle $evidence $claim
+    @eid __Event
+    @act __Role Action supports
+    @ctx __Role Context StressCompat
+    @evidence __Role Attribute $a
+    @claim __Role Content $b
+    @relation __Bundle $eid $act $evidence $claim $ctx
     return $relation
 end
 
 @susceptible:susceptible graph a b
+    @eid __Event
+    @act __Role Action susceptible
+    @ctx __Role Context StressCompat
     @entity __Role Entity $a
-    @risk __Role Risk $b
-    @relation __Bundle $entity $risk
+    @risk __Role Attribute $b
+    @relation __Bundle $eid $act $entity $risk $ctx
     return $relation
 end
 
 @symptom:symptom graph a b
-    @disorder __Role Disorder $a
-    @sign __Role Sign $b
-    @relation __Bundle $disorder $sign
+    @eid __Event
+    @act __Role Action symptom
+    @ctx __Role Context StressCompat
+    @disorder __Role Attribute $a
+    @sign __Role Attribute $b
+    @relation __Bundle $eid $act $disorder $sign $ctx
     return $relation
 end
 
 @targets:targets graph a b
-    @intervention __Role Intervention $a
-    @symptom __Role Symptom $b
-    @relation __Bundle $intervention $symptom
+    @eid __Event
+    @act __Role Action targets
+    @ctx __Role Context StressCompat
+    @intervention __Role Attribute $a
+    @symptom __Role Attribute $b
+    @relation __Bundle $eid $act $intervention $symptom $ctx
     return $relation
 end
 
 @tends:tends graph a b
+    @eid __Event
+    @act __Role Action tends
+    @ctx __Role Context StressCompat
     @entity __Role Entity $a
-    @pattern __Role Pattern $b
-    @relation __Bundle $entity $pattern
+    @pattern __Role Structure $b
+    @relation __Bundle $eid $act $entity $pattern $ctx
     return $relation
 end
 
 @threatens:threatens graph a b
-    @factor __Role Factor $a
+    @eid __Event
+    @act __Role Action threatens
+    @ctx __Role Context StressCompat
+    @factor __Role Attribute $a
     @target __Role Target $b
-    @relation __Bundle $factor $target
+    @relation __Bundle $eid $act $factor $target $ctx
     return $relation
 end
 
 @top:top graph a b
-    @hierarchy __Role Hierarchy $a
-    @level __Role Level $b
-    @relation __Bundle $hierarchy $level
+    @eid __Event
+    @act __Role Action top
+    @ctx __Role Context StressCompat
+    @hierarchy __Role Attribute $a
+    @level __Role Attribute $b
+    @relation __Bundle $eid $act $hierarchy $level $ctx
     return $relation
 end
 
 @typically:typically graph a b
-    @pattern __Role Pattern $a
+    @eid __Event
+    @act __Role Action typically
+    @ctx __Role Context StressCompat
+    @pattern __Role Structure $a
     @context __Role Context $b
-    @relation __Bundle $pattern $context
+    @relation __Bundle $eid $act $pattern $context $ctx
     return $relation
 end
 
 @typicallyLasts:typicallyLasts graph a b
+    @eid __Event
+    @act __Role Action typicallyLasts
+    @ctx __Role Context StressCompat
     @state __Role State $a
     @duration __Role Duration $b
-    @relation __Bundle $state $duration
+    @relation __Bundle $eid $act $state $duration $ctx
     return $relation
 end
 
 @underlying:underlying graph a b
-    @basis __Role Basis $a
-    @surface __Role Surface $b
-    @relation __Bundle $basis $surface
+    @eid __Event
+    @act __Role Action underlying
+    @ctx __Role Context StressCompat
+    @basis __Role Attribute $a
+    @surface __Role Attribute $b
+    @relation __Bundle $eid $act $basis $surface $ctx
     return $relation
 end
 
 @understands:understands graph subject object
-    @s __Role Subject $subject
-    @o __Role Object $object
+    @s __Role Attribute $subject
+    @o __Role Theme $object
     @cognition __Pair $s $o
     return $cognition
 end
 
 @useful:useful graph a b
-    @tool __Role Tool $a
+    @eid __Event
+    @act __Role Action useful
+    @ctx __Role Context StressCompat
+    @tool __Role Attribute $a
     @context __Role Context $b
-    @relation __Bundle $tool $context
+    @relation __Bundle $eid $act $tool $context $ctx
     return $relation
 end
 
 @varies:varies graph a b
-    @variable __Role Variable $a
+    @eid __Event
+    @act __Role Action varies
+    @ctx __Role Context StressCompat
+    @variable __Role Attribute $a
     @context __Role Context $b
-    @relation __Bundle $variable $context
+    @relation __Bundle $eid $act $variable $context $ctx
     return $relation
 end
 

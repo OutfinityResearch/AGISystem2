@@ -1,215 +1,94 @@
 # Sociology - Domain Concepts
-# Foundational sociological concepts with proper graph semantics
+# Core-compatible concept graphs for sociological vocabulary.
 
-# ===== Social Structure =====
+@_:Sociology isA Sociology AbstractType
 
-@Society:Society graph collective
-    # Organized group of people
-    @coll __Role Collective $collective
-    @type __Role Type Society
-    @organized __Role Property Structure
-    @shared __Role Feature SharedCulture
-    @concept __Bundle $coll $type $organized $shared
+@Society:Society graph entity
+    @e __Role Entity $entity
+    @type __Role Type OrganizationType
+    @ctx __Role Context Sociology
+    @role __Role Role Society
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Institution:Institution graph structure
-    # Established social structure
-    @struct __Role Structure $structure
-    @type __Role Type SocialInstitution
-    @normative __Role Property RuleGoverned
-    @persistent __Role TimeScale Enduring
-    @concept __Bundle $struct $type $normative $persistent
+@SocialGroup:SocialGroup graph entity
+    @e __Role Entity $entity
+    @type __Role Type OrganizationType
+    @ctx __Role Context Sociology
+    @role __Role Role SocialGroup
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Class:Class graph stratum
-    # Social class or stratum
-    @strat __Role Stratum $stratum
-    @type __Role Type SocialClass
-    @hierarchical __Role Nature Stratified
-    @economic __Role Basis EconomicPosition
-    @concept __Bundle $strat $type $hierarchical $economic
+@SocialInstitution:SocialInstitution graph entity
+    @e __Role Entity $entity
+    @type __Role Type OrganizationType
+    @ctx __Role Context Sociology
+    @role __Role Role SocialInstitution
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Status:Status graph position
-    # Social standing
-    @pos __Role Position $position
-    @type __Role Type SocialStatus
-    @prestige __Role Dimension Prestige
-    @relational __Role Nature RelativeRanking
-    @concept __Bundle $pos $type $prestige $relational
+@SocialNorm:SocialNorm graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Sociology
+    @role __Role Role SocialNorm
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Role:Role graph position
-    # Expected behavior pattern
-    @pat __Role Position $position
-    @type __Role Type SocialRole
-    @behavioral __Role Content Expectations
-    @normative __Role Nature Prescribed
-    @concept __Bundle $pat $type $behavioral $normative
+@SocialRole:SocialRole graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Sociology
+    @role __Role Role SocialRole
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-# ===== Social Processes =====
-
-@Socialization:Socialization graph process
-    # Learning social norms and roles
-    @proc __Role Process $process
-    @type __Role Type Socialization
-    @learning __Role Nature Acquisition
-    @cultural __Role Content NormsAndValues
-    @concept __Bundle $proc $type $learning $cultural
+@SocialStatus:SocialStatus graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Sociology
+    @role __Role Role SocialStatus
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Interaction:Interaction graph process
-    # Social interaction between actors
-    @proc __Role Process $process
-    @type __Role Type SocialInteraction
-    @reciprocal __Role Nature Mutual
-    @meaningful __Role Property Symbolic
-    @concept __Bundle $proc $type $reciprocal $meaningful
+@SocialNetwork:SocialNetwork graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Sociology
+    @role __Role Role SocialNetwork
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Conflict:Conflict graph process
-    # Social conflict
-    @proc __Role Process $process
-    @type __Role Type SocialConflict
-    @opposition __Role Nature ContradictoryInterests
-    @dynamic __Role Character ChangeProducing
-    @concept __Bundle $proc $type $opposition $dynamic
+@SocialClass:SocialClass graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Sociology
+    @role __Role Role SocialClass
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-@Change:Change graph process
-    # Social change
-    @proc __Role Process $process
-    @type __Role Type SocialChange
-    @transformation __Role Nature Alteration
-    @collective __Role Level SocietyWide
-    @concept __Bundle $proc $type $transformation $collective
+@SocialPower:SocialPower graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Sociology
+    @role __Role Role SocialPower
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end
 
-# ===== Groups & Organizations =====
-
-@Group:Group graph collective
-    # Social group
-    @coll __Role Collective $collective
-    @type __Role Type SocialGroup
-    @interactive __Role Property Interaction
-    @identity __Role Feature SharedIdentity
-    @concept __Bundle $coll $type $interactive $identity
-    return $concept
-end
-
-@Organization:Organization graph structure
-    # Formal organization
-    @struct __Role Structure $structure
-    @type __Role Type Organization
-    @formal __Role Property RulesAndRoles
-    @purposive __Role Nature GoalOriented
-    @concept __Bundle $struct $type $formal $purposive
-    return $concept
-end
-
-@Network:Network graph structure
-    # Social network
-    @struct __Role Structure $structure
-    @type __Role Type SocialNetwork
-    @relational __Role Nature Connections
-    @patterns __Role Property StructuredRelations
-    @concept __Bundle $struct $type $relational $patterns
-    return $concept
-end
-
-# ===== Culture & Norms =====
-
-@Culture:Culture graph system
-    # System of shared meanings
-    @sys __Role System $system
-    @type __Role Type Culture
-    @symbolic __Role Nature Meanings
-    @shared __Role Property Collective
-    @learned __Role Transmission SociallyTransmitted
-    @concept __Bundle $sys $type $symbolic $shared
-    return $concept
-end
-
-@Norm:Norm graph socialnorm
-    # Social norm
-    @r __Role Rule $socialnorm
-    @type __Role Type SocialNorm
-    @prescriptive __Role Nature Prescriptive
-    @shared __Role Property Collective
-    @concept __Bundle $r $type $prescriptive $shared
-    return $concept
-end
-
-@Value:Value graph belief
-    # Shared value
-    @bel __Role Belief $belief
-    @type __Role Type SocialValue
-    @evaluative __Role Nature Evaluative
-    @core __Role Importance Fundamental
-    @concept __Bundle $bel $type $evaluative $core
-    return $concept
-end
-
-# ===== Inequality & Stratification =====
-
-@Inequality:Inequality graph condition
-    # Social inequality
-    @cond __Role Condition $condition
-    @type __Role Type SocialInequality
-    @unequal __Role Nature UnequalDistribution
-    @resources __Role Domain Resources
-    @concept __Bundle $cond $type $unequal $resources
-    return $concept
-end
-
-@Power:Power graph capacity
-    # Social power
-    @cap __Role Capacity $capacity
-    @type __Role Type SocialPower
-    @influence __Role Nature Influence
-    @relational __Role Context SocialRelations
-    @concept __Bundle $cap $type $influence $relational
-    return $concept
-end
-
-@Mobility:Mobility graph process
-    # Social mobility
-    @proc __Role Process $process
-    @type __Role Type SocialMobility
-    @movement __Role Nature StatusChange
-    @stratification __Role Context ClassSystem
-    @concept __Bundle $proc $type $movement $stratification
-    return $concept
-end
-
-# ===== Deviance & Control =====
-
-@Deviance:Deviance graph behavior
-    # Deviant behavior
-    @behav __Role Behavior $behavior
-    @type __Role Type Deviance
-    @normViolation __Role Nature NormViolating
-    @labeled __Role Process SociallyDefined
-    @concept __Bundle $behav $type $normViolation $labeled
-    return $concept
-end
-
-@Control:Control graph mechanism
-    # Social control
-    @mech __Role Mechanism $mechanism
-    @type __Role Type SocialControl
-    @regulatory __Role Purpose Conformity
-    @sanctions __Role Method Sanctions
-    @concept __Bundle $mech $type $regulatory $sanctions
+@SocialChange:SocialChange graph entity
+    @e __Role Entity $entity
+    @type __Role Type AbstractType
+    @ctx __Role Context Sociology
+    @role __Role Role SocialChange
+    @concept __Bundle $e $type $ctx $role
     return $concept
 end

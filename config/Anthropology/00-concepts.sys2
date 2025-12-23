@@ -5,41 +5,41 @@
 
 @Culture:Culture graph system
     # System of shared learned behaviors and meanings
-    @sys __Role System $system
+    @sys __Role Structure $system
     @type __Role Type Culture
-    @learned __Role Transmission Learned
+    @learned __Role Property Learned
     @shared __Role Property Collective
-    @symbolic __Role Nature Symbolic
-    @concept __Bundle $sys $type $learned $shared
+    @symbolic __Role Property Symbolic
+    @concept __Bundle $sys $type $learned $shared $symbolic
     return $concept
 end
 
 @Ritual:Ritual graph practice
     # Formalized ceremonial practice
-    @pract __Role Practice $practice
+    @pract __Role Action $practice
     @type __Role Type Ritual
     @formal __Role Property Formalized
-    @symbolic __Role Nature Symbolic
-    @repeated __Role Pattern Repetitive
-    @concept __Bundle $pract $type $formal $symbolic
+    @symbolic __Role Property Symbolic
+    @repeated __Role Property Repetitive
+    @concept __Bundle $pract $type $formal $symbolic $repeated
     return $concept
 end
 
 @Symbol:Symbol graph representation
     # Cultural symbol
-    @rep __Role Representation $representation
+    @rep __Role Content $representation
     @type __Role Type Symbol
     @meaningful __Role Property CarriesMeaning
-    @arbitrary __Role Nature Arbitrary
+    @arbitrary __Role Property Arbitrary
     @concept __Bundle $rep $type $meaningful $arbitrary
     return $concept
 end
 
 @Tradition:Tradition graph practice
     # Traditional practice passed across generations
-    @pract __Role Practice $practice
+    @pract __Role Action $practice
     @type __Role Type Tradition
-    @transmitted __Role Transmission GenerationalTransmission
+    @transmitted __Role Process GenerationalTransmission
     @persistent __Role Property Enduring
     @concept __Bundle $pract $type $transmitted $persistent
     return $concept
@@ -47,9 +47,9 @@ end
 
 @Myth:Myth graph narrative
     # Cultural narrative
-    @narr __Role Narrative $narrative
+    @narr __Role Content $narrative
     @type __Role Type Myth
-    @sacred __Role Nature Sacred
+    @sacred __Role Property Sacred
     @explanatory __Role Function ExplainsOrigins
     @concept __Bundle $narr $type $sacred $explanatory
     return $concept
@@ -59,9 +59,9 @@ end
 
 @Kinship:Kinship graph system
     # System of family relations
-    @sys __Role System $system
+    @sys __Role Structure $system
     @type __Role Type KinshipSystem
-    @genealogical __Role Basis Descent
+    @genealogical __Role Attribute Descent
     @organizing __Role Function SocialOrganization
     @concept __Bundle $sys $type $genealogical $organizing
     return $concept
@@ -71,8 +71,8 @@ end
     # Descent group
     @grp __Role Group $group
     @type __Role Type Lineage
-    @descent __Role Basis CommonAncestor
-    @unilineal __Role Structure UnilateralDescent
+    @descent __Role Attribute CommonAncestor
+    @unilineal __Role Attribute UnilateralDescent
     @concept __Bundle $grp $type $descent $unilineal
     return $concept
 end
@@ -81,15 +81,15 @@ end
     # Larger kin group
     @grp __Role Group $group
     @type __Role Type Clan
-    @totemic __Role Symbol TotemicIdentity
-    @exogamous __Role Rule Exogamy
+    @totemic __Role Attribute TotemicIdentity
+    @exogamous __Role Property Exogamy
     @concept __Bundle $grp $type $totemic $exogamous
     return $concept
 end
 
 @Marriage:Marriage graph institution
     # Marriage institution
-    @inst __Role Institution $institution
+    @inst __Role Structure $institution
     @type __Role Type Marriage
     @alliance __Role Function SocialAlliance
     @regulated __Role Property RuleGoverned
@@ -101,9 +101,9 @@ end
 
 @Artifact:Artifact graph object
     # Human-made object
-    @obj __Role Object $object
+    @obj __Role Entity $object
     @type __Role Type Artifact
-    @manufactured __Role Origin HumanMade
+    @manufactured __Role Property HumanMade
     @material __Role Property PhysicalObject
     @concept __Bundle $obj $type $manufactured $material
     return $concept
@@ -111,9 +111,9 @@ end
 
 @Technology:Technology graph system
     # System of techniques and tools
-    @sys __Role System $system
+    @sys __Role Structure $system
     @type __Role Type Technology
-    @practical __Role Nature ToolsAndTechniques
+    @practical __Role Attribute ToolsAndTechniques
     @adaptive __Role Function ProblemSolving
     @concept __Bundle $sys $type $practical $adaptive
     return $concept
@@ -123,19 +123,19 @@ end
 
 @Subsistence:Subsistence graph system
     # Mode of obtaining food
-    @sys __Role System $system
+    @sys __Role Structure $system
     @type __Role Type SubsistenceMode
-    @economic __Role Domain Economy
-    @adaptive __Role Nature Adaptation
+    @economic __Role Context Economy
+    @adaptive __Role Attribute Adaptation
     @concept __Bundle $sys $type $economic $adaptive
     return $concept
 end
 
 @Exchange:Exchange graph practice
     # Economic exchange
-    @pract __Role Practice $practice
+    @pract __Role Action $practice
     @type __Role Type Exchange
-    @reciprocal __Role Nature Reciprocity
+    @reciprocal __Role Attribute Reciprocity
     @social __Role Function CreatesObligations
     @concept __Bundle $pract $type $reciprocal $social
     return $concept
@@ -145,9 +145,9 @@ end
 
 @Religion:Religion graph system
     # Religious belief system
-    @sys __Role System $system
+    @sys __Role Structure $system
     @type __Role Type Religion
-    @sacred __Role Domain Sacred
+    @sacred __Role Property Sacred
     @beliefs __Role Content Cosmology
     @practices __Role Component Rituals
     @concept __Bundle $sys $type $sacred $beliefs
@@ -156,9 +156,9 @@ end
 
 @Worldview:Worldview graph framework
     # Cultural worldview
-    @frame __Role Framework $framework
+    @frame __Role Structure $framework
     @type __Role Type Worldview
-    @comprehensive __Role Scope Holistic
+    @comprehensive __Role Property Holistic
     @interpretive __Role Function MeaningFramework
     @concept __Bundle $frame $type $comprehensive $interpretive
     return $concept
@@ -171,7 +171,7 @@ end
     @proc __Role Process $process
     @type __Role Type CulturalAdaptation
     @environmental __Role Context Environment
-    @responsive __Role Nature Responsive
+    @responsive __Role Property Responsive
     @concept __Bundle $proc $type $environmental $responsive
     return $concept
 end
@@ -180,8 +180,8 @@ end
     # Cultural evolution
     @proc __Role Process $process
     @type __Role Type CulturalEvolution
-    @change __Role Nature Change
-    @cumulative __Role Pattern Cumulative
+    @change __Role Attribute Change
+    @cumulative __Role Property Cumulative
     @concept __Bundle $proc $type $change $cumulative
     return $concept
 end
@@ -190,9 +190,9 @@ end
 
 @Ethnography:Ethnography graph method
     # Ethnographic research method
-    @meth __Role Method $method
+    @meth __Role Process $method
     @type __Role Type Ethnography
-    @fieldwork __Role Technique ParticipantObservation
+    @fieldwork __Role Instrument ParticipantObservation
     @descriptive __Role Purpose CulturalDescription
     @concept __Bundle $meth $type $fieldwork $descriptive
     return $concept
@@ -202,8 +202,8 @@ end
     # Cultural informant
     @r __Role Role $role
     @type __Role Type Informant
-    @knowledgeable __Role Property CulturalKnowledge
-    @source __Role Function DataSource
+    @knowledgeable __Role Attribute CulturalKnowledge
+    @source __Role Source DataSource
     @concept __Bundle $r $type $knowledgeable $source
     return $concept
 end
