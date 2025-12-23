@@ -33,7 +33,7 @@ end
 
 @Individual:Individual graph organism
     # Single organism
-    @org __Role Organism $organism
+    @org __Role Theme $organism
     @type __Role Type Individual
     @unique __Role Property SingleEntity
     @concept __Bundle $org $type $unique
@@ -86,7 +86,7 @@ end
 
 @Gene:Gene graph sequence
     # DNA sequence coding for functional product
-    @seq __Role Sequence $sequence
+    @seq __Role Theme $sequence
     @type __Role Type Gene
     @coding __Role Property CodesForProduct
     @hereditary __Role Property Inheritable
@@ -96,7 +96,7 @@ end
 
 @Protein:Protein graph molecule
     # Functional macromolecule made of amino acids
-    @mol __Role Molecule $molecule
+    @mol __Role Theme $molecule
     @type __Role Type Protein
     @polymer __Role Structure Polypeptide
     @functional __Role Property BiologicallyActive
@@ -106,7 +106,7 @@ end
 
 @DNA:DNA graph molecule
     # Deoxyribonucleic acid - genetic material
-    @mol __Role Molecule $molecule
+    @mol __Role Theme $molecule
     @type __Role Type DNA
     @nucleic __Role Class NucleicAcid
     @genetic __Role Property GeneticMaterial
@@ -117,7 +117,7 @@ end
 
 @RNA:RNA graph molecule
     # Ribonucleic acid
-    @mol __Role Molecule $molecule
+    @mol __Role Theme $molecule
     @type __Role Type RNA
     @nucleic __Role Class NucleicAcid
     @messenger __Role Function TranscriptionTranslation
@@ -127,7 +127,7 @@ end
 
 @Enzyme:Enzyme graph protein
     # Biological catalyst
-    @prot __Role Protein $protein
+    @prot __Role Theme $protein
     @type __Role Type Enzyme
     @catalytic __Role Property Catalyzes
     @specific __Role Property SubstrateSpecific
@@ -181,7 +181,7 @@ end
 
 @Ecosystem:Ecosystem graph system
     # Community of organisms and environment
-    @sys __Role System $system
+    @sys __Role Structure $system
     @type __Role Type Ecosystem
     @biotic __Role Component Organisms
     @abiotic __Role Component Environment
@@ -216,24 +216,24 @@ end
     @proc __Role Process $process
     @type __Role Type Evolution
     @heritable __Role Scope HeritableTraits
-    @generational __Role TimeScale Generations
+    @generational __Role Time Generations
     @concept __Bundle $proc $type $heritable $generational
     return $concept
 end
 
 @Adaptation:Adaptation graph trait
     # Trait that enhances survival/reproduction
-    @tr __Role Trait $trait
+    @tr __Role Theme $trait
     @type __Role Type Adaptation
     @advantageous __Role Property IncreasedFitness
-    @selected __Role Origin NaturalSelection
+    @selected __Role Cause NaturalSelection
     @concept __Bundle $tr $type $advantageous $selected
     return $concept
 end
 
 @Mutation:Mutation graph change
     # Change in DNA sequence
-    @ch __Role Change $change
+    @ch __Role Theme $change
     @type __Role Type Mutation
     @genetic __Role Target DNA
     @random __Role Nature Random
@@ -246,7 +246,7 @@ end
     # Differential survival and reproduction
     @proc __Role Process $process
     @type __Role Type NaturalSelection
-    @differential __Role Mechanism DifferentialReproduction
+    @differential __Role Process DifferentialReproduction
     @adaptive __Role Result IncreasedFitness
     @concept __Bundle $proc $type $differential $adaptive
     return $concept
@@ -259,14 +259,14 @@ end
     @st __Role State $state
     @type __Role Type Homeostasis
     @stable __Role Property StableEquilibrium
-    @regulated __Role Mechanism ActiveRegulation
+    @regulated __Role Process ActiveRegulation
     @concept __Bundle $st $type $stable $regulated
     return $concept
 end
 
 @Stimulus:Stimulus graph signal
     # Environmental change detected by organism
-    @sig __Role Signal $signal
+    @sig __Role Theme $signal
     @type __Role Type Stimulus
     @external __Role Source Environmental
     @detectable __Role Property Sensed
@@ -276,7 +276,7 @@ end
 
 @Response:Response graph reaction
     # Organism's reaction to stimulus
-    @react __Role Reaction $reaction
+    @react __Role Theme $reaction
     @type __Role Type BiologicalResponse
     @triggered __Role Cause StimulusTriggered
     @adaptive __Role Purpose AdaptiveReaction

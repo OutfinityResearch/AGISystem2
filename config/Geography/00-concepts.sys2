@@ -17,7 +17,7 @@ end
 
 @Mountain:Mountain graph landform
     # Elevated landform
-    @land __Role Landform $landform
+    @land __Role Theme $landform
     @type __Role Type Mountain
     @ctx __Role Context Geography
     @concept __Bundle $ctx $land $type
@@ -44,7 +44,7 @@ end
 
 @Climate:Climate graph pattern
     # Long-term weather pattern
-    @pat __Role Pattern $pattern
+    @pat __Role Structure $pattern
     @type __Role Type Climate
     @ctx __Role Context Geography
     @concept __Bundle $ctx $pat $type
@@ -131,7 +131,7 @@ end
 
 @Ecosystem:Ecosystem graph system
     # Environmental system
-    @sys __Role System $system
+    @sys __Role Structure $system
     @type __Role Type Ecosystem
     @ctx __Role Context Geography
     @concept __Bundle $ctx $sys $type

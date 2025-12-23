@@ -140,9 +140,18 @@ const ATOMIC_DECL_POLICY = {
     '.errors'
   ],
 
-  // Only Core is permitted to use atomic declarations without being flagged as issues.
+  // Core may use atomic declarations without being flagged as issues.
   allowedPrefixes: [
     'config/Core/'
+  ],
+
+  // Domain lexicons are allowed to define value vocabulary (typed atoms) so strict DSL validation
+  // can reject unknown tokens without forcing every domain to embed huge token lists in graphs.
+  //
+  // Important: lexicon files should NOT introduce ad-hoc schema roles for `__Role` — domain theories
+  // must still use Core semantic roles from `config/Core/09-roles.sys2`.
+  allowedLexiconSuffixes: [
+    '/00-lexicon.sys2'
   ],
 
   // Explicit list of "fundamental" declaration heads permitted in Core.
@@ -179,6 +188,18 @@ const ATOMIC_DECL_POLICY = {
     '__TimePoint',
     '__TimePeriod',
     '__Amount'
+  ]),
+
+  // Heads permitted in domain lexicons.
+  allowedLexiconHeads: new Set([
+    '__Category',
+    '__Property',
+    '__State',
+    '__Relation',
+    '__TransitiveRelation',
+    '__SymmetricRelation',
+    '__ReflexiveRelation',
+    '__InheritableProperty'
   ])
 };
 
@@ -352,13 +373,17 @@ function detectNonGraphDeclarations(content, relPath) {
     const head = rest.split(/\s+/)[0];
     if (head.startsWith('__') || head.startsWith('___')) {
       const inAllowedPrefix = ATOMIC_DECL_POLICY.allowedPrefixes.some(p => relPath.startsWith(p));
-      const allowed = inAllowedPrefix && ATOMIC_DECL_POLICY.allowedHeads.has(head);
+      const inAllowedLexicon = ATOMIC_DECL_POLICY.allowedLexiconSuffixes.some(s => relPath.endsWith(s));
+      const allowedCore = inAllowedPrefix && ATOMIC_DECL_POLICY.allowedHeads.has(head);
+      const allowedLexicon = inAllowedLexicon && ATOMIC_DECL_POLICY.allowedLexiconHeads.has(head);
+      const allowed = allowedCore || allowedLexicon;
       out.push({
         dest,
         persist,
         head,
         line: i + 1,
-        allowed
+        allowed,
+        allowedKind: allowedCore ? 'core' : (allowedLexicon ? 'lexicon' : null)
       });
     }
   }
@@ -623,7 +648,7 @@ async function checkAndLoad(session, filePath, report, label, fileReports, progr
   const atomicDecls = detectNonGraphDeclarations(content, relPath);
   for (const decl of atomicDecls) {
     if (decl.allowed) {
-      localFundamentalAtoms += 1;
+      if (decl.allowedKind === 'core') localFundamentalAtoms += 1;
       continue;
     }
     addIssue('declaration', `Atomic declaration '${decl.dest}:${decl.persist} ${decl.head}' at ${decl.line}:1`);

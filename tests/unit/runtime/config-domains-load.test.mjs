@@ -36,13 +36,17 @@ function loadDomainIndex(session, domainName) {
 }
 
 describe('Config domain theory loading', () => {
-  test('Geography/History/Law load cleanly after Core', () => {
-    const session = new Session({ geometry: 2048 });
-    loadCore(session);
+  test('All config domains load cleanly after Core', () => {
+    const domains = fs.readdirSync('./config')
+      .filter(d => fs.statSync(path.join('./config', d)).isDirectory())
+      .filter(d => d !== 'Core')
+      .filter(d => fs.existsSync(path.join('./config', d, 'index.sys2')))
+      .sort();
 
-    loadDomainIndex(session, 'Geography');
-    loadDomainIndex(session, 'History');
-    loadDomainIndex(session, 'Law');
+    for (const domain of domains) {
+      const session = new Session({ geometry: 2048 });
+      loadCore(session);
+      loadDomainIndex(session, domain);
+    }
   });
 });
-

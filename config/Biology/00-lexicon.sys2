@@ -1,67 +1,69 @@
-# Biology - Lexicon (Atoms)
-# Shared atoms required by Biology domain graphs under strict DSL validation.
-# Keep this minimal and typed where obvious; most are declared as __Category.
+# Biology - Lexicon (Value Vocabulary)
+# Domain value tokens used inside Biology graph bodies under strict DSL validation.
+#
+# This file intentionally avoids defining ad-hoc schema role labels for `__Role`:
+# domain theories should use Core semantic roles from `config/Core/09-roles.sys2`.
 
-@ReproductiveIsolation:ReproductiveIsolation __Category
+@ReproductiveIsolation:ReproductiveIsolation __Property
 @SpeciesHomogeneous:SpeciesHomogeneous __Property
 @SingleEntity:SingleEntity __Property
 @Localized:Localized __Property
 
-@LivingUnit:LivingUnit __Category
+@LivingUnit:LivingUnit __Property
 @CellMembrane:CellMembrane __Category
 @Cells:Cells __Category
-@SpecializedFunction:SpecializedFunction __Category
+@SpecializedFunction:SpecializedFunction __Property
 @MultipleTissues:MultipleTissues __Category
-@OrganFunction:OrganFunction __Category
+@OrganFunction:OrganFunction __Property
 @MultipleOrgans:MultipleOrgans __Category
-@CoordinatedFunction:CoordinatedFunction __Category
+@CoordinatedFunction:CoordinatedFunction __Property
 @BiologicalSystem:BiologicalSystem __Category
 
 @Sequence:Sequence __Category
-@CodesForProduct:CodesForProduct __Category
+@CodesForProduct:CodesForProduct __Property
 @Inheritable:Inheritable __Property
 
 @Molecule:Molecule __Category
 @Polypeptide:Polypeptide __Category
 @BiologicallyActive:BiologicallyActive __Property
-@GeneticMaterial:GeneticMaterial __Category
+@GeneticMaterial:GeneticMaterial __Property
 @NucleicAcid:NucleicAcid __Category
 @DoubleHelix:DoubleHelix __Category
 @TranscriptionTranslation:TranscriptionTranslation __Category
 
-@Catalyzes:Catalyzes __Category
+@Catalyzes:Catalyzes __Property
 @SubstrateSpecific:SubstrateSpecific __Property
 
 @ChemicalReactions:ChemicalReactions __Category
 @EnergyTransformation:EnergyTransformation __Category
 @Building:Building __Category
 @Breaking:Breaking __Category
-@RequiresEnergy:RequiresEnergy __Category
-@ReleasesEnergy:ReleasesEnergy __Category
+@RequiresEnergy:RequiresEnergy __Property
+@ReleasesEnergy:ReleasesEnergy __Property
 @ATP:ATP __Category
 @BiologicalEnergy:BiologicalEnergy __Category
 @Transferable:Transferable __Property
 
-@InterdependentInteractions:InterdependentInteractions __Category
+@InterdependentInteractions:InterdependentInteractions __Property
 @Organisms:Organisms __Category
-@SupportsLife:SupportsLife __Category
+@SupportsLife:SupportsLife __Property
 @EcologicalNiche:EcologicalNiche __Category
 @FunctionalRole:FunctionalRole __Category
 @ResourceUse:ResourceUse __Category
 
 @Trait:Trait __Category
 @NaturalSelection:NaturalSelection __Category
-@IncreasedFitness:IncreasedFitness __Category
+@IncreasedFitness:IncreasedFitness __Property
 @HeritableTraits:HeritableTraits __Category
 @Generations:Generations __Category
 @TimeScale:TimeScale __Category
 @Random:Random __Property
-@CanBeInherited:CanBeInherited __Category
+@CanBeInherited:CanBeInherited __Property
 @DifferentialReproduction:DifferentialReproduction __Category
 
 @Mechanism:Mechanism __Category
 @ActiveRegulation:ActiveRegulation __Category
-@StableEquilibrium:StableEquilibrium __Category
+@StableEquilibrium:StableEquilibrium __Property
 
 @Signal:Signal __Category
 @Environmental:Environmental __Property
@@ -71,43 +73,9 @@
 @BiologicalResponse:BiologicalResponse __Category
 @AdaptiveReaction:AdaptiveReaction __Category
 
-# ===== Additional role labels / values used in 01-relations.sys2 =====
+# ===== Values used in 01-relations.sys2 =====
 
-@Method:Method __Relation
-@Ancestor:Ancestor __Relation
-@Descendant:Descendant __Relation
-
-@Substance:Substance __Relation
-@Product:Product __Relation
-@Precursors:Precursors __Relation
-@ProcessType:ProcessType __Relation
-@Input:Input __Relation
-@Output:Output __Relation
-@Original:Original __Relation
-@Variant:Variant __Relation
-@Event:Event __Relation
-@Regulator:Regulator __Relation
-@Predator:Predator __Relation
-@Prey:Prey __Relation
-@Behavior:Behavior __Relation
-@BenefitType:BenefitType __Relation
-@Competitor:Competitor __Relation
-@Parasite:Parasite __Relation
-@Host:Host __Relation
-@Effect:Effect __Relation
 @Dependency:Dependency __Category
-@Taxon:Taxon __Relation
-@Whole:Whole __Relation
-@Parts:Parts __Relation
-@Destination:Destination __Relation
-@Secretion:Secretion __Relation
-@Offspring:Offspring __Relation
-@Parent:Parent __Relation
-@Pathogen:Pathogen __Relation
-@R0:R0 __Relation
-@Inhibitor:Inhibitor __Relation
-@Activator:Activator __Relation
-
 @Hunting:Hunting __Category
 @Consumption:Consumption __Category
 @Harm:Harm __Category
