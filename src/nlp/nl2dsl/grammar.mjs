@@ -88,26 +88,29 @@ export function translateQuestionWithGrammar(question, options = {}) {
       const coord = splitCoord(predRaw);
       if (coord.items.length > 1) {
         const goalLines = [];
+        let needsQuery = false;
         for (let i = 0; i < coord.items.length; i++) {
           const clause = `${subjectRaw} ${verb} ${coord.items[i]}`.trim();
-          const copula = parseCopulaClause(clause, '?x');
+          const copula = parseCopulaClause(clause, '?x', { indefiniteAsEntity: true });
           if (!copula || copula.items.length === 0) continue;
           const asked = copula.items[copula.items.length - 1];
           if (!asked?.atom) continue;
           const inner = `${asked.atom.op} ${asked.atom.args.join(' ')}`.trim();
-          if (inner.includes('?')) continue;
+          if (inner.includes('?')) needsQuery = true;
           const dest = i === 0 ? '@goal:goal' : `@goal${i}:goal`;
           goalLines.push(asked.negated ? `${dest} Not (${inner})` : `${dest} ${inner}`);
         }
         if (goalLines.length > 0) {
-          return [`// goal_logic:${coord.op}`, ...goalLines].join('\n');
+          const header = [`// goal_logic:${coord.op}`];
+          if (needsQuery) header.push('// action:query');
+          return [...header, ...goalLines].join('\n');
         }
       }
     }
   }
 
   // Copula goals
-  const copula = parseCopulaClause(q, '?x');
+  const copula = parseCopulaClause(q, '?x', { indefiniteAsEntity: true });
   if (copula && copula.items.length > 0) {
     // Prefer the last item as the actual asked predicate, but preserve typing constraints
     // by folding them into the goal only when it's the predicate itself.
@@ -115,12 +118,12 @@ export function translateQuestionWithGrammar(question, options = {}) {
     if (!asked?.atom) return null;
     if (asked.negated) {
       const inner = `${asked.atom.op} ${asked.atom.args.join(' ')}`.trim();
-      if (inner.includes('?')) return null;
-      return `@goal:goal Not (${inner})`;
+      const goal = `@goal:goal Not (${inner})`;
+      return inner.includes('?') ? ['// action:query', goal].join('\n') : goal;
     }
     const inner = `${asked.atom.op} ${asked.atom.args.join(' ')}`.trim();
-    if (inner.includes('?')) return null;
-    return `@goal:goal ${inner}`;
+    const goal = `@goal:goal ${inner}`;
+    return inner.includes('?') ? ['// action:query', goal].join('\n') : goal;
   }
 
   // Relation goals
@@ -131,14 +134,18 @@ export function translateQuestionWithGrammar(question, options = {}) {
     const decl = Array.isArray(rel.declaredOperators) ? rel.declaredOperators : [];
     if (asked.negated) {
       const inner = `${asked.atom.op} ${asked.atom.args.join(' ')}`.trim();
-      if (inner.includes('?')) return null;
       const goal = `@goal:goal Not (${inner})`;
-      return decl.length > 0 ? [`// declare_ops:${decl.join(',')}`, goal].join('\n') : goal;
+      const header = [];
+      if (decl.length > 0) header.push(`// declare_ops:${decl.join(',')}`);
+      if (inner.includes('?')) header.push('// action:query');
+      return header.length > 0 ? [...header, goal].join('\n') : goal;
     }
     const inner = `${asked.atom.op} ${asked.atom.args.join(' ')}`.trim();
-    if (inner.includes('?')) return null;
     const goal = `@goal:goal ${inner}`;
-    return decl.length > 0 ? [`// declare_ops:${decl.join(',')}`, goal].join('\n') : goal;
+    const header = [];
+    if (decl.length > 0) header.push(`// declare_ops:${decl.join(',')}`);
+    if (inner.includes('?')) header.push('// action:query');
+    return header.length > 0 ? [...header, goal].join('\n') : goal;
   }
 
   return null;

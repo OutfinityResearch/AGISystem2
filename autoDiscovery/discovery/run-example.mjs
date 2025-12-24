@@ -19,6 +19,14 @@ function assessTranslationQuality(example, translated) {
   return { hasIssues: issues.length > 0, details: issues.join('; ') || 'Translation appears correct' };
 }
 
+function queryToBool(result) {
+  if (!result) return false;
+  if (result.success !== true) return false;
+  if (Array.isArray(result.allResults)) return result.allResults.length > 0;
+  if (Array.isArray(result.matches)) return result.matches.length > 0;
+  return true;
+}
+
 export function runExample(example, caseId, options = {}) {
   const startTime = performance.now();
   const source = example.source || 'generic';
@@ -117,19 +125,27 @@ export function runExample(example, caseId, options = {}) {
 
     const goals = goalValidation.goals || [translated.questionDsl];
     const goalLogic = goalValidation.goalLogic || 'Single';
+    const action = goalValidation.action || (goals.some(g => g.includes('?')) ? 'query' : 'prove');
     if (options.autoDeclareUnknownOperators === true && Array.isArray(goalValidation.declaredOperators) && goalValidation.declaredOperators.length > 0) {
       const declLines = goalValidation.declaredOperators.map(op => `@${op}:${op} __Relation`).join('\n');
       session.learn(declLines);
     }
-    const perGoal = goals.map(g => ({ goalDsl: g, result: session.prove(g, { timeout: 2000 }) }));
+    const perGoal = goals.map(g => {
+      if (action === 'query') {
+        const result = session.query(g, { timeout: 2000 });
+        return { goalDsl: g, result, action: 'query', valid: queryToBool(result) };
+      }
+      const result = session.prove(g, { timeout: 2000 });
+      return { goalDsl: g, result, action: 'prove', valid: result?.valid === true };
+    });
 
-    const anyInvalidStructure = perGoal.some(p => !p.result || typeof p.result.valid !== 'boolean');
+    const anyInvalidStructure = perGoal.some(p => !p.result || (p.action === 'prove' && typeof p.result.valid !== 'boolean') || (p.action === 'query' && typeof p.result.success !== 'boolean'));
     if (anyInvalidStructure) {
       return {
         category: CATEGORY.UNKNOWN,
         correct: false,
         reason: 'prove_no_result',
-        details: 'prove() returned invalid result structure',
+        details: `${action}() returned invalid result structure`,
         translated,
         proveResult: perGoal.map(p => ({ goalDsl: p.goalDsl, result: p.result })),
         durationMs: performance.now() - startTime,
@@ -139,8 +155,8 @@ export function runExample(example, caseId, options = {}) {
     }
 
     const provedValid = goalLogic === 'Or'
-      ? perGoal.some(p => p.result.valid === true)
-      : perGoal.every(p => p.result.valid === true);
+      ? perGoal.some(p => p.valid === true)
+      : perGoal.every(p => p.valid === true);
 
     const proveResult = {
       valid: provedValid,
@@ -149,9 +165,9 @@ export function runExample(example, caseId, options = {}) {
       reason: goals.length > 1 ? null : (perGoal[0]?.result?.reason || null),
       parts: perGoal.map(p => ({
         goalDsl: p.goalDsl,
-        valid: p.result.valid,
+        valid: p.valid === true,
         method: p.result.method || null,
-        reason: p.result.reason || null,
+        reason: p.result.reason || p.result.error || null,
         stepsCount: p.result.steps?.length || 0
       }))
     };
@@ -159,10 +175,10 @@ export function runExample(example, caseId, options = {}) {
     let actual_nl = null;
     try {
       if (goals.length === 1) {
-        actual_nl = session.describeResult({ action: 'prove', reasoningResult: perGoal[0].result, queryDsl: goals[0] });
+        actual_nl = session.describeResult({ action, reasoningResult: perGoal[0].result, queryDsl: goals[0] });
       } else {
         const parts = perGoal.map(p => {
-          const nl = session.describeResult({ action: 'prove', reasoningResult: p.result, queryDsl: p.goalDsl });
+          const nl = session.describeResult({ action, reasoningResult: p.result, queryDsl: p.goalDsl });
           return `- ${p.goalDsl}\n  ${nl}`;
         });
         actual_nl = `Compound goal (${goalLogic}):\n${parts.join('\n')}`;
@@ -171,8 +187,9 @@ export function runExample(example, caseId, options = {}) {
       actual_nl = `Error: ${err.message}`;
     }
 
-    const proofInvalid = goals.length === 1 &&
-      perGoal[0].result.valid === true &&
+    const proofInvalid = action === 'prove' &&
+      goals.length === 1 &&
+      perGoal[0].valid === true &&
       perGoal[0].result.proofObject &&
       perGoal[0].result.proofObject.validatorOk === false;
     if (proofInvalid) {

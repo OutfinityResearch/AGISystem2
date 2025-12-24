@@ -56,6 +56,14 @@ function normalizeForComparison(text) {
     .trim();
 }
 
+function queryToBool(result) {
+  if (!result) return false;
+  if (result.success !== true) return false;
+  if (Array.isArray(result.allResults)) return result.allResults.length > 0;
+  if (Array.isArray(result.matches)) return result.matches.length > 0;
+  return true;
+}
+
 /**
  * Run a bug case
  */
@@ -147,14 +155,22 @@ async function runBugCase(caseFile, options = {}) {
   // Step 5: Prove
   const goals = goalValidation.goals || [translated.questionDsl];
   const goalLogic = goalValidation.goalLogic || 'Single';
+  const action = goalValidation.action || (goals.some(g => g.includes('?')) ? 'query' : 'prove');
   if (autoDeclareUnknownOperators && Array.isArray(goalValidation.declaredOperators) && goalValidation.declaredOperators.length > 0) {
     const declLines = goalValidation.declaredOperators.map(op => `@${op}:${op} __Relation`).join('\n');
     session.learn(declLines);
   }
-  const perGoal = goals.map(g => ({ goalDsl: g, result: session.prove(g, { timeout: 2000 }) }));
+  const perGoal = goals.map(g => {
+    if (action === 'query') {
+      const result = session.query(g, { timeout: 2000 });
+      return { goalDsl: g, result, action: 'query', valid: queryToBool(result) };
+    }
+    const result = session.prove(g, { timeout: 2000 });
+    return { goalDsl: g, result, action: 'prove', valid: result?.valid === true };
+  });
   const provedValid = goalLogic === 'Or'
-    ? perGoal.some(p => p.result.valid === true)
-    : perGoal.every(p => p.result.valid === true);
+    ? perGoal.some(p => p.valid === true)
+    : perGoal.every(p => p.valid === true);
   const proveResult = {
     valid: provedValid,
     method: goals.length > 1 ? `compound_goal_${goalLogic.toLowerCase()}` : (perGoal[0]?.result?.method || null),
@@ -162,9 +178,9 @@ async function runBugCase(caseFile, options = {}) {
     reason: goals.length > 1 ? null : (perGoal[0]?.result?.reason || null),
     parts: perGoal.map(p => ({
       goalDsl: p.goalDsl,
-      valid: p.result.valid,
+      valid: p.valid === true,
       method: p.result.method || null,
-      reason: p.result.reason || null,
+      reason: p.result.reason || p.result.error || null,
       stepsCount: p.result.steps?.length || 0
     }))
   };
@@ -172,10 +188,10 @@ async function runBugCase(caseFile, options = {}) {
   // Step 6: Generate actual_nl using describeResult
   let actual_nl;
   if (goals.length === 1) {
-    actual_nl = session.describeResult({ action: 'prove', reasoningResult: perGoal[0].result, queryDsl: goals[0] });
+    actual_nl = session.describeResult({ action, reasoningResult: perGoal[0].result, queryDsl: goals[0] });
   } else {
     const parts = perGoal.map(p => {
-      const nl = session.describeResult({ action: 'prove', reasoningResult: p.result, queryDsl: p.goalDsl });
+      const nl = session.describeResult({ action, reasoningResult: p.result, queryDsl: p.goalDsl });
       return `- ${p.goalDsl}\n  ${nl}`;
     });
     actual_nl = `Compound goal (${goalLogic}):\n${parts.join('\n')}`;

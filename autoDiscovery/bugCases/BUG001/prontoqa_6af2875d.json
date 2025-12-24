@@ -1,0 +1,47 @@
+{
+  "caseId": "prontoqa_6af2875d",
+  "bugId": "BUG001",
+  "source": "prontoqa",
+  "dataset": {
+    "label": "entailment",
+    "expectProved": true,
+    "choices": []
+  },
+  "input": {
+    "context_nl": "Every brimpus is a dumpus. Lempuses are grimpuses. Everything that is a shumpus or a zumpus or a brimpus is a numpus. Everything that is a wumpus or a brimpus or a grimpus is a lorpus. Every tumpus is a jompus, a lempus, and a brimpus. Jompuses are rompuses. Everything that is a shumpus or a zumpus or a brimpus is a jompus and a tumpus and a gorpus. Tumpuses are dumpuses. Every gorpus is a yumpus. Fae is a numpus. Fae is a brimpus.",
+    "question_nl": "Fae is a jompus."
+  },
+  "translation": {
+    "translator": "src/nlp/nl2dsl.mjs::translateExample",
+    "contextDsl": "@cond0 isA ?x Brimpu\n@cond1 isA ?x Dumpus\nImplies $cond0 $cond1\n@ant2 isA ?x Lempu\n@cons3 isA ?x Grimpu\nImplies $ant2 $cons3\n@cond4 isA ?x Shumpus\n@cond5 isA ?x Zumpus\n@cond6 isA ?x Brimpus\n@or7 Or $cond4 $cond5 $cond6\n@cond8 isA ?x Numpus\nImplies $or7 $cond8\n@cond9 isA ?x Wumpus\n@cond10 isA ?x Brimpus\n@cond11 isA ?x Grimpus\n@or12 Or $cond9 $cond10 $cond11\n@cond13 isA ?x Lorpus\nImplies $or12 $cond13\n@cond14 isA ?x Tumpu\n@cond15 isA ?x Jompus\n@cond16 isA ?x Lempus\n@cond17 hasProperty ?x brimpus\n@and18 And $cond15 $cond16 $cond17\nImplies $cond14 $and18\n@ant19 isA ?x Jompu\n@cons20 isA ?x Rompu\nImplies $ant19 $cons20\n@cond21 isA ?x Shumpus\n@cond22 isA ?x Zumpus\n@cond23 isA ?x Brimpus\n@or24 Or $cond21 $cond22 $cond23\n@cond25 isA ?x Jompus\n@cond26 isA ?x Tumpus\n@cond27 isA ?x Gorpus\n@and28 And $cond25 $cond26 $cond27\nImplies $or24 $and28\n@ant29 isA ?x Tumpu\n@cons30 isA ?x Dumpu\nImplies $ant29 $cons30\n@cond31 isA ?x Gorpu\n@cond32 isA ?x Yumpus\nImplies $cond31 $cond32\nisA Fae Numpus\nisA Fae Brimpus",
+    "questionDsl": "@goal isA Fae Jompus",
+    "contextErrors": [],
+    "questionErrors": []
+  },
+  "sessionConfig": {
+    "hdcStrategy": "dense-binary",
+    "geometry": 256,
+    "closedWorldAssumption": true,
+    "rejectContradictions": false
+  },
+  "execution": {
+    "learnResult": {
+      "success": true
+    },
+    "proveResult": {
+      "valid": false,
+      "reason": "No proof found",
+      "stepsCount": 0,
+      "validatorOk": true,
+      "method": null
+    },
+    "actual_nl": "Cannot prove: Fae is a jompus. Search: Fae isA Numpus. Checked rule: Implies @cond0 @cond1. Missing: isA Fae Brimpu.. No path exists from Fae to Jompus.",
+    "actual_proof_nl": null
+  },
+  "expected": {
+    "expected_nl": "True: [goal should be provable]",
+    "expected_proof_nl": null,
+    "note": "auto-generated; verify manually or run with --accept-actual"
+  },
+  "timestamp": "2025-12-24T11:35:32.202Z"
+}

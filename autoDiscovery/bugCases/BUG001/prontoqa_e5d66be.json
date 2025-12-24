@@ -1,0 +1,47 @@
+{
+  "caseId": "prontoqa_e5d66be",
+  "bugId": "BUG001",
+  "source": "prontoqa",
+  "dataset": {
+    "label": "entailment",
+    "expectProved": true,
+    "choices": []
+  },
+  "input": {
+    "context_nl": "Dumpuses are vumpuses. Each jompus is a dumpus and a numpus and a shumpus. Everything that is a tumpus, a zumpus, or a grimpus is an impus. Dumpuses are rompuses. Everything that is a tumpus, a gorpus, or a lempus is an impus. Lorpuses are wumpuses. Everything that is a tumpus or a zumpus or a grimpus is a jompus and a dumpus and a lorpus. Every shumpus is a rompus. Each jompus is a gorpus. Sam is a lempus. Sam is a tumpus.",
+    "question_nl": "Sam is a numpus."
+  },
+  "translation": {
+    "translator": "src/nlp/nl2dsl.mjs::translateExample",
+    "contextDsl": "@ant0 isA ?x Dumpu\n@cons1 isA ?x Vumpu\nImplies $ant0 $cons1\n@cond2 isA ?x Jompu\n@cond3 isA ?x Dumpus\n@cond4 isA ?x Numpus\n@cond5 isA ?x Shumpus\n@and6 And $cond3 $cond4 $cond5\nImplies $cond2 $and6\n@cond7 isA ?x Tumpus\n@cond8 isA ?x Zumpus\n@cond9 hasProperty ?x grimpus\n@or10 Or $cond7 $cond8 $cond9\n@cond11 isA ?x Impus\nImplies $or10 $cond11\n@ant12 isA ?x Dumpu\n@cons13 isA ?x Rompu\nImplies $ant12 $cons13\n@cond14 isA ?x Tumpus\n@cond15 isA ?x Gorpus\n@cond16 hasProperty ?x lempus\n@or17 Or $cond14 $cond15 $cond16\n@cond18 isA ?x Impus\nImplies $or17 $cond18\n@ant19 isA ?x Lorpu\n@cons20 isA ?x Wumpu\nImplies $ant19 $cons20\n@cond21 isA ?x Tumpus\n@cond22 isA ?x Zumpus\n@cond23 isA ?x Grimpus\n@or24 Or $cond21 $cond22 $cond23\n@cond25 isA ?x Jompus\n@cond26 isA ?x Dumpus\n@cond27 isA ?x Lorpus\n@and28 And $cond25 $cond26 $cond27\nImplies $or24 $and28\n@cond29 isA ?x Shumpu\n@cond30 isA ?x Rompus\nImplies $cond29 $cond30\n@cond31 isA ?x Jompu\n@cond32 isA ?x Gorpus\nImplies $cond31 $cond32\nisA Sam Lempus\nisA Sam Tumpus",
+    "questionDsl": "@goal isA Sam Numpus",
+    "contextErrors": [],
+    "questionErrors": []
+  },
+  "sessionConfig": {
+    "hdcStrategy": "dense-binary",
+    "geometry": 256,
+    "closedWorldAssumption": true,
+    "rejectContradictions": false
+  },
+  "execution": {
+    "learnResult": {
+      "success": true
+    },
+    "proveResult": {
+      "valid": false,
+      "reason": "No proof found",
+      "stepsCount": 0,
+      "validatorOk": true,
+      "method": null
+    },
+    "actual_nl": "Cannot prove: Sam is a numpus. Search: Sam isA Lempus. Checked rule: Implies @ant0 @cons1. Missing: isA Sam Dumpu.. No path exists from Sam to Numpus.",
+    "actual_proof_nl": null
+  },
+  "expected": {
+    "expected_nl": "True: [goal should be provable]",
+    "expected_proof_nl": null,
+    "note": "auto-generated; verify manually or run with --accept-actual"
+  },
+  "timestamp": "2025-12-24T11:35:32.202Z"
+}

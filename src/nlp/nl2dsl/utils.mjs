@@ -103,7 +103,8 @@ export function isTypeNoun(word) {
  * @returns {string}
  */
 export function normalizeTypeName(word) {
-  const w = singularize(word);
+  const cleaned = String(word || '').replace(/[^a-zA-Z0-9_]/g, '');
+  const w = singularize(cleaned);
   return capitalize(w);
 }
 

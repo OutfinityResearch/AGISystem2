@@ -65,4 +65,37 @@ describe('NL→DSL grammar translator (low-hardcoding)', () => {
     assert.match(goal, /@goal1:goal isA Stella Zumpus/);
     assert.match(goal, /@goal2:goal isA Stella Impus/);
   });
+
+  test('parses intransitive questions as hasProperty (Space sucks → hasProperty Space suck)', () => {
+    const goal = translateQuestionWithGrammar('Space sucks.');
+    assert.equal(goal, '@goal:goal hasProperty Space suck');
+  });
+
+  test('sanitizes type tokens with hyphens (mind-reading → Mindreading)', () => {
+    const { dsl, errors } = translateContextWithGrammar('All mind-reading things are shapes.');
+    assert.deepEqual(errors, []);
+    assert.ok(!dsl.includes('Mind-reading'), 'hyphenated type must be sanitized');
+    assert.ok(dsl.includes('mindreading') || dsl.includes('Mindreading'), 'sanitized token must remain');
+  });
+
+  test('sanitizes reserved keyword verbs to avoid lexer keywords (begin → begin_op)', () => {
+    const { dsl, errors } = translateContextWithGrammar('All plates begin with the number 34.', { autoDeclareUnknownOperators: true });
+    assert.deepEqual(errors, []);
+    assert.ok(dsl.includes('begin_op') || dsl.includes('@begin_op:begin_op'), 'reserved keyword verb must be rewritten');
+    assert.ok(!dsl.includes('\nbegin '), 'should not emit keyword operator "begin"');
+  });
+
+  test('nests And groups beyond MAX_POSITIONS (no And statement binds >20 refs)', () => {
+    const sentence =
+      'All alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau upsilon phi chi psi omega students are humans.';
+    const { dsl, errors } = translateContextWithGrammar(sentence);
+    assert.deepEqual(errors, []);
+    const lines = dsl.split('\n').filter(Boolean);
+    const andLines = lines.filter(l => /\bAnd\b/.test(l));
+    assert.ok(andLines.length >= 2, 'should nest And into multiple statements');
+    for (const l of andLines) {
+      const refs = (l.match(/\$/g) || []).length;
+      assert.ok(refs <= 20, `And line must not exceed 20 refs: ${l}`);
+    }
+  });
 });

@@ -19,7 +19,6 @@ import { translateExample } from '../src/nlp/nl2dsl.mjs';
 import { createSession, validateQuestionDsl } from './discovery/session.mjs';
 
 const ROOT = join(process.cwd(), 'autoDiscovery', 'nlpBugs');
-const RESOLVED_ROOT = join(ROOT, '_resolved');
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -48,6 +47,10 @@ function classifyWithCurrentCode(caseJson) {
   const context = caseJson.input?.context_nl ?? caseJson.example?.context ?? '';
   const question = caseJson.input?.question_nl ?? caseJson.example?.question ?? '';
   const label = caseJson.input?.label ?? caseJson.example?.label ?? caseJson.dataset?.label ?? null;
+
+  if (!String(question || '').trim()) {
+    return { ok: true, reason: 'skipped_empty_question' };
+  }
 
   const translated = translateExample({
     source,
@@ -84,8 +87,20 @@ function classifyWithCurrentCode(caseJson) {
   return { ok: true, reason: 'resolved' };
 }
 
-function ensureDir(dir) {
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+function removeEmptyBugDirs() {
+  if (!fs.existsSync(ROOT)) return;
+  const dirs = fs.readdirSync(ROOT).filter(d => d.startsWith('NLP') && fs.statSync(join(ROOT, d)).isDirectory());
+  for (const d of dirs) {
+    const full = join(ROOT, d);
+    const jsonCount = fs.readdirSync(full).filter(f => f.endsWith('.json')).length;
+    if (jsonCount > 0) continue;
+    // If the folder only has report.md (or is empty), remove it.
+    try {
+      fs.rmSync(full, { recursive: true, force: true });
+    } catch {
+      // best-effort
+    }
+  }
 }
 
 async function main() {
@@ -113,17 +128,13 @@ async function main() {
     }
 
     resolved++;
-    const destDir = join(RESOLVED_ROOT, c.nlpId);
-    const destPath = join(destDir, c.file);
-
     if (!args.dryRun) {
-      ensureDir(destDir);
-      fs.renameSync(c.path, destPath);
+      fs.rmSync(c.path, { force: true });
     }
   }
 
   console.log(`NLP bug snapshots: ${cases.length}`);
-  console.log(`Resolved (moved): ${resolved}${args.dryRun ? ' (dry-run)' : ''}`);
+  console.log(`Resolved (deleted): ${resolved}${args.dryRun ? ' (dry-run)' : ''}`);
   console.log(`Still failing: ${still}`);
   if (still > 0) {
     const sorted = Object.entries(byReason).sort((a, b) => b[1] - a[1]);
@@ -137,6 +148,10 @@ async function main() {
     if (!args.verbose) {
       console.log('\nTip: add --verbose to print example filenames per reason.');
     }
+  }
+
+  if (!args.dryRun) {
+    removeEmptyBugDirs();
   }
 }
 

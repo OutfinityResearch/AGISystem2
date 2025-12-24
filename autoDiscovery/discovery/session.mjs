@@ -33,6 +33,7 @@ export function validateQuestionDsl(questionDsl) {
 
   let goalLogic = null;
   let declaredOperators = [];
+  let action = null;
   for (const c of commentLines) {
     const m = c.match(/goal_logic\s*:\s*(And|Or)/i);
     if (m) {
@@ -49,13 +50,22 @@ export function validateQuestionDsl(questionDsl) {
       .filter(Boolean);
     break;
   }
+  for (const c of commentLines) {
+    const m = c.match(/action\s*:\s*(prove|query)/i);
+    if (m) {
+      action = m[1].toLowerCase();
+      break;
+    }
+  }
 
   if (lines.length === 1) {
-    return { valid: true, goals: [lines[0]], goalLogic: goalLogic || 'Single', declaredOperators };
+    const inferred = action || (lines[0].includes('?') ? 'query' : 'prove');
+    return { valid: true, goals: [lines[0]], goalLogic: goalLogic || 'Single', declaredOperators, action: inferred };
   }
 
   const allGoalLines = lines.every(l => l.startsWith('@goal') || l.startsWith('@g'));
   if (!allGoalLines) return { valid: false, reason: 'multi_statement_no_goal' };
 
-  return { valid: true, goals: lines, goalLogic: goalLogic || 'And', declaredOperators };
+  const inferred = action || (lines.some(l => l.includes('?')) ? 'query' : 'prove');
+  return { valid: true, goals: lines, goalLogic: goalLogic || 'And', declaredOperators, action: inferred };
 }

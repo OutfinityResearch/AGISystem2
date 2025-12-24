@@ -52,7 +52,7 @@ function parsePredicateItem(item, subject) {
   return { negated, atom: { op: 'hasProperty', args: [subject, prop] } };
 }
 
-function parseSubjectNP(text, defaultVar = '?x') {
+function parseSubjectNP(text, defaultVar = '?x', options = {}) {
   const t = clean(text);
   if (!t) return { subject: defaultVar, extraCondition: null };
 
@@ -63,6 +63,10 @@ function parseSubjectNP(text, defaultVar = '?x') {
 
   const m = t.match(/^(?:a|an)\s+(.+)$/i);
   if (m) {
+    if (options.indefiniteAsEntity === true) {
+      // Goal-mode: treat indefinite NP as a concrete entity token.
+      return { subject: normalizeEntity(m[1], defaultVar), extraCondition: null };
+    }
     const typeName = parseTypePhrase(m[1]);
     if (typeName) {
       return {
@@ -76,7 +80,7 @@ function parseSubjectNP(text, defaultVar = '?x') {
   return { subject: normalizeEntity(normalized, defaultVar), extraCondition: null };
 }
 
-export function parseCopulaClause(text, defaultVar = '?x') {
+export function parseCopulaClause(text, defaultVar = '?x', options = {}) {
   const t = clean(text)
     .replace(/\bisn't\b/ig, 'is not')
     .replace(/\baren't\b/ig, 'are not')
@@ -86,7 +90,7 @@ export function parseCopulaClause(text, defaultVar = '?x') {
   if (!m) return null;
   const [, subjectRaw, notPart, predRaw] = m;
 
-  const { subject, extraCondition } = parseSubjectNP(subjectRaw, defaultVar);
+  const { subject, extraCondition } = parseSubjectNP(subjectRaw, defaultVar, options);
   const negated = !!notPart;
 
   const pred = clean(predRaw);
@@ -333,6 +337,66 @@ export function parseRuleSentence(sentence, options = {}) {
     const consEmit = emitExprAsRefs(cons.items, cons.op);
     if (!condEmit.ref || !consEmit.ref) return null;
     return { lines: [...condEmit.lines, ...consEmit.lines, `Implies $${condEmit.ref} $${consEmit.ref}`] };
+  }
+
+  // Universal with verb predicate:
+  // "All plates begin with the number 34."
+  // "Every student studies."
+  const quantVerb = s.match(/^(all|every|each)\s+(\w+)\s+([A-Za-z_][A-Za-z0-9_'-]*)(?:\s+(.+))?$/i);
+  if (quantVerb) {
+    const [, , subjectPlural, verbRaw, objRaw] = quantVerb;
+    if (!isPlural(subjectPlural) || isGenericClassNoun(subjectPlural)) return null;
+
+    const typeName = normalizeTypeName(singularize(subjectPlural));
+    const antRef = genRef('ant');
+
+    const verbLowerRaw = String(verbRaw || '').toLowerCase();
+    const verbLower = sanitizePredicate(verbLowerRaw);
+    if (!verbLower) return null;
+    const base = verbLower.endsWith('s') && verbLower.length > 3 ? verbLower.slice(0, -1) : verbLower;
+    const op = sanitizePredicate(normalizeVerb(base));
+    if (!op) return null;
+
+    const declaredOperators = [];
+    if (!isKnownOperator(op) && options.autoDeclareUnknownOperators) declaredOperators.push(op);
+
+    // Avoid invoking core graphs/macros with incompatible arity.
+    const expectedArity = CORE_GRAPH_ARITY.get(op);
+    const hasObj = !!String(objRaw || '').trim();
+    if (typeof expectedArity === 'number' && expectedArity !== (hasObj ? 2 : 1)) {
+      const prop = sanitizePredicate(`${op}_${String(objRaw || '').replace(/\s+/g, '_')}`);
+      const consRef = genRef('cons');
+      return {
+        lines: [
+          `@${antRef} isA ?x ${typeName}`,
+          `@${consRef} hasProperty ?x ${prop || op}`,
+          `Implies $${antRef} $${consRef}`
+        ],
+        declaredOperators
+      };
+    }
+
+    const consRef = genRef('cons');
+    if (!hasObj) {
+      return {
+        lines: [
+          `@${antRef} isA ?x ${typeName}`,
+          `@${consRef} hasProperty ?x ${op}`,
+          `Implies $${antRef} $${consRef}`
+        ],
+        declaredOperators
+      };
+    }
+
+    const object = normalizeEntity(objRaw, '?x');
+    return {
+      lines: [
+        `@${antRef} isA ?x ${typeName}`,
+        `@${consRef} ${op} ?x ${object}`,
+        `Implies $${antRef} $${consRef}`
+      ],
+      declaredOperators
+    };
   }
 
   // Bare plural universal: "<PluralType> are <predicate list>"

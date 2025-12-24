@@ -1,0 +1,47 @@
+{
+  "caseId": "prontoqa_236ef268",
+  "bugId": "BUG001",
+  "source": "prontoqa",
+  "dataset": {
+    "label": "entailment",
+    "expectProved": true,
+    "choices": []
+  },
+  "input": {
+    "context_nl": "Everything that is an impus, a grimpus, and a lempus is a rompus. Everything that is an impus, a numpus, and a tumpus is a rompus. Everything that is an impus, a numpus, and a tumpus is a yumpus and a lorpus and a gorpus. Polly is a lempus. Polly is a grimpus. Polly is an impus. Each gorpus is a vumpus. Every lorpus is a rompus. Polly is an impus. Polly is a brimpus. Polly is a numpus. Polly is a tumpus.",
+    "question_nl": "Polly is a yumpus."
+  },
+  "translation": {
+    "translator": "src/nlp/nl2dsl.mjs::translateExample",
+    "options": {
+      "autoDeclareUnknownOperators": true
+    },
+    "contextDsl": "@cond0 isA ?x Impus\n@cond1 isA ?x Grimpus\n@cond2 isA ?x Lempus\n@and3 And $cond0 $cond1 $cond2\n@cond4 isA ?x Rompus\nImplies $and3 $cond4\n@cond5 isA ?x Impus\n@cond6 isA ?x Numpus\n@cond7 isA ?x Tumpus\n@and8 And $cond5 $cond6 $cond7\n@cond9 isA ?x Rompus\nImplies $and8 $cond9\n@cond10 isA ?x Impus\n@cond11 isA ?x Numpus\n@cond12 isA ?x Tumpus\n@and13 And $cond10 $cond11 $cond12\n@cond14 isA ?x Yumpus\n@cond15 isA ?x Lorpus\n@cond16 isA ?x Gorpus\n@and17 And $cond14 $cond15 $cond16\nImplies $and13 $and17\nisA Polly Lempus\nisA Polly Grimpus\nisA Polly Impus\n@cond18 isA ?x Gorpus\n@cond19 isA ?x Vumpus\nImplies $cond18 $cond19\n@cond20 isA ?x Lorpus\n@cond21 isA ?x Rompus\nImplies $cond20 $cond21\nisA Polly Impus\nisA Polly Brimpus\nisA Polly Numpus\nisA Polly Tumpus",
+    "questionDsl": "@goal:goal isA Polly Yumpus",
+    "contextErrors": [],
+    "contextAutoDeclaredOperators": []
+  },
+  "sessionConfig": {
+    "hdcStrategy": "dense-binary",
+    "geometry": 256,
+    "closedWorldAssumption": true,
+    "rejectContradictions": false
+  },
+  "execution": {
+    "learnResult": null,
+    "proveResult": {
+      "valid": false,
+      "reason": "No proof found",
+      "stepsCount": 0,
+      "method": null
+    },
+    "actual_nl": "Cannot prove: Polly is a yumpus. Search: Polly isA Lempus. Checked rule: Implies @and3 @cond4. Found: isA Polly Impus, isA Polly Grimpus, isA Polly Lempus.. No path exists from Polly to Yumpus."
+  },
+  "expected": {
+    "expected_proved": true,
+    "expected_nl": "TODO",
+    "expected_nl_hint": "Proved: Polly is a yumpus.. Proof: [engine steps]",
+    "note": "Run `node autoDiscovery/runBugCase.mjs --accept-actual <case.json>` after reviewing actual_nl"
+  },
+  "timestamp": "2025-12-24T12:53:52.926Z"
+}

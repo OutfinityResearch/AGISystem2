@@ -1,4 +1,5 @@
 import { genRef } from '../utils.mjs';
+import { MAX_POSITIONS } from '../../../core/constants.mjs';
 
 export function emitAtomLine(atom) {
   return `${atom.op} ${atom.args.join(' ')}`.trim();
@@ -37,8 +38,25 @@ export function emitExprAsRefs(exprItems, combineOp) {
   if (leaves.length === 0) return { lines: [], ref: null };
   if (leaves.length === 1) return { lines, ref: leaves[0] };
 
-  const combRef = genRef(combineOp.toLowerCase());
-  lines.push(`@${combRef} ${combineOp} ${leaves.map(r => `$${r}`).join(' ')}`);
-  return { lines, ref: combRef };
-}
+  // Bound by MAX_POSITIONS (positional vectors) – nest when needed.
+  let current = leaves.slice();
+  let lastRef = null;
 
+  while (current.length > 1) {
+    const next = [];
+    for (let i = 0; i < current.length; i += MAX_POSITIONS) {
+      const chunk = current.slice(i, i + MAX_POSITIONS);
+      if (chunk.length === 1) {
+        next.push(chunk[0]);
+        continue;
+      }
+      const combRef = genRef(combineOp.toLowerCase());
+      lines.push(`@${combRef} ${combineOp} ${chunk.map(r => `$${r}`).join(' ')}`);
+      next.push(combRef);
+      lastRef = combRef;
+    }
+    current = next;
+  }
+
+  return { lines, ref: current[0] || lastRef };
+}
