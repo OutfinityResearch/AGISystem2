@@ -20,6 +20,7 @@ import {
   C,
   DEFAULT_BATCH_SIZE,
   DEFAULT_WORKERS,
+  ANALYSED_FILE,
   QUARANTINE_DIR
 } from './discovery/constants.mjs';
 import { runBatch } from './discovery/run-batch.mjs';
@@ -50,6 +51,7 @@ function parseArgs() {
     verbose: args.includes('--verbose') || args.includes('-v'),
     seed: getIntArg('--seed', Date.now()),
     autoDeclareUnknownOperators: !args.includes('--strict-operators'),
+    clean: args.includes('--clean'),
     help: args.includes('--help') || args.includes('-h')
   };
 }
@@ -72,6 +74,7 @@ ${C.bold}Options:${C.reset}
   --analyze             Analyze quarantine folder and exit
   --verbose, -v         Show per-case results
   --seed=N              Random seed for sampling
+  --clean               Reset autoDiscovery/analised.md and start fresh (no cached skips)
   --strict-operators    Disable auto-declaration for unknown verb operators
 
 ${C.bold}Examples:${C.reset}
@@ -79,6 +82,7 @@ ${C.bold}Examples:${C.reset}
   node autoDiscovery/bugsAutoDiscovery.mjs --source=prontoqa
   node autoDiscovery/bugsAutoDiscovery.mjs --continuous
   node autoDiscovery/bugsAutoDiscovery.mjs --analyze
+  node autoDiscovery/bugsAutoDiscovery.mjs --clean --batch=1000
 `);
 }
 
@@ -98,8 +102,21 @@ async function main() {
   console.log(`${C.bold}${C.magenta}AGISystem2 - Automated Bug Discovery${C.reset}`);
   console.log(`${C.dim}Discovery mode: symbolicPriority, loadCore, autoDeclareUnknownOperators=${args.autoDeclareUnknownOperators}${C.reset}\n`);
 
+  if (args.clean) {
+    try {
+      if (fs.existsSync(ANALYSED_FILE)) fs.rmSync(ANALYSED_FILE, { force: true });
+    } catch {
+      // ignore
+    }
+    try {
+      if (fs.existsSync(QUARANTINE_DIR)) fs.rmSync(QUARANTINE_DIR, { recursive: true, force: true });
+    } catch {
+      // ignore
+    }
+  }
+
   ensureDir(QUARANTINE_DIR);
-  const analysedCases = loadAnalysedCases();
+  const analysedCases = args.clean ? new Set() : loadAnalysedCases();
   console.log(`${C.cyan}Previously analysed: ${analysedCases.size} cases${C.reset}`);
 
   const progressCallback = ({ phase, source }) => {

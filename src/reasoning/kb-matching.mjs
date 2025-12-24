@@ -38,12 +38,44 @@ export class KBMatcher {
       return { valid: false, confidence: 0 };
     }
 
+    // Optimization: avoid full-KB similarity scans when we can cheaply narrow
+    // candidates by operator/arg0 using ComponentKB indices.
+    //
+    // This is especially important for sparse-polynomial similarity, which can be
+    // noticeably slower per comparison and may cause timeouts in deep proof chains.
+    const parseGoalHint = (text) => {
+      if (!text || typeof text !== 'string') return null;
+      const tokens = text.trim().split(/\s+/).filter(Boolean);
+      if (tokens.length < 1) return null;
+      const cleaned = tokens.filter(t => !t.startsWith('@'));
+      if (cleaned.length < 1) return null;
+      return { op: cleaned[0], arg0: cleaned[1] || null };
+    };
+
+    let scanFacts = this.session.kbFacts;
+    const componentKB = this.session.componentKB;
+    const hint = parseGoalHint(goalStr);
+
+    if (componentKB && hint?.op) {
+      const opFacts = componentKB.findByOperator(hint.op);
+      if (opFacts.length === 0) {
+        return { valid: false, confidence: 0 };
+      }
+      if (hint.arg0) {
+        const narrowed = componentKB.findByOperatorAndArg0(hint.op, hint.arg0);
+        scanFacts = narrowed.length > 0 ? narrowed : opFacts;
+      } else {
+        scanFacts = opFacts;
+      }
+    }
+
     let bestSim = 0;
-    for (const fact of this.session.kbFacts) {
-      if (!fact.vector) continue;
+    for (const fact of scanFacts) {
+      const vec = fact?.vector;
+      if (!vec) continue;
       this.session.reasoningStats.kbScans++;
       this.session.reasoningStats.similarityChecks++;
-      const sim = similarity(goalVec, fact.vector);
+      const sim = similarity(goalVec, vec);
       if (sim > bestSim) {
         bestSim = sim;
       }

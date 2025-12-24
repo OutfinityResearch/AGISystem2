@@ -1,23 +1,19 @@
 # AutoDiscovery Bug Tracker
 
+**Last Updated:** 2025-12-24
+**Total Cases Analysed:** 1051+
+
 ## Directory Structure
 
 ```
 autoDiscovery/
 ├── bugCases/           # Reasoning bugs
-│   ├── BUG001/
-│   │   ├── report.md   # Bug description & case list
-│   │   └── *.json      # Example cases
-│   └── BUG003/
-│       ├── report.md
-│       └── *.json
-├── nlpBugs/            # Translation/NLP bugs
-│   ├── NLP002/
-│   │   ├── report.md
-│   │   └── *.json
-│   └── NLP005/
-│       ├── report.md
-│       └── *.json
+│   ├── BUG000/         # Unclassified (325 cases)
+│   ├── BUG001/         # Compound logic (132 cases)
+│   ├── BUG003/         # Deep chains (569 cases)
+│   ├── BUG006/         # Multi-choice (143 cases)
+│   ├── BUG008/         # Existential (254 cases)
+│   └── BUG009/         # General failure (857 cases)
 ├── quarantine/         # Unclassified cases (should be empty)
 └── analised.md         # Deduplication log
 ```
@@ -38,63 +34,93 @@ node autoDiscovery/runBugCase.mjs --strict-operators autoDiscovery/bugCases/BUG0
 node autoDiscovery/bugsAutoDiscovery.mjs --batch=100
 ```
 
-## Translation Status by Source
+## Pass Rate by Source
 
-| Source | Status | Notes |
-|--------|--------|-------|
-| **prontoqa** | Complete | 0 translation bugs, 32.5% pass rate |
-| **ruletaker** | Complete | 0 translation bugs |
-| folio | Needs work | Complex first-order logic, real-world entities |
-| folio_fol | Needs work | Has FOL annotations but complex patterns |
-| abduction | Needs work | Property-based reasoning, "why" questions |
-| babi15/babi16 | Needs work | Numbered sentences, simple patterns to fix |
-| clutrr | Needs work | Kinship reasoning, [Name] entity format |
-| logiqa/logiqa2 | Needs work | Multi-choice logical reading comprehension |
-| logicnli | Needs work | NLI with complex logic conditions |
-| reclor | Needs work | Reading comprehension multi-choice |
-| rulebert | Needs work | Rule-based soft inference |
+| Source | Passed | Failed | Pass Rate | Notes |
+|--------|--------|--------|-----------|-------|
+| **prontoqa** | 102 | 5 | **95.3%** | Near complete - only proof-by-contradiction cases fail |
+| **logicnli** | 53 | 14 | **79.1%** | NLI patterns - good coverage |
+| **logiqa** | 90 | 29 | **75.6%** | Multi-choice logic - good coverage |
+| **folio** | 131 | 101 | **56.5%** | Complex FOL with real-world entities |
+| **folio_fol** | 63 | 57 | **52.5%** | FOL with annotations |
+| **rulebert** | 36 | 65 | **35.6%** | Soft inference rules - problematic |
+
+**Global: 475 passed / 271 failed = 63.7% overall pass rate**
+
+### Sources Without Evaluation Labels
+
+These sources run but cannot be verified (no expected answer):
+- logiqa2 (84 cases)
+- abduction (83 cases)
+- babi15 (83 cases)
+- babi16 (83 cases)
+- clutrr (83 cases)
+- reclor (83 cases)
+
+## Translation Status
+
+**All translation bugs have been resolved.** Zero translation errors across all sources.
+
+| Source | Translation | Notes |
+|--------|-------------|-------|
+| prontoqa | ✅ Complete | 100% sentences parsed |
+| folio | ✅ Complete | Complex FOL translated |
+| folio_fol | ✅ Complete | FOL annotations used |
+| logiqa | ✅ Complete | Multi-choice format |
+| logicnli | ✅ Complete | NLI format |
+| rulebert | ✅ Complete | Rule format |
+| abduction | ✅ Complete | Property assertions |
+| babi15/16 | ✅ Complete | Simple patterns |
+| clutrr | ✅ Complete | Kinship relations |
 
 ## Reasoning Bugs
 
-| Bug ID | Description | Folder |
-|--------|-------------|--------|
-| BUG001 | Compound logic (Or/And in implications) | bugCases/BUG001/ |
-| BUG002 | Negation reasoning | bugCases/BUG002/ |
-| BUG003 | Deep chains (>3 hops) | bugCases/BUG003/ |
-| BUG004 | Relational reasoning | bugCases/BUG004/ |
-| BUG005 | Abductive reasoning | bugCases/BUG005/ |
-| BUG006 | Multi-choice ambiguity | bugCases/BUG006/ |
-| BUG007 | Quantifier handling | bugCases/BUG007/ |
+| Bug ID | Description | Cases | Status |
+|--------|-------------|-------|--------|
+| **BUG009** | General reasoning failure | 857 | Open |
+| **BUG003** | Deep chains (>3 hops) | 569 | Open |
+| **BUG000** | Unclassified failure | 325 | Needs triage |
+| **BUG008** | Existential reasoning | 254 | Open |
+| **BUG006** | Multi-choice ambiguity | 143 | Open |
+| **BUG001** | Compound logic (Or/And) | 132 | Open |
+| **TOTAL** | | **2280** | |
 
-## NLP/Translation Bugs
+### Bug Details
 
-| Bug ID | Description | Folder |
-|--------|-------------|--------|
-| NLP001 | Context translation empty | nlpBugs/NLP001/ |
-| NLP002 | Question translation empty | nlpBugs/NLP002/ |
-| NLP003 | Goal not first statement | nlpBugs/NLP003/ |
-| NLP004 | Multi-statement without goal | nlpBugs/NLP004/ |
-| NLP005 | Learn parse error | nlpBugs/NLP005/ |
-| NLP006 | Translation quality issue | nlpBugs/NLP006/ |
-| NLP007 | Complex sentence unsupported | nlpBugs/NLP007/ |
+#### BUG001: Compound Logic Failure
+Engine cannot match compound And conditions:
+```
+Implies (And A B C) (And D E F)
+```
+When facts A, B, C exist separately, cannot derive D, E, F.
 
-## Pass Rate Analysis
+#### BUG003: Deep Chain Failure
+Inference chains with >3 steps fail to complete.
 
-For ProntoQA (with complete translation):
-- **65 passed (32.5%)** - Simple implication chains work
-- **135 failed (67.5%)** - Compound logic (Or antecedents, And consequents)
+#### BUG008: Existential Reasoning
+```
+All rabbits have fur. Some pets are rabbits.
+Question: Some pets do not have fur.
+Expected: uncertain → Actual: proved=true (WRONG)
+```
 
-The 32.5% pass rate represents cases with simple `A -> B` chains.
-The 67.5% failure rate represents cases requiring:
-- Disjunction matching (if A, then A|B|C matches)
-- Conjunction splitting (from A&B&C derive A)
-- Forward chaining through compound formulas
+#### BUG009: General Reasoning (Transitive + Negation)
+```
+No plants are fungi. Mushrooms are fungi.
+Question: No plants are mushrooms.
+Expected: entailment → Actual: cannot prove
+```
 
-## Translation Priority
+## Historical Progress
 
-1. **babi15/babi16** - Strip sentence numbers, simple patterns
-2. **logicnli** - Similar if-then patterns to prontoqa
-3. **clutrr** - Extract [Name] entities, simple relationships
-4. **abduction** - Property assertions, why-questions
-5. **folio/folio_fol** - Complex real-world logic
-6. **logiqa/reclor** - Multi-choice answer selection (different paradigm)
+| Date | ProntoQA | LogiQA | FOLIO | Global | Notes |
+|------|----------|--------|-------|--------|-------|
+| Initial | 32.5% | - | - | - | Simple chains only |
+| 2025-12-24 | **95.3%** | **75.6%** | **56.5%** | **63.7%** | Translation fixed, reasoning improved |
+
+## Priority for Bug Fixes
+
+1. **BUG001** - Compound And/Or matching (impacts 132 cases)
+2. **BUG003** - Deep chain support (impacts 569 cases)
+3. **BUG009** - Transitive negation (impacts 857 cases)
+4. **BUG008** - Existential quantifier handling (impacts 254 cases)

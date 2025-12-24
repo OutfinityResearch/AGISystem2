@@ -96,13 +96,35 @@ async function runBugCase(caseFile, options = {}) {
     console.log(`${'─'.repeat(50)}`);
   }
 
+  const extractNl = (raw) => {
+    const context =
+      raw?.input?.context_nl ??
+      raw?.example?.context ??
+      raw?.translated?.original?.context ??
+      raw?.translation?.context_nl ??
+      null;
+    const question =
+      raw?.input?.question_nl ??
+      raw?.example?.question ??
+      raw?.translated?.original?.question ??
+      raw?.translation?.question_nl ??
+      null;
+    return { context, question };
+  };
+
   // Step 1: Translate from NL
+  const nl = extractNl(bugCase);
+  if (!nl.context || !nl.question) {
+    console.error(`${C.red}Error:${C.reset} missing NL context/question in bug case schema`);
+    return { success: false, error: 'missing_nl', caseId };
+  }
+
   resetRefCounter();
   const translated = translateExample({
     source: bugCase.source || 'generic',
-    context: bugCase.input?.context_nl,
-    question: bugCase.input?.question_nl,
-    label: bugCase.dataset?.label,
+    context: nl.context,
+    question: nl.question,
+    label: bugCase.dataset?.label ?? bugCase.example?.label ?? bugCase.translated?.label,
     translateOptions: { autoDeclareUnknownOperators, expandCompoundQuestions: true }
   });
 
@@ -199,7 +221,12 @@ async function runBugCase(caseFile, options = {}) {
 
   // Step 7: Check expected_nl
   const expected_nl = bugCase.expected?.expected_nl;
-  const expectProved = bugCase.dataset?.expectProved;
+  const expectProved =
+    bugCase?.dataset?.expectProved ??
+    bugCase?.translated?.expectProved ??
+    bugCase?.translation?.expectProved ??
+    bugCase?.expected?.expected_proved ??
+    null;
 
   if (verbose) {
     console.log(`\n${C.bold}Results:${C.reset}`);

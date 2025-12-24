@@ -110,18 +110,47 @@ function loadCoreTheories(session) {
   }
 }
 
+function extractExpectProved(raw) {
+  if (raw?.dataset?.expectProved === true || raw?.dataset?.expectProved === false) return raw.dataset.expectProved;
+  if (raw?.translated?.expectProved === true || raw?.translated?.expectProved === false) return raw.translated.expectProved;
+  if (raw?.translation?.expectProved === true || raw?.translation?.expectProved === false) return raw.translation.expectProved;
+  if (raw?.expected?.expected_proved === true || raw?.expected?.expected_proved === false) return raw.expected.expected_proved;
+  return null;
+}
+
+function extractNl(raw) {
+  const context =
+    raw?.input?.context_nl ??
+    raw?.example?.context ??
+    raw?.translated?.original?.context ??
+    raw?.translation?.context_nl ??
+    null;
+  const question =
+    raw?.input?.question_nl ??
+    raw?.example?.question ??
+    raw?.translated?.original?.question ??
+    raw?.translation?.question_nl ??
+    null;
+  return { context, question };
+}
+
 async function validateOne(caseFile, { autoDeclareUnknownOperators } = {}) {
   const raw = JSON.parse(fs.readFileSync(caseFile, 'utf8'));
-  const expectProved = raw?.dataset?.expectProved;
+  const expectProved = extractExpectProved(raw);
   if (expectProved !== true && expectProved !== false) {
     return { ok: true, skipped: true, reason: 'no_expectation' };
+  }
+
+  const { context, question } = extractNl(raw);
+  if (!context || !question) {
+    return { ok: true, skipped: true, reason: 'missing_nl' };
   }
 
   resetRefCounter();
   const translated = translateExample({
     source: raw.source || 'generic',
-    context: raw.input?.context_nl,
-    question: raw.input?.question_nl,
+    context,
+    question,
     label: raw.dataset?.label,
     translateOptions: { autoDeclareUnknownOperators, expandCompoundQuestions: true }
   });
@@ -251,4 +280,3 @@ main().catch(err => {
   console.error(`${C.red}Fatal:${C.reset} ${err.message}`);
   process.exit(1);
 });
-
