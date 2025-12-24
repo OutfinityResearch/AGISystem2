@@ -47,6 +47,7 @@ function parseArgs() {
     bugId: getArg('--bug'),
     updateMissing: args.includes('--update-missing'),
     verbose: args.includes('--verbose') || args.includes('-v'),
+    autoDeclareUnknownOperators: !args.includes('--strict-operators'),
     help: args.includes('--help') || args.includes('-h')
   };
 }
@@ -124,7 +125,8 @@ async function runSuite(options = {}) {
     try {
       const result = await runBugCase(file, {
         updateExpected: updateMissing,
-        verbose: false
+        verbose: false,
+        autoDeclareUnknownOperators: options.autoDeclareUnknownOperators
       });
 
       if (result.error === 'missing_expected_nl') {
@@ -224,6 +226,7 @@ ${C.bold}Options:${C.reset}
   --bug=BUGID         Run only cases for specific bug (e.g., --bug=BUG001)
   --update-missing    Auto-fill missing expected_nl from actual_nl
   --verbose, -v       Show per-case results
+  --strict-operators  Do not auto-declare unknown verb operators in translation
   --help, -h          Show this help
 
 ${C.bold}Directory Structure:${C.reset}

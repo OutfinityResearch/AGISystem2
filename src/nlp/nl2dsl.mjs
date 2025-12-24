@@ -15,23 +15,7 @@
 // Import utilities
 import { resetRefCounter } from './nl2dsl/utils.mjs';
 
-// Import translators
-import {
-  translateProntoQAContext,
-  translateProntoQAQuestion
-} from './nl2dsl/prontoqa.mjs';
-
-import {
-  translateRuleTakerContext,
-  translateRuleTakerQuestion
-} from './nl2dsl/ruletaker.mjs';
-
-import {
-  translateFOLIOContext,
-  translateFOLIOQuestion,
-  translateGenericContext,
-  translateGenericQuestion
-} from './nl2dsl/folio.mjs';
+import { translateContextWithGrammar, translateQuestionWithGrammar } from './nl2dsl/grammar.mjs';
 
 // Re-export resetRefCounter for external use
 export { resetRefCounter } from './nl2dsl/utils.mjs';
@@ -58,22 +42,9 @@ export function translateNL2DSL(text, options = {}) {
     let result;
 
     if (isQuestion) {
-      // Translate as question/goal
-      let questionDsl;
-      switch (source) {
-        case 'prontoqa':
-          questionDsl = translateProntoQAQuestion(text);
-          break;
-        case 'folio':
-        case 'folio_fol':
-          questionDsl = translateFOLIOQuestion(text);
-          break;
-        case 'ruletaker':
-          questionDsl = translateRuleTakerQuestion(text);
-          break;
-        default:
-          questionDsl = translateGenericQuestion(text);
-      }
+      // Dataset/source-agnostic translation.
+      // `source` is preserved as metadata only (useful for eval bookkeeping).
+      const questionDsl = translateQuestionWithGrammar(text, options);
 
       return {
         dsl: questionDsl || '',
@@ -83,28 +54,16 @@ export function translateNL2DSL(text, options = {}) {
         type: 'question'
       };
     } else {
-      // Translate as context/facts/rules
-      switch (source) {
-        case 'prontoqa':
-          result = translateProntoQAContext(text);
-          break;
-        case 'folio':
-        case 'folio_fol':
-          result = translateFOLIOContext(text);
-          break;
-        case 'ruletaker':
-          result = translateRuleTakerContext(text);
-          break;
-        default:
-          result = translateGenericContext(text);
-      }
+      // Dataset/source-agnostic translation.
+      result = translateContextWithGrammar(text, options);
 
       return {
         dsl: result.dsl,
         errors: result.errors,
         success: result.errors.length === 0,
         source,
-        type: 'context'
+        type: 'context',
+        autoDeclaredOperators: result.autoDeclaredOperators || []
       };
     }
   } catch (err) {
@@ -129,11 +88,12 @@ export function translateNL2DSL(text, options = {}) {
  */
 export function translateExample(example) {
   const { source = 'generic', context, question, label } = example;
+  const translateOptions = example?.translateOptions || {};
 
   resetRefCounter();
 
-  const contextResult = translateNL2DSL(context, { source, isQuestion: false });
-  const questionResult = translateNL2DSL(question, { source, isQuestion: true });
+  const contextResult = translateNL2DSL(context, { source, isQuestion: false, ...translateOptions });
+  const questionResult = translateNL2DSL(question, { source, isQuestion: true, ...translateOptions });
 
   const expectProved = labelToExpectation(label);
 
@@ -141,6 +101,7 @@ export function translateExample(example) {
     source,
     contextDsl: contextResult.dsl,
     contextErrors: contextResult.errors,
+    contextAutoDeclaredOperators: contextResult.autoDeclaredOperators || [],
     questionDsl: questionResult.dsl,
     expectProved,
     label,

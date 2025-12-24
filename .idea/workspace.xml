@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="new evaluation approach from external  reasoning suites, new suites, bug fixings">
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/analised.md" afterDir="false" />
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="created a custom agent for autoDiscovery of NLP to DSl and of reasoning bugs">
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/README.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/autoDiscovery/bugCases/BUG001/prontoqa_21768947.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/autoDiscovery/bugCases/BUG001/prontoqa_236ef268.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/autoDiscovery/bugCases/BUG001/prontoqa_2370cdad.json" afterDir="false" />
@@ -15,56 +15,39 @@
       <change afterPath="$PROJECT_DIR$/autoDiscovery/bugCases/BUG001/prontoqa_6af2875d.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/autoDiscovery/bugCases/BUG001/prontoqa_e5d66be.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/autoDiscovery/bugCases/BUG003/folio_3f468f42.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/bugs/BUG001-compound-logic.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/bugs/BUG003-deep-chains.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/bugs/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/bugsAutoDiscovery.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP002.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP002/folio_fol_23de74fa.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP002/logiqa2_5f293a00.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP002/logiqa_540a95c1.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP002/prontoqa_45fdd8bb.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP005.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP005/folio_5defeef3.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP005/folio_6126a251.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP005/folio_73e64b59.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP005/folio_fol_516088b0.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP005/logicnli_112847c4.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP005/logicnli_327186c.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP005/logicnli_7204f858.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP005/logiqa2_79c66033.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP005/logiqa_13834231.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP005/logiqa_4ebc48e8.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP005/rulebert_110b540a.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP005/rulebert_4650a3b.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/runBugCase.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/runBugSuite.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS20-AutoDiscovery.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/nlp/nl2dsl.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/folio.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/prontoqa.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/ruletaker.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/utils.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/discovery/analysed.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/discovery/constants.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/discovery/fs-utils.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/discovery/ids.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/discovery/patterns.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/discovery/quarantine.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/discovery/run-batch.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/discovery/run-example.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/discovery/session.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/discovery/write-cases.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar/emit.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar/parse.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar/text.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/nlp/nl2dsl-e2e.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/nlp/nl2dsl-grammar.test.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/debug-prontoqa.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/logiglue/lib/dataset-loader.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/libs/logiglue/dataset-loader.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/logiglue/lib/translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/libs/logiglue/translator.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/ruletaker/ANALYSIS_REPORT.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/ruletaker/FIX_PLAN.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/ruletaker/analyze_failures.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/ruletaker/check_fp.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/ruletaker/failure_analysis.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/ruletaker/lib/dataset-loader.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/libs/ruletaker/dataset-loader.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/ruletaker/lib/reporter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/libs/ruletaker/reporter.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/ruletaker/lib/translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/libs/ruletaker/translator.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/ruletaker/ruletaker-theory.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/libs/ruletaker/ruletaker-theory.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/run-parallel-ruletaker.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runAllEvals.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runAllEvals.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runLogiGlueEval.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runRuleTakerEval.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/stress_queries/bugs.md" beforeDir="false" afterPath="$PROJECT_DIR$/evals/stress_queries/bugs.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/analised.md" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/analised.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugs/BUG001-compound-logic.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugs/BUG003-deep-chains.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugs/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugsAutoDiscovery.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/bugsAutoDiscovery.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP002.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/nlpBugs/NLP005.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/runBugCase.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/runBugCase.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/runBugSuite.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/runBugSuite.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Core/00-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/00-relations.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/nl2dsl.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl/folio.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl/prontoqa.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl/ruletaker.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/evals/ruletaker-translator.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/evals/ruletaker-translator.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,15 +157,7 @@
       <workItem from="1766130107490" duration="10280000" />
       <workItem from="1766389595090" duration="9185000" />
       <workItem from="1766477237780" duration="9294000" />
-      <workItem from="1766562947099" duration="5753000" />
-    </task>
-    <task id="LOCAL-00013" summary="Better Documentation and WIP for code">
-      <option name="closed" value="true" />
-      <created>1764165384906</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1764165384906</updated>
+      <workItem from="1766562947099" duration="7361000" />
     </task>
     <task id="LOCAL-00014" summary="Better Documentation and WIP for code">
       <option name="closed" value="true" />
@@ -568,7 +543,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766510233160</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="created a custom agent for autoDiscovery of NLP to DSl and of reasoning bugs">
+      <option name="closed" value="true" />
+      <created>1766576357651</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1766576357651</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -607,6 +590,7 @@
     <MESSAGE value="wip to create better semantic unification of theories and concepts even when defined with different defeinitions" />
     <MESSAGE value="better documentation, consolidating steps for next steps of research and improvements" />
     <MESSAGE value="new evaluation approach from external  reasoning suites, new suites, bug fixings" />
-    <option name="LAST_COMMIT_MESSAGE" value="new evaluation approach from external  reasoning suites, new suites, bug fixings" />
+    <MESSAGE value="created a custom agent for autoDiscovery of NLP to DSl and of reasoning bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="created a custom agent for autoDiscovery of NLP to DSl and of reasoning bugs" />
   </component>
 </project>

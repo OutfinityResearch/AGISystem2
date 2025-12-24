@@ -71,6 +71,3 @@
 
 @trusts:trusts __Relation
 @conflictsWith:conflictsWith __SymmetricRelation
-
-# Generic fallback relation for NL→DSL translation when the verb/operator is unknown.
-@rel:rel __Relation

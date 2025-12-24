@@ -2,79 +2,29 @@
 /**
  * Automated Bug Discovery Script
  *
- * Runs continuous evaluation to discover translation bugs and reasoning failures.
+ * - Samples examples (dataset-loader)
+ * - Translates NL→DSL
+ * - Runs a real Session.learn + Session.prove using symbolicPriority
+ * - Records failures into quarantine/ and bug folders
  *
- * Features:
- * - Fetches random test cases from HuggingFace evaluation sources (LogiGlue, RuleTaker)
- * - Runs 10 concurrent sessions for parallel processing
- * - Compares reasoning engine output with ground truth
- * - Deduplicates: never re-tests cases already in analised.md
- * - Quarantines failed cases for analysis
- * - Categorizes bugs: Translation (Category A) vs Reasoning (Category B)
- *
- * Usage:
- *   node autoDiscovery/bugsAutoDiscovery.mjs                    # Run discovery loop
- *   node autoDiscovery/bugsAutoDiscovery.mjs --batch=100        # Process 100 cases
- *   node autoDiscovery/bugsAutoDiscovery.mjs --source=prontoqa  # Specific source only
- *   node autoDiscovery/bugsAutoDiscovery.mjs --continuous       # Run indefinitely
- *   node autoDiscovery/bugsAutoDiscovery.mjs --analyze          # Analyze quarantine
+ * Default behavior for discovery:
+ * - autoDeclareUnknownOperators=true (opt-in safety for discovery runs)
+ * - loadCore() always
  */
 
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import fs from 'node:fs';
+import { loadExamples } from './libs/logiglue/dataset-loader.mjs';
+import { ensureDir } from './discovery/fs-utils.mjs';
+import { loadAnalysedCases } from './discovery/analysed.mjs';
+import { analyzeQuarantine } from './discovery/quarantine.mjs';
+import {
+  C,
+  DEFAULT_BATCH_SIZE,
+  DEFAULT_WORKERS,
+  QUARANTINE_DIR
+} from './discovery/constants.mjs';
+import { runBatch } from './discovery/run-batch.mjs';
+import { BUG_PATTERNS, NLP_BUG_PATTERNS } from './discovery/patterns.mjs';
 
-import { loadExamples, listAvailableSubsets, DATASET_SOURCES } from './libs/logiglue/dataset-loader.mjs';
-import { translateNL2DSL, translateExample, resetRefCounter } from '../src/nlp/nl2dsl.mjs';
-import { Session } from '../src/runtime/session.mjs';
-import { REASONING_PRIORITY } from '../src/core/constants.mjs';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(__dirname, '..');
-const CONFIG_ROOT = join(ROOT, 'config');
-
-// File paths
-const ANALYSED_FILE = join(__dirname, 'analised.md');
-const QUARANTINE_DIR = join(__dirname, 'quarantine');
-const BUGS_DIR = join(__dirname, 'bugs');
-const BUG_CASES_DIR = join(__dirname, 'bugCases');
-const NLP_BUGS_DIR = join(__dirname, 'nlpBugs');
-// Reasoning bugs: bugCases/<bugId>/<caseId>.json
-// NLP/Translation bugs: nlpBugs/<nlpBugId>/<caseId>.json
-
-// ANSI colors
-const C = {
-  reset: '\x1b[0m',
-  bold: '\x1b[1m',
-  dim: '\x1b[2m',
-  red: '\x1b[31m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  blue: '\x1b[34m',
-  magenta: '\x1b[35m',
-  cyan: '\x1b[36m'
-};
-
-// Default configuration - optimized for diverse discovery
-const DEFAULT_WORKERS = 5;       // Reduced for stability
-const DEFAULT_BATCH_SIZE = 10;   // Small batches for fast iteration
-const DEFAULT_STRATEGY = 'dense-binary';
-const DEFAULT_GEOMETRY = 256;
-
-// Result categories
-const CATEGORY = {
-  PASSED: null,
-  TRANSLATION: 'A',      // Translation failed
-  REASONING: 'B',        // Known reasoning bug pattern
-  UNKNOWN: 'U',          // Unknown - needs manual analysis
-  UNSUPPORTED: 'S',      // Unsupported label/source (skip)
-  LEARN_FAILED: 'L',     // session.learn() failed
-  INVALID_GOAL: 'G'      // questionDsl invalid for prove()
-};
-
-/**
- * Parse command line arguments
- */
 function parseArgs() {
   const args = process.argv.slice(2);
 
@@ -96,1077 +46,11 @@ function parseArgs() {
     analyze: args.includes('--analyze'),
     verbose: args.includes('--verbose') || args.includes('-v'),
     seed: getIntArg('--seed', Date.now()),
+    autoDeclareUnknownOperators: !args.includes('--strict-operators'),
     help: args.includes('--help') || args.includes('-h')
   };
 }
 
-/**
- * Ensure directory exists
- */
-function ensureDir(dirPath) {
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-  }
-}
-
-/**
- * Load already analysed case IDs from analised.md
- * @returns {Set<string>} Set of case IDs already tested
- */
-function loadAnalysedCases() {
-  const analysed = new Set();
-
-  if (!fs.existsSync(ANALYSED_FILE)) {
-    return analysed;
-  }
-
-  const content = fs.readFileSync(ANALYSED_FILE, 'utf8');
-  const lines = content.split('\n');
-
-  for (const line of lines) {
-    // Format: "- [source]_[caseId]: result"
-    const match = line.match(/^-\s+(\w+_\w+):/);
-    if (match) {
-      analysed.add(match[1]);
-    }
-  }
-
-  return analysed;
-}
-
-/**
- * Append case to analised.md
- */
-function recordAnalysedCase(caseId, result, details) {
-  const line = `- ${caseId}: ${result} (${details})\n`;
-
-  if (!fs.existsSync(ANALYSED_FILE)) {
-    fs.writeFileSync(ANALYSED_FILE, `# Analysed Cases\n\nGenerated by bugsAutoDiscovery.mjs\n\n`);
-  }
-
-  fs.appendFileSync(ANALYSED_FILE, line);
-}
-
-/**
- * Generate unique case ID
- */
-function generateCaseId(source, example, index) {
-  const hash = simpleHash(JSON.stringify({ c: example.context?.slice(0, 100), q: example.question }));
-  return `${source}_${hash}`;
-}
-
-/**
- * Simple hash function for deduplication
- */
-function simpleHash(str) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
-  }
-  return Math.abs(hash).toString(16).slice(0, 8);
-}
-
-/**
- * Load Core theories into session
- */
-function loadCoreTheories(session) {
-  const corePath = join(CONFIG_ROOT, 'Core');
-  if (!fs.existsSync(corePath)) return 0;
-
-  const files = fs.readdirSync(corePath)
-    .filter(f => f.endsWith('.sys2') && f !== 'index.sys2')
-    .sort();
-
-  let loaded = 0;
-  for (const file of files) {
-    try {
-      const content = fs.readFileSync(join(corePath, file), 'utf8');
-      const res = session.learn(content);
-      if (res.success !== false) loaded++;
-    } catch (err) { /* skip */ }
-  }
-  return loaded;
-}
-
-/**
- * Create fresh session
- */
-function createSession() {
-  const session = new Session({
-    hdcStrategy: DEFAULT_STRATEGY,
-    geometry: DEFAULT_GEOMETRY,
-    reasoningPriority: REASONING_PRIORITY.HOLOGRAPHIC,
-    reasoningProfile: 'theoryDriven',
-    closedWorldAssumption: true,
-    rejectContradictions: false
-  });
-
-  loadCoreTheories(session);
-  return session;
-}
-
-/**
- * Validate questionDsl is valid for prove()
- * prove() uses only ast.statements[0], so questionDsl must be single statement
- * or have @goal as first statement
- *
- * STRICT MODE: Multi-line without @goal on first line is INVALID
- */
-function validateQuestionDsl(questionDsl) {
-  if (!questionDsl || !questionDsl.trim()) {
-    return { valid: false, reason: 'empty_question_dsl' };
-  }
-
-  const lines = questionDsl.trim().split('\n').filter(l => l.trim() && !l.trim().startsWith('//'));
-
-  if (lines.length === 0) {
-    return { valid: false, reason: 'no_statements' };
-  }
-
-  if (lines.length === 1) {
-    return { valid: true };
-  }
-
-  // Multi-line: MUST have @goal as first statement
-  const firstLine = lines[0].trim();
-  if (firstLine.startsWith('@goal ') || firstLine.startsWith('@goal:')) {
-    return { valid: true };
-  }
-
-  // Check if any line has @goal (but not first) - this is INVALID
-  const hasGoalElsewhere = lines.slice(1).some(l => l.trim().startsWith('@goal'));
-  if (hasGoalElsewhere) {
-    return { valid: false, reason: 'goal_not_first_statement' };
-  }
-
-  // Multi-line without explicit @goal - INVALID (translator contract violation)
-  return { valid: false, reason: 'multi_statement_no_goal' };
-}
-
-/**
- * Run single example and categorize result
- * Implements Codex's Definition of Done checklist
- *
- * @returns {Object} Result with category, correct, details
- */
-function runExample(example, caseId) {
-  const startTime = performance.now();
-  const source = example.source || 'generic';
-  const sessionConfig = {
-    hdcStrategy: DEFAULT_STRATEGY,
-    geometry: DEFAULT_GEOMETRY,
-    closedWorldAssumption: true,
-    rejectContradictions: false
-  };
-
-  resetRefCounter();
-
-  // Translate using consolidated module
-  const translated = translateExample({
-    ...example,
-    source
-  });
-
-  // GATE 1: LabelSupported - expectProved must be boolean
-  if (translated.expectProved === null || translated.expectProved === undefined) {
-    return {
-      category: CATEGORY.UNSUPPORTED,
-      correct: false,
-      reason: 'unsupported_label',
-      details: `Label "${example.label}" not supported for binary entailment`,
-      translated,
-      durationMs: performance.now() - startTime,
-      caseId,
-      sessionConfig
-    };
-  }
-
-  // GATE 2: ContextTranslationPresent
-  if (!translated.contextDsl || !translated.contextDsl.trim()) {
-    return {
-      category: CATEGORY.TRANSLATION,
-      correct: false,
-      reason: 'context_translation_empty',
-      details: `Context translation failed: ${translated.contextErrors?.length || 0} errors`,
-      translated,
-      durationMs: performance.now() - startTime,
-      caseId,
-      sessionConfig
-    };
-  }
-
-  // GATE 3: QuestionTranslationPresent
-  if (!translated.questionDsl || !translated.questionDsl.trim()) {
-    return {
-      category: CATEGORY.TRANSLATION,
-      correct: false,
-      reason: 'question_translation_empty',
-      details: 'Question translation failed',
-      translated,
-      durationMs: performance.now() - startTime,
-      caseId,
-      sessionConfig
-    };
-  }
-
-  // GATE 4: GoalShapeValidForProve
-  const goalValidation = validateQuestionDsl(translated.questionDsl);
-  if (!goalValidation.valid) {
-    return {
-      category: CATEGORY.INVALID_GOAL,
-      correct: false,
-      reason: goalValidation.reason,
-      details: `questionDsl invalid for prove(): ${goalValidation.reason}`,
-      translated,
-      durationMs: performance.now() - startTime,
-      caseId,
-      sessionConfig
-    };
-  }
-
-  // Run reasoning with proper validation
-  try {
-    const session = createSession();
-
-    // GATE 5: LearnSucceeded - validate learn() result
-    const learnResult = session.learn(translated.contextDsl);
-    if (learnResult.success === false || (learnResult.errors && learnResult.errors.length > 0)) {
-      return {
-        category: CATEGORY.LEARN_FAILED,
-        correct: false,
-        reason: 'learn_failed',
-        details: `learn() failed: ${learnResult.errors?.join(', ') || 'unknown error'}`,
-        translated,
-        learnResult: { success: learnResult.success, errorCount: learnResult.errors?.length || 0 },
-        durationMs: performance.now() - startTime,
-        caseId,
-        sessionConfig
-      };
-    }
-
-    // GATE 6: ProveExecuted
-    const proveResult = session.prove(translated.questionDsl, { timeout: 2000 });
-
-    if (!proveResult || typeof proveResult.valid !== 'boolean') {
-      return {
-        category: CATEGORY.UNKNOWN,
-        correct: false,
-        reason: 'prove_no_result',
-        details: 'prove() returned invalid result structure',
-        translated,
-        proveResult,
-        durationMs: performance.now() - startTime,
-        caseId,
-        sessionConfig
-      };
-    }
-
-    // Generate actual_nl for reproducibility
-    let actual_nl = null;
-    try {
-      actual_nl = session.describeResult({
-        action: 'prove',
-        reasoningResult: proveResult,
-        queryDsl: translated.questionDsl
-      });
-    } catch (err) {
-      actual_nl = `Error: ${err.message}`;
-    }
-
-    // GATE 7: ProofValidationIfEnabled (if applicable)
-    const proofInvalid = proveResult.valid === true &&
-      proveResult.proofObject &&
-      proveResult.proofObject.validatorOk === false;
-
-    if (proofInvalid) {
-      return {
-        category: CATEGORY.UNKNOWN,
-        correct: false,
-        reason: 'invalid_proof',
-        details: 'Engine produced invalid proof (validatorOk=false)',
-        translated,
-        proveResult: {
-          valid: proveResult.valid,
-          reason: proveResult.reason,
-          stepsCount: proveResult.steps?.length || 0,
-          validatorOk: proveResult.proofObject?.validatorOk
-        },
-        actual_nl,
-        durationMs: performance.now() - startTime,
-        caseId,
-        sessionConfig
-      };
-    }
-
-    // GATE 8: Compare proved vs expected
-    const proved = proveResult.valid === true;
-    const correct = (proved === translated.expectProved);
-
-    if (correct) {
-      return {
-        category: CATEGORY.PASSED,
-        correct: true,
-        reason: 'passed',
-        details: `proved=${proved}, expected=${translated.expectProved}`,
-        translated,
-        proveResult: {
-          valid: proveResult.valid,
-          stepsCount: proveResult.steps?.length || 0
-        },
-        actual_nl,
-        durationMs: performance.now() - startTime,
-        caseId,
-        sessionConfig
-      };
-    }
-
-    // Failed - determine if translation or reasoning issue
-    const translationQuality = assessTranslationQuality(example, translated);
-
-    if (translationQuality.hasIssues) {
-      return {
-        category: CATEGORY.TRANSLATION,
-        correct: false,
-        reason: 'translation_quality_issue',
-        details: translationQuality.details,
-        translated,
-        proveResult: {
-          valid: proveResult.valid,
-          reason: proveResult.reason,
-          stepsCount: proveResult.steps?.length || 0
-        },
-        actual_nl,
-        durationMs: performance.now() - startTime,
-        caseId,
-        sessionConfig
-      };
-    }
-
-    // Reasoning failure with rich diagnostics
-    return {
-      category: CATEGORY.REASONING,
-      correct: false,
-      reason: 'reasoning_failure',
-      details: `proved=${proved}, expected=${translated.expectProved}`,
-      translated,
-      proveResult: {
-        valid: proveResult.valid,
-        reason: proveResult.reason,
-        stepsCount: proveResult.steps?.length || 0,
-        validatorOk: proveResult.proofObject?.validatorOk
-      },
-      actual_nl,
-      durationMs: performance.now() - startTime,
-      caseId,
-      sessionConfig
-    };
-
-  } catch (err) {
-    return {
-      category: CATEGORY.UNKNOWN,
-      correct: false,
-      reason: 'runtime_error',
-      details: err.message,
-      translated,
-      durationMs: performance.now() - startTime,
-      caseId,
-      sessionConfig
-    };
-  }
-}
-
-// Bug example counters (max 10 per bug type)
-const bugExampleCounts = {};
-const MAX_EXAMPLES_PER_BUG = 10;
-
-// Bug pattern definitions
-const BUG_PATTERNS = {
-  'BUG001': {
-    name: 'Or→And implication failure',
-    description: 'Compound logic with Or antecedent and/or And consequent',
-    file: 'BUG001-compound-logic.md'
-  },
-  'BUG002': {
-    name: 'Negation reasoning failure',
-    description: 'Not operator handling in implications',
-    file: 'BUG002-negation.md'
-  },
-  'BUG003': {
-    name: 'Deep chain failure',
-    description: 'Multi-hop inference chains (>3 steps)',
-    file: 'BUG003-deep-chains.md'
-  },
-  'BUG004': {
-    name: 'Relational reasoning failure',
-    description: 'Kinship or relational inference patterns',
-    file: 'BUG004-relational.md'
-  },
-  'BUG005': {
-    name: 'Abductive reasoning failure',
-    description: 'Inference from effect to cause',
-    file: 'BUG005-abduction.md'
-  },
-  'BUG006': {
-    name: 'Multi-choice ambiguity',
-    description: 'Multiple choice answer selection issues',
-    file: 'BUG006-multichoice.md'
-  },
-  'BUG007': {
-    name: 'Quantifier handling failure',
-    description: 'Universal/existential quantifier issues',
-    file: 'BUG007-quantifiers.md'
-  }
-};
-
-// NLP/Translation bug patterns
-const NLP_BUG_PATTERNS = {
-  'NLP001': {
-    name: 'Context translation empty',
-    description: 'Translator produced empty DSL for non-empty context',
-    reason: 'context_translation_empty'
-  },
-  'NLP002': {
-    name: 'Question translation empty',
-    description: 'Translator produced empty DSL for question/goal',
-    reason: 'question_translation_empty'
-  },
-  'NLP003': {
-    name: 'Goal not first statement',
-    description: 'Multi-line questionDsl has @goal on wrong line',
-    reason: 'goal_not_first_statement'
-  },
-  'NLP004': {
-    name: 'Multi-statement without goal',
-    description: 'Multi-line questionDsl without explicit @goal',
-    reason: 'multi_statement_no_goal'
-  },
-  'NLP005': {
-    name: 'Learn parse error',
-    description: 'Generated DSL has syntax errors (lexer/parser)',
-    reason: 'learn_failed'
-  },
-  'NLP006': {
-    name: 'Translation quality issue',
-    description: 'Missing operators or incomplete translation',
-    reason: 'translation_quality_issue'
-  },
-  'NLP007': {
-    name: 'Complex sentence unsupported',
-    description: 'Sentence patterns not yet supported by translator',
-    reason: 'complex_unsupported'
-  }
-};
-
-// Initialize counters
-for (const bugId of Object.keys(BUG_PATTERNS)) {
-  bugExampleCounts[bugId] = 0;
-}
-
-/**
- * Detect known bug patterns in the DSL and example metadata
- * Returns bug ID if matched, null otherwise
- */
-function detectKnownBugPattern(translated, example) {
-  const dsl = translated?.contextDsl || '';
-  const source = example?.source || '';
-  const category = example?.category || '';
-
-  // BUG001: Compound logic (Or/And in implications)
-  const hasOrAntecedent = /Implies \$or\d+/.test(dsl);
-  const hasAndConsequent = /@and\d+ And/.test(dsl) && /Implies \$\w+ \$and\d+/.test(dsl);
-  const hasAndAntecedent = /Implies \$and\d+/.test(dsl);
-
-  if ((hasOrAntecedent || hasAndAntecedent) && hasAndConsequent) {
-    return 'BUG001';
-  }
-
-  // BUG002: Negation reasoning
-  const hasNot = /\bNot\b/.test(dsl);
-  const hasNotInImplication = /Implies \$\w+ \$neg\d+/.test(dsl) || /Implies \$not\d+/.test(dsl);
-  if (hasNot && hasNotInImplication) {
-    return 'BUG002';
-  }
-
-  // BUG003: Deep chains (count Implies statements)
-  const impliesCount = (dsl.match(/Implies/g) || []).length;
-  if (impliesCount >= 4) {
-    return 'BUG003';
-  }
-
-  // BUG004: Relational/kinship reasoning (CLUTRR source)
-  if (source === 'clutrr' || category === 'relational_reasoning') {
-    return 'BUG004';
-  }
-
-  // BUG005: Abductive reasoning
-  if (source === 'abduction' || category === 'abductive_reasoning') {
-    return 'BUG005';
-  }
-
-  // BUG006: Multi-choice (logiqa, reclor with multiple choices)
-  if ((source === 'logiqa' || source === 'logiqa2' || source === 'reclor') &&
-      example?.choices?.length > 2) {
-    return 'BUG006';
-  }
-
-  // BUG007: Quantifier issues (forAll, exists patterns)
-  const hasQuantifiers = /\b(forAll|exists|Every|All|Some|Any)\b/i.test(example?.context || '');
-  const hasQuantifierDsl = /\?\w+/.test(dsl);  // Variables indicate quantification
-  if (hasQuantifiers && impliesCount >= 2 && hasQuantifierDsl) {
-    return 'BUG007';
-  }
-
-  return null;
-}
-
-/**
- * Detect NLP bug pattern based on reason
- * @returns {string|null} NLP bug ID (NLP001-NLP007) or null
- */
-function detectNlpBugPattern(reason, result, example) {
-  // Direct mapping from reason to NLP bug
-  for (const [nlpId, pattern] of Object.entries(NLP_BUG_PATTERNS)) {
-    if (pattern.reason === reason) {
-      return nlpId;
-    }
-  }
-
-  // Check for parse/validation errors in details
-  if (result?.details?.includes('Lexer error') ||
-      result?.details?.includes('Parse error') ||
-      result?.details?.includes('Unexpected') ||
-      result?.details?.includes('Unknown operator') ||
-      result?.details?.includes('validation failed')) {
-    return 'NLP005';
-  }
-
-  // Check context complexity for unsupported patterns
-  const context = example?.context || '';
-  if (context.length > 200 && reason === 'context_translation_empty') {
-    return 'NLP007';  // Complex sentence unsupported
-  }
-
-  return null;
-}
-
-/**
- * Write NLP bug case JSON
- */
-function writeNlpBugCaseJson(nlpBugId, result, example) {
-  const bugDir = join(NLP_BUGS_DIR, nlpBugId);
-  ensureDir(bugDir);
-
-  const filename = `${result.caseId}.json`;
-  const filepath = join(bugDir, filename);
-
-  const nlpCase = {
-    caseId: result.caseId,
-    nlpBugId: nlpBugId,
-    source: example.source || 'generic',
-    reason: result.reason,
-    details: result.details,
-    input: {
-      context_nl: example.context,
-      question_nl: example.question,
-      label: example.label
-    },
-    translation: {
-      contextDsl: result.translated?.contextDsl || '',
-      questionDsl: result.translated?.questionDsl || '',
-      contextErrors: result.translated?.contextErrors || []
-    },
-    timestamp: new Date().toISOString()
-  };
-
-  fs.writeFileSync(filepath, JSON.stringify(nlpCase, null, 2));
-  return filepath;
-}
-
-/**
- * Add NLP bug to index file
- */
-function addToNlpBugIndex(nlpBugId, result, example) {
-  ensureDir(NLP_BUGS_DIR);
-
-  const pattern = NLP_BUG_PATTERNS[nlpBugId] || { name: nlpBugId, description: 'Unknown' };
-  const indexFile = join(NLP_BUGS_DIR, `${nlpBugId}.md`);
-
-  // Write JSON case
-  const jsonPath = writeNlpBugCaseJson(nlpBugId, result, example);
-  const relativeJsonPath = jsonPath.replace(join(__dirname, '..') + '/', '');
-
-  // Initialize index if doesn't exist
-  if (!fs.existsSync(indexFile)) {
-    fs.writeFileSync(indexFile, `# ${nlpBugId}: ${pattern.name}
-
-## Description
-${pattern.description}
-
-## Cases
-
-`);
-  }
-
-  // Add case entry
-  let content = fs.readFileSync(indexFile, 'utf8');
-  if (!content.includes(result.caseId)) {
-    const caseEntry = `### ${result.caseId}
-- **Source:** ${example.source || 'generic'}
-- **Reason:** ${result.reason}
-- **JSON:** \`${relativeJsonPath}\`
-
-`;
-    content += caseEntry;
-    fs.writeFileSync(indexFile, content);
-  }
-}
-
-/**
- * Assess translation quality to determine bug category
- */
-function assessTranslationQuality(example, translated) {
-  const issues = [];
-
-  // Check for untranslated sentences
-  if (translated.contextErrors?.length > 0) {
-    const ratio = translated.contextErrors.length / (example.context?.split('.').length || 1);
-    if (ratio > 0.2) {
-      issues.push(`${(ratio * 100).toFixed(0)}% sentences unparsed`);
-    }
-  }
-
-  // Check for suspicious DSL patterns (heuristic)
-  const dsl = translated.contextDsl || '';
-
-  // Empty or very short DSL for non-empty context
-  if (example.context?.length > 50 && dsl.length < 20) {
-    issues.push('DSL too short for context');
-  }
-
-  // Missing expected operators
-  if (example.context?.toLowerCase().includes('if ') && !dsl.includes('Implies')) {
-    issues.push('Missing Implies for conditional');
-  }
-
-  // Negation handling
-  if (example.context?.toLowerCase().includes(' not ') && !dsl.includes('Not')) {
-    issues.push('Missing Not for negation');
-  }
-
-  return {
-    hasIssues: issues.length > 0,
-    details: issues.join('; ') || 'Translation appears correct'
-  };
-}
-
-/**
- * Add case to bug file (markdown is now INDEX only, not source of truth)
- * Full data is in bugCases/<bugId>/<caseId>.json
- */
-function addToBugFile(bugId, result, example) {
-  ensureDir(BUGS_DIR);
-  ensureDir(BUG_CASES_DIR);
-
-  const bugInfo = BUG_PATTERNS[bugId] || { name: bugId, description: 'Unknown', file: `${bugId}.md` };
-  const bugFile = join(BUGS_DIR, bugInfo.file);
-
-  // Write complete JSON case for reproducibility
-  const jsonPath = writeBugCaseJson(bugId, result, example);
-  const relativeJsonPath = jsonPath.replace(join(__dirname, '..') + '/', '');
-
-  // Initialize bug file if doesn't exist
-  if (!fs.existsSync(bugFile)) {
-    fs.writeFileSync(bugFile, `# ${bugId}: ${bugInfo.name}
-
-## Description
-${bugInfo.description}
-
-## How to Run Cases
-\`\`\`bash
-node autoDiscovery/runBugSuite.mjs --bug=${bugId}
-\`\`\`
-
-## Cases
-
-`);
-  }
-
-  // Read current file
-  let content = fs.readFileSync(bugFile, 'utf8');
-
-  // Add case entry with link to JSON (if not already present)
-  if (!content.includes(result.caseId)) {
-    const expectedResult = result.translated?.expectProved === true ? 'TRUE'
-      : result.translated?.expectProved === false ? 'FALSE'
-      : 'UNKNOWN';
-
-    const actualResult = result.proveResult?.valid === true ? 'proved'
-      : result.proveResult?.valid === false ? 'not proved'
-      : 'error';
-
-    const caseEntry = `### ${result.caseId}
-- **Source:** ${example.source || 'generic'}
-- **Expected:** ${expectedResult} | **Actual:** ${actualResult}
-- **JSON:** \`${relativeJsonPath}\`
-- **Run:** \`node autoDiscovery/runBugCase.mjs ${relativeJsonPath}\`
-
-`;
-    content += caseEntry;
-  }
-
-  fs.writeFileSync(bugFile, content);
-}
-
-/**
- * Save failed case to quarantine
- */
-function quarantineCase(result, example) {
-  ensureDir(QUARANTINE_DIR);
-
-  const filename = `${result.caseId}.json`;
-  const filepath = join(QUARANTINE_DIR, filename);
-
-  const data = {
-    caseId: result.caseId,
-    category: result.category,
-    reason: result.reason,
-    details: result.details,
-    timestamp: new Date().toISOString(),
-    example: {
-      source: example.source,
-      context: example.context,
-      question: example.question,
-      label: example.label
-    },
-    translated: result.translated,
-    learnResult: result.learnResult || null,
-    proveResult: result.proveResult || null,
-    actual_nl: result.actual_nl || null,
-    sessionConfig: result.sessionConfig || null
-  };
-
-  fs.writeFileSync(filepath, JSON.stringify(data, null, 2));
-}
-
-/**
- * Write complete bug case JSON for reproducibility
- */
-function writeBugCaseJson(bugId, result, example) {
-  const bugDir = join(BUG_CASES_DIR, bugId);
-  ensureDir(bugDir);
-
-  const filename = `${result.caseId}.json`;
-  const filepath = join(bugDir, filename);
-
-  // Use actual_nl from result (generated in runExample)
-  const actual_nl = result.actual_nl || null;
-
-  // Generate expected_nl based on expectProved
-  let expected_nl = 'TODO';
-  const expectProved = result.translated?.expectProved;
-  if (expectProved === true) {
-    expected_nl = `True: [goal should be provable]`;
-  } else if (expectProved === false) {
-    expected_nl = `Cannot prove: [goal should not be provable]`;
-  }
-
-  const bugCase = {
-    caseId: result.caseId,
-    bugId: bugId,
-    source: example.source || 'generic',
-    dataset: {
-      label: example.label,
-      expectProved: result.translated?.expectProved,
-      choices: example.choices || []
-    },
-    input: {
-      context_nl: example.context,
-      question_nl: example.question
-    },
-    translation: {
-      translator: 'src/nlp/nl2dsl.mjs::translateExample',
-      contextDsl: result.translated?.contextDsl || '',
-      questionDsl: result.translated?.questionDsl || '',
-      contextErrors: result.translated?.contextErrors || [],
-      questionErrors: []
-    },
-    sessionConfig: result.sessionConfig || {
-      hdcStrategy: DEFAULT_STRATEGY,
-      geometry: DEFAULT_GEOMETRY,
-      closedWorldAssumption: true,
-      rejectContradictions: false
-    },
-    execution: {
-      learnResult: result.learnResult || { success: true },
-      proveResult: {
-        valid: result.proveResult?.valid,
-        reason: result.proveResult?.reason || null,
-        stepsCount: result.proveResult?.stepsCount || 0,
-        validatorOk: result.proveResult?.validatorOk || null,
-        method: result.proveResult?.method || null
-      },
-      actual_nl: actual_nl,
-      actual_proof_nl: null
-    },
-    expected: {
-      expected_nl: expected_nl,
-      expected_proof_nl: null,
-      note: 'auto-generated; verify manually or run with --accept-actual'
-    },
-    timestamp: new Date().toISOString()
-  };
-
-  fs.writeFileSync(filepath, JSON.stringify(bugCase, null, 2));
-  return filepath;
-}
-
-/**
- * Run batch of examples with concurrent workers
- */
-async function runBatch(examples, analysedCases, args) {
-  const results = {
-    total: 0,
-    passed: 0,
-    categoryA: 0,      // Translation bugs
-    categoryB: 0,      // Known reasoning bugs
-    categoryU: 0,      // Unknown (needs analysis)
-    categoryS: 0,      // Unsupported label/source
-    categoryL: 0,      // learn() failed
-    categoryG: 0,      // Invalid goal shape
-    skipped: 0,
-    byBugType: {},     // Count per bug type
-    bySource: {},      // Count per source
-    byReason: {}       // Count per failure reason
-  };
-
-  // Filter out already analysed cases
-  const toProcess = [];
-  for (let i = 0; i < examples.length; i++) {
-    const example = examples[i];
-    const caseId = generateCaseId(example.source || 'generic', example, i);
-
-    if (analysedCases.has(caseId)) {
-      results.skipped++;
-      continue;
-    }
-
-    toProcess.push({ example, caseId, index: i });
-  }
-
-  console.log(`\n${C.cyan}Processing ${toProcess.length} cases (${results.skipped} already analysed)${C.reset}\n`);
-
-  // Process in parallel chunks
-  const chunkSize = args.workers;
-  const startTime = performance.now();
-
-  for (let i = 0; i < toProcess.length; i += chunkSize) {
-    const chunk = toProcess.slice(i, i + chunkSize);
-
-    // Run chunk in parallel
-    const chunkResults = await Promise.all(
-      chunk.map(async ({ example, caseId }) => {
-        return runExample(example, caseId);
-      })
-    );
-
-    // Process results
-    for (let j = 0; j < chunkResults.length; j++) {
-      const result = chunkResults[j];
-      const { example } = chunk[j];
-
-      results.total++;
-
-      // Track reason for analysis
-      results.byReason[result.reason] = (results.byReason[result.reason] || 0) + 1;
-
-      if (result.correct) {
-        results.passed++;
-        recordAnalysedCase(result.caseId, 'PASSED', result.details);
-
-        if (args.verbose) {
-          console.log(`${C.green}✓${C.reset} ${result.caseId} ${C.dim}(${result.durationMs.toFixed(0)}ms)${C.reset}`);
-        }
-      } else {
-        // Handle failure by category using CATEGORY constants
-        switch (result.category) {
-          case CATEGORY.TRANSLATION: {
-            results.categoryA++;
-            // Classify NLP bug and save to nlpBugs/
-            const nlpBugId = detectNlpBugPattern(result.reason, result, example) || 'NLP006';
-            addToNlpBugIndex(nlpBugId, result, example);
-            results.byNlpBug = results.byNlpBug || {};
-            results.byNlpBug[nlpBugId] = (results.byNlpBug[nlpBugId] || 0) + 1;
-            if (args.verbose) {
-              console.log(`${C.yellow}⚠${C.reset} ${result.caseId} [${nlpBugId}] ${C.dim}${result.reason}${C.reset}`);
-            }
-            break;
-          }
-
-          case CATEGORY.UNSUPPORTED:
-            results.categoryS++;
-            // Record as skipped - not retryable without source changes
-            recordAnalysedCase(result.caseId, 'SKIP_UNSUPPORTED', result.details);
-            if (args.verbose) {
-              console.log(`${C.dim}⊘${C.reset} ${result.caseId} [Unsupported] ${C.dim}${result.reason}${C.reset}`);
-            }
-            break;
-
-          case CATEGORY.LEARN_FAILED: {
-            results.categoryL++;
-            // Learn failures are NLP bugs (parse errors in generated DSL)
-            const nlpBugId = detectNlpBugPattern(result.reason, result, example) || 'NLP005';
-            addToNlpBugIndex(nlpBugId, result, example);
-            results.byNlpBug = results.byNlpBug || {};
-            results.byNlpBug[nlpBugId] = (results.byNlpBug[nlpBugId] || 0) + 1;
-            if (args.verbose) {
-              console.log(`${C.yellow}⚠${C.reset} ${result.caseId} [${nlpBugId}] ${C.dim}${result.reason}${C.reset}`);
-            }
-            break;
-          }
-
-          case CATEGORY.INVALID_GOAL: {
-            results.categoryG++;
-            // Goal shape issues are NLP bugs
-            const nlpBugId = detectNlpBugPattern(result.reason, result, example) || 'NLP003';
-            addToNlpBugIndex(nlpBugId, result, example);
-            results.byNlpBug = results.byNlpBug || {};
-            results.byNlpBug[nlpBugId] = (results.byNlpBug[nlpBugId] || 0) + 1;
-            if (args.verbose) {
-              console.log(`${C.yellow}⚠${C.reset} ${result.caseId} [${nlpBugId}] ${C.dim}${result.reason}${C.reset}`);
-            }
-            break;
-          }
-
-          case CATEGORY.REASONING:
-            // Check if matches a known bug pattern
-            const bugId = detectKnownBugPattern(result.translated, example);
-
-            if (bugId) {
-              results.categoryB++;
-              results.byBugType[bugId] = (results.byBugType[bugId] || 0) + 1;
-              results.bySource[example.source] = (results.bySource[example.source] || 0) + 1;
-
-              // Record with bug ID - these are confirmed reasoning bugs
-              recordAnalysedCase(result.caseId, `FAIL_${bugId}`, result.details);
-              addToBugFile(bugId, result, example);
-
-              if (args.verbose) {
-                console.log(`${C.red}✗${C.reset} ${result.caseId} [${bugId}] ${C.dim}${result.reason}${C.reset}`);
-              }
-            } else {
-              // Unknown pattern - quarantine for manual analysis
-              results.categoryU++;
-              quarantineCase(result, example);
-              if (args.verbose) {
-                console.log(`${C.yellow}?${C.reset} ${result.caseId} [Unknown] ${C.dim}needs analysis${C.reset}`);
-              }
-            }
-            break;
-
-          case CATEGORY.UNKNOWN:
-          default: {
-            // Check if it's actually a parse/lexer error (NLP bug)
-            const nlpBugId = detectNlpBugPattern(result.reason, result, example);
-            if (nlpBugId) {
-              // It's an NLP bug, not truly unknown
-              addToNlpBugIndex(nlpBugId, result, example);
-              results.byNlpBug = results.byNlpBug || {};
-              results.byNlpBug[nlpBugId] = (results.byNlpBug[nlpBugId] || 0) + 1;
-              // Still count as unknown for stats, but classified
-              results.categoryU++;
-              if (args.verbose) {
-                console.log(`${C.yellow}⚠${C.reset} ${result.caseId} [${nlpBugId}] ${C.dim}${result.reason}${C.reset}`);
-              }
-            } else {
-              // Truly unknown - quarantine for manual analysis
-              results.categoryU++;
-              quarantineCase(result, example);
-              if (args.verbose) {
-                console.log(`${C.yellow}?${C.reset} ${result.caseId} [Unknown] ${C.dim}${result.reason}${C.reset}`);
-              }
-            }
-            break;
-          }
-        }
-      }
-
-      // Add to analysed set
-      analysedCases.add(result.caseId);
-    }
-
-    // Progress update
-    const processed = Math.min(i + chunkSize, toProcess.length);
-    const pct = ((processed / toProcess.length) * 100).toFixed(0);
-    const elapsed = performance.now() - startTime;
-    const rate = processed / (elapsed / 1000);
-
-    if (!args.verbose) {
-      process.stdout.write(`\r  Progress: ${processed}/${toProcess.length} (${pct}%) | ${rate.toFixed(1)} cases/sec`);
-    }
-  }
-
-  if (!args.verbose) {
-    console.log();
-  }
-
-  return results;
-}
-
-/**
- * Analyze quarantine folder
- */
-function analyzeQuarantine() {
-  ensureDir(QUARANTINE_DIR);
-
-  const files = fs.readdirSync(QUARANTINE_DIR).filter(f => f.endsWith('.json'));
-
-  if (files.length === 0) {
-    console.log(`${C.cyan}Quarantine is empty.${C.reset}`);
-    return;
-  }
-
-  const stats = {
-    total: files.length,
-    byCategory: { A: 0, B: 0 },
-    bySource: {},
-    byReason: {}
-  };
-
-  for (const file of files) {
-    const data = JSON.parse(fs.readFileSync(join(QUARANTINE_DIR, file), 'utf8'));
-
-    stats.byCategory[data.category] = (stats.byCategory[data.category] || 0) + 1;
-    stats.bySource[data.example?.source || 'unknown'] = (stats.bySource[data.example?.source || 'unknown'] || 0) + 1;
-    stats.byReason[data.reason] = (stats.byReason[data.reason] || 0) + 1;
-  }
-
-  console.log(`\n${C.bold}${C.magenta}Quarantine Analysis${C.reset}`);
-  console.log(`${'═'.repeat(50)}`);
-
-  console.log(`\n${C.bold}Total Cases: ${stats.total}${C.reset}`);
-
-  console.log(`\n${C.cyan}By Category:${C.reset}`);
-  console.log(`  ${C.yellow}Category A (Translation):${C.reset} ${stats.byCategory.A || 0}`);
-  console.log(`  ${C.red}Category B (Reasoning):${C.reset} ${stats.byCategory.B || 0}`);
-
-  console.log(`\n${C.cyan}By Source:${C.reset}`);
-  for (const [source, count] of Object.entries(stats.bySource).sort((a, b) => b[1] - a[1])) {
-    console.log(`  ${source.padEnd(15)} ${count}`);
-  }
-
-  console.log(`\n${C.cyan}By Reason:${C.reset}`);
-  for (const [reason, count] of Object.entries(stats.byReason).sort((a, b) => b[1] - a[1])) {
-    console.log(`  ${reason.padEnd(20)} ${count}`);
-  }
-
-  console.log();
-}
-
-/**
- * Show help
- */
 function showHelp() {
   console.log(`
 ${C.bold}Automated Bug Discovery Script${C.reset}
@@ -1185,27 +69,16 @@ ${C.bold}Options:${C.reset}
   --analyze             Analyze quarantine folder and exit
   --verbose, -v         Show per-case results
   --seed=N              Random seed for sampling
-
-${C.bold}Output Files:${C.reset}
-  analised.md           List of all tested cases (deduplication)
-  quarantine/           Failed cases for analysis
-  reasoningBugs.md      Detailed reasoning bug reports
-
-${C.bold}Bug Categories:${C.reset}
-  ${C.yellow}Category A${C.reset}  Translation bugs - incorrect DSL generation
-  ${C.red}Category B${C.reset}  Reasoning bugs - correct DSL but wrong result
+  --strict-operators    Disable auto-declaration for unknown verb operators
 
 ${C.bold}Examples:${C.reset}
-  node autoDiscovery/bugsAutoDiscovery.mjs --batch=100           # Process 100 cases
-  node autoDiscovery/bugsAutoDiscovery.mjs --source=prontoqa     # Only ProntoQA
-  node autoDiscovery/bugsAutoDiscovery.mjs --continuous          # Run until Ctrl+C
-  node autoDiscovery/bugsAutoDiscovery.mjs --analyze             # Analyze failures
+  node autoDiscovery/bugsAutoDiscovery.mjs --batch=100
+  node autoDiscovery/bugsAutoDiscovery.mjs --source=prontoqa
+  node autoDiscovery/bugsAutoDiscovery.mjs --continuous
+  node autoDiscovery/bugsAutoDiscovery.mjs --analyze
 `);
 }
 
-/**
- * Main entry point
- */
 async function main() {
   const args = parseArgs();
 
@@ -1220,20 +93,14 @@ async function main() {
   }
 
   console.log(`${C.bold}${C.magenta}AGISystem2 - Automated Bug Discovery${C.reset}`);
-  console.log(`${C.dim}Discovering translation and reasoning bugs${C.reset}\n`);
+  console.log(`${C.dim}Discovery mode: symbolicPriority, loadCore, autoDeclareUnknownOperators=${args.autoDeclareUnknownOperators}${C.reset}\n`);
 
-  // Ensure directories exist
   ensureDir(QUARANTINE_DIR);
-
-  // Load already analysed cases
   const analysedCases = loadAnalysedCases();
   console.log(`${C.cyan}Previously analysed: ${analysedCases.size} cases${C.reset}`);
 
-  // Progress callback
   const progressCallback = ({ phase, source }) => {
-    if (phase === 'loading') {
-      process.stdout.write(`\r  Loading ${source}...`);
-    }
+    if (phase === 'loading') process.stdout.write(`\r  Loading ${source}...`);
   };
 
   let iteration = 0;
@@ -1246,12 +113,11 @@ async function main() {
     iteration++;
     console.log(`\n${C.bold}${C.blue}━━━ Iteration ${iteration} ━━━${C.reset}`);
 
-    // Load examples
     let examples;
     try {
       const data = await loadExamples({
         sources: args.source ? [args.source] : null,
-        limit: args.batch * 2,  // Load extra to account for skipped
+        limit: args.batch * 2,
         randomSeed: args.seed + iteration,
         progressCallback
       });
@@ -1264,20 +130,17 @@ async function main() {
       continue;
     }
 
-    // Run batch
     const results = await runBatch(examples, analysedCases, args);
 
     totalProcessed += results.total;
     totalPassed += results.passed;
-    totalCategoryA += results.categoryA;
+    totalCategoryA += results.categoryA + results.categoryL + results.categoryG;
     totalCategoryB += results.categoryB;
 
-    // Summary
     const accuracy = results.total > 0 ? ((results.passed / results.total) * 100).toFixed(1) : '0.0';
     console.log(`\n${C.bold}Iteration ${iteration} Results:${C.reset}`);
     console.log(`  ${C.green}Passed:${C.reset} ${results.passed} (${accuracy}%)`);
 
-    // Show all failure categories
     const translationTotal = results.categoryA + results.categoryL + results.categoryG;
     console.log(`  ${C.yellow}Translation Issues:${C.reset} ${translationTotal}`);
     if (translationTotal > 0) {
@@ -1291,7 +154,6 @@ async function main() {
     console.log(`  ${C.dim}Unsupported labels:${C.reset} ${results.categoryS}`);
     console.log(`  ${C.dim}Skipped (already tested):${C.reset} ${results.skipped}`);
 
-    // Show reasoning bug breakdown
     if (Object.keys(results.byBugType).length > 0) {
       console.log(`\n  ${C.bold}Reasoning Bugs:${C.reset}`);
       for (const [bugId, count] of Object.entries(results.byBugType).sort()) {
@@ -1300,7 +162,6 @@ async function main() {
       }
     }
 
-    // Show NLP bug breakdown
     if (results.byNlpBug && Object.keys(results.byNlpBug).length > 0) {
       console.log(`\n  ${C.bold}NLP/Translation Bugs:${C.reset}`);
       for (const [nlpId, count] of Object.entries(results.byNlpBug).sort()) {
@@ -1309,7 +170,6 @@ async function main() {
       }
     }
 
-    // Show failure reason breakdown
     if (Object.keys(results.byReason).length > 0) {
       console.log(`\n  ${C.bold}By Reason:${C.reset}`);
       for (const [reason, count] of Object.entries(results.byReason).sort((a, b) => b[1] - a[1]).slice(0, 5)) {
@@ -1317,7 +177,6 @@ async function main() {
       }
     }
 
-    // Show source breakdown if diverse
     if (Object.keys(results.bySource).length > 1) {
       console.log(`\n  ${C.bold}By Source:${C.reset}`);
       for (const [source, count] of Object.entries(results.bySource).sort((a, b) => b[1] - a[1])) {
@@ -1329,16 +188,14 @@ async function main() {
       console.log(`\n${C.dim}Continuing... (Ctrl+C to stop)${C.reset}`);
       await new Promise(r => setTimeout(r, 1000));
     }
-
   } while (args.continuous);
 
-  // Final summary
   console.log(`\n${C.bold}${C.magenta}═══════════════════════════════════════${C.reset}`);
   console.log(`${C.bold}Final Summary${C.reset}`);
   console.log(`  Total Processed: ${totalProcessed}`);
   console.log(`  ${C.green}Passed:${C.reset} ${totalPassed} (${((totalPassed / totalProcessed) * 100).toFixed(1)}%)`);
-  console.log(`  ${C.yellow}Translation Bugs (A):${C.reset} ${totalCategoryA}`);
-  console.log(`  ${C.red}Reasoning Bugs (B):${C.reset} ${totalCategoryB}`);
+  console.log(`  ${C.yellow}Translation Issues:${C.reset} ${totalCategoryA}`);
+  console.log(`  ${C.red}Reasoning Bugs:${C.reset} ${totalCategoryB}`);
   console.log(`  Total Analysed: ${analysedCases.size}`);
   console.log(`${C.bold}${C.magenta}═══════════════════════════════════════${C.reset}\n`);
 
@@ -1350,3 +207,4 @@ main().catch(err => {
   console.error(err.stack);
   process.exit(1);
 });
+

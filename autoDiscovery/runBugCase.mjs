@@ -35,26 +35,13 @@ const C = {
   cyan: '\x1b[36m'
 };
 
-/**
- * Load Core theories into session
- */
 function loadCoreTheories(session) {
-  const corePath = join(CONFIG_ROOT, 'Core');
-  if (!fs.existsSync(corePath)) return 0;
-
-  const files = fs.readdirSync(corePath)
-    .filter(f => f.endsWith('.sys2') && f !== 'index.sys2')
-    .sort();
-
-  let loaded = 0;
-  for (const file of files) {
-    try {
-      const content = fs.readFileSync(join(corePath, file), 'utf8');
-      const res = session.learn(content);
-      if (res.success !== false) loaded++;
-    } catch (err) { /* skip */ }
+  const result = session.loadCore({ includeIndex: false });
+  if (result.success !== true) {
+    const msg = result.errors?.map(e => `${e.file}: ${e.errors?.join('; ')}`).join(' | ') || 'unknown error';
+    throw new Error(`loadCore failed: ${msg}`);
   }
-  return loaded;
+  return 1;
 }
 
 /**
@@ -108,7 +95,12 @@ function normalizeForComparison(text) {
  * Run a bug case
  */
 async function runBugCase(caseFile, options = {}) {
-  const { updateExpected = false, acceptActual = false, verbose = true } = options;
+  const {
+    updateExpected = false,
+    acceptActual = false,
+    verbose = true,
+    autoDeclareUnknownOperators = true
+  } = options;
 
   // Load case JSON
   if (!fs.existsSync(caseFile)) {
@@ -137,7 +129,8 @@ async function runBugCase(caseFile, options = {}) {
     source: bugCase.source || 'generic',
     context: bugCase.input?.context_nl,
     question: bugCase.input?.question_nl,
-    label: bugCase.dataset?.label
+    label: bugCase.dataset?.label,
+    translateOptions: { autoDeclareUnknownOperators }
   });
 
   // Step 2: Validate questionDsl
@@ -163,11 +156,16 @@ async function runBugCase(caseFile, options = {}) {
 
   const session = new Session({
     ...sessionConfig,
-    reasoningPriority: REASONING_PRIORITY.HOLOGRAPHIC,
+    reasoningPriority: REASONING_PRIORITY.SYMBOLIC,
     reasoningProfile: 'theoryDriven'
   });
 
-  loadCoreTheories(session);
+  try {
+    loadCoreTheories(session);
+  } catch (err) {
+    console.log(`${C.red}Core Load Failed:${C.reset} ${err.message}`);
+    return { success: false, error: 'core_load_failed', caseId };
+  }
 
   // Step 4: Learn context
   const learnResult = session.learn(translated.contextDsl);
@@ -297,6 +295,7 @@ ${C.bold}Usage:${C.reset}
 ${C.bold}Options:${C.reset}
   --accept-actual    If expected_nl is missing, use actual_nl as expected
   --update-expected  Same as --accept-actual
+  --strict-operators Do not auto-declare unknown verb operators in translation
   --help, -h         Show this help
 
 ${C.bold}Example:${C.reset}
@@ -306,6 +305,7 @@ ${C.bold}Example:${C.reset}
   }
 
   const updateExpected = args.includes('--update-expected') || args.includes('--accept-actual');
+  const autoDeclareUnknownOperators = !args.includes('--strict-operators');
   const caseFile = args.find(a => a.endsWith('.json'));
 
   if (!caseFile) {
@@ -313,7 +313,7 @@ ${C.bold}Example:${C.reset}
     process.exit(1);
   }
 
-  const result = await runBugCase(caseFile, { updateExpected, verbose: true });
+  const result = await runBugCase(caseFile, { updateExpected, verbose: true, autoDeclareUnknownOperators });
 
   process.exit(result.success ? 0 : 1);
 }
