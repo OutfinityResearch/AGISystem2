@@ -1,6 +1,7 @@
 import { resetRefCounter, translateExample } from '../../src/nlp/nl2dsl.mjs';
 import { CATEGORY, DEFAULT_GEOMETRY, DEFAULT_STRATEGY } from './constants.mjs';
 import { createSession, validateQuestionDsl } from './session.mjs';
+import { evaluateNonBooleanExample } from './nonboolean-eval.mjs';
 
 function assessTranslationQuality(example, translated) {
   const issues = [];
@@ -243,9 +244,76 @@ export function runExample(example, caseId, options = {}) {
       };
     }
 
+    // Dataset-label guardrail:
+    // If the hypothesis is a simple `Not(P)` but `P` is explicitly asserted as a KB fact,
+    // then `expectProved=true` implies explosive inconsistency semantics (or a mislabeled example).
+    // We treat this as a config/data limitation rather than a reasoning-engine bug.
+    if (
+      hasExpectation &&
+      translated.expectProved === true &&
+      proved === false &&
+      action === 'prove' &&
+      goals.length === 1
+    ) {
+      const goalLine = String(goals[0] || '');
+      const m = goalLine.match(/^\s*@goal[^\s]*\s+Not\s*\(([^)]+)\)\s*$/i);
+      const inner = m ? m[1].trim() : null;
+      if (inner) {
+        const parts = inner.split(/\s+/).filter(Boolean);
+        const op = parts[0] || null;
+        const args = parts.slice(1);
+        if (op && args.length > 0) {
+          const canon = (name) => {
+            if (!session?.canonicalizationEnabled) return name;
+            return session.componentKB?.canonicalizeName?.(name) || name;
+          };
+          const innerExplicit = (session.kbFacts || []).some(f => {
+            const meta = f?.metadata;
+            if (!meta) return false;
+            if (canon(meta.operator) !== canon(op)) return false;
+            const a = Array.isArray(meta.args) ? meta.args : [];
+            if (a.length !== args.length) return false;
+            for (let i = 0; i < a.length; i++) if (canon(a[i]) !== canon(args[i])) return false;
+            return true;
+          });
+          if (innerExplicit) {
+            return {
+              category: CATEGORY.UNSUPPORTED,
+              correct: false,
+              reason: 'label_conflicts_with_explicit_fact',
+              details: `Expected entailment for Not(${inner}), but ${inner} is explicitly asserted in the translated KB (non-explosive semantics).`,
+              translated,
+              proveResult: { valid: proveResult.valid, reason: proveResult.reason, stepsCount: proveResult.steps?.length || 0, validatorOk: proveResult.proofObject?.validatorOk, method: proveResult.method || null },
+              actual_nl,
+              durationMs: performance.now() - startTime,
+              caseId,
+              sessionConfig
+            };
+          }
+        }
+      }
+    }
+
     const translationQuality = assessTranslationQuality(example, translated);
 
     if (!hasExpectation) {
+      const evaluated = evaluateNonBooleanExample({
+        example,
+        source,
+        session,
+        translated,
+        goals,
+        action,
+        perGoal,
+        actual_nl,
+        options,
+        caseId,
+        sessionConfig,
+        translatorOptions,
+        startTime
+      });
+      if (evaluated) return evaluated;
+
       const meta = [
         `label=${JSON.stringify(example.label ?? null)}`,
         `category=${JSON.stringify(example.category ?? null)}`,

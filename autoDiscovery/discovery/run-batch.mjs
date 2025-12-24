@@ -67,13 +67,13 @@ export async function runBatch(examples, analysedCases, args) {
 
       if (result.category === CATEGORY.NO_EXPECTATION) {
         results.categoryN++;
-        recordAnalysedCase(caseId, 'RUN', result.details || result.reason);
+        recordAnalysedCase(caseId, 'FAIL(N)', result.details || result.reason);
         continue;
       }
 
       if (result.category === CATEGORY.UNSUPPORTED) {
         results.categoryS++;
-        recordAnalysedCase(caseId, 'RUN', result.details || result.reason);
+        recordAnalysedCase(caseId, 'FAIL(S)', result.details || result.reason);
         continue;
       }
 

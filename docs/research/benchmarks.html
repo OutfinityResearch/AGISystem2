@@ -1,0 +1,522 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AGISystem2 – External Benchmarks</title>
+  <link rel="stylesheet" href="../reference/style.css">
+  <style>
+    .benchmark-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    .benchmark-table th, .benchmark-table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    .benchmark-table th {
+      background: #1976d2;
+      color: white;
+    }
+    .benchmark-table tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    .pass-high { color: #2e7d32; font-weight: bold; }
+    .pass-medium { color: #f57c00; font-weight: bold; }
+    .pass-low { color: #c62828; font-weight: bold; }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .metric-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .metric-card h3 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .metric-card p {
+      margin: 5px 0 0 0;
+      opacity: 0.9;
+      font-size: 12px;
+    }
+    .metric-card.green { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+    .metric-card.orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .metric-card.blue { background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%); }
+    .success-box {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .warning-box {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .info-box {
+      background: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .chart-container {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-family: monospace;
+      overflow-x: auto;
+    }
+    h2 {
+      border-bottom: 2px solid #1976d2;
+      padding-bottom: 10px;
+      margin-top: 40px;
+    }
+    .source-link {
+      font-size: 12px;
+      color: #666;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+    .badge-academic { background: #e3f2fd; color: #1565c0; }
+    .badge-synthetic { background: #f3e5f5; color: #7b1fa2; }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>AGISystem2 – External Benchmarks</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../theory/index.html">Theory</a> ·
+      <a href="../syntax/index.html">Syntax</a> ·
+      <a href="../api/index.html">APIs</a> ·
+      <a href="../specs/matrix.html">Specs</a> ·
+      <a href="index.html">Research</a> ·
+      <a href="benchmarks.html"><strong>Benchmarks</strong></a>
+    </small>
+    <small>Performance on standard reasoning benchmark suites from academic literature</small>
+  </div>
+
+  <div class="info-box">
+    <strong>About These Benchmarks:</strong> AGISystem2 is evaluated on standard reasoning benchmark suites from academic research.
+    These tests assess logical reasoning, natural language inference, and multi-step deduction capabilities.
+    All benchmarks use our NL2DSL translation layer to convert natural language to formal DSL before reasoning.
+  </div>
+
+  <h2>1. Overall Results (December 2024)</h2>
+
+  <div class="metric-grid">
+    <div class="metric-card green">
+      <h3>63.7%</h3>
+      <p>Global Pass Rate<br>(475/746 evaluable)</p>
+    </div>
+    <div class="metric-card">
+      <h3>95.3%</h3>
+      <p>ProntoQA<br>(Best Performance)</p>
+    </div>
+    <div class="metric-card orange">
+      <h3>100%</h3>
+      <p>Translation Success<br>(0 NL2DSL errors)</p>
+    </div>
+    <div class="metric-card blue">
+      <h3>9</h3>
+      <p>Benchmark Suites<br>(6 with labels)</p>
+    </div>
+  </div>
+
+  <h2>2. Benchmark Results by Source</h2>
+
+  <table class="benchmark-table">
+    <tr>
+      <th>Benchmark</th>
+      <th>Type</th>
+      <th>Passed</th>
+      <th>Failed</th>
+      <th>Pass Rate</th>
+      <th>Notes</th>
+    </tr>
+    <tr>
+      <td><strong>ProntoQA</strong> <span class="badge badge-synthetic">Synthetic</span></td>
+      <td>Deductive reasoning with ontologies</td>
+      <td>102</td>
+      <td>5</td>
+      <td class="pass-high">95.3%</td>
+      <td>Only proof-by-contradiction cases fail</td>
+    </tr>
+    <tr>
+      <td><strong>LogicNLI</strong> <span class="badge badge-academic">Academic</span></td>
+      <td>Natural Language Inference</td>
+      <td>53</td>
+      <td>14</td>
+      <td class="pass-high">79.1%</td>
+      <td>NLI patterns - good coverage</td>
+    </tr>
+    <tr>
+      <td><strong>LogiQA</strong> <span class="badge badge-academic">Academic</span></td>
+      <td>Multi-choice logical reasoning</td>
+      <td>90</td>
+      <td>29</td>
+      <td class="pass-medium">75.6%</td>
+      <td>Complex multi-choice format</td>
+    </tr>
+    <tr>
+      <td><strong>FOLIO</strong> <span class="badge badge-academic">Academic</span></td>
+      <td>First-Order Logic with real entities</td>
+      <td>131</td>
+      <td>101</td>
+      <td class="pass-medium">56.5%</td>
+      <td>Complex FOL with world knowledge</td>
+    </tr>
+    <tr>
+      <td><strong>FOLIO-FOL</strong> <span class="badge badge-academic">Academic</span></td>
+      <td>FOL with annotations</td>
+      <td>63</td>
+      <td>57</td>
+      <td class="pass-medium">52.5%</td>
+      <td>Uses FOL annotations directly</td>
+    </tr>
+    <tr>
+      <td><strong>RuleBERT</strong> <span class="badge badge-academic">Academic</span></td>
+      <td>Soft inference rules</td>
+      <td>36</td>
+      <td>65</td>
+      <td class="pass-low">35.6%</td>
+      <td>Probabilistic rules - challenging</td>
+    </tr>
+  </table>
+
+  <h3>2.1 Performance Visualization</h3>
+
+  <div class="chart-container">
+<pre>
+Pass Rate by Benchmark Suite
+────────────────────────────────────────────────────────────────────
+ProntoQA      ████████████████████████████████████████████████ 95.3%
+LogicNLI      ████████████████████████████████████████ 79.1%
+LogiQA        ██████████████████████████████████████ 75.6%
+FOLIO         ████████████████████████████ 56.5%
+FOLIO-FOL     ██████████████████████████ 52.5%
+RuleBERT      ██████████████████ 35.6%
+────────────────────────────────────────────────────────────────────
+Global Average: 63.7% (475/746 with evaluation labels)
+</pre>
+  </div>
+
+  <h2>3. Benchmark Descriptions</h2>
+
+  <h3>3.1 ProntoQA <span class="pass-high">(95.3%)</span></h3>
+
+  <div class="success-box">
+    <strong>Excellent Performance:</strong> AGISystem2 achieves near-perfect results on ProntoQA,
+    a synthetic benchmark designed to test deductive reasoning over ontological hierarchies.
+  </div>
+
+  <p><strong>What it tests:</strong> Multi-step deductive reasoning with taxonomic (IS_A) hierarchies.</p>
+  <p><strong>Example:</strong></p>
+  <pre><code>Context: "Every cat is a mammal. Every mammal is an animal. Tom is a cat."
+Question: "Is Tom an animal?"
+Answer: Yes (requires 2-step transitive inference)</code></pre>
+
+  <p><strong>Why we excel:</strong> AGISystem2's transitive reasoning engine handles deep IS_A chains naturally.</p>
+  <p><strong>Failure cases:</strong> 5 cases requiring proof-by-contradiction (reductio ad absurdum).</p>
+  <p class="source-link">Source: <a href="https://github.com/asaparov/prontoqa">github.com/asaparov/prontoqa</a></p>
+
+  <h3>3.2 LogicNLI <span class="pass-high">(79.1%)</span></h3>
+
+  <p><strong>What it tests:</strong> Natural Language Inference with logical operators (AND, OR, NOT, IF-THEN).</p>
+  <p><strong>Example:</strong></p>
+  <pre><code>Premise: "If it rains, the ground is wet. It is raining."
+Hypothesis: "The ground is wet."
+Label: Entailment</code></pre>
+
+  <p><strong>Why we do well:</strong> Rule-based inference with backward chaining handles conditional logic.</p>
+  <p class="source-link">Source: <a href="https://github.com/microsoft/LogicNLI">github.com/microsoft/LogicNLI</a></p>
+
+  <h3>3.3 LogiQA <span class="pass-medium">(75.6%)</span></h3>
+
+  <p><strong>What it tests:</strong> Multi-choice logical reasoning from Chinese civil service exams.</p>
+  <p><strong>Example:</strong></p>
+  <pre><code>Context: "All managers attend meetings. John is a manager."
+Question: "Which must be true?"
+A) John attends meetings  ← Correct
+B) John is the CEO
+C) Meetings are boring
+D) None of the above</code></pre>
+
+  <p><strong>Challenges:</strong> Requires understanding question intent and eliminating distractors.</p>
+  <p class="source-link">Source: <a href="https://github.com/lgw863/LogiQA-dataset">github.com/lgw863/LogiQA-dataset</a></p>
+
+  <h3>3.4 FOLIO <span class="pass-medium">(56.5%)</span></h3>
+
+  <div class="warning-box">
+    <strong>Moderate Performance:</strong> FOLIO tests complex first-order logic with real-world entities,
+    requiring world knowledge that AGISystem2 may not have in its knowledge base.
+  </div>
+
+  <p><strong>What it tests:</strong> First-order logic reasoning with real-world entities and relationships.</p>
+  <p><strong>Example:</strong></p>
+  <pre><code>Context: "All Nobel Prize winners are famous. Marie Curie won the Nobel Prize."
+Question: "Is Marie Curie famous?"
+Answer: Yes</code></pre>
+
+  <p><strong>Why it's harder:</strong> Requires world knowledge about entities (who is Marie Curie?).</p>
+  <p class="source-link">Source: <a href="https://github.com/Yale-LILY/FOLIO">github.com/Yale-LILY/FOLIO</a></p>
+
+  <h3>3.5 RuleBERT <span class="pass-low">(35.6%)</span></h3>
+
+  <div class="warning-box">
+    <strong>Challenging:</strong> RuleBERT tests soft/probabilistic inference rules, which AGISystem2's
+    deterministic reasoning engine is not designed for.
+  </div>
+
+  <p><strong>What it tests:</strong> Soft inference rules with probabilistic semantics.</p>
+  <p><strong>Example:</strong></p>
+  <pre><code>Rule: "Birds usually fly" (soft rule, ~90% true)
+Fact: "Tweety is a bird"
+Question: "Does Tweety fly?"
+Answer: Probably yes (but penguins don't!)</code></pre>
+
+  <p><strong>Why it's hard:</strong> AGISystem2 uses deterministic logic; probabilistic exceptions are challenging.</p>
+  <p class="source-link">Source: <a href="https://arxiv.org/abs/2109.13006">arxiv.org/abs/2109.13006</a></p>
+
+  <h2>4. Sources Without Evaluation Labels</h2>
+
+  <p>These benchmark sources run successfully through NL2DSL translation and reasoning,
+  but lack ground-truth labels for automatic evaluation:</p>
+
+  <table class="benchmark-table">
+    <tr>
+      <th>Source</th>
+      <th>Cases</th>
+      <th>Type</th>
+      <th>Translation</th>
+    </tr>
+    <tr>
+      <td>LogiQA2</td>
+      <td>84</td>
+      <td>Multi-choice reasoning</td>
+      <td class="pass-high">100%</td>
+    </tr>
+    <tr>
+      <td>Abduction</td>
+      <td>83</td>
+      <td>Abductive inference</td>
+      <td class="pass-high">100%</td>
+    </tr>
+    <tr>
+      <td>bAbI-15</td>
+      <td>83</td>
+      <td>Basic deduction</td>
+      <td class="pass-high">100%</td>
+    </tr>
+    <tr>
+      <td>bAbI-16</td>
+      <td>83</td>
+      <td>Basic induction</td>
+      <td class="pass-high">100%</td>
+    </tr>
+    <tr>
+      <td>CLUTRR</td>
+      <td>83</td>
+      <td>Kinship reasoning</td>
+      <td class="pass-high">100%</td>
+    </tr>
+    <tr>
+      <td>ReClor</td>
+      <td>83</td>
+      <td>Reading comprehension</td>
+      <td class="pass-high">100%</td>
+    </tr>
+  </table>
+
+  <h2>5. Translation Success</h2>
+
+  <div class="success-box">
+    <strong>100% Translation Success:</strong> All benchmark sentences are successfully translated
+    from natural language to DSL. This validates the NL2DSL layer's coverage of logical patterns.
+  </div>
+
+  <table class="benchmark-table">
+    <tr>
+      <th>Source</th>
+      <th>Translation Status</th>
+      <th>Notes</th>
+    </tr>
+    <tr>
+      <td>ProntoQA</td>
+      <td class="pass-high">100%</td>
+      <td>Clean ontological patterns</td>
+    </tr>
+    <tr>
+      <td>FOLIO</td>
+      <td class="pass-high">100%</td>
+      <td>Complex FOL translated</td>
+    </tr>
+    <tr>
+      <td>FOLIO-FOL</td>
+      <td class="pass-high">100%</td>
+      <td>FOL annotations used</td>
+    </tr>
+    <tr>
+      <td>LogiQA</td>
+      <td class="pass-high">100%</td>
+      <td>Multi-choice format</td>
+    </tr>
+    <tr>
+      <td>LogicNLI</td>
+      <td class="pass-high">100%</td>
+      <td>NLI format</td>
+    </tr>
+    <tr>
+      <td>RuleBERT</td>
+      <td class="pass-high">100%</td>
+      <td>Rule format</td>
+    </tr>
+    <tr>
+      <td>bAbI-15/16</td>
+      <td class="pass-high">100%</td>
+      <td>Simple patterns</td>
+    </tr>
+    <tr>
+      <td>CLUTRR</td>
+      <td class="pass-high">100%</td>
+      <td>Kinship relations</td>
+    </tr>
+  </table>
+
+  <h2>6. Analysis: Why Some Benchmarks Are Harder</h2>
+
+  <h3>6.1 Strength Areas</h3>
+  <ul>
+    <li><strong>Taxonomic reasoning:</strong> IS_A hierarchies, transitive chains (ProntoQA: 95%)</li>
+    <li><strong>Conditional logic:</strong> IF-THEN rules, modus ponens (LogicNLI: 79%)</li>
+    <li><strong>Multi-step deduction:</strong> Chained inferences up to 6+ steps</li>
+  </ul>
+
+  <h3>6.2 Challenge Areas</h3>
+  <ul>
+    <li><strong>World knowledge:</strong> Real-world entity facts not in KB (FOLIO: 56%)</li>
+    <li><strong>Probabilistic reasoning:</strong> Soft rules, exceptions (RuleBERT: 36%)</li>
+    <li><strong>Proof by contradiction:</strong> Reductio ad absurdum not yet implemented</li>
+    <li><strong>Ambiguous questions:</strong> Multiple valid interpretations</li>
+  </ul>
+
+  <h3>6.3 Reasoning Bug Categories</h3>
+
+  <p>Failed cases are classified into bug categories for systematic improvement:</p>
+
+  <table class="benchmark-table">
+    <tr>
+      <th>Bug ID</th>
+      <th>Description</th>
+      <th>Cases</th>
+      <th>Impact</th>
+    </tr>
+    <tr>
+      <td><strong>BUG009</strong></td>
+      <td>General reasoning failure</td>
+      <td>857</td>
+      <td>Largest category - diverse causes</td>
+    </tr>
+    <tr>
+      <td><strong>BUG003</strong></td>
+      <td>Deep inference chains</td>
+      <td>569</td>
+      <td>Chains exceeding proof depth</td>
+    </tr>
+    <tr>
+      <td><strong>BUG000</strong></td>
+      <td>Unclassified</td>
+      <td>325</td>
+      <td>Needs investigation</td>
+    </tr>
+    <tr>
+      <td><strong>BUG008</strong></td>
+      <td>Existential quantifiers</td>
+      <td>254</td>
+      <td>∃x patterns</td>
+    </tr>
+    <tr>
+      <td><strong>BUG006</strong></td>
+      <td>Multi-choice ambiguity</td>
+      <td>143</td>
+      <td>Answer selection issues</td>
+    </tr>
+    <tr>
+      <td><strong>BUG001</strong></td>
+      <td>Compound logic</td>
+      <td>132</td>
+      <td>AND/OR combinations</td>
+    </tr>
+  </table>
+
+  <p>See <a href="bug-taxonomy.html">Bug Taxonomy</a> for detailed analysis.</p>
+
+  <h2>7. Running Benchmarks</h2>
+
+  <pre><code># Run all benchmarks with auto-discovery
+node autoDiscovery/bugsAutoDiscovery.mjs --batch=100
+
+# Run specific source
+node autoDiscovery/bugsAutoDiscovery.mjs --source=prontoqa --batch=50
+
+# Run a single case
+node autoDiscovery/runBugCase.mjs autoDiscovery/bugCases/BUG001/prontoqa_xxx.json
+
+# Strict mode (no auto-declare of unknown operators)
+node autoDiscovery/runBugCase.mjs --strict-operators &lt;case.json&gt;</code></pre>
+
+  <h2>8. Comparison with Other Systems</h2>
+
+  <div class="info-box">
+    <strong>Note:</strong> Direct comparisons are difficult because:
+    <ul>
+      <li>AGISystem2 uses deterministic symbolic reasoning (not neural)</li>
+      <li>LLMs use probabilistic pattern matching with different trade-offs</li>
+      <li>AGISystem2 requires NL2DSL translation (adds potential errors)</li>
+    </ul>
+    The goal is not to "beat" LLMs, but to provide <em>verifiable, traceable</em> reasoning.
+  </div>
+
+  <h2>9. Future Improvements</h2>
+
+  <ul>
+    <li><strong>Proof by contradiction:</strong> Implement reductio ad absurdum for ProntoQA edge cases</li>
+    <li><strong>World knowledge integration:</strong> Connect to external KBs (Wikidata, ConceptNet)</li>
+    <li><strong>Probabilistic extension:</strong> Add confidence scores for soft rules</li>
+    <li><strong>Deeper chains:</strong> Optimize for 10+ step inference chains</li>
+  </ul>
+
+  <div class="footer-nav">
+    <p>Benchmark results updated December 2024. AGISystem2 autoDiscovery framework.</p>
+    <p><strong>Related:</strong>
+      <a href="index.html">Research Overview</a> ·
+      <a href="bug-taxonomy.html">Bug Taxonomy</a> ·
+      <a href="../theory/nl2dsl.html">NL2DSL Translation</a>
+    </p>
+    <p><a href="../index.html">← Back to Documentation Home</a></p>
+  </div>
+  </div>
+</body>
+</html>

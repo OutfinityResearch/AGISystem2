@@ -5,24 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs">
-      <change afterPath="$PROJECT_DIR$/src/reasoning/prove/defaults.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/prove/fact-exists.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/prove/modus-ponens.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/prove/negation.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/prove/prove-goal.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/prove/state.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/prove/synonym-match.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/prove/utils.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/discovery/nonboolean-eval.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/guides/getting-started.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/guides/llm-integration.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/guides/vs-prolog.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/research/benchmarks.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/theory/nl2dsl.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar/existentials.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/autoDiscovery/analised.md" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/analised.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugCases/BUG001/prontoqa_21768947.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugCases/BUG001/prontoqa_236ef268.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugCases/BUG001/prontoqa_2370cdad.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugCases/BUG001/prontoqa_2562d170.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugCases/BUG001/prontoqa_67357ad9.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugCases/BUG001/prontoqa_6953f0a3.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugCases/BUG001/prontoqa_6af2875d.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugCases/BUG001/prontoqa_e5d66be.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/prove.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/discovery/run-batch.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/discovery/run-batch.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/discovery/run-example.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/discovery/run-example.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/guides/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/wiki/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/wiki/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reasoning_engines_fixes_summray.md" beforeDir="false" afterPath="$PROJECT_DIR$/reasoning_engines_fixes_summray.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/nl2dsl.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar/parse/fact.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar/parse/fact.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/nlp/nl2dsl-grammar.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/nlp/nl2dsl-grammar.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,23 +133,7 @@
       <workItem from="1766130107490" duration="10280000" />
       <workItem from="1766389595090" duration="9185000" />
       <workItem from="1766477237780" duration="9294000" />
-      <workItem from="1766562947099" duration="19475000" />
-    </task>
-    <task id="LOCAL-00019" summary="Better Documentation and WIP for code">
-      <option name="closed" value="true" />
-      <created>1764257749064</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1764257749064</updated>
-    </task>
-    <task id="LOCAL-00020" summary="Better Documentation and WIP for code">
-      <option name="closed" value="true" />
-      <created>1764264400294</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1764264400294</updated>
+      <workItem from="1766562947099" duration="20998000" />
     </task>
     <task id="LOCAL-00021" summary="Better Documentation and WIP for code">
       <option name="closed" value="true" />
@@ -526,7 +511,23 @@
       <option name="project" value="LOCAL" />
       <updated>1766593301654</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs">
+      <option name="closed" value="true" />
+      <created>1766593733627</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1766593733627</updated>
+    </task>
+    <task id="LOCAL-00069" summary="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs">
+      <option name="closed" value="true" />
+      <created>1766595868503</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1766595868503</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

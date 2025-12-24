@@ -148,4 +148,34 @@ describe('NL→DSL grammar translator (low-hardcoding)', () => {
       assert.ok(refs <= 20, `And line must not exceed 20 refs: ${l}`);
     }
   });
+
+  test('parses existential goals ("There is an animal" → query isA ?x Animal)', () => {
+    const goal = translateQuestionWithGrammar('There is an animal.');
+    assert.equal(goal, '@goal:goal isA ?x Animal');
+  });
+
+  test('parses inverted existential questions ("Is there an animal?" → Exists x ...)', () => {
+    const goal = translateQuestionWithGrammar('Is there an animal?');
+    assert.equal(goal, '@goal:goal isA ?x Animal');
+  });
+
+  test('adds existence hints from quantifiers ("certain animals, including humans")', () => {
+    const { dsl, errors } = translateContextWithGrammar(
+      'Monkeypox virus can occur in certain animals, including humans.',
+      { autoDeclareUnknownOperators: true }
+    );
+    assert.deepEqual(errors, []);
+    assert.match(dsl, /\bisA\s+\w+\s+Animal\b/, `expected Animal existence, got: ${dsl}`);
+    assert.match(dsl, /\bisA\s+\w+\s+Human\b/, `expected Human existence, got: ${dsl}`);
+  });
+
+  test('parses WH-questions as queries (What is Sarah? → isA Sarah ?x)', () => {
+    const goal = translateQuestionWithGrammar('What is Sarah?');
+    assert.equal(goal, '@goal:goal isA Sarah ?x');
+  });
+
+  test('parses WH-property questions as hasProperty queries (What color is the cat? → hasProperty Cat ?x)', () => {
+    const goal = translateQuestionWithGrammar('What color is the cat?');
+    assert.equal(goal, '@goal:goal hasProperty Cat ?x');
+  });
 });

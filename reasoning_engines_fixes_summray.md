@@ -7,6 +7,29 @@ This repo has two reasoning “engines” exposed via priorities:
 
 So fixes in the shared symbolic modules improve **both** priorities.
 
+## Fixed: contrapositive negation + `Not(Compound)` hashing (BUG009-class subset)
+
+### Symptom
+Some ProntoQA-style proofs require contrapositive reasoning via contradiction:
+
+- From `Not (isA Stella Tumpus)` and a rule `(Yumpus ∧ Rompus ∧ Lorpus) → Tumpus` plus `Yumpus/Rompus/Lorpus`,
+- prove `Not (isA Stella Yumpus)`.
+
+This path was failing due to two concrete bugs:
+
+- Nested `Not(...)` goals could crash during proof construction (`Cannot read properties of null (reading 'type')`).
+- Different `Not(isA Stella X)` goals could collide in vector/hash space when `isA` is a Core graph, causing the prover to treat distinct negated facts as identical.
+
+### Fix
+- `src/reasoning/prove/prove-goal.mjs`: build nested `Compound` goals correctly (`new Compound(new Identifier(op), ...)`) instead of constructing a `Compound` with a null operator.
+- `src/runtime/executor-resolve.mjs`: when resolving `Not(<Compound>)`, treat the inner compound as a quoted statement and vectorize it via a nested `Statement` (avoid graph expansion), so:
+  - `Not (isA Stella Yumpus)` and `Not (isA Stella Tumpus)` no longer collide.
+- `src/reasoning/prove/prove-goal.mjs`: emit the final contrapositive proof step as `operation: rule_application` with `inference: contrapositive` so `src/reasoning/proof-schema.mjs` accepts it.
+
+### Regression coverage
+- `evals/fastEval/suite27_contrapositive_negation/cases.mjs`
+- `tests/unit/runtime/executor-not-quoted-statement.test.mjs`
+
 ## Fixed: compound rule conclusions (BUG001-class)
 
 ### Symptom
@@ -61,10 +84,42 @@ Notes:
 - This is intentionally capped (`MAX_DOMAIN`, `MAX_ASSIGNMENTS`) to avoid combinatorial blowups.
 - It is still not a complete Datalog-style solver; it’s a pragmatic bridge for chained rule sets.
 
+## Improved: NL→DSL existential + WH-query support (reduces false “reasoning” buckets)
+
+Some dataset failures were translation artifacts:
+- `"There is an animal."` was translated as `isA There Animal` (treating `There` as an entity).
+- Many datasets expect *existence* or *answer-as-query* behavior rather than boolean entailment.
+
+Fixes:
+- `src/nlp/nl2dsl/grammar/existentials.mjs`, `src/nlp/nl2dsl/grammar.mjs`:
+  - existential questions translate to queries (`@goal:goal isA ?x Animal`) rather than invalid quantifier syntax.
+  - “quantifier hints” in contexts (e.g. “in certain animals, including humans”) inject lightweight existence facts via deterministic Skolem entities.
+- `src/nlp/nl2dsl/grammar.mjs`: basic WH questions become queries:
+  - `What is Sarah?` → `@goal:goal isA Sarah ?x`
+  - `What color is the cat?` → `@goal:goal hasProperty Cat ?x`
+
+Regression coverage:
+- `tests/unit/nlp/nl2dsl-grammar.test.mjs`
+
+## Improved: AutoDiscovery evaluation (no “RUN/no_expectation” left behind)
+
+AutoDiscovery now evaluates more dataset types instead of emitting “RUN/no_expectation”:
+- Query-answer tasks (bAbI): compare query bindings to the expected label token.
+- Multi-choice tasks (ReClor/LogiQA-style): probe each choice and pick a predicted option.
+- CLUTRR: evaluate by proving the ground-truth relation for the `(A,B)` pair (operators aren’t first-class queryable in the DSL).
+- Abduction: explicitly marked as unsupported (explanation task).
+
+Implementation:
+- `autoDiscovery/discovery/nonboolean-eval.mjs`
+- `autoDiscovery/discovery/run-example.mjs`
+- `autoDiscovery/discovery/run-batch.mjs`
+
 ## Verification runs (local)
 
 - `node evals/runFastEval.mjs suite26_compound_conclusions --priority=symbolicPriority`
 - `node evals/runFastEval.mjs suite26_compound_conclusions --priority=holographicPriority`
+- `node evals/runFastEval.mjs suite27_contrapositive_negation`
+- `node evals/runFastEval.mjs --fast`
 - `node evals/runFastEval.mjs suite03_rules --priority=symbolicPriority`
 - `node autoDiscovery/bugsAutoDiscovery.mjs --batch=200 --workers=8`
   - `Translation Issues: 0`
@@ -73,6 +128,17 @@ Notes:
   - No `Maximum call stack size exceeded` occurrences after the `Not`-flatten fix
 
 ## Remaining issues (not fixed in this pass)
+
+### Current bugCases snapshot (after prune)
+
+Counts of still-reproducing cases under boolean validation:
+
+- `autoDiscovery/bugCases/BUG009`: 839
+- `autoDiscovery/bugCases/BUG003`: 568
+- `autoDiscovery/bugCases/BUG008`: 251
+- `autoDiscovery/bugCases/BUG006`: 140
+- `autoDiscovery/bugCases/BUG001`: 132
+- `autoDiscovery/bugCases/BUG000`: 332
 
 ### BUG003 (“Deep chain failure”) bucket is not a precise diagnosis
 `autoDiscovery/processQuarantine.mjs` currently assigns `BUG003` largely by `Implies` count (≥4), so it mixes multiple failure modes. A lot of these cases also appear to be impacted by NL→DSL semantic loss (quantifiers like “No/Some”, and “destination” statements that act as templates rather than asserted facts).

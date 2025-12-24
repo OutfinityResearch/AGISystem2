@@ -1,0 +1,411 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AGISystem2 – LLM Integration</title>
+  <link rel="stylesheet" href="../reference/style.css">
+  <style>
+    .architecture-box {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-family: monospace;
+      overflow-x: auto;
+    }
+    .code-box {
+      background: #263238;
+      color: #aed581;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin: 15px 0;
+      font-family: monospace;
+      overflow-x: auto;
+    }
+    .code-box .comment { color: #78909c; }
+    .code-box .keyword { color: #80cbc4; }
+    .code-box .string { color: #c5e1a5; }
+    .success-box {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .warning-box {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .info-box {
+      background: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    h2 {
+      border-bottom: 2px solid #1976d2;
+      padding-bottom: 10px;
+      margin-top: 40px;
+    }
+    .pattern-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    .pattern-table th, .pattern-table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    .pattern-table th {
+      background: #1976d2;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>AGISystem2 – LLM Integration</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="../architecture/index.html">Architecture</a> ·
+      <a href="../theory/index.html">Theory</a> ·
+      <a href="index.html">Guides</a> ·
+      <a href="../research/index.html">Research</a>
+    </small>
+    <small>Combining LLMs with symbolic reasoning</small>
+  </div>
+
+  <div class="info-box">
+    <strong>Philosophy:</strong> AGISystem2 is designed to <em>complement</em> LLMs, not replace them.
+    LLMs excel at natural language understanding and generation; AGISystem2 provides verifiable,
+    traceable reasoning. Together, they offer the best of both worlds.
+  </div>
+
+  <h2>1. Integration Architecture</h2>
+
+  <div class="architecture-box">
+<pre>
+┌─────────────────────────────────────────────────────────────────┐
+│                         User Query                               │
+│                    (Natural Language)                            │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      LLM (Claude, GPT, etc.)                     │
+│                                                                  │
+│  1. Parse intent                                                 │
+│  2. Extract entities and relationships                           │
+│  3. Generate structured query                                    │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                        AGISystem2                                │
+│                                                                  │
+│  1. Formal reasoning over knowledge base                         │
+│  2. Generate proof chain                                         │
+│  3. Return structured result + explanation                       │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      LLM (Response Generation)                   │
+│                                                                  │
+│  1. Format proof as natural language                             │
+│  2. Add context and caveats                                      │
+│  3. Generate user-friendly response                              │
+└─────────────────────────────────────────────────────────────────┘
+</pre>
+  </div>
+
+  <h2>2. Integration Patterns</h2>
+
+  <h3>2.1 Pattern A: LLM as NL Frontend</h3>
+
+  <p>Use the LLM to translate complex natural language into AGISystem2 DSL:</p>
+
+  <div class="code-box">
+<pre><span class="comment">// Prompt for LLM</span>
+<span class="keyword">const</span> prompt = <span class="string">`
+Convert this natural language to AGISystem2 DSL:
+
+User: "Is a penguin a bird that can fly?"
+
+Rules:
+- Use isA for type relationships
+- Use hasProperty for attributes
+- Use And for conjunctions
+- Variables start with ?
+
+Output only valid DSL.
+`</span>;
+
+<span class="comment">// LLM returns:</span>
+<span class="comment">// @c1 isA Penguin Bird</span>
+<span class="comment">// @c2 hasProperty Penguin can_fly</span>
+<span class="comment">// And $c1 $c2</span>
+
+<span class="comment">// Execute in AGISystem2</span>
+<span class="keyword">const</span> result = session.query(llmOutput);
+<span class="comment">// Returns: { success: false, reason: "Penguins cannot fly" }</span></pre>
+  </div>
+
+  <h3>2.2 Pattern B: Verification Layer</h3>
+
+  <p>Use AGISystem2 to verify LLM claims:</p>
+
+  <div class="code-box">
+<pre><span class="comment">// LLM generates a claim</span>
+<span class="keyword">const</span> llmClaim = <span class="string">"Marie Curie won the Nobel Prize in Physics"</span>;
+
+<span class="comment">// Translate to DSL</span>
+<span class="keyword">const</span> { dsl } = translateContextWithGrammar(llmClaim);
+
+<span class="comment">// Verify against knowledge base</span>
+<span class="keyword">const</span> verification = session.query(dsl);
+
+<span class="keyword">if</span> (verification.success) {
+  console.log(<span class="string">"Verified with proof:"</span>, verification.proof);
+} <span class="keyword">else</span> {
+  console.log(<span class="string">"Could not verify. Checking for contradictions..."</span>);
+  <span class="keyword">const</span> contradiction = session.query(<span class="string">`Not (${dsl})`</span>);
+  <span class="keyword">if</span> (contradiction.success) {
+    console.log(<span class="string">"CONTRADICTION DETECTED"</span>);
+  }
+}</pre>
+  </div>
+
+  <h3>2.3 Pattern C: Explainable Reasoning</h3>
+
+  <p>Use AGISystem2 for reasoning, LLM for explanation:</p>
+
+  <div class="code-box">
+<pre><span class="comment">// AGISystem2 provides proof</span>
+<span class="keyword">const</span> result = session.query(<span class="string">'isA Penguin Animal'</span>);
+
+<span class="comment">// Proof chain:</span>
+<span class="comment">// 1. isA Penguin Bird (fact)</span>
+<span class="comment">// 2. isA Bird Animal (rule)</span>
+<span class="comment">// 3. Therefore: isA Penguin Animal (transitive)</span>
+
+<span class="comment">// Ask LLM to explain</span>
+<span class="keyword">const</span> explanationPrompt = <span class="string">`
+Explain this reasoning chain in simple terms:
+${JSON.stringify(result.proof)}
+
+User question: "Why is a penguin an animal?"
+`</span>;
+
+<span class="comment">// LLM generates:</span>
+<span class="comment">// "A penguin is an animal because penguins are birds,</span>
+<span class="comment">//  and all birds are animals. This follows from the</span>
+<span class="comment">//  biological classification hierarchy."</span></pre>
+  </div>
+
+  <h2>3. Example: RAG with Verified Reasoning</h2>
+
+  <div class="success-box">
+    <strong>Use Case:</strong> Retrieval-Augmented Generation (RAG) where retrieved facts
+    are verified through formal reasoning before being used in the response.
+  </div>
+
+  <div class="code-box">
+<pre><span class="keyword">import</span> { Session } <span class="keyword">from</span> <span class="string">'./src/session.mjs'</span>;
+<span class="keyword">import</span> { translateContextWithGrammar } <span class="keyword">from</span> <span class="string">'./src/nlp/nl2dsl/grammar.mjs'</span>;
+
+<span class="keyword">async function</span> verifiedRAG(userQuery, llmClient) {
+  <span class="comment">// Step 1: LLM extracts intent and entities</span>
+  <span class="keyword">const</span> extraction = <span class="keyword">await</span> llmClient.complete({
+    prompt: <span class="string">`Extract the logical query from: "${userQuery}"`</span>
+  });
+
+  <span class="comment">// Step 2: Retrieve relevant documents</span>
+  <span class="keyword">const</span> docs = <span class="keyword">await</span> retrieveDocuments(extraction.entities);
+
+  <span class="comment">// Step 3: Load documents into AGISystem2</span>
+  <span class="keyword">const</span> session = <span class="keyword">new</span> Session();
+  <span class="keyword">for</span> (<span class="keyword">const</span> doc <span class="keyword">of</span> docs) {
+    <span class="keyword">const</span> { dsl, errors } = translateContextWithGrammar(doc.text);
+    <span class="keyword">if</span> (errors.length === 0) {
+      <span class="keyword">for</span> (<span class="keyword">const</span> line <span class="keyword">of</span> dsl.split(<span class="string">'\n'</span>)) {
+        session.learn(line);
+      }
+    }
+  }
+
+  <span class="comment">// Step 4: Reason over the knowledge</span>
+  <span class="keyword">const</span> { dsl: queryDsl } = translateContextWithGrammar(extraction.query);
+  <span class="keyword">const</span> result = session.query(queryDsl);
+
+  <span class="comment">// Step 5: Generate response with verified facts</span>
+  <span class="keyword">const</span> response = <span class="keyword">await</span> llmClient.complete({
+    prompt: <span class="string">`
+      User question: ${userQuery}
+
+      Verified facts (with proof):
+      ${JSON.stringify(result)}
+
+      Generate a response using only verified information.
+      If something couldn't be verified, say so explicitly.
+    `</span>
+  });
+
+  <span class="keyword">return</span> {
+    answer: response.text,
+    verified: result.success,
+    proof: result.proof
+  };
+}</pre>
+  </div>
+
+  <h2>4. API Integration</h2>
+
+  <h3>4.1 REST API Wrapper</h3>
+
+  <div class="code-box">
+<pre><span class="keyword">import</span> express <span class="keyword">from</span> <span class="string">'express'</span>;
+<span class="keyword">import</span> { Session } <span class="keyword">from</span> <span class="string">'./src/session.mjs'</span>;
+
+<span class="keyword">const</span> app = express();
+<span class="keyword">const</span> sessions = <span class="keyword">new</span> Map();
+
+app.post(<span class="string">'/session/:id/learn'</span>, (req, res) => {
+  <span class="keyword">const</span> session = sessions.get(req.params.id) || <span class="keyword">new</span> Session();
+  sessions.set(req.params.id, session);
+
+  <span class="keyword">const</span> { dsl } = req.body;
+  session.learn(dsl);
+  res.json({ success: <span class="keyword">true</span> });
+});
+
+app.post(<span class="string">'/session/:id/query'</span>, (req, res) => {
+  <span class="keyword">const</span> session = sessions.get(req.params.id);
+  <span class="keyword">if</span> (!session) <span class="keyword">return</span> res.status(404).json({ error: <span class="string">'Session not found'</span> });
+
+  <span class="keyword">const</span> result = session.query(req.body.query);
+  res.json(result);
+});
+
+app.listen(3000);</pre>
+  </div>
+
+  <h3>4.2 Tool Use with Claude</h3>
+
+  <div class="code-box">
+<pre><span class="comment">// Define AGISystem2 as a tool for Claude</span>
+<span class="keyword">const</span> tools = [{
+  name: <span class="string">"reason"</span>,
+  description: <span class="string">"Perform formal logical reasoning over a knowledge base"</span>,
+  input_schema: {
+    type: <span class="string">"object"</span>,
+    properties: {
+      context: { type: <span class="string">"string"</span>, description: <span class="string">"Facts and rules in natural language"</span> },
+      query: { type: <span class="string">"string"</span>, description: <span class="string">"Question to answer"</span> }
+    }
+  }
+}];
+
+<span class="comment">// Claude can now call:</span>
+<span class="comment">// reason({ context: "All cats are mammals. Tom is a cat.", query: "Is Tom a mammal?" })</span>
+<span class="comment">// Returns: { success: true, proof: [...] }</span></pre>
+  </div>
+
+  <h2>5. Best Practices</h2>
+
+  <table class="pattern-table">
+    <tr>
+      <th>Do</th>
+      <th>Don't</th>
+    </tr>
+    <tr>
+      <td>Use LLM for NL understanding</td>
+      <td>Use LLM for logical reasoning</td>
+    </tr>
+    <tr>
+      <td>Verify LLM claims with AGISystem2</td>
+      <td>Trust LLM outputs blindly</td>
+    </tr>
+    <tr>
+      <td>Return proofs with answers</td>
+      <td>Hide reasoning steps</td>
+    </tr>
+    <tr>
+      <td>Handle translation errors gracefully</td>
+      <td>Assume all NL translates perfectly</td>
+    </tr>
+    <tr>
+      <td>Use sessions for isolated contexts</td>
+      <td>Share state across unrelated queries</td>
+    </tr>
+  </table>
+
+  <h2>6. Limitations</h2>
+
+  <div class="warning-box">
+    <strong>Current Limitations:</strong>
+    <ul>
+      <li><strong>NL2DSL coverage:</strong> Not all natural language patterns are supported</li>
+      <li><strong>World knowledge:</strong> AGISystem2 only knows what's in the KB</li>
+      <li><strong>Probabilistic reasoning:</strong> No native support for uncertainty</li>
+      <li><strong>Latency:</strong> Round-trip to LLM + reasoning adds time</li>
+    </ul>
+  </div>
+
+  <h2>7. Example Prompts for LLMs</h2>
+
+  <h3>7.1 NL to DSL Translation</h3>
+
+  <div class="code-box">
+<pre><span class="string">`You are a translator from natural language to AGISystem2 DSL.
+
+DSL Syntax:
+- isA Subject Type (e.g., isA Tom Cat)
+- hasProperty Subject Property (e.g., hasProperty Ball red)
+- operator Subject Object (e.g., loves John Mary)
+- @ref statement (named reference)
+- Implies $antecedent $consequent (rules)
+- And $a $b (conjunction)
+- Not (statement) (negation)
+- Variables: ?x, ?y (for rules)
+
+Input: "${userInput}"
+
+Output only valid DSL, one statement per line.`</span></pre>
+  </div>
+
+  <h3>7.2 Proof Explanation</h3>
+
+  <div class="code-box">
+<pre><span class="string">`Explain this formal proof in simple, accessible language:
+
+Proof:
+${JSON.stringify(proof, null, 2)}
+
+User's original question: "${question}"
+
+Requirements:
+- Use everyday language
+- Explain each step
+- Highlight key inferences
+- Note any assumptions`</span></pre>
+  </div>
+
+  <div class="footer-nav">
+    <p>LLM Integration Guide – AGISystem2</p>
+    <p><strong>Related:</strong>
+      <a href="getting-started.html">Getting Started</a> ·
+      <a href="../theory/nl2dsl.html">NL2DSL Translation</a> ·
+      <a href="../api/index.html">API Reference</a>
+    </p>
+    <p><a href="../index.html">← Back to Documentation Home</a></p>
+  </div>
+  </div>
+</body>
+</html>

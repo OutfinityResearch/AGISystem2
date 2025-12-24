@@ -1,7 +1,15 @@
 import { clean, splitCoord } from '../text.mjs';
+import crypto from 'node:crypto';
 import { emitAtomLine, emitNotFact } from '../emit.mjs';
 import { parseCopulaClause } from './copula.mjs';
 import { parseNonCopulaRelationClause, parseRelationClause } from './relation.mjs';
+import { parseExistentialCopula } from '../existentials.mjs';
+
+function opaqueEnt(prefix, salt) {
+  const s = clean(salt).toLowerCase();
+  const hash = crypto.createHash('sha1').update(s).digest('hex').slice(0, 10);
+  return `${prefix}_${hash}`;
+}
 
 export function parseFactSentence(sentence, options = {}) {
   const s = clean(sentence);
@@ -17,6 +25,15 @@ export function parseFactSentence(sentence, options = {}) {
       else lines.push(emitAtomLine(item.atom));
     }
     return { lines, declaredOperators };
+  }
+
+  const existential = parseExistentialCopula(s);
+  if (existential) {
+    const ent = opaqueEnt('exists_ent', `${existential.typeName}:${s}`);
+    if (existential.negated) {
+      return { lines: emitNotFact({ op: 'isA', args: [ent, existential.typeName] }) };
+    }
+    return { lines: [`isA ${ent} ${existential.typeName}`] };
   }
 
   const copulaList = s.match(/^(.*?)\s+(is|are)\s+(.+)$/i);

@@ -1,7 +1,8 @@
-import { splitSentences } from './utils.mjs';
+import { splitSentences, normalizeEntity } from './utils.mjs';
 import { clean, splitCoord } from './grammar/text.mjs';
 import { parseCopulaClause, parseRelationClause, parseRuleSentence, parseFactSentence } from './grammar/parse.mjs';
 import crypto from 'node:crypto';
+import { extractExistentialTypeClaims, parseExistentialCopula } from './grammar/existentials.mjs';
 
 function opaqueProp(prefix, sentence) {
   const s = clean(sentence).toLowerCase();
@@ -19,10 +20,21 @@ export function translateContextWithGrammar(text, options = {}) {
     autoDeclaredOperators: 0
   };
   const lines = [];
+  const existentialTypesAdded = new Set();
   const autoDeclared = new Set();
   const sentences = splitSentences(text);
   stats.sentencesTotal = sentences.length;
   for (const sent of sentences) {
+    if (options.extractExistentials !== false) {
+      const hinted = extractExistentialTypeClaims(sent);
+      for (const typeName of hinted) {
+        if (existentialTypesAdded.has(typeName)) continue;
+        existentialTypesAdded.add(typeName);
+        const ent = opaqueProp('exists_ent', `${typeName}:${sent}`);
+        lines.push(`isA ${ent} ${typeName}`);
+      }
+    }
+
     const rule = parseRuleSentence(sent, options);
     if (rule?.kind === 'error') {
       const unknownMatch = String(rule.error || '').match(/Unknown operator '([^']+)'/i);
@@ -117,6 +129,30 @@ export function translateQuestionWithGrammar(question, options = {}) {
     const subj = invAux[2];
     const rest = invAux[4];
     q = `${subj} ${invAux[3] ? 'does not ' : ''}${rest}`.trim();
+  }
+
+  // Simple WH-questions (answer-as-query):
+  // - "What is Sarah?" -> isA Sarah ?x
+  // - "What color is the cat?" -> hasProperty Cat ?x
+  const whatProp = q.match(/^what\s+([a-z][a-z0-9_'-]*)\s+(?:is|are|was|were)\s+(.+)$/i);
+  if (whatProp) {
+    const subject = normalizeEntity(whatProp[2], '?x');
+    return `@goal:goal hasProperty ${subject} ?x`;
+  }
+  const whatIs = q.match(/^what\s+(?:is|are|was|were)\s+(.+)$/i);
+  if (whatIs) {
+    const subject = normalizeEntity(whatIs[1], '?x');
+    return `@goal:goal isA ${subject} ?x`;
+  }
+
+  const existential = parseExistentialCopula(q);
+  if (existential) {
+    if (existential.negated) {
+      return options.fallbackOpaqueQuestions === true
+        ? `@goal:goal hasProperty KB ${opaqueProp('opaque_q', q)}`
+        : null;
+    }
+    return `@goal:goal isA ?x ${existential.typeName}`;
   }
 
   // Optionally expand compound questions into multiple atomic goals (for orchestrators

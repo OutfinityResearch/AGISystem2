@@ -136,10 +136,10 @@ function normalizeDatasetExample(example) {
   return { ...example, context: contextWithoutHypothesis };
 }
 
-function isSupportedBinaryExample({ category }) {
-  // logiqa2 is mapped as NLI but its hypotheses are generally too complex for the current grammar translator.
-  if (!category) return true;
-  return String(category) !== 'nli_complex';
+function isSupportedBinaryExample() {
+  // AutoDiscovery should not skip examples purely by dataset category.
+  // If a label is not mappable to a boolean expectation, `labelToExpectation()` returns null.
+  return true;
 }
 
 /**
@@ -149,11 +149,12 @@ function isSupportedBinaryExample({ category }) {
  */
 function labelToExpectation(label) {
   if (!label) return null;
-  const l = String(label).toLowerCase();
+  const l0 = String(label).toLowerCase().trim();
+  const l = l0.replace(/[\s-]+/g, '_');
   if (l === 'entailment' || l === 'true' || l === 'yes' || l === 'correct' || l === '1') {
     return true;
   }
-  if (l === 'not_entailment' || l === 'contradiction' || l === 'false' || l === 'no' || l === 'incorrect' || l === '0') {
+  if (l === 'not_entailment' || l === 'non_entailment' || l === 'contradiction' || l === 'false' || l === 'no' || l === 'incorrect' || l === '0') {
     return false;
   }
   if (l === 'uncertain' || l === 'neutral' || l === 'unknown') {
