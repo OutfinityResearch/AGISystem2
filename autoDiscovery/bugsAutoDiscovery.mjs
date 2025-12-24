@@ -193,7 +193,8 @@ async function main() {
   console.log(`\n${C.bold}${C.magenta}═══════════════════════════════════════${C.reset}`);
   console.log(`${C.bold}Final Summary${C.reset}`);
   console.log(`  Total Processed: ${totalProcessed}`);
-  console.log(`  ${C.green}Passed:${C.reset} ${totalPassed} (${((totalPassed / totalProcessed) * 100).toFixed(1)}%)`);
+  const finalPct = totalProcessed > 0 ? ((totalPassed / totalProcessed) * 100).toFixed(1) : '0.0';
+  console.log(`  ${C.green}Passed:${C.reset} ${totalPassed} (${finalPct}%)`);
   console.log(`  ${C.yellow}Translation Issues:${C.reset} ${totalCategoryA}`);
   console.log(`  ${C.red}Reasoning Bugs:${C.reset} ${totalCategoryB}`);
   console.log(`  Total Analysed: ${analysedCases.size}`);
@@ -207,4 +208,3 @@ main().catch(err => {
   console.error(err.stack);
   process.exit(1);
 });
-

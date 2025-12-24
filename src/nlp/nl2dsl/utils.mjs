@@ -5,6 +5,8 @@
  * Shared utility functions for NL to DSL translation
  */
 
+import { KEYWORDS } from '../../core/constants.mjs';
+
 // Reference counter for generating unique names
 let refCounter = 0;
 
@@ -75,6 +77,9 @@ export function singularize(word) {
   if (w === 'men') return 'man';
   if (w === 'women') return 'woman';
   if (w === 'livingthings') return 'livingthing';
+  // ProntoQA-style invented nouns often use "-us" as singular suffix (wumpus/impus/etc).
+  // Avoid stripping the final "s" in singular forms like "impus".
+  if (w.endsWith('us')) return w;
   if (w.endsWith('uses')) return w.slice(0, -2); // wumpuses -> wumpus
   if (w.endsWith('ies') && w.length > 3) return w.slice(0, -3) + 'y';
   if (w.endsWith('es') && w.length > 3) return w.slice(0, -2);
@@ -114,6 +119,23 @@ export function sanitizeEntity(name) {
 }
 
 /**
+ * Sanitize predicate/property/operator identifier for DSL.
+ * DSL lexer accepts [a-zA-Z0-9_]; anything else (e.g. hyphens, apostrophes) must be removed.
+ * @param {string} name
+ * @returns {string}
+ */
+export function sanitizePredicate(name) {
+  if (!name) return '';
+  const cleaned = String(name)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_]/g, '');
+  if (!cleaned) return '';
+  if (KEYWORDS.includes(cleaned)) return `${cleaned}_op`;
+  return cleaned;
+}
+
+/**
  * Split text into sentences
  * @param {string} text
  * @returns {string[]}
@@ -138,7 +160,10 @@ export function normalizeEntity(text, defaultVar = '?x') {
     return defaultVar;
   }
   const withoutThe = lower.replace(/^the\s+/, '').replace(/^(?:a|an)\s+/, '');
-  const parts = withoutThe.split(/\s+/);
+  const parts = withoutThe
+    .split(/\s+/)
+    .map(p => p.replace(/[^a-zA-Z0-9_]/g, ''))
+    .filter(Boolean);
   return parts.map(p => capitalize(p)).join('');
 }
 

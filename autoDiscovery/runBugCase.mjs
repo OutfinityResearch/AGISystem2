@@ -17,6 +17,7 @@ import fs from 'node:fs';
 import { translateExample, resetRefCounter } from '../src/nlp/nl2dsl.mjs';
 import { Session } from '../src/runtime/session.mjs';
 import { REASONING_PRIORITY } from '../src/core/constants.mjs';
+import { validateQuestionDsl } from './discovery/session.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -42,42 +43,6 @@ function loadCoreTheories(session) {
     throw new Error(`loadCore failed: ${msg}`);
   }
   return 1;
-}
-
-/**
- * Validate questionDsl is valid for prove()
- * STRICT: must be single statement or have @goal as first line
- */
-function validateQuestionDsl(questionDsl) {
-  if (!questionDsl || !questionDsl.trim()) {
-    return { valid: false, reason: 'empty_question_dsl' };
-  }
-
-  const lines = questionDsl.trim().split('\n').filter(l => l.trim() && !l.trim().startsWith('//'));
-
-  if (lines.length === 0) {
-    return { valid: false, reason: 'no_statements' };
-  }
-
-  if (lines.length === 1) {
-    // Single statement is OK (but should ideally start with @goal)
-    return { valid: true };
-  }
-
-  // Multi-line: MUST have @goal as first statement
-  const firstLine = lines[0].trim();
-  if (firstLine.startsWith('@goal ') || firstLine.startsWith('@goal:')) {
-    return { valid: true };
-  }
-
-  // Check if any line has @goal (but not first) - this is INVALID
-  const hasGoalElsewhere = lines.slice(1).some(l => l.trim().startsWith('@goal'));
-  if (hasGoalElsewhere) {
-    return { valid: false, reason: 'goal_not_first_statement' };
-  }
-
-  // Multi-line without explicit @goal - INVALID (translator contract violation)
-  return { valid: false, reason: 'multi_statement_no_goal' };
 }
 
 /**
@@ -130,7 +95,7 @@ async function runBugCase(caseFile, options = {}) {
     context: bugCase.input?.context_nl,
     question: bugCase.input?.question_nl,
     label: bugCase.dataset?.label,
-    translateOptions: { autoDeclareUnknownOperators }
+    translateOptions: { autoDeclareUnknownOperators, expandCompoundQuestions: true }
   });
 
   // Step 2: Validate questionDsl
@@ -180,14 +145,41 @@ async function runBugCase(caseFile, options = {}) {
   }
 
   // Step 5: Prove
-  const proveResult = session.prove(translated.questionDsl, { timeout: 2000 });
+  const goals = goalValidation.goals || [translated.questionDsl];
+  const goalLogic = goalValidation.goalLogic || 'Single';
+  if (autoDeclareUnknownOperators && Array.isArray(goalValidation.declaredOperators) && goalValidation.declaredOperators.length > 0) {
+    const declLines = goalValidation.declaredOperators.map(op => `@${op}:${op} __Relation`).join('\n');
+    session.learn(declLines);
+  }
+  const perGoal = goals.map(g => ({ goalDsl: g, result: session.prove(g, { timeout: 2000 }) }));
+  const provedValid = goalLogic === 'Or'
+    ? perGoal.some(p => p.result.valid === true)
+    : perGoal.every(p => p.result.valid === true);
+  const proveResult = {
+    valid: provedValid,
+    method: goals.length > 1 ? `compound_goal_${goalLogic.toLowerCase()}` : (perGoal[0]?.result?.method || null),
+    steps: goals.length > 1 ? [] : (perGoal[0]?.result?.steps || []),
+    reason: goals.length > 1 ? null : (perGoal[0]?.result?.reason || null),
+    parts: perGoal.map(p => ({
+      goalDsl: p.goalDsl,
+      valid: p.result.valid,
+      method: p.result.method || null,
+      reason: p.result.reason || null,
+      stepsCount: p.result.steps?.length || 0
+    }))
+  };
 
   // Step 6: Generate actual_nl using describeResult
-  const actual_nl = session.describeResult({
-    action: 'prove',
-    reasoningResult: proveResult,
-    queryDsl: translated.questionDsl
-  });
+  let actual_nl;
+  if (goals.length === 1) {
+    actual_nl = session.describeResult({ action: 'prove', reasoningResult: perGoal[0].result, queryDsl: goals[0] });
+  } else {
+    const parts = perGoal.map(p => {
+      const nl = session.describeResult({ action: 'prove', reasoningResult: p.result, queryDsl: p.goalDsl });
+      return `- ${p.goalDsl}\n  ${nl}`;
+    });
+    actual_nl = `Compound goal (${goalLogic}):\n${parts.join('\n')}`;
+  }
 
   // Step 7: Check expected_nl
   const expected_nl = bugCase.expected?.expected_nl;
@@ -203,7 +195,8 @@ async function runBugCase(caseFile, options = {}) {
   }
 
   // Handle missing expected_nl
-  if (!expected_nl || expected_nl === 'TODO') {
+  const expectedMarkedTodo = typeof expected_nl === 'string' && /(^|\b)todo(\b|$)/i.test(expected_nl);
+  if (!expected_nl || expectedMarkedTodo) {
     console.log(`\n${C.yellow}Missing expected_nl!${C.reset}`);
     console.log(`\nTo complete this bug case, add expected_nl to the JSON file.`);
     console.log(`\n${C.bold}Suggested expected_nl based on expectProved=${expectProved}:${C.reset}`);

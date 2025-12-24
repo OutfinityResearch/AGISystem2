@@ -53,4 +53,16 @@ describe('NL→DSL grammar translator (low-hardcoding)', () => {
     assert.ok(dsl.includes('RobertLewandowski'), 'should collapse proper name');
     assert.ok(dsl.includes('isA'), 'should use isA');
   });
+
+  test('expands copula disjunction questions into multiple goals when enabled', () => {
+    const goal = translateQuestionWithGrammar(
+      'Stella is a gorpus, a zumpus, or an impus.',
+      { expandCompoundQuestions: true }
+    );
+    assert.ok(goal);
+    assert.match(goal, /\/\/ goal_logic:Or/);
+    assert.match(goal, /@goal:goal isA Stella Gorpus/);
+    assert.match(goal, /@goal1:goal isA Stella Zumpus/);
+    assert.match(goal, /@goal2:goal isA Stella Impus/);
+  });
 });

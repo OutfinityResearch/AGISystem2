@@ -24,7 +24,8 @@ export function runExample(example, caseId, options = {}) {
   const source = example.source || 'generic';
 
   const translatorOptions = {
-    autoDeclareUnknownOperators: options.autoDeclareUnknownOperators === true
+    autoDeclareUnknownOperators: options.autoDeclareUnknownOperators === true,
+    expandCompoundQuestions: true
   };
 
   const sessionConfig = {
@@ -114,29 +115,66 @@ export function runExample(example, caseId, options = {}) {
       };
     }
 
-    const proveResult = session.prove(translated.questionDsl, { timeout: 2000 });
-    if (!proveResult || typeof proveResult.valid !== 'boolean') {
+    const goals = goalValidation.goals || [translated.questionDsl];
+    const goalLogic = goalValidation.goalLogic || 'Single';
+    if (options.autoDeclareUnknownOperators === true && Array.isArray(goalValidation.declaredOperators) && goalValidation.declaredOperators.length > 0) {
+      const declLines = goalValidation.declaredOperators.map(op => `@${op}:${op} __Relation`).join('\n');
+      session.learn(declLines);
+    }
+    const perGoal = goals.map(g => ({ goalDsl: g, result: session.prove(g, { timeout: 2000 }) }));
+
+    const anyInvalidStructure = perGoal.some(p => !p.result || typeof p.result.valid !== 'boolean');
+    if (anyInvalidStructure) {
       return {
         category: CATEGORY.UNKNOWN,
         correct: false,
         reason: 'prove_no_result',
         details: 'prove() returned invalid result structure',
         translated,
-        proveResult,
+        proveResult: perGoal.map(p => ({ goalDsl: p.goalDsl, result: p.result })),
         durationMs: performance.now() - startTime,
         caseId,
         sessionConfig
       };
     }
 
+    const provedValid = goalLogic === 'Or'
+      ? perGoal.some(p => p.result.valid === true)
+      : perGoal.every(p => p.result.valid === true);
+
+    const proveResult = {
+      valid: provedValid,
+      method: goals.length > 1 ? `compound_goal_${goalLogic.toLowerCase()}` : (perGoal[0]?.result?.method || null),
+      steps: goals.length > 1 ? [] : (perGoal[0]?.result?.steps || []),
+      reason: goals.length > 1 ? null : (perGoal[0]?.result?.reason || null),
+      parts: perGoal.map(p => ({
+        goalDsl: p.goalDsl,
+        valid: p.result.valid,
+        method: p.result.method || null,
+        reason: p.result.reason || null,
+        stepsCount: p.result.steps?.length || 0
+      }))
+    };
+
     let actual_nl = null;
     try {
-      actual_nl = session.describeResult({ action: 'prove', reasoningResult: proveResult, queryDsl: translated.questionDsl });
+      if (goals.length === 1) {
+        actual_nl = session.describeResult({ action: 'prove', reasoningResult: perGoal[0].result, queryDsl: goals[0] });
+      } else {
+        const parts = perGoal.map(p => {
+          const nl = session.describeResult({ action: 'prove', reasoningResult: p.result, queryDsl: p.goalDsl });
+          return `- ${p.goalDsl}\n  ${nl}`;
+        });
+        actual_nl = `Compound goal (${goalLogic}):\n${parts.join('\n')}`;
+      }
     } catch (err) {
       actual_nl = `Error: ${err.message}`;
     }
 
-    const proofInvalid = proveResult.valid === true && proveResult.proofObject && proveResult.proofObject.validatorOk === false;
+    const proofInvalid = goals.length === 1 &&
+      perGoal[0].result.valid === true &&
+      perGoal[0].result.proofObject &&
+      perGoal[0].result.proofObject.validatorOk === false;
     if (proofInvalid) {
       return {
         category: CATEGORY.UNKNOWN,
@@ -216,4 +254,3 @@ export function runExample(example, caseId, options = {}) {
     };
   }
 }
-

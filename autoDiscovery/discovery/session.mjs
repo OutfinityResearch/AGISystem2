@@ -25,16 +25,37 @@ export function createSession(sessionConfig = {}) {
 export function validateQuestionDsl(questionDsl) {
   if (!questionDsl || !questionDsl.trim()) return { valid: false, reason: 'empty_question_dsl' };
 
-  const lines = questionDsl.trim().split('\n').filter(l => l.trim() && !l.trim().startsWith('//'));
+  const rawLines = questionDsl.trim().split('\n').map(l => l.trim()).filter(Boolean);
+  const commentLines = rawLines.filter(l => l.startsWith('//'));
+  const lines = rawLines.filter(l => !l.startsWith('//'));
+
   if (lines.length === 0) return { valid: false, reason: 'no_statements' };
-  if (lines.length === 1) return { valid: true };
 
-  const firstLine = lines[0].trim();
-  if (firstLine.startsWith('@goal ') || firstLine.startsWith('@goal:')) return { valid: true };
+  let goalLogic = null;
+  let declaredOperators = [];
+  for (const c of commentLines) {
+    const m = c.match(/goal_logic\s*:\s*(And|Or)/i);
+    if (m) {
+      goalLogic = m[1];
+      break;
+    }
+  }
+  for (const c of commentLines) {
+    const m = c.match(/declare_ops\s*:\s*(.+)$/i);
+    if (!m) continue;
+    declaredOperators = m[1]
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+    break;
+  }
 
-  const hasGoalElsewhere = lines.slice(1).some(l => l.trim().startsWith('@goal'));
-  if (hasGoalElsewhere) return { valid: false, reason: 'goal_not_first_statement' };
+  if (lines.length === 1) {
+    return { valid: true, goals: [lines[0]], goalLogic: goalLogic || 'Single', declaredOperators };
+  }
 
-  return { valid: false, reason: 'multi_statement_no_goal' };
+  const allGoalLines = lines.every(l => l.startsWith('@goal') || l.startsWith('@g'));
+  if (!allGoalLines) return { valid: false, reason: 'multi_statement_no_goal' };
+
+  return { valid: true, goals: lines, goalLogic: goalLogic || 'And', declaredOperators };
 }
-

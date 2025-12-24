@@ -25,7 +25,11 @@ export function splitCoord(text) {
     .filter(Boolean)
     .flatMap(part => part.split(byConj).map(p => p.trim()).filter(Boolean));
 
-  return { op, items: raw };
+  const items = raw
+    .map(s => s.replace(/^(?:or|and)\s+/i, '').trim())
+    .filter(Boolean);
+
+  return { op, items };
 }
 
 export function detectNegationPrefix(text) {
@@ -33,4 +37,3 @@ export function detectNegationPrefix(text) {
   if (/^not\s+/i.test(t)) return { negated: true, rest: t.replace(/^not\s+/i, '').trim() };
   return { negated: false, rest: t };
 }
-

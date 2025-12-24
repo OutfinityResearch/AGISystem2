@@ -1,0 +1,126 @@
+{
+  "bugs": {
+    "BUG001": {
+      "name": "Or→And implication failure",
+      "description": "Compound logic with Or antecedent and/or And consequent"
+    },
+    "BUG002": {
+      "name": "Negation reasoning failure",
+      "description": "Not operator handling in implications"
+    },
+    "BUG003": {
+      "name": "Deep chain failure",
+      "description": "Multi-hop inference chains (>3 steps)"
+    },
+    "BUG004": {
+      "name": "Relational reasoning failure",
+      "description": "Kinship or relational inference patterns"
+    },
+    "BUG005": {
+      "name": "Abductive reasoning failure",
+      "description": "Inference from effect to cause"
+    },
+    "BUG006": {
+      "name": "Multi-choice ambiguity",
+      "description": "Multiple choice answer selection issues"
+    },
+    "BUG007": {
+      "name": "Quantifier handling failure",
+      "description": "Universal/existential quantifier issues"
+    }
+  },
+  "nlpBugs": {
+    "NLP001": {
+      "name": "Context translation empty",
+      "description": "Translator produced empty DSL for non-empty context",
+      "reason": "context_translation_empty"
+    },
+    "NLP002": {
+      "name": "Question translation empty",
+      "description": "Translator produced empty DSL for question/goal",
+      "reason": "question_translation_empty"
+    },
+    "NLP003": {
+      "name": "Goal not first statement",
+      "description": "Multi-line questionDsl has @goal on wrong line",
+      "reason": "goal_not_first_statement"
+    },
+    "NLP004": {
+      "name": "Multi-statement without goal",
+      "description": "Multi-line questionDsl without explicit @goal",
+      "reason": "multi_statement_no_goal"
+    },
+    "NLP005": {
+      "name": "Learn parse error",
+      "description": "Generated DSL has syntax errors (lexer/parser)",
+      "reason": "learn_failed"
+    },
+    "NLP006": {
+      "name": "Translation quality issue",
+      "description": "Missing operators or incomplete translation",
+      "reason": "translation_quality_issue"
+    },
+    "NLP007": {
+      "name": "Complex sentence unsupported",
+      "description": "Sentence patterns not yet supported by translator",
+      "reason": "complex_unsupported"
+    }
+  },
+  "detectors": {
+    "bug": [
+      {
+        "id": "BUG001",
+        "dslAnyRegex": [
+          "Implies \\$or\\d+",
+          "Implies \\$and\\d+"
+        ],
+        "dslAllRegex": [
+          "@and\\d+ And",
+          "Implies \\$\\w+ \\$and\\d+"
+        ]
+      },
+      {
+        "id": "BUG002",
+        "dslAllRegex": [
+          "\\\\bNot\\\\b",
+          "Implies \\$\\w+ \\$(?:neg\\d+|not\\d+)"
+        ]
+      },
+      {
+        "id": "BUG003",
+        "dslTokenCount": { "token": "Implies", "min": 4 }
+      },
+      {
+        "id": "BUG004",
+        "sourceIn": ["clutrr"],
+        "categoryIn": ["relational_reasoning"]
+      },
+      {
+        "id": "BUG005",
+        "sourceIn": ["abduction"],
+        "categoryIn": ["abductive_reasoning"]
+      },
+      {
+        "id": "BUG006",
+        "sourceIn": ["logiqa", "logiqa2", "reclor"],
+        "minChoices": 3
+      },
+      {
+        "id": "BUG007",
+        "contextAnyRegex": ["\\\\b(forAll|exists|Every|All|Some|Any)\\\\b"],
+        "dslHasVariable": true,
+        "dslTokenCount": { "token": "Implies", "min": 2 }
+      }
+    ],
+    "nlp": {
+      "detailsAnyRegex": [
+        "Lexer error",
+        "Parse error",
+        "Unexpected",
+        "Unknown operator",
+        "validation failed"
+      ]
+    }
+  }
+}
+

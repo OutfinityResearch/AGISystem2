@@ -44,16 +44,23 @@ export function writeNlpBugCaseJson(nlpBugId, result, example, translatorOptions
   const filename = `${result.caseId}.json`;
   const filepath = join(bugDir, filename);
 
+  const label = example.label;
+  const expectProved = result.translated?.expectProved;
+
   const payload = {
     caseId: result.caseId,
     nlpBugId,
     source: example.source || 'generic',
     reason: result.reason,
     details: result.details,
+    dataset: {
+      label,
+      expectProved
+    },
     input: {
       context_nl: example.context,
       question_nl: example.question,
-      label: example.label
+      label
     },
     translation: {
       translator: 'src/nlp/nl2dsl.mjs::translateExample',
@@ -62,6 +69,16 @@ export function writeNlpBugCaseJson(nlpBugId, result, example, translatorOptions
       questionDsl: result.translated?.questionDsl || '',
       contextErrors: result.translated?.contextErrors || [],
       contextAutoDeclaredOperators: result.translated?.contextAutoDeclaredOperators || []
+    },
+    execution: {
+      learnResult: result.learnResult || null,
+      proveResult: result.proveResult || null,
+      actual_nl: result.actual_nl || null
+    },
+    expected: {
+      expected_proved: expectProved,
+      expected_nl: 'TODO',
+      note: 'For NLP bugs, expected_nl is often unavailable until translation + learn succeed; use runBugCase once DSL is valid.'
     },
     timestamp: new Date().toISOString()
   };
@@ -84,9 +101,6 @@ export function writeBugCaseJson(bugId, result, example, translatorOptions) {
   const expectProved = result.translated?.expectProved;
   const questionNl = String(example.question || '').trim();
   const goalNl = questionNl ? questionNl.replace(/[?]+$/, '') : '[goal]';
-  const expected_nl = expectProved === true
-    ? `True: ${goalNl}. Proof: TODO`
-    : `Cannot prove: ${goalNl}`;
   const bugCase = {
     caseId: result.caseId,
     bugId,
@@ -116,8 +130,11 @@ export function writeBugCaseJson(bugId, result, example, translatorOptions) {
     },
     expected: {
       expected_proved: expectProved,
-      expected_nl,
-      note: 'Fill expected_nl with engine-style output or accept actual_nl after review'
+      expected_nl: 'TODO',
+      expected_nl_hint: expectProved === true
+        ? `Proved: ${goalNl}. Proof: [engine steps]`
+        : `Cannot prove: ${goalNl}`,
+      note: 'Run `node autoDiscovery/runBugCase.mjs --accept-actual <case.json>` after reviewing actual_nl'
     },
     timestamp: new Date().toISOString()
   };
