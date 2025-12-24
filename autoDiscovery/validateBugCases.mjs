@@ -151,7 +151,7 @@ async function validateOne(caseFile, { autoDeclareUnknownOperators } = {}) {
     source: raw.source || 'generic',
     context,
     question,
-    label: raw.dataset?.label,
+    label: raw.dataset?.label ?? raw.example?.label ?? raw.translated?.label ?? raw.translation?.label ?? null,
     translateOptions: { autoDeclareUnknownOperators, expandCompoundQuestions: true }
   });
 

@@ -27,8 +27,15 @@ export function parseFactSentence(sentence, options = {}) {
       const lines = [];
       const declaredOperators = [];
       for (const item of coord.items) {
-        const clause = `${subjRaw} ${verb} ${item}`.trim();
-        const cop = parseCopulaClause(clause, '?x', options);
+        // If the coordination item already contains its own copula clause
+        // (e.g. "Wren is a brimpus"), avoid duplicating the subject:
+        // "Wren is Wren is a brimpus" can synthesize a fake type token.
+        let clause = item;
+        let cop = parseCopulaClause(clause, '?x', options);
+        if (!cop) {
+          clause = `${subjRaw} ${verb} ${item}`.trim();
+          cop = parseCopulaClause(clause, '?x', options);
+        }
         if (!cop) continue;
         if (Array.isArray(cop.declaredOperators)) declaredOperators.push(...cop.declaredOperators);
         for (const it of cop.items || []) {

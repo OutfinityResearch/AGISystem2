@@ -5,11 +5,19 @@ import { ExecutionError } from './execution-error.mjs';
 import { canonicalizeTokenName } from './canonicalize.mjs';
 
 export function buildStatementVector(executor, stmt) {
+  const operatorName = executor.extractName(stmt.operator);
   const operatorVec = resolveExpression(executor, stmt.operator);
 
   const positionedArgs = [];
   for (let i = 0; i < stmt.args.length; i++) {
-    const argVec = resolveExpression(executor, stmt.args[i]);
+    const arg = stmt.args[i];
+    // `Not ( ... )` uses a Compound as a *quoted statement*, not as a graph invocation.
+    // If we resolve the Compound normally, we may expand graphs/macros (e.g. `isA`) and
+    // collapse distinct inner statements into identical vectors, breaking negation proof,
+    // cycle detection, and reference metadata alignment.
+    const argVec = (operatorName === 'Not' && i === 0 && (arg instanceof Compound || arg?.type === 'Compound'))
+      ? buildStatementVector(executor, new Statement(null, arg.operator, arg.args, null, arg.line, arg.column))
+      : resolveExpression(executor, arg);
     positionedArgs.push(withPosition(i + 1, argVec));
   }
 

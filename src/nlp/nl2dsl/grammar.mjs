@@ -133,8 +133,17 @@ export function translateQuestionWithGrammar(question, options = {}) {
         let needsQuery = false;
         const declaredOperators = new Set();
         for (let i = 0; i < coord.items.length; i++) {
-          const clause = `${subjectRaw} ${verb} ${coord.items[i]}`.trim();
-          const copula = parseCopulaClause(clause, '?x', { ...options, indefiniteAsEntity: true });
+          const item = coord.items[i];
+          // If the coordination item already contains its own copula clause
+          // (e.g. "Sally is not a dumpus"), do NOT prefix the subject again.
+          // Otherwise, we end up with "Sally is Sally is not a dumpus" and the
+          // predicate parser can incorrectly synthesize a type like "SallyIsNotADumpus".
+          let clause = item;
+          let copula = parseCopulaClause(clause, '?x', { ...options, indefiniteAsEntity: true });
+          if (!copula || copula.items.length === 0) {
+            clause = `${subjectRaw} ${verb} ${item}`.trim();
+            copula = parseCopulaClause(clause, '?x', { ...options, indefiniteAsEntity: true });
+          }
           if (!copula || copula.items.length === 0) continue;
           for (const op of copula.declaredOperators || []) declaredOperators.add(op);
           const asked = copula.items[copula.items.length - 1];

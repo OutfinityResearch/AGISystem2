@@ -33,7 +33,7 @@ function buildStatementFromStrings(op, args = []) {
 }
 
 function buildNotGoalFromStrings(op, args = []) {
-  const inner = new Compound(null, new Identifier(op), args.map(a => new Identifier(a)));
+  const inner = new Compound(new Identifier(op), args.map(a => new Identifier(a)));
   return new Statement(null, new Identifier('Not'), [inner]);
 }
 
@@ -140,9 +140,11 @@ function tryContrapositiveNot(self, innerOp, innerArgs, depth) {
             ...(notConcRes.steps || []),
             ...otherSteps,
             {
-              operation: 'contrapositive',
+              operation: 'rule_application',
               fact: `Not ${innerOp} ${innerArgs.join(' ')}`.trim(),
-              rule: rule.label || rule.name || rule.source
+              rule: rule.label || rule.name || rule.source,
+              ruleId: rule.id || null,
+              inference: 'contrapositive'
             }
           ]
         };
@@ -347,4 +349,3 @@ export function proveGoal(self, goal, depth) {
     self.visited.delete(goalKey);
   }
 }
-

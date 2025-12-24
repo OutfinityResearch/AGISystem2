@@ -66,6 +66,19 @@ describe('NL→DSL grammar translator (low-hardcoding)', () => {
     assert.match(goal, /@goal2:goal isA Stella Impus/);
   });
 
+  test('expands copula conjunction into multiple goals without duplicating the subject ("Sally is ... and Sally is ...")', () => {
+    const goal = translateQuestionWithGrammar(
+      'Sally is a lempus and Sally is not a dumpus and Sally is a brimpus.',
+      { expandCompoundQuestions: true }
+    );
+    assert.ok(goal);
+    assert.match(goal, /\/\/ goal_logic:And/);
+    assert.match(goal, /@goal:goal isA Sally Lempus/);
+    assert.match(goal, /@goal1:goal Not \(isA Sally Dumpus\)/);
+    assert.match(goal, /@goal2:goal isA Sally Brimpus/);
+    assert.ok(!goal.includes('SallyIsNotADumpus'), `should not synthesize a fake type, got: ${goal}`);
+  });
+
   test('parses intransitive questions as hasProperty (Space sucks → hasProperty Space suck)', () => {
     const goal = translateQuestionWithGrammar('Space sucks.');
     assert.equal(goal, '@goal:goal hasProperty Space suck');
@@ -81,6 +94,15 @@ describe('NL→DSL grammar translator (low-hardcoding)', () => {
     const { dsl, errors } = translateContextWithGrammar('Harry is the parent of Jack.');
     assert.deepEqual(errors, []);
     assert.ok(/\bparent Harry Jack\b/.test(dsl), `expected relation, got: ${dsl}`);
+  });
+
+  test('parses copula coordination even when items repeat the subject ("Wren is X, Wren is Y")', () => {
+    const { dsl, errors } = translateContextWithGrammar('Wren is a numpus, Wren is a brimpus, and Wren is not a sterpus.');
+    assert.deepEqual(errors, []);
+    assert.ok(/\bisA Wren Numpus\b/.test(dsl), `expected isA Wren Numpus, got: ${dsl}`);
+    assert.ok(/\bisA Wren Brimpus\b/.test(dsl), `expected isA Wren Brimpus, got: ${dsl}`);
+    assert.ok(!dsl.includes('WrenIsABrimpus'), `should not synthesize fake type tokens, got: ${dsl}`);
+    assert.ok(/\bNot\s+\$base\d+\b/.test(dsl), `expected persistent negation Not $baseN, got: ${dsl}`);
   });
 
   test('parses movement to location (Mary went to the kitchen → at Mary Kitchen)', () => {
