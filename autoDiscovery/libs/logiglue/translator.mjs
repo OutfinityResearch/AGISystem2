@@ -156,7 +156,36 @@ function translateProntoQASentence(sent) {
     if (facts.length > 0) return facts.join('\n');
   }
 
-  // Pattern: "Xes are Yes" (plural type subsumption)
+  // Pattern: "Xes are Yes, Zes, and Wes" (plural type with multiple consequences)
+  // e.g., "Brimpuses are grimpuses, dumpuses, and numpuses"
+  const pluralMultiple = s.match(/^(\w+(?:us)?e?s)\s+are\s+(.+)$/i);
+  if (pluralMultiple && pluralMultiple[2].includes(',')) {
+    const [, fromPlural, rest] = pluralMultiple;
+    const fromType = singularize(fromPlural);
+    // Parse comma/and separated list
+    const toTypes = rest.split(/,\s*(?:and\s+)?|(?:\s+and\s+)/)
+      .map(t => singularize(t.trim()))
+      .filter(Boolean);
+
+    if (toTypes.length > 1) {
+      const antRef = genRef('ant');
+      const statements = [`@${antRef} isA ?x ${capitalize(fromType)}`];
+      const consRefs = [];
+
+      for (const t of toTypes) {
+        const ref = genRef('cons');
+        statements.push(`@${ref} isA ?x ${capitalize(t)}`);
+        consRefs.push(ref);
+      }
+
+      const andRef = genRef('and');
+      statements.push(`@${andRef} And ${consRefs.map(r => `$${r}`).join(' ')}`);
+      statements.push(`Implies $${antRef} $${andRef}`);
+      return statements.join('\n');
+    }
+  }
+
+  // Pattern: "Xes are Yes" (plural type subsumption - single)
   // e.g., "Wumpuses are grimpuses", "Lempuses are lorpuses"
   const pluralSubsumption = s.match(/^(\w+(?:us)?e?s)\s+are\s+(\w+(?:us)?e?s)$/i);
   if (pluralSubsumption) {
@@ -169,10 +198,14 @@ function translateProntoQASentence(sent) {
   }
 
   // Pattern: "Every/Each X is a Y [and a Z [and a W]]"
-  const everyIsA = s.match(/^(?:every|each)\s+(\w+)\s+is\s+(?:a\s+)?(.+)$/i);
+  // Also handles: "Every numpus is an impus"
+  const everyIsA = s.match(/^(?:every|each)\s+(\w+)\s+is\s+(?:an?\s+)?(.+)$/i);
   if (everyIsA) {
     const [, fromType, rest] = everyIsA;
-    const toTypes = rest.split(/,?\s+and\s+|,\s*/).map(t => t.replace(/^a\s+/i, '').trim()).filter(Boolean);
+    const toTypes = rest
+      .split(/,?\s+and\s+|,\s*/)
+      .map(t => t.replace(/^an?\s+/i, '').trim())
+      .filter(t => t && /^\w+$/.test(t));
 
     const antRef = genRef('ant');
     const statements = [`@${antRef} isA ?x ${capitalize(fromType)}`];
@@ -197,19 +230,32 @@ function translateProntoQASentence(sent) {
   }
 
   // Pattern: "Everything that is an X or a Y or a Z is a W [, a V, and a U]"
-  const everythingOr = s.match(/^everything\s+that\s+is\s+(?:an?\s+)?(.+?)\s+is\s+(?:an?\s+)?(.+)$/i);
-  if (everythingOr) {
-    const [, antecedentPart, consequentPart] = everythingOr;
+  // Also handles: "Everything that is a dumpus, a sterpus, or a rompus is a grimpus"
+  // And: "Everything that is a yumpus, a rompus, and a vumpus is a sterpus" (conjunction)
+  const everythingThat = s.match(/^everything\s+that\s+is\s+(?:an?\s+)?(.+?)\s+is\s+(?:an?\s+)?(.+)$/i);
+  if (everythingThat) {
+    const [, antecedentPart, consequentPart] = everythingThat;
 
-    // Parse antecedent (or-separated types)
-    const antTypes = antecedentPart.split(/\s+or\s+/i).map(t => t.replace(/^an?\s+/i, '').trim()).filter(Boolean);
+    // Detect if antecedent is conjunction (and) or disjunction (or)
+    // "X, Y, and Z" → And (ends with "and Z")
+    // "X, Y, or Z" or "X or Y or Z" → Or (contains "or")
+    const isDisjunction = /\s+or\s+/i.test(antecedentPart);
+
+    // Parse antecedent types
+    const antTypes = antecedentPart
+      .split(/,\s*(?:(?:and|or)\s+)?|(?:\s+(?:and|or)\s+)/i)
+      .map(t => t.replace(/^an?\s+/i, '').trim())
+      .filter(t => t && /^\w+$/.test(t));
 
     // Parse consequent (and-separated types or single)
-    const consTypes = consequentPart.split(/,?\s+and\s+|,\s*/).map(t => t.replace(/^an?\s+/i, '').trim()).filter(Boolean);
+    const consTypes = consequentPart
+      .split(/,\s*(?:and\s+)?|(?:\s+and\s+)/i)
+      .map(t => t.replace(/^an?\s+/i, '').trim())
+      .filter(t => t && /^\w+$/.test(t));
 
     const statements = [];
 
-    // Build antecedent (Or of isA)
+    // Build antecedent (Or or And of isA)
     let antRef;
     if (antTypes.length === 1) {
       antRef = genRef('ant');
@@ -221,8 +267,10 @@ function translateProntoQASentence(sent) {
         statements.push(`@${ref} isA ?x ${capitalize(t)}`);
         typeRefs.push(ref);
       }
-      antRef = genRef('or');
-      statements.push(`@${antRef} Or ${typeRefs.map(r => `$${r}`).join(' ')}`);
+      // Use Or for disjunction, And for conjunction
+      const combOp = isDisjunction ? 'Or' : 'And';
+      antRef = genRef(combOp.toLowerCase());
+      statements.push(`@${antRef} ${combOp} ${typeRefs.map(r => `$${r}`).join(' ')}`);
     }
 
     // Build consequent
@@ -308,24 +356,32 @@ function translateProntoQAQuestion(question) {
   if (!question) return null;
   const q = question.trim().replace(/\.$/, '');
 
-  // Pattern: "X is a Y, a Z, or a W" (disjunction query)
-  const disjMatch = q.match(/^(\w+)\s+is\s+(?:an?\s+)?(.+)$/i);
-  if (disjMatch && disjMatch[2].includes(' or ')) {
-    const [, entity, rest] = disjMatch;
-    const types = rest.split(/,?\s+or\s+/i).map(t => t.replace(/^an?\s+/i, '').trim()).filter(Boolean);
+  // Pattern: "X is a Y, a Z, or a W" (disjunction query with commas)
+  // e.g., "Rex is a wumpus, a dumpus, or an impus"
+  const disjCommaMatch = q.match(/^(\w+)\s+is\s+(?:an?\s+)?(.+)$/i);
+  if (disjCommaMatch && (disjCommaMatch[2].includes(' or ') || disjCommaMatch[2].includes(','))) {
+    const [, entity, rest] = disjCommaMatch;
+    // Split by comma and/or "or", then clean up each type
+    const types = rest
+      .split(/,\s*(?:or\s+)?|(?:\s+or\s+)/i)
+      .map(t => t.replace(/^an?\s+/i, '').trim())
+      .filter(t => t && /^\w+$/.test(t));  // Only keep single-word types
 
     if (types.length > 1) {
       const statements = [];
       const refs = [];
       for (const t of types) {
         const ref = genRef('q');
-        statements.push(`@${ref} isA ${capitalize(entity)} ${capitalize(t)}`);
+        statements.push(`@${ref} isA ${sanitizeEntity(entity)} ${capitalize(t)}`);
         refs.push(ref);
       }
       const orRef = genRef('or');
       statements.push(`@${orRef} Or ${refs.map(r => `$${r}`).join(' ')}`);
       statements.push(`@goal $${orRef}`);
       return statements.join('\n');
+    } else if (types.length === 1) {
+      // Single type after parsing
+      return `@goal isA ${sanitizeEntity(entity)} ${capitalize(types[0])}`;
     }
   }
 
@@ -333,14 +389,14 @@ function translateProntoQAQuestion(question) {
   const negMatch = q.match(/^(\w+)\s+is\s+not\s+(?:an?\s+)?(\w+)$/i);
   if (negMatch) {
     const [, entity, type] = negMatch;
-    return `@goal Not (isA ${capitalize(entity)} ${capitalize(type)})`;
+    return `@goal Not (isA ${sanitizeEntity(entity)} ${capitalize(type)})`;
   }
 
   // Pattern: "X is a Y"
   const simpleMatch = q.match(/^(\w+)\s+is\s+(?:an?\s+)?(\w+)$/i);
   if (simpleMatch) {
     const [, entity, type] = simpleMatch;
-    return `@goal isA ${capitalize(entity)} ${capitalize(type)}`;
+    return `@goal isA ${sanitizeEntity(entity)} ${capitalize(type)}`;
   }
 
   return null;
@@ -784,6 +840,20 @@ function capitalize(s) {
 function normalizeEntity(text) {
   const parts = text.trim().split(/\s+/);
   return parts.map(p => capitalize(p)).join('');
+}
+
+/**
+ * Sanitize entity name to be valid DSL identifier
+ * Removes hyphens, apostrophes, and other special characters
+ */
+function sanitizeEntity(text) {
+  if (!text) return text;
+  return text
+    .replace(/['-]/g, '')  // Remove hyphens and apostrophes
+    .replace(/[^a-zA-Z0-9\s]/g, '')  // Remove other special chars
+    .split(/\s+/)
+    .map(p => capitalize(p))
+    .join('');
 }
 
 function singularize(word) {

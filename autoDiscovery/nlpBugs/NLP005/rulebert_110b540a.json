@@ -1,0 +1,23 @@
+{
+  "caseId": "rulebert_110b540a",
+  "nlpBugId": "NLP005",
+  "source": "rulebert",
+  "reason": "runtime_error",
+  "details": "Parse error at 1:10: Unexpected token ':'",
+  "input": {
+    "context_nl": "facts: The parent of Dan is Harry. The parent of Arthur is Jack. The parent of David is Frank. The successor of Lucy is Jack. The parent of Jack is Lucy. The relative of Dan is John. The parent of Gary is William. The child of Fiona is Eve. The child of Jack is Carole. The relative of Carole is Eve. The parent of Arthur is Harry.\nrules: (r0, 0.5): If the successor of the third person is the first person, and the parent of the first person is the third person, and the parent of the second person is the first person, then the successor of the first person is the second person (r1, 0.9): If the parent of the third person is the second person, and the parent of the third person is the first person, and the successor of the first person is the third person, then the spouse of the first person is the second person (r2, 0.8): If the parent of the first person is the third person, and the spouse of the second person is the third person, then the parent of the first person is the second person (r3, 0.69): If the child of the third person is the first person, and the parent of fourth person is the third person, and the relative of fourth person is the second person, then the relative of the first person is the second person (r4, 0.4): If the relative of the third person is the second person, and the relative of the third person is fourth person, and the child of the first person is fourth person, then the child of the first person is the second person.\nhypothesis: relative(Carole,John)",
+    "question_nl": "Is the hypothesis true given the facts and rules?",
+    "label": "entailment"
+  },
+  "translation": {
+    "contextDsl": "isA Facts:TheParentOfDan Harry\nisA ParentOfArthur Jack\nisA ParentOfDavid Frank\nisA SuccessorOfLucy Jack\nisA ParentOfJack Lucy\nisA RelativeOfDan John\nisA ParentOfGary William\nisA ChildOfFiona Eve\nisA ChildOfJack Carole\nisA RelativeOfCarole Eve\nisA ParentOfArthur Harry\nhasProperty Rules:(r0,0.5):IfTheSuccessorOfTheThirdPerson person",
+    "questionDsl": "@goal rel ?x is HypothesisTrueGivenTheFactsAndRules?",
+    "contextErrors": [
+      {
+        "sentence": "hypothesis: relative(Carole,John)",
+        "error": "Could not parse"
+      }
+    ]
+  },
+  "timestamp": "2025-12-24T11:35:32.296Z"
+}

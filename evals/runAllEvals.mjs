@@ -2,10 +2,13 @@
 /**
  * Complete Evaluation Runner
  *
- * Runs all 3 evaluation types and consolidates results:
+ * Runs core evaluation types and consolidates results:
  * 1. Fast Eval (NL->DSL transformation suites)
  * 2. Stress Check (theory loading validation)
  * 3. Query Eval (cross-domain semantic reasoning)
+ *
+ * Note: External benchmark evaluations (LogiGlue, RuleTaker) have been moved
+ * to autoDiscovery/ for automated bug discovery workflows.
  *
  * Usage:
  *   node evals/runAllEvals.mjs                  # Run all evals with default configs (6 sessions each)
@@ -258,11 +261,16 @@ async function main() {
     console.log(`
 Complete Evaluation Runner
 
-Runs all 4 evaluation types and consolidates results:
+Runs core evaluation types and consolidates results:
   1. Fast Eval (NL->DSL transformation suites)
   2. Stress Check (theory loading validation)
   3. Query Eval (cross-domain semantic reasoning)
-  4. RuleTaker Eval (external reasoning benchmark)
+
+Note: External benchmark evaluations (LogiGlue, RuleTaker) have been moved
+to autoDiscovery/ for automated bug discovery workflows. See:
+  - node autoDiscovery/bugsAutoDiscovery.mjs
+  - node autoDiscovery/runLogiGlueEval.mjs
+  - node autoDiscovery/runRuleTakerEval.mjs
 
 Usage:
   node evals/runAllEvals.mjs [options]
@@ -342,18 +350,8 @@ Examples:
     );
     results.push(queryResult);
 
-    // Phase 4: RuleTaker Eval (external reasoning benchmark)
-    const ruleTakerArgs = [...commonArgs];
-    // Use smaller sample for allEvals to keep runtime reasonable
-    if (!fast && !ruleTakerArgs.some(a => a.startsWith('--sample='))) {
-      ruleTakerArgs.push('--sample=500');
-    }
-    const ruleTakerResult = await runCommand(
-      'node',
-      [join(__dirname, 'runRuleTakerEval.mjs'), ...ruleTakerArgs],
-      'Phase 4: RuleTaker Eval (External Reasoning Benchmark)'
-    );
-    results.push(ruleTakerResult);
+    // Note: RuleTaker and LogiGlue evals have been moved to autoDiscovery/
+    // Use autoDiscovery/bugsAutoDiscovery.mjs for external benchmark testing
 
     // Consolidated Summary
     const overallDuration = performance.now() - overallStart;

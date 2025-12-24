@@ -1,0 +1,18 @@
+{
+  "caseId": "prontoqa_45fdd8bb",
+  "nlpBugId": "NLP002",
+  "source": "prontoqa",
+  "reason": "question_translation_empty",
+  "details": "Question translation failed",
+  "input": {
+    "context_nl": "Sterpuses are numpuses. Each gorpus is a dumpus. Every zumpus is a brimpus. Everything that is a dumpus or a jompus or a wumpus is a lempus. Every gorpus is a tumpus. Wren is a numpus and a vumpus and a jompus. Wren is a sterpus, a zumpus, and a gorpus.",
+    "question_nl": "Wren is a sterpus, a dumpus, or an impus.",
+    "label": "entailment"
+  },
+  "translation": {
+    "contextDsl": "@ant0 isA ?x Sterpu\n@cons1 isA ?x Numpu\nImplies $ant0 $cons1\n@cond2 isA ?x Gorpu\n@cond3 isA ?x Dumpus\nImplies $cond2 $cond3\n@cond4 isA ?x Zumpu\n@cond5 isA ?x Brimpus\nImplies $cond4 $cond5\n@cond6 isA ?x Dumpus\n@cond7 isA ?x Jompus\n@cond8 isA ?x Wumpus\n@or9 Or $cond6 $cond7 $cond8\n@cond10 isA ?x Lempus\nImplies $or9 $cond10\n@cond11 isA ?x Gorpu\n@cond12 isA ?x Tumpus\nImplies $cond11 $cond12\nisA Wren NumpusAndAVumpusAndAJompus\nisA Wren Sterpus,AZumpus,AndAGorpus",
+    "questionDsl": "",
+    "contextErrors": []
+  },
+  "timestamp": "2025-12-24T11:35:32.241Z"
+}

@@ -1,0 +1,18 @@
+{
+  "caseId": "folio_fol_23de74fa",
+  "nlpBugId": "NLP002",
+  "source": "folio_fol",
+  "reason": "question_translation_empty",
+  "details": "Question translation failed",
+  "input": {
+    "context_nl": "All products designed by Apple are sold at Apple Stores.\nAll products with Apple logos are designed by Apple.\nAll Macbooks have Apple logos.\nAll products with Apple M2 chips are Mackbooks.\nA Thinkpad X1 is not both sold in Apple Stores and is a Macbook.",
+    "question_nl": "The Thinkpad X1 either has an Apple M2 chip or is a Macbook.",
+    "label": "not_entailment"
+  },
+  "translation": {
+    "contextDsl": "@cond0 isA ?x Apple\n@cond1 hasProperty ?x products\n@cond2 hasProperty ?x designed\n@cond3 hasProperty ?x by\n@and4 And $cond0 $cond1 $cond2 $cond3\n@cond5 isA ?x SoldAtAppleStores\nImplies $and4 $cond5\n@cond6 isA ?x Logo\n@cond7 hasProperty ?x products\n@cond8 hasProperty ?x with\n@cond9 hasProperty ?x apple\n@and10 And $cond6 $cond7 $cond8 $cond9\n@cond11 hasProperty ?x apple\nImplies $and10 $cond11\nrel ?x all MacbooksHaveAppleLogos\n@cond12 isA ?x Chip\n@cond13 hasProperty ?x products\n@cond14 hasProperty ?x with\n@cond15 hasProperty ?x apple\n@cond16 hasProperty ?x m2\n@and17 And $cond12 $cond13 $cond14 $cond15 $cond16\n@cond18 isA ?x Mackbooks\nImplies $and17 $cond18\nisA ?x ThinkpadX1\n@base19 hasProperty ?x macbook\n@neg20 Not $base19",
+    "questionDsl": "",
+    "contextErrors": []
+  },
+  "timestamp": "2025-12-24T11:35:32.222Z"
+}

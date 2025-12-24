@@ -1,0 +1,18 @@
+{
+  "caseId": "logicnli_112847c4",
+  "nlpBugId": "NLP005",
+  "source": "logicnli",
+  "reason": "runtime_error",
+  "details": "Parse error at 1:27: Unexpected token ':'",
+  "input": {
+    "context_nl": "context: Howard is not new. Cara is new. Howard is not granite. Luka is not granite. Christopher is comfortable. Blaine is not soft. Blaine is not cheap. Luka is comfortable. Algernon is shiny. Howard is soft. Cara is shiny. Cara is granite.Algernon is not cheap if and only if Howard is not comfortable. Someone is cheap and comfortable if and only if he is soft. Someone who is comfortable or new is always not cheap and not granite. As long as someone is soft, he is comfortable and cheap. Cara is shiny if and only if Cara is not new and Cara is comfortable. If Christopher is not soft, then Graciela is not comfortable and Graciela is cheap, and vice versa. Someone being neither new nor soft is equivalent to being shiny and comfortable. If there is someone who is soft, then Howard is new. It can be concluded that Howard is not soft and Christopher is new once knowing that Howard is shiny. If Graciela is cheap and Christopher is not soft, then Cara is not new. Graciela being not new is equivalent to Howard being not granite. If there is at least one people who is both soft and not comfortable, then Blaine is granite. statement: Luka is comfortable.",
+    "question_nl": "What is the relation between the context and the statement?",
+    "label": "entailment"
+  },
+  "translation": {
+    "contextDsl": "@base0 hasProperty Context:Howard new\n@neg1 Not $base0\nhasProperty Cara new\n@base2 hasProperty Howard granite\n@neg3 Not $base2\n@base4 hasProperty Luka granite\n@neg5 Not $base4\nhasProperty Christopher comfortable\n@base6 hasProperty Blaine soft\n@neg7 Not $base6\n@base8 hasProperty Blaine cheap\n@neg9 Not $base8\nhasProperty Luka comfortable\nhasProperty Algernon shiny\nhasProperty Howard soft\nhasProperty Cara shiny\nhasProperty Cara comfortable\nhasProperty ?x soft\nhasProperty SomeoneWho granite\nhasProperty AsLongAsSomeone cheap\nhasProperty Cara comfortable\n@base10 hasProperty Christopher soft\n@neg11 Not $base10\n@base12 hasProperty Graciela comfortable\n@neg13 Not $base12\n@cond14 hasProperty Graciela cheap\n@cond15 rel ?x and ViceVersa\n@and16 And $neg13 $cond14 $cond15\nImplies $neg11 $and16\nhasProperty SomeoneBeingNeitherNewNorSoft comfortable\n@cond17 hasProperty There soft\n@cond18 hasProperty Howard new\nImplies $cond17 $cond18\n@base19 hasProperty ItCanBeConcludedThatHoward shiny\n@neg20 Not $base19\n@cond21 hasProperty Graciela cheap\n@base22 hasProperty Christopher soft\n@neg23 Not $base22\n@and24 And $cond21 $neg23\n@base25 hasProperty Cara new\n@neg26 Not $base25\nImplies $and24 $neg26\nhasProperty GracielaBeingNotNew granite\n@cond27 hasProperty There soft\n@cond28 hasProperty Blaine granite\nImplies $cond27 $cond28\nhasProperty Statement:Luka comfortable",
+    "questionDsl": "@goal hasProperty What statement?",
+    "contextErrors": []
+  },
+  "timestamp": "2025-12-24T11:35:32.296Z"
+}

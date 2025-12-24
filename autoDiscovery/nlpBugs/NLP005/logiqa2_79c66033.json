@@ -1,0 +1,18 @@
+{
+  "caseId": "logiqa2_79c66033",
+  "nlpBugId": "NLP005",
+  "source": "logiqa2",
+  "reason": "runtime_error",
+  "details": "Lexer error at 1:93: Unterminated string literal",
+  "input": {
+    "context_nl": "A certain airport security scanner designed to detect explosives in luggage will alert the scanner' s operator whenever the piece of luggage passing under the scanner contains an explosive. The scanner will erroneously alert the operator for only one percent of the pieces of luggage that contain no explosives. Thus in ninety-nine out of a hundred alerts explosives will actually be present.",
+    "question_nl": "The argument draws a general conclusion about reliability on the basis of a sample that is likely to be biased.",
+    "label": "entailment"
+  },
+  "translation": {
+    "contextDsl": "rel ?x a CertainAirportSecurityScannerDesignedToDetectExplosivesInLuggageWillAlertTheScanner'SOperatorWheneverThePieceOfLuggagePassingUnderTheScannerContainsAnExplosive\nrel ?x scanner WillErroneouslyAlertTheOperatorForOnlyOnePercentOfThePiecesOfLuggageThatContainNoExplosives\nrel ?x thu InNinety-nineOutOfAHundredAlertsExplosivesWillActuallyBePresent",
+    "questionDsl": "@goal hasProperty ArgumentDrawsAGeneralConclusionAboutReliabilityOnTheBasisOfASampleThat biased",
+    "contextErrors": []
+  },
+  "timestamp": "2025-12-24T11:35:32.276Z"
+}

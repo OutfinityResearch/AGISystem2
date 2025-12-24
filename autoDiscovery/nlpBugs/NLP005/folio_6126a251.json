@@ -1,0 +1,18 @@
+{
+  "caseId": "folio_6126a251",
+  "nlpBugId": "NLP005",
+  "source": "folio",
+  "reason": "runtime_error",
+  "details": "Parse error at 1:24: Unexpected token ','",
+  "input": {
+    "context_nl": "Ailton Silva, born in 1995, is commonly known as Ailton. Ailton is a football player who was loaned out to Braga. Ailton Silva is a Brazillian footballer who plays for Nautico. Nautico is a football club along with Braga. Fluminense is a football club.",
+    "question_nl": "No one playing for Nautico is Brazilian.",
+    "label": "not_entailment"
+  },
+  "translation": {
+    "contextDsl": "hasProperty AiltonSilva,BornIn1995, ailton\nisA Ailton FootballPlayerWhoWasLoanedOutToBraga\nisA AiltonSilva BrazillianFootballerWhoPlaysForNautico\nisA Nautico FootballClubAlongWithBraga\nisA Fluminense FootballClub",
+    "questionDsl": "@goal isA NoOnePlayingForNautico Brazilian",
+    "contextErrors": []
+  },
+  "timestamp": "2025-12-24T11:35:32.277Z"
+}

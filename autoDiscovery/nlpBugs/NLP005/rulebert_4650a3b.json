@@ -1,0 +1,23 @@
+{
+  "caseId": "rulebert_4650a3b",
+  "nlpBugId": "NLP005",
+  "source": "rulebert",
+  "reason": "runtime_error",
+  "details": "Parse error at 1:10: Unexpected token ':'",
+  "input": {
+    "context_nl": "facts: The predecessor of John is Grace. The parent of Fiona is John. The deathplace of Charles is Paris. The child of David is Jack. The parent of Jack is Grace. The child of Grace is John. The parent of Charlie is Lucy. The child of Harry is Dan. The parent of Michael is not Dan.\nrules: (r0, 0.87): If the parent of the third person is the second person, and the child of the first person is the third person, then the spouse of the first person is the second person (r1, 0.49): If the child of the third person is the second person, and the spouse of the third person is the first person, then the child of the first person is the second person (r2, 0.9): If the parent of the third person is the second person, and the child of the second person is the third person, and the child of the second person is the first person, then the parent of the first person is the second person (r3, 0.5): If the predecessor of the first person is the third person, and the parent of the first person is the third person, and the parent of the second person is the first person, then the successor of the first person is the second person (r4, 0.99): If the successor of the second person is the first person, then the predecessor of the first person is the second person.\nhypothesis: child(Jack,Grace)",
+    "question_nl": "Is the hypothesis true given the facts and rules?",
+    "label": "not_entailment"
+  },
+  "translation": {
+    "contextDsl": "isA Facts:ThePredecessorOfJohn Grace\nisA ParentOfFiona John\nisA DeathplaceOfCharles Paris\nisA ChildOfDavid Jack\nisA ParentOfJack Grace\nisA ChildOfGrace John\nisA ParentOfCharlie Lucy\nisA ChildOfHarry Dan\n@base0 isA ParentOfMichael Dan\n@neg1 Not $base0\nhasProperty Rules:(r0,0.87):IfTheParentOfTheThirdPerson person",
+    "questionDsl": "@goal rel ?x is HypothesisTrueGivenTheFactsAndRules?",
+    "contextErrors": [
+      {
+        "sentence": "hypothesis: child(Jack,Grace)",
+        "error": "Could not parse"
+      }
+    ]
+  },
+  "timestamp": "2025-12-24T11:35:32.149Z"
+}

@@ -140,3 +140,5 @@ vite.config.ts.timestamp-*
 /.idea/AGISystem2.iml
 /.idea/modules.xml
 /.idea/
+/autoDiscovery/quarantine/
+/autoDiscovery/bugCases/

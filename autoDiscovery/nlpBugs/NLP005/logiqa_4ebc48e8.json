@@ -1,0 +1,18 @@
+{
+  "caseId": "logiqa_4ebc48e8",
+  "nlpBugId": "NLP005",
+  "source": "logiqa",
+  "reason": "runtime_error",
+  "details": "Lexer error at 1:19: Unterminated string literal",
+  "input": {
+    "context_nl": "People's daily thinking and actions, even if they are extremely small, contain conscious active behaviors and some kind of creativity, and all the behaviors of computers are controlled by pre-programmed programs, so it is impossible for computers to own people The initiative and creativity.",
+    "question_nl": "Which of the following supplements will most strongly support the reasoning in the question stem?",
+    "label": "not_entailment"
+  },
+  "translation": {
+    "contextDsl": "hasProperty People'sDailyThinkingAndActions,EvenIfThey creativity",
+    "questionDsl": "@goal rel ?x which OfFollowingSupplementsWillMostStronglySupportTheReasoningInTheQuestionStem?",
+    "contextErrors": []
+  },
+  "timestamp": "2025-12-24T11:35:32.222Z"
+}

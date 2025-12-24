@@ -1,0 +1,176 @@
+/**
+ * AGISystem2 - NL2DSL Utilities
+ * @module nlp/nl2dsl/utils
+ *
+ * Shared utility functions for NL to DSL translation
+ */
+
+// Reference counter for generating unique names
+let refCounter = 0;
+
+/**
+ * Reset reference counter (call between examples)
+ */
+export function resetRefCounter() {
+  refCounter = 0;
+}
+
+/**
+ * Generate unique reference name
+ * @param {string} prefix - Prefix for the reference
+ * @returns {string} Unique reference name
+ */
+export function genRef(prefix = 'ref') {
+  return `${prefix}${refCounter++}`;
+}
+
+// Generic class nouns are placeholders, not domain types.
+// Keep this set intentionally small and based on function-like nouns.
+export const GENERIC_CLASS_NOUNS = new Set([
+  'thing',
+  'things',
+  'person',
+  'people',
+  'someone',
+  'something'
+]);
+
+export function isGenericClassNoun(word) {
+  const w = singularize(word);
+  return GENERIC_CLASS_NOUNS.has(w);
+}
+
+export function isPlural(word) {
+  const w = String(word || '').toLowerCase().trim();
+  if (!w) return false;
+  if (['people', 'mice', 'children', 'men', 'women', 'feet', 'teeth', 'things'].includes(w)) return true;
+  if (w.endsWith('uses') && w.length > 4) return true; // wumpuses
+  if (w.endsWith('ies') && w.length > 3) return true;
+  if (w.endsWith('es') && w.length > 3) return true;
+  if (w.endsWith('s') && !w.endsWith('ss') && !w.endsWith('us') && w.length > 2) return true;
+  return false;
+}
+
+/**
+ * Capitalize first letter
+ * @param {string} s - String to capitalize
+ * @returns {string}
+ */
+export function capitalize(s) {
+  if (!s) return s;
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+}
+
+/**
+ * Singularize a noun
+ * @param {string} word - Word to singularize
+ * @returns {string}
+ */
+export function singularize(word) {
+  const w = String(word || '').toLowerCase().trim();
+  if (!w) return w;
+  if (w === 'people') return 'person';
+  if (w === 'mice') return 'mouse';
+  if (w === 'children') return 'child';
+  if (w === 'men') return 'man';
+  if (w === 'women') return 'woman';
+  if (w === 'livingthings') return 'livingthing';
+  if (w.endsWith('uses')) return w.slice(0, -2); // wumpuses -> wumpus
+  if (w.endsWith('ies') && w.length > 3) return w.slice(0, -3) + 'y';
+  if (w.endsWith('es') && w.length > 3) return w.slice(0, -2);
+  if (w.endsWith('s') && w.length > 1) return w.slice(0, -1);
+  return w;
+}
+
+/**
+ * Check if word is a type noun
+ * @param {string} word
+ * @returns {boolean}
+ */
+export function isTypeNoun(word) {
+  // Heuristic: treat plurals as types unless they are generic placeholders.
+  return isPlural(word) && !isGenericClassNoun(word);
+}
+
+/**
+ * Normalize type name
+ * @param {string} word
+ * @returns {string}
+ */
+export function normalizeTypeName(word) {
+  const w = singularize(word);
+  return capitalize(w);
+}
+
+/**
+ * Sanitize entity name
+ * @param {string} name
+ * @returns {string}
+ */
+export function sanitizeEntity(name) {
+  if (!name) return name;
+  const cleaned = name.replace(/[^a-zA-Z0-9_]/g, '');
+  return capitalize(cleaned);
+}
+
+/**
+ * Split text into sentences
+ * @param {string} text
+ * @returns {string[]}
+ */
+export function splitSentences(text) {
+  if (!text) return [];
+  return text
+    .split(/\.\s+/)
+    .map(s => s.trim().replace(/\.+$/, ''))
+    .filter(Boolean);
+}
+
+/**
+ * Normalize entity reference
+ * @param {string} text - Entity text
+ * @param {string} defaultVar - Default variable if pronoun
+ * @returns {string}
+ */
+export function normalizeEntity(text, defaultVar = '?x') {
+  const lower = text.toLowerCase().trim();
+  if (['someone', 'something', 'they', 'it', 'he', 'she'].includes(lower)) {
+    return defaultVar;
+  }
+  const withoutThe = lower.replace(/^the\s+/, '').replace(/^(?:a|an)\s+/, '');
+  const parts = withoutThe.split(/\s+/);
+  return parts.map(p => capitalize(p)).join('');
+}
+
+/**
+ * Normalize verb to base form
+ * @param {string} verb
+ * @returns {string}
+ */
+export function normalizeVerb(verb) {
+  const v = String(verb || '').toLowerCase().trim();
+  const verbMap = {
+    like: 'likes',
+    love: 'loves',
+    hate: 'hates',
+    need: 'requires'
+  };
+  return verbMap[v] || v;
+}
+
+/**
+ * Check if sentence is a rule
+ * @param {string} sentence
+ * @returns {boolean}
+ */
+export function isRule(sentence) {
+  const lowerSentence = sentence.toLowerCase();
+  return (
+    lowerSentence.startsWith('if ') ||
+    lowerSentence.startsWith('all ') ||
+    lowerSentence.startsWith('every ') ||
+    lowerSentence.startsWith('each ') ||
+    lowerSentence.startsWith('everything that ') ||
+    lowerSentence.includes(' then ')
+  );
+}

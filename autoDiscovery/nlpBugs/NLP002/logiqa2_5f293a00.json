@@ -1,0 +1,18 @@
+{
+  "caseId": "logiqa2_5f293a00",
+  "nlpBugId": "NLP002",
+  "source": "logiqa2",
+  "reason": "question_translation_empty",
+  "details": "Question translation failed",
+  "input": {
+    "context_nl": "There are two kinds of agricultural products A and B. A cannot grow in dry climate and B cannot grow in cold climate. In most parts of a country, either agricultural product Aor agricultural product B can be planted.",
+    "question_nl": "If the above statement is true, then half of the country having a dry and cold climate must be false.",
+    "label": "entailment"
+  },
+  "translation": {
+    "contextDsl": "hasProperty There b\nrel ?x a CannotGrowInDryClimateAndBCannotGrowInColdClimate\nrel ?x in MostPartsOfACountry,EitherAgriculturalProductAorAgriculturalProductBCanBePlanted",
+    "questionDsl": "",
+    "contextErrors": []
+  },
+  "timestamp": "2025-12-24T11:35:32.277Z"
+}
