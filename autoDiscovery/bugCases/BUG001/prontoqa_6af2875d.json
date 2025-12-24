@@ -2,6 +2,11 @@
   "caseId": "prontoqa_6af2875d",
   "bugId": "BUG001",
   "source": "prontoqa",
+  "failure": {
+    "category": "B",
+    "reason": "reasoning_failure",
+    "details": "proved=false, expected=true"
+  },
   "dataset": {
     "label": "entailment",
     "expectProved": true,
@@ -13,10 +18,20 @@
   },
   "translation": {
     "translator": "src/nlp/nl2dsl.mjs::translateExample",
-    "contextDsl": "@cond0 isA ?x Brimpu\n@cond1 isA ?x Dumpus\nImplies $cond0 $cond1\n@ant2 isA ?x Lempu\n@cons3 isA ?x Grimpu\nImplies $ant2 $cons3\n@cond4 isA ?x Shumpus\n@cond5 isA ?x Zumpus\n@cond6 isA ?x Brimpus\n@or7 Or $cond4 $cond5 $cond6\n@cond8 isA ?x Numpus\nImplies $or7 $cond8\n@cond9 isA ?x Wumpus\n@cond10 isA ?x Brimpus\n@cond11 isA ?x Grimpus\n@or12 Or $cond9 $cond10 $cond11\n@cond13 isA ?x Lorpus\nImplies $or12 $cond13\n@cond14 isA ?x Tumpu\n@cond15 isA ?x Jompus\n@cond16 isA ?x Lempus\n@cond17 hasProperty ?x brimpus\n@and18 And $cond15 $cond16 $cond17\nImplies $cond14 $and18\n@ant19 isA ?x Jompu\n@cons20 isA ?x Rompu\nImplies $ant19 $cons20\n@cond21 isA ?x Shumpus\n@cond22 isA ?x Zumpus\n@cond23 isA ?x Brimpus\n@or24 Or $cond21 $cond22 $cond23\n@cond25 isA ?x Jompus\n@cond26 isA ?x Tumpus\n@cond27 isA ?x Gorpus\n@and28 And $cond25 $cond26 $cond27\nImplies $or24 $and28\n@ant29 isA ?x Tumpu\n@cons30 isA ?x Dumpu\nImplies $ant29 $cons30\n@cond31 isA ?x Gorpu\n@cond32 isA ?x Yumpus\nImplies $cond31 $cond32\nisA Fae Numpus\nisA Fae Brimpus",
-    "questionDsl": "@goal isA Fae Jompus",
+    "options": {
+      "autoDeclareUnknownOperators": true
+    },
+    "contextDsl": "@cond0 isA ?x Brimpus\n@cond1 isA ?x Dumpus\nImplies $cond0 $cond1\n@cond2 isA ?x Lempus\n@cond3 isA ?x Grimpus\nImplies $cond2 $cond3\n@cond4 isA ?x Shumpus\n@cond5 isA ?x Zumpus\n@cond6 isA ?x Brimpus\n@or7 Or $cond4 $cond5 $cond6\n@cond8 isA ?x Numpus\nImplies $or7 $cond8\n@cond9 isA ?x Wumpus\n@cond10 isA ?x Brimpus\n@cond11 isA ?x Grimpus\n@or12 Or $cond9 $cond10 $cond11\n@cond13 isA ?x Lorpus\nImplies $or12 $cond13\n@cond14 isA ?x Tumpus\n@cond15 isA ?x Jompus\n@cond16 isA ?x Lempus\n@cond17 isA ?x Brimpus\n@and18 And $cond15 $cond16 $cond17\nImplies $cond14 $and18\n@cond19 isA ?x Jompus\n@cond20 isA ?x Rompus\nImplies $cond19 $cond20\n@cond21 isA ?x Shumpus\n@cond22 isA ?x Zumpus\n@cond23 isA ?x Brimpus\n@or24 Or $cond21 $cond22 $cond23\n@cond25 isA ?x Jompus\n@cond26 isA ?x Tumpus\n@cond27 isA ?x Gorpus\n@and28 And $cond25 $cond26 $cond27\nImplies $or24 $and28\n@cond29 isA ?x Tumpus\n@cond30 isA ?x Dumpus\nImplies $cond29 $cond30\n@cond31 isA ?x Gorpus\n@cond32 isA ?x Yumpus\nImplies $cond31 $cond32\nisA Fae Numpus\nisA Fae Brimpus",
+    "questionDsl": "@goal:goal isA Fae Jompus",
     "contextErrors": [],
-    "questionErrors": []
+    "contextWarnings": [],
+    "contextStats": {
+      "sentencesTotal": 11,
+      "sentencesParsed": 11,
+      "sentencesOpaque": 0,
+      "autoDeclaredOperators": 0
+    },
+    "contextAutoDeclaredOperators": []
   },
   "sessionConfig": {
     "hdcStrategy": "dense-binary",
@@ -25,23 +40,20 @@
     "rejectContradictions": false
   },
   "execution": {
-    "learnResult": {
-      "success": true
-    },
+    "learnResult": null,
     "proveResult": {
       "valid": false,
       "reason": "No proof found",
       "stepsCount": 0,
-      "validatorOk": true,
       "method": null
     },
-    "actual_nl": "Cannot prove: Fae is a jompus. Search: Fae isA Numpus. Checked rule: Implies @cond0 @cond1. Missing: isA Fae Brimpu.. No path exists from Fae to Jompus.",
-    "actual_proof_nl": null
+    "actual_nl": "Cannot prove: Fae is a jompus. Search: Fae isA Numpus. Checked rule: Implies @cond0 @cond1. Found: isA Fae Brimpus.. No path exists from Fae to Jompus."
   },
   "expected": {
-    "expected_nl": "True: [goal should be provable]",
-    "expected_proof_nl": null,
-    "note": "auto-generated; verify manually or run with --accept-actual"
+    "expected_proved": true,
+    "expected_nl": "TODO",
+    "expected_nl_hint": "Proved: Fae is a jompus.. Proof: [engine steps]",
+    "note": "Run `node autoDiscovery/runBugCase.mjs --accept-actual <case.json>` after reviewing actual_nl"
   },
-  "timestamp": "2025-12-24T11:35:32.202Z"
+  "timestamp": "2025-12-24T14:54:52.209Z"
 }

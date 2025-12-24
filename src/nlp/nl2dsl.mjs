@@ -60,6 +60,8 @@ export function translateNL2DSL(text, options = {}) {
       return {
         dsl: result.dsl,
         errors: result.errors,
+        warnings: result.warnings || [],
+        stats: result.stats || null,
         success: result.errors.length === 0,
         source,
         type: 'context',
@@ -87,7 +89,9 @@ export function translateNL2DSL(text, options = {}) {
  * @returns {Object} Translated example with contextDsl, questionDsl, expectProved
  */
 export function translateExample(example) {
-  const { source = 'generic', context, question, label } = example;
+  const { source = 'generic', label, category } = example;
+  const normalized = normalizeDatasetExample(example);
+  const { context, question } = normalized;
   const translateOptions = example?.translateOptions || {};
 
   resetRefCounter();
@@ -95,18 +99,47 @@ export function translateExample(example) {
   const contextResult = translateNL2DSL(context, { source, isQuestion: false, ...translateOptions });
   const questionResult = translateNL2DSL(question, { source, isQuestion: true, ...translateOptions });
 
-  const expectProved = labelToExpectation(label);
+  const expectProved = isSupportedBinaryExample({ source, category, label }) ? labelToExpectation(label) : null;
 
   return {
     source,
     contextDsl: contextResult.dsl,
     contextErrors: contextResult.errors,
+    contextWarnings: contextResult.warnings || [],
+    contextStats: contextResult.stats || null,
     contextAutoDeclaredOperators: contextResult.autoDeclaredOperators || [],
     questionDsl: questionResult.dsl,
     expectProved,
     label,
-    original: example
+    original: normalized
   };
+}
+
+function normalizeDatasetExample(example) {
+  const source = example?.source || 'generic';
+  if (source !== 'rulebert') return example;
+
+  const context = String(example?.context || '');
+  const question = String(example?.question || '');
+
+  // RuleBERT encodes the actual goal inside the context as: "hypothesis: pred(A,B)"
+  // and uses a meta question: "Is the hypothesis true given the facts and rules?"
+  const hypMatch = context.match(/(?:^|\n)\s*hypothesis\s*:\s*([^\n]+)\s*$/i);
+  const hypothesis = hypMatch ? hypMatch[1].trim() : null;
+  const contextWithoutHypothesis = hypMatch ? context.replace(hypMatch[0], '').trim() : context;
+
+  const isMetaQuestion = /\bhypothesis\b/i.test(question) && /\bfacts\b/i.test(question) && /\brules\b/i.test(question);
+  if (hypothesis && isMetaQuestion) {
+    return { ...example, context: contextWithoutHypothesis, question: hypothesis };
+  }
+
+  return { ...example, context: contextWithoutHypothesis };
+}
+
+function isSupportedBinaryExample({ category }) {
+  // logiqa2 is mapped as NLI but its hypotheses are generally too complex for the current grammar translator.
+  if (!category) return true;
+  return String(category) !== 'nli_complex';
 }
 
 /**

@@ -71,6 +71,34 @@ describe('NL→DSL grammar translator (low-hardcoding)', () => {
     assert.equal(goal, '@goal:goal hasProperty Space suck');
   });
 
+  test('parses locative copula (Mary is in the kitchen → in Mary Kitchen)', () => {
+    const { dsl, errors } = translateContextWithGrammar('Mary is in the kitchen.');
+    assert.deepEqual(errors, []);
+    assert.ok(/\bin Mary Kitchen\b/.test(dsl), `expected locative relation, got: ${dsl}`);
+  });
+
+  test('parses relational-noun copula (Harry is the parent of Jack → parent Harry Jack)', () => {
+    const { dsl, errors } = translateContextWithGrammar('Harry is the parent of Jack.');
+    assert.deepEqual(errors, []);
+    assert.ok(/\bparent Harry Jack\b/.test(dsl), `expected relation, got: ${dsl}`);
+  });
+
+  test('parses movement to location (Mary went to the kitchen → at Mary Kitchen)', () => {
+    const { dsl, errors } = translateContextWithGrammar('Mary went to the kitchen.');
+    assert.deepEqual(errors, []);
+    assert.ok(/\bat Mary Kitchen\b/.test(dsl), `expected at relation, got: ${dsl}`);
+  });
+
+  test('parses pickup/drop as has/Not has', () => {
+    const up = translateContextWithGrammar('Mary picked up the apple.');
+    assert.deepEqual(up.errors, []);
+    assert.ok(/\bhas Mary Apple\b/.test(up.dsl), `expected has relation, got: ${up.dsl}`);
+
+    const down = translateContextWithGrammar('Mary dropped the apple.');
+    assert.deepEqual(down.errors, []);
+    assert.ok(/\bNot \$base\d+\b/.test(down.dsl), 'expected persistent negation Not $baseN');
+  });
+
   test('sanitizes type tokens with hyphens (mind-reading → Mindreading)', () => {
     const { dsl, errors } = translateContextWithGrammar('All mind-reading things are shapes.');
     assert.deepEqual(errors, []);

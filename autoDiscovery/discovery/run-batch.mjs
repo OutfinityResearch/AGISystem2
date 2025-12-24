@@ -13,6 +13,7 @@ export async function runBatch(examples, analysedCases, args) {
     categoryB: 0,
     categoryU: 0,
     categoryS: 0,
+    categoryN: 0,
     categoryL: 0,
     categoryG: 0,
     skipped: 0,
@@ -64,9 +65,15 @@ export async function runBatch(examples, analysedCases, args) {
 
       analysedCases.add(caseId);
 
+      if (result.category === CATEGORY.NO_EXPECTATION) {
+        results.categoryN++;
+        recordAnalysedCase(caseId, 'RUN', result.details || result.reason);
+        continue;
+      }
+
       if (result.category === CATEGORY.UNSUPPORTED) {
         results.categoryS++;
-        recordAnalysedCase(caseId, 'SKIP', result.reason);
+        recordAnalysedCase(caseId, 'RUN', result.details || result.reason);
         continue;
       }
 
@@ -94,12 +101,9 @@ export async function runBatch(examples, analysedCases, args) {
       if (result.category === CATEGORY.REASONING) {
         results.categoryB++;
         recordAnalysedCase(caseId, 'FAIL(B)', result.reason);
-        quarantineCase(result, example);
-        const bugId = detectKnownBugPattern(result.translated, example);
-        if (bugId) {
-          results.byBugType[bugId] = (results.byBugType[bugId] || 0) + 1;
-          writeBugCaseJson(bugId, result, example, translatorOptions);
-        }
+        const bugId = detectKnownBugPattern(result.translated, example) || 'BUG000';
+        results.byBugType[bugId] = (results.byBugType[bugId] || 0) + 1;
+        writeBugCaseJson(bugId, result, example, translatorOptions);
         continue;
       }
 

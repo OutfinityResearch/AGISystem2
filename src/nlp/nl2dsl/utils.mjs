@@ -105,7 +105,9 @@ export function isTypeNoun(word) {
 export function normalizeTypeName(word) {
   const cleaned = String(word || '').replace(/[^a-zA-Z0-9_]/g, '');
   const w = singularize(cleaned);
-  return capitalize(w);
+  const t = capitalize(w);
+  if (t && /^[0-9]/.test(t)) return `T${t}`;
+  return t;
 }
 
 /**
@@ -116,7 +118,9 @@ export function normalizeTypeName(word) {
 export function sanitizeEntity(name) {
   if (!name) return name;
   const cleaned = name.replace(/[^a-zA-Z0-9_]/g, '');
-  return capitalize(cleaned);
+  const e = capitalize(cleaned);
+  if (e && /^[0-9]/.test(e)) return `E${e}`;
+  return e;
 }
 
 /**
@@ -143,9 +147,29 @@ export function sanitizePredicate(name) {
  */
 export function splitSentences(text) {
   if (!text) return [];
-  return text
-    .split(/\.\s+/)
-    .map(s => s.trim().replace(/\.+$/, ''))
+  const DOT = '__DOT__';
+  let t = String(text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+
+  // Many datasets separate clauses by newlines or rule markers instead of punctuation.
+  // Convert those separators into sentence boundaries before whitespace normalization.
+  t = t.replace(/\n+/g, '. ');
+  // Treat semicolons as sentence boundaries (common in longer passages).
+  t = t.replace(/;\s+/g, '. ');
+  // Split "rules: (r0, 0.37): ..." style blocks into per-rule sentences.
+  t = t.replace(/(?<!:)\s+(\(\s*r\d+\s*(?:,\s*[0-9.]+)?\s*\)\s*:)\s*/gi, '. $1 ');
+  // Split on explicit hypothesis markers.
+  t = t.replace(/\s*(hypothesis\s*:)\s*/gi, '. $1 ');
+
+  t = t.replace(/\s+/g, ' ').trim();
+
+  // Protect common abbreviations and numeric/initialism dots from sentence splitting.
+  t = t.replace(/\b(No|Mr|Mrs|Ms|Dr|Prof|Sr|Jr|St)\./g, `$1${DOT}`);
+  t = t.replace(/(\d)\.(\d)/g, `$1${DOT}$2`);
+  t = t.replace(/\b(?:[A-Z]\.){2,}/g, (m) => m.replace(/\./g, DOT));
+
+  return t
+    .split(/[.?!]\s+/)
+    .map(s => s.replaceAll(DOT, '.').trim().replace(/[.?!]+$/, ''))
     .filter(Boolean);
 }
 
@@ -160,12 +184,24 @@ export function normalizeEntity(text, defaultVar = '?x') {
   if (['someone', 'something', 'they', 'it', 'he', 'she'].includes(lower)) {
     return defaultVar;
   }
+  // RuleBERT / soft-rules style role variables: "first person", "second person", etc.
+  // Map to stable variable names so rules can contain multiple variables.
+  const role = lower.replace(/^the\s+/, '').trim();
+  const roleMatch = role.match(/^(first|second|third|fourth|fifth)\s+(person|thing|place)$/);
+  if (roleMatch) {
+    const ordinal = roleMatch[1];
+    const map = { first: '?x', second: '?y', third: '?z', fourth: '?w', fifth: '?v' };
+    return map[ordinal] || defaultVar;
+  }
   const withoutThe = lower.replace(/^the\s+/, '').replace(/^(?:a|an)\s+/, '');
   const parts = withoutThe
     .split(/\s+/)
     .map(p => p.replace(/[^a-zA-Z0-9_]/g, ''))
     .filter(Boolean);
-  return parts.map(p => capitalize(p)).join('');
+  const token = parts.map(p => capitalize(p)).join('');
+  if (!token) return defaultVar;
+  if (/^[0-9]/.test(token)) return `E${token}`;
+  return token;
 }
 
 /**

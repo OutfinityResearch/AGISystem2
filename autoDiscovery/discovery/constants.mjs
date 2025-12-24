@@ -33,7 +33,7 @@ export const CATEGORY = {
   REASONING: 'B',
   UNKNOWN: 'U',
   UNSUPPORTED: 'S',
+  NO_EXPECTATION: 'N',
   LEARN_FAILED: 'L',
   INVALID_GOAL: 'G'
 };
-

@@ -143,3 +143,4 @@ vite.config.ts.timestamp-*
 /autoDiscovery/quarantine/
 /autoDiscovery/bugCases/
 /autoDiscovery/nlpBugs/
+/autoDiscovery/bugCases/

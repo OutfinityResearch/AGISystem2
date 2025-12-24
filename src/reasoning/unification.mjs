@@ -45,60 +45,80 @@ export class UnificationEngine {
       return { valid: false };
     }
 
-    const concAST = rule.conclusionAST;
-    const concOp = this.extractOperatorFromAST(concAST);
-    const concArgs = this.extractArgsFromAST(concAST);
+    const leafConclusions = [];
+    const collectLeafAsts = (part) => {
+      if (!part) return;
+      if (part.type === 'leaf' && part.ast) {
+        leafConclusions.push(part.ast);
+        return;
+      }
+      // Do not treat Not(P) as P when matching conclusions.
+      if (part.type === 'Not') return;
+      if ((part.type === 'And' || part.type === 'Or') && Array.isArray(part.parts)) {
+        for (const p of part.parts) collectLeafAsts(p);
+      }
+    };
+    if (rule.conclusionParts) collectLeafAsts(rule.conclusionParts);
 
-    // Operators must match
-    if (goalOp !== concOp) {
-      return { valid: false };
-    }
+    const candidateConclusions = leafConclusions.length > 0 ? leafConclusions : [rule.conclusionAST];
 
-    // Args count must match
-    if (goalArgs.length !== concArgs.length) {
-      return { valid: false };
-    }
+    for (const concAST of candidateConclusions) {
+      const concOp = this.extractOperatorFromAST(concAST);
+      const concArgs = this.extractArgsFromAST(concAST);
 
-    // Build bindings from unification
-    const bindings = new Map();
-    for (let i = 0; i < goalArgs.length; i++) {
-      const goalArg = goalArgs[i];
-      const concArg = concArgs[i];
+      // Operators must match
+      if (goalOp !== concOp) continue;
 
-      if (concArg.isVariable) {
-        if (bindings.has(concArg.name)) {
-          if (bindings.get(concArg.name) !== goalArg) {
-            return { valid: false }; // Inconsistent binding
+      // Args count must match
+      if (goalArgs.length !== concArgs.length) continue;
+
+      // Build bindings from unification
+      const bindings = new Map();
+      let unifyOk = true;
+
+      for (let i = 0; i < goalArgs.length; i++) {
+        const goalArg = goalArgs[i];
+        const concArg = concArgs[i];
+
+        if (concArg.isVariable) {
+          if (bindings.has(concArg.name)) {
+            if (bindings.get(concArg.name) !== goalArg) {
+              unifyOk = false;
+              break;
+            }
+          } else {
+            bindings.set(concArg.name, goalArg);
           }
         } else {
-          bindings.set(concArg.name, goalArg);
-        }
-      } else {
-        if (concArg.name !== goalArg) {
-          return { valid: false };
+          if (concArg.name !== goalArg) {
+            unifyOk = false;
+            break;
+          }
         }
       }
-    }
 
-    dbg('UNIFY', 'Bindings:', [...bindings.entries()]);
+      if (!unifyOk) continue;
 
-    // Prove the instantiated condition
-    const condResult = this.engine.conditions.proveInstantiatedCondition(rule, bindings, depth + 1);
+      dbg('UNIFY', 'Bindings:', [...bindings.entries()]);
 
-    if (condResult.valid) {
-      this.engine.logStep('unification_match', rule.name || rule.source);
-      return {
-        valid: true,
-        method: 'backward_chain_unified',
-        rule: rule.name,
-        bindings: Object.fromEntries(bindings),
-        confidence: condResult.confidence * this.thresholds.CONFIDENCE_DECAY,
-        goal: goal.toString(),
-        steps: [
-          { operation: 'unification_match', rule: rule.name || rule.source, bindings: Object.fromEntries(bindings) },
-          ...condResult.steps
-        ]
-      };
+      // Prove the instantiated condition
+      const condResult = this.engine.conditions.proveInstantiatedCondition(rule, bindings, depth + 1);
+
+      if (condResult.valid) {
+        this.engine.logStep('unification_match', rule.name || rule.source);
+        return {
+          valid: true,
+          method: 'backward_chain_unified',
+          rule: rule.name,
+          bindings: Object.fromEntries(bindings),
+          confidence: condResult.confidence * this.thresholds.CONFIDENCE_DECAY,
+          goal: goal.toString(),
+          steps: [
+            { operation: 'unification_match', rule: rule.name || rule.source, bindings: Object.fromEntries(bindings) },
+            ...condResult.steps
+          ]
+        };
+      }
     }
 
     return { valid: false };

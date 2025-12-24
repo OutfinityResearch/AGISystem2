@@ -1,5 +1,9 @@
 {
   "bugs": {
+    "BUG000": {
+      "name": "Unclassified reasoning failure",
+      "description": "Reasoning failure that did not match any known detector"
+    },
     "BUG001": {
       "name": "Or→And implication failure",
       "description": "Compound logic with Or antecedent and/or And consequent"
@@ -30,6 +34,11 @@
     }
   },
   "nlpBugs": {
+    "NLP000": {
+      "name": "Unclassified translation issue",
+      "description": "Translation/goal/learn failure that did not match any known pattern",
+      "reason": "unclassified_translation_issue"
+    },
     "NLP001": {
       "name": "Context translation empty",
       "description": "Translator produced empty DSL for non-empty context",
@@ -64,6 +73,11 @@
       "name": "Complex sentence unsupported",
       "description": "Sentence patterns not yet supported by translator",
       "reason": "complex_unsupported"
+    },
+    "NLP999": {
+      "name": "Runtime error",
+      "description": "Unexpected runtime error during translation or execution",
+      "reason": "runtime_error"
     }
   },
   "detectors": {
@@ -123,4 +137,3 @@
     }
   }
 }
-

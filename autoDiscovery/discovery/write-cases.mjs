@@ -26,7 +26,10 @@ export function quarantineCase(result, example) {
       source: example.source,
       context: example.context,
       question: example.question,
-      label: example.label
+      label: example.label,
+      category: example.category,
+      choices: example.choices || [],
+      answerIndex: example.answerIndex
     },
     translated: result.translated,
     learnResult: result.learnResult || null,
@@ -68,6 +71,8 @@ export function writeNlpBugCaseJson(nlpBugId, result, example, translatorOptions
       contextDsl: result.translated?.contextDsl || '',
       questionDsl: result.translated?.questionDsl || '',
       contextErrors: result.translated?.contextErrors || [],
+      contextWarnings: result.translated?.contextWarnings || [],
+      contextStats: result.translated?.contextStats || null,
       contextAutoDeclaredOperators: result.translated?.contextAutoDeclaredOperators || []
     },
     execution: {
@@ -105,6 +110,11 @@ export function writeBugCaseJson(bugId, result, example, translatorOptions) {
     caseId: result.caseId,
     bugId,
     source: example.source || 'generic',
+    failure: {
+      category: result.category || null,
+      reason: result.reason || null,
+      details: result.details || null
+    },
     dataset: {
       label: example.label,
       expectProved,
@@ -120,6 +130,8 @@ export function writeBugCaseJson(bugId, result, example, translatorOptions) {
       contextDsl: result.translated?.contextDsl || '',
       questionDsl: result.translated?.questionDsl || '',
       contextErrors: result.translated?.contextErrors || [],
+      contextWarnings: result.translated?.contextWarnings || [],
+      contextStats: result.translated?.contextStats || null,
       contextAutoDeclaredOperators: result.translated?.contextAutoDeclaredOperators || []
     },
     sessionConfig: result.sessionConfig || null,

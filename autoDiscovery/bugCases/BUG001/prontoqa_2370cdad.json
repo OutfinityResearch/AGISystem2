@@ -2,6 +2,11 @@
   "caseId": "prontoqa_2370cdad",
   "bugId": "BUG001",
   "source": "prontoqa",
+  "failure": {
+    "category": "B",
+    "reason": "reasoning_failure",
+    "details": "proved=false, expected=true"
+  },
   "dataset": {
     "label": "entailment",
     "expectProved": true,
@@ -19,6 +24,13 @@
     "contextDsl": "isA Alex Gorpus\n@cond0 isA ?x Shumpus\n@cond1 isA ?x Rompus\nImplies $cond0 $cond1\n@cond2 isA ?x Yumpus\n@cond3 isA ?x Jompus\n@cond4 isA ?x Tumpus\n@and5 And $cond2 $cond3 $cond4\n@cond6 isA ?x Gorpus\nImplies $and5 $cond6\n@cond7 isA ?x Sterpus\n@cond8 isA ?x Brimpus\nImplies $cond7 $cond8\nisA Alex Dumpus\n@cond9 isA ?x Gorpus\n@cond10 isA ?x Yumpus\n@cond11 isA ?x Dumpus\n@and12 And $cond9 $cond10 $cond11\n@cond13 isA ?x Grimpus\nImplies $and12 $cond13\n@cond14 isA ?x Shumpus\n@cond15 isA ?x Zumpus\nImplies $cond14 $cond15\n@cond16 isA ?x Yumpus\n@cond17 isA ?x Jompus\n@cond18 isA ?x Tumpus\n@and19 And $cond16 $cond17 $cond18\n@cond20 isA ?x Numpus\nImplies $and19 $cond20\nisA Alex Yumpus\n@cond21 isA ?x Impus\n@cond22 isA ?x Gorpus\nImplies $cond21 $cond22\n@cond23 isA ?x Numpus\n@cond24 isA ?x Lempus\nImplies $cond23 $cond24\n@cond25 isA ?x Numpus\n@cond26 isA ?x Shumpus\n@cond27 isA ?x Sterpus\n@cond28 isA ?x Impus\n@and29 And $cond26 $cond27 $cond28\nImplies $cond25 $and29\nisA Alex Yumpus\nisA Alex Grimpus\nisA Alex Jompus\nisA Alex Tumpus",
     "questionDsl": "@goal:goal isA Alex Rompus",
     "contextErrors": [],
+    "contextWarnings": [],
+    "contextStats": {
+      "sentencesTotal": 16,
+      "sentencesParsed": 16,
+      "sentencesOpaque": 0,
+      "autoDeclaredOperators": 0
+    },
     "contextAutoDeclaredOperators": []
   },
   "sessionConfig": {
@@ -39,8 +51,9 @@
   },
   "expected": {
     "expected_proved": true,
-    "expected_nl": "True: Alex is a rompus.. Proof: TODO",
-    "note": "Fill expected_nl with engine-style output or accept actual_nl after review"
+    "expected_nl": "TODO",
+    "expected_nl_hint": "Proved: Alex is a rompus.. Proof: [engine steps]",
+    "note": "Run `node autoDiscovery/runBugCase.mjs --accept-actual <case.json>` after reviewing actual_nl"
   },
-  "timestamp": "2025-12-24T12:49:01.018Z"
+  "timestamp": "2025-12-24T14:54:55.904Z"
 }

@@ -1,17 +1,38 @@
 import { splitSentences } from './utils.mjs';
 import { clean, splitCoord } from './grammar/text.mjs';
 import { parseCopulaClause, parseRelationClause, parseRuleSentence, parseFactSentence } from './grammar/parse.mjs';
+import crypto from 'node:crypto';
+
+function opaqueProp(prefix, sentence) {
+  const s = clean(sentence).toLowerCase();
+  const hash = crypto.createHash('sha1').update(s).digest('hex').slice(0, 10);
+  return `${prefix}_${hash}`;
+}
 
 export function translateContextWithGrammar(text, options = {}) {
   const errors = [];
+  const warnings = [];
+  const stats = {
+    sentencesTotal: 0,
+    sentencesParsed: 0,
+    sentencesOpaque: 0,
+    autoDeclaredOperators: 0
+  };
   const lines = [];
   const autoDeclared = new Set();
   const sentences = splitSentences(text);
+  stats.sentencesTotal = sentences.length;
   for (const sent of sentences) {
     const rule = parseRuleSentence(sent, options);
     if (rule?.kind === 'error') {
       const unknownMatch = String(rule.error || '').match(/Unknown operator '([^']+)'/i);
       const unknownOperator = unknownMatch ? unknownMatch[1] : null;
+      if (options.fallbackOpaqueStatements === true) {
+        warnings.push({ sentence: clean(sent), warning: rule.error || 'Rule parse error', opaque: true });
+        stats.sentencesOpaque++;
+        lines.push(`hasProperty KB ${opaqueProp('opaque_ctx', sent)}`);
+        continue;
+      }
       errors.push({
         sentence: clean(sent),
         error: rule.error,
@@ -25,12 +46,19 @@ export function translateContextWithGrammar(text, options = {}) {
     if (rule) {
       for (const op of rule.declaredOperators || []) autoDeclared.add(op);
       lines.push(...rule.lines);
+      stats.sentencesParsed++;
       continue;
     }
     const fact = parseFactSentence(sent, options);
     if (fact?.kind === 'error') {
       const unknownMatch = String(fact.error || '').match(/Unknown operator '([^']+)'/i);
       const unknownOperator = fact.unknownOperator || (unknownMatch ? unknownMatch[1] : null);
+      if (options.fallbackOpaqueStatements === true) {
+        warnings.push({ sentence: clean(sent), warning: fact.error || 'Fact parse error', opaque: true });
+        stats.sentencesOpaque++;
+        lines.push(`hasProperty KB ${opaqueProp('opaque_ctx', sent)}`);
+        continue;
+      }
       errors.push({
         sentence: clean(sent),
         error: fact.error,
@@ -44,6 +72,13 @@ export function translateContextWithGrammar(text, options = {}) {
     if (fact) {
       for (const op of fact.declaredOperators || []) autoDeclared.add(op);
       lines.push(...fact.lines);
+      stats.sentencesParsed++;
+      continue;
+    }
+    if (options.fallbackOpaqueStatements === true) {
+      warnings.push({ sentence: clean(sent), warning: 'Could not parse', opaque: true });
+      stats.sentencesOpaque++;
+      lines.push(`hasProperty KB ${opaqueProp('opaque_ctx', sent)}`);
       continue;
     }
     errors.push({ sentence: clean(sent), error: 'Could not parse' });
@@ -57,16 +92,23 @@ export function translateContextWithGrammar(text, options = {}) {
     }
   }
 
-  return { dsl: [...prelude, ...lines].join('\n'), errors, autoDeclaredOperators: [...autoDeclared] };
+  stats.autoDeclaredOperators = autoDeclared.size;
+  return {
+    dsl: [...prelude, ...lines].join('\n'),
+    errors,
+    warnings,
+    stats,
+    autoDeclaredOperators: [...autoDeclared]
+  };
 }
 
 export function translateQuestionWithGrammar(question, options = {}) {
   let q = clean(question);
-  if (!q) return null;
+  if (!q) return options.fallbackOpaqueQuestions === true ? `@goal:goal hasProperty KB ${opaqueProp('opaque_q', question)}` : null;
 
   // Normalize common English question inversions into declarative clauses
   // so the same clause parsers can be reused.
-  const invCopula = q.match(/^(is|are)\s+(.+?)\s+(.+)$/i);
+  const invCopula = q.match(/^(is|are|was|were)\s+(.+?)\s+(.+)$/i);
   if (invCopula) {
     q = `${invCopula[2]} ${invCopula[1]} ${invCopula[3]}`.trim();
   }
@@ -89,10 +131,12 @@ export function translateQuestionWithGrammar(question, options = {}) {
       if (coord.items.length > 1) {
         const goalLines = [];
         let needsQuery = false;
+        const declaredOperators = new Set();
         for (let i = 0; i < coord.items.length; i++) {
           const clause = `${subjectRaw} ${verb} ${coord.items[i]}`.trim();
-          const copula = parseCopulaClause(clause, '?x', { indefiniteAsEntity: true });
+          const copula = parseCopulaClause(clause, '?x', { ...options, indefiniteAsEntity: true });
           if (!copula || copula.items.length === 0) continue;
+          for (const op of copula.declaredOperators || []) declaredOperators.add(op);
           const asked = copula.items[copula.items.length - 1];
           if (!asked?.atom) continue;
           const inner = `${asked.atom.op} ${asked.atom.args.join(' ')}`.trim();
@@ -102,6 +146,7 @@ export function translateQuestionWithGrammar(question, options = {}) {
         }
         if (goalLines.length > 0) {
           const header = [`// goal_logic:${coord.op}`];
+          if (declaredOperators.size > 0) header.push(`// declare_ops:${[...declaredOperators].sort().join(',')}`);
           if (needsQuery) header.push('// action:query');
           return [...header, ...goalLines].join('\n');
         }
@@ -110,20 +155,25 @@ export function translateQuestionWithGrammar(question, options = {}) {
   }
 
   // Copula goals
-  const copula = parseCopulaClause(q, '?x', { indefiniteAsEntity: true });
+  const copula = parseCopulaClause(q, '?x', { ...options, indefiniteAsEntity: true });
   if (copula && copula.items.length > 0) {
     // Prefer the last item as the actual asked predicate, but preserve typing constraints
     // by folding them into the goal only when it's the predicate itself.
     const asked = copula.items[copula.items.length - 1];
     if (!asked?.atom) return null;
+    const header = [];
+    const decl = Array.isArray(copula.declaredOperators) ? copula.declaredOperators : [];
+    if (decl.length > 0) header.push(`// declare_ops:${decl.join(',')}`);
     if (asked.negated) {
       const inner = `${asked.atom.op} ${asked.atom.args.join(' ')}`.trim();
       const goal = `@goal:goal Not (${inner})`;
-      return inner.includes('?') ? ['// action:query', goal].join('\n') : goal;
+      if (inner.includes('?')) header.push('// action:query');
+      return header.length > 0 ? [...header, goal].join('\n') : goal;
     }
     const inner = `${asked.atom.op} ${asked.atom.args.join(' ')}`.trim();
     const goal = `@goal:goal ${inner}`;
-    return inner.includes('?') ? ['// action:query', goal].join('\n') : goal;
+    if (inner.includes('?')) header.push('// action:query');
+    return header.length > 0 ? [...header, goal].join('\n') : goal;
   }
 
   // Relation goals
@@ -148,5 +198,8 @@ export function translateQuestionWithGrammar(question, options = {}) {
     return header.length > 0 ? [...header, goal].join('\n') : goal;
   }
 
+  if (options.fallbackOpaqueQuestions === true) {
+    return `@goal:goal hasProperty KB ${opaqueProp('opaque_q', q)}`;
+  }
   return null;
 }

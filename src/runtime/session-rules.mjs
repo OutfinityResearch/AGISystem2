@@ -179,6 +179,7 @@ export function trackRules(session, ast) {
     const condVec = session.executor.resolveExpression(stmt.args[0]);
     const concVec = session.executor.resolveExpression(stmt.args[1]);
     const conditionParts = extractCompoundCondition(session, stmt.args[0], stmtMap);
+    const conclusionParts = extractCompoundCondition(session, stmt.args[1], stmtMap);
 
     const conditionAST = resolveReferenceToAST(stmt.args[0], stmtMap);
     const conclusionAST = resolveReferenceToAST(stmt.args[1], stmtMap);
@@ -200,6 +201,7 @@ export function trackRules(session, ast) {
       condition: condVec,
       conclusion: concVec,
       conditionParts,
+      conclusionParts,
       conditionAST,
       conclusionAST,
       conditionVars,

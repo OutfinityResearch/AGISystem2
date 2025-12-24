@@ -279,45 +279,71 @@ export class KBMatcher {
       return { valid: false };
     }
 
+    const flattenConclusionLeaves = () => {
+      if (!rule.conclusionParts) {
+        return [{ ast: rule.conclusionAST, vector: rule.conclusion }];
+      }
+      const leaves = [];
+      const walk = (part) => {
+        if (!part) return;
+        if (part.type === 'leaf' && part.ast) {
+          leaves.push({ ast: part.ast, vector: part.vector });
+          return;
+        }
+        // IMPORTANT: Do not treat Not(P) as a leaf P.
+        // If we recurse into inner here, the prover can incorrectly match P goals
+        // against rules that *conclude* Not(P), creating contradictions and cycles.
+        if (part.type === 'Not') return;
+        if ((part.type === 'And' || part.type === 'Or') && Array.isArray(part.parts)) {
+          for (const p of part.parts) walk(p);
+        }
+      };
+      walk(rule.conclusionParts);
+      return leaves.length > 0 ? leaves : [{ ast: rule.conclusionAST, vector: rule.conclusion }];
+    };
+
     // For ground-term rules (no variables), prefer AST/metadata equality over vector similarity.
     // This avoids false negatives for graph/macro operators where stored fact vectors are
     // `bind(op, graphResult)` but buildStatementVector(goal) is `bindAll(op, PosN⊕argN, ...)`.
     const goalOp = this.engine.unification.extractOperatorFromAST(goal);
     const goalArgs = this.engine.unification.extractArgsFromAST(goal);
-    const concOp = this.engine.unification.extractOperatorFromAST(rule.conclusionAST);
-    const concArgs = this.engine.unification.extractArgsFromAST(rule.conclusionAST);
 
     const canon = (name) => {
       if (!this.session?.canonicalizationEnabled) return name;
       return canonicalizeTokenName(this.session, name);
     };
 
-    const goalMatchesConclusion =
-      !rule.hasVariables &&
-      goalOp &&
-      concOp &&
-      canon(goalOp) === canon(concOp) &&
-      goalArgs.length === concArgs.length &&
-      goalArgs.every((arg, i) => !arg.isVariable && !concArgs[i]?.isVariable && canon(arg.name) === canon(concArgs[i]?.name));
-
-    let conclusionSim = 0;
-    if (!goalMatchesConclusion) {
+    if (!rule.hasVariables) {
+      const candidates = flattenConclusionLeaves();
       const goalVec = this.session.executor.buildStatementVector(goal);
-      this.session.reasoningStats.similarityChecks++;
-      conclusionSim = similarity(goalVec, rule.conclusion);
-    }
 
-    if ((goalMatchesConclusion || conclusionSim > this.thresholds.CONCLUSION_MATCH) && !rule.hasVariables) {
-      const conditionResult = this.engine.conditions.proveCondition(rule, depth + 1);
+      for (const candidate of candidates) {
+        const concOp = this.engine.unification.extractOperatorFromAST(candidate.ast);
+        const concArgs = this.engine.unification.extractArgsFromAST(candidate.ast);
 
-      if (conditionResult.valid) {
-        this.engine.logStep('rule_match', rule.name || rule.source);
-        // Extract conclusion fact from rule source
-        let conclusionFact = '';
-        const match = rule.source?.match(/Implies\s+[@$]?(\w+)\s+[@$]?(\w+)/i);
-        if (match && this.session.referenceTexts.has(match[2])) {
-          conclusionFact = this.session.referenceTexts.get(match[2]);
+        const goalMatchesConclusion =
+          goalOp &&
+          concOp &&
+          canon(goalOp) === canon(concOp) &&
+          goalArgs.length === concArgs.length &&
+          goalArgs.every((arg, i) => !arg.isVariable && !concArgs[i]?.isVariable && canon(arg.name) === canon(concArgs[i]?.name));
+
+        let conclusionSim = 0;
+        if (!goalMatchesConclusion) {
+          const vec = candidate.vector || (candidate.ast ? this.session.executor.buildStatementVector(candidate.ast) : null);
+          if (vec) {
+            this.session.reasoningStats.similarityChecks++;
+            conclusionSim = similarity(goalVec, vec);
+          }
         }
+
+        if (!(goalMatchesConclusion || conclusionSim > this.thresholds.CONCLUSION_MATCH)) continue;
+
+        const conditionResult = this.engine.conditions.proveCondition(rule, depth + 1);
+        if (!conditionResult.valid) continue;
+
+        this.engine.logStep('rule_match', rule.name || rule.source);
+
         return {
           valid: true,
           method: 'backward_chain',
@@ -325,7 +351,12 @@ export class KBMatcher {
           confidence: (goalMatchesConclusion ? 1.0 : Math.min(conclusionSim, conditionResult.confidence)) * this.thresholds.CONFIDENCE_DECAY,
           goal: goal.toString(),
           steps: [
-            { operation: 'rule_match', rule: rule.label || rule.name || rule.source, ruleId: rule.id || null, fact: conclusionFact },
+            {
+              operation: 'rule_match',
+              rule: rule.label || rule.name || rule.source,
+              ruleId: rule.id || null,
+              fact: candidate.ast?.toString?.() || ''
+            },
             ...conditionResult.steps
           ]
         };

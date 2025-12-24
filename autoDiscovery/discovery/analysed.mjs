@@ -7,8 +7,12 @@ export function loadAnalysedCases() {
 
   const content = fs.readFileSync(ANALYSED_FILE, 'utf8');
   for (const line of content.split('\n')) {
-    const match = line.match(/^-\s+(\w+_\w+):/);
-    if (match) analysed.add(match[1]);
+    const match = line.match(/^-\s+(\w+_\w+):\s+([A-Z()]+)\s+\(/);
+    if (!match) continue;
+    const [, caseId, result] = match;
+    // Allow re-processing old SKIP entries after capability improvements.
+    if (result === 'SKIP') continue;
+    analysed.add(caseId);
   }
   return analysed;
 }
@@ -20,4 +24,3 @@ export function recordAnalysedCase(caseId, result, details) {
   }
   fs.appendFileSync(ANALYSED_FILE, line);
 }
-

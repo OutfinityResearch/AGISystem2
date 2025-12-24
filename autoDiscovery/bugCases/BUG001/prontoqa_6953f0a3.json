@@ -2,6 +2,11 @@
   "caseId": "prontoqa_6953f0a3",
   "bugId": "BUG001",
   "source": "prontoqa",
+  "failure": {
+    "category": "B",
+    "reason": "reasoning_failure",
+    "details": "proved=false, expected=true"
+  },
   "dataset": {
     "label": "entailment",
     "expectProved": true,
@@ -19,6 +24,13 @@
     "contextDsl": "isA Max Dumpus\n@cond0 isA ?x Rompus\n@cond1 isA ?x Tumpus\nImplies $cond0 $cond1\n@cond2 isA ?x Brimpus\n@cond3 isA ?x Vumpus\n@cond4 isA ?x Grimpus\n@and5 And $cond2 $cond3 $cond4\n@cond6 isA ?x Lorpus\n@cond7 isA ?x Rompus\n@cond8 isA ?x Lempus\n@and9 And $cond6 $cond7 $cond8\nImplies $and5 $and9\n@cond10 isA ?x Lorpus\n@cond11 isA ?x Gorpus\nImplies $cond10 $cond11\n@cond12 isA ?x Lempus\n@cond13 isA ?x Jompus\nImplies $cond12 $cond13\n@cond14 isA ?x Brimpus\n@cond15 isA ?x Vumpus\n@cond16 isA ?x Grimpus\n@and17 And $cond14 $cond15 $cond16\n@cond18 isA ?x Tumpus\nImplies $and17 $cond18\nisA Max Brimpus\n@cond19 isA ?x Lorpus\n@cond20 isA ?x Shumpus\n@cond21 isA ?x Numpus\n@cond22 isA ?x Lempus\n@and23 And $cond20 $cond21 $cond22\nImplies $cond19 $and23\n@cond24 isA ?x Brimpus\n@cond25 isA ?x Dumpus\n@cond26 isA ?x Gorpus\n@and27 And $cond24 $cond25 $cond26\n@cond28 isA ?x Zumpus\nImplies $and27 $cond28\n@cond29 isA ?x Lempus\n@cond30 isA ?x Impus\nImplies $cond29 $cond30\n@cond31 isA ?x Shumpus\n@cond32 isA ?x Yumpus\nImplies $cond31 $cond32\nisA Max Gorpus\nisA Max Brimpus\nisA Max Vumpus\nisA Max Yumpus\nisA Max Grimpus",
     "questionDsl": "@goal:goal isA Max Numpus",
     "contextErrors": [],
+    "contextWarnings": [],
+    "contextStats": {
+      "sentencesTotal": 16,
+      "sentencesParsed": 16,
+      "sentencesOpaque": 0,
+      "autoDeclaredOperators": 0
+    },
     "contextAutoDeclaredOperators": []
   },
   "sessionConfig": {
@@ -39,8 +51,9 @@
   },
   "expected": {
     "expected_proved": true,
-    "expected_nl": "True: Max is a numpus.. Proof: TODO",
-    "note": "Fill expected_nl with engine-style output or accept actual_nl after review"
+    "expected_nl": "TODO",
+    "expected_nl_hint": "Proved: Max is a numpus.. Proof: [engine steps]",
+    "note": "Run `node autoDiscovery/runBugCase.mjs --accept-actual <case.json>` after reviewing actual_nl"
   },
-  "timestamp": "2025-12-24T12:48:19.319Z"
+  "timestamp": "2025-12-24T14:55:03.681Z"
 }

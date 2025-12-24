@@ -5,7 +5,11 @@ import { createSession, validateQuestionDsl } from './session.mjs';
 function assessTranslationQuality(example, translated) {
   const issues = [];
 
-  if (translated.contextErrors?.length > 0) {
+  const stats = translated.contextStats || null;
+  if (stats && typeof stats.sentencesTotal === 'number' && stats.sentencesTotal > 0) {
+    const opaqueRatio = (stats.sentencesOpaque || 0) / stats.sentencesTotal;
+    if (opaqueRatio > 0.2) issues.push(`${(opaqueRatio * 100).toFixed(0)}% opaque statements (fallback)`);
+  } else if (translated.contextErrors?.length > 0) {
     const sentenceCount = example.context?.split('.').filter(Boolean).length || 1;
     const ratio = translated.contextErrors.length / sentenceCount;
     if (ratio > 0.2) issues.push(`${(ratio * 100).toFixed(0)}% sentences unparsed`);
@@ -33,7 +37,9 @@ export function runExample(example, caseId, options = {}) {
 
   const translatorOptions = {
     autoDeclareUnknownOperators: options.autoDeclareUnknownOperators === true,
-    expandCompoundQuestions: true
+    expandCompoundQuestions: true,
+    fallbackOpaqueStatements: true,
+    fallbackOpaqueQuestions: true
   };
 
   const sessionConfig = {
@@ -52,18 +58,25 @@ export function runExample(example, caseId, options = {}) {
     translateOptions: translatorOptions
   });
 
-  if (translated.expectProved === null || translated.expectProved === undefined) {
-    return {
-      category: CATEGORY.UNSUPPORTED,
-      correct: false,
-      reason: 'unsupported_label',
-      details: `Label "${example.label}" not supported for binary entailment`,
-      translated,
-      durationMs: performance.now() - startTime,
-      caseId,
-      sessionConfig
-    };
+  // In strict mode (no auto-declare), unknown operators are treated as a translation limitation.
+  if (options.autoDeclareUnknownOperators !== true) {
+    const hasUnknownOperator = Array.isArray(translated.contextErrors) &&
+      translated.contextErrors.some(e => /unknown operator/i.test(String(e?.error || '')) || e?.unknownOperator);
+    if (hasUnknownOperator) {
+      return {
+        category: CATEGORY.TRANSLATION,
+        correct: false,
+        reason: 'strict_unknown_operator',
+        details: 'Strict mode: unknown operators present (rerun without --strict-operators or add @op:op __Relation)',
+        translated,
+        durationMs: performance.now() - startTime,
+        caseId,
+        sessionConfig
+      };
+    }
   }
+
+  const hasExpectation = !(translated.expectProved === null || translated.expectProved === undefined);
 
   if (!translated.contextDsl || !translated.contextDsl.trim()) {
     return {
@@ -142,9 +155,9 @@ export function runExample(example, caseId, options = {}) {
     const anyInvalidStructure = perGoal.some(p => !p.result || (p.action === 'prove' && typeof p.result.valid !== 'boolean') || (p.action === 'query' && typeof p.result.success !== 'boolean'));
     if (anyInvalidStructure) {
       return {
-        category: CATEGORY.UNKNOWN,
+        category: CATEGORY.REASONING,
         correct: false,
-        reason: 'prove_no_result',
+        reason: 'runtime_error',
         details: `${action}() returned invalid result structure`,
         translated,
         proveResult: perGoal.map(p => ({ goalDsl: p.goalDsl, result: p.result })),
@@ -194,9 +207,9 @@ export function runExample(example, caseId, options = {}) {
       perGoal[0].result.proofObject.validatorOk === false;
     if (proofInvalid) {
       return {
-        category: CATEGORY.UNKNOWN,
+        category: CATEGORY.REASONING,
         correct: false,
-        reason: 'invalid_proof',
+        reason: 'runtime_error',
         details: 'Engine produced invalid proof (validatorOk=false)',
         translated,
         proveResult: {
@@ -213,9 +226,9 @@ export function runExample(example, caseId, options = {}) {
     }
 
     const proved = proveResult.valid === true;
-    const correct = (proved === translated.expectProved);
+    const correct = hasExpectation ? (proved === translated.expectProved) : false;
 
-    if (correct) {
+    if (hasExpectation && correct) {
       return {
         category: CATEGORY.PASSED,
         correct: true,
@@ -231,14 +244,22 @@ export function runExample(example, caseId, options = {}) {
     }
 
     const translationQuality = assessTranslationQuality(example, translated);
-    if (translationQuality.hasIssues) {
+
+    if (!hasExpectation) {
+      const meta = [
+        `label=${JSON.stringify(example.label ?? null)}`,
+        `category=${JSON.stringify(example.category ?? null)}`,
+        `choices=${Array.isArray(example.choices) ? example.choices.length : 0}`,
+        `action=${action}`,
+        `proved=${proved}`
+      ].join(' ');
       return {
-        category: CATEGORY.TRANSLATION,
+        category: CATEGORY.NO_EXPECTATION,
         correct: false,
-        reason: 'translation_quality_issue',
-        details: translationQuality.details,
+        reason: 'no_expectation',
+        details: meta,
         translated,
-        proveResult: { valid: proveResult.valid, reason: proveResult.reason, stepsCount: proveResult.steps?.length || 0, method: proveResult.method || null },
+        proveResult: { valid: proveResult.valid, reason: proveResult.reason, stepsCount: proveResult.steps?.length || 0, validatorOk: proveResult.proofObject?.validatorOk, method: proveResult.method || null },
         actual_nl,
         durationMs: performance.now() - startTime,
         caseId,
@@ -250,7 +271,7 @@ export function runExample(example, caseId, options = {}) {
       category: CATEGORY.REASONING,
       correct: false,
       reason: 'reasoning_failure',
-      details: `proved=${proved}, expected=${translated.expectProved}`,
+      details: `${translationQuality.hasIssues ? `translation_low_confidence(${translationQuality.details}); ` : ''}proved=${proved}, expected=${translated.expectProved}`,
       translated,
       proveResult: { valid: proveResult.valid, reason: proveResult.reason, stepsCount: proveResult.steps?.length || 0, validatorOk: proveResult.proofObject?.validatorOk, method: proveResult.method || null },
       actual_nl,
@@ -260,10 +281,10 @@ export function runExample(example, caseId, options = {}) {
     };
   } catch (err) {
     return {
-      category: CATEGORY.UNKNOWN,
+      category: CATEGORY.REASONING,
       correct: false,
       reason: 'runtime_error',
-      details: err.message,
+      details: err.stack || err.message,
       translated,
       durationMs: performance.now() - startTime,
       caseId,

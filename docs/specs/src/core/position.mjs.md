@@ -1,7 +1,7 @@
-# Module Plan: src/core/position.js
+# Module Plan: src/core/position.mjs
 
-**Document Version:** 1.0
-**Status:** Specification
+**Document Version:** 2.0
+**Status:** Implemented
 **Traces To:** FS-05, FS-67
 
 ---
@@ -10,123 +10,105 @@
 
 Provides position vectors (Pos1 through Pos20) for encoding argument order in bound vectors. Solves the problem of XOR commutativity by tagging each argument with its position.
 
----
-
-## 2. Responsibilities
-
-- Initialize position vectors deterministically
-- Provide access to position vectors by index
-- Support position binding and unbinding
-- Ensure position vectors are mutually quasi-orthogonal
+**Strategy-aware:** Works with any HDC strategy (dense-binary, sparse-polynomial, metric-affine).
 
 ---
 
-## 3. Public API
+## 2. Public API
 
 ```javascript
 // Get position vector by index (1-20)
-function getPosition(index: number): Vector
+// Strategy-aware: returns vector compatible with specified or current HDC strategy
+function getPositionVector(position: number, geometry?: number, strategyId?: string): Vector
+
+// Initialize all position vectors for a geometry
+function initPositionVectors(geometry?: number): Vector[]
 
 // Bind value with position marker
-function withPosition(position: number, value: Vector): Vector
+// Strategy-agnostic: works with any vector type
+function withPosition(position: number, vector: Vector): Vector
 
 // Remove position marker from value
-function removePosition(position: number, value: Vector): Vector
+// Strategy-agnostic: works with any vector type
+function removePosition(position: number, vector: Vector): Vector
 
-// Check if all positions are initialized
-function positionsReady(): boolean
+// Extract content at a specific position from composite
+// Alias for removePosition with clearer semantics
+function extractAtPosition(position: number, composite: Vector): Vector
 
-// Initialize positions for specific geometry
-function initPositions(geometry: number): void
+// Clear position vector cache
+// Useful when switching strategies or geometries
+function clearPositionCache(): void
 
 // Constants
 const MIN_POSITION = 1;
-const MAX_POSITION = 20;
+const MAX_POSITION = 20;  // from core/constants.mjs
 ```
 
 ---
 
-## 4. Internal Design
+## 3. Internal Design
 
-### 4.1 Position Initialization
+### 3.1 Position Cache (Strategy-Aware)
 
 ```javascript
-const positions = new Map();  // geometry -> position vectors
+// Cache key includes strategy ID for multi-strategy support
+const positionCache = new Map();  // key: `${strategyId}:${geometry}:${position}`
 
-function initPositions(geometry) {
-  if (positions.has(geometry)) return;
+function getPositionVector(position, geometry = DEFAULT_GEOMETRY, strategyId = null) {
+  const resolvedStrategyId = strategyId || getStrategyId();
+  const cacheKey = `${resolvedStrategyId}:${geometry}:${position}`;
 
-  const posVectors = [];
-  for (let i = 1; i <= MAX_POSITION; i++) {
-    // Deterministic initialization from name
-    const name = `__Pos${i}__`;
-    const vector = asciiStamp(name, 'Core', geometry);
-    posVectors.push(vector);
+  if (positionCache.has(cacheKey)) {
+    return positionCache.get(cacheKey);
   }
 
-  positions.set(geometry, posVectors);
-
-  // Verify quasi-orthogonality
-  verifyOrthogonality(posVectors);
-}
-
-function getPosition(index) {
-  if (index < MIN_POSITION || index > MAX_POSITION) {
-    throw new Error(`Position must be ${MIN_POSITION}-${MAX_POSITION}, got ${index}`);
-  }
-
-  const geometry = getDefaultGeometry();
-  if (!positions.has(geometry)) {
-    initPositions(geometry);
-  }
-
-  return positions.get(geometry)[index - 1];
+  // Generate deterministic position vector using active strategy
+  const posVec = createFromName(`__POS_${position}__`, geometry, { strategyId: resolvedStrategyId });
+  positionCache.set(cacheKey, posVec);
+  return posVec;
 }
 ```
 
-### 4.2 Position Operations
+### 3.2 Position Operations
 
 ```javascript
-function withPosition(position, value) {
-  const pos = getPosition(position);
-  return bind(pos, value);
+function withPosition(position, vector) {
+  const geometry = getVectorGeometry(vector);
+  const posVec = getPositionVector(position, geometry, getStrategyId(vector));
+  return bind(vector, posVec);
 }
 
-function removePosition(position, value) {
-  // XOR is self-inverse: removing = binding again
-  const pos = getPosition(position);
-  return bind(pos, value);
+function removePosition(position, vector) {
+  const geometry = getVectorGeometry(vector);
+  const posVec = getPositionVector(position, geometry, getStrategyId(vector));
+  return unbind(vector, posVec);
+}
+
+function extractAtPosition(position, composite) {
+  return removePosition(position, composite);
 }
 ```
 
-### 4.3 Orthogonality Verification
+### 3.3 Geometry Detection (Strategy-Agnostic)
 
 ```javascript
-function verifyOrthogonality(vectors) {
-  const threshold = 0.55;  // Should be below this
-
-  for (let i = 0; i < vectors.length; i++) {
-    for (let j = i + 1; j < vectors.length; j++) {
-      const sim = similarity(vectors[i], vectors[j]);
-      if (sim > threshold) {
-        console.warn(`Position vectors ${i+1} and ${j+1} have high similarity: ${sim}`);
-      }
-    }
-  }
+function getVectorGeometry(vector) {
+  // dense-binary uses .geometry, SPHDC uses .maxSize
+  return vector.geometry || vector.maxSize || DEFAULT_GEOMETRY;
 }
 ```
 
 ---
 
-## 5. Dependencies
+## 4. Dependencies
 
-- `./vector.js` - Vector class
-- `./operations.js` - bind, similarity
-- `../util/ascii-stamp.js` - deterministic initialization
+- `../hdc/facade.mjs` - bind, unbind, getStrategyId, createFromName
+- `./constants.mjs` - MAX_POSITIONS, DEFAULT_GEOMETRY
 
 ---
 
-## 6. Test Cases
+## 5. Test Cases
 
 | Test ID | Description | Expected Result |
 |---------|-------------|-----------------|
@@ -134,12 +116,15 @@ function verifyOrthogonality(vectors) {
 | POS-02 | Position determinism | Same position = same vector always |
 | POS-03 | Positions quasi-orthogonal | sim(Pos_i, Pos_j) < 0.55 for i != j |
 | POS-04 | withPosition/removePosition | Round-trip preserves value |
-| POS-05 | Invalid position index | Throws error |
+| POS-05 | Invalid position index | Throws RangeError |
 | POS-06 | Different geometries | Positions extend correctly |
+| POS-07 | extractAtPosition alias | Same result as removePosition |
+| POS-08 | clearPositionCache | Cache cleared, new vectors generated |
+| POS-09 | Multi-strategy cache | Different strategies get different vectors |
 
 ---
 
-## 7. Why Position Vectors (Not Permutation)
+## 6. Why Position Vectors (Not Permutation)
 
 Permutation (bit rotation) breaks geometry extension:
 
@@ -158,14 +143,16 @@ Position vectors (XOR-based) extend correctly because XOR distributes over cloni
 
 ---
 
-## 8. Performance Requirements
+## 7. Performance Requirements
 
 | Operation | Target | Measurement |
 |-----------|--------|-------------|
-| getPosition | < 1us | Lookup only |
+| getPositionVector | < 1us | Cache lookup |
 | withPosition | < 50us | Single bind |
-| removePosition | < 50us | Single bind |
-| initPositions | < 10ms | One-time init |
+| removePosition | < 50us | Single unbind |
+| extractAtPosition | < 50us | Single unbind |
+| initPositionVectors | < 10ms | One-time init |
+| clearPositionCache | < 1us | Map.clear() |
 
 ---
 

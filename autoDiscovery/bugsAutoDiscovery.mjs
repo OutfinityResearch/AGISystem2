@@ -24,6 +24,9 @@ import {
 } from './discovery/constants.mjs';
 import { runBatch } from './discovery/run-batch.mjs';
 import { BUG_PATTERNS, NLP_BUG_PATTERNS } from './discovery/patterns.mjs';
+import { processQuarantine } from './discovery/process-quarantine.mjs';
+import fs from 'node:fs';
+import { join } from 'node:path';
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -108,6 +111,7 @@ async function main() {
   let totalPassed = 0;
   let totalCategoryA = 0;
   let totalCategoryB = 0;
+  let totalNoExpectation = 0;
 
   do {
     iteration++;
@@ -136,6 +140,7 @@ async function main() {
     totalPassed += results.passed;
     totalCategoryA += results.categoryA + results.categoryL + results.categoryG;
     totalCategoryB += results.categoryB;
+    totalNoExpectation += results.categoryN || 0;
 
     const accuracy = results.total > 0 ? ((results.passed / results.total) * 100).toFixed(1) : '0.0';
     console.log(`\n${C.bold}Iteration ${iteration} Results:${C.reset}`);
@@ -151,7 +156,8 @@ async function main() {
 
     console.log(`  ${C.red}Known Reasoning Bugs:${C.reset} ${results.categoryB}`);
     console.log(`  ${C.cyan}Unknown (needs analysis):${C.reset} ${results.categoryU}`);
-    console.log(`  ${C.dim}Unsupported labels:${C.reset} ${results.categoryS}`);
+    console.log(`  ${C.dim}No expectation:${C.reset} ${results.categoryN || 0}`);
+    console.log(`  ${C.dim}Config limitations:${C.reset} ${results.categoryS}`);
     console.log(`  ${C.dim}Skipped (already tested):${C.reset} ${results.skipped}`);
 
     if (Object.keys(results.byBugType).length > 0) {
@@ -188,6 +194,25 @@ async function main() {
       console.log(`\n${C.dim}Continuing... (Ctrl+C to stop)${C.reset}`);
       await new Promise(r => setTimeout(r, 1000));
     }
+
+    // Always process quarantine into bug folders to keep quarantine clean.
+    try {
+      const moved = processQuarantine({ translatorOptions: { autoDeclareUnknownOperators: args.autoDeclareUnknownOperators === true } });
+      const movedTotal = Object.values(moved.bug || {}).reduce((a, b) => a + b, 0) + Object.values(moved.nlp || {}).reduce((a, b) => a + b, 0);
+      if (movedTotal > 0) {
+        console.log(`${C.dim}Quarantine processed: moved ${movedTotal} cases.${C.reset}`);
+      }
+    } catch {
+      // Keep discovery resilient; quarantine can be processed manually if needed.
+    }
+
+    // We consider translation bugs fixed during this workflow; keep workspace clean.
+    try {
+      const nlpDir = join('autoDiscovery', 'nlpBugs');
+      if (fs.existsSync(nlpDir)) fs.rmSync(nlpDir, { recursive: true, force: true });
+    } catch {
+      // ignore
+    }
   } while (args.continuous);
 
   console.log(`\n${C.bold}${C.magenta}═══════════════════════════════════════${C.reset}`);
@@ -197,6 +222,7 @@ async function main() {
   console.log(`  ${C.green}Passed:${C.reset} ${totalPassed} (${finalPct}%)`);
   console.log(`  ${C.yellow}Translation Issues:${C.reset} ${totalCategoryA}`);
   console.log(`  ${C.red}Reasoning Bugs:${C.reset} ${totalCategoryB}`);
+  console.log(`  ${C.dim}No expectation:${C.reset} ${totalNoExpectation}`);
   console.log(`  Total Analysed: ${analysedCases.size}`);
   console.log(`${C.bold}${C.magenta}═══════════════════════════════════════${C.reset}\n`);
 

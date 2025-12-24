@@ -2,6 +2,11 @@
   "caseId": "prontoqa_21768947",
   "bugId": "BUG001",
   "source": "prontoqa",
+  "failure": {
+    "category": "B",
+    "reason": "reasoning_failure",
+    "details": "proved=false, expected=true"
+  },
   "dataset": {
     "label": "entailment",
     "expectProved": true,
@@ -19,6 +24,13 @@
     "contextDsl": "isA Sally Numpus\n@cond0 isA ?x Impus\n@cond1 isA ?x Shumpus\nImplies $cond0 $cond1\nisA Sally Yumpus\n@cond2 isA ?x Tumpus\n@cond3 isA ?x Yumpus\nImplies $cond2 $cond3\n@cond4 isA ?x Wumpus\n@cond5 isA ?x Sterpus\n@cond6 isA ?x Gorpus\n@and7 And $cond4 $cond5 $cond6\n@cond8 isA ?x Impus\n@cond9 isA ?x Zumpus\n@cond10 isA ?x Tumpus\n@and11 And $cond8 $cond9 $cond10\nImplies $and7 $and11\nisA Sally Wumpus\n@cond12 isA ?x Wumpus\n@cond13 isA ?x Yumpus\n@cond14 isA ?x Numpus\n@and15 And $cond12 $cond13 $cond14\n@cond16 isA ?x Brimpus\nImplies $and15 $cond16\n@cond17 isA ?x Wumpus\n@cond18 isA ?x Sterpus\n@cond19 isA ?x Gorpus\n@and20 And $cond17 $cond18 $cond19\n@cond21 isA ?x Lorpus\nImplies $and20 $cond21\nisA Sally Shumpus\nisA Sally Wumpus\nisA Sally Sterpus\nisA Sally Gorpus",
     "questionDsl": "@goal:goal isA Sally Zumpus",
     "contextErrors": [],
+    "contextWarnings": [],
+    "contextStats": {
+      "sentencesTotal": 12,
+      "sentencesParsed": 12,
+      "sentencesOpaque": 0,
+      "autoDeclaredOperators": 0
+    },
     "contextAutoDeclaredOperators": []
   },
   "sessionConfig": {
@@ -39,8 +51,9 @@
   },
   "expected": {
     "expected_proved": true,
-    "expected_nl": "True: Sally is a zumpus.. Proof: TODO",
-    "note": "Fill expected_nl with engine-style output or accept actual_nl after review"
+    "expected_nl": "TODO",
+    "expected_nl_hint": "Proved: Sally is a zumpus.. Proof: [engine steps]",
+    "note": "Run `node autoDiscovery/runBugCase.mjs --accept-actual <case.json>` after reviewing actual_nl"
   },
-  "timestamp": "2025-12-24T12:48:36.936Z"
+  "timestamp": "2025-12-24T14:55:01.554Z"
 }

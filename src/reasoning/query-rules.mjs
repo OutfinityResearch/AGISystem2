@@ -25,102 +25,126 @@ function dbg(category, ...args) {
 export function searchViaRules(session, operatorName, knowns, holes) {
   const results = [];
 
+  const flattenConclusionLeaves = (rule) => {
+    if (!rule?.conclusionParts) return [rule?.conclusionAST].filter(Boolean);
+    const leaves = [];
+    const walk = (part) => {
+      if (!part) return;
+      if (part.type === 'leaf' && part.ast) {
+        leaves.push(part.ast);
+        return;
+      }
+      // Do not treat Not(P) as P for rule-derived answers.
+      if (part.type === 'Not') return;
+      if ((part.type === 'And' || part.type === 'Or') && Array.isArray(part.parts)) {
+        for (const p of part.parts) walk(p);
+      }
+    };
+    walk(rule.conclusionParts);
+    return leaves.length > 0 ? leaves : [rule.conclusionAST].filter(Boolean);
+  };
+
   // Try each rule whose conclusion matches our query operator
   for (const rule of session.rules) {
-    if (!rule.hasVariables || !rule.conclusionAST) continue;
+    if (!rule.hasVariables) continue;
 
-    const concOp = extractOperator(rule.conclusionAST);
-    if (concOp !== operatorName) continue;
+    const concAsts = flattenConclusionLeaves(rule);
+    for (const concAST of concAsts) {
+      if (!concAST) continue;
 
-    const concArgs = extractArgs(rule.conclusionAST);
-    if (concArgs.length !== knowns.length + holes.length) continue;
+      const concOp = extractOperator(concAST);
+      if (concOp !== operatorName) continue;
 
-    // Try to unify known arguments
-    const bindings = new Map();
-    let unifyOk = true;
+      const concArgs = extractArgs(concAST);
+      if (concArgs.length !== knowns.length + holes.length) continue;
 
-    for (const known of knowns) {
-      const argIndex = known.index - 1;
-      const concArg = concArgs[argIndex];
-      if (concArg?.isVariable) {
-        bindings.set(concArg.name, known.name);
-      } else if (concArg?.name !== known.name) {
-        unifyOk = false;
-        break;
-      }
-    }
+      // Try to unify known arguments
+      const bindings = new Map();
+      let unifyOk = true;
 
-    if (!unifyOk) continue;
-
-    // Try to find values for holes by proving conditions
-    const holeBindings = [];
-    for (const hole of holes) {
-      const argIndex = hole.index - 1;
-      const concArg = concArgs[argIndex];
-      if (concArg?.isVariable) {
-        holeBindings.push({ holeName: hole.name, varName: concArg.name });
-      } else if (concArg?.name) {
-        holeBindings.push({ holeName: hole.name, constValue: concArg.name });
-      }
-    }
-
-    // Try proving the rule's condition with various substitutions
-    const conditionMatches = findConditionMatches(session, rule, bindings);
-
-    for (const match of conditionMatches) {
-      const cm = match.bindings;
-      const factBindings = new Map();
-      let valid = true;
-
-      for (const binding of holeBindings) {
-        const value = binding.varName ? cm.get(binding.varName) : binding.constValue;
-        if (value) {
-          factBindings.set(binding.holeName, {
-            answer: value,
-            similarity: 0.85,
-            method: 'rule_derived'
-          });
-        } else {
-          valid = false;
+      for (const known of knowns) {
+        const argIndex = known.index - 1;
+        const concArg = concArgs[argIndex];
+        if (concArg?.isVariable) {
+          bindings.set(concArg.name, known.name);
+        } else if (concArg?.name !== known.name) {
+          unifyOk = false;
           break;
         }
       }
 
-      if (valid && factBindings.size === holes.length) {
-        // Check if this derived fact is negated
-        const args = [];
-        for (const concArg of concArgs) {
-          if (concArg.isVariable) {
-            args.push(cm.get(concArg.name));
+      if (!unifyOk) continue;
+
+      // Try to find values for holes by proving conditions
+      const holeBindings = [];
+      for (const hole of holes) {
+        const argIndex = hole.index - 1;
+        const concArg = concArgs[argIndex];
+        if (concArg?.isVariable) {
+          holeBindings.push({ holeName: hole.name, varName: concArg.name });
+        } else if (concArg?.name) {
+          holeBindings.push({ holeName: hole.name, constValue: concArg.name });
+        }
+      }
+
+      // Try proving the rule's condition with various substitutions
+      const conditionMatches = findConditionMatches(session, rule, bindings);
+
+      for (const match of conditionMatches) {
+        const cm = match.bindings;
+        const factBindings = new Map();
+        let valid = true;
+
+        for (const binding of holeBindings) {
+          const value = binding.varName ? cm.get(binding.varName) : binding.constValue;
+          if (value) {
+            factBindings.set(binding.holeName, {
+              answer: value,
+              similarity: 0.85,
+              method: 'rule_derived'
+            });
           } else {
-            args.push(concArg.name);
+            valid = false;
+            break;
           }
         }
 
-        if (isFactNegated(session, operatorName, args)) {
-          dbg('RULES', `Skipping negated: ${operatorName} ${args.join(' ')}`);
-          continue;
-        }
+        if (valid && factBindings.size === holes.length) {
+          // Check if this derived fact is negated
+          const args = [];
+          for (const concArg of concArgs) {
+            if (concArg.isVariable) {
+              args.push(cm.get(concArg.name));
+            } else {
+              args.push(concArg.name);
+            }
+          }
 
-        // Build proof steps showing how rule was applied, with evidence facts first.
-        const proofSteps = [];
-        for (const s of match.steps || []) {
-          if (typeof s === 'string' && s.trim()) proofSteps.push(s.trim());
-        }
-        proofSteps.push(`Applied rule: ${rule.name || rule.source?.substring(0, 40) || 'rule'}`);
+          if (isFactNegated(session, operatorName, args)) {
+            dbg('RULES', `Skipping negated: ${operatorName} ${args.join(' ')}`);
+            continue;
+          }
 
-        // Add steps to each binding entry
-        for (const [holeName, bindingData] of factBindings) {
-          bindingData.steps = proofSteps;
-        }
+          // Build proof steps showing how rule was applied, with evidence facts first.
+          const proofSteps = [];
+          for (const s of match.steps || []) {
+            if (typeof s === 'string' && s.trim()) proofSteps.push(s.trim());
+          }
+          proofSteps.push(`Applied rule: ${rule.name || rule.source?.substring(0, 40) || 'rule'}`);
 
-        results.push({
-          bindings: factBindings,
-          score: 0.85,
-          method: 'rule_derived',
-          rule: rule.name,
-          steps: proofSteps
-        });
+          // Add steps to each binding entry
+          for (const [, bindingData] of factBindings) {
+            bindingData.steps = proofSteps;
+          }
+
+          results.push({
+            bindings: factBindings,
+            score: 0.85,
+            method: 'rule_derived',
+            rule: rule.name,
+            steps: proofSteps
+          });
+        }
       }
     }
   }

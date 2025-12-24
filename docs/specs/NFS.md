@@ -48,7 +48,7 @@ This Non-Functional Specification (NFS) defines the quality attributes, constrai
 | **NFS-15** | Maximum concurrent sessions | 100 sessions | Memory bounded | URS-22 |
 | **NFS-16** | Maximum theory nesting depth | 10 levels | Design limit | URS-07 |
 | **NFS-17** | Maximum macro nesting depth | 20 levels | Stack limit | URS-11 |
-| **NFS-18** | Maximum proof search depth | 10 levels | Configurable | URS-04 |
+| **NFS-18** | Maximum proof search depth | 200 levels | Configurable | URS-04 |
 
 ### 2.4 HDC Strategy Benchmarking
 

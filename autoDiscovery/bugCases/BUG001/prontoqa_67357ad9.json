@@ -2,6 +2,11 @@
   "caseId": "prontoqa_67357ad9",
   "bugId": "BUG001",
   "source": "prontoqa",
+  "failure": {
+    "category": "B",
+    "reason": "reasoning_failure",
+    "details": "proved=false, expected=true"
+  },
   "dataset": {
     "label": "entailment",
     "expectProved": true,
@@ -19,6 +24,13 @@
     "contextDsl": "@cond0 isA ?x Zumpus\n@cond1 isA ?x Tumpus\nImplies $cond0 $cond1\nisA Rex Brimpus\nisA Rex Vumpus\n@cond2 isA ?x Yumpus\n@cond3 isA ?x Dumpus\nImplies $cond2 $cond3\n@cond4 isA ?x Numpus\n@cond5 isA ?x Lorpus\nImplies $cond4 $cond5\nisA Rex Rompus\n@cond6 isA ?x Wumpus\n@cond7 isA ?x Vumpus\nImplies $cond6 $cond7\n@cond8 isA ?x Brimpus\n@cond9 isA ?x Rompus\n@cond10 isA ?x Vumpus\n@and11 And $cond8 $cond9 $cond10\n@cond12 isA ?x Dumpus\nImplies $and11 $cond12\n@cond13 isA ?x Brimpus\n@cond14 isA ?x Shumpus\n@cond15 isA ?x Grimpus\n@and16 And $cond13 $cond14 $cond15\n@cond17 isA ?x Dumpus\nImplies $and16 $cond17\n@cond18 isA ?x Lempus\n@cond19 isA ?x Tumpus\nImplies $cond18 $cond19\n@cond20 isA ?x Brimpus\n@cond21 isA ?x Shumpus\n@cond22 isA ?x Grimpus\n@and23 And $cond20 $cond21 $cond22\n@cond24 isA ?x Yumpus\n@cond25 isA ?x Wumpus\n@cond26 isA ?x Zumpus\n@and27 And $cond24 $cond25 $cond26\nImplies $and23 $and27\n@cond28 isA ?x Wumpus\n@cond29 isA ?x Gorpus\n@cond30 isA ?x Lempus\n@cond31 isA ?x Numpus\n@and32 And $cond29 $cond30 $cond31\nImplies $cond28 $and32\nisA Rex Brimpus\nisA Rex Shumpus\nisA Rex Tumpus\nisA Rex Grimpus",
     "questionDsl": "@goal:goal isA Rex Gorpus",
     "contextErrors": [],
+    "contextWarnings": [],
+    "contextStats": {
+      "sentencesTotal": 16,
+      "sentencesParsed": 16,
+      "sentencesOpaque": 0,
+      "autoDeclaredOperators": 0
+    },
     "contextAutoDeclaredOperators": []
   },
   "sessionConfig": {
@@ -43,5 +55,5 @@
     "expected_nl_hint": "Proved: Rex is a gorpus.. Proof: [engine steps]",
     "note": "Run `node autoDiscovery/runBugCase.mjs --accept-actual <case.json>` after reviewing actual_nl"
   },
-  "timestamp": "2025-12-24T12:53:50.321Z"
+  "timestamp": "2025-12-24T14:55:01.327Z"
 }
