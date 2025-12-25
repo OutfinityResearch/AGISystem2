@@ -728,7 +728,9 @@ function compareOutputs(testCase, actualText) {
   // Exact fact counts are validated in healthCheck.js
   if (testCase.action === 'learn') {
     if (proofNl !== undefined && proofNl !== null) {
-      const proofOk = proofIncludes(proofNl, actualText) || proofIncludes(altProofNl, actualText);
+      const proofOk =
+        proofIncludes(proofNl, actualText) ||
+        ((altProofNl !== undefined && altProofNl !== null) && proofIncludes(altProofNl, actualText));
       if (!proofOk) return false;
     }
     // Check that output indicates learning happened
@@ -754,11 +756,15 @@ function compareOutputs(testCase, actualText) {
     if (testCase.action === 'query' && Array.isArray(expected)) {
       const actualNorm = normalizeText(actualText);
       const mainOk = expected.every(entry => actualNorm.includes(normalizeText(entry)));
-      const proofOk = proofIncludes(proofNl, actualText) || proofIncludes(altProofNl, actualText);
+      const proofOk =
+        proofIncludes(proofNl, actualText) ||
+        ((altProofNl !== undefined && altProofNl !== null) && proofIncludes(altProofNl, actualText));
       return mainOk && proofOk;
     }
     const mainOk = normalizeText(actualText).includes(normalizeText(expected));
-    const proofOk = proofIncludes(proofNl, actualText) || proofIncludes(altProofNl, actualText);
+    const proofOk =
+      proofIncludes(proofNl, actualText) ||
+      ((altProofNl !== undefined && altProofNl !== null) && proofIncludes(altProofNl, actualText));
     return mainOk && proofOk;
   }
 

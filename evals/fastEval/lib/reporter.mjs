@@ -263,10 +263,9 @@ export function reportGlobalSummary(suiteResults) {
     minProofDepth: Infinity,  // Track minimum across all suites
     maxProofDepth: 0,
     totalProofSteps: 0,
-    // HDC Master Equation stats
-    hdcQueries: 0,
-    hdcSuccesses: 0,
-    hdcBindings: 0,
+    // HDC usefulness stats (across both engines)
+    hdcOps: 0,         // "asked": HDC query/proof operations attempted
+    hdcUsefulOps: 0,   // "used": final method was HDC-based
     methods: {},
     operations: {}
   };
@@ -281,9 +280,10 @@ export function reportGlobalSummary(suiteResults) {
   console.log(`${colors.dim}   KBSc = KB fact iterations (expensive)   Sim = HDC similarity checks (O(n) each)${colors.reset}`);
   console.log(`${colors.dim}   Tr   = transitive chain steps           Rl  = rule inference attempts${colors.reset}`);
   console.log(`${colors.dim}   M/D  = min/max proof depth              Avg/Steps = avg steps, total steps${colors.reset}`);
-  console.log(`${colors.dim}   HDC% = HDC vector matching success rate (higher = better vector recall)${colors.reset}`);
+  console.log(`${colors.dim}   HDC% = % of HDC ops that produced the final answer (best method = hdc*)${colors.reset}`);
+  console.log(`${colors.dim}   HDC  = useful/asked count (e.g., 29/49)${colors.reset}`);
   console.log();
-  console.log(`${colors.dim}${'─'.repeat(130)}${colors.reset}`);
+  console.log(`${colors.dim}${'─'.repeat(142)}${colors.reset}`);
   console.log(`${colors.bold}` +
     `${'Suite'.padEnd(25)}` +
     `${'Pass'.padStart(6)}` +
@@ -303,8 +303,9 @@ export function reportGlobalSummary(suiteResults) {
     `${'Steps'.padStart(6)}` +
     ` ${colors.gray}│${colors.reset}` +
     `${'HDC%'.padStart(6)}` +
+    `${'HDC'.padStart(10)}` +
     `${colors.reset}`);
-  console.log(`${colors.dim}${'─'.repeat(130)}${colors.reset}`);
+  console.log(`${colors.dim}${'─'.repeat(142)}${colors.reset}`);
 
   for (const suite of suiteResults) {
     totalCases += suite.summary.total;
@@ -334,17 +335,9 @@ export function reportGlobalSummary(suiteResults) {
     for (const [op, count] of Object.entries(stats.operations || {})) {
       aggregatedStats.operations[op] = (aggregatedStats.operations[op] || 0) + count;
     }
-    // Aggregate HDC stats (symbolic engine)
-    aggregatedStats.hdcQueries += stats.hdcQueries || 0;
-    aggregatedStats.hdcSuccesses += stats.hdcSuccesses || 0;
-    aggregatedStats.hdcBindings += stats.hdcBindings || 0;
-
-    // Aggregate Holographic engine stats (map to same display)
-    // holo ops are query/proof calls; success means "HDC validated a result" for queries.
-    const holoOps = (stats.holographicQueries || 0) + (stats.holographicProofs || 0);
-    const holoSuccesses = (stats.holographicQueryHdcSuccesses || 0) + (stats.hdcProofSuccesses || 0);
-    aggregatedStats.hdcQueries += holoOps;
-    aggregatedStats.hdcSuccesses += holoSuccesses;
+    const askedOps = (stats.queries || 0) + (stats.proofs || 0);
+    aggregatedStats.hdcOps += askedOps;
+    aggregatedStats.hdcUsefulOps += stats.hdcUsefulOps || 0;
 
     const pct = suite.summary.total > 0
       ? Math.floor((suite.summary.passed / suite.summary.total) * 100)
@@ -369,11 +362,11 @@ export function reportGlobalSummary(suiteResults) {
       }
     }
 
-    // Format HDC stats as percentage (combine symbolic + holographic)
-    const hdcQ = (stats.hdcQueries || 0) + (stats.holographicQueries || 0) + (stats.holographicProofs || 0);
-    const hdcS = (stats.hdcSuccesses || 0) + (stats.holographicQueryHdcSuccesses || 0) + (stats.hdcProofSuccesses || 0);
-    const hdcPct = hdcQ > 0 ? Math.floor((hdcS / hdcQ) * 100) : 0;
-    const hdcStr = hdcQ > 0 ? `${hdcPct}%` : '-';
+    const hdcAsked = (stats.queries || 0) + (stats.proofs || 0);
+    const hdcUsed = stats.hdcUsefulOps || 0;
+    const hdcPct = hdcAsked > 0 ? Math.floor((hdcUsed / hdcAsked) * 100) : 0;
+    const hdcStr = hdcAsked > 0 ? `${hdcPct}%` : '-';
+    const hdcCountStr = hdcAsked > 0 ? `${hdcUsed}/${hdcAsked}` : '-';
 
     console.log(
       `${displayName.padEnd(25)}` +
@@ -393,11 +386,12 @@ export function reportGlobalSummary(suiteResults) {
       `${String(stats.avgProofLength || 0).padStart(5)}` +
       `${String(stats.totalProofSteps || 0).padStart(6)}` +
       ` ${colors.gray}│${colors.reset}` +
-      `${hdcStr.padStart(6)}`
+      `${hdcStr.padStart(6)}` +
+      `${hdcCountStr.padStart(10)}`
     );
   }
 
-  console.log(`${colors.dim}${'─'.repeat(130)}${colors.reset}`);
+  console.log(`${colors.dim}${'─'.repeat(142)}${colors.reset}`);
 
   // Totals row
   const overallPct = totalCases > 0 ? Math.floor((totalPassed / totalCases) * 100) : 0;
@@ -421,11 +415,13 @@ export function reportGlobalSummary(suiteResults) {
     }
   }
 
-  // Format HDC totals as percentage
-  const totalHdcPct = aggregatedStats.hdcQueries > 0
-    ? Math.floor((aggregatedStats.hdcSuccesses / aggregatedStats.hdcQueries) * 100)
+  const totalHdcPct = aggregatedStats.hdcOps > 0
+    ? Math.floor((aggregatedStats.hdcUsefulOps / aggregatedStats.hdcOps) * 100)
     : 0;
-  const totalHdcStr = aggregatedStats.hdcQueries > 0 ? `${totalHdcPct}%` : '-';
+  const totalHdcStr = aggregatedStats.hdcOps > 0 ? `${totalHdcPct}%` : '-';
+  const totalHdcCountStr = aggregatedStats.hdcOps > 0
+    ? `${aggregatedStats.hdcUsefulOps}/${aggregatedStats.hdcOps}`
+    : '-';
 
   console.log(`${colors.bold}` +
     `${'TOTAL'.padEnd(25)}` +
@@ -445,9 +441,10 @@ export function reportGlobalSummary(suiteResults) {
     `${colors.cyan}${avgProofLen.padStart(5)}${colors.reset}` +
     `${colors.cyan}${String(aggregatedStats.totalProofSteps).padStart(6)}${colors.reset}` +
     ` ${colors.gray}│${colors.reset}` +
-    `${colors.cyan}${totalHdcStr.padStart(6)}${colors.reset}`
+    `${colors.cyan}${totalHdcStr.padStart(6)}${colors.reset}` +
+    `${colors.cyan}${totalHdcCountStr.padStart(10)}${colors.reset}`
   );
-  console.log(`${colors.dim}${'─'.repeat(130)}${colors.reset}`);
+  console.log(`${colors.dim}${'─'.repeat(142)}${colors.reset}`);
   console.log();
 
   // Score
@@ -570,13 +567,13 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
 
       const stats = summary.reasoningStats || {};
       const durationMs = summary.durationMs || 0;
-      const hdcSucc = (stats.hdcSuccesses || 0) + (stats.holographicQueryHdcSuccesses || 0) + (stats.hdcProofSuccesses || 0);
-      const hdcTot = (stats.hdcQueries || 0) + (stats.holographicQueries || 0) + (stats.holographicProofs || 0);
+      const hdcUsed = stats.hdcUsefulOps || 0;
+      const hdcTot = (stats.queries || 0) + (stats.proofs || 0);
       const scans = stats.kbScans || 0;
 
       strategyTotals[strategyId].passed += summary.passed;
       strategyTotals[strategyId].total += summary.total;
-      strategyTotals[strategyId].hdcSuccesses += hdcSucc;
+      strategyTotals[strategyId].hdcSuccesses += hdcUsed;
       strategyTotals[strategyId].hdcTotal += hdcTot;
       strategyTotals[strategyId].kbScans += scans;
       strategyTotals[strategyId].simChecks += stats.similarityChecks || 0;
@@ -602,14 +599,26 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
   // Comparison table header
   console.log(`${colors.bold}${colors.cyan}Per-Configuration Comparison:${colors.reset}`);
   console.log();
-  console.log(`${colors.dim}Format: Pass%/HDC%  KB / Sim  Time${colors.reset}`);
+  console.log(`${colors.dim}Format: Pass%  KB / Sim  Time${colors.reset}`);
+
+  const ANSI_RE = /\x1b\[[0-9;]*m/g;
+  const visibleLen = (text) => String(text || '').replace(ANSI_RE, '').length;
+  const padAnsiRight = (text, width) => {
+    const value = String(text || '');
+    const len = visibleLen(value);
+    if (len >= width) return value;
+    return value + ' '.repeat(width - len);
+  };
 
   // Build header row - each cell width to match data
-  // Data format: "100%/100%  12K / 5K    23ms" = 29 chars
-  const dataColW = 29;
+  // Data format: "100%  12K / 5K    23ms" = 24 chars
+  const dataColW = 24;
   let headerRow = `${'Suite'.padEnd(18)}`;
   for (const strategyId of orderedStrategies) {
-    const shortName = shortStrategyName(strategyId);
+    const shortNameRaw = shortStrategyName(strategyId);
+    const shortName = shortNameRaw.length > dataColW
+      ? shortNameRaw.substring(0, Math.max(0, dataColW - 2)) + '..'
+      : shortNameRaw;
     headerRow += ` ${colors.gray}│${colors.reset} ${shortName.padEnd(dataColW)}`;
   }
   console.log(`${colors.bold}${headerRow}${colors.reset}`);
@@ -627,7 +636,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
     for (const strategyId of orderedStrategies) {
       const summary = suiteSummaries[suiteKey][strategyId];
       if (!summary) {
-        row += ` ${colors.gray}│${colors.reset} ${'N/A'.padEnd(dataColW)}`;
+        row += ` ${colors.gray}│${colors.reset} ${padAnsiRight('N/A', dataColW)}`;
         continue;
       }
 
@@ -635,21 +644,17 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       const stats = summary.reasoningStats || {};
       const durationMs = summary.durationMs || 0;
 
-      // Calculate HDC accuracy for this suite/config
-      const hdcSucc = (stats.hdcSuccesses || 0) + (stats.holographicQueryHdcSuccesses || 0) + (stats.hdcProofSuccesses || 0);
-      const hdcTot = (stats.hdcQueries || 0) + (stats.holographicQueries || 0) + (stats.holographicProofs || 0);
-      const hdcPct = hdcTot > 0 ? Math.floor((hdcSucc / hdcTot) * 100) : 0;
       // kbScans is the real measure of reasoning work (fact iterations)
       const scans = stats.kbScans || 0;
 
       const statusColor = pct === 100 ? colors.green : pct >= 50 ? colors.yellow : colors.red;
-      const hdcColor = hdcPct >= 50 ? colors.cyan : colors.dim;
-      // Format: "100%/100%  12K / 5K   23ms"
+      // Format: "100%  12K / 5K   23ms"
       const simChecks = stats.similarityChecks || 0;
       const kbStr = scans >= 1000 ? (scans / 1000).toFixed(0) + 'K' : String(scans);
       const simStr = simChecks >= 1000 ? (simChecks / 1000).toFixed(0) + 'K' : String(simChecks);
       const opsStr = `${kbStr.padStart(4)} / ${simStr.padEnd(4)}`;
-      row += ` ${colors.gray}│${colors.reset} ${statusColor}${String(pct).padStart(3)}%${colors.reset}/${hdcColor}${String(hdcPct).padStart(3)}%${colors.reset}  ${opsStr}  ${String(durationMs).padStart(3)}ms`;
+      const cell = `${statusColor}${String(pct).padStart(3)}%${colors.reset}  ${opsStr}  ${String(durationMs).padStart(3)}ms`;
+      row += ` ${colors.gray}│${colors.reset} ${padAnsiRight(cell, dataColW)}`;
     }
 
     console.log(row);
@@ -688,12 +693,25 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
   let hdcRow = `${'HDC%'.padEnd(12)}`;
   for (const strategyId of orderedStrategies) {
     const totals = strategyTotals[strategyId];
-    const hdcPct = totals.hdcTotal > 0 ? Math.floor((totals.hdcSuccesses / totals.hdcTotal) * 100) : 0;
-    const hdcColor = hdcPct >= 50 ? colors.cyan : colors.dim;
-    const cellContent = `${hdcPct}% (${totals.hdcSuccesses}/${totals.hdcTotal})`.padEnd(colW);
+    const hasHdc = totals.hdcTotal > 0;
+    const hdcPct = hasHdc ? Math.floor((totals.hdcSuccesses / totals.hdcTotal) * 100) : 0;
+    const hdcColor = hasHdc && hdcPct >= 50 ? colors.cyan : colors.dim;
+    const cellContent = hasHdc
+      ? `${hdcPct}% (${totals.hdcSuccesses}/${totals.hdcTotal})`.padEnd(colW)
+      : '-'.padEnd(colW);
     hdcRow += ` ${colors.gray}│${colors.reset} ${hdcColor}${cellContent}${colors.reset}`;
   }
   console.log(hdcRow);
+
+  // HDC Ops row (raw total count of HDC operations asked)
+  let hdcOpsRow = `${'HDC Ops'.padEnd(12)}`;
+  for (const strategyId of orderedStrategies) {
+    const totals = strategyTotals[strategyId];
+    const hasHdc = totals.hdcTotal > 0;
+    const cellContent = hasHdc ? String(totals.hdcTotal).padEnd(colW) : '-'.padEnd(colW);
+    hdcOpsRow += ` ${colors.gray}│${colors.reset} ${colors.dim}${cellContent}${colors.reset}`;
+  }
+  console.log(hdcOpsRow);
 
   // KB Scans row
   let scansRow = `${'KB Scans'.padEnd(12)}`;

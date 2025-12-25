@@ -1,5 +1,7 @@
 # HDC% Metric Analysis
 
+> Note (2025-12-25): fastEval `HDC%` now reports **usefulness** (how often the final answer uses an HDC method), not the older “HDC found candidates” success-rate. This document mostly analyzes the legacy metric; see `eval_statistics_report.md` for the current definition.
+
 ## Executive Summary
 
 The **HDC%** metric measures the success rate of Hyperdimensional Computing (HDC) vector operations in the AGISystem2 reasoning engine. It represents the percentage of HDC-based reasoning attempts that successfully produced valid results.

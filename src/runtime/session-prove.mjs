@@ -3,6 +3,7 @@ import { createProofEngine } from '../reasoning/index.mjs';
 import { canonicalizeStatement } from './canonicalize.mjs';
 import { buildProofObject } from '../reasoning/proof-schema.mjs';
 import { validateProof } from '../reasoning/proof-validator.mjs';
+import { isHdcMethod } from './session-stats.mjs';
 
 /**
  * Prove a goal.
@@ -57,6 +58,9 @@ export function prove(session, dsl, options = {}) {
     }
     if (result.valid && result.method) {
       session.trackMethod(result.method);
+      if (isHdcMethod(result.method)) {
+        session.reasoningStats.hdcUsefulOps = (session.reasoningStats.hdcUsefulOps || 0) + 1;
+      }
     }
 
     return result;

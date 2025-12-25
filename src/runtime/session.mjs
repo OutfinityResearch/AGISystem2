@@ -107,11 +107,11 @@ export class Session {
     this.rejectContradictions = options.rejectContradictions ?? true;
 
     // Reasoning statistics
-    this.reasoningStats = {
-      queries: 0,
-      proofs: 0,
-      kbScans: 0,
-      similarityChecks: 0,
+	    this.reasoningStats = {
+	      queries: 0,
+	      proofs: 0,
+	      kbScans: 0,
+	      similarityChecks: 0,
       ruleAttempts: 0,
       transitiveSteps: 0,
       maxProofDepth: 0,
@@ -121,14 +121,15 @@ export class Session {
       proofLengths: [],
       methods: {},
       operations: {},
-      // HDC-specific stats
-      hdcQueries: 0,         // Total queries using HDC Master Equation
-      hdcSuccesses: 0,       // HDC queries that found results
-      hdcBindings: 0,        // Total bindings found via HDC
-      // Holographic / HDC-first stats (populated by holographic engines)
-      holographicQueries: 0,
-      holographicQueryHdcSuccesses: 0,
-      holographicProofs: 0,
+	      // HDC-specific stats
+	      hdcQueries: 0,         // Total queries using HDC Master Equation
+	      hdcSuccesses: 0,       // HDC queries that found results
+	      hdcBindings: 0,        // Total bindings found via HDC
+	      hdcUsefulOps: 0,       // Query/prove ops where final method is HDC-based
+	      // Holographic / HDC-first stats (populated by holographic engines)
+	      holographicQueries: 0,
+	      holographicQueryHdcSuccesses: 0,
+	      holographicProofs: 0,
       hdcUnbindAttempts: 0,
       hdcUnbindSuccesses: 0,
       hdcValidationAttempts: 0,

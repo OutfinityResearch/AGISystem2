@@ -236,17 +236,31 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec, opt
           continue;
         }
 
+        const totalArgs = Math.max(hole.index, ...knowns.map(k => k.index));
+        const factArgs = [];
+        for (let i = 1; i <= totalArgs; i++) {
+          if (i === hole.index) {
+            factArgs.push(match.name);
+          } else {
+            const known = knowns.find(k => k.index === i);
+            factArgs.push(known?.name ?? '');
+          }
+        }
+        const steps = [`${operatorName} ${factArgs.join(' ')}`];
+
         const factBindings = new Map();
         factBindings.set(hole.name, {
           answer: match.name,
           similarity: match.similarity,
-          method: 'hdc'
+          method: 'hdc',
+          steps
         });
 
         results.push({
           bindings: factBindings,
           score: match.similarity,
-          method: 'hdc'
+          method: 'hdc',
+          steps
         });
       }
     }
@@ -378,19 +392,33 @@ export function searchHDCByLevel(session, operatorName, knowns, holes, operatorV
           continue;
         }
 
+        const totalArgs = Math.max(hole.index, ...knowns.map(k => k.index));
+        const factArgs = [];
+        for (let i = 1; i <= totalArgs; i++) {
+          if (i === hole.index) {
+            factArgs.push(match.name);
+          } else {
+            const known = knowns.find(k => k.index === i);
+            factArgs.push(known?.name ?? '');
+          }
+        }
+        const steps = [`${operatorName} ${factArgs.join(' ')}`];
+
         const factBindings = new Map();
         factBindings.set(hole.name, {
           answer: match.name,
           similarity: match.similarity,
           method: 'hdc_level',
-          level
+          level,
+          steps
         });
 
         results.push({
           bindings: factBindings,
           score: match.similarity,
           method: 'hdc_level',
-          level
+          level,
+          steps
         });
 
         // Early termination on high confidence

@@ -231,63 +231,45 @@ for (const suite of suiteResults) {
 
 ### 4.1 Formula
 
-**HDC% = (hdcSuccesses / hdcQueries) × 100**
+**HDC% = (hdcUsefulOps / hdcOps) × 100**
 
 Where:
-- `hdcSuccesses` = number of HDC queries that found at least one match
-- `hdcQueries` = total number of HDC query attempts
+- `hdcOps` = total number of HDC-based operations attempted (asked)
+- `hdcUsefulOps` = number of operations where the final answer used an HDC method (`method` starts with `hdc`)
 
 ### 4.2 Holographic Mode Aggregation
 
-For holographic priority mode, HDC% combines both symbolic and holographic operations:
+HDC% is computed over all `query()` + `prove()` operations (asked ops), regardless of which engine ran internally:
 
 ```javascript
-// Per-suite calculation (reporter.mjs:373-376)
-const hdcQ = (stats.hdcQueries || 0) +
-             (stats.holographicQueries || 0) +
-             (stats.holographicProofs || 0);
+// Per-suite calculation (reporter.mjs)
+const hdcOps = (stats.queries || 0) + (stats.proofs || 0);
 
-const hdcS = (stats.hdcSuccesses || 0) +
-             (stats.hdcUnbindSuccesses || 0) +
-             (stats.hdcProofSuccesses || 0);
+const hdcUsefulOps = stats.hdcUsefulOps || 0;
 
-const hdcPct = hdcQ > 0 ? Math.floor((hdcS / hdcQ) * 100) : 0;
+const hdcPct = hdcOps > 0 ? Math.floor((hdcUsefulOps / hdcOps) * 100) : 0;
 ```
 
 ### 4.3 Global HDC% Calculation
 
-Aggregated across all suites (reporter.mjs:342-347):
+Aggregated across all suites (reporter.mjs):
 
 ```javascript
-// Aggregate symbolic engine stats
-aggregatedStats.hdcQueries += stats.hdcQueries || 0;
-aggregatedStats.hdcSuccesses += stats.hdcSuccesses || 0;
+// Aggregate asked ops + useful ops
+aggregatedStats.hdcOps += (stats.queries || 0) + (stats.proofs || 0);
+aggregatedStats.hdcUsefulOps += stats.hdcUsefulOps || 0;
 
-// Aggregate holographic engine stats
-const holoOps = (stats.holographicQueries || 0) + (stats.holographicProofs || 0);
-const holoSuccesses = (stats.hdcUnbindSuccesses || 0) + (stats.hdcProofSuccesses || 0);
-aggregatedStats.hdcQueries += holoOps;
-aggregatedStats.hdcSuccesses += holoSuccesses;
-
-// Final percentage (reporter.mjs:425-427)
-const totalHdcPct = aggregatedStats.hdcQueries > 0
-  ? Math.floor((aggregatedStats.hdcSuccesses / aggregatedStats.hdcQueries) * 100)
+const totalHdcPct = aggregatedStats.hdcOps > 0
+  ? Math.floor((aggregatedStats.hdcUsefulOps / aggregatedStats.hdcOps) * 100)
   : 0;
 ```
 
 ### 4.4 Display Format
 
-**Per-suite**: Simple percentage (reporter.mjs:376-377):
+**Per-suite**: percentage + counts:
 ```javascript
-const hdcStr = hdcQ > 0 ? `${hdcPct}%` : '-';
-```
-
-**Global totals**: Percentage with counts (reporter.mjs:688-695):
-```javascript
-const hdcPct = totals.hdcTotal > 0
-  ? Math.floor((totals.hdcSuccesses / totals.hdcTotal) * 100)
-  : 0;
-const cellContent = `${hdcPct}% (${totals.hdcSuccesses}/${totals.hdcTotal})`.padEnd(colW);
+const hdcStr = hdcOps > 0 ? `${hdcPct}%` : '-';
+const hdcCountStr = hdcOps > 0 ? `${hdcUsefulOps}/${hdcOps}` : '-';
 ```
 
 ---
@@ -499,14 +481,13 @@ Displayed:
 
 ### 9.2 HDC% Accuracy in Holographic Mode
 
-**Current behavior**: Combines different operation types:
+**Current behavior**: Uses “final answer uses HDC” over “asked ops”:
 ```javascript
-const hdcQ = hdcQueries + holographicQueries + holographicProofs;
-const hdcS = hdcSuccesses + hdcUnbindSuccesses + hdcProofSuccesses;
+const hdcOps = queries + proofs;
+const hdcUsefulOps = /* best method starts with 'hdc' */;
 ```
 
-**Issue**: Different operation types have different success criteria.
-- Lumping them together may obscure which HDC mode is more effective
+**Issue**: It answers “how often did HDC win the final answer”, not “how often HDC found candidates”.
 
 **Recommendation**: Consider separate metrics or weighted averages.
 

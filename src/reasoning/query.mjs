@@ -59,6 +59,7 @@ export const METHOD_PRIORITY = {
   compound_csp: 3,
   rule_derived: 2,
   hdc: 1,
+  hdc_level: 1,
   // Holographic engine output
   hdc_validated: 1
 };
@@ -202,8 +203,10 @@ export class QueryEngine {
         sameBindings(r.bindings, dm.bindings, holes)
       );
       if (existingIdx >= 0) {
-        // Replace HDC with direct if direct has higher priority
-        if (allResults[existingIdx].method === 'hdc') {
+        const existing = allResults[existingIdx];
+        const existingPriority = METHOD_PRIORITY[existing.method] || 0;
+        const replacementPriority = METHOD_PRIORITY[dm.method] || 0;
+        if (replacementPriority > existingPriority) {
           allResults[existingIdx] = dm;
         }
       } else {
@@ -222,8 +225,10 @@ export class QueryEngine {
           sameBindings(r.bindings, tm.bindings, holes)
         );
         if (existingIdx >= 0) {
-          // Replace HDC with transitive
-          if (allResults[existingIdx].method === 'hdc') {
+          const existing = allResults[existingIdx];
+          const existingPriority = METHOD_PRIORITY[existing.method] || 0;
+          const replacementPriority = METHOD_PRIORITY[tm.method] || 0;
+          if (replacementPriority > existingPriority) {
             allResults[existingIdx] = tm;
           }
         } else {
@@ -241,8 +246,10 @@ export class QueryEngine {
         sameBindings(r.bindings, rm.bindings, holes)
       );
       if (existingIdx >= 0) {
-        // Replace HDC with rule_derived
-        if (allResults[existingIdx].method === 'hdc') {
+        const existing = allResults[existingIdx];
+        const existingPriority = METHOD_PRIORITY[existing.method] || 0;
+        const replacementPriority = METHOD_PRIORITY[rm.method] || 0;
+        if (replacementPriority > existingPriority) {
           allResults[existingIdx] = rm;
         }
       } else {

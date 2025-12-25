@@ -1,5 +1,6 @@
 import { parse } from '../parser/parser.mjs';
 import { canonicalizeStatement } from './canonicalize.mjs';
+import { isHdcMethod } from './session-stats.mjs';
 
 /**
  * Execute query using HDC + Symbolic Reasoning (unified interface)
@@ -39,6 +40,10 @@ export function query(session, dsl, options = {}) {
       const method = result.allResults?.[0]?.method || 'query_match';
       session.trackMethod(method);
       session.trackOperation('query_search');
+
+      if (isHdcMethod(method)) {
+        session.reasoningStats.hdcUsefulOps = (session.reasoningStats.hdcUsefulOps || 0) + 1;
+      }
     }
 
     return result;

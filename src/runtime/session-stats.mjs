@@ -24,6 +24,7 @@ export function getReasoningStats(session, reset = false) {
       minProofDepth: Infinity, totalProofSteps: 0, totalReasoningSteps: 0,
       proofLengths: [], methods: {}, operations: {},
       hdcQueries: 0, hdcSuccesses: 0, hdcBindings: 0,
+      hdcUsefulOps: 0,
       holographicQueries: 0, holographicQueryHdcSuccesses: 0, holographicProofs: 0,
       hdcUnbindAttempts: 0, hdcUnbindSuccesses: 0,
       hdcValidationAttempts: 0, hdcValidationSuccesses: 0,
@@ -35,4 +36,9 @@ export function getReasoningStats(session, reset = false) {
   }
 
   return stats;
+}
+
+export function isHdcMethod(method) {
+  if (!method || typeof method !== 'string') return false;
+  return method === 'hdc' || method === 'hdc_level' || method.startsWith('hdc_');
 }

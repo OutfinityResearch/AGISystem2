@@ -80,6 +80,7 @@ export const steps = [
     action: 'query',
     input_nl: 'How many steps are in the learning-report plan?',
     input_dsl: '@q plan planLearn ?len',
+    maxResults: 1,
     expected_nl: [
       'Plan planLearn has 3 steps.'
     ],
@@ -92,6 +93,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is step 1 of the learning-report plan?',
     input_dsl: '@q planStep planLearn 1 ?action',
+    maxResults: 1,
     expected_nl: [
       'Step 1 of plan planLearn is ReadDS03.'
     ],
@@ -103,6 +105,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What tool is used at step 1 (with parameters)?',
     input_dsl: '@q planAction planLearn 1 ?tool ?input ?output',
+    maxResults: 1,
     expected_nl: [
       'Step 1 of plan planLearn uses ReadFile with DS03Spec and DS03Text.'
     ],
@@ -115,6 +118,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is step 2 of the learning-report plan?',
     input_dsl: '@q planStep planLearn 2 ?action',
+    maxResults: 1,
     expected_nl: [
       'Step 2 of plan planLearn is ExtractLearnReturn.'
     ],
@@ -126,6 +130,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What tool is used at step 2 (with parameters)?',
     input_dsl: '@q planAction planLearn 2 ?tool ?input ?output',
+    maxResults: 1,
     expected_nl: [
       'Step 2 of plan planLearn uses Extract with DS03Text and LearnReturnInfo.'
     ],
@@ -138,6 +143,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is step 3 of the learning-report plan?',
     input_dsl: '@q planStep planLearn 3 ?action',
+    maxResults: 1,
     expected_nl: [
       'Step 3 of plan planLearn is WriteLearnReport.'
     ],
@@ -149,6 +155,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What tool is used at step 3 (with parameters)?',
     input_dsl: '@q planAction planLearn 3 ?tool ?input ?output',
+    maxResults: 1,
     expected_nl: [
       'Step 3 of plan planLearn uses WriteFile with LearnReturnInfo and LearnReturnReport.'
     ],
@@ -181,6 +188,7 @@ export const steps = [
     action: 'query',
     input_nl: 'How many steps are in the eval-report plan?',
     input_dsl: '@q plan planEval ?len',
+    maxResults: 1,
     expected_nl: [
       'Plan planEval has 3 steps.'
     ],
@@ -193,6 +201,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is step 1 of the eval-report plan?',
     input_dsl: '@q planStep planEval 1 ?action',
+    maxResults: 1,
     expected_nl: [
       'Step 1 of plan planEval is ReadDS14.'
     ],
@@ -204,6 +213,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What tool is used at step 1 (with parameters)?',
     input_dsl: '@q planAction planEval 1 ?tool ?input ?output',
+    maxResults: 1,
     expected_nl: [
       'Step 1 of plan planEval uses ReadFile with DS14Spec and DS14Text.'
     ],
@@ -216,6 +226,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is step 2 of the eval-report plan?',
     input_dsl: '@q planStep planEval 2 ?action',
+    maxResults: 1,
     expected_nl: [
       'Step 2 of plan planEval is ExtractProveNoHoles.'
     ],
@@ -227,6 +238,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What tool is used at step 2 (with parameters)?',
     input_dsl: '@q planAction planEval 2 ?tool ?input ?output',
+    maxResults: 1,
     expected_nl: [
       'Step 2 of plan planEval uses Extract with DS14Text and ProveNoHolesInfo.'
     ],
@@ -239,6 +251,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What is step 3 of the eval-report plan?',
     input_dsl: '@q planStep planEval 3 ?action',
+    maxResults: 1,
     expected_nl: [
       'Step 3 of plan planEval is WriteEvalReport.'
     ],
@@ -250,6 +263,7 @@ export const steps = [
     action: 'query',
     input_nl: 'What tool is used at step 3 (with parameters)?',
     input_dsl: '@q planAction planEval 3 ?tool ?input ?output',
+    maxResults: 1,
     expected_nl: [
       'Step 3 of plan planEval uses WriteFile with ProveNoHolesInfo and EvalReport.'
     ],
@@ -260,4 +274,3 @@ export const steps = [
 ];
 
 export default { name, description, theories, steps };
-

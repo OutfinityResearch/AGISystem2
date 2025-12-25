@@ -147,7 +147,8 @@ export function tryContrapositiveNot(self, innerOp, innerArgs, depth, proveGoalF
     else if (rule.conclusionAST) concLeaves.push(rule.conclusionAST);
     if (concLeaves.length === 0) continue;
 
-    for (const leafAst of condLeaves) {
+    for (let targetIdx = 0; targetIdx < condLeaves.length; targetIdx++) {
+      const leafAst = condLeaves[targetIdx];
       const leafOp = self.unification.extractOperatorFromAST(leafAst);
       const leafArgs = self.unification.extractArgsFromAST(leafAst);
       if (!leafOp || leafOp !== innerOp) continue;
@@ -170,11 +171,12 @@ export function tryContrapositiveNot(self, innerOp, innerArgs, depth, proveGoalF
 
         const otherSteps = [];
         let ok = true;
-        for (const other of condLeaves) {
-          if (other === leafAst) continue;
+        for (let i = 0; i < condLeaves.length; i++) {
+          if (i === targetIdx) continue;
+          const other = condLeaves[i];
           const inst = self.unification.instantiateAST(other, bindings);
           if (!inst || inst.includes('?')) { ok = false; break; }
-          const parts = inst.trim().split(/\\s+/);
+          const parts = inst.trim().split(/\s+/);
           if (parts.length < 2) { ok = false; break; }
           const stmt = buildStatementFromStrings(parts[0], parts.slice(1));
           const res = proveGoalFn(self, stmt, depth + 1);
@@ -207,4 +209,3 @@ export function tryContrapositiveNot(self, innerOp, innerArgs, depth, proveGoalF
 }
 
 export { buildStatementFromStrings };
-

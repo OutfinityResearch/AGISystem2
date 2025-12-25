@@ -169,6 +169,76 @@ class ProveTranslator extends BaseTranslator {
     return this.describePositiveProof(reasoningResult);
   }
 
+  formatRuleLabelFromSource(ruleSource) {
+    const src = String(ruleSource || '').trim();
+    if (!src) return null;
+    const m = src.match(/\bImplies\s+\$(\w+)\s+\$(\w+)\s*$/i);
+    if (m) return `Implies @${m[1]} @${m[2]}`;
+    if (/^\s*Implies\b/i.test(src)) {
+      // Prefer @-style references in logs (human-friendly and matches suite expectations).
+      return src.replace(/\$/g, '@');
+    }
+    return null;
+  }
+
+  exprToHuman(expr) {
+    if (!expr || typeof expr !== 'object') return String(expr ?? '');
+
+    const termToToken = (node) => {
+      if (!node || typeof node !== 'object') return String(node ?? '');
+      if (node.type === 'Identifier') return node.name;
+      if (node.type === 'Hole') return `?${node.name}`;
+      if (node.type === 'Reference') return `@${node.name}`;
+      if (node.type === 'Literal') return node.literalType === 'string' ? String(node.value) : String(node.value);
+      return typeof node.toString === 'function' ? node.toString() : String(node);
+    };
+
+    if (expr.type === 'Statement') {
+      const op = expr.operator?.name || expr.operator?.value || termToToken(expr.operator);
+      const args = Array.isArray(expr.args) ? expr.args.map(termToToken) : [];
+      return this.session.generateText(op, args).replace(/[.!?]+$/, '');
+    }
+
+    if (expr.type === 'Compound') {
+      const op = expr.operator?.name || expr.operator?.value || termToToken(expr.operator);
+      const args = Array.isArray(expr.args) ? expr.args : [];
+      if (op === 'Not' && args.length === 1) {
+        return `NOT (${this.exprToHuman(args[0])})`;
+      }
+      if ((op === 'And' || op === 'Or') && args.length > 0) {
+        const joiner = op === 'And' ? ' AND ' : ' OR ';
+        return args.map(a => `(${this.exprToHuman(a)})`).join(joiner);
+      }
+      const rendered = args.map(a => this.exprToHuman(a)).join(', ');
+      return `${op}(${rendered})`;
+    }
+
+    return typeof expr.toString === 'function' ? expr.toString() : String(expr);
+  }
+
+  bindingsToHuman(bindings) {
+    if (!bindings || typeof bindings !== 'object') return null;
+    const entries = Object.entries(bindings).filter(([, v]) => typeof v === 'string' && v.trim().length > 0);
+    if (entries.length === 0) return null;
+    const parts = entries.map(([k, v]) => `?${k}=${v}`);
+    return `Bindings: ${parts.join(', ')}`;
+  }
+
+  compoundToHuman(part) {
+    if (!part || typeof part !== 'object') return String(part ?? '');
+    if (part.type === 'leaf') {
+      return this.exprToHuman(part.ast);
+    }
+    if (part.type === 'Not' && part.inner) {
+      return `NOT (${this.compoundToHuman(part.inner)})`;
+    }
+    if ((part.type === 'And' || part.type === 'Or') && Array.isArray(part.parts)) {
+      const joiner = part.type === 'And' ? ' AND ' : ' OR ';
+      return part.parts.map(p => `(${this.compoundToHuman(p)})`).join(joiner);
+    }
+    return typeof part.toString === 'function' ? part.toString() : String(part);
+  }
+
   parseNotGoal(goalString) {
     if (!goalString || typeof goalString !== 'string') return null;
     const parts = goalString.trim().split(/\s+/).filter(p => !p.startsWith('@'));
@@ -315,21 +385,33 @@ class ProveTranslator extends BaseTranslator {
       return true;
     };
 
+    const ruleById = (ruleId) => {
+      if (!ruleId) return null;
+      return (this.session.rules || []).find(r => r.id === ruleId) || null;
+    };
+
     for (const step of steps) {
       if (['rule_match', 'unification_match', 'rule_applied'].includes(step.operation)) {
         ruleApplied = true;
-        let ruleName = step.rule || 'rule';
-        if (/^rule_[0-9a-f]+$/i.test(ruleName)) {
-          ruleName = 'rule';
+        const ruleObj = ruleById(step.ruleId);
+        const label =
+          this.formatRuleLabelFromSource(ruleObj?.source) ||
+          (typeof step.rule === 'string' && step.rule.trim().length > 0 ? step.rule.trim() : null) ||
+          'rule';
+
+        appliedRuleText = `Applied rule: ${label}`;
+        if (!proofSteps.includes(appliedRuleText)) proofSteps.push(appliedRuleText);
+
+        if (ruleObj?.conditionParts && ruleObj?.conclusionParts) {
+          const cond = this.compoundToHuman(ruleObj.conditionParts);
+          const conc = this.compoundToHuman(ruleObj.conclusionParts);
+          const meaning = `Rule meaning: IF ${cond} THEN ${conc}`;
+          if (!proofSteps.includes(meaning)) proofSteps.push(meaning);
         }
-        if (ruleName.includes('@causeAnd') || ruleName.includes('indirectConc')) {
-          ruleName = '(A causes B AND B causes C) implies wouldPrevent A C';
-        }
-        const factText = step.fact ? ` implies ${step.fact}` : '';
-        appliedRuleText = `Applied rule: ${ruleName}${factText}`;
-        if (!proofSteps.includes(appliedRuleText)) {
-          proofSteps.push(appliedRuleText);
-        }
+
+        const bindingLine = this.bindingsToHuman(step.bindings);
+        if (bindingLine && !proofSteps.includes(bindingLine)) proofSteps.push(bindingLine);
+
         continue;
       }
 
@@ -675,7 +757,7 @@ class QueryTranslator extends BaseTranslator {
   }
 
   buildTextFromBinding(bindings, parts) {
-    const { answer, proof } = this.buildTextAndProofFromBinding(bindings, parts);
+    const { answer, proof } = this.buildTextAndProofFromBinding({ bindings }, parts);
     if (!answer) return null;
     if (proof && proof.length > 0) {
       return `${answer}. Proof: ${proof.join('. ')}`;
@@ -683,7 +765,39 @@ class QueryTranslator extends BaseTranslator {
     return answer;
   }
 
-  buildTextAndProofFromBinding(bindings, parts) {
+  normalizeProofSteps(proofSteps) {
+    if (!proofSteps) return [];
+    const raw = Array.isArray(proofSteps) ? proofSteps : [proofSteps];
+    const out = [];
+    for (const step of raw) {
+      if (typeof step !== 'string') continue;
+      const s = step.trim();
+      if (!s) continue;
+      // Humanize simple DSL fact strings for readability.
+      const parts = s.split(/\s+/).filter(Boolean);
+      if (parts.length >= 3 && /^[A-Za-z_][A-Za-z0-9_]*$/.test(parts[0])) {
+        const op = parts[0];
+        const args = parts.slice(1);
+        const generated = this.session.generateText(op, args).replace(/[.!?]+$/, '');
+        out.push(generated || s);
+      } else {
+        out.push(s);
+      }
+    }
+    return out;
+  }
+
+  shouldUpgradeProofSteps(proofSteps) {
+    const steps = this.normalizeProofSteps(proofSteps);
+    if (steps.length === 0) return true;
+    if (steps.length <= 2) return true;
+    if (steps.some(s => /\bApplied rule:\s*Implies\b/i.test(s))) return true;
+    if (!steps.some(s => /\bcondition satisfied\b/i.test(s))) return true;
+    return false;
+  }
+
+  buildTextAndProofFromBinding(entry, parts) {
+    const bindings = entry?.bindings;
     const op = parts[0];
     const args = parts.slice(1).map(arg => {
       if (!arg.startsWith('?')) return arg;
@@ -704,7 +818,14 @@ class QueryTranslator extends BaseTranslator {
     const proofSteps = bindingData?.steps;
 
     if (proofSteps && proofSteps.length > 0) {
-      return { answer: generatedText, proof: proofSteps };
+      if (this.shouldUpgradeProofSteps(proofSteps)) {
+        const proveProof = this.generateProofFromProve(op, args);
+        if (proveProof) {
+          const proofArray = proveProof.split('. ').filter(s => s.length > 0);
+          return { answer: generatedText, proof: proofArray };
+        }
+      }
+      return { answer: generatedText, proof: this.normalizeProofSteps(proofSteps) };
     }
 
     const proveProof = this.generateProofFromProve(op, args);
@@ -722,9 +843,8 @@ class QueryTranslator extends BaseTranslator {
       const goal = ['@goal:goal', op, ...args].join(' ');
       const proofResult = this.session.prove(goal);
       if (!proofResult?.valid) return null;
-      const elaboration = this.session.elaborate(proofResult) || {};
-      const full = elaboration.fullProof || elaboration.text || '';
-      const proofMatch = full.match(/Proof:\s*(.+)/);
+      const described = this.session.describeResult({ action: 'prove', reasoningResult: proofResult, queryDsl: goal }) || '';
+      const proofMatch = String(described).match(/Proof:\s*(.+)/);
       return proofMatch ? proofMatch[1].trim() : null;
     } catch {
       return null;

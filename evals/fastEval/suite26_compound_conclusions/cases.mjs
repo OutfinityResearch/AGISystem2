@@ -37,7 +37,15 @@ export const steps = [
     input_nl: 'BUG001 regression: prove leaf (Zumpus) from And consequent.',
     input_dsl: '@goal isA Sally Zumpus',
     expected_nl: 'True: Sally is a zumpus.',
-    proof_nl: 'Applied rule: Implies. And condition satisfied. Therefore Sally is a zumpus.'
+    proof_nl: [
+      'Applied rule: Implies @ant @cons',
+      'Rule meaning: IF',
+      'Sally is a wumpus',
+      'Sally is a sterpus',
+      'Sally is a gorpus',
+      'And condition satisfied',
+      'Therefore Sally is a zumpus'
+    ]
   },
 
   {
@@ -45,7 +53,15 @@ export const steps = [
     input_nl: 'Also prove the other leaf (Impus) from the same And consequent.',
     input_dsl: '@goal isA Sally Impus',
     expected_nl: 'True: Sally is a impus.',
-    proof_nl: 'Applied rule: Implies'
+    proof_nl: [
+      'Applied rule: Implies @ant @cons',
+      'Rule meaning: IF',
+      'Sally is a wumpus',
+      'Sally is a sterpus',
+      'Sally is a gorpus',
+      'And condition satisfied',
+      'Therefore Sally is an impus'
+    ]
   },
 
   {
@@ -53,7 +69,8 @@ export const steps = [
     input_nl: 'Query: who is a zumpus?',
     input_dsl: '@q isA ?who Zumpus',
     expected_nl: ['Sally is a zumpus.'],
-    proof_nl: ['Applied rule: Implies']
+    proof_nl: [
+      'Applied rule: Implies @ant @cons. Rule meaning: IF. Sally is a wumpus. Sally is a sterpus. Sally is a gorpus. And condition satisfied'
+    ]
   }
 ];
-

@@ -49,6 +49,27 @@ export const steps = [
       'Stella is a rompus',
       'Stella is a lorpus'
     ]
+  },
+  {
+    action: 'learn',
+    input_nl: 'Setup: contrapositive where the rule conclusion is a conjunction (A → (B ∧ C)).',
+    input_dsl: `
+      @cond8 isA ?x Vumpus
+      @cond9 isA ?x Brimpus
+      @cond10 isA ?x Zumpus
+      @and11 And $cond9 $cond10
+      Implies $cond8 $and11
+
+      @base12 isA Alex Brimpus
+      Not $base12
+    `,
+    expected_nl: 'Learned 1 facts'
+  },
+  {
+    action: 'prove',
+    input_nl: 'Prove: Alex is not a vumpus (from Not(Brimpus) and Vumpus→(Brimpus∧Zumpus)).',
+    input_dsl: '@goal:goal Not (isA Alex Vumpus)',
+    expected_nl: 'True: Not((isA, Alex, Vumpus)).',
+    proof_nl: 'Not (isA Alex Brimpus)'
   }
 ];
-
