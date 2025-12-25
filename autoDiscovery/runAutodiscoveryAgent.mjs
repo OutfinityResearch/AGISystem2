@@ -18,7 +18,8 @@ import { loadExamples } from './libs/logiglue/dataset-loader.mjs';
 import { ensureDir } from './discovery/fs-utils.mjs';
 import { loadAnalysedCases } from './discovery/analysed.mjs';
 import { runBatch } from './discovery/run-batch.mjs';
-import { processQuarantine } from './discovery/process-quarantine.mjs';
+import { categorizeQuarantine } from './libs/categorize-quarantine.mjs';
+import { refreshFolderReport } from './libs/reports.mjs';
 import {
   C,
   DEFAULT_BATCH_SIZE,
@@ -28,6 +29,7 @@ import {
   BUG_CASES_DIR,
   NLP_BUGS_DIR
 } from './discovery/constants.mjs';
+import { BUG_PATTERNS, NLP_BUG_PATTERNS } from './discovery/patterns.mjs';
 
 function parseArgs(argv) {
   const args = argv.slice(2);
@@ -57,6 +59,8 @@ function parseArgs(argv) {
     clean: args.includes('--clean'),
     strictOperators: args.includes('--strict-operators'),
     offline: !args.includes('--online'),
+    maxPerBug: getIntArg('--max-per-bug', 10),
+    maxPerNlpBug: getIntArg('--max-per-nlpbug', 10),
     keepBugCases: args.includes('--keep-bugcases'),
     keepNlpBugs: args.includes('--keep-nlpbugs'),
     verbose: args.includes('--verbose') || args.includes('-v'),
@@ -75,7 +79,9 @@ ${C.bold}Usage:${C.reset}
 
 ${C.bold}Modes:${C.reset}
   run              Discover + process quarantine (default)
-  discover         Only discover (sample + execute)
+  discover         Sample + execute, write failures to quarantine
+  categorize       Re-run quarantine and bucket into bugCases/nlpBugs
+  report           Enforce caps and rewrite report.md files
   clean            Delete analysed/quarantine/bugCases/nlpBugs
   status           Print current folder status (quarantine, bugCases, nlpBugs)
 
@@ -86,6 +92,8 @@ ${C.bold}Options:${C.reset}
   --source=NAME         Filter to one source (prontoqa, folio, logiqa, logicnli, ...)
   --seed=N              Random seed (default: Date.now())
   --online              Allow dataset downloads (default: offline/cache-only)
+  --max-per-bug=N       Keep at most N cases per BUG folder (default: 10)
+  --max-per-nlpbug=N    Keep at most N cases per NLP folder (default: 10)
   --continuous          Loop until interrupted (Ctrl+C)
   --clean               Start from scratch (also deletes bug folders)
   --strict-operators    Disable auto-declaration of unknown operators during translation
@@ -156,7 +164,7 @@ function printStatus() {
   console.log(`  - analysed:   ${fs.existsSync(ANALYSED_FILE) ? 'present' : 'missing'}`);
 }
 
-async function runDiscoverOnce(args) {
+async function runDiscoverOnce(args, { quarantineOnly = true } = {}) {
   console.log(`${C.bold}${C.magenta}AGISystem2 - AutoDiscovery Agent${C.reset}`);
   console.log(`${C.dim}Mode: ${args.mode} | loadCore: true | offline=${args.offline !== false} | autoDeclareUnknownOperators=${!args.strictOperators}${C.reset}\n`);
 
@@ -181,7 +189,8 @@ async function runDiscoverOnce(args) {
 
   const results = await runBatch(examples, analysedCases, {
     ...args,
-    autoDeclareUnknownOperators: args.strictOperators !== true
+    autoDeclareUnknownOperators: args.strictOperators !== true,
+    quarantineAllFailures: quarantineOnly === true
   });
 
   const accuracy = results.total > 0 ? ((results.passed / results.total) * 100).toFixed(1) : '0.0';
@@ -198,32 +207,54 @@ async function runDiscoverOnce(args) {
 
   printSourceStats(results.bySourceStats);
 
-  // Always process quarantine into bug folders to keep quarantine clean.
-  let movedTotal = 0;
-  try {
-    const moved = processQuarantine({
-      translatorOptions: { autoDeclareUnknownOperators: args.strictOperators !== true }
-    });
-    movedTotal = Object.values(moved.bug || {}).reduce((a, b) => a + b, 0) +
-      Object.values(moved.nlp || {}).reduce((a, b) => a + b, 0);
-  } catch {
-    // ignore
+  if (quarantineOnly) {
+    const quarantineCount = countJsonFiles(QUARANTINE_DIR);
+    console.log(`\n${C.dim}Quarantine now contains ${quarantineCount} case(s). Run:${C.reset}`);
+    console.log(`  node autoDiscovery/runAutodiscoveryAgent.mjs categorize --max-per-bug=${args.maxPerBug} --max-per-nlpbug=${args.maxPerNlpBug}`);
   }
-  if (movedTotal > 0) {
-    console.log(`${C.dim}Quarantine processed: moved ${movedTotal} cases.${C.reset}`);
+}
+
+function refreshAllReports({ maxPerBug = 10, maxPerNlpBug = 10 } = {}) {
+  // BUG folders
+  if (fs.existsSync(BUG_CASES_DIR)) {
+    const bugDirs = fs.readdirSync(BUG_CASES_DIR).filter(d => d.startsWith('BUG') && fs.statSync(join(BUG_CASES_DIR, d)).isDirectory());
+    for (const bugId of bugDirs) {
+      const p = BUG_PATTERNS[bugId] || { name: bugId, description: '' };
+      refreshFolderReport(join(BUG_CASES_DIR, bugId), { id: bugId, title: p.name, description: p.description, maxCases: maxPerBug });
+    }
   }
+  // NLP folders
+  if (fs.existsSync(NLP_BUGS_DIR)) {
+    const nlpDirs = fs.readdirSync(NLP_BUGS_DIR).filter(d => d.startsWith('NLP') && fs.statSync(join(NLP_BUGS_DIR, d)).isDirectory());
+    for (const nlpId of nlpDirs) {
+      const p = NLP_BUG_PATTERNS[nlpId] || { name: nlpId, description: '' };
+      refreshFolderReport(join(NLP_BUGS_DIR, nlpId), { id: nlpId, title: p.name, description: p.description, maxCases: maxPerNlpBug });
+    }
+  }
+}
 
-  // Keep workspace clean: translation bugs should be fixed, not accumulated.
-  if (!args.keepNlpBugs) safeRm(NLP_BUGS_DIR);
+function runCategorize(args) {
+  console.log(`${C.bold}${C.magenta}AGISystem2 - AutoDiscovery Agent${C.reset}`);
+  console.log(`${C.dim}Mode: categorize | re-run quarantine | autoDeclareUnknownOperators=${!args.strictOperators}${C.reset}\n`);
 
-  // Report end-state status (must be clean for quarantine + nlpBugs).
+  const stats = categorizeQuarantine({
+    autoDeclareUnknownOperators: args.strictOperators !== true,
+    maxPerBug: args.maxPerBug,
+    maxPerNlpBug: args.maxPerNlpBug
+  });
+
+  console.log(`${C.bold}Categorize Results:${C.reset}`);
+  console.log(`  fixed (no longer reproduces): ${stats.fixed}`);
+  console.log(`  moved to bugCases: ${stats.movedBug}`);
+  console.log(`  moved to nlpBugs:  ${stats.movedNlp}`);
+
+  refreshAllReports({ maxPerBug: args.maxPerBug, maxPerNlpBug: args.maxPerNlpBug });
+
   const quarantineCount = countJsonFiles(QUARANTINE_DIR);
-  const nlpCount = countJsonFiles(NLP_BUGS_DIR);
-  if (quarantineCount > 0) {
-    console.log(`${C.yellow}WARNING: quarantine is not empty (${quarantineCount} json).${C.reset}`);
-  }
-  if (nlpCount > 0) {
-    console.log(`${C.yellow}WARNING: nlpBugs is not empty (${nlpCount} json).${C.reset}`);
+  console.log(`\n${C.dim}Quarantine remaining: ${quarantineCount}${C.reset}`);
+  if (!args.keepNlpBugs) {
+    // Optional hygiene: keep only bugCases by default.
+    safeRm(NLP_BUGS_DIR);
   }
 }
 
@@ -235,6 +266,12 @@ async function main() {
   }
 
   if (args.mode === 'status') {
+    printStatus();
+    process.exit(0);
+  }
+
+  if (args.mode === 'report') {
+    refreshAllReports({ maxPerBug: args.maxPerBug, maxPerNlpBug: args.maxPerNlpBug });
     printStatus();
     process.exit(0);
   }
@@ -252,7 +289,15 @@ async function main() {
 
   const loop = args.continuous === true;
   do {
-    await runDiscoverOnce(args);
+    if (args.mode === 'categorize') {
+      runCategorize(args);
+    } else if (args.mode === 'discover') {
+      await runDiscoverOnce(args, { quarantineOnly: true });
+    } else {
+      // default: run = discover + categorize (keeps quarantine empty)
+      await runDiscoverOnce({ ...args, mode: 'discover' }, { quarantineOnly: true });
+      runCategorize(args);
+    }
     if (!loop) break;
     console.log(`\n${C.dim}Continuing... (Ctrl+C to stop)${C.reset}`);
     await new Promise(r => setTimeout(r, 500));

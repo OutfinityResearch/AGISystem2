@@ -24,6 +24,8 @@ export async function runBatch(examples, analysedCases, args) {
     byReason: {}
   };
 
+  const quarantineAllFailures = args?.quarantineAllFailures === true;
+
   const toProcess = [];
   for (const example of examples) {
     const caseId = generateCaseId(example.source || 'generic', example);
@@ -112,10 +114,12 @@ export async function runBatch(examples, analysedCases, args) {
 
       if (result.category === CATEGORY.TRANSLATION || result.category === CATEGORY.INVALID_GOAL || result.category === CATEGORY.LEARN_FAILED) {
         quarantineCase(result, example);
-        const nlpId = detectNlpBugPattern(result.reason, result, example);
-        if (nlpId) {
-          results.byNlpBug[nlpId] = (results.byNlpBug[nlpId] || 0) + 1;
-          writeNlpBugCaseJson(nlpId, result, example, translatorOptions);
+        if (!quarantineAllFailures) {
+          const nlpId = detectNlpBugPattern(result.reason, result, example);
+          if (nlpId) {
+            results.byNlpBug[nlpId] = (results.byNlpBug[nlpId] || 0) + 1;
+            writeNlpBugCaseJson(nlpId, result, example, translatorOptions);
+          }
         }
         continue;
       }
@@ -126,7 +130,11 @@ export async function runBatch(examples, analysedCases, args) {
         recordAnalysedCase(caseId, 'FAIL(B)', result.reason);
         const bugId = detectKnownBugPattern(result.translated, example, result) || 'BUG000';
         results.byBugType[bugId] = (results.byBugType[bugId] || 0) + 1;
-        writeBugCaseJson(bugId, result, example, translatorOptions);
+        if (quarantineAllFailures) {
+          quarantineCase(result, example);
+        } else {
+          writeBugCaseJson(bugId, result, example, translatorOptions);
+        }
         continue;
       }
 

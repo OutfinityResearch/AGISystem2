@@ -3,8 +3,8 @@ import { join } from 'node:path';
 
 import { CATEGORY, QUARANTINE_DIR } from './constants.mjs';
 import { ensureDir } from './fs-utils.mjs';
-import { detectKnownBugPattern } from './patterns.mjs';
-import { writeBugCaseJson } from './write-cases.mjs';
+import { detectKnownBugPattern, detectNlpBugPattern } from './patterns.mjs';
+import { writeBugCaseJson, writeNlpBugCaseJson } from './write-cases.mjs';
 
 export function processQuarantine({ translatorOptions = { autoDeclareUnknownOperators: true } } = {}) {
   ensureDir(QUARANTINE_DIR);
@@ -43,7 +43,16 @@ export function processQuarantine({ translatorOptions = { autoDeclareUnknownOper
         continue;
       }
 
-      // Non-reasoning failures are treated as BUG000 in this workflow to avoid leaving NLP folders around.
+      // Translation/goal/learn failures are stored separately to keep the bug tracker actionable.
+      if (data.category === CATEGORY.TRANSLATION || data.category === CATEGORY.INVALID_GOAL || data.category === CATEGORY.LEARN_FAILED) {
+        const nlpId = detectNlpBugPattern(data.reason, result, example) || 'NLP000';
+        writeNlpBugCaseJson(nlpId, result, example, translatorOptions);
+        moved.nlp[nlpId] = (moved.nlp[nlpId] || 0) + 1;
+        fs.unlinkSync(filePath);
+        continue;
+      }
+
+      // Unknown/unsupported/no-expectation: keep a small trace as BUG000 to avoid leaving quarantine dirty.
       writeBugCaseJson('BUG000', result, example, translatorOptions);
       moved.bug.BUG000 = (moved.bug.BUG000 || 0) + 1;
       fs.unlinkSync(filePath);

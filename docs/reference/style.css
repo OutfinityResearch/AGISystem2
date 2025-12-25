@@ -369,15 +369,35 @@ html {
     font-size: 1.5em;
   }
 
-  .nav-header small {
-    font-size: 0.95em;
-    line-height: 1.8;
+  /* Navigation menu - compact horizontal scroll on mobile */
+  .nav-header small:first-of-type {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    font-size: 0.9em;
+    line-height: 1.6;
+    margin: 10px 0;
   }
 
-  .nav-header small a {
+  .nav-header small:first-of-type a {
     display: inline-block;
-    padding: 4px 0; /* Better touch targets */
-    margin: 2px 6px;
+    padding: 6px 10px;
+    background: #e3f2fd;
+    border-radius: 4px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .nav-header small:first-of-type a:hover {
+    background: #bbdefb;
+  }
+
+  /* Subtitle line */
+  .nav-header small:last-of-type {
+    display: block;
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    margin-top: 8px;
   }
 
   .section-grid {

@@ -28,7 +28,28 @@ node autoDiscovery/runAutodiscoveryAgent.mjs --continuous --batch=200
 
 # Show current folder status
 node autoDiscovery/runAutodiscoveryAgent.mjs status
+
+# Rebuild report.md and enforce caps
+node autoDiscovery/runAutodiscoveryAgent.mjs report --max-per-bug=10 --max-per-nlpbug=10
 ```
+
+## Recommended Pattern (Discover → Triage → Categorize)
+
+When you want humans/LLMs to triage before bucketing:
+
+```bash
+# 1) Discover: writes failures into quarantine/
+node autoDiscovery/runAutodiscoveryAgent.mjs discover --batch=500
+
+# 2) (Human/LLM) inspect/edit patterns if needed:
+# - autoDiscovery/discovery/patterns.json
+# - autoDiscovery/quarantine/*.json
+
+# 3) Categorize: re-runs quarantine cases and buckets into bugCases/ + nlpBugs/
+node autoDiscovery/runAutodiscoveryAgent.mjs categorize --max-per-bug=10 --max-per-nlpbug=10
+```
+
+`run` mode does steps (1) + (3) automatically and leaves `quarantine/` empty.
 
 ## What It Prints Each Run
 
@@ -42,8 +63,9 @@ This is the “% passed per external evaluation suite” view.
 ## Outputs / Invariants
 
 After a normal run we expect:
-- `autoDiscovery/quarantine/` to be empty (the agent processes it into bug folders)
-- `autoDiscovery/nlpBugs/` to be empty (we treat translation bugs as “fix immediately”, not “accumulate”)
+- `autoDiscovery/quarantine/` to be empty (the agent categorizes it)
+- `autoDiscovery/bugCases/BUG*/` to contain at most `--max-per-bug` JSONs per BUG id
+- `autoDiscovery/nlpBugs/NLP*/` to contain at most `--max-per-nlpbug` JSONs per NLP id (only kept if you pass `--keep-nlpbugs`)
 - reasoning failures recorded as JSONs in `autoDiscovery/bugCases/BUG*/`
 
 Useful status check:
@@ -72,3 +94,6 @@ Run `--help` for the full list. The important ones:
 - `--strict-operators` disables auto-declaration of unknown operators (useful for “strict” translation checks)
 - `--clean` resets `analised.md`, `quarantine/`, and (by default) `bugCases/` + `nlpBugs/`
 
+## Notes on `tools/`
+
+`autoDiscovery/tools/` contains optional CLIs kept for debugging/backward-compatibility. The supported workflow is via `autoDiscovery/runAutodiscoveryAgent.mjs`.
