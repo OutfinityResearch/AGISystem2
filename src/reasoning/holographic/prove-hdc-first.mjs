@@ -71,6 +71,19 @@ export class HolographicProofEngine {
       (this.session.reasoningStats.holographicProofs || 0) + 1;
 
     try {
+      // Quantifiers are higher-order expressions; route them directly to symbolic proof.
+      // HDC matching is not meaningful for Exists/ForAll goals (and can produce misleading "trivial echo" outputs).
+      const topOp = this.extractOperatorName(goal);
+      const inner = goal?.args?.[0];
+      const innerOp = inner?.type === 'Compound' ? (inner.operator?.name || inner.operator?.value) : null;
+      const isQuantifier = topOp === 'Exists' || topOp === 'ForAll' ||
+        (topOp === 'Not' && (innerOp === 'Exists' || innerOp === 'ForAll'));
+      if (isQuantifier) {
+        const symbolicResult = this.symbolicEngine.prove(goal);
+        symbolicResult.reasoningSteps = this.reasoningSteps + (symbolicResult.reasoningSteps || 0);
+        return symbolicResult;
+      }
+
       // Step 1: Try HDC similarity search
       const hdcResult = this.tryHDCProof(goal);
 

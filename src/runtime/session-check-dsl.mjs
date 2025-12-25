@@ -135,7 +135,7 @@ function ensureKnownAtom(name, node, context) {
   context.errors.push(`Unknown concept '${name}'${formatLocation(node)}`);
 }
 
-function validateExpression(expr, context, role = 'argument') {
+function validateExpression(expr, context, role = 'argument', holesOk = context.allowHoles) {
   if (!expr) return;
 
   switch (expr.type) {
@@ -152,19 +152,23 @@ function validateExpression(expr, context, role = 'argument') {
       }
       return;
     case 'Hole':
-      if (!context.allowHoles) {
+      if (!holesOk) {
         context.errors.push(`Holes are not allowed in ${context.mode} DSL${formatLocation(expr)}`);
       }
       return;
     case 'Compound':
-      validateExpression(expr.operator, context, 'operator');
-      for (const arg of expr.args || []) {
-        validateExpression(arg, context, 'argument');
+      validateExpression(expr.operator, context, 'operator', holesOk);
+      {
+        const opName = expr.operator?.name;
+        const nestedHolesOk = holesOk || opName === 'Exists' || opName === 'ForAll';
+        for (const arg of expr.args || []) {
+          validateExpression(arg, context, 'argument', nestedHolesOk);
+        }
       }
       return;
     case 'List':
       for (const item of expr.items || []) {
-        validateExpression(item, context, 'argument');
+        validateExpression(item, context, 'argument', holesOk);
       }
       return;
     case 'Literal':
@@ -176,22 +180,28 @@ function validateExpression(expr, context, role = 'argument') {
 }
 
 function validateStatement(stmt, context) {
-  validateExpression(stmt.operator, context, 'operator');
+  validateExpression(stmt.operator, context, 'operator', context.allowHoles);
 
   const operatorName = stmt.operator?.name;
   const args = stmt.args || [];
+  const quantifierHolesOk =
+    operatorName === 'Exists' ||
+    operatorName === 'ForAll' ||
+    (operatorName === 'Not' &&
+      args[0]?.type === 'Compound' &&
+      (args[0].operator?.name === 'Exists' || args[0].operator?.name === 'ForAll'));
 
   // Meta-constraints treat operator names as arguments.
   if (operatorName === 'mutuallyExclusive' && args.length >= 1) {
-    validateExpression(args[0], context, 'operator');
-    for (let i = 1; i < args.length; i++) validateExpression(args[i], context, 'argument');
+    validateExpression(args[0], context, 'operator', context.allowHoles);
+    for (let i = 1; i < args.length; i++) validateExpression(args[i], context, 'argument', context.allowHoles);
   } else if ((operatorName === 'inverseRelation' || operatorName === 'contradictsSameArgs') && args.length >= 2) {
-    validateExpression(args[0], context, 'operator');
-    validateExpression(args[1], context, 'operator');
-    for (let i = 2; i < args.length; i++) validateExpression(args[i], context, 'argument');
+    validateExpression(args[0], context, 'operator', context.allowHoles);
+    validateExpression(args[1], context, 'operator', context.allowHoles);
+    for (let i = 2; i < args.length; i++) validateExpression(args[i], context, 'argument', context.allowHoles);
   } else {
     for (const arg of args) {
-      validateExpression(arg, context, 'argument');
+      validateExpression(arg, context, 'argument', quantifierHolesOk || context.allowHoles);
     }
   }
   if (stmt.destination) {

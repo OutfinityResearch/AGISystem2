@@ -113,6 +113,12 @@ async function main() {
     } catch {
       // ignore
     }
+    try {
+      const bugDir = join('autoDiscovery', 'bugCases');
+      if (fs.existsSync(bugDir)) fs.rmSync(bugDir, { recursive: true, force: true });
+    } catch {
+      // ignore
+    }
   }
 
   ensureDir(QUARANTINE_DIR);

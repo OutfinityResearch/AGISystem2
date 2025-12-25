@@ -1,6 +1,8 @@
 import {
   normalizeEntity,
   normalizeVerb,
+  normalizeTypeName,
+  singularize,
   sanitizePredicate
 } from '../../utils.mjs';
 
@@ -11,6 +13,77 @@ import { collapseProperNames, isKnownOperator } from './shared.mjs';
 function disambiguateBinaryOp(op) {
   const rel = sanitizePredicate(`${op}_rel`);
   return rel || op;
+}
+
+function parseKinshipMentions(text, defaultVar = '?x', options = {}) {
+  const t = clean(text);
+  if (!t) return null;
+
+  const kin = new Set(['mother', 'father', 'son', 'daughter', 'aunt', 'uncle', 'brother', 'sister', 'wife', 'husband']);
+  const declaredOperators = [];
+  const items = [];
+
+  // "Max's aunt Rebecca ..." => aunt(Rebecca, Max)
+  const poss = t.match(/^([A-Z][A-Za-z0-9]*)'s\s+([a-z]+)\s+([A-Z][A-Za-z0-9]*)\b/);
+  if (poss) {
+    const relRaw = poss[2].toLowerCase();
+    if (kin.has(relRaw)) {
+      const op = sanitizePredicate(relRaw);
+      const a = normalizeEntity(poss[3], defaultVar);
+      const b = normalizeEntity(poss[1], defaultVar);
+      if (op && a && b) {
+        if (!isKnownOperator(op) && options.autoDeclareUnknownOperators) declaredOperators.push(op);
+        items.push({ negated: false, atom: { op, args: [a, b] } });
+        return { op: 'And', items, ...(declaredOperators.length > 0 ? { declaredOperators } : {}) };
+      }
+    }
+  }
+
+  // "Patricia and her son, Max, ..." => son(Max, Patricia) and mother(Patricia, Max)
+  const andChild = t.match(/^([A-Z][A-Za-z0-9]*)\s+and\s+(his|her)\s+(son|daughter)\s*,?\s*([A-Z][A-Za-z0-9]*)\b/i);
+  if (andChild) {
+    const parent = normalizeEntity(andChild[1], defaultVar);
+    const pron = andChild[2].toLowerCase();
+    const childRel = andChild[3].toLowerCase();
+    const child = normalizeEntity(andChild[4], defaultVar);
+
+    const childOp = sanitizePredicate(childRel);
+    if (childOp && child && parent) {
+      if (!isKnownOperator(childOp) && options.autoDeclareUnknownOperators) declaredOperators.push(childOp);
+      items.push({ negated: false, atom: { op: childOp, args: [child, parent] } });
+    }
+
+    const parentRel = pron === 'his' ? 'father' : 'mother';
+    const parentOp = sanitizePredicate(parentRel);
+    if (parentOp && parent && child) {
+      if (!isKnownOperator(parentOp) && options.autoDeclareUnknownOperators) declaredOperators.push(parentOp);
+      items.push({ negated: false, atom: { op: parentOp, args: [parent, child] } });
+    }
+
+    return items.length > 0 ? { op: 'And', items, ...(declaredOperators.length > 0 ? { declaredOperators } : {}) } : null;
+  }
+
+  // "Rebecca bought her mother, Maida, ..." => mother(Maida, Rebecca)
+  const subj = t.match(/^([A-Z][A-Za-z0-9]*)\b/);
+  const proKin = subj
+    ? t.match(/\b(?:his|her)\s+(mother|father|wife|husband|brother|sister|aunt|uncle|son|daughter)\s*,?\s*([A-Z][A-Za-z0-9]*)\b/i)
+    : null;
+  if (subj && proKin) {
+    const relRaw = proKin[1].toLowerCase();
+    const name = proKin[2];
+    if (kin.has(relRaw)) {
+      const op = sanitizePredicate(relRaw);
+      const a = normalizeEntity(name, defaultVar);
+      const b = normalizeEntity(subj[1], defaultVar);
+      if (op && a && b) {
+        if (!isKnownOperator(op) && options.autoDeclareUnknownOperators) declaredOperators.push(op);
+        items.push({ negated: false, atom: { op, args: [a, b] } });
+        return { op: 'And', items, ...(declaredOperators.length > 0 ? { declaredOperators } : {}) };
+      }
+    }
+  }
+
+  return null;
 }
 
 function parseMovementToLocation(text, defaultVar = '?x') {
@@ -159,6 +232,9 @@ export function parseNonCopulaRelationClause(text, defaultVar = '?x', options = 
   const t0 = clean(text);
   if (!t0) return null;
 
+  const kinship = parseKinshipMentions(t0, defaultVar, options);
+  if (kinship) return kinship;
+
   // Functional calls like: successor(Alice,Michael), negparent(Alice,Bob)
   const fn = parseFunctionalCall(t0, defaultVar, options);
   if (fn) return fn;
@@ -245,7 +321,8 @@ export function parseRelationClause(text, defaultVar = '?x', options = {}) {
     const verbLowerRaw = String(verbRaw || '').toLowerCase();
     const verbLower = sanitizePredicate(verbLowerRaw);
     if (!verbLower) return null;
-    const base = verbLower.endsWith('s') && verbLower.length > 3 ? verbLower.slice(0, -1) : verbLower;
+    let base = verbLower.endsWith('s') && verbLower.length > 3 ? verbLower.slice(0, -1) : verbLower;
+    if (verbLower === 'has') base = 'have';
     const op = sanitizePredicate(normalizeVerb(base));
 
     const expectedArity = CORE_GRAPH_ARITY.get(op);
@@ -256,6 +333,65 @@ export function parseRelationClause(text, defaultVar = '?x', options = {}) {
     return { op: 'And', items: [{ negated: hasNot, atom: { op: 'hasProperty', args: [subject, op] } }] };
   }
   let [, subjRaw, verbRaw, objRaw] = m;
+
+  // Indefinite NP subject: "an animal barks" => Animal(x) ∧ bark(x)
+  // The naive token split makes subjRaw="an", verbRaw="animal", objRaw="barks ...".
+  if (/^(?:a|an)$/i.test(String(subjRaw || '').trim())) {
+    const typeName = normalizeTypeName(singularize(String(verbRaw || '').trim()));
+    const restText = clean(objRaw);
+    if (!typeName || !restText) return null;
+
+    const items = [{ negated: false, atom: { op: 'isA', args: [defaultVar, typeName] } }];
+    const declaredOperators = [];
+
+    const have = restText.match(/^(?:has|have)\s+(.+)$/i);
+    if (have) {
+      const stripped = clean(have[1]).replace(/^(?:a|an|the)\s+/i, '').trim();
+      const tokens = stripped.split(/\s+/).filter(Boolean);
+      const key = tokens.length <= 6
+        ? tokens.join('_')
+        : [...tokens.slice(0, 3), ...tokens.slice(-2)].join('_');
+      const prop = sanitizePredicate(key) || sanitizePredicate(tokens[tokens.length - 1] || '');
+      if (!prop) return null;
+      items.push({ negated: hasNot, atom: { op: 'hasProperty', args: [defaultVar, prop] } });
+      return { op: 'And', items, declaredOperators };
+    }
+
+    const parts = restText.split(/\s+/).filter(Boolean);
+    const verbToken = parts.shift() || '';
+    const objText = parts.join(' ').trim();
+    const verbLower = sanitizePredicate(String(verbToken).toLowerCase());
+    if (!verbLower) return null;
+    let base = verbLower.endsWith('s') && verbLower.length > 3 ? verbLower.slice(0, -1) : verbLower;
+    if (verbLower === 'has') base = 'have';
+    const op = sanitizePredicate(normalizeVerb(base));
+    if (!op) return null;
+
+    const expectedArity = CORE_GRAPH_ARITY.get(op);
+    if (objText && typeof expectedArity === 'number' && expectedArity !== 2) {
+      const prop = sanitizePredicate(`${op}_${objText.replace(/\s+/g, '_')}`);
+      items.push({ negated: hasNot, atom: { op: 'hasProperty', args: [defaultVar, prop || op] } });
+      return { op: 'And', items, declaredOperators };
+    }
+
+    if (!objText || (typeof expectedArity === 'number' && expectedArity !== 2)) {
+      items.push({ negated: hasNot, atom: { op: 'hasProperty', args: [defaultVar, op] } });
+      return { op: 'And', items, declaredOperators };
+    }
+
+    const object = normalizeEntity(objText, defaultVar);
+    if (!isKnownOperator(op)) {
+      if (options.autoDeclareUnknownOperators) {
+        declaredOperators.push(op);
+        items.push({ negated: hasNot, atom: { op, args: [defaultVar, object] } });
+        return { op: 'And', items, declaredOperators };
+      }
+      return { kind: 'error', error: `Unknown operator '${op}' derived from verb '${verbToken}'`, unknownOperator: op };
+    }
+
+    items.push({ negated: hasNot, atom: { op, args: [defaultVar, object] } });
+    return { op: 'And', items, declaredOperators };
+  }
 
   const candidateVerbLowerRaw = String(subjRaw || '').toLowerCase();
   const candidateVerbLower = candidateVerbLowerRaw.replace(/[^a-z0-9_]/g, '');
@@ -283,8 +419,25 @@ export function parseRelationClause(text, defaultVar = '?x', options = {}) {
   const verbLowerRaw = String(verbRaw || '').toLowerCase();
   const verbLower = sanitizePredicate(verbLowerRaw);
   if (!verbLower) return null;
-  const base = verbLower.endsWith('s') && verbLower.length > 3 ? verbLower.slice(0, -1) : verbLower;
+  let base = verbLower.endsWith('s') && verbLower.length > 3 ? verbLower.slice(0, -1) : verbLower;
+  if (verbLower === 'has') base = 'have';
   const op = sanitizePredicate(normalizeVerb(base));
+
+  // Heuristic: treat "X have (no) <noun>" as (negated) hasProperty, not a binary relation.
+  // This is common in FOL corpora: Have(x, fur) / ¬Have(x, fur).
+  if (op === 'have') {
+    const objText = clean(objRaw);
+    const negObj = /^no\s+/i.test(objText) || /^not\s+any\s+/i.test(objText);
+    const stripped = objText.replace(/^(?:no|not\s+any)\s+/i, '').replace(/^(?:a|an|the)\s+/i, '').trim();
+    const tokens = stripped.split(/\s+/).filter(Boolean);
+    const key = tokens.length <= 6
+      ? tokens.join('_')
+      : [...tokens.slice(0, 3), ...tokens.slice(-2)].join('_');
+    const prop = sanitizePredicate(key) || sanitizePredicate(tokens[tokens.length - 1] || '');
+    if (prop) {
+      return { op: 'And', items: [{ negated: hasNot || negObj, atom: { op: 'hasProperty', args: [subject, prop] } }] };
+    }
+  }
 
   const expectedArity = CORE_GRAPH_ARITY.get(op);
   let effectiveOp = op;

@@ -87,7 +87,12 @@ export function extractExistentialTypeClaims(sentence) {
   // "some X" / "certain X" anywhere (kept conservative: require plural-ish token).
   const quant = t.match(/\b(?:some|certain|various)\s+([A-Za-z][A-Za-z0-9_'-]*(?:\s+[A-Za-z][A-Za-z0-9_'-]*)*)/i);
   if (quant) {
-    const typeName = parseTypePhrase(quant[1]);
+    // Stop before common verb/preposition continuations to avoid synthesizing huge type tokens
+    // like "MammalsHaveTeeth" from "some mammals have teeth".
+    const head = String(quant[1] || '')
+      .split(/\b(?:are|is|was|were|have|has|can|could|will|would|may|might|must|should|do|does|did|with|that|which|who)\b/i)[0]
+      .trim();
+    const typeName = parseTypePhrase(head);
     if (typeName) types.add(typeName);
   }
 
@@ -101,4 +106,3 @@ export function extractExistentialTypeClaims(sentence) {
 
   return [...types];
 }
-

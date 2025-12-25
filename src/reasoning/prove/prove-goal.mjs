@@ -5,6 +5,345 @@
 
 import { Statement, Identifier, Compound } from '../../parser/ast.mjs';
 
+function opName(expr) {
+  if (!expr) return null;
+  return expr.operator?.name || expr.operator?.value || expr.name || expr.value || null;
+}
+
+function isIdentifier(expr, name) {
+  if (!expr) return false;
+  const n = expr.name || expr.value || null;
+  return expr.type === 'Identifier' && n === name;
+}
+
+function isHole(expr) {
+  return expr?.type === 'Hole';
+}
+
+function instantiateExpr(expr, varName, value) {
+  if (!expr) return null;
+  if (expr.type === 'Hole' && expr.name === varName) {
+    return new Identifier(value);
+  }
+  if (expr.type === 'Identifier') return new Identifier(expr.name);
+  if (expr.type === 'Literal') return expr;
+  if (expr.type === 'Compound') {
+    const op = new Identifier(opName(expr.operator));
+    const args = (expr.args || []).map(a => instantiateExpr(a, varName, value)).filter(Boolean);
+    return new Compound(op, args);
+  }
+  if (expr.type === 'Statement') {
+    const op = new Identifier(opName(expr.operator));
+    const args = (expr.args || []).map(a => instantiateExpr(a, varName, value)).filter(Boolean);
+    return new Statement(null, op, args);
+  }
+  return null;
+}
+
+function buildStatementFromCompound(comp) {
+  if (!comp || comp.type !== 'Compound') return null;
+  const op = opName(comp.operator);
+  if (!op) return null;
+  const args = [];
+  for (const a of comp.args || []) {
+    if (a.type === 'Identifier') args.push(new Identifier(a.name));
+    else if (a.type === 'Literal') args.push(a);
+    else return null;
+  }
+  return new Statement(null, new Identifier(op), args);
+}
+
+function collectEntitiesByType(session, typeName) {
+  const out = new Set();
+  const componentKB = session?.componentKB;
+  if (componentKB) {
+    const facts = componentKB.findByOperatorAndArg1?.('isA', typeName) || [];
+    for (const f of facts) {
+      if (f?.args?.[0]) out.add(f.args[0]);
+    }
+    return [...out];
+  }
+  for (const fact of session.kbFacts || []) {
+    const meta = fact?.metadata;
+    if (meta?.operator === 'isA' && meta.args?.[1] === typeName && meta.args?.[0]) out.add(meta.args[0]);
+  }
+  return [...out];
+}
+
+function collectEntityDomain(session) {
+  const componentKB = session?.componentKB;
+  if (componentKB) {
+    const entities = new Set();
+    for (const f of componentKB.facts || []) {
+      for (const a of f.args || []) {
+        if (a && !String(a).startsWith('?')) entities.add(a);
+      }
+    }
+    return [...entities];
+  }
+  const entities = new Set();
+  for (const fact of session.kbFacts || []) {
+    const args = fact?.metadata?.args || [];
+    for (const a of args) {
+      if (a && !String(a).startsWith('?')) entities.add(a);
+    }
+  }
+  return [...entities];
+}
+
+function buildTypeImplicationIndex(session) {
+  const pos = new Map(); // A -> B
+  const neg = new Map(); // A -> Not(B)
+
+  const addEdge = (map, from, to) => {
+    if (!from || !to) return;
+    const s = map.get(from) || new Set();
+    s.add(to);
+    map.set(from, s);
+  };
+
+  for (const rule of session.rules || []) {
+    const condLeaves = extractLeafAsts(rule.conditionParts, []);
+    const condAst = condLeaves.length === 1 ? condLeaves[0] : rule.conditionAST;
+    const antOperator = (condAst?.operator?.name || condAst?.operator?.value || null);
+    if (antOperator !== 'isA') continue;
+    const antArgs = (condAst?.args || []);
+    if (antArgs.length !== 2 || !isHole(antArgs[0]) || antArgs[1].type !== 'Identifier') continue;
+    const fromType = antArgs[1].name;
+
+    const concParts = rule.conclusionParts;
+    if (concParts) {
+      const concLeaves = extractLeafAsts(concParts, []);
+      for (const leaf of concLeaves) {
+        const op = leaf?.operator?.name || leaf?.operator?.value || null;
+        if (op !== 'isA') continue;
+        const args = leaf.args || [];
+        if (args.length !== 2 || !isHole(args[0]) || args[1].type !== 'Identifier') continue;
+        addEdge(pos, fromType, args[1].name);
+      }
+
+      if (concParts.type === 'Not') {
+        const inner = concParts.inner;
+        if (inner?.type === 'leaf' && inner.ast) {
+          const innerAst = inner.ast;
+          const op = innerAst?.operator?.name || innerAst?.operator?.value || null;
+          if (op === 'isA') {
+            const args = innerAst.args || [];
+            if (args.length === 2 && isHole(args[0]) && args[1].type === 'Identifier') {
+              addEdge(neg, fromType, args[1].name);
+            }
+          }
+        }
+      }
+    } else if (rule.conclusionAST) {
+      const leaf = rule.conclusionAST;
+      const op = leaf?.operator?.name || leaf?.operator?.value || null;
+      if (op === 'isA') {
+        const args = leaf.args || [];
+        if (args.length === 2 && isHole(args[0]) && args[1].type === 'Identifier') {
+          addEdge(pos, fromType, args[1].name);
+        }
+      }
+    }
+  }
+
+  return { pos, neg };
+}
+
+function computeReachability(index, startType) {
+  const reachable = new Set();
+  const impliedNeg = new Set();
+  const queue = [startType];
+  reachable.add(startType);
+
+  while (queue.length > 0) {
+    const cur = queue.shift();
+    for (const n of index.neg.get(cur) || []) impliedNeg.add(n);
+    for (const next of index.pos.get(cur) || []) {
+      if (reachable.has(next)) continue;
+      reachable.add(next);
+      queue.push(next);
+    }
+  }
+  return { reachable, impliedNeg };
+}
+
+function collectIsAConstraints(expr, varName, out = { required: [], forbidden: [] }) {
+  if (!expr) return out;
+  if (expr.type !== 'Compound') return out;
+  const op = opName(expr.operator);
+  if (!op) return out;
+
+  if (op === 'And') {
+    for (const a of expr.args || []) collectIsAConstraints(a, varName, out);
+    return out;
+  }
+  if (op === 'Not' && (expr.args || []).length === 1) {
+    const inner = expr.args[0];
+    if (inner?.type === 'Compound' && opName(inner.operator) === 'isA') {
+      const args = inner.args || [];
+      if (args.length === 2 && args[0]?.type === 'Hole' && args[0].name === varName && args[1]?.type === 'Identifier') {
+        out.forbidden.push(args[1].name);
+      }
+    }
+    return out;
+  }
+  if (op === 'isA') {
+    const args = expr.args || [];
+    if (args.length === 2 && args[0]?.type === 'Hole' && args[0].name === varName && args[1]?.type === 'Identifier') {
+      out.required.push(args[1].name);
+    }
+  }
+  return out;
+}
+
+function tryProveNotExistsViaTypeDisjointness(self, goalStr, existsExpr) {
+  if (!existsExpr || existsExpr.type !== 'Compound') return { valid: false };
+  if (opName(existsExpr.operator) !== 'Exists') return { valid: false };
+  const args = existsExpr.args || [];
+  if (args.length < 2 || !isHole(args[0])) return { valid: false };
+  const varName = args[0].name;
+  const predicate = args[1];
+  if (!predicate || predicate.type !== 'Compound') return { valid: false };
+
+  const constraints = collectIsAConstraints(predicate, varName);
+  const required = [...new Set(constraints.required)];
+  const forbidden = new Set(constraints.forbidden);
+
+  // Immediate contradiction: requires and forbids the same type.
+  for (const t of required) {
+    if (forbidden.has(t)) {
+      return {
+        valid: true,
+        method: 'quantifier_unsat',
+        confidence: self.thresholds.CONDITION_CONFIDENCE,
+        goal: goalStr,
+        steps: [{ operation: 'unsat_constraints', detail: `Exists ${varName}: requires and forbids ${t}` }]
+      };
+    }
+  }
+
+  if (required.length < 2) return { valid: false };
+
+  const index = buildTypeImplicationIndex(self.session);
+  for (let i = 0; i < required.length; i++) {
+    for (let j = i + 1; j < required.length; j++) {
+      const a = required[i];
+      const b = required[j];
+      const ra = computeReachability(index, a);
+      const rb = computeReachability(index, b);
+      const aImpliesNot = [...ra.impliedNeg];
+      const bImpliesNot = [...rb.impliedNeg];
+
+      const aDisjointB = ra.reachable.has(b) ? aImpliesNot.includes(b) : false;
+      const bDisjointA = rb.reachable.has(a) ? bImpliesNot.includes(a) : false;
+
+      const aHitsB = [...rb.reachable].some(t => ra.impliedNeg.has(t));
+      const bHitsA = [...ra.reachable].some(t => rb.impliedNeg.has(t));
+
+      if (aDisjointB || bDisjointA || aHitsB || bHitsA) {
+        return {
+          valid: true,
+          method: 'quantifier_type_disjointness',
+          confidence: self.thresholds.CONDITION_CONFIDENCE,
+          goal: goalStr,
+          steps: [{ operation: 'type_disjointness', detail: `No ${a} can also be ${b} (derived from rules)` }]
+        };
+      }
+    }
+  }
+
+  return { valid: false };
+}
+
+function proveExistsGoal(self, goalStr, goal, depth) {
+  const args = goal.args || [];
+  if (args.length < 2 || !isHole(args[0])) {
+    return { valid: false, reason: 'Malformed Exists goal', goal: goalStr };
+  }
+  const varName = args[0].name;
+  const predicate = args[1];
+  if (!predicate || predicate.type !== 'Compound') {
+    return { valid: false, reason: 'Exists predicate missing', goal: goalStr };
+  }
+
+  const constraints = collectIsAConstraints(predicate, varName);
+  const requiredTypes = [...new Set(constraints.required)];
+
+  let candidates = [];
+  if (requiredTypes.length > 0) {
+    candidates = collectEntitiesByType(self.session, requiredTypes[0]);
+    for (let i = 1; i < requiredTypes.length; i++) {
+      const next = new Set(collectEntitiesByType(self.session, requiredTypes[i]));
+      candidates = candidates.filter(e => next.has(e));
+    }
+  } else {
+    candidates = collectEntityDomain(self.session);
+  }
+
+  const MAX_CANDIDATES = 200;
+  candidates = candidates.slice(0, MAX_CANDIDATES);
+
+  const provePredicate = (expr, entity) => {
+    if (!expr) return { valid: false };
+    if (expr.type !== 'Compound') return { valid: false };
+    const op = opName(expr.operator);
+    if (!op) return { valid: false };
+
+    if (op === 'And') {
+      const sub = expr.args || [];
+      const steps = [];
+      for (const a of sub) {
+        const res = provePredicate(a, entity);
+        if (!res.valid) return { valid: false };
+        steps.push(...(res.steps || []));
+      }
+      return { valid: true, steps };
+    }
+    if (op === 'Or') {
+      for (const a of expr.args || []) {
+        const res = provePredicate(a, entity);
+        if (res.valid) return res;
+      }
+      return { valid: false };
+    }
+    if (op === 'Not') {
+      const inner = expr.args?.[0];
+      if (!inner || inner.type !== 'Compound') return { valid: false };
+      const instInner = instantiateExpr(inner, varName, entity);
+      if (!instInner || instInner.type !== 'Compound') return { valid: false };
+      const stmt = new Statement(null, new Identifier('Not'), [instInner]);
+      const res = proveGoal(self, stmt, depth + 1);
+      return { valid: res.valid === true, steps: res.steps || [] };
+    }
+
+    const inst = instantiateExpr(expr, varName, entity);
+    if (!inst || inst.type !== 'Compound') return { valid: false };
+    const stmt = buildStatementFromCompound(inst);
+    if (!stmt) return { valid: false };
+    const res = proveGoal(self, stmt, depth + 1);
+    return { valid: res.valid === true, steps: res.steps || [] };
+  };
+
+  for (const entity of candidates) {
+    const res = provePredicate(predicate, entity);
+    if (res.valid) {
+      return {
+        valid: true,
+        method: 'exists_witness',
+        confidence: self.thresholds.CONDITION_CONFIDENCE,
+        goal: goalStr,
+        steps: [
+          { operation: 'exists_witness', variable: varName, entity },
+          ...(res.steps || [])
+        ]
+      };
+    }
+  }
+
+  return { valid: false, reason: 'No witness found', goal: goalStr };
+}
+
 function unifyConcreteArgs(concArgs, goalArgs) {
   if (concArgs.length !== goalArgs.length) return null;
   const bindings = new Map();
@@ -166,22 +505,41 @@ export function proveGoal(self, goal, depth) {
     return { valid: false, reason: 'Depth limit exceeded' };
   }
 
-  const goalVec = self.session.executor.buildStatementVector(goal);
-  const goalHash = self.hashVector(goalVec);
-  const goalKey = `goal:${goalHash}`;
+  const goalStr = goal.toString();
+  const goalOp = self.extractOperatorName(goal);
 
-  if (self.visited.has(goalKey)) {
-    return { valid: false, reason: 'Cycle detected' };
+  // Quantifiers (Exists/ForAll) are handled structurally (not via vector equality),
+  // since their arguments include higher-order expressions.
+  const cycleKey = (goalOp === 'Exists' || goalOp === 'ForAll') ? `goalStr:${goalStr}` : null;
+  if (cycleKey) {
+    if (self.visited.has(cycleKey)) return { valid: false, reason: 'Cycle detected' };
+    self.visited.add(cycleKey);
   }
-  self.visited.add(goalKey);
 
+  let goalKey = null;
   try {
-    const goalStr = goal.toString();
-    const goalOp = self.extractOperatorName(goal);
+    if (goalOp === 'Exists') {
+      return proveExistsGoal(self, goalStr, goal, depth);
+    }
+
+    const goalVec = self.session.executor.buildStatementVector(goal);
+    const goalHash = self.hashVector(goalVec);
+    goalKey = `goal:${goalHash}`;
+    if (!cycleKey) {
+      if (self.visited.has(goalKey)) return { valid: false, reason: 'Cycle detected' };
+      self.visited.add(goalKey);
+    }
+
     const goalArgs = (goal.args || []).map(a => self.extractArgName(a)).filter(Boolean);
     const goalFactExists = goalOp ? self.factExists(goalOp, goalArgs[0], goalArgs[1]) : false;
 
     if (goalOp === 'Not' && Array.isArray(goal.args) && goal.args.length === 1) {
+      const innerExpr = goal.args[0];
+      if (innerExpr?.type === 'Compound' && opName(innerExpr.operator) === 'Exists') {
+        const disjoint = tryProveNotExistsViaTypeDisjointness(self, goalStr, innerExpr);
+        if (disjoint.valid) return disjoint;
+      }
+
       const meta = self.session.executor.extractMetadataWithNotExpansion(goal, 'Not');
       const innerOp = meta?.innerOperator;
       const innerArgs = meta?.innerArgs;
@@ -346,6 +704,7 @@ export function proveGoal(self, goal, depth) {
       steps: self.steps
     };
   } finally {
-    self.visited.delete(goalKey);
+    if (cycleKey) self.visited.delete(cycleKey);
+    if (goalKey) self.visited.delete(goalKey);
   }
 }

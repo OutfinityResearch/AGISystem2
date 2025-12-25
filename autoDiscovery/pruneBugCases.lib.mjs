@@ -81,6 +81,10 @@ export async function validateOne(caseFile, { autoDeclareUnknownOperators = true
     closedWorldAssumption: true,
     rejectContradictions: false
   };
+  const src = String(raw.source || translated.source || 'generic').toLowerCase();
+  if (['folio', 'folio_fol', 'logicnli'].includes(src)) {
+    sessionConfig.closedWorldAssumption = false;
+  }
 
   const session = new Session({
     ...sessionConfig,

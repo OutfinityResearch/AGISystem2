@@ -3,6 +3,8 @@ export function clean(text) {
     .trim()
     // Strip dataset annotations like [BG], [FOL], etc.
     .replace(/\[[A-Z]+\]\s*/g, '')
+    // Strip square-bracket entity markers: "[Max]" -> "Max" (common in story datasets).
+    .replace(/\[([^\]]+)\]/g, '$1')
     // Strip leading numbering / enumeration markers (common in bAbI, logic datasets).
     .replace(/^\(?\d+\)?[)\].:-]?\s+/g, '')
     .replace(/^:\(?\d+\)?[)\].:-]?\s+/g, '')
@@ -21,6 +23,20 @@ export function lower(text) {
 export function splitCoord(text) {
   let t = clean(text);
   if (!t) return { op: 'And', items: [] };
+
+  // "either A or B" -> split on "or" (but drop the leading "either")
+  t = t.replace(/^either\s+/i, '');
+
+  // "neither A nor B" means "not A and not B"
+  const neither = t.match(/^neither\s+(.+?)\s+nor\s+(.+)$/i);
+  if (neither) {
+    const a = neither[1].trim();
+    const b = neither[2].trim();
+    const items = [];
+    if (a) items.push(`not ${a}`);
+    if (b) items.push(`not ${b}`);
+    return { op: 'And', items };
+  }
 
   // Protect "between X and Y" so its internal "and" doesn't get treated as coordination.
   const BETWEEN_AND = '__BETWEEN_AND__';

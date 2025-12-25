@@ -169,6 +169,48 @@ export const steps = [
     input_dsl: '@goal isA Zeus Mortal',
     expected_nl: 'Cannot prove: Zeus is a mortal.',
     proof_nl: 'Zeus isA Deity. Found explicit negation: Not(isA Zeus Mortal). Negation blocks inference.'
+  },
+
+  // === QUANTIFIERS: Not(Exists...) via type disjointness ===
+  {
+    action: 'learn',
+    input_nl: 'Add type constraints: Plant -> Not(Fungus), Mushroom -> Fungus.',
+    input_dsl: `
+      @p isA ?x Plant
+      @f isA ?x Fungus
+      @nf Not $f
+      Implies $p $nf
+
+      @m isA ?x Mushroom
+      @f2 isA ?x Fungus
+      Implies $m $f2
+    `,
+    expected_nl: 'Learned'
+  },
+  {
+    action: 'prove',
+    input_nl: 'Is it impossible for something to be both a plant and a mushroom?',
+    input_dsl: '@goal Not (Exists ?x (And (isA ?x Plant) (isA ?x Mushroom)))',
+    expected_nl: 'True:',
+    proof_nl: 'No Plant can also be Mushroom'
+  },
+
+  // === QUANTIFIERS: Exists witness ===
+  {
+    action: 'learn',
+    input_nl: 'Add a concrete witness for Pet(x) AND Rabbit(x).',
+    input_dsl: `
+      isA Alice Pet
+      isA Alice Rabbit
+    `,
+    expected_nl: 'Learned'
+  },
+  {
+    action: 'prove',
+    input_nl: 'Does there exist a pet that is also a rabbit?',
+    input_dsl: '@goal Exists ?x (And (isA ?x Pet) (isA ?x Rabbit))',
+    expected_nl: 'True:',
+    proof_nl: 'Witness Alice satisfies the existential'
   }
 ];
 

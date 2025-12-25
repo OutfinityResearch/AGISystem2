@@ -46,10 +46,29 @@ export function runExample(example, caseId, options = {}) {
   const sessionConfig = {
     hdcStrategy: DEFAULT_STRATEGY,
     geometry: DEFAULT_GEOMETRY,
-    closedWorldAssumption: true,
+    // AutoDiscovery is primarily evaluating entailment-style corpora.
+    // Default to open-world semantics (no negation-as-failure) unless explicitly enabled.
+    closedWorldAssumption: false,
     rejectContradictions: false,
     ...(options.sessionConfig || {})
   };
+
+  // Entailment-style corpora should not use negation-as-failure.
+  // If a dataset expects `Not(P)` to be true, it must be derivable from explicit negation,
+  // disjointness, or proof-by-contradiction (not from missing facts).
+  if ([
+    'folio',
+    'folio_fol',
+    'logicnli',
+    'rulebert',
+    'ruletaker',
+    'prontoqa',
+    'logiqa',
+    'logiqa2',
+    'reclor'
+  ].includes(String(source || '').toLowerCase())) {
+    sessionConfig.closedWorldAssumption = false;
+  }
 
   resetRefCounter();
 

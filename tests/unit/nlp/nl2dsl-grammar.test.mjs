@@ -178,4 +178,79 @@ describe('NL→DSL grammar translator (low-hardcoding)', () => {
     const goal = translateQuestionWithGrammar('What color is the cat?');
     assert.equal(goal, '@goal:goal hasProperty Cat ?x');
   });
+
+  test('parses adjective+preposition relations (Mice are afraid of wolves → Mouse -> afraid ?x Wolf)', () => {
+    const { dsl, errors } = translateContextWithGrammar('Mice are afraid of wolves.', { autoDeclareUnknownOperators: true });
+    assert.deepEqual(errors, []);
+    assert.match(dsl, /@afraid:afraid __Relation/);
+    assert.match(dsl, /isA\s+\?x\s+Mouse/);
+    assert.match(dsl, /afraid\s+\?x\s+Wolf/);
+    assert.match(dsl, /Implies/);
+  });
+
+  test('parses "What is X afraid of?" as a relation query', () => {
+    const goal = translateQuestionWithGrammar('What is Emily afraid of?');
+    assert.match(goal, /\/\/ action:query/);
+    assert.match(goal, /@goal:goal afraid Emily \?x/);
+  });
+
+  test('treats multi-word copula predicates as types (bile duct cancer)', () => {
+    const { dsl, errors } = translateContextWithGrammar('All cholangiocarcinoma is bile duct cancer.');
+    assert.deepEqual(errors, []);
+    assert.match(dsl, /isA\s+\?x\s+Cholangiocarcinoma/);
+    assert.match(dsl, /isA\s+\?x\s+BileDuctCancer/);
+    assert.match(dsl, /Implies/);
+  });
+
+  test('parses universal negative rules (No plants are fungi → Plant -> Not(Fungus))', () => {
+    const { dsl, errors } = translateContextWithGrammar('No plants are fungi.');
+    assert.deepEqual(errors, []);
+    assert.match(dsl, /isA\s+\?x\s+Plant/);
+    assert.match(dsl, /Not/);
+    assert.match(dsl, /Implies/);
+  });
+
+  test('parses existential facts (Some pets are rabbits → exists_ent isA Pet + Rabbit)', () => {
+    const { dsl, errors } = translateContextWithGrammar('Some pets are rabbits.');
+    assert.deepEqual(errors, []);
+    assert.match(dsl, /isA\s+exists_ent_[a-f0-9]{10}\s+Pet/);
+    assert.match(dsl, /isA\s+exists_ent_[a-f0-9]{10}\s+Rabbit/);
+  });
+
+  test('parses quantified existential questions as Exists goals with action:prove', () => {
+    const goal = translateQuestionWithGrammar('Some pets do not have fur.');
+    assert.match(goal, /\/\/ action:prove/);
+    assert.match(goal, /@goal:goal Exists \?x/);
+    assert.match(goal, /Not/);
+  });
+
+  test('parses quantified universal negatives as Not(Exists...) with action:prove', () => {
+    const goal = translateQuestionWithGrammar('No plants are mushrooms.');
+    assert.match(goal, /\/\/ action:prove/);
+    assert.match(goal, /@goal:goal Not \(Exists \?x/);
+  });
+
+  test('expands "neither ... nor ..." into two Not goals', () => {
+    const goal = translateQuestionWithGrammar(
+      'Dried Thai chilies are neither a product of Baked by Melissa nor a bakery.',
+      { expandCompoundQuestions: true }
+    );
+    assert.match(goal, /\/\/ goal_logic:And/);
+    assert.match(goal, /Not \(isA DriedThaiChilies/);
+    assert.ok(goal.split('\n').filter(l => l.startsWith('@goal')).length >= 2);
+  });
+
+  test('parses have/no as Not(hasProperty) facts (Platypus have no teeth)', () => {
+    const { dsl, errors } = translateContextWithGrammar('Platypus have no teeth.');
+    assert.deepEqual(errors, []);
+    assert.match(dsl, /@base\d+\s+hasProperty Platypus teeth/);
+    assert.match(dsl, /Not\s+\$base\d+/);
+  });
+
+  test('parses "with no" copula questions into compound goals (X are mammals with no teeth)', () => {
+    const goal = translateQuestionWithGrammar('Platypus are mammals with no teeth.', { expandCompoundQuestions: true });
+    assert.match(goal, /\/\/ goal_logic:And/);
+    assert.match(goal, /@goal:goal isA Platypus Mammal/);
+    assert.match(goal, /@goal1:goal Not \(hasProperty Platypus teeth\)/);
+  });
 });

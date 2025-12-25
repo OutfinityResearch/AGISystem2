@@ -236,6 +236,23 @@ class ProveTranslator extends BaseTranslator {
   describePositiveProof(result) {
     const steps = result.steps || [];
 
+    // Quantifiers: describe them explicitly so they don't get mislabeled as "trivial echo"
+    // (they often have 0-1 non-fact steps).
+    if (result.method === 'quantifier_type_disjointness' || result.method === 'quantifier_unsat') {
+      const detail =
+        steps.find(s => s?.operation === 'type_disjointness')?.detail ||
+        steps.find(s => s?.operation === 'unsat_constraints')?.detail ||
+        'Derived unsatisfiable existential constraints';
+      const goal = (result.goal || '').trim() || 'goal';
+      return `True: ${goal.replace(/^\s*@\S+\s+/, '')}. Proof: ${detail}.`;
+    }
+    if (result.method === 'exists_witness') {
+      const witness = steps.find(s => s?.operation === 'exists_witness');
+      const goal = (result.goal || '').trim() || 'goal';
+      const entity = witness?.entity || 'witness';
+      return `True: ${goal.replace(/^\s*@\S+\s+/, '')}. Proof: Witness ${entity} satisfies the existential.`;
+    }
+
     // Not-goals can be proved either by explicit negation or by CWA (negation-as-failure).
     // In holographicPriority mode, the top-level method is often "hdc_*_validated", so rely
     // on step operations as the source of truth for messaging.

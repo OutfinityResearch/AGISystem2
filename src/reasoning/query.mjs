@@ -26,6 +26,7 @@ import { searchTransitive, isTransitiveRelation, findAllTransitiveTargets } from
 import { searchViaRules } from './query-rules.mjs';
 import { searchCompoundSolutions } from './query-compound.mjs';
 import { debug_trace } from '../utils/debug.js';
+import { searchTypeInductionHasProperty } from './query-induction.mjs';
 
 // Import meta-operators (DS17)
 import {
@@ -369,8 +370,18 @@ export class QueryEngine {
     // Also filter negated facts for rule_derived and hdc
     filteredResults = filterNegated(filteredResults, this.session, operatorName, knowns);
 
+    // SOURCE 7 (fallback): bAbI16-style induction for missing hasProperty values.
+    // Only activate when no other source produced a usable answer.
+    if (filteredResults.length === 0 && operatorName === 'hasProperty' && knowns.length === 1 && holes.length === 1) {
+      if (knowns[0].index === 1) {
+        const entityName = knowns[0].name;
+        const induced = searchTypeInductionHasProperty(this.session, entityName, holes[0], { minSupport: 2 });
+        for (const r of induced) filteredResults.push(r);
+      }
+    }
+
     // Sort by: 1) method priority (direct > transitive > property_inheritance > bundle > compound_csp > rule > hdc), 2) score
-    const methodPriority = { direct: 7, transitive: 6, property_inheritance: 5, bundle_common: 4, compound_csp: 3, rule_derived: 2, hdc: 1 };
+    const methodPriority = { direct: 7, transitive: 6, property_inheritance: 5, type_induction: 4.5, bundle_common: 4, compound_csp: 3, rule_derived: 2, hdc: 1 };
     filteredResults.sort((a, b) => {
       const pa = methodPriority[a.method] || 0;
       const pb = methodPriority[b.method] || 0;

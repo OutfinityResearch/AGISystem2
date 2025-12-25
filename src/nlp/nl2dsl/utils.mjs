@@ -31,8 +31,6 @@ export function genRef(prefix = 'ref') {
 export const GENERIC_CLASS_NOUNS = new Set([
   'thing',
   'things',
-  'person',
-  'people',
   'someone',
   'something'
 ]);
@@ -45,7 +43,8 @@ export function isGenericClassNoun(word) {
 export function isPlural(word) {
   const w = String(word || '').toLowerCase().trim();
   if (!w) return false;
-  if (['people', 'mice', 'children', 'men', 'women', 'feet', 'teeth', 'things'].includes(w)) return true;
+  if (['fungi', 'cacti', 'bacteria', 'criteria', 'phenomena', 'data'].includes(w)) return true;
+  if (['people', 'mice', 'children', 'men', 'women', 'feet', 'teeth', 'things', 'sheep', 'deer', 'fish'].includes(w)) return true;
   if (w.endsWith('uses') && w.length > 4) return true; // wumpuses
   if (w.endsWith('ies') && w.length > 3) return true;
   if (w.endsWith('es') && w.length > 3) return true;
@@ -71,6 +70,13 @@ export function capitalize(s) {
 export function singularize(word) {
   const w = String(word || '').toLowerCase().trim();
   if (!w) return w;
+  if (w === 'wolves') return 'wolf';
+  if (w === 'fungi') return 'fungus';
+  if (w === 'cacti') return 'cactus';
+  if (w === 'bacteria') return 'bacterium';
+  if (w === 'criteria') return 'criterion';
+  if (w === 'phenomena') return 'phenomenon';
+  if (w === 'data') return 'datum';
   if (w === 'people') return 'person';
   if (w === 'mice') return 'mouse';
   if (w === 'children') return 'child';

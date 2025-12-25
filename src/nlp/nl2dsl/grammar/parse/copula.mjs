@@ -74,7 +74,15 @@ export function parseCopulaClause(text, defaultVar = '?x', options = {}) {
   if (!parsed) return null;
 
   const items = [];
+  const declaredOperators = [];
   if (extraCondition) items.push({ negated: false, atom: extraCondition });
-  items.push({ negated, atom: parsed.atom });
-  return { op: 'And', items };
+  const parsedItems = Array.isArray(parsed) ? parsed : [parsed];
+  for (const it of parsedItems) {
+    if (!it?.atom) continue;
+    const finalNeg = negated ? !it.negated : it.negated;
+    const atomOp = it.atom.op;
+    if (atomOp && !isKnownOperator(atomOp) && options.autoDeclareUnknownOperators) declaredOperators.push(atomOp);
+    items.push({ negated: finalNeg, atom: it.atom });
+  }
+  return { op: 'And', items, ...(declaredOperators.length > 0 ? { declaredOperators } : {}) };
 }
