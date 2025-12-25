@@ -168,6 +168,11 @@ export function proveGoal(self, goal, depth) {
       return symmetricResult;
     }
 
+    const inverseResult = self.inverse?.tryInverse ? self.inverse.tryInverse(goal, depth) : { valid: false };
+    if (inverseResult.valid) {
+      return inverseResult;
+    }
+
     const synonymResult = self.trySynonymMatch(goal, depth);
     if (synonymResult.valid) {
       return synonymResult;

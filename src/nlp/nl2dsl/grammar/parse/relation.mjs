@@ -228,7 +228,17 @@ function parseOfIsRelationClause(text, defaultVar = '?x', options = {}) {
   // treat it as op(of, value) to match fact templates like "X of Lucy is Corps" -> op Corps Lucy.
   const valueIsVar = typeof valueEntity === 'string' && valueEntity.startsWith('?');
   const ofIsVar = typeof ofEntity === 'string' && ofEntity.startsWith('?');
-  const args = (valueIsVar && !ofIsVar) ? [ofEntity, valueEntity] : [valueEntity, ofEntity];
+  const looksPerson = (v) => typeof v === 'string' && v.startsWith('?') && /_person$/i.test(v);
+  const valueIsPerson = looksPerson(valueEntity);
+  const ofIsPerson = looksPerson(ofEntity);
+
+  let args = [valueEntity, ofEntity];
+  if (valueIsVar && !ofIsVar) {
+    args = [ofEntity, valueEntity];
+  } else if (valueIsVar && ofIsVar && valueIsPerson !== ofIsPerson) {
+    // Prefer the (non-person, person) ordering when exactly one side is a person-like role var.
+    args = valueIsPerson ? [ofEntity, valueEntity] : [valueEntity, ofEntity];
+  }
   const items = [{ negated, atom: { op: effectiveOp, args } }];
 
   if (!isKnownOperator(effectiveOp)) {

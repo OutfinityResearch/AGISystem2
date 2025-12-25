@@ -14,6 +14,7 @@ import { KBMatcher } from './kb-matching.mjs';
 import { DisjointProver } from './disjoint.mjs';
 import { DefaultReasoner } from './defaults.mjs';
 import { SymmetricReasoner } from './symmetric.mjs';
+import { InverseReasoner } from './inverse.mjs';
 
 import { buildSearchTrace as buildSearchTraceImpl } from './prove-search-trace.mjs';
 
@@ -50,6 +51,7 @@ export class ProofEngine {
 
     this.transitive = new TransitiveReasoner(this);
     this.symmetric = new SymmetricReasoner(this);
+    this.inverse = new InverseReasoner(this);
     this.propertyInheritance = new PropertyInheritanceReasoner(this);
     this.unification = new UnificationEngine(this);
     this.conditions = new ConditionProver(this);

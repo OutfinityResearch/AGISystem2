@@ -89,6 +89,14 @@ export function parseFactSentence(sentence, options = {}) {
     const [, subjRaw, verb, predRaw] = copulaList;
     const coord = splitCoord(predRaw);
     if (coord.items.length > 1) {
+      // Disjunctive facts ("X is either A or B") should NOT be expanded into multiple
+      // independent facts, otherwise we over-assert knowledge and create false entailments.
+      // Since the symbolic engine does not (yet) reason over disjunctive KB facts, encode
+      // the whole clause opaquely so downstream reasoning stays conservative.
+      if (coord.op === 'Or' && options.allowDisjunctiveFacts !== true) {
+        return { lines: [`hasProperty KB ${opaqueEnt('opaque_or', s)}`], declaredOperators: [] };
+      }
+
       const lines = [];
       const declaredOperators = [];
       for (const item of coord.items) {

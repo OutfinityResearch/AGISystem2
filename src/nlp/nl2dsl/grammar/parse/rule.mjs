@@ -174,6 +174,28 @@ export function parseRuleSentence(sentence, options = {}) {
   const s = clean(sentence);
   if (!s) return null;
 
+  const ruleOptions = { ...options, inRule: true };
+
+  const buildIfRule = (condPart, consPart) => {
+    const existsCond = parseExistentialConditionExpr(condPart, ruleOptions);
+    const cond = existsCond ? null : parseClauseGroup(condPart, '?x', ruleOptions);
+    const cons = parseClauseGroup(consPart, '?x', ruleOptions);
+    if (cond?.kind === 'error') return { kind: 'error', error: cond.error };
+    if (cons?.kind === 'error') return { kind: 'error', error: cons.error };
+    if ((!cond && !existsCond) || !cons) return null;
+    const condEmit = cond ? emitExprAsRefs(cond.items, cond.op) : null;
+    const consEmit = emitExprAsRefs(cons.items, cons.op);
+    if ((cond && !condEmit?.ref) || !consEmit.ref) return null;
+    return {
+      lines: [
+        ...(condEmit?.lines || []),
+        ...consEmit.lines,
+        `Implies ${existsCond ? existsCond : `$${condEmit.ref}`} $${consEmit.ref}`
+      ],
+      declaredOperators: [...(cond?.declaredOperators || []), ...(cons.declaredOperators || [])]
+    };
+  };
+
   // Indefinite "A/An X ..." is treated as a universal rule in most logic corpora.
   // Examples:
   // - "A person is either A or B."  => Person(x) -> (A(x) ∨ B(x))
@@ -264,26 +286,24 @@ export function parseRuleSentence(sentence, options = {}) {
     return { lines: [...condEmit.lines, ...consEmit.lines, `Implies $${condEmit.ref} $${consEmit.ref}`] };
   }
 
-  const ifThen = s.match(/^if\s+(.+?)\s+then\s+(.+)$/i);
+  const ifThen = s.match(/^(?:even\s+)?if\s+(.+?)\s+then\s+(.+)$/i);
   if (ifThen) {
     const [, condPart, consPart] = ifThen;
-    const existsCond = parseExistentialConditionExpr(condPart, options);
-    const cond = existsCond ? null : parseClauseGroup(condPart, '?x', options);
-    const cons = parseClauseGroup(consPart, '?x', options);
-    if (cond?.kind === 'error') return { kind: 'error', error: cond.error };
-    if (cons?.kind === 'error') return { kind: 'error', error: cons.error };
-    if ((!cond && !existsCond) || !cons) return null;
-    const condEmit = cond ? emitExprAsRefs(cond.items, cond.op) : null;
-    const consEmit = emitExprAsRefs(cons.items, cons.op);
-    if ((cond && !condEmit?.ref) || !consEmit.ref) return null;
-    return {
-      lines: [
-        ...(condEmit?.lines || []),
-        ...consEmit.lines,
-        `Implies ${existsCond ? existsCond : `$${condEmit.ref}`} $${consEmit.ref}`
-      ],
-      declaredOperators: [...(cond?.declaredOperators || []), ...(cons.declaredOperators || [])]
-    };
+    return buildIfRule(condPart, consPart);
+  }
+
+  // "If A, B" (no explicit "then")
+  const ifComma = s.match(/^(?:even\s+)?if\s+(.+?),\s*(.+)$/i);
+  if (ifComma) {
+    const [, condPart, consPart] = ifComma;
+    return buildIfRule(condPart, consPart);
+  }
+
+  // "B if A"
+  const consIf = s.match(/^(.+?)\s+(?:even\s+)?if\s+(.+)$/i);
+  if (consIf) {
+    const [, consPart, condPart] = consIf;
+    return buildIfRule(condPart, consPart);
   }
 
   const everythingThat = s.match(/^everything\s+that\s+is\s+(.+?)\s+is\s+(.+)$/i);

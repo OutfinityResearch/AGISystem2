@@ -220,6 +220,16 @@ describe('NL→DSL grammar translator (low-hardcoding)', () => {
     assert.match(dsl, /Implies/);
   });
 
+  test('parses postposed conditionals ("Do not X if Y") as Implies with negated consequent', () => {
+    const { dsl, errors } = translateContextWithGrammar(
+      'Do not close your bank account if you request documents from the bank.',
+      { autoDeclareUnknownOperators: true }
+    );
+    assert.deepEqual(errors, []);
+    assert.match(dsl, /Implies/, `expected Implies, got: ${dsl}`);
+    assert.match(dsl, /\bNot\b/, `expected Not in consequent, got: ${dsl}`);
+  });
+
   test('parses universal negative rules (No plants are fungi → Plant -> Not(Fungus))', () => {
     const { dsl, errors } = translateContextWithGrammar('No plants are fungi.');
     assert.deepEqual(errors, []);

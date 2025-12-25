@@ -48,3 +48,11 @@ contradictsSameArgs before after
 # Useful for future rewriting/canonicalization: after is the inverse of before.
 inverseRelation before after
 inverseRelation after before
+
+# ===== Family inverses =====
+inverseRelation parent child
+inverseRelation child parent
+
+# ===== RuleBERT inverses =====
+inverseRelation predecessor successor_rel
+inverseRelation successor_rel predecessor
