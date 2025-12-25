@@ -135,9 +135,10 @@ export class KBMatcher {
    * Find all KB facts matching a pattern (for backtracking)
    * @param {string} condStr - Condition string with possible ?vars
    * @param {Map} bindings - Current bindings
+   * @param {number} depth - Current proof depth (for bounded rule chaining)
    * @returns {Array} List of matches
    */
-  findAllFactMatches(condStr, bindings) {
+  findAllFactMatches(condStr, bindings, depth = 0) {
     const matches = [];
     const parts = condStr.split(/\s+/);
 
@@ -229,14 +230,16 @@ export class KBMatcher {
           steps: transResult.steps
         });
       } else {
-        const ruleResult = this.tryRuleChainForCondition(condStr, 0);
-        if (ruleResult.valid) {
-          matches.push({
-            valid: true,
-            confidence: ruleResult.confidence || this.thresholds.RULE_CONFIDENCE,
-            newBindings: new Map(),
-            steps: ruleResult.steps || []
-          });
+        if (depth < this.engine.options.maxDepth) {
+          const ruleResult = this.tryRuleChainForCondition(condStr, depth + 1);
+          if (ruleResult.valid) {
+            matches.push({
+              valid: true,
+              confidence: ruleResult.confidence || this.thresholds.RULE_CONFIDENCE,
+              newBindings: new Map(),
+              steps: ruleResult.steps || []
+            });
+          }
         }
       }
     }

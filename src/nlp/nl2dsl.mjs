@@ -99,7 +99,12 @@ export function translateExample(example) {
   const contextResult = translateNL2DSL(context, { source, isQuestion: false, ...translateOptions });
   const questionResult = translateNL2DSL(question, { source, isQuestion: true, ...translateOptions });
 
-  const expectProved = isSupportedBinaryExample({ source, category, label }) ? labelToExpectation(label) : null;
+  const expectProved = isSupportedBinaryExample({
+    source,
+    category,
+    label,
+    choices: normalized?.choices || example?.choices || []
+  }) ? labelToExpectation(label) : null;
 
   return {
     source,
@@ -115,31 +120,73 @@ export function translateExample(example) {
   };
 }
 
-function normalizeDatasetExample(example) {
-  const source = example?.source || 'generic';
-  if (source !== 'rulebert') return example;
+function normalizeLogicNliExample(example) {
+  const contextRaw = String(example?.context || '');
+  const questionRaw = String(example?.question || '');
 
-  const context = String(example?.context || '');
-  const question = String(example?.question || '');
+  const ctxMatch = contextRaw.match(/context\s*:\s*(.+?)(?:\s*statement\s*:|$)/is);
+  const stmtMatch = contextRaw.match(/statement\s*:\s*(.+?)\s*$/is);
 
-  // RuleBERT encodes the actual goal inside the context as: "hypothesis: pred(A,B)"
-  // and uses a meta question: "Is the hypothesis true given the facts and rules?"
-  const hypMatch = context.match(/(?:^|\n)\s*hypothesis\s*:\s*([^\n]+)\s*$/i);
-  const hypothesis = hypMatch ? hypMatch[1].trim() : null;
-  const contextWithoutHypothesis = hypMatch ? context.replace(hypMatch[0], '').trim() : context;
+  const context = (ctxMatch ? ctxMatch[1] : contextRaw)
+    .replace(/^context\s*:\s*/i, '')
+    .trim();
 
-  const isMetaQuestion = /\bhypothesis\b/i.test(question) && /\bfacts\b/i.test(question) && /\brules\b/i.test(question);
-  if (hypothesis && isMetaQuestion) {
-    return { ...example, context: contextWithoutHypothesis, question: hypothesis };
+  const statement = stmtMatch ? stmtMatch[1].trim() : null;
+  const isMetaQuestion =
+    /\brelation\b/i.test(questionRaw) &&
+    /\bcontext\b/i.test(questionRaw) &&
+    /\bstatement\b/i.test(questionRaw);
+
+  if (statement && (isMetaQuestion || !questionRaw)) {
+    return { ...example, context, question: statement };
   }
 
-  return { ...example, context: contextWithoutHypothesis };
+  return { ...example, context };
 }
 
-function isSupportedBinaryExample() {
-  // AutoDiscovery should not skip examples purely by dataset category.
-  // If a label is not mappable to a boolean expectation, `labelToExpectation()` returns null.
-  return true;
+function normalizeDatasetExample(example) {
+  const source = example?.source || 'generic';
+
+  if (source === 'rulebert') {
+    const context = String(example?.context || '');
+    const question = String(example?.question || '');
+
+    // RuleBERT encodes the actual goal inside the context as: "hypothesis: pred(A,B)"
+    // and uses a meta question: "Is the hypothesis true given the facts and rules?"
+    const hypMatch = context.match(/(?:^|\n)\s*hypothesis\s*:\s*([^\n]+)\s*$/i);
+    const hypothesis = hypMatch ? hypMatch[1].trim() : null;
+    const contextWithoutHypothesis = hypMatch ? context.replace(hypMatch[0], '').trim() : context;
+
+    const isMetaQuestion = /\bhypothesis\b/i.test(question) && /\bfacts\b/i.test(question) && /\brules\b/i.test(question);
+    if (hypothesis && isMetaQuestion) {
+      return { ...example, context: contextWithoutHypothesis, question: hypothesis };
+    }
+
+    return { ...example, context: contextWithoutHypothesis };
+  }
+
+  if (source === 'logicnli') {
+    return normalizeLogicNliExample(example);
+  }
+
+  return example;
+}
+
+function isSupportedBinaryExample({ source, choices, label }) {
+  const src = String(source || '').toLowerCase();
+
+  // Non-boolean tasks are evaluated by AutoDiscovery's nonboolean evaluator.
+  if (src === 'logicnli') return false;
+  if (src === 'clutrr') return false;
+  if (src === 'reclor') return false;
+  if (src === 'logiqa') return false;
+  if (src === 'babi15' || src === 'babi16') return false;
+
+  // Multi-choice corpora shouldn't be coerced into boolean entailment even if the
+  // label happens to look boolean-like.
+  if (Array.isArray(choices) && choices.length >= 2 && src !== 'rulebert') return false;
+
+  return labelToExpectation(label) !== null;
 }
 
 /**

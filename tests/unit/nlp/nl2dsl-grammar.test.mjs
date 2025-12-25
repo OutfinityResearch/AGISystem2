@@ -189,6 +189,14 @@ describe('NL→DSL grammar translator (low-hardcoding)', () => {
     assert.match(dsl, /Implies/, `expected Implies rule, got: ${dsl}`);
   });
 
+  test('splits participial type modifiers (a student working in the lab → isA Student + hasProperty working_in_lab)', () => {
+    const { dsl, errors } = translateContextWithGrammar('James is a student working in the lab.');
+    assert.deepEqual(errors, []);
+    assert.match(dsl, /\bisA\s+James\s+Student\b/, `expected Student type, got: ${dsl}`);
+    assert.match(dsl, /\bhasProperty\s+James\s+working_in_lab\b/i, `expected working_in_lab property, got: ${dsl}`);
+    assert.ok(!/StudentWorkingInTheLab/.test(dsl), `should not synthesize composite type, got: ${dsl}`);
+  });
+
   test('parses adjective+preposition relations (Mice are afraid of wolves → Mouse -> afraid ?x Wolf)', () => {
     const { dsl, errors } = translateContextWithGrammar('Mice are afraid of wolves.', { autoDeclareUnknownOperators: true });
     assert.deepEqual(errors, []);
@@ -262,5 +270,22 @@ describe('NL→DSL grammar translator (low-hardcoding)', () => {
     assert.match(goal, /\/\/ goal_logic:And/);
     assert.match(goal, /@goal:goal isA Platypus Mammal/);
     assert.match(goal, /@goal1:goal Not \(hasProperty Platypus teeth\)/);
+  });
+
+  test('splits sentences even without whitespace after punctuation (sour.Someone → sour. Someone)', () => {
+    const { dsl, errors, stats } = translateContextWithGrammar('Sandra is sour.Owen is not frank.');
+    assert.deepEqual(errors, []);
+    assert.equal(stats.sentencesTotal, 2);
+    assert.match(dsl, /\bhasProperty Sandra sour\b/);
+    assert.match(dsl, /\bNot\s+\$base\d+\b/);
+  });
+
+  test('expands "if and only if" into two Implies rules', () => {
+    const { dsl, errors } = translateContextWithGrammar('Someone is not sour if and only if he is not talkative.');
+    assert.deepEqual(errors, []);
+    const impliesCount = (dsl.match(/\bImplies\b/g) || []).length;
+    assert.equal(impliesCount, 2, `expected 2 Implies, got:\n${dsl}`);
+    assert.match(dsl, /\bsour\b/);
+    assert.match(dsl, /\btalkative\b/);
   });
 });

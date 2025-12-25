@@ -14,7 +14,7 @@ export function prove(session, dsl, options = {}) {
       return { valid: false, reason: 'Empty goal' };
     }
 
-    const engine = createProofEngine(session, { timeout: options.timeout || 2000 });
+    const engine = createProofEngine(session, { ...options, timeout: options.timeout || 2000 });
     const rawGoalStatement = ast.statements[0];
     const goalStatement = session.canonicalizationEnabled
       ? canonicalizeStatement(session, rawGoalStatement)

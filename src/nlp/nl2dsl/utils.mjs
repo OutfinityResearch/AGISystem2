@@ -173,6 +173,10 @@ export function splitSentences(text) {
   t = t.replace(/(\d)\.(\d)/g, `$1${DOT}$2`);
   t = t.replace(/\b(?:[A-Z]\.){2,}/g, (m) => m.replace(/\./g, DOT));
 
+  // Some corpora omit whitespace after sentence-ending punctuation (e.g. "sour.Someone").
+  // Insert a boundary when a lowercase letter is followed by '.' and then an uppercase letter.
+  t = t.replace(/([a-z])\.(?=[A-Z])/g, '$1. ');
+
   return t
     .split(/[.?!]\s+/)
     .map(s => s.replaceAll(DOT, '.').trim().replace(/[.?!]+$/, ''))

@@ -32,6 +32,24 @@ export function parseQuantifiedSubjectDescriptor(subjectPart) {
   const tokens = lower(baseText).split(/\s+/).filter(Boolean);
   if (tokens.length === 0) return { typeName: null, properties: [] };
 
+  // Heuristic: in subject descriptors like:
+  // - "students working in the lab"
+  // - "students instructed by professor David"
+  // - "students taking the database course"
+  // the head is typically the first plural noun ("students"), and the rest is a relative predicate.
+  // The older "head=last token" heuristic breaks badly on trailing proper names ("... David").
+  if (!relText && isPlural(tokens[0]) && !isGenericClassNoun(tokens[0]) && tokens.length >= 2) {
+    const t1 = tokens[1] || '';
+    const preps = new Set(['in', 'on', 'at', 'by', 'to', 'from', 'with', 'for', 'of', 'near', 'behind', 'beside', 'under', 'over', 'inside', 'outside']);
+    const hasPrep = tokens.some(t => preps.has(t));
+    const looksLikeVerbish = /(?:ing|ed)$/.test(t1) || preps.has(t1) || hasPrep;
+    if (looksLikeVerbish) {
+      const headType = normalizeTypeName(singularize(tokens[0]));
+      const relative = tokens.slice(1).join(' ').trim();
+      return { typeName: headType, properties: [], ...(relative ? { relative } : {}) };
+    }
+  }
+
   const head = tokens[tokens.length - 1];
   const mods = tokens.slice(0, -1);
   const typeName = isGenericClassNoun(head) ? null : normalizeTypeName(isPlural(head) ? singularize(head) : head);

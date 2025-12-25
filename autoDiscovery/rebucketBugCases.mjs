@@ -9,6 +9,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { performance } from 'node:perf_hooks';
 
 import { runExample } from './discovery/run-example.mjs';
 import { detectKnownBugPattern, BUG_PATTERNS } from './discovery/patterns.mjs';
@@ -23,6 +24,22 @@ function listBugDirs() {
     .filter(d => d.startsWith('BUG'))
     .map(d => path.join(ROOT, d))
     .filter(p => fs.statSync(p).isDirectory());
+}
+
+function parseArgs(argv) {
+  const out = { bug: null, limit: null, slowMs: 5000 };
+  for (const a of argv) {
+    if (a.startsWith('--bug=')) out.bug = a.slice('--bug='.length).trim();
+    if (a.startsWith('--limit=')) {
+      const n = Number(a.slice('--limit='.length));
+      if (Number.isFinite(n) && n > 0) out.limit = n;
+    }
+    if (a.startsWith('--slow-ms=')) {
+      const n = Number(a.slice('--slow-ms='.length));
+      if (Number.isFinite(n) && n >= 0) out.slowMs = n;
+    }
+  }
+  return out;
 }
 
 function listJsonFiles(dir) {
@@ -82,20 +99,33 @@ function updateReport(bugDir, bugId) {
 }
 
 async function main() {
+  const args = parseArgs(process.argv.slice(2));
   const bugDirs = listBugDirs();
   if (bugDirs.length === 0) {
     console.log('No bugCases folders found.');
     process.exit(0);
   }
 
+  const selectedDirs = args.bug
+    ? bugDirs.filter(d => path.basename(d) === args.bug)
+    : bugDirs;
+
+  const allFiles = [];
+  for (const dir of selectedDirs) {
+    for (const file of listJsonFiles(dir)) allFiles.push({ dir, file });
+  }
+  if (args.limit) allFiles.splice(args.limit);
+
   let deleted = 0;
   let moved = 0;
   let kept = 0;
 
   const touchedBugDirs = new Set();
+  const startAll = performance.now();
+  let processed = 0;
 
-  for (const dir of bugDirs) {
-    for (const file of listJsonFiles(dir)) {
+  for (const { dir, file } of allFiles) {
+      const startOne = performance.now();
       const raw = readJson(file);
       const example = extractExample(raw);
       const caseId = raw.caseId || path.basename(file, '.json');
@@ -108,12 +138,26 @@ async function main() {
       if (result.correct === true || result.category === CATEGORY.PASSED) {
         safeRm(file);
         deleted++;
+        processed++;
+        if (performance.now() - startOne >= args.slowMs) {
+          console.log(`SLOW(${Math.round(performance.now() - startOne)}ms): ${caseId} => deleted`);
+        }
+        if (processed % 10 === 0) {
+          console.log(`Progress: ${processed}/${allFiles.length} (elapsed ${Math.round((performance.now() - startAll) / 1000)}s)`);
+        }
         continue;
       }
 
       if (result.category === CATEGORY.UNSUPPORTED) {
         safeRm(file);
         deleted++;
+        processed++;
+        if (performance.now() - startOne >= args.slowMs) {
+          console.log(`SLOW(${Math.round(performance.now() - startOne)}ms): ${caseId} => unsupported`);
+        }
+        if (processed % 10 === 0) {
+          console.log(`Progress: ${processed}/${allFiles.length} (elapsed ${Math.round((performance.now() - startAll) / 1000)}s)`);
+        }
         continue;
       }
 
@@ -178,7 +222,13 @@ async function main() {
       writeJson(targetFile, updated);
       touchedBugDirs.add(targetDir);
       touchedBugDirs.add(path.join(path.dirname(file)));
-    }
+      processed++;
+      if (performance.now() - startOne >= args.slowMs) {
+        console.log(`SLOW(${Math.round(performance.now() - startOne)}ms): ${caseId} => ${bugId}`);
+      }
+      if (processed % 10 === 0) {
+        console.log(`Progress: ${processed}/${allFiles.length} (elapsed ${Math.round((performance.now() - startAll) / 1000)}s)`);
+      }
   }
 
   // Delete empty bug dirs and refresh reports.
@@ -193,10 +243,10 @@ async function main() {
   }
 
   console.log(`Rebucket complete: deleted=${deleted} moved=${moved} kept=${kept}`);
+  console.log(`Total time: ${Math.round((performance.now() - startAll) / 1000)}s for ${processed} cases`);
 }
 
 main().catch(err => {
   console.error(`Fatal: ${err.stack || err.message}`);
   process.exit(1);
 });
-

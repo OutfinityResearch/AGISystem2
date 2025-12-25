@@ -137,7 +137,7 @@ export function findAllMatches(self, part, bindings, depth) {
 
   if (part.type === 'leaf' && part.ast) {
     const condStr = self.engine.unification.instantiateAST(part.ast, bindings);
-    const directMatches = self.engine.kbMatcher.findAllFactMatches(condStr, bindings);
+    const directMatches = self.engine.kbMatcher.findAllFactMatches(condStr, bindings, depth);
     if (directMatches.length > 0) return directMatches;
 
     // If the condition still contains unbound variables, try a bounded witness search
@@ -339,4 +339,3 @@ export function proveCompoundPart(self, part, bindings, depth) {
 
   return { valid: false, reason: 'Cannot prove part' };
 }
-

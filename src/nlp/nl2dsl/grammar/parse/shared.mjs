@@ -2,6 +2,7 @@ import {
   capitalize,
   singularize,
   normalizeEntity,
+  normalizeVerb,
   normalizeTypeName,
   isPlural,
   isGenericClassNoun,
@@ -56,7 +57,8 @@ function looksLikeTypePhrase(text) {
     const first = tokens[0] || '';
     const second = String(tokens[1] || '').toLowerCase();
     const preps = new Set(['in', 'on', 'at', 'by', 'to', 'from', 'with', 'for', 'of', 'near', 'behind', 'beside', 'under', 'over', 'inside', 'outside']);
-    const verbish = /^[a-z]/.test(first) && (preps.has(second) || /(?:ing|ed)$/.test(first));
+    const det = new Set(['the', 'a', 'an', 'their', 'his', 'her', 'its', 'my', 'your', 'our', 'some', 'any', 'no', 'every', 'each']);
+    const verbish = /^[a-z]/.test(first) && (preps.has(second) || det.has(second) || /(?:ing|ed)$/.test(first));
     if (!verbish) return true;
   }
   return isPlural(last);
@@ -85,6 +87,40 @@ export function parsePredicateItem(item, subject) {
     return items.length > 0 ? items : null;
   }
 
+  // Participial modifiers inside type phrases:
+  // "a student working in the lab" => Student(x) ∧ working_in_lab(x)
+  // "students taking the database course" => Student(x) ∧ taking_database_course(x)
+  const part = r.match(/^(.+?)\s+([a-z][a-z0-9_'-]*(?:ing|ed))\s+(.+)$/i);
+  if (part) {
+    const baseText = part[1].trim();
+    // Do not rewrite "have <noun> ..." via participial splitting; it should stay as hasProperty.
+    if (!/^(?:has|have)\b/i.test(baseText)) {
+      const baseClean = clean(baseText);
+      const baseTokens = baseClean.split(/\s+/).filter(Boolean);
+      const baseHead = baseTokens[baseTokens.length - 1] || '';
+      const baseEligible =
+        /^(?:a|an|the)\s+/i.test(baseClean) ||
+        /^[A-Z]/.test(baseClean) ||
+        (baseHead && isPlural(baseHead));
+
+      // If the phrase starts with a participle ("taking ..."), treat it as a predicate/property,
+      // not as a type + modifier split.
+      if (baseEligible) {
+        const relText = `${part[2]} ${part[3]}`.trim();
+        const baseType = parseTypePhrase(baseText);
+        const items = [];
+        if (baseType) items.push({ negated, atom: { op: 'isA', args: [subject, baseType] } });
+        const relParsed = parsePredicateItem(relText, subject);
+        const relItems = Array.isArray(relParsed) ? relParsed : (relParsed ? [relParsed] : []);
+        for (const it of relItems) {
+          if (!it?.atom) continue;
+          items.push(negated ? { ...it, negated: !it.negated } : it);
+        }
+        return items.length > 0 ? items : null;
+      }
+    }
+  }
+
   // Adjective + preposition: "afraid of wolves" => afraid(x, Wolf)
   const prepRel = r.match(/^([a-z][a-z0-9_'-]*)\s+(of|to|with|from|for)\s+(.+)$/i);
   if (prepRel) {
@@ -105,6 +141,13 @@ export function parsePredicateItem(item, subject) {
       .map(t => String(t).toLowerCase())
       .filter(t => !det.has(t))
       .map(t => singularize(t));
+    const preps = new Set(['in', 'on', 'at', 'by', 'to', 'from', 'with', 'for', 'of', 'near', 'behind', 'beside', 'under', 'over', 'inside', 'outside']);
+    if (kept.length >= 2) {
+      const first = kept[0] || '';
+      const second = kept[1] || '';
+      const verbishHead = preps.has(second) || det.has(second) || /(?:ing|ed)$/.test(first);
+      if (verbishHead) kept[0] = normalizeVerb(first);
+    }
     const keyTokens = kept.length <= 10 ? kept : [...kept.slice(0, 5), ...kept.slice(-3)];
     const key = keyTokens.join('_');
     const prop = sanitizePredicate(key) || sanitizePredicate(keyTokens[keyTokens.length - 1] || '');
@@ -121,6 +164,13 @@ export function parsePredicateItem(item, subject) {
   const tokens = r.split(/\s+/).filter(Boolean).map(t => String(t).toLowerCase());
   const det = new Set(['the', 'a', 'an']);
   const kept = tokens.filter(t => !det.has(t)).map(t => singularize(t));
+  const preps = new Set(['in', 'on', 'at', 'by', 'to', 'from', 'with', 'for', 'of', 'near', 'behind', 'beside', 'under', 'over', 'inside', 'outside']);
+  if (kept.length >= 2) {
+    const first = kept[0] || '';
+    const second = kept[1] || '';
+    const verbishHead = preps.has(second) || det.has(second) || /(?:ing|ed)$/.test(first);
+    if (verbishHead) kept[0] = normalizeVerb(first);
+  }
   const keyTokens = kept.length <= 10 ? kept : [...kept.slice(0, 5), ...kept.slice(-3)];
   const key = keyTokens.join('_');
   const prop = sanitizePredicate(key) || sanitizePredicate(keyTokens[keyTokens.length - 1] || '');

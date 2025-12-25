@@ -1,6 +1,7 @@
 import { splitSentences, normalizeEntity, sanitizePredicate } from './utils.mjs';
 import { clean, splitCoord } from './grammar/text.mjs';
 import { parseCopulaClause, parseRelationClause, parseRuleSentence, parseFactSentence } from './grammar/parse.mjs';
+import { isKnownOperator } from './grammar/parse/shared.mjs';
 import crypto from 'node:crypto';
 import { extractExistentialTypeClaims, parseExistentialCopula } from './grammar/existentials.mjs';
 import { emitSubjectDescriptorItems, parseCopulaPredicates, parseHavePredicate, parseQuantifiedSubjectDescriptor } from './grammar/parse/quantifiers.mjs';
@@ -86,17 +87,89 @@ function parseSimpleClauseToCompound(text, options = {}) {
   return null;
 }
 
-function translateQuantifiedQuestion(q) {
+function toIfThenSentence(condText, consText) {
+  const c = clean(condText);
+  const k = clean(consText);
+  if (!c || !k) return null;
+  return `If ${c}, then ${k}`;
+}
+
+function normalizeEquivalenceSide(side, defaultSubject = 'someone') {
+  const s = clean(side);
+  if (!s) return null;
+
+  // "Someone being X" -> "Someone is X"
+  const someoneBeing = s.match(/^(someone|something|they|it|he|she)\s+being\s+(.+)$/i);
+  if (someoneBeing) {
+    const subj = someoneBeing[1];
+    const pred = someoneBeing[2];
+    return `${subj} is ${pred}`.trim();
+  }
+
+  // "being X" -> "<defaultSubject> is X"
+  const being = s.match(/^being\s+(.+)$/i);
+  if (being) {
+    return `${defaultSubject} is ${being[1]}`.trim();
+  }
+
+  return s;
+}
+
+function expandBiconditionalSentence(sentence) {
+  const s = clean(sentence);
+  if (!s) return [];
+
+  // "A iff B" patterns.
+  const iff = s.match(/^(.+?)\s+if\s+and\s+only\s+if\s+(.+)$/i);
+  if (iff) {
+    const left = clean(iff[1]);
+    const right = clean(iff[2]);
+    const a = toIfThenSentence(left, right);
+    const b = toIfThenSentence(right, left);
+    return [a, b].filter(Boolean);
+  }
+
+  // "A is equivalent to B" patterns (LogicNLI).
+  const equiv = s.match(/^(.+?)\s+is\s+equivalent\s+to\s+(.+)$/i);
+  if (equiv) {
+    const left0 = clean(equiv[1]);
+    const right0 = clean(equiv[2]);
+
+    const left = normalizeEquivalenceSide(left0, 'someone');
+    const right = normalizeEquivalenceSide(right0, 'someone');
+    const a = toIfThenSentence(left, right);
+    const b = toIfThenSentence(right, left);
+    return [a, b].filter(Boolean);
+  }
+
+  return [s];
+}
+
+function translateQuantifiedQuestion(q, options = {}) {
+  const declaredOperators = new Set();
+  const rememberOps = (items) => {
+    if (!options.autoDeclareUnknownOperators) return;
+    for (const it of items || []) {
+      const op = it?.atom?.op;
+      if (op && !isKnownOperator(op)) declaredOperators.add(op);
+    }
+  };
+
   const someCopula = q.match(/^some\s+(.+?)\s+(?:are|is)\s+(.+)$/i);
   if (someCopula) {
     const [, subjectPart, predPart] = someCopula;
     const condItems = emitSubjectDescriptorItems('?x', parseQuantifiedSubjectDescriptor(subjectPart));
     const pred = parseCopulaPredicates('?x', predPart);
     if (condItems.length === 0 || !pred) return null;
+    rememberOps(condItems);
+    rememberOps(pred.items);
     const compounds = [...condItems, ...pred.items].map(itemToCompound).filter(Boolean);
     const body = buildAndCompound(compounds);
     if (!body) return null;
-    return `// action:prove\n@goal:goal Exists ?x ${body}`;
+    const header = ['// action:prove'];
+    if (declaredOperators.size > 0) header.push(`// declare_ops:${[...declaredOperators].sort().join(',')}`);
+    header.push(`@goal:goal Exists ?x ${body}`);
+    return header.join('\n');
   }
 
   const someHave = q.match(/^some\s+(.+?)\s+(?:do\s+not\s+|don't\s+)?have\s+(.+)$/i);
@@ -106,10 +179,15 @@ function translateQuantifiedQuestion(q) {
     const condItems = emitSubjectDescriptorItems('?x', parseQuantifiedSubjectDescriptor(subjectPart));
     const have = parseHavePredicate('?x', objPart, negated);
     if (condItems.length === 0 || !have) return null;
+    rememberOps(condItems);
+    rememberOps([have]);
     const compounds = [...condItems, have].map(itemToCompound).filter(Boolean);
     const body = buildAndCompound(compounds);
     if (!body) return null;
-    return `// action:prove\n@goal:goal Exists ?x ${body}`;
+    const header = ['// action:prove'];
+    if (declaredOperators.size > 0) header.push(`// declare_ops:${[...declaredOperators].sort().join(',')}`);
+    header.push(`@goal:goal Exists ?x ${body}`);
+    return header.join('\n');
   }
 
   const noCopula = q.match(/^(?:no|none)\s+(.+?)\s+(?:are|is)\s+(.+)$/i);
@@ -118,10 +196,15 @@ function translateQuantifiedQuestion(q) {
     const condItems = emitSubjectDescriptorItems('?x', parseQuantifiedSubjectDescriptor(subjectPart));
     const pred = parseCopulaPredicates('?x', predPart);
     if (condItems.length === 0 || !pred) return null;
+    rememberOps(condItems);
+    rememberOps(pred.items);
     const compounds = [...condItems, ...pred.items].map(itemToCompound).filter(Boolean);
     const body = buildAndCompound(compounds);
     if (!body) return null;
-    return `// action:prove\n@goal:goal Not (Exists ?x ${body})`;
+    const header = ['// action:prove'];
+    if (declaredOperators.size > 0) header.push(`// declare_ops:${[...declaredOperators].sort().join(',')}`);
+    header.push(`@goal:goal Not (Exists ?x ${body})`);
+    return header.join('\n');
   }
 
   const noHave = q.match(/^(?:no|none)\s+(.+?)\s+(?:do\s+not\s+)?have\s+(.+)$/i);
@@ -130,10 +213,15 @@ function translateQuantifiedQuestion(q) {
     const condItems = emitSubjectDescriptorItems('?x', parseQuantifiedSubjectDescriptor(subjectPart));
     const have = parseHavePredicate('?x', objPart, false);
     if (condItems.length === 0 || !have) return null;
+    rememberOps(condItems);
+    rememberOps([have]);
     const compounds = [...condItems, have].map(itemToCompound).filter(Boolean);
     const body = buildAndCompound(compounds);
     if (!body) return null;
-    return `// action:prove\n@goal:goal Not (Exists ?x ${body})`;
+    const header = ['// action:prove'];
+    if (declaredOperators.size > 0) header.push(`// declare_ops:${[...declaredOperators].sort().join(',')}`);
+    header.push(`@goal:goal Not (Exists ?x ${body})`);
+    return header.join('\n');
   }
 
   return null;
@@ -152,8 +240,9 @@ export function translateContextWithGrammar(text, options = {}) {
   const existentialTypesAdded = new Set();
   const autoDeclared = new Set();
   const sentences = splitSentences(text);
-  stats.sentencesTotal = sentences.length;
-  for (const sent of sentences) {
+  const expandedSentences = sentences.flatMap(s => expandBiconditionalSentence(s));
+  stats.sentencesTotal = expandedSentences.length;
+  for (const sent of expandedSentences) {
     if (options.extractExistentials !== false) {
       const hinted = extractExistentialTypeClaims(sent);
       for (const typeName of hinted) {
@@ -294,7 +383,7 @@ export function translateQuestionWithGrammar(question, options = {}) {
     }
   }
 
-  const quantified = translateQuantifiedQuestion(q);
+  const quantified = translateQuantifiedQuestion(q, options);
   if (quantified) return quantified;
 
   // Normalize common English question inversions into declarative clauses
@@ -353,42 +442,39 @@ export function translateQuestionWithGrammar(question, options = {}) {
       const [, subjectRaw, verb, typeRaw, withRaw] = withClause;
       const baseClause = `${subjectRaw} ${verb} ${typeRaw}`.trim();
       const base = parseCopulaClause(baseClause, '?x', { ...options, indefiniteAsEntity: true });
-      // Only apply this expansion when the base clause is a genuine type assertion (isA),
-      // otherwise we incorrectly split sentences like:
+      // Only apply this expansion when the base clause is a genuine type assertion (isA).
+      // Otherwise we incorrectly split sentences like:
       // - "James is invited ... with the audience ..."
       // - "... has nothing to do with whether ..."
       const baseHasType = Array.isArray(base?.items) && base.items.some(it => it?.atom?.op === 'isA');
-      if (!baseHasType) {
-        // Let the downstream clause splitters handle it (copula list / relation goals).
-        // Returning null here continues parsing without forcing a conjunction.
-      } else {
-      const subject = normalizeEntity(subjectRaw, '?x');
-      const withText = clean(withRaw);
-      const neg = /^no\s+/i.test(withText) || /^not\s+/i.test(withText);
-      const stripped = withText.replace(/^(?:no|not)\s+/i, '').trim();
-      const have = parseHavePredicate(subject, stripped, neg);
+      if (baseHasType) {
+        const subject = normalizeEntity(subjectRaw, '?x');
+        const withText = clean(withRaw);
+        const neg = /^no\s+/i.test(withText) || /^not\s+/i.test(withText);
+        const stripped = withText.replace(/^(?:no|not)\s+/i, '').trim();
+        const have = parseHavePredicate(subject, stripped, neg);
 
-      const goalLines = [];
-      const declaredOperators = new Set(base?.declaredOperators || []);
-      if (base?.items?.length) {
-        for (const it of base.items) {
-          if (!it?.atom) continue;
-          const inner = `${it.atom.op} ${it.atom.args.join(' ')}`.trim();
-          goalLines.push(`${goalLines.length === 0 ? '@goal:goal' : `@goal${goalLines.length}:goal`} ${it.negated ? `Not (${inner})` : inner}`);
+        const goalLines = [];
+        const declaredOperators = new Set(base?.declaredOperators || []);
+
+        if (base?.items?.length) {
+          for (const it of base.items) {
+            if (!it?.atom) continue;
+            const inner = `${it.atom.op} ${it.atom.args.join(' ')}`.trim();
+            goalLines.push(`${goalLines.length === 0 ? '@goal:goal' : `@goal${goalLines.length}:goal`} ${it.negated ? `Not (${inner})` : inner}`);
+          }
+        }
+        if (have?.atom) {
+          const inner = `${have.atom.op} ${have.atom.args.join(' ')}`.trim();
+          goalLines.push(`${goalLines.length === 0 ? '@goal:goal' : `@goal${goalLines.length}:goal`} ${have.negated ? `Not (${inner})` : inner}`);
+        }
+
+        if (goalLines.length > 1) {
+          const header = ['// goal_logic:And'];
+          if (declaredOperators.size > 0) header.push(`// declare_ops:${[...declaredOperators].sort().join(',')}`);
+          return [...header, ...goalLines].join('\n');
         }
       }
-      if (have?.atom) {
-        const inner = `${have.atom.op} ${have.atom.args.join(' ')}`.trim();
-        goalLines.push(`${goalLines.length === 0 ? '@goal:goal' : `@goal${goalLines.length}:goal`} ${have.negated ? `Not (${inner})` : inner}`);
-      }
-
-      if (goalLines.length > 1) {
-        const header = ['// goal_logic:And'];
-        if (declaredOperators.size > 0) header.push(`// declare_ops:${[...declaredOperators].sort().join(',')}`);
-        return [...header, ...goalLines].join('\n');
-      }
-      }
-    }
     }
 
     const copulaList = q.match(/^(.*?)\s+(is|are)\s+(.+)$/i);

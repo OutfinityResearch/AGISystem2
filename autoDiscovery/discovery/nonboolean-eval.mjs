@@ -10,6 +10,27 @@ function normalizeTextKey(text) {
     .toLowerCase();
 }
 
+function stripGoalPrefix(goalLine) {
+  const line = String(goalLine || '').trim();
+  if (!line) return '';
+  if (!line.startsWith('@')) return line;
+  return line.split(/\s+/).slice(1).join(' ').trim();
+}
+
+function ensureGoalLine(line) {
+  const t = String(line || '').trim();
+  if (!t) return '';
+  if (t.startsWith('@goal')) return t;
+  return `@goal:goal ${t}`;
+}
+
+function buildNegatedGoalLine(goalLine) {
+  const raw = stripGoalPrefix(goalLine);
+  if (!raw) return '';
+  const inner = raw.startsWith('Not ') || raw.startsWith('Not(') ? raw : `Not (${raw})`;
+  return ensureGoalLine(inner);
+}
+
 function queryToBool(result) {
   if (!result) return false;
   if (result.success !== true) return false;
@@ -53,6 +74,38 @@ export function evaluateNonBooleanExample({
   translatorOptions,
   startTime
 }) {
+  // ---- LogicNLI: classify entailment/contradiction/neutral/self_contradiction ----
+  if (String(source || '').toLowerCase() === 'logicnli' && typeof example.label === 'string' && goals.length >= 1) {
+    const posGoal = ensureGoalLine(goals[0]);
+    const negGoal = buildNegatedGoalLine(goals[0]);
+
+    const posRes = posGoal ? session.prove(posGoal, { timeout: 2000, includeSearchTrace: false }) : null;
+    const negRes = negGoal ? session.prove(negGoal, { timeout: 2000, includeSearchTrace: false }) : null;
+
+    const provedPos = posRes?.valid === true;
+    const provedNeg = negRes?.valid === true;
+
+    const predicted =
+      (provedPos && provedNeg) ? 'self_contradiction'
+        : provedPos ? 'entailment'
+          : provedNeg ? 'contradiction'
+            : 'neutral';
+
+    const correct = normalizeTextKey(predicted) === normalizeTextKey(example.label);
+    return {
+      category: correct ? CATEGORY.PASSED : CATEGORY.REASONING,
+      correct,
+      reason: correct ? 'passed_logicnli' : 'logicnli_label_mismatch',
+      details: `predicted=${predicted} label=${example.label} provedPos=${provedPos} provedNeg=${provedNeg}`,
+      translated: { ...translated, questionDsl: posGoal },
+      proveResult: { valid: correct, reason: correct ? null : 'logicnli_label_mismatch', stepsCount: 0, validatorOk: true, method: 'logicnli_probe' },
+      actual_nl,
+      durationMs: performance.now() - startTime,
+      caseId,
+      sessionConfig
+    };
+  }
+
   // ---- Query-answer tasks (bAbI / similar) ----
   if (typeof example.label === 'string' && action === 'query' && goals.length === 1) {
     const goalLine = String(goals[0] || '').trim();
@@ -101,7 +154,7 @@ export function evaluateNonBooleanExample({
       }
       const res = choiceAction === 'query'
         ? session.query(choiceLine, { timeout: 2000 })
-        : session.prove(choiceLine, { timeout: 2000 });
+        : session.prove(choiceLine, { timeout: 2000, includeSearchTrace: false });
       const ok = choiceAction === 'query' ? queryToBool(res) : (res?.valid === true);
       choiceResults.push({ choice, valid: ok, action: choiceAction });
     }
@@ -140,7 +193,7 @@ export function evaluateNonBooleanExample({
           session.learn(`@${rel}:${rel} __Relation`);
         }
         const goalLine = `@goal:goal ${rel} ${a} ${b}`;
-        const res = session.prove(goalLine, { timeout: 2000 });
+        const res = session.prove(goalLine, { timeout: 2000, includeSearchTrace: false });
         const ok = res?.valid === true;
         return {
           category: ok ? CATEGORY.PASSED : CATEGORY.REASONING,
@@ -176,4 +229,3 @@ export function evaluateNonBooleanExample({
 
   return null;
 }
-

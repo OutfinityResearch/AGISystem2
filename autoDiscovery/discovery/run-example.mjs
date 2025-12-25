@@ -168,7 +168,7 @@ export function runExample(example, caseId, options = {}) {
         const result = session.query(g, { timeout: 2000 });
         return { goalDsl: g, result, action: 'query', valid: queryToBool(result) };
       }
-      const result = session.prove(g, { timeout: 2000 });
+      const result = session.prove(g, { timeout: 2000, includeSearchTrace: false });
       return { goalDsl: g, result, action: 'prove', valid: result?.valid === true };
     });
 

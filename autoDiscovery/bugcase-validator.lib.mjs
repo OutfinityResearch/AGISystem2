@@ -78,6 +78,27 @@ function normalizeTextKey(text) {
   return String(text || '').trim().replace(/\s+/g, ' ').toLowerCase();
 }
 
+function stripGoalPrefix(goalLine) {
+  const line = String(goalLine || '').trim();
+  if (!line) return '';
+  if (!line.startsWith('@')) return line;
+  return line.split(/\s+/).slice(1).join(' ').trim();
+}
+
+function ensureGoalLine(line) {
+  const t = String(line || '').trim();
+  if (!t) return '';
+  if (t.startsWith('@goal')) return t;
+  return `@goal:goal ${t}`;
+}
+
+function buildNegatedGoalLine(goalLine) {
+  const raw = stripGoalPrefix(goalLine);
+  if (!raw) return '';
+  const inner = raw.startsWith('Not ') || raw.startsWith('Not(') ? raw : `Not (${raw})`;
+  return ensureGoalLine(inner);
+}
+
 function inferExpectationKind(raw, translated, goalValidation) {
   const src = String(raw?.source || translated?.source || '').toLowerCase();
   const expectProved = extractExpectProved(raw);
@@ -91,6 +112,13 @@ function inferExpectationKind(raw, translated, goalValidation) {
 
   if ((src === 'babi15' || src === 'babi16') && typeof label === 'string' && action === 'query' && goals.length === 1) {
     return { kind: 'query_answer', label };
+  }
+
+  if (src === 'logicnli' && typeof label === 'string') {
+    const l = normalizeTextKey(label);
+    if (['entailment', 'contradiction', 'neutral', 'self_contradiction'].includes(l)) {
+      return { kind: 'nli_label', label: l };
+    }
   }
 
   if (Array.isArray(choices) && choices.length >= 2 && typeof label === 'string') {
@@ -188,7 +216,7 @@ export async function validateOne(caseFile, { autoDeclareUnknownOperators = true
       const result = session.query(goalDsl, { timeout: 2000 });
       return { goalDsl, ok: queryToBool(result), result };
     }
-    const result = session.prove(goalDsl, { timeout: 2000 });
+    const result = session.prove(goalDsl, { timeout: 2000, includeSearchTrace: false });
     return { goalDsl, ok: result?.valid === true, result };
   });
 
@@ -205,6 +233,22 @@ export async function validateOne(caseFile, { autoDeclareUnknownOperators = true
     const evalRes = evaluateQueryAnswer({ goalDsl: goals[0], queryResult: perGoal[0].result, label: expectation.label });
     // For bug cases, ok=true means the issue is fixed (answer now matches).
     return { ok: evalRes.ok, skipped: false, kind: 'query_answer', ...evalRes };
+  }
+
+  if (expectation.kind === 'nli_label') {
+    const posGoal = ensureGoalLine(goals[0]);
+    const negGoal = buildNegatedGoalLine(goals[0]);
+    const posRes = posGoal ? session.prove(posGoal, { timeout: 2000, includeSearchTrace: false }) : null;
+    const negRes = negGoal ? session.prove(negGoal, { timeout: 2000, includeSearchTrace: false }) : null;
+    const provedPos = posRes?.valid === true;
+    const provedNeg = negRes?.valid === true;
+    const predicted =
+      (provedPos && provedNeg) ? 'self_contradiction'
+        : provedPos ? 'entailment'
+          : provedNeg ? 'contradiction'
+            : 'neutral';
+    const nowPasses = normalizeTextKey(predicted) === normalizeTextKey(expectation.label);
+    return { ok: nowPasses, skipped: false, kind: 'nli_label', predicted, label: expectation.label, provedPos, provedNeg };
   }
 
   if (expectation.kind === 'multi_choice') {
@@ -225,7 +269,7 @@ export async function validateOne(caseFile, { autoDeclareUnknownOperators = true
       }
       const res = choiceAction === 'query'
         ? session.query(choiceLine, { timeout: 2000 })
-        : session.prove(choiceLine, { timeout: 2000 });
+        : session.prove(choiceLine, { timeout: 2000, includeSearchTrace: false });
       const ok = choiceAction === 'query' ? queryToBool(res) : (res?.valid === true);
       choiceResults.push({ choice, valid: ok, action: choiceAction });
     }
@@ -247,10 +291,9 @@ export async function validateOne(caseFile, { autoDeclareUnknownOperators = true
     if (!rel) return { ok: false, skipped: true, kind: 'clutrr', reason: 'invalid_relation_label' };
     if (autoDeclareUnknownOperators) session.learn(`@${rel}:${rel} __Relation`);
     const goalLine = `@goal:goal ${rel} ${a} ${b}`;
-    const res = session.prove(goalLine, { timeout: 2000 });
+    const res = session.prove(goalLine, { timeout: 2000, includeSearchTrace: false });
     return { ok: res?.valid === true, skipped: false, kind: 'clutrr', goal: goalLine };
   }
 
   return { ok: false, skipped: true, kind: 'unknown', reason: 'unknown_expectation_kind' };
 }
-

@@ -5,25 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs">
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/analyzeBugCases.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/bugcase-validator.lib.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/discovery/semantics.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/rebucketBugCases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/discovery/patterns.json" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/discovery/patterns.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/discovery/patterns.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/discovery/patterns.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/discovery/process-quarantine.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/discovery/process-quarantine.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/discovery/run-batch.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/discovery/run-batch.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/pruneBugCases.lib.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/pruneBugCases.lib.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/validateBugCases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/validateBugCases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/guides/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/guides/vs-prolog.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/vs-prolog.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite28_induction/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite28_induction/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugcase-validator.lib.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/bugcase-validator.lib.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/discovery/nonboolean-eval.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/discovery/nonboolean-eval.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/discovery/run-example.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/discovery/run-example.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/rebucketBugCases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/rebucketBugCases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/nl2dsl.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar/parse/quantifiers.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar/parse/quantifiers.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar/parse/relation.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar/parse/relation.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar/parse/shared.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar/parse/shared.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-induction.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-induction.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl/utils.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/utils.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/response-translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/conditions/instantiated.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/conditions/instantiated.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/prove.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/prove/prove-goal.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove/prove-goal.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session-prove.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-prove.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/unit/nlp/nl2dsl-grammar.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/nlp/nl2dsl-grammar.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -135,15 +131,7 @@
       <workItem from="1766389595090" duration="9185000" />
       <workItem from="1766477237780" duration="9294000" />
       <workItem from="1766562947099" duration="21851000" />
-      <workItem from="1766650266623" duration="942000" />
-    </task>
-    <task id="LOCAL-00022" summary="Better Documentation and WIP for code">
-      <option name="closed" value="true" />
-      <created>1764345204598</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1764345204598</updated>
+      <workItem from="1766650266623" duration="1768000" />
     </task>
     <task id="LOCAL-00023" summary="Better Documentation and WIP for code">
       <option name="closed" value="true" />
@@ -529,7 +517,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766618229533</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs">
+      <option name="closed" value="true" />
+      <created>1766652073486</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1766652073486</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

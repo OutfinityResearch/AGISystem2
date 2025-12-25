@@ -719,7 +719,7 @@ class QueryTranslator extends BaseTranslator {
 
   generateProofFromProve(op, args) {
     try {
-      const goal = ['@goal', op, ...args].join(' ');
+      const goal = ['@goal:goal', op, ...args].join(' ');
       const proofResult = this.session.prove(goal);
       if (!proofResult?.valid) return null;
       const elaboration = this.session.elaborate(proofResult) || {};

@@ -30,7 +30,8 @@ export class ProofEngine {
     this.session = session;
     this.options = {
       maxDepth: options.maxDepth || MAX_PROOF_DEPTH,
-      timeout: options.timeout || PROOF_TIMEOUT_MS
+      timeout: options.timeout || PROOF_TIMEOUT_MS,
+      includeSearchTrace: options.includeSearchTrace !== false
     };
 
     const strategy = session?.hdcStrategy || 'dense-binary';
@@ -176,4 +177,3 @@ export class ProofEngine {
 }
 
 export default ProofEngine;
-

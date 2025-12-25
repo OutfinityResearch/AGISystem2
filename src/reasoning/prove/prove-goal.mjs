@@ -612,7 +612,7 @@ export function proveGoal(self, goal, depth) {
 
     const negationInfo = self.checkGoalNegation(goal);
     if (negationInfo.negated) {
-      const searchTrace = self.buildNegationSearchTrace(goal, negationInfo);
+      const searchTrace = self.options.includeSearchTrace ? self.buildNegationSearchTrace(goal, negationInfo) : null;
       return {
         valid: false,
         reason: 'Goal is negated',
@@ -694,7 +694,7 @@ export function proveGoal(self, goal, depth) {
       return disjointResult;
     }
 
-    const searchTrace = self.buildSearchTrace(goal, goalStr);
+    const searchTrace = self.options.includeSearchTrace ? self.buildSearchTrace(goal, goalStr) : null;
 
     return {
       valid: false,
