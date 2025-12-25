@@ -116,6 +116,15 @@ function legacyStepToDs19(step) {
     };
   }
 
+  // Derived (proved) conditions inside instantiated And/Or backtracking may not be asserted as KB facts.
+  if (operation === 'derived_condition') {
+    return {
+      kind: 'derived',
+      producesFact: factMeta || null,
+      detail: { ...step }
+    };
+  }
+
   if (operation === 'rule_match' || operation === 'rule_applied' || operation === 'rule_application') {
     const ruleId = step.ruleId ?? null;
     const ruleName = step.rule ?? null;

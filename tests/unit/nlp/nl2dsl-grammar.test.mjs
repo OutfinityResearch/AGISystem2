@@ -288,4 +288,12 @@ describe('NL→DSL grammar translator (low-hardcoding)', () => {
     assert.match(dsl, /\bsour\b/);
     assert.match(dsl, /\btalkative\b/);
   });
+
+  test('normalizes "<Name> being ..." in equivalences (Barry being not wild → Barry is not wild)', () => {
+    const { dsl, errors } = translateContextWithGrammar('Ansel being bewildered is equivalent to Barry being not wild.');
+    assert.deepEqual(errors, []);
+    assert.match(dsl, /\bImplies\b/, `expected Implies, got: ${dsl}`);
+    assert.match(dsl, /\bNot\b/, `expected Not, got: ${dsl}`);
+    assert.match(dsl, /\bhasProperty Barry wild\b/, `expected wild predicate, got: ${dsl}`);
+  });
 });

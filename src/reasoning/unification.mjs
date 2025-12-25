@@ -114,7 +114,12 @@ export class UnificationEngine {
           confidence: condResult.confidence * this.thresholds.CONFIDENCE_DECAY,
           goal: goal.toString(),
           steps: [
-            { operation: 'unification_match', rule: rule.name || rule.source, bindings: Object.fromEntries(bindings) },
+            {
+              operation: 'unification_match',
+              rule: rule.label || rule.id || rule.name || rule.source,
+              ruleId: rule.id || null,
+              bindings: Object.fromEntries(bindings)
+            },
             ...condResult.steps
           ]
         };

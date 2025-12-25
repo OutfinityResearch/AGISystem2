@@ -17,6 +17,64 @@ import { parseCopulaClause } from './copula.mjs';
 import { parseNonCopulaRelationClause, parseRelationClause } from './relation.mjs';
 import { emitSubjectDescriptorItems, parseCopulaPredicates, parseHavePredicate, parseQuantifiedSubjectDescriptor } from './quantifiers.mjs';
 
+function atomToCompound({ op, args }) {
+  return `(${op} ${args.join(' ')})`;
+}
+
+function itemToCompound(item) {
+  if (!item?.atom) return null;
+  const inner = atomToCompound(item.atom);
+  return item.negated ? `(Not ${inner})` : inner;
+}
+
+function buildCoordCompound(op, compounds) {
+  const parts = compounds.filter(Boolean);
+  if (parts.length === 0) return null;
+  if (parts.length === 1) return parts[0];
+  return `(${op} ${parts.join(' ')})`;
+}
+
+function parseExistentialConditionExpr(text, options = {}) {
+  const t0 = clean(text).replace(/,+$/, '');
+  if (!t0) return null;
+
+  if (/\bbetween\b/i.test(t0)) return null;
+
+  const m = t0.match(/^there\s+(?:is|are|exists)\s+(.+)$/i);
+  if (!m) return null;
+
+  let rest = clean(m[1] || '');
+  if (!rest) return null;
+  rest = rest.replace(/^at\s+least\s+one\s+/i, '');
+  rest = rest.replace(/^(?:a|an|some|any)\s+/i, '');
+
+  const subj = rest.match(/^(someone|something|person|people)\b\s*(.*)$/i);
+  if (!subj) return null;
+  const subjectWord = lower(subj[1] || '');
+  const tail = clean(subj[2] || '');
+  if (!tail) return null;
+
+  const who = tail.match(/^(?:who|that)\s+(?:is|are)\s+(.+)$/i) || tail.match(/^(?:who|that)\s+(.+)$/i);
+  if (!who) return null;
+  const predPart = clean(who[1] || '');
+  if (!predPart) return null;
+
+  const pred = parseCopulaPredicates('?x', predPart, options);
+  if (!pred || !Array.isArray(pred.items) || pred.items.length === 0) return null;
+
+  const compounds = [];
+  if (subjectWord === 'person' || subjectWord === 'people') {
+    compounds.push('(isA ?x Person)');
+  }
+
+  const predCompounds = pred.items.map(itemToCompound).filter(Boolean);
+  const predExpr = buildCoordCompound(pred.op || 'And', predCompounds);
+  if (!predExpr) return null;
+
+  const body = compounds.length > 0 ? `(And ${compounds.join(' ')} ${predExpr})` : predExpr;
+  return `(Exists ?x ${body})`;
+}
+
 function parsePredicateGroup(text, subject, options = {}) {
   const { op, items } = splitCoord(text);
   const parsedItems = [];
@@ -209,17 +267,22 @@ export function parseRuleSentence(sentence, options = {}) {
   const ifThen = s.match(/^if\s+(.+?)\s+then\s+(.+)$/i);
   if (ifThen) {
     const [, condPart, consPart] = ifThen;
-    const cond = parseClauseGroup(condPart, '?x', options);
+    const existsCond = parseExistentialConditionExpr(condPart, options);
+    const cond = existsCond ? null : parseClauseGroup(condPart, '?x', options);
     const cons = parseClauseGroup(consPart, '?x', options);
     if (cond?.kind === 'error') return { kind: 'error', error: cond.error };
     if (cons?.kind === 'error') return { kind: 'error', error: cons.error };
-    if (!cond || !cons) return null;
-    const condEmit = emitExprAsRefs(cond.items, cond.op);
+    if ((!cond && !existsCond) || !cons) return null;
+    const condEmit = cond ? emitExprAsRefs(cond.items, cond.op) : null;
     const consEmit = emitExprAsRefs(cons.items, cons.op);
-    if (!condEmit.ref || !consEmit.ref) return null;
+    if ((cond && !condEmit?.ref) || !consEmit.ref) return null;
     return {
-      lines: [...condEmit.lines, ...consEmit.lines, `Implies $${condEmit.ref} $${consEmit.ref}`],
-      declaredOperators: [...(cond.declaredOperators || []), ...(cons.declaredOperators || [])]
+      lines: [
+        ...(condEmit?.lines || []),
+        ...consEmit.lines,
+        `Implies ${existsCond ? existsCond : `$${condEmit.ref}`} $${consEmit.ref}`
+      ],
+      declaredOperators: [...(cond?.declaredOperators || []), ...(cons.declaredOperators || [])]
     };
   }
 

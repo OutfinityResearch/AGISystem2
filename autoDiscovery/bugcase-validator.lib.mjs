@@ -238,8 +238,8 @@ export async function validateOne(caseFile, { autoDeclareUnknownOperators = true
   if (expectation.kind === 'nli_label') {
     const posGoal = ensureGoalLine(goals[0]);
     const negGoal = buildNegatedGoalLine(goals[0]);
-    const posRes = posGoal ? session.prove(posGoal, { timeout: 2000, includeSearchTrace: false }) : null;
-    const negRes = negGoal ? session.prove(negGoal, { timeout: 2000, includeSearchTrace: false }) : null;
+    const posRes = posGoal ? session.prove(posGoal, { timeout: 2000, includeSearchTrace: false, ignoreNegation: true }) : null;
+    const negRes = negGoal ? session.prove(negGoal, { timeout: 2000, includeSearchTrace: false, ignoreNegation: true }) : null;
     const provedPos = posRes?.valid === true;
     const provedNeg = negRes?.valid === true;
     const predicted =

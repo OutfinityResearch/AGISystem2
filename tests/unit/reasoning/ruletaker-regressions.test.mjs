@@ -120,5 +120,6 @@ describe('RuleTaker regressions (translator + reasoning)', () => {
       Array.isArray(result.steps) && result.steps.some(s => s.operation === 'unification_match'),
       'expected an unification_match step'
     );
+    assert.equal(result.proofObject?.validatorOk, true, 'expected proof to validate');
   });
 });

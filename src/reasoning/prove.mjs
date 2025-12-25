@@ -31,7 +31,8 @@ export class ProofEngine {
     this.options = {
       maxDepth: options.maxDepth || MAX_PROOF_DEPTH,
       timeout: options.timeout || PROOF_TIMEOUT_MS,
-      includeSearchTrace: options.includeSearchTrace !== false
+      includeSearchTrace: options.includeSearchTrace !== false,
+      ignoreNegation: options.ignoreNegation === true
     };
 
     const strategy = session?.hdcStrategy || 'dense-binary';

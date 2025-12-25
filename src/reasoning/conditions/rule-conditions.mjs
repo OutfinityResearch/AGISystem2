@@ -210,6 +210,13 @@ export function provePart(self, part, depth) {
       }
     }
     const op = self.engine.extractOperatorName(part.ast);
+    if (op === 'Exists') {
+      const result = self.engine.proveGoal(part.ast, depth + 1);
+      if (result.valid) {
+        return { valid: true, confidence: result.confidence, steps: result.steps };
+      }
+      return { valid: false, reason: result.reason || 'Exists condition failed' };
+    }
     if (op === 'holds') {
       const result = self.engine.proveGoal(part.ast, depth + 1);
       if (result.valid) {
@@ -228,4 +235,3 @@ export function provePart(self, part, depth) {
 
   return { valid: false, reason: 'Invalid part structure' };
 }
-

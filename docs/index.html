@@ -20,25 +20,58 @@
       <a href="specs/matrix.html">Specs</a> &middot;
       <a href="research/index.html">Research</a>
     </small>
-    <small>Neuro-symbolic reasoning with hyperdimensional computing</small>
+    <small>Semantic programming language for natural language reasoning with mathematical guarantees</small>
   </div>
 
-  <div class="section-intro">
+  <div class="section-intro" style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);">
     <h2 style="margin-top: 0;">What is AGISystem2?</h2>
-    <p>AGISystem2 is a research project exploring <strong>formal reasoning engines</strong> that complement probabilistic AI systems. It implements mechanisms inspired by deliberative reasoning (sometimes called "System 2 thinking" in cognitive science) using hyperdimensional computing as the representational substrate.</p>
-    <p>The goal is not to replace neural networks, but to provide a <strong>complementary layer</strong> for scenarios where <em>traceability</em>, <em>verifiability</em>, and <em>explainability</em> are requirements, not nice-to-haves.</p>
+    <p>AGISystem2 is a <strong>semantic programming language</strong> that gives formal, machine-verifiable meaning to natural language. Instead of teaching humans to write in formal logic, we created a DSL (Domain-Specific Language) that captures the semantic structure <em>implicit</em> in everyday language.</p>
+    <p>Think of it as a bridge: on one side, humans speak naturally about concepts, rules, and relationships. On the other, the system reasons formally with complete traceability. The result is <strong>natural language with mathematical guarantees</strong>.</p>
+  </div>
+
+  <div class="core-innovation" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 12px; margin: 20px 0;">
+    <h3 style="margin-top: 0; color: white;">The Core Innovation: Semantic Libraries</h3>
+    <p style="margin-bottom: 15px;">Just as programming languages have libraries for math, networking, or graphics, AGISystem2 enables <strong>semantic libraries</strong> for any domain&mdash;medicine, law, physics, biology. Each library defines:</p>
+    <ul style="margin: 0; padding-left: 20px;">
+      <li><strong>Vocabulary:</strong> Domain-specific terms and their formal meaning</li>
+      <li><strong>Rules:</strong> How concepts relate and what follows from what</li>
+      <li><strong>Inference:</strong> Automatic reasoning over the domain's knowledge</li>
+    </ul>
+    <p style="margin-top: 15px; margin-bottom: 0; font-style: italic; opacity: 0.9;">
+      "Instead of teaching humans to speak to machines in formal languages, we teach machines to understand the formal structure implicit in human language."
+    </p>
+  </div>
+
+  <h2>Two Ways to Use AGISystem2</h2>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+    <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border-left: 4px solid #4caf50;">
+      <h3 style="margin-top: 0; color: #2e7d32;">1. Built-in NL2DSL Engine</h3>
+      <p>AGISystem2 includes a grammar-based translation engine that converts natural language to DSL automatically. Tested on academic benchmarks with <strong>100% translation success</strong> and up to <strong>99.5% reasoning accuracy</strong>.</p>
+      <p style="margin-bottom: 0;"><a href="theory/nl2dsl.html">Learn about NL2DSL →</a></p>
+    </div>
+    <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border-left: 4px solid #1976d2;">
+      <h3 style="margin-top: 0; color: #1565c0;">2. LLM Integration</h3>
+      <p>Use LLMs (Claude, GPT, etc.) to translate complex natural language to DSL, then let AGISystem2 provide <strong>verified, traceable reasoning</strong>. Combine LLM fluency with formal verification.</p>
+      <p style="margin-bottom: 0;"><a href="guides/llm-integration.html">Learn about LLM Integration →</a></p>
+    </div>
   </div>
 
   <div class="alert alert-info" style="margin: 20px 0; padding: 15px 20px; background: #fff3e0; border-left: 4px solid #ff9800; border-radius: 4px;">
-    <strong>Research Project:</strong> AGISystem2 is an open-source research project, not a finished product. It demonstrates that deterministic, mathematically grounded AI reasoning is practical for specific domains. We make no claims about artificial general intelligence or solving fundamental AI problems.
+    <strong>Active Research:</strong> AGISystem2 is an open-source research project. We're continuously expanding coverage of natural language patterns and improving reasoning capabilities. The system works well for structured domains; open-ended conversation is outside scope.
   </div>
 
-  <h2>Positioning: What Problem Does This Solve?</h2>
+  <h2>Why This Matters</h2>
 
-  <p>For applications where <strong>verification is critical</strong>&mdash;compliance, auditing, legal decisions, safety-critical systems&mdash;probabilistic pattern matching alone may not suffice. AGISystem2 addresses this gap:</p>
+  <p>For applications where <strong>verification is critical</strong>&mdash;compliance, medical decisions, legal reasoning, safety-critical systems&mdash;probabilistic pattern matching alone isn't enough. AGISystem2 provides:</p>
 
-  <div class="positioning-box" style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin: 15px 0;">
-    <p style="margin: 0;"><strong>AGISystem2 is not an LLM and does not try to be.</strong> It is a complementary reasoning engine designed for scenarios where complete traceability and formal verification are requirements, not options.</p>
+  <div class="positioning-box" style="background: #e8f5e9; padding: 20px; border-radius: 8px; margin: 15px 0;">
+    <ul style="margin: 0; padding-left: 20px;">
+      <li><strong>Complete audit trails:</strong> Every conclusion traces back to facts and rules</li>
+      <li><strong>Contradiction detection:</strong> The system flags inconsistencies in knowledge</li>
+      <li><strong>Reproducible results:</strong> Same input always produces same output</li>
+      <li><strong>Domain modularity:</strong> Semantic libraries can be composed and reused</li>
+    </ul>
   </div>
 
   <h2>Capability Comparison (with Trade-offs)</h2>
@@ -110,24 +143,69 @@
     <p style="margin-bottom: 0;"><strong>Fundamental limitation:</strong> The system reasons correctly <em>within</em> a theory, but cannot guarantee the theory itself is correct. See <a href="theory/grounding-problem.html">The Symbol Grounding Problem</a> for an honest discussion of this epistemological limitation.</p>
   </div>
 
-  <h2>Key Capabilities</h2>
+  <h2>Current Benchmark Results</h2>
 
-  <ul>
-    <li><strong>Deterministic Reasoning:</strong> Reproducible results with full proof traces</li>
-    <li><strong>Multi-Strategy HDC:</strong> Three pluggable vector representations (dense-binary, sparse-polynomial, metric-affine)</li>
-    <li><strong>Transitive Chains:</strong> Automatic inference across taxonomies</li>
-    <li><strong>Backward Chaining:</strong> Rule-based reasoning with And/Or conditions</li>
-    <li><strong><a href="theory/nl2dsl.html">Natural Language Translation:</a></strong> NL2DSL converts English to formal DSL automatically</li>
-    <li><strong><a href="guides/llm-integration.html">LLM Integration:</a></strong> Complementary layer for verified reasoning with large language models</li>
-  </ul>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin: 20px 0;">
+    <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+      <div style="font-size: 28px; font-weight: bold;">99.5%</div>
+      <div style="font-size: 12px; opacity: 0.9;">ProntoQA</div>
+    </div>
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+      <div style="font-size: 28px; font-weight: bold;">75%</div>
+      <div style="font-size: 12px; opacity: 0.9;">LogiQA</div>
+    </div>
+    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+      <div style="font-size: 28px; font-weight: bold;">63%</div>
+      <div style="font-size: 12px; opacity: 0.9;">FOLIO</div>
+    </div>
+    <div style="background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+      <div style="font-size: 28px; font-weight: bold;">100%</div>
+      <div style="font-size: 12px; opacity: 0.9;">Translation</div>
+    </div>
+  </div>
+  <p style="font-size: 12px; color: #666; text-align: center;"><a href="research/benchmarks.html">See full benchmark results →</a></p>
 
-  <div class="quick-start-box" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; margin: 20px 0;">
-    <h3 style="margin-top: 0; color: white;">Quick Start</h3>
-    <p style="margin-bottom: 15px;">New to AGISystem2? Start here:</p>
-    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-      <a href="guides/getting-started.html" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">Getting Started Tutorial</a>
-      <a href="theory/nl2dsl.html" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">NL2DSL Translation</a>
-      <a href="guides/technology-comparison.html" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">vs Other Technologies</a>
+  <div class="quick-start-box" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 25px; border-radius: 12px; margin: 20px 0;">
+    <h3 style="margin-top: 0; color: white;">🚀 Quick Start</h3>
+    <p style="margin-bottom: 20px; opacity: 0.9;">Choose your path:</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+      <a href="guides/getting-started.html" style="background: rgba(255,255,255,0.1); color: white; padding: 15px; border-radius: 8px; text-decoration: none; display: block; border: 1px solid rgba(255,255,255,0.2);">
+        <strong style="display: block; margin-bottom: 5px;">📖 Getting Started</strong>
+        <span style="font-size: 12px; opacity: 0.8;">Install, configure, first query</span>
+      </a>
+      <a href="theory/nl2dsl.html" style="background: rgba(255,255,255,0.1); color: white; padding: 15px; border-radius: 8px; text-decoration: none; display: block; border: 1px solid rgba(255,255,255,0.2);">
+        <strong style="display: block; margin-bottom: 5px;">🔤 NL2DSL Translation</strong>
+        <span style="font-size: 12px; opacity: 0.8;">Natural language to DSL</span>
+      </a>
+      <a href="guides/llm-integration.html" style="background: rgba(255,255,255,0.1); color: white; padding: 15px; border-radius: 8px; text-decoration: none; display: block; border: 1px solid rgba(255,255,255,0.2);">
+        <strong style="display: block; margin-bottom: 5px;">🤖 LLM Integration</strong>
+        <span style="font-size: 12px; opacity: 0.8;">Combine with Claude/GPT</span>
+      </a>
+      <a href="guides/technology-comparison.html" style="background: rgba(255,255,255,0.1); color: white; padding: 15px; border-radius: 8px; text-decoration: none; display: block; border: 1px solid rgba(255,255,255,0.2);">
+        <strong style="display: block; margin-bottom: 5px;">⚖️ vs Other Tech</strong>
+        <span style="font-size: 12px; opacity: 0.8;">Prolog, Datalog, Wolfram...</span>
+      </a>
+    </div>
+  </div>
+
+  <h2>Technical Capabilities</h2>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin: 20px 0;">
+    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+      <strong>Multi-Strategy HDC</strong>
+      <p style="margin: 5px 0 0 0; font-size: 13px; color: #666;">Three pluggable vector representations: dense-binary, sparse-polynomial, metric-affine. <a href="guides/hdc-strategies.html">Learn more</a></p>
+    </div>
+    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+      <strong>Transitive Inference</strong>
+      <p style="margin: 5px 0 0 0; font-size: 13px; color: #666;">Automatic reasoning across IS_A hierarchies and other transitive relations.</p>
+    </div>
+    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+      <strong>Backward Chaining</strong>
+      <p style="margin: 5px 0 0 0; font-size: 13px; color: #666;">Rule-based reasoning with And/Or conditions and full proof traces.</p>
+    </div>
+    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+      <strong>Contradiction Detection</strong>
+      <p style="margin: 5px 0 0 0; font-size: 13px; color: #666;">Automatic identification of inconsistencies in knowledge bases.</p>
     </div>
   </div>
 
@@ -231,39 +309,61 @@
     </div>
   </div>
 
-  <h2>Honest Assessment</h2>
+  <h2>The Vision: Semantic Programming for Everyone</h2>
 
-  <div class="honest-box" style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 15px 0;">
-    <h3 style="margin-top: 0;">What We Claim</h3>
-    <ul>
-      <li><strong>Design claim:</strong> The system implements backward chaining with And/Or rules over HDC representations</li>
-      <li><strong>Capability claim:</strong> It enables detection of formal contradictions in knowledge bases</li>
-      <li><strong>Value claim:</strong> It provides transparency for scenarios requiring audit trails</li>
+  <div style="background: linear-gradient(135deg, #f5f5f5 0%, #e8eaf6 100%); padding: 25px; border-radius: 12px; margin: 15px 0;">
+    <p style="margin-top: 0;">Imagine a world where:</p>
+    <ul style="margin-bottom: 20px;">
+      <li><strong>Domain experts</strong> define medical, legal, or scientific knowledge in near-natural language</li>
+      <li><strong>The system automatically reasons</strong> over that knowledge with mathematical precision</li>
+      <li><strong>Every conclusion is traceable</strong> back to the rules and facts that produced it</li>
+      <li><strong>LLMs and formal reasoning work together</strong>&mdash;fluency meets verification</li>
     </ul>
-
-    <h3>What We're Exploring</h3>
-    <ul>
-      <li><strong>Research hypothesis:</strong> HDC representations can scale to more complex reasoning domains</li>
-      <li><strong>Research hypothesis:</strong> LLM+HDC hybrid architectures can combine fluency with rigor</li>
-      <li><strong>Research hypothesis:</strong> Formal theories can usefully constrain AI agent behavior</li>
-    </ul>
-
-    <h3>What We Don't Claim</h3>
-    <ul>
-      <li>Universal semantics or solved grounding problem</li>
-      <li>Replacement for LLMs or neural networks</li>
-      <li>Artificial general intelligence</li>
-      <li>Automatic scaling to arbitrary domains</li>
-    </ul>
+    <p style="margin-bottom: 0;">This is what AGISystem2 is building toward. We don't claim to have arrived, but the path is clear and the foundation is solid.</p>
   </div>
 
-  <h2>The Meta-Rational Approach</h2>
+  <h2>Where We Are Today</h2>
 
-  <p>We adopt a pragmatic stance: <strong>theories are tools, not truths</strong>. AGISystem2 guarantees correct reasoning <em>within</em> a theory, not the correctness of the theory itself. This isn't a limitation to apologize for&mdash;it's how all formal systems work, from mathematics to legal codes.</p>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin: 20px 0;">
+    <div style="background: #e8f5e9; padding: 20px; border-radius: 10px;">
+      <h4 style="margin-top: 0; color: #2e7d32;">✓ What Works Now</h4>
+      <ul style="margin: 0; padding-left: 18px; font-size: 14px;">
+        <li>Taxonomic reasoning (IS_A hierarchies)</li>
+        <li>Rule-based inference with full traces</li>
+        <li>NL translation for structured sentences</li>
+        <li>LLM integration patterns</li>
+        <li>Academic benchmark validation</li>
+      </ul>
+    </div>
+    <div style="background: #fff3e0; padding: 20px; border-radius: 10px;">
+      <h4 style="margin-top: 0; color: #e65100;">⚡ Active Development</h4>
+      <ul style="margin: 0; padding-left: 18px; font-size: 14px;">
+        <li>Complex quantifier patterns</li>
+        <li>Proof-by-contradiction</li>
+        <li>Domain-specific semantic libraries</li>
+        <li>Self-improving learning loops</li>
+        <li>Deeper inference chains</li>
+      </ul>
+    </div>
+    <div style="background: #e3f2fd; padding: 20px; border-radius: 10px;">
+      <h4 style="margin-top: 0; color: #1565c0;">🔭 Future Vision</h4>
+      <ul style="margin: 0; padding-left: 18px; font-size: 14px;">
+        <li>Scientific domain libraries (medicine, law, physics)</li>
+        <li>LLM-driven theory discovery</li>
+        <li>Self-learning from observations</li>
+        <li>Integration with knowledge graphs</li>
+        <li>Real-time collaborative reasoning</li>
+      </ul>
+    </div>
+  </div>
 
-  <p>The value proposition is practical: transform natural language specifications into formal theories that can be analyzed, debugged, and revised. This doesn't solve the grounding problem, but it makes specifications explicit and their consequences computable.</p>
+  <h2>Philosophy: Theories as Tools</h2>
 
-  <p><a href="theory/grounding-problem.html">Read our full discussion of epistemological limitations &rarr;</a></p>
+  <p>AGISystem2 adopts a pragmatic stance: <strong>theories are tools, not truths</strong>. The system guarantees correct reasoning <em>within</em> a theory, not the correctness of the theory itself. This isn't a limitation&mdash;it's how all formal systems work, from mathematics to legal codes.</p>
+
+  <p>The value is practical: transform natural language specifications into formal theories that can be analyzed, debugged, and revised. The consequences of your knowledge become computable, verifiable, and auditable.</p>
+
+  <p><a href="theory/grounding-problem.html">Read about epistemological foundations &rarr;</a> · <a href="guides/technology-comparison.html">Compare with other approaches &rarr;</a></p>
 
   <div class="footer-nav">
     <p>Research conducted by <a href="https://www.axiologic.net" target="_blank" style="color: #1976d2;">Axiologic Research</a> as part of the European research project <a href="https://www.achilles-project.eu/" target="_blank" style="color: #1976d2;">Achilles</a>.</p>

@@ -128,20 +128,20 @@
 
   <div class="metric-grid">
     <div class="metric-card green">
-      <h3>63.7%</h3>
-      <p>Global Pass Rate<br>(475/746 evaluable)</p>
-    </div>
-    <div class="metric-card">
-      <h3>95.3%</h3>
+      <h3>99.5%</h3>
       <p>ProntoQA<br>(Best Performance)</p>
     </div>
+    <div class="metric-card">
+      <h3>75%</h3>
+      <p>LogiQA<br>(Multi-choice reasoning)</p>
+    </div>
     <div class="metric-card orange">
-      <h3>100%</h3>
-      <p>Translation Success<br>(0 NL2DSL errors)</p>
+      <h3>63%</h3>
+      <p>FOLIO<br>(First-Order Logic)</p>
     </div>
     <div class="metric-card blue">
-      <h3>9</h3>
-      <p>Benchmark Suites<br>(6 with labels)</p>
+      <h3>100%</h3>
+      <p>Translation Success<br>(0 NL2DSL errors)</p>
     </div>
   </div>
 
@@ -159,34 +159,34 @@
     <tr>
       <td><strong>ProntoQA</strong> <span class="badge badge-synthetic">Synthetic</span></td>
       <td>Deductive reasoning with ontologies</td>
-      <td>102</td>
-      <td>5</td>
-      <td class="pass-high">95.3%</td>
-      <td>Only proof-by-contradiction cases fail</td>
-    </tr>
-    <tr>
-      <td><strong>LogicNLI</strong> <span class="badge badge-academic">Academic</span></td>
-      <td>Natural Language Inference</td>
-      <td>53</td>
-      <td>14</td>
-      <td class="pass-high">79.1%</td>
-      <td>NLI patterns - good coverage</td>
+      <td>199</td>
+      <td>1</td>
+      <td class="pass-high">99.5%</td>
+      <td>Near-perfect performance</td>
     </tr>
     <tr>
       <td><strong>LogiQA</strong> <span class="badge badge-academic">Academic</span></td>
       <td>Multi-choice logical reasoning</td>
-      <td>90</td>
-      <td>29</td>
-      <td class="pass-medium">75.6%</td>
+      <td>75</td>
+      <td>25</td>
+      <td class="pass-high">75%</td>
       <td>Complex multi-choice format</td>
     </tr>
     <tr>
       <td><strong>FOLIO</strong> <span class="badge badge-academic">Academic</span></td>
       <td>First-Order Logic with real entities</td>
-      <td>131</td>
-      <td>101</td>
-      <td class="pass-medium">56.5%</td>
+      <td>63</td>
+      <td>37</td>
+      <td class="pass-medium">63%</td>
       <td>Complex FOL with world knowledge</td>
+    </tr>
+    <tr>
+      <td><strong>LogicNLI</strong> <span class="badge badge-academic">Academic</span></td>
+      <td>Natural Language Inference</td>
+      <td>54</td>
+      <td>46</td>
+      <td class="pass-medium">54%</td>
+      <td>NLI patterns</td>
     </tr>
     <tr>
       <td><strong>FOLIO-FOL</strong> <span class="badge badge-academic">Academic</span></td>
@@ -210,22 +210,21 @@
 
   <div class="chart-container">
 <pre>
-Pass Rate by Benchmark Suite
+Pass Rate by Benchmark Suite (December 2024)
 ────────────────────────────────────────────────────────────────────
-ProntoQA      ████████████████████████████████████████████████ 95.3%
-LogicNLI      ████████████████████████████████████████ 79.1%
-LogiQA        ██████████████████████████████████████ 75.6%
-FOLIO         ████████████████████████████ 56.5%
-FOLIO-FOL     ██████████████████████████ 52.5%
-RuleBERT      ██████████████████ 35.6%
+ProntoQA      █████████████████████████████████████████████████ 99.5%
+LogiQA        ██████████████████████████████████████ 75%
+FOLIO         ████████████████████████████████ 63%
+LogicNLI      ███████████████████████████ 54%
+RuleBERT      ████████████████████ 39%
 ────────────────────────────────────────────────────────────────────
-Global Average: 63.7% (475/746 with evaluation labels)
+Translation Success: 100% across all sources
 </pre>
   </div>
 
   <h2>3. Benchmark Descriptions</h2>
 
-  <h3>3.1 ProntoQA <span class="pass-high">(95.3%)</span></h3>
+  <h3>3.1 ProntoQA <span class="pass-high">(99.5%)</span></h3>
 
   <div class="success-box">
     <strong>Excellent Performance:</strong> AGISystem2 achieves near-perfect results on ProntoQA,

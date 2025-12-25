@@ -112,6 +112,14 @@ function normalizeEquivalenceSide(side, defaultSubject = 'someone') {
     return `${defaultSubject} is ${being[1]}`.trim();
   }
 
+  // "<Name> being X" -> "<Name> is X"
+  const namedBeing = s.match(/^(.+?)\s+being\s+(.+)$/i);
+  if (namedBeing) {
+    const subj = clean(namedBeing[1]);
+    const pred = clean(namedBeing[2]);
+    if (subj && pred) return `${subj} is ${pred}`.trim();
+  }
+
   return s;
 }
 
