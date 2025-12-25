@@ -5,24 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs">
-      <change afterPath="$PROJECT_DIR$/src/reasoning/prove/prove-goal-exists.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/prove/prove-goal-negation.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/claude_code_review.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/reasoning/proof-engine.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/reasoning/query-engine.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/research/directions/hdc-strategies.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/research/directions/holographic-reasoning.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/research/directions/learning-from-text.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/research/directions/nl2dsl-grammar.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/research/directions/nl2dsl-llm.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/research/directions/proof-to-nl.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/research/directions/semantic-libraries.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/research/directions/text-generation.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/research/roadmap.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/reasoning/prove/rule-index.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/reasoning/symmetric.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugcase-validator.lib.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/bugcase-validator.lib.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/discovery/nonboolean-eval.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/discovery/nonboolean-eval.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/guides/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REASONING_OPERATORS.md" beforeDir="false" afterPath="$PROJECT_DIR$/REASONING_OPERATORS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/discovery/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/discovery/session.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/claude_project_review.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Core/00-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/00-relations.sys2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/research/benchmarks.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/benchmarks.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar/parse/rule.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/nlp/nl2dsl/grammar/parse/rule.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/conditions/rule-conditions.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/conditions/rule-conditions.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/syntax/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/syntax/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reasoning_engines_fixes_summray.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/conditions/single.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/conditions/single.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/prove.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/prove/fact-exists.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove/fact-exists.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/prove/prove-goal.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove/prove-goal.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/unification.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/unification.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/nlp/nl2dsl-grammar.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/nlp/nl2dsl-grammar.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/ruletaker-regressions.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/ruletaker-regressions.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/proof-validator.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/proof-validator.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,15 +145,7 @@
       <workItem from="1766389595090" duration="9185000" />
       <workItem from="1766477237780" duration="9294000" />
       <workItem from="1766562947099" duration="21851000" />
-      <workItem from="1766650266623" duration="3263000" />
-    </task>
-    <task id="LOCAL-00025" summary="Better Documentation and WIP for code">
-      <option name="closed" value="true" />
-      <created>1764609441000</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1764609441000</updated>
+      <workItem from="1766650266623" duration="5232000" />
     </task>
     <task id="LOCAL-00026" summary="Better Documentation and WIP for code">
       <option name="closed" value="true" />
@@ -527,7 +531,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766666379579</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs">
+      <option name="closed" value="true" />
+      <created>1766669386999</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1766669386999</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

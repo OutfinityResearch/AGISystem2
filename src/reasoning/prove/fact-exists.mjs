@@ -8,9 +8,9 @@ export function factExists(self, op, arg0, arg1) {
   if (self.session?.componentKB) {
     const candidates = self.session.componentKB.findByOperatorAndArg0(op, arg0);
     if (arg1 === undefined || arg1 === null) {
-      return candidates.some(c => (c.args?.length || 0) < 2 || c.args?.[1] === undefined);
+      return candidates.some(c => (c.metadata?.args?.length || 0) < 2 || c.metadata?.args?.[1] === undefined);
     }
-    return candidates.some(c => (c.args?.[1] || '') === arg1);
+    return candidates.some(c => (c.metadata?.args?.[1] || '') === arg1);
   }
   for (const fact of self.session.kbFacts) {
     const meta = fact.metadata;
@@ -20,4 +20,3 @@ export function factExists(self, op, arg0, arg1) {
   }
   return false;
 }
-

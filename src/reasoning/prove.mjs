@@ -13,6 +13,7 @@ import { ConditionProver } from './conditions.mjs';
 import { KBMatcher } from './kb-matching.mjs';
 import { DisjointProver } from './disjoint.mjs';
 import { DefaultReasoner } from './defaults.mjs';
+import { SymmetricReasoner } from './symmetric.mjs';
 
 import { buildSearchTrace as buildSearchTraceImpl } from './prove-search-trace.mjs';
 
@@ -24,6 +25,7 @@ import { trySynonymMatch } from './prove/synonym-match.mjs';
 import { checkGoalNegation, buildNegationSearchTrace, isGoalNegated } from './prove/negation.mjs';
 import { tryDefaultReasoning } from './prove/defaults.mjs';
 import { tryImplicationModusPonens, proveImplicationCondition, describeSimpleImplication } from './prove/modus-ponens.mjs';
+import { buildRuleIndexByConclusionOp } from './prove/rule-index.mjs';
 
 export class ProofEngine {
   constructor(session, options = {}) {
@@ -43,8 +45,11 @@ export class ProofEngine {
     this.startTime = 0;
     this.reasoningSteps = 0;
     this.maxSteps = MAX_REASONING_STEPS;
+    this._ruleIndex = null;
+    this._ruleIndexLen = 0;
 
     this.transitive = new TransitiveReasoner(this);
+    this.symmetric = new SymmetricReasoner(this);
     this.propertyInheritance = new PropertyInheritanceReasoner(this);
     this.unification = new UnificationEngine(this);
     this.conditions = new ConditionProver(this);
@@ -102,6 +107,16 @@ export class ProofEngine {
 
   proveGoal(goal, depth) {
     return proveGoalImpl(this, goal, depth);
+  }
+
+  getRulesByConclusionOp(op) {
+    const rules = this.session?.rules || [];
+    if (!this._ruleIndex || this._ruleIndexLen !== rules.length) {
+      this._ruleIndex = buildRuleIndexByConclusionOp(this.session);
+      this._ruleIndexLen = rules.length;
+    }
+    if (!op) return rules;
+    return this._ruleIndex.get(op) || [];
   }
 
   buildSearchTrace(goal, goalStr) {

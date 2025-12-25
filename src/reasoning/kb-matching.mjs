@@ -107,7 +107,15 @@ export class KBMatcher {
     const op = parts[0];
     const args = parts.slice(1);
 
-    for (const fact of this.session.kbFacts) {
+    const componentKB = this.session.componentKB;
+    let scanFacts = this.session.kbFacts;
+    if (componentKB && op) {
+      const arg0 = args[0] || null;
+      scanFacts = arg0 ? componentKB.findByOperatorAndArg0(op, arg0) : componentKB.findByOperator(op);
+    }
+
+    for (const fact of scanFacts) {
+      if (this.engine.isTimedOut()) throw new Error('Proof timed out');
       this.session.reasoningStats.kbScans++;
       const meta = fact.metadata;
       if (!meta) continue;
@@ -149,8 +157,16 @@ export class KBMatcher {
     const op = parts[0];
     const args = parts.slice(1);
 
+    const componentKB = this.session.componentKB;
+    let scanFacts = this.session.kbFacts;
+    if (componentKB && op) {
+      const arg0 = args[0] && !String(args[0]).startsWith('?') ? args[0] : null;
+      scanFacts = arg0 ? componentKB.findByOperatorAndArg0(op, arg0) : componentKB.findByOperator(op);
+    }
+
     // Direct KB matches
-    for (const fact of this.session.kbFacts) {
+    for (const fact of scanFacts) {
+      if (this.engine.isTimedOut()) throw new Error('Proof timed out');
       this.session.reasoningStats.kbScans++;
       const meta = fact.metadata;
       if (!meta || meta.operator !== op) continue;
@@ -260,7 +276,12 @@ export class KBMatcher {
     const goalOp = parts[0];
     const goalArgs = parts.slice(1);
 
-    for (const rule of this.session.rules) {
+    if (this.engine.isTimedOut()) throw new Error('Proof timed out');
+    if (depth > this.engine.options.maxDepth) return { valid: false, reason: 'Depth limit' };
+
+    const candidates = this.engine.getRulesByConclusionOp ? this.engine.getRulesByConclusionOp(goalOp) : this.session.rules;
+    for (const rule of candidates) {
+      if (this.engine.isTimedOut()) throw new Error('Proof timed out');
       if (!rule.hasVariables) continue;
 
       const concAST = rule.conclusionAST;

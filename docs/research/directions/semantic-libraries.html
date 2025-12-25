@@ -1,0 +1,375 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AGISystem2 – Semantic Libraries</title>
+  <link rel="stylesheet" href="../../reference/style.css">
+  <style>
+    .research-section { background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0; }
+    .concept-box { background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+    .example-box { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+    .code-example { background: #263238; color: #aed581; padding: 15px; border-radius: 8px; font-family: monospace; overflow-x: auto; margin: 15px 0; }
+    h2 { border-bottom: 2px solid #1976d2; padding-bottom: 10px; margin-top: 40px; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+    th { background: #1976d2; color: white; }
+    .pass { color: #2e7d32; font-weight: bold; }
+    .library-card {
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 15px 0;
+      transition: all 0.3s ease;
+    }
+    .library-card:hover { border-color: #1976d2; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .library-header { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
+    .library-icon { font-size: 32px; }
+    .library-stats { display: flex; gap: 20px; margin-top: 10px; font-size: 12px; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Semantic Libraries</h1>
+    <small>
+      <a href="../../index.html">Home</a> ·
+      <a href="../index.html">Research</a> ·
+      <a href="../roadmap.html">Roadmap</a>
+    </small>
+    <small>Reusable, composable domain knowledge packages</small>
+  </div>
+
+  <div class="research-section">
+    <h2 style="margin-top: 0; border: none;">Research Overview</h2>
+    <p><strong>Goal:</strong> Create a package ecosystem for domain knowledge—like npm for facts and rules. Enable knowledge reuse across applications.</p>
+    <p><strong>Key insight:</strong> Just as software libraries enable code reuse, semantic libraries enable <em>knowledge reuse</em> with formal guarantees.</p>
+  </div>
+
+  <h2>1. The Vision: Knowledge as Packages</h2>
+
+  <div class="concept-box">
+    <strong>Core Idea:</strong> Package domain knowledge (concepts, relationships, rules) as versioned, distributable units that applications can depend on and extend.
+  </div>
+
+  <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin: 20px 0;">
+    <svg viewBox="0 0 700 280" style="width: 100%; max-width: 800px; display: block; margin: 0 auto;">
+      <!-- Title -->
+      <text x="350" y="25" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Semantic Library Architecture</text>
+
+      <!-- Base layer -->
+      <rect x="50" y="200" width="600" height="50" rx="8" fill="url(#baseGrad)" stroke="#1565c0" stroke-width="2"/>
+      <text x="350" y="230" text-anchor="middle" font-size="13" fill="white" font-weight="bold">AGISystem2 Core (reasoning engine, HDC, DSL parser)</text>
+
+      <!-- Domain libraries -->
+      <rect x="50" y="130" width="140" height="55" rx="6" fill="white" stroke="#43a047" stroke-width="2"/>
+      <text x="120" y="155" text-anchor="middle" font-size="11" fill="#2e7d32" font-weight="bold">@sys2/biology</text>
+      <text x="120" y="172" text-anchor="middle" font-size="9" fill="#666">Species, Genes, Pathways</text>
+
+      <rect x="205" y="130" width="140" height="55" rx="6" fill="white" stroke="#7b1fa2" stroke-width="2"/>
+      <text x="275" y="155" text-anchor="middle" font-size="11" fill="#6a1b9a" font-weight="bold">@sys2/physics</text>
+      <text x="275" y="172" text-anchor="middle" font-size="9" fill="#666">Forces, Units, Laws</text>
+
+      <rect x="360" y="130" width="140" height="55" rx="6" fill="white" stroke="#e65100" stroke-width="2"/>
+      <text x="430" y="155" text-anchor="middle" font-size="11" fill="#e65100" font-weight="bold">@sys2/law</text>
+      <text x="430" y="172" text-anchor="middle" font-size="9" fill="#666">Rights, Obligations</text>
+
+      <rect x="515" y="130" width="130" height="55" rx="6" fill="white" stroke="#00897b" stroke-width="2"/>
+      <text x="580" y="155" text-anchor="middle" font-size="11" fill="#00796b" font-weight="bold">@sys2/medicine</text>
+      <text x="580" y="172" text-anchor="middle" font-size="9" fill="#666">Symptoms, Diagnoses</text>
+
+      <!-- Application layer -->
+      <rect x="150" y="50" width="180" height="55" rx="6" fill="#fff3e0" stroke="#ef6c00" stroke-width="2"/>
+      <text x="240" y="75" text-anchor="middle" font-size="11" fill="#e65100" font-weight="bold">Medical Diagnosis App</text>
+      <text x="240" y="92" text-anchor="middle" font-size="9" fill="#666">Uses: biology, medicine</text>
+
+      <rect x="370" y="50" width="180" height="55" rx="6" fill="#fce4ec" stroke="#c2185b" stroke-width="2"/>
+      <text x="460" y="75" text-anchor="middle" font-size="11" fill="#c2185b" font-weight="bold">Legal Advisor Bot</text>
+      <text x="460" y="92" text-anchor="middle" font-size="9" fill="#666">Uses: law, custom rules</text>
+
+      <!-- Arrows -->
+      <path d="M120 130 L120 105 L165 105" stroke="#546e7a" stroke-width="1.5"/>
+      <path d="M580 130 L580 105 L545 105" stroke="#546e7a" stroke-width="1.5"/>
+      <path d="M240 105 L240 130" stroke="#546e7a" stroke-width="1.5" marker-end="url(#libArrow)"/>
+      <path d="M460 105 L460 130" stroke="#546e7a" stroke-width="1.5" marker-end="url(#libArrow)"/>
+
+      <!-- Defs -->
+      <defs>
+        <linearGradient id="baseGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1565c0"/>
+          <stop offset="100%" stop-color="#42a5f5"/>
+        </linearGradient>
+        <marker id="libArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#546e7a"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h2>2. Library Structure</h2>
+
+  <p>Each semantic library follows a standard structure:</p>
+
+  <div class="code-example">
+<pre>
+@sys2/biology/
+├── package.json          <span style="color: #78909c;">// Metadata, dependencies</span>
+├── 00-types.sys2         <span style="color: #78909c;">// Type hierarchy declarations</span>
+├── 01-concepts.sys2      <span style="color: #78909c;">// Core concepts</span>
+├── 02-relations.sys2     <span style="color: #78909c;">// Relationship definitions</span>
+├── 03-rules.sys2         <span style="color: #78909c;">// Inference rules</span>
+├── 04-constraints.sys2   <span style="color: #78909c;">// Integrity constraints</span>
+└── tests/
+    └── biology.test.sys2 <span style="color: #78909c;">// Validation tests</span>
+</pre>
+  </div>
+
+  <h3>2.1 Package Manifest</h3>
+
+  <div class="code-example">
+<pre>
+{
+  "name": "@sys2/biology",
+  "version": "1.2.0",
+  "description": "Biological concepts, taxonomies, and rules",
+  "keywords": ["biology", "taxonomy", "species", "genetics"],
+  "dependencies": {
+    "@sys2/core-relations": "^2.0.0",
+    "@sys2/units": "^1.0.0"
+  },
+  "sys2": {
+    "entryPoints": ["00-types.sys2", "01-concepts.sys2"],
+    "exports": {
+      "concepts": ["Species", "Gene", "Protein", "Cell"],
+      "relations": ["isA", "partOf", "encodedBy", "expressedIn"]
+    },
+    "testSuite": "tests/biology.test.sys2"
+  }
+}
+</pre>
+  </div>
+
+  <h2>3. Example Libraries</h2>
+
+  <div class="library-card">
+    <div class="library-header">
+      <span class="library-icon">🧬</span>
+      <div>
+        <strong style="font-size: 16px;">@sys2/biology</strong>
+        <div style="color: #666; font-size: 12px;">Biological concepts and taxonomies</div>
+      </div>
+    </div>
+    <p>Taxonomic hierarchies (Kingdom → Species), genetic concepts (Gene, Protein, DNA), cellular biology, physiological systems.</p>
+    <div class="library-stats">
+      <span>📊 2,400 concepts</span>
+      <span>🔗 5,800 relationships</span>
+      <span>📜 340 rules</span>
+      <span>✅ 98% test coverage</span>
+    </div>
+  </div>
+
+  <div class="library-card">
+    <div class="library-header">
+      <span class="library-icon">⚖️</span>
+      <div>
+        <strong style="font-size: 16px;">@sys2/law</strong>
+        <div style="color: #666; font-size: 12px;">Legal concepts and reasoning rules</div>
+      </div>
+    </div>
+    <p>Legal entities (Person, Corporation), rights and obligations, contractual relationships, jurisdictional rules.</p>
+    <div class="library-stats">
+      <span>📊 1,200 concepts</span>
+      <span>🔗 3,400 relationships</span>
+      <span>📜 890 rules</span>
+      <span>✅ 95% test coverage</span>
+    </div>
+  </div>
+
+  <div class="library-card">
+    <div class="library-header">
+      <span class="library-icon">🏥</span>
+      <div>
+        <strong style="font-size: 16px;">@sys2/medicine</strong>
+        <div style="color: #666; font-size: 12px;">Medical knowledge and diagnostic rules</div>
+      </div>
+    </div>
+    <p>Symptoms, diseases, treatments, drug interactions, diagnostic pathways, anatomical relationships.</p>
+    <div class="library-stats">
+      <span>📊 8,500 concepts</span>
+      <span>🔗 24,000 relationships</span>
+      <span>📜 2,100 rules</span>
+      <span>✅ 92% test coverage</span>
+    </div>
+  </div>
+
+  <h2>4. Composition and Extension</h2>
+
+  <div class="example-box">
+    <strong>Extending a Library:</strong>
+    <div class="code-example" style="margin-bottom: 0;">
+<pre>
+<span style="color: #78909c;">// my-veterinary-app.sys2</span>
+
+<span style="color: #78909c;">// Import base libraries</span>
+import @sys2/biology
+import @sys2/medicine
+
+<span style="color: #78909c;">// Extend with domain-specific concepts</span>
+isA VeterinaryMedicine Medicine
+isA DomesticAnimal Animal
+
+<span style="color: #78909c;">// Add specialized rules</span>
+@r_vet1 Implies (And (isA ?animal DomesticAnimal) (hasSymptom ?animal ?symptom))
+                (suggestCheckup ?animal Veterinarian)
+
+<span style="color: #78909c;">// Customize existing rules</span>
+@r_vet2 Override @r_med_dosage
+        (scaleDosage ?drug ?animal (bodyWeight ?animal))
+</pre>
+    </div>
+  </div>
+
+  <h2>5. Versioning and Compatibility</h2>
+
+  <table>
+    <tr>
+      <th>Version Change</th>
+      <th>Type</th>
+      <th>Compatibility</th>
+    </tr>
+    <tr>
+      <td>1.0.0 → 1.0.1</td>
+      <td>Patch</td>
+      <td>Bug fixes, no API changes</td>
+    </tr>
+    <tr>
+      <td>1.0.0 → 1.1.0</td>
+      <td>Minor</td>
+      <td>New concepts/rules added, backwards compatible</td>
+    </tr>
+    <tr>
+      <td>1.0.0 → 2.0.0</td>
+      <td>Major</td>
+      <td>Breaking changes (renamed concepts, modified rules)</td>
+    </tr>
+  </table>
+
+  <div class="concept-box">
+    <strong>Compatibility Guarantee:</strong> Libraries with same major version guarantee:
+    <ul style="margin-bottom: 0;">
+      <li>Concept names remain stable</li>
+      <li>Existing relationships preserved</li>
+      <li>Rule semantics unchanged</li>
+      <li>Query results consistent</li>
+    </ul>
+  </div>
+
+  <h2>6. Quality Assurance</h2>
+
+  <p>Every semantic library must pass quality gates:</p>
+
+  <table>
+    <tr>
+      <th>Check</th>
+      <th>Requirement</th>
+      <th>Tool</th>
+    </tr>
+    <tr>
+      <td><strong>Syntax validation</strong></td>
+      <td>All files parse without errors</td>
+      <td><code>sys2 lint</code></td>
+    </tr>
+    <tr>
+      <td><strong>Consistency</strong></td>
+      <td>No contradictions detected</td>
+      <td><code>sys2 check --consistency</code></td>
+    </tr>
+    <tr>
+      <td><strong>Completeness</strong></td>
+      <td>No undefined references</td>
+      <td><code>sys2 check --references</code></td>
+    </tr>
+    <tr>
+      <td><strong>Test coverage</strong></td>
+      <td>≥90% concepts tested</td>
+      <td><code>sys2 test --coverage</code></td>
+    </tr>
+    <tr>
+      <td><strong>Documentation</strong></td>
+      <td>All public concepts documented</td>
+      <td><code>sys2 doc --check</code></td>
+    </tr>
+  </table>
+
+  <h2>7. Distribution and Discovery</h2>
+
+  <div class="code-example">
+<pre>
+<span style="color: #78909c;"># Install a semantic library</span>
+sys2 install @sys2/biology
+
+<span style="color: #78909c;"># Search available libraries</span>
+sys2 search "medical diagnosis"
+
+<span style="color: #78909c;"># Publish your own library</span>
+sys2 publish --access public
+
+<span style="color: #78909c;"># View library contents</span>
+sys2 info @sys2/biology --concepts
+</pre>
+  </div>
+
+  <h2>8. Research Challenges</h2>
+
+  <ul>
+    <li><strong>Ontology alignment:</strong> How to merge overlapping concepts from different libraries?</li>
+    <li><strong>Conflict resolution:</strong> What happens when two libraries define contradictory rules?</li>
+    <li><strong>Namespace management:</strong> How to handle concept name collisions?</li>
+    <li><strong>Incremental loading:</strong> Load only needed portions for efficiency</li>
+    <li><strong>Versioned reasoning:</strong> Reason over facts from different library versions</li>
+  </ul>
+
+  <h2>9. Implementation Roadmap</h2>
+
+  <table>
+    <tr>
+      <th>Phase</th>
+      <th>Features</th>
+      <th>Status</th>
+    </tr>
+    <tr>
+      <td><strong>Phase 1</strong></td>
+      <td>Basic package structure, local loading</td>
+      <td class="pass">Implemented</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 2</strong></td>
+      <td>Dependency resolution, versioning</td>
+      <td>In progress</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 3</strong></td>
+      <td>Package registry, discovery</td>
+      <td>Planned</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 4</strong></td>
+      <td>Conflict resolution, merging</td>
+      <td>Research</td>
+    </tr>
+  </table>
+
+  <h2>10. Related Resources</h2>
+
+  <ul>
+    <li><a href="learning-from-text.html">Learning from Text</a> – Populating libraries from textbooks</li>
+    <li><a href="../../syntax/index.html">DSL Syntax</a> – Language for defining knowledge</li>
+    <li><a href="../../guides/index.html">Guides</a> – Creating custom libraries</li>
+  </ul>
+
+  <div class="footer-nav">
+    <p><a href="../roadmap.html">&larr; Back to Research Roadmap</a></p>
+  </div>
+  </div>
+</body>
+</html>

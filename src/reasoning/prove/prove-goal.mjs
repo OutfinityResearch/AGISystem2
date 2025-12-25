@@ -34,27 +34,18 @@ export function proveGoal(self, goal, depth) {
   const goalStr = goal.toString();
   const goalOp = self.extractOperatorName(goal);
 
-  // Quantifiers (Exists/ForAll) are handled structurally (not via vector equality),
-  // since their arguments include higher-order expressions.
-  const cycleKey = (goalOp === 'Exists' || goalOp === 'ForAll') ? `goalStr:${goalStr}` : null;
-  if (cycleKey) {
-    if (self.visited.has(cycleKey)) return { valid: false, reason: 'Cycle detected' };
-    self.visited.add(cycleKey);
-  }
+  // Cycle detection must be order-sensitive.
+  // HDC vectors are commutative under XOR binding, so swapped args can hash identically.
+  const goalKey = `goalStr:${goalStr}`;
+  if (self.visited.has(goalKey)) return { valid: false, reason: 'Cycle detected' };
+  self.visited.add(goalKey);
 
-  let goalKey = null;
   try {
     if (goalOp === 'Exists') {
       return proveExistsGoal(self, goalStr, goal, depth, proveGoal);
     }
 
     const goalVec = self.session.executor.buildStatementVector(goal);
-    const goalHash = self.hashVector(goalVec);
-    goalKey = `goal:${goalHash}`;
-    if (!cycleKey) {
-      if (self.visited.has(goalKey)) return { valid: false, reason: 'Cycle detected' };
-      self.visited.add(goalKey);
-    }
 
     const goalArgs = (goal.args || []).map(a => self.extractArgName(a)).filter(Boolean);
     const goalFactExists = goalOp ? self.factExists(goalOp, goalArgs[0], goalArgs[1]) : false;
@@ -172,6 +163,11 @@ export function proveGoal(self, goal, depth) {
       };
     }
 
+    const symmetricResult = self.symmetric?.trySymmetric ? self.symmetric.trySymmetric(goal, depth) : { valid: false };
+    if (symmetricResult.valid) {
+      return symmetricResult;
+    }
+
     const synonymResult = self.trySynonymMatch(goal, depth);
     if (synonymResult.valid) {
       return synonymResult;
@@ -200,7 +196,8 @@ export function proveGoal(self, goal, depth) {
       return modusResult;
     }
 
-    for (const rule of self.session.rules) {
+    const candidateRules = self.getRulesByConclusionOp ? self.getRulesByConclusionOp(goalOp) : self.session.rules;
+    for (const rule of candidateRules) {
       self.session.reasoningStats.ruleAttempts++;
       const ruleResult = self.kbMatcher.tryRuleMatch(goal, rule, depth);
       if (ruleResult.valid) {
@@ -238,7 +235,6 @@ export function proveGoal(self, goal, depth) {
       steps: self.steps
     };
   } finally {
-    if (cycleKey) self.visited.delete(cycleKey);
-    if (goalKey) self.visited.delete(goalKey);
+    self.visited.delete(goalKey);
   }
 }

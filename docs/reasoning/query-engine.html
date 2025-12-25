@@ -1,0 +1,456 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Query Engine - AGISystem2</title>
+  <link rel="stylesheet" href="../reference/style.css">
+  <style>
+    .math-box { background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+    .algorithm-box { background: #f3e5f5; border-left: 4px solid #9c27b0; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+    .example-box { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+    h2 { border-bottom: 2px solid #1976d2; padding-bottom: 10px; margin-top: 40px; }
+    .equation { text-align: center; font-size: 18px; margin: 20px 0; font-family: 'Times New Roman', serif; }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Query Engine</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="index.html">Reasoning</a> ·
+      <a href="symbolic.html">Symbolic</a> ·
+      <a href="holographic.html">Holographic</a>
+    </small>
+    <small>Finding answers to questions with variable bindings</small>
+  </div>
+
+  <div class="section-intro">
+    <p>The Query Engine extends proof search to handle <strong>open queries</strong> – questions with variables that seek multiple answers. Unlike proof (yes/no), queries return <strong>sets of bindings</strong> that satisfy the goal.</p>
+  </div>
+
+  <h2>1. Theoretical Foundation</h2>
+
+  <div class="math-box">
+    <p><strong>Proof vs Query:</strong></p>
+    <div class="equation">
+      prove(isA Socrates Mortal) → { success: true }
+    </div>
+    <div class="equation">
+      query(isA ?x Mortal) → [{ ?x: Socrates }, { ?x: Plato }, ...]
+    </div>
+    <p>A <strong>proof</strong> determines if a ground goal is derivable. A <strong>query</strong> finds all instantiations of variables that make the goal derivable.</p>
+  </div>
+
+  <div class="math-box">
+    <p><strong>Formal Definition:</strong></p>
+    <div class="equation">
+      query(G[?x₁, ..., ?xₙ], KB) = { θ | KB ⊢ G·θ }
+    </div>
+    <p>Where θ is a substitution mapping variables to constants, and G·θ is the goal with substitution applied.</p>
+  </div>
+
+  <h2>2. Query Processing Pipeline</h2>
+
+  <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin: 20px 0;">
+    <svg viewBox="0 0 750 200" style="width: 100%; max-width: 850px; display: block; margin: 0 auto;">
+      <!-- Title -->
+      <text x="375" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Query Processing Pipeline</text>
+
+      <!-- Stage 1: Parse -->
+      <rect x="20" y="50" width="100" height="60" rx="8" fill="#1976d2"/>
+      <text x="70" y="75" text-anchor="middle" font-size="11" fill="white" font-weight="bold">Parse</text>
+      <text x="70" y="92" text-anchor="middle" font-size="9" fill="#bbdefb">Extract variables</text>
+
+      <!-- Arrow 1 -->
+      <path d="M125 80 L155 80" stroke="#546e7a" stroke-width="2" marker-end="url(#queryArrow)"/>
+
+      <!-- Stage 2: HDC Pre-filter -->
+      <rect x="160" y="50" width="100" height="60" rx="8" fill="#7b1fa2"/>
+      <text x="210" y="75" text-anchor="middle" font-size="11" fill="white" font-weight="bold">HDC Filter</text>
+      <text x="210" y="92" text-anchor="middle" font-size="9" fill="#e1bee7">Find candidates</text>
+
+      <!-- Arrow 2 -->
+      <path d="M265 80 L295 80" stroke="#546e7a" stroke-width="2" marker-end="url(#queryArrow)"/>
+
+      <!-- Stage 3: Match -->
+      <rect x="300" y="50" width="100" height="60" rx="8" fill="#00796b"/>
+      <text x="350" y="75" text-anchor="middle" font-size="11" fill="white" font-weight="bold">Match</text>
+      <text x="350" y="92" text-anchor="middle" font-size="9" fill="#b2dfdb">Unify patterns</text>
+
+      <!-- Arrow 3 -->
+      <path d="M405 80 L435 80" stroke="#546e7a" stroke-width="2" marker-end="url(#queryArrow)"/>
+
+      <!-- Stage 4: Chain -->
+      <rect x="440" y="50" width="100" height="60" rx="8" fill="#ef6c00"/>
+      <text x="490" y="75" text-anchor="middle" font-size="11" fill="white" font-weight="bold">Chain</text>
+      <text x="490" y="92" text-anchor="middle" font-size="9" fill="#ffe0b2">Apply rules</text>
+
+      <!-- Arrow 4 -->
+      <path d="M545 80 L575 80" stroke="#546e7a" stroke-width="2" marker-end="url(#queryArrow)"/>
+
+      <!-- Stage 5: Collect -->
+      <rect x="580" y="50" width="100" height="60" rx="8" fill="#c62828"/>
+      <text x="630" y="75" text-anchor="middle" font-size="11" fill="white" font-weight="bold">Collect</text>
+      <text x="630" y="92" text-anchor="middle" font-size="9" fill="#ffcdd2">Aggregate results</text>
+
+      <!-- Output arrow -->
+      <path d="M685 80 L715 80" stroke="#4caf50" stroke-width="2" marker-end="url(#queryArrowGreen)"/>
+
+      <!-- Result box -->
+      <rect x="720" y="55" width="25" height="50" rx="4" fill="#4caf50"/>
+      <text x="732" y="85" text-anchor="middle" font-size="14" fill="white">[ ]</text>
+
+      <!-- Input example -->
+      <text x="70" y="140" text-anchor="middle" font-size="10" fill="#1565c0">isA ?x Animal</text>
+      <path d="M70 145 L70 50" stroke="#1976d2" stroke-width="1" stroke-dasharray="3,2"/>
+
+      <!-- HDC example -->
+      <text x="210" y="140" text-anchor="middle" font-size="10" fill="#7b1fa2">~500 candidates</text>
+      <path d="M210 145 L210 110" stroke="#7b1fa2" stroke-width="1" stroke-dasharray="3,2"/>
+
+      <!-- Match example -->
+      <text x="350" y="140" text-anchor="middle" font-size="10" fill="#00796b">Direct: 12</text>
+      <path d="M350 145 L350 110" stroke="#00796b" stroke-width="1" stroke-dasharray="3,2"/>
+
+      <!-- Chain example -->
+      <text x="490" y="140" text-anchor="middle" font-size="10" fill="#ef6c00">Inferred: 45</text>
+      <path d="M490 145 L490 110" stroke="#ef6c00" stroke-width="1" stroke-dasharray="3,2"/>
+
+      <!-- Result example -->
+      <text x="630" y="140" text-anchor="middle" font-size="10" fill="#c62828">Unique: 57</text>
+      <path d="M630 145 L630 110" stroke="#c62828" stroke-width="1" stroke-dasharray="3,2"/>
+
+      <!-- Legend -->
+      <text x="375" y="175" text-anchor="middle" font-size="10" fill="#666">Typical query: 57 results from KB with 10,000 facts</text>
+
+      <defs>
+        <marker id="queryArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#546e7a"/>
+        </marker>
+        <marker id="queryArrowGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#4caf50"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h2>3. Query Modes</h2>
+
+  <table>
+    <tr>
+      <th>Mode</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+    <tr>
+      <td><strong>Single Variable</strong></td>
+      <td>Find all X where P(X) holds</td>
+      <td><code>isA ?x Animal</code></td>
+    </tr>
+    <tr>
+      <td><strong>Multi-Variable</strong></td>
+      <td>Find all (X,Y) pairs where R(X,Y) holds</td>
+      <td><code>loves ?x ?y</code></td>
+    </tr>
+    <tr>
+      <td><strong>Constrained</strong></td>
+      <td>Find X with constraints</td>
+      <td><code>And (isA ?x Animal) (livesIn ?x Africa)</code></td>
+    </tr>
+    <tr>
+      <td><strong>Existential</strong></td>
+      <td>Check if any solution exists</td>
+      <td><code>exists ?x (isA ?x Dragon)</code></td>
+    </tr>
+    <tr>
+      <td><strong>Counting</strong></td>
+      <td>Count solutions</td>
+      <td><code>count ?x (isA ?x City)</code></td>
+    </tr>
+  </table>
+
+  <h2>4. Algorithm: Query Evaluation</h2>
+
+  <div class="algorithm-box">
+    <strong>Algorithm: query(goal, kb)</strong>
+    <ol>
+      <li><strong>Extract variables:</strong> vars = findVariables(goal)</li>
+      <li><strong>Initialize:</strong> results = []</li>
+      <li><strong>HDC pre-filter:</strong> If goal has constants, use HDC similarity to find candidate facts</li>
+      <li><strong>Direct matching:</strong>
+        <ul>
+          <li>For each fact F in KB (or candidates):</li>
+          <li>θ = unify(goal, F)</li>
+          <li>If θ ≠ FAIL: results.push(θ)</li>
+        </ul>
+      </li>
+      <li><strong>Rule chaining:</strong>
+        <ul>
+          <li>For each rule R: (premises → consequent)</li>
+          <li>θ = unify(goal, consequent)</li>
+          <li>If θ ≠ FAIL:</li>
+          <li>&nbsp;&nbsp;premise_bindings = query(premises·θ, kb)</li>
+          <li>&nbsp;&nbsp;results.extend(compose(θ, premise_bindings))</li>
+        </ul>
+      </li>
+      <li><strong>Deduplicate:</strong> Remove equivalent bindings</li>
+      <li><strong>Return:</strong> results with confidence scores</li>
+    </ol>
+  </div>
+
+  <h2>5. Compound Query Handling</h2>
+
+  <div class="example-box">
+    <strong>And (Conjunction):</strong>
+    <pre><code>query(And(P, Q)) =
+  for θ in query(P):
+    for φ in query(Q·θ):
+      yield compose(θ, φ)</code></pre>
+    <p>Bindings from P are used to instantiate Q before querying.</p>
+  </div>
+
+  <div class="example-box">
+    <strong>Or (Disjunction):</strong>
+    <pre><code>query(Or(P, Q)) = query(P) ∪ query(Q)</code></pre>
+    <p>Results from both branches are merged (with deduplication).</p>
+  </div>
+
+  <div class="example-box">
+    <strong>Not (Negation):</strong>
+    <pre><code>query(And(P, Not(Q))) =
+  for θ in query(P):
+    if query(Q·θ) is empty:
+      yield θ</code></pre>
+    <p>Keep only bindings where the negated condition has no solutions.</p>
+  </div>
+
+  <h2>6. Variable Binding Flow</h2>
+
+  <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin: 20px 0;">
+    <svg viewBox="0 0 600 280" style="width: 100%; max-width: 700px; display: block; margin: 0 auto;">
+      <!-- Title -->
+      <text x="300" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Variable Binding Flow</text>
+
+      <!-- Query box -->
+      <rect x="20" y="40" width="200" height="50" rx="6" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+      <text x="120" y="60" text-anchor="middle" font-size="11" font-weight="bold" fill="#1565c0">Query</text>
+      <text x="120" y="78" text-anchor="middle" font-size="10" fill="#1565c0">And (isA ?x Animal) (eats ?x ?y)</text>
+
+      <!-- Arrow to first subgoal -->
+      <path d="M120 90 L120 115" stroke="#546e7a" stroke-width="2" marker-end="url(#bindArrow)"/>
+
+      <!-- First subgoal -->
+      <rect x="50" y="120" width="140" height="40" rx="6" fill="#4caf50"/>
+      <text x="120" y="145" text-anchor="middle" font-size="10" fill="white">isA ?x Animal → [Cat, Dog, Lion]</text>
+
+      <!-- Binding boxes -->
+      <rect x="250" y="120" width="80" height="30" rx="4" fill="#fff3e0" stroke="#ef6c00"/>
+      <text x="290" y="140" text-anchor="middle" font-size="10" fill="#e65100">?x = Cat</text>
+
+      <rect x="340" y="120" width="80" height="30" rx="4" fill="#fff3e0" stroke="#ef6c00"/>
+      <text x="380" y="140" text-anchor="middle" font-size="10" fill="#e65100">?x = Dog</text>
+
+      <rect x="430" y="120" width="80" height="30" rx="4" fill="#fff3e0" stroke="#ef6c00"/>
+      <text x="470" y="140" text-anchor="middle" font-size="10" fill="#e65100">?x = Lion</text>
+
+      <!-- Arrows from first to binding -->
+      <path d="M190 140 L245 140" stroke="#4caf50" stroke-width="1.5" marker-end="url(#bindArrowGreen)"/>
+
+      <!-- Second subgoal queries -->
+      <rect x="240" y="175" width="100" height="30" rx="4" fill="#1976d2"/>
+      <text x="290" y="195" text-anchor="middle" font-size="9" fill="white">eats Cat ?y</text>
+
+      <rect x="350" y="175" width="100" height="30" rx="4" fill="#1976d2"/>
+      <text x="400" y="195" text-anchor="middle" font-size="9" fill="white">eats Dog ?y</text>
+
+      <rect x="460" y="175" width="100" height="30" rx="4" fill="#1976d2"/>
+      <text x="510" y="195" text-anchor="middle" font-size="9" fill="white">eats Lion ?y</text>
+
+      <!-- Arrows down -->
+      <path d="M290 150 L290 170" stroke="#ef6c00" stroke-width="1.5"/>
+      <path d="M400 150 L400 170" stroke="#ef6c00" stroke-width="1.5"/>
+      <path d="M470 150 L510 170" stroke="#ef6c00" stroke-width="1.5"/>
+
+      <!-- Results -->
+      <rect x="230" y="220" width="120" height="40" rx="4" fill="#e8f5e9" stroke="#4caf50"/>
+      <text x="290" y="237" text-anchor="middle" font-size="9" fill="#2e7d32">?x=Cat, ?y=Fish</text>
+      <text x="290" y="252" text-anchor="middle" font-size="9" fill="#2e7d32">?x=Cat, ?y=Mouse</text>
+
+      <rect x="360" y="220" width="100" height="40" rx="4" fill="#e8f5e9" stroke="#4caf50"/>
+      <text x="410" y="237" text-anchor="middle" font-size="9" fill="#2e7d32">?x=Dog, ?y=Meat</text>
+      <text x="410" y="252" text-anchor="middle" font-size="9" fill="#2e7d32">?x=Dog, ?y=Bone</text>
+
+      <rect x="470" y="220" width="100" height="40" rx="4" fill="#e8f5e9" stroke="#4caf50"/>
+      <text x="520" y="237" text-anchor="middle" font-size="9" fill="#2e7d32">?x=Lion, ?y=Zebra</text>
+      <text x="520" y="252" text-anchor="middle" font-size="9" fill="#2e7d32">?x=Lion, ?y=Antelope</text>
+
+      <!-- Arrows to results -->
+      <path d="M290 205 L290 215" stroke="#1976d2" stroke-width="1.5"/>
+      <path d="M400 205 L410 215" stroke="#1976d2" stroke-width="1.5"/>
+      <path d="M510 205 L520 215" stroke="#1976d2" stroke-width="1.5"/>
+
+      <defs>
+        <marker id="bindArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#546e7a"/>
+        </marker>
+        <marker id="bindArrowGreen" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#4caf50"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h2>7. Confidence in Query Results</h2>
+
+  <div class="math-box">
+    <p>Each binding carries a confidence score indicating how reliably it was derived:</p>
+    <div class="equation">
+      Result = { bindings: θ, confidence: c, method: m, trace: [...] }
+    </div>
+  </div>
+
+  <table>
+    <tr>
+      <th>Source</th>
+      <th>Confidence</th>
+      <th>Example</th>
+    </tr>
+    <tr>
+      <td><strong>Direct KB fact</strong></td>
+      <td>1.0</td>
+      <td>Exact match to stated fact</td>
+    </tr>
+    <tr>
+      <td><strong>Transitive chain</strong></td>
+      <td>0.95^(n-1)</td>
+      <td>isA chain through hierarchy</td>
+    </tr>
+    <tr>
+      <td><strong>Rule inference</strong></td>
+      <td>min(premises) × 0.95</td>
+      <td>Derived via implication rule</td>
+    </tr>
+    <tr>
+      <td><strong>HDC similarity</strong></td>
+      <td>similarity score</td>
+      <td>Approximate/fuzzy match</td>
+    </tr>
+  </table>
+
+  <h2>8. Query Examples</h2>
+
+  <div class="example-box">
+    <strong>Simple Query:</strong>
+    <pre><code>// Find all animals
+query: isA ?x Animal
+
+results: [
+  { bindings: { ?x: 'Cat' }, confidence: 1.0 },
+  { bindings: { ?x: 'Dog' }, confidence: 1.0 },
+  { bindings: { ?x: 'Lion' }, confidence: 0.95 }  // via isA Lion Mammal, isA Mammal Animal
+]</code></pre>
+  </div>
+
+  <div class="example-box">
+    <strong>Join Query:</strong>
+    <pre><code>// Find what African animals eat
+query: And (livesIn ?x Africa) (eats ?x ?food)
+
+results: [
+  { bindings: { ?x: 'Lion', ?food: 'Zebra' }, confidence: 0.95 },
+  { bindings: { ?x: 'Elephant', ?food: 'Grass' }, confidence: 1.0 }
+]</code></pre>
+  </div>
+
+  <div class="example-box">
+    <strong>Negation Query:</strong>
+    <pre><code>// Find animals that don't fly
+query: And (isA ?x Animal) (Not (canFly ?x))
+
+results: [
+  { bindings: { ?x: 'Dog' }, confidence: 1.0 },
+  { bindings: { ?x: 'Cat' }, confidence: 1.0 },
+  { bindings: { ?x: 'Fish' }, confidence: 1.0 }
+]</code></pre>
+  </div>
+
+  <h2>9. Optimization Techniques</h2>
+
+  <table>
+    <tr>
+      <th>Technique</th>
+      <th>Description</th>
+      <th>Benefit</th>
+    </tr>
+    <tr>
+      <td><strong>Variable ordering</strong></td>
+      <td>Process most selective subgoal first</td>
+      <td>Reduces intermediate results</td>
+    </tr>
+    <tr>
+      <td><strong>HDC pre-filtering</strong></td>
+      <td>Use similarity to narrow candidates</td>
+      <td>Avoids scanning entire KB</td>
+    </tr>
+    <tr>
+      <td><strong>Index utilization</strong></td>
+      <td>Use operator/argument indexes</td>
+      <td>O(1) lookup vs O(n) scan</td>
+    </tr>
+    <tr>
+      <td><strong>Early termination</strong></td>
+      <td>Stop when limit reached</td>
+      <td>Bounded response time</td>
+    </tr>
+    <tr>
+      <td><strong>Memoization</strong></td>
+      <td>Cache subquery results</td>
+      <td>Avoids redundant computation</td>
+    </tr>
+  </table>
+
+  <h2>10. API Reference</h2>
+
+  <pre><code>import { QueryEngine } from 'agisystem2/reasoning';
+
+const engine = new QueryEngine(session);
+
+// Basic query
+const results = await engine.query({
+  operator: 'isA',
+  args: ['?x', 'Animal']
+});
+
+// With options
+const results = await engine.query(goal, {
+  limit: 100,              // Max results
+  minConfidence: 0.5,      // Filter weak results
+  includeTrace: true,      // Include derivation
+  timeout: 5000            // Max time (ms)
+});
+
+// Compound query
+const results = await engine.query({
+  operator: 'And',
+  args: [
+    { operator: 'isA', args: ['?x', 'Person'] },
+    { operator: 'livesIn', args: ['?x', 'Paris'] }
+  ]
+});</code></pre>
+
+  <h2>11. Related Documentation</h2>
+
+  <ul>
+    <li><a href="proof-engine.html">Proof Engine</a> – Boolean proof search</li>
+    <li><a href="abduction.html">Abduction Engine</a> – Finding explanations</li>
+    <li><a href="induction.html">Induction Engine</a> – Learning rules from examples</li>
+    <li><a href="holographic.html">Holographic Reasoning</a> – HDC-accelerated queries</li>
+  </ul>
+
+  <div class="footer-nav">
+    <p><a href="index.html">&larr; Back to Reasoning Engines</a></p>
+  </div>
+  </div>
+</body>
+</html>

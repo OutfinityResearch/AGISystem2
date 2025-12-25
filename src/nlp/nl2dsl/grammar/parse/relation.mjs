@@ -172,6 +172,11 @@ function parseFunctionalCall(text, defaultVar = '?x', options = {}) {
     return { op: 'And', items: [{ negated, atom: { op: 'hasProperty', args: [args[0], op] } }] };
   }
 
+  // Interpret f(a,b) as "the f of a is b" (value-of semantics) which matches the
+  // DSL convention used for clauses like "the parent of X is Y" => parent Y X.
+  const [a0, a1] = args;
+  const swappedArgs = a1 !== undefined ? [a1, a0] : args;
+
   const expectedArity = CORE_GRAPH_ARITY.get(op);
   let effectiveOp = op;
   const declaredOperators = [];
@@ -183,19 +188,22 @@ function parseFunctionalCall(text, defaultVar = '?x', options = {}) {
 
   if (!isKnownOperator(effectiveOp)) {
     if (options.autoDeclareUnknownOperators) {
-      return { op: 'And', items: [{ negated, atom: { op: effectiveOp, args: args.slice(0, 2) } }], declaredOperators: declaredOperators.length > 0 ? declaredOperators : [effectiveOp] };
+      return { op: 'And', items: [{ negated, atom: { op: effectiveOp, args: swappedArgs.slice(0, 2) } }], declaredOperators: declaredOperators.length > 0 ? declaredOperators : [effectiveOp] };
     }
     return { kind: 'error', error: `Unknown operator '${effectiveOp}' derived from function '${rawFn}'`, unknownOperator: effectiveOp };
   }
 
-  return { op: 'And', items: [{ negated, atom: { op: effectiveOp, args: args.slice(0, 2) } }], ...(declaredOperators.length > 0 ? { declaredOperators } : {}) };
+  return { op: 'And', items: [{ negated, atom: { op: effectiveOp, args: swappedArgs.slice(0, 2) } }], ...(declaredOperators.length > 0 ? { declaredOperators } : {}) };
 }
 
 function parseOfIsRelationClause(text, defaultVar = '?x', options = {}) {
   const t = clean(text);
   if (!t) return null;
 
-  const m = t.match(/^(?:the\s+)?([A-Za-z_][A-Za-z0-9_'-]*)\s+of\s+(.+?)\s+(?:is|are|was|were)\s+(not\s+)?(.+)$/i);
+  // Support multiword relation nouns:
+  // - "the birth place of X is Rome"
+  // - "the military command of X is Corps"
+  const m = t.match(/^(?:the\s+)?(.+?)\s+of\s+(.+?)\s+(?:is|are|was|were)\s+(not\s+)?(.+)$/i);
   if (!m) return null;
 
   const [, relRaw, ofRaw, notPart, valueRaw] = m;
@@ -214,14 +222,23 @@ function parseOfIsRelationClause(text, defaultVar = '?x', options = {}) {
     if (options.autoDeclareUnknownOperators) declaredOperators.push(effectiveOp);
   }
 
+  // Heuristic for rule corpora:
+  // Sometimes generated rule templates swap the semantic roles in "X of A is B" clauses.
+  // If the value is a role-variable (?x/ ?y ...) but the "of" side is a constant token,
+  // treat it as op(of, value) to match fact templates like "X of Lucy is Corps" -> op Corps Lucy.
+  const valueIsVar = typeof valueEntity === 'string' && valueEntity.startsWith('?');
+  const ofIsVar = typeof ofEntity === 'string' && ofEntity.startsWith('?');
+  const args = (valueIsVar && !ofIsVar) ? [ofEntity, valueEntity] : [valueEntity, ofEntity];
+  const items = [{ negated, atom: { op: effectiveOp, args } }];
+
   if (!isKnownOperator(effectiveOp)) {
     if (options.autoDeclareUnknownOperators) {
-      return { op: 'And', items: [{ negated, atom: { op: effectiveOp, args: [valueEntity, ofEntity] } }], declaredOperators: declaredOperators.length > 0 ? declaredOperators : [effectiveOp] };
+      return { op: 'And', items, declaredOperators: declaredOperators.length > 0 ? declaredOperators : [effectiveOp] };
     }
     return { kind: 'error', error: `Unknown operator '${effectiveOp}' derived from relation noun '${relRaw}'`, unknownOperator: effectiveOp };
   }
 
-  return { op: 'And', items: [{ negated, atom: { op: effectiveOp, args: [valueEntity, ofEntity] } }], ...(declaredOperators.length > 0 ? { declaredOperators } : {}) };
+  return { op: 'And', items, ...(declaredOperators.length > 0 ? { declaredOperators } : {}) };
 }
 
 function parseThereIsBetweenClause(text, defaultVar = '?x', options = {}) {

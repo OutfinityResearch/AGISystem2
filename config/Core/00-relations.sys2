@@ -27,6 +27,9 @@
 @marriedTo:marriedTo __SymmetricRelation
 @near:near __SymmetricRelation
 @adjacent:adjacent __SymmetricRelation
+@spouse:spouse __SymmetricRelation
+@relative:relative __SymmetricRelation
+@relation:relation __SymmetricRelation
 
 # ===== Reflexive Relations =====
 # Relations where: R(A,A) is always true

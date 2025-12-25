@@ -1,0 +1,414 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Induction Engine - AGISystem2</title>
+  <link rel="stylesheet" href="../reference/style.css">
+  <style>
+    .math-box { background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+    .algorithm-box { background: #f3e5f5; border-left: 4px solid #9c27b0; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+    .example-box { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+    .warning-box { background: #fff3e0; border-left: 4px solid #ef6c00; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+    h2 { border-bottom: 2px solid #ff9800; padding-bottom: 10px; margin-top: 40px; }
+    .equation { text-align: center; font-size: 18px; margin: 20px 0; font-family: 'Times New Roman', serif; }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Induction Engine</h1>
+    <small>
+      <a href="../index.html">Home</a> ·
+      <a href="index.html">Reasoning</a> ·
+      <a href="proof-engine.html">Proof</a> ·
+      <a href="abduction.html">Abduction</a>
+    </small>
+    <small>Learning rules from examples</small>
+  </div>
+
+  <div class="section-intro">
+    <p><strong>Induction</strong> is learning general rules from specific examples. Given positive and negative examples, the Induction Engine discovers rules that classify the examples correctly. This enables the knowledge base to grow automatically from data.</p>
+  </div>
+
+  <h2>1. Theoretical Foundation</h2>
+
+  <div class="math-box">
+    <p><strong>Inductive Logic Programming (ILP):</strong></p>
+    <div class="equation">
+      Given: B (background knowledge), E⁺ (positive examples), E⁻ (negative examples)
+    </div>
+    <div class="equation">
+      Find: H (hypothesis) such that: B ∪ H ⊢ E⁺ and B ∪ H ⊬ E⁻
+    </div>
+    <p>The learned hypothesis H must entail all positive examples while not entailing any negative examples.</p>
+  </div>
+
+  <div class="math-box">
+    <p><strong>Comparison of Inference Modes:</strong></p>
+    <table style="width: 100%; margin: 15px 0;">
+      <tr>
+        <th>Mode</th>
+        <th>Given</th>
+        <th>Infer</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><strong>Deduction</strong></td>
+        <td>Rule + Case</td>
+        <td>Result</td>
+        <td>All birds fly + Tweety is a bird → Tweety flies</td>
+      </tr>
+      <tr>
+        <td><strong>Abduction</strong></td>
+        <td>Rule + Result</td>
+        <td>Case</td>
+        <td>All birds fly + X flies → X might be a bird</td>
+      </tr>
+      <tr>
+        <td><strong>Induction</strong></td>
+        <td>Cases + Results</td>
+        <td>Rule</td>
+        <td>Robin flies, Sparrow flies, Eagle flies → Birds fly</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>2. Induction Process</h2>
+
+  <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin: 20px 0;">
+    <svg viewBox="0 0 750 350" style="width: 100%; max-width: 850px; display: block; margin: 0 auto;">
+      <!-- Title -->
+      <text x="375" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Rule Induction Process</text>
+
+      <!-- Examples input -->
+      <rect x="20" y="50" width="200" height="100" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+      <text x="120" y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="#2e7d32">Positive Examples (E⁺)</text>
+      <text x="35" y="95" font-size="9" fill="#333">canFly Robin ✓</text>
+      <text x="35" y="110" font-size="9" fill="#333">canFly Eagle ✓</text>
+      <text x="35" y="125" font-size="9" fill="#333">canFly Sparrow ✓</text>
+      <text x="35" y="140" font-size="9" fill="#333">canFly Penguin ✗</text>
+
+      <!-- Background knowledge -->
+      <rect x="20" y="165" width="200" height="80" rx="8" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+      <text x="120" y="190" text-anchor="middle" font-size="12" font-weight="bold" fill="#1565c0">Background (B)</text>
+      <text x="35" y="210" font-size="9" fill="#333">isA Robin Bird</text>
+      <text x="35" y="225" font-size="9" fill="#333">isA Eagle Bird</text>
+      <text x="35" y="240" font-size="9" fill="#333">isA Penguin Bird</text>
+
+      <!-- Arrow to generalize -->
+      <path d="M225 150 L280 150" stroke="#546e7a" stroke-width="2" marker-end="url(#indArrow)"/>
+
+      <!-- Generalization box -->
+      <rect x="290" y="80" width="170" height="140" rx="8" fill="#7b1fa2"/>
+      <text x="375" y="105" text-anchor="middle" font-size="11" fill="white" font-weight="bold">Generalization</text>
+      <text x="375" y="130" text-anchor="middle" font-size="9" fill="#e1bee7">1. Find common properties</text>
+      <text x="375" y="150" text-anchor="middle" font-size="9" fill="#e1bee7">2. Form candidate rules</text>
+      <text x="375" y="170" text-anchor="middle" font-size="9" fill="#e1bee7">3. Test coverage</text>
+      <text x="375" y="190" text-anchor="middle" font-size="9" fill="#e1bee7">4. Check negatives</text>
+      <text x="375" y="210" text-anchor="middle" font-size="9" fill="#e1bee7">5. Rank by simplicity</text>
+
+      <!-- Arrow to candidates -->
+      <path d="M465 150 L510 150" stroke="#546e7a" stroke-width="2" marker-end="url(#indArrow)"/>
+
+      <!-- Candidate rules -->
+      <rect x="520" y="50" width="210" height="120" rx="8" fill="#fff3e0" stroke="#ef6c00" stroke-width="2"/>
+      <text x="625" y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="#e65100">Candidate Rules</text>
+      <text x="535" y="100" font-size="9" fill="#333">H₁: Implies (isA ?x Bird) (canFly ?x)</text>
+      <text x="555" y="115" font-size="8" fill="#666">Coverage: 75% (3/4), Wrong: 1</text>
+      <text x="535" y="135" font-size="9" fill="#333">H₂: Implies (And (isA ?x Bird)</text>
+      <text x="565" y="150" font-size="9" fill="#333">(Not (isA ?x Penguin)))</text>
+      <text x="565" y="165" font-size="9" fill="#333">(canFly ?x)</text>
+
+      <!-- Arrow to output -->
+      <path d="M625 175 L625 210" stroke="#4caf50" stroke-width="2" marker-end="url(#indArrowGreen)"/>
+
+      <!-- Selected rule -->
+      <rect x="490" y="220" width="240" height="60" rx="8" fill="#4caf50"/>
+      <text x="610" y="245" text-anchor="middle" font-size="11" fill="white" font-weight="bold">Selected Rule (H₂)</text>
+      <text x="610" y="265" text-anchor="middle" font-size="9" fill="#c8e6c9">100% coverage, 0 false positives</text>
+
+      <!-- Exception note -->
+      <rect x="490" y="295" width="240" height="40" rx="6" fill="#ffebee" stroke="#c62828"/>
+      <text x="610" y="320" text-anchor="middle" font-size="9" fill="#c62828">Exception learned: Penguins don't fly</text>
+
+      <defs>
+        <marker id="indArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#546e7a"/>
+        </marker>
+        <marker id="indArrowGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#4caf50"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h2>3. Algorithm: Rule Induction</h2>
+
+  <div class="algorithm-box">
+    <strong>Algorithm: induce(E⁺, E⁻, B)</strong>
+    <ol>
+      <li><strong>Initialize:</strong> H = most general hypothesis (covers everything)</li>
+      <li><strong>Specialize:</strong> While H covers any negative example:
+        <ul>
+          <li>Find specializations of H that exclude negatives</li>
+          <li>Select best specialization (by information gain)</li>
+          <li>H = selected specialization</li>
+        </ul>
+      </li>
+      <li><strong>Verify:</strong> Check that H still covers all positives</li>
+      <li><strong>Simplify:</strong> Remove redundant conditions</li>
+      <li><strong>Return:</strong> H with confidence score</li>
+    </ol>
+  </div>
+
+  <div class="algorithm-box">
+    <strong>Specialization Operators:</strong>
+    <ul>
+      <li><strong>Add condition:</strong> H → H ∧ C (make hypothesis more specific)</li>
+      <li><strong>Substitute variable:</strong> Replace ?x with constant</li>
+      <li><strong>Add negation:</strong> H → H ∧ ¬C (exclude exception cases)</li>
+      <li><strong>Restrict type:</strong> isA ?x Thing → isA ?x Animal</li>
+    </ul>
+  </div>
+
+  <h2>4. Evaluation Metrics</h2>
+
+  <div class="math-box">
+    <p><strong>Coverage and Accuracy:</strong></p>
+    <div class="equation">
+      Coverage = |{e ∈ E⁺ | B ∪ H ⊢ e}| / |E⁺|
+    </div>
+    <div class="equation">
+      Accuracy = (TP + TN) / (TP + TN + FP + FN)
+    </div>
+  </div>
+
+  <table>
+    <tr>
+      <th>Metric</th>
+      <th>Formula</th>
+      <th>Meaning</th>
+    </tr>
+    <tr>
+      <td><strong>Coverage</strong></td>
+      <td>TP / (TP + FN)</td>
+      <td>What fraction of positives are covered?</td>
+    </tr>
+    <tr>
+      <td><strong>Precision</strong></td>
+      <td>TP / (TP + FP)</td>
+      <td>What fraction of predictions are correct?</td>
+    </tr>
+    <tr>
+      <td><strong>Information Gain</strong></td>
+      <td>H(D) - H(D|A)</td>
+      <td>How much does condition A reduce uncertainty?</td>
+    </tr>
+    <tr>
+      <td><strong>MDL Score</strong></td>
+      <td>|H| + |D|H||</td>
+      <td>Hypothesis size + exceptions (prefer simpler)</td>
+    </tr>
+  </table>
+
+  <h2>5. Learning Strategies</h2>
+
+  <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin: 20px 0;">
+    <svg viewBox="0 0 700 180" style="width: 100%; max-width: 800px; display: block; margin: 0 auto;">
+      <!-- Title -->
+      <text x="350" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Induction Strategies</text>
+
+      <!-- Top-down -->
+      <rect x="30" y="45" width="200" height="120" rx="8" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+      <text x="130" y="70" text-anchor="middle" font-size="12" font-weight="bold" fill="#1565c0">Top-Down (Specific-to-General)</text>
+      <text x="45" y="95" font-size="9" fill="#333">Start: Most general rule</text>
+      <text x="45" y="115" font-size="9" fill="#333">Action: Add conditions to</text>
+      <text x="45" y="130" font-size="9" fill="#333">exclude negative examples</text>
+      <text x="45" y="150" font-size="9" fill="#666">Example: FOIL, Progol</text>
+
+      <!-- Bottom-up -->
+      <rect x="250" y="45" width="200" height="120" rx="8" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2"/>
+      <text x="350" y="70" text-anchor="middle" font-size="12" font-weight="bold" fill="#7b1fa2">Bottom-Up (General-to-Specific)</text>
+      <text x="265" y="95" font-size="9" fill="#333">Start: Specific examples</text>
+      <text x="265" y="115" font-size="9" fill="#333">Action: Generalize common</text>
+      <text x="265" y="130" font-size="9" fill="#333">patterns across examples</text>
+      <text x="265" y="150" font-size="9" fill="#666">Example: GOLEM, CIGOL</text>
+
+      <!-- Hybrid -->
+      <rect x="470" y="45" width="200" height="120" rx="8" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+      <text x="570" y="70" text-anchor="middle" font-size="12" font-weight="bold" fill="#2e7d32">Hybrid</text>
+      <text x="485" y="95" font-size="9" fill="#333">Combine both approaches:</text>
+      <text x="485" y="115" font-size="9" fill="#333">- Generalize from seeds</text>
+      <text x="485" y="130" font-size="9" fill="#333">- Specialize to fit negatives</text>
+      <text x="485" y="150" font-size="9" fill="#666">Example: AGISystem2</text>
+    </svg>
+  </div>
+
+  <h2>6. Handling Noise and Exceptions</h2>
+
+  <div class="warning-box">
+    <p><strong>Real-World Challenge:</strong> Data often contains noise (mislabeled examples) and exceptions (genuine outliers). Strict ILP fails on noisy data.</p>
+  </div>
+
+  <div class="example-box">
+    <strong>Probabilistic Relaxation:</strong>
+    <pre><code>// Instead of: H must cover ALL positives and NO negatives
+// Allow: H may miss some positives and cover some negatives
+
+Criterion: maximize(Coverage(H) - α × FalsePositives(H) - β × Complexity(H))
+
+// Example: "Birds fly" covers 95% of examples
+// Better than: "Birds except penguins, ostriches, emus, kiwis... fly"</code></pre>
+  </div>
+
+  <table>
+    <tr>
+      <th>Strategy</th>
+      <th>Description</th>
+      <th>When to Use</th>
+    </tr>
+    <tr>
+      <td><strong>Hard constraints</strong></td>
+      <td>No false positives allowed</td>
+      <td>Clean data, critical domains</td>
+    </tr>
+    <tr>
+      <td><strong>Soft constraints</strong></td>
+      <td>Allow some error for simpler rules</td>
+      <td>Noisy data, pattern discovery</td>
+    </tr>
+    <tr>
+      <td><strong>Exception lists</strong></td>
+      <td>Learn rule + explicit exceptions</td>
+      <td>Few outliers, interpretability</td>
+    </tr>
+    <tr>
+      <td><strong>Confidence scores</strong></td>
+      <td>Attach probability to rules</td>
+      <td>Uncertain domains</td>
+    </tr>
+  </table>
+
+  <h2>7. Example: Learning Family Relations</h2>
+
+  <div class="example-box">
+    <strong>Background Knowledge:</strong>
+    <pre><code>parent Alice Bob
+parent Alice Carol
+parent Bob Dave
+parent Carol Eve
+male Bob
+male Dave
+female Alice
+female Carol
+female Eve</code></pre>
+
+    <strong>Positive Examples:</strong>
+    <pre><code>grandparent Alice Dave ✓
+grandparent Alice Eve ✓</code></pre>
+
+    <strong>Negative Examples:</strong>
+    <pre><code>grandparent Bob Dave ✗
+grandparent Alice Bob ✗</code></pre>
+
+    <strong>Induced Rule:</strong>
+    <pre><code>@r_induced Implies (And (parent ?x ?y) (parent ?y ?z)) (grandparent ?x ?z)
+
+// "X is grandparent of Z if X is parent of Y and Y is parent of Z"
+// Coverage: 100%, Precision: 100%</code></pre>
+  </div>
+
+  <h2>8. Integration with Knowledge Base</h2>
+
+  <div class="algorithm-box">
+    <strong>Rule Integration Pipeline:</strong>
+    <ol>
+      <li><strong>Learn:</strong> Induce candidate rules from examples</li>
+      <li><strong>Validate:</strong> Test on held-out examples</li>
+      <li><strong>Check consistency:</strong> Verify no conflicts with existing KB</li>
+      <li><strong>Assign confidence:</strong> Based on coverage and validation</li>
+      <li><strong>Add to KB:</strong> With provenance marking</li>
+      <li><strong>Monitor:</strong> Track rule performance over time</li>
+    </ol>
+  </div>
+
+  <pre><code>// Induced rules are marked with provenance
+@r_learned_001 Implies (isA ?x Bird) (canFly ?x)
+  ; induced_from: examples/birds.sys2
+  ; confidence: 0.95
+  ; coverage: 47/50
+  ; exceptions: [Penguin, Ostrich, Emu]</code></pre>
+
+  <h2>9. Minimum Description Length (MDL)</h2>
+
+  <div class="math-box">
+    <p><strong>MDL Principle:</strong> The best hypothesis is the one that minimizes the total description length.</p>
+    <div class="equation">
+      MDL(H, D) = L(H) + L(D|H)
+    </div>
+    <ul>
+      <li><strong>L(H):</strong> Length to describe the hypothesis (prefer simpler rules)</li>
+      <li><strong>L(D|H):</strong> Length to describe data given hypothesis (prefer higher coverage)</li>
+    </ul>
+  </div>
+
+  <div class="example-box">
+    <strong>MDL Trade-off:</strong>
+    <pre><code>H₁: "Birds fly"
+    L(H₁) = 2 tokens
+    L(D|H₁) = 3 exceptions = 3 tokens
+    MDL = 5
+
+H₂: "Birds except penguins, ostriches, emus fly"
+    L(H₂) = 5 tokens
+    L(D|H₂) = 0 exceptions = 0 tokens
+    MDL = 5
+
+// Equal MDL - but H₁ is preferred for generalization</code></pre>
+  </div>
+
+  <h2>10. API Reference</h2>
+
+  <pre><code>import { InductionEngine } from 'agisystem2/reasoning';
+
+const engine = new InductionEngine(session);
+
+// Learn from examples
+const rules = await engine.induce({
+  positives: [
+    { operator: 'canFly', args: ['Robin'] },
+    { operator: 'canFly', args: ['Eagle'] }
+  ],
+  negatives: [
+    { operator: 'canFly', args: ['Penguin'] }
+  ],
+  background: session.kb
+});
+
+// With options
+const rules = await engine.induce(examples, {
+  maxRules: 5,              // Max rules to learn
+  minCoverage: 0.8,         // Minimum coverage required
+  maxComplexity: 3,         // Max conditions per rule
+  allowExceptions: true,    // Learn exception lists
+  noiseThreshold: 0.05      // Tolerate 5% noise
+});
+
+// Validate learned rules
+const validation = await engine.validate(rules, testExamples);</code></pre>
+
+  <h2>11. Related Documentation</h2>
+
+  <ul>
+    <li><a href="proof-engine.html">Proof Engine</a> – Testing induced rules</li>
+    <li><a href="query-engine.html">Query Engine</a> – Finding training examples</li>
+    <li><a href="abduction.html">Abduction Engine</a> – Complementary inference</li>
+    <li><a href="../research/directions/semantic-libraries.html">Semantic Libraries</a> – Sharing learned knowledge</li>
+  </ul>
+
+  <div class="footer-nav">
+    <p><a href="index.html">&larr; Back to Reasoning Engines</a></p>
+  </div>
+  </div>
+</body>
+</html>

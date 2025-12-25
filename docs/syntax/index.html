@@ -32,9 +32,24 @@
     <p>Atoms, operators, facts, roles, and theories are ALL represented as hypervectors. The DSL provides human-readable syntax that compiles to vector operations.</p>
   </div>
 
+  <h2>Position Binding Model</h2>
+
+  <p>Every statement is encoded using position vectors that tag each argument:</p>
+
+  <div class="alert alert-info">
+    <strong>Binding Formula:</strong>
+    <pre style="background: transparent; padding: 10px 0; margin: 10px 0;"><code>destination = Operator ⊕ (Pos1 ⊕ arg1) ⊕ (Pos2 ⊕ arg2) ⊕ (Pos3 ⊕ arg3) ⊕ ...</code></pre>
+    <p>Each argument is tagged with its position vector (Pos1, Pos2, etc.) before being XORed into the result. This encodes argument order without using permutation.</p>
+  </div>
+
+  <p><strong>Example:</strong></p>
+  <pre><code>@rel loves John Mary
+# Encoded as: rel = loves ⊕ (Pos1 ⊕ John) ⊕ (Pos2 ⊕ Mary)
+# Note: loves(John, Mary) ≠ loves(Mary, John) because Pos1⊕John ≠ Pos1⊕Mary</code></pre>
+
   <h2>Basic Statement Syntax</h2>
 
-  <p>Three statement forms with different storage behavior:</p>
+  <p>Four statement forms with different storage behavior:</p>
 
   <table>
     <tr>
@@ -61,6 +76,12 @@
       <td><strong>Yes</strong></td>
       <td>Named persistent fact</td>
     </tr>
+    <tr>
+      <td><code>@:name operator arg1 arg2</code></td>
+      <td>No</td>
+      <td><strong>Yes</strong></td>
+      <td>KB only (no local reference needed)</td>
+    </tr>
   </table>
 
   <h3>Examples</h3>
@@ -78,7 +99,10 @@ loves John Mary
 @myRule:inheritance Implies (isA ?x Dog) (isA ?x Animal)
 
 # Discard result (execute but don't store)
-@_ Load $Commerce</code></pre>
+@_ Load $Commerce
+
+# KB-only export (no local variable needed)
+@:Pythagorean_Theorem Implies $premise $conclusion</code></pre>
 
   <h2>Token Types</h2>
 
@@ -97,9 +121,15 @@ loves John Mary
     </tr>
     <tr>
       <td><code>@var:name</code></td>
-      <td>Export</td>
-      <td>Create variable and export as name</td>
+      <td>Declare + KB</td>
+      <td>Create variable AND add to KB as name</td>
       <td><code>@Person:Person __Atom</code></td>
+    </tr>
+    <tr>
+      <td><code>@:name</code></td>
+      <td>KB only</td>
+      <td>Add to KB without local variable</td>
+      <td><code>@:myFact isA Dog Animal</code></td>
     </tr>
     <tr>
       <td><code>@_</code></td>
@@ -255,11 +285,11 @@ end</code></pre>
 
 end</code></pre>
 
-  <h2>Macro Definition</h2>
+  <h2>Graph Definition</h2>
 
-  <p>Macros are reusable statement templates:</p>
+  <p>Graphs are named procedures that process arguments and return a result:</p>
 
-  <pre><code>@MacroName:exportName macro param1 param2 param3
+  <pre><code>@GraphName:exportName graph param1 param2 param3
     # Statements using parameters
     @local1 someOp $param1 $param2
     @local2 otherOp $local1 $param3
@@ -268,10 +298,16 @@ end</code></pre>
     return $local2
 end</code></pre>
 
-  <h3>Macro Usage</h3>
+  <p>When a statement uses an operator that has a graph, the graph is executed first:</p>
 
-  <pre><code># Define macro
-@DefinePerson:person macro name age occupation
+  <pre><code>@tx sell Alice Bob Car 100
+# 1. Execute sell graph with args (Alice, Bob, Car, 100) → graphResult
+# 2. Bind: tx = sell ⊕ graphResult</code></pre>
+
+  <h3>Graph Examples</h3>
+
+  <pre><code># Define a person creation graph
+@DefinePerson:person graph name age occupation
     @p1 isA $name Person
     @p2 hasAge $name $age
     @p3 hasJob $name $occupation
@@ -279,9 +315,15 @@ end</code></pre>
     return $result
 end
 
-# Use macro
+# Use the graph
 @john person John 30 Engineer
-@mary person Mary 25 Doctor</code></pre>
+@mary person Mary 25 Doctor
+
+# Graph with holes for pattern matching
+@:FindKiller graph victim
+    @result kill ?murderer $victim
+    return $result
+end</code></pre>
 
   <h2>Query Syntax</h2>
 
@@ -484,13 +526,12 @@ session.solveWeddingSeating()
     @parent:parent __Relation
     @sibling:sibling __Relation
 
-    # Rule: siblings share parent (using reference-based composition)
-    # Note: Parenthesized expressions are NOT supported.
-    # Complex rules are built by defining parts as separate statements.
+    # Rule: siblings share parent
+    # Using reference-based composition (clearer for complex logic)
     @p1 parent ?p ?x
     @p2 parent ?p ?y
-    @notSame Not equals ?x ?y
-    @siblingCond And $p1 $p2 $notSame
+    @notSame Not (equals ?x ?y)
+    @siblingCond And $p1 (And $p2 $notSame)
     @siblingConc sibling ?x ?y
     @siblingRule Implies $siblingCond $siblingConc
 
@@ -591,19 +632,73 @@ import Animals    # Load animals theory</code></pre>
   <pre><code>@items __Bundle [Cat, Dog, Bird]
 @numbers __List [1, 2, 3, 4, 5]</code></pre>
 
-  <h2>Building Complex Rules</h2>
+  <h2>Compound Expressions (Parenthesized)</h2>
 
-  <p><strong>Note:</strong> Parenthesized compound expressions are NOT directly supported in the executor. Complex rules must be built by defining parts as separate statements, then referencing them:</p>
+  <p>Sys2DSL supports parenthesized expressions for nested graph calls:</p>
 
-  <pre><code># WRONG (parentheses parsed but not executed):
-# @rule Implies (And $cond1 $cond2) $conclusion
+  <pre><code># Inline nested graph call:
+@causal __Role Causes (__Pair $cause $effect)
 
-# CORRECT (define parts separately):
+# Nested logic operators:
+@rule Implies (And (isA ?x Human) (isA ?x Adult)) (canVote ?x)</code></pre>
+
+  <p><strong>Syntax:</strong> <code>(operator arg1 arg2 ...)</code></p>
+
+  <p>Compound expressions evaluate the nested graph call first, then pass the result as an argument to the outer expression. This is useful for:</p>
+  <ul>
+    <li>Nested graph invocations in Core theories</li>
+    <li>Building complex structures inline</li>
+  </ul>
+
+  <h3>Alternative: Reference-Based Composition</h3>
+
+  <p>For complex logic or when sub-expressions need names for debugging, you can also define parts separately:</p>
+
+  <pre><code># Reference-based (recommended for complex logic):
 @cond1 hasState Door Open
 @cond2 isA Door Entrance
 @combined And $cond1 $cond2
 @conclusion canEnter Person Door
 @rule Implies $combined $conclusion</code></pre>
+
+  <p>The reference-based approach is preferred when sub-expressions need inspection or when the logic is complex. Inline parentheses are best for simple structural patterns.</p>
+
+  <h2>Formal Grammar (EBNF)</h2>
+
+  <p>Complete grammar specification for the Sys2DSL parser:</p>
+
+  <pre><code>program      = { statement | graph_def | theory_block } ;
+
+destination  = "_" | ident [ ":" , ident ] | ":" , ident ;
+statement    = "@" , destination , operation , { argument } , [ "#" , text ] , NL ;
+operation    = ident | "$" , ident ;
+argument     = "$" , ident | "?" , ident | ident | number | list | compound ;
+
+list         = "[" , { argument } , "]" ;
+compound     = "(" , ident , { argument } , ")" ;
+
+graph_def    = "@" , ( ident [ ":" , ident ] | ":" , ident ) , "graph" , { ident } , NL ,
+               { statement } ,
+               "return" , "$" , ident , NL ,
+               "end" , NL ;
+
+theory_primary = "@" , ident , "theory" , number , init_type , NL ,
+                 { statement | graph_def } ,
+                 "end" , NL ;
+
+theory_brace   = "theory" , ident , "{" , NL ,
+                 { statement | graph_def } ,
+                 "}" , NL ;
+
+theory_begin   = "theory" , ident , "begin" , NL ,
+                 { statement | graph_def } ,
+                 "end" , NL ;
+
+theory_block   = theory_primary | theory_brace | theory_begin ;
+
+init_type    = "random" | "deterministic" ;
+ident        = ( letter | "_" ) , { letter | digit | "_" } ;
+number       = digit , { digit } ;</code></pre>
 
   <h2>Related Documentation</h2>
 

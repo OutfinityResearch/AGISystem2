@@ -1,0 +1,384 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AGISystem2 – Deep Holographic Reasoning</title>
+  <link rel="stylesheet" href="../../reference/style.css">
+  <style>
+    .research-section { background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0; }
+    .innovation-box { background: #f3e5f5; border-left: 4px solid #9c27b0; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+    .math-box { background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px 20px; margin: 15px 0; border-radius: 0 8px 8px 0; font-family: 'Times New Roman', serif; }
+    .code-example { background: #263238; color: #aed581; padding: 15px; border-radius: 8px; font-family: monospace; overflow-x: auto; margin: 15px 0; }
+    h2 { border-bottom: 2px solid #1976d2; padding-bottom: 10px; margin-top: 40px; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+    th { background: #1976d2; color: white; }
+    .pass { color: #2e7d32; font-weight: bold; }
+    .equation { text-align: center; font-size: 18px; margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <div class="page">
+  <div class="nav-header">
+    <h1>Deep Holographic Reasoning</h1>
+    <small>
+      <a href="../../index.html">Home</a> ·
+      <a href="../index.html">Research</a> ·
+      <a href="../roadmap.html">Roadmap</a>
+    </small>
+    <small>HDC-native inference algorithms for analogical and compositional reasoning</small>
+  </div>
+
+  <div class="research-section">
+    <h2 style="margin-top: 0; border: none;">Research Overview</h2>
+    <p><strong>Goal:</strong> Develop reasoning algorithms that operate natively in hyperdimensional space, enabling associative inference beyond traditional symbolic logic.</p>
+    <p><strong>Key insight:</strong> HDC vectors encode semantic relationships in their geometry. This structure enables reasoning operations that discover implicit knowledge.</p>
+  </div>
+
+  <h2>1. The Master Equation</h2>
+
+  <div class="math-box">
+    <p>The foundation of holographic reasoning is the <strong>HDC Master Equation</strong>:</p>
+    <div class="equation">
+      <strong>Answer = KB ⊕ Query<sup>−1</sup></strong>
+    </div>
+    <p>Where:</p>
+    <ul>
+      <li><strong>KB</strong> = Bundled knowledge base (superposition of all facts)</li>
+      <li><strong>⊕</strong> = Binding operation (XOR for binary, circular convolution for HRR)</li>
+      <li><strong>Query<sup>−1</sup></strong> = Inverse of the query vector</li>
+    </ul>
+    <p>This single equation supports retrieval, completion, and inference in constant time.</p>
+  </div>
+
+  <h2>2. HDC Operations for Reasoning</h2>
+
+  <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin: 20px 0;">
+    <svg viewBox="0 0 700 320" style="width: 100%; max-width: 800px; display: block; margin: 0 auto;">
+      <!-- Title -->
+      <text x="350" y="25" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">HDC Algebra for Reasoning</text>
+
+      <!-- Binding -->
+      <rect x="50" y="50" width="180" height="100" rx="8" fill="white" stroke="#1976d2" stroke-width="2"/>
+      <text x="140" y="75" text-anchor="middle" font-size="13" fill="#1565c0" font-weight="bold">Binding (⊕)</text>
+      <text x="140" y="100" text-anchor="middle" font-size="11" fill="#555">role ⊕ filler</text>
+      <text x="140" y="120" text-anchor="middle" font-size="10" fill="#777">Creates role-filler pairs</text>
+      <text x="140" y="140" text-anchor="middle" font-size="10" fill="#777">Preserves similarity</text>
+
+      <!-- Bundling -->
+      <rect x="260" y="50" width="180" height="100" rx="8" fill="white" stroke="#7b1fa2" stroke-width="2"/>
+      <text x="350" y="75" text-anchor="middle" font-size="13" fill="#6a1b9a" font-weight="bold">Bundling (+)</text>
+      <text x="350" y="100" text-anchor="middle" font-size="11" fill="#555">v₁ + v₂ + ... + vₙ</text>
+      <text x="350" y="120" text-anchor="middle" font-size="10" fill="#777">Superposition of vectors</text>
+      <text x="350" y="140" text-anchor="middle" font-size="10" fill="#777">Similar to all inputs</text>
+
+      <!-- Unbinding -->
+      <rect x="470" y="50" width="180" height="100" rx="8" fill="white" stroke="#43a047" stroke-width="2"/>
+      <text x="560" y="75" text-anchor="middle" font-size="13" fill="#2e7d32" font-weight="bold">Unbinding (⊖)</text>
+      <text x="560" y="100" text-anchor="middle" font-size="11" fill="#555">pair ⊕ role⁻¹ = filler</text>
+      <text x="560" y="120" text-anchor="middle" font-size="10" fill="#777">Retrieves bound filler</text>
+      <text x="560" y="140" text-anchor="middle" font-size="10" fill="#777">Query answering</text>
+
+      <!-- Similarity -->
+      <rect x="50" y="180" width="180" height="100" rx="8" fill="white" stroke="#e65100" stroke-width="2"/>
+      <text x="140" y="205" text-anchor="middle" font-size="13" fill="#e65100" font-weight="bold">Similarity (δ)</text>
+      <text x="140" y="230" text-anchor="middle" font-size="11" fill="#555">cos(v₁, v₂) or Hamming</text>
+      <text x="140" y="250" text-anchor="middle" font-size="10" fill="#777">Measures semantic closeness</text>
+      <text x="140" y="270" text-anchor="middle" font-size="10" fill="#777">Enables fuzzy matching</text>
+
+      <!-- Permutation -->
+      <rect x="260" y="180" width="180" height="100" rx="8" fill="white" stroke="#00897b" stroke-width="2"/>
+      <text x="350" y="205" text-anchor="middle" font-size="13" fill="#00796b" font-weight="bold">Permutation (ρ)</text>
+      <text x="350" y="230" text-anchor="middle" font-size="11" fill="#555">ρ(v) shuffles elements</text>
+      <text x="350" y="250" text-anchor="middle" font-size="10" fill="#777">Encodes sequence/structure</text>
+      <text x="350" y="270" text-anchor="middle" font-size="10" fill="#777">Preserves information</text>
+
+      <!-- Cleanup -->
+      <rect x="470" y="180" width="180" height="100" rx="8" fill="white" stroke="#c62828" stroke-width="2"/>
+      <text x="560" y="205" text-anchor="middle" font-size="13" fill="#c62828" font-weight="bold">Cleanup (σ)</text>
+      <text x="560" y="230" text-anchor="middle" font-size="11" fill="#555">σ(v) → nearest known</text>
+      <text x="560" y="250" text-anchor="middle" font-size="10" fill="#777">Maps to clean memory</text>
+      <text x="560" y="270" text-anchor="middle" font-size="10" fill="#777">Noise reduction</text>
+    </svg>
+  </div>
+
+  <h2>3. Analogical Reasoning Algorithm</h2>
+
+  <div class="innovation-box">
+    <strong>HDC-Native Analogy:</strong> Given "A is to B as C is to ?", compute the answer using vector algebra:
+    <div class="equation" style="margin-top: 10px;">
+      ? = C ⊕ (B ⊕ A<sup>−1</sup>)
+    </div>
+    <p>The relation (B ⊕ A<sup>−1</sup>) is extracted and applied to C to find the analogous concept.</p>
+  </div>
+
+  <div class="code-example">
+<pre>
+<span style="color: #78909c;">// Analogical reasoning in HDC</span>
+
+function solveAnalogy(A, B, C, cleanupMemory) {
+  <span style="color: #78909c;">// Step 1: Extract the relation from A→B</span>
+  const relation = bind(B, inverse(A));  <span style="color: #78909c;">// B ⊕ A⁻¹</span>
+
+  <span style="color: #78909c;">// Step 2: Apply relation to C</span>
+  const rawAnswer = bind(C, relation);   <span style="color: #78909c;">// C ⊕ relation</span>
+
+  <span style="color: #78909c;">// Step 3: Cleanup to nearest known concept</span>
+  return cleanup(rawAnswer, cleanupMemory);
+}
+
+<span style="color: #78909c;">// Example: king:man :: queen:?</span>
+const answer = solveAnalogy(
+  vectors.king,
+  vectors.man,
+  vectors.queen,
+  conceptMemory
+);
+<span style="color: #78909c;">// answer ≈ vectors.woman (high similarity)</span>
+</pre>
+  </div>
+
+  <h2>4. Compositional Structure Encoding</h2>
+
+  <p>HDC can encode structured knowledge using role-filler bindings:</p>
+
+  <div class="code-example">
+<pre>
+<span style="color: #78909c;">// Encoding: "John loves Mary"</span>
+
+const fact = bundle([
+  bind(roles.agent, entities.john),
+  bind(roles.action, verbs.love),
+  bind(roles.patient, entities.mary)
+]);
+
+<span style="color: #78909c;">// Query: "Who does John love?"</span>
+const query = bind(roles.agent, entities.john);
+const answer = unbind(fact, query);
+<span style="color: #78909c;">// Cleanup → entities.mary</span>
+
+<span style="color: #78909c;">// Query: "Who loves Mary?"</span>
+const query2 = bind(roles.patient, entities.mary);
+const answer2 = unbind(fact, query2);
+<span style="color: #78909c;">// Cleanup → entities.john</span>
+</pre>
+  </div>
+
+  <h2>5. Transitive Inference in HDC</h2>
+
+  <div class="math-box">
+    <p>For transitive relations like IS-A, we can chain inferences:</p>
+    <div class="equation">
+      isA(X, Z) = cleanup(X ⊕ isA⁻¹ ⊕ isA⁻¹)
+    </div>
+    <p>Each application of isA⁻¹ moves one step up the hierarchy.</p>
+  </div>
+
+  <table>
+    <tr>
+      <th>Inference Type</th>
+      <th>HDC Operation</th>
+      <th>Example</th>
+    </tr>
+    <tr>
+      <td><strong>Direct lookup</strong></td>
+      <td>cleanup(X ⊕ relation⁻¹)</td>
+      <td>isA(Cat) → Mammal</td>
+    </tr>
+    <tr>
+      <td><strong>Transitive (2 steps)</strong></td>
+      <td>cleanup(X ⊕ rel⁻¹ ⊕ rel⁻¹)</td>
+      <td>isA(Cat) → Animal</td>
+    </tr>
+    <tr>
+      <td><strong>Property inheritance</strong></td>
+      <td>cleanup(X ⊕ isA⁻¹ ⊕ has⁻¹)</td>
+      <td>has(Cat) → warm_blooded</td>
+    </tr>
+    <tr>
+      <td><strong>Reverse lookup</strong></td>
+      <td>cleanup(Y ⊕ relation)</td>
+      <td>What is a Mammal? → Cat, Dog, ...</td>
+    </tr>
+  </table>
+
+  <h2>6. Confidence and Noise</h2>
+
+  <p>HDC operations accumulate noise. The confidence decreases with inference depth:</p>
+
+  <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin: 20px 0;">
+    <svg viewBox="0 0 600 200" style="width: 100%; max-width: 700px; display: block; margin: 0 auto;">
+      <!-- Title -->
+      <text x="300" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Confidence Decay Model</text>
+
+      <!-- Axes -->
+      <line x1="80" y1="160" x2="550" y2="160" stroke="#333" stroke-width="2"/>
+      <line x1="80" y1="160" x2="80" y2="40" stroke="#333" stroke-width="2"/>
+
+      <!-- X-axis labels -->
+      <text x="80" y="180" text-anchor="middle" font-size="10" fill="#666">0</text>
+      <text x="175" y="180" text-anchor="middle" font-size="10" fill="#666">1</text>
+      <text x="270" y="180" text-anchor="middle" font-size="10" fill="#666">2</text>
+      <text x="365" y="180" text-anchor="middle" font-size="10" fill="#666">3</text>
+      <text x="460" y="180" text-anchor="middle" font-size="10" fill="#666">4</text>
+      <text x="315" y="195" text-anchor="middle" font-size="11" fill="#333">Inference Depth</text>
+
+      <!-- Y-axis labels -->
+      <text x="70" y="165" text-anchor="end" font-size="10" fill="#666">0</text>
+      <text x="70" y="105" text-anchor="end" font-size="10" fill="#666">0.5</text>
+      <text x="70" y="45" text-anchor="end" font-size="10" fill="#666">1.0</text>
+      <text x="30" y="100" text-anchor="middle" font-size="11" fill="#333" transform="rotate(-90, 30, 100)">Confidence</text>
+
+      <!-- Decay curve -->
+      <path d="M80 45 Q 175 55, 270 85 Q 365 115, 460 140 Q 530 155, 550 158" fill="none" stroke="#1976d2" stroke-width="3"/>
+
+      <!-- Data points -->
+      <circle cx="80" cy="45" r="5" fill="#1976d2"/>
+      <circle cx="175" cy="57" r="5" fill="#1976d2"/>
+      <circle cx="270" cy="85" r="5" fill="#1976d2"/>
+      <circle cx="365" cy="115" r="5" fill="#1976d2"/>
+      <circle cx="460" cy="140" r="5" fill="#1976d2"/>
+
+      <!-- Labels -->
+      <text x="90" y="40" font-size="9" fill="#1565c0">Direct (1.0)</text>
+      <text x="185" y="52" font-size="9" fill="#1565c0">1-step (0.95)</text>
+      <text x="280" y="80" font-size="9" fill="#1565c0">2-step (0.85)</text>
+      <text x="375" y="110" font-size="9" fill="#1565c0">3-step (0.72)</text>
+      <text x="470" y="135" font-size="9" fill="#1565c0">4-step (0.58)</text>
+    </svg>
+  </div>
+
+  <div class="math-box">
+    <p><strong>Confidence Formula:</strong></p>
+    <div class="equation">
+      C(n) = C₀ × α<sup>n</sup>
+    </div>
+    <p>Where α ≈ 0.85-0.95 depending on vector dimensionality and noise level.</p>
+  </div>
+
+  <h2>7. Research Challenges</h2>
+
+  <table>
+    <tr>
+      <th>Challenge</th>
+      <th>Current Status</th>
+      <th>Proposed Solution</th>
+    </tr>
+    <tr>
+      <td><strong>Noise accumulation</strong></td>
+      <td>Limits depth to ~4-5 steps</td>
+      <td>Iterative cleanup, higher dimensions</td>
+    </tr>
+    <tr>
+      <td><strong>Negation handling</strong></td>
+      <td>No natural representation</td>
+      <td>Dedicated negation vectors, bipolar encoding</td>
+    </tr>
+    <tr>
+      <td><strong>Variable binding</strong></td>
+      <td>Limited to role-filler patterns</td>
+      <td>Placeholder vectors, substitution algebra</td>
+    </tr>
+    <tr>
+      <td><strong>Rule application</strong></td>
+      <td>Requires symbolic fallback</td>
+      <td>Holographic rule encoding</td>
+    </tr>
+    <tr>
+      <td><strong>Contradiction detection</strong></td>
+      <td>Not implemented in HDC</td>
+      <td>Orthogonality testing</td>
+    </tr>
+  </table>
+
+  <h2>8. Hybrid Architecture</h2>
+
+  <p>AGISystem2 combines HDC with symbolic reasoning:</p>
+
+  <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 25px; border-radius: 12px; margin: 20px 0;">
+    <svg viewBox="0 0 600 200" style="width: 100%; max-width: 700px; display: block; margin: 0 auto;">
+      <!-- Title -->
+      <text x="300" y="20" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Hybrid Reasoning Pipeline</text>
+
+      <!-- Query input -->
+      <rect x="50" y="60" width="100" height="50" rx="6" fill="url(#hybridGrad1)" stroke="#1976d2" stroke-width="2"/>
+      <text x="100" y="90" text-anchor="middle" font-size="11" fill="white" font-weight="bold">Query</text>
+
+      <!-- Arrow 1 -->
+      <path d="M150 85 L180 85" stroke="#546e7a" stroke-width="2" marker-end="url(#hybridArrow)"/>
+
+      <!-- HDC fast path -->
+      <rect x="190" y="40" width="130" height="40" rx="6" fill="#e8f5e9" stroke="#43a047" stroke-width="2"/>
+      <text x="255" y="65" text-anchor="middle" font-size="10" fill="#2e7d32" font-weight="bold">HDC Master Eq</text>
+
+      <!-- Symbolic path -->
+      <rect x="190" y="100" width="130" height="40" rx="6" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+      <text x="255" y="125" text-anchor="middle" font-size="10" fill="#1565c0" font-weight="bold">Symbolic Engine</text>
+
+      <!-- Branch lines -->
+      <path d="M180 85 L180 60 L190 60" stroke="#546e7a" stroke-width="2"/>
+      <path d="M180 85 L180 120 L190 120" stroke="#546e7a" stroke-width="2"/>
+
+      <!-- Arrow 2 -->
+      <path d="M320 60 L350 60 L350 85" stroke="#546e7a" stroke-width="2"/>
+      <path d="M320 120 L350 120 L350 85" stroke="#546e7a" stroke-width="2"/>
+      <path d="M350 85 L380 85" stroke="#546e7a" stroke-width="2" marker-end="url(#hybridArrow)"/>
+
+      <!-- Fusion -->
+      <rect x="390" y="60" width="100" height="50" rx="6" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+      <text x="440" y="90" text-anchor="middle" font-size="10" fill="#e65100" font-weight="bold">Result Fusion</text>
+
+      <!-- Arrow 3 -->
+      <path d="M490 85 L520 85" stroke="#546e7a" stroke-width="2" marker-end="url(#hybridArrow)"/>
+
+      <!-- Answer -->
+      <rect x="530" y="60" width="60" height="50" rx="6" fill="url(#hybridGrad2)" stroke="#9c27b0" stroke-width="2"/>
+      <text x="560" y="90" text-anchor="middle" font-size="11" fill="white" font-weight="bold">Answer</text>
+
+      <!-- Labels -->
+      <text x="255" y="175" text-anchor="middle" font-size="9" fill="#666">Fast (O(1)) but approximate</text>
+      <text x="255" y="160" text-anchor="start" font-size="9" fill="#2e7d32">↑</text>
+      <text x="255" y="185" text-anchor="middle" font-size="9" fill="#666">Slow but precise</text>
+
+      <!-- Defs -->
+      <defs>
+        <linearGradient id="hybridGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1565c0"/>
+          <stop offset="100%" stop-color="#42a5f5"/>
+        </linearGradient>
+        <linearGradient id="hybridGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#7b1fa2"/>
+          <stop offset="100%" stop-color="#ba68c8"/>
+        </linearGradient>
+        <marker id="hybridArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#546e7a"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <h2>9. Future Directions</h2>
+
+  <ul>
+    <li><strong>Holographic rule compilation:</strong> Encode entire rule sets as HDC vectors</li>
+    <li><strong>Attention-based cleanup:</strong> Use learned attention for better retrieval</li>
+    <li><strong>Hierarchical HDC:</strong> Multi-scale representations for deep reasoning</li>
+    <li><strong>Temporal HDC:</strong> Sequence-aware binding for causal reasoning</li>
+    <li><strong>Distributed HDC:</strong> Scale across multiple compute nodes</li>
+  </ul>
+
+  <h2>10. Related Resources</h2>
+
+  <ul>
+    <li><a href="hdc-strategies.html">HDC Strategy Development</a> – Strategy comparison</li>
+    <li><a href="../../theory/hrr-comparison.html">HRR Comparison</a> – Theoretical foundations</li>
+    <li><a href="../index.html">Research Overview</a> – Current evaluation results</li>
+    <li><a href="../../theory/index.html">Theory</a> – Mathematical foundations</li>
+  </ul>
+
+  <div class="footer-nav">
+    <p><a href="../roadmap.html">&larr; Back to Research Roadmap</a></p>
+  </div>
+  </div>
+</body>
+</html>

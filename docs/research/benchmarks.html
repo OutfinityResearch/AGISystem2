@@ -208,18 +208,88 @@
 
   <h3>2.1 Performance Visualization</h3>
 
-  <div class="chart-container">
-<pre>
-Pass Rate by Benchmark Suite (December 2024)
-────────────────────────────────────────────────────────────────────
-ProntoQA      █████████████████████████████████████████████████ 99.5%
-LogiQA        ██████████████████████████████████████ 75%
-FOLIO         ████████████████████████████████ 63%
-LogicNLI      ███████████████████████████ 54%
-RuleBERT      ████████████████████ 39%
-────────────────────────────────────────────────────────────────────
-Translation Success: 100% across all sources
-</pre>
+  <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin: 20px 0;">
+    <svg viewBox="0 0 600 280" style="width: 100%; max-width: 700px; display: block; margin: 0 auto;">
+      <!-- Title -->
+      <text x="300" y="25" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">Pass Rate by Benchmark Suite (December 2024)</text>
+
+      <!-- Grid lines -->
+      <g stroke="#e0e0e0" stroke-width="1">
+        <line x1="150" y1="50" x2="150" y2="210"/>
+        <line x1="262" y1="50" x2="262" y2="210"/>
+        <line x1="375" y1="50" x2="375" y2="210"/>
+        <line x1="487" y1="50" x2="487" y2="210"/>
+        <line x1="580" y1="50" x2="580" y2="210"/>
+      </g>
+
+      <!-- X-axis labels -->
+      <g font-size="11" fill="#666" text-anchor="middle">
+        <text x="150" y="225">0%</text>
+        <text x="262" y="225">25%</text>
+        <text x="375" y="225">50%</text>
+        <text x="487" y="225">75%</text>
+        <text x="580" y="225">100%</text>
+      </g>
+
+      <!-- Bars -->
+      <!-- ProntoQA: 99.5% -->
+      <g>
+        <text x="140" y="72" text-anchor="end" font-size="13" fill="#333" font-weight="500">ProntoQA</text>
+        <rect x="150" y="58" width="428" height="24" rx="4" fill="url(#greenGradient)"/>
+        <text x="585" y="75" font-size="12" fill="#2e7d32" font-weight="bold">99.5%</text>
+      </g>
+
+      <!-- LogiQA: 75% -->
+      <g>
+        <text x="140" y="107" text-anchor="end" font-size="13" fill="#333" font-weight="500">LogiQA</text>
+        <rect x="150" y="93" width="322" height="24" rx="4" fill="url(#blueGradient)"/>
+        <text x="479" y="110" font-size="12" fill="#1565c0" font-weight="bold">75%</text>
+      </g>
+
+      <!-- FOLIO: 63% -->
+      <g>
+        <text x="140" y="142" text-anchor="end" font-size="13" fill="#333" font-weight="500">FOLIO</text>
+        <rect x="150" y="128" width="271" height="24" rx="4" fill="url(#orangeGradient)"/>
+        <text x="428" y="145" font-size="12" fill="#e65100" font-weight="bold">63%</text>
+      </g>
+
+      <!-- LogicNLI: 54% -->
+      <g>
+        <text x="140" y="177" text-anchor="end" font-size="13" fill="#333" font-weight="500">LogicNLI</text>
+        <rect x="150" y="163" width="232" height="24" rx="4" fill="url(#orangeGradient)"/>
+        <text x="389" y="180" font-size="12" fill="#e65100" font-weight="bold">54%</text>
+      </g>
+
+      <!-- RuleBERT: 39% -->
+      <g>
+        <text x="140" y="212" text-anchor="end" font-size="13" fill="#333" font-weight="500">RuleBERT</text>
+        <rect x="150" y="198" width="168" height="24" rx="4" fill="url(#redGradient)"/>
+        <text x="325" y="215" font-size="12" fill="#c62828" font-weight="bold">39%</text>
+      </g>
+
+      <!-- Gradients -->
+      <defs>
+        <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#43a047"/>
+          <stop offset="100%" stop-color="#66bb6a"/>
+        </linearGradient>
+        <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1976d2"/>
+          <stop offset="100%" stop-color="#42a5f5"/>
+        </linearGradient>
+        <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#ef6c00"/>
+          <stop offset="100%" stop-color="#ffa726"/>
+        </linearGradient>
+        <linearGradient id="redGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#d32f2f"/>
+          <stop offset="100%" stop-color="#ef5350"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Footer note -->
+      <text x="300" y="260" text-anchor="middle" font-size="12" fill="#4caf50" font-weight="600">Translation Success: 100% across all sources</text>
+    </svg>
   </div>
 
   <h2>3. Benchmark Descriptions</h2>

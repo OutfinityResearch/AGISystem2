@@ -116,7 +116,10 @@ export function tryValueTypeInheritance(self, condStr, depth) {
   dbg('VALUE_INHERIT', `Trying ${operator} ${entity} ${targetType} via value inheritance`);
 
   // Find all things that entity 'has'
-  for (const fact of self.session.kbFacts) {
+  const componentKB = self.session.componentKB;
+  const scanFacts = componentKB?.findByOperatorAndArg0 ? componentKB.findByOperatorAndArg0(operator, entity) : self.session.kbFacts;
+  for (const fact of scanFacts) {
+    if (self.engine.isTimedOut()) throw new Error('Proof timed out');
     self.session.reasoningStats.kbScans++;
     const meta = fact.metadata;
 
@@ -152,7 +155,10 @@ export function checkIsATransitive(self, child, parent, depth, visited = new Set
 
   visited.add(child);
 
-  for (const fact of self.session.kbFacts) {
+  const componentKB = self.session.componentKB;
+  const scanFacts = componentKB?.findByOperatorAndArg0 ? componentKB.findByOperatorAndArg0('isA', child) : self.session.kbFacts;
+  for (const fact of scanFacts) {
+    if (self.engine.isTimedOut()) throw new Error('Proof timed out');
     self.session.reasoningStats.kbScans++;
     const meta = fact.metadata;
 
@@ -177,7 +183,10 @@ export function proveWithUnboundVars(self, condStr, bindings, depth) {
   const op = parts[0];
   const args = parts.slice(1);
 
-  for (const fact of self.session.kbFacts) {
+  const componentKB = self.session.componentKB;
+  const scanFacts = componentKB?.findByOperator ? componentKB.findByOperator(op) : self.session.kbFacts;
+  for (const fact of scanFacts) {
+    if (self.engine.isTimedOut()) throw new Error('Proof timed out');
     self.session.reasoningStats.kbScans++;
     const meta = fact.metadata;
     if (!meta || meta.operator !== op) continue;
@@ -221,4 +230,3 @@ export function proveWithUnboundVars(self, condStr, bindings, depth) {
 
   return { valid: false, reason: 'No pattern match found' };
 }
-

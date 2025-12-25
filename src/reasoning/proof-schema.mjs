@@ -161,6 +161,22 @@ function legacyStepToDs19(step) {
     };
   }
 
+  if (operation === 'symmetric_reverse_fact') {
+    return {
+      kind: 'fact',
+      usesFacts: factMeta ? [{ id: null, ...factMeta }] : undefined,
+      detail: { ...step }
+    };
+  }
+
+  if (operation === 'symmetric_flip' || operation === 'symmetric_reflexive') {
+    return {
+      kind: 'derived',
+      producesFact: factMeta || null,
+      detail: { ...step }
+    };
+  }
+
   // Derived steps are evidence-less: they represent computed conclusions, not asserted KB facts.
   if (operation === 'property_inherited' || operation === 'transitive_found') {
     return {

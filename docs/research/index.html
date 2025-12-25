@@ -419,25 +419,155 @@ All strategies still load 1,314 facts from stress theories
 
   <h3>4.2 Performance Visualization (12 Configurations)</h3>
 
-  <div class="chart-container">
-<pre>
-Execution Time by Configuration (npm run eval --full)
-────────────────────────────────────────────────────────────────────
-metric(32)+symb      █████████████████ 318ms ⚡ FASTEST
-metric(16)+symb      ██████████████████ 337ms
-sparse(2)+symb       ███████████████████ 349ms
-dense(512)+symb      ███████████████████ 355ms
-metric(32)+holo      █████████████████████ 386ms
-sparse(2)+holo       █████████████████████ 390ms
-metric(16)+holo      ██████████████████████ 411ms
-dense(256)+symb      ████████████████████████ 456ms
-dense(512)+holo      █████████████████████████ 475ms
-dense(256)+holo      ███████████████████████████ 530ms
-sparse(4)+symb       █████████████████████████████████████ 711ms
-sparse(4)+holo       ████████████████████████████████████████ 835ms (baseline)
-────────────────────────────────────────────────────────────────────
-Key insight: Metric-affine is 2.6x faster than sparse(k=4)
-</pre>
+  <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin: 20px 0;">
+    <svg viewBox="0 0 700 480" style="width: 100%; max-width: 800px; display: block; margin: 0 auto;">
+      <!-- Title -->
+      <text x="350" y="25" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Execution Time by Configuration (npm run eval --full)</text>
+
+      <!-- Grid lines -->
+      <g stroke="#e8e8e8" stroke-width="1">
+        <line x1="200" y1="45" x2="200" y2="400"/>
+        <line x1="320" y1="45" x2="320" y2="400"/>
+        <line x1="440" y1="45" x2="440" y2="400"/>
+        <line x1="560" y1="45" x2="560" y2="400"/>
+        <line x1="650" y1="45" x2="650" y2="400"/>
+      </g>
+
+      <!-- X-axis labels -->
+      <g font-size="10" fill="#666" text-anchor="middle">
+        <text x="200" y="415">0ms</text>
+        <text x="320" y="415">250ms</text>
+        <text x="440" y="415">500ms</text>
+        <text x="560" y="415">750ms</text>
+        <text x="650" y="415">1000ms</text>
+      </g>
+
+      <!-- Bars with labels -->
+      <!-- metric(32)+symb: 318ms - FASTEST -->
+      <g>
+        <text x="190" y="68" text-anchor="end" font-size="11" fill="#333">metric(32)+symb</text>
+        <rect x="200" y="55" width="143" height="22" rx="3" fill="url(#fastGradient)"/>
+        <text x="350" y="70" font-size="10" fill="#1b5e20" font-weight="bold">318ms ⚡</text>
+      </g>
+
+      <!-- metric(16)+symb: 337ms -->
+      <g>
+        <text x="190" y="96" text-anchor="end" font-size="11" fill="#333">metric(16)+symb</text>
+        <rect x="200" y="83" width="152" height="22" rx="3" fill="url(#metricGradient)"/>
+        <text x="358" y="98" font-size="10" fill="#2e7d32" font-weight="600">337ms</text>
+      </g>
+
+      <!-- sparse(2)+symb: 349ms -->
+      <g>
+        <text x="190" y="124" text-anchor="end" font-size="11" fill="#333">sparse(2)+symb</text>
+        <rect x="200" y="111" width="157" height="22" rx="3" fill="url(#sparseGradient)"/>
+        <text x="363" y="126" font-size="10" fill="#7b1fa2" font-weight="600">349ms</text>
+      </g>
+
+      <!-- dense(512)+symb: 355ms -->
+      <g>
+        <text x="190" y="152" text-anchor="end" font-size="11" fill="#333">dense(512)+symb</text>
+        <rect x="200" y="139" width="160" height="22" rx="3" fill="url(#denseGradient)"/>
+        <text x="366" y="154" font-size="10" fill="#1565c0" font-weight="600">355ms</text>
+      </g>
+
+      <!-- metric(32)+holo: 386ms -->
+      <g>
+        <text x="190" y="180" text-anchor="end" font-size="11" fill="#333">metric(32)+holo</text>
+        <rect x="200" y="167" width="174" height="22" rx="3" fill="url(#metricGradient)"/>
+        <text x="380" y="182" font-size="10" fill="#2e7d32" font-weight="600">386ms</text>
+      </g>
+
+      <!-- sparse(2)+holo: 390ms -->
+      <g>
+        <text x="190" y="208" text-anchor="end" font-size="11" fill="#333">sparse(2)+holo</text>
+        <rect x="200" y="195" width="176" height="22" rx="3" fill="url(#sparseGradient)"/>
+        <text x="382" y="210" font-size="10" fill="#7b1fa2" font-weight="600">390ms</text>
+      </g>
+
+      <!-- metric(16)+holo: 411ms -->
+      <g>
+        <text x="190" y="236" text-anchor="end" font-size="11" fill="#333">metric(16)+holo</text>
+        <rect x="200" y="223" width="185" height="22" rx="3" fill="url(#metricGradient)"/>
+        <text x="391" y="238" font-size="10" fill="#2e7d32" font-weight="600">411ms</text>
+      </g>
+
+      <!-- dense(256)+symb: 456ms -->
+      <g>
+        <text x="190" y="264" text-anchor="end" font-size="11" fill="#333">dense(256)+symb</text>
+        <rect x="200" y="251" width="205" height="22" rx="3" fill="url(#denseGradient)"/>
+        <text x="411" y="266" font-size="10" fill="#1565c0" font-weight="600">456ms</text>
+      </g>
+
+      <!-- dense(512)+holo: 475ms -->
+      <g>
+        <text x="190" y="292" text-anchor="end" font-size="11" fill="#333">dense(512)+holo</text>
+        <rect x="200" y="279" width="214" height="22" rx="3" fill="url(#denseGradient)"/>
+        <text x="420" y="294" font-size="10" fill="#1565c0" font-weight="600">475ms</text>
+      </g>
+
+      <!-- dense(256)+holo: 530ms -->
+      <g>
+        <text x="190" y="320" text-anchor="end" font-size="11" fill="#333">dense(256)+holo</text>
+        <rect x="200" y="307" width="239" height="22" rx="3" fill="url(#denseGradient)"/>
+        <text x="445" y="322" font-size="10" fill="#1565c0" font-weight="600">530ms</text>
+      </g>
+
+      <!-- sparse(4)+symb: 711ms -->
+      <g>
+        <text x="190" y="348" text-anchor="end" font-size="11" fill="#333">sparse(4)+symb</text>
+        <rect x="200" y="335" width="320" height="22" rx="3" fill="url(#slowGradient)"/>
+        <text x="526" y="350" font-size="10" fill="#e65100" font-weight="600">711ms</text>
+      </g>
+
+      <!-- sparse(4)+holo: 835ms - BASELINE -->
+      <g>
+        <text x="190" y="376" text-anchor="end" font-size="11" fill="#333">sparse(4)+holo</text>
+        <rect x="200" y="363" width="376" height="22" rx="3" fill="url(#baselineGradient)"/>
+        <text x="582" y="378" font-size="10" fill="#c62828" font-weight="600">835ms</text>
+      </g>
+
+      <!-- Gradients -->
+      <defs>
+        <linearGradient id="fastGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1b5e20"/>
+          <stop offset="100%" stop-color="#43a047"/>
+        </linearGradient>
+        <linearGradient id="metricGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#2e7d32"/>
+          <stop offset="100%" stop-color="#66bb6a"/>
+        </linearGradient>
+        <linearGradient id="sparseGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#7b1fa2"/>
+          <stop offset="100%" stop-color="#ab47bc"/>
+        </linearGradient>
+        <linearGradient id="denseGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1565c0"/>
+          <stop offset="100%" stop-color="#42a5f5"/>
+        </linearGradient>
+        <linearGradient id="slowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#e65100"/>
+          <stop offset="100%" stop-color="#ffa726"/>
+        </linearGradient>
+        <linearGradient id="baselineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#c62828"/>
+          <stop offset="100%" stop-color="#ef5350"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Legend -->
+      <g transform="translate(200, 430)">
+        <rect x="0" y="0" width="12" height="12" rx="2" fill="#2e7d32"/>
+        <text x="18" y="10" font-size="10" fill="#555">Metric-Affine</text>
+        <rect x="100" y="0" width="12" height="12" rx="2" fill="#7b1fa2"/>
+        <text x="118" y="10" font-size="10" fill="#555">Sparse-Poly</text>
+        <rect x="200" y="0" width="12" height="12" rx="2" fill="#1565c0"/>
+        <text x="218" y="10" font-size="10" fill="#555">Dense-Binary</text>
+      </g>
+
+      <!-- Key insight -->
+      <text x="350" y="460" text-anchor="middle" font-size="11" fill="#1b5e20" font-weight="600">Key insight: Metric-affine is 2.6× faster than sparse(k=4)</text>
+    </svg>
   </div>
 
   <h2>5. Cross-Domain Query Evaluation (<code>runQueryEval.mjs</code>)</h2>
@@ -512,18 +642,93 @@ Key insight: Metric-affine is 2.6x faster than sparse(k=4)
 
   <h3>5.1 Speed Comparison Visualization</h3>
 
-  <div class="chart-container">
-<pre>
-Total Execution Time (All 12 Queries)
-────────────────────────────────────────────────────────────────────
-metric-affine/holographic  ███████████████████████████ 326ms ⚡ FASTEST (2.6x)
-metric-affine/symbolic     █████████████████████████████ 412ms (2.1x)
-sparse-polynomial/holographic ███████████████████████████████████ 505ms (1.7x)
-sparse-polynomial/symbolic  ██████████████████████████████████████ 608ms (1.4x)
-dense-binary/holographic   ████████████████████████████████████████████████ 710ms (1.2x)
-dense-binary/symbolic      █████████████████████████████████████████████████████ 858ms (baseline)
-────────────────────────────────────────────────────────────────────
-</pre>
+  <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin: 20px 0;">
+    <svg viewBox="0 0 650 280" style="width: 100%; max-width: 750px; display: block; margin: 0 auto;">
+      <!-- Title -->
+      <text x="325" y="22" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Total Execution Time (All 12 Queries)</text>
+
+      <!-- Grid lines -->
+      <g stroke="#e8e8e8" stroke-width="1">
+        <line x1="220" y1="40" x2="220" y2="220"/>
+        <line x1="327" y1="40" x2="327" y2="220"/>
+        <line x1="434" y1="40" x2="434" y2="220"/>
+        <line x1="541" y1="40" x2="541" y2="220"/>
+        <line x1="610" y1="40" x2="610" y2="220"/>
+      </g>
+
+      <!-- X-axis labels -->
+      <g font-size="10" fill="#666" text-anchor="middle">
+        <text x="220" y="235">0ms</text>
+        <text x="327" y="235">250ms</text>
+        <text x="434" y="235">500ms</text>
+        <text x="541" y="235">750ms</text>
+        <text x="610" y="235">1000ms</text>
+      </g>
+
+      <!-- Bars -->
+      <g>
+        <text x="210" y="62" text-anchor="end" font-size="11" fill="#333">metric-affine/holo</text>
+        <rect x="220" y="50" width="127" height="20" rx="3" fill="url(#speedFast)"/>
+        <text x="354" y="64" font-size="10" fill="#1b5e20" font-weight="bold">326ms ⚡ 2.6×</text>
+      </g>
+
+      <g>
+        <text x="210" y="90" text-anchor="end" font-size="11" fill="#333">metric-affine/symb</text>
+        <rect x="220" y="78" width="161" height="20" rx="3" fill="url(#speedGood)"/>
+        <text x="388" y="92" font-size="10" fill="#2e7d32" font-weight="600">412ms (2.1×)</text>
+      </g>
+
+      <g>
+        <text x="210" y="118" text-anchor="end" font-size="11" fill="#333">sparse-poly/holo</text>
+        <rect x="220" y="106" width="197" height="20" rx="3" fill="url(#speedMedium)"/>
+        <text x="424" y="120" font-size="10" fill="#7b1fa2" font-weight="600">505ms (1.7×)</text>
+      </g>
+
+      <g>
+        <text x="210" y="146" text-anchor="end" font-size="11" fill="#333">sparse-poly/symb</text>
+        <rect x="220" y="134" width="237" height="20" rx="3" fill="url(#speedMedium)"/>
+        <text x="464" y="148" font-size="10" fill="#7b1fa2" font-weight="600">608ms (1.4×)</text>
+      </g>
+
+      <g>
+        <text x="210" y="174" text-anchor="end" font-size="11" fill="#333">dense-binary/holo</text>
+        <rect x="220" y="162" width="277" height="20" rx="3" fill="url(#speedSlow)"/>
+        <text x="504" y="176" font-size="10" fill="#1565c0" font-weight="600">710ms (1.2×)</text>
+      </g>
+
+      <g>
+        <text x="210" y="202" text-anchor="end" font-size="11" fill="#333">dense-binary/symb</text>
+        <rect x="220" y="190" width="335" height="20" rx="3" fill="url(#speedBaseline)"/>
+        <text x="562" y="204" font-size="10" fill="#c62828" font-weight="600">858ms</text>
+      </g>
+
+      <!-- Gradients -->
+      <defs>
+        <linearGradient id="speedFast" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1b5e20"/>
+          <stop offset="100%" stop-color="#4caf50"/>
+        </linearGradient>
+        <linearGradient id="speedGood" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#2e7d32"/>
+          <stop offset="100%" stop-color="#81c784"/>
+        </linearGradient>
+        <linearGradient id="speedMedium" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#6a1b9a"/>
+          <stop offset="100%" stop-color="#ba68c8"/>
+        </linearGradient>
+        <linearGradient id="speedSlow" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1565c0"/>
+          <stop offset="100%" stop-color="#64b5f6"/>
+        </linearGradient>
+        <linearGradient id="speedBaseline" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#b71c1c"/>
+          <stop offset="100%" stop-color="#ef5350"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Baseline label -->
+      <text x="325" y="260" text-anchor="middle" font-size="10" fill="#666" font-style="italic">baseline = dense-binary/symbolic at 858ms</text>
+    </svg>
   </div>
 
   <h3>5.2 Query-level Observations</h3>
@@ -556,36 +761,91 @@ dense-binary/symbolic      █████████████████�
 
   <p>AGISystem2 uses a <strong>multi-source query fusion</strong> strategy with configurable priority:</p>
 
-  <div class="chart-container">
-<pre>
-Query Execution Pipeline
-┌─────────────────────────────────────────────────────────────┐
-│                    QueryEngine.query()                       │
-└─────────────────────────────────────────────────────────────┘
-                            │
-        ┌───────────────────┼───────────────────┐
-        │                   │                   │
-        ▼                   ▼                   ▼
-┌──────────────┐  ┌──────────────────┐  ┌──────────────┐
-│ Direct KB    │  │ Transitive       │  │ Rule         │
-│ Search       │  │ Reasoning        │  │ Derivations  │
-│              │  │                  │  │              │
-│ O(1) lookup  │  │ isA, partOf,     │  │ Backward     │
-│ exact match  │  │ locatedIn chains │  │ chaining     │
-└──────────────┘  └──────────────────┘  └──────────────┘
-        │                   │                   │
-        └───────────────────┼───────────────────┘
-                            │
-        ┌───────────────────┼───────────────────┐
-        │                   │                   │
-        ▼                   ▼                   ▼
-┌──────────────┐  ┌──────────────────┐  ┌──────────────┐
-│ HDC Master   │  │ Meta-Operators   │  │ Proof        │
-│ Equation     │  │                  │  │ Construction │
-│              │  │ similar, analogy │  │              │
-│ KB ⊕ Query⁻¹ │  │ abduce, whatif   │  │ Track steps  │
-└──────────────┘  └──────────────────┘  └──────────────┘
-</pre>
+  <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 30px; border-radius: 12px; margin: 20px 0;">
+    <svg viewBox="0 0 700 420" style="width: 100%; max-width: 800px; display: block; margin: 0 auto;">
+      <!-- Title -->
+      <text x="350" y="25" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a237e">Query Execution Pipeline</text>
+
+      <!-- QueryEngine.query() box -->
+      <rect x="175" y="40" width="350" height="40" rx="8" fill="url(#queryEngineGrad)" stroke="#1565c0" stroke-width="2"/>
+      <text x="350" y="65" text-anchor="middle" font-size="13" fill="white" font-weight="600">QueryEngine.query()</text>
+
+      <!-- First branch arrows -->
+      <path d="M350 80 L350 100 L175 100 L175 130" fill="none" stroke="#546e7a" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <path d="M350 80 L350 130" fill="none" stroke="#546e7a" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <path d="M350 80 L350 100 L525 100 L525 130" fill="none" stroke="#546e7a" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <!-- First row of boxes -->
+      <!-- Direct KB Search -->
+      <rect x="100" y="135" width="150" height="80" rx="6" fill="white" stroke="#43a047" stroke-width="2"/>
+      <text x="175" y="158" text-anchor="middle" font-size="12" fill="#2e7d32" font-weight="bold">Direct KB Search</text>
+      <line x1="120" y1="168" x2="230" y2="168" stroke="#e0e0e0" stroke-width="1"/>
+      <text x="175" y="185" text-anchor="middle" font-size="10" fill="#666">O(1) lookup</text>
+      <text x="175" y="200" text-anchor="middle" font-size="10" fill="#666">exact match</text>
+
+      <!-- Transitive Reasoning -->
+      <rect x="275" y="135" width="150" height="80" rx="6" fill="white" stroke="#1976d2" stroke-width="2"/>
+      <text x="350" y="158" text-anchor="middle" font-size="12" fill="#1565c0" font-weight="bold">Transitive Reasoning</text>
+      <line x1="295" y1="168" x2="405" y2="168" stroke="#e0e0e0" stroke-width="1"/>
+      <text x="350" y="185" text-anchor="middle" font-size="10" fill="#666">isA, partOf,</text>
+      <text x="350" y="200" text-anchor="middle" font-size="10" fill="#666">locatedIn chains</text>
+
+      <!-- Rule Derivations -->
+      <rect x="450" y="135" width="150" height="80" rx="6" fill="white" stroke="#7b1fa2" stroke-width="2"/>
+      <text x="525" y="158" text-anchor="middle" font-size="12" fill="#6a1b9a" font-weight="bold">Rule Derivations</text>
+      <line x1="470" y1="168" x2="580" y2="168" stroke="#e0e0e0" stroke-width="1"/>
+      <text x="525" y="185" text-anchor="middle" font-size="10" fill="#666">Backward</text>
+      <text x="525" y="200" text-anchor="middle" font-size="10" fill="#666">chaining</text>
+
+      <!-- Second branch arrows -->
+      <path d="M175 215 L175 245 L350 245" fill="none" stroke="#546e7a" stroke-width="2"/>
+      <path d="M350 215 L350 245" fill="none" stroke="#546e7a" stroke-width="2"/>
+      <path d="M525 215 L525 245 L350 245" fill="none" stroke="#546e7a" stroke-width="2"/>
+      <path d="M175 245 L175 275" fill="none" stroke="#546e7a" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <path d="M350 245 L350 275" fill="none" stroke="#546e7a" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <path d="M525 245 L525 275" fill="none" stroke="#546e7a" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <!-- Second row of boxes -->
+      <!-- HDC Master Equation -->
+      <rect x="100" y="280" width="150" height="80" rx="6" fill="white" stroke="#e65100" stroke-width="2"/>
+      <text x="175" y="303" text-anchor="middle" font-size="12" fill="#e65100" font-weight="bold">HDC Master Equation</text>
+      <line x1="120" y1="313" x2="230" y2="313" stroke="#e0e0e0" stroke-width="1"/>
+      <text x="175" y="335" text-anchor="middle" font-size="11" fill="#555" font-family="monospace">KB ⊕ Query⁻¹</text>
+
+      <!-- Meta-Operators -->
+      <rect x="275" y="280" width="150" height="80" rx="6" fill="white" stroke="#00897b" stroke-width="2"/>
+      <text x="350" y="303" text-anchor="middle" font-size="12" fill="#00796b" font-weight="bold">Meta-Operators</text>
+      <line x1="295" y1="313" x2="405" y2="313" stroke="#e0e0e0" stroke-width="1"/>
+      <text x="350" y="332" text-anchor="middle" font-size="10" fill="#666">similar, analogy</text>
+      <text x="350" y="347" text-anchor="middle" font-size="10" fill="#666">abduce, whatif</text>
+
+      <!-- Proof Construction -->
+      <rect x="450" y="280" width="150" height="80" rx="6" fill="white" stroke="#c62828" stroke-width="2"/>
+      <text x="525" y="303" text-anchor="middle" font-size="12" fill="#c62828" font-weight="bold">Proof Construction</text>
+      <line x1="470" y1="313" x2="580" y2="313" stroke="#e0e0e0" stroke-width="1"/>
+      <text x="525" y="335" text-anchor="middle" font-size="10" fill="#666">Track steps</text>
+
+      <!-- Result fusion -->
+      <path d="M175 360 L175 385 L350 385" fill="none" stroke="#546e7a" stroke-width="2"/>
+      <path d="M350 360 L350 385" fill="none" stroke="#546e7a" stroke-width="2"/>
+      <path d="M525 360 L525 385 L350 385" fill="none" stroke="#546e7a" stroke-width="2"/>
+      <circle cx="350" cy="385" r="8" fill="#1976d2"/>
+      <path d="M350 393 L350 410" fill="none" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+      <!-- Defs -->
+      <defs>
+        <linearGradient id="queryEngineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1565c0"/>
+          <stop offset="100%" stop-color="#1976d2"/>
+        </linearGradient>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#546e7a"/>
+        </marker>
+        <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#1976d2"/>
+        </marker>
+      </defs>
+    </svg>
   </div>
 
   <h3>6.1 Priority Modes</h3>
@@ -734,21 +994,82 @@ Query Execution Pipeline
 
   <h2>9. Memory Footprint Comparison</h2>
 
-<div class="chart-container">
-<pre>
-Memory Usage per Vector
-────────────────────────────────────────────────────────────────────
-Dense-Binary (2048 bits)      ████████ 256 bytes
-Dense-Binary (4096 bits)      ████████████████ 512 bytes
-Sparse-Poly (k=8)             ████████ 64 bytes
-Metric-Affine (32 channels)   ████ 32 bytes  ⚡ SMALLEST
-Sparse-Poly (k=4)             ████ 32 bytes
-────────────────────────────────────────────────────────────────────
+  <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin: 20px 0;">
+    <svg viewBox="0 0 650 320" style="width: 100%; max-width: 750px; display: block; margin: 0 auto;">
+      <!-- Title -->
+      <text x="325" y="25" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Memory Usage per Vector</text>
 
-For 10,000 concepts:
-  Dense-Binary/2048:  2.56 MB
-  Metric-Affine/32:   320 KB  (8x smaller!)
-</pre>
+      <!-- Grid lines -->
+      <g stroke="#e8e8e8" stroke-width="1">
+        <line x1="220" y1="45" x2="220" y2="195"/>
+        <line x1="317" y1="45" x2="317" y2="195"/>
+        <line x1="414" y1="45" x2="414" y2="195"/>
+        <line x1="511" y1="45" x2="511" y2="195"/>
+        <line x1="608" y1="45" x2="608" y2="195"/>
+      </g>
+
+      <!-- X-axis labels -->
+      <g font-size="10" fill="#666" text-anchor="middle">
+        <text x="220" y="210">0</text>
+        <text x="317" y="210">128</text>
+        <text x="414" y="210">256</text>
+        <text x="511" y="210">384</text>
+        <text x="608" y="210">512 bytes</text>
+      </g>
+
+      <!-- Bars -->
+      <g>
+        <text x="210" y="68" text-anchor="end" font-size="11" fill="#333">Dense-Binary (2048 bits)</text>
+        <rect x="220" y="55" width="194" height="22" rx="3" fill="url(#memDense)"/>
+        <text x="420" y="70" font-size="10" fill="#1565c0" font-weight="600">256 bytes</text>
+      </g>
+
+      <g>
+        <text x="210" y="98" text-anchor="end" font-size="11" fill="#333">Dense-Binary (4096 bits)</text>
+        <rect x="220" y="85" width="388" height="22" rx="3" fill="url(#memDense)"/>
+        <text x="614" y="100" font-size="10" fill="#1565c0" font-weight="600">512 bytes</text>
+      </g>
+
+      <g>
+        <text x="210" y="128" text-anchor="end" font-size="11" fill="#333">Sparse-Poly (k=8)</text>
+        <rect x="220" y="115" width="49" height="22" rx="3" fill="url(#memSparse)"/>
+        <text x="275" y="130" font-size="10" fill="#7b1fa2" font-weight="600">64 bytes</text>
+      </g>
+
+      <g>
+        <text x="210" y="158" text-anchor="end" font-size="11" fill="#333">Metric-Affine (32 ch)</text>
+        <rect x="220" y="145" width="24" height="22" rx="3" fill="url(#memMetric)"/>
+        <text x="250" y="160" font-size="10" fill="#1b5e20" font-weight="bold">32 bytes ⚡</text>
+      </g>
+
+      <g>
+        <text x="210" y="188" text-anchor="end" font-size="11" fill="#333">Sparse-Poly (k=4)</text>
+        <rect x="220" y="175" width="24" height="22" rx="3" fill="url(#memSparse)"/>
+        <text x="250" y="190" font-size="10" fill="#7b1fa2" font-weight="600">32 bytes</text>
+      </g>
+
+      <!-- Comparison box -->
+      <rect x="180" y="235" width="290" height="60" rx="8" fill="#e8f5e9" stroke="#43a047" stroke-width="1"/>
+      <text x="325" y="258" text-anchor="middle" font-size="12" fill="#2e7d32" font-weight="bold">For 10,000 concepts:</text>
+      <text x="325" y="278" text-anchor="middle" font-size="11" fill="#555">Dense-Binary/2048: 2.56 MB  vs  Metric-Affine/32: 320 KB</text>
+      <text x="325" y="290" text-anchor="middle" font-size="10" fill="#43a047" font-weight="600">(8× smaller!)</text>
+
+      <!-- Gradients -->
+      <defs>
+        <linearGradient id="memDense" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1565c0"/>
+          <stop offset="100%" stop-color="#64b5f6"/>
+        </linearGradient>
+        <linearGradient id="memSparse" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#6a1b9a"/>
+          <stop offset="100%" stop-color="#ba68c8"/>
+        </linearGradient>
+        <linearGradient id="memMetric" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1b5e20"/>
+          <stop offset="100%" stop-color="#66bb6a"/>
+        </linearGradient>
+      </defs>
+    </svg>
   </div>
 
   <h2>10. Theoretical Context: HRR, VSA, and HDC</h2>

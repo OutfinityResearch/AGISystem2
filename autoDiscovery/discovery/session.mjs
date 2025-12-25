@@ -58,14 +58,20 @@ export function validateQuestionDsl(questionDsl) {
     }
   }
 
+  const normalizeGoalLine = (line) => {
+    const m = line.match(/^@(goal|g)(?::goal)?\s+(.+)$/i);
+    if (!m) return line;
+    return String(m[2] || '').trim();
+  };
+
   if (lines.length === 1) {
     const inferred = action || (lines[0].includes('?') ? 'query' : 'prove');
-    return { valid: true, goals: [lines[0]], goalLogic: goalLogic || 'Single', declaredOperators, action: inferred };
+    return { valid: true, goals: [normalizeGoalLine(lines[0])], goalLogic: goalLogic || 'Single', declaredOperators, action: inferred };
   }
 
   const allGoalLines = lines.every(l => l.startsWith('@goal') || l.startsWith('@g'));
   if (!allGoalLines) return { valid: false, reason: 'multi_statement_no_goal' };
 
   const inferred = action || (lines.some(l => l.includes('?')) ? 'query' : 'prove');
-  return { valid: true, goals: lines, goalLogic: goalLogic || 'And', declaredOperators, action: inferred };
+  return { valid: true, goals: lines.map(normalizeGoalLine), goalLogic: goalLogic || 'And', declaredOperators, action: inferred };
 }

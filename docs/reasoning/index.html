@@ -227,26 +227,57 @@ const cspSolver = createCSPSolver(session);</code></pre>
     </tr>
   </table>
 
+  <h2>Reasoning Engine Documentation</h2>
+
+  <p>Detailed documentation for each reasoning capability:</p>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <h3><a href="proof-engine.html">Proof Engine</a></h3>
+      <p>Backward chaining proof search with confidence tracking. Determines if KB ⊢ G (KB entails G) using goal-directed reasoning.</p>
+      <ul style="font-size: 0.9em;">
+        <li>Direct KB matching</li>
+        <li>Rule application with unification</li>
+        <li>Transitive chain reasoning</li>
+      </ul>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="query-engine.html">Query Engine</a></h3>
+      <p>Finding answers to open queries with variables. Returns sets of bindings that satisfy the goal pattern.</p>
+      <ul style="font-size: 0.9em;">
+        <li>Variable binding propagation</li>
+        <li>Compound query handling</li>
+        <li>HDC-accelerated candidate search</li>
+      </ul>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="abduction.html">Abduction Engine</a></h3>
+      <p>Inference to the best explanation. Given observations, finds hypotheses that would explain them.</p>
+      <ul style="font-size: 0.9em;">
+        <li>Hypothesis generation</li>
+        <li>Bayesian scoring</li>
+        <li>Consistency checking</li>
+      </ul>
+    </div>
+
+    <div class="section-card">
+      <h3><a href="induction.html">Induction Engine</a></h3>
+      <p>Learning general rules from specific examples. Discovers patterns and generalizes from KB facts.</p>
+      <ul style="font-size: 0.9em;">
+        <li>Pattern generalization</li>
+        <li>MDL-based rule selection</li>
+        <li>Exception handling</li>
+      </ul>
+    </div>
+  </div>
+
   <h2>Shared Components</h2>
 
   <p>Both engines share the following components that are used regardless of reasoning mode:</p>
 
   <div class="section-grid">
-    <div class="section-card">
-      <h3>AbductionEngine</h3>
-      <p>Implements "best explanation" reasoning. Given an observation, finds hypotheses that would explain it.</p>
-      <pre><code>// Find what explains "Tweety cannot fly"
-engine.abduce({ operator: 'cannot', args: ['Tweety', 'Fly'] })</code></pre>
-    </div>
-
-    <div class="section-card">
-      <h3>InductionEngine</h3>
-      <p>Discovers patterns and generalizes rules from KB facts. Learns from examples.</p>
-      <pre><code>// Induce rules from KB patterns
-engine.induceRules({ minExamples: 3 })
-// → "All Birds can Fly" (from Dog→Animal, Cat→Animal...)</code></pre>
-    </div>
-
     <div class="section-card">
       <h3>TransitiveReasoner</h3>
       <p>Handles transitive relations like <code>isA</code>, <code>locatedIn</code>, <code>partOf</code>.</p>
@@ -259,6 +290,20 @@ engine.induceRules({ minExamples: 3 })
       <p>Inherits properties along class hierarchies.</p>
       <pre><code>// Bird can Fly, Tweety isA Bird
 // → Tweety can Fly (property inheritance)</code></pre>
+    </div>
+
+    <div class="section-card">
+      <h3>UnificationEngine</h3>
+      <p>Finds substitutions that make two expressions identical.</p>
+      <pre><code>unify(isA ?x Human, isA Socrates Human)
+// → { ?x → Socrates }</code></pre>
+    </div>
+
+    <div class="section-card">
+      <h3>CSPSolver</h3>
+      <p>Constraint satisfaction for compound queries with multiple variables.</p>
+      <pre><code>// And (isA ?x Animal) (eats ?x ?y)
+// → All (animal, food) pairs</code></pre>
     </div>
   </div>
 
@@ -301,35 +346,56 @@ engine.induceRules({ minExamples: 3 })
     <strong>Note:</strong> Both engines ultimately rely on symbolic validation for correctness. The holographic engine uses HDC to <em>find candidates faster</em>, not to replace symbolic proof.
   </div>
 
-  <h2>Source Code Structure</h2>
+  <h2>Theoretical Foundations</h2>
 
-  <pre><code>src/reasoning/
-├── index.mjs                    # Factory functions, exports
-├── prove.mjs                    # ProofEngine (symbolic)
-├── query.mjs                    # QueryEngine (symbolic)
-├── abduction.mjs                # AbductionEngine (shared)
-├── induction.mjs                # InductionEngine (shared)
-├── transitive.mjs               # TransitiveReasoner
-├── property-inheritance.mjs     # PropertyInheritanceReasoner
-├── unification.mjs              # UnificationEngine
-├── conditions.mjs               # ConditionProver (And/Or)
-├── kb-matching.mjs              # KBMatcher
-├── disjoint.mjs                 # DisjointProver
-├── query-hdc.mjs                # HDC search utilities
-├── query-kb.mjs                 # Direct KB search
-├── query-transitive.mjs         # Transitive query support
-├── query-rules.mjs              # Rule-derived queries
-├── query-compound.mjs           # Compound CSP queries
-├── csp/
-│   ├── solver.mjs               # CSPSolver (symbolic)
-│   ├── constraint.mjs           # Constraint definitions
-│   ├── domain.mjs               # Domain management
-│   └── backtrack.mjs            # Backtracking search
-└── holographic/
-    ├── index.mjs                # Holographic exports
-    ├── prove-hdc-first.mjs      # HolographicProofEngine
-    ├── query-hdc-first.mjs      # HolographicQueryEngine
-    └── csp-hdc-heuristic.mjs    # HolographicCSPSolver</code></pre>
+  <div style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); padding: 20px; border-radius: 12px; margin: 20px 0;">
+    <h3 style="margin-top: 0;">The Four Modes of Reasoning</h3>
+    <p>AGISystem2 implements all four classical modes of logical inference, each serving a distinct cognitive purpose:</p>
+
+    <table style="background: white; border-radius: 8px;">
+      <tr>
+        <th>Mode</th>
+        <th>Direction</th>
+        <th>Question</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><strong>Deduction</strong> (Proof)</td>
+        <td>Rule + Case → Conclusion</td>
+        <td>"What must be true?"</td>
+        <td>Humans are mortal + Socrates is human → Socrates is mortal</td>
+      </tr>
+      <tr>
+        <td><strong>Query</strong></td>
+        <td>Pattern → Instances</td>
+        <td>"What satisfies this?"</td>
+        <td>Find all X where isA(X, Mortal)</td>
+      </tr>
+      <tr>
+        <td><strong>Abduction</strong></td>
+        <td>Rule + Conclusion → Case</td>
+        <td>"What explains this?"</td>
+        <td>Ground is wet + Rain wets ground → It rained (maybe)</td>
+      </tr>
+      <tr>
+        <td><strong>Induction</strong></td>
+        <td>Cases → Rule</td>
+        <td>"What pattern fits these?"</td>
+        <td>Swan1 is white, Swan2 is white → Swans are white</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="background: #e8f5e9; padding: 20px; border-radius: 12px; margin: 20px 0;">
+    <h3 style="margin-top: 0;">Confidence Propagation</h3>
+    <p>All reasoning modes track confidence scores that decay through inference chains:</p>
+    <ul>
+      <li><strong>Direct KB match:</strong> c = 1.0 (perfect confidence)</li>
+      <li><strong>Transitive chain (n steps):</strong> c = α^(n-1) where α = 0.95</li>
+      <li><strong>Rule application:</strong> c = min(premise confidences) × rule_confidence</li>
+      <li><strong>Abductive hypothesis:</strong> c = coverage × rule_strength × prior</li>
+    </ul>
+  </div>
 
   <div class="footer-nav">
     <p><a href="symbolic.html">Next: Symbolic Reasoning Engine &rarr;</a></p>

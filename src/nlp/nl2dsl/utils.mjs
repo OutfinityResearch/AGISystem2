@@ -197,11 +197,13 @@ export function normalizeEntity(text, defaultVar = '?x') {
   // RuleBERT / soft-rules style role variables: "first person", "second person", etc.
   // Map to stable variable names so rules can contain multiple variables.
   const role = lower.replace(/^the\s+/, '').trim();
-  const roleMatch = role.match(/^(first|second|third|fourth|fifth)\s+(person|thing|place)$/);
+  const roleMatch = role.match(/^(first|second|third|fourth|fifth)\s+([a-z][a-z0-9_-]*)$/);
   if (roleMatch) {
     const ordinal = roleMatch[1];
-    const map = { first: '?x', second: '?y', third: '?z', fourth: '?w', fifth: '?v' };
-    return map[ordinal] || defaultVar;
+    const noun = sanitizePredicate(roleMatch[2] || '') || 'role';
+    const map = { first: 'x', second: 'y', third: 'z', fourth: 'w', fifth: 'v' };
+    const base = map[ordinal] || 'x';
+    return `?${base}_${noun}`;
   }
   const withoutThe = lower.replace(/^the\s+/, '').replace(/^(?:a|an)\s+/, '');
   const parts = withoutThe
