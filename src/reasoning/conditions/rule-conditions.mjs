@@ -50,7 +50,9 @@ export function proveSimpleCondition(self, conditionVec, depth) {
 
   try {
     for (const fact of self.session.kbFacts) {
+      self.session.reasoningStats.kbScans++;
       if (!fact.vector) continue;
+      self.session.reasoningStats.similarityChecks++;
       const sim = similarity(conditionVec, fact.vector);
       if (sim > self.thresholds.CONCLUSION_MATCH) {
         let factStr = '';
@@ -68,6 +70,7 @@ export function proveSimpleCondition(self, conditionVec, depth) {
 
     for (const rule of self.session.rules) {
       if (!rule.conclusion) continue;
+      self.session.reasoningStats.similarityChecks++;
       const conclusionSim = similarity(conditionVec, rule.conclusion);
       if (conclusionSim > self.thresholds.CONCLUSION_MATCH) {
         const subResult = proveCondition(self, rule, depth + 1);

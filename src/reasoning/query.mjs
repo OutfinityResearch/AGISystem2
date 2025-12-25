@@ -67,7 +67,7 @@ export class QueryEngine {
    * @param {Statement} statement - Query statement with holes
    * @returns {QueryResult} - includes allResults from HDC and symbolic
    */
-  execute(statement) {
+  execute(statement, options = {}) {
     // Step 1: Identify holes and knowns
     const holes = [];
     const knowns = [];
@@ -152,11 +152,15 @@ export class QueryEngine {
       return searchDeduce(this.session, knowns[0], knowns[1], holes[0], depth, limit);
     }
 
+    const maxResults = Number.isFinite(options.maxResults) ? Math.max(1, options.maxResults) : null;
+
     // Step 2: Collect results from multiple sources
     const allResults = [];
 
     // SOURCE 1: HDC Master Equation (true holographic computing)
-    const hdcMatches = searchHDC(this.session, operatorName, knowns, holes, operator);
+    const hdcMatches = searchHDC(this.session, operatorName, knowns, holes, operator, {
+      useLevelOptimization: options.useLevelOptimization ?? true
+    });
     allResults.push(...hdcMatches);
     dbg('HDC', `Found ${hdcMatches.length} HDC matches`);
 
@@ -168,7 +172,7 @@ export class QueryEngine {
     }
 
     // SOURCE 2: Direct KB matches (symbolic, exact) - HIGHEST PRIORITY
-    const directMatches = searchKBDirect(this.session, operatorName, knowns, holes);
+    const directMatches = searchKBDirect(this.session, operatorName, knowns, holes, { maxResults });
     // Replace HDC duplicates with direct (direct is more reliable)
     for (const dm of directMatches) {
       const existingIdx = allResults.findIndex(r =>
@@ -390,6 +394,10 @@ export class QueryEngine {
       if (pa !== pb) return pb - pa; // Higher priority first
       return b.score - a.score; // Then by score
     });
+
+    if (maxResults !== null) {
+      filteredResults = filteredResults.slice(0, maxResults);
+    }
 
     // Build primary bindings from best result
     const bindings = new Map();

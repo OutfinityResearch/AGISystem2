@@ -80,6 +80,7 @@ export class InductionEngine {
    */
   findHierarchyPatterns(minExamples) {
     const patterns = [];
+    this.session.reasoningStats.kbScans += this.session.kbFacts.length;
     const isaFacts = this.session.kbFacts.filter(f => f.metadata?.operator === 'isA');
 
     // Group by parent
@@ -168,6 +169,7 @@ export class InductionEngine {
    */
   findPropertyPatterns(minExamples) {
     const patterns = [];
+    this.session.reasoningStats.kbScans += this.session.kbFacts.length;
     const propertyFacts = this.session.kbFacts.filter(f =>
       f.metadata?.operator === 'hasProperty' ||
       f.metadata?.operator === 'can' ||
@@ -220,6 +222,7 @@ export class InductionEngine {
 
     for (const subject of subjects) {
       for (const fact of this.session.kbFacts) {
+        this.session.reasoningStats.kbScans++;
         if (fact.metadata?.operator === 'isA' && fact.metadata?.args?.[0] === subject) {
           const type = fact.metadata.args[1];
           types.set(type, (types.get(type) || 0) + 1);
@@ -250,6 +253,7 @@ export class InductionEngine {
     // Group facts by operator
     const opGroups = new Map();
     for (const fact of this.session.kbFacts) {
+      this.session.reasoningStats.kbScans++;
       const op = fact.metadata?.operator;
       if (!op) continue;
       if (!opGroups.has(op)) {

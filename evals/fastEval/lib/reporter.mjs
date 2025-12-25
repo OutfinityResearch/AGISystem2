@@ -340,9 +340,9 @@ export function reportGlobalSummary(suiteResults) {
     aggregatedStats.hdcBindings += stats.hdcBindings || 0;
 
     // Aggregate Holographic engine stats (map to same display)
-    // holographicQueries + hdcUnbindAttempts = total HDC operations in holographic mode
+    // holo ops are query/proof calls; success means "HDC validated a result" for queries.
     const holoOps = (stats.holographicQueries || 0) + (stats.holographicProofs || 0);
-    const holoSuccesses = (stats.hdcUnbindSuccesses || 0) + (stats.hdcProofSuccesses || 0);
+    const holoSuccesses = (stats.holographicQueryHdcSuccesses || 0) + (stats.hdcProofSuccesses || 0);
     aggregatedStats.hdcQueries += holoOps;
     aggregatedStats.hdcSuccesses += holoSuccesses;
 
@@ -371,7 +371,7 @@ export function reportGlobalSummary(suiteResults) {
 
     // Format HDC stats as percentage (combine symbolic + holographic)
     const hdcQ = (stats.hdcQueries || 0) + (stats.holographicQueries || 0) + (stats.holographicProofs || 0);
-    const hdcS = (stats.hdcSuccesses || 0) + (stats.hdcUnbindSuccesses || 0) + (stats.hdcProofSuccesses || 0);
+    const hdcS = (stats.hdcSuccesses || 0) + (stats.holographicQueryHdcSuccesses || 0) + (stats.hdcProofSuccesses || 0);
     const hdcPct = hdcQ > 0 ? Math.floor((hdcS / hdcQ) * 100) : 0;
     const hdcStr = hdcQ > 0 ? `${hdcPct}%` : '-';
 
@@ -570,7 +570,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
 
       const stats = summary.reasoningStats || {};
       const durationMs = summary.durationMs || 0;
-      const hdcSucc = (stats.hdcSuccesses || 0) + (stats.hdcUnbindSuccesses || 0) + (stats.hdcProofSuccesses || 0);
+      const hdcSucc = (stats.hdcSuccesses || 0) + (stats.holographicQueryHdcSuccesses || 0) + (stats.hdcProofSuccesses || 0);
       const hdcTot = (stats.hdcQueries || 0) + (stats.holographicQueries || 0) + (stats.holographicProofs || 0);
       const scans = stats.kbScans || 0;
 
@@ -636,7 +636,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       const durationMs = summary.durationMs || 0;
 
       // Calculate HDC accuracy for this suite/config
-      const hdcSucc = (stats.hdcSuccesses || 0) + (stats.hdcUnbindSuccesses || 0) + (stats.hdcProofSuccesses || 0);
+      const hdcSucc = (stats.hdcSuccesses || 0) + (stats.holographicQueryHdcSuccesses || 0) + (stats.hdcProofSuccesses || 0);
       const hdcTot = (stats.hdcQueries || 0) + (stats.holographicQueries || 0) + (stats.holographicProofs || 0);
       const hdcPct = hdcTot > 0 ? Math.floor((hdcSucc / hdcTot) * 100) : 0;
       // kbScans is the real measure of reasoning work (fact iterations)

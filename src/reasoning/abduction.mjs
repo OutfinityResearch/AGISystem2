@@ -97,6 +97,7 @@ export class AbductionEngine {
     }
 
     // Vector similarity check
+    this.session.reasoningStats.similarityChecks++;
     const sim = similarity(rule.conclusion, obsVec);
     if (sim < this.thresholds.SIMILARITY) {
       return { score: 0, bindings: null };
@@ -191,6 +192,7 @@ export class AbductionEngine {
     // Look for "causes" relations that lead to this
     if (opName) {
       for (const fact of this.session.kbFacts) {
+        this.session.reasoningStats.kbScans++;
         const meta = fact.metadata;
         if (meta?.operator === 'causes' && meta.args?.length >= 2) {
           // Check if effect matches observation
@@ -234,8 +236,10 @@ export class AbductionEngine {
     const analogyThreshold = Math.max(this.thresholds.ANALOGY_MIN, minSim);
 
     for (const fact of this.session.kbFacts) {
+      this.session.reasoningStats.kbScans++;
       if (!fact.vector) continue;
 
+      this.session.reasoningStats.similarityChecks++;
       const sim = similarity(fact.vector, obsVec);
       if (sim > analogyThreshold && sim < this.thresholds.ANALOGY_MAX) { // Not exact match but strongly similar
         const meta = fact.metadata;

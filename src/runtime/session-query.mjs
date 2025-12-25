@@ -24,7 +24,7 @@ export function query(session, dsl, options = {}) {
       ? canonicalizeStatement(session, rawQueryStmt)
       : rawQueryStmt;
 
-    const result = session.queryEngine.execute(queryStmt);
+    const result = session.queryEngine.execute(queryStmt, options);
     session.reasoningStats.queries++;
 
     // Queries count as depth 5 for averaging (require KB traversal)

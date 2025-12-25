@@ -115,6 +115,7 @@ export function findAllTransitivePairs(session, relation) {
   // Start from all subjects
   const allSubjects = new Set();
   for (const fact of session.kbFacts) {
+    session.reasoningStats.kbScans++;
     const meta = fact.metadata;
     if (meta?.operator === relation && meta.args) {
       allSubjects.add(meta.args[0]);
@@ -161,6 +162,7 @@ export function findAllTransitiveTargets(session, relation, subject) {
 
     // Find direct relations
     for (const fact of session.kbFacts) {
+      session.reasoningStats.kbScans++;
       const meta = fact.metadata;
       if (!meta || meta.operator !== relation) continue;
       if (!meta.args || meta.args[0] !== current) continue;
@@ -191,6 +193,7 @@ export function findAllTransitiveSources(session, relation, target) {
   // Build reverse graph first
   const reverseEdges = new Map(); // target -> [sources]
   for (const fact of session.kbFacts) {
+    session.reasoningStats.kbScans++;
     const meta = fact.metadata;
     if (!meta || meta.operator !== relation) continue;
     if (!meta.args) continue;
@@ -237,6 +240,7 @@ export function reachesTransitively(session, relation, entity, target, visited =
   visited.add(entity);
 
   for (const fact of session.kbFacts) {
+    session.reasoningStats.kbScans++;
     const meta = fact.metadata;
     if (meta?.operator !== relation) continue;
     if (meta.args?.[0] !== entity) continue;

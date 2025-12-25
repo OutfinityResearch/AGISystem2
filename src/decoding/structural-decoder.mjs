@@ -42,6 +42,7 @@ export class StructuralDecoder {
 
     // Check reserved operators
     for (const [name, opVec] of this.session.operators) {
+      this.session.reasoningStats.similarityChecks++;
       const sim = similarity(vector, opVec);
       if (sim > this.options.operatorThreshold) {
         operatorCandidates.push({ name, similarity: sim, reserved: true });
@@ -51,6 +52,7 @@ export class StructuralDecoder {
     // Check vocabulary atoms
     for (const [name, atomVec] of this.session.vocabulary.entries()) {
       if (!this.session.operators.has(name)) {
+        this.session.reasoningStats.similarityChecks++;
         const sim = similarity(vector, atomVec);
         if (sim > this.options.operatorThreshold) {
           operatorCandidates.push({ name, similarity: sim, reserved: false });
@@ -80,7 +82,7 @@ export class StructuralDecoder {
     const args = [];
     for (let pos = 1; pos <= 20; pos++) {
       const posUnbound = removePosition(pos, remainder);
-      const matches = topKSimilar(posUnbound, this.session.vocabulary.atoms, 3);
+      const matches = topKSimilar(posUnbound, this.session.vocabulary.atoms, 3, this.session);
 
       if (matches.length > 0 && matches[0].similarity > this.options.argThreshold) {
         // Check if argument might be compound
@@ -149,6 +151,7 @@ export class StructuralDecoder {
       return false; // Disable nested compound detection for now
     }
 
+    this.session.reasoningStats.similarityChecks++;
     const directSim = similarity(extracted, directMatch);
 
     // Only consider compound if very low similarity to direct match
@@ -162,6 +165,7 @@ export class StructuralDecoder {
     for (const [name] of this.session.operators) {
       const opVec = this.session.vocabulary.get(name);
       if (opVec) {
+        this.session.reasoningStats.similarityChecks++;
         const opSim = similarity(extracted, opVec);
         if (opSim > 0.6) {
           return true; // Likely a compound with this operator

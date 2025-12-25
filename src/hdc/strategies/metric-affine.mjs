@@ -505,7 +505,7 @@ function serialize(v) {
  * @param {number} k
  * @returns {Array<{name: string, similarity: number}>}
  */
-function topKSimilar(query, vocabulary, k = 5) {
+ function topKSimilar(query, vocabulary, k = 5, session = null) {
   const results = [];
 
   const entries = vocabulary instanceof Map
@@ -513,6 +513,7 @@ function topKSimilar(query, vocabulary, k = 5) {
     : Object.entries(vocabulary);
 
   for (const [name, vec] of entries) {
+    if (session?.reasoningStats) session.reasoningStats.similarityChecks++;
     const sim = similarity(query, vec);
     results.push({ name, similarity: sim });
   }

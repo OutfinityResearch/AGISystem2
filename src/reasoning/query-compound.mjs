@@ -55,6 +55,7 @@ function verifyFactInCompound(session, solVector, operatorName, entity, value) {
   const factVec = bind(bind(opVec, withPosition(1, entityVec)), withPosition(2, valueVec));
 
   // Check similarity with compound solution
+  session.reasoningStats.similarityChecks++;
   const sim = similarity(factVec, solVector);
 
   // Verification is informational only - metadata extraction is authoritative
@@ -78,6 +79,7 @@ export function searchCompoundSolutions(session, operatorName, knowns, holes) {
   const results = [];
 
   // Find all compound CSP solutions in KB
+  session.reasoningStats.kbScans += session.kbFacts.length;
   const compoundSolutions = session.kbFacts.filter(
     f => f.metadata?.operator === 'cspSolution'
   );
@@ -99,6 +101,7 @@ export function searchCompoundSolutions(session, operatorName, knowns, holes) {
 
   // Search each compound solution
   for (const sol of compoundSolutions) {
+    session.reasoningStats.similarityChecks++;
     const sim = similarity(queryVec, sol.vector);
 
     if (sim < COMPOUND_THRESHOLD) {
@@ -219,6 +222,7 @@ export function decodeCompoundSolution(session, compoundVec, operatorName) {
 
       // Calculate similarity of full unbind
       const fullUnbind = bind(afterPos1, pos2Vec);
+      session.reasoningStats.similarityChecks++;
       const sim = similarity(fullUnbind, session.kb || compoundVec);
 
       if (sim > 0.4) {

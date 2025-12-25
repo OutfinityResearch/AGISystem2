@@ -59,6 +59,7 @@ function collectEntitiesByType(session, typeName) {
     return [...out];
   }
   for (const fact of session.kbFacts || []) {
+    session.reasoningStats.kbScans++;
     const meta = fact?.metadata;
     if (meta?.operator === 'isA' && meta.args?.[1] === typeName && meta.args?.[0]) out.add(meta.args[0]);
   }
@@ -79,6 +80,7 @@ function collectEntityDomain(session) {
 
   const domain = new Set();
   for (const fact of session.kbFacts || []) {
+    session.reasoningStats.kbScans++;
     const meta = fact?.metadata;
     if (!meta) continue;
     for (const a of meta.args || []) {
@@ -141,19 +143,24 @@ function collectCandidatesFromPredicate(session, predicate, varName) {
 function buildTypeImplicationIndex(session) {
   const index = new Map();
   const rules = session?.rules || [];
-  for (const rule of rules) {
-    const conc = rule.conclusionParts;
-    const cond = rule.conditionParts;
-    if (!conc || !cond) continue;
-    if (conc.type !== 'leaf' || !conc.ast) continue;
-    if (cond.type !== 'leaf' || !cond.ast) continue;
 
-    const concOp = conc.ast.operator?.name || conc.ast.operator?.value;
-    const condOp = cond.ast.operator?.name || cond.ast.operator?.value;
+  const leafAst = (parts, fallbackAst) => {
+    if (parts?.type === 'leaf' && parts.ast) return parts.ast;
+    if (fallbackAst?.type === 'Statement') return fallbackAst;
+    return null;
+  };
+
+  for (const rule of rules) {
+    const concAst = leafAst(rule.conclusionParts, rule.conclusionAST);
+    const condAst = leafAst(rule.conditionParts, rule.conditionAST);
+    if (!concAst || !condAst) continue;
+
+    const concOp = concAst.operator?.name || concAst.operator?.value;
+    const condOp = condAst.operator?.name || condAst.operator?.value;
     if (concOp !== 'isA' || condOp !== 'isA') continue;
 
-    const concArgs = conc.ast.args || [];
-    const condArgs = cond.ast.args || [];
+    const concArgs = concAst.args || [];
+    const condArgs = condAst.args || [];
     if (concArgs.length !== 2 || condArgs.length !== 2) continue;
     if (!isHole(concArgs[0]) || !isHole(condArgs[0])) continue;
     if (concArgs[0].name !== condArgs[0].name) continue;
@@ -170,19 +177,18 @@ function buildTypeImplicationIndex(session) {
 
   // Not(isA x T) conclusions encode disjointness: A -> Not(B) means A disjoint B.
   for (const rule of rules) {
-    const conc = rule.conclusionParts;
-    const cond = rule.conditionParts;
-    if (!conc || !cond) continue;
-    if (conc.type !== 'Not' || !conc.inner) continue;
-    if (cond.type !== 'leaf' || !cond.ast) continue;
-    if (conc.inner.type !== 'leaf' || !conc.inner.ast) continue;
+    const condAst = leafAst(rule.conditionParts, rule.conditionAST);
+    const concInnerAst = rule.conclusionParts?.type === 'Not' && rule.conclusionParts.inner?.type === 'leaf'
+      ? rule.conclusionParts.inner.ast
+      : null;
+    if (!condAst || !concInnerAst) continue;
 
-    const concOp = conc.inner.ast.operator?.name || conc.inner.ast.operator?.value;
-    const condOp = cond.ast.operator?.name || cond.ast.operator?.value;
+    const concOp = concInnerAst.operator?.name || concInnerAst.operator?.value;
+    const condOp = condAst.operator?.name || condAst.operator?.value;
     if (concOp !== 'isA' || condOp !== 'isA') continue;
 
-    const concArgs = conc.inner.ast.args || [];
-    const condArgs = cond.ast.args || [];
+    const concArgs = concInnerAst.args || [];
+    const condArgs = condAst.args || [];
     if (concArgs.length !== 2 || condArgs.length !== 2) continue;
     if (!isHole(concArgs[0]) || !isHole(condArgs[0])) continue;
     if (concArgs[0].name !== condArgs[0].name) continue;
@@ -269,12 +275,16 @@ export function tryProveNotExistsViaTypeDisjointness(self, goalStr, existsExpr) 
   const constraints = collectIsAConstraints(predicate, varName);
   const requiredTypes = [...new Set(constraints.required)];
   const forbiddenTypes = [...new Set(constraints.forbidden)];
-  if (requiredTypes.length === 0 || forbiddenTypes.length === 0) return { valid: false };
+  if (requiredTypes.length === 0) return { valid: false };
+  const forbidden = forbiddenTypes.length > 0 ? forbiddenTypes : requiredTypes;
+  if (forbidden.length === 0) return { valid: false };
+  if (forbiddenTypes.length === 0 && requiredTypes.length < 2) return { valid: false };
 
   const index = buildTypeImplicationIndex(self.session);
 
   for (const req of requiredTypes) {
-    for (const forb of forbiddenTypes) {
+    for (const forb of forbidden) {
+      if (forb === req) continue;
       const ra = index.get(req);
       const rb = index.get(forb);
       if (!ra || !rb) continue;

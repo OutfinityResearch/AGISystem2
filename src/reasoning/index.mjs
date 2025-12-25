@@ -7,10 +7,14 @@
  * - ProofEngine: Goal-directed backward chaining
  * - AbductionEngine: "Best explanation" reasoning
  * - InductionEngine: Pattern generalization and rule learning
+ * - ForwardChainEngine: Level-ordered forward chaining
  *
  * Reasoning Priority Modes:
  * - symbolicPriority (default): Symbolic reasoning first, HDC for storage
  * - holographicPriority: HDC operations first, symbolic for validation
+ *
+ * Optimizations:
+ * - Constructivist Level: Hierarchical concept ordering for search pruning
  */
 
 import { isHolographicPriority, getReasoningPriority, REASONING_PRIORITY } from '../core/constants.mjs';
@@ -25,11 +29,19 @@ import { HolographicProofEngine } from './holographic/prove-hdc-first.mjs';
 import { HolographicCSPSolver, buildConstraintSatisfaction, scoreCandidate, orderDomainByHDC } from './holographic/csp-hdc-heuristic.mjs';
 import { CSPSolver, solveWeddingSeating } from './csp/solver.mjs';
 
+// Constructivist Level Optimization
+import { LevelManager, computeConstructivistLevel, computeGoalLevel, computeRuleLevels, extractDependencies } from './constructivist-level.mjs';
+import { ForwardChainEngine, createForwardChainEngine } from './forward-chain.mjs';
+
 // Re-export all engines
 export { QueryEngine, ProofEngine, AbductionEngine, InductionEngine };
 export { HolographicQueryEngine, HolographicProofEngine };
 export { HolographicCSPSolver, buildConstraintSatisfaction, scoreCandidate, orderDomainByHDC };
 export { CSPSolver, solveWeddingSeating };
+
+// Export constructivist level optimization
+export { LevelManager, computeConstructivistLevel, computeGoalLevel, computeRuleLevels, extractDependencies };
+export { ForwardChainEngine, createForwardChainEngine };
 
 /**
  * Check if session or global config uses holographic priority

@@ -40,6 +40,7 @@ function parseFactString(fact) {
 function findFactId(session, operator, args) {
   if (!session || !operator || !Array.isArray(args)) return null;
   for (const fact of session.kbFacts || []) {
+    session.reasoningStats.kbScans++;
     const meta = fact?.metadata;
     if (!meta || meta.operator !== operator) continue;
     const a = meta.args || [];

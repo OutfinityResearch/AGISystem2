@@ -289,6 +289,12 @@ export class HolographicCSPSolver {
       startTime
     );
 
+    if (this.session?.reasoningStats) {
+      this.session.reasoningStats.cspNodesExplored += stats.nodesExplored || 0;
+      this.session.reasoningStats.cspBacktracks += stats.backtracks || 0;
+      this.session.reasoningStats.cspHdcPruned += stats.hdcPruned || 0;
+    }
+
     const result = {
       success: solutions.length > 0,
       solutions,
@@ -456,6 +462,7 @@ export function solveWeddingSeating(session, options = {}) {
   const tables = [];
 
   for (const fact of session.kbFacts) {
+    session.reasoningStats.kbScans++;
     const meta = fact.metadata;
     if (meta?.operator === 'isA' && meta.args?.length === 2) {
       const [entity, type] = meta.args;
@@ -481,6 +488,7 @@ export function solveWeddingSeating(session, options = {}) {
   // Get conflicts from KB
   const conflicts = [];
   for (const fact of session.kbFacts) {
+    session.reasoningStats.kbScans++;
     const meta = fact.metadata;
     if (meta?.operator === 'conflictsWith' && meta.args?.length === 2) {
       const [p1, p2] = meta.args;

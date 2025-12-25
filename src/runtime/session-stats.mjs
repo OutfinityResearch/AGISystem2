@@ -23,10 +23,16 @@ export function getReasoningStats(session, reset = false) {
       ruleAttempts: 0, transitiveSteps: 0, maxProofDepth: 0,
       minProofDepth: Infinity, totalProofSteps: 0, totalReasoningSteps: 0,
       proofLengths: [], methods: {}, operations: {},
-      hdcQueries: 0, hdcSuccesses: 0, hdcBindings: 0
+      hdcQueries: 0, hdcSuccesses: 0, hdcBindings: 0,
+      holographicQueries: 0, holographicQueryHdcSuccesses: 0, holographicProofs: 0,
+      hdcUnbindAttempts: 0, hdcUnbindSuccesses: 0,
+      hdcValidationAttempts: 0, hdcValidationSuccesses: 0,
+      hdcProofSuccesses: 0, symbolicProofFallbacks: 0,
+      holographicCSP: 0, cspBundleBuilt: 0, cspSymbolicFallback: 0,
+      cspNodesExplored: 0, cspBacktracks: 0, cspPruned: 0, cspHdcPruned: 0,
+      holographicWedding: 0
     };
   }
 
   return stats;
 }
-

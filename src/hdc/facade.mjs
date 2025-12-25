@@ -298,8 +298,8 @@ export function serialize(v) {
  * @param {number} k
  * @returns {Array<{name: string, similarity: number}>}
  */
-export function topKSimilar(query, vocabulary, k = 5) {
-  return resolveStrategy({ vectors: [query] }).topKSimilar(query, vocabulary, k);
+export function topKSimilar(query, vocabulary, k = 5, session = null) {
+  return resolveStrategy({ vectors: [query] }).topKSimilar(query, vocabulary, k, session);
 }
 
 /**

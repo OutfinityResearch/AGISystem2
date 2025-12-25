@@ -268,6 +268,7 @@ function findIsAPath(session, from, to, maxDepth = 10) {
     if (path.length >= maxDepth) continue;
 
     for (const fact of session.kbFacts) {
+      session.reasoningStats.kbScans++;
       const meta = fact.metadata;
       if (meta?.operator !== 'isA') continue;
       if (meta.args?.[0] !== node) continue;
@@ -293,6 +294,7 @@ export function findLeafConditionMatches(session, condAST, initialBindings) {
 
   // Search KB for facts matching condition pattern (direct matches)
   for (const fact of session.kbFacts) {
+    session.reasoningStats.kbScans++;
     const meta = fact.metadata;
     if (!meta || meta.operator !== condOp) continue;
     if (!meta.args || meta.args.length !== condArgs.length) continue;
@@ -356,6 +358,7 @@ export function findLeafConditionMatches(session, condAST, initialBindings) {
       const targetValue = arg1.name;
       const checkedEntities = new Set();
       for (const fact of session.kbFacts) {
+        session.reasoningStats.kbScans++;
         const meta = fact.metadata;
         if (meta?.operator === condOp && meta.args?.[0]) {
           const entity = meta.args[0];

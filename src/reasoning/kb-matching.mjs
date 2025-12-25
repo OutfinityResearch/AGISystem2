@@ -4,15 +4,17 @@
  *
  * Direct KB fact matching and pattern search.
  * Handles rule chaining for conditions.
+ * Supports constructivist level optimization for search space pruning.
  */
 
 import { similarity } from '../core/operations.mjs';
 import { TRANSITIVE_RELATIONS } from './transitive.mjs';
 import { getThresholds } from '../core/constants.mjs';
 import { canonicalizeTokenName } from '../runtime/canonicalize.mjs';
+import { LevelAwareRuleIndex } from './prove/rule-index.mjs';
 
 /**
- * KB matching engine
+ * KB matching engine with level-aware optimization
  */
 export class KBMatcher {
   constructor(proofEngine) {
@@ -20,6 +22,19 @@ export class KBMatcher {
     // Get strategy-dependent thresholds
     const strategy = proofEngine.session?.hdcStrategy || 'dense-binary';
     this.thresholds = getThresholds(strategy);
+
+    // Level-aware rule index (lazy initialized)
+    this._levelRuleIndex = null;
+  }
+
+  /**
+   * Get level-aware rule index
+   */
+  get levelRuleIndex() {
+    if (!this._levelRuleIndex) {
+      this._levelRuleIndex = new LevelAwareRuleIndex(this.session);
+    }
+    return this._levelRuleIndex;
   }
 
   get session() {
@@ -30,9 +45,10 @@ export class KBMatcher {
    * Try direct match against KB
    * @param {Object} goalVec - Goal vector
    * @param {string} goalStr - Goal string
+   * @param {Object} options - Additional options (goalLevel for level-aware search)
    * @returns {Object} Match result with confidence
    */
-  tryDirectMatch(goalVec, goalStr) {
+  tryDirectMatch(goalVec, goalStr, options = {}) {
     // Support both dense-binary (data) and sparse-polynomial (exponents) vectors
     if (!goalVec || (!goalVec.data && !goalVec.exponents)) {
       return { valid: false, confidence: 0 };
@@ -56,16 +72,31 @@ export class KBMatcher {
     const componentKB = this.session.componentKB;
     const hint = parseGoalHint(goalStr);
 
+    // Level-aware optimization - DISABLED by default pending fix for deep chain regression
+    // TODO: Fix level computation for variables in rules before re-enabling
+    const useLevelOpt = false; // options.useLevelOptimization ??
+      // (componentKB?.useLevelOptimization && this.session.useLevelOptimization !== false);
+    const goalLevel = null; // options.goalLevel ?? (useLevelOpt && componentKB ? componentKB.computeGoalLevel(goalStr) : null);
+
     if (componentKB && hint?.op) {
-      const opFacts = componentKB.findByOperator(hint.op);
-      if (opFacts.length === 0) {
-        return { valid: false, confidence: 0 };
-      }
-      if (hint.arg0) {
-        const narrowed = componentKB.findByOperatorAndArg0(hint.op, hint.arg0);
-        scanFacts = narrowed.length > 0 ? narrowed : opFacts;
+      // Use level-aware search if enabled
+      if (useLevelOpt && goalLevel !== null) {
+        scanFacts = componentKB.findByOperatorAtLevel(hint.op, goalLevel);
       } else {
-        scanFacts = opFacts;
+        const opFacts = componentKB.findByOperator(hint.op);
+        if (opFacts.length === 0) {
+          return { valid: false, confidence: 0 };
+        }
+        if (hint.arg0) {
+          const narrowed = componentKB.findByOperatorAndArg0(hint.op, hint.arg0);
+          scanFacts = narrowed.length > 0 ? narrowed : opFacts;
+        } else {
+          scanFacts = opFacts;
+        }
+      }
+
+      if (scanFacts.length === 0) {
+        return { valid: false, confidence: 0 };
       }
     }
 
@@ -267,9 +298,10 @@ export class KBMatcher {
    * Try to prove a condition string by applying rules (backward chaining)
    * @param {string} condStr - Condition string
    * @param {number} depth - Current proof depth
+   * @param {Object} options - Additional options (goalLevel for level pruning)
    * @returns {Object} Proof result
    */
-  tryRuleChainForCondition(condStr, depth) {
+  tryRuleChainForCondition(condStr, depth, options = {}) {
     const parts = condStr.split(/\s+/);
     if (parts.length < 2) return { valid: false };
 
@@ -279,7 +311,21 @@ export class KBMatcher {
     if (this.engine.isTimedOut()) throw new Error('Proof timed out');
     if (depth > this.engine.options.maxDepth) return { valid: false, reason: 'Depth limit' };
 
-    const candidates = this.engine.getRulesByConclusionOp ? this.engine.getRulesByConclusionOp(goalOp) : this.session.rules;
+    // Level-aware rule selection - DISABLED by default pending fix for deep chain regression
+    // TODO: Fix level computation for variables in rules before re-enabling
+    // const componentKB = this.session.componentKB;
+    // const useLevelOpt = options.useLevelOptimization ??
+    //   (componentKB?.useLevelOptimization && this.session.useLevelOptimization !== false);
+    // const goalLevel = options.goalLevel ?? (useLevelOpt && componentKB ? componentKB.computeGoalLevel(condStr) : null);
+
+    let candidates;
+    // if (useLevelOpt && goalLevel !== null) {
+    //   // Use level-aware rule index - only rules where premises < goalLevel
+    //   candidates = this.levelRuleIndex.getRulesForGoal(goalOp, goalLevel);
+    // } else {
+    candidates = this.engine.getRulesByConclusionOp ? this.engine.getRulesByConclusionOp(goalOp) : this.session.rules;
+    // }
+
     for (const rule of candidates) {
       if (this.engine.isTimedOut()) throw new Error('Proof timed out');
       if (!rule.hasVariables) continue;

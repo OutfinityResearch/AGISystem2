@@ -134,6 +134,11 @@ export class CSPSolver {
 
     const solutions = search.search();
     const stats = search.getStats();
+    if (this.session?.reasoningStats) {
+      this.session.reasoningStats.cspNodesExplored += stats.nodesExplored || 0;
+      this.session.reasoningStats.cspBacktracks += stats.backtracks || 0;
+      this.session.reasoningStats.cspPruned += stats.pruned || 0;
+    }
 
     return {
       success: solutions.length > 0,

@@ -124,7 +124,26 @@ export class Session {
       // HDC-specific stats
       hdcQueries: 0,         // Total queries using HDC Master Equation
       hdcSuccesses: 0,       // HDC queries that found results
-      hdcBindings: 0         // Total bindings found via HDC
+      hdcBindings: 0,        // Total bindings found via HDC
+      // Holographic / HDC-first stats (populated by holographic engines)
+      holographicQueries: 0,
+      holographicQueryHdcSuccesses: 0,
+      holographicProofs: 0,
+      hdcUnbindAttempts: 0,
+      hdcUnbindSuccesses: 0,
+      hdcValidationAttempts: 0,
+      hdcValidationSuccesses: 0,
+      hdcProofSuccesses: 0,
+      symbolicProofFallbacks: 0,
+      // CSP stats
+      holographicCSP: 0,
+      cspBundleBuilt: 0,
+      cspSymbolicFallback: 0,
+      cspNodesExplored: 0,
+      cspBacktracks: 0,
+      cspPruned: 0,
+      cspHdcPruned: 0,
+      holographicWedding: 0
     };
 
     this.initOperators();

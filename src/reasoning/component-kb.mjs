@@ -10,10 +10,12 @@
  * - Support synonym expansion
  * - Enable similarity-based candidate generation
  * - Work with anonymous (nameless) vectors
+ * - Constructivist level tracking for search optimization
  */
 
-import { similarity } from '../core/operations.mjs';
+import { similarity, bundle } from '../core/operations.mjs';
 import { getThresholds } from '../core/constants.mjs';
+import { LevelManager, computeConstructivistLevel, computeGoalLevel } from './constructivist-level.mjs';
 
 /**
  * Component-based Knowledge Base
@@ -42,6 +44,15 @@ export class ComponentKB {
     // Canonical representative mapping (directional)
     // alias -> canonical
     this.canonicalMap = new Map();
+
+    // Constructivist level optimization
+    this.levelManager = new LevelManager(session);
+    this.useLevelOptimization = session?.useLevelOptimization ?? true;
+
+    // Level-segmented HDC bundles (lazy computed)
+    this._levelBundles = new Map();      // level -> Vector
+    this._cumulativeBundles = new Map(); // level -> Vector (0..level)
+    this._bundlesDirty = true;
   }
 
   /**
@@ -71,6 +82,14 @@ export class ComponentKB {
     };
 
     this.facts.push(entry);
+
+    // Compute and store constructivist level
+    if (this.useLevelOptimization) {
+      entry.constructivistLevel = this.levelManager.addFact(entry);
+    }
+
+    // Mark bundles as dirty
+    this._bundlesDirty = true;
 
     // Index by operator
     if (meta.operator) {
@@ -319,6 +338,7 @@ export class ComponentKB {
     for (const fact of this.facts) {
       if (!fact.vector) continue;
 
+      if (this.session?.reasoningStats) this.session.reasoningStats.similarityChecks++;
       const sim = similarity(queryVec, fact.vector);
       if (sim >= minSim) {
         results.push({
@@ -353,6 +373,7 @@ export class ComponentKB {
       if (seen.has(name)) continue;
       seen.add(name);
 
+      if (this.session?.reasoningStats) this.session.reasoningStats.similarityChecks++;
       const sim = similarity(queryVec, vec);
       if (sim > 0) {
         results.push({ name, similarity: sim });
@@ -412,14 +433,168 @@ export class ComponentKB {
    * @returns {Object} Stats
    */
   getStats() {
+    const levelStats = this.levelManager.getStatistics();
     return {
       totalFacts: this.facts.length,
       operators: this.operatorIndex.size,
       arg0Values: this.arg0Index.size,
       arg1Values: this.arg1Index.size,
       synonymPairs: this.synonyms.size,
-      vectorizedConcepts: this.argVectors.size
+      vectorizedConcepts: this.argVectors.size,
+      maxConstructivistLevel: levelStats.maxLevel,
+      conceptsByLevel: levelStats.conceptsByLevel,
+      factsByLevel: levelStats.factsByLevel
     };
+  }
+
+  // ============================================
+  // Constructivist Level Optimization Methods
+  // ============================================
+
+  /**
+   * Get constructivist level of a concept
+   * @param {string} name - Concept name
+   * @returns {number} Level (0 if primitive)
+   */
+  getConceptLevel(name) {
+    return this.levelManager.getConceptLevel(name);
+  }
+
+  /**
+   * Get facts at a specific constructivist level
+   * @param {number} level - Target level
+   * @returns {Array} Facts at that level
+   */
+  getFactsAtLevel(level) {
+    return this.levelManager.getFactsAtLevel(level);
+  }
+
+  /**
+   * Get facts up to and including a level
+   * @param {number} maxLevel - Maximum level (inclusive)
+   * @returns {Array} Facts up to level
+   */
+  getFactsUpToLevel(maxLevel) {
+    return this.levelManager.getFactsUpToLevel(maxLevel);
+  }
+
+  /**
+   * Find facts by operator constrained to a level range
+   * @param {string} operator - Operator name
+   * @param {number} maxLevel - Maximum level to search
+   * @returns {Array} Matching facts
+   */
+  findByOperatorAtLevel(operator, maxLevel) {
+    const allMatches = this.findByOperator(operator);
+    if (!this.useLevelOptimization) return allMatches;
+
+    return allMatches.filter(fact => {
+      const level = fact.constructivistLevel ?? this.levelManager.factLevels.get(fact.id) ?? 0;
+      return level <= maxLevel;
+    });
+  }
+
+  /**
+   * Compute goal level for search optimization
+   * @param {Object|string} goal - Goal AST or string
+   * @returns {number} Estimated goal level
+   */
+  computeGoalLevel(goal) {
+    return computeGoalLevel(goal, this.levelManager.conceptLevels);
+  }
+
+  /**
+   * Get or compute level-segmented KB bundle
+   * @param {number} level - Target level
+   * @returns {Object} Vector bundle for facts at this level
+   */
+  getLevelBundle(level) {
+    this._ensureBundlesComputed();
+    return this._levelBundles.get(level);
+  }
+
+  /**
+   * Get cumulative bundle for levels 0..maxLevel
+   * @param {number} maxLevel - Maximum level (inclusive)
+   * @returns {Object} Cumulative vector bundle
+   */
+  getCumulativeBundle(maxLevel) {
+    this._ensureBundlesComputed();
+
+    // Check cache
+    if (this._cumulativeBundles.has(maxLevel)) {
+      return this._cumulativeBundles.get(maxLevel);
+    }
+
+    // Compute cumulative bundle
+    const vectors = [];
+    for (let l = 0; l <= maxLevel; l++) {
+      const levelBundle = this._levelBundles.get(l);
+      if (levelBundle) {
+        vectors.push(levelBundle);
+      }
+    }
+
+    if (vectors.length === 0) return null;
+
+    const cumBundle = bundle(vectors);
+    this._cumulativeBundles.set(maxLevel, cumBundle);
+    return cumBundle;
+  }
+
+  /**
+   * Ensure level bundles are computed
+   */
+  _ensureBundlesComputed() {
+    if (!this._bundlesDirty) return;
+
+    this._levelBundles.clear();
+    this._cumulativeBundles.clear();
+
+    // Group facts by level
+    const factsByLevel = new Map();
+    for (const fact of this.facts) {
+      if (!fact.vector) continue;
+      const level = fact.constructivistLevel ?? 0;
+      if (!factsByLevel.has(level)) {
+        factsByLevel.set(level, []);
+      }
+      factsByLevel.get(level).push(fact.vector);
+    }
+
+    // Create bundle per level
+    for (const [level, vectors] of factsByLevel) {
+      if (vectors.length > 0) {
+        this._levelBundles.set(level, bundle(vectors));
+      }
+    }
+
+    this._bundlesDirty = false;
+  }
+
+  /**
+   * Get maximum constructivist level in KB
+   * @returns {number} Max level
+   */
+  getMaxLevel() {
+    return this.levelManager.maxLevel;
+  }
+
+  /**
+   * Check if proving a goal at given level is potentially possible
+   * @param {number} level - Goal level
+   * @returns {boolean} True if potentially achievable
+   */
+  isLevelAchievable(level) {
+    return this.levelManager.isLevelAchievable(level);
+  }
+
+  /**
+   * Get level statistics
+   * @returns {Object} Level statistics
+   */
+  getLevelStatistics() {
+    return this.levelManager.getStatistics();
   }
 }
 

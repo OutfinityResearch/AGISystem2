@@ -228,6 +228,7 @@ export function checkContradiction(session, metadata) {
     if ((operator === 'before' || operator === 'after') && args.length >= 2) {
       const oppositeOp = operator === 'before' ? 'after' : 'before';
       for (const fact of session.kbFacts) {
+        session.reasoningStats.kbScans++;
         if (fact.metadata?.operator === oppositeOp &&
             fact.metadata.args[0] === args[0] &&
             fact.metadata.args[1] === args[1]) {
@@ -267,6 +268,7 @@ export function checkContradiction(session, metadata) {
       }
       // Fallback for sessions without index (or for facts injected without addToKB).
       for (const fact of session.kbFacts) {
+        session.reasoningStats.kbScans++;
         if (fact?.metadata?.operator === otherOp &&
             fact?.metadata?.args?.[0] === args[0] &&
             fact?.metadata?.args?.[1] === args[1]) {
@@ -359,6 +361,7 @@ export function checkContradiction(session, metadata) {
   }
   // Fallback for sessions without index (or for facts injected without addToKB).
   for (const fact of session.kbFacts) {
+    session.reasoningStats.kbScans++;
     if (fact?.metadata?.operator === operator &&
         fact?.metadata?.args?.[0] === subject &&
         fact?.metadata?.args?.[1] === exclusiveValue) {

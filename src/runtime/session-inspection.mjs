@@ -8,7 +8,7 @@ export function extractArguments(session, vector, operatorName) {
   const args = [];
   for (let pos = 1; pos <= 5; pos++) {
     const extracted = removePosition(pos, remainder);
-    const matches = topKSimilar(extracted, session.vocabulary.atoms, 3);
+    const matches = topKSimilar(extracted, session.vocabulary.atoms, 3, session);
 
     if (matches.length > 0 && matches[0].similarity > 0.45) {
       args.push({
@@ -27,12 +27,14 @@ export function decodeVector(session, vector) {
   const operatorCandidates = [];
 
   for (const [name, opVec] of session.operators) {
+    session.reasoningStats.similarityChecks++;
     const sim = similarity(vector, opVec);
     if (sim > 0.4) operatorCandidates.push({ name, similarity: sim });
   }
 
   for (const [name, atomVec] of session.vocabulary.entries()) {
     if (!session.operators.has(name)) {
+      session.reasoningStats.similarityChecks++;
       const sim = similarity(vector, atomVec);
       if (sim > 0.5) operatorCandidates.push({ name, similarity: sim });
     }
@@ -65,4 +67,3 @@ export function summarizeVector(session, vector) {
   const text = session.generateText(operator, args);
   return { success: true, text, structure: decoded.structure };
 }
-

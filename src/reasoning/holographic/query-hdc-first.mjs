@@ -142,6 +142,11 @@ export class HolographicQueryEngine {
 
     dbg('RESULTS', `${validatedResults.length} validated results`);
 
+    if (validatedResults.length > 0) {
+      this.session.reasoningStats.holographicQueryHdcSuccesses =
+        (this.session.reasoningStats.holographicQueryHdcSuccesses || 0) + 1;
+    }
+
     // Step 4: Always merge with symbolic results for completeness
     // HDC may miss some results due to KB noise, so we supplement with symbolic
     if (this.config.FALLBACK_TO_SYMBOLIC) {
@@ -226,7 +231,12 @@ export class HolographicQueryEngine {
 
       // Find top-K similar in vocabulary (strategy-level topKSimilar)
       const vocabulary = this.getVocabulary();
-      const rawTop = topKSimilar(unboundVec, vocabulary, this.config.UNBIND_MAX_CANDIDATES * 3);
+      const rawTop = topKSimilar(
+        unboundVec,
+        vocabulary,
+        this.config.UNBIND_MAX_CANDIDATES * 3,
+        this.session
+      );
       const candidates = rawTop
         .filter(c => c.similarity >= this.config.UNBIND_MIN_SIMILARITY)
         .slice(0, this.config.UNBIND_MAX_CANDIDATES);
