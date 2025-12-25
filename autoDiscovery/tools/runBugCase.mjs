@@ -14,13 +14,13 @@ import { dirname, join, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
 
-import { translateExample, resetRefCounter } from '../src/nlp/nl2dsl.mjs';
-import { Session } from '../src/runtime/session.mjs';
-import { REASONING_PRIORITY } from '../src/core/constants.mjs';
-import { validateQuestionDsl } from './discovery/session.mjs';
+import { translateExample, resetRefCounter } from '../../src/nlp/nl2dsl.mjs';
+import { Session } from '../../src/runtime/session.mjs';
+import { REASONING_PRIORITY } from '../../src/core/constants.mjs';
+import { validateQuestionDsl } from '../discovery/session.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(__dirname, '..');
+const ROOT = join(__dirname, '..', '..');
 const CONFIG_ROOT = join(ROOT, 'config');
 
 // ANSI colors

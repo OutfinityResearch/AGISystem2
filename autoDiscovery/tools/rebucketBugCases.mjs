@@ -11,12 +11,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { performance } from 'node:perf_hooks';
 
-import { runExample } from './discovery/run-example.mjs';
-import { detectKnownBugPattern, BUG_PATTERNS } from './discovery/patterns.mjs';
-import { ensureDir } from './discovery/fs-utils.mjs';
-import { CATEGORY } from './discovery/constants.mjs';
+import { runExample } from '../discovery/run-example.mjs';
+import { detectKnownBugPattern, BUG_PATTERNS } from '../discovery/patterns.mjs';
+import { ensureDir } from '../discovery/fs-utils.mjs';
+import { CATEGORY } from '../discovery/constants.mjs';
 
-const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), 'bugCases');
+const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'bugCases');
 
 function listBugDirs() {
   if (!fs.existsSync(ROOT)) return [];

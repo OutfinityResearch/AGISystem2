@@ -50,6 +50,19 @@ function dbg(category, ...args) {
   debug_trace(`[Query:${category}]`, ...args);
 }
 
+export const METHOD_PRIORITY = {
+  direct: 7,
+  transitive: 6,
+  property_inheritance: 5,
+  type_induction: 4.5,
+  bundle_common: 4,
+  compound_csp: 3,
+  rule_derived: 2,
+  hdc: 1,
+  // Holographic engine output
+  hdc_validated: 1
+};
+
 // Re-export for backwards compatibility
 export { RESERVED, isValidEntity };
 
@@ -387,10 +400,9 @@ export class QueryEngine {
     }
 
     // Sort by: 1) method priority (direct > transitive > property_inheritance > bundle > compound_csp > rule > hdc), 2) score
-    const methodPriority = { direct: 7, transitive: 6, property_inheritance: 5, type_induction: 4.5, bundle_common: 4, compound_csp: 3, rule_derived: 2, hdc: 1 };
     filteredResults.sort((a, b) => {
-      const pa = methodPriority[a.method] || 0;
-      const pb = methodPriority[b.method] || 0;
+      const pa = METHOD_PRIORITY[a.method] || 0;
+      const pb = METHOD_PRIORITY[b.method] || 0;
       if (pa !== pb) return pb - pa; // Higher priority first
       return b.score - a.score; // Then by score
     });

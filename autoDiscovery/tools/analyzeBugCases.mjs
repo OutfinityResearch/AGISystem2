@@ -8,7 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), 'bugCases');
+const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'bugCases');
 
 function readJson(file) {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -144,4 +144,3 @@ function main() {
 }
 
 main();
-

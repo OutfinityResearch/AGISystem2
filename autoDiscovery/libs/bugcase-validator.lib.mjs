@@ -10,12 +10,12 @@
 
 import fs from 'node:fs';
 
-import { resetRefCounter, translateExample, translateNL2DSL } from '../src/nlp/nl2dsl.mjs';
-import { normalizeEntity, sanitizePredicate } from '../src/nlp/nl2dsl/utils.mjs';
-import { Session } from '../src/runtime/session.mjs';
-import { REASONING_PRIORITY } from '../src/core/constants.mjs';
-import { validateQuestionDsl } from './discovery/session.mjs';
-import { normalizeSessionConfigForSource } from './discovery/semantics.mjs';
+import { resetRefCounter, translateExample, translateNL2DSL } from '../../src/nlp/nl2dsl.mjs';
+import { normalizeEntity, sanitizePredicate } from '../../src/nlp/nl2dsl/utils.mjs';
+import { Session } from '../../src/runtime/session.mjs';
+import { REASONING_PRIORITY } from '../../src/core/constants.mjs';
+import { validateQuestionDsl } from '../discovery/session.mjs';
+import { normalizeSessionConfigForSource } from '../discovery/semantics.mjs';
 
 function queryToBool(result) {
   if (!result) return false;

@@ -108,21 +108,7 @@
 
   <h2>2. Library Structure</h2>
 
-  <p>Each semantic library follows a standard structure:</p>
-
-  <div class="code-example">
-<pre>
-@sys2/biology/
-├── package.json          <span style="color: #78909c;">// Metadata, dependencies</span>
-├── 00-types.sys2         <span style="color: #78909c;">// Type hierarchy declarations</span>
-├── 01-concepts.sys2      <span style="color: #78909c;">// Core concepts</span>
-├── 02-relations.sys2     <span style="color: #78909c;">// Relationship definitions</span>
-├── 03-rules.sys2         <span style="color: #78909c;">// Inference rules</span>
-├── 04-constraints.sys2   <span style="color: #78909c;">// Integrity constraints</span>
-└── tests/
-    └── biology.test.sys2 <span style="color: #78909c;">// Validation tests</span>
-</pre>
-  </div>
+  <p>Each semantic library contains: type hierarchy declarations, core concepts, relationship definitions, inference rules, integrity constraints, and validation tests.</p>
 
   <h3>2.1 Package Manifest</h3>
 

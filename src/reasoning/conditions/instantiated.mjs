@@ -77,7 +77,8 @@ export function proveInstantiatedNot(self, inner, bindings, depth) {
 }
 
 export function proveInstantiatedAnd(self, parts, bindings, depth) {
-  return proveAndWithBacktracking(self, parts, 0, new Map(bindings), [], depth);
+  const ordered = orderAndParts(self, parts, bindings);
+  return proveAndWithBacktracking(self, ordered, 0, new Map(bindings), [], depth);
 }
 
 export function proveAndWithBacktracking(self, parts, partIndex, bindings, accumulatedSteps, depth) {
@@ -209,6 +210,12 @@ export function findAllMatches(self, part, bindings, depth) {
 }
 
 export function collectEntityDomain(self) {
+  const componentKB = self.session?.componentKB;
+  if (componentKB?.getEntityDomain) {
+    const cached = componentKB.getEntityDomain();
+    if (Array.isArray(cached) && cached.length > 0) return cached;
+  }
+
   const domain = new Set();
   for (const fact of self.session.kbFacts || []) {
     const meta = fact?.metadata;
@@ -221,6 +228,55 @@ export function collectEntityDomain(self) {
     }
   }
   return [...domain];
+}
+
+function parseConditionHint(text) {
+  if (!text || typeof text !== 'string') return null;
+  const tokens = text.trim().split(/\s+/).filter(Boolean);
+  if (tokens.length < 1) return null;
+  const cleaned = tokens.filter(t => !t.startsWith('@'));
+  if (cleaned.length < 1) return null;
+  return { op: cleaned[0], arg0: cleaned[1] || null, arg1: cleaned[2] || null, tokens: cleaned };
+}
+
+function estimatePartFanout(self, part, bindings) {
+  const componentKB = self.session?.componentKB;
+
+  // Prefer to prove compound parts later: they can recurse/branch heavily.
+  if (part.type === 'And' || part.type === 'Or') return { estimate: 1e9, grounded: 0 };
+  if (part.type === 'Not') return { estimate: 5e8, grounded: 0 };
+
+  if (!(part.type === 'leaf' && part.ast)) return { estimate: 1e9, grounded: 0 };
+
+  const condStr = self.engine.unification.instantiateAST(part.ast, bindings);
+  const hint = parseConditionHint(condStr);
+  if (!hint?.op) return { estimate: 1e9, grounded: 0 };
+
+  const grounded = hint.tokens.slice(1).filter(t => t && !t.startsWith('?')).length;
+
+  if (!componentKB) {
+    return { estimate: (self.session?.kbFacts?.length || 0) * (1 + Math.max(0, hint.tokens.length - 2 - grounded)), grounded };
+  }
+
+  // Exact counts (no synonym expansion) to preserve semantics and avoid surprises.
+  if (hint.arg0 && !hint.arg0.startsWith('?')) {
+    return { estimate: componentKB.countByOperatorAndArg0(hint.op, hint.arg0, false), grounded };
+  }
+  return { estimate: componentKB.countByOperator(hint.op, false), grounded };
+}
+
+function orderAndParts(self, parts, bindings) {
+  if (!Array.isArray(parts) || parts.length < 2) return parts;
+  const scored = parts.map((p, index) => {
+    const { estimate, grounded } = estimatePartFanout(self, p, bindings);
+    return { p, index, estimate, grounded };
+  });
+  scored.sort((a, b) => {
+    if (a.estimate !== b.estimate) return a.estimate - b.estimate;
+    if (a.grounded !== b.grounded) return b.grounded - a.grounded;
+    return a.index - b.index;
+  });
+  return scored.map(s => s.p);
 }
 
 export function findAllNotMatches(self, part, bindings, depth) {

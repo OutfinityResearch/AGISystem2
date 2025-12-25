@@ -9,9 +9,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const quarantineDir = join(__dirname, 'quarantine');
-const nlpBugsDir = join(__dirname, 'nlpBugs');
-const bugCasesDir = join(__dirname, 'bugCases');
+const quarantineDir = join(__dirname, '..', 'quarantine');
+const nlpBugsDir = join(__dirname, '..', 'nlpBugs');
+const bugCasesDir = join(__dirname, '..', 'bugCases');
 
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) {

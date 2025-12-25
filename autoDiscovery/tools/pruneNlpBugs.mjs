@@ -15,8 +15,8 @@
 import fs from 'node:fs';
 import { join } from 'node:path';
 
-import { translateExample } from '../src/nlp/nl2dsl.mjs';
-import { createSession, validateQuestionDsl } from './discovery/session.mjs';
+import { translateExample } from '../../src/nlp/nl2dsl.mjs';
+import { createSession, validateQuestionDsl } from '../discovery/session.mjs';
 
 const ROOT = join(process.cwd(), 'autoDiscovery', 'nlpBugs');
 

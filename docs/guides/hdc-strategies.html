@@ -21,15 +21,6 @@
     <p>AGISystem2 uses a <strong>strategy pattern</strong> for HDC operations. This allows swapping the underlying vector representation without changing the reasoning layer. This guide explains how to create a new strategy.</p>
   </div>
 
-  <h2>Architecture Overview</h2>
-  <pre><code>src/hdc/
-├── contract.mjs              # Interface definitions (JSDoc)
-├── facade.mjs                # Single entry point for all HDC ops
-└── strategies/
-    ├── index.mjs             # Strategy registry
-    ├── dense-binary.mjs      # Default: Uint32Array + XOR
-    └── your-strategy.mjs     # Your new strategy</code></pre>
-
   <h2>HDC Contract</h2>
   <p>Every strategy must satisfy these <strong>mathematical properties</strong>:</p>
 

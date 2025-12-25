@@ -135,35 +135,13 @@
     </ul>
     <p><strong>What AGISystem2 does NOT do:</strong></p>
     <ul style="margin-bottom: 15px;">
-      <li>Natural language understanding (requires external NL→DSL translation)</li>
+      <li>Full natural language understanding&mdash;includes a hardcoded English NL&rarr;DSL translator for common patterns; LLMs can translate other languages into our supported English format (less flexible, more formalizable)</li>
       <li>Creative generation or open-ended conversation</li>
       <li>Learning from unstructured data</li>
       <li>Handling domains that haven't been formally modeled</li>
     </ul>
     <p style="margin-bottom: 0;"><strong>Fundamental limitation:</strong> The system reasons correctly <em>within</em> a theory, but cannot guarantee the theory itself is correct. See <a href="theory/grounding-problem.html">The Symbol Grounding Problem</a> for an honest discussion of this epistemological limitation.</p>
   </div>
-
-  <h2>Current Benchmark Results</h2>
-
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin: 20px 0;">
-    <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
-      <div style="font-size: 28px; font-weight: bold;">99.5%</div>
-      <div style="font-size: 12px; opacity: 0.9;">ProntoQA</div>
-    </div>
-    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
-      <div style="font-size: 28px; font-weight: bold;">75%</div>
-      <div style="font-size: 12px; opacity: 0.9;">LogiQA</div>
-    </div>
-    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
-      <div style="font-size: 28px; font-weight: bold;">63%</div>
-      <div style="font-size: 12px; opacity: 0.9;">FOLIO</div>
-    </div>
-    <div style="background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
-      <div style="font-size: 28px; font-weight: bold;">100%</div>
-      <div style="font-size: 12px; opacity: 0.9;">Translation</div>
-    </div>
-  </div>
-  <p style="font-size: 12px; color: #666; text-align: center;"><a href="research/benchmarks.html">See full benchmark results →</a></p>
 
   <div class="quick-start-box" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 25px; border-radius: 12px; margin: 20px 0;">
     <h3 style="margin-top: 0; color: white;">🚀 Quick Start</h3>

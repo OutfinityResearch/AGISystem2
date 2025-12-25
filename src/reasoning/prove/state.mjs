@@ -6,6 +6,7 @@
 export function resetState(self) {
   self.steps = [];
   self.visited = new Set();
+  self.memo = new Map();
   self.startTime = Date.now();
   self.reasoningSteps = 0;
 }
@@ -25,4 +26,3 @@ export function logStep(self, operation, detail) {
     timestamp: Date.now() - self.startTime
   });
 }
-

@@ -19,14 +19,25 @@ function dbg(category, ...args) {
  * @param {string} operatorName - Query operator name
  * @param {Array} knowns - Known arguments with positions
  * @param {Array} holes - Holes with positions
+ * @param {Object} options - Query options
+ * @param {number|null} options.maxResults - Stop after collecting this many matches
  * @returns {Array} Matching results with bindings
  */
-export function searchKBDirect(session, operatorName, knowns, holes) {
+export function searchKBDirect(session, operatorName, knowns, holes, options = {}) {
   const results = [];
 
-  for (const fact of session.kbFacts) {
+  const maxResults = Number.isFinite(options.maxResults) ? Math.max(1, options.maxResults) : null;
+
+  const componentKB = session.componentKB;
+  let scanFacts = session.kbFacts;
+  if (componentKB && operatorName) {
+    // NOTE: direct KB search must be exact (no synonym expansion), to preserve semantics.
+    scanFacts = componentKB.findByOperator(operatorName, false);
+  }
+
+  for (const fact of scanFacts) {
     session.reasoningStats.kbScans++;
-    const meta = fact.metadata;
+    const meta = fact?.metadata;
     if (!meta || meta.operator !== operatorName) continue;
     if (!meta.args) continue;
 
@@ -70,6 +81,10 @@ export function searchKBDirect(session, operatorName, knowns, holes) {
           steps
         });
       }
+
+      if (maxResults !== null && results.length >= maxResults) {
+        break;
+      }
     }
   }
 
@@ -83,9 +98,12 @@ export function searchKBDirect(session, operatorName, knowns, holes) {
  * @returns {boolean} True if type class
  */
 export function isTypeClass(session, name) {
-  for (const fact of session.kbFacts) {
+  const componentKB = session.componentKB;
+  const scanFacts = componentKB?.findByArg1 ? componentKB.findByArg1(name, false) : session.kbFacts;
+
+  for (const fact of scanFacts) {
     session.reasoningStats.kbScans++;
-    const meta = fact.metadata;
+    const meta = fact?.metadata;
     if (meta?.operator === 'isA' && meta.args?.[1] === name) {
       return true;
     }
@@ -101,9 +119,12 @@ export function isTypeClass(session, name) {
  * @returns {boolean} True if negated
  */
 export function isFactNegated(session, operator, args) {
-  for (const fact of session.kbFacts) {
+  const componentKB = session.componentKB;
+  const scanFacts = componentKB?.findByOperator ? componentKB.findByOperator('Not', false) : session.kbFacts;
+
+  for (const fact of scanFacts) {
     session.reasoningStats.kbScans++;
-    const meta = fact.metadata;
+    const meta = fact?.metadata;
     if (meta?.operator !== 'Not') continue;
 
     // Get the reference that Not is applied to

@@ -20,10 +20,10 @@ import fs from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { validateOne } from './bugcase-validator.lib.mjs';
+import { validateOne } from '../libs/bugcase-validator.lib.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const BUG_CASES_DIR = join(__dirname, 'bugCases');
+const BUG_CASES_DIR = join(__dirname, '..', 'bugCases');
 
 const C = {
   reset: '\x1b[0m',

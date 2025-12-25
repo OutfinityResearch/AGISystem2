@@ -17,7 +17,7 @@ import fs from 'node:fs';
 import { runBugCase } from './runBugCase.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const BUG_CASES_DIR = join(__dirname, 'bugCases');
+const BUG_CASES_DIR = join(__dirname, '..', 'bugCases');
 
 // ANSI colors
 const C = {

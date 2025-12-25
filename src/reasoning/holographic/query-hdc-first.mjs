@@ -13,7 +13,7 @@
 import { bind, unbind, bundle, similarity, topKSimilar } from '../../core/operations.mjs';
 import { withPosition, getPositionVector } from '../../core/position.mjs';
 import { MAX_HOLES, getHolographicThresholds, getThresholds } from '../../core/constants.mjs';
-import { QueryEngine } from '../query.mjs';
+import { QueryEngine, METHOD_PRIORITY } from '../query.mjs';
 import { sameBindings } from '../query-kb.mjs';
 import { ProofEngine } from '../prove.mjs';
 import { buildProofObject } from '../proof-schema.mjs';
@@ -53,9 +53,10 @@ export class HolographicQueryEngine {
   /**
    * Execute query using HDC-first approach
    * @param {Statement} statement - Query statement with holes
+   * @param {Object} options - Query options
    * @returns {QueryResult} Same interface as QueryEngine
    */
-  execute(statement) {
+  execute(statement, options = {}) {
     // Track holographic stats
     this.session.reasoningStats.holographicQueries =
       (this.session.reasoningStats.holographicQueries || 0) + 1;
@@ -81,7 +82,7 @@ export class HolographicQueryEngine {
 
     // Direct match (no holes) - use symbolic
     if (holes.length === 0) {
-      return this.symbolicEngine.execute(statement);
+      return this.symbolicEngine.execute(statement, options);
     }
 
     // Too many holes - fail
@@ -106,6 +107,8 @@ export class HolographicQueryEngine {
       this.session.reasoningStats.hdcUnbindSuccesses =
         (this.session.reasoningStats.hdcUnbindSuccesses || 0) + 1;
     }
+
+    const maxResults = Number.isFinite(options.maxResults) ? Math.max(1, options.maxResults) : null;
 
     // Step 3: Validate candidates with symbolic proof
     const validatedResults = [];
@@ -138,6 +141,10 @@ export class HolographicQueryEngine {
 
         dbg('VALID', `Validated: ${JSON.stringify(candidate.bindings)}`);
       }
+
+      if (maxResults !== null && validatedResults.length >= maxResults) {
+        break;
+      }
     }
 
     dbg('RESULTS', `${validatedResults.length} validated results`);
@@ -150,7 +157,7 @@ export class HolographicQueryEngine {
     // Step 4: Always merge with symbolic results for completeness
     // HDC may miss some results due to KB noise, so we supplement with symbolic
     if (this.config.FALLBACK_TO_SYMBOLIC) {
-      const symbolicResult = this.symbolicEngine.execute(statement);
+      const symbolicResult = this.symbolicEngine.execute(statement, options);
 
       if (symbolicResult.allResults && symbolicResult.allResults.length > 0) {
         const hasSteps = (result) => {
@@ -186,16 +193,26 @@ export class HolographicQueryEngine {
       }
     }
 
+    // Match QueryEngine ordering + maxResults behavior.
+    validatedResults.sort((a, b) => {
+      const pa = METHOD_PRIORITY[a.method] || 0;
+      const pb = METHOD_PRIORITY[b.method] || 0;
+      if (pa !== pb) return pb - pa;
+      return (b.score || 0) - (a.score || 0);
+    });
+
+    const finalResults = maxResults !== null ? validatedResults.slice(0, maxResults) : validatedResults;
+
     // Build final result matching QueryEngine interface
-    const bindings = validatedResults.length > 0 ? validatedResults[0].bindings : new Map();
-    const confidence = validatedResults.length > 0 ? validatedResults[0].score : 0;
+    const bindings = finalResults.length > 0 ? finalResults[0].bindings : new Map();
+    const confidence = finalResults.length > 0 ? finalResults[0].score : 0;
 
     return {
-      success: validatedResults.length > 0,
+      success: finalResults.length > 0,
       bindings,
       confidence,
-      ambiguous: validatedResults.length > 1,
-      allResults: validatedResults
+      ambiguous: finalResults.length > 1,
+      allResults: finalResults
     };
   }
 

@@ -225,49 +225,6 @@
     </svg>
   </div>
 
-  <h2>Module Directory Structure</h2>
-
-  <pre><code>src/
-├── core/                    # Core HDC Layer
-│   ├── vector.js            # Vector storage & manipulation
-│   ├── operations.js        # Bind, Bundle, Similarity
-│   ├── position.js          # Position vectors
-│   └── constants.js         # Configuration
-│
-├── util/                    # Utilities
-│   ├── ascii-stamp.js       # Deterministic initialization
-│   ├── prng.js              # Seeded randomness
-│   └── hash.js              # String to seed
-│
-├── parser/                  # DSL Processing
-│   ├── lexer.js             # Tokenization
-│   ├── parser.js            # AST construction
-│   └── ast.js               # Node definitions
-│
-├── runtime/                 # Runtime Layer
-│   ├── session.js           # Main API surface
-│   ├── executor.js          # Statement execution
-│   ├── scope.js             # Variable management
-│   └── theory/              # Theory management
-│       ├── registry.js      # Theory storage
-│       ├── loader.js        # File loading
-│       └── core-theory.js   # Built-in Core
-│
-├── reasoning/               # Reasoning Systems
-│   ├── query.js             # Single-step queries
-│   ├── prove.js             # Multi-step proofs
-│   ├── rules.js             # Rule matching
-│   └── unify.js             # Unification
-│
-├── decoding/                # Output Generation
-│   ├── structural-decoder.js# Vector to structure
-│   ├── phrasing-registry.js # Template storage
-│   ├── text-generator.js    # Slot filling
-│   └── elaborator.js        # LLM integration
-│
-└── bridge/                  # Integration
-    └── evaluator.js         # JS-HDC bridge</code></pre>
-
   <h2>Design Principles</h2>
 
   <table>

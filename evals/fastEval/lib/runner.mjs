@@ -304,6 +304,21 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
       const queryDsl = testCase.query_dsl || dslToExecute;
 
       const sessionOptions = { timeout: timeoutMs };
+      const maxResults =
+        testCase.maxResults ??
+        testCase.max_results ??
+        testCase.max_results_count ??
+        null;
+      if (Number.isFinite(maxResults)) {
+        sessionOptions.maxResults = Math.max(1, maxResults);
+      }
+      const useLevelOptimization =
+        testCase.useLevelOptimization ??
+        testCase.use_level_optimization ??
+        null;
+      if (typeof useLevelOptimization === 'boolean') {
+        sessionOptions.useLevelOptimization = useLevelOptimization;
+      }
 
       if (testCase.action === 'prove' || testCase.action === 'elaborate') {
         const result = session.prove(queryDsl, sessionOptions);

@@ -8,6 +8,7 @@
 
 import { getThresholds } from '../core/constants.mjs';
 import { debug_trace } from '../utils/debug.js';
+import { computeGoalLevel } from './constructivist-level.mjs';
 
 function dbg(category, ...args) {
   debug_trace(`[Unify:${category}]`, ...args);
@@ -33,9 +34,12 @@ export class UnificationEngine {
    * @param {Object} goal - Goal statement
    * @param {Object} rule - Rule to match
    * @param {number} depth - Current proof depth
+   * @param {Object} options - Options
+   * @param {number|null} options.goalLevel - Goal constructivist level (for pruning)
+   * @param {boolean} options.useLevelOptimization - Enable level pruning
    * @returns {Object} Proof result with bindings
    */
-  tryUnification(goal, rule, depth) {
+  tryUnification(goal, rule, depth, options = {}) {
     dbg('UNIFY', 'Trying unification for rule:', rule.name);
 
     const goalOp = this.engine.extractOperatorName(goal);
@@ -44,6 +48,11 @@ export class UnificationEngine {
     if (!goalOp || goalArgs.length === 0) {
       return { valid: false };
     }
+
+    const componentKB = this.session?.componentKB;
+    const useLevelOpt = options.useLevelOptimization ??
+      (componentKB?.useLevelOptimization && this.session.useLevelOptimization !== false);
+    const goalLevel = options.goalLevel ?? (useLevelOpt && componentKB ? componentKB.computeGoalLevel(goal.toString?.() || '') : null);
 
     const leafConclusions = [];
     const collectLeafAsts = (part) => {
@@ -100,6 +109,13 @@ export class UnificationEngine {
       if (!unifyOk) continue;
 
       dbg('UNIFY', 'Bindings:', [...bindings.entries()]);
+
+      if (useLevelOpt && goalLevel !== null) {
+        const premLevel = this.computeMaxPremiseLevel(rule, bindings);
+        if (Number.isFinite(premLevel) && premLevel >= goalLevel) {
+          continue;
+        }
+      }
 
       // Prove the instantiated condition
       const condResult = this.engine.conditions.proveInstantiatedCondition(rule, bindings, depth + 1);
@@ -200,6 +216,48 @@ export class UnificationEngine {
       args: parts.slice(1).map(name => ({ type: 'Identifier', name })),
       toString: () => factStr
     };
+  }
+
+  /**
+   * Estimate the maximum constructivist level of a rule's premises after applying bindings.
+   * Uses a safe-under-approximation when variables remain unbound (those tokens are ignored).
+   * @param {Object} rule
+   * @param {Map<string,string>} bindings
+   * @returns {number|null}
+   */
+  computeMaxPremiseLevel(rule, bindings) {
+    const componentKB = this.session?.componentKB;
+    const conceptLevels = componentKB?.levelManager?.conceptLevels || new Map();
+
+    const walk = (part) => {
+      if (!part) return 0;
+      if (part.type === 'leaf' && part.ast) {
+        const s = this.instantiateAST(part.ast, bindings);
+        return computeGoalLevel(s, conceptLevels);
+      }
+      if (part.type === 'Not') return walk(part.inner);
+      if ((part.type === 'And' || part.type === 'Or') && Array.isArray(part.parts)) {
+        let max = 0;
+        for (const p of part.parts) max = Math.max(max, walk(p));
+        return max;
+      }
+      if (part.operator && Array.isArray(part.args)) {
+        const s = this.instantiateAST(part, bindings);
+        return computeGoalLevel(s, conceptLevels);
+      }
+      return 0;
+    };
+
+    if (rule.conditionParts) {
+      return walk(rule.conditionParts);
+    }
+
+    if (rule.conditionAST) {
+      const s = this.instantiateAST(rule.conditionAST, bindings);
+      return computeGoalLevel(s, conceptLevels);
+    }
+
+    return null;
   }
 }
 

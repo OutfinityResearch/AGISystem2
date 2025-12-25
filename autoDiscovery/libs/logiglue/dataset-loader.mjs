@@ -436,13 +436,18 @@ async function downloadSubset(sourceKey, subsetKey, progressCallback) {
  * Load examples from a single subset
  */
 async function loadSubset(sourceKey, subsetKey, options = {}) {
-  const { forceDownload = false, progressCallback } = options;
+  const { forceDownload = false, progressCallback, offline = false } = options;
 
   ensureCacheDir();
   const cachePath = getCachePath(sourceKey, subsetKey);
 
-  // Download if not cached
-  if (forceDownload || !isCacheFresh(cachePath)) {
+  // Offline mode: never attempt network; use cache if present (even if stale).
+  if (offline === true) {
+    if (!fs.existsSync(cachePath)) return [];
+  }
+
+  // Download if not cached (or stale)
+  if (offline !== true && (forceDownload || !isCacheFresh(cachePath))) {
     await downloadSubset(sourceKey, subsetKey, progressCallback);
   }
 
@@ -498,6 +503,7 @@ export async function loadExamples(options = {}) {
     limit = null,
     randomSeed = 42,
     forceDownload = false,
+    offline = false,
     progressCallback = null,
     uniform = true  // Sample equally from each source
   } = options;
@@ -537,6 +543,7 @@ export async function loadExamples(options = {}) {
     try {
       const examples = await loadSubset(sourceKey, subsetKey, {
         forceDownload,
+        offline,
         progressCallback
       });
 

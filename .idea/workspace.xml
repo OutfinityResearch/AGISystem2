@@ -5,46 +5,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs">
-      <change afterPath="$PROJECT_DIR$/HDC_METRIC_ANALYSIS.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PERFORMANCE_METRICS_ANALYSIS.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS22-Constructivist-Level-Optimization.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/eval_statistics_report.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/operation-counting-comparison.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/reasoning-stats-lifecycle.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/review_operation_counting.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/constructivist-level.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reasoning/forward-chain.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/libs/bugcase-validator.lib.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/libs/pruneBugCases.lib.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/runAutodiscoveryAgent.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/tools/.keep" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/tools/analyzeBugCases.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/tools/rebucketBugCases.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/autoDiscovery/analised.md" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/analised.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/guides/getting-started.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/getting-started.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/analyzeBugCases.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugcase-validator.lib.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/discovery/run-batch.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/discovery/run-batch.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/libs/logiglue/dataset-loader.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/libs/logiglue/dataset-loader.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/pruneBugCases.lib.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/rebucketBugCases.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/architecture/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/architecture/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/guides/hdc-strategies.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/hdc-strategies.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/research/benchmarks.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/benchmarks.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/decoding/structural-decoder.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/decoding/structural-decoder.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hdc/facade.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/facade.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/dense-binary.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/dense-binary.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/metric-affine.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/metric-affine.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/sparse-polynomial.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/sparse-polynomial.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/abduction.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/abduction.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/directions/semantic-libraries.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/semantic-libraries.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/use-cases/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/use-cases/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/component-kb.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/component-kb.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/conditions/rule-conditions.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/conditions/rule-conditions.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/csp/solver.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/csp/solver.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/csp-hdc-heuristic.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/csp-hdc-heuristic.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/conditions/instantiated.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/conditions/instantiated.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/conditions/single.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/conditions/single.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/index.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/induction.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/induction.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/prove/prove-goal-exists.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove/prove-goal-exists.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/prove/rule-index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove/rule-index.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-compound.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-compound.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-inheritance.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-inheritance.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-rules.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-rules.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-transitive.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-transitive.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session-contradictions.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-contradictions.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session-inspection.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-inspection.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session-stats.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-stats.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/prove/prove-goal.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove/prove-goal.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/prove/state.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove/state.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query-kb.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-kb.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/unification.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/unification.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -162,14 +153,6 @@
       <workItem from="1766477237780" duration="9294000" />
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
-    </task>
-    <task id="LOCAL-00028" summary="Better Documentation and WIP for code">
-      <option name="closed" value="true" />
-      <created>1764770289523</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1764770289523</updated>
     </task>
     <task id="LOCAL-00029" summary="Better Documentation and WIP for code">
       <option name="closed" value="true" />
@@ -555,7 +538,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766672524651</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs">
+      <option name="closed" value="true" />
+      <created>1766675861425</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1766675861425</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -49,6 +49,11 @@ export class ComponentKB {
     this.levelManager = new LevelManager(session);
     this.useLevelOptimization = session?.useLevelOptimization ?? true;
 
+    // Fast entity-domain enumeration (for witness search / quantified rules)
+    this.atomDomain = new Set();
+    this._entityDomainCache = [];
+    this._entityDomainCacheSize = 0;
+
     // Level-segmented HDC bundles (lazy computed)
     this._levelBundles = new Map();      // level -> Vector
     this._cumulativeBundles = new Map(); // level -> Vector (0..level)
@@ -70,6 +75,7 @@ export class ComponentKB {
 
     const entry = {
       id,
+      name: fact.name,
       vector: fact.vector,
       metadata: meta,
       operator: meta.operator,
@@ -86,6 +92,20 @@ export class ComponentKB {
     // Compute and store constructivist level
     if (this.useLevelOptimization) {
       entry.constructivistLevel = this.levelManager.addFact(entry);
+    }
+
+    // Update entity domain cache from all args (not just arg0/arg1).
+    if (meta.args) {
+      const beforeSize = this.atomDomain.size;
+      for (const a of meta.args) {
+        if (typeof a !== 'string') continue;
+        if (!a) continue;
+        if (a.startsWith('__')) continue;
+        this.atomDomain.add(a);
+      }
+      if (this.atomDomain.size !== beforeSize) {
+        this._entityDomainCacheSize = -1;
+      }
     }
 
     // Mark bundles as dirty
@@ -130,6 +150,19 @@ export class ComponentKB {
     }
 
     return id;
+  }
+
+  /**
+   * Return a cached list of observed entity tokens (arguments across facts).
+   * Used to ground unbound variables during witness search.
+   * @returns {Array<string>}
+   */
+  getEntityDomain() {
+    if (this._entityDomainCacheSize !== this.atomDomain.size) {
+      this._entityDomainCache = [...this.atomDomain];
+      this._entityDomainCacheSize = this.atomDomain.size;
+    }
+    return this._entityDomainCache;
   }
 
   /**
@@ -258,6 +291,21 @@ export class ComponentKB {
   }
 
   /**
+   * Count facts by operator (with optional synonym expansion).
+   * @param {string} operator
+   * @param {boolean} expandSyn
+   * @returns {number}
+   */
+  countByOperator(operator, expandSyn = true) {
+    const operators = expandSyn ? this.expandSynonyms(operator) : new Set([operator]);
+    let count = 0;
+    for (const op of operators) {
+      count += (this.operatorIndex.get(op) || []).length;
+    }
+    return count;
+  }
+
+  /**
    * Find facts by first argument (with synonym expansion)
    * @param {string} arg - Argument name
    * @param {boolean} expandSyn - Expand synonyms (default true)
@@ -275,6 +323,21 @@ export class ComponentKB {
     }
 
     return results;
+  }
+
+  /**
+   * Count facts by arg0 (with optional synonym expansion).
+   * @param {string} arg
+   * @param {boolean} expandSyn
+   * @returns {number}
+   */
+  countByArg0(arg, expandSyn = true) {
+    const args = expandSyn ? this.expandSynonyms(arg) : new Set([arg]);
+    let count = 0;
+    for (const a of args) {
+      count += (this.arg0Index.get(a) || []).length;
+    }
+    return count;
   }
 
   /**
@@ -298,6 +361,21 @@ export class ComponentKB {
   }
 
   /**
+   * Count facts by arg1 (with optional synonym expansion).
+   * @param {string} arg
+   * @param {boolean} expandSyn
+   * @returns {number}
+   */
+  countByArg1(arg, expandSyn = true) {
+    const args = expandSyn ? this.expandSynonyms(arg) : new Set([arg]);
+    let count = 0;
+    for (const a of args) {
+      count += (this.arg1Index.get(a) || []).length;
+    }
+    return count;
+  }
+
+  /**
    * Find facts matching operator AND arg0 (with synonyms)
    * @param {string} operator - Operator name
    * @param {string} arg0 - First argument
@@ -308,6 +386,38 @@ export class ComponentKB {
     const argFacts = this.findByArg0(arg0);
 
     return argFacts.filter(f => opFacts.has(f.id));
+  }
+
+  /**
+   * Count facts matching operator AND arg0 (with optional synonym expansion).
+   * @param {string} operator
+   * @param {string} arg0
+   * @param {boolean} expandSyn
+   * @returns {number}
+   */
+  countByOperatorAndArg0(operator, arg0, expandSyn = true) {
+    const operators = expandSyn ? this.expandSynonyms(operator) : new Set([operator]);
+    const args0 = expandSyn ? this.expandSynonyms(arg0) : new Set([arg0]);
+
+    const opIds = [];
+    for (const op of operators) opIds.push(...(this.operatorIndex.get(op) || []));
+    if (opIds.length === 0) return 0;
+
+    const argIds = [];
+    for (const a0 of args0) argIds.push(...(this.arg0Index.get(a0) || []));
+    if (argIds.length === 0) return 0;
+
+    if (opIds.length <= argIds.length) {
+      const set = new Set(opIds);
+      let count = 0;
+      for (const id of argIds) if (set.has(id)) count++;
+      return count;
+    }
+
+    const set = new Set(argIds);
+    let count = 0;
+    for (const id of opIds) if (set.has(id)) count++;
+    return count;
   }
 
   /**

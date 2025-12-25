@@ -19,6 +19,30 @@ function opName(expr) {
   return expr.operator?.name || expr.operator?.value || expr.name || expr.value || null;
 }
 
+function cloneStep(step) {
+  if (!step || typeof step !== 'object') return step;
+  return { ...step };
+}
+
+function cloneResult(result) {
+  if (!result || typeof result !== 'object') return result;
+  const cloned = { ...result };
+  if (Array.isArray(result.steps)) cloned.steps = result.steps.map(cloneStep);
+  if (result.bindings && typeof result.bindings === 'object' && !Array.isArray(result.bindings)) {
+    cloned.bindings = { ...result.bindings };
+  }
+  return cloned;
+}
+
+function shouldMemoize(goalStr, result, self) {
+  if (!goalStr || typeof goalStr !== 'string') return false;
+  if (goalStr.includes('?')) return false;
+  if (!result || typeof result !== 'object') return false;
+  if (!Array.isArray(result.steps) || result.steps.length === 0) return false;
+  if (result.steps === self.steps) return false;
+  return true;
+}
+
 export function proveGoal(self, goal, depth) {
   if (self.isTimedOut()) {
     throw new Error('Proof timed out');
@@ -40,9 +64,22 @@ export function proveGoal(self, goal, depth) {
   if (self.visited.has(goalKey)) return { valid: false, reason: 'Cycle detected' };
   self.visited.add(goalKey);
 
+  const memoKey = !goalStr.includes('?')
+    ? `prove:${goalStr}::d${depth}::ignNeg${self.options.ignoreNegation === true ? 1 : 0}::cwa${self.session.closedWorldAssumption ? 1 : 0}`
+    : null;
+  if (memoKey && self.memo?.has(memoKey)) {
+    return cloneResult(self.memo.get(memoKey));
+  }
+  const remember = (result) => {
+    if (memoKey && self.memo && shouldMemoize(goalStr, result, self)) {
+      self.memo.set(memoKey, cloneResult(result));
+    }
+    return result;
+  };
+
   try {
     if (goalOp === 'Exists') {
-      return proveExistsGoal(self, goalStr, goal, depth, proveGoal);
+      return remember(proveExistsGoal(self, goalStr, goal, depth, proveGoal));
     }
 
     const goalVec = self.session.executor.buildStatementVector(goal);
@@ -54,7 +91,7 @@ export function proveGoal(self, goal, depth) {
       const innerExpr = goal.args[0];
       if (innerExpr?.type === 'Compound' && opName(innerExpr.operator) === 'Exists') {
         const disjoint = tryProveNotExistsViaTypeDisjointness(self, goalStr, innerExpr);
-        if (disjoint.valid) return disjoint;
+        if (disjoint.valid) return remember(disjoint);
       }
 
       const meta = self.session.executor.extractMetadataWithNotExpansion(goal, 'Not');
@@ -62,8 +99,12 @@ export function proveGoal(self, goal, depth) {
       const innerArgs = meta?.innerArgs;
 
       if (innerOp && Array.isArray(innerArgs)) {
-        for (const fact of self.session.kbFacts) {
-          const fm = fact.metadata;
+        const componentKB = self.session?.componentKB;
+        const scanFacts = componentKB?.findByOperator ? componentKB.findByOperator('Not', false) : self.session.kbFacts;
+        for (const fact of scanFacts) {
+          if (self.isTimedOut()) throw new Error('Proof timed out');
+          self.session.reasoningStats.kbScans++;
+          const fm = fact?.metadata;
           if (fm?.operator !== 'Not') continue;
           if (fm.innerOperator !== innerOp) continue;
           if (!Array.isArray(fm.innerArgs) || fm.innerArgs.length !== innerArgs.length) continue;
@@ -72,38 +113,38 @@ export function proveGoal(self, goal, depth) {
             if (fm.innerArgs[i] !== innerArgs[i]) { ok = false; break; }
           }
           if (ok) {
-            return {
+            return remember({
               valid: true,
               method: 'explicit_negation',
               confidence: self.thresholds.STRONG_MATCH,
               goal: goalStr,
               steps: [{ operation: 'not_fact', fact: `Not ${innerOp} ${innerArgs.join(' ')}`.trim() }]
-            };
+            });
           }
         }
 
         const derived = tryRuleDerivedNot(self, innerOp, innerArgs, depth);
         if (derived.valid) {
           derived.goal = goalStr;
-          return derived;
+          return remember(derived);
         }
 
         const derivedCompound = tryRuleDerivedNotFromCompoundConclusion(self, innerOp, innerArgs, depth);
         if (derivedCompound.valid) {
           derivedCompound.goal = goalStr;
-          return derivedCompound;
+          return remember(derivedCompound);
         }
 
         const contra = tryContrapositiveNot(self, innerOp, innerArgs, depth, proveGoal);
         if (contra.valid) {
           contra.goal = goalStr;
-          return contra;
+          return remember(contra);
         }
 
         const innerStmt = buildStatementFromStrings(innerOp, innerArgs);
         const innerResult = proveGoal(self, innerStmt, depth + 1);
         if (!innerResult.valid && self.session.closedWorldAssumption) {
-          return {
+          return remember({
             valid: true,
             method: 'closed_world_assumption',
             confidence: self.thresholds.CONDITION_CONFIDENCE,
@@ -112,24 +153,24 @@ export function proveGoal(self, goal, depth) {
               ...(innerResult.steps || []),
               { operation: 'cwa_negation', fact: `Not ${innerOp} ${innerArgs.join(' ')}`.trim() }
             ]
-          };
+          });
         }
 
         if (!innerResult.valid && !self.session.closedWorldAssumption) {
-          return {
+          return remember({
             valid: false,
             reason: 'Not goal requires explicit negation (open world)',
             goal: goalStr,
             steps: self.steps
-          };
+          });
         }
 
-        return {
+        return remember({
           valid: false,
           reason: 'Not goal failed - inner is provable',
           goal: goalStr,
           steps: self.steps
-        };
+        });
       }
     }
 
@@ -137,13 +178,13 @@ export function proveGoal(self, goal, depth) {
       const negationInfo = self.checkGoalNegation(goal);
       if (negationInfo.negated) {
         const searchTrace = self.options.includeSearchTrace ? self.buildNegationSearchTrace(goal, negationInfo) : null;
-        return {
+        return remember({
           valid: false,
           reason: 'Goal is negated',
           goal: goalStr,
           searchTrace,
           steps: self.steps
-        };
+        });
       }
     }
 
@@ -151,62 +192,69 @@ export function proveGoal(self, goal, depth) {
     const directMatchTrusted = directResult.valid && goalFactExists;
     if (directMatchTrusted && directResult.confidence > self.thresholds.VERY_STRONG_MATCH) {
       directResult.steps = [{ operation: 'direct_match', fact: self.goalToFact(goal) }];
-      return directResult;
+      return remember(directResult);
     }
     if (goalFactExists) {
-      return {
+      return remember({
         valid: true,
         method: 'direct_metadata',
         confidence: self.thresholds.STRONG_MATCH,
         goal: goalStr,
         steps: [{ operation: 'direct_fact', fact: self.goalToFact(goal) }]
-      };
+      });
     }
 
     const symmetricResult = self.symmetric?.trySymmetric ? self.symmetric.trySymmetric(goal, depth) : { valid: false };
     if (symmetricResult.valid) {
-      return symmetricResult;
+      return remember(symmetricResult);
     }
 
     const inverseResult = self.inverse?.tryInverse ? self.inverse.tryInverse(goal, depth) : { valid: false };
     if (inverseResult.valid) {
-      return inverseResult;
+      return remember(inverseResult);
     }
 
     const synonymResult = self.trySynonymMatch(goal, depth);
     if (synonymResult.valid) {
-      return synonymResult;
+      return remember(synonymResult);
     }
 
     const transitiveResult = self.transitive.tryTransitiveChain(goal, depth);
     if (transitiveResult.valid) {
-      return transitiveResult;
+      return remember(transitiveResult);
     }
 
     const inheritanceResult = self.propertyInheritance.tryPropertyInheritance(goal, depth);
     if (inheritanceResult.valid) {
-      return inheritanceResult;
+      return remember(inheritanceResult);
     }
 
     const defaultResult = self.tryDefaultReasoning(goal, depth);
     if (defaultResult.valid) {
-      return defaultResult;
+      return remember(defaultResult);
     }
     if (defaultResult.definitive) {
-      return defaultResult;
+      return remember(defaultResult);
     }
 
     const modusResult = self.tryImplicationModusPonens(goal, depth);
     if (modusResult.valid) {
-      return modusResult;
+      return remember(modusResult);
     }
+
+    const componentKB = self.session?.componentKB;
+    const useLevelOptimization = componentKB?.useLevelOptimization && self.session.useLevelOptimization !== false;
+    const goalLevel = useLevelOptimization ? componentKB.computeGoalLevel(goalStr) : null;
 
     const candidateRules = self.getRulesByConclusionOp ? self.getRulesByConclusionOp(goalOp) : self.session.rules;
     for (const rule of candidateRules) {
       self.session.reasoningStats.ruleAttempts++;
-      const ruleResult = self.kbMatcher.tryRuleMatch(goal, rule, depth);
+      const ruleResult = self.kbMatcher.tryRuleMatch(goal, rule, depth, {
+        useLevelOptimization,
+        goalLevel
+      });
       if (ruleResult.valid) {
-        return ruleResult;
+        return remember(ruleResult);
       }
     }
 
@@ -227,18 +275,18 @@ export function proveGoal(self, goal, depth) {
 
     const disjointResult = self.disjoint.tryDisjointProof(goal, depth);
     if (disjointResult.valid) {
-      return disjointResult;
+      return remember(disjointResult);
     }
 
     const searchTrace = self.options.includeSearchTrace ? self.buildSearchTrace(goal, goalStr) : null;
 
-    return {
+    return remember({
       valid: false,
       reason: 'No proof found',
       goal: goalStr,
       searchTrace,
       steps: self.steps
-    };
+    });
   } finally {
     self.visited.delete(goalKey);
   }

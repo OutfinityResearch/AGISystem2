@@ -328,6 +328,8 @@ export class Session {
    * @param {string} dsl - Query DSL
    * @param {Object} options - Query options
    * @param {boolean} options.hdcOnly - Use only HDC (no symbolic fallback)
+   * @param {number} options.maxResults - Max number of results to return (>=1)
+   * @param {boolean} options.useLevelOptimization - Enable constructivist level pruning (default true)
    * @returns {Object} Query result with bindings and alternatives
    */
   query(dsl, options = {}) {

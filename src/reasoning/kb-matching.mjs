@@ -311,20 +311,13 @@ export class KBMatcher {
     if (this.engine.isTimedOut()) throw new Error('Proof timed out');
     if (depth > this.engine.options.maxDepth) return { valid: false, reason: 'Depth limit' };
 
-    // Level-aware rule selection - DISABLED by default pending fix for deep chain regression
-    // TODO: Fix level computation for variables in rules before re-enabling
-    // const componentKB = this.session.componentKB;
-    // const useLevelOpt = options.useLevelOptimization ??
-    //   (componentKB?.useLevelOptimization && this.session.useLevelOptimization !== false);
-    // const goalLevel = options.goalLevel ?? (useLevelOpt && componentKB ? componentKB.computeGoalLevel(condStr) : null);
+    const componentKB = this.session.componentKB;
+    const useLevelOpt = options.useLevelOptimization ??
+      (componentKB?.useLevelOptimization && this.session.useLevelOptimization !== false);
+    const goalLevel = options.goalLevel ?? (useLevelOpt && componentKB ? componentKB.computeGoalLevel(condStr) : null);
 
     let candidates;
-    // if (useLevelOpt && goalLevel !== null) {
-    //   // Use level-aware rule index - only rules where premises < goalLevel
-    //   candidates = this.levelRuleIndex.getRulesForGoal(goalOp, goalLevel);
-    // } else {
     candidates = this.engine.getRulesByConclusionOp ? this.engine.getRulesByConclusionOp(goalOp) : this.session.rules;
-    // }
 
     for (const rule of candidates) {
       if (this.engine.isTimedOut()) throw new Error('Proof timed out');
@@ -351,6 +344,13 @@ export class KBMatcher {
 
       if (!unifyOk) continue;
 
+      if (useLevelOpt && goalLevel !== null) {
+        const premLevel = this.engine.unification.computeMaxPremiseLevel(rule, ruleBindings);
+        if (Number.isFinite(premLevel) && premLevel >= goalLevel) {
+          continue;
+        }
+      }
+
       const condResult = this.engine.conditions.proveInstantiatedCondition(rule, ruleBindings, depth);
       if (condResult.valid) {
         this.session.reasoningStats.ruleAttempts++;
@@ -376,7 +376,7 @@ export class KBMatcher {
    * @param {number} depth - Current depth
    * @returns {Object} Proof result
    */
-  tryRuleMatch(goal, rule, depth) {
+  tryRuleMatch(goal, rule, depth, options = {}) {
     if (!rule.conclusion || !rule.condition) {
       return { valid: false };
     }
@@ -410,12 +410,24 @@ export class KBMatcher {
     const goalOp = this.engine.unification.extractOperatorFromAST(goal);
     const goalArgs = this.engine.unification.extractArgsFromAST(goal);
 
+    const componentKB = this.session.componentKB;
+    const useLevelOpt = options.useLevelOptimization ??
+      (componentKB?.useLevelOptimization && this.session.useLevelOptimization !== false);
+    const goalLevel = options.goalLevel ?? (useLevelOpt && componentKB ? componentKB.computeGoalLevel(goal.toString?.() || '') : null);
+
     const canon = (name) => {
       if (!this.session?.canonicalizationEnabled) return name;
       return canonicalizeTokenName(this.session, name);
     };
 
     if (!rule.hasVariables) {
+      if (useLevelOpt && goalLevel !== null) {
+        const premLevel = rule._maxPremLevel ?? null;
+        if (Number.isFinite(premLevel) && premLevel >= goalLevel) {
+          return { valid: false };
+        }
+      }
+
       const candidates = flattenConclusionLeaves();
       const goalVec = this.session.executor.buildStatementVector(goal);
 
@@ -514,7 +526,10 @@ export class KBMatcher {
         }
       }
 
-      const unifyResult = this.engine.unification.tryUnification(goal, rule, depth);
+      const unifyResult = this.engine.unification.tryUnification(goal, rule, depth, {
+        useLevelOptimization: useLevelOpt,
+        goalLevel
+      });
       if (unifyResult.valid) {
         return unifyResult;
       }

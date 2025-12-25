@@ -8,7 +8,7 @@
  * - input context_nl + question_nl (normalized)
  *
  * Usage:
- *   node autoDiscovery/dedupeBugCases.mjs
+ *   node autoDiscovery/tools/dedupeBugCases.mjs
  */
 
 import fs from 'node:fs';
@@ -86,4 +86,3 @@ for (const bugDir of listBugFolders()) {
 }
 
 console.log(`dedupe complete: kept=${kept} deleted=${deleted}`);
-

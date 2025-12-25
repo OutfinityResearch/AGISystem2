@@ -233,7 +233,95 @@ Proof:
 
   <hr>
 
-  <h2>Use Case 4: LLM Output Verification <span class="status-badge status-theoretical">Theoretical</span></h2>
+  <h2>Use Case 4: Thinking Database (RAG Alternative) <span class="status-badge status-implemented">Implemented</span></h2>
+
+  <div class="alert alert-info" style="background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px; margin: 15px 0;">
+    <strong>Value proposition:</strong> Replace semantic search approximations with verifiable logical reasoning.
+    Get real answers derived from formal proofs, not statistical similarity matches.
+  </div>
+
+  <h3>The Problem with RAG</h3>
+  <p>Retrieval-Augmented Generation (RAG) finds "similar" documents using vector embeddings, but:</p>
+  <ul>
+    <li><strong>Similarity ≠ Relevance:</strong> Semantically similar text may not contain the actual answer</li>
+    <li><strong>No reasoning:</strong> RAG retrieves, it doesn't think&mdash;multi-step inference is impossible</li>
+    <li><strong>Hallucination risk:</strong> LLM may still hallucinate even with retrieved context</li>
+    <li><strong>No provenance:</strong> "Where did this answer come from?" is hard to answer</li>
+  </ul>
+
+  <h3>The Thinking Database Approach</h3>
+  <p>AGISystem2 as a "thinking database" provides:</p>
+  <ul>
+    <li><strong>Logical derivation:</strong> Answers are <em>proved</em>, not retrieved</li>
+    <li><strong>Multi-step reasoning:</strong> Chains facts and rules to reach conclusions</li>
+    <li><strong>Complete provenance:</strong> Every answer has a formal proof trace</li>
+    <li><strong>Consistency guarantees:</strong> Contradictions are detected, not hidden</li>
+  </ul>
+
+  <h3>Comparison</h3>
+  <table>
+    <tr>
+      <th>Aspect</th>
+      <th>RAG (Semantic Search)</th>
+      <th>Thinking Database</th>
+    </tr>
+    <tr>
+      <td>Query</td>
+      <td>"Find similar documents"</td>
+      <td>"Prove this is true"</td>
+    </tr>
+    <tr>
+      <td>Answer source</td>
+      <td>Retrieved text chunks</td>
+      <td>Logical derivation</td>
+    </tr>
+    <tr>
+      <td>Multi-step reasoning</td>
+      <td>No (single retrieval)</td>
+      <td>Yes (chained inference)</td>
+    </tr>
+    <tr>
+      <td>Explainability</td>
+      <td>"These docs were similar"</td>
+      <td>"Here's the proof"</td>
+    </tr>
+    <tr>
+      <td>Consistency</td>
+      <td>Can return contradictions</td>
+      <td>Contradictions detected</td>
+    </tr>
+  </table>
+
+  <h3>Example</h3>
+  <pre><code>Question: "Can employees in the Finance department access customer data?"
+
+<strong>RAG approach:</strong>
+  → Vector search finds: "Finance handles sensitive financial data..."
+  → LLM generates: "Yes, Finance can access data" (WRONG - no reasoning)
+
+<strong>Thinking Database approach:</strong>
+  Knowledge Base:
+    - Finance department handles FinancialData
+    - CustomerData requires CustomerDataAccess permission
+    - Finance department has FinancialDataAccess permission
+    - CustomerDataAccess ≠ FinancialDataAccess
+
+  Query: canAccess(Finance, CustomerData)?
+
+  Result: FALSE
+  Proof:
+    1. canAccess(X, CustomerData) requires hasPermission(X, CustomerDataAccess)
+    2. hasPermission(Finance, FinancialDataAccess) [fact]
+    3. NOT hasPermission(Finance, CustomerDataAccess) [no matching fact]
+    4. Therefore: canAccess(Finance, CustomerData) = FALSE</code></pre>
+
+  <div class="tradeoff-note">
+    <strong>Trade-off:</strong> Requires structured knowledge base (not free-form documents). Best for domains with clear rules and relationships. Can be combined with RAG: use RAG for initial retrieval, then verify with formal reasoning.
+  </div>
+
+  <hr>
+
+  <h2>Use Case 5: LLM Output Verification <span class="status-badge status-theoretical">Theoretical</span></h2>
 
   <div class="alert alert-info" style="background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px; margin: 15px 0;">
     <strong>Value proposition:</strong> Check LLM outputs against formal constraints. Catch inconsistencies and hallucinations.
@@ -266,7 +354,7 @@ Verification result: INCONSISTENT
 
   <hr>
 
-  <h2>Use Case 5: Scientific Reasoning Support <span class="status-badge status-theoretical">Theoretical</span></h2>
+  <h2>Use Case 6: Scientific Reasoning Support <span class="status-badge status-theoretical">Theoretical</span></h2>
 
   <div class="alert alert-info" style="background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px; margin: 15px 0;">
     <strong>Value proposition:</strong> Encode theories formally. Check claims against established knowledge. Explore hypotheticals.

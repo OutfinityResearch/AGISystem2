@@ -77,7 +77,8 @@ export function proveSingleCondition(self, condStr, bindings, depth) {
         return self.session.componentKB?.canonicalizeName?.(name) || name;
       };
 
-      for (const rule of self.session.rules) {
+      const candidates = self.engine.getRulesByConclusionOp ? self.engine.getRulesByConclusionOp(goalOp) : self.session.rules;
+      for (const rule of candidates) {
         if (!rule.conclusionAST) continue;
 
         if (!rule.hasVariables) {

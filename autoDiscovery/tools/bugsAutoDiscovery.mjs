@@ -12,20 +12,20 @@
  * - loadCore() always
  */
 
-import { loadExamples } from './libs/logiglue/dataset-loader.mjs';
-import { ensureDir } from './discovery/fs-utils.mjs';
-import { loadAnalysedCases } from './discovery/analysed.mjs';
-import { analyzeQuarantine } from './discovery/quarantine.mjs';
+import { loadExamples } from '../libs/logiglue/dataset-loader.mjs';
+import { ensureDir } from '../discovery/fs-utils.mjs';
+import { loadAnalysedCases } from '../discovery/analysed.mjs';
+import { analyzeQuarantine } from '../discovery/quarantine.mjs';
 import {
   C,
   DEFAULT_BATCH_SIZE,
   DEFAULT_WORKERS,
   ANALYSED_FILE,
   QUARANTINE_DIR
-} from './discovery/constants.mjs';
-import { runBatch } from './discovery/run-batch.mjs';
-import { BUG_PATTERNS, NLP_BUG_PATTERNS } from './discovery/patterns.mjs';
-import { processQuarantine } from './discovery/process-quarantine.mjs';
+} from '../discovery/constants.mjs';
+import { runBatch } from '../discovery/run-batch.mjs';
+import { BUG_PATTERNS, NLP_BUG_PATTERNS } from '../discovery/patterns.mjs';
+import { processQuarantine } from '../discovery/process-quarantine.mjs';
 import fs from 'node:fs';
 import { join } from 'node:path';
 

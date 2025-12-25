@@ -20,6 +20,7 @@ export async function runBatch(examples, analysedCases, args) {
     byBugType: {},
     byNlpBug: {},
     bySource: {},
+    bySourceStats: {},
     byReason: {}
   };
 
@@ -51,13 +52,29 @@ export async function runBatch(examples, analysedCases, args) {
       const result = chunkResults[j];
 
       results.total++;
-      results.bySource[example.source || 'generic'] = (results.bySource[example.source || 'generic'] || 0) + 1;
+      const source = example.source || 'generic';
+      results.bySource[source] = (results.bySource[source] || 0) + 1;
+      if (!results.bySourceStats[source]) {
+        results.bySourceStats[source] = {
+          total: 0,
+          passed: 0,
+          translation: 0,
+          learnFailed: 0,
+          invalidGoal: 0,
+          reasoning: 0,
+          unknown: 0,
+          unsupported: 0,
+          noExpectation: 0
+        };
+      }
+      results.bySourceStats[source].total++;
       results.byReason[result.reason] = (results.byReason[result.reason] || 0) + 1;
 
       const translatorOptions = { autoDeclareUnknownOperators: args.autoDeclareUnknownOperators === true };
 
       if (result.correct) {
         results.passed++;
+        results.bySourceStats[source].passed++;
         analysedCases.add(caseId);
         recordAnalysedCase(caseId, 'PASS', result.details);
         continue;
@@ -67,24 +84,29 @@ export async function runBatch(examples, analysedCases, args) {
 
       if (result.category === CATEGORY.NO_EXPECTATION) {
         results.categoryN++;
+        results.bySourceStats[source].noExpectation++;
         recordAnalysedCase(caseId, 'FAIL(N)', result.details || result.reason);
         continue;
       }
 
       if (result.category === CATEGORY.UNSUPPORTED) {
         results.categoryS++;
+        results.bySourceStats[source].unsupported++;
         recordAnalysedCase(caseId, 'FAIL(S)', result.details || result.reason);
         continue;
       }
 
       if (result.category === CATEGORY.INVALID_GOAL) {
         results.categoryG++;
+        results.bySourceStats[source].invalidGoal++;
         recordAnalysedCase(caseId, 'FAIL(G)', result.reason);
       } else if (result.category === CATEGORY.LEARN_FAILED) {
         results.categoryL++;
+        results.bySourceStats[source].learnFailed++;
         recordAnalysedCase(caseId, 'FAIL(L)', result.reason);
       } else if (result.category === CATEGORY.TRANSLATION) {
         results.categoryA++;
+        results.bySourceStats[source].translation++;
         recordAnalysedCase(caseId, 'FAIL(A)', result.reason);
       }
 
@@ -100,6 +122,7 @@ export async function runBatch(examples, analysedCases, args) {
 
       if (result.category === CATEGORY.REASONING) {
         results.categoryB++;
+        results.bySourceStats[source].reasoning++;
         recordAnalysedCase(caseId, 'FAIL(B)', result.reason);
         const bugId = detectKnownBugPattern(result.translated, example, result) || 'BUG000';
         results.byBugType[bugId] = (results.byBugType[bugId] || 0) + 1;
@@ -108,6 +131,7 @@ export async function runBatch(examples, analysedCases, args) {
       }
 
       results.categoryU++;
+      results.bySourceStats[source].unknown++;
       recordAnalysedCase(caseId, 'FAIL(U)', result.reason);
       quarantineCase(result, example);
     }
