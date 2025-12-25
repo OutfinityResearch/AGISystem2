@@ -179,6 +179,16 @@ describe('NL→DSL grammar translator (low-hardcoding)', () => {
     assert.equal(goal, '@goal:goal hasProperty Cat ?x');
   });
 
+  test('normalizes "have <noun phrase>" consistently as hasProperty (no fake isA type)', () => {
+    const sent = 'All students who have part-time jobs offered by the university are students who work in the library.';
+    const { dsl, errors } = translateContextWithGrammar(sent);
+    assert.deepEqual(errors, []);
+    assert.match(dsl, /hasProperty\s+\?x\s+part_?time_job_offered_by_university/i, `expected hasProperty job, got: ${dsl}`);
+    assert.match(dsl, /hasProperty\s+\?x\s+work_in_library/i, `expected hasProperty work_in_library, got: ${dsl}`);
+    assert.ok(!/HaveParttimeJobsOfferedByTheUniversity/.test(dsl), `should not synthesize a type for "have ...", got: ${dsl}`);
+    assert.match(dsl, /Implies/, `expected Implies rule, got: ${dsl}`);
+  });
+
   test('parses adjective+preposition relations (Mice are afraid of wolves → Mouse -> afraid ?x Wolf)', () => {
     const { dsl, errors } = translateContextWithGrammar('Mice are afraid of wolves.', { autoDeclareUnknownOperators: true });
     assert.deepEqual(errors, []);

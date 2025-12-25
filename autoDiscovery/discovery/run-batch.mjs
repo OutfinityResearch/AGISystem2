@@ -101,7 +101,7 @@ export async function runBatch(examples, analysedCases, args) {
       if (result.category === CATEGORY.REASONING) {
         results.categoryB++;
         recordAnalysedCase(caseId, 'FAIL(B)', result.reason);
-        const bugId = detectKnownBugPattern(result.translated, example) || 'BUG000';
+        const bugId = detectKnownBugPattern(result.translated, example, result) || 'BUG000';
         results.byBugType[bugId] = (results.byBugType[bugId] || 0) + 1;
         writeBugCaseJson(bugId, result, example, translatorOptions);
         continue;

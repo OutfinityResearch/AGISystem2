@@ -36,7 +36,7 @@ export function processQuarantine({ translatorOptions = { autoDeclareUnknownOper
 
     try {
       if (data.category === CATEGORY.REASONING) {
-        const bugId = detectKnownBugPattern(data.translated, example) || 'BUG000';
+        const bugId = detectKnownBugPattern(data.translated, example, { reason: data.reason, details: data.details }) || 'BUG000';
         writeBugCaseJson(bugId, result, example, translatorOptions);
         moved.bug[bugId] = (moved.bug[bugId] || 0) + 1;
         fs.unlinkSync(filePath);

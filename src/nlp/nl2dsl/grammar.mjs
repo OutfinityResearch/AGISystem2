@@ -353,6 +353,15 @@ export function translateQuestionWithGrammar(question, options = {}) {
       const [, subjectRaw, verb, typeRaw, withRaw] = withClause;
       const baseClause = `${subjectRaw} ${verb} ${typeRaw}`.trim();
       const base = parseCopulaClause(baseClause, '?x', { ...options, indefiniteAsEntity: true });
+      // Only apply this expansion when the base clause is a genuine type assertion (isA),
+      // otherwise we incorrectly split sentences like:
+      // - "James is invited ... with the audience ..."
+      // - "... has nothing to do with whether ..."
+      const baseHasType = Array.isArray(base?.items) && base.items.some(it => it?.atom?.op === 'isA');
+      if (!baseHasType) {
+        // Let the downstream clause splitters handle it (copula list / relation goals).
+        // Returning null here continues parsing without forcing a conjunction.
+      } else {
       const subject = normalizeEntity(subjectRaw, '?x');
       const withText = clean(withRaw);
       const neg = /^no\s+/i.test(withText) || /^not\s+/i.test(withText);
@@ -360,6 +369,7 @@ export function translateQuestionWithGrammar(question, options = {}) {
       const have = parseHavePredicate(subject, stripped, neg);
 
       const goalLines = [];
+      const declaredOperators = new Set(base?.declaredOperators || []);
       if (base?.items?.length) {
         for (const it of base.items) {
           if (!it?.atom) continue;
@@ -373,8 +383,12 @@ export function translateQuestionWithGrammar(question, options = {}) {
       }
 
       if (goalLines.length > 1) {
-        return [`// goal_logic:And`, ...goalLines].join('\n');
+        const header = ['// goal_logic:And'];
+        if (declaredOperators.size > 0) header.push(`// declare_ops:${[...declaredOperators].sort().join(',')}`);
+        return [...header, ...goalLines].join('\n');
       }
+      }
+    }
     }
 
     const copulaList = q.match(/^(.*?)\s+(is|are)\s+(.+)$/i);

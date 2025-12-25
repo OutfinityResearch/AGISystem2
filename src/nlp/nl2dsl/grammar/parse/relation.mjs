@@ -15,6 +15,25 @@ function disambiguateBinaryOp(op) {
   return rel || op;
 }
 
+function propertyKeyFromObjectPhrase(text) {
+  const objText = clean(text)
+    .replace(/^(?:no|not\s+any)\s+/i, '')
+    .replace(/^(?:a|an|the)\s+/i, '')
+    .trim();
+  if (!objText) return null;
+  const det = new Set(['the', 'a', 'an']);
+  const tokens = objText
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(t => String(t).toLowerCase())
+    .filter(t => !det.has(t))
+    .map(t => singularize(t));
+  if (tokens.length === 0) return null;
+  const keyTokens = tokens.length <= 10 ? tokens : [...tokens.slice(0, 5), ...tokens.slice(-3)];
+  const key = keyTokens.join('_');
+  return sanitizePredicate(key) || sanitizePredicate(keyTokens[keyTokens.length - 1] || '');
+}
+
 function parseKinshipMentions(text, defaultVar = '?x', options = {}) {
   const t = clean(text);
   if (!t) return null;
@@ -346,12 +365,7 @@ export function parseRelationClause(text, defaultVar = '?x', options = {}) {
 
     const have = restText.match(/^(?:has|have)\s+(.+)$/i);
     if (have) {
-      const stripped = clean(have[1]).replace(/^(?:a|an|the)\s+/i, '').trim();
-      const tokens = stripped.split(/\s+/).filter(Boolean);
-      const key = tokens.length <= 6
-        ? tokens.join('_')
-        : [...tokens.slice(0, 3), ...tokens.slice(-2)].join('_');
-      const prop = sanitizePredicate(key) || sanitizePredicate(tokens[tokens.length - 1] || '');
+      const prop = propertyKeyFromObjectPhrase(have[1]);
       if (!prop) return null;
       items.push({ negated: hasNot, atom: { op: 'hasProperty', args: [defaultVar, prop] } });
       return { op: 'And', items, declaredOperators };
@@ -428,12 +442,7 @@ export function parseRelationClause(text, defaultVar = '?x', options = {}) {
   if (op === 'have') {
     const objText = clean(objRaw);
     const negObj = /^no\s+/i.test(objText) || /^not\s+any\s+/i.test(objText);
-    const stripped = objText.replace(/^(?:no|not\s+any)\s+/i, '').replace(/^(?:a|an|the)\s+/i, '').trim();
-    const tokens = stripped.split(/\s+/).filter(Boolean);
-    const key = tokens.length <= 6
-      ? tokens.join('_')
-      : [...tokens.slice(0, 3), ...tokens.slice(-2)].join('_');
-    const prop = sanitizePredicate(key) || sanitizePredicate(tokens[tokens.length - 1] || '');
+    const prop = propertyKeyFromObjectPhrase(objText);
     if (prop) {
       return { op: 'And', items: [{ negated: hasNot || negObj, atom: { op: 'hasProperty', args: [subject, prop] } }] };
     }

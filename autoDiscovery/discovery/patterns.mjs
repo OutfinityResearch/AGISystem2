@@ -78,12 +78,19 @@ function matchesDetector(detector, { dsl, context, source, category, choicesLen 
   return true;
 }
 
-export function detectKnownBugPattern(translated, example) {
+export function detectKnownBugPattern(translated, example, result = null) {
   const dsl = translated?.contextDsl || '';
   const source = example?.source || '';
   const category = example?.category || '';
   const choicesLen = Array.isArray(example?.choices) ? example.choices.length : 0;
   const context = example?.context || '';
+
+  // First: task-level buckets that should never mix with structural reasoning patterns.
+  const reason = String(result?.reason || '').trim();
+  if (reason === 'query_answer_mismatch') return 'BUG010';
+  if (reason === 'multi_choice_mismatch') return 'BUG006';
+  if (reason === 'clutrr_relation_not_proved') return 'BUG004';
+  if (reason === 'runtime_error') return 'BUG011';
 
   for (const detector of PATTERNS?.detectors?.bug || []) {
     if (matchesDetector(detector, { dsl, context, source, category, choicesLen })) {
@@ -108,4 +115,3 @@ export function detectNlpBugPattern(reason, result, example) {
 
   return null;
 }
-

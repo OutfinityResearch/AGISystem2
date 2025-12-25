@@ -31,6 +31,14 @@
     "BUG007": {
       "name": "Quantifier handling failure",
       "description": "Universal/existential quantifier issues"
+    },
+    "BUG010": {
+      "name": "Query-answer mismatch",
+      "description": "Query returned no/incorrect bindings for a labeled answer (bAbI-style)"
+    },
+    "BUG011": {
+      "name": "Runtime/DSL validation error",
+      "description": "Execution failed due to undeclared operators or runtime errors (should be moved out of bugCases once fixed)"
     }
   },
   "nlpBugs": {

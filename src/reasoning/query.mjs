@@ -375,7 +375,9 @@ export class QueryEngine {
     if (filteredResults.length === 0 && operatorName === 'hasProperty' && knowns.length === 1 && holes.length === 1) {
       if (knowns[0].index === 1) {
         const entityName = knowns[0].name;
-        const induced = searchTypeInductionHasProperty(this.session, entityName, holes[0], { minSupport: 2 });
+        // AutoDiscovery/bAbI16 often expects induction even with a single peer example.
+        // Keep it as a low-confidence fallback only when no other source answered.
+        const induced = searchTypeInductionHasProperty(this.session, entityName, holes[0], { minSupport: 1 });
         for (const r of induced) filteredResults.push(r);
       }
     }

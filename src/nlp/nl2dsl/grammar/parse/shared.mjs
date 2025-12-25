@@ -50,9 +50,15 @@ function looksLikeTypePhrase(text) {
   if (/^[A-Z]/.test(t)) return true;
   const tokens = t.split(/\s+/).filter(Boolean);
   const last = tokens[tokens.length - 1] || '';
-  // Multi-word noun phrases like "bile duct cancer" are almost always types in logic corpora.
-  // Prefer isA(...) over collapsing everything to a trailing-word property.
-  if (tokens.length >= 2) return true;
+  // Heuristic: multi-word phrases are often types in logic corpora, but verb-ish phrases
+  // like "work in the library" should be treated as properties/relations instead.
+  if (tokens.length >= 2) {
+    const first = tokens[0] || '';
+    const second = String(tokens[1] || '').toLowerCase();
+    const preps = new Set(['in', 'on', 'at', 'by', 'to', 'from', 'with', 'for', 'of', 'near', 'behind', 'beside', 'under', 'over', 'inside', 'outside']);
+    const verbish = /^[a-z]/.test(first) && (preps.has(second) || /(?:ing|ed)$/.test(first));
+    if (!verbish) return true;
+  }
   return isPlural(last);
 }
 
@@ -89,6 +95,22 @@ export function parsePredicateItem(item, subject) {
     }
   }
 
+  // "has/have <noun>" as a predicate phrase (common in relative clauses).
+  const have = r.match(/^(?:has|have)\s+(.+)$/i);
+  if (have) {
+    const stripped = clean(have[1]).replace(/^(?:no|not\s+any)\s+/i, '').replace(/^(?:a|an|the)\s+/i, '').trim();
+    const tokens = stripped.split(/\s+/).filter(Boolean);
+    const det = new Set(['the', 'a', 'an']);
+    const kept = tokens
+      .map(t => String(t).toLowerCase())
+      .filter(t => !det.has(t))
+      .map(t => singularize(t));
+    const keyTokens = kept.length <= 10 ? kept : [...kept.slice(0, 5), ...kept.slice(-3)];
+    const key = keyTokens.join('_');
+    const prop = sanitizePredicate(key) || sanitizePredicate(keyTokens[keyTokens.length - 1] || '');
+    if (prop) return { negated, atom: { op: 'hasProperty', args: [subject, prop] } };
+  }
+
   const isType = looksLikeTypePhrase(r);
   if (isType) {
     const typeName = parseTypePhrase(r);
@@ -96,17 +118,12 @@ export function parsePredicateItem(item, subject) {
     return { negated, atom: { op: 'isA', args: [subject, typeName] } };
   }
 
-  // "has/have <noun>" as a predicate phrase (common in relative clauses).
-  const have = r.match(/^(?:has|have)\s+(.+)$/i);
-  if (have) {
-    const last = clean(have[1]).split(/\s+/).filter(Boolean).slice(-1)[0];
-    const prop = sanitizePredicate(last);
-    if (prop) return { negated, atom: { op: 'hasProperty', args: [subject, prop] } };
-  }
-
-  const last = r.split(/\s+/).filter(Boolean).slice(-1)[0];
-  if (!last) return null;
-  const prop = sanitizePredicate(last);
+  const tokens = r.split(/\s+/).filter(Boolean).map(t => String(t).toLowerCase());
+  const det = new Set(['the', 'a', 'an']);
+  const kept = tokens.filter(t => !det.has(t)).map(t => singularize(t));
+  const keyTokens = kept.length <= 10 ? kept : [...kept.slice(0, 5), ...kept.slice(-3)];
+  const key = keyTokens.join('_');
+  const prop = sanitizePredicate(key) || sanitizePredicate(keyTokens[keyTokens.length - 1] || '');
   if (!prop) return null;
   return { negated, atom: { op: 'hasProperty', args: [subject, prop] } };
 }

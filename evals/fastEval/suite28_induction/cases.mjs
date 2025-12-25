@@ -32,6 +32,26 @@ export const steps = [
     proof_nl: [
       'induction: among Frog peers, observed 2/2 with gray'
     ]
+  },
+  {
+    action: 'learn',
+    input_nl: 'Single-peer induction: Bernhard is a yellow swan; Brian is a swan',
+    input_dsl: `
+      isA Bernhard Swan
+      isA Brian Swan
+      hasProperty Bernhard yellow
+    `,
+    expected_nl: 'Learned 3 facts'
+  },
+  {
+    action: 'query',
+    input_dsl: '@q hasProperty Brian ?x',
+    expected_nl: [
+      'Brian has yellow.'
+    ],
+    proof_nl: [
+      'induction: among Swan peers, observed 1/1 with yellow'
+    ]
   }
 ];
 

@@ -81,11 +81,12 @@ export function parseHavePredicate(subject, objectPart, negated = false) {
     .replace(/^(?:a|an|the)\s+/i, '')
     .trim();
   if (!obj) return null;
-  const tokens = obj.split(/\s+/).filter(Boolean);
-  const key = tokens.length <= 6
-    ? tokens.join('_')
-    : [...tokens.slice(0, 3), ...tokens.slice(-2)].join('_');
-  const prop = sanitizePredicate(key) || sanitizePredicate(tokens[tokens.length - 1] || '');
+  const tokens = obj.split(/\s+/).filter(Boolean).map(t => String(t).toLowerCase());
+  const det = new Set(['the', 'a', 'an']);
+  const kept = tokens.filter(t => !det.has(t)).map(t => singularize(t));
+  const keyTokens = kept.length <= 10 ? kept : [...kept.slice(0, 5), ...kept.slice(-3)];
+  const key = keyTokens.join('_');
+  const prop = sanitizePredicate(key) || sanitizePredicate(keyTokens[keyTokens.length - 1] || '');
   if (!prop) return null;
   return { negated, atom: { op: 'hasProperty', args: [subject, prop] } };
 }

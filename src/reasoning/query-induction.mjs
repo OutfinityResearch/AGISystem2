@@ -63,7 +63,7 @@ function getHasPropertyValues(session, entityName) {
  * @returns {Array} query result candidates (same shape as searchKBDirect entries)
  */
 export function searchTypeInductionHasProperty(session, entityName, hole, options = {}) {
-  const minSupport = Number.isFinite(options.minSupport) ? options.minSupport : 2;
+  const minSupport = Number.isFinite(options.minSupport) ? options.minSupport : 1;
 
   const types = getDirectTypes(session, entityName);
   if (types.length === 0) return [];
@@ -93,18 +93,18 @@ export function searchTypeInductionHasProperty(session, entityName, hole, option
     const bindings = new Map();
     bindings.set(hole.name, {
       answer: value,
-      similarity: 0.55,
-      method: 'type_induction',
-      steps: [
-        `isA ${entityName} ${typeName}`,
-        `induction: among ${typeName} peers, observed ${count}/${contributingPeers} with ${value}`,
-        `therefore hasProperty ${entityName} ${value}`
-      ]
-    });
+          similarity: minSupport <= 1 ? 0.35 : 0.55,
+          method: 'type_induction',
+          steps: [
+            `isA ${entityName} ${typeName}`,
+            `induction: among ${typeName} peers, observed ${count}/${contributingPeers} with ${value}`,
+            `therefore hasProperty ${entityName} ${value}`
+          ]
+        });
 
     return [{
       bindings,
-      score: 0.55,
+      score: minSupport <= 1 ? 0.35 : 0.55,
       factName: null,
       method: 'type_induction',
       steps: bindings.get(hole.name).steps
@@ -113,4 +113,3 @@ export function searchTypeInductionHasProperty(session, entityName, hole, option
 
   return [];
 }
-
