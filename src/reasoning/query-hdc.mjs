@@ -186,11 +186,9 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec, opt
   }
 
   // Check if level-progressive search is enabled
-  // DISABLED by default pending fix for deep chain regression
-  // TODO: Fix level computation before re-enabling
   const componentKB = session.componentKB;
-  const useLevelSearch = false; // options.useLevelOptimization ??
-    // (componentKB?.useLevelOptimization && session.useLevelOptimization !== false);
+  const useLevelSearch = options.useLevelOptimization ??
+    (componentKB?.useLevelOptimization && session.useLevelOptimization !== false);
 
   let kbBundle;
 

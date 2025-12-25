@@ -5,9 +5,9 @@
  * Runs a single bug case from JSON file and validates expected vs actual.
  *
  * Usage:
- *   node autoDiscovery/runBugCase.mjs autoDiscovery/bugCases/BUG001/prontoqa_xxx.json
- *   node autoDiscovery/runBugCase.mjs --update-expected case.json  # Update expected_nl from actual
- *   node autoDiscovery/runBugCase.mjs --accept-actual case.json    # Accept actual as expected
+ *   node autoDiscovery/tools/runBugCase.mjs autoDiscovery/bugCases/BUG001/prontoqa_xxx.json
+ *   node autoDiscovery/tools/runBugCase.mjs --update-expected case.json  # Update expected_nl from actual
+ *   node autoDiscovery/tools/runBugCase.mjs --accept-actual case.json    # Accept actual as expected
  */
 
 import { dirname, join, basename } from 'node:path';
@@ -251,7 +251,7 @@ async function runBugCase(caseFile, options = {}) {
     }
 
     console.log(`\n${C.bold}Or run with --accept-actual to use actual_nl:${C.reset}`);
-    console.log(`  node autoDiscovery/runBugCase.mjs --accept-actual ${caseFile}`);
+    console.log(`  node autoDiscovery/tools/runBugCase.mjs --accept-actual ${caseFile}`);
 
     if (acceptActual || updateExpected) {
       // Update the JSON file
@@ -324,9 +324,9 @@ ${C.bold}Bug Case Runner${C.reset}
 Runs a single bug case from JSON and validates expected vs actual.
 
 ${C.bold}Usage:${C.reset}
-  node autoDiscovery/runBugCase.mjs <case.json>
-  node autoDiscovery/runBugCase.mjs --accept-actual <case.json>
-  node autoDiscovery/runBugCase.mjs --update-expected <case.json>
+  node autoDiscovery/tools/runBugCase.mjs <case.json>
+  node autoDiscovery/tools/runBugCase.mjs --accept-actual <case.json>
+  node autoDiscovery/tools/runBugCase.mjs --update-expected <case.json>
 
 ${C.bold}Options:${C.reset}
   --accept-actual    If expected_nl is missing, use actual_nl as expected
@@ -335,7 +335,7 @@ ${C.bold}Options:${C.reset}
   --help, -h         Show this help
 
 ${C.bold}Example:${C.reset}
-  node autoDiscovery/runBugCase.mjs autoDiscovery/bugCases/BUG001/prontoqa_xxx.json
+  node autoDiscovery/tools/runBugCase.mjs autoDiscovery/bugCases/BUG001/prontoqa_xxx.json
 `);
     process.exit(0);
   }

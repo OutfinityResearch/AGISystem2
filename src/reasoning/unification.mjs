@@ -53,6 +53,7 @@ export class UnificationEngine {
     const useLevelOpt = options.useLevelOptimization ??
       (componentKB?.useLevelOptimization && this.session.useLevelOptimization !== false);
     const goalLevel = options.goalLevel ?? (useLevelOpt && componentKB ? componentKB.computeGoalLevel(goal.toString?.() || '') : null);
+    const strictLevelPruning = options.strictLevelPruning === true;
 
     const leafConclusions = [];
     const collectLeafAsts = (part) => {
@@ -110,9 +111,9 @@ export class UnificationEngine {
 
       dbg('UNIFY', 'Bindings:', [...bindings.entries()]);
 
-      if (useLevelOpt && goalLevel !== null) {
+      if (strictLevelPruning && useLevelOpt && goalLevel !== null) {
         const premLevel = this.computeMaxPremiseLevel(rule, bindings);
-        if (Number.isFinite(premLevel) && premLevel >= goalLevel) {
+        if (Number.isFinite(premLevel) && premLevel > goalLevel) {
           continue;
         }
       }

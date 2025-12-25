@@ -5,10 +5,10 @@
  * Runs all bug cases from autoDiscovery/bugCases/ and reports results.
  *
  * Usage:
- *   node autoDiscovery/runBugSuite.mjs                    # Run all cases
- *   node autoDiscovery/runBugSuite.mjs --bug=BUG001       # Run specific bug cases
- *   node autoDiscovery/runBugSuite.mjs --update-missing   # Fill missing expected_nl
- *   node autoDiscovery/runBugSuite.mjs --verbose          # Show per-case details
+ *   node autoDiscovery/tools/runBugSuite.mjs                    # Run all cases
+ *   node autoDiscovery/tools/runBugSuite.mjs --bug=BUG001       # Run specific bug cases
+ *   node autoDiscovery/tools/runBugSuite.mjs --update-missing   # Fill missing expected_nl
+ *   node autoDiscovery/tools/runBugSuite.mjs --verbose          # Show per-case details
  */
 
 import { dirname, join, basename } from 'node:path';
@@ -220,7 +220,7 @@ ${C.bold}Bug Suite Runner${C.reset}
 Runs all bug cases from autoDiscovery/bugCases/ and reports results.
 
 ${C.bold}Usage:${C.reset}
-  node autoDiscovery/runBugSuite.mjs [options]
+  node autoDiscovery/tools/runBugSuite.mjs [options]
 
 ${C.bold}Options:${C.reset}
   --bug=BUGID         Run only cases for specific bug (e.g., --bug=BUG001)

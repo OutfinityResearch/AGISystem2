@@ -5,38 +5,79 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs">
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/libs/bugcase-validator.lib.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/libs/pruneBugCases.lib.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/runAutodiscoveryAgent.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/tools/.keep" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/tools/analyzeBugCases.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/tools/rebucketBugCases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/autoDiscovery/analised.md" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/analised.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/analyzeBugCases.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/bugcase-validator.lib.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/discovery/run-batch.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/discovery/run-batch.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/libs/logiglue/dataset-loader.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/libs/logiglue/dataset-loader.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/pruneBugCases.lib.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/rebucketBugCases.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/discovery/write-cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/discovery/write-cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/tools/bugsAutoDiscovery.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/tools/bugsAutoDiscovery.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/tools/pruneBugCases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/tools/pruneBugCases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/tools/rebucketBugCases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/tools/rebucketBugCases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/tools/runBugCase.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/tools/runBugCase.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/tools/runBugSuite.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/tools/runBugSuite.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoDiscovery/tools/validateBugCases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/tools/validateBugCases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/api/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/api/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/architecture/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/architecture/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/gamp/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/gamp/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/guides/getting-started.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/getting-started.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/guides/hdc-strategies.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/hdc-strategies.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/guides/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/guides/llm-integration.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/llm-integration.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/guides/sphdc-comparison.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/sphdc-comparison.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/guides/technology-comparison.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/technology-comparison.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/reasoning/abduction.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/reasoning/abduction.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/reasoning/holographic.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/reasoning/holographic.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/reasoning/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/reasoning/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/reasoning/induction.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/reasoning/induction.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/reasoning/proof-engine.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/reasoning/proof-engine.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/reasoning/query-engine.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/reasoning/query-engine.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/reasoning/symbolic.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/reasoning/symbolic.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/reference/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/reference/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/benchmarks.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/benchmarks.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/directions/hdc-strategies.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/hdc-strategies.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/directions/holographic-reasoning.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/holographic-reasoning.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/directions/learning-from-text.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/learning-from-text.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/directions/nl2dsl-grammar.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/nl2dsl-grammar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/directions/nl2dsl-llm.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/nl2dsl-llm.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/directions/proof-to-nl.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/proof-to-nl.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/research/directions/semantic-libraries.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/semantic-libraries.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/directions/text-generation.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/text-generation.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/roadmap.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/roadmap.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS14-EvalSuite.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS14-EvalSuite.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS20-AutoDiscovery.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS20-AutoDiscovery.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS22-Constructivist-Level-Optimization.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS22-Constructivist-Level-Optimization.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/matrix.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/matrix.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/syntax/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/syntax/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/concepts/gf2.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/concepts/gf2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/concepts/hash.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/concepts/hash.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/concepts/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/concepts/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/concepts/jaccard.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/concepts/jaccard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/concepts/minhash.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/concepts/minhash.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/deterministic-vectors.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/deterministic-vectors.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/grounding-problem.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/grounding-problem.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/holographic-representations.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/holographic-representations.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/hrr-comparison.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/hrr-comparison.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/nl2dsl.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/nl2dsl.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/privacy-hdc.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/privacy-hdc.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/metric-affine.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/metric-affine.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/sphdc-analysis.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/sphdc-analysis.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/agent-planning.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/agent-planning.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/bias-study.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/bias-study.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/compliance.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/compliance.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/explainability.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/explainability.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/research.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/research.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/synthetic-data.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/synthetic-data.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/use-cases/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/use-cases/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/component-kb.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/component-kb.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/conditions/instantiated.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/conditions/instantiated.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/conditions/single.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/conditions/single.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/wiki/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/wiki/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/runAllEvals.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runAllEvals.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review_operation_counting.md" beforeDir="false" afterPath="$PROJECT_DIR$/review_operation_counting.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/prove/prove-goal.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove/prove-goal.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/prove/state.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove/state.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-kb.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-kb.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/query.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/unification.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/unification.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -153,14 +194,6 @@
       <workItem from="1766477237780" duration="9294000" />
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
-    </task>
-    <task id="LOCAL-00029" summary="Better Documentation and WIP for code">
-      <option name="closed" value="true" />
-      <created>1764788338331</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1764788338331</updated>
     </task>
     <task id="LOCAL-00030" summary="added a new HDC strategy, wip">
       <option name="closed" value="true" />
@@ -546,7 +579,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766675861425</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs">
+      <option name="closed" value="true" />
+      <created>1766676750320</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1766676750320</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

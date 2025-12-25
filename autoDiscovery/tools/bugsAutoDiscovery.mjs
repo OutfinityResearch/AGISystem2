@@ -51,6 +51,7 @@ function parseArgs() {
     verbose: args.includes('--verbose') || args.includes('-v'),
     seed: getIntArg('--seed', Date.now()),
     autoDeclareUnknownOperators: !args.includes('--strict-operators'),
+    offline: !args.includes('--online'),
     clean: args.includes('--clean'),
     help: args.includes('--help') || args.includes('-h')
   };
@@ -146,6 +147,7 @@ async function main() {
         sources: args.source ? [args.source] : null,
         limit: args.batch * 2,
         randomSeed: args.seed + iteration,
+        offline: args.offline === true,
         progressCallback
       });
       examples = data.examples;

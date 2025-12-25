@@ -256,22 +256,22 @@ isA Polly Wumpus
 
 ```bash
 # Run discovery with default settings (50 cases, 10 workers)
-node autoDiscovery/bugsAutoDiscovery.mjs
+node autoDiscovery/runAutodiscoveryAgent.mjs
 
 # Process 100 cases
-node autoDiscovery/bugsAutoDiscovery.mjs --batch=100
+node autoDiscovery/runAutodiscoveryAgent.mjs --batch=100
 
 # Only test ProntoQA examples
-node autoDiscovery/bugsAutoDiscovery.mjs --source=prontoqa
+node autoDiscovery/runAutodiscoveryAgent.mjs --source=prontoqa
 
 # Run continuously until interrupted
-node autoDiscovery/bugsAutoDiscovery.mjs --continuous
+node autoDiscovery/runAutodiscoveryAgent.mjs --continuous
 
 # Analyze quarantine folder
-node autoDiscovery/bugsAutoDiscovery.mjs --analyze
+node autoDiscovery/runAutodiscoveryAgent.mjs status
 
 # Verbose output (show each case)
-node autoDiscovery/bugsAutoDiscovery.mjs --verbose
+node autoDiscovery/runAutodiscoveryAgent.mjs --verbose
 ```
 
 ### 6.2 Options

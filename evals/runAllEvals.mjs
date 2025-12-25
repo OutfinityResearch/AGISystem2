@@ -268,7 +268,7 @@ Runs core evaluation types and consolidates results:
 
 Note: External benchmark evaluations (LogiGlue, RuleTaker) have been moved
 to autoDiscovery/ for automated bug discovery workflows. See:
-  - node autoDiscovery/bugsAutoDiscovery.mjs
+  - node autoDiscovery/runAutodiscoveryAgent.mjs
   - node autoDiscovery/runLogiGlueEval.mjs
   - node autoDiscovery/runRuleTakerEval.mjs
 
@@ -351,7 +351,7 @@ Examples:
     results.push(queryResult);
 
     // Note: RuleTaker and LogiGlue evals have been moved to autoDiscovery/
-    // Use autoDiscovery/bugsAutoDiscovery.mjs for external benchmark testing
+    // Use autoDiscovery/runAutodiscoveryAgent.mjs for external benchmark testing
 
     // Consolidated Summary
     const overallDuration = performance.now() - overallStart;

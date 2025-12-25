@@ -14,6 +14,15 @@ This report analyzes the operation counting metrics displayed in the evaluation 
 4. **HDC-first engine shows 2-3x higher counts** - Due to mandatory validation + symbolic fallback redundancy
 5. **15+ categories of expensive operations** are not tracked at all
 
+## Status Update (2025-12-25)
+
+Most of the concrete undercounting issues in this report have been addressed in code:
+- `kbScans` increments were added across the previously missing query/prove/contradiction loops (including transitive, rules, inheritance, contradictions).
+- `similarityChecks` now counts the internal loops inside `topKSimilar()` (counts once per vocabulary comparison via a threaded optional `session` parameter).
+- HDC% semantics were tightened for holographic query: the numerator only increments when at least one HDC candidate validates.
+
+Remaining gaps called out in this report still apply for “untracked heavy ops” (e.g., `bind`/`bundle`/`unbind` core ops), and some `kbFacts.filter(...)` full scans remain un-metered.
+
 ---
 
 ## 1. KB Scan Counting Analysis

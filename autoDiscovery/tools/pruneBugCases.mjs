@@ -7,9 +7,9 @@
  * - Entire BUG folders that end up with 0 JSON cases (including report.md).
  *
  * Usage:
- *   node autoDiscovery/pruneBugCases.mjs
- *   node autoDiscovery/pruneBugCases.mjs --bug=BUG001
- *   node autoDiscovery/pruneBugCases.mjs --dry-run
+ *   node autoDiscovery/tools/pruneBugCases.mjs
+ *   node autoDiscovery/tools/pruneBugCases.mjs --bug=BUG001
+ *   node autoDiscovery/tools/pruneBugCases.mjs --dry-run
  */
 
 import fs from 'node:fs';
@@ -53,7 +53,7 @@ ${C.bold}Prune Bug Cases${C.reset}
 Deletes cases that no longer reproduce and removes empty bug folders.
 
 Usage:
-  node autoDiscovery/pruneBugCases.mjs [options]
+  node autoDiscovery/tools/pruneBugCases.mjs [options]
 
 Options:
   --bug=BUGID         Only prune a specific bug folder

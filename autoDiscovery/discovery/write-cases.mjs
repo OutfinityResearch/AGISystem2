@@ -146,7 +146,7 @@ export function writeBugCaseJson(bugId, result, example, translatorOptions) {
       expected_nl_hint: expectProved === true
         ? `Proved: ${goalNl}. Proof: [engine steps]`
         : `Cannot prove: ${goalNl}`,
-      note: 'Run `node autoDiscovery/runBugCase.mjs --accept-actual <case.json>` after reviewing actual_nl'
+      note: 'Run `node autoDiscovery/tools/runBugCase.mjs --accept-actual <case.json>` after reviewing actual_nl'
     },
     timestamp: new Date().toISOString()
   };
@@ -155,7 +155,7 @@ export function writeBugCaseJson(bugId, result, example, translatorOptions) {
 
   const bugInfo = BUG_PATTERNS[bugId] || { name: bugId, description: 'Unknown' };
   const reportFile = join(bugDir, 'report.md');
-  const header = `# ${bugId}: ${bugInfo.name}\n\n## Description\n${bugInfo.description}\n\n## How to Run Cases\n\`\`\`bash\nnode autoDiscovery/runBugSuite.mjs --bug=${bugId}\n\`\`\``;
+  const header = `# ${bugId}: ${bugInfo.name}\n\n## Description\n${bugInfo.description}\n\n## How to Run Cases\n\`\`\`bash\nnode autoDiscovery/tools/runBugSuite.mjs --bug=${bugId}\n\`\`\``;
   appendCaseToReport(reportFile, header, result.caseId, filename);
   return filepath;
 }

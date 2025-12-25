@@ -12,7 +12,7 @@
 
 This document specifies the Constructivist Level optimization for AGISystem2's reasoning engines. The optimization exploits the hierarchical nature of knowledge bases where concepts at level N can only be constructed from concepts at levels strictly < N, creating a DAG structure that enables search space pruning.
 
-**Current State**: Infrastructure implemented and functional. Runtime optimization for backward chaining temporarily disabled pending fix for variable instantiation issue.
+**Current State**: Infrastructure implemented and functional. Runtime pruning is enabled for variable-rule instantiation (premise-level check after unification); full conclusion-level indexing for variable rules remains an open optimization.
 
 ---
 
@@ -367,17 +367,19 @@ if (useLevelOpt && goalLevel !== null) {
 | ForwardChainEngine | ✅ Active | Level-ordered processing |
 | LevelAwareRuleIndex | ⚠️ Built | Not used due to variable issue |
 
-### 6.2 What's Disabled
+### 6.2 What's Disabled / Partially Enabled
 
 ```javascript
 // kb-matching.mjs - tryDirectMatch
 const useLevelOpt = false; // DISABLED
 
 // kb-matching.mjs - tryRuleChainForCondition
-candidates = this.engine.getRulesByConclusionOp(goalOp); // No level filtering
+// Still uses operator-indexed candidates; now applies premise-level pruning after unification.
+candidates = this.engine.getRulesByConclusionOp(goalOp);
 
 // query-hdc.mjs - searchHDC
-const useLevelSearch = false; // DISABLED
+// Enabled when session/useLevelOptimization is true (safe fallback to full bundle when needed)
+const useLevelSearch = options.useLevelOptimization ?? (componentKB?.useLevelOptimization && session.useLevelOptimization !== false);
 ```
 
 ---

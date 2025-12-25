@@ -10,10 +10,10 @@
  * It checks only boolean correctness vs `dataset.expectProved` and ignores `expected_nl`.
  *
  * Usage:
- *   node autoDiscovery/validateBugCases.mjs
- *   node autoDiscovery/validateBugCases.mjs --bug=BUG001
- *   node autoDiscovery/validateBugCases.mjs --bug=BUG001 --limit=50
- *   node autoDiscovery/validateBugCases.mjs --strict-operators
+ *   node autoDiscovery/tools/validateBugCases.mjs
+ *   node autoDiscovery/tools/validateBugCases.mjs --bug=BUG001
+ *   node autoDiscovery/tools/validateBugCases.mjs --bug=BUG001 --limit=50
+ *   node autoDiscovery/tools/validateBugCases.mjs --strict-operators
  */
 
 import fs from 'node:fs';
@@ -62,7 +62,7 @@ ${C.bold}Bug Cases Validator${C.reset}
 Validates bug cases by boolean result only (expectProved vs proved).
 
 Usage:
-  node autoDiscovery/validateBugCases.mjs [options]
+  node autoDiscovery/tools/validateBugCases.mjs [options]
 
 Options:
   --bug=BUGID         Validate only this bug folder (e.g. BUG001)

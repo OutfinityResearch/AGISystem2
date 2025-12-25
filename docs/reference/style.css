@@ -334,21 +334,148 @@ li {
   }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Fluid typography - scales smoothly between mobile and desktop */
+html {
+  font-size: clamp(16px, 2.5vw, 18px);
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
   .page {
-    padding: 15px;
+    padding: 20px 25px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  html {
+    font-size: 17px; /* Slightly larger base for mobile readability */
+  }
+
+  body {
+    line-height: 1.7; /* More line spacing on mobile */
+  }
+
+  .page {
+    padding: 16px;
+  }
+
+  /* Larger headings on mobile for better hierarchy */
+  h1 { font-size: 1.75em; }
+  h2 { font-size: 1.35em; margin-top: 30px; }
+  h3 { font-size: 1.15em; margin-top: 25px; }
+
+  .nav-header h1 {
+    font-size: 1.5em;
+  }
+
+  .nav-header small {
+    font-size: 0.95em;
+    line-height: 1.8;
+  }
+
+  .nav-header small a {
+    display: inline-block;
+    padding: 4px 0; /* Better touch targets */
+    margin: 2px 6px;
   }
 
   .section-grid {
     grid-template-columns: 1fr;
   }
 
+  .section-intro {
+    padding: 16px;
+    font-size: 1em;
+  }
+
+  .section-intro p {
+    font-size: 1em;
+  }
+
+  /* Tables - horizontal scroll instead of tiny text */
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   table {
-    font-size: 0.9em;
+    font-size: 0.95em;
+    min-width: 500px; /* Force scroll instead of squishing */
   }
 
   th, td {
-    padding: 8px 10px;
+    padding: 10px 12px;
+  }
+
+  /* Code blocks */
+  pre {
+    padding: 15px;
+    font-size: 0.9em;
+  }
+
+  code {
+    font-size: 0.95em;
+  }
+
+  /* Lists with better spacing */
+  ul, ol {
+    padding-left: 20px;
+  }
+
+  li {
+    margin: 10px 0;
+  }
+
+  /* Alerts */
+  .alert {
+    padding: 14px 16px;
+    font-size: 0.95em;
+  }
+
+  /* Footer */
+  .footer-nav {
+    font-size: 0.95em;
+    margin-top: 40px;
+  }
+}
+
+/* Responsive - Small phones */
+@media (max-width: 480px) {
+  html {
+    font-size: 18px; /* Even larger for small screens */
+  }
+
+  .page {
+    padding: 14px;
+  }
+
+  h1 { font-size: 1.6em; }
+  h2 { font-size: 1.25em; }
+  h3 { font-size: 1.1em; }
+
+  .nav-header h1 {
+    font-size: 1.4em;
+  }
+
+  /* Stack navigation links vertically on very small screens */
+  .nav-header small a {
+    display: block;
+    margin: 6px 0;
+  }
+
+  pre {
+    padding: 12px;
+    border-radius: 6px;
+  }
+
+  .section-card {
+    padding: 18px;
+  }
+
+  /* Badges */
+  .badge {
+    font-size: 0.85em;
+    padding: 4px 8px;
   }
 }

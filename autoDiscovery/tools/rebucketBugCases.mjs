@@ -85,7 +85,7 @@ function updateReport(bugDir, bugId) {
     '',
     '## How to Run Cases',
     '```bash',
-    `node autoDiscovery/runBugSuite.mjs --bug=${bugId}`,
+    `node autoDiscovery/tools/runBugSuite.mjs --bug=${bugId}`,
     '```',
     '',
     '## All Cases',
@@ -214,7 +214,7 @@ async function main() {
         expected: raw.expected || {
           expected_proved: result.translated?.expectProved ?? null,
           expected_nl: 'TODO',
-          note: 'Run `node autoDiscovery/runBugCase.mjs --accept-actual <case.json>` after reviewing actual_nl'
+          note: 'Run `node autoDiscovery/tools/runBugCase.mjs --accept-actual <case.json>` after reviewing actual_nl'
         },
         timestamp: raw.timestamp || new Date().toISOString()
       };

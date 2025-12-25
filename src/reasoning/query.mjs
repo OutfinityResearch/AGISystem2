@@ -171,17 +171,27 @@ export class QueryEngine {
     const allResults = [];
 
     // SOURCE 1: HDC Master Equation (true holographic computing)
-    const hdcMatches = searchHDC(this.session, operatorName, knowns, holes, operator, {
-      useLevelOptimization: options.useLevelOptimization ?? true
-    });
-    allResults.push(...hdcMatches);
-    dbg('HDC', `Found ${hdcMatches.length} HDC matches`);
+    // For capped queries, defer HDC until needed (it's lowest priority).
+    let ranHdc = false;
+    const runHdc = () => {
+      const hdcMatches = searchHDC(this.session, operatorName, knowns, holes, operator, {
+        useLevelOptimization: options.useLevelOptimization ?? true
+      });
+      allResults.push(...hdcMatches);
+      dbg('HDC', `Found ${hdcMatches.length} HDC matches`);
 
-    // Track HDC usage
-    this.session.reasoningStats.hdcQueries++;
-    if (hdcMatches.length > 0) {
-      this.session.reasoningStats.hdcSuccesses++;
-      this.session.reasoningStats.hdcBindings += hdcMatches.length;
+      // Track HDC usage
+      this.session.reasoningStats.hdcQueries++;
+      if (hdcMatches.length > 0) {
+        this.session.reasoningStats.hdcSuccesses++;
+        this.session.reasoningStats.hdcBindings += hdcMatches.length;
+      }
+      return hdcMatches;
+    };
+
+    if (maxResults === null) {
+      runHdc();
+      ranHdc = true;
     }
 
     // SOURCE 2: Direct KB matches (symbolic, exact) - HIGHEST PRIORITY
@@ -386,6 +396,14 @@ export class QueryEngine {
 
     // Also filter negated facts for rule_derived and hdc
     filteredResults = filterNegated(filteredResults, this.session, operatorName, knowns);
+
+    // For capped queries: if we still don't have enough high-priority results, run HDC last.
+    if (!ranHdc && maxResults !== null && filteredResults.length < maxResults) {
+      runHdc();
+      ranHdc = true;
+      filteredResults = filterTypeClasses(allResults, this.session, operatorName);
+      filteredResults = filterNegated(filteredResults, this.session, operatorName, knowns);
+    }
 
     // SOURCE 7 (fallback): bAbI16-style induction for missing hasProperty values.
     // Only activate when no other source produced a usable answer.

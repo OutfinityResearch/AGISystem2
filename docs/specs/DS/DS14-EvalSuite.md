@@ -216,6 +216,8 @@ export default { name, description, theories, steps };
 | `expected_nl` | string (learn/prove), string[] (query) | Yes | Expected natural language response |
 | `proof_nl` | string (prove), string[] (query) | Conditional | Required for `query` and `prove`; omit for `learn` |
 | `alternative_proof_nl` | string (prove), string[] (query) | Optional | Alternate proof chain(s) accepted by runner (must match `proof_nl` shape) |
+| `maxResults` / `max_results` | number | Optional | For `query` only: cap returned answers to N (>=1) |
+| `useLevelOptimization` / `use_level_optimization` | boolean | Optional | Enable/disable constructivist level pruning for this step |
 
 **Note**: Step ordering is determined by array index - no explicit `step` field needed.
 

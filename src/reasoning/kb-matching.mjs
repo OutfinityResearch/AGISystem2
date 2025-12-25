@@ -315,6 +315,7 @@ export class KBMatcher {
     const useLevelOpt = options.useLevelOptimization ??
       (componentKB?.useLevelOptimization && this.session.useLevelOptimization !== false);
     const goalLevel = options.goalLevel ?? (useLevelOpt && componentKB ? componentKB.computeGoalLevel(condStr) : null);
+    const strictLevelPruning = options.strictLevelPruning === true;
 
     let candidates;
     candidates = this.engine.getRulesByConclusionOp ? this.engine.getRulesByConclusionOp(goalOp) : this.session.rules;
@@ -344,9 +345,9 @@ export class KBMatcher {
 
       if (!unifyOk) continue;
 
-      if (useLevelOpt && goalLevel !== null) {
+      if (strictLevelPruning && useLevelOpt && goalLevel !== null) {
         const premLevel = this.engine.unification.computeMaxPremiseLevel(rule, ruleBindings);
-        if (Number.isFinite(premLevel) && premLevel >= goalLevel) {
+        if (Number.isFinite(premLevel) && premLevel > goalLevel) {
           continue;
         }
       }
@@ -414,6 +415,7 @@ export class KBMatcher {
     const useLevelOpt = options.useLevelOptimization ??
       (componentKB?.useLevelOptimization && this.session.useLevelOptimization !== false);
     const goalLevel = options.goalLevel ?? (useLevelOpt && componentKB ? componentKB.computeGoalLevel(goal.toString?.() || '') : null);
+    const strictLevelPruning = options.strictLevelPruning === true;
 
     const canon = (name) => {
       if (!this.session?.canonicalizationEnabled) return name;
@@ -421,9 +423,9 @@ export class KBMatcher {
     };
 
     if (!rule.hasVariables) {
-      if (useLevelOpt && goalLevel !== null) {
+      if (strictLevelPruning && useLevelOpt && goalLevel !== null) {
         const premLevel = rule._maxPremLevel ?? null;
-        if (Number.isFinite(premLevel) && premLevel >= goalLevel) {
+        if (Number.isFinite(premLevel) && premLevel > goalLevel) {
           return { valid: false };
         }
       }
@@ -478,54 +480,6 @@ export class KBMatcher {
     }
 
     if (rule.hasVariables && rule.conclusionAST) {
-      // Some rules contain *bound* variables inside Exists/ForAll conditions.
-      // Those should not force unification when the rule conclusion is ground and
-      // exactly matches the goal (LogicNLI-style: (Exists ?x P(?x)) -> Q).
-      const concOp0 = this.engine.unification.extractOperatorFromAST(rule.conclusionAST);
-      const concArgs0 = this.engine.unification.extractArgsFromAST(rule.conclusionAST);
-      const concIsGround = Array.isArray(concArgs0) && concArgs0.every(a => !a?.isVariable);
-
-      if (concIsGround) {
-        const canon = (name) => {
-          if (!this.session?.canonicalizationEnabled) return name;
-          return canonicalizeTokenName(this.session, name);
-        };
-
-        const goalOpName = goalOp;
-        const goalArgNames = goalArgs.map(a => a.name);
-        const concArgNames = concArgs0.map(a => a.name);
-
-        const exact =
-          goalOpName &&
-          concOp0 &&
-          canon(goalOpName) === canon(concOp0) &&
-          goalArgNames.length === concArgNames.length &&
-          goalArgNames.every((a, i) => canon(a) === canon(concArgNames[i]));
-
-        if (exact) {
-          const conditionResult = this.engine.conditions.proveCondition(rule, depth + 1);
-          if (conditionResult.valid) {
-            this.engine.logStep('rule_match', rule.name || rule.source);
-            return {
-              valid: true,
-              method: 'backward_chain',
-              rule: rule.name,
-              confidence: (conditionResult.confidence || this.thresholds.CONDITION_CONFIDENCE) * this.thresholds.CONFIDENCE_DECAY,
-              goal: goal.toString(),
-              steps: [
-                {
-                  operation: 'rule_match',
-                  rule: rule.label || rule.name || rule.source,
-                  ruleId: rule.id || null,
-                  fact: rule.conclusionAST?.toString?.() || ''
-                },
-                ...conditionResult.steps
-              ]
-            };
-          }
-        }
-      }
-
       const unifyResult = this.engine.unification.tryUnification(goal, rule, depth, {
         useLevelOptimization: useLevelOpt,
         goalLevel
