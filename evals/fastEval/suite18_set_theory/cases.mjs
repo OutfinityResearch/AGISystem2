@@ -49,7 +49,12 @@ export const steps = [
     input_nl: 'Is SetA a subset of SetD?',
     input_dsl: '@goal subsetOf SetA SetD',
     expected_nl: 'True: SetA subsetOf SetD.',
-    proof_nl: 'Applied rule: implies @ax_cond @ax_conseq. Applied rule: rule implies subsetOf SetB SetD. SetB subsetOf SetC. SetC subsetOf SetD. And condition satisfied: subsetOf SetB SetC, subsetOf SetC SetD. SetA subsetOf SetB. SetB subsetOf SetD. And condition satisfied: subsetOf SetA SetB, subsetOf SetB SetD. Therefore SetA subsetOf SetD.'
+    proof_nl: [
+      'SetA subsetOf SetB',
+      'SetB subsetOf SetC',
+      'SetC subsetOf SetD',
+      'Therefore SetA subsetOf SetD'
+    ]
   },
 
   // === PROVE: Element propagation (x ∈ SetA -> x ∈ SetC) ===
@@ -58,7 +63,13 @@ export const steps = [
     input_nl: 'Does x belong to SetC?',
     input_dsl: '@goal elementOf x SetC',
     expected_nl: 'True: x elementOf SetC.',
-    proof_nl: 'Applied rule: implies @ax_cond2 @ax_conseq2. Applied rule: rule implies subsetOf SetA SetC. SetA subsetOf SetB. SetB subsetOf SetC. And condition satisfied: subsetOf SetA SetB, subsetOf SetB SetC. x elementOf SetA. SetA subsetOf SetC. And condition satisfied: elementOf x SetA, subsetOf SetA SetC. Therefore x elementOf SetC.'
+    proof_nl: [
+      'x elementOf SetA',
+      'SetA subsetOf SetC',
+      'And condition satisfied: x elementOf SetA, SetA subsetOf SetC',
+      'Applied rule: IF ((x elementOf SetA) AND (SetA subsetOf SetC)) THEN (x elementOf SetC)',
+      'Therefore x elementOf SetC'
+    ]
   },
 
   // === PROVE: Element propagation to Universe ===
@@ -67,7 +78,13 @@ export const steps = [
     input_nl: 'Is y in Universe via subset chain?',
     input_dsl: '@goal elementOf y Universe',
     expected_nl: 'True: y elementOf Universe.',
-    proof_nl: 'Applied rule: implies @ax_cond2 @ax_conseq2. Applied rule: rule implies subsetOf SetB Universe. Applied rule: rule implies subsetOf SetC Universe. SetC subsetOf SetD. SetD subsetOf Universe. And condition satisfied: subsetOf SetC SetD, subsetOf SetD Universe. SetB subsetOf SetC. SetC subsetOf Universe. And condition satisfied: subsetOf SetB SetC, subsetOf SetC Universe. y elementOf SetB. SetB subsetOf Universe. And condition satisfied: elementOf y SetB, subsetOf SetB Universe. Therefore y elementOf Universe.'
+    proof_nl: [
+      'y elementOf SetB',
+      'SetB subsetOf Universe',
+      'And condition satisfied: y elementOf SetB, SetB subsetOf Universe',
+      'Applied rule: IF ((y elementOf SetB) AND (SetB subsetOf Universe)) THEN (y elementOf Universe)',
+      'Therefore y elementOf Universe'
+    ]
   },
 
   // === QUERY: What sets contain x? ===
@@ -83,11 +100,11 @@ export const steps = [
       'x elementOf Universe.'
     ],
     proof_nl: [
-      'elementOf x SetA',
-      'elementOf x SetA. subsetOf SetA SetB. Applied rule: implies @ax_cond2 @ax_conseq2',
-      'elementOf x SetA. subsetOf SetA SetB. subsetOf SetB SetC',
-      'elementOf x SetA. subsetOf SetA SetB. subsetOf SetB SetC. subsetOf SetC SetD',
-      'elementOf x SetA. subsetOf SetA SetB. subsetOf SetB SetC. subsetOf SetC SetD. subsetOf SetD Universe'
+      'Fact in KB: x elementOf SetA',
+      'Therefore x elementOf SetB',
+      'Therefore x elementOf SetC',
+      'Therefore x elementOf SetD',
+      'Therefore x elementOf Universe'
     ]
   },
 
@@ -97,7 +114,10 @@ export const steps = [
     input_nl: 'Is x in SetZ (unrelated)?',
     input_dsl: '@goal elementOf x SetZ',
     expected_nl: 'Cannot prove: x elementOf SetZ.',
-    proof_nl: 'Search: Checked rule: implies @ax_cond2 @ax_conseq2. Missing: elementOf x ?A, subsetOf ?A ?B.'
+    proof_nl: [
+      'No proof found for x elementOf SetZ',
+      'No proof found'
+    ]
   },
 
   // === SETUP 2: Equality axiom and intersection ===
@@ -139,7 +159,12 @@ export const steps = [
     input_nl: 'Are Alpha and Beta equal sets?',
     input_dsl: '@goal equal Alpha Beta',
     expected_nl: 'True: Alpha equals Beta.',
-    proof_nl: 'Applied rule: implies @eqCond @eqConseq. Alpha subsetOf Beta. Beta subsetOf Alpha. And condition satisfied: subsetOf Alpha Beta, subsetOf Beta Alpha. Therefore Alpha equals Beta.'
+    proof_nl: [
+      'Alpha subsetOf Beta',
+      'Beta subsetOf Alpha',
+      'Applied rule: IF ((Alpha subsetOf Beta) AND (Beta subsetOf Alpha)) THEN (Alpha equals Beta)',
+      'Therefore Alpha equals Beta'
+    ]
   },
 
   // === PROVE: x is in intersection (x already in SetA and SetB via propagation) ===
@@ -148,7 +173,12 @@ export const steps = [
     input_nl: 'Is x in the intersection of SetA and SetB?',
     input_dsl: '@goal elementOf x IntersectAB',
     expected_nl: 'True: x elementOf IntersectAB.',
-    proof_nl: 'Applied rule: implies @intCond @intConseq. Applied rule: rule implies elementOf x SetB. x elementOf SetA. SetA subsetOf SetB. And condition satisfied: elementOf x SetA, subsetOf SetA SetB. x elementOf SetB. And condition satisfied: elementOf x SetA, elementOf x SetB. Therefore x elementOf IntersectAB.'
+    proof_nl: [
+      'x elementOf SetA',
+      'x elementOf SetB',
+      'Applied rule: IF ((x elementOf SetA) AND (x elementOf SetB)) THEN (x elementOf IntersectAB)',
+      'Therefore x elementOf IntersectAB'
+    ]
   }
 ];
 

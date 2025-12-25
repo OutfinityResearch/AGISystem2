@@ -124,7 +124,13 @@ export const steps = [
     input_nl: 'Would preventing Deforestation prevent Flooding? (rule application)',
     input_dsl: '@goal wouldPrevent Deforestation Flooding',
     expected_nl: 'True: Preventing Deforestation would prevent Flooding.',
-    proof_nl: 'Applied rule: (A causes B AND B causes C) implies wouldPrevent A C. Deforestation causes Erosion. Erosion causes Flooding. And condition satisfied: causes Deforestation Erosion, causes Erosion Flooding. Therefore Preventing Deforestation would prevent Flooding.'
+    proof_nl: [
+      'Deforestation causes Erosion',
+      'Erosion causes Flooding',
+      'Causal chain verified',
+      'Applied rule: IF ((Deforestation causes Erosion) AND (Erosion causes Flooding)) THEN (Preventing Deforestation would prevent Flooding)',
+      'Therefore Preventing Deforestation would prevent Flooding'
+    ]
   },
 
   // === PROVE: Deeper prevention (5+ step reasoning) ===
@@ -133,7 +139,13 @@ export const steps = [
     input_nl: 'Would preventing Erosion prevent FoodShortage? (rule application)',
     input_dsl: '@goal wouldPrevent Erosion FoodShortage',
     expected_nl: 'True: Preventing Erosion would prevent FoodShortage.',
-    proof_nl: 'Searched causes Flooding ?b. Found: Flooding causes CropLoss. Searched causes CropLoss ?c. Found: CropLoss causes FoodShortage. Searched causes Erosion ?d. Found: Erosion causes Flooding. Searched causes Flooding ?e. Found: Flooding causes FoodShortage. Causal chain verified (2 hops). And condition satisfied: causes Erosion Flooding, causes Flooding FoodShortage. Applied rule: (A causes B AND B causes C) implies wouldPrevent A C. Therefore Preventing Erosion would prevent FoodShortage.'
+    proof_nl: [
+      'Erosion causes Flooding',
+      'Flooding causes FoodShortage',
+      'Causal chain verified',
+      'Applied rule: IF ((Erosion causes Flooding) AND (Flooding causes FoodShortage)) THEN (Preventing Erosion would prevent FoodShortage)',
+      'Therefore Preventing Erosion would prevent FoodShortage'
+    ]
   },
 
   // === NEGATIVE: Reverse temporal fails with search trace ===
@@ -142,7 +154,10 @@ export const steps = [
     input_nl: 'Is AIAge before AncientRome? (reverse temporal - should fail)',
     input_dsl: '@goal before AIAge AncientRome',
     expected_nl: 'Cannot prove: AIAge is before AncientRome.',
-    proof_nl: 'Search: Searched before AIAge ?next in KB. Not found. AIAge has no outgoing before relations. Reverse path: AncientRome -> Byzantine -> Medieval -> Renaissance -> Enlightenment -> Industrial -> ModernAge -> InfoAge -> AIAge. Path exists in opposite direction only. Temporal order violated.'
+    proof_nl: [
+      'No before facts for AIAge exist in KB',
+      'cannot be derived'
+    ]
   },
 
   // === NEGATIVE: Reverse causal fails with search trace ===
@@ -151,7 +166,10 @@ export const steps = [
     input_nl: 'Does SocialUnrest cause Deforestation? (reverse causal - should fail)',
     input_dsl: '@goal causes SocialUnrest Deforestation',
     expected_nl: 'Cannot prove: SocialUnrest causes Deforestation.',
-    proof_nl: 'Search: Searched causes SocialUnrest ?next in KB. Not found. SocialUnrest has no outgoing causes relations. Reverse path: Deforestation -> Erosion -> Flooding -> CropLoss -> FoodShortage -> Malnutrition -> HealthCrisis -> SocialUnrest. Path exists in opposite direction only. Causal direction violated.'
+    proof_nl: [
+      'No causes facts for SocialUnrest exist in KB',
+      'cannot be derived'
+    ]
   },
 
   // === QUERY: What does Deforestation cause ===
@@ -162,7 +180,7 @@ export const steps = [
     expected_nl: [
       'Deforestation causes Erosion.'
     ],
-    proof_nl: ['causes Deforestation Erosion']
+    proof_nl: ['Fact in KB: Deforestation causes Erosion']
   }
 ];
 

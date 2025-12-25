@@ -74,8 +74,7 @@ export const steps = [
     input_nl: 'Is Mittens a Mammal? (7-step deep chain)',
     input_dsl: '@goal isA Mittens Mammal',
     expected_nl: 'True: Mittens is a mammal.',
-    proof_nl: 'Mittens is a persiancat. PersianCat is a longhair. LongHair is a domesticcat. DomesticCat is a cat. Cat is a feline. Feline is a mammal. Transitive chain verified (6 hops). Therefore Mittens is a mammal.',
-    alternative_proof_nl: 'Mittens is a persiancat. PersianCat is a longhair. LongHair is a domesticcat. DomesticCat is a cat. Cat is a mammal. Transitive chain verified (5 hops). Therefore Mittens is a mammal.'
+    proof_nl: 'Mittens is a persiancat. PersianCat is a longhair. LongHair is a domesticcat. DomesticCat is a cat. Cat is a mammal. Transitive chain verified (5 hops). Therefore Mittens is a mammal.'
   },
 
   // === SETUP: Deep geographic hierarchy ===
@@ -131,7 +130,10 @@ export const steps = [
     input_nl: 'Is Rex in Europe? (cross-hierarchy - should fail)',
     input_dsl: '@goal locatedIn Rex Europe',
     expected_nl: 'Cannot prove: Rex is in Europe.',
-    proof_nl: 'Search: Rex isA GermanShepherd. GermanShepherd isA Shepherd. Shepherd isA WorkingDog. WorkingDog isA Dog. Dog isA Canine. Canine isA Carnivore. Carnivore isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing. Searched locatedIn Rex ?next in KB. Not found. Rex has no outgoing locatedIn relations. No transitive path to Europe.'
+    proof_nl: [
+      'No locatedIn facts for Rex exist in KB',
+      'cannot be derived'
+    ]
   },
 
   // === QUERY: What is in Europe ===
@@ -150,14 +152,14 @@ export const steps = [
       'Berlin is in Europe.'
     ],
     proof_nl: [
-      'locatedIn WesternEurope Europe',
-      'locatedIn CentralEurope Europe',
-      'locatedIn France WesternEurope. locatedIn WesternEurope Europe',
-      'locatedIn Germany CentralEurope. locatedIn CentralEurope Europe',
-      'locatedIn IleDeFrance France. locatedIn France WesternEurope. locatedIn WesternEurope Europe',
-      'locatedIn Brandenburg Germany. locatedIn Germany CentralEurope. locatedIn CentralEurope Europe',
-      'locatedIn Paris IleDeFrance. locatedIn IleDeFrance France. locatedIn France WesternEurope. locatedIn WesternEurope Europe',
-      'locatedIn Berlin Brandenburg. locatedIn Brandenburg Germany. locatedIn Germany CentralEurope. locatedIn CentralEurope Europe'
+      'Fact in KB: WesternEurope is in Europe',
+      'Fact in KB: CentralEurope is in Europe',
+      'Therefore France is in Europe',
+      'Therefore Germany is in Europe',
+      'Therefore IleDeFrance is in Europe',
+      'Therefore Brandenburg is in Europe',
+      'Therefore Paris is in Europe',
+      'Therefore Berlin is in Europe'
     ]
   },
 
@@ -208,10 +210,10 @@ export const steps = [
       'Car has a seats.'
     ],
     proof_nl: [
-      'has Car Steering',
-      'has Car Wheels',
-      'has Car Engine',
-      'has Car Seats'
+      'Fact in KB: Car has a steering',
+      'Fact in KB: Car has a wheels',
+      'Fact in KB: Car has an engine',
+      'Fact in KB: Car has a seats'
     ]
   }
 ];

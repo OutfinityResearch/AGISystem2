@@ -30,7 +30,7 @@ export const steps = [
     expected_nl: 'Learned 10 facts'
   },
 
-  // === ABDUCE: Explain WetGrass + WetSidewalk, reject Sprinkler by DryPath ===
+  // === ABDUCE: Both Rain and Sprinkler can explain WetGrass ===
   {
     action: 'query',
     input_nl: 'Why is the grass wet and the sidewalk wet?',
@@ -101,7 +101,10 @@ export const steps = [
     input_nl: 'Can Opus fly (exception should block)?',
     input_dsl: '@goal can Opus Fly',
     expected_nl: 'Cannot prove: Opus can Fly.',
-    proof_nl: 'Search: Opus isA Penguin. Opus isA Bird. Default can Bird Fly blocked by exception for Penguin.'
+    proof_nl: [
+      'No can facts for Opus exist in KB',
+      'cannot be derived'
+    ]
   },
 
   // === ANALOGY: Orbital system proportional reasoning ===

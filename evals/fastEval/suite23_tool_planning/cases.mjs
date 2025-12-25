@@ -85,7 +85,7 @@ export const steps = [
       'Plan planLearn has 3 steps.'
     ],
     proof_nl: [
-      'plan planLearn 3'
+      'Found 3 plan steps for planLearn'
     ]
   },
 
@@ -98,7 +98,7 @@ export const steps = [
       'Step 1 of plan planLearn is ReadDS03.'
     ],
     proof_nl: [
-      'planStep planLearn 1 ReadDS03'
+      'Fact in KB: Step 1 of plan planLearn is ReadDS03'
     ]
   },
   {
@@ -110,7 +110,7 @@ export const steps = [
       'Step 1 of plan planLearn uses ReadFile with DS03Spec and DS03Text.'
     ],
     proof_nl: [
-      'planAction planLearn 1 ReadFile DS03Spec DS03Text'
+      'Fact in KB: Step 1 of plan planLearn uses ReadFile with DS03Spec and DS03Text'
     ]
   },
 
@@ -123,7 +123,7 @@ export const steps = [
       'Step 2 of plan planLearn is ExtractLearnReturn.'
     ],
     proof_nl: [
-      'planStep planLearn 2 ExtractLearnReturn'
+      'Fact in KB: Step 2 of plan planLearn is ExtractLearnReturn'
     ]
   },
   {
@@ -135,7 +135,7 @@ export const steps = [
       'Step 2 of plan planLearn uses Extract with DS03Text and LearnReturnInfo.'
     ],
     proof_nl: [
-      'planAction planLearn 2 Extract DS03Text LearnReturnInfo'
+      'Fact in KB: Step 2 of plan planLearn uses Extract with DS03Text and LearnReturnInfo'
     ]
   },
 
@@ -148,7 +148,7 @@ export const steps = [
       'Step 3 of plan planLearn is WriteLearnReport.'
     ],
     proof_nl: [
-      'planStep planLearn 3 WriteLearnReport'
+      'Fact in KB: Step 3 of plan planLearn is WriteLearnReport'
     ]
   },
   {
@@ -160,7 +160,7 @@ export const steps = [
       'Step 3 of plan planLearn uses WriteFile with LearnReturnInfo and LearnReturnReport.'
     ],
     proof_nl: [
-      'planAction planLearn 3 WriteFile LearnReturnInfo LearnReturnReport'
+      'Fact in KB: Step 3 of plan planLearn uses WriteFile with LearnReturnInfo and LearnReturnReport'
     ]
   },
 
@@ -193,7 +193,7 @@ export const steps = [
       'Plan planEval has 3 steps.'
     ],
     proof_nl: [
-      'plan planEval 3'
+      'Found 3 plan steps for planEval'
     ]
   },
 
@@ -206,7 +206,7 @@ export const steps = [
       'Step 1 of plan planEval is ReadDS14.'
     ],
     proof_nl: [
-      'planStep planEval 1 ReadDS14'
+      'Fact in KB: Step 1 of plan planEval is ReadDS14'
     ]
   },
   {
@@ -218,7 +218,7 @@ export const steps = [
       'Step 1 of plan planEval uses ReadFile with DS14Spec and DS14Text.'
     ],
     proof_nl: [
-      'planAction planEval 1 ReadFile DS14Spec DS14Text'
+      'Fact in KB: Step 1 of plan planEval uses ReadFile with DS14Spec and DS14Text'
     ]
   },
 
@@ -231,7 +231,7 @@ export const steps = [
       'Step 2 of plan planEval is ExtractProveNoHoles.'
     ],
     proof_nl: [
-      'planStep planEval 2 ExtractProveNoHoles'
+      'Fact in KB: Step 2 of plan planEval is ExtractProveNoHoles'
     ]
   },
   {
@@ -243,7 +243,7 @@ export const steps = [
       'Step 2 of plan planEval uses Extract with DS14Text and ProveNoHolesInfo.'
     ],
     proof_nl: [
-      'planAction planEval 2 Extract DS14Text ProveNoHolesInfo'
+      'Fact in KB: Step 2 of plan planEval uses Extract with DS14Text and ProveNoHolesInfo'
     ]
   },
 
@@ -256,7 +256,7 @@ export const steps = [
       'Step 3 of plan planEval is WriteEvalReport.'
     ],
     proof_nl: [
-      'planStep planEval 3 WriteEvalReport'
+      'Fact in KB: Step 3 of plan planEval is WriteEvalReport'
     ]
   },
   {
@@ -268,7 +268,7 @@ export const steps = [
       'Step 3 of plan planEval uses WriteFile with ProveNoHolesInfo and EvalReport.'
     ],
     proof_nl: [
-      'planAction planEval 3 WriteFile ProveNoHolesInfo EvalReport'
+      'Fact in KB: Step 3 of plan planEval uses WriteFile with ProveNoHolesInfo and EvalReport'
     ]
   }
 ];

@@ -38,12 +38,11 @@ export const steps = [
     input_dsl: '@goal isA Sally Zumpus',
     expected_nl: 'True: Sally is a zumpus.',
     proof_nl: [
-      'Applied rule: Implies @ant @cons',
-      'Rule meaning: IF',
       'Sally is a wumpus',
       'Sally is a sterpus',
       'Sally is a gorpus',
-      'And condition satisfied',
+      'And condition satisfied: Sally is a wumpus, Sally is a sterpus, Sally is a gorpus',
+      'Applied rule: IF ((Sally is a wumpus) AND (Sally is a sterpus) AND (Sally is a gorpus)) THEN (Sally is a zumpus)',
       'Therefore Sally is a zumpus'
     ]
   },
@@ -52,14 +51,13 @@ export const steps = [
     action: 'prove',
     input_nl: 'Also prove the other leaf (Impus) from the same And consequent.',
     input_dsl: '@goal isA Sally Impus',
-    expected_nl: 'True: Sally is a impus.',
+    expected_nl: 'True: Sally is an impus.',
     proof_nl: [
-      'Applied rule: Implies @ant @cons',
-      'Rule meaning: IF',
       'Sally is a wumpus',
       'Sally is a sterpus',
       'Sally is a gorpus',
-      'And condition satisfied',
+      'And condition satisfied: Sally is a wumpus, Sally is a sterpus, Sally is a gorpus',
+      'Applied rule: IF ((Sally is a wumpus) AND (Sally is a sterpus) AND (Sally is a gorpus)) THEN (Sally is an impus)',
       'Therefore Sally is an impus'
     ]
   },
@@ -70,7 +68,7 @@ export const steps = [
     input_dsl: '@q isA ?who Zumpus',
     expected_nl: ['Sally is a zumpus.'],
     proof_nl: [
-      'Applied rule: Implies @ant @cons. Rule meaning: IF. Sally is a wumpus. Sally is a sterpus. Sally is a gorpus. And condition satisfied'
+      'Therefore Sally is a zumpus'
     ]
   }
 ];

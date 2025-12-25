@@ -78,7 +78,7 @@ export const steps = [
     input_nl: 'Can Opus fly? (Opus→Penguin→FlightlessBird→Bird but negation blocks)',
     input_dsl: '@goal can Opus Fly',
     expected_nl: 'Cannot prove: Opus can Fly.',
-    proof_nl: 'Search: Opus isA Penguin. Penguin isA FlightlessBird. FlightlessBird isA Bird. Bird isA FlyingAnimal. FlyingAnimal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing. Found explicit negation: Not(can Opus Fly). Negation blocks inference.'
+    proof_nl: 'Found explicit negation: NOT (Opus can Fly). Negation blocks inference.'
   },
 
   // === PROVE: 7-step Carbon→Organism ===
@@ -104,12 +104,12 @@ export const steps = [
       'Opus is a bird.'
     ],
     proof_nl: [
-      'isA Songbird Bird',
-      'isA FlightlessBird Bird',
-      'isA Sparrow Songbird. isA Songbird Bird',
-      'isA Penguin FlightlessBird. isA FlightlessBird Bird',
-      'isA Tweety Sparrow. isA Sparrow Songbird. isA Songbird Bird',
-      'isA Opus Penguin. isA Penguin FlightlessBird. isA FlightlessBird Bird'
+      'Fact in KB: FlightlessBird is a bird',
+      'Fact in KB: Songbird is a bird',
+      'Therefore Sparrow is a bird',
+      'Therefore Penguin is a bird',
+      'Therefore Tweety is a bird',
+      'Therefore Opus is a bird'
     ]
   },
 
@@ -128,7 +128,7 @@ export const steps = [
     input_nl: 'Is Charlie a Dog? (Charlie not in KB)',
     input_dsl: '@goal isA Charlie Dog',
     expected_nl: 'Cannot prove: Charlie is a dog.',
-    proof_nl: 'Search: Searched isA Charlie ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
+    proof_nl: 'No isA facts for Charlie exist in KB'
   },
 
   // === PROVE: 8-step Carbon→Ecosystem ===

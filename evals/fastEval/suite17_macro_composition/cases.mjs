@@ -92,7 +92,10 @@ export const steps = [
     input_nl: 'Must TeamAlpha coordinate?',
     input_dsl: '@goal must TeamAlpha Coordinate',
     expected_nl: 'True: TeamAlpha must Coordinate.',
-    proof_nl: 'Applied rule: implies @r2cond @r2conseq. Therefore TeamAlpha must Coordinate.'
+    proof_nl: [
+      'Applied rule: IF (TeamAlpha must Protect) THEN (TeamAlpha must Coordinate)',
+      'Therefore TeamAlpha must Coordinate'
+    ]
   },
 
   // === PROVE: Team must train via can Mobilize rule ===
@@ -101,7 +104,10 @@ export const steps = [
     input_nl: 'Must TeamAlpha train?',
     input_dsl: '@goal must TeamAlpha Train',
     expected_nl: 'True: TeamAlpha must Train.',
-    proof_nl: 'Applied rule: implies @r1cond @r1conseq. Therefore TeamAlpha must Train.'
+    proof_nl: [
+      'Applied rule: IF (TeamAlpha can Mobilize) THEN (TeamAlpha must Train)',
+      'Therefore TeamAlpha must Train'
+    ]
   },
 
   // === PROVE: Temporal chain ===
@@ -119,7 +125,10 @@ export const steps = [
     input_nl: 'Is TeamAlpha located in ReactorSite?',
     input_dsl: '@goal locatedIn TeamAlpha ReactorSite',
     expected_nl: 'Cannot prove: TeamAlpha is in ReactorSite.',
-    proof_nl: 'Search: TeamAlpha isA ResponseTeam. Found explicit negation: Not(locatedIn TeamAlpha ReactorSite). Negation blocks inference.'
+    proof_nl: [
+      'Found explicit negation: NOT (TeamAlpha is in ReactorSite)',
+      'Negation blocks inference'
+    ]
   },
 
   // === QUERY: What must TeamAlpha do? ===
@@ -133,9 +142,9 @@ export const steps = [
       'TeamAlpha must Coordinate.'
     ],
     proof_nl: [
-      'must TeamAlpha Protect',
-      'can TeamAlpha Mobilize. Applied rule: implies @r1cond @r1conseq',
-      'must TeamAlpha Protect. Applied rule: implies @r2cond @r2conseq'
+      'Fact in KB: TeamAlpha must Protect',
+      'Applied rule: IF (TeamAlpha can Mobilize) THEN (TeamAlpha must Train)',
+      'Applied rule: IF (TeamAlpha must Protect) THEN (TeamAlpha must Coordinate)'
     ]
   },
 
@@ -167,8 +176,8 @@ export const steps = [
       'Battery partOf SupplyChain.'
     ],
     proof_nl: [
-      'partOf Beam SupplyChain',
-      'partOf Battery SupplyChain'
+      'Fact in KB: Beam partOf SupplyChain',
+      'Fact in KB: Battery partOf SupplyChain'
     ]
   },
 

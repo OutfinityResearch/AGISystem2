@@ -35,7 +35,9 @@ export class HolographicQueryEngine {
   constructor(session) {
     this.session = session;
     this.symbolicEngine = new QueryEngine(session);
-    this.validatorEngine = new ProofEngine(session, { timeout: 500, maxDepth: 8 });
+    // Validation depth needs to cover long transitive chains (e.g., deep taxonomies).
+    // Keep it bounded for performance, but avoid truncating correct answers.
+    this.validatorEngine = new ProofEngine(session, { timeout: 500, maxDepth: 12 });
 
     // Get strategy-dependent thresholds
     const strategy = session?.hdcStrategy || 'dense-binary';

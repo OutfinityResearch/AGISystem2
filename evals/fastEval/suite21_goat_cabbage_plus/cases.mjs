@@ -70,7 +70,7 @@ export const steps = [
     input_nl: 'Does Wolf conflict with Goat?',
     input_dsl: '@goal conflicts Wolf Goat',
     expected_nl: 'True: Wolf conflicts Goat.',
-    proof_nl: 'Wolf conflicts Goat. Therefore Wolf conflicts Goat.'
+    proof_nl: 'Fact in KB: Wolf conflicts Goat'
   },
 
   // === PROVE: Initial unsafe state (all on Left without move) ===
@@ -79,7 +79,10 @@ export const steps = [
     input_nl: 'Is Left bank currently safe?',
     input_dsl: '@goal safe Left',
     expected_nl: 'True: Left is safe.',
-    proof_nl: 'Applied rule: implies @pres1 @pres2.'
+    proof_nl: [
+      'Applied rule: IF (Farmer is at Left) THEN (Left is safe)',
+      'Therefore Left is safe'
+    ]
   },
 
   // === QUERY: What is on the Left bank? ===
@@ -94,10 +97,10 @@ export const steps = [
       'Cabbage is at Left.'
     ],
     proof_nl: [
-      'location Farmer Left',
-      'location Wolf Left',
-      'location Goat Left',
-      'location Cabbage Left'
+      'Fact in KB: Farmer is at Left',
+      'Fact in KB: Wolf is at Left',
+      'Fact in KB: Goat is at Left',
+      'Fact in KB: Cabbage is at Left'
     ]
   },
 
@@ -111,8 +114,8 @@ export const steps = [
       'Goat conflicts Cabbage.'
     ],
     proof_nl: [
-      'conflicts Wolf Goat',
-      'conflicts Goat Cabbage'
+      'Fact in KB: Wolf conflicts Goat',
+      'Fact in KB: Goat conflicts Cabbage'
     ]
   },
 
@@ -122,7 +125,7 @@ export const steps = [
     input_nl: 'Does Goat conflict with Cabbage?',
     input_dsl: '@goal conflicts Goat Cabbage',
     expected_nl: 'True: Goat conflicts Cabbage.',
-    proof_nl: 'Goat conflicts Cabbage. Therefore Goat conflicts Cabbage.'
+    proof_nl: 'Fact in KB: Goat conflicts Cabbage'
   },
 
   // === PROVE: Boat capacity ===
@@ -131,7 +134,7 @@ export const steps = [
     input_nl: 'What is the boat capacity?',
     input_dsl: '@goal boatCapacity Boat Two',
     expected_nl: 'True: Boat boatCapacity Two.',
-    proof_nl: 'Boat boatCapacity Two. Therefore Boat boatCapacity Two.'
+    proof_nl: 'Fact in KB: Boat boatCapacity Two'
   },
 
   // === QUERY: What animals are there? ===
@@ -144,8 +147,8 @@ export const steps = [
       'Goat is an animal.'
     ],
     proof_nl: [
-      'isA Wolf Animal',
-      'isA Goat Animal'
+      'Fact in KB: Wolf is an animal',
+      'Fact in KB: Goat is an animal'
     ]
   },
 
@@ -155,7 +158,7 @@ export const steps = [
     input_nl: 'Must Farmer be in the boat to cross?',
     input_dsl: '@goal mustBe Farmer InBoat',
     expected_nl: 'True: Farmer mustBe InBoat.',
-    proof_nl: 'Farmer mustBe InBoat. Therefore Farmer mustBe InBoat.'
+    proof_nl: 'Fact in KB: Farmer mustBe InBoat'
   },
 
   // === DEMONSTRATE: Solve check (like suite 11) ===
@@ -164,7 +167,10 @@ export const steps = [
     input_nl: 'Demonstrate the solution logic: Is the initial state safe?',
     input_dsl: '@goal safe Left',
     expected_nl: 'True: Left is safe.',
-    proof_nl: 'Applied rule: implies @pres1 @pres2.'
+    proof_nl: [
+      'Applied rule: IF (Farmer is at Left) THEN (Left is safe)',
+      'Therefore Left is safe'
+    ]
   },
 
   // === PLANNING: Solve the puzzle with constraints ===
@@ -265,7 +271,7 @@ export const steps = [
       'Plan crossingPlan has 7 steps.'
     ],
     proof_nl: [
-      'plan crossingPlan 7'
+      'Found 7 plan steps for crossingPlan'
     ]
   },
 
@@ -283,13 +289,13 @@ export const steps = [
       'Step 7 of plan crossingPlan is CrossGoatLR.'
     ],
     proof_nl: [
-      'planStep crossingPlan 1 CrossGoatLR',
-      'planStep crossingPlan 2 CrossAloneRL',
-      'planStep crossingPlan 3 CrossWolfLR',
-      'planStep crossingPlan 4 CrossGoatRL',
-      'planStep crossingPlan 5 CrossCabbageLR',
-      'planStep crossingPlan 6 CrossAloneRL',
-      'planStep crossingPlan 7 CrossGoatLR'
+      'Fact in KB: Step 1 of plan crossingPlan is CrossGoatLR',
+      'Fact in KB: Step 2 of plan crossingPlan is CrossAloneRL',
+      'Fact in KB: Step 3 of plan crossingPlan is CrossWolfLR',
+      'Fact in KB: Step 4 of plan crossingPlan is CrossGoatRL',
+      'Fact in KB: Step 5 of plan crossingPlan is CrossCabbageLR',
+      'Fact in KB: Step 6 of plan crossingPlan is CrossAloneRL',
+      'Fact in KB: Step 7 of plan crossingPlan is CrossGoatLR'
     ]
   },
 
@@ -331,7 +337,7 @@ export const steps = [
       'Step 1 of plan nextAfterGoatRight is CrossAloneRL.'
     ],
     proof_nl: [
-      'planStep nextAfterGoatRight 1 CrossAloneRL'
+      'Fact in KB: Step 1 of plan nextAfterGoatRight is CrossAloneRL'
     ]
   },
 
@@ -372,7 +378,7 @@ export const steps = [
       'Step 1 of plan nextAfterWolfRight is CrossGoatRL.'
     ],
     proof_nl: [
-      'planStep nextAfterWolfRight 1 CrossGoatRL'
+      'Fact in KB: Step 1 of plan nextAfterWolfRight is CrossGoatRL'
     ]
   }
 ];

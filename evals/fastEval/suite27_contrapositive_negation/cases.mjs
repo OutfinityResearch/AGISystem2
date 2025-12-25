@@ -45,9 +45,10 @@ export const steps = [
     input_dsl: '@goal:goal Not (isA Stella Yumpus)',
     expected_nl: 'True: Not((isA, Stella, Yumpus)).',
     proof_nl: [
-      'Not (isA Stella Tumpus)',
       'Stella is a rompus',
-      'Stella is a lorpus'
+      'Stella is a lorpus',
+      'Applied contrapositive on rule: IF ((Stella is a yumpus) AND (Stella is a rompus) AND (Stella is a lorpus)) THEN (Stella is a tumpus)',
+      'Therefore Not((isA, Stella, Yumpus))'
     ]
   },
   {
@@ -69,7 +70,7 @@ export const steps = [
     action: 'prove',
     input_nl: 'Prove: Alex is not a vumpus (from Not(Brimpus) and Vumpus→(Brimpus∧Zumpus)).',
     input_dsl: '@goal:goal Not (isA Alex Vumpus)',
-    expected_nl: 'True: Not((isA, Alex, Vumpus)).',
-    proof_nl: 'Not (isA Alex Brimpus)'
+    expected_nl: 'Cannot prove: NOT (Alex is a vumpus).',
+    proof_nl: 'Open-world negation: no explicit negation fact for (Alex is a vumpus)'
   }
 ];

@@ -99,7 +99,7 @@ export const steps = [
     input_nl: 'BUG #2: Charlie round via modus ponens (quiet->round, quiet=TRUE)',
     input_dsl: '@goal hasProperty Charlie round',
     expected_nl: 'True: Charlie has round.',
-    proof_nl: 'Applied rule Implies. hasProperty Charlie quiet is true. Therefore hasProperty Charlie round.'
+    proof_nl: 'Applied rule: IF (Charlie has quiet) THEN (Charlie has round). Therefore Charlie has round.'
   },
 
   // ============================================================
@@ -124,7 +124,7 @@ export const steps = [
     input_nl: 'Sanity: Bob green via variable rule (THIS WORKS)',
     input_dsl: '@goal hasProperty Bob green',
     expected_nl: 'True: Bob has green.',
-    proof_nl: 'Applied rule: Implies'
+    proof_nl: 'Applied rule: IF (Bob has big) THEN (Bob has green). Therefore Bob has green.'
   },
 
   // ============================================================
@@ -149,7 +149,7 @@ export const steps = [
     input_nl: 'BUG #3: Dave frozen via ground modus ponens (should work but fails)',
     input_dsl: '@goal hasProperty Dave frozen',
     expected_nl: 'True: Dave has frozen.',
-    proof_nl: 'Applied rule Implies. hasProperty Dave cold is true. Therefore hasProperty Dave frozen.'
+    proof_nl: 'Applied rule: IF (Dave has cold) THEN (Dave has frozen). Therefore Dave has frozen.'
   },
 
   // ============================================================
@@ -214,7 +214,11 @@ export const steps = [
     input_nl: 'BUG #4: Water frozen should be UNPROVABLE (Water is not cold)',
     input_dsl: '@goal hasProperty Water frozen',
     expected_nl: 'Cannot prove',
-    proof_nl: 'Search'
+    proof_nl: [
+      'Checked rule: IF (Water has cold) THEN (Water has frozen)',
+      'Missing: Water has cold',
+      'Therefore the rule antecedent is not satisfied'
+    ]
   }
 ];
 

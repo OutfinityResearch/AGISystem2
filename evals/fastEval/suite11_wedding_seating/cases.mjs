@@ -73,8 +73,8 @@ export const cases = [
       'Alice is at T2.'
     ],
     proof_nl: [
-      'conflictsWith(Alice, Bob) satisfied: Alice at T1, Bob at T2, T1 != T2. seating Alice T1',
-      'conflictsWith(Alice, Bob) satisfied: Alice at T2, Bob at T1, T2 != T1. seating Alice T2'
+      'Fact in KB: Alice is at T1',
+      'Fact in KB: Alice is at T2'
     ]
   },
 

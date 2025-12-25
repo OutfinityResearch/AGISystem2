@@ -67,7 +67,10 @@ export const steps = [
     input_nl: 'Can Opus fly? (negation blocks despite being a Bird)',
     input_dsl: '@goal can Opus Fly',
     expected_nl: 'Cannot prove: Opus can Fly.',
-    proof_nl: 'Search: Opus isA Penguin. Penguin isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Bird isA Vertebrate. Rule: isA Bird implies can Fly would apply. Found explicit negation: Not(can Opus Fly). Negation blocks inference.'
+    proof_nl: [
+      'Found explicit negation: NOT (Opus can Fly)',
+      'Negation blocks inference'
+    ]
   },
 
   // === NEGATIVE: Oscar cannot fly (negation blocks) ===
@@ -76,7 +79,10 @@ export const steps = [
     input_nl: 'Can Oscar fly? (negation blocks)',
     input_dsl: '@goal can Oscar Fly',
     expected_nl: 'Cannot prove: Oscar can Fly.',
-    proof_nl: 'Search: Oscar isA Ostrich. Ostrich isA Ratite. Ratite isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Bird isA Vertebrate. Rule: isA Bird implies can Fly would apply. Found explicit negation: Not(can Oscar Fly). Negation blocks inference.'
+    proof_nl: [
+      'Found explicit negation: NOT (Oscar can Fly)',
+      'Negation blocks inference'
+    ]
   },
 
   // === PROVE: 6-step Oscar→Animal ===
@@ -130,7 +136,12 @@ export const steps = [
     input_nl: 'Is Bob a good driver? (has violations, And condition fails)',
     input_dsl: '@goal hasStatus Bob GoodDriver',
     expected_nl: 'Cannot prove: Bob is gooddriver.',
-    proof_nl: 'Search: Bob isA Professional. Professional isA Worker. Worker isA Adult. Adult isA Person. Person isA Human. Human isA Entity.'
+    proof_nl: [
+      'Checked rule: IF ((Bob has a license) AND (NOT (Bob has a violations))) THEN (Bob is gooddriver)',
+      'Found: Bob has a license',
+      'Blocked: NOT (Bob has a violations) is false because Bob has a violations is true',
+      'Therefore the rule antecedent is not satisfied'
+    ]
   },
 
   // === PROVE: Tweety can fly (via rule: Bird implies can Fly) ===
@@ -139,7 +150,12 @@ export const steps = [
     input_nl: 'Can Tweety fly? (Tweety→Sparrow→Songbird→Passerine→Bird + rule)',
     input_dsl: '@goal can Tweety Fly',
     expected_nl: 'True: Tweety can Fly.',
-    proof_nl: 'Applied rule: Implies @birdCond @birdFly. Tweety is a bird. Tweety is a sparrow. Sparrow is a songbird. Songbird is a passerine. Passerine is a bird. Therefore Tweety can Fly.'
+    proof_nl: [
+      'Tweety is a sparrow',
+      'Tweety is a bird',
+      'Applied rule: IF (Tweety is a bird) THEN (Tweety can Fly)',
+      'Therefore Tweety can Fly'
+    ]
   },
 
   // === NEGATIVE: Rock cannot fly (no type assertions) ===
@@ -148,7 +164,11 @@ export const steps = [
     input_nl: 'Can a Rock fly? (not in KB)',
     input_dsl: '@goal can Rock Fly',
     expected_nl: 'Cannot prove: Rock can Fly.',
-    proof_nl: 'Search: Searched isA Rock ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
+    proof_nl: [
+      'Checked rule: IF (Rock is a bird) THEN (Rock can Fly)',
+      'Missing: Rock is a bird',
+      'Therefore the rule antecedent is not satisfied'
+    ]
   },
 
   // === PROVE: 6-step Tweety→Animal ===

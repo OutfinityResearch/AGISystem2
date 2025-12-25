@@ -130,7 +130,10 @@ export const steps = [
     input_nl: 'Does DistrictCourt appeal to SupremeCourt? (2-step appeal chain)',
     input_dsl: '@goal appealsTo DistrictCourt SupremeCourt',
     expected_nl: 'True: DistrictCourt appeals to SupremeCourt.',
-    proof_nl: 'DistrictCourt appeals to AppealsCourt. AppealsCourt appeals to SupremeCourt. Therefore DistrictCourt appeals to SupremeCourt.'
+    proof_nl: [
+      'DistrictCourt appeals to AppealsCourt',
+      'AppealsCourt appeals to SupremeCourt'
+    ]
   },
 
   // === PROVE: 7-step biological (Hemoglobin->Matter) ===
@@ -157,7 +160,10 @@ export const steps = [
     input_nl: 'Is COVID a Court? (cross-domain - should fail)',
     input_dsl: '@goal isA COVID Court',
     expected_nl: 'Cannot prove: COVID is a court.',
-    proof_nl: 'Search: COVID isA ViralDisease. ViralDisease isA Infectious. Infectious isA Disease. Disease isA MedicalCondition. MedicalCondition isA HealthIssue. HealthIssue isA Problem. No path exists from COVID to Court.'
+    proof_nl: [
+      'No proof found for COVID is a court',
+      'No proof found'
+    ]
   },
 
   // === NEGATIVE: Reverse causation with search trace ===
@@ -166,7 +172,10 @@ export const steps = [
     input_nl: 'Does Trial cause Crime? (reverse causation - should fail)',
     input_dsl: '@goal causes Trial Crime',
     expected_nl: 'Cannot prove: Trial causes Crime.',
-    proof_nl: 'Search: Searched causes Trial ?next in KB. Not found. Trial has no outgoing causes relations. Reverse path: Crime -> Investigation -> Evidence -> Arrest -> Prosecution -> Trial. Path exists in opposite direction only. Causal direction violated.'
+    proof_nl: [
+      'No causes facts for Trial exist in KB',
+      'cannot be derived'
+    ]
   },
 
   // === NEGATIVE: Reverse temporal with search trace ===
@@ -175,7 +184,10 @@ export const steps = [
     input_nl: 'Is Sentencing before Complaint? (reverse temporal - should fail)',
     input_dsl: '@goal before Sentencing Complaint',
     expected_nl: 'Cannot prove: Sentencing is before Complaint.',
-    proof_nl: 'Search: Searched before Sentencing ?next in KB. Not found. Sentencing has no outgoing before relations. Reverse path: Complaint -> Filing -> Investigation -> Arrest -> Trial -> Verdict -> Sentencing. Path exists in opposite direction only. Temporal order violated.'
+    proof_nl: [
+      'No before facts for Sentencing exist in KB',
+      'cannot be derived'
+    ]
   },
 
   // === QUERY: Patient symptoms ===
@@ -189,9 +201,9 @@ export const steps = [
       'Patient1 has cough.'
     ],
     proof_nl: [
-      'hasSymptom Patient1 Fatigue',
-      'hasSymptom Patient1 Fever',
-      'hasSymptom Patient1 Cough'
+      'Fact in KB: Patient1 has fatigue',
+      'Fact in KB: Patient1 has fever',
+      'Fact in KB: Patient1 has cough'
     ]
   },
 
@@ -205,8 +217,8 @@ export const steps = [
       'DrSmith can Diagnose.'
     ],
     proof_nl: [
-      'can DrSmith Prescribe',
-      'can DrSmith Diagnose'
+      'Fact in KB: DrSmith can Prescribe',
+      'Fact in KB: DrSmith can Diagnose'
     ]
   }
 ];

@@ -40,7 +40,12 @@ export const steps = [
     input_nl: 'Can Opus fly? (Opus→Penguin→AntarcticBird→Seabird→Bird + rule→canFly)',
     input_dsl: '@goal can Opus Fly',
     expected_nl: 'True: Opus can Fly.',
-    proof_nl: 'Applied rule: Implies @birdCond @birdFly. Opus isA Bird. Opus isA Penguin. Penguin isA AntarcticBird. AntarcticBird isA Seabird. Seabird isA Bird. Therefore Opus can Fly.'
+    proof_nl: [
+      'Opus is a penguin',
+      'Opus is a bird',
+      'Applied rule: IF (Opus is a bird) THEN (Opus can Fly)',
+      'Therefore Opus can Fly'
+    ]
   },
 
   // === PROVE: 5-step (Tweety→Bird via 3 intermediates + rule) ===
@@ -49,7 +54,12 @@ export const steps = [
     input_nl: 'Can Tweety fly? (Tweety→Sparrow→Songbird→Passerine→Bird + rule)',
     input_dsl: '@goal can Tweety Fly',
     expected_nl: 'True: Tweety can Fly.',
-    proof_nl: 'Applied rule: Implies @birdCond @birdFly. Tweety isA Bird. Tweety isA Sparrow. Sparrow isA Songbird. Songbird isA Passerine. Passerine isA Bird. Therefore Tweety can Fly.'
+    proof_nl: [
+      'Tweety is a sparrow',
+      'Tweety is a bird',
+      'Applied rule: IF (Tweety is a bird) THEN (Tweety can Fly)',
+      'Therefore Tweety can Fly'
+    ]
   },
 
   // === SETUP: Deep suspect chain (7 levels for roles + And rule) ===
@@ -86,7 +96,13 @@ export const steps = [
     input_nl: 'Is John a suspect? (has Motive AND has Opportunity, both verified)',
     input_dsl: '@goal isSuspect John',
     expected_nl: 'True: John is suspect.',
-    proof_nl: 'Applied rule: Implies @susAnd @susConc. John has a motive. John has an opportunity. And condition satisfied: has John Motive, has John Opportunity. Therefore John is suspect.'
+    proof_nl: [
+      'John has a motive',
+      'John has an opportunity',
+      'And condition satisfied: John has a motive, John has an opportunity',
+      'Applied rule: IF ((John has a motive) AND (John has an opportunity)) THEN (John is suspect)',
+      'Therefore John is suspect'
+    ]
   },
 
   // === NEGATIVE: 6-step search showing what failed ===
@@ -95,7 +111,12 @@ export const steps = [
     input_nl: 'Is Mary a suspect? (has Motive but NOT Opportunity)',
     input_dsl: '@goal isSuspect Mary',
     expected_nl: 'Cannot prove: Mary is suspect.',
-    proof_nl: 'Search: Mary isA Civilian. Civilian isA Person. Person isA Entity. Checked rule: Implies @susAnd @susConc. Found: has Mary Motive. Missing: has Mary Opportunity.'
+    proof_nl: [
+      'Checked rule: IF ((Mary has a motive) AND (Mary has an opportunity)) THEN (Mary is suspect)',
+      'Found: Mary has a motive',
+      'Missing: Mary has an opportunity',
+      'Therefore the rule antecedent is not satisfied'
+    ]
   },
 
   // === SETUP: Deep payment chain (6 levels Or rule + chained rules) ===
@@ -140,7 +161,13 @@ export const steps = [
     input_nl: 'Can Alice pay? (CreditCard→Card→PaymentMethod + rule)',
     input_dsl: '@goal can Alice Pay',
     expected_nl: 'True: Alice can Pay.',
-    proof_nl: 'Applied rule: Implies @payCond @payConc. Alice has CreditCard. CreditCard isA Card. Card isA PaymentMethod. Inherited via value type: has Alice PaymentMethod. Therefore Alice can Pay.'
+    proof_nl: [
+      'Alice has a creditcard',
+      'Card is a paymentmethod',
+      'Value-type inheritance: inferred Alice has a paymentmethod',
+      'Applied rule: IF (Alice has a paymentmethod) THEN (Alice can Pay)',
+      'Therefore Alice can Pay'
+    ]
   },
 
   // === PROVE: 5-step chained rules (Pay→Purchase→Own→Use→Capable) ===
@@ -149,7 +176,12 @@ export const steps = [
     input_nl: 'Is Alice capable? (canPay→canPurchase→canOwn→canUse→isCapable)',
     input_dsl: '@goal isCapable Alice',
     expected_nl: 'True: Alice is isCapable.',
-    proof_nl: 'Applied rule: Implies @chainUse2 @chainCapable. Applied rule: rule implies can Alice Use. Applied rule: rule implies can Alice Own. Applied rule: rule implies can Alice Purchase. Applied rule: rule implies can Alice Pay. Alice has CreditCard. CreditCard isA Card. Card isA PaymentMethod. Inherited via value type: has Alice PaymentMethod. Therefore Alice is isCapable.'
+    proof_nl: [
+      'Value-type inheritance: inferred Alice has a paymentmethod',
+      'Applied rule: IF (Alice has a paymentmethod) THEN (Alice can Pay)',
+      'Applied rule: IF (Alice can Use) THEN (Alice is isCapable)',
+      'Therefore Alice is isCapable'
+    ]
   },
 
   // === QUERY: Who can pay ===
@@ -163,9 +195,9 @@ export const steps = [
       'Eve can Pay.'
     ],
     proof_nl: [
-      'has Alice CreditCard. isA CreditCard Card. isA Card PaymentMethod. Inherited via value type: has Alice PaymentMethod. Applied rule: Implies @payCond @payConc',
-      'has Bob DebitCard. isA DebitCard Card. isA Card PaymentMethod. Inherited via value type: has Bob PaymentMethod. Applied rule: Implies @payCond @payConc',
-      'has Eve Cash. isA Cash PaymentMethod. Inherited via value type: has Eve PaymentMethod. Applied rule: Implies @payCond @payConc'
+      'Therefore Alice can Pay',
+      'Therefore Bob can Pay',
+      'Therefore Eve can Pay'
     ]
   },
 
@@ -175,13 +207,17 @@ export const steps = [
     input_nl: 'Can Charlie pay? (has no payment method)',
     input_dsl: '@goal can Charlie Pay',
     expected_nl: 'Cannot prove: Charlie can Pay.',
-    proof_nl: 'Search: Searched isA Charlie ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
+    proof_nl: [
+      'Checked rule: IF (Charlie has a paymentmethod) THEN (Charlie can Pay)',
+      'Missing: Charlie has a paymentmethod',
+      'Therefore the rule antecedent is not satisfied'
+    ]
   },
 
   // === SETUP: Negation with deep hierarchy ===
   {
     action: 'learn',
-    input_nl: 'Eve had her account frozen (negated payment capability)',
+    input_nl: 'Dan had his account frozen (negated payment capability)',
     input_dsl: `
       isA Dan Customer
       isA Dan Buyer
@@ -200,7 +236,7 @@ export const steps = [
     input_nl: 'Can Dan pay? (has ExpiredCard but payment is negated)',
     input_dsl: '@goal can Dan Pay',
     expected_nl: 'Cannot prove: Dan can Pay.',
-    proof_nl: 'Search: Dan isA Customer. Customer isA Buyer. Buyer isA Participant. Participant isA Actor. Actor isA Entity. Found explicit negation: Not(can Dan Pay). Negation blocks inference.'
+    proof_nl: 'Found explicit negation: NOT (Dan can Pay)'
   },
 
   // === PROVE: 5-step Bob payment (different path) ===
@@ -209,7 +245,11 @@ export const steps = [
     input_nl: 'Can Bob pay? (DebitCard→Card→PaymentMethod + rule)',
     input_dsl: '@goal can Bob Pay',
     expected_nl: 'True: Bob can Pay.',
-    proof_nl: 'Applied rule: Implies @payCond @payConc. Bob has DebitCard. DebitCard isA Card. Card isA PaymentMethod. Inherited via value type: has Bob PaymentMethod. Therefore Bob can Pay.'
+    proof_nl: [
+      'Value-type inheritance: inferred Bob has a paymentmethod',
+      'Applied rule: IF (Bob has a paymentmethod) THEN (Bob can Pay)',
+      'Therefore Bob can Pay'
+    ]
   },
 
   // === PROVE: 5-step Eve payment (Cash path) ===
@@ -218,7 +258,11 @@ export const steps = [
     input_nl: 'Can Eve pay? (Cash→PaymentMethod + rule)',
     input_dsl: '@goal can Eve Pay',
     expected_nl: 'True: Eve can Pay.',
-    proof_nl: 'Applied rule: Implies @payCond @payConc. Eve has Cash. Cash isA PaymentMethod. Inherited via value type: has Eve PaymentMethod. Therefore Eve can Pay.'
+    proof_nl: [
+      'Value-type inheritance: inferred Eve has a paymentmethod',
+      'Applied rule: IF (Eve has a paymentmethod) THEN (Eve can Pay)',
+      'Therefore Eve can Pay'
+    ]
   }
 ];
 

@@ -143,10 +143,10 @@ export const steps = [
       'Paris is a location.'
     ],
     proof_nl: [
-      'isA Paris City',
-      'isA Paris City. isA City Settlement',
-      'isA Paris City. isA City Settlement. isA Settlement Place',
-      'isA Paris City. isA City Settlement. isA Settlement Place. isA Place Location'
+      'Fact in KB: Paris is a city',
+      'Therefore Paris is a settlement',
+      'Therefore Paris is a place',
+      'Therefore Paris is a location'
     ]
   },
 
@@ -167,15 +167,15 @@ export const steps = [
       'Paris is in Universe.'
     ],
     proof_nl: [
-      'locatedIn Paris France',
-      'locatedIn Paris France. locatedIn France Europe',
-      'locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth',
-      'locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem',
-      'locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm',
-      'locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. locatedIn MilkyWayArm MilkyWay',
-      'locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. locatedIn MilkyWayArm MilkyWay. locatedIn MilkyWay LocalCluster',
-      'locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. locatedIn MilkyWayArm MilkyWay. locatedIn MilkyWay LocalCluster. locatedIn LocalCluster Supercluster',
-      'locatedIn Paris France. locatedIn France Europe. locatedIn Europe Earth. locatedIn Earth SolarSystem. locatedIn SolarSystem MilkyWayArm. locatedIn MilkyWayArm MilkyWay. locatedIn MilkyWay LocalCluster. locatedIn LocalCluster Supercluster. locatedIn Supercluster Universe'
+      'Fact in KB: Paris is in France',
+      'Therefore Paris is in Europe',
+      'Therefore Paris is in Earth',
+      'Therefore Paris is in SolarSystem',
+      'Therefore Paris is in MilkyWayArm',
+      'Therefore Paris is in MilkyWay',
+      'Therefore Paris is in LocalCluster',
+      'Therefore Paris is in Supercluster',
+      'Therefore Paris is in Universe'
     ]
   },
 
@@ -193,12 +193,12 @@ export const steps = [
       'Pollution causes Conflict.'
     ],
     proof_nl: [
-      'causes Migration Conflict',
-      'causes Famine Migration. causes Migration Conflict',
-      'causes CropFailure Famine. causes Famine Migration. causes Migration Conflict',
-      'causes Drought CropFailure. causes CropFailure Famine. causes Famine Migration. causes Migration Conflict',
-      'causes ClimateChange Drought. causes Drought CropFailure. causes CropFailure Famine. causes Famine Migration. causes Migration Conflict',
-      'causes Pollution ClimateChange. causes ClimateChange Drought. causes Drought CropFailure. causes CropFailure Famine. causes Famine Migration. causes Migration Conflict'
+      'Fact in KB: Migration causes Conflict',
+      'Therefore Famine causes Conflict',
+      'Therefore CropFailure causes Conflict',
+      'Therefore Drought causes Conflict',
+      'Therefore ClimateChange causes Conflict',
+      'Therefore Pollution causes Conflict'
     ]
   },
 
@@ -208,7 +208,7 @@ export const steps = [
     input_nl: 'Is AI before Antiquity? (reverse order - should fail)',
     input_dsl: '@goal before AI Antiquity',
     expected_nl: 'Cannot prove: AI is before Antiquity.',
-    proof_nl: 'Search: Searched before AI ?next in KB. Not found. AI has no outgoing before relations. Reverse path: Antiquity -> Medieval -> Renaissance -> Industrial -> Modern -> Digital -> AI. Path exists in opposite direction only. Temporal order violated.'
+    proof_nl: 'No before facts for AI exist in KB'
   }
 ];
 

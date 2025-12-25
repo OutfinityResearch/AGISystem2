@@ -46,7 +46,10 @@ export const steps = [
     input_nl: 'Door is not in Kitchen (the rejected learn did not partially apply)',
     input_dsl: '@goal locatedIn Door Kitchen',
     expected_nl: 'Cannot prove: Door is in Kitchen.',
-    proof_nl: 'Door is in Kitchen'
+    proof_nl: [
+      'No locatedIn facts for Door exist in KB',
+      'Door is in Kitchen cannot be derived'
+    ]
   },
   {
     action: 'learn',
@@ -78,7 +81,10 @@ export const steps = [
     input_nl: 'Door is not in Attic (the rejected indirect learn did not partially apply)',
     input_dsl: '@goal locatedIn Door Attic',
     expected_nl: 'Cannot prove: Door is in Attic.',
-    proof_nl: 'Door is in Attic'
+    proof_nl: [
+      'No locatedIn facts for Door exist in KB',
+      'Door is in Attic cannot be derived'
+    ]
   },
   {
     action: 'learn',
@@ -145,7 +151,10 @@ export const steps = [
     input_nl: 'X does not cause Y (the rejected learn did not partially apply)',
     input_dsl: '@goal causes X Y',
     expected_nl: 'Cannot prove: X causes Y.',
-    proof_nl: 'X causes Y'
+    proof_nl: [
+      'No causes facts for X exist in KB',
+      'X causes Y cannot be derived'
+    ]
   },
   {
     action: 'learn',
@@ -205,7 +214,10 @@ export const steps = [
     input_nl: 'Foo does not cause Bar (the rejected learn did not partially apply)',
     input_dsl: '@goal causes Foo Bar',
     expected_nl: 'Cannot prove: Foo causes Bar.',
-    proof_nl: 'Foo causes Bar'
+    proof_nl: [
+      'No causes facts for Foo exist in KB',
+      'Foo causes Bar cannot be derived'
+    ]
   },
   {
     action: 'learn',
@@ -242,7 +254,10 @@ export const steps = [
     input_nl: 'Tea is not in Cupboard (the rejected inherited-contradiction learn did not partially apply)',
     input_dsl: '@goal locatedIn Tea Cupboard',
     expected_nl: 'Cannot prove: Tea is in Cupboard.',
-    proof_nl: 'Tea is in Cupboard'
+    proof_nl: [
+      'No locatedIn facts for Tea exist in KB',
+      'Tea is in Cupboard cannot be derived'
+    ]
   },
   {
     action: 'learn',
@@ -277,7 +292,10 @@ export const steps = [
     input_nl: 'Foo is not in Bar (the rejected operator-alias contradiction learn did not partially apply)',
     input_dsl: '@goal locatedIn Foo Bar',
     expected_nl: 'Cannot prove: Foo is in Bar.',
-    proof_nl: 'Foo is in Bar'
+    proof_nl: [
+      'No locatedIn facts for Foo exist in KB',
+      'Foo is in Bar cannot be derived'
+    ]
   },
   {
     action: 'learn',

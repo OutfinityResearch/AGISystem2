@@ -122,7 +122,11 @@ export const steps = [
     input_nl: 'Does CityPowerDown cause supply chain disruption?',
     input_dsl: '@goal causes CityPowerDown SupplyChainDisruption',
     expected_nl: 'True: CityPowerDown causes SupplyChainDisruption.',
-    proof_nl: 'CityPowerDown is a hazard. Hazard causes SupplyChainDisruption. CityPowerDown causes SupplyChainDisruption. Therefore CityPowerDown causes SupplyChainDisruption.'
+    proof_nl: [
+      'CityPowerDown is a hazard',
+      'Hazard causes SupplyChainDisruption',
+      'CityPowerDown causes SupplyChainDisruption'
+    ]
   },
 
   // === PROVE: Temporal chain from earthquake ===
@@ -140,7 +144,7 @@ export const steps = [
     input_nl: 'Must TeamAlpha assist?',
     input_dsl: '@goal must TeamAlpha Assist',
     expected_nl: 'True: TeamAlpha must Assist.',
-    proof_nl: 'TeamAlpha must Assist. Therefore TeamAlpha must Assist.'
+    proof_nl: 'Fact in KB: TeamAlpha must Assist'
   },
 
   // === NEGATIVE: Blocked by explicit negation ===
@@ -149,7 +153,10 @@ export const steps = [
     input_nl: 'Is CityPowerDown in SafeZone?',
     input_dsl: '@goal locatedIn CityPowerDown SafeZone',
     expected_nl: 'Cannot prove: CityPowerDown is in SafeZone.',
-    proof_nl: 'Search: CityPowerDown isA Hazard. Found explicit negation: Not(locatedIn CityPowerDown SafeZone). Negation blocks inference.'
+    proof_nl: [
+      'Found explicit negation: NOT (CityPowerDown is in SafeZone)',
+      'Negation blocks inference'
+    ]
   },
 
   // === QUERY: List all hazards ===
@@ -162,8 +169,8 @@ export const steps = [
       'PortDamage is a hazard.'
     ],
     proof_nl: [
-      'isA CityPowerDown Hazard',
-      'isA PortDamage Hazard'
+      'Fact in KB: CityPowerDown is a hazard',
+      'Fact in KB: PortDamage is a hazard'
     ]
   },
 
@@ -182,7 +189,12 @@ export const steps = [
     input_nl: 'Does VirusX cause a public health emergency?',
     input_dsl: '@goal causes VirusX PublicHealthEmergency',
     expected_nl: 'True: VirusX causes PublicHealthEmergency.',
-    proof_nl: 'Applied rule: implies @conj @conseq. VirusX causes Infection. VirusX is a virus. And condition satisfied: causes VirusX Infection, isA VirusX Virus. Therefore VirusX causes PublicHealthEmergency.'
+    proof_nl: [
+      'VirusX causes Infection',
+      'VirusX is a virus',
+      'Applied rule: IF ((VirusX causes Infection) AND (VirusX is a virus)) THEN (VirusX causes PublicHealthEmergency)',
+      'Therefore VirusX causes PublicHealthEmergency'
+    ]
   },
 
   // === QUERY: Which hazards cause supply chain disruption? ===
@@ -196,9 +208,9 @@ export const steps = [
       'PortDamage causes SupplyChainDisruption.'
     ],
     proof_nl: [
-      'causes Hazard SupplyChainDisruption',
-      'isA CityPowerDown Hazard. causes Hazard SupplyChainDisruption',
-      'isA PortDamage Hazard. causes Hazard SupplyChainDisruption'
+      'Fact in KB: Hazard causes SupplyChainDisruption',
+      'CityPowerDown is a hazard',
+      'PortDamage is a hazard'
     ]
   },
 
@@ -208,7 +220,12 @@ export const steps = [
     input_nl: 'Does VirusY cause a public health emergency?',
     input_dsl: '@goal causes VirusY PublicHealthEmergency',
     expected_nl: 'True: VirusY causes PublicHealthEmergency.',
-    proof_nl: 'Applied rule: implies @conj @conseq. VirusY causes Infection. VirusY is a virus. And condition satisfied: causes VirusY Infection, isA VirusY Virus. Therefore VirusY causes PublicHealthEmergency.'
+    proof_nl: [
+      'VirusY causes Infection',
+      'VirusY is a virus',
+      'Applied rule: IF ((VirusY causes Infection) AND (VirusY is a virus)) THEN (VirusY causes PublicHealthEmergency)',
+      'Therefore VirusY causes PublicHealthEmergency'
+    ]
   }
 ];
 

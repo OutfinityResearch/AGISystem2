@@ -116,15 +116,15 @@ export const steps = [
       'Poodle is an entity.'
     ],
     proof_nl: [
-      'isA Poodle Toy',
-      'isA Poodle Toy. isA Toy Dog',
-      'isA Poodle Toy. isA Toy Dog. isA Dog Canine',
-      'isA Poodle Toy. isA Toy Dog. isA Dog Canine. isA Canine Carnivore',
-      'isA Poodle Toy. isA Toy Dog. isA Dog Canine. isA Canine Carnivore. isA Carnivore Mammal',
-      'isA Poodle Toy. isA Toy Dog. isA Dog Canine. isA Canine Carnivore. isA Carnivore Mammal. isA Mammal Vertebrate',
-      'isA Poodle Toy. isA Toy Dog. isA Dog Canine. isA Canine Carnivore. isA Carnivore Mammal. isA Mammal Vertebrate. isA Vertebrate Animal',
-      'isA Poodle Toy. isA Toy Dog. isA Dog Canine. isA Canine Carnivore. isA Carnivore Mammal. isA Mammal Vertebrate. isA Vertebrate Animal. isA Animal LivingThing',
-      'isA Poodle Toy. isA Toy Dog. isA Dog Canine. isA Canine Carnivore. isA Carnivore Mammal. isA Mammal Vertebrate. isA Vertebrate Animal. isA Animal LivingThing. isA LivingThing Entity'
+      'Fact in KB: Poodle is a toy',
+      'Therefore Poodle is a dog',
+      'Therefore Poodle is a canine',
+      'Therefore Poodle is a carnivore',
+      'Therefore Poodle is a mammal',
+      'Therefore Poodle is a vertebrate',
+      'Therefore Poodle is an animal',
+      'Therefore Poodle is a livingthing',
+      'Therefore Poodle is an entity'
     ]
   },
 
@@ -134,7 +134,7 @@ export const steps = [
     input_nl: 'Is Rock a LivingThing? (Rock→Mineral→Inorganic→Matter, no path to LivingThing)',
     input_dsl: '@goal isA Rock LivingThing',
     expected_nl: 'Cannot prove: Rock is a livingthing.',
-    proof_nl: 'Search: Rock isA Mineral. Mineral isA Inorganic. Inorganic isA Matter. No path exists from Rock to LivingThing.'
+    proof_nl: 'No proof found for Rock is a livingthing'
   }
 ];
 

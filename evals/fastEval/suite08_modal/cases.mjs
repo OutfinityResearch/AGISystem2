@@ -64,7 +64,12 @@ export const steps = [
     input_nl: 'Can Socrates think? (modal via 5-step Human inheritance)',
     input_dsl: '@goal can Socrates Think',
     expected_nl: 'True: Socrates can Think.',
-    proof_nl: 'Applied rule: Implies @humanThink @humanThinkC. Socrates is a human. Socrates is a philosopher. Philosopher is a thinker. Thinker is an intellectual. Intellectual is a human. Therefore Socrates can Think.'
+    proof_nl: [
+      'Socrates is a philosopher',
+      'Socrates is a human',
+      'Applied rule: IF (Socrates is a human) THEN (Socrates can Think)',
+      'Therefore Socrates can Think'
+    ]
   },
 
   // === PROVE: Modal via 8-step rule (can Feel via Animal) ===
@@ -73,7 +78,12 @@ export const steps = [
     input_nl: 'Can Socrates feel? (modal via 8-step Animal inheritance)',
     input_dsl: '@goal can Socrates Feel',
     expected_nl: 'True: Socrates can Feel.',
-    proof_nl: 'Applied rule: Implies @sentFeel @sentFeelC. Socrates is an animal. Socrates is a philosopher. Philosopher is a thinker. Thinker is an intellectual. Intellectual is a human. Human is a primate. Primate is a mammal. Mammal is a vertebrate. Vertebrate is an animal. Therefore Socrates can Feel.'
+    proof_nl: [
+      'Socrates is a philosopher',
+      'Socrates is an animal',
+      'Applied rule: IF (Socrates is an animal) THEN (Socrates can Feel)',
+      'Therefore Socrates can Feel'
+    ]
   },
 
   // === PROVE: Modal via 9-step rule (can Respire via Organism) ===
@@ -82,7 +92,12 @@ export const steps = [
     input_nl: 'Can Socrates respire? (modal via 9-step Organism inheritance)',
     input_dsl: '@goal can Socrates Respire',
     expected_nl: 'True: Socrates can Respire.',
-    proof_nl: 'Applied rule: Implies @livingResp @livingRespC. Socrates is an organism. Socrates is a philosopher. Philosopher is a thinker. Thinker is an intellectual. Intellectual is a human. Human is a primate. Primate is a mammal. Mammal is a vertebrate. Vertebrate is an animal. Animal is an organism. Therefore Socrates can Respire.'
+    proof_nl: [
+      'Socrates is a philosopher',
+      'Socrates is an organism',
+      'Applied rule: IF (Socrates is an organism) THEN (Socrates can Respire)',
+      'Therefore Socrates can Respire'
+    ]
   },
 
   // === SETUP: Deep obligation hierarchy (6 levels) ===
@@ -126,7 +141,12 @@ export const steps = [
     input_nl: 'Must DrJones help patients? (obligation via 4-step Doctor inheritance)',
     input_dsl: '@goal must DrJones HelpPatients',
     expected_nl: 'True: DrJones must HelpPatients.',
-    proof_nl: 'Applied rule: Implies @docHelp @docHelpC. DrJones is a doctor. DrJones is a surgeon. Surgeon is a specialist. Specialist is a doctor. Therefore DrJones must HelpPatients.'
+    proof_nl: [
+      'DrJones is a surgeon',
+      'DrJones is a doctor',
+      'Applied rule: IF (DrJones is a doctor) THEN (DrJones must HelpPatients)',
+      'Therefore DrJones must HelpPatients'
+    ]
   },
 
   // === PROVE: Obligation via 5-step rule (must FollowEthics via Professional) ===
@@ -135,7 +155,12 @@ export const steps = [
     input_nl: 'Must DrJones follow ethics? (obligation via 5-step Professional inheritance)',
     input_dsl: '@goal must DrJones FollowEthics',
     expected_nl: 'True: DrJones must FollowEthics.',
-    proof_nl: 'Applied rule: Implies @profEthic @profEthicC. DrJones is a professional. DrJones is a surgeon. Surgeon is a specialist. Specialist is a doctor. Doctor is a medicalprofessional. MedicalProfessional is a professional. Therefore DrJones must FollowEthics.'
+    proof_nl: [
+      'DrJones is a surgeon',
+      'DrJones is a professional',
+      'Applied rule: IF (DrJones is a professional) THEN (DrJones must FollowEthics)',
+      'Therefore DrJones must FollowEthics'
+    ]
   },
 
   // === PROVE: Obligation via 7-step rule (must FollowLaw via Adult) ===
@@ -144,7 +169,12 @@ export const steps = [
     input_nl: 'Must DrJones follow law? (obligation via 7-step Adult inheritance)',
     input_dsl: '@goal must DrJones FollowLaw',
     expected_nl: 'True: DrJones must FollowLaw.',
-    proof_nl: 'Applied rule: Implies @adultLaw @adultLawC. DrJones is an adult. DrJones is a surgeon. Surgeon is a specialist. Specialist is a doctor. Doctor is a medicalprofessional. MedicalProfessional is a professional. Professional is a worker. Worker is an adult. Therefore DrJones must FollowLaw.'
+    proof_nl: [
+      'DrJones is a surgeon',
+      'DrJones is an adult',
+      'Applied rule: IF (DrJones is an adult) THEN (DrJones must FollowLaw)',
+      'Therefore DrJones must FollowLaw'
+    ]
   },
 
   // === SETUP: Explicit negation blocking modal in deep hierarchy ===
@@ -183,7 +213,10 @@ export const steps = [
     input_nl: 'Can Opus fly? (negation blocks despite 5-step Bird inheritance)',
     input_dsl: '@goal can Opus Fly',
     expected_nl: 'Cannot prove: Opus can Fly.',
-    proof_nl: 'Search: Opus isA Penguin. Penguin isA Flightless. Flightless isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Bird isA FlyingAnimal. Rule: isA Bird implies can Fly would apply. Found explicit negation: Not(can Opus Fly). Negation blocks inference.'
+    proof_nl: [
+      'Found explicit negation: NOT (Opus can Fly)',
+      'Negation blocks inference'
+    ]
   },
 
   // === NEGATIVE: Non-entity has no obligations ===
@@ -192,7 +225,11 @@ export const steps = [
     input_nl: 'Must Rock follow law? (Rock not in KB)',
     input_dsl: '@goal must Rock FollowLaw',
     expected_nl: 'Cannot prove: Rock must FollowLaw.',
-    proof_nl: 'Search: Searched isA Rock ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
+    proof_nl: [
+      'Checked rule: IF (Rock is an adult) THEN (Rock must FollowLaw)',
+      'Missing: Rock is an adult',
+      'Therefore the rule antecedent is not satisfied'
+    ]
   },
 
   // === NEGATIVE: Cross-category modal fails ===
@@ -201,7 +238,11 @@ export const steps = [
     input_nl: 'Can DrJones fly? (Human cannot fly without explicit fact)',
     input_dsl: '@goal can DrJones Fly',
     expected_nl: 'Cannot prove: DrJones can Fly.',
-    proof_nl: 'Search: DrJones isA Surgeon. Surgeon isA Specialist. Specialist isA Doctor. Doctor isA MedicalProfessional. MedicalProfessional isA Professional. Professional isA Worker. Worker isA Adult. Adult isA Person. Checked rule: Implies @birdFly @birdFlyC. Missing: isA DrJones Bird. No can Fly facts found in KB.'
+    proof_nl: [
+      'Checked rule: IF (DrJones is a bird) THEN (DrJones can Fly)',
+      'Missing: DrJones is a bird',
+      'Therefore the rule antecedent is not satisfied'
+    ]
   },
 
   // === QUERY: Who can think ===
@@ -213,7 +254,7 @@ export const steps = [
       'Socrates can Think.'
     ],
     proof_nl: [
-      'isA Socrates Philosopher. isA Philosopher Thinker. isA Thinker Intellectual. isA Intellectual Human. Applied rule: Implies @humanThink @humanThinkC'
+      'Applied rule: IF (Socrates is a human) THEN (Socrates can Think)'
     ]
   }
 ];

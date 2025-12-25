@@ -241,7 +241,10 @@ export const steps = [
     input_nl: 'Can Opus fly? (negation blocks despite 5-step Bird inheritance)',
     input_dsl: '@goal can Opus Fly',
     expected_nl: 'Cannot prove: Opus can Fly.',
-    proof_nl: 'Search: Opus isA EmperorPenguin. EmperorPenguin isA Penguin. Penguin isA Antarctic. Antarctic isA Seabird. Seabird isA Bird. Bird isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing. LivingThing isA Entity. Entity isA Thing. Found explicit negation: Not(can Penguin Fly). Negation blocks inheritance.'
+    proof_nl: [
+      'Found explicit negation: NOT (Opus can Fly)',
+      'Negation blocks inference'
+    ]
   },
 
   // === PROVE: Penguin still has feathers (no exception) ===
@@ -259,7 +262,10 @@ export const steps = [
     input_nl: 'Can Rex fly? (no path to Bird, should fail)',
     input_dsl: '@goal can Rex Fly',
     expected_nl: 'Cannot prove: Rex can Fly.',
-    proof_nl: 'Search: Rex isA GermanShepherd. GermanShepherd isA Shepherd. Shepherd isA WorkingDog. WorkingDog isA Dog. Dog isA Canine. Canine isA Carnivore. Carnivore isA Mammal. Mammal isA Vertebrate. Vertebrate isA Animal. Animal isA LivingThing. LivingThing isA Entity. Entity isA Thing. Checked: Bird can Fly. Rex is not a Bird. Property not inheritable.'
+    proof_nl: [
+      'No can facts for Rex exist in KB',
+      'cannot be derived'
+    ]
   },
 
   // === NEGATIVE: Unknown entity fails with search trace ===
@@ -268,7 +274,10 @@ export const steps = [
     input_nl: 'Can Rock fly? (unknown entity)',
     input_dsl: '@goal can Rock Fly',
     expected_nl: 'Cannot prove: Rock can Fly.',
-    proof_nl: 'Search: Searched isA Rock ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
+    proof_nl: [
+      'No can facts for Rock exist in KB',
+      'cannot be derived'
+    ]
   },
 
   // === QUERY: What can Rex do ===
@@ -281,8 +290,8 @@ export const steps = [
       'Rex can Hunt.'
     ],
     proof_nl: [
-      'isA Rex GermanShepherd. isA GermanShepherd Shepherd. isA Shepherd WorkingDog. isA WorkingDog Dog. can Dog Bark',
-      'isA Rex GermanShepherd. isA GermanShepherd Shepherd. isA Shepherd WorkingDog. isA WorkingDog Dog. isA Dog Canine. isA Canine Carnivore. can Carnivore Hunt'
+      'Therefore Rex can Bark',
+      'Therefore Rex can Hunt'
     ]
   },
 
@@ -295,7 +304,7 @@ export const steps = [
       'Tweety can Fly.'
     ],
     proof_nl: [
-      'isA Tweety HouseSparrow. isA HouseSparrow Sparrow. isA Sparrow Songbird. isA Songbird Bird. can Bird Fly'
+      'Therefore Tweety can Fly'
     ]
   },
 
@@ -308,7 +317,7 @@ export const steps = [
       'Whiskers likes Fish.'
     ],
     proof_nl: [
-      'isA Whiskers PersianCat. isA PersianCat DomesticCat. isA DomesticCat Cat. likes Cat Fish'
+      'Therefore Whiskers likes Fish'
     ]
   }
 ];

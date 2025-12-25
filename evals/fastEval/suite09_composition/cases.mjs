@@ -101,7 +101,12 @@ export const steps = [
     input_nl: 'Can GoldenRetriever grow? (chained rule: inheritance + And rule)',
     input_dsl: '@goal can GoldenRetriever Grow',
     expected_nl: 'True: GoldenRetriever can Grow.',
-    proof_nl: 'Applied rule: Implies @metGrowAnd @metGrowConc. Applied rule: rule implies hasProperty GoldenRetriever Metabolizes. Applied rule: rule implies hasProperty Retriever Metabolizes. Applied rule: rule implies hasProperty Sporting Metabolizes. Applied rule: rule implies hasProperty Dog Metabolizes. Applied rule: rule implies hasProperty Canine Metabolizes. Applied rule: rule implies hasProperty Carnivore Metabolizes. Applied rule: rule implies hasProperty Mammal Metabolizes. Applied rule: rule implies hasProperty Vertebrate Metabolizes. Applied rule: rule implies hasProperty Animal Metabolizes. Animal is a livingthing. LivingThing has Metabolizes. And condition satisfied: isA Animal LivingThing, hasProperty LivingThing Metabolizes. Vertebrate is an animal. Animal has Metabolizes. And condition satisfied: isA Vertebrate Animal, hasProperty Animal Metabolizes. Mammal is a vertebrate. Vertebrate has Metabolizes. And condition satisfied: isA Mammal Vertebrate, hasProperty Vertebrate Metabolizes. Carnivore is a mammal. Mammal has Metabolizes. And condition satisfied: isA Carnivore Mammal, hasProperty Mammal Metabolizes. Canine is a carnivore. Carnivore has Metabolizes. And condition satisfied: isA Canine Carnivore, hasProperty Carnivore Metabolizes. Dog is a canine. Canine has Metabolizes. And condition satisfied: isA Dog Canine, hasProperty Canine Metabolizes. Sporting is a dog. Dog has Metabolizes. And condition satisfied: isA Sporting Dog, hasProperty Dog Metabolizes. Retriever is a sporting. Sporting has Metabolizes. And condition satisfied: isA Retriever Sporting, hasProperty Sporting Metabolizes. GoldenRetriever is a retriever. Retriever has Metabolizes. And condition satisfied: isA GoldenRetriever Retriever, hasProperty Retriever Metabolizes. Applied rule: rule implies hasProperty GoldenRetriever WarmBlooded. Applied rule: rule implies hasProperty Retriever WarmBlooded. Applied rule: rule implies hasProperty Sporting WarmBlooded. Applied rule: rule implies hasProperty Dog WarmBlooded. Applied rule: rule implies hasProperty Canine WarmBlooded. Applied rule: rule implies hasProperty Carnivore WarmBlooded. Mammal has WarmBlooded. And condition satisfied: isA Carnivore Mammal, hasProperty Mammal WarmBlooded. Carnivore has WarmBlooded. And condition satisfied: isA Canine Carnivore, hasProperty Carnivore WarmBlooded. Canine has WarmBlooded. And condition satisfied: isA Dog Canine, hasProperty Canine WarmBlooded. Dog has WarmBlooded. And condition satisfied: isA Sporting Dog, hasProperty Dog WarmBlooded. Sporting has WarmBlooded. And condition satisfied: isA Retriever Sporting, hasProperty Sporting WarmBlooded. Retriever has WarmBlooded. And condition satisfied: isA GoldenRetriever Retriever, hasProperty Retriever WarmBlooded. GoldenRetriever has Metabolizes. GoldenRetriever has WarmBlooded. And condition satisfied: hasProperty GoldenRetriever Metabolizes, hasProperty GoldenRetriever WarmBlooded. Therefore GoldenRetriever can Grow.'
+    proof_nl: [
+      'GoldenRetriever has Metabolizes',
+      'GoldenRetriever has WarmBlooded',
+      'Applied rule: IF ((GoldenRetriever has Metabolizes) AND (GoldenRetriever has WarmBlooded)) THEN (GoldenRetriever can Grow)',
+      'Therefore GoldenRetriever can Grow'
+    ]
   },
 
   // === PROVE: Deep chained rule (Intelligent via Sentient + can Grow) ===
@@ -110,7 +115,10 @@ export const steps = [
     input_nl: 'Is GoldenRetriever intelligent? (deep chained rules)',
     input_dsl: '@goal hasProperty GoldenRetriever Intelligent',
     expected_nl: 'True: GoldenRetriever has Intelligent.',
-    proof_nl: 'Applied rule: Implies @inhAnd @inhConc. Applied rule: rule implies hasProperty Retriever Intelligent. Applied rule: rule implies hasProperty Sporting Intelligent. Applied rule: rule implies hasProperty Dog Intelligent. Applied rule: rule implies hasProperty Canine Intelligent. Applied rule: rule implies hasProperty Carnivore Intelligent. Applied rule: rule implies hasProperty Mammal Intelligent. Applied rule: rule implies hasProperty Mammal Sentient. Applied rule: rule implies hasProperty Vertebrate Sentient. Vertebrate is an animal. Animal has Sentient. And condition satisfied: isA Vertebrate Animal, hasProperty Animal Sentient. Mammal is a vertebrate. Vertebrate has Sentient. And condition satisfied: isA Mammal Vertebrate, hasProperty Vertebrate Sentient. Applied rule: rule implies can Mammal Grow. Applied rule: rule implies hasProperty Mammal Metabolizes. Applied rule: rule implies hasProperty Vertebrate Metabolizes. Applied rule: rule implies hasProperty Animal Metabolizes. Animal is a livingthing. LivingThing has Metabolizes. And condition satisfied: isA Animal LivingThing, hasProperty LivingThing Metabolizes. Animal has Metabolizes. And condition satisfied: isA Vertebrate Animal, hasProperty Animal Metabolizes. Vertebrate has Metabolizes. And condition satisfied: isA Mammal Vertebrate, hasProperty Vertebrate Metabolizes. Mammal has Metabolizes. Mammal has WarmBlooded. And condition satisfied: hasProperty Mammal Metabolizes, hasProperty Mammal WarmBlooded. Mammal has Sentient. Mammal can Grow. And condition satisfied: hasProperty Mammal Sentient, can Mammal Grow. Carnivore is a mammal. Mammal has Intelligent. And condition satisfied: isA Carnivore Mammal, hasProperty Mammal Intelligent. Canine is a carnivore. Carnivore has Intelligent. And condition satisfied: isA Canine Carnivore, hasProperty Carnivore Intelligent. Dog is a canine. Canine has Intelligent. And condition satisfied: isA Dog Canine, hasProperty Canine Intelligent. Sporting is a dog. Dog has Intelligent. And condition satisfied: isA Sporting Dog, hasProperty Dog Intelligent. Retriever is a sporting. Sporting has Intelligent. And condition satisfied: isA Retriever Sporting, hasProperty Sporting Intelligent. GoldenRetriever is a retriever. Retriever has Intelligent. And condition satisfied: isA GoldenRetriever Retriever, hasProperty Retriever Intelligent. Therefore GoldenRetriever has Intelligent.'
+    proof_nl: [
+      'GoldenRetriever has Intelligent',
+      'Therefore GoldenRetriever has Intelligent'
+    ]
   },
 
   // === SETUP: Deep multi-role composition ===
@@ -173,7 +181,12 @@ export const steps = [
     input_nl: 'Can Sarah innovate? (combined role properties)',
     input_dsl: '@goal can Sarah Innovate',
     expected_nl: 'True: Sarah can Innovate.',
-    proof_nl: 'Applied rule: Implies @researchAnd @researchConc. Applied rule: rule implies hasProperty Sarah Analytical. Applied rule: rule implies hasProperty ResearchScientist Analytical. Applied rule: rule implies hasProperty Scientist Analytical. Applied rule: rule implies hasProperty Researcher Analytical. Applied rule: rule implies hasProperty Academic Analytical. Applied rule: rule implies hasProperty Intellectual Analytical. Intellectual is an educated. Educated has Analytical. And condition satisfied: isA Intellectual Educated, hasProperty Educated Analytical. Academic is an intellectual. Intellectual has Analytical. And condition satisfied: isA Academic Intellectual, hasProperty Intellectual Analytical. Researcher is an academic. Academic has Analytical. And condition satisfied: isA Researcher Academic, hasProperty Academic Analytical. Scientist is a researcher. Researcher has Analytical. And condition satisfied: isA Scientist Researcher, hasProperty Researcher Analytical. ResearchScientist is a scientist. Scientist has Analytical. And condition satisfied: isA ResearchScientist Scientist, hasProperty Scientist Analytical. Sarah is a researchscientist. ResearchScientist has Analytical. And condition satisfied: isA Sarah ResearchScientist, hasProperty ResearchScientist Analytical. Applied rule: rule implies hasProperty Sarah Methodical. Applied rule: rule implies hasProperty ResearchScientist Methodical. Applied rule: rule implies hasProperty Scientist Methodical. Researcher has Methodical. And condition satisfied: isA Scientist Researcher, hasProperty Researcher Methodical. Scientist has Methodical. And condition satisfied: isA ResearchScientist Scientist, hasProperty Scientist Methodical. ResearchScientist has Methodical. And condition satisfied: isA Sarah ResearchScientist, hasProperty ResearchScientist Methodical. Sarah has Analytical. Sarah has Methodical. And condition satisfied: hasProperty Sarah Analytical, hasProperty Sarah Methodical. Therefore Sarah can Innovate.'
+    proof_nl: [
+      'Sarah has Analytical',
+      'Sarah has Methodical',
+      'Applied rule: IF ((Sarah has Analytical) AND (Sarah has Methodical)) THEN (Sarah can Innovate)',
+      'Therefore Sarah can Innovate'
+    ]
   },
 
   // === PROVE: Deep chained multi-role (can ClinicalTrials) ===
@@ -182,7 +195,12 @@ export const steps = [
     input_nl: 'Can Sarah do clinical trials? (chained multi-role)',
     input_dsl: '@goal can Sarah ClinicalTrials',
     expected_nl: 'True: Sarah can ClinicalTrials.',
-    proof_nl: 'Applied rule: Implies @clinAnd @clinConc. Applied rule: rule implies can Sarah Innovate. Applied rule: rule implies hasProperty Sarah Analytical. Applied rule: rule implies hasProperty ResearchScientist Analytical. Applied rule: rule implies hasProperty Scientist Analytical. Applied rule: rule implies hasProperty Researcher Analytical. Applied rule: rule implies hasProperty Academic Analytical. Applied rule: rule implies hasProperty Intellectual Analytical. Intellectual is an educated. Educated has Analytical. And condition satisfied: isA Intellectual Educated, hasProperty Educated Analytical. Academic is an intellectual. Intellectual has Analytical. And condition satisfied: isA Academic Intellectual, hasProperty Intellectual Analytical. Researcher is an academic. Academic has Analytical. And condition satisfied: isA Researcher Academic, hasProperty Academic Analytical. Scientist is a researcher. Researcher has Analytical. And condition satisfied: isA Scientist Researcher, hasProperty Researcher Analytical. ResearchScientist is a scientist. Scientist has Analytical. And condition satisfied: isA ResearchScientist Scientist, hasProperty Scientist Analytical. Sarah is a researchscientist. ResearchScientist has Analytical. And condition satisfied: isA Sarah ResearchScientist, hasProperty ResearchScientist Analytical. Applied rule: rule implies hasProperty Sarah Methodical. Applied rule: rule implies hasProperty ResearchScientist Methodical. Applied rule: rule implies hasProperty Scientist Methodical. Researcher has Methodical. And condition satisfied: isA Scientist Researcher, hasProperty Researcher Methodical. Scientist has Methodical. And condition satisfied: isA ResearchScientist Scientist, hasProperty Scientist Methodical. ResearchScientist has Methodical. And condition satisfied: isA Sarah ResearchScientist, hasProperty ResearchScientist Methodical. Sarah has Analytical. Sarah has Methodical. And condition satisfied: hasProperty Sarah Analytical, hasProperty Sarah Methodical. Applied rule: rule implies hasProperty Sarah Compassionate. Applied rule: rule implies hasProperty ClinicianDoctor Compassionate. Applied rule: rule implies hasProperty Physician Compassionate. Applied rule: rule implies hasProperty Doctor Compassionate. Applied rule: rule implies hasProperty MedicalProfessional Compassionate. MedicalProfessional is a healer. Healer has Compassionate. And condition satisfied: isA MedicalProfessional Healer, hasProperty Healer Compassionate. Doctor is a medicalprofessional. MedicalProfessional has Compassionate. And condition satisfied: isA Doctor MedicalProfessional, hasProperty MedicalProfessional Compassionate. Physician is a doctor. Doctor has Compassionate. And condition satisfied: isA Physician Doctor, hasProperty Doctor Compassionate. ClinicianDoctor is a physician. Physician has Compassionate. And condition satisfied: isA ClinicianDoctor Physician, hasProperty Physician Compassionate. Sarah is a cliniciandoctor. ClinicianDoctor has Compassionate. And condition satisfied: isA Sarah ClinicianDoctor, hasProperty ClinicianDoctor Compassionate. Sarah can Innovate. Sarah has Compassionate. And condition satisfied: can Sarah Innovate, hasProperty Sarah Compassionate. Therefore Sarah can ClinicalTrials.'
+    proof_nl: [
+      'Sarah can Innovate',
+      'Sarah has Compassionate',
+      'Applied rule: IF ((Sarah can Innovate) AND (Sarah has Compassionate)) THEN (Sarah can ClinicalTrials)',
+      'Therefore Sarah can ClinicalTrials'
+    ]
   },
 
   // === NEGATIVE: Rock cannot do clinical trials with search trace ===
@@ -191,7 +209,12 @@ export const steps = [
     input_nl: 'Can Rock do clinical trials? (not in KB)',
     input_dsl: '@goal can Rock ClinicalTrials',
     expected_nl: 'Cannot prove: Rock can ClinicalTrials.',
-    proof_nl: 'Search: Searched isA Rock ?type in KB. Not found. Entity unknown. No applicable inheritance paths.'
+    proof_nl: [
+      'Checked rule: IF ((Rock can Innovate) AND (Rock has Compassionate)) THEN (Rock can ClinicalTrials)',
+      'Missing: Rock can Innovate',
+      'Missing: Rock has Compassionate',
+      'Therefore the rule antecedent is not satisfied'
+    ]
   },
 
   // === QUERY: What is Sarah ===
@@ -214,18 +237,18 @@ export const steps = [
       'Sarah is a Caregiver.'
     ],
     proof_nl: [
-      'isA Sarah ResearchScientist',
-      'isA Sarah ResearchScientist. isA ResearchScientist Scientist',
-      'isA Sarah ResearchScientist. isA ResearchScientist Scientist. isA Scientist Researcher',
-      'isA Sarah ResearchScientist. isA ResearchScientist Scientist. isA Scientist Researcher. isA Researcher Academic',
-      'isA Sarah ResearchScientist. isA ResearchScientist Scientist. isA Scientist Researcher. isA Researcher Academic. isA Academic Intellectual',
-      'isA Sarah ResearchScientist. isA ResearchScientist Scientist. isA Scientist Researcher. isA Researcher Academic. isA Academic Intellectual. isA Intellectual Educated',
-      'isA Sarah ClinicianDoctor',
-      'isA Sarah ClinicianDoctor. isA ClinicianDoctor Physician',
-      'isA Sarah ClinicianDoctor. isA ClinicianDoctor Physician. isA Physician Doctor',
-      'isA Sarah ClinicianDoctor. isA ClinicianDoctor Physician. isA Physician Doctor. isA Doctor MedicalProfessional',
-      'isA Sarah ClinicianDoctor. isA ClinicianDoctor Physician. isA Physician Doctor. isA Doctor MedicalProfessional. isA MedicalProfessional Healer',
-      'isA Sarah ClinicianDoctor. isA ClinicianDoctor Physician. isA Physician Doctor. isA Doctor MedicalProfessional. isA MedicalProfessional Healer. isA Healer Caregiver'
+      'Fact in KB: Sarah is a researchscientist',
+      'Therefore Sarah is a scientist',
+      'Therefore Sarah is a researcher',
+      'Therefore Sarah is an academic',
+      'Therefore Sarah is an intellectual',
+      'Therefore Sarah is an educated',
+      'Fact in KB: Sarah is a cliniciandoctor',
+      'Therefore Sarah is a physician',
+      'Therefore Sarah is a doctor',
+      'Therefore Sarah is a medicalprofessional',
+      'Therefore Sarah is a healer',
+      'Therefore Sarah is a caregiver'
     ]
   }
 ];
