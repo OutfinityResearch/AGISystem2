@@ -47,11 +47,11 @@ describe('CSP Solve DSL', () => {
       
       // Execute solve block
       const solveResult = session.learn(`
-        @solutions solve WeddingSeating
-          guests from Guest
-          tables from Table
-          noConflict conflictsWith
-        end
+        @solutions solve WeddingSeating [
+          (variablesFrom Guest),
+          (domainFrom Table),
+          (noConflict conflictsWith)
+        ]
       `);
       
       assert.ok(solveResult.success, 'Solve execution should succeed');
@@ -77,11 +77,11 @@ describe('CSP Solve DSL', () => {
       
       // Execute solve block
       const solveResult = session.learn(`
-        @solutions solve WeddingSeating
-          guests from Guest
-          tables from Table
-          noConflict conflictsWith
-        end
+        @solutions solve WeddingSeating [
+          (variablesFrom Guest),
+          (domainFrom Table),
+          (noConflict conflictsWith)
+        ]
       `);
       
       assert.ok(solveResult.solveResult, 'Should have solve result');

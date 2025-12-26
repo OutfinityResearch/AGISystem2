@@ -9,13 +9,23 @@ function splitGoalParts(goalString) {
 export class ProveTranslator extends BaseTranslator {
   translate({ reasoningResult }) {
     if (!reasoningResult) return 'Cannot prove: statement';
-    if (!reasoningResult.valid) {
-      return this.describeInvalidProof(reasoningResult);
+    const base = (() => {
+      if (!reasoningResult.valid) {
+        return this.describeInvalidProof(reasoningResult);
+      }
+      if (reasoningResult.result === false) {
+        return this.describeNegativeProof(reasoningResult);
+      }
+      return describePositiveProof(this.session, reasoningResult);
+    })();
+
+    const confidence = typeof reasoningResult.confidence === 'number'
+      ? reasoningResult.confidence
+      : (typeof reasoningResult?.proofObject?.confidence === 'number' ? reasoningResult.proofObject.confidence : null);
+    if (typeof confidence === 'number' && Number.isFinite(confidence)) {
+      return `${base} (confidence=${confidence.toFixed(2)})`;
     }
-    if (reasoningResult.result === false) {
-      return this.describeNegativeProof(reasoningResult);
-    }
-    return describePositiveProof(this.session, reasoningResult);
+    return base;
   }
 
   exprToHuman(expr, bindings = null) {

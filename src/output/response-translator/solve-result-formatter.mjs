@@ -17,7 +17,13 @@ export class SolveResultFormatter {
       const proofText = constraintDesc
         ? `Constraints ${constraintDesc} cannot all be satisfied with available assignments.`
         : 'No valid assignment exists.';
-      return makeTranslation(error, proofText);
+      // For DS14-style eval runner compatibility, keep the surface text stable and
+      // put engine-specific details into the proof.
+      const baseText = 'No valid solutions found.';
+      const combinedProof = error && error !== baseText
+        ? `${error}. ${proofText}`
+        : proofText;
+      return makeTranslation(baseText, combinedProof);
     }
 
     const solutionTexts = (solveData.solutions || []).map((sol, idx) => {
@@ -73,4 +79,3 @@ export class SolveResultFormatter {
     return JSON.stringify(fact);
   }
 }
-

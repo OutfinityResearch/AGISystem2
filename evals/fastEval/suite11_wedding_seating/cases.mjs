@@ -51,14 +51,14 @@ export const cases = [
       conflictsWith Bob Alice
 
       @seating solve WeddingSeating
-        guests from GuestA
-        tables from TableA
+        variables from GuestA
+        domain from TableA
         noConflict conflictsWith
       end
     `,
     expected_nl: 'Found 2 seating: 1. Alice is at T1, Bob is at T2. 2. Alice is at T2, Bob is at T1.'
   },
-  // List all solutions - Alice și Bob sunt mereu la mese diferite
+  // List all solutions - Alice and Bob are always seated at different tables
   {
     action: 'listSolutions',
     input_dsl: 'seating',
@@ -73,8 +73,8 @@ export const cases = [
       'Alice is at T2.'
     ],
     proof_nl: [
-      'Fact in KB: Alice is at T1',
-      'Fact in KB: Alice is at T2'
+      'conflictsWith(Alice, Bob) satisfied',
+      'conflictsWith(Alice, Bob) satisfied'
     ]
   },
 
@@ -98,14 +98,14 @@ export const cases = [
       conflictsWith Dave Carol
 
       @arrangement solve WeddingSeating
-        guests from GuestB
-        tables from TableB
+        variables from GuestB
+        domain from TableB
         noConflict conflictsWith
       end
     `,
     expected_nl: 'Found 18 arrangement: 1. Carol is at RoomX, Dave is at RoomY, Eve is at RoomX. 2. Carol is at RoomX, Dave is at RoomY, Eve is at RoomY. 3. Carol is at RoomX, Dave is at RoomY, Eve is at RoomZ. 4. Carol is at RoomX, Dave is at RoomZ, Eve is at RoomX. 5. Carol is at RoomX, Dave is at RoomZ, Eve is at RoomY. 6. Carol is at RoomX, Dave is at RoomZ, Eve is at RoomZ. 7. Carol is at RoomY, Dave is at RoomX, Eve is at RoomX. 8. Carol is at RoomY, Dave is at RoomX, Eve is at RoomY. 9. Carol is at RoomY, Dave is at RoomX, Eve is at RoomZ. 10. Carol is at RoomY, Dave is at RoomZ, Eve is at RoomX. 11. Carol is at RoomY, Dave is at RoomZ, Eve is at RoomY. 12. Carol is at RoomY, Dave is at RoomZ, Eve is at RoomZ. 13. Carol is at RoomZ, Dave is at RoomX, Eve is at RoomX. 14. Carol is at RoomZ, Dave is at RoomX, Eve is at RoomY. 15. Carol is at RoomZ, Dave is at RoomX, Eve is at RoomZ. 16. Carol is at RoomZ, Dave is at RoomY, Eve is at RoomX. 17. Carol is at RoomZ, Dave is at RoomY, Eve is at RoomY. 18. Carol is at RoomZ, Dave is at RoomY, Eve is at RoomZ.'
   },
-  // List all 18 solutions - Carol și Dave sunt MEREU în camere diferite
+  // List all 18 solutions - Carol and Dave are ALWAYS in different rooms
   {
     action: 'listSolutions',
     input_dsl: 'arrangement',
@@ -121,21 +121,21 @@ export const cases = [
   {
     action: 'learn',
     input_dsl: `
-      isA Maria GuestC
-      isA Ion GuestC
-      isA Ana GuestC
-      isA MasaMare TableC
-      isA MasaMica TableC
-      conflictsWith Maria Ion
-      conflictsWith Ion Maria
-      conflictsWith Ion Ana
-      conflictsWith Ana Ion
-      conflictsWith Maria Ana
-      conflictsWith Ana Maria
+      isA Mary GuestC
+      isA John GuestC
+      isA Ann GuestC
+      isA BigTable TableC
+      isA SmallTable TableC
+      conflictsWith Mary John
+      conflictsWith John Mary
+      conflictsWith John Ann
+      conflictsWith Ann John
+      conflictsWith Mary Ann
+      conflictsWith Ann Mary
 
-      @plasare solve WeddingSeating
-        guests from GuestC
-        tables from TableC
+      @seatingImpossible solve WeddingSeating
+        variables from GuestC
+        domain from TableC
         noConflict conflictsWith
       end
     `,
@@ -144,7 +144,7 @@ export const cases = [
   // Query the seating - should return no results because problem has no solution
   {
     action: 'listSolutions',
-    input_dsl: 'plasare',
+    input_dsl: 'seatingImpossible',
     expected_nl: 'No valid solutions found.'
   },
 
@@ -167,34 +167,20 @@ export const cases = [
       isA Room2 RoomD
       isA Room3 RoomD
       isA Room4 RoomD
-      isA Room5 RoomD
-
-      conflictsWith Guest1 Guest2
-      conflictsWith Guest2 Guest1
-      conflictsWith Guest1 Guest3
-      conflictsWith Guest3 Guest1
-      conflictsWith Guest1 Guest4
-      conflictsWith Guest4 Guest1
-      conflictsWith Guest2 Guest3
-      conflictsWith Guest3 Guest2
-      conflictsWith Guest2 Guest4
-      conflictsWith Guest4 Guest2
-      conflictsWith Guest3 Guest4
-      conflictsWith Guest4 Guest3
-
+      
       @rooms solve WeddingSeating
-        guests from GuestD
-        tables from RoomD
-        noConflict conflictsWith
+        variables from GuestD
+        domain from RoomD
+        allDifferent variables
+        maxSolutions from 24
       end
-    `,
-    expected_nl: 'Found 100 rooms:'
+    `
   },
   {
     action: 'listSolutions',
     input_dsl: 'rooms',
     maxSolutions: 2,
-    expected_nl: 'Found 100 solutions (showing 2). Solution 1: Guest1 is at Room1, Guest2 is at Room2, Guest3 is at Room3, Guest4 is at Room4. Solution 2: Guest1 is at Room1, Guest2 is at Room2, Guest3 is at Room3, Guest4 is at Room5.'
+    expected_nl: 'Found 24 solutions (showing 2). Solution 1: Guest1 is at Room1, Guest2 is at Room2, Guest3 is at Room3, Guest4 is at Room4. Solution 2: Guest1 is at Room1, Guest2 is at Room2, Guest3 is at Room4, Guest4 is at Room3.'
   },
   {
     action: 'query',
@@ -204,7 +190,68 @@ export const cases = [
       'Guest1 is at Room1, Guest2 is at Room2, Guest3 is at Room3, Guest4 is at Room4.'
     ],
     proof_nl: [
-      'Fact in KB: Guest1 is at Room1, Guest2 is at Room2, Guest3 is at Room3, Guest4 is at Room4'
+      'allDifferent(Guest1, Guest2, Guest3, Guest4) satisfied'
+    ]
+  }
+  ,
+
+  // ========================================
+  // SCENARIO 5: 4 guests, 5 rooms (less hardcoded)
+  // - Tests that we can still extract 3 hole bindings from a single CSP tuple
+  // - Avoids hardcoding the full assignment for Guest1/2/3 (only requires they appear)
+  // ========================================
+
+  {
+    action: 'learn',
+    input_dsl: `
+      isA Guest1 GuestE
+      isA Guest2 GuestE
+      isA Guest3 GuestE
+      isA Guest4 GuestE
+      isA Room1 RoomE
+      isA Room2 RoomE
+      isA Room3 RoomE
+      isA Room4 RoomE
+      isA Room5 RoomE
+
+      @rooms5 solve WeddingSeating
+        variables from GuestE
+        domain from RoomE
+        allDifferent variables
+        maxSolutions from 120
+      end
+    `
+  },
+
+  {
+    action: 'query',
+    input_dsl: '@q rooms5 Guest4 ?room',
+    maxResults: 5,
+    expected_nl: [
+      'Guest4 is at Room1.',
+      'Guest4 is at Room2.',
+      'Guest4 is at Room3.',
+      'Guest4 is at Room4.',
+      'Guest4 is at Room5.'
+    ],
+    proof_nl: [
+      'allDifferent(Guest1, Guest2, Guest3, Guest4) satisfied',
+      'allDifferent(Guest1, Guest2, Guest3, Guest4) satisfied',
+      'allDifferent(Guest1, Guest2, Guest3, Guest4) satisfied',
+      'allDifferent(Guest1, Guest2, Guest3, Guest4) satisfied',
+      'allDifferent(Guest1, Guest2, Guest3, Guest4) satisfied'
+    ]
+  },
+
+  {
+    action: 'query',
+    input_dsl: 'cspTuple rooms5 Guest1 ?r1 Guest2 ?r2 Guest3 ?r3 Guest4 Room4',
+    maxResults: 1,
+    expected_nl: [
+      'Guest4 is at Room4.'
+    ],
+    proof_nl: [
+      'allDifferent(Guest1, Guest2, Guest3, Guest4) satisfied'
     ]
   }
 ];

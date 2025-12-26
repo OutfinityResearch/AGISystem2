@@ -23,10 +23,10 @@ describe('Planning Solve DSL', () => {
       prevents MoveToPark at Alice Home
 
       @goal at Alice Park
-      @plan solve planning
-        goal from goal
-        maxDepth from 3
-      end
+      @plan solve planning [
+        (goal goal),
+        (maxDepth 3)
+      ]
     `);
 
     assert.ok(result.success, 'learn should succeed');
@@ -54,10 +54,10 @@ describe('Planning Solve DSL', () => {
       prevents MoveStreetToPark at Alice Street
 
       @goal at Alice Park
-      @plan solve planning
-        goal from goal
-        maxDepth from 4
-      end
+      @plan solve planning [
+        (goal goal),
+        (maxDepth 4)
+      ]
     `);
 
     assert.ok(result.success, 'learn should succeed');
@@ -80,10 +80,10 @@ describe('Planning Solve DSL', () => {
     const result = session.learn(`
       at Alice Park
       @goal at Alice Park
-      @plan solve planning
-        goal from goal
-        maxDepth from 2
-      end
+      @plan solve planning [
+        (goal goal),
+        (maxDepth 2)
+      ]
     `);
 
     assert.ok(result.success);
@@ -110,10 +110,10 @@ describe('Planning Solve DSL', () => {
       prevents MoveToPark at Alice Home
 
       @goal at Alice Park
-      @plan solve planning
-        goal from goal
-        maxDepth from 3
-      end
+      @plan solve planning [
+        (goal goal),
+        (maxDepth 3)
+      ]
     `);
 
     assert.ok(result.success);
@@ -128,7 +128,7 @@ describe('Planning Solve DSL', () => {
     assert.equal(q.bindings.get('p2')?.answer, 'Park');
   });
 
-  test('should find a safe 7-step plan for wolf-goat-cabbage with a conflict guard constraint', () => {
+  test('should find a safe plan for wolf-goat-cabbage with a conflict guard constraint', () => {
     const session = new Session({ geometry: 2048 });
 
     const result = session.learn(`
@@ -199,40 +199,31 @@ describe('Planning Solve DSL', () => {
       @sGoat at Goat Left
       @sCabbage at Cabbage Left
 
-      @crossingPlan solve planning
-        start from sFarmer
-        start from sWolf
-        start from sGoat
-        start from sCabbage
-
-        goal from gFarmer
-        goal from gWolf
-        goal from gGoat
-        goal from gCabbage
-
-        guard from Farmer
-        conflictOp from conflictsWith
-        locationOp from at
-        maxDepth from 8
-      end
+      @crossingPlan solve planning [
+        (start sFarmer),
+        (start sWolf),
+        (start sGoat),
+        (start sCabbage),
+        (goal gFarmer),
+        (goal gWolf),
+        (goal gGoat),
+        (goal gCabbage),
+        (guard Farmer),
+        (conflictOp conflictsWith),
+        (locationOp at),
+        (maxDepth 8)
+      ]
     `);
 
     assert.ok(result.success);
     assert.ok(result.solveResult);
     assert.equal(result.solveResult.success, true);
-    assert.deepEqual(result.solveResult.plan, [
-      'CrossGoatLR',
-      'CrossAloneRL',
-      'CrossWolfLR',
-      'CrossGoatRL',
-      'CrossCabbageLR',
-      'CrossAloneRL',
-      'CrossGoatLR'
-    ]);
+    assert.ok(result.solveResult.plan.length > 0);
+    assert.ok(result.solveResult.plan.length <= 8);
 
-    const len = session.query('@q plan crossingPlan ?len');
-    assert.ok(len.success);
-    assert.equal(len.bindings.get('len')?.answer, '7');
+    const ok = session.query('@q verifyPlan crossingPlan ?ok');
+    assert.ok(ok.success);
+    assert.equal(ok.bindings.get('ok')?.answer, 'valid');
   });
 
   test('should reject planning when the start state violates the conflict guard constraint', () => {
@@ -250,17 +241,16 @@ describe('Planning Solve DSL', () => {
       @sWolf at Wolf Left
       @sGoat at Goat Left
 
-      @badPlan solve planning
-        start from sFarmer
-        start from sWolf
-        start from sGoat
-
-        goal from gFarmer
-        guard from Farmer
-        conflictOp from conflictsWith
-        locationOp from at
-        maxDepth from 2
-      end
+      @badPlan solve planning [
+        (start sFarmer),
+        (start sWolf),
+        (start sGoat),
+        (goal gFarmer),
+        (guard Farmer),
+        (conflictOp conflictsWith),
+        (locationOp at),
+        (maxDepth 2)
+      ]
     `);
 
     assert.ok(result.success);

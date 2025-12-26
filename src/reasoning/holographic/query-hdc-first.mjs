@@ -69,14 +69,38 @@ export class HolographicQueryEngine {
     const operator = this.session.resolve(statement.operator);
     const operatorName = statement.operator?.name || statement.operator?.value;
 
+    // Meta-operators and non-relational helpers should bypass HDC unbind.
+    // HDC-first candidate extraction is not meaningful for these operations and produces noisy/invalid results.
+    const HDC_BYPASS_OPERATORS = new Set([
+      'abduce',
+      'whatif',
+      'explain',
+      'deduce',
+      'induce',
+      'bundle',
+      'difference',
+      'analogy',
+      'similar',
+      'verifyPlan'
+    ]);
+
     for (let i = 0; i < statement.args.length; i++) {
       const arg = statement.args[i];
       if (arg.type === 'Hole') {
         holes.push({ index: i + 1, name: arg.name });
       } else {
+        const name =
+          typeof arg.name === 'string'
+            ? arg.name
+            : (arg.value !== undefined && arg.value !== null)
+              ? String(arg.value)
+              : typeof arg.toString === 'function'
+                ? arg.toString()
+                : null;
         knowns.push({
           index: i + 1,
-          name: arg.name || arg.value,
+          name,
+          node: arg,
           vector: this.session.resolve(arg)
         });
       }
@@ -84,6 +108,10 @@ export class HolographicQueryEngine {
 
     // Direct match (no holes) - use symbolic
     if (holes.length === 0) {
+      return this.symbolicEngine.execute(statement, options);
+    }
+
+    if (HDC_BYPASS_OPERATORS.has(operatorName)) {
       return this.symbolicEngine.execute(statement, options);
     }
 

@@ -434,3 +434,166 @@ export function resolveGoalRefs(session, refs = []) {
   }
   return metas;
 }
+
+function findPlanFact(session, planName) {
+  const name = String(planName ?? '').trim();
+  if (!name) return null;
+  for (const fact of session?.kbFacts || []) {
+    const meta = fact?.metadata;
+    if (!meta || meta.operator !== 'plan') continue;
+    if (!Array.isArray(meta.args) || meta.args.length < 2) continue;
+    if (meta.args[0] === name) return fact;
+  }
+  return null;
+}
+
+function readPlanStepsFromKB(session, planName) {
+  const name = String(planName ?? '').trim();
+  const steps = [];
+  for (const fact of session?.kbFacts || []) {
+    const meta = fact?.metadata;
+    if (!meta || meta.operator !== 'planStep') continue;
+    if (!Array.isArray(meta.args) || meta.args.length < 3) continue;
+    if (meta.args[0] !== name) continue;
+    const idx = Number.parseInt(String(meta.args[1]), 10);
+    if (!Number.isFinite(idx) || idx <= 0) continue;
+    const action = meta.args[2];
+    if (!action) continue;
+    steps.push([idx, action]);
+  }
+  steps.sort((a, b) => a[0] - b[0]);
+  return steps.map(([, action]) => action);
+}
+
+function describeMeta(meta) {
+  if (!meta?.operator) return '';
+  const args = Array.isArray(meta.args) ? meta.args : [];
+  return `${meta.operator} ${args.join(' ')}`.trim();
+}
+
+/**
+ * Verify a stored plan produced by `solve planning`.
+ * - Checks that each step is applicable (requires satisfied)
+ * - Applies effects (causes/prevents)
+ * - Re-checks optional conflict/guard constraints
+ * - Confirms that all goal facts are satisfied in the final state
+ */
+export function verifyPlan(session, planName) {
+  const startedAt = Date.now();
+  const name = String(planName ?? '').trim();
+  if (!name) return { success: false, valid: false, error: 'Missing plan name' };
+
+  const planFact = findPlanFact(session, name);
+  const meta = planFact?.metadata || null;
+
+  const plan = Array.isArray(meta?.plan) ? meta.plan : readPlanStepsFromKB(session, name);
+  const goals = Array.isArray(meta?.goals) ? meta.goals : [];
+  const startFacts = Array.isArray(meta?.startFacts) ? meta.startFacts : [];
+
+  const guard = meta?.guard ?? null;
+  const conflictOperators = meta?.conflictOperators ?? null;
+  const locationOperators = meta?.locationOperators ?? null;
+
+  if (!Array.isArray(plan) || plan.length === 0) {
+    return { success: false, valid: false, error: `No plan steps found for ${name}` };
+  }
+  if (goals.length === 0) {
+    return { success: false, valid: false, error: `Plan ${name} has no stored goals to verify` };
+  }
+  if (startFacts.length === 0) {
+    return { success: false, valid: false, error: `Plan ${name} has no stored start facts to verify` };
+  }
+
+  const actionDefs = collectActionDefs(session);
+  const isValidState = buildConflictGuardValidator(session, { guard, conflictOperators, locationOperators });
+
+  let state = buildInitialStateFromSession(session, { explicitFacts: startFacts });
+  const proof = [];
+
+  if (isValidState && !isValidState(state)) {
+    return {
+      success: true,
+      valid: false,
+      planName: name,
+      steps: ['Initial state violates planning constraints'],
+      stats: { durationMs: Date.now() - startedAt }
+    };
+  }
+
+  proof.push(`Loaded plan ${name} (${plan.length} steps)`);
+  proof.push(`Start: ${startFacts.map(describeMeta).filter(Boolean).join(', ')}`);
+
+  for (let i = 0; i < plan.length; i++) {
+    const stepIndex = i + 1;
+    const actionName = plan[i];
+    const action = actionDefs.get(actionName);
+    if (!action) {
+      return {
+        success: true,
+        valid: false,
+        planName: name,
+        steps: [...proof, `Step ${stepIndex}: unknown action ${actionName}`],
+        stats: { durationMs: Date.now() - startedAt }
+      };
+    }
+
+    if (!applicable(action, state)) {
+      const missing = [];
+      for (const req of action.requires || []) {
+        const key = factKey(req);
+        if (key && !state.has(key)) missing.push(describeMeta(req));
+      }
+      return {
+        success: true,
+        valid: false,
+        planName: name,
+        steps: [
+          ...proof,
+          `Step ${stepIndex}: ${actionName} not applicable`,
+          ...(missing.length > 0 ? [`Missing: ${missing.join(', ')}`] : [])
+        ],
+        stats: { durationMs: Date.now() - startedAt }
+      };
+    }
+
+    const nextState = applyAction(action, state);
+    if (isValidState && !isValidState(nextState)) {
+      return {
+        success: true,
+        valid: false,
+        planName: name,
+        steps: [...proof, `Step ${stepIndex}: ${actionName} violates planning constraints`],
+        stats: { durationMs: Date.now() - startedAt }
+      };
+    }
+
+    proof.push(`Step ${stepIndex}: applied ${actionName}`);
+    state = nextState;
+  }
+
+  const goalKeys = goals.map(factKey).filter(Boolean);
+  if (!goalsSatisfied(goalKeys, state)) {
+    const missing = [];
+    for (const g of goals) {
+      const key = factKey(g);
+      if (key && !state.has(key)) missing.push(describeMeta(g));
+    }
+    return {
+      success: true,
+      valid: false,
+      planName: name,
+      steps: [...proof, `Goals not satisfied: ${missing.join(', ')}`],
+      stats: { durationMs: Date.now() - startedAt }
+    };
+  }
+
+  proof.push(`Goals satisfied: ${goals.map(describeMeta).filter(Boolean).join(', ')}`);
+
+  return {
+    success: true,
+    valid: true,
+    planName: name,
+    steps: proof,
+    stats: { durationMs: Date.now() - startedAt }
+  };
+}

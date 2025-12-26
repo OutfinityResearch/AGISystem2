@@ -5,17 +5,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="impelmenting DS#19 wip">
+      <change afterPath="$PROJECT_DIR$/evals/fastEval/suite29_explain_abduce_whatif/cases.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/explain.test.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/00-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/00-relations.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REASONING_OPERATORS.md" beforeDir="false" afterPath="$PROJECT_DIR$/REASONING_OPERATORS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/directions/proof-to-nl.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/proof-to-nl.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/semantic_unification_implementation_plan.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/semantic_unification_implementation_plan.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evals/fastEval/suite11_wedding_seating/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite11_wedding_seating/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/output/response-translator/list-solutions-translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/list-solutions-translator.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite15_reasoning_macros/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite15_reasoning_macros/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite21_goat_cabbage_plus/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite21_goat_cabbage_plus/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite23_tool_planning/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite23_tool_planning/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite25_ruletaker_bugs/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite25_ruletaker_bugs/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/constants.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/constants.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/response-translator/constants.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/constants.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/response-translator/prove-translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/prove-translator.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/output/response-translator/query-translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/query-translator.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/output/text-generator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/text-generator.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/response-translator/solve-result-formatter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/solve-result-formatter.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/result-formatter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/result-formatter.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser/parser.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/parser.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/abduction.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/abduction.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/planning/solver.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/planning/solver.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query-kb.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-kb.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/operator-declarations.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/operator-declarations.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/semantic-index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/semantic-index.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/executor.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session-check-dsl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-check-dsl.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/integration/csp-wedding-seating.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/integration/csp-wedding-seating.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/csp-hdc.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/csp-hdc.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/csp/solve-dsl.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/csp/solve-dsl.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/planning/solve-planning.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/planning/solve-planning.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,14 +152,6 @@
       <workItem from="1766477237780" duration="9294000" />
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
-    </task>
-    <task id="LOCAL-00037" summary="better documentation and project presentation">
-      <option name="closed" value="true" />
-      <created>1765894514767</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1765894514767</updated>
     </task>
     <task id="LOCAL-00038" summary="better documentation and project presentation">
       <option name="closed" value="true" />
@@ -525,7 +537,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766772760101</updated>
     </task>
-    <option name="localTasksCounter" value="86" />
+    <task id="LOCAL-00086" summary="impelmenting DS#19 wip">
+      <option name="closed" value="true" />
+      <created>1766774490066</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1766774490067</updated>
+    </task>
+    <option name="localTasksCounter" value="87" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

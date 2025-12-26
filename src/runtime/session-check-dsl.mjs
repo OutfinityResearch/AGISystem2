@@ -6,6 +6,7 @@ const BUILTIN_OPERATORS = new Set([
   'Load',
   'Unload',
   'Set',
+  'solve',
   'abduce',
   'whatif',
   'similar',
@@ -16,6 +17,7 @@ const BUILTIN_OPERATORS = new Set([
   'deduce',
   'induce',
   'bundle',
+  'verifyPlan',
   'synonym',
   'canonical',
   'alias',
@@ -243,6 +245,46 @@ function validateStatement(stmt, context) {
   validateExpression(stmt.operator, context, 'operator', context.allowHoles, enforceDecls);
 
   const args = stmt.args || [];
+
+  // DS02/DS16: `solve` is a builtin verb; its option expressions are *data* and must not
+  // be validated as graph calls (i.e., we don't require declaration for option keywords).
+  if (operatorName === 'solve') {
+    if (args.length < 1) {
+      context.errors.push(`solve expects at least a problem type${formatLocation(stmt)}`);
+      return;
+    }
+    if (args[0]?.type !== 'Identifier') {
+      context.errors.push(`solve expects an identifier problem type as first argument${formatLocation(args[0])}`);
+    }
+
+    const optionItems = [];
+    for (const arg of args.slice(1)) {
+      if (!arg) continue;
+      if (arg.type === 'List') {
+        for (const item of arg.items || []) optionItems.push(item);
+        continue;
+      }
+      optionItems.push(arg);
+    }
+
+    for (const item of optionItems) {
+      if (!item) continue;
+      if (item.type !== 'Compound') continue;
+      const key = item.operator?.name;
+      if (!key) continue;
+
+      // Only validate that referenced relation operators exist.
+      if (key === 'noConflict') {
+        const rel = item.args?.[0];
+        if (rel?.type === 'Identifier') {
+          ensureKnownOperator(rel.name, rel, context);
+        }
+      }
+    }
+
+    if (stmt.destination) context.bindings.add(stmt.destination);
+    return;
+  }
   const quantifierHolesOk =
     operatorName === 'Exists' ||
     operatorName === 'ForAll' ||
@@ -291,9 +333,11 @@ function validateRule(rule, context) {
 function validateSolveBlock(block, context) {
   for (const decl of block.declarations || []) {
     if (!decl?.source) continue;
-    if (decl.kind === 'noConflict' || decl.kind === 'allDifferent') {
+    // noConflict expects a relation operator name (e.g. conflictsWith).
+    if (decl.kind === 'noConflict') {
       ensureKnownOperator(decl.source, decl, context);
     }
+    // allDifferent's source token is informational (e.g. "guests") and not an operator name.
   }
   if (block.destination) {
     context.knownOperators.add(block.destination);

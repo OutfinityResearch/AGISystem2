@@ -27,6 +27,7 @@ export function searchKBDirect(session, operatorName, knowns, holes, options = {
   const results = [];
 
   const maxResults = Number.isFinite(options.maxResults) ? Math.max(1, options.maxResults) : null;
+  const seen = new Set();
 
   const componentKB = session.componentKB;
   let scanFacts = session.kbFacts;
@@ -73,6 +74,14 @@ export function searchKBDirect(session, operatorName, knowns, holes, options = {
       }
 
       if (factBindings.size === holes.length) {
+        const key = holes
+          .map(hole => {
+            const argIndex = hole.index - 1;
+            return meta.args[argIndex] || '';
+          })
+          .join('|');
+        if (seen.has(key)) continue;
+        seen.add(key);
         results.push({
           bindings: factBindings,
           score: 0.95,

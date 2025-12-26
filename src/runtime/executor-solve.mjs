@@ -13,6 +13,125 @@ import { CSPSolver } from '../reasoning/csp/solver.mjs';
 import { findAllOfType } from '../reasoning/find-all.mjs';
 import { solvePlanning, resolveGoalRefs } from '../reasoning/planning/solver.mjs';
 
+function nodeToAtomOrNumber(node) {
+  if (!node) return null;
+  if (node.type === 'Identifier') return node.name;
+  if (node.type === 'Reference') return node.name;
+  if (node.type === 'Literal') return node.value;
+  return null;
+}
+
+function parseSolveOptionExpr(optionExpr) {
+  if (!optionExpr || optionExpr.type !== 'Compound') return null;
+  const key = optionExpr.operator?.name;
+  if (!key) return null;
+  const rawArgs = Array.isArray(optionExpr.args) ? optionExpr.args : [];
+  const args = rawArgs.map(nodeToAtomOrNumber);
+  return { key, args };
+}
+
+function parseSolveStatementDeclarations(stmt) {
+  const declarations = [];
+  const args = Array.isArray(stmt?.args) ? stmt.args : [];
+  const optionArgs = args.slice(1);
+
+  const optionItems = [];
+  for (const arg of optionArgs) {
+    if (!arg) continue;
+    if (arg.type === 'List') {
+      for (const item of arg.items || []) optionItems.push(item);
+      continue;
+    }
+    optionItems.push(arg);
+  }
+
+  for (const item of optionItems) {
+    const opt = parseSolveOptionExpr(item);
+    if (!opt) continue;
+
+    const keyNorm = String(opt.key || '').trim();
+    if (!keyNorm) continue;
+
+    // CSP assignment-style options (generic, DS16-aligned)
+    if (keyNorm === 'variablesFrom' || keyNorm === 'varsFrom' || keyNorm === 'entitiesFrom') {
+      const typeName = opt.args?.[0];
+      if (typeName) declarations.push({ varName: 'variables', kind: 'from', source: typeName });
+      continue;
+    }
+    if (keyNorm === 'domainFrom' || keyNorm === 'valuesFrom') {
+      const typeName = opt.args?.[0];
+      if (typeName) declarations.push({ varName: 'domain', kind: 'from', source: typeName });
+      continue;
+    }
+    if (keyNorm === 'noConflict') {
+      const rel = opt.args?.[0];
+      if (rel) declarations.push({ varName: 'noConflict', kind: 'noConflict', source: rel });
+      continue;
+    }
+    if (keyNorm === 'allDifferent') {
+      declarations.push({ varName: 'allDifferent', kind: 'allDifferent', source: opt.args?.[0] || 'variables' });
+      continue;
+    }
+    if (keyNorm === 'maxSolutions' || keyNorm === 'maxResults' || keyNorm === 'max_solutions' || keyNorm === 'max_results') {
+      const n = opt.args?.[0];
+      if (n !== null && n !== undefined) declarations.push({ varName: 'maxSolutions', kind: 'from', source: n });
+      continue;
+    }
+    if (keyNorm === 'timeoutMs' || keyNorm === 'timeout' || keyNorm === 'timeout_ms') {
+      const n = opt.args?.[0];
+      if (n !== null && n !== undefined) declarations.push({ varName: 'timeout', kind: 'from', source: n });
+      continue;
+    }
+
+    // Planning options (solve planning ...)
+    if (keyNorm === 'start') {
+      const ref = opt.args?.[0];
+      if (ref) declarations.push({ varName: 'start', kind: 'from', source: ref });
+      continue;
+    }
+    if (keyNorm === 'goal') {
+      const ref = opt.args?.[0];
+      if (ref) declarations.push({ varName: 'goal', kind: 'from', source: ref });
+      continue;
+    }
+    if (keyNorm === 'maxDepth' || keyNorm === 'depth') {
+      const n = opt.args?.[0];
+      if (n !== null && n !== undefined) declarations.push({ varName: 'maxDepth', kind: 'from', source: n });
+      continue;
+    }
+    if (keyNorm === 'guard') {
+      const name = opt.args?.[0];
+      if (name) declarations.push({ varName: 'guard', kind: 'from', source: name });
+      continue;
+    }
+    if (keyNorm === 'conflictOp' || keyNorm === 'conflictsOp' || keyNorm === 'conflictRelation' || keyNorm === 'conflictsRelation') {
+      const op = opt.args?.[0];
+      if (op) declarations.push({ varName: 'conflictOp', kind: 'from', source: op });
+      continue;
+    }
+    if (keyNorm === 'locationOp' || keyNorm === 'locationsOp' || keyNorm === 'locationRelation' || keyNorm === 'locationsRelation') {
+      const op = opt.args?.[0];
+      if (op) declarations.push({ varName: 'locationOp', kind: 'from', source: op });
+      continue;
+    }
+  }
+
+  return declarations;
+}
+
+export function executeSolveStatement(executor, stmt) {
+  const args = Array.isArray(stmt?.args) ? stmt.args : [];
+  const problemType = nodeToAtomOrNumber(args[0]);
+  const pseudo = {
+    destination: stmt.destination,
+    problemType,
+    declarations: parseSolveStatementDeclarations(stmt),
+    line: stmt.line,
+    column: stmt.column
+  };
+  return executeSolveBlock(executor, pseudo);
+}
+
 /**
  * Execute solve block - runs CSP solver
  * @param {Executor} executor - Executor instance
@@ -32,7 +151,14 @@ export function executeSolveBlock(executor, stmt) {
     executor.session.semanticIndex?.assignmentRelations?.add?.(stmt.destination);
   }
 
-  const solver = new CSPSolver(executor.session, { timeout: 5000 });
+  // DS16: allow per-solve overrides like `maxSolutions from 200`.
+  let maxSolutions = null;
+  let timeoutMs = 5000;
+
+  const solver = new CSPSolver(executor.session, {
+    timeout: timeoutMs,
+    maxSolutions: maxSolutions ?? undefined
+  });
 
   // Process declarations to configure solver
   let variableType = null;
@@ -41,18 +167,59 @@ export function executeSolveBlock(executor, stmt) {
 
   for (const decl of stmt.declarations) {
     if (decl.kind === 'from') {
-      // Domain declaration: guests from Guest, tables from Table
-      if (decl.varName === 'guests') {
+      // Domain declaration: variables from <Type>, domain from <Type>
+      if (decl.varName === 'variables' || decl.varName === 'guests' || decl.varName === 'vars' || decl.varName === 'entities') {
         variableType = decl.source;
-      } else if (decl.varName === 'tables') {
+      } else if (decl.varName === 'domain' || decl.varName === 'tables' || decl.varName === 'values' || decl.varName === 'rooms') {
         domainType = decl.source;
+      } else if (
+        decl.varName === 'maxSolutions' ||
+        decl.varName === 'max_solutions' ||
+        decl.varName === 'maxResults' ||
+        decl.varName === 'max_results'
+      ) {
+        maxSolutions = parsePositiveInt(decl.source, null);
+      } else if (decl.varName === 'timeout' || decl.varName === 'timeoutMs' || decl.varName === 'timeout_ms') {
+        timeoutMs = parsePositiveInt(decl.source, timeoutMs);
       }
     } else if (decl.kind === 'noConflict') {
       // Constraint: noConflict conflictsWith
       constraints.push({ type: 'noConflict', relation: decl.source });
     } else if (decl.kind === 'allDifferent') {
-      constraints.push({ type: 'allDifferent', relation: decl.source });
+      constraints.push({ type: 'allDifferent', target: decl.source });
     }
+  }
+
+  // Apply CSP options once we've parsed declarations.
+  if (Number.isFinite(maxSolutions) && maxSolutions > 0) {
+    solver.options.maxSolutions = maxSolutions;
+  }
+  if (Number.isFinite(timeoutMs) && timeoutMs > 0) {
+    solver.options.timeout = timeoutMs;
+  }
+
+  if (!variableType) {
+    return {
+      type: 'solve',
+      destination: stmt.destination,
+      problemType: stmt.problemType,
+      success: false,
+      error: 'solve WeddingSeating requires `variables from <Type>` (or `guests from <Type>`)',
+      solutionCount: 0,
+      solutions: []
+    };
+  }
+
+  if (!domainType) {
+    return {
+      type: 'solve',
+      destination: stmt.destination,
+      problemType: stmt.problemType,
+      success: false,
+      error: 'solve WeddingSeating requires `domain from <Type>` (or `tables from <Type>`)',
+      solutionCount: 0,
+      solutions: []
+    };
   }
 
   // Get entities from KB
@@ -102,6 +269,14 @@ export function executeSolveBlock(executor, stmt) {
             return t1 !== t2;
           });
         }
+      }
+    }
+    if (c.type === 'allDifferent') {
+      // DS16: allDifferent across all variables in this solve block.
+      // Optional `allDifferent guests` is accepted; the token is informational here.
+      if (variables.length >= 2) {
+        constraintInfo.push({ type: 'allDifferent', entities: [...variables] });
+        solver.addAllDifferent(...variables);
       }
     }
   }
@@ -162,6 +337,28 @@ export function executeSolveBlock(executor, stmt) {
             constraint: `${constraint.relation}(${e1}, ${e2})`,
             satisfied: true,
             reason: `${e1} at ${t1}, ${e2} at ${t2}, ${t1} ≠ ${t2}`
+          });
+        }
+      }
+      if (constraint.type === 'allDifferent') {
+        const used = new Set();
+        let ok = true;
+        const assignmentsText = [];
+        for (const entity of constraint.entities || []) {
+          const value = sol[entity];
+          if (!value) continue;
+          assignmentsText.push(`${entity} at ${value}`);
+          if (used.has(value)) {
+            ok = false;
+            break;
+          }
+          used.add(value);
+        }
+        if (ok) {
+          proofSteps.push({
+            constraint: `allDifferent(${(constraint.entities || []).join(', ')})`,
+            satisfied: true,
+            reason: `${assignmentsText.join(', ')} (all values distinct)`
           });
         }
       }
@@ -238,6 +435,7 @@ export function executeSolveBlock(executor, stmt) {
         operator: 'cspTuple',
         args: tupleArgs,
         source: 'csp',
+        proof: proofText,
         solutionRelation,
         solutionIndex: i + 1
       });
@@ -375,7 +573,19 @@ function executePlanningSolveBlock(executor, stmt) {
   // Store a plan summary fact: plan <planName> <length>
   const lengthStr = String(planning.plan.length);
   const planVec = buildPlanFactVector(session, 'plan', [planName, lengthStr]);
-  session.addToKB(planVec, `${planName}_plan`, { operator: 'plan', args: [planName, lengthStr], source: 'planning' });
+  session.addToKB(planVec, `${planName}_plan`, {
+    operator: 'plan',
+    args: [planName, lengthStr],
+    source: 'planning',
+    // Persist the solve spec for proof-real verification (DS19).
+    plan: planning.plan,
+    goals,
+    startFacts,
+    maxDepth,
+    guard: guard || null,
+    conflictOperators,
+    locationOperators
+  });
 
   // Optional: action signatures for nicer planAction facts.
   // Convention: actionSig <ActionName> <Tool> <Param1> <Param2>

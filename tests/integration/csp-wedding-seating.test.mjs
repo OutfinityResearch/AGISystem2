@@ -26,8 +26,8 @@ describe('CSP Wedding Seating', () => {
         conflictsWith Bob Alice
 
         @seating solve WeddingSeating
-          guests from Guest
-          tables from Table
+          variables from Guest
+          domain from Table
           noConflict conflictsWith
         end
       `);
@@ -56,8 +56,8 @@ describe('CSP Wedding Seating', () => {
         conflictsWith Bob Alice
 
         @seating solve WeddingSeating
-          guests from Guest
-          tables from Table
+          variables from Guest
+          domain from Table
           noConflict conflictsWith
         end
       `);
@@ -90,8 +90,8 @@ describe('CSP Wedding Seating', () => {
         conflictsWith Bob Alice
 
         @seating solve WeddingSeating
-          guests from Guest
-          tables from Table
+          variables from Guest
+          domain from Table
           noConflict conflictsWith
         end
       `);
@@ -116,8 +116,8 @@ describe('CSP Wedding Seating', () => {
         conflictsWith Bob Alice
 
         @seating solve WeddingSeating
-          guests from Guest
-          tables from Table
+          variables from Guest
+          domain from Table
           noConflict conflictsWith
         end
       `);
@@ -154,8 +154,8 @@ describe('CSP Wedding Seating', () => {
         conflictsWith Dave Carol
 
         @arrangement solve WeddingSeating
-          guests from Guest2
-          tables from Table2
+          variables from Guest2
+          domain from Table2
           noConflict conflictsWith
         end
       `);
@@ -180,8 +180,8 @@ describe('CSP Wedding Seating', () => {
         conflictsWith Dave Carol
 
         @arrangement solve WeddingSeating
-          guests from Guest2
-          tables from Table2
+          variables from Guest2
+          domain from Table2
           noConflict conflictsWith
         end
       `);
@@ -216,8 +216,8 @@ describe('CSP Wedding Seating', () => {
         conflictsWith Dave Carol
 
         @arrangement solve WeddingSeating
-          guests from Guest2
-          tables from Table2
+          variables from Guest2
+          domain from Table2
           noConflict conflictsWith
         end
       `);
@@ -260,8 +260,8 @@ describe('CSP Wedding Seating', () => {
         conflictsWith P3 P1
 
         @impossible solve WeddingSeating
-          guests from Guest3
-          tables from Table3
+          variables from Guest3
+          domain from Table3
           noConflict conflictsWith
         end
       `);
@@ -289,8 +289,8 @@ describe('CSP Wedding Seating', () => {
         conflictsWith P3 P1
 
         @impossible solve WeddingSeating
-          guests from Guest3
-          tables from Table3
+          variables from Guest3
+          domain from Table3
           noConflict conflictsWith
         end
       `);
@@ -320,8 +320,8 @@ describe('CSP Wedding Seating', () => {
         isA Slot2 Place1
 
         @myCustomRelation solve WeddingSeating
-          guests from Entity1
-          tables from Place1
+          variables from Entity1
+          domain from Place1
           noConflict conflictsWith
         end
       `);

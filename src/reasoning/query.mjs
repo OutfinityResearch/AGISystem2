@@ -26,6 +26,7 @@ import { searchViaRules } from './query-rules.mjs';
 import { searchCompoundSolutions } from './query-compound.mjs';
 import { debug_trace } from '../utils/debug.js';
 import { searchTypeInductionHasProperty } from './query-induction.mjs';
+import { verifyPlan as verifyStoredPlan } from './planning/solver.mjs';
 
 // Import meta-operators (DS17)
 import {
@@ -103,6 +104,7 @@ export class QueryEngine {
         knowns.push({
           index: i + 1,
           name,
+          node: arg,
           vector: this.session.resolve(arg)
         });
       }
@@ -124,6 +126,28 @@ export class QueryEngine {
     // Special case: 'similar' operator - find similar concepts via property matching
     if (operatorName === 'similar' && knowns.length === 1 && holes.length === 1) {
       return searchSimilarOp(this.session, knowns[0], holes[0]);
+    }
+
+    // Meta-operator: 'verifyPlan' - validate a stored plan by simulating it over the action model.
+    // Signature: verifyPlan <planName> ?ok
+    if (operatorName === 'verifyPlan' && knowns.length === 1 && holes.length === 1) {
+      const planName = knowns[0]?.name;
+      const res = verifyStoredPlan(this.session, planName);
+      // Avoid reserved boolean literals in NL output filtering; use semantic labels.
+      const ok = res?.success && res?.valid ? 'valid' : 'invalid';
+      const steps = Array.isArray(res?.steps) ? res.steps : [];
+      const bindings = new Map();
+      bindings.set(holes[0].name, {
+        answer: ok,
+        similarity: 1.0,
+        method: 'plan_verify',
+        steps
+      });
+      return {
+        success: true,
+        bindings,
+        allResults: [{ bindings, score: 1.0, method: 'plan_verify', steps }]
+      };
     }
 
     // Meta-operator: 'induce' - find common properties (intersection)
@@ -149,6 +173,13 @@ export class QueryEngine {
     // Meta-operator: 'abduce' - find best explanation for an observation
     if (operatorName === 'abduce' && knowns.length >= 1 && holes.length === 1) {
       return this.searchAbduce(knowns, holes[0]);
+    }
+
+    // Meta-operator: 'explain' - produce a human-readable explanation for a goal
+    // Signature: explain <goal> ?explanation
+    // Goal may be provided as a Compound `(op ...)` or as a Reference to a proposition.
+    if (operatorName === 'explain' && knowns.length >= 1 && holes.length === 1) {
+      return this.searchExplain(knowns, holes[0]);
     }
 
     // Meta-operator: 'whatif' - counterfactual reasoning
@@ -571,12 +602,8 @@ export class QueryEngine {
     const engine = new AbductionEngine(this.session);
     const observation = knowns[0];
 
-    // Build observation AST from known
-    const obsAST = {
-      type: 'Statement',
-      operator: { type: 'Identifier', name: 'observed' },
-      args: [{ type: 'Identifier', name: observation.name }]
-    };
+    const obsMeta = this.extractGoalMetadataFromKnown(observation);
+    const obsAST = this.buildStatementFromMetadata(obsMeta || { operator: 'observed', args: [observation.name] });
 
     const result = engine.abduce(obsAST);
 
@@ -587,7 +614,8 @@ export class QueryEngine {
         answer: cause,
         confidence: result.confidence,
         method: 'abduce',
-        explanations: result.explanations
+        explanations: result.explanations,
+        steps: this.buildMetaProofSteps('abduce', result.bestExplanation, { observed: obsAST })
       });
     }
 
@@ -596,17 +624,234 @@ export class QueryEngine {
       bindings,
       confidence: result.confidence,
       allResults: result.explanations?.map(e => ({
-        bindings: new Map([[hole.name, { answer: e.cause || e.hypothesis, confidence: e.score, method: 'abduce' }]]),
+        bindings: new Map([[hole.name, { answer: e.cause || e.hypothesis, confidence: e.score, method: 'abduce', steps: this.buildMetaProofSteps('abduce', e, { observed: obsAST }) }]]),
         score: e.score,
         method: 'abduce',
         proof: {
           operation: 'abduce',
-          observed: observation.name,
+          observed: obsMeta ? this.renderMetadataAsFactString(obsMeta) : observation.name,
           cause: e.cause || e.hypothesis,
-          explanation: e.explanation
+          explanation: e.explanation,
+          confidence: e.score
         }
       })) || []
     };
+  }
+
+  /**
+   * Search for a human-readable explanation for a goal.
+   * If the goal is provable, summarize the proof. Otherwise, fall back to abduction.
+   *
+   * @param {Array} knowns
+   * @param {Object} hole
+   * @returns {QueryResult}
+   */
+  searchExplain(knowns, hole) {
+    const goalMeta = this.extractGoalMetadataFromKnown(knowns[0]);
+    if (!goalMeta || !goalMeta.operator) {
+      return { success: false, bindings: new Map(), allResults: [], reason: 'explain expects a structured goal (compound or reference)' };
+    }
+
+    const goalDsl = `@goal ${this.renderMetadataAsDsl(goalMeta)}`;
+    const proveRes = this.session.prove(goalDsl, { timeout: 600 });
+
+    const bindings = new Map();
+    const allResults = [];
+
+    if (proveRes?.valid) {
+      const proofLine = this.session.describeResult({ action: 'prove', reasoningResult: proveRes, queryDsl: goalDsl });
+      const proofText = this.extractProofText(proofLine);
+      const confidence = typeof proveRes.confidence === 'number'
+        ? proveRes.confidence
+        : (typeof proveRes?.proofObject?.confidence === 'number' ? proveRes.proofObject.confidence : 0.9);
+      const explanation = proofText || 'Derived by symbolic proof.';
+
+      bindings.set(hole.name, {
+        answer: explanation,
+        confidence,
+        method: 'explain',
+        steps: Array.isArray(proveRes.steps) ? proveRes.steps.map(s => s?.fact || s?.operation || '').filter(Boolean) : []
+      });
+
+      allResults.push({
+        bindings: new Map([[hole.name, { answer: explanation, confidence, method: 'explain' }]]),
+        score: confidence,
+        method: 'explain',
+        proof: {
+          operation: 'explain',
+          goal: this.renderMetadataAsFactString(goalMeta),
+          via: 'prove',
+          confidence,
+          explanation
+        }
+      });
+
+      return { success: true, bindings, confidence, allResults };
+    }
+
+    const abduceRes = this.session.abduce(this.renderMetadataAsDsl(goalMeta), { maxExplanations: 5 });
+    if (abduceRes?.success && abduceRes.bestExplanation) {
+      const best = abduceRes.bestExplanation;
+      const cause = best.cause || best.hypothesis || 'unknown';
+      const confidence = best.score ?? abduceRes.confidence ?? 0.4;
+      const explanation = best.explanation || `${cause} explains ${this.renderMetadataAsFactString(goalMeta)}`;
+
+      bindings.set(hole.name, {
+        answer: explanation,
+        confidence,
+        method: 'explain',
+        steps: this.buildMetaProofSteps('explain', best, { goal: goalMeta, cause })
+      });
+
+      allResults.push({
+        bindings: new Map([[hole.name, { answer: explanation, confidence, method: 'explain' }]]),
+        score: confidence,
+        method: 'explain',
+        proof: {
+          operation: 'explain',
+          goal: this.renderMetadataAsFactString(goalMeta),
+          via: 'abduce',
+          cause,
+          confidence,
+          explanation
+        }
+      });
+
+      return { success: true, bindings, confidence, allResults };
+    }
+
+    return { success: false, bindings: new Map(), allResults: [], reason: 'No explanation found' };
+  }
+
+  extractGoalMetadataFromKnown(known) {
+    const node = known?.node;
+    if (!node) return null;
+
+    if (node.type === 'Reference') {
+      const m = this.session.referenceMetadata.get(node.name);
+      return m || null;
+    }
+
+    if (node.type === 'Compound') {
+      const base = this.session.executor.extractCompoundMetadata(node);
+      if (base?.operator === 'Not' && Array.isArray(node.args) && node.args.length === 1) {
+        const innerNode = node.args[0];
+        if (innerNode?.type === 'Reference') {
+          const inner = this.session.referenceMetadata.get(innerNode.name);
+          if (inner?.operator) {
+            return {
+              operator: 'Not',
+              args: [inner.operator, ...(inner.args || [])],
+              innerOperator: inner.operator,
+              innerArgs: inner.args || [],
+              inner
+            };
+          }
+        }
+        if (innerNode?.type === 'Compound') {
+          const inner = this.session.executor.extractCompoundMetadata(innerNode);
+          if (inner?.operator) {
+            return {
+              operator: 'Not',
+              args: [inner.operator, ...(inner.args || [])],
+              innerOperator: inner.operator,
+              innerArgs: inner.args || [],
+              inner
+            };
+          }
+        }
+      }
+      return base || null;
+    }
+
+    if (node.type === 'Identifier') {
+      // Allow explaining atomic events as "operators with arity 0" (e.g., WetGrass).
+      return { operator: node.name, args: [] };
+    }
+
+    return null;
+  }
+
+  buildStatementFromMetadata(meta) {
+    if (!meta?.operator) return null;
+    const opNode = { type: 'Identifier', name: meta.operator };
+    if (meta.operator === 'Not' && meta.innerOperator && Array.isArray(meta.innerArgs)) {
+      const inner = {
+        type: 'Compound',
+        operator: { type: 'Identifier', name: meta.innerOperator },
+        args: meta.innerArgs.map(a => ({ type: 'Identifier', name: String(a) }))
+      };
+      return { type: 'Statement', operator: opNode, args: [inner] };
+    }
+    const args = (meta.args || []).map(a => ({ type: 'Identifier', name: String(a) }));
+    return { type: 'Statement', operator: opNode, args };
+  }
+
+  renderMetadataAsFactString(meta) {
+    if (!meta?.operator) return '';
+    const args = Array.isArray(meta.args) ? meta.args : [];
+    if (meta.operator === 'Not' && meta.innerOperator && Array.isArray(meta.innerArgs)) {
+      return `Not (${meta.innerOperator} ${meta.innerArgs.join(' ')})`;
+    }
+    return `${meta.operator}${args.length > 0 ? ` ${args.join(' ')}` : ''}`.trim();
+  }
+
+  renderMetadataAsDsl(meta) {
+    const safe = (tok) => {
+      const s = String(tok ?? '').trim();
+      if (!s) return '';
+      if (/[\s"]/g.test(s)) return `"${s.replace(/\"/g, '\\"')}"`;
+      return s;
+    };
+
+    if (meta?.operator === 'Not' && meta.innerOperator && Array.isArray(meta.innerArgs)) {
+      const inner = [safe(meta.innerOperator), ...meta.innerArgs.map(safe)].filter(Boolean).join(' ');
+      return `Not (${inner})`;
+    }
+
+    const op = safe(meta?.operator);
+    const args = Array.isArray(meta?.args) ? meta.args.map(safe).filter(Boolean) : [];
+    return `${op}${args.length > 0 ? ` ${args.join(' ')}` : ''}`.trim();
+  }
+
+  extractProofText(line) {
+    const s = String(line || '').trim();
+    const idx = s.toLowerCase().indexOf('proof:');
+    if (idx === -1) return s;
+    return s.slice(idx + 'proof:'.length).trim();
+  }
+
+  buildMetaProofSteps(op, explanation, { observed = null, goal = null, cause = null } = {}) {
+    const steps = [];
+    if (op === 'abduce') {
+      const obs = (observed && observed.type === 'Statement')
+        ? this.renderStatementAsFactString(observed)
+        : (observed?.operator ? this.renderMetadataAsFactString(observed) : (observed?.name || null));
+      if (obs) steps.push(`Observed: ${obs}`);
+    }
+    if (goal?.operator) {
+      steps.push(`Goal: ${this.renderMetadataAsFactString(goal)}`);
+    }
+    if (explanation?.rule) steps.push(`Used rule: ${explanation.rule}`);
+    if (explanation?.type === 'causal' && explanation?.explanation) steps.push(explanation.explanation);
+    if (Array.isArray(explanation?.steps)) {
+      for (const s of explanation.steps) {
+        if (typeof s === 'string' && s.trim().length > 0) steps.push(s.trim());
+      }
+    }
+    if (cause) steps.push(`Hypothesis: ${cause}`);
+    const conf = typeof explanation?.score === 'number' ? explanation.score : null;
+    if (conf !== null) steps.push(`confidence=${conf.toFixed(2)}`);
+    return steps;
+  }
+
+  renderStatementAsFactString(stmt) {
+    if (!stmt || typeof stmt !== 'object') return '';
+    const op = stmt.operator?.name || stmt.operator?.value || '';
+    const args = Array.isArray(stmt.args)
+      ? stmt.args.map(a => a?.name || a?.value || (typeof a?.toString === 'function' ? a.toString() : '')).filter(Boolean)
+      : [];
+    return `${op}${args.length > 0 ? ` ${args.join(' ')}` : ''}`.trim();
   }
 
   /**
@@ -620,63 +865,85 @@ export class QueryEngine {
     const affectedFact = knowns[1]; // The fact we're checking
     const componentKB = this.session?.componentKB;
 
-    // Find causal chains from negatedFact to affectedFact
-    const causalPaths = [];
-
     if (componentKB) {
-      // Find all "causes" relations involving negatedFact
+      const affectedName = affectedFact.name;
+      const negatedName = negatedFact.name;
+
       const causeFacts = componentKB.findByOperator('causes');
-      const effectsOfNegated = new Set();
+      const forward = new Map(); // cause -> Set(effect)
+      const reverse = new Map(); // effect -> Set(cause)
 
       for (const fact of causeFacts) {
-        if (fact.args?.[0] === negatedFact.name) {
-          effectsOfNegated.add(fact.args[1]);
-        }
+        const cause = fact.args?.[0];
+        const effect = fact.args?.[1];
+        if (!cause || !effect) continue;
+        if (!forward.has(cause)) forward.set(cause, new Set());
+        forward.get(cause).add(effect);
+        if (!reverse.has(effect)) reverse.set(effect, new Set());
+        reverse.get(effect).add(cause);
       }
 
-      // Check if affectedFact is in the effects chain
-      const affectedName = affectedFact.name;
-      let outcome = 'unchanged';
-      let confidence = 0.5;
+      const MAX_DEPTH = 6;
+      const MAX_PATHS = 3;
 
-      if (effectsOfNegated.has(affectedName)) {
-        // Direct causal link - negating cause negates effect
-        outcome = 'would_fail';
-        confidence = 0.9;
-        causalPaths.push({
-          path: [negatedFact.name, affectedName],
-          type: 'direct_cause'
-        });
-      } else {
-        // Check transitive effects
-        for (const effect of effectsOfNegated) {
-          // Does this effect cause the affected fact?
-          const secondaryFacts = componentKB.findByOperatorAndArg0('causes', effect);
-          for (const sf of secondaryFacts) {
-            if (sf.args?.[1] === affectedName) {
-              outcome = 'would_fail';
-              confidence = 0.85;
-              causalPaths.push({
-                path: [negatedFact.name, effect, affectedName],
-                type: 'transitive_cause'
-              });
+      const findPaths = (start, target) => {
+        if (!start || !target) return [];
+        if (start === target) return [[start]];
+
+        const paths = [];
+        const queue = [{ node: start, path: [start] }];
+        const seenDepth = new Map([[start, 0]]);
+
+        while (queue.length > 0 && paths.length < MAX_PATHS) {
+          const { node, path } = queue.shift();
+          const depth = path.length - 1;
+          if (depth >= MAX_DEPTH) continue;
+          const next = forward.get(node);
+          if (!next) continue;
+          for (const n of next) {
+            if (path.includes(n)) continue;
+            const nextPath = [...path, n];
+            if (n === target) {
+              paths.push(nextPath);
+              continue;
+            }
+            const prevBest = seenDepth.get(n);
+            if (prevBest === undefined || prevBest > nextPath.length) {
+              seenDepth.set(n, nextPath.length);
+              queue.push({ node: n, path: nextPath });
             }
           }
         }
+        return paths;
+      };
+
+      const isReachable = (start, target) => findPaths(start, target).length > 0;
+
+      const paths = findPaths(negatedName, affectedName);
+      const causalPaths = paths.map(path => ({
+        path,
+        type: path.length <= 2 ? 'direct_cause' : 'transitive_cause',
+        confidence: Math.max(0.5, 0.9 - ((path.length - 2) * 0.07))
+      }));
+
+      let outcome = 'unchanged';
+      let confidence = 0.7;
+      if (negatedName === affectedName) {
+        outcome = 'would_fail';
+        confidence = 0.95;
+      } else if (causalPaths.length > 0) {
+        outcome = 'would_fail';
+        confidence = causalPaths[0].confidence;
       }
 
-      // Check for alternative causes that would still produce affectedFact
-      const alternativeCauses = [];
-      for (const fact of causeFacts) {
-        if (fact.args?.[1] === affectedName && fact.args?.[0] !== negatedFact.name) {
-          alternativeCauses.push(fact.args[0]);
-        }
-      }
+      const allAlternativeCauses = [...(reverse.get(affectedName) || new Set())]
+        .filter(c => c !== negatedName);
+      const independentAlternatives = allAlternativeCauses.filter(c => !isReachable(negatedName, c));
 
-      if (alternativeCauses.length > 0 && outcome === 'would_fail') {
-        // There are alternative explanations - outcome is uncertain
+      // If there are independent alternatives, we cannot conclude the effect would fail; it's uncertain.
+      if (outcome === 'would_fail' && independentAlternatives.length > 0) {
         outcome = 'uncertain';
-        confidence = 0.6;
+        confidence = Math.min(confidence, 0.65);
       }
 
       const bindings = new Map();
@@ -685,7 +952,7 @@ export class QueryEngine {
         confidence,
         method: 'whatif',
         causalPaths,
-        alternativeCauses
+        alternativeCauses: independentAlternatives
       });
 
       return {
@@ -698,10 +965,12 @@ export class QueryEngine {
           method: 'whatif',
           proof: {
             operation: 'whatif',
-            negated: negatedFact.name,
+            negated: negatedName,
             affected: affectedName,
             outcome,
-            paths: causalPaths
+            paths: causalPaths,
+            alternativeCauses: independentAlternatives,
+            confidence
           }
         }]
       };

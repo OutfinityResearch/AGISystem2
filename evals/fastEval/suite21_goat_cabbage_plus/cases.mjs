@@ -50,12 +50,12 @@ export const steps = [
       @safeCond And $safe1 $safe2
       @safeCond2 And $safeCond $safe3
       @safeConseq unsafe ?loc
-      implies $safeCond2 $safeConseq
+      Implies $safeCond2 $safeConseq
 
       # Rule: presence of Farmer makes location safe
       @pres1 location Farmer ?loc
       @pres2 safe ?loc
-      implies $pres1 $pres2
+      Implies $pres1 $pres2
 
       # Boat capacity
       boatCapacity Boat Two
@@ -248,12 +248,10 @@ export const steps = [
         start from sWolf
         start from sGoat
         start from sCabbage
-
         goal from gFarmer
         goal from gWolf
         goal from gGoat
         goal from gCabbage
-
         guard from Farmer
         conflictOp from conflicts
         locationOp from location
@@ -267,6 +265,7 @@ export const steps = [
     action: 'query',
     input_nl: 'How many steps are in the computed plan?',
     input_dsl: '@q plan crossingPlan ?len',
+    maxResults: 1,
     expected_nl: [
       'Plan crossingPlan has 7 steps.'
     ],
@@ -277,25 +276,40 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'List the plan steps (shortest valid plan).',
-    input_dsl: '@q planStep crossingPlan ?n ?action',
+    input_nl: 'What is step 1 of the computed plan?',
+    input_dsl: '@q planStep crossingPlan 1 ?action',
+    maxResults: 1,
     expected_nl: [
-      'Step 1 of plan crossingPlan is CrossGoatLR.',
-      'Step 2 of plan crossingPlan is CrossAloneRL.',
-      'Step 3 of plan crossingPlan is CrossWolfLR.',
-      'Step 4 of plan crossingPlan is CrossGoatRL.',
-      'Step 5 of plan crossingPlan is CrossCabbageLR.',
-      'Step 6 of plan crossingPlan is CrossAloneRL.',
+      'Step 1 of plan crossingPlan is CrossGoatLR.'
+    ],
+    proof_nl: [
+      'Fact in KB: Step 1 of plan crossingPlan is CrossGoatLR'
+    ]
+  },
+
+  {
+    action: 'query',
+    input_nl: 'What is step 7 of the computed plan?',
+    input_dsl: '@q planStep crossingPlan 7 ?action',
+    maxResults: 1,
+    expected_nl: [
       'Step 7 of plan crossingPlan is CrossGoatLR.'
     ],
     proof_nl: [
-      'Fact in KB: Step 1 of plan crossingPlan is CrossGoatLR',
-      'Fact in KB: Step 2 of plan crossingPlan is CrossAloneRL',
-      'Fact in KB: Step 3 of plan crossingPlan is CrossWolfLR',
-      'Fact in KB: Step 4 of plan crossingPlan is CrossGoatRL',
-      'Fact in KB: Step 5 of plan crossingPlan is CrossCabbageLR',
-      'Fact in KB: Step 6 of plan crossingPlan is CrossAloneRL',
       'Fact in KB: Step 7 of plan crossingPlan is CrossGoatLR'
+    ]
+  },
+
+  {
+    action: 'query',
+    input_nl: 'Verify the computed plan by simulating it over requires/causes/prevents.',
+    input_dsl: '@q verifyPlan crossingPlan ?ok',
+    maxResults: 1,
+    expected_nl: [
+      'Plan crossingPlan is valid.'
+    ],
+    proof_nl: [
+      'Goals satisfied'
     ]
   },
 
@@ -314,12 +328,10 @@ export const steps = [
         start from i1Goat
         start from i1Wolf
         start from i1Cabbage
-
         goal from gFarmer
         goal from gWolf
         goal from gGoat
         goal from gCabbage
-
         guard from Farmer
         conflictOp from conflicts
         locationOp from location
@@ -331,13 +343,40 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'What is the next action from that intermediate state?',
+    input_nl: 'How many steps are in the intermediate-state plan?',
+    input_dsl: '@q plan nextAfterGoatRight ?len',
+    maxResults: 1,
+    expected_nl: [
+      'Plan nextAfterGoatRight has 6 steps.'
+    ],
+    proof_nl: [
+      'Found 6 plan steps for nextAfterGoatRight'
+    ]
+  },
+
+  {
+    action: 'query',
+    input_nl: 'What is step 1 of the intermediate-state plan?',
     input_dsl: '@q planStep nextAfterGoatRight 1 ?action',
+    maxResults: 1,
     expected_nl: [
       'Step 1 of plan nextAfterGoatRight is CrossAloneRL.'
     ],
     proof_nl: [
       'Fact in KB: Step 1 of plan nextAfterGoatRight is CrossAloneRL'
+    ]
+  },
+
+  {
+    action: 'query',
+    input_nl: 'Verify that the intermediate-state plan is valid.',
+    input_dsl: '@q verifyPlan nextAfterGoatRight ?ok',
+    maxResults: 1,
+    expected_nl: [
+      'Plan nextAfterGoatRight is valid.'
+    ],
+    proof_nl: [
+      'Goals satisfied'
     ]
   },
 
@@ -355,12 +394,10 @@ export const steps = [
         start from i3Goat
         start from i3Wolf
         start from i3Cabbage
-
         goal from gFarmer
         goal from gWolf
         goal from gGoat
         goal from gCabbage
-
         guard from Farmer
         conflictOp from conflicts
         locationOp from location
@@ -372,13 +409,40 @@ export const steps = [
 
   {
     action: 'query',
-    input_nl: 'What is the next action from that intermediate state?',
+    input_nl: 'How many steps are in the later intermediate-state plan?',
+    input_dsl: '@q plan nextAfterWolfRight ?len',
+    maxResults: 1,
+    expected_nl: [
+      'Plan nextAfterWolfRight has 4 steps.'
+    ],
+    proof_nl: [
+      'Found 4 plan steps for nextAfterWolfRight'
+    ]
+  },
+
+  {
+    action: 'query',
+    input_nl: 'What is step 1 of the later intermediate-state plan?',
     input_dsl: '@q planStep nextAfterWolfRight 1 ?action',
+    maxResults: 1,
     expected_nl: [
       'Step 1 of plan nextAfterWolfRight is CrossGoatRL.'
     ],
     proof_nl: [
       'Fact in KB: Step 1 of plan nextAfterWolfRight is CrossGoatRL'
+    ]
+  },
+
+  {
+    action: 'query',
+    input_nl: 'Verify that the intermediate-state plan is valid.',
+    input_dsl: '@q verifyPlan nextAfterWolfRight ?ok',
+    maxResults: 1,
+    expected_nl: [
+      'Plan nextAfterWolfRight is valid.'
+    ],
+    proof_nl: [
+      'Goals satisfied'
     ]
   }
 ];

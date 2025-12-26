@@ -1,6 +1,7 @@
 export const META_OPERATORS = [
   'abduce', 'whatif', 'similar', 'analogy', 'symbolic_analogy',
-  'property_analogy', 'difference', 'induce', 'bundle', 'deduce'
+  'property_analogy', 'difference', 'induce', 'bundle', 'deduce',
+  'explain'
 ];
 
 export const RESERVED_SYMBOLS = new Set([

@@ -68,12 +68,24 @@ export const steps = [
         start from sWriteFile
         start from sDS03
         start from sDS14
-
         goal from gLearnReport
         maxDepth from 6
       end
     `,
     expected_nl: 'Found 1 plan.'
+  },
+
+  {
+    action: 'query',
+    input_nl: 'Verify the learning-report plan is valid by simulating it.',
+    input_dsl: '@q verifyPlan planLearn ?ok',
+    maxResults: 1,
+    expected_nl: [
+      'Plan planLearn is valid.'
+    ],
+    proof_nl: [
+      'Goals satisfied'
+    ]
   },
 
   {
@@ -176,12 +188,24 @@ export const steps = [
         start from sWriteFile
         start from sDS03
         start from sDS14
-
         goal from gEvalReport
         maxDepth from 6
       end
     `,
     expected_nl: 'Found 1 plan.'
+  },
+
+  {
+    action: 'query',
+    input_nl: 'Verify the eval-report plan is valid by simulating it.',
+    input_dsl: '@q verifyPlan planEval ?ok',
+    maxResults: 1,
+    expected_nl: [
+      'Plan planEval is valid.'
+    ],
+    proof_nl: [
+      'Goals satisfied'
+    ]
   },
 
   {

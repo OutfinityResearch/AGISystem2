@@ -1,215 +1,215 @@
-# Semantic Unification (DS19) — Plan de implementare
+# Semantic Unification (DS19) — Implementation Plan
 
-**Status:** draft, plan de lucru (non-normativ)  
-**Leagă:** `docs/specs/DS/DS19-Semantic-Unification.md`  
-**Scop:** să ajungem la canonicalizare + „proof real” pentru ambele motoare (symbolicPriority și holographicPriority)
-
----
-
-## 1) Rezultatul dorit (ce înseamnă „done”)
-
-1. Orice input DSL (learn/prove/query) trece printr-o **canonicalizare unică**, deterministă.
-2. **Fapte echivalente semantic** (definite pe căi diferite) ajung la aceeași reprezentare canonicală:
-   - metadata canonicală identică (operator/args normalizate),
-   - vectori HDC identici sau explicabil echivalenți printr-un pas canonical (de ex. alias-map).
-3. `Session.prove(...)` returnează **un proof object verificabil** (validabil offline) pentru:
-   - reasoning simbolic,
-   - reasoning holografic (HDC-first) cu pas explicit de validare simbolică.
-4. Proprietățile de relații (transitivitate/simetrie/reflexivitate/…​) sunt **theory-driven** (din `config/Core/*.sys2` încărcate), nu din liste JS hardcodate sau fallback-uri opace.
-5. Există teste DS19 care blochează regresii (canonical equivalence, proof validation, dual-engine consistency).
+**Status:** draft, working plan (non-normative)  
+**Links:** `docs/specs/DS/DS19-Semantic-Unification.md`  
+**Goal:** reach canonicalization + “proof-real” outputs for both engines (symbolicPriority and holographicPriority)
 
 ---
 
-## 2) Ce am verificat în cod (starea curentă, pe scurt)
+## 1) Target outcome (definition of “done”)
 
-| Zonă | Observație | De ce contează pentru DS19 |
+1. Any DSL input (learn/prove/query) goes through a **single deterministic canonicalization** step.
+2. **Semantically equivalent facts** (encoded through different DSL forms) end up in the same canonical representation:
+   - identical canonical metadata (normalized operator/args),
+   - identical HDC vectors, or equivalently explainable via an explicit canonical step (e.g., alias-map).
+3. `Session.prove(...)` returns a **verifiable proof object** (offline-validatable) for:
+   - symbolic reasoning,
+   - holographic reasoning (HDC-first) with an explicit symbolic validation step.
+4. Relation properties (transitive/symmetric/reflexive/…) are **theory-driven** (derived from loaded `config/Core/*.sys2`), not from hardcoded JS lists or opaque fallbacks.
+5. DS19 tests exist to prevent regressions (canonical equivalence, proof validation, dual-engine consistency).
+
+---
+
+## 2) Current code check (short status)
+
+| Area | Observation | Why it matters for DS19 |
 |---|---|---|
-| `src/runtime/executor.mjs` | Construiește vectori + metadata (în unele locuri) dar NU are o etapă explicită de canonicalizare AST/metadata înainte de commit. | Fapte echivalente pot ajunge la vectori/metadata diferite, deci „semantic unification” se rupe. |
-| `src/reasoning/prove.mjs` + `src/reasoning/holographic/prove-hdc-first.mjs` | Returnează rezultate cu `steps`, `confidence`, `method`, dar nu un proof schema unificat + validator robust. | DS19 cere „proof real” identic ca schemă între motoare. |
-| `src/reasoning/transitive.mjs` | Încarcă unele relații din `config/Core/00-relations.sys2`, dar are și un `defaults` hardcodat. | DS19 cere theory-driven fără hardcodări care schimbă semantica. |
-| `config/Core/*.sys2` | Există definiții de relații/roluri/proprietăți și macro-uri (graphs). | Putem extrage meta-informații din theory pentru canonicalizare (alias, properties, templates). |
+| `src/runtime/executor.mjs` | Builds vectors + metadata, but lacks an explicit canonicalization stage for AST/metadata before committing facts. | Equivalent facts can end up with different vectors/metadata → breaks “semantic unification”. |
+| `src/reasoning/prove.mjs` + `src/reasoning/holographic/prove-hdc-first.mjs` | Returns results with `steps`, `confidence`, `method`, but no unified proof schema + robust validator. | DS19 requires “proof real” with the same schema across engines. |
+| `src/reasoning/transitive.mjs` | Loads some relation properties from `config/Core/00-relations.sys2`, but also uses hardcoded defaults. | DS19 requires theory-driven properties without semantic-changing hardcoding. |
+| `config/Core/*.sys2` | Contains relations/roles/properties and macros (graphs). | We can extract theory metadata for canonicalization (alias, properties, templates). |
 
 ---
 
-## 3) Arhitectură țintă (componente noi / refactor)
+## 3) Target architecture (new components / refactor)
 
-### 3.1 Module propuse
+### 3.1 Proposed modules
 
-| Modul | Rol | Integrare |
+| Module | Role | Integration |
 |---|---|---|
-| `src/runtime/canonicalize.mjs` | Canonicalizează AST-ul și metadata: alias/synonym, Not normalization, typed atoms, macro normalization. | Apelat în `Session.learn`, `Session.query`, `Session.prove` înainte de execuție/proving. |
-| `src/runtime/semantic-index.mjs` | Index determinist derivat din theories: operator properties, alias-map, templates, semantic classes. | Populat la încărcarea core theories; folosit de canonicalizer + reasoners. |
-| `src/runtime/builtins.mjs` | Implementarea executabilă a L0 `___*` (NewVector/Bind/Bundle/Similarity/MostSimilar/…). | Folosit de executor (learn-time) și de macro-expansion dacă apar builtins în theory. |
-| `src/reasoning/proof-schema.mjs` | Definește schema (shape) unificată a proof object + helperi de construire. | Folosit de ambele motoare + validator. |
-| `src/reasoning/proof-validator.mjs` | Verifică proof object: referințe fact/rule, pași transitive, sinonime, defaults, negation. | Folosit în mod debug/CI/test; opțional și în runtime (flag). |
+| `src/runtime/canonicalize.mjs` | Canonicalizes AST + metadata: alias/synonym, Not normalization, typed atoms, macro normalization. | Called in `Session.learn`, `Session.query`, `Session.prove` before execution/proving. |
+| `src/runtime/semantic-index.mjs` | Deterministic index derived from theories: operator properties, alias-map, templates, semantic classes. | Built while loading core theories; used by canonicalizer + reasoners. |
+| `src/runtime/builtins.mjs` | Executable L0 `___*` implementations (NewVector/Bind/Bundle/Similarity/MostSimilar/…). | Used by executor (learn-time) and macro-expansion if theories use builtins. |
+| `src/reasoning/proof-schema.mjs` | Defines the unified proof-object schema + builder helpers. | Used by both engines + the validator. |
+| `src/reasoning/proof-validator.mjs` | Validates proof objects: fact/rule references, transitive steps, synonyms, defaults, negation. | Used in debug/CI/tests; optionally in runtime (flag). |
 
-### 3.2 Fluxuri țintă
+### 3.2 Target flows
 
 1. **Learn**
    - parse DSL → AST
-   - canonicalize AST (semantic index) → canonical AST + canonical metadata
-   - executor evaluează builtins L0 (dacă apar) și persistă fapte cu metadata canonicală stabilă
+   - canonicalize AST (via semantic index) → canonical AST + canonical metadata
+   - executor evaluates L0 builtins (if present) and persists facts with stable canonical metadata
 2. **Prove/Query**
-   - parse goal → canonicalize goal (aceleași reguli ca la learn)
-   - rule engine lucrează cu metadata canonicală (și cu alias-map când e necesar)
-   - returnează proof object conform `proof-schema`
-   - validator poate revalida proof fără re-run (replayable)
+   - parse goal → canonicalize goal (same rules as Learn)
+   - rule engine operates on canonical metadata (and alias-map when needed)
+   - returns a proof object conforming to `proof-schema`
+   - validator can re-check the proof without rerunning the search (replayable)
 
 ---
 
-## 4) Workstreams (paralelizabile)
+## 4) Workstreams (parallelizable)
 
-### WS-A — Meta-model în theory (config/Core)
+### WS-A — Meta-model in theory (config/Core)
 
-**Obiectiv:** să putem exprima în `*.sys2` (și să extragem) meta-informațiile necesare canonicalizării.
+**Objective:** express (and extract from) `*.sys2` the metadata needed for canonicalization.
 
 Deliverables:
-- convenție minimă pentru:
-  - `__TransitiveRelation`, `__SymmetricRelation`, `__ReflexiveRelation`, `__InheritableProperty` (deja există),
-  - `synonym` (deja există ca macro/rol) + definirea unui *canonical representative* (ex: `@canonicalName`),
-  - tipizare pentru atomi (ex: `__Person`, `__Place`, …) și constructori canonici (ex: `__Named`),
-  - template-uri de macro canonicale pe semantic classes (ex: Communication).
+- minimal convention for:
+  - `__TransitiveRelation`, `__SymmetricRelation`, `__ReflexiveRelation`, `__InheritableProperty` (already exist),
+  - `synonym` (already exists as macro/role) + defining a *canonical representative* (e.g., `@canonicalName`),
+  - typed atoms (e.g., `__Person`, `__Place`, …) and canonical constructors (e.g., `__Named`),
+  - canonical macro templates per semantic class (e.g., Communication).
 
 ### WS-B — Canonicalizer + SemanticIndex (runtime)
 
-**Obiectiv:** un singur loc care decide „cum arată canonical”.
+**Objective:** a single place that decides “what canonical looks like”.
 
 Deliverables:
-- `SemanticIndex` populat determinist din core theories încărcate (fără heuristici hardcodate).
+- `SemanticIndex` populated deterministically from loaded core theories (no hardcoded heuristics).
 - Canonicalizer care:
-  - normalizează `Not`,
-  - aplică alias/synonym mapping,
-  - aplică canonical macro templates (sau respinge în `enforceCanonical`),
-  - normalizează nume + tipuri pentru atomi (disciplină de atom).
+  - normalizes `Not`,
+  - applies alias/synonym mapping,
+  - applies canonical macro templates (or rejects in `enforceCanonical`),
+  - normalizes atom names + types (atom discipline).
 
-### WS-C — Execuție builtins L0 `___*` (runtime/executor)
+### WS-C — Executable L0 builtins `___*` (runtime/executor)
 
-**Obiectiv:** dacă theory folosește `___*`, runtime trebuie să execute sau să dea eroare determinist.
+**Objective:** if a theory uses `___*`, runtime must execute it or fail deterministically.
 
 Deliverables:
 - map `builtinName -> function` cu:
-  - truthy parsing consistent pentru flags (ex: debug / strict modes),
-  - determinism pentru `___NewVector(name, theoryId)` (seeded).
+  - consistent truthy parsing for flags (e.g., debug / strict modes),
+  - determinism for `___NewVector(name, theoryId)` (seeded).
 
 ### WS-D — Proof schema unificat + validator (reasoning)
 
-**Obiectiv:** „proof real” comun între motoare.
+**Objective:** a shared “proof-real” format across engines.
 
 Deliverables:
 - schema + `ProofBuilder`
-- `ProofValidator` (offline, fără căutare) care verifică:
-  - pași `fact` referă KB entries (prin `id` sau metadata canonicală),
-  - pași `rule` referă reguli `Implies` existente,
-  - `transitive` chain e justificat de property din semantic index,
-  - `synonym` step justificat de synonym/alias mapping,
-  - `validation` step prezent în holographic mode.
+- `ProofValidator` (offline, no search) that verifies:
+  - `fact` steps reference KB entries (via `id` or canonical metadata),
+  - `rule` steps reference existing `Implies` rules,
+  - `transitive` chains are justified by a property from the semantic index,
+  - `synonym` steps are justified by synonym/alias mapping,
+  - a `validation` step is present in holographic mode.
 
 ### WS-E — Teste + EvalSuite hooks
 
-**Obiectiv:** să blocăm divergentele și să putem măsura progresul.
+**Objective:** prevent divergence and measure progress.
 
 Deliverables:
-- teste unit (DS19) pentru:
+- unit tests (DS19) for:
   - canonical equivalence,
   - proof validation,
   - dual-engine consistency.
-- ulterior: scenarii EvalSuite care verifică canonical/proof invariants pe seturi mari.
+- later: EvalSuite scenarios that validate canonical/proof invariants at larger scale.
 
 ---
 
-## 5) Roadmap fazat (cu dependențe & criterii de ieșire)
+## 5) Phased roadmap (dependencies & exit criteria)
 
-### Faza 0 — Stabilizare interfețe (1–2 zile)
+### Phase 0 — Stabilize interfaces (1–2 days)
 
 | Task | Depinde de | Output |
 |---|---|---|
-| Definește `proof-schema` minim (structură + tipuri) | nimic | `src/reasoning/proof-schema.mjs` |
-| Definește API `SemanticIndex` (ce proprietăți expune) | nimic | `src/runtime/semantic-index.mjs` (schelet) |
-| Adaugă teste DS19 ca `todo` (nu blochează CI încă) | nimic | fișiere noi în `tests/unit/semantic-unification/` |
+| Define minimal `proof-schema` (structure + types) | none | `src/reasoning/proof-schema.mjs` |
+| Define the `SemanticIndex` API (exposed properties) | none | `src/runtime/semantic-index.mjs` (skeleton) |
+| Add DS19 tests as `todo` (do not block CI yet) | none | new files under `tests/unit/semantic-unification/` |
 
 Exit:
-- testele DS19 există și rulează (todo), fără import errors.
+- DS19 tests exist and run (todo), with no import errors.
 
-### Faza 1 — SemanticIndex real (2–4 zile)
+### Phase 1 — Real SemanticIndex (2–4 days)
 
 | Task | Depinde de | Modificări probabile |
 |---|---|---|
-| Încarcă/parcurge core theories pentru meta (relations/synonyms/templates) | Faza 0 | `src/runtime/semantic-index.mjs`, `src/runtime/session.mjs` |
-| Elimină fallback-ul hardcodat pentru relation properties (sau îl face explicit „dev-only”) | cache funcțional | `src/reasoning/transitive.mjs`, `src/reasoning/*` |
+| Load/scan core theories for meta (relations/synonyms/templates) | Phase 0 | `src/runtime/semantic-index.mjs`, `src/runtime/session.mjs` |
+| Remove the hardcoded fallback for relation properties (or make it explicitly “dev-only”) | working cache | `src/reasoning/transitive.mjs`, `src/reasoning/*` |
 
 Exit:
-- `TRANSITIVE_RELATIONS` și similar vin din cache derivat din theories încărcate.
+- `TRANSITIVE_RELATIONS` and similar come from a cache derived from loaded theories.
 
-### Faza 2 — Canonicalizer (3–6 zile)
+### Phase 2 — Canonicalizer (3–6 days)
 
 | Task | Depinde de | Modificări probabile |
 |---|---|---|
-| Canonicalizează `Not` (ref vs inline) într-o reprezentare unică | Faza 1 | `src/runtime/canonicalize.mjs`, `src/runtime/executor.mjs` |
-| Canonicalizează alias/synonym (metadata + proof steps) | Faza 1 | `src/runtime/canonicalize.mjs`, `src/reasoning/*` |
-| Canonicalizează atomi tipizați (disciplină `__*`/`___*`) | Faza 1 | `config/Core/00-types.sys2`, `config/Core/02-constructors.sys2`, canonicalizer |
+| Canonicalize `Not` (ref vs inline) into a single representation | Phase 1 | `src/runtime/canonicalize.mjs`, `src/runtime/executor.mjs` |
+| Canonicalize alias/synonym (metadata + proof steps) | Phase 1 | `src/runtime/canonicalize.mjs`, `src/reasoning/*` |
+| Canonicalize typed atoms (`__*`/`___*` discipline) | Phase 1 | `config/Core/00-types.sys2`, `config/Core/02-constructors.sys2`, canonicalizer |
 
 Exit:
-- două formulări DSL echivalente produc metadata canonicală identică (test DS19 devine activ).
+- two equivalent DSL formulations produce identical canonical metadata (DS19 test becomes active).
 
-### Faza 3 — Builtins L0 executabile (2–5 zile)
+### Phase 3 — Executable L0 builtins (2–5 days)
 
 | Task | Depinde de | Modificări probabile |
 |---|---|---|
-| Introdu executor builtins map pentru `___*` | Faza 2 | `src/runtime/builtins.mjs`, `src/runtime/executor.mjs` |
-| Fail-fast dacă apare builtin necunoscut | Faza 2 | `src/runtime/executor.mjs` |
-| Determinism pentru `___NewVector` (seeded) | Faza 2 | `src/runtime/builtins.mjs` |
+| Introduce executor builtins map for `___*` | Phase 2 | `src/runtime/builtins.mjs`, `src/runtime/executor.mjs` |
+| Fail-fast on unknown builtin | Phase 2 | `src/runtime/executor.mjs` |
+| Determinism for `___NewVector` (seeded) | Phase 2 | `src/runtime/builtins.mjs` |
 
 Exit:
-- core theories pot folosi `___*` fără să „bage garbage vectors” silent.
+- core theories can use `___*` without silently producing garbage vectors.
 
-### Faza 4 — Proof unificat + Validator (4–8 zile)
+### Phase 4 — Unified proof + Validator (4–8 days)
 
 | Task | Depinde de | Modificări probabile |
 |---|---|---|
-| Unifică output-ul dintre `ProofEngine` și `HolographicProofEngine` | Faza 0/2 | `src/reasoning/prove.mjs`, `src/reasoning/holographic/prove-hdc-first.mjs` |
+| Unify outputs between `ProofEngine` and `HolographicProofEngine` | Phase 0/2 | `src/reasoning/prove.mjs`, `src/reasoning/holographic/prove-hdc-first.mjs` |
 | Implement `ProofValidator` (replayable) | schema stabilă | `src/reasoning/proof-validator.mjs` |
-| Introdu `validation` step obligatoriu în holographic mode | unificare | `src/reasoning/holographic/prove-hdc-first.mjs` |
+| Introduce a mandatory `validation` step in holographic mode | unification | `src/reasoning/holographic/prove-hdc-first.mjs` |
 
 Exit:
-- `validate(proof, sessionSnapshot)` întoarce true pentru rezultate valide; teste DS19 devin active.
+- `validate(proof, sessionSnapshot)` returns true for valid results; DS19 tests become active.
 
-### Faza 5 — Activare treptată + EvalSuite (continuă)
+### Phase 5 — Gradual enablement + EvalSuite (ongoing)
 
 | Task | Depinde de | Output |
 |---|---|---|
-| Feature flag `SYS2_CANONICAL=1` + `SYS2_PROOF_VALIDATE=1` | Faze 2/4 | modificări runtime |
-| Migrare incrementală a theory files către noile convenții | Faza 2/3 | `config/Core/*.sys2` |
-| Scenarii FastEval pentru canonical/proof invariants | Faze 2/4 | `evals/fastEval/*` |
+| Feature flags `SYS2_CANONICAL=1` + `SYS2_PROOF_VALIDATE=1` | Phases 2/4 | runtime changes |
+| Incremental migration of theory files to the new conventions | Phase 2/3 | `config/Core/*.sys2` |
+| FastEval scenarios for canonical/proof invariants | Phases 2/4 | `evals/fastEval/*` |
 
 Exit:
-- canonical/proof validate ON by default în CI.
+- canonical/proof validation ON by default in CI.
 
 ---
 
-## 6) Propuneri concrete de schimbări în `config/Core/*` (minim necesar pentru DS19)
+## 6) Concrete proposed changes in `config/Core/*` (minimum for DS19)
 
-| Fișier | Schimbare propusă | Motiv DS19 |
+| File | Proposed change | DS19 rationale |
 |---|---|---|
-| `config/Core/00-relations.sys2` | Adăugare meta pentru proprietăți (ex: `__TransitiveRelation` deja) + eventual un „registry” de properties consumabil de cache (format stabil). | Reasoner trebuie să citească properties din theory, nu din JS. |
-| `config/Core/10-properties.sys2` | Clarificare/standardizare `synonym` (ce e canonical vs alias) + reguli de proof step pentru alias expansion. | Sinonimele trebuie să devină pași expliciți în proof. |
-| `config/Core/02-constructors.sys2` | Introducere/standardizare constructori pentru atomi tipizați (ex: `__Named`, `__TypedAtom`). | Evităm atomi high-level arbitrar; impunem disciplină. |
-| `config/Core/05-logic.sys2` | Standardizare reprezentare `Not` (și ce înseamnă negation-as-failure în core). | Negation canonicală și validabilă. |
-| `config/Core/12-reasoning.sys2` | Template-uri canonice pentru macro-urile de reasoning (și semantic classes), folosite de canonicalizer. | „Aceeași semnificație → aceeași formă canonicală”. |
+| `config/Core/00-relations.sys2` | Add meta for relation properties (e.g., `__TransitiveRelation` already exists) + optionally a stable “registry” format consumable by a cache. | Reasoner must read properties from theory, not JS. |
+| `config/Core/10-properties.sys2` | Clarify/standardize `synonym` (canonical vs alias) + proof-step rules for alias expansion. | Synonyms must become explicit proof steps. |
+| `config/Core/02-constructors.sys2` | Introduce/standardize typed atom constructors (e.g., `__Named`, `__TypedAtom`). | Avoid arbitrary high-level atoms; enforce discipline. |
+| `config/Core/05-logic.sys2` | Standardize `Not` representation (and what negation-as-failure means in Core). | Canonical, validatable negation. |
+| `config/Core/12-reasoning.sys2` | Canonical templates for reasoning macros (and semantic classes), used by the canonicalizer. | “Same meaning → same canonical form”. |
 
 ---
 
-## 7) Cum transformăm testele DS19 din `todo` în „active”
+## 7) Turning DS19 tests from `todo` into “active”
 
-1. Faza 0: testele sunt `todo` (doar definesc cerința).
-2. După Faza 2: activezi testele de canonicalization (unskip).
-3. După Faza 4: activezi testele de proof validation + dual-engine consistency.
+1. Phase 0: tests are `todo` (they define the requirement).
+2. After Phase 2: enable canonicalization tests (unskip).
+3. After Phase 4: enable proof validation + dual-engine consistency tests.
 
 ---
 
-## 8) Riscuri (și cum le controlăm)
+## 8) Risks (and how we control them)
 
-| Risc | Simptom | Mitigare |
+| Risk | Symptom | Mitigation |
 |---|---|---|
-| Canonicalizer schimbă masiv comportamentul | testele existente se rup | feature flag + compat layer: acceptă vechi forme, dar rescrie la canonical; log warnings. |
-| ProofValidator prea strict / incomplet | false negatives | începe minimal (fact/rule/transitive), extinde incremental; în proof păstrezi `detail` suficient. |
-| Alias/synonym creează ambiguitate | două canonical candidates | impune „canonical representative” în theory sau o regulă de tie-break deterministă. |
+| Canonicalizer changes behavior significantly | existing tests break | feature flag + compat layer: accept old forms, rewrite to canonical; log warnings. |
+| ProofValidator too strict / incomplete | false negatives | start minimal (fact/rule/transitive), extend incrementally; preserve enough `detail` in proof. |
+| Alias/synonym ambiguity | two canonical candidates | require a “canonical representative” in theory or a deterministic tie-break rule. |

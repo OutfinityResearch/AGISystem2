@@ -452,6 +452,15 @@ export class Session {
    * Generate natural language text
    */
   generateText(operator, args) {
+    // Plan verification meta-operator: verifyPlan <planName> <true|false>
+    if (operator === 'verifyPlan' && Array.isArray(args) && args.length === 2) {
+      const [planName, okRaw] = args;
+      const ok = String(okRaw ?? '').toLowerCase();
+      if (ok === 'true' || ok === 'valid') return `Plan ${planName} is valid.`;
+      if (ok === 'false' || ok === 'invalid') return `Plan ${planName} is invalid.`;
+      return `Plan ${planName} verification result: ${okRaw}.`;
+    }
+
     // DS19: helper for multi-variable extraction from CSP solutions.
     // cspTuple <relation> <entity1> <value1> <entity2> <value2> ...
     if (operator === 'cspTuple' && Array.isArray(args) && args.length >= 3) {

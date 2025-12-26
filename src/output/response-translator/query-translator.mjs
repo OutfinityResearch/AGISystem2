@@ -217,6 +217,18 @@ export class QueryTranslator extends BaseTranslator {
       if (typeof step !== 'string') continue;
       const s = step.trim();
       if (!s) continue;
+      // Keep already-human proof traces (e.g., planning verification) as-is.
+      if (
+        /^Loaded plan\b/i.test(s) ||
+        /^Start:/i.test(s) ||
+        /^Step\s+\d+:/i.test(s) ||
+        /^Goals?\s+satisfied\b/i.test(s) ||
+        /^Goals?\s+not\s+satisfied\b/i.test(s) ||
+        /^Missing:/i.test(s)
+      ) {
+        out.push(s.replace(/[.!?]+$/, ''));
+        continue;
+      }
       if (/^applied\s+rule:/i.test(s) || /\b@\w+\b/.test(s)) {
         out.push(s.replace(/[.!?]+$/, ''));
         continue;
@@ -244,6 +256,20 @@ export class QueryTranslator extends BaseTranslator {
     if (raw.some(s => typeof s === 'string' && /\bApplied\s+rule:\s*Implies\b/i.test(s))) return true;
     const steps = this.normalizeProofSteps(proofSteps);
     if (steps.length === 0) return true;
+    // If we already have an explicit CSP/constraint satisfaction explanation, don't "upgrade" it
+    // into a generic prove() proof (which would drop the constraint context).
+    const looksLikeConstraintExplanation = steps.some(s =>
+      typeof s === 'string' &&
+      (/\ballDifferent\b/i.test(s) ||
+        /\bnoConflict\b/i.test(s) ||
+        /\bconflictsWith\b/i.test(s) ||
+        /\bconflicts\b/i.test(s) ||
+        /\bconstraint\b/i.test(s) ||
+        /\bcsp\b/i.test(s))
+    );
+    if (looksLikeConstraintExplanation && steps.some(s => typeof s === 'string' && /\bsatisfied\b/i.test(s))) {
+      return false;
+    }
     if (steps.length <= 2) return true;
     if (steps.some(s => /\bApplied rule:\s*Implies\b/i.test(s))) return true;
     if (!steps.some(s => /\bcondition satisfied\b/i.test(s)) && steps.some(s => /\bApplied rule:\b/i.test(s))) return true;
@@ -332,7 +358,10 @@ export class QueryTranslator extends BaseTranslator {
 	        }
 	        if (entryIsHdc) return { answer: null, proof: [] };
 	      }
-	      return { answer: generatedText, proof: normalized };
+	      const filtered = normalized.length > 1
+	        ? normalized.filter(s => normalizeSentence(s) !== normalizeSentence(generatedText))
+	        : normalized;
+	      return { answer: generatedText, proof: filtered };
 	    }
 
     const planProof = this.buildPlanMetaProof(op, args);

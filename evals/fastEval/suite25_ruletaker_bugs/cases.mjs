@@ -40,7 +40,7 @@ export const steps = [
     input_nl: 'Verify: Harry is big (positive fact exists)',
     input_dsl: '@goal hasProperty Harry big',
     expected_nl: 'True: Harry has big.',
-    proof_nl: 'Harry has big'
+    proof_nl: 'Fact in KB: Harry has big'
   },
 
   // This is the bug: when we ask to prove Not(hasProperty Harry big),
@@ -53,7 +53,7 @@ export const steps = [
     // so this must be a single goal statement (no intermediate @neg bindings).
     input_dsl: '@goal Not (hasProperty Harry big)',
     expected_nl: 'Cannot prove: Not',
-    proof_nl: 'Not'
+    proof_nl: 'No Not facts'
   },
 
   // CWA behavior: Not(P) is TRUE when P is absent from KB.
@@ -89,7 +89,7 @@ export const steps = [
     input_nl: 'Verify: Charlie is quiet (antecedent is TRUE)',
     input_dsl: '@goal hasProperty Charlie quiet',
     expected_nl: 'True: Charlie has quiet.',
-    proof_nl: 'Charlie has quiet'
+    proof_nl: 'Fact in KB: Charlie has quiet'
   },
 
   // This is the bug: A->B exists, A is true, but B cannot be proved!
@@ -174,7 +174,7 @@ export const steps = [
     input_nl: 'Verify: Tom is smart (positive)',
     input_dsl: '@goal hasProperty Tom smart',
     expected_nl: 'True: Tom has smart.',
-    proof_nl: 'Tom has smart'
+    proof_nl: 'Fact in KB: Tom has smart'
   },
 
   // This test verifies that Not(P) is correctly unprovable when P is true

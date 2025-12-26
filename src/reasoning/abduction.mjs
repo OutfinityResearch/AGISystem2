@@ -46,17 +46,18 @@ export class AbductionEngine {
 
     const explanations = [];
 
-    // Build observation vector
+    // Build observation vector (kept for HDC analogical fallback)
     const obsVec = this.session.executor.buildStatementVector(observation);
-    const obsStr = observation.toString?.() || '';
+    const obsStr = observation.toString?.() || this.statementToString(observation);
 
-    // Strategy 1: Find rules where conclusion matches observation
+    // Strategy 1: Find rules where conclusion unifies with the observation
     for (const rule of this.session.rules) {
       const match = this.matchRuleConclusion(rule, obsVec, observation);
       if (match.score > minConfidence) {
+        const hypothesis = this.extractHypothesis(rule, match.bindings);
         explanations.push({
           type: 'rule_backward',
-          hypothesis: this.extractHypothesis(rule),
+          hypothesis,
           rule: rule.name,
           score: match.score,
           bindings: match.bindings,
@@ -66,7 +67,7 @@ export class AbductionEngine {
     }
 
     // Strategy 2: Find causal chains that lead to observation
-    const causalExplanations = this.findCausalChains(observation, obsVec);
+    const causalExplanations = this.findCausalChains(observation);
     explanations.push(...causalExplanations);
 
     // Strategy 3: Find similar KB facts as analogical explanations
@@ -96,22 +97,21 @@ export class AbductionEngine {
       return { score: 0, bindings: null };
     }
 
-    // Vector similarity check
+    // Prefer symbolic unification when available.
+    let bindings = null;
+    if (rule.conclusionAST) {
+      bindings = this.tryUnify(rule.conclusionAST, observation);
+      if (bindings) {
+        return { score: 0.92, bindings };
+      }
+    }
+
+    // Fallback: vector similarity check
     this.session.reasoningStats.similarityChecks++;
     const sim = similarity(rule.conclusion, obsVec);
-    if (sim < this.thresholds.SIMILARITY) {
-      return { score: 0, bindings: null };
-    }
+    if (sim < this.thresholds.SIMILARITY) return { score: 0, bindings: null };
 
-    // Try unification if rule has variables
-    let bindings = null;
-    if (rule.hasVariables && rule.conclusionAST) {
-      bindings = this.tryUnify(rule.conclusionAST, observation);
-    }
-
-    // Score based on similarity and binding success
-    const bindingBonus = bindings ? 0.2 : 0;
-    const score = Math.min(1.0, sim + bindingBonus);
+    const score = Math.min(1.0, sim);
 
     return { score, bindings };
   }
@@ -120,9 +120,10 @@ export class AbductionEngine {
    * Extract hypothesis (condition) from rule
    * @private
    */
-  extractHypothesis(rule) {
+  extractHypothesis(rule, bindings = null) {
     if (rule.conditionAST) {
-      return rule.conditionAST.toString?.() || 'condition';
+      const grounded = bindings ? this.groundAst(rule.conditionAST, bindings) : null;
+      return grounded?.toString?.() || grounded || rule.conditionAST.toString?.() || 'condition';
     }
     return rule.source || 'hypothesis';
   }
@@ -185,33 +186,64 @@ export class AbductionEngine {
    * Find causal chains leading to observation
    * @private
    */
-  findCausalChains(observation, obsVec) {
+  findCausalChains(observation) {
     const explanations = [];
-    const opName = observation.operator?.name || observation.operator?.value;
 
-    // Look for "causes" relations that lead to this
-    if (opName) {
-      for (const fact of this.session.kbFacts) {
-        this.session.reasoningStats.kbScans++;
-        const meta = fact.metadata;
-        if (meta?.operator === 'causes' && meta.args?.length >= 2) {
-          // Check if effect matches observation
-          const effectName = meta.args[1];
-          if (effectName === opName || this.matchesObservation(effectName, observation)) {
-            explanations.push({
-              type: 'causal',
-              hypothesis: `${meta.args[0]} causes ${effectName}`,
-              cause: meta.args[0],
-              effect: effectName,
-              score: this.thresholds.ABDUCTION_SCORE,
-              explanation: `Causal chain: ${meta.args[0]} → ${effectName}`
-            });
-          }
+    const observedEvent = this.extractObservedEvent(observation);
+    if (!observedEvent) return explanations;
+
+    const componentKB = this.session?.componentKB;
+    const causeFacts = componentKB
+      ? componentKB.findByOperator('causes')
+      : (this.session.kbFacts || []).map(f => f?.metadata).filter(m => m?.operator === 'causes');
+
+    const reverse = new Map(); // effect -> Set(cause)
+    for (const fact of causeFacts) {
+      const args = fact?.args || [];
+      const cause = args[0];
+      const effect = args[1];
+      if (!cause || !effect) continue;
+      if (!reverse.has(effect)) reverse.set(effect, new Set());
+      reverse.get(effect).add(cause);
+    }
+
+    const MAX_DEPTH = 6;
+    const MAX_EXPLANATIONS = 6;
+
+    const queue = [{ node: observedEvent, path: [observedEvent] }];
+    const visited = new Set([observedEvent]);
+
+    while (queue.length > 0 && explanations.length < MAX_EXPLANATIONS) {
+      const { node, path } = queue.shift();
+      const depth = path.length - 1;
+      if (depth >= MAX_DEPTH) continue;
+
+      const causes = reverse.get(node);
+      if (!causes) continue;
+      for (const c of causes) {
+        if (path.includes(c)) continue;
+        const nextPath = [c, ...path];
+        const score = Math.max(0.4, 0.9 - ((nextPath.length - 2) * 0.07));
+        explanations.push({
+          type: 'causal',
+          hypothesis: `${c} causes ${observedEvent}`,
+          cause: c,
+          effect: observedEvent,
+          score,
+          steps: [`Causal path: ${nextPath.join(' → ')}`],
+          explanation: `Causal path: ${nextPath.join(' → ')}`
+        });
+
+        if (!visited.has(c)) {
+          visited.add(c);
+          queue.push({ node: c, path: nextPath });
         }
       }
     }
 
-    return explanations;
+    // Prefer shorter paths.
+    explanations.sort((a, b) => b.score - a.score);
+    return explanations.slice(0, MAX_EXPLANATIONS);
   }
 
   /**
@@ -222,6 +254,55 @@ export class AbductionEngine {
     const obsOp = observation.operator?.name || observation.operator?.value;
     const obsArg = observation.args?.[0]?.name || observation.args?.[0]?.value;
     return name === obsOp || name === obsArg;
+  }
+
+  extractObservedEvent(observation) {
+    if (!observation || typeof observation !== 'object') return null;
+    const op = observation.operator?.name || observation.operator?.value;
+    const args = observation.args || [];
+
+    if (op === 'observed' && args.length >= 1) {
+      const a0 = args[0];
+      return a0?.name || a0?.value || null;
+    }
+
+    // Treat arity-0 statements as atomic events (e.g., WetGrass).
+    if (op && Array.isArray(args) && args.length === 0) return op;
+
+    // Otherwise, abduction-by-causality is undefined unless a theory maps the structured proposition.
+    return null;
+  }
+
+  statementToString(stmt) {
+    if (!stmt || typeof stmt !== 'object') return '';
+    const op = stmt.operator?.name || stmt.operator?.value || '';
+    const args = Array.isArray(stmt.args) ? stmt.args.map(a => a?.name || a?.value || '').filter(Boolean) : [];
+    return `${op}${args.length > 0 ? ` ${args.join(' ')}` : ''}`.trim();
+  }
+
+  groundAst(ast, bindings) {
+    if (!ast || typeof ast !== 'object' || !(bindings instanceof Map)) return null;
+
+    const clone = (node) => {
+      if (!node || typeof node !== 'object') return node;
+      if (node.type === 'Hole') {
+        const bound = bindings.get(node.name);
+        return bound || node;
+      }
+      if (node.type === 'Statement') {
+        return {
+          ...node,
+          operator: clone(node.operator),
+          args: Array.isArray(node.args) ? node.args.map(clone) : []
+        };
+      }
+      if (node.type === 'Identifier' || node.type === 'Literal' || node.type === 'Reference') return node;
+      return node;
+    };
+
+    const grounded = clone(ast);
+    if (grounded?.type !== 'Statement') return grounded;
+    return this.statementToString(grounded);
   }
 
   /**

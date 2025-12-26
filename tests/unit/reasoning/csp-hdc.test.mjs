@@ -24,11 +24,11 @@ describe('CSP HDC Compound Encoding', () => {
       isA X Slot
       isA Y Slot
 
-      @assign solve WeddingSeating
-        guests from Entity
-        tables from Slot
-        noConflict conflictsWith
-      end
+      @assign solve WeddingSeating [
+        (variablesFrom Entity),
+        (domainFrom Slot),
+        (noConflict conflictsWith)
+      ]
     `);
 
     // Check compound solutions exist
@@ -52,11 +52,11 @@ describe('CSP HDC Compound Encoding', () => {
       isA Alice Person
       isA T1 Table
 
-      @placement solve WeddingSeating
-        guests from Person
-        tables from Table
-        noConflict conflictsWith
-      end
+      @placement solve WeddingSeating [
+        (variablesFrom Person),
+        (domainFrom Table),
+        (noConflict conflictsWith)
+      ]
     `);
 
     const solutions = session.kbFacts.filter(f => f.metadata?.operator === 'cspSolution');
@@ -85,11 +85,11 @@ describe('CSP HDC Compound Encoding', () => {
       isA Guest1 Person
       isA Table1 Seat
 
-      @loc solve WeddingSeating
-        guests from Person
-        tables from Seat
-        noConflict conflictsWith
-      end
+      @loc solve WeddingSeating [
+        (variablesFrom Person),
+        (domainFrom Seat),
+        (noConflict conflictsWith)
+      ]
     `);
 
     // Query with single hole
@@ -118,11 +118,11 @@ describe('Multi-Hole Query Extraction', () => {
       conflictsWith Alice Bob
       conflictsWith Bob Alice
 
-      @seat solve WeddingSeating
-        guests from G1
-        tables from S1
-        noConflict conflictsWith
-      end
+      @seat solve WeddingSeating [
+        (variablesFrom G1),
+        (domainFrom S1),
+        (noConflict conflictsWith)
+      ]
     `);
 
     // Query with two holes
@@ -155,11 +155,11 @@ describe('Multi-Hole Query Extraction', () => {
       isA Slot2 Place
       isA Slot3 Place
 
-      @position solve WeddingSeating
-        guests from Item
-        tables from Place
-        noConflict conflictsWith
-      end
+      @position solve WeddingSeating [
+        (variablesFrom Item),
+        (domainFrom Place),
+        (noConflict conflictsWith)
+      ]
     `);
 
     // Query: X can be at any of 3 places
@@ -187,11 +187,11 @@ describe('HDC Verification', () => {
       isA Entity1 Type1
       isA Slot1 Type2
 
-      @rel solve WeddingSeating
-        guests from Type1
-        tables from Type2
-        noConflict conflictsWith
-      end
+      @rel solve WeddingSeating [
+        (variablesFrom Type1),
+        (domainFrom Type2),
+        (noConflict conflictsWith)
+      ]
     `);
 
     const solutions = session.kbFacts.filter(f => f.metadata?.operator === 'cspSolution');
@@ -227,11 +227,11 @@ describe('Constraint Verification', () => {
       conflictsWith Carol Dave
       conflictsWith Dave Carol
 
-      @seating solve WeddingSeating
-        guests from Guest
-        tables from Room
-        noConflict conflictsWith
-      end
+      @seating solve WeddingSeating [
+        (variablesFrom Guest),
+        (domainFrom Room),
+        (noConflict conflictsWith)
+      ]
     `);
 
     const solutions = session.kbFacts.filter(f =>
@@ -271,11 +271,11 @@ describe('Constraint Verification', () => {
       conflictsWith A B
       conflictsWith B A
 
-      @pos solve WeddingSeating
-        guests from Person
-        tables from Slot
-        noConflict conflictsWith
-      end
+      @pos solve WeddingSeating [
+        (variablesFrom Person),
+        (domainFrom Slot),
+        (noConflict conflictsWith)
+      ]
     `);
 
     const solutions = session.kbFacts.filter(f =>
@@ -313,11 +313,11 @@ describe('Unsatisfiable CSP', () => {
       conflictsWith A C
       conflictsWith C A
 
-      @fail solve WeddingSeating
-        guests from Item2
-        tables from Place2
-        noConflict conflictsWith
-      end
+      @fail solve WeddingSeating [
+        (variablesFrom Item2),
+        (domainFrom Place2),
+        (noConflict conflictsWith)
+      ]
     `);
 
     const solutions = session.kbFacts.filter(f => f.metadata?.operator === 'cspSolution');
@@ -336,11 +336,11 @@ describe('Unsatisfiable CSP', () => {
       conflictsWith X Y
       conflictsWith Y X
 
-      @impossible solve WeddingSeating
-        guests from Item3
-        tables from Place3
-        noConflict conflictsWith
-      end
+      @impossible solve WeddingSeating [
+        (variablesFrom Item3),
+        (domainFrom Place3),
+        (noConflict conflictsWith)
+      ]
     `);
 
     const result = session.query('impossible X ?slot');

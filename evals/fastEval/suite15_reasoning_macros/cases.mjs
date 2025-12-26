@@ -40,8 +40,8 @@ export const steps = [
       'WetGrass is explained by Sprinkler.'
     ],
     proof_nl: [
-      'Causal chain: Rain → WetGrass',
-      'Causal chain: Sprinkler → WetGrass'
+      'Causal path: Rain → WetGrass',
+      'Causal path: Sprinkler → WetGrass'
     ]
   },
 
@@ -140,7 +140,7 @@ export const steps = [
       'DryPath is explained by Sprinkler.'
     ],
     proof_nl: [
-      'Causal chain: Sprinkler → DryPath'
+      'Causal path: Sprinkler → DryPath'
     ]
   }
 ];

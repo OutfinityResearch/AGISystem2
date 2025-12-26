@@ -87,17 +87,41 @@ export class Parser {
       const savedPos = this.pos;
       this.advance(); // consume @name
 
+      // Solve block syntax: @dest solve ProblemType ... end
+      // NOTE: `solve` is currently lexed as an IDENTIFIER (not a KEYWORD).
+      if (this.check(TOKEN_TYPES.IDENTIFIER) && this.peek().value === 'solve') {
+        // Heuristic disambiguation:
+        // - solve *statement* form keeps options on the same line (often via a list/compound).
+        // - solve *block* form uses NEWLINE + declarations + KEYWORD 'end'.
+        //
+        // If we see an immediate NEWLINE after the problem type and we can find a terminating
+        // 'end' before the next '@' statement, parse as a SolveBlock.
+        this.advance(); // consume 'solve'
+        if (this.check(TOKEN_TYPES.IDENTIFIER)) {
+          this.advance(); // consume ProblemType
+          if (this.check(TOKEN_TYPES.NEWLINE)) {
+            let foundEnd = false;
+            for (let i = this.pos; i < this.tokens.length; i++) {
+              const t = this.tokens[i];
+              if (!t) break;
+              if (t.type === TOKEN_TYPES.AT) break;
+              if (t.type === TOKEN_TYPES.KEYWORD && t.value === 'end') {
+                foundEnd = true;
+                break;
+              }
+            }
+            if (foundEnd) {
+              this.pos = savedPos; // rewind
+              return this.parseSolveBlock();
+            }
+          }
+        }
+      }
+
       if (this.check(TOKEN_TYPES.KEYWORD) && this.peek().value === 'theory') {
         // This is the primary theory syntax
         this.pos = savedPos; // rewind
         return this.parseTheoryPrimary();
-      }
-
-      // Check for solve block syntax: @dest solve ... end
-      if (this.check(TOKEN_TYPES.KEYWORD) && this.peek().value === 'solve') {
-        // This is a solve block
-        this.pos = savedPos; // rewind
-        return this.parseSolveBlock();
       }
 
       // Not a theory or solve block, rewind and parse as normal statement
@@ -494,10 +518,19 @@ export class Parser {
 
     const items = [];
     while (!this.check(TOKEN_TYPES.RBRACKET) && !this.isEof()) {
+      // Allow multi-line lists:
+      // [
+      //   (a b),
+      //   (c d)
+      // ]
+      this.skipNewlines();
+      if (this.check(TOKEN_TYPES.RBRACKET) || this.isEof()) break;
+
       const item = this.parseExpression();
       if (!item) break;
       items.push(item);
 
+      this.skipNewlines();
       if (this.check(TOKEN_TYPES.COMMA)) {
         this.advance();
       }
@@ -602,10 +635,24 @@ export class Parser {
 
     // Consume @destination (AT token already contains the destination name)
     const destToken = this.expect(TOKEN_TYPES.AT);
-    const destination = destToken.value;
+    const destinationRaw = destToken.value;
+    if (typeof destinationRaw !== 'string' || destinationRaw.trim().length === 0) {
+      throw new ParseError('Expected destination after @ in solve block', destToken);
+    }
+    // Solve blocks do not support the @:name or @var:name persistence syntax (they emit their own outputs).
+    if (destinationRaw.includes(':')) {
+      throw new ParseError('Solve blocks do not support @:name or @var:name destinations', destToken);
+    }
+    const destination = destinationRaw;
 
-    // Consume 'solve'
-    this.expect(TOKEN_TYPES.KEYWORD, 'solve');
+    // Consume 'solve' (currently lexed as IDENTIFIER; accept either for compatibility)
+    const solveToken = this.advance();
+    const isSolve =
+      (solveToken.type === TOKEN_TYPES.IDENTIFIER && solveToken.value === 'solve') ||
+      (solveToken.type === TOKEN_TYPES.KEYWORD && solveToken.value === 'solve');
+    if (!isSolve) {
+      throw new ParseError("Expected 'solve' in solve block", solveToken);
+    }
 
     // Get problem type
     const problemTypeToken = this.expect(TOKEN_TYPES.IDENTIFIER);

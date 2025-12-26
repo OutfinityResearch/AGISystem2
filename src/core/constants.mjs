@@ -175,8 +175,5 @@ export const KEYWORDS = [
   'macro',   // deprecated synonym for 'graph'
   'begin',
   'end',
-  'return',
-  'solve'
-  // Note: 'from', 'noConflict', 'allDifferent' are handled contextually in parseSolveBlock
-  // to avoid conflicts with identifier parsing (e.g., graph parameter names)
+  'return'
 ];

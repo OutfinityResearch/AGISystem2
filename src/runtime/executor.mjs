@@ -13,6 +13,7 @@ import {
 
 // Import extracted modules
 import { executeSolveBlock as executeSolveBlockImpl, findConflictPairs as findConflictPairsImpl } from './executor-solve.mjs';
+import { executeSolveStatement as executeSolveStatementImpl } from './executor-solve.mjs';
 import { executeInduce as executeInduceImpl, executeBundle as executeBundleImpl } from './executor-meta-ops.mjs';
 import { debug_trace, isDebugEnabled } from '../utils/debug.js';
 import { canonicalizeMetadata } from './canonicalize.mjs';
@@ -87,6 +88,13 @@ export class Executor {
           continue;
         }
 
+        // Solve blocks: @dest solve ProblemType ... end
+        if (stmt instanceof SolveBlock || stmt?.type === 'SolveBlock') {
+          const result = this.executeSolveBlock(stmt);
+          results.push(result);
+          continue;
+        }
+
         // Normal execution
         const result = this.executeStatement(stmt);
         results.push(result);
@@ -132,14 +140,6 @@ export class Executor {
    * - operator args (no @)    → KB only (anonymous persistent)
    */
   executeStatement(stmt) {
-    // Handle solve blocks
-    if (stmt instanceof SolveBlock) {
-      if (stmt.destination) {
-        this.session.declaredOperators?.add(stmt.destination);
-      }
-      return this.executeSolveBlock(stmt);
-    }
-
     if (!(stmt instanceof Statement)) {
       throw new ExecutionError('Expected Statement node', stmt);
     }
@@ -165,6 +165,12 @@ export class Executor {
     }
     if (operatorName === 'Set') {
       return this.executeSet(stmt);
+    }
+    if (operatorName === 'solve') {
+      if (stmt.destination) {
+        this.session.declaredOperators?.add(stmt.destination);
+      }
+      return this.executeSolveStatement(stmt);
     }
     if (operatorName === 'induce') {
       return this.executeInduce(stmt);
@@ -507,6 +513,10 @@ export class Executor {
    */
   executeSolveBlock(stmt) {
     return executeSolveBlockImpl(this, stmt);
+  }
+
+  executeSolveStatement(stmt) {
+    return executeSolveStatementImpl(this, stmt);
   }
 
   /**

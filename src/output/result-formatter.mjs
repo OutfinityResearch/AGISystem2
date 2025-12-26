@@ -23,7 +23,8 @@ export function formatQueryResult(result, queryType = 'query') {
   const metaOps = [
     'abduce', 'whatif', 'similar', 'analogy',
     'symbolic_analogy', 'property_analogy',  // analogy variants
-    'difference', 'induce', 'bundle', 'deduce'
+    'difference', 'induce', 'bundle', 'deduce',
+    'explain'
   ];
   const metaResults = allResults.filter(r => metaOps.includes(r.method));
 
@@ -78,6 +79,8 @@ function formatSingleMetaResult(op, result, proof) {
       return formatWhatif(result, proof);
     case 'deduce':
       return formatDeduce(result, proof);
+    case 'explain':
+      return formatExplain(result, proof);
     default:
       return `${op}: ${JSON.stringify(proof)}`;
   }
@@ -188,8 +191,12 @@ function formatAbduce(result, proof) {
   const observed = proof.observed || 'Observation';
   const cause = proof.cause || getAnswerFromBindings(result.bindings) || 'Unknown';
   const explanation = proof.explanation || `${cause} causes ${observed}`;
+  const confidence = typeof proof.confidence === 'number'
+    ? proof.confidence
+    : (typeof result?.score === 'number' ? result.score : null);
 
-  return `${observed} is explained by ${cause}. Proof: ${explanation}`;
+  const confText = typeof confidence === 'number' ? ` (confidence=${confidence.toFixed(2)})` : '';
+  return `${observed} is explained by ${cause}. Proof: ${explanation}${confText}`;
 }
 
 /**
@@ -200,6 +207,9 @@ function formatWhatif(result, proof) {
   const affected = proof.affected || 'outcome';
   const outcome = proof.outcome || 'uncertain';
   const paths = proof.paths || [];
+  const confidence = typeof proof.confidence === 'number'
+    ? proof.confidence
+    : (typeof result?.score === 'number' ? result.score : null);
 
   const outcomeText = outcome === 'would_fail' ? 'would not occur' :
                       outcome === 'unchanged' ? 'would be unchanged' :
@@ -209,7 +219,8 @@ function formatWhatif(result, proof) {
     ? paths.map(p => p.path?.join(' → ')).filter(Boolean).join('; ')
     : `${negated} → ${affected}`;
 
-  return `If ${negated} did not occur, ${affected} ${outcomeText}. Proof: ${pathDesc}`;
+  const confText = typeof confidence === 'number' ? ` (confidence=${confidence.toFixed(2)})` : '';
+  return `If ${negated} did not occur, ${affected} ${outcomeText}. Proof: ${pathDesc}${confText}`;
 }
 
 /**
@@ -245,6 +256,20 @@ function formatDeduce(result, proof) {
   }
 
   return `From ${source}, deduce ${conclusionText}. Proof: ${proofText}`;
+}
+
+/**
+ * explain: "Explanation for X: ... Proof: ... (confidence=...)"
+ */
+function formatExplain(result, proof) {
+  const goal = proof.goal || proof.target || 'goal';
+  const via = proof.via || 'prove';
+  const explanation = proof.explanation || getAnswerFromBindings(result.bindings) || 'No explanation.';
+  const confidence = typeof proof.confidence === 'number'
+    ? proof.confidence
+    : (typeof result?.score === 'number' ? result.score : null);
+  const confText = typeof confidence === 'number' ? ` (confidence=${confidence.toFixed(2)})` : '';
+  return `Explanation for ${goal}. Proof: ${explanation} (via ${via})${confText}`;
 }
 
 /**
