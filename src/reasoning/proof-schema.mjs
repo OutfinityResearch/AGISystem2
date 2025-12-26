@@ -8,7 +8,12 @@
  * This is an incremental step toward DS19 "proof real".
  */
 
+import { createHash } from 'node:crypto';
 import { Identifier, Literal, Reference, Hole } from '../parser/ast.mjs';
+
+function stableHash(text) {
+  return createHash('sha256').update(String(text)).digest('hex').slice(0, 16);
+}
 
 function nodeToName(node) {
   if (!node) return null;
@@ -65,6 +70,31 @@ function fillFactIds(session, steps) {
       if (!u || u.id !== null && u.id !== undefined) continue;
       if (typeof u.operator !== 'string' || !Array.isArray(u.args)) continue;
       u.id = findFactId(session, u.operator, u.args);
+    }
+  }
+}
+
+function fillStableEvidenceIds(steps) {
+  for (const step of steps) {
+    const facts = step?.usesFacts;
+    if (Array.isArray(facts)) {
+      for (const f of facts) {
+        if (!f || typeof f.operator !== 'string' || !Array.isArray(f.args)) continue;
+        if (f.stableId) continue;
+        f.stableId = `fact_${stableHash(`${f.operator} ${f.args.join(' ')}`.trim())}`;
+      }
+    }
+    const rules = step?.usesRules;
+    if (Array.isArray(rules)) {
+      for (const r of rules) {
+        if (!r) continue;
+        if (r.stableId) continue;
+        if (typeof r.id === 'string' && r.id) {
+          r.stableId = r.id;
+        } else if (typeof r.name === 'string' && r.name) {
+          r.stableId = `rule_${stableHash(r.name)}`;
+        }
+      }
     }
   }
 }
@@ -297,6 +327,7 @@ export function buildProofObject({ session, goalStatement, result }) {
   const steps = legacyStepsToDs19Steps(legacySteps);
   fillFactIds(session, steps);
   fillRuleIds(session, steps);
+  fillStableEvidenceIds(steps);
 
   const assumptions = [];
   for (const s of legacySteps) {

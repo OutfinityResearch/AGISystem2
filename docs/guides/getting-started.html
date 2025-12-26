@@ -236,11 +236,14 @@ console.log(<span class="string">'Is Jerry an animal?'</span>, session.query(<sp
     <strong>Configure HDC geometry</strong>
   </div>
 
-  <p>AGISystem2 supports three HDC strategies. Set via environment variables:</p>
+  <p>AGISystem2 supports four HDC strategies. Set via environment variables:</p>
 
   <div class="code-box">
 <pre><span class="comment"># Metric-Affine (fastest, recommended)</span>
 SYS2_HDC_STRATEGY=metric-affine SYS2_HDC_SIZE=32 node tutorial.mjs
+
+<span class="comment"># Metric-Affine Elastic (large KBs)</span>
+SYS2_HDC_STRATEGY=metric-affine-elastic SYS2_HDC_SIZE=32 node tutorial.mjs
 
 <span class="comment"># Dense-Binary (standard VSA)</span>
 SYS2_HDC_STRATEGY=dense-binary SYS2_HDC_SIZE=256 node tutorial.mjs
@@ -261,11 +264,16 @@ SYS2_HDC_STRATEGY=sparse-polynomial SYS2_HDC_SIZE=4 node tutorial.mjs</pre>
       <td style="padding:10px; border:1px solid #ddd;">318ms (2.6x faster)</td>
     </tr>
     <tr style="background:#f9f9f9;">
+      <td style="padding:10px; border:1px solid #ddd;"><strong>metric-affine-elastic</strong></td>
+      <td style="padding:10px; border:1px solid #ddd;">Large KBs, stable bundling</td>
+      <td style="padding:10px; border:1px solid #ddd;">Similar to metric-affine</td>
+    </tr>
+    <tr>
       <td style="padding:10px; border:1px solid #ddd;"><strong>dense-binary</strong></td>
       <td style="padding:10px; border:1px solid #ddd;">Standard HDC, similarity search</td>
       <td style="padding:10px; border:1px solid #ddd;">456ms</td>
     </tr>
-    <tr>
+    <tr style="background:#f9f9f9;">
       <td style="padding:10px; border:1px solid #ddd;"><strong>sparse-polynomial</strong></td>
       <td style="padding:10px; border:1px solid #ddd;">Memory-constrained environments</td>
       <td style="padding:10px; border:1px solid #ddd;">349ms (k=2)</td>
@@ -337,7 +345,7 @@ node autoDiscovery/bugsAutoDiscovery.mjs --source=prontoqa --batch=20</pre>
     <li><a href="../theory/nl2dsl.html"><strong>NL2DSL Translation</strong></a> – Natural language patterns</li>
     <li><a href="../api/index.html"><strong>API Reference</strong></a> – Full programmatic API</li>
     <li><a href="../research/benchmarks.html"><strong>External Benchmarks</strong></a> – Performance on standard test suites</li>
-    <li><a href="../theory/hrr-comparison.html"><strong>HDC Theory</strong></a> – Understanding the three strategies</li>
+    <li><a href="../theory/hrr-comparison.html"><strong>HDC Theory</strong></a> – Understanding the four strategies</li>
     <li><a href="llm-integration.html"><strong>LLM Integration</strong></a> – Combining with language models</li>
   </ul>
 

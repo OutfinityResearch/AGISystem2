@@ -87,16 +87,23 @@ export function proveGoal(self, goal, depth) {
     const goalArgs = (goal.args || []).map(a => self.extractArgName(a)).filter(Boolean);
     const goalFactExists = goalOp ? self.factExists(goalOp, goalArgs[0], goalArgs[1]) : false;
 
-    if (goalOp === 'Not' && Array.isArray(goal.args) && goal.args.length === 1) {
+    if (goalOp === 'Not' && Array.isArray(goal.args) && goal.args.length >= 1) {
       const innerExpr = goal.args[0];
       if (innerExpr?.type === 'Compound' && opName(innerExpr.operator) === 'Exists') {
         const disjoint = tryProveNotExistsViaTypeDisjointness(self, goalStr, innerExpr);
         if (disjoint.valid) return remember(disjoint);
       }
 
-      const meta = self.session.executor.extractMetadataWithNotExpansion(goal, 'Not');
-      const innerOp = meta?.innerOperator;
-      const innerArgs = meta?.innerArgs;
+      let innerOp;
+      let innerArgs;
+      if (goal.args.length === 1) {
+        const meta = self.session.executor.extractMetadataWithNotExpansion(goal, 'Not');
+        innerOp = meta?.innerOperator;
+        innerArgs = meta?.innerArgs;
+      } else {
+        innerOp = self.extractArgName(goal.args[0]);
+        innerArgs = goal.args.slice(1).map(a => self.extractArgName(a)).filter(Boolean);
+      }
 
       if (innerOp && Array.isArray(innerArgs)) {
         const componentKB = self.session?.componentKB;

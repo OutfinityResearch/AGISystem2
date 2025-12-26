@@ -145,6 +145,9 @@ export function canonicalizeMetadata(session, metadata) {
   if (metadata.operator === 'Not') {
     if (metadata.inner) out.inner = canonicalizeNested(metadata.inner);
   }
+  if (metadata.operator === 'Exists' || metadata.operator === 'ForAll') {
+    if (metadata.body) out.body = canonicalizeNested(metadata.body);
+  }
 
   if (metadata.operator === 'Not') {
     if (typeof metadata.innerOperator === 'string') {

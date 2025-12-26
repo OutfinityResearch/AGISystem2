@@ -1,4 +1,4 @@
-import { Identifier, Reference, Literal, Compound, List } from '../parser/ast.mjs';
+import { Identifier, Reference, Literal, Compound, List, Hole } from '../parser/ast.mjs';
 import { ExecutionError } from './execution-error.mjs';
 
 function asInt(node) {
@@ -45,6 +45,7 @@ export function resolveNameFromNode(executor, node) {
   }
 
   if (node instanceof Identifier) return node.name;
+  if (node instanceof Hole) return `?${node.name}`;
   if (node instanceof Literal) return String(node.value);
   if (node instanceof Compound) return node.toString();
   if (node instanceof List) return node.toString();
@@ -53,10 +54,67 @@ export function resolveNameFromNode(executor, node) {
   return null;
 }
 
+function extractExpressionMetadata(executor, expr, { requirePropositionMetadata = false, parentStmt = null } = {}) {
+  if (!expr) return null;
+
+  if (expr instanceof Reference) {
+    const m = executor.session.referenceMetadata.get(expr.name);
+    if (!m && requirePropositionMetadata && executor.session?.enforceCanonical) {
+      throw new ExecutionError(`$${expr.name}: missing proposition metadata (non-canonical)`, parentStmt);
+    }
+    return m || null;
+  }
+
+  if (expr instanceof Compound) {
+    const operatorName = resolveNameFromNode(executor, expr.operator);
+    const args = (expr.args || []).map(a => resolveNameFromNode(executor, a));
+    const base = { operator: operatorName, args };
+
+    if (operatorName === 'Implies' && (expr.args || []).length >= 2) {
+      const condition = extractExpressionMetadata(executor, expr.args[0], { requirePropositionMetadata, parentStmt });
+      const conclusion = extractExpressionMetadata(executor, expr.args[1], { requirePropositionMetadata, parentStmt });
+      return { ...base, condition: condition || null, conclusion: conclusion || null };
+    }
+
+    if ((operatorName === 'And' || operatorName === 'Or') && (expr.args || []).length >= 1) {
+      const parts = [];
+      for (const a of expr.args || []) {
+        parts.push(extractExpressionMetadata(executor, a, { requirePropositionMetadata, parentStmt }));
+      }
+      return { ...base, parts };
+    }
+
+    if (operatorName === 'Not' && (expr.args || []).length === 1) {
+      const inner = extractExpressionMetadata(executor, expr.args[0], { requirePropositionMetadata, parentStmt });
+      if (inner?.operator) {
+        return {
+          ...base,
+          args: [inner.operator, ...(inner.args || [])],
+          innerOperator: inner.operator,
+          innerArgs: inner.args || [],
+          inner
+        };
+      }
+      return base;
+    }
+
+    if ((operatorName === 'Exists' || operatorName === 'ForAll') && (expr.args || []).length >= 2) {
+      const variable = resolveNameFromNode(executor, expr.args[0]);
+      const body = extractExpressionMetadata(executor, expr.args[1], { requirePropositionMetadata, parentStmt });
+      return { ...base, variable, body: body || null };
+    }
+
+    return base;
+  }
+
+  return null;
+}
+
 export function extractName(executor, node) {
   if (!node) return null;
   if (node instanceof Identifier) return node.name;
   if (node instanceof Reference) return node.name;
+  if (node instanceof Hole) return `?${node.name}`;
   if (node instanceof Literal) return String(node.value);
   if (node.name) return node.name;
   if (node.value) return String(node.value);
@@ -93,18 +151,8 @@ export function extractMetadataWithNotExpansion(executor, stmt, operatorName) {
   if (operatorName === 'Implies' && stmt.args.length >= 2) {
     const condNode = stmt.args[0];
     const concNode = stmt.args[1];
-    const condition =
-      condNode instanceof Reference ? executor.session.referenceMetadata.get(condNode.name) : null;
-    const conclusion =
-      concNode instanceof Reference ? executor.session.referenceMetadata.get(concNode.name) : null;
-    if (executor.session?.enforceCanonical) {
-      if (condNode instanceof Reference && !condition) {
-        throw new ExecutionError(`Implies $${condNode.name}: missing proposition metadata (non-canonical)`, stmt);
-      }
-      if (concNode instanceof Reference && !conclusion) {
-        throw new ExecutionError(`Implies $${concNode.name}: missing proposition metadata (non-canonical)`, stmt);
-      }
-    }
+    const condition = extractExpressionMetadata(executor, condNode, { requirePropositionMetadata: true, parentStmt: stmt });
+    const conclusion = extractExpressionMetadata(executor, concNode, { requirePropositionMetadata: true, parentStmt: stmt });
     const base = extractMetadata(executor, stmt);
     return { ...base, condition: condition || null, conclusion: conclusion || null };
   }
@@ -112,17 +160,7 @@ export function extractMetadataWithNotExpansion(executor, stmt, operatorName) {
   if ((operatorName === 'And' || operatorName === 'Or') && stmt.args.length >= 1) {
     const parts = [];
     for (const arg of stmt.args) {
-      if (arg instanceof Reference) {
-        const m = executor.session.referenceMetadata.get(arg.name);
-        if (!m && executor.session?.enforceCanonical) {
-          throw new ExecutionError(`${operatorName} $${arg.name}: missing proposition metadata (non-canonical)`, stmt);
-        }
-        parts.push(m || null);
-      } else if (arg instanceof Compound) {
-        parts.push(extractCompoundMetadata(executor, arg));
-      } else {
-        parts.push(null);
-      }
+      parts.push(extractExpressionMetadata(executor, arg, { requirePropositionMetadata: true, parentStmt: stmt }));
     }
     const base = extractMetadata(executor, stmt);
     return { ...base, parts };
@@ -147,7 +185,7 @@ export function extractMetadataWithNotExpansion(executor, stmt, operatorName) {
   }
 
   if (operatorName === 'Not' && stmt.args.length === 1 && stmt.args[0] instanceof Compound) {
-    const inner = extractCompoundMetadata(executor, stmt.args[0]);
+    const inner = extractExpressionMetadata(executor, stmt.args[0], { parentStmt: stmt });
     if (inner.operator) {
       return {
         operator: 'Not',
@@ -172,6 +210,13 @@ export function extractMetadataWithNotExpansion(executor, stmt, operatorName) {
         innerArgs
       };
     }
+  }
+
+  if ((operatorName === 'Exists' || operatorName === 'ForAll') && stmt.args.length >= 2) {
+    const variable = resolveNameFromNode(executor, stmt.args[0]);
+    const body = extractExpressionMetadata(executor, stmt.args[1], { requirePropositionMetadata: true, parentStmt: stmt });
+    const base = extractMetadata(executor, stmt);
+    return { ...base, variable, body: body || null };
   }
 
   return extractMetadata(executor, stmt);

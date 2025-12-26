@@ -227,7 +227,9 @@ function executeGetType(executor, stmt) {
 
 export function tryExecuteBuiltin(executor, stmt, operatorName) {
   if (!executor?.session?.l0BuiltinsEnabled) return { handled: false };
-  if (typeof operatorName !== 'string' || !operatorName.startsWith('___')) return { handled: false };
+  if (typeof operatorName !== 'string') return { handled: false };
+  const isBuiltin = operatorName.startsWith('___') || operatorName === '__GetType';
+  if (!isBuiltin) return { handled: false };
 
   switch (operatorName) {
     case '___NewVector':
@@ -245,6 +247,7 @@ export function tryExecuteBuiltin(executor, stmt, operatorName) {
     case '___Extend':
       return { handled: true, vector: executeExtend(executor, stmt) };
     case '___GetType':
+    case '__GetType':
       return { handled: true, vector: executeGetType(executor, stmt) };
     default:
       // If this is a known bootstrap primitive, fail-fast. Otherwise treat as normal operator.

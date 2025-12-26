@@ -406,24 +406,27 @@ function similarity(a, b) {
     <li>Applications where statistical robustness > perfect properties</li>
   </ul>
 
-  <h3>Comparison of All Three Strategies</h3>
+  <h3>Comparison of All Four Strategies</h3>
   <table class="matrix-table">
     <tr>
       <td><strong>Property</strong></td>
       <td><strong>Dense Binary</strong></td>
       <td><strong>Sparse Polynomial</strong></td>
       <td><strong>Metric-Affine</strong></td>
+      <td><strong>Metric-Affine Elastic</strong></td>
     </tr>
     <tr>
       <td>Dimensionality</td>
       <td>Fixed (2048-4096 bits)</td>
       <td>Infinite (k=4-8 exponents)</td>
       <td>Fixed (32 byte channels)</td>
+      <td>Elastic (32+ byte channels)</td>
     </tr>
     <tr>
       <td>Binding Operation</td>
       <td>XOR (bitwise)</td>
       <td>Symmetric difference</td>
+      <td>Affine transformation</td>
       <td>Affine transformation</td>
     </tr>
     <tr>
@@ -431,33 +434,39 @@ function similarity(a, b) {
       <td>Fast (O(n/32))</td>
       <td>Slower (O(k²))</td>
       <td><strong>Fastest (O(m))</strong></td>
+      <td>Fast (O(m) + chunk scan)</td>
     </tr>
     <tr>
       <td>Memory per Vector</td>
       <td>256-512 bytes</td>
       <td>32 bytes (k=4 default)</td>
       <td><strong>32 bytes</strong></td>
+      <td>32B+ (chunked bundles)</td>
     </tr>
     <tr>
       <td>Similarity Metric</td>
       <td>Hamming distance</td>
       <td>Jaccard index</td>
       <td>Channel overlap</td>
+      <td>Channel overlap (max over chunks)</td>
     </tr>
     <tr>
       <td>Performance (Core Theory)</td>
       <td>516ms (symbolic)</td>
       <td>523ms (symbolic)</td>
       <td><strong>225ms (symbolic)</strong> ⚡ 2.3x faster</td>
+      <td>Similar to Metric-Affine (small KBs)</td>
     </tr>
     <tr>
       <td>Self-Inverse</td>
       <td>Perfect</td>
       <td>Approximate</td>
       <td>Approximate</td>
+      <td>Approximate</td>
     </tr>
     <tr>
       <td>Commutative</td>
+      <td>Perfect</td>
       <td>Perfect</td>
       <td>Perfect</td>
       <td>Perfect</td>
@@ -467,10 +476,11 @@ function similarity(a, b) {
       <td>Research, standard HDC</td>
       <td>Large KBs, memory-constrained</td>
       <td><strong>Production systems, speed-critical apps</strong></td>
+      <td>Large KB superpositions, stable bundling</td>
     </tr>
   </table>
 
-  <p>See the <a href="sphdc-comparison.html">SPHDC Comparison Guide</a> for detailed benchmarks and recommendations.</p>
+  <p>See the <a href="sphdc-comparison.html">SPHDC Comparison Guide</a> for detailed benchmarks and recommendations. For EMA internals, read <a href="../theory/strategies/metric-affine-elastic.html">Metric-Affine Elastic</a>.</p>
 
   <h2>Common Pitfalls</h2>
   <ul>

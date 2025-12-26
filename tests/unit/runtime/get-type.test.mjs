@@ -20,6 +20,23 @@ describe('___GetType (strict typing)', () => {
     assert.ok(session.similarity(extracted, expected) > 0.99, 'expected extracted type to match PersonType');
   });
 
+  test('__GetType is an alias of ___GetType', () => {
+    const session = new Session({ geometry: 2048, strictMode: true });
+
+    session.learn(`
+      @_ Load "./config/Core/00-types.sys2"
+      @_ Load "./config/Core/02-constructors.sys2"
+    `);
+
+    session.learn('@John:John __Person');
+    session.learn('@t __GetType $John');
+
+    const extracted = session.scope.get('t');
+    const expected = session.scope.get('PersonType');
+    assert.ok(expected, 'expected PersonType to be declared in scope');
+    assert.ok(session.similarity(extracted, expected) > 0.99, 'expected extracted type to match PersonType');
+  });
+
   test('throws deterministically when type is unknown in strict mode', () => {
     const session = new Session({ geometry: 2048, strictMode: true });
 

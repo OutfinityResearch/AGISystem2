@@ -19,6 +19,14 @@ export function metadataToCanonicalDsl(metadata) {
   const op = metadata.operator;
   if (typeof op !== 'string' || !op) return null;
 
+  if (op === 'Exists' || op === 'ForAll') {
+    const variable = metadata.variable || (Array.isArray(metadata.args) ? metadata.args[0] : null);
+    const body = metadata.body ? metadataToCanonicalDsl(metadata.body) : null;
+    if (typeof variable === 'string' && variable && body) {
+      return `${op} ${variable} (${body})`;
+    }
+  }
+
   if (op === 'And' || op === 'Or') {
     const parts = Array.isArray(metadata.parts) ? metadata.parts : null;
     if (parts && parts.length > 0) {
