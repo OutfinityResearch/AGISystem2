@@ -13,6 +13,9 @@ export class ListSolutionsTranslator extends BaseTranslator {
       return 'No valid solutions found.';
     }
 
+    const shownCount = reasoningResult.shownCount ?? reasoningResult.solutions.length;
+    const truncated = reasoningResult.truncated === true && shownCount < (reasoningResult.solutionCount || 0);
+
     const solutionTexts = reasoningResult.solutions.map(sol => {
       const factTexts = (sol.facts || []).map(fact => {
         const parts = fact.split(' ');
@@ -21,7 +24,9 @@ export class ListSolutionsTranslator extends BaseTranslator {
       return `Solution ${sol.index}: ${factTexts.join(', ')}`;
     });
 
-    return `Found ${reasoningResult.solutionCount} solutions. ${solutionTexts.join('. ')}.`;
+    const head = truncated
+      ? `Found ${reasoningResult.solutionCount} solutions (showing ${shownCount}).`
+      : `Found ${reasoningResult.solutionCount} solutions.`;
+    return `${head} ${solutionTexts.join('. ')}.`.trim();
   }
 }
-

@@ -117,6 +117,7 @@ function parseContradictsSameArgs(content) {
 export class SemanticIndex {
   constructor({
     relations = new Set(),
+    assignmentRelations = new Set(),
     transitiveRelations = new Set(),
     symmetricRelations = new Set(),
     reflexiveRelations = new Set(),
@@ -130,6 +131,7 @@ export class SemanticIndex {
     contradictsSameArgsSources = new Map()
   } = {}) {
     this.relations = relations;
+    this.assignmentRelations = assignmentRelations;
     this.transitiveRelations = transitiveRelations;
     this.symmetricRelations = symmetricRelations;
     this.reflexiveRelations = reflexiveRelations;
@@ -146,6 +148,7 @@ export class SemanticIndex {
   clone() {
     return new SemanticIndex({
       relations: new Set(this.relations || []),
+      assignmentRelations: new Set(this.assignmentRelations || []),
       transitiveRelations: new Set(this.transitiveRelations || []),
       symmetricRelations: new Set(this.symmetricRelations || []),
       reflexiveRelations: new Set(this.reflexiveRelations || []),
@@ -188,6 +191,7 @@ export class SemanticIndex {
 
     if (
       operator === '__Relation' ||
+      operator === '__AssignmentRelation' ||
       operator === '__TransitiveRelation' ||
       operator === '__SymmetricRelation' ||
       operator === '__ReflexiveRelation' ||
@@ -197,6 +201,7 @@ export class SemanticIndex {
       if (typeof rel !== 'string' || !rel) return;
 
       if (operator === '__Relation') this.relations.add(rel);
+      if (operator === '__AssignmentRelation') this.assignmentRelations.add(rel);
       if (operator === '__TransitiveRelation') this.transitiveRelations.add(rel);
       if (operator === '__SymmetricRelation') this.symmetricRelations.add(rel);
       if (operator === '__ReflexiveRelation') this.reflexiveRelations.add(rel);
@@ -243,6 +248,10 @@ export class SemanticIndex {
 
   isRelation(name) {
     return this.relations.has(name);
+  }
+
+  isAssignmentRelation(name) {
+    return this.assignmentRelations.has(name);
   }
 
   isSymmetric(name) {
@@ -297,6 +306,7 @@ export class SemanticIndex {
   static fromCoreRelationsFile({ allowFallbackDefaults = true } = {}) {
     const defaults = new SemanticIndex({
       relations: new Set(['parent', 'child', 'loves', 'hates', 'trusts']),
+      assignmentRelations: new Set(),
       transitiveRelations: new Set([
         'isA',
         'locatedIn',
@@ -351,9 +361,11 @@ export class SemanticIndex {
     const symmetricRelations = parsePropertyLines(content, '__SymmetricRelation');
     const reflexiveRelations = parsePropertyLines(content, '__ReflexiveRelation');
     const inheritableProperties = parsePropertyLines(content, '__InheritableProperty');
+    const assignmentRelations = parsePropertyLines(content, '__AssignmentRelation');
 
     const idx = new SemanticIndex({
       relations,
+      assignmentRelations,
       transitiveRelations,
       symmetricRelations,
       reflexiveRelations,
@@ -371,6 +383,7 @@ export class SemanticIndex {
 
     // Fill gaps to preserve existing behavior if the config file is partial.
     for (const name of defaults.relations) idx.relations.add(name);
+    for (const name of defaults.assignmentRelations) idx.assignmentRelations.add(name);
     for (const name of defaults.transitiveRelations) idx.transitiveRelations.add(name);
     for (const name of defaults.symmetricRelations) idx.symmetricRelations.add(name);
     for (const name of defaults.reflexiveRelations) idx.reflexiveRelations.add(name);
@@ -388,6 +401,7 @@ export class SemanticIndex {
 
     const merged = new SemanticIndex({
       relations: new Set(baseIndex.relations || []),
+      assignmentRelations: new Set(baseIndex.assignmentRelations || []),
       transitiveRelations: new Set(baseIndex.transitiveRelations),
       symmetricRelations: new Set(baseIndex.symmetricRelations),
       reflexiveRelations: new Set(baseIndex.reflexiveRelations),
@@ -421,6 +435,7 @@ export class SemanticIndex {
     // Merge into baseIndex (copy-on-write).
     const merged = new SemanticIndex({
       relations: new Set(baseIndex.relations || []),
+      assignmentRelations: new Set(baseIndex.assignmentRelations || []),
       transitiveRelations: new Set(baseIndex.transitiveRelations),
       symmetricRelations: new Set(baseIndex.symmetricRelations),
       reflexiveRelations: new Set(baseIndex.reflexiveRelations),

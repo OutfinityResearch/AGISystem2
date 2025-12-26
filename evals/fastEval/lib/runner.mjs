@@ -294,11 +294,21 @@ async function runReasoning(testCase, generatedDsl, session, timeoutMs) {
         f.metadata?.operator === 'cspSolution' &&
         f.metadata?.solutionRelation === destination
       );
+      const maxSolutionsRaw =
+        testCase.maxSolutions ??
+        testCase.max_solutions ??
+        testCase.max_results ??
+        testCase.maxResults ??
+        null;
+      const maxSolutions = Number.isFinite(maxSolutionsRaw) ? Math.max(1, maxSolutionsRaw) : null;
+      const shown = maxSolutions !== null ? solutions.slice(0, maxSolutions) : solutions;
       const result = {
         success: solutions.length > 0,
         destination,
         solutionCount: solutions.length,
-        solutions: solutions.map((sol, i) => ({
+        shownCount: shown.length,
+        truncated: shown.length < solutions.length,
+        solutions: shown.map((sol, i) => ({
           index: i + 1,
           facts: sol.metadata?.facts || [],
           assignments: sol.metadata?.assignments || []

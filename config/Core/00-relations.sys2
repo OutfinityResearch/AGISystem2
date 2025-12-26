@@ -74,3 +74,13 @@
 
 @trusts:trusts __Relation
 @conflictsWith:conflictsWith __SymmetricRelation
+
+# ===== Assignment Relations =====
+# Binary relations that should be phrased as "X is at Y" in NL outputs.
+@location:location __AssignmentRelation
+@at:at __AssignmentRelation
+@locatedAt:locatedAt __AssignmentRelation
+
+# ===== CSP / Solver meta =====
+# Structured solution tuples emitted by solve blocks (used for multi-hole queries).
+@cspTuple:cspTuple __Relation

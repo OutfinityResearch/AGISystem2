@@ -29,6 +29,7 @@ export function executeSolveBlock(executor, stmt) {
   // used to query solution bindings (e.g. `@seating solve ...` then `seating Alice ?t`).
   if (stmt.destination) {
     executor.session.semanticIndex?.relations?.add?.(stmt.destination);
+    executor.session.semanticIndex?.assignmentRelations?.add?.(stmt.destination);
   }
 
   const solver = new CSPSolver(executor.session, { timeout: 5000 });
@@ -176,6 +177,7 @@ export function executeSolveBlock(executor, stmt) {
   // Store compound solution vectors in KB (not individual facts)
   let storedSolutions = 0;
   if (result.success && solutionVectors.length > 0) {
+    const cspTupleOp = executor.session.vocabulary.getOrCreate('cspTuple');
     for (let i = 0; i < solutionVectors.length; i++) {
       const { vector, assignments } = solutionVectors[i];
       const solutionName = `${stmt.destination}_sol${i + 1}`;
@@ -216,6 +218,29 @@ export function executeSolveBlock(executor, stmt) {
           proof: proofText
         });
       }
+
+      // Also store a deterministic n-ary tuple fact for multi-hole extraction from a single solution:
+      // cspTuple <relation> <entity1> <value1> <entity2> <value2> ...
+      // Uses the solve variable ordering to keep output stable.
+      const byEntity = new Map(assignments.map(a => [a.entity, a.value]));
+      const tupleArgs = [solutionRelation];
+      const tupleVectors = [cspTupleOp, withPosition(1, relationVec)];
+      let pos = 2;
+      for (const entity of variables) {
+        const value = byEntity.get(entity);
+        if (!value) continue;
+        tupleArgs.push(entity, value);
+        tupleVectors.push(withPosition(pos++, executor.session.vocabulary.getOrCreate(entity)));
+        tupleVectors.push(withPosition(pos++, executor.session.vocabulary.getOrCreate(value)));
+      }
+      const tupleVec = bindAll(...tupleVectors);
+      executor.session.addToKB(tupleVec, `${solutionName}_tuple`, {
+        operator: 'cspTuple',
+        args: tupleArgs,
+        source: 'csp',
+        solutionRelation,
+        solutionIndex: i + 1
+      });
 
       storedSolutions++;
     }

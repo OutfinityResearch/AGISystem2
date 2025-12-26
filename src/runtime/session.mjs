@@ -452,6 +452,34 @@ export class Session {
    * Generate natural language text
    */
   generateText(operator, args) {
+    // DS19: helper for multi-variable extraction from CSP solutions.
+    // cspTuple <relation> <entity1> <value1> <entity2> <value2> ...
+    if (operator === 'cspTuple' && Array.isArray(args) && args.length >= 3) {
+      const relation = args[0];
+      if (typeof relation === 'string' && relation !== 'cspTuple') {
+        const pairs = [];
+        for (let i = 1; i + 1 < args.length; i += 2) {
+          const entity = args[i];
+          const value = args[i + 1];
+          if (!entity || !value) continue;
+          pairs.push([String(entity), String(value)]);
+        }
+        if (pairs.length > 0) {
+          const rendered = pairs.map(([entity, value]) => {
+            const text = this.generateText(relation, [entity, value]);
+            return String(text || '').replace(/\.$/, '');
+          });
+          return `${rendered.join(', ')}.`;
+        }
+      }
+    }
+
+    // DS19: solve blocks define assignment relations; prefer "is at" phrasing for those.
+    if (typeof operator === 'string' && Array.isArray(args) && args.length === 2) {
+      if (this.semanticIndex?.isAssignmentRelation?.(operator)) {
+        return `${args[0]} is at ${args[1]}.`;
+      }
+    }
     return textGenerator.generate(operator, args);
   }
 

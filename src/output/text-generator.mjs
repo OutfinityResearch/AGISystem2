@@ -155,16 +155,9 @@ export class TextGenerator {
     if (argValues.length === 1) {
       return `${argValues[0]} is ${operator}.`;
     }
-    if (argValues.length === 2) {
-      // Detect assignment/placement relations (common in solve blocks)
-      // These should use "is at/in" pattern, not verb conjugation
-      const assignmentPatterns = ['seating', 'arrangement', 'placement', 'assignment', 'position', 'location', 'slot'];
-      const opLower = operator.toLowerCase();
-      if (assignmentPatterns.some(p => opLower.includes(p)) || opLower.endsWith('ing')) {
-        return `${argValues[0]} is at ${argValues[1]}.`;
-      }
-      return `${argValues[0]} ${this.thirdPerson(operator)} ${argValues[1]}.`;
-    }
+	    if (argValues.length === 2) {
+	      return `${argValues[0]} ${this.thirdPerson(operator)} ${argValues[1]}.`;
+	    }
 
     return `${operator}(${argValues.join(', ')}).`;
   }

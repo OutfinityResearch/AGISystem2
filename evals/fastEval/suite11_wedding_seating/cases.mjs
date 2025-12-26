@@ -146,6 +146,66 @@ export const cases = [
     action: 'listSolutions',
     input_dsl: 'plasare',
     expected_nl: 'No valid solutions found.'
+  },
+
+  // ========================================
+  // SCENARIO 4: Larger CSP + multi-variable extraction
+  // 4 guests, 5 rooms, complete conflict graph → all guests must be in different rooms.
+  // Solver caps at 100 solutions (default). We also test:
+  // - listSolutions truncation (show 2)
+  // - multi-hole query extraction from a single solution via cspTuple
+  // ========================================
+
+  {
+    action: 'learn',
+    input_dsl: `
+      isA Guest1 GuestD
+      isA Guest2 GuestD
+      isA Guest3 GuestD
+      isA Guest4 GuestD
+      isA Room1 RoomD
+      isA Room2 RoomD
+      isA Room3 RoomD
+      isA Room4 RoomD
+      isA Room5 RoomD
+
+      conflictsWith Guest1 Guest2
+      conflictsWith Guest2 Guest1
+      conflictsWith Guest1 Guest3
+      conflictsWith Guest3 Guest1
+      conflictsWith Guest1 Guest4
+      conflictsWith Guest4 Guest1
+      conflictsWith Guest2 Guest3
+      conflictsWith Guest3 Guest2
+      conflictsWith Guest2 Guest4
+      conflictsWith Guest4 Guest2
+      conflictsWith Guest3 Guest4
+      conflictsWith Guest4 Guest3
+
+      @rooms solve WeddingSeating
+        guests from GuestD
+        tables from RoomD
+        noConflict conflictsWith
+      end
+    `,
+    expected_nl: 'Found 100 rooms:'
+  },
+  {
+    action: 'listSolutions',
+    input_dsl: 'rooms',
+    maxSolutions: 2,
+    expected_nl: 'Found 100 solutions (showing 2). Solution 1: Guest1 is at Room1, Guest2 is at Room2, Guest3 is at Room3, Guest4 is at Room4. Solution 2: Guest1 is at Room1, Guest2 is at Room2, Guest3 is at Room3, Guest4 is at Room5.'
+  },
+  {
+    action: 'query',
+    input_dsl: 'cspTuple rooms Guest1 ?r1 Guest2 ?r2 Guest3 ?r3 Guest4 Room4',
+    maxResults: 1,
+    expected_nl: [
+      'Guest1 is at Room1, Guest2 is at Room2, Guest3 is at Room3, Guest4 is at Room4.'
+    ],
+    proof_nl: [
+      'Fact in KB: Guest1 is at Room1, Guest2 is at Room2, Guest3 is at Room3, Guest4 is at Room4'
+    ]
   }
 ];
 

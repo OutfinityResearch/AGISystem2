@@ -6,15 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="impelmenting DS#19 wip">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/research/directions/hdc-strategies.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/hdc-strategies.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/research/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Core/00-relations.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/00-relations.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evals/fastEval/suite11_wedding_seating/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite11_wedding_seating/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/response-translator/list-solutions-translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/list-solutions-translator.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/response-translator/query-translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/query-translator.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/output/text-generator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/text-generator.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/operator-catalog.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/operator-catalog.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/reasoning-profile.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/reasoning-profile.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/operator-declarations.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/operator-declarations.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/semantic-index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/semantic-index.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session-check-dsl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-check-dsl.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -132,14 +132,6 @@
       <workItem from="1766477237780" duration="9294000" />
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
-    </task>
-    <task id="LOCAL-00036" summary="better documentation and project presentation">
-      <option name="closed" value="true" />
-      <created>1765891969187</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1765891969187</updated>
     </task>
     <task id="LOCAL-00037" summary="better documentation and project presentation">
       <option name="closed" value="true" />
@@ -525,7 +517,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766771322228</updated>
     </task>
-    <option name="localTasksCounter" value="85" />
+    <task id="LOCAL-00085" summary="impelmenting DS#19 wip">
+      <option name="closed" value="true" />
+      <created>1766772760101</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1766772760101</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

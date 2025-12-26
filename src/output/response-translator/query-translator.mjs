@@ -164,16 +164,18 @@ export class QueryTranslator extends BaseTranslator {
   }
 
   mergeResults(primary, secondary, parts) {
-    const seenAnswers = new Set();
     const combined = [];
-    const holeName = parts.find(p => p.startsWith('?'))?.substring(1);
+    const seenKeys = new Set();
+    const holeNames = [...new Set(parts.filter(p => p.startsWith('?')).map(p => p.substring(1)))];
 
     const addEntry = (entry) => {
-      const answer = this.getAnswer(entry.bindings, holeName);
-      if (answer && !this.isForbiddenAnswer(answer) && !seenAnswers.has(answer)) {
-        seenAnswers.add(answer);
-        combined.push(entry);
-      }
+      if (!entry?.bindings) return;
+      const key = this.getBindingKey(entry.bindings, holeNames);
+      if (!key) return;
+      if (seenKeys.has(key)) return;
+      if (this.bindingHasForbiddenAnswers(entry.bindings, holeNames)) return;
+      seenKeys.add(key);
+      combined.push(entry);
     };
 
     primary.forEach(addEntry);
@@ -187,6 +189,24 @@ export class QueryTranslator extends BaseTranslator {
       return bindings.get(holeName)?.answer;
     }
     return bindings?.[holeName]?.answer;
+  }
+
+  getBindingKey(bindings, holeNames) {
+    if (!bindings) return null;
+    if (!Array.isArray(holeNames) || holeNames.length === 0) return '__NOHOLES__';
+    const answers = holeNames.map(hole => this.getAnswer(bindings, hole));
+    if (answers.some(a => a === undefined || a === null || String(a).trim() === '')) return null;
+    return JSON.stringify(answers.map(a => String(a)));
+  }
+
+  bindingHasForbiddenAnswers(bindings, holeNames) {
+    if (!bindings) return true;
+    if (!Array.isArray(holeNames) || holeNames.length === 0) return false;
+    for (const holeName of holeNames) {
+      const answer = this.getAnswer(bindings, holeName);
+      if (this.isForbiddenAnswer(answer)) return true;
+    }
+    return false;
   }
 
   normalizeProofSteps(proofSteps) {
@@ -277,10 +297,26 @@ export class QueryTranslator extends BaseTranslator {
       if (this.isForbiddenAnswer(ans)) return { answer: null, proof: [] };
     }
 
-    const generatedText = this.session.generateText(op, args).replace(/[.!?]+$/, '');
-    const holeName = parts.find(p => p.startsWith('?'))?.substring(1);
-    const bindingData = bindings instanceof Map ? bindings.get(holeName) : bindings?.[holeName];
-    const proofSteps = bindingData?.steps;
+	    const generatedText = this.session.generateText(op, args).replace(/[.!?]+$/, '');
+    const holeNames = parts.slice(1).filter(p => p.startsWith('?')).map(p => p.substring(1));
+    const collectedSteps = [];
+    for (const holeName of holeNames) {
+      const bindingData = bindings instanceof Map ? bindings.get(holeName) : bindings?.[holeName];
+      const steps = bindingData?.steps;
+      if (Array.isArray(steps)) collectedSteps.push(...steps);
+      else if (typeof steps === 'string') collectedSteps.push(steps);
+    }
+    const dedupedSteps = [];
+    const seenStepStrings = new Set();
+    for (const step of collectedSteps) {
+      if (typeof step !== 'string') continue;
+      const key = step.trim();
+      if (!key) continue;
+      if (seenStepStrings.has(key)) continue;
+      seenStepStrings.add(key);
+      dedupedSteps.push(step);
+    }
+    const proofSteps = dedupedSteps.length > 0 ? dedupedSteps : entry?.steps;
 
 	    if (proofSteps && proofSteps.length > 0) {
 	      const normalized = this.normalizeProofSteps(proofSteps);

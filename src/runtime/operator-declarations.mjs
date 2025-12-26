@@ -1,5 +1,6 @@
 export const DECLARATION_OPERATORS = new Set([
   '__Relation',
+  '__AssignmentRelation',
   '__TransitiveRelation',
   '__SymmetricRelation',
   '__ReflexiveRelation',
@@ -16,6 +17,7 @@ export const BOOTSTRAP_OPERATORS = new Set([
   '___Similarity',
   '___MostSimilar',
   '__Relation',
+  '__AssignmentRelation',
   '__Role',
   '__TransitiveRelation',
   '__SymmetricRelation',
