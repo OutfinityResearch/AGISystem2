@@ -4,30 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="investigating saturation of variosu staregies, new strategy got introduced">
-      <change afterPath="$PROJECT_DIR$/src/runtime/core-validator.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/type-registry.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/core-validator.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/get-type.test.mjs" afterDir="false" />
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="impelmenting DS#19 wip">
+      <change afterPath="$PROJECT_DIR$/docs/theory/strategies/metric-affine-elastic.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/00-types.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/00-types.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/04a-numeric.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/04a-numeric.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runSaturationEval.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runSaturationEval.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/saturation/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Core/index.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/index.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS19-Semantic-Unification.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS19-Semantic-Unification.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/hrr-comparison.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/hrr-comparison.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/metric-affine.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/metric-affine.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evals/saturation/books/book01.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book01.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book02.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book02.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book03.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book03.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book05.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book05.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book10.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book10.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/executor-builtins.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-builtins.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/executor-graphs.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-graphs.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/executor-resolve.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-resolve.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/reasoning-profile.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/reasoning-profile.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/semantic-index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/semantic-index.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session-core-load.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-core-load.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/vocabulary.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/vocabulary.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/proof-validator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/proof-validator.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-proof-schema.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-proof-schema.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,22 +134,6 @@
       <workItem from="1766477237780" duration="9294000" />
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
-    </task>
-    <task id="LOCAL-00032" summary="added a new HDC strategy, wip">
-      <option name="closed" value="true" />
-      <created>1765880041338</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1765880041338</updated>
-    </task>
-    <task id="LOCAL-00033" summary="added a new HDC strategy, wip">
-      <option name="closed" value="true" />
-      <created>1765880724118</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1765880724118</updated>
     </task>
     <task id="LOCAL-00034" summary="better documentation">
       <option name="closed" value="true" />
@@ -537,7 +511,23 @@
       <option name="project" value="LOCAL" />
       <updated>1766760560839</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="investigating saturation of variosu staregies, new strategy got introduced">
+      <option name="closed" value="true" />
+      <created>1766763073322</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1766763073322</updated>
+    </task>
+    <task id="LOCAL-00082" summary="impelmenting DS#19 wip">
+      <option name="closed" value="true" />
+      <created>1766766318468</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1766766318468</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -579,6 +569,7 @@
     <MESSAGE value="created a custom agent for autoDiscovery of NLP to DSl and of reasoning bugs" />
     <MESSAGE value="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs" />
     <MESSAGE value="investigating saturation of variosu staregies, new strategy got introduced" />
-    <option name="LAST_COMMIT_MESSAGE" value="investigating saturation of variosu staregies, new strategy got introduced" />
+    <MESSAGE value="impelmenting DS#19 wip" />
+    <option name="LAST_COMMIT_MESSAGE" value="impelmenting DS#19 wip" />
   </component>
 </project>

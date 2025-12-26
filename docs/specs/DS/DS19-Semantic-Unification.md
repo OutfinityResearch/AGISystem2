@@ -156,6 +156,19 @@ For each semantic class, define canonical macro forms. Example (Communication):
 - Canonical: `tell speaker info listener`
 - Non-canonical forms such as explicit `_mtrans` patterns SHALL be rewritten into the canonical form when they match the canonical template, or rejected in `enforceCanonical` mode.
 
+**Theory-driven rewrite declarations.** Canonical rewrites SHOULD be declared in theory (Core or domain packs), not hardcoded in JS.  
+The canonical format is a fact:
+
+```
+canonicalRewrite fromOp toOp [argMap...] [[i,j]...]
+```
+
+Where:
+- `argMap` selects output arguments by index from the input arguments (e.g. `[0,1,3]`),
+- `[[i,j]...]` are equality constraints over the input arguments that MUST hold for the rewrite to apply.
+
+In strict mode, if `enforceCanonical` is enabled, the runtime MUST reject any persisted non-canonical primitive fact unless a matching `canonicalRewrite` rule is present and applicable (unambiguous).
+
 ### 19.5.3 Negation Canonicalization Rule
 
 All negations SHALL be stored in canonical metadata:

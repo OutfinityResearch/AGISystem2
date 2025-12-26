@@ -69,6 +69,32 @@ function fillFactIds(session, steps) {
   }
 }
 
+function findRuleId(session, name) {
+  if (!session || !name || typeof name !== 'string') return null;
+  const rules = session.rules || [];
+  for (const r of rules) {
+    if (!r) continue;
+    if (r.id && r.id === name) return r.id;
+    if (r.name && r.name === name) return r.id ?? null;
+    if (r.label && r.label === name) return r.id ?? null;
+    if (r.signature && r.signature === name) return r.id ?? null;
+    if (r.source && r.source === name) return r.id ?? null;
+  }
+  return null;
+}
+
+function fillRuleIds(session, steps) {
+  for (const step of steps) {
+    const uses = step?.usesRules;
+    if (!Array.isArray(uses)) continue;
+    for (const u of uses) {
+      if (!u || u.id !== null && u.id !== undefined) continue;
+      if (typeof u.name !== 'string') continue;
+      u.id = findRuleId(session, u.name);
+    }
+  }
+}
+
 function legacyStepToDs19(step) {
   if (!step || typeof step !== 'object') return null;
 
@@ -264,22 +290,37 @@ export function legacyStepsToDs19Steps(steps) {
 export function buildProofObject({ session, goalStatement, result }) {
   const goal = statementToGoalMetadata(goalStatement);
   const priority = session?.reasoningPriority || 'symbolicPriority';
-  const method =
-    result?.method ||
-    (priority === 'holographicPriority' ? 'holographic' : 'symbolic');
+  const mode = priority === 'holographicPriority' ? 'holographic' : 'symbolic';
+  const method = mode;
 
   const legacySteps = Array.isArray(result?.steps) ? result.steps : [];
   const steps = legacyStepsToDs19Steps(legacySteps);
   fillFactIds(session, steps);
+  fillRuleIds(session, steps);
+
+  const assumptions = [];
+  for (const s of legacySteps) {
+    if (!s || s.operation !== 'cwa_negation' || typeof s.fact !== 'string') continue;
+    const parsed = parseFactString(s.fact);
+    if (parsed?.operator === 'Not' && Array.isArray(parsed.args) && parsed.args.length >= 1) {
+      assumptions.push({
+        kind: 'closed_world_negation',
+        target: { operator: parsed.args[0], args: parsed.args.slice(1) }
+      });
+    }
+  }
 
   return {
     valid: !!result?.valid,
     goal,
     method,
+    mode,
     confidence: typeof result?.confidence === 'number' ? result.confidence : (result?.valid ? 1 : 0),
     steps,
+    assumptions: assumptions.length > 0 ? assumptions : undefined,
     legacySteps,
     legacy: {
+      methodRaw: result?.method || null,
       reason: result?.reason || null,
       searchTrace: result?.searchTrace || null
     }

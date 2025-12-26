@@ -19,6 +19,7 @@ describe('DS19: Semantic Unification — proof schema + validator', () => {
       assert.equal(typeof result.proofObject.valid, 'boolean');
       assert.deepEqual(result.proofObject.goal, { operator: 'isA', args: ['Socrates', 'Human'] });
       assert.ok(Array.isArray(result.proofObject.steps));
+      assert.equal(result.proofObject.method, 'symbolic');
     }
   );
 
@@ -36,6 +37,24 @@ describe('DS19: Semantic Unification — proof schema + validator', () => {
       const { validateProof } = await import('../../../src/reasoning/proof-validator.mjs');
       const ok = validateProof(result.proofObject, session);
       assert.equal(ok, true);
+    }
+  );
+
+  test(
+    'Closed-world negation emits explicit assumptions (DS19)',
+    async () => {
+      const session = new Session({ geometry: 2048, closedWorldAssumption: true });
+      const result = session.prove('@goal Not isA Socrates Human');
+      assert.equal(result.valid, true);
+      assert.equal(result.proofObject.method, 'symbolic');
+      assert.ok(Array.isArray(result.proofObject.assumptions));
+      assert.deepEqual(result.proofObject.assumptions[0], {
+        kind: 'closed_world_negation',
+        target: { operator: 'isA', args: ['Socrates', 'Human'] }
+      });
+
+      const { validateProof } = await import('../../../src/reasoning/proof-validator.mjs');
+      assert.equal(validateProof(result.proofObject, session), true);
     }
   );
 });

@@ -127,16 +127,22 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
       <p>Compact 32-byte vectors over Z₂₅₆. Uses XOR binding with L₁ similarity and arithmetic mean bundling. Fuzzy-Boolean Hyper-Lattice.</p>
       <p><a href="strategies/metric-affine.html">Full Documentation &rarr;</a></p>
     </div>
+
+    <div class="section-card" style="background: linear-gradient(135deg, #e0f2f122 0%, #b2dfdb22 100%);">
+      <h3>Metric-Affine Elastic (EMA)</h3>
+      <p>Metric-Affine extension with chunked bundling and optional elastic geometry for large KB superpositions.</p>
+      <p><a href="strategies/metric-affine-elastic.html">Full Documentation &rarr;</a></p>
+    </div>
   </div>
 
   <h2>HRR Comparison: Original Contributions</h2>
 
-  <p>AGISystem2 implements three HDC strategies, two of which are <strong>original contributions</strong> not found in existing literature. How do they relate to Tony Plate's Holographic Reduced Representations (HRR)?</p>
+  <p>AGISystem2 implements four HDC strategies. Two are <strong>original contributions</strong> not found in existing literature, and one is an elastic extension of Metric-Affine. How do they relate to Tony Plate's Holographic Reduced Representations (HRR)?</p>
 
   <div class="section-grid">
     <div class="section-card">
       <h3><a href="hrr-comparison.html">HRR vs. Our Strategies</a></h3>
-      <p>Detailed analysis of Dense-Binary (standard), Sparse Polynomial (novel), and Metric-Affine (novel) against classic HRR.</p>
+      <p>Detailed analysis of Dense-Binary (standard), Sparse Polynomial (novel), and Metric-Affine (novel) against classic HRR, with notes on the EMA extension.</p>
     </div>
 
     <div class="section-card" style="background: linear-gradient(135deg, #f3e5f522 0%, #ce93d822 100%);">
@@ -148,10 +154,15 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
       <h3>Metric-Affine</h3>
       <p><strong>ORIGINAL:</strong> Fuzzy-Boolean hybrid combining XOR binding with continuous bundling. HRR-inspired but novel.</p>
     </div>
+
+    <div class="section-card" style="background: linear-gradient(135deg, #e0f2f122 0%, #b2dfdb22 100%);">
+      <h3>Metric-Affine Elastic (EMA)</h3>
+      <p><strong>EXTENSION:</strong> Chunked bundling + elastic geometry for stable superposition at scale.</p>
+    </div>
   </div>
 
   <div class="alert alert-info">
-    <strong>Summary:</strong> Dense-Binary is standard VSA/HDC. Sparse Polynomial and Metric-Affine are original contributions developed for AGISystem2, each introducing novel mathematical foundations for hyperdimensional reasoning.
+    <strong>Summary:</strong> Dense-Binary is standard VSA/HDC. Sparse Polynomial and Metric-Affine are original contributions developed for AGISystem2, and Metric-Affine Elastic extends Metric-Affine for large KB superpositions.
   </div>
 
   <h2>Trustworthy AI</h2>
@@ -304,6 +315,7 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
     <li><a href="strategies/dense-binary.html">Dense-Binary Strategy - In-Depth Theory</a></li>
     <li><a href="strategies/sparse-polynomial.html">SPHDC Strategy - In-Depth Theory</a> (Original)</li>
     <li><a href="strategies/metric-affine.html">Metric-Affine Strategy - Fuzzy-Boolean HDC</a> (Original)</li>
+    <li><a href="strategies/metric-affine-elastic.html">Metric-Affine Elastic Strategy - Chunked Bundling + Elastic Geometry</a> (Extension)</li>
     <li><a href="strategies/sphdc-analysis.html">SPHDC Theoretical Analysis</a> - Mathematical deep-dive</li>
     <li><a href="../specsLoader.html?spec=DS01-Theoretical-Foundation.md">DS01 - Theoretical Foundation Specification</a></li>
     <li><a href="../specsLoader.html?spec=DS09-Core-HDC-Implementation.md">DS09 - Core HDC Implementation Specification</a></li>
