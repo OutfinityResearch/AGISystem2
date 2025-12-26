@@ -48,6 +48,7 @@ export function expandGraph(executor, graphName, args) {
     dbg('GRAPH_EXPAND', `Expanding graph: ${graphName} with ${args.length} args`);
   }
 
+  executor._graphDepth = (executor._graphDepth || 0) + 1;
   const parentScope = executor.session.scope;
   const graphScope = parentScope.child();
   executor.session.scope = graphScope;
@@ -82,6 +83,7 @@ export function expandGraph(executor, graphName, args) {
     return null;
   } finally {
     executor.session.scope = parentScope;
+    executor._graphDepth = Math.max(0, (executor._graphDepth || 1) - 1);
   }
 }
 
@@ -90,5 +92,7 @@ export function bindGraphInvocationResult(executor, stmt, graphResult) {
     return executor.resolveExpression(stmt.operator);
   }
   const operatorVec = executor.resolveExpression(stmt.operator);
-  return bind(operatorVec, graphResult);
+  const out = bind(operatorVec, graphResult);
+  executor.session?.typeRegistry?.recordBind?.({ inputVec: graphResult, outputVec: out, rhsTypeMarker: null });
+  return out;
 }

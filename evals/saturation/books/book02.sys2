@@ -22,7 +22,7 @@ end
 @_ Idea NoiseGate Filter Selective
 @B02_R0002 Mentions Book02 Key_B02_C01_I02 NoiseGate
 
-@Chapter01 bundle [$B02_R0001, $B02_R0002]
+@Chapter01 __Sequence [$B02_R0001, $B02_R0002]
 
 # Chapter 02 - Memory
 # Idea: ShortTermStore (Memory, Volatile)
@@ -33,7 +33,7 @@ end
 @_ Idea LongTermIndex Memory Durable
 @B02_R0004 Mentions Book02 Key_B02_C02_I02 LongTermIndex
 
-@Chapter02 bundle [$B02_R0003, $B02_R0004]
+@Chapter02 __Sequence [$B02_R0003, $B02_R0004]
 
 # Chapter 03 - Learning
 # Idea: PatternMining (Learning, Incremental)
@@ -44,7 +44,7 @@ end
 @_ Idea ModelUpdate Learning Adaptive
 @B02_R0006 Mentions Book02 Key_B02_C03_I02 ModelUpdate
 
-@Chapter03 bundle [$B02_R0005, $B02_R0006]
+@Chapter03 __Sequence [$B02_R0005, $B02_R0006]
 
 # Chapter 04 - Planning
 # Idea: GoalStack (Planner, Hierarchical)
@@ -55,6 +55,6 @@ end
 @_ Idea ActionSequencing Planner Ordered
 @B02_R0008 Mentions Book02 Key_B02_C04_I02 ActionSequencing
 
-@Chapter04 bundle [$B02_R0007, $B02_R0008]
+@Chapter04 __Sequence [$B02_R0007, $B02_R0008]
 
-@Book:Book bundle [$Chapter01, $Chapter02, $Chapter03, $Chapter04]
+@Book:Book __Sequence [$Chapter01, $Chapter02, $Chapter03, $Chapter04]

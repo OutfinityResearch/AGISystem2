@@ -70,6 +70,20 @@ export function resolveIdentifier(executor, expr) {
     ? canonicalizeTokenName(executor.session, expr.name)
     : expr.name;
 
+  // Strict typing: type markers must be declared explicitly (typically via `config/Core/00-types.sys2`).
+  // This catches silent creation of "FooType" atoms via vocabulary fallback.
+  if (
+    executor.session?.strictMode &&
+    // Only enforce for parser-produced identifiers; internal resolution (e.g., KB indexing)
+    // uses plain objects and should not make theory loading fail mid-statement.
+    (expr instanceof Identifier) &&
+    /^[A-Za-z_][A-Za-z0-9_]*Type$/.test(name) &&
+    !executor.session.scope.has(name) &&
+    !executor.session.vocabulary.has(name)
+  ) {
+    throw new ExecutionError(`Unknown type marker "${name}" (strict mode)`, expr);
+  }
+
   // If canonicalization rewrites the token to a name that is already bound in scope,
   // prefer that canonical binding (e.g., @Closed:Closed __State) instead of creating
   // a new vocabulary atom for the same surface form. This keeps learn() rollback

@@ -32,6 +32,17 @@ function parsePropertyLines(content, className) {
   return names;
 }
 
+function parseTypeMarkers(content) {
+  const names = new Set();
+  // Matches lines like: "@PersonType:PersonType ___NewVector ..."
+  const re = /^@(\w+):\w+\s+___NewVector\b/;
+  for (const line of content.split('\n')) {
+    const m = line.match(re);
+    if (m) names.add(m[1]);
+  }
+  return names;
+}
+
 function parseMutuallyExclusive(content) {
   // Lines like:
   //   mutuallyExclusive hasState Open Closed
@@ -109,6 +120,7 @@ export class SemanticIndex {
     symmetricRelations = new Set(),
     reflexiveRelations = new Set(),
     inheritableProperties = new Set(),
+    typeMarkers = new Set(),
     mutuallyExclusive = new Map(),
     inverseRelations = new Map(),
     contradictsSameArgs = new Map(),
@@ -120,6 +132,7 @@ export class SemanticIndex {
     this.symmetricRelations = symmetricRelations;
     this.reflexiveRelations = reflexiveRelations;
     this.inheritableProperties = inheritableProperties;
+    this.typeMarkers = typeMarkers;
     this.mutuallyExclusive = mutuallyExclusive;
     this.inverseRelations = inverseRelations;
     this.contradictsSameArgs = contradictsSameArgs;
@@ -142,6 +155,10 @@ export class SemanticIndex {
 
   isInheritableProperty(name) {
     return this.inheritableProperties.has(name);
+  }
+
+  isTypeMarker(name) {
+    return this.typeMarkers.has(name);
   }
 
   getMutuallyExclusivePairs(operator) {
@@ -213,6 +230,7 @@ export class SemanticIndex {
         'should',
         'may'
       ]),
+      typeMarkers: new Set(),
       mutuallyExclusive: new Map(),
       inverseRelations: new Map(),
       contradictsSameArgs: new Map(),
@@ -237,6 +255,7 @@ export class SemanticIndex {
       symmetricRelations,
       reflexiveRelations,
       inheritableProperties,
+      typeMarkers: new Set(),
       mutuallyExclusive: new Map(),
       inverseRelations: new Map(),
       contradictsSameArgs: new Map(),
@@ -254,6 +273,32 @@ export class SemanticIndex {
     for (const name of defaults.inheritableProperties) idx.inheritableProperties.add(name);
 
     return idx;
+  }
+
+  static withCoreTypes(baseIndex, { allowFallbackDefaults = true } = {}) {
+    const configPath = coreConfigPath('00-types.sys2');
+    if (!existsSync(configPath)) return baseIndex;
+
+    const content = readFileSync(configPath, 'utf-8');
+    const markers = parseTypeMarkers(content);
+
+    const merged = new SemanticIndex({
+      transitiveRelations: new Set(baseIndex.transitiveRelations),
+      symmetricRelations: new Set(baseIndex.symmetricRelations),
+      reflexiveRelations: new Set(baseIndex.reflexiveRelations),
+      inheritableProperties: new Set(baseIndex.inheritableProperties),
+      typeMarkers: new Set(baseIndex.typeMarkers || []),
+      mutuallyExclusive: new Map(baseIndex.mutuallyExclusive),
+      inverseRelations: new Map(baseIndex.inverseRelations),
+      contradictsSameArgs: new Map(baseIndex.contradictsSameArgs),
+      mutuallyExclusiveSources: new Map(baseIndex.mutuallyExclusiveSources || []),
+      inverseRelationsSources: new Map(baseIndex.inverseRelationsSources || []),
+      contradictsSameArgsSources: new Map(baseIndex.contradictsSameArgsSources || [])
+    });
+
+    for (const m of markers) merged.typeMarkers.add(m);
+    if (!allowFallbackDefaults) return merged;
+    return merged;
   }
 
   static withCoreConstraints(baseIndex, { allowFallbackDefaults = true } = {}) {
@@ -274,6 +319,7 @@ export class SemanticIndex {
       symmetricRelations: new Set(baseIndex.symmetricRelations),
       reflexiveRelations: new Set(baseIndex.reflexiveRelations),
       inheritableProperties: new Set(baseIndex.inheritableProperties),
+      typeMarkers: new Set(baseIndex.typeMarkers || []),
       mutuallyExclusive: new Map(baseIndex.mutuallyExclusive),
       inverseRelations: new Map(baseIndex.inverseRelations),
       contradictsSameArgs: new Map(baseIndex.contradictsSameArgs),
@@ -321,8 +367,14 @@ export class SemanticIndex {
   }
 }
 
-const BASE_SEMANTIC_INDEX = SemanticIndex.fromCoreRelationsFile({ allowFallbackDefaults: true });
+const STRICT_BASE = SemanticIndex.fromCoreRelationsFile({ allowFallbackDefaults: false });
+const STRICT_WITH_TYPES = SemanticIndex.withCoreTypes(STRICT_BASE, { allowFallbackDefaults: false });
+export const DEFAULT_SEMANTIC_INDEX = SemanticIndex.withCoreConstraints(STRICT_WITH_TYPES, {
+  allowFallbackDefaults: false
+});
 
-export const DEFAULT_SEMANTIC_INDEX = SemanticIndex.withCoreConstraints(BASE_SEMANTIC_INDEX, {
+const FALLBACK_BASE = SemanticIndex.fromCoreRelationsFile({ allowFallbackDefaults: true });
+const FALLBACK_WITH_TYPES = SemanticIndex.withCoreTypes(FALLBACK_BASE, { allowFallbackDefaults: true });
+export const FALLBACK_SEMANTIC_INDEX = SemanticIndex.withCoreConstraints(FALLBACK_WITH_TYPES, {
   allowFallbackDefaults: true
 });

@@ -29,6 +29,20 @@ function executeNewVector(executor, stmt) {
   const { session } = executor;
   const args = stmt.args || [];
   if (args.length === 0) {
+    // If the statement binds to a stable name, prefer deterministic naming over a session counter.
+    const stableName = stmt?.persistName || null;
+    if (stableName) {
+      const token = `__NV_User__${String(stableName)}__`;
+      return session.vocabulary.getOrCreate(token);
+    }
+
+    // Strict mode forbids nondeterministic top-level NewVector usage.
+    // Graph-local "fresh" NewVector is allowed (used by typed constructors and other macros).
+    const inGraph = (executor._graphDepth || 0) > 0;
+    if (session?.strictMode && !inGraph && !stmt?.destination) {
+      throw new ExecutionError('___NewVector without a persistent name must be scope-bound or graph-local (strict mode)', stmt);
+    }
+
     // Deterministic per session: stable ordering for a given program execution.
     const token = newVectorToken(session, 'session');
     return session.vocabulary.getOrCreate(token);
@@ -51,9 +65,16 @@ function executeBind(executor, stmt) {
   if (args.length === 1) {
     return argVector(executor, args[0]);
   }
+  const { session } = executor;
   let out = argVector(executor, args[0]);
   for (let i = 1; i < args.length; i++) {
-    out = bind(out, argVector(executor, args[i]));
+    const rhsNode = args[i];
+    const rhsVec = argVector(executor, rhsNode);
+    const rhsToken = executor.resolveNameFromNode(rhsNode);
+    const rhsType = session?.typeRegistry?.resolveTypeMarkerName?.(rhsToken) || null;
+    const next = bind(out, rhsVec);
+    session?.typeRegistry?.recordBind?.({ inputVec: out, outputVec: next, rhsTypeMarker: rhsType });
+    out = next;
   }
   return out;
 }
@@ -164,6 +185,46 @@ function executeExtend(executor, stmt) {
   throw new ExecutionError(`___Extend not supported by strategy ${vec?.strategyId || executor.session.hdcStrategy}`, stmt);
 }
 
+function executeGetType(executor, stmt) {
+  const args = stmt.args || [];
+  if (args.length < 1) {
+    throw new ExecutionError('___GetType requires 1 argument', stmt);
+  }
+
+  const { session } = executor;
+  const instance = argVector(executor, args[0]);
+
+  // If the instance is itself a type marker, treat it as its own type.
+  const instanceName = session?.vocabulary?.reverseLookup?.(instance);
+  const directType = session?.typeRegistry?.resolveTypeMarkerName?.(instanceName) || null;
+  if (directType) {
+    return session.vocabulary.getOrCreate(directType);
+  }
+
+  const typeName = session?.typeRegistry?.getPrimaryTypeName?.(instance);
+  if (!typeName) {
+    if (session?.strictMode) {
+      throw new ExecutionError('___GetType: instance has no known type (strict mode)', stmt);
+    }
+    return session.vocabulary.getOrCreate('__UnknownType__');
+  }
+
+  // In strict mode, ensure we only return declared type markers.
+  const marker = session?.typeRegistry?.resolveTypeMarkerName?.(typeName);
+  if (!marker) {
+    if (session?.strictMode) {
+      throw new ExecutionError(`___GetType: unknown type marker "${typeName}" (strict mode)`, stmt);
+    }
+    return session.vocabulary.getOrCreate(typeName);
+  }
+
+  // Prefer scope-bound canonical marker vectors (Core types are usually declared in scope, not vocabulary).
+  if (session?.scope?.has?.(marker)) {
+    return session.scope.get(marker);
+  }
+  return session.vocabulary.getOrCreate(marker);
+}
+
 export function tryExecuteBuiltin(executor, stmt, operatorName) {
   if (!executor?.session?.l0BuiltinsEnabled) return { handled: false };
   if (typeof operatorName !== 'string' || !operatorName.startsWith('___')) return { handled: false };
@@ -184,7 +245,7 @@ export function tryExecuteBuiltin(executor, stmt, operatorName) {
     case '___Extend':
       return { handled: true, vector: executeExtend(executor, stmt) };
     case '___GetType':
-      throw new ExecutionError('___GetType is not implemented (type embedding not supported)', stmt);
+      return { handled: true, vector: executeGetType(executor, stmt) };
     default:
       // If this is a known bootstrap primitive, fail-fast. Otherwise treat as normal operator.
       if (BOOTSTRAP_OPERATORS.has(operatorName)) {

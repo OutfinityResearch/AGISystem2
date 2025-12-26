@@ -3,22 +3,22 @@
 # Auto-loaded by runtime
 
 # ===== Type Markers =====
-@EntityType:EntityType ___NewVector
-@PersonType:PersonType ___NewVector
-@ObjectType:ObjectType ___NewVector
-@PlaceType:PlaceType ___NewVector
-@OrganizationType:OrganizationType ___NewVector
-@SubstanceType:SubstanceType ___NewVector
-@AbstractType:AbstractType ___NewVector
-@PropertyType:PropertyType ___NewVector
-@StateType:StateType ___NewVector
-@CategoryType:CategoryType ___NewVector
-@RelationType:RelationType ___NewVector
-@ActionType:ActionType ___NewVector
-@TimePointType:TimePointType ___NewVector
-@TimePeriodType:TimePeriodType ___NewVector
-@NumberType:NumberType ___NewVector
-@AmountType:AmountType ___NewVector
-@MeasureType:MeasureType ___NewVector
-@EventType:EventType ___NewVector
-@RoleType:RoleType ___NewVector
+@EntityType:EntityType ___NewVector "EntityType" "Core"
+@PersonType:PersonType ___NewVector "PersonType" "Core"
+@ObjectType:ObjectType ___NewVector "ObjectType" "Core"
+@PlaceType:PlaceType ___NewVector "PlaceType" "Core"
+@OrganizationType:OrganizationType ___NewVector "OrganizationType" "Core"
+@SubstanceType:SubstanceType ___NewVector "SubstanceType" "Core"
+@AbstractType:AbstractType ___NewVector "AbstractType" "Core"
+@PropertyType:PropertyType ___NewVector "PropertyType" "Core"
+@StateType:StateType ___NewVector "StateType" "Core"
+@CategoryType:CategoryType ___NewVector "CategoryType" "Core"
+@RelationType:RelationType ___NewVector "RelationType" "Core"
+@ActionType:ActionType ___NewVector "ActionType" "Core"
+@TimePointType:TimePointType ___NewVector "TimePointType" "Core"
+@TimePeriodType:TimePeriodType ___NewVector "TimePeriodType" "Core"
+@NumberType:NumberType ___NewVector "NumberType" "Core"
+@AmountType:AmountType ___NewVector "AmountType" "Core"
+@MeasureType:MeasureType ___NewVector "MeasureType" "Core"
+@EventType:EventType ___NewVector "EventType" "Core"
+@RoleType:RoleType ___NewVector "RoleType" "Core"

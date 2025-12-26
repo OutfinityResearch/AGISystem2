@@ -24,9 +24,13 @@ Useful options:
 ```bash
 node evals/runSaturationEval.mjs --full
 node evals/runSaturationEval.mjs --huge
+node evals/runSaturationEval.mjs --extra-huge
 node evals/runSaturationEval.mjs --strategies=dense-binary,metric-affine,metric-affine-elastic
 node evals/runSaturationEval.mjs --no-color
 ```
+
+Notes:
+- `--extra-huge` uses 32x and 64x the fast geometries (dense hits 8192/16384 bits).
 
 Books:
 

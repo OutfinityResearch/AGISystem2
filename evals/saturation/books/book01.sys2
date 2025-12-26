@@ -22,7 +22,7 @@ end
 @_ Idea EdgeDetection PerceptionModule ContrastSensitive
 @B01_R0002 Mentions Book01 Key_B01_C01_I02 EdgeDetection
 
-@Chapter01 bundle [$B01_R0001, $B01_R0002]
+@Chapter01 __Sequence [$B01_R0001, $B01_R0002]
 
 # Chapter 02 - Reasoning
 # Idea: SymbolGrounding (Mapping, Stable)
@@ -33,6 +33,6 @@ end
 @_ Idea ContextUpdate Inference Incremental
 @B01_R0004 Mentions Book01 Key_B01_C02_I02 ContextUpdate
 
-@Chapter02 bundle [$B01_R0003, $B01_R0004]
+@Chapter02 __Sequence [$B01_R0003, $B01_R0004]
 
-@Book:Book bundle [$Chapter01, $Chapter02]
+@Book:Book __Sequence [$Chapter01, $Chapter02]

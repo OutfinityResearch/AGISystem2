@@ -46,6 +46,12 @@ const HUGE_CONFIGS = [
   { strategy: 'metric-affine-elastic', geometries: [32, 64] }  // bytes
 ];
 
+const EXTRA_HUGE_CONFIGS = [
+  { strategy: 'dense-binary', geometries: [8192, 16384] },        // bits (32x, 64x vs fast)
+  { strategy: 'sparse-polynomial', geometries: [64, 128] },       // k
+  { strategy: 'metric-affine', geometries: [512, 1024] },         // bytes
+  { strategy: 'metric-affine-elastic', geometries: [256, 512] }   // bytes
+];
 const DEFAULT_CANDIDATE_SET_SIZE = 10;
 const DEFAULT_MIN_MARGIN = 0.02;
 
@@ -251,7 +257,9 @@ function decodeIdeaFromBook(session, bookVec, query, candidates, options = {}) {
   const margin = (top1?.similarity ?? 0) - (top2?.similarity ?? 0);
 
   const expectNone = query.expect === 'none';
+  const expectedEntry = expectNone ? null : ranked.find(r => r.name === query.expect);
   const expectedRank = expectNone ? null : (ranked.findIndex(r => r.name === query.expect) + 1 || null);
+  const expectedSim = expectedEntry ? expectedEntry.similarity : null;
   const correctTop1 = !expectNone && top1.name === query.expect;
   const marginOk = margin >= minMargin;
   // POS: need correct top-1 and some separation.
@@ -268,6 +276,7 @@ function decodeIdeaFromBook(session, bookVec, query, candidates, options = {}) {
     top1,
     top2,
     margin,
+    expectedSim,
     expectedRank,
     minMargin,
     hdcMatch,
@@ -311,6 +320,51 @@ function configInfo({ strategyId, geometry, priority }) {
 
 function configLabel(cfg) {
   return configInfo(cfg).label;
+}
+
+function formatThresholds(thresholds) {
+  if (!thresholds || typeof thresholds !== 'object') return 'n/a';
+  const order = [
+    'HDC_MATCH',
+    'SIMILARITY',
+    'VERIFICATION',
+    'ANALOGY_MIN',
+    'ANALOGY_MAX',
+    'RULE_MATCH',
+    'CONCLUSION_MATCH',
+    'BUNDLE_COMMON_SCORE'
+  ];
+  const seen = new Set();
+  const parts = [];
+  const add = (key) => {
+    if (!Object.prototype.hasOwnProperty.call(thresholds, key)) return;
+    const val = thresholds[key];
+    const fmt = typeof val === 'number' ? val.toFixed(3) : String(val);
+    parts.push(`${key}=${fmt}`);
+    seen.add(key);
+  };
+  for (const key of order) add(key);
+  const remaining = Object.keys(thresholds).filter(k => !seen.has(k)).sort();
+  for (const key of remaining) add(key);
+  return parts.length ? parts.join(' ') : 'n/a';
+}
+
+function formatStrategyProps(strategy, geometry, bytes) {
+  if (!strategy?.properties) return 'n/a';
+  const props = strategy.properties;
+  const parts = [];
+  if (Number.isFinite(props.recommendedBundleCapacity)) {
+    parts.push(`bundleRec=${props.recommendedBundleCapacity}`);
+  }
+  if (Number.isFinite(props.maxBundleCapacity)) {
+    parts.push(`bundleMax=${props.maxBundleCapacity}`);
+  }
+  if (Number.isFinite(bytes)) {
+    parts.push(`bytesPerVector=${bytes}B`);
+  } else if (typeof props.bytesPerVector === 'function' && Number.isFinite(geometry)) {
+    parts.push(`bytesPerVector=${props.bytesPerVector(geometry)}B`);
+  }
+  return parts.length ? parts.join(' ') : 'n/a';
 }
 
 async function runOne(config, bookPath) {
@@ -405,6 +459,7 @@ async function runOne(config, bookPath) {
 async function main() {
   const fullMode = hasFlag('--full');
   const hugeMode = hasFlag('--huge');
+  const extraHugeMode = hasFlag('--extra-huge');
   const details = true;
   const noColor = hasFlag('--no-color');
   const useColor = process.stdout.isTTY && !noColor;
@@ -420,11 +475,27 @@ async function main() {
     ? new Set(strategiesArg.split(',').map(s => s.trim()).filter(Boolean))
     : null;
 
-  const baseConfigs = hugeMode ? HUGE_CONFIGS : (fullMode ? FULL_CONFIGS : FAST_CONFIGS);
-  const configs = baseConfigs
+  const baseConfigs = extraHugeMode
+    ? EXTRA_HUGE_CONFIGS
+    : (hugeMode ? HUGE_CONFIGS : (fullMode ? FULL_CONFIGS : FAST_CONFIGS));
+
+  let effectiveConfigs = baseConfigs;
+  if (extraHugeMode) {
+    const sparseRequested = !requestedStrategies || requestedStrategies.has('sparse-polynomial');
+    if (sparseRequested) {
+      console.log(colorize(useColor, ANSI.yellow, 'Warning: skipping sparse-polynomial for --extra-huge (too slow).'));
+    }
+    effectiveConfigs = baseConfigs.filter(c => c.strategy !== 'sparse-polynomial');
+  }
+
+  const configs = effectiveConfigs
     .filter(c => available.has(c.strategy))
     .filter(c => !requestedStrategies || requestedStrategies.has(c.strategy))
     .flatMap(c => priorities.flatMap(p => c.geometries.map(g => ({ strategyId: c.strategy, geometry: g, priority: p }))));
+
+  if (configs.length === 0) {
+    throw new Error('No configs selected after applying flags/filters.');
+  }
 
   const books = discoverBooks();
   if (books.length === 0) {
@@ -455,8 +526,12 @@ async function main() {
   const totalsByConfig = new Map();
   const byConfigDetails = new Map();
 
-  for (const cfg of configs) {
+  for (let cfgIndex = 0; cfgIndex < configs.length; cfgIndex++) {
+    const cfg = configs[cfgIndex];
     const { label, bytes } = configInfo(cfg);
+    const cfgLabel = `${label} (${cfgIndex + 1}/${configs.length})`;
+    console.log();
+    console.log(`${ANSI.bold}Running:${ANSI.reset} ${cfgLabel}`);
 
     let passCount = 0;
     let posPass = 0;
@@ -486,19 +561,31 @@ async function main() {
       posMargins.push(posMargin);
       negMargins.push(negMargin);
 
+      const bookName = res.book.replace('.sys2', '');
+      const status = res.passed ? colorize(useColor, ANSI.green, 'PASS') : colorize(useColor, ANSI.red, 'FAIL');
+      const posTag = posOk ? colorize(useColor, ANSI.green, 'POS') : colorize(useColor, ANSI.red, 'POS');
+      const negTag = negOk ? colorize(useColor, ANSI.green, 'NEG') : colorize(useColor, ANSI.red, 'NEG');
+      const bookLine = `- ${bookName}: ${status} ${posTag}/${negTag} learn=${fmtMs(res.times.learnMs)} decode=${fmtMs(res.times.decodeMs)}`;
+      console.log(bookLine);
+
       perBook.push({
         book: res.book.replace('.sys2', ''),
         passed: res.passed,
         posOk,
         negOk,
         ideas: d?.ideas ?? 0,
+        posExpect: d?.pos?.expect ?? null,
         posTop1Name: d?.posRes?.top1?.name ?? null,
         posTop1: d?.posRes?.top1?.similarity ?? 0,
+        posExpectSim: d?.posRes?.expectedSim ?? null,
         posMargin,
         posRank: d?.posRes?.expectedRank ?? null,
+        negExpect: d?.neg?.expect ?? null,
         negTop1Name: d?.negRes?.top1?.name ?? null,
         negTop1: d?.negRes?.top1?.similarity ?? 0,
         negMargin,
+        hdcMatch: d?.posRes?.hdcMatch ?? null,
+        minMargin: d?.posRes?.minMargin ?? null,
         simChecks,
         learnMs: res.times.learnMs,
         decodeMs: res.times.decodeMs,
@@ -510,6 +597,9 @@ async function main() {
     totalsByConfig.set(label, {
       label,
       bytes,
+      strategyId: cfg.strategyId,
+      geometry: cfg.geometry,
+      priority: cfg.priority,
       pass: passCount,
       posPass,
       negPass,
@@ -520,7 +610,7 @@ async function main() {
       avgPosMargin: avg(posMargins),
       avgNegMargin: avg(negMargins)
     });
-    byConfigDetails.set(label, perBook);
+    byConfigDetails.set(label, { perBook, meta: { ...cfg, label, bytes } });
   }
 
   // Summary table (configs as rows)
@@ -598,59 +688,191 @@ async function main() {
     return '─'.repeat(Math.max(16, totalW));
   };
 
-  console.log(`${ANSI.bold}Summary${ANSI.reset}`);
-  const headerLine = headers.map((h, idx) => {
-    const w = colW.get(h.key);
+  const printSummaryTable = () => {
+    console.log(`${ANSI.bold}Summary${ANSI.reset}`);
+    const headerLine = headers.map((h, idx) => {
+      const w = colW.get(h.key);
+      const cell = padEndAnsi(h.title, w);
+      return idx === 0 ? cell : `│ ${cell}`;
+    }).join(' ');
+    console.log(useColor ? headerLine : stripAnsi(headerLine));
+    console.log(useColor ? line() : stripAnsi(line()));
+
+    for (const row of formatted) {
+      const out = headers.map((h, idx) => {
+        const w = colW.get(h.key);
+        const v = row[h.key];
+        const cell = h.align === 'right' ? padStartAnsi(v, w) : padEndAnsi(v, w);
+        return idx === 0 ? cell : `│ ${cell}`;
+      }).join(' ');
+      console.log(useColor ? out : stripAnsi(out));
+    }
+    console.log(useColor ? line() : stripAnsi(line()));
+  };
+
+  const best = rows.filter(r => r.pass === bestPass);
+  const fastest = rows.find(r => Math.round(r.learnMs + r.decodeMs) === fastestMsRounded);
+
+  if (details) {
+    for (const cfg of rows) {
+      const label = cfg.label;
+      const bundle = byConfigDetails.get(label);
+      const perBook = bundle?.perBook || [];
+      const meta = bundle?.meta || {};
+      const strategy = getStrategy(meta.strategyId);
+      const thresholdLine = formatThresholds(strategy?.thresholds);
+      const propLine = formatStrategyProps(strategy, meta.geometry, meta.bytes);
+      console.log();
+      console.log(`${ANSI.bold}Details:${ANSI.reset} ${label}`);
+      console.log(`  strategy=${meta.strategyId ?? 'n/a'} geometry=${meta.geometry ?? 'n/a'} priority=${meta.priority ?? 'n/a'}`);
+      console.log(`  properties: ${propLine}`);
+      console.log(`  thresholds: ${thresholdLine}`);
+      if (perBook.length === 0) {
+        console.log(colorize(useColor, ANSI.yellow, '- No per-book data available'));
+        continue;
+      }
+      const detailHeaders = [
+        { key: 'book', title: 'Book', align: 'left' },
+        { key: 'status', title: 'Status', align: 'left' },
+        { key: 'pos', title: 'POS', align: 'left' },
+        { key: 'posM', title: 'PosM', align: 'right' },
+        { key: 'posTop', title: 'PosTop1', align: 'left' },
+        { key: 'posExp', title: 'PosExp', align: 'left' },
+        { key: 'posRank', title: 'PosRk', align: 'right' },
+        { key: 'neg', title: 'NEG', align: 'left' },
+        { key: 'negM', title: 'NegM', align: 'right' },
+        { key: 'negTop', title: 'NegTop1', align: 'left' },
+        { key: 'thr', title: 'Thr', align: 'right' },
+        { key: 'err', title: 'Err', align: 'left' }
+      ];
+
+      const detailRows = perBook.map(b => {
+        const status = b.passed ? colorize(useColor, ANSI.green, 'PASS') : colorize(useColor, ANSI.red, 'FAIL');
+        const pos = b.posOk ? colorize(useColor, ANSI.green, 'POS') : colorize(useColor, ANSI.red, 'POS');
+        const neg = b.negOk ? colorize(useColor, ANSI.green, 'NEG') : colorize(useColor, ANSI.red, 'NEG');
+        const posTop = `${b.posTop1Name ?? '∅'}@${b.posTop1.toFixed(3)}`;
+        const expSim = Number.isFinite(b.posExpectSim) ? b.posExpectSim.toFixed(3) : 'n/a';
+        const posExp = b.posExpect ? `${b.posExpect}@${expSim}` : '∅';
+        const negTop = `${b.negTop1Name ?? '∅'}@${b.negTop1.toFixed(3)}`;
+        const thr = Number.isFinite(b.hdcMatch) ? b.hdcMatch.toFixed(3) : 'n/a';
+        const posRank = b.posRank ?? '∅';
+        return {
+          book: b.book,
+          status,
+          pos,
+          posM: b.posMargin.toFixed(3),
+          posTop,
+          posExp,
+          posRank: String(posRank),
+          neg,
+          negM: b.negMargin.toFixed(3),
+          negTop,
+          thr,
+          err: b.error || ''
+        };
+      });
+
+      const detailColW = new Map();
+      for (const h of detailHeaders) {
+        const values = detailRows.map(row => row[h.key]);
+        const width = Math.max(stripAnsi(h.title).length, ...values.map(v => stripAnsi(v).length));
+        detailColW.set(h.key, Math.min(80, width));
+      }
+
+      const detailLine = () => {
+        const totalW = detailHeaders.reduce((sum, h, idx) => sum + detailColW.get(h.key) + (idx === 0 ? 0 : 3), 0);
+        return '─'.repeat(Math.max(16, totalW));
+      };
+
+      const detailHeaderLine = detailHeaders.map((h, idx) => {
+        const w = detailColW.get(h.key);
+        const cell = padEndAnsi(h.title, w);
+        return idx === 0 ? cell : `│ ${cell}`;
+      }).join(' ');
+      console.log(useColor ? detailHeaderLine : stripAnsi(detailHeaderLine));
+      console.log(useColor ? detailLine() : stripAnsi(detailLine()));
+
+      for (const row of detailRows) {
+        const out = detailHeaders.map((h, idx) => {
+          const w = detailColW.get(h.key);
+          const v = row[h.key];
+          const cell = h.align === 'right' ? padStartAnsi(v, w) : padEndAnsi(v, w);
+          return idx === 0 ? cell : `│ ${cell}`;
+        }).join(' ');
+        console.log(useColor ? out : stripAnsi(out));
+      }
+    }
+  }
+
+  const bookNames = books.map(b => path.basename(b, '.sys2'));
+  const formattedByLabel = new Map(formatted.map(row => [stripAnsi(row.label), row.label]));
+  const statusHeaders = [
+    { key: 'label', title: 'Config', align: 'left' },
+    ...bookNames.map(book => ({ key: book, title: book, align: 'left' })),
+    { key: 'time', title: 'Time', align: 'right' }
+  ];
+  const statusRows = rows.map(r => {
+    const bundle = byConfigDetails.get(r.label);
+    const perBook = bundle?.perBook || [];
+    const byBook = new Map(perBook.map(b => [b.book, b]));
+    const row = {
+      label: formattedByLabel.get(r.label) || r.label,
+      time: `${Math.round(r.learnMs + r.decodeMs)}ms`
+    };
+    for (const book of bookNames) {
+      const res = byBook.get(book);
+      if (!res) {
+        row[book] = colorize(useColor, ANSI.gray, 'n/a');
+        continue;
+      }
+      row[book] = res.passed
+        ? colorize(useColor, ANSI.green, 'PASS')
+        : colorize(useColor, ANSI.red, 'FAIL');
+    }
+    return row;
+  });
+
+  const statusColW = new Map();
+  for (const h of statusHeaders) {
+    const values = statusRows.map(row => row[h.key]);
+    const width = Math.max(stripAnsi(h.title).length, ...values.map(v => stripAnsi(v).length));
+    statusColW.set(h.key, Math.min(80, width));
+  }
+
+  const statusLine = () => {
+    const totalW = statusHeaders.reduce((sum, h, idx) => sum + statusColW.get(h.key) + (idx === 0 ? 0 : 3), 0);
+    return '─'.repeat(Math.max(16, totalW));
+  };
+
+  console.log();
+  console.log(`${ANSI.bold}Per-Book Results${ANSI.reset}`);
+  const statusHeaderLine = statusHeaders.map((h, idx) => {
+    const w = statusColW.get(h.key);
     const cell = padEndAnsi(h.title, w);
     return idx === 0 ? cell : `│ ${cell}`;
   }).join(' ');
-  console.log(useColor ? headerLine : stripAnsi(headerLine));
-  console.log(useColor ? line() : stripAnsi(line()));
+  console.log(useColor ? statusHeaderLine : stripAnsi(statusHeaderLine));
+  console.log(useColor ? statusLine() : stripAnsi(statusLine()));
 
-  for (const row of formatted) {
-    const out = headers.map((h, idx) => {
-      const w = colW.get(h.key);
+  for (const row of statusRows) {
+    const out = statusHeaders.map((h, idx) => {
+      const w = statusColW.get(h.key);
       const v = row[h.key];
       const cell = h.align === 'right' ? padStartAnsi(v, w) : padEndAnsi(v, w);
       return idx === 0 ? cell : `│ ${cell}`;
     }).join(' ');
     console.log(useColor ? out : stripAnsi(out));
   }
-  console.log(useColor ? line() : stripAnsi(line()));
+  console.log(useColor ? statusLine() : stripAnsi(statusLine()));
 
-  const best = rows.filter(r => r.pass === bestPass);
-  const fastest = rows.find(r => Math.round(r.learnMs + r.decodeMs) === fastestMsRounded);
+  console.log();
+  printSummaryTable();
 
   console.log();
   console.log(`${ANSI.bold}Conclusions${ANSI.reset}`);
   console.log(`- Best pass rate: ${best.map(b => b.label).join(' | ')} (${bestPass}/${books.length})`);
   console.log(`- Fastest: ${fastest?.label ?? 'n/a'} (${fastestMsRounded}ms total learn+decode)`);
-  console.log(`- Tip: re-run with \`--details\` to see per-book failures and margins.`);
-
-  if (details) {
-    for (const cfg of rows) {
-      const label = cfg.label;
-      const perBook = byConfigDetails.get(label) || [];
-      console.log();
-      console.log(`${ANSI.bold}Details:${ANSI.reset} ${label}`);
-      if (perBook.length === 0) {
-        console.log(colorize(useColor, ANSI.yellow, '- No per-book data available'));
-        continue;
-      }
-      for (const b of perBook) {
-        const status = b.passed ? colorize(useColor, ANSI.green, 'PASS') : colorize(useColor, ANSI.red, 'FAIL');
-        const why = b.error ? ` (${b.error})` : '';
-        const pos = b.posOk ? colorize(useColor, ANSI.green, 'POS') : colorize(useColor, ANSI.red, 'POS');
-        const neg = b.negOk ? colorize(useColor, ANSI.green, 'NEG') : colorize(useColor, ANSI.red, 'NEG');
-        const posTop = `${b.posTop1Name ?? '∅'}@${b.posTop1.toFixed(3)}`;
-        const negTop = `${b.negTop1Name ?? '∅'}@${b.negTop1.toFixed(3)}`;
-        console.log(
-          `- ${b.book}: ${status} ${pos} m=${b.posMargin.toFixed(3)} top1=${posTop} rk=${b.posRank ?? '∅'} | ` +
-          `${neg} m=${b.negMargin.toFixed(3)} top1=${negTop}${why}`
-        );
-      }
-    }
-  }
+  console.log(`- Tip: use \`--full\` or \`--huge\` to sweep larger geometries.`);
 }
 
 main().catch(err => {

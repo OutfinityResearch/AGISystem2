@@ -20,11 +20,12 @@ import { ResponseTranslator } from '../output/response-translator.mjs';
 import { findAll } from '../reasoning/find-all.mjs';
 import { ComponentKB } from '../reasoning/component-kb.mjs';
 import { debug_trace, isDebugEnabled } from '../utils/debug.js';
-import { DEFAULT_SEMANTIC_INDEX } from './semantic-index.mjs';
+import { DEFAULT_SEMANTIC_INDEX, FALLBACK_SEMANTIC_INDEX } from './semantic-index.mjs';
 import { canonicalizeMetadata } from './canonicalize.mjs';
 import { FactIndex } from './fact-index.mjs';
 import { ContradictionError } from './contradiction-error.mjs';
 import { computeFeatureToggles, computeReasoningProfile } from './reasoning-profile.mjs';
+import { TypeRegistry } from './type-registry.mjs';
 import {
   initOperators as initOperatorsImpl,
   trackRules as trackRulesImpl,
@@ -67,6 +68,8 @@ export class Session {
     this.canonicalizationEnabled = this.features.canonicalizationEnabled;
     this.proofValidationEnabled = this.features.proofValidationEnabled;
     this.l0BuiltinsEnabled = this.features.l0BuiltinsEnabled;
+    this.strictMode = this.features.strictMode;
+    this.allowSemanticFallbacks = this.features.allowSemanticFallbacks;
     this.closedWorldAssumption = this.features.closedWorldAssumption;
     this.useSemanticIndex = this.features.useSemanticIndex;
     this.useTheoryConstraints = this.features.useTheoryConstraints;
@@ -104,7 +107,9 @@ export class Session {
     this.graphs = new Map();       // HDC point relationship graphs
     this.graphAliases = new Map();  // Aliases for graphs (persistName -> name)
     this.responseTranslator = new ResponseTranslator(this);
-    this.semanticIndex = DEFAULT_SEMANTIC_INDEX;
+    // Strict by default: only use fallback defaults when explicitly requested.
+    this.semanticIndex = this.allowSemanticFallbacks ? FALLBACK_SEMANTIC_INDEX : DEFAULT_SEMANTIC_INDEX;
+    this.typeRegistry = new TypeRegistry(this);
     this.rejectContradictions = options.rejectContradictions ?? true;
 
     // Reasoning statistics

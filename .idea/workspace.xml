@@ -4,48 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs">
-      <change afterPath="$PROJECT_DIR$/AGENTS.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS23-Elastic-Metric-Affine-HDC.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS24-Pure-Symbolic-Term-Engine.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/src/hdc/ema-contract.mjs.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/src/hdc/strategies/metric-affine-elastic.mjs.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/runSaturationEval.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/saturation/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/saturation/books/book01.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/saturation/books/book02.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/hdc/strategies/metric-affine-elastic.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/runtime/executor-builtins.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/hdc/metric-affine-elastic-ops.test.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/executor-l0-builtins.test.mjs" afterDir="false" />
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="investigating saturation of variosu staregies, new strategy got introduced">
+      <change afterPath="$PROJECT_DIR$/src/runtime/core-validator.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/runtime/type-registry.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/core-validator.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/get-type.test.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Core/00-types.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/00-types.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/Core/04a-numeric.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/04a-numeric.sys2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runFastEval.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runFastEval.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/constants.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/constants.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/index.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/find-all.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/find-all.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/prove-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/prove-hdc-first.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/inverse.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/inverse.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/proof-validator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/proof-validator.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/property-inheritance.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/property-inheritance.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/prove/defaults.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove/defaults.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-rules.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-rules.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-transitive.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-transitive.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/symmetric.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/symmetric.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/transitive.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/transitive.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/executor.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/runSaturationEval.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runSaturationEval.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/saturation/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book01.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book01.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book02.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book02.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book03.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book03.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book05.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book05.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book10.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book10.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/executor-builtins.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-builtins.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/executor-graphs.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-graphs.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/executor-resolve.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-resolve.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/reasoning-profile.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/reasoning-profile.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session-prove.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-prove.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session-rules.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-rules.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/semantic-index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/semantic-index.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session-core-load.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-core-load.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/hdc/facade-isVector.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/hdc/facade-isVector.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-canonicalization.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-canonicalization.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-dual-engine-consistency.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-dual-engine-consistency.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-proof-schema.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-proof-schema.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/vocabulary.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/vocabulary.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -162,14 +144,6 @@
       <workItem from="1766477237780" duration="9294000" />
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
-    </task>
-    <task id="LOCAL-00031" summary="added a new HDC strategy, wip">
-      <option name="closed" value="true" />
-      <created>1765878186589</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1765878186589</updated>
     </task>
     <task id="LOCAL-00032" summary="added a new HDC strategy, wip">
       <option name="closed" value="true" />
@@ -555,7 +529,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766686505459</updated>
     </task>
-    <option name="localTasksCounter" value="80" />
+    <task id="LOCAL-00080" summary="investigating saturation of variosu staregies, new strategy got introduced">
+      <option name="closed" value="true" />
+      <created>1766760560839</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1766760560839</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -596,6 +578,7 @@
     <MESSAGE value="new evaluation approach from external  reasoning suites, new suites, bug fixings" />
     <MESSAGE value="created a custom agent for autoDiscovery of NLP to DSl and of reasoning bugs" />
     <MESSAGE value="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs" />
-    <option name="LAST_COMMIT_MESSAGE" value="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs" />
+    <MESSAGE value="investigating saturation of variosu staregies, new strategy got introduced" />
+    <option name="LAST_COMMIT_MESSAGE" value="investigating saturation of variosu staregies, new strategy got introduced" />
   </component>
 </project>

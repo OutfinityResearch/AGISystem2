@@ -58,31 +58,38 @@ function statesEqual(a, b) {
  */
 function loadCoreTheories(session) {
   console.log('[Runner] Loading Core Theories...');
-  const loaded = new Set();
   const corePath = path.join(PROJECT_ROOT, 'config', 'Core');
   if (!fs.existsSync(corePath)) return;
 
-  // Load all Core theories except index.sys2 (which uses Load directive)
-  const files = fs.readdirSync(corePath)
+  const files = fs
+    .readdirSync(corePath)
     .filter(f => f.endsWith('.sys2') && f !== 'index.sys2')
     .sort();
 
-  for (const file of files) {
-    dbg('CORE', `Loading theory: ${file}`);
-    const content = fs.readFileSync(path.join(corePath, file), 'utf8');
-    try {
-      const startTime = Date.now();
-      const res = session.learn(content);
-      const elapsed = Date.now() - startTime;
-      if (!res.success) {
-        console.error(`[Runner] Failed to load ${file}:`, res.errors);
-      } else {
-        dbg('CORE', `Loaded ${file} in ${elapsed}ms, facts: ${res.facts}`);
+  const loaded = new Set(files.map(f => path.join(corePath, f)));
+
+  try {
+    const startTime = Date.now();
+    const res = session.loadCore({
+      corePath,
+      includeIndex: false,
+      validate: true,
+      throwOnValidationError: false
+    });
+    const elapsed = Date.now() - startTime;
+
+    if (!res?.success) {
+      for (const err of res?.errors || []) {
+        console.error(`[Runner] Failed to load ${err.file}:`, err.errors);
       }
-      loaded.add(path.join(corePath, file));
-    } catch (e) {
-      console.error(`[Runner] Exception loading ${file}:`, e.message);
     }
+    if (res?.warnings?.length > 0) {
+      console.warn('[Runner] Core validation warnings:', res.warnings);
+    }
+
+    dbg('CORE', `Loaded Core stack in ${elapsed}ms`);
+  } catch (e) {
+    console.error('[Runner] Exception loading Core theories:', e.message);
   }
   console.log('[Runner] Core Theories loaded.');
   return loaded;

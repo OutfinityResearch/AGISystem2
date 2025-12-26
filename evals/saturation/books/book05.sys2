@@ -22,7 +22,7 @@ end
 @_ Idea NoiseGate Filter Selective
 @B05_R0002 Mentions Book05 Key_B05_C01_I02 NoiseGate
 
-@Chapter01 bundle [$B05_R0001, $B05_R0002]
+@Chapter01 __Sequence [$B05_R0001, $B05_R0002]
 
 # Chapter 02 - Memory
 # Idea: ShortTermStore (Memory, Volatile)
@@ -33,7 +33,7 @@ end
 @_ Idea LongTermIndex Memory Durable
 @B05_R0004 Mentions Book05 Key_B05_C02_I02 LongTermIndex
 
-@Chapter02 bundle [$B05_R0003, $B05_R0004]
+@Chapter02 __Sequence [$B05_R0003, $B05_R0004]
 
 # Chapter 03 - Learning
 # Idea: PatternMining (Learning, Incremental)
@@ -44,7 +44,7 @@ end
 @_ Idea ModelUpdate Learning Adaptive
 @B05_R0006 Mentions Book05 Key_B05_C03_I02 ModelUpdate
 
-@Chapter03 bundle [$B05_R0005, $B05_R0006]
+@Chapter03 __Sequence [$B05_R0005, $B05_R0006]
 
 # Chapter 04 - Planning
 # Idea: GoalStack (Planner, Hierarchical)
@@ -55,7 +55,7 @@ end
 @_ Idea ActionSequencing Planner Ordered
 @B05_R0008 Mentions Book05 Key_B05_C04_I02 ActionSequencing
 
-@Chapter04 bundle [$B05_R0007, $B05_R0008]
+@Chapter04 __Sequence [$B05_R0007, $B05_R0008]
 
 # Chapter 05 - Control
 # Idea: FeedbackLoop (Control, Stable)
@@ -66,7 +66,7 @@ end
 @_ Idea ErrorCorrection Control Resilient
 @B05_R0010 Mentions Book05 Key_B05_C05_I02 ErrorCorrection
 
-@Chapter05 bundle [$B05_R0009, $B05_R0010]
+@Chapter05 __Sequence [$B05_R0009, $B05_R0010]
 
 # Chapter 06 - Communication
 # Idea: MessageRouting (Protocol, Reliable)
@@ -77,7 +77,7 @@ end
 @_ Idea ConsensusPing Protocol Coherent
 @B05_R0012 Mentions Book05 Key_B05_C06_I02 ConsensusPing
 
-@Chapter06 bundle [$B05_R0011, $B05_R0012]
+@Chapter06 __Sequence [$B05_R0011, $B05_R0012]
 
 # Chapter 07 - Coordination
 # Idea: RoleAssignment (Coordination, Balanced)
@@ -88,7 +88,7 @@ end
 @_ Idea TaskHandoff Coordination Timely
 @B05_R0014 Mentions Book05 Key_B05_C07_I02 TaskHandoff
 
-@Chapter07 bundle [$B05_R0013, $B05_R0014]
+@Chapter07 __Sequence [$B05_R0013, $B05_R0014]
 
 # Chapter 08 - Optimization
 # Idea: SearchPruning (Optimization, Efficient)
@@ -99,7 +99,7 @@ end
 @_ Idea CostShaping Optimization Bounded
 @B05_R0016 Mentions Book05 Key_B05_C08_I02 CostShaping
 
-@Chapter08 bundle [$B05_R0015, $B05_R0016]
+@Chapter08 __Sequence [$B05_R0015, $B05_R0016]
 
 # Chapter 09 - Safety
 # Idea: ConstraintGuard (Safety, Strict)
@@ -110,7 +110,7 @@ end
 @_ Idea AnomalyWatch Safety Vigilant
 @B05_R0018 Mentions Book05 Key_B05_C09_I02 AnomalyWatch
 
-@Chapter09 bundle [$B05_R0017, $B05_R0018]
+@Chapter09 __Sequence [$B05_R0017, $B05_R0018]
 
 # Chapter 10 - Interpretation
 # Idea: SymbolLinking (Mapping, Consistent)
@@ -121,6 +121,6 @@ end
 @_ Idea ContextWeaving Inference Contextual
 @B05_R0020 Mentions Book05 Key_B05_C10_I02 ContextWeaving
 
-@Chapter10 bundle [$B05_R0019, $B05_R0020]
+@Chapter10 __Sequence [$B05_R0019, $B05_R0020]
 
-@Book:Book bundle [$Chapter01, $Chapter02, $Chapter03, $Chapter04, $Chapter05, $Chapter06, $Chapter07, $Chapter08, $Chapter09, $Chapter10]
+@Book:Book __Sequence [$Chapter01, $Chapter02, $Chapter03, $Chapter04, $Chapter05, $Chapter06, $Chapter07, $Chapter08, $Chapter09, $Chapter10]

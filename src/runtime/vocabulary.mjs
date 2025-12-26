@@ -121,7 +121,13 @@ export class Vocabulary {
 
     // SPHDC: hash sorted exponents.
     if (vec?.exponents) {
-      const exps = Array.from(vec.exponents).map(Number).sort((a, b) => a - b);
+      // Exponents are BigInt 64-bit values; converting to Number loses precision and causes
+      // catastrophic collisions in reverseLookup (especially for k>1).
+      const raw = Array.from(vec.exponents);
+      const bigints = raw.every(e => typeof e === 'bigint');
+      const exps = bigints
+        ? raw.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0)).map(e => e.toString(16))
+        : raw.map(e => String(e)).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
       const payload = `${strategy}:${exps.join(',')}`;
       return `${strategy}:${createHash('sha256').update(payload).digest('hex')}`;
     }

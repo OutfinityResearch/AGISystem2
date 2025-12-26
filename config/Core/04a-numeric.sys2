@@ -13,10 +13,10 @@
 @Operation:Operation __Relation
 @Operator:Operator __Relation
 
-@Addition:Addition ___NewVector
-@Subtraction:Subtraction ___NewVector
-@Multiplication:Multiplication ___NewVector
-@Division:Division ___NewVector
+@Addition:Addition ___NewVector "Addition" "Core"
+@Subtraction:Subtraction ___NewVector "Subtraction" "Core"
+@Multiplication:Multiplication ___NewVector "Multiplication" "Core"
+@Division:Division ___NewVector "Division" "Core"
 
 # ===== Comparison Operators =====
 
