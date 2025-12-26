@@ -5,19 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="impelmenting DS#19 wip">
-      <change afterPath="$PROJECT_DIR$/docs/theory/strategies/metric-affine-elastic.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/Core/index.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/config/Core/index.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS19-Semantic-Unification.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS19-Semantic-Unification.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/hrr-comparison.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/hrr-comparison.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/metric-affine.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/metric-affine.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book01.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book01.sys2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/proof-validator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/proof-validator.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-proof-schema.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-proof-schema.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/directions/hdc-strategies.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/hdc-strategies.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite11_wedding_seating/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite11_wedding_seating/cases.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/operator-catalog.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/operator-catalog.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/reasoning-profile.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/reasoning-profile.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/semantic-index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/semantic-index.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session-check-dsl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-check-dsl.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,22 +132,6 @@
       <workItem from="1766477237780" duration="9294000" />
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
-    </task>
-    <task id="LOCAL-00034" summary="better documentation">
-      <option name="closed" value="true" />
-      <created>1765889256752</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1765889256752</updated>
-    </task>
-    <task id="LOCAL-00035" summary="better documentation and project presentation">
-      <option name="closed" value="true" />
-      <created>1765891809829</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1765891809829</updated>
     </task>
     <task id="LOCAL-00036" summary="better documentation and project presentation">
       <option name="closed" value="true" />
@@ -527,7 +509,23 @@
       <option name="project" value="LOCAL" />
       <updated>1766766318468</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="impelmenting DS#19 wip">
+      <option name="closed" value="true" />
+      <created>1766766847212</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1766766847212</updated>
+    </task>
+    <task id="LOCAL-00084" summary="impelmenting DS#19 wip">
+      <option name="closed" value="true" />
+      <created>1766771322228</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1766771322228</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -34,6 +34,7 @@ export function computeFeatureToggles({ profile, options = {} } = {}) {
   const envStrict = readEnvBoolean('SYS2_STRICT');
   const envSemanticFallbacks = readEnvBoolean('SYS2_SEMANTIC_FALLBACKS');
   const envEnforceCanonical = readEnvBoolean('SYS2_ENFORCE_CANONICAL');
+  const envEnforceDeclarations = readEnvBoolean('SYS2_ENFORCE_DECLARATIONS');
 
   const canonicalizationEnabled =
     options.canonicalizationEnabled ??
@@ -66,12 +67,21 @@ export function computeFeatureToggles({ profile, options = {} } = {}) {
     envEnforceCanonical ??
     strictMode;
 
+  // Strict operator declarations: operators used in persisted facts and rule bodies must be declared
+  // via theory headers (`@op:op __Relation` / `@op graph` / `@op macro`), or be builtins.
+  // Escape hatch: `SYS2_ENFORCE_DECLARATIONS=0` or `enforceDeclarations:false`.
+  const enforceDeclarations =
+    options.enforceDeclarations ??
+    envEnforceDeclarations ??
+    strictMode;
+
   return {
     canonicalizationEnabled,
     proofValidationEnabled,
     strictMode,
     allowSemanticFallbacks,
     enforceCanonical,
+    enforceDeclarations,
     // L0 builtins are required for strict Core theory semantics (___NewVector, ___Bind, ___GetType, etc.).
     l0BuiltinsEnabled: options.l0BuiltinsEnabled ?? envL0Builtins ?? strictMode,
     closedWorldAssumption: options.closedWorldAssumption ?? envCwa ?? false,

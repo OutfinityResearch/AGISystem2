@@ -72,6 +72,7 @@ export class Session {
     this.strictMode = this.features.strictMode;
     this.allowSemanticFallbacks = this.features.allowSemanticFallbacks;
     this.enforceCanonical = this.features.enforceCanonical;
+    this.enforceDeclarations = this.features.enforceDeclarations;
     this.closedWorldAssumption = this.features.closedWorldAssumption;
     this.useSemanticIndex = this.features.useSemanticIndex;
     this.useTheoryConstraints = this.features.useTheoryConstraints;

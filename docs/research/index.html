@@ -132,16 +132,17 @@
       <a href="../specs/matrix.html">Specs</a> ·
       <a href="index.html"><strong>Research</strong></a>
     </small>
-    <small>Current research status: Three HDC strategies, two reasoning priorities, dual evaluation framework</small>
+    <small>Current research status: Three core HDC strategies + EMA extension, two reasoning priorities, dual evaluation framework</small>
   </div>
 
   <div class="abstract">
-    <strong>Abstract:</strong> We compare three Hyperdimensional Computing (HDC) strategies for symbolic reasoning:
+    <strong>Abstract:</strong> We compare three core Hyperdimensional Computing (HDC) strategies for symbolic reasoning:
     <strong>Dense-Binary</strong> (standard VSA), <strong>Sparse-Polynomial HDC</strong> (SPHDC – a <em>novel</em> paradigm with k=2-4 BigInt exponents), and
-    <strong>Metric-Affine HDC</strong> (a <em>novel</em> HRR-inspired hybrid with byte-channel representation). The Core Theory
+    <strong>Metric-Affine HDC</strong> (a <em>novel</em> HRR-inspired hybrid with byte-channel representation). <strong>Metric-Affine Elastic (EMA)</strong>
+    extends Metric-Affine with chunked bundling and optional elastic geometry; it is documented separately and not included in this 2025 benchmark. The Core Theory
     evaluation framework (<code>npm run eval --full</code>) runs <strong>12 configurations</strong> across 27 test suites with 364 tests.
     All configurations achieve <strong>100% success rate</strong>, with Metric-Affine (32 bytes) completing in just <strong>318ms</strong>—
-    2.6× faster than the 835ms sparse-polynomial holographic baseline. Two of the three strategies (Sparse-Polynomial and Metric-Affine)
+    2.6× faster than the 835ms sparse-polynomial holographic baseline. Two of the three core strategies (Sparse-Polynomial and Metric-Affine)
     are <strong>original contributions</strong> not found in standard HRR or VSA literature. For theoretical foundations, see
     <a href="../theory/hrr-comparison.html">HRR/VSA Comparison</a>.
   </div>
@@ -151,7 +152,7 @@
   <div class="metric-grid">
     <div class="metric-card">
       <h3>12</h3>
-      <p>HDC Configurations<br>(3 strategies × geometries)</p>
+      <p>HDC Configurations<br>(3 core strategies × geometries)</p>
     </div>
     <div class="metric-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
       <h3>364</h3>
@@ -167,7 +168,7 @@
     </div>
   </div>
 
-  <h2>2. The Three HDC Strategies</h2>
+  <h2>2. Core HDC Strategies (3) + EMA Extension</h2>
 
   <div class="innovation-box">
     <strong>Novel Contributions:</strong> AGISystem2 introduces two new HDC strategies beyond classic Dense-Binary.
@@ -175,6 +176,7 @@
     <ul>
       <li><strong>Sparse-Polynomial HDC (SPHDC)</strong> – A fundamentally new paradigm using sets of BigInt exponents instead of bit vectors. <em>NOT HRR</em> – represents a novel approach to VSA.</li>
       <li><strong>Metric-Affine HDC</strong> – HRR-inspired hybrid with byte-channel representation and affine operations. <em>Novel architecture</em> combining HRR principles with practical efficiency.</li>
+      <li><strong>Metric-Affine Elastic (EMA)</strong> – Extension of Metric-Affine with chunked bundling and elastic geometry for large KB superpositions.</li>
     </ul>
   </div>
 
@@ -206,6 +208,13 @@
       <td>Affine transformation</td>
       <td>Channel overlap</td>
       <td class="pass">⚡ Fastest (317ms metric-16 vs 845ms sparse-4)</td>
+    </tr>
+    <tr style="background: #e0f2f1;">
+      <td><strong>Metric-Affine Elastic</strong> <span class="strategy-badge badge-novel">Extension</span></td>
+      <td>32+ bytes (elastic)</td>
+      <td>Affine transformation</td>
+      <td>Channel overlap (max over chunks)</td>
+      <td class="pass">Extension for large KB superpositions</td>
     </tr>
   </table>
 
@@ -574,12 +583,12 @@ All strategies still load 1,314 facts from stress theories
   <h2>5. Cross-Domain Query Evaluation (<code>runQueryEval.mjs</code>)</h2>
 
   <div class="discovery-box">
-    <strong>Key Finding:</strong> The cross-domain benchmark runs 12 advanced semantic queries across six sessions (three strategies ×
+    <strong>Key Finding:</strong> The cross-domain benchmark runs 12 advanced semantic queries across six sessions (three core strategies ×
     symbolic/holographic priorities). Metric-Affine HDC (32-byte channels) succeeds on every query in both modes, with the holographic
     session completing the suite in 326ms—≈2.6× faster than the 858ms dense-binary symbolic baseline—and the symbolic session finishing
     in 412ms. Dense-binary and sparse-polynomial repeatedly fail nine queries because core operators such as <code>similar</code>,
     <code>analogy</code>, <code>happenedBefore</code>, <code>solve</code>, and <code>isBestExplanation</code> are still missing, which
-    confirms that semantic coverage—not HDC compute—is the current bottleneck.
+    confirms that semantic coverage—not HDC compute—is the current bottleneck. EMA is an extension of Metric-Affine and is not part of this benchmark.
   </div>
 
   <table class="research-table">
@@ -1076,7 +1085,7 @@ All strategies still load 1,314 facts from stress theories
   <h2>10. Theoretical Context: HRR, VSA, and HDC</h2>
 
   <div class="innovation-box">
-    <strong>Positioning AGISystem2 in the HDC Landscape:</strong> For detailed analysis of how our three strategies relate to
+    <strong>Positioning AGISystem2 in the HDC Landscape:</strong> For detailed analysis of how our three core strategies relate to
     Holographic Reduced Representations (HRR) and Vector Symbolic Architectures (VSA), see:
     <ul>
       <li><a href="../theory/hrr-comparison.html"><strong>HRR Comparison: Original Contributions</strong></a> – Full assessment of novelty</li>
@@ -1087,6 +1096,7 @@ All strategies still load 1,314 facts from stress theories
       <li><strong>Dense-Binary:</strong> Standard VSA (HRR-compatible) – our baseline implementation</li>
       <li><strong>Sparse-Polynomial:</strong> <em>Novel paradigm</em> – NOT HRR. Uses finite field algebra over BigInt exponents.</li>
       <li><strong>Metric-Affine:</strong> <em>Novel HRR-inspired hybrid</em> – Combines HRR principles with practical byte-channel efficiency.</li>
+      <li><strong>Metric-Affine Elastic (EMA):</strong> Extension of Metric-Affine for large KB superpositions with chunked bundling.</li>
     </ul>
   </div>
 
@@ -1259,12 +1269,13 @@ SYS2_HDC_SIZE=16 SYS2_HDC_STRATEGY=metric-affine npm run eval</code></pre>
           <li>Memory: <strong>8-16x savings</strong> (16-32 bytes vs 256-512 bytes Dense-Binary)</li>
         </ul>
       </li>
-      <li><strong>Original contributions validated:</strong> Two of three strategies are <strong>novel</strong>:
+      <li><strong>Original contributions validated:</strong> Two of three core strategies are <strong>novel</strong>:
         <ul>
           <li><a href="../theory/hrr-comparison.html">Sparse-Polynomial HDC</a>: New paradigm (NOT HRR)</li>
           <li><a href="../theory/hrr-comparison.html">Metric-Affine HDC</a>: HRR-inspired hybrid (NOVEL architecture)</li>
         </ul>
       </li>
+      <li><strong>EMA extension available:</strong> Metric-Affine Elastic adds chunked bundling + elastic geometry for large KB superpositions (not part of the 2025 benchmark).</li>
       <li><strong>12 configurations tested:</strong> All geometries (dense 256/512, sparse k=2/4, metric 16/32) × priorities (symbolic/holographic) achieve 100% success</li>
       <li><strong>Dual evaluation framework reveals complementary insights:</strong>
         <ul>
@@ -1287,7 +1298,7 @@ SYS2_HDC_SIZE=16 SYS2_HDC_STRATEGY=metric-affine npm run eval</code></pre>
   </div>
 
   <div class="footer-nav">
-    <p>Research conducted December 2025. AGISystem2 version with three HDC strategies, 12 configurations, and dual evaluation framework.</p>
+    <p>Research conducted December 2025. AGISystem2 version with three core HDC strategies, 12 configurations, and dual evaluation framework (EMA extension documented separately).</p>
     <p><strong>Read more:</strong></p>
     <ul>
       <li><a href="../theory/hrr-comparison.html">HRR Comparison: Original Contributions</a> – Detailed assessment of novelty vs HRR/VSA</li>

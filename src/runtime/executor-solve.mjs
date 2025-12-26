@@ -25,6 +25,12 @@ export function executeSolveBlock(executor, stmt) {
     return executePlanningSolveBlock(executor, stmt);
   }
 
+  // DS19 strict declarations: a solve block defines a relation name (its destination)
+  // used to query solution bindings (e.g. `@seating solve ...` then `seating Alice ?t`).
+  if (stmt.destination) {
+    executor.session.semanticIndex?.relations?.add?.(stmt.destination);
+  }
+
   const solver = new CSPSolver(executor.session, { timeout: 5000 });
 
   // Process declarations to configure solver
@@ -259,6 +265,11 @@ function buildPlanFactVector(session, operator, args) {
 function executePlanningSolveBlock(executor, stmt) {
   const session = executor.session;
   const planName = stmt.destination || 'plan';
+
+  // DS19 strict declarations: a solve block defines a relation name used in outputs/queries.
+  if (stmt.destination) {
+    session.semanticIndex?.relations?.add?.(stmt.destination);
+  }
 
   let maxDepth = 6;
   const goalRefs = [];

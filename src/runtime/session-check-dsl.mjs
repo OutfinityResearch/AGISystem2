@@ -1,6 +1,6 @@
 import { parse } from '../parser/parser.mjs';
 import { BOOTSTRAP_OPERATORS, DECLARATION_OPERATORS } from './operator-declarations.mjs';
-import { CORE_OPERATOR_CATALOG } from './operator-catalog.mjs';
+import { CORE_OPERATOR_CATALOG, CORE_OPERATOR_KIND } from './operator-catalog.mjs';
 
 const BUILTIN_OPERATORS = new Set([
   'Load',
@@ -58,6 +58,35 @@ function collectSemanticOperators(index) {
   return names;
 }
 
+function collectSemanticOperatorKinds(index) {
+  const kinds = new Map(); // name -> kind
+  if (!index) return kinds;
+  const addSet = (set, kind) => {
+    if (!set) return;
+    for (const name of set) kinds.set(name, kind);
+  };
+  addSet(index.relations, 'relation');
+  addSet(index.transitiveRelations, 'relation');
+  addSet(index.symmetricRelations, 'relation');
+  addSet(index.reflexiveRelations, 'relation');
+  addSet(index.inheritableProperties, 'relation');
+  // Constraints are still relation-typed operators.
+  for (const [op, inv] of index.inverseRelations || []) {
+    if (op) kinds.set(op, 'relation');
+    if (inv) kinds.set(inv, 'relation');
+  }
+  for (const [op, others] of index.contradictsSameArgs || []) {
+    if (op) kinds.set(op, 'relation');
+    if (others) {
+      for (const other of others) kinds.set(other, 'relation');
+    }
+  }
+  for (const [op] of index.mutuallyExclusive || []) {
+    if (op) kinds.set(op, 'relation');
+  }
+  return kinds;
+}
+
 function collectKnownOperators(session) {
   const names = new Set(BUILTIN_OPERATORS);
   for (const op of CORE_OPERATOR_CATALOG) {
@@ -105,16 +134,22 @@ function buildContext(session, options) {
   const graphAtoms = collectKnownGraphs(session);
   const vocabAtoms = new Set(session?.vocabulary?.names?.() || []);
   const knownAtoms = new Set([...vocabAtoms, ...scopeAtoms, ...graphAtoms]);
+  const operatorKinds = new Map(CORE_OPERATOR_KIND || []);
+  const semanticKinds = collectSemanticOperatorKinds(session?.semanticIndex);
+  for (const [k, v] of semanticKinds.entries()) operatorKinds.set(k, v);
+
   return {
     mode: options.mode || 'generic',
     allowNewOperators,
     allowHoles,
     requireKnownAtoms,
+    enforceDeclarations: options.enforceDeclarations ?? session?.enforceDeclarations ?? false,
     errors: [],
     bindings: new Set(session?.scope?.allNames?.() || []),
     knownOperators: collectKnownOperators(session),
     knownGraphs: collectKnownGraphs(session),
     localGraphs: new Set(),
+    operatorKinds,
     knownAtoms,
     localAtoms: new Set()
   };
@@ -128,6 +163,18 @@ function ensureKnownOperator(name, node, context) {
   context.errors.push(`Unknown operator '${name}'${formatLocation(node)}`);
 }
 
+function ensureDeclaredOperator(name, node, context) {
+  if (!context.enforceDeclarations) return;
+  if (!name || typeof name !== 'string') return;
+  if (BUILTIN_OPERATORS.has(name)) return;
+  if (DECLARATION_OPERATORS.has(name)) return;
+  if (context.knownGraphs.has(name) || context.localGraphs.has(name)) return;
+  if (context.operatorKinds?.has?.(name)) return;
+  context.errors.push(
+    `Undeclared operator '${name}'${formatLocation(node)} (declare with '@${name}:${name} __Relation' or '@${name} graph ...')`
+  );
+}
+
 function ensureKnownAtom(name, node, context) {
   if (!context.requireKnownAtoms) return;
   if (context.knownAtoms.has(name)) return;
@@ -135,13 +182,14 @@ function ensureKnownAtom(name, node, context) {
   context.errors.push(`Unknown concept '${name}'${formatLocation(node)}`);
 }
 
-function validateExpression(expr, context, role = 'argument', holesOk = context.allowHoles) {
+function validateExpression(expr, context, role = 'argument', holesOk = context.allowHoles, enforceDecls = false) {
   if (!expr) return;
 
   switch (expr.type) {
     case 'Identifier':
       if (role === 'operator') {
         ensureKnownOperator(expr.name, expr, context);
+        if (enforceDecls) ensureDeclaredOperator(expr.name, expr, context);
       } else {
         ensureKnownAtom(expr.name, expr, context);
       }
@@ -157,18 +205,18 @@ function validateExpression(expr, context, role = 'argument', holesOk = context.
       }
       return;
     case 'Compound':
-      validateExpression(expr.operator, context, 'operator', holesOk);
+      validateExpression(expr.operator, context, 'operator', holesOk, enforceDecls);
       {
         const opName = expr.operator?.name;
         const nestedHolesOk = holesOk || opName === 'Exists' || opName === 'ForAll';
         for (const arg of expr.args || []) {
-          validateExpression(arg, context, 'argument', nestedHolesOk);
+          validateExpression(arg, context, 'argument', nestedHolesOk, enforceDecls);
         }
       }
       return;
     case 'List':
       for (const item of expr.items || []) {
-        validateExpression(item, context, 'argument', holesOk);
+        validateExpression(item, context, 'argument', holesOk, enforceDecls);
       }
       return;
     case 'Literal':
@@ -180,9 +228,20 @@ function validateExpression(expr, context, role = 'argument', holesOk = context.
 }
 
 function validateStatement(stmt, context) {
-  validateExpression(stmt.operator, context, 'operator', context.allowHoles);
-
+  // Only enforce declared operator kinds for persistent statements/rules;
+  // allow non-persistent "scratch" statements during refactors (e.g. temporary primitives).
+  const shouldPersist = !stmt.destination || stmt.isPersistent;
   const operatorName = stmt.operator?.name;
+  const definesRuleOrProposition =
+    operatorName === 'Implies' ||
+    operatorName === 'And' ||
+    operatorName === 'Or' ||
+    operatorName === 'Not' ||
+    operatorName === 'Exists' ||
+    operatorName === 'ForAll';
+  const enforceDecls = shouldPersist || definesRuleOrProposition;
+  validateExpression(stmt.operator, context, 'operator', context.allowHoles, enforceDecls);
+
   const args = stmt.args || [];
   const quantifierHolesOk =
     operatorName === 'Exists' ||
@@ -193,15 +252,26 @@ function validateStatement(stmt, context) {
 
   // Meta-constraints treat operator names as arguments.
   if (operatorName === 'mutuallyExclusive' && args.length >= 1) {
-    validateExpression(args[0], context, 'operator', context.allowHoles);
-    for (let i = 1; i < args.length; i++) validateExpression(args[i], context, 'argument', context.allowHoles);
+    validateExpression(args[0], context, 'operator', context.allowHoles, enforceDecls);
+    for (let i = 1; i < args.length; i++) validateExpression(args[i], context, 'argument', context.allowHoles, enforceDecls);
   } else if ((operatorName === 'inverseRelation' || operatorName === 'contradictsSameArgs') && args.length >= 2) {
-    validateExpression(args[0], context, 'operator', context.allowHoles);
-    validateExpression(args[1], context, 'operator', context.allowHoles);
-    for (let i = 2; i < args.length; i++) validateExpression(args[i], context, 'argument', context.allowHoles);
+    validateExpression(args[0], context, 'operator', context.allowHoles, enforceDecls);
+    validateExpression(args[1], context, 'operator', context.allowHoles, enforceDecls);
+    for (let i = 2; i < args.length; i++) validateExpression(args[i], context, 'argument', context.allowHoles, enforceDecls);
   } else {
     for (const arg of args) {
-      validateExpression(arg, context, 'argument', quantifierHolesOk || context.allowHoles);
+      validateExpression(arg, context, 'argument', quantifierHolesOk || context.allowHoles, enforceDecls);
+    }
+  }
+
+  if (shouldPersist && operatorName) {
+    // Declaration statements define operator kinds.
+    if (DECLARATION_OPERATORS.has(operatorName)) {
+      const kind = 'relation';
+      if (stmt.destination) context.operatorKinds.set(stmt.destination, kind);
+      if (stmt.persistName) context.operatorKinds.set(stmt.persistName, kind);
+    } else {
+      ensureDeclaredOperator(operatorName, stmt.operator, context);
     }
   }
   if (stmt.destination) {
@@ -214,8 +284,8 @@ function validateStatement(stmt, context) {
 }
 
 function validateRule(rule, context) {
-  validateExpression(rule.condition, context, 'argument');
-  validateExpression(rule.conclusion, context, 'argument');
+  validateExpression(rule.condition, context, 'argument', context.allowHoles, true);
+  validateExpression(rule.conclusion, context, 'argument', context.allowHoles, true);
 }
 
 function validateSolveBlock(block, context) {
@@ -234,6 +304,7 @@ function validateGraph(graph, context) {
   const localNames = [graph.name, graph.persistName].filter(Boolean);
   for (const name of localNames) {
     context.localGraphs.add(name);
+    context.operatorKinds.set(name, 'graph');
   }
 
   const child = {
@@ -305,10 +376,12 @@ function collectLocalAtomsAndOperators(node, context) {
         if (node.destination) {
           context.knownOperators.add(node.destination);
           context.localAtoms.add(node.destination);
+          context.operatorKinds.set(node.destination, 'relation');
         }
         if (node.persistName) {
           context.knownOperators.add(node.persistName);
           context.localAtoms.add(node.persistName);
+          context.operatorKinds.set(node.persistName, 'relation');
         }
       }
       return;
@@ -316,6 +389,8 @@ function collectLocalAtomsAndOperators(node, context) {
     case 'GraphDeclaration': {
       if (node.name) context.localGraphs.add(node.name);
       if (node.persistName) context.localGraphs.add(node.persistName);
+      if (node.name) context.operatorKinds.set(node.name, 'graph');
+      if (node.persistName) context.operatorKinds.set(node.persistName, 'graph');
       if (node.name) context.localAtoms.add(node.name);
       if (node.persistName) context.localAtoms.add(node.persistName);
       return;

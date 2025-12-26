@@ -33,7 +33,7 @@
   <div class="research-section">
     <h2 style="margin-top: 0; border: none;">Research Overview</h2>
     <p><strong>Goal:</strong> Develop and compare hyperdimensional computing strategies optimized for formal reasoning tasks.</p>
-    <p><strong>Current state:</strong> Three strategies implemented (Dense-Binary, Sparse-Polynomial, Metric-Affine), with two being novel contributions.</p>
+    <p><strong>Current state:</strong> Three core strategies implemented (Dense-Binary, Sparse-Polynomial, Metric-Affine), with two being novel contributions. Metric-Affine Elastic (EMA) is available as an extension for large KB superpositions.</p>
   </div>
 
   <h2>1. Current Strategy Landscape</h2>
@@ -63,6 +63,12 @@
       <td>Byte channels (16-32 bytes)</td>
       <td class="novel">Original + Fastest</td>
     </tr>
+    <tr>
+      <td><strong>Metric-Affine Elastic</strong></td>
+      <td class="novel">EXTENSION</td>
+      <td>Elastic byte channels (32+ bytes)</td>
+      <td class="pass">Chunked bundling, large KBs</td>
+    </tr>
   </table>
 
   <div class="innovation-box">
@@ -70,6 +76,7 @@
     <ul>
       <li><strong>Sparse-Polynomial HDC:</strong> New paradigm using finite field algebra over BigInt exponents. NOT a variant of HRR.</li>
       <li><strong>Metric-Affine HDC:</strong> HRR-inspired hybrid with byte-channel representation and affine operations.</li>
+      <li><strong>Metric-Affine Elastic (EMA):</strong> Extension of Metric-Affine with chunked bundling and elastic geometry.</li>
     </ul>
     <p>See <a href="../../theory/hrr-comparison.html">HRR Comparison</a> for theoretical analysis.</p>
   </div>

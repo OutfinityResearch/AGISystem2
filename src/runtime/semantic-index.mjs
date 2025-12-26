@@ -116,6 +116,7 @@ function parseContradictsSameArgs(content) {
 
 export class SemanticIndex {
   constructor({
+    relations = new Set(),
     transitiveRelations = new Set(),
     symmetricRelations = new Set(),
     reflexiveRelations = new Set(),
@@ -128,6 +129,7 @@ export class SemanticIndex {
     inverseRelationsSources = new Map(),
     contradictsSameArgsSources = new Map()
   } = {}) {
+    this.relations = relations;
     this.transitiveRelations = transitiveRelations;
     this.symmetricRelations = symmetricRelations;
     this.reflexiveRelations = reflexiveRelations;
@@ -143,6 +145,7 @@ export class SemanticIndex {
 
   clone() {
     return new SemanticIndex({
+      relations: new Set(this.relations || []),
       transitiveRelations: new Set(this.transitiveRelations || []),
       symmetricRelations: new Set(this.symmetricRelations || []),
       reflexiveRelations: new Set(this.reflexiveRelations || []),
@@ -184,6 +187,7 @@ export class SemanticIndex {
     if (typeof operator !== 'string') return;
 
     if (
+      operator === '__Relation' ||
       operator === '__TransitiveRelation' ||
       operator === '__SymmetricRelation' ||
       operator === '__ReflexiveRelation' ||
@@ -192,6 +196,7 @@ export class SemanticIndex {
       const rel = typeof fact?.name === 'string' ? fact.name : (Array.isArray(meta.args) ? meta.args[0] : null);
       if (typeof rel !== 'string' || !rel) return;
 
+      if (operator === '__Relation') this.relations.add(rel);
       if (operator === '__TransitiveRelation') this.transitiveRelations.add(rel);
       if (operator === '__SymmetricRelation') this.symmetricRelations.add(rel);
       if (operator === '__ReflexiveRelation') this.reflexiveRelations.add(rel);
@@ -234,6 +239,10 @@ export class SemanticIndex {
 
   isTransitive(name) {
     return this.transitiveRelations.has(name);
+  }
+
+  isRelation(name) {
+    return this.relations.has(name);
   }
 
   isSymmetric(name) {
@@ -287,6 +296,7 @@ export class SemanticIndex {
 
   static fromCoreRelationsFile({ allowFallbackDefaults = true } = {}) {
     const defaults = new SemanticIndex({
+      relations: new Set(['parent', 'child', 'loves', 'hates', 'trusts']),
       transitiveRelations: new Set([
         'isA',
         'locatedIn',
@@ -336,12 +346,14 @@ export class SemanticIndex {
     }
 
     const content = readFileSync(configPath, 'utf-8');
+    const relations = parsePropertyLines(content, '__Relation');
     const transitiveRelations = parsePropertyLines(content, '__TransitiveRelation');
     const symmetricRelations = parsePropertyLines(content, '__SymmetricRelation');
     const reflexiveRelations = parsePropertyLines(content, '__ReflexiveRelation');
     const inheritableProperties = parsePropertyLines(content, '__InheritableProperty');
 
     const idx = new SemanticIndex({
+      relations,
       transitiveRelations,
       symmetricRelations,
       reflexiveRelations,
@@ -358,6 +370,7 @@ export class SemanticIndex {
     if (!allowFallbackDefaults) return idx;
 
     // Fill gaps to preserve existing behavior if the config file is partial.
+    for (const name of defaults.relations) idx.relations.add(name);
     for (const name of defaults.transitiveRelations) idx.transitiveRelations.add(name);
     for (const name of defaults.symmetricRelations) idx.symmetricRelations.add(name);
     for (const name of defaults.reflexiveRelations) idx.reflexiveRelations.add(name);
@@ -374,6 +387,7 @@ export class SemanticIndex {
     const markers = parseTypeMarkers(content);
 
     const merged = new SemanticIndex({
+      relations: new Set(baseIndex.relations || []),
       transitiveRelations: new Set(baseIndex.transitiveRelations),
       symmetricRelations: new Set(baseIndex.symmetricRelations),
       reflexiveRelations: new Set(baseIndex.reflexiveRelations),
@@ -406,6 +420,7 @@ export class SemanticIndex {
 
     // Merge into baseIndex (copy-on-write).
     const merged = new SemanticIndex({
+      relations: new Set(baseIndex.relations || []),
       transitiveRelations: new Set(baseIndex.transitiveRelations),
       symmetricRelations: new Set(baseIndex.symmetricRelations),
       reflexiveRelations: new Set(baseIndex.reflexiveRelations),
