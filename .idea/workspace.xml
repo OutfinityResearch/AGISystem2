@@ -5,47 +5,47 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs">
-      <change afterPath="$PROJECT_DIR$/src/output/response-translator/constants.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/output/response-translator/elaborate-translator.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/output/response-translator/index.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/output/response-translator/learn-translator.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/output/response-translator/list-solutions-translator.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/output/response-translator/prove-contrapositive.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/output/response-translator/prove-positive.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/output/response-translator/prove-translator.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/output/response-translator/query-translator.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/output/response-translator/shared.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/output/response-translator/solve-result-formatter.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AGENTS.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS23-Elastic-Metric-Affine-HDC.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS24-Pure-Symbolic-Term-Engine.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/hdc/ema-contract.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/hdc/strategies/metric-affine-elastic.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/runSaturationEval.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/saturation/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/saturation/books/book01.sys2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/evals/saturation/books/book02.sys2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hdc/strategies/metric-affine-elastic.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/runtime/executor-builtins.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/hdc/metric-affine-elastic-ops.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/executor-l0-builtins.test.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/analised.md" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/analised.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite01_foundations/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite01_foundations/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite02_hierarchies/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite02_hierarchies/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite03_rules/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite03_rules/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite04_deep_chains/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite04_deep_chains/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite05_negation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite05_negation/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite06_compound_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite06_compound_logic/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite07_temporal/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite07_temporal/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite08_modal/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite08_modal/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite09_composition/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite09_composition/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite10_integration/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite10_integration/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite11_wedding_seating/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite11_wedding_seating/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite12_fuzzy_matching/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite12_fuzzy_matching/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite13_property_inheritance/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite13_property_inheritance/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite15_reasoning_macros/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite15_reasoning_macros/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite16_macro_aggregation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite16_macro_aggregation/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite17_macro_composition/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite17_macro_composition/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite18_set_theory/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite18_set_theory/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite19_biology/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite19_biology/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite20_predicate_logic/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite20_predicate_logic/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite21_goat_cabbage_plus/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite21_goat_cabbage_plus/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite23_tool_planning/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite23_tool_planning/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite24_contradictions/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite24_contradictions/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite25_ruletaker_bugs/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite25_ruletaker_bugs/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite26_compound_conclusions/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite26_compound_conclusions/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite27_contrapositive_negation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite27_contrapositive_negation/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fastEval_assessment.md" beforeDir="false" afterPath="$PROJECT_DIR$/fastEval_assessment.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/output/response-translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/runFastEval.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runFastEval.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/constants.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/constants.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/index.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/find-all.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/find-all.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/prove-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/prove-hdc-first.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/inverse.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/inverse.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/kb-matching.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/proof-schema.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/proof-validator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/proof-validator.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/property-inheritance.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/property-inheritance.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/prove/defaults.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove/defaults.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query-rules.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-rules.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query-transitive.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-transitive.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/symmetric.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/symmetric.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/transitive.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/transitive.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/executor.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/reasoning-profile.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/reasoning-profile.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session-prove.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-prove.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session-rules.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-rules.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/hdc/facade-isVector.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/hdc/facade-isVector.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-canonicalization.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-canonicalization.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-dual-engine-consistency.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-dual-engine-consistency.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-proof-schema.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/semantic-unification/ds19-proof-schema.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,26 +86,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "master",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/home/salboaie/work/ploinky",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/salboaie/work/ploinky&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />

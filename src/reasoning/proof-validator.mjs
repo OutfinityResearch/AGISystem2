@@ -34,6 +34,13 @@ function isSynonym(session, a, b) {
   return set.has(b);
 }
 
+function isCanonicalMapping(session, alias, canonical) {
+  if (!alias || !canonical) return false;
+  const kb = session?.componentKB;
+  if (!kb || typeof kb.resolveCanonical !== 'function') return false;
+  return kb.resolveCanonical(alias) === canonical;
+}
+
 /**
  * Validate a proofObject (best-effort, incremental).
  * Returns false if structure is invalid or if required evidence is missing.
@@ -81,9 +88,14 @@ export function validateProof(proofObject, session) {
 
     if (step.kind === 'synonym') {
       const syn = step.detail?.synonymUsed;
+      const canon = step.detail?.canonicalUsed;
       if (typeof syn === 'string' && syn.includes('<->')) {
         const [left, right] = syn.split('<->').map(s => s.trim());
         if (left && right && !isSynonym(session, left, right)) return false;
+      }
+      if (typeof canon === 'string' && canon.includes('->')) {
+        const [left, right] = canon.split('->').map(s => s.trim());
+        if (left && right && !isCanonicalMapping(session, left, right)) return false;
       }
     }
 

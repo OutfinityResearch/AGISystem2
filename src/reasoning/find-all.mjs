@@ -93,10 +93,9 @@ export function findAll(session, pattern, options = {}) {
   }
 
   // Add transitive results for transitive relations
-  const isTransitive =
-    session?.useSemanticIndex && session?.semanticIndex?.isTransitive
-      ? session.semanticIndex.isTransitive(operatorName)
-      : isTransitiveRelationFallback(operatorName);
+  const isTransitive = session?.semanticIndex?.isTransitive
+    ? session.semanticIndex.isTransitive(operatorName)
+    : false;
 
   if (includeTransitive && isTransitive) {
     const transitiveResults = findTransitiveResults(session, operatorName, holes, knowns, maxResults - results.length);
@@ -122,10 +121,7 @@ export function findAll(session, pattern, options = {}) {
 /**
  * Check if relation supports transitive reasoning
  */
-function isTransitiveRelationFallback(operator) {
-  return ['isA', 'locatedIn', 'partOf', 'subsetOf', 'before', 'after',
-          'causes', 'appealsTo', 'leadsTo', 'enables', 'containedIn'].includes(operator);
-}
+// DS19: relation properties must be theory-driven (SemanticIndex). No hardcoded fallbacks.
 
 /**
  * Find results through transitive chains

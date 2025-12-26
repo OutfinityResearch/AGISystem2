@@ -146,6 +146,14 @@ function legacyStepToDs19(step) {
     };
   }
 
+  if (operation === 'canonical_match') {
+    return {
+      kind: 'synonym',
+      usesFacts: step.fact ? [{ id: null, ...factMeta }] : undefined,
+      detail: { ...step }
+    };
+  }
+
   if (operation && operation.startsWith('transitive_')) {
     return {
       kind: 'transitive',

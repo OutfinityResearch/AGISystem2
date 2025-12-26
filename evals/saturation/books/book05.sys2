@@ -1,0 +1,126 @@
+# Book05: Factor 5 vs Book01, 10 chapters x 2 ideas
+# SAT_QUERY_POS op=Mentions book=Book05 key=Key_B05_C10_I02 expect=ContextWeaving
+# SAT_QUERY_NEG op=Mentions book=Book05 key=Key_B05_Missing expect=none
+
+@Idea:Idea graph idea concept trait
+    isA $idea $concept
+    hasProperty $idea $trait
+    return $idea
+end
+
+@Mentions:Mentions graph book key idea
+    @triple __Triple $book $key $idea
+    return $triple
+end
+
+# Chapter 01 - Perception
+# Idea: SensorCalibration (Process, Precise)
+@_ Idea SensorCalibration Process Precise
+@B05_R0001 Mentions Book05 Key_B05_C01_I01 SensorCalibration
+
+# Idea: NoiseGate (Filter, Selective)
+@_ Idea NoiseGate Filter Selective
+@B05_R0002 Mentions Book05 Key_B05_C01_I02 NoiseGate
+
+@Chapter01 bundle [$B05_R0001, $B05_R0002]
+
+# Chapter 02 - Memory
+# Idea: ShortTermStore (Memory, Volatile)
+@_ Idea ShortTermStore Memory Volatile
+@B05_R0003 Mentions Book05 Key_B05_C02_I01 ShortTermStore
+
+# Idea: LongTermIndex (Memory, Durable)
+@_ Idea LongTermIndex Memory Durable
+@B05_R0004 Mentions Book05 Key_B05_C02_I02 LongTermIndex
+
+@Chapter02 bundle [$B05_R0003, $B05_R0004]
+
+# Chapter 03 - Learning
+# Idea: PatternMining (Learning, Incremental)
+@_ Idea PatternMining Learning Incremental
+@B05_R0005 Mentions Book05 Key_B05_C03_I01 PatternMining
+
+# Idea: ModelUpdate (Learning, Adaptive)
+@_ Idea ModelUpdate Learning Adaptive
+@B05_R0006 Mentions Book05 Key_B05_C03_I02 ModelUpdate
+
+@Chapter03 bundle [$B05_R0005, $B05_R0006]
+
+# Chapter 04 - Planning
+# Idea: GoalStack (Planner, Hierarchical)
+@_ Idea GoalStack Planner Hierarchical
+@B05_R0007 Mentions Book05 Key_B05_C04_I01 GoalStack
+
+# Idea: ActionSequencing (Planner, Ordered)
+@_ Idea ActionSequencing Planner Ordered
+@B05_R0008 Mentions Book05 Key_B05_C04_I02 ActionSequencing
+
+@Chapter04 bundle [$B05_R0007, $B05_R0008]
+
+# Chapter 05 - Control
+# Idea: FeedbackLoop (Control, Stable)
+@_ Idea FeedbackLoop Control Stable
+@B05_R0009 Mentions Book05 Key_B05_C05_I01 FeedbackLoop
+
+# Idea: ErrorCorrection (Control, Resilient)
+@_ Idea ErrorCorrection Control Resilient
+@B05_R0010 Mentions Book05 Key_B05_C05_I02 ErrorCorrection
+
+@Chapter05 bundle [$B05_R0009, $B05_R0010]
+
+# Chapter 06 - Communication
+# Idea: MessageRouting (Protocol, Reliable)
+@_ Idea MessageRouting Protocol Reliable
+@B05_R0011 Mentions Book05 Key_B05_C06_I01 MessageRouting
+
+# Idea: ConsensusPing (Protocol, Coherent)
+@_ Idea ConsensusPing Protocol Coherent
+@B05_R0012 Mentions Book05 Key_B05_C06_I02 ConsensusPing
+
+@Chapter06 bundle [$B05_R0011, $B05_R0012]
+
+# Chapter 07 - Coordination
+# Idea: RoleAssignment (Coordination, Balanced)
+@_ Idea RoleAssignment Coordination Balanced
+@B05_R0013 Mentions Book05 Key_B05_C07_I01 RoleAssignment
+
+# Idea: TaskHandoff (Coordination, Timely)
+@_ Idea TaskHandoff Coordination Timely
+@B05_R0014 Mentions Book05 Key_B05_C07_I02 TaskHandoff
+
+@Chapter07 bundle [$B05_R0013, $B05_R0014]
+
+# Chapter 08 - Optimization
+# Idea: SearchPruning (Optimization, Efficient)
+@_ Idea SearchPruning Optimization Efficient
+@B05_R0015 Mentions Book05 Key_B05_C08_I01 SearchPruning
+
+# Idea: CostShaping (Optimization, Bounded)
+@_ Idea CostShaping Optimization Bounded
+@B05_R0016 Mentions Book05 Key_B05_C08_I02 CostShaping
+
+@Chapter08 bundle [$B05_R0015, $B05_R0016]
+
+# Chapter 09 - Safety
+# Idea: ConstraintGuard (Safety, Strict)
+@_ Idea ConstraintGuard Safety Strict
+@B05_R0017 Mentions Book05 Key_B05_C09_I01 ConstraintGuard
+
+# Idea: AnomalyWatch (Safety, Vigilant)
+@_ Idea AnomalyWatch Safety Vigilant
+@B05_R0018 Mentions Book05 Key_B05_C09_I02 AnomalyWatch
+
+@Chapter09 bundle [$B05_R0017, $B05_R0018]
+
+# Chapter 10 - Interpretation
+# Idea: SymbolLinking (Mapping, Consistent)
+@_ Idea SymbolLinking Mapping Consistent
+@B05_R0019 Mentions Book05 Key_B05_C10_I01 SymbolLinking
+
+# Idea: ContextWeaving (Inference, Contextual)
+@_ Idea ContextWeaving Inference Contextual
+@B05_R0020 Mentions Book05 Key_B05_C10_I02 ContextWeaving
+
+@Chapter10 bundle [$B05_R0019, $B05_R0020]
+
+@Book:Book bundle [$Chapter01, $Chapter02, $Chapter03, $Chapter04, $Chapter05, $Chapter06, $Chapter07, $Chapter08, $Chapter09, $Chapter10]

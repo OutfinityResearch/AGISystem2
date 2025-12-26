@@ -26,9 +26,7 @@ export class SymmetricReasoner {
 
   isSymmetricOperator(name) {
     if (!name) return false;
-    if (this.session?.useSemanticIndex && this.session?.semanticIndex?.isSymmetric) {
-      return this.session.semanticIndex.isSymmetric(name);
-    }
+    if (this.session?.semanticIndex?.isSymmetric) return this.session.semanticIndex.isSymmetric(name);
     return false;
   }
 
@@ -100,4 +98,3 @@ export class SymmetricReasoner {
 }
 
 export default SymmetricReasoner;
-

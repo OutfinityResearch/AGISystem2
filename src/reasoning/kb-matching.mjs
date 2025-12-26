@@ -246,7 +246,11 @@ export class KBMatcher {
     }
 
     // For transitive relations "isA Subject ?var", find all transitive targets
-    if (TRANSITIVE_RELATIONS.has(op) && args.length === 2 && !args[0].startsWith('?') && args[1].startsWith('?')) {
+    const isTransitive =
+      this.session?.semanticIndex?.isTransitive
+        ? this.session.semanticIndex.isTransitive(op)
+        : TRANSITIVE_RELATIONS.has(op);
+    if (isTransitive && args.length === 2 && !args[0].startsWith('?') && args[1].startsWith('?')) {
       const subject = args[0];
       const varName = args[1].substring(1);
       const transitiveTargets = this.engine.transitive.findAllTransitiveTargets(op, subject);

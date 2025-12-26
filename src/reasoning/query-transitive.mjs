@@ -259,6 +259,8 @@ export function reachesTransitively(session, relation, entity, target, visited =
  * @param {string} operatorName - Operator name
  * @returns {boolean} True if transitive
  */
-export function isTransitiveRelation(operatorName) {
+export function isTransitiveRelation(operatorName, session = null) {
+  const idx = session?.semanticIndex;
+  if (idx?.isTransitive) return idx.isTransitive(operatorName);
   return TRANSITIVE_RELATIONS.has(operatorName);
 }

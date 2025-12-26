@@ -38,7 +38,7 @@ describe('isVector - Multi-Strategy Support', () => {
     for (const strategyId of strategies) {
       const strategy = getStrategy(strategyId);
       const geometry = strategyId === 'sparse-polynomial' ? 4 :
-                       strategyId === 'metric-affine' ? 32 : 2048;
+                       (strategyId === 'metric-affine' || strategyId === 'metric-affine-elastic') ? 32 : 2048;
       const vec = strategy.createRandom(geometry);
 
       assert.ok(isVector(vec), `${strategyId} vector should be detected by isVector()`);

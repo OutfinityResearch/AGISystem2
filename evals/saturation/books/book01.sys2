@@ -1,0 +1,38 @@
+# Book01: Small, 2 chapters x 2 ideas, each idea has 2 declarations
+# SAT_QUERY_POS op=Mentions book=Book01 key=Key_B01_C02_I02 expect=ContextUpdate
+# SAT_QUERY_NEG op=Mentions book=Book01 key=Key_B01_Missing expect=none
+
+@Idea:Idea graph idea concept trait
+    isA $idea $concept
+    hasProperty $idea $trait
+    return $idea
+end
+
+@Mentions:Mentions graph book key idea
+    @triple __Triple $book $key $idea
+    return $triple
+end
+
+# Chapter 01 - Perception
+# Idea: SensorFusion (Process, Robust)
+@_ Idea SensorFusion Process Robust
+@B01_R0001 Mentions Book01 Key_B01_C01_I01 SensorFusion
+
+# Idea: EdgeDetection (PerceptionModule, ContrastSensitive)
+@_ Idea EdgeDetection PerceptionModule ContrastSensitive
+@B01_R0002 Mentions Book01 Key_B01_C01_I02 EdgeDetection
+
+@Chapter01 bundle [$B01_R0001, $B01_R0002]
+
+# Chapter 02 - Reasoning
+# Idea: SymbolGrounding (Mapping, Stable)
+@_ Idea SymbolGrounding Mapping Stable
+@B01_R0003 Mentions Book01 Key_B01_C02_I01 SymbolGrounding
+
+# Idea: ContextUpdate (Inference, Incremental)
+@_ Idea ContextUpdate Inference Incremental
+@B01_R0004 Mentions Book01 Key_B01_C02_I02 ContextUpdate
+
+@Chapter02 bundle [$B01_R0003, $B01_R0004]
+
+@Book:Book bundle [$Chapter01, $Chapter02]

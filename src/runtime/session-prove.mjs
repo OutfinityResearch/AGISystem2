@@ -5,6 +5,65 @@ import { buildProofObject } from '../reasoning/proof-schema.mjs';
 import { validateProof } from '../reasoning/proof-validator.mjs';
 import { isHdcMethod } from './session-stats.mjs';
 
+function stmtToOpArgs(stmt) {
+  const op = stmt?.operator?.name || stmt?.operator?.value || null;
+  const args = Array.isArray(stmt?.args)
+    ? stmt.args.map(a => a?.name ?? a?.value ?? (typeof a?.toString === 'function' ? a.toString() : null)).filter(v => v !== null)
+    : [];
+  return { op, args };
+}
+
+function computeCanonicalizationSteps(session, rawStmt, canonicalStmt) {
+  if (!rawStmt || !canonicalStmt) return [];
+  const raw = stmtToOpArgs(rawStmt);
+  const canon = stmtToOpArgs(canonicalStmt);
+  if (!raw.op || !canon.op) return [];
+
+  const steps = [];
+  const kb = session?.componentKB;
+  const explainMapping = (a, b) => {
+    if (a === b) return null;
+    if (!kb) return null;
+
+    if (typeof kb.expandSynonyms === 'function' && kb.expandSynonyms(a).has(b)) {
+      return { operation: 'synonym_match', detailKey: 'synonymUsed', detailValue: `${a} <-> ${b}` };
+    }
+
+    if (typeof kb.resolveCanonical === 'function' && kb.resolveCanonical(a) === b) {
+      return { operation: 'canonical_match', detailKey: 'canonicalUsed', detailValue: `${a} -> ${b}` };
+    }
+
+    return null;
+  };
+
+  const opMapping = explainMapping(raw.op, canon.op);
+  if (raw.op !== canon.op && opMapping) {
+    steps.push({
+      operation: opMapping.operation,
+      fact: `${canon.op} ${canon.args.join(' ')}`.trim(),
+      [opMapping.detailKey]: opMapping.detailValue,
+      confidence: 1.0
+    });
+  }
+
+  const n = Math.min(raw.args.length, canon.args.length);
+  for (let i = 0; i < n; i++) {
+    const a = raw.args[i];
+    const b = canon.args[i];
+    if (a === b) continue;
+    const mapping = explainMapping(a, b);
+    if (!mapping) continue;
+    steps.push({
+      operation: mapping.operation,
+      fact: `${canon.op} ${canon.args.join(' ')}`.trim(),
+      [mapping.detailKey]: mapping.detailValue,
+      confidence: 1.0
+    });
+  }
+
+  return steps;
+}
+
 /**
  * Prove a goal.
  */
@@ -22,6 +81,16 @@ export function prove(session, dsl, options = {}) {
       : rawGoalStatement;
 
     const result = engine.prove(goalStatement);
+    const canonSteps = (goalStatement !== rawGoalStatement)
+      ? computeCanonicalizationSteps(session, rawGoalStatement, goalStatement)
+      : [];
+    if (canonSteps.length > 0) {
+      result.steps = [...canonSteps, ...(result.steps || [])];
+      // If the engine already produced a "proof" alias, keep it consistent.
+      if (result.proof && Array.isArray(result.proof)) {
+        result.proof = [...canonSteps, ...result.proof];
+      }
+    }
     result.proofObject = buildProofObject({ session, goalStatement, result });
     if (goalStatement !== rawGoalStatement) {
       result.proofObject.legacy = {

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { Session } from '../../../src/runtime/session.mjs';
 
 describe('DS19: Semantic Unification — canonicalization', () => {
-  test.skip(
+  test(
     'equivalent DSL encodings normalize to identical canonical metadata',
     () => {
       const session = new Session({ geometry: 2048 });
@@ -29,7 +29,7 @@ describe('DS19: Semantic Unification — canonicalization', () => {
     }
   );
 
-  test.skip(
+  test(
     'synonyms/aliases normalize (proof includes synonym step)',
     () => {
       const session = new Session({ geometry: 2048 });
@@ -39,14 +39,35 @@ describe('DS19: Semantic Unification — canonicalization', () => {
         isA Car Vehicle
       `);
 
-      const result = session.prove('@goal isA Automobile Vehicle');
+      const canonical = session.componentKB.canonicalizeName('Car');
+      const nonCanonical = canonical === 'Car' ? 'Automobile' : 'Car';
+      const result = session.prove(`@goal isA ${nonCanonical} Vehicle`);
 
       // TODO(DS19):
-      // - query should canonicalize Automobile -> Car (or the chosen canonical representative)
+      // - query should canonicalize nonCanonical -> canonical
       // - proof MUST include a synonym step explaining the rewrite
       assert.equal(result.valid, true);
-      assert.ok(Array.isArray(result.proof?.steps));
-      assert.ok(result.proof.steps.some(s => s.kind === 'synonym'));
+      assert.ok(Array.isArray(result.proofObject?.steps));
+      assert.ok(result.proofObject.steps.some(s => s.kind === 'synonym'));
+    }
+  );
+
+  test(
+    'canonical/alias mappings normalize (proof includes canonical step)',
+    () => {
+      const session = new Session({ geometry: 2048 });
+
+      session.learn(`
+        alias Car Automobile
+        isA Car Vehicle
+      `);
+
+      const result = session.prove('@goal isA Car Vehicle');
+      assert.equal(result.valid, true);
+      assert.ok(Array.isArray(result.proofObject?.steps));
+      assert.ok(
+        result.proofObject.steps.some(s => s.kind === 'synonym' && typeof s.detail?.canonicalUsed === 'string')
+      );
     }
   );
 });

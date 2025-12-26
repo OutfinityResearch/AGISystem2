@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { Session } from '../../../src/runtime/session.mjs';
 
 describe('DS19: Semantic Unification — dual-engine consistency', () => {
-  test.skip(
+  test(
     'symbolicPriority vs holographicPriority produce compatible proofs',
     () => {
       const sessionSymbolic = new Session({ geometry: 2048, reasoningPriority: 'symbolicPriority' });
@@ -25,9 +25,9 @@ describe('DS19: Semantic Unification — dual-engine consistency', () => {
       // TODO(DS19):
       // - both MUST expose proof objects in the same schema
       // - holographic MUST include a `validation` step
-      assert.equal(typeof r1.proof, 'object');
-      assert.equal(typeof r2.proof, 'object');
-      assert.ok(r2.proof.steps.some(s => s.kind === 'validation'));
+      assert.equal(typeof r1.proofObject, 'object');
+      assert.equal(typeof r2.proofObject, 'object');
+      assert.ok(r2.proofObject.steps.some(s => s.kind === 'validation'));
     }
   );
 });

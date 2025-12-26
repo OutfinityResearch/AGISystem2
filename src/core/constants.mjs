@@ -19,6 +19,11 @@ import {
   HOLOGRAPHIC_THRESHOLDS as METRIC_AFFINE_HOLO
 } from '../hdc/strategies/metric-affine.mjs';
 
+import {
+  REASONING_THRESHOLDS as METRIC_AFFINE_ELASTIC_THRESHOLDS,
+  HOLOGRAPHIC_THRESHOLDS as METRIC_AFFINE_ELASTIC_HOLO
+} from '../hdc/strategies/metric-affine-elastic.mjs';
+
 // Default geometry (vector dimension in bits)
 export const DEFAULT_GEOMETRY = 32768;
 
@@ -46,7 +51,8 @@ export const ORTHOGONAL_THRESHOLD = 0.55;
 export const REASONING_THRESHOLDS = {
   'dense-binary': DENSE_BINARY_THRESHOLDS,
   'sparse-polynomial': SPARSE_POLY_THRESHOLDS,
-  'metric-affine': METRIC_AFFINE_THRESHOLDS
+  'metric-affine': METRIC_AFFINE_THRESHOLDS,
+  'metric-affine-elastic': METRIC_AFFINE_ELASTIC_THRESHOLDS
 };
 
 /**
@@ -103,7 +109,8 @@ export function isHolographicPriority() {
 export const HOLOGRAPHIC_THRESHOLDS = {
   'dense-binary': DENSE_BINARY_HOLO,
   'sparse-polynomial': SPARSE_POLY_HOLO,
-  'metric-affine': METRIC_AFFINE_HOLO
+  'metric-affine': METRIC_AFFINE_HOLO,
+  'metric-affine-elastic': METRIC_AFFINE_ELASTIC_HOLO
 };
 
 /**

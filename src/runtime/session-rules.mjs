@@ -4,6 +4,7 @@
  */
 
 import { createHash } from 'node:crypto';
+import { canonicalizeExpression, canonicalizeStatement } from './canonicalize.mjs';
 
 export function initOperators(session) {
   const reserved = ['Implies', 'And', 'Or', 'Not', 'ForAll', 'Exists'];
@@ -139,10 +140,13 @@ export function extractCompoundCondition(session, expr, stmtMap) {
       if (nested) return nested;
 
       const resolvedAST = resolveReferenceToAST(arg, stmtMap);
+      const canonicalAst = session?.canonicalizationEnabled
+        ? (resolvedAST?.type === 'Statement' ? canonicalizeStatement(session, resolvedAST) : canonicalizeExpression(session, resolvedAST))
+        : resolvedAST;
       return {
         type: 'leaf',
         vector: session.executor.resolveExpression(arg),
-        ast: resolvedAST
+        ast: canonicalAst
       };
     });
     return { type: op, parts };
@@ -153,12 +157,15 @@ export function extractCompoundCondition(session, expr, stmtMap) {
     if (inner) return { type: 'Not', inner };
 
     const resolvedAST = resolveReferenceToAST(stmt.args[0], stmtMap);
+    const canonicalAst = session?.canonicalizationEnabled
+      ? (resolvedAST?.type === 'Statement' ? canonicalizeStatement(session, resolvedAST) : canonicalizeExpression(session, resolvedAST))
+      : resolvedAST;
     return {
       type: 'Not',
       inner: {
         type: 'leaf',
         vector: session.executor.resolveExpression(stmt.args[0]),
-        ast: resolvedAST
+        ast: canonicalAst
       }
     };
   }
@@ -181,8 +188,14 @@ export function trackRules(session, ast) {
     const conditionParts = extractCompoundCondition(session, stmt.args[0], stmtMap);
     const conclusionParts = extractCompoundCondition(session, stmt.args[1], stmtMap);
 
-    const conditionAST = resolveReferenceToAST(stmt.args[0], stmtMap);
-    const conclusionAST = resolveReferenceToAST(stmt.args[1], stmtMap);
+    const rawConditionAST = resolveReferenceToAST(stmt.args[0], stmtMap);
+    const rawConclusionAST = resolveReferenceToAST(stmt.args[1], stmtMap);
+    const conditionAST = session.canonicalizationEnabled
+      ? (rawConditionAST?.type === 'Statement' ? canonicalizeStatement(session, rawConditionAST) : canonicalizeExpression(session, rawConditionAST))
+      : rawConditionAST;
+    const conclusionAST = session.canonicalizationEnabled
+      ? (rawConclusionAST?.type === 'Statement' ? canonicalizeStatement(session, rawConclusionAST) : canonicalizeExpression(session, rawConclusionAST))
+      : rawConclusionAST;
 
     const conditionVars = extractVariablesDeep(conditionAST, stmtMap);
     const conclusionVars = extractVariablesDeep(conclusionAST, stmtMap);

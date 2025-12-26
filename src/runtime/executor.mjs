@@ -48,6 +48,7 @@ import {
   trackRulesFromProgram as trackRulesFromProgramImpl,
   extractCompoundCondition as extractCompoundConditionImpl
 } from './executor-rules.mjs';
+import { tryExecuteBuiltin as tryExecuteBuiltinImpl } from './executor-builtins.mjs';
 
 function dbg(category, ...args) {
   debug_trace(`[Executor:${category}]`, ...args);
@@ -170,18 +171,26 @@ export class Executor {
       return this.executeBundle(stmt);
     }
 
-    // Check if operator is a graph - if so, expand it
-    // Check both direct graph names and aliases (persistName)
     let vector;
-    const isGraph = this.session.graphs?.has(operatorName) ||
-                    this.session.graphAliases?.has(operatorName);
-    if (isGraph) {
-      // Graph invocation: execute graph then bind with operator
-      const graphResult = this.expandGraph(operatorName, stmt.args);
-      vector = bindGraphInvocationResult(this, stmt, graphResult);
+
+    // DS19: Optional executable L0 builtins (___*). Guarded by feature flag.
+    const builtin = tryExecuteBuiltinImpl(this, stmt, operatorName);
+    if (builtin?.handled) {
+      vector = builtin.vector;
     } else {
-      // Normal statement: build vector directly
-      vector = this.buildStatementVector(stmt);
+
+      // Check if operator is a graph - if so, expand it
+      // Check both direct graph names and aliases (persistName)
+      const isGraph = this.session.graphs?.has(operatorName) ||
+                      this.session.graphAliases?.has(operatorName);
+      if (isGraph) {
+        // Graph invocation: execute graph then bind with operator
+        const graphResult = this.expandGraph(operatorName, stmt.args);
+        vector = bindGraphInvocationResult(this, stmt, graphResult);
+      } else {
+        // Normal statement: build vector directly
+        vector = this.buildStatementVector(stmt);
+      }
     }
 
     // Add to knowledge base only if:

@@ -203,7 +203,10 @@ export class HolographicProofEngine {
             return {
               ...transitiveResult,
               method: 'hdc_transitive_validated',
-              steps: symbolicProof.steps?.length ? symbolicProof.steps : transitiveResult.steps
+              steps: [
+                ...(symbolicProof.steps?.length ? symbolicProof.steps : transitiveResult.steps),
+                { operation: 'validation', method: 'symbolic', fact: goalStr, valid: true }
+              ]
             };
           }
         }
@@ -501,12 +504,17 @@ export class HolographicProofEngine {
             confidence: sim * conditionResult.confidence,
             method: 'hdc_rule_validated',
             rule: rule.label || rule.name || rule.id,
-            steps: symbolicProof.steps?.length ? symbolicProof.steps : [{
-              operation: 'rule_application',
-              rule: rule.label || rule.name || rule.id,
-              ruleId: rule.id || null,
-              confidence: conditionResult.confidence
-            }]
+            steps: [
+              ...(symbolicProof.steps?.length
+                ? symbolicProof.steps
+                : [{
+                    operation: 'rule_application',
+                    rule: rule.label || rule.name || rule.id,
+                    ruleId: rule.id || null,
+                    confidence: conditionResult.confidence
+                  }]),
+              { operation: 'validation', method: 'symbolic', fact: goalStr, valid: true }
+            ]
           };
         }
       }
@@ -677,9 +685,7 @@ export class HolographicProofEngine {
    * @private
    */
   isTransitiveRelation(name) {
-    if (this.session?.useSemanticIndex && this.session?.semanticIndex?.isTransitive) {
-      return this.session.semanticIndex.isTransitive(name);
-    }
+    if (this.session?.semanticIndex?.isTransitive) return this.session.semanticIndex.isTransitive(name);
     return TRANSITIVE_RELATIONS.has(name);
   }
 

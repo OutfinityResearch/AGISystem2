@@ -7,24 +7,15 @@
  */
 
 import { getThresholds } from '../core/constants.mjs';
+import { DEFAULT_SEMANTIC_INDEX } from '../runtime/semantic-index.mjs';
 
 /**
- * Transitive relations that support chaining
- * Legacy (hardcoded) list, used when the session is not theory-driven.
+ * Transitive relations that support chaining.
+ *
+ * DS19: Prefer theory-derived properties (SemanticIndex). This exported set is used
+ * as a conservative fallback and is initialized from the default SemanticIndex.
  */
-export const TRANSITIVE_RELATIONS = new Set([
-  'isA',
-  'locatedIn',
-  'partOf',
-  'subclassOf',
-  'containedIn',
-  'before',
-  'after',
-  'causes',
-  'appealsTo',
-  'leadsTo',
-  'enables'
-]);
+export const TRANSITIVE_RELATIONS = new Set(DEFAULT_SEMANTIC_INDEX?.transitiveRelations || []);
 
 /**
  * Reserved words to exclude from intermediates
@@ -62,7 +53,7 @@ export class TransitiveReasoner {
   tryTransitiveChain(goal, depth) {
     const operatorName = this.engine.extractOperatorName(goal);
     const isTransitive =
-      this.session?.useSemanticIndex && this.session?.semanticIndex?.isTransitive
+      this.session?.semanticIndex?.isTransitive
         ? this.session.semanticIndex.isTransitive(operatorName)
         : (operatorName ? TRANSITIVE_RELATIONS.has(operatorName) : false);
 
@@ -277,7 +268,7 @@ export class TransitiveReasoner {
 
     const [op, subject, target] = parts;
     const isTransitive =
-      this.session?.useSemanticIndex && this.session?.semanticIndex?.isTransitive
+      this.session?.semanticIndex?.isTransitive
         ? this.session.semanticIndex.isTransitive(op)
         : (op ? TRANSITIVE_RELATIONS.has(op) : false);
     if (!isTransitive) return { valid: false };

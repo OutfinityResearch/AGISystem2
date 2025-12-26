@@ -66,6 +66,7 @@ export class Session {
     this.features = computeFeatureToggles({ profile: this.reasoningProfile, options });
     this.canonicalizationEnabled = this.features.canonicalizationEnabled;
     this.proofValidationEnabled = this.features.proofValidationEnabled;
+    this.l0BuiltinsEnabled = this.features.l0BuiltinsEnabled;
     this.closedWorldAssumption = this.features.closedWorldAssumption;
     this.useSemanticIndex = this.features.useSemanticIndex;
     this.useTheoryConstraints = this.features.useTheoryConstraints;

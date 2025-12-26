@@ -27,7 +27,7 @@ export class InverseReasoner {
   getInverseOperator(op) {
     if (!op) return null;
     const idx = this.session?.semanticIndex;
-    if (!this.session?.useSemanticIndex || !idx?.getInverseRelation) return null;
+    if (!idx?.getInverseRelation) return null;
     return idx.getInverseRelation(op) || null;
   }
 
@@ -88,4 +88,3 @@ export class InverseReasoner {
 }
 
 export default InverseReasoner;
-

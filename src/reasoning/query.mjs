@@ -17,7 +17,6 @@
 import { bind, similarity } from '../core/operations.mjs';
 import { withPosition } from '../core/position.mjs';
 import { MAX_HOLES, SIMILARITY_THRESHOLD } from '../core/constants.mjs';
-import { TRANSITIVE_RELATIONS } from './transitive.mjs';
 
 // Import sub-modules
 import { searchHDC, isValidEntity, RESERVED } from './query-hdc.mjs';
@@ -217,7 +216,7 @@ export class QueryEngine {
 
     // SOURCE 3: Transitive reasoning (for isA, locatedIn, partOf, etc.)
     // Now supports 1 or 2 holes
-    if (isTransitiveRelation(operatorName) && holes.length <= 2) {
+    if (isTransitiveRelation(operatorName, this.session) && holes.length <= 2) {
       const transitiveMatches = searchTransitive(this.session, operatorName, knowns, holes);
       // Replace HDC duplicates with transitive (transitive is more reliable)
       for (const tm of transitiveMatches) {
@@ -258,16 +257,10 @@ export class QueryEngine {
     }
     dbg('RULES', `Found ${ruleMatches.length} rule-derived matches`);
 
-    // SOURCE 4.5: Property Inheritance (can/has/likes/etc. through isA chain)
-    const inheritableOps = new Set([
-      'can', 'has', 'likes', 'knows', 'owns', 'uses',
-      'hasProperty', 'hasAbility', 'hasTrait', 'exhibits',
-      'causes', 'prevents', 'enables', 'requires',
-      'must', 'should', 'may'
-    ]);
-    const isInheritable = this.session?.useSemanticIndex && this.session?.semanticIndex?.isInheritableProperty
+    // SOURCE 4.5: Property Inheritance (theory-driven via SemanticIndex)
+    const isInheritable = this.session?.semanticIndex?.isInheritableProperty
       ? this.session.semanticIndex.isInheritableProperty(operatorName)
-      : inheritableOps.has(operatorName);
+      : false;
 
     if (isInheritable && knowns.length === 1 && holes.length === 1) {
       if (knowns[0].index === 1) {

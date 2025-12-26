@@ -9,7 +9,7 @@ export function tryDefaultReasoning(self, goal) {
   const semanticIndex = self.session?.semanticIndex;
   const isDefaultable = semanticIndex?.isInheritableProperty
     ? semanticIndex.isInheritableProperty(op)
-    : new Set(['can', 'has', 'likes', 'knows', 'owns', 'uses']).has(op);
+    : false;
 
   if (!isDefaultable) {
     return { valid: false };
@@ -68,4 +68,3 @@ export function tryDefaultReasoning(self, goal) {
 
   return { valid: false };
 }
-

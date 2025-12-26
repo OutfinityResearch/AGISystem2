@@ -836,6 +836,9 @@ export async function runSuite(suite, options = {}) {
     defaultGeometry = 4;
   } else if (strategyId === 'metric-affine') {
     defaultGeometry = 32;
+  } else if (strategyId === 'metric-affine-elastic') {
+    // geometry is BYTES (start at 8 bytes = 64 bits)
+    defaultGeometry = 8;
   } else {
     defaultGeometry = 2048;
   }

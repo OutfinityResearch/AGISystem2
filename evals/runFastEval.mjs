@@ -5,16 +5,18 @@
  * Run evaluation suites to test NL->DSL transformation and reasoning.
  *
  * Usage:
- *   node evals/runFastEval.mjs                           # Run all suites with 6 configs (default)
+ *   node evals/runFastEval.mjs                           # Run all suites with 6 configs (summary only)
  *   node evals/runFastEval.mjs suite01                   # Run specific suite
+ *   node evals/runFastEval.mjs --details                 # Show per-case results
  *   node evals/runFastEval.mjs --verbose                 # Show failure details
- *   node evals/runFastEval.mjs --full                    # Run with 12 configurations (3 strategies × 2 priorities × 2 geometries)
+ *   node evals/runFastEval.mjs --full                    # Run with 16 configurations (4 strategies × 2 priorities × 2 geometries)
  *   node evals/runFastEval.mjs --priority=holographicPriority  # Run with specific reasoning priority
  *
  * Strategy Mode (runs single strategy with multiple geometries):
  *   node evals/runFastEval.mjs --strategy=dense          # Dense: 128, 256, 512, 1024, 2048, 4096 bits
  *   node evals/runFastEval.mjs --strategy=sparse         # Sparse: k=1, 2, 3, 5, 8, 13
  *   node evals/runFastEval.mjs --strategy=metric         # Metric: 8, 16, 32, 64, 128, 256 bytes
+ *   node evals/runFastEval.mjs --strategy=ema            # EMA: 8, 16, 32, 64, 128, 256 bytes
  *
  * Geometry Parameters (for default mode):
  *   --dense-dim=N   Dense binary vector dimension (default: 256)
@@ -22,7 +24,7 @@
  *   --metric-dim=N  Metric affine byte channels (default: 16)
  *
  * Configurations:
- *   HDC Strategies: dense-binary, sparse-polynomial, metric-affine
+ *   HDC Strategies: dense-binary, sparse-polynomial, metric-affine, metric-affine-elastic
  *   Reasoning Priorities: symbolicPriority, holographicPriority
  */
 
@@ -44,13 +46,15 @@ import { REASONING_PRIORITY } from '../src/core/constants.mjs';
 const STRATEGY_GEOMETRIES = {
   'dense': [128, 256, 512, 1024, 2048, 4096],       // bits
   'sparse': [1, 2, 3, 4, 5, 6],                      // k exponents
-  'metric': [8, 16, 32, 64, 128, 256]                // bytes
+  'metric': [8, 16, 32, 64, 128, 256],               // bytes
+  'ema': [8, 16, 32, 64, 128, 256]                   // bytes
 };
 
 const STRATEGY_FULL_NAMES = {
   'dense': 'dense-binary',
   'sparse': 'sparse-polynomial',
-  'metric': 'metric-affine'
+  'metric': 'metric-affine',
+  'ema': 'metric-affine-elastic'
 };
 
 // Short display names for compact output
@@ -64,7 +68,17 @@ function shortPriority(p) {
 }
 
 function configLabel(strategy, geometry, priority) {
-  return `${shortStrategy(strategy)}(${geometry})+${shortPriority(priority)}`;
+  const s = shortStrategy(strategy);
+  if (strategy === 'dense-binary') {
+    const bytes = Number.isFinite(geometry) ? Math.ceil(geometry / 8) : geometry;
+    return `${s}(${bytes}B)+${shortPriority(priority)}`;
+  }
+  if (strategy === 'sparse-polynomial') return `${s}(k${geometry})+${shortPriority(priority)}`;
+  // metric-affine + metric-affine-elastic geometries are byte channels
+  if (strategy === 'metric-affine' || strategy === 'metric-affine-elastic') {
+    return `${s}(${geometry}B)+${shortPriority(priority)}`;
+  }
+  return `${s}(${geometry})+${shortPriority(priority)}`;
 }
 
 // Parse command line arguments
@@ -80,11 +94,12 @@ Usage:
 
 Options:
   --help, -h              Show this help message
+  --details, -d           Show per-case results
   --verbose, -v           Show failure details
   --fast                  Quick run with single config
-  --full                  Run with 12 configurations (3 strategies × 2 priorities × 2 geometries)
+  --full                  Run with 16 configurations (4 strategies × 2 priorities × 2 geometries)
   --strategy=NAME         Run single strategy with multiple geometries
-                          NAME: dense, sparse, metric
+                          NAME: dense, sparse, metric, ema
   --priority=NAME         Run with specific reasoning priority
                           NAME: symbolicPriority, holographicPriority
 
@@ -97,12 +112,15 @@ Examples:
   node evals/runFastEval.mjs                     # Run all suites with 6 configs
   node evals/runFastEval.mjs suite01             # Run specific suite
   node evals/runFastEval.mjs --strategy=dense    # Dense: 128, 256, 512, 1024, 2048, 4096 bits
+  node evals/runFastEval.mjs --details           # Show per-case results
   node evals/runFastEval.mjs --verbose           # Show failure details
 `);
   process.exit(0);
 }
 
+const details = args.includes('--details') || args.includes('-d');
 const verbose = args.includes('--verbose') || args.includes('-v');
+const showDetails = details || verbose;
 const fullModes = args.includes('--full');
 const fastMode = args.includes('--fast');
 
@@ -193,13 +211,16 @@ async function main() {
       const allGeometries = STRATEGY_GEOMETRIES[shortName];
 
       if (!allGeometries) {
-        console.error(`\x1b[31mUnknown strategy: ${singleStrategy}. Available: dense, sparse, metric\x1b[0m`);
+        console.error(`\x1b[31mUnknown strategy: ${singleStrategy}. Available: dense, sparse, metric, ema\x1b[0m`);
         process.exit(1);
       }
 
       // --strategy=X --fast: single geometry for quick test of that strategy
       if (fastMode) {
-        const defaultGeometry = allGeometries[Math.floor(allGeometries.length / 2)]; // middle geometry
+        // Prefer starting-point geometry (especially for EMA/metric-elastic: 8 bytes = 64 bits).
+        const defaultGeometry = fullName === 'metric-affine-elastic'
+          ? allGeometries[0]
+          : allGeometries[Math.floor(allGeometries.length / 2)]; // middle geometry
         configurations.push({
           strategy: fullName,
           priority: REASONING_PRIORITY.HOLOGRAPHIC,
@@ -235,6 +256,10 @@ async function main() {
           } else if (strategy === 'metric-affine') {
             geometries.push(metricDim);
             if (fullModes) geometries.push(metricDim * 2);
+          } else if (strategy === 'metric-affine-elastic') {
+            // metric-elastic geometry is BYTES; start at 8 bytes (=64 bits) by default
+            geometries.push(8);
+            if (fullModes) geometries.push(16);
           } else {
             geometries.push(denseDim);
             if (fullModes) geometries.push(denseDim * 2);
@@ -247,10 +272,12 @@ async function main() {
     }
 
     // Sort configurations
-    const strategyOrder = ['dense-binary', 'sparse-polynomial', 'metric-affine'];
+    const strategyOrder = ['dense-binary', 'sparse-polynomial', 'metric-affine', 'metric-affine-elastic'];
     const priorityOrder = [REASONING_PRIORITY.SYMBOLIC, REASONING_PRIORITY.HOLOGRAPHIC];
     configurations.sort((a, b) => {
-      const strategyDiff = strategyOrder.indexOf(a.strategy) - strategyOrder.indexOf(b.strategy);
+      const aIdx = strategyOrder.includes(a.strategy) ? strategyOrder.indexOf(a.strategy) : strategyOrder.length;
+      const bIdx = strategyOrder.includes(b.strategy) ? strategyOrder.indexOf(b.strategy) : strategyOrder.length;
+      const strategyDiff = aIdx - bIdx;
       if (strategyDiff !== 0) return strategyDiff;
       const geometryDiff = a.geometry - b.geometry;
       if (geometryDiff !== 0) return geometryDiff;
@@ -294,9 +321,11 @@ async function main() {
           });
 
           // Report results
-          reportCaseResults(suite.cases, results);
+          if (showDetails) {
+            reportCaseResults(suite.cases, results);
+          }
           reportSuiteSummary(summary, suite.cases);
-          if (summary.failed > 0) {
+          if (showDetails && summary.failed > 0) {
             reportFailureComparisons(suite.cases, results, {
               suiteName,
               strategyId: config.strategy,

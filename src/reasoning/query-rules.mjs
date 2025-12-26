@@ -349,7 +349,11 @@ export function findLeafConditionMatches(session, condAST, initialBindings) {
   }
 
   // For transitive relations, also find entities that match via chains
-  if (TRANSITIVE_RELATIONS.has(condOp) && condArgs.length === 2) {
+  const isTransitive =
+    session?.semanticIndex?.isTransitive
+      ? session.semanticIndex.isTransitive(condOp)
+      : TRANSITIVE_RELATIONS.has(condOp);
+  if (isTransitive && condArgs.length === 2) {
     const arg0 = condArgs[0];
     const arg1 = condArgs[1];
 
