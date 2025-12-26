@@ -141,6 +141,97 @@ export class SemanticIndex {
     this.contradictsSameArgsSources = contradictsSameArgsSources;
   }
 
+  clone() {
+    return new SemanticIndex({
+      transitiveRelations: new Set(this.transitiveRelations || []),
+      symmetricRelations: new Set(this.symmetricRelations || []),
+      reflexiveRelations: new Set(this.reflexiveRelations || []),
+      inheritableProperties: new Set(this.inheritableProperties || []),
+      typeMarkers: new Set(this.typeMarkers || []),
+      mutuallyExclusive: new Map(this.mutuallyExclusive || []),
+      inverseRelations: new Map(this.inverseRelations || []),
+      contradictsSameArgs: new Map(
+        [...(this.contradictsSameArgs || new Map()).entries()].map(([k, v]) => [k, new Set(v || [])])
+      ),
+      mutuallyExclusiveSources: new Map(
+        [...(this.mutuallyExclusiveSources || new Map()).entries()].map(([k, v]) => [k, new Map(v || [])])
+      ),
+      inverseRelationsSources: new Map(this.inverseRelationsSources || []),
+      contradictsSameArgsSources: new Map(
+        [...(this.contradictsSameArgsSources || new Map()).entries()].map(([k, v]) => [k, new Map(v || [])])
+      )
+    });
+  }
+
+  /**
+   * Incrementally update this SemanticIndex from a newly asserted KB fact.
+   * This enables theory-defined operator properties outside config/Core.
+   *
+   * Supported declaration shapes (mirroring config/Core files):
+   * - `@rel:rel __TransitiveRelation` (fact.name supplies the relation token)
+   * - `@rel:rel __SymmetricRelation`
+   * - `@rel:rel __ReflexiveRelation`
+   * - `@prop:prop __InheritableProperty`
+   * - `mutuallyExclusive op A B`
+   * - `inverseRelation op inv`
+   * - `contradictsSameArgs op other`
+   *
+   * @param {{name?: string|null, metadata?: {operator?: string, args?: any[]}}} fact
+   */
+  observeFact(fact) {
+    const meta = fact?.metadata;
+    const operator = meta?.operator;
+    if (typeof operator !== 'string') return;
+
+    if (
+      operator === '__TransitiveRelation' ||
+      operator === '__SymmetricRelation' ||
+      operator === '__ReflexiveRelation' ||
+      operator === '__InheritableProperty'
+    ) {
+      const rel = typeof fact?.name === 'string' ? fact.name : (Array.isArray(meta.args) ? meta.args[0] : null);
+      if (typeof rel !== 'string' || !rel) return;
+
+      if (operator === '__TransitiveRelation') this.transitiveRelations.add(rel);
+      if (operator === '__SymmetricRelation') this.symmetricRelations.add(rel);
+      if (operator === '__ReflexiveRelation') this.reflexiveRelations.add(rel);
+      if (operator === '__InheritableProperty') this.inheritableProperties.add(rel);
+      return;
+    }
+
+    if (operator === 'mutuallyExclusive' && Array.isArray(meta.args) && meta.args.length === 3) {
+      const [op, a, b] = meta.args;
+      if (typeof op !== 'string' || typeof a !== 'string' || typeof b !== 'string') return;
+      if (!this.mutuallyExclusive.has(op)) this.mutuallyExclusive.set(op, []);
+      this.mutuallyExclusive.get(op).push([a, b]);
+      return;
+    }
+
+    if (operator === 'inverseRelation' && Array.isArray(meta.args) && meta.args.length === 2) {
+      const [op, inv] = meta.args;
+      if (typeof op !== 'string' || typeof inv !== 'string') return;
+      this.inverseRelations.set(op, inv);
+      // Treat as symmetric by default: inverseRelation A B implies inverseRelation B A.
+      // (Core expresses both directions explicitly; user theories often won't.)
+      if (!this.inverseRelations.has(inv)) {
+        this.inverseRelations.set(inv, op);
+      }
+      return;
+    }
+
+    if (operator === 'contradictsSameArgs' && Array.isArray(meta.args) && meta.args.length === 2) {
+      const [a, b] = meta.args;
+      if (typeof a !== 'string' || typeof b !== 'string') return;
+
+      const add = (x, y) => {
+        if (!this.contradictsSameArgs.has(x)) this.contradictsSameArgs.set(x, new Set());
+        this.contradictsSameArgs.get(x).add(y);
+      };
+      add(a, b);
+      add(b, a);
+    }
+  }
+
   isTransitive(name) {
     return this.transitiveRelations.has(name);
   }

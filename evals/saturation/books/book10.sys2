@@ -16,220 +16,220 @@ end
 # Chapter 01 - Perception
 # Idea: SensorCalibration (Process, Precise)
 @_ Idea SensorCalibration Process Precise
-@B10_R0001 Mentions Book10 Key_B10_C01_I01 SensorCalibration
+@B10_R0001:Mentions_B10_R0001 Mentions Book10 Key_B10_C01_I01 SensorCalibration
 
 # Idea: NoiseGate (Filter, Selective)
 @_ Idea NoiseGate Filter Selective
-@B10_R0002 Mentions Book10 Key_B10_C01_I02 NoiseGate
+@B10_R0002:Mentions_B10_R0002 Mentions Book10 Key_B10_C01_I02 NoiseGate
 
 @Chapter01 __Sequence [$B10_R0001, $B10_R0002]
 
 # Chapter 02 - Memory
 # Idea: ShortTermStore (Memory, Volatile)
 @_ Idea ShortTermStore Memory Volatile
-@B10_R0003 Mentions Book10 Key_B10_C02_I01 ShortTermStore
+@B10_R0003:Mentions_B10_R0003 Mentions Book10 Key_B10_C02_I01 ShortTermStore
 
 # Idea: LongTermIndex (Memory, Durable)
 @_ Idea LongTermIndex Memory Durable
-@B10_R0004 Mentions Book10 Key_B10_C02_I02 LongTermIndex
+@B10_R0004:Mentions_B10_R0004 Mentions Book10 Key_B10_C02_I02 LongTermIndex
 
 @Chapter02 __Sequence [$B10_R0003, $B10_R0004]
 
 # Chapter 03 - Learning
 # Idea: PatternMining (Learning, Incremental)
 @_ Idea PatternMining Learning Incremental
-@B10_R0005 Mentions Book10 Key_B10_C03_I01 PatternMining
+@B10_R0005:Mentions_B10_R0005 Mentions Book10 Key_B10_C03_I01 PatternMining
 
 # Idea: ModelUpdate (Learning, Adaptive)
 @_ Idea ModelUpdate Learning Adaptive
-@B10_R0006 Mentions Book10 Key_B10_C03_I02 ModelUpdate
+@B10_R0006:Mentions_B10_R0006 Mentions Book10 Key_B10_C03_I02 ModelUpdate
 
 @Chapter03 __Sequence [$B10_R0005, $B10_R0006]
 
 # Chapter 04 - Planning
 # Idea: GoalStack (Planner, Hierarchical)
 @_ Idea GoalStack Planner Hierarchical
-@B10_R0007 Mentions Book10 Key_B10_C04_I01 GoalStack
+@B10_R0007:Mentions_B10_R0007 Mentions Book10 Key_B10_C04_I01 GoalStack
 
 # Idea: ActionSequencing (Planner, Ordered)
 @_ Idea ActionSequencing Planner Ordered
-@B10_R0008 Mentions Book10 Key_B10_C04_I02 ActionSequencing
+@B10_R0008:Mentions_B10_R0008 Mentions Book10 Key_B10_C04_I02 ActionSequencing
 
 @Chapter04 __Sequence [$B10_R0007, $B10_R0008]
 
 # Chapter 05 - Control
 # Idea: FeedbackLoop (Control, Stable)
 @_ Idea FeedbackLoop Control Stable
-@B10_R0009 Mentions Book10 Key_B10_C05_I01 FeedbackLoop
+@B10_R0009:Mentions_B10_R0009 Mentions Book10 Key_B10_C05_I01 FeedbackLoop
 
 # Idea: ErrorCorrection (Control, Resilient)
 @_ Idea ErrorCorrection Control Resilient
-@B10_R0010 Mentions Book10 Key_B10_C05_I02 ErrorCorrection
+@B10_R0010:Mentions_B10_R0010 Mentions Book10 Key_B10_C05_I02 ErrorCorrection
 
 @Chapter05 __Sequence [$B10_R0009, $B10_R0010]
 
 # Chapter 06 - Communication
 # Idea: MessageRouting (Protocol, Reliable)
 @_ Idea MessageRouting Protocol Reliable
-@B10_R0011 Mentions Book10 Key_B10_C06_I01 MessageRouting
+@B10_R0011:Mentions_B10_R0011 Mentions Book10 Key_B10_C06_I01 MessageRouting
 
 # Idea: ConsensusPing (Protocol, Coherent)
 @_ Idea ConsensusPing Protocol Coherent
-@B10_R0012 Mentions Book10 Key_B10_C06_I02 ConsensusPing
+@B10_R0012:Mentions_B10_R0012 Mentions Book10 Key_B10_C06_I02 ConsensusPing
 
 @Chapter06 __Sequence [$B10_R0011, $B10_R0012]
 
 # Chapter 07 - Coordination
 # Idea: RoleAssignment (Coordination, Balanced)
 @_ Idea RoleAssignment Coordination Balanced
-@B10_R0013 Mentions Book10 Key_B10_C07_I01 RoleAssignment
+@B10_R0013:Mentions_B10_R0013 Mentions Book10 Key_B10_C07_I01 RoleAssignment
 
 # Idea: TaskHandoff (Coordination, Timely)
 @_ Idea TaskHandoff Coordination Timely
-@B10_R0014 Mentions Book10 Key_B10_C07_I02 TaskHandoff
+@B10_R0014:Mentions_B10_R0014 Mentions Book10 Key_B10_C07_I02 TaskHandoff
 
 @Chapter07 __Sequence [$B10_R0013, $B10_R0014]
 
 # Chapter 08 - Optimization
 # Idea: SearchPruning (Optimization, Efficient)
 @_ Idea SearchPruning Optimization Efficient
-@B10_R0015 Mentions Book10 Key_B10_C08_I01 SearchPruning
+@B10_R0015:Mentions_B10_R0015 Mentions Book10 Key_B10_C08_I01 SearchPruning
 
 # Idea: CostShaping (Optimization, Bounded)
 @_ Idea CostShaping Optimization Bounded
-@B10_R0016 Mentions Book10 Key_B10_C08_I02 CostShaping
+@B10_R0016:Mentions_B10_R0016 Mentions Book10 Key_B10_C08_I02 CostShaping
 
 @Chapter08 __Sequence [$B10_R0015, $B10_R0016]
 
 # Chapter 09 - Safety
 # Idea: ConstraintGuard (Safety, Strict)
 @_ Idea ConstraintGuard Safety Strict
-@B10_R0017 Mentions Book10 Key_B10_C09_I01 ConstraintGuard
+@B10_R0017:Mentions_B10_R0017 Mentions Book10 Key_B10_C09_I01 ConstraintGuard
 
 # Idea: AnomalyWatch (Safety, Vigilant)
 @_ Idea AnomalyWatch Safety Vigilant
-@B10_R0018 Mentions Book10 Key_B10_C09_I02 AnomalyWatch
+@B10_R0018:Mentions_B10_R0018 Mentions Book10 Key_B10_C09_I02 AnomalyWatch
 
 @Chapter09 __Sequence [$B10_R0017, $B10_R0018]
 
 # Chapter 10 - Interpretation
 # Idea: SymbolLinking (Mapping, Consistent)
 @_ Idea SymbolLinking Mapping Consistent
-@B10_R0019 Mentions Book10 Key_B10_C10_I01 SymbolLinking
+@B10_R0019:Mentions_B10_R0019 Mentions Book10 Key_B10_C10_I01 SymbolLinking
 
 # Idea: ContextWeaving (Inference, Contextual)
 @_ Idea ContextWeaving Inference Contextual
-@B10_R0020 Mentions Book10 Key_B10_C10_I02 ContextWeaving
+@B10_R0020:Mentions_B10_R0020 Mentions Book10 Key_B10_C10_I02 ContextWeaving
 
 @Chapter10 __Sequence [$B10_R0019, $B10_R0020]
 
 # Chapter 11 - Navigation
 # Idea: PathSketch (Navigation, Feasible)
 @_ Idea PathSketch Navigation Feasible
-@B10_R0021 Mentions Book10 Key_B10_C11_I01 PathSketch
+@B10_R0021:Mentions_B10_R0021 Mentions Book10 Key_B10_C11_I01 PathSketch
 
 # Idea: ObstacleMap (Navigation, Cautious)
 @_ Idea ObstacleMap Navigation Cautious
-@B10_R0022 Mentions Book10 Key_B10_C11_I02 ObstacleMap
+@B10_R0022:Mentions_B10_R0022 Mentions Book10 Key_B10_C11_I02 ObstacleMap
 
 @Chapter11 __Sequence [$B10_R0021, $B10_R0022]
 
 # Chapter 12 - Resource
 # Idea: MemoryBudget (Resource, Limited)
 @_ Idea MemoryBudget Resource Limited
-@B10_R0023 Mentions Book10 Key_B10_C12_I01 MemoryBudget
+@B10_R0023:Mentions_B10_R0023 Mentions Book10 Key_B10_C12_I01 MemoryBudget
 
 # Idea: ComputeQuota (Resource, Measured)
 @_ Idea ComputeQuota Resource Measured
-@B10_R0024 Mentions Book10 Key_B10_C12_I02 ComputeQuota
+@B10_R0024:Mentions_B10_R0024 Mentions Book10 Key_B10_C12_I02 ComputeQuota
 
 @Chapter12 __Sequence [$B10_R0023, $B10_R0024]
 
 # Chapter 13 - Evaluation
 # Idea: Benchmarking (Evaluation, Comparable)
 @_ Idea Benchmarking Evaluation Comparable
-@B10_R0025 Mentions Book10 Key_B10_C13_I01 Benchmarking
+@B10_R0025:Mentions_B10_R0025 Mentions Book10 Key_B10_C13_I01 Benchmarking
 
 # Idea: ErrorAnalysis (Evaluation, Diagnostic)
 @_ Idea ErrorAnalysis Evaluation Diagnostic
-@B10_R0026 Mentions Book10 Key_B10_C13_I02 ErrorAnalysis
+@B10_R0026:Mentions_B10_R0026 Mentions Book10 Key_B10_C13_I02 ErrorAnalysis
 
 @Chapter13 __Sequence [$B10_R0025, $B10_R0026]
 
 # Chapter 14 - Abstraction
 # Idea: ConceptLift (Abstraction, General)
 @_ Idea ConceptLift Abstraction General
-@B10_R0027 Mentions Book10 Key_B10_C14_I01 ConceptLift
+@B10_R0027:Mentions_B10_R0027 Mentions Book10 Key_B10_C14_I01 ConceptLift
 
 # Idea: DetailSuppression (Abstraction, Selective)
 @_ Idea DetailSuppression Abstraction Selective
-@B10_R0028 Mentions Book10 Key_B10_C14_I02 DetailSuppression
+@B10_R0028:Mentions_B10_R0028 Mentions Book10 Key_B10_C14_I02 DetailSuppression
 
 @Chapter14 __Sequence [$B10_R0027, $B10_R0028]
 
 # Chapter 15 - Prediction
 # Idea: TrendForecast (Prediction, Probabilistic)
 @_ Idea TrendForecast Prediction Probabilistic
-@B10_R0029 Mentions Book10 Key_B10_C15_I01 TrendForecast
+@B10_R0029:Mentions_B10_R0029 Mentions Book10 Key_B10_C15_I01 TrendForecast
 
 # Idea: OutcomeEstimation (Prediction, Approximate)
 @_ Idea OutcomeEstimation Prediction Approximate
-@B10_R0030 Mentions Book10 Key_B10_C15_I02 OutcomeEstimation
+@B10_R0030:Mentions_B10_R0030 Mentions Book10 Key_B10_C15_I02 OutcomeEstimation
 
 @Chapter15 __Sequence [$B10_R0029, $B10_R0030]
 
 # Chapter 16 - Adaptation
 # Idea: PolicyShift (Adaptation, Flexible)
 @_ Idea PolicyShift Adaptation Flexible
-@B10_R0031 Mentions Book10 Key_B10_C16_I01 PolicyShift
+@B10_R0031:Mentions_B10_R0031 Mentions Book10 Key_B10_C16_I01 PolicyShift
 
 # Idea: ParameterDrift (Adaptation, Gradual)
 @_ Idea ParameterDrift Adaptation Gradual
-@B10_R0032 Mentions Book10 Key_B10_C16_I02 ParameterDrift
+@B10_R0032:Mentions_B10_R0032 Mentions Book10 Key_B10_C16_I02 ParameterDrift
 
 @Chapter16 __Sequence [$B10_R0031, $B10_R0032]
 
 # Chapter 17 - Verification
 # Idea: InvariantCheck (Verification, Exact)
 @_ Idea InvariantCheck Verification Exact
-@B10_R0033 Mentions Book10 Key_B10_C17_I01 InvariantCheck
+@B10_R0033:Mentions_B10_R0033 Mentions Book10 Key_B10_C17_I01 InvariantCheck
 
 # Idea: ProofSketch (Verification, Minimal)
 @_ Idea ProofSketch Verification Minimal
-@B10_R0034 Mentions Book10 Key_B10_C17_I02 ProofSketch
+@B10_R0034:Mentions_B10_R0034 Mentions Book10 Key_B10_C17_I02 ProofSketch
 
 @Chapter17 __Sequence [$B10_R0033, $B10_R0034]
 
 # Chapter 18 - Interface
 # Idea: SignalEncoding (Interface, Compact)
 @_ Idea SignalEncoding Interface Compact
-@B10_R0035 Mentions Book10 Key_B10_C18_I01 SignalEncoding
+@B10_R0035:Mentions_B10_R0035 Mentions Book10 Key_B10_C18_I01 SignalEncoding
 
 # Idea: ResponseTiming (Interface, Responsive)
 @_ Idea ResponseTiming Interface Responsive
-@B10_R0036 Mentions Book10 Key_B10_C18_I02 ResponseTiming
+@B10_R0036:Mentions_B10_R0036 Mentions Book10 Key_B10_C18_I02 ResponseTiming
 
 @Chapter18 __Sequence [$B10_R0035, $B10_R0036]
 
 # Chapter 19 - Discovery
 # Idea: HypothesisSeed (Discovery, Exploratory)
 @_ Idea HypothesisSeed Discovery Exploratory
-@B10_R0037 Mentions Book10 Key_B10_C19_I01 HypothesisSeed
+@B10_R0037:Mentions_B10_R0037 Mentions Book10 Key_B10_C19_I01 HypothesisSeed
 
 # Idea: PatternLink (Discovery, Associative)
 @_ Idea PatternLink Discovery Associative
-@B10_R0038 Mentions Book10 Key_B10_C19_I02 PatternLink
+@B10_R0038:Mentions_B10_R0038 Mentions Book10 Key_B10_C19_I02 PatternLink
 
 @Chapter19 __Sequence [$B10_R0037, $B10_R0038]
 
 # Chapter 20 - Governance
 # Idea: AccessControl (Governance, Restricted)
 @_ Idea AccessControl Governance Restricted
-@B10_R0039 Mentions Book10 Key_B10_C20_I01 AccessControl
+@B10_R0039:Mentions_B10_R0039 Mentions Book10 Key_B10_C20_I01 AccessControl
 
 # Idea: AuditTrail (Governance, Traceable)
 @_ Idea AuditTrail Governance Traceable
-@B10_R0040 Mentions Book10 Key_B10_C20_I02 AuditTrail
+@B10_R0040:Mentions_B10_R0040 Mentions Book10 Key_B10_C20_I02 AuditTrail
 
 @Chapter20 __Sequence [$B10_R0039, $B10_R0040]
 

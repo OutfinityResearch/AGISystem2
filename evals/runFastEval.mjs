@@ -17,6 +17,9 @@
  *   node evals/runFastEval.mjs --strategy=sparse         # Sparse: k=1, 2, 3, 5, 8, 13
  *   node evals/runFastEval.mjs --strategy=metric         # Metric: 8, 16, 32, 64, 128, 256 bytes
  *   node evals/runFastEval.mjs --strategy=ema            # EMA: 8, 16, 32, 64, 128, 256 bytes
+ *   node evals/runFastEval.mjs --small                   # Use 8-byte equivalents for all strategies
+ *   node evals/runFastEval.mjs --big                     # Use 32-byte equivalents for all strategies
+ *   node evals/runFastEval.mjs --huge                    # Use 128-byte equivalents for all strategies
  *
  * Geometry Parameters (for default mode):
  *   --dense-dim=N   Dense binary vector dimension (default: 256)
@@ -98,6 +101,9 @@ Options:
   --verbose, -v           Show failure details
   --fast                  Quick run with single config
   --full                  Run with 16 configurations (4 strategies × 2 priorities × 2 geometries)
+  --small                 Use 8-byte equivalents for all strategies (dense=64b, sparse=k1, metric=8B, ema=8B)
+  --big                   Use 32-byte equivalents for all strategies (dense=256b, sparse=k4, metric=32B, ema=32B)
+  --huge                  Use 128-byte equivalents for all strategies (dense=1024b, sparse=k16, metric=128B, ema=128B)
   --strategy=NAME         Run single strategy with multiple geometries
                           NAME: dense, sparse, metric, ema
   --priority=NAME         Run with specific reasoning priority
@@ -112,6 +118,9 @@ Examples:
   node evals/runFastEval.mjs                     # Run all suites with 6 configs
   node evals/runFastEval.mjs suite01             # Run specific suite
   node evals/runFastEval.mjs --strategy=dense    # Dense: 128, 256, 512, 1024, 2048, 4096 bits
+  node evals/runFastEval.mjs --small             # 8-byte equivalents across strategies
+  node evals/runFastEval.mjs --big               # 32-byte equivalents across strategies
+  node evals/runFastEval.mjs --huge              # 128-byte equivalents across strategies
   node evals/runFastEval.mjs --details           # Show per-case results
   node evals/runFastEval.mjs --verbose           # Show failure details
 `);
@@ -123,6 +132,40 @@ const verbose = args.includes('--verbose') || args.includes('-v');
 const showDetails = details || verbose;
 const fullModes = args.includes('--full');
 const fastMode = args.includes('--fast');
+const smallMode = args.includes('--small');
+const bigMode = args.includes('--big');
+const hugeMode = args.includes('--huge');
+
+const knownFlags = new Set([
+  '--details', '-d',
+  '--verbose', '-v',
+  '--fast',
+  '--full',
+  '--small',
+  '--big',
+  '--huge',
+  '--help', '-h'
+]);
+const knownPrefixes = [
+  '--strategy=',
+  '--priority=',
+  '--dense-dim=',
+  '--sparse-k=',
+  '--metric-dim='
+];
+
+for (const arg of args) {
+  if (!arg.startsWith('-')) continue;
+  if (knownFlags.has(arg)) continue;
+  if (knownPrefixes.some(prefix => arg.startsWith(prefix))) continue;
+  console.error(`\x1b[31mUnknown option: ${arg}\x1b[0m`);
+  process.exit(1);
+}
+
+if ((smallMode && bigMode) || (smallMode && hugeMode) || (bigMode && hugeMode)) {
+  console.error('\x1b[31mCannot combine --small, --big, or --huge.\x1b[0m');
+  process.exit(1);
+}
 
 // Extract specific strategy if provided (for geometry sweep mode)
 const strategyArg = args.find(a => a.startsWith('--strategy='));
@@ -134,13 +177,34 @@ const singlePriority = priorityArg ? priorityArg.split('=')[1] : null;
 
 // Extract geometry parameters (for default mode)
 const denseDimArg = args.find(a => a.startsWith('--dense-dim='));
-const denseDim = denseDimArg ? parseInt(denseDimArg.split('=')[1], 10) : 256;
-
 const sparseKArg = args.find(a => a.startsWith('--sparse-k='));
-const sparseK = sparseKArg ? parseInt(sparseKArg.split('=')[1], 10) : 2;
-
 const metricDimArg = args.find(a => a.startsWith('--metric-dim='));
-const metricDim = metricDimArg ? parseInt(metricDimArg.split('=')[1], 10) : 16;
+
+let denseDim = 256;
+let sparseK = 2;
+let metricDim = 16;
+let elasticDim = metricDim;
+
+if (smallMode) {
+  denseDim = 64;   // 8 bytes
+  sparseK = 1;     // 8 bytes (1 BigInt)
+  metricDim = 8;   // 8 bytes
+}
+if (bigMode) {
+  denseDim = 256;  // 32 bytes
+  sparseK = 4;     // 32 bytes (4 BigInt)
+  metricDim = 32;  // 32 bytes
+}
+if (hugeMode) {
+  denseDim = 1024; // 128 bytes
+  sparseK = 16;    // 128 bytes (16 BigInt)
+  metricDim = 128; // 128 bytes
+}
+
+if (denseDimArg) denseDim = parseInt(denseDimArg.split('=')[1], 10);
+if (sparseKArg) sparseK = parseInt(sparseKArg.split('=')[1], 10);
+if (metricDimArg) metricDim = parseInt(metricDimArg.split('=')[1], 10);
+elasticDim = metricDim;
 
 const specificSuites = args.filter(a => !a.startsWith('-') && !a.startsWith('--'));
 
@@ -257,9 +321,9 @@ async function main() {
             geometries.push(metricDim);
             if (fullModes) geometries.push(metricDim * 2);
           } else if (strategy === 'metric-affine-elastic') {
-            // metric-elastic geometry is BYTES; start at 8 bytes (=64 bits) by default
-            geometries.push(8);
-            if (fullModes) geometries.push(16);
+            // metric-elastic geometry is BYTES; start at base elastic geometry
+            geometries.push(elasticDim);
+            if (fullModes) geometries.push(elasticDim * 2);
           } else {
             geometries.push(denseDim);
             if (fullModes) geometries.push(denseDim * 2);

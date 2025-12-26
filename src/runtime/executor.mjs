@@ -19,6 +19,7 @@ import { canonicalizeMetadata } from './canonicalize.mjs';
 import { ExecutionError } from './execution-error.mjs';
 export { ExecutionError } from './execution-error.mjs';
 import { DECLARATION_OPERATORS } from './operator-declarations.mjs';
+import { enforceCanonicalStatement } from './enforce-canonical.mjs';
 
 import {
   executeGraphDeclaration as executeGraphDeclarationImpl,
@@ -49,6 +50,7 @@ import {
   extractCompoundCondition as extractCompoundConditionImpl
 } from './executor-rules.mjs';
 import { tryExecuteBuiltin as tryExecuteBuiltinImpl } from './executor-builtins.mjs';
+import { rewriteCanonicalSurfaceStatement } from './canonical-rewrite.mjs';
 
 function dbg(category, ...args) {
   debug_trace(`[Executor:${category}]`, ...args);
@@ -143,7 +145,7 @@ export class Executor {
     }
 
     // Check for special operators (Load, Unload, induce, bundle)
-    const operatorName = this.extractName(stmt.operator);
+    let operatorName = this.extractName(stmt.operator);
     if (operatorName) {
       this.session.declaredOperators?.add(operatorName);
       if (DECLARATION_OPERATORS.has(operatorName)) {
@@ -171,6 +173,71 @@ export class Executor {
       return this.executeBundle(stmt);
     }
 
+    // Add to knowledge base only if:
+    // 1. No destination (anonymous fact) - always persistent
+    // 2. Has persistName (@var:name syntax) - explicitly persistent
+    const shouldPersist = !stmt.destination || stmt.isPersistent;
+
+    if (isDebugEnabled()) {
+      dbg(
+        'executeStatement',
+        `Statement: ${stmt.toString()} | destination=${stmt.destination || 'none'} | isPersistent=${stmt.isPersistent} | shouldPersist=${shouldPersist}`
+      );
+    }
+
+    // DS19: strict canonical surface checks (including "must be persistent" declarations).
+    enforceCanonicalStatement(this.session, stmt, operatorName);
+
+    // DS19: rewrite selected non-canonical surface facts into canonical macros.
+    if (shouldPersist) {
+      const before = operatorName;
+      const rewrite = rewriteCanonicalSurfaceStatement(this.session, stmt, operatorName);
+      if (rewrite?.rewritten) {
+        stmt = rewrite.statement;
+        operatorName = this.extractName(stmt.operator);
+        if (operatorName) this.session.declaredOperators?.add(operatorName);
+      } else if (
+        this.session?.enforceCanonical &&
+        typeof before === 'string' &&
+        /^_[A-Za-z]/.test(before) &&
+        !before.startsWith('__')
+      ) {
+        throw new ExecutionError(`Non-canonical primitive asserted as fact: ${before}`, stmt);
+      }
+    }
+
+    // DS19: metadata-only facts should not force vector construction from complex arguments.
+    // In particular, metric-affine-elastic does not support binding bundle(list) vectors together.
+    if (operatorName === 'canonicalRewrite') {
+      if (shouldPersist) {
+        let metadata = this.extractMetadataWithNotExpansion(stmt, operatorName);
+        if (this.session?.canonicalizationEnabled) {
+          metadata = canonicalizeMetadata(this.session, metadata);
+        }
+        const vector = this.session.vocabulary.getOrCreate('__CANONICAL_REWRITE__');
+        this.session.addToKB(vector, stmt.persistName, metadata);
+        return {
+          destination: stmt.destination,
+          persistName: stmt.persistName,
+          persistent: true,
+          vector,
+          statement: stmt.toString()
+        };
+      }
+
+      // Non-persistent canonicalRewrite is disallowed under enforceCanonical, but if reached
+      // (e.g. enforceCanonical off), treat it as a no-op scope binding.
+      const vector = this.session.vocabulary.getOrCreate('__CANONICAL_REWRITE__');
+      if (stmt.destination) this.session.scope.set(stmt.destination, vector);
+      return {
+        destination: stmt.destination,
+        persistName: stmt.persistName,
+        persistent: false,
+        vector,
+        statement: stmt.toString()
+      };
+    }
+
     let vector;
 
     // DS19: Optional executable L0 builtins (___*). Guarded by feature flag.
@@ -191,15 +258,6 @@ export class Executor {
         // Normal statement: build vector directly
         vector = this.buildStatementVector(stmt);
       }
-    }
-
-    // Add to knowledge base only if:
-    // 1. No destination (anonymous fact) - always persistent
-    // 2. Has persistName (@var:name syntax) - explicitly persistent
-    const shouldPersist = !stmt.destination || stmt.isPersistent;
-
-    if (isDebugEnabled()) {
-      dbg('executeStatement', `Statement: ${stmt.toString()} | destination=${stmt.destination || 'none'} | isPersistent=${stmt.isPersistent} | shouldPersist=${shouldPersist}`);
     }
 
     if (shouldPersist) {

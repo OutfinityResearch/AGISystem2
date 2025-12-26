@@ -1,6 +1,7 @@
 import { parse } from '../parser/parser.mjs';
 import { createProofEngine } from '../reasoning/index.mjs';
 import { canonicalizeStatement } from './canonicalize.mjs';
+import { rewriteCanonicalSurfaceStatement } from './canonical-rewrite.mjs';
 import { buildProofObject } from '../reasoning/proof-schema.mjs';
 import { validateProof } from '../reasoning/proof-validator.mjs';
 import { isHdcMethod } from './session-stats.mjs';
@@ -76,19 +77,37 @@ export function prove(session, dsl, options = {}) {
 
     const engine = createProofEngine(session, { ...options, timeout: options.timeout || 2000 });
     const rawGoalStatement = ast.statements[0];
-    const goalStatement = session.canonicalizationEnabled
+    let goalStatement = session.canonicalizationEnabled
       ? canonicalizeStatement(session, rawGoalStatement)
       : rawGoalStatement;
+
+    const rewriteSteps = [];
+    if (session?.enforceCanonical) {
+      const opName = goalStatement?.operator?.name || goalStatement?.operator?.value || null;
+      const rewrite = rewriteCanonicalSurfaceStatement(session, goalStatement, opName);
+      if (rewrite?.rewritten) {
+        goalStatement = rewrite.statement;
+        const afterOp = goalStatement?.operator?.name || goalStatement?.operator?.value || null;
+        rewriteSteps.push({
+          operation: 'canonical_rewrite',
+          fact: goalStatement.toString?.() || `${afterOp || ''}`.trim(),
+          detail: rewrite.detail || { from: opName, to: afterOp },
+          confidence: 1.0
+        });
+      } else if (typeof opName === 'string' && /^_[A-Za-z]/.test(opName) && !opName.startsWith('__')) {
+        return { valid: false, reason: `Non-canonical primitive in goal: ${opName}` };
+      }
+    }
 
     const result = engine.prove(goalStatement);
     const canonSteps = (goalStatement !== rawGoalStatement)
       ? computeCanonicalizationSteps(session, rawGoalStatement, goalStatement)
       : [];
-    if (canonSteps.length > 0) {
-      result.steps = [...canonSteps, ...(result.steps || [])];
+    if (rewriteSteps.length > 0 || canonSteps.length > 0) {
+      result.steps = [...rewriteSteps, ...canonSteps, ...(result.steps || [])];
       // If the engine already produced a "proof" alias, keep it consistent.
       if (result.proof && Array.isArray(result.proof)) {
-        result.proof = [...canonSteps, ...result.proof];
+        result.proof = [...rewriteSteps, ...canonSteps, ...result.proof];
       }
     }
     result.proofObject = buildProofObject({ session, goalStatement, result });

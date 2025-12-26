@@ -1,5 +1,6 @@
 import { parse } from '../parser/parser.mjs';
 import { canonicalizeStatement } from './canonicalize.mjs';
+import { rewriteCanonicalSurfaceStatement } from './canonical-rewrite.mjs';
 import { isHdcMethod } from './session-stats.mjs';
 
 /**
@@ -21,9 +22,19 @@ export function query(session, dsl, options = {}) {
     }
 
     const rawQueryStmt = ast.statements[ast.statements.length - 1];
-    const queryStmt = session.canonicalizationEnabled
+    let queryStmt = session.canonicalizationEnabled
       ? canonicalizeStatement(session, rawQueryStmt)
       : rawQueryStmt;
+
+    if (session?.enforceCanonical) {
+      const opName = queryStmt?.operator?.name || queryStmt?.operator?.value || null;
+      const rewrite = rewriteCanonicalSurfaceStatement(session, queryStmt, opName);
+      if (rewrite?.rewritten) {
+        queryStmt = rewrite.statement;
+      } else if (typeof opName === 'string' && /^_[A-Za-z]/.test(opName) && !opName.startsWith('__')) {
+        return { success: false, reason: `Non-canonical primitive in query: ${opName}` };
+      }
+    }
 
     const result = session.queryEngine.execute(queryStmt, options);
     session.reasoningStats.queries++;

@@ -154,6 +154,14 @@ function legacyStepToDs19(step) {
     };
   }
 
+  if (operation === 'canonical_rewrite') {
+    return {
+      kind: 'synonym',
+      producesFact: factMeta || null,
+      detail: { ...step }
+    };
+  }
+
   if (operation && operation.startsWith('transitive_')) {
     return {
       kind: 'transitive',

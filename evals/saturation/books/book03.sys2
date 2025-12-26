@@ -16,66 +16,66 @@ end
 # Chapter 01 - Perception
 # Idea: SensorCalibration (Process, Precise)
 @_ Idea SensorCalibration Process Precise
-@B03_R0001 Mentions Book03 Key_B03_C01_I01 SensorCalibration
+@B03_R0001:Mentions_B03_R0001 Mentions Book03 Key_B03_C01_I01 SensorCalibration
 
 # Idea: NoiseGate (Filter, Selective)
 @_ Idea NoiseGate Filter Selective
-@B03_R0002 Mentions Book03 Key_B03_C01_I02 NoiseGate
+@B03_R0002:Mentions_B03_R0002 Mentions Book03 Key_B03_C01_I02 NoiseGate
 
 @Chapter01 __Sequence [$B03_R0001, $B03_R0002]
 
 # Chapter 02 - Memory
 # Idea: ShortTermStore (Memory, Volatile)
 @_ Idea ShortTermStore Memory Volatile
-@B03_R0003 Mentions Book03 Key_B03_C02_I01 ShortTermStore
+@B03_R0003:Mentions_B03_R0003 Mentions Book03 Key_B03_C02_I01 ShortTermStore
 
 # Idea: LongTermIndex (Memory, Durable)
 @_ Idea LongTermIndex Memory Durable
-@B03_R0004 Mentions Book03 Key_B03_C02_I02 LongTermIndex
+@B03_R0004:Mentions_B03_R0004 Mentions Book03 Key_B03_C02_I02 LongTermIndex
 
 @Chapter02 __Sequence [$B03_R0003, $B03_R0004]
 
 # Chapter 03 - Learning
 # Idea: PatternMining (Learning, Incremental)
 @_ Idea PatternMining Learning Incremental
-@B03_R0005 Mentions Book03 Key_B03_C03_I01 PatternMining
+@B03_R0005:Mentions_B03_R0005 Mentions Book03 Key_B03_C03_I01 PatternMining
 
 # Idea: ModelUpdate (Learning, Adaptive)
 @_ Idea ModelUpdate Learning Adaptive
-@B03_R0006 Mentions Book03 Key_B03_C03_I02 ModelUpdate
+@B03_R0006:Mentions_B03_R0006 Mentions Book03 Key_B03_C03_I02 ModelUpdate
 
 @Chapter03 __Sequence [$B03_R0005, $B03_R0006]
 
 # Chapter 04 - Planning
 # Idea: GoalStack (Planner, Hierarchical)
 @_ Idea GoalStack Planner Hierarchical
-@B03_R0007 Mentions Book03 Key_B03_C04_I01 GoalStack
+@B03_R0007:Mentions_B03_R0007 Mentions Book03 Key_B03_C04_I01 GoalStack
 
 # Idea: ActionSequencing (Planner, Ordered)
 @_ Idea ActionSequencing Planner Ordered
-@B03_R0008 Mentions Book03 Key_B03_C04_I02 ActionSequencing
+@B03_R0008:Mentions_B03_R0008 Mentions Book03 Key_B03_C04_I02 ActionSequencing
 
 @Chapter04 __Sequence [$B03_R0007, $B03_R0008]
 
 # Chapter 05 - Control
 # Idea: FeedbackLoop (Control, Stable)
 @_ Idea FeedbackLoop Control Stable
-@B03_R0009 Mentions Book03 Key_B03_C05_I01 FeedbackLoop
+@B03_R0009:Mentions_B03_R0009 Mentions Book03 Key_B03_C05_I01 FeedbackLoop
 
 # Idea: ErrorCorrection (Control, Resilient)
 @_ Idea ErrorCorrection Control Resilient
-@B03_R0010 Mentions Book03 Key_B03_C05_I02 ErrorCorrection
+@B03_R0010:Mentions_B03_R0010 Mentions Book03 Key_B03_C05_I02 ErrorCorrection
 
 @Chapter05 __Sequence [$B03_R0009, $B03_R0010]
 
 # Chapter 06 - Communication
 # Idea: MessageRouting (Protocol, Reliable)
 @_ Idea MessageRouting Protocol Reliable
-@B03_R0011 Mentions Book03 Key_B03_C06_I01 MessageRouting
+@B03_R0011:Mentions_B03_R0011 Mentions Book03 Key_B03_C06_I01 MessageRouting
 
 # Idea: ConsensusPing (Protocol, Coherent)
 @_ Idea ConsensusPing Protocol Coherent
-@B03_R0012 Mentions Book03 Key_B03_C06_I02 ConsensusPing
+@B03_R0012:Mentions_B03_R0012 Mentions Book03 Key_B03_C06_I02 ConsensusPing
 
 @Chapter06 __Sequence [$B03_R0011, $B03_R0012]
 

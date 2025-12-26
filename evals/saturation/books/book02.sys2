@@ -16,44 +16,44 @@ end
 # Chapter 01 - Perception
 # Idea: SensorCalibration (Process, Precise)
 @_ Idea SensorCalibration Process Precise
-@B02_R0001 Mentions Book02 Key_B02_C01_I01 SensorCalibration
+@B02_R0001:Mentions_B02_R0001 Mentions Book02 Key_B02_C01_I01 SensorCalibration
 
 # Idea: NoiseGate (Filter, Selective)
 @_ Idea NoiseGate Filter Selective
-@B02_R0002 Mentions Book02 Key_B02_C01_I02 NoiseGate
+@B02_R0002:Mentions_B02_R0002 Mentions Book02 Key_B02_C01_I02 NoiseGate
 
 @Chapter01 __Sequence [$B02_R0001, $B02_R0002]
 
 # Chapter 02 - Memory
 # Idea: ShortTermStore (Memory, Volatile)
 @_ Idea ShortTermStore Memory Volatile
-@B02_R0003 Mentions Book02 Key_B02_C02_I01 ShortTermStore
+@B02_R0003:Mentions_B02_R0003 Mentions Book02 Key_B02_C02_I01 ShortTermStore
 
 # Idea: LongTermIndex (Memory, Durable)
 @_ Idea LongTermIndex Memory Durable
-@B02_R0004 Mentions Book02 Key_B02_C02_I02 LongTermIndex
+@B02_R0004:Mentions_B02_R0004 Mentions Book02 Key_B02_C02_I02 LongTermIndex
 
 @Chapter02 __Sequence [$B02_R0003, $B02_R0004]
 
 # Chapter 03 - Learning
 # Idea: PatternMining (Learning, Incremental)
 @_ Idea PatternMining Learning Incremental
-@B02_R0005 Mentions Book02 Key_B02_C03_I01 PatternMining
+@B02_R0005:Mentions_B02_R0005 Mentions Book02 Key_B02_C03_I01 PatternMining
 
 # Idea: ModelUpdate (Learning, Adaptive)
 @_ Idea ModelUpdate Learning Adaptive
-@B02_R0006 Mentions Book02 Key_B02_C03_I02 ModelUpdate
+@B02_R0006:Mentions_B02_R0006 Mentions Book02 Key_B02_C03_I02 ModelUpdate
 
 @Chapter03 __Sequence [$B02_R0005, $B02_R0006]
 
 # Chapter 04 - Planning
 # Idea: GoalStack (Planner, Hierarchical)
 @_ Idea GoalStack Planner Hierarchical
-@B02_R0007 Mentions Book02 Key_B02_C04_I01 GoalStack
+@B02_R0007:Mentions_B02_R0007 Mentions Book02 Key_B02_C04_I01 GoalStack
 
 # Idea: ActionSequencing (Planner, Ordered)
 @_ Idea ActionSequencing Planner Ordered
-@B02_R0008 Mentions Book02 Key_B02_C04_I02 ActionSequencing
+@B02_R0008:Mentions_B02_R0008 Mentions Book02 Key_B02_C04_I02 ActionSequencing
 
 @Chapter04 __Sequence [$B02_R0007, $B02_R0008]
 

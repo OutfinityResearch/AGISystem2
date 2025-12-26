@@ -367,6 +367,27 @@ function formatStrategyProps(strategy, geometry, bytes) {
   return parts.length ? parts.join(' ') : 'n/a';
 }
 
+function formatProofSteps(steps, limit = 2) {
+  if (!Array.isArray(steps) || steps.length === 0) return 'none';
+  const shown = steps.slice(0, limit).map(s => String(s).trim()).filter(Boolean);
+  const extra = steps.length > shown.length ? ` (+${steps.length - shown.length})` : '';
+  return `${shown.join(' ; ')}${extra}`;
+}
+
+function runQueryValidation(session, dsl, holeName = 'idea') {
+  const result = session.query(dsl, { maxResults: 3 });
+  const binding = result?.bindings?.get?.(holeName);
+  const steps = binding?.steps || result?.allResults?.[0]?.steps || [];
+  return {
+    success: !!result?.success,
+    answer: binding?.answer ?? null,
+    method: binding?.method ?? (result?.allResults?.[0]?.method ?? null),
+    similarity: Number.isFinite(binding?.similarity) ? binding.similarity : null,
+    steps,
+    resultCount: result?.allResults?.length ?? 0
+  };
+}
+
 async function runOne(config, bookPath) {
   const { strategyId, geometry, priority } = config;
 
@@ -436,14 +457,28 @@ async function runOne(config, bookPath) {
   const negRes = decodeIdeaFromBook(session, bookVec, neg, negCandidates, { strategyId, geometry, k: DEFAULT_CANDIDATE_SET_SIZE });
   const decodeMs = nowMs() - tQ0;
 
+  const posQueryDsl = `@q ${pos.op} ${pos.book} ${pos.key} ?idea`;
+  const negQueryDsl = `@q ${neg.op} ${neg.book} ${neg.key} ?idea`;
+  const posQuery = runQueryValidation(session, posQueryDsl, 'idea');
+  const negQuery = runQueryValidation(session, negQueryDsl, 'idea');
+
   const stats = session.getReasoningStats();
   session.close();
 
-  const passed = posRes.passed && negRes.passed;
+  const hdcPassed = posRes.passed && negRes.passed;
+  const queryPosPassed = posQuery.success && posQuery.answer === pos.expect;
+  const queryNegPassed = !negQuery.success;
+  const queryPassed = queryPosPassed && queryNegPassed;
+  const passed = hdcPassed;
+  const error = passed ? null : 'hdc decode failed';
   return {
     book: path.basename(bookPath),
     passed,
-    error: passed ? null : 'decode failed (pos/neg)',
+    hdcPassed,
+    queryPassed,
+    queryPosPassed,
+    queryNegPassed,
+    error,
     times: { sessionMs: tSessionMs, coreMs, learnMs, decodeMs },
     stats,
     details: {
@@ -451,12 +486,46 @@ async function runOne(config, bookPath) {
       neg,
       posRes,
       negRes,
-      ideas: ideaNames.length
+      ideas: ideaNames.length,
+      posQueryDsl,
+      negQueryDsl,
+      posQuery,
+      negQuery
     }
   };
 }
 
 async function main() {
+  const args = process.argv.slice(2);
+  const allowedFlags = new Set(['--full', '--huge', '--extra-huge', '--details', '--no-color', '--help']);
+  const allowedPrefixes = ['--strategies=', '--priority='];
+  const unknownFlags = args.filter(a =>
+    a.startsWith('-') &&
+    !allowedFlags.has(a) &&
+    !allowedPrefixes.some(p => a.startsWith(p))
+  );
+  if (unknownFlags.length > 0) {
+    console.error(`Unknown option(s): ${unknownFlags.join(', ')}`);
+    process.exit(1);
+  }
+
+  if (args.includes('--help') || args.includes('-h')) {
+    console.log(`
+Usage:
+  node evals/runSaturationEval.mjs [options]
+
+Options:
+  --help, -h        Show this help message
+  --full            Run full geometry sweep
+  --huge            Run huge geometry sweep
+  --extra-huge      Run extra huge geometry sweep (skips sparse-polynomial)
+  --strategies=...  Comma-separated strategy list
+  --priority=...    symbolicPriority or holographicPriority
+  --no-color        Disable ANSI colors
+`);
+    process.exit(0);
+  }
+
   const fullMode = hasFlag('--full');
   const hugeMode = hasFlag('--huge');
   const extraHugeMode = hasFlag('--extra-huge');
@@ -533,9 +602,12 @@ async function main() {
     console.log();
     console.log(`${ANSI.bold}Running:${ANSI.reset} ${cfgLabel}`);
 
-    let passCount = 0;
+    let hdcPass = 0;
+    let queryPass = 0;
     let posPass = 0;
     let negPass = 0;
+    let queryPosPass = 0;
+    let queryNegPass = 0;
     let totalLearn = 0;
     let totalDecode = 0;
     let totalSim = 0;
@@ -552,9 +624,12 @@ async function main() {
       const posMargin = d?.posRes?.margin ?? 0;
       const negMargin = d?.negRes?.margin ?? 0;
 
-      if (res.passed) passCount++;
+      if (res.hdcPassed) hdcPass++;
+      if (res.queryPassed) queryPass++;
       if (posOk) posPass++;
       if (negOk) negPass++;
+      if (res.queryPosPassed) queryPosPass++;
+      if (res.queryNegPassed) queryNegPass++;
       totalLearn += res.times.learnMs;
       totalDecode += res.times.decodeMs;
       totalSim += simChecks;
@@ -563,17 +638,27 @@ async function main() {
 
       const bookName = res.book.replace('.sys2', '');
       const status = res.passed ? colorize(useColor, ANSI.green, 'PASS') : colorize(useColor, ANSI.red, 'FAIL');
+      const hdcTag = res.hdcPassed ? colorize(useColor, ANSI.green, 'HDC:PASS') : colorize(useColor, ANSI.red, 'HDC:FAIL');
+      const qryTag = res.queryPassed ? colorize(useColor, ANSI.green, 'QRY:PASS') : colorize(useColor, ANSI.red, 'QRY:FAIL');
       const posTag = posOk ? colorize(useColor, ANSI.green, 'POS') : colorize(useColor, ANSI.red, 'POS');
       const negTag = negOk ? colorize(useColor, ANSI.green, 'NEG') : colorize(useColor, ANSI.red, 'NEG');
-      const bookLine = `- ${bookName}: ${status} ${posTag}/${negTag} learn=${fmtMs(res.times.learnMs)} decode=${fmtMs(res.times.decodeMs)}`;
+      const bookLine = `- ${bookName}: ${status} ${hdcTag}/${qryTag} ${posTag}/${negTag} learn=${fmtMs(res.times.learnMs)} decode=${fmtMs(res.times.decodeMs)}`;
       console.log(bookLine);
 
       perBook.push({
         book: res.book.replace('.sys2', ''),
         passed: res.passed,
+        hdcPassed: res.hdcPassed,
+        queryPassed: res.queryPassed,
+        queryPosPassed: res.queryPosPassed,
+        queryNegPassed: res.queryNegPassed,
         posOk,
         negOk,
         ideas: d?.ideas ?? 0,
+        posQueryDsl: d?.posQueryDsl ?? null,
+        negQueryDsl: d?.negQueryDsl ?? null,
+        posQuery: d?.posQuery ?? null,
+        negQuery: d?.negQuery ?? null,
         posExpect: d?.pos?.expect ?? null,
         posTop1Name: d?.posRes?.top1?.name ?? null,
         posTop1: d?.posRes?.top1?.similarity ?? 0,
@@ -600,9 +685,12 @@ async function main() {
       strategyId: cfg.strategyId,
       geometry: cfg.geometry,
       priority: cfg.priority,
-      pass: passCount,
+      hdcPass,
+      queryPass,
       posPass,
       negPass,
+      queryPosPass,
+      queryNegPass,
       total: books.length,
       simChecks: totalSim,
       learnMs: totalLearn,
@@ -615,19 +703,20 @@ async function main() {
 
   // Summary table (configs as rows)
   const rows = Array.from(totalsByConfig.values())
-    .sort((a, b) => {
-      if (b.pass !== a.pass) return b.pass - a.pass;
-      return (a.learnMs + a.decodeMs) - (b.learnMs + b.decodeMs);
-    });
+    .sort((a, b) => (a.learnMs + a.decodeMs) - (b.learnMs + b.decodeMs));
 
-  const bestPass = Math.max(...rows.map(r => r.pass));
+  const bestHdcPass = Math.max(...rows.map(r => r.hdcPass));
+  const bestQueryPass = Math.max(...rows.map(r => r.queryPass));
   const fastestMsRounded = Math.min(...rows.map(r => Math.round(r.learnMs + r.decodeMs)));
 
   const headers = [
     { key: 'label', title: 'Config', align: 'left' },
-    { key: 'pass', title: 'Pass', align: 'right' },
-    { key: 'pos', title: 'Pos', align: 'right' },
-    { key: 'neg', title: 'Neg', align: 'right' },
+    { key: 'hdc', title: 'HDC', align: 'right' },
+    { key: 'qry', title: 'Query', align: 'right' },
+    { key: 'pos', title: 'HPos', align: 'right' },
+    { key: 'neg', title: 'HNeg', align: 'right' },
+    { key: 'qpos', title: 'QPos', align: 'right' },
+    { key: 'qneg', title: 'QNeg', align: 'right' },
     { key: 'mPos', title: 'AvgPosM', align: 'right' },
     { key: 'mNeg', title: 'AvgNegM', align: 'right' },
     { key: 'sim', title: 'SimChk', align: 'right' },
@@ -636,21 +725,14 @@ async function main() {
 
   const formatted = rows.map(r => {
     const pct = Math.floor((r.pass / r.total) * 100);
-    const passText = `${pct}% (${r.pass}/${r.total})`;
     const timeMs = Math.round(r.learnMs + r.decodeMs);
     const timeText = `${timeMs}ms`;
-
-    const passColored = r.pass === r.total
-      ? colorize(useColor, ANSI.green, passText)
-      : (r.pass >= Math.ceil(r.total * 0.8)
-        ? colorize(useColor, ANSI.yellow, passText)
-        : colorize(useColor, ANSI.red, passText));
 
     const timeColored = timeMs === fastestMsRounded
       ? colorize(useColor, ANSI.cyan, timeText)
       : timeText;
 
-    const labelColored = r.pass === bestPass
+    const labelColored = r.hdcPass === bestHdcPass
       ? colorize(useColor, ANSI.bold, r.label)
       : r.label;
 
@@ -666,9 +748,12 @@ async function main() {
 
     return {
       label: labelColored,
-      pass: passColored,
+      hdc: `${r.hdcPass}/${r.total}`,
+      qry: `${r.queryPass}/${r.total}`,
       pos: `${r.posPass}/${r.total}`,
       neg: `${r.negPass}/${r.total}`,
+      qpos: `${r.queryPosPass}/${r.total}`,
+      qneg: `${r.queryNegPass}/${r.total}`,
       mPos,
       mNeg,
       sim: r.simChecks >= 1000 ? `${(r.simChecks / 1000).toFixed(1)}K` : String(r.simChecks),
@@ -710,7 +795,8 @@ async function main() {
     console.log(useColor ? line() : stripAnsi(line()));
   };
 
-  const best = rows.filter(r => r.pass === bestPass);
+  const bestHdc = rows.filter(r => r.hdcPass === bestHdcPass);
+  const bestQuery = rows.filter(r => r.queryPass === bestQueryPass);
   const fastest = rows.find(r => Math.round(r.learnMs + r.decodeMs) === fastestMsRounded);
 
   if (details) {
@@ -801,6 +887,26 @@ async function main() {
         }).join(' ');
         console.log(useColor ? out : stripAnsi(out));
       }
+
+      console.log();
+      console.log(`${ANSI.bold}Query Validation:${ANSI.reset}`);
+      for (const b of perBook) {
+        const posQ = b.posQuery;
+        const negQ = b.negQuery;
+        const posAns = posQ?.answer ?? '∅';
+        const posMethod = posQ?.method ?? 'n/a';
+        const posSim = Number.isFinite(posQ?.similarity) ? posQ.similarity.toFixed(3) : 'n/a';
+        const posSteps = formatProofSteps(posQ?.steps, 2);
+        const posLine = `- ${b.book} POS: ${b.posQueryDsl} -> ${posAns} (method=${posMethod} sim=${posSim}) steps=${posSteps}`;
+        console.log(posLine);
+
+        const negAns = negQ?.answer ?? '∅';
+        const negMethod = negQ?.method ?? 'n/a';
+        const negSim = Number.isFinite(negQ?.similarity) ? negQ.similarity.toFixed(3) : 'n/a';
+        const negSteps = formatProofSteps(negQ?.steps, 2);
+        const negLine = `  ${b.book} NEG: ${b.negQueryDsl} -> ${negAns} (method=${negMethod} sim=${negSim}) steps=${negSteps}`;
+        console.log(negLine);
+      }
     }
   }
 
@@ -811,13 +917,16 @@ async function main() {
     ...bookNames.map(book => ({ key: book, title: book, align: 'left' })),
     { key: 'time', title: 'Time', align: 'right' }
   ];
-  const statusRows = rows.map(r => {
+
+  const buildStatusRows = (mode) => rows.map(r => {
     const bundle = byConfigDetails.get(r.label);
     const perBook = bundle?.perBook || [];
     const byBook = new Map(perBook.map(b => [b.book, b]));
+    const timeMs = Math.round(r.learnMs + r.decodeMs);
     const row = {
       label: formattedByLabel.get(r.label) || r.label,
-      time: `${Math.round(r.learnMs + r.decodeMs)}ms`
+      time: `${timeMs}ms`,
+      _timeMs: timeMs
     };
     for (const book of bookNames) {
       const res = byBook.get(book);
@@ -825,52 +934,62 @@ async function main() {
         row[book] = colorize(useColor, ANSI.gray, 'n/a');
         continue;
       }
-      row[book] = res.passed
+      const ok = mode === 'hdc' ? res.hdcPassed : res.queryPassed;
+      row[book] = ok
         ? colorize(useColor, ANSI.green, 'PASS')
         : colorize(useColor, ANSI.red, 'FAIL');
     }
     return row;
   });
 
-  const statusColW = new Map();
-  for (const h of statusHeaders) {
-    const values = statusRows.map(row => row[h.key]);
-    const width = Math.max(stripAnsi(h.title).length, ...values.map(v => stripAnsi(v).length));
-    statusColW.set(h.key, Math.min(80, width));
-  }
+  const renderStatusTable = (title, rowsForTable, sortByTime = false) => {
+    const rowsToRender = sortByTime
+      ? rowsForTable.slice().sort((a, b) => a._timeMs - b._timeMs)
+      : rowsForTable;
+    const statusColW = new Map();
+    for (const h of statusHeaders) {
+      const values = rowsToRender.map(row => row[h.key]);
+      const width = Math.max(stripAnsi(h.title).length, ...values.map(v => stripAnsi(v).length));
+      statusColW.set(h.key, Math.min(80, width));
+    }
 
-  const statusLine = () => {
-    const totalW = statusHeaders.reduce((sum, h, idx) => sum + statusColW.get(h.key) + (idx === 0 ? 0 : 3), 0);
-    return '─'.repeat(Math.max(16, totalW));
-  };
+    const statusLine = () => {
+      const totalW = statusHeaders.reduce((sum, h, idx) => sum + statusColW.get(h.key) + (idx === 0 ? 0 : 3), 0);
+      return '─'.repeat(Math.max(16, totalW));
+    };
 
-  console.log();
-  console.log(`${ANSI.bold}Per-Book Results${ANSI.reset}`);
-  const statusHeaderLine = statusHeaders.map((h, idx) => {
-    const w = statusColW.get(h.key);
-    const cell = padEndAnsi(h.title, w);
-    return idx === 0 ? cell : `│ ${cell}`;
-  }).join(' ');
-  console.log(useColor ? statusHeaderLine : stripAnsi(statusHeaderLine));
-  console.log(useColor ? statusLine() : stripAnsi(statusLine()));
-
-  for (const row of statusRows) {
-    const out = statusHeaders.map((h, idx) => {
+    console.log();
+    console.log(`${ANSI.bold}${title}${ANSI.reset}`);
+    const statusHeaderLine = statusHeaders.map((h, idx) => {
       const w = statusColW.get(h.key);
-      const v = row[h.key];
-      const cell = h.align === 'right' ? padStartAnsi(v, w) : padEndAnsi(v, w);
+      const cell = padEndAnsi(h.title, w);
       return idx === 0 ? cell : `│ ${cell}`;
     }).join(' ');
-    console.log(useColor ? out : stripAnsi(out));
-  }
-  console.log(useColor ? statusLine() : stripAnsi(statusLine()));
+    console.log(useColor ? statusHeaderLine : stripAnsi(statusHeaderLine));
+    console.log(useColor ? statusLine() : stripAnsi(statusLine()));
+
+    for (const row of rowsToRender) {
+      const out = statusHeaders.map((h, idx) => {
+        const w = statusColW.get(h.key);
+        const v = row[h.key];
+        const cell = h.align === 'right' ? padStartAnsi(v, w) : padEndAnsi(v, w);
+        return idx === 0 ? cell : `│ ${cell}`;
+      }).join(' ');
+      console.log(useColor ? out : stripAnsi(out));
+    }
+    console.log(useColor ? statusLine() : stripAnsi(statusLine()));
+  };
+
+  renderStatusTable('Per-Book Results (HDC)', buildStatusRows('hdc'));
+  renderStatusTable('Per-Book Results (Query)', buildStatusRows('query'), true);
 
   console.log();
   printSummaryTable();
 
   console.log();
   console.log(`${ANSI.bold}Conclusions${ANSI.reset}`);
-  console.log(`- Best pass rate: ${best.map(b => b.label).join(' | ')} (${bestPass}/${books.length})`);
+  console.log(`- Best HDC pass rate: ${bestHdc.map(b => b.label).join(' | ')} (${bestHdcPass}/${books.length})`);
+  console.log(`- Best Query pass rate: ${bestQuery.map(b => b.label).join(' | ')} (${bestQueryPass}/${books.length})`);
   console.log(`- Fastest: ${fastest?.label ?? 'n/a'} (${fastestMsRounded}ms total learn+decode)`);
   console.log(`- Tip: use \`--full\` or \`--huge\` to sweep larger geometries.`);
 }

@@ -33,6 +33,7 @@ export function computeFeatureToggles({ profile, options = {} } = {}) {
   const envL0Builtins = readEnvBoolean('SYS2_L0_BUILTINS');
   const envStrict = readEnvBoolean('SYS2_STRICT');
   const envSemanticFallbacks = readEnvBoolean('SYS2_SEMANTIC_FALLBACKS');
+  const envEnforceCanonical = readEnvBoolean('SYS2_ENFORCE_CANONICAL');
 
   const canonicalizationEnabled =
     options.canonicalizationEnabled ??
@@ -58,11 +59,19 @@ export function computeFeatureToggles({ profile, options = {} } = {}) {
     envSemanticFallbacks ??
     false;
 
+  // DS19: enforce canonical surface DSL (reject non-canonical assertions) in strict mode by default.
+  // Escape hatch: `SYS2_ENFORCE_CANONICAL=0` or `enforceCanonical:false`.
+  const enforceCanonical =
+    options.enforceCanonical ??
+    envEnforceCanonical ??
+    strictMode;
+
   return {
     canonicalizationEnabled,
     proofValidationEnabled,
     strictMode,
     allowSemanticFallbacks,
+    enforceCanonical,
     // L0 builtins are required for strict Core theory semantics (___NewVector, ___Bind, ___GetType, etc.).
     l0BuiltinsEnabled: options.l0BuiltinsEnabled ?? envL0Builtins ?? strictMode,
     closedWorldAssumption: options.closedWorldAssumption ?? envCwa ?? false,

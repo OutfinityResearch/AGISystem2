@@ -26,6 +26,7 @@ import { FactIndex } from './fact-index.mjs';
 import { ContradictionError } from './contradiction-error.mjs';
 import { computeFeatureToggles, computeReasoningProfile } from './reasoning-profile.mjs';
 import { TypeRegistry } from './type-registry.mjs';
+import { CanonicalRewriteIndex } from './canonical-rewrite-index.mjs';
 import {
   initOperators as initOperatorsImpl,
   trackRules as trackRulesImpl,
@@ -70,6 +71,7 @@ export class Session {
     this.l0BuiltinsEnabled = this.features.l0BuiltinsEnabled;
     this.strictMode = this.features.strictMode;
     this.allowSemanticFallbacks = this.features.allowSemanticFallbacks;
+    this.enforceCanonical = this.features.enforceCanonical;
     this.closedWorldAssumption = this.features.closedWorldAssumption;
     this.useSemanticIndex = this.features.useSemanticIndex;
     this.useTheoryConstraints = this.features.useTheoryConstraints;
@@ -108,7 +110,12 @@ export class Session {
     this.graphAliases = new Map();  // Aliases for graphs (persistName -> name)
     this.responseTranslator = new ResponseTranslator(this);
     // Strict by default: only use fallback defaults when explicitly requested.
-    this.semanticIndex = this.allowSemanticFallbacks ? FALLBACK_SEMANTIC_INDEX : DEFAULT_SEMANTIC_INDEX;
+    // Clone to keep session-local semantics (and allow incremental theory-driven updates).
+    this.semanticIndex = (this.allowSemanticFallbacks ? FALLBACK_SEMANTIC_INDEX : DEFAULT_SEMANTIC_INDEX).clone();
+    // DS19: semantic-class canonical rewrites are theory-driven; fallback defaults exist only for refactor validation.
+    this.canonicalRewriteIndex = this.allowSemanticFallbacks
+      ? CanonicalRewriteIndex.withCoreDefaults()
+      : new CanonicalRewriteIndex();
     this.typeRegistry = new TypeRegistry(this);
     this.rejectContradictions = options.rejectContradictions ?? true;
 
@@ -272,6 +279,10 @@ export class Session {
 
     // Index in component KB for fuzzy matching
     this.componentKB.addFact(fact);
+
+    // DS19: allow theories to declare relation properties/constraints at runtime.
+    this.semanticIndex?.observeFact?.(fact);
+    this.canonicalRewriteIndex?.observeFact?.(fact);
 
     // Handle synonym declarations
     if (metadata?.operator === 'synonym' && metadata?.args?.length === 2) {

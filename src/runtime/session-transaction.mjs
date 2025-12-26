@@ -59,7 +59,9 @@ export function beginTransaction(session) {
     graphAliases: new Map(session.graphAliases || []),
     theories: new Map(session.theories || []),
     executorLoadedTheories: new Set(session.executor?.loadedTheories || []),
-    reasoningStats: cloneReasoningStats(session.reasoningStats)
+    reasoningStats: cloneReasoningStats(session.reasoningStats),
+    semanticIndex: session.semanticIndex?.clone?.() || null,
+    canonicalRewriteIndex: session.canonicalRewriteIndex?.clone?.() || null
   };
 }
 
@@ -98,6 +100,12 @@ export function rollbackTransaction(session, snapshot) {
   }
 
   session.reasoningStats = cloneReasoningStats(snapshot.reasoningStats);
+  if (snapshot.semanticIndex && session.semanticIndex?.clone) {
+    session.semanticIndex = snapshot.semanticIndex.clone();
+  }
+  if (snapshot.canonicalRewriteIndex && session.canonicalRewriteIndex?.clone) {
+    session.canonicalRewriteIndex = snapshot.canonicalRewriteIndex.clone();
+  }
 
   rebuildComponentKB(session, session.kbFacts);
   rebuildFactIndex(session, session.kbFacts);

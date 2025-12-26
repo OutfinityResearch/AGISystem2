@@ -1,0 +1,676 @@
+# Book30: Factor 30 vs Book01, 60 chapters x 2 ideas
+# SAT_QUERY_POS op=Mentions book=Book30 key=Key_B30_C60_I02 expect=AuditTrailV3
+# SAT_QUERY_NEG op=Mentions book=Book30 key=Key_B30_Missing expect=none
+
+@Idea:Idea graph idea concept trait
+    isA $idea $concept
+    hasProperty $idea $trait
+    return $idea
+end
+
+@Mentions:Mentions graph book key idea
+    @triple __Triple $book $key $idea
+    return $triple
+end
+
+# Chapter 01 - Perception
+# Idea: SensorCalibration (Process, Precise)
+@_ Idea SensorCalibration Process Precise
+@B30_R0001:Mentions_B30_R0001 Mentions Book30 Key_B30_C01_I01 SensorCalibration
+
+# Idea: NoiseGate (Filter, Selective)
+@_ Idea NoiseGate Filter Selective
+@B30_R0002:Mentions_B30_R0002 Mentions Book30 Key_B30_C01_I02 NoiseGate
+
+@Chapter01 __Sequence [$B30_R0001, $B30_R0002]
+
+# Chapter 02 - Memory
+# Idea: ShortTermStore (Memory, Volatile)
+@_ Idea ShortTermStore Memory Volatile
+@B30_R0003:Mentions_B30_R0003 Mentions Book30 Key_B30_C02_I01 ShortTermStore
+
+# Idea: LongTermIndex (Memory, Durable)
+@_ Idea LongTermIndex Memory Durable
+@B30_R0004:Mentions_B30_R0004 Mentions Book30 Key_B30_C02_I02 LongTermIndex
+
+@Chapter02 __Sequence [$B30_R0003, $B30_R0004]
+
+# Chapter 03 - Learning
+# Idea: PatternMining (Learning, Incremental)
+@_ Idea PatternMining Learning Incremental
+@B30_R0005:Mentions_B30_R0005 Mentions Book30 Key_B30_C03_I01 PatternMining
+
+# Idea: ModelUpdate (Learning, Adaptive)
+@_ Idea ModelUpdate Learning Adaptive
+@B30_R0006:Mentions_B30_R0006 Mentions Book30 Key_B30_C03_I02 ModelUpdate
+
+@Chapter03 __Sequence [$B30_R0005, $B30_R0006]
+
+# Chapter 04 - Planning
+# Idea: GoalStack (Planner, Hierarchical)
+@_ Idea GoalStack Planner Hierarchical
+@B30_R0007:Mentions_B30_R0007 Mentions Book30 Key_B30_C04_I01 GoalStack
+
+# Idea: ActionSequencing (Planner, Ordered)
+@_ Idea ActionSequencing Planner Ordered
+@B30_R0008:Mentions_B30_R0008 Mentions Book30 Key_B30_C04_I02 ActionSequencing
+
+@Chapter04 __Sequence [$B30_R0007, $B30_R0008]
+
+# Chapter 05 - Control
+# Idea: FeedbackLoop (Control, Stable)
+@_ Idea FeedbackLoop Control Stable
+@B30_R0009:Mentions_B30_R0009 Mentions Book30 Key_B30_C05_I01 FeedbackLoop
+
+# Idea: ErrorCorrection (Control, Resilient)
+@_ Idea ErrorCorrection Control Resilient
+@B30_R0010:Mentions_B30_R0010 Mentions Book30 Key_B30_C05_I02 ErrorCorrection
+
+@Chapter05 __Sequence [$B30_R0009, $B30_R0010]
+
+# Chapter 06 - Communication
+# Idea: MessageRouting (Protocol, Reliable)
+@_ Idea MessageRouting Protocol Reliable
+@B30_R0011:Mentions_B30_R0011 Mentions Book30 Key_B30_C06_I01 MessageRouting
+
+# Idea: ConsensusPing (Protocol, Coherent)
+@_ Idea ConsensusPing Protocol Coherent
+@B30_R0012:Mentions_B30_R0012 Mentions Book30 Key_B30_C06_I02 ConsensusPing
+
+@Chapter06 __Sequence [$B30_R0011, $B30_R0012]
+
+# Chapter 07 - Coordination
+# Idea: RoleAssignment (Coordination, Balanced)
+@_ Idea RoleAssignment Coordination Balanced
+@B30_R0013:Mentions_B30_R0013 Mentions Book30 Key_B30_C07_I01 RoleAssignment
+
+# Idea: TaskHandoff (Coordination, Timely)
+@_ Idea TaskHandoff Coordination Timely
+@B30_R0014:Mentions_B30_R0014 Mentions Book30 Key_B30_C07_I02 TaskHandoff
+
+@Chapter07 __Sequence [$B30_R0013, $B30_R0014]
+
+# Chapter 08 - Optimization
+# Idea: SearchPruning (Optimization, Efficient)
+@_ Idea SearchPruning Optimization Efficient
+@B30_R0015:Mentions_B30_R0015 Mentions Book30 Key_B30_C08_I01 SearchPruning
+
+# Idea: CostShaping (Optimization, Bounded)
+@_ Idea CostShaping Optimization Bounded
+@B30_R0016:Mentions_B30_R0016 Mentions Book30 Key_B30_C08_I02 CostShaping
+
+@Chapter08 __Sequence [$B30_R0015, $B30_R0016]
+
+# Chapter 09 - Safety
+# Idea: ConstraintGuard (Safety, Strict)
+@_ Idea ConstraintGuard Safety Strict
+@B30_R0017:Mentions_B30_R0017 Mentions Book30 Key_B30_C09_I01 ConstraintGuard
+
+# Idea: AnomalyWatch (Safety, Vigilant)
+@_ Idea AnomalyWatch Safety Vigilant
+@B30_R0018:Mentions_B30_R0018 Mentions Book30 Key_B30_C09_I02 AnomalyWatch
+
+@Chapter09 __Sequence [$B30_R0017, $B30_R0018]
+
+# Chapter 10 - Interpretation
+# Idea: SymbolLinking (Mapping, Consistent)
+@_ Idea SymbolLinking Mapping Consistent
+@B30_R0019:Mentions_B30_R0019 Mentions Book30 Key_B30_C10_I01 SymbolLinking
+
+# Idea: ContextWeaving (Inference, Contextual)
+@_ Idea ContextWeaving Inference Contextual
+@B30_R0020:Mentions_B30_R0020 Mentions Book30 Key_B30_C10_I02 ContextWeaving
+
+@Chapter10 __Sequence [$B30_R0019, $B30_R0020]
+
+# Chapter 11 - Navigation
+# Idea: PathSketch (Navigation, Feasible)
+@_ Idea PathSketch Navigation Feasible
+@B30_R0021:Mentions_B30_R0021 Mentions Book30 Key_B30_C11_I01 PathSketch
+
+# Idea: ObstacleMap (Navigation, Cautious)
+@_ Idea ObstacleMap Navigation Cautious
+@B30_R0022:Mentions_B30_R0022 Mentions Book30 Key_B30_C11_I02 ObstacleMap
+
+@Chapter11 __Sequence [$B30_R0021, $B30_R0022]
+
+# Chapter 12 - Resource
+# Idea: MemoryBudget (Resource, Limited)
+@_ Idea MemoryBudget Resource Limited
+@B30_R0023:Mentions_B30_R0023 Mentions Book30 Key_B30_C12_I01 MemoryBudget
+
+# Idea: ComputeQuota (Resource, Measured)
+@_ Idea ComputeQuota Resource Measured
+@B30_R0024:Mentions_B30_R0024 Mentions Book30 Key_B30_C12_I02 ComputeQuota
+
+@Chapter12 __Sequence [$B30_R0023, $B30_R0024]
+
+# Chapter 13 - Evaluation
+# Idea: Benchmarking (Evaluation, Comparable)
+@_ Idea Benchmarking Evaluation Comparable
+@B30_R0025:Mentions_B30_R0025 Mentions Book30 Key_B30_C13_I01 Benchmarking
+
+# Idea: ErrorAnalysis (Evaluation, Diagnostic)
+@_ Idea ErrorAnalysis Evaluation Diagnostic
+@B30_R0026:Mentions_B30_R0026 Mentions Book30 Key_B30_C13_I02 ErrorAnalysis
+
+@Chapter13 __Sequence [$B30_R0025, $B30_R0026]
+
+# Chapter 14 - Abstraction
+# Idea: ConceptLift (Abstraction, General)
+@_ Idea ConceptLift Abstraction General
+@B30_R0027:Mentions_B30_R0027 Mentions Book30 Key_B30_C14_I01 ConceptLift
+
+# Idea: DetailSuppression (Abstraction, Selective)
+@_ Idea DetailSuppression Abstraction Selective
+@B30_R0028:Mentions_B30_R0028 Mentions Book30 Key_B30_C14_I02 DetailSuppression
+
+@Chapter14 __Sequence [$B30_R0027, $B30_R0028]
+
+# Chapter 15 - Prediction
+# Idea: TrendForecast (Prediction, Probabilistic)
+@_ Idea TrendForecast Prediction Probabilistic
+@B30_R0029:Mentions_B30_R0029 Mentions Book30 Key_B30_C15_I01 TrendForecast
+
+# Idea: OutcomeEstimation (Prediction, Approximate)
+@_ Idea OutcomeEstimation Prediction Approximate
+@B30_R0030:Mentions_B30_R0030 Mentions Book30 Key_B30_C15_I02 OutcomeEstimation
+
+@Chapter15 __Sequence [$B30_R0029, $B30_R0030]
+
+# Chapter 16 - Adaptation
+# Idea: PolicyShift (Adaptation, Flexible)
+@_ Idea PolicyShift Adaptation Flexible
+@B30_R0031:Mentions_B30_R0031 Mentions Book30 Key_B30_C16_I01 PolicyShift
+
+# Idea: ParameterDrift (Adaptation, Gradual)
+@_ Idea ParameterDrift Adaptation Gradual
+@B30_R0032:Mentions_B30_R0032 Mentions Book30 Key_B30_C16_I02 ParameterDrift
+
+@Chapter16 __Sequence [$B30_R0031, $B30_R0032]
+
+# Chapter 17 - Verification
+# Idea: InvariantCheck (Verification, Exact)
+@_ Idea InvariantCheck Verification Exact
+@B30_R0033:Mentions_B30_R0033 Mentions Book30 Key_B30_C17_I01 InvariantCheck
+
+# Idea: ProofSketch (Verification, Minimal)
+@_ Idea ProofSketch Verification Minimal
+@B30_R0034:Mentions_B30_R0034 Mentions Book30 Key_B30_C17_I02 ProofSketch
+
+@Chapter17 __Sequence [$B30_R0033, $B30_R0034]
+
+# Chapter 18 - Interface
+# Idea: SignalEncoding (Interface, Compact)
+@_ Idea SignalEncoding Interface Compact
+@B30_R0035:Mentions_B30_R0035 Mentions Book30 Key_B30_C18_I01 SignalEncoding
+
+# Idea: ResponseTiming (Interface, Responsive)
+@_ Idea ResponseTiming Interface Responsive
+@B30_R0036:Mentions_B30_R0036 Mentions Book30 Key_B30_C18_I02 ResponseTiming
+
+@Chapter18 __Sequence [$B30_R0035, $B30_R0036]
+
+# Chapter 19 - Discovery
+# Idea: HypothesisSeed (Discovery, Exploratory)
+@_ Idea HypothesisSeed Discovery Exploratory
+@B30_R0037:Mentions_B30_R0037 Mentions Book30 Key_B30_C19_I01 HypothesisSeed
+
+# Idea: PatternLink (Discovery, Associative)
+@_ Idea PatternLink Discovery Associative
+@B30_R0038:Mentions_B30_R0038 Mentions Book30 Key_B30_C19_I02 PatternLink
+
+@Chapter19 __Sequence [$B30_R0037, $B30_R0038]
+
+# Chapter 20 - Governance
+# Idea: AccessControl (Governance, Restricted)
+@_ Idea AccessControl Governance Restricted
+@B30_R0039:Mentions_B30_R0039 Mentions Book30 Key_B30_C20_I01 AccessControl
+
+# Idea: AuditTrail (Governance, Traceable)
+@_ Idea AuditTrail Governance Traceable
+@B30_R0040:Mentions_B30_R0040 Mentions Book30 Key_B30_C20_I02 AuditTrail
+
+@Chapter20 __Sequence [$B30_R0039, $B30_R0040]
+
+# Chapter 21 - PerceptionV2
+# Idea: SensorCalibrationV2 (Process, Precise)
+@_ Idea SensorCalibrationV2 Process Precise
+@B30_R0041:Mentions_B30_R0041 Mentions Book30 Key_B30_C21_I01 SensorCalibrationV2
+
+# Idea: NoiseGateV2 (Filter, Selective)
+@_ Idea NoiseGateV2 Filter Selective
+@B30_R0042:Mentions_B30_R0042 Mentions Book30 Key_B30_C21_I02 NoiseGateV2
+
+@Chapter21 __Sequence [$B30_R0041, $B30_R0042]
+
+# Chapter 22 - MemoryV2
+# Idea: ShortTermStoreV2 (Memory, Volatile)
+@_ Idea ShortTermStoreV2 Memory Volatile
+@B30_R0043:Mentions_B30_R0043 Mentions Book30 Key_B30_C22_I01 ShortTermStoreV2
+
+# Idea: LongTermIndexV2 (Memory, Durable)
+@_ Idea LongTermIndexV2 Memory Durable
+@B30_R0044:Mentions_B30_R0044 Mentions Book30 Key_B30_C22_I02 LongTermIndexV2
+
+@Chapter22 __Sequence [$B30_R0043, $B30_R0044]
+
+# Chapter 23 - LearningV2
+# Idea: PatternMiningV2 (Learning, Incremental)
+@_ Idea PatternMiningV2 Learning Incremental
+@B30_R0045:Mentions_B30_R0045 Mentions Book30 Key_B30_C23_I01 PatternMiningV2
+
+# Idea: ModelUpdateV2 (Learning, Adaptive)
+@_ Idea ModelUpdateV2 Learning Adaptive
+@B30_R0046:Mentions_B30_R0046 Mentions Book30 Key_B30_C23_I02 ModelUpdateV2
+
+@Chapter23 __Sequence [$B30_R0045, $B30_R0046]
+
+# Chapter 24 - PlanningV2
+# Idea: GoalStackV2 (Planner, Hierarchical)
+@_ Idea GoalStackV2 Planner Hierarchical
+@B30_R0047:Mentions_B30_R0047 Mentions Book30 Key_B30_C24_I01 GoalStackV2
+
+# Idea: ActionSequencingV2 (Planner, Ordered)
+@_ Idea ActionSequencingV2 Planner Ordered
+@B30_R0048:Mentions_B30_R0048 Mentions Book30 Key_B30_C24_I02 ActionSequencingV2
+
+@Chapter24 __Sequence [$B30_R0047, $B30_R0048]
+
+# Chapter 25 - ControlV2
+# Idea: FeedbackLoopV2 (Control, Stable)
+@_ Idea FeedbackLoopV2 Control Stable
+@B30_R0049:Mentions_B30_R0049 Mentions Book30 Key_B30_C25_I01 FeedbackLoopV2
+
+# Idea: ErrorCorrectionV2 (Control, Resilient)
+@_ Idea ErrorCorrectionV2 Control Resilient
+@B30_R0050:Mentions_B30_R0050 Mentions Book30 Key_B30_C25_I02 ErrorCorrectionV2
+
+@Chapter25 __Sequence [$B30_R0049, $B30_R0050]
+
+# Chapter 26 - CommunicationV2
+# Idea: MessageRoutingV2 (Protocol, Reliable)
+@_ Idea MessageRoutingV2 Protocol Reliable
+@B30_R0051:Mentions_B30_R0051 Mentions Book30 Key_B30_C26_I01 MessageRoutingV2
+
+# Idea: ConsensusPingV2 (Protocol, Coherent)
+@_ Idea ConsensusPingV2 Protocol Coherent
+@B30_R0052:Mentions_B30_R0052 Mentions Book30 Key_B30_C26_I02 ConsensusPingV2
+
+@Chapter26 __Sequence [$B30_R0051, $B30_R0052]
+
+# Chapter 27 - CoordinationV2
+# Idea: RoleAssignmentV2 (Coordination, Balanced)
+@_ Idea RoleAssignmentV2 Coordination Balanced
+@B30_R0053:Mentions_B30_R0053 Mentions Book30 Key_B30_C27_I01 RoleAssignmentV2
+
+# Idea: TaskHandoffV2 (Coordination, Timely)
+@_ Idea TaskHandoffV2 Coordination Timely
+@B30_R0054:Mentions_B30_R0054 Mentions Book30 Key_B30_C27_I02 TaskHandoffV2
+
+@Chapter27 __Sequence [$B30_R0053, $B30_R0054]
+
+# Chapter 28 - OptimizationV2
+# Idea: SearchPruningV2 (Optimization, Efficient)
+@_ Idea SearchPruningV2 Optimization Efficient
+@B30_R0055:Mentions_B30_R0055 Mentions Book30 Key_B30_C28_I01 SearchPruningV2
+
+# Idea: CostShapingV2 (Optimization, Bounded)
+@_ Idea CostShapingV2 Optimization Bounded
+@B30_R0056:Mentions_B30_R0056 Mentions Book30 Key_B30_C28_I02 CostShapingV2
+
+@Chapter28 __Sequence [$B30_R0055, $B30_R0056]
+
+# Chapter 29 - SafetyV2
+# Idea: ConstraintGuardV2 (Safety, Strict)
+@_ Idea ConstraintGuardV2 Safety Strict
+@B30_R0057:Mentions_B30_R0057 Mentions Book30 Key_B30_C29_I01 ConstraintGuardV2
+
+# Idea: AnomalyWatchV2 (Safety, Vigilant)
+@_ Idea AnomalyWatchV2 Safety Vigilant
+@B30_R0058:Mentions_B30_R0058 Mentions Book30 Key_B30_C29_I02 AnomalyWatchV2
+
+@Chapter29 __Sequence [$B30_R0057, $B30_R0058]
+
+# Chapter 30 - InterpretationV2
+# Idea: SymbolLinkingV2 (Mapping, Consistent)
+@_ Idea SymbolLinkingV2 Mapping Consistent
+@B30_R0059:Mentions_B30_R0059 Mentions Book30 Key_B30_C30_I01 SymbolLinkingV2
+
+# Idea: ContextWeavingV2 (Inference, Contextual)
+@_ Idea ContextWeavingV2 Inference Contextual
+@B30_R0060:Mentions_B30_R0060 Mentions Book30 Key_B30_C30_I02 ContextWeavingV2
+
+@Chapter30 __Sequence [$B30_R0059, $B30_R0060]
+
+# Chapter 31 - NavigationV2
+# Idea: PathSketchV2 (Navigation, Feasible)
+@_ Idea PathSketchV2 Navigation Feasible
+@B30_R0061:Mentions_B30_R0061 Mentions Book30 Key_B30_C31_I01 PathSketchV2
+
+# Idea: ObstacleMapV2 (Navigation, Cautious)
+@_ Idea ObstacleMapV2 Navigation Cautious
+@B30_R0062:Mentions_B30_R0062 Mentions Book30 Key_B30_C31_I02 ObstacleMapV2
+
+@Chapter31 __Sequence [$B30_R0061, $B30_R0062]
+
+# Chapter 32 - ResourceV2
+# Idea: MemoryBudgetV2 (Resource, Limited)
+@_ Idea MemoryBudgetV2 Resource Limited
+@B30_R0063:Mentions_B30_R0063 Mentions Book30 Key_B30_C32_I01 MemoryBudgetV2
+
+# Idea: ComputeQuotaV2 (Resource, Measured)
+@_ Idea ComputeQuotaV2 Resource Measured
+@B30_R0064:Mentions_B30_R0064 Mentions Book30 Key_B30_C32_I02 ComputeQuotaV2
+
+@Chapter32 __Sequence [$B30_R0063, $B30_R0064]
+
+# Chapter 33 - EvaluationV2
+# Idea: BenchmarkingV2 (Evaluation, Comparable)
+@_ Idea BenchmarkingV2 Evaluation Comparable
+@B30_R0065:Mentions_B30_R0065 Mentions Book30 Key_B30_C33_I01 BenchmarkingV2
+
+# Idea: ErrorAnalysisV2 (Evaluation, Diagnostic)
+@_ Idea ErrorAnalysisV2 Evaluation Diagnostic
+@B30_R0066:Mentions_B30_R0066 Mentions Book30 Key_B30_C33_I02 ErrorAnalysisV2
+
+@Chapter33 __Sequence [$B30_R0065, $B30_R0066]
+
+# Chapter 34 - AbstractionV2
+# Idea: ConceptLiftV2 (Abstraction, General)
+@_ Idea ConceptLiftV2 Abstraction General
+@B30_R0067:Mentions_B30_R0067 Mentions Book30 Key_B30_C34_I01 ConceptLiftV2
+
+# Idea: DetailSuppressionV2 (Abstraction, Selective)
+@_ Idea DetailSuppressionV2 Abstraction Selective
+@B30_R0068:Mentions_B30_R0068 Mentions Book30 Key_B30_C34_I02 DetailSuppressionV2
+
+@Chapter34 __Sequence [$B30_R0067, $B30_R0068]
+
+# Chapter 35 - PredictionV2
+# Idea: TrendForecastV2 (Prediction, Probabilistic)
+@_ Idea TrendForecastV2 Prediction Probabilistic
+@B30_R0069:Mentions_B30_R0069 Mentions Book30 Key_B30_C35_I01 TrendForecastV2
+
+# Idea: OutcomeEstimationV2 (Prediction, Approximate)
+@_ Idea OutcomeEstimationV2 Prediction Approximate
+@B30_R0070:Mentions_B30_R0070 Mentions Book30 Key_B30_C35_I02 OutcomeEstimationV2
+
+@Chapter35 __Sequence [$B30_R0069, $B30_R0070]
+
+# Chapter 36 - AdaptationV2
+# Idea: PolicyShiftV2 (Adaptation, Flexible)
+@_ Idea PolicyShiftV2 Adaptation Flexible
+@B30_R0071:Mentions_B30_R0071 Mentions Book30 Key_B30_C36_I01 PolicyShiftV2
+
+# Idea: ParameterDriftV2 (Adaptation, Gradual)
+@_ Idea ParameterDriftV2 Adaptation Gradual
+@B30_R0072:Mentions_B30_R0072 Mentions Book30 Key_B30_C36_I02 ParameterDriftV2
+
+@Chapter36 __Sequence [$B30_R0071, $B30_R0072]
+
+# Chapter 37 - VerificationV2
+# Idea: InvariantCheckV2 (Verification, Exact)
+@_ Idea InvariantCheckV2 Verification Exact
+@B30_R0073:Mentions_B30_R0073 Mentions Book30 Key_B30_C37_I01 InvariantCheckV2
+
+# Idea: ProofSketchV2 (Verification, Minimal)
+@_ Idea ProofSketchV2 Verification Minimal
+@B30_R0074:Mentions_B30_R0074 Mentions Book30 Key_B30_C37_I02 ProofSketchV2
+
+@Chapter37 __Sequence [$B30_R0073, $B30_R0074]
+
+# Chapter 38 - InterfaceV2
+# Idea: SignalEncodingV2 (Interface, Compact)
+@_ Idea SignalEncodingV2 Interface Compact
+@B30_R0075:Mentions_B30_R0075 Mentions Book30 Key_B30_C38_I01 SignalEncodingV2
+
+# Idea: ResponseTimingV2 (Interface, Responsive)
+@_ Idea ResponseTimingV2 Interface Responsive
+@B30_R0076:Mentions_B30_R0076 Mentions Book30 Key_B30_C38_I02 ResponseTimingV2
+
+@Chapter38 __Sequence [$B30_R0075, $B30_R0076]
+
+# Chapter 39 - DiscoveryV2
+# Idea: HypothesisSeedV2 (Discovery, Exploratory)
+@_ Idea HypothesisSeedV2 Discovery Exploratory
+@B30_R0077:Mentions_B30_R0077 Mentions Book30 Key_B30_C39_I01 HypothesisSeedV2
+
+# Idea: PatternLinkV2 (Discovery, Associative)
+@_ Idea PatternLinkV2 Discovery Associative
+@B30_R0078:Mentions_B30_R0078 Mentions Book30 Key_B30_C39_I02 PatternLinkV2
+
+@Chapter39 __Sequence [$B30_R0077, $B30_R0078]
+
+# Chapter 40 - GovernanceV2
+# Idea: AccessControlV2 (Governance, Restricted)
+@_ Idea AccessControlV2 Governance Restricted
+@B30_R0079:Mentions_B30_R0079 Mentions Book30 Key_B30_C40_I01 AccessControlV2
+
+# Idea: AuditTrailV2 (Governance, Traceable)
+@_ Idea AuditTrailV2 Governance Traceable
+@B30_R0080:Mentions_B30_R0080 Mentions Book30 Key_B30_C40_I02 AuditTrailV2
+
+@Chapter40 __Sequence [$B30_R0079, $B30_R0080]
+
+# Chapter 41 - PerceptionV3
+# Idea: SensorCalibrationV3 (Process, Precise)
+@_ Idea SensorCalibrationV3 Process Precise
+@B30_R0081:Mentions_B30_R0081 Mentions Book30 Key_B30_C41_I01 SensorCalibrationV3
+
+# Idea: NoiseGateV3 (Filter, Selective)
+@_ Idea NoiseGateV3 Filter Selective
+@B30_R0082:Mentions_B30_R0082 Mentions Book30 Key_B30_C41_I02 NoiseGateV3
+
+@Chapter41 __Sequence [$B30_R0081, $B30_R0082]
+
+# Chapter 42 - MemoryV3
+# Idea: ShortTermStoreV3 (Memory, Volatile)
+@_ Idea ShortTermStoreV3 Memory Volatile
+@B30_R0083:Mentions_B30_R0083 Mentions Book30 Key_B30_C42_I01 ShortTermStoreV3
+
+# Idea: LongTermIndexV3 (Memory, Durable)
+@_ Idea LongTermIndexV3 Memory Durable
+@B30_R0084:Mentions_B30_R0084 Mentions Book30 Key_B30_C42_I02 LongTermIndexV3
+
+@Chapter42 __Sequence [$B30_R0083, $B30_R0084]
+
+# Chapter 43 - LearningV3
+# Idea: PatternMiningV3 (Learning, Incremental)
+@_ Idea PatternMiningV3 Learning Incremental
+@B30_R0085:Mentions_B30_R0085 Mentions Book30 Key_B30_C43_I01 PatternMiningV3
+
+# Idea: ModelUpdateV3 (Learning, Adaptive)
+@_ Idea ModelUpdateV3 Learning Adaptive
+@B30_R0086:Mentions_B30_R0086 Mentions Book30 Key_B30_C43_I02 ModelUpdateV3
+
+@Chapter43 __Sequence [$B30_R0085, $B30_R0086]
+
+# Chapter 44 - PlanningV3
+# Idea: GoalStackV3 (Planner, Hierarchical)
+@_ Idea GoalStackV3 Planner Hierarchical
+@B30_R0087:Mentions_B30_R0087 Mentions Book30 Key_B30_C44_I01 GoalStackV3
+
+# Idea: ActionSequencingV3 (Planner, Ordered)
+@_ Idea ActionSequencingV3 Planner Ordered
+@B30_R0088:Mentions_B30_R0088 Mentions Book30 Key_B30_C44_I02 ActionSequencingV3
+
+@Chapter44 __Sequence [$B30_R0087, $B30_R0088]
+
+# Chapter 45 - ControlV3
+# Idea: FeedbackLoopV3 (Control, Stable)
+@_ Idea FeedbackLoopV3 Control Stable
+@B30_R0089:Mentions_B30_R0089 Mentions Book30 Key_B30_C45_I01 FeedbackLoopV3
+
+# Idea: ErrorCorrectionV3 (Control, Resilient)
+@_ Idea ErrorCorrectionV3 Control Resilient
+@B30_R0090:Mentions_B30_R0090 Mentions Book30 Key_B30_C45_I02 ErrorCorrectionV3
+
+@Chapter45 __Sequence [$B30_R0089, $B30_R0090]
+
+# Chapter 46 - CommunicationV3
+# Idea: MessageRoutingV3 (Protocol, Reliable)
+@_ Idea MessageRoutingV3 Protocol Reliable
+@B30_R0091:Mentions_B30_R0091 Mentions Book30 Key_B30_C46_I01 MessageRoutingV3
+
+# Idea: ConsensusPingV3 (Protocol, Coherent)
+@_ Idea ConsensusPingV3 Protocol Coherent
+@B30_R0092:Mentions_B30_R0092 Mentions Book30 Key_B30_C46_I02 ConsensusPingV3
+
+@Chapter46 __Sequence [$B30_R0091, $B30_R0092]
+
+# Chapter 47 - CoordinationV3
+# Idea: RoleAssignmentV3 (Coordination, Balanced)
+@_ Idea RoleAssignmentV3 Coordination Balanced
+@B30_R0093:Mentions_B30_R0093 Mentions Book30 Key_B30_C47_I01 RoleAssignmentV3
+
+# Idea: TaskHandoffV3 (Coordination, Timely)
+@_ Idea TaskHandoffV3 Coordination Timely
+@B30_R0094:Mentions_B30_R0094 Mentions Book30 Key_B30_C47_I02 TaskHandoffV3
+
+@Chapter47 __Sequence [$B30_R0093, $B30_R0094]
+
+# Chapter 48 - OptimizationV3
+# Idea: SearchPruningV3 (Optimization, Efficient)
+@_ Idea SearchPruningV3 Optimization Efficient
+@B30_R0095:Mentions_B30_R0095 Mentions Book30 Key_B30_C48_I01 SearchPruningV3
+
+# Idea: CostShapingV3 (Optimization, Bounded)
+@_ Idea CostShapingV3 Optimization Bounded
+@B30_R0096:Mentions_B30_R0096 Mentions Book30 Key_B30_C48_I02 CostShapingV3
+
+@Chapter48 __Sequence [$B30_R0095, $B30_R0096]
+
+# Chapter 49 - SafetyV3
+# Idea: ConstraintGuardV3 (Safety, Strict)
+@_ Idea ConstraintGuardV3 Safety Strict
+@B30_R0097:Mentions_B30_R0097 Mentions Book30 Key_B30_C49_I01 ConstraintGuardV3
+
+# Idea: AnomalyWatchV3 (Safety, Vigilant)
+@_ Idea AnomalyWatchV3 Safety Vigilant
+@B30_R0098:Mentions_B30_R0098 Mentions Book30 Key_B30_C49_I02 AnomalyWatchV3
+
+@Chapter49 __Sequence [$B30_R0097, $B30_R0098]
+
+# Chapter 50 - InterpretationV3
+# Idea: SymbolLinkingV3 (Mapping, Consistent)
+@_ Idea SymbolLinkingV3 Mapping Consistent
+@B30_R0099:Mentions_B30_R0099 Mentions Book30 Key_B30_C50_I01 SymbolLinkingV3
+
+# Idea: ContextWeavingV3 (Inference, Contextual)
+@_ Idea ContextWeavingV3 Inference Contextual
+@B30_R0100:Mentions_B30_R0100 Mentions Book30 Key_B30_C50_I02 ContextWeavingV3
+
+@Chapter50 __Sequence [$B30_R0099, $B30_R0100]
+
+# Chapter 51 - NavigationV3
+# Idea: PathSketchV3 (Navigation, Feasible)
+@_ Idea PathSketchV3 Navigation Feasible
+@B30_R0101:Mentions_B30_R0101 Mentions Book30 Key_B30_C51_I01 PathSketchV3
+
+# Idea: ObstacleMapV3 (Navigation, Cautious)
+@_ Idea ObstacleMapV3 Navigation Cautious
+@B30_R0102:Mentions_B30_R0102 Mentions Book30 Key_B30_C51_I02 ObstacleMapV3
+
+@Chapter51 __Sequence [$B30_R0101, $B30_R0102]
+
+# Chapter 52 - ResourceV3
+# Idea: MemoryBudgetV3 (Resource, Limited)
+@_ Idea MemoryBudgetV3 Resource Limited
+@B30_R0103:Mentions_B30_R0103 Mentions Book30 Key_B30_C52_I01 MemoryBudgetV3
+
+# Idea: ComputeQuotaV3 (Resource, Measured)
+@_ Idea ComputeQuotaV3 Resource Measured
+@B30_R0104:Mentions_B30_R0104 Mentions Book30 Key_B30_C52_I02 ComputeQuotaV3
+
+@Chapter52 __Sequence [$B30_R0103, $B30_R0104]
+
+# Chapter 53 - EvaluationV3
+# Idea: BenchmarkingV3 (Evaluation, Comparable)
+@_ Idea BenchmarkingV3 Evaluation Comparable
+@B30_R0105:Mentions_B30_R0105 Mentions Book30 Key_B30_C53_I01 BenchmarkingV3
+
+# Idea: ErrorAnalysisV3 (Evaluation, Diagnostic)
+@_ Idea ErrorAnalysisV3 Evaluation Diagnostic
+@B30_R0106:Mentions_B30_R0106 Mentions Book30 Key_B30_C53_I02 ErrorAnalysisV3
+
+@Chapter53 __Sequence [$B30_R0105, $B30_R0106]
+
+# Chapter 54 - AbstractionV3
+# Idea: ConceptLiftV3 (Abstraction, General)
+@_ Idea ConceptLiftV3 Abstraction General
+@B30_R0107:Mentions_B30_R0107 Mentions Book30 Key_B30_C54_I01 ConceptLiftV3
+
+# Idea: DetailSuppressionV3 (Abstraction, Selective)
+@_ Idea DetailSuppressionV3 Abstraction Selective
+@B30_R0108:Mentions_B30_R0108 Mentions Book30 Key_B30_C54_I02 DetailSuppressionV3
+
+@Chapter54 __Sequence [$B30_R0107, $B30_R0108]
+
+# Chapter 55 - PredictionV3
+# Idea: TrendForecastV3 (Prediction, Probabilistic)
+@_ Idea TrendForecastV3 Prediction Probabilistic
+@B30_R0109:Mentions_B30_R0109 Mentions Book30 Key_B30_C55_I01 TrendForecastV3
+
+# Idea: OutcomeEstimationV3 (Prediction, Approximate)
+@_ Idea OutcomeEstimationV3 Prediction Approximate
+@B30_R0110:Mentions_B30_R0110 Mentions Book30 Key_B30_C55_I02 OutcomeEstimationV3
+
+@Chapter55 __Sequence [$B30_R0109, $B30_R0110]
+
+# Chapter 56 - AdaptationV3
+# Idea: PolicyShiftV3 (Adaptation, Flexible)
+@_ Idea PolicyShiftV3 Adaptation Flexible
+@B30_R0111:Mentions_B30_R0111 Mentions Book30 Key_B30_C56_I01 PolicyShiftV3
+
+# Idea: ParameterDriftV3 (Adaptation, Gradual)
+@_ Idea ParameterDriftV3 Adaptation Gradual
+@B30_R0112:Mentions_B30_R0112 Mentions Book30 Key_B30_C56_I02 ParameterDriftV3
+
+@Chapter56 __Sequence [$B30_R0111, $B30_R0112]
+
+# Chapter 57 - VerificationV3
+# Idea: InvariantCheckV3 (Verification, Exact)
+@_ Idea InvariantCheckV3 Verification Exact
+@B30_R0113:Mentions_B30_R0113 Mentions Book30 Key_B30_C57_I01 InvariantCheckV3
+
+# Idea: ProofSketchV3 (Verification, Minimal)
+@_ Idea ProofSketchV3 Verification Minimal
+@B30_R0114:Mentions_B30_R0114 Mentions Book30 Key_B30_C57_I02 ProofSketchV3
+
+@Chapter57 __Sequence [$B30_R0113, $B30_R0114]
+
+# Chapter 58 - InterfaceV3
+# Idea: SignalEncodingV3 (Interface, Compact)
+@_ Idea SignalEncodingV3 Interface Compact
+@B30_R0115:Mentions_B30_R0115 Mentions Book30 Key_B30_C58_I01 SignalEncodingV3
+
+# Idea: ResponseTimingV3 (Interface, Responsive)
+@_ Idea ResponseTimingV3 Interface Responsive
+@B30_R0116:Mentions_B30_R0116 Mentions Book30 Key_B30_C58_I02 ResponseTimingV3
+
+@Chapter58 __Sequence [$B30_R0115, $B30_R0116]
+
+# Chapter 59 - DiscoveryV3
+# Idea: HypothesisSeedV3 (Discovery, Exploratory)
+@_ Idea HypothesisSeedV3 Discovery Exploratory
+@B30_R0117:Mentions_B30_R0117 Mentions Book30 Key_B30_C59_I01 HypothesisSeedV3
+
+# Idea: PatternLinkV3 (Discovery, Associative)
+@_ Idea PatternLinkV3 Discovery Associative
+@B30_R0118:Mentions_B30_R0118 Mentions Book30 Key_B30_C59_I02 PatternLinkV3
+
+@Chapter59 __Sequence [$B30_R0117, $B30_R0118]
+
+# Chapter 60 - GovernanceV3
+# Idea: AccessControlV3 (Governance, Restricted)
+@_ Idea AccessControlV3 Governance Restricted
+@B30_R0119:Mentions_B30_R0119 Mentions Book30 Key_B30_C60_I01 AccessControlV3
+
+# Idea: AuditTrailV3 (Governance, Traceable)
+@_ Idea AuditTrailV3 Governance Traceable
+@B30_R0120:Mentions_B30_R0120 Mentions Book30 Key_B30_C60_I02 AuditTrailV3
+
+@Chapter60 __Sequence [$B30_R0119, $B30_R0120]
+
+@Book:Book __Sequence [$Chapter01, $Chapter02, $Chapter03, $Chapter04, $Chapter05, $Chapter06, $Chapter07, $Chapter08, $Chapter09, $Chapter10, $Chapter11, $Chapter12, $Chapter13, $Chapter14, $Chapter15, $Chapter16, $Chapter17, $Chapter18, $Chapter19, $Chapter20, $Chapter21, $Chapter22, $Chapter23, $Chapter24, $Chapter25, $Chapter26, $Chapter27, $Chapter28, $Chapter29, $Chapter30, $Chapter31, $Chapter32, $Chapter33, $Chapter34, $Chapter35, $Chapter36, $Chapter37, $Chapter38, $Chapter39, $Chapter40, $Chapter41, $Chapter42, $Chapter43, $Chapter44, $Chapter45, $Chapter46, $Chapter47, $Chapter48, $Chapter49, $Chapter50, $Chapter51, $Chapter52, $Chapter53, $Chapter54, $Chapter55, $Chapter56, $Chapter57, $Chapter58, $Chapter59, $Chapter60]

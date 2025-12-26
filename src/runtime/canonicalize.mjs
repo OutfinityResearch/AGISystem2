@@ -106,6 +106,24 @@ export function canonicalizeMetadata(session, metadata) {
   if (metadata.operator === 'canonical') return metadata;
   if (metadata.operator === 'alias') return metadata;
 
+  // DS19: normalize Not metadata to always include `innerOperator`/`innerArgs`
+  // regardless of whether it came from `Not (op ...)`, `Not $ref`, or flat `Not op a b`.
+  if (metadata.operator === 'Not' && !metadata.innerOperator && Array.isArray(metadata.args) && metadata.args.length >= 1) {
+    metadata = {
+      ...metadata,
+      innerOperator: metadata.args[0],
+      innerArgs: metadata.args.slice(1)
+    };
+  }
+
+  const canonicalizeNested = (value) => {
+    if (!value) return value;
+    if (Array.isArray(value)) return value.map(v => canonicalizeNested(v));
+    if (typeof value === 'object') return canonicalizeMetadata(session, value);
+    if (typeof value === 'string') return canonicalizeTokenName(session, value);
+    return value;
+  };
+
   const operator = (typeof metadata.operator === 'string' && !RESERVED_OPERATORS.has(metadata.operator))
     ? canonicalizeTokenName(session, metadata.operator)
     : metadata.operator;
@@ -115,6 +133,18 @@ export function canonicalizeMetadata(session, metadata) {
     : metadata.args;
 
   const out = { ...metadata, operator, args };
+
+  // Canonicalize known nested metadata shapes.
+  if (metadata.operator === 'Implies') {
+    if (metadata.condition) out.condition = canonicalizeNested(metadata.condition);
+    if (metadata.conclusion) out.conclusion = canonicalizeNested(metadata.conclusion);
+  }
+  if (metadata.operator === 'And' || metadata.operator === 'Or') {
+    if (metadata.parts) out.parts = canonicalizeNested(metadata.parts);
+  }
+  if (metadata.operator === 'Not') {
+    if (metadata.inner) out.inner = canonicalizeNested(metadata.inner);
+  }
 
   if (metadata.operator === 'Not') {
     if (typeof metadata.innerOperator === 'string') {
