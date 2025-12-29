@@ -139,8 +139,8 @@
     <strong>Abstract:</strong> We compare three core Hyperdimensional Computing (HDC) strategies for symbolic reasoning:
     <strong>Dense-Binary</strong> (standard VSA), <strong>Sparse-Polynomial HDC</strong> (SPHDC – a <em>novel</em> paradigm with k=2-4 BigInt exponents), and
     <strong>Metric-Affine HDC</strong> (a <em>novel</em> HRR-inspired hybrid with byte-channel representation). <strong>Metric-Affine Elastic (EMA)</strong>
-    extends Metric-Affine with chunked bundling and optional elastic geometry; it is documented separately and not included in this 2025 benchmark. The Core Theory
-    evaluation framework (<code>npm run eval --full</code>) runs <strong>12 configurations</strong> across 27 test suites with 364 tests.
+    extends Metric-Affine with chunked bundling and optional elastic geometry. The December 2025 benchmark used the three core strategies (12 configurations).
+    Today, the Core Theory evaluation runner (<code>npm run eval -- --full</code>) supports <strong>16 configurations</strong> (4 strategies × 2 priorities × 2 geometries).
     All configurations achieve <strong>100% success rate</strong>, with Metric-Affine (32 bytes) completing in just <strong>318ms</strong>—
     2.6× faster than the 835ms sparse-polynomial holographic baseline. Two of the three core strategies (Sparse-Polynomial and Metric-Affine)
     are <strong>original contributions</strong> not found in standard HRR or VSA literature. For theoretical foundations, see
@@ -152,7 +152,11 @@
   <div class="metric-grid">
     <div class="metric-card">
       <h3>12</h3>
-      <p>HDC Configurations<br>(3 core strategies × geometries)</p>
+      <p>Benchmark Configs<br>(Dec 2025 snapshot)</p>
+    </div>
+    <div class="metric-card" style="background: linear-gradient(135deg, #00897b 0%, #4db6ac 100%);">
+      <h3>16</h3>
+      <p>Current Full Matrix<br>(incl. EMA)</p>
     </div>
     <div class="metric-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
       <h3>364</h3>
@@ -283,10 +287,10 @@ All strategies still load 1,314 facts from stress theories
     <li><strong>Multi-domain concept clustering</strong> – Cross-domain patterns</li>
   </ul>
 
-  <h2>4. Core Theory Evaluation (<code>npm run eval --full</code>)</h2>
+  <h2>4. Core Theory Evaluation (<code>npm run eval -- --full</code>)</h2>
 
   <div class="discovery-box">
-    <strong>Success Story:</strong> <strong>All 12 configurations achieve 100% success</strong> on the comprehensive Core Theory test suite:
+    <strong>Success Story:</strong> <strong>All 12 benchmark configurations achieve 100% success</strong> on the comprehensive Core Theory test suite:
     <strong>364 tests across 27 suites</strong> covering foundations, hierarchies, rules, negation, compound logic, temporal reasoning, modal logic,
     composition, CSP, fuzzy matching, property inheritance, meta-operators, macros, set theory, biological pathways, predicate logic,
     deduction, planning, and contradiction detection. This validates that <strong>core reasoning capabilities are production-ready</strong>
@@ -427,12 +431,12 @@ All strategies still load 1,314 facts from stress theories
     </tr>
   </table>
 
-  <h3>4.2 Performance Visualization (12 Configurations)</h3>
+  <h3>4.2 Performance Visualization (12 Benchmark Configurations)</h3>
 
   <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin: 20px 0;">
     <svg viewBox="0 0 700 480" style="width: 100%; max-width: 800px; display: block; margin: 0 auto;">
       <!-- Title -->
-      <text x="350" y="25" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Execution Time by Configuration (npm run eval --full)</text>
+      <text x="350" y="25" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">Execution Time by Configuration (npm run eval -- --full)</text>
 
       <!-- Grid lines -->
       <g stroke="#e8e8e8" stroke-width="1">
@@ -1228,19 +1232,19 @@ All strategies still load 1,314 facts from stress theories
 
   <p>To reproduce these experiments:</p>
 
-  <pre><code># Run Core Theory evaluation (364 tests, 27 suites, 6 configs - default)
+  <pre><code># Run Core Theory evaluation (364 tests, 27 suites; default: 8 configs = 4 strategies × 2 priorities)
 npm run eval                         # Default geometries
 # Expected: 100% success, ~300-850ms depending on config
 
-# Run Core Theory with ALL 12 configurations (smaller geometries)
-npm run eval -- --full               # Includes dense(256,512), sparse(2,4), metric(16,32)
-# Expected: 100% success across all 12 configurations
+# Run Core Theory with ALL configurations (current full matrix: 16 configs incl. EMA)
+npm run eval -- --full               # Includes dense(256,512), sparse(2,4), metric(16,32), metric-elastic(16,32)
+# Expected: 100% success on the benchmark subset; measure EMA on your machine
 
 # Run stress testing (theory loading validation)
-node evals/runStressCheck.js          # Default: --full (6 configs)
+node evals/runStressCheck.js          # Default: 12 configs (dense/sparse/metric × 2 geometries × 2 priorities)
 node evals/runStressCheck.js --fast   # Single config only
 
-# Run cross-domain query evaluation (12 queries, 6 configs)
+# Run cross-domain query evaluation (12 queries, 12 configs)
 node evals/runQueryEval.mjs           # Quiet mode
 node evals/runQueryEval.mjs --verbose # Show per-query progress
 # Expected: Low success (missing operators in KB), but speed results valid
@@ -1261,7 +1265,7 @@ SYS2_HDC_SIZE=16 SYS2_HDC_STRATEGY=metric-affine npm run eval</code></pre>
   <div class="discovery-box">
     <strong>Key Takeaways (December 2025):</strong>
     <ol>
-      <li><strong>Core reasoning is production-ready:</strong> 100% success rate (<strong>364/364 tests</strong>) across all <strong>12 configurations</strong> validates that fundamental reasoning capabilities work reliably</li>
+      <li><strong>Core reasoning is production-ready:</strong> 100% success rate (<strong>364/364 tests</strong>) across the <strong>12 benchmark configurations</strong> validates that fundamental reasoning capabilities work reliably</li>
       <li><strong>Metric-Affine HDC wins decisively on speed:</strong>
         <ul>
           <li>Core Theory: <strong>2.6x faster</strong> (318ms vs 835ms sparse-4 baseline)</li>
@@ -1276,10 +1280,10 @@ SYS2_HDC_SIZE=16 SYS2_HDC_STRATEGY=metric-affine npm run eval</code></pre>
         </ul>
       </li>
       <li><strong>EMA extension available:</strong> Metric-Affine Elastic adds chunked bundling + elastic geometry for large KB superpositions (not part of the 2025 benchmark).</li>
-      <li><strong>12 configurations tested:</strong> All geometries (dense 256/512, sparse k=2/4, metric 16/32) × priorities (symbolic/holographic) achieve 100% success</li>
+      <li><strong>12 benchmark configurations tested:</strong> All geometries (dense 256/512, sparse k=2/4, metric 16/32) × priorities (symbolic/holographic) achieve 100% success</li>
       <li><strong>Dual evaluation framework reveals complementary insights:</strong>
         <ul>
-          <li><strong>Core Theory (npm run eval --full):</strong> All strategies excel at symbolic reasoning, transitive chains, rules, CSP, and deduction</li>
+          <li><strong>Core Theory (npm run eval -- --full):</strong> All strategies excel at symbolic reasoning, transitive chains, rules, CSP, and deduction</li>
           <li><strong>Cross-Domain Queries (runQueryEval.mjs):</strong> Reveals operator definition gaps (9/12 failures due to missing operators in KB, not reasoning engine limitations)</li>
         </ul>
       </li>
@@ -1298,7 +1302,7 @@ SYS2_HDC_SIZE=16 SYS2_HDC_STRATEGY=metric-affine npm run eval</code></pre>
   </div>
 
   <div class="footer-nav">
-    <p>Research conducted December 2025. AGISystem2 version with three core HDC strategies, 12 configurations, and dual evaluation framework (EMA extension documented separately).</p>
+    <p>Research conducted December 2025. AGISystem2 benchmark snapshot with three core HDC strategies (12 configurations). EMA is an extension documented separately; the current evaluation runner supports 16 configurations including EMA.</p>
     <p><strong>Read more:</strong></p>
     <ul>
       <li><a href="../theory/hrr-comparison.html">HRR Comparison: Original Contributions</a> – Detailed assessment of novelty vs HRR/VSA</li>

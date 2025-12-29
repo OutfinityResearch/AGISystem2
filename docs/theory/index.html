@@ -62,7 +62,7 @@
     <strong>Key Insight:</strong> In high-dimensional spaces, randomly generated vectors are almost orthogonal to each other. This "quasi-orthogonality" property means any new concept gets a representation that doesn't interfere with existing ones.
   </div>
 
-  <h3>The Three Core Operations</h3>
+  <h3>The Core Operations</h3>
 
   <table>
     <tr>
@@ -73,7 +73,12 @@
     <tr>
       <td><strong>BIND</strong></td>
       <td>Create associations between concepts</td>
-      <td>Self-inverse: (A BIND B) BIND B = A</td>
+      <td>Has an inverse: UNBIND(BIND(A, B), B) = A (exact for self-inverse bindings like XOR)</td>
+    </tr>
+    <tr>
+      <td><strong>UNBIND</strong></td>
+      <td>Remove a known component from a composite</td>
+      <td>Inverse of BIND; some strategies implement UNBIND ≡ BIND, but this is not required by the contract</td>
     </tr>
     <tr>
       <td><strong>BUNDLE</strong></td>
@@ -101,8 +106,8 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
   <p>All queries reduce to this fundamental principle:</p>
 
   <div class="alert alert-info">
-    <strong>Answer = Knowledge BIND Query<sup>-1</sup></strong>
-    <p>Since BIND is self-inverse, "unbinding" the known parts of a query from the knowledge base reveals the unknown parts.</p>
+    <strong>Answer &asymp; UNBIND(Knowledge, QueryKey)</strong>
+    <p><code>QueryKey</code> is the part of the query you already know (relation + bound arguments). UNBIND removes that key from the KB composite to reveal the unknown parts. In many XOR-based strategies, UNBIND is implemented by calling BIND again, but other strategies may implement UNBIND differently.</p>
   </div>
 
   <h2>HDC Strategies</h2>
@@ -317,8 +322,8 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
     <li><a href="strategies/metric-affine.html">Metric-Affine Strategy - Fuzzy-Boolean HDC</a> (Original)</li>
     <li><a href="strategies/metric-affine-elastic.html">Metric-Affine Elastic Strategy - Chunked Bundling + Elastic Geometry</a> (Extension)</li>
     <li><a href="strategies/sphdc-analysis.html">SPHDC Theoretical Analysis</a> - Mathematical deep-dive</li>
-    <li><a href="../specsLoader.html?spec=DS01-Theoretical-Foundation.md">DS01 - Theoretical Foundation Specification</a></li>
-    <li><a href="../specsLoader.html?spec=DS09-Core-HDC-Implementation.md">DS09 - Core HDC Implementation Specification</a></li>
+    <li><a href="../specsLoader.html?spec=DS/DS01-Theoretical-Foundation.md">DS01 - Theoretical Foundation Specification</a></li>
+    <li><a href="../specsLoader.html?spec=DS/DS09-Core-HDC-Implementation.md">DS09 - Core HDC Implementation Specification</a></li>
     <li>Kanerva, P. (2009). "Hyperdimensional Computing: An Introduction to Computing in Distributed Representations"</li>
     <li>Plate, T. (2003). "Holographic Reduced Representation: Distributed Representation for Cognitive Structures"</li>
     <li>Gayler, R. (2003). "Vector Symbolic Architectures Answer Jackendoff's Challenges for Cognitive Neuroscience"</li>

@@ -134,6 +134,10 @@
     set theory, biology, and more.
   </div>
 
+  <div class="info-box">
+    <strong>Note:</strong> The tables below reflect a historical 3-strategy snapshot (Dense-Binary, Sparse-Polynomial, Metric-Affine). The evaluation runner now also supports <strong>Metric-Affine Elastic (EMA)</strong>; see <a href="../theory/strategies/metric-affine-elastic.html">the EMA theory page</a>.
+  </div>
+
   <div class="metric-grid">
     <div class="metric-card green">
       <h3>99%</h3>
@@ -215,6 +219,39 @@
   </table>
 
   <p><strong>Note:</strong> <code>metric(16)+symb</code> is 1.6x faster than <code>dense(256)+holo</code> while maintaining the same accuracy.</p>
+
+  <h3>1.2 EMA Extension (Metric-Affine Elastic)</h3>
+
+  <div class="info-box">
+    <strong>Metric-Affine Elastic (EMA):</strong> Extends Metric-Affine with chunked bundling and optional elastic geometry to improve behavior under large KB superpositions. It was not included in the historical benchmark table above; run <code>npm run eval -- --full</code> on your machine to measure it in the same framework.
+  </div>
+
+  <table class="benchmark-table">
+    <tr>
+      <th>Configuration</th>
+      <th>Pass Rate</th>
+      <th>HDC%</th>
+      <th>KB Scans</th>
+      <th>Sim Checks</th>
+      <th>Time</th>
+    </tr>
+    <tr>
+      <td><strong>metric-elastic(16)+symb</strong></td>
+      <td class="pass-medium">TBD</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+    </tr>
+    <tr>
+      <td><strong>metric-elastic(16)+holo</strong></td>
+      <td class="pass-medium">TBD</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+    </tr>
+  </table>
 
   <h2>2. External Benchmarks Overview</h2>
 

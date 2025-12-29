@@ -5,37 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="impelmenting DS#19 wip">
-      <change afterPath="$PROJECT_DIR$/evals/fastEval/suite29_explain_abduce_whatif/cases.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/explain.test.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REASONING_OPERATORS.md" beforeDir="false" afterPath="$PROJECT_DIR$/REASONING_OPERATORS.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/research/directions/proof-to-nl.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/proof-to-nl.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/semantic_unification_implementation_plan.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/semantic_unification_implementation_plan.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite11_wedding_seating/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite11_wedding_seating/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite15_reasoning_macros/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite15_reasoning_macros/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite21_goat_cabbage_plus/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite21_goat_cabbage_plus/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite23_tool_planning/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite23_tool_planning/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/fastEval/suite25_ruletaker_bugs/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite25_ruletaker_bugs/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/constants.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/constants.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/output/response-translator/constants.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/constants.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/output/response-translator/prove-translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/prove-translator.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/output/response-translator/query-translator.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/query-translator.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/output/response-translator/solve-result-formatter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/response-translator/solve-result-formatter.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/output/result-formatter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/output/result-formatter.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/parser/parser.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser/parser.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/abduction.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/abduction.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/planning/solver.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/planning/solver.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query-kb.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-kb.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reasoning/query.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/executor.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session-check-dsl.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-check-dsl.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/integration/csp-wedding-seating.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/integration/csp-wedding-seating.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/csp-hdc.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/csp-hdc.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/csp/solve-dsl.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/csp/solve-dsl.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/planning/solve-planning.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/planning/solve-planning.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/guides/getting-started.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/getting-started.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/benchmarks.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/benchmarks.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/matrix.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/matrix.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/syntax/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/syntax/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/metric-affine-elastic.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/metric-affine-elastic.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/metric-affine.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/metric-affine.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/agent-planning.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/agent-planning.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/compliance.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/compliance.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/research.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/research.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/wiki/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/wiki/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -152,6 +134,7 @@
       <workItem from="1766477237780" duration="9294000" />
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
+      <workItem from="1767005469743" duration="1457000" />
     </task>
     <task id="LOCAL-00038" summary="better documentation and project presentation">
       <option name="closed" value="true" />
