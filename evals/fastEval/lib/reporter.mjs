@@ -589,8 +589,15 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
     strategyTotals[strategyId] = {
       passed: 0,
       total: 0,
-      hdcSuccesses: 0,
+      // HDC utilization metrics:
+      // - hdcTotal: total query+prove ops executed
+      // - hdcTried: ops where an HDC attempt was made (Master Equation / HDC-first engines)
+      // - hdcValidated: ops where HDC produced at least one acceptable result (validated or trusted)
+      // - hdcFinal: ops where the final chosen method was HDC-based (method starts with "hdc")
       hdcTotal: 0,
+      hdcTried: 0,
+      hdcValidated: 0,
+      hdcFinal: 0,
       kbScans: 0,
       simChecks: 0,
       totalSteps: 0,
@@ -619,14 +626,30 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
 
       const stats = summary.reasoningStats || {};
       const durationMs = summary.durationMs || 0;
-      const hdcUsed = stats.hdcUsefulOps || 0;
+      const hdcFinal = stats.hdcUsefulOps || 0;
       const hdcTot = (stats.queries || 0) + (stats.proofs || 0);
       const scans = stats.kbScans || 0;
 
       strategyTotals[strategyId].passed += summary.passed;
       strategyTotals[strategyId].total += summary.total;
-      strategyTotals[strategyId].hdcSuccesses += hdcUsed;
+      strategyTotals[strategyId].hdcFinal += hdcFinal;
       strategyTotals[strategyId].hdcTotal += hdcTot;
+
+      // Tried/validated are counted from engine-specific stats.
+      // Note: in symbolicPriority, QueryEngine may still attempt HDC Master Equation (hdcQueries/hdcSuccesses).
+      // In holographicPriority, HDC-first engines use hdcUnbindAttempts/holographicQueryHdcSuccesses + holographicProofs/hdcProofSuccesses.
+      const tried =
+        (stats.hdcQueries || 0) +
+        (stats.hdcUnbindAttempts || 0) +
+        (stats.holographicProofs || 0);
+      const validated =
+        (stats.hdcSuccesses || 0) +
+        (stats.holographicQueryHdcSuccesses || 0) +
+        (stats.hdcProofSuccesses || 0);
+
+      strategyTotals[strategyId].hdcTried += tried;
+      strategyTotals[strategyId].hdcValidated += validated;
+
       strategyTotals[strategyId].kbScans += scans;
       strategyTotals[strategyId].simChecks += stats.similarityChecks || 0;
       strategyTotals[strategyId].totalMs += durationMs;
@@ -776,7 +799,9 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
   const columns = [
     { key: 'strategy', title: 'Strategy', align: 'left' },
     { key: 'pass', title: 'Pass Rate', align: 'right' },
-    { key: 'hdc', title: 'HDC%', align: 'right' },
+    { key: 'hdcTried', title: 'HDC Tried', align: 'right' },
+    { key: 'hdcValid', title: 'HDC Valid', align: 'right' },
+    { key: 'hdcFinal', title: 'HDC Final', align: 'right' },
     { key: 'hdcOps', title: 'HDC Ops', align: 'right' },
     { key: 'kb', title: 'KB Scans', align: 'right' },
     { key: 'sim', title: 'Sim Checks', align: 'right' },
@@ -798,11 +823,25 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
     const passColor = passPct === 100 ? colors.green : passPct >= 50 ? colors.yellow : colors.red;
     const passCell = `${passColor}${passPct}% (${totals.passed}/${totals.total})${colors.reset}`;
 
-    const hasHdc = totals.hdcTotal > 0;
-    const hdcPct = hasHdc ? Math.floor((totals.hdcSuccesses / totals.hdcTotal) * 100) : 0;
-    const hdcColor = hasHdc && hdcPct >= 50 ? colors.cyan : colors.dim;
-    const hdcCell = hasHdc
-      ? `${hdcColor}${hdcPct}% (${totals.hdcSuccesses}/${totals.hdcTotal})${colors.reset}`
+    const hasAsked = totals.hdcTotal > 0;
+
+    const triedPct = hasAsked ? Math.floor((totals.hdcTried / totals.hdcTotal) * 100) : 0;
+    const triedColor = hasAsked && triedPct >= 50 ? colors.cyan : colors.dim;
+    const triedCell = hasAsked
+      ? `${triedColor}${triedPct}% (${totals.hdcTried}/${totals.hdcTotal})${colors.reset}`
+      : `${colors.dim}-${colors.reset}`;
+
+    const hasTried = totals.hdcTried > 0;
+    const validPct = hasTried ? Math.floor((totals.hdcValidated / totals.hdcTried) * 100) : 0;
+    const validColor = hasTried && validPct >= 50 ? colors.cyan : colors.dim;
+    const validCell = hasTried
+      ? `${validColor}${validPct}% (${totals.hdcValidated}/${totals.hdcTried})${colors.reset}`
+      : `${colors.dim}-${colors.reset}`;
+
+    const finalPct = hasAsked ? Math.floor((totals.hdcFinal / totals.hdcTotal) * 100) : 0;
+    const finalColor = hasAsked && finalPct >= 50 ? colors.cyan : colors.dim;
+    const finalCell = hasAsked
+      ? `${finalColor}${finalPct}% (${totals.hdcFinal}/${totals.hdcTotal})${colors.reset}`
       : `${colors.dim}-${colors.reset}`;
 
     const timeCell = totals.totalMs === fastestMs
@@ -812,8 +851,10 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
     const base = {
       strategy: shortStrategyName(strategyId),
       pass: passCell,
-      hdc: hdcCell,
-      hdcOps: hasHdc ? `${totals.hdcTotal}` : `${colors.dim}-${colors.reset}`,
+      hdcTried: triedCell,
+      hdcValid: validCell,
+      hdcFinal: finalCell,
+      hdcOps: hasAsked ? `${totals.hdcTotal}` : `${colors.dim}-${colors.reset}`,
       kb: formatNum(totals.kbScans),
       sim: formatNum(totals.simChecks),
       time: timeCell

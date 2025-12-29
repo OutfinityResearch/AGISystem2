@@ -18,6 +18,7 @@ import { sameBindings } from '../query-kb.mjs';
 import { ProofEngine } from '../prove.mjs';
 import { buildProofObject } from '../proof-schema.mjs';
 import { validateProof } from '../proof-validator.mjs';
+import { isValidEntity } from '../query-hdc.mjs';
 import { debug_trace } from '../../utils/debug.js';
 
 function dbg(category, ...args) {
@@ -44,12 +45,20 @@ export class HolographicQueryEngine {
     this.config = getHolographicThresholds(strategy);
     this.thresholds = getThresholds(strategy);
 
+    // Some strategies can treat the Master Equation as structurally reliable (lossless decode for fact membership),
+    // so we can skip symbolic validation/supplement for speed.
+    this.trustMasterEquation =
+      !!this.session?.hdc?.strategy?.properties?.reasoningEquationReliable;
+
     // Cache: vocabulary view for topKSimilar
     // Avoid rebuilding / rescanning KB for every query in holographicPriority mode.
     this._vocabCache = null;
     this._vocabCacheAtomCount = -1;
 
-    dbg('INIT', `Strategy: ${strategy}, MinSim: ${this.config.UNBIND_MIN_SIMILARITY}`);
+    dbg(
+      'INIT',
+      `Strategy: ${strategy}, MinSim: ${this.config.UNBIND_MIN_SIMILARITY}, TrustEq: ${this.trustMasterEquation}`
+    );
   }
 
   /**
@@ -142,38 +151,61 @@ export class HolographicQueryEngine {
 
     // Step 3: Validate candidates with symbolic proof
     const validatedResults = [];
-    for (const candidate of candidates) {
-      this.session.reasoningStats.hdcValidationAttempts =
-        (this.session.reasoningStats.hdcValidationAttempts || 0) + 1;
+    const requireValidation = this.config.VALIDATION_REQUIRED !== false && !this.trustMasterEquation;
+    if (requireValidation) {
+      for (const candidate of candidates) {
+        this.session.reasoningStats.hdcValidationAttempts =
+          (this.session.reasoningStats.hdcValidationAttempts || 0) + 1;
 
-      const validation = this.validateCandidate(operatorName, knowns, holes, candidate);
+        const validation = this.validateCandidate(operatorName, knowns, holes, candidate);
 
-      if (validation.valid) {
-        this.session.reasoningStats.hdcValidationSuccesses =
-          (this.session.reasoningStats.hdcValidationSuccesses || 0) + 1;
+        if (validation.valid) {
+          this.session.reasoningStats.hdcValidationSuccesses =
+            (this.session.reasoningStats.hdcValidationSuccesses || 0) + 1;
 
-        // Build bindings map matching QueryEngine format
+          // Build bindings map matching QueryEngine format
+          const bindings = new Map();
+          for (const [holeName, value] of Object.entries(candidate.bindings)) {
+            bindings.set(holeName, {
+              answer: value.name,
+              similarity: value.similarity,
+              method: 'hdc_validated',
+              steps: validation.steps || []
+            });
+          }
+
+          validatedResults.push({
+            bindings,
+            score: candidate.combinedScore,
+            method: 'hdc_validated'
+          });
+
+          dbg('VALID', `Validated: ${JSON.stringify(candidate.bindings)}`);
+        }
+
+        if (maxResults !== null && validatedResults.length >= maxResults) {
+          break;
+        }
+      }
+    } else {
+      // Trusted mode: accept HDC decode directly (no symbolic validation).
+      // This is safe only for strategies that guarantee structural correctness for fact membership.
+      for (const candidate of candidates) {
         const bindings = new Map();
         for (const [holeName, value] of Object.entries(candidate.bindings)) {
           bindings.set(holeName, {
             answer: value.name,
             similarity: value.similarity,
-            method: 'hdc_validated',
-            steps: validation.steps || []
+            method: 'hdc',
+            steps: []
           });
         }
-
         validatedResults.push({
           bindings,
           score: candidate.combinedScore,
-          method: 'hdc_validated'
+          method: 'hdc'
         });
-
-        dbg('VALID', `Validated: ${JSON.stringify(candidate.bindings)}`);
-      }
-
-      if (maxResults !== null && validatedResults.length >= maxResults) {
-        break;
+        if (maxResults !== null && validatedResults.length >= maxResults) break;
       }
     }
 
@@ -184,8 +216,9 @@ export class HolographicQueryEngine {
         (this.session.reasoningStats.holographicQueryHdcSuccesses || 0) + 1;
     }
 
-    // Step 4: Always merge with symbolic results for completeness
-    // HDC may miss some results due to KB noise, so we supplement with symbolic
+    // Step 4: Always merge with symbolic results for completeness.
+    // Even for strategies with structurally reliable unbind, symbolic results can represent
+    // transitive/rule-derived answers that are not explicit facts (and therefore not retrievable by unbind alone).
     if (this.config.FALLBACK_TO_SYMBOLIC) {
       const symbolicResult = this.symbolicEngine.execute(statement, options);
 
@@ -284,8 +317,15 @@ export class HolographicQueryEngine {
         this.config.UNBIND_MAX_CANDIDATES * 3,
         this.session
       );
+
+      // If we skip symbolic validation, we must require a strong similarity gate to avoid “0.000 tie” noise.
+      const minSim = this.trustMasterEquation
+        ? Math.max(this.config.UNBIND_MIN_SIMILARITY ?? 0, this.thresholds.HDC_MATCH ?? 0)
+        : (this.config.UNBIND_MIN_SIMILARITY ?? 0);
+
       const candidates = rawTop
-        .filter(c => c.similarity >= this.config.UNBIND_MIN_SIMILARITY)
+        .filter(c => c.similarity >= minSim)
+        .filter(c => isValidEntity(c.name, this.session))
         .slice(0, this.config.UNBIND_MAX_CANDIDATES);
 
       holeCandidates.set(hole.name, candidates);
