@@ -926,6 +926,17 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
   }
 
   console.log(`${colors.dim}${'─'.repeat(totalWidth)}${colors.reset}`);
+  console.log();
+  console.log(`${colors.dim}Legend (Configuration Totals):${colors.reset}`);
+  console.log(`${colors.dim}  HDC Ops:    Σ(queries + proofs) — total number of reasoning ops executed (query + prove).${colors.reset}`);
+  console.log(`${colors.dim}  HDC Tried:  Σ(hdcQueries + hdcUnbindAttempts + holographicProofs) — ops where an HDC attempt was made.${colors.reset}`);
+  console.log(`${colors.dim}  HDC Valid:  Σ(hdcSuccesses + holographicQueryHdcSuccesses + hdcProofSuccesses) — HDC attempts that produced at least one accepted result.${colors.reset}`);
+  console.log(`${colors.dim}  HDC Eq:     Σ(hdcEquivalentOps) — ops where the HDC result set matched the symbolic result set.${colors.reset}`);
+  console.log(`${colors.dim}  HDC Final:  Σ(hdcUsefulOps) — ops where the final chosen method was HDC-based (method starts with \"hdc\").${colors.reset}`);
+  console.log(`${colors.dim}  KB Scans:   Σ(kbScans) — number of KB scan/iteration steps performed by the engine.${colors.reset}`);
+  console.log(`${colors.dim}  Sim Checks: Σ(similarityChecks) — number of vector similarity computations performed.${colors.reset}`);
+  console.log(`${colors.dim}  Note: HDC Tried/Eq/Final are reported as % of HDC Ops; HDC Valid is reported as % of HDC Tried.${colors.reset}`);
+  console.log();
 
   // Speed comparison
   const times = orderedStrategies.map(s => ({ id: s, ms: strategyTotals[s].totalMs }));

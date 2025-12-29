@@ -335,22 +335,26 @@ src/hdc/strategies/
 
 Minimal integration points:
 
-- **Dictionary scope:** The dictionary must be session-local (not process-global). The simplest v0 approach is to keep dictionaries inside the strategy module keyed by a session namespace, and to attach that namespace to vectors (or pass it via `theoryId`).
-- **Position atoms:** Optionally pre-initialize `__POS_1__..__POS_20__` early for stable low indices; otherwise rely on deterministic creation order.
-- **Persistence:** Do not implement dictionary persistence until KB serialization is introduced (see §3.4).
+- **Dictionary scope:** The dictionary must be session-local (not process-global). The recommended approach is to instantiate the strategy per Session (see §9.1) so each Session has a fresh allocator.
+- **Position atoms:** Pre-initialize `__POS_1__..__POS_20__` early for stable low indices in appearance-index strategies. (The runtime can do this before loading any theories.)
+- **Persistence:** Do not implement dictionary persistence until KB serialization is introduced (see §3.4). Until then, evaluation workflows can reload theories from text and re-vectorize each run.
 
 ### 9.1 Session-local dictionary without KB serialization (v0 guidance)
 
-AGISystem2 can run many Sessions sequentially in the same Node.js process (e.g., evaluation runners). If the dictionary were stored as a single module-global map without scoping, it would leak across Sessions and make “appearance index” depend on prior runs.
+AGISystem2 can run many Sessions sequentially in the same Node.js process (e.g., evaluation runners). If the appearance-index dictionary were stored as a single module-global map without scoping, it would leak across Sessions and make “appearance index” depend on prior runs.
 
-Therefore EXACT should implement one of these v0 scoping patterns:
+**Implemented approach (recommended): per-Session strategy instances.**
 
-- **(Preferred for v0)** Provide a strategy-local `reset()` hook and call it when constructing a new Session configured for EXACT. This keeps the implementation simple while the system does not persist KBs and while evaluation workflows create Sessions sequentially.
-- **(More robust)** Maintain `Map<namespaceId, Dictionary>` inside the EXACT strategy module and use a session-unique namespace. The existing `theoryId` parameter passed to `createFromName(name, geometry, theoryId)` can serve as `namespaceId`, but introducing such a namespace is deferred until persistent serialization or multi-session concurrency becomes a priority.
+EXACT is instantiated per Session via a `createInstance({ session })` hook, and the instance owns:
 
-Which approach is chosen is an implementation detail, but the outcome must be: **fresh dictionary per Session** under typical evaluation workflows.
+- `atomToIndex: Map<string, number>`
+- `indexToAtom: string[]`
 
-**Concurrency note:** A single module-global dictionary plus `reset()` is not safe if multiple Sessions using EXACT are active concurrently inside the same Node.js process. This is acceptable for the current workflow assumption (sequential Sessions), but must be revisited for server-style deployments.
+This keeps the allocator session-local, supports concurrent Sessions safely, and avoids any need for a global `reset()`.
+
+**Contract note:** The strategy registry may still expose a process-global “fallback instance” for legacy facade calls, but Session-owned code paths MUST use the session-local HDC context (IoC) so the per-Session allocator is used.
+
+**Concurrency note:** Per-Session instances are safe for concurrent Sessions. A module-global dictionary + `reset()` is not safe in concurrent server-style deployments and is not recommended even as a v0 pattern.
 
 ---
 
@@ -382,7 +386,7 @@ At minimum, tests MUST cover:
 - `bundle` idempotence and commutativity (set union)
 - `bind` behavior for monomial facts (OR) and for general polynomials
 - UNBIND_A query flow: fact → partial → candidates → position removal → answer
-- KB serialization roundtrip including atom dictionary
+- (Future) KB serialization roundtrip including atom dictionary (when serialization becomes a workflow requirement)
 
 ---
 

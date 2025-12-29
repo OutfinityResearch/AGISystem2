@@ -1,6 +1,6 @@
 # Module Plan: src/core/position.mjs
 
-**Document Version:** 2.0
+**Document Version:** 2.1
 **Status:** Implemented
 **Traces To:** FS-05, FS-67
 
@@ -39,10 +39,6 @@ function extractAtPosition(position: number, composite: Vector): Vector
 // Clear position vector cache
 // Useful when switching strategies or geometries
 function clearPositionCache(): void
-
-// Constants
-const MIN_POSITION = 1;
-const MAX_POSITION = 20;  // from core/constants.mjs
 ```
 
 ---
@@ -110,7 +106,7 @@ function getVectorGeometry(vector) {
 ## 4. Dependencies
 
 - `../hdc/facade.mjs` - bind, unbind, getStrategyId, createFromName
-- `./constants.mjs` - MAX_POSITIONS, DEFAULT_GEOMETRY
+- `./constants.mjs` - `MAX_POSITIONS`, `DEFAULT_GEOMETRY` (internal use)
 
 ---
 

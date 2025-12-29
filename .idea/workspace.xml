@@ -4,7 +4,63 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="trying to optimise teh hgraphic priority reasoning emgine" />
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="trying to optimise teh hgraphic priority reasoning emgine">
+      <change afterPath="$PROJECT_DIR$/config/runtime/reserved-atoms.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS26-Session-Universe.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/hdc/context.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/nlp/nl2dsl.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/nlp/normalizer.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/nlp/tokenizer.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/nlp/transformer.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/output/response-translator.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/output/result-formatter.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/reasoning/component-kb.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/reasoning/csp/solver.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/reasoning/holographic/csp-hdc-heuristic.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/reasoning/holographic/prove-hdc-first.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/reasoning/holographic/query-hdc-first.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/specs/src/runtime/runtime-reserved-atoms.mjs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/future-improvements.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/runtime/runtime-reserved-atoms.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/hdc/strategy-basics.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/holographic-query-decode.test.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/runtime/runtime-reserved-atoms.test.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AGENTS.md" beforeDir="false" afterPath="$PROJECT_DIR$/AGENTS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HDC_METRIC_ANALYSIS.md" beforeDir="false" afterPath="$PROJECT_DIR$/HDC_METRIC_ANALYSIS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PERFORMANCE_METRICS_ANALYSIS.md" beforeDir="false" afterPath="$PROJECT_DIR$/PERFORMANCE_METRICS_ANALYSIS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REASONING_OPERATORS.md" beforeDir="false" afterPath="$PROJECT_DIR$/REASONING_OPERATORS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/claude_code_review.md" beforeDir="false" afterPath="$PROJECT_DIR$/claude_code_review.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/guides/hdc-strategies.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/hdc-strategies.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/benchmarks.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/benchmarks.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/directions/hdc-strategies.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/hdc-strategies.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS09-Core-HDC-Implementation.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS09-Core-HDC-Implementation.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/specs_coverage_report.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/src/core/constants.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/core/constants.mjs.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/src/core/operations.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/core/operations.mjs.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/src/core/position.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/core/position.mjs.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/src/hdc/contract.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/hdc/contract.mjs.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/src/reasoning/index.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/reasoning/index.mjs.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/src/runtime/session.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/runtime/session.mjs.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/src/runtime/vocabulary.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/runtime/vocabulary.mjs.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/exact.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/exact.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval_statistics_report.md" beforeDir="false" afterPath="$PROJECT_DIR$/eval_statistics_report.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fastEval_assessment.md" beforeDir="false" afterPath="$PROJECT_DIR$/fastEval_assessment.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operation-counting-comparison.md" beforeDir="false" afterPath="$PROJECT_DIR$/operation-counting-comparison.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimisation_proposal.md" beforeDir="false" afterPath="$PROJECT_DIR$/optimisation_proposal.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plan_improve_reasoning.md" beforeDir="false" afterPath="$PROJECT_DIR$/plan_improve_reasoning.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reasoning-stats-lifecycle.md" beforeDir="false" afterPath="$PROJECT_DIR$/reasoning-stats-lifecycle.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/review_operation_counting.md" beforeDir="false" afterPath="$PROJECT_DIR$/review_operation_counting.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hdc/contract.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/contract.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/exact.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/exact.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/hdc/exact-strategy.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/hdc/exact-strategy.test.mjs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -120,15 +176,7 @@
       <workItem from="1766477237780" duration="9294000" />
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
-      <workItem from="1767005469743" duration="7201000" />
-    </task>
-    <task id="LOCAL-00043" summary=" implemented a new staregy (metric-afine), wip to improve the suite to show proofs everywhere and have deeper reasoning examples">
-      <option name="closed" value="true" />
-      <created>1766056838662</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1766056838662</updated>
+      <workItem from="1767005469743" duration="10476000" />
     </task>
     <task id="LOCAL-00044" summary="prearing to add new reasoning methods">
       <option name="closed" value="true" />
@@ -514,7 +562,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767022255866</updated>
     </task>
-    <option name="localTasksCounter" value="92" />
+    <task id="LOCAL-00092" summary="trying to optimise teh hgraphic priority reasoning emgine">
+      <option name="closed" value="true" />
+      <created>1767023145763</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1767023145763</updated>
+    </task>
+    <option name="localTasksCounter" value="93" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

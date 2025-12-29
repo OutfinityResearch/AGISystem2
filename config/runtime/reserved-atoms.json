@@ -1,0 +1,10 @@
+{
+  "positionAtoms": {
+    "count": 20,
+    "template": "__POS_{n}__"
+  },
+  "atoms": [
+    "__EMPTY_BUNDLE__",
+    "__CANONICAL_REWRITE__"
+  ]
+}

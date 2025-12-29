@@ -22,6 +22,7 @@ import { ResponseTranslator } from '../output/response-translator.mjs';
 import { findAll } from '../reasoning/find-all.mjs';
 import { ComponentKB } from '../reasoning/component-kb.mjs';
 import { debug_trace, isDebugEnabled } from '../utils/debug.js';
+import { readEnvBoolean } from '../utils/env.js';
 import { DEFAULT_SEMANTIC_INDEX, FALLBACK_SEMANTIC_INDEX } from './semantic-index.mjs';
 import { canonicalizeMetadata } from './canonicalize.mjs';
 import { FactIndex } from './fact-index.mjs';
@@ -29,6 +30,7 @@ import { ContradictionError } from './contradiction-error.mjs';
 import { computeFeatureToggles, computeReasoningProfile } from './reasoning-profile.mjs';
 import { TypeRegistry } from './type-registry.mjs';
 import { CanonicalRewriteIndex } from './canonical-rewrite-index.mjs';
+import { initRuntimeReservedAtoms } from './runtime-reserved-atoms.mjs';
 import {
   initOperators as initOperatorsImpl,
   trackRules as trackRulesImpl,
@@ -91,11 +93,9 @@ export class Session {
     this.hdc = createHDCContext({ strategyId: this.hdcStrategy, geometry: this.geometry, session: this });
     this.scope = new Scope();
     this.vocabulary = new Vocabulary(this.geometry, this.hdcStrategy, this.hdc);
-    // Pre-initialize position atoms to keep early indices stable in strategies
-    // that may use session-local allocators (e.g., EXACT / appearance-index).
-    for (let pos = 1; pos <= MAX_POSITIONS; pos++) {
-      this.vocabulary.getOrCreate(`__POS_${pos}__`);
-    }
+    // Pre-initialize runtime-reserved atoms (non-DSL config) to keep early indices stable
+    // in strategies that may use session-local allocators (e.g., EXACT / appearance-index).
+    this.runtimeReserved = initRuntimeReservedAtoms(this, { maxPositions: MAX_POSITIONS });
     this.executor = new Executor(this);
 
     // Use dispatcher to create engines based on reasoning priority
@@ -174,6 +174,35 @@ export class Session {
 
     this.initOperators();
 
+    // Core loading policy:
+    // - Default ON for normal runs (keeps semantics theory-driven without runners).
+    // - Default OFF under `node --test` unless explicitly enabled.
+    const envAutoLoadCore = readEnvBoolean('SYS2_AUTO_LOAD_CORE');
+    const runningUnderNodeTest =
+      typeof process.env.NODE_TEST_CONTEXT === 'string' ||
+      (Array.isArray(process.execArgv) && process.execArgv.includes('--test')) ||
+      (Array.isArray(process.argv) && process.argv.includes('--test'));
+    const defaultAutoLoadCore = runningUnderNodeTest ? false : true;
+    this.autoLoadCore = options.autoLoadCore ?? envAutoLoadCore ?? defaultAutoLoadCore;
+    this.corePath = options.corePath || './config/Core';
+    this.coreIncludeIndex = options.coreIncludeIndex ?? false;
+    if (this.autoLoadCore) {
+      const report = this.loadCore({
+        corePath: this.corePath,
+        includeIndex: this.coreIncludeIndex,
+        validate: true
+      });
+      if (!report?.success) {
+        const summary = (report?.errors || [])
+          .map(e => `${e.file}: ${(e.errors || []).join('; ')}`)
+          .join(' | ');
+        throw new Error(`Core load failed: ${summary || 'unknown error'}`);
+      }
+      if (report?.warnings?.length) {
+        this.warnings.push(...report.warnings);
+      }
+    }
+
     dbg(
       'INIT',
       `Strategy: ${this.hdcStrategy}, Priority: ${this.reasoningPriority}, Profile: ${this.reasoningProfile}`
@@ -218,7 +247,15 @@ export class Session {
    * @returns {{success: boolean, errors: Array<{file: string, errors: string[]}>}}
    */
   loadCore(options = {}) {
-    return loadCoreImpl(this, options);
+    if (this._coreLoaded && !options.force) {
+      return { success: true, errors: [], warnings: this._coreWarnings || [] };
+    }
+    const report = loadCoreImpl(this, options);
+    if (report?.success) {
+      this._coreLoaded = true;
+      this._coreWarnings = report?.warnings || [];
+    }
+    return report;
   }
 
   /**

@@ -71,22 +71,6 @@
  */
 export const HDC_CONTRACT = {
   /**
-   * Bind is self-inverse: bind(a, a) produces "zero" effect
-   * More specifically: bind(bind(a, b), b) ≈ a
-   */
-  BIND_SELF_INVERSE: true,
-
-  /**
-   * Bind is associative: bind(bind(a, b), c) ≡ bind(a, bind(b, c))
-   */
-  BIND_ASSOCIATIVE: true,
-
-  /**
-   * Bind is commutative: bind(a, b) ≡ bind(b, a)
-   */
-  BIND_COMMUTATIVE: true,
-
-  /**
    * Similarity is reflexive: similarity(v, v) = 1.0
    */
   SIMILARITY_REFLEXIVE: true,
@@ -100,18 +84,6 @@ export const HDC_CONTRACT = {
    * Similarity range: [0, 1]
    */
   SIMILARITY_RANGE: [0, 1],
-
-  /**
-   * Random vectors have ~0.5 similarity (quasi-orthogonal)
-   * Expected value ± tolerance
-   */
-  RANDOM_BASELINE_SIMILARITY: { expected: 0.5, tolerance: 0.05 },
-
-  /**
-   * Bundle preserves retrievability:
-   * similarity(bundle([a, b, c]), a) > 0.5 for small n
-   */
-  BUNDLE_RETRIEVABLE: true
 };
 
 /**
@@ -120,10 +92,15 @@ export const HDC_CONTRACT = {
  *
  * @param {HDCStrategy} strategy - Strategy to validate
  * @param {number} geometry - Test geometry
- * @returns {{valid: boolean, errors: string[]}}
+ * @param {Object} [options]
+ * @param {boolean} [options.expectSelfInverse] - Validate `unbind(bind(a,b), b) ≈ a` (XOR-like strategies)
+ * @param {{expected:number, tolerance:number}} [options.expectRandomBaseline] - Validate similarity(random, random) baseline
+ * @param {{min:number}} [options.expectBundleRetrievable] - Validate sim(bundle([a,b,c]), a) >= min
+ * @returns {{valid: boolean, errors: string[], warnings: string[]}}
  */
-export function validateStrategy(strategy, geometry = 2048) {
+export function validateStrategy(strategy, geometry = 2048, options = {}) {
   const errors = [];
+  const warnings = [];
 
   // Check required methods exist
   const requiredMethods = [
@@ -139,18 +116,11 @@ export function validateStrategy(strategy, geometry = 2048) {
   }
 
   if (errors.length > 0) {
-    return { valid: false, errors };
+    return { valid: false, errors, warnings };
   }
 
-  // Test bind self-inverse
   const a = strategy.createRandom(geometry);
   const b = strategy.createRandom(geometry);
-  const bound = strategy.bind(a, b);
-  const unbound = strategy.bind(bound, b);
-  const simAfterUnbind = strategy.similarity(a, unbound);
-  if (simAfterUnbind < 0.99) {
-    errors.push(`Bind not self-inverse: similarity after unbind = ${simAfterUnbind}`);
-  }
 
   // Test similarity reflexive
   const simSelf = strategy.similarity(a, a);
@@ -165,13 +135,13 @@ export function validateStrategy(strategy, geometry = 2048) {
     errors.push(`Similarity not symmetric: ${simAB} vs ${simBA}`);
   }
 
-  // Test random baseline
-  const r1 = strategy.createRandom(geometry);
-  const r2 = strategy.createRandom(geometry);
-  const simRandom = strategy.similarity(r1, r2);
-  const { expected, tolerance } = HDC_CONTRACT.RANDOM_BASELINE_SIMILARITY;
-  if (Math.abs(simRandom - expected) > tolerance) {
-    errors.push(`Random baseline off: ${simRandom} (expected ~${expected})`);
+  // Test similarity range for basic samples
+  const range = HDC_CONTRACT.SIMILARITY_RANGE;
+  for (const s of [simSelf, simAB]) {
+    if (!(s >= range[0] && s <= range[1])) {
+      errors.push(`Similarity out of range [${range[0]}, ${range[1]}]: ${s}`);
+      break;
+    }
   }
 
   // Test deterministic creation
@@ -181,19 +151,49 @@ export function validateStrategy(strategy, geometry = 2048) {
     errors.push('createFromName not deterministic');
   }
 
-  // Test bundle retrievability
-  const v1 = strategy.createRandom(geometry);
-  const v2 = strategy.createRandom(geometry);
-  const v3 = strategy.createRandom(geometry);
-  const bundled = strategy.bundle([v1, v2, v3]);
-  const bundleSim = strategy.similarity(bundled, v1);
-  if (bundleSim < 0.5) {
-    errors.push(`Bundle not retrievable: sim = ${bundleSim}`);
+  // Optional: self-inverse / XOR-like cancellation
+  if (options?.expectSelfInverse) {
+    const bound = strategy.bind(a, b);
+    const unbound = strategy.unbind(bound, b);
+    const simAfterUnbind = strategy.similarity(a, unbound);
+    if (simAfterUnbind < 0.99) {
+      errors.push(`Unbind not cancellative: similarity after unbind = ${simAfterUnbind}`);
+    }
+  }
+
+  // Optional: random baseline (strategy-specific; not universal)
+  if (options?.expectRandomBaseline) {
+    const r1 = strategy.createRandom(geometry);
+    const r2 = strategy.createRandom(geometry);
+    const simRandom = strategy.similarity(r1, r2);
+    const expected = Number(options.expectRandomBaseline.expected);
+    const tolerance = Number(options.expectRandomBaseline.tolerance);
+    if (!Number.isFinite(expected) || !Number.isFinite(tolerance)) {
+      warnings.push('expectRandomBaseline provided but expected/tolerance are not finite numbers');
+    } else if (Math.abs(simRandom - expected) > tolerance) {
+      errors.push(`Random baseline off: ${simRandom} (expected ~${expected} ± ${tolerance})`);
+    }
+  }
+
+  // Optional: bundle retrievability (strategy-specific)
+  if (options?.expectBundleRetrievable) {
+    const v1 = strategy.createRandom(geometry);
+    const v2 = strategy.createRandom(geometry);
+    const v3 = strategy.createRandom(geometry);
+    const bundled = strategy.bundle([v1, v2, v3]);
+    const bundleSim = strategy.similarity(bundled, v1);
+    const min = Number(options.expectBundleRetrievable.min);
+    if (!Number.isFinite(min)) {
+      warnings.push('expectBundleRetrievable provided but min is not a finite number');
+    } else if (bundleSim < min) {
+      errors.push(`Bundle not retrievable: sim = ${bundleSim} (min ${min})`);
+    }
   }
 
   return {
     valid: errors.length === 0,
-    errors
+    errors,
+    warnings
   };
 }
 

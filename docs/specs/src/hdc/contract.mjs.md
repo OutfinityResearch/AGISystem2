@@ -22,24 +22,10 @@ Defines the HDC strategy contract using JSDoc type definitions. Provides validat
 
 ```javascript
 export const HDC_CONTRACT = {
-  // Bind properties
-  BIND_SELF_INVERSE: true,      // bind(a, a) → zero effect
-  BIND_ASSOCIATIVE: true,       // bind(bind(a,b), c) ≡ bind(a, bind(b,c))
-  BIND_COMMUTATIVE: true,       // bind(a, b) ≡ bind(b, a)
-
   // Similarity properties
   SIMILARITY_REFLEXIVE: true,   // similarity(v, v) = 1.0
   SIMILARITY_SYMMETRIC: true,   // similarity(a, b) = similarity(b, a)
-  SIMILARITY_RANGE: [0, 1],     // Output must be in [0, 1]
-
-  // Random baseline
-  RANDOM_BASELINE_SIMILARITY: {
-    expected: 0.5,
-    tolerance: 0.05             // 0.5 ± 0.05
-  },
-
-  // Bundle retrievability
-  BUNDLE_RETRIEVABLE: true      // bundle([a,b,c]).similarity(a) > 0.5
+  SIMILARITY_RANGE: [0, 1]      // Output must be in [0, 1]
 };
 ```
 
@@ -50,9 +36,13 @@ export const HDC_CONTRACT = {
  * Validate a strategy implementation
  * @param {Object} strategy - Strategy object to validate
  * @param {number} geometry - Vector dimension for testing
+ * @param {Object} [options]
+ * @param {boolean} [options.expectSelfInverse] - validate `unbind(bind(a,b), b) ≈ a` (XOR-like strategies)
+ * @param {{expected:number, tolerance:number}} [options.expectRandomBaseline] - validate similarity(random, random) baseline
+ * @param {{min:number}} [options.expectBundleRetrievable] - validate sim(bundle([a,b,c]), a) >= min
  * @returns {{valid: boolean, errors: string[], warnings: string[]}}
  */
-validateStrategy(strategy, geometry = 2048) → ValidationResult
+validateStrategy(strategy, geometry = 2048, options = {}) → ValidationResult
 ```
 
 ## Strategy Interface (JSDoc)
@@ -96,21 +86,18 @@ The `validateStrategy()` function tests:
    - All core operations present
    - All utility functions present
 
-2. **Bind Properties**
-   - Self-inverse: `bind(a, a)` produces effect similar to zero
-   - Reversibility: `bind(bind(a, b), b)` ≈ a (similarity > 0.95)
-
-3. **Similarity Properties**
+2. **Similarity Properties**
    - Reflexive: `similarity(v, v) = 1.0`
    - Symmetric: `similarity(a, b) = similarity(b, a)`
    - Range: Output in [0, 1]
-   - Random baseline: `similarity(random, random)` ≈ 0.5 ± 0.05
 
-4. **Bundle Properties**
-   - Retrievable: `similarity(bundle([a,b,c]), a) > 0.5`
-
-5. **Determinism**
+3. **Determinism**
    - `createFromName(same, same)` produces identical vectors
+
+4. **Optional checks (strategy-specific)**
+   - XOR-like cancellation: `expectSelfInverse`
+   - Random baseline: `expectRandomBaseline`
+   - Bundle retrievability: `expectBundleRetrievable`
 
 ## Dependencies
 
@@ -139,8 +126,8 @@ if (result.warnings.length > 0) {
 
 ## Test Cases
 
-1. Dense-binary strategy passes validation
+1. Dense-binary strategy passes validation (with XOR-specific options enabled)
 2. Missing functions detected as errors
 3. Invalid similarity range detected
 4. Non-deterministic createFromName detected
-5. Bind not self-inverse detected
+5. Unbind not cancellative detected when `expectSelfInverse` is enabled

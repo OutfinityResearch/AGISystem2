@@ -177,19 +177,16 @@
       <a href="../specs/matrix.html">Specs</a> ·
       <a href="index.html"><strong>Research</strong></a>
     </small>
-    <small>Current research status: Three core HDC strategies + EMA extension, two reasoning priorities, dual evaluation framework</small>
+    <small>Current research status: multiple HDC strategies (incl. EXACT), two reasoning priorities, multi-metric evaluation framework</small>
   </div>
 
   <div class="abstract">
-    <strong>Abstract:</strong> We compare three core Hyperdimensional Computing (HDC) strategies for symbolic reasoning:
-    <strong>Dense-Binary</strong> (standard VSA), <strong>Sparse-Polynomial HDC</strong> (SPHDC – a <em>novel</em> paradigm with k=2-4 BigInt exponents), and
-    <strong>Metric-Affine HDC</strong> (a <em>novel</em> HRR-inspired hybrid with byte-channel representation). <strong>Metric-Affine Elastic (EMA)</strong>
-    extends Metric-Affine with chunked bundling and optional elastic geometry. The December 2025 benchmark used the three core strategies (12 configurations).
-    Today, the Core Theory evaluation runner (<code>npm run eval -- --full</code>) supports <strong>16 configurations</strong> (4 strategies × 2 priorities × 2 geometries).
-    All configurations achieve <strong>100% success rate</strong>, with Metric-Affine (32 bytes) completing in just <strong>318ms</strong>—
-    2.6× faster than the 835ms sparse-polynomial holographic baseline. Two of the three core strategies (Sparse-Polynomial and Metric-Affine)
-    are <strong>original contributions</strong> not found in standard HRR or VSA literature. For theoretical foundations, see
-    <a href="../theory/hrr-comparison.html">HRR/VSA Comparison</a>.
+    <strong>Abstract:</strong> AGISystem2 compares multiple Hyperdimensional Computing (HDC) strategies under a shared contract:
+    <strong>Dense-Binary</strong> (standard VSA), <strong>Sparse-Polynomial HDC</strong> (SPHDC – a <em>novel</em> paradigm with k-sparse BigInt exponents),
+    <strong>Metric-Affine HDC</strong> (a <em>novel</em> HRR-inspired byte-channel hybrid), <strong>Metric-Affine Elastic (EMA)</strong> (chunked bundling + elastic geometry),
+    and <strong>EXACT</strong> (lossless session-local bitset-polynomial, quotient-like UNBIND).
+    Benchmarks report both overall success and <em>how</em> holographic reasoning behaves (<code>HDC Tried</code>, <code>HDC Valid</code>, <code>HDC Eq</code>, <code>HDC Final</code>), since “HDC worked” can mean “HDC matched symbolic” even when symbolic is chosen for richer proof traces.
+    For theoretical foundations, see <a href="../theory/hrr-comparison.html">HRR/VSA Comparison</a>.
   </div>
 
   <h2>0. Research Topics</h2>
@@ -680,12 +677,12 @@ All strategies still load 1,314 facts from stress theories
   <h2>5. Cross-Domain Query Evaluation (<code>runQueryEval.mjs</code>)</h2>
 
   <div class="discovery-box">
-    <strong>Key Finding:</strong> The cross-domain benchmark runs 12 advanced semantic queries across six sessions (three core strategies ×
+    <strong>Key Finding (historical snapshot):</strong> The cross-domain benchmark runs 12 advanced semantic queries across six sessions (three strategies ×
     symbolic/holographic priorities). Metric-Affine HDC (32-byte channels) succeeds on every query in both modes, with the holographic
     session completing the suite in 326ms—≈2.6× faster than the 858ms dense-binary symbolic baseline—and the symbolic session finishing
     in 412ms. Dense-binary and sparse-polynomial repeatedly fail nine queries because core operators such as <code>similar</code>,
     <code>analogy</code>, <code>happenedBefore</code>, <code>solve</code>, and <code>isBestExplanation</code> are still missing, which
-    confirms that semantic coverage—not HDC compute—is the current bottleneck. EMA is an extension of Metric-Affine and is not part of this benchmark.
+    confirms that semantic coverage—not HDC compute—is the current bottleneck. EMA and EXACT are not part of this historical benchmark.
   </div>
 
   <table class="research-table">
@@ -994,7 +991,7 @@ All strategies still load 1,314 facts from stress theories
 
   <h2>7. Reasoning Operator Implementation Status</h2>
 
-  <p>Detailed analysis in <a href="../../REASONING_OPERATORS.md"><code>REASONING_OPERATORS.md</code></a></p>
+  <p>Operator backlog and research notes in <a href="../../future-improvements.md"><code>future-improvements.md</code></a></p>
 
   <table class="research-table">
     <tr>
@@ -1182,7 +1179,7 @@ All strategies still load 1,314 facts from stress theories
   <h2>10. Theoretical Context: HRR, VSA, and HDC</h2>
 
   <div class="innovation-box">
-    <strong>Positioning AGISystem2 in the HDC Landscape:</strong> For detailed analysis of how our three core strategies relate to
+    <strong>Positioning AGISystem2 in the HDC Landscape:</strong> For detailed analysis of how our strategies relate to
     Holographic Reduced Representations (HRR) and Vector Symbolic Architectures (VSA), see:
     <ul>
       <li><a href="../theory/hrr-comparison.html"><strong>HRR Comparison: Original Contributions</strong></a> – Full assessment of novelty</li>
@@ -1194,6 +1191,7 @@ All strategies still load 1,314 facts from stress theories
       <li><strong>Sparse-Polynomial:</strong> <em>Novel paradigm</em> – NOT HRR. Uses finite field algebra over BigInt exponents.</li>
       <li><strong>Metric-Affine:</strong> <em>Novel HRR-inspired hybrid</em> – Combines HRR principles with practical byte-channel efficiency.</li>
       <li><strong>Metric-Affine Elastic (EMA):</strong> Extension of Metric-Affine for large KB superpositions with chunked bundling.</li>
+      <li><strong>EXACT:</strong> Lossless session-local “bitset polynomial” exploration; UNBIND is quotient-like and can require decoding/cleanup.</li>
     </ul>
   </div>
 
@@ -1279,7 +1277,7 @@ All strategies still load 1,314 facts from stress theories
 
   <h2>12. Future Work</h2>
 
-  <h3>12.1 Operator Enhancements (see <a href="../../REASONING_OPERATORS.md">REASONING_OPERATORS.md</a>)</h3>
+  <h3>12.1 Operator Enhancements (see <a href="../../future-improvements.md">future-improvements.md</a>)</h3>
 
   <p><strong>Priority 1: HDC Relational Algebra for Analogy</strong></p>
   <ul>
@@ -1366,13 +1364,14 @@ SYS2_GEOMETRY=16 SYS2_HDC_STRATEGY=metric-affine npm run eval</code></pre>
           <li>Memory: <strong>8-16x savings</strong> (16-32 bytes vs 256-512 bytes Dense-Binary)</li>
         </ul>
       </li>
-      <li><strong>Original contributions validated:</strong> Two of three core strategies are <strong>novel</strong>:
+      <li><strong>Original contributions validated:</strong> Two of the established strategies are <strong>novel</strong>:
         <ul>
           <li><a href="../theory/hrr-comparison.html">Sparse-Polynomial HDC</a>: New paradigm (NOT HRR)</li>
           <li><a href="../theory/hrr-comparison.html">Metric-Affine HDC</a>: HRR-inspired hybrid (NOVEL architecture)</li>
         </ul>
       </li>
       <li><strong>EMA extension available:</strong> Metric-Affine Elastic adds chunked bundling + elastic geometry for large KB superpositions (not part of the 2025 benchmark).</li>
+      <li><strong>EXACT exploration added:</strong> Lossless bitset-polynomial strategy + strategy-aware decode/cleanup enables meaningful holographic decoding beyond “0.000 similarity” artifacts.</li>
       <li><strong>12 benchmark configurations tested:</strong> All geometries (dense 256/512, sparse k=2/4, metric 16/32) × priorities (symbolic/holographic) achieve 100% success</li>
       <li><strong>Dual evaluation framework reveals complementary insights:</strong>
         <ul>
@@ -1391,16 +1390,16 @@ SYS2_GEOMETRY=16 SYS2_HDC_STRATEGY=metric-affine npm run eval</code></pre>
     <p><strong>⚠ What needs work (Cross-Domain Queries):</strong> Stress theory files lack domain-specific operator definitions. The reasoning engine is capable, but the knowledge base is incomplete. This is a <strong>content issue, not an architecture limitation</strong>.</p>
     <p><strong>🚀 Performance validated:</strong> Metric-Affine HDC (32 bytes) is the <strong>fastest configuration</strong> at 318ms—2.6x faster than the slowest (sparse-4 holographic at 835ms). Memory savings: 8-16x vs Dense-Binary. The byte-channel approach is production-ready.</p>
     <p><strong>🔬 Novel contributions:</strong> Two original HDC strategies validated. See <a href="../theory/hrr-comparison.html">HRR Comparison</a> for theoretical analysis.</p>
-    <p><strong>Next phase:</strong> Complete operator ecosystem (estimated 20-40 hours per <code>REASONING_OPERATORS.md</code>) to unlock full reasoning capabilities on cross-domain queries.</p>
+    <p><strong>Next phase:</strong> Complete operator ecosystem (estimated 20-40 hours) to unlock full reasoning capabilities on cross-domain queries.</p>
   </div>
 
   <div class="footer-nav">
-    <p>Research conducted December 2025. AGISystem2 benchmark snapshot with three core HDC strategies (12 configurations). EMA is an extension documented separately; the current evaluation runner supports 16 configurations including EMA.</p>
+    <p>Research started December 2025. Some tables and timings on this page are historical snapshots; the current evaluation runner includes EMA and EXACT and reports <code>HDC Tried/Valid/Eq/Final</code> to disambiguate “HDC found the same answer set” from “HDC was the final chosen method”.</p>
     <p><strong>Read more:</strong></p>
     <ul>
       <li><a href="../theory/hrr-comparison.html">HRR Comparison: Original Contributions</a> – Detailed assessment of novelty vs HRR/VSA</li>
       <li><a href="../theory/index.html">Theory Overview</a> – Foundations of symbolic + HDC reasoning</li>
-      <li><a href="../../REASONING_OPERATORS.md">REASONING_OPERATORS.md</a> – Detailed operator analysis and implementation plan</li>
+      <li><a href="../../future-improvements.md">future-improvements.md</a> – Consolidated operator/metrics/security backlog</li>
     </ul>
     <p><a href="../index.html">← Back to Documentation Home</a></p>
   </div>

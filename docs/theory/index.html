@@ -73,7 +73,7 @@
     <tr>
       <td><strong>BIND</strong></td>
       <td>Create associations between concepts</td>
-      <td>Has an inverse: UNBIND(BIND(A, B), B) = A (exact for self-inverse bindings like XOR)</td>
+      <td>Supports cancellation for self-inverse bindings (e.g. XOR). Other strategies use a distinct UNBIND and may require decoding/cleanup.</td>
     </tr>
     <tr>
       <td><strong>UNBIND</strong></td>
@@ -107,7 +107,7 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
 
   <div class="alert alert-info">
     <strong>Answer &asymp; UNBIND(Knowledge, QueryKey)</strong>
-    <p><code>QueryKey</code> is the part of the query you already know (relation + bound arguments). UNBIND removes that key from the KB composite to reveal the unknown parts. In many XOR-based strategies, UNBIND is implemented by calling BIND again, but other strategies may implement UNBIND differently.</p>
+    <p><code>QueryKey</code> is the part of the query you already know (relation + bound arguments). UNBIND removes that key from the KB composite to reveal the unknown parts. In XOR-based strategies, UNBIND is often implemented by calling BIND again. In other strategies (e.g. lossless EXACT), UNBIND yields a residual that must be projected back to entity candidates via strategy-aware decoding/cleanup.</p>
   </div>
 
   <h2>HDC Strategies</h2>
@@ -214,7 +214,7 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
   <ul>
     <li><strong>Closure:</strong> All operations produce valid hypervectors</li>
     <li><strong>Determinism:</strong> Same inputs always produce same outputs</li>
-    <li><strong>Approximate Reversibility:</strong> BIND is self-inverse; BUNDLE is approximately recoverable</li>
+    <li><strong>Cancellation (strategy-dependent):</strong> Some strategies have self-inverse binding (XOR); others use a distinct UNBIND and decoding/cleanup</li>
     <li><strong>Compositionality:</strong> Complex structures are built from simple parts</li>
     <li><strong>Graceful Degradation:</strong> Accuracy decreases smoothly as capacity is reached</li>
   </ul>
@@ -243,7 +243,7 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
   <p>When we bind two concepts A and B, the result contains "holographic traces" of both:</p>
 
   <pre><code>// A BIND B is "holographically" related to both A and B
-// Unbinding recovers the original:
+// For XOR/self-inverse bindings, unbinding can be done by binding again:
 (A BIND B) BIND B = A    // B is the "key" to recover A
 (A BIND B) BIND A = B    // A is the "key" to recover B</code></pre>
 
@@ -291,7 +291,7 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
     <li><strong>Parallel Retrieval:</strong> All facts matching a query pattern are activated simultaneously</li>
     <li><strong>Confidence-Ordered Results:</strong> Multiple candidates emerge ranked by similarity</li>
     <li><strong>State Preservation:</strong> The vector state before binding can be preserved for backtracking</li>
-    <li><strong>Compositional Rollback:</strong> Since BIND is self-inverse, computations can be "undone" algebraically</li>
+    <li><strong>Compositional Rollback:</strong> For self-inverse bindings (e.g. XOR), computations can be “undone” algebraically; other strategies require explicit UNBIND/decoding</li>
   </ul>
 
   <h3>Connections to Homomorphic Encryption</h3>
@@ -332,6 +332,7 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
     <li><a href="strategies/sparse-polynomial.html">SPHDC Strategy - In-Depth Theory</a> (Original)</li>
     <li><a href="strategies/metric-affine.html">Metric-Affine Strategy - Fuzzy-Boolean HDC</a> (Original)</li>
     <li><a href="strategies/metric-affine-elastic.html">Metric-Affine Elastic Strategy - Chunked Bundling + Elastic Geometry</a> (Extension)</li>
+    <li><a href="strategies/exact.html">EXACT Strategy - Lossless Bitset-Polynomial</a> (Exploration)</li>
     <li><a href="strategies/sphdc-analysis.html">SPHDC Theoretical Analysis</a> - Mathematical deep-dive</li>
     <li><a href="../specsLoader.html?spec=DS/DS01-Theoretical-Foundation.md">DS01 - Theoretical Foundation Specification</a></li>
     <li><a href="../specsLoader.html?spec=DS/DS09-Core-HDC-Implementation.md">DS09 - Core HDC Implementation Specification</a></li>

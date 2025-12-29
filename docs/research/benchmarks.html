@@ -134,9 +134,13 @@
     set theory, biology, and more.
   </div>
 
-  <div class="info-box">
-    <strong>Note:</strong> The tables below reflect a historical 3-strategy snapshot (Dense-Binary, Sparse-Polynomial, Metric-Affine). The evaluation runner now also supports <strong>Metric-Affine Elastic (EMA)</strong>; see <a href="../theory/strategies/metric-affine-elastic.html">the EMA theory page</a>.
-  </div>
+	  <div class="info-box">
+	    <strong>Note:</strong> The tables below reflect a historical 3-strategy snapshot (Dense-Binary, Sparse-Polynomial, Metric-Affine). The evaluation runner now also supports <strong>Metric-Affine Elastic (EMA)</strong>; see <a href="../theory/strategies/metric-affine-elastic.html">the EMA theory page</a>.
+	  </div>
+	
+	  <div class="info-box">
+	    <strong>Update:</strong> The current evaluation runner also includes the lossless <strong>EXACT</strong> strategy and reports richer holographic metrics (<code>HDC Tried</code>, <code>HDC Valid</code>, <code>HDC Eq</code>, <code>HDC Final</code>). In the historical tables below, <strong>HDC%</strong> should be read as <strong>HDC Final</strong> (the % of queries where the final returned method was HDC-based).
+	  </div>
 
   <div class="metric-grid">
     <div class="metric-card green">
@@ -147,10 +151,10 @@
       <h3>28</h3>
       <p>Test Suites<br>(Comprehensive coverage)</p>
     </div>
-    <div class="metric-card blue">
-      <h3>0-62%</h3>
-      <p>HDC Usage<br>(Config-dependent)</p>
-    </div>
+	    <div class="metric-card blue">
+	      <h3>0-62%</h3>
+	      <p>HDC Final<br>(Config-dependent)</p>
+	    </div>
     <div class="metric-card orange">
       <h3>6</h3>
       <p>Configurations<br>(Tested in parallel)</p>
@@ -159,15 +163,15 @@
 
   <h3>1.1 Configuration Comparison</h3>
 
-  <table class="benchmark-table">
-    <tr>
-      <th>Configuration</th>
-      <th>Pass Rate</th>
-      <th>HDC%</th>
-      <th>KB Scans</th>
-      <th>Sim Checks</th>
-      <th>Time</th>
-    </tr>
+	  <table class="benchmark-table">
+	    <tr>
+	      <th>Configuration</th>
+	      <th>Pass Rate</th>
+	      <th>HDC Final</th>
+	      <th>KB Scans</th>
+	      <th>Sim Checks</th>
+	      <th>Time</th>
+	    </tr>
     <tr>
       <td><strong>metric(16)+symb</strong></td>
       <td class="pass-high">99%</td>
@@ -226,15 +230,15 @@
     <strong>Metric-Affine Elastic (EMA):</strong> Extends Metric-Affine with chunked bundling and optional elastic geometry to improve behavior under large KB superpositions. It was not included in the historical benchmark table above; run <code>npm run eval -- --full</code> on your machine to measure it in the same framework.
   </div>
 
-  <table class="benchmark-table">
-    <tr>
-      <th>Configuration</th>
-      <th>Pass Rate</th>
-      <th>HDC%</th>
-      <th>KB Scans</th>
-      <th>Sim Checks</th>
-      <th>Time</th>
-    </tr>
+	  <table class="benchmark-table">
+	    <tr>
+	      <th>Configuration</th>
+	      <th>Pass Rate</th>
+	      <th>HDC Final</th>
+	      <th>KB Scans</th>
+	      <th>Sim Checks</th>
+	      <th>Time</th>
+	    </tr>
     <tr>
       <td><strong>metric-elastic(16)+symb</strong></td>
       <td class="pass-medium">TBD</td>

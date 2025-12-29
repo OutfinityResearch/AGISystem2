@@ -20,23 +20,31 @@ New code should import from `src/hdc/facade.mjs` instead.
 
 ```javascript
 // src/core/operations.mjs
+import {
+  bind,
+  bindAll,
+  bundle,
+  similarity,
+  distance,
+  topKSimilar,
+  isOrthogonal,
+  unbind,
+  getDefaultGeometry,
+  setDefaultGeometry
+} from '../hdc/facade.mjs';
+
 export {
   bind,
   bindAll,
   bundle,
   similarity,
-  unbind,
-  clone,
-  equals,
-  serialize,
-  deserialize,
-  topKSimilar,
   distance,
+  topKSimilar,
   isOrthogonal,
-  createZero,
-  createRandom,
-  createFromName
-} from '../hdc/facade.mjs';
+  unbind,
+  getDefaultGeometry,
+  setDefaultGeometry
+};
 ```
 
 ---
@@ -61,21 +69,26 @@ For complete API documentation, see `src/hdc/facade.mjs.md`.
 
 | Function | Description |
 |----------|-------------|
-| `bind(a, b)` | XOR-based association |
+| `bind(a, b)` | Strategy-defined association (XOR for dense-binary/metric-affine; other strategies differ) |
 | `bindAll(...vectors)` | Sequential bind |
-| `bundle(vectors, tieBreaker?)` | Majority vote superposition |
-| `similarity(a, b)` | Hamming-based similarity [0,1] |
-| `unbind(composite, component)` | Inverse of bind |
+| `bundle(vectors, tieBreaker?)` | Strategy-defined superposition |
+| `similarity(a, b)` | Strategy-defined similarity in [0,1] |
+| `unbind(composite, component)` | Strategy-defined inverse/quotient |
 
 ### Utility Operations
 
 | Function | Description |
 |----------|-------------|
-| `clone(v)` | Deep copy |
-| `equals(a, b)` | Exact equality |
 | `topKSimilar(query, vocab, k)` | Find K most similar |
 | `distance(a, b)` | 1 - similarity |
 | `isOrthogonal(a, b, threshold?)` | Check quasi-orthogonality |
+
+### Geometry Helpers
+
+| Function | Description |
+|----------|-------------|
+| `getDefaultGeometry()` | Returns the process-default geometry used by the facade |
+| `setDefaultGeometry(g)` | Sets the process-default geometry used by the facade |
 
 ---
 

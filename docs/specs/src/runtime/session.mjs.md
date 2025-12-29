@@ -10,6 +10,14 @@
 
 Provides the main API surface for AGISystem2. Sessions are isolated reasoning contexts that manage scope, knowledge base, vocabulary, and high-level methods for learning, querying, and proving.
 
+### 1.1 Session universe (DS26)
+
+In addition to the public API, `Session` is responsible for “universe bootstrapping”:
+
+- Creates a **session-local HDC context** (IoC), which may instantiate a per-session strategy instance (e.g., EXACT allocator).
+- Initializes **runtime-reserved atoms** (internal tokens such as `__POS_1__`, `__EMPTY_BUNDLE__`) from a non-DSL config file (`config/runtime/reserved-atoms.json`).
+- Auto-loads Core theories by default (with opt-out, and default-off under `node --test`).
+
 ---
 
 ## 2. Public API
@@ -29,6 +37,14 @@ interface SessionOptions {
   canonicalizationEnabled?: boolean;   // Override profile-derived toggle
   proofValidationEnabled?: boolean;    // Override profile-derived toggle
   rejectContradictions?: boolean;      // Default: true
+
+  // Strategy-specific (session-local) tuning
+  exactUnbindMode?: 'A'|'B';           // EXACT: which UNBIND variant is default
+
+  // Core bootstrapping (non-DSL runtime policy)
+  autoLoadCore?: boolean;              // Default: true (except under `node --test`)
+  corePath?: string;                   // Default: './config/Core'
+  coreIncludeIndex?: boolean;          // Default: false
 }
 ```
 
@@ -64,7 +80,7 @@ learnFrom(examples: string[]): LearnResult
 
 ```javascript
 // Load core theories
-loadCore(options?: { corePath?: string, includeIndex?: boolean }): LoadResult
+loadCore(options?: { corePath?: string, includeIndex?: boolean, force?: boolean }): LoadResult
 
 // Track rules for reasoning
 trackRules(ast: AST): void

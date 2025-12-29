@@ -406,7 +406,7 @@ function similarity(a, b) {
     <li>Applications where statistical robustness > perfect properties</li>
   </ul>
 
-  <h3>Comparison of All Four Strategies</h3>
+  <h3>Comparison of All Five Strategies</h3>
   <table class="matrix-table">
     <tr>
       <td><strong>Property</strong></td>
@@ -414,6 +414,7 @@ function similarity(a, b) {
       <td><strong>Sparse Polynomial</strong></td>
       <td><strong>Metric-Affine</strong></td>
       <td><strong>Metric-Affine Elastic</strong></td>
+      <td><strong>EXACT</strong></td>
     </tr>
     <tr>
       <td>Dimensionality</td>
@@ -421,6 +422,7 @@ function similarity(a, b) {
       <td>Infinite (k=4-8 exponents)</td>
       <td>Fixed (32 byte channels)</td>
       <td>Elastic (32+ byte channels)</td>
+      <td>Elastic (session-local atom indices)</td>
     </tr>
     <tr>
       <td>Binding Operation</td>
@@ -428,6 +430,7 @@ function similarity(a, b) {
       <td>Symmetric difference</td>
       <td>Affine transformation</td>
       <td>Affine transformation</td>
+      <td>OR-product (bitset-polynomial)</td>
     </tr>
     <tr>
       <td>Binding Speed</td>
@@ -435,6 +438,7 @@ function similarity(a, b) {
       <td>Slower (O(k²))</td>
       <td><strong>Fastest (O(m))</strong></td>
       <td>Fast (O(m) + chunk scan)</td>
+      <td>Depends on term counts (often fast for monomial facts; worst-case O(|A||B|))</td>
     </tr>
     <tr>
       <td>Memory per Vector</td>
@@ -442,6 +446,7 @@ function similarity(a, b) {
       <td>32 bytes (k=4 default)</td>
       <td><strong>32 bytes</strong></td>
       <td>32B+ (chunked bundles)</td>
+      <td>Variable (lossless set of BigInt monomials)</td>
     </tr>
     <tr>
       <td>Similarity Metric</td>
@@ -449,6 +454,7 @@ function similarity(a, b) {
       <td>Jaccard index</td>
       <td>Channel overlap</td>
       <td>Channel overlap (max over chunks)</td>
+      <td>Jaccard over monomials (plus witness-based decode/cleanup)</td>
     </tr>
     <tr>
       <td>Performance (Core Theory)</td>
@@ -456,6 +462,7 @@ function similarity(a, b) {
       <td>523ms (symbolic)</td>
       <td><strong>225ms (symbolic)</strong> ⚡ 2.3x faster</td>
       <td>Similar to Metric-Affine (small KBs)</td>
+      <td>Varies; used as an upper bound in saturation evaluation</td>
     </tr>
     <tr>
       <td>Self-Inverse</td>
@@ -463,9 +470,11 @@ function similarity(a, b) {
       <td>Approximate</td>
       <td>Approximate</td>
       <td>Approximate</td>
+      <td>Not required (UNBIND is quotient-like)</td>
     </tr>
     <tr>
       <td>Commutative</td>
+      <td>Perfect</td>
       <td>Perfect</td>
       <td>Perfect</td>
       <td>Perfect</td>
@@ -477,6 +486,7 @@ function similarity(a, b) {
       <td>Large KBs, memory-constrained</td>
       <td><strong>Production systems, speed-critical apps</strong></td>
       <td>Large KB superpositions, stable bundling</td>
+      <td>Research: lossless encoding + decoding/cleanup studies</td>
     </tr>
   </table>
 
@@ -486,7 +496,7 @@ function similarity(a, b) {
   <ul>
     <li><strong>Non-deterministic createFromName:</strong> Must produce identical vector for same input!</li>
     <li><strong>Geometry mismatch:</strong> Always check geometries match before operations</li>
-    <li><strong>Bind not self-inverse:</strong> bind(bind(a,b), b) must approximately recover a</li>
+    <li><strong>Bind/Unbind assumptions:</strong> Some strategies have self-inverse binding (XOR), but others use a distinct <code>unbind()</code> and may require decoding/cleanup.</li>
     <li><strong>Similarity out of range:</strong> Must return value in [0, 1]</li>
   </ul>
 

@@ -152,11 +152,35 @@
     </defs>
   </svg>
 
-  <div class="note">
-    <strong>Implementation note:</strong> EXACT uses a session-local atom dictionary. At the moment AGISystem2 typically reloads theories from text and re-vectorizes each run, so dictionary persistence is deferred; when KB serialization becomes a workflow, the dictionary must be serialized alongside the KB.
-  </div>
+	  <div class="note">
+	    <strong>Implementation note:</strong> EXACT uses a session-local atom dictionary. At the moment AGISystem2 typically reloads theories from text and re-vectorizes each run, so dictionary persistence is deferred; when KB serialization becomes a workflow, the dictionary must be serialized alongside the KB.
+	  </div>
+	
+	  <h2>3. Decoding / Cleanup (making holographic answers “real”)</h2>
+	
+	  <p>
+	    In XOR-based HDC, unbinding often returns a vector that can be compared directly by similarity. In EXACT, <code>UNBIND</code> is
+	    quotient-like, so its output is a <em>residual</em> that frequently contains structural atoms (e.g., position markers and operator tags).
+	    A raw similarity score can be misleading (e.g., many candidates appear as <code>0.000</code>).
+	  </p>
+	
+	  <div class="definition">
+	    <strong>Strategy-aware projection</strong>
+	    <p>
+	      The EXACT strategy exposes an optional decoder hook (<code>decodeUnboundCandidates()</code>) that maps residual bitsets back to
+	      likely entity atoms by counting witnesses and filtering structural residue. The holographic query engine uses this hook when present,
+	      reducing unnecessary similarity scans and producing interpretable top-k candidates.
+	    </p>
+	  </div>
+	
+	  <div class="concept-box">
+	    <h4>UNBIND variants</h4>
+	    <p>
+	      EXACT can operate in multiple UNBIND modes. In evaluation runners you may see <strong>EXACT(A)</strong> (existential quotient: “emit residuals for matches”)
+	      and <strong>EXACT(B)</strong> (residual intersection across component terms, stricter). Both preserve losslessness; they trade speed vs. strictness.
+	    </p>
+	  </div>
 
-  </div>
-</body>
-</html>
-
+	  </div>
+	</body>
+	</html>

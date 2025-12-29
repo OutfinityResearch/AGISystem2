@@ -1,8 +1,8 @@
 # Module: src/reasoning/index.mjs
 
-**Document Version:** 2.0
+**Document Version:** 2.1
 **Status:** Implemented
-**Purpose:** Re-exports all reasoning module components with reasoning priority support.
+**Purpose:** Re-exports reasoning engines and helper utilities, including reasoning-priority factories.
 
 ---
 
@@ -12,6 +12,8 @@ The reasoning module provides multiple reasoning engines with automatic selectio
 
 - **symbolicPriority** (default): Symbolic reasoning first, HDC for storage/verification
 - **holographicPriority**: HDC operations first, symbolic for validation
+
+It also exports optional performance/structure helpers (Constructivist Levels, forward chaining).
 
 ---
 
@@ -25,6 +27,7 @@ export { QueryEngine } from './query.mjs';
 export { ProofEngine } from './prove.mjs';
 export { AbductionEngine } from './abduction.mjs';
 export { InductionEngine } from './induction.mjs';
+export { ForwardChainEngine, createForwardChainEngine } from './forward-chain.mjs';
 ```
 
 ### 2.2 Holographic Engines
@@ -48,6 +51,18 @@ export {
   scoreCandidate,
   orderDomainByHDC
 } from './holographic/csp-hdc-heuristic.mjs';
+```
+
+### 2.4 Constructivist Level Optimization
+
+```javascript
+export {
+  LevelManager,
+  computeConstructivistLevel,
+  computeGoalLevel,
+  computeRuleLevels,
+  extractDependencies
+} from './constructivist-level.mjs';
 ```
 
 ---
@@ -117,10 +132,12 @@ function sessionIsHolographic(session) {
 - `./prove.mjs` - ProofEngine
 - `./abduction.mjs` - AbductionEngine
 - `./induction.mjs` - InductionEngine
+- `./forward-chain.mjs` - ForwardChainEngine
 - `./holographic/query-hdc-first.mjs` - HolographicQueryEngine
 - `./holographic/prove-hdc-first.mjs` - HolographicProofEngine
 - `./holographic/csp-hdc-heuristic.mjs` - HolographicCSPSolver
 - `./csp/solver.mjs` - CSPSolver
+- `./constructivist-level.mjs` - Constructivist Level helpers
 - `../core/constants.mjs` - REASONING_PRIORITY, getReasoningPriority, isHolographicPriority
 
 ---
@@ -170,6 +187,8 @@ const queryEngine = createQueryEngine(session);  // Returns HolographicQueryEngi
 | REAS-08 | CSPSolver exported | Available for import |
 | REAS-09 | HolographicCSPSolver exported | Available for import |
 | REAS-10 | createCSPSolver factory | Returns correct solver type |
+| REAS-11 | ForwardChainEngine exported | Available for import |
+| REAS-12 | Constructivist exports present | Available for import |
 
 ---
 

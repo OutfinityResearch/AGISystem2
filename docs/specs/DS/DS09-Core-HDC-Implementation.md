@@ -481,16 +481,17 @@ This is why we use position vectors, not permutation.
 
 ## 9A.9 HDC Contract (Strategy Requirements)
 
-All HDC strategies must satisfy these **mathematical properties**:
+All HDC strategies must satisfy these **interface-level invariants**:
 
-| Property | Requirement | Verification |
-|----------|-------------|--------------|
-| `bind(a, a)` | Produces "zero" effect (self-inverse) | Unit test |
-| `bind(bind(a, b), b)` | ≈ a (reversibility) | Similarity > 0.95 |
-| `similarity(v, v)` | = 1.0 (reflexive) | Exact equality |
-| `similarity(a, b)` | = similarity(b, a) (symmetric) | Unit test |
-| `similarity(random, random)` | ≈ 0.5 ± 0.05 (quasi-orthogonal) | Statistical test |
-| `bundle([a,b,c]).similarity(a)` | > 0.5 for small n (retrievable) | Unit test |
+| Property | Requirement | Notes |
+|----------|-------------|-------|
+| `similarity(v, v)` | = 1.0 (reflexive) | Exact match must score as identical. |
+| `similarity(a, b)` | = `similarity(b, a)` (symmetric) | Required by ranking and threshold logic. |
+| `similarity(a, b)` | ∈ [0, 1] | Strategy-specific baselines are allowed (e.g., 0.5 for dense-binary, 0 for sparse/exact). |
+| `bundle([...])` | deterministic | Tie-breakers must be deterministic under EvalSuite. |
+| `createFromName(name, ...)` | deterministic | Same input must yield same vector *within the same session context*. |
+
+**Important:** properties like “self-inverse bind” (`bind(bind(a,b),b) ≈ a`) are **strategy-dependent**. XOR-based strategies satisfy it, but quotient-like strategies (e.g., EXACT) do not require `unbind == bind` and may return residual structure that must be decoded/cleaned.
 
 ### Required Strategy Functions
 
@@ -502,7 +503,7 @@ createFromName(name, geometry) // → deterministic vector (CRITICAL: same input
 deserialize(obj)               // → vector from storage format
 
 // Core operations
-bind(a, b)                     // → associative, commutative, self-inverse
+bind(a, b)                     // → associative, commutative (self-inverse is strategy-dependent)
 bindAll(...vectors)            // → sequential bind
 bundle(vectors, tieBreaker?)   // → superposition (majority vote for binary)
 similarity(a, b)               // → [0, 1] range
@@ -519,6 +520,16 @@ decodeUnboundCandidates(unboundVec, options?) // → [{name, similarity, witness
 
 **Contract clarification:**
 The dense-binary strategy uses XOR binding, so `unbind == bind` and the DS07a cancellation identity applies directly. Other strategies may implement `unbind` as a **quotient-like extraction** that yields a residual vector; in those cases `decodeUnboundCandidates()` provides a strategy-aware “cleanup/projection” step used by holographic (HDC-first) engines.
+
+### Session scoping (stateful strategies)
+
+Some strategies require per-Session state (e.g., session-local appearance-index dictionaries). For those strategies, the registry MAY expose:
+
+```js
+createInstance({ strategyId, geometry, session }) // → session-local strategy instance
+```
+
+Session-owned code paths should prefer a session-local HDC context (IoC) that calls `createInstance()` when present.
 
 ### Strategy Validation
 

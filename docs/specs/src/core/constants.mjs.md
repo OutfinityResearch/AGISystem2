@@ -35,7 +35,9 @@ export const ORTHOGONAL_THRESHOLD = 0.55;
 export const REASONING_THRESHOLDS = {
   'dense-binary': { /* from dense-binary-thresholds.mjs */ },
   'sparse-polynomial': { /* from sparse-polynomial-thresholds.mjs */ },
-  'metric-affine': { /* from metric-affine.mjs */ }
+  'metric-affine': { /* from metric-affine.mjs */ },
+  'metric-affine-elastic': { /* from metric-affine-elastic.mjs */ },
+  'exact': { /* from exact-thresholds.mjs */ }
 };
 
 // Get thresholds for a specific strategy
@@ -54,7 +56,9 @@ export const HOLOGRAPHIC_THRESHOLDS = {
     FALLBACK_TO_SYMBOLIC: boolean     // Fall back if HDC fails
   },
   'sparse-polynomial': { /* ... */ },
-  'metric-affine': { /* ... */ }
+  'metric-affine': { /* ... */ },
+  'metric-affine-elastic': { /* ... */ },
+  'exact': { /* ... */ }
 };
 
 // Get holographic thresholds for a specific strategy
@@ -161,8 +165,7 @@ export const KEYWORDS = [
   'macro',   // deprecated synonym for 'graph'
   'begin',
   'end',
-  'return',
-  'solve'
+  'return'
 ];
 ```
 
@@ -173,6 +176,8 @@ export const KEYWORDS = [
 - `../hdc/strategies/dense-binary-thresholds.mjs`
 - `../hdc/strategies/sparse-polynomial-thresholds.mjs`
 - `../hdc/strategies/metric-affine.mjs`
+- `../hdc/strategies/metric-affine-elastic.mjs`
+- `../hdc/strategies/exact-thresholds.mjs`
 
 ---
 

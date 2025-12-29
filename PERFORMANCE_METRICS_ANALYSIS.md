@@ -1,5 +1,7 @@
 # AGISystem2 Performance Metrics Analysis
 
+> **Status (2025-12-29):** Snapshot report. Any still-relevant follow-ups have been consolidated into `future-improvements.md`.
+
 ## Executive Summary
 
 This document identifies **heavy/expensive operations** in the AGISystem2 reasoning engines that are **NOT currently tracked** but **SHOULD be** for comprehensive performance analysis.

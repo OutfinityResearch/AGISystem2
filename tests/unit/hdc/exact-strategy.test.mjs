@@ -112,5 +112,48 @@ describe('EXACT strategy (DS25)', () => {
 
     session.close();
   });
-});
 
+  test('decodeUnboundCandidates can project residuals to entity atoms', () => {
+    const session = new Session({ hdcStrategy: 'exact', geometry: 256, reasoningPriority: 'symbolicPriority' });
+
+    const op = session.vocabulary.getOrCreate('SAT_OP');
+    const book = session.vocabulary.getOrCreate('BOOK01');
+    const key = session.vocabulary.getOrCreate('Topic');
+    const ideaA = session.vocabulary.getOrCreate('IdeaA');
+    const ideaB = session.vocabulary.getOrCreate('IdeaB');
+
+    const pos1 = getPositionVector(1, session.geometry, session.hdcStrategy, session);
+    const pos2 = getPositionVector(2, session.geometry, session.hdcStrategy, session);
+    const pos3 = getPositionVector(3, session.geometry, session.hdcStrategy, session);
+
+    const makeFact = (idea) => {
+      let f = op;
+      f = bind(f, bind(book, pos1));
+      f = bind(f, bind(key, pos2));
+      f = bind(f, bind(idea, pos3));
+      return f;
+    };
+
+    const kb = session.hdc.bundle([makeFact(ideaA), makeFact(ideaB)]);
+
+    let partial = op;
+    partial = bind(partial, bind(book, pos1));
+    partial = bind(partial, bind(key, pos2));
+
+    // Equivalent to the holographic engine's per-hole extraction:
+    // unboundVec = unbind(unbind(KB, partial), Pos3)
+    const unboundVec = unbind(unbind(kb, partial), pos3);
+
+    const decoded = session.hdc.strategy.decodeUnboundCandidates(unboundVec, {
+      session,
+      maxCandidates: 10,
+      domain: ['IdeaA', 'IdeaB'],
+      knowns: []
+    });
+
+    const names = decoded.map(d => d.name).sort();
+    assert.deepEqual(names, ['IdeaA', 'IdeaB']);
+
+    session.close();
+  });
+});

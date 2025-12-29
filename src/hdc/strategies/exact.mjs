@@ -695,8 +695,28 @@ export const exactStrategy = {
   // Session-local instantiation
   createInstance,
 
-  // Factory (process-global fallback allocator; not recommended for multi-session)
-  ...createInstance({ geometry: 0 })
+  // NOTE: EXACT requires a session-local instance (appearance-index dictionary).
+  // The process-global facade MUST NOT use EXACT without a Session/IoC context.
+  // Provide explicit methods that throw to make accidental usage obvious.
+  createZero: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  createRandom: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  createFromName: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  deserialize: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  bind: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  bindAll: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  bundle: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  unbind: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  similarity: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  distance: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  topKSimilar: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  isOrthogonal: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  decodeUnboundCandidates: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  clone: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  equals: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  serialize: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  serializeKB: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  deserializeKB: () => { throw new Error('EXACT requires a Session-local instance; use Session({ hdcStrategy: \"exact\" })'); },
+  Vector: ExactVector
 };
 
 export default exactStrategy;
