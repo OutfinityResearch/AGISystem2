@@ -254,7 +254,7 @@ export class HolographicQueryEngine {
     // Build partial query vector (without holes)
     let queryPartial = operator;
     for (const known of knowns) {
-      const posVec = getPositionVector(known.index, this.session.geometry, this.session.hdcStrategy);
+      const posVec = getPositionVector(known.index, this.session.geometry, this.session.hdcStrategy, this.session);
       queryPartial = bind(queryPartial, bind(posVec, known.vector));
     }
 
@@ -270,7 +270,7 @@ export class HolographicQueryEngine {
     const holeCandidates = new Map();
 
     for (const hole of holes) {
-      const posVec = getPositionVector(hole.index, this.session.geometry, this.session.hdcStrategy);
+      const posVec = getPositionVector(hole.index, this.session.geometry, this.session.hdcStrategy, this.session);
 
       // Unbind: candidate = KB ⊕ queryPartial ⊕ position⁻¹
       // This extracts what's at the hole position

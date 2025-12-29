@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 import { Session } from '../src/runtime/session.mjs';
 import { bind, unbind, topKSimilar } from '../src/core/operations.mjs';
 import { getPositionVector } from '../src/core/position.mjs';
-import { REASONING_PRIORITY } from '../src/core/constants.mjs';
+import { getThresholds, REASONING_PRIORITY } from '../src/core/constants.mjs';
 import { getStrategy, listStrategies } from '../src/hdc/facade.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -29,28 +29,32 @@ const FULL_CONFIGS = [
   { strategy: 'dense-binary', geometries: [128, 256, 512, 1024, 2048, 4096] },   // bits
   { strategy: 'sparse-polynomial', geometries: [1, 2, 3, 4, 5, 6] },             // k
   { strategy: 'metric-affine', geometries: [8, 16, 32, 64, 128, 256] },          // bytes
-  { strategy: 'metric-affine-elastic', geometries: [8, 16, 32, 64, 128, 256] }   // bytes
+  { strategy: 'metric-affine-elastic', geometries: [8, 16, 32, 64, 128, 256] },  // bytes
+  { strategy: 'exact', geometries: [256] }                                       // placeholder (bits ignored)
 ];
 
 const FAST_CONFIGS = [
   { strategy: 'dense-binary', geometries: [256] },           // bits
   { strategy: 'sparse-polynomial', geometries: [2] },        // k
   { strategy: 'metric-affine', geometries: [16] },           // bytes
-  { strategy: 'metric-affine-elastic', geometries: [8] }     // bytes
+  { strategy: 'metric-affine-elastic', geometries: [8] },    // bytes
+  { strategy: 'exact', geometries: [256] }                   // placeholder (bits ignored)
 ];
 
 const HUGE_CONFIGS = [
   { strategy: 'dense-binary', geometries: [1024, 2048] },      // bits
   { strategy: 'sparse-polynomial', geometries: [8, 16] },      // k
   { strategy: 'metric-affine', geometries: [64, 128] },        // bytes
-  { strategy: 'metric-affine-elastic', geometries: [32, 64] }  // bytes
+  { strategy: 'metric-affine-elastic', geometries: [32, 64] }, // bytes
+  { strategy: 'exact', geometries: [256] }                     // placeholder (bits ignored)
 ];
 
 const EXTRA_HUGE_CONFIGS = [
   { strategy: 'dense-binary', geometries: [8192, 16384] },        // bits (32x, 64x vs fast)
   { strategy: 'sparse-polynomial', geometries: [64, 128] },       // k
   { strategy: 'metric-affine', geometries: [512, 1024] },         // bytes
-  { strategy: 'metric-affine-elastic', geometries: [256, 512] }   // bytes
+  { strategy: 'metric-affine-elastic', geometries: [256, 512] },  // bytes
+  { strategy: 'exact', geometries: [256] }                        // placeholder (bits ignored)
 ];
 const DEFAULT_CANDIDATE_SET_SIZE = 10;
 const DEFAULT_MIN_MARGIN = 0.02;
@@ -63,12 +67,7 @@ function minMarginForStrategy(strategyId) {
 }
 
 function hdcMatchThreshold(strategyId) {
-  try {
-    const t = getStrategy(strategyId)?.thresholds;
-    return typeof t?.HDC_MATCH === 'number' ? t.HDC_MATCH : 0.75;
-  } catch {
-    return 0.75;
-  }
+  return getThresholds(strategyId)?.HDC_MATCH ?? 0.75;
 }
 
 const ANSI = {
@@ -165,6 +164,16 @@ function extractIdeaNames(content, { op, book }) {
   return Array.from(ideas);
 }
 
+function extractKeys(content, { op, book }) {
+  const keys = new Set();
+  const re = new RegExp(String.raw`^\s*@B\d{2}_R\d{4}(?::\S+)?\s+${op}\s+${book}\s+(\S+)\s+\S+\s*$`);
+  for (const line of content.split('\n')) {
+    const m = line.match(re);
+    if (m) keys.add(m[1]);
+  }
+  return Array.from(keys);
+}
+
 function djb2(text) {
   let hash = 5381;
   for (let i = 0; i < text.length; i++) {
@@ -238,9 +247,9 @@ function decodeIdeaFromBook(session, bookVec, query, candidates, options = {}) {
   const bookIdVec = session.vocabulary.getOrCreate(query.book);
   const keyVec = session.vocabulary.getOrCreate(query.key);
 
-  const pos1 = getPositionVector(1, geometry, strategyId);
-  const pos2 = getPositionVector(2, geometry, strategyId);
-  const pos3 = getPositionVector(3, geometry, strategyId);
+  const pos1 = getPositionVector(1, geometry, strategyId, session);
+  const pos2 = getPositionVector(2, geometry, strategyId, session);
+  const pos3 = getPositionVector(3, geometry, strategyId, session);
 
   let partial = opVec;
   partial = bind(partial, bind(bookIdVec, pos1));
@@ -262,23 +271,82 @@ function decodeIdeaFromBook(session, bookVec, query, candidates, options = {}) {
   const expectedSim = expectedEntry ? expectedEntry.similarity : null;
   const correctTop1 = !expectNone && top1.name === query.expect;
   const marginOk = margin >= minMargin;
+  const separationOk = (top1?.similarity ?? 0) > (top2?.similarity ?? -1);
+  const confidenceOk = (top1?.similarity ?? 0) > 0;
   // POS: need correct top-1 and some separation.
   // NEG: we want no "confident" match (avoid hallucinating a decoy).
   const passed = expectNone
     ? ((top1?.similarity ?? 0) < hdcMatch)
-    : correctTop1;
+    : (correctTop1 && separationOk && confidenceOk);
 
   return {
     passed,
     expectNone,
     correctTop1,
     marginOk,
+    separationOk,
+    confidenceOk,
     top1,
     top2,
     margin,
     expectedSim,
     expectedRank,
     minMargin,
+    hdcMatch,
+    similarityChecks: simAfter - simBefore,
+    candidateCount: candidates.size
+  };
+}
+
+function decodeKeyFromBook(session, bookVec, query, candidates, options = {}) {
+  const { strategyId, geometry, k = 25 } = options;
+  const hdcMatch = hdcMatchThreshold(strategyId);
+
+  const opVec = session.scope.get(query.op) || session.vocabulary.getOrCreate(query.op);
+  const bookIdVec = session.vocabulary.getOrCreate(query.book);
+  const ideaVec = session.vocabulary.getOrCreate(query.idea);
+
+  const pos1 = getPositionVector(1, geometry, strategyId, session);
+  const pos2 = getPositionVector(2, geometry, strategyId, session);
+  const pos3 = getPositionVector(3, geometry, strategyId, session);
+
+  let partial = opVec;
+  partial = bind(partial, bind(bookIdVec, pos1));
+  partial = bind(partial, bind(ideaVec, pos3));
+
+  const simBefore = session.reasoningStats?.similarityChecks || 0;
+  const answer = unbind(bookVec, partial);
+  const keyOutVec = unbind(answer, pos2);
+  const ranked = topKSimilar(keyOutVec, candidates, k, session);
+  const simAfter = session.reasoningStats?.similarityChecks || 0;
+
+  const top1 = ranked[0] || { name: null, similarity: -1 };
+  const top2 = ranked[1] || { name: null, similarity: -1 };
+  const margin = (top1?.similarity ?? 0) - (top2?.similarity ?? 0);
+
+  const expectNone = query.expect === 'none';
+  const expectedEntry = expectNone ? null : ranked.find(r => r.name === query.expect);
+  const expectedRank = expectNone ? null : (ranked.findIndex(r => r.name === query.expect) + 1 || null);
+  const expectedSim = expectedEntry ? expectedEntry.similarity : null;
+  const correctTop1 = !expectNone && top1.name === query.expect;
+  const separationOk = (top1?.similarity ?? 0) > (top2?.similarity ?? -1);
+  const confidenceOk = (top1?.similarity ?? 0) > 0;
+
+  const passed = expectNone
+    ? ((top1?.similarity ?? 0) < hdcMatch)
+    : (correctTop1 && separationOk && confidenceOk);
+
+  return {
+    passed,
+    expectNone,
+    correctTop1,
+    separationOk,
+    confidenceOk,
+    top1,
+    top2,
+    margin,
+    expectedSim,
+    expectedRank,
     hdcMatch,
     similarityChecks: simAfter - simBefore,
     candidateCount: candidates.size
@@ -292,7 +360,7 @@ function discoverBooks() {
   return files.map(f => path.join(BOOKS_DIR, f));
 }
 
-function configInfo({ strategyId, geometry, priority }) {
+function configInfo({ strategyId, geometry, priority, exactUnbindMode = null }) {
   const pr = priority === REASONING_PRIORITY.HOLOGRAPHIC ? 'holo' : 'symb';
   let bytes = null;
   try {
@@ -302,6 +370,11 @@ function configInfo({ strategyId, geometry, priority }) {
   }
 
   let label;
+  if (strategyId === 'exact') {
+    const mode = String(exactUnbindMode || process.env.SYS2_EXACT_UNBIND_MODE || 'A').trim().toUpperCase();
+    label = `exact(${mode})+${pr}`;
+    return { label, bytes: null };
+  }
   if (strategyId === 'dense-binary') {
     const denseBytes = bytes ?? (Number.isFinite(geometry) ? Math.round(geometry / 8) : null);
     label = denseBytes !== null ? `dense(${denseBytes}B)+${pr}` : `dense(${geometry})+${pr}`;
@@ -389,15 +462,21 @@ function runQueryValidation(session, dsl, holeName = 'idea') {
 }
 
 async function runOne(config, bookPath) {
-  const { strategyId, geometry, priority } = config;
+  const { strategyId, geometry, priority, exactUnbindMode = null } = config;
 
   const t0 = nowMs();
-  const session = new Session({ hdcStrategy: strategyId, geometry, reasoningPriority: priority });
+  const session = new Session({
+    hdcStrategy: strategyId,
+    geometry,
+    reasoningPriority: priority,
+    ...(strategyId === 'exact' && exactUnbindMode ? { exactUnbindMode } : null)
+  });
   const tSessionMs = nowMs() - t0;
 
   const content = readFileSync(bookPath, 'utf8');
   const { pos, neg } = parseSatQueries(content);
   const ideaNames = extractIdeaNames(content, pos);
+  const keyNames = extractKeys(content, pos);
   const bookPrefix = path.basename(bookPath, '.sys2').toUpperCase(); // BOOK01
 
   const tLearn0 = nowMs();
@@ -455,6 +534,36 @@ async function runOne(config, bookPath) {
 
   const posRes = decodeIdeaFromBook(session, bookVec, pos, posCandidates, { strategyId, geometry, k: DEFAULT_CANDIDATE_SET_SIZE });
   const negRes = decodeIdeaFromBook(session, bookVec, neg, negCandidates, { strategyId, geometry, k: DEFAULT_CANDIDATE_SET_SIZE });
+
+  // Membership-style test: given an idea, can we recover a key? (Idea exists vs idea doesn't exist)
+  const memIdeaPos = pos.expect;
+  const memIdeaNeg = `${bookPrefix}_MissingIdea`;
+  const memKeyCandidates = new Map();
+  // Use real in-book keys as the candidate set for both pos/neg.
+  // If an idea does not exist in the book, we expect no "confident" key match.
+  for (const key of keyNames) {
+    memKeyCandidates.set(key, session.vocabulary.getOrCreate(key));
+  }
+  // Ensure some decoy keys exist even if extraction fails.
+  for (let i = 1; memKeyCandidates.size < DEFAULT_CANDIDATE_SET_SIZE && i <= DEFAULT_CANDIDATE_SET_SIZE * 2; i++) {
+    const k = `${bookPrefix}_DecoyKey_${String(i).padStart(4, '0')}`;
+    if (!memKeyCandidates.has(k)) memKeyCandidates.set(k, session.vocabulary.getOrCreate(k));
+  }
+
+  const memPosRes = decodeKeyFromBook(
+    session,
+    bookVec,
+    { op: pos.op, book: pos.book, idea: memIdeaPos, expect: pos.key },
+    memKeyCandidates,
+    { strategyId, geometry, k: DEFAULT_CANDIDATE_SET_SIZE }
+  );
+  const memNegRes = decodeKeyFromBook(
+    session,
+    bookVec,
+    { op: pos.op, book: pos.book, idea: memIdeaNeg, expect: 'none' },
+    memKeyCandidates,
+    { strategyId, geometry, k: DEFAULT_CANDIDATE_SET_SIZE }
+  );
   const decodeMs = nowMs() - tQ0;
 
   const posQueryDsl = `@q ${pos.op} ${pos.book} ${pos.key} ?idea`;
@@ -462,13 +571,25 @@ async function runOne(config, bookPath) {
   const posQuery = runQueryValidation(session, posQueryDsl, 'idea');
   const negQuery = runQueryValidation(session, negQueryDsl, 'idea');
 
+  const memPosQueryDsl = `@q ${pos.op} ${pos.book} ?key ${memIdeaPos}`;
+  const memNegQueryDsl = `@q ${pos.op} ${pos.book} ?key ${memIdeaNeg}`;
+  const memPosQuery = runQueryValidation(session, memPosQueryDsl, 'key');
+  const memNegQuery = runQueryValidation(session, memNegQueryDsl, 'key');
+
   const stats = session.getReasoningStats();
+  const exactStats = strategyId === 'exact' ? (session?.hdc?.strategy?._stats || null) : null;
   session.close();
 
   const hdcPassed = posRes.passed && negRes.passed;
   const queryPosPassed = posQuery.success && posQuery.answer === pos.expect;
   const queryNegPassed = !negQuery.success;
   const queryPassed = queryPosPassed && queryNegPassed;
+
+  const hdcMemPassed = memPosRes.passed && memNegRes.passed;
+  const queryMemPosPassed = memPosQuery.success && memPosQuery.answer === pos.key;
+  const queryMemNegPassed = !memNegQuery.success;
+  const queryMemPassed = queryMemPosPassed && queryMemNegPassed;
+
   const passed = hdcPassed;
   const error = passed ? null : 'hdc decode failed';
   return {
@@ -478,14 +599,27 @@ async function runOne(config, bookPath) {
     queryPassed,
     queryPosPassed,
     queryNegPassed,
+    hdcMemPassed,
+    queryMemPassed,
+    queryMemPosPassed,
+    queryMemNegPassed,
     error,
     times: { sessionMs: tSessionMs, coreMs, learnMs, decodeMs },
     stats,
+    exactStats,
     details: {
       pos,
       neg,
       posRes,
       negRes,
+      memPosRes,
+      memNegRes,
+      memIdeaPos,
+      memIdeaNeg,
+      memPosQueryDsl,
+      memNegQueryDsl,
+      memPosQuery,
+      memNegQuery,
       ideas: ideaNames.length,
       posQueryDsl,
       negQueryDsl,
@@ -560,7 +694,13 @@ Options:
   const configs = effectiveConfigs
     .filter(c => available.has(c.strategy))
     .filter(c => !requestedStrategies || requestedStrategies.has(c.strategy))
-    .flatMap(c => priorities.flatMap(p => c.geometries.map(g => ({ strategyId: c.strategy, geometry: g, priority: p }))));
+    .flatMap(c => priorities.flatMap(p => c.geometries.flatMap(g => {
+      if (c.strategy !== 'exact') return [{ strategyId: c.strategy, geometry: g, priority: p }];
+      return [
+        { strategyId: c.strategy, geometry: g, priority: p, exactUnbindMode: 'A' },
+        { strategyId: c.strategy, geometry: g, priority: p, exactUnbindMode: 'B' }
+      ];
+    })));
 
   if (configs.length === 0) {
     throw new Error('No configs selected after applying flags/filters.');
@@ -611,6 +751,8 @@ Options:
     let totalLearn = 0;
     let totalDecode = 0;
     let totalSim = 0;
+    let totalExactUnbindChecks = 0;
+    let totalExactUnbindOutputs = 0;
     const posMargins = [];
     const negMargins = [];
     const perBook = [];
@@ -633,6 +775,10 @@ Options:
       totalLearn += res.times.learnMs;
       totalDecode += res.times.decodeMs;
       totalSim += simChecks;
+      if (res.exactStats) {
+        totalExactUnbindChecks += res.exactStats.unbindChecks || 0;
+        totalExactUnbindOutputs += res.exactStats.unbindOutTerms || 0;
+      }
       posMargins.push(posMargin);
       negMargins.push(negMargin);
 
@@ -672,6 +818,8 @@ Options:
         hdcMatch: d?.posRes?.hdcMatch ?? null,
         minMargin: d?.posRes?.minMargin ?? null,
         simChecks,
+        exactUnbindChecks: res.exactStats?.unbindChecks ?? null,
+        exactUnbindOutTerms: res.exactStats?.unbindOutTerms ?? null,
         learnMs: res.times.learnMs,
         decodeMs: res.times.decodeMs,
         error: res.error
@@ -693,6 +841,8 @@ Options:
       queryNegPass,
       total: books.length,
       simChecks: totalSim,
+      exactUnbindChecks: totalExactUnbindChecks,
+      exactUnbindOutTerms: totalExactUnbindOutputs,
       learnMs: totalLearn,
       decodeMs: totalDecode,
       avgPosMargin: avg(posMargins),
@@ -720,6 +870,7 @@ Options:
     { key: 'mPos', title: 'AvgPosM', align: 'right' },
     { key: 'mNeg', title: 'AvgNegM', align: 'right' },
     { key: 'sim', title: 'SimChk', align: 'right' },
+    { key: 'uChk', title: 'UnbChk', align: 'right' },
     { key: 'time', title: 'Time', align: 'right' }
   ];
 
@@ -757,6 +908,9 @@ Options:
       mPos,
       mNeg,
       sim: r.simChecks >= 1000 ? `${(r.simChecks / 1000).toFixed(1)}K` : String(r.simChecks),
+      uChk: Number.isFinite(r.exactUnbindChecks) && r.exactUnbindChecks > 0
+        ? (r.exactUnbindChecks >= 1000 ? `${(r.exactUnbindChecks / 1000).toFixed(1)}K` : String(r.exactUnbindChecks))
+        : '-',
       time: timeColored
     };
   });
@@ -806,7 +960,7 @@ Options:
       const perBook = bundle?.perBook || [];
       const meta = bundle?.meta || {};
       const strategy = getStrategy(meta.strategyId);
-      const thresholdLine = formatThresholds(strategy?.thresholds);
+      const thresholdLine = formatThresholds(getThresholds(meta.strategyId));
       const propLine = formatStrategyProps(strategy, meta.geometry, meta.bytes);
       console.log();
       console.log(`${ANSI.bold}Details:${ANSI.reset} ${label}`);

@@ -8,6 +8,8 @@
 
 import { bundle, getDefaultGeometry, similarity } from '../core/operations.mjs';
 import { getProperties, getStrategy } from '../hdc/facade.mjs';
+import { createHDCContext } from '../hdc/context.mjs';
+import { MAX_POSITIONS } from '../core/constants.mjs';
 import { Scope } from './scope.mjs';
 import { Vocabulary } from './vocabulary.mjs';
 import { Executor } from './executor.mjs';
@@ -60,6 +62,8 @@ function dbg(category, ...args) {
 export class Session {
   constructor(options = {}) {
     this.hdcStrategy = options.hdcStrategy || process.env.SYS2_HDC_STRATEGY || 'dense-binary';
+    // Strategy-specific options (kept session-local to preserve IoC/session isolation).
+    this.exactUnbindMode = (options.exactUnbindMode || process.env.SYS2_EXACT_UNBIND_MODE || 'A');
     this.reasoningPriority = options.reasoningPriority || getReasoningPriority();
     this.reasoningProfile = computeReasoningProfile({
       reasoningPriority: this.reasoningPriority,
@@ -84,8 +88,14 @@ export class Session {
     const hasEnvGeometry = typeof process.env.SYS2_GEOMETRY === 'string' && process.env.SYS2_GEOMETRY.trim() !== '';
     this.geometry = options.geometry || (hasEnvGeometry ? getDefaultGeometry() : (strategyDefaultGeometry || getDefaultGeometry()));
 
+    this.hdc = createHDCContext({ strategyId: this.hdcStrategy, geometry: this.geometry, session: this });
     this.scope = new Scope();
-    this.vocabulary = new Vocabulary(this.geometry, this.hdcStrategy);
+    this.vocabulary = new Vocabulary(this.geometry, this.hdcStrategy, this.hdc);
+    // Pre-initialize position atoms to keep early indices stable in strategies
+    // that may use session-local allocators (e.g., EXACT / appearance-index).
+    for (let pos = 1; pos <= MAX_POSITIONS; pos++) {
+      this.vocabulary.getOrCreate(`__POS_${pos}__`);
+    }
     this.executor = new Executor(this);
 
     // Use dispatcher to create engines based on reasoning priority

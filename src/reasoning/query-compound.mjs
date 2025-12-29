@@ -52,7 +52,7 @@ function verifyFactInCompound(session, solVector, operatorName, entity, value) {
   const valueVec = session.vocabulary.getOrCreate(value);
 
   // Build the full fact vector: bind(operator, pos1(entity), pos2(value))
-  const factVec = bind(bind(opVec, withPosition(1, entityVec)), withPosition(2, valueVec));
+  const factVec = bind(bind(opVec, withPosition(1, entityVec, session)), withPosition(2, valueVec, session));
 
   // Check similarity with compound solution
   session.reasoningStats.similarityChecks++;
@@ -96,7 +96,7 @@ export function searchCompoundSolutions(session, operatorName, knowns, holes) {
   let queryVec = opVec;
 
   for (const known of knowns) {
-    queryVec = bind(queryVec, withPosition(known.index, known.vector));
+    queryVec = bind(queryVec, withPosition(known.index, known.vector, session));
   }
 
   // Search each compound solution
@@ -211,14 +211,14 @@ export function decodeCompoundSolution(session, compoundVec, operatorName) {
 
   // Try to match each entity in vocabulary at position 1
   for (const [entityName, entityVec] of session.vocabulary.entries()) {
-    const pos1Vec = withPosition(1, entityVec);
+    const pos1Vec = withPosition(1, entityVec, session);
     const afterPos1 = bind(remainder, pos1Vec);
 
     // Try to match each value in vocabulary at position 2
     for (const [valueName, valueVec] of session.vocabulary.entries()) {
       if (valueName === entityName) continue;
 
-      const pos2Vec = withPosition(2, valueVec);
+      const pos2Vec = withPosition(2, valueVec, session);
 
       // Calculate similarity of full unbind
       const fullUnbind = bind(afterPos1, pos2Vec);

@@ -8,10 +8,7 @@
     return $idea
 end
 
-@Mentions:Mentions graph book key idea
-    @triple __Triple $book $key $idea
-    return $triple
-end
+@Mentions:Mentions __Relation
 
 # Chapter 01 - Perception
 # Idea: SensorCalibration (Process, Precise)
@@ -22,7 +19,8 @@ end
 @_ Idea NoiseGate Filter Selective
 @B03_R0002:Mentions_B03_R0002 Mentions Book03 Key_B03_C01_I02 NoiseGate
 
-@Chapter01 __Sequence [$B03_R0001, $B03_R0002]
+@Chapter01_Seq __Sequence [$B03_R0001, $B03_R0002]
+@Chapter01:Chapter01 bundle [$B03_R0001, $B03_R0002]
 
 # Chapter 02 - Memory
 # Idea: ShortTermStore (Memory, Volatile)
@@ -33,7 +31,8 @@ end
 @_ Idea LongTermIndex Memory Durable
 @B03_R0004:Mentions_B03_R0004 Mentions Book03 Key_B03_C02_I02 LongTermIndex
 
-@Chapter02 __Sequence [$B03_R0003, $B03_R0004]
+@Chapter02_Seq __Sequence [$B03_R0003, $B03_R0004]
+@Chapter02:Chapter02 bundle [$B03_R0003, $B03_R0004]
 
 # Chapter 03 - Learning
 # Idea: PatternMining (Learning, Incremental)
@@ -44,7 +43,8 @@ end
 @_ Idea ModelUpdate Learning Adaptive
 @B03_R0006:Mentions_B03_R0006 Mentions Book03 Key_B03_C03_I02 ModelUpdate
 
-@Chapter03 __Sequence [$B03_R0005, $B03_R0006]
+@Chapter03_Seq __Sequence [$B03_R0005, $B03_R0006]
+@Chapter03:Chapter03 bundle [$B03_R0005, $B03_R0006]
 
 # Chapter 04 - Planning
 # Idea: GoalStack (Planner, Hierarchical)
@@ -55,7 +55,8 @@ end
 @_ Idea ActionSequencing Planner Ordered
 @B03_R0008:Mentions_B03_R0008 Mentions Book03 Key_B03_C04_I02 ActionSequencing
 
-@Chapter04 __Sequence [$B03_R0007, $B03_R0008]
+@Chapter04_Seq __Sequence [$B03_R0007, $B03_R0008]
+@Chapter04:Chapter04 bundle [$B03_R0007, $B03_R0008]
 
 # Chapter 05 - Control
 # Idea: FeedbackLoop (Control, Stable)
@@ -66,7 +67,8 @@ end
 @_ Idea ErrorCorrection Control Resilient
 @B03_R0010:Mentions_B03_R0010 Mentions Book03 Key_B03_C05_I02 ErrorCorrection
 
-@Chapter05 __Sequence [$B03_R0009, $B03_R0010]
+@Chapter05_Seq __Sequence [$B03_R0009, $B03_R0010]
+@Chapter05:Chapter05 bundle [$B03_R0009, $B03_R0010]
 
 # Chapter 06 - Communication
 # Idea: MessageRouting (Protocol, Reliable)
@@ -77,6 +79,8 @@ end
 @_ Idea ConsensusPing Protocol Coherent
 @B03_R0012:Mentions_B03_R0012 Mentions Book03 Key_B03_C06_I02 ConsensusPing
 
-@Chapter06 __Sequence [$B03_R0011, $B03_R0012]
+@Chapter06_Seq __Sequence [$B03_R0011, $B03_R0012]
+@Chapter06:Chapter06 bundle [$B03_R0011, $B03_R0012]
 
-@Book:Book __Sequence [$Chapter01, $Chapter02, $Chapter03, $Chapter04, $Chapter05, $Chapter06]
+@Book_Seq __Sequence [$Chapter01, $Chapter02, $Chapter03, $Chapter04, $Chapter05, $Chapter06]
+@Book:Book bundle [$Chapter01, $Chapter02, $Chapter03, $Chapter04, $Chapter05, $Chapter06]

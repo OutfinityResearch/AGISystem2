@@ -454,6 +454,7 @@ export function reportGlobalSummary(suiteResults) {
     `${colors.dim}(${totalPassed} passed, ${totalCases - totalPassed} failed)${colors.reset}`);
   console.log();
 
+  reportMethodsAndOps(aggregatedStats);
 }
 
 /**
@@ -520,7 +521,8 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
   const shortStrategyName = (id) => {
     const parts = String(id).split('/');
     const strategyId = parts[0] || id;
-    const geometryRaw = parts.length === 3 ? parts[1] : null;
+    const modeRaw = (parts.length === 3 && strategyId === 'exact') ? parts[1] : null;
+    const geometryRaw = (parts.length === 3 && strategyId !== 'exact') ? parts[1] : null;
     const priorityId = parts.length === 3 ? parts[2] : parts[1];
 
     const priorityLabel = (priorityId || '')
@@ -532,6 +534,11 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       .replace('sparse-polynomial', 'sparse')
       .replace('metric-affine-elastic', 'metric-elastic')
       .replace('metric-affine', 'metric');
+
+    if (strategyId === 'exact') {
+      const mode = String(modeRaw || 'A').trim().toUpperCase();
+      return `${strategyLabel}(${mode})+${priorityLabel}`;
+    }
 
     const geometry = geometryRaw && !Number.isNaN(Number(geometryRaw)) ? Number(geometryRaw) : null;
     if (geometry === null) return `${strategyLabel}+${priorityLabel}`;

@@ -8,9 +8,9 @@
 
 ## 1. Purpose
 
-Provides position vectors (Pos1 through Pos20) for encoding argument order in bound vectors. Solves the problem of XOR commutativity by tagging each argument with its position.
+Provides position vectors (Pos1 through Pos20) for encoding argument order in bound vectors. Solves the problem of commutative binding by tagging each argument with its position.
 
-**Strategy-aware:** Works with any HDC strategy (dense-binary, sparse-polynomial, metric-affine).
+**Strategy-aware:** Works with any HDC strategy (dense-binary, sparse-polynomial, metric-affine, metric-affine-elastic, exact).
 
 ---
 
@@ -19,18 +19,18 @@ Provides position vectors (Pos1 through Pos20) for encoding argument order in bo
 ```javascript
 // Get position vector by index (1-20)
 // Strategy-aware: returns vector compatible with specified or current HDC strategy
-function getPositionVector(position: number, geometry?: number, strategyId?: string): Vector
+function getPositionVector(position: number, geometry?: number, strategyId?: string, sessionOrHdc?: Session): Vector
 
 // Initialize all position vectors for a geometry
 function initPositionVectors(geometry?: number): Vector[]
 
 // Bind value with position marker
 // Strategy-agnostic: works with any vector type
-function withPosition(position: number, vector: Vector): Vector
+function withPosition(position: number, vector: Vector, sessionOrHdc?: Session): Vector
 
 // Remove position marker from value
 // Strategy-agnostic: works with any vector type
-function removePosition(position: number, vector: Vector): Vector
+function removePosition(position: number, vector: Vector, sessionOrHdc?: Session): Vector
 
 // Extract content at a specific position from composite
 // Alias for removePosition with clearer semantics
@@ -55,7 +55,13 @@ const MAX_POSITION = 20;  // from core/constants.mjs
 // Cache key includes strategy ID for multi-strategy support
 const positionCache = new Map();  // key: `${strategyId}:${geometry}:${position}`
 
-function getPositionVector(position, geometry = DEFAULT_GEOMETRY, strategyId = null) {
+function getPositionVector(position, geometry = DEFAULT_GEOMETRY, strategyId = null, sessionOrHdc = null) {
+  // IoC path: if a Session is provided, position vectors must be session-local
+  // (some strategies may require per-session allocators / dictionaries).
+  if (sessionOrHdc && sessionOrHdc.vocabulary?.getOrCreate) {
+    return sessionOrHdc.vocabulary.getOrCreate(`__POS_${position}__`);
+  }
+
   const resolvedStrategyId = strategyId || getStrategyId();
   const cacheKey = `${resolvedStrategyId}:${geometry}:${position}`;
 
@@ -73,15 +79,15 @@ function getPositionVector(position, geometry = DEFAULT_GEOMETRY, strategyId = n
 ### 3.2 Position Operations
 
 ```javascript
-function withPosition(position, vector) {
+function withPosition(position, vector, sessionOrHdc = null) {
   const geometry = getVectorGeometry(vector);
-  const posVec = getPositionVector(position, geometry, getStrategyId(vector));
+  const posVec = getPositionVector(position, geometry, getStrategyId(vector), sessionOrHdc);
   return bind(vector, posVec);
 }
 
-function removePosition(position, vector) {
+function removePosition(position, vector, sessionOrHdc = null) {
   const geometry = getVectorGeometry(vector);
-  const posVec = getPositionVector(position, geometry, getStrategyId(vector));
+  const posVec = getPositionVector(position, geometry, getStrategyId(vector), sessionOrHdc);
   return unbind(vector, posVec);
 }
 

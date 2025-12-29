@@ -665,13 +665,15 @@ const GEOMETRY_VARIANTS = {
 const GEOMETRY_SWEEP = {
   'dense-binary': [128, 256, 512, 1024, 2048, 4096],       // bits
   'sparse-polynomial': [1, 2, 3, 4, 5, 6],                  // k exponents
-  'metric-affine': [8, 16, 32, 64, 128, 256]                // bytes
+  'metric-affine': [8, 16, 32, 64, 128, 256],               // bytes
+  'exact': [256]                                             // placeholder (bits ignored by EXACT)
 };
 
 const STRATEGY_ALIASES = {
   'dense': 'dense-binary',
   'sparse': 'sparse-polynomial',
-  'metric': 'metric-affine'
+  'metric': 'metric-affine',
+  'exact': 'exact'
 };
 
 function getArgValue(args, name) {

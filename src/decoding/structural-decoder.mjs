@@ -81,7 +81,7 @@ export class StructuralDecoder {
     trace('Step 3: Extracting arguments');
     const args = [];
     for (let pos = 1; pos <= 20; pos++) {
-      const posUnbound = removePosition(pos, remainder);
+      const posUnbound = removePosition(pos, remainder, this.session);
       const matches = topKSimilar(posUnbound, this.session.vocabulary.atoms, 3, this.session);
 
       if (matches.length > 0 && matches[0].similarity > this.options.argThreshold) {

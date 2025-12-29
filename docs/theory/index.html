@@ -138,11 +138,17 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
       <p>Metric-Affine extension with chunked bundling and optional elastic geometry for large KB superpositions.</p>
       <p><a href="strategies/metric-affine-elastic.html">Full Documentation &rarr;</a></p>
     </div>
+
+    <div class="section-card" style="background: linear-gradient(135deg, #e8eaf622 0%, #c5cae922 100%);">
+      <h3>EXACT (Exact-Sparse)</h3>
+      <p>Lossless bitset-polynomial HDC over <code>BigInt</code> monomials. Session-local atom IDs (appearance index dictionary). UNBIND is not required to equal BIND.</p>
+      <p><a href="strategies/exact.html">Full Documentation &rarr;</a></p>
+    </div>
   </div>
 
   <h2>HRR Comparison: Original Contributions</h2>
 
-  <p>AGISystem2 implements four HDC strategies. Two are <strong>original contributions</strong> not found in existing literature, and one is an elastic extension of Metric-Affine. How do they relate to Tony Plate's Holographic Reduced Representations (HRR)?</p>
+  <p>AGISystem2 implements five HDC strategies. Two are <strong>original contributions</strong> not found in existing literature, one is an elastic extension of Metric-Affine, and one (EXACT) is a lossless, session-local “bitset polynomial” exploration. How do they relate to Tony Plate's Holographic Reduced Representations (HRR)?</p>
 
   <div class="section-grid">
     <div class="section-card">
@@ -164,10 +170,15 @@ fact = Loves BIND (Pos1 BIND Mary) BIND (Pos2 BIND John)  // loves(Mary, John) -
       <h3>Metric-Affine Elastic (EMA)</h3>
       <p><strong>EXTENSION:</strong> Chunked bundling + elastic geometry for stable superposition at scale.</p>
     </div>
+
+    <div class="section-card" style="background: linear-gradient(135deg, #e8eaf622 0%, #c5cae922 100%);">
+      <h3>EXACT (Exact-Sparse)</h3>
+      <p><strong>EXPLORATION:</strong> Lossless bitset-polynomial strategy (no PRNG/hashing for atom IDs inside a session). Uses a quotient-like UNBIND instead of self-inverse XOR.</p>
+    </div>
   </div>
 
   <div class="alert alert-info">
-    <strong>Summary:</strong> Dense-Binary is standard VSA/HDC. Sparse Polynomial and Metric-Affine are original contributions developed for AGISystem2, and Metric-Affine Elastic extends Metric-Affine for large KB superpositions.
+    <strong>Summary:</strong> Dense-Binary is standard VSA/HDC. Sparse Polynomial and Metric-Affine are original contributions developed for AGISystem2, Metric-Affine Elastic extends Metric-Affine for large KB superpositions, and EXACT explores a fully lossless session-local representation.
   </div>
 
   <h2>Trustworthy AI</h2>

@@ -843,6 +843,7 @@ export async function runSuite(suite, options = {}) {
   const strategyId = options.strategy || process.env.SYS2_HDC_STRATEGY || 'dense-binary';
 
   const reasoningPriority = options.reasoningPriority || process.env.REASONING_PRIORITY || 'symbolicPriority';
+  const exactUnbindMode = options.exactUnbindMode || null;
 
   // Use geometry from options or defaults
   // Dense-binary: vector dimension (default 2048)
@@ -860,11 +861,19 @@ export async function runSuite(suite, options = {}) {
     defaultGeometry = 2048;
   }
   const geometry = options.geometry || defaultGeometry;
-  const session = new Session({
+
+  const sessionOptions = {
     geometry,
     hdcStrategy: strategyId,
     reasoningPriority,
     ...(suite.sessionOptions || {})
+  };
+  if (strategyId === 'exact' && exactUnbindMode) {
+    sessionOptions.exactUnbindMode = exactUnbindMode;
+  }
+
+  const session = new Session({
+    ...sessionOptions
   });
 
   dbg('CONFIG', `Strategy: ${strategyId}, Geometry: ${geometry}, Priority: ${reasoningPriority}`);

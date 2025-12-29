@@ -4,20 +4,55 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="impelmenting DS#19 wip">
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="preparing to add Canonical Hypervectors staregy  for deeper reseaerch on holograrafic reasoning. documentation update">
+      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/theory/strategies/exact.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hdc/context.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hdc/strategies/exact-thresholds.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hdc/strategies/exact.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/unit/hdc/exact-strategy.test.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/guides/getting-started.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/guides/getting-started.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/research/benchmarks.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/benchmarks.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/research/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/specs/matrix.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/matrix.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/syntax/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/syntax/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/specs/src/core/position.mjs.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/src/core/position.mjs.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/theory/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/dense-binary.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/theory/strategies/metric-affine-elastic.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/metric-affine-elastic.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/theory/strategies/metric-affine.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/metric-affine.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/agent-planning.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/agent-planning.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/compliance.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/compliance.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/research.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/research.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/wiki/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/wiki/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/strategies/sparse-polynomial.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/runner.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/runAllEvals.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runAllEvals.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/runFastEval.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runFastEval.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/runQueryEval.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runQueryEval.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/runSaturationEval.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runSaturationEval.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/runStressCheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runStressCheck.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book01.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book01.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book02.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book02.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book03.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book03.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book05.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book05.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book10.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book10.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book20.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book20.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/saturation/books/book30.sys2" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/books/book30.sys2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/constants.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/constants.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/position.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/position.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/decoding/structural-decoder.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/decoding/structural-decoder.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hdc/facade.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/facade.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/index.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/index.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query-compound.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-compound.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query-hdc.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/query.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/query.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/executor-builtins.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-builtins.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/executor-meta-ops.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-meta-ops.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/executor-resolve.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-resolve.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/executor-solve.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session-inspection.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session-inspection.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/session.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/session.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/vocabulary.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/vocabulary.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/regression/hdc-strategies-smoke.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/regression/hdc-strategies-smoke.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,15 +169,7 @@
       <workItem from="1766477237780" duration="9294000" />
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
-      <workItem from="1767005469743" duration="1457000" />
-    </task>
-    <task id="LOCAL-00038" summary="better documentation and project presentation">
-      <option name="closed" value="true" />
-      <created>1765895829065</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1765895829065</updated>
+      <workItem from="1767005469743" duration="3809000" />
     </task>
     <task id="LOCAL-00039" summary="better documentation and project presentation, more tests for advcaed holographic reasoning">
       <option name="closed" value="true" />
@@ -528,7 +555,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766774490067</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="preparing to add Canonical Hypervectors staregy  for deeper reseaerch on holograrafic reasoning. documentation update">
+      <option name="closed" value="true" />
+      <created>1767007827597</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1767007827597</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -571,6 +606,7 @@
     <MESSAGE value="created a custom agent for autoDiscovery of NLP to DSL and of reasoning bugs" />
     <MESSAGE value="investigating saturation of variosu staregies, new strategy got introduced" />
     <MESSAGE value="impelmenting DS#19 wip" />
-    <option name="LAST_COMMIT_MESSAGE" value="impelmenting DS#19 wip" />
+    <MESSAGE value="preparing to add Canonical Hypervectors staregy  for deeper reseaerch on holograrafic reasoning. documentation update" />
+    <option name="LAST_COMMIT_MESSAGE" value="preparing to add Canonical Hypervectors staregy  for deeper reseaerch on holograrafic reasoning. documentation update" />
   </component>
 </project>

@@ -20,9 +20,15 @@ const positionCache = new Map();
  * @param {number} geometry - Vector dimension
  * @returns {Object} Position vector (type depends on active strategy)
  */
-export function getPositionVector(position, geometry = DEFAULT_GEOMETRY, strategyId = null) {
+export function getPositionVector(position, geometry = DEFAULT_GEOMETRY, strategyId = null, sessionOrHdc = null) {
   if (position < 1 || position > MAX_POSITIONS) {
     throw new RangeError(`Position must be 1-${MAX_POSITIONS}, got ${position}`);
+  }
+
+  // IoC path: if a Session is provided, position vectors must be session-local
+  // (some strategies may require per-session allocators / dictionaries).
+  if (sessionOrHdc && sessionOrHdc.vocabulary?.getOrCreate) {
+    return sessionOrHdc.vocabulary.getOrCreate(`__POS_${position}__`);
   }
 
   // Include strategy in cache key to support multi-strategy execution
@@ -68,9 +74,9 @@ function getVectorGeometry(vector) {
  * @param {Object} vector - Vector to position
  * @returns {Object} Positioned vector
  */
-export function withPosition(position, vector) {
+export function withPosition(position, vector, sessionOrHdc = null) {
   const geometry = getVectorGeometry(vector);
-  const posVec = getPositionVector(position, geometry, getStrategyId(vector));
+  const posVec = getPositionVector(position, geometry, getStrategyId(vector), sessionOrHdc);
   return bind(vector, posVec);
 }
 
@@ -81,9 +87,9 @@ export function withPosition(position, vector) {
  * @param {Object} vector - Positioned vector
  * @returns {Object} Unpositioned vector
  */
-export function removePosition(position, vector) {
+export function removePosition(position, vector, sessionOrHdc = null) {
   const geometry = getVectorGeometry(vector);
-  const posVec = getPositionVector(position, geometry, getStrategyId(vector));
+  const posVec = getPositionVector(position, geometry, getStrategyId(vector), sessionOrHdc);
   return unbind(vector, posVec);
 }
 

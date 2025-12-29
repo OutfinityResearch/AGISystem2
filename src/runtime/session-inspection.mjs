@@ -7,7 +7,7 @@ export function extractArguments(session, vector, operatorName) {
 
   const args = [];
   for (let pos = 1; pos <= 5; pos++) {
-    const extracted = removePosition(pos, remainder);
+    const extracted = removePosition(pos, remainder, session);
     const matches = topKSimilar(extracted, session.vocabulary.atoms, 3, session);
 
     if (matches.length > 0 && matches[0].similarity > 0.45) {

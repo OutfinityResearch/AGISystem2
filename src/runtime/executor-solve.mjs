@@ -301,7 +301,11 @@ export function executeSolveBlock(executor, stmt) {
       const entityVec = executor.session.vocabulary.getOrCreate(entity);
       const valueVec = executor.session.vocabulary.getOrCreate(value);
       // Bind: operator XOR pos1(entity) XOR pos2(value)
-      const assignment = bindAll(relationVec, withPosition(1, entityVec), withPosition(2, valueVec));
+      const assignment = bindAll(
+        relationVec,
+        withPosition(1, entityVec, executor.session),
+        withPosition(2, valueVec, executor.session)
+      );
       assignmentVectors.push(assignment);
     }
 
@@ -403,9 +407,11 @@ export function executeSolveBlock(executor, stmt) {
 
       // Store individual facts with constraint satisfaction proof
       for (const { entity, value } of assignments) {
-        const factVec = bindAll(relationVec,
-          withPosition(1, executor.session.vocabulary.getOrCreate(entity)),
-          withPosition(2, executor.session.vocabulary.getOrCreate(value)));
+        const factVec = bindAll(
+          relationVec,
+          withPosition(1, executor.session.vocabulary.getOrCreate(entity), executor.session),
+          withPosition(2, executor.session.vocabulary.getOrCreate(value), executor.session)
+        );
 
         executor.session.addToKB(factVec, `${solutionRelation}_${entity}_${value}`, {
           operator: solutionRelation,
@@ -421,14 +427,14 @@ export function executeSolveBlock(executor, stmt) {
       // Uses the solve variable ordering to keep output stable.
       const byEntity = new Map(assignments.map(a => [a.entity, a.value]));
       const tupleArgs = [solutionRelation];
-      const tupleVectors = [cspTupleOp, withPosition(1, relationVec)];
+      const tupleVectors = [cspTupleOp, withPosition(1, relationVec, executor.session)];
       let pos = 2;
       for (const entity of variables) {
         const value = byEntity.get(entity);
         if (!value) continue;
         tupleArgs.push(entity, value);
-        tupleVectors.push(withPosition(pos++, executor.session.vocabulary.getOrCreate(entity)));
-        tupleVectors.push(withPosition(pos++, executor.session.vocabulary.getOrCreate(value)));
+        tupleVectors.push(withPosition(pos++, executor.session.vocabulary.getOrCreate(entity), executor.session));
+        tupleVectors.push(withPosition(pos++, executor.session.vocabulary.getOrCreate(value), executor.session));
       }
       const tupleVec = bindAll(...tupleVectors);
       executor.session.addToKB(tupleVec, `${solutionName}_tuple`, {
@@ -481,7 +487,7 @@ function parsePositiveInt(value, fallback) {
 
 function buildPlanFactVector(session, operator, args) {
   const opVec = session.vocabulary.getOrCreate(operator);
-  const positioned = args.map((a, i) => withPosition(i + 1, session.vocabulary.getOrCreate(String(a))));
+  const positioned = args.map((a, i) => withPosition(i + 1, session.vocabulary.getOrCreate(String(a)), session));
   return bindAll(opVec, ...positioned);
 }
 

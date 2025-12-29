@@ -24,6 +24,11 @@ import {
   HOLOGRAPHIC_THRESHOLDS as METRIC_AFFINE_ELASTIC_HOLO
 } from '../hdc/strategies/metric-affine-elastic.mjs';
 
+import {
+  REASONING_THRESHOLDS as EXACT_THRESHOLDS,
+  HOLOGRAPHIC_THRESHOLDS as EXACT_HOLO
+} from '../hdc/strategies/exact-thresholds.mjs';
+
 // Default geometry (vector dimension in bits)
 export const DEFAULT_GEOMETRY = 32768;
 
@@ -52,7 +57,8 @@ export const REASONING_THRESHOLDS = {
   'dense-binary': DENSE_BINARY_THRESHOLDS,
   'sparse-polynomial': SPARSE_POLY_THRESHOLDS,
   'metric-affine': METRIC_AFFINE_THRESHOLDS,
-  'metric-affine-elastic': METRIC_AFFINE_ELASTIC_THRESHOLDS
+  'metric-affine-elastic': METRIC_AFFINE_ELASTIC_THRESHOLDS,
+  'exact': EXACT_THRESHOLDS
 };
 
 /**
@@ -110,7 +116,8 @@ export const HOLOGRAPHIC_THRESHOLDS = {
   'dense-binary': DENSE_BINARY_HOLO,
   'sparse-polynomial': SPARSE_POLY_HOLO,
   'metric-affine': METRIC_AFFINE_HOLO,
-  'metric-affine-elastic': METRIC_AFFINE_ELASTIC_HOLO
+  'metric-affine-elastic': METRIC_AFFINE_ELASTIC_HOLO,
+  'exact': EXACT_HOLO
 };
 
 /**

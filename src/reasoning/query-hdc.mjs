@@ -181,7 +181,7 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec, opt
   // Build partial vector (everything except holes)
   let partial = operatorVec;
   for (const known of knowns) {
-    const posVec = getPositionVector(known.index, session.geometry, session.hdcStrategy);
+    const posVec = getPositionVector(known.index, session.geometry, session.hdcStrategy, session);
     partial = bind(partial, bind(known.vector, posVec));
   }
 
@@ -215,7 +215,7 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec, opt
   // For single hole - extract directly
   if (holes.length === 1) {
     const hole = holes[0];
-    const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy);
+    const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy, session);
     const candidate = unbind(answer, posVec);
 
     // Find top K matches in vocabulary
@@ -271,7 +271,7 @@ export function searchHDC(session, operatorName, knowns, holes, operatorVec, opt
     // For each combination of top candidates per hole
     const holeCandidates = [];
     for (const hole of holes) {
-      const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy);
+      const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy, session);
       const candidate = unbind(answer, posVec);
       const matches = topKSimilar(candidate, session.vocabulary.atoms, 5, session);
       holeCandidates.push({
@@ -367,7 +367,7 @@ export function searchHDCByLevel(session, operatorName, knowns, holes, operatorV
   // Single hole optimization
   if (holes.length === 1) {
     const hole = holes[0];
-    const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy);
+    const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy, session);
     const validator = new ProofEngine(session);
     const validationCache = new Map();
 
@@ -446,7 +446,7 @@ export function searchHDCByLevel(session, operatorName, knowns, holes, operatorV
       const holeCandidates = [];
 
       for (const hole of holes) {
-        const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy);
+        const posVec = getPositionVector(hole.index, session.geometry, session.hdcStrategy, session);
         const candidate = unbind(answer, posVec);
         const matches = topKSimilar(candidate, session.vocabulary.atoms, 5, session);
         holeCandidates.push({

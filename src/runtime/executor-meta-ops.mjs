@@ -73,7 +73,7 @@ export function executeInduce(executor, stmt) {
     const [op, arg1] = prop.split(':');
     const opVec = executor.session.vocabulary.getOrCreate(op);
     const arg1Vec = executor.session.vocabulary.getOrCreate(arg1);
-    const propVec = bind(opVec, withPosition(1, arg1Vec));
+    const propVec = bind(opVec, withPosition(1, arg1Vec, executor.session));
     propVectors.push(propVec);
     propMetadata.push({ operator: op, arg: arg1 });
   }

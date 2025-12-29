@@ -14,10 +14,12 @@ export class Vocabulary {
    * Create a new vocabulary
    * @param {number} geometry - Vector dimension
    * @param {string} [strategyId] - HDC strategy identifier for this vocabulary
+   * @param {Object} [hdc] - Optional session-local HDC context/instance (IoC)
    */
-  constructor(geometry, strategyId = null) {
+  constructor(geometry, strategyId = null, hdc = null) {
     this.geometry = geometry;
     this.strategyId = strategyId || getStrategyId();
+    this.hdc = hdc;
     this.atoms = new Map();      // name -> Vector
     this.reverse = new Map();    // Vector hash -> name (for decoding)
   }
@@ -32,8 +34,12 @@ export class Vocabulary {
       return this.atoms.get(name);
     }
 
-    // Create deterministic vector from name using this vocabulary strategy
-    const vec = createFromName(name, this.geometry, { strategyId: this.strategyId });
+    // Create deterministic vector from name using this vocabulary strategy.
+    // If a session-local HDC context is provided, prefer it to avoid any
+    // cross-session shared state in strategies that need per-session allocators.
+    const vec = this.hdc?.createFromName
+      ? this.hdc.createFromName(name, this.geometry, 'default')
+      : createFromName(name, this.geometry, { strategyId: this.strategyId });
     this.atoms.set(name, vec);
 
     // Store reverse mapping for decoding

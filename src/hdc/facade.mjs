@@ -13,6 +13,28 @@
 
 import { getStrategy, getDefaultStrategy, listStrategies } from './strategies/index.mjs';
 
+const STRATEGY_INSTANCE_PROP = '__sys2StrategyInstance';
+
+function getAttachedStrategyInstance(vector) {
+  if (!vector || typeof vector !== 'object') return null;
+  return vector[STRATEGY_INSTANCE_PROP] || null;
+}
+
+function attachStrategyInstance(vector, strategy) {
+  if (!vector || typeof vector !== 'object') return vector;
+  try {
+    if (!Object.isExtensible(vector)) return vector;
+    Object.defineProperty(vector, STRATEGY_INSTANCE_PROP, {
+      value: strategy,
+      enumerable: false,
+      configurable: true
+    });
+  } catch {
+    // Best-effort tagging.
+  }
+  return vector;
+}
+
 // ============================================================================
 // ENVIRONMENT CONFIGURATION
 // ============================================================================
@@ -91,6 +113,21 @@ function inferStrategyId(vector) {
  * Resolve a strategy object from an explicit id, or from vectors.
  */
 function resolveStrategy({ strategyId = null, vectors = [] } = {}) {
+  // Prefer session-attached strategy instances to keep operations IoC-correct:
+  // if vectors came from a Session-owned HDC context, use that same instance so
+  // per-session configuration/state (e.g. EXACT unbind mode, allocators, stats) applies.
+  const attached = [];
+  for (const v of vectors || []) {
+    const inst = getAttachedStrategyInstance(v);
+    if (inst) attached.push(inst);
+  }
+  const uniqueAttached = Array.from(new Set(attached));
+  if (uniqueAttached.length > 1) {
+    // Keep legacy wording so existing tests/handlers still match this error class.
+    throw new Error('Mixed HDC strategies in one operation (cross-session vector mix).');
+  }
+  if (uniqueAttached.length === 1) return uniqueAttached[0];
+
   const inferred = [];
   if (strategyId) inferred.push(strategyId);
   for (const v of vectors) {
@@ -147,7 +184,8 @@ export { getStrategy };
  * @returns {Object} SemanticVector
  */
 export function createZero(geometry = defaultGeometry, strategyId = null) {
-  return resolveStrategy({ strategyId }).createZero(geometry);
+  const strategy = resolveStrategy({ strategyId });
+  return attachStrategyInstance(strategy.createZero(geometry), strategy);
 }
 
 /**
@@ -158,7 +196,8 @@ export function createZero(geometry = defaultGeometry, strategyId = null) {
  * @returns {Object} SemanticVector
  */
 export function createRandom(geometry = defaultGeometry, seed = null, strategyId = null) {
-  return resolveStrategy({ strategyId }).createRandom(geometry, seed);
+  const strategy = resolveStrategy({ strategyId });
+  return attachStrategyInstance(strategy.createRandom(geometry, seed), strategy);
 }
 
 /**
@@ -184,7 +223,7 @@ export function createFromName(name, geometry = defaultGeometry, theoryIdOrOptio
     theoryId = theoryIdOrOptions || 'default';
   }
   const strategy = resolveStrategy({ strategyId: resolvedStrategyId });
-  return strategy.createFromName(name, geometry, theoryId);
+  return attachStrategyInstance(strategy.createFromName(name, geometry, theoryId), strategy);
 }
 
 /**
@@ -196,7 +235,7 @@ export function deserialize(serialized) {
   // Use the strategy indicated in serialized data
   const strategyId = serialized.strategyId || 'dense-binary';
   const strategy = getStrategy(strategyId);
-  return strategy.deserialize(serialized);
+  return attachStrategyInstance(strategy.deserialize(serialized), strategy);
 }
 
 // ============================================================================
@@ -215,7 +254,8 @@ export function deserialize(serialized) {
  * @returns {Object} Bound result
  */
 export function bind(a, b) {
-  return resolveStrategy({ vectors: [a, b] }).bind(a, b);
+  const strategy = resolveStrategy({ vectors: [a, b] });
+  return attachStrategyInstance(strategy.bind(a, b), strategy);
 }
 
 /**
@@ -224,7 +264,8 @@ export function bind(a, b) {
  * @returns {Object} Combined result
  */
 export function bindAll(...vectors) {
-  return resolveStrategy({ vectors }).bindAll(...vectors);
+  const strategy = resolveStrategy({ vectors });
+  return attachStrategyInstance(strategy.bindAll(...vectors), strategy);
 }
 
 /**
@@ -235,7 +276,8 @@ export function bindAll(...vectors) {
  * @returns {Object} Bundled result
  */
 export function bundle(vectors, tieBreaker = null) {
-  return resolveStrategy({ vectors }).bundle(vectors, tieBreaker);
+  const strategy = resolveStrategy({ vectors });
+  return attachStrategyInstance(strategy.bundle(vectors, tieBreaker), strategy);
 }
 
 /**
@@ -256,7 +298,8 @@ export function similarity(a, b) {
  * @returns {Object} Remaining component
  */
 export function unbind(composite, component) {
-  return resolveStrategy({ vectors: [composite, component] }).unbind(composite, component);
+  const strategy = resolveStrategy({ vectors: [composite, component] });
+  return attachStrategyInstance(strategy.unbind(composite, component), strategy);
 }
 
 // ============================================================================
@@ -269,7 +312,8 @@ export function unbind(composite, component) {
  * @returns {Object}
  */
 export function clone(v) {
-  return resolveStrategy({ vectors: [v] }).clone(v);
+  const strategy = resolveStrategy({ vectors: [v] });
+  return attachStrategyInstance(strategy.clone(v), strategy);
 }
 
 /**
@@ -383,6 +427,7 @@ export function getVectorClassFor(strategyId = null) {
  * - dense-binary: Uint32Array data + geometry (number of bits)
  * - sparse-polynomial: Set exponents + geometry (k parameter)
  * - metric-affine: Uint8Array data + geometry (number of dimensions)
+ * - exact: bigint[] terms + geometry (compat placeholder)
  *
  * @param {any} obj - Object to check
  * @returns {boolean} True if obj is a vector from any strategy
@@ -400,6 +445,8 @@ export function isVector(obj) {
   if (obj.data instanceof Uint8Array) return true;
   // sparse-polynomial: Set of exponents
   if (obj.exponents instanceof Set) return true;
+  // exact: bigint[] terms (polynomial over bitset monomials)
+  if (Array.isArray(obj.terms) && obj.terms.every(t => typeof t === 'bigint')) return true;
 
   return false;
 }

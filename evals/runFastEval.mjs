@@ -17,6 +17,7 @@
  *   node evals/runFastEval.mjs --strategy=sparse         # Sparse: k=1, 2, 3, 5, 8, 13
  *   node evals/runFastEval.mjs --strategy=metric         # Metric: 8, 16, 32, 64, 128, 256 bytes
  *   node evals/runFastEval.mjs --strategy=ema            # EMA: 8, 16, 32, 64, 128, 256 bytes
+ *   node evals/runFastEval.mjs --strategy=exact          # EXACT: 256 (placeholder; geometry ignored)
  *   node evals/runFastEval.mjs --small                   # Use 8-byte equivalents for all strategies
  *   node evals/runFastEval.mjs --big                     # Use 32-byte equivalents for all strategies
  *   node evals/runFastEval.mjs --huge                    # Use 128-byte equivalents for all strategies
@@ -50,14 +51,16 @@ const STRATEGY_GEOMETRIES = {
   'dense': [128, 256, 512, 1024, 2048, 4096],       // bits
   'sparse': [1, 2, 3, 4, 5, 6],                      // k exponents
   'metric': [8, 16, 32, 64, 128, 256],               // bytes
-  'ema': [8, 16, 32, 64, 128, 256]                   // bytes
+  'ema': [8, 16, 32, 64, 128, 256],                  // bytes
+  'exact': [256]                                     // placeholder (geometry ignored by EXACT)
 };
 
 const STRATEGY_FULL_NAMES = {
   'dense': 'dense-binary',
   'sparse': 'sparse-polynomial',
   'metric': 'metric-affine',
-  'ema': 'metric-affine-elastic'
+  'ema': 'metric-affine-elastic',
+  'exact': 'exact'
 };
 
 // Short display names for compact output
@@ -70,8 +73,12 @@ function shortPriority(p) {
   return p.replace('symbolicPriority', 'symb').replace('holographicPriority', 'holo').replace('Priority', '');
 }
 
-function configLabel(strategy, geometry, priority) {
+function configLabel(strategy, geometry, priority, exactUnbindMode = null) {
   const s = shortStrategy(strategy);
+  if (strategy === 'exact') {
+    const mode = String(exactUnbindMode || process.env.SYS2_EXACT_UNBIND_MODE || 'A').trim().toUpperCase();
+    return `${s}(${mode})+${shortPriority(priority)}`;
+  }
   if (strategy === 'dense-binary') {
     const bytes = Number.isFinite(geometry) ? Math.ceil(geometry / 8) : geometry;
     return `${s}(${bytes}B)+${shortPriority(priority)}`;
@@ -105,7 +112,7 @@ Options:
   --big                   Use 32-byte equivalents for all strategies (dense=256b, sparse=k4, metric=32B, ema=32B)
   --huge                  Use 128-byte equivalents for all strategies (dense=1024b, sparse=k16, metric=128B, ema=128B)
   --strategy=NAME         Run single strategy with multiple geometries
-                          NAME: dense, sparse, metric, ema
+                          NAME: dense, sparse, metric, ema, exact
   --priority=NAME         Run with specific reasoning priority
                           NAME: symbolicPriority, holographicPriority
 
@@ -118,6 +125,7 @@ Examples:
   node evals/runFastEval.mjs                     # Run all suites with 6 configs
   node evals/runFastEval.mjs suite01             # Run specific suite
   node evals/runFastEval.mjs --strategy=dense    # Dense: 128, 256, 512, 1024, 2048, 4096 bits
+  node evals/runFastEval.mjs --strategy=exact    # EXACT (placeholder geometry)
   node evals/runFastEval.mjs --small             # 8-byte equivalents across strategies
   node evals/runFastEval.mjs --big               # 32-byte equivalents across strategies
   node evals/runFastEval.mjs --huge              # 128-byte equivalents across strategies
@@ -275,7 +283,7 @@ async function main() {
       const allGeometries = STRATEGY_GEOMETRIES[shortName];
 
       if (!allGeometries) {
-        console.error(`\x1b[31mUnknown strategy: ${singleStrategy}. Available: dense, sparse, metric, ema\x1b[0m`);
+        console.error(`\x1b[31mUnknown strategy: ${singleStrategy}. Available: dense, sparse, metric, ema, exact\x1b[0m`);
         process.exit(1);
       }
 
@@ -285,12 +293,18 @@ async function main() {
         const defaultGeometry = fullName === 'metric-affine-elastic'
           ? allGeometries[0]
           : allGeometries[Math.floor(allGeometries.length / 2)]; // middle geometry
-        configurations.push({
-          strategy: fullName,
-          priority: REASONING_PRIORITY.HOLOGRAPHIC,
-          geometry: defaultGeometry
-        });
-        console.log(`Fast mode: single config (${fullName}/${defaultGeometry}/holographic)`);
+        if (fullName === 'exact') {
+          configurations.push({ strategy: fullName, priority: REASONING_PRIORITY.HOLOGRAPHIC, geometry: defaultGeometry, exactUnbindMode: 'A' });
+          configurations.push({ strategy: fullName, priority: REASONING_PRIORITY.HOLOGRAPHIC, geometry: defaultGeometry, exactUnbindMode: 'B' });
+          console.log(`Fast mode: configs (${fullName}/A/holographic), (${fullName}/B/holographic)`);
+        } else {
+          configurations.push({
+            strategy: fullName,
+            priority: REASONING_PRIORITY.HOLOGRAPHIC,
+            geometry: defaultGeometry
+          });
+          console.log(`Fast mode: single config (${fullName}/${defaultGeometry}/holographic)`);
+        }
       } else {
         // --strategy=X: all geometries for that strategy
         const priorities = singlePriority
@@ -299,7 +313,12 @@ async function main() {
 
         for (const geometry of allGeometries) {
           for (const priority of priorities) {
-            configurations.push({ strategy: fullName, priority, geometry });
+            if (fullName === 'exact') {
+              configurations.push({ strategy: fullName, priority, geometry, exactUnbindMode: 'A' });
+              configurations.push({ strategy: fullName, priority, geometry, exactUnbindMode: 'B' });
+            } else {
+              configurations.push({ strategy: fullName, priority, geometry });
+            }
           }
         }
         console.log(`Strategy sweep mode: ${fullName} with geometries ${allGeometries.join(', ')}`);
@@ -317,6 +336,9 @@ async function main() {
           if (strategy === 'sparse-polynomial') {
             geometries.push(sparseK);
             if (fullModes) geometries.push(sparseK * 2);
+          } else if (strategy === 'exact') {
+            // EXACT geometry is a placeholder; still run both UNBIND modes (A/B) for comparison.
+            geometries.push(denseDim);
           } else if (strategy === 'metric-affine') {
             geometries.push(metricDim);
             if (fullModes) geometries.push(metricDim * 2);
@@ -329,26 +351,38 @@ async function main() {
             if (fullModes) geometries.push(denseDim * 2);
           }
           for (const geometry of geometries) {
-            configurations.push({ strategy, priority, geometry });
+            if (strategy === 'exact') {
+              configurations.push({ strategy, priority, geometry, exactUnbindMode: 'A' });
+              configurations.push({ strategy, priority, geometry, exactUnbindMode: 'B' });
+            } else {
+              configurations.push({ strategy, priority, geometry });
+            }
           }
         }
       }
     }
 
     // Sort configurations
-    const strategyOrder = ['dense-binary', 'sparse-polynomial', 'metric-affine', 'metric-affine-elastic'];
+    const strategyOrder = ['dense-binary', 'sparse-polynomial', 'metric-affine', 'metric-affine-elastic', 'exact'];
     const priorityOrder = [REASONING_PRIORITY.SYMBOLIC, REASONING_PRIORITY.HOLOGRAPHIC];
+    const modeOrder = ['A', 'B'];
     configurations.sort((a, b) => {
       const aIdx = strategyOrder.includes(a.strategy) ? strategyOrder.indexOf(a.strategy) : strategyOrder.length;
       const bIdx = strategyOrder.includes(b.strategy) ? strategyOrder.indexOf(b.strategy) : strategyOrder.length;
       const strategyDiff = aIdx - bIdx;
       if (strategyDiff !== 0) return strategyDiff;
+      if (a.strategy === 'exact' && b.strategy === 'exact') {
+        const am = String(a.exactUnbindMode || 'A').toUpperCase();
+        const bm = String(b.exactUnbindMode || 'A').toUpperCase();
+        const md = modeOrder.indexOf(am) - modeOrder.indexOf(bm);
+        if (md !== 0) return md;
+      }
       const geometryDiff = a.geometry - b.geometry;
       if (geometryDiff !== 0) return geometryDiff;
       return priorityOrder.indexOf(a.priority) - priorityOrder.indexOf(b.priority);
     });
 
-    const configNames = configurations.map(c => configLabel(c.strategy, c.geometry, c.priority));
+    const configNames = configurations.map(c => configLabel(c.strategy, c.geometry, c.priority, c.exactUnbindMode));
     console.log(`Running ${configurations.length} config(s): ${configNames.join(', ')}`);
 
     // Results by configuration (key = "strategy/geometry/priority")
@@ -358,11 +392,13 @@ async function main() {
     for (const config of configurations) {
       if (interrupted) break;
 
-      const configKey = `${config.strategy}/${config.geometry}/${config.priority}`;
+      const configKey = config.strategy === 'exact'
+        ? `${config.strategy}/${String(config.exactUnbindMode || 'A').toUpperCase()}/${config.priority}`
+        : `${config.strategy}/${config.geometry}/${config.priority}`;
 
       console.log();
       console.log(`\x1b[1m\x1b[35m${'━'.repeat(80)}\x1b[0m`);
-      console.log(`\x1b[1m\x1b[35mConfiguration: ${configLabel(config.strategy, config.geometry, config.priority)}\x1b[0m`);
+      console.log(`\x1b[1m\x1b[35mConfiguration: ${configLabel(config.strategy, config.geometry, config.priority, config.exactUnbindMode)}\x1b[0m`);
       console.log(`\x1b[35m${'━'.repeat(80)}\x1b[0m`);
 
       resultsByConfig[configKey] = [];
@@ -381,7 +417,8 @@ async function main() {
           const { results, summary } = await runSuite(suite, {
             strategy: config.strategy,
             reasoningPriority: config.priority,
-            geometry: config.geometry
+            geometry: config.geometry,
+            ...(config.strategy === 'exact' && config.exactUnbindMode ? { exactUnbindMode: config.exactUnbindMode } : null)
           });
 
           // Report results
@@ -426,7 +463,7 @@ async function main() {
       // Show summary for this configuration
       if (!interrupted && resultsByConfig[configKey].length > 0) {
         console.log();
-        console.log(`\x1b[1m\x1b[35m${configLabel(config.strategy, config.geometry, config.priority)} - Summary\x1b[0m`);
+        console.log(`\x1b[1m\x1b[35m${configLabel(config.strategy, config.geometry, config.priority, config.exactUnbindMode)} - Summary\x1b[0m`);
         reportGlobalSummary(resultsByConfig[configKey]);
       }
     }

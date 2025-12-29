@@ -8,10 +8,7 @@
     return $idea
 end
 
-@Mentions:Mentions graph book key idea
-    @triple __Triple $book $key $idea
-    return $triple
-end
+@Mentions:Mentions __Relation
 
 # Chapter 01 - Perception
 # Idea: SensorCalibration (Process, Precise)
@@ -22,7 +19,8 @@ end
 @_ Idea NoiseGate Filter Selective
 @B20_R0002:Mentions_B20_R0002 Mentions Book20 Key_B20_C01_I02 NoiseGate
 
-@Chapter01 __Sequence [$B20_R0001, $B20_R0002]
+@Chapter01_Seq __Sequence [$B20_R0001, $B20_R0002]
+@Chapter01:Chapter01 bundle [$B20_R0001, $B20_R0002]
 
 # Chapter 02 - Memory
 # Idea: ShortTermStore (Memory, Volatile)
@@ -33,7 +31,8 @@ end
 @_ Idea LongTermIndex Memory Durable
 @B20_R0004:Mentions_B20_R0004 Mentions Book20 Key_B20_C02_I02 LongTermIndex
 
-@Chapter02 __Sequence [$B20_R0003, $B20_R0004]
+@Chapter02_Seq __Sequence [$B20_R0003, $B20_R0004]
+@Chapter02:Chapter02 bundle [$B20_R0003, $B20_R0004]
 
 # Chapter 03 - Learning
 # Idea: PatternMining (Learning, Incremental)
@@ -44,7 +43,8 @@ end
 @_ Idea ModelUpdate Learning Adaptive
 @B20_R0006:Mentions_B20_R0006 Mentions Book20 Key_B20_C03_I02 ModelUpdate
 
-@Chapter03 __Sequence [$B20_R0005, $B20_R0006]
+@Chapter03_Seq __Sequence [$B20_R0005, $B20_R0006]
+@Chapter03:Chapter03 bundle [$B20_R0005, $B20_R0006]
 
 # Chapter 04 - Planning
 # Idea: GoalStack (Planner, Hierarchical)
@@ -55,7 +55,8 @@ end
 @_ Idea ActionSequencing Planner Ordered
 @B20_R0008:Mentions_B20_R0008 Mentions Book20 Key_B20_C04_I02 ActionSequencing
 
-@Chapter04 __Sequence [$B20_R0007, $B20_R0008]
+@Chapter04_Seq __Sequence [$B20_R0007, $B20_R0008]
+@Chapter04:Chapter04 bundle [$B20_R0007, $B20_R0008]
 
 # Chapter 05 - Control
 # Idea: FeedbackLoop (Control, Stable)
@@ -66,7 +67,8 @@ end
 @_ Idea ErrorCorrection Control Resilient
 @B20_R0010:Mentions_B20_R0010 Mentions Book20 Key_B20_C05_I02 ErrorCorrection
 
-@Chapter05 __Sequence [$B20_R0009, $B20_R0010]
+@Chapter05_Seq __Sequence [$B20_R0009, $B20_R0010]
+@Chapter05:Chapter05 bundle [$B20_R0009, $B20_R0010]
 
 # Chapter 06 - Communication
 # Idea: MessageRouting (Protocol, Reliable)
@@ -77,7 +79,8 @@ end
 @_ Idea ConsensusPing Protocol Coherent
 @B20_R0012:Mentions_B20_R0012 Mentions Book20 Key_B20_C06_I02 ConsensusPing
 
-@Chapter06 __Sequence [$B20_R0011, $B20_R0012]
+@Chapter06_Seq __Sequence [$B20_R0011, $B20_R0012]
+@Chapter06:Chapter06 bundle [$B20_R0011, $B20_R0012]
 
 # Chapter 07 - Coordination
 # Idea: RoleAssignment (Coordination, Balanced)
@@ -88,7 +91,8 @@ end
 @_ Idea TaskHandoff Coordination Timely
 @B20_R0014:Mentions_B20_R0014 Mentions Book20 Key_B20_C07_I02 TaskHandoff
 
-@Chapter07 __Sequence [$B20_R0013, $B20_R0014]
+@Chapter07_Seq __Sequence [$B20_R0013, $B20_R0014]
+@Chapter07:Chapter07 bundle [$B20_R0013, $B20_R0014]
 
 # Chapter 08 - Optimization
 # Idea: SearchPruning (Optimization, Efficient)
@@ -99,7 +103,8 @@ end
 @_ Idea CostShaping Optimization Bounded
 @B20_R0016:Mentions_B20_R0016 Mentions Book20 Key_B20_C08_I02 CostShaping
 
-@Chapter08 __Sequence [$B20_R0015, $B20_R0016]
+@Chapter08_Seq __Sequence [$B20_R0015, $B20_R0016]
+@Chapter08:Chapter08 bundle [$B20_R0015, $B20_R0016]
 
 # Chapter 09 - Safety
 # Idea: ConstraintGuard (Safety, Strict)
@@ -110,7 +115,8 @@ end
 @_ Idea AnomalyWatch Safety Vigilant
 @B20_R0018:Mentions_B20_R0018 Mentions Book20 Key_B20_C09_I02 AnomalyWatch
 
-@Chapter09 __Sequence [$B20_R0017, $B20_R0018]
+@Chapter09_Seq __Sequence [$B20_R0017, $B20_R0018]
+@Chapter09:Chapter09 bundle [$B20_R0017, $B20_R0018]
 
 # Chapter 10 - Interpretation
 # Idea: SymbolLinking (Mapping, Consistent)
@@ -121,7 +127,8 @@ end
 @_ Idea ContextWeaving Inference Contextual
 @B20_R0020:Mentions_B20_R0020 Mentions Book20 Key_B20_C10_I02 ContextWeaving
 
-@Chapter10 __Sequence [$B20_R0019, $B20_R0020]
+@Chapter10_Seq __Sequence [$B20_R0019, $B20_R0020]
+@Chapter10:Chapter10 bundle [$B20_R0019, $B20_R0020]
 
 # Chapter 11 - Navigation
 # Idea: PathSketch (Navigation, Feasible)
@@ -132,7 +139,8 @@ end
 @_ Idea ObstacleMap Navigation Cautious
 @B20_R0022:Mentions_B20_R0022 Mentions Book20 Key_B20_C11_I02 ObstacleMap
 
-@Chapter11 __Sequence [$B20_R0021, $B20_R0022]
+@Chapter11_Seq __Sequence [$B20_R0021, $B20_R0022]
+@Chapter11:Chapter11 bundle [$B20_R0021, $B20_R0022]
 
 # Chapter 12 - Resource
 # Idea: MemoryBudget (Resource, Limited)
@@ -143,7 +151,8 @@ end
 @_ Idea ComputeQuota Resource Measured
 @B20_R0024:Mentions_B20_R0024 Mentions Book20 Key_B20_C12_I02 ComputeQuota
 
-@Chapter12 __Sequence [$B20_R0023, $B20_R0024]
+@Chapter12_Seq __Sequence [$B20_R0023, $B20_R0024]
+@Chapter12:Chapter12 bundle [$B20_R0023, $B20_R0024]
 
 # Chapter 13 - Evaluation
 # Idea: Benchmarking (Evaluation, Comparable)
@@ -154,7 +163,8 @@ end
 @_ Idea ErrorAnalysis Evaluation Diagnostic
 @B20_R0026:Mentions_B20_R0026 Mentions Book20 Key_B20_C13_I02 ErrorAnalysis
 
-@Chapter13 __Sequence [$B20_R0025, $B20_R0026]
+@Chapter13_Seq __Sequence [$B20_R0025, $B20_R0026]
+@Chapter13:Chapter13 bundle [$B20_R0025, $B20_R0026]
 
 # Chapter 14 - Abstraction
 # Idea: ConceptLift (Abstraction, General)
@@ -165,7 +175,8 @@ end
 @_ Idea DetailSuppression Abstraction Selective
 @B20_R0028:Mentions_B20_R0028 Mentions Book20 Key_B20_C14_I02 DetailSuppression
 
-@Chapter14 __Sequence [$B20_R0027, $B20_R0028]
+@Chapter14_Seq __Sequence [$B20_R0027, $B20_R0028]
+@Chapter14:Chapter14 bundle [$B20_R0027, $B20_R0028]
 
 # Chapter 15 - Prediction
 # Idea: TrendForecast (Prediction, Probabilistic)
@@ -176,7 +187,8 @@ end
 @_ Idea OutcomeEstimation Prediction Approximate
 @B20_R0030:Mentions_B20_R0030 Mentions Book20 Key_B20_C15_I02 OutcomeEstimation
 
-@Chapter15 __Sequence [$B20_R0029, $B20_R0030]
+@Chapter15_Seq __Sequence [$B20_R0029, $B20_R0030]
+@Chapter15:Chapter15 bundle [$B20_R0029, $B20_R0030]
 
 # Chapter 16 - Adaptation
 # Idea: PolicyShift (Adaptation, Flexible)
@@ -187,7 +199,8 @@ end
 @_ Idea ParameterDrift Adaptation Gradual
 @B20_R0032:Mentions_B20_R0032 Mentions Book20 Key_B20_C16_I02 ParameterDrift
 
-@Chapter16 __Sequence [$B20_R0031, $B20_R0032]
+@Chapter16_Seq __Sequence [$B20_R0031, $B20_R0032]
+@Chapter16:Chapter16 bundle [$B20_R0031, $B20_R0032]
 
 # Chapter 17 - Verification
 # Idea: InvariantCheck (Verification, Exact)
@@ -198,7 +211,8 @@ end
 @_ Idea ProofSketch Verification Minimal
 @B20_R0034:Mentions_B20_R0034 Mentions Book20 Key_B20_C17_I02 ProofSketch
 
-@Chapter17 __Sequence [$B20_R0033, $B20_R0034]
+@Chapter17_Seq __Sequence [$B20_R0033, $B20_R0034]
+@Chapter17:Chapter17 bundle [$B20_R0033, $B20_R0034]
 
 # Chapter 18 - Interface
 # Idea: SignalEncoding (Interface, Compact)
@@ -209,7 +223,8 @@ end
 @_ Idea ResponseTiming Interface Responsive
 @B20_R0036:Mentions_B20_R0036 Mentions Book20 Key_B20_C18_I02 ResponseTiming
 
-@Chapter18 __Sequence [$B20_R0035, $B20_R0036]
+@Chapter18_Seq __Sequence [$B20_R0035, $B20_R0036]
+@Chapter18:Chapter18 bundle [$B20_R0035, $B20_R0036]
 
 # Chapter 19 - Discovery
 # Idea: HypothesisSeed (Discovery, Exploratory)
@@ -220,7 +235,8 @@ end
 @_ Idea PatternLink Discovery Associative
 @B20_R0038:Mentions_B20_R0038 Mentions Book20 Key_B20_C19_I02 PatternLink
 
-@Chapter19 __Sequence [$B20_R0037, $B20_R0038]
+@Chapter19_Seq __Sequence [$B20_R0037, $B20_R0038]
+@Chapter19:Chapter19 bundle [$B20_R0037, $B20_R0038]
 
 # Chapter 20 - Governance
 # Idea: AccessControl (Governance, Restricted)
@@ -231,7 +247,8 @@ end
 @_ Idea AuditTrail Governance Traceable
 @B20_R0040:Mentions_B20_R0040 Mentions Book20 Key_B20_C20_I02 AuditTrail
 
-@Chapter20 __Sequence [$B20_R0039, $B20_R0040]
+@Chapter20_Seq __Sequence [$B20_R0039, $B20_R0040]
+@Chapter20:Chapter20 bundle [$B20_R0039, $B20_R0040]
 
 # Chapter 21 - PerceptionV2
 # Idea: SensorCalibrationV2 (Process, Precise)
@@ -242,7 +259,8 @@ end
 @_ Idea NoiseGateV2 Filter Selective
 @B20_R0042:Mentions_B20_R0042 Mentions Book20 Key_B20_C21_I02 NoiseGateV2
 
-@Chapter21 __Sequence [$B20_R0041, $B20_R0042]
+@Chapter21_Seq __Sequence [$B20_R0041, $B20_R0042]
+@Chapter21:Chapter21 bundle [$B20_R0041, $B20_R0042]
 
 # Chapter 22 - MemoryV2
 # Idea: ShortTermStoreV2 (Memory, Volatile)
@@ -253,7 +271,8 @@ end
 @_ Idea LongTermIndexV2 Memory Durable
 @B20_R0044:Mentions_B20_R0044 Mentions Book20 Key_B20_C22_I02 LongTermIndexV2
 
-@Chapter22 __Sequence [$B20_R0043, $B20_R0044]
+@Chapter22_Seq __Sequence [$B20_R0043, $B20_R0044]
+@Chapter22:Chapter22 bundle [$B20_R0043, $B20_R0044]
 
 # Chapter 23 - LearningV2
 # Idea: PatternMiningV2 (Learning, Incremental)
@@ -264,7 +283,8 @@ end
 @_ Idea ModelUpdateV2 Learning Adaptive
 @B20_R0046:Mentions_B20_R0046 Mentions Book20 Key_B20_C23_I02 ModelUpdateV2
 
-@Chapter23 __Sequence [$B20_R0045, $B20_R0046]
+@Chapter23_Seq __Sequence [$B20_R0045, $B20_R0046]
+@Chapter23:Chapter23 bundle [$B20_R0045, $B20_R0046]
 
 # Chapter 24 - PlanningV2
 # Idea: GoalStackV2 (Planner, Hierarchical)
@@ -275,7 +295,8 @@ end
 @_ Idea ActionSequencingV2 Planner Ordered
 @B20_R0048:Mentions_B20_R0048 Mentions Book20 Key_B20_C24_I02 ActionSequencingV2
 
-@Chapter24 __Sequence [$B20_R0047, $B20_R0048]
+@Chapter24_Seq __Sequence [$B20_R0047, $B20_R0048]
+@Chapter24:Chapter24 bundle [$B20_R0047, $B20_R0048]
 
 # Chapter 25 - ControlV2
 # Idea: FeedbackLoopV2 (Control, Stable)
@@ -286,7 +307,8 @@ end
 @_ Idea ErrorCorrectionV2 Control Resilient
 @B20_R0050:Mentions_B20_R0050 Mentions Book20 Key_B20_C25_I02 ErrorCorrectionV2
 
-@Chapter25 __Sequence [$B20_R0049, $B20_R0050]
+@Chapter25_Seq __Sequence [$B20_R0049, $B20_R0050]
+@Chapter25:Chapter25 bundle [$B20_R0049, $B20_R0050]
 
 # Chapter 26 - CommunicationV2
 # Idea: MessageRoutingV2 (Protocol, Reliable)
@@ -297,7 +319,8 @@ end
 @_ Idea ConsensusPingV2 Protocol Coherent
 @B20_R0052:Mentions_B20_R0052 Mentions Book20 Key_B20_C26_I02 ConsensusPingV2
 
-@Chapter26 __Sequence [$B20_R0051, $B20_R0052]
+@Chapter26_Seq __Sequence [$B20_R0051, $B20_R0052]
+@Chapter26:Chapter26 bundle [$B20_R0051, $B20_R0052]
 
 # Chapter 27 - CoordinationV2
 # Idea: RoleAssignmentV2 (Coordination, Balanced)
@@ -308,7 +331,8 @@ end
 @_ Idea TaskHandoffV2 Coordination Timely
 @B20_R0054:Mentions_B20_R0054 Mentions Book20 Key_B20_C27_I02 TaskHandoffV2
 
-@Chapter27 __Sequence [$B20_R0053, $B20_R0054]
+@Chapter27_Seq __Sequence [$B20_R0053, $B20_R0054]
+@Chapter27:Chapter27 bundle [$B20_R0053, $B20_R0054]
 
 # Chapter 28 - OptimizationV2
 # Idea: SearchPruningV2 (Optimization, Efficient)
@@ -319,7 +343,8 @@ end
 @_ Idea CostShapingV2 Optimization Bounded
 @B20_R0056:Mentions_B20_R0056 Mentions Book20 Key_B20_C28_I02 CostShapingV2
 
-@Chapter28 __Sequence [$B20_R0055, $B20_R0056]
+@Chapter28_Seq __Sequence [$B20_R0055, $B20_R0056]
+@Chapter28:Chapter28 bundle [$B20_R0055, $B20_R0056]
 
 # Chapter 29 - SafetyV2
 # Idea: ConstraintGuardV2 (Safety, Strict)
@@ -330,7 +355,8 @@ end
 @_ Idea AnomalyWatchV2 Safety Vigilant
 @B20_R0058:Mentions_B20_R0058 Mentions Book20 Key_B20_C29_I02 AnomalyWatchV2
 
-@Chapter29 __Sequence [$B20_R0057, $B20_R0058]
+@Chapter29_Seq __Sequence [$B20_R0057, $B20_R0058]
+@Chapter29:Chapter29 bundle [$B20_R0057, $B20_R0058]
 
 # Chapter 30 - InterpretationV2
 # Idea: SymbolLinkingV2 (Mapping, Consistent)
@@ -341,7 +367,8 @@ end
 @_ Idea ContextWeavingV2 Inference Contextual
 @B20_R0060:Mentions_B20_R0060 Mentions Book20 Key_B20_C30_I02 ContextWeavingV2
 
-@Chapter30 __Sequence [$B20_R0059, $B20_R0060]
+@Chapter30_Seq __Sequence [$B20_R0059, $B20_R0060]
+@Chapter30:Chapter30 bundle [$B20_R0059, $B20_R0060]
 
 # Chapter 31 - NavigationV2
 # Idea: PathSketchV2 (Navigation, Feasible)
@@ -352,7 +379,8 @@ end
 @_ Idea ObstacleMapV2 Navigation Cautious
 @B20_R0062:Mentions_B20_R0062 Mentions Book20 Key_B20_C31_I02 ObstacleMapV2
 
-@Chapter31 __Sequence [$B20_R0061, $B20_R0062]
+@Chapter31_Seq __Sequence [$B20_R0061, $B20_R0062]
+@Chapter31:Chapter31 bundle [$B20_R0061, $B20_R0062]
 
 # Chapter 32 - ResourceV2
 # Idea: MemoryBudgetV2 (Resource, Limited)
@@ -363,7 +391,8 @@ end
 @_ Idea ComputeQuotaV2 Resource Measured
 @B20_R0064:Mentions_B20_R0064 Mentions Book20 Key_B20_C32_I02 ComputeQuotaV2
 
-@Chapter32 __Sequence [$B20_R0063, $B20_R0064]
+@Chapter32_Seq __Sequence [$B20_R0063, $B20_R0064]
+@Chapter32:Chapter32 bundle [$B20_R0063, $B20_R0064]
 
 # Chapter 33 - EvaluationV2
 # Idea: BenchmarkingV2 (Evaluation, Comparable)
@@ -374,7 +403,8 @@ end
 @_ Idea ErrorAnalysisV2 Evaluation Diagnostic
 @B20_R0066:Mentions_B20_R0066 Mentions Book20 Key_B20_C33_I02 ErrorAnalysisV2
 
-@Chapter33 __Sequence [$B20_R0065, $B20_R0066]
+@Chapter33_Seq __Sequence [$B20_R0065, $B20_R0066]
+@Chapter33:Chapter33 bundle [$B20_R0065, $B20_R0066]
 
 # Chapter 34 - AbstractionV2
 # Idea: ConceptLiftV2 (Abstraction, General)
@@ -385,7 +415,8 @@ end
 @_ Idea DetailSuppressionV2 Abstraction Selective
 @B20_R0068:Mentions_B20_R0068 Mentions Book20 Key_B20_C34_I02 DetailSuppressionV2
 
-@Chapter34 __Sequence [$B20_R0067, $B20_R0068]
+@Chapter34_Seq __Sequence [$B20_R0067, $B20_R0068]
+@Chapter34:Chapter34 bundle [$B20_R0067, $B20_R0068]
 
 # Chapter 35 - PredictionV2
 # Idea: TrendForecastV2 (Prediction, Probabilistic)
@@ -396,7 +427,8 @@ end
 @_ Idea OutcomeEstimationV2 Prediction Approximate
 @B20_R0070:Mentions_B20_R0070 Mentions Book20 Key_B20_C35_I02 OutcomeEstimationV2
 
-@Chapter35 __Sequence [$B20_R0069, $B20_R0070]
+@Chapter35_Seq __Sequence [$B20_R0069, $B20_R0070]
+@Chapter35:Chapter35 bundle [$B20_R0069, $B20_R0070]
 
 # Chapter 36 - AdaptationV2
 # Idea: PolicyShiftV2 (Adaptation, Flexible)
@@ -407,7 +439,8 @@ end
 @_ Idea ParameterDriftV2 Adaptation Gradual
 @B20_R0072:Mentions_B20_R0072 Mentions Book20 Key_B20_C36_I02 ParameterDriftV2
 
-@Chapter36 __Sequence [$B20_R0071, $B20_R0072]
+@Chapter36_Seq __Sequence [$B20_R0071, $B20_R0072]
+@Chapter36:Chapter36 bundle [$B20_R0071, $B20_R0072]
 
 # Chapter 37 - VerificationV2
 # Idea: InvariantCheckV2 (Verification, Exact)
@@ -418,7 +451,8 @@ end
 @_ Idea ProofSketchV2 Verification Minimal
 @B20_R0074:Mentions_B20_R0074 Mentions Book20 Key_B20_C37_I02 ProofSketchV2
 
-@Chapter37 __Sequence [$B20_R0073, $B20_R0074]
+@Chapter37_Seq __Sequence [$B20_R0073, $B20_R0074]
+@Chapter37:Chapter37 bundle [$B20_R0073, $B20_R0074]
 
 # Chapter 38 - InterfaceV2
 # Idea: SignalEncodingV2 (Interface, Compact)
@@ -429,7 +463,8 @@ end
 @_ Idea ResponseTimingV2 Interface Responsive
 @B20_R0076:Mentions_B20_R0076 Mentions Book20 Key_B20_C38_I02 ResponseTimingV2
 
-@Chapter38 __Sequence [$B20_R0075, $B20_R0076]
+@Chapter38_Seq __Sequence [$B20_R0075, $B20_R0076]
+@Chapter38:Chapter38 bundle [$B20_R0075, $B20_R0076]
 
 # Chapter 39 - DiscoveryV2
 # Idea: HypothesisSeedV2 (Discovery, Exploratory)
@@ -440,7 +475,8 @@ end
 @_ Idea PatternLinkV2 Discovery Associative
 @B20_R0078:Mentions_B20_R0078 Mentions Book20 Key_B20_C39_I02 PatternLinkV2
 
-@Chapter39 __Sequence [$B20_R0077, $B20_R0078]
+@Chapter39_Seq __Sequence [$B20_R0077, $B20_R0078]
+@Chapter39:Chapter39 bundle [$B20_R0077, $B20_R0078]
 
 # Chapter 40 - GovernanceV2
 # Idea: AccessControlV2 (Governance, Restricted)
@@ -451,6 +487,8 @@ end
 @_ Idea AuditTrailV2 Governance Traceable
 @B20_R0080:Mentions_B20_R0080 Mentions Book20 Key_B20_C40_I02 AuditTrailV2
 
-@Chapter40 __Sequence [$B20_R0079, $B20_R0080]
+@Chapter40_Seq __Sequence [$B20_R0079, $B20_R0080]
+@Chapter40:Chapter40 bundle [$B20_R0079, $B20_R0080]
 
-@Book:Book __Sequence [$Chapter01, $Chapter02, $Chapter03, $Chapter04, $Chapter05, $Chapter06, $Chapter07, $Chapter08, $Chapter09, $Chapter10, $Chapter11, $Chapter12, $Chapter13, $Chapter14, $Chapter15, $Chapter16, $Chapter17, $Chapter18, $Chapter19, $Chapter20, $Chapter21, $Chapter22, $Chapter23, $Chapter24, $Chapter25, $Chapter26, $Chapter27, $Chapter28, $Chapter29, $Chapter30, $Chapter31, $Chapter32, $Chapter33, $Chapter34, $Chapter35, $Chapter36, $Chapter37, $Chapter38, $Chapter39, $Chapter40]
+@Book_Seq __Sequence [$Chapter01, $Chapter02, $Chapter03, $Chapter04, $Chapter05, $Chapter06, $Chapter07, $Chapter08, $Chapter09, $Chapter10, $Chapter11, $Chapter12, $Chapter13, $Chapter14, $Chapter15, $Chapter16, $Chapter17, $Chapter18, $Chapter19, $Chapter20, $Chapter21, $Chapter22, $Chapter23, $Chapter24, $Chapter25, $Chapter26, $Chapter27, $Chapter28, $Chapter29, $Chapter30, $Chapter31, $Chapter32, $Chapter33, $Chapter34, $Chapter35, $Chapter36, $Chapter37, $Chapter38, $Chapter39, $Chapter40]
+@Book:Book bundle [$Chapter01, $Chapter02, $Chapter03, $Chapter04, $Chapter05, $Chapter06, $Chapter07, $Chapter08, $Chapter09, $Chapter10, $Chapter11, $Chapter12, $Chapter13, $Chapter14, $Chapter15, $Chapter16, $Chapter17, $Chapter18, $Chapter19, $Chapter20, $Chapter21, $Chapter22, $Chapter23, $Chapter24, $Chapter25, $Chapter26, $Chapter27, $Chapter28, $Chapter29, $Chapter30, $Chapter31, $Chapter32, $Chapter33, $Chapter34, $Chapter35, $Chapter36, $Chapter37, $Chapter38, $Chapter39, $Chapter40]

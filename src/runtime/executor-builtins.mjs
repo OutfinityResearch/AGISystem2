@@ -107,13 +107,13 @@ function executeBundlePositioned(executor, stmt) {
   const items = listItems(args[0]);
   if (items) {
     if (items.length === 0) return executor.session.vocabulary.getOrCreate('__EMPTY_BUNDLE__');
-    const positioned = items.map((item, idx) => withPosition(idx + 1, argVector(executor, item)));
+    const positioned = items.map((item, idx) => withPosition(idx + 1, argVector(executor, item), executor.session));
     return bundle(positioned);
   }
 
   // Fallback: treat as a normal bundle.
   if (args.length === 1) return argVector(executor, args[0]);
-  const positioned = args.map((item, idx) => withPosition(idx + 1, argVector(executor, item)));
+  const positioned = args.map((item, idx) => withPosition(idx + 1, argVector(executor, item), executor.session));
   return bundle(positioned);
 }
 

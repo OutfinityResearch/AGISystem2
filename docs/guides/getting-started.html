@@ -236,20 +236,23 @@ console.log(<span class="string">'Is Jerry an animal?'</span>, session.query(<sp
     <strong>Configure HDC geometry</strong>
   </div>
 
-  <p>AGISystem2 supports four HDC strategies. Set via environment variables:</p>
+  <p>AGISystem2 supports five HDC strategies. Set via environment variables:</p>
 
   <div class="code-box">
 <pre><span class="comment"># Metric-Affine (fastest, recommended)</span>
-SYS2_HDC_STRATEGY=metric-affine SYS2_HDC_SIZE=32 node tutorial.mjs
+SYS2_HDC_STRATEGY=metric-affine SYS2_GEOMETRY=32 node tutorial.mjs
 
 <span class="comment"># Metric-Affine Elastic (large KBs)</span>
-SYS2_HDC_STRATEGY=metric-affine-elastic SYS2_HDC_SIZE=32 node tutorial.mjs
+SYS2_HDC_STRATEGY=metric-affine-elastic SYS2_GEOMETRY=32 node tutorial.mjs
 
 <span class="comment"># Dense-Binary (standard VSA)</span>
-SYS2_HDC_STRATEGY=dense-binary SYS2_HDC_SIZE=256 node tutorial.mjs
+SYS2_HDC_STRATEGY=dense-binary SYS2_GEOMETRY=256 node tutorial.mjs
 
 <span class="comment"># Sparse-Polynomial (memory efficient)</span>
-SYS2_HDC_STRATEGY=sparse-polynomial SYS2_HDC_SIZE=4 node tutorial.mjs</pre>
+SYS2_HDC_STRATEGY=sparse-polynomial SYS2_GEOMETRY=4 node tutorial.mjs
+
+<span class="comment"># EXACT (lossless, session-local atom IDs)</span>
+SYS2_HDC_STRATEGY=exact SYS2_GEOMETRY=256 node tutorial.mjs</pre>
   </div>
 
   <table style="width:100%; border-collapse:collapse; margin:20px 0;">
@@ -277,6 +280,11 @@ SYS2_HDC_STRATEGY=sparse-polynomial SYS2_HDC_SIZE=4 node tutorial.mjs</pre>
       <td style="padding:10px; border:1px solid #ddd;"><strong>sparse-polynomial</strong></td>
       <td style="padding:10px; border:1px solid #ddd;">Memory-constrained environments</td>
       <td style="padding:10px; border:1px solid #ddd;">349ms (k=2)</td>
+    </tr>
+    <tr>
+      <td style="padding:10px; border:1px solid #ddd;"><strong>exact</strong></td>
+      <td style="padding:10px; border:1px solid #ddd;">Lossless experiments, saturation studies</td>
+      <td style="padding:10px; border:1px solid #ddd;">Varies (BigInt/KB dependent)</td>
     </tr>
   </table>
 
@@ -345,7 +353,7 @@ node autoDiscovery/bugsAutoDiscovery.mjs --source=prontoqa --batch=20</pre>
     <li><a href="../theory/nl2dsl.html"><strong>NL2DSL Translation</strong></a> – Natural language patterns</li>
     <li><a href="../api/index.html"><strong>API Reference</strong></a> – Full programmatic API</li>
     <li><a href="../research/benchmarks.html"><strong>External Benchmarks</strong></a> – Performance on standard test suites</li>
-    <li><a href="../theory/hrr-comparison.html"><strong>HDC Theory</strong></a> – Understanding the four strategies</li>
+    <li><a href="../theory/hrr-comparison.html"><strong>HDC Theory</strong></a> – Understanding the five strategies</li>
     <li><a href="llm-integration.html"><strong>LLM Integration</strong></a> – Combining with language models</li>
   </ul>
 

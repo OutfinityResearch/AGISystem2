@@ -501,7 +501,7 @@ export class QueryEngine {
   directMatch(operator, knowns, statement) {
     let queryVec = operator;
     for (const known of knowns) {
-      queryVec = bind(queryVec, withPosition(known.index, known.vector));
+      queryVec = bind(queryVec, withPosition(known.index, known.vector, this.session));
     }
 
     const matches = [];

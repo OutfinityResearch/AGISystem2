@@ -20,6 +20,7 @@
  *   --strategy=dense    Dense: 128, 256, 512, 1024, 2048, 4096 bits
  *   --strategy=sparse   Sparse: k=1, 2, 3, 5, 8, 13
  *   --strategy=metric   Metric: 8, 16, 32, 64, 128, 256 bytes
+ *   --strategy=exact    EXACT: 256 (placeholder; geometry ignored)
  */
 
 import { spawn } from 'node:child_process';
@@ -63,6 +64,11 @@ const STRATEGY_CONFIGS = {
     name: 'metric-affine',
     geometries: [8, 16, 32, 64, 128, 256],
     unit: 'bytes'
+  },
+  'exact': {
+    name: 'exact',
+    geometries: [256],
+    unit: 'bits'
   }
 };
 
@@ -121,54 +127,29 @@ function printConsolidatedSummary(results, overallDuration, strategyArg, isFast)
   console.log(`${COLORS.magenta}${'═'.repeat(80)}${COLORS.reset}`);
   console.log();
 
-  // Calculate configuration counts
-  let configsPerEval, strategiesRun, geometriesPerStrategy, priorities;
-
-  if (isFast) {
-    configsPerEval = 1;
-    strategiesRun = ['dense-binary'];
-    geometriesPerStrategy = 1;
-    priorities = 1;
-  } else if (strategyArg) {
-    const config = STRATEGY_CONFIGS[strategyArg.toLowerCase()];
-    if (config) {
-      configsPerEval = config.geometries.length * 2; // geometries × 2 priorities
-      strategiesRun = [config.name];
-      geometriesPerStrategy = config.geometries.length;
-      priorities = 2;
-    } else {
-      configsPerEval = 6;
-      strategiesRun = ['dense-binary', 'sparse-polynomial', 'metric-affine'];
-      geometriesPerStrategy = 2;
-      priorities = 2;
-    }
-  } else {
-    // Default: 3 strategies × 2 geometries × 2 priorities = 12, but we run 6 (no --full)
-    configsPerEval = 6;  // 3 strategies × 2 priorities × 1 geometry each
-    strategiesRun = ['dense-binary', 'sparse-polynomial', 'metric-affine'];
-    geometriesPerStrategy = 1;
-    priorities = 2;
-  }
-
-  const totalRuns = configsPerEval * results.length;
   const evalTypes = results.length;
 
   // Configuration overview
   console.log(`${COLORS.bright}${COLORS.cyan}Configuration:${COLORS.reset}`);
   console.log(`${'─'.repeat(60)}`);
-  if (strategyArg) {
+  if (isFast) {
+    console.log(`  Mode:        ${COLORS.yellow}--fast${COLORS.reset}`);
+    console.log(`  Strategy:    ${COLORS.yellow}dense-binary${COLORS.reset}`);
+    console.log(`  Configs:     1 per phase`);
+  } else if (strategyArg) {
     const config = STRATEGY_CONFIGS[strategyArg.toLowerCase()];
     if (config) {
-      console.log(`  Strategy:    ${COLORS.yellow}${config.name}${COLORS.reset} (sweep mode)`);
+      console.log(`  Mode:        ${COLORS.yellow}--strategy=${strategyArg}${COLORS.reset}`);
+      console.log(`  Strategy:    ${COLORS.yellow}${config.name}${COLORS.reset} (sweep)`);
       console.log(`  Geometries:  ${config.geometries.join(', ')} ${config.unit}`);
       console.log(`  Priorities:  symbolicPriority, holographicPriority`);
-      console.log(`  Per eval:    ${geometriesPerStrategy} geometries × ${priorities} priorities = ${COLORS.bright}${configsPerEval} configs${COLORS.reset}`);
+    } else {
+      console.log(`  Mode:        ${COLORS.yellow}--strategy=${strategyArg}${COLORS.reset}`);
+      console.log(`  Strategy:    ${COLORS.red}unknown (see per-phase help)${COLORS.reset}`);
     }
   } else {
-    console.log(`  Strategies:  ${COLORS.yellow}${strategiesRun.join(', ')}${COLORS.reset}`);
-    console.log(`  Geometries:  ${geometriesPerStrategy} per strategy (default)`);
-    console.log(`  Priorities:  symbolicPriority, holographicPriority`);
-    console.log(`  Per eval:    ${strategiesRun.length} strategies × ${priorities} priorities = ${COLORS.bright}${configsPerEval} configs${COLORS.reset}`);
+    console.log(`  Mode:        ${COLORS.yellow}default${COLORS.reset}`);
+    console.log(`  Configs:     phase-specific (FastEval/Stress/Query each choose their own defaults)`);
   }
   console.log(`${'─'.repeat(60)}`);
   console.log();
@@ -205,27 +186,12 @@ function printConsolidatedSummary(results, overallDuration, strategyArg, isFast)
   }
   console.log();
 
-  // Total runs breakdown
+  // Total runs breakdown (phase-specific; avoid over-promising a single number)
   console.log(`${COLORS.bright}${COLORS.cyan}Total Execution:${COLORS.reset}`);
   console.log(`${'─'.repeat(60)}`);
   console.log(`  Eval types:        ${evalTypes} (FastEval, StressCheck, QueryEval)`);
-  console.log(`  Configs per eval:  ${configsPerEval}`);
-  console.log(`  ${COLORS.bright}Total runs:        ${totalRuns}${COLORS.reset} (${configsPerEval} × ${evalTypes})`);
   console.log(`${'─'.repeat(60)}`);
   console.log();
-
-  // Per-strategy time estimate (if running all strategies)
-  if (!strategyArg && strategiesRun.length === 3) {
-    const avgTimePerConfig = overallDuration / totalRuns;
-    console.log(`${COLORS.bright}${COLORS.cyan}Estimated Time per Strategy:${COLORS.reset}`);
-    console.log(`  (Assuming equal distribution across ${strategiesRun.length} strategies)`);
-    const timePerStrategy = overallDuration / strategiesRun.length;
-    for (const strategy of strategiesRun) {
-      const shortName = strategy.replace('-binary', '').replace('-polynomial', '').replace('-affine', '');
-      console.log(`  ${shortName.padEnd(12)} ~${formatDuration(timePerStrategy)}`);
-    }
-    console.log();
-  }
 
   // Overall stats
   const passed = results.filter(r => !r.failed).length;
@@ -233,14 +199,12 @@ function printConsolidatedSummary(results, overallDuration, strategyArg, isFast)
 
   console.log(`${COLORS.bright}${COLORS.cyan}Summary:${COLORS.reset}`);
   console.log(`  Phases: ${COLORS.green}${passed} passed${COLORS.reset}, ${failed > 0 ? COLORS.red : COLORS.dim}${failed} failed${COLORS.reset} / ${evalTypes} total`);
-  console.log(`  Runs:   ${COLORS.bright}${totalRuns}${COLORS.reset} total configurations executed`);
   console.log(`  Time:   ${COLORS.bright}${formatDuration(overallDuration)}${COLORS.reset} total`);
-  console.log(`  Avg:    ${formatDuration(overallDuration / totalRuns)} per configuration`);
   console.log();
 
   // Final verdict
   if (failed === 0) {
-    console.log(`${COLORS.green}${COLORS.bright}All ${totalRuns} evaluation runs completed successfully!${COLORS.reset}`);
+    console.log(`${COLORS.green}${COLORS.bright}All evaluation phases completed successfully!${COLORS.reset}`);
   } else {
     console.log(`${COLORS.red}${COLORS.bright}${failed} phase(s) failed - see details above${COLORS.reset}`);
   }
@@ -280,7 +244,7 @@ Options:
   --fast                  Quick run with single config
   --verbose, -v           Show detailed output
   --strategy=NAME         Run single strategy with all geometries
-                          NAME: dense, sparse, metric
+                          NAME: dense, sparse, metric, exact
   --priority=NAME         Run with specific reasoning priority
                           NAME: symbolicPriority, holographicPriority
 
@@ -288,6 +252,7 @@ Strategy Mode (runs single strategy with multiple geometries):
   --strategy=dense        Dense: 128, 256, 512, 1024, 2048, 4096 bits
   --strategy=sparse       Sparse: k=1, 2, 3, 4, 5, 6
   --strategy=metric       Metric: 8, 16, 32, 64, 128, 256 bytes
+  --strategy=exact        EXACT: 256 (placeholder; geometry ignored)
 
 Examples:
   node evals/runAllEvals.mjs                     # Run all evals with 6 configs each

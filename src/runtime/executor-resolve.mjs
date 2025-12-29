@@ -18,7 +18,7 @@ export function buildStatementVector(executor, stmt) {
     const argVec = (operatorName === 'Not' && i === 0 && (arg instanceof Compound || arg?.type === 'Compound'))
       ? buildStatementVector(executor, new Statement(null, arg.operator, arg.args, null, arg.line, arg.column))
       : resolveExpression(executor, arg);
-    positionedArgs.push(withPosition(i + 1, argVec));
+    positionedArgs.push(withPosition(i + 1, argVec, executor.session));
   }
 
   if (positionedArgs.length === 0) return operatorVec;
