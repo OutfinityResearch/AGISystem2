@@ -119,6 +119,13 @@ answer = result ⊕ Pos1
        = John
 ```
 
+**Important scope note (non-XOR strategies):**
+The cancellation derivation above relies on **XOR-class** binding where `UNBIND` is the same operation as `BIND` and is self-inverse. In AGISystem2, not all strategies have that property (e.g., sparse-polynomial, metric-affine, EXACT). For those strategies:
+
+- `unbind(KB, partial)` may produce a **residual / superposition** that contains *more than just* the missing argument.
+- Extracting the hole value requires a **decoding / projection** step, which can be strategy-specific.
+- Some strategies expose a helper like `decodeUnboundCandidates(unboundVec, ...)` to “clean” structural residue and return ranked entity candidates.
+
 ---
 
 ## 7a.5 Position Vectors

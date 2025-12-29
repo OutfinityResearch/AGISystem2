@@ -506,13 +506,19 @@ bind(a, b)                     // → associative, commutative, self-inverse
 bindAll(...vectors)            // → sequential bind
 bundle(vectors, tieBreaker?)   // → superposition (majority vote for binary)
 similarity(a, b)               // → [0, 1] range
-unbind(composite, component)   // → inverse of bind (= bind for XOR)
+unbind(composite, component)   // → strategy-defined inverse/quotient; may leave residual structure
 
 // Utilities
 clone(v), equals(a, b), serialize(v)
 topKSimilar(query, vocabulary, k)
 distance(a, b), isOrthogonal(a, b)
+
+// Optional decoding hook (recommended for non-XOR strategies)
+decodeUnboundCandidates(unboundVec, options?) // → [{name, similarity, witnesses, source}, ...]
 ```
+
+**Contract clarification:**
+The dense-binary strategy uses XOR binding, so `unbind == bind` and the DS07a cancellation identity applies directly. Other strategies may implement `unbind` as a **quotient-like extraction** that yields a residual vector; in those cases `decodeUnboundCandidates()` provides a strategy-aware “cleanup/projection” step used by holographic (HDC-first) engines.
 
 ### Strategy Validation
 

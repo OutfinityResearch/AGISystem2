@@ -593,10 +593,12 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       // - hdcTotal: total query+prove ops executed
       // - hdcTried: ops where an HDC attempt was made (Master Equation / HDC-first engines)
       // - hdcValidated: ops where HDC produced at least one acceptable result (validated or trusted)
+      // - hdcEquivalent: ops where HDC result set matches symbolic result set
       // - hdcFinal: ops where the final chosen method was HDC-based (method starts with "hdc")
       hdcTotal: 0,
       hdcTried: 0,
       hdcValidated: 0,
+      hdcEquivalent: 0,
       hdcFinal: 0,
       kbScans: 0,
       simChecks: 0,
@@ -627,6 +629,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       const stats = summary.reasoningStats || {};
       const durationMs = summary.durationMs || 0;
       const hdcFinal = stats.hdcUsefulOps || 0;
+      const hdcEq = stats.hdcEquivalentOps || 0;
       const hdcTot = (stats.queries || 0) + (stats.proofs || 0);
       const scans = stats.kbScans || 0;
 
@@ -634,6 +637,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       strategyTotals[strategyId].total += summary.total;
       strategyTotals[strategyId].hdcFinal += hdcFinal;
       strategyTotals[strategyId].hdcTotal += hdcTot;
+      strategyTotals[strategyId].hdcEquivalent += hdcEq;
 
       // Tried/validated are counted from engine-specific stats.
       // Note: in symbolicPriority, QueryEngine may still attempt HDC Master Equation (hdcQueries/hdcSuccesses).
@@ -801,6 +805,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
     { key: 'pass', title: 'Pass Rate', align: 'right' },
     { key: 'hdcTried', title: 'HDC Tried', align: 'right' },
     { key: 'hdcValid', title: 'HDC Valid', align: 'right' },
+    { key: 'hdcEq', title: 'HDC Eq', align: 'right' },
     { key: 'hdcFinal', title: 'HDC Final', align: 'right' },
     { key: 'hdcOps', title: 'HDC Ops', align: 'right' },
     { key: 'kb', title: 'KB Scans', align: 'right' },
@@ -838,6 +843,12 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       ? `${validColor}${validPct}% (${totals.hdcValidated}/${totals.hdcTried})${colors.reset}`
       : `${colors.dim}-${colors.reset}`;
 
+    const eqPct = hasAsked ? Math.floor((totals.hdcEquivalent / totals.hdcTotal) * 100) : 0;
+    const eqColor = hasAsked && eqPct >= 50 ? colors.cyan : colors.dim;
+    const eqCell = hasAsked
+      ? `${eqColor}${eqPct}% (${totals.hdcEquivalent}/${totals.hdcTotal})${colors.reset}`
+      : `${colors.dim}-${colors.reset}`;
+
     const finalPct = hasAsked ? Math.floor((totals.hdcFinal / totals.hdcTotal) * 100) : 0;
     const finalColor = hasAsked && finalPct >= 50 ? colors.cyan : colors.dim;
     const finalCell = hasAsked
@@ -853,6 +864,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
       pass: passCell,
       hdcTried: triedCell,
       hdcValid: validCell,
+      hdcEq: eqCell,
       hdcFinal: finalCell,
       hdcOps: hasAsked ? `${totals.hdcTotal}` : `${colors.dim}-${colors.reset}`,
       kb: formatNum(totals.kbScans),

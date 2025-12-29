@@ -492,6 +492,9 @@ export class HolographicQueryEngine {
         (this.session.reasoningStats.holographicQueryHdcSuccesses || 0) + 1;
     }
 
+    // Keep an HDC-only snapshot for equivalence analysis vs symbolic results.
+    const hdcValidatedResults = validatedResults.slice();
+
     // Step 4: Merge/fallback to symbolic when needed.
     // For correctness: HDC candidate extraction is not complete; use symbolic supplement unless we returned
     // via the direct index fast-path earlier.
@@ -499,6 +502,45 @@ export class HolographicQueryEngine {
 
     if (shouldSupplement) {
       const symbolicResult = this.symbolicEngine.execute(statement, options);
+
+      // Metric: did HDC find a result set equivalent to the symbolic engine (for this query)?
+      // This is stricter than "HDC Valid" and independent from "HDC Final" method selection.
+      const bindingKey = (bindings) => {
+        const holeNames = holes.map(h => h.name).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+        const values = [];
+        for (const hn of holeNames) {
+          const ans = bindings instanceof Map ? bindings.get(hn)?.answer : bindings?.[hn]?.answer;
+          if (ans === undefined || ans === null || String(ans).trim() === '') return null;
+          values.push(String(ans));
+        }
+        return JSON.stringify(values);
+      };
+
+      const toKeySet = (results) => {
+        const set = new Set();
+        for (const r of results || []) {
+          const k = bindingKey(r?.bindings);
+          if (k) set.add(k);
+        }
+        return set;
+      };
+
+      const symSet = toKeySet(symbolicResult?.allResults || []);
+      const hdcSet = toKeySet(hdcValidatedResults);
+      if (symSet.size > 0 && symSet.size === hdcSet.size) {
+        let same = true;
+        for (const k of symSet) {
+          if (!hdcSet.has(k)) {
+            same = false;
+            break;
+          }
+        }
+        if (same) {
+          this.session.reasoningStats.hdcEquivalentOps =
+            (this.session.reasoningStats.hdcEquivalentOps || 0) + 1;
+          this.trackOp('holo_hdc_equivalent', 1);
+        }
+      }
 
       if (symbolicResult.allResults && symbolicResult.allResults.length > 0) {
         const hasSteps = (result) => {
@@ -589,11 +631,28 @@ export class HolographicQueryEngine {
       // This extracts what's at the hole position
       const unboundVec = unbind(unbind(kbBundle, queryPartial), posVec);
 
-      // Find top-K similar in vocabulary (strategy-level topKSimilar)
+      // Find top-K similar in vocabulary (strategy-level topKSimilar) or use a strategy-specific
+      // decoder when available (e.g., EXACT can project unbound residue to entity atoms).
       const kbDomain = this.buildCandidateDomainFromKB(operatorName, knowns, hole.index);
       let candidates = null;
 
-      if (kbDomain && kbDomain.length > 0) {
+      const strategy = this.session?.hdc?.strategy || null;
+      const canDecode = typeof strategy?.decodeUnboundCandidates === 'function';
+
+      if (canDecode) {
+        this.trackOp('holo_domain_decode', 1);
+        const domainNames = kbDomain && kbDomain.length > 0 ? kbDomain.map(d => d.name) : null;
+        const knownNames = Array.isArray(knowns) ? knowns.map(k => k?.name).filter(Boolean) : [];
+        candidates = strategy.decodeUnboundCandidates(unboundVec, {
+          session: this.session,
+          operatorName,
+          holeIndex: hole.index,
+          maxCandidates: this.config.UNBIND_MAX_CANDIDATES,
+          domain: domainNames,
+          knowns: knownNames,
+          isValidEntity
+        });
+      } else if (kbDomain && kbDomain.length > 0) {
         this.trackOp('holo_domain_kb', 1);
         const scored = [];
         for (const entry of kbDomain) {

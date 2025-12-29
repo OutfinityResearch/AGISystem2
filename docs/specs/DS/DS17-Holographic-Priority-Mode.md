@@ -143,7 +143,10 @@ hdcFirstQuery(statement):
   2. Build partial query vector (skip holes)
   3. For each hole:
      a. unbind(KB_bundle, partial) → candidate vectors
-     b. topK = findTopKSimilar(candidates, vocabulary, MAX_CANDIDATES)
+     b. If the active HDC strategy supports decoding:
+        topK = decodeUnboundCandidates(unboundVec, domain?, knowns?)
+        Else:
+        topK = findTopKSimilar(unboundVec, vocabulary, MAX_CANDIDATES)
      c. filter by MIN_SIMILARITY threshold
   4. For each candidate combination:
      a. Build complete statement
@@ -214,11 +217,18 @@ export class HolographicQueryEngine {
     // For each hole, extract candidates via unbind
     for (const hole of holes) {
       const unboundVec = unbind(kbBundle, queryVec);
-      const topK = this.session.topKSimilar(
-        unboundVec,
-        this.session.vocabulary,
-        this.config.UNBIND_MAX_CANDIDATES
-      );
+      const strategy = this.session?.hdc?.strategy || null;
+      const topK = typeof strategy?.decodeUnboundCandidates === 'function'
+        ? strategy.decodeUnboundCandidates(unboundVec, {
+            session: this.session,
+            operatorName: operator.name,
+            holeIndex: hole.position
+          })
+        : this.session.topKSimilar(
+            unboundVec,
+            this.session.vocabulary,
+            this.config.UNBIND_MAX_CANDIDATES
+          );
 
       for (const match of topK) {
         if (match.similarity >= this.config.UNBIND_MIN_SIMILARITY) {
@@ -467,10 +477,16 @@ this.reasoningStats = {
   hdcUnbindSuccesses: 0,       // Candidates found above threshold
   hdcValidationAttempts: 0,    // HDC results sent for validation
   hdcValidationSuccesses: 0,   // HDC results that passed validation
+  hdcEquivalentOps: 0,         // HDC result set == symbolic result set (when fallback runs)
   symbolicFallbacks: 0,        // Times we fell back to symbolic
   cspHeuristicOrderings: 0     // CSP domains ordered by HDC
 };
 ```
+
+**Note on interpretation:**
+- `hdcValidationSuccesses` answers “did HDC produce at least one valid candidate?”
+- `hdcEquivalentOps` answers “did HDC produce the same set of answers as symbolic for this query?”
+- The *final* returned method may still be symbolic (by priority/proof richness) even if `hdcEquivalentOps` holds.
 
 ### 17.7.2 Metrics Computation
 

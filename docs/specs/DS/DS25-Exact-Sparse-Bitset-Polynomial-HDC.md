@@ -262,7 +262,26 @@ Given a query with a hole at position N:
 3. `answers = UNBIND_A(candidates, {PosN})`
 4. Decode answer bits using `indexToAtom` (exact) or rank via UNBIND_C2 witnesses.
 
+**Residue / “cleanup” note (important):**
+In real workloads, the raw UNBIND result may contain **structural residue** (extra atoms) rather than a clean one-hot answer. This happens when:
+- KB is a `bundle` (superposition) of many facts, so unbind yields multiple residuals.
+- Some facts are wrapped (e.g., graph operators use `bind(Op, graph_result)`), introducing operator-level atoms that can “leak” into residuals.
+
+Therefore EXACT benefits from a strategy-level decoding step that **projects** residual terms to plausible entity atoms and filters out non-entities (`__POS_*__`, `__*` markers, operator tokens, known args, etc.).
+
 This preserves the DS07a “remove known pieces to expose unknown piece” reasoning pattern, without requiring XOR-inverse binding.
+
+### 7.3 Optional decoder: `decodeUnboundCandidates(unboundVec, …)`
+
+EXACT may expose an optional helper to decode UNBIND residuals into ranked candidate atoms:
+
+- Input: `unboundVec` (EXACT vector, potentially multi-term) plus query context (operator, hole index, knowns, optional candidate domain).
+- Output: ranked list of `{name, similarity, witnesses, source}` where:
+  - `witnesses` counts how many residual terms support the atom,
+  - `similarity` can be derived from witness ratios (or other scoring),
+  - “cleanup” filters out structural/non-entity atoms.
+
+This decoder is used by holographic (HDC-first) query engines to avoid relying on `similarity(unboundVec, atomVec)` when the unbound result is not a clean one-hot.
 
 ---
 
@@ -296,6 +315,7 @@ export const exactStrategy = {
   unbindResidual,     // UNBIND_B
   unbindCountDistinct,// UNBIND_C1
   unbindWitnesses,    // UNBIND_C2
+  decodeUnboundCandidates, // optional: decode UNBIND residuals into ranked entity candidates
 
   // Utilities
   clone, equals, serialize, topKSimilar,

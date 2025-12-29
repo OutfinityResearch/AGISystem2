@@ -25,6 +25,7 @@ export function getReasoningStats(session, reset = false) {
       proofLengths: [], methods: {}, operations: {},
       hdcQueries: 0, hdcSuccesses: 0, hdcBindings: 0,
       hdcUsefulOps: 0,
+      hdcEquivalentOps: 0,
       holographicQueries: 0, holographicQueryHdcSuccesses: 0, holographicProofs: 0,
       hdcUnbindAttempts: 0, hdcUnbindSuccesses: 0,
       hdcValidationAttempts: 0, hdcValidationSuccesses: 0,

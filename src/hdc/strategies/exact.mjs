@@ -538,6 +538,109 @@ function createInstance({ geometry = 0, session = null } = {}) {
     return new ExactVector(geometryOut, terms);
   }
 
+  function* iterSetBitIndices32(word) {
+    let v = Number(word >>> 0);
+    while (v !== 0) {
+      const lsb = v & -v;
+      const bit = 31 - Math.clz32(lsb);
+      yield bit;
+      v &= (v - 1);
+    }
+  }
+
+  function extractCandidateAtomsFromTerm(termBits, options = {}) {
+    const out = [];
+    let t = termBits;
+    let offset = 0;
+    while (t !== 0n) {
+      const word = Number(t & 0xffffffffn);
+      if (word !== 0) {
+        for (const bit of iterSetBitIndices32(word)) {
+          const idx = offset + bit;
+          const name = alloc.indexToAtom[idx] || null;
+          if (!name) continue;
+          out.push(name);
+        }
+      }
+      t >>= 32n;
+      offset += 32;
+    }
+
+    const sessionRef = options.session || session || null;
+    const knownNames = options.knownNames instanceof Set ? options.knownNames : null;
+    const isValidEntity = options.isValidEntity || null;
+
+    return out.filter((name) => {
+      if (!name) return false;
+      if (knownNames && knownNames.has(name)) return false;
+      if (typeof name !== 'string') return false;
+      if (name.startsWith('__')) return false;
+      if (name.startsWith('@') || name.startsWith('$') || name.startsWith('?')) return false;
+      // Session pre-initializes position atoms as __POS_N__ (noise for hole decoding).
+      if (/^__POS_\d+__$/.test(name)) return false;
+      // If provided, defer to system-level entity filtering (filters operators, reserved tokens, etc.).
+      if (typeof isValidEntity === 'function') {
+        return isValidEntity(name, sessionRef);
+      }
+      return true;
+    });
+  }
+
+  /**
+   * Strategy-specific candidate decoding for unbound vectors.
+   *
+   * EXACT unbind can leave structural residue (e.g., wrapped graph operators like `location`
+   * contribute extra operator bits like `at`). This decoder projects unbound terms to plausible
+   * entity atoms by dropping reserved/internal tokens and scoring by witness counts.
+   *
+   * @param {ExactVector} unboundVec
+   * @param {Object} options
+   * @param {Object} [options.session]
+   * @param {string} [options.operatorName]
+   * @param {number} [options.holeIndex]
+   * @param {number} [options.maxCandidates]
+   * @param {string[]} [options.domain] - Optional allowed names
+   * @param {string[]} [options.knowns] - Optional known arg names to exclude
+   * @param {(name:string, session:any)=>boolean} [options.isValidEntity]
+   * @returns {Array<{name:string, similarity:number, witnesses:number, source:string}>}
+   */
+  function decodeUnboundCandidates(unboundVec, options = {}) {
+    if (!unboundVec || unboundVec.strategyId !== STRATEGY_ID) return [];
+    const terms = unboundVec.terms || [];
+    if (terms.length === 0) return [];
+
+    const maxCandidates = Number.isFinite(options.maxCandidates) ? Math.max(1, options.maxCandidates) : 25;
+    const domain = Array.isArray(options.domain) && options.domain.length > 0 ? new Set(options.domain) : null;
+    const knownNames = Array.isArray(options.knowns) && options.knowns.length > 0 ? new Set(options.knowns) : null;
+
+    const counts = new Map();
+    let witnessesTotal = 0;
+
+    for (const term of terms) {
+      const atoms = extractCandidateAtomsFromTerm(term, { ...options, knownNames });
+      if (atoms.length === 0) continue;
+      witnessesTotal++;
+      for (const name of atoms) {
+        if (domain && !domain.has(name)) continue;
+        counts.set(name, (counts.get(name) || 0) + 1);
+      }
+    }
+
+    if (counts.size === 0) return [];
+
+    const denom = Math.max(1, witnessesTotal);
+    const out = Array.from(counts.entries())
+      .map(([name, witnesses]) => ({
+        name,
+        witnesses,
+        similarity: witnesses / denom,
+        source: 'decode'
+      }))
+      .sort((a, b) => (b.witnesses - a.witnesses) || (b.similarity - a.similarity) || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+
+    return out.slice(0, maxCandidates);
+  }
+
   return {
     id: STRATEGY_ID,
     properties,
@@ -557,6 +660,7 @@ function createInstance({ geometry = 0, session = null } = {}) {
     distance,
     topKSimilar,
     isOrthogonal,
+    decodeUnboundCandidates,
 
     // Utils
     clone,

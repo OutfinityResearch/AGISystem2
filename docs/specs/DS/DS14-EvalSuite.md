@@ -768,6 +768,17 @@ When spec vs code vs behavior disagree:
 2. Report to maintainer before making changes
 3. Do NOT silently "fix" by changing expected values
 
+### 14.12.9 Holographic Reporting Metrics (fastEval)
+
+The reporter aggregates *reasoning-mode* behavior into a few HDC-related counters to avoid misinterpreting “HDC%” as accuracy.
+
+Key concepts:
+
+- **HDC Tried**: how often an HDC-first / Master-Equation attempt was executed (candidate generation).
+- **HDC Valid**: how often HDC produced at least one acceptable candidate (validated or trusted).
+- **HDC Eq**: how often the **set of answers** produced by HDC matches the set produced by symbolic reasoning for the same query (when symbolic fallback/supplement runs).
+- **HDC Final**: how often the final returned method is HDC-based (method starts with `hdc*`). This can be lower than `HDC Eq` because symbolic results may be preferred due to method priority and richer proof traces.
+
 ---
 
 *End of Chapter 14 - Evaluation Suite Framework*

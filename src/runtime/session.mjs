@@ -150,6 +150,7 @@ export class Session {
 	      hdcSuccesses: 0,       // HDC queries that found results
 	      hdcBindings: 0,        // Total bindings found via HDC
 	      hdcUsefulOps: 0,       // Query/prove ops where final method is HDC-based
+	      hdcEquivalentOps: 0,   // Query/prove ops where HDC result set == symbolic result set
 	      // Holographic / HDC-first stats (populated by holographic engines)
 	      holographicQueries: 0,
 	      holographicQueryHdcSuccesses: 0,
