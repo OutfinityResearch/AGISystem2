@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="got new staregy named &quot;exact&quot; (exact sparce biwise polinomial) looks good">
-      <change afterPath="$PROJECT_DIR$/docs/research/saturationEvaluation.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/saturation/books/book_10cap_100.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/saturation/books/book_10cap_1000.sys2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evals/saturation/gen-books.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/research/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/runSaturationEval.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/runSaturationEval.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evals/saturation/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/evals/saturation/README.md" afterDir="false" />
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better saturation research, documentation of this reseaerch">
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hdc/strategies/exact.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/hdc/strategies/exact.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/holographic/query-hdc-first.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,15 +124,7 @@
       <workItem from="1766477237780" duration="9294000" />
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
-      <workItem from="1767005469743" duration="5215000" />
-    </task>
-    <task id="LOCAL-00040" summary=" tests for holographic reasoning">
-      <option name="closed" value="true" />
-      <created>1765918087950</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1765918087950</updated>
+      <workItem from="1767005469743" duration="6089000" />
     </task>
     <task id="LOCAL-00041" summary=" implemented a new staregy (metric-afine), wip to improve the suite to show proofs everywhere and have deeper reasoning examples">
       <option name="closed" value="true" />
@@ -523,7 +510,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767016441905</updated>
     </task>
-    <option name="localTasksCounter" value="89" />
+    <task id="LOCAL-00089" summary="better saturation research, documentation of this reseaerch">
+      <option name="closed" value="true" />
+      <created>1767017676933</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1767017676934</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -542,7 +537,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Better Documentation and WIP for code" />
     <MESSAGE value="replaced with the best experiment, this becomes the standard architecture" />
     <MESSAGE value="added a new HDC strategy, wip" />
     <MESSAGE value="better documentation" />
@@ -567,6 +561,7 @@
     <MESSAGE value="impelmenting DS#19 wip" />
     <MESSAGE value="preparing to add Canonical Hypervectors staregy  for deeper reseaerch on holograrafic reasoning. documentation update" />
     <MESSAGE value="got new staregy named &quot;exact&quot; (exact sparce biwise polinomial) looks good" />
-    <option name="LAST_COMMIT_MESSAGE" value="got new staregy named &quot;exact&quot; (exact sparce biwise polinomial) looks good" />
+    <MESSAGE value="better saturation research, documentation of this reseaerch" />
+    <option name="LAST_COMMIT_MESSAGE" value="better saturation research, documentation of this reseaerch" />
   </component>
 </project>

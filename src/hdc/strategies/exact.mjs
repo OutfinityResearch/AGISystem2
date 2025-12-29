@@ -581,10 +581,6 @@ const properties = {
   bytesPerVector: (_geometry) => 0,
   bindComplexity: 'O(|A||B|·W)',
   sparseOptimized: true,
-  // The Master Equation decode is structural (subset-based), not statistical.
-  // When the query key matches a fact term, the recovered hole can be exact.
-  // This enables an HDC-first engine to skip symbolic validation for speed.
-  reasoningEquationReliable: true,
   description: 'Exact sparse polynomial over bitset monomials (BigInt); union bundle + OR-product bind.'
 };
 

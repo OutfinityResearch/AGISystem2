@@ -19,6 +19,7 @@ import { ProofEngine } from '../prove.mjs';
 import { buildProofObject } from '../proof-schema.mjs';
 import { validateProof } from '../proof-validator.mjs';
 import { isValidEntity } from '../query-hdc.mjs';
+import { isTransitiveRelation } from '../query-transitive.mjs';
 import { debug_trace } from '../../utils/debug.js';
 
 function dbg(category, ...args) {
@@ -45,20 +46,310 @@ export class HolographicQueryEngine {
     this.config = getHolographicThresholds(strategy);
     this.thresholds = getThresholds(strategy);
 
-    // Some strategies can treat the Master Equation as structurally reliable (lossless decode for fact membership),
-    // so we can skip symbolic validation/supplement for speed.
-    this.trustMasterEquation =
-      !!this.session?.hdc?.strategy?.properties?.reasoningEquationReliable;
-
     // Cache: vocabulary view for topKSimilar
     // Avoid rebuilding / rescanning KB for every query in holographicPriority mode.
     this._vocabCache = null;
     this._vocabCacheAtomCount = -1;
 
-    dbg(
-      'INIT',
-      `Strategy: ${strategy}, MinSim: ${this.config.UNBIND_MIN_SIMILARITY}, TrustEq: ${this.trustMasterEquation}`
-    );
+    dbg('INIT', `Strategy: ${strategy}, MinSim: ${this.config.UNBIND_MIN_SIMILARITY}`);
+  }
+
+  trackOp(name, delta = 1) {
+    const n = Number(delta || 0);
+    if (!Number.isFinite(n) || n === 0) return;
+    if (!this.session?.reasoningStats?.operations) return;
+    this.session.reasoningStats.operations[name] = (this.session.reasoningStats.operations[name] || 0) + n;
+  }
+
+  isGraphOperator(operatorName) {
+    if (!operatorName) return false;
+    return !!(this.session?.graphs?.has?.(operatorName) || this.session?.graphAliases?.has?.(operatorName));
+  }
+
+  classifyQuery(operatorName, holes, knowns) {
+    // Keep this coarse on purpose: it is used to decide which fast paths are safe.
+    const HDC_BYPASS_OPERATORS = new Set([
+      'abduce',
+      'whatif',
+      'explain',
+      'deduce',
+      'induce',
+      'bundle',
+      'difference',
+      'analogy',
+      'similar',
+      'verifyPlan'
+    ]);
+
+    if (HDC_BYPASS_OPERATORS.has(operatorName)) {
+      return { kind: 'meta', symbolicOnly: true, hdcUnbindAllowed: false, indexFastPathAllowed: false };
+    }
+
+    // Quantifiers are higher-order; HDC unbind candidate extraction is not meaningful.
+    if (operatorName === 'Exists' || operatorName === 'ForAll') {
+      return { kind: 'quantifier', symbolicOnly: true, hdcUnbindAllowed: false, indexFastPathAllowed: false };
+    }
+
+    if (isTransitiveRelation(operatorName, this.session)) {
+      // Transitive closure is derived reasoning; HDC unbind only sees explicit edges.
+      return { kind: 'transitive', symbolicOnly: true, hdcUnbindAllowed: false, indexFastPathAllowed: false };
+    }
+
+    // Graph operators wrap inner DS07a records (bind(op, innerRecord)) and therefore do not follow
+    // the flat record encoding assumed by the Master Equation unbind path.
+    const isGraph = this.isGraphOperator(operatorName);
+
+    const isAssignment = this.session?.semanticIndex?.isAssignmentRelation
+      ? this.session.semanticIndex.isAssignmentRelation(operatorName)
+      : false;
+
+    const isInheritable = this.session?.semanticIndex?.isInheritableProperty
+      ? this.session.semanticIndex.isInheritableProperty(operatorName)
+      : false;
+
+    const isSpecialDerived = operatorName === 'elementOf';
+
+    // Rule-derived operators: if there are rules concluding this operator, symbolic may return results
+    // that are not explicit facts and are therefore not retrievable by unbind alone.
+    const ruleOps = this.getRuleConclusionOperators();
+    const isRuleDerived = ruleOps.has(operatorName);
+
+    if (isInheritable || isSpecialDerived || isRuleDerived) {
+      return {
+        kind: 'derived',
+        symbolicOnly: false,
+        hdcUnbindAllowed: !isGraph,
+        indexFastPathAllowed: false
+      };
+    }
+
+    // Fact-retrieval pattern: 1 hole, direct membership query.
+    // For these, we can use ComponentKB to answer without proof search or HDC similarity.
+    if (holes.length === 1) {
+      return {
+        kind: isGraph ? 'graph_fact' : (isAssignment ? 'assignment_fact' : 'fact'),
+        symbolicOnly: false,
+        hdcUnbindAllowed: !isGraph,
+        indexFastPathAllowed: true
+      };
+    }
+
+    return { kind: 'other', symbolicOnly: false, hdcUnbindAllowed: !isGraph, indexFastPathAllowed: false };
+  }
+
+  getRuleConclusionOperators() {
+    // Cache by rule count (rules are appended during learn/loadCore).
+    const n = this.session?.rules?.length || 0;
+    if (this._ruleOpsCache && this._ruleOpsCacheN === n) return this._ruleOpsCache;
+
+    const ops = new Set();
+    const rules = this.session?.rules || [];
+
+    const addLeafOp = (ast) => {
+      const op = ast?.operator?.name || ast?.operator?.value || null;
+      if (typeof op === 'string' && op) ops.add(op);
+    };
+
+    const walkParts = (part) => {
+      if (!part) return;
+      if (part.type === 'leaf' && part.ast) {
+        addLeafOp(part.ast);
+        return;
+      }
+      if (part.type === 'Not') return;
+      if ((part.type === 'And' || part.type === 'Or') && Array.isArray(part.parts)) {
+        for (const p of part.parts) walkParts(p);
+      }
+    };
+
+    for (const r of rules) {
+      if (r?.conclusionParts) {
+        walkParts(r.conclusionParts);
+        continue;
+      }
+      if (r?.conclusionAST) addLeafOp(r.conclusionAST);
+    }
+
+    this._ruleOpsCache = ops;
+    this._ruleOpsCacheN = n;
+    return ops;
+  }
+
+  /**
+   * Build a candidate domain for a hole using KB component indices.
+   * Returns a list of { name, witnesses, source:'kb' } or null if not available/too expensive.
+   */
+  buildCandidateDomainFromKB(operatorName, knowns, holeIndex) {
+    const kb = this.session?.componentKB;
+    if (!kb || typeof kb.findByOperator !== 'function') return null;
+
+    const knownByPos = new Map();
+    for (const k of knowns || []) {
+      if (typeof k?.index === 'number' && typeof k?.name === 'string') {
+        knownByPos.set(k.index, k.name);
+      }
+    }
+
+    // Choose the smallest indexed slice as the base (no synonym expansion; preserve QueryEngine semantics).
+    let facts = null;
+    if (knownByPos.has(1) && typeof kb.findByArg0 === 'function') {
+      facts = kb.findByArg0(knownByPos.get(1), false).filter(f => f?.operator === operatorName);
+    } else if (knownByPos.has(2) && typeof kb.findByArg1 === 'function') {
+      facts = kb.findByArg1(knownByPos.get(2), false).filter(f => f?.operator === operatorName);
+    } else {
+      facts = kb.findByOperator(operatorName, false);
+    }
+
+    if (!Array.isArray(facts) || facts.length === 0) return null;
+
+    const counts = new Map();
+    for (const f of facts) {
+      const args = Array.isArray(f?.args) ? f.args : Array.isArray(f?.metadata?.args) ? f.metadata.args : null;
+      if (!args || args.length < holeIndex) continue;
+
+      let ok = true;
+      for (const k of knowns || []) {
+        const idx = (k.index || 0) - 1;
+        if (idx < 0) continue;
+        if (args[idx] !== k.name) {
+          ok = false;
+          break;
+        }
+      }
+      if (!ok) continue;
+
+      const name = args[holeIndex - 1];
+      if (typeof name !== 'string' || !isValidEntity(name, this.session)) continue;
+      counts.set(name, (counts.get(name) || 0) + 1);
+    }
+
+    if (counts.size === 0) return null;
+
+    const out = Array.from(counts.entries())
+      .map(([name, witnesses]) => ({ name, witnesses, source: 'kb' }))
+      .sort((a, b) => (b.witnesses - a.witnesses) || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+
+    // Safety cap: avoid spending O(huge) similarity checks. Keep the most frequent candidates.
+    const maxDomain = Math.max(200, (this.config.UNBIND_MAX_CANDIDATES || 25) * 50);
+    return out.length > maxDomain ? out.slice(0, maxDomain) : out;
+  }
+
+  /**
+   * Fast, complete enumeration for single-hole fact queries using ComponentKB indices only.
+   * This path is exact (no HDC similarity gates, no proof search) and therefore safe to use
+   * as a replacement for symbolic supplement on "direct fact" queries.
+   */
+  tryDirectIndexQuery(operatorName, knowns, holes, options = {}) {
+    if (!operatorName) return null;
+    if (!Array.isArray(holes) || holes.length !== 1) return null;
+    const kb = this.session?.componentKB;
+    if (!kb || typeof kb.findByOperator !== 'function') return null;
+
+    const hole = holes[0];
+    if (!hole || typeof hole.index !== 'number' || typeof hole.name !== 'string') return null;
+
+    const knownByPos = new Map();
+    for (const k of knowns || []) {
+      if (typeof k?.index === 'number' && typeof k?.name === 'string') knownByPos.set(k.index, k.name);
+    }
+
+    // Use the smallest index slice available (no synonym expansion).
+    let facts;
+    if (knownByPos.has(1) && typeof kb.findByArg0 === 'function') {
+      this.trackOp('holo_index_domain_arg0', 1);
+      facts = kb.findByArg0(knownByPos.get(1), false).filter(f => f?.operator === operatorName);
+    } else if (knownByPos.has(2) && typeof kb.findByArg1 === 'function') {
+      this.trackOp('holo_index_domain_arg1', 1);
+      facts = kb.findByArg1(knownByPos.get(2), false).filter(f => f?.operator === operatorName);
+    } else {
+      this.trackOp('holo_index_domain_operator', 1);
+      facts = kb.findByOperator(operatorName, false);
+    }
+
+    if (!Array.isArray(facts) || facts.length === 0) return null;
+
+    const maxResults = Number.isFinite(options.maxResults) ? Math.max(1, options.maxResults) : null;
+    const seen = new Set();
+    const allResults = [];
+
+    for (const fact of facts) {
+      this.session.reasoningStats.kbScans++;
+      const args = Array.isArray(fact?.args) ? fact.args : Array.isArray(fact?.metadata?.args) ? fact.metadata.args : null;
+      if (!args || args.length < hole.index) continue;
+
+      let ok = true;
+      for (const [pos, name] of knownByPos.entries()) {
+        const idx = pos - 1;
+        if (idx < 0 || idx >= args.length || args[idx] !== name) {
+          ok = false;
+          break;
+        }
+      }
+      if (!ok) continue;
+
+      const value = args[hole.index - 1];
+      if (typeof value !== 'string' || !value) continue;
+
+      const key = `${hole.index}:${value}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      const bindings = new Map();
+      const stmt = `${operatorName} ${args.join(' ')}`;
+      const steps = [];
+      const metaProof = typeof fact?.metadata?.proof === 'string' ? fact.metadata.proof.trim() : '';
+      if (metaProof) steps.push(metaProof);
+      steps.push(stmt);
+
+      bindings.set(hole.name, { answer: value, similarity: 0.95, method: 'direct', steps });
+      allResults.push({ bindings, score: 0.95, method: 'direct', steps });
+
+      if (maxResults !== null && allResults.length >= maxResults) break;
+    }
+
+    if (allResults.length === 0) return null;
+
+    this.trackOp('holo_index_fastpath_success', 1);
+    return {
+      success: true,
+      bindings: allResults[0].bindings,
+      confidence: allResults[0].score,
+      ambiguous: allResults.length > 1,
+      allResults
+    };
+  }
+
+  /**
+   * Fast exact-fact check using ComponentKB indices (no proof search, no full KB scans).
+   */
+  hasDirectFactFast(operatorName, args) {
+    if (!operatorName || !Array.isArray(args) || args.length === 0) return false;
+    const kb = this.session?.componentKB;
+    if (!kb) return false;
+
+    let candidates;
+    if (args[0] && typeof kb.findByArg0 === 'function') {
+      candidates = kb.findByArg0(args[0], false).filter(f => f?.operator === operatorName);
+    } else if (typeof kb.findByOperator === 'function') {
+      candidates = kb.findByOperator(operatorName, false);
+    } else {
+      return false;
+    }
+
+    for (const fact of candidates || []) {
+      this.session.reasoningStats.kbScans++;
+      if (!fact || fact.operator !== operatorName) continue;
+      if (!Array.isArray(fact.args) || fact.args.length !== args.length) continue;
+      let ok = true;
+      for (let i = 0; i < args.length; i++) {
+        if (fact.args[i] !== args[i]) {
+          ok = false;
+          break;
+        }
+      }
+      if (ok) return true;
+    }
+    return false;
   }
 
   /**
@@ -80,19 +371,6 @@ export class HolographicQueryEngine {
 
     // Meta-operators and non-relational helpers should bypass HDC unbind.
     // HDC-first candidate extraction is not meaningful for these operations and produces noisy/invalid results.
-    const HDC_BYPASS_OPERATORS = new Set([
-      'abduce',
-      'whatif',
-      'explain',
-      'deduce',
-      'induce',
-      'bundle',
-      'difference',
-      'analogy',
-      'similar',
-      'verifyPlan'
-    ]);
-
     for (let i = 0; i < statement.args.length; i++) {
       const arg = statement.args[i];
       if (arg.type === 'Hole') {
@@ -120,8 +398,18 @@ export class HolographicQueryEngine {
       return this.symbolicEngine.execute(statement, options);
     }
 
-    if (HDC_BYPASS_OPERATORS.has(operatorName)) {
+    const queryClass = this.classifyQuery(operatorName, holes, knowns);
+    this.trackOp(`holo_query_class_${queryClass.kind}`, 1);
+    if (queryClass.symbolicOnly) {
+      this.trackOp('holo_symbolic_only', 1);
       return this.symbolicEngine.execute(statement, options);
+    }
+
+    // Safe fast-path: exact, complete retrieval for 1-hole fact queries using ComponentKB indices.
+    // This bypasses both HDC similarity and symbolic proof search.
+    if (queryClass.indexFastPathAllowed) {
+      const fast = this.tryDirectIndexQuery(operatorName, knowns, holes, options);
+      if (fast) return fast;
     }
 
     // Too many holes - fail
@@ -135,33 +423,41 @@ export class HolographicQueryEngine {
     }
 
     // Step 2: HDC unbind to find candidates
-    dbg('UNBIND', `Starting HDC unbind for ${operatorName} with ${holes.length} holes`);
-    const candidates = this.hdcUnbindCandidates(operator, operatorName, knowns, holes);
-    dbg('UNBIND', `Found ${candidates.length} candidate combinations`);
+    let candidates = [];
+    if (queryClass.hdcUnbindAllowed) {
+      this.session.reasoningStats.hdcUnbindAttempts =
+        (this.session.reasoningStats.hdcUnbindAttempts || 0) + 1;
 
-    this.session.reasoningStats.hdcUnbindAttempts =
-      (this.session.reasoningStats.hdcUnbindAttempts || 0) + 1;
+      dbg('UNBIND', `Starting HDC unbind for ${operatorName} with ${holes.length} holes`);
+      candidates = this.hdcUnbindCandidates(operator, operatorName, knowns, holes);
+      dbg('UNBIND', `Found ${candidates.length} candidate combinations`);
 
-    if (candidates.length > 0) {
-      this.session.reasoningStats.hdcUnbindSuccesses =
-        (this.session.reasoningStats.hdcUnbindSuccesses || 0) + 1;
+      if (candidates.length > 0) {
+        this.session.reasoningStats.hdcUnbindSuccesses =
+          (this.session.reasoningStats.hdcUnbindSuccesses || 0) + 1;
+      }
+    } else {
+      this.trackOp('holo_hdc_unbind_skipped', 1);
     }
 
     const maxResults = Number.isFinite(options.maxResults) ? Math.max(1, options.maxResults) : null;
 
     // Step 3: Validate candidates with symbolic proof
     const validatedResults = [];
-    const requireValidation = this.config.VALIDATION_REQUIRED !== false && !this.trustMasterEquation;
-    if (requireValidation) {
+    const requireProofValidation = this.config.VALIDATION_REQUIRED !== false;
+
+    if (requireProofValidation) {
       for (const candidate of candidates) {
         this.session.reasoningStats.hdcValidationAttempts =
           (this.session.reasoningStats.hdcValidationAttempts || 0) + 1;
 
+        this.trackOp('holo_validation_proof_attempt', 1);
         const validation = this.validateCandidate(operatorName, knowns, holes, candidate);
 
         if (validation.valid) {
           this.session.reasoningStats.hdcValidationSuccesses =
             (this.session.reasoningStats.hdcValidationSuccesses || 0) + 1;
+          this.trackOp('holo_validation_proof_ok', 1);
 
           // Build bindings map matching QueryEngine format
           const bindings = new Map();
@@ -187,26 +483,6 @@ export class HolographicQueryEngine {
           break;
         }
       }
-    } else {
-      // Trusted mode: accept HDC decode directly (no symbolic validation).
-      // This is safe only for strategies that guarantee structural correctness for fact membership.
-      for (const candidate of candidates) {
-        const bindings = new Map();
-        for (const [holeName, value] of Object.entries(candidate.bindings)) {
-          bindings.set(holeName, {
-            answer: value.name,
-            similarity: value.similarity,
-            method: 'hdc',
-            steps: []
-          });
-        }
-        validatedResults.push({
-          bindings,
-          score: candidate.combinedScore,
-          method: 'hdc'
-        });
-        if (maxResults !== null && validatedResults.length >= maxResults) break;
-      }
     }
 
     dbg('RESULTS', `${validatedResults.length} validated results`);
@@ -216,10 +492,12 @@ export class HolographicQueryEngine {
         (this.session.reasoningStats.holographicQueryHdcSuccesses || 0) + 1;
     }
 
-    // Step 4: Always merge with symbolic results for completeness.
-    // Even for strategies with structurally reliable unbind, symbolic results can represent
-    // transitive/rule-derived answers that are not explicit facts (and therefore not retrievable by unbind alone).
-    if (this.config.FALLBACK_TO_SYMBOLIC) {
+    // Step 4: Merge/fallback to symbolic when needed.
+    // For correctness: HDC candidate extraction is not complete; use symbolic supplement unless we returned
+    // via the direct index fast-path earlier.
+    const shouldSupplement = !!this.config.FALLBACK_TO_SYMBOLIC;
+
+    if (shouldSupplement) {
       const symbolicResult = this.symbolicEngine.execute(statement, options);
 
       if (symbolicResult.allResults && symbolicResult.allResults.length > 0) {
@@ -254,6 +532,8 @@ export class HolographicQueryEngine {
 
         dbg('MERGE', `Merged ${validatedResults.length} results (HDC + symbolic)`);
       }
+    } else {
+      this.trackOp('holo_skip_symbolic_supplement', 1);
     }
 
     // Match QueryEngine ordering + maxResults behavior.
@@ -310,23 +590,41 @@ export class HolographicQueryEngine {
       const unboundVec = unbind(unbind(kbBundle, queryPartial), posVec);
 
       // Find top-K similar in vocabulary (strategy-level topKSimilar)
-      const vocabulary = this.getVocabulary();
-      const rawTop = topKSimilar(
-        unboundVec,
-        vocabulary,
-        this.config.UNBIND_MAX_CANDIDATES * 3,
-        this.session
-      );
+      const kbDomain = this.buildCandidateDomainFromKB(operatorName, knowns, hole.index);
+      let candidates = null;
 
-      // If we skip symbolic validation, we must require a strong similarity gate to avoid “0.000 tie” noise.
-      const minSim = this.trustMasterEquation
-        ? Math.max(this.config.UNBIND_MIN_SIMILARITY ?? 0, this.thresholds.HDC_MATCH ?? 0)
-        : (this.config.UNBIND_MIN_SIMILARITY ?? 0);
-
-      const candidates = rawTop
-        .filter(c => c.similarity >= minSim)
-        .filter(c => isValidEntity(c.name, this.session))
-        .slice(0, this.config.UNBIND_MAX_CANDIDATES);
+      if (kbDomain && kbDomain.length > 0) {
+        this.trackOp('holo_domain_kb', 1);
+        const scored = [];
+        for (const entry of kbDomain) {
+          const vec = this.session.resolve({ type: 'Identifier', name: entry.name });
+          this.session.reasoningStats.similarityChecks++;
+          const sim = similarity(unboundVec, vec);
+          scored.push({
+            name: entry.name,
+            similarity: sim,
+            witnesses: entry.witnesses || 0,
+            source: 'kb'
+          });
+        }
+        scored.sort((a, b) => (b.similarity - a.similarity) || (b.witnesses - a.witnesses) || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+        candidates = scored
+          .filter(c => c.similarity >= (this.config.UNBIND_MIN_SIMILARITY ?? 0))
+          .slice(0, this.config.UNBIND_MAX_CANDIDATES);
+      } else {
+        this.trackOp('holo_domain_vocab', 1);
+        const vocabulary = this.getVocabulary();
+        const rawTop = topKSimilar(
+          unboundVec,
+          vocabulary,
+          this.config.UNBIND_MAX_CANDIDATES * 3,
+          this.session
+        );
+        candidates = rawTop
+          .filter(c => c.similarity >= (this.config.UNBIND_MIN_SIMILARITY ?? 0))
+          .filter(c => isValidEntity(c.name, this.session))
+          .slice(0, this.config.UNBIND_MAX_CANDIDATES);
+      }
 
       holeCandidates.set(hole.name, candidates);
       dbg('UNBIND', `Hole ?${hole.name}: ${candidates.length} candidates`);

@@ -41,6 +41,16 @@ const FAST_CONFIGS = [
   { strategy: 'exact', geometries: [256] }                   // placeholder (bits ignored)
 ];
 
+// Smallest “byte-equivalent” geometries (like runFastEval.mjs --small):
+// dense=64b (8B), sparse=k1, metric=8B, ema=8B
+const SMALL_CONFIGS = [
+  { strategy: 'dense-binary', geometries: [64] },            // bits (8 bytes)
+  { strategy: 'sparse-polynomial', geometries: [1] },        // k
+  { strategy: 'metric-affine', geometries: [8] },            // bytes
+  { strategy: 'metric-affine-elastic', geometries: [8] },    // bytes
+  { strategy: 'exact', geometries: [256] }                   // placeholder (bits ignored)
+];
+
 const HUGE_CONFIGS = [
   { strategy: 'dense-binary', geometries: [1024, 2048] },      // bits
   { strategy: 'sparse-polynomial', geometries: [8, 16] },      // k
@@ -525,7 +535,7 @@ async function runOne(config, bookPath) {
       book: path.basename(bookPath),
       passed: false,
       error: learnRes.errors?.map(e => e.error || String(e)).join('; ') || 'learn failed',
-      times: { sessionMs: tSessionMs, coreMs, learnMs, decodeMs: 0 },
+      times: { sessionMs: tSessionMs, coreMs, learnMs, decodeMs: 0, queryMs: 0 },
       stats,
       details: null
     };
@@ -539,13 +549,13 @@ async function runOne(config, bookPath) {
       book: path.basename(bookPath),
       passed: false,
       error: 'Missing book vector in scope: Book',
-      times: { sessionMs: tSessionMs, coreMs, learnMs, decodeMs: 0 },
+      times: { sessionMs: tSessionMs, coreMs, learnMs, decodeMs: 0, queryMs: 0 },
       stats,
       details: null
     };
   }
 
-  const tQ0 = nowMs();
+  const tHdc0 = nowMs();
   const posCandidates = buildCandidatesForQuery(session, {
     ideaNames,
     bookPrefix,
@@ -600,8 +610,9 @@ async function runOne(config, bookPath) {
     memNegCandidates,
     { strategyId, geometry, k: DEFAULT_CANDIDATE_SET_SIZE }
   );
-  const decodeMs = nowMs() - tQ0;
+  const decodeMs = nowMs() - tHdc0;
 
+  const tQuery0 = nowMs();
   const posQueryDsl = `@q ${pos.op} ${pos.book} ${pos.key} ?idea`;
   const negQueryDsl = `@q ${neg.op} ${neg.book} ${neg.key} ?idea`;
   const posQuery = runQueryValidation(session, posQueryDsl, 'idea');
@@ -611,6 +622,7 @@ async function runOne(config, bookPath) {
   const memNegQueryDsl = `@q ${pos.op} ${pos.book} ?key ${memIdeaNeg}`;
   const memPosQuery = runQueryValidation(session, memPosQueryDsl, 'key');
   const memNegQuery = runQueryValidation(session, memNegQueryDsl, 'key');
+  const queryMs = nowMs() - tQuery0;
 
   const stats = session.getReasoningStats();
   const exactStats = strategyId === 'exact' ? (session?.hdc?.strategy?._stats || null) : null;
@@ -640,7 +652,7 @@ async function runOne(config, bookPath) {
     queryMemPosPassed,
     queryMemNegPassed,
     error,
-    times: { sessionMs: tSessionMs, coreMs, learnMs, decodeMs },
+    times: { sessionMs: tSessionMs, coreMs, learnMs, decodeMs, queryMs },
     stats,
     exactStats,
     details: {
@@ -667,7 +679,7 @@ async function runOne(config, bookPath) {
 
 async function main() {
   const args = process.argv.slice(2);
-  const allowedFlags = new Set(['--full', '--huge', '--extra-huge', '--details', '--no-color', '--help']);
+  const allowedFlags = new Set(['--full', '--huge', '--extra-huge', '--small', '--details', '--no-color', '--help']);
   const allowedPrefixes = ['--strategies=', '--priority='];
   const unknownFlags = args.filter(a =>
     a.startsWith('-') &&
@@ -689,6 +701,7 @@ Options:
   --full            Run full geometry sweep
   --huge            Run huge geometry sweep
   --extra-huge      Run extra huge geometry sweep (skips sparse-polynomial)
+  --small           Run smallest geometries (8-byte equivalents)
   --strategies=...  Comma-separated strategy list
   --priority=...    symbolicPriority or holographicPriority
   --no-color        Disable ANSI colors
@@ -699,11 +712,17 @@ Options:
   const fullMode = hasFlag('--full');
   const hugeMode = hasFlag('--huge');
   const extraHugeMode = hasFlag('--extra-huge');
+  const smallMode = hasFlag('--small');
   const details = true;
   const noColor = hasFlag('--no-color');
   const useColor = process.stdout.isTTY && !noColor;
   const strategiesArg = parseArg('--strategies');
   const priorityArg = parseArg('--priority');
+
+  if (smallMode && (fullMode || hugeMode || extraHugeMode)) {
+    console.error('Cannot combine --small with --full/--huge/--extra-huge.');
+    process.exit(1);
+  }
 
   const priorities = priorityArg
     ? [priorityArg]
@@ -716,7 +735,7 @@ Options:
 
   const baseConfigs = extraHugeMode
     ? EXTRA_HUGE_CONFIGS
-    : (hugeMode ? HUGE_CONFIGS : (fullMode ? FULL_CONFIGS : FAST_CONFIGS));
+    : (hugeMode ? HUGE_CONFIGS : (fullMode ? FULL_CONFIGS : (smallMode ? SMALL_CONFIGS : FAST_CONFIGS)));
 
   let effectiveConfigs = baseConfigs;
   if (extraHugeMode) {
@@ -788,6 +807,7 @@ Options:
     let queryMemPass = 0;
     let totalLearn = 0;
     let totalDecode = 0;
+    let totalQuery = 0;
     let totalSim = 0;
     let totalExactUnbindChecks = 0;
     let totalExactUnbindOutputs = 0;
@@ -814,6 +834,7 @@ Options:
       if (res.queryMemPassed) queryMemPass++;
       totalLearn += res.times.learnMs;
       totalDecode += res.times.decodeMs;
+      totalQuery += res.times.queryMs;
       totalSim += simChecks;
       if (res.exactStats) {
         totalExactUnbindChecks += res.exactStats.unbindChecks || 0;
@@ -830,7 +851,7 @@ Options:
       const memQryTag = res.queryMemPassed ? colorize(useColor, ANSI.green, 'M-QRY:PASS') : colorize(useColor, ANSI.red, 'M-QRY:FAIL');
       const posTag = posOk ? colorize(useColor, ANSI.green, 'POS') : colorize(useColor, ANSI.red, 'POS');
       const negTag = negOk ? colorize(useColor, ANSI.green, 'NEG') : colorize(useColor, ANSI.red, 'NEG');
-      const bookLine = `- ${bookName}: ${status} ${hdcTag}/${qryTag} ${memHdcTag}/${memQryTag} ${posTag}/${negTag} learn=${fmtMs(res.times.learnMs)} decode=${fmtMs(res.times.decodeMs)}`;
+      const bookLine = `- ${bookName}: ${status} ${hdcTag}/${qryTag} ${memHdcTag}/${memQryTag} ${posTag}/${negTag} learn=${fmtMs(res.times.learnMs)} decode=${fmtMs(res.times.decodeMs)} query=${fmtMs(res.times.queryMs)}`;
       console.log(bookLine);
 
       perBook.push({
@@ -882,6 +903,7 @@ Options:
         exactUnbindOutTerms: res.exactStats?.unbindOutTerms ?? null,
         learnMs: res.times.learnMs,
         decodeMs: res.times.decodeMs,
+        queryMs: res.times.queryMs,
         error: res.error
       });
     }
@@ -907,6 +929,7 @@ Options:
       exactUnbindOutTerms: totalExactUnbindOutputs,
       learnMs: totalLearn,
       decodeMs: totalDecode,
+      queryMs: totalQuery,
       avgPosMargin: avg(posMargins),
       avgNegMargin: avg(negMargins)
     });
@@ -915,11 +938,11 @@ Options:
 
   // Summary table (configs as rows)
   const rows = Array.from(totalsByConfig.values())
-    .sort((a, b) => (a.learnMs + a.decodeMs) - (b.learnMs + b.decodeMs));
+    .sort((a, b) => (a.learnMs + a.decodeMs + a.queryMs) - (b.learnMs + b.decodeMs + b.queryMs));
 
   const bestHdcPass = Math.max(...rows.map(r => r.hdcPass));
   const bestQueryPass = Math.max(...rows.map(r => r.queryPass));
-  const fastestMsRounded = Math.min(...rows.map(r => Math.round(r.learnMs + r.decodeMs)));
+  const fastestMsRounded = Math.min(...rows.map(r => Math.round(r.learnMs + r.decodeMs + r.queryMs)));
 
   const headers = [
     { key: 'label', title: 'Config', align: 'left' },
@@ -935,12 +958,12 @@ Options:
     { key: 'mNeg', title: 'AvgNegM', align: 'right' },
     { key: 'sim', title: 'SimChk', align: 'right' },
     { key: 'uChk', title: 'UnbChk', align: 'right' },
-    { key: 'time', title: 'Time', align: 'right' }
+    { key: 'time', title: 'Total', align: 'right' }
   ];
 
   const formatted = rows.map(r => {
     const pct = Math.floor((r.pass / r.total) * 100);
-    const timeMs = Math.round(r.learnMs + r.decodeMs);
+    const timeMs = Math.round(r.learnMs + r.decodeMs + r.queryMs);
     const timeText = `${timeMs}ms`;
 
     const timeColored = timeMs === fastestMsRounded
@@ -1017,7 +1040,7 @@ Options:
 
   const bestHdc = rows.filter(r => r.hdcPass === bestHdcPass);
   const bestQuery = rows.filter(r => r.queryPass === bestQueryPass);
-  const fastest = rows.find(r => Math.round(r.learnMs + r.decodeMs) === fastestMsRounded);
+  const fastest = rows.find(r => Math.round(r.learnMs + r.decodeMs + r.queryMs) === fastestMsRounded);
 
   if (details) {
     for (const cfg of rows) {
@@ -1213,17 +1236,19 @@ Options:
 
   const bookNames = books.map(b => path.basename(b, '.sys2'));
   const formattedByLabel = new Map(formatted.map(row => [stripAnsi(row.label), row.label]));
-  const statusHeaders = [
+  const makeStatusHeaders = (timeTitle) => ([
     { key: 'label', title: 'Config', align: 'left' },
     ...bookNames.map(book => ({ key: book, title: book, align: 'left' })),
-    { key: 'time', title: 'Time', align: 'right' }
-  ];
+    { key: 'time', title: timeTitle, align: 'right' }
+  ]);
 
   const buildStatusRows = (mode) => rows.map(r => {
     const bundle = byConfigDetails.get(r.label);
     const perBook = bundle?.perBook || [];
     const byBook = new Map(perBook.map(b => [b.book, b]));
-    const timeMs = Math.round(r.learnMs + r.decodeMs);
+    const timeMs = mode === 'query'
+      ? Math.round(r.queryMs)
+      : Math.round(r.learnMs + r.decodeMs);
     const row = {
       label: formattedByLabel.get(r.label) || r.label,
       time: `${timeMs}ms`,
@@ -1243,7 +1268,8 @@ Options:
     return row;
   });
 
-  const renderStatusTable = (title, rowsForTable, sortByTime = false) => {
+  const renderStatusTable = (title, rowsForTable, { sortByTime = false, timeTitle = 'Time' } = {}) => {
+    const statusHeaders = makeStatusHeaders(timeTitle);
     const rowsToRender = sortByTime
       ? rowsForTable.slice().sort((a, b) => a._timeMs - b._timeMs)
       : rowsForTable;
@@ -1281,8 +1307,8 @@ Options:
     console.log(useColor ? statusLine() : stripAnsi(statusLine()));
   };
 
-  renderStatusTable('Per-Book Results (HDC)', buildStatusRows('hdc'));
-  renderStatusTable('Per-Book Results (Query)', buildStatusRows('query'), true);
+  renderStatusTable('Per-Book Results (HDC)', buildStatusRows('hdc'), { timeTitle: 'HDC' });
+  renderStatusTable('Per-Book Results (Query)', buildStatusRows('query'), { sortByTime: true, timeTitle: 'Query' });
 
   console.log();
   printSummaryTable();
@@ -1291,7 +1317,7 @@ Options:
   console.log(`${ANSI.bold}Conclusions${ANSI.reset}`);
   console.log(`- Best HDC pass rate: ${bestHdc.map(b => b.label).join(' | ')} (${bestHdcPass}/${books.length})`);
   console.log(`- Best Query pass rate: ${bestQuery.map(b => b.label).join(' | ')} (${bestQueryPass}/${books.length})`);
-  console.log(`- Fastest: ${fastest?.label ?? 'n/a'} (${fastestMsRounded}ms total learn+decode)`);
+  console.log(`- Fastest: ${fastest?.label ?? 'n/a'} (${fastestMsRounded}ms total learn+decode+query)`);
   console.log(`- Tip: use \`--full\` or \`--huge\` to sweep larger geometries.`);
 }
 
