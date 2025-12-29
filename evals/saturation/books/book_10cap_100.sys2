@@ -1,0 +1,269 @@
+# book_10cap_100.sys2: 10 chapters, 10 ideas/chapter
+# SAT_QUERY_POS op=Mentions book=Book10Cap100 key=Key_B10C100_C10_I10 expect=Idea_Key_B10C100_C10_I10
+# SAT_QUERY_NEG op=Mentions book=Book10Cap100 key=Key_B10C100_Missing expect=none
+
+@Mentions:Mentions __Relation
+@IdeaAbout:IdeaAbout __Relation
+
+@B10_R0001:Mentions_B10_R0001 Mentions Book10Cap100 Key_B10C100_C01_I01 Idea_Key_B10C100_C01_I01
+@B10_D0001:IdeaAbout_B10_D0001 IdeaAbout Book10Cap100 Ch01 Idea_Key_B10C100_C01_I01 Learning Incremental Memory Gate Minimal Coverage
+@B10_R0002:Mentions_B10_R0002 Mentions Book10Cap100 Key_B10C100_C01_I02 Idea_Key_B10C100_C01_I02
+@B10_D0002:IdeaAbout_B10_D0002 IdeaAbout Book10Cap100 Ch01 Idea_Key_B10C100_C01_I02 Planner Adaptive Memory Index Robust Throughput
+@B10_R0003:Mentions_B10_R0003 Mentions Book10Cap100 Key_B10C100_C01_I03 Idea_Key_B10C100_C01_I03
+@B10_D0003:IdeaAbout_B10_D0003 IdeaAbout Book10Cap100 Ch01 Idea_Key_B10C100_C01_I03 Control Hierarchical Memory Update Traceable Coverage
+@B10_R0004:Mentions_B10_R0004 Mentions Book10Cap100 Key_B10C100_C01_I04 Idea_Key_B10C100_C01_I04
+@B10_D0004:IdeaAbout_B10_D0004 IdeaAbout Book10Cap100 Ch01 Idea_Key_B10C100_C01_I04 Protocol Ordered Memory Stack Scalable Throughput
+@B10_R0005:Mentions_B10_R0005 Mentions Book10Cap100 Key_B10C100_C01_I05 Idea_Key_B10C100_C01_I05
+@B10_D0005:IdeaAbout_B10_D0005 IdeaAbout Book10Cap100 Ch01 Idea_Key_B10C100_C01_I05 Coordination Stable Memory Loop Strict Coverage
+@B10_R0006:Mentions_B10_R0006 Mentions Book10Cap100 Key_B10C100_C01_I06 Idea_Key_B10C100_C01_I06
+@B10_D0006:IdeaAbout_B10_D0006 IdeaAbout Book10Cap100 Ch01 Idea_Key_B10C100_C01_I06 Optimization Resilient Memory Routing Minimal Throughput
+@B10_R0007:Mentions_B10_R0007 Mentions Book10Cap100 Key_B10C100_C01_I07 Idea_Key_B10C100_C01_I07
+@B10_D0007:IdeaAbout_B10_D0007 IdeaAbout Book10Cap100 Ch01 Idea_Key_B10C100_C01_I07 Safety Precise Memory Pruning Robust Coverage
+@B10_R0008:Mentions_B10_R0008 Mentions Book10Cap100 Key_B10C100_C01_I08 Idea_Key_B10C100_C01_I08
+@B10_D0008:IdeaAbout_B10_D0008 IdeaAbout Book10Cap100 Ch01 Idea_Key_B10C100_C01_I08 Mapping Selective Memory Guard Traceable Throughput
+@B10_R0009:Mentions_B10_R0009 Mentions Book10Cap100 Key_B10C100_C01_I09 Idea_Key_B10C100_C01_I09
+@B10_D0009:IdeaAbout_B10_D0009 IdeaAbout Book10Cap100 Ch01 Idea_Key_B10C100_C01_I09 Process Volatile Memory Weaving Scalable Coverage
+@B10_R0010:Mentions_B10_R0010 Mentions Book10Cap100 Key_B10C100_C01_I10 Idea_Key_B10C100_C01_I10
+@B10_D0010:IdeaAbout_B10_D0010 IdeaAbout Book10Cap100 Ch01 Idea_Key_B10C100_C01_I10 Memory Durable Memory Fusion Strict Throughput
+
+@Chapter01_P1:Chapter01_P1 bundle [$B10_R0001, $B10_D0001, $B10_R0002, $B10_D0002, $B10_R0003, $B10_D0003, $B10_R0004, $B10_D0004, $B10_R0005, $B10_D0005, $B10_R0006, $B10_D0006, $B10_R0007, $B10_D0007, $B10_R0008, $B10_D0008, $B10_R0009, $B10_D0009, $B10_R0010, $B10_D0010]
+
+@Chapter01:Chapter01 bundle [$Chapter01_P1]
+@Chapter01_Seq __Sequence [$Chapter01_P1]
+
+@B10_R0011:Mentions_B10_R0011 Mentions Book10Cap100 Key_B10C100_C02_I01 Idea_Key_B10C100_C02_I01
+@B10_D0011:IdeaAbout_B10_D0011 IdeaAbout Book10Cap100 Ch02 Idea_Key_B10C100_C02_I01 Planner Ordered Learning Gate Exact Precision
+@B10_R0012:Mentions_B10_R0012 Mentions Book10Cap100 Key_B10C100_C02_I02 Idea_Key_B10C100_C02_I02
+@B10_D0012:IdeaAbout_B10_D0012 IdeaAbout Book10Cap100 Ch02 Idea_Key_B10C100_C02_I02 Control Stable Learning Index Coherent Consistency
+@B10_R0013:Mentions_B10_R0013 Mentions Book10Cap100 Key_B10C100_C02_I03 Idea_Key_B10C100_C02_I03
+@B10_D0013:IdeaAbout_B10_D0013 IdeaAbout Book10Cap100 Ch02 Idea_Key_B10C100_C02_I03 Protocol Resilient Learning Update Secure Precision
+@B10_R0014:Mentions_B10_R0014 Mentions Book10Cap100 Key_B10C100_C02_I04 Idea_Key_B10C100_C02_I04
+@B10_D0014:IdeaAbout_B10_D0014 IdeaAbout Book10Cap100 Ch02 Idea_Key_B10C100_C02_I04 Coordination Precise Learning Stack Bounded Consistency
+@B10_R0015:Mentions_B10_R0015 Mentions Book10Cap100 Key_B10C100_C02_I05 Idea_Key_B10C100_C02_I05
+@B10_D0015:IdeaAbout_B10_D0015 IdeaAbout Book10Cap100 Ch02 Idea_Key_B10C100_C02_I05 Optimization Selective Learning Loop Fast Precision
+@B10_R0016:Mentions_B10_R0016 Mentions Book10Cap100 Key_B10C100_C02_I06 Idea_Key_B10C100_C02_I06
+@B10_D0016:IdeaAbout_B10_D0016 IdeaAbout Book10Cap100 Ch02 Idea_Key_B10C100_C02_I06 Safety Volatile Learning Routing Exact Consistency
+@B10_R0017:Mentions_B10_R0017 Mentions Book10Cap100 Key_B10C100_C02_I07 Idea_Key_B10C100_C02_I07
+@B10_D0017:IdeaAbout_B10_D0017 IdeaAbout Book10Cap100 Ch02 Idea_Key_B10C100_C02_I07 Mapping Durable Learning Pruning Coherent Precision
+@B10_R0018:Mentions_B10_R0018 Mentions Book10Cap100 Key_B10C100_C02_I08 Idea_Key_B10C100_C02_I08
+@B10_D0018:IdeaAbout_B10_D0018 IdeaAbout Book10Cap100 Ch02 Idea_Key_B10C100_C02_I08 Process Incremental Learning Guard Secure Consistency
+@B10_R0019:Mentions_B10_R0019 Mentions Book10Cap100 Key_B10C100_C02_I09 Idea_Key_B10C100_C02_I09
+@B10_D0019:IdeaAbout_B10_D0019 IdeaAbout Book10Cap100 Ch02 Idea_Key_B10C100_C02_I09 Memory Adaptive Learning Weaving Bounded Precision
+@B10_R0020:Mentions_B10_R0020 Mentions Book10Cap100 Key_B10C100_C02_I10 Idea_Key_B10C100_C02_I10
+@B10_D0020:IdeaAbout_B10_D0020 IdeaAbout Book10Cap100 Ch02 Idea_Key_B10C100_C02_I10 Learning Hierarchical Learning Fusion Fast Consistency
+
+@Chapter02_P1:Chapter02_P1 bundle [$B10_R0011, $B10_D0011, $B10_R0012, $B10_D0012, $B10_R0013, $B10_D0013, $B10_R0014, $B10_D0014, $B10_R0015, $B10_D0015, $B10_R0016, $B10_D0016, $B10_R0017, $B10_D0017, $B10_R0018, $B10_D0018, $B10_R0019, $B10_D0019, $B10_R0020, $B10_D0020]
+
+@Chapter02:Chapter02 bundle [$Chapter02_P1]
+@Chapter02_Seq __Sequence [$Chapter02_P1]
+
+@B10_R0021:Mentions_B10_R0021 Mentions Book10Cap100 Key_B10C100_C03_I01 Idea_Key_B10C100_C03_I01
+@B10_D0021:IdeaAbout_B10_D0021 IdeaAbout Book10Cap100 Ch03 Idea_Key_B10C100_C03_I01 Control Precise Planning Gate Robust Recall
+@B10_R0022:Mentions_B10_R0022 Mentions Book10Cap100 Key_B10C100_C03_I02 Idea_Key_B10C100_C03_I02
+@B10_D0022:IdeaAbout_B10_D0022 IdeaAbout Book10Cap100 Ch03 Idea_Key_B10C100_C03_I02 Protocol Selective Planning Index Traceable Convergence
+@B10_R0023:Mentions_B10_R0023 Mentions Book10Cap100 Key_B10C100_C03_I03 Idea_Key_B10C100_C03_I03
+@B10_D0023:IdeaAbout_B10_D0023 IdeaAbout Book10Cap100 Ch03 Idea_Key_B10C100_C03_I03 Coordination Volatile Planning Update Scalable Recall
+@B10_R0024:Mentions_B10_R0024 Mentions Book10Cap100 Key_B10C100_C03_I04 Idea_Key_B10C100_C03_I04
+@B10_D0024:IdeaAbout_B10_D0024 IdeaAbout Book10Cap100 Ch03 Idea_Key_B10C100_C03_I04 Optimization Durable Planning Stack Strict Convergence
+@B10_R0025:Mentions_B10_R0025 Mentions Book10Cap100 Key_B10C100_C03_I05 Idea_Key_B10C100_C03_I05
+@B10_D0025:IdeaAbout_B10_D0025 IdeaAbout Book10Cap100 Ch03 Idea_Key_B10C100_C03_I05 Safety Incremental Planning Loop Minimal Recall
+@B10_R0026:Mentions_B10_R0026 Mentions Book10Cap100 Key_B10C100_C03_I06 Idea_Key_B10C100_C03_I06
+@B10_D0026:IdeaAbout_B10_D0026 IdeaAbout Book10Cap100 Ch03 Idea_Key_B10C100_C03_I06 Mapping Adaptive Planning Routing Robust Convergence
+@B10_R0027:Mentions_B10_R0027 Mentions Book10Cap100 Key_B10C100_C03_I07 Idea_Key_B10C100_C03_I07
+@B10_D0027:IdeaAbout_B10_D0027 IdeaAbout Book10Cap100 Ch03 Idea_Key_B10C100_C03_I07 Process Hierarchical Planning Pruning Traceable Recall
+@B10_R0028:Mentions_B10_R0028 Mentions Book10Cap100 Key_B10C100_C03_I08 Idea_Key_B10C100_C03_I08
+@B10_D0028:IdeaAbout_B10_D0028 IdeaAbout Book10Cap100 Ch03 Idea_Key_B10C100_C03_I08 Memory Ordered Planning Guard Scalable Convergence
+@B10_R0029:Mentions_B10_R0029 Mentions Book10Cap100 Key_B10C100_C03_I09 Idea_Key_B10C100_C03_I09
+@B10_D0029:IdeaAbout_B10_D0029 IdeaAbout Book10Cap100 Ch03 Idea_Key_B10C100_C03_I09 Learning Stable Planning Weaving Strict Recall
+@B10_R0030:Mentions_B10_R0030 Mentions Book10Cap100 Key_B10C100_C03_I10 Idea_Key_B10C100_C03_I10
+@B10_D0030:IdeaAbout_B10_D0030 IdeaAbout Book10Cap100 Ch03 Idea_Key_B10C100_C03_I10 Planner Resilient Planning Fusion Minimal Convergence
+
+@Chapter03_P1:Chapter03_P1 bundle [$B10_R0021, $B10_D0021, $B10_R0022, $B10_D0022, $B10_R0023, $B10_D0023, $B10_R0024, $B10_D0024, $B10_R0025, $B10_D0025, $B10_R0026, $B10_D0026, $B10_R0027, $B10_D0027, $B10_R0028, $B10_D0028, $B10_R0029, $B10_D0029, $B10_R0030, $B10_D0030]
+
+@Chapter03:Chapter03 bundle [$Chapter03_P1]
+@Chapter03_Seq __Sequence [$Chapter03_P1]
+
+@B10_R0031:Mentions_B10_R0031 Mentions Book10Cap100 Key_B10C100_C04_I01 Idea_Key_B10C100_C04_I01
+@B10_D0031:IdeaAbout_B10_D0031 IdeaAbout Book10Cap100 Ch04 Idea_Key_B10C100_C04_I01 Protocol Durable Control Gate Coherent Auditability
+@B10_R0032:Mentions_B10_R0032 Mentions Book10Cap100 Key_B10C100_C04_I02 Idea_Key_B10C100_C04_I02
+@B10_D0032:IdeaAbout_B10_D0032 IdeaAbout Book10Cap100 Ch04 Idea_Key_B10C100_C04_I02 Coordination Incremental Control Index Secure Stability
+@B10_R0033:Mentions_B10_R0033 Mentions Book10Cap100 Key_B10C100_C04_I03 Idea_Key_B10C100_C04_I03
+@B10_D0033:IdeaAbout_B10_D0033 IdeaAbout Book10Cap100 Ch04 Idea_Key_B10C100_C04_I03 Optimization Adaptive Control Update Bounded Auditability
+@B10_R0034:Mentions_B10_R0034 Mentions Book10Cap100 Key_B10C100_C04_I04 Idea_Key_B10C100_C04_I04
+@B10_D0034:IdeaAbout_B10_D0034 IdeaAbout Book10Cap100 Ch04 Idea_Key_B10C100_C04_I04 Safety Hierarchical Control Stack Fast Stability
+@B10_R0035:Mentions_B10_R0035 Mentions Book10Cap100 Key_B10C100_C04_I05 Idea_Key_B10C100_C04_I05
+@B10_D0035:IdeaAbout_B10_D0035 IdeaAbout Book10Cap100 Ch04 Idea_Key_B10C100_C04_I05 Mapping Ordered Control Loop Exact Auditability
+@B10_R0036:Mentions_B10_R0036 Mentions Book10Cap100 Key_B10C100_C04_I06 Idea_Key_B10C100_C04_I06
+@B10_D0036:IdeaAbout_B10_D0036 IdeaAbout Book10Cap100 Ch04 Idea_Key_B10C100_C04_I06 Process Stable Control Routing Coherent Stability
+@B10_R0037:Mentions_B10_R0037 Mentions Book10Cap100 Key_B10C100_C04_I07 Idea_Key_B10C100_C04_I07
+@B10_D0037:IdeaAbout_B10_D0037 IdeaAbout Book10Cap100 Ch04 Idea_Key_B10C100_C04_I07 Memory Resilient Control Pruning Secure Auditability
+@B10_R0038:Mentions_B10_R0038 Mentions Book10Cap100 Key_B10C100_C04_I08 Idea_Key_B10C100_C04_I08
+@B10_D0038:IdeaAbout_B10_D0038 IdeaAbout Book10Cap100 Ch04 Idea_Key_B10C100_C04_I08 Learning Precise Control Guard Bounded Stability
+@B10_R0039:Mentions_B10_R0039 Mentions Book10Cap100 Key_B10C100_C04_I09 Idea_Key_B10C100_C04_I09
+@B10_D0039:IdeaAbout_B10_D0039 IdeaAbout Book10Cap100 Ch04 Idea_Key_B10C100_C04_I09 Planner Selective Control Weaving Fast Auditability
+@B10_R0040:Mentions_B10_R0040 Mentions Book10Cap100 Key_B10C100_C04_I10 Idea_Key_B10C100_C04_I10
+@B10_D0040:IdeaAbout_B10_D0040 IdeaAbout Book10Cap100 Ch04 Idea_Key_B10C100_C04_I10 Control Volatile Control Fusion Exact Stability
+
+@Chapter04_P1:Chapter04_P1 bundle [$B10_R0031, $B10_D0031, $B10_R0032, $B10_D0032, $B10_R0033, $B10_D0033, $B10_R0034, $B10_D0034, $B10_R0035, $B10_D0035, $B10_R0036, $B10_D0036, $B10_R0037, $B10_D0037, $B10_R0038, $B10_D0038, $B10_R0039, $B10_D0039, $B10_R0040, $B10_D0040]
+
+@Chapter04:Chapter04 bundle [$Chapter04_P1]
+@Chapter04_Seq __Sequence [$Chapter04_P1]
+
+@B10_R0041:Mentions_B10_R0041 Mentions Book10Cap100 Key_B10C100_C05_I01 Idea_Key_B10C100_C05_I01
+@B10_D0041:IdeaAbout_B10_D0041 IdeaAbout Book10Cap100 Ch05 Idea_Key_B10C100_C05_I01 Coordination Hierarchical Communication Gate Traceable Accuracy
+@B10_R0042:Mentions_B10_R0042 Mentions Book10Cap100 Key_B10C100_C05_I02 Idea_Key_B10C100_C05_I02
+@B10_D0042:IdeaAbout_B10_D0042 IdeaAbout Book10Cap100 Ch05 Idea_Key_B10C100_C05_I02 Optimization Ordered Communication Index Scalable Latency
+@B10_R0043:Mentions_B10_R0043 Mentions Book10Cap100 Key_B10C100_C05_I03 Idea_Key_B10C100_C05_I03
+@B10_D0043:IdeaAbout_B10_D0043 IdeaAbout Book10Cap100 Ch05 Idea_Key_B10C100_C05_I03 Safety Stable Communication Update Strict Accuracy
+@B10_R0044:Mentions_B10_R0044 Mentions Book10Cap100 Key_B10C100_C05_I04 Idea_Key_B10C100_C05_I04
+@B10_D0044:IdeaAbout_B10_D0044 IdeaAbout Book10Cap100 Ch05 Idea_Key_B10C100_C05_I04 Mapping Resilient Communication Stack Minimal Latency
+@B10_R0045:Mentions_B10_R0045 Mentions Book10Cap100 Key_B10C100_C05_I05 Idea_Key_B10C100_C05_I05
+@B10_D0045:IdeaAbout_B10_D0045 IdeaAbout Book10Cap100 Ch05 Idea_Key_B10C100_C05_I05 Process Precise Communication Loop Robust Accuracy
+@B10_R0046:Mentions_B10_R0046 Mentions Book10Cap100 Key_B10C100_C05_I06 Idea_Key_B10C100_C05_I06
+@B10_D0046:IdeaAbout_B10_D0046 IdeaAbout Book10Cap100 Ch05 Idea_Key_B10C100_C05_I06 Memory Selective Communication Routing Traceable Latency
+@B10_R0047:Mentions_B10_R0047 Mentions Book10Cap100 Key_B10C100_C05_I07 Idea_Key_B10C100_C05_I07
+@B10_D0047:IdeaAbout_B10_D0047 IdeaAbout Book10Cap100 Ch05 Idea_Key_B10C100_C05_I07 Learning Volatile Communication Pruning Scalable Accuracy
+@B10_R0048:Mentions_B10_R0048 Mentions Book10Cap100 Key_B10C100_C05_I08 Idea_Key_B10C100_C05_I08
+@B10_D0048:IdeaAbout_B10_D0048 IdeaAbout Book10Cap100 Ch05 Idea_Key_B10C100_C05_I08 Planner Durable Communication Guard Strict Latency
+@B10_R0049:Mentions_B10_R0049 Mentions Book10Cap100 Key_B10C100_C05_I09 Idea_Key_B10C100_C05_I09
+@B10_D0049:IdeaAbout_B10_D0049 IdeaAbout Book10Cap100 Ch05 Idea_Key_B10C100_C05_I09 Control Incremental Communication Weaving Minimal Accuracy
+@B10_R0050:Mentions_B10_R0050 Mentions Book10Cap100 Key_B10C100_C05_I10 Idea_Key_B10C100_C05_I10
+@B10_D0050:IdeaAbout_B10_D0050 IdeaAbout Book10Cap100 Ch05 Idea_Key_B10C100_C05_I10 Protocol Adaptive Communication Fusion Robust Latency
+
+@Chapter05_P1:Chapter05_P1 bundle [$B10_R0041, $B10_D0041, $B10_R0042, $B10_D0042, $B10_R0043, $B10_D0043, $B10_R0044, $B10_D0044, $B10_R0045, $B10_D0045, $B10_R0046, $B10_D0046, $B10_R0047, $B10_D0047, $B10_R0048, $B10_D0048, $B10_R0049, $B10_D0049, $B10_R0050, $B10_D0050]
+
+@Chapter05:Chapter05 bundle [$Chapter05_P1]
+@Chapter05_Seq __Sequence [$Chapter05_P1]
+
+@B10_R0051:Mentions_B10_R0051 Mentions Book10Cap100 Key_B10C100_C06_I01 Idea_Key_B10C100_C06_I01
+@B10_D0051:IdeaAbout_B10_D0051 IdeaAbout Book10Cap100 Ch06 Idea_Key_B10C100_C06_I01 Optimization Resilient Coordination Gate Secure Throughput
+@B10_R0052:Mentions_B10_R0052 Mentions Book10Cap100 Key_B10C100_C06_I02 Idea_Key_B10C100_C06_I02
+@B10_D0052:IdeaAbout_B10_D0052 IdeaAbout Book10Cap100 Ch06 Idea_Key_B10C100_C06_I02 Safety Precise Coordination Index Bounded Coverage
+@B10_R0053:Mentions_B10_R0053 Mentions Book10Cap100 Key_B10C100_C06_I03 Idea_Key_B10C100_C06_I03
+@B10_D0053:IdeaAbout_B10_D0053 IdeaAbout Book10Cap100 Ch06 Idea_Key_B10C100_C06_I03 Mapping Selective Coordination Update Fast Throughput
+@B10_R0054:Mentions_B10_R0054 Mentions Book10Cap100 Key_B10C100_C06_I04 Idea_Key_B10C100_C06_I04
+@B10_D0054:IdeaAbout_B10_D0054 IdeaAbout Book10Cap100 Ch06 Idea_Key_B10C100_C06_I04 Process Volatile Coordination Stack Exact Coverage
+@B10_R0055:Mentions_B10_R0055 Mentions Book10Cap100 Key_B10C100_C06_I05 Idea_Key_B10C100_C06_I05
+@B10_D0055:IdeaAbout_B10_D0055 IdeaAbout Book10Cap100 Ch06 Idea_Key_B10C100_C06_I05 Memory Durable Coordination Loop Coherent Throughput
+@B10_R0056:Mentions_B10_R0056 Mentions Book10Cap100 Key_B10C100_C06_I06 Idea_Key_B10C100_C06_I06
+@B10_D0056:IdeaAbout_B10_D0056 IdeaAbout Book10Cap100 Ch06 Idea_Key_B10C100_C06_I06 Learning Incremental Coordination Routing Secure Coverage
+@B10_R0057:Mentions_B10_R0057 Mentions Book10Cap100 Key_B10C100_C06_I07 Idea_Key_B10C100_C06_I07
+@B10_D0057:IdeaAbout_B10_D0057 IdeaAbout Book10Cap100 Ch06 Idea_Key_B10C100_C06_I07 Planner Adaptive Coordination Pruning Bounded Throughput
+@B10_R0058:Mentions_B10_R0058 Mentions Book10Cap100 Key_B10C100_C06_I08 Idea_Key_B10C100_C06_I08
+@B10_D0058:IdeaAbout_B10_D0058 IdeaAbout Book10Cap100 Ch06 Idea_Key_B10C100_C06_I08 Control Hierarchical Coordination Guard Fast Coverage
+@B10_R0059:Mentions_B10_R0059 Mentions Book10Cap100 Key_B10C100_C06_I09 Idea_Key_B10C100_C06_I09
+@B10_D0059:IdeaAbout_B10_D0059 IdeaAbout Book10Cap100 Ch06 Idea_Key_B10C100_C06_I09 Protocol Ordered Coordination Weaving Exact Throughput
+@B10_R0060:Mentions_B10_R0060 Mentions Book10Cap100 Key_B10C100_C06_I10 Idea_Key_B10C100_C06_I10
+@B10_D0060:IdeaAbout_B10_D0060 IdeaAbout Book10Cap100 Ch06 Idea_Key_B10C100_C06_I10 Coordination Stable Coordination Fusion Coherent Coverage
+
+@Chapter06_P1:Chapter06_P1 bundle [$B10_R0051, $B10_D0051, $B10_R0052, $B10_D0052, $B10_R0053, $B10_D0053, $B10_R0054, $B10_D0054, $B10_R0055, $B10_D0055, $B10_R0056, $B10_D0056, $B10_R0057, $B10_D0057, $B10_R0058, $B10_D0058, $B10_R0059, $B10_D0059, $B10_R0060, $B10_D0060]
+
+@Chapter06:Chapter06 bundle [$Chapter06_P1]
+@Chapter06_Seq __Sequence [$Chapter06_P1]
+
+@B10_R0061:Mentions_B10_R0061 Mentions Book10Cap100 Key_B10C100_C07_I01 Idea_Key_B10C100_C07_I01
+@B10_D0061:IdeaAbout_B10_D0061 IdeaAbout Book10Cap100 Ch07 Idea_Key_B10C100_C07_I01 Safety Volatile Optimization Gate Scalable Consistency
+@B10_R0062:Mentions_B10_R0062 Mentions Book10Cap100 Key_B10C100_C07_I02 Idea_Key_B10C100_C07_I02
+@B10_D0062:IdeaAbout_B10_D0062 IdeaAbout Book10Cap100 Ch07 Idea_Key_B10C100_C07_I02 Mapping Durable Optimization Index Strict Precision
+@B10_R0063:Mentions_B10_R0063 Mentions Book10Cap100 Key_B10C100_C07_I03 Idea_Key_B10C100_C07_I03
+@B10_D0063:IdeaAbout_B10_D0063 IdeaAbout Book10Cap100 Ch07 Idea_Key_B10C100_C07_I03 Process Incremental Optimization Update Minimal Consistency
+@B10_R0064:Mentions_B10_R0064 Mentions Book10Cap100 Key_B10C100_C07_I04 Idea_Key_B10C100_C07_I04
+@B10_D0064:IdeaAbout_B10_D0064 IdeaAbout Book10Cap100 Ch07 Idea_Key_B10C100_C07_I04 Memory Adaptive Optimization Stack Robust Precision
+@B10_R0065:Mentions_B10_R0065 Mentions Book10Cap100 Key_B10C100_C07_I05 Idea_Key_B10C100_C07_I05
+@B10_D0065:IdeaAbout_B10_D0065 IdeaAbout Book10Cap100 Ch07 Idea_Key_B10C100_C07_I05 Learning Hierarchical Optimization Loop Traceable Consistency
+@B10_R0066:Mentions_B10_R0066 Mentions Book10Cap100 Key_B10C100_C07_I06 Idea_Key_B10C100_C07_I06
+@B10_D0066:IdeaAbout_B10_D0066 IdeaAbout Book10Cap100 Ch07 Idea_Key_B10C100_C07_I06 Planner Ordered Optimization Routing Scalable Precision
+@B10_R0067:Mentions_B10_R0067 Mentions Book10Cap100 Key_B10C100_C07_I07 Idea_Key_B10C100_C07_I07
+@B10_D0067:IdeaAbout_B10_D0067 IdeaAbout Book10Cap100 Ch07 Idea_Key_B10C100_C07_I07 Control Stable Optimization Pruning Strict Consistency
+@B10_R0068:Mentions_B10_R0068 Mentions Book10Cap100 Key_B10C100_C07_I08 Idea_Key_B10C100_C07_I08
+@B10_D0068:IdeaAbout_B10_D0068 IdeaAbout Book10Cap100 Ch07 Idea_Key_B10C100_C07_I08 Protocol Resilient Optimization Guard Minimal Precision
+@B10_R0069:Mentions_B10_R0069 Mentions Book10Cap100 Key_B10C100_C07_I09 Idea_Key_B10C100_C07_I09
+@B10_D0069:IdeaAbout_B10_D0069 IdeaAbout Book10Cap100 Ch07 Idea_Key_B10C100_C07_I09 Coordination Precise Optimization Weaving Robust Consistency
+@B10_R0070:Mentions_B10_R0070 Mentions Book10Cap100 Key_B10C100_C07_I10 Idea_Key_B10C100_C07_I10
+@B10_D0070:IdeaAbout_B10_D0070 IdeaAbout Book10Cap100 Ch07 Idea_Key_B10C100_C07_I10 Optimization Selective Optimization Fusion Traceable Precision
+
+@Chapter07_P1:Chapter07_P1 bundle [$B10_R0061, $B10_D0061, $B10_R0062, $B10_D0062, $B10_R0063, $B10_D0063, $B10_R0064, $B10_D0064, $B10_R0065, $B10_D0065, $B10_R0066, $B10_D0066, $B10_R0067, $B10_D0067, $B10_R0068, $B10_D0068, $B10_R0069, $B10_D0069, $B10_R0070, $B10_D0070]
+
+@Chapter07:Chapter07 bundle [$Chapter07_P1]
+@Chapter07_Seq __Sequence [$Chapter07_P1]
+
+@B10_R0071:Mentions_B10_R0071 Mentions Book10Cap100 Key_B10C100_C08_I01 Idea_Key_B10C100_C08_I01
+@B10_D0071:IdeaAbout_B10_D0071 IdeaAbout Book10Cap100 Ch08 Idea_Key_B10C100_C08_I01 Mapping Adaptive Safety Gate Bounded Convergence
+@B10_R0072:Mentions_B10_R0072 Mentions Book10Cap100 Key_B10C100_C08_I02 Idea_Key_B10C100_C08_I02
+@B10_D0072:IdeaAbout_B10_D0072 IdeaAbout Book10Cap100 Ch08 Idea_Key_B10C100_C08_I02 Process Hierarchical Safety Index Fast Recall
+@B10_R0073:Mentions_B10_R0073 Mentions Book10Cap100 Key_B10C100_C08_I03 Idea_Key_B10C100_C08_I03
+@B10_D0073:IdeaAbout_B10_D0073 IdeaAbout Book10Cap100 Ch08 Idea_Key_B10C100_C08_I03 Memory Ordered Safety Update Exact Convergence
+@B10_R0074:Mentions_B10_R0074 Mentions Book10Cap100 Key_B10C100_C08_I04 Idea_Key_B10C100_C08_I04
+@B10_D0074:IdeaAbout_B10_D0074 IdeaAbout Book10Cap100 Ch08 Idea_Key_B10C100_C08_I04 Learning Stable Safety Stack Coherent Recall
+@B10_R0075:Mentions_B10_R0075 Mentions Book10Cap100 Key_B10C100_C08_I05 Idea_Key_B10C100_C08_I05
+@B10_D0075:IdeaAbout_B10_D0075 IdeaAbout Book10Cap100 Ch08 Idea_Key_B10C100_C08_I05 Planner Resilient Safety Loop Secure Convergence
+@B10_R0076:Mentions_B10_R0076 Mentions Book10Cap100 Key_B10C100_C08_I06 Idea_Key_B10C100_C08_I06
+@B10_D0076:IdeaAbout_B10_D0076 IdeaAbout Book10Cap100 Ch08 Idea_Key_B10C100_C08_I06 Control Precise Safety Routing Bounded Recall
+@B10_R0077:Mentions_B10_R0077 Mentions Book10Cap100 Key_B10C100_C08_I07 Idea_Key_B10C100_C08_I07
+@B10_D0077:IdeaAbout_B10_D0077 IdeaAbout Book10Cap100 Ch08 Idea_Key_B10C100_C08_I07 Protocol Selective Safety Pruning Fast Convergence
+@B10_R0078:Mentions_B10_R0078 Mentions Book10Cap100 Key_B10C100_C08_I08 Idea_Key_B10C100_C08_I08
+@B10_D0078:IdeaAbout_B10_D0078 IdeaAbout Book10Cap100 Ch08 Idea_Key_B10C100_C08_I08 Coordination Volatile Safety Guard Exact Recall
+@B10_R0079:Mentions_B10_R0079 Mentions Book10Cap100 Key_B10C100_C08_I09 Idea_Key_B10C100_C08_I09
+@B10_D0079:IdeaAbout_B10_D0079 IdeaAbout Book10Cap100 Ch08 Idea_Key_B10C100_C08_I09 Optimization Durable Safety Weaving Coherent Convergence
+@B10_R0080:Mentions_B10_R0080 Mentions Book10Cap100 Key_B10C100_C08_I10 Idea_Key_B10C100_C08_I10
+@B10_D0080:IdeaAbout_B10_D0080 IdeaAbout Book10Cap100 Ch08 Idea_Key_B10C100_C08_I10 Safety Incremental Safety Fusion Secure Recall
+
+@Chapter08_P1:Chapter08_P1 bundle [$B10_R0071, $B10_D0071, $B10_R0072, $B10_D0072, $B10_R0073, $B10_D0073, $B10_R0074, $B10_D0074, $B10_R0075, $B10_D0075, $B10_R0076, $B10_D0076, $B10_R0077, $B10_D0077, $B10_R0078, $B10_D0078, $B10_R0079, $B10_D0079, $B10_R0080, $B10_D0080]
+
+@Chapter08:Chapter08 bundle [$Chapter08_P1]
+@Chapter08_Seq __Sequence [$Chapter08_P1]
+
+@B10_R0081:Mentions_B10_R0081 Mentions Book10Cap100 Key_B10C100_C09_I01 Idea_Key_B10C100_C09_I01
+@B10_D0081:IdeaAbout_B10_D0081 IdeaAbout Book10Cap100 Ch09 Idea_Key_B10C100_C09_I01 Process Stable Governance Gate Strict Stability
+@B10_R0082:Mentions_B10_R0082 Mentions Book10Cap100 Key_B10C100_C09_I02 Idea_Key_B10C100_C09_I02
+@B10_D0082:IdeaAbout_B10_D0082 IdeaAbout Book10Cap100 Ch09 Idea_Key_B10C100_C09_I02 Memory Resilient Governance Index Minimal Auditability
+@B10_R0083:Mentions_B10_R0083 Mentions Book10Cap100 Key_B10C100_C09_I03 Idea_Key_B10C100_C09_I03
+@B10_D0083:IdeaAbout_B10_D0083 IdeaAbout Book10Cap100 Ch09 Idea_Key_B10C100_C09_I03 Learning Precise Governance Update Robust Stability
+@B10_R0084:Mentions_B10_R0084 Mentions Book10Cap100 Key_B10C100_C09_I04 Idea_Key_B10C100_C09_I04
+@B10_D0084:IdeaAbout_B10_D0084 IdeaAbout Book10Cap100 Ch09 Idea_Key_B10C100_C09_I04 Planner Selective Governance Stack Traceable Auditability
+@B10_R0085:Mentions_B10_R0085 Mentions Book10Cap100 Key_B10C100_C09_I05 Idea_Key_B10C100_C09_I05
+@B10_D0085:IdeaAbout_B10_D0085 IdeaAbout Book10Cap100 Ch09 Idea_Key_B10C100_C09_I05 Control Volatile Governance Loop Scalable Stability
+@B10_R0086:Mentions_B10_R0086 Mentions Book10Cap100 Key_B10C100_C09_I06 Idea_Key_B10C100_C09_I06
+@B10_D0086:IdeaAbout_B10_D0086 IdeaAbout Book10Cap100 Ch09 Idea_Key_B10C100_C09_I06 Protocol Durable Governance Routing Strict Auditability
+@B10_R0087:Mentions_B10_R0087 Mentions Book10Cap100 Key_B10C100_C09_I07 Idea_Key_B10C100_C09_I07
+@B10_D0087:IdeaAbout_B10_D0087 IdeaAbout Book10Cap100 Ch09 Idea_Key_B10C100_C09_I07 Coordination Incremental Governance Pruning Minimal Stability
+@B10_R0088:Mentions_B10_R0088 Mentions Book10Cap100 Key_B10C100_C09_I08 Idea_Key_B10C100_C09_I08
+@B10_D0088:IdeaAbout_B10_D0088 IdeaAbout Book10Cap100 Ch09 Idea_Key_B10C100_C09_I08 Optimization Adaptive Governance Guard Robust Auditability
+@B10_R0089:Mentions_B10_R0089 Mentions Book10Cap100 Key_B10C100_C09_I09 Idea_Key_B10C100_C09_I09
+@B10_D0089:IdeaAbout_B10_D0089 IdeaAbout Book10Cap100 Ch09 Idea_Key_B10C100_C09_I09 Safety Hierarchical Governance Weaving Traceable Stability
+@B10_R0090:Mentions_B10_R0090 Mentions Book10Cap100 Key_B10C100_C09_I10 Idea_Key_B10C100_C09_I10
+@B10_D0090:IdeaAbout_B10_D0090 IdeaAbout Book10Cap100 Ch09 Idea_Key_B10C100_C09_I10 Mapping Ordered Governance Fusion Scalable Auditability
+
+@Chapter09_P1:Chapter09_P1 bundle [$B10_R0081, $B10_D0081, $B10_R0082, $B10_D0082, $B10_R0083, $B10_D0083, $B10_R0084, $B10_D0084, $B10_R0085, $B10_D0085, $B10_R0086, $B10_D0086, $B10_R0087, $B10_D0087, $B10_R0088, $B10_D0088, $B10_R0089, $B10_D0089, $B10_R0090, $B10_D0090]
+
+@Chapter09:Chapter09 bundle [$Chapter09_P1]
+@Chapter09_Seq __Sequence [$Chapter09_P1]
+
+@B10_R0091:Mentions_B10_R0091 Mentions Book10Cap100 Key_B10C100_C10_I01 Idea_Key_B10C100_C10_I01
+@B10_D0091:IdeaAbout_B10_D0091 IdeaAbout Book10Cap100 Ch10 Idea_Key_B10C100_C10_I01 Memory Selective Perception Gate Fast Latency
+@B10_R0092:Mentions_B10_R0092 Mentions Book10Cap100 Key_B10C100_C10_I02 Idea_Key_B10C100_C10_I02
+@B10_D0092:IdeaAbout_B10_D0092 IdeaAbout Book10Cap100 Ch10 Idea_Key_B10C100_C10_I02 Learning Volatile Perception Index Exact Accuracy
+@B10_R0093:Mentions_B10_R0093 Mentions Book10Cap100 Key_B10C100_C10_I03 Idea_Key_B10C100_C10_I03
+@B10_D0093:IdeaAbout_B10_D0093 IdeaAbout Book10Cap100 Ch10 Idea_Key_B10C100_C10_I03 Planner Durable Perception Update Coherent Latency
+@B10_R0094:Mentions_B10_R0094 Mentions Book10Cap100 Key_B10C100_C10_I04 Idea_Key_B10C100_C10_I04
+@B10_D0094:IdeaAbout_B10_D0094 IdeaAbout Book10Cap100 Ch10 Idea_Key_B10C100_C10_I04 Control Incremental Perception Stack Secure Accuracy
+@B10_R0095:Mentions_B10_R0095 Mentions Book10Cap100 Key_B10C100_C10_I05 Idea_Key_B10C100_C10_I05
+@B10_D0095:IdeaAbout_B10_D0095 IdeaAbout Book10Cap100 Ch10 Idea_Key_B10C100_C10_I05 Protocol Adaptive Perception Loop Bounded Latency
+@B10_R0096:Mentions_B10_R0096 Mentions Book10Cap100 Key_B10C100_C10_I06 Idea_Key_B10C100_C10_I06
+@B10_D0096:IdeaAbout_B10_D0096 IdeaAbout Book10Cap100 Ch10 Idea_Key_B10C100_C10_I06 Coordination Hierarchical Perception Routing Fast Accuracy
+@B10_R0097:Mentions_B10_R0097 Mentions Book10Cap100 Key_B10C100_C10_I07 Idea_Key_B10C100_C10_I07
+@B10_D0097:IdeaAbout_B10_D0097 IdeaAbout Book10Cap100 Ch10 Idea_Key_B10C100_C10_I07 Optimization Ordered Perception Pruning Exact Latency
+@B10_R0098:Mentions_B10_R0098 Mentions Book10Cap100 Key_B10C100_C10_I08 Idea_Key_B10C100_C10_I08
+@B10_D0098:IdeaAbout_B10_D0098 IdeaAbout Book10Cap100 Ch10 Idea_Key_B10C100_C10_I08 Safety Stable Perception Guard Coherent Accuracy
+@B10_R0099:Mentions_B10_R0099 Mentions Book10Cap100 Key_B10C100_C10_I09 Idea_Key_B10C100_C10_I09
+@B10_D0099:IdeaAbout_B10_D0099 IdeaAbout Book10Cap100 Ch10 Idea_Key_B10C100_C10_I09 Mapping Resilient Perception Weaving Secure Latency
+@B10_R0100:Mentions_B10_R0100 Mentions Book10Cap100 Key_B10C100_C10_I10 Idea_Key_B10C100_C10_I10
+@B10_D0100:IdeaAbout_B10_D0100 IdeaAbout Book10Cap100 Ch10 Idea_Key_B10C100_C10_I10 Process Precise Perception Fusion Bounded Accuracy
+
+@Chapter10_P1:Chapter10_P1 bundle [$B10_R0091, $B10_D0091, $B10_R0092, $B10_D0092, $B10_R0093, $B10_D0093, $B10_R0094, $B10_D0094, $B10_R0095, $B10_D0095, $B10_R0096, $B10_D0096, $B10_R0097, $B10_D0097, $B10_R0098, $B10_D0098, $B10_R0099, $B10_D0099, $B10_R0100, $B10_D0100]
+
+@Chapter10:Chapter10 bundle [$Chapter10_P1]
+@Chapter10_Seq __Sequence [$Chapter10_P1]
+
+@Book_Seq __Sequence [$Chapter01, $Chapter02, $Chapter03, $Chapter04, $Chapter05, $Chapter06, $Chapter07, $Chapter08, $Chapter09, $Chapter10]
+@Book:Book bundle [$Chapter01, $Chapter02, $Chapter03, $Chapter04, $Chapter05, $Chapter06, $Chapter07, $Chapter08, $Chapter09, $Chapter10]

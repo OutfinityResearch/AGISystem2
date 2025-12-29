@@ -238,6 +238,30 @@ function buildCandidatesForQuery(session, { ideaNames, bookPrefix, queryKey, exp
   return candidates;
 }
 
+function buildCandidatesForKeyQuery(session, { keyNames, bookPrefix, queryIdea, expectKey, size, mode }) {
+  const rng = makeRng(djb2(`${bookPrefix}:${queryIdea}:${expectKey}:${size}`));
+
+  const candidateKeys = new Set();
+  if (expectKey && expectKey !== 'none') candidateKeys.add(expectKey);
+
+  const decoyPool = [];
+  const decoyCount = Math.max(64, size * 4);
+  for (let i = 1; i <= decoyCount; i++) {
+    decoyPool.push(`${bookPrefix}_DecoyKey_${String(i).padStart(4, '0')}`);
+  }
+
+  const pool = mode === 'neg' ? decoyPool : keyNames;
+  const needed = Math.max(0, size - candidateKeys.size);
+  const picked = pickDistinct(pool, needed, rng, candidateKeys);
+  for (const key of picked) candidateKeys.add(key);
+
+  const candidates = new Map();
+  for (const key of candidateKeys) {
+    candidates.set(key, session.vocabulary.getOrCreate(key));
+  }
+  return candidates;
+}
+
 function decodeIdeaFromBook(session, bookVec, query, candidates, options = {}) {
   const { strategyId, geometry, k = 25 } = options;
   const minMargin = minMarginForStrategy(strategyId);
@@ -355,8 +379,15 @@ function decodeKeyFromBook(session, bookVec, query, candidates, options = {}) {
 
 function discoverBooks() {
   const files = readdirSync(BOOKS_DIR)
-    .filter(f => /^book[0-9]{2}\.sys2$/.test(f))
-    .sort();
+    .filter(f => /^book(?:[0-9]{2}|_.+)\.sys2$/.test(f))
+    .sort((a, b) => {
+      const an = a.match(/^book(\d{2})\.sys2$/)?.[1];
+      const bn = b.match(/^book(\d{2})\.sys2$/)?.[1];
+      const ai = an ? Number(an) : Number.POSITIVE_INFINITY;
+      const bi = bn ? Number(bn) : Number.POSITIVE_INFINITY;
+      if (ai !== bi) return ai - bi;
+      return a.localeCompare(b);
+    });
   return files.map(f => path.join(BOOKS_DIR, f));
 }
 
@@ -538,30 +569,35 @@ async function runOne(config, bookPath) {
   // Membership-style test: given an idea, can we recover a key? (Idea exists vs idea doesn't exist)
   const memIdeaPos = pos.expect;
   const memIdeaNeg = `${bookPrefix}_MissingIdea`;
-  const memKeyCandidates = new Map();
-  // Use real in-book keys as the candidate set for both pos/neg.
-  // If an idea does not exist in the book, we expect no "confident" key match.
-  for (const key of keyNames) {
-    memKeyCandidates.set(key, session.vocabulary.getOrCreate(key));
-  }
-  // Ensure some decoy keys exist even if extraction fails.
-  for (let i = 1; memKeyCandidates.size < DEFAULT_CANDIDATE_SET_SIZE && i <= DEFAULT_CANDIDATE_SET_SIZE * 2; i++) {
-    const k = `${bookPrefix}_DecoyKey_${String(i).padStart(4, '0')}`;
-    if (!memKeyCandidates.has(k)) memKeyCandidates.set(k, session.vocabulary.getOrCreate(k));
-  }
+  const memPosCandidates = buildCandidatesForKeyQuery(session, {
+    keyNames,
+    bookPrefix,
+    queryIdea: memIdeaPos,
+    expectKey: pos.key,
+    size: DEFAULT_CANDIDATE_SET_SIZE,
+    mode: 'pos'
+  });
+  const memNegCandidates = buildCandidatesForKeyQuery(session, {
+    keyNames,
+    bookPrefix,
+    queryIdea: memIdeaNeg,
+    expectKey: 'none',
+    size: DEFAULT_CANDIDATE_SET_SIZE,
+    mode: 'neg'
+  });
 
   const memPosRes = decodeKeyFromBook(
     session,
     bookVec,
     { op: pos.op, book: pos.book, idea: memIdeaPos, expect: pos.key },
-    memKeyCandidates,
+    memPosCandidates,
     { strategyId, geometry, k: DEFAULT_CANDIDATE_SET_SIZE }
   );
   const memNegRes = decodeKeyFromBook(
     session,
     bookVec,
     { op: pos.op, book: pos.book, idea: memIdeaNeg, expect: 'none' },
-    memKeyCandidates,
+    memNegCandidates,
     { strategyId, geometry, k: DEFAULT_CANDIDATE_SET_SIZE }
   );
   const decodeMs = nowMs() - tQ0;
@@ -748,6 +784,8 @@ Options:
     let negPass = 0;
     let queryPosPass = 0;
     let queryNegPass = 0;
+    let hdcMemPass = 0;
+    let queryMemPass = 0;
     let totalLearn = 0;
     let totalDecode = 0;
     let totalSim = 0;
@@ -772,6 +810,8 @@ Options:
       if (negOk) negPass++;
       if (res.queryPosPassed) queryPosPass++;
       if (res.queryNegPassed) queryNegPass++;
+      if (res.hdcMemPassed) hdcMemPass++;
+      if (res.queryMemPassed) queryMemPass++;
       totalLearn += res.times.learnMs;
       totalDecode += res.times.decodeMs;
       totalSim += simChecks;
@@ -786,9 +826,11 @@ Options:
       const status = res.passed ? colorize(useColor, ANSI.green, 'PASS') : colorize(useColor, ANSI.red, 'FAIL');
       const hdcTag = res.hdcPassed ? colorize(useColor, ANSI.green, 'HDC:PASS') : colorize(useColor, ANSI.red, 'HDC:FAIL');
       const qryTag = res.queryPassed ? colorize(useColor, ANSI.green, 'QRY:PASS') : colorize(useColor, ANSI.red, 'QRY:FAIL');
+      const memHdcTag = res.hdcMemPassed ? colorize(useColor, ANSI.green, 'M-HDC:PASS') : colorize(useColor, ANSI.red, 'M-HDC:FAIL');
+      const memQryTag = res.queryMemPassed ? colorize(useColor, ANSI.green, 'M-QRY:PASS') : colorize(useColor, ANSI.red, 'M-QRY:FAIL');
       const posTag = posOk ? colorize(useColor, ANSI.green, 'POS') : colorize(useColor, ANSI.red, 'POS');
       const negTag = negOk ? colorize(useColor, ANSI.green, 'NEG') : colorize(useColor, ANSI.red, 'NEG');
-      const bookLine = `- ${bookName}: ${status} ${hdcTag}/${qryTag} ${posTag}/${negTag} learn=${fmtMs(res.times.learnMs)} decode=${fmtMs(res.times.decodeMs)}`;
+      const bookLine = `- ${bookName}: ${status} ${hdcTag}/${qryTag} ${memHdcTag}/${memQryTag} ${posTag}/${negTag} learn=${fmtMs(res.times.learnMs)} decode=${fmtMs(res.times.decodeMs)}`;
       console.log(bookLine);
 
       perBook.push({
@@ -798,6 +840,8 @@ Options:
         queryPassed: res.queryPassed,
         queryPosPassed: res.queryPosPassed,
         queryNegPassed: res.queryNegPassed,
+        hdcMemPassed: res.hdcMemPassed,
+        queryMemPassed: res.queryMemPassed,
         posOk,
         negOk,
         ideas: d?.ideas ?? 0,
@@ -805,6 +849,22 @@ Options:
         negQueryDsl: d?.negQueryDsl ?? null,
         posQuery: d?.posQuery ?? null,
         negQuery: d?.negQuery ?? null,
+        memPosQueryDsl: d?.memPosQueryDsl ?? null,
+        memNegQueryDsl: d?.memNegQueryDsl ?? null,
+        memPosQuery: d?.memPosQuery ?? null,
+        memNegQuery: d?.memNegQuery ?? null,
+        memPosOk: d?.memPosRes?.passed ?? false,
+        memNegOk: d?.memNegRes?.passed ?? false,
+        memIdeaPos: d?.memIdeaPos ?? null,
+        memIdeaNeg: d?.memIdeaNeg ?? null,
+        memExpectKey: d?.pos?.key ?? null,
+        memPosTop1Key: d?.memPosRes?.top1?.name ?? null,
+        memPosTop1Sim: d?.memPosRes?.top1?.similarity ?? 0,
+        memPosMargin: d?.memPosRes?.margin ?? 0,
+        memNegTop1Key: d?.memNegRes?.top1?.name ?? null,
+        memNegTop1Sim: d?.memNegRes?.top1?.similarity ?? 0,
+        memNegMargin: d?.memNegRes?.margin ?? 0,
+        memHdcMatch: d?.memPosRes?.hdcMatch ?? null,
         posExpect: d?.pos?.expect ?? null,
         posTop1Name: d?.posRes?.top1?.name ?? null,
         posTop1: d?.posRes?.top1?.similarity ?? 0,
@@ -839,6 +899,8 @@ Options:
       negPass,
       queryPosPass,
       queryNegPass,
+      hdcMemPass,
+      queryMemPass,
       total: books.length,
       simChecks: totalSim,
       exactUnbindChecks: totalExactUnbindChecks,
@@ -863,6 +925,8 @@ Options:
     { key: 'label', title: 'Config', align: 'left' },
     { key: 'hdc', title: 'HDC', align: 'right' },
     { key: 'qry', title: 'Query', align: 'right' },
+    { key: 'hmem', title: 'HMem', align: 'right' },
+    { key: 'qmem', title: 'QMem', align: 'right' },
     { key: 'pos', title: 'HPos', align: 'right' },
     { key: 'neg', title: 'HNeg', align: 'right' },
     { key: 'qpos', title: 'QPos', align: 'right' },
@@ -901,6 +965,8 @@ Options:
       label: labelColored,
       hdc: `${r.hdcPass}/${r.total}`,
       qry: `${r.queryPass}/${r.total}`,
+      hmem: `${r.hdcMemPass}/${r.total}`,
+      qmem: `${r.queryMemPass}/${r.total}`,
       pos: `${r.posPass}/${r.total}`,
       neg: `${r.negPass}/${r.total}`,
       qpos: `${r.queryPosPass}/${r.total}`,
@@ -1042,6 +1108,67 @@ Options:
         console.log(useColor ? out : stripAnsi(out));
       }
 
+      // Idea membership (Idea -> Key) via holographic decode.
+      console.log();
+      console.log(`${ANSI.bold}Idea Membership (HDC):${ANSI.reset} decode key from (book, idea)`);
+
+      const memHeaders = [
+        { key: 'book', title: 'Book', align: 'left' },
+        { key: 'mpos', title: 'M+', align: 'left' },
+        { key: 'mposTop', title: 'Top1Key', align: 'left' },
+        { key: 'mposExp', title: 'ExpectKey', align: 'left' },
+        { key: 'mneg', title: 'M-', align: 'left' },
+        { key: 'mnegTop', title: 'NegTop1', align: 'left' },
+        { key: 'thr', title: 'Thr', align: 'right' }
+      ];
+
+      const memRows = perBook.map(b => {
+        const mpos = b.memPosOk ? colorize(useColor, ANSI.green, 'PASS') : colorize(useColor, ANSI.red, 'FAIL');
+        const mneg = b.memNegOk ? colorize(useColor, ANSI.green, 'PASS') : colorize(useColor, ANSI.red, 'FAIL');
+        const mposTop = `${b.memPosTop1Key ?? '∅'}@${Number(b.memPosTop1Sim || 0).toFixed(3)}`;
+        const mnegTop = `${b.memNegTop1Key ?? '∅'}@${Number(b.memNegTop1Sim || 0).toFixed(3)}`;
+        const thr = Number.isFinite(b.memHdcMatch) ? Number(b.memHdcMatch).toFixed(3) : 'n/a';
+        return {
+          book: b.book,
+          mpos,
+          mposTop,
+          mposExp: b.memExpectKey ?? '∅',
+          mneg,
+          mnegTop,
+          thr
+        };
+      });
+
+      const memColW = new Map();
+      for (const h of memHeaders) {
+        const values = memRows.map(row => row[h.key]);
+        const width = Math.max(stripAnsi(h.title).length, ...values.map(v => stripAnsi(v).length));
+        memColW.set(h.key, Math.min(80, width));
+      }
+
+      const memLine = () => {
+        const totalW = memHeaders.reduce((sum, h, idx) => sum + memColW.get(h.key) + (idx === 0 ? 0 : 3), 0);
+        return '─'.repeat(Math.max(16, totalW));
+      };
+
+      const memHeaderLine = memHeaders.map((h, idx) => {
+        const w = memColW.get(h.key);
+        const cell = padEndAnsi(h.title, w);
+        return idx === 0 ? cell : `│ ${cell}`;
+      }).join(' ');
+      console.log(useColor ? memHeaderLine : stripAnsi(memHeaderLine));
+      console.log(useColor ? memLine() : stripAnsi(memLine()));
+
+      for (const row of memRows) {
+        const out = memHeaders.map((h, idx) => {
+          const w = memColW.get(h.key);
+          const v = row[h.key];
+          const cell = h.align === 'right' ? padStartAnsi(v, w) : padEndAnsi(v, w);
+          return idx === 0 ? cell : `│ ${cell}`;
+        }).join(' ');
+        console.log(useColor ? out : stripAnsi(out));
+      }
+
       console.log();
       console.log(`${ANSI.bold}Query Validation:${ANSI.reset}`);
       for (const b of perBook) {
@@ -1059,6 +1186,26 @@ Options:
         const negSim = Number.isFinite(negQ?.similarity) ? negQ.similarity.toFixed(3) : 'n/a';
         const negSteps = formatProofSteps(negQ?.steps, 2);
         const negLine = `  ${b.book} NEG: ${b.negQueryDsl} -> ${negAns} (method=${negMethod} sim=${negSim}) steps=${negSteps}`;
+        console.log(negLine);
+      }
+
+      console.log();
+      console.log(`${ANSI.bold}Idea Membership (Query):${ANSI.reset} query key from (book, idea)`);
+      for (const b of perBook) {
+        const posQ = b.memPosQuery;
+        const negQ = b.memNegQuery;
+        const posAns = posQ?.answer ?? '∅';
+        const posMethod = posQ?.method ?? 'n/a';
+        const posSim = Number.isFinite(posQ?.similarity) ? posQ.similarity.toFixed(3) : 'n/a';
+        const posSteps = formatProofSteps(posQ?.steps, 2);
+        const posLine = `- ${b.book} M+ : ${b.memPosQueryDsl} -> ${posAns} (method=${posMethod} sim=${posSim}) steps=${posSteps}`;
+        console.log(posLine);
+
+        const negAns = negQ?.answer ?? '∅';
+        const negMethod = negQ?.method ?? 'n/a';
+        const negSim = Number.isFinite(negQ?.similarity) ? negQ.similarity.toFixed(3) : 'n/a';
+        const negSteps = formatProofSteps(negQ?.steps, 2);
+        const negLine = `  ${b.book} M- : ${b.memNegQueryDsl} -> ${negAns} (method=${negMethod} sim=${negSim}) steps=${negSteps}`;
         console.log(negLine);
       }
     }

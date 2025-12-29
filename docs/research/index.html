@@ -117,6 +117,51 @@
       font-weight: bold;
       font-size: 12px;
     }
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .topic-card {
+      display: block;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px 18px;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+    }
+    .topic-card:hover {
+      border-color: #1976d2;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+      transform: translateY(-1px);
+    }
+    .topic-card h3 {
+      margin: 0 0 8px 0;
+      font-size: 15px;
+      color: #1976d2;
+    }
+    .topic-card p {
+      margin: 0;
+      color: #555;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .topic-card .meta {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #1565c0;
+      background: #e3f2fd;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
   </style>
 </head>
 <body>
@@ -146,6 +191,54 @@
     are <strong>original contributions</strong> not found in standard HRR or VSA literature. For theoretical foundations, see
     <a href="../theory/hrr-comparison.html">HRR/VSA Comparison</a>.
   </div>
+
+  <h2>0. Research Topics</h2>
+
+  <p>
+    The Research section is organized around reproducible experiments (evaluation suites), theory notes, and forward-looking directions.
+    These are the current topics we actively study:
+  </p>
+
+  <div class="topic-grid">
+    <a class="topic-card" href="saturationEvaluation.html">
+      <h3>Saturation Evaluation (HDC Capacity)</h3>
+      <p>
+        Measures how quickly different HDC strategies lose discriminative power under hierarchical superposition
+        (“book” = bundle(chapters) = bundle(records)) and evaluates pure holographic membership queries vs. symbolic ground truth.
+      </p>
+      <span class="meta">New · Capacity Study</span>
+    </a>
+
+    <a class="topic-card" href="benchmarks.html">
+      <h3>Benchmarks (Performance & Accuracy)</h3>
+      <p>
+        Comparative timing and success rates across strategies, geometries, and reasoning priorities on the Core Theory suite.
+      </p>
+      <span class="meta">Evaluation</span>
+    </a>
+
+    <a class="topic-card" href="roadmap.html">
+      <h3>Research Roadmap</h3>
+      <p>
+        Near-term and long-term plan: scaling experiments, new query operators, improved cleanup, and strategy exploration.
+      </p>
+      <span class="meta">Planning</span>
+    </a>
+
+    <a class="topic-card" href="directions/holographic-reasoning.html">
+      <h3>Holographic Reasoning Directions</h3>
+      <p>
+        Reasoning engines and priorities, decoding workflows, and the tradeoffs between purely holographic steps and symbolic validation.
+      </p>
+      <span class="meta">Directions</span>
+    </a>
+  </div>
+
+  <p>
+    Additional research directions are documented under <a href="directions/hdc-strategies.html">HDC Strategies</a>,
+    <a href="directions/learning-from-text.html">Learning from Text</a>, <a href="directions/nl2dsl-llm.html">NL→DSL</a>,
+    <a href="directions/proof-to-nl.html">Proof→NL</a>, and <a href="directions/semantic-libraries.html">Semantic Libraries</a>.
+  </p>
 
   <h2>1. Key Metrics (December 2025)</h2>
 
