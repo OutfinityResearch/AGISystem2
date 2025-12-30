@@ -3,6 +3,7 @@
 # DS39: STAR / UNSTAR — Reasoning Closure Primitives (Research)
 #
 **Document Version:** 0.1  
+**Author:** Sînică Alboaie  
 **Status:** Research / Proposed (not implemented)  
 **Audience:** Core developers, reasoning-engine developers, HDC researchers  
 

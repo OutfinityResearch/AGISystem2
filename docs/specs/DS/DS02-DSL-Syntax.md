@@ -3,6 +3,7 @@
 # Chapter 2: The Sys2DSL Language Specification
 
 **Document Version:** 5.0  
+**Author:** Sînică Alboaie  
 **Status:** Draft Specification
 
 ---

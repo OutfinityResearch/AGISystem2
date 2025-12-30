@@ -199,6 +199,7 @@ function normalizeDslToStatements(dsl, { onlyPersistent = false } = {}) {
     const op = getName(n.operator) || '';
     if (!op) continue;
     if (op === 'Load' || op === 'Unload' || op === 'Set') continue;
+    if (op.startsWith('__')) continue;
 
     const shouldPersist = !n.destination || Boolean(n.persistName);
     if (onlyPersistent && !shouldPersist) continue;
@@ -713,7 +714,7 @@ async function analyzeSuite(suite) {
   };
 
   let allLearnedFacts = [];
-  const transformer = new NLTransformer({ strict: true });
+  const transformer = new NLTransformer({ strict: true, dslPreserveOperators: true });
 
   for (let i = 0; i < suite.cases.length; i++) {
     const testCase = suite.cases[i];

@@ -3,6 +3,7 @@
 # Chapter 15: Sparse Polynomial HDC (SPHDC) - Efficient Sparse Hyperdimensional Computing
 
 **Document Version:** 2.0
+**Author:** Sînică Alboaie
 **Status:** Implemented & Verified
 **Audience:** Technical Architects, HDC Researchers, Core Developers
 

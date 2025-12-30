@@ -3,6 +3,7 @@
 # Chapter 7c: L2 Semantic Primitives
 
 **Document Version:** 1.0
+**Author:** Sînică Alboaie
 **Status:** Draft Specification
 **Part Of:** DS07 Core Theory (refactored)
 **Config File:** `config/Core/04-semantic-primitives.sys2`

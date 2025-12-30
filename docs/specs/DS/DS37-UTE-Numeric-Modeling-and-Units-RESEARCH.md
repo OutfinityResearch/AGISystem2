@@ -3,6 +3,7 @@
 # DS37: UTE — Numeric Modeling & Units — Research
 #
 # **Document Version:** 0.1
+# **Author:** Sînică Alboaie
 # **Status:** Research (proposed; not implemented)
 # **Audience:** Researchers, runtime and DSL developers
 #
@@ -61,4 +62,3 @@ UTE needs to support:
 ---
 
 *End of DS37*
-

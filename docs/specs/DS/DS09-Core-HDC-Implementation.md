@@ -3,6 +3,7 @@
 # Chapter 9A: Core HDC Implementation
 
 **Document Version:** 3.0
+**Author:** Sînică Alboaie
 **Status:** Draft Specification
 **Focus:** HDC Strategy Abstraction, Theoretical Foundation, Module Architecture
 

@@ -4,6 +4,7 @@
 
 **Version**: 1.0
 **Date**: 2025-12-25
+**Author:** Sînică Alboaie
 **Authors**: Claude Code + S. Alboaie
 
 ---

@@ -3,6 +3,7 @@
 # DS38: UTE — Experiment Planning — Research
 #
 # **Document Version:** 0.1
+# **Author:** Sînică Alboaie
 # **Status:** Research (proposed; not implemented)
 # **Audience:** Researchers, planning/CSP developers
 #
@@ -59,4 +60,3 @@ This DS builds on:
 ---
 
 *End of DS38*
-

@@ -3,6 +3,7 @@
 # DS41: URK (UTE Reasoning Kernel) — Reasoning Programs IR (Research)
 #
 **Document Version:** 0.1  
+**Author:** Sînică Alboaie  
 **Status:** Research / Proposed (not implemented)  
 **Audience:** Runtime/Reasoning developers, UTE roadmap contributors  
 
@@ -213,4 +214,3 @@ Compilation must fail fast on unknown operators or unknown filter types.
 ---
 
 *End of DS41*
-

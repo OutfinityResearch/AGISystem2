@@ -3,6 +3,7 @@
 # Chapter 21: Natural Language to DSL Translation (NL2DSL)
 
 **Document Version:** 1.0
+**Author:** Sînică Alboaie
 **Status:** Draft Specification
 **Scope:** NLP module - Grammar-based translation for reasoning datasets
 

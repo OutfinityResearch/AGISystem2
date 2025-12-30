@@ -3,6 +3,7 @@
 # Chapter 6: Advanced Reasoning
 
 **Document Version:** 1.0  
+**Author:** Sînică Alboaie  
 **Status:** Draft Specification
 
 ---

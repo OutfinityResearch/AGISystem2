@@ -3,6 +3,7 @@
 # DS40: Holographic Priority vNext — Closure Tactics (STAR/UNSTAR) (Research)
 #
 **Document Version:** 0.1  
+**Author:** Sînică Alboaie  
 **Status:** Research / Proposed (not implemented)  
 **Audience:** Reasoning engine developers, HDC strategy developers, UTE roadmap contributors  
 
@@ -308,4 +309,3 @@ At minimum, implementing this DS would require:
 ---
 
 *End of DS40*
-

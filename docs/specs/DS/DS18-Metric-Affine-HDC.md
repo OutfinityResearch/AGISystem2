@@ -3,6 +3,7 @@
 # Chapter 18: Metric-Affine HDC Strategy
 
 **Document Version:** 1.0
+**Author:** Sînică Alboaie
 **Status:** Implemented
 **Audience:** Technical Architects, HDC Researchers, Core Developers
 

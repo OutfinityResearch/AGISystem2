@@ -3,6 +3,7 @@
 # DS36: UTE — Uncertainty & Probabilistic Semantics — Research
 #
 # **Document Version:** 0.1
+# **Author:** Sînică Alboaie
 # **Status:** Research (proposed; not implemented)
 # **Audience:** Researchers, evaluation authors
 #
@@ -61,4 +62,3 @@ This implies eval suites and metrics for:
 ---
 
 *End of DS36*
-

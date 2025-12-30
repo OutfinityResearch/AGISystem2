@@ -3,6 +3,7 @@
 # DS24: Pure Symbolic Term Engine (Baseline Backend) — Exploratory
 #
 # **Document Version:** 1.0
+# **Author:** Sînică Alboaie
 # **Status:** Exploratory (not planned for implementation)
 # **Audience:** Runtime/Reasoning developers, eval authors
 # **Related:** DS02 (DSL), DS03 (Architecture), DS05/DS06 (Reasoning), DS16 (CSP), DS17 (Priority modes), DS19 (Proof real)

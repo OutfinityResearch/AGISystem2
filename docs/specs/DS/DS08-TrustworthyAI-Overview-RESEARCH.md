@@ -3,6 +3,7 @@
 # DS08: Trustworthy AI Patterns (Overview) — Research
 
 **Document Version:** 1.1
+**Author:** Sînică Alboaie
 **Status:** Exploratory / planned (research-level; not implemented)
 
 This chapter is a high-level overview of trustworthy AI patterns expressed in AGISystem2’s DSL. The detailed pattern documents are split into focused DS documents to keep each theme self-contained.

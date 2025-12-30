@@ -17,15 +17,65 @@ function termToToken(expr, env) {
     if (resolved && resolved.type === 'Statement') {
       return resolved; // let higher layers render as statement
     }
-    return `@${expr.name}`;
+    // DSL reference syntax uses `$name`.
+    return `$${expr.name}`;
   }
   if (expr.type === 'Compound') return expr;
   if (expr.type === 'List') return expr;
   return typeof expr.toString === 'function' ? expr.toString() : String(expr);
 }
 
-function renderSentence(session, op, args, { stripPunctuation = true } = {}) {
-  const text = session.generateText(op, args).trim();
+function chooseIndefiniteArticle(word) {
+  const w = String(word || '').trim();
+  if (!w) return 'a';
+  return /^[aeiou]/i.test(w) ? 'an' : 'a';
+}
+
+function renderParseableRelation(op, args) {
+  const a = Array.isArray(args) ? args.map(String) : [];
+
+  if (op === 'isA' && a.length === 2) {
+    const [subject, object] = a;
+    return `${subject} is ${chooseIndefiniteArticle(object)} ${object}`;
+  }
+
+  if (op === 'locatedIn' && a.length === 2) {
+    const [subject, object] = a;
+    return `${subject} is in ${object}`;
+  }
+
+  if (op === 'has' && a.length === 2) {
+    const [subject, object] = a;
+    return `${subject} has ${object}`;
+  }
+
+  if (op === 'owns' && a.length === 2) {
+    const [subject, object] = a;
+    return `${subject} owns ${object}`;
+  }
+
+  if (op === 'can' && a.length === 2) {
+    const [subject, ability] = a;
+    return `${subject} can ${ability}`;
+  }
+
+  if (a.length === 1) {
+    const [subject] = a;
+    return `${subject} ${op}`;
+  }
+
+  if (a.length >= 2) {
+    const [subject, ...rest] = a;
+    return `${subject} ${op} ${rest.join(' ')}`;
+  }
+
+  return `${op}`.trim();
+}
+
+function renderSentence(session, op, args, { stripPunctuation = true, style = 'pretty' } = {}) {
+  const text = style === 'parseable'
+    ? renderParseableRelation(op, args).trim()
+    : session.generateText(op, args).trim();
   if (!stripPunctuation) return text;
   return text.replace(/[.!?]+$/g, '');
 }
@@ -79,7 +129,7 @@ function renderNegationParseable(session, innerExpr, env) {
     return `${subject} does not ${op}`;
   }
 
-  const inner = renderSentence(session, op, args, { stripPunctuation: true });
+  const inner = renderSentence(session, op, args, { stripPunctuation: true, style: 'parseable' });
   return `It is not true that ${inner}`;
 }
 
@@ -109,7 +159,7 @@ function exprToHuman(session, expr, env, { style = 'pretty' } = {}) {
 
     const tokenArgs = args.map(a => termToToken(a, env));
     if (tokenArgs.every(a => typeof a === 'string')) {
-      return renderSentence(session, op, tokenArgs, { stripPunctuation: true });
+      return renderSentence(session, op, tokenArgs, { stripPunctuation: true, style });
     }
     return typeof e.toString === 'function' ? e.toString() : String(e);
   }
@@ -172,7 +222,7 @@ function statementToHuman(session, stmt, env, { style = 'pretty' } = {}) {
 
   const tokenArgs = args.map(a => termToToken(a, env));
   if (tokenArgs.every(a => typeof a === 'string')) {
-    return renderSentence(session, op, tokenArgs, { stripPunctuation: true });
+    return renderSentence(session, op, tokenArgs, { stripPunctuation: true, style });
   }
 
   // Fall back: render args with recursion (handles references/compounds).

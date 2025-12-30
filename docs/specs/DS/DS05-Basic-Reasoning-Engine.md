@@ -3,6 +3,7 @@
 # Chapter 5: Reasoning Engine
 
 **Document Version:** 2.0  
+**Author:** Sînică Alboaie  
 **Status:** Draft Specification
 
 ---

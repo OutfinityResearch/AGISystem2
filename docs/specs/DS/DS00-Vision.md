@@ -3,6 +3,7 @@
 # Chapter 0: Vision
 
 **Document Version:** 3.0  
+**Author:** Sînică Alboaie  
 **Status:** Vision Document  
 **Audience:** Stakeholders, Decision Makers, Technical Leads
 

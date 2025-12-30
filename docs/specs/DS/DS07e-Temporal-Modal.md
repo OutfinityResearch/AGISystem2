@@ -3,6 +3,7 @@
 # Chapter 7e: Temporal, Modal & Default Primitives
 
 **Document Version:** 1.0
+**Author:** Sînică Alboaie
 **Status:** Draft Specification
 **Part Of:** DS07 Core Theory (refactored)
 **Config Files:** `config/Core/06-temporal.sys2`, `config/Core/07-modal.sys2`, `config/Core/08-defaults.sys2`

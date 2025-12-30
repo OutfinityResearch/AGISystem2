@@ -39,6 +39,16 @@ export class NLTransformer {
     this.patterns = { ...patterns };
     this.patternPriority = [...patternPriority];
 
+    // Optional: enable DSL-preserving parsing for suite-generated "supported NL".
+    // When off (default), skip DSL-specific exact operator patterns to keep normal English behavior stable.
+    this.dslPreserveOperators = options.dslPreserveOperators ?? false;
+    if (!this.dslPreserveOperators) {
+      for (const key of ['exactPrefixNary', 'exactNary', 'exactSvo', 'exactUnary']) {
+        delete this.patterns[key];
+      }
+      this.patternPriority = this.patternPriority.filter(p => !['exactPrefixNary', 'exactNary', 'exactSvo', 'exactUnary'].includes(p));
+    }
+
     // Merge custom patterns
     if (options.customPatterns) {
       for (const [type, patternList] of Object.entries(options.customPatterns)) {
@@ -109,6 +119,13 @@ export class NLTransformer {
       normalized = inner;
     }
 
+    // Parentheses are common in DSL-derived English; remove them to stabilize matching.
+    // Keep parentheses for `implies (...) AND (...) ...` macro parsing, where they disambiguate clause boundaries.
+    const keepParens = /^\s*implies\b/i.test(normalized);
+    if (!keepParens && /[()]/.test(normalized)) {
+      normalized = normalized.replace(/[()]/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+
     if (!normalized || normalized.length < 3) return null;
 
     const tokens = this.tokenizer.tokenize(normalized);
@@ -148,6 +165,28 @@ export class NLTransformer {
                 return {
                   type: 'rule',
                   ruleType: 'conditional',
+                  antecedent: ant,
+                  consequent: cons,
+                  source: sentence,
+                  pattern: patternType
+                };
+              }
+            }
+
+            if (extracted.type === 'implies-macro') {
+              const antecedentRaws = Array.isArray(extracted.antecedentRaws) ? extracted.antecedentRaws : [];
+              const antecedents = antecedentRaws
+                .map(raw => this.transformSentence(raw))
+                .filter(Boolean);
+              const cons = this.transformSentence(extracted.consequentRaw);
+
+              if (antecedents.length > 0 && cons) {
+                let ant = antecedents[0];
+                for (let j = 1; j < antecedents.length; j++) {
+                  ant = { type: 'compound', operator: 'And', parts: [ant, antecedents[j]] };
+                }
+                return {
+                  type: 'implies',
                   antecedent: ant,
                   consequent: cons,
                   source: sentence,
@@ -304,6 +343,13 @@ export class NLTransformer {
         if (!ant || !cons) return null;
         // Rules are persistent; do not emit non-persistent @dest bindings.
         return `Implies (${ant}) (${cons})`;
+      }
+
+      case 'implies': {
+        const ant = this.clauseToDSL(parsed.antecedent);
+        const cons = this.clauseToDSL(parsed.consequent);
+        if (!ant || !cons) return null;
+        return `implies (${ant}) (${cons})`;
       }
 
       case 'unknown':

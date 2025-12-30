@@ -3,6 +3,7 @@
 # Chapter 4: Architecture and API
 
 **Document Version:** 2.0
+**Author:** Sînică Alboaie
 **Status:** Implemented
 
 > **Note:** This document describes the architecture and API. The actual implementation supports dual reasoning modes (HDC-Priority and Symbolic-Priority) based on HDC strategy. See DS01 Section 1.10 for details.

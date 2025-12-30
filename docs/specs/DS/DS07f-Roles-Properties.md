@@ -3,6 +3,7 @@
 # Chapter 7f: Semantic Roles & Property Relations
 
 **Document Version:** 1.0
+**Author:** Sînică Alboaie
 **Status:** Draft Specification
 **Part Of:** DS07 Core Theory (refactored)
 **Config Files:** `config/Core/09-roles.sys2`, `config/Core/10-properties.sys2`, `config/Core/00-relations.sys2`

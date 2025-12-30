@@ -3,6 +3,7 @@
 # Chapter 7b: Type System & Constructors
 
 **Document Version:** 1.0
+**Author:** Sînică Alboaie
 **Status:** Draft Specification
 **Part Of:** DS07 Core Theory (refactored)
 **Config Files:** `config/Core/00-types.sys2`, `config/Core/02-constructors.sys2`, `config/Core/03-structural.sys2`

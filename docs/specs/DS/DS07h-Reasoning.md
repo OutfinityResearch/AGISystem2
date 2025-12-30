@@ -3,6 +3,7 @@
 # Chapter 7h: Reasoning Verbs & Meta-Operators
 
 **Document Version:** 1.0
+**Author:** Sînică Alboaie
 **Status:** Draft Specification
 **Part Of:** DS07 Core Theory (refactored)
 **Config File:** `config/Core/12-reasoning.sys2`

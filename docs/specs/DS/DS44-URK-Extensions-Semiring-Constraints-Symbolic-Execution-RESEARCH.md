@@ -3,6 +3,7 @@
 # DS44: URK — Extensions (Semiring Weights, Constraint Layer, Symbolic Execution) (Research)
 #
 **Document Version:** 0.1  
+**Author:** Sînică Alboaie  
 **Status:** Research / Proposed (not implemented)  
 **Audience:** UTE roadmap contributors, reasoning engine developers  
 
@@ -185,4 +186,3 @@ This DS keeps them together as “extension directions” until there is an impl
 ---
 
 *End of DS44*
-

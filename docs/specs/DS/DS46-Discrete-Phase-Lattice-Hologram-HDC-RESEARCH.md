@@ -3,6 +3,7 @@
 # DS46: Discrete Phase Lattice Hologram HDC Strategy (DPLH / “Phase-Lattice”) (Research)
 #
 **Document Version:** 0.1  
+**Author:** Sînică Alboaie  
 **Status:** Research / Proposed (not implemented)  
 **Audience:** HDC/VSA researchers, core architects, strategy implementers  
 

@@ -3,6 +3,7 @@
 # Chapter 13: Basic NLP Module - Natural Language to DSL Transformation
 
 **Document Version:** 1.0
+**Author:** Sînică Alboaie
 **Status:** Draft Specification
 **Focus:** Heuristic-based English to SYS2 DSL Transformation
 

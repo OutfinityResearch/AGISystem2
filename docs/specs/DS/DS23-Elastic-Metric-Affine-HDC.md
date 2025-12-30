@@ -3,6 +3,7 @@
 # DS23: Elastic Metric-Affine HDC Strategy (EMA / “Metric-Affine Elastic”)
 
 **Document Version:** 1.0  
+**Author:** Sînică Alboaie  
 **Status:** Implemented (runtime; evolving)  
 **Audience:** Technical Architects, HDC Researchers, Core Developers  
 

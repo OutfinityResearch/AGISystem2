@@ -3,6 +3,7 @@
 # DS33: UTE — Representation & Query — Research
 #
 # **Document Version:** 0.1
+# **Author:** Sînică Alboaie
 # **Status:** Research (proposed; not implemented)
 # **Audience:** DSL, indexing, and reasoning developers
 #
@@ -89,4 +90,3 @@ These changes are designed to layer on top of existing DS02/DS05 semantics:
 ---
 
 *End of DS33*
-

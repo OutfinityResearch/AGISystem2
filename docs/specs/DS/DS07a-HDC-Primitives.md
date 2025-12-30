@@ -3,6 +3,7 @@
 # Chapter 7a: HDC Primitives & Binding Formula
 
 **Document Version:** 1.0
+**Author:** Sînică Alboaie
 **Status:** Draft Specification
 **Part Of:** DS07 Core Theory (refactored)
 **Implementation:** `src/core/operations.mjs`, `src/core/position.mjs`

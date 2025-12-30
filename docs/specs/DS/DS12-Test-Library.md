@@ -3,6 +3,7 @@
 # Chapter 12: Test Library and End-to-End Testing Framework
 
 **Document Version:** 1.0
+**Author:** Sînică Alboaie
 **Status:** Draft Specification
 **Focus:** Integration Testing Library for Learn → Reason → Decode Pipeline
 

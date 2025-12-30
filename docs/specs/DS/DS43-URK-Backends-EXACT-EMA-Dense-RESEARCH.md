@@ -3,6 +3,7 @@
 # DS43: URK — Backend Contract and Mappings (EXACT vs EMA vs Dense) (Research)
 #
 **Document Version:** 0.1  
+**Author:** Sînică Alboaie  
 **Status:** Research / Proposed (not implemented)  
 **Audience:** HDC strategy developers, reasoning engine developers  
 
@@ -233,4 +234,3 @@ This preserves backward compatibility while allowing URK to be adopted increment
 ---
 
 *End of DS43*
-

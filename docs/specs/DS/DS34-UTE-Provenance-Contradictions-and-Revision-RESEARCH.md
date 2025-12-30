@@ -3,6 +3,7 @@
 # DS34: UTE — Provenance, Contradictions & Revision — Research
 #
 # **Document Version:** 0.1
+# **Author:** Sînică Alboaie
 # **Status:** Research (proposed; not implemented)
 # **Audience:** Reasoning developers, proof/evidence designers
 #
@@ -73,4 +74,3 @@ This DS is designed to align with:
 ---
 
 *End of DS34*
-

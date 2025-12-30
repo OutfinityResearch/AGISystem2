@@ -3,6 +3,7 @@
 # Chapter 7g: L3 Bootstrap Verbs
 
 **Document Version:** 1.0
+**Author:** Sînică Alboaie
 **Status:** Draft Specification
 **Part Of:** DS07 Core Theory (refactored)
 **Config File:** `config/Core/11-bootstrap-verbs.sys2`

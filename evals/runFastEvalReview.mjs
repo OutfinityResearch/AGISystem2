@@ -419,7 +419,7 @@ async function main() {
     process.exit(1);
   }
 
-  const transformer = new NLTransformer();
+  const transformer = new NLTransformer({ dslPreserveOperators: true });
 
   const report = [];
   report.push(`# FastEval Review\n`);

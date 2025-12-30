@@ -3,6 +3,7 @@
 # DS35: UTE — Causal / Mechanistic Reasoning — Research
 #
 # **Document Version:** 0.1
+# **Author:** Sînică Alboaie
 # **Status:** Research (proposed; not implemented)
 # **Audience:** Reasoning researchers, DSL designers
 #
@@ -63,4 +64,3 @@ This DS depends on:
 ---
 
 *End of DS35*
-

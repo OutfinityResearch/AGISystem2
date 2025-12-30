@@ -3,6 +3,7 @@
 # DS45: URK Extensions for Probabilistic + Mathematical Reasoning (Research)
 #
 **Document Version:** 0.1  
+**Author:** Sînică Alboaie  
 **Status:** Research / Product proposal (not implemented)  
 **Audience:** Core architects, reasoning-engine developers, HDC/VSA researchers, UTE roadmap contributors  
 **Scope:** Strategy-agnostic (EXACT, Dense-Binary, Metric-Affine, EMA, future strategies)  
@@ -387,4 +388,3 @@ These metrics should integrate with fastEval/saturation style evaluation runners
 ---
 
 *End of DS45*
-

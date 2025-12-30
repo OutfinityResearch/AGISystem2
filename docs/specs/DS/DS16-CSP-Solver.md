@@ -3,6 +3,7 @@
 # Chapter 16: Constraint Satisfaction Problem Solver
 
 **Document Version:** 1.0
+**Author:** Sînică Alboaie
 **Status:** Draft Specification
 
 ---

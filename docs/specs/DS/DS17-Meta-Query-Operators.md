@@ -3,6 +3,7 @@
 # Chapter 17: Meta-Query Operators
 
 **Document Version:** 1.0
+**Author:** Sînică Alboaie
 **Status:** Draft Specification
 **Depends On:** DS02 (DSL Syntax), DS05 (Basic Reasoning), DS06 (Advanced Reasoning)
 

@@ -3,6 +3,7 @@
 # Chapter 13: Decoding and Phrasing Engine
 
 **Document Version:** 1.0  
+**Author:** Sînică Alboaie  
 **Status:** Draft Specification  
 **Audience:** Developers, NLP Engineers  
 **Focus:** Vector → Structure → Natural Language

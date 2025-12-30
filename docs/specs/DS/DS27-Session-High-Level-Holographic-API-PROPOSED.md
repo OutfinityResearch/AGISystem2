@@ -3,6 +3,7 @@
 # DS27: Session High-Level Holographic APIs (Holo Query + Batch Q/A) — Proposed
 #
 # **Document Version:** 1.0
+# **Author:** Sînică Alboaie
 # **Status:** Proposed (planned for implementation; not yet implemented)
 # **Audience:** Runtime/Reasoning developers, application authors
 # **Related:** DS02 (DSL), DS03 (Architecture), DS14 (EvalSuite), DS17 (Priority modes), DS19 (Proof-real), DS25 (EXACT)

@@ -3,6 +3,7 @@
 # DS32: Universal Theory Engine (UTE) — Research
 #
 # **Document Version:** 0.1
+# **Author:** Sînică Alboaie
 # **Status:** Research (proposed; not implemented)
 # **Audience:** Researchers, architects, reasoning/DSL developers
 #
@@ -114,4 +115,3 @@ and be promoted from “research” to “planned/implemented” with:
 ---
 
 *End of DS32*
-

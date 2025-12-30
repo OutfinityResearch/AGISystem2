@@ -3,6 +3,7 @@
 # Chapter 7: The Core Theory Reference
 
 **Document Version:** 2.1
+**Author:** Sînică Alboaie
 **Status:** Refactored
 
 ---

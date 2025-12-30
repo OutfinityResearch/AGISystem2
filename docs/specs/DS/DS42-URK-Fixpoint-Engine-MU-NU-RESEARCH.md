@@ -3,6 +3,7 @@
 # DS42: URK — Fixpoint Engine (MU/NU), Dedup, Budgets, Traces (Research)
 #
 **Document Version:** 0.1  
+**Author:** Sînică Alboaie  
 **Status:** Research / Proposed (not implemented)  
 **Audience:** Reasoning engine developers, evaluation authors  
 
@@ -239,4 +240,3 @@ These metrics allow assessing whether closure tactics reduce symbolic fallback f
 ---
 
 *End of DS42*
-

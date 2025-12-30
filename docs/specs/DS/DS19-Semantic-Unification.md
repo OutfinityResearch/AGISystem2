@@ -3,6 +3,7 @@
 # Chapter 19: Semantic Unification & Canonicalization
 
 **Document Version:** 1.0  
+**Author:** Sînică Alboaie  
 **Status:** Draft Specification  
 **Scope:** Core runtime + reasoning engines + theory integration  
 

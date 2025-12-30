@@ -3,6 +3,7 @@
 # DS31: Scientific Theory Encoding and Validation (Trustworthy Pattern) — Research
 #
 # **Document Version:** 1.0
+# **Author:** Sînică Alboaie
 # **Status:** Planned (research-level; not implemented)
 #
 # This document is an extracted, focused spec from DS08 (Trustworthy AI Patterns).

@@ -3,6 +3,7 @@
 # Chapter 1: Theoretical Foundations
 
 **Document Version:** 5.0  
+**Author:** Sînică Alboaie  
 **Status:** Draft Specification
 
 ---

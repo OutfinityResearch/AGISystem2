@@ -3,6 +3,7 @@
 # DS10: Codebase Map (Parser, Runtime, Reasoning, HDC)
 #
 # **Document Version:** 3.0
+# **Author:** Sînică Alboaie
 # **Status:** Implemented (living reference; reflects current codebase)
 # **Audience:** Core developers, evaluation authors, integrators
 # **Related:** DS02 (DSL), DS03 (Architecture), DS11 (Decoding), DS19 (Semantic Unification), DS26 (Session Universe)
@@ -170,4 +171,3 @@ AGISystem2 currently relies on reloading theories from text (`.sys2`) and re-vec
 ---
 
 *End of DS10*
-

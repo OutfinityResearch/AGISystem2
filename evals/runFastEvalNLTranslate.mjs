@@ -354,7 +354,7 @@ async function main() {
     process.exit(1);
   }
 
-  const transformer = new NLTransformer();
+  const transformer = new NLTransformer({ dslPreserveOperators: true });
   let totalCases = 0;
   let translated = 0;
   let dslSame = 0;

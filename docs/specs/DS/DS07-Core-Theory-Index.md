@@ -3,6 +3,7 @@
 # Chapter 7: Core Theory Reference (Index)
 
 **Document Version:** 2.1
+**Author:** Sînică Alboaie
 **Status:** Draft Specification
 **Refactored:** This document was split into smaller, focused documents for clarity.
 

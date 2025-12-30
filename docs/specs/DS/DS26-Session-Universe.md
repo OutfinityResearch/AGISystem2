@@ -4,6 +4,7 @@
 #
 # Status: Draft (implemented in code)
 # Audience: Core developers, evaluation authors
+# Author: Sînică Alboaie
 
 ## 1. Summary
 
@@ -133,4 +134,3 @@ Implementation reference: `tests/unit/runtime/runtime-reserved-atoms.test.mjs`.
 - `src/runtime/vocabulary.mjs`
 - `src/runtime/runtime-reserved-atoms.mjs`
 - `config/runtime/reserved-atoms.json`
-

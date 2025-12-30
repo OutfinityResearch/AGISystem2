@@ -129,6 +129,11 @@ export function capitalizeWord(word) {
   if (!word) return '';
   const s = String(word);
   if (/^\?[A-Za-z_][A-Za-z0-9_]*$/.test(s)) return s;
+  if (/^\$[A-Za-z_][A-Za-z0-9_]*$/.test(s)) return s;
+  if (/^__.*__$/.test(s)) return s;
+
+  // Preserve ID-like ALLCAPS tokens (often stable identifiers).
+  if (/[0-9_]/.test(s) && s.toUpperCase() === s) return s;
 
   const first = s.charAt(0);
   const rest = s.slice(1);
@@ -149,6 +154,7 @@ export function capitalizeWord(word) {
  */
 export function singularize(word) {
   if (!word || word.length < 3) return word;
+  if (/^[$@?]/.test(word)) return word;
 
   // Preserve proper nouns (capitalized words that look like names)
   // Names ending in 's' like Whiskers, James, Thomas should NOT be singularized
@@ -156,6 +162,10 @@ export function singularize(word) {
     // Check if it's likely a name (not a regular plural)
     // Common noun plurals have lowercase first letter in normal text
     // Names like "Whiskers", "James", "Thomas" should be preserved
+    return word;
+  }
+  // Preserve CamelCase / internal-caps tokens (e.g., "DrJones", "LivingThings") as-is.
+  if (word[0] === word[0].toUpperCase() && /[A-Z]/.test(word.slice(1)) && word.endsWith('s')) {
     return word;
   }
 
@@ -262,7 +272,8 @@ export function normalizeVerb(verb) {
   // Irregular verbs (common ones)
   const irregulars = {
     'is': 'be', 'are': 'be', 'was': 'be', 'were': 'be', 'been': 'be', 'am': 'be',
-    'has': 'have', 'had': 'have',
+    // In AGISystem2 DSL, `has` is a first-class relation name (we keep it as-is).
+    'has': 'has', 'had': 'has',
     'does': 'do', 'did': 'do',
     'goes': 'go', 'went': 'go', 'gone': 'go',
     'says': 'say', 'said': 'say',

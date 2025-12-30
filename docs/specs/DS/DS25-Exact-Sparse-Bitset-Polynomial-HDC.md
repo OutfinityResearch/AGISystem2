@@ -3,6 +3,7 @@
 # DS25: Exact Sparse Bitset Polynomial HDC (EXACT / “Exact-Sparse”)
 
 **Document Version:** 0.9  
+**Author:** Sînică Alboaie  
 **Status:** Implemented (v0; persistence deferred)  
 **Audience:** Technical Architects, HDC Researchers, Core Developers  
 

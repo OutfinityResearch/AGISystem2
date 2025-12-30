@@ -3,6 +3,7 @@
 # DS47: OF-HDC — Optical-Field HDC Strategy (Research)
 #
 **Document Version:** 0.1  
+**Author:** Sînică Alboaie  
 **Status:** Research / Proposed (not implemented)  
 **Audience:** Core architects, HDC/VSA researchers, engine/strategy developers  
 **Scope:** Strategy proposal compatible with AGISystem2’s HDC contract and reasoning equation  
@@ -399,4 +400,3 @@ Recommended initial parameter defaults (research starting points):
 ---
 
 *End of DS47*
-

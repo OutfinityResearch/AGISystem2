@@ -76,7 +76,7 @@ function supportedNlForCase(session, c) {
 
   const res = session.describeDsl(dsl, {
     includeDeclarations: false,
-    includeMeta: false,
+    includeMeta: c.action !== 'learn',
     style: 'parseable'
   });
   if (!res?.success || !Array.isArray(res.lines) || res.lines.length === 0) return null;
@@ -159,4 +159,3 @@ main().catch(err => {
   console.error(err?.stack || err?.message || String(err));
   process.exit(1);
 });
-

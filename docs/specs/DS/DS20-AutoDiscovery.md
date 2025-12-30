@@ -1,6 +1,7 @@
 # DS20 - AutoDiscovery: Automated Bug Discovery System
 
 **Document Version:** 1.0  
+**Author:** Sînică Alboaie  
 **Status:** Implemented (tooling; not part of runtime Core)
 
 ## 1. Overview
