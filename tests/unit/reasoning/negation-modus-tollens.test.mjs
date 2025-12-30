@@ -57,4 +57,23 @@ describe('Negation: modus tollens / contrapositive', () => {
 
     session.close();
   });
+
+  test('supports disjunctive antecedents: (A ∨ B) → C, Not(C) ⇒ Not(A)', () => {
+    const session = new Session({ geometry: 2048, closedWorldAssumption: false });
+
+    session.learn(`
+      @a isA ?x Shumpus
+      @b isA ?x Dumpus
+      @ab Or $a $b
+      @c isA ?x Impus
+      Implies $ab $c
+
+      Not isA Max Impus
+    `);
+
+    const proof = session.prove('@g Not isA Max Shumpus');
+    assert.equal(proof.valid, true);
+
+    session.close();
+  });
 });

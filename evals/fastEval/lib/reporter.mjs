@@ -30,6 +30,11 @@ const colors = {
   bgBlue: '\x1b[44m'
 };
 
+function pctFloor(n, d) {
+  if (!Number.isFinite(n) || !Number.isFinite(d) || d <= 0) return 0;
+  return Math.floor((n / d) * 100);
+}
+
 /**
  * Phase result symbols
  */
@@ -142,7 +147,7 @@ export function reportCaseResults(cases, results) {
  */
 export function reportSuiteSummary(summary, cases = []) {
   const { total, passed, failed, partialPass } = summary;
-  const pct = total > 0 ? Math.round((passed / total) * 100) : 0;
+  const pct = pctFloor(passed, total);
 
   const barWidth = 40;
   const filledWidth = Math.round((passed / total) * barWidth);
@@ -350,9 +355,7 @@ export function reportGlobalSummary(suiteResults) {
     aggregatedStats.hdcOps += askedOps;
     aggregatedStats.hdcUsefulOps += stats.hdcUsefulOps || 0;
 
-    const pct = suite.summary.total > 0
-      ? Math.round((suite.summary.passed / suite.summary.total) * 100)
-      : 0;
+    const pct = pctFloor(suite.summary.passed, suite.summary.total);
 
     const statusColor = pct === 100 ? colors.green : pct >= 50 ? colors.yellow : colors.red;
 
@@ -375,7 +378,7 @@ export function reportGlobalSummary(suiteResults) {
 
     const hdcAsked = (stats.queries || 0) + (stats.proofs || 0);
     const hdcUsed = stats.hdcUsefulOps || 0;
-    const hdcPct = hdcAsked > 0 ? Math.round((hdcUsed / hdcAsked) * 100) : 0;
+    const hdcPct = pctFloor(hdcUsed, hdcAsked);
     const hdcStr = hdcAsked > 0 ? `${hdcPct}%` : '-';
     const hdcCountStr = hdcAsked > 0 ? `${hdcUsed}/${hdcAsked}` : '-';
 
@@ -405,7 +408,7 @@ export function reportGlobalSummary(suiteResults) {
   console.log(`${colors.dim}${'─'.repeat(142)}${colors.reset}`);
 
   // Totals row
-  const overallPct = totalCases > 0 ? Math.round((totalPassed / totalCases) * 100) : 0;
+  const overallPct = pctFloor(totalPassed, totalCases);
   const overallColor = overallPct === 100 ? colors.green : overallPct >= 50 ? colors.yellow : colors.red;
   const avgProofLen = aggregatedStats.proofs > 0
     ? (aggregatedStats.totalProofSteps / aggregatedStats.proofs).toFixed(1)
@@ -426,9 +429,7 @@ export function reportGlobalSummary(suiteResults) {
     }
   }
 
-  const totalHdcPct = aggregatedStats.hdcOps > 0
-    ? Math.round((aggregatedStats.hdcUsefulOps / aggregatedStats.hdcOps) * 100)
-    : 0;
+  const totalHdcPct = pctFloor(aggregatedStats.hdcUsefulOps, aggregatedStats.hdcOps);
   const totalHdcStr = aggregatedStats.hdcOps > 0 ? `${totalHdcPct}%` : '-';
   const totalHdcCountStr = aggregatedStats.hdcOps > 0
     ? `${aggregatedStats.hdcUsefulOps}/${aggregatedStats.hdcOps}`
@@ -781,7 +782,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
           continue;
         }
 
-        const pct = summary.total > 0 ? Math.round((summary.passed / summary.total) * 100) : 0;
+        const pct = pctFloor(summary.passed, summary.total);
         const stats = summary.reasoningStats || {};
         const durationMs = summary.durationMs || 0;
 
@@ -837,33 +838,33 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
   const rows = orderedStrategies.map(strategyId => {
     const totals = strategyTotals[strategyId];
 
-    const passPct = totals.total > 0 ? Math.round((totals.passed / totals.total) * 100) : 0;
+    const passPct = pctFloor(totals.passed, totals.total);
     const passColor = passPct === 100 ? colors.green : passPct >= 50 ? colors.yellow : colors.red;
     const passCell = `${passColor}${passPct}% (${totals.passed}/${totals.total})${colors.reset}`;
 
     const hasAsked = totals.hdcTotal > 0;
 
-    const triedPct = hasAsked ? Math.round((totals.hdcTried / totals.hdcTotal) * 100) : 0;
+    const triedPct = pctFloor(totals.hdcTried, totals.hdcTotal);
     const triedColor = hasAsked && triedPct >= 50 ? colors.cyan : colors.dim;
     const triedCell = hasAsked
       ? `${triedColor}${triedPct}% (${totals.hdcTried}/${totals.hdcTotal})${colors.reset}`
       : `${colors.dim}-${colors.reset}`;
 
     const hasTried = totals.hdcTried > 0;
-    const validPct = hasTried ? Math.round((totals.hdcValidated / totals.hdcTried) * 100) : 0;
+    const validPct = pctFloor(totals.hdcValidated, totals.hdcTried);
     const validColor = hasTried && validPct >= 50 ? colors.cyan : colors.dim;
 	    const validCell = hasTried
 	      ? `${validColor}${validPct}% (${totals.hdcValidated}/${totals.hdcTried})${colors.reset}`
 	      : `${colors.dim}-${colors.reset}`;
 	
 	    const hasCompared = totals.hdcCompared > 0;
-	    const matchPct = hasCompared ? Math.round((totals.hdcEquivalent / totals.hdcCompared) * 100) : 0;
+	    const matchPct = pctFloor(totals.hdcEquivalent, totals.hdcCompared);
 	    const matchColor = hasCompared && matchPct >= 50 ? colors.cyan : colors.dim;
 	    const matchCell = hasCompared
 	      ? `${matchColor}${matchPct}% (${totals.hdcEquivalent}/${totals.hdcCompared})${colors.reset}`
 	      : `${colors.dim}-${colors.reset}`;
 
-    const finalPct = hasAsked ? Math.round((totals.hdcFinal / totals.hdcTotal) * 100) : 0;
+    const finalPct = pctFloor(totals.hdcFinal, totals.hdcTotal);
     const finalColor = hasAsked && finalPct >= 50 ? colors.cyan : colors.dim;
     const finalCell = hasAsked
       ? `${finalColor}${finalPct}% (${totals.hdcFinal}/${totals.hdcTotal})${colors.reset}`
@@ -889,7 +890,7 @@ export function reportMultiStrategyComparison(resultsByStrategy) {
     if (!hasAnyFailures) return base;
 
     const pctOrDash = (n) => {
-      const pct = totals.total > 0 ? Math.round((n / totals.total) * 100) : 0;
+      const pct = pctFloor(n, totals.total);
       return pct > 0 ? `${pct}%` : `${colors.dim}-${colors.reset}`;
     };
 

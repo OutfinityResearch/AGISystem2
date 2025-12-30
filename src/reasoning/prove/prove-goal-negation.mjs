@@ -65,6 +65,31 @@ function extractNotLeafAsts(part, out = []) {
   return out;
 }
 
+function withIsolatedProofAttempt(self, fn, { maxSteps = 200 } = {}) {
+  const saved = {
+    steps: self.steps,
+    visited: self.visited,
+    memo: self.memo,
+    reasoningSteps: self.reasoningSteps,
+    maxSteps: self.maxSteps
+  };
+
+  try {
+    self.steps = [];
+    self.visited = new Set();
+    self.memo = new Map();
+    self.reasoningSteps = 0;
+    self.maxSteps = Math.max(1, maxSteps);
+    return fn();
+  } finally {
+    self.steps = saved.steps;
+    self.visited = saved.visited;
+    self.memo = saved.memo;
+    self.reasoningSteps = saved.reasoningSteps;
+    self.maxSteps = saved.maxSteps;
+  }
+}
+
 export function tryRuleDerivedNot(self, innerOp, innerArgs, depth) {
   for (const rule of self.session.rules || []) {
     const concParts = rule.conclusionParts;
@@ -137,17 +162,8 @@ export function tryRuleDerivedNotFromCompoundConclusion(self, innerOp, innerArgs
 
 export function tryContrapositiveNot(self, innerOp, innerArgs, depth, proveGoalFn) {
   for (const rule of self.session.rules || []) {
-    const condLeaves = (() => {
-      if (rule.conditionParts) {
-        if (rule.conditionParts.type === 'Or') return null;
-        if (rule.conditionParts.type === 'leaf' && rule.conditionParts.ast) return [rule.conditionParts.ast];
-        return extractLeafAsts(rule.conditionParts, []);
-      }
-      if (rule.conditionAST) return [rule.conditionAST];
-      return null;
-    })();
-    if (!condLeaves) continue;
-    if (condLeaves.length < 1) continue;
+    const conditionKind = rule.conditionParts?.type || (rule.conditionAST ? 'leaf' : null);
+    if (!conditionKind) continue;
 
     // Contrapositive is applied conservatively:
     // - allow a single leaf conclusion: (A ∧ B ∧ ...) → C
@@ -168,6 +184,77 @@ export function tryContrapositiveNot(self, innerOp, innerArgs, depth, proveGoalF
     }
     if (concLeaves.length === 0) continue;
 
+    // Case 1: leaf antecedent (conditionAST) or And antecedent (conditionParts=And or nested)
+    // Use the existing modus-tollens pattern:
+    //   prove Not(conclusion), prove all other antecedents, infer Not(target antecedent).
+    const condLeaves = (() => {
+      if (rule.conditionParts) {
+        if (rule.conditionParts.type === 'leaf' && rule.conditionParts.ast) return [rule.conditionParts.ast];
+        // For And, this collects all leaves (including from nested And/Or). This is fine because
+        // we only run this branch when the *top-level* is not Or.
+        return extractLeafAsts(rule.conditionParts, []);
+      }
+      if (rule.conditionAST) return [rule.conditionAST];
+      return [];
+    })();
+
+    // Case 2: Or antecedent (A ∨ B ∨ ...) → C
+    // In classical logic: Not(C) ⇒ Not(A ∨ B ∨ ...) ⇒ Not(A) (and Not(B), ...)
+    // No need to prove other antecedents (there are no conjunctive siblings).
+    if (rule.conditionParts?.type === 'Or') {
+      const orLeaves = extractLeafAsts(rule.conditionParts, []);
+      if (orLeaves.length === 0) continue;
+
+      for (const leafAst of orLeaves) {
+        const leafOp = self.unification.extractOperatorFromAST(leafAst);
+        const leafArgs = self.unification.extractArgsFromAST(leafAst);
+        if (!leafOp || leafOp !== innerOp) continue;
+        if (leafArgs.length !== innerArgs.length) continue;
+
+        const bindings = unifyConcreteArgs(leafArgs, innerArgs);
+        if (!bindings) continue;
+
+        // If any conclusion leaf is refuted (Not leaf is provable), we can refute this disjunct.
+        let refuted = null;
+        for (const concAst of concLeaves) {
+          const concOp = self.unification.extractOperatorFromAST(concAst);
+          const concArgs = self.unification.extractArgsFromAST(concAst);
+          if (!concOp) continue;
+
+          const concArgVals = concArgs.map(a => a.isVariable ? bindings.get(a.name) : a.name);
+          if (concArgVals.some(v => !v)) continue;
+
+          const notConcGoal = buildNotGoalFromStrings(concOp, concArgVals);
+          const notConcRes = withIsolatedProofAttempt(self, () => proveGoalFn(self, notConcGoal, depth + 1));
+          if (notConcRes.valid) {
+            refuted = { notConcRes, concOp, concArgVals, rule };
+            break;
+          }
+        }
+        if (!refuted) continue;
+
+        self.session.reasoningStats.ruleAttempts++;
+        return {
+          valid: true,
+          method: 'contrapositive',
+          confidence: self.thresholds.CONDITION_CONFIDENCE,
+          steps: [
+            ...(refuted.notConcRes.steps || []),
+            {
+              operation: 'rule_application',
+              fact: `Not ${innerOp} ${innerArgs.join(' ')}`.trim(),
+              rule: rule.label || rule.name || rule.source,
+              ruleId: rule.id || null,
+              inference: 'contrapositive'
+            }
+          ]
+        };
+      }
+      continue;
+    }
+
+    if (condLeaves.length < 1) continue;
+
     for (let targetIdx = 0; targetIdx < condLeaves.length; targetIdx++) {
       const leafAst = condLeaves[targetIdx];
       const leafOp = self.unification.extractOperatorFromAST(leafAst);
@@ -187,7 +274,7 @@ export function tryContrapositiveNot(self, innerOp, innerArgs, depth, proveGoalF
         if (concArgVals.some(v => !v)) continue;
 
         const notConcGoal = buildNotGoalFromStrings(concOp, concArgVals);
-        const notConcRes = proveGoalFn(self, notConcGoal, depth + 1);
+        const notConcRes = withIsolatedProofAttempt(self, () => proveGoalFn(self, notConcGoal, depth + 1));
         if (!notConcRes.valid) continue;
 
         const otherSteps = [];

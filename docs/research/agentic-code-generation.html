@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research – Agentic Code Generation</title>
+  <link rel="stylesheet" href="../reference/style.css">
+  <style>
+    .callout {
+      background: #e3f2fd;
+      border-left: 4px solid #1976d2;
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 18px 0;
+    }
+    .warn {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 18px 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin: 18px 0;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    .card h3 {
+      margin: 0 0 8px 0;
+      color: #1976d2;
+      font-size: 15px;
+    }
+    .card p {
+      margin: 0;
+      color: #555;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    table { width: 100%; border-collapse: collapse; margin: 18px 0; }
+    th, td { border: 1px solid #ddd; padding: 10px 12px; text-align: left; vertical-align: top; }
+    th { background: #1976d2; color: white; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="nav-header">
+      <h1>Agentic Code Generation (Research)</h1>
+      <small>
+        <a href="../index.html">Home</a> ·
+        <a href="../architecture/index.html">Architecture</a> ·
+        <a href="../theory/index.html">Theory</a> ·
+        <a href="../specs/matrix.html">Specs</a> ·
+        <a href="index.html">Research</a> ·
+        <a href="agentic-code-generation.html"><strong>Agents</strong></a>
+      </small>
+      <small>Use LLMs + eval data to synthesize programs, repair systems, and formalize theories</small>
+    </div>
+
+    <div class="callout">
+      <strong>Working definition:</strong> “agentic code generation” is a workflow where an AI agent iteratively proposes code changes
+      (or new code), validates them against tests/evals, and keeps artifacts (traces, failing cases, hypotheses) so the process is
+      reproducible and improves over time.
+    </div>
+
+    <h2 style="margin-top: 0;">Why this matters for AGISystem2</h2>
+    <p>
+      AGISystem2 is built around explicit theories (DSL), deterministic execution, and evaluation suites. That makes it a strong platform
+      for “learning by synthesis”: instead of only prompting a model for answers, we can use models to propose <em>executable artifacts</em>:
+    </p>
+    <ul>
+      <li>code that implements algorithms or optimizations,</li>
+      <li>simulations that model real mechanisms,</li>
+      <li>DSL theories that encode invariants and constraints,</li>
+      <li>tests/evals that prevent regressions and sharpen semantics.</li>
+    </ul>
+
+    <h2>General pattern (LLM + data → programs + theories)</h2>
+    <table>
+      <tr>
+        <th>Stage</th>
+        <th>Input</th>
+        <th>Agent output</th>
+        <th>Validation signal</th>
+      </tr>
+      <tr>
+        <td><strong>1) Observe</strong></td>
+        <td>Failures, slow paths, ambiguous proofs, missing coverage</td>
+        <td>Hypotheses about root cause + candidate fixes</td>
+        <td>Reproducible minimal failing case</td>
+      </tr>
+      <tr>
+        <td><strong>2) Synthesize</strong></td>
+        <td>Specs + codebase context + failing case</td>
+        <td>Patch (code/tests) or DSL theory snippet</td>
+        <td>Static checks + targeted tests</td>
+      </tr>
+      <tr>
+        <td><strong>3) Evaluate</strong></td>
+        <td>Local test suite + eval runners</td>
+        <td>Run results + diffs in behavior</td>
+        <td>Pass/fail + performance deltas</td>
+      </tr>
+      <tr>
+        <td><strong>4) Curate</strong></td>
+        <td>New learnings</td>
+        <td>Quarantine bad hypotheses; keep minimal repro + explanation</td>
+        <td>Regression tests prevent reintroduction</td>
+      </tr>
+      <tr>
+        <td><strong>5) Formalize</strong></td>
+        <td>Stable patterns in failures and fixes</td>
+        <td>Promote to DS/Docs, Core theories, or reusable modules</td>
+        <td>Traceability in specs + repeatable evals</td>
+      </tr>
+    </table>
+
+    <h2>AutoDiscovery as a concrete instance</h2>
+    <p>
+      AutoDiscovery is AGISystem2’s internal “agentic debugging” and regression discovery workflow. It runs evaluation suites, collects
+      failures and traces, and uses structured analysis to identify minimal bug cases and propose fixes.
+    </p>
+    <ul>
+      <li>Spec: <a href="../specsLoader.html?spec=DS/DS20-AutoDiscovery.md">DS20 – AutoDiscovery</a></li>
+      <li>Runtime folder: <code>autoDiscovery/</code> (runner: <code>autoDiscovery/runAutodiscoveryAgent.mjs</code>)</li>
+    </ul>
+
+    <div class="grid">
+      <div class="card">
+        <h3>What is “learned”</h3>
+        <p>
+          Not model weights: AGISystem2 “learns” by adding stable artifacts: regression tests, repaired reasoning rules,
+          clarified specs, and (optionally) new DSL theory fragments.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Why it scales</h3>
+        <p>
+          The evaluation suite is the judge. As coverage grows, the agent’s search space becomes safer: fewer patches pass unless they
+          preserve semantics across many suites.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Why it stays scientific</h3>
+        <p>
+          The process produces inspectable evidence: minimal repro cases, proof traces, and performance counters. Hypotheses are falsified
+          by deterministic runs, not by narrative.
+        </p>
+      </div>
+    </div>
+
+    <h2>From code synthesis to theory synthesis</h2>
+    <p>
+      UTE-oriented research (see <a href="universal-theory-engine.html">Universal Theory Engine (UTE)</a>) needs a pathway from data and
+      experiments to new theory fragments. Agentic workflows can help by generating candidate DSL theories and checking them against
+      observed data:
+    </p>
+    <ul>
+      <li><strong>Constraint discovery:</strong> infer invariants that remove contradictions or explain patterns, then validate with <code>prove()</code>.</li>
+      <li><strong>Model sketching:</strong> generate small simulations/models that fit data; keep the model executable and audited.</li>
+      <li><strong>Experiment loops:</strong> propose which additional facts/measurements would disambiguate competing hypotheses.</li>
+    </ul>
+
+    <div class="warn">
+      <strong>Important guardrail:</strong> LLMs are used as proposal engines, not as truth engines.
+      Anything promoted to “theory” (DSL) or “algorithm” (code) must be validated by deterministic evaluation and, when applicable,
+      proof/evidence objects.
+    </div>
+
+    <h2>Where this goes next (research questions)</h2>
+    <ul>
+      <li>How do we represent “candidate theories” so that they can be evaluated, revised, and compared systematically?</li>
+      <li>Which operators should be allowed in synthesized DSL to keep search tractable and semantics stable?</li>
+      <li>How do we tie numeric/probabilistic model fitting to evidence and revision (UTE: DS34–DS37)?</li>
+      <li>What is the best interface between “agent planning” and “theory validation” (DS28 + UTE)?</li>
+    </ul>
+  </div>
+</body>
+</html>
+

@@ -144,3 +144,4 @@ vite.config.ts.timestamp-*
 /autoDiscovery/bugCases/
 /autoDiscovery/nlpBugs/
 /autoDiscovery/bugCases/
+/autoDiscovery/cache/

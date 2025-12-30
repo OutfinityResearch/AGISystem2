@@ -4,59 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="bug finixng, better stress evaluation suite to analyse the holografic properties of the startegies">
-      <change afterPath="$PROJECT_DIR$/autoDiscovery/cache/logiglue/logi_glue_prontoqa.jsonl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/research/dynamic-size-representations.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/research/holographic-session-api.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/research/persistence-and-kb-serialization.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/research/pure-symbolic-baseline.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/research/snapshot-2025.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/research/trustworthy-patterns.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/research/universal-theory-engine.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/research/ute-causal-mechanistic-reasoning.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/research/ute-experiment-planning.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/research/ute-numeric-modeling.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/research/ute-provenance-and-revision.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/research/ute-representation-and-query.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/research/ute-uncertainty-probabilistic.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS08-TrustworthyAI-Overview-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS10-Codebase-Map.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS27-Session-High-Level-Holographic-API-PROPOSED.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS28-Agent-Planning-and-Tool-Orchestration-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS29-Creative-Writing-Consistency-and-Bias-Detection-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS30-Compliance-and-Regulatory-Verification-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS31-Scientific-Theory-Encoding-and-Validation-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS32-Universal-Theory-Engine-UTE-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS33-UTE-Representation-and-Query-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS34-UTE-Provenance-Contradictions-and-Revision-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS35-UTE-Causal-Mechanistic-Reasoning-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS36-UTE-Uncertainty-and-Probabilistic-Semantics-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS37-UTE-Numeric-Modeling-and-Units-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/specs/DS/DS38-UTE-Experiment-Planning-RESEARCH.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/unit/reasoning/negation-modus-tollens.test.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/analised.md" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/analised.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/discovery/analysed.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/discovery/analysed.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/libs/logiglue/dataset-loader.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/libs/logiglue/dataset-loader.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autoDiscovery/runAutodiscoveryAgent.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/autoDiscovery/runAutodiscoveryAgent.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/research/directions/hdc-strategies.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/directions/hdc-strategies.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/research/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/research/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS03-Memory-Model.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS03-Memory-Model-OBSOLETE.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS08-ThurstworthyAI-Patterns.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS10-Code-Plan.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS20-AutoDiscovery.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS20-AutoDiscovery.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS23-Elastic-Metric-Affine-HDC.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS23-Elastic-Metric-Affine-HDC.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS24-Pure-Symbolic-Term-Engine.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS24-Pure-Symbolic-Term-Engine-EXPLORATORY.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/DS/DS25-Exact-Sparse-Bitset-Polynomial-HDC.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/NFS.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/NFS.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/specs/matrix.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/specs/matrix.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/agent-planning.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/agent-planning.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/compliance.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/compliance.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theory/trustworthy-ai/research.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/theory/trustworthy-ai/research.html" afterDir="false" />
+    <list default="true" id="1a3565d6-2cd2-44b5-9e63-18923d86972c" name="Changes" comment="better docuemntation, overview of the planned research, wip. started to run the external eval and fix stuff from the external benchmark suites">
+      <change afterPath="$PROJECT_DIR$/autoDiscovery/analised.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/lib/reporter.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evals/fastEval/suite27_contrapositive_negation/cases.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/evals/fastEval/suite27_contrapositive_negation/cases.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/holografic_reasoning_usecases.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/reasoning/prove/prove-goal-negation.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/src/reasoning/prove/prove-goal-negation.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/reasoning/negation-modus-tollens.test.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/reasoning/negation-modus-tollens.test.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,15 +129,7 @@
       <workItem from="1766562947099" duration="21851000" />
       <workItem from="1766650266623" duration="6940000" />
       <workItem from="1767005469743" duration="10476000" />
-      <workItem from="1767083849618" duration="11416000" />
-    </task>
-    <task id="LOCAL-00045" summary="prearing to add new reasoning methods">
-      <option name="closed" value="true" />
-      <created>1766073952890</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1766073952890</updated>
+      <workItem from="1767083849618" duration="11908000" />
     </task>
     <task id="LOCAL-00046" summary="prearing to add new reasoning methods">
       <option name="closed" value="true" />
@@ -569,7 +515,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767101141189</updated>
     </task>
-    <option name="localTasksCounter" value="94" />
+    <task id="LOCAL-00094" summary="better docuemntation, overview of the planned research, wip. started to run the external eval and fix stuff from the external benchmark suites">
+      <option name="closed" value="true" />
+      <created>1767104387396</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1767104387396</updated>
+    </task>
+    <option name="localTasksCounter" value="95" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -588,7 +542,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="better documentation" />
     <MESSAGE value="better documentation and project presentation" />
     <MESSAGE value="better documentation and project presentation, more tests for advcaed holographic reasoning" />
     <MESSAGE value=" tests for holographic reasoning" />
@@ -613,6 +566,7 @@
     <MESSAGE value="better saturation research, documentation of this reseaerch" />
     <MESSAGE value="trying to optimise teh hgraphic priority reasoning emgine" />
     <MESSAGE value="bug finixng, better stress evaluation suite to analyse the holografic properties of the startegies" />
-    <option name="LAST_COMMIT_MESSAGE" value="bug finixng, better stress evaluation suite to analyse the holografic properties of the startegies" />
+    <MESSAGE value="better docuemntation, overview of the planned research, wip. started to run the external eval and fix stuff from the external benchmark suites" />
+    <option name="LAST_COMMIT_MESSAGE" value="better docuemntation, overview of the planned research, wip. started to run the external eval and fix stuff from the external benchmark suites" />
   </component>
 </project>

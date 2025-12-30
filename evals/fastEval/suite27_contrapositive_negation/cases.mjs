@@ -102,5 +102,94 @@ export const steps = [
       'Proved: Not(isA, Stella, Numpus)',
       'Therefore Not((isA, Stella, Vumpus))'
     ]
+  },
+  {
+    action: 'learn',
+    input_nl: 'Setup: disjunctive antecedent (Lempus OR Shumpus OR Yumpus) → Impus, plus explicit Not(Impus).',
+    input_dsl: `
+      @cond18 isA ?x Lempus
+      @cond19 isA ?x Shumpus
+      @cond20 isA ?x Yumpus
+      @or21 Or $cond18 $cond19 $cond20
+      @conc22 isA ?x Impus
+      Implies $or21 $conc22
+
+      isA Max Lempus
+      isA Max Yumpus
+      Not isA Max Impus
+    `,
+    expected_nl: 'Learned 1 facts'
+  },
+  {
+    action: 'prove',
+    input_nl: 'Prove: Max is not a shumpus (from Not(Impus) and (Lempus OR Shumpus OR Yumpus)→Impus).',
+    input_dsl: '@goal:goal Not (isA Max Shumpus)',
+    expected_nl: 'True: Not((isA, Max, Shumpus)).',
+    proof_nl: [
+      'Proved: Not(isA, Max, Impus)',
+      'Therefore Not((isA, Max, Shumpus))'
+    ]
+  },
+  {
+    action: 'learn',
+    input_nl: 'Setup: chain refutation via Or antecedent: Tumpus→Brimpus (as Or branch), and Numpus→(Wumpus∧Tumpus).',
+    input_dsl: `
+      @s isA ?x Shumpus
+      @d isA ?x Dumpus
+      @t isA ?x Tumpus
+      @sdtor Or $s $d $t
+      @br isA ?x Brimpus
+      Implies $sdtor $br
+
+      @n isA ?x Numpus
+      @w isA ?x Wumpus
+      @tw And $t $w
+      Implies $n $tw
+
+      isA Wren Numpus
+      Not isA Wren Brimpus
+    `,
+    expected_nl: 'Learned 1 facts'
+  },
+  {
+    action: 'prove',
+    input_nl: 'Prove: Wren is not a numpus (from Not(Brimpus) + Or→Brimpus + Numpus→(Wumpus∧Tumpus)).',
+    input_dsl: '@goal:goal Not (isA Wren Numpus)',
+    expected_nl: 'True: Not((isA, Wren, Numpus)).',
+    proof_nl: [
+      'Proved: Not(isA, Wren, Brimpus)',
+      'Therefore Not((isA, Wren, Numpus))'
+    ]
+  },
+  {
+    action: 'learn',
+    input_nl: 'Setup: multiple possible refutations (Shumpus→(Grimpus∧Zumpus∧Rompus), Zumpus→(Sterpus∧...)), with explicit Not(Sterpus).',
+    input_dsl: `
+      @sh isA ?x Shumpus
+      @g isA ?x Grimpus
+      @z isA ?x Zumpus
+      @r isA ?x Rompus
+      @andA And $g $z $r
+      Implies $sh $andA
+
+      @zs isA ?x Zumpus
+      @st isA ?x Sterpus
+      @l isA ?x Lorpus
+      @sh2 isA ?x Shumpus
+      @andB And $st $l $sh2
+      Implies $zs $andB
+
+      Not isA Stella Sterpus
+    `,
+    expected_nl: 'Learned 1 facts'
+  },
+  {
+    action: 'prove',
+    input_nl: 'Prove: Stella is not a shumpus (should find the easy refutation path via Not(Sterpus) without exhausting step budget).',
+    input_dsl: '@goal:goal Not (isA Stella Shumpus)',
+    expected_nl: 'True: Not((isA, Stella, Shumpus)).',
+    proof_nl: [
+      'Therefore Not((isA, Stella, Shumpus))'
+    ]
   }
 ];
